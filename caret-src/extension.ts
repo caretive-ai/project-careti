@@ -17,6 +17,58 @@ import pWaitFor from "p-wait-for"
 
 let outputChannel: vscode.OutputChannel
 
+const handleUri = async (uri: vscode.Uri) => {
+	caretLogger.info(`URI Handler called with: ${uri.toString()}`, "AUTH")
+	// const query = new URLSearchParams(uri.query.replace(/\+/g, "%2B"))
+	// CARET FIX: Decode the URI query component to handle double-encoding from the server.
+	// The server incorrectly encodes '&' as '%26', which prevents URLSearchParams from parsing correctly.
+	const decodedQuery = decodeURIComponent(uri.query.replace(/\+/g, "%2B"))
+	const query = new URLSearchParams(decodedQuery)
+
+	// DEBUG: Log all received query parameters to see what the server is sending.
+	for (const [key, value] of query.entries()) {
+		caretLogger.info(`[AUTH DEBUG] Received query param: ${key}=${value}`, "AUTH")
+	}
+
+	const visibleProvider = CaretProvider.getVisibleInstance()
+
+	if (!visibleProvider) {
+		caretLogger.warn("No visible Caret instance found to handle URI.", "AUTH")
+		return
+	}
+
+	switch (uri.path) {
+		case "/auth": {
+			const token = query.get("code")
+			const state = query.get("state")
+			const apiKey = query.get("apiKey")
+
+			caretLogger.info(
+				`Auth callback received: state=${state}, token=${token ? "present" : "missing"}, apiKey=${apiKey ? "present" : "missing"}`,
+				"AUTH",
+			)
+
+			if (!(await visibleProvider.controller.validateAuthState(state))) {
+				vscode.window.showErrorMessage("Invalid authentication state. Please try logging in again.")
+				caretLogger.error("Invalid auth state received.", "AUTH")
+				return
+			}
+
+			if (token && apiKey) {
+				await visibleProvider.controller.handleAuthCallback(token, apiKey)
+				caretLogger.success("Authentication callback handled successfully.", "AUTH")
+			} else {
+				caretLogger.error("Token or API key missing in auth callback.", "AUTH")
+				vscode.window.showErrorMessage("Authentication failed. Token or API key was not provided.")
+			}
+			break
+		}
+		default:
+			caretLogger.warn(`Unsupported URI path: ${uri.path}`, "AUTH")
+			break
+	}
+}
+
 export async function activate(context: vscode.ExtensionContext) {
 	outputChannel = vscode.window.createOutputChannel("Caret")
 	context.subscriptions.push(outputChannel)
@@ -176,6 +228,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(vscode.commands.registerCommand("caret.popoutButtonClicked", openCaretInNewTab))
 	context.subscriptions.push(vscode.commands.registerCommand("caret.openInNewTab", openCaretInNewTab))
+
+	// 6. Register URI Handler
+	context.subscriptions.push(vscode.window.registerUriHandler({ handleUri }))
+	caretLogger.info("Caret URI handler for authentication registered.")
 
 	// CARET MODIFICATION: Use Cline's original accountButtonClicked pattern with controller ID targeting
 	// Inherit sendAccountButtonClickedEvent instead of deprecated controller method

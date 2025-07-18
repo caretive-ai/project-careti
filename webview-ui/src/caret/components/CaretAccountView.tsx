@@ -15,11 +15,11 @@ import { getUrl } from "@/caret/constants/urls"
 
 const logger = new WebviewLogger("[CARET-UI-ACCOUNT-VIEW]")
 
-export const ClineAccountView = () => {
+export const CaretAccountView = () => {
 	const { user: firebaseUser, handleSignOut } = useFirebaseAuth()
 	const { userInfo, apiConfiguration, personaProfile, plan, isPayAsYouGo } = useExtensionState() as ExtensionStateContextType // CARET MODIFICATION: personaProfile 추가 및 타입 명시
 
-	let user = apiConfiguration?.clineApiKey ? firebaseUser || userInfo : undefined
+	let user = apiConfiguration?.caretApiKey ? firebaseUser || userInfo : undefined // clineApiKey -> caretApiKey
 
 	const [balance, setBalance] = useState(0)
 	const [isLoading, setIsLoading] = useState(true)

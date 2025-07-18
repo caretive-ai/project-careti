@@ -43,7 +43,7 @@ describe("CaretAccountInfoCard - TDD Implementation", () => {
 
 		mockUseExtensionState.mockReturnValue({
 			userInfo: null,
-			apiConfiguration: { clineApiKey: null },
+			apiConfiguration: { caretApiKey: null },
 			navigateToAccount: vi.fn(),
 		} as any)
 
@@ -67,7 +67,7 @@ describe("CaretAccountInfoCard - TDD Implementation", () => {
 
 			mockUseExtensionState.mockReturnValue({
 				userInfo: { uid: "test-user" },
-				apiConfiguration: { clineApiKey: "test-key" },
+				apiConfiguration: { caretApiKey: "test-key" },
 				navigateToAccount: vi.fn(),
 			} as any)
 
@@ -95,7 +95,7 @@ describe("CaretAccountInfoCard - TDD Implementation", () => {
 
 			mockUseExtensionState.mockReturnValue({
 				userInfo: { uid: "test-user" },
-				apiConfiguration: { clineApiKey: "test-key" },
+				apiConfiguration: { caretApiKey: "test-key" },
 				navigateToAccount: mockNavigateToAccount,
 			} as any)
 
@@ -172,7 +172,7 @@ describe("CaretAccountInfoCard - TDD Implementation", () => {
 
 			mockUseExtensionState.mockReturnValue({
 				userInfo: { uid: "test-user" },
-				apiConfiguration: { clineApiKey: "test-key" },
+				apiConfiguration: { caretApiKey: "test-key" },
 				navigateToAccount: vi.fn(),
 			} as any)
 

@@ -24,6 +24,7 @@ export async function accountLoginClicked(controller: Controller, _: EmptyReques
 	const uriScheme = vscode.env.uriScheme
 	const audience = process.env.AUTH0_AUDIENCE
 
+	console.log(audience)
 	if (!audience) {
 		const errorMsg =
 			"Auth0 Audience is not defined. Please check your .env file and ensure esbuild.js is injecting environment variables correctly."

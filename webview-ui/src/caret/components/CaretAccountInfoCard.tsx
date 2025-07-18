@@ -12,7 +12,7 @@ export const CaretAccountInfoCard = () => {
 	const { user: firebaseUser, handleSignOut } = useFirebaseAuth()
 	const { userInfo, apiConfiguration, navigateToAccount } = useExtensionState()
 
-	let user = apiConfiguration?.clineApiKey ? firebaseUser || userInfo : undefined
+	let user = apiConfiguration?.caretApiKey ? firebaseUser || userInfo : undefined //clineApiKey -> caretApiKey
 
 	const handleLogin = () => {
 		logger.info("User clicked Caret sign up button")

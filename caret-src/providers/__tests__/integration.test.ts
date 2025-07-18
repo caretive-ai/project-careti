@@ -16,7 +16,7 @@ describe("Provider Integration Test", () => {
 	it('should use CaretHandler when provider is "cline"', () => {
 		const config: ApiConfiguration = {
 			apiProvider: "cline",
-			clineApiKey: "test-key",
+			caretApiKey: "test-key",
 			taskId: "integration-test",
 		}
 

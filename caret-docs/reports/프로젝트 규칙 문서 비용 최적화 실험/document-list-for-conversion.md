@@ -2,20 +2,16 @@
 
 ## 분석 대상 문서 목록
 
-| No. | 파일 경로 | 원본 토큰 | JSON 토큰 | 감소량 |
-| --- | --------- | --------- | --------- | ------ |
-| 1   | CONTRIBUTING.md |           |           |        |
-| 2   | DEVELOPER_GUIDE.md |           |           |        |
-| 3   | README.ja.md |           |           |        |
-| 4   | README.ko.md |           |           |        |
-| 5   | README.md |           |           |        |
-| 6   | README.zh-cn.md |           |           |        |
-| 7   | caret-docs/caretrules.ko.md |           |           |        |
-| 8   | caret-docs/development/ai-message-flow-guide.mdx |           |           |        |
-| 9   | caret-docs/development/ai-work-index.mdx |           |           |        |
-| 10   | caret-docs/development/backend-i18n-system.mdx |           |           |        |
+| No. | 파일 경로 | 원본 토큰 | 영문 MD 토큰 | JSON 토큰 | MD 감소량 | JSON 감소량 | 선택 형식 |
+| --- | --------- | --------- | ------------ | --------- | ----------- | ----------- | --------- |
+| 1   | CONTRIBUTING.md | 118 | N/A | N/A |
+| 2   | DEVELOPER_GUIDE.md | 3795 | N/A | N/A |
+| 4   | README.ko.md | 3498 | N/A | N/A |
+| 8   | caret-docs/development/ai-message-flow-guide.mdx | 4639 | N/A | N/A |
+| 9   | caret-docs/development/ai-work-index.mdx | 1516 | N/A | N/A |
+| 10   | caret-docs/development/backend-i18n-system.mdx | 1270 | N/A | N/A |
 | 11   | caret-docs/development/build-scripts.mdx |           |           |        |
-| 12   | caret-docs/development/caret-architecture-and-implementation-guide.md |           |           |        |
+| 12   | caret-docs/development/caret-architecture-and-implementation-guide.md | 9345 | N/A | N/A |
 | 13   | caret-docs/development/caret-architecture-and-implementation-guide.mdx |           |           |        |
 | 14   | caret-docs/development/code-analysis-tools.mdx |           |           |        |
 | 15   | caret-docs/development/component-architecture-principles.md |           |           |        |

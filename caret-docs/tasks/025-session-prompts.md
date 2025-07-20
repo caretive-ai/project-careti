@@ -1,6 +1,6 @@
-# Task 025: AI 컨텍스트 최적화 실험을 위한 세션별 프롬프트
+# Task 025: AI 컨텍스트 최적화를 위한 세션별 프롬프트 (v3)
 
-**실험 목표:** 각 작업을 독립적인 세션으로 분리하여, AI의 문서 분석 및 변환에 소요되는 비용(토큰)을 정밀하게 측정합니다.
+**실험 목표:** AI의 문서 이해 및 컨텍스트 활용에 있어 토큰 효율성을 극대화하기 위해, **영문 마크다운(MD)**, **영문 JSON**, 그리고 **영문 YAML** 형식 간의 변환 효율성을 비교 분석합니다. 특히, 코드 블록 포함 여부에 따라 각 형식의 토큰 수가 어떻게 변화하는지 정밀하게 측정하고, 가장 효율적인 문서 형식을 선택하는 것을 목표로 합니다.
 
 ---
 
@@ -9,124 +9,131 @@
 **[Session 1 AI에게 전달할 프롬프트]**
 
 **임무:**
-주어진 `.caretrules` 파일 내용을 시작으로, 참조된 모든 마크다운(`.md`, `.mdx`) 파일을 재귀적으로 탐색하여 최종 목록을 식별하고, 그 결과를 지정된 경로에 **데이터시트 파일**로 생성하라.
+`caret-scripts/collect-all-markdown-references.js` 스크립트를 사용하여 프로젝트 내 모든 마크다운 파일의 참조 관계를 분석하고, 52개의 대상 파일 목록을 비교 분석용 데이터시트 파일로 생성하라.
 
 **작업 절차:**
-1.  아래에 제공된 `.caretrules` 파일 내용을 분석하여, 값(value)에 포함된 `.md` 또는 `.mdx` 파일 경로를 모두 추출하여 1차 목록을 만든다.
-2.  1차 목록에 있는 각 파일의 내용을 읽는다.
-3.  파일 내용에서 `(./.../file.md)` 또는 `(file.mdx)`와 같은 형식의 상대 경로 마크다운 파일 참조를 모두 찾아 목록에 추가한다.
-4.  새롭게 추가된 파일이 없을 때까지 2-3번 과정을 반복한다.
-5.  모든 과정이 끝나면, 수집된 모든 파일 경로에서 중복을 제거한 최종 목록을 만든다.
-6.  아래 **출력 형식**에 따라, 최종 목록을 마크다운 테이블로 변환하여, `caret-docs/reports/프로젝트 규칙 문서 비용 최적화 실험/document-list-for-conversion.md` 파일에 저장하라.
+1.  `caret-scripts/collect-all-markdown-references.js` 스크립트를 실행하여, `.caretrules`를 시작으로 모든 참조된 마크다운 파일 목록을 추출한다.
+2.  추출된 목록을 기반으로, 아래 **출력 형식**에 따라 마크다운 테이블을 생성한다.
+3.  생성된 테이블을 `caret-docs/reports/프로젝트 규칙 문서 비용 최적화 실험/document-list-for-conversion.md` 파일에 저장한다.
 
 **출력 형식 (`document-list-for-conversion.md`):**
 ```markdown
-# AI 문서 변환 실험 데이터시트
+# AI 문서 변환 효율성 비교 실험 데이터시트
 
 ## 분석 대상 문서 목록
 
-| No. | 파일 경로 | 원본 토큰 | JSON 토큰 | 감소량 |
-| --- | --------- | --------- | --------- | ------ |
-| 1   | [파일 경로 1] |           |           |        |
-| 2   | [파일 경로 2] |           |           |        |
-| ... | ...       |           |           |        |
+| No. | 파일 경로 | 원본 토큰 | 영문 MD 토큰 | JSON 토큰 | YAML 토큰 | MD 감소량 | JSON 감소량 | YAML 감소량 | 선택 형식 |
+| --- | --------- | --------- | ------------ | --------- | --------- | ----------- | ----------- | ----------- | --------- |
+| 1   | [파일 경로 1] |           |              |           |           |             |             |             |           |
+| 2   | [파일 경로 2] |           |              |           |           |             |             |             |           |
+| ... | ...       |           |              |           |           |             |             |             |           |
 
 ## 총계
 
-- **총 원본 토큰:** 
-- **총 JSON 토큰:** 
-- **총 감소량:** 
+- **총 원본 토큰:**
+- **총 영문 MD 토큰:**
+- **총 JSON 토큰:**
+- **총 YAML 토큰:**
+- **총 MD 감소량:**
+- **총 JSON 감소량:**
+- **총 YAML 감소량:**
 ```
-
-**시작 데이터 (`.caretrules`):**
-```json
-{
-  "project_overview": {
-    "name": "Caret",
-    "description": "VSCode AI coding assistant extension - Cline-based Fork project",
-    "repository_url": "https://github.com/aicoding-caret/caret",
-    "naming_convention": "Caret refers to the '^' (caret) symbol used in programming, representing position and direction in programming contexts. NOT a carrot (🥕)."
-  },
-  "ai_task_protocol": {
-    "task_start_protocol": [
-      "STEP 1: Read caret-docs/development/ai-work-index.en.mdx (AI Work Index Guide)"
-    ],
-    "task_nature_mandatory_documents": {
-      "frontend_backend_interaction": [
-        "caret-docs/development/frontend-backend-interaction-patterns.mdx",
-        "caret-docs/development/caret-architecture-and-implementation-guide.mdx (sections 10-11)"
-      ],
-      "cline_original_modification": [
-        "File modification checklist in caret-docs/caretrules.ko.md"
-      ],
-      "component_ui_development": [
-        "caret-docs/development/component-architecture-principles.mdx"
-      ],
-      "testing_related": [
-        "caret-docs/development/testing-guide.mdx"
-      ]
-    }
-  },
-  "key_reference_files": {
-    "config_files": [".caretrules", "caret-docs/caretrules.ko.md", "caret-docs/development/index.mdx"],
-    "entry_points": ["caret-src/extension.ts", "caret-src/core/webview/CaretProvider.ts", "src/extension.ts"],
-    "frontend": ["webview-ui/src/App.tsx", "webview-ui/src/context/ExtensionStateContext.tsx", "webview-ui/src/caret/"]
-  }
-}
-```
-*(.caretrules의 내용은 설명을 위해 일부만 발췌함)*
 
 ---
 
-## ❏ Session 2 ~ N: 개별 문서 JSON 변환
+## ❏ Session 2: 토큰 수 측정을 위한 스크립트 개발
 
-**[Session 1에서 얻은 각 파일별로 아래 프롬프트 템플릿을 사용하여 개별 세션을 실행]**
+**[Session 2 AI에게 전달할 프롬프트]**
 
 **임무:**
-주어진 마크다운 파일의 내용을 분석하여, 핵심 의미를 담은 **영문 JSON 형식**으로 변환하라.
+Google Gemini API를 사용하여 주어진 파일의 토큰 수를 계산하는 Node.js 스크립트를 개발하라.
 
-**변환 규칙:**
-1.  **구조화:** 제목(Headings)을 기준으로 내용을 계층적으로 구조화한다.
-2.  **의미 보존 및 재구성:** 각 문단과 목록의 핵심 의미(semantics)를 보존하면서, AI가 이해하기 쉬운 간결한 영문 키-값 형태로 재구성한다. 불필요한 미사여구나 반복적인 설명은 제거한다.
-3.  **코드 블록:** 코드 블록은 **이스케이프 처리된 단일 문자열**로 변환하여 `code` 필드에 포함시킨다. (예: 줄바꿈은 `\n`, 큰따옴표는 `\"`로 변환)
-4.  **참조 링크 변환:** 내용에 포함된 다른 마크다운 파일(`.md`, `.mdx`) 참조는 다음 규칙에 따라 변환한다.
-    - `(./path/to/file.md)` → `(./path/to/file.json.md)`
-    - `(./path/to/file.mdx)` → `(./path/to/file.json.mdx)`
-5.  최종 결과물은 오직 JSON 객체만을 출력한다. 다른 설명은 덧붙이지 않는다.
+**작업 절차:**
+1.  `.env` 파일에 `GOOGLE_API_KEY`가 설정되어 있는지 확인한다.
+2.  `@google/genai`와 `dotenv` 라이브러리를 사용하여, 파일 경로를 인자로 받아 해당 파일의 내용을 읽고 토큰 수를 계산하는 스크립트(`caret-scripts/calculate-gemini-tokens.mjs`)를 작성한다.
+3.  스크립트는 파일 경로, 사용된 모델, 계산된 총 토큰 수를 콘솔에 출력해야 한다.
 
-**변환 대상 파일 경로:**
-`[여기에 Session 1에서 얻은 파일 경로 중 하나를 입력]`
-
-**예시:**
-*입력 파일 (`example.md`):*
-```markdown
-# 2. 주요 기능
-
-주요 기능은 다음과 같습니다.
-
-```javascript
-function sayHello(name) {
-  console.log(`Hello, ${name}!`);
-}
+**스크립트 사용 예시:**
+```bash
+node caret-scripts/calculate-gemini-tokens.mjs [파일 경로]
 ```
-이 코드는 `sayHello` 함수를 정의합니다.
-자세한 내용은 [개발 가이드](./development-guide.mdx)를 참조하세요.
-```
-*출력 JSON:*
-```json
-{
-  "section_title": "Key Features",
-  "description": "The main feature is as follows.",
-  "code_block": {
-    "language": "javascript",
-    "code": "function sayHello(name) {\n  console.log(`Hello, ${name}!`);\n}"
-  },
-  "additional_info": "This code defines the `sayHello` function.",
-  "references": [
-    {
-      "text": "Development Guide",
-      "link": "./development-guide.json.mdx"
-    }
-  ]
-}
-```
+
+---
+
+## ❏ Session 3 ~ N: 순차적 문서 변환, 토큰 측정 및 형식 선택
+
+**[Session 3부터 각 세션의 AI에게 전달할 시스템 프롬프트]**
+
+**당신은 문서 변환 자동화 시스템의 일부로, 주어진 작업을 한 단계씩 처리하는 AI입니다.**
+
+**전체 임무:**
+`document-list-for-conversion.md` 데이터시트에 명시된 모든 마크다운 문서를 **영문 마크다운**, **영문 JSON**, **영문 YAML** 세 가지 형식으로 변환하고, 각 형식의 토큰 효율성을 측정하여 최적의 데이터 형식을 결정합니다. 이 과정은 모든 문서가 처리될 때까지 여러 세션에 걸쳐 진행됩니다.
+
+**이번 세션의 임무:**
+1.  `caret-docs/reports/프로젝트 규칙 문서 비용 최적화 실험/document-list-for-conversion.md` 파일을 읽어 처리할 다음 파일을 식별합니다. (처리되지 않은 첫 번째 파일, 즉 '원본 토큰' 필드가 비어있는 첫 번째 행)
+2.  만약 처리할 파일이 더 이상 없다면, 작업을 종료하고 "모든 문서 변환 및 분석이 완료되었습니다."라고 보고합니다.
+3.  대상 마크다운 파일을 **영문 마크다운, 영문 JSON, 영문 YAML 형식으로 각각 변환**합니다. (아래 **[문서 변환 규칙]** 참고)
+4.  `caret-scripts/calculate-gemini-tokens.mjs` 스크립트를 사용하여 **원본 파일**, **변환된 영문 MD**, **변환된 영문 JSON**, 그리고 **변환된 영문 YAML**의 토큰 수를 각각 측정합니다.
+5.  **토큰 측정 및 기록:**
+    - 측정된 '원본 토큰', '영문 MD 토큰', 'JSON 토큰', 'YAML 토큰' 수를 데이터시트의 해당 파일 행에 업데이트합니다.
+    - 'MD 감소량'은 `(원본 토큰 - 영문 MD 토큰)`으로 계산하여 기록합니다.
+    - 'JSON 감소량'은 `(원본 토큰 - JSON 토큰)`으로 계산하여 기록합니다.
+    - 'YAML 감소량'은 `(원본 토큰 - YAML 토큰)`으로 계산하여 기록합니다.
+    - **선택 형식 결정:** 세 가지 형식의 감소량을 비교하여 가장 효율적인 형식(토큰 감소량이 가장 큰 쪽)을 '선택 형식' 필드에 기록합니다. (예: 'YAML', '영문 MD', 'JSON')
+6.  **다음 세션을 위한 인수인계 메시지**를 아래 **[다음 세션을 위한 시스템 프롬프트]** 형식에 맞춰 다시 생성하여 작업을 마무리합니다.
+
+**[문서 변환 규칙]**
+1.  **공통 규칙:**
+    - **한국어 완전 변환:** 원본 내용의 한국어는 모두 의미를 살려 간결한 영문으로 변환합니다.
+    - **핵심 내용 추출:** 불필요한 미사여구나 반복적인 설명을 제거하고, 핵심 내용만 간결하게 재구성합니다.
+2.  **구조화 데이터 변환 규칙 (JSON & YAML):**
+    - **구조화:** 제목(Headings)을 기준으로 내용을 계층적으로 구조화합니다.
+    - **간결한 키 사용:** AI가 이해할 수 있는 범위 내에서 최대한 짧고 명확한 영문 키를 사용합니다. (예: `description` → `desc`)
+    - **코드 블록 처리:** 코드 블록은 원본 형식을 최대한 유지하는 블록 스칼라(YAML)나 단일 문자열(JSON)로 변환합니다.
+3.  **최종 결과물 형식:** 변환된 영문 MD, 영문 JSON, 영문 YAML은 각각 별도의 결과물로 생성되어야 합니다.
+
+---
+### **[작업 종료 후 다음 세션에 전달할 프롬프트 템플릿]**
+
+[작업 완료 보고]
+- 처리한 파일: [방금 처리한 파일 경로]
+- 원본 토큰: [측정된 원본 토큰 수]
+- 영문 MD 토큰: [측정된 영문 MD 토큰 수]
+- JSON 토큰: [측정된 JSON 토큰 수]
+- YAML 토큰: [측정된 YAML 토큰 수]
+- MD 감소량: [계산된 MD 감소량]
+- JSON 감소량: [계산된 JSON 감소량]
+- YAML 감소량: [계산된 YAML 감소량]
+- 선택 형식: [선택된 형식]
+- 데이터시트 업데이트 완료.
+
+---
+[다음 세션을 위한 시스템 프롬프트]
+
+**당신은 문서 변환 자동화 시스템의 일부로, 주어진 작업을 한 단계씩 처리하는 AI입니다.**
+
+**전체 임무:**
+`document-list-for-conversion.md` 데이터시트에 명시된 모든 마크다운 문서를 **영문 마크다운**, **영문 JSON**, **영문 YAML** 세 가지 형식으로 변환하고, 각 형식의 토큰 효율성을 측정하여 최적의 데이터 형식을 결정합니다. 이 과정은 모든 문서가 처리될 때까지 여러 세션에 걸쳐 진행됩니다.
+
+**이번 세션의 임무:**
+1.  `caret-docs/reports/프로젝트 규칙 문서 비용 최적화 실험/document-list-for-conversion.md` 파일을 읽어 처리할 다음 파일을 식별합니다. (처리되지 않은 첫 번째 파일, 즉 '원본 토큰' 필드가 비어있는 첫 번째 행)
+2.  만약 처리할 파일이 더 이상 없다면, 작업을 종료하고 "모든 문서 변환 및 분석이 완료되었습니다."라고 보고합니다.
+3.  대상 마크다운 파일을 **영문 마크다운, 영문 JSON, 영문 YAML 형식으로 각각 변환**합니다. (아래 **[문서 변환 규칙]** 참고)
+4.  `caret-scripts/calculate-gemini-tokens.mjs` 스크립트를 사용하여 **원본 파일**, **변환된 영문 MD**, **변환된 영문 JSON**, 그리고 **변환된 영문 YAML**의 토큰 수를 각각 측정합니다.
+5.  **토큰 측정 및 기록:**
+    - 측정된 '원본 토큰', '영문 MD 토큰', 'JSON 토큰', 'YAML 토큰' 수를 데이터시트의 해당 파일 행에 업데이트합니다.
+    - 'MD 감소량'은 `(원본 토큰 - 영문 MD 토큰)`으로 계산하여 기록합니다.
+    - 'JSON 감소량'은 `(원본 토큰 - JSON 토큰)`으로 계산하여 기록합니다.
+    - 'YAML 감소량'은 `(원본 토큰 - YAML 토큰)`으로 계산하여 기록합니다.
+    - **선택 형식 결정:** 세 가지 형식의 감소량을 비교하여 가장 효율적인 형식(토큰 감소량이 가장 큰 쪽)을 '선택 형식' 필드에 기록합니다. (예: 'YAML', '영문 MD', 'JSON')
+6.  **다음 세션을 위한 인수인계 메시지**를 이 형식에 맞춰 다시 생성하여 작업을 마무리합니다.
+
+**[문서 변환 규칙]**
+1.  **공통 규칙:**
+    - **한국어 완전 변환:** 원본 내용의 한국어는 모두 의미를 살려 간결한 영문으로 변환합니다.
+    - **핵심 내용 추출:** 불필요한 미사여구나 반복적인 설명을 제거하고, 핵심 내용만 간결하게 재구성합니다.
+2.  **구조화 데이터 변환 규칙 (JSON & YAML):**
+    - **구조화:** 제목(Headings)을 기준으로 내용을 계층적으로 구조화합니다.
+    - **간결한 키 사용:** AI가 이해할 수 있는 범위 내에서 최대한 짧고 명확한 영문 키를 사용합니다. (예: `description` → `desc`)
+    - **코드 블록 처리:** 코드 블록은 원본 형식을 최대한 유지하는 블록 스칼라(YAML)나 단일 문자열(JSON)로 변환합니다.
+3.  **최종 결과물 형식:** 변환된 영문 MD, 영문 JSON, 영문 YAML은 각각 별도의 결과물로 생성되어야 합니다.

@@ -1,4 +1,4 @@
-[Read this document in English](./README.md) | [한국어로 읽기](./README.ko.md) | [日本語で読む](./README.ja.md) | [阅读中文版](./README.zh-cn.md)
+dmd[Read this document in English](./README.md) | [한국어로 읽기](./README.ko.md) | [日本語で読む](./README.ja.md) | [阅读中文版](./README.zh-cn.md)
 
 <div align="center">
   <img src="caret-assets/icons/icon.png" alt="Caret icon" width="128">
@@ -14,20 +14,21 @@
   </p>
 </div>
 
-Caret은 단순한 AI 코딩 도구를 넘어, **개발자와 함께 성장하는 AI 동료**를 목표로 하는 VS Code 확장 프로그램입니다. 안정성이 검증된 오픈소스 [Cline](https://github.com/cline/cline)의 장점은 그대로 유지하면서, 그 위에 더욱 강력하고 유연한 기능들을 '오버레이'하여 개발 경험을 극대화합니다.
+Caret은 단순한 AI 코딩 도구를 넘어, **개발자와 함께 성장하는 AI 동료**를 목표로 하는 VS Code 확장 프로그램입니다. 안정성이 검증된 오픈소스 [Cline](https://github.com/cline/cline)의 장점은 그대로 유지하면서, 그 위에 더욱 강력한 성능, 낮은 비용, 유연한 기능들을 '오버레이'하여 개발 경험을 극대화합니다.
 
 ## ✨ 캐럿, 무엇이 다른가요?
 
 | 특징 | 클라인 (Cline) | 커서 (Cursor) | **캐럿 (Caret)** |
 | :--- | :--- | :--- | :--- |
-| **AI 행동 방식** | Plan/Act (다소 부자연스러움) | Ask/Agent (자연스러움) | **Chatbot/Agent 모드 (더 직관적이고 강력함)** |
-| **AI 투명성** | ✅ 오픈소스 (높음) | ❌ 블랙박스 (낮음) | **✅ 오픈소스 + 시스템 프롬프트 개선 (매우 높음)** |
+| **AI 행동 방식** | Plan/Act(분절된 경험)  | Ask/Agent(단일 경험) | **Chatbot/Agent 모드(단일 경험)** |
+| **AI 투명성** | ✅ 오픈소스 (높음) | ❌ 블랙박스 (낮음) | **✅ 오픈소스 (높음)** |
+| **AI 효율성** | 기본 | 기본 | **시스템 프롬프트 최적화로 50% 토큰 절약** |
 | **페르소나** | ❌ 미지원 | ❌ 미지원 | **✅ 템플릿 및 커스텀 페르소나, 프로필 이미지 지원** |
 | **다국어 지원** | ❌ 미지원 | ❌ 미지원 | **✅ 완벽한 다국어 지원 (i18n 오버레이)** |
 | **아키텍처** | 코어 기능 | 폐쇄형 | **오버레이 구조 (안정성 + 확장성)** |
 
 ### 1. 더 자연스러운 AI와의 대화: Chatbot & Agent 모드
-클라인의 다소 경직된 Plan/Act 모드를 넘어, 커서(Cursor)의 Ask/Agent 방식처럼 유연하면서도, 'Ask'라는 용어보다 더 직관적인 **Chatbot/Agent 모드**를 제공합니다. 또한, 행동 방식만 바꾼 것이 아니라 **자체적으로 개선한 시스템 프롬프트**를 통해 AI의 응답 성능과 태도를 모두 향상시켰습니다. 이는 더 똑똑하고 자연스러운 협업을 가능하게 할 뿐만 아니라, 불필요한 토큰 사용을 줄여 **API 비용을 절감**하고 **비용 예측성을 높이는 효과**를 가져옵니다.
+클라인의 다소 경직된 Plan/Act 모드를 넘어, 커서(Cursor)의 Ask/Agent 방식처럼 유연하면서도, 'Ask'라는 용어보다 더 직관적인 **Chatbot/Agent 모드**를 제공합니다. 또한, 행동 방식만 바꾼 것이 아니라 **자체적으로 개선한 시스템 프롬프트**를 통해 AI의 응답 성능과 태도를 모두 향상시켰습니다. [실험 검증](./caret-docs/reports/experiment/json_caret_performance_test_20250713/comprehensive-performance-report-20250717.md)을 통해 **50% 토큰 절약**과 **20% API 비용 절감**을 달성하여, 더 경제적이고 예측 가능한 AI 협업을 제공합니다.
 
 ### 2. 나만의 AI 동료 만들기: 커스텀 페르소나
 <img src="caret-assets/template_characters/caret_illust.png" alt="Caret Persona Illustration" width="300"/>

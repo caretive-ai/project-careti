@@ -3,7 +3,7 @@
 	"name": "caret",
 	"displayName": "Caret",
 	"description": "An autonomous coding AI agent, forked from Cline. For context-aware pair programming, refactoring, and 'vibe coding' with customizable AI personas. Supports: 한국어, 日本語, 中文.",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"icon": "caret-assets/icons/icon.png",
 	"engines": {
 		"vscode": "^1.84.0"

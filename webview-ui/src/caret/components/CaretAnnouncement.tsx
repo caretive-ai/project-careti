@@ -35,12 +35,14 @@ const linkStyle: CSSProperties = { display: "inline" }
   Texts are fetched from locale files under caret/locale/{*}/announcement.json
 */
 export const CaretAnnouncement = ({ version, hideAnnouncement }: AnnouncementProps) => {
-  const minorVersion = version.split(".").slice(0, 2).join(".") // e.g. 2.0.0 -> 2.0
+  // CARET MODIFICATION: Use full version number instead of just major.minor
+  const displayVersion = version // e.g. "0.1.1"
 
   // Build current update bullet list (keys: bullets.current.{index})
   const currentBullets: string[] = []
   for (let i = 1; i <= 10; i++) {
-    const txt = t(`bullets.current.${i}`, "announcement", { version: minorVersion })
+    const txt = t(`bullets.current.${i}`, "announcement", { version: displayVersion })
+    // Only add if translation exists and is not the key itself
     if (txt && txt !== `bullets.current.${i}`) {
       currentBullets.push(txt)
     }
@@ -50,9 +52,15 @@ export const CaretAnnouncement = ({ version, hideAnnouncement }: AnnouncementPro
   const previousBullets: string[] = []
   for (let i = 1; i <= 20; i++) {
     const txt = t(`bullets.previous.${i}`, "announcement")
+    // Only add if translation exists and is not the key itself
     if (txt && txt !== `bullets.previous.${i}`) {
       previousBullets.push(txt)
     }
+  }
+
+  // Only render if we have any bullets to show
+  if (currentBullets.length === 0) {
+    return null
   }
 
   return (
@@ -60,7 +68,7 @@ export const CaretAnnouncement = ({ version, hideAnnouncement }: AnnouncementPro
       <VSCodeButton data-testid="close-button" appearance="icon" onClick={hideAnnouncement} style={closeIconStyle}>
         <span className="codicon codicon-close"></span>
       </VSCodeButton>
-      <h3 style={h3TitleStyle}>{t("header", "announcement", { version: minorVersion })}</h3>
+      <h3 style={h3TitleStyle}>{t("header", "announcement", { version: displayVersion })}</h3>
       {currentBullets.length > 0 && (
         <ul style={ulStyle}>
           {currentBullets.map((b, idx) => (

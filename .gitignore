@@ -98,3 +98,9 @@ build/Release
 
 # Temporary submodule reference (서브모듈로 임시 참조)
 caret-zero/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.bak

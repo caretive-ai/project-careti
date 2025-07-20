@@ -1,8 +1,11 @@
 # Changelog
 
-## [0.0.1]
+## [0.1.1]
 
--   Initial release
+- Patched persona application bug
+- Fixed project opening failure by handling broken checkpoint exceptions
+- Changed API providers (except Caret) to Native and applied caching
+- Optimized token cost by dynamic loading of system prompts
 
 ## [0.1.0]
 

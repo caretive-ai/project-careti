@@ -8,6 +8,35 @@
 
 Caret은 Cline의 707라인 하드코딩된 시스템 프롬프트를 **JSON 기반 모듈형 시스템**으로 완전히 재설계했습니다. 이는 **Chatbot/Agent 모드**, **협력적 AI 태도**, **메타인지 시스템**을 통합하여 Cursor 수준의 자연스러운 협업 경험을 제공합니다.
 
+## ⭐ **핵심 개선사항**
+
+Caret은 Cline 대비 다음과 같은 혁신적 개선을 달성했습니다:
+
+### **🤖 [Chatbot/Agent 모드 시스템](#1-chatbotagent-모드-철학)**
+- Plan/Act의 비효율성을 해결한 실용적 모드 시스템
+- **Agent 모드**: Cursor 스타일 자연스러운 협업
+- **Chatbot 모드**: 안전한 전문가 컨설팅
+
+### **📁 [JSON 모듈형 아키텍처](#json-시스템-아키텍처)**  
+- 707라인 하드코딩 → 15개 JSON 모듈로 분해
+- 동적 로딩 시스템으로 토큰 효율성 극대화
+- 개별 섹션 독립적 수정 가능
+
+### **🚀 [토큰 최적화 성과](#토큰-최적화-실제-성과-2025-07-17-달성-)**
+- **Agent 모드**: 53.28% 토큰 절약
+- **Chatbot 모드**: 69.68% 토큰 절약  
+- JIT Phase 1으로 최대 4,500 토큰 추가 절약
+
+### **🤝 [협력적 AI 태도](#2-협력적-ai-태도-5개-핵심-원칙)**
+- Quality-First Collaboration: 속도보다 정확성 우선
+- Evidence-Based Analysis: "Found it!" 증후군 방지
+- Natural Development Partnership: 자연스러운 개발 파트너십
+
+### **📈 [실제 성능 향상](#실제-api-성능-향상-pro-모델-기준---42회-실험-검증)**
+- **API 비용**: 21.5% 절약 (Pro 모델 기준)
+- **실행 속도**: 17.9% 향상
+- **토큰 효율성**: 28.5% 개선
+
 ## 📜 **기술 배경**
 
 ### **특허 기술 기반**
@@ -16,9 +45,8 @@ Caret은 Cline의 707라인 하드코딩된 시스템 프롬프트를 **JSON 기
 
 **핵심 기술:**
 
--   **이중 표현 방식**: 마크다운-JSON 구조로 인간 가독성과 AI 효율성 동시 달성
 -   **모듈형 JSON 시스템**: 하드코딩된 프롬프트를 JSON 모듈로 분해하여 관리
--   **동적 로딩**: 컨텍스트에 따른 선택적 모듈 로딩
+-   **동적 로딩**: 컨텍스트에 따른 선택적 모듈 로딩 (JIT Phase 1 구현 완료)
 -   **검증 기반 안전성**: 기능 보존을 보장하는 자동 검증 시스템
 
 ### **라이센스**
@@ -43,7 +71,7 @@ Caret은 Cline의 707라인 하드코딩된 시스템 프롬프트를 **JSON 기
 }
 ```
 
-#### **Ask Mode (안전모드) - 컨설팅 전용**
+#### **Chatbot Mode (안전모드) - 컨설팅 전용**
 
 ```json
 {
@@ -248,34 +276,87 @@ npm run test caret-src/__tests__/cline-feature-validation.test.ts
 -   **실행 시간**: 평균 1ms 미만
 -   **메모리 사용량**: 14MB 이하
 -   **테스트 통과율**: 100% (25/25)
--   **코드 효율성**: 75% 코드 감소 (리팩토링 후)
 
-### **JSON 시스템 효율성**
+### **토큰 최적화 실제 성과 (2025-07-17 달성)** ⭐
 
--   **토큰 절약**: 약 30-40% 토큰 효율성 개선
--   **로딩 성능**: < 100ms 목표
+#### **🎯 모드별 토큰 절약 효과 (실제 실험 검증)**
+```
+📊 토큰 길이 종합 분석:
+Cline 원본:           11,791 tokens (47,161 chars)
+Caret Agent 모드:     5,509 tokens (22,036 chars)  → 53.28% 절약 ✨
+Caret Chatbot 모드:   3,575 tokens (14,299 chars)  → 69.68% 절약 🚀
+```
+
+**실험 설계 및 상세 결과:**
+- **[실험 계획서](../reports/experiment/json_caret_performance_test_20250713/experiment-design.md)**: 42회 실험 설계 방법론
+- **[종합 성능 보고서](../reports/experiment/json_caret_performance_test_20250713/comprehensive-performance-report-20250717.md)**: 상세 분석 결과
+
+#### **🔥 실제 API 성능 향상 (Pro 모델 기준 - 42회 실험 검증)**
+- **API 호출당 비용**: $0.021532 vs $0.027429 → **21.5% 더 저렴** 💰
+- **API 호출당 시간**: 11초 vs 13초 → **17.9% 더 빨라짐** ⚡
+- **API 호출당 입력 토큰**: 28,986 vs 40,528 → **28.5% 더 효율적** 📈
+- **API 호출당 출력 토큰**: 416 vs 471 → **11.8% 더 효율적** 🎯
+
+#### **💡 JIT (Just-In-Time) 동적 로딩 효과 (Phase 1 구현 완료)**
+```
+Phase 1 최적화 (✅ 구현 완료):
+- MCP 서버 제거: 최대 4,500 토큰 절약
+- 기본 시스템: 1,800~2,200 토큰 (79% 절약!)
+- 필수 도구만: read_file, edit_file, search_replace, list_dir, codebase_search, run_terminal_cmd
+
+Phase 2 예정 (동적 로딩):
+- 브라우저 도구들: +800 tokens (필요시에만)
+- MCP 서버들: +2,000~4,500 tokens (컨텍스트별)
+- 특수 도구들: 상황별 추가
+```
+
+#### **📊 중요한 발견사항**
+- **시스템 프롬프트 vs 실제 비용**: 시스템 프롬프트 토큰 절약(53-69%)과 실제 API 비용 절약(21.5%)의 차이는 실제 사용에서 사용자 코드와 컨텍스트가 전체 토큰의 대부분을 차지하기 때문
+- **Pro 모델 우수성**: 안정적이고 일관된 성능으로 실제 운영 환경에 적합
+- **Phase 1 최적화 효과**: MCP 제거를 통한 토큰 최적화로 실질적 성능 개선 달성
+
+### **JSON 시스템 구현 현황**
+
+-   **완전 구현**: `caret-src/core/prompts/` 15개 JSON 섹션 완료
+-   **로딩 성능**: < 100ms 목표 달성
 -   **메모리 최적화**: JSON 캐싱으로 반복 로딩 방지
 -   **모듈성**: 개별 섹션 독립적 수정 가능
 
-### **실시간 모니터링**
+## 🛠️ **토큰 최적화 구현 아키텍처 (JIT Phase 1 완료)**
 
+### **✅ Phase 1: MCP 섹션 제거 (완료)**
+
+**구현 완료:**
 ```typescript
-// 성능 메트릭 확인
-const summary = validator.getPerformanceSummary()
-console.log({
-	totalValidations: summary.totalValidations,
-	averageTime: summary.averageTime,
-	peakMemory: summary.peakMemory,
-	totalErrors: summary.totalErrors,
-})
+// caret-src/core/prompts/JsonSectionAssembler.ts
+private async generateMcpServerSection(mcpHub: any): Promise<string> {
+    // CARET MODIFICATION: JIT Phase 1 - Complete MCP section removal
+    // Return empty string instead of MCP server information
+    // This achieves dramatic token savings (typically 200-4,500 tokens per session)
+    return ""
+}
+```
 
-// CaretLogger로 상세 로깅
-CaretLogger.info("시스템 프롬프트 생성 완료", {
-	sectionsLoaded: 15,
-	rulesLoaded: 3,
-	totalTokens: prompt.length,
-	loadTime: performance.now() - startTime,
-})
+**성과:**
+- **토큰 절약**: 최대 4,500 토큰 절약
+- **기본 도구**: 필수 6개 도구만 유지
+- **79% 효율성**: 기존 대비 대폭적인 토큰 최적화
+
+### **⏳ Phase 2: 동적 도구 로딩 시스템 (예정)**
+
+**계획된 아키텍처:**
+```typescript
+interface JITLoadingSystem {
+    // 기본 필수 도구만 로딩 (1,800~2,200 토큰)
+    coreTools: ['read_file', 'edit_file', 'search_replace', 'list_dir', 'codebase_search', 'run_terminal_cmd'];
+    
+    // 컨텍스트별 동적 로딩
+    loadOnDemand: {
+        browserContext: ['browser_action'],        // +800 토큰
+        mcpContext: ['mcp_servers'],              // +2,000~4,500 토큰
+        specialContext: ['specialized_tools']      // 상황별
+    };
+}
 ```
 
 ## 🎯 **Caret vs Cline 비교**
@@ -294,10 +375,10 @@ CaretLogger.info("시스템 프롬프트 생성 완료", {
 
 | 영역        | Cline    | Caret         | 개선 효과             |
 | ----------- | -------- | ------------- | --------------------- |
-| 모드 시스템 | Plan/Act | Chatbot/Agent | 실용성 300% 향상      |
-| 협업 태도   | 기본적   | 5개 원칙      | 자연스러움 500% 향상  |
+| 모드 시스템 | Plan/Act | Chatbot/Agent | 실용성 향상      |
+| 협업 태도   | 기본적   | 5개 원칙      | 자연스러움 향상  |
 | 메타인지    | 없음     | 완전 통합     | 자기 진단 능력        |
-| 모듈성      | 하드코딩 | JSON 모듈     | 유지보수성 1000% 향상 |
+| 모듈성      | 하드코딩 | JSON 모듈     | 유지보수성 향상 |
 
 ## 🚨 **주의사항 및 제약**
 
@@ -348,15 +429,6 @@ CaretLogger.info("시스템 프롬프트 생성 완료", {
 -   **[Testing Guide](./testing-guide.mdx)**: TDD 방법론
 -   **[Upstream Merging Guide](../guides/upstream-merging.mdx)**: Cline 업데이트 통합
 
-### **Task 시리즈**
-
--   **003-01**: ClineFeatureValidator 검증 시스템 ✅
--   **003-02**: JSON 템플릿 로딩 시스템 ✅
--   **003-03**: JSON 오버레이 시스템 ✅
--   **003-04**: JSON 검토 및 보강 ✅
--   **003-05**: CaretSystemPrompt 통합 검증 (예정)
--   **003-06**: Chatbot/Agent JSON 템플릿 (예정)
-
 ## 📞 **개발자 지원**
 
 ### **문제 해결 가이드**
@@ -387,6 +459,6 @@ CaretLogger.debug("최종 프롬프트 생성 완료", { tokenCount: prompt.leng
 
 ---
 
-**🎯 목표**: Cline의 모든 기능을 보존하면서 Cursor 수준의 협업 경험 제공!\*\*
+**🎯 목표**: Cline의 모든 기능을 보존하면서 Cursor 수준의 협업 경험 제공!**
 
-**🚀 혁신**: Chatbot/Agent 모드 + 협력적 AI 태도 + 메타인지 시스템 통합!\*\* ✨☕
+**🚀 혁신**: Chatbot/Agent 모드 + 협력적 AI 태도 + 메타인지 시스템 통합!** ✨☕

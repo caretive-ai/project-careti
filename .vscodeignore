@@ -116,3 +116,9 @@ webview-ui/.env*
 # Include compiled output
 !dist/**
 !webview-ui/build/**
+
+# Additional directories to ignore
+old_docs/**
+standalone/**
+walkthrough/**
+!walkthrough/*.md  # walkthrough에서 필요한 마크다운 파일만 포함

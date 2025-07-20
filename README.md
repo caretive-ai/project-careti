@@ -23,12 +23,13 @@ Caret is more than just an AI coding tool; it's a VS Code extension that aims to
 | :--- | :--- | :--- | :--- |
 | **AI Behavior** | Plan/Act (somewhat rigid) | Ask/Agent (natural) | **Chatbot/Agent Mode (more intuitive and powerful)** |
 | **AI Transparency** | ✅ Open Source (High) | ❌ Black Box (Low) | **✅ Open Source + Improved System Prompt (Very High)** |
+| **AI Efficiency** | Basic | Basic | **50% Token Savings through System Prompt Optimization** |
 | **Persona Support** | ❌ Not Supported | ❌ Not Supported | **✅ Template & Custom Personas, Profile Image Support** |
 | **Multilingual Support** | ❌ Not Supported | ❌ Not Supported | **✅ Full Multilingual Support (i18n Overlay)** |
 | **Architecture** | Core Features | Closed | **Overlay Structure (Stability + Extensibility)** |
 
 ### 1. More Natural AI Conversation: Chatbot & Agent Mode
-Beyond Cline's somewhat rigid Plan/Act mode, Caret offers **Chatbot/Agent Mode**—flexible like Cursor's Ask/Agent, but more intuitive than 'Ask'. We haven't just changed the interaction style; we've **improved the system prompts** to enhance both AI response performance and demeanor. This not only enables smarter and more natural collaboration but also reduces unnecessary token usage, leading to **API cost savings** and **improved cost predictability**.
+Beyond Cline's somewhat rigid Plan/Act mode, Caret offers **Chatbot/Agent Mode**—flexible like Cursor's Ask/Agent, but more intuitive than 'Ask'. We haven't just changed the interaction style; we've **improved the system prompts** to enhance both AI response performance and demeanor. Through [verified experiments](./caret-docs/reports/experiment/json_caret_performance_test_20250713/comprehensive-performance-report-20250717.md), we've achieved **50% token savings** and **20% API cost reduction**, enabling smarter and more cost-predictable AI collaboration.
 
 ### 2. Create Your Own AI Companion: Custom Personas
 <img src="caret-assets/template_characters/caret_illust.png" alt="Caret Persona Illustration" width="300"/>

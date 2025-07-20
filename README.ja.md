@@ -1,9 +1,9 @@
-[Englishで読む](./README.en.md) | [韓国語で読む](./README.ko.md) | [日本語で読む](./README.ja.md) | [中国語で読む](./README.zh-cn.md)
+[Read this document in English](./README.md) | [한국어로 읽기](./README.ko.md) | [日本語で読む](./README.ja.md) | [阅读中文版](./README.zh-cn.md)
 
 <div align="center">
   <img src="caret-assets/icons/icon.png" alt="Caret icon" width="128">
-  <h1>Caret: あなたの新しいAIコンパニオン</h1>
-  <p><strong>Clineの透明性にCursorの柔軟性を追加</strong></p>
+  <h1>Caret: あなたの新しいAIパートナー</h1>
+  <p><strong>Clineの透明性にCursorの柔軟性を加える</strong></p>
   <p>
     <a href="https://marketplace.visualstudio.com/items?itemName=caretive.caret">
       <img src="https://img.shields.io/visual-studio-marketplace/v/caretive.caret.svg?color=blue&label=VS%20Code%20Marketplace" alt="VS Code Marketplace">
@@ -14,138 +14,146 @@
   </p>
 </div>
 
-Caretは単なるAIコーディングツールではありません。**開発者と共に成長するAIコンパニオン**を目指すVS Code拡張機能です。実績のあるオープンソース[Cline](https://github.com/cline/cline)の利点を維持しつつ、より強力で柔軟な機能を「オーバーレイ」することで、開発体験を最大限に引き出します。
+Caretは単なるAIコーディングツールを超え、**開発者と共に成長するAIパートナー**を目指すVS Code拡張機能です。安定性が実証されたオープンソース[Cline](https://github.com/cline/cline)の利点を維持しながら、より強力な機能、低コスト、柔軟な機能を'オーバーレイ'として追加し、開発体験を最大化します。
 
-## ✨ Caretの何が違うのか？
+## ✨ Caretの特徴
 
-| 機能 | Cline | Cursor | **Caret** |
+| 特徴 | Cline | Cursor | **Caret** |
 | :--- | :--- | :--- | :--- |
-| **AIの振る舞い** | Plan/Act (やや不自然) | Ask/Agent (自然) | **Chatbot/Agentモード (より直感的で強力)** |
-| **AIの透明性** | ✅ オープンソース (高) | ❌ ブラックボックス (低) | **✅ オープンソース + 改善されたシステムプロンプト (非常に高い)** |
-| **ペルソナ** | ❌ 未サポート | ❌ 未サポート | **✅ テンプレート＆カスタムペルソナ、プロフィール画像サポート** |
-| **多言語サポート** | ❌ 未サポート | ❌ 未サポート | **✅ 完全な多言語サポート (i18nオーバーレイ)** |
+| **AI行動様式** | Plan/Act(分断された体験) | Ask/Agent(単一体験) | **Chatbot/Agentモード(単一体験)** |
+| **AI透明性** | ✅ オープンソース (高) | ❌ ブラックボックス (低) | **✅ オープンソース (高)** |
+| **AI効率性** | 基本 | 基本 | **システムプロンプト最適化で50%トークン削減** |
+| **ペルソナ** | ❌ 未対応 | ❌ 未対応 | **✅ テンプレートとカスタムペルソナ、プロフィール画像対応** |
+| **多言語対応** | ❌ 未対応 | ❌ 未対応 | **✅ 完全な多言語対応 (i18nオーバーレイ)** |
 | **アーキテクチャ** | コア機能 | クローズド | **オーバーレイ構造 (安定性 + 拡張性)** |
 
-### 1. AIとのより自然な会話：Chatbot & Agentモード
-Clineのやや硬直したPlan/Actモードを超え、CaretはCursorの柔軟なAsk/Agentアプローチに似た、より直感的な**Chatbot/Agentモード**を提供します。さらに、単に振る舞いを変更するだけでなく、**独自に改善されたシステムプロンプト**により、AIの応答性能と態度が向上し、よりスマートで自然なコラボレーションが可能になります。これにより、コラボレーションがよりスマートで自然になるだけでなく、不要なトークン使用量を削減し、**APIコストの削減**と**コスト予測の改善**にもつながります。
+### 1. より自然なAIとの対話: ChatbotとAgentモード
+Clineのやや硬直したPlan/Actモードを超え、Cursorの Ask/Agent方式のように柔軟で、かつ'Ask'という用語よりも直感的な**Chatbot/Agentモード**を提供します。また、行動様式を変えただけでなく、**独自に改善したシステムプロンプト**によってAIの応答性能と態度を向上させました。[実験検証](./caret-docs/reports/experiment/json_caret_performance_test_20250713/comprehensive-performance-report-20250717.md)により、**50%のトークン削減**と**20%のAPIコスト削減**を達成し、より経済的で予測可能なAI協業を提供します。
 
-### 2. 自分だけのAIコンパニオンを作成：カスタムペルソナ
+### 2. 自分だけのAIパートナーを作る: カスタムペルソナ
 <img src="caret-assets/template_characters/caret_illust.png" alt="Caret Persona Illustration" width="300"/>
 
-Caretのデフォルトキャラクター、K-POPアイドル、OS-tanなどのプリセット**テンプレートペルソナ**でコーディングに楽しさを加えましょう。独自のAIエージェント名と**プロフィール画像**を登録することで、視覚的に鮮やかな開発環境を作成できます。
+Caretの基本キャラクター、K-POPアイドル、OS-tanなど、あらかじめ用意された**テンプレートペルソナ**でコーディングに楽しさを加えましょう。自分だけのAIエージェント名と**プロフィール画像を登録**して、視覚的に生き生きとした開発環境を作ることができます。
 
-**デフォルトペルソナ：**
-*   <img src="caret-assets/template_characters/caret.png" width="24" align="center"/> **Caret**: コーディングと開発者の手助けが大好きなフレンドリーなロボットの友達。
-*   <img src="caret-assets/template_characters/sarang.png" width="24" align="center"/> **オ・サラン**: K-POPアイドルであり、ツンデレなエンジニアリングガール。論理と感情の間をナビゲートするのを手伝ってくれます。
-*   <img src="caret-assets/template_characters/ichika.png" width="24" align="center"/> **窓辺いちか**: Windows 11にインスパイアされた、きちんとしていて信頼できるアシスタント。
-*   <img src="caret-assets/template_characters/cyan.png" width="24" align="center"/> **シアン・マッキン**: macOSにインスパイアされた、簡潔で効率的なアシスタント。
-*   <img src="caret-assets/template_characters/ubuntu.png" width="24" align="center"/> **タンド・ウブントゥ**: オープンソースの精神で共に問題を解決する温かい協力者。
+**基本提供ペルソナ:**
+*   <img src="caret-assets/template_characters/caret.png" width="24" align="center"/> **キャレット**: コーディングが大好きで開発者を支援するフレンドリーなロボット。
+*   <img src="caret-assets/template_characters/sarang.png" width="24" align="center"/> **オサラン**: K-popアイドルであり、論理と感情の間であなたを助けるツンデレ工学女子。
+*   <img src="caret-assets/template_characters/ichika.png" width="24" align="center"/> **窓辺イチカ**: Windows 11をモチーフにした、きちんとして頼りになるアシスタント。
+*   <img src="caret-assets/template_characters/cyan.png" width="24" align="center"/> **シアン・マッキン**: macOSをモチーフにした、簡潔で効率的なヘルパー。
+*   <img src="caret-assets/template_characters/ubuntu.png" width="24" align="center"/> **丹土ウブントゥ**: オープンソースの精神で共に問題を解決する温かい協力者。
 
-### 3. 言語の壁なしでコーディング：完全な多言語サポート
-Caretは、他のAIツールが見過ごしてきた多言語サポートに対応しています。**i18nベースのオーバーレイ構造**により、英語に不慣れな開発者でも、**韓国語、日本語、中国語を含む母国語**でシームレスにすべての機能を使用できます。
+### 3. 言語の壁のないコーディング: 完全な多言語対応
+他のAIツールが見落としていた多言語対応、Caretが解決します。**i18nベースのオーバーレイ構造**により、英語に不慣れな開発者も**日本語、韓国語、中国語など自分の母国語**ですべての機能を完全に使用できます。
 
-### 4. 安定性と拡張性を同時に：オーバーレイアーキテクチャ
-Clineの実績ある安定したコアを維持し、Caret独自の革新的な機能をオーバーレイすることで、**Clineの安定性と透明性**、そして**Caretの強力な拡張性**の両方を享受できます。
+### 4. 安定性と拡張性を同時に: オーバーレイアーキテクチャ
+安定性が実証されたClineのコアはそのまま保持し、Caret独自の革新的な機能をその上に'オーバーレイ'として重ねました。これにより、**Clineの安定性と透明性**を享受しながら、**Caretの強力な拡張性**を体験できます。
 
-## 🚀 はじめに
+## 🚀 はじめ方
 
-1.  **インストール:** VS Code Marketplaceで**「Caret」**を検索してインストールします。(近日公開)
-2.  **ペルソナの選択:** サイドバーからお気に入りのAIペルソナを選択するか、独自のペルソナを作成します。
-3.  **チャット開始:** 新しいAIコンパニオンとのコーディングを始めましょう！
+1.  **インストール:** VS Code マーケットプレイスで**"Caret"**を検索してインストールしてください。(準備中)
+2.  **ペルソナ選択:** サイドバーでお好みのAIペルソナを選択するか、独自に作成してください。
+3.  **対話開始:** さあ、AIパートナーと一緒にコーディングを始めましょう！
 
-## 🔮 ビジョン＆ロードマップ
+## 🔮 将来のビジョンとロードマップ
 
-Caretは究極のAIコンパニオンを目指して進化し続けています。
+Caretは'究極のAIパートナー'を目指して進化し続けています。
 
-*   **独自のログイン＆クレジットシステム:** 独自のログイン機能（1週間以内に予定）とクレジット購入機能（2週間以内に予定）を準備中です。
-*   **sLLMとソブリンモデルのサポート:** セキュリティとコスト効率のために、ローカルLLM（sLLM）と国別ソブリンモデルのサポートを強化します。
-*   **コミュニティ主導の機能拡張:** ユーザーからのフィードバックと貢献を通じて、共に作成された機能を追加する予定です。
+*   **独自ログインとクレジットシステム:** 独自ログイン機能（1週間以内提供予定）とクレジット購入機能（2週間以内提供予定）を準備中です。
+*   **sLLMとソブリンモデル対応:** セキュリティとコスト効率のため、ローカルLLM（sLLM）と各国特化型ソブリンモデルのサポートを強化します。
+*   **コミュニティベースの機能拡張:** ユーザーのフィードバックと貢献を通じて共に作り上げる機能を追加予定です。
 
-## 🤝 貢献する
+## 🤝 貢献について
 
-Caretは、あなたの参加と共に成長するオープンソースプロジェクトです。バグ報告、機能提案、コード貢献など、あらゆる形の協力者を歓迎します！
+Caretはみなさんの参加で成長するオープンソースプロジェクトです。バグレポート、機能提案、コード貢献など、どのような形の協力も歓迎します！
 
 ### 🌟 貢献方法
 
-| 貢献の種類 | 説明 | メリット |
-|---|---|---|
-| **💻 コード貢献** | 機能開発、バグ修正、ドキュメント改善 | サービスクレジット + GitHub貢献者リストへの掲載 |
-| **🐛 バグ報告** | 問題の報告、再現手順の提供 | サービスクレジット |
-| **💡 アイデア提案** | 新機能、改善点の提案 | サービスクレジット |
-| **💰 資金貢献** | プロジェクトのスポンサー、開発支援 | サービスクレジット + 特別貢献者リストへの掲載 |
-| **📖 ドキュメント** | ガイドの作成、翻訳、チュートリアル | サービスクレジット + ドキュメント貢献者リストへの掲載 |
+| 貢献タイプ | 説明 | 特典 |
+|------------|------|------|
+| **💻 コード貢献** | 機能開発、バグ修正、文書改善 | サービスクレジット + GitHub貢献者登録 |
+| **🐛 バグ報告** | 問題報告、再現手順提供 | サービスクレジット |
+| **💡 アイデア提案** | 新機能、改善案の提案 | サービスクレジット |
+| **💰 金銭的貢献** | プロジェクト支援、開発支援 | サービスクレジット + 特別貢献者登録 |
+| **📖 文書化** | ガイド作成、翻訳、チュートリアル | サービスクレジット + 文書貢献者登録 |
 
 ### 🎁 貢献者特典
 
-- **サービスクレジット**: 貢献の規模に応じてCaretサービスクレジットを提供。
-- **GitHub貢献者リスト**: プロジェクトのREADMEとリリースノートにあなたの名前が掲載されます。
-- **サービスページリスト**: 公式ウェブサイトの貢献者ページにあなたのプロフィールが掲載されます。
-- **優先サポート**: 新機能やベータ版への優先アクセス。
+- **サービス利用クレジット**: 貢献規模に応じたCaretサービスクレジットの提供
+- **GitHub貢献者登録**: プロジェクトREADMEとリリースノートへの名前掲載
+- **サービスページ掲載**: 公式ウェブサイトの貢献者ページへのプロフィール掲載
+- **優先サポート**: 新機能とベータ版への優先アクセス
 
-### 🚀 開始方法
+### 🚀 始め方
 
-1. **Issueを確認**: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)で貢献できるIssueを見つけます。
-2. **議論に参加**: IssueまたはDiscussionsで機能提案や質問を共有します。
-3. **コード貢献**: Fork → 開発 → プルリクエストのプロセスを通じてコードを貢献します。
-4. **ドキュメント貢献**: `caret-docs/`フォルダ内のドキュメントを改善または翻訳します。
+1. **イシューの確認**: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)で貢献できる課題を探す
+2. **議論への参加**: 機能提案や質問をIssuesやDiscussionsで共有
+3. **コード貢献**: Fork → 開発 → Pull Requestのプロセスでコード貢献
+4. **文書貢献**: `caret-docs/`フォルダの文書改善や翻訳作業
 
-詳細な貢献ガイドラインについては、[CONTRIBUTING.md](./CONTRIBUTING.en.md)をご覧ください。
+詳細な貢献ガイドは[CONTRIBUTING.md](./CONTRIBUTING.en.md)を参照してください。
 
 ---
 
 ## 🛠️ 開発者向け情報
 
-Caretプロジェクトの開発に必要な全ての情報を体系的に整理しました。
+Caretプロジェクト開発に必要なすべての情報を体系的に整理しました。
 
 ### 📚 コア開発ガイド
 
 #### 🏗️ アーキテクチャ & 設計
 - **[開発者ガイド (DEVELOPER_GUIDE.md)](./DEVELOPER_GUIDE.en.md)** - ビルド、テスト、パッケージングの基本情報
-- **[開発ガイド概要 (development/)](./caret-docs/development/index.en.mdx)** - 全開発ガイドナビゲーション
+- **[開発ガイド概要 (development/)](./caret-docs/development/index.en.mdx)** - 全開発ガイドのナビゲーション
 - **[Caretアーキテクチャガイド](./caret-docs/development/caret-architecture-and-implementation-guide.en.mdx)** - Fork構造、拡張戦略、設計原則
-- **[拡張アーキテクチャ図](./caret-docs/development/extension-architecture.mmd)** - 全体システム構造の可視化 (Mermaid)
-- **[新人開発者ガイド](./caret-docs/development/new-developer-guide.en.mdx)** - プロジェクト入門と開発環境構築
+- **[拡張アーキテクチャ図](./caret-docs/development/extension-architecture.mmd)** - 全システム構造の視覚化 (Mermaid)
+- **[新規開発者ガイド](./caret-docs/development/new-developer-guide.en.mdx)** - プロジェクト入門と開発環境構築
 
 #### 🧪 テスト & 品質管理
 - **[テストガイド](./caret-docs/development/testing-guide.en.mdx)** - TDD、テスト作成標準、カバレッジ管理
-- **[ログシステム](./caret-docs/development/logging.en.mdx)** - 統合ログ、デバッグ、開発/プロダクションモード
+- **[ロギングシステム](./caret-docs/development/logging.en.mdx)** - 統合ロギング、デバッグ、開発/本番モード
 
-#### 🔄 フロントエンド-バックエンド通信
-- **[インタラクションパターン](./caret-docs/development/frontend-backend-interaction-patterns.en.mdx)** - 循環メッセージ防止、Optimistic Update
-- **[Webview通信](./caret-docs/development/webview-communication.en.mdx)** - 拡張機能とWebviewUIの通信
-- **[UIからStorageへの流れ](./caret-docs/development/ui-to-storage-flow.en.mdx)** - 設定保存/読み込みの詳細手順
+#### 🔄 Frontend-Backend通信
+- **[相互作用パターン](./caret-docs/development/frontend-backend-interaction-patterns.en.mdx)** - 循環メッセージ防止、Optimistic Update
+- **[Webview通信](./caret-docs/development/webview-extension-communication.en.mdx)** - メッセージタイプ、状態管理、通信構造
+- **[UI-Storageフロー](./caret-docs/development/ui-to-storage-flow.en.mdx)** - データフローと状態管理パターン
 
 #### 🤖 AIシステム実装
-- **[AIメッセージフローガイド](./caret-docs/development/ai-message-flow-guide.en.mdx)** - AIとの通信アーキテクチャ
-- **[システムプロンプト実装](./caret-docs/development/system-prompt-implementation.en.mdx)** - プロンプトエンジニアリング
-- **[メッセージ処理アーキテクチャ](./caret-docs/development/message-processing-architecture.en.mdx)** - メッセージ処理システム
+- **[AIメッセージフローガイド](./caret-docs/development/ai-message-flow-guide.en.mdx)** - AIメッセージ送受信の全フロー
+- **[システムプロンプト実装](./caret-docs/development/system-prompt-implementation.en.mdx)** - システムプロンプトの設計と実装
+- **[メッセージ処理アーキテクチャ](./caret-docs/development/message-processing-architecture.en.mdx)** - メッセージ処理システムの設計
 
 #### 🎨 UI/UX開発
-- **[コンポーネントアーキテクチャ](./caret-docs/development/component-architecture-principles.en.mdx)** - UIコンポーネント設計原則
-- **[ロケール（フロントエンド）](./caret-docs/development/locale.en.mdx)** - webview-ui i18nシステム
-- **[バックエンドi18nシステム](./caret-docs/development/backend-i18n-system.en.mdx)** - 拡張機能メッセージ翻訳
+- **[コンポーネントアーキテクチャ](./caret-docs/development/component-architecture-principles.en.mdx)** - Reactコンポーネント設計原則
+- **[フロントエンドi18nシステム](./caret-docs/development/locale.en.mdx)** - 多言語対応実装 (UI)
+- **[バックエンドi18nシステム](./caret-docs/development/backend-i18n-system.en.mdx)** - 多言語対応実装 (システムメッセージ)
 
 #### 🔧 開発ツール & ユーティリティ
-- **[ユーティリティガイド](./caret-docs/development/utilities.en.mdx)** - 開発に役立つツール
-- **[ファイル保存とイメージ読み込み](./caret-docs/development/file-storage-and-image-loading-guide.en.mdx)** - リソース管理
+- **[ユーティリティガイド](./caret-docs/development/utilities.en.mdx)** - 開発ユーティリティの使用法
+- **[ファイル保存と画像読み込み](./caret-docs/development/file-storage-and-image-loading-guide.en.mdx)** - ファイル処理システム
+- **[リンク管理ガイド](./caret-docs/development/link-management-guide.en.mdx)** - リンク管理システム
+- **[対応モデル一覧](./caret-docs/development/support-model-list.en.mdx)** - AIモデル対応状況
 
-#### 📖 ドキュメント & 規約
-- **[ドキュメンテーションガイド](./caret-docs/development/documentation-guide.en.mdx)** - 文書作成標準
+#### 📖 文書化 & 規約
+- **[文書化ガイド](./caret-docs/development/documentation-guide.en.mdx)** - 文書作成標準と規約
+- **[JSON注釈規約](./caret-docs/development/json-comment-conventions.en.mdx)** - JSONファイル注釈作成規則
 
 #### 🤖 AI作業方法論
-- **[AI作業インデックスガイド](./caret-docs/development/ai-work-index.en.mdx)** - **AI必須事前読書** 📋
+- **[AI作業インデックスガイド](./caret-docs/development/ai-work-index.en.mdx)** - **AI必須事前読解** 📋
 - **[AI作業ガイド](./caret-docs/guides/ai-work-method-guide.en.mdx)** - TDD、アーキテクチャレビュー、フェーズベース作業
 
-### 🚀 クイックスタートワークフロー
+### 🎯 クイックスタートワークフロー
 
-1. **環境設定**: `npm install` → `cd webview-ui && npm install`
-2. **アーキテクチャ理解**: アーキテクチャガイドでCaret構造把握
-3. **AIシステム理解**: AIメッセージフローガイドで通信パターン把握
-4. **テスト実行**: `npm run test:all`でシステム状態確認
-5. **開発開始**: 該当機能の詳細ガイド参照
+1. **環境設定**: [開発者ガイド](./DEVELOPER_GUIDE.en.md) → [開発ガイド概要](./caret-docs/development/index.en.mdx)
+2. **プロジェクト理解**: [新規開発者ガイド](./caret-docs/development/new-developer-guide.en.mdx) → [Caretアーキテクチャガイド](./caret-docs/development/caret-architecture-and-implementation-guide.en.mdx)
+3. **AIシステム理解**: [AIメッセージフローガイド](./caret-docs/development/ai-message-flow-guide.en.mdx) → [システムプロンプト実装](./caret-docs/development/system-prompt-implementation.en.mdx)
+4. **開発開始**: [AI作業ガイド](./caret-docs/guides/ai-work-method-guide.en.mdx) → [テストガイド](./caret-docs/development/testing-guide.en.mdx)
+5. **高度な機能**: [相互作用パターン](./caret-docs/development/frontend-backend-interaction-patterns.en.mdx) → [コンポーネントアーキテクチャ](./caret-docs/development/component-architecture-principles.en.mdx)
 
-### 🎯 **重要:** AIメッセージフローガイド
+### 📖 追加資料
 
-AI拡張機能の動作原理を理解したい開発者は、**[AI Message Flow Guide](./caret-docs/development/ai-message-flow-guide.en.mdx)**を必ずお読みください。CaretのAIがどのように動作し、どのようにメッセージを処理し、どのような構造で拡張機能とWebviewUIが通信するかを詳細に説明しています。
+- **[タスク文書](./caret-docs/tasks/)** - 具体的な実装作業ガイド
+- **[戦略文書](./caret-docs/strategy-archive/)** - プロジェクトビジョンとロードマップ
+- **[ユーザーガイド](./caret-docs/user-guide/)** - エンドユーザー向け使用方法
 
-このガイドは、AI機能の開発、デバッグ、および拡張に必要な核心的な知識を提供します。
+💡 **開発開始前の必読**: [AI作業方法論ガイド](./caret-docs/guides/ai-work-method-guide.en.mdx)でTDDベース開発プロセスとアーキテクチャ原則を最初に理解してください。
+
+⚡ **AIシステムを理解したい場合**: [AIメッセージフローガイド](./caret-docs/development/ai-message-flow-guide.en.mdx)でユーザーメッセージがAIに送信され応答を受け取る全プロセスを確認してください！

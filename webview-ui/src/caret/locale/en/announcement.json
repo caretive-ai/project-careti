@@ -3,12 +3,10 @@
   "previousHeader": "Previous Updates:",
   "bullets": {
     "current": {
-      "1": "Public release of Caret repository forked from Cline v3.17.13",
-      "2": "Applied overlay architecture design for Caret development based on Cline",
-      "3": "Introduced <code>.caretrules</code> for AI-agent–based development",
-      "4": "Added i18n support for Korean, English, Chinese and Japanese",
-      "5": "Provided six persona templates",
-      "6": "Developed Caret-exclusive chatbot/agent features"
+      "1": "Fixed persona application bugs",
+      "2": "Resolved project opening failures due to corrupted checkpoints with exception handling",
+      "3": "Changed non-Caret API providers to Native and applied caching",
+      "4": "Optimized token costs through dynamic system prompt loading"
     }
   },
   "links": {

@@ -19,10 +19,13 @@ let outputChannel: vscode.OutputChannel
 
 const handleUri = async (uri: vscode.Uri) => {
 	caretLogger.info(`URI Handler called with: ${uri.toString()}`, "AUTH")
-	// const query = new URLSearchParams(uri.query.replace(/\+/g, "%2B"))
+	caretLogger.info(`[AUTH DEBUG] Original query: ${uri.query}`, "AUTH")
+
 	// CARET FIX: Decode the URI query component to handle double-encoding from the server.
 	// The server incorrectly encodes '&' as '%26', which prevents URLSearchParams from parsing correctly.
 	const decodedQuery = decodeURIComponent(uri.query.replace(/\+/g, "%2B"))
+	caretLogger.info(`[AUTH DEBUG] Decoded query: ${decodedQuery}`, "AUTH")
+
 	const query = new URLSearchParams(decodedQuery)
 
 	// DEBUG: Log all received query parameters to see what the server is sending.
@@ -39,9 +42,13 @@ const handleUri = async (uri: vscode.Uri) => {
 
 	switch (uri.path) {
 		case "/auth": {
-			const token = query.get("code")
+			const token = query.get("token")
 			const state = query.get("state")
 			const apiKey = query.get("apiKey")
+
+			caretLogger.info(`[AUTH DEBUG] token value: "${token}"`, "AUTH")
+			caretLogger.info(`[AUTH DEBUG] state value: "${state}"`, "AUTH")
+			caretLogger.info(`[AUTH DEBUG] apiKey value: "${apiKey}"`, "AUTH")
 
 			caretLogger.info(
 				`Auth callback received: state=${state}, token=${token ? "present" : "missing"}, apiKey=${apiKey ? "present" : "missing"}`,

@@ -1,6 +1,5 @@
 import { VSCodeButton, VSCodeDivider, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { useEffect, useState } from "react"
-import { useFirebaseAuth } from "@/context/FirebaseAuthContext"
 import { vscode } from "@/utils/vscode"
 import VSCodeButtonLink from "../../components/common/VSCodeButtonLink"
 import CountUp from "react-countup"
@@ -16,10 +15,9 @@ import { getUrl } from "@/caret/constants/urls"
 const logger = new WebviewLogger("[CARET-UI-ACCOUNT-VIEW]")
 
 export const CaretAccountView = () => {
-	const { user: firebaseUser, handleSignOut } = useFirebaseAuth()
 	const { userInfo, apiConfiguration, personaProfile, plan, isPayAsYouGo } = useExtensionState() as ExtensionStateContextType // CARET MODIFICATION: personaProfile 추가 및 타입 명시
 
-	let user = apiConfiguration?.caretApiKey ? firebaseUser || userInfo : undefined // clineApiKey -> caretApiKey
+	let user = apiConfiguration?.caretApiKey ? userInfo : undefined
 
 	const [balance, setBalance] = useState(0)
 	const [isLoading, setIsLoading] = useState(true)
@@ -72,8 +70,6 @@ export const CaretAccountView = () => {
 			logger.error("Failed to logout:", err)
 			console.error("Failed to logout:", err)
 		})
-		// Then sign out of Firebase
-		handleSignOut()
 	}
 
 	return (

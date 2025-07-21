@@ -44,7 +44,6 @@ import { Task } from "../task"
 import { ClineRulesToggles } from "@shared/cline-rules"
 import { sendStateUpdate } from "./state/subscribeToState"
 import { sendAddToInputEvent } from "./ui/subscribeToAddToInput"
-import { sendAuthCallbackEvent } from "./account/subscribeToAuthCallback"
 import { sendMcpMarketplaceCatalogEvent } from "./mcp/subscribeToMcpMarketplaceCatalog"
 import { sendRelinquishControlEvent } from "./ui/subscribeToRelinquishControl"
 import type { PersonaInstruction } from "../../shared/persona"
@@ -976,9 +975,19 @@ export class Controller {
 			await storeSecret(this.context, "caretApiKey", apiKey)
 			caretLogger.info("[AUTH] API key stored successfully.")
 
-			// Send custom token to webview for Firebase auth
-			await sendAuthCallbackEvent(customToken)
-			caretLogger.info("[AUTH] Custom token sent to webview.")
+			// Extract user info from Auth0 token and store it
+			try {
+				const tokenPayload = JSON.parse(atob(customToken.split(".")[1])) // Decode JWT payload
+				const userInfo = {
+					displayName: tokenPayload.name || tokenPayload.nickname || null,
+					email: tokenPayload.email || null,
+					photoURL: tokenPayload.picture || null,
+				}
+				await this.setUserInfo(userInfo)
+				caretLogger.info("[AUTH] User info extracted from token and stored successfully.")
+			} catch (error) {
+				caretLogger.warn(`[AUTH] Failed to extract user info from token: ${error}`)
+			}
 
 			// CARET MODIFICATION: Keep user's selected API provider, don't force "caret"
 			// Only store caretApiKey for authentication, preserve selected provider (gemini, anthropic, etc.)

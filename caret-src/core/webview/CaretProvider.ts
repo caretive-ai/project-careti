@@ -21,7 +21,7 @@ export const CARET_TAB_PANEL_ID = "caret.TabPanelProvider"
 export class CaretProvider implements vscode.WebviewViewProvider {
 	public view?: vscode.WebviewView | vscode.WebviewPanel
 	private disposables: vscode.Disposable[] = []
-	private controller: Controller
+	public controller: Controller
 	private clientId: string
 	private outputChannel: vscode.OutputChannel
 	private providerType: WebviewProviderType

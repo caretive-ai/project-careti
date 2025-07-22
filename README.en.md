@@ -100,7 +100,7 @@ For detailed contribution guidelines, please refer to [CONTRIBUTING.md](./CONTRI
 
 | Profile | GitHub ID | Role |
 |---------|-----------|------|
-| <img src="https://github.com/potpotakim.png" width="50" height="50" style="border-radius: 50%;"> | [@potpotakim](https://github.com/potpotakim) | Business Planning, Server & Cloud Development, Community Support |
+| <img src="https://github.com/potakim.png" width="50" height="50" style="border-radius: 50%;"> | [@potakim](https://github.com/potakim) | Business Planning, Server & Cloud Development, Community Support |
 | <img src="https://github.com/fstory97.png" width="50" height="50" style="border-radius: 50%;"> | [@fstory97](https://github.com/fstory97) | Business Planning, Client & AI Research Development, Community Support |
 | <img src="https://github.com/ysyang1973.png" width="50" height="50" style="border-radius: 50%;"> | [@ysyang1973](https://github.com/ysyang1973) | Documentation |
 | <img src="https://github.com/jikime.png" width="50" height="50" style="border-radius: 50%;"> | [@jikime](https://github.com/jikime) | Community Support, Preview and LangConnect Development |

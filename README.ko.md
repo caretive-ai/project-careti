@@ -87,7 +87,7 @@ Caret은 여러분의 참여로 성장하는 오픈소스 프로젝트입니다.
 
 | 프로필 | GitHub ID | 역할 |
 |--------|-----------|------|
-| <img src="https://github.com/potpotakim.png" width="50" height="50" style="border-radius: 50%;"> | [@potpotakim](https://github.com/potpotakim) | 사업 기획,서버 및 클라우드 개발,커뮤니티 지원 |
+| <img src="https://github.com/potakim.png" width="50" height="50" style="border-radius: 50%;"> | [@potakim](https://github.com/potakim) | 사업 기획,서버 및 클라우드 개발,커뮤니티 지원 |
 | <img src="https://github.com/fstory97.png" width="50" height="50" style="border-radius: 50%;"> | [@fstory97](https://github.com/fstory97) | 사업 기획,클라이언트 및 AI 연구 개발,커뮤니티 지원 |
 | <img src="https://github.com/ysyang1973.png" width="50" height="50" style="border-radius: 50%;"> | [@ysyang1973](https://github.com/ysyang1973) | 문서화 |
 | <img src="https://github.com/jikime.png" width="50" height="50" style="border-radius: 50%;"> | [@jikime](https://github.com/jikime) | 커뮤니티 지원, Preview및 LangConnect 개발 |

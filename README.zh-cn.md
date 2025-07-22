@@ -87,7 +87,7 @@ Caret是一个通过您的参与而成长的开源项目。我们欢迎任何形
 
 | 头像 | GitHub ID | 角色 |
 |------|-----------|------|
-| <img src="https://github.com/potpotakim.png" width="50" height="50" style="border-radius: 50%;"> | [@potpotakim](https://github.com/potpotakim) | 业务规划，服务器与云开发，社区支持 |
+| <img src="https://github.com/potakim.png" width="50" height="50" style="border-radius: 50%;"> | [@potakim](https://github.com/potakim) | 业务规划，服务器与云开发，社区支持 |
 | <img src="https://github.com/fstory97.png" width="50" height="50" style="border-radius: 50%;"> | [@fstory97](https://github.com/fstory97) | 业务规划，客户端与AI研究开发，社区支持 |
 | <img src="https://github.com/ysyang1973.png" width="50" height="50" style="border-radius: 50%;"> | [@ysyang1973](https://github.com/ysyang1973) | 文档编写 |
 | <img src="https://github.com/jikime.png" width="50" height="50" style="border-radius: 50%;"> | [@jikime](https://github.com/jikime) | 社区支持，Preview及LangConnect开发 |

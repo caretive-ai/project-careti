@@ -87,7 +87,7 @@ Caretはみなさんの参加で成長するオープンソースプロジェク
 
 | プロフィール | GitHub ID | 役割 |
 |-------------|-----------|------|
-| <img src="https://github.com/potpotakim.png" width="50" height="50" style="border-radius: 50%;"> | [@potpotakim](https://github.com/potpotakim) | 事業企画、サーバー・クラウド開発、コミュニティサポート |
+| <img src="https://github.com/potakim.png" width="50" height="50" style="border-radius: 50%;"> | [@potakim](https://github.com/potakim) | 事業企画、サーバー・クラウド開発、コミュニティサポート |
 | <img src="https://github.com/fstory97.png" width="50" height="50" style="border-radius: 50%;"> | [@fstory97](https://github.com/fstory97) | 事業企画、クライアント・AI研究開発、コミュニティサポート |
 | <img src="https://github.com/ysyang1973.png" width="50" height="50" style="border-radius: 50%;"> | [@ysyang1973](https://github.com/ysyang1973) | ドキュメント化 |
 | <img src="https://github.com/jikime.png" width="50" height="50" style="border-radius: 50%;"> | [@jikime](https://github.com/jikime) | コミュニティサポート、プレビュー・LangConnect開発 |

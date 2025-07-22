@@ -84,6 +84,19 @@ Caret is an open-source project that grows with your participation. We welcome a
 - **Service Page Listing**: Profile listed on the official website's contributor page
 - **Priority Support**: Priority access to new features and beta versions
 
+### 🎁 Contributors 
+
+| Profile | GitHub ID | Role |
+|---------|-----------|------|
+| <img src="https://github.com/potpotakim.png" width="50" height="50" style="border-radius: 50%;"> | [@potpotakim](https://github.com/potpotakim) | Business Planning, Server & Cloud Development, Community Support |
+| <img src="https://github.com/fstory97.png" width="50" height="50" style="border-radius: 50%;"> | [@fstory97](https://github.com/fstory97) | Business Planning, Client & AI Research Development, Community Support |
+| <img src="https://github.com/ysyang1973.png" width="50" height="50" style="border-radius: 50%;"> | [@ysyang1973](https://github.com/ysyang1973) | Documentation |
+| <img src="https://github.com/jikime.png" width="50" height="50" style="border-radius: 50%;"> | [@jikime](https://github.com/jikime) | Community Support, Preview and LangConnect Development |
+| <img src="https://github.com/parkjongill.png" width="50" height="50" style="border-radius: 50%;"> | [@parkjongill](https://github.com/parkjongill) | Business Planning |
+| <img src="https://github.com/freelife1191.png" width="50" height="50" style="border-radius: 50%;"> | [@freelife1191](https://github.com/freelife1191) | Backend Development, ML Ops |
+| <img src="https://github.com/allipcloud.png" width="50" height="50" style="border-radius: 50%;"> | [@allipcloud](https://github.com/allipcloud) | Educational Content Development, Business & Sales Support |
+| <img src="https://github.com/jaydenchoe.png" width="50" height="50" style="border-radius: 50%;"> | [@jaydenchoe](https://github.com/jaydenchoe) | Educational Material Creation, Educational Content Development, RAG & Memory Development |
+
 ### 🚀 How to Get Started
 
 1. **Check Issues**: Find issues to contribute to on [GitHub Issues](https://github.com/aicoding-caret/caret/issues)

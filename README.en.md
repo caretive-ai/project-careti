@@ -96,6 +96,19 @@ Caret is an open source project that welcomes various forms of contribution!
 
 For detailed contribution guidelines, please refer to [CONTRIBUTING.md](./CONTRIBUTING.md).
 
+### 🎁 Contributors 
+
+| Profile | GitHub ID | Role |
+|---------|-----------|------|
+| <img src="https://github.com/potpotakim.png" width="50" height="50" style="border-radius: 50%;"> | [@potpotakim](https://github.com/potpotakim) | Business Planning, Server & Cloud Development, Community Support |
+| <img src="https://github.com/fstory97.png" width="50" height="50" style="border-radius: 50%;"> | [@fstory97](https://github.com/fstory97) | Business Planning, Client & AI Research Development, Community Support |
+| <img src="https://github.com/ysyang1973.png" width="50" height="50" style="border-radius: 50%;"> | [@ysyang1973](https://github.com/ysyang1973) | Documentation |
+| <img src="https://github.com/jikime.png" width="50" height="50" style="border-radius: 50%;"> | [@jikime](https://github.com/jikime) | Community Support, Preview and LangConnect Development |
+| <img src="https://github.com/parkjongill.png" width="50" height="50" style="border-radius: 50%;"> | [@parkjongill](https://github.com/parkjongill) | Business Planning |
+| <img src="https://github.com/freelife1191.png" width="50" height="50" style="border-radius: 50%;"> | [@freelife1191](https://github.com/freelife1191) | Backend Development, ML Ops |
+| <img src="https://github.com/allipcloud.png" width="50" height="50" style="border-radius: 50%;"> | [@allipcloud](https://github.com/allipcloud) | Educational Content Development, Business & Sales Support |
+| <img src="https://github.com/jaydenchoe.png" width="50" height="50" style="border-radius: 50%;"> | [@jaydenchoe](https://github.com/jaydenchoe) | Educational Material Creation, Educational Content Development, RAG & Memory Development |
+
 ## Build & Packaging 🛠️
 
 Follow these steps to set up your local development environment and build the extension.

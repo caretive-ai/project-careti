@@ -83,6 +83,19 @@ Caret是一个通过您的参与而成长的开源项目。我们欢迎任何形
 - **服务页面展示**: 在官方网站贡献者页面展示个人资料
 - **优先支持**: 优先访问新功能和测试版
 
+### 🎁 贡献者 
+
+| 头像 | GitHub ID | 角色 |
+|------|-----------|------|
+| <img src="https://github.com/potpotakim.png" width="50" height="50" style="border-radius: 50%;"> | [@potpotakim](https://github.com/potpotakim) | 业务规划，服务器与云开发，社区支持 |
+| <img src="https://github.com/fstory97.png" width="50" height="50" style="border-radius: 50%;"> | [@fstory97](https://github.com/fstory97) | 业务规划，客户端与AI研究开发，社区支持 |
+| <img src="https://github.com/ysyang1973.png" width="50" height="50" style="border-radius: 50%;"> | [@ysyang1973](https://github.com/ysyang1973) | 文档编写 |
+| <img src="https://github.com/jikime.png" width="50" height="50" style="border-radius: 50%;"> | [@jikime](https://github.com/jikime) | 社区支持，Preview及LangConnect开发 |
+| <img src="https://github.com/parkjongill.png" width="50" height="50" style="border-radius: 50%;"> | [@parkjongill](https://github.com/parkjongill) | 业务规划 |
+| <img src="https://github.com/freelife1191.png" width="50" height="50" style="border-radius: 50%;"> | [@freelife1191](https://github.com/freelife1191) | 后端开发，ML Ops |
+| <img src="https://github.com/allipcloud.png" width="50" height="50" style="border-radius: 50%;"> | [@allipcloud](https://github.com/allipcloud) | 教育内容开发，业务与销售支持 |
+| <img src="https://github.com/jaydenchoe.png" width="50" height="50" style="border-radius: 50%;"> | [@jaydenchoe](https://github.com/jaydenchoe) | 教材制作，教育内容开发，RAG与内存开发 |
+
 ### 🚀 如何开始
 
 1. **查看议题**: 在[GitHub Issues](https://github.com/aicoding-caret/caret/issues)中寻找可以贡献的任务

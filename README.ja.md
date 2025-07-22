@@ -83,6 +83,19 @@ Caretはみなさんの参加で成長するオープンソースプロジェク
 - **サービスページ掲載**: 公式ウェブサイトの貢献者ページへのプロフィール掲載
 - **優先サポート**: 新機能とベータ版への優先アクセス
 
+### 🎁 貢献者 
+
+| プロフィール | GitHub ID | 役割 |
+|-------------|-----------|------|
+| <img src="https://github.com/potpotakim.png" width="50" height="50" style="border-radius: 50%;"> | [@potpotakim](https://github.com/potpotakim) | 事業企画、サーバー・クラウド開発、コミュニティサポート |
+| <img src="https://github.com/fstory97.png" width="50" height="50" style="border-radius: 50%;"> | [@fstory97](https://github.com/fstory97) | 事業企画、クライアント・AI研究開発、コミュニティサポート |
+| <img src="https://github.com/ysyang1973.png" width="50" height="50" style="border-radius: 50%;"> | [@ysyang1973](https://github.com/ysyang1973) | ドキュメント化 |
+| <img src="https://github.com/jikime.png" width="50" height="50" style="border-radius: 50%;"> | [@jikime](https://github.com/jikime) | コミュニティサポート、プレビュー・LangConnect開発 |
+| <img src="https://github.com/parkjongill.png" width="50" height="50" style="border-radius: 50%;"> | [@parkjongill](https://github.com/parkjongill) | 事業企画 |
+| <img src="https://github.com/freelife1191.png" width="50" height="50" style="border-radius: 50%;"> | [@freelife1191](https://github.com/freelife1191) | バックエンド開発、ML Ops |
+| <img src="https://github.com/allipcloud.png" width="50" height="50" style="border-radius: 50%;"> | [@allipcloud](https://github.com/allipcloud) | 教育コンテンツ開発、事業・営業サポート |
+| <img src="https://github.com/jaydenchoe.png" width="50" height="50" style="border-radius: 50%;"> | [@jaydenchoe](https://github.com/jaydenchoe) | 教材制作、教育コンテンツ開発、RAG・メモリ開発 |
+
 ### 🚀 始め方
 
 1. **イシューの確認**: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)で貢献できる課題を探す

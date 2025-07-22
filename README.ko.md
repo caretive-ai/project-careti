@@ -83,6 +83,19 @@ Caret은 여러분의 참여로 성장하는 오픈소스 프로젝트입니다.
 - **서비스 페이지 등재**: 공식 웹사이트 기여자 페이지에 프로필 등재
 - **우선 지원**: 새로운 기능 및 베타 버전 우선 접근
 
+### 🎁 기여자 
+
+| 프로필 | GitHub ID | 역할 |
+|--------|-----------|------|
+| <img src="https://github.com/potpotakim.png" width="50" height="50" style="border-radius: 50%;"> | [@potpotakim](https://github.com/potpotakim) | 사업 기획,서버 및 클라우드 개발,커뮤니티 지원 |
+| <img src="https://github.com/fstory97.png" width="50" height="50" style="border-radius: 50%;"> | [@fstory97](https://github.com/fstory97) | 사업 기획,클라이언트 및 AI 연구 개발,커뮤니티 지원 |
+| <img src="https://github.com/ysyang1973.png" width="50" height="50" style="border-radius: 50%;"> | [@ysyang1973](https://github.com/ysyang1973) | 문서화 |
+| <img src="https://github.com/jikime.png" width="50" height="50" style="border-radius: 50%;"> | [@jikime](https://github.com/jikime) | 커뮤니티 지원, Preview및 LangConnect 개발 |
+| <img src="https://github.com/parkjongill.png" width="50" height="50" style="border-radius: 50%;"> | [@parkjongill](https://github.com/parkjongill) | 사업 기획 |
+| <img src="https://github.com/freelife1191.png" width="50" height="50" style="border-radius: 50%;"> | [@freelife1191](https://github.com/freelife1191) | 백엔드 개발, ML Ops |
+| <img src="https://github.com/allipcloud.png" width="50" height="50" style="border-radius: 50%;"> | [@allipcloud](https://github.com/allipcloud) | 교육 콘텐츠 개발, 사업 및 영업 지원 |
+| <img src="https://github.com/jaydenchoe.png" width="50" height="50" style="border-radius: 50%;"> | [@jaydenchoe](https://github.com/jaydenchoe) | 교재 제작, 교육 콘텐츠 개발, RAG 및 메모리 개발 |
+
 ### 🚀 시작하는 방법
 
 1. **이슈 확인**: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)에서 기여할 수 있는 이슈 찾기

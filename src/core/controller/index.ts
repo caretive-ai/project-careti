@@ -891,7 +891,20 @@ export class Controller {
 
 	async cancelTask() {
 		if (this.task) {
-			const { historyItem } = await this.getTaskWithId(this.task.taskId)
+			let historyItem: HistoryItem | undefined
+			try {
+				// Attempt to get the history item for the current task
+				const taskData = await this.getTaskWithId(this.task.taskId)
+				historyItem = taskData.historyItem
+			} catch (error) {
+				// If task not found, log the error and proceed to clear the task
+				console.error(`[Controller] Error getting task history for cancellation: ${error}`)
+				// CARET MODIFICATION: If task not found, ensure this.task is cleared to prevent further issues.
+				this.task = undefined // Clear the task reference
+				await this.postStateToWebview() // Update UI to reflect task cleared
+				return // Exit early as there's no valid task to abort or reinitialize
+			}
+
 			try {
 				await this.task.abortTask()
 			} catch (error) {
@@ -913,7 +926,14 @@ export class Controller {
 				// 'abandoned' will prevent this cline instance from affecting future cline instance gui. this may happen if its hanging on a streaming request
 				this.task.abandoned = true
 			}
-			await this.initTask(undefined, undefined, undefined, historyItem) // clears task again, so we need to abortTask manually above
+			// CARET MODIFICATION: Only reinitialize if historyItem is valid.
+			if (historyItem) {
+				await this.initTask(undefined, undefined, undefined, historyItem) // clears task again, so we need to abortTask manually above
+			} else {
+				// If historyItem is not found, just clear the task
+				this.task = undefined
+				await this.postStateToWebview()
+			}
 			// await this.postStateToWebview() // new Cline instance will post state when it's ready. having this here sent an empty messages array to webview leading to virtuoso having to reload the entire list
 		}
 	}

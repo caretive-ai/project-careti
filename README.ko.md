@@ -95,6 +95,8 @@ Caret은 여러분의 참여로 성장하는 오픈소스 프로젝트입니다.
 | <img src="https://github.com/freelife1191.png" width="50" height="50" style="border-radius: 50%;"> | [@freelife1191](https://github.com/freelife1191) | 백엔드 개발, ML Ops |
 | <img src="https://github.com/allipcloud.png" width="50" height="50" style="border-radius: 50%;"> | [@allipcloud](https://github.com/allipcloud) | 교육 콘텐츠 개발, 사업 및 영업 지원 |
 | <img src="https://github.com/jaydenchoe.png" width="50" height="50" style="border-radius: 50%;"> | [@jaydenchoe](https://github.com/jaydenchoe) | 교재 제작, 교육 콘텐츠 개발, RAG 및 메모리 개발 |
+| <img src="https://github.com/su-record.png" width="50" height="50" style="border-radius: 50%;"> | [@su-record](https://github.com/su-record) | 클라이언트 및 서비스 프론트 개발 |
+
 
 ### 🚀 시작하는 방법
 

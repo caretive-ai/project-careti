@@ -96,6 +96,7 @@ Caret is an open-source project that grows with your participation. We welcome a
 | <img src="https://github.com/freelife1191.png" width="50" height="50" style="border-radius: 50%;"> | [@freelife1191](https://github.com/freelife1191) | Backend Development, ML Ops |
 | <img src="https://github.com/allipcloud.png" width="50" height="50" style="border-radius: 50%;"> | [@allipcloud](https://github.com/allipcloud) | Educational Content Development, Business & Sales Support |
 | <img src="https://github.com/jaydenchoe.png" width="50" height="50" style="border-radius: 50%;"> | [@jaydenchoe](https://github.com/jaydenchoe) | Educational Material Creation, Educational Content Development, RAG & Memory Development |
+| <img src="https://github.com/su-record.png" width="50" height="50" style="border-radius: 50%;"> | [@su-record](https://github.com/su-record) | Client and Service Frontend Development |
 
 ### 🚀 How to Get Started
 

@@ -95,6 +95,7 @@ Caretはみなさんの参加で成長するオープンソースプロジェク
 | <img src="https://github.com/freelife1191.png" width="50" height="50" style="border-radius: 50%;"> | [@freelife1191](https://github.com/freelife1191) | バックエンド開発、ML Ops |
 | <img src="https://github.com/allipcloud.png" width="50" height="50" style="border-radius: 50%;"> | [@allipcloud](https://github.com/allipcloud) | 教育コンテンツ開発、事業・営業サポート |
 | <img src="https://github.com/jaydenchoe.png" width="50" height="50" style="border-radius: 50%;"> | [@jaydenchoe](https://github.com/jaydenchoe) | 教材制作、教育コンテンツ開発、RAG・メモリ開発 |
+| <img src="https://github.com/su-record.png" width="50" height="50" style="border-radius: 50%;"> | [@su-record](https://github.com/su-record) | クライアント・サービスフロントエンド開発 |
 
 ### 🚀 始め方
 

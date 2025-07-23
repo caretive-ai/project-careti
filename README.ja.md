@@ -96,6 +96,7 @@ Caretはみなさんの参加で成長するオープンソースプロジェク
 | <img src="https://github.com/allipcloud.png" width="50" height="50" style="border-radius: 50%;"> | [@allipcloud](https://github.com/allipcloud) | 教育コンテンツ開発、事業・営業サポート |
 | <img src="https://github.com/jaydenchoe.png" width="50" height="50" style="border-radius: 50%;"> | [@jaydenchoe](https://github.com/jaydenchoe) | 教材制作、教育コンテンツ開発、RAG・メモリ開発 |
 | <img src="https://github.com/su-record.png" width="50" height="50" style="border-radius: 50%;"> | [@su-record](https://github.com/su-record) | クライアント・サービスフロントエンド開発 |
+| <img src="https://github.com/calmglow.png" width="50" height="50" style="border-radius: 50%;"> | [@calmglow](https://github.com/calmglow) | プロジェクト名「Caret」の提案 |
 
 ### 🚀 始め方
 

@@ -96,6 +96,7 @@ Caret是一个通过您的参与而成长的开源项目。我们欢迎任何形
 | <img src="https://github.com/allipcloud.png" width="50" height="50" style="border-radius: 50%;"> | [@allipcloud](https://github.com/allipcloud) | 教育内容开发，业务与销售支持 |
 | <img src="https://github.com/jaydenchoe.png" width="50" height="50" style="border-radius: 50%;"> | [@jaydenchoe](https://github.com/jaydenchoe) | 教材制作，教育内容开发，RAG与内存开发 |
 | <img src="https://github.com/su-record.png" width="50" height="50" style="border-radius: 50%;"> | [@su-record](https://github.com/su-record) | 客户端及服务前端开发 |
+| <img src="https://github.com/calmglow.png" width="50" height="50" style="border-radius: 50%;"> | [@calmglow](https://github.com/calmglow) | 提出了项目名称'Caret' |
 
 ### 🚀 如何开始
 

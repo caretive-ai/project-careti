@@ -70,6 +70,8 @@ export async function listFiles(dirPath: string, recursive: boolean, limit: numb
 		dot: true, // do not ignore hidden files/directories
 		absolute: true,
 		markDirectories: true, // Append a / on any directories matched
+		// CARET MODIFICATION: Disabled symbolic link following to prevent infinite loops in projects with recursive symlinks.
+		followSymbolicLinks: false,
 		gitignore: recursive, // globby ignores any files that are gitignored
 		ignore: recursive ? buildIgnorePatterns(absolutePath) : undefined,
 		onlyFiles: false, // include directories in results

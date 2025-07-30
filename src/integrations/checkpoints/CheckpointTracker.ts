@@ -109,22 +109,37 @@ class CheckpointTracker {
 			}
 
 			// Check if git is installed by attempting to get version
+			console.time("git-version-check")
 			try {
 				await simpleGit().version()
+				console.timeEnd("git-version-check")
 			} catch (error) {
+				console.timeEnd("git-version-check")
 				throw new Error("Git must be installed to use checkpoints.") // FIXME: must match what we check for in TaskHeader to show link
 			}
 
+			console.time("working-dir-setup")
 			const workingDir = await getWorkingDirectory()
 			const cwdHash = hashWorkingDir(workingDir)
 			console.debug(`Repository ID (cwdHash): ${cwdHash}`)
+			console.timeEnd("working-dir-setup")
 
+			console.time("tracker-construction")
 			const newTracker = new CheckpointTracker(globalStoragePath, taskId, workingDir, cwdHash)
+			console.timeEnd("tracker-construction")
 
+			console.time("shadow-git-path-generation")
 			const gitPath = await getShadowGitPath(newTracker.globalStoragePath, newTracker.taskId, newTracker.cwdHash)
+			console.timeEnd("shadow-git-path-generation")
+
+			console.time("shadow-git-init")
+			console.info(`[Caret Checkpoint] Starting shadow git initialization at: ${gitPath}`)
 			await newTracker.gitOperations.initShadowGit(gitPath, workingDir, taskId)
+			console.timeEnd("shadow-git-init")
+			console.info(`[Caret Checkpoint] Shadow git initialization completed`)
 
 			const durationMs = Math.round(performance.now() - startTime)
+			console.info(`[Caret Checkpoint] Total initialization time: ${durationMs}ms`)
 			telemetryService.captureCheckpointUsage(taskId, "shadow_git_initialized", durationMs)
 
 			return newTracker
@@ -160,48 +175,67 @@ class CheckpointTracker {
 	 */
 	public async commit(): Promise<string | undefined> {
 		try {
-			console.info(`Creating new checkpoint commit for task ${this.taskId}`)
+			console.info(`========== 체크포인트 커밋 시작 (Task: ${this.taskId}) ==========`)
+			console.time("total-checkpoint-commit")
 			const startTime = performance.now()
 
+			console.time("get-shadow-git-path")
 			const gitPath = await getShadowGitPath(this.globalStoragePath, this.taskId, this.cwdHash)
+			console.timeEnd("get-shadow-git-path")
 			const git = simpleGit(path.dirname(gitPath))
 
-			console.info(`Using shadow git at: ${gitPath}`)
+			console.info(`🗂️ Shadow Git 경로: ${gitPath}`)
 
+			console.time("add-checkpoint-files")
+			console.info(`📁 파일 추가 작업 시작...`)
 			const addFilesResult = await this.gitOperations.addCheckpointFiles(git)
+			console.timeEnd("add-checkpoint-files")
 			if (!addFilesResult.success) {
-				console.error("Failed to add at least one file(s) to checkpoints shadow git")
+				console.warn("⚠️ 일부 파일 추가 실패, 빈 커밋으로 진행")
+			} else {
+				console.info("✅ 파일 추가 완료")
 			}
 
 			const commitMessage = "checkpoint-" + this.cwdHash + "-" + this.taskId
 
-			console.info(`Creating checkpoint commit with message: ${commitMessage}`)
+			console.time("git-commit")
+			console.info(`💾 Git 커밋 생성 중... 메시지: ${commitMessage}`)
 			const result = await git.commit(commitMessage, {
 				"--allow-empty": null,
 				"--no-verify": null,
 			})
+			console.timeEnd("git-commit")
 			const commitHash = (result.commit || "").replace(/^HEAD\s+/, "")
-			console.warn(`Checkpoint commit created: `, commitHash)
+			console.info(`✅ 체크포인트 커밋 생성 완료: ${commitHash}`)
 
 			const durationMs = Math.round(performance.now() - startTime)
+			console.timeEnd("total-checkpoint-commit")
+			console.info(`========== 체크포인트 커밋 완료 (${durationMs}ms) ==========`)
 			telemetryService.captureCheckpointUsage(this.taskId, "commit_created", durationMs)
 
 			return commitHash
 		} catch (error) {
 			// CARET MODIFICATION: Enhanced error handling with automatic recovery
 			const errorMessage = error instanceof Error ? error.message : String(error)
-			console.error("Failed to create checkpoint:", {
+			console.error("❌ 체크포인트 생성 실패:", {
 				taskId: this.taskId,
 				error: errorMessage,
+				stack: error instanceof Error ? error.stack : undefined,
 			})
-			
+
 			// CARET MODIFICATION: Automatic recovery for broken Git references
-			if (errorMessage.includes("cannot lock ref 'HEAD'") || 
+			if (
+				errorMessage.includes("cannot lock ref 'HEAD'") ||
 				errorMessage.includes("unable to resolve reference") ||
-				errorMessage.includes("reference broken")) {
-				console.warn("Detected corrupted checkpoint Git repository, attempting auto-recovery...")
+				errorMessage.includes("reference broken") ||
+				errorMessage.includes("index.lock")
+			) {
+				console.warn("🔧 손상된 체크포인트 Git 저장소 감지, 자동 복구 시도 중...")
 				await this.attemptCheckpointRecovery()
 			}
+
+			console.timeEnd("total-checkpoint-commit")
+			console.info("========== 체크포인트 커밋 실패 ==========")
 
 			// CARET MODIFICATION: Return undefined instead of throwing to prevent system crash
 			// This allows Caret to continue working even if checkpoints fail
@@ -214,18 +248,18 @@ class CheckpointTracker {
 		try {
 			const gitPath = await getShadowGitPath(this.globalStoragePath, this.taskId, this.cwdHash)
 			const checkpointDir = path.dirname(gitPath)
-			
+
 			console.info(`Attempting to recover corrupted checkpoint directory: ${checkpointDir}`)
-			
+
 			// Remove the corrupted checkpoint directory
 			const fs = await import("fs/promises")
 			await fs.rm(checkpointDir, { recursive: true, force: true })
-			
+
 			console.info("Corrupted checkpoint directory removed successfully")
-			
+
 			// Recreate the checkpoint tracker
 			await this.gitOperations.initShadowGit(gitPath, this.cwd, this.taskId)
-			
+
 			console.info("Checkpoint system recovered successfully")
 		} catch (recoveryError) {
 			console.error("Failed to recover checkpoint system:", recoveryError)

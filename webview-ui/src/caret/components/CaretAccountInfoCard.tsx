@@ -1,5 +1,4 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
-import { useFirebaseAuth } from "@/context/FirebaseAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
 import { EmptyRequest } from "@shared/proto/common"
@@ -9,10 +8,9 @@ import { t } from "@/caret/utils/i18n"
 const logger = new WebviewLogger("[CARET-UI-ACCOUNT]")
 
 export const CaretAccountInfoCard = () => {
-	const { user: firebaseUser, handleSignOut } = useFirebaseAuth()
 	const { userInfo, apiConfiguration, navigateToAccount } = useExtensionState()
 
-	let user = apiConfiguration?.clineApiKey ? firebaseUser || userInfo : undefined
+	let user = apiConfiguration?.caretApiKey ? userInfo : undefined
 
 	const handleLogin = () => {
 		logger.info("User clicked Caret sign up button")

@@ -21,7 +21,7 @@ export const CARET_TAB_PANEL_ID = "caret.TabPanelProvider"
 export class CaretProvider implements vscode.WebviewViewProvider {
 	public view?: vscode.WebviewView | vscode.WebviewPanel
 	private disposables: vscode.Disposable[] = []
-	private controller: Controller
+	public controller: Controller
 	private clientId: string
 	private outputChannel: vscode.OutputChannel
 	private providerType: WebviewProviderType
@@ -48,7 +48,7 @@ export class CaretProvider implements vscode.WebviewViewProvider {
 		this.caretLogger.setOutputChannel(outputChannel)
 		this.caretLogger.extensionActivated()
 		this.caretLogger.welcomePageLoaded() // Use instance method instead of global function
-		
+
 		// CARET MODIFICATION: Set singleton instance
 		CaretProvider.instance = this
 	}
@@ -64,7 +64,8 @@ export class CaretProvider implements vscode.WebviewViewProvider {
 
 	// CARET MODIFICATION: Add getVisibleInstance static method for compatibility with extension.ts
 	public static getVisibleInstance(): CaretProvider | null {
-		return CaretProvider.instance && CaretProvider.instance.view?.visible ? CaretProvider.instance : null
+		// CARET FIX: Return instance even if not visible to handle auth callbacks in the background.
+		return CaretProvider.instance
 	}
 
 	public async resolveWebviewView(webviewView: vscode.WebviewView | vscode.WebviewPanel) {
@@ -197,13 +198,13 @@ export class CaretProvider implements vscode.WebviewViewProvider {
 			const personaDir = path.join(this.context.globalStorageUri.fsPath, "personas")
 			const profilePath = path.join(personaDir, "agent_profile.png")
 			const thinkingPath = path.join(personaDir, "agent_thinking.png")
-			
+
 			if (fs.existsSync(profilePath)) {
 				const profileBuffer = fs.readFileSync(profilePath)
 				personaProfileDataUri = `data:image/png;base64,${profileBuffer.toString("base64")}`
 				this.caretLogger.debug(`[CaretProvider] Persona profile loaded, size: ${profileBuffer.length} bytes`)
 			}
-			
+
 			if (fs.existsSync(thinkingPath)) {
 				const thinkingBuffer = fs.readFileSync(thinkingPath)
 				personaThinkingDataUri = `data:image/png;base64,${thinkingBuffer.toString("base64")}`
@@ -248,7 +249,8 @@ export class CaretProvider implements vscode.WebviewViewProvider {
 		const DEFAULT_PORT = 25463
 		const portFilePath = path.join(this.context.extensionPath, "webview-ui", ".vite-port")
 
-		return fs.promises.readFile(portFilePath, "utf8")
+		return fs.promises
+			.readFile(portFilePath, "utf8")
 			.then((portFile) => {
 				const port = parseInt(portFile.trim()) || DEFAULT_PORT
 				this.caretLogger.info(`[getDevServerPort] Using dev server port ${port} from .vite-port file`)
@@ -346,13 +348,13 @@ export class CaretProvider implements vscode.WebviewViewProvider {
 			const personaDir = path.join(this.context.globalStorageUri.fsPath, "personas")
 			const profilePath = path.join(personaDir, "agent_profile.png")
 			const thinkingPath = path.join(personaDir, "agent_thinking.png")
-			
+
 			if (fs.existsSync(profilePath)) {
 				const profileBuffer = fs.readFileSync(profilePath)
 				personaProfileDataUri = `data:image/png;base64,${profileBuffer.toString("base64")}`
 				this.caretLogger.debug(`[CaretProvider] HMR - Persona profile loaded, size: ${profileBuffer.length} bytes`)
 			}
-			
+
 			if (fs.existsSync(thinkingPath)) {
 				const thinkingBuffer = fs.readFileSync(thinkingPath)
 				personaThinkingDataUri = `data:image/png;base64,${thinkingBuffer.toString("base64")}`
@@ -419,68 +421,67 @@ export class CaretProvider implements vscode.WebviewViewProvider {
 	 */
 	// CARET MODIFICATION: Changed to protected for testing purposes, following forTest_ prefix rule.
 	protected async forTest_loadEnvironmentVariables(): Promise<Record<string, string>> {
-		const envFileName = this.context.extensionMode === vscode.ExtensionMode.Development ? ".env.dev" : ".env.prod";
-		const envFilePath = path.join(this.context.extensionPath, "webview-ui", envFileName);
-		
-		this.caretLogger.info(`Attempting to load environment variables from: ${envFilePath}`, "ENV_LOAD");
+		const envFileName = this.context.extensionMode === vscode.ExtensionMode.Development ? ".env.dev" : ".env.prod"
+		const envFilePath = path.join(this.context.extensionPath, "webview-ui", envFileName)
+
+		this.caretLogger.info(`Attempting to load environment variables from: ${envFilePath}`, "ENV_LOAD")
 
 		try {
-			const fileContent = await fs.promises.readFile(envFilePath, "utf8");
-			const envVars: Record<string, string> = {};
-			fileContent.split('\n').forEach(line => {
-				const trimmedLine = line.trim();
-				if (trimmedLine && !trimmedLine.startsWith('#')) {
-					const [key, value] = trimmedLine.split('=');
+			const fileContent = await fs.promises.readFile(envFilePath, "utf8")
+			const envVars: Record<string, string> = {}
+			fileContent.split("\n").forEach((line) => {
+				const trimmedLine = line.trim()
+				if (trimmedLine && !trimmedLine.startsWith("#")) {
+					const [key, value] = trimmedLine.split("=")
 					if (key && value) {
-						envVars[key.trim()] = value.trim();
+						envVars[key.trim()] = value.trim()
 					}
 				}
-			});
-			this.caretLogger.info(`Successfully loaded environment variables from ${envFileName}`, "ENV_LOAD");
-			return envVars;
+			})
+			this.caretLogger.info(`Successfully loaded environment variables from ${envFileName}`, "ENV_LOAD")
+			return envVars
 		} catch (error) {
-			this.caretLogger.error(`Failed to load environment variables from ${envFileName}: ${error}`, "ENV_LOAD");
-			return {}; // Return empty object on error
+			this.caretLogger.error(`Failed to load environment variables from ${envFileName}: ${error}`, "ENV_LOAD")
+			return {} // Return empty object on error
 		}
 	}
 
 	// CARET MODIFICATION: Add login method for Auth0 authentication
 	public async login(): Promise<void> {
-		this.caretLogger.info("Initiating login process...", "AUTH");
+		this.caretLogger.info("Initiating login process...", "AUTH")
 		try {
-			await this.initializeAuth0Client(); // CARET MODIFICATION: Ensure client is initialized
-			const authorizeUrl = await this.generateLoginUrl(); // CARET MODIFICATION: Use new method to get URL
+			await this.initializeAuth0Client() // CARET MODIFICATION: Ensure client is initialized
+			const authorizeUrl = await this.generateLoginUrl() // CARET MODIFICATION: Use new method to get URL
 
-			this.caretLogger.info(`Opening browser for authentication: ${authorizeUrl}`, "AUTH");
-			await vscode.env.openExternal(vscode.Uri.parse(authorizeUrl));
-			this.caretLogger.info("Browser opened for authentication.", "AUTH");
-
+			this.caretLogger.info(`Opening browser for authentication: ${authorizeUrl}`, "AUTH")
+			await vscode.env.openExternal(vscode.Uri.parse(authorizeUrl))
+			this.caretLogger.info("Browser opened for authentication.", "AUTH")
 		} catch (error) {
-			this.caretLogger.error(`Login process failed: ${error}`, "AUTH");
-			this.handleAuthError(error); // CARET MODIFICATION: Use new error handling method
+			this.caretLogger.error(`Login process failed: ${error}`, "AUTH")
+			this.handleAuthError(error) // CARET MODIFICATION: Use new error handling method
 		}
 	}
 
 	// CARET MODIFICATION: Public method to initialize Auth0 client
 	private async initializeAuth0Client(): Promise<void> {
-		await this.forTest_initializeAuth0Client();
+		await this.forTest_initializeAuth0Client()
 	}
 
 	// CARET MODIFICATION: Initializes the Auth0 client for testing purposes, following forTest_ prefix rule.
 	protected async forTest_initializeAuth0Client(): Promise<void> {
 		if (this.auth0Client) {
-			this.caretLogger.info("Auth0 client already initialized.", "AUTH");
-			return;
+			this.caretLogger.info("Auth0 client already initialized.", "AUTH")
+			return
 		}
 
-		const envVars = await this.forTest_loadEnvironmentVariables();
-		const auth0Domain = envVars.AUTH0_DOMAIN;
-		const auth0ClientId = envVars.AUTH0_CLIENT_ID;
-		const auth0CallbackUrl = envVars.AUTH0_CALLBACK_URL;
+		const envVars = await this.forTest_loadEnvironmentVariables()
+		const auth0Domain = envVars.AUTH0_DOMAIN
+		const auth0ClientId = envVars.AUTH0_CLIENT_ID
+		const auth0CallbackUrl = envVars.AUTH0_CALLBACK_URL
 
 		if (!auth0Domain || !auth0ClientId || !auth0CallbackUrl) {
-			this.caretLogger.error("Missing Auth0 environment variables for client initialization.", "AUTH");
-			throw new Error("Auth0 configuration incomplete.");
+			this.caretLogger.error("Missing Auth0 environment variables for client initialization.", "AUTH")
+			throw new Error("Auth0 configuration incomplete.")
 		}
 
 		this.auth0Client = new Auth0Client({
@@ -493,64 +494,65 @@ export class CaretProvider implements vscode.WebviewViewProvider {
 			},
 			useRefreshTokens: true,
 			cacheLocation: "localstorage", // Or 'memory' depending on requirements
-		});
-		this.caretLogger.info("Auth0 client initialized successfully.", "AUTH");
+		})
+		this.caretLogger.info("Auth0 client initialized successfully.", "AUTH")
 	}
 
 	// CARET MODIFICATION: Generates the login URL using Auth0 SPA JS approach
 	public async generateLoginUrl(): Promise<string> {
-		await this.initializeAuth0Client();
+		await this.initializeAuth0Client()
 		if (!this.auth0Client) {
-			throw new Error("Auth0 client not initialized.");
+			throw new Error("Auth0 client not initialized.")
 		}
-		
+
 		// CARET MODIFICATION: Use Auth0 SPA JS approach to build authorize URL
-		const envVars = await this.forTest_loadEnvironmentVariables();
-		const auth0Domain = envVars.AUTH0_DOMAIN;
-		const auth0ClientId = envVars.AUTH0_CLIENT_ID;
-		const auth0CallbackUrl = envVars.AUTH0_CALLBACK_URL;
-		
-		const state = uuidv4();
-		const nonce = uuidv4();
-		
-		const authorizeUrl = `https://${auth0Domain}/authorize?` +
+		const envVars = await this.forTest_loadEnvironmentVariables()
+		const auth0Domain = envVars.AUTH0_DOMAIN
+		const auth0ClientId = envVars.AUTH0_CLIENT_ID
+		const auth0CallbackUrl = envVars.AUTH0_CALLBACK_URL
+
+		const state = uuidv4()
+		const nonce = uuidv4()
+
+		const authorizeUrl =
+			`https://${auth0Domain}/authorize?` +
 			`client_id=${encodeURIComponent(auth0ClientId)}&` +
 			`response_type=code&` +
 			`redirect_uri=${encodeURIComponent(auth0CallbackUrl)}&` +
-			`scope=${encodeURIComponent("openid profile email").replace(/%20/g, '+')}&` +
+			`scope=${encodeURIComponent("openid profile email").replace(/%20/g, "+")}&` +
 			`audience=${encodeURIComponent("")}&` +
 			`state=${encodeURIComponent(state)}&` +
-			`nonce=${encodeURIComponent(nonce)}`;
-		
-		this.caretLogger.info(`Generated login URL: ${authorizeUrl}`, "AUTH");
-		return authorizeUrl;
+			`nonce=${encodeURIComponent(nonce)}`
+
+		this.caretLogger.info(`Generated login URL: ${authorizeUrl}`, "AUTH")
+		return authorizeUrl
 	}
 
 	// CARET MODIFICATION: Handles the authentication callback
 	public async handleAuthCallback(url: string): Promise<void> {
-		this.caretLogger.info(`Handling authentication callback for URL: ${url}`, "AUTH");
-		await this.initializeAuth0Client();
+		this.caretLogger.info(`Handling authentication callback for URL: ${url}`, "AUTH")
+		await this.initializeAuth0Client()
 		if (!this.auth0Client) {
-			throw new Error("Auth0 client not initialized.");
+			throw new Error("Auth0 client not initialized.")
 		}
 		try {
 			// CARET MODIFICATION: Use Auth0 SPA JS approach - handle redirect callback
-			await this.auth0Client.handleRedirectCallback(url);
-			this.caretLogger.info("Authentication callback processed successfully.", "AUTH");
-			const user = await this.auth0Client.getUser();
-			this.caretLogger.info(`Logged in user: ${user?.email}`, "AUTH");
-			vscode.window.showInformationMessage(`Caret: Logged in as ${user?.email}`);
+			await this.auth0Client.handleRedirectCallback(url)
+			this.caretLogger.info("Authentication callback processed successfully.", "AUTH")
+			const user = await this.auth0Client.getUser()
+			this.caretLogger.info(`Logged in user: ${user?.email}`, "AUTH")
+			vscode.window.showInformationMessage(`Caret: Logged in as ${user?.email}`)
 			// TODO: Save user session/tokens securely
 		} catch (error) {
-			this.caretLogger.error(`Error processing authentication callback: ${error}`, "AUTH");
-			this.handleAuthError(error);
+			this.caretLogger.error(`Error processing authentication callback: ${error}`, "AUTH")
+			this.handleAuthError(error)
 		}
 	}
 
 	// CARET MODIFICATION: Handles authentication errors gracefully
 	public handleAuthError(error: any): void {
-		this.caretLogger.error(`Authentication error: ${error}`, "AUTH");
-		vscode.window.showErrorMessage(`Caret: Authentication failed. ${error?.message || error}`);
+		this.caretLogger.error(`Authentication error: ${error}`, "AUTH")
+		vscode.window.showErrorMessage(`Caret: Authentication failed. ${error?.message || error}`)
 	}
 
 	/**

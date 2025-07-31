@@ -318,7 +318,8 @@ export async function activate(context: vscode.ExtensionContext) {
 				break
 		}
 	}
-	context.subscriptions.push(vscode.window.registerUriHandler({ handleUri }))
+	// CARET MODIFICATION: URI Handler is now handled by caret-src/extension.ts to avoid conflicts
+	// context.subscriptions.push(vscode.window.registerUriHandler({ handleUri }))
 
 	// Register size testing commands in development mode
 	if (IS_DEV && IS_DEV === "true") {

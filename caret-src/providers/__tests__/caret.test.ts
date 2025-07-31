@@ -39,7 +39,7 @@ describe("CaretHandler", () => {
 
 		// Mock API options
 		mockOptions = {
-			clineApiKey: "test-api-key",
+			caretApiKey: "test-api-key",
 			taskId: "test-task-id",
 			openRouterModelId: "test-model",
 			openRouterModelInfo: {

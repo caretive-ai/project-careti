@@ -69,6 +69,11 @@ export function validateApiConfiguration(
 					return t("invalidApiKey", "validate-api-conf", language)
 				}
 				break
+			case "caret": // CARET MODIFICATION: Add Caret
+				if (!apiConfiguration.caretApiKey) {
+					return t("invalidApiKey", "validate-api-conf", language)
+				}
+				break
 			case "openai":
 				if (!apiConfiguration.openAiBaseUrl || !apiConfiguration.openAiApiKey || !apiConfiguration.openAiModelId) {
 					return t("invalidOpenAiConfig", "validate-api-conf", language)

@@ -98,7 +98,7 @@ describe("CaretAccountView - TDD Implementation", () => {
 
 		mockUseExtensionState.mockReturnValue({
 			userInfo: null,
-			apiConfiguration: { clineApiKey: null },
+			apiConfiguration: { caretApiKey: null },
 		} as any)
 
 		// Reset service mocks
@@ -126,7 +126,7 @@ describe("CaretAccountView - TDD Implementation", () => {
 
 			mockUseExtensionState.mockReturnValue({
 				userInfo: { uid: "test-user" },
-				apiConfiguration: { clineApiKey: "test-key" },
+				apiConfiguration: { caretApiKey: "test-key" },
 			} as any)
 
 			render(<ClineAccountView />)
@@ -145,7 +145,7 @@ describe("CaretAccountView - TDD Implementation", () => {
 
 			mockUseExtensionState.mockReturnValue({
 				userInfo: null,
-				apiConfiguration: { clineApiKey: null },
+				apiConfiguration: { caretApiKey: null },
 			} as any)
 
 			render(<ClineAccountView />)
@@ -163,7 +163,7 @@ describe("CaretAccountView - TDD Implementation", () => {
 
 			mockUseExtensionState.mockReturnValue({
 				userInfo: { uid: "test-user" },
-				apiConfiguration: { clineApiKey: "test-key" },
+				apiConfiguration: { caretApiKey: "test-key" },
 			} as any)
 
 			render(<ClineAccountView />)
@@ -203,7 +203,7 @@ describe("CaretAccountView - TDD Implementation", () => {
 
 			mockUseExtensionState.mockReturnValue({
 				userInfo: { uid: "test-user" },
-				apiConfiguration: { clineApiKey: "test-key" },
+				apiConfiguration: { caretApiKey: "test-key" },
 			} as any)
 
 			render(<ClineAccountView />)
@@ -223,7 +223,7 @@ describe("CaretAccountView - TDD Implementation", () => {
 
 			mockUseExtensionState.mockReturnValue({
 				userInfo: { uid: "test-user" },
-				apiConfiguration: { clineApiKey: "test-key" },
+				apiConfiguration: { caretApiKey: "test-key" },
 			} as any)
 
 			render(<ClineAccountView />)
@@ -239,7 +239,7 @@ describe("CaretAccountView - TDD Implementation", () => {
 			mockUseExtensionState.mockReturnValue({
 				userInfo: { uid: "test-user" }, // userInfo는 그대로 두고
 				plan: "Free", // plan을 userInfo와 같은 레벨로 이동
-				apiConfiguration: { clineApiKey: "test-key" },
+				apiConfiguration: { caretApiKey: "test-key" },
 			} as any)
 
 			render(<ClineAccountView />)
@@ -250,7 +250,7 @@ describe("CaretAccountView - TDD Implementation", () => {
 			mockUseExtensionState.mockReturnValue({
 				userInfo: { uid: "test-user" }, // userInfo는 그대로 두고
 				isPayAsYouGo: true, // isPayAsYouGo를 userInfo와 같은 레벨로 이동
-				apiConfiguration: { clineApiKey: "test-key" },
+				apiConfiguration: { caretApiKey: "test-key" },
 			} as any)
 
 			render(<ClineAccountView />)
@@ -263,7 +263,7 @@ describe("CaretAccountView - TDD Implementation", () => {
 				userInfo: { uid: "test-user" },
 				plan: "Free",
 				isPayAsYouGo: true,
-				apiConfiguration: { clineApiKey: "test-key" },
+				apiConfiguration: { caretApiKey: "test-key" },
 			} as any)
 
 			render(<ClineAccountView />)
@@ -310,7 +310,7 @@ describe("CaretAccountView - TDD Implementation", () => {
 
 			mockUseExtensionState.mockReturnValue({
 				userInfo: { uid: "test-user" },
-				apiConfiguration: { clineApiKey: "test-key" },
+				apiConfiguration: { caretApiKey: "test-key" },
 			} as any)
 
 			render(<ClineAccountView />)

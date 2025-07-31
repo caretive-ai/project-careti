@@ -13,7 +13,8 @@ import { buildApiHandler } from "@api/index"
 import { cleanupLegacyCheckpoints } from "@integrations/checkpoints/CheckpointMigration"
 import { downloadTask } from "@integrations/misc/export-markdown"
 import WorkspaceTracker from "@integrations/workspace/WorkspaceTracker"
-import { ClineAccountService } from "@services/account/ClineAccountService"
+//import { ClineAccountService } from "@services/account/ClineAccountService"// CARET MODIFICATION:
+import { CaretAccountService } from "../../../caret-src/services/account/CaretAccountService" // CARET MODIFICATION:
 import { McpHub } from "@services/mcp/McpHub"
 import { telemetryService } from "@/services/posthog/telemetry/TelemetryService"
 import { ApiProvider, ModelInfo, ApiConfiguration } from "@shared/api" // ApiConfiguration import 추가
@@ -43,7 +44,6 @@ import { Task } from "../task"
 import { ClineRulesToggles } from "@shared/cline-rules"
 import { sendStateUpdate } from "./state/subscribeToState"
 import { sendAddToInputEvent } from "./ui/subscribeToAddToInput"
-import { sendAuthCallbackEvent } from "./account/subscribeToAuthCallback"
 import { sendMcpMarketplaceCatalogEvent } from "./mcp/subscribeToMcpMarketplaceCatalog"
 import { sendRelinquishControlEvent } from "./ui/subscribeToRelinquishControl"
 import type { PersonaInstruction } from "../../shared/persona"
@@ -64,7 +64,8 @@ export class Controller {
 	task?: Task
 	workspaceTracker: WorkspaceTracker
 	mcpHub: McpHub
-	accountService: ClineAccountService
+	//ccountService: ClineAccountService  // CARET MODIFICATION:
+	accountService: CaretAccountService // CARET MODIFICATION:
 	latestAnnouncementId = "may-22-2025_16:11:00" // update to some unique identifier when we add a new announcement
 
 	constructor(
@@ -88,7 +89,17 @@ export class Controller {
 			(msg) => this.postMessageToWebview(msg),
 			this.context.extension?.packageJSON?.version ?? "1.0.0",
 		)
+		/* // CARET MODIFICATION:
 		this.accountService = new ClineAccountService(
+			(msg) => this.postMessageToWebview(msg),
+			async () => {
+				const { apiConfiguration } = await this.getStateToPostToWebview()
+				return apiConfiguration?.caretApiKey // CARET MODIFICATION: Return caretApiKey instead of apiKey
+			},
+		)
+		*/
+		// CARET MODIFICATION:
+		this.accountService = new CaretAccountService(
 			(msg) => this.postMessageToWebview(msg),
 			async () => {
 				const { apiConfiguration } = await this.getStateToPostToWebview()
@@ -984,9 +995,19 @@ export class Controller {
 			await storeSecret(this.context, "caretApiKey", apiKey)
 			caretLogger.info("[AUTH] API key stored successfully.")
 
-			// Send custom token to webview for Firebase auth
-			await sendAuthCallbackEvent(customToken)
-			caretLogger.info("[AUTH] Custom token sent to webview.")
+			// Extract user info from Auth0 token and store it
+			try {
+				const tokenPayload = JSON.parse(atob(customToken.split(".")[1])) // Decode JWT payload
+				const userInfo = {
+					displayName: tokenPayload.name || tokenPayload.nickname || null,
+					email: tokenPayload.email || null,
+					photoURL: tokenPayload.picture || null,
+				}
+				await this.setUserInfo(userInfo)
+				caretLogger.info("[AUTH] User info extracted from token and stored successfully.")
+			} catch (error) {
+				caretLogger.warn(`[AUTH] Failed to extract user info from token: ${error}`)
+			}
 
 			// CARET MODIFICATION: Keep user's selected API provider, don't force "caret"
 			// Only store caretApiKey for authentication, preserve selected provider (gemini, anthropic, etc.)

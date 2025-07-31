@@ -11,7 +11,8 @@ import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
 import { EmptyRequest } from "@shared/proto/common"
 // CARET MODIFICATION: Import Caret version for conditional rendering
-import { ClineAccountView as CaretAccountView } from "@/caret/components/CaretAccountView"
+//import { ClineAccountView as CaretAccountView } from "@/caret/components/CaretAccountView"/
+import { CaretAccountView } from "@/caret/components/CaretAccountView"
 import { t } from "@/caret/utils/i18n" // CARET MODIFICATION: 다국어 지원 추가
 
 type AccountViewProps = {

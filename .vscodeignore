@@ -63,6 +63,7 @@ webview-ui/node_modules/**
 caret-docs/**
 docs/**
 evals/**
+new-docs/**
 
 # Ignore test templates
 caret-assets/test-templates/**
@@ -75,6 +76,21 @@ caret-assets/test-templates/**
 **/*.tgz
 **/*.zip
 *.vsix
+
+# Ignore test and analysis files
+test-setup.js
+task-log-analysis*.json
+test-results.json
+tsconfig.test.json
+tsconfig.unit-test.json
+analyze-existing-task-logs.js
+cline-test-*.json
+meetup-summary.md
+system-prompt-token-measurement.js
+*-login.md
+
+# Ignore locales directory (multiple language docs)
+locales/**
 
 # Ignore Proto source files
 proto/**

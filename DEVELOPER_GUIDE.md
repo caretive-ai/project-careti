@@ -37,13 +37,82 @@ Caret은 [Cline](https://github.com/cline/cline) 프로젝트의 **Fork 기반 �
     
     이 구조를 통해 **Cline의 강력한 기능을 그대로 활용**하면서, **Caret만의 고유한 기능을 안전하게 확장**할 수 있습니다.
 
-### 2. 의존성 설치
+### 2. 개발 환경 설정 및 의존성 설치
 
 Caret 프로젝트의 모든 의존성을 설치하는 방법입니다.
 
+#### 2-1. 자동 설정 (권장) 🚀
+
+**크로스 플랫폼 (모든 운영체제):**
+```bash
+# npm 스크립트로 자동 설정 (운영체제 자동 감지)
+npm run setup
+```
+
+**운영체제별 직접 실행:**
+```bash
+# Linux/macOS
+npm run setup:linux
+# 또는
+./scripts/setup-dev-env.sh
+
+# Windows
+npm run setup:windows
+# 또는
+scripts\setup-dev-env.bat
+```
+
+이 스크립트들은 다음 작업을 자동으로 수행합니다:
+- ✅ Node.js 20 설치 및 설정
+- ✅ 프로젝트 의존성 설치
+- ✅ Protocol Buffer 컴파일
+- ✅ TypeScript 컴파일 테스트
+- ✅ WebView UI 빌드 테스트
+
+#### 2-2. 수동 설정
+
+**Node.js 버전 확인 및 업데이트 (필수):**
+
+Caret은 Node.js 20.x를 요구합니다. 현재 버전을 확인하고 필요시 업데이트하세요:
+
+**Linux/macOS:**
+```bash
+# 현재 Node.js 버전 확인
+node --version
+
+# Node.js 12.x 이하인 경우 업데이트 필요
+# 권장 방법: nvm 사용 (프로젝트별 버전 관리)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+source ~/.bashrc
+nvm install 20
+nvm use 20
+
+# 또는 시스템 패키지 매니저 사용
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+**Windows:**
+```cmd
+# 현재 Node.js 버전 확인
+node --version
+
+# nvm-windows 설치 (https://github.com/coreybutler/nvm-windows/releases)
+# 설치 후 Node.js 20 설치
+nvm install 20.19.4
+nvm use 20.19.4
+
+# 또는 Node.js 공식 사이트에서 직접 설치
+# https://nodejs.org/en/download/
+```
+
+> **💡 팁**: 프로젝트에 `.nvmrc` 파일이 있으므로 `nvm use`만 실행해도 자동으로 Node.js 20으로 전환됩니다.
+
+**의존성 설치:**
+
 ```bash
 # 모든 플랫폼에서 권장 - 루트와 webview-ui 의존성을 한번에 설치
-l:all
+npm run install:all
 ```
 
 이 명령어는 다음과 같은 작업을 수행합니다:
@@ -57,15 +126,51 @@ l:all
 만약 자동 설정 스크립트가 실패하거나 특정 단계를 직접 실행하고 싶을 경우, 아래의 수동 절차를 따르세요.
 
 ```bash
-# 1. 의존성 설치
+# 1. Node.js 버전 확인 (필수)
+node --version  # 20.x 이상이어야 함
+
+# 2. 의존성 설치
 npm install
 cd webview-ui && npm install && cd ..
 
-# 2. Protocol Buffer 컴파일
+# 3. Protocol Buffer 컴파일
 npm run protos
 
-# 3. TypeScript 컴파일 확인
+# 4. TypeScript 컴파일 확인
 npm run compile
+```
+
+#### 🔧 일반적인 문제 해결
+
+**Node.js 버전 오류 (`ERR_MODULE_NOT_FOUND: Cannot find package 'fs'` 등):**
+```bash
+# Node.js 20 설치 후 재시도
+nvm install 20 && nvm use 20
+npm run install:all
+npm run compile
+```
+
+**의존성 관련 오류:**
+```bash
+# node_modules 삭제 후 재설치
+rm -rf node_modules webview-ui/node_modules
+npm run install:all
+```
+
+**Windows에서 nvm 관련 오류:**
+```cmd
+# nvm이 인식되지 않는 경우
+# 1. 새 명령 프롬프트 창 열기
+# 2. 또는 시스템 환경 변수 확인
+# 3. nvm-windows 재설치 고려
+```
+
+**Linux/macOS에서 npm_config_prefix 오류:**
+```bash
+# nvm 호환성 문제 해결
+unset npm_config_prefix
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 ```
 
 ### 4. 개발 빌드

@@ -37,9 +37,78 @@ Caret adopts a **Fork-based architecture** from the [Cline](https://github.com/c
     
     This structure allows you to **leverage Cline's powerful features** while **safely extending Caret's unique functionalities**.
 
-### 2. Install Dependencies
+### 2. Development Environment Setup and Dependency Installation
 
 Instructions on how to install all dependencies for the Caret project.
+
+#### 2-1. Automatic Setup (Recommended) 🚀
+
+**Cross-platform (All operating systems):**
+```bash
+# Automatic setup using npm script (auto-detects OS)
+npm run setup
+```
+
+**OS-specific direct execution:**
+```bash
+# Linux/macOS
+npm run setup:linux
+# or
+./scripts/setup-dev-env.sh
+
+# Windows
+npm run setup:windows
+# or
+scripts\setup-dev-env.bat
+```
+
+These scripts automatically perform the following tasks:
+- ✅ Node.js 20 installation and configuration
+- ✅ Project dependency installation
+- ✅ Protocol Buffer compilation
+- ✅ TypeScript compilation test
+- ✅ WebView UI build test
+
+#### 2-2. Manual Setup
+
+**Node.js Version Check and Update (Required):**
+
+Caret requires Node.js 20.x. Check your current version and update if necessary:
+
+**Linux/macOS:**
+```bash
+# Check current Node.js version
+node --version
+
+# Update if Node.js 12.x or below
+# Recommended method: Use nvm (project-specific version management)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+source ~/.bashrc
+nvm install 20
+nvm use 20
+
+# Or use system package manager
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+**Windows:**
+```cmd
+# Check current Node.js version
+node --version
+
+# Install nvm-windows (https://github.com/coreybutler/nvm-windows/releases)
+# After installation, install Node.js 20
+nvm install 20.19.4
+nvm use 20.19.4
+
+# Or install directly from Node.js official site
+# https://nodejs.org/en/download/
+```
+
+> **💡 Tip**: The project has a `.nvmrc` file, so running `nvm use` will automatically switch to Node.js 20.
+
+**Dependency Installation:**
 
 ```bash
 # Recommended for all platforms - installs dependencies for both root and webview-ui at once
@@ -57,15 +126,51 @@ This command performs the following tasks:
 If the automatic setup script fails or you wish to execute specific steps manually, follow the procedures below.
 
 ```bash
-# 1. Install Dependencies
+# 1. Check Node.js version (required)
+node --version  # Must be 20.x or higher
+
+# 2. Install Dependencies
 npm install
 cd webview-ui && npm install && cd ..
 
-# 2. Compile Protocol Buffers
+# 3. Compile Protocol Buffers
 npm run protos
 
-# 3. Verify TypeScript Compilation
+# 4. Verify TypeScript Compilation
 npm run compile
+```
+
+#### 🔧 Common Problem Solutions
+
+**Node.js version errors (`ERR_MODULE_NOT_FOUND: Cannot find package 'fs'` etc.):**
+```bash
+# Install Node.js 20 and retry
+nvm install 20 && nvm use 20
+npm run install:all
+npm run compile
+```
+
+**Dependency-related errors:**
+```bash
+# Remove node_modules and reinstall
+rm -rf node_modules webview-ui/node_modules
+npm run install:all
+```
+
+**Windows nvm-related errors:**
+```cmd
+# If nvm is not recognized
+# 1. Open new command prompt window
+# 2. Or check system environment variables
+# 3. Consider reinstalling nvm-windows
+```
+
+**Linux/macOS npm_config_prefix errors:**
+```bash
+# Resolve nvm compatibility issues
+unset npm_config_prefix
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 ```
 
 ### 4. Development Build

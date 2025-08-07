@@ -2,7 +2,7 @@ import { Anthropic } from "@anthropic-ai/sdk"
 import { withRetry } from "../retry"
 import { ApiHandler } from "../"
 import { convertToR1Format } from "../transform/r1-format"
-import { ApiHandlerOptions, bedrockDefaultModelId, BedrockModelId, bedrockModels, ModelInfo } from "@shared/api"
+import { bedrockDefaultModelId, BedrockModelId, bedrockModels, ModelInfo } from "@shared/api"
 import { calculateApiCostOpenAI } from "../../utils/cost"
 import { ApiStream } from "../transform/stream"
 import { fromNodeProviderChain } from "@aws-sdk/credential-providers"
@@ -15,6 +15,24 @@ import {
 
 // Import proper AWS SDK types
 import type { Message, ContentBlock } from "@aws-sdk/client-bedrock-runtime"
+
+interface AwsBedrockHandlerOptions {
+	apiModelId?: string
+	awsAccessKey?: string
+	awsSecretKey?: string
+	awsSessionToken?: string
+	awsRegion?: string
+	awsAuthentication?: string
+	awsBedrockApiKey?: string
+	awsUseCrossRegionInference?: boolean
+	awsBedrockUsePromptCache?: boolean
+	awsUseProfile?: boolean
+	awsProfile?: string
+	awsBedrockEndpoint?: string
+	awsBedrockCustomSelected?: boolean
+	awsBedrockCustomModelBaseId?: BedrockModelId
+	thinkingBudgetTokens?: number
+}
 
 // Extend AWS SDK types to include additionalModelResponseFields
 interface ExtendedMetadata {
@@ -90,9 +108,9 @@ interface ProviderChainOptions {
 
 // https://docs.anthropic.com/en/api/claude-on-amazon-bedrock
 export class AwsBedrockHandler implements ApiHandler {
-	private options: ApiHandlerOptions
+	private options: AwsBedrockHandlerOptions
 
-	constructor(options: ApiHandlerOptions) {
+	constructor(options: AwsBedrockHandlerOptions) {
 		this.options = options
 	}
 
@@ -133,11 +151,20 @@ export class AwsBedrockHandler implements ApiHandler {
 
 		const customSelected = this.options.awsBedrockCustomSelected
 		const baseModel = this.options.awsBedrockCustomModelBaseId
-		if (customSelected && modelId && baseModel && baseModel in bedrockModels) {
-			// Use the user-input model ID but inherit capabilities from the base model
+
+		// Handle custom models
+		if (customSelected && modelId) {
+			// If base model is provided and valid, use its capabilities
+			if (baseModel && baseModel in bedrockModels) {
+				return {
+					id: modelId,
+					info: bedrockModels[baseModel],
+				}
+			}
+			// For custom models without valid base model in bedrock model list, use default model's capabilities
 			return {
 				id: modelId,
-				info: bedrockModels[baseModel],
+				info: bedrockModels[bedrockDefaultModelId],
 			}
 		}
 
@@ -161,7 +188,10 @@ export class AwsBedrockHandler implements ApiHandler {
 	}> {
 		// Configure provider options
 		const providerOptions: ProviderChainOptions = {}
-		if (this.options.awsUseProfile) {
+		const useProfile =
+			(this.options.awsAuthentication === undefined && this.options.awsUseProfile) ||
+			this.options.awsAuthentication === "profile"
+		if (useProfile) {
 			// For profile-based auth, always use ignoreCache to detect credential file changes
 			// This solves the AWS Identity Manager issue where credential files change externally
 			providerOptions.ignoreCache = true
@@ -175,7 +205,7 @@ export class AwsBedrockHandler implements ApiHandler {
 		return await AwsBedrockHandler.withTempEnv(
 			() => {
 				AwsBedrockHandler.setEnv("AWS_REGION", this.options.awsRegion)
-				if (this.options.awsUseProfile) {
+				if (useProfile) {
 					AwsBedrockHandler.setEnv("AWS_PROFILE", this.options.awsProfile)
 				} else {
 					delete process.env["AWS_PROFILE"]
@@ -199,27 +229,35 @@ export class AwsBedrockHandler implements ApiHandler {
 	 * Creates a BedrockRuntimeClient with the appropriate credentials
 	 */
 	private async getBedrockClient(): Promise<BedrockRuntimeClient> {
-		const credentials = await this.getAwsCredentials()
+		let auth: any
 
+		if (this.options.awsAuthentication === "apikey") {
+			auth = {
+				token: { token: this.options.awsBedrockApiKey },
+				authSchemePreference: ["httpBearerAuth"],
+			}
+		} else {
+			const credentials = await this.getAwsCredentials()
+			auth = {
+				credentials: {
+					accessKeyId: credentials.accessKeyId,
+					secretAccessKey: credentials.secretAccessKey,
+					sessionToken: credentials.sessionToken,
+				},
+			}
+		}
 		return new BedrockRuntimeClient({
 			region: this.getRegion(),
-			credentials: {
-				accessKeyId: credentials.accessKeyId,
-				secretAccessKey: credentials.secretAccessKey,
-				sessionToken: credentials.sessionToken,
-			},
+			...auth,
 			...(this.options.awsBedrockEndpoint && { endpoint: this.options.awsBedrockEndpoint }),
 		})
 	}
 
 	/**
 	 * Gets the appropriate model ID, accounting for cross-region inference if enabled.
-	 * If the model ID is an ARN that contains a slash, you will get the URL encoded ARN.
+	 * For custom models, returns the raw model ID without any encoding.
 	 */
 	async getModelId(): Promise<string> {
-		if (this.options.awsBedrockCustomSelected && this.getModel().id.includes("/")) {
-			return encodeURIComponent(this.getModel().id)
-		}
 		if (!this.options.awsBedrockCustomSelected && this.options.awsUseCrossRegionInference) {
 			const regionPrefix = this.getRegion().slice(0, 3)
 			switch (regionPrefix) {

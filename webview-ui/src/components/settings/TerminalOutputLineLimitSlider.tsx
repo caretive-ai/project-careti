@@ -1,14 +1,18 @@
 import React from "react"
 import { useExtensionState } from "@/context/ExtensionStateContext"
+<<<<<<< HEAD
 // CARET MODIFICATION: 다국어 지원 추가
 import { t } from "../../caret/utils/i18n"
+=======
+import { updateSetting } from "./utils/settingsHandlers"
+>>>>>>> upstream/main
 
 const TerminalOutputLineLimitSlider: React.FC = () => {
-	const { terminalOutputLineLimit, setTerminalOutputLineLimit } = useExtensionState()
+	const { terminalOutputLineLimit } = useExtensionState()
 
 	const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const value = parseInt(event.target.value, 10)
-		setTerminalOutputLineLimit(value)
+		updateSetting("terminalOutputLineLimit", value)
 	}
 
 	return (

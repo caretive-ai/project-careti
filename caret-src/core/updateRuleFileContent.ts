@@ -2,7 +2,6 @@
 import * as fs from "fs"
 import * as path from "path"
 import { ensureRulesDirectoryExists } from "../../src/core/storage/disk"
-import { cwd } from "../../src/core/task"
 
 export interface UpdateRuleFileContentParams {
 	rulePath: string
@@ -10,6 +9,7 @@ export interface UpdateRuleFileContentParams {
 	isGlobal: boolean
 	deleteFile?: boolean
 	enabled?: boolean
+	cwd: string
 }
 
 export async function updateRuleFileContent(
@@ -31,7 +31,7 @@ export async function updateRuleFileContent(
 			targetDir = await ensureRulesDirectoryExists()
 		} else {
 			// For workspace rules, use the current working directory
-			targetDir = path.join(cwd, ".clinerules")
+			targetDir = path.join(request.cwd, ".clinerules")
 			// Ensure the workspace rules directory exists
 			if (!fs.existsSync(targetDir)) {
 				fs.mkdirSync(targetDir, { recursive: true })

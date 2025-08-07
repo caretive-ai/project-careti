@@ -1,6 +1,6 @@
 import { Controller } from ".."
-import { EmptyRequest } from "../../../shared/proto/common"
-import { OpenRouterCompatibleModelInfo, OpenRouterModelInfo } from "../../../shared/proto/models"
+import { EmptyRequest } from "@shared/proto/cline/common"
+import { OpenRouterCompatibleModelInfo, OpenRouterModelInfo } from "@shared/proto/cline/models"
 import axios from "axios"
 import { getSecret } from "@core/storage/state"
 
@@ -41,11 +41,6 @@ export async function refreshRequestyModels(controller: Controller, _: EmptyRequ
 				models[model.id] = modelInfo
 			}
 			console.log("Requesty models fetched", models)
-
-			controller.postMessageToWebview({
-				type: "requestyModels",
-				requestyModels: models,
-			})
 		} else {
 			console.error("Invalid response from Requesty API")
 		}

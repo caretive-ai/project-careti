@@ -7,10 +7,14 @@ import ServersToggleList from "@/components/mcp/configuration/tabs/installed/Ser
 import { McpServiceClient } from "@/services/grpc-client"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import Tooltip from "@/components/common/Tooltip"
-import { McpServers } from "@shared/proto/mcp"
+import { McpServers } from "@shared/proto/cline/mcp"
 import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mcp/mcp-server-conversion"
+<<<<<<< HEAD
 import { EmptyRequest } from "@shared/proto/common"
 import { t } from "@/caret/utils/i18n"
+=======
+import { EmptyRequest } from "@shared/proto/cline/common"
+>>>>>>> upstream/main
 
 const ServersToggleModal: React.FC = () => {
 	const { mcpServers, navigateToMcp, setMcpServers } = useExtensionState()

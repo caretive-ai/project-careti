@@ -4,6 +4,7 @@ import React from "react"
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { useEffect, useState } from "react"
 import { useExtensionState } from "@/context/ExtensionStateContext"
+<<<<<<< HEAD
 import { validateApiConfiguration } from "@utils/validate"
 import { vscode } from "@utils/vscode"
 import CaretWelcomeSection from "@/caret/components/CaretWelcomeSection"
@@ -22,6 +23,16 @@ import CaretUILanguageSetting from "@/caret/components/CaretUILanguageSetting"
 const WelcomeView = () => {
 	const { apiConfiguration, caretBanner, chatSettings, setChatSettings } = useExtensionState()
 	const currentLanguage = useCurrentLanguage()
+=======
+import { validateApiConfiguration } from "@/utils/validate"
+import ApiOptions from "@/components/settings/ApiOptions"
+import ClineLogoWhite from "@/assets/ClineLogoWhite"
+import { AccountServiceClient, StateServiceClient } from "@/services/grpc-client"
+import { EmptyRequest, BooleanRequest } from "@shared/proto/cline/common"
+
+const WelcomeView = memo(() => {
+	const { apiConfiguration, mode } = useExtensionState()
+>>>>>>> upstream/main
 	const [apiErrorMessage, setApiErrorMessage] = useState<string | undefined>(undefined)
 	const [showApiOptions, setShowApiOptions] = useState(false)
 
@@ -31,6 +42,7 @@ const WelcomeView = () => {
 		vscode.postMessage({ type: "openExternalLink", link })
 	}
 
+<<<<<<< HEAD
 	const handleSubmitApiKey = async () => {
 		try {
 			if (!apiConfiguration) return
@@ -71,6 +83,13 @@ const WelcomeView = () => {
 			console.log("[WelcomeView] API configuration saved successfully, closing setup page")
 		} catch (error) {
 			console.error("Failed to save API configuration:", error)
+=======
+	const handleSubmit = async () => {
+		try {
+			await StateServiceClient.setWelcomeViewCompleted(BooleanRequest.create({ value: true }))
+		} catch (error) {
+			console.error("Failed to update API configuration or complete welcome view:", error)
+>>>>>>> upstream/main
 		}
 	}
 
@@ -89,9 +108,14 @@ const WelcomeView = () => {
 	}
 
 	useEffect(() => {
+<<<<<<< HEAD
 		// CARET MODIFICATION: 다국어 에러 메시지 적용
 		setApiErrorMessage(validateApiConfiguration(apiConfiguration, currentLanguage))
 	}, [apiConfiguration, currentLanguage])
+=======
+		setApiErrorMessage(validateApiConfiguration(mode, apiConfiguration))
+	}, [apiConfiguration, mode])
+>>>>>>> upstream/main
 
 	// CARET DEBUG: Add console.log to check the value of caretBanner
 	useEffect(() => {
@@ -211,9 +235,22 @@ const WelcomeView = () => {
 						{t("coreFeatures.header", "welcome", currentLanguage)}
 					</h2>
 				</div>
+<<<<<<< HEAD
+=======
+				<p>
+					I can do all kinds of tasks thanks to breakthroughs in{" "}
+					<VSCodeLink href="https://www.anthropic.com/claude/sonnet" className="inline">
+						Claude 4 Sonnet's
+					</VSCodeLink>
+					agentic coding capabilities and access to tools that let me create & edit files, explore complex projects, use
+					a browser, and execute terminal commands <i>(with your permission, of course)</i>. I can even use MCP to
+					create new tools and extend my own capabilities.
+				</p>
+>>>>>>> upstream/main
 
 				{renderSection("", "coreFeatures.description")}
 
+<<<<<<< HEAD
 				{/* 언어 선택과 시작 섹션 - 검은색 박스로 섹션화 */}
 				<CaretWelcomeSection headerKey="" bodyKey="" allowHtml={true} data-testid="language-selection-section">
 					{/* 언어 선택을 가로 2단 배치 */}
@@ -234,6 +271,28 @@ const WelcomeView = () => {
 								setChatSettings={setChatSettings}
 								hideLabel={true}
 							/>
+=======
+				<VSCodeButton appearance="primary" onClick={handleLogin} className="w-full mt-1">
+					Get Started for Free
+				</VSCodeButton>
+
+				{!showApiOptions && (
+					<VSCodeButton
+						appearance="secondary"
+						onClick={() => setShowApiOptions(!showApiOptions)}
+						className="mt-2.5 w-full">
+						Use your own API key
+					</VSCodeButton>
+				)}
+
+				<div className="mt-4.5">
+					{showApiOptions && (
+						<div>
+							<ApiOptions showModelOptions={false} currentMode={mode} />
+							<VSCodeButton onClick={handleSubmit} disabled={disableLetsGoButton} className="mt-0.75">
+								Let's go!
+							</VSCodeButton>
+>>>>>>> upstream/main
 						</div>
 						{/* AI 응답 언어 (오른쪽) */}
 						<div style={{ flex: "1", minWidth: "200px" }}>

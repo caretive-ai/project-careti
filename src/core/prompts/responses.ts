@@ -2,8 +2,8 @@ import { Anthropic } from "@anthropic-ai/sdk"
 import * as diff from "diff"
 import * as path from "path"
 import { ClineIgnoreController, LOCK_TEXT_SYMBOL } from "../ignore/ClineIgnoreController"
-// CARET MODIFICATION: CaretResponses 클래스 임포트
 import { CaretResponses } from "../../../caret-src/core/prompts/CaretResponses"
+import { Mode } from "@shared/storage/types"
 
 export const formatResponse = {
 	duplicateFileReadNotice: () => CaretResponses.duplicateFileReadNotice(),
@@ -22,9 +22,12 @@ export const formatResponse = {
 
 	tooManyMistakes: (feedback?: string) => CaretResponses.tooManyMistakes(feedback),
 
+	autoApprovalMaxReached: (feedback?: string) => CaretResponses.autoApprovalMaxReached(feedback),
+
 	missingToolParameterError: (paramName: string) => CaretResponses.missingToolParameterError(paramName),
 
-	invalidMcpToolArgumentError: (serverName: string, toolName: string) => CaretResponses.invalidMcpToolArgumentError(serverName, toolName),
+	invalidMcpToolArgumentError: (serverName: string, toolName: string) =>
+		CaretResponses.invalidMcpToolArgumentError(serverName, toolName),
 
 	toolResult: (
 		text: string,
@@ -127,7 +130,7 @@ export const formatResponse = {
 	},
 
 	taskResumption: (
-		mode: "plan" | "act",
+		mode: Mode,
 		agoText: string,
 		cwd: string,
 		wasRecent: boolean | 0 | undefined,

@@ -1,15 +1,16 @@
 // type that represents json data that is sent from extension to webview, called ExtensionMessage and has 'type' enum which can be 'plusButtonClicked' or 'settingsButtonClicked' or 'hello'
-
-import { GitCommit } from "../utils/git"
 import { ApiConfiguration, ModelInfo } from "./api"
 import { AutoApprovalSettings } from "./AutoApprovalSettings"
 import { BrowserSettings } from "./BrowserSettings"
-import { ChatSettings } from "./ChatSettings"
+import { Mode, OpenaiReasoningEffort } from "./storage/types"
 import { HistoryItem } from "./HistoryItem"
-import { McpServer, McpMarketplaceCatalog, McpDownloadResponse, McpViewTab } from "./mcp"
 import { TelemetrySetting } from "./TelemetrySetting"
-import type { BalanceResponse, UsageTransaction, PaymentTransaction } from "../shared/ClineAccount"
 import { ClineRulesToggles } from "./cline-rules"
+import { UserInfo } from "./UserInfo"
+import { McpDisplayMode } from "./McpDisplayMode"
+import { McpDownloadResponse, McpMarketplaceCatalog, McpServer, McpViewTab } from "./mcp"
+import { BalanceResponse, PaymentTransaction, UsageTransaction } from "./ClineAccount"
+import { GitCommit } from "../utils/git"
 
 // webview will hold state
 export interface ExtensionMessage {
@@ -64,13 +65,15 @@ export interface ExtensionMessage {
 		label?: string
 	}>
 	tab?: McpViewTab
-	grpc_response?: {
-		message?: any // JSON serialized protobuf message
-		request_id: string // Same ID as the request
-		error?: string // Optional error message
-		is_streaming?: boolean // Whether this is part of a streaming response
-		sequence_number?: number // For ordering chunks in streaming responses
-	}
+	grpc_response?: GrpcResponse
+}
+
+export type GrpcResponse = {
+	message?: any // JSON serialized protobuf message
+	request_id: string // Same ID as the request
+	error?: string // Optional error message
+	is_streaming?: boolean // Whether this is part of a streaming response
+	sequence_number?: number // For ordering chunks in streaming responses
 }
 
 export type Platform = "aix" | "darwin" | "freebsd" | "linux" | "openbsd" | "sunos" | "win32" | "unknown"
@@ -79,16 +82,19 @@ export const DEFAULT_PLATFORM = "unknown"
 
 export interface ExtensionState {
 	isNewUser: boolean
+	welcomeViewCompleted: boolean
 	apiConfiguration?: ApiConfiguration
 	autoApprovalSettings: AutoApprovalSettings
 	browserSettings: BrowserSettings
 	remoteBrowserHost?: string
-	chatSettings: ChatSettings
+	preferredLanguage?: string
+	openaiReasoningEffort?: OpenaiReasoningEffort
+	mode: Mode
 	checkpointTrackerErrorMessage?: string
 	clineMessages: ClineMessage[]
 	currentTaskItem?: HistoryItem
 	mcpMarketplaceEnabled?: boolean
-	mcpRichDisplayEnabled: boolean
+	mcpDisplayMode: McpDisplayMode
 	planActSeparateModelsSetting: boolean
 	enableCheckpointsSetting?: boolean
 	platform: Platform
@@ -100,11 +106,7 @@ export interface ExtensionState {
 	terminalOutputLineLimit: number
 	defaultTerminalProfile?: string
 	uriScheme?: string
-	userInfo?: {
-		displayName: string | null
-		email: string | null
-		photoURL: string | null
-	}
+	userInfo?: UserInfo
 	version: string
 	distinctId: string
 	globalClineRulesToggles: ClineRulesToggles
@@ -119,6 +121,7 @@ export interface ExtensionState {
 	// CARET MODIFICATION: Add plan and isPayAsYouGo for account plan display
 	plan?: string
 	isPayAsYouGo?: boolean
+	strictPlanModeEnabled?: boolean
 }
 
 export interface ClineMessage {

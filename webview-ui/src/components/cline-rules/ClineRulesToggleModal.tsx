@@ -6,8 +6,12 @@ import Tooltip from "@/components/common/Tooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { FileServiceClient } from "@/services/grpc-client"
 import { vscode } from "@/utils/vscode"
+<<<<<<< HEAD
 import { caretWebviewLogger } from "@/caret/utils/webview-logger"
 import { EmptyRequest } from "@shared/proto/common"
+=======
+import { EmptyRequest } from "@shared/proto/cline/common"
+>>>>>>> upstream/main
 import {
 	ClineRulesToggles,
 	RefreshedRules,
@@ -16,7 +20,7 @@ import {
 	ToggleCursorRuleRequest,
 	ToggleWindsurfRuleRequest,
 	ToggleWorkflowRequest,
-} from "@shared/proto/file"
+} from "@shared/proto/cline/file"
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useRef, useState } from "react"
 import { useClickAway, useWindowSize } from "react-use"

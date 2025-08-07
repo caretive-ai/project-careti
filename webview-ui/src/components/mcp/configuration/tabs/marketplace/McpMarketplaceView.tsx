@@ -13,10 +13,12 @@ import { useExtensionState } from "@/context/ExtensionStateContext"
 // CARET MODIFICATION: 다국어 지원을 위한 i18n 유틸 추가
 import { t } from "@/caret/utils/i18n"
 import { vscode } from "@/utils/vscode"
+import { McpServiceClient } from "@/services/grpc-client"
+import { EmptyRequest } from "@shared/proto/cline/common"
 import McpMarketplaceCard from "./McpMarketplaceCard"
 import McpSubmitCard from "./McpSubmitCard"
 const McpMarketplaceView = () => {
-	const { mcpServers, mcpMarketplaceCatalog } = useExtensionState()
+	const { mcpServers, mcpMarketplaceCatalog, setMcpMarketplaceCatalog, mcpMarketplaceEnabled } = useExtensionState()
 	const [isLoading, setIsLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
 	const [isRefreshing, setIsRefreshing] = useState(false)
@@ -59,23 +61,8 @@ const McpMarketplaceView = () => {
 	}, [items, searchQuery, selectedCategory, sortBy])
 
 	useEffect(() => {
-		const handleMessage = (event: MessageEvent) => {
-			const message = event.data
-			if (message.type === "mcpDownloadDetails") {
-				if (message.error) {
-					setError(message.error)
-				}
-			}
-		}
-
-		window.addEventListener("message", handleMessage)
-
 		// Fetch marketplace catalog on initial load
 		fetchMarketplace()
-
-		return () => {
-			window.removeEventListener("message", handleMessage)
-		}
 	}, [])
 
 	useEffect(() => {
@@ -94,7 +81,19 @@ const McpMarketplaceView = () => {
 			setIsLoading(true)
 		}
 		setError(null)
-		vscode.postMessage({ type: "fetchMcpMarketplace", bool: forceRefresh })
+
+		if (mcpMarketplaceEnabled) {
+			McpServiceClient.refreshMcpMarketplace(EmptyRequest.create({}))
+				.then((response) => {
+					setMcpMarketplaceCatalog(response)
+				})
+				.catch((error) => {
+					console.error("Error refreshing MCP marketplace:", error)
+					setError("Failed to load marketplace data")
+					setIsLoading(false)
+					setIsRefreshing(false)
+				})
+		}
 	}
 
 	if (isLoading || isRefreshing) {
@@ -279,7 +278,9 @@ const McpMarketplaceView = () => {
 							: t("mcp.noServersFound", "common")}
 					</div>
 				) : (
-					filteredItems.map((item) => <McpMarketplaceCard key={item.mcpId} item={item} installedServers={mcpServers} />)
+					filteredItems.map((item) => (
+						<McpMarketplaceCard key={item.mcpId} item={item} installedServers={mcpServers} setError={setError} />
+					))
 				)}
 				<McpSubmitCard />
 			</div>

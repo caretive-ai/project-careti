@@ -66,6 +66,10 @@
 		{
 			"id": "CDATA_USAGE",
 			"description": "Avoid unnecessary CDATA sections when generating file content. Only include CDATA if required by the file format or context."
+		},
+		{
+			"id": "EVIDENCE_BASED_ANALYSIS",
+			"description": "Do not operate on assumptions. Always verify facts through code, git history, or other reliable sources before making decisions. When the existence or behavior of code is uncertain, use tools like `git show` or `read_file` to confirm before proceeding."
 		}
 	]
 }

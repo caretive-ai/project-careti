@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const { execSync } = require("child_process")
 const esbuild = require("esbuild")
 
@@ -34,7 +35,6 @@ const srcConfig = {
 	format: "cjs",
 	platform: "node",
 	define: {
-		"process.env.IS_DEV": "true",
 		"process.env.IS_TEST": "true",
 	},
 	external: ["vscode"],

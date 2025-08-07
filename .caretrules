@@ -220,7 +220,11 @@
         "Verification results recording: passed tests and confirmed functions",
         "Important decision documentation: design intent and constraints",
         "Next session preparation: enable new AI to start work immediately"
-      ]
+      ],
+      "mode_specific_procedures": {
+        "agent_mode": "Use the 'new_task' tool to pass the full context and start a new task immediately. This is the standard procedure for session handoff in Agent Mode.",
+        "chatbot_mode": "Since 'new_task' (a write tool) is unavailable, the goal is to summarize the consultation content and record it in 'next-session-guide.md' to preserve context for the next Agent Mode session. The AI must clearly explain this limitation to the user."
+      }
     },
     "development_method_evolution": {
       "change_detection": "Immediately document when new development patterns, tools, or methodologies are introduced",

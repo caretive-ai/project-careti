@@ -12,9 +12,9 @@ export const SYSTEM_PROMPT = async (
 	supportsBrowserUse: boolean,
 	mcpHub: McpHub,
 	browserSettings: BrowserSettings,
-	isClaude4ModelFamily: boolean = false,
-	extensionPath?: string, // CARET MODIFICATION: CaretSystemPrompt 연결을 위한 extensionPath
-	mode: 'chatbot' | 'agent' = 'agent' // CARET MODIFICATION: Chatbot/Agent 모드 지원
+	isNextGenModel: boolean = false, // CARET MODIFICATION: Adopted from upstream
+	extensionPath?: string, // CARET MODIFICATION: For routing to CaretSystemPrompt
+	mode: 'chatbot' | 'agent' = 'agent' // CARET MODIFICATION: For Chatbot/Agent mode support
 ) => {
 	// CARET MODIFICATION: SYSTEM_PROMPT 호출 시 모드 확인 로그 추가
 	// CARET MODIFICATION: extensionPath가 있으면 Caret 전용 system.ts 사용
@@ -24,7 +24,7 @@ export const SYSTEM_PROMPT = async (
 			caretLogger.info(`🎯 [CARET-ROUTING] Routing to caret-src/core/prompts/system.ts - mode=${mode}`, "SYSTEM")
 			
 			const { SYSTEM_PROMPT: CARET_SYSTEM_PROMPT } = await import('../../../caret-src/core/prompts/system')
-			const result = await CARET_SYSTEM_PROMPT(cwd, supportsBrowserUse, mcpHub, browserSettings, isClaude4ModelFamily, extensionPath, mode)
+			const result = await CARET_SYSTEM_PROMPT(cwd, supportsBrowserUse, mcpHub, browserSettings, isNextGenModel, extensionPath, mode)
 			
 			caretLogger.success(`✅ [CARET-ROUTING] Caret system completed - mode=${mode}`, "SYSTEM")
 			return result
@@ -35,16 +35,16 @@ export const SYSTEM_PROMPT = async (
 		}
 	}
 
-	if (isClaude4ModelFamily && USE_EXPERIMENTAL_CLAUDE4_FEATURES) {
+	if (isNextGenModel && USE_EXPERIMENTAL_CLAUDE4_FEATURES) {
 		return SYSTEM_PROMPT_CLAUDE4_EXPERIMENTAL(cwd, supportsBrowserUse, mcpHub, browserSettings)
 	}
 
-  if (isClaude4ModelFamily) {
-    return SYSTEM_PROMPT_CLAUDE4(cwd, supportsBrowserUse, mcpHub, browserSettings)
-  }
+  	if (isNextGenModel) {
+		return SYSTEM_PROMPT_CLAUDE4(cwd, supportsBrowserUse, mcpHub, browserSettings)
+  	}
 
 	// CARET MODIFICATION: Cline 원본 프롬프트 보존 함수로 분리
-	return ORIGINAL_CLINE_SYSTEM_PROMPT(cwd, supportsBrowserUse, mcpHub, browserSettings, isClaude4ModelFamily)
+	return ORIGINAL_CLINE_SYSTEM_PROMPT(cwd, supportsBrowserUse, mcpHub, browserSettings, isNextGenModel)
 }
 
 // CARET MODIFICATION: Cline 원본 시스템 프롬프트 보존 (성능 비교용)
@@ -53,7 +53,7 @@ export function ORIGINAL_CLINE_SYSTEM_PROMPT(
 	supportsBrowserUse: boolean,
 	mcpHub: McpHub,
 	browserSettings: BrowserSettings,
-	isClaude4ModelFamily: boolean
+	isNextGenModel: boolean
 ): string {
 	return `You are Cline, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.
 

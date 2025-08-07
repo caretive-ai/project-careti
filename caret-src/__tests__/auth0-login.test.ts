@@ -73,7 +73,7 @@ vi.mock("../../src/core/storage/disk", () => ({
 }))
 
 // CARET MODIFICATION: Mock proto imports to prevent path resolution errors
-vi.mock("@shared/proto/browser", () => ({
+vi.mock("@shared/proto/cline/browser", () => ({
 	BrowserConnectionInfo: {},
 }))
 

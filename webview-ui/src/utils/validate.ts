@@ -1,5 +1,6 @@
 // CARET MODIFICATION: Removed debugging logs for Gemini API validation (백업: validate-ts.cline)
 import { ApiConfiguration, openRouterDefaultModelId, ModelInfo } from "@shared/api"
+<<<<<<< HEAD
 import { t } from "@/caret/utils/i18n"
 import { SupportedLanguage } from "@/caret/constants/urls"
 
@@ -7,8 +8,25 @@ export function validateApiConfiguration(
 	apiConfiguration?: ApiConfiguration,
 	language: SupportedLanguage = "en",
 ): string | undefined {
+=======
+import { getModeSpecificFields } from "@/components/settings/utils/providerUtils"
+import { Mode } from "@shared/storage/types"
+
+export function validateApiConfiguration(currentMode: Mode, apiConfiguration?: ApiConfiguration): string | undefined {
+>>>>>>> upstream/main
 	if (apiConfiguration) {
-		switch (apiConfiguration.apiProvider) {
+		const {
+			apiProvider,
+			openAiModelId,
+			requestyModelId,
+			fireworksModelId,
+			togetherModelId,
+			ollamaModelId,
+			lmStudioModelId,
+			vsCodeLmModelSelector,
+		} = getModeSpecificFields(apiConfiguration, currentMode)
+
+		switch (apiProvider) {
 			case "anthropic":
 				if (!apiConfiguration.apiKey) {
 					return t("invalidApiKey", "validate-api-conf", language)
@@ -65,6 +83,7 @@ export function validateApiConfiguration(
 				}
 				break
 			case "cline":
+<<<<<<< HEAD
 				if (!apiConfiguration.clineApiKey) {
 					return t("invalidApiKey", "validate-api-conf", language)
 				}
@@ -107,6 +126,50 @@ export function validateApiConfiguration(
 			case "vscode-lm":
 				if (!apiConfiguration.vsCodeLmModelSelector) {
 					return t("invalidModelSelector", "validate-api-conf", language)
+=======
+				if (!apiConfiguration.clineAccountId) {
+					return "You must provide a valid API key or choose a different provider."
+				}
+				break
+			case "openai":
+				if (!apiConfiguration.openAiBaseUrl || !apiConfiguration.openAiApiKey || !openAiModelId) {
+					return "You must provide a valid base URL, API key, and model ID."
+				}
+				break
+			case "requesty":
+				if (!apiConfiguration.requestyApiKey || !requestyModelId) {
+					return "You must provide a valid API key or choose a different provider."
+				}
+				break
+			case "fireworks":
+				if (!apiConfiguration.fireworksApiKey || !fireworksModelId) {
+					return "You must provide a valid API key or choose a different provider."
+				}
+				break
+			case "together":
+				if (!apiConfiguration.togetherApiKey || !togetherModelId) {
+					return "You must provide a valid API key or choose a different provider."
+				}
+				break
+			case "ollama":
+				if (!ollamaModelId) {
+					return "You must provide a valid model ID."
+				}
+				break
+			case "lmstudio":
+				if (!lmStudioModelId) {
+					return "You must provide a valid model ID."
+				}
+				break
+			case "vscode-lm":
+				if (!vsCodeLmModelSelector) {
+					return "You must provide a valid model selector."
+>>>>>>> upstream/main
+				}
+				break
+			case "moonshot":
+				if (!apiConfiguration.moonshotApiKey) {
+					return "You must provide a valid API key or choose a different provider."
 				}
 				break
 			case "nebius":
@@ -144,15 +207,17 @@ export function validateApiConfiguration(
 }
 
 export function validateModelId(
+	currentMode: Mode,
 	apiConfiguration?: ApiConfiguration,
 	openRouterModels?: Record<string, ModelInfo>,
 	language: SupportedLanguage = "en",
 ): string | undefined {
 	if (apiConfiguration) {
-		switch (apiConfiguration.apiProvider) {
+		const { apiProvider, openRouterModelId } = getModeSpecificFields(apiConfiguration, currentMode)
+		switch (apiProvider) {
 			case "openrouter":
 			case "cline":
-				const modelId = apiConfiguration.openRouterModelId || openRouterDefaultModelId // in case the user hasn't changed the model id, it will be undefined by default
+				const modelId = openRouterModelId || openRouterDefaultModelId // in case the user hasn't changed the model id, it will be undefined by default
 				if (!modelId) {
 					return t("invalidModelId", "validate-api-conf", language)
 				}

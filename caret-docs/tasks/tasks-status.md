@@ -27,6 +27,8 @@
   [014-ai-file-read-inconsistency-bug.md](./014-ai-file-read-inconsistency-bug.md)
 - **Task #017:** 작업 공간 규칙 초기화 문제 해결 (담당자: luke)
   [017-workspace-rules-initialization-fix.md](./017-workspace-rules-initialization-fix.md)
+- **Task #026:** 모드 별 AI 행동 제약 및 소통 오류 개선 (담당자: TBD)
+  [026-fix-agent-mode-tool-use-bug.md](./026-fix-agent-mode-tool-use-bug.md)
 
 
 ## 완료된 작업번호:담당자 (Complete)

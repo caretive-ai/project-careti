@@ -11,19 +11,23 @@ import { getLatestTerminalOutput } from "@integrations/terminal/get-latest-outpu
 import { getCommitInfo } from "@utils/git"
 import { getWorkingState } from "@utils/git"
 import { FileContextTracker } from "../context/context-tracking/FileContextTracker"
+import { getCwd } from "@/utils/path"
+import { openExternal } from "@utils/env"
+import { HostProvider } from "@/hosts/host-provider"
+import { ShowMessageType } from "@/shared/proto/host/window"
 
-export function openMention(mention?: string): void {
+export async function openMention(mention?: string): Promise<void> {
 	if (!mention) {
 		return
 	}
 
-	const cwd = vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath).at(0)
+	const cwd = await getCwd()
 	if (!cwd) {
 		return
 	}
 
-	if (mention.startsWith("/")) {
-		const relPath = mention.slice(1)
+	if (isFileMention(mention)) {
+		const relPath = getFilePathFromMention(mention)
 		const absPath = path.resolve(cwd, relPath)
 		if (mention.endsWith("/")) {
 			vscode.commands.executeCommand("revealInExplorer", vscode.Uri.file(absPath))
@@ -35,7 +39,7 @@ export function openMention(mention?: string): void {
 	} else if (mention === "terminal") {
 		vscode.commands.executeCommand("workbench.action.terminal.focus")
 	} else if (mention.startsWith("http")) {
-		vscode.env.openExternal(vscode.Uri.parse(mention))
+		await openExternal(mention)
 	}
 }
 
@@ -50,8 +54,8 @@ export async function parseMentions(
 		mentions.add(mention)
 		if (mention.startsWith("http")) {
 			return `'${mention}' (see below for site content)`
-		} else if (mention.startsWith("/")) {
-			const mentionPath = mention.slice(1) // Remove the leading '/'
+		} else if (isFileMention(mention)) {
+			const mentionPath = getFilePathFromMention(mention)
 			return mentionPath.endsWith("/")
 				? `'${mentionPath}' (see below for folder content)`
 				: `'${mentionPath}' (see below for file content)`
@@ -74,7 +78,10 @@ export async function parseMentions(
 			await urlContentFetcher.launchBrowser()
 		} catch (error) {
 			launchBrowserError = error
-			vscode.window.showErrorMessage(`Error fetching content for ${urlMention}: ${error.message}`)
+			HostProvider.window.showMessage({
+				type: ShowMessageType.ERROR,
+				message: `Error fetching content for ${urlMention}: ${error.message}`,
+			})
 		}
 	}
 
@@ -91,13 +98,16 @@ export async function parseMentions(
 					const markdown = await urlContentFetcher.urlToMarkdown(mention)
 					result = markdown
 				} catch (error) {
-					vscode.window.showErrorMessage(`Error fetching content for ${mention}: ${error.message}`)
+					HostProvider.window.showMessage({
+						type: ShowMessageType.ERROR,
+						message: `Error fetching content for ${mention}: ${error.message}`,
+					})
 					result = `Error fetching content: ${error.message}`
 				}
 			}
 			parsedText += `\n\n<url_content url="${mention}">\n${result}\n</url_content>`
-		} else if (mention.startsWith("/")) {
-			const mentionPath = mention.slice(1)
+		} else if (isFileMention(mention)) {
+			const mentionPath = getFilePathFromMention(mention)
 			try {
 				const content = await getFileOrFolderContent(mentionPath, cwd)
 				if (mention.endsWith("/")) {
@@ -118,7 +128,7 @@ export async function parseMentions(
 			}
 		} else if (mention === "problems") {
 			try {
-				const problems = getWorkspaceProblems(cwd)
+				const problems = await getWorkspaceProblems()
 				parsedText += `\n\n<workspace_diagnostics>\n${problems}\n</workspace_diagnostics>`
 			} catch (error) {
 				parsedText += `\n\n<workspace_diagnostics>\nError fetching diagnostics: ${error.message}\n</workspace_diagnostics>`
@@ -214,15 +224,23 @@ async function getFileOrFolderContent(mentionPath: string, cwd: string): Promise
 	}
 }
 
-function getWorkspaceProblems(cwd: string): string {
+async function getWorkspaceProblems(): Promise<string> {
 	const diagnostics = vscode.languages.getDiagnostics()
-	const result = diagnosticsToProblemsString(
-		diagnostics,
-		[vscode.DiagnosticSeverity.Error, vscode.DiagnosticSeverity.Warning],
-		cwd,
-	)
+	const result = diagnosticsToProblemsString(diagnostics, [vscode.DiagnosticSeverity.Error, vscode.DiagnosticSeverity.Warning])
 	if (!result) {
 		return "No errors or warnings detected."
 	}
 	return result
+}
+
+function isFileMention(mention: string): boolean {
+	return mention.startsWith("/") || mention.startsWith('"/')
+}
+
+function getFilePathFromMention(mention: string): string {
+	// Remove quotes
+	const match = mention.match(/^"(.*)"$/)
+	const filePath = match ? match[1] : mention
+	// Remove leading slash
+	return filePath.slice(1)
 }

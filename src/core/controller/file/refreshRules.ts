@@ -1,14 +1,16 @@
-import { EmptyRequest } from "@shared/proto/common"
-import { RefreshedRules } from "@shared/proto/file"
+// CARET MODIFICATION: Merged with upstream/main. Proto paths updated to 'caret' package.
+// Adopted new getCwd utility and preserved Caret's multi-rule priority logic.
+import { EmptyRequest } from "@shared/proto/caret/common"
+import { RefreshedRules } from "@shared/proto/caret/file"
 import type { Controller } from "../index"
 import { refreshClineRulesToggles } from "@core/context/instructions/user-instructions/cline-rules"
 import { refreshExternalRulesToggles } from "@core/context/instructions/user-instructions/external-rules"
 import { refreshWorkflowToggles } from "@core/context/instructions/user-instructions/workflows"
-import { cwd } from "@core/task"
 import { fileExistsAtPath } from "@utils/fs"
 import { GlobalFileNames } from "@core/storage/disk"
 import { ClineRulesToggles } from "@shared/cline-rules"
 import * as path from "path"
+import { getCwd, getDesktopDir } from "@/utils/path"
 
 /**
  * Apply priority-based rule guidance while respecting user settings
@@ -78,7 +80,7 @@ async function applyGlobalRulePriority(
  */
 export async function refreshRules(controller: Controller, _request: EmptyRequest): Promise<RefreshedRules> {
 	try {
-		// CARET MODIFICATION: Added caretrules support and global priority system. Original backed up as refreshRules-ts.cline
+		const cwd = await getCwd(getDesktopDir())
 		const { globalToggles, localToggles } = await refreshClineRulesToggles(controller.context, cwd)
 		const { caretLocalToggles, cursorLocalToggles, windsurfLocalToggles } = await refreshExternalRulesToggles(
 			controller.context,

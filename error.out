@@ -1,0 +1,43 @@
+
+> caret@0.1.1 protos
+> node scripts/build-proto.mjs
+
+Compiling Protocol Buffers...
+Processing 17 proto files from /home/luke/caret/proto
+
+Warning: Found 9 fields using 64-bit integer types
+Inspecting proto object structure: {
+  "caret": {
+    "Metadata": {
+      "format": "Protocol Buffer 3 DescriptorProto",
+      "type": {
+        "field": [],
+        "nestedType": [],
+        "enumType": [],
+        "extensionRange": [],
+        "extension": [],
+        "oneofDecl": [],
+        "reservedRange": [],
+        "reservedName": [],
+        "name": "Metadata",
+        "options": null,
+        "visibility": "VISIBILITY_UNSET"
+      },
+      "fileDescriptorProtos": [
+        {
+          "type": "Buffer",
+          "data": [
+            10,
+            15,
+            99,
+            108,
+            105,
+            110,
+            101,
+            47,
+            119,
+            101,
+            98,
+            46,
+          ..
+          

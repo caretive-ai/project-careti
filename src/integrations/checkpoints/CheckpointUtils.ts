@@ -2,6 +2,7 @@ import { mkdir, access, constants } from "fs/promises"
 import * as path from "path"
 import * as vscode from "vscode"
 import os from "os"
+import { getCwd, getDesktopDir } from "@/utils/path"
 
 /**
  * Gets the path to the shadow Git repository in globalStorage.
@@ -30,7 +31,6 @@ export async function getShadowGitPath(globalStoragePath: string, taskId: string
 
 /**
  * Gets the current working directory from the VS Code workspace.
- * Enhanced with multiple detection methods and better error handling.
  * Validates that checkpoints are not being used in protected directories
  * like home, Desktop, Documents, or Downloads. Checks to confirm that the workspace
  * is accessible and that we will not encounter breaking permissions issues when
@@ -46,70 +46,9 @@ export async function getShadowGitPath(globalStoragePath: string, taskId: string
  * @throws Error if no workspace is detected, if in a protected directory, or if no read access
  */
 export async function getWorkingDirectory(): Promise<string> {
-	let cwd: string | undefined
-
-	// Primary method: Use VS Code workspace API
-	cwd = vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath).at(0)
-
-	// Fallback method 1: Check if we have an active text editor with a file
-	if (!cwd && vscode.window.activeTextEditor) {
-		const activeFilePath = vscode.window.activeTextEditor.document.uri.fsPath
-		if (activeFilePath && path.isAbsolute(activeFilePath)) {
-			// Get the directory containing the active file
-			cwd = path.dirname(activeFilePath)
-			console.info(`Workspace detected via active editor: ${cwd}`)
-		}
-	}
-
-	// Fallback method 2: Check all open text editors
+	const cwd = await getCwd()
 	if (!cwd) {
-		for (const editor of vscode.window.visibleTextEditors) {
-			const filePath = editor.document.uri.fsPath
-			if (filePath && path.isAbsolute(filePath)) {
-				cwd = path.dirname(filePath)
-				console.info(`Workspace detected via visible editor: ${cwd}`)
-				break
-			}
-		}
-	}
-
-	// Fallback method 3: Try to find workspace root by looking for common project files
-	if (!cwd && vscode.window.activeTextEditor) {
-		const activeFilePath = vscode.window.activeTextEditor.document.uri.fsPath
-		if (activeFilePath) {
-			let currentDir = path.dirname(activeFilePath)
-			const root = path.parse(currentDir).root
-
-			// Look for workspace indicators going up the directory tree
-			while (currentDir !== root) {
-				try {
-					const files = await vscode.workspace.fs.readDirectory(vscode.Uri.file(currentDir))
-					const fileNames = files.map(([name]) => name)
-
-					// Check for common workspace indicators
-					if (
-						fileNames.some((name) =>
-							[".git", "package.json", ".vscode", "tsconfig.json", "Cargo.toml", "go.mod", ".project"].includes(
-								name,
-							),
-						)
-					) {
-						cwd = currentDir
-						console.info(`Workspace detected via project files: ${cwd}`)
-						break
-					}
-				} catch (error) {
-					// Continue searching if we can't read this directory
-				}
-				currentDir = path.dirname(currentDir)
-			}
-		}
-	}
-
-	if (!cwd) {
-		throw new Error(
-			"No workspace detected. Please open Cline in a workspace to use checkpoints. Try opening a folder or workspace in VS Code.",
-		)
+		throw new Error("No workspace detected. Please open Cline in a workspace to use checkpoints.")
 	}
 
 	// Check if directory exists and we have read permissions
@@ -122,7 +61,7 @@ export async function getWorkingDirectory(): Promise<string> {
 	}
 
 	const homedir = os.homedir()
-	const desktopPath = path.join(homedir, "Desktop")
+	const desktopPath = getDesktopDir()
 	const documentsPath = path.join(homedir, "Documents")
 	const downloadsPath = path.join(homedir, "Downloads")
 

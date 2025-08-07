@@ -14,6 +14,8 @@ export const GlobalFileNames = {
 	contextHistory: "context_history.json",
 	uiMessages: "ui_messages.json",
 	openRouterModels: "openrouter_models.json",
+	groqModels: "groq_models.json",
+	basetenModels: "baseten_models.json",
 	mcpSettings: "caret_mcp_settings.json",
 	caretRules: ".caretrules",
 	clineRules: ".clinerules",

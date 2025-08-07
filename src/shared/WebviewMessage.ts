@@ -54,25 +54,6 @@ export interface WebviewMessage {
 		| "start"
 		| "setWelcomeContext"
 
-	text?: string
-	disabled?: boolean
-	apiConfiguration?: ApiConfiguration
-	images?: string[]
-	files?: string[]
-	bool?: boolean
-	number?: number
-	browserSettings?: BrowserSettings
-	chatSettings?: ChatSettings
-	chatContent?: ChatContent
-	mcpId?: string
-	timeout?: number
-	tab?: McpViewTab
-	// For toggleToolAutoApprove
-	serverName?: string
-	serverUrl?: string
-	toolNames?: string[]
-	autoApprove?: boolean
-
 	// For auth
 	user?: UserInfo | null
 	customToken?: string
@@ -86,16 +67,11 @@ export interface WebviewMessage {
 	query?: string
 	// For toggleFavoriteModel
 	modelId?: string
-	grpc_request?: {
-		service: string
-		method: string
-		message: any // JSON serialized protobuf message
-		request_id: string // For correlating requests and responses
-		is_streaming?: boolean // Whether this is a streaming request
-	}
-	grpc_request_cancel?: {
-		request_id: string // ID of the request to cancel
-	}
+
+	// Cline refactored types
+	grpc_request?: GrpcRequest
+	grpc_request_cancel?: GrpcCancel
+
 	// For cline rules and workflows
 	isGlobal?: boolean
 	rulePath?: string
@@ -122,6 +98,18 @@ export interface WebviewMessage {
 
 	personaInstruction?: PersonaInstruction
 	payload?: any // Used for RESPONSE_TEMPLATE_CHARACTERS and potentially others
+}
+
+export type GrpcRequest = {
+	service: string
+	method: string
+	message: any // JSON serialized protobuf message
+	request_id: string // For correlating requests and responses
+	is_streaming: boolean // Whether this is a streaming request
+}
+
+export type GrpcCancel = {
+	request_id: string // ID of the request to cancel
 }
 
 export type ClineAskResponse = "yesButtonClicked" | "noButtonClicked" | "messageResponse"

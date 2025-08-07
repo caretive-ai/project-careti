@@ -5,6 +5,8 @@ import * as path from "path"
 import { Controller } from "@core/controller"
 import { HistoryItem } from "@shared/HistoryItem"
 import { ClineMessage } from "@shared/ExtensionMessage"
+import { ShowMessageType } from "@shared/proto/host/window"
+import { HostProvider } from "@hosts/host-provider"
 
 /**
  * Registers development-only commands for task manipulation.
@@ -14,13 +16,15 @@ export function registerTaskCommands(context: vscode.ExtensionContext, controlle
 	return [
 		// CARET MODIFICATION: modify caret id,from package.json
 		vscode.commands.registerCommand("caret.dev.createTestTasks", async () => {
-			const count = await vscode.window.showInputBox({
-				title: "Test Tasks",
-				prompt: "How many test tasks to create?",
-				value: "10",
-			})
+			const count = (
+				await HostProvider.window.showInputBox({
+					title: "Test Tasks",
+					prompt: "How many test tasks to create?",
+					value: "10",
+				})
+			).response
 
-			if (!count) {
+			if (count === undefined) {
 				return
 			}
 
@@ -98,7 +102,11 @@ export function registerTaskCommands(context: vscode.ExtensionContext, controlle
 					// Update the UI to show the new tasks
 					await controller.postStateToWebview()
 
-					vscode.window.showInformationMessage(`Created ${tasksCount} test tasks`)
+					const message = `Created ${tasksCount} test tasks`
+					HostProvider.window.showMessage({
+						type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+						message,
+					})
 				},
 			)
 		}),

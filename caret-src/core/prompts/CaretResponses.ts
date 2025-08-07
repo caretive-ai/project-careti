@@ -85,6 +85,10 @@ export class CaretResponses {
         return this.getResponse("tooManyMistakes", { feedback: feedback || "" })
     }
 
+    static autoApprovalMaxReached(feedback?: string): string {
+        return this.getResponse("autoApprovalMaxReached", { feedback: feedback || "" })
+    }
+
     static missingToolParameterError(paramName: string): string {
         return this.getResponse("missingToolParameterError", { paramName })
     }

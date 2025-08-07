@@ -13,5 +13,10 @@
 	
 	// CARET MODIFICATION: 강제로 Caret 모드 활성화
 	"caret.systemPrompt.mode": "caret",
-	"caret.systemPrompt.fallbackToCline": true
+	"caret.systemPrompt.fallbackToCline": true,
+
+	// Protobuf settings
+	"protoc": {
+		"options": ["--proto_path=proto"]
+	}
 }

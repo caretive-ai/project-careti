@@ -63,7 +63,7 @@ const checkGitHubAuth = async () => {
 
 const createIssueUrl = (systemInfo, issueTitle) => {
 	return (
-		`https://github.com/cline/cline/issues/new?template=bug_report.yml` +
+		`https://github.com/aicoding-caret/caret/issues/new?template=bug_report.yml` +
 		`&title=${issueTitle}` +
 		`&operating-system=${systemInfo.os}` +
 		`&cline-version=${systemInfo.clineVersion}` +

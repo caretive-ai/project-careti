@@ -1,0 +1,137 @@
+syntax = "proto3";
+
+package caret;
+option java_package = "bot.caret.proto";
+option java_multiple_files = true;
+
+import "cline/common.proto";
+
+// Provides methods for working with IDE windows and editors.
+service WindowService {
+  // Opens a text document in the editor and returns editor information.
+  rpc showTextDocument(ShowTextDocumentRequest) returns (TextEditorInfo);
+  rpc showOpenDialogue(ShowOpenDialogueRequest) returns (SelectedResources);
+  rpc showMessage(ShowMessageRequest) returns (SelectedResponse);
+  rpc showInputBox(ShowInputBoxRequest) returns (ShowInputBoxResponse);
+  rpc showSaveDialog(ShowSaveDialogRequest) returns (ShowSaveDialogResponse);
+  rpc openFile(OpenFileRequest) returns (OpenFileResponse);
+  rpc getOpenTabs(GetOpenTabsRequest) returns (GetOpenTabsResponse);
+  rpc getVisibleTabs(GetVisibleTabsRequest) returns (GetVisibleTabsResponse);
+}
+
+message ShowTextDocumentRequest {
+  caret.Metadata metadata = 1;
+  string path = 2;
+  optional ShowTextDocumentOptions options = 3;
+}
+
+// See https://code.visualstudio.com/api/references/vscode-api#TextDocumentShowOptions
+message ShowTextDocumentOptions {
+  optional bool preview = 1;
+  optional bool preserve_focus = 2;
+  optional int32 view_column = 3;
+}
+
+message TextEditorInfo {
+  string document_path = 1;
+  optional int32 view_column = 2;
+  bool is_active = 3;
+}
+
+message ShowOpenDialogueRequest {
+  caret.Metadata metadata = 1;
+  optional bool can_select_many = 2;
+  optional string open_label = 3;
+  optional ShowOpenDialogueFilterOption filters = 4;
+}
+
+message ShowOpenDialogueFilterOption {
+  repeated string files = 1;
+}
+
+message SelectedResources {
+  repeated string paths = 1;
+}
+
+enum ShowMessageType {
+  // CARET MODIFICATION: Renamed to avoid name collision with `ClineSay.ERROR`
+  // after unifying all proto packages to `caret`. Protobuf enums share a single namespace within a package.
+  WINDOW_MESSAGE_ERROR = 0;
+  WINDOW_MESSAGE_INFORMATION = 1;
+  WINDOW_MESSAGE_WARNING = 2;
+}
+
+message ShowMessageRequest {
+  caret.Metadata metadata = 1;
+  ShowMessageType type = 2;
+  string message = 3;
+  optional ShowMessageRequestOptions options = 4;
+}
+
+message ShowMessageRequestOptions {
+  repeated string items = 1;
+  optional bool modal = 2;
+  optional string detail = 3;
+
+}
+
+message SelectedResponse {
+  optional string selected_option = 1;
+}
+
+message ShowSaveDialogRequest {
+  caret.Metadata metadata = 1;
+  optional ShowSaveDialogOptions options = 2;
+}
+
+message ShowSaveDialogOptions {
+  optional string default_path = 1;
+  // A map of file types to extensions, e.g
+  // "Text Files": { "extensions": ["txt", "md"] }
+  map<string, FileExtensionList> filters = 2;
+}
+
+message FileExtensionList {
+  repeated string extensions = 1;
+}
+
+message ShowSaveDialogResponse {
+  // If the user cancelled the dialog, this will be empty.
+  optional string selected_path = 1;
+}
+
+message ShowInputBoxRequest {
+  caret.Metadata metadata = 1;
+  string title = 2;
+  optional string prompt = 3;
+  optional string value = 4;
+}
+
+message ShowInputBoxResponse {
+  optional string response = 1;
+}
+
+message OpenFileRequest {
+  caret.Metadata metadata = 1;
+  string file_path = 2;
+}
+
+message OpenFileResponse {
+  // empty
+}
+
+message GetOpenTabsRequest {
+  // empty
+}
+
+message GetOpenTabsResponse {
+  repeated string paths = 1;
+}
+
+message GetVisibleTabsRequest {
+  // empty
+}
+
+message GetVisibleTabsResponse {
+  repeated string paths = 1;
+}

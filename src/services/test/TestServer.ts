@@ -5,26 +5,16 @@ import { execa } from "execa"
 import { Logger } from "@services/logging/Logger"
 import { WebviewProvider } from "@core/webview"
 import { AutoApprovalSettings } from "@shared/AutoApprovalSettings"
-import { TaskServiceClient } from "webview-ui/src/services/grpc-client"
-import {
-	getWorkspacePath,
-	validateWorkspacePath,
-	initializeGitRepository,
-	getFileChanges,
-	calculateToolSuccessRate,
-} from "./GitHelper"
-import {
-	updateGlobalState,
-	getAllExtensionState,
-	updateApiConfiguration,
-	storeSecret,
-	updateWorkspaceState,
-} from "@core/storage/state"
-import { ClineAsk, ExtensionMessage } from "@shared/ExtensionMessage"
-import { ApiProvider } from "@shared/api"
+import { validateWorkspacePath, initializeGitRepository, getFileChanges, calculateToolSuccessRate } from "./GitHelper"
+// CARET MODIFICATION: Removed unused imports from @core/storage/state
+import { ExtensionMessage } from "@shared/ExtensionMessage"
+import { ApiProvider, ApiConfiguration } from "@shared/api"
 import { HistoryItem } from "@shared/HistoryItem"
 import { getSavedClineMessages, getSavedApiConversationHistory } from "@core/storage/disk"
-import { AskResponseRequest } from "@/shared/proto/task"
+import { AskResponseRequest } from "@shared/proto/cline/task"
+import { getCwd } from "@/utils/path"
+import { askResponse } from "@core/controller/task/askResponse"
+import { ChatMode, ChatSettings } from "@shared/storage/types"
 
 /**
  * Creates a tracker to monitor tool calls and failures during task execution
@@ -45,26 +35,6 @@ function createToolCallTracker(webviewProvider: WebviewProvider): {
 	webviewProvider.controller.postMessageToWebview = async (message: ExtensionMessage) => {
 		// NOTE: Tool tracking via partialMessage has been migrated to gRPC streaming
 		// This interceptor is kept for potential future use with other message types
-
-		// Track tool calls - commented out as partialMessage is now handled via gRPC
-		// if (message.type === "partialMessage" && message.partialMessage?.say === "tool") {
-		// 	const toolName = (message.partialMessage.text as any)?.tool
-		// 	if (toolName) {
-		// 		tracker.toolCalls[toolName] = (tracker.toolCalls[toolName] || 0) + 1
-		// 	}
-		// }
-
-		// Track tool failures - commented out as partialMessage is now handled via gRPC
-		// if (message.type === "partialMessage" && message.partialMessage?.say === "error") {
-		// 	const errorText = message.partialMessage.text
-		// 	if (errorText && errorText.includes("Error executing tool")) {
-		// 		const match = errorText.match(/Error executing tool: (\w+)/)
-		// 		if (match && match[1]) {
-		// 			const toolName = match[1]
-		// 			tracker.toolFailures[toolName] = (tracker.toolFailures[toolName] || 0) + 1
-		// 		}
-		// 	}
-		// }
 
 		return originalPostMessageToWebview.call(webviewProvider.controller, message)
 	}
@@ -102,7 +72,11 @@ let messageCatcherDisposable: vscode.Disposable | undefined
  */
 async function updateAutoApprovalSettings(context: vscode.ExtensionContext, provider?: WebviewProvider) {
 	try {
-		const { autoApprovalSettings } = await getAllExtensionState(context)
+        if (!provider?.controller) {
+            return
+        }
+		// CARET MODIFICATION: Use controller to get state and update settings
+		const { autoApprovalSettings } = await provider.controller.getStateToPostToWebview()
 
 		// Enable all actions
 		const updatedSettings: AutoApprovalSettings = {
@@ -121,13 +95,11 @@ async function updateAutoApprovalSettings(context: vscode.ExtensionContext, prov
 			maxRequests: 10000, // Increase max requests for tests
 		}
 
-		await updateGlobalState(context, "autoApprovalSettings", updatedSettings)
+		await provider.controller.cacheService.setGlobalState("autoApprovalSettings", updatedSettings)
 		Logger.log("Auto approval settings updated for test mode")
 
 		// Update the webview with the new state
-		if (provider?.controller) {
-			await provider.controller.postStateToWebview()
-		}
+		await provider.controller.postStateToWebview()
 	} catch (error) {
 		Logger.log(`Error updating auto approval settings: ${error}`)
 	}
@@ -215,18 +187,19 @@ export function createTestServer(webviewProvider?: WebviewProvider): http.Server
 
 				try {
 					// Get and validate the workspace path
-					const workspacePath = getWorkspacePath(visibleWebview)
+					const workspacePath = await getCwd()
 					Logger.log(`Using workspace path: ${workspacePath}`)
 
 					// Validate workspace path before proceeding with any operations
 					try {
 						await validateWorkspacePath(workspacePath)
 					} catch (error) {
-						Logger.log(`Workspace validation failed: ${error.message}`)
+						const errorMessage = error instanceof Error ? error.message : String(error)
+						Logger.log(`Workspace validation failed: ${errorMessage}`)
 						res.writeHead(500)
 						res.end(
 							JSON.stringify({
-								error: `Workspace validation failed: ${error.message}. Please open a workspace folder in VSCode before running the test.`,
+								error: `Workspace validation failed: ${errorMessage}. Please open a workspace folder in VSCode before running the test.`,
 								workspacePath,
 							}),
 						)
@@ -247,10 +220,12 @@ export function createTestServer(webviewProvider?: WebviewProvider): http.Server
 							const { stdout: lsOutput } = await execa("ls", ["-la", workspacePath])
 							Logger.log(`Directory contents before task start:\n${lsOutput}`)
 						} catch (lsError) {
-							Logger.log(`Warning: Failed to list directory contents: ${lsError.message}`)
+							const errorMessage = lsError instanceof Error ? lsError.message : String(lsError)
+							Logger.log(`Warning: Failed to list directory contents: ${errorMessage}`)
 						}
 					} catch (gitError) {
-						Logger.log(`Warning: Git initialization failed: ${gitError.message}`)
+						const errorMessage = gitError instanceof Error ? gitError.message : String(gitError)
+						Logger.log(`Warning: Git initialization failed: ${errorMessage}`)
 						Logger.log("Continuing without Git initialization")
 					}
 
@@ -262,34 +237,26 @@ export function createTestServer(webviewProvider?: WebviewProvider): http.Server
 						Logger.log("API key provided, updating API configuration")
 
 						// Get current API configuration
-						const { apiConfiguration } = await getAllExtensionState(visibleWebview.controller.context)
+						const apiConfiguration = visibleWebview.controller.cacheService.getApiConfiguration()
 
 						// Update API configuration with API key
-						const updatedConfig = {
+						const updatedConfig: ApiConfiguration = {
 							...apiConfiguration,
-							apiProvider: "cline" as ApiProvider,
-							clineApiKey: apiKey,
+							agentModeApiProvider: "cline" as ApiProvider,
+							clineAccountId: apiKey,
 						}
 
 						// Store the API key securely
-						await storeSecret(visibleWebview.controller.context, "clineApiKey", apiKey)
-
-						// Update the API configuration
-						await updateApiConfiguration(visibleWebview.controller.context, updatedConfig)
-
-						// Update global state to use cline provider
-						await updateWorkspaceState(visibleWebview.controller.context, "apiProvider", "cline" as ApiProvider)
+						await visibleWebview.controller.cacheService.setSecret("clineAccountId", apiKey)
+						await visibleWebview.controller.cacheService.setApiConfiguration(updatedConfig)
 
 						// Post state to webview to reflect changes
 						await visibleWebview.controller.postStateToWebview()
 					}
 
-					// CARET MODIFICATION: Chatbot/Agent 용어 통일 - Ensure we're in Agent mode before initiating the task
-					const { chatSettings } = await visibleWebview.controller.getStateToPostToWebview()
-					// CARET MODIFICATION: Chatbot 모드에서는 자동 Agent 전환
-					if (chatSettings.mode === "chatbot") {
-						// Switch to Agent mode if currently in Chatbot mode
-						// CARET MODIFICATION: Chatbot/Agent 통일 - 올바른 메서드명 사용
+					// CARET MODIFICATION: Merged logic from both branches
+					const { mode } = await visibleWebview.controller.getStateToPostToWebview()
+					if (mode !== "agent") {
 						await visibleWebview.controller.toggleChatbotAgentModeWithChatSettings({ mode: "agent" })
 					}
 
@@ -377,7 +344,7 @@ export function createTestServer(webviewProvider?: WebviewProvider): http.Server
 						let fileChanges
 						try {
 							// Get the workspace path using our helper function
-							const workspacePath = getWorkspacePath(visibleWebview)
+							const workspacePath = await getCwd()
 							Logger.log(`Getting file changes from workspace path: ${workspacePath}`)
 
 							// Log directory contents for debugging
@@ -385,7 +352,7 @@ export function createTestServer(webviewProvider?: WebviewProvider): http.Server
 								const { stdout: lsOutput } = await execa("ls", ["-la", workspacePath])
 								Logger.log(`Directory contents after task completion:\n${lsOutput}`)
 							} catch (lsError) {
-								Logger.log(`Warning: Failed to list directory contents: ${lsError.message}`)
+								Logger.log(`Warning: Failed to list directory contents: ${lsError}`)
 							}
 
 							// Get file changes using Git
@@ -414,12 +381,12 @@ export function createTestServer(webviewProvider?: WebviewProvider): http.Server
 									fileChanges.created = files.map((file) => path.relative(workspacePath, file))
 									Logger.log(`Fallback found ${fileChanges.created.length} files`)
 								} catch (findError) {
-									Logger.log(`Warning: Fallback directory scan failed: ${findError.message}`)
+									Logger.log(`Warning: Fallback directory scan failed: ${findError}`)
 								}
 							}
 						} catch (fileChangeError) {
-							Logger.log(`Error getting file changes: ${fileChangeError.message}`)
-							throw new Error(`Error getting file changes: ${fileChangeError.message}`)
+							Logger.log(`Error getting file changes: ${fileChangeError}`)
+							throw new Error(`Error getting file changes: ${fileChangeError}`)
 						}
 
 						// Get tool metrics
@@ -517,24 +484,6 @@ export function createMessageCatcher(webviewProvider: WebviewProvider): vscode.D
 		webviewProvider.controller.postMessageToWebview = async (message: ExtensionMessage) => {
 			// NOTE: Completion and ask message detection has been migrated to gRPC streaming
 			// This interceptor is kept for potential future use with other message types
-
-			// Check for completion_result message - commented out as partialMessage is now handled via gRPC
-			// if (message.type === "partialMessage" && message.partialMessage?.say === "completion_result") {
-			// 	// Complete the current task
-			// 	completeTask()
-			// }
-
-			// Check for ask messages that require user intervention - commented out as partialMessage is now handled via gRPC
-			// if (message.type === "partialMessage" && message.partialMessage?.type === "ask" && !message.partialMessage.partial) {
-			// 	const askType = message.partialMessage.ask as ClineAsk
-			// 	const askText = message.partialMessage.text
-
-			// 	// Automatically respond to different types of asks
-			// 	setTimeout(async () => {
-			// 		await autoRespondToAsk(webviewProvider, askType, askText)
-			// 	}, 100) // Small delay to ensure the message is processed first
-			// }
-
 			return originalPostMessageToWebview.call(webviewProvider.controller, message)
 		}
 	} else {
@@ -553,7 +502,7 @@ export function createMessageCatcher(webviewProvider: WebviewProvider): vscode.D
  * @param askType The type of ask message
  * @param askText The text content of the ask message
  */
-async function autoRespondToAsk(webviewProvider: WebviewProvider, askType: ClineAsk, askText?: string): Promise<void> {
+async function autoRespondToAsk(webviewProvider: WebviewProvider, askType: string, askText?: string): Promise<void> {
 	if (!webviewProvider.controller) {
 		return
 	}
@@ -605,35 +554,38 @@ async function autoRespondToAsk(webviewProvider: WebviewProvider, askType: Cline
 			// Decline creating a new task to keep the current task running
 			responseType = "messageResponse"
 			responseText = "Continue with the current task."
-			break
+			break;
 
-		case "plan_mode_respond":
-			// Respond to plan mode with a message to toggle to Act mode
-			responseType = "messageResponse"
-			responseText = "PLAN_MODE_TOGGLE_RESPONSE" // Special marker to toggle to Act mode
+		// CARET MODIFICATION: This case is no longer relevant with the new mode handling
+		// case "plan_mode_respond":
+		// 	// Respond to plan mode with a message to toggle to Act mode
+		// 	responseType = "messageResponse"
+		// 	responseText = "PLAN_MODE_TOGGLE_RESPONSE" // Special marker to toggle to Act mode
 
-			// Automatically toggle to Act mode after responding
-			setTimeout(async () => {
-				try {
-					if (webviewProvider.controller) {
-						Logger.log("Auto-toggling to Act mode from Plan mode")
-						// CARET MODIFICATION: Chatbot/Agent 용어 통일 - 메서드명 및 모드값 변경
-						// CARET MODIFICATION: Chatbot/Agent 통일 - 올바른 메서드명 사용
-						await webviewProvider.controller.toggleChatbotAgentModeWithChatSettings({ mode: "agent" })
-					}
-				} catch (error) {
-					Logger.log(`Error toggling to Act mode: ${error}`)
-				}
-			}, 500) // Small delay to ensure the response is processed first
-			break
+		// 	// Automatically toggle to Act mode after responding
+		// 	setTimeout(async () => {
+		// 		try {
+		// 			if (webviewProvider.controller) {
+		// 				Logger.log("Auto-toggling to Act mode from Plan mode")
+		// 				const { chatSettings } = await webviewProvider.controller.getStateToPostToWebview()
+		// 				if (chatSettings.mode === "chatbot") {
+		// 					await webviewProvider.controller.toggleChatbotAgentModeWithChatSettings({ mode: "agent" })
+		// 				}
+		// 			}
+		// 		} catch (error) {
+		// 			Logger.log(`Error toggling to Act mode: ${error}`)
+		// 		}
+		// 	}, 500) // Small delay to ensure the response is processed first
+		// 	break
 
 		// For all other ask types (tool, command, browser_action_launch, use_mcp_server),
 		// we use the default "yesButtonClicked" to approve the action
 	}
 
-	// Send the response message
+	// Send the response message using the backend controller method
 	try {
-		await TaskServiceClient.askResponse(
+		await askResponse(
+			webviewProvider.controller,
 			AskResponseRequest.create({
 				responseType,
 				text: responseText,

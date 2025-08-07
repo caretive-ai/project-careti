@@ -1,19 +1,21 @@
-import { UnsavedChangesDialog } from "@/components/common/AlertDialog"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "@/services/grpc-client"
-import { cn } from "@/utils/cn"
-import { validateApiConfiguration, validateModelId } from "@/utils/validate"
-import { vscode } from "@/utils/vscode"
 import { ExtensionMessage } from "@shared/ExtensionMessage"
+<<<<<<< HEAD
 import { EmptyRequest, StringRequest } from "@shared/proto/common"
 // CARET MODIFICATION: Chatbot/Agent 용어 통일 - PlanActMode 제거
 import { ChatbotAgentMode, ResetStateRequest, ToggleChatbotAgentModeRequest, UpdateSettingsRequest } from "@shared/proto/state"
 import { VSCodeButton, VSCodeCheckbox, VSCodeLink, VSCodeTextArea } from "@vscode/webview-ui-toolkit/react"
+=======
+import { ResetStateRequest } from "@shared/proto/cline/state"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+>>>>>>> upstream/main
 import { CheckCheck, FlaskConical, Info, LucideIcon, Settings, SquareMousePointer, SquareTerminal, Webhook } from "lucide-react"
-import { memo, useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useEvent } from "react-use"
 import { Tab, TabContent, TabHeader, TabList, TabTrigger } from "../common/Tab"
+<<<<<<< HEAD
 import { TabButton } from "../mcp/configuration/McpConfigurationView"
 import ApiOptions from "./ApiOptions"
 import BrowserSettingsSection from "./BrowserSettingsSection"
@@ -32,6 +34,18 @@ import { useCurrentLanguage } from "@/caret/hooks/useCurrentLanguage"
 import styled from "styled-components"
 import CaretFooter from "@/caret/components/CaretFooter"
 const { IS_DEV } = process.env
+=======
+import FeatureSettingsSection from "./sections/FeatureSettingsSection"
+import SectionHeader from "./SectionHeader"
+import TerminalSettingsSection from "./sections/TerminalSettingsSection"
+import ApiConfigurationSection from "./sections/ApiConfigurationSection"
+import GeneralSettingsSection from "./sections/GeneralSettingsSection"
+import BrowserSettingsSection from "./sections/BrowserSettingsSection"
+import DebugSection from "./sections/DebugSection"
+import AboutSection from "./sections/AboutSection"
+
+const IS_DEV = process.env.IS_DEV
+>>>>>>> upstream/main
 
 // CARET MODIFICATION: Styled components for Caret/Cline mode toggle switch (copied from ChatTextArea)
 const ModeSwitchContainer = styled.div<{ disabled: boolean }>`
@@ -165,6 +179,7 @@ type SettingsViewProps = {
 }
 
 const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
+<<<<<<< HEAD
 	// CARET MODIFICATION: SettingsView 렌더링 확인
 	// caretWebviewLogger.debug("🎯 SettingsView 컴포넌트 렌더링!"); // CARET MODIFICATION: 주석 처리
 	//caretWebviewLogger.debug("🎯 SettingsView props:", { onDone, targetSection })
@@ -438,13 +453,20 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 	}, [someVar])
 	If we only want to run code once on mount we can use react-use's useEffectOnce or useMount
 	*/
+=======
+	// Track active tab
+	const [activeTab, setActiveTab] = useState<string>(targetSection || SETTINGS_TABS[0].id)
+	// Track if we're currently switching modes
+
+	const { version } = useExtensionState()
+>>>>>>> upstream/main
 
 	const handleMessage = useCallback((event: MessageEvent) => {
 		const message: ExtensionMessage = event.data
 		switch (message.type) {
 			// Handle tab navigation through targetSection prop instead
 			case "grpc_response":
-				if (message.grpc_response?.message?.action === "scrollToSettings") {
+				if (message.grpc_response?.message?.key === "scrollToSettings") {
 					const tabId = message.grpc_response?.message?.value
 					if (tabId) {
 						// CARET MODIFICATION: console.log to logger
@@ -494,6 +516,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 		}
 	}
 
+<<<<<<< HEAD
 	// CARET MODIFICATION: Chatbot/Agent 통일 - 직접 비교
 	const handleChatbotAgentModeChange = async (tab: "chatbot" | "agent") => {
 		// CARET MODIFICATION: Chatbot/Agent 통일 - 직접 모드 비교
@@ -525,6 +548,8 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 	// Track active tab - default to general tab
 	const [activeTab, setActiveTab] = useState<string>(targetSection || "general")
 
+=======
+>>>>>>> upstream/main
 	// Update active tab when targetSection changes
 	useEffect(() => {
 		if (targetSection) {
@@ -586,33 +611,37 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 					<h3 className="text-[var(--vscode-foreground)] m-0">{t("settingsView.title", "settings")}</h3>
 				</div>
 				<div className="flex gap-2">
+<<<<<<< HEAD
 					<VSCodeButton appearance="secondary" onClick={handleCancel}>
 						{t("buttons.cancel", "settings")}
 					</VSCodeButton>
 					<VSCodeButton onClick={() => handleSubmit(false)} disabled={!hasUnsavedChanges}>
 						{t("buttons.save", "settings")}
 					</VSCodeButton>
+=======
+					{/* All settings now save immediately, so only show Done button */}
+					<VSCodeButton onClick={onDone}>Done</VSCodeButton>
+>>>>>>> upstream/main
 				</div>
 			</TabHeader>
 
 			{/* Vertical tabs layout */}
-			<div ref={containerRef} className={cn(settingsTabsContainer, isCompactMode && "narrow")}>
+			<div ref={containerRef} className={`${settingsTabsContainer} ${isCompactMode ? "narrow" : ""}`}>
 				{/* Tab sidebar */}
 				<TabList
 					value={activeTab}
 					onValueChange={handleTabChange}
-					className={cn(settingsTabList)}
+					className={settingsTabList}
 					data-compact={isCompactMode}>
 					{getSettingsTabs(currentLanguage).map((tab) =>
 						isCompactMode ? (
 							<HeroTooltip key={tab.id} content={tab.tooltipText} placement="right">
 								<div
-									className={cn(
+									className={`${
 										activeTab === tab.id
 											? `${settingsTabTrigger} ${settingsTabTriggerActive}`
-											: settingsTabTrigger,
-										"focus:ring-0",
-									)}
+											: settingsTabTrigger
+									} focus:ring-0`}
 									data-compact={isCompactMode}
 									data-testid={`tab-${tab.id}`}
 									data-value={tab.id}
@@ -621,7 +650,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 										// caretWebviewLogger.debug("Compact tab clicked:", { tabId: tab.id }); // CARET MODIFICATION: 주석 처리
 										handleCompactTabClick(tab.id as "general" | "api" | "advanced" | "chat")
 									}}>
-									<div className={cn("flex items-center gap-2", isCompactMode && "justify-center")}>
+									<div className={`flex items-center gap-2 ${isCompactMode ? "justify-center" : ""}`}>
 										<tab.icon className="w-4 h-4" />
 										<span className="tab-label">{tab.name}</span>
 									</div>
@@ -631,15 +660,14 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 							<TabTrigger
 								key={tab.id}
 								value={tab.id}
-								className={cn(
+								className={`${
 									activeTab === tab.id
 										? `${settingsTabTrigger} ${settingsTabTriggerActive}`
-										: settingsTabTrigger,
-									"focus:ring-0",
-								)}
+										: settingsTabTrigger
+								} focus:ring-0`}
 								data-compact={isCompactMode}
 								data-testid={`tab-${tab.id}`}>
-								<div className={cn("flex items-center gap-2", isCompactMode && "justify-center")}>
+								<div className={`flex items-center gap-2 ${isCompactMode ? "justify-center" : ""}`}>
 									<tab.icon className="w-4 h-4" />
 									<span className="tab-label">{tab.name}</span>
 								</div>
@@ -670,6 +698,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 					return (
 						<TabContent className="flex-1 overflow-auto">
 							{/* API Configuration Tab */}
+<<<<<<< HEAD
 							{activeTab === "api-config" && (
 								<div>
 									{renderSectionHeader("api-config")}
@@ -789,39 +818,25 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 									</Section>
 								</div>
 							)}
+=======
+							{activeTab === "api-config" && <ApiConfigurationSection renderSectionHeader={renderSectionHeader} />}
+
+							{/* General Settings Tab */}
+							{activeTab === "general" && <GeneralSettingsSection renderSectionHeader={renderSectionHeader} />}
+>>>>>>> upstream/main
 
 							{/* Feature Settings Tab */}
-							{activeTab === "features" && (
-								<div>
-									{renderSectionHeader("features")}
-									<Section>
-										<FeatureSettingsSection />
-									</Section>
-								</div>
-							)}
+							{activeTab === "features" && <FeatureSettingsSection renderSectionHeader={renderSectionHeader} />}
 
 							{/* Browser Settings Tab */}
-							{activeTab === "browser" && (
-								<div>
-									{renderSectionHeader("browser")}
-									<Section>
-										<BrowserSettingsSection />
-									</Section>
-								</div>
-							)}
+							{activeTab === "browser" && <BrowserSettingsSection renderSectionHeader={renderSectionHeader} />}
 
 							{/* Terminal Settings Tab */}
-							{activeTab === "terminal" && (
-								<div>
-									{renderSectionHeader("terminal")}
-									<Section>
-										<TerminalSettingsSection />
-									</Section>
-								</div>
-							)}
+							{activeTab === "terminal" && <TerminalSettingsSection renderSectionHeader={renderSectionHeader} />}
 
 							{/* Debug Tab (only in dev mode) */}
 							{IS_DEV && activeTab === "debug" && (
+<<<<<<< HEAD
 								<div>
 									{renderSectionHeader("debug")}
 									<Section>
@@ -842,10 +857,14 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 										</p>
 									</Section>
 								</div>
+=======
+								<DebugSection onResetState={handleResetState} renderSectionHeader={renderSectionHeader} />
+>>>>>>> upstream/main
 							)}
 
 							{/* About Tab */}
 							{activeTab === "about" && (
+<<<<<<< HEAD
 								<div>
 									{renderSectionHeader("about")}
 									<Section>
@@ -855,21 +874,16 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 										</div>
 									</Section>
 								</div>
+=======
+								<AboutSection version={version} renderSectionHeader={renderSectionHeader} />
+>>>>>>> upstream/main
 							)}
 						</TabContent>
 					)
 				})()}
 			</div>
-
-			{/* Unsaved Changes Dialog */}
-			<UnsavedChangesDialog
-				open={isUnsavedChangesDialogOpen}
-				onOpenChange={setIsUnsavedChangesDialogOpen}
-				onConfirm={handleConfirmDiscard}
-				onCancel={handleCancelDiscard}
-			/>
 		</Tab>
 	)
 }
 
-export default memo(SettingsView)
+export default SettingsView

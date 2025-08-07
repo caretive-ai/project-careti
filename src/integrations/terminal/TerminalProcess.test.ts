@@ -4,6 +4,8 @@ import * as sinon from "sinon"
 import { TerminalProcess } from "./TerminalProcess"
 import * as vscode from "vscode"
 import { TerminalRegistry } from "./TerminalRegistry"
+import { DiffViewProviderCreator, HostProvider, WebviewProviderCreator } from "@/hosts/host-provider"
+import { vscodeHostBridgeClient } from "@/hosts/vscode/hostbridge/client/host-grpc-client"
 
 declare module "vscode" {
 	// https://github.com/microsoft/vscode/blob/f0417069c62e20f3667506f4b7e53ca0004b4e3e/src/vscode-dts/vscode.d.ts#L7442
@@ -36,6 +38,13 @@ describe("TerminalProcess (Integration Tests)", () => {
 
 	beforeEach(() => {
 		sandbox = sinon.createSandbox({ useFakeTimers: true })
+		HostProvider.reset()
+		HostProvider.initialize(
+			((_) => {}) as WebviewProviderCreator,
+			(() => {}) as DiffViewProviderCreator,
+			vscodeHostBridgeClient,
+			(s: string) => console.log(s),
+		)
 		process = new TerminalProcess()
 	})
 
@@ -60,7 +69,14 @@ describe("TerminalProcess (Integration Tests)", () => {
 			const emitSpy = sandbox.spy(process, "emit")
 
 			// Run a simple command
-			await process.run(terminal, "echo test")
+			const runPromise = process.run(terminal, "echo test")
+
+			// If terminal doesn't have shell integration, advance timer
+			if (!terminal.shellIntegration) {
+				await sandbox.clock.tickAsync(3000)
+			}
+
+			await runPromise
 
 			// Verify that the continue event was emitted
 			;(emitSpy as sinon.SinonSpy).calledWith("continue").should.be.true()
@@ -76,7 +92,14 @@ describe("TerminalProcess (Integration Tests)", () => {
 			const emitSpy = sandbox.spy(process, "emit")
 
 			// Run a command that produces predictable output
-			await process.run(terminal, "echo 'Line 1' && echo 'Line 2'")
+			const runPromise = process.run(terminal, "echo 'Line 1' && echo 'Line 2'")
+
+			// If terminal doesn't have shell integration, advance timer
+			if (!terminal.shellIntegration) {
+				await sandbox.clock.tickAsync(3000)
+			}
+
+			await runPromise
 
 			// Check that the events were emitted
 			;(emitSpy as sinon.SinonSpy).calledWith("completed").should.be.true()
@@ -92,7 +115,14 @@ describe("TerminalProcess (Integration Tests)", () => {
 			const emitSpy = sandbox.spy(process, "emit")
 
 			// Run a command that lists files
-			await process.run(terminal, "ls -la")
+			const runPromise = process.run(terminal, "ls -la")
+
+			// If terminal doesn't have shell integration, advance timer
+			if (!terminal.shellIntegration) {
+				await sandbox.clock.tickAsync(3000)
+			}
+
+			await runPromise
 
 			// Verify that the continue event was emitted
 			;(emitSpy as sinon.SinonSpy).calledWith("continue").should.be.true()
@@ -130,7 +160,14 @@ describe("TerminalProcess (Integration Tests)", () => {
 			const emitSpy = sandbox.spy(process, "emit")
 
 			// Run a command that produces predictable output
-			await process.run(terminal, "echo 'Line 1' 'Line 2'")
+			const runPromise = process.run(terminal, "echo 'Line 1' 'Line 2'")
+
+			// If terminal doesn't have shell integration, advance timer
+			if (!terminal.shellIntegration) {
+				await sandbox.clock.tickAsync(3000)
+			}
+
+			await runPromise
 
 			// Check that the events were emitted
 			;(emitSpy as sinon.SinonSpy).calledWith("completed").should.be.true()
@@ -146,7 +183,14 @@ describe("TerminalProcess (Integration Tests)", () => {
 			const emitSpy = sandbox.spy(process, "emit")
 
 			// Run a command that produces predictable output
-			await process.run(terminal, "echo \"Line 1\" && echo 'Line 2'")
+			const runPromise = process.run(terminal, "echo \"Line 1\" && echo 'Line 2'")
+
+			// If terminal doesn't have shell integration, advance timer
+			if (!terminal.shellIntegration) {
+				await sandbox.clock.tickAsync(3000)
+			}
+
+			await runPromise
 
 			// Check that the events were emitted
 			;(emitSpy as sinon.SinonSpy).calledWith("completed").should.be.true()
@@ -169,8 +213,14 @@ describe("TerminalProcess (Integration Tests)", () => {
 		// Spy on the emit function to verify events
 		const emitSpy = sandbox.spy(process, "emit")
 
-		// Run the command
-		await process.run(terminal, "test-command")
+		// Run the command - this returns a promise
+		const runPromise = process.run(terminal, "test-command")
+
+		// Advance the fake timer by 3 seconds to trigger the setTimeout
+		await sandbox.clock.tickAsync(3000)
+
+		// Now wait for the promise to resolve
+		await runPromise
 
 		// Check that the correct methods were called and events emitted
 		sendTextStub.calledWith("test-command", true).should.be.true()

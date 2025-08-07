@@ -508,12 +508,99 @@ cd webview-ui && npm run build
 3. **최소 구현**: 가능한 Cline 모듈 재사용
 4. **테스트 및 로깅**: 모든 새 기능에 테스트와 로깅 포함
 
-### 6.2. 업스트림 머징
+### 7.2. 업스트림 머징
 
 1. **Cline 변경사항 확인**
 2. **충돌 해결**: 주로 `src/` 디렉토리에서 발생
 3. **Caret 기능 호환성 검증**
 4. **문서 업데이트**
+
+#### 충돌 해결 전략: 보존과 통합 (Conflict Resolution Strategy: Preservation and Integration)
+
+-   **원칙 (Principle):** 단순한 '우리 것' (`--ours`) 또는 '저쪽 것' (`--theirs`) 선택을 넘어, 두 브랜치의 변경 사항을 모두 통합하여 코드의 이력과 유연성을 보존하는 것을 목표로 합니다.
+-   **적용 사례 (Use Case):** 설정 인터페이스(`ApiHandlerOptions` 등)나 설정 파일에서 충돌이 발생했을 때, Caret의 고유 속성과 Cline의 새로운 속성을 모두 포함하도록 병합합니다.
+    ```typescript
+    // 예시: src/shared/api.ts의 ApiHandlerOptions 병합
+    // BEFORE (Conflict)
+    // HEAD (Caret)
+    caretApiKey?: string;
+    clineApiKey?: string;
+    // upstream/main (Cline)
+    clineAccountId?: string;
+
+    // AFTER (Integrated)
+    // CARET MODIFICATION: Merged both Caret and Cline properties for future reference.
+    caretApiKey?: string;
+    clineApiKey?: string;
+    clineAccountId?: string;
+    ```
+-   **기대 효과 (Benefits):**
+    -   **향후 병합 용이성:** `upstream`의 변경 내역이 코드에 남아있어 다음 병합 시 컨텍스트 파악이 용이합니다.
+    -   **점진적 마이그레이션:** Caret이 아직 사용하지 않는 `upstream`의 새로운 기능을 코드 상에 안전하게 유지하면서, 점진적으로 도입할 수 있는 기반을 마련합니다.
+    -   **개발 투명성:** 두 브랜치의 차이점을 코드 내에서 명확하게 확인할 수 있습니다.
+
+#### 머지 후 주요 확인 사항: Proto Import 경로
+
+-   **문제점:** `upstream` 브랜치에서 `proto` 파일로부터 생성되는 TypeScript 모듈의 디렉토리 구조가 변경될 수 있습니다. 예를 들어, 기존에 `@shared/proto/common`으로 접근하던 모듈이 `@shared/proto/cline/common`으로 변경될 수 있습니다.
+-   **영향:** 이 변경 사항을 인지하지 못하면, 머지 후 `npm run compile` 실행 시 대량의 "Cannot find module" 타입스크립트 오류가 발생합니다.
+-   **해결 절차:**
+    1.  **컴파일 오류 확인:** 머지 후 컴파일 시 `proto` 관련 import 경로 오류가 다수 발생하는지 확인합니다.
+    2.  **경로 구조 분석:** `src/shared/proto/` 디렉토리의 하위 구조(`cline/`, `host/` 등)를 확인하여 새로운 경로 규칙을 파악합니다.
+    3.  **전체 경로 수정:** VSCode의 '전체에서 바꾸기' 기능을 사용하여, 변경이 필요한 모든 `import` 구문을 새 경로 규칙에 맞게 수정합니다. (예: `"@shared/proto/common"` -> `"@shared/proto/cline/common"`)
+
+#### 특정 파일 머징 전략: `api.ts` 예시
+
+-   **배경:** `src/shared/api.ts`와 같은 특정 파일들은 Cline의 구조적 문제(예: 모든 모델 정보를 단일 파일에 포함)를 가지고 있지만, `upstream`에서 매우 빈번하게 업데이트됩니다.
+-   **원칙: 구조적 변경 최소화:** 이러한 파일들을 Caret에서 임의로 리팩토링(예: 파일 분리)할 경우, 향후 `upstream` 변경 사항을 병합할 때 막대한 비용이 발생합니다. 따라서 **Cline의 파일 구조를 그대로 유지**하고, Caret의 고유 기능과 관련된 수정 사항만 최소한으로 추가하는 것을 원칙으로 합니다.
+-   **병합 방식:** `upstream/main` 버전을 기준으로 삼고, 그 위에 Caret의 필수 수정사항(예: `ApiProvider` 타입에 `caret` 추가, `ApiHandlerOptions`에 Caret 전용 키 추가 등)을 병합합니다.
+
+-   **`api.ts` 충돌 해결 전략 및 절차:**
+    -   **원칙: Upstream 우선 원칙 (Upstream-First Principle):** `api.ts`와 같이 `upstream`에서 빈번하게 변경되는 파일의 머지 충돌 시, `upstream` 버전을 '진리의 원천(Source of Truth)'으로 삼습니다. 로컬의 변경사항을 기준으로 `upstream` 코드를 수정하려 하지 말고, `upstream`의 최신 버전을 먼저 가져온 뒤, Caret의 필수 변경사항만 최소한으로 다시 적용하는 것을 원칙으로 합니다.
+    -   **절차:**
+        1.  **1단계 (Reset):** `git checkout upstream/main -- src/shared/api.ts` 명령을 실행하여, 충돌로 인해 손상되었을 수 있는 로컬 파일을 `upstream`의 깨끗한 버전으로 완전히 덮어씁니다.
+        2.  **2단계 (Re-apply):** 복구된 `api.ts` 파일에 Caret의 동작에 필수적인 다음 수정사항들을 다시 적용합니다.
+            -   `ApiProvider` 타입에 `'caret'` 추가
+            -   `ApiHandlerOptions` 인터페이스에 Caret 관련 필드(`caretApiKey` 등) 추가
+            -   `normalizeApiConfiguration` 함수를 Caret의 이중 모드(`plan`/`act` vs `chatbot`/`agent`)를 처리할 수 있도록 수정
+        3.  **3단계 (Verify):** `npm run compile` 명령을 실행하여 수정된 파일에 타입 에러나 문법 오류가 없는지 즉시 검증합니다.
+
+#### Proto 파일 머징 전략
+
+**핵심 원칙: 단일 `caret` 패키지로 통합 및 체계적 충돌 해결**
+
+Cline 원본의 `proto` 파일들은 `cline`, `host` 등 여러 패키지로 분리되어 있습니다. Caret에서는 유지보수성과 일관성을 위해 모든 `proto` 파일을 단일 `caret` 패키지로 통합하여 관리합니다.
+
+따라서 Cline의 `proto` 관련 변경사항을 머지할 때는 다음 절차를 반드시 따라야 합니다.
+
+**1. Proto 파일 자체의 머지 충돌 해결**
+
+만약 `.proto` 파일 내부에 `<<<<<<<`, `=======`, `>>>>>>>`와 같은 머지 충돌 마커가 발생했다면, 다음 절차를 따릅니다.
+
+1.  **수동 병합**: `.proto` 파일을 직접 열어 Caret의 변경사항과 `upstream`의 변경사항을 모두 고려하여 충돌을 해결합니다. 예를 들어, `ApiProvider` enum에 Caret 고유의 `CARET` provider와 `upstream`의 새로운 provider를 모두 추가합니다.
+2.  **프로토콜 버퍼 재컴파일**: 충돌 해결 후, 터미널에서 `npm run protos` 명령을 실행하여 변경된 `.proto` 파일로부터 TypeScript 코드를 다시 생성합니다. 이 과정을 거치지 않으면 이후 단계에서 타입 에러가 발생합니다.
+3.  **관련 파일 충돌 해결**: 재컴파일된 타입 정의를 바탕으로, 이 `proto` 파일을 사용하는 다른 파일(예: `src/shared/proto-conversions/` 내의 변환 파일)의 충돌을 해결합니다.
+
+**2. 패키지 통합 및 스크립트 검증**
+
+1.  **패키지 선언 수정**: 머지하는 모든 `.proto` 파일 상단의 패키지 선언을 `package caret;`으로 수정합니다.
+    ```protobuf
+    // 예시: proto/cline/account.proto
+    // BEFORE
+    package cline;
+
+    // AFTER
+    package caret;
+    ```
+2.  **빌드 스크립트 수정 확인**: 패키지 통합으로 인해 `proto` 파일을 컴파일하고 처리하는 스크립트(`scripts/build-proto.mjs`, `scripts/proto-utils.mjs`, `scripts/generate-protobus-setup.mjs` 등)에 영향이 있습니다. 이 스크립트들이 `proto.caret` 객체만 참조하도록 수정되었는지 확인해야 합니다.
+    ```javascript
+    // 예시: scripts/proto-utils.mjs
+    // 여러 패키지를 순회하는 대신, 'caret' 패키지만 순회해야 합니다.
+    for (const [name, def] of Object.entries(proto.caret)) {
+      // ...
+    }
+    ```
+3.  **하드코딩된 패키지 이름 확인**: 스크립트 내에 `"cline."` 또는 `"host."` 와 같이 하드코딩된 문자열이 있다면, 이를 `"caret."`으로 변경해야 합니다.
+4.  **(선택적) 자동화 스크립트 검토**: 향후 유사한 머지 작업 시, 반복적인 패키지 이름 변경 및 스크립트 수정을 자동화하는 스크립트(`node caret-scripts/unify-proto-packages.js` 등) 제작을 검토하여 작업 효율을 높일 수 있습니다.
 
 > **[중요] 머징 프로세스 관련 주요 변경사항**
 >

@@ -11,10 +11,10 @@ export async function showMessage(request: ShowMessageRequest): Promise<Selected
 	let selectedOption: string | undefined = undefined
 
 	switch (type) {
-		case ShowMessageType.ERROR:
+		case ShowMessageType.WINDOW_MESSAGE_ERROR:
 			selectedOption = await window.showErrorMessage(message, option, ...items)
 			break
-		case ShowMessageType.WARNING:
+		case ShowMessageType.WINDOW_MESSAGE_WARNING:
 			selectedOption = await window.showWarningMessage(message, option, ...items)
 			break
 		default:

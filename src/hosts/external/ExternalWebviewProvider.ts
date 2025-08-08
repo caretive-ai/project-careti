@@ -28,11 +28,11 @@ export class ExternalWebviewProvider extends WebviewProvider {
 	override isVisible() {
 		return true
 	}
-	override getWebview() {
-		return {}
+	override getWebview(): vscode.WebviewView | vscode.WebviewPanel | undefined {
+		return undefined
 	}
 
-	override resolveWebviewView(_: any): Promise<void> {
+	override async resolveWebviewView(_: any): Promise<void> {
 		return Promise.resolve()
 	}
 }

@@ -77,32 +77,10 @@ const HistoryPreview = ({ showHistoryView }: HistoryPreviewProps) => {
 					alignItems: "center",
 				}}>
 				<span
-<<<<<<< HEAD
 					className={`codicon codicon-chevron-${isExpanded ? "down" : "right"} scale-90 transition-transform duration-200`}
 				/>
 				<span className="codicon codicon-comment-discussion scale-90" />
 				<span className="font-medium text-xs uppercase tracking-wide">{t("welcome.recentTasks", "common")}</span>
-=======
-					className={`codicon codicon-chevron-${isExpanded ? "down" : "right"}`}
-					style={{
-						marginRight: "4px",
-						transform: "scale(0.9)",
-					}}></span>
-				<span
-					className="codicon codicon-comment-discussion"
-					style={{
-						marginRight: "4px",
-						transform: "scale(0.9)",
-					}}></span>
-				<span
-					style={{
-						fontWeight: 500,
-						fontSize: "0.85em",
-						textTransform: "uppercase",
-					}}>
-					Recent Tasks
-				</span>
->>>>>>> upstream/main
 			</div>
 
 			{isExpanded && (
@@ -198,20 +176,9 @@ const HistoryPreview = ({ showHistoryView }: HistoryPreviewProps) => {
 									style={{
 										opacity: 0.9,
 									}}>
-<<<<<<< HEAD
 									<span className="codicon codicon-history scale-90"></span>
 									<span className="font-medium">{t("welcome.viewAllHistory", "common")}</span>
 								</button>
-=======
-									<div
-										style={{
-											fontSize: "var(--vscode-font-size)",
-											color: "var(--vscode-descriptionForeground)",
-										}}>
-										View all history
-									</div>
-								</VSCodeButton>
->>>>>>> upstream/main
 							</div>
 						</>
 					) : (

@@ -28,7 +28,7 @@ export async function updateDefaultTerminalProfile(
 		if (closedCount > 0) {
 			const message = `Closed ${closedCount} ${closedCount === 1 ? "terminal" : "terminals"} with different profile.`
 			HostProvider.window.showMessage({
-				type: ShowMessageType.INFORMATION,
+				type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
 				message,
 			})
 		}
@@ -39,7 +39,7 @@ export async function updateDefaultTerminalProfile(
 				`${busyTerminals.length} busy ${busyTerminals.length === 1 ? "terminal has" : "terminals have"} a different profile. ` +
 				`Close ${busyTerminals.length === 1 ? "it" : "them"} to use the new profile for all commands.`
 			HostProvider.window.showMessage({
-				type: ShowMessageType.WARNING,
+				type: ShowMessageType.WINDOW_MESSAGE_WARNING,
 				message,
 			})
 		}

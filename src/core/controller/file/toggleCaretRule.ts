@@ -1,5 +1,5 @@
-import type { ToggleCaretRuleRequest } from "../../../shared/proto/file"
-import { ClineRulesToggles } from "../../../shared/proto/file"
+import type { ToggleCaretRuleRequest } from "@shared/proto/cline/file"
+import { ClineRulesToggles } from "@shared/proto/cline/file"
 import type { Controller } from "../index"
 import { getWorkspaceState, updateWorkspaceState } from "../../../core/storage/state"
 import { ClineRulesToggles as AppClineRulesToggles } from "@shared/cline-rules"

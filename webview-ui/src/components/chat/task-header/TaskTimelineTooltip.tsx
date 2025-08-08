@@ -1,14 +1,10 @@
 import React from "react"
 import { ClineMessage } from "@shared/ExtensionMessage"
 import { Tooltip } from "@heroui/react"
-<<<<<<< HEAD
 // CARET MODIFICATION: 다국어 지원을 위한 i18n import
 import { t } from "../../../caret/utils/i18n"
 
 // Color mapping for different message types
-=======
-import { getColor } from "./util"
->>>>>>> upstream/main
 
 interface TaskTimelineTooltipProps {
 	message: ClineMessage

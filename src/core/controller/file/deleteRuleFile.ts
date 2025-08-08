@@ -46,7 +46,7 @@ export async function deleteRuleFile(controller: Controller, request: RuleFileRe
 
 	const message = `${fileTypeName} file "${fileName}" deleted successfully`
 	HostProvider.window.showMessage({
-		type: ShowMessageType.INFORMATION,
+		type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
 		message,
 	})
 

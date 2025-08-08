@@ -5,7 +5,7 @@ import * as path from "path"
 import * as fs from "fs/promises"
 import * as os from "os"
 import { saveOpenDocumentIfDirty } from "@/hosts/vscode/hostbridge/workspace/saveOpenDocumentIfDirty"
-import { SaveOpenDocumentIfDirtyRequest } from "@shared/proto/host/window"
+import { SaveOpenDocumentIfDirtyRequest } from "@shared/proto/host/workspace"
 
 describe("saveOpenDocumentIfDirty Integration Test", () => {
 	let testWorkspaceRoot: string

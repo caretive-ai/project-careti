@@ -2,14 +2,9 @@ import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { memo, useState } from "react"
 import styled from "styled-components"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-<<<<<<< HEAD
 import { vscode } from "@/utils/vscode"
 import { TelemetrySetting } from "@shared/TelemetrySetting"
 import { t } from "@/caret/utils/i18n"
-=======
-import { StateServiceClient } from "@/services/grpc-client"
-import { TelemetrySettingEnum, TelemetrySettingRequest } from "@shared/proto/cline/state"
->>>>>>> upstream/main
 
 const BannerContainer = styled.div`
 	background-color: var(--vscode-banner-background);
@@ -83,12 +78,7 @@ const TelemetryBanner = () => {
 					{t("telemetry.experimentalFeatures", "common")}
 				</i>
 				<div style={{ marginTop: 4 }}>
-<<<<<<< HEAD
 					{t("telemetry.description", "common")}
-=======
-					Cline collects error and usage data to help us fix bugs and improve the extension. No code, prompts, or
-					personal information is ever sent.
->>>>>>> upstream/main
 					<div style={{ marginTop: 4 }}>
 						{t("telemetry.settingsLink", "common")}{" "}
 						<VSCodeLink href="#" onClick={handleOpenSettings}>

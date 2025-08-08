@@ -21,7 +21,7 @@ async function generate(context: vscode.ExtensionContext, scm?: vscode.SourceCon
 	const cwd = await getCwd()
 	if (!context || !cwd) {
 		HostProvider.window.showMessage({
-			type: ShowMessageType.ERROR,
+			type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 			message: "No workspace folder open",
 		})
 		return
@@ -30,7 +30,7 @@ async function generate(context: vscode.ExtensionContext, scm?: vscode.SourceCon
 	const gitDiff = await getWorkingState(cwd)
 	if (gitDiff === "No changes in working directory") {
 		HostProvider.window.showMessage({
-			type: ShowMessageType.INFORMATION,
+			type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
 			message: "No changes in workspace for commit message",
 		})
 		return
@@ -39,7 +39,7 @@ async function generate(context: vscode.ExtensionContext, scm?: vscode.SourceCon
 	const inputBox = scm?.inputBox
 	if (!inputBox) {
 		HostProvider.window.showMessage({
-			type: ShowMessageType.ERROR,
+			type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 			message: "Git extension not found or no repositories available",
 		})
 		return
@@ -104,7 +104,7 @@ Commit message:`
 	} catch (error) {
 		const errorMessage = error instanceof Error ? error.message : String(error)
 		HostProvider.window.showMessage({
-			type: ShowMessageType.ERROR,
+			type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 			message: `Failed to generate commit message: ${errorMessage}`,
 		})
 	} finally {
@@ -164,7 +164,7 @@ export function extractCommitMessage(str: string): string {
 export async function copyCommitMessageToClipboard(message: string): Promise<void> {
 	await writeTextToClipboard(message)
 	HostProvider.window.showMessage({
-		type: ShowMessageType.INFORMATION,
+		type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
 		message: "Commit message copied to clipboard",
 	})
 }
@@ -180,7 +180,7 @@ export async function showCommitMessageOptions(message: string): Promise<void> {
 
 	const selectedAction = (
 		await HostProvider.window.showMessage({
-			type: ShowMessageType.INFORMATION,
+			type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
 			message: "Commit message generated",
 			options: {
 				modal: false,
@@ -221,19 +221,19 @@ async function applyCommitMessageToGitInput(message: string): Promise<void> {
 			const repo = api.repositories[0]
 			repo.inputBox.value = message
 			HostProvider.window.showMessage({
-				type: ShowMessageType.INFORMATION,
+				type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
 				message: "Commit message applied to Git input",
 			})
 		} else {
 			HostProvider.window.showMessage({
-				type: ShowMessageType.ERROR,
+				type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 				message: "No Git repositories found",
 			})
 			await copyCommitMessageToClipboard(message)
 		}
 	} else {
 		HostProvider.window.showMessage({
-			type: ShowMessageType.ERROR,
+			type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 			message: "Git extension not found",
 		})
 		await copyCommitMessageToClipboard(message)
@@ -256,7 +256,7 @@ async function editCommitMessage(message: string): Promise<void> {
 		}),
 	)
 	HostProvider.window.showMessage({
-		type: ShowMessageType.INFORMATION,
+		type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
 		message: "Edit the commit message and copy when ready",
 	})
 }

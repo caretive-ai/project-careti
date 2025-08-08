@@ -1,7 +1,9 @@
 import axios from "axios"
 import * as vscode from "vscode"
 import { getNonce } from "./getNonce"
+// CARET MODIFICATION: add local getUri util usage and HostProvider logging
 import { getUri } from "./getUri"
+import { HostProvider } from "@/hosts/host-provider"
 import { getTheme } from "@integrations/theme/getTheme"
 import { Controller } from "@core/controller/index"
 import { findLast } from "@shared/array"
@@ -20,21 +22,23 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
 	public static readonly sideBarId = "caret.SidebarProvider" // used in package.json as the view's id. This value cannot be changed due to how vscode caches views based on their id, and updating the id would break existing instances of the extension.
 	public static readonly tabPanelId = "caret.TabPanelProvider"
 	private static activeInstances: Set<WebviewProvider> = new Set()
-	private static clientIdMap = new Map<WebviewProvider, string>()
-	public view?: vscode.WebviewView | vscode.WebviewPanel
-	private disposables: vscode.Disposable[] = []
+    private static clientIdMap = new Map<WebviewProvider, string>()
+    public view?: vscode.WebviewView | vscode.WebviewPanel
+    // CARET MODIFICATION: use protected to avoid private-mismatch in subclasses
+    protected disposables: vscode.Disposable[] = []
 	controller: Controller
 	private clientId: string
 
-	constructor(
-		readonly context: vscode.ExtensionContext,
-		protected readonly outputChannel: vscode.OutputChannel,
-		protected readonly providerType: WebviewProviderType = WebviewProviderType.TAB, // Default to tab provider
-	) {
+    constructor(
+        // CARET MODIFICATION: drop outputChannel; HostProvider handles logging
+        readonly context: vscode.ExtensionContext,
+        protected readonly providerType: WebviewProviderType = WebviewProviderType.TAB, // Default to tab provider
+    ) {
 		WebviewProvider.activeInstances.add(this)
 		this.clientId = uuidv4()
 		WebviewProvider.clientIdMap.set(this, this.clientId)
-		this.controller = new Controller(context, outputChannel, (message) => this.view?.webview.postMessage(message))
+        // CARET MODIFICATION: align to new Controller signature (context, postMessage, id)
+        this.controller = new Controller(context, (message) => this.view?.webview.postMessage(message), this.clientId)
 	}
 
 	// Add a method to get the client ID
@@ -174,9 +178,10 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
 			)
 
 			// if the extension is starting a new session, clear previous task state
-			this.controller.clearTask()
+            this.controller.clearTask()
 
-			this.outputChannel.appendLine("Webview view resolved")
+            // CARET MODIFICATION: use HostProvider channel instead of direct outputChannel
+            HostProvider.get().logToChannel("Webview view resolved")
 
 			// Title setting logic removed to allow VSCode to use the container title primarily.
 		}
@@ -193,20 +198,25 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
 	 * @returns A template string literal containing the HTML that should be
 	 * rendered within the webview panel
 	 */
-	protected getHtmlContent(webview: vscode.Webview): string {
+    // CARET MODIFICATION: accept optional webview for backward calls
+    protected getHtmlContent(webview?: vscode.Webview): string {
+        const wv = webview ?? (this.view as vscode.WebviewView | vscode.WebviewPanel | undefined)?.webview
+        if (!wv) {
+            throw new Error("Webview not initialized")
+        }
 		// Get the local path to main script run in the webview,
 		// then convert it to a uri we can use in the webview.
 
 		// The CSS file from the React build output
-		const stylesUri = getUri(webview, this.context.extensionUri, ["webview-ui", "build", "assets", "index.css"])
+        const stylesUri = getUri(wv, this.context.extensionUri, ["webview-ui", "build", "assets", "index.css"])
 		// The JS file from the React build output
-		const scriptUri = getUri(webview, this.context.extensionUri, ["webview-ui", "build", "assets", "index.js"])
+        const scriptUri = getUri(wv, this.context.extensionUri, ["webview-ui", "build", "assets", "index.js"])
 
 		// The codicon font from the React build output
 		// https://github.com/microsoft/vscode-extension-samples/blob/main/webview-codicons-sample/src/extension.ts
 		// we installed this package in the extension so that we can access it how its intended from the extension (the font file is likely bundled in vscode), and we just import the css fileinto our react app we don't have access to it
 		// don't forget to add font-src ${webview.cspSource};
-		const codiconsUri = getUri(webview, this.context.extensionUri, [
+        const codiconsUri = getUri(wv, this.context.extensionUri, [
 			"node_modules",
 			"@vscode",
 			"codicons",
@@ -214,7 +224,7 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
 			"codicon.css",
 		])
 
-		const katexCssUri = getUri(webview, this.context.extensionUri, [
+        const katexCssUri = getUri(wv, this.context.extensionUri, [
 			"webview-ui",
 			"node_modules",
 			"katex",
@@ -254,7 +264,7 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
 				<link rel="stylesheet" type="text/css" href="${stylesUri}">
 				<link href="${codiconsUri}" rel="stylesheet" />
 				<link href="${katexCssUri}" rel="stylesheet" />
-				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src https://*.posthog.com https://*.firebaseauth.com https://*.firebaseio.com https://*.googleapis.com https://*.firebase.com; font-src ${webview.cspSource} data:; style-src ${webview.cspSource} 'unsafe-inline'; img-src ${webview.cspSource} https: data:; script-src 'nonce-${nonce}' 'unsafe-eval';">
+                <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src https://*.posthog.com https://*.firebaseauth.com https://*.firebaseio.com https://*.googleapis.com https://*.firebase.com; font-src ${wv.cspSource} data:; style-src ${wv.cspSource} 'unsafe-inline'; img-src ${wv.cspSource} https: data:; script-src 'nonce-${nonce}' 'unsafe-eval';">
 				<title>Cline</title>
 			</head>
 			<body>
@@ -305,7 +315,12 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
 	 * @returns A template string literal containing the HTML that should be
 	 * rendered within the webview panel
 	 */
-	protected async getHMRHtmlContent(webview: vscode.Webview): Promise<string> {
+    // CARET MODIFICATION: accept optional webview for backward calls
+    protected async getHMRHtmlContent(webview?: vscode.Webview): Promise<string> {
+        const wv = webview ?? (this.view as vscode.WebviewView | vscode.WebviewPanel | undefined)?.webview
+        if (!wv) {
+            throw new Error("Webview not initialized")
+        }
 		const localPort = await this.getDevServerPort()
 		const localServerUrl = `localhost:${localPort}`
 
@@ -317,12 +332,12 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
 				"Cline: Local webview dev server is not running, HMR will not work. Please run 'npm run dev:webview' before launching the extension to enable HMR. Using bundled assets.",
 			)
 
-			return this.getHtmlContent(webview)
+            return this.getHtmlContent(wv)
 		}
 
 		const nonce = getNonce()
-		const stylesUri = getUri(webview, this.context.extensionUri, ["webview-ui", "build", "assets", "index.css"])
-		const codiconsUri = getUri(webview, this.context.extensionUri, [
+        const stylesUri = getUri(wv, this.context.extensionUri, ["webview-ui", "build", "assets", "index.css"])
+        const codiconsUri = getUri(wv, this.context.extensionUri, [
 			"node_modules",
 			"@vscode",
 			"codicons",
@@ -331,7 +346,7 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
 		])
 
 		// Get KaTeX resources
-		const katexCssUri = getUri(webview, this.context.extensionUri, [
+        const katexCssUri = getUri(wv, this.context.extensionUri, [
 			"webview-ui",
 			"node_modules",
 			"katex",
@@ -352,14 +367,14 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
 			</script>
 		`
 
-		const csp = [
-			"default-src 'none'",
-			`font-src ${webview.cspSource} data:`,
-			`style-src ${webview.cspSource} 'unsafe-inline' https://* http://${localServerUrl} http://0.0.0.0:${localPort}`,
-			`img-src ${webview.cspSource} https: data:`,
-			`script-src 'unsafe-eval' https://* http://${localServerUrl} http://0.0.0.0:${localPort} 'nonce-${nonce}' https://data.cline.bot`,
-			`connect-src https://* ws://${localServerUrl} ws://0.0.0.0:${localPort} http://${localServerUrl} http://0.0.0.0:${localPort} https://data.cline.bot`,
-		]
+        const csp = [
+            "default-src 'none'",
+            `font-src ${wv.cspSource} data:`,
+            `style-src ${wv.cspSource} 'unsafe-inline' https://* http://${localServerUrl} http://0.0.0.0:${localPort}`,
+            `img-src ${wv.cspSource} https: data:`,
+            `script-src 'unsafe-eval' https://* http://${localServerUrl} http://0.0.0.0:${localPort} 'nonce-${nonce}' https://data.cline.bot`,
+            `connect-src https://* ws://${localServerUrl} ws://0.0.0.0:${localPort} http://${localServerUrl} http://0.0.0.0:${localPort} https://data.cline.bot`,
+        ]
 
 		return /*html*/ `
 			<!DOCTYPE html>
@@ -368,7 +383,7 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
 					<script src="http://localhost:8097"></script> 
 					<meta charset="utf-8">
 					<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-					<meta http-equiv="Content-Security-Policy" content="${csp.join("; ")}">
+                    <meta http-equiv="Content-Security-Policy" content="${csp.join("; ")}">
 					<link rel="stylesheet" type="text/css" href="${stylesUri}">
 					<link href="${codiconsUri}" rel="stylesheet" />
 					<link href="${katexCssUri}" rel="stylesheet" />
@@ -376,7 +391,7 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
 				</head>
 				<body>
 					<div id="root"></div>
-					<script type="text/javascript" nonce="${nonce}">
+                    <script type="text/javascript" nonce="${nonce}">
 						// Inject the provider type
 						window.WEBVIEW_PROVIDER_TYPE = ${JSON.stringify(this.providerType)};
 						
@@ -414,7 +429,8 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
 	 *
 	 * @param webview The webview instance to attach the message listener to
 	 */
-	private setWebviewMessageListener(webview: vscode.Webview) {
+    // CARET MODIFICATION: make listener protected to allow subclass overrides after upstream change
+    protected setWebviewMessageListener(webview: vscode.Webview) {
 		webview.onDidReceiveMessage(
 			(message) => {
 				this.controller.handleWebviewMessage(message)
@@ -423,4 +439,30 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
 			this.disposables,
 		)
 	}
+
+    // CARET MODIFICATION: compatibility helpers expected by upstream callers
+    public getWebview() {
+        return this.view
+    }
+    public isVisible(): boolean {
+        return this.view?.visible || false
+    }
+    public getWebviewUri(uri: vscode.Uri) {
+        if (!this.view) throw new Error("Webview not initialized")
+        return this.view.webview.asWebviewUri(uri)
+    }
+    public getCspSource() {
+        if (!this.view) throw new Error("Webview not initialized")
+        return this.view.webview.cspSource
+    }
+    public postMessageToWebview(message: import("@/shared/ExtensionMessage").ExtensionMessage) {
+        return this.view?.webview.postMessage(message)
+    }
+}
+
+// CARET MODIFICATION: static alias for compatibility
+export namespace WebviewProvider {
+    export function getActiveInstance(): WebviewProvider | undefined {
+        return WebviewProvider.getVisibleInstance()
+    }
 }

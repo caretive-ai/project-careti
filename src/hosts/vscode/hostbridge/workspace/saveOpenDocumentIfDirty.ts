@@ -1,4 +1,4 @@
-import { SaveOpenDocumentIfDirtyRequest, SaveOpenDocumentIfDirtyResponse } from "@shared/proto/host/window"
+import { SaveOpenDocumentIfDirtyRequest, SaveOpenDocumentIfDirtyResponse } from "@shared/proto/host/workspace"
 import * as vscode from "vscode"
 import { arePathsEqual } from "@utils/path"
 

@@ -2,6 +2,7 @@
 import { ApiConfiguration, ModelInfo } from "./api"
 import { AutoApprovalSettings } from "./AutoApprovalSettings"
 import { BrowserSettings } from "./BrowserSettings"
+import { ChatSettings } from "./ChatSettings"
 import { Mode, OpenaiReasoningEffort } from "./storage/types"
 import { HistoryItem } from "./HistoryItem"
 import { TelemetrySetting } from "./TelemetrySetting"
@@ -81,6 +82,7 @@ export type Platform = "aix" | "darwin" | "freebsd" | "linux" | "openbsd" | "sun
 export const DEFAULT_PLATFORM = "unknown"
 
 export interface ExtensionState {
+	chatSettings?: ChatSettings
 	isNewUser: boolean
 	welcomeViewCompleted: boolean
 	apiConfiguration?: ApiConfiguration

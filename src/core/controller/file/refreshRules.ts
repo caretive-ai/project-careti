@@ -1,7 +1,7 @@
 // CARET MODIFICATION: Merged with upstream/main. Proto paths updated to 'caret' package.
 // Adopted new getCwd utility and preserved Caret's multi-rule priority logic.
-import { EmptyRequest } from "@shared/proto/caret/common"
-import { RefreshedRules } from "@shared/proto/caret/file"
+import { EmptyRequest } from "@shared/proto/cline/common"
+import { RefreshedRules } from "@shared/proto/cline/file"
 import type { Controller } from "../index"
 import { refreshClineRulesToggles } from "@core/context/instructions/user-instructions/cline-rules"
 import { refreshExternalRulesToggles } from "@core/context/instructions/user-instructions/external-rules"

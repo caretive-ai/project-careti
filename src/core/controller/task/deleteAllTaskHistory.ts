@@ -25,7 +25,7 @@ export async function deleteAllTaskHistory(controller: Controller): Promise<Dele
 		const userChoice = (
 			await HostProvider.window.showMessage(
 				ShowMessageRequest.create({
-					type: ShowMessageType.WARNING,
+					type: ShowMessageType.WINDOW_MESSAGE_WARNING,
 					message: "What would you like to delete?",
 					options: {
 						modal: true,
@@ -68,7 +68,7 @@ export async function deleteAllTaskHistory(controller: Controller): Promise<Dele
 				// No favorited tasks found - show warning and ask user what to do
 				const answer = (
 					await HostProvider.window.showMessage({
-						type: ShowMessageType.WARNING,
+						type: ShowMessageType.WINDOW_MESSAGE_WARNING,
 						message: "No favorited tasks found. Would you like to delete all tasks anyway?",
 						options: {
 							modal: true,
@@ -104,7 +104,7 @@ export async function deleteAllTaskHistory(controller: Controller): Promise<Dele
 			}
 		} catch (error) {
 			HostProvider.window.showMessage({
-				type: ShowMessageType.ERROR,
+				type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 				message: `Encountered error while deleting task history, there may be some files left behind. Error: ${error instanceof Error ? error.message : String(error)}`,
 			})
 		}

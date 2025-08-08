@@ -158,6 +158,7 @@ export type GlobalStateKey =
 	| "actModeHuaweiCloudMaasModelInfo"
 
 export type LocalStateKey =
+	| "chatSettings"
 	| "localClineRulesToggles"
 	| "localCursorRulesToggles"
 	| "localWindsurfRulesToggles"

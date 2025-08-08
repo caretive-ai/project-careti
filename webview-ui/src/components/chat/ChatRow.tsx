@@ -35,14 +35,9 @@ import NewTaskPreview from "./NewTaskPreview"
 import ReportBugPreview from "./ReportBugPreview"
 import UserMessage from "./UserMessage"
 import QuoteButton from "./QuoteButton"
-<<<<<<< HEAD
 // CARET MODIFICATION: Import PersonaAvatar for displaying persona images in chat
 import PersonaAvatar from "../../caret/components/PersonaAvatar"
 import { t } from "@/caret/utils/i18n" // CARET MODIFICATION: 다국어 지원을 위한 t 함수 임포트
-=======
-import ErrorRow from "./ErrorRow"
-import { ErrorBlockTitle } from "./ErrorBlockTitle"
->>>>>>> upstream/main
 
 const normalColor = "var(--vscode-foreground)"
 const errorColor = "var(--vscode-errorForeground)"
@@ -278,7 +273,6 @@ export const ChatRowContent = memo(
 							style={{
 								color: errorColor,
 								marginBottom: "-1.5px",
-<<<<<<< HEAD
 							}}></span>
 					),
 					<span style={{ color: normalColor, fontWeight: "bold" }}>{t("chat.executeCommand", "common")}</span>,
@@ -289,19 +283,11 @@ export const ChatRowContent = memo(
 					isMcpServerResponding ? (
 						<ProgressIndicator />
 					) : (
-=======
-							}}></span>,
-						<span style={{ color: errorColor, fontWeight: "bold" }}>Error</span>,
-					]
-				case "mistake_limit_reached":
-					return [
->>>>>>> upstream/main
 						<span
 							className="codicon codicon-error"
 							style={{
 								color: errorColor,
 								marginBottom: "-1.5px",
-<<<<<<< HEAD
 							}}></span>
 					),
 					<span className="ph-no-capture" style={{ color: normalColor, fontWeight: "bold", wordBreak: "break-word" }}>
@@ -334,13 +320,6 @@ export const ChatRowContent = memo(
 							alignItems: "center",
 							justifyContent: "center",
 						}}>
-=======
-							}}></span>,
-						<span style={{ color: errorColor, fontWeight: "bold" }}>Cline is having trouble...</span>,
-					]
-				case "auto_approval_max_req_reached":
-					return [
->>>>>>> upstream/main
 						<span
 							className="codicon codicon-warning"
 							style={{
@@ -354,7 +333,6 @@ export const ChatRowContent = memo(
 						isCommandExecuting ? (
 							<ProgressIndicator />
 						) : (
-<<<<<<< HEAD
 							getIconSpan("error", errorColor)
 						)
 					) : cost != null ? (
@@ -512,44 +490,6 @@ export const ChatRowContent = memo(
 							</span>
 						</div>
 						<div
-=======
-							<span
-								className="codicon codicon-terminal"
-								style={{
-									color: normalColor,
-									marginBottom: "-1.5px",
-								}}></span>
-						),
-						<span style={{ color: normalColor, fontWeight: "bold" }}>Cline wants to execute this command:</span>,
-					]
-				case "use_mcp_server":
-					const mcpServerUse = JSON.parse(message.text || "{}") as ClineAskUseMcpServer
-					return [
-						isMcpServerResponding ? (
-							<ProgressIndicator />
-						) : (
-							<span
-								className="codicon codicon-server"
-								style={{
-									color: normalColor,
-									marginBottom: "-1.5px",
-								}}></span>
-						),
-						<span
-							className="ph-no-capture"
-							style={{ color: normalColor, fontWeight: "bold", wordBreak: "break-word" }}>
-							Cline wants to {mcpServerUse.type === "use_mcp_tool" ? "use a tool" : "access a resource"} on the{" "}
-							<code style={{ wordBreak: "break-all" }}>
-								{getMcpServerDisplayName(mcpServerUse.serverName, mcpMarketplaceCatalog)}
-							</code>{" "}
-							MCP server:
-						</span>,
-					]
-				case "completion_result":
-					return [
-						<span
-							className="codicon codicon-check"
->>>>>>> upstream/main
 							style={{
 								color: successColor,
 								marginBottom: "-1.5px",
@@ -865,7 +805,6 @@ export const ChatRowContent = memo(
 									{tool.path + "\u200E"}
 								</span>
 							</div>
-<<<<<<< HEAD
 						</div>
 					</>
 				)
@@ -1043,14 +982,6 @@ export const ChatRowContent = memo(
 						}
 					})
 					.join(""),
-=======
-							{/* Displaying the 'content' which now holds "Fetching URL: [URL]" */}
-							{/* <div style={{ paddingTop: 5, fontSize: '0.9em', opacity: 0.8 }}>{tool.content}</div> */}
-						</>
-					)
-				default:
-					return null
->>>>>>> upstream/main
 			}
 		}
 
@@ -1110,7 +1041,6 @@ export const ChatRowContent = memo(
 									style={{
 										display: "flex",
 										alignItems: "center",
-<<<<<<< HEAD
 										gap: "10px",
 									}}>
 									{icon}
@@ -1449,22 +1379,6 @@ export const ChatRowContent = memo(
 					)
 				case "load_mcp_documentation":
 					return (
-=======
-										gap: "4px",
-										width: "100%",
-										justifyContent: "flex-start",
-										cursor: "pointer",
-										padding: `2px 8px ${isExpanded ? 0 : 8}px 8px`,
-									}}>
-									<span className={`codicon codicon-chevron-${isExpanded ? "down" : "right"}`}></span>
-									<span style={{ fontSize: "0.8em" }}>Command Output</span>
-								</div>
-								{isExpanded && <CodeBlock source={`${"```"}shell\n${output}\n${"```"}`} />}
-							</div>
-						)}
-					</div>
-					{requestsApproval && (
->>>>>>> upstream/main
 						<div
 							style={{
 								display: "flex",
@@ -2139,7 +2053,6 @@ export const ChatRowContent = memo(
 					default:
 						return null
 				}
-<<<<<<< HEAD
 				case "chatbot_mode_respond": {
 					// CARET MODIFICATION: Handle chatbot mode responses - identical to plan_mode_respond
 					let response: string | undefined
@@ -2192,8 +2105,10 @@ function parseErrorText(text: string | undefined) {
 			const jsonStr = text.substring(startIndex, endIndex + 1)
 			const errorObject = JSON.parse(jsonStr)
 			return errorObject
-=======
->>>>>>> upstream/main
 		}
-	},
-)
+	} catch (error) {
+		console.error("Failed to parse error text:", error)
+		return undefined
+	}
+	return undefined
+}

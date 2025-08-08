@@ -67,7 +67,6 @@ export interface ExtensionStateContextType extends ExtensionState { // CARET MOD
 	// Setters
 	setShowAnnouncement: (value: boolean) => void
 	setShouldShowAnnouncement: (value: boolean) => void
-<<<<<<< HEAD
 	setPlanActSeparateModelsSetting: (value: boolean) => void
 	setEnableCheckpointsSetting: (value: boolean) => void
 	setMcpMarketplaceEnabled: (value: boolean) => void
@@ -83,8 +82,6 @@ export interface ExtensionStateContextType extends ExtensionState { // CARET MOD
 	// CARET MODIFICATION: Mode system (Caret/Cline interface) setter
 	setModeSystem: (modeSystem: string) => void
 
-=======
->>>>>>> upstream/main
 	setMcpServers: (value: McpServer[]) => void
 	setRequestyModels: (value: Record<string, ModelInfo>) => void
 	setGroqModels: (value: Record<string, ModelInfo>) => void
@@ -227,12 +224,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		isNewUser: false,
 		welcomeViewCompleted: false,
 		mcpResponsesCollapsed: false, // Default value (expanded), will be overwritten by extension state
-<<<<<<< HEAD
 		// CARET MODIFICATION: Add uiLanguage for i18n support - follows VSCode settings or defaults to 'en'
 		uiLanguage: "en", // Will be overwritten by backend state with VSCode settings
-=======
-		strictPlanModeEnabled: false,
->>>>>>> upstream/main
 	})
 	const [didHydrateState, setDidHydrateState] = useState(false)
 	const [showWelcome, setShowWelcome] = useState(false)
@@ -261,7 +254,6 @@ export const ExtensionStateContextProvider: React.FC<{
 	const [huggingFaceModels, setHuggingFaceModels] = useState<Record<string, ModelInfo>>({})
 	const [mcpServers, setMcpServers] = useState<McpServer[]>([])
 	const [mcpMarketplaceCatalog, setMcpMarketplaceCatalog] = useState<McpMarketplaceCatalog>({ items: [] })
-<<<<<<< HEAD
 	const handleMessage = useCallback((event: MessageEvent) => {
 		const message: ExtensionMessage = event.data
 		switch (message.type) {
@@ -292,80 +284,6 @@ export const ExtensionStateContextProvider: React.FC<{
 	}, [])
 
 	useEvent("message", handleMessage)
-=======
->>>>>>> upstream/main
-
-	// References to store subscription cancellation functions
-	const stateSubscriptionRef = useRef<(() => void) | null>(null)
-
-	// Reference for focusChatInput subscription
-	const focusChatInputUnsubscribeRef = useRef<(() => void) | null>(null)
-	const mcpButtonUnsubscribeRef = useRef<(() => void) | null>(null)
-	const historyButtonClickedSubscriptionRef = useRef<(() => void) | null>(null)
-	const chatButtonUnsubscribeRef = useRef<(() => void) | null>(null)
-	const accountButtonClickedSubscriptionRef = useRef<(() => void) | null>(null)
-	const settingsButtonClickedSubscriptionRef = useRef<(() => void) | null>(null)
-	const partialMessageUnsubscribeRef = useRef<(() => void) | null>(null)
-	const mcpMarketplaceUnsubscribeRef = useRef<(() => void) | null>(null)
-	const themeSubscriptionRef = useRef<(() => void) | null>(null)
-	const openRouterModelsUnsubscribeRef = useRef<(() => void) | null>(null)
-	const workspaceUpdatesUnsubscribeRef = useRef<(() => void) | null>(null)
-	const relinquishControlUnsubscribeRef = useRef<(() => void) | null>(null)
-
-	// Add ref for callbacks
-	const relinquishControlCallbacks = useRef<Set<() => void>>(new Set())
-
-	// Create hook function
-	const onRelinquishControl = useCallback((callback: () => void) => {
-		relinquishControlCallbacks.current.add(callback)
-		return () => {
-			relinquishControlCallbacks.current.delete(callback)
-		}
-	}, [])
-	const mcpServersSubscriptionRef = useRef<(() => void) | null>(null)
-	const didBecomeVisibleUnsubscribeRef = useRef<(() => void) | null>(null)
-
-	// CARET MODIFICATION: 웰컴 상태 변경을 백엔드에 알려서 VSCode 컨텍스트 업데이트
-	useEffect(() => {
-		// showWelcome 상태가 변경될 때마다 백엔드에 알려서 VSCode 컨텍스트를 업데이트
-		if (didHydrateState) {
-			// 간단한 메시지로 백엔드에 웰컴 상태 전달
-			window.postMessage(
-				{
-					type: "setWelcomeContext",
-					showWelcome: showWelcome,
-				},
-				"*",
-			)
-			console.log(`[DEBUG] Sent welcome context to backend: showWelcome=${showWelcome}`)
-		}
-	}, [showWelcome, didHydrateState])
-
-	// Subscribe to state updates and UI events using the gRPC streaming API
-	useEffect(() => {
-		// Use the already defined webview provider type
-		const webviewType = currentProviderType
-
-		// Set up state subscription
-		stateSubscriptionRef.current = StateServiceClient.subscribeToState(EmptyRequest.create({}), {
-			onResponse: (response) => {
-				if (response.stateJson) {
-					try {
-						const stateData = JSON.parse(response.stateJson) as ExtensionState
-<<<<<<< HEAD
-						console.log("[DEBUG] parsed state JSON, updating state")
-
-						// CARET MODIFICATION: Mission 2 - 상태 업데이트 수신 로깅
-						import("../caret/utils/webview-logger").then(({ caretWebviewLogger }) => {
-							caretWebviewLogger.info("📥 [RECEIVE] State update received from backend", {
-								hasChatSettings: !!stateData.chatSettings,
-								newMode: stateData.chatSettings?.mode,
-								timestamp: new Date().toISOString(),
-							})
-						})
-
-=======
->>>>>>> upstream/main
 						setState((prevState) => {
 							// CARET MODIFICATION: Mission 2 - 모드 변경 감지 로깅
 							const modeChanged = prevState.chatSettings?.mode !== stateData.chatSettings?.mode
@@ -390,7 +308,6 @@ export const ExtensionStateContextProvider: React.FC<{
 							}
 
 							// Update welcome screen state based on API configuration
-<<<<<<< HEAD
 							const config = stateData.apiConfiguration
 							const hasKey = config
 								? [
@@ -420,9 +337,6 @@ export const ExtensionStateContextProvider: React.FC<{
 								: false
 
 							setShowWelcome(!hasKey)
-=======
-							setShowWelcome(!newState.welcomeViewCompleted)
->>>>>>> upstream/main
 							setDidHydrateState(true)
 
 							console.log("[DEBUG] returning new state in ESC")
@@ -854,7 +768,6 @@ export const ExtensionStateContextProvider: React.FC<{
 		setMcpMarketplaceCatalog: (catalog: McpMarketplaceCatalog) => setMcpMarketplaceCatalog(catalog),
 		setShowMcp,
 		closeMcpView,
-<<<<<<< HEAD
 		setChatSettings: async (value) => {
 			try {
 				// CARET MODIFICATION: Mission 2 - 간단한 로깅으로 모드 동기화 문제 추적
@@ -902,146 +815,6 @@ export const ExtensionStateContextProvider: React.FC<{
 				console.error("Failed to update chat settings:", error)
 			}
 		},
-=======
->>>>>>> upstream/main
-		setGlobalClineRulesToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				globalClineRulesToggles: toggles,
-			})),
-		setLocalClineRulesToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				localClineRulesToggles: toggles,
-			})),
-		setLocalCaretRulesToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				localCaretRulesToggles: toggles,
-			})),
-		setLocalCursorRulesToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				localCursorRulesToggles: toggles,
-			})),
-		setLocalWindsurfRulesToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				localWindsurfRulesToggles: toggles,
-			})),
-		setLocalWorkflowToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				localWorkflowToggles: toggles,
-			})),
-		setGlobalWorkflowToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				globalWorkflowToggles: toggles,
-			})),
-		setMcpTab,
-		setTotalTasksSize,
-		refreshOpenRouterModels,
-		onRelinquishControl,
-<<<<<<< HEAD
-		// CARET MODIFICATION: UI 언어만 업데이트하는 별도 함수 - chatSettings 충돌 방지
-		setUILanguage: async (language: string) => {
-			try {
-				// UI 언어만 업데이트 (다른 설정 포함하지 않음)
-				await StateServiceClient.updateSettings(
-					UpdateSettingsRequest.create({
-						uiLanguage: language, // 오직 이것만 업데이트
-					}),
-				)
-
-				// Frontend 상태 업데이트
-				setState((prevState) => ({
-					...prevState,
-					uiLanguage: language,
-					chatSettings: {
-						...prevState.chatSettings,
-						uiLanguage: language,
-					},
-				}))
-
-				console.log("[DEBUG] 🌐 setUILanguage completed:", language)
-			} catch (error) {
-				console.error("Failed to update UI language:", error)
-			}
-		},
-		// CARET MODIFICATION: Mode system setter for Caret/Cline interface switching
-		setModeSystem: async (modeSystem: string) => {
-			try {
-				// CARET MODIFICATION: Mission 2 - 모드 변경 감지 및 자동 New Task
-				const currentModeSystem = state.chatSettings.modeSystem
-				const isModeChanged = currentModeSystem !== modeSystem
-
-				// CARET MODIFICATION: 기본값 설정 로직 - Caret=Agent, Cline=Plan
-				let defaultMode: "chatbot" | "agent" | "plan" | "act"
-
-				// 모드 시스템 변경 시 해당 시스템의 기본값으로 설정
-				if (modeSystem === "caret") {
-					// Caret 모드: 기본값은 항상 agent
-					defaultMode = "agent"
-				} else if (modeSystem === "cline") {
-					// Cline 모드: 기본값은 항상 plan
-					defaultMode = "plan"
-				} else {
-					// 알 수 없는 모드 시스템인 경우 현재 모드 유지
-					defaultMode = state.chatSettings.mode
-				}
-
-				// Import the conversion functions for proper chat settings update
-				const { convertChatSettingsToProtoChatSettings } = await import(
-					"@shared/proto-conversions/state/chat-settings-conversion"
-				)
-
-				const updatedChatSettings = {
-					...state.chatSettings,
-					mode: defaultMode,
-					modeSystem,
-				}
-
-				// Update both modeSystem and mode if needed
-				await StateServiceClient.updateSettings(
-					UpdateSettingsRequest.create({
-						modeSystem,
-						chatSettings: convertChatSettingsToProtoChatSettings(updatedChatSettings),
-					}),
-				)
-
-				// Update frontend state with both modeSystem and default mode
-				setState((prevState) => ({
-					...prevState,
-					chatSettings: updatedChatSettings,
-				}))
-
-				// CARET MODIFICATION: Mission 2 - 모드 변경 시 자동 New Task 트리거
-				if (isModeChanged) {
-					try {
-						const { TaskServiceClient } = await import("../services/grpc-client")
-						const { EmptyRequest } = await import("@shared/proto/common")
-
-						// 기존 태스크 정리
-						await TaskServiceClient.clearTask(EmptyRequest.create({}))
-
-						console.log(
-							`[DEBUG] 🔄 Mode changed from ${currentModeSystem} to ${modeSystem} - Auto New Task triggered`,
-						)
-					} catch (taskError) {
-						console.error("Failed to trigger auto new task after mode change:", taskError)
-						// 모드 변경은 성공했으므로 에러를 던지지 않음
-					}
-				}
-
-				console.log("[DEBUG] 🔧 setModeSystem completed:", modeSystem, "with default mode:", defaultMode)
-			} catch (error) {
-				console.error("Failed to update mode system:", error)
-			}
-		},
-=======
-		setUserInfo: (userInfo?: UserInfo) => setState((prevState) => ({ ...prevState, userInfo })),
->>>>>>> upstream/main
 	}
 
 	return <ExtensionStateContext.Provider value={contextValue}>{children}</ExtensionStateContext.Provider>

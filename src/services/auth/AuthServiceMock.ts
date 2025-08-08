@@ -46,7 +46,7 @@ export class AuthServiceMock extends AuthService {
 		return this._clineAuthInfo.idToken
 	}
 
-	override async createAuthRequest(): Promise<String> {
+	override async createAuthRequest(controller: Controller): Promise<String> {
 		// Use URL object for more graceful query construction
 		const authUrl = new URL(clineEnvConfig.apiBaseUrl)
 		const authUrlString = authUrl.toString()

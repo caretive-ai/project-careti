@@ -2,20 +2,14 @@ import HeroTooltip from "@/components/common/HeroTooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "@/services/grpc-client"
 import { ExtensionMessage } from "@shared/ExtensionMessage"
-<<<<<<< HEAD
 import { EmptyRequest, StringRequest } from "@shared/proto/common"
 // CARET MODIFICATION: Chatbot/Agent 용어 통일 - PlanActMode 제거
 import { ChatbotAgentMode, ResetStateRequest, ToggleChatbotAgentModeRequest, UpdateSettingsRequest } from "@shared/proto/state"
 import { VSCodeButton, VSCodeCheckbox, VSCodeLink, VSCodeTextArea } from "@vscode/webview-ui-toolkit/react"
-=======
-import { ResetStateRequest } from "@shared/proto/cline/state"
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
->>>>>>> upstream/main
 import { CheckCheck, FlaskConical, Info, LucideIcon, Settings, SquareMousePointer, SquareTerminal, Webhook } from "lucide-react"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useEvent } from "react-use"
 import { Tab, TabContent, TabHeader, TabList, TabTrigger } from "../common/Tab"
-<<<<<<< HEAD
 import { TabButton } from "../mcp/configuration/McpConfigurationView"
 import ApiOptions from "./ApiOptions"
 import BrowserSettingsSection from "./BrowserSettingsSection"
@@ -34,18 +28,6 @@ import { useCurrentLanguage } from "@/caret/hooks/useCurrentLanguage"
 import styled from "styled-components"
 import CaretFooter from "@/caret/components/CaretFooter"
 const { IS_DEV } = process.env
-=======
-import FeatureSettingsSection from "./sections/FeatureSettingsSection"
-import SectionHeader from "./SectionHeader"
-import TerminalSettingsSection from "./sections/TerminalSettingsSection"
-import ApiConfigurationSection from "./sections/ApiConfigurationSection"
-import GeneralSettingsSection from "./sections/GeneralSettingsSection"
-import BrowserSettingsSection from "./sections/BrowserSettingsSection"
-import DebugSection from "./sections/DebugSection"
-import AboutSection from "./sections/AboutSection"
-
-const IS_DEV = process.env.IS_DEV
->>>>>>> upstream/main
 
 // CARET MODIFICATION: Styled components for Caret/Cline mode toggle switch (copied from ChatTextArea)
 const ModeSwitchContainer = styled.div<{ disabled: boolean }>`
@@ -179,7 +161,6 @@ type SettingsViewProps = {
 }
 
 const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
-<<<<<<< HEAD
 	// CARET MODIFICATION: SettingsView 렌더링 확인
 	// caretWebviewLogger.debug("🎯 SettingsView 컴포넌트 렌더링!"); // CARET MODIFICATION: 주석 처리
 	//caretWebviewLogger.debug("🎯 SettingsView props:", { onDone, targetSection })
@@ -453,13 +434,6 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 	}, [someVar])
 	If we only want to run code once on mount we can use react-use's useEffectOnce or useMount
 	*/
-=======
-	// Track active tab
-	const [activeTab, setActiveTab] = useState<string>(targetSection || SETTINGS_TABS[0].id)
-	// Track if we're currently switching modes
-
-	const { version } = useExtensionState()
->>>>>>> upstream/main
 
 	const handleMessage = useCallback((event: MessageEvent) => {
 		const message: ExtensionMessage = event.data
@@ -516,7 +490,6 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 		}
 	}
 
-<<<<<<< HEAD
 	// CARET MODIFICATION: Chatbot/Agent 통일 - 직접 비교
 	const handleChatbotAgentModeChange = async (tab: "chatbot" | "agent") => {
 		// CARET MODIFICATION: Chatbot/Agent 통일 - 직접 모드 비교
@@ -548,80 +521,6 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 	// Track active tab - default to general tab
 	const [activeTab, setActiveTab] = useState<string>(targetSection || "general")
 
-=======
->>>>>>> upstream/main
-	// Update active tab when targetSection changes
-	useEffect(() => {
-		if (targetSection) {
-			setActiveTab(targetSection)
-		}
-	}, [targetSection])
-
-	// Enhanced tab change handler with debugging
-	const handleTabChange = useCallback(
-		(tabId: string) => {
-			// CARET MODIFICATION: console.log to logger, corrected arguments
-			// caretWebviewLogger.debug("Tab change requested:", { tabId, currentTab: activeTab }); // CARET MODIFICATION: 주석 처리
-			setActiveTab(tabId)
-			// CARET MODIFICATION: console.log to logger, corrected arguments
-			// caretWebviewLogger.debug("Active tab changed to:", { activeTab }); // CARET MODIFICATION: 주석 처리
-		},
-		[activeTab],
-	)
-
-	const handleCompactTabClick = (tab: "general" | "api" | "advanced" | "chat") => {
-		// CARET MODIFICATION: console.log to logger, corrected arguments
-		// caretWebviewLogger.debug("Compact tab clicked:", { tabId: tab }); // CARET MODIFICATION: 주석 처리
-		handleTabChange(tab)
-	}
-
-	// Debug tab changes
-	useEffect(() => {
-		// CARET MODIFICATION: console.log to logger
-		// console.log("Active tab changed to:", activeTab)
-		caretWebviewLogger.debug("Active tab changed to:", activeTab)
-	}, [activeTab])
-
-	// Track whether we're in compact mode
-	const [isCompactMode, setIsCompactMode] = useState(false)
-	const containerRef = useRef<HTMLDivElement>(null)
-
-	// Setup resize observer to detect when we should switch to compact mode
-	useEffect(() => {
-		if (!containerRef.current) return
-
-		const observer = new ResizeObserver((entries) => {
-			for (const entry of entries) {
-				// If container width is less than 500px, switch to compact mode
-				setIsCompactMode(entry.contentRect.width < 500)
-			}
-		})
-
-		observer.observe(containerRef.current)
-
-		return () => {
-			observer?.disconnect()
-		}
-	}, [])
-
-	return (
-		<Tab>
-			<TabHeader className="flex justify-between items-center gap-2">
-				<div className="flex items-center gap-1">
-					<h3 className="text-[var(--vscode-foreground)] m-0">{t("settingsView.title", "settings")}</h3>
-				</div>
-				<div className="flex gap-2">
-<<<<<<< HEAD
-					<VSCodeButton appearance="secondary" onClick={handleCancel}>
-						{t("buttons.cancel", "settings")}
-					</VSCodeButton>
-					<VSCodeButton onClick={() => handleSubmit(false)} disabled={!hasUnsavedChanges}>
-						{t("buttons.save", "settings")}
-					</VSCodeButton>
-=======
-					{/* All settings now save immediately, so only show Done button */}
-					<VSCodeButton onClick={onDone}>Done</VSCodeButton>
->>>>>>> upstream/main
 				</div>
 			</TabHeader>
 
@@ -698,7 +597,6 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 					return (
 						<TabContent className="flex-1 overflow-auto">
 							{/* API Configuration Tab */}
-<<<<<<< HEAD
 							{activeTab === "api-config" && (
 								<div>
 									{renderSectionHeader("api-config")}
@@ -818,12 +716,6 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 									</Section>
 								</div>
 							)}
-=======
-							{activeTab === "api-config" && <ApiConfigurationSection renderSectionHeader={renderSectionHeader} />}
-
-							{/* General Settings Tab */}
-							{activeTab === "general" && <GeneralSettingsSection renderSectionHeader={renderSectionHeader} />}
->>>>>>> upstream/main
 
 							{/* Feature Settings Tab */}
 							{activeTab === "features" && <FeatureSettingsSection renderSectionHeader={renderSectionHeader} />}
@@ -836,7 +728,6 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 
 							{/* Debug Tab (only in dev mode) */}
 							{IS_DEV && activeTab === "debug" && (
-<<<<<<< HEAD
 								<div>
 									{renderSectionHeader("debug")}
 									<Section>
@@ -857,14 +748,10 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 										</p>
 									</Section>
 								</div>
-=======
-								<DebugSection onResetState={handleResetState} renderSectionHeader={renderSectionHeader} />
->>>>>>> upstream/main
 							)}
 
 							{/* About Tab */}
 							{activeTab === "about" && (
-<<<<<<< HEAD
 								<div>
 									{renderSectionHeader("about")}
 									<Section>
@@ -874,9 +761,6 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 										</div>
 									</Section>
 								</div>
-=======
-								<AboutSection version={version} renderSectionHeader={renderSectionHeader} />
->>>>>>> upstream/main
 							)}
 						</TabContent>
 					)

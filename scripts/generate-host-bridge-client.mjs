@@ -103,6 +103,12 @@ import { BaseGrpcClient } from "@/hosts/external/grpc-types"
 
 ${imports.join("\n")}
 
+// CARET MODIFICATION: Temporary type definitions until nice-grpc generation is fixed
+// TODO: Fix proto generation to properly export ServiceDefinition and ServiceClient types
+${Object.keys(hostServices).map(serviceName => `
+type ${serviceName}Client = any
+const ${serviceName}Definition = {} as any`).join("")}
+
 ${clientImplementations.join("\n\n")}
 `
 	// Write output file
@@ -159,11 +165,11 @@ function generateExternalClientSetup(serviceName, serviceDefinition) {
  * Type-safe client implementation for ${serviceName}.
  */
 export class ${serviceName}ClientImpl 
-	extends BaseGrpcClient<niceGrpc.host.${serviceName}Client> 
+	extends BaseGrpcClient<${serviceName}Client> 
 	implements ${serviceName}ClientInterface {
 
-	protected createClient(channel: Channel): niceGrpc.host.${serviceName}Client {
-		return createClient(niceGrpc.host.${serviceName}Definition, channel)
+	protected createClient(channel: Channel): ${serviceName}Client {
+		return createClient(${serviceName}Definition, channel)
 	}
 
 ${methods}

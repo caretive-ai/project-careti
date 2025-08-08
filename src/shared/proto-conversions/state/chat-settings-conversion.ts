@@ -1,7 +1,7 @@
 import { ChatContent } from "@shared/ChatContent"
 import { ChatSettings } from "@shared/ChatSettings"
 // CARET MODIFICATION: Chatbot/Agent 용어 통일
-import { ChatContent as ProtoChatContent, ChatSettings as ProtoChatSettings, ChatbotAgentMode } from "../../../shared/proto/state"
+import { ChatContent as ProtoChatContent, ChatSettings as ProtoChatSettings, ChatbotAgentMode } from "@shared/proto/cline/state"
 
 /**
  * Converts domain ChatSettings objects to proto ChatSettings objects
@@ -44,7 +44,6 @@ export function convertProtoChatSettingsToChatSettings(protoChatSettings: ProtoC
 		modeString = protoChatSettings.mode === ChatbotAgentMode.CHATBOT_MODE ? "chatbot" : "agent"
 	}
 
-	// eslint-disable-next-line eslint-rules/no-protobuf-object-literals
 	return {
 		mode: modeString, // CARET MODIFICATION: Mission 2 - Cline/Caret 모드 용어 지원
 		preferredLanguage: protoChatSettings.preferredLanguage,
@@ -77,7 +76,6 @@ export function convertProtoChatContentToChatContent(protoChatContent?: ProtoCha
 		return undefined
 	}
 
-	// eslint-disable-next-line eslint-rules/no-protobuf-object-literals
 	return {
 		message: protoChatContent.message,
 		images: protoChatContent.images || [],

@@ -10,8 +10,12 @@ import type { Controller } from "../index"
  */
 export async function refreshMcpMarketplace(controller: Controller, _request: EmptyRequest): Promise<McpMarketplaceCatalog> {
 	try {
-		// Call the RPC variant which returns the result directly
-		const catalog = await controller.silentlyRefreshMcpMarketplaceRPC()
+		// Call the method to refresh the catalog, which updates it internally
+		await controller.silentlyRefreshMcpMarketplace()
+
+		// Get the updated catalog from the global state
+		const { getGlobalState } = await import("../../storage/state")
+		const catalog = await getGlobalState(controller.context, "mcpMarketplaceCatalog")
 
 		if (catalog) {
 			// Types are structurally identical, use direct type assertion

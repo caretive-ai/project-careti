@@ -22,17 +22,16 @@ export class CaretProvider extends WebviewProvider {
 	private _personaThinkingDataUri: string = ""
 	private static instance: CaretProvider | null = null
 
-	constructor(
-		public override readonly context: vscode.ExtensionContext,
-		outputChannel: vscode.OutputChannel,
-		providerType: WebviewProviderType = WebviewProviderType.SIDEBAR,
-		caretLoggerInstance?: CaretLogger,
-	) {
-		super(context, outputChannel, providerType)
+    constructor(
+        public override readonly context: vscode.ExtensionContext,
+        providerType: WebviewProviderType = WebviewProviderType.SIDEBAR,
+        caretLoggerInstance?: CaretLogger,
+    ) {
+        // CARET MODIFICATION: align to new base constructor without outputChannel
+        super(context, providerType)
 		this.caretLogger = caretLoggerInstance || new CaretLogger()
 
 		this.caretLogger.info(`CaretProvider constructor called for ${providerType}.`)
-		this.caretLogger.setOutputChannel(outputChannel)
 		this.caretLogger.extensionActivated()
 		this.caretLogger.welcomePageLoaded()
 
@@ -50,14 +49,13 @@ export class CaretProvider extends WebviewProvider {
 	public override async resolveWebviewView(webviewView: vscode.WebviewView | vscode.WebviewPanel) {
 		this.caretLogger.info(`resolveWebviewView started for ${this.providerType} with client ID: ${this.getClientId()}`)
 		await super.resolveWebviewView(webviewView)
-		this.controller.postStateToWebview()
-		this.outputChannel.appendLine("Caret Webview view resolved successfully.")
+        this.controller.postStateToWebview()
 		this.caretLogger.info(
 			`resolveWebviewView finished for ${this.providerType} with client ID: ${this.getClientId()}. Controller is ready.`,
 		)
 	}
 
-	protected override getHtmlContent(webview: vscode.Webview): string {
+    protected override getHtmlContent(webview: vscode.Webview): string {
 		const stylesUri = getUri(webview, this.context.extensionUri, ["webview-ui", "build", "assets", "index.css"])
 		const scriptUri = getUri(webview, this.context.extensionUri, ["webview-ui", "build", "assets", "index.js"])
 		const codiconsUri = getUri(webview, this.context.extensionUri, [
@@ -144,7 +142,7 @@ export class CaretProvider extends WebviewProvider {
 		`
 	}
 
-	protected override async getHMRHtmlContent(webview: vscode.Webview): Promise<string> {
+    protected override async getHMRHtmlContent(webview: vscode.Webview): Promise<string> {
 		const localPort = await super["getDevServerPort"]()
 		const localServerUrl = `localhost:${localPort}`
 

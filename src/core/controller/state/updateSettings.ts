@@ -2,8 +2,8 @@
 // Integrated new settings from upstream and adapted to individual setting updates instead of a single chatSettings object.
 // Preserved Caret's logging, persona initialization, and advanced broadcast skipping logic.
 import { Controller } from ".."
-import { Empty } from "@shared/proto/caret/common"
-import { PlanActMode, UpdateSettingsRequest } from "@shared/proto/caret/state"
+import { Empty } from "@shared/proto/cline/common"
+import { PlanActMode, UpdateSettingsRequest } from "@shared/proto/cline/state"
 import { buildApiHandler } from "../../../api"
 import { convertProtoApiConfigurationToApiConfiguration } from "../../../shared/proto-conversions/state/settings-conversion"
 import { TelemetrySetting } from "@/shared/TelemetrySetting"
@@ -37,8 +37,8 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 		}
 
 		// CARET MODIFICATION: Chatbot/Agent 용어 통일 - planActSeparateModelsSetting → chatbotAgentSeparateModelsSetting
-		if (request.chatbotAgentSeparateModelsSetting !== undefined) {
-			await controller.context.globalState.update("planActSeparateModelsSetting", request.chatbotAgentSeparateModelsSetting)
+		if (request.planActSeparateModelsSetting !== undefined) {
+			await controller.context.globalState.update("planActSeparateModelsSetting", request.planActSeparateModelsSetting)
 		}
 
 		// Update checkpoints setting
@@ -128,7 +128,7 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 				request.uiLanguage,
 				request.apiConfiguration,
 				request.telemetrySetting,
-				request.chatbotAgentSeparateModelsSetting,
+				request.planActSeparateModelsSetting,
 				request.enableCheckpointsSetting,
 				request.mcpMarketplaceEnabled,
 				request.mcpResponsesCollapsed,

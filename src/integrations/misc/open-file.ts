@@ -10,7 +10,7 @@ export async function openImage(dataUri: string) {
 	const matches = dataUri.match(/^data:image\/([a-zA-Z]+);base64,(.+)$/)
 	if (!matches) {
 		HostProvider.window.showMessage({
-			type: ShowMessageType.ERROR,
+			type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 			message: "Invalid data URI format",
 		})
 		return
@@ -25,7 +25,7 @@ export async function openImage(dataUri: string) {
 		})
 	} catch (error) {
 		HostProvider.window.showMessage({
-			type: ShowMessageType.ERROR,
+			type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 			message: `Error opening image: ${error}`,
 		})
 	}
@@ -58,7 +58,7 @@ export async function openFile(absolutePath: string) {
 		})
 	} catch (error) {
 		HostProvider.window.showMessage({
-			type: ShowMessageType.ERROR,
+			type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 			message: `Could not open file!`,
 		})
 	}

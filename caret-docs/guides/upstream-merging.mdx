@@ -76,11 +76,48 @@ git merge upstream/main
         -   **작업 순서 및 체크리스트**: 해결 우선순위에 따른 단계별 작업 계획과 검증을 위한 체크리스트를 작성합니다.
     5.  작성된 계획 문서를 기반으로, 단계별로 신중하게 충돌을 해결합니다. 각 단계 실행 전 동료 또는 AI 어시스턴트와 계획을 공유하고 합의하는 것을 강력히 권장합니다.
 
+### 6. 반복 머징 시 재탐색을 줄이는 상위 원칙(신규)
+
+- **Webview/HostBridge/ProtoBus 삼각 정합성**을 먼저 맞춥니다.
+  - 베이스(WebviewProvider) → HostProvider → 생성물(proto/generate-*) 순서로 정렬하면 오류가 빠르게 좁혀집니다.
+  - WebviewProvider의 constructor/헬퍼 및 private→protected 변경은 하위 클래스 영향이 커서 즉시 보완 헬퍼를 추가해 두는 게 좋습니다.
+- **생성 스크립트 규칙의 소스화**(규칙을 코드에 고정).
+  - grpc-js 네임스페이스가 우리 포크에선 `caret`으로 export됩니다. 생성 스크립트에서 이를 강제하고, import 경로도 한 번에 관리하세요.
+  - HostBridge 도메인(diff/env/watch/window/workspace)은 컨트롤러가 아니라 `src/hosts/vscode/hostbridge/**`에서 import하도록 제너레이터에 고정하세요.
+- **중복 심볼 대비 자동화**.
+  - 서로 다른 도메인에 같은 RPC 이름이 있을 수 있습니다. 생성 시 이름 충돌을 `dir_rpc` 로컬명으로 자동 치환하면 수동 충돌이 사라집니다.
+- **Proto 원칙: 내용은 Caret, 구조는 Cline**.
+  - 패키지/enum 컨벤션은 우리 방식으로, 디렉토리/경로 구조는 upstream 유지. 문서와 스크립트에 동일 문구로 고정하세요.
+- **검증 체크리스트를 PR 필수 항목으로**.
+  - WebviewProvider API 변경, HostBridge 경로/심볼, 생성물 네임스페이스, proto-conversions 대상 enum/메시지 이름 변경 등.
+
+### 7. 문서 주도 검증 포인트(신규)
+
+ - 병합 작업 중 얻은 일반화 가능한 규칙은 본 가이드에 즉시 상위 개념으로 반영하고, 세부 단계는 해당 회차의 작업(Task) 문서로 연결하세요.
+- 반복 탐색이 예상되는 이슈는 “원인 → 패턴 → 영향 → 자동화 포인트”로 기록해 다음 병합의 검색 비용을 줄이세요.
+
 ## 충돌 해결 전략
 
 ### 일반적인 충돌 유형과 해결 방법
 
-#### 1. **Cline 원본 파일 충돌** (`src/`, `webview-ui/`)
+### 반복적 충돌 해결을 위한 일괄 처리 전략
+
+병합 과정에서 동일한 패턴의 충돌이 여러 파일에 걸쳐 반복적으로 나타날 수 있습니다. (예: `import` 경로 오류, 네임스페이스 변경 등). 이런 경우, 개별 파일을 하나씩 수정하는 것은 비효율적이며 실수를 유발할 수 있습니다.
+
+**권장 절차:**
+
+1.  **패턴 식별:** 2-3개의 파일을 수동으로 수정하며 문제의 핵심 패턴을 명확히 식별합니다.
+    -   *예시: `import "caret/common.proto"`는 항상 `import "cline/common.proto"`로 변경되어야 한다.*
+
+2.  **영향 범위 분석 (매우 중요):** `search_files`와 같은 도구를 사용하여, 해당 패턴이 프로젝트 전체에 얼마나 광범위하게 영향을 미치는지 정확히 파악합니다.
+    -   **안전한 검색어 예시:** `import "caret/` 와 같이, 다른 문자열과 겹치지 않도록 충분히 구체적이고 안전한 검색어를 사용해야 합니다.
+
+3.  **일괄 변경 실행:** `replace_in_files` 또는 스크립트를 사용하여 찾아낸 모든 파일에 대해 일괄적으로 변경을 적용합니다.
+    -   **주의:** 일괄 변경은 매우 강력하지만 위험하므로, 반드시 2단계에서 파악된 영향 범위를 기반으로 신중하게 실행해야 합니다.
+
+4.  **즉시 검증:** 일괄 변경 후, 즉시 `npm run compile` 또는 관련 테스트를 실행하여 모든 문제가 의도대로 해결되었는지, 그리고 새로운 부작용이 발생하지 않았는지 검증합니다.
+
+#### 1. **Cline 원본 파일 충돌** (`src/`)
 
 -   **원칙**: Cline 원본을 우선으로 하되, Caret 호환성 검토
 -   **해결**: 대부분의 경우 upstream 변경사항 수용
@@ -90,7 +127,15 @@ git merge upstream/main
 git checkout --theirs <충돌파일>
 ```
 
-#### 2. **빌드 설정 파일 충돌** (`package.json`, `tsconfig.json` 등)
+#### 2. **Caret 고유 UI/UX 디렉토리 충돌** (`webview-ui/`)
+
+-   **원칙**: Caret의 고유한 UI/UX 정체성을 최우선으로 보존합니다. `webview-ui/`는 Cline과 거의 완전히 다른 코드 베이스를 가지고 있으므로, 일반적인 파일 충돌과 다르게 접근해야 합니다.
+-   **해결 전략**:
+    1.  **Caret 버전 우선:** 충돌 발생 시, `git checkout --ours -- webview-ui` 명령을 사용하여 **일단 Caret의 버전을 유지**하는 것을 기본 원칙으로 합니다.
+    2.  **선별적 기능 통합:** Cline의 변경 사항 중, 명백한 버그 수정이나 Caret에 유용한 성능 개선(예: 빌드 설정, 의존성 업데이트)이 있다면, 해당 부분만 신중하게 검토하여 선별적으로 적용합니다.
+    3.  **전면 개편 시 주의사항:** Caret에서 UI를 전면 개편한 경우, Cline의 UI 구조 변경은 대부분 무시하고, 필요한 로직이나 데이터 흐름만 참고하여 Caret의 구조에 맞게 재구현하는 것을 권장합니다.
+
+#### 3. **빌드 설정 파일 충돌** (`package.json`, `tsconfig.json` 등)
 
 -   **원칙**: Fork 특성을 유지하면서 upstream 개선사항 적용
 -   **해결**: 수동으로 병합하여 Caret 설정과 Cline 개선사항 모두 반영.
@@ -100,7 +145,7 @@ git checkout --theirs <충돌파일>
         -   **`scripts`:** Fork의 고유 스크립트는 유지하면서, Upstream의 개선된 스크립트(예: 빌드 방식 변경)는 채택하는 것을 고려합니다.
         -   **`dependencies`:** 버전 충돌 시 최신 버전을 따르는 것을 기본으로 하되, Fork 고유 기능에 필수적인 의존성은 버전을 신중하게 결정합니다. 양쪽에만 존재하는 의존성은 모두 포함하여 기능 호환성을 유지합니다.
 
-#### 3. **문서 파일 충돌** (`README.md`, `CHANGELOG.md` 등)
+#### 4. **문서 파일 충돌** (`README.md`, `CHANGELOG.md` 등)
 
 -   **원칙**: Caret 고유 내용 유지. 특히, 해당 파일의 원본이 `-cline.md` 또는 `.cline` 접미사로 백업되어 있는지 반드시 확인합니다.
 -   **해결**: 백업 파일이 존재하는 경우, 해당 파일은 Caret이 완전히 소유한 파일이므로 고민 없이 우리 버전(Caret)을 선택합니다 (`git checkout --ours <파일>`). 백업이 없다면, Caret 버전을 우선으로 하되 필요시 Cline 개선사항을 선별적으로 적용합니다.
@@ -115,6 +160,18 @@ Caret 프로젝트는 내부 통신을 위해 Protobuf를 사용하며, 이때 �
 
 **업스트림 병합 시 주의사항**:
 Cline의 원본 `.proto` 파일은 `package cline;`으로 선언되어 있을 수 있습니다. 병합 과정에서 충돌이 발생하거나, `npm run protos` 빌드 시 "is not defined" 오류가 발생하면, 해당 파일의 `package` 선언과 메시지 참조(`cline.MessageName`)를 `caret`으로 수정해야 합니다.
+
+-   **디렉토리 구조 유지 (매우 중요):** `package` 선언은 `caret`으로 통일하되, `proto/cline`과 같은 **디렉토리 구조 자체는 `upstream`과 동일하게 유지**해야 합니다. 디렉토리 이름을 `proto/caret` 등으로 변경하면, 향후 `upstream` 병합 시 Git이 파일 히스토리를 추적하지 못해 대규모 충돌이 발생할 수 있습니다. **내용은 Caret의 규칙을 따르되, 구조는 Cline의 것을 유지**하는 것이 핵심입니다.
+
+#### Protobuf 파일의 import 경로 충돌 예시
+
+-   **문제 상황:** `host/diff.proto` 파일에서 `import "caret/common.proto";` 구문으로 인해 빌드 오류 발생.
+-   **원인 분석:** `common.proto`의 실제 위치는 `proto/cline/common.proto` 이므로, `protoc` 컴파일러가 파일을 찾지 못함.
+-   **잘못된 해결책:** `proto/cline` 디렉토리를 `proto/caret`으로 변경하는 것. 이는 Git 히스토리를 손상시켜 더 큰 문제를 야기합니다.
+-   **올바른 해결책:** `import` 경로 자체를 수정합니다.
+    -   **수정 전:** `import "caret/common.proto";`
+    -   **수정 후:** `import "cline/common.proto";`
+-   **핵심 원칙:** 파일의 **내용(package 선언)**은 `caret` 규칙을 따르더라도, 파일의 **구조(디렉토리, import 경로)**는 `cline`의 것을 그대로 유지하고 참조해야 합니다.
 
 #### Protobuf 파일의 경로 변경 및 백업 최신화 (매우 중요)
 
@@ -151,6 +208,36 @@ git commit -m "merge: integrate upstream changes from Cline"
 
 ## 병합 후 검증 절차
 
+### 0. 파일 삭제/이동 검증 (필수)
+
+병합 후 오래된 파일이 남아있는 문제를 방지하기 위해 **반드시** 다음 절차를 수행:
+
+```bash
+# 1. Cline의 파일 삭제 목록 확인
+git log upstream/main --oneline -n 100 | grep -i "delete\|remove"
+
+# 2. 특정 커밋의 삭제된 파일 목록 확인
+git show --name-status <commit-hash> | grep "^D"
+
+# 3. 두 브랜치 간 파일 차이 확인
+git diff --name-status upstream/main..HEAD | grep "^D"
+
+# 4. Cline에서 삭제되었지만 Caret에 남아있는 파일 찾기
+git ls-tree -r upstream/main --name-only | sort > /tmp/cline-files.txt
+git ls-tree -r HEAD --name-only | sort > /tmp/caret-files.txt
+comm -13 /tmp/cline-files.txt /tmp/caret-files.txt > /tmp/caret-only-files.txt
+
+# 5. 발견된 파일들의 원인 분석
+# - 각 파일이 Cline에서 언제, 왜 삭제되었는지 확인
+# - Caret에서 해당 파일이 필요한지 검토
+# - 불필요한 경우 삭제 처리
+```
+
+**중요**: 
+- "아마 삭제되었을 것이다"는 추측 금지
+- 실제 git 이력에서 삭제 기록 확인 필수
+- 삭제 이유와 영향 분석 후 처리
+
 ### 1. 빌드 시스템 검증
 
 ```bash
@@ -179,7 +266,58 @@ npm run test
 -   웹뷰 UI 렌더링 확인
 -   로깅 시스템 동작 확인
 
-### 4. 핵심 병합 원칙
+### 4. 머지 충돌 해결 도구
+
+#### 자동 충돌 해결 스크립트
+
+대량의 머지 충돌을 효율적으로 처리하기 위한 Python 스크립트:
+
+```python
+# merge-conflict-resolver.py
+# 사용법: python3 merge-conflict-resolver.py <file_path> [strategy]
+# strategy: "caret" (기본값), "cline", "manual"
+```
+
+**주요 기능**:
+- CARET MODIFICATION 주석이 있는 코드는 항상 보존
+- 전략별 자동 해결 (caret: HEAD 유지, cline: upstream 유지)
+- 충돌 개수 보고
+
+**사용 예시**:
+```bash
+# 단일 파일 처리
+python3 merge-conflict-resolver.py webview-ui/src/App.tsx caret
+
+# 모든 충돌 파일 일괄 처리 (캐럿 기준)
+find . -name "*.tsx" -o -name "*.ts" | xargs grep -l "<<<<<<< HEAD" | \
+  xargs -I {} python3 merge-conflict-resolver.py {} caret
+```
+
+**주의사항**:
+- ⚠️ 단순 텍스트 매칭이므로 복잡한 충돌은 수동 검토 필수
+- ⚠️ 클라인의 중요한 개선사항을 놓칠 수 있음
+- ⚠️ 실행 전 백업 권장
+
+#### 권장 병합 절차
+
+1. **자동 해결 시도**
+   ```bash
+   # 캐럿 고유 기능이 많은 디렉토리
+   find webview-ui/src/caret -name "*.tsx" | xargs -I {} \
+     python3 merge-conflict-resolver.py {} caret
+   ```
+
+2. **중요 파일 수동 검토**
+   - ExtensionStateContext.tsx
+   - ChatView.tsx, ChatTextArea.tsx
+   - CaretProvider.ts
+
+3. **클라인 개선사항 선택적 통합**
+   - 성능 개선
+   - 버그 수정
+   - 새로운 기능
+
+### 5. 핵심 병합 원칙
 
 -   **Caret 기능 보존:** `// CARET MODIFICATION` 주석이 포함된 코드는 Caret의 핵심 기능이므로, Cline의 변경 사항을 통합하더라도 해당 기능이 손상되지 않도록 주의 깊게 수동으로 병합합니다.
 -   **Cline 구조 개선 수용:** Cline에서 발생한 리팩토링(예: 클래스 분리, 아키텍처 변경)은 가급적 수용하여 코드 베이스를 최신 상태로 유지합니다.
@@ -289,6 +427,57 @@ console.log(report.modifiedTools) // 변경된 도구 확인
 이 시스템을 통해 업스트림 병합 시에도 **Cline 기능의 100% 보존**이 보장됩니다.
 
 ---
+
+## 프로토버퍼 필드 번호 관리 전략
+
+### 캐럿 고유 필드 추가 시 주의사항
+
+1. **필드 번호 충돌 문제**
+   - Cline이 지속적으로 프로토 필드를 추가하므로 번호 충돌 발생 가능
+   - 병합 시 "Field number X has already been used" 에러 주의
+
+2. **캐럿 전용 번호 범위: 1000+**
+   ```proto
+   // Cline 필드: 1-999 범위 사용
+   optional string cline_api_key = 2;
+   
+   // Caret 필드: 1000+ 범위 사용
+   optional string caret_api_key = 1000; // CARET MODIFICATION: (1000+ reserved for Caret)
+   ```
+
+3. **필드 추가 예시**
+   ```proto
+   // proto/cline/state.proto
+   message ApiConfiguration {
+     // ... Cline 필드들 ...
+     
+     // Caret 전용 필드들
+     optional string caret_api_key = 1000;
+     optional string caret_custom_field = 1001;
+     // 계속 1002, 1003... 순서로 추가
+   }
+   ```
+
+4. **enum 값 추가 시**
+   - enum은 순차적으로 추가 (충돌 가능성 낮음)
+   - CARET MODIFICATION 주석 필수
+
+## 머징 가이드 검증 결과 (2025-08-08)
+
+### 실제 적용 검증
+1. **파일 차이 검증 명령어**: ✅ 정상 작동
+   - Cline: 937개 파일
+   - Caret: 1993개 파일 (캐럿 고유 파일 포함)
+   - `comm` 명령어로 차이 파일 정확히 식별 가능
+
+2. **프로토 필드 번호 전략**: ✅ 성공적 적용
+   - `caret_api_key = 1000` 정상 추가
+   - `CHATBOT_MODE_RESPOND = 16`, `ASK_BROWSER_ACTION = 17` 추가
+   - 1000+ 범위 사용으로 충돌 방지 확인
+
+3. **파일 삭제 추적**: ✅ 유효
+   - `git log` 명령으로 삭제 이력 추적 가능
+   - `git ls-tree` 비교로 실제 존재 여부 확인
 
 ## 정기적인 업스트림 동기화 권장사항
 

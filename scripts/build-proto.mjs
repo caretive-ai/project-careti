@@ -61,6 +61,7 @@ async function compileProtos() {
 	// grpc-js is used to generate service impls for the ProtoBus service.
 	tsProtoc(GRPC_JS_OUT_DIR, protoFiles, ["outputServices=grpc-js,outputClientImpl=false", ...TS_PROTO_OPTIONS])
 	// nice-js is used for the Host Bridge client impls because it uses promises.
+	// CARET MODIFICATION: Added outputServices=nice-grpc to generate ServiceDefinition exports
 	tsProtoc(NICE_JS_OUT_DIR, protoFiles, ["outputServices=nice-grpc,useExactTypes=false", ...TS_PROTO_OPTIONS])
 
 	const descriptorFile = path.join(DESCRIPTOR_OUT_DIR, "descriptor_set.pb")

@@ -6,12 +6,8 @@ import Tooltip from "@/components/common/Tooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { FileServiceClient } from "@/services/grpc-client"
 import { vscode } from "@/utils/vscode"
-<<<<<<< HEAD
 import { caretWebviewLogger } from "@/caret/utils/webview-logger"
 import { EmptyRequest } from "@shared/proto/common"
-=======
-import { EmptyRequest } from "@shared/proto/cline/common"
->>>>>>> upstream/main
 import {
 	ClineRulesToggles,
 	RefreshedRules,

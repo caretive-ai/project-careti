@@ -79,7 +79,7 @@ export async function parseMentions(
 		} catch (error) {
 			launchBrowserError = error
 			HostProvider.window.showMessage({
-				type: ShowMessageType.ERROR,
+				type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 				message: `Error fetching content for ${urlMention}: ${error.message}`,
 			})
 		}
@@ -99,7 +99,7 @@ export async function parseMentions(
 					result = markdown
 				} catch (error) {
 					HostProvider.window.showMessage({
-						type: ShowMessageType.ERROR,
+						type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 						message: `Error fetching content for ${mention}: ${error.message}`,
 					})
 					result = `Error fetching content: ${error.message}`

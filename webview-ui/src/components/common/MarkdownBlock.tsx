@@ -10,7 +10,6 @@ import CodeBlock, { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import MermaidBlock from "@/components/common/MermaidBlock"
 import { WithCopyButton } from "./CopyButton"
 import { StateServiceClient } from "@/services/grpc-client"
-<<<<<<< HEAD
 // CARET MODIFICATION: Chatbot/Agent 용어 통일 - PlanActMode 제거
 import { ChatbotAgentMode, ToggleChatbotAgentModeRequest } from "@shared/proto/state"
 
@@ -58,37 +57,6 @@ const AgentModeHighlight: React.FC = () => (
 		🤖 Agent Mode (⌘⇧A)
 	</span>
 )
-=======
-import { PlanActMode, TogglePlanActModeRequest } from "@shared/proto/cline/state"
-
-// Styled component for Act Mode text with more specific styling
-const ActModeHighlight: React.FC = () => {
-	const { mode } = useExtensionState()
-
-	return (
-		<span
-			onClick={() => {
-				// Only toggle to Act mode if we're currently in Plan mode
-				if (mode === "plan") {
-					StateServiceClient.togglePlanActModeProto(
-						TogglePlanActModeRequest.create({
-							mode: PlanActMode.ACT,
-						}),
-					)
-				}
-			}}
-			title={mode === "plan" ? "Click to toggle to Act Mode" : "Already in Act Mode"}
-			className={`text-[var(--vscode-textLink-foreground)] inline-flex items-center gap-1 ${
-				mode === "plan" ? "hover:opacity-90 cursor-pointer" : "cursor-default opacity-60"
-			}`}>
-			<div className="p-1 rounded-[12px] bg-[var(--vscode-editor-background)] flex items-center justify-end w-4 border-[1px] border-[var(--vscode-input-border)]">
-				<div className="rounded-full bg-[var(--vscode-textLink-foreground)] w-2 h-2" />
-			</div>
-			Act Mode (⌘⇧A)
-		</span>
-	)
-}
->>>>>>> upstream/main
 
 // CARET MODIFICATION: Chatbot/Agent 일관성 있는 텍스트 처리
 const transformChatbotAgentText = (text: string, mode: "chatbot" | "agent" | "plan" | "act", modeSystem?: string): string => {
@@ -464,12 +432,8 @@ const MarkdownBlock = memo(({ markdown, highlightOptions = {}, className }: Mark
 		remarkPlugins: [
 			remarkPreventBoldFilenames,
 			remarkUrlToLink,
-<<<<<<< HEAD
 			remarkHighlightAgentMode,
 			remarkMath,
-=======
-			remarkHighlightActMode,
->>>>>>> upstream/main
 			() => {
 				return (tree) => {
 					visit(tree, "code", (node: any) => {

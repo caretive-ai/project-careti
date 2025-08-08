@@ -104,7 +104,6 @@ export function UnsavedChangesDialog({
 				<AlertDialogHeader>
 					<AlertDialogTitle>
 						<AlertTriangle className="w-5 h-5 text-[var(--vscode-errorForeground)]" />
-<<<<<<< HEAD
 						{t("messages.unsavedChangesTitle", "settings", currentLanguage)}
 					</AlertDialogTitle>
 					<AlertDialogDescription>
@@ -114,18 +113,6 @@ export function UnsavedChangesDialog({
 				<AlertDialogFooter>
 					<AlertDialogCancel onClick={onCancel}>{t("buttons.cancel", "settings", currentLanguage)}</AlertDialogCancel>
 					<AlertDialogAction onClick={onConfirm}>{t("buttons.discardChanges", "settings", currentLanguage)}</AlertDialogAction>
-=======
-						{title}
-					</AlertDialogTitle>
-					<AlertDialogDescription>{description}</AlertDialogDescription>
-				</AlertDialogHeader>
-				<AlertDialogFooter>
-					<AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
-					{showSaveOption && onSave && <AlertDialogAction onClick={onSave}>{saveText}</AlertDialogAction>}
-					<AlertDialogAction onClick={onConfirm} appearance={showSaveOption ? "secondary" : "primary"}>
-						{confirmText}
-					</AlertDialogAction>
->>>>>>> upstream/main
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

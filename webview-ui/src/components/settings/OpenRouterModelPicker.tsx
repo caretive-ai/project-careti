@@ -14,12 +14,7 @@ import { ModelInfoView } from "./common/ModelInfoView"
 import { getModeSpecificFields, normalizeApiConfiguration } from "./utils/providerUtils"
 import FeaturedModelCard from "./FeaturedModelCard"
 import ThinkingBudgetSlider from "./ThinkingBudgetSlider"
-<<<<<<< HEAD
 import { t } from "@/caret/utils/i18n"
-=======
-import { useApiConfigurationHandlers } from "./utils/useApiConfigurationHandlers"
-import { Mode } from "@shared/storage/types"
->>>>>>> upstream/main
 
 // Star icon for favorites
 const StarIcon = ({ isFavorite, onClick }: { isFavorite: boolean; onClick: (e: React.MouseEvent) => void }) => {

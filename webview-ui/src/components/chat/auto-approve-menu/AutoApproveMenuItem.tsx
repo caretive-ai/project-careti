@@ -16,17 +16,12 @@ interface AutoApproveMenuItemProps {
 }
 
 const CheckboxContainer = styled.div.withConfig({
-<<<<<<< HEAD
 	shouldForwardProp: (prop) => prop !== 'isFavorited',
 })<{
 	isFavorited?: boolean
 	onClick?: (e: MouseEvent) => void
 	onMouseDown?: (e: React.MouseEvent) => void
 }>`
-=======
-	shouldForwardProp: (prop) => !["isFavorited"].includes(prop),
-})<{ isFavorited?: boolean; onClick?: (e: MouseEvent) => void; onMouseDown?: (e: React.MouseEvent) => void }>`
->>>>>>> upstream/main
 	display: flex;
 	align-items: center;
 	justify-content: space-between; /* Push content to edges */
@@ -125,26 +120,6 @@ const AutoApproveMenuItem = ({
 							{showIcon && <span className={`codicon ${action.icon} icon`}></span>}
 							<span className="label">{condensed ? action.shortName : action.label}</span>
 						</div>
-<<<<<<< HEAD
-						{onToggleFavorite && !condensed && (
-							<HeroTooltip
-								delay={500}
-								content={favorited ? t("autoApprove.removeFromQuickAccess", "settings") : t("autoApprove.addToQuickAccess", "settings")}>
-								<span
-									className={`p-0.5 codicon codicon-${favorited ? "star-full" : "star-empty"} star`}
-									style={{
-										cursor: "pointer",
-									}}
-									onClick={async (e) => {
-										e.stopPropagation()
-										if (action.id === "enableAll") return
-										await onToggleFavorite?.(action.id)
-									}}
-								/>
-							</HeroTooltip>
-						)}
-=======
->>>>>>> upstream/main
 					</CheckboxContainer>
 				</HeroTooltip>
 			</ActionButtonContainer>

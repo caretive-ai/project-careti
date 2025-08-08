@@ -16,7 +16,7 @@ export async function checkpointRestore(controller: Controller, request: Checkpo
 		}).catch((error) => {
 			console.log("Failed to init new Cline instance to restore checkpoint", error)
 			HostProvider.window.showMessage({
-				type: ShowMessageType.ERROR,
+				type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 				message: "Failed to restore checkpoint",
 			})
 			throw error

@@ -1,6 +1,5 @@
 // CARET MODIFICATION: Removed debugging logs for Gemini API validation (백업: validate-ts.cline)
 import { ApiConfiguration, openRouterDefaultModelId, ModelInfo } from "@shared/api"
-<<<<<<< HEAD
 import { t } from "@/caret/utils/i18n"
 import { SupportedLanguage } from "@/caret/constants/urls"
 
@@ -8,12 +7,6 @@ export function validateApiConfiguration(
 	apiConfiguration?: ApiConfiguration,
 	language: SupportedLanguage = "en",
 ): string | undefined {
-=======
-import { getModeSpecificFields } from "@/components/settings/utils/providerUtils"
-import { Mode } from "@shared/storage/types"
-
-export function validateApiConfiguration(currentMode: Mode, apiConfiguration?: ApiConfiguration): string | undefined {
->>>>>>> upstream/main
 	if (apiConfiguration) {
 		const {
 			apiProvider,
@@ -83,7 +76,6 @@ export function validateApiConfiguration(currentMode: Mode, apiConfiguration?: A
 				}
 				break
 			case "cline":
-<<<<<<< HEAD
 				if (!apiConfiguration.clineApiKey) {
 					return t("invalidApiKey", "validate-api-conf", language)
 				}
@@ -126,45 +118,6 @@ export function validateApiConfiguration(currentMode: Mode, apiConfiguration?: A
 			case "vscode-lm":
 				if (!apiConfiguration.vsCodeLmModelSelector) {
 					return t("invalidModelSelector", "validate-api-conf", language)
-=======
-				if (!apiConfiguration.clineAccountId) {
-					return "You must provide a valid API key or choose a different provider."
-				}
-				break
-			case "openai":
-				if (!apiConfiguration.openAiBaseUrl || !apiConfiguration.openAiApiKey || !openAiModelId) {
-					return "You must provide a valid base URL, API key, and model ID."
-				}
-				break
-			case "requesty":
-				if (!apiConfiguration.requestyApiKey || !requestyModelId) {
-					return "You must provide a valid API key or choose a different provider."
-				}
-				break
-			case "fireworks":
-				if (!apiConfiguration.fireworksApiKey || !fireworksModelId) {
-					return "You must provide a valid API key or choose a different provider."
-				}
-				break
-			case "together":
-				if (!apiConfiguration.togetherApiKey || !togetherModelId) {
-					return "You must provide a valid API key or choose a different provider."
-				}
-				break
-			case "ollama":
-				if (!ollamaModelId) {
-					return "You must provide a valid model ID."
-				}
-				break
-			case "lmstudio":
-				if (!lmStudioModelId) {
-					return "You must provide a valid model ID."
-				}
-				break
-			case "vscode-lm":
-				if (!vsCodeLmModelSelector) {
-					return "You must provide a valid model selector."
->>>>>>> upstream/main
 				}
 				break
 			case "moonshot":

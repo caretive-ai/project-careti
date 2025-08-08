@@ -42,7 +42,8 @@ import { SharedUriHandler } from "./services/uri/SharedUriHandler"
 import { getLatestAnnouncementId } from "./utils/announcements"
 
 // CARET MODIFICATION: IS_DEV 변수를 위로 이동 (undefined 에러 방지)
-const { IS_DEV, DEV_WORKSPACE_FOLDER } = process.env
+const IS_DEV = process.env.IS_DEV
+const DEV_WORKSPACE_FOLDER = process.env.DEV_WORKSPACE_FOLDER
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -73,25 +74,21 @@ export async function activate(context: vscode.ExtensionContext) {
 		Logger.log(`Failed to initialize persona storage system: ${error}`)
 	}
 
-	// CARET MODIFICATION: 확장 활성화 시 modeSystem을 "caret"으로 강제 설정
-	try {
-		const { getAllExtensionState } = await import("./core/storage/state")
-		const currentState = await getAllExtensionState(context)
-
-		// modeSystem이 cline으로 설정되어 있으면 caret으로 변경
-		if (currentState.chatSettings?.modeSystem === "cline") {
-			const { updateWorkspaceState } = await import("./core/storage/state")
-			const updatedChatSettings = {
-				...currentState.chatSettings,
-				modeSystem: "caret",
-				mode: "agent" as const, // caret 모드의 기본값
-			}
-			await updateWorkspaceState(context, "chatSettings", updatedChatSettings)
-			Logger.log("Mode system changed from cline to caret on activation")
-		}
-	} catch (error) {
-		Logger.log(`Failed to ensure caret mode system: ${error}`)
-	}
+    // CARET MODIFICATION: modeSystem 필드는 현 스키마에 없음. 기존 마이그레이션 로직 간소화
+    try {
+        const { getAllExtensionState, updateWorkspaceState } = await import("./core/storage/state")
+        const currentState = await getAllExtensionState(context)
+        if (currentState?.chatSettings?.mode !== "agent") {
+            const updatedChatSettings = {
+                ...currentState.chatSettings,
+                mode: "agent" as const,
+            }
+            await updateWorkspaceState(context, "chatSettings", updatedChatSettings)
+            Logger.log("Chat mode normalized to 'agent' on activation")
+        }
+    } catch (error) {
+        Logger.log(`Failed to normalize chat mode: ${error}`)
+    }
 
 	// Version checking for autoupdate notification
 	const currentVersion = context.extension.packageJSON.version
@@ -126,7 +123,7 @@ export async function activate(context: vscode.ExtensionContext) {
 					: `Welcome to Caret v${currentVersion}`
 				await vscode.commands.executeCommand("caret.SidebarProvider.focus")
 				await new Promise((resolve) => setTimeout(resolve, 200))
-				HostProvider.window.showMessage({ type: ShowMessageType.INFORMATION, message })
+				HostProvider.window.showMessage({ type: ShowMessageType.WINDOW_MESSAGE_INFORMATION, message })
 			}
 			// Always update the main version tracker for the next launch.
 			await context.globalState.update("clineVersion", currentVersion)
@@ -343,7 +340,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				await writeTextToClipboard(tempCopyBuffer)
 				console.error("Error getting terminal contents:", error)
 				HostProvider.window.showMessage({
-					type: ShowMessageType.ERROR,
+					type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 					message: "Failed to get terminal contents",
 				})
 			}
@@ -472,7 +469,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			const selectedText = editor.document.getText(range)
 			if (!selectedText.trim()) {
 				HostProvider.window.showMessage({
-					type: ShowMessageType.INFORMATION,
+					type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
 					message: "Please select some code to explain.",
 				})
 				return
@@ -497,7 +494,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			const selectedText = editor.document.getText(range)
 			if (!selectedText.trim()) {
 				HostProvider.window.showMessage({
-					type: ShowMessageType.INFORMATION,
+					type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
 					message: "Please select some code to improve.",
 				})
 				return
@@ -515,8 +512,9 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand("caret.focusChatInput", async () => {
 			let activeWebviewProvider: WebviewProvider | undefined = WebviewProvider.getVisibleInstance()
 
-			if (activeWebviewProvider?.getWebview() && activeWebviewProvider.getWebview().hasOwnProperty("reveal")) {
-				const panelView = activeWebviewProvider.getWebview() as vscode.WebviewPanel
+			const webview = activeWebviewProvider?.getWebview()
+			if (webview && webview.hasOwnProperty("reveal")) {
+				const panelView = webview as vscode.WebviewPanel
 				panelView.reveal(panelView.viewColumn)
 			} else if (!activeWebviewProvider) {
 				await vscode.commands.executeCommand("caret.SidebarProvider.focus")
@@ -527,8 +525,9 @@ export async function activate(context: vscode.ExtensionContext) {
 					const tabInstances = WebviewProvider.getTabInstances()
 					if (tabInstances.length > 0) {
 						const potentialTabInstance = tabInstances[tabInstances.length - 1]
-						if (potentialTabInstance.getWebview() && potentialTabInstance.getWebview().hasOwnProperty("reveal")) {
-							const panelView = potentialTabInstance.getWebview() as vscode.WebviewPanel
+						const tabWebview = potentialTabInstance.getWebview()
+						if (tabWebview && tabWebview.hasOwnProperty("reveal")) {
+							const panelView = tabWebview as vscode.WebviewPanel
 							panelView.reveal(panelView.viewColumn)
 							activeWebviewProvider = potentialTabInstance
 						}
@@ -540,7 +539,8 @@ export async function activate(context: vscode.ExtensionContext) {
 					await pWaitFor(
 						() => {
 							const visibleInstance = WebviewProvider.getVisibleInstance()
-							return !!(visibleInstance?.getWebview() && visibleInstance.getWebview().hasOwnProperty("reveal"))
+							const webview = visibleInstance?.getWebview()
+							return !!(webview && webview.hasOwnProperty("reveal"))
 						},
 						{ timeout: 2000 },
 					)
@@ -551,9 +551,9 @@ export async function activate(context: vscode.ExtensionContext) {
 				const clientId = activeWebviewProvider.getClientId()
 				sendFocusChatInputEvent(clientId)
 			} else {
-				console.error("FocusChatInput: Could not find or activate a Caret webview to focus.")
+				console.error("FocusChatInput: Could not find or activate a Careet webview to focus.")
 				HostProvider.window.showMessage({
-					type: ShowMessageType.ERROR,
+					type: ShowMessageType.WINDOW_MESSAGE_ERROR,
 					message: "Could not activate Caret view. Please try opening it manually from the Activity Bar.",
 				})
 			}
@@ -602,9 +602,9 @@ function maybeSetupHostProviders(context: ExtensionContext) {
 	if (!HostProvider.isInitialized()) {
 		console.log("Setting up vscode host providers...")
 
-		const createWebview = function (type: WebviewProviderType) {
-			return new VscodeWebviewProvider(context, type)
-		}
+    const createWebview = function (type: WebviewProviderType): WebviewProvider {
+            return new VscodeWebviewProvider(context, type)
+        }
 		const createDiffView = function () {
 			return new VscodeDiffViewProvider()
 		}

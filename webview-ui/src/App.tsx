@@ -9,14 +9,10 @@ import WelcomeView from "./components/welcome/WelcomeView"
 import { useClineAuth } from "./context/ClineAuthContext"
 import { useExtensionState } from "./context/ExtensionStateContext"
 import { Providers } from "./Providers"
-<<<<<<< HEAD
-import { Boolean, EmptyRequest } from "@shared/proto/common"
 import { WebviewProviderType } from "@shared/webview/types"
 import { setGlobalUILanguage } from "./caret/utils/i18n"
 import { type SupportedLanguage } from "./caret/constants/urls"
-=======
 import { UiServiceClient } from "./services/grpc-client"
->>>>>>> upstream/main
 
 const AppContent = () => {
 	const {
@@ -40,7 +36,8 @@ const AppContent = () => {
 		uiLanguage,
 	} = useExtensionState()
 
-<<<<<<< HEAD
+	const { clineUser, organizations, activeOrganization } = useClineAuth()
+
 	// CARET MODIFICATION: Added useEffect to set global UI language based on context state (uiLanguage).
 	// This ensures that when the uiLanguage changes in ExtensionStateContext (e.g., via settings),
 	// the i18n instance used throughout the webview is updated to reflect the new language.
@@ -49,9 +46,6 @@ const AppContent = () => {
 			setGlobalUILanguage(uiLanguage as SupportedLanguage)
 		}
 	}, [uiLanguage])
-=======
-	const { clineUser, organizations, activeOrganization } = useClineAuth()
->>>>>>> upstream/main
 
 	useEffect(() => {
 		if (shouldShowAnnouncement) {

@@ -215,6 +215,8 @@ export class ToolExecutor {
 			case "web_fetch":
 				return `[${block.name} for '${block.params.url}']`
 		}
+		// CARET MODIFICATION: Ensure all code paths return a value
+		return `[${block.name}]`
 	}
 
 	// The user can approve, reject, or provide feedback (rejection). However the user may also send a message along with an approval, in which case we add a separate user message with this feedback.

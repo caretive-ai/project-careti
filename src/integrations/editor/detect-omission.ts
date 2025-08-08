@@ -44,7 +44,7 @@ export function showOmissionWarning(originalFileContent: string, newFileContent:
 	if (detectCodeOmission(originalFileContent, newFileContent)) {
 		HostProvider.window
 			.showMessage({
-				type: ShowMessageType.WARNING,
+				type: ShowMessageType.WINDOW_MESSAGE_WARNING,
 				message: "Potential code truncation detected. This happens when the AI reaches its max output limit.",
 				options: {
 					items: ["Follow this guide to fix the issue"],

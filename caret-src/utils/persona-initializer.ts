@@ -167,6 +167,7 @@ export class PersonaInitializer {
 				rulePath: "custom_instructions.md",
 				isGlobal: true,
 				content: JSON.stringify(personaInstruction, null, 2),
+				cwd: "", // isGlobal: true일 때는 사용되지 않지만, 타입 정의상 필수
 			})
 
 			caretLogger.info("PersonaInitializer: custom_instructions.md 파일 업데이트 완료")

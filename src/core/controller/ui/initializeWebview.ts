@@ -22,12 +22,14 @@ export async function initializeWebview(controller: Controller, request: EmptyRe
 		// Populate file paths for workspace tracker (don't await)
 		controller.workspaceTracker?.populateFilePaths()
 
-		// Post last cached models in case the call to endpoint fails
-		controller.readOpenRouterModels().then((openRouterModels) => {
-			if (openRouterModels) {
-				sendOpenRouterModelsEvent(OpenRouterCompatibleModelInfo.create({ models: openRouterModels }))
-			}
-		})
+		// CARET MODIFICATION: The 'readOpenRouterModels' method was removed in an upstream update.
+		// The logic is now handled by 'refreshOpenRouterModels', so this call is obsolete.
+		// // Post last cached models in case the call to endpoint fails
+		// controller.readOpenRouterModels().then((openRouterModels) => {
+		// 	if (openRouterModels) {
+		// 		sendOpenRouterModelsEvent(OpenRouterCompatibleModelInfo.create({ models: openRouterModels }))
+		// 	}
+		// })
 
 		// Refresh OpenRouter models from API
 		refreshOpenRouterModels(controller, EmptyRequest.create()).then(async (response) => {

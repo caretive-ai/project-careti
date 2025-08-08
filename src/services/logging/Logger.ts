@@ -24,7 +24,7 @@ export class Logger {
 
 	static debug(message: string) {
 		// CARET MODIFICATION: 개발 모드에서만 디버그 로그 출력
-		if (process.env.IS_DEV !== "true") return
+		if (process.env.IS_DEV !== "true") {return}
 		Logger.#output("DEBUG", message)
 	}
 
@@ -34,7 +34,7 @@ export class Logger {
 
 	static trace(message: string) {
 		// CARET MODIFICATION: 개발 모드에서만 트레이스 로그 출력
-		if (process.env.IS_DEV !== "true") return
+		if (process.env.IS_DEV !== "true") {return}
 		Logger.#output("TRACE", message)
 	}
 

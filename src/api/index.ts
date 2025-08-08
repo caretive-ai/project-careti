@@ -195,7 +195,7 @@ function createHandlerForProvider(
 		// CARET MODIFICATION: Use 'caret' provider instead of 'cline'
 		case "caret":
 			return new CaretHandler({
-				clineAccountId: options.clineAccountId,
+				caretApiKey: options.caretApiKey,
 				taskId: options.taskId,
 				reasoningEffort: mode === "plan" ? options.planModeReasoningEffort : options.actModeReasoningEffort,
 				thinkingBudgetTokens:

@@ -37,13 +37,15 @@ export async function loadServicesFromProtoDescriptor() {
 	// Extract host services and proto messages from the proto definition
 	const hostServices = {}
 	const protobusServices = {}
+	// CARET MODIFICATION: Properly separate host services (Window, Env, Watch, Diff, Workspace) from protobus services
+	const hostServiceNames = new Set(["WindowService", "EnvService", "WatchService", "DiffService", "WorkspaceService"])
+	
 	for (const [name, def] of Object.entries(proto.caret)) {
 		if (def && "service" in def) {
-			// TODO: This is a hack to separate the host and protobus services.
-			if (name.endsWith("Service")) {
-				protobusServices[name] = def
-			} else {
+			if (hostServiceNames.has(name)) {
 				hostServices[name] = def
+			} else {
+				protobusServices[name] = def
 			}
 		} else {
 			addTypeNameToFqn(name, `proto.caret.${name}`)

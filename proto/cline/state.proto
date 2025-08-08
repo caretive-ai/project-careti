@@ -52,6 +52,21 @@ enum PlanActMode {
   ACT = 1;
 }
 
+// CARET MODIFICATION: Added Caret-specific mode enum
+enum ChatbotAgentMode {
+  CHATBOT_MODE = 0;
+  AGENT_MODE = 1;
+}
+
+// CARET MODIFICATION: Added ChatSettings message
+message ChatSettings {
+  ChatbotAgentMode mode = 1;
+  optional string preferred_language = 2;
+  optional string open_ai_reasoning_effort = 3;
+  optional string ui_language = 4;
+  optional string mode_system = 5;
+}
+
 message ChatContent {
   optional string message = 1;
   repeated string images = 2;
@@ -119,6 +134,7 @@ message ApiConfiguration {
   // Global configuration fields (not mode-specific)
   optional string api_key = 1; // anthropic
   optional string cline_api_key = 2;
+  optional string caret_api_key = 1000; // CARET MODIFICATION: Added Caret API key (1000+ reserved for Caret)
   optional string task_id = 3;
   optional string lite_llm_base_url = 4;
   optional string lite_llm_api_key = 5;

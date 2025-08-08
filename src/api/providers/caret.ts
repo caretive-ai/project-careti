@@ -4,7 +4,7 @@
 import { Anthropic } from "@anthropic-ai/sdk"
 import OpenAI from "openai"
 import { ApiHandler } from "../"
-import { ApiHandlerOptions, ModelInfo, openRouterDefaultModelId, openRouterDefaultModelInfo } from "../../shared/api"
+import { ModelInfo, openRouterDefaultModelId, openRouterDefaultModelInfo } from "../../shared/api"
 import { createOpenRouterStream } from "../transform/openrouter-stream"
 import { ApiStream, ApiStreamUsageChunk } from "../transform/stream"
 import axios from "axios"
@@ -13,12 +13,22 @@ import { withRetry } from "../retry"
 import { Logger } from "../../services/logging/Logger"
 // CARET MODIFICATION: Use dynamic import for caretLogger to avoid rootDir issues
 
+export interface CaretHandlerOptions {
+	caretApiKey?: string
+	taskId?: string
+	reasoningEffort?: string
+	thinkingBudgetTokens?: number
+	openRouterProviderSorting?: string
+	openRouterModelId?: string
+	openRouterModelInfo?: ModelInfo
+}
+
 export class CaretHandler implements ApiHandler {
-	private options: ApiHandlerOptions
+	private options: CaretHandlerOptions
 	private client: OpenAI
 	lastGenerationId?: string
 
-	constructor(options: ApiHandlerOptions) {
+	constructor(options: CaretHandlerOptions) {
 		this.options = options
 
 		// CARET MODIFICATION: Caret 서비스 URL 사용

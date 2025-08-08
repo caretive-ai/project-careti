@@ -15,7 +15,6 @@ https://github.com/KumarVariable/vscode-extension-sidebar-html/blob/master/src/c
 
 export class VscodeWebviewProvider extends WebviewProvider implements vscode.WebviewViewProvider {
 	private webview?: vscode.WebviewView | vscode.WebviewPanel
-	private disposables: vscode.Disposable[] = []
 
 	constructor(context: vscode.ExtensionContext, providerType: WebviewProviderType) {
 		super(context, providerType)
@@ -54,8 +53,8 @@ export class VscodeWebviewProvider extends WebviewProvider implements vscode.Web
 
 		webviewView.webview.html =
 			this.context.extensionMode === vscode.ExtensionMode.Development
-				? await this.getHMRHtmlContent()
-				: this.getHtmlContent()
+				? await this.getHMRHtmlContent(webviewView.webview)
+				: this.getHtmlContent(webviewView.webview)
 
 		// Sets up an event listener to listen for messages passed from the webview view context
 		// and executes code based on the message that is received
@@ -153,7 +152,7 @@ export class VscodeWebviewProvider extends WebviewProvider implements vscode.Web
 	 *
 	 * @param webview The webview instance to attach the message listener to
 	 */
-	private setWebviewMessageListener(webview: vscode.Webview) {
+	protected override setWebviewMessageListener(webview: vscode.Webview) {
 		webview.onDidReceiveMessage(
 			(message) => {
 				this.controller.handleWebviewMessage(message)

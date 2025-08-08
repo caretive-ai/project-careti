@@ -110,22 +110,40 @@ ${servers.join("\n")}
  * Generate imports and function to add all the handlers to the server for all services defined in the proto files.
  */
 async function generateVscodeProtobusServers(protobusServices) {
-	const imports = []
-	const servers = []
-	const serviceMap = []
-	for (const [serviceName, def] of Object.entries(protobusServices)) {
-		const domain = getDomainName(serviceName)
-		const dir = getDirName(serviceName)
-		imports.push(`// ${domain} Service`)
-		servers.push(`const ${serviceName}Handlers: serviceTypes.${serviceName}Handlers = {`)
-		for (const [rpcName, _rpc] of Object.entries(def.service)) {
-			imports.push(`import { ${rpcName} } from "@core/controller/${dir}/${rpcName}"`)
-			servers.push(`    ${rpcName}: ${rpcName},`)
-		}
-		servers.push(`} \n`)
-		serviceMap.push(`    "cline.${serviceName}": ${serviceName}Handlers,`)
-		imports.push("")
-	}
+    const imports = []
+    const servers = []
+    const serviceMap = []
+    const usedNames = new Set()
+    const hostDomains = new Set(["diff", "env", "watch", "window", "workspace"]) // hostbridge-owned
+    for (const [serviceName, def] of Object.entries(protobusServices)) {
+        const domain = getDomainName(serviceName)
+        const dir = getDirName(serviceName)
+        imports.push(`// ${domain} Service`)
+        servers.push(`const ${serviceName}Handlers: serviceTypes.${serviceName}Handlers = {`)
+        for (const [rpcName, rpc] of Object.entries(def.service)) {
+            const isHost = hostDomains.has(dir)
+            const importPath = isHost
+                ? `@/hosts/vscode/hostbridge/${dir}/${rpcName}`
+                : `@core/controller/${dir}/${rpcName}`
+            const localName = usedNames.has(rpcName) ? `${dir}_${rpcName}` : rpcName
+            imports.push(`import { ${rpcName} as ${localName} } from "${importPath}"`)
+            usedNames.add(rpcName)
+            if (!rpc.responseStream) {
+                const handler = isHost
+                    ? `(controller, request) => ${localName}(request)`
+                    : `${localName}`
+                servers.push(`    ${rpcName}: ${handler},`)
+            } else {
+                const handler = isHost
+                    ? `(controller, request, responseStream, requestId) => ${localName}(request, responseStream, requestId)`
+                    : `${localName}`
+                servers.push(`    ${rpcName}: ${handler},`)
+            }
+        }
+        servers.push(`} \n`)
+        serviceMap.push(`    "cline.${serviceName}": ${serviceName}Handlers,`)
+        imports.push("")
+    }
 
 	// Create output file
 	let output = `// GENERATED CODE -- DO NOT EDIT!
@@ -146,40 +164,53 @@ ${serviceMap.join("\n")}
  * Generate imports and function to add all the handlers to the server for all services defined in the proto files.
  */
 async function generateStandaloneProtobusServiceSetup(protobusServices) {
-	const imports = []
-	const handlerSetup = []
+    const imports = []
+    const handlerSetup = []
+    const usedNames = new Set()
+    const hostDomains = new Set(["diff", "env", "watch", "window", "workspace"]) // hostbridge-owned
 
-	for (const [name, def] of Object.entries(protobusServices)) {
-		const domain = getDomainName(name)
-		const dir = getDirName(name)
-		imports.push(`// ${domain} Service`)
-		handlerSetup.push(`    // ${domain} Service`)
-		handlerSetup.push(`    server.addService(cline.${name}Service, {`)
-		for (const [rpcName, rpc] of Object.entries(def.service)) {
-			imports.push(`import { ${rpcName} } from "@core/controller/${dir}/${rpcName}"`)
-			const requestType = "cline." + rpc.requestType.type.name
-			const responseType = "cline." + rpc.responseType.type.name
-			if (rpc.requestStream) {
-				throw new Error("Request streaming is not supported")
-			}
-			if (rpc.responseStream) {
-				handlerSetup.push(
-					`        ${rpcName}: wrapStreamingResponse<${requestType},${responseType}>(${rpcName}, controller),`,
-				)
-			} else {
-				handlerSetup.push(`         ${rpcName}: wrapper<${requestType},${responseType}>(${rpcName}, controller),`)
-			}
-		}
-		handlerSetup.push(`    });`)
-		imports.push("")
-		handlerSetup.push("")
-	}
+    for (const [name, def] of Object.entries(protobusServices)) {
+        const domain = getDomainName(name)
+        const dir = getDirName(name)
+        imports.push(`// ${domain} Service`)
+        handlerSetup.push(`    // ${domain} Service`)
+        // CARET MODIFICATION: generated grpc-js namespace is 'caret', not 'cline'
+        handlerSetup.push(`    server.addService(caret.${name}Service, {`)
+        for (const [rpcName, rpc] of Object.entries(def.service)) {
+            const isHost = hostDomains.has(dir)
+            const importPath = isHost
+                ? `@/hosts/vscode/hostbridge/${dir}/${rpcName}`
+                : `@core/controller/${dir}/${rpcName}`
+            const localName = usedNames.has(rpcName) ? `${dir}_${rpcName}` : rpcName
+            imports.push(`import { ${rpcName} as ${localName} } from "${importPath}"`)
+            usedNames.add(rpcName)
+            const requestType = "caret." + rpc.requestType.type.name
+            const responseType = "caret." + rpc.responseType.type.name
+            if (rpc.requestStream) {
+                throw new Error("Request streaming is not supported")
+            }
+            if (rpc.responseStream) {
+                const handler = isHost
+                    ? `(controller, request, responseStream, requestId) => ${localName}(request, responseStream, requestId)`
+                    : `${localName}`
+                handlerSetup.push(
+                    `        ${rpcName}: wrapStreamingResponse<${requestType},${responseType}>(${handler}, controller),`,
+                )
+            } else {
+                const handler = isHost ? `(controller, request) => ${localName}(request)` : `${localName}`
+                handlerSetup.push(`         ${rpcName}: wrapper<${requestType},${responseType}>(${handler}, controller),`)
+            }
+        }
+        handlerSetup.push(`    });`)
+        imports.push("")
+        handlerSetup.push("")
+    }
 
 	// Create output file
-	let output = `// GENERATED CODE -- DO NOT EDIT!
+    let output = `// GENERATED CODE -- DO NOT EDIT!
 // Generated by ${SCRIPT_NAME}
 import * as grpc from "@grpc/grpc-js"
-import { cline } from "@generated/grpc-js"
+import { caret } from "@generated/grpc-js"
 import { Controller } from "@core/controller"
 import { GrpcHandlerWrapper, GrpcStreamingResponseHandlerWrapper } from "@hosts/external/grpc-types"
 

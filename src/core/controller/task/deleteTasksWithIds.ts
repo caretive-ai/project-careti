@@ -25,7 +25,7 @@ export async function deleteTasksWithIds(controller: Controller, request: String
 			: `Are you sure you want to delete these ${taskCount} tasks? This action cannot be undone.`
 
 	const userChoice = await HostProvider.window.showMessage({
-		type: ShowMessageType.WARNING,
+		type: ShowMessageType.WINDOW_MESSAGE_WARNING,
 		message,
 		options: { modal: true, items: ["Delete"] },
 	})

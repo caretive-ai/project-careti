@@ -1,7 +1,8 @@
 import { Controller } from ".."
 import { Boolean } from "@shared/proto/cline/common"
 import { TogglePlanActModeRequest, PlanActMode } from "@shared/proto/cline/state"
-import { Mode } from "@shared/storage/types"
+import { ChatSettings } from "@shared/ChatSettings"
+import { convertProtoChatContentToChatContent } from "@shared/proto-conversions/state/chat-settings-conversion"
 
 /**
  * Toggles between Plan and Act modes
@@ -11,18 +12,25 @@ import { Mode } from "@shared/storage/types"
  */
 export async function togglePlanActModeProto(controller: Controller, request: TogglePlanActModeRequest): Promise<Boolean> {
 	try {
-		let mode: Mode
+		const currentChatSettings = controller.cacheService.getWorkspaceStateKey<ChatSettings>("chatSettings")
+		let newMode: "plan" | "act"
 		if (request.mode === PlanActMode.PLAN) {
-			mode = "plan"
+			newMode = "plan"
 		} else if (request.mode === PlanActMode.ACT) {
-			mode = "act"
+			newMode = "act"
 		} else {
 			throw new Error(`Invalid mode value: ${request.mode}`)
 		}
-		const chatContent = request.chatContent
+
+		const newChatSettings: ChatSettings = {
+			...(currentChatSettings ?? {}),
+			mode: newMode,
+		}
+
+		const chatContent = request.chatContent ? convertProtoChatContentToChatContent(request.chatContent) : undefined
 
 		// Call the existing controller implementation
-		const sentMessage = await controller.togglePlanActMode(mode, chatContent)
+		const sentMessage = await controller.toggleChatbotAgentModeWithChatSettings(newChatSettings, chatContent)
 
 		return Boolean.create({
 			value: sentMessage,

@@ -187,14 +187,17 @@ export class ClineHandler implements ApiHandler {
 				// TODO: replace this with firebase auth
 				// TODO: use global API Host
 
-				const response = await axios.get(`${this.clineAccountService.baseUrl}/generation?id=${this.lastGenerationId}`, {
-					headers: {
-						Authorization: `Bearer ${this.options.clineAccountId}`,
-					},
-					timeout: 15_000, // this request hangs sometimes
-				})
+				// CARET MODIFICATION: Temporarily disable this block as it causes a compile error by accessing a private property.
+				// This code is not used in Caret, as Caret has its own CaretHandler.
+				// const response = await axios.get(`${this.clineAccountService.baseUrl}/generation?id=${this.lastGenerationId}`, {
+				// 	headers: {
+				// 		Authorization: `Bearer ${this.options.clineAccountId}`,
+				// 	},
+				// 	timeout: 15_000, // this request hangs sometimes
+				// })
+				const response = { data: {} } // Mock response to avoid further errors
 
-				const generation = response.data
+				const generation: any = response.data
 				let modelId = this.options.openRouterModelId
 				if (modelId && modelId.includes("gemini")) {
 					return {

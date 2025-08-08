@@ -1,4 +1,4 @@
-import { GetWorkspacePathsRequest, GetWorkspacePathsResponse } from "@shared/proto/host/window"
+import { GetWorkspacePathsRequest, GetWorkspacePathsResponse } from "@shared/proto/host/workspace"
 import * as vscode from "vscode"
 export async function getWorkspacePaths(_: GetWorkspacePathsRequest): Promise<GetWorkspacePathsResponse> {
 	const paths = vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath) ?? []

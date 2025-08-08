@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // CARET MODIFICATION: Provider 순서 변경 및 Cline을 Caret으로 표시
 // 백업 위치: webview-ui/src/components/settings/ApiOptions-tsx.cline
 // 목적: 사용자 피드백 반영 - Provider 순서를 Caret > Google Gemini > OpenAI > Anthropic 순으로 변경
@@ -81,57 +80,12 @@ import RequestyModelPicker from "./RequestyModelPicker"
 import ThinkingBudgetSlider from "./ThinkingBudgetSlider"
 import { ExtensionMessage } from "@shared/ExtensionMessage"
 import FeaturedModelCard from "./FeaturedModelCard" // CARET MODIFICATION: Added FeaturedModelCard import
-=======
-import { useExtensionState } from "@/context/ExtensionStateContext"
-import { ModelsServiceClient } from "@/services/grpc-client"
-import { StringRequest } from "@shared/proto/cline/common"
-import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
-import { useCallback, useEffect, useState } from "react"
-import { useInterval } from "react-use"
-import styled from "styled-components"
-import { OPENROUTER_MODEL_PICKER_Z_INDEX } from "./OpenRouterModelPicker"
-import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
-import { ClineProvider } from "./providers/ClineProvider"
-import { OpenRouterProvider } from "./providers/OpenRouterProvider"
-import { MistralProvider } from "./providers/MistralProvider"
-import { DeepSeekProvider } from "./providers/DeepSeekProvider"
-import { TogetherProvider } from "./providers/TogetherProvider"
-import { OpenAICompatibleProvider } from "./providers/OpenAICompatible"
-import { SambanovaProvider } from "./providers/SambanovaProvider"
-import { AnthropicProvider } from "./providers/AnthropicProvider"
-import { AskSageProvider } from "./providers/AskSageProvider"
-import { OpenAINativeProvider } from "./providers/OpenAINative"
-import { GeminiProvider } from "./providers/GeminiProvider"
-import { DoubaoProvider } from "./providers/DoubaoProvider"
-import { QwenProvider } from "./providers/QwenProvider"
-import { VertexProvider } from "./providers/VertexProvider"
-import { RequestyProvider } from "./providers/RequestyProvider"
-import { FireworksProvider } from "./providers/FireworksProvider"
-import { XaiProvider } from "./providers/XaiProvider"
-import { CerebrasProvider } from "./providers/CerebrasProvider"
-import { OllamaProvider } from "./providers/OllamaProvider"
-import { ClaudeCodeProvider } from "./providers/ClaudeCodeProvider"
-import { SapAiCoreProvider } from "./providers/SapAiCoreProvider"
-import { BedrockProvider } from "./providers/BedrockProvider"
-import { MoonshotProvider } from "./providers/MoonshotProvider"
-import { HuggingFaceProvider } from "./providers/HuggingFaceProvider"
-import { NebiusProvider } from "./providers/NebiusProvider"
-import { LiteLlmProvider } from "./providers/LiteLlmProvider"
-import { VSCodeLmProvider } from "./providers/VSCodeLmProvider"
-import { LMStudioProvider } from "./providers/LMStudioProvider"
-import { useApiConfigurationHandlers } from "./utils/useApiConfigurationHandlers"
-import { GroqProvider } from "./providers/GroqProvider"
-import { BasetenProvider } from "./providers/BasetenProvider"
-import { Mode } from "@shared/storage/types"
-import { HuaweiCloudMaasProvider } from "./providers/HuaweiCloudMaasProvider"
->>>>>>> upstream/main
 
 interface ApiOptionsProps {
 	showModelOptions: boolean
 	apiErrorMessage?: string
 	modelIdErrorMessage?: string
 	isPopup?: boolean
-<<<<<<< HEAD
 	saveImmediately?: boolean // Add prop to control immediate saving
 }
 
@@ -200,9 +154,6 @@ const SUPPORTED_THINKING_MODELS: Record<string, string[]> = {
 		"qwen-turbo-latest",
 	],
 	gemini: ["gemini-2.5-flash-preview-05-20", "gemini-2.5-flash-preview-04-17", "gemini-2.5-pro-preview-06-05"],
-=======
-	currentMode: Mode
->>>>>>> upstream/main
 }
 
 // This is necessary to ensure dropdown opens downward, important for when this is used in popup
@@ -231,19 +182,10 @@ declare module "vscode" {
 
 const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, isPopup, currentMode }: ApiOptionsProps) => {
 	// Use full context state for immediate save payload
-<<<<<<< HEAD
 	const extensionState = useExtensionState()
 	const { apiConfiguration, setApiConfiguration, uriScheme } = extensionState
 	// CARET MODIFICATION: 반응형 레이아웃을 위한 창 크기 감지
 	const { width } = useWindowSize()
-=======
-	const { apiConfiguration } = useExtensionState()
-
-	const { selectedProvider } = normalizeApiConfiguration(apiConfiguration, currentMode)
-
-	const { handleModeFieldChange } = useApiConfigurationHandlers()
-
->>>>>>> upstream/main
 	const [ollamaModels, setOllamaModels] = useState<string[]>([])
 
 	// Poll ollama/vscode-lm models
@@ -279,7 +221,6 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 
 	As a workaround, we create separate instances of the dropdown for each provider, and then conditionally render the one that matches the current provider.
 	*/
-<<<<<<< HEAD
 	const createDropdown = (models: Record<string, ModelInfo>) => {
 		return (
 			<VSCodeDropdown
@@ -333,52 +274,6 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 			}, 500)
 		}
 	}, [])
-=======
->>>>>>> upstream/main
-
-	return (
-		<div style={{ display: "flex", flexDirection: "column", gap: 5, marginBottom: isPopup ? -10 : 0 }}>
-			<DropdownContainer className="dropdown-container">
-				<label htmlFor="api-provider">
-					<span style={{ fontWeight: 500 }}>{t("apiOptions.apiProvider", "common")}</span>
-				</label>
-				<VSCodeDropdown
-					id="api-provider"
-					value={selectedProvider}
-					onChange={(e: any) => {
-						handleModeFieldChange(
-							{ plan: "planModeApiProvider", act: "actModeApiProvider" },
-							e.target.value,
-							currentMode,
-						)
-					}}
-					style={{
-						minWidth: 130,
-						position: "relative",
-					}}>
-					<VSCodeOption value="caret">Caret</VSCodeOption>
-					<VSCodeOption value="gemini">Google Gemini</VSCodeOption>
-					<VSCodeOption value="openai-native">OpenAI</VSCodeOption>
-					<VSCodeOption value="anthropic">Anthropic</VSCodeOption>
-<<<<<<< HEAD
-					<VSCodeOption value="openrouter">OpenRouter</VSCodeOption>
-					<VSCodeOption value="bedrock">Amazon Bedrock</VSCodeOption>
-					<VSCodeOption value="openai">OpenAI Compatible</VSCodeOption>
-					<VSCodeOption value="vertex">GCP Vertex AI</VSCodeOption>
-					<VSCodeOption value="deepseek">DeepSeek</VSCodeOption>
-					<VSCodeOption value="mistral">Mistral</VSCodeOption>
-=======
-					<VSCodeOption value="claude-code">Claude Code</VSCodeOption>
-					<VSCodeOption value="bedrock">Amazon Bedrock</VSCodeOption>
-					<VSCodeOption value="openai">OpenAI Compatible</VSCodeOption>
-					<VSCodeOption value="vertex">GCP Vertex AI</VSCodeOption>
-					<VSCodeOption value="gemini">Google Gemini</VSCodeOption>
-					<VSCodeOption value="groq">Groq</VSCodeOption>
-					<VSCodeOption value="deepseek">DeepSeek</VSCodeOption>
-					<VSCodeOption value="openai-native">OpenAI</VSCodeOption>
-					<VSCodeOption value="cerebras">Cerebras</VSCodeOption>
-					<VSCodeOption value="baseten">Baseten</VSCodeOption>
->>>>>>> upstream/main
 					<VSCodeOption value="vscode-lm">VS Code LM API</VSCodeOption>
 					<VSCodeOption value="mistral">Mistral</VSCodeOption>
 					<VSCodeOption value="requesty">Requesty</VSCodeOption>
@@ -400,7 +295,6 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 				</VSCodeDropdown>
 			</DropdownContainer>
 
-<<<<<<< HEAD
 			{selectedProvider === "caret" && ( // CARET MODIFICATION: Changed 'cline' to 'caret'
 				<div>
 					{/* CARET MODIFICATION: Caret 프로바이더 개선 - 향후 지원 예정 메시지 및 모델 선택 */}
@@ -1483,65 +1377,12 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						</span>
 					</p>
 				</div>
-=======
-			{apiConfiguration && selectedProvider === "cline" && (
-				<ClineProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "asksage" && (
-				<AskSageProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "anthropic" && (
-				<AnthropicProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "claude-code" && (
-				<ClaudeCodeProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "openai-native" && (
-				<OpenAINativeProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "qwen" && (
-				<QwenProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "doubao" && (
-				<DoubaoProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "mistral" && (
-				<MistralProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "openrouter" && (
-				<OpenRouterProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "deepseek" && (
-				<DeepSeekProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "together" && (
-				<TogetherProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "openai" && (
-				<OpenAICompatibleProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "sambanova" && (
-				<SambanovaProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
->>>>>>> upstream/main
 			)}
 
 			{apiConfiguration && selectedProvider === "bedrock" && (
 				<BedrockProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
 			)}
 
-<<<<<<< HEAD
 			{selectedProvider === "fireworks" && (
 				<div>
 					<VSCodeTextField
@@ -1790,22 +1631,6 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						</span>
 					</p>
 				</div>
-=======
-			{apiConfiguration && selectedProvider === "vertex" && (
-				<VertexProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "gemini" && (
-				<GeminiProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "requesty" && (
-				<RequestyProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "fireworks" && (
-				<FireworksProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
->>>>>>> upstream/main
 			)}
 
 			{apiConfiguration && selectedProvider === "vscode-lm" && <VSCodeLmProvider currentMode={currentMode} />}
@@ -1820,7 +1645,6 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 				<LiteLlmProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
 			)}
 
-<<<<<<< HEAD
 			{selectedProvider === "ollama" && (
 				<div>
 					<VSCodeTextField
@@ -1923,42 +1747,6 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						</span>
 					</p>
 				</div>
-=======
-			{apiConfiguration && selectedProvider === "lmstudio" && (
-				<LMStudioProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "ollama" && (
-				<OllamaProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "moonshot" && (
-				<MoonshotProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "huggingface" && (
-				<HuggingFaceProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "nebius" && (
-				<NebiusProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "xai" && (
-				<XaiProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "cerebras" && (
-				<CerebrasProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "sapaicore" && (
-				<SapAiCoreProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
-			)}
-
-			{apiConfiguration && selectedProvider === "huawei-cloud-maas" && (
-				<HuaweiCloudMaasProvider showModelOptions={showModelOptions} isPopup={isPopup} currentMode={currentMode} />
->>>>>>> upstream/main
 			)}
 
 			{apiErrorMessage && (
@@ -1971,7 +1759,6 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 					{apiErrorMessage}
 				</p>
 			)}
-<<<<<<< HEAD
 
 			{selectedProvider === "xai" && (
 				<div>
@@ -2479,382 +2266,3 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 			{selectedProvider === "openrouter" && showModelOptions && <OpenRouterModelPicker isPopup={isPopup} />}
 			{selectedProvider === "requesty" && showModelOptions && <RequestyModelPicker isPopup={isPopup} />}
 
-=======
->>>>>>> upstream/main
-			{modelIdErrorMessage && (
-				<p
-					style={{
-						margin: "-10px 0 4px 0",
-						fontSize: 12,
-						color: "var(--vscode-errorForeground)",
-					}}>
-					{modelIdErrorMessage}
-				</p>
-			)}
-		</div>
-	)
-}
-
-<<<<<<< HEAD
-export function getOpenRouterAuthUrl(uriScheme?: string) {
-	return `https://openrouter.ai/auth?callback_url=${uriScheme || "vscode"}://caretive.caret/openrouter`
-}
-
-export const formatPrice = (price: number) => {
-	return new Intl.NumberFormat("en-US", {
-		style: "currency",
-		currency: "USD",
-		minimumFractionDigits: 2,
-		maximumFractionDigits: 2,
-	}).format(price)
-}
-
-// Returns an array of formatted tier strings
-const formatTiers = (
-	tiers: ModelInfo["tiers"],
-	priceType: "inputPrice" | "outputPrice" | "cacheReadsPrice" | "cacheWritesPrice",
-): JSX.Element[] => {
-	if (!tiers || tiers.length === 0) {
-		return []
-	}
-
-	return tiers
-		.map((tier, index, arr) => {
-			const prevLimit = index > 0 ? arr[index - 1].contextWindow : 0
-			const price = tier[priceType]
-
-			if (price === undefined) return null
-
-			return (
-				<span style={{ paddingLeft: "15px" }} key={index}>
-					{formatPrice(price)}/{t("millionTokens", "common")} (
-					{tier.contextWindow === Number.POSITIVE_INFINITY ? (
-						<span>
-							{">"} {prevLimit.toLocaleString()}
-						</span>
-					) : (
-						<span>
-							{"<="} {tier.contextWindow.toLocaleString()}
-						</span>
-					)}
-					{" "}{t("tokens", "common")})
-					{index < arr.length - 1 && <br />}
-				</span>
-			)
-		})
-		.filter((element): element is JSX.Element => element !== null)
-}
-
-export const ModelInfoView = ({
-	selectedModelId,
-	modelInfo,
-	isDescriptionExpanded,
-	setIsDescriptionExpanded,
-	isPopup,
-}: {
-	selectedModelId: string
-	modelInfo: ModelInfo
-	isDescriptionExpanded: boolean
-	setIsDescriptionExpanded: (isExpanded: boolean) => void
-	isPopup?: boolean
-}) => {
-	const isGemini = Object.keys(geminiModels).includes(selectedModelId)
-	const hasThinkingConfig = !!modelInfo.thinkingConfig
-	const hasTiers = !!modelInfo.tiers && modelInfo.tiers.length > 0
-
-	// Create elements for input pricing
-	const inputPriceElement = hasTiers ? (
-		<Fragment key="inputPriceTiers">
-			<span style={{ fontWeight: 500 }}>{t("modelInfo.inputPrice", "common")}:</span>
-			<br />
-			{formatTiers(modelInfo.tiers, "inputPrice")}
-		</Fragment>
-	) : modelInfo.inputPrice !== undefined && modelInfo.inputPrice > 0 ? (
-		<span key="inputPrice">
-			<span style={{ fontWeight: 500 }}>{t("modelInfo.inputPrice", "common")}:</span> {formatPrice(modelInfo.inputPrice)}
-			/{t("millionTokens", "common")}
-		</span>
-	) : null
-
-	// --- Output Price Logic ---
-	let outputPriceElement = null
-	if (hasThinkingConfig && modelInfo.outputPrice !== undefined && modelInfo.thinkingConfig?.outputPrice !== undefined) {
-		// Display both standard and thinking budget prices
-		outputPriceElement = (
-			<Fragment key="outputPriceConditional">
-				<span style={{ fontWeight: 500 }}>{t("modelInfo.outputPriceStandard", "common")}:</span>{" "}
-				{formatPrice(modelInfo.outputPrice)}/{t("millionTokens", "common")}
-				<br />
-				<span style={{ fontWeight: 500 }}>{t("modelInfo.outputPriceThinkingBudget", "common")}:</span>{" "}
-				{formatPrice(modelInfo.thinkingConfig.outputPrice)}/{t("millionTokens", "common")}
-			</Fragment>
-		)
-	} else if (hasTiers) {
-		// Display tiered output pricing
-		outputPriceElement = (
-			<Fragment key="outputPriceTiers">
-				<span style={{ fontWeight: 500 }}>{t("modelInfo.outputPrice", "common")}:</span>
-				<span style={{ fontStyle: "italic" }}> {t("modelInfo.basedOnInputTokens", "common")}</span>
-				<br />
-				{formatTiers(modelInfo.tiers, "outputPrice")}
-			</Fragment>
-		)
-	} else if (modelInfo.outputPrice !== undefined && modelInfo.outputPrice > 0) {
-		// Display single standard output price
-		outputPriceElement = (
-			<span key="outputPrice">
-				<span style={{ fontWeight: 500 }}>{t("modelInfo.outputPrice", "common")}:</span>{" "}
-				{formatPrice(modelInfo.outputPrice)}/{t("millionTokens", "common")}
-			</span>
-		)
-	}
-	// --- End Output Price Logic ---
-
-	const infoItems = [
-		modelInfo.description && (
-			<ModelDescriptionMarkdown
-				key="description"
-				markdown={modelInfo.description}
-				isExpanded={isDescriptionExpanded}
-				setIsExpanded={setIsDescriptionExpanded}
-				isPopup={isPopup}
-			/>
-		),
-		<ModelInfoSupportsItem
-			key="supportsImages"
-			isSupported={modelInfo.supportsImages ?? false}
-			supportsLabel={t("modelInfo.supportsImages", "common")}
-			doesNotSupportLabel={t("modelInfo.doesNotSupportImages", "common")}
-		/>,
-		<ModelInfoSupportsItem
-			key="supportsBrowserUse"
-			isSupported={modelInfo.supportsImages ?? false} // cline browser tool uses image recognition for navigation (requires model image support).
-			supportsLabel={t("modelInfo.supportsBrowserUse", "common")}
-			doesNotSupportLabel={t("modelInfo.doesNotSupportBrowserUse", "common")}
-		/>,
-		!isGemini && (
-			<ModelInfoSupportsItem
-				key="supportsPromptCache"
-				isSupported={modelInfo.supportsPromptCache}
-				supportsLabel={t("modelInfo.supportsPromptCaching", "common")}
-				doesNotSupportLabel={t("modelInfo.doesNotSupportPromptCaching", "common")}
-			/>
-		),
-		modelInfo.maxTokens !== undefined && modelInfo.maxTokens > 0 && (
-			<span key="maxTokens">
-				<span style={{ fontWeight: 500 }}>{t("modelInfo.maxOutput", "common")}:</span>{" "}
-				{modelInfo.maxTokens?.toLocaleString()} {t("tokens", "common")}
-			</span>
-		),
-		inputPriceElement, // Add the generated input price block
-		modelInfo.supportsPromptCache && modelInfo.cacheWritesPrice && (
-			<span key="cacheWritesPrice">
-				<span style={{ fontWeight: 500 }}>{t("modelInfo.cacheWritesPrice", "common")}:</span>{" "}
-				{formatPrice(modelInfo.cacheWritesPrice || 0)}
-				/{t("millionTokens", "common")}
-			</span>
-		),
-		modelInfo.supportsPromptCache && modelInfo.cacheReadsPrice && (
-			<span key="cacheReadsPrice">
-				<span style={{ fontWeight: 500 }}>{t("modelInfo.cacheReadsPrice", "common")}:</span>{" "}
-				{formatPrice(modelInfo.cacheReadsPrice || 0)}/{t("millionTokens", "common")}
-			</span>
-		),
-		outputPriceElement, // Add the generated output price block
-		isGemini && (
-			<span key="geminiInfo" style={{ fontStyle: "italic" }}>
-				{t("modelInfo.freeRequestsPerMinute", "common", {
-					count: selectedModelId && selectedModelId.includes("flash") ? "15" : "2",
-				})}{" "}
-				<VSCodeLink href="https://ai.google.dev/pricing" style={{ display: "inline", fontSize: "inherit" }}>
-					{t("modelInfo.forMoreInfo", "common")}
-				</VSCodeLink>
-			</span>
-		), // CARET MODIFICATION: Applied i18n for Gemini specific text and standardized t() calls
-	].filter(Boolean)
-
-	return (
-		<p
-			style={{
-				fontSize: "12px",
-				marginTop: "2px",
-				color: "var(--vscode-descriptionForeground)",
-			}}>
-			{infoItems.map((item, index) => (
-				<Fragment key={index}>
-					{item}
-					{index < infoItems.length - 1 && <br />}
-				</Fragment>
-			))}
-		</p>
-	)
-}
-
-const ModelInfoSupportsItem = (
-	{
-		isSupported,
-		supportsLabel,
-		doesNotSupportLabel,
-	}: {
-		isSupported: boolean
-		supportsLabel: string
-		doesNotSupportLabel: string
-	}, // CARET MODIFICATION: Applied i18n for ModelInfoSupportsItem and standardized t() calls
-) => (
-	<span
-		style={{
-			fontWeight: 500,
-			color: isSupported ? "var(--vscode-charts-green)" : "var(--vscode-errorForeground)",
-		}}>
-		<i
-			className={`codicon codicon-${isSupported ? "check" : "x"}`}
-			style={{
-				marginRight: 4,
-				marginBottom: isSupported ? 1 : -1,
-				fontSize: isSupported ? 11 : 13,
-				fontWeight: 700,
-				display: "inline-block",
-				verticalAlign: "bottom",
-			}}></i>
-		{isSupported ? supportsLabel : doesNotSupportLabel}
-	</span>
-)
-
-export function normalizeApiConfiguration(apiConfiguration?: ApiConfiguration): {
-	selectedProvider: ApiProvider
-	selectedModelId: string
-	selectedModelInfo: ModelInfo
-} {
-	const provider = apiConfiguration?.apiProvider || "caret"
-	const modelId = apiConfiguration?.apiModelId
-
-	const getProviderData = (models: Record<string, ModelInfo>, defaultId: string) => {
-		let selectedModelId: string
-		let selectedModelInfo: ModelInfo
-		if (modelId && modelId in models) {
-			selectedModelId = modelId
-			selectedModelInfo = models[modelId]
-		} else {
-			selectedModelId = defaultId
-			selectedModelInfo = models[defaultId]
-		}
-		return {
-			selectedProvider: provider,
-			selectedModelId,
-			selectedModelInfo,
-		}
-	}
-	switch (provider) {
-		case "anthropic":
-			return getProviderData(anthropicModels, anthropicDefaultModelId)
-		case "bedrock":
-			if (apiConfiguration?.awsBedrockCustomSelected) {
-				const baseModelId = apiConfiguration.awsBedrockCustomModelBaseId
-				return {
-					selectedProvider: provider,
-					selectedModelId: modelId || bedrockDefaultModelId,
-					selectedModelInfo: (baseModelId && bedrockModels[baseModelId]) || bedrockModels[bedrockDefaultModelId],
-				}
-			}
-			return getProviderData(bedrockModels, bedrockDefaultModelId)
-		case "vertex":
-			return getProviderData(vertexModels, vertexDefaultModelId)
-		case "gemini":
-			return getProviderData(geminiModels, geminiDefaultModelId)
-		case "openai-native":
-			return getProviderData(openAiNativeModels, openAiNativeDefaultModelId)
-		case "deepseek":
-			return getProviderData(deepSeekModels, deepSeekDefaultModelId)
-		case "qwen":
-			const qwenModels = apiConfiguration?.qwenApiLine === "china" ? mainlandQwenModels : internationalQwenModels
-			const qwenDefaultId =
-				apiConfiguration?.qwenApiLine === "china" ? mainlandQwenDefaultModelId : internationalQwenDefaultModelId
-			return getProviderData(qwenModels, qwenDefaultId)
-		case "doubao":
-			return getProviderData(doubaoModels, doubaoDefaultModelId)
-		case "mistral":
-			return getProviderData(mistralModels, mistralDefaultModelId)
-		case "asksage":
-			return getProviderData(askSageModels, askSageDefaultModelId)
-		case "openrouter":
-			return {
-				selectedProvider: provider,
-				selectedModelId: apiConfiguration?.openRouterModelId || openRouterDefaultModelId,
-				selectedModelInfo: apiConfiguration?.openRouterModelInfo || openRouterDefaultModelInfo,
-			}
-		case "requesty":
-			return {
-				selectedProvider: provider,
-				selectedModelId: apiConfiguration?.requestyModelId || requestyDefaultModelId,
-				selectedModelInfo: apiConfiguration?.requestyModelInfo || requestyDefaultModelInfo,
-			}
-		case "openai":
-			return {
-				selectedProvider: provider,
-				selectedModelId: apiConfiguration?.openAiModelId || "",
-				selectedModelInfo: apiConfiguration?.openAiModelInfo || openAiModelInfoSaneDefaults,
-			}
-		case "ollama":
-			return {
-				selectedProvider: provider,
-				selectedModelId: apiConfiguration?.ollamaModelId || "",
-				selectedModelInfo: openAiModelInfoSaneDefaults,
-			}
-		case "lmstudio":
-			return {
-				selectedProvider: provider,
-				selectedModelId: apiConfiguration?.lmStudioModelId || "",
-				selectedModelInfo: openAiModelInfoSaneDefaults,
-			}
-		case "vscode-lm":
-			return {
-				selectedProvider: provider,
-				selectedModelId: apiConfiguration?.vsCodeLmModelSelector
-					? `${apiConfiguration.vsCodeLmModelSelector.vendor}/${apiConfiguration.vsCodeLmModelSelector.family}`
-					: "",
-				selectedModelInfo: {
-					...openAiModelInfoSaneDefaults,
-					supportsImages: false, // VSCode LM API currently doesn't support images
-				},
-			}
-		case "litellm":
-			return {
-				selectedProvider: provider,
-				selectedModelId: apiConfiguration?.liteLlmModelId || "",
-				selectedModelInfo: apiConfiguration?.liteLlmModelInfo || liteLlmModelInfoSaneDefaults,
-			}
-		case "xai":
-			return getProviderData(xaiModels, xaiDefaultModelId)
-		case "nebius":
-			return getProviderData(nebiusModels, nebiusDefaultModelId)
-		case "sambanova":
-			return getProviderData(sambanovaModels, sambanovaDefaultModelId)
-		case "cerebras":
-			return getProviderData(cerebrasModels, cerebrasDefaultModelId)
-		case "sapaicore":
-			return getProviderData(sapAiCoreModels, sapAiCoreDefaultModelId)
-		case "caret": // CARET MODIFICATION: Caret 프로바이더를 위한 모델 정보 제공
-			const caretModelId = apiConfiguration?.apiModelId || geminiDefaultModelId // Caret 기본 모델 설정
-			let caretSelectedModelInfo: ModelInfo | undefined
-			if (caretModelId === "gemini-2.5-pro-preview-06-05") {
-				caretSelectedModelInfo = geminiModels["gemini-2.5-pro-preview-06-05"]
-			} else if (caretModelId === "gemini-2.5-flash-preview-05-20") {
-				caretSelectedModelInfo = geminiModels["gemini-2.5-flash-preview-05-20"]
-			} else {
-				// 기본값 또는 예외 처리 (예: 플래시 모델을 기본으로 설정)
-				caretSelectedModelInfo = geminiModels[geminiDefaultModelId]
-			}
-			return {
-				selectedProvider: provider,
-				selectedModelId: caretModelId,
-				selectedModelInfo: caretSelectedModelInfo || geminiModels[geminiDefaultModelId],
-			}
-		default:
-			return getProviderData(anthropicModels, anthropicDefaultModelId)
-	}
-}
-
-export default memo(ApiOptions)
-=======
-export default ApiOptions
->>>>>>> upstream/main

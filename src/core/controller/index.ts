@@ -15,7 +15,7 @@ import { CaretAccountService } from "../../../caret-src/services/account/CaretAc
 import { McpHub } from "@services/mcp/McpHub"
 import { ApiProvider, ModelInfo, ApiConfiguration } from "@shared/api"
 import { ChatContent } from "@shared/ChatContent"
-import { ChatSettings } from "@shared/ChatSettings" // CARET MODIFICATION
+import { ChatSettings, DEFAULT_CHAT_SETTINGS } from "@shared/ChatSettings" // CARET MODIFICATION
 import { ClineRulesToggles } from "@shared/cline-rules"
 import { ExtensionMessage, ExtensionState, Platform } from "@shared/ExtensionMessage"
 import { HistoryItem } from "@shared/HistoryItem"
@@ -123,7 +123,6 @@ export class Controller {
 	}
 
 	async getCurrentMode(): Promise<ChatSettings["mode"]> {
-		// CARET MODIFICATION: Use CacheService to get workspace state
 		const chatSettings = this.cacheService.getWorkspaceStateKey<ChatSettings>("chatSettings")
 		return chatSettings?.mode || "agent"
 	}
@@ -223,8 +222,8 @@ export class Controller {
 			apiConfiguration,
 			autoApprovalSettings,
 			browserSettings,
-			chatSettings.preferredLanguage,
-			chatSettings.openAIReasoningEffort,
+			chatSettings.preferredLanguage ?? "English",
+			chatSettings.openAIReasoningEffort ?? "medium",
 			chatSettings.mode,
 			chatSettings, // CARET MODIFICATION
 			false, // strictPlanModeEnabled - Caret에서는 사용하지 않으므로 기본값 false로 설정
@@ -273,7 +272,7 @@ export class Controller {
 				} else if (answer === "Delete Everything") {
 					// Implement logic
 				}
-				sendRelinquishControlEvent(this.id)
+				sendRelinquishControlEvent()
 				break
 			}
 			case "grpc_request": {
@@ -369,7 +368,9 @@ export class Controller {
 				const templatesWithBase64Images = await Promise.all(
 					templates.map(async (template: any) => {
 						const convertImageUri = async (uri: string): Promise<string> => {
-							if (!uri || !uri.startsWith("asset:/assets/")) return uri
+							if (!uri || !uri.startsWith("asset:/assets/")) {
+								return uri
+							}
 							const imagePath = path.join(
 								this.context.extensionPath,
 								"caret-assets",
@@ -403,7 +404,9 @@ export class Controller {
 			}
 			case "REQUEST_RULE_FILE_CONTENT": {
 				const ruleName = message.payload?.ruleName
-				if (!ruleName) break
+				if (!ruleName) {
+					break
+				}
 				try {
 					let ruleDir
 					if (message.payload.isGlobal) {
@@ -411,7 +414,9 @@ export class Controller {
 						ruleDir = await ensureRulesDirectoryExists()
 					} else {
 						const cwd = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
-						if (!cwd) break
+						if (!cwd) {
+							break
+						}
 						ruleDir = path.join(cwd, ".clinerules")
 						if (!(await fileExistsAtPath(ruleDir))) {
 							await fs.mkdir(ruleDir, { recursive: true })
@@ -444,7 +449,7 @@ export class Controller {
 		const didSwitchToAgentMode = chatSettings.mode === "agent"
 		telemetryService.captureModeSwitch(this.task?.taskId ?? "0", chatSettings.mode === "chatbot" ? "plan" : "act")
 
-		await updateWorkspaceState(this.context, "chatSettings", chatSettings)
+		this.cacheService.setWorkspaceState("chatSettings", chatSettings)
 		if (this.task) {
 			this.task.api = buildApiHandler(this.cacheService.getApiConfiguration(), chatSettings.mode)
 		}
@@ -538,7 +543,9 @@ export class Controller {
 			const response = await axios.get(`${process.env.AUTH0_AUDIENCE}/api/auth/mcp/marketplace`, {
 				headers: { "Content-Type": "application/json" },
 			})
-			if (!response.data) throw new Error("Invalid response from MCP marketplace API")
+			if (!response.data) {
+				throw new Error("Invalid response from MCP marketplace API")
+			}
 			const catalog: McpMarketplaceCatalog = {
 				items: (response.data || []).map((item: any) => ({
 					...item,
@@ -562,7 +569,7 @@ export class Controller {
 		try {
 			const catalog = await this.fetchMcpMarketplaceFromApi(true)
 			if (catalog) {
-				await sendMcpMarketplaceCatalogEvent(this.id, catalog)
+				await sendMcpMarketplaceCatalogEvent(catalog)
 			}
 		} catch (error) {
 			console.error("Failed to silently refresh MCP marketplace:", error)
@@ -595,7 +602,9 @@ export class Controller {
 
 	async getFileMentionFromPath(filePath: string) {
 		const cwd = await getCwd()
-		if (!cwd) return "@/" + filePath
+		if (!cwd) {
+			return "@/" + filePath
+		}
 		const relativePath = path.relative(cwd, filePath)
 		return "@/" + relativePath
 	}
@@ -608,13 +617,13 @@ export class Controller {
 		if (diagnostics) {
 			input += `\nProblems:\n${this.convertDiagnosticsToProblemsString(diagnostics)}`
 		}
-		await sendAddToInputEvent(this.id, input)
+		await sendAddToInputEvent(input)
 	}
 
 	async addSelectedTerminalOutputToChat(output: string, terminalName: string) {
 		await vscode.commands.executeCommand("caret.SidebarProvider.focus")
 		await setTimeoutPromise(100)
-		await sendAddToInputEvent(this.id, `Terminal output:\n\`\`\`\n${output}\n\`\`\``)
+		await sendAddToInputEvent(`Terminal output:\n\`\`\`\n${output}\n\`\`\``)
 	}
 
 	async fixWithCline(code: string, filePath: string, languageId: string, diagnostics: vscode.Diagnostic[]) {
@@ -701,18 +710,19 @@ export class Controller {
 
 	async postStateToWebview() {
 		const state = await this.getStateToPostToWebview()
-		caretLogger.info(`📡 [WEBVIEW-SEND] Sending state to webview - chatSettings.mode=${state.chatSettings.mode}`, "STATE")
+		const chatSettings = this.cacheService.getWorkspaceStateKey<ChatSettings>("chatSettings")
+		caretLogger.info(`📡 [WEBVIEW-SEND] Sending state to webview - chatSettings.mode=${chatSettings?.mode}`, "STATE")
 		await sendStateUpdate(this.id, state)
 	}
 
 	async getStateToPostToWebview(): Promise<ExtensionState> {
 		const apiConfiguration = this.cacheService.getApiConfiguration()
+		const chatSettings = this.cacheService.getWorkspaceStateKey<ChatSettings>("chatSettings")
 		const {
 			lastShownAnnouncementId,
 			taskHistory,
 			autoApprovalSettings,
 			browserSettings,
-			chatSettings,
 			userInfo,
 			mcpMarketplaceEnabled,
 			mcpDisplayMode,
@@ -731,14 +741,20 @@ export class Controller {
 			localWindsurfRulesToggles,
 			localCursorRulesToggles,
 			localWorkflowToggles,
+			mode,
+			planActSeparateModelsSetting,
+			shellIntegrationTimeout,
+			strictPlanModeEnabled,
 		} = await getAllExtensionState(this.context)
 
-		const currentTaskItem = this.task?.taskId ? (taskHistory || []).find((item) => item.id === this.task?.taskId) : undefined
+		const currentTaskItem = this.task?.taskId
+			? (taskHistory || []).find((item: HistoryItem) => item.id === this.task?.taskId)
+			: undefined
 		const checkpointTrackerErrorMessage = this.task?.taskState.checkpointTrackerErrorMessage
 		const clineMessages = this.task?.messageStateHandler.getClineMessages() || []
 		const processedTaskHistory = (taskHistory || [])
-			.filter((item) => item.ts && item.task)
-			.sort((a, b) => b.ts - a.ts)
+			.filter((item: HistoryItem) => item.ts && item.task)
+			.sort((a: HistoryItem, b: HistoryItem) => b.ts - a.ts)
 			.slice(0, 100)
 		const latestAnnouncementId = getLatestAnnouncementId(this.context)
 		const shouldShowAnnouncement = lastShownAnnouncementId !== latestAnnouncementId
@@ -750,6 +766,7 @@ export class Controller {
 		return {
 			version,
 			apiConfiguration,
+			chatSettings: chatSettings ?? undefined,
 			uriScheme,
 			currentTaskItem,
 			checkpointTrackerErrorMessage,
@@ -759,7 +776,6 @@ export class Controller {
 			platform,
 			autoApprovalSettings,
 			browserSettings,
-			chatSettings, // CARET MODIFICATION
 			userInfo,
 			mcpMarketplaceEnabled,
 			mcpDisplayMode,
@@ -779,6 +795,13 @@ export class Controller {
 			terminalOutputLineLimit,
 			plan,
 			isPayAsYouGo,
+			mode,
+			planActSeparateModelsSetting,
+			shellIntegrationTimeout,
+			uiLanguage: chatSettings?.uiLanguage ?? DEFAULT_CHAT_SETTINGS.uiLanguage!,
+			preferredLanguage: chatSettings?.preferredLanguage ?? DEFAULT_CHAT_SETTINGS.preferredLanguage!,
+			openaiReasoningEffort: chatSettings?.openAIReasoningEffort ?? DEFAULT_CHAT_SETTINGS.openAIReasoningEffort!,
+			strictPlanModeEnabled,
 		}
 	}
 

@@ -41,7 +41,6 @@ import {
 	validateSlashCommand,
 } from "@/utils/slash-commands"
 import { validateApiConfiguration, validateModelId } from "@/utils/validate"
-<<<<<<< HEAD
 import { vscode } from "@/utils/vscode"
 import { ChatSettings } from "@shared/ChatSettings"
 import { mentionRegex, mentionRegexGlobal } from "@shared/context-mentions"
@@ -62,13 +61,9 @@ import ServersToggleModal from "./ServersToggleModal"
 // CARET MODIFICATION: 다국어 지원을 위한 i18n import
 import { t } from "@/caret/utils/i18n"
 import { useCurrentLanguage } from "@/caret/hooks/useCurrentLanguage"
-=======
-import ClineRulesToggleModal from "../cline-rules/ClineRulesToggleModal"
-import ServersToggleModal from "./ServersToggleModal"
 import { Mode } from "@shared/storage/types"
 
 const { MAX_IMAGES_AND_FILES_PER_MESSAGE } = CHAT_CONSTANTS
->>>>>>> upstream/main
 
 const getImageDimensions = (dataUrl: string): Promise<{ width: number; height: number }> => {
 	return new Promise((resolve, reject) => {
@@ -120,15 +115,9 @@ interface GitCommit {
 const CHATBOT_MODE_COLOR = "var(--vscode-focusBorder)"
 
 const SwitchOption = styled.div.withConfig({
-<<<<<<< HEAD
 	shouldForwardProp: (prop) => prop !== "isActive",
 })<{ isActive: boolean }>`
 	padding: 2px 12px;
-=======
-	shouldForwardProp: (prop) => !["isActive"].includes(prop),
-})<{ isActive: boolean }>`
-	padding: 2px 8px;
->>>>>>> upstream/main
 	color: ${(props) => (props.isActive ? "white" : "var(--vscode-input-foreground)")};
 	z-index: 1;
 	transition: color 0.2s ease;
@@ -159,13 +148,8 @@ const SwitchContainer = styled.div<{ disabled: boolean }>`
 `
 
 const Slider = styled.div.withConfig({
-<<<<<<< HEAD
 	shouldForwardProp: (prop) => !["isAgent", "isChatbot"].includes(prop),
 })<{ isAgent: boolean; isChatbot?: boolean }>`
-=======
-	shouldForwardProp: (prop) => !["isAct", "isPlan"].includes(prop),
-})<{ isAct: boolean; isPlan?: boolean }>`
->>>>>>> upstream/main
 	position: absolute;
 	height: 100%;
 	width: 50%;
@@ -1007,14 +991,9 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 		// Separate the API config submission logic
 		const submitApiConfig = useCallback(async () => {
-<<<<<<< HEAD
 			// CARET MODIFICATION: 다국어 에러 메시지 적용
 			const apiValidationResult = validateApiConfiguration(apiConfiguration, currentLanguage)
 			const modelIdValidationResult = validateModelId(apiConfiguration, openRouterModels, currentLanguage)
-=======
-			const apiValidationResult = validateApiConfiguration(mode, apiConfiguration)
-			const modelIdValidationResult = validateModelId(mode, apiConfiguration, openRouterModels)
->>>>>>> upstream/main
 
 			if (!apiValidationResult && !modelIdValidationResult && apiConfiguration) {
 				try {
@@ -1045,7 +1024,6 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				submitApiConfig()
 				changeModeDelay = 250 // necessary to let the api config update (we send message and wait for it to be saved) FIXME: this is a hack and we ideally should check for api config changes, then wait for it to be saved, before switching modes
 			}
-<<<<<<< HEAD
 			setTimeout(() => {
 				// CARET MODIFICATION: modeSystem 기반 토글 로직 - plan/act vs chatbot/agent
 				let newMode: ChatbotAgentMode
@@ -1065,13 +1043,6 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 							openAiReasoningEffort: chatSettings.openAIReasoningEffort,
 							modeSystem: chatSettings.modeSystem,
 						},
-=======
-			setTimeout(async () => {
-				const convertedProtoMode = mode === "plan" ? PlanActMode.ACT : PlanActMode.PLAN
-				const response = await StateServiceClient.togglePlanActModeProto(
-					TogglePlanActModeRequest.create({
-						mode: convertedProtoMode,
->>>>>>> upstream/main
 						chatContent: {
 							message: inputValue.trim() ? inputValue : undefined,
 							images: selectedImages,
@@ -1087,7 +1058,6 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					textAreaRef.current?.focus()
 				}, 100)
 			}, changeModeDelay)
-<<<<<<< HEAD
 		}, [
 			chatSettings.mode,
 			chatSettings.modeSystem,
@@ -1097,9 +1067,6 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			selectedImages,
 			selectedFiles,
 		])
-=======
-		}, [mode, showModelSelector, submitApiConfig, inputValue, selectedImages, selectedFiles])
->>>>>>> upstream/main
 
 		useShortcut("Meta+Shift+a", onChatbotAgentModeToggle, { disableTextInputs: false }) // important that we don't disable the text input here
 
@@ -1658,11 +1625,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								isDraggingOver && !showUnsupportedFileError // Only show drag outline if not showing error
 									? "2px dashed var(--vscode-focusBorder)"
 									: isTextAreaFocused
-<<<<<<< HEAD
 										? `1px solid ${chatSettings.mode === "chatbot" ? CHATBOT_MODE_COLOR : "var(--vscode-focusBorder)"}`
-=======
-										? `1px solid ${mode === "plan" ? PLAN_MODE_COLOR : "var(--vscode-focusBorder)"}`
->>>>>>> upstream/main
 										: "none",
 							outlineOffset: isDraggingOver && !showUnsupportedFileError ? "1px" : "0px", // Add offset for drag-over outline
 						}}
@@ -1826,7 +1789,6 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					<Tooltip
 						style={{ zIndex: 1000 }}
 						visible={shownTooltipMode !== null}
-<<<<<<< HEAD
 						tipText={
 							shownTooltipMode === "agent"
 								? t(`mode.tooltip.${chatSettings.modeSystem === "cline" ? "act" : "agent"}`)
@@ -1856,34 +1818,16 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 										: chatSettings.mode === "chatbot"
 								}
 								onMouseOver={() => setShownTooltipMode("chatbot")}
-=======
-						tipText={`In ${shownTooltipMode === "act" ? "Act" : "Plan"}  mode, Cline will ${shownTooltipMode === "act" ? "complete the task immediately" : "gather information to architect a plan"}`}
-						hintText={`Toggle w/ ${metaKeyChar}+Shift+A`}>
-						<SwitchContainer data-testid="mode-switch" disabled={false} onClick={onModeToggle}>
-							<Slider isAct={mode === "act"} isPlan={mode === "plan"} />
-							<SwitchOption
-								isActive={mode === "plan"}
-								role="switch"
-								aria-checked={mode === "plan"}
-								onMouseOver={() => setShownTooltipMode("plan")}
->>>>>>> upstream/main
 								onMouseLeave={() => setShownTooltipMode(null)}>
 								{t(`mode.${chatSettings.modeSystem === "cline" ? "plan" : "chatbot"}.label`)}
 							</SwitchOption>
 							<SwitchOption
-<<<<<<< HEAD
 								isActive={
 									chatSettings.modeSystem === "cline"
 										? chatSettings.mode === "act"
 										: chatSettings.mode === "agent"
 								}
 								onMouseOver={() => setShownTooltipMode("agent")}
-=======
-								isActive={mode === "act"}
-								role="switch"
-								aria-checked={mode === "act"}
-								onMouseOver={() => setShownTooltipMode("act")}
->>>>>>> upstream/main
 								onMouseLeave={() => setShownTooltipMode(null)}>
 								{t(`mode.${chatSettings.modeSystem === "cline" ? "act" : "agent"}.label`)}
 							</SwitchOption>

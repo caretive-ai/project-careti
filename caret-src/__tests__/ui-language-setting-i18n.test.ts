@@ -12,7 +12,7 @@ import React from "react"
 
 // i18n 모킹
 const mockT = vi.fn()
-vi.mock("../../webview-ui/src/caret/utils/i18n", () => ({
+vi.mock("../../caret-webview-ui/src/caret/utils/i18n", () => ({
 	t: mockT,
 }))
 
@@ -50,7 +50,7 @@ describe("CaretUILanguageSetting i18n Application", () => {
 			expect(true).toBe(true) // 임시 통과
 
 			// TODO: 실제 구현 후 다음과 같이 테스트
-			// const { CaretUILanguageSetting } = await import('../../webview-ui/src/components/settings/CaretUILanguageSetting')
+			// const { CaretUILanguageSetting } = await import('../../caret-webview-ui/src/components/settings/CaretUILanguageSetting')
 			//
 			// render(<CaretUILanguageSetting />)
 			//
@@ -73,8 +73,8 @@ describe("CaretUILanguageSetting i18n Application", () => {
 	describe("Translation File Verification", () => {
 		it("should verify translation keys exist in common.json files", async () => {
 			// GREEN: 번역 파일 존재 확인
-			const koCommon = await import("../../webview-ui/src/caret/locale/ko/common.json")
-			const enCommon = await import("../../webview-ui/src/caret/locale/en/common.json")
+			const koCommon = await import("../../caret-webview-ui/src/caret/locale/ko/common.json")
+			const enCommon = await import("../../caret-webview-ui/src/caret/locale/en/common.json")
 
 			// 번역 키 존재 확인
 			expect(koCommon.settings.uiLanguage.label).toBe("UI 언어")
@@ -89,7 +89,7 @@ describe("CaretUILanguageSetting i18n Application", () => {
 			const languages = ["ko", "en", "ja", "zh"]
 
 			for (const lang of languages) {
-				const common = await import(`../../webview-ui/src/caret/locale/${lang}/common.json`)
+				const common = await import(`../../caret-webview-ui/src/caret/locale/${lang}/common.json`)
 
 				expect(common.settings).toBeDefined()
 				expect(common.settings.uiLanguage).toBeDefined()
@@ -102,7 +102,7 @@ describe("CaretUILanguageSetting i18n Application", () => {
 	describe("i18n Function Integration", () => {
 		it("should properly import and use t function from i18n utils", async () => {
 			// GREEN: i18n 유틸리티 함수 사용 확인
-			const { t } = await import("../../webview-ui/src/caret/utils/i18n")
+			const { t } = await import("../../caret-webview-ui/src/caret/utils/i18n")
 
 			// 함수가 존재하는지 확인
 			expect(typeof t).toBe("function")
@@ -114,7 +114,7 @@ describe("CaretUILanguageSetting i18n Application", () => {
 			// GREEN: 컴포넌트 존재 및 수정 가능성 확인
 
 			try {
-				const component = await import("../../webview-ui/src/components/settings/CaretUILanguageSetting")
+				const component = await import("../../caret-webview-ui/src/components/settings/CaretUILanguageSetting")
 				expect(component).toBeDefined()
 				expect(component.default).toBeDefined()
 			} catch (error) {

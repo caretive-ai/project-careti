@@ -7,7 +7,7 @@ describe("UI Color Consistency", () => {
 	describe("Chatbot/Agent Mode Button Colors", () => {
 		// 실제 ChatTextArea.tsx 파일에서 색깔 값을 추출하는 헬퍼 함수
 		const getChatTextAreaColors = () => {
-			const filePath = join(process.cwd(), "webview-ui/src/components/chat/ChatTextArea.tsx")
+			const filePath = join(process.cwd(), "caret-caret-webview-ui/src/components/chat/ChatTextArea.tsx")
 			const fileContent = readFileSync(filePath, "utf-8")
 
 			// CHATBOT_MODE_COLOR 값 추출

@@ -6,7 +6,7 @@ describe("UI Language Context Integration (TDD)", () => {
 			// RED: getCurrentLanguage가 하드코딩된 "ko"만 반환하여 사용자 설정 무시
 
 			// 현재 문제:
-			// 1. webview-ui/src/caret/utils/i18n.ts의 getCurrentLanguage()가 항상 "ko" 반환
+			// 1. caret-webview-ui/src/caret/utils/i18n.ts의 getCurrentLanguage()가 항상 "ko" 반환
 			// 2. 사용자가 UI Language를 English로 변경해도 무시됨
 			// 3. chatSettings.uiLanguage 값을 전혀 참조하지 않음
 

@@ -17,7 +17,7 @@ describe("Integration Tests", () => {
 
 	it("should build webview-ui successfully", async () => {
 		try {
-			const { stdout, stderr } = await execAsync("cd webview-ui && npm run build")
+			const { stdout, stderr } = await execAsync("cd caret-webview-ui && npm run build")
 			// 빌드 성공 시 vite 빌드 메시지가 있어야 함
 			expect(stdout).toContain("vite")
 			expect(stdout).toContain("building for production")
@@ -34,7 +34,7 @@ describe("Integration Tests", () => {
 		const path = require("path")
 
 		try {
-			const grpcClientPath = path.join(process.cwd(), "webview-ui/src/services/grpc-client.js")
+			const grpcClientPath = path.join(process.cwd(), "caret-caret-webview-ui/src/services/grpc-client.js")
 			const content = fs.readFileSync(grpcClientPath, "utf8")
 
 			expect(content).toContain("import {")

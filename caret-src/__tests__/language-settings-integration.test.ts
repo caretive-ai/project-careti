@@ -133,8 +133,8 @@ describe("Language Settings Integration Tests", () => {
 				// 1. 핵심 파일들이 존재하는지 확인
 				const coreFiles = [
 					"src/core/controller/state/updateSettings.ts",
-					"webview-ui/src/context/ExtensionStateContext.tsx",
-					"webview-ui/src/caret/components/CaretUILanguageSetting.tsx",
+					"caret-caret-webview-ui/src/context/ExtensionStateContext.tsx",
+					"caret-caret-webview-ui/src/caret/components/CaretUILanguageSetting.tsx",
 				]
 
 				for (const filePath of coreFiles) {
@@ -146,7 +146,7 @@ describe("Language Settings Integration Tests", () => {
 				// 2. 백업 파일들이 존재하는지 확인 (Cline 원본 보호)
 				const backupFiles = [
 					"src/core/controller/state/updateSettings-ts.cline",
-					"webview-ui/src/context/ExtensionStateContext-tsx.cline",
+					"caret-caret-webview-ui/src/context/ExtensionStateContext-tsx.cline",
 				]
 
 				for (const backupPath of backupFiles) {
@@ -196,8 +196,8 @@ describe("Language Settings Integration Tests", () => {
 				// 4. 실제 구현 파일 검증 (integration 테스트 대신)
 				const implementationFiles = [
 					{ path: "src/core/controller/state/updateSettings.ts", desc: "Storage update logic" },
-					{ path: "webview-ui/src/context/ExtensionStateContext.tsx", desc: "Context state management" },
-					{ path: "webview-ui/src/caret/components/CaretUILanguageSetting.tsx", desc: "UI component" },
+					{ path: "caret-caret-webview-ui/src/context/ExtensionStateContext.tsx", desc: "Context state management" },
+					{ path: "caret-caret-webview-ui/src/caret/components/CaretUILanguageSetting.tsx", desc: "UI component" },
 				]
 
 				for (const file of implementationFiles) {

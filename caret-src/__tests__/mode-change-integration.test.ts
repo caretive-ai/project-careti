@@ -79,7 +79,7 @@ describe("🟢 GREEN - Mode Change Integration Test", () => {
 		it("✅ should be able to import TaskServiceClient", async () => {
 			// This verifies the dynamic import works
 			try {
-				const { TaskServiceClient } = await import("../../webview-ui/src/services/grpc-client")
+				const { TaskServiceClient } = await import("../../caret-webview-ui/src/services/grpc-client")
 				const { EmptyRequest } = await import("@shared/proto/common")
 
 				// Verify the imports are successful

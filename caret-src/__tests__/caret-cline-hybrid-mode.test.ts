@@ -24,7 +24,7 @@ describe("Caret-Cline Hybrid Mode Settings", () => {
 
 	describe("Settings UI Integration", () => {
 		it("should have mode system setting in SettingsView", () => {
-			const settingsPath = join(process.cwd(), "webview-ui/src/components/settings/SettingsView.tsx")
+			const settingsPath = join(process.cwd(), "caret-caret-webview-ui/src/components/settings/SettingsView.tsx")
 			const settingsContent = readFileSync(settingsPath, "utf-8")
 
 			// RED: 아직 modeSystem 설정 UI가 없어야 함
@@ -32,7 +32,7 @@ describe("Caret-Cline Hybrid Mode Settings", () => {
 		})
 
 		it("should have mode system in ExtensionStateContext", () => {
-			const contextPath = join(process.cwd(), "webview-ui/src/context/ExtensionStateContext.tsx")
+			const contextPath = join(process.cwd(), "caret-caret-webview-ui/src/context/ExtensionStateContext.tsx")
 			const contextContent = readFileSync(contextPath, "utf-8")
 
 			// RED: Context에 modeSystem 상태가 없어야 함
@@ -45,7 +45,7 @@ describe("Caret-Cline Hybrid Mode Settings", () => {
 
 		locales.forEach((locale) => {
 			it(`should have mode system translations in ${locale}`, () => {
-				const localePath = join(process.cwd(), `webview-ui/src/caret/locale/${locale}/common.json`)
+				const localePath = join(process.cwd(), `caret-webview-ui/src/caret/locale/${locale}/common.json`)
 				const localeContent = readFileSync(localePath, "utf-8")
 				const translations = JSON.parse(localeContent)
 

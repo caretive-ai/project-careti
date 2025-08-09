@@ -7,12 +7,12 @@ import { sendChatButtonClickedEvent } from "../src/core/controller/ui/subscribeT
 import { sendMcpButtonClickedEvent } from "../src/core/controller/ui/subscribeToMcpButtonClicked"
 import { sendHistoryButtonClickedEvent } from "../src/core/controller/ui/subscribeToHistoryButtonClicked"
 import { sendAccountButtonClickedEvent } from "../src/core/controller/ui/subscribeToAccountButtonClicked"
-import { WebviewProviderType as WebviewProviderTypeEnum } from "../src/shared/proto/ui"
+import { WebviewProviderType as WebviewProviderTypeEnum } from "../src/shared/proto/cline/ui"
 import { WebviewProviderType } from "../src/shared/webview/types"
 import { caretLogger } from "./utils/caret-logger"
 import { CaretSystemPrompt } from "./core/prompts/CaretSystemPrompt"
 import { CaretResponses } from "./core/prompts/CaretResponses"
-import { DIFF_VIEW_URI_SCHEME } from "../src/integrations/editor/DiffViewProvider"
+import { DIFF_VIEW_URI_SCHEME } from "../src/hosts/vscode/VscodeDiffViewProvider"
 import pWaitFor from "p-wait-for"
 
 let outputChannel: vscode.OutputChannel

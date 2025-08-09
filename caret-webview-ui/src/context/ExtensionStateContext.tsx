@@ -283,7 +283,77 @@ export const ExtensionStateContextProvider: React.FC<{
 		}
 	}, [])
 
+
 	useEvent("message", handleMessage)
+
+	// References to store subscription cancellation functions
+	const stateSubscriptionRef = useRef<(() => void) | null>(null)
+
+	// Reference for focusChatInput subscription
+	const focusChatInputUnsubscribeRef = useRef<(() => void) | null>(null)
+	const mcpButtonUnsubscribeRef = useRef<(() => void) | null>(null)
+	const historyButtonClickedSubscriptionRef = useRef<(() => void) | null>(null)
+	const chatButtonUnsubscribeRef = useRef<(() => void) | null>(null)
+	const accountButtonClickedSubscriptionRef = useRef<(() => void) | null>(null)
+	const settingsButtonClickedSubscriptionRef = useRef<(() => void) | null>(null)
+	const partialMessageUnsubscribeRef = useRef<(() => void) | null>(null)
+	const mcpMarketplaceUnsubscribeRef = useRef<(() => void) | null>(null)
+	const themeSubscriptionRef = useRef<(() => void) | null>(null)
+	const openRouterModelsUnsubscribeRef = useRef<(() => void) | null>(null)
+	const workspaceUpdatesUnsubscribeRef = useRef<(() => void) | null>(null)
+	const relinquishControlUnsubscribeRef = useRef<(() => void) | null>(null)
+
+	// Add ref for callbacks
+	const relinquishControlCallbacks = useRef<Set<() => void>>(new Set())
+
+	// Create hook function
+	const onRelinquishControl = useCallback((callback: () => void) => {
+		relinquishControlCallbacks.current.add(callback)
+		return () => {
+			relinquishControlCallbacks.current.delete(callback)
+		}
+	}, [])
+	const mcpServersSubscriptionRef = useRef<(() => void) | null>(null)
+
+	// CARET MODIFICATION: 웰컴 상태 변경을 백엔드에 알려서 VSCode 컨텍스트 업데이트
+	useEffect(() => {
+		// showWelcome 상태가 변경될 때마다 백엔드에 알려서 VSCode 컨텍스트를 업데이트
+		if (didHydrateState) {
+			// 간단한 메시지로 백엔드에 웰컴 상태 전달
+			window.postMessage(
+				{
+					type: "setWelcomeContext",
+					showWelcome: showWelcome,
+				},
+				"*",
+			)
+			console.log(`[DEBUG] Sent welcome context to backend: showWelcome=${showWelcome}`)
+		}
+	}, [showWelcome, didHydrateState])
+
+	// Subscribe to state updates and UI events using the gRPC streaming API
+	useEffect(() => {
+		// Determine the webview provider type
+		const webviewType =
+			window.WEBVIEW_PROVIDER_TYPE === "sidebar" ? WebviewProviderTypeEnum.SIDEBAR : WebviewProviderTypeEnum.TAB
+
+		// Set up state subscription
+		stateSubscriptionRef.current = StateServiceClient.subscribeToState(EmptyRequest.create({}), {
+			onResponse: (response) => {
+				if (response.stateJson) {
+					try {
+						const stateData = JSON.parse(response.stateJson) as ExtensionState
+						console.log("[DEBUG] parsed state JSON, updating state")
+
+						// CARET MODIFICATION: Mission 2 - 상태 업데이트 수신 로깅
+						import("../caret/utils/webview-logger").then(({ caretWebviewLogger }) => {
+							caretWebviewLogger.info("📥 [RECEIVE] State update received from backend", {
+								hasChatSettings: !!stateData.chatSettings,
+								newMode: stateData.chatSettings?.mode,
+								timestamp: new Date().toISOString(),
+							})
+						})
+
 						setState((prevState) => {
 							// CARET MODIFICATION: Mission 2 - 모드 변경 감지 로깅
 							const modeChanged = prevState.chatSettings?.mode !== stateData.chatSettings?.mode

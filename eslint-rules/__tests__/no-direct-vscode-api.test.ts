@@ -116,3 +116,4 @@ directApiRuleTester.run("no-direct-vscode-api", noDirectVscodeApiRule, {
 		},
 	],
 })
+

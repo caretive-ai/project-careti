@@ -1,0 +1,135 @@
+import React from 'react'
+import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
+import { useEffect, useState } from "react"
+import { useExtensionState } from "@/context/ExtensionStateContext"
+import { validateApiConfiguration } from "@utils/validate"
+import { vscode } from "@utils/vscode"
+import ApiOptions from "@components/settings/ApiOptions"
+
+// Define link constants for easy updates
+const EDUCATION_PROGRAM_LINK = "https://github.com/aicoding-caret/multi-post-agent/blob/main/README.ko.md" // Or the blog link if preferred
+const CARET_GITHUB_LINK = "https://github.com/aicoding-caret/caret"
+
+const WelcomeView = () => {
+	const { apiConfiguration, caretBanner } = useExtensionState()
+	const [apiErrorMessage, setApiErrorMessage] = useState<string | undefined>(undefined)
+	const [showApiOptions, setShowApiOptions] = useState(false)
+
+	const disableLetsGoButton = apiErrorMessage !== null
+
+	const handleOpenLink = (link: string, linkName: string) => {
+		vscode.postMessage({ type: "openExternalLink", link })
+	}
+
+	const handleSubmitApiKey = () => {
+		vscode.postMessage({ type: "apiConfiguration", apiConfiguration })
+	}
+
+	const handleShowApiOptions = () => {
+		setShowApiOptions(true)
+	}
+
+	const handleCaretAccountNotify = () => {
+		vscode.postMessage({ type: "notifyCaretAccount" })
+	}
+
+	useEffect(() => {
+		setApiErrorMessage(validateApiConfiguration(apiConfiguration))
+	}, [apiConfiguration])
+
+	// Helper to render sections consistently
+	const renderSection = (headerKey: string, bodyKey: string, buttonTextKey?: string, buttonHandler?: () => void, buttonAppearance: "primary" | "secondary" = "secondary", children?: React.ReactNode) => (
+		<div style={{ marginBottom: "25px", padding: "20px", border: "1px solid var(--vscode-settings-headerBorder)", borderRadius: "8px", backgroundColor: "var(--vscode-sideBar-background)" }}>
+			<h3>{headerKey}</h3>
+			{/* For body, allow HTML for links if needed in translation */}
+			<p>{bodyKey}</p>
+			{children}
+			{buttonTextKey && buttonHandler && (
+				<VSCodeButton
+					appearance={buttonAppearance}
+					onClick={buttonHandler}
+					style={{ width: "100%", marginTop: "15px" }}>
+					{buttonTextKey}
+				</VSCodeButton>
+			)}
+		</div>
+	)
+
+	return (
+		<div
+			data-testid="caret-welcome-view"
+			data-overlay-version="caret"
+			className="caret-welcome"
+			style={{
+				position: "fixed",
+				top: 0,
+				left: 0,
+				right: 0,
+				bottom: 0,
+				padding: "0 0px",
+				display: "flex",
+				flexDirection: "column",
+			}}>
+			<div
+				style={{
+					height: "100%",
+					padding: "20px",
+					overflowY: "auto",
+				}}>
+				<center style={{ marginBottom: "30px" }}>
+					<img src={caretBanner} alt="caretBanner" style={{ maxWidth: "180px", margin: "10px 0 20px" }} />
+					<h2>greeting</h2>
+					<p style={{ color: "var(--vscode-descriptionForeground)", maxWidth: "700px", fontSize: "1.1em", margin: "0 auto" }}>catchPhrase</p>
+				</center>
+
+				{renderSection(
+					'coreFeatures.header',
+					'coreFeatures.description'
+				)}
+
+				{!showApiOptions && renderSection(
+					"Get Started with Caret",
+					`Welcome to Caret! This AI coding assistant helps you with development tasks. Check out our <a href="${EDUCATION_PROGRAM_LINK}" target="_blank">education program</a> to learn more about AI-assisted development.`,
+					"Setup API or Local LLM",
+					handleShowApiOptions,
+					"primary"
+				)}
+				
+				{renderSection(
+					"Join the Caret Community",
+					`Connect with other developers using Caret! Visit our <a href="${CARET_GITHUB_LINK}" target="_blank">GitHub repository</a> to contribute, report issues, or learn from the community.`,
+					"Notify for Caret Account",
+					handleCaretAccountNotify,
+					"secondary"
+				)}
+
+				{renderSection(
+					'educationOffer.header',
+					'educationOffer.body',
+					undefined,
+					undefined,
+					"primary"
+				)}
+
+				{showApiOptions && (
+					<div style={{ marginTop: "25px", padding: "20px", border: "1px solid var(--vscode-inputValidation-infoBorder)", borderRadius: "8px", backgroundColor: "var(--vscode-sideBar-background)" }}>
+						<h4>API Key Settings</h4>
+						<ApiOptions showModelOptions={true} />
+						<VSCodeButton onClick={handleSubmitApiKey} disabled={disableLetsGoButton} style={{ width: "100%", marginTop: "15px" }}>
+							Save and Start
+						</VSCodeButton>
+					</div>
+				)}
+
+				<div style={{ textAlign: 'center', marginTop: '40px', marginBottom: '20px', fontSize: '0.9em', color: 'var(--vscode-descriptionForeground)' }}>
+					<p>Ready to revolutionize your coding experience with Caret? Let's get started!</p>
+					<VSCodeLink onClick={() => handleOpenLink(CARET_GITHUB_LINK, "Caret GitHub")} style={{cursor: "pointer"}}>
+						Learn More on GitHub
+					</VSCodeLink>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+export default WelcomeView

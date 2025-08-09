@@ -274,6 +274,22 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 			}, 500)
 		}
 	}, [])
+
+	return (
+		<DropdownContainer>
+			<label htmlFor="provider">
+				<span style={{ fontWeight: 500 }}>API Provider</span>
+			</label>
+			<VSCodeDropdown
+				id="provider"
+				value={selectedProvider}
+				onChange={(e) => {
+					const target = e.target as HTMLSelectElement
+					if (target) {
+						setSelectedProvider(target.value as ApiProvider)
+					}
+				}}
+				style={{ width: "100%" }}>
 					<VSCodeOption value="vscode-lm">VS Code LM API</VSCodeOption>
 					<VSCodeOption value="mistral">Mistral</VSCodeOption>
 					<VSCodeOption value="requesty">Requesty</VSCodeOption>
@@ -2263,6 +2279,11 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 					</>
 				)}
 
-			{selectedProvider === "openrouter" && showModelOptions && <OpenRouterModelPicker isPopup={isPopup} />}
+					{selectedProvider === "openrouter" && showModelOptions && <OpenRouterModelPicker isPopup={isPopup} />}
 			{selectedProvider === "requesty" && showModelOptions && <RequestyModelPicker isPopup={isPopup} />}
+		</>
+	)
+}
+
+export default ApiOptions
 

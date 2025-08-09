@@ -521,6 +521,14 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 	// Track active tab - default to general tab
 	const [activeTab, setActiveTab] = useState<string>(targetSection || "general")
 
+	return (
+		<Tab>
+			<TabHeader>
+				<div className={settingsHeader}>
+					<VSCodeButton onClick={handleCancel} appearance="icon">
+						<span className="codicon codicon-arrow-left"></span>
+					</VSCodeButton>
+					<h3 className="settings-title">Settings</h3>
 				</div>
 			</TabHeader>
 

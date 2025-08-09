@@ -273,8 +273,7 @@ export const ChatRowContent = memo(
 							style={{
 								color: errorColor,
 								marginBottom: "-1.5px",
-							}}></span>
-					),
+							}}></span>,
 					<span style={{ color: normalColor, fontWeight: "bold" }}>{t("chat.executeCommand", "common")}</span>,
 				]
 			case "use_mcp_server":

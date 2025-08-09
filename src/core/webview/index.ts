@@ -448,11 +448,15 @@ export class WebviewProvider implements vscode.WebviewViewProvider {
         return this.view?.visible || false
     }
     public getWebviewUri(uri: vscode.Uri) {
-        if (!this.view) throw new Error("Webview not initialized")
+        if (!this.view) {
+            throw new Error("Webview not initialized")
+        }
         return this.view.webview.asWebviewUri(uri)
     }
     public getCspSource() {
-        if (!this.view) throw new Error("Webview not initialized")
+        if (!this.view) {
+            throw new Error("Webview not initialized")
+        }
         return this.view.webview.cspSource
     }
     public postMessageToWebview(message: import("@/shared/ExtensionMessage").ExtensionMessage) {

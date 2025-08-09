@@ -1,99 +1,120 @@
-# 다음 세션 가이드 - 2025-01-22
+# 다음 세션 작업 가이드
 
-## 현재 진행 상황
+## 🎯 현재 작업 컨텍스트
 
-### 완료된 작업
-1. **upstream/main 머지 기본 작업 완료**
-   - Git 충돌 해결 전략 수립
-   - Protobuf 필드 번호 충돌 해결 (Caret: 1000+ 사용)
-   - 코드 생성 스크립트 수정 완료
+### 상위 작업
+- **006번 업스트림 머지 작업**: Cline upstream/main 병합 및 머징 프로세스 검증/보강
+- **목적**: 머지 작업 수행 + 머징 가이드 실전 검증 + 프로세스 개선
 
-2. **Webview 충돌 해결 완료**
-   - App.tsx, Providers.tsx, ExtensionStateContext.tsx
-   - ChatTextArea.tsx (Caret 모드 시스템 보존)
-   - ChatRow.tsx, WelcomeView.tsx, AutoApproveMenuItem.tsx
-   - vite.config.ts (Cline dev build 개선사항 통합)
+### 현재 진행 상황
+- **006-4 완료**: 머지 충돌 해결 중 webview 디렉토리의 반복적 충돌 문제 발견
+- **006-5 전략 수립 완료**: webview 참조 분리 전략 문서화 완료
+- **결정사항**: webview-ui(Cline 원본)와 caret-webview-ui(Caret 빌드용) 분리
 
-3. **도구 개발 및 문서화**
-   - merge-conflict-resolver.py 스크립트 개발
-   - analyze-cline-improvements.py 개선사항 분석 도구 개발
-   - 머징 가이드 업데이트 (충돌 해결 도구, 파일 삭제 검증 섹션 추가)
+### 다음 작업
+**006-5 전략 실행**: webview 디렉토리 분리 구현
 
-### 현재 상태
-- **컴파일 에러**: 180개 (대부분 src 디렉토리)
-- **주요 에러 타입**:
-  - implicit any 타입 에러
-  - 구문 에러 (일부 파일에 남은 충돌 흔적)
-  - API 시그니처 불일치
+## 📚 필수 참조 문서
 
-## 다음 세션 작업 사항
+### 반드시 읽어야 할 문서
+1. **`.caretrules`** - 프로젝트 절대 규칙
+2. **`caret-docs/tasks/006-5-webview-separation-strategy.md`** - 실행할 전략 문서 (체크리스트 포함)
+3. **`caret-docs/tasks/006-upstream-merge-conflict-resolution-plan.md`** - 전체 작업 맥락
+4. **`caret-docs/guides/upstream-merging.mdx`** - 머징 가이드 (작업 후 업데이트 필요)
 
-### 1. 컴파일 에러 해결 (우선순위: 높음)
+### 참고 문서
+- `caret-docs/tasks/006-4-merge-work-log.md` - 이전 작업 로그
+- `caret-docs/development/ai-work-index.mdx` - AI 작업 가이드
+
+## 📊 현재 상태
+
+### Git 상태
+- **브랜치**: `upstream-merge-test`
+- **상태**: 머지 진행 중 (uncommitted changes)
+- **주요 변경사항**:
+  - 006-5 전략 문서 작성 완료
+  - analyze-cline-improvements.py 스크립트 추가
+  - ai-work-index.mdx에 세션 가이드 작성 원칙 추가
+
+### 컴파일 상태
+- **webview 외 에러**: 약 180개 (006-5 완료 후 해결 예정)
+- **webview 충돌**: 모두 해결됨 (하지만 근본적 해결 필요)
+
+## 🔑 핵심 결정사항 및 제약
+
+1. **webview 분리 원칙**:
+   - webview-ui/: Cline 원본 유지 (참조용, 빌드 안함)
+   - caret-webview-ui/: Caret 실제 빌드용
+   - .gitattributes로 자동 머지 설정
+
+2. **작업 순서 중요**:
+   - 현재 상태 커밋 → 새 브랜치 → 006-5 실행
+   - 각 Phase별 검증 필수
+
+3. **머징 가이드 업데이트 필수**:
+   - 비교 기준점 변경 문서화 (분기점 → 머징 시점)
+   - 실전 검증 결과 반영
+
+## 🚀 구체적 다음 단계
+
+### 1. 현재 작업 커밋 & 푸시
 ```bash
-# 에러 확인 명령
-npm run compile 2>&1 | grep -E "error TS" | head -50
+# 변경사항 확인
+git status
 
-# 특정 에러 타입별 확인
-npm run compile 2>&1 | grep "TS7006" # implicit any
-npm run compile 2>&1 | grep "TS1005" # 구문 에러
+# 모든 변경사항 커밋
+git add -A
+git commit -m "docs: 006-5 webview 분리 전략 수립 완료 및 AI 가이드 업데이트"
+
+# 푸시
+git push origin upstream-merge-test
 ```
 
-### 2. 주요 확인 파일
-- src/components/chat/ChatView.tsx
-- src/components/settings/ApiOptions.tsx
-- src/components/settings/SettingsView.tsx
-- src/components/history/HistoryPreview.tsx
-
-### 3. 검증 필요 사항
-- Caret 고유 기능 동작 확인:
-  - Persona 시스템
-  - i18n (다국어 지원)
-  - chatbot/agent 모드 전환
-  - Caret API 키 관리
-
-### 4. 테스트 실행
+### 2. 006-5 실행을 위한 새 브랜치 생성
 ```bash
-# 백엔드 테스트
-npm run test:backend
+# 백업 브랜치 생성
+git branch backup-before-webview-separation
 
-# 프론트엔드 테스트  
-npm run test:webview
-
-# 통합 테스트
-npm run test:all
+# 작업 브랜치 생성
+git checkout -b webview-separation
 ```
 
-## 중요 결정 사항 및 주의점
+### 3. 006-5 Phase 0 시작
+```bash
+# webview-ui 참조 분석 (006-5 문서의 Phase 0 참조)
+grep -r "webview-ui" --include="*.ts" --include="*.tsx" --include="*.json" --include="*.js" --include="*.mjs" . | grep -v node_modules > webview-references.txt
 
-1. **Protobuf 필드 번호 규칙**
-   - Cline: 1-999
-   - Caret: 1000+
-   - 이 규칙은 향후 머지에서도 계속 유지
+# 카테고리별 분류
+grep -r "webview-ui" --include="*.json" . | grep -v node_modules > webview-refs-config.txt
+# ... (006-5 문서 참조)
+```
 
-2. **Caret 기능 보호**
-   - CARET MODIFICATION 주석이 있는 부분은 절대 제거하지 않음
-   - Caret UI 컴포넌트는 유지하면서 Cline 개선사항만 선택적 통합
+## ⚠️ 주의사항
 
-3. **머지 전략**
-   - 버그 수정과 보안 개선은 적극 수용
-   - 새 기능은 Caret과 충돌 여부 확인 후 통합
-   - 리팩토링은 Caret 확장 기능에 영향 없는지 확인
+1. **Git 이력 보존**: 006-5 문서의 "Git 이력 보존을 위한 복사 순서" 반드시 준수
+2. **Proto 생성 경로**: scripts/build-proto.mjs 수정 시 주의
+3. **테스트 경로**: 7개 테스트 파일 경로 변경 필요
+4. **각 Phase별 즉시 검증**: 컴파일 → 빌드 → 테스트 순서
 
-## 개발자 노트
+## 📈 예상 결과
 
-### 이번 머지의 주요 통찰
-1. **자동화 도구의 중요성**: merge-conflict-resolver.py는 반복적인 충돌 해결에 매우 유용했음
-2. **사전 분석의 필요성**: analyze-cline-improvements.py로 개선사항을 미리 파악하면 선택적 병합이 용이
-3. **문서화의 가치**: 머징 가이드를 지속적으로 업데이트하여 다음 머지 시 참고 가능
+1. **즉각적 효과**:
+   - 향후 머지 시 webview 충돌 완전 제거
+   - Cline 개선사항 선택적 적용 가능
 
-### 개선 아이디어
-1. 컴파일 에러 자동 분류 도구 개발
-2. Caret 기능 테스트 자동화 스크립트
-3. 머지 후 회귀 테스트 체크리스트 작성
+2. **머징 프로세스 개선**:
+   - 대규모 독립 모듈 처리 패턴 확립
+   - 재사용 가능한 자동화 스크립트
 
-## 다음 단계 예상 소요 시간
-- 컴파일 에러 해결: 2-3시간
-- 기능 검증 및 테스트: 1-2시간
-- 문서 마무리: 30분
+## 🎓 작업 의의
 
-총 예상 시간: 4-5시간
+이번 006-5 작업은 단순한 기술적 해결이 아닌:
+- **머징 가이드 실전 검증**의 핵심 사례
+- **반복 작업 제거**를 통한 개발 효율성 향상
+- **Fork 프로젝트의 지속가능한 관리** 패턴 확립
+
+---
+
+**작성일**: 2025-01-22
+**작성자**: Alpha (알파)
+**검토자**: Luke

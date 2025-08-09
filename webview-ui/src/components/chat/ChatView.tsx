@@ -434,24 +434,6 @@ const logger = new WebviewLogger("ChatView") // CARET MODIFICATION: Instantiate 
 					shouldDisableFilesAndImages={shouldDisableFilesAndImages}
 					selectFilesAndImages={selectFilesAndImages}
 				/>
-			) : (
-				<div
-					style={{
-						flex: "1 1 0", // flex-grow: 1, flex-shrink: 1, flex-basis: 0
-						minHeight: 0,
-						overflowY: "auto",
-						display: "flex",
-						flexDirection: "column",
-						paddingBottom: "10px",
-					}}>
-					{telemetrySetting === "unset" && <TelemetryBanner />}
-
-					{showAnnouncement && <Announcement version={version} hideAnnouncement={hideAnnouncement} />}
-
-					<HomeHeader />
-					{!shouldShowQuickWins && taskHistory.length > 0 && <HistoryPreview showHistoryView={showHistoryView} />}
-				</div>
-			)}
 
 			{!task && (
 				<>
@@ -579,8 +561,9 @@ const logger = new WebviewLogger("ChatView") // CARET MODIFICATION: Instantiate 
 						scrollToBottomAuto()
 					}
 				}}
-			/>
-		</div>
+									/>
+			</footer>
+		</ChatLayout>
 	)
 }
 

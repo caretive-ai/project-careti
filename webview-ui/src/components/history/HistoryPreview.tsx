@@ -178,7 +178,7 @@ const HistoryPreview = ({ showHistoryView }: HistoryPreviewProps) => {
 									}}>
 									<span className="codicon codicon-history scale-90"></span>
 									<span className="font-medium">{t("welcome.viewAllHistory", "common")}</span>
-								</button>
+								</VSCodeButton>
 							</div>
 						</>
 					) : (

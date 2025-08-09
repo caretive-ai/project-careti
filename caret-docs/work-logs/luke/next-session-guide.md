@@ -9,10 +9,14 @@
 ### 현재 진행 상황
 - **006-4 완료**: 머지 충돌 해결 중 webview 디렉토리의 반복적 충돌 문제 발견
 - **006-5 전략 수립 완료**: webview 참조 분리 전략 문서화 완료
-- **결정사항**: webview-ui(Cline 원본)와 caret-webview-ui(Caret 빌드용) 분리
+- **006-5 실행 완료**: webview 디렉토리 분리 구현 (2025-01-22)
+  - ✅ caret-webview-ui 디렉토리 생성 및 구조 변경
+  - ✅ 빌드 경로 수정 (package.json, CaretProvider.ts 등)
+  - ✅ 테스트 코드 경로 업데이트
+  - ⚠️ TypeScript 컴파일 에러 존재 (upstream 머지 관련)
 
 ### 다음 작업
-**006-5 전략 실행**: webview 디렉토리 분리 구현
+**006-4로 복귀**: upstream 머지 관련 컴파일 에러 해결
 
 ## 📚 필수 참조 문서
 
@@ -29,16 +33,18 @@
 ## 📊 현재 상태
 
 ### Git 상태
-- **브랜치**: `upstream-merge-test`
-- **상태**: 머지 진행 중 (uncommitted changes)
+- **브랜치**: `webview-separation` (006-5 작업 완료)
+- **상태**: webview 분리 완료, 4개 커밋 생성
 - **주요 변경사항**:
-  - 006-5 전략 문서 작성 완료
-  - analyze-cline-improvements.py 스크립트 추가
-  - ai-work-index.mdx에 세션 가이드 작성 원칙 추가
+  - ✅ caret-webview-ui 디렉토리 생성
+  - ✅ 모든 빌드 경로 변경 완료
+  - ✅ .gitignore/.gitattributes 설정
+  - ✅ path-migration.py 자동화 스크립트 생성
 
 ### 컴파일 상태
-- **webview 외 에러**: 약 180개 (006-5 완료 후 해결 예정)
-- **webview 충돌**: 모두 해결됨 (하지만 근본적 해결 필요)
+- **webview 분리 관련**: 성공적으로 완료
+- **upstream 머지 관련 에러**: ChatRow.tsx 등 약 146개 TypeScript 에러
+- **proto 관련 경고**: buf lint 경고 (package "caret" 관련)
 
 ## 🔑 핵심 결정사항 및 제약
 

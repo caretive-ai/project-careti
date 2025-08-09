@@ -5,7 +5,7 @@ import path from "path"
 import { fileURLToPath } from "url"
 import { loadServicesFromProtoDescriptor, getFqn } from "./proto-utils.mjs"
 
-const WEBVIEW_CLIENTS_FILE = path.resolve("webview-ui/src/services/grpc-client.ts")
+const WEBVIEW_CLIENTS_FILE = path.resolve("caret-webview-ui/src/services/grpc-client.ts")
 const VSCODE_SERVICES_FILE = path.resolve("src/generated/hosts/vscode/protobus-services.ts")
 const VSCODE_SERVICE_TYPES_FILE = path.resolve("src/generated/hosts/vscode/protobus-service-types.ts")
 const STANDALONE_SERVER_SETUP_FILE = path.resolve("src/generated/hosts/standalone/protobus-server-setup.ts")

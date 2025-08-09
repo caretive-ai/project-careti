@@ -56,8 +56,8 @@ export class CaretProvider extends WebviewProvider {
 	}
 
     protected override getHtmlContent(webview: vscode.Webview): string {
-		const stylesUri = getUri(webview, this.context.extensionUri, ["webview-ui", "build", "assets", "index.css"])
-		const scriptUri = getUri(webview, this.context.extensionUri, ["webview-ui", "build", "assets", "index.js"])
+		const stylesUri = getUri(webview, this.context.extensionUri, ["caret-webview-ui", "build", "assets", "index.css"])
+		const scriptUri = getUri(webview, this.context.extensionUri, ["caret-webview-ui", "build", "assets", "index.js"])
 		const codiconsUri = getUri(webview, this.context.extensionUri, [
 			"node_modules",
 			"@vscode",
@@ -66,7 +66,7 @@ export class CaretProvider extends WebviewProvider {
 			"codicon.css",
 		])
 		const katexCssUri = getUri(webview, this.context.extensionUri, [
-			"webview-ui",
+			"caret-webview-ui",
 			"node_modules",
 			"katex",
 			"dist",
@@ -156,7 +156,7 @@ export class CaretProvider extends WebviewProvider {
 		}
 
 		const nonce = getNonce()
-		const stylesUri = getUri(webview, this.context.extensionUri, ["webview-ui", "build", "assets", "index.css"])
+		const stylesUri = getUri(webview, this.context.extensionUri, ["caret-webview-ui", "build", "assets", "index.css"])
 		const codiconsUri = getUri(webview, this.context.extensionUri, [
 			"node_modules",
 			"@vscode",
@@ -165,7 +165,7 @@ export class CaretProvider extends WebviewProvider {
 			"codicon.css",
 		])
 		const katexCssUri = getUri(webview, this.context.extensionUri, [
-			"webview-ui",
+			"caret-webview-ui",
 			"node_modules",
 			"katex",
 			"dist",
@@ -263,7 +263,7 @@ export class CaretProvider extends WebviewProvider {
 
 	protected async forTest_loadEnvironmentVariables(): Promise<Record<string, string>> {
 		const envFileName = this.context.extensionMode === vscode.ExtensionMode.Development ? ".env.dev" : ".env.prod"
-		const envFilePath = path.join(this.context.extensionPath, "webview-ui", envFileName)
+		const envFilePath = path.join(this.context.extensionPath, "caret-webview-ui", envFileName)
 
 		this.caretLogger.info(`Attempting to load environment variables from: ${envFilePath}`, "ENV_LOAD")
 

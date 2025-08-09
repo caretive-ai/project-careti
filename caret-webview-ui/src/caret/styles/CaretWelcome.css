@@ -1,0 +1,236 @@
+/* Caret Welcome Page Styles */
+.caret-welcome {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	background: var(--vscode-editor-background);
+	color: var(--vscode-editor-foreground);
+}
+
+.caret-welcome-container {
+	flex: 1;
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 20px;
+	width: 100%;
+}
+
+/* Main Banner Styles */
+.caret-banner {
+	margin-bottom: 30px;
+	text-align: center;
+}
+
+.caret-banner-image {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styles */
+.caret-header {
+	text-align: center;
+	margin-bottom: 40px;
+}
+
+.caret-title {
+	font-size: 1.8rem;
+	font-weight: bold;
+	margin-bottom: 12px;
+	color: var(--vscode-textLink-foreground);
+}
+
+.caret-subtitle {
+	font-size: 1rem;
+	margin-bottom: 12px;
+	color: var(--vscode-editor-foreground);
+}
+
+.caret-description {
+	font-size: 1rem;
+	line-height: 1.6;
+	color: var(--vscode-descriptionForeground);
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+/* Sections Styles */
+.caret-offer,
+.caret-features,
+.caret-flexibility,
+.caret-account,
+.caret-education {
+	margin-bottom: 30px;
+	padding: 20px;
+	border: 1px solid var(--vscode-panel-border);
+	border-radius: 8px;
+	background: var(--vscode-panel-background);
+}
+
+.caret-offer h2,
+.caret-features h2,
+.caret-flexibility h2,
+.caret-account h2,
+.caret-education h2 {
+	font-size: 1.1rem;
+	margin-bottom: 10px;
+	color: var(--vscode-textLink-foreground);
+}
+
+.caret-offer p,
+.caret-features p,
+.caret-flexibility p,
+.caret-account p,
+.caret-education p {
+	line-height: 1.6;
+	margin-bottom: 10px;
+}
+
+/* Actions Section */
+.caret-actions {
+	text-align: center;
+	margin: 40px 0;
+}
+
+.caret-actions vscode-button {
+	font-size: 1rem;
+	padding: 10px 24px;
+	min-width: 120px;
+	height: 38px;
+}
+
+/* Footer Styles */
+.caret-footer {
+	background: var(--vscode-panel-background);
+	border-top: 1px solid var(--vscode-panel-border);
+	margin-top: auto;
+	padding: 20px 15px 15px;
+	font-size: 0.75rem;
+}
+
+.caret-footer-container {
+	max-width: 700px;
+	margin: 0 auto;
+}
+
+/* 가로 레이아웃 링크 */
+.caret-footer-links-horizontal {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 15px;
+	gap: 3px;
+}
+
+.caret-footer-link {
+	color: var(--vscode-textLink-foreground);
+	text-decoration: none;
+	font-size: 0.75rem;
+}
+
+.caret-footer-link:hover {
+	text-decoration: underline;
+}
+
+.caret-footer-link-inline {
+	color: var(--vscode-textLink-foreground);
+	text-decoration: none;
+}
+
+.caret-footer-link-inline:hover {
+	text-decoration: underline;
+}
+
+.caret-footer-separator {
+	color: var(--vscode-descriptionForeground);
+	margin: 0 3px;
+}
+
+.caret-footer-company-info {
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.caret-footer-company-name {
+	font-size: 0.85rem;
+	margin-bottom: 3px;
+	color: var(--vscode-editor-foreground);
+}
+
+.caret-footer-business-info,
+.caret-footer-address {
+	font-size: 0.7rem;
+	color: var(--vscode-descriptionForeground);
+	margin-bottom: 2px;
+}
+
+.caret-footer-copyright {
+	text-align: center;
+	border-top: 1px solid var(--vscode-panel-border);
+	padding-top: 10px;
+}
+
+.caret-footer-copyright p {
+	font-size: 0.7rem;
+	color: var(--vscode-descriptionForeground);
+	margin-bottom: 3px;
+}
+
+.caret-footer-version {
+	margin-top: 3px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	.caret-welcome-container {
+		padding: 15px;
+	}
+
+	.caret-title {
+		font-size: 2rem;
+	}
+
+	.caret-subtitle {
+		font-size: 1.1rem;
+	}
+
+	.caret-footer-links-horizontal {
+		justify-content: center;
+		text-align: center;
+	}
+
+	.caret-footer-separator {
+		margin: 0 2px;
+	}
+}
+
+/* Animation Effects */
+.caret-welcome-container {
+	animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Hover Effects */
+.caret-actions vscode-button:hover {
+	transform: scale(1.02);
+	transition: transform 0.2s ease;
+}
+
+.caret-feature-list li:hover {
+	background: var(--vscode-list-hoverBackground);
+	border-radius: 4px;
+	padding: 4px;
+	transition: all 0.2s ease;
+}

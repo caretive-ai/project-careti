@@ -1,4 +1,2 @@
-demo.gif filter=lfs diff=lfs merge=lfs -text
-assets/docs/demo.gif filter=lfs diff=lfs merge=lfs -text
-
-* text=auto eol=lf
+# webview-ui는 항상 upstream 버전 유지
+webview-ui/** merge=theirs

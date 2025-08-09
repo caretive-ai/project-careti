@@ -19,6 +19,11 @@ pnpm-lock.yaml
 webview-ui/src//**/*.js
 webview-ui/src/**/*.js.map
 
+# Cline 원본은 참조용 - 빌드하지 않음
+webview-ui/node_modules/
+webview-ui/build/
+webview-ui/package-lock.json
+
 # Ignore coverage directories and files
 coverage
 # But don't ignore the coverage scripts in .github/scripts/
@@ -30,6 +35,7 @@ coverage
 src/generated/
 src/shared/proto/
 webview-ui/src/services/grpc-client.ts
+caret-webview-ui/src/services/grpc-client.ts
 
 # Host bridge
 src/hosts/vscode/*/methods.ts

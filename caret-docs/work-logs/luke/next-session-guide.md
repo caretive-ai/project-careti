@@ -16,10 +16,17 @@
   - ⚠️ TypeScript 컴파일 에러 존재 (upstream 머지 관련)
 
 ### 다음 작업
-**006-4로 복귀**: upstream 머지 관련 컴파일 에러 해결
-- ChatRow.tsx 등 프론트엔드 TypeScript 에러 수정  
-- **백엔드**: ✅ 이미 컴파일 성공! (host-grpc-client.ts 제거로 해결)
-- **프론트엔드**: ❌ 약 146개 에러 남음 (JSX 구문 관련)
+1. **머징 가이드 보강** (006-5 경험 반영)
+   - webview 디렉토리 분리 전략 추가
+   - .gitattributes 활용법 문서화
+   - 자동화 스크립트 템플릿 제공
+   - CI/CD 업데이트 체크리스트 추가
+   - 단계별 검증 프로세스 강화
+
+2. **006-4로 복귀**: upstream 머지 관련 컴파일 에러 해결
+   - ChatRow.tsx 등 프론트엔드 TypeScript 에러 수정  
+   - **백엔드**: ✅ 이미 컴파일 성공! (host-grpc-client.ts 제거로 해결)
+   - **프론트엔드**: ❌ 약 146개 에러 남음 (JSX 구문 관련)
 
 ## 📚 필수 참조 문서
 
@@ -121,6 +128,64 @@ grep -r "webview-ui" --include="*.json" . | grep -v node_modules > webview-refs-
 - **머징 가이드 실전 검증**의 핵심 사례
 - **반복 작업 제거**를 통한 개발 효율성 향상
 - **Fork 프로젝트의 지속가능한 관리** 패턴 확립
+
+## 📝 머징 가이드 보강 작업 (필수)
+
+### 006-5 경험을 통해 배운 교훈들:
+
+1. **webview 디렉토리 분리 전략**
+   - 문제: 매번 반복되는 대규모 충돌
+   - 해결: 원본 참조용 / 빌드용 분리
+   - 효과: 향후 머지에서 자동 처리 가능
+
+2. **.gitattributes 활용의 중요성**
+   ```gitattributes
+   # upstream 파일 자동 처리
+   webview-ui/** merge=theirs
+   ```
+
+3. **자동화 스크립트의 필요성**
+   - path-migration.py: 대규모 경로 변경 자동화
+   - rollback.ps1: 실패 시 빠른 복구
+   - 재사용 가능한 템플릿으로 제공
+
+4. **CI/CD 영향 분석 필수**
+   - GitHub Actions 모든 워크플로우 확인
+   - 캐시 경로, 빌드 경로 모두 업데이트
+   - 놓치기 쉬운 부분 체크리스트화
+
+5. **단계별 검증의 중요성**
+   - Phase별 작업과 즉시 검증
+   - 백엔드/프론트엔드 분리 컴파일
+   - 문제 조기 발견과 해결
+
+### 머징 가이드에 추가할 구체적 내용:
+
+```markdown
+## 대규모 디렉토리 충돌 처리 전략
+
+### 1. 디렉토리 분리 패턴
+- {original-dir}/: upstream 원본 (참조용)
+- {caret-dir}/: Caret 빌드용
+- 예: webview-ui/ → caret-webview-ui/
+
+### 2. 구현 체크리스트
+□ 백업 브랜치 생성
+□ 디렉토리 복사
+□ .gitignore 업데이트
+□ .gitattributes 설정
+□ 빌드 경로 변경 (package.json)
+□ 소스 코드 경로 변경
+□ 테스트 코드 경로 변경
+□ CI/CD 워크플로우 업데이트
+□ 빌드 검증
+□ 테스트 실행
+
+### 3. 자동화 도구
+- path-migration.py 템플릿
+- rollback 스크립트
+- 검증 스크립트
+```
 
 ---
 

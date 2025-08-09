@@ -213,6 +213,7 @@ const WelcomeView = () => {
 				</div>
 
 				{renderSection("", "coreFeatures.description")}
+
 				{/* 언어 선택과 시작 섹션 - 검은색 박스로 섹션화 */}
 				<CaretWelcomeSection headerKey="" bodyKey="" allowHtml={true} data-testid="language-selection-section">
 					{/* 언어 선택을 가로 2단 배치 */}

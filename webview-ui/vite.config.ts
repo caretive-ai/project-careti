@@ -22,9 +22,6 @@ function writePortToFile() {
 	}
 }
 
-// CARET MODIFICATION: Support both mode-based and --dev-build flag
-const isDevBuild = process.argv.includes("--dev-build")
-
 export default defineConfig(({ mode }) => {
 	console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	console.log("CURRENT VITE MODE DETECTED:", mode)
@@ -44,19 +41,15 @@ export default defineConfig(({ mode }) => {
 				include: ["src/caret/**/*.{ts,tsx}"],
 				exclude: ["src/caret/**/*.test.{ts,tsx}", "src/caret/**/*.d.ts", "src/caret/test-utils"],
 				all: true,
-				reportOnFailure: true, // Cline improvement: report on failure
 			},
 			globals: true,
 		},
 		build: {
 			outDir: "build",
 			reportCompressedSize: false,
-			// CARET MODIFICATION: Enhanced build configuration with Cline improvements
-			minify: mode === "production" && !isDevBuild,
-			sourcemap: mode === "development" || isDevBuild ? "inline" : false,
+			sourcemap: mode === "development", // Ensure sourcemap is set based on mode
 			rollupOptions: {
 				output: {
-					inlineDynamicImports: true, // Cline improvement
 					entryFileNames: "assets/[name].js",
 					chunkFileNames: "assets/[name].js",
 					assetFileNames: (assetInfo) => {
@@ -65,15 +58,6 @@ export default defineConfig(({ mode }) => {
 						}
 						return "assets/[name][extname]"
 					},
-					// Cline improvement: dev build formatting
-					compact: mode === "production" && !isDevBuild,
-					...(isDevBuild && {
-						generatedCode: {
-							constBindings: false,
-							objectShorthand: false,
-							arrowFunctions: false,
-						},
-					}),
 				},
 			},
 			chunkSizeWarningLimit: 100000,

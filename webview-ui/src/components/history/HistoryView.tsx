@@ -6,8 +6,8 @@ import { TaskServiceClient } from "@/services/grpc-client"
 import { formatLargeNumber, formatSize } from "@/utils/format"
 import { vscode } from "@/utils/vscode"
 import { ExtensionMessage } from "@shared/ExtensionMessage"
-import { BooleanRequest, EmptyRequest, StringArrayRequest, StringRequest } from "@shared/proto/cline/common"
-import { GetTaskHistoryRequest, TaskFavoriteRequest } from "@shared/proto/cline/task"
+import { EmptyRequest, StringArrayRequest, StringRequest } from "@shared/proto/common"
+import { GetTaskHistoryRequest, TaskFavoriteRequest } from "@shared/proto/task"
 import { VSCodeButton, VSCodeCheckbox, VSCodeRadio, VSCodeRadioGroup, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse, { FuseResult } from "fuse.js"
 import { memo, useCallback, useEffect, useMemo, useState } from "react"
@@ -734,9 +734,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 							disabled={deleteAllDisabled || taskHistory.length === 0}
 							onClick={() => {
 								setDeleteAllDisabled(true)
-								TaskServiceClient.deleteAllTaskHistory(BooleanRequest.create({}))
-									.catch((error) => console.error("Error deleting task history:", error))
-									.finally(() => setDeleteAllDisabled(false))
+								vscode.postMessage({ type: "clearAllTaskHistory" })
 							}}>
 							{/* CARET MODIFICATION: 다국어 처리된 Delete All History 버튼 텍스트 */}
 						{t("history.deleteAllHistory", "common")}{totalTasksSize !== null ? ` (${formatSize(totalTasksSize)})` : ""}

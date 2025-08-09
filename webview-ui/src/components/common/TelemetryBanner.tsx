@@ -54,16 +54,8 @@ const TelemetryBanner = () => {
 		navigateToSettings()
 	}
 
-	const handleClose = async () => {
-		try {
-			await StateServiceClient.updateTelemetrySetting(
-				TelemetrySettingRequest.create({
-					setting: TelemetrySettingEnum.ENABLED,
-				}),
-			)
-		} catch (error) {
-			console.error("Error updating telemetry setting:", error)
-		}
+	const handleClose = () => {
+		vscode.postMessage({ type: "telemetrySetting", telemetrySetting: "enabled" satisfies TelemetrySetting })
 	}
 
 	return (

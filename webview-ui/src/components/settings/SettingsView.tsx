@@ -1,13 +1,17 @@
+import { UnsavedChangesDialog } from "@/components/common/AlertDialog"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "@/services/grpc-client"
+import { cn } from "@/utils/cn"
+import { validateApiConfiguration, validateModelId } from "@/utils/validate"
+import { vscode } from "@/utils/vscode"
 import { ExtensionMessage } from "@shared/ExtensionMessage"
 import { EmptyRequest, StringRequest } from "@shared/proto/common"
 // CARET MODIFICATION: Chatbot/Agent 용어 통일 - PlanActMode 제거
 import { ChatbotAgentMode, ResetStateRequest, ToggleChatbotAgentModeRequest, UpdateSettingsRequest } from "@shared/proto/state"
 import { VSCodeButton, VSCodeCheckbox, VSCodeLink, VSCodeTextArea } from "@vscode/webview-ui-toolkit/react"
 import { CheckCheck, FlaskConical, Info, LucideIcon, Settings, SquareMousePointer, SquareTerminal, Webhook } from "lucide-react"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useRef, useState } from "react"
 import { useEvent } from "react-use"
 import { Tab, TabContent, TabHeader, TabList, TabTrigger } from "../common/Tab"
 import { TabButton } from "../mcp/configuration/McpConfigurationView"
@@ -440,7 +444,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 		switch (message.type) {
 			// Handle tab navigation through targetSection prop instead
 			case "grpc_response":
-				if (message.grpc_response?.message?.key === "scrollToSettings") {
+				if (message.grpc_response?.message?.action === "scrollToSettings") {
 					const tabId = message.grpc_response?.message?.value
 					if (tabId) {
 						// CARET MODIFICATION: console.log to logger
@@ -521,34 +525,94 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 	// Track active tab - default to general tab
 	const [activeTab, setActiveTab] = useState<string>(targetSection || "general")
 
+	// Update active tab when targetSection changes
+	useEffect(() => {
+		if (targetSection) {
+			setActiveTab(targetSection)
+		}
+	}, [targetSection])
+
+	// Enhanced tab change handler with debugging
+	const handleTabChange = useCallback(
+		(tabId: string) => {
+			// CARET MODIFICATION: console.log to logger, corrected arguments
+			// caretWebviewLogger.debug("Tab change requested:", { tabId, currentTab: activeTab }); // CARET MODIFICATION: 주석 처리
+			setActiveTab(tabId)
+			// CARET MODIFICATION: console.log to logger, corrected arguments
+			// caretWebviewLogger.debug("Active tab changed to:", { activeTab }); // CARET MODIFICATION: 주석 처리
+		},
+		[activeTab],
+	)
+
+	const handleCompactTabClick = (tab: "general" | "api" | "advanced" | "chat") => {
+		// CARET MODIFICATION: console.log to logger, corrected arguments
+		// caretWebviewLogger.debug("Compact tab clicked:", { tabId: tab }); // CARET MODIFICATION: 주석 처리
+		handleTabChange(tab)
+	}
+
+	// Debug tab changes
+	useEffect(() => {
+		// CARET MODIFICATION: console.log to logger
+		// console.log("Active tab changed to:", activeTab)
+		caretWebviewLogger.debug("Active tab changed to:", activeTab)
+	}, [activeTab])
+
+	// Track whether we're in compact mode
+	const [isCompactMode, setIsCompactMode] = useState(false)
+	const containerRef = useRef<HTMLDivElement>(null)
+
+	// Setup resize observer to detect when we should switch to compact mode
+	useEffect(() => {
+		if (!containerRef.current) return
+
+		const observer = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				// If container width is less than 500px, switch to compact mode
+				setIsCompactMode(entry.contentRect.width < 500)
+			}
+		})
+
+		observer.observe(containerRef.current)
+
+		return () => {
+			observer?.disconnect()
+		}
+	}, [])
+
 	return (
 		<Tab>
-			<TabHeader>
-				<div className={settingsHeader}>
-					<VSCodeButton onClick={handleCancel} appearance="icon">
-						<span className="codicon codicon-arrow-left"></span>
+			<TabHeader className="flex justify-between items-center gap-2">
+				<div className="flex items-center gap-1">
+					<h3 className="text-[var(--vscode-foreground)] m-0">{t("settingsView.title", "settings")}</h3>
+				</div>
+				<div className="flex gap-2">
+					<VSCodeButton appearance="secondary" onClick={handleCancel}>
+						{t("buttons.cancel", "settings")}
 					</VSCodeButton>
-					<h3 className="settings-title">Settings</h3>
+					<VSCodeButton onClick={() => handleSubmit(false)} disabled={!hasUnsavedChanges}>
+						{t("buttons.save", "settings")}
+					</VSCodeButton>
 				</div>
 			</TabHeader>
 
 			{/* Vertical tabs layout */}
-			<div ref={containerRef} className={`${settingsTabsContainer} ${isCompactMode ? "narrow" : ""}`}>
+			<div ref={containerRef} className={cn(settingsTabsContainer, isCompactMode && "narrow")}>
 				{/* Tab sidebar */}
 				<TabList
 					value={activeTab}
 					onValueChange={handleTabChange}
-					className={settingsTabList}
+					className={cn(settingsTabList)}
 					data-compact={isCompactMode}>
 					{getSettingsTabs(currentLanguage).map((tab) =>
 						isCompactMode ? (
 							<HeroTooltip key={tab.id} content={tab.tooltipText} placement="right">
 								<div
-									className={`${
+									className={cn(
 										activeTab === tab.id
 											? `${settingsTabTrigger} ${settingsTabTriggerActive}`
-											: settingsTabTrigger
-									} focus:ring-0`}
+											: settingsTabTrigger,
+										"focus:ring-0",
+									)}
 									data-compact={isCompactMode}
 									data-testid={`tab-${tab.id}`}
 									data-value={tab.id}
@@ -557,7 +621,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 										// caretWebviewLogger.debug("Compact tab clicked:", { tabId: tab.id }); // CARET MODIFICATION: 주석 처리
 										handleCompactTabClick(tab.id as "general" | "api" | "advanced" | "chat")
 									}}>
-									<div className={`flex items-center gap-2 ${isCompactMode ? "justify-center" : ""}`}>
+									<div className={cn("flex items-center gap-2", isCompactMode && "justify-center")}>
 										<tab.icon className="w-4 h-4" />
 										<span className="tab-label">{tab.name}</span>
 									</div>
@@ -567,14 +631,15 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 							<TabTrigger
 								key={tab.id}
 								value={tab.id}
-								className={`${
+								className={cn(
 									activeTab === tab.id
 										? `${settingsTabTrigger} ${settingsTabTriggerActive}`
-										: settingsTabTrigger
-								} focus:ring-0`}
+										: settingsTabTrigger,
+									"focus:ring-0",
+								)}
 								data-compact={isCompactMode}
 								data-testid={`tab-${tab.id}`}>
-								<div className={`flex items-center gap-2 ${isCompactMode ? "justify-center" : ""}`}>
+								<div className={cn("flex items-center gap-2", isCompactMode && "justify-center")}>
 									<tab.icon className="w-4 h-4" />
 									<span className="tab-label">{tab.name}</span>
 								</div>
@@ -726,13 +791,34 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 							)}
 
 							{/* Feature Settings Tab */}
-							{activeTab === "features" && <FeatureSettingsSection renderSectionHeader={renderSectionHeader} />}
+							{activeTab === "features" && (
+								<div>
+									{renderSectionHeader("features")}
+									<Section>
+										<FeatureSettingsSection />
+									</Section>
+								</div>
+							)}
 
 							{/* Browser Settings Tab */}
-							{activeTab === "browser" && <BrowserSettingsSection renderSectionHeader={renderSectionHeader} />}
+							{activeTab === "browser" && (
+								<div>
+									{renderSectionHeader("browser")}
+									<Section>
+										<BrowserSettingsSection />
+									</Section>
+								</div>
+							)}
 
 							{/* Terminal Settings Tab */}
-							{activeTab === "terminal" && <TerminalSettingsSection renderSectionHeader={renderSectionHeader} />}
+							{activeTab === "terminal" && (
+								<div>
+									{renderSectionHeader("terminal")}
+									<Section>
+										<TerminalSettingsSection />
+									</Section>
+								</div>
+							)}
 
 							{/* Debug Tab (only in dev mode) */}
 							{IS_DEV && activeTab === "debug" && (
@@ -774,8 +860,16 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 					)
 				})()}
 			</div>
+
+			{/* Unsaved Changes Dialog */}
+			<UnsavedChangesDialog
+				open={isUnsavedChangesDialogOpen}
+				onOpenChange={setIsUnsavedChangesDialogOpen}
+				onConfirm={handleConfirmDiscard}
+				onCancel={handleCancelDiscard}
+			/>
 		</Tab>
 	)
 }
 
-export default SettingsView
+export default memo(SettingsView)

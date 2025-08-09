@@ -21,6 +21,13 @@ import {
 } from "@vscode/webview-ui-toolkit/react"
 
 function Demo() {
+	// function handleHowdyClick() {
+	// 	vscode.postMessage({
+	// 		command: "hello",
+	// 		text: "Hey there partner! 🤠",
+	// 	})
+	// }
+
 	const rowData = [
 		{
 			cell1: "Cell Data",

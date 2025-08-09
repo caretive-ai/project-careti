@@ -1,13 +1,13 @@
 import HeroTooltip from "@/components/common/HeroTooltip"
 import Thumbnails from "@/components/common/Thumbnails"
-import { normalizeApiConfiguration, getModeSpecificFields } from "@/components/settings/utils/providerUtils"
+import { normalizeApiConfiguration } from "@/components/settings/ApiOptions"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { FileServiceClient, TaskServiceClient, UiServiceClient } from "@/services/grpc-client"
 import { formatLargeNumber, formatSize } from "@/utils/format"
 import { validateSlashCommand } from "@/utils/slash-commands"
 import { mentionRegexGlobal } from "@shared/context-mentions"
 import { ClineMessage } from "@shared/ExtensionMessage"
-import { StringArrayRequest, StringRequest } from "@shared/proto/cline/common"
+import { StringArrayRequest, StringRequest } from "@shared/proto/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React, { memo, useEffect, useMemo, useRef, useState } from "react"
 import { useWindowSize } from "react-use"
@@ -16,7 +16,7 @@ import DeleteTaskButton from "./buttons/DeleteTaskButton"
 import CopyTaskButton from "./buttons/CopyTaskButton"
 import OpenDiskTaskHistoryButton from "./buttons/OpenDiskTaskHistoryButton"
 
-const IS_DEV = process.env.IS_DEV
+const { IS_DEV } = process.env
 
 interface TaskHeaderProps {
 	task: ClineMessage
@@ -43,7 +43,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 	onClose,
 	onScrollToMessage,
 }) => {
-	const { apiConfiguration, currentTaskItem, checkpointTrackerErrorMessage, clineMessages, navigateToSettings, mode } =
+	const { apiConfiguration, currentTaskItem, checkpointTrackerErrorMessage, clineMessages, navigateToSettings } =
 		useExtensionState()
 	const [isTaskExpanded, setIsTaskExpanded] = useState(true)
 	const [isTextExpanded, setIsTextExpanded] = useState(false)
@@ -51,7 +51,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 	const textContainerRef = useRef<HTMLDivElement>(null)
 	const textRef = useRef<HTMLDivElement>(null)
 
-	const { selectedModelInfo } = useMemo(() => normalizeApiConfiguration(apiConfiguration, mode), [apiConfiguration, mode])
+	const { selectedModelInfo } = useMemo(() => normalizeApiConfiguration(apiConfiguration), [apiConfiguration])
 	const contextWindow = selectedModelInfo?.contextWindow
 
 	// Open task header when checkpoint tracker error message is set
@@ -130,18 +130,19 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 	}, [task.text, windowWidth, isTaskExpanded])
 
 	const isCostAvailable = useMemo(() => {
-		const modeFields = getModeSpecificFields(apiConfiguration, mode)
 		const openAiCompatHasPricing =
-			modeFields.apiProvider === "openai" &&
-			modeFields.openAiModelInfo?.inputPrice &&
-			modeFields.openAiModelInfo?.outputPrice
+			apiConfiguration?.apiProvider === "openai" &&
+			apiConfiguration?.openAiModelInfo?.inputPrice &&
+			apiConfiguration?.openAiModelInfo?.outputPrice
 		if (openAiCompatHasPricing) {
 			return true
 		}
 		return (
-			modeFields.apiProvider !== "vscode-lm" && modeFields.apiProvider !== "ollama" && modeFields.apiProvider !== "lmstudio"
+			apiConfiguration?.apiProvider !== "vscode-lm" &&
+			apiConfiguration?.apiProvider !== "ollama" &&
+			apiConfiguration?.apiProvider !== "lmstudio"
 		)
-	}, [apiConfiguration, mode])
+	}, [apiConfiguration?.apiProvider, apiConfiguration?.openAiModelInfo])
 
 	const shouldShowPromptCacheInfo = () => {
 		// Hybrid logic: Show cache info if we have actual cache data,
@@ -285,11 +286,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 							${totalCost?.toFixed(4)}
 						</div>
 					)}
-					<VSCodeButton
-						appearance="icon"
-						onClick={onClose}
-						style={{ marginLeft: 6, flexShrink: 0 }}
-						aria-label="Close task">
+					<VSCodeButton appearance="icon" onClick={onClose} style={{ marginLeft: 6, flexShrink: 0 }}>
 						<span className="codicon codicon-close"></span>
 					</VSCodeButton>
 				</div>

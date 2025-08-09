@@ -1,68 +1,53 @@
-import { EmptyRequest } from "@shared/proto/cline/common"
+import { EmptyRequest } from "@shared/proto/common"
 import { VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from "react"
 import { useRemark } from "react-remark"
 import { useMount } from "react-use"
 import styled from "styled-components"
-import { requestyDefaultModelId, requestyDefaultModelInfo } from "@shared/api"
+import { requestyDefaultModelId } from "../../../../src/shared/api"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { ModelsServiceClient } from "../../services/grpc-client"
 import { CODE_BLOCK_BG_COLOR } from "../common/CodeBlock"
 import { highlight } from "../history/HistoryView"
-import { ModelInfoView } from "./common/ModelInfoView"
-import { getModeSpecificFields, normalizeApiConfiguration } from "./utils/providerUtils"
+import { ModelInfoView, normalizeApiConfiguration } from "./ApiOptions"
 import ThinkingBudgetSlider from "./ThinkingBudgetSlider"
 import { t } from "@/caret/utils/i18n"
 
 export interface RequestyModelPickerProps {
 	isPopup?: boolean
-	currentMode: Mode
 }
 
-const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, currentMode }) => {
-	const { apiConfiguration, requestyModels, setRequestyModels } = useExtensionState()
-	const { handleModeFieldsChange } = useApiConfigurationHandlers()
-	const modeFields = getModeSpecificFields(apiConfiguration, currentMode)
-	const [searchTerm, setSearchTerm] = useState(modeFields.requestyModelId || requestyDefaultModelId)
+const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup }) => {
+	const { apiConfiguration, setApiConfiguration, requestyModels } = useExtensionState()
+	const [searchTerm, setSearchTerm] = useState(apiConfiguration?.requestyModelId || requestyDefaultModelId)
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false)
 	const [selectedIndex, setSelectedIndex] = useState(-1)
 	const dropdownRef = useRef<HTMLDivElement>(null)
 	const itemRefs = useRef<(HTMLDivElement | null)[]>([])
+	const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
 	const dropdownListRef = useRef<HTMLDivElement>(null)
 
 	const handleModelChange = (newModelId: string) => {
 		// could be setting invalid model id/undefined info but validation will catch it
-
-		handleModeFieldsChange(
-			{
-				requestyModelId: { plan: "planModeRequestyModelId", act: "actModeRequestyModelId" },
-				requestyModelInfo: { plan: "planModeRequestyModelInfo", act: "actModeRequestyModelInfo" },
-			},
-			{
+		setApiConfiguration({
+			...apiConfiguration,
+			...{
 				requestyModelId: newModelId,
 				requestyModelInfo: requestyModels[newModelId],
 			},
-			currentMode,
-		)
+		})
 		setSearchTerm(newModelId)
 	}
 
 	const { selectedModelId, selectedModelInfo } = useMemo(() => {
-		return normalizeApiConfiguration(apiConfiguration, currentMode)
-	}, [apiConfiguration, currentMode])
+		return normalizeApiConfiguration(apiConfiguration)
+	}, [apiConfiguration])
 
 	useMount(() => {
-		ModelsServiceClient.refreshRequestyModels(EmptyRequest.create({}))
-			.then((response) => {
-				setRequestyModels({
-					[requestyDefaultModelId]: requestyDefaultModelInfo,
-					...response.models,
-				})
-			})
-			.catch((err) => {
-				console.error("Failed to refresh Requesty models:", err)
-			})
+		ModelsServiceClient.refreshRequestyModels(EmptyRequest.create({})).catch((err) => {
+			console.error("Failed to refresh Requesty models:", err)
+		})
 	})
 
 	useEffect(() => {
@@ -235,8 +220,16 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, curr
 
 			{hasInfo ? (
 				<>
-					{showBudgetSlider && <ThinkingBudgetSlider currentMode={currentMode} />}
-					<ModelInfoView selectedModelId={selectedModelId} modelInfo={selectedModelInfo} isPopup={isPopup} />
+					{showBudgetSlider && (
+						<ThinkingBudgetSlider apiConfiguration={apiConfiguration} setApiConfiguration={setApiConfiguration} />
+					)}
+					<ModelInfoView
+						selectedModelId={selectedModelId}
+						modelInfo={selectedModelInfo}
+						isDescriptionExpanded={isDescriptionExpanded}
+						setIsDescriptionExpanded={setIsDescriptionExpanded}
+						isPopup={isPopup}
+					/>
 				</>
 			) : (
 				<p

@@ -1,33 +1,20 @@
-import { mentionRegex, mentionRegexGlobal } from "@shared/context-mentions"
-import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
-import { FileSearchRequest, RelativePathsRequest } from "@shared/proto/cline/file"
-import { UpdateApiConfigurationRequest } from "@shared/proto/cline/models"
-import { PlanActMode, TogglePlanActModeRequest } from "@shared/proto/cline/state"
-import { convertApiConfigurationToProto } from "@shared/proto-conversions/models/api-configuration-conversion"
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
-import type React from "react"
-import { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
-import DynamicTextArea from "react-textarea-autosize"
-import { useClickAway, useWindowSize } from "react-use"
-import styled from "styled-components"
+import { MAX_IMAGES_AND_FILES_PER_MESSAGE } from "@/components/chat/ChatView"
 import ContextMenu from "@/components/chat/ContextMenu"
-import { CHAT_CONSTANTS } from "@/components/chat/chat-view/constants"
 import SlashCommandMenu from "@/components/chat/SlashCommandMenu"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import Thumbnails from "@/components/common/Thumbnails"
 import Tooltip from "@/components/common/Tooltip"
-import ApiOptions from "@/components/settings/ApiOptions"
-import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
+import ApiOptions, { normalizeApiConfiguration } from "@/components/settings/ApiOptions"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
+import { FileServiceClient, StateServiceClient, ModelsServiceClient } from "@/services/grpc-client"
 import {
 	ContextMenuOptionType,
-	getContextMenuOptionIndex,
 	getContextMenuOptions,
+	getContextMenuOptionIndex,
 	insertMention,
 	insertMentionDirectly,
 	removeMention,
-	type SearchResult,
+	SearchResult,
 	shouldShowContextMenu,
 } from "@/utils/context-mentions"
 import { useMetaKeyDetection, useShortcut } from "@/utils/hooks"
@@ -35,8 +22,8 @@ import {
 	getMatchingSlashCommands,
 	insertSlashCommand,
 	removeSlashCommand,
-	type SlashCommand,
 	shouldShowSlashCommandsMenu,
+	SlashCommand,
 	slashCommandDeleteRegex,
 	validateSlashCommand,
 } from "@/utils/slash-commands"
@@ -61,9 +48,6 @@ import ServersToggleModal from "./ServersToggleModal"
 // CARET MODIFICATION: 다국어 지원을 위한 i18n import
 import { t } from "@/caret/utils/i18n"
 import { useCurrentLanguage } from "@/caret/hooks/useCurrentLanguage"
-import { Mode } from "@shared/storage/types"
-
-const { MAX_IMAGES_AND_FILES_PER_MESSAGE } = CHAT_CONSTANTS
 
 const getImageDimensions = (dataUrl: string): Promise<{ width: number; height: number }> => {
 	return new Promise((resolve, reject) => {
@@ -301,8 +285,15 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		},
 		ref,
 	) => {
-		const { filePaths, mode, apiConfiguration, openRouterModels, platform, localWorkflowToggles, globalWorkflowToggles } =
-			useExtensionState()
+		const {
+			filePaths,
+			chatSettings,
+			apiConfiguration,
+			openRouterModels,
+			platform,
+			localWorkflowToggles,
+			globalWorkflowToggles,
+		} = useExtensionState()
 		const [isTextAreaFocused, setIsTextAreaFocused] = useState(false)
 		const [isDraggingOver, setIsDraggingOver] = useState(false)
 		const [gitCommits, setGitCommits] = useState<GitCommit[]>([])
@@ -332,7 +323,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		const buttonRef = useRef<HTMLDivElement>(null)
 		const [arrowPosition, setArrowPosition] = useState(0)
 		const [menuPosition, setMenuPosition] = useState(0)
-		const [shownTooltipMode, setShownTooltipMode] = useState<Mode | null>(null)
+		const [shownTooltipMode, setShownTooltipMode] = useState<ChatSettings["mode"] | null>(null)
 		const [pendingInsertions, setPendingInsertions] = useState<string[]>([])
 		const shiftHoldTimerRef = useRef<NodeJS.Timeout | null>(null)
 		const [showUnsupportedFileError, setShowUnsupportedFileError] = useState(false)
@@ -773,7 +764,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								}),
 							)
 								.then((results) => {
-									setFileSearchResults((results.results || []) as SearchResult[])
+									setFileSearchResults(results.results || [])
 									setSearchLoading(false)
 								})
 								.catch((error) => {
@@ -1045,16 +1036,13 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						},
 						chatContent: {
 							message: inputValue.trim() ? inputValue : undefined,
-							images: selectedImages,
-							files: selectedFiles,
+							images: selectedImages.length > 0 ? selectedImages : undefined,
+							files: selectedFiles.length > 0 ? selectedFiles : undefined,
 						},
 					}),
 				)
 				// Focus the textarea after mode toggle with slight delay
 				setTimeout(() => {
-					if (response.value) {
-						setInputValue("")
-					}
 					textAreaRef.current?.focus()
 				}, 100)
 			}, changeModeDelay)
@@ -1133,16 +1121,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 		// Get model display name
 		const modelDisplayName = useMemo(() => {
-			const { selectedProvider, selectedModelId } = normalizeApiConfiguration(apiConfiguration, mode)
-			const {
-				vsCodeLmModelSelector,
-				togetherModelId,
-				fireworksModelId,
-				lmStudioModelId,
-				ollamaModelId,
-				liteLlmModelId,
-				requestyModelId,
-			} = getModeSpecificFields(apiConfiguration, mode)
+			const { selectedProvider, selectedModelId } = normalizeApiConfiguration(apiConfiguration)
 			const unknownModel = "unknown"
 			if (!apiConfiguration) return unknownModel
 			switch (selectedProvider) {
@@ -1151,25 +1130,25 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				case "openai":
 					return `openai-compat:${selectedModelId}`
 				case "vscode-lm":
-					return `vscode-lm:${vsCodeLmModelSelector ? `${vsCodeLmModelSelector.vendor ?? ""}/${vsCodeLmModelSelector.family ?? ""}` : unknownModel}`
+					return `vscode-lm:${apiConfiguration.vsCodeLmModelSelector ? `${apiConfiguration.vsCodeLmModelSelector.vendor ?? ""}/${apiConfiguration.vsCodeLmModelSelector.family ?? ""}` : unknownModel}`
 				case "together":
-					return `${selectedProvider}:${togetherModelId}`
+					return `${selectedProvider}:${apiConfiguration.togetherModelId}`
 				case "fireworks":
-					return `fireworks:${fireworksModelId}`
+					return `fireworks:${apiConfiguration.fireworksModelId}`
 				case "lmstudio":
-					return `${selectedProvider}:${lmStudioModelId}`
+					return `${selectedProvider}:${apiConfiguration.lmStudioModelId}`
 				case "ollama":
-					return `${selectedProvider}:${ollamaModelId}`
+					return `${selectedProvider}:${apiConfiguration.ollamaModelId}`
 				case "litellm":
-					return `${selectedProvider}:${liteLlmModelId}`
+					return `${selectedProvider}:${apiConfiguration.liteLlmModelId}`
 				case "requesty":
-					return `${selectedProvider}:${requestyModelId}`
+					return `${selectedProvider}:${apiConfiguration.requestyModelId}`
 				case "anthropic":
 				case "openrouter":
 				default:
 					return `${selectedProvider}:${selectedModelId}`
 			}
-		}, [apiConfiguration, mode])
+		}, [apiConfiguration])
 
 		// Calculate arrow position and menu position based on button location
 		useEffect(() => {
@@ -1778,7 +1757,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 											apiErrorMessage={undefined}
 											modelIdErrorMessage={undefined}
 											isPopup={true}
-											currentMode={mode}
+											saveImmediately={true} // Ensure popup saves immediately
 										/>
 									</ModelSelectorTooltip>
 								)}

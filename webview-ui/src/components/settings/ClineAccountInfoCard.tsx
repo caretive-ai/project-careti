@@ -1,5 +1,5 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
-import { useClineAuth } from "@/context/ClineAuthContext"
+import { useFirebaseAuth } from "@/context/FirebaseAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
 import { EmptyRequest } from "@shared/proto/common"

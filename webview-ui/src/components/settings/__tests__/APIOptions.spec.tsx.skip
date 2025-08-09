@@ -11,16 +11,13 @@ vi.mock("../../../context/ExtensionStateContext", async (importOriginal) => {
 		// your mocked methods
 		useExtensionState: vi.fn(() => ({
 			apiConfiguration: {
-				planModeApiProvider: "requesty",
-				actModeApiProvider: "requesty",
+				apiProvider: "requesty",
 				requestyApiKey: "",
-				planModeRequestyModelId: "",
-				actModeRequestyModelId: "",
+				requestyModelId: "",
 			},
 			setApiConfiguration: vi.fn(),
 			uriScheme: "vscode",
 			requestyModels: {},
-			planActSeparateModelsSetting: false,
 		})),
 	}
 })
@@ -31,7 +28,6 @@ const mockExtensionState = (apiConfiguration: Partial<ApiConfiguration>) => {
 		setApiConfiguration: vi.fn(),
 		uriScheme: "vscode",
 		requestyModels: {},
-		planActSeparateModelsSetting: false,
 	} as any)
 }
 
@@ -43,15 +39,14 @@ describe("ApiOptions Component", () => {
 		//@ts-expect-error - vscode is not defined in the global namespace in test environment
 		global.vscode = { postMessage: mockPostMessage }
 		mockExtensionState({
-			planModeApiProvider: "requesty",
-			actModeApiProvider: "requesty",
+			apiProvider: "requesty",
 		})
 	})
 
 	it("renders Requesty API Key input", () => {
 		render(
 			<ExtensionStateContextProvider>
-				<ApiOptions showModelOptions={true} currentMode="plan" />
+				<ApiOptions showModelOptions={true} />
 			</ExtensionStateContextProvider>,
 		)
 		const apiKeyInput = screen.getByPlaceholderText("Enter API Key...")
@@ -61,7 +56,7 @@ describe("ApiOptions Component", () => {
 	it("renders Requesty Model ID input", () => {
 		render(
 			<ExtensionStateContextProvider>
-				<ApiOptions showModelOptions={true} currentMode="plan" />
+				<ApiOptions showModelOptions={true} />
 			</ExtensionStateContextProvider>,
 		)
 		const modelIdInput = screen.getByPlaceholderText("Search and select a model...")
@@ -77,15 +72,14 @@ describe("ApiOptions Component", () => {
 		//@ts-expect-error - vscode is not defined in the global namespace in test environment
 		global.vscode = { postMessage: mockPostMessage }
 		mockExtensionState({
-			planModeApiProvider: "together",
-			actModeApiProvider: "together",
+			apiProvider: "together",
 		})
 	})
 
 	it("renders Together API Key input", () => {
 		render(
 			<ExtensionStateContextProvider>
-				<ApiOptions showModelOptions={true} currentMode="plan" />
+				<ApiOptions showModelOptions={true} />
 			</ExtensionStateContextProvider>,
 		)
 		const apiKeyInput = screen.getByPlaceholderText("Enter API Key...")
@@ -95,7 +89,7 @@ describe("ApiOptions Component", () => {
 	it("renders Together Model ID input", () => {
 		render(
 			<ExtensionStateContextProvider>
-				<ApiOptions showModelOptions={true} currentMode="plan" />
+				<ApiOptions showModelOptions={true} />
 			</ExtensionStateContextProvider>,
 		)
 		const modelIdInput = screen.getByPlaceholderText("Enter Model ID...")
@@ -112,11 +106,9 @@ describe("ApiOptions Component", () => {
 		global.vscode = { postMessage: mockPostMessage }
 
 		mockExtensionState({
-			planModeApiProvider: "fireworks",
-			actModeApiProvider: "fireworks",
+			apiProvider: "fireworks",
 			fireworksApiKey: "",
-			planModeFireworksModelId: "",
-			actModeFireworksModelId: "",
+			fireworksModelId: "",
 			fireworksModelMaxCompletionTokens: 2000,
 			fireworksModelMaxTokens: 4000,
 		})
@@ -125,7 +117,7 @@ describe("ApiOptions Component", () => {
 	it("renders Fireworks API Key input", () => {
 		render(
 			<ExtensionStateContextProvider>
-				<ApiOptions showModelOptions={true} currentMode="plan" />
+				<ApiOptions showModelOptions={true} />
 			</ExtensionStateContextProvider>,
 		)
 		const apiKeyInput = screen.getByPlaceholderText("Enter API Key...")
@@ -135,7 +127,7 @@ describe("ApiOptions Component", () => {
 	it("renders Fireworks Model ID input", () => {
 		render(
 			<ExtensionStateContextProvider>
-				<ApiOptions showModelOptions={true} currentMode="plan" />
+				<ApiOptions showModelOptions={true} />
 			</ExtensionStateContextProvider>,
 		)
 		const modelIdInput = screen.getByPlaceholderText("Enter Model ID...")
@@ -145,7 +137,7 @@ describe("ApiOptions Component", () => {
 	it("renders Fireworks Max Completion Tokens input", () => {
 		render(
 			<ExtensionStateContextProvider>
-				<ApiOptions showModelOptions={true} currentMode="plan" />
+				<ApiOptions showModelOptions={true} />
 			</ExtensionStateContextProvider>,
 		)
 		const maxCompletionTokensInput = screen.getByPlaceholderText("2000")
@@ -155,7 +147,7 @@ describe("ApiOptions Component", () => {
 	it("renders Fireworks Max Tokens input", () => {
 		render(
 			<ExtensionStateContextProvider>
-				<ApiOptions showModelOptions={true} currentMode="plan" />
+				<ApiOptions showModelOptions={true} />
 			</ExtensionStateContextProvider>,
 		)
 		const maxTokensInput = screen.getByPlaceholderText("4000")
@@ -171,15 +163,14 @@ describe("OpenApiInfoOptions", () => {
 		//@ts-expect-error - vscode is not defined in the global namespace in test environment
 		global.vscode = { postMessage: mockPostMessage }
 		mockExtensionState({
-			planModeApiProvider: "openai",
-			actModeApiProvider: "openai",
+			apiProvider: "openai",
 		})
 	})
 
 	it("renders OpenAI Supports Images input", () => {
 		render(
 			<ExtensionStateContextProvider>
-				<ApiOptions showModelOptions={true} currentMode="plan" />
+				<ApiOptions showModelOptions={true} />
 			</ExtensionStateContextProvider>,
 		)
 		fireEvent.click(screen.getByText("Model Configuration"))
@@ -190,7 +181,7 @@ describe("OpenApiInfoOptions", () => {
 	it("renders OpenAI Context Window Size input", () => {
 		render(
 			<ExtensionStateContextProvider>
-				<ApiOptions showModelOptions={true} currentMode="plan" />
+				<ApiOptions showModelOptions={true} />
 			</ExtensionStateContextProvider>,
 		)
 		fireEvent.click(screen.getByText("Model Configuration"))
@@ -201,7 +192,7 @@ describe("OpenApiInfoOptions", () => {
 	it("renders OpenAI Max Output Tokens input", () => {
 		render(
 			<ExtensionStateContextProvider>
-				<ApiOptions showModelOptions={true} currentMode="plan" />
+				<ApiOptions showModelOptions={true} />
 			</ExtensionStateContextProvider>,
 		)
 		fireEvent.click(screen.getByText("Model Configuration"))
@@ -219,8 +210,7 @@ describe("ApiOptions Component", () => {
 		global.vscode = { postMessage: mockPostMessage }
 
 		mockExtensionState({
-			planModeApiProvider: "nebius",
-			actModeApiProvider: "nebius",
+			apiProvider: "nebius",
 			nebiusApiKey: "",
 		})
 	})
@@ -228,7 +218,7 @@ describe("ApiOptions Component", () => {
 	it("renders Nebius API Key input", () => {
 		render(
 			<ExtensionStateContextProvider>
-				<ApiOptions showModelOptions={true} currentMode="plan" />
+				<ApiOptions showModelOptions={true} />
 			</ExtensionStateContextProvider>,
 		)
 		const apiKeyInput = screen.getByPlaceholderText("Enter API Key...")
@@ -238,7 +228,7 @@ describe("ApiOptions Component", () => {
 	it("renders Nebius Model ID select with a default model", () => {
 		render(
 			<ExtensionStateContextProvider>
-				<ApiOptions showModelOptions={true} currentMode="plan" />
+				<ApiOptions showModelOptions={true} />
 			</ExtensionStateContextProvider>,
 		)
 		const modelIdSelect = screen.getByLabelText("Model")

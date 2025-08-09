@@ -4,7 +4,7 @@ import { t } from "@/caret/utils/i18n"
 
 import { McpServiceClient, UiServiceClient } from "@/services/grpc-client"
 
-import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
+import { EmptyRequest, StringRequest } from "@shared/proto/common"
 import ServersToggleList from "./ServersToggleList"
 const InstalledServersView = () => {
 	const { mcpServers: servers, navigateToSettings } = useExtensionState()

@@ -1,4 +1,5 @@
 import { HTMLAttributes } from "react"
+import { cn } from "@/utils/cn"
 
 import { OPENROUTER_MODEL_PICKER_Z_INDEX } from "./OpenRouterModelPicker"
 
@@ -10,7 +11,10 @@ type SectionHeaderProps = HTMLAttributes<HTMLDivElement> & {
 export const SectionHeader = ({ description, children, className, ...props }: SectionHeaderProps) => {
 	return (
 		<div
-			className={`sticky top-0 text-[var(--vscode-foreground)] bg-[var(--vscode-panel-background)] px-5 py-3 ${className || ""}`}
+			className={cn(
+				`sticky top-0 text-[var(--vscode-foreground)] bg-[var(--vscode-panel-background)] px-5 py-3`,
+				className,
+			)}
 			{...props}
 			style={{ zIndex: OPENROUTER_MODEL_PICKER_Z_INDEX + 20 }}>
 			<h4 className="m-0">{children}</h4>

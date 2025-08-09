@@ -16,7 +16,7 @@ import {
 	ToggleCursorRuleRequest,
 	ToggleWindsurfRuleRequest,
 	ToggleWorkflowRequest,
-} from "@shared/proto/cline/file"
+} from "@shared/proto/file"
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useRef, useState } from "react"
 import { useClickAway, useWindowSize } from "react-use"

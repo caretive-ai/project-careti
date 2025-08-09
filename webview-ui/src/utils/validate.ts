@@ -8,18 +8,7 @@ export function validateApiConfiguration(
 	language: SupportedLanguage = "en",
 ): string | undefined {
 	if (apiConfiguration) {
-		const {
-			apiProvider,
-			openAiModelId,
-			requestyModelId,
-			fireworksModelId,
-			togetherModelId,
-			ollamaModelId,
-			lmStudioModelId,
-			vsCodeLmModelSelector,
-		} = getModeSpecificFields(apiConfiguration, currentMode)
-
-		switch (apiProvider) {
+		switch (apiConfiguration.apiProvider) {
 			case "anthropic":
 				if (!apiConfiguration.apiKey) {
 					return t("invalidApiKey", "validate-api-conf", language)
@@ -120,11 +109,6 @@ export function validateApiConfiguration(
 					return t("invalidModelSelector", "validate-api-conf", language)
 				}
 				break
-			case "moonshot":
-				if (!apiConfiguration.moonshotApiKey) {
-					return "You must provide a valid API key or choose a different provider."
-				}
-				break
 			case "nebius":
 				if (!apiConfiguration.nebiusApiKey) {
 					return t("invalidApiKey", "validate-api-conf", language)
@@ -160,17 +144,15 @@ export function validateApiConfiguration(
 }
 
 export function validateModelId(
-	currentMode: Mode,
 	apiConfiguration?: ApiConfiguration,
 	openRouterModels?: Record<string, ModelInfo>,
 	language: SupportedLanguage = "en",
 ): string | undefined {
 	if (apiConfiguration) {
-		const { apiProvider, openRouterModelId } = getModeSpecificFields(apiConfiguration, currentMode)
-		switch (apiProvider) {
+		switch (apiConfiguration.apiProvider) {
 			case "openrouter":
 			case "cline":
-				const modelId = openRouterModelId || openRouterDefaultModelId // in case the user hasn't changed the model id, it will be undefined by default
+				const modelId = apiConfiguration.openRouterModelId || openRouterDefaultModelId // in case the user hasn't changed the model id, it will be undefined by default
 				if (!modelId) {
 					return t("invalidModelId", "validate-api-conf", language)
 				}

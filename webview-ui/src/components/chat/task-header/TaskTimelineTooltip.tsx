@@ -3,6 +3,7 @@ import { ClineMessage } from "@shared/ExtensionMessage"
 import { Tooltip } from "@heroui/react"
 // CARET MODIFICATION: 다국어 지원을 위한 i18n import
 import { t } from "../../../caret/utils/i18n"
+import { getColor } from "./util"
 
 // Color mapping for different message types
 

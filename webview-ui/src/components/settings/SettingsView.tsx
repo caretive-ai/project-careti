@@ -490,6 +490,63 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 		}
 	}
 
+	// Track active tab - default to general tab
+	const [activeTab, setActiveTab] = useState<string>(targetSection || "general")
+
+	// Update active tab when targetSection changes
+	useEffect(() => {
+		if (targetSection) {
+			setActiveTab(targetSection)
+		}
+	}, [targetSection])
+
+	// Enhanced tab change handler with debugging
+	const handleTabChange = useCallback(
+		(tabId: string) => {
+			// CARET MODIFICATION: console.log to logger, corrected arguments
+			// caretWebviewLogger.debug("Tab change requested:", { tabId, currentTab: activeTab }); // CARET MODIFICATION: 주석 처리
+			setActiveTab(tabId)
+			// CARET MODIFICATION: console.log to logger, corrected arguments
+			// caretWebviewLogger.debug("Active tab changed to:", { activeTab }); // CARET MODIFICATION: 주석 처리
+		},
+		[activeTab],
+	)
+
+	const handleCompactTabClick = (tab: "general" | "api" | "advanced" | "chat") => {
+		// CARET MODIFICATION: console.log to logger, corrected arguments
+		// caretWebviewLogger.debug("Compact tab clicked:", { tabId: tab }); // CARET MODIFICATION: 주석 처리
+		handleTabChange(tab)
+	}
+
+	// Debug tab changes
+	useEffect(() => {
+		// CARET MODIFICATION: console.log to logger
+		// console.log("Active tab changed to:", activeTab)
+		caretWebviewLogger.debug("Active tab changed to:", activeTab)
+	}, [activeTab])
+
+	// Track whether we're in compact mode
+	const [isCompactMode, setIsCompactMode] = useState(false)
+	const containerRef = useRef<HTMLDivElement>(null)
+
+	// Setup resize observer to detect when we should switch to compact mode
+	useEffect(() => {
+		if (!containerRef.current) return
+
+		const observer = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				// If container width is less than 500px, switch to compact mode
+				setIsCompactMode(entry.contentRect.width < 500)
+			}
+		})
+
+		observer.observe(containerRef.current)
+
+		return () => {
+			observer?.disconnect()
+		}
+	}, [])
+
 	// CARET MODIFICATION: Chatbot/Agent 통일 - 직접 비교
 	const handleChatbotAgentModeChange = async (tab: "chatbot" | "agent") => {
 		// CARET MODIFICATION: Chatbot/Agent 통일 - 직접 모드 비교

@@ -385,12 +385,14 @@ const MarkdownBlock = memo(({ markdown, highlightOptions = {}, className }: Mark
 	const [processedMarkdown, setProcessedMarkdown] = useState(markdown)
 
 	useEffect(() => {
+		if (!chatSettings) return
 		const transformedText = transformChatbotAgentText(markdown || "", chatSettings.mode, chatSettings.modeSystem)
 		setProcessedMarkdown(transformedText)
-	}, [markdown]) // ← modeSystem 종속성 제거!
+	}, [markdown, chatSettings]) // ← chatSettings 종속성 추가
 
 	// CARET MODIFICATION: Chatbot/Agent 모드별 동적 강조 표시
 	const processMarkdownForChatbotAgent = (content: string): string => {
+		if (!chatSettings) return content
 		const isInChatbotMode = chatSettings.mode === "chatbot"
 		const isClineMode = chatSettings.modeSystem === "cline"
 
@@ -508,7 +510,7 @@ const MarkdownBlock = memo(({ markdown, highlightOptions = {}, className }: Mark
 	return (
 		<StyledMarkdown
 			className={`markdown-block ph-no-capture ${className || ""}`}
-			data-chatbot-agent-mode={chatSettings.mode === "chatbot" ? "chatbot" : "agent"}>
+			data-chatbot-agent-mode={chatSettings?.mode === "chatbot" ? "chatbot" : "agent"}>
 			{reactContent}
 		</StyledMarkdown>
 	)

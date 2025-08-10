@@ -1037,16 +1037,18 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			}
 			setTimeout(() => {
 				// CARET MODIFICATION: modeSystem 기반 토글 로직 - plan/act vs chatbot/agent
-				let newMode: ChatbotAgentMode
-				if (chatSettings.modeSystem === "cline") {
-					// Cline 모드: plan ↔ act 토글
-					newMode = chatSettings.mode === "plan" ? ChatbotAgentMode.AGENT_MODE : ChatbotAgentMode.CHATBOT_MODE
-				} else {
-					// Caret 모드: chatbot ↔ agent 토글
-					newMode = chatSettings.mode === "chatbot" ? ChatbotAgentMode.AGENT_MODE : ChatbotAgentMode.CHATBOT_MODE
-				}
+							if (!chatSettings) return
 
-				StateServiceClient.toggleChatbotAgentMode(
+			let newMode: ChatbotAgentMode
+			if (chatSettings.modeSystem === "cline") {
+				// Cline 모드: plan ↔ act 토글
+				newMode = chatSettings.mode === "plan" ? ChatbotAgentMode.AGENT_MODE : ChatbotAgentMode.CHATBOT_MODE
+			} else {
+				// Caret 모드: chatbot ↔ agent 토글
+				newMode = chatSettings.mode === "chatbot" ? ChatbotAgentMode.AGENT_MODE : ChatbotAgentMode.CHATBOT_MODE
+			}
+
+				const response = await StateServiceClient.toggleChatbotAgentMode(
 					ToggleChatbotAgentModeRequest.create({
 						chatSettings: {
 							mode: newMode,
@@ -1063,15 +1065,15 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				)
 				// Focus the textarea after mode toggle with slight delay
 				setTimeout(() => {
-					if (response.value) {
+					if (response) {
 						setInputValue("")
 					}
 					textAreaRef.current?.focus()
 				}, 100)
 			}, changeModeDelay)
 		}, [
-			chatSettings.mode,
-			chatSettings.modeSystem,
+			chatSettings?.mode,
+			chatSettings?.modeSystem,
 			showModelSelector,
 			submitApiConfig,
 			inputValue,
@@ -1636,7 +1638,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								isDraggingOver && !showUnsupportedFileError // Only show drag outline if not showing error
 									? "2px dashed var(--vscode-focusBorder)"
 									: isTextAreaFocused
-										? `1px solid ${chatSettings.mode === "chatbot" ? CHATBOT_MODE_COLOR : "var(--vscode-focusBorder)"}`
+										? `1px solid ${chatSettings?.mode === "chatbot" ? CHATBOT_MODE_COLOR : "var(--vscode-focusBorder)"}`
 										: "none",
 							outlineOffset: isDraggingOver && !showUnsupportedFileError ? "1px" : "0px", // Add offset for drag-over outline
 						}}
@@ -1802,8 +1804,8 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						visible={shownTooltipMode !== null}
 						tipText={
 							shownTooltipMode === "agent"
-								? t(`mode.tooltip.${chatSettings.modeSystem === "cline" ? "act" : "agent"}`)
-								: t(`mode.tooltip.${chatSettings.modeSystem === "cline" ? "plan" : "chatbot"}`)
+								? t(`mode.tooltip.${chatSettings?.modeSystem === "cline" ? "act" : "agent"}`)
+								: t(`mode.tooltip.${chatSettings?.modeSystem === "cline" ? "plan" : "chatbot"}`)
 						}
 						hintText={t("mode.tooltip.toggle", "common").replace("{{metaKey}}", metaKeyChar)}>
 						<SwitchContainer
@@ -1812,35 +1814,35 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 							onClick={onChatbotAgentModeToggle}>
 							<Slider
 								isAgent={
-									chatSettings.modeSystem === "cline"
-										? chatSettings.mode === "act"
-										: chatSettings.mode === "agent"
+									chatSettings?.modeSystem === "cline"
+										? chatSettings?.mode === "act"
+										: chatSettings?.mode === "agent"
 								}
 								isChatbot={
-									chatSettings.modeSystem === "cline"
-										? chatSettings.mode === "plan"
-										: chatSettings.mode === "chatbot"
+									chatSettings?.modeSystem === "cline"
+										? chatSettings?.mode === "plan"
+										: chatSettings?.mode === "chatbot"
 								}
 							/>
 							<SwitchOption
 								isActive={
-									chatSettings.modeSystem === "cline"
-										? chatSettings.mode === "plan"
-										: chatSettings.mode === "chatbot"
+									chatSettings?.modeSystem === "cline"
+										? chatSettings?.mode === "plan"
+										: chatSettings?.mode === "chatbot"
 								}
 								onMouseOver={() => setShownTooltipMode("chatbot")}
 								onMouseLeave={() => setShownTooltipMode(null)}>
-								{t(`mode.${chatSettings.modeSystem === "cline" ? "plan" : "chatbot"}.label`)}
+								{t(`mode.${chatSettings?.modeSystem === "cline" ? "plan" : "chatbot"}.label`)}
 							</SwitchOption>
 							<SwitchOption
 								isActive={
-									chatSettings.modeSystem === "cline"
-										? chatSettings.mode === "act"
-										: chatSettings.mode === "agent"
+									chatSettings?.modeSystem === "cline"
+										? chatSettings?.mode === "act"
+										: chatSettings?.mode === "agent"
 								}
 								onMouseOver={() => setShownTooltipMode("agent")}
 								onMouseLeave={() => setShownTooltipMode(null)}>
-								{t(`mode.${chatSettings.modeSystem === "cline" ? "act" : "agent"}.label`)}
+								{t(`mode.${chatSettings?.modeSystem === "cline" ? "act" : "agent"}.label`)}
 							</SwitchOption>
 						</SwitchContainer>
 					</Tooltip>

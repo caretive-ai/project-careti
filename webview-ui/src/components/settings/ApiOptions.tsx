@@ -80,7 +80,6 @@ import OllamaModelPicker from "./OllamaModelPicker"
 import OpenRouterModelPicker, { ModelDescriptionMarkdown, OPENROUTER_MODEL_PICKER_Z_INDEX } from "./OpenRouterModelPicker"
 import RequestyModelPicker from "./RequestyModelPicker"
 import ThinkingBudgetSlider from "./ThinkingBudgetSlider"
-import { getModeSpecificFields } from "./utils/providerUtils"
 import { ExtensionMessage } from "@shared/ExtensionMessage"
 import FeaturedModelCard from "./FeaturedModelCard" // CARET MODIFICATION: Added FeaturedModelCard import
 
@@ -190,6 +189,7 @@ const ApiOptions = ({
 	modelIdErrorMessage,
 	isPopup,
 	saveImmediately = false, // Default to false
+	currentMode,
 }: ApiOptionsProps) => {
 	// Use full context state for immediate save payload
 	const extensionState = useExtensionState()

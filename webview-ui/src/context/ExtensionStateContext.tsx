@@ -1,10 +1,14 @@
 import type React from "react"
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
+import { TelemetrySetting } from "@shared/TelemetrySetting"
+import { useEvent } from "react-use"
 import "../../../src/shared/webview/types"
 import { DEFAULT_AUTO_APPROVAL_SETTINGS } from "@shared/AutoApprovalSettings"
 import { findLastIndex } from "@shared/array"
 import { DEFAULT_BROWSER_SETTINGS } from "@shared/BrowserSettings"
-import { DEFAULT_PLATFORM, type ExtensionState } from "@shared/ExtensionMessage"
+import { ChatSettings } from "@shared/ChatSettings"
+import { ApiConfiguration } from "@shared/api"
+import { DEFAULT_PLATFORM, type ExtensionState, ExtensionMessage } from "@shared/ExtensionMessage"
 import { DEFAULT_MCP_DISPLAY_MODE } from "@shared/McpDisplayMode"
 import type { UserInfo } from "@shared/proto/cline/account"
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
@@ -36,7 +40,8 @@ import { convertTextMateToHljs } from "../utils/textMateToHljs"
 
 // CARET MODIFICATION: Added caretBanner property for Caret welcome page
 // Original backed up to: ExtensionStateContext-tsx.cline
-export interface ExtensionStateContextType extends ExtensionState { // CARET MODIFICATION: ExtensionStateContextType export
+export interface ExtensionStateContextType extends ExtensionState {
+	// CARET MODIFICATION: ExtensionStateContextType export
 	didHydrateState: boolean
 	showWelcome: boolean
 	theme: Record<string, string> | undefined
@@ -67,6 +72,7 @@ export interface ExtensionStateContextType extends ExtensionState { // CARET MOD
 	// Setters
 	setShowAnnouncement: (value: boolean) => void
 	setShouldShowAnnouncement: (value: boolean) => void
+
 	setPlanActSeparateModelsSetting: (value: boolean) => void
 	setEnableCheckpointsSetting: (value: boolean) => void
 	setMcpMarketplaceEnabled: (value: boolean) => void
@@ -120,6 +126,9 @@ export interface ExtensionStateContextType extends ExtensionState { // CARET MOD
 	hideAnnouncement: () => void
 	closeMcpView: () => void
 
+	// API Configuration setter
+	setApiConfiguration: (apiConfiguration: ApiConfiguration) => void
+
 	// Event callbacks
 	onRelinquishControl: (callback: () => void) => () => void
 }
@@ -140,6 +149,9 @@ export const ExtensionStateContextProvider: React.FC<{
 	const [showHistory, setShowHistory] = useState(false)
 	const [showAccount, setShowAccount] = useState(false)
 	const [showAnnouncement, setShowAnnouncement] = useState(false)
+
+	// Subscribe reference
+	const didBecomeVisibleUnsubscribeRef = useRef<(() => void) | null>(null)
 
 	// Helper for MCP view
 	const closeMcpView = useCallback(() => {
@@ -284,7 +296,6 @@ export const ExtensionStateContextProvider: React.FC<{
 		}
 	}, [])
 
-
 	useEvent("message", handleMessage)
 
 	// References to store subscription cancellation functions
@@ -387,8 +398,8 @@ export const ExtensionStateContextProvider: React.FC<{
 										config.awsRegion,
 										config.vertexProjectId,
 										config.openAiApiKey,
-										config.ollamaModelId,
-										config.lmStudioModelId,
+										config.planModeOllamaModelId || config.actModeOllamaModelId,
+										config.planModeLmStudioModelId || config.actModeLmStudioModelId,
 										config.liteLlmApiKey,
 										config.geminiApiKey,
 										config.openAiNativeApiKey,
@@ -398,7 +409,7 @@ export const ExtensionStateContextProvider: React.FC<{
 										config.qwenApiKey,
 										config.doubaoApiKey,
 										config.mistralApiKey,
-										config.vsCodeLmModelSelector,
+										config.planModeVsCodeLmModelSelector || config.actModeVsCodeLmModelSelector,
 										config.caretApiKey,
 										config.asksageApiKey,
 										config.xaiApiKey,
@@ -846,10 +857,14 @@ export const ExtensionStateContextProvider: React.FC<{
 					UpdateSettingsRequest.create({
 						telemetrySetting: value,
 						chatSettings: state.chatSettings
-							? (await import("@shared/proto-conversions/state/chat-settings-conversion")).convertChatSettingsToProtoChatSettings(state.chatSettings)
+							? (
+									await import("@shared/proto-conversions/state/chat-settings-conversion")
+								).convertChatSettingsToProtoChatSettings(state.chatSettings)
 							: undefined,
 						apiConfiguration: state.apiConfiguration
-							? (await import("@shared/proto-conversions/state/settings-conversion")).convertApiConfigurationToProtoApiConfiguration(state.apiConfiguration)
+							? (
+									await import("@shared/proto-conversions/state/settings-conversion")
+								).convertApiConfigurationToProtoApiConfiguration(state.apiConfiguration)
 							: undefined,
 						chatbotAgentSeparateModelsSetting: state.planActSeparateModelsSetting,
 						enableCheckpointsSetting: state.enableCheckpointsSetting,
@@ -860,48 +875,83 @@ export const ExtensionStateContextProvider: React.FC<{
 				)
 				setState((prevState) => ({
 					...prevState,
-					telemetrySetting: value,
+					telemetrySetting: value as TelemetrySetting,
 				}))
 			} catch (error) {
 				console.error("Failed to update telemetry setting:", error)
 			}
 		},
-		setMcpRichDisplayEnabled: async (value: boolean) => {
-			try {
-				await StateServiceClient.updateSettings(
-					UpdateSettingsRequest.create({
-						mcpRichDisplayEnabled: value,
-						telemetrySetting: state.telemetrySetting,
-						chatSettings: state.chatSettings
-							? (await import("@shared/proto-conversions/state/chat-settings-conversion")).convertChatSettingsToProtoChatSettings(state.chatSettings)
-							: undefined,
-						apiConfiguration: state.apiConfiguration
-							? (await import("@shared/proto-conversions/state/settings-conversion")).convertApiConfigurationToProtoApiConfiguration(state.apiConfiguration)
-							: undefined,
-						chatbotAgentSeparateModelsSetting: state.planActSeparateModelsSetting,
-						enableCheckpointsSetting: state.enableCheckpointsSetting,
-						mcpMarketplaceEnabled: state.mcpMarketplaceEnabled,
-						mcpResponsesCollapsed: state.mcpResponsesCollapsed,
-					}),
-				)
-				setState((prevState) => ({
-					...prevState,
-					mcpRichDisplayEnabled: value,
-				}))
-			} catch (error) {
-				console.error("Failed to update MCP rich display setting:", error)
-			}
-		},
+
 		setShowMcp,
 		closeMcpView,
+		setApiConfiguration: (apiConfiguration: ApiConfiguration) => {
+			setState((prevState) => ({
+				...prevState,
+				apiConfiguration,
+			}))
+		},
+		setPlanActSeparateModelsSetting: (value: boolean) => {
+			setState((prevState) => ({
+				...prevState,
+				planActSeparateModelsSetting: value,
+			}))
+		},
+		setEnableCheckpointsSetting: (value: boolean) => {
+			setState((prevState) => ({
+				...prevState,
+				enableCheckpointsSetting: value,
+			}))
+		},
+		setMcpMarketplaceEnabled: (value: boolean) => {
+			setState((prevState) => ({
+				...prevState,
+				mcpMarketplaceEnabled: value,
+			}))
+		},
+		setMcpRichDisplayEnabled: (value: boolean) => {
+			setState((prevState) => ({
+				...prevState,
+				mcpRichDisplayEnabled: value,
+			}))
+		},
+		setMcpResponsesCollapsed: (value: boolean) => {
+			setState((prevState) => ({
+				...prevState,
+				mcpResponsesCollapsed: value,
+			}))
+		},
+		setShellIntegrationTimeout: (value: number) => {
+			setState((prevState) => ({
+				...prevState,
+				shellIntegrationTimeout: value,
+			}))
+		},
+		setTerminalReuseEnabled: (value: boolean) => {
+			setState((prevState) => ({
+				...prevState,
+				terminalReuseEnabled: value,
+			}))
+		},
+		setTerminalOutputLineLimit: (value: number) => {
+			setState((prevState) => ({
+				...prevState,
+				terminalOutputLineLimit: value,
+			}))
+		},
+		setDefaultTerminalProfile: (value: string) => {
+			setState((prevState) => ({
+				...prevState,
+				defaultTerminalProfile: value,
+			}))
+		},
 		setChatSettings: async (value) => {
 			try {
 				// CARET MODIFICATION: Mission 2 - 간단한 로깅으로 모드 동기화 문제 추적
 				const { caretWebviewLogger } = await import("../caret/utils/webview-logger")
 				caretWebviewLogger.info("📤 [SEND] setChatSettings called", {
-					currentMode: state.chatSettings.mode,
+					currentMode: state.chatSettings?.mode,
 					newMode: value.mode,
-					modeChanged: state.chatSettings.mode !== value.mode,
+					modeChanged: state.chatSettings?.mode !== value.mode,
 				})
 
 				// Import the conversion functions
@@ -939,6 +989,119 @@ export const ExtensionStateContextProvider: React.FC<{
 				caretWebviewLogger.info("🔄 [SYNC] setChatSettings completed")
 			} catch (error) {
 				console.error("Failed to update chat settings:", error)
+			}
+		},
+		// CARET MODIFICATION: UI Language setter
+		setUILanguage: async (language: string) => {
+			if (state.chatSettings) {
+				const updatedSettings = { ...state.chatSettings, uiLanguage: language }
+				await StateServiceClient.updateSettings(
+					UpdateSettingsRequest.create({
+						chatSettings: (
+							await import("@shared/proto-conversions/state/chat-settings-conversion")
+						).convertChatSettingsToProtoChatSettings(updatedSettings),
+						telemetrySetting: state.telemetrySetting,
+						apiConfiguration: state.apiConfiguration
+							? (
+									await import("@shared/proto-conversions/state/settings-conversion")
+								).convertApiConfigurationToProtoApiConfiguration(state.apiConfiguration)
+							: undefined,
+					}),
+				)
+				setState((prevState) => ({
+					...prevState,
+					chatSettings: updatedSettings,
+				}))
+			}
+		},
+		// CARET MODIFICATION: Mode System setter
+		setModeSystem: async (modeSystem: string) => {
+			if (state.chatSettings) {
+				const updatedSettings = { ...state.chatSettings, modeSystem }
+				await StateServiceClient.updateSettings(
+					UpdateSettingsRequest.create({
+						chatSettings: (
+							await import("@shared/proto-conversions/state/chat-settings-conversion")
+						).convertChatSettingsToProtoChatSettings(updatedSettings),
+						telemetrySetting: state.telemetrySetting,
+						apiConfiguration: state.apiConfiguration
+							? (
+									await import("@shared/proto-conversions/state/settings-conversion")
+								).convertApiConfigurationToProtoApiConfiguration(state.apiConfiguration)
+							: undefined,
+					}),
+				)
+				setState((prevState) => ({
+					...prevState,
+					chatSettings: updatedSettings,
+				}))
+			}
+		},
+		// CARET MODIFICATION: Rule toggles setters
+		setGlobalClineRulesToggles: (toggles: Record<string, boolean>) => {
+			setState((prevState) => ({
+				...prevState,
+				globalClineRulesToggles: toggles,
+			}))
+		},
+		setLocalClineRulesToggles: (toggles: Record<string, boolean>) => {
+			setState((prevState) => ({
+				...prevState,
+				localClineRulesToggles: toggles,
+			}))
+		},
+		setLocalCaretRulesToggles: (toggles: Record<string, boolean>) => {
+			setState((prevState) => ({
+				...prevState,
+				localCaretRulesToggles: toggles,
+			}))
+		},
+		setLocalCursorRulesToggles: (toggles: Record<string, boolean>) => {
+			setState((prevState) => ({
+				...prevState,
+				localCursorRulesToggles: toggles,
+			}))
+		},
+		setLocalWindsurfRulesToggles: (toggles: Record<string, boolean>) => {
+			setState((prevState) => ({
+				...prevState,
+				localWindsurfRulesToggles: toggles,
+			}))
+		},
+		setLocalWorkflowToggles: (toggles: Record<string, boolean>) => {
+			setState((prevState) => ({
+				...prevState,
+				localWorkflowToggles: toggles,
+			}))
+		},
+		setGlobalWorkflowToggles: (toggles: Record<string, boolean>) => {
+			setState((prevState) => ({
+				...prevState,
+				globalWorkflowToggles: toggles,
+			}))
+		},
+		setTotalTasksSize: (size: number | null) => {
+			setState((prevState) => ({
+				...prevState,
+				totalTasksSize: size,
+			}))
+		},
+		refreshOpenRouterModels: () => {
+			// Implementation for refreshing OpenRouter models
+		},
+		setUserInfo: (user: any) => {
+			setState((prevState) => ({
+				...prevState,
+				userInfo: user,
+			}))
+		},
+		setMcpTab: (tab: McpViewTab | undefined) => {
+			setMcpTab(tab)
+		},
+		onRelinquishControl: (callback: () => void) => {
+			// Return unsubscribe function
+			return () => {
+				// Cleanup logic
 			}
 		},
 	}

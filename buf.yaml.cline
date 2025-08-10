@@ -15,9 +15,6 @@ lint:
         - PACKAGE_VERSION_SUFFIX # package name does not contain version.
         - ENUM_VALUE_PREFIX # enum values dont start with the enum name.
         - ENUM_ZERO_VALUE_SUFFIX # first value does not have to be UNSPECIFIED.
-        # CARET MODIFICATION: Allow package/directory name mismatch (caret package in cline directory)
-        - PACKAGE_DIRECTORY_MATCH # package name doesn't need to match directory structure
-        - PACKAGE_SAME_DIRECTORY # allow multiple directories to contain same package
 
 # breaking:
 #   use:

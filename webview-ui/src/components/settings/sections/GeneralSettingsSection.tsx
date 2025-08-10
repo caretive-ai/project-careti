@@ -3,19 +3,22 @@ import { useExtensionState } from "@/context/ExtensionStateContext"
 import { updateSetting } from "../utils/settingsHandlers"
 import PreferredLanguageSetting from "../PreferredLanguageSetting"
 import Section from "../Section"
+import { ChatSettings } from "@shared/ChatSettings"
 
 interface GeneralSettingsSectionProps {
 	renderSectionHeader: (tabId: string) => JSX.Element | null
+	chatSettings: ChatSettings
+	setChatSettings: (settings: ChatSettings) => void
 }
 
-const GeneralSettingsSection = ({ renderSectionHeader }: GeneralSettingsSectionProps) => {
+const GeneralSettingsSection = ({ renderSectionHeader, chatSettings, setChatSettings }: GeneralSettingsSectionProps) => {
 	const { telemetrySetting } = useExtensionState()
 
 	return (
 		<div>
 			{renderSectionHeader("general")}
 			<Section>
-				<PreferredLanguageSetting />
+				<PreferredLanguageSetting chatSettings={chatSettings} setChatSettings={setChatSettings} />
 
 				<div className="mb-[5px]">
 					<VSCodeCheckbox

@@ -20,6 +20,8 @@ import { useExtensionState } from "@/context/ExtensionStateContext"
 import { FileServiceClient, TaskServiceClient } from "@/services/grpc-client"
 import { findMatchingResourceOrTemplate, getMcpServerDisplayName } from "@/utils/mcp"
 import { vscode } from "@/utils/vscode"
+import WebviewLogger from "@/caret/utils/webview-logger"
+import { t } from "@/caret/utils/i18n"
 import {
 	ClineApiReqInfo,
 	ClineAskQuestion,
@@ -45,6 +47,9 @@ const errorColor = "var(--vscode-errorForeground)"
 const successColor = "var(--vscode-charts-green)"
 const cancelledColor = "var(--vscode-descriptionForeground)"
 
+// CARET MODIFICATION: WebviewLogger 초기화
+const logger = new WebviewLogger("[CHAT-ROW]")
+
 const ChatRowContainer = styled.div`
 	padding: 10px 6px 10px 15px;
 	position: relative;
@@ -57,7 +62,7 @@ const ChatRowContainer = styled.div`
 interface ChatRowProps {
 	message: ClineMessage
 	isExpanded: boolean
-	onToggleExpand: () => void
+	onToggleExpand: (ts: number) => void
 	lastModifiedMessage?: ClineMessage
 	isLast: boolean
 	onHeightChange: (isTaller: boolean) => void
@@ -495,15 +500,15 @@ export const ChatRowContent = ({
 						<div style={headerStyle}>
 							{toolIcon("edit")}
 							{tool.operationIsLocatedInWorkspace === false &&
-								toolIcon("sign-out", "yellow", -90, "This file is outside of your workspace")}
-							<span style={{ fontWeight: "bold" }}>Cline wants to edit this file:</span>
+								toolIcon("sign-out", "yellow", -90, t("chat.fileOutsideWorkspace", "common"))}
+							<span style={{ fontWeight: "bold" }}>{t("chat.caretWantsToEditFile", "common")}</span>
 						</div>
 						<CodeAccordian
 							// isLoading={message.partial}
 							code={tool.content}
 							path={tool.path!}
 							isExpanded={isExpanded}
-							onToggleExpand={onToggleExpand}
+							onToggleExpand={() => onToggleExpand(message.ts)}
 						/>
 					</>
 				)
@@ -513,15 +518,15 @@ export const ChatRowContent = ({
 						<div style={headerStyle}>
 							{toolIcon("new-file")}
 							{tool.operationIsLocatedInWorkspace === false &&
-								toolIcon("sign-out", "yellow", -90, "This file is outside of your workspace")}
-							<span style={{ fontWeight: "bold" }}>Cline wants to create a new file:</span>
+								toolIcon("sign-out", "yellow", -90, t("chat.fileOutsideWorkspace", "common"))}
+							<span style={{ fontWeight: "bold" }}>{t("chat.caretWantsToCreateFile", "common")}</span>
 						</div>
 						<CodeAccordian
 							isLoading={message.partial}
 							code={tool.content!}
 							path={tool.path!}
 							isExpanded={isExpanded}
-							onToggleExpand={onToggleExpand}
+							onToggleExpand={() => onToggleExpand(message.ts)}
 						/>
 					</>
 				)
@@ -531,7 +536,7 @@ export const ChatRowContent = ({
 						<div style={headerStyle}>
 							{toolIcon("file-code")}
 							{tool.operationIsLocatedInWorkspace === false &&
-								toolIcon("sign-out", "yellow", -90, "This file is outside of your workspace")}
+								toolIcon("sign-out", "yellow", -90, t("chat.fileOutsideWorkspace", "common"))}
 							<span style={{ fontWeight: "bold" }}>
 								{/* {message.type === "ask" ? "" : "Cline read this file:"} */}
 								Cline wants to read this file:
@@ -558,7 +563,7 @@ export const ChatRowContent = ({
 								}}
 								onClick={() => {
 									FileServiceClient.openFile(StringRequest.create({ value: tool.content })).catch((err) =>
-										console.error("Failed to open file:", err),
+										logger.error("Failed to open file:", err),
 									)
 								}}>
 								{tool.path?.startsWith(".") && <span>.</span>}
@@ -591,7 +596,7 @@ export const ChatRowContent = ({
 						<div style={headerStyle}>
 							{toolIcon("folder-opened")}
 							{tool.operationIsLocatedInWorkspace === false &&
-								toolIcon("sign-out", "yellow", -90, "This is outside of your workspace")}
+								toolIcon("sign-out", "yellow", -90, t("chat.outsideWorkspace", "common"))}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask"
 									? "Cline wants to view the top level files in this directory:"
@@ -603,7 +608,7 @@ export const ChatRowContent = ({
 							path={tool.path!}
 							language="shell-session"
 							isExpanded={isExpanded}
-							onToggleExpand={onToggleExpand}
+							onToggleExpand={() => onToggleExpand(message.ts)}
 						/>
 					</>
 				)
@@ -613,7 +618,7 @@ export const ChatRowContent = ({
 						<div style={headerStyle}>
 							{toolIcon("folder-opened")}
 							{tool.operationIsLocatedInWorkspace === false &&
-								toolIcon("sign-out", "yellow", -90, "This is outside of your workspace")}
+								toolIcon("sign-out", "yellow", -90, t("chat.outsideWorkspace", "common"))}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask"
 									? "Cline wants to recursively view all files in this directory:"
@@ -625,7 +630,7 @@ export const ChatRowContent = ({
 							path={tool.path!}
 							language="shell-session"
 							isExpanded={isExpanded}
-							onToggleExpand={onToggleExpand}
+							onToggleExpand={() => onToggleExpand(message.ts)}
 						/>
 					</>
 				)
@@ -635,7 +640,7 @@ export const ChatRowContent = ({
 						<div style={headerStyle}>
 							{toolIcon("file-code")}
 							{tool.operationIsLocatedInWorkspace === false &&
-								toolIcon("sign-out", "yellow", -90, "This file is outside of your workspace")}
+								toolIcon("sign-out", "yellow", -90, t("chat.fileOutsideWorkspace", "common"))}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask"
 									? "Cline wants to view source code definition names used in this directory:"
@@ -646,7 +651,7 @@ export const ChatRowContent = ({
 							code={tool.content!}
 							path={tool.path!}
 							isExpanded={isExpanded}
-							onToggleExpand={onToggleExpand}
+							onToggleExpand={() => onToggleExpand(message.ts)}
 						/>
 					</>
 				)
@@ -656,7 +661,7 @@ export const ChatRowContent = ({
 						<div style={headerStyle}>
 							{toolIcon("search")}
 							{tool.operationIsLocatedInWorkspace === false &&
-								toolIcon("sign-out", "yellow", -90, "This is outside of your workspace")}
+								toolIcon("sign-out", "yellow", -90, t("chat.outsideWorkspace", "common"))}
 							<span style={{ fontWeight: "bold" }}>
 								Cline wants to search this directory for <code>{tool.regex}</code>:
 							</span>
@@ -666,7 +671,7 @@ export const ChatRowContent = ({
 							path={tool.path! + (tool.filePattern ? `/(${tool.filePattern})` : "")}
 							language="plaintext"
 							isExpanded={isExpanded}
-							onToggleExpand={onToggleExpand}
+							onToggleExpand={() => onToggleExpand(message.ts)}
 						/>
 					</>
 				)
@@ -676,11 +681,11 @@ export const ChatRowContent = ({
 						<div style={headerStyle}>
 							<span className="codicon codicon-link" style={{ color: normalColor, marginBottom: "-1.5px" }}></span>
 							{tool.operationIsLocatedInWorkspace === false &&
-								toolIcon("sign-out", "yellow", -90, "This URL is external")}
+								toolIcon("sign-out", "yellow", -90, t("chat.externalUrl", "common"))}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask"
-									? "Cline wants to fetch content from this URL:"
-									: "Cline fetched content from this URL:"}
+									? t("chat.caretWantsToFetchUrl", "common")
+									: t("chat.caretFetchedUrl", "common")}
 							</span>
 						</div>
 						<div
@@ -784,7 +789,7 @@ export const ChatRowContent = ({
 					{output.length > 0 && (
 						<div style={{ width: "100%" }}>
 							<div
-								onClick={onToggleExpand}
+								onClick={() => onToggleExpand(message.ts)}
 								style={{
 									display: "flex",
 									alignItems: "center",
@@ -883,7 +888,7 @@ export const ChatRowContent = ({
 										code={useMcpServer.arguments}
 										language="json"
 										isExpanded={true}
-										onToggleExpand={onToggleExpand}
+										onToggleExpand={() => onToggleExpand(message.ts)}
 									/>
 								</div>
 							)}
@@ -912,7 +917,7 @@ export const ChatRowContent = ({
 									MozUserSelect: "none",
 									msUserSelect: "none",
 								}}
-								onClick={onToggleExpand}>
+								onClick={() => onToggleExpand(message.ts)}>
 								<div
 									style={{
 										display: "flex",
@@ -991,7 +996,7 @@ export const ChatRowContent = ({
 										code={JSON.parse(message.text || "{}").request}
 										language="markdown"
 										isExpanded={true}
-										onToggleExpand={onToggleExpand}
+										onToggleExpand={() => onToggleExpand(message.ts)}
 									/>
 								</div>
 							)}
@@ -1055,7 +1060,7 @@ export const ChatRowContent = ({
 						<>
 							{message.text && (
 								<div
-									onClick={onToggleExpand}
+									onClick={() => onToggleExpand(message.ts)}
 									style={{
 										// marginBottom: 15,
 										cursor: "pointer",
@@ -1129,7 +1134,7 @@ export const ChatRowContent = ({
 								diff={tool.diff!}
 								isFeedback={true}
 								isExpanded={isExpanded}
-								onToggleExpand={onToggleExpand}
+								onToggleExpand={() => onToggleExpand(message.ts)}
 							/>
 						</div>
 					)
@@ -1298,7 +1303,7 @@ export const ChatRowContent = ({
 												Int64Request.create({
 													value: message.ts,
 												}),
-											).catch((err) => console.error("Failed to show task completion view changes:", err))
+											).catch((err) => logger.error("Failed to show task completion view changes:", err))
 										}}
 										style={{
 											cursor: seeNewChangesDisabled ? "wait" : "pointer",
@@ -1465,7 +1470,7 @@ export const ChatRowContent = ({
 														value: message.ts,
 													}),
 												).catch((err) =>
-													console.error("Failed to show task completion view changes:", err),
+													logger.error("Failed to show task completion view changes:", err),
 												)
 											}}>
 											<i

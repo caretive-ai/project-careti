@@ -49,9 +49,9 @@ export const FirebaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
 				type: "authStateChanged",
 				user: user
 					? {
-							displayName: user.displayName,
-							email: user.email,
-							photoUrl: user.photoURL,
+							displayName: user.displayName || undefined,
+							email: user.email || undefined,
+							photoUrl: user.photoURL || undefined,
 						}
 					: null,
 			})
@@ -74,21 +74,21 @@ export const FirebaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
 	)
 
 	// Set up authCallback subscription
-	useEffect(() => {
-		const cleanup = AccountServiceClient.subscribeToAuthCallback(EmptyRequest.create({}), {
-			onResponse: (event: any) => {
-				if (event.value) {
-					signInWithToken(event.value)
-				}
-			},
-			onError: (error: any) => {
-				console.error("Error in authCallback subscription:", error)
-			},
-			onComplete: () => {},
-		})
+	// useEffect(() => {
+	// 	const cleanup = AccountServiceClient.subscribeToAuthCallback(EmptyRequest.create({}), {
+	// 		onResponse: (event: any) => {
+	// 			if (event.value) {
+	// 				signInWithToken(event.value)
+	// 			}
+	// 		},
+	// 		onError: (error: any) => {
+	// 			console.error("Error in authCallback subscription:", error)
+	// 		},
+	// 		onComplete: () => {},
+	// 	})
 
-		return cleanup
-	}, [signInWithToken])
+	// 	return cleanup
+	// }, [signInWithToken])
 
 	const handleSignOut = useCallback(async () => {
 		try {

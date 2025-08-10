@@ -43,11 +43,11 @@ export const TerminalSettingsSection: React.FC = () => {
 		setShellIntegrationTimeout(timeout)
 
 		StateServiceClient.updateTerminalConnectionTimeout({
-			value: timeout,
-		} as Int64Request)
-			.then((response: Int64) => {
-				setShellIntegrationTimeout(response.value)
-				setInputValue((response.value / 1000).toString())
+			timeoutMs: timeout,
+		})
+			.then((response) => {
+				setShellIntegrationTimeout(response.timeoutMs || timeout)
+				setInputValue(((response.timeoutMs || timeout) / 1000).toString())
 			})
 			.catch((error) => {
 				console.error("Failed to update terminal connection timeout:", error)

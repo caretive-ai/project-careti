@@ -90,7 +90,7 @@ const WelcomeView = () => {
 
 	useEffect(() => {
 		// CARET MODIFICATION: 다국어 에러 메시지 적용
-		setApiErrorMessage(validateApiConfiguration(apiConfiguration, currentLanguage))
+		setApiErrorMessage(validateApiConfiguration(apiConfiguration, "agent", currentLanguage))
 	}, [apiConfiguration, currentLanguage])
 
 	// CARET DEBUG: Add console.log to check the value of caretBanner
@@ -228,22 +228,26 @@ const WelcomeView = () => {
 							<label style={{ display: "block", marginBottom: "5px", fontWeight: "500" }}>
 								{t("getStarted.uiLanguage", "welcome", currentLanguage)}
 							</label>
-							<CaretUILanguageSetting
-								chatSettings={chatSettings}
-								setChatSettings={setChatSettings}
-								hideLabel={true}
-							/>
+							{chatSettings && (
+								<CaretUILanguageSetting
+									chatSettings={chatSettings}
+									setChatSettings={setChatSettings}
+									hideLabel={true}
+								/>
+							)}
 						</div>
 						{/* AI 응답 언어 (오른쪽) */}
 						<div style={{ flex: "1", minWidth: "200px" }}>
 							<label style={{ display: "block", marginBottom: "5px", fontWeight: "500" }}>
 								{t("getStarted.preferredLanguage", "welcome", currentLanguage)}
 							</label>
-							<PreferredLanguageSetting
-								chatSettings={chatSettings}
-								setChatSettings={setChatSettings}
-								hideLabel={true}
-							/>
+							{chatSettings && (
+								<PreferredLanguageSetting
+									chatSettings={chatSettings}
+									setChatSettings={setChatSettings}
+									hideLabel={true}
+								/>
+							)}
 						</div>
 					</div>
 					{/* 시작하기 버튼 - 컨테이너 안에서 적당히 넓게, 높이만 GitHub 저장소 버튼과 같게 */}

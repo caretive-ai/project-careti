@@ -84,17 +84,21 @@ const FeatureSettingsSection = () => {
 				</label>
 				<VSCodeDropdown
 					id="openai-reasoning-effort-dropdown"
-					currentValue={chatSettings.openAIReasoningEffort || "medium"}
+					currentValue={chatSettings?.openAIReasoningEffort || "medium"}
 					onChange={(e: any) => {
 						const newValue = e.target.currentValue as OpenAIReasoningEffort
-						setChatSettings({
-							...chatSettings,
-							openAIReasoningEffort: newValue,
-						})
+						if (chatSettings) {
+							setChatSettings({
+								...chatSettings,
+								openAIReasoningEffort: newValue,
+							})
+						}
 					}}
 					className="w-full">
 					<VSCodeOption value="low">{t("features.reasoningEffort.low", "settings", currentLanguage)}</VSCodeOption>
-					<VSCodeOption value="medium">{t("features.reasoningEffort.medium", "settings", currentLanguage)}</VSCodeOption>
+					<VSCodeOption value="medium">
+						{t("features.reasoningEffort.medium", "settings", currentLanguage)}
+					</VSCodeOption>
 					<VSCodeOption value="high">{t("features.reasoningEffort.high", "settings", currentLanguage)}</VSCodeOption>
 				</VSCodeDropdown>
 				<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">

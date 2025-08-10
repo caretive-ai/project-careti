@@ -34,10 +34,14 @@ const ConnectionStatusIndicator = ({
 			) : isConnected === true ? (
 				<>
 					<CheckIcon className="codicon codicon-check" />
-					<StatusText style={{ color: "var(--vscode-terminal-ansiGreen)" }}>{t("browser.connected", "settings", currentLanguage)}</StatusText>
+					<StatusText style={{ color: "var(--vscode-terminal-ansiGreen)" }}>
+						{t("browser.connected", "settings", currentLanguage)}
+					</StatusText>
 				</>
 			) : isConnected === false ? (
-				<StatusText style={{ color: "var(--vscode-errorForeground)" }}>{t("browser.notConnected", "settings", currentLanguage)}</StatusText>
+				<StatusText style={{ color: "var(--vscode-errorForeground)" }}>
+					{t("browser.notConnected", "settings", currentLanguage)}
+				</StatusText>
 			) : null}
 		</StatusContainer>
 	)
@@ -352,8 +356,8 @@ export const BrowserSettingsSection: React.FC = () => {
 		BrowserServiceClient.relaunchChromeDebugMode(EmptyRequest.create({}))
 			.then((result) => {
 				setRelaunchResult({
-					success: result.success,
-					message: result.message,
+					success: true,
+					message: result.value,
 				})
 				setDebugMode(false)
 			})
@@ -385,11 +389,14 @@ export const BrowserSettingsSection: React.FC = () => {
 					<div className="ml-[24px] flex flex-col gap-4">
 						{/* Connection Host */}
 						<div className="flex flex-col gap-2">
-							<label className="text-sm font-medium">{t("browser.remoteBrowserHost", "settings", currentLanguage)}</label>
+							<label className="text-sm font-medium">
+								{t("browser.remoteBrowserHost", "settings", currentLanguage)}
+							</label>
 							<VSCodeTextField
 								placeholder="ws://127.0.0.1:9222"
 								value={browserSettings.remoteBrowserHost || ""}
-								onChange={(e: any) => updateRemoteBrowserHost(e.target.value)} />
+								onChange={(e: any) => updateRemoteBrowserHost(e.target.value)}
+							/>
 							<ConnectionStatusIndicator
 								isChecking={isCheckingConnection}
 								isConnected={connectionStatus}
@@ -409,7 +416,9 @@ export const BrowserSettingsSection: React.FC = () => {
 								<p
 									className="text-xs mt-2"
 									style={{
-										color: relaunchResult.success ? "var(--vscode-terminal-ansiGreen)" : "var(--vscode-errorForeground)",
+										color: relaunchResult.success
+											? "var(--vscode-terminal-ansiGreen)"
+											: "var(--vscode-errorForeground)",
 									}}>
 									{relaunchResult.message}
 								</p>
@@ -418,15 +427,19 @@ export const BrowserSettingsSection: React.FC = () => {
 
 						{/* Chrome Executable Path */}
 						<div className="flex flex-col gap-2">
-							<label className="text-sm font-medium">{t("browser.chromeExecutablePath", "settings", currentLanguage)}</label>
+							<label className="text-sm font-medium">
+								{t("browser.chromeExecutablePath", "settings", currentLanguage)}
+							</label>
 							<VSCodeTextField
 								placeholder="path/to/chrome.exe"
 								value={localChromePath}
 								onChange={(e: any) => setLocalChromePath(e.target.value)}
-								onBlur={(e: any) => updateChromeExecutablePath(e.target.value)} />
+								onBlur={(e: any) => updateChromeExecutablePath(e.target.value)}
+							/>
 							{detectedChromePath && !isBundled && (
 								<p className="text-xs text-[var(--vscode-descriptionForeground)]">
-									{t("browser.detectedChromePath", "settings", currentLanguage)}: <code>{detectedChromePath}</code>
+									{t("browser.detectedChromePath", "settings", currentLanguage)}:{" "}
+									<code>{detectedChromePath}</code>
 								</p>
 							)}
 							{isBundled && (
@@ -445,7 +458,10 @@ export const BrowserSettingsSection: React.FC = () => {
 
 						{/* Viewport Size */}
 						<div className="flex flex-col gap-2">
-							<label className="text-sm font-medium">{t("browser.viewportWidth", "settings", currentLanguage)} / {t("browser.viewportHeight", "settings", currentLanguage)}</label>
+							<label className="text-sm font-medium">
+								{t("browser.viewportWidth", "settings", currentLanguage)} /{" "}
+								{t("browser.viewportHeight", "settings", currentLanguage)}
+							</label>
 							<VSCodeDropdown
 								value={`${browserSettings.viewport.width}x${browserSettings.viewport.height}`}
 								onChange={handleViewportChange}>

@@ -128,4 +128,4 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 	)
 }
 
-export default memo(FeatureSettingsSection)
+export default memo<FeatureSettingsSectionProps>(FeatureSettingsSection)

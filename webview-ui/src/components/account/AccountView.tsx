@@ -60,8 +60,11 @@ const AccountView = ({ onDone, clineUser, organizations, activeOrganization }: A
 }
 
 // CARET MODIFICATION: Use Caret version by default, keeping the original name for compatibility.
-export const ClineAccountView = () => {
-	return <CaretAccountView />
+export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganization }: ClineAccountViewProps) => {
+	// CARET MODIFICATION: Now CaretAccountView accepts props just like ClineAccountView
+	return (
+		<CaretAccountView clineUser={clineUser} userOrganizations={userOrganizations} activeOrganization={activeOrganization} />
+	)
 }
 
 // CARET MODIFICATION: Keep Cline's new account view implementation for reference, but do not export it.

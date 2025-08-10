@@ -71,9 +71,11 @@ export function normalizeApiConfiguration(
 	apiConfiguration: ApiConfiguration | undefined,
 	currentMode: Mode,
 ): NormalizedApiConfig {
+	// CARET MODIFICATION: Map chatbot/agent modes to plan/act fields
+	const effectiveMode = currentMode === "chatbot" ? "plan" : currentMode === "agent" ? "act" : currentMode
 	const provider =
-		(currentMode === "plan" ? apiConfiguration?.planModeApiProvider : apiConfiguration?.actModeApiProvider) || "anthropic"
-	const modelId = currentMode === "plan" ? apiConfiguration?.planModeApiModelId : apiConfiguration?.actModeApiModelId
+		(effectiveMode === "plan" ? apiConfiguration?.planModeApiProvider : apiConfiguration?.actModeApiProvider) || "anthropic"
+	const modelId = effectiveMode === "plan" ? apiConfiguration?.planModeApiModelId : apiConfiguration?.actModeApiModelId
 
 	const getProviderData = (models: Record<string, ModelInfo>, defaultId: string) => {
 		let selectedModelId: string
@@ -293,6 +295,9 @@ export function normalizeApiConfiguration(
  * @returns Object containing mode-specific field values for clean destructuring
  */
 export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undefined, mode: Mode) {
+	// CARET MODIFICATION: Map chatbot/agent modes to plan/act fields
+	const effectiveMode = mode === "chatbot" ? "plan" : mode === "agent" ? "act" : mode
+
 	if (!apiConfiguration) {
 		return {
 			// Core fields
@@ -338,8 +343,8 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 
 	return {
 		// Core fields
-		apiProvider: mode === "plan" ? apiConfiguration.planModeApiProvider : apiConfiguration.actModeApiProvider,
-		apiModelId: mode === "plan" ? apiConfiguration.planModeApiModelId : apiConfiguration.actModeApiModelId,
+		apiProvider: effectiveMode === "plan" ? apiConfiguration.planModeApiProvider : apiConfiguration.actModeApiProvider,
+		apiModelId: effectiveMode === "plan" ? apiConfiguration.planModeApiModelId : apiConfiguration.actModeApiModelId,
 
 		// Provider-specific model IDs
 		togetherModelId: mode === "plan" ? apiConfiguration.planModeTogetherModelId : apiConfiguration.actModeTogetherModelId,
@@ -350,27 +355,33 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 		requestyModelId: mode === "plan" ? apiConfiguration.planModeRequestyModelId : apiConfiguration.actModeRequestyModelId,
 		openAiModelId: mode === "plan" ? apiConfiguration.planModeOpenAiModelId : apiConfiguration.actModeOpenAiModelId,
 		openRouterModelId:
-			mode === "plan" ? apiConfiguration.planModeOpenRouterModelId : apiConfiguration.actModeOpenRouterModelId,
+			effectiveMode === "plan" ? apiConfiguration.planModeOpenRouterModelId : apiConfiguration.actModeOpenRouterModelId,
 		groqModelId: mode === "plan" ? apiConfiguration.planModeGroqModelId : apiConfiguration.actModeGroqModelId,
 		basetenModelId: mode === "plan" ? apiConfiguration.planModeBasetenModelId : apiConfiguration.actModeBasetenModelId,
 		huggingFaceModelId:
-			mode === "plan" ? apiConfiguration.planModeHuggingFaceModelId : apiConfiguration.actModeHuggingFaceModelId,
+			effectiveMode === "plan" ? apiConfiguration.planModeHuggingFaceModelId : apiConfiguration.actModeHuggingFaceModelId,
 		huaweiCloudMaasModelId:
-			mode === "plan" ? apiConfiguration.planModeHuaweiCloudMaasModelId : apiConfiguration.actModeHuaweiCloudMaasModelId,
+			effectiveMode === "plan"
+				? apiConfiguration.planModeHuaweiCloudMaasModelId
+				: apiConfiguration.actModeHuaweiCloudMaasModelId,
 
 		// Model info objects
 		openAiModelInfo: mode === "plan" ? apiConfiguration.planModeOpenAiModelInfo : apiConfiguration.actModeOpenAiModelInfo,
 		liteLlmModelInfo: mode === "plan" ? apiConfiguration.planModeLiteLlmModelInfo : apiConfiguration.actModeLiteLlmModelInfo,
 		openRouterModelInfo:
-			mode === "plan" ? apiConfiguration.planModeOpenRouterModelInfo : apiConfiguration.actModeOpenRouterModelInfo,
+			effectiveMode === "plan" ? apiConfiguration.planModeOpenRouterModelInfo : apiConfiguration.actModeOpenRouterModelInfo,
 		requestyModelInfo:
-			mode === "plan" ? apiConfiguration.planModeRequestyModelInfo : apiConfiguration.actModeRequestyModelInfo,
+			effectiveMode === "plan" ? apiConfiguration.planModeRequestyModelInfo : apiConfiguration.actModeRequestyModelInfo,
 		groqModelInfo: mode === "plan" ? apiConfiguration.planModeGroqModelInfo : apiConfiguration.actModeGroqModelInfo,
 		basetenModelInfo: mode === "plan" ? apiConfiguration.planModeBasetenModelInfo : apiConfiguration.actModeBasetenModelInfo,
 		huggingFaceModelInfo:
-			mode === "plan" ? apiConfiguration.planModeHuggingFaceModelInfo : apiConfiguration.actModeHuggingFaceModelInfo,
+			effectiveMode === "plan"
+				? apiConfiguration.planModeHuggingFaceModelInfo
+				: apiConfiguration.actModeHuggingFaceModelInfo,
 		vsCodeLmModelSelector:
-			mode === "plan" ? apiConfiguration.planModeVsCodeLmModelSelector : apiConfiguration.actModeVsCodeLmModelSelector,
+			effectiveMode === "plan"
+				? apiConfiguration.planModeVsCodeLmModelSelector
+				: apiConfiguration.actModeVsCodeLmModelSelector,
 
 		// AWS Bedrock fields
 		awsBedrockCustomSelected:
@@ -390,7 +401,9 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 
 		// Other mode-specific fields
 		thinkingBudgetTokens:
-			mode === "plan" ? apiConfiguration.planModeThinkingBudgetTokens : apiConfiguration.actModeThinkingBudgetTokens,
+			effectiveMode === "plan"
+				? apiConfiguration.planModeThinkingBudgetTokens
+				: apiConfiguration.actModeThinkingBudgetTokens,
 		reasoningEffort: mode === "plan" ? apiConfiguration.planModeReasoningEffort : apiConfiguration.actModeReasoningEffort,
 	}
 }

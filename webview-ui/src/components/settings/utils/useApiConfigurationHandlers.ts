@@ -61,7 +61,14 @@ export const useApiConfigurationHandlers = () => {
 		currentMode: Mode,
 	) => {
 		if (planActSeparateModelsSetting) {
-			const targetField = fieldPair[currentMode]
+			// CARET MODIFICATION: Map chatbot/agent modes to plan/act fields
+			const modeMapping: Record<Mode, keyof typeof fieldPair> = {
+				plan: "plan",
+				act: "act",
+				chatbot: "plan", // chatbot uses plan field
+				agent: "act", // agent uses act field
+			}
+			const targetField = fieldPair[modeMapping[currentMode]]
 			await handleFieldChange(targetField, value)
 		} else {
 			await handleFieldsChange({
@@ -88,9 +95,11 @@ export const useApiConfigurationHandlers = () => {
 	) => {
 		if (planActSeparateModelsSetting) {
 			// Update only the current mode's fields
+			// CARET MODIFICATION: Map chatbot/agent modes to plan/act fields
+			const effectiveMode = currentMode === "chatbot" ? "plan" : currentMode === "agent" ? "act" : currentMode
 			const updates: Partial<ApiConfiguration> = {}
 			Object.entries(fieldPairs).forEach(([key, { plan, act }]) => {
-				const targetField = currentMode === "plan" ? plan : act
+				const targetField = effectiveMode === "plan" ? plan : act
 				updates[targetField] = values[key]
 			})
 			await handleFieldsChange(updates)

@@ -1,10 +1,18 @@
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"
+import { useApiConfigurationHandlers } from "./utils/useApiConfigurationHandlers"
+import { validateApiConfiguration, validateModelId } from "@/utils/validate"
+import { Mode } from "@shared/storage/types"
 import { StateServiceClient } from "@/services/grpc-client"
 import { ExtensionMessage } from "@shared/ExtensionMessage"
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 // CARET MODIFICATION: Chatbot/Agent 용어 통일 - PlanActMode 제거
-import { ChatbotAgentMode, ResetStateRequest, ToggleChatbotAgentModeRequest, UpdateSettingsRequest } from "@shared/proto/cline/state"
+import {
+	ChatbotAgentMode,
+	ResetStateRequest,
+	ToggleChatbotAgentModeRequest,
+	UpdateSettingsRequest,
+} from "@shared/proto/cline/state"
 import { VSCodeButton, VSCodeCheckbox, VSCodeLink, VSCodeTextArea } from "@vscode/webview-ui-toolkit/react"
 import { CheckCheck, FlaskConical, Info, LucideIcon, Settings, SquareMousePointer, SquareTerminal, Webhook } from "lucide-react"
 import { useCallback, useEffect, useRef, useState } from "react"
@@ -12,13 +20,13 @@ import { useEvent } from "react-use"
 import { Tab, TabContent, TabHeader, TabList, TabTrigger } from "../common/Tab"
 import { TabButton } from "../mcp/configuration/McpConfigurationView"
 import ApiOptions from "./ApiOptions"
-import BrowserSettingsSection from "./BrowserSettingsSection"
-import FeatureSettingsSection from "./FeatureSettingsSection"
+import BrowserSettingsSection from "./sections/BrowserSettingsSection"
+import FeatureSettingsSection from "./sections/FeatureSettingsSection"
 import PreferredLanguageSetting from "./PreferredLanguageSetting" // Added import
 import CaretUILanguageSetting from "../../caret/components/CaretUILanguageSetting" // CARET MODIFICATION: Moved to Caret directory
 import Section from "./Section"
 import SectionHeader from "./SectionHeader"
-import TerminalSettingsSection from "./TerminalSettingsSection"
+import TerminalSettingsSection from "./sections/TerminalSettingsSection"
 import { convertApiConfigurationToProtoApiConfiguration } from "@shared/proto-conversions/state/settings-conversion"
 import { convertChatSettingsToProtoChatSettings } from "@shared/proto-conversions/state/chat-settings-conversion"
 //import { caretWebviewLogger } from "@/caret/utils/webview-logger" // CARET MODIFICATION: 주석 처리
@@ -27,7 +35,10 @@ import { t, getLink, getGlobalLink } from "@/caret/utils/i18n"
 import { useCurrentLanguage } from "@/caret/hooks/useCurrentLanguage"
 import styled from "styled-components"
 import CaretFooter from "@/caret/components/CaretFooter"
-const { IS_DEV } = process.env
+const IS_DEV = process.env.IS_DEV
+
+// CARET MODIFICATION: Settings header style definition
+const settingsHeader = "flex items-center gap-1"
 
 // CARET MODIFICATION: Styled components for Caret/Cline mode toggle switch (copied from ChatTextArea)
 const ModeSwitchContainer = styled.div<{ disabled: boolean }>`
@@ -178,12 +189,13 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 		openRouterModels,
 		telemetrySetting,
 		setTelemetrySetting,
-		chatSettings,
-		setChatSettings,
 		planActSeparateModelsSetting,
 		setPlanActSeparateModelsSetting,
 		enableCheckpointsSetting,
 		setEnableCheckpointsSetting,
+		chatSettings,
+		setChatSettings,
+
 		mcpMarketplaceEnabled,
 		setMcpMarketplaceEnabled,
 		mcpRichDisplayEnabled,
@@ -198,9 +210,11 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 		setDefaultTerminalProfile,
 		mcpResponsesCollapsed,
 		setMcpResponsesCollapsed,
-		setApiConfiguration,
 		setModeSystem, // CARET MODIFICATION: Add modeSystem setter
 	} = useExtensionState()
+
+	// CARET MODIFICATION: Use new API configuration handlers instead of setApiConfiguration
+	const { handleFieldsChange } = useApiConfigurationHandlers()
 
 	// Store the original state to detect changes
 	const originalState = useRef({
@@ -220,9 +234,14 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 	const [apiErrorMessage, setApiErrorMessage] = useState<string | undefined>(undefined)
 	const [modelIdErrorMessage, setModelIdErrorMessage] = useState<string | undefined>(undefined)
 	const handleSubmit = async (withoutDone: boolean = false) => {
-		// CARET MODIFICATION: 다국어 에러 메시지 적용
-		const apiValidationResult = validateApiConfiguration(apiConfiguration, currentLanguage)
-		const modelIdValidationResult = validateModelId(apiConfiguration, openRouterModels, currentLanguage)
+		// CARET MODIFICATION: 다국어 에러 메시지 적용 + 올바른 매개변수 순서
+		const apiValidationResult = validateApiConfiguration(apiConfiguration, chatSettings?.mode || "agent", currentLanguage)
+		const modelIdValidationResult = validateModelId(
+			chatSettings?.mode || "agent",
+			apiConfiguration,
+			openRouterModels,
+			currentLanguage,
+		)
 
 		// setApiErrorMessage(apiValidationResult)
 		// setModelIdErrorMessage(modelIdValidationResult)
@@ -249,18 +268,15 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 			// caretWebviewLogger.debug("[DEBUG] Saving settings with chatSettings:", chatSettings); // CARET MODIFICATION: 주석 처리
 			await StateServiceClient.updateSettings(
 				UpdateSettingsRequest.create({
-					chatbotAgentSeparateModelsSetting: planActSeparateModelsSetting,
 					telemetrySetting,
-					enableCheckpointsSetting,
 					mcpMarketplaceEnabled,
-					mcpRichDisplayEnabled,
 					shellIntegrationTimeout,
 					terminalReuseEnabled,
 					mcpResponsesCollapsed,
 					apiConfiguration: apiConfigurationToSubmit
 						? convertApiConfigurationToProtoApiConfiguration(apiConfigurationToSubmit)
 						: undefined,
-					chatSettings: chatSettings ? convertChatSettingsToProtoChatSettings(chatSettings) : undefined,
+					preferredLanguage: chatSettings?.preferredLanguage,
 					terminalOutputLineLimit,
 				}),
 			)
@@ -310,8 +326,6 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 		const hasChanges =
 			JSON.stringify(apiConfiguration) !== JSON.stringify(originalState.current.apiConfiguration) ||
 			telemetrySetting !== originalState.current.telemetrySetting ||
-			planActSeparateModelsSetting !== originalState.current.planActSeparateModelsSetting ||
-			enableCheckpointsSetting !== originalState.current.enableCheckpointsSetting ||
 			mcpMarketplaceEnabled !== originalState.current.mcpMarketplaceEnabled ||
 			mcpRichDisplayEnabled !== originalState.current.mcpRichDisplayEnabled ||
 			JSON.stringify(chatSettings) !== JSON.stringify(originalState.current.chatSettings) ||
@@ -326,8 +340,6 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 	}, [
 		apiConfiguration,
 		telemetrySetting,
-		planActSeparateModelsSetting,
-		enableCheckpointsSetting,
 		mcpMarketplaceEnabled,
 		mcpRichDisplayEnabled,
 		mcpResponsesCollapsed,
@@ -346,10 +358,12 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 			pendingAction.current = () => {
 				// Reset all tracked state to original values
 				setTelemetrySetting(originalState.current.telemetrySetting)
-				setPlanActSeparateModelsSetting(originalState.current.planActSeparateModelsSetting)
-				setChatSettings(originalState.current.chatSettings)
-				if (typeof setApiConfiguration === "function") {
-					setApiConfiguration(originalState.current.apiConfiguration ?? {})
+				if (originalState.current.chatSettings) {
+					setChatSettings(originalState.current.chatSettings)
+				}
+				// CARET MODIFICATION: Use handleFieldsChange instead of setApiConfiguration
+				if (originalState.current.apiConfiguration) {
+					handleFieldsChange(originalState.current.apiConfiguration)
 				}
 				if (typeof setEnableCheckpointsSetting === "function") {
 					setEnableCheckpointsSetting(
@@ -401,10 +415,9 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 		setTelemetrySetting,
 		setPlanActSeparateModelsSetting,
 		setChatSettings,
-		setApiConfiguration,
+		handleFieldsChange,
 		setEnableCheckpointsSetting,
 		setMcpMarketplaceEnabled,
-		setMcpRichDisplayEnabled,
 		setMcpResponsesCollapsed,
 	])
 
@@ -547,10 +560,20 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 		}
 	}, [])
 
+	// Helper function to render section headers
+	const renderSectionHeader = (sectionId: string) => {
+		const sectionTitles: Record<string, string> = {
+			general: t("settings.generalSettings", "common"),
+			api: t("settings.apiConfiguration", "common"),
+			advanced: t("settings.advancedSettings", "common"),
+		}
+		return <SectionHeader description="">{sectionTitles[sectionId] || sectionId}</SectionHeader>
+	}
+
 	// CARET MODIFICATION: Chatbot/Agent 통일 - 직접 비교
 	const handleChatbotAgentModeChange = async (tab: "chatbot" | "agent") => {
-		// CARET MODIFICATION: Chatbot/Agent 통일 - 직접 모드 비교
-		if (tab === chatSettings.mode) {
+		// CARET MODIFICATION: Chatbot/Agent 통일 - 직접 모드 비교 + null 체크
+		if (!chatSettings || tab === chatSettings.mode) {
 			return
 		}
 
@@ -574,9 +597,6 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 			caretWebviewLogger.error("Failed to toggle Chatbot/Agent mode:", error)
 		}
 	}
-
-	// Track active tab - default to general tab
-	const [activeTab, setActiveTab] = useState<string>(targetSection || "general")
 
 	return (
 		<Tab>
@@ -673,6 +693,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 													showModelOptions={true}
 													apiErrorMessage={apiErrorMessage}
 													modelIdErrorMessage={modelIdErrorMessage}
+													currentMode={chatSettings?.mode || "agent"}
 												/>
 											</div>
 										</div>
@@ -693,43 +714,12 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 										)}
 
 										{/* CARET MODIFICATION: UI Language Setting */}
-										{chatSettings &&
-											(() => {
-												// caretWebviewLogger.debug(\`🎯 General 탭! Rendering CaretUILanguageSetting with chatSettings.\\`); // 주석 유지
-												// CARET MODIFICATION: console.log to logger
-												// console.log(
-												// 	"🎯 [SettingsView] chatSettings for CaretUILanguageSetting:",
-												// 	chatSettings,
-												// )
-												caretWebviewLogger.debug(
-													"🎯 [SettingsView] chatSettings for CaretUILanguageSetting:",
-													chatSettings,
-												)
-
-												try {
-													// caretWebviewLogger.debug(\\`🔥 CaretUILanguageSetting 렌더링 시도!\\`) // 주석 유지
-													return (
-														<CaretUILanguageSetting
-															chatSettings={chatSettings}
-															setChatSettings={setChatSettings}
-														/>
-													)
-												} catch (error) {
-													// caretWebviewLogger.error(\\`❌ CaretUILanguageSetting 에러: \\${error}\\`) // 주석 유지
-													// CARET MODIFICATION: console.error to logger
-													// console.error("CaretUILanguageSetting Error:", error) // console.error 사용
-													caretWebviewLogger.error("CaretUILanguageSetting Error:", error)
-													return <div>CaretUILanguageSetting Error: {String(error)}</div>
-												}
-											})()}
-										{!chatSettings &&
-											// CARET MODIFICATION: console.debug to logger
-											// console.debug(
-											// 	"🎯 General 탭! chatSettings not available, CaretUILanguageSetting not rendered.",
-											// )
-											caretWebviewLogger.debug(
-												"🎯 General 탭! chatSettings not available, CaretUILanguageSetting not rendered.",
-											)}
+										{chatSettings && (
+											<CaretUILanguageSetting
+												chatSettings={chatSettings}
+												setChatSettings={setChatSettings}
+											/>
+										)}
 
 										{/* CARET MODIFICATION: Mode System Selection - Slider Toggle Style */}
 										{chatSettings && (
@@ -772,7 +762,8 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 												{t("telemetry.title", "settings")}
 											</VSCodeCheckbox>
 											<p className="text-xs text-[var(--vscode-descriptionForeground)] mb-[15px]">
-												{t("telemetry.description", "settings")} {t("telemetry.forMoreDetails", "settings")}{" "}
+												{t("telemetry.description", "settings")}{" "}
+												{t("telemetry.forMoreDetails", "settings")}{" "}
 												<VSCodeLink href={getGlobalLink("CARET_PRIVACY_POLICY")}>
 													{t("telemetry.privacyPolicy", "settings")}
 												</VSCodeLink>

@@ -140,7 +140,7 @@ const CaretApiSetup: React.FC<CaretApiSetupProps> = ({ onSubmit, onBack, disable
 			{/* API Configuration Section */}
 			<div style={apiSectionStyle}>
 				{/* API Options */}
-				    <ApiOptions showModelOptions={true} currentMode="act" />
+				<ApiOptions showModelOptions={true} currentMode="act" />
 
 				{/* Submit Button */}
 				{selectedProvider !== "caret" && (

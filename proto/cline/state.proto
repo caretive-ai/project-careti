@@ -126,6 +126,7 @@ message UpdateSettingsRequest {
   optional bool plan_act_separate_models_setting = 4;
   optional bool enable_checkpoints_setting = 5;
   optional bool mcp_marketplace_enabled = 6;
+  optional ChatSettings chat_settings = 7; // CARET MODIFICATION: Added chat settings
   optional int32 shell_integration_timeout = 8;
   optional bool terminal_reuse_enabled = 9;
   optional bool mcp_responses_collapsed = 10;
@@ -136,6 +137,8 @@ message UpdateSettingsRequest {
   optional string openai_reasoning_effort = 15;
   optional bool strict_plan_mode_enabled = 16;
   optional string ui_language = 17; // CARET MODIFICATION: UI display language (Caret specific)
+  optional bool mcp_rich_display_enabled = 18; // CARET MODIFICATION: Added MCP rich display setting
+  optional bool chatbot_agent_separate_models_setting = 19; // CARET MODIFICATION: Chatbot/Agent model separation
 }
 
 // Complete API Configuration message

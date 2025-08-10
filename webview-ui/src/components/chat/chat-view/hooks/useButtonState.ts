@@ -4,6 +4,7 @@ import { ChatState } from "../types/chatTypes"
 import { useDeepCompareEffect } from "react-use"
 // CARET MODIFICATION: 다국어 지원 추가
 import { t } from "@/caret/utils/i18n"
+import WebviewLogger from "@/caret/utils/webview-logger"
 
 /**
  * Custom hook for managing button state based on messages
@@ -11,7 +12,7 @@ import { t } from "@/caret/utils/i18n"
  */
 export function useButtonState(messages: ClineMessage[], chatState: ChatState) {
 	// CARET MODIFICATION: WebviewLogger 추가로 상세 디버깅 지원
-	const logger = new (require("@/caret/utils/webview-logger").default)("useButtonState")
+	const logger = new WebviewLogger("useButtonState")
 	const {
 		setSendingDisabled,
 		setEnableButtons,

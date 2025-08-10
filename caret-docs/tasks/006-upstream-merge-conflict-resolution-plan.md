@@ -198,4 +198,48 @@
 3. Cline 개선사항 분석 도구 개발 (analyze-cline-improvements.py)
 4. 머징 가이드 대폭 강화
 
+## 📊 2025-08-10 Extension 활성화 이슈 분석
+
+### 🔴 발견된 심각한 구조적 문제들
+
+**1. WebviewMessage 처리 구조 불일치**
+- **문제**: `Received unhandled WebviewMessage type: {"type":"log"}` 대량 발생
+- **원인**: 006 머징으로 인한 gRPC vs 기존 메시지 처리 방식 충돌
+- **영향**: 웹뷰↔백엔드 통신 완전 마비
+
+**2. Controller 초기화 타이밍 문제**
+- **해결됨**: HostProvider 초기화 순서 문제 (caret-src/extension.ts에 maybeSetupHostProviders 추가)
+- **부분해결**: WorkspaceTracker/McpHub 지연 로딩 구현
+
+**3. Proto namespace 불일치**
+- **해결됨**: `cline` → `caret` namespace 변경
+- **해결됨**: scripts/generate-protobus-setup.mjs 수정
+
+### 🟡 미해결 중요 이슈들
+
+**1. 언어 설정 시스템 손상**
+- `useCurrentLanguage returning: en` 항상 영어 고정
+- VSCode 언어 설정 연동 실패
+
+**2. 상태 관리 시스템 불안정**
+- `Failed to reset state` 에러 발생
+- 웹뷰 상태 초기화 실패
+
+### 🔧 필요한 추가 작업 (Next Session)
+
+**우선순위 1: 웹뷰 메시지 처리 구조 재설계**
+- gRPC vs WebviewMessage 처리 방식 통일
+- "log" 타입 메시지 핸들러 추가
+- 웹뷰↔백엔드 통신 프로토콜 재정비
+
+**우선순위 2: 언어 설정 시스템 복구**
+- VSCode 언어 설정 연동 로직 수정
+- useCurrentLanguage 훅 디버깅
+- 다국어 지원 시스템 검증
+
+**우선순위 3: 상태 관리 안정화**
+- ExtensionStateContext 검증
+- 웹뷰 상태 초기화 로직 수정
+- 에러 핸들링 강화
+
 해당 문서의 단계적 체크리스트(Phase A~E)에 따라 정리 및 수정 후 본 문서에 결과를 반영합니다.

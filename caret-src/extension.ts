@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
 import { setTimeout as setTimeoutPromise } from "node:timers/promises"
-import { Logger } from "../src/services/logging/Logger"
+// import { Logger } from "../src/services/logging/Logger" // CARET MODIFICATION: Removed, using CaretLogger instead
 import { CaretProvider, CARET_SIDEBAR_ID, CARET_TAB_PANEL_ID } from "./core/webview/CaretProvider"
 import { sendSettingsButtonClickedEvent } from "../src/core/controller/ui/subscribeToSettingsButtonClicked"
 import { sendChatButtonClickedEvent } from "../src/core/controller/ui/subscribeToChatButtonClicked"
@@ -13,6 +13,11 @@ import { caretLogger } from "./utils/caret-logger"
 import { CaretSystemPrompt } from "./core/prompts/CaretSystemPrompt"
 import { CaretResponses } from "./core/prompts/CaretResponses"
 import { DIFF_VIEW_URI_SCHEME } from "../src/hosts/vscode/VscodeDiffViewProvider"
+import { VscodeDiffViewProvider } from "../src/hosts/vscode/VscodeDiffViewProvider"
+import { VscodeWebviewProvider } from "../src/hosts/vscode/VscodeWebviewProvider"
+import { HostProvider } from "../src/hosts/host-provider"
+import { vscodeHostBridgeClient } from "../src/hosts/vscode/hostbridge/client/host-grpc-client"
+import { WebviewProvider } from "../src/core/webview"
 import pWaitFor from "p-wait-for"
 
 let outputChannel: vscode.OutputChannel
@@ -77,10 +82,13 @@ const handleUri = async (uri: vscode.Uri) => {
 }
 
 export async function activate(context: vscode.ExtensionContext) {
+	// CARET MODIFICATION: Initialize HostProvider first (critical for Controller initialization)
+	maybeSetupHostProviders(context)
+
 	outputChannel = vscode.window.createOutputChannel("Caret")
 	context.subscriptions.push(outputChannel)
 
-	Logger.initialize(outputChannel)
+	// CARET MODIFICATION: Use CaretLogger instead of Logger.initialize (which doesn't exist)
 	caretLogger.setOutputChannel(outputChannel)
 	caretLogger.info("Caret extension activating...")
 	caretLogger.extensionActivated()
@@ -99,6 +107,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	// This resolves the extensionPath dependency for JSON-based system prompt generation
 	try {
 		const extensionPath = context.extensionPath
+		caretLogger.info(`Debug: CaretSystemPrompt = ${typeof CaretSystemPrompt}`, "SYSTEM")
+		caretLogger.info(`Debug: CaretSystemPrompt.getInstance = ${typeof CaretSystemPrompt?.getInstance}`, "SYSTEM")
 		CaretSystemPrompt.getInstance(extensionPath)
 		caretLogger.success("CaretSystemPrompt initialized with JSON-based prompt system", "SYSTEM")
 	} catch (error) {
@@ -142,7 +152,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	}
 
-	const sidebarWebviewProvider = new CaretProvider(context, outputChannel, WebviewProviderType.SIDEBAR)
+	const sidebarWebviewProvider = new CaretProvider(context, WebviewProviderType.SIDEBAR, caretLogger)
 
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(CARET_SIDEBAR_ID, sidebarWebviewProvider, {
@@ -153,7 +163,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	// --- COMMAND REGISTRATION ---
 
 	const openCaretInNewTab = async () => {
-		const tabWebview = new CaretProvider(context, outputChannel, WebviewProviderType.TAB)
+		const tabWebview = new CaretProvider(context, WebviewProviderType.TAB, caretLogger)
 		const lastCol = Math.max(...vscode.window.visibleTextEditors.map((editor) => editor.viewColumn || 0))
 		const hasVisibleEditors = vscode.window.visibleTextEditors.length > 0
 		if (!hasVisibleEditors) {
@@ -337,4 +347,22 @@ export async function activate(context: vscode.ExtensionContext) {
 
 export function deactivate() {
 	outputChannel?.appendLine("Caret extension deactivated.")
+}
+
+// CARET MODIFICATION: Initialize HostProvider (copied from src/extension.ts)
+function maybeSetupHostProviders(context: vscode.ExtensionContext) {
+	if (!HostProvider.isInitialized()) {
+		console.log("Setting up vscode host providers...")
+
+		const createWebview = function (type: WebviewProviderType): WebviewProvider {
+			return new VscodeWebviewProvider(context, type)
+		}
+		const createDiffView = function () {
+			return new VscodeDiffViewProvider()
+		}
+		const outputChannel = vscode.window.createOutputChannel("Caret")
+		context.subscriptions.push(outputChannel)
+
+		HostProvider.initialize(createWebview, createDiffView, vscodeHostBridgeClient, outputChannel.appendLine)
+	}
 }

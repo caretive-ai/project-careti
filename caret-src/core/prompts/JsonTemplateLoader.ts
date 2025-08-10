@@ -4,7 +4,7 @@
 
 import { promises as fs } from "fs"
 import * as path from "path"
-import { caretLogger } from "../../utils/caret-logger"
+// import { console } from "../../utils/caret-logger" // CARET MODIFICATION: Removed to prevent circular imports
 import { PromptTemplate } from "./types"
 
 /**
@@ -31,11 +31,11 @@ export class JsonTemplateLoader {
 		// CARET MODIFICATION: Use test-templates directory for tests
 		if (useTestTemplates) {
 			this.templateDir = path.join(extensionPath, "caret-assets", "test-templates")
-			caretLogger.info(`[JsonTemplateLoader] Initialized with TEST template directory: ${this.templateDir}`, "JSON_LOADER")
+			console.log(`[JsonTemplateLoader] Initialized with TEST template directory: ${this.templateDir}`)
 		} else {
 			// CARET MODIFICATION: Use sections directory for system prompt JSON files
 			this.templateDir = path.join(extensionPath, "caret-src", "core", "prompts", "sections")
-			caretLogger.info(`[JsonTemplateLoader] Initialized with sections directory: ${this.templateDir}`, "JSON_LOADER")
+			console.log(`[JsonTemplateLoader] Initialized with sections directory: ${this.templateDir}`, "JSON_LOADER")
 		}
 	}
 
@@ -50,12 +50,12 @@ export class JsonTemplateLoader {
 	async loadTemplate(templateName: string): Promise<PromptTemplate> {
 		// Check cache first (performance optimization)
 		if (this.templateCache.has(templateName)) {
-			caretLogger.info(`[JsonTemplateLoader] Using cached template: ${templateName}`, "JSON_LOADER")
+			console.log(`[JsonTemplateLoader] Using cached template: ${templateName}`, "JSON_LOADER")
 			return this.templateCache.get(templateName)!
 		}
 
 		try {
-			caretLogger.info(`[JsonTemplateLoader] Loading template: ${templateName}`, "JSON_LOADER")
+			console.log(`[JsonTemplateLoader] Loading template: ${templateName}`, "JSON_LOADER")
 
 			// Simple file loading
 			const templatePath = path.join(this.templateDir, `${templateName}.json`)
@@ -76,26 +76,21 @@ export class JsonTemplateLoader {
 			this.templateCache.set(templateName, template)
 
 			const sections = template.add?.sections?.length ?? 0
-			caretLogger.info(
-				`[JsonTemplateLoader] Template loaded: ${templateName} (${sections} sections)`,
-				"JSON_LOADER",
-			)
+			console.log(`[JsonTemplateLoader] Template loaded: ${templateName} (${sections} sections)`, "JSON_LOADER")
 
 			return template
 		} catch (error) {
-			caretLogger.error(`[JsonTemplateLoader] Failed to load template: ${templateName} - ${error}`, "JSON_LOADER")
+			console.log(`[JsonTemplateLoader] Failed to load template: ${templateName} - ${error}`, "JSON_LOADER")
 			throw new Error(`Failed to load template ${templateName}: ${error}`)
 		}
 	}
-
-
 
 	/**
 	 * Simple conversion from legacy JSON to PromptTemplate format
 	 * Replaces complex adaptLegacyFormat with minimal conversion logic
 	 */
 	private simpleConvert(content: any, templateName: string): PromptTemplate {
-		caretLogger.info(`[JsonTemplateLoader] Simple conversion for template: ${templateName}`, "JSON_LOADER")
+		console.log(`[JsonTemplateLoader] Simple conversion for template: ${templateName}`, "JSON_LOADER")
 
 		// Basic metadata
 		const metadata = {
@@ -112,29 +107,47 @@ export class JsonTemplateLoader {
 
 		if (templateName === "COLLABORATIVE_PRINCIPLES") {
 			// Handle COLLABORATIVE_PRINCIPLES specifically
-			const principleKeys = ['core_mindset', 'analysis_approach', 'efficiency_patterns', 'developer_colleague', 'continuous_improvement']
-			
+			const principleKeys = [
+				"core_mindset",
+				"analysis_approach",
+				"efficiency_patterns",
+				"developer_colleague",
+				"continuous_improvement",
+			]
+
 			for (const key of principleKeys) {
 				if (content[key]) {
 					const principle = content[key]
 					const principleContent = [
 						`**${principle.principle}**`,
 						principle.description,
-						principle.behaviors ? `**Behaviors:**\n${principle.behaviors.map((b: string) => `• ${b}`).join('\n')}` : '',
-						principle.practices ? `**Practices:**\n${principle.practices.map((p: string) => `• ${p}`).join('\n')}` : '',
-						principle.strategies ? `**Strategies:**\n${principle.strategies.map((s: string) => `• ${s}`).join('\n')}` : '',
-						principle.contributions ? `**Contributions:**\n${principle.contributions.map((c: string) => `• ${c}`).join('\n')}` : '',
-						principle.guidelines ? `**Guidelines:**\n${principle.guidelines.map((g: string) => `• ${g}`).join('\n')}` : '',
-					].filter(Boolean).join('\n')
-					
-				sections.push({
+						principle.behaviors
+							? `**Behaviors:**\n${principle.behaviors.map((b: string) => `• ${b}`).join("\n")}`
+							: "",
+						principle.practices
+							? `**Practices:**\n${principle.practices.map((p: string) => `• ${p}`).join("\n")}`
+							: "",
+						principle.strategies
+							? `**Strategies:**\n${principle.strategies.map((s: string) => `• ${s}`).join("\n")}`
+							: "",
+						principle.contributions
+							? `**Contributions:**\n${principle.contributions.map((c: string) => `• ${c}`).join("\n")}`
+							: "",
+						principle.guidelines
+							? `**Guidelines:**\n${principle.guidelines.map((g: string) => `• ${g}`).join("\n")}`
+							: "",
+					]
+						.filter(Boolean)
+						.join("\n")
+
+					sections.push({
 						id: key,
 						title: principle.principle,
 						content: principleContent,
-					position: "before_tools",
-					priority: 10,
+						position: "before_tools",
+						priority: 10,
 					})
-			}
+				}
 			}
 		} else {
 			// Generic conversion: create one section with the entire content
@@ -147,7 +160,7 @@ export class JsonTemplateLoader {
 			})
 		}
 
-		caretLogger.info(`[JsonTemplateLoader] Created ${sections.length} sections: ${templateName}`, "JSON_LOADER")
+		console.log(`[JsonTemplateLoader] Created ${sections.length} sections: ${templateName}`, "JSON_LOADER")
 
 		return {
 			metadata,
@@ -159,8 +172,6 @@ export class JsonTemplateLoader {
 		}
 	}
 
-
-
 	/**
 	 * Clear template cache
 	 * Useful for testing or when templates are updated
@@ -168,7 +179,7 @@ export class JsonTemplateLoader {
 	clearCache(): void {
 		const cacheSize = this.templateCache.size
 		this.templateCache.clear()
-		caretLogger.info(`[JsonTemplateLoader] Template cache cleared: ${cacheSize} templates removed`, "JSON_LOADER")
+		console.log(`[JsonTemplateLoader] Template cache cleared: ${cacheSize} templates removed`, "JSON_LOADER")
 	}
 
 	/**
@@ -213,11 +224,11 @@ export class JsonTemplateLoader {
 				await this.loadTemplate(templateName)
 				loaded.push(templateName)
 			} catch (error) {
-				caretLogger.warn(`[JsonTemplateLoader] Failed to preload template: ${templateName} - ${error}`, "JSON_LOADER")
+				console.log(`[JsonTemplateLoader] Failed to preload template: ${templateName} - ${error}`, "JSON_LOADER")
 			}
 		}
 
-		caretLogger.info(
+		console.log(
 			`[JsonTemplateLoader] Templates preloaded: ${loaded.length}/${templateNames.length} successful (${loaded.join(", ")})`,
 			"JSON_LOADER",
 		)

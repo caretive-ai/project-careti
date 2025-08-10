@@ -157,7 +157,6 @@ async function generateStandaloneProtobusServiceSetup(protobusServices) {
 		handlerSetup.push(`    server.addService(caret.${name}Service, {`)
 		for (const [rpcName, rpc] of Object.entries(def.service)) {
 			imports.push(`import { ${rpcName} } from "@core/controller/${dir}/${rpcName}"`)
-			// CARET MODIFICATION: Use 'caret' namespace prefix for TypeScript type definitions
 			const requestType = "caret." + rpc.requestType.type.name
 			const responseType = "caret." + rpc.responseType.type.name
 			if (rpc.requestStream) {

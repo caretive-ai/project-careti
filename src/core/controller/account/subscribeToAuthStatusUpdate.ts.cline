@@ -1,0 +1,12 @@
+import { AuthService } from "../../../services/auth/AuthService"
+
+// CARET MODIFICATION: Use lazy loading to prevent early initialization issues
+export const subscribeToAuthStatusUpdate = (...args: any[]) => {
+	const authService = AuthService.getInstance()
+	return authService.subscribeToAuthStatusUpdate(...args)
+}
+
+export const sendAuthStatusUpdateEvent = (...args: any[]) => {
+	const authService = AuthService.getInstance()
+	return authService.sendAuthStatusUpdate(...args)
+}

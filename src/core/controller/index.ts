@@ -59,8 +59,8 @@ export class Controller {
 	private disposables: vscode.Disposable[] = []
 	task?: Task
 
-	workspaceTracker: WorkspaceTracker
-	mcpHub: McpHub
+	workspaceTracker!: WorkspaceTracker
+	mcpHub!: McpHub
 	accountService: CaretAccountService // CARET MODIFICATION
 	readonly cacheService: CacheService
 
@@ -71,7 +71,12 @@ export class Controller {
 	) {
 		this.id = id
 		caretLogger.info(`Controller constructor called. ID: ${this.id}`)
-		HostProvider.get().logToChannel("CaretProvider instantiated")
+		// CARET MODIFICATION: Check HostProvider initialization before using it
+		if (HostProvider.isInitialized()) {
+			HostProvider.get().logToChannel("CaretProvider instantiated")
+		} else {
+			caretLogger.warn("HostProvider not yet initialized, skipping log")
+		}
 
 		this.postMessage = postMessage
 		this.cacheService = new CacheService(context)
@@ -110,16 +115,37 @@ export class Controller {
 			}
 		}
 
-		this.workspaceTracker = new WorkspaceTracker()
-		this.mcpHub = new McpHub(
-			() => ensureMcpServersDirectoryExists(),
-			() => ensureSettingsDirectoryExists(this.context),
-			this.context.extension?.packageJSON?.version ?? "1.0.0",
-		)
+		// CARET MODIFICATION: Delay initialization of services that depend on HostProvider
+		if (HostProvider.isInitialized()) {
+			this.workspaceTracker = new WorkspaceTracker()
+			this.mcpHub = new McpHub(
+				() => ensureMcpServersDirectoryExists(),
+				() => ensureSettingsDirectoryExists(this.context),
+				this.context.extension?.packageJSON?.version ?? "1.0.0",
+			)
 
-		cleanupLegacyCheckpoints(this.context.globalStorageUri.fsPath).catch((error) => {
-			console.error("Failed to cleanup legacy checkpoints:", error)
-		})
+			cleanupLegacyCheckpoints(this.context.globalStorageUri.fsPath).catch((error) => {
+				console.error("Failed to cleanup legacy checkpoints:", error)
+			})
+		} else {
+			caretLogger.warn("HostProvider not initialized, deferring WorkspaceTracker and McpHub initialization")
+			// Initialize them later when HostProvider is ready
+			setTimeout(() => {
+				if (HostProvider.isInitialized()) {
+					this.workspaceTracker = new WorkspaceTracker()
+					this.mcpHub = new McpHub(
+						() => ensureMcpServersDirectoryExists(),
+						() => ensureSettingsDirectoryExists(this.context),
+						this.context.extension?.packageJSON?.version ?? "1.0.0",
+					)
+
+					cleanupLegacyCheckpoints(this.context.globalStorageUri.fsPath).catch((error) => {
+						console.error("Failed to cleanup legacy checkpoints:", error)
+					})
+					caretLogger.info("Deferred services initialized successfully")
+				}
+			}, 200)
+		}
 	}
 
 	async getCurrentMode(): Promise<ChatSettings["mode"]> {
@@ -135,8 +161,13 @@ export class Controller {
 				x.dispose()
 			}
 		}
-		this.workspaceTracker.dispose()
-		this.mcpHub.dispose()
+		// CARET MODIFICATION: Check if services are initialized before disposing
+		if (this.workspaceTracker) {
+			this.workspaceTracker.dispose()
+		}
+		if (this.mcpHub) {
+			this.mcpHub.dispose()
+		}
 		console.error("Controller disposed")
 	}
 

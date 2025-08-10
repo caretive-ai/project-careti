@@ -22,13 +22,17 @@ export class CaretProvider extends WebviewProvider {
 	private _personaThinkingDataUri: string = ""
 	private static instance: CaretProvider | null = null
 
-    constructor(
-        public override readonly context: vscode.ExtensionContext,
-        providerType: WebviewProviderType = WebviewProviderType.SIDEBAR,
-        caretLoggerInstance?: CaretLogger,
-    ) {
-        // CARET MODIFICATION: align to new base constructor without outputChannel
-        super(context, providerType)
+	constructor(
+		public override readonly context: vscode.ExtensionContext,
+		providerType: WebviewProviderType = WebviewProviderType.SIDEBAR,
+		caretLoggerInstance?: CaretLogger,
+	) {
+		// CARET MODIFICATION: Call super() but override Controller creation
+		super(context, providerType)
+
+		// CARET MODIFICATION: Replace Controller with null temporarily to prevent early initialization
+		this.controller = null as any
+
 		this.caretLogger = caretLoggerInstance || new CaretLogger()
 
 		this.caretLogger.info(`CaretProvider constructor called for ${providerType}.`)
@@ -36,6 +40,38 @@ export class CaretProvider extends WebviewProvider {
 		this.caretLogger.welcomePageLoaded()
 
 		CaretProvider.instance = this
+
+		// CARET MODIFICATION: Delay Controller creation until first use
+		this._controllerInitialized = false
+	}
+
+	// CARET MODIFICATION: Lazy Controller initialization
+	private _controllerInitialized = false
+
+	private async ensureControllerInitialized(): Promise<void> {
+		if (!this._controllerInitialized) {
+			// CARET MODIFICATION: Ensure HostProvider is initialized before creating Controller
+			const { HostProvider } = require("../../../src/hosts/host-provider")
+			if (!HostProvider.isInitialized()) {
+				this.caretLogger.warn("HostProvider not initialized when creating Controller, waiting...")
+				// Wait a bit for src/extension.ts to initialize HostProvider
+				return new Promise((resolve) => {
+					setTimeout(async () => {
+						await this.ensureControllerInitialized()
+						resolve()
+					}, 100)
+				})
+			}
+
+			const { Controller } = require("../../../src/core/controller")
+			this.controller = new Controller(
+				this.context,
+				(message: any) => this.view?.webview.postMessage(message),
+				this.getClientId(),
+			)
+			this._controllerInitialized = true
+			this.caretLogger.info(`Controller initialized with client ID: ${this.getClientId()}`)
+		}
 	}
 
 	public static getInstance(): CaretProvider | null {
@@ -48,14 +84,18 @@ export class CaretProvider extends WebviewProvider {
 
 	public override async resolveWebviewView(webviewView: vscode.WebviewView | vscode.WebviewPanel) {
 		this.caretLogger.info(`resolveWebviewView started for ${this.providerType} with client ID: ${this.getClientId()}`)
+
+		// CARET MODIFICATION: Ensure Controller is initialized before proceeding
+		await this.ensureControllerInitialized()
+
 		await super.resolveWebviewView(webviewView)
-        this.controller.postStateToWebview()
+		this.controller.postStateToWebview()
 		this.caretLogger.info(
 			`resolveWebviewView finished for ${this.providerType} with client ID: ${this.getClientId()}. Controller is ready.`,
 		)
 	}
 
-    protected override getHtmlContent(webview: vscode.Webview): string {
+	protected override getHtmlContent(webview: vscode.Webview): string {
 		const stylesUri = getUri(webview, this.context.extensionUri, ["caret-webview-ui", "build", "assets", "index.css"])
 		const scriptUri = getUri(webview, this.context.extensionUri, ["caret-webview-ui", "build", "assets", "index.js"])
 		const codiconsUri = getUri(webview, this.context.extensionUri, [
@@ -142,7 +182,7 @@ export class CaretProvider extends WebviewProvider {
 		`
 	}
 
-    protected override async getHMRHtmlContent(webview: vscode.Webview): Promise<string> {
+	protected override async getHMRHtmlContent(webview: vscode.Webview): Promise<string> {
 		const localPort = await super["getDevServerPort"]()
 		const localServerUrl = `localhost:${localPort}`
 

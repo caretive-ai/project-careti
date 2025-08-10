@@ -4,7 +4,8 @@ import { t } from "../utils/i18n"
 import ApiOptions from "../../components/settings/ApiOptions"
 import { vscode } from "../../utils/vscode"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { normalizeApiConfiguration, ApiProvider } from "@shared/api"
+import { ApiProvider } from "@shared/api"
+import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 
 interface CaretApiSetupProps {
 	onSubmit: () => void
@@ -15,7 +16,7 @@ interface CaretApiSetupProps {
 
 const CaretApiSetup: React.FC<CaretApiSetupProps> = ({ onSubmit, onBack, disabled = false, errorMessage }) => {
 	const { apiConfiguration } = useExtensionState()
-	const { selectedProvider } = normalizeApiConfiguration(apiConfiguration)
+	const { selectedProvider } = normalizeApiConfiguration(apiConfiguration, "act")
 
 	const containerStyle = {
 		maxWidth: "600px",
@@ -139,7 +140,7 @@ const CaretApiSetup: React.FC<CaretApiSetupProps> = ({ onSubmit, onBack, disable
 			{/* API Configuration Section */}
 			<div style={apiSectionStyle}>
 				{/* API Options */}
-				<ApiOptions showModelOptions={true} />
+				    <ApiOptions showModelOptions={true} currentMode="act" />
 
 				{/* Submit Button */}
 				{selectedProvider !== "caret" && (

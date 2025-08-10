@@ -5,6 +5,8 @@ import { useExtensionState } from "@/context/ExtensionStateContext"
 import { vscode } from "@/utils/vscode"
 import { TelemetrySetting } from "@shared/TelemetrySetting"
 import { t } from "@/caret/utils/i18n"
+import { StateServiceClient } from "@/services/grpc-client"
+import { TelemetrySettingRequest, TelemetrySettingEnum } from "@shared/proto/cline/state"
 
 const BannerContainer = styled.div`
 	background-color: var(--vscode-banner-background);
@@ -54,8 +56,16 @@ const TelemetryBanner = () => {
 		navigateToSettings()
 	}
 
-	const handleClose = () => {
-		vscode.postMessage({ type: "telemetrySetting", telemetrySetting: "enabled" satisfies TelemetrySetting })
+	const handleClose = async () => {
+		try {
+			await StateServiceClient.updateTelemetrySetting(
+				TelemetrySettingRequest.create({
+					setting: TelemetrySettingEnum.ENABLED,
+				}),
+			)
+		} catch (error) {
+			console.error("Error updating telemetry setting:", error)
+		}
 	}
 
 	return (

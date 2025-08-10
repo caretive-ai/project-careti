@@ -2,8 +2,6 @@ import React, { memo, useEffect, useRef, useState } from "react"
 import type { ComponentProps } from "react"
 import { useRemark } from "react-remark"
 import rehypeHighlight, { Options } from "rehype-highlight"
-import rehypeKatex from "rehype-katex"
-import remarkMath from "remark-math"
 import styled from "styled-components"
 import { visit } from "unist-util-visit"
 import type { Node } from "unist"
@@ -12,8 +10,9 @@ import CodeBlock, { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import MermaidBlock from "@/components/common/MermaidBlock"
 import { WithCopyButton } from "./CopyButton"
 import { StateServiceClient } from "@/services/grpc-client"
-// CARET MODIFICATION: Chatbot/Agent 용어 통일 - PlanActMode 제거
-import { ChatbotAgentMode, ToggleChatbotAgentModeRequest } from "@shared/proto/state"
+// CARET MODIFICATION: Chatbot/Agent 용어 통일 - PlanActMode 제거  
+import { ChatbotAgentMode, ToggleChatbotAgentModeRequest } from "@shared/proto/cline/state"
+import remarkMath from "remark-math"
 
 // CARET MODIFICATION: Chatbot/Agent 일관성 있는 UI 구현
 // Ask 모드 강조 컴포넌트 - 💬 Expert Consultation
@@ -276,34 +275,6 @@ const StyledMarkdown = styled.div`
 		overflow-wrap: anywhere;
 	}
 
-	/* KaTeX styling */
-	.katex {
-		font-size: 1.1em;
-		color: var(--vscode-editor-foreground);
-		font-family: KaTeX_Main, "Times New Roman", serif;
-		line-height: 1.2;
-		white-space: normal;
-		text-indent: 0;
-	}
-
-	.katex-display {
-		display: block;
-		margin: 1em 0;
-		text-align: center;
-		padding: 0.5em;
-		overflow-x: auto;
-		overflow-y: hidden;
-		background-color: var(--vscode-textCodeBlock-background);
-		border-radius: 3px;
-	}
-
-	.katex-error {
-		color: var(--vscode-errorForeground);
-		border: 1px solid var(--vscode-inputValidation-errorBorder);
-		padding: 8px;
-		border-radius: 3px;
-	}
-
 	font-family:
 		var(--vscode-font-family),
 		system-ui,
@@ -481,7 +452,6 @@ const MarkdownBlock = memo(({ markdown, highlightOptions = {}, className }: Mark
 			{
 				// languages: {},
 			} as Options,
-			rehypeKatex,
 		],
 		rehypeReactOptions: {
 			components: {

@@ -2,18 +2,25 @@
 
 ## 📋 작업 개요
 
-**목표**: caret-webview-ui의 297개 TypeScript 에러를 해결하여 Cline v3.20.8 API 구조와 호환되도록 마이그레이션
+**목표**: webview-ui(Caret 메인)의 ~~297개~~ → **250개** TypeScript 에러를 해결하여 Cline v3.20.8 API 구조와 호환되도록 마이그레이션
+**진행률**: **47개 해결 완료** (19% 진행)
+
+**디렉토리 구조 변경 완료** ✅:
+- `caret-webview-ui` → `webview-ui` (Caret 메인)
+- `webview-ui` → `cline-webview-ui` (Cline 원본)
+- **머징 후 `cline-webview-ui` 삭제 예정**
 
 **핵심 문제**: Cline의 ApiConfiguration이 Mode별 필드 분리 구조로 대변혁
 - `apiProvider` → `planModeApiProvider` / `actModeApiProvider`
 - `openAiModelId` → `planModeOpenAiModelId` / `actModeOpenAiModelId`
 - 20+ 필드가 모두 Mode별로 분리됨
 
-**전략**: 작은 수정으로 큰 효과를 내는 순차적 접근
+**전략**: 작은 수정으로 큰 효과를 내는 순차적 접근 + **선별적 개선사항 이식**
 
 ## 🎯 에러 분류 및 우선순위
 
-### 📊 에러 통계 (297개)
+### 📊 에러 통계 (~~297개~~ → **250개**)
+**해결 완료**: 47개 (Proto imports, 중복 imports, grpc 복구 등)
 1. **Mode별 API 필드 접근** (~180개): `apiConfiguration.apiProvider` 등
 2. **Missing 타입/함수** (~50개): `Mode`, `getModeSpecificFields`, `useApiConfigurationHandlers`
 3. **Validation 함수** (~30개): `validateApiConfiguration` 시그니처 변경
@@ -25,10 +32,39 @@
 - **Phase 2** (API 매핑): 180개 에러 → 10개 이하로 감소 예상
 - **Phase 3-5**: 개별 컴포넌트 정리
 
+## 💾 **백업 파일 네이밍 규칙 업데이트 (2025-01-22)**
+
+**변경사항**: `.cline` 백업 파일 네이밍을 AI 친화적 DOT 방식으로 통일
+- **기존**: `App-tsx.cline` (DASH 방식)
+- **변경**: `App.tsx.cline` (DOT 방식)
+- **이유**: AI가 자연스럽게 선호하는 직관적 패턴과 일치
+
+**완료 작업**:
+- ✅ 344개 → 102개 백업 파일 정리 (중복 제거)
+- ✅ 모든 DASH 방식을 DOT 방식으로 변경
+- ✅ CARET 파일명 포함된 잘못된 백업 삭제
+- ✅ 머징 완료 후 v3.20.8 기준 업데이트 계획 수립
+
+## 🔥 **중대 발견: 백엔드-프론트엔드 타입 불일치 (2025-01-22 해결)**
+
+**문제**: `toggleChatbotAgentMode` 기능에서 심각한 타입 불일치 발견
+- **Proto 정의**: `ToggleChatbotAgentModeRequest` ✅
+- **백엔드 구현**: `TogglePlanActModeRequest` ❌ (잘못된 타입)
+- **프론트엔드**: `ToggleChatbotAgentModeRequest` ✅ (올바른 타입)
+
+**해결 과정**:
+1. **3-레포 전략**: main-caret와 비교하여 정확한 구현 확인
+2. **백업 생성**: 잘못된 버전을 `.cline`으로 백업 (규칙 위반 수정됨)
+3. **올바른 구현 복구**: main-caret에서 정상 버전 복사
+4. **Import 경로 수정**: `@shared/proto/cline/*` 형식으로 업데이트
+
+**교훈**: Proto 정의만으로는 부족, **백엔드-프론트엔드 타입 일치성** 검증 필수
+
 ## 📝 Phase별 작업 계획
 
-### **Phase 1: 핵심 타입/모듈 호환성** 🔧
-**목표**: 297개 → 50개 이하로 에러 감소
+### **Phase 1: 핵심 타입/모듈 호환성** 🔧 (진행중)
+**목표**: ~~297개~~ 250개 → 50개 이하로 에러 감소
+**진행 상황**: 47개 해결 완료, 203개 남음
 
 #### 1.1 Mode 타입 추가
 ```typescript
@@ -204,6 +240,57 @@ npm run compile:fast  # 백엔드 호환성 확인
 - **아키텍처 가이드**: `caret-docs/development/caret-architecture-and-implementation-guide.mdx`
 - **이전 머징 경험**: `caret-docs/tasks/006-upstream-merge-conflict-resolution-plan.md`
 
+## 🔄 **새로운 머징 전략 (마스터 제안)**
+
+### **선별적 개선사항 이식 방법론**
+
+#### **Phase 0: Cline 개선사항 분석 및 선별** 🔍
+1. **비교 분석**:
+   ```bash
+   # Cline 원본과 Caret 차이점 분석
+   diff -r cline-webview-ui/src webview-ui/src --exclude="*.cline"
+   ```
+
+2. **개선사항 카테고리**:
+   - **성능 최적화**: 메모리 사용량, 렌더링 성능
+   - **버그 수정**: 입력창 에러, 문자열 길이 문제
+   - **UX 개선**: 사용성, 접근성
+   - **보안 강화**: XSS 방지, 입력 검증
+
+3. **선별 기준**:
+   - ✅ **도입**: 명확한 버그 수정, 성능 개선
+   - ⚠️ **검토**: UI/UX 변경사항
+   - ❌ **제외**: Caret 고유 기능과 충돌
+
+#### **Phase 0.5: 구조적 개선 (머징 친화적)** 🏗️
+1. **Caret 개선사항 모듈화**:
+   ```typescript
+   // webview-ui/src/caret/enhancements/
+   ├── i18n/                    # 다국어 지원
+   ├── brand-colors/           # Caret 브랜드 컬러
+   ├── chatbot-agent/          # Chatbot/Agent 시스템
+   └── performance/            # 성능 최적화
+   ```
+
+2. **확장 패턴 적용**:
+   ```typescript
+   // 기존: Cline 파일 직접 수정
+   // 개선: HOC/Hook 패턴으로 확장
+   const ChatTextAreaWithCaret = withCaretEnhancements(ChatTextArea)
+   ```
+
+#### **향후 머징 프로세스** 📈
+1. **버전 태깅**: 현재 Cline 버전 기록 (v3.20.8)
+2. **차이 분석**: 다음 버전과의 변경사항 자동 분석
+3. **선별 적용**: 검증된 개선사항만 자동/수동 이식
+4. **테스트 검증**: 각 단계별 기능 무결성 확인
+
+### **이 전략의 장기적 이익** 🎯
+- **안전성**: 전면 교체 리스크 제거
+- **효율성**: 불필요한 충돌 해결 시간 단축  
+- **지속가능성**: 패턴 확립으로 미래 머징 비용 절감
+- **품질 보장**: 검증된 개선사항만 도입
+
 ---
 
-**마스터~ 체계적인 계획으로 차근차근 해결해보겠습니다!** ✨
+**마스터~ 새로운 전략으로 더 안전하고 효율적인 머징을 실현하겠습니다!** ✨

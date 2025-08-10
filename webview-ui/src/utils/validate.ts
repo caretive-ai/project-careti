@@ -1,14 +1,28 @@
 // CARET MODIFICATION: Removed debugging logs for Gemini API validation (백업: validate-ts.cline)
 import { ApiConfiguration, openRouterDefaultModelId, ModelInfo } from "@shared/api"
+import { Mode } from "@shared/storage/types"
+import { getModeSpecificFields } from "@/components/settings/utils/providerUtils"
 import { t } from "@/caret/utils/i18n"
 import { SupportedLanguage } from "@/caret/constants/urls"
 
 export function validateApiConfiguration(
 	apiConfiguration?: ApiConfiguration,
+	currentMode: Mode = "plan",
 	language: SupportedLanguage = "en",
 ): string | undefined {
 	if (apiConfiguration) {
-		switch (apiConfiguration.apiProvider) {
+		const {
+			apiProvider,
+			openAiModelId,
+			requestyModelId,
+			fireworksModelId,
+			togetherModelId,
+			ollamaModelId,
+			lmStudioModelId,
+			vsCodeLmModelSelector,
+		} = getModeSpecificFields(apiConfiguration, currentMode)
+
+		switch (apiProvider) {
 			case "anthropic":
 				if (!apiConfiguration.apiKey) {
 					return t("invalidApiKey", "validate-api-conf", language)
@@ -64,49 +78,54 @@ export function validateApiConfiguration(
 					return t("invalidApiKey", "validate-api-conf", language)
 				}
 				break
-			case "cline":
-				if (!apiConfiguration.clineApiKey) {
-					return t("invalidApiKey", "validate-api-conf", language)
-				}
-				break
+					case "cline":
+			if (!apiConfiguration.clineAccountId) {
+				return t("invalidApiKey", "validate-api-conf", language)
+			}
+			break
 			case "caret": // CARET MODIFICATION: Add Caret
 				if (!apiConfiguration.caretApiKey) {
 					return t("invalidApiKey", "validate-api-conf", language)
 				}
 				break
 			case "openai":
-				if (!apiConfiguration.openAiBaseUrl || !apiConfiguration.openAiApiKey || !apiConfiguration.openAiModelId) {
+				if (!apiConfiguration.openAiBaseUrl || !apiConfiguration.openAiApiKey || !openAiModelId) {
 					return t("invalidOpenAiConfig", "validate-api-conf", language)
 				}
 				break
 			case "requesty":
-				if (!apiConfiguration.requestyApiKey || !apiConfiguration.requestyModelId) {
+				if (!apiConfiguration.requestyApiKey || !requestyModelId) {
 					return t("invalidApiKey", "validate-api-conf", language)
 				}
 				break
 			case "fireworks":
-				if (!apiConfiguration.fireworksApiKey || !apiConfiguration.fireworksModelId) {
+				if (!apiConfiguration.fireworksApiKey || !fireworksModelId) {
 					return t("invalidApiKey", "validate-api-conf", language)
 				}
 				break
 			case "together":
-				if (!apiConfiguration.togetherApiKey || !apiConfiguration.togetherModelId) {
+				if (!apiConfiguration.togetherApiKey || !togetherModelId) {
 					return t("invalidApiKey", "validate-api-conf", language)
 				}
 				break
 			case "ollama":
-				if (!apiConfiguration.ollamaModelId) {
+				if (!ollamaModelId) {
 					return t("invalidModelId", "validate-api-conf", language)
 				}
 				break
 			case "lmstudio":
-				if (!apiConfiguration.lmStudioModelId) {
+				if (!lmStudioModelId) {
 					return t("invalidModelId", "validate-api-conf", language)
 				}
 				break
 			case "vscode-lm":
-				if (!apiConfiguration.vsCodeLmModelSelector) {
+				if (!vsCodeLmModelSelector) {
 					return t("invalidModelSelector", "validate-api-conf", language)
+				}
+				break
+			case "moonshot":
+				if (!apiConfiguration.moonshotApiKey) {
+					return "You must provide a valid API key or choose a different provider."
 				}
 				break
 			case "nebius":
@@ -144,15 +163,17 @@ export function validateApiConfiguration(
 }
 
 export function validateModelId(
+	currentMode: Mode,
 	apiConfiguration?: ApiConfiguration,
 	openRouterModels?: Record<string, ModelInfo>,
 	language: SupportedLanguage = "en",
 ): string | undefined {
 	if (apiConfiguration) {
-		switch (apiConfiguration.apiProvider) {
+		const { apiProvider, openRouterModelId } = getModeSpecificFields(apiConfiguration, currentMode)
+		switch (apiProvider) {
 			case "openrouter":
 			case "cline":
-				const modelId = apiConfiguration.openRouterModelId || openRouterDefaultModelId // in case the user hasn't changed the model id, it will be undefined by default
+				const modelId = openRouterModelId || openRouterDefaultModelId // in case the user hasn't changed the model id, it will be undefined by default
 				if (!modelId) {
 					return t("invalidModelId", "validate-api-conf", language)
 				}

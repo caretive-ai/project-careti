@@ -40,13 +40,16 @@ Caret의 문서 시스템을 **Docusaurus 기반으로 구축**하고 `docs.care
 - [ ] **Upstream remote 설정**: `docs` Submodule 디렉토리 내에서 `git remote add upstream <aicoding/cline-repo-url>` 실행.
 
 ### **Phase 3: Docusaurus 설정 및 Caret 콘텐츠 통합**
+- [ ] **문서 현황 파악**: `caret-docs/development/documentation-status.mdx` 참고하여 현재 문서 상태 및 다국어 지원 현황 확인
 - [ ] **"Cline" → "Caret" 브랜딩 변경**: `docs` Submodule 내에서 스크립트를 활용하여 일괄 변경.
 - [ ] **`caret-docs` 콘텐츠 이전**: 기존 `caret-docs`의 `development/`, `guides/` 등의 개발 문서를 `docs/docs` 디렉토리의 해당 경로로 이전.
 - [ ] **네비게이션 구조 설계 (`sidebars.js`)**: 사용자 문서와 개발자 문서를 명확히 구분하는 사이드바 구성.
 - [ ] **다국어 (i18n) 기본 설정**: `docusaurus.config.js`에 4개 국어(ko, en, ja, zh) 설정.
 
 ### **Phase 4: 다국어 번역 시스템 구축**
+- [ ] **Task #028 완료 확인**: 누락된 영어 문서들(`checkpoint-architecture.en.mdx`, `caret-features.en.mdx`) 생성 완료 여부 확인
 - [ ] **Docusaurus i18n 설정**: 4개 언어(ko, en, ja, zh) 지원 활성화.
+- [ ] **기존 다국어 문서 활용**: `documentation-status.mdx`에서 ✅🌍 표시된 문서들을 우선 통합
 - [ ] **영문 문서를 기본으로 번역 진행**:
   - `i18n/ko/docusaurus-plugin-content-docs/current/...` 경로에 한국어 번역본 생성.
   - (이후) 일본어, 중국어 번역본 추가.
@@ -77,12 +80,18 @@ Caret의 문서 시스템을 **Docusaurus 기반으로 구축**하고 `docs.care
 - `docs/` (Git Submodule로 대체될 디렉토리)
 - `caret-docs/` (내용을 `docs/`로 이전 후 제거 대상)
 - `webview-ui/src/components/welcome/WelcomeView.tsx` (API 가이드 연동 대상)
+- **`caret-docs/development/documentation-status.mdx`** (현재 문서 현황 및 다국어 지원 상태 참고)
 
 ## ⚠️ **주의사항**
 1.  **Git Submodule 관리**: `git submodule update --init --recursive` 등 Submodule 명령어에 대한 이해 필요.
 2.  **수동 동기화**: Cline 업데이트 시 수동 작업으로 인한 누락 또는 오류 발생 가능성에 주의.
 3.  **번역 품질**: 전문 용어 일관성 확보를 위한 가이드라인 필요.
 4.  **빌드/배포 분리**: 문서의 빌드 및 배포는 `caret-docs-repo`에서 독립적으로 처리됨.
+5.  **Task #028 연계**: 본 작업 시작 전 Task #028 완료 권장 (누락 문서 보완)
+
+## 🔄 **연관 작업**
+- **Task #028**: 필수 개발 문서 완성 및 다국어 지원 (선행 작업 권장)
+- **향후 Cline 머징 작업**: 문서 동기화 필요 시 참조
 
 ## 💰 **비용 효율성**
 - **Mintlify**: 월 $120+ (Pro 플랜)

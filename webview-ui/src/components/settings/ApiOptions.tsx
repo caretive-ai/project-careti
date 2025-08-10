@@ -1,7 +1,6 @@
-// CARET MODIFICATION: Provider 순서 변경 및 Cline을 Caret으로 표시
-// 백업 위치: webview-ui/src/components/settings/ApiOptions-tsx.cline
-// 목적: 사용자 피드백 반영 - Provider 순서를 Caret > Google Gemini > OpenAI > Anthropic 순으로 변경
-
+﻿// CARET MODIFICATION: Provider ?쒖꽌 蹂寃?諛?Cline??Caret?쇰줈 ?쒖떆
+// 諛깆뾽 ?꾩튂: webview-ui/src/components/settings/ApiOptions-tsx.cline
+// 紐⑹쟻: ?ъ슜???쇰뱶諛?諛섏쁺 - Provider ?쒖꽌瑜?Caret > Google Gemini > OpenAI > Anthropic ?쒖쑝濡?蹂寃?
 import VSCodeButtonLink from "@/components/common/VSCodeButtonLink"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ModelsServiceClient } from "@/services/grpc-client"
@@ -53,9 +52,12 @@ import {
 	sapAiCoreDefaultModelId,
 	sapAiCoreModels,
 } from "@shared/api"
-import { EmptyRequest, StringRequest } from "@shared/proto/common"
-import { OpenAiModelsRequest, UpdateApiConfigurationRequest } from "@shared/proto/models"
+import { Mode } from "@shared/storage/types"
+import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
+import { OpenAiModelsRequest, UpdateApiConfigurationRequest } from "@shared/proto/cline/models"
 import { convertApiConfigurationToProto } from "@shared/proto-conversions/models/api-configuration-conversion"
+import { getModeSpecificFields } from "./utils/providerUtils"
+import { useApiConfigurationHandlers } from "./utils/useApiConfigurationHandlers"
 import {
 	VSCodeButton,
 	VSCodeCheckbox,
@@ -78,6 +80,7 @@ import OllamaModelPicker from "./OllamaModelPicker"
 import OpenRouterModelPicker, { ModelDescriptionMarkdown, OPENROUTER_MODEL_PICKER_Z_INDEX } from "./OpenRouterModelPicker"
 import RequestyModelPicker from "./RequestyModelPicker"
 import ThinkingBudgetSlider from "./ThinkingBudgetSlider"
+import { getModeSpecificFields } from "./utils/providerUtils"
 import { ExtensionMessage } from "@shared/ExtensionMessage"
 import FeaturedModelCard from "./FeaturedModelCard" // CARET MODIFICATION: Added FeaturedModelCard import
 
@@ -87,6 +90,7 @@ interface ApiOptionsProps {
 	modelIdErrorMessage?: string
 	isPopup?: boolean
 	saveImmediately?: boolean // Add prop to control immediate saving
+	currentMode: Mode
 }
 
 const OpenRouterBalanceDisplay = ({ apiKey }: { apiKey: string }) => {
@@ -189,8 +193,9 @@ const ApiOptions = ({
 }: ApiOptionsProps) => {
 	// Use full context state for immediate save payload
 	const extensionState = useExtensionState()
-	const { apiConfiguration, setApiConfiguration, uriScheme } = extensionState
-	// CARET MODIFICATION: 반응형 레이아웃을 위한 창 크기 감지
+	const { apiConfiguration, uriScheme } = extensionState
+	const { handleFieldsChange: setApiConfiguration } = useApiConfigurationHandlers()
+	// CARET MODIFICATION: 諛섏쓳???덉씠?꾩썐???꾪븳 李??ш린 媛먯?
 	const { width } = useWindowSize()
 	const [ollamaModels, setOllamaModels] = useState<string[]>([])
 	const [lmStudioModels, setLmStudioModels] = useState<string[]>([])
@@ -202,7 +207,10 @@ const ApiOptions = ({
 	const [modelConfigurationSelected, setModelConfigurationSelected] = useState(false)
 	const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
 	const [providerSortingSelected, setProviderSortingSelected] = useState(!!apiConfiguration?.openRouterProviderSorting)
-	const [reasoningEffortSelected, setReasoningEffortSelected] = useState(!!apiConfiguration?.reasoningEffort)
+	
+	// CARET MODIFICATION: Mode별 필드 접근을 위한 getModeSpecificFields 사용
+	const modeSpecificFields = getModeSpecificFields(apiConfiguration, currentMode)
+	const [reasoningEffortSelected, setReasoningEffortSelected] = useState(!!modeSpecificFields.reasoningEffort)
 
 	const handleInputChange = (field: keyof ApiConfiguration) => (event: any) => {
 		const newValue = event.target.value
@@ -396,13 +404,13 @@ const ApiOptions = ({
 
 			{selectedProvider === "caret" && ( // CARET MODIFICATION: Changed 'cline' to 'caret'
 				<div>
-					{/* CARET MODIFICATION: Caret 프로바이더 개선 - 향후 지원 예정 메시지 및 모델 선택 */}
+					{/* CARET MODIFICATION: Caret ?꾨줈諛붿씠??媛쒖꽑 - ?ν썑 吏???덉젙 硫붿떆吏 諛?紐⑤뜽 ?좏깮 */}
 					<div style={{ marginBottom: 14, marginTop: 4 }}>
 						<ClineAccountInfoCard />
 					</div>
 
 					{/* CARET MODIFICATION: Testing edit_file functionality with a comment */}
-					{/* 향후 지원 예정 메시지 */}
+					{/* ?ν썑 吏???덉젙 硫붿떆吏 */}
 					<div
 						style={{
 							padding: "10px",
@@ -916,7 +924,7 @@ const ApiOptions = ({
 					<DropdownContainer zIndex={DROPDOWN_Z_INDEX - 2} className="dropdown-container">
 						<VSCodeDropdown
 							id="bedrock-model-dropdown"
-							value={apiConfiguration?.awsBedrockCustomSelected ? "custom" : selectedModelId}
+							value={modeSpecificFields.awsBedrockCustomSelected ? "custom" : selectedModelId}
 							onChange={(e: any) => {
 								const isCustom = e.target.value === "custom"
 								setApiConfiguration({
@@ -943,7 +951,7 @@ const ApiOptions = ({
 							<VSCodeOption value="custom">{t("apiOptions.custom", "common")}</VSCodeOption>
 						</VSCodeDropdown>
 					</DropdownContainer>
-					{apiConfiguration?.awsBedrockCustomSelected && (
+					{modeSpecificFields.awsBedrockCustomSelected && (
 						<div>
 							<p
 								style={{
@@ -959,7 +967,7 @@ const ApiOptions = ({
 							</label>
 							<VSCodeTextField
 								id="bedrock-model-input"
-								value={apiConfiguration?.apiModelId || ""}
+								value={modeSpecificFields.apiModelId || ""}
 								style={{ width: "100%", marginTop: 3 }}
 								onInput={handleInputChange("apiModelId")}
 								placeholder={t("apiOptions.enterCustomModelId", "common")}
@@ -970,7 +978,7 @@ const ApiOptions = ({
 							<DropdownContainer zIndex={DROPDOWN_Z_INDEX - 3} className="dropdown-container">
 								<VSCodeDropdown
 									id="bedrock-base-model-dropdown"
-									value={apiConfiguration?.awsBedrockCustomModelBaseId || bedrockDefaultModelId}
+									value={modeSpecificFields.awsBedrockCustomModelBaseId || bedrockDefaultModelId}
 									onChange={handleInputChange("awsBedrockCustomModelBaseId")}
 									style={{ width: "100%" }}>
 									<VSCodeOption value="">{t("apiOptions.selectModel", "common")}</VSCodeOption>
@@ -993,12 +1001,12 @@ const ApiOptions = ({
 					{(selectedModelId === "anthropic.claude-3-7-sonnet-20250219-v1:0" ||
 						selectedModelId === "anthropic.claude-sonnet-4-20250514-v1:0" ||
 						selectedModelId === "anthropic.claude-opus-4-20250514-v1:0" ||
-						(apiConfiguration?.awsBedrockCustomSelected &&
-							apiConfiguration?.awsBedrockCustomModelBaseId === "anthropic.claude-3-7-sonnet-20250219-v1:0") ||
-						(apiConfiguration?.awsBedrockCustomSelected &&
-							apiConfiguration?.awsBedrockCustomModelBaseId === "anthropic.claude-sonnet-4-20250514-v1:0") ||
-						(apiConfiguration?.awsBedrockCustomSelected &&
-							apiConfiguration?.awsBedrockCustomModelBaseId === "anthropic.claude-opus-4-20250514-v1:0")) && (
+											(modeSpecificFields.awsBedrockCustomSelected &&
+						modeSpecificFields.awsBedrockCustomModelBaseId === "anthropic.claude-3-7-sonnet-20250219-v1:0") ||
+					(modeSpecificFields.awsBedrockCustomSelected &&
+						modeSpecificFields.awsBedrockCustomModelBaseId === "anthropic.claude-sonnet-4-20250514-v1:0") ||
+					(modeSpecificFields.awsBedrockCustomSelected &&
+						modeSpecificFields.awsBedrockCustomModelBaseId === "anthropic.claude-opus-4-20250514-v1:0")) && (
 						<ThinkingBudgetSlider apiConfiguration={apiConfiguration} setApiConfiguration={setApiConfiguration} />
 					)}
 					<ModelInfoView
@@ -1011,7 +1019,7 @@ const ApiOptions = ({
 				</div>
 			)}
 
-			{apiConfiguration?.apiProvider === "vertex" && (
+			{modeSpecificFields.apiProvider === "vertex" && (
 				<div
 					style={{
 						display: "flex",
@@ -1053,12 +1061,12 @@ const ApiOptions = ({
 						<VSCodeLink
 							href="https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude#before_you_begin"
 							style={{ display: "inline", fontSize: "inherit" }}>
-							{"1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,"}
+							{"1) create a Google Cloud account ??enable the Vertex AI API ??enable the desired Claude models,"}
 						</VSCodeLink>{" "}
 						<VSCodeLink
 							href="https://cloud.google.com/docs/authentication/provide-credentials-adc#google-idp"
 							style={{ display: "inline", fontSize: "inherit" }}>
-							{"2) install the Google Cloud CLI › configure Application Default Credentials."}
+							{"2) install the Google Cloud CLI ??configure Application Default Credentials."}
 						</VSCodeLink>
 					</p>
 				</div>
@@ -1075,7 +1083,7 @@ const ApiOptions = ({
 						<span style={{ fontWeight: 500 }}>{t("apiOptions.geminiApiKey", "common")}</span>
 					</VSCodeTextField>
 
-					{/* CARET MODIFICATION: Flash 모델 추론 기능 기본 활성화 안내 */}
+					{/* CARET MODIFICATION: Flash 紐⑤뜽 異붾줎 湲곕뒫 湲곕낯 ?쒖꽦???덈궡 */}
 					{selectedModelId === "gemini-2.5-flash-preview-05-20" && (
 						<div
 							style={{
@@ -1092,7 +1100,7 @@ const ApiOptions = ({
 									color: "var(--vscode-charts-blue)",
 									fontWeight: 500,
 								}}>
-								💡 {t("apiOptions.reasoningEnabled", "common")}
+								?뮕 {t("apiOptions.reasoningEnabled", "common")}
 							</p>
 						</div>
 					)}
@@ -1172,7 +1180,7 @@ const ApiOptions = ({
 						<span style={{ fontWeight: 500 }}>API Key</span>
 					</VSCodeTextField>
 					<VSCodeTextField
-						value={apiConfiguration?.openAiModelId || ""}
+						value={modeSpecificFields.openAiModelId || ""}
 						style={{ width: "100%", marginBottom: 10 }}
 						onInput={handleInputChange("openAiModelId")}
 						placeholder={"Enter Model ID..."}>
@@ -1305,11 +1313,11 @@ const ApiOptions = ({
 					{modelConfigurationSelected && (
 						<>
 							<VSCodeCheckbox
-								checked={!!apiConfiguration?.openAiModelInfo?.supportsImages}
+								checked={!!modeSpecificFields.openAiModelInfo?.supportsImages}
 								onChange={(e: any) => {
 									const isChecked = e.target.checked === true
-									const modelInfo = apiConfiguration?.openAiModelInfo
-										? apiConfiguration.openAiModelInfo
+									const modelInfo = modeSpecificFields.openAiModelInfo
+										? modeSpecificFields.openAiModelInfo
 										: { ...openAiModelInfoSaneDefaults }
 									modelInfo.supportsImages = isChecked
 									setApiConfiguration({
@@ -1320,11 +1328,11 @@ const ApiOptions = ({
 								Supports Images
 							</VSCodeCheckbox>
 							<VSCodeCheckbox
-								checked={!!apiConfiguration?.openAiModelInfo?.supportsImages}
+								checked={!!modeSpecificFields.openAiModelInfo?.supportsImages}
 								onChange={(e: any) => {
 									const isChecked = e.target.checked === true
-									let modelInfo = apiConfiguration?.openAiModelInfo
-										? apiConfiguration.openAiModelInfo
+									let modelInfo = modeSpecificFields.openAiModelInfo
+										? modeSpecificFields.openAiModelInfo
 										: { ...openAiModelInfoSaneDefaults }
 									modelInfo.supportsImages = isChecked
 									setApiConfiguration({
@@ -1335,11 +1343,11 @@ const ApiOptions = ({
 								Supports browser use
 							</VSCodeCheckbox>
 							<VSCodeCheckbox
-								checked={!!apiConfiguration?.openAiModelInfo?.isR1FormatRequired}
+								checked={!!modeSpecificFields.openAiModelInfo?.isR1FormatRequired}
 								onChange={(e: any) => {
 									const isChecked = e.target.checked === true
-									let modelInfo = apiConfiguration?.openAiModelInfo
-										? apiConfiguration.openAiModelInfo
+									let modelInfo = modeSpecificFields.openAiModelInfo
+										? modeSpecificFields.openAiModelInfo
 										: { ...openAiModelInfoSaneDefaults }
 									modelInfo = { ...modelInfo, isR1FormatRequired: isChecked }
 
@@ -1353,14 +1361,14 @@ const ApiOptions = ({
 							<div style={{ display: "flex", gap: 10, marginTop: "5px" }}>
 								<VSCodeTextField
 									value={
-										apiConfiguration?.openAiModelInfo?.contextWindow
-											? apiConfiguration.openAiModelInfo.contextWindow.toString()
+										modeSpecificFields.openAiModelInfo?.contextWindow
+											? modeSpecificFields.openAiModelInfo.contextWindow.toString()
 											: openAiModelInfoSaneDefaults.contextWindow?.toString()
 									}
 									style={{ flex: 1 }}
 									onInput={(input: any) => {
-										const modelInfo = apiConfiguration?.openAiModelInfo
-											? apiConfiguration.openAiModelInfo
+										const modelInfo = modeSpecificFields.openAiModelInfo
+											? modeSpecificFields.openAiModelInfo
 											: { ...openAiModelInfoSaneDefaults }
 										modelInfo.contextWindow = Number(input.target.value)
 										setApiConfiguration({
@@ -1372,14 +1380,14 @@ const ApiOptions = ({
 								</VSCodeTextField>
 								<VSCodeTextField
 									value={
-										apiConfiguration?.openAiModelInfo?.maxTokens
-											? apiConfiguration.openAiModelInfo.maxTokens.toString()
+										modeSpecificFields.openAiModelInfo?.maxTokens
+											? modeSpecificFields.openAiModelInfo.maxTokens.toString()
 											: openAiModelInfoSaneDefaults.maxTokens?.toString()
 									}
 									style={{ flex: 1 }}
 									onInput={(input: any) => {
-										const modelInfo = apiConfiguration?.openAiModelInfo
-											? apiConfiguration.openAiModelInfo
+										const modelInfo = modeSpecificFields.openAiModelInfo
+											? modeSpecificFields.openAiModelInfo
 											: { ...openAiModelInfoSaneDefaults }
 										modelInfo.maxTokens = input.target.value
 										setApiConfiguration({
@@ -1393,14 +1401,14 @@ const ApiOptions = ({
 							<div style={{ display: "flex", gap: 10, marginTop: "5px" }}>
 								<VSCodeTextField
 									value={
-										apiConfiguration?.openAiModelInfo?.inputPrice
-											? apiConfiguration.openAiModelInfo.inputPrice.toString()
+										modeSpecificFields.openAiModelInfo?.inputPrice
+											? modeSpecificFields.openAiModelInfo.inputPrice.toString()
 											: openAiModelInfoSaneDefaults.inputPrice?.toString()
 									}
 									style={{ flex: 1 }}
 									onInput={(input: any) => {
-										const modelInfo = apiConfiguration?.openAiModelInfo
-											? apiConfiguration.openAiModelInfo
+										const modelInfo = modeSpecificFields.openAiModelInfo
+											? modeSpecificFields.openAiModelInfo
 											: { ...openAiModelInfoSaneDefaults }
 										modelInfo.inputPrice = input.target.value
 										setApiConfiguration({
@@ -1412,14 +1420,14 @@ const ApiOptions = ({
 								</VSCodeTextField>
 								<VSCodeTextField
 									value={
-										apiConfiguration?.openAiModelInfo?.outputPrice
-											? apiConfiguration.openAiModelInfo.outputPrice.toString()
+										modeSpecificFields.openAiModelInfo?.outputPrice
+											? modeSpecificFields.openAiModelInfo.outputPrice.toString()
 											: openAiModelInfoSaneDefaults.outputPrice?.toString()
 									}
 									style={{ flex: 1 }}
 									onInput={(input: any) => {
-										const modelInfo = apiConfiguration?.openAiModelInfo
-											? apiConfiguration.openAiModelInfo
+										const modelInfo = modeSpecificFields.openAiModelInfo
+											? modeSpecificFields.openAiModelInfo
 											: { ...openAiModelInfoSaneDefaults }
 										modelInfo.outputPrice = input.target.value
 										setApiConfiguration({
@@ -1433,13 +1441,13 @@ const ApiOptions = ({
 							<div style={{ display: "flex", gap: 10, marginTop: "5px" }}>
 								<VSCodeTextField
 									value={
-										apiConfiguration?.openAiModelInfo?.temperature
-											? apiConfiguration.openAiModelInfo.temperature.toString()
+										modeSpecificFields.openAiModelInfo?.temperature
+											? modeSpecificFields.openAiModelInfo.temperature.toString()
 											: openAiModelInfoSaneDefaults.temperature?.toString()
 									}
 									onInput={(input: any) => {
-										const modelInfo = apiConfiguration?.openAiModelInfo
-											? apiConfiguration.openAiModelInfo
+										const modelInfo = modeSpecificFields.openAiModelInfo
+											? modeSpecificFields.openAiModelInfo
 											: { ...openAiModelInfoSaneDefaults }
 
 										// Check if the input ends with a decimal point or has trailing zeros after decimal
@@ -1521,7 +1529,7 @@ const ApiOptions = ({
 						)}
 					</p>
 					<VSCodeTextField
-						value={apiConfiguration?.fireworksModelId || ""}
+						value={modeSpecificFields.fireworksModelId || ""}
 						style={{ width: "100%" }}
 						onInput={handleInputChange("fireworksModelId")}
 						placeholder={"Enter Model ID..."}>
@@ -1594,7 +1602,7 @@ const ApiOptions = ({
 						<span style={{ fontWeight: 500 }}>API Key</span>
 					</VSCodeTextField>
 					<VSCodeTextField
-						value={apiConfiguration?.togetherModelId || ""}
+						value={modeSpecificFields.togetherModelId || ""}
 						style={{ width: "100%" }}
 						onInput={handleInputChange("togetherModelId")}
 						placeholder={"Enter Model ID..."}>
@@ -2308,7 +2316,7 @@ const ApiOptions = ({
 				</>
 			)}
 
-			{/* CARET MODIFICATION: Caret 프로바이더 전용 모델 버튼 2개 */}
+			{/* CARET MODIFICATION: Caret ?꾨줈諛붿씠???꾩슜 紐⑤뜽 踰꾪듉 2媛?*/}
 			{selectedProvider === "caret" && showModelOptions && (
 				<>
 					<div style={{ marginBottom: "8px" }}>
@@ -2317,7 +2325,7 @@ const ApiOptions = ({
 						</label>
 					</div>
 
-					{/* CARET MODIFICATION: 반응형 모델 선택 버튼 2개 - 1920*1080에서 2열 유지 */}
+					{/* CARET MODIFICATION: 諛섏쓳??紐⑤뜽 ?좏깮 踰꾪듉 2媛?- 1920*1080?먯꽌 2???좎? */}
 					<div
 						style={{
 							display: "flex",
@@ -2325,7 +2333,7 @@ const ApiOptions = ({
 							gap: "4px",
 							marginBottom: "8px",
 						}}>
-						{/* Gemini Pro 모델 버튼 */}
+						{/* Gemini Pro 紐⑤뜽 踰꾪듉 */}
 						<div
 							onClick={() => handleInputChange("apiModelId")({ target: { value: "gemini-2.5-pro-preview-06-05" } })}
 							style={{
@@ -2341,7 +2349,7 @@ const ApiOptions = ({
 									selectedModelId === "gemini-2.5-pro-preview-06-05"
 										? "var(--vscode-list-activeSelectionBackground)"
 										: "transparent",
-								// CARET MODIFICATION: 반응형 폭 조정
+								// CARET MODIFICATION: 諛섏쓳????議곗젙
 								flex: width >= 1200 ? "1" : "none",
 							}}
 							onMouseEnter={(e) => {
@@ -2378,7 +2386,7 @@ const ApiOptions = ({
 							</div>
 						</div>
 
-						{/* Gemini Flash 모델 버튼 */}
+						{/* Gemini Flash 紐⑤뜽 踰꾪듉 */}
 						<div
 							onClick={() =>
 								handleInputChange("apiModelId")({ target: { value: "gemini-2.5-flash-preview-05-20" } })
@@ -2396,7 +2404,7 @@ const ApiOptions = ({
 									selectedModelId === "gemini-2.5-flash-preview-05-20"
 										? "var(--vscode-list-activeSelectionBackground)"
 										: "transparent",
-								// CARET MODIFICATION: 반응형 폭 조정
+								// CARET MODIFICATION: 諛섏쓳????議곗젙
 								flex: width >= 400 ? "1" : "none",
 							}}
 							onMouseEnter={(e) => {
@@ -2436,7 +2444,7 @@ const ApiOptions = ({
 				</>
 			)}
 
-			{/* CARET MODIFICATION: Caret 프로바이더에도 ModelInfoView 표시 */}
+			{/* CARET MODIFICATION: Caret ?꾨줈諛붿씠?붿뿉??ModelInfoView ?쒖떆 */}
 			{selectedProvider === "caret" && showModelOptions && selectedModelId && (
 				<ModelInfoView
 					selectedModelId={selectedModelId}
@@ -2822,8 +2830,8 @@ export function normalizeApiConfiguration(apiConfiguration?: ApiConfiguration): 
 		case "anthropic":
 			return getProviderData(anthropicModels, anthropicDefaultModelId)
 		case "bedrock":
-			if (apiConfiguration?.awsBedrockCustomSelected) {
-				const baseModelId = apiConfiguration.awsBedrockCustomModelBaseId
+					if (modeSpecificFields.awsBedrockCustomSelected) {
+			const baseModelId = modeSpecificFields.awsBedrockCustomModelBaseId
 				return {
 					selectedProvider: provider,
 					selectedModelId: modelId || bedrockDefaultModelId,
@@ -2865,8 +2873,8 @@ export function normalizeApiConfiguration(apiConfiguration?: ApiConfiguration): 
 		case "openai":
 			return {
 				selectedProvider: provider,
-				selectedModelId: apiConfiguration?.openAiModelId || "",
-				selectedModelInfo: apiConfiguration?.openAiModelInfo || openAiModelInfoSaneDefaults,
+							selectedModelId: modeSpecificFields.openAiModelId || "",
+			selectedModelInfo: modeSpecificFields.openAiModelInfo || openAiModelInfoSaneDefaults,
 			}
 		case "ollama":
 			return {
@@ -2907,15 +2915,15 @@ export function normalizeApiConfiguration(apiConfiguration?: ApiConfiguration): 
 			return getProviderData(cerebrasModels, cerebrasDefaultModelId)
 		case "sapaicore":
 			return getProviderData(sapAiCoreModels, sapAiCoreDefaultModelId)
-		case "caret": // CARET MODIFICATION: Caret 프로바이더를 위한 모델 정보 제공
-			const caretModelId = apiConfiguration?.apiModelId || geminiDefaultModelId // Caret 기본 모델 설정
+		case "caret": // CARET MODIFICATION: Caret ?꾨줈諛붿씠?붾? ?꾪븳 紐⑤뜽 ?뺣낫 ?쒓났
+			const caretModelId = apiConfiguration?.apiModelId || geminiDefaultModelId // Caret 湲곕낯 紐⑤뜽 ?ㅼ젙
 			let caretSelectedModelInfo: ModelInfo | undefined
 			if (caretModelId === "gemini-2.5-pro-preview-06-05") {
 				caretSelectedModelInfo = geminiModels["gemini-2.5-pro-preview-06-05"]
 			} else if (caretModelId === "gemini-2.5-flash-preview-05-20") {
 				caretSelectedModelInfo = geminiModels["gemini-2.5-flash-preview-05-20"]
 			} else {
-				// 기본값 또는 예외 처리 (예: 플래시 모델을 기본으로 설정)
+				// 湲곕낯媛??먮뒗 ?덉쇅 泥섎━ (?? ?뚮옒??紐⑤뜽??湲곕낯?쇰줈 ?ㅼ젙)
 				caretSelectedModelInfo = geminiModels[geminiDefaultModelId]
 			}
 			return {

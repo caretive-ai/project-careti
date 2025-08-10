@@ -3,7 +3,7 @@ import { VSCodeTextField, VSCodeCheckbox, VSCodeDropdown, VSCodeOption } from "@
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import TerminalOutputLineLimitSlider from "./TerminalOutputLineLimitSlider"
 import { StateServiceClient } from "../../services/grpc-client"
-import { Int64, Int64Request } from "@shared/proto/common"
+import { Int64, Int64Request } from "@shared/proto/cline/common"
 // CARET MODIFICATION: 다국어 지원 추가
 import { t } from "../../caret/utils/i18n"
 import { useCurrentLanguage } from "../../caret/hooks/useCurrentLanguage"

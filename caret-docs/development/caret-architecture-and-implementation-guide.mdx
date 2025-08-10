@@ -422,7 +422,7 @@ export class CaretTask extends Task {
 
     ```bash
     # 원본 파일을 .cline 확장자로 백업
-    cp webview-ui/src/components/Welcome.tsx webview-ui/src/components/Welcome-tsx.cline
+    cp webview-ui/src/components/Welcome.tsx webview-ui/src/components/Welcome.tsx.cline
     ```
 
 2. **Caret 버전으로 교체**
@@ -458,7 +458,7 @@ export class CaretProvider extends ClineWebviewProvider {
 
 1.  **무리한 재구현 금지**: `CaretProvider`에서 `resolveWebviewView`와 같은 거대한 메소드를 통째로 복사하여 재구현하는 것은 **엄격히 금지**됩니다. 이는 버그 발생의 주요 원인이 됩니다.
 2.  **원본 파일 백업 (안전 규칙)**:
-    -   백업 생성 전 기존 백업 확인: `Test-Path "src/core/webview/index-ts.cline"`
+    -   백업 생성 전 기존 백업 확인: `Test-Path "src/core/webview/index.ts.cline"`
     -   기존 백업이 **없을 때만** 생성: `if (!(Test-Path "백업경로")) { Copy-Item "원본" "백업" }`
     -   **절대 기존 백업을 덮어쓰지 않음**: 첫 번째 백업이 가장 중요한 원본 상태
 3.  **최소한의 직접 수정**: `src/core/webview/index.ts` 파일에서 문제가 되는 `private` 속성을 `protected`로 변경합니다. 이는 단 한 줄의 수정으로, 가장 안전하고 명확한 해결책입니다.

@@ -31,7 +31,7 @@ import {
 	ExtensionMessage,
 } from "@shared/ExtensionMessage"
 import { COMMAND_OUTPUT_STRING, COMMAND_REQ_APP_STRING } from "@shared/combineCommandSequences"
-import { Int64Request, StringRequest } from "@shared/proto/common"
+import { Int64Request, StringRequest } from "@shared/proto/cline/common"
 
 import CodeAccordian, { cleanPathPrefix } from "../common/CodeAccordian"
 import { CheckpointControls } from "../common/CheckpointControls"
@@ -39,9 +39,6 @@ import NewTaskPreview from "./NewTaskPreview"
 import ReportBugPreview from "./ReportBugPreview"
 import UserMessage from "./UserMessage"
 import QuoteButton from "./QuoteButton"
-// CARET MODIFICATION: Import PersonaAvatar for displaying persona images in chat
-import PersonaAvatar from "../../caret/components/PersonaAvatar"
-import { t } from "@/caret/utils/i18n" // CARET MODIFICATION: 다국어 지원을 위한 t 함수 임포트
 
 const normalColor = "var(--vscode-foreground)"
 const errorColor = "var(--vscode-errorForeground)"
@@ -341,7 +338,7 @@ export const ChatRowContent = ({
 								marginBottom: "-1.5px",
 							}}></span>
 					),
-					<span style={{ color: normalColor, fontWeight: "bold" }}>{t("chat.executeCommand", "common")}</span>,
+					<span style={{ color: normalColor, fontWeight: "bold" }}>Cline wants to execute this command:</span>,
 				]
 			case "use_mcp_server":
 				const mcpServerUse = JSON.parse(message.text || "{}") as ClineAskUseMcpServer
@@ -372,9 +369,7 @@ export const ChatRowContent = ({
 							color: successColor,
 							marginBottom: "-1.5px",
 						}}></span>,
-					<span style={{ color: successColor, fontWeight: "bold" }}>
-						{t("systemMessages.taskCompleted", "common")}
-					</span>,
+					<span style={{ color: successColor, fontWeight: "bold" }}>Task Completed</span>,
 				]
 			case "api_req_started":
 				const getIconSpan = (iconName: string, color: string) => (
@@ -412,28 +407,18 @@ export const ChatRowContent = ({
 					(() => {
 						if (apiReqCancelReason != null) {
 							return apiReqCancelReason === "user_cancelled" ? (
-								<span style={{ color: normalColor, fontWeight: "bold" }}>
-									{t("chat.apiRequestCancelled", "common")}
-								</span>
+								<span style={{ color: normalColor, fontWeight: "bold" }}>API Request Cancelled</span>
 							) : (
-								<span style={{ color: errorColor, fontWeight: "bold" }}>
-									{t("chat.apiStreamingFailed", "common")}
-								</span>
+								<span style={{ color: errorColor, fontWeight: "bold" }}>API Streaming Failed</span>
 							)
 						}
 
 						if (cost != null) {
-							return (
-								<span style={{ color: normalColor, fontWeight: "bold" }}>{t("chat.apiRequest", "common")}</span>
-							)
+							return <span style={{ color: normalColor, fontWeight: "bold" }}>API Request</span>
 						}
 
 						if (apiRequestFailedMessage) {
-							return (
-								<span style={{ color: errorColor, fontWeight: "bold" }}>
-									{t("chat.apiRequestFailed", "common")}
-								</span>
-							)
+							return <span style={{ color: errorColor, fontWeight: "bold" }}>API Request Failed</span>
 						}
 						// New: Check for retryStatus to modify the title
 						if (retryStatus && cost == null && !apiReqCancelReason) {
@@ -447,11 +432,7 @@ export const ChatRowContent = ({
 							)
 						}
 
-						return (
-							<span style={{ color: normalColor, fontWeight: "bold" }}>
-								{t("chat.apiRequestPending", "common")}
-							</span>
-						)
+						return <span style={{ color: normalColor, fontWeight: "bold" }}>API Request...</span>
 					})(),
 				]
 			case "followup":
@@ -462,7 +443,7 @@ export const ChatRowContent = ({
 							color: normalColor,
 							marginBottom: "-1.5px",
 						}}></span>,
-					<span style={{ color: normalColor, fontWeight: "bold" }}>{t("chat.caretHasQuestion", "common")}:</span>,
+					<span style={{ color: normalColor, fontWeight: "bold" }}>Cline has a question:</span>,
 				]
 			default:
 				return [null, null]
@@ -533,7 +514,7 @@ export const ChatRowContent = ({
 							{toolIcon("new-file")}
 							{tool.operationIsLocatedInWorkspace === false &&
 								toolIcon("sign-out", "yellow", -90, "This file is outside of your workspace")}
-							<span style={{ fontWeight: "bold" }}>{t("chat.caretWantsToCreateNewFile", "common")}</span>
+							<span style={{ fontWeight: "bold" }}>Cline wants to create a new file:</span>
 						</div>
 						<CodeAccordian
 							isLoading={message.partial}
@@ -613,8 +594,8 @@ export const ChatRowContent = ({
 								toolIcon("sign-out", "yellow", -90, "This is outside of your workspace")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask"
-									? t("systemMessages.wantsToViewTopLevelFiles", "common")
-									: t("systemMessages.viewedTopLevelFiles", "common")}
+									? "Cline wants to view the top level files in this directory:"
+									: "Cline viewed the top level files in this directory:"}
 							</span>
 						</div>
 						<CodeAccordian
@@ -635,8 +616,8 @@ export const ChatRowContent = ({
 								toolIcon("sign-out", "yellow", -90, "This is outside of your workspace")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask"
-									? t("systemMessages.wantsToViewFilesRecursively", "common")
-									: t("systemMessages.viewedFilesRecursively", "common")}
+									? "Cline wants to recursively view all files in this directory:"
+									: "Cline recursively viewed all files in this directory:"}
 							</span>
 						</div>
 						<CodeAccordian
@@ -657,8 +638,8 @@ export const ChatRowContent = ({
 								toolIcon("sign-out", "yellow", -90, "This file is outside of your workspace")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask"
-									? t("systemMessages.wantsToViewCodeDefinitions", "common")
-									: t("systemMessages.viewedCodeDefinitions", "common")}
+									? "Cline wants to view source code definition names used in this directory:"
+									: "Cline viewed source code definition names used in this directory:"}
 							</span>
 						</div>
 						<CodeAccordian
@@ -677,7 +658,7 @@ export const ChatRowContent = ({
 							{tool.operationIsLocatedInWorkspace === false &&
 								toolIcon("sign-out", "yellow", -90, "This is outside of your workspace")}
 							<span style={{ fontWeight: "bold" }}>
-								{t("systemMessages.wantsToSearchDirectory", "common")} <code>{tool.regex}</code>:
+								Cline wants to search this directory for <code>{tool.regex}</code>:
 							</span>
 						</div>
 						<CodeAccordian
@@ -698,8 +679,8 @@ export const ChatRowContent = ({
 								toolIcon("sign-out", "yellow", -90, "This URL is external")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask"
-									? t("systemMessages.wantsToFetchContentFromUrl", "common")
-									: t("systemMessages.fetchedContentFromUrl", "common")}
+									? "Cline wants to fetch content from this URL:"
+									: "Cline fetched content from this URL:"}
 							</span>
 						</div>
 						<div
@@ -1052,101 +1033,79 @@ export const ChatRowContent = ({
 					)
 				case "text":
 					return (
-						<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-							<PersonaAvatar
-								isThinking={false}
-								size={64}
-								style={{
-									marginTop: "2px",
-									flexShrink: 0,
-								}}
-							/>
-							<div style={{ flex: 1, minWidth: 0 }}>
-								<WithCopyButton
-									ref={contentRef}
-									onMouseUp={handleMouseUp}
-									textToCopy={message.text}
-									position="bottom-right">
-									<Markdown markdown={message.text} />
-									{quoteButtonState.visible && (
-										<QuoteButton
-											top={quoteButtonState.top}
-											left={quoteButtonState.left}
-											onClick={() => {
-												handleQuoteClick()
-											}}
-										/>
-									)}
-								</WithCopyButton>
-							</div>
-						</div>
+						<WithCopyButton
+							ref={contentRef}
+							onMouseUp={handleMouseUp}
+							textToCopy={message.text}
+							position="bottom-right">
+							<Markdown markdown={message.text} />
+							{quoteButtonState.visible && (
+								<QuoteButton
+									top={quoteButtonState.top}
+									left={quoteButtonState.left}
+									onClick={() => {
+										handleQuoteClick()
+									}}
+								/>
+							)}
+						</WithCopyButton>
 					)
 				case "reasoning":
 					return (
-						<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-							<PersonaAvatar
-								isThinking={true}
-								size={64}
-								style={{
-									marginTop: "2px",
-									flexShrink: 0,
-								}}
-							/>
-							<div style={{ flex: 1, minWidth: 0 }}>
-								{message.text && (
-									<div
-										onClick={onToggleExpand}
-										style={{
-											// marginBottom: 15,
-											cursor: "pointer",
-											color: "var(--vscode-descriptionForeground)",
+						<>
+							{message.text && (
+								<div
+									onClick={onToggleExpand}
+									style={{
+										// marginBottom: 15,
+										cursor: "pointer",
+										color: "var(--vscode-descriptionForeground)",
 
-											fontStyle: "italic",
-											overflow: "hidden",
-										}}>
-										{isExpanded ? (
-											<div style={{ marginTop: -3 }}>
-												<span style={{ fontWeight: "bold", display: "block", marginBottom: "4px" }}>
-													Thinking
-													<span
-														className="codicon codicon-chevron-down"
-														style={{
-															display: "inline-block",
-															transform: "translateY(3px)",
-															marginLeft: "1.5px",
-														}}
-													/>
-												</span>
-												<span className="ph-no-capture">{message.text}</span>
-											</div>
-										) : (
-											<div style={{ display: "flex", alignItems: "center" }}>
-												<span style={{ fontWeight: "bold", marginRight: "4px" }}>Thinking:</span>
+										fontStyle: "italic",
+										overflow: "hidden",
+									}}>
+									{isExpanded ? (
+										<div style={{ marginTop: -3 }}>
+											<span style={{ fontWeight: "bold", display: "block", marginBottom: "4px" }}>
+												Thinking
 												<span
-													className="ph-no-capture"
+													className="codicon codicon-chevron-down"
 													style={{
-														whiteSpace: "nowrap",
-														overflow: "hidden",
-														textOverflow: "ellipsis",
-														direction: "rtl",
-														textAlign: "left",
-														flex: 1,
-													}}>
-													{message.text + "\u200E"}
-												</span>
-												<span
-													className="codicon codicon-chevron-right"
-													style={{
-														marginLeft: "4px",
-														flexShrink: 0,
+														display: "inline-block",
+														transform: "translateY(3px)",
+														marginLeft: "1.5px",
 													}}
 												/>
-											</div>
-										)}
-									</div>
-								)}
-							</div>
-						</div>
+											</span>
+											<span className="ph-no-capture">{message.text}</span>
+										</div>
+									) : (
+										<div style={{ display: "flex", alignItems: "center" }}>
+											<span style={{ fontWeight: "bold", marginRight: "4px" }}>Thinking:</span>
+											<span
+												className="ph-no-capture"
+												style={{
+													whiteSpace: "nowrap",
+													overflow: "hidden",
+													textOverflow: "ellipsis",
+													direction: "rtl",
+													textAlign: "left",
+													flex: 1,
+												}}>
+												{message.text + "\u200E"}
+											</span>
+											<span
+												className="codicon codicon-chevron-right"
+												style={{
+													marginLeft: "4px",
+													flexShrink: 0,
+												}}
+											/>
+										</div>
+									)}
+								</div>
+							)}
+						</>
 					)
 				case "user_feedback":
 					return (
@@ -1260,7 +1219,7 @@ export const ChatRowContent = ({
 								</div>
 								<div>
 									Cline tried to access <code>{message.text}</code> which is blocked by the{" "}
-									<code>.caretignore</code>
+									<code>.clineignore</code>
 									file.
 								</div>
 							</div>
@@ -1641,41 +1600,6 @@ export const ChatRowContent = ({
 								options={options}
 								selected={selected}
 								isActive={isLast && lastModifiedMessage?.ask === "plan_mode_respond"}
-								inputValue={inputValue}
-							/>
-							{quoteButtonState.visible && (
-								<QuoteButton
-									top={quoteButtonState.top}
-									left={quoteButtonState.left}
-									onClick={() => {
-										handleQuoteClick()
-									}}
-								/>
-							)}
-						</WithCopyButton>
-					)
-				}
-				case "chatbot_mode_respond": {
-					// CARET MODIFICATION: Handle chatbot mode responses - identical to plan_mode_respond
-					let response: string | undefined
-					let options: string[] | undefined
-					let selected: string | undefined
-					try {
-						const parsedMessage = JSON.parse(message.text || "{}") as ClinePlanModeResponse
-						response = parsedMessage.response
-						options = parsedMessage.options
-						selected = parsedMessage.selected
-					} catch (e) {
-						// legacy messages would pass response directly
-						response = message.text
-					}
-					return (
-						<WithCopyButton ref={contentRef} onMouseUp={handleMouseUp} textToCopy={response} position="bottom-right">
-							<Markdown markdown={response} />
-							<OptionsButtons
-								options={options}
-								selected={selected}
-								isActive={isLast && lastModifiedMessage?.ask === "chatbot_mode_respond"}
 								inputValue={inputValue}
 							/>
 							{quoteButtonState.visible && (

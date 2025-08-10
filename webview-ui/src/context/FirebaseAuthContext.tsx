@@ -1,6 +1,6 @@
-import { AccountServiceClient } from "@/services/grpc-client"
+import { AccountServiceClient } from "../services/grpc-client"
 import { vscode } from "@/utils/vscode"
-import { EmptyRequest } from "@shared/proto/common"
+import { EmptyRequest } from "@shared/proto/cline/common"
 import { initializeApp } from "firebase/app"
 import { User, getAuth, signInWithCustomToken, signOut } from "firebase/auth"
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react"
@@ -51,7 +51,7 @@ export const FirebaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
 					? {
 							displayName: user.displayName,
 							email: user.email,
-							photoURL: user.photoURL,
+							photoUrl: user.photoURL,
 						}
 					: null,
 			})
@@ -76,12 +76,12 @@ export const FirebaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
 	// Set up authCallback subscription
 	useEffect(() => {
 		const cleanup = AccountServiceClient.subscribeToAuthCallback(EmptyRequest.create({}), {
-			onResponse: (event) => {
+			onResponse: (event: any) => {
 				if (event.value) {
 					signInWithToken(event.value)
 				}
 			},
-			onError: (error) => {
+			onError: (error: any) => {
 				console.error("Error in authCallback subscription:", error)
 			},
 			onComplete: () => {},

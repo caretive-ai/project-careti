@@ -1,5 +1,5 @@
-import { UpdateBrowserSettingsRequest } from "@shared/proto/browser"
-import { EmptyRequest, StringRequest } from "@shared/proto/common"
+import { UpdateBrowserSettingsRequest } from "@shared/proto/cline/browser"
+import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import { VSCodeButton, VSCodeCheckbox, VSCodeDropdown, VSCodeOption, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import debounce from "debounce"
 import React, { useCallback, useEffect, useState } from "react"

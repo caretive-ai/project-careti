@@ -1,20 +1,49 @@
-import { MAX_IMAGES_AND_FILES_PER_MESSAGE } from "@/components/chat/ChatView"
+// CARET MODIFICATION: 중복 import 정리 및 올바른 proto 경로 사용
+import React, { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import DynamicTextArea from "react-textarea-autosize"
+import { useClickAway, useEvent, useWindowSize } from "react-use"
+import styled from "styled-components"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+
+// Shared imports
+import { ChatSettings } from "@shared/ChatSettings"
+import { ExtensionMessage } from "@shared/ExtensionMessage"
+import { mentionRegex, mentionRegexGlobal } from "@shared/context-mentions"
+import { Mode } from "@shared/storage/types"
+
+// Proto imports - Cline 경로 사용
+import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
+import { FileSearchRequest, RelativePathsRequest } from "@shared/proto/cline/file"
+import { UpdateApiConfigurationRequest } from "@shared/proto/cline/models"
+// CARET MODIFICATION: Chatbot/Agent 용어 통일 - PlanActMode → ChatbotAgentMode  
+import { TogglePlanActModeRequest } from "@shared/proto/cline/state"
+import { convertApiConfigurationToProto } from "@shared/proto-conversions/models/api-configuration-conversion"
+
+// Component imports
 import ContextMenu from "@/components/chat/ContextMenu"
+import { CHAT_CONSTANTS } from "@/components/chat/chat-view/constants"
 import SlashCommandMenu from "@/components/chat/SlashCommandMenu"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import Thumbnails from "@/components/common/Thumbnails"
 import Tooltip from "@/components/common/Tooltip"
-import ApiOptions, { normalizeApiConfiguration } from "@/components/settings/ApiOptions"
+import ApiOptions from "@/components/settings/ApiOptions"
+import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
+import ClineRulesToggleModal from "../cline-rules/ClineRulesToggleModal"
+import ServersToggleModal from "./ServersToggleModal"
+
+// Context and services
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { FileServiceClient, StateServiceClient, ModelsServiceClient } from "@/services/grpc-client"
+import { FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
+
+// Utils
 import {
 	ContextMenuOptionType,
-	getContextMenuOptions,
 	getContextMenuOptionIndex,
+	getContextMenuOptions,
 	insertMention,
 	insertMentionDirectly,
 	removeMention,
-	SearchResult,
+	type SearchResult,
 	shouldShowContextMenu,
 } from "@/utils/context-mentions"
 import { useMetaKeyDetection, useShortcut } from "@/utils/hooks"
@@ -22,32 +51,21 @@ import {
 	getMatchingSlashCommands,
 	insertSlashCommand,
 	removeSlashCommand,
+	type SlashCommand,
 	shouldShowSlashCommandsMenu,
-	SlashCommand,
 	slashCommandDeleteRegex,
 	validateSlashCommand,
 } from "@/utils/slash-commands"
 import { validateApiConfiguration, validateModelId } from "@/utils/validate"
 import { vscode } from "@/utils/vscode"
-import { ChatSettings } from "@shared/ChatSettings"
-import { mentionRegex, mentionRegexGlobal } from "@shared/context-mentions"
-import { ExtensionMessage } from "@shared/ExtensionMessage"
-import { EmptyRequest, StringRequest } from "@shared/proto/common"
-import { FileSearchRequest, RelativePathsRequest } from "@shared/proto/file"
-import { UpdateApiConfigurationRequest } from "@shared/proto/models"
-import { convertApiConfigurationToProto } from "@shared/proto-conversions/models/api-configuration-conversion"
-// CARET MODIFICATION: Chatbot/Agent 용어 통일 - PlanActMode 제거
-import { ChatbotAgentMode, ToggleChatbotAgentModeRequest } from "@shared/proto/state"
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
-import React, { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
-import DynamicTextArea from "react-textarea-autosize"
-import { useClickAway, useEvent, useWindowSize } from "react-use"
-import styled from "styled-components"
-import ClineRulesToggleModal from "../cline-rules/ClineRulesToggleModal"
-import ServersToggleModal from "./ServersToggleModal"
+
 // CARET MODIFICATION: 다국어 지원을 위한 i18n import
 import { t } from "@/caret/utils/i18n"
 import { useCurrentLanguage } from "@/caret/hooks/useCurrentLanguage"
+// CARET MODIFICATION: Chatbot/Agent 용어 통일 - PlanActMode 제거
+import { ChatbotAgentMode, ToggleChatbotAgentModeRequest } from "@shared/proto/cline/state"
+
+const { MAX_IMAGES_AND_FILES_PER_MESSAGE } = CHAT_CONSTANTS
 
 const getImageDimensions = (dataUrl: string): Promise<{ width: number; height: number }> => {
 	return new Promise((resolve, reject) => {
@@ -287,13 +305,15 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 	) => {
 		const {
 			filePaths,
+			mode,
 			chatSettings,
 			apiConfiguration,
 			openRouterModels,
 			platform,
 			localWorkflowToggles,
 			globalWorkflowToggles,
-		} = useExtensionState()
+		} =
+			useExtensionState()
 		const [isTextAreaFocused, setIsTextAreaFocused] = useState(false)
 		const [isDraggingOver, setIsDraggingOver] = useState(false)
 		const [gitCommits, setGitCommits] = useState<GitCommit[]>([])
@@ -323,7 +343,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		const buttonRef = useRef<HTMLDivElement>(null)
 		const [arrowPosition, setArrowPosition] = useState(0)
 		const [menuPosition, setMenuPosition] = useState(0)
-		const [shownTooltipMode, setShownTooltipMode] = useState<ChatSettings["mode"] | null>(null)
+		const [shownTooltipMode, setShownTooltipMode] = useState<Mode | null>(null)
 		const [pendingInsertions, setPendingInsertions] = useState<string[]>([])
 		const shiftHoldTimerRef = useRef<NodeJS.Timeout | null>(null)
 		const [showUnsupportedFileError, setShowUnsupportedFileError] = useState(false)
@@ -764,7 +784,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								}),
 							)
 								.then((results) => {
-									setFileSearchResults(results.results || [])
+									setFileSearchResults((results.results || []) as SearchResult[])
 									setSearchLoading(false)
 								})
 								.catch((error) => {
@@ -983,8 +1003,8 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		// Separate the API config submission logic
 		const submitApiConfig = useCallback(async () => {
 			// CARET MODIFICATION: 다국어 에러 메시지 적용
-			const apiValidationResult = validateApiConfiguration(apiConfiguration, currentLanguage)
-			const modelIdValidationResult = validateModelId(apiConfiguration, openRouterModels, currentLanguage)
+					const apiValidationResult = validateApiConfiguration(apiConfiguration, "act", currentLanguage)
+		const modelIdValidationResult = validateModelId("act", apiConfiguration, openRouterModels, currentLanguage)
 
 			if (!apiValidationResult && !modelIdValidationResult && apiConfiguration) {
 				try {
@@ -1036,13 +1056,16 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						},
 						chatContent: {
 							message: inputValue.trim() ? inputValue : undefined,
-							images: selectedImages.length > 0 ? selectedImages : undefined,
-							files: selectedFiles.length > 0 ? selectedFiles : undefined,
+							images: selectedImages,
+							files: selectedFiles,
 						},
 					}),
 				)
 				// Focus the textarea after mode toggle with slight delay
 				setTimeout(() => {
+					if (response.value) {
+						setInputValue("")
+					}
 					textAreaRef.current?.focus()
 				}, 100)
 			}, changeModeDelay)
@@ -1121,7 +1144,16 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 		// Get model display name
 		const modelDisplayName = useMemo(() => {
-			const { selectedProvider, selectedModelId } = normalizeApiConfiguration(apiConfiguration)
+			const { selectedProvider, selectedModelId } = normalizeApiConfiguration(apiConfiguration, mode)
+			const {
+				vsCodeLmModelSelector,
+				togetherModelId,
+				fireworksModelId,
+				lmStudioModelId,
+				ollamaModelId,
+				liteLlmModelId,
+				requestyModelId,
+			} = getModeSpecificFields(apiConfiguration, mode)
 			const unknownModel = "unknown"
 			if (!apiConfiguration) return unknownModel
 			switch (selectedProvider) {
@@ -1130,25 +1162,25 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				case "openai":
 					return `openai-compat:${selectedModelId}`
 				case "vscode-lm":
-					return `vscode-lm:${apiConfiguration.vsCodeLmModelSelector ? `${apiConfiguration.vsCodeLmModelSelector.vendor ?? ""}/${apiConfiguration.vsCodeLmModelSelector.family ?? ""}` : unknownModel}`
+					return `vscode-lm:${vsCodeLmModelSelector ? `${vsCodeLmModelSelector.vendor ?? ""}/${vsCodeLmModelSelector.family ?? ""}` : unknownModel}`
 				case "together":
-					return `${selectedProvider}:${apiConfiguration.togetherModelId}`
+					return `${selectedProvider}:${togetherModelId}`
 				case "fireworks":
-					return `fireworks:${apiConfiguration.fireworksModelId}`
+					return `fireworks:${fireworksModelId}`
 				case "lmstudio":
-					return `${selectedProvider}:${apiConfiguration.lmStudioModelId}`
+					return `${selectedProvider}:${lmStudioModelId}`
 				case "ollama":
-					return `${selectedProvider}:${apiConfiguration.ollamaModelId}`
+					return `${selectedProvider}:${ollamaModelId}`
 				case "litellm":
-					return `${selectedProvider}:${apiConfiguration.liteLlmModelId}`
+					return `${selectedProvider}:${liteLlmModelId}`
 				case "requesty":
-					return `${selectedProvider}:${apiConfiguration.requestyModelId}`
+					return `${selectedProvider}:${requestyModelId}`
 				case "anthropic":
 				case "openrouter":
 				default:
 					return `${selectedProvider}:${selectedModelId}`
 			}
-		}, [apiConfiguration])
+		}, [apiConfiguration, mode])
 
 		// Calculate arrow position and menu position based on button location
 		useEffect(() => {
@@ -1757,7 +1789,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 											apiErrorMessage={undefined}
 											modelIdErrorMessage={undefined}
 											isPopup={true}
-											saveImmediately={true} // Ensure popup saves immediately
+											currentMode={mode}
 										/>
 									</ModelSelectorTooltip>
 								)}

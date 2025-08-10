@@ -1,0 +1,111 @@
+# Caret 문서 현황 및 다국어 지원 상태
+
+## 📋 **문서 상태 범례**
+- ✅🌍 = 한국어 + 영어 버전 모두 존재
+- ✅❌ = 한국어만 존재 (영어 버전 필요)
+- ❌✅ = 영어만 존재 (한국어 버전 필요)
+- ❌❌ = 문서 없음 (생성 필요)
+
+## 🎯 **AI Work Index 필수 문서 현황**
+
+### 🏗️ **아키텍처 & 설계 관련**
+- `caret-architecture-and-implementation-guide.mdx` ✅🌍
+- `checkpoint-architecture.mdx` ✅❌ ⚠️
+- `new-developer-guide.mdx` ✅🌍
+
+### 🤖 **AI 시스템 개발**
+- `ai-message-flow-guide.mdx` ✅🌍
+- `system-prompt-implementation.mdx` ✅🌍
+- `message-processing-architecture.mdx` ✅🌍
+
+### 🎭 **Caret vs Cline 이해**
+- `../caret-features-specification.mdx` ✅🌍
+- `../user-guide/caret-features.mdx` ✅❌ ⚠️
+- `system-prompt-implementation.mdx` ✅🌍
+
+### 🔄 **Frontend-Backend 통신**
+- `frontend-backend-interaction-patterns.mdx` ✅🌍
+- `webview-extension-communication.mdx` ✅🌍
+- `ui-to-storage-flow.mdx` ✅🌍
+
+### 🎨 **UI/UX 개발**
+- `component-architecture-principles.mdx` ✅🌍
+- `locale.mdx` ✅🌍
+- `backend-i18n-system.mdx` ✅🌍
+
+### 🧪 **테스트 & 품질 관리**
+- `testing-guide.mdx` ✅🌍
+- `logging.mdx` ✅🌍
+
+### 🔧 **개발 도구 & 유틸리티**
+- `utilities.mdx` ✅🌍
+- `file-storage-and-image-loading-guide.mdx` ✅🌍
+- `link-management-guide.mdx` ✅🌍
+
+### 📖 **문서화 & 규약**
+- `documentation-guide.mdx` ✅🌍
+- `json-comment-conventions.mdx` ✅🌍
+
+### 🚨 **Cline 원본 수정**
+- `caret-architecture-and-implementation-guide.mdx` ✅🌍
+
+---
+
+## 📊 **전체 현황 요약**
+
+### 🌍 **다국어 지원 현황**
+- **완전 지원 (한/영)**: 19개 문서 ✅
+- **한국어만**: 2개 문서 ⚠️
+  - `checkpoint-architecture.mdx`
+  - `../user-guide/caret-features.mdx`
+- **영어만**: 0개 문서
+- **누락**: 0개 문서
+
+### 🚨 **즉시 작업 필요 (Task #028)**
+1. **checkpoint-architecture.en.mdx** 생성
+   - 체크포인트 아키텍처 이해에 필수
+   - 머징 작업 시 참조 필요
+
+2. **user-guide/caret-features.en.mdx** 생성
+   - Caret 고유 기능 이해에 필수
+   - 국제 개발자 온보딩에 필요
+
+### 📈 **완성도 지표**
+- **전체 완성도**: 90.5% (19/21)
+- **AI Work Index 커버리지**: 100% (모든 필수 문서 존재)
+- **다국어 지원율**: 90.5%
+
+## 🔍 **문서 품질 기준**
+
+### ✅ **고품질 문서 기준**
+- 한국어 + 영어 버전 모두 존재
+- 최신 코드베이스 반영
+- 교차 참조 링크 정상 작동
+- 실제 사용 가능한 예제 코드 포함
+
+### ⚠️ **개선 필요 문서 식별**
+- 영어 버전 누락: 2개
+- 내용 업데이트 필요: 추후 검토
+- 링크 오류: 추후 점검
+
+## 🎯 **향후 계획**
+
+### **단기 목표 (Task #028)**
+- [ ] checkpoint-architecture.en.mdx 생성
+- [ ] caret-features.en.mdx 생성
+- [ ] 교차 참조 링크 업데이트
+- [ ] 품질 검증 완료
+
+### **중기 목표 (Task #004 연계)**
+- Docusaurus 시스템 구축 시 현재 문서들 통합
+- 4개 국어 지원 (한/영/일/중) 확장
+- 자동화된 번역 워크플로우 구축
+
+### **장기 목표**
+- 문서 품질 지속적 개선
+- 개발자 피드백 기반 문서 업데이트
+- 국제 커뮤니티 지원 강화
+
+---
+
+**📝 관리 지침**: 이 문서는 새로운 문서 생성/수정 시마다 업데이트하여 전체 문서 현황을 정확히 추적합니다.

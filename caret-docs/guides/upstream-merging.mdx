@@ -50,6 +50,28 @@ git checkout main
 git pull origin main
 ```
 
+### 3.5. CHANGELOG 정리 (필수 선행 작업)
+
+**머징 작업 시작 전 반드시 CHANGELOG를 먼저 정리해야 합니다:**
+
+```bash
+# 1. Cline의 최신 CHANGELOG를 별도 파일로 보존
+cp cline-latest/CHANGELOG.md CHANGELOG-cline.md
+
+# 2. 주요 변경사항 분석 (마지막 머징 이후)
+grep -A 10 "^## \[3\.1[7-9]\|^## \[3\.20" CHANGELOG-cline.md
+
+# 3. CHANGELOG.md를 Caret 전용으로 정리
+# - 머지 마커 제거 (<<<<<<< HEAD, =======, >>>>>>> upstream/main)
+# - Caret 버전 이력만 유지 (v0.1.x)
+# - "For changes prior to v3.17.13, see CHANGELOG-cline.md" 추가
+```
+
+**목적 및 효과:**
+- **🎯 변경사항 사전 파악**: 어떤 기능이 추가/수정되었는지 분석하여 선별적 머징 전략 수립
+- **🚀 우선순위 결정**: 중요도별(Plan/Act Mode, 성능 개선, 새 API 제공자 등) 작업 순서 계획
+- **❌ 충돌 방지**: CHANGELOG.md는 Caret 전용으로 확실히 분리하여 머징 시 충돌 제거
+
 ### 4. 업스트림 병합 실행
 
 ```bash
@@ -90,6 +112,104 @@ git merge upstream/main
   - 패키지/enum 컨벤션은 우리 방식으로, 디렉토리/경로 구조는 upstream 유지. 문서와 스크립트에 동일 문구로 고정하세요.
 - **검증 체크리스트를 PR 필수 항목으로**.
   - WebviewProvider API 변경, HostBridge 경로/심볼, 생성물 네임스페이스, proto-conversions 대상 enum/메시지 이름 변경 등.
+
+### 6.1 **선별적 개선사항 이식 전략 (2025-01-22 신규)** 🔄
+
+#### 실제 적용 사례: 006-3 WebView 머징 (진행중)
+**목표**: Caret WebView UI를 Cline v3.20.8 API 구조에 맞게 마이그레이션
+- **시작점**: 297개 TypeScript 에러
+- **현재**: 250개 에러 (47개 해결, 19% 진행)
+- **전략**: 순차적 Phase 접근 + Caret 고유 기능 보존
+
+**Phase 1 성과**:
+- ✅ Proto import 경로 수정: `@shared/proto/common` → `@shared/proto/cline/common`
+- ✅ 중복 import 정리 및 타입 추가
+- ✅ **핵심 발견**: `toggleChatbotAgentMode` grpc 메서드 누락 복구
+- ✅ 불필요한 임시 백업 폴더 정리
+
+**디렉토리 구조 최적화**:
+- `caret-webview-ui` → `webview-ui` (Caret 메인)  
+- `webview-ui` → `cline-webview-ui` (Cline 원본)
+- **머징 후 `cline-webview-ui` 삭제**
+
+**선별적 이식 프로세스**:
+1. **버전 태깅**: 현재 Cline 버전 기록 및 추적
+2. **차이 분석**: 새 버전과 이전 버전의 변경사항 분석
+   ```bash
+   git log cline-v3.20.8..cline-v3.21.0 --oneline
+   git diff cline-v3.20.8..cline-v3.21.0 -- webview-ui/
+   ```
+3. **개선사항 카테고리별 선별**:
+   - ✅ **도입**: 버그 수정, 성능 최적화, 보안 강화
+   - ⚠️ **검토**: UI/UX 변경 (Caret 브랜딩과 충돌 여부)
+   - ❌ **제외**: Caret 고유 기능과 상충하는 변경
+4. **모듈화된 적용**: Caret 개선사항을 별도 디렉토리로 분리하여 Git 충돌 최소화
+
+### 6.2 **Caret 고유 코드 누락 방지 전략 (2025-01-22 추가)** 🛡️
+
+**문제 상황**: 머징 과정에서 Caret 고유 기능이 실수로 누락되는 경우가 발생
+- 예시: `ToggleChatbotAgentModeRequest` proto 메시지 누락
+- 원인: 복잡한 머징 과정에서 Caret 고유 코드가 Cline 원본으로 덮어써짐
+
+**예방 전략**:
+1. **3-레포 환경 구성** (머징 시작 전 필수):
+   ```bash
+   # 현재 caret 프로젝트 루트에서 (IDE 워크스페이스 내)
+   cd D:\dev\caret
+   
+   # Caret 메인 브랜치 백업 (고유 기능 참조용)
+   git clone https://github.com/aicoding-caret/caret.git main-caret
+   
+   # Cline 머징 시점 버전 (원본 비교용)
+   git clone https://github.com/cline/cline.git cline-latest
+   ```
+   
+   **구조**:
+   ```
+   /dev/caret/                    # IDE 루트 (실제 머징 작업)
+   ├── src/, webview-ui/, ...     # 현재 작업 파일들
+   ├── main-caret/                # Caret 메인 백업 (참조용)
+   └── cline-latest/              # Cline 머징 대상 (소스용)
+   ```
+
+2. **3-레포 비교 검증**:
+   ```bash
+   # Caret 고유 기능 확인 (main-caret 참조)
+   Get-ChildItem -Recurse main-caret\ -Filter "*.proto" | Select-String "ToggleChatbotAgentMode"
+   
+   # 현재 작업 결과 확인 (누락 여부 체크)
+   Get-ChildItem -Recurse proto\ -Filter "*.proto" | Select-String "ToggleChatbotAgentMode"
+   
+   # Cline 새 기능 확인 (선별적 도입용)
+   Get-ChildItem -Recurse cline-latest\ -Filter "*.tsx" | Select-String "새로운기능키워드"
+   ```
+
+3. **핵심 Caret 기능 체크리스트** (머징 완료 후 필수 확인):
+   - [ ] **Proto 메시지**: `ToggleChatbotAgentModeRequest`, `ChatSettings` 등
+   - [ ] **Proto 서비스**: `toggleChatbotAgentMode` RPC 메서드
+   - [ ] **Enum 타입**: `ChatbotAgentMode` (CHATBOT_MODE, AGENT_MODE)
+   - [ ] **다국어 시스템**: 30개 i18n JSON 파일 및 번역 함수
+   - [ ] **Caret 브랜딩**: CHATBOT_MODE_COLOR, Caret 로고 등
+   - [ ] **CARET MODIFICATION 주석**: 모든 Caret 수정사항 표시
+
+4. **자동화된 검증 스크립트** (권장):
+   ```bash
+   # Caret 고유 기능 누락 검사
+   node caret-scripts/verify-caret-features.js
+   ```
+
+**복구 절차** (누락 발견 시):
+1. 백업 레포에서 누락된 코드 확인
+2. 정확한 위치와 내용 파악
+3. 현재 작업 브랜치에 복구
+4. Proto 재생성: `npm run protos`
+5. 빌드 테스트로 검증
+
+**장기적 이익**:
+- 전면 교체 대신 검증된 개선사항만 도입
+- 머징 친화적 구조로 충돌 최소화  
+- 패턴 확립으로 미래 머징 비용 절감
+- **Caret 고유 기능 안전성 보장**
 
 ### 7. 문서 주도 검증 포인트(신규)
 
@@ -148,6 +268,7 @@ git checkout --theirs <충돌파일>
 #### 4. **문서 파일 충돌** (`README.md`, `CHANGELOG.md` 등)
 
 -   **원칙**: Caret 고유 내용 유지. 특히, 해당 파일의 원본이 `-cline.md` 또는 `.cline` 접미사로 백업되어 있는지 반드시 확인합니다.
+-   **CHANGELOG.md 특수 처리**: `CHANGELOG.md`는 **Caret 전용 파일**이며, Cline 원본은 `CHANGELOG-cline.md`로 분리 관리됩니다. 따라서 **머징 시 CHANGELOG.md는 무조건 Caret 버전(`git checkout --ours`)을 선택**하고, Cline 변경사항은 고려하지 않습니다.
 -   **해결**: 백업 파일이 존재하는 경우, 해당 파일은 Caret이 완전히 소유한 파일이므로 고민 없이 우리 버전(Caret)을 선택합니다 (`git checkout --ours <파일>`). 백업이 없다면, Caret 버전을 우선으로 하되 필요시 Cline 개선사항을 선별적으로 적용합니다.
 
 ### Protobuf 패키지 이름 규칙 (`cline` vs `caret`)
@@ -478,6 +599,41 @@ console.log(report.modifiedTools) // 변경된 도구 확인
 3. **파일 삭제 추적**: ✅ 유효
    - `git log` 명령으로 삭제 이력 추적 가능
    - `git ls-tree` 비교로 실제 존재 여부 확인
+
+### 6.3 머징 완료 후 `.cline` 백업 업데이트 (2025-01-22 추가)
+
+**목적**: 머징 완료 후 `.cline` 백업들을 새로운 Cline 원본(v3.20.8)으로 업데이트
+
+#### .cline 파일 업데이트 절차
+
+**현재 상황**: 102개 `.cline` 파일들이 **이전 Cline 버전** (v3.19 등) 원본
+**목표**: **v3.20.8 Cline 원본**으로 전체 업데이트
+
+**백업 네이밍 규칙**: `{원본파일}.{확장자}.cline` (DOT 방식 - AI 친화적)
+
+```powershell
+# 1. 현재 .cline 파일 상태 확인
+Get-ChildItem -Recurse -Filter "*.cline" | Measure-Object
+
+# 2. 머징 완료 후 새로운 Cline 원본으로 업데이트
+# 예시: webview-ui 관련 파일들
+Copy-Item "cline-latest\webview-ui\src\App.tsx" "webview-ui\src\App.tsx.cline" -Force
+Copy-Item "cline-latest\webview-ui\src\components\chat\ChatTextArea.tsx" "webview-ui\src\components\chat\ChatTextArea.tsx.cline" -Force
+
+# 3. 루트 설정 파일들도 업데이트
+Copy-Item "cline-latest\package.json" "package.json.cline" -Force
+Copy-Item "cline-latest\.clinerules" ".clinerules.cline" -Force
+```
+
+#### 업데이트 시기
+- **머징 작업 완료 후**: 모든 에러 해결 및 기능 검증 완료 시점
+- **다음 머징 대비**: v3.20.8이 새로운 비교 기준점이 됨
+- **자동화 고려**: 향후 스크립트로 일괄 업데이트 가능
+
+#### 네이밍 규칙 표준화 (2025-01-22)
+- **표준 형식**: `{원본파일}.{확장자}.cline` (예: `App.tsx.cline`)
+- **AI 친화적**: 직관적인 `.` 방식으로 통일하여 AI의 자연스러운 패턴과 일치
+- **기존 DASH 방식**: `App-tsx.cline` → `App.tsx.cline`으로 변경 완료
 
 ## 정기적인 업스트림 동기화 권장사항
 

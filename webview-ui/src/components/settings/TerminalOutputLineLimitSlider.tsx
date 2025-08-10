@@ -4,11 +4,11 @@ import { useExtensionState } from "@/context/ExtensionStateContext"
 import { t } from "../../caret/utils/i18n"
 
 const TerminalOutputLineLimitSlider: React.FC = () => {
-	const { terminalOutputLineLimit, setTerminalOutputLineLimit } = useExtensionState()
+	const { terminalOutputLineLimit } = useExtensionState()
 
 	const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const value = parseInt(event.target.value, 10)
-		setTerminalOutputLineLimit(value)
+		updateSetting("terminalOutputLineLimit", value)
 	}
 
 	return (

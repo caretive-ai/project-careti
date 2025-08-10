@@ -29,6 +29,9 @@
   [017-workspace-rules-initialization-fix.md](./017-workspace-rules-initialization-fix.md)
 - **Task #026:** 모드 별 AI 행동 제약 및 소통 오류 개선 (담당자: TBD)
   [026-fix-agent-mode-tool-use-bug.md](./026-fix-agent-mode-tool-use-bug.md)
+- **Task #028:** 필수 개발 문서 완성 및 다국어 지원 (담당자: TBD)
+  - 요약: AI Work Index 검토 중 발견된 누락 영어 문서 생성, 문서 현황 체계화
+  [028-essential-documentation-completion.md](./028-essential-documentation-completion.md)
 
 
 ## 완료된 작업번호:담당자 (Complete)

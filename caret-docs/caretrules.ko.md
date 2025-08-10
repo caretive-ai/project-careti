@@ -42,11 +42,11 @@ caret/
 ### 2. 백업 규칙 (MANDATORY)
 ```bash
 # 1단계: 백업 생성 (수정 전 필수)
-cp src/extension.ts src/extension-ts.cline
+cp src/extension.ts src/extension.ts.cline
 
 # 2단계: 파일 상단에 CARET MODIFICATION 주석 추가
 // CARET MODIFICATION: 구체적인 수정 내용 설명
-// Original backed up to: src/extension-ts.cline
+// Original backed up to: src/extension.ts.cline
 // Purpose: 수정 목적
 ```
 
@@ -201,7 +201,7 @@ chore: 빌드/설정 변경
 - 기존 Cline 컴포넌트에 기능 추가
 
 **필수 체크리스트:**
-- [ ] 백업 파일 생성: `cp {원본파일} {파일명-확장자}.cline`
+- [ ] 백업 파일 생성: `cp {원본파일} {원본파일}.cline`
 - [ ] CARET MODIFICATION 주석 추가 계획
 - [ ] 최소 수정 원칙 (1-3라인) 준수 계획
 - [ ] 완전 대체 (주석처리 금지) 방식 계획
@@ -334,19 +334,24 @@ chore: 빌드/설정 변경
 3. **백업 확인 방법**: `Get-ChildItem -Recurse -Filter "*.cline" | Where-Object { $_.Name -like "*파일명*" }`
 
 **백업 네이밍 규칙**:
-- 형식: `{원본파일명-확장자}.cline`
-- 예시: 
+- **표준 형식**: `{원본파일명}.{확장자}.cline` (DOT 방식으로 변경)
+- **✅ 올바른 예시**: 
   - `ChatTextArea.tsx` → `ChatTextArea.tsx.cline`
-  - `package.json` → `package-json.cline`
-  - `extension.ts` → `extension-ts.cline`
+  - `package.json` → `package.json.cline`
+  - `extension.ts` → `extension.ts.cline`
+- **❌ 구형식 (변경 필요)**: 
+  - `ChatTextArea-tsx.cline` (DASH 방식 - 구버전)
+  - `package-json.cline` (DASH 방식 - 구버전)
+
+**🎯 AI 친화적**: 직관적인 `.` 방식으로 통일하여 AI의 자연스러운 패턴과 일치
 
 **백업 생성 명령어 (PowerShell)**:
 ```powershell
 # 백업 존재 확인
-Test-Path "파일경로.cline"
+Test-Path "원본파일.cline"
 
 # 백업이 없을 때만 생성
-if (!(Test-Path "파일경로.cline")) { Copy-Item "원본파일경로" "파일경로.cline" }
+if (!(Test-Path "원본파일.cline")) { Copy-Item "원본파일" "원본파일.cline" }
 ```
 
 **백업 검증 절차**:

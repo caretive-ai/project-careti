@@ -1,35 +1,38 @@
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
-import { useEvent } from "react-use"
-import {
-	StateServiceClient,
-	ModelsServiceClient,
-	UiServiceClient,
-	FileServiceClient,
-	McpServiceClient,
-} from "../services/grpc-client"
-import { EmptyRequest, StringRequest } from "@shared/proto/common"
-import { UpdateSettingsRequest } from "@shared/proto/state"
-import { WebviewProviderType as WebviewProviderTypeEnum, WebviewProviderTypeRequest } from "@shared/proto/ui"
-import { TerminalProfile } from "@shared/proto/state"
+import type React from "react"
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
+import "../../../src/shared/webview/types"
+import { DEFAULT_AUTO_APPROVAL_SETTINGS } from "@shared/AutoApprovalSettings"
+import { findLastIndex } from "@shared/array"
+import { DEFAULT_BROWSER_SETTINGS } from "@shared/BrowserSettings"
+import { DEFAULT_PLATFORM, type ExtensionState } from "@shared/ExtensionMessage"
+import { DEFAULT_MCP_DISPLAY_MODE } from "@shared/McpDisplayMode"
+import type { UserInfo } from "@shared/proto/cline/account"
+import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
+import type { OpenRouterCompatibleModelInfo } from "@shared/proto/cline/models"
+import { type TerminalProfile, UpdateSettingsRequest } from "@shared/proto/cline/state"
+import { WebviewProviderType as WebviewProviderTypeEnum, WebviewProviderTypeRequest } from "@shared/proto/cline/ui"
 import { convertProtoToClineMessage } from "@shared/proto-conversions/cline-message"
 import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mcp/mcp-server-conversion"
-import { DEFAULT_AUTO_APPROVAL_SETTINGS } from "@shared/AutoApprovalSettings"
-import { DEFAULT_BROWSER_SETTINGS } from "@shared/BrowserSettings"
-import { ChatSettings, DEFAULT_CHAT_SETTINGS } from "@shared/ChatSettings"
-import { DEFAULT_PLATFORM, ExtensionMessage, ExtensionState } from "@shared/ExtensionMessage"
-import { TelemetrySetting } from "@shared/TelemetrySetting"
-import { findLastIndex } from "@shared/array"
 import {
-	ApiConfiguration,
-	ModelInfo,
+	groqDefaultModelId,
+	groqModels,
+	basetenDefaultModelId,
+	basetenModels,
+	type ModelInfo,
 	openRouterDefaultModelId,
 	openRouterDefaultModelInfo,
 	requestyDefaultModelId,
 	requestyDefaultModelInfo,
 } from "../../../src/shared/api"
-import { McpMarketplaceCatalog, McpServer, McpViewTab } from "../../../src/shared/mcp"
+import type { McpMarketplaceCatalog, McpServer, McpViewTab } from "../../../src/shared/mcp"
+import {
+	FileServiceClient,
+	McpServiceClient,
+	ModelsServiceClient,
+	StateServiceClient,
+	UiServiceClient,
+} from "../services/grpc-client"
 import { convertTextMateToHljs } from "../utils/textMateToHljs"
-import { OpenRouterCompatibleModelInfo } from "@shared/proto/models"
 
 // CARET MODIFICATION: Added caretBanner property for Caret welcome page
 // Original backed up to: ExtensionStateContext-tsx.cline
@@ -40,6 +43,9 @@ export interface ExtensionStateContextType extends ExtensionState { // CARET MOD
 	openRouterModels: Record<string, ModelInfo>
 	openAiModels: string[]
 	requestyModels: Record<string, ModelInfo>
+	groqModels: Record<string, ModelInfo>
+	basetenModels: Record<string, ModelInfo>
+	huggingFaceModels: Record<string, ModelInfo>
 	mcpServers: McpServer[]
 	mcpMarketplaceCatalog: McpMarketplaceCatalog
 	filePaths: string[]
@@ -59,8 +65,6 @@ export interface ExtensionStateContextType extends ExtensionState { // CARET MOD
 	showAnnouncement: boolean
 
 	// Setters
-	setApiConfiguration: (config: ApiConfiguration) => void
-	setTelemetrySetting: (value: TelemetrySetting) => void
 	setShowAnnouncement: (value: boolean) => void
 	setShouldShowAnnouncement: (value: boolean) => void
 	setPlanActSeparateModelsSetting: (value: boolean) => void
@@ -79,6 +83,10 @@ export interface ExtensionStateContextType extends ExtensionState { // CARET MOD
 	setModeSystem: (modeSystem: string) => void
 
 	setMcpServers: (value: McpServer[]) => void
+	setRequestyModels: (value: Record<string, ModelInfo>) => void
+	setGroqModels: (value: Record<string, ModelInfo>) => void
+	setBasetenModels: (value: Record<string, ModelInfo>) => void
+	setHuggingFaceModels: (value: Record<string, ModelInfo>) => void
 	setGlobalClineRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalClineRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalCaretRulesToggles: (toggles: Record<string, boolean>) => void
@@ -88,10 +96,10 @@ export interface ExtensionStateContextType extends ExtensionState { // CARET MOD
 	setGlobalWorkflowToggles: (toggles: Record<string, boolean>) => void
 	setMcpMarketplaceCatalog: (value: McpMarketplaceCatalog) => void
 	setTotalTasksSize: (value: number | null) => void
-	setAvailableTerminalProfiles: (profiles: TerminalProfile[]) => void // Setter for profiles
 
 	// Refresh functions
 	refreshOpenRouterModels: () => void
+	setUserInfo: (userInfo?: UserInfo) => void
 
 	// Navigation state setters
 	setShowMcp: (value: boolean) => void
@@ -193,13 +201,15 @@ export const ExtensionStateContextProvider: React.FC<{
 		shouldShowAnnouncement: false,
 		autoApprovalSettings: DEFAULT_AUTO_APPROVAL_SETTINGS,
 		browserSettings: DEFAULT_BROWSER_SETTINGS,
-		chatSettings: DEFAULT_CHAT_SETTINGS,
+		preferredLanguage: "English",
+		openaiReasoningEffort: "medium",
+		mode: "act",
 		platform: DEFAULT_PLATFORM,
 		telemetrySetting: "unset",
 		distinctId: "",
 		planActSeparateModelsSetting: true,
 		enableCheckpointsSetting: true,
-		mcpRichDisplayEnabled: true,
+		mcpDisplayMode: DEFAULT_MCP_DISPLAY_MODE,
 		globalClineRulesToggles: {},
 		localClineRulesToggles: {},
 		localCaretRulesToggles: {},
@@ -212,6 +222,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		terminalOutputLineLimit: 500,
 		defaultTerminalProfile: "default",
 		isNewUser: false,
+		welcomeViewCompleted: false,
 		mcpResponsesCollapsed: false, // Default value (expanded), will be overwritten by extension state
 		// CARET MODIFICATION: Add uiLanguage for i18n support - follows VSCode settings or defaults to 'en'
 		uiLanguage: "en", // Will be overwritten by backend state with VSCode settings
@@ -234,6 +245,13 @@ export const ExtensionStateContextProvider: React.FC<{
 	const [requestyModels, setRequestyModels] = useState<Record<string, ModelInfo>>({
 		[requestyDefaultModelId]: requestyDefaultModelInfo,
 	})
+	const [groqModelsState, setGroqModels] = useState<Record<string, ModelInfo>>({
+		[groqDefaultModelId]: groqModels[groqDefaultModelId],
+	})
+	const [basetenModelsState, setBasetenModels] = useState<Record<string, ModelInfo>>({
+		[basetenDefaultModelId]: basetenModels[basetenDefaultModelId],
+	})
+	const [huggingFaceModels, setHuggingFaceModels] = useState<Record<string, ModelInfo>>({})
 	const [mcpServers, setMcpServers] = useState<McpServer[]>([])
 	const [mcpMarketplaceCatalog, setMcpMarketplaceCatalog] = useState<McpMarketplaceCatalog>({ items: [] })
 	const handleMessage = useCallback((event: MessageEvent) => {
@@ -264,6 +282,7 @@ export const ExtensionStateContextProvider: React.FC<{
 			}
 		}
 	}, [])
+
 
 	useEvent("message", handleMessage)
 
@@ -463,6 +482,18 @@ export const ExtensionStateContextProvider: React.FC<{
 			},
 			onError: (error) => {
 				console.error("Error in chat button subscription:", error)
+			},
+			onComplete: () => {},
+		})
+
+		// Subscribe to didBecomeVisible events
+		didBecomeVisibleUnsubscribeRef.current = UiServiceClient.subscribeToDidBecomeVisible(EmptyRequest.create({}), {
+			onResponse: () => {
+				console.log("[DEBUG] Received didBecomeVisible event from gRPC stream")
+				window.dispatchEvent(new CustomEvent("focusChatInput"))
+			},
+			onError: (error) => {
+				console.error("Error in didBecomeVisible subscription:", error)
 			},
 			onComplete: () => {},
 		})
@@ -727,6 +758,10 @@ export const ExtensionStateContextProvider: React.FC<{
 				mcpServersSubscriptionRef.current()
 				mcpServersSubscriptionRef.current = null
 			}
+			if (didBecomeVisibleUnsubscribeRef.current) {
+				didBecomeVisibleUnsubscribeRef.current()
+				didBecomeVisibleUnsubscribeRef.current = null
+			}
 		}
 	}, [])
 
@@ -750,6 +785,9 @@ export const ExtensionStateContextProvider: React.FC<{
 		openRouterModels,
 		openAiModels,
 		requestyModels,
+		groqModels: groqModelsState,
+		basetenModels: basetenModelsState,
+		huggingFaceModels,
 		mcpServers,
 		mcpMarketplaceCatalog,
 		filePaths,
@@ -786,71 +824,18 @@ export const ExtensionStateContextProvider: React.FC<{
 		hideHistory,
 		hideAccount,
 		hideAnnouncement,
-		setApiConfiguration: (value) =>
-			setState((prevState) => ({
-				...prevState,
-				apiConfiguration: value,
-			})),
-		setTelemetrySetting: (value) =>
-			setState((prevState) => ({
-				...prevState,
-				telemetrySetting: value,
-			})),
-		setPlanActSeparateModelsSetting: (value) =>
-			setState((prevState) => ({
-				...prevState,
-				planActSeparateModelsSetting: value,
-			})),
-		setEnableCheckpointsSetting: (value) =>
-			setState((prevState) => ({
-				...prevState,
-				enableCheckpointsSetting: value,
-			})),
-		setMcpMarketplaceEnabled: (value) =>
-			setState((prevState) => ({
-				...prevState,
-				mcpMarketplaceEnabled: value,
-			})),
-		setMcpRichDisplayEnabled: (value) =>
-			setState((prevState) => ({
-				...prevState,
-				mcpRichDisplayEnabled: value,
-			})),
-		setMcpResponsesCollapsed: (value) => {
-			setState((prevState) => ({
-				...prevState,
-				mcpResponsesCollapsed: value,
-			}))
-		},
 		setShowAnnouncement,
 		setShouldShowAnnouncement: (value) =>
 			setState((prevState) => ({
 				...prevState,
 				shouldShowAnnouncement: value,
 			})),
-		setShellIntegrationTimeout: (value) =>
-			setState((prevState) => ({
-				...prevState,
-				shellIntegrationTimeout: value,
-			})),
-		setTerminalReuseEnabled: (value) =>
-			setState((prevState) => ({
-				...prevState,
-				terminalReuseEnabled: value,
-			})),
-		setTerminalOutputLineLimit: (value) =>
-			setState((prevState) => ({
-				...prevState,
-				terminalOutputLineLimit: value,
-			})),
-		setDefaultTerminalProfile: (value) =>
-			setState((prevState) => ({
-				...prevState,
-				defaultTerminalProfile: value,
-			})),
 		setMcpServers: (mcpServers: McpServer[]) => setMcpServers(mcpServers),
+		setRequestyModels: (models: Record<string, ModelInfo>) => setRequestyModels(models),
+		setGroqModels: (models: Record<string, ModelInfo>) => setGroqModels(models),
+		setBasetenModels: (models: Record<string, ModelInfo>) => setBasetenModels(models),
+		setHuggingFaceModels: (models: Record<string, ModelInfo>) => setHuggingFaceModels(models),
 		setMcpMarketplaceCatalog: (catalog: McpMarketplaceCatalog) => setMcpMarketplaceCatalog(catalog),
-		setAvailableTerminalProfiles,
 		setShowMcp,
 		closeMcpView,
 		setChatSettings: async (value) => {
@@ -898,140 +883,6 @@ export const ExtensionStateContextProvider: React.FC<{
 				caretWebviewLogger.info("🔄 [SYNC] setChatSettings completed")
 			} catch (error) {
 				console.error("Failed to update chat settings:", error)
-			}
-		},
-		setGlobalClineRulesToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				globalClineRulesToggles: toggles,
-			})),
-		setLocalClineRulesToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				localClineRulesToggles: toggles,
-			})),
-		setLocalCaretRulesToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				localCaretRulesToggles: toggles,
-			})),
-		setLocalCursorRulesToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				localCursorRulesToggles: toggles,
-			})),
-		setLocalWindsurfRulesToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				localWindsurfRulesToggles: toggles,
-			})),
-		setLocalWorkflowToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				localWorkflowToggles: toggles,
-			})),
-		setGlobalWorkflowToggles: (toggles) =>
-			setState((prevState) => ({
-				...prevState,
-				globalWorkflowToggles: toggles,
-			})),
-		setMcpTab,
-		setTotalTasksSize,
-		refreshOpenRouterModels,
-		onRelinquishControl,
-		// CARET MODIFICATION: UI 언어만 업데이트하는 별도 함수 - chatSettings 충돌 방지
-		setUILanguage: async (language: string) => {
-			try {
-				// UI 언어만 업데이트 (다른 설정 포함하지 않음)
-				await StateServiceClient.updateSettings(
-					UpdateSettingsRequest.create({
-						uiLanguage: language, // 오직 이것만 업데이트
-					}),
-				)
-
-				// Frontend 상태 업데이트
-				setState((prevState) => ({
-					...prevState,
-					uiLanguage: language,
-					chatSettings: {
-						...prevState.chatSettings,
-						uiLanguage: language,
-					},
-				}))
-
-				console.log("[DEBUG] 🌐 setUILanguage completed:", language)
-			} catch (error) {
-				console.error("Failed to update UI language:", error)
-			}
-		},
-		// CARET MODIFICATION: Mode system setter for Caret/Cline interface switching
-		setModeSystem: async (modeSystem: string) => {
-			try {
-				// CARET MODIFICATION: Mission 2 - 모드 변경 감지 및 자동 New Task
-				const currentModeSystem = state.chatSettings.modeSystem
-				const isModeChanged = currentModeSystem !== modeSystem
-
-				// CARET MODIFICATION: 기본값 설정 로직 - Caret=Agent, Cline=Plan
-				let defaultMode: "chatbot" | "agent" | "plan" | "act"
-
-				// 모드 시스템 변경 시 해당 시스템의 기본값으로 설정
-				if (modeSystem === "caret") {
-					// Caret 모드: 기본값은 항상 agent
-					defaultMode = "agent"
-				} else if (modeSystem === "cline") {
-					// Cline 모드: 기본값은 항상 plan
-					defaultMode = "plan"
-				} else {
-					// 알 수 없는 모드 시스템인 경우 현재 모드 유지
-					defaultMode = state.chatSettings.mode
-				}
-
-				// Import the conversion functions for proper chat settings update
-				const { convertChatSettingsToProtoChatSettings } = await import(
-					"@shared/proto-conversions/state/chat-settings-conversion"
-				)
-
-				const updatedChatSettings = {
-					...state.chatSettings,
-					mode: defaultMode,
-					modeSystem,
-				}
-
-				// Update both modeSystem and mode if needed
-				await StateServiceClient.updateSettings(
-					UpdateSettingsRequest.create({
-						modeSystem,
-						chatSettings: convertChatSettingsToProtoChatSettings(updatedChatSettings),
-					}),
-				)
-
-				// Update frontend state with both modeSystem and default mode
-				setState((prevState) => ({
-					...prevState,
-					chatSettings: updatedChatSettings,
-				}))
-
-				// CARET MODIFICATION: Mission 2 - 모드 변경 시 자동 New Task 트리거
-				if (isModeChanged) {
-					try {
-						const { TaskServiceClient } = await import("../services/grpc-client")
-						const { EmptyRequest } = await import("@shared/proto/common")
-
-						// 기존 태스크 정리
-						await TaskServiceClient.clearTask(EmptyRequest.create({}))
-
-						console.log(
-							`[DEBUG] 🔄 Mode changed from ${currentModeSystem} to ${modeSystem} - Auto New Task triggered`,
-						)
-					} catch (taskError) {
-						console.error("Failed to trigger auto new task after mode change:", taskError)
-						// 모드 변경은 성공했으므로 에러를 던지지 않음
-					}
-				}
-
-				console.log("[DEBUG] 🔧 setModeSystem completed:", modeSystem, "with default mode:", defaultMode)
-			} catch (error) {
-				console.error("Failed to update mode system:", error)
 			}
 		},
 	}

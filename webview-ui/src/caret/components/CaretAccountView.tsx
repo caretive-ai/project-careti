@@ -7,7 +7,7 @@ import CreditsHistoryTable from "../../components/account/CreditsHistoryTable"
 import { UsageTransaction, PaymentTransaction } from "@shared/ClineAccount"
 import { useExtensionState, ExtensionStateContextType } from "@/context/ExtensionStateContext" // CARET MODIFICATION: ExtensionStateContextType 임포트 추가
 import { AccountServiceClient } from "@/services/grpc-client"
-import { EmptyRequest } from "@shared/proto/common"
+import { EmptyRequest } from "@shared/proto/cline/common"
 import WebviewLogger from "@/caret/utils/webview-logger"
 import { t, getLink } from "@/caret/utils/i18n" // CARET MODIFICATION: getLink 함수 임포트
 import { getUrl } from "@/caret/constants/urls"
@@ -78,8 +78,8 @@ export const CaretAccountView = () => {
 				<div className="flex flex-col pr-3 h-full">
 					<div className="flex flex-col w-full">
 						<div className="flex items-center mb-6 flex-wrap gap-y-4">
-							{user.photoURL ? (
-								<img src={user.photoURL} alt="Profile" className="size-16 rounded-full mr-4" />
+									{user.photoUrl ? (
+			<img src={user.photoUrl} alt="Profile" className="size-16 rounded-full mr-4" />
 							) : (
 								<div className="size-16 rounded-full bg-[var(--vscode-button-background)] flex items-center justify-center text-2xl text-[var(--vscode-button-foreground)] mr-4">
 									{user.displayName?.[0] || user.email?.[0] || "?"}

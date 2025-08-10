@@ -18,14 +18,20 @@ AI는 모든 작업 시작 전에 다음 문서들을 **반드시** 읽어야 �
 
 ## 🎯 **작업 성격별 필수 문서 매핑**
 
+### 📋 **문서 상태 범례**
+- ✅🌍 = 한국어 + 영어 버전 모두 존재
+- ✅❌ = 한국어만 존재 (영어 버전 필요)
+- ❌✅ = 영어만 존재 (한국어 버전 필요)
+- ❌❌ = 문서 없음 (생성 필요)
+
 ### 🏗️ **아키텍처 & 설계 관련**
 
 **키워드**: 아키텍처, 설계, 구조, 시스템, 확장, Fork, Cline 수정
 **필수 문서**:
 
-- `caret-architecture-and-implementation-guide.mdx` (전체 아키텍처)
-- `extension-architecture.mmd` (시각적 구조도)
-- `new-developer-guide.mdx` (신입 개발자용)
+- `caret-architecture-and-implementation-guide.mdx` ✅🌍 (전체 아키텍처)
+- `checkpoint-architecture.mdx` ✅❌ (체크포인트 아키텍처) *영어 버전 필요
+- `new-developer-guide.mdx` ✅🌍 (신입 개발자용)
 
 ### 🤖 **AI 시스템 개발**
 
@@ -35,6 +41,26 @@ AI는 모든 작업 시작 전에 다음 문서들을 **반드시** 읽어야 �
 - `ai-message-flow-guide.mdx` (메시지 플로우)
 - `system-prompt-implementation.mdx` (시스템 프롬프트)
 - `message-processing-architecture.mdx` (메시지 처리)
+
+### 🎭 **Caret vs Cline 이해 (기본 필수)**
+
+**⚠️ 모든 AI가 반드시 알아야 할 핵심 개념**:
+
+**Caret = Cline + 주요 개선사항들**
+- **Plan/Act Mode**: Cline 기본 기능 (실행 전 계획 vs 바로 실행)  
+- **Chatbot/Agent Mode**: Caret 추가 기능 (대화형 vs 자동실행)
+- **시스템 프롬프트**: Cline 707줄 하드코딩 → Caret JSON 모듈 시스템 (53-69% 토큰 절약)
+- **페르소나 시스템**: 4개 AI 캐릭터 (오사랑, 마도베, 사이안, 탄도)
+- **규칙 우선순위**: .clinerules > .cursorrules > .windsurfrules (중복 방지)
+- **다국어 처리**: 한국어/영어/일본어/중국어 + i18n 프레임워크
+- **로깅 시스템**: 프론트엔드/백엔드 통합 로깅 + 디버그 모드
+- **UI/UX 개선**: 접근성, 성능 최적화, 사용자 친화적 인터페이스
+- **둘은 독립적**: Caret이 Cline 위에 얹어진 별개 레이어
+
+**필수 참고 문서**: 
+- `../caret-features-specification.mdx` (상세 차이점)
+- `../user-guide/caret-features.mdx` (전체 기능 목록)
+- `system-prompt-implementation.mdx` (시스템 프롬프트 구조)
 
 ### 🔄 **Frontend-Backend 통신**
 
@@ -161,9 +187,21 @@ AI 세션 전환 시 새로운 AI가 전체 맥락을 즉시 이해하고 작업
    - 다음 작업: [명확한 목표와 우선순위]
    ```
 
-2. **참조 문서 체계**
-   ```
+2. **🚨 MANDATORY: 필수 읽기 문서 목록**
+   ```markdown
    필수 읽기:
+   - @next-session-guide.md (현재 작업 상황)
+   - @ai-work-index.mdx (AI Work Index Guide)
+   - @{task-plan}.md (작업 계획서)  
+   - @{related-guide}.mdx (작업 성격별 가이드)
+   
+   현재 상황: [구체적 진행 상황]
+   다음 우선순위: [명확한 첫 번째 할 일]
+   ```
+
+3. **참조 문서 체계**
+   ```
+   작업 성격별 필수 문서:
    - .caretrules (프로젝트 규칙)
    - [작업 문서] (예: 006-5-webview-separation-strategy.md)
    - [관련 가이드] (예: upstream-merging.mdx)

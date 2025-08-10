@@ -6,7 +6,7 @@ import { StateServiceClient } from "../../../services/grpc-client"
 import { Int64, Int64Request, StringRequest } from "@shared/proto/cline/common"
 import Section from "../Section"
 import { updateSetting } from "../utils/settingsHandlers"
-import { UpdateTerminalConnectionTimeoutResponse } from "@shared/proto/cline/index"
+import { UpdateTerminalConnectionTimeoutResponse } from "@shared/proto/cline/state"
 
 interface TerminalSettingsSectionProps {
 	renderSectionHeader: (tabId: string) => JSX.Element | null

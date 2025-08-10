@@ -51,18 +51,19 @@ export const CaretProviderSection = () => (
 		{/* Featured Model Cards for Caret */}
 		<div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "15px" }}>
 			<FeaturedModelCard
-				title={t("featuredModels.geminiPro.title", "common")}
+				label={t("featuredModels.geminiPro.title", "common")}
 				description={t("featuredModels.geminiPro.description", "common")}
 				modelId="gemini-2.5-pro-preview-06-05"
-				provider="caret"
-				isPopular={true}
+				onClick={() => console.log("Gemini Pro selected")}
+				isSelected={false}
+				badgeLabel="Popular"
 			/>
 			<FeaturedModelCard
-				title={t("featuredModels.geminiFlash.title", "common")}
+				label={t("featuredModels.geminiFlash.title", "common")}
 				description={t("featuredModels.geminiFlash.description", "common")}
 				modelId="gemini-2.5-flash-preview-05-20"
-				provider="caret"
-				isPopular={false}
+				onClick={() => console.log("Gemini Flash selected")}
+				isSelected={false}
 			/>
 		</div>
 	</div>

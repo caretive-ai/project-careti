@@ -1035,7 +1035,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				submitApiConfig()
 				changeModeDelay = 250 // necessary to let the api config update (we send message and wait for it to be saved) FIXME: this is a hack and we ideally should check for api config changes, then wait for it to be saved, before switching modes
 			}
-			setTimeout(() => {
+			setTimeout(async () => {
 				// CARET MODIFICATION: modeSystem 기반 토글 로직 - plan/act vs chatbot/agent
 							if (!chatSettings) return
 

@@ -1,6 +1,8 @@
 import { useState, useMemo, useRef, useCallback } from "react"
 import { ClineMessage, ClineAsk } from "@shared/ExtensionMessage"
 import { ChatState, MessageHandlers } from "../types/chatTypes"
+// CARET MODIFICATION: 다국어 지원 추가
+import { t } from "@/caret/utils/i18n"
 
 /**
  * Custom hook for managing chat state
@@ -17,8 +19,9 @@ export function useChatState(messages: ClineMessage[]): ChatState {
 	// UI state
 	const [sendingDisabled, setSendingDisabled] = useState(false)
 	const [enableButtons, setEnableButtons] = useState<boolean>(false)
-	const [primaryButtonText, setPrimaryButtonText] = useState<string | undefined>("Approve")
-	const [secondaryButtonText, setSecondaryButtonText] = useState<string | undefined>("Reject")
+	// CARET MODIFICATION: 다국어 지원 기본값 적용
+	const [primaryButtonText, setPrimaryButtonText] = useState<string | undefined>(t("chat.approve", "common"))
+	const [secondaryButtonText, setSecondaryButtonText] = useState<string | undefined>(t("chat.reject", "common"))
 	const [didClickCancel, setDidClickCancel] = useState(false)
 	const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({})
 
@@ -44,8 +47,9 @@ export function useChatState(messages: ClineMessage[]): ChatState {
 		setSelectedImages([])
 		setSelectedFiles([])
 		setEnableButtons(false)
-		setPrimaryButtonText("Approve")
-		setSecondaryButtonText("Reject")
+		// CARET MODIFICATION: 다국어 지원 기본값 적용
+		setPrimaryButtonText(t("chat.approve", "common"))
+		setSecondaryButtonText(t("chat.reject", "common"))
 		setDidClickCancel(false)
 	}, [])
 

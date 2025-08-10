@@ -2,6 +2,8 @@ import React from "react"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import styled from "styled-components"
 import { ChatState, MessageHandlers } from "../../types/chatTypes"
+// CARET MODIFICATION: 다국어 지원 추가
+import { t } from "@/caret/utils/i18n"
 
 interface ActionButtonsProps {
 	chatState: ChatState
@@ -72,7 +74,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ chatState, message
 						marginLeft: isStreaming ? 0 : "6px",
 					}}
 					onClick={() => messageHandlers.handleSecondaryButtonClick(inputValue, selectedImages, selectedFiles)}>
-					{isStreaming ? "Cancel" : secondaryButtonText}
+					{/* CARET MODIFICATION: 다국어 지원 텍스트 적용 */}
+					{isStreaming ? t("chat.cancel", "common") : secondaryButtonText}
 				</VSCodeButton>
 			)}
 		</div>

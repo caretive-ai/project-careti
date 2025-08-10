@@ -72,6 +72,7 @@ export interface ExtensionStateContextType extends ExtensionState { // CARET MOD
 	setMcpMarketplaceEnabled: (value: boolean) => void
 	setMcpRichDisplayEnabled: (value: boolean) => void
 	setMcpResponsesCollapsed: (value: boolean) => void
+	setTelemetrySetting: (value: string) => void
 	setShellIntegrationTimeout: (value: number) => void
 	setTerminalReuseEnabled: (value: boolean) => void
 	setTerminalOutputLineLimit: (value: number) => void
@@ -811,6 +812,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		localWorkflowToggles: state.localWorkflowToggles || {},
 		globalWorkflowToggles: state.globalWorkflowToggles || {},
 		enableCheckpointsSetting: state.enableCheckpointsSetting,
+		// CARET MODIFICATION: MCP 설정들 추가
+		mcpRichDisplayEnabled: state.mcpRichDisplayEnabled,
 
 		// Navigation functions
 		navigateToMcp,
@@ -836,6 +839,59 @@ export const ExtensionStateContextProvider: React.FC<{
 		setBasetenModels: (models: Record<string, ModelInfo>) => setBasetenModels(models),
 		setHuggingFaceModels: (models: Record<string, ModelInfo>) => setHuggingFaceModels(models),
 		setMcpMarketplaceCatalog: (catalog: McpMarketplaceCatalog) => setMcpMarketplaceCatalog(catalog),
+		// CARET MODIFICATION: 누락된 setter들 추가
+		setTelemetrySetting: async (value: string) => {
+			try {
+				await StateServiceClient.updateSettings(
+					UpdateSettingsRequest.create({
+						telemetrySetting: value,
+						chatSettings: state.chatSettings
+							? (await import("@shared/proto-conversions/state/chat-settings-conversion")).convertChatSettingsToProtoChatSettings(state.chatSettings)
+							: undefined,
+						apiConfiguration: state.apiConfiguration
+							? (await import("@shared/proto-conversions/state/settings-conversion")).convertApiConfigurationToProtoApiConfiguration(state.apiConfiguration)
+							: undefined,
+						chatbotAgentSeparateModelsSetting: state.planActSeparateModelsSetting,
+						enableCheckpointsSetting: state.enableCheckpointsSetting,
+						mcpMarketplaceEnabled: state.mcpMarketplaceEnabled,
+						mcpRichDisplayEnabled: state.mcpRichDisplayEnabled,
+						mcpResponsesCollapsed: state.mcpResponsesCollapsed,
+					}),
+				)
+				setState((prevState) => ({
+					...prevState,
+					telemetrySetting: value,
+				}))
+			} catch (error) {
+				console.error("Failed to update telemetry setting:", error)
+			}
+		},
+		setMcpRichDisplayEnabled: async (value: boolean) => {
+			try {
+				await StateServiceClient.updateSettings(
+					UpdateSettingsRequest.create({
+						mcpRichDisplayEnabled: value,
+						telemetrySetting: state.telemetrySetting,
+						chatSettings: state.chatSettings
+							? (await import("@shared/proto-conversions/state/chat-settings-conversion")).convertChatSettingsToProtoChatSettings(state.chatSettings)
+							: undefined,
+						apiConfiguration: state.apiConfiguration
+							? (await import("@shared/proto-conversions/state/settings-conversion")).convertApiConfigurationToProtoApiConfiguration(state.apiConfiguration)
+							: undefined,
+						chatbotAgentSeparateModelsSetting: state.planActSeparateModelsSetting,
+						enableCheckpointsSetting: state.enableCheckpointsSetting,
+						mcpMarketplaceEnabled: state.mcpMarketplaceEnabled,
+						mcpResponsesCollapsed: state.mcpResponsesCollapsed,
+					}),
+				)
+				setState((prevState) => ({
+					...prevState,
+					mcpRichDisplayEnabled: value,
+				}))
+			} catch (error) {
+				console.error("Failed to update MCP rich display setting:", error)
+			}
+		},
 		setShowMcp,
 		closeMcpView,
 		setChatSettings: async (value) => {

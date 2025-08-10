@@ -362,6 +362,33 @@ npm run build 2>&1 | Select-String "error TS" | Select-Object -First 20
 3. **Cline 패턴 준수**: 새로운 Cline 아키텍처 패턴 학습 및 적용
 4. **단계적 검증**: 각 수정 후 즉시 빌드 확인으로 에러 전파 방지
 
+### 실제 적용 사례: Task #006-3 (2025-01-22)
+
+다음은 위 방법론을 실제 머징 작업에 적용한 성과입니다:
+
+#### **적용 전후 비교**
+- **시작**: 240개 TypeScript 에러 (혼란스러운 상황)
+- **방법론 적용**: 4-카테고리 분류 및 우선순위 설정
+- **결과**: 57개 에러 (76% 해결, 체계적 접근)
+
+#### **카테고리별 해결 성과**
+| 카테고리 | 해결수 | 주요 해결 항목 |
+|---------|--------|----------------|
+| Category 1 (Cline 신규) | 3개 | useApiConfigurationHandlers, Mode 타입, Proto 경로 |
+| Category 2 (Caret 호환성) | 2개 | FeaturedModelCard Props 매핑 |
+| Category 3 (타입 시스템) | 5개 | ExtensionState 동기화, Context setter |
+| Category 4 (기존 문제) | 1개 | ChatTextArea async 수정 |
+
+#### **방법론의 효과**
+1. **에러 증가 원인 즉시 파악**: mcpRichDisplayEnabled 누락 → ExtensionState 추가
+2. **우선순위 기반 해결**: 구조적 문제 먼저, 세부 문제 나중
+3. **예방적 접근**: 타입 계층 전체 동기화로 연쇄 에러 방지
+
+#### **학습된 패턴**
+- **Cline Hook 시스템**: `useApiConfigurationHandlers` 패턴 학습
+- **타입 상속 문제**: Interface → Implementation 전체 동기화 필요
+- **Props 매핑 변경**: 컴포넌트 API 변화에 대한 적응 방법
+
 ## 충돌 해결 전략
 
 ### 일반적인 충돌 유형과 해결 방법

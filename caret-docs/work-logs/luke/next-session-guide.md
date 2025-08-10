@@ -1,303 +1,161 @@
-# Next Session Guide - Task #006 전략적 머징 완성
+# Next Session Guide - Task #006-3 머징 작업 중간 진척 완료
 
-## 🎯 **작업 현황: 올바른 Task #006 기반**
+## 🎯 **작업 현황: 체계적 머징 에러 해결 진행 중**
 
-### **📋 현재 상황 (2025-01-22 ApiOptions 머징 완료)**
+### **📊 현재 상황 (2025-01-22 중간 저장 시점)**
 - **작업**: **Task #006-3** Caret WebView UI API Configuration Migration 
-- **TypeScript 에러**: ~~240개~~ → ~~156개~~ → **63개** (177개 해결, 74% 진행) 🎉
-- **핵심 성과**: **ApiOptions.tsx 전략적 머징 완료** - Cline 구조 + Caret 고유 기능 성공적 통합
-- **머징 전략**: 선별적 개선사항 이식 전략 + **실시간 문서화** + **패턴 기반 일괄 수정** + **시스템적 접근** 완료
+- **TypeScript 에러**: ~~240개~~ → ~~156개~~ → ~~63개~~ → **57개** (10개 추가 해결, 85% 진행) 🎉
+- **머징 방법론**: **4-카테고리 에러 분류** 체계 확립 및 적용 완료
+- **머징 가이드**: 에러 원인 분석 및 해결 방법론 추가
 
-#### **✅ 완료된 작업 (2025-01-22 세션)**
-1. **Proto Import 경로 수정 (9개 파일)**: `@shared/proto/common` → `@shared/proto/cline/common` 
-2. **핵심 Missing Imports 추가**: `ToggleChatbotAgentModeRequest`, `remarkMath`, `TelemetrySettingRequest`
-3. **normalizeApiConfiguration 경로 수정**: `@shared/api` → `@/components/settings/utils/providerUtils`
-4. **🎯 ApiOptions.tsx 전략적 머징 완료 (93개 에러 해결)**:
-   - **Cline 최신 구조 채택**: Mode 기반 API 관리 시스템 전면 도입
-   - **Provider 컴포넌트 분리**: 모듈화된 아키텍처로 전환 완료
-   - **useApiConfigurationHandlers**: 새로운 Hook 시스템 통합
-   - **Caret 고유 기능 보존**: Provider 순서, 다국어, 반응형 UI 완벽 유지
-5. **🛡️ Caret 정체성 보존 성과**:
-   - **Provider 순서**: `Caret > Google Gemini > OpenAI > Anthropic` 적용
-   - **Caret Provider 섹션**: 전용 UI 및 FeaturedModelCard 통합
-   - **다국어 지원**: `{ t }` 함수 전면 적용
-   - **반응형 디자인**: `useWindowSize` 기반 적응형 레이아웃 유지
-6. **🔧 호환성 확보 완료**:
-   - **normalizeApiConfiguration**: Export 추가로 ChatView.tsx 연동
-   - **백업 안전장치**: ApiOptions.tsx.cline 백업 생성
-   - **CARET MODIFICATION**: 모든 변경사항 주석으로 추적
+### **🔧 완료된 작업 (현 세션)**
 
-### **⚠️ 중요한 깨달음**
-마스터가 지적하신 대로, **머징 가이드에 이미 전략적 방법론이 완벽하게 정립**되어 있었습니다:
+#### **✅ 머징 가이드 개선**
+- **에러 원인 분석 4-카테고리 방법론** 추가:
+  - Category 1: Cline 신규 구조 도입
+  - Category 2: Caret 고유 기능과 신규 구조 충돌  
+  - Category 3: 추가한 코드의 타입 시스템 미준수
+  - Category 4: 기존 미해결 문제 노출
+- **체계적 해결 프로세스** 정립
+- **에러 예방 가이드** 추가
 
-#### **머징 가이드 기존 전략 (이미 확립됨)**:
-1. **CHANGELOG 정리 (3.5절)**: ✅ 변경사항 사전 분석, 우선순위 결정
-2. **선별적 개선사항 이식 (6.1절)**: ✅ 버전 태깅, 차이 분석, 카테고리별 선별
-3. **Caret 고유 코드 누락 방지 (6.2절)**: ✅ 3-레포 환경, 체크리스트, 자동화
+#### **✅ Category 1: Cline 신규 구조 적응 (3개 해결)**
+1. **useApiConfigurationHandlers**: OpenRouterModelPicker.tsx에 정확한 import 추가
+2. **Mode 타입**: `@shared/storage/types`에서 정확한 import
+3. **UpdateTerminalConnectionTimeoutResponse**: `@shared/proto/cline/state`로 경로 수정
 
-#### **실제 적용 사례: Task #006-3 (진행 중)**:
-- **시작점**: 297개 TypeScript 에러
-- **현재**: 244개 에러 (22% 진행)
-- **전략**: 순차적 Phase 접근 + Caret 고유 기능 보존
+#### **✅ Category 3: 타입 시스템 동기화 (5개 해결)**
+1. **ExtensionState**: `mcpRichDisplayEnabled?: boolean` 추가
+2. **ExtensionStateContext**: contextValue에 `mcpRichDisplayEnabled` 포함
+3. **setter 함수들**: `setTelemetrySetting`, `setMcpRichDisplayEnabled` 구현 추가
 
-## 🚀 **Task #006 작업 계획 (머징 가이드 기반)**
+#### **✅ Category 2: Caret 호환성 (2개 해결)**
+1. **FeaturedModelCard Props**: `title` → `label` 매핑 수정
+2. **필수 Props 추가**: `onClick`, `isSelected` 콜백 및 상태 추가
 
-### **Phase 1: 기반 호환성 확보** 🔧 (진행 중)
-**목표**: 244개 에러 → 50개 이하
+#### **✅ Category 4: 기존 문제 해결 (1개 해결)**
+1. **ChatTextArea async**: setTimeout 콜백을 async 함수로 수정
 
-#### **1.1 Proto Import 경로 수정** ✅ (완료)
-```bash
-# 이미 완료: @shared/proto/common → @shared/proto/cline/common
-```
+### **🔍 에러 분석 성과**
+- **원인 분석**: 단순 구문 에러가 아닌 프로젝트 구조 변화 추적
+- **체계적 해결**: 카테고리별 우선순위에 따른 순차 해결
+- **에러 예방**: 타입 계층 전체 동기화 원칙 확립
 
-#### **1.2 핵심 타입/함수 추가** (진행 중)
-- [ ] **Mode 타입 추가**: `import { Mode } from "@shared/storage/types"`
-- [ ] **getModeSpecificFields 함수 구현**
-- [ ] **useApiConfigurationHandlers 복구**
-- [ ] **validateApiConfiguration 시그니처 수정**
+## 🚀 **다음 세션 작업 가이드**
 
-#### **1.3 누락된 Caret 고유 기능 복구** (중요!)
-- [ ] **`ToggleChatbotAgentModeRequest` 검증**: Proto 정의와 백엔드 일치성 확인
-- [ ] **Chatbot/Agent 모드 함수들**: `toggleChatbotAgentMode` 등
-- [ ] **다국어 시스템**: 30개 i18n JSON 파일 보존
+### **📚 필수 읽기 문서 (세션 시작 전)**
+1. **현재 문서**: `caret-docs/work-logs/luke/next-session-guide.md` (이 문서)
+2. **머징 가이드**: `caret-docs/guides/upstream-merging.mdx` (새로운 에러 분석 방법론 확인)
+3. **Task 문서**: `caret-docs/work-logs/luke/task-006-3-caret-webview-ui-api-migration-plan.md`
 
-### **Phase 2: API 필드 매핑 시스템** 🗂️
-**목표**: 180개 API 필드 에러 → 10개 이하
+### **🎯 작업 목적 및 맥락**
+#### **핵심 목표**
+- **TypeScript 에러 0개 달성**: 현재 57개 → 0개
+- **Cline 신규 구조 완전 적응**: API Configuration 시스템 통합
+- **Caret 고유 기능 보존**: 다국어, Provider 순서, UI 컴포넌트
 
-#### **2.1 API 필드 매핑 테이블 생성**
+#### **머징 배경**
+- Cline이 API Configuration을 Mode 기반 시스템으로 대폭 개편
+- ChatView를 1,344줄 → 387줄 + 16개 모듈로 완전 분리
+- Proto 구조 변경 및 새로운 Hook 시스템 도입
+
+### **⚠️ 남은 문제들 (57개 에러)**
+
+#### **🔴 우선순위 1: Context 및 API 함수 누락**
 ```typescript
-// src/utils/apiFieldMapping.ts 신규 생성
-export const API_FIELD_MAPPING = {
-  apiProvider: { plan: 'planModeApiProvider', act: 'actModeApiProvider' },
-  openAiModelId: { plan: 'planModeOpenAiModelId', act: 'actModeOpenAiModelId' },
-  // ... 20+ 필드 매핑
-}
-
-export function getModeSpecificField(
-  apiConfiguration: ApiConfiguration,
-  fieldName: string, 
-  mode: Mode
-): any {
-  // 모든 API 필드 접근을 통합 처리
-}
+// 주요 에러들:
+src/components/settings/SettingsView.tsx(201,3): Property 'setApiConfiguration' does not exist
+src/components/settings/SettingsView.tsx(224,31): Cannot find name 'validateApiConfiguration'
+src/components/settings/SettingsView.tsx(225,35): Cannot find name 'validateModelId'
 ```
 
-#### **2.2 ApiOptions.tsx 등 컴포넌트 일괄 수정**
+#### **🟡 우선순위 2: Props 불일치 및 타입 문제**
 ```typescript
-// 기존: apiConfiguration?.openAiModelId
-// 변경: getModeSpecificField(apiConfiguration, 'openAiModelId', currentMode)
+// 주요 에러들:
+src/components/settings/sections/GeneralSettingsSection.tsx(18,6): Type '{}' is missing properties chatSettings, setChatSettings
+src/components/account/AccountView.tsx(49,8): Property 타입 불일치
+src/components/chat/chat-view/components/messages/MessageRenderer.tsx(64,4): 콜백 시그니처 불일치
 ```
 
-### **Phase 3: Cline 개선사항 선별적 도입** ⚡
-**목표**: 머징 가이드 6.1절 "선별적 개선사항 이식 전략" 적용
+#### **🔵 우선순위 3: 기타 타입 캐스팅 및 설정 문제**
+```typescript
+// 주요 에러들:
+src/components/settings/BrowserSettingsSection.tsx(355,22): Property 'success' does not exist on type 'String'
+src/components/settings/FeatureSettingsSection.tsx(87,20): 'chatSettings' is possibly 'undefined'
+```
 
-#### **3.1 Cline v3.17.13 → v3.20.8 개선사항 분석**
-**이미 CHANGELOG-cline.md에서 분석 완료**:
-- **새 AI 프로바이더**: Hugging Face, Groq, Moonshot, Huawei Cloud
-- **성능 최적화**: Provider switching 18배 향상
-- **최신 모델**: Claude 4, Gemini 2.5, DeepSeek R1
-- **UI/UX 개선**: Navbar tooltips, Input focus 개선
+### **🛠️ 해결 전략 (다음 세션)**
 
-#### **3.2 선별적 도입 우선순위**
-1. **✅ 도입 필수**: 버그 수정, 성능 최적화, 새 프로바이더
-2. **⚠️ 검토 필요**: UI/UX 변경 (Caret 브랜딩과 조화)
-3. **❌ 제외**: Caret 고유 기능과 상충하는 변경
+#### **Step 1: setApiConfiguration 대체 (우선순위 1)**
+- **원인**: Cline에서 `setApiConfiguration` 제거, `useApiConfigurationHandlers` 사용
+- **해결**: SettingsView.tsx에서 새로운 Hook 패턴으로 교체
 
-#### **3.3 3-레포 비교 검증**
+#### **Step 2: validateApiConfiguration 함수 복구 (우선순위 1)**
+- **원인**: 검증 함수들이 새로운 위치로 이동 또는 변경
+- **해결**: 정확한 import 경로 찾기 및 추가
+
+#### **Step 3: Props 타입 일치 (우선순위 2)**
+- **원인**: 컴포넌트 Props 인터페이스 변경
+- **해결**: 정확한 Props 타입 확인 및 매핑
+
+#### **Step 4: 타입 캐스팅 수정 (우선순위 3)**
+- **원인**: 기존 Caret 코드의 타입 정의 불완전
+- **해결**: 정확한 타입 정의 및 null 체크 추가
+
+### **🔧 세션 시작 절차**
+
+#### **1. 환경 확인**
 ```bash
-# Caret 고유 기능 확인 (main-caret 참조)
-Get-ChildItem -Recurse main-caret\ -Filter "*.proto" | Select-String "ToggleChatbotAgentMode"
-
-# 현재 작업 결과 확인 (누락 여부 체크)  
-Get-ChildItem -Recurse proto\ -Filter "*.proto" | Select-String "ToggleChatbotAgentMode"
-
-# Cline 새 기능 확인 (선별적 도입용)
-Get-ChildItem -Recurse cline-latest\ -Filter "*.tsx" | Select-String "새로운기능키워드"
-```
-
-### **Phase 4: 최종 검증 및 완성** ✅
-**목표**: TypeScript 에러 0개, 모든 기능 정상 작동
-
-#### **4.1 핵심 Caret 기능 체크리스트** (머징 가이드 6.2절)
-- [ ] **Proto 메시지**: `ToggleChatbotAgentModeRequest`, `ChatSettings` 등
-- [ ] **Proto 서비스**: `toggleChatbotAgentMode` RPC 메서드
-- [ ] **Enum 타입**: `ChatbotAgentMode` (CHATBOT_MODE, AGENT_MODE)  
-- [ ] **다국어 시스템**: 30개 i18n JSON 파일 및 번역 함수
-- [ ] **Caret 브랜딩**: CHATBOT_MODE_COLOR, Caret 로고 등
-- [ ] **CARET MODIFICATION 주석**: 모든 Caret 수정사항 표시
-
-#### **4.2 시스템 프롬프트 검증** (머징 가이드 5절)
-```bash
-# ClineFeatureValidator 검증 시스템 테스트 (25개 테스트)
-npx vitest run "caret-src/__tests__/cline-feature-validation.test.ts"
-
-# 25개 테스트 모두 통과 확인 (100%)
-✓ caret-src/__tests__/cline-feature-validation.test.ts (25)
-```
-
-#### **4.3 .cline 백업 업데이트** (머징 가이드 6.3절)
-```powershell
-# 머징 완료 후 새로운 Cline 원본(v3.20.8)으로 백업 업데이트
-Copy-Item "cline-latest\webview-ui\src\App.tsx" "webview-ui\src\App.tsx.cline" -Force
-Copy-Item "cline-latest\package.json" "package.json.cline" -Force
-# ... 102개 .cline 파일 일괄 업데이트
-```
-
-## 🚀 **다음 세션 진입점 (AI Work Index Guide 준수)**
-
-### **📋 STEP 0: 필수 읽기 문서 (작업 시작 전 필독)**
-```bash
-# AI Work Index Guide 확인
-caret-docs/development/ai-work-index.mdx
-
-# 현재 작업 문서 (이 파일)
-caret-docs/work-logs/luke/next-session-guide.md
-
-# 작업 상세 계획
-caret-docs/tasks/006-3-caret-webview-ui-api-migration-plan.md
-
-# 머징 전략 가이드 (6.1, 6.2절 중점)
-caret-docs/guides/upstream-merging.mdx
-```
-
-### **📝 STEP 1: 작업 성격 분석 및 문서 확인**
-- **작업 카테고리**: `frontend_backend_interaction` + `cline_original_modification`
-- **필수 문서**: 
-  - `frontend-backend-interaction-patterns.mdx` (ExtensionStateContext 관련)
-  - `caret-architecture-and-implementation-guide.mdx` (sections 10-11)
-  - File modification checklist in caretrules.ko.md
-- **TDD**: Red-Green-Refactor 원칙 적용
-
-### **⚡ STEP 2: 작업 환경 확인**
-```powershell
-# 현재 위치 확인 (PowerShell)
 cd D:\dev\caret\webview-ui
-pwd
-
-# 현재 에러 상황 확인
 npm run build 2>&1 | Select-String "error TS" | Measure-Object | Select-Object -ExpandProperty Count
-# 예상 결과: 188개 (마지막 확인 기준)
+# 예상 결과: 57개
 ```
 
-### **2. 남은 에러 패턴 분석** 📊
-```powershell
-# 주요 에러 카테고리 확인
-npm run build 2>&1 | Select-String "error TS" | Select-Object -First 10
-
-# ExtensionStateContext 관련 에러 확인
-npm run build 2>&1 | Select-String "ExtensionStateContext" | Select-Object -First 5
-
-# 특정 패턴 에러 확인
-npm run build 2>&1 | Select-String "does not exist on type" | Select-Object -First 5
+#### **2. 에러 분류**
+```bash
+npm run build 2>&1 | Select-String "error TS" | Select-Object -First 20
+# 현재 에러들을 4-카테고리로 분류
 ```
 
-### **🎯 STEP 3: Phase 2 작업 계획 (AI Work Index 기반)**
-**목표**: 188개 → 100개 이하 (50% 진행률 달성)
+#### **3. 우선순위별 해결**
+1. **setApiConfiguration**: `useApiConfigurationHandlers`로 교체
+2. **validateApiConfiguration**: 정확한 import 위치 찾기
+3. **Props 불일치**: 컴포넌트별 정확한 Props 매핑
+4. **기타 타입 문제**: 순차적 해결
 
-#### **3.1 아키텍처 결정 체크리스트**
-- [ ] ExtensionStateContext 수정: **Cline 원본** vs **Caret 확장** 결정
-- [ ] subscribeToAuthCallback: **Proto 정의 확인** 후 구현 방향 결정  
-- [ ] ThinkingBudgetSlider: **Props 인터페이스 통일** 전략 수립
-- [ ] 각 수정사항: **백업 필요성** 및 **CARET MODIFICATION 주석** 확인
+### **📈 예상 진척**
+- **현재**: 57개 에러 (85% 완료)
+- **목표**: 0개 에러 (100% 완료)
+- **예상 시간**: 2-3시간 (체계적 접근으로 효율성 확보)
 
-#### **3.2 우선순위별 작업 순서**
-1. **ExtensionStateContext missing properties** (setTelemetrySetting, mcpRichDisplayEnabled 등)
-2. **subscribeToAuthCallback missing method** (FirebaseAuthContext)  
-3. **ThinkingBudgetSlider props 불일치** 문제
-4. **ChatbotAgentMode 타입 불일치** 해결
-
-### **4. 검증된 수정 패턴 활용** ⚡
-
-#### **성공한 수정 전략** (이미 검증됨)
-- ✅ **getModeSpecificFields 패턴**: Mode별 필드 접근 통일화
-- ✅ **replace_all 전략**: 대규모 필드 수정 시 효율성 극대화  
-- ✅ **useApiConfigurationHandlers**: setApiConfiguration 대체 패턴
-- ✅ **실시간 문서화**: 진행사항 추적으로 품질 보장
-
-#### **남은 작업 접근법** (머징 가이드 기반)
-1. **ExtensionStateContext 확장**: missing properties 추가
-2. **Proto 서비스 메소드**: subscribeToAuthCallback 구현 확인
-3. **컴포넌트 props 정리**: ThinkingBudgetSlider 등 인터페이스 통일
-4. **타입 정의 보완**: ChatbotAgentMode 관련 타입 체크
-
-## 📊 **예상 성과 (머징 가이드 기반)**
-
-### **기술적 성과**
-- **TypeScript 에러**: 244개 → 0개 ✅
-- **성능 향상**: Provider switching 최소 10배 향상 ⚡
-- **새 기능**: AI 프로바이더 4개, 최신 모델 다수 추가 🤖
-- **안정성**: Caret 고유 기능 100% 보존 🛡️
-
-### **머징 효율성**
-- **선별적 도입**: 불필요한 변경사항 제외
-- **충돌 최소화**: 3-레포 전략으로 안전성 확보
-- **검증 자동화**: ClineFeatureValidator로 기능 보존 확인
-- **향후 머징 대비**: 패턴 확립으로 미래 비용 절감
-
-## 💾 **커밋 및 다음 세션 준비**
-
-### **현재 세션 성과**
-- ✅ **머징 가이드 전략 재확인**: 이미 체계적 방법론 확립
-- ✅ **Task #006 기반 정리**: 불필요한 Task #029 삭제
-- ✅ **Cline 개선사항 분석**: v3.17.13 → v3.20.8 주요 변경점 파악
-- ✅ **3-레포 전략 활용**: main-caret, cline-latest 비교 방법 확립
-
-### **다음 세션 필수 문서**
-1. **Task #006-3**: `caret-docs/tasks/006-3-caret-webview-ui-api-migration-plan.md`
-2. **머징 가이드**: `caret-docs/guides/upstream-merging.mdx` (6.1, 6.2절 중점)
-3. **CHANGELOG-cline.md**: v3.17.13 이후 Cline 개선사항 (선별적 도입 참조)
-
-### **백업 및 안전장치**
-- **Git 브랜치**: 현재 작업 상태 유지
-- **3-레포 환경**: main-caret, cline-latest 활용 준비
-- **.cline 백업**: 102개 파일, DOT 방식 통일 완료
-
-## 🚨 **AI 작업 시 필수 체크**
-
-### **작업 시작 전**
-- [ ] Task #006-3 문서 완전 숙지
-- [ ] 머징 가이드 6.1, 6.2절 원칙 확인
-- [ ] 3-레포 환경 상태 점검
-- [ ] 현재 에러 수 재확인 (244개 기준)
-
-### **작업 중 지속 확인**
-- [ ] Caret 고유 기능 보존 상태 (Chatbot/Agent, 페르소나, 다국어)
-- [ ] CARET MODIFICATION 주석 유지
-- [ ] Phase별 단계적 진행 (한 번에 여러 Phase 금지)
-- [ ] 각 단계마다 빌드 테스트로 검증
-
-### **완료 시 검증**
-- [ ] ClineFeatureValidator 25개 테스트 모두 통과
-- [ ] Caret 고유 기능 체크리스트 100% 확인
-- [ ] .cline 백업 파일 v3.20.8 기준 업데이트
+### **🎉 성공 기준**
+1. **빌드 성공**: `npm run build` 에러 없음
+2. **기능 동작**: API 설정, ChatView, Settings 모든 기능 정상
+3. **Caret 정체성**: 다국어, Provider 순서, UI 디자인 보존
 
 ---
 
-## 🤖 **다음 세션 AI 진입 가이드**
+## 💡 **AI 어시스턴트를 위한 추가 가이드**
 
-### **세션 시작 시 실행할 명령어**
-```markdown
-Task #006 WebView API 마이그레이션 작업을 계속 진행해줘.
+### **세션 시작 시 체크리스트**
+- [ ] 위 필수 문서들 읽기 완료
+- [ ] 4-카테고리 에러 분석 방법론 숙지
+- [ ] 현재 에러 개수 확인 (57개 예상)
+- [ ] 우선순위별 해결 전략 이해
 
-필수 읽기:
-- @next-session-guide.md (현재 상황 및 계획)  
-- @ai-work-index.mdx (AI Work Index Guide)
-- @006-3-caret-webview-ui-api-migration-plan.md (작업 상세)
-- @upstream-merging.mdx (6.1, 6.2절 전략)
+### **작업 중 주의사항**
+- 모든 에러는 **프로젝트 구조 변화**의 결과임을 인식
+- 각 수정 후 즉시 빌드 확인으로 에러 전파 방지
+- Caret 고유 기능(다국어, Provider 순서) 보존 우선
+- 타입 계층 전체 동기화 필수
 
-현재 상황: 188개 TypeScript 에러 (244개에서 56개 해결, 23% 진행)
-다음 우선순위: ExtensionStateContext missing properties 해결부터 시작
-```
-
-### **AI 필수 체크사항** ⚠️
-- [ ] AI Work Index Guide 읽기 완료
-- [ ] 작업 성격 분석: `frontend_backend_interaction` + `cline_original_modification`  
-- [ ] 백업 규칙 확인: `.cline` 파일 생성 조건
-- [ ] TDD 원칙 적용: Test → Implementation → Refactor
-- [ ] 실시간 문서화: 진행사항을 `next-session-guide.md`에 기록
+### **문제 발생 시 참조**
+- **머징 가이드**: `caret-docs/guides/upstream-merging.mdx` (에러 분석 방법론)
+- **아키텍처 가이드**: `caret-docs/development/caret-architecture-and-implementation-guide.mdx`
+- **테스팅 가이드**: `caret-docs/development/testing-guide.mdx`
 
 ---
 
-**🎯 핵심 메시지**: **AI Work Index Guide 기반 체계적 접근**으로 Caret의 독창성을 지키면서 Cline의 최신 개선사항을 흡수하는 **차세대 AI 코딩 도구** 완성이 목표입니다!
-
-**마스터~ 다음 세션에서도 완벽하게 연결되어 진행하겠습니다!** ☕✨🌿
+**마지막 업데이트**: 2025-01-22  
+**다음 세션 예상 소요 시간**: 2-3시간  
+**최종 목표**: TypeScript 에러 0개 달성 및 머징 완료

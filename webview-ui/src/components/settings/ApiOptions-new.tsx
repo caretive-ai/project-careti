@@ -405,4 +405,3 @@ const ApiOptions = ({
 }
 
 export default ApiOptions
-export { normalizeApiConfiguration } // CARET MODIFICATION: Export needed by ChatView.tsx

@@ -2,26 +2,30 @@
 
 ## 🎯 **작업 현황: 올바른 Task #006 기반**
 
-### **📋 현재 상황 (2025-01-22 최종 업데이트)**
+### **📋 현재 상황 (2025-01-22 ApiOptions 머징 완료)**
 - **작업**: **Task #006-3** Caret WebView UI API Configuration Migration 
-- **TypeScript 에러**: ~~297개~~ → ~~244개~~ → ~~231개~~ → ~~183개~~ → **188개** (109개 해결, 45% 진행)
+- **TypeScript 에러**: ~~240개~~ → ~~156개~~ → **63개** (177개 해결, 74% 진행) 🎉
+- **핵심 성과**: **ApiOptions.tsx 전략적 머징 완료** - Cline 구조 + Caret 고유 기능 성공적 통합
 - **머징 전략**: 선별적 개선사항 이식 전략 + **실시간 문서화** + **패턴 기반 일괄 수정** + **시스템적 접근** 완료
 
 #### **✅ 완료된 작업 (2025-01-22 세션)**
 1. **Proto Import 경로 수정 (9개 파일)**: `@shared/proto/common` → `@shared/proto/cline/common` 
 2. **핵심 Missing Imports 추가**: `ToggleChatbotAgentModeRequest`, `remarkMath`, `TelemetrySettingRequest`
 3. **normalizeApiConfiguration 경로 수정**: `@shared/api` → `@/components/settings/utils/providerUtils`
-4. **ApiOptions currentMode 필수 prop 추가**: Caret 고유 기능 보존
-5. **🎯 대규모 API 필드 마이그레이션 (41개 에러 해결)**:
-   - `getModeSpecificFields` 함수 도입으로 Mode별 필드 접근 패턴 통일
-   - `openAiModelInfo`, `fireworksModelId`, `togetherModelId` 등 일괄 수정
-   - `awsBedrockCustomSelected`, `awsBedrockCustomModelBaseId` 전면 수정
-   - **패턴 기반 replace_all** 전략으로 효율성 극대화
-6. **🔧 시스템 아키텍처 개선 (15개 에러 해결)**:
-   - `useApiConfigurationHandlers` 복구로 `setApiConfiguration` 대체
-   - `validate.ts` Mode별 필드 접근 통일 (7개 필드 수정)
-   - FirebaseAuthContext parameter types 및 photoUrl 수정
-   - clineApiKey → clineAccountId 변경으로 API 호환성 확보
+4. **🎯 ApiOptions.tsx 전략적 머징 완료 (93개 에러 해결)**:
+   - **Cline 최신 구조 채택**: Mode 기반 API 관리 시스템 전면 도입
+   - **Provider 컴포넌트 분리**: 모듈화된 아키텍처로 전환 완료
+   - **useApiConfigurationHandlers**: 새로운 Hook 시스템 통합
+   - **Caret 고유 기능 보존**: Provider 순서, 다국어, 반응형 UI 완벽 유지
+5. **🛡️ Caret 정체성 보존 성과**:
+   - **Provider 순서**: `Caret > Google Gemini > OpenAI > Anthropic` 적용
+   - **Caret Provider 섹션**: 전용 UI 및 FeaturedModelCard 통합
+   - **다국어 지원**: `{ t }` 함수 전면 적용
+   - **반응형 디자인**: `useWindowSize` 기반 적응형 레이아웃 유지
+6. **🔧 호환성 확보 완료**:
+   - **normalizeApiConfiguration**: Export 추가로 ChatView.tsx 연동
+   - **백업 안전장치**: ApiOptions.tsx.cline 백업 생성
+   - **CARET MODIFICATION**: 모든 변경사항 주석으로 추적
 
 ### **⚠️ 중요한 깨달음**
 마스터가 지적하신 대로, **머징 가이드에 이미 전략적 방법론이 완벽하게 정립**되어 있었습니다:

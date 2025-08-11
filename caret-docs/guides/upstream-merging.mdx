@@ -6,10 +6,13 @@ Caret은 Cline 프로젝트의 **Fork**로, Cline의 최신 변경사항을 지�
 
 ### 핵심 원칙
 
--   **Cline 코드 보존**: `src/`, `webview-ui/` 디렉토리의 Cline 원본 코드는 가능한 한 수정하지 않고 보존
--   **Git merge 활용**: 오버레이 방식이 아닌 Git의 표준 merge 워크플로우 사용
--   **최소한의 충돌**: Caret 확장 코드를 `caret-src/`에 분리하여 충돌 최소화
--   **체계적 테스트**: 병합 후 전체 시스템 동작 검증
+- **🎯 Cline-First 전략**: 모든 구조 변경은 Cline을 우선으로 따름, Caret은 Cline 구조에 의미적으로 합성
+- **Cline 코드 보존**: `src/`, `webview-ui/` 디렉토리의 Cline 원본 코드는 가능한 한 수정하지 않고 보존
+- **대량 변경 시 재합성**: Cline 최신 코드로 교체 후 Caret 기능을 caret-src로 분리하여 재구현
+- **Git merge 활용**: 오버레이 방식이 아닌 Git의 표준 merge 워크플로우 사용
+- **최소한의 충돌**: Caret 확장 코드를 `caret-src/`에 분리하여 충돌 최소화
+- **Cline 버그 수정**: 불가피하고 명백한 Cline 빌드 버그는 임시 수정 후 나중에 제거
+- **체계적 테스트**: 병합 후 전체 시스템 동작 검증
 
 ## 업스트림 동기화 절차
 
@@ -38,6 +41,10 @@ git diff --name-only main upstream/main
 
 ### 3. 병합 전 준비작업
 
+#### 3.1 삭제된 파일 확인 및 제거
+
+**중요**: Cline에서 삭제된 파일들이 Caret에서 자동으로 제거되지 않을 수 있습니다.
+
 ```bash
 # 현재 작업 상태 확인 및 정리
 git status
@@ -48,7 +55,49 @@ git checkout main
 
 # 로컬 main 브랜치 최신화
 git pull origin main
+
+# Cline에서 삭제된 파일 확인
+git diff --name-only --diff-filter=D main upstream/main
 ```
+
+#### 3.2 삭제된 파일 처리 원칙
+
+1. **Cline 원본 파일이 삭제된 경우**: Caret에서도 삭제 (Caret 수정사항이 없는 경우)
+2. **Caret 수정사항이 있는 파일**: 삭제하지 말고 충돌 해결 시 검토
+3. **Caret 고유 파일**: 유지 (caret-src/, caret-docs/ 등)
+
+```bash
+# 삭제된 파일 중 Caret 수정사항 확인
+git log --oneline --follow <삭제된_파일_경로>
+
+# Caret 수정사항이 없으면 삭제
+git rm <삭제된_파일_경로>
+```
+
+````
+
+### 3.5. CHANGELOG 정리 (필수 선행 작업)
+
+**머징 작업 시작 전 반드시 CHANGELOG를 먼저 정리해야 합니다:**
+
+```bash
+# 1. Cline의 최신 CHANGELOG를 별도 파일로 보존
+cp cline-latest/CHANGELOG.md CHANGELOG-cline.md
+
+# 2. 주요 변경사항 분석 (마지막 머징 이후)
+grep -A 10 "^## \[3\.1[7-9]\|^## \[3\.20" CHANGELOG-cline.md
+
+# 3. CHANGELOG.md를 Caret 전용으로 정리
+# - 머지 마커 제거 (<<<<<<< HEAD, =======, >>>>>>> upstream/main)
+# - Caret 버전 이력만 유지 (v0.1.x)
+# - "For changes prior to v3.17.13, see CHANGELOG-cline.md" 추가
+````
+
+**목적 및 효과:**
+
+- **🎯 변경사항 사전 파악**: 어떤 기능이 추가/수정되었는지 분석하여 선별적 머징 전략 수립
+- **🚀 우선순위 결정**: 중요도별(Plan/Act Mode, 성능 개선, 새 API 제공자 등) 작업 순서 계획
+- **❌ 충돌 방지**: CHANGELOG.md는 Caret 전용으로 확실히 분리하여 머징 시 충돌 제거
 
 ### 4. 업스트림 병합 실행
 
@@ -60,29 +109,704 @@ git merge upstream/main
 # git rebase upstream/main
 ```
 
+### 5. 충돌 발생 시 계획 수립 (매우 중요)
+
+병합 실행 후 다수의 충돌이 발생했을 경우, 즉시 개별 파일을 수정하기보다 체계적인 계획을 먼저 수립하는 것이 매우 중요합니다. 이는 작업의 실수를 줄이고, 팀(또는 AI 어시스턴트)과의 협업을 원활하게 합니다.
+
+- **원칙**: 복잡한 충돌(예: 10개 이상의 파일, 주요 설정 파일 포함) 발생 시, 즉시 해결을 시도하지 않고 **상세 분석 및 계획 문서를 먼저 작성**합니다.
+- **절차**:
+    1.  `git status` 명령으로 충돌 목록 전체를 빠짐없이 확인합니다.
+    2.  충돌의 규모와 복잡성을 판단합니다.
+    3.  `caret-docs/tasks/` 디렉토리에 `XXX-upstream-merge-conflict-resolution-plan.md` 와 같은 형식으로 계획 문서를 생성합니다.
+    4.  **계획 문서 필수 포함 내용**:
+        - **충돌 개요**: 충돌 파일 수, 주요 충돌 영역 요약.
+        - **충돌 파일 상세 목록**: `git status` 결과를 기반으로 한 전체 목록.
+        - **충돌 유형별 해결 전략**: 내용 충돌, 이름 변경/삭제 충돌, 수정/삭제 충돌 등 유형에 따른 해결 원칙을 명시합니다.
+        - **작업 순서 및 체크리스트**: 해결 우선순위에 따른 단계별 작업 계획과 검증을 위한 체크리스트를 작성합니다.
+    5.  작성된 계획 문서를 기반으로, 단계별로 신중하게 충돌을 해결합니다. 각 단계 실행 전 동료 또는 AI 어시스턴트와 계획을 공유하고 합의하는 것을 강력히 권장합니다.
+
+### 6. 반복 머징 시 재탐색을 줄이는 상위 원칙(신규)
+
+- **Webview/HostBridge/ProtoBus 삼각 정합성**을 먼저 맞춥니다.
+    - 베이스(WebviewProvider) → HostProvider → 생성물(proto/generate-\*) 순서로 정렬하면 오류가 빠르게 좁혀집니다.
+    - WebviewProvider의 constructor/헬퍼 및 private→protected 변경은 하위 클래스 영향이 커서 즉시 보완 헬퍼를 추가해 두는 게 좋습니다.
+- **생성 스크립트 규칙의 소스화**(규칙을 코드에 고정).
+    - grpc-js 네임스페이스가 우리 포크에선 `caret`으로 export됩니다. 생성 스크립트에서 이를 강제하고, import 경로도 한 번에 관리하세요.
+    - HostBridge 도메인(diff/env/watch/window/workspace)은 컨트롤러가 아니라 `src/hosts/vscode/hostbridge/**`에서 import하도록 제너레이터에 고정하세요.
+- **중복 심볼 대비 자동화**.
+    - 서로 다른 도메인에 같은 RPC 이름이 있을 수 있습니다. 생성 시 이름 충돌을 `dir_rpc` 로컬명으로 자동 치환하면 수동 충돌이 사라집니다.
+- **Proto 원칙: 내용은 Caret, 구조는 Cline**.
+    - 패키지/enum 컨벤션은 우리 방식으로, 디렉토리/경로 구조는 upstream 유지. 문서와 스크립트에 동일 문구로 고정하세요.
+- **검증 체크리스트를 PR 필수 항목으로**.
+    - WebviewProvider API 변경, HostBridge 경로/심볼, 생성물 네임스페이스, proto-conversions 대상 enum/메시지 이름 변경 등.
+
+### 6.1 **선별적 개선사항 이식 전략 (2025-01-22 신규)** 🔄
+
+#### 실제 적용 사례: 006-3 WebView 머징 (진행중)
+
+**목표**: Caret WebView UI를 Cline v3.20.8 API 구조에 맞게 마이그레이션
+
+- **시작점**: 297개 TypeScript 에러
+- **현재**: 250개 에러 (47개 해결, 19% 진행)
+- **전략**: 순차적 Phase 접근 + Caret 고유 기능 보존
+
+**Phase 1 성과**:
+
+- ✅ Proto import 경로 수정: `@shared/proto/common` → `@shared/proto/cline/common`
+- ✅ 중복 import 정리 및 타입 추가
+- ✅ **핵심 발견**: `toggleChatbotAgentMode` grpc 메서드 누락 복구
+- ✅ 불필요한 임시 백업 폴더 정리
+
+**디렉토리 구조 최적화**:
+
+- `caret-webview-ui` → `webview-ui` (Caret 메인)
+- `webview-ui` → `cline-webview-ui` (Cline 원본)
+- **머징 후 `cline-webview-ui` 삭제**
+
+**🚨 머징 전 필수 검증 절차 (Anti-Confusion Protocol)**:
+
+**의심스러운 변경사항 발견 시 즉시 적용**:
+
+1. **원본 비교 분석 (MANDATORY)**
+
+    ```bash
+    # Cline 원본 vs Caret 현재 구조 직접 비교
+    diff cline-latest/webview-ui/src/components/settings/SettingsView.tsx webview-ui/src/components/settings/SettingsView.tsx
+    ```
+
+2. **핵심 차이점 확인**
+    - **Cline**: Section 기반, `setApiConfiguration` 없음
+    - **Caret**: ApiOptions 기반 + `useApiConfigurationHandlers` + `setApiConfiguration` 있음
+
+3. **변경 전 질문**: 왜 필요한가? Caret 기능에 영향은? Proto 정의와 일치하는가?
+
+4. **검증 강화**: `caret-docs/guides/merging-verification-checklist.md` 참조
+
+**🔧 Common Issues and Solutions**:
+
+### Proto 정의 불일치 해결
+
+```bash
+# UpdateSettingsRequest에 필드 누락 시
+# 1. proto/cline/state.proto 수정
+# 2. npm run protos 실행
+# 3. TypeScript 에러 확인
+```
+
+### 경로 통일 문제
+
+```bash
+# caret-webview-ui vs webview-ui 혼용 방지
+# 모든 스크립트에서 webview-ui 사용 통일
+grep -r "caret-webview-ui" package.json scripts/
+```
+
+### ESLint 규칙 불일치
+
+```bash
+# Cline 원본과 동일한 규칙 사용
+# webview-ui/.eslintrc.json에서 Cline 규칙 적용
+# eslint-rules/no-direct-vscode-api만 사용
+```
+
+## 🚨 Cline 빌드 버그 수정 가이드
+
+때로는 Cline 업스트림에서 **빌드가 안 되는 버전**을 릴리즈하는 경우가 있습니다. 이런 **불가피하고 명백한 버그**는 임시로 수정하되, 나중에 제거할 수 있도록 명확히 표시해야 합니다.
+
+### 수정 대상
+
+- **타입 정의 누락**: 인터페이스에서 사용하는 속성이 누락된 경우
+- **빌드 실패**: TypeScript 컴파일 에러를 발생시키는 명백한 오타나 누락
+- **Import 경로 오류**: 존재하지 않는 모듈을 import하는 경우
+- **Proto 생성 스크립트 오류**: 생성된 클라이언트에서 타입 정의가 누락된 경우
+- **함수 시그니처 불일치**: 호출하는 곳과 정의된 곳의 매개변수 개수가 다른 경우
+
+### 수정 방법
+
+```typescript
+// CARET MODIFICATION: Cline build bug fix - [간단한 설명]
+// [왜 필요한지 상세 설명]
+// Will be removed when Cline fixes this issue upstream
+[수정 내용]
+```
+
+**예시**:
+
+```typescript
+// CARET MODIFICATION: Cline build bug fix - missing bool property for fetchMcpMarketplace
+// This property is used in Controller but missing from interface definition
+// Will be removed when Cline fixes this issue upstream
+bool?: boolean
+```
+
+### 주의사항
+
+1. **최소한의 수정**: 빌드가 되는 최소한의 변경만 적용
+2. **명확한 주석**: 왜 수정했는지, 언제 제거할 것인지 명시
+3. **백업 생성**: `.cline` 백업 파일 생성 필수
+4. **추적**: 수정 사항을 별도로 기록하여 나중에 제거 시점 파악
+
+## 📦 Proto 패키지 분리 작업 (Task #007)
+
+Proto 패키지 분리로 인한 머징 복잡도를 최소화하기 위한 특별 가이드입니다.
+
+### Proto 분리 구조
+
+- **`proto/cline/`**: Cline 원본 proto 파일들
+- **`proto/caret/`**: Caret 전용 proto 파일들
+- **`proto/host/`**: Host 관련 proto 파일들
+
+### 머징 시 주의사항
+
+#### 1. Proto 생성 스크립트 복원
+
+Cline 최신으로 머징 시 proto 생성 스크립트들을 우선 복원:
+
+```bash
+# Cline 원본 스크립트로 복원 (백업 생성 후)
+cp scripts/generate-host-bridge-client.mjs scripts/generate-host-bridge-client.mjs.cline
+cp cline-latest/scripts/generate-host-bridge-client.mjs scripts/
+cp scripts/generate-protobus-setup.mjs scripts/generate-protobus-setup.mjs.cline
+cp cline-latest/scripts/generate-protobus-setup.mjs scripts/
+```
+
+#### 2. 생성된 파일 재생성
+
+```bash
+# proto 파일 재생성
+npm run protos
+```
+
+#### 3. Caret 전용 타입 복원
+
+state.ts에서 Caret 전용 필드들을 최소한으로 추가:
+
+```typescript
+// CARET MODIFICATION: Add Caret-specific state properties
+localCaretRulesToggles: localCaretRulesToggles || {},
+uiLanguage: uiLanguage,
+```
+
+#### 4. Controller 확장 패턴 유지
+
+```typescript
+// caret-src/core/controller/index.ts - Cline Controller 상속
+export class CaretController extends ClineController {
+	// Caret 전용 로직만 추가
+}
+```
+
+### 일반적인 Proto 머징 에러 해결
+
+#### 타입 정의 누락 에러
+
+```bash
+# 에러: Cannot find name 'DiffServiceClient'
+# 해결: generate-host-bridge-client.mjs에서 임시 타입 정의 제거
+```
+
+#### chatSettings 프로퍼티 누락
+
+```typescript
+// state.ts에서 chatSettings 관련 로직이 Cline에서 변경된 경우
+// Cline-First 원칙에 따라 Cline 구조를 우선 적용
+```
+
+**선별적 이식 프로세스**:
+
+1. **버전 태깅**: 현재 Cline 버전 기록 및 추적
+2. **차이 분석**: 새 버전과 이전 버전의 변경사항 분석
+    ```bash
+    git log cline-v3.20.8..cline-v3.21.0 --oneline
+    git diff cline-v3.20.8..cline-v3.21.0 -- webview-ui/
+    ```
+3. **개선사항 카테고리별 선별**:
+    - ✅ **도입**: 버그 수정, 성능 최적화, 보안 강화
+    - ⚠️ **검토**: UI/UX 변경 (Caret 브랜딩과 충돌 여부)
+    - ❌ **제외**: Caret 고유 기능과 상충하는 변경
+4. **모듈화된 적용**: Caret 개선사항을 별도 디렉토리로 분리하여 Git 충돌 최소화
+
+### 6.2 **Caret 고유 코드 누락 방지 전략 (2025-01-22 추가)** 🛡️
+
+**문제 상황**: 머징 과정에서 Caret 고유 기능이 실수로 누락되는 경우가 발생
+
+- 예시: `ToggleChatbotAgentModeRequest` proto 메시지 누락
+- 원인: 복잡한 머징 과정에서 Caret 고유 코드가 Cline 원본으로 덮어써짐
+
+**예방 전략**:
+
+1. **3-레포 환경 구성** (머징 시작 전 필수):
+
+    ```bash
+    # 현재 caret 프로젝트 루트에서 (IDE 워크스페이스 내)
+    cd D:\dev\caret
+
+    # Caret 메인 브랜치 백업 (고유 기능 참조용)
+    git clone https://github.com/aicoding-caret/caret.git main-caret
+
+    # Cline 머징 시점 버전 (원본 비교용)
+    git clone https://github.com/cline/cline.git cline-latest
+    ```
+
+    **구조**:
+
+    ```
+    /dev/caret/                    # IDE 루트 (실제 머징 작업)
+    ├── src/, webview-ui/, ...     # 현재 작업 파일들
+    ├── main-caret/                # Caret 메인 백업 (참조용)
+    └── cline-latest/              # Cline 머징 대상 (소스용)
+    ```
+
+2. **3-레포 비교 검증**:
+
+    ```bash
+    # Caret 고유 기능 확인 (main-caret 참조)
+    Get-ChildItem -Recurse main-caret\ -Filter "*.proto" | Select-String "ToggleChatbotAgentMode"
+
+    # 현재 작업 결과 확인 (누락 여부 체크)
+    Get-ChildItem -Recurse proto\ -Filter "*.proto" | Select-String "ToggleChatbotAgentMode"
+
+    # Cline 새 기능 확인 (선별적 도입용)
+    Get-ChildItem -Recurse cline-latest\ -Filter "*.tsx" | Select-String "새로운기능키워드"
+    ```
+
+3. **핵심 Caret 기능 체크리스트** (머징 완료 후 필수 확인):
+    - [ ] **Proto 메시지**: `ToggleChatbotAgentModeRequest`, `ChatSettings` 등
+    - [ ] **Proto 서비스**: `toggleChatbotAgentMode` RPC 메서드
+    - [ ] **Enum 타입**: `ChatbotAgentMode` (CHATBOT_MODE, AGENT_MODE)
+    - [ ] **다국어 시스템**: 30개 i18n JSON 파일 및 번역 함수
+    - [ ] **Caret 브랜딩**: CHATBOT_MODE_COLOR, Caret 로고 등
+    - [ ] **CARET MODIFICATION 주석**: 모든 Caret 수정사항 표시
+
+4. **자동화된 검증 스크립트** (권장):
+    ```bash
+    # Caret 고유 기능 누락 검사
+    node caret-scripts/verify-caret-features.js
+    ```
+
+**복구 절차** (누락 발견 시):
+
+1. 백업 레포에서 누락된 코드 확인
+2. 정확한 위치와 내용 파악
+3. 현재 작업 브랜치에 복구
+4. Proto 재생성: `npm run protos`
+5. 빌드 테스트로 검증
+
+**장기적 이익**:
+
+- 전면 교체 대신 검증된 개선사항만 도입
+- 머징 친화적 구조로 충돌 최소화
+- 패턴 확립으로 미래 머징 비용 절감
+- **Caret 고유 기능 안전성 보장**
+
+### 7. 머징 차이점 분석 도구 (검토 가이드)
+
+**목적**: 머징 과정에서 검토가 필요한 영역을 빠르게 파악하는 가이드 도구
+
+**⚠️ 주의**: 이 도구의 결과를 맹신하지 마세요. 단순히 "어디를 찾아봐야 할지" 힌트만 제공합니다.
+
+**분석 도구**: `caret-scripts/merging-task/analyze-merge-differences.js`
+
+#### 7.1 스크립트 실행 시점
+
+**🚨 필수 실행 지점**:
+
+1. **머징 작업 시작 전**: 기준선 확립
+2. **대규모 파일 수정 후**: 실수로 삭제된 기능 즉시 탐지
+3. **머징 작업 완료 후**: 최종 검증
+4. **빌드 에러 발생 시**: 누락된 기능이 원인일 가능성 확인
+
+```bash
+# 전체 프로젝트 분석 (기본)
+node caret-scripts/merging-task/analyze-merge-differences.js
+
+# 특정 파일만 분석
+node caret-scripts/merging-task/analyze-merge-differences.js webview-ui/src/context/ExtensionStateContext.tsx
+
+# 예상 출력 예시 (전체 분석)
+🔍 머징 차이점 분석 가이드 시작...
+🌍 전체 프로젝트 분석 모드
+
+🔍 Cline 최신 vs 현재 머징 - 전체 디렉토리 스캔
+📊 비교 대상: 145개 파일
+📝 상세 리포트: caret-scripts/merging-task/cline-vs-current-report.md
+📊 요약: ❌ 23개 누락, ✅ 67개 추가, 📁 5개 파일 누락, 📁 12개 파일 추가
+
+🔍 Caret 원본 vs 현재 머징 - 전체 디렉토리 스캔
+📊 비교 대상: 132개 파일
+📝 상세 리포트: caret-scripts/merging-task/caret-vs-current-report.md
+📊 요약: ❌ 45개 누락, ✅ 89개 추가, 📁 3개 파일 누락, 📁 8개 파일 추가
+
+📝 상세 리포트:
+   📄 caret-scripts/merging-task/cline-vs-current-report.md
+   📄 caret-scripts/merging-task/caret-vs-current-report.md
+```
+
+#### 7.2 분석 결과 해석
+
+**전체 프로젝트 스캔의 장점**:
+
+- **모든 파일 검토**: 단일 파일이 아닌 전체 디렉토리 분석
+- **파일 추가/삭제 탐지**: 누락되거나 새로 생긴 파일들도 발견
+- **상세 리포트**: 마크다운 파일로 체계적 정리
+
+**"❌ 체크 필요" 항목들**:
+
+- **Cline 최신에는 있지만 현재에는 없는 것**: Cline 새 기능이 누락되었을 가능성
+- **Caret 원본에는 있지만 현재에는 없는 것**: Caret 고유 기능이 삭제되었을 가능성
+
+**"✅ 새로 추가" 항목들**:
+
+- **현재에는 있지만 기준에는 없는 것**: 머징 과정에서 새로 생긴 기능들
+
+**📁 파일 차이**:
+
+- **누락된 파일**: 삭제되었거나 이동된 파일들
+- **추가된 파일**: 새로 생성된 파일들
+
+#### 7.3 수동 검토 절차
+
+**1단계: 우선순위 파악**
+
+- **Caret 고유 기능** (setUILanguage, setModeSystem 등) 최우선 보호
+- **Cline 핵심 기능** 다음 우선순위
+- **편의 기능** 마지막 우선순위
+
+**2단계: 삭제 원인 분석**
+
+- `.cline` 백업 파일과 비교
+- Git 히스토리 확인
+- Cline 변경사항 문서 확인
+
+**3단계: 복구 여부 결정**
+
+- **필수 기능**: 즉시 복구
+- **호환성 문제**: 수정 후 복구
+- **더 이상 불필요**: 삭제 유지
+
+**4단계: 상세 리포트 활용**
+
+- **cline-vs-current-report.md**: Cline 최신 기능 누락 확인
+- **caret-vs-current-report.md**: Caret 고유 기능 삭제 확인
+- **파일별 우선순위**: 누락이 많은 파일부터 검토
+
+**5단계: 테스트 및 검증**
+
+- 빌드 테스트: `npm run build`
+- 기능 테스트: 실제 동작 확인
+- 재분석: 복구 후 스크립트 재실행으로 진행률 확인
+
+### 8. 문서 주도 검증 포인트
+
+- 병합 작업 중 얻은 일반화 가능한 규칙은 본 가이드에 즉시 상위 개념으로 반영하고, 세부 단계는 해당 회차의 작업(Task) 문서로 연결하세요.
+- 반복 탐색이 예상되는 이슈는 "원인 → 패턴 → 영향 → 자동화 포인트"로 기록해 다음 병합의 검색 비용을 줄이세요.
+
+## buf.yaml 설정 최적화 (2025-01-23 업데이트)
+
+### Proto 패키지/디렉토리 불일치 해결
+
+Task #006-3에서 발견된 문제: `buf lint`가 package 이름과 디렉토리 구조 불일치로 인해 다수의 경고 발생
+
+**문제 상황**:
+
+```
+proto\cline\account.proto:3:1:Files with package "caret" must be within a directory "caret" relative to root but were in directory "cline".
+```
+
+**해결 방법**: `buf.yaml`에 Caret 전용 except 규칙 추가
+
+```yaml
+# CARET MODIFICATION: Allow package/directory name mismatch (caret package in cline directory)
+- PACKAGE_DIRECTORY_MATCH # package name doesn't need to match directory structure
+- PACKAGE_SAME_DIRECTORY # allow multiple directories to contain same package
+```
+
+**적용 결과**:
+
+- ✅ `npx buf lint` 완전 성공 (0개 경고)
+- ✅ 전체 `npm run lint` 에서 buf 관련 에러 완전 제거
+- ✅ 백업 파일 `buf.yaml.cline` 생성으로 원본 보존
+
+**핵심 원칙 재확인**: **내용은 Caret, 구조는 Cline**
+
+- proto 파일 **내용**: `package caret;` 사용
+- 디렉토리 **구조**: `proto/cline/`, `proto/host/` 유지 (Git 히스토리 보존)
+
+## 머징 에러 원인 분석 및 해결
+
+### 핵심 원칙: 에러는 프로젝트 구조 변화의 추적 결과
+
+머징 과정에서 발생하는 TypeScript 에러는 **단순한 구문 문제가 아니라** Cline 프로젝트의 구조적 변화를 반영합니다. 각 에러는 다음 4가지 카테고리로 분류되어야 합니다:
+
+#### **Category 1: Cline 신규 구조 도입**
+
+- **특징**: 새로운 Hook, 타입, 모듈 시스템
+- **예시**: `useApiConfigurationHandlers`, `Mode` 타입, Proto 경로 변경
+- **해결**: 새로운 구조 학습 후 정확한 import 경로 및 사용법 적용
+- **중요**: Cline 아키텍처 변화를 이해하고 동일한 패턴으로 적응
+
+#### **Category 2: Caret 고유 기능과 신규 구조 충돌**
+
+- **특징**: Caret 컴포넌트/Hook이 새 Cline 구조와 호환되지 않음
+- **예시**: `FeaturedModelCard` Props 불일치, 콜백 시그니처 변경
+- **해결**: Caret 코드를 새 Cline 인터페이스에 맞게 수정
+- **중요**: Caret 기능 보존하되 Cline 표준 준수
+
+#### **Category 3: 추가한 코드의 타입 시스템 미준수**
+
+- **특징**: 새로 추가한 속성/메소드가 베이스 타입에 정의되지 않음
+- **예시**: `ExtensionStateContextType`에 추가했지만 `ExtensionState`에 누락
+- **해결**: 타입 계층 구조 전체에 일관성 있게 추가
+- **중요**: 인터페이스 상속 관계와 구현체 모두 동기화
+
+#### **Category 4: 기존 미해결 문제 노출**
+
+- **특징**: Caret에 이미 존재했던 문제가 머징으로 인해 표면화
+- **예시**: `ChatTextArea` async 문제, `BrowserSettings` 타입 캐스팅
+- **해결**: 근본 원인 해결 (함수 시그니처 수정, 정확한 타입 정의)
+
+### 에러 해결 프로세스
+
+```bash
+# 1. 에러 분류
+npm run build 2>&1 | Select-String "error TS" | Select-Object -First 20
+
+# 2. 카테고리별 우선순위 설정
+# Priority 1: Cline 신규 구조 적응
+# Priority 2: 타입 시스템 동기화
+# Priority 3: Caret 고유 기능 호환성
+# Priority 4: 기존 문제 근본 해결
+
+# 3. 각 에러별 원인 분석 및 문서화
+# - 변경된 Cline 구조 파악
+# - Caret 영향도 분석
+# - 해결 방안 설계
+
+# 4. 체계적 해결 및 검증
+# - 카테고리별 순차 해결
+# - 각 단계마다 빌드 확인
+# - 기능 동작 검증
+```
+
+### 머징 후 에러 예방 가이드
+
+1. **타입 정의 동기화**: 새 속성 추가 시 전체 타입 계층에 반영
+2. **인터페이스 일관성**: Context, State, Props 간 타입 일치 확인
+3. **Cline 패턴 준수**: 새로운 Cline 아키텍처 패턴 학습 및 적용
+4. **단계적 검증**: 각 수정 후 즉시 빌드 확인으로 에러 전파 방지
+
+### 실제 적용 사례: Task #006-3 (2025-01-23 완료)
+
+다음은 위 방법론을 실제 머징 작업에 적용한 최종 성과입니다:
+
+#### **적용 전후 비교**
+
+- **시작**: TypeScript 28개 + ESLint 122개 = **150개 에러**
+- **방법론 적용**: 4-카테고리 분류 및 순차적 해결
+- **최종 결과**: **완전 무에러 달성** (TypeScript 0개, ESLint 0개, buf lint 0개)
+
+#### **카테고리별 해결 성과**
+
+| 카테고리                  | 해결수 | 주요 해결 항목                                                  |
+| ------------------------- | ------ | --------------------------------------------------------------- |
+| Category 1 (Cline 신규)   | 28개   | useApiConfigurationHandlers, Mode 타입, Proto 경로, import 경로 |
+| Category 2 (Caret 호환성) | 15개   | FeaturedModelCard Props, API 설정 호환성                        |
+| Category 3 (타입 시스템)  | 45개   | ExtensionState 동기화, Context setter, 타입 정의                |
+| Category 4 (기존 문제)    | 62개   | ESLint 규칙 정리, 탭/스페이스 혼용, buf.yaml 설정               |
+
+#### **추가 해결 항목 (2025-01-23)**
+
+- **buf.yaml 설정**: proto 패키지/디렉토리 불일치 해결
+- **코드 스타일**: 탭/스페이스 혼용 문제 완전 정리
+- **빌드 시스템**: 모든 빌드 단계 안정화 (webview, compile, lint, package)
+
+#### **방법론의 효과**
+
+1. **에러 증가 원인 즉시 파악**: mcpRichDisplayEnabled 누락 → ExtensionState 추가
+2. **우선순위 기반 해결**: 구조적 문제 먼저, 세부 문제 나중
+3. **예방적 접근**: 타입 계층 전체 동기화로 연쇄 에러 방지
+
+#### **학습된 패턴**
+
+- **Cline Hook 시스템**: `useApiConfigurationHandlers` 패턴 학습
+- **타입 상속 문제**: Interface → Implementation 전체 동기화 필요
+- **Props 매핑 변경**: 컴포넌트 API 변화에 대한 적응 방법
+
 ## 충돌 해결 전략
 
 ### 일반적인 충돌 유형과 해결 방법
 
-#### 1. **Cline 원본 파일 충돌** (`src/`, `webview-ui/`)
+### 반복적 충돌 해결을 위한 일괄 처리 전략
 
--   **원칙**: Cline 원본을 우선으로 하되, Caret 호환성 검토
--   **해결**: 대부분의 경우 upstream 변경사항 수용
+병합 과정에서 동일한 패턴의 충돌이 여러 파일에 걸쳐 반복적으로 나타날 수 있습니다. (예: `import` 경로 오류, 네임스페이스 변경 등). 이런 경우, 개별 파일을 하나씩 수정하는 것은 비효율적이며 실수를 유발할 수 있습니다.
+
+**권장 절차:**
+
+1.  **패턴 식별:** 2-3개의 파일을 수동으로 수정하며 문제의 핵심 패턴을 명확히 식별합니다.
+    - _예시: `import "caret/common.proto"`는 항상 `import "cline/common.proto"`로 변경되어야 한다._
+
+2.  **영향 범위 분석 (매우 중요):** `search_files`와 같은 도구를 사용하여, 해당 패턴이 프로젝트 전체에 얼마나 광범위하게 영향을 미치는지 정확히 파악합니다.
+    - **안전한 검색어 예시:** `import "caret/` 와 같이, 다른 문자열과 겹치지 않도록 충분히 구체적이고 안전한 검색어를 사용해야 합니다.
+
+3.  **일괄 변경 실행:** `replace_in_files` 또는 스크립트를 사용하여 찾아낸 모든 파일에 대해 일괄적으로 변경을 적용합니다.
+    - **주의:** 일괄 변경은 매우 강력하지만 위험하므로, 반드시 2단계에서 파악된 영향 범위를 기반으로 신중하게 실행해야 합니다.
+
+4.  **즉시 검증:** 일괄 변경 후, 즉시 `npm run compile` 또는 관련 테스트를 실행하여 모든 문제가 의도대로 해결되었는지, 그리고 새로운 부작용이 발생하지 않았는지 검증합니다.
+
+#### 1. **Cline 원본 파일 충돌** (`src/`)
+
+- **원칙**: Cline 원본을 우선으로 하되, Caret 호환성 검토
+- **해결**: 대부분의 경우 upstream 변경사항 수용
 
 ```bash
 # upstream 변경사항 수용
 git checkout --theirs <충돌파일>
 ```
 
-#### 2. **빌드 설정 파일 충돌** (`package.json`, `tsconfig.json` 등)
+#### 2. **Caret 고유 UI/UX 디렉토리 충돌** (`webview-ui/`)
 
--   **원칙**: Fork 특성을 유지하면서 upstream 개선사항 적용
--   **해결**: 수동으로 병합하여 Caret 설정과 Cline 개선사항 모두 반영
+- **원칙**: Caret의 고유한 UI/UX 정체성을 최우선으로 보존합니다. `webview-ui/`는 Cline과 거의 완전히 다른 코드 베이스를 가지고 있으므로, 일반적인 파일 충돌과 다르게 접근해야 합니다.
+- **해결 전략**:
+    1.  **Caret 버전 우선:** 충돌 발생 시, `git checkout --ours -- webview-ui` 명령을 사용하여 **일단 Caret의 버전을 유지**하는 것을 기본 원칙으로 합니다.
+    2.  **선별적 기능 통합:** Cline의 변경 사항 중, 명백한 버그 수정이나 Caret에 유용한 성능 개선(예: 빌드 설정, 의존성 업데이트)이 있다면, 해당 부분만 신중하게 검토하여 선별적으로 적용합니다.
+    3.  **전면 개편 시 주의사항:** Caret에서 UI를 전면 개편한 경우, Cline의 UI 구조 변경은 대부분 무시하고, 필요한 로직이나 데이터 흐름만 참고하여 Caret의 구조에 맞게 재구현하는 것을 권장합니다.
 
-#### 3. **문서 파일 충돌** (`README.md`, `CHANGELOG.md` 등)
+#### 2.1. **Caret 프론트엔드 코드 품질 규칙** (2025-01-22 추가)
 
--   **원칙**: Caret 고유 내용 유지
--   **해결**: Caret 버전 우선, 필요시 Cline 개선사항 선별 적용
+프론트엔드 머징 시 **모든 새로운 코드**는 다음 Caret 표준을 준수해야 합니다:
+
+##### **다국어 처리 (i18n) 필수**
+
+```typescript
+// ❌ 하드코딩된 영어 텍스트 사용 금지
+<button>Sign Up</button>
+console.log("User clicked button")
+
+// ✅ t() 함수를 통한 다국어 처리 필수
+<button>{t("account.signUp", "common")}</button>
+logger.info("User clicked button")
+```
+
+**필수 구현 사항**:
+
+- 모든 사용자 표시 텍스트는 `t("key", "namespace")` 함수 사용
+- `alt` 속성, `placeholder`, `title` 등도 다국어 처리
+- JSON 키는 `계층.기능` 구조로 명명 (예: `account.signUp`, `settings.apiKey`)
+
+##### **Caret 통합 로깅 시스템 필수**
+
+```typescript
+// ❌ console 직접 사용 금지
+console.log("User action")
+console.error("API error:", error)
+
+// ✅ WebviewLogger 사용 필수
+import WebviewLogger from "@/caret/utils/webview-logger"
+const logger = new WebviewLogger("[COMPONENT-NAME]")
+
+logger.info("User action")
+logger.error("API error:", error)
+```
+
+**로깅 레벨 가이드**:
+
+- `logger.debug()`: 개발 디버깅용 상세 정보
+- `logger.info()`: 사용자 액션, 중요한 상태 변화
+- `logger.warn()`: 경고 상황, 복구 가능한 문제
+- `logger.error()`: 에러 상황, API 실패, 예외 처리
+
+##### **머징 검증 체크리스트**
+
+새로운 컴포넌트나 코드 추가 시 다음을 확인:
+
+- [ ] 모든 텍스트가 `t()` 함수로 다국어 처리됨
+- [ ] `console.*` 사용이 `logger.*`로 교체됨
+- [ ] 컴포넌트 상단에 WebviewLogger 인스턴스 생성됨
+- [ ] i18n JSON 파일에 해당 키가 추가됨 (ko, en, ja, zh 등)
+- [ ] 로깅 메시지가 적절한 레벨로 분류됨
+
+##### **실제 적용 사례**
+
+```typescript
+// CaretAccountView.tsx - 올바른 구현 예시
+import WebviewLogger from "@/caret/utils/webview-logger"
+import { t } from "@/caret/utils/i18n"
+
+const logger = new WebviewLogger("[CARET-UI-ACCOUNT-VIEW]")
+
+const handleLogin = () => {
+	logger.info("User clicked Caret sign up button")
+	// API 호출...
+}
+
+return (
+	<div>
+		<img src={personaProfile} alt={t("account.caretLogo", "common")} />
+		<button onClick={handleLogin}>
+			{t("account.signUpWithCaret", "common")}
+		</button>
+	</div>
+)
+```
+
+이 규칙들을 준수하여 **일관된 사용자 경험**과 **효과적인 디버깅 환경**을 유지합니다.
+
+#### 3. **빌드 설정 파일 충돌** (`package.json`, `tsconfig.json` 등)
+
+- **원칙**: Fork 특성을 유지하면서 upstream 개선사항 적용
+- **해결**: 수동으로 병합하여 Caret 설정과 Cline 개선사항 모두 반영.
+    - **예시 (`.gitignore`):** 양쪽 브랜치의 무시 규칙을 모두 포함하도록 합치는 것이 일반적입니다.
+    - **예시 (`package.json`):**
+        - **기본 정보 (`name`, `version` 등):** Fork 프로젝트(Caret)의 브랜딩을 유지합니다.
+        - **`scripts`:** Fork의 고유 스크립트는 유지하면서, Upstream의 개선된 스크립트(예: 빌드 방식 변경)는 채택하는 것을 고려합니다.
+        - **`dependencies`:** 버전 충돌 시 최신 버전을 따르는 것을 기본으로 하되, Fork 고유 기능에 필수적인 의존성은 버전을 신중하게 결정합니다. 양쪽에만 존재하는 의존성은 모두 포함하여 기능 호환성을 유지합니다.
+
+#### 4. **문서 파일 충돌** (`README.md`, `CHANGELOG.md` 등)
+
+- **원칙**: Caret 고유 내용 유지. 특히, 해당 파일의 원본이 `-cline.md` 또는 `.cline` 접미사로 백업되어 있는지 반드시 확인합니다.
+- **CHANGELOG.md 특수 처리**: `CHANGELOG.md`는 **Caret 전용 파일**이며, Cline 원본은 `CHANGELOG-cline.md`로 분리 관리됩니다. 따라서 **머징 시 CHANGELOG.md는 무조건 Caret 버전(`git checkout --ours`)을 선택**하고, Cline 변경사항은 고려하지 않습니다.
+- **해결**: 백업 파일이 존재하는 경우, 해당 파일은 Caret이 완전히 소유한 파일이므로 고민 없이 우리 버전(Caret)을 선택합니다 (`git checkout --ours <파일>`). 백업이 없다면, Caret 버전을 우선으로 하되 필요시 Cline 개선사항을 선별적으로 적용합니다.
+
+### Protobuf 패키지 이름 규칙 (`cline` vs `caret`)
+
+Caret 프로젝트는 내부 통신을 위해 Protobuf를 사용하며, 이때 일관된 패키지 이름 규칙을 따르는 것이 매우 중요합니다.
+
+- **패키지 이름**: 모든 `.proto` 파일의 `package` 선언은 `caret`으로 통일합니다.
+- **참조**: 다른 `.proto` 파일의 메시지를 참조할 때는 `caret.MessageName` 형식을 사용합니다.
+- **`java_package` 옵션**: `option java_package = "bot.caret.proto";` 와 같이 `caret`을 사용합니다.
+
+**업스트림 병합 시 주의사항**:
+Cline의 원본 `.proto` 파일은 `package cline;`으로 선언되어 있을 수 있습니다. 병합 과정에서 충돌이 발생하거나, `npm run protos` 빌드 시 "is not defined" 오류가 발생하면, 해당 파일의 `package` 선언과 메시지 참조(`cline.MessageName`)를 `caret`으로 수정해야 합니다.
+
+- **디렉토리 구조 유지 (매우 중요):** `package` 선언은 `caret`으로 통일하되, `proto/cline`과 같은 **디렉토리 구조 자체는 `upstream`과 동일하게 유지**해야 합니다. 디렉토리 이름을 `proto/caret` 등으로 변경하면, 향후 `upstream` 병합 시 Git이 파일 히스토리를 추적하지 못해 대규모 충돌이 발생할 수 있습니다. **내용은 Caret의 규칙을 따르되, 구조는 Cline의 것을 유지**하는 것이 핵심입니다.
+
+#### Protobuf 파일의 import 경로 충돌 예시
+
+- **문제 상황:** `host/diff.proto` 파일에서 `import "caret/common.proto";` 구문으로 인해 빌드 오류 발생.
+- **원인 분석:** `common.proto`의 실제 위치는 `proto/cline/common.proto` 이므로, `protoc` 컴파일러가 파일을 찾지 못함.
+- **잘못된 해결책:** `proto/cline` 디렉토리를 `proto/caret`으로 변경하는 것. 이는 Git 히스토리를 손상시켜 더 큰 문제를 야기합니다.
+- **올바른 해결책:** `import` 경로 자체를 수정합니다.
+    - **수정 전:** `import "caret/common.proto";`
+    - **수정 후:** `import "cline/common.proto";`
+- **핵심 원칙:** 파일의 **내용(package 선언)**은 `caret` 규칙을 따르더라도, 파일의 **구조(디렉토리, import 경로)**는 `cline`의 것을 그대로 유지하고 참조해야 합니다.
+
+#### Protobuf 파일의 경로 변경 및 백업 최신화 (매우 중요)
+
+Upstream 병합 시, Cline의 `proto` 파일 구조가 변경될 수 있습니다 (예: `proto/account.proto` -> `proto/cline/account.proto`). 이 경우, **반드시 아래의 순서를 지켜야 합니다.** 순서가 틀릴 경우, Caret의 수정사항이 유실되거나 잘못된 원본을 백업하게 될 수 있습니다.
+
+**올바른 병합 절차:**
+
+1.  **(가장 먼저) Cline 원본 상태로 초기화:** `git checkout --theirs proto/` 와 같은 명령으로 `proto` 디렉토리 전체를 Cline의 최신 구조와 내용으로 먼저 받아들입니다.
+    - **이유:** Caret의 수정사항을 적용하기 전에, 비교의 기준이 될 깨끗한 최신 원본을 먼저 확보해야 합니다.
+
+2.  **최신 원본으로 백업 생성:** `git show MERGE_HEAD:proto/cline/account.proto > proto/cline/account.proto.cline` 과 같은 명령을 사용하여, 1단계에서 가져온 **순수한 Cline 최신 버전의 파일**을 기준으로 **새로운 경로에 `.cline` 백업을 생성**합니다.
+    - **이유:** 이것이 "최신 Cline 원본"을 확보하고, Caret의 수정 내역을 추적할 수 있는 유일한 방법입니다.
+
+3.  **오래된 백업 삭제:** `proto/` 루트 디렉토리 등에 남아있는 구버전 `.cline` 백업 파일들을 삭제하여 혼란을 방지합니다.
+    - **이유:** 이전 구조의 백업 파일이 남아있으면, 어떤 파일이 최신 백업인지 혼란을 야기할 수 있습니다.
+
+4.  **(가장 마지막에) Caret 기능 병합:** 새로운 백업 파일과 현재 작업 디렉토리의 파일을 비교하여, Caret 고유의 수정사항을 신중하게 다시 적용하고 `package`를 `caret`으로 수정합니다.
+    - **이유:** 모든 준비가 끝난 상태에서 가장 안전하게 Caret의 고유한 가치를 더하는 단계입니다.
 
 ### 충돌 해결 예시
 
@@ -100,6 +824,37 @@ git commit -m "merge: integrate upstream changes from Cline"
 ```
 
 ## 병합 후 검증 절차
+
+### 0. 파일 삭제/이동 검증 (필수)
+
+병합 후 오래된 파일이 남아있는 문제를 방지하기 위해 **반드시** 다음 절차를 수행:
+
+```bash
+# 1. Cline의 파일 삭제 목록 확인
+git log upstream/main --oneline -n 100 | grep -i "delete\|remove"
+
+# 2. 특정 커밋의 삭제된 파일 목록 확인
+git show --name-status <commit-hash> | grep "^D"
+
+# 3. 두 브랜치 간 파일 차이 확인
+git diff --name-status upstream/main..HEAD | grep "^D"
+
+# 4. Cline에서 삭제되었지만 Caret에 남아있는 파일 찾기
+git ls-tree -r upstream/main --name-only | sort > /tmp/cline-files.txt
+git ls-tree -r HEAD --name-only | sort > /tmp/caret-files.txt
+comm -13 /tmp/cline-files.txt /tmp/caret-files.txt > /tmp/caret-only-files.txt
+
+# 5. 발견된 파일들의 원인 분석
+# - 각 파일이 Cline에서 언제, 왜 삭제되었는지 확인
+# - Caret에서 해당 파일이 필요한지 검토
+# - 불필요한 경우 삭제 처리
+```
+
+**중요**:
+
+- "아마 삭제되었을 것이다"는 추측 금지
+- 실제 git 이력에서 삭제 기록 확인 필수
+- 삭제 이유와 영향 분석 후 처리
 
 ### 1. 빌드 시스템 검증
 
@@ -125,11 +880,83 @@ npm run test
 
 ### 3. Caret 고유 기능 확인
 
--   CaretProvider 정상 동작 확인
--   웹뷰 UI 렌더링 확인
--   로깅 시스템 동작 확인
+- CaretProvider 정상 동작 확인
+- 웹뷰 UI 렌더링 확인
+- 로깅 시스템 동작 확인
 
-### 4. 시스템 프롬프트 검증 (ClineFeatureValidator)
+### 4. 머지 충돌 해결 도구
+
+#### 자동 충돌 해결 스크립트
+
+대량의 머지 충돌을 효율적으로 처리하기 위한 스크립트들:
+
+##### Bash 스크립트 (Linux/WSL/Git Bash)
+
+```bash
+# caret-scripts/merging-task/resolve-conflicts-caret.sh
+# webview-ui 폴더의 TypeScript 파일에서 발생한 충돌을 Caret 버전으로 자동 해결
+chmod +x caret-scripts/merging-task/resolve-conflicts-caret.sh
+./caret-scripts/merging-task/resolve-conflicts-caret.sh
+```
+
+##### Python 스크립트 (크로스 플랫폼)
+
+```python
+# caret-scripts/merging-task/merge-conflict-resolver.py
+# 사용법: python3 caret-scripts/merging-task/merge-conflict-resolver.py <file_path> [strategy]
+# strategy: "caret" (기본값), "cline", "manual"
+```
+
+**주요 기능**:
+
+- CARET MODIFICATION 주석이 있는 코드는 항상 보존
+- 전략별 자동 해결 (caret: HEAD 유지, cline: upstream 유지)
+- 충돌 개수 보고
+
+**사용 예시**:
+
+```bash
+# 단일 파일 처리
+python3 caret-scripts/merging-task/merge-conflict-resolver.py webview-ui/src/App.tsx caret
+
+# 모든 충돌 파일 일괄 처리 (캐럿 기준)
+find . -name "*.tsx" -o -name "*.ts" | xargs grep -l "<<<<<<< HEAD" | \
+  xargs -I {} python3 caret-scripts/merging-task/merge-conflict-resolver.py {} caret
+```
+
+**주의사항**:
+
+- ⚠️ 단순 텍스트 매칭이므로 복잡한 충돌은 수동 검토 필수
+- ⚠️ 클라인의 중요한 개선사항을 놓칠 수 있음
+- ⚠️ 실행 전 백업 권장
+
+#### 권장 병합 절차
+
+1. **자동 해결 시도**
+
+    ```bash
+    # 캐럿 고유 기능이 많은 디렉토리
+    find webview-ui/src/caret -name "*.tsx" | xargs -I {} \
+      python3 caret-scripts/merging-task/merge-conflict-resolver.py {} caret
+    ```
+
+2. **중요 파일 수동 검토**
+    - ExtensionStateContext.tsx
+    - ChatView.tsx, ChatTextArea.tsx
+    - CaretProvider.ts
+
+3. **클라인 개선사항 선택적 통합**
+    - 성능 개선
+    - 버그 수정
+    - 새로운 기능
+
+### 5. 핵심 병합 원칙
+
+- **Caret 기능 보존:** `// CARET MODIFICATION` 주석이 포함된 코드는 Caret의 핵심 기능이므로, Cline의 변경 사항을 통합하더라도 해당 기능이 손상되지 않도록 주의 깊게 수동으로 병합합니다.
+- **Cline 구조 개선 수용:** Cline에서 발생한 리팩토링(예: 클래스 분리, 아키텍처 변경)은 가급적 수용하여 코드 베이스를 최신 상태로 유지합니다.
+- **Cline 기능 분리 시 도입 검토:** Cline에서 별도의 클래스나 모듈로 분리된 기능(예: `ToolExecutor`)이 있다면, 해당 기능이 Caret의 유지보수성과 확장성에 기여하는지 검토하고 도입을 고려합니다.
+
+### 5. 시스템 프롬프트 검증 (ClineFeatureValidator)
 
 ```bash
 # 시스템 프롬프트 검증 시스템 테스트 (25개 테스트만)
@@ -141,10 +968,10 @@ npx vitest run "caret-src/__tests__/cline-feature-validation.test.ts"
 
 **검증 항목**:
 
--   **도구 보존**: Cline의 25개 핵심 도구 누락 없음
--   **MCP 통합**: MCP 서버 설정 유지
--   **시스템 정보**: OS/환경 정보 보존
--   **성능**: 검증 시간 100ms 이하 유지
+- **도구 보존**: Cline의 25개 핵심 도구 누락 없음
+- **MCP 통합**: MCP 서버 설정 유지
+- **시스템 정보**: OS/환경 정보 보존
+- **성능**: 검증 시간 100ms 이하 유지
 
 ## 버전 호환성 관리
 
@@ -152,8 +979,8 @@ npx vitest run "caret-src/__tests__/cline-feature-validation.test.ts"
 
 Caret의 `package.json`에서 관리하는 주요 버전들:
 
--   `@types/vscode`: Cline과의 호환성을 위해 신중하게 관리
--   `engines.vscode`: 최소 VSCode 버전 요구사항
+- `@types/vscode`: Cline과의 호환성을 위해 신중하게 관리
+- `engines.vscode`: 최소 VSCode 버전 요구사항
 
 **업그레이드 시 주의사항**:
 
@@ -234,16 +1061,292 @@ console.log(report.modifiedTools) // 변경된 도구 확인
 
 ---
 
+## 프로토버퍼 필드 번호 관리 전략
+
+### 캐럿 고유 필드 추가 시 주의사항
+
+1. **필드 번호 충돌 문제**
+    - Cline이 지속적으로 프로토 필드를 추가하므로 번호 충돌 발생 가능
+    - 병합 시 "Field number X has already been used" 에러 주의
+
+2. **캐럿 전용 번호 범위: 1000+**
+
+    ```proto
+    // Cline 필드: 1-999 범위 사용
+    optional string cline_api_key = 2;
+
+    // Caret 필드: 1000+ 범위 사용
+    optional string caret_api_key = 1000; // CARET MODIFICATION: (1000+ reserved for Caret)
+    ```
+
+3. **필드 추가 예시**
+
+    ```proto
+    // proto/cline/state.proto
+    message ApiConfiguration {
+      // ... Cline 필드들 ...
+
+      // Caret 전용 필드들
+      optional string caret_api_key = 1000;
+      optional string caret_custom_field = 1001;
+      // 계속 1002, 1003... 순서로 추가
+    }
+    ```
+
+4. **enum 값 추가 시**
+    - enum은 순차적으로 추가 (충돌 가능성 낮음)
+    - CARET MODIFICATION 주석 필수
+
+## 머징 가이드 검증 결과 (2025-08-08)
+
+### 실제 적용 검증
+
+1. **파일 차이 검증 명령어**: ✅ 정상 작동
+    - Cline: 937개 파일
+    - Caret: 1993개 파일 (캐럿 고유 파일 포함)
+    - `comm` 명령어로 차이 파일 정확히 식별 가능
+
+2. **프로토 필드 번호 전략**: ✅ 성공적 적용
+    - `caret_api_key = 1000` 정상 추가
+    - `CHATBOT_MODE_RESPOND = 16`, `ASK_BROWSER_ACTION = 17` 추가
+    - 1000+ 범위 사용으로 충돌 방지 확인
+
+3. **파일 삭제 추적**: ✅ 유효
+    - `git log` 명령으로 삭제 이력 추적 가능
+    - `git ls-tree` 비교로 실제 존재 여부 확인
+
+### 6.3 머징 완료 후 `.cline` 백업 업데이트 (2025-01-22 추가)
+
+**목적**: 머징 완료 후 `.cline` 백업들을 새로운 Cline 원본(v3.20.8)으로 업데이트
+
+#### .cline 파일 업데이트 절차
+
+**현재 상황**: 102개 `.cline` 파일들이 **이전 Cline 버전** (v3.19 등) 원본
+**목표**: **v3.20.8 Cline 원본**으로 전체 업데이트
+
+**백업 네이밍 규칙**: `{원본파일}.{확장자}.cline` (DOT 방식 - AI 친화적)
+
+```powershell
+# 1. 현재 .cline 파일 상태 확인
+Get-ChildItem -Recurse -Filter "*.cline" | Measure-Object
+
+# 2. 머징 완료 후 새로운 Cline 원본으로 업데이트
+# 예시: webview-ui 관련 파일들
+Copy-Item "cline-latest\webview-ui\src\App.tsx" "webview-ui\src\App.tsx.cline" -Force
+Copy-Item "cline-latest\webview-ui\src\components\chat\ChatTextArea.tsx" "webview-ui\src\components\chat\ChatTextArea.tsx.cline" -Force
+
+# 3. 루트 설정 파일들도 업데이트
+Copy-Item "cline-latest\package.json" "package.json.cline" -Force
+Copy-Item "cline-latest\.clinerules" ".clinerules.cline" -Force
+```
+
+#### 업데이트 시기
+
+- **머징 작업 완료 후**: 모든 에러 해결 및 기능 검증 완료 시점
+- **다음 머징 대비**: v3.20.8이 새로운 비교 기준점이 됨
+- **자동화 고려**: 향후 스크립트로 일괄 업데이트 가능
+
+#### 네이밍 규칙 표준화 (2025-01-22)
+
+- **표준 형식**: `{원본파일}.{확장자}.cline` (예: `App.tsx.cline`)
+- **AI 친화적**: 직관적인 `.` 방식으로 통일하여 AI의 자연스러운 패턴과 일치
+- **기존 DASH 방식**: `App-tsx.cline` → `App.tsx.cline`으로 변경 완료
+
+## 구조적 변화 감지 및 대응 (2025-01-23 신규)
+
+### 8.1 머징 전 필수 CHANGELOG 분석
+
+**목적**: Cline의 주요 아키텍처 변화를 사전에 파악하여 호환성 문제 예방
+
+**절차**:
+
+1. **CHANGELOG 버전 갭 확인**
+
+    ```bash
+    # 현재 기준점과 최신 버전 간격 확인
+    echo "Caret 기준: $(grep -E "forked from Cline v" CHANGELOG.md | head -1)"
+    echo "Cline 최신: $(head -3 cline-latest/CHANGELOG.md | grep -E "## \[.*\]" | head -1)"
+    ```
+
+2. **구조적 변화 키워드 검색** (RED FLAG 감지)
+
+    ```bash
+    grep -i "optimized.*to work\|refactor\|redesign\|new.*approach\|breaking\|simplified\|streamlined" cline-latest/CHANGELOG.md
+    ```
+
+3. **API/통신 방식 변화 감지**
+    - "gRPC", "WebviewMessage", "API provider", "communication"
+    - "simplified", "streamlined", "consolidated"
+
+### 8.2 구조 변화 RED FLAG 키워드
+
+**🚨 즉시 주의 필요한 변화**:
+
+- `"Optimized ... to work with"` → 전면 재구성 (예: Claude 4 최적화)
+- `"New ... approach"` → 기존 방식 대체
+- `"Redesign/Refactor"` → 아키텍처 변경
+- `"Add/Remove ... provider/API"` → 통신 구조 변화
+- `"Comprehensive ... configuration"` → 설정 체계 변화
+
+### 8.3 구조 변화 대응 체크리스트
+
+**머징 전 필수 확인사항**:
+
+- [ ] **통신 방식 변화**: WebviewMessage → gRPC 등
+- [ ] **Provider 구조 변화**: API 제공자 방식 변경
+- [ ] **설정 체계 변화**: 기존 설정 호환성
+- [ ] **도구 시스템 변화**: MCP, 브라우저 도구 등
+- [ ] **UI 아키텍처 변화**: Plan/Act 모드 등
+
+### 8.4 호환성 충돌 해결 원칙
+
+**원칙 1: Cline 신규 구조 우선**
+
+- 구조적 변화가 감지되면 **Caret 고유 기능을 신규 구조에 맞게 재구현**
+- 구버전 호환성 코드는 **과감히 제거**
+
+**원칙 2: 점진적 전환**
+
+- 한 번에 모든 구조를 바꾸지 말고 **단계별 적응**
+- 각 단계마다 **동작 검증** 필수
+
+**원칙 3: 문서화**
+
+- 제거된 기능과 이유를 **명확히 기록**
+- 대체 방안을 **구체적으로 제시**
+
+### 8.5 AI 자동 감지 강화
+
+**AI가 놓치기 쉬운 구조 변화**:
+
+1. **파일 라인 수 급격한 변화**
+    - Controller: 1676줄 → 874줄 (50% 감소) = 구조 간소화
+2. **case문 개수 급격한 감소**
+    - WebviewMessage 처리: 54개 → 3개 = 통신 방식 대변화
+
+3. **import 구조 변화**
+    - 새로운 패키지 의존성 vs 제거된 의존성 비교
+
+**AI 판단 기준**:
+
+- 파일 크기 30% 이상 변화 → 구조적 변화 의심
+- 핵심 인터페이스 필드 50% 이상 변화 → 호환성 재검토
+- 새로운 서비스/클라이언트 패턴 등장 → 통신 방식 변화
+
+### 8.6 실제 적용 사례: Task #006-3 교훈
+
+**발생한 문제**:
+
+- WebviewMessage 'log' 타입이 v3.17.13 → v3.20.8 사이에 **구조 간소화로 제거됨**
+- gRPC 기반 통신으로 전환되면서 기존 복잡한 메시지 타입들 **대폭 삭제**
+
+**놓친 분석 포인트**:
+
+- CHANGELOG에서 "Optimized Cline to work with Claude 4" 키워드 무시
+- 파일 크기 변화 (1676줄 → 874줄) 간과
+- case문 개수 변화 (54개 → 3개) 미확인
+
+**예방 방법**:
+
+- 머징 전 **CHANGELOG 키워드 분석** 필수
+- **파일 크기/구조 변화 수치 확인** 필수
+- **Cline 신규 구조에 Caret 기능 적응** 우선
+
+### 8.3 AI 파일 수정 필수 절차 (2025-01-23 신규 - 무작정 덮어쓰기 방지)
+
+**배경**: AI가 머징 중 **3-레포 비교 분석 없이** 무작정 파일을 덮어쓰는 문제 발생
+
+#### **🚨 절대 금지 행위**
+
+```bash
+# ❌ 절대 금지: 분석 없이 무작정 덮어쓰기
+cp cline-latest/src/core/task/index.ts src/core/task/index.ts
+
+# ❌ 절대 금지: 백업 없이 수정
+# ❌ 절대 금지: Caret 수정사항 확인 없이 교체
+```
+
+#### **✅ 필수 3-레포 비교 분석 절차**
+
+**Phase 1: 현재 상황 파악**
+
+```bash
+# 1. 현재 작업 중인 파일 상태
+git status
+git diff [대상파일]
+
+# 2. 기존 백업 파일 존재 확인
+ls -la src/core/task/index.ts.cline 2>/dev/null || echo "백업 없음"
+```
+
+**Phase 2: 3-레포 비교 분석**
+
+```bash
+# 1. Caret 원본과 현재 비교 (Caret 수정사항 확인)
+diff main-caret/[파일경로] [현재파일경로]
+
+# 2. Cline 최신과 현재 비교 (Cline 변경사항 확인)
+diff cline-latest/[파일경로] [현재파일경로]
+
+# 3. Caret 원본과 Cline 최신 비교 (구조 차이 확인)
+diff main-caret/[파일경로] cline-latest/[파일경로]
+```
+
+**Phase 3: 수정사항 분류**
+
+| 비교 결과                             | 분류             | 대응 방법                      |
+| ------------------------------------- | ---------------- | ------------------------------ |
+| **Caret 수정 있음 + Cline 변경 있음** | 🔴 복잡 충돌     | 최소 수정 원칙으로 신중한 머징 |
+| **Caret 수정 없음 + Cline 변경 있음** | 🟡 단순 업데이트 | Cline 방식 적용                |
+| **Caret 수정 있음 + Cline 변경 없음** | 🟢 Caret 고유    | 현재 상태 유지                 |
+| **둘 다 변경 없음**                   | ✅ 변경 불필요   | 현재 상태 유지                 |
+
+**Phase 4: 신중한 수정 적용**
+
+```bash
+# 1. 반드시 백업 생성 (기존 백업 없을 때만)
+if [[ ! -f "파일경로.cline" ]]; then
+    cp 원본파일 파일경로.cline
+fi
+
+# 2. 최소 수정 원칙 적용
+# - Caret 수정사항은 CARET MODIFICATION 주석과 함께 보존
+# - Cline 구조 변경은 우선 적용
+# - 1-3라인 이내 최소 수정
+
+# 3. 즉시 검증
+npm run check-types
+```
+
+#### **AI 필수 자체 점검 체크리스트**
+
+모든 파일 수정 전 필수 확인:
+
+```
+□ 3-레포 비교 분석을 완료했는가?
+□ Caret 수정사항을 정확히 파악했는가?
+□ 기존 백업 파일 존재 여부를 확인했는가?
+□ 무작정 덮어쓰지 않고 최소 수정 원칙을 적용했는가?
+□ CARET MODIFICATION 주석을 추가했는가?
+```
+
+#### **교훈 및 원칙**
+
+1. **"3-레포 비교 없는 수정 금지"** - 반드시 분석 후 작업
+2. **"백업 확인 필수"** - 기존 백업 덮어쓰기 금지
+3. **"최소 수정 원칙"** - Caret 수정사항 최소한으로 보존
+4. **"즉시 검증"** - 수정 후 바로 컴파일 확인
+
 ## 정기적인 업스트림 동기화 권장사항
 
--   **주기**: 월 1-2회 정기적인 업스트림 확인
--   **타이밍**: 주요 기능 개발 완료 후, 안정적인 상태에서 진행
--   **문서화**: 병합 내용과 변경사항을 `CHANGELOG-caret.md`에 기록
--   **팀 공유**: 병합 결과와 주요 변경사항을 팀에 공유
+- **주기**: 월 1-2회 정기적인 업스트림 확인
+- **타이밍**: 주요 기능 개발 완료 후, 안정적인 상태에서 진행
+- **문서화**: 병합 내용과 변경사항을 `CHANGELOG-caret.md`에 기록
+- **팀 공유**: 병합 결과와 주요 변경사항을 팀에 공유
 
 ---
 
 **참고 문서**:
 
--   [Caret Fork 기반 아키텍처 가이드](../development/caret-architecture-and-implementation-guide.mdx)
--   [개발 환경 설정 가이드](../development/index.mdx)
+- [Caret Fork 기반 아키텍처 가이드](../development/caret-architecture-and-implementation-guide.mdx)
+- [개발 환경 설정 가이드](../development/index.mdx)

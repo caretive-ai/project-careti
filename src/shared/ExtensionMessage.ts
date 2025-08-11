@@ -121,10 +121,10 @@ export interface ExtensionState {
 	localWindsurfRulesToggles: ClineRulesToggles
 	mcpResponsesCollapsed?: boolean
 	uiLanguage: string
-	// CARET MODIFICATION: Add plan and isPayAsYouGo for account plan display
-	plan?: string
+	// CARET MODIFICATION: Add caretPlan and isPayAsYouGo for account plan display
+	caretPlan?: string
 	isPayAsYouGo?: boolean
-	strictPlanModeEnabled?: boolean
+	strictChatbotModeEnabled?: boolean
 }
 
 export interface ClineMessage {

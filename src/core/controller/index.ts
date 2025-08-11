@@ -205,6 +205,7 @@ export class Controller {
 			}
 			await updateGlobalState(this.context, "autoApprovalSettings", updatedAutoApprovalSettings)
 		}
+
 		this.task = new Task(
 			this.context,
 			this.mcpHub,
@@ -758,6 +759,10 @@ export class Controller {
 			localWindsurfRulesToggles,
 			localCursorRulesToggles,
 			localWorkflowToggles,
+			// CARET MODIFICATION: Add Caret-specific fields
+			localCaretRulesToggles,
+			uiLanguage,
+			chatSettings,
 		} = await getAllExtensionState(this.context)
 
 		const currentTaskItem = this.task?.taskId ? (taskHistory || []).find((item) => item.id === this.task?.taskId) : undefined
@@ -779,6 +784,7 @@ export class Controller {
 		return {
 			version,
 			apiConfiguration,
+			chatSettings,
 			uriScheme,
 			currentTaskItem,
 			checkpointTrackerErrorMessage,
@@ -811,6 +817,9 @@ export class Controller {
 			welcomeViewCompleted: welcomeViewCompleted as boolean, // Can be undefined but is set to either true or false by the migration that runs on extension launch in extension.ts
 			mcpResponsesCollapsed,
 			terminalOutputLineLimit,
+			// CARET MODIFICATION: Add Caret-specific state properties
+			localCaretRulesToggles: localCaretRulesToggles || {},
+			uiLanguage: uiLanguage || "en",
 		}
 	}
 

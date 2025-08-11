@@ -73,6 +73,9 @@ export class ToolExecutor {
 	}
 
 	constructor(
+		// CARET MODIFICATION: Caret-specific parameters (placed first for merge safety)
+		private strictChatbotModeEnabled: boolean,
+
 		// Core Services & Managers
 		private context: vscode.ExtensionContext,
 		private taskState: TaskState,
@@ -94,7 +97,6 @@ export class ToolExecutor {
 		private cwd: string,
 		private taskId: string,
 		private mode: Mode,
-		private strictPlanModeEnabled: boolean,
 
 		// Callbacks to the Task (Entity)
 		private say: (
@@ -137,8 +139,8 @@ export class ToolExecutor {
 		this.mode = mode
 	}
 
-	public updateStrictPlanModeEnabled(strictPlanModeEnabled: boolean): void {
-		this.strictPlanModeEnabled = strictPlanModeEnabled
+	public updateStrictChatbotModeEnabled(strictChatbotModeEnabled: boolean): void {
+		this.strictChatbotModeEnabled = strictChatbotModeEnabled
 	}
 
 	private pushToolResult = (content: ToolResponse, block: ToolUse) => {
@@ -457,7 +459,7 @@ export class ToolExecutor {
 		}
 
 		// Logic for plan-model tool call restrictions
-		if (this.strictPlanModeEnabled && this.mode === "plan" && block.name && this.isPlanModeToolRestricted(block.name)) {
+		if (this.strictChatbotModeEnabled && this.mode === "plan" && block.name && this.isPlanModeToolRestricted(block.name)) {
 			const errorMessage = `Tool '${block.name}' is not available in PLAN MODE. This tool is restricted to ACT MODE for file modifications. Only use tools available for PLAN MODE when in that mode.`
 			await this.say("error", errorMessage)
 			this.pushToolResult(formatResponse.toolError(errorMessage), block)

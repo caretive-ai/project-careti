@@ -229,7 +229,7 @@ export type ApiConfiguration = ApiHandlerOptions & {
 	favoritedModelIds?: string[]
 	// CARET MODIFICATION: Add missing properties to resolve type errors
 	mode?: Mode
-	strictPlanModeEnabled?: boolean
+	strictChatbotModeEnabled?: boolean
 	preferredLanguage?: string
 	openaiReasoningEffort?: OpenaiReasoningEffort
 }

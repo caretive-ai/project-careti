@@ -10,6 +10,7 @@ import { BrowserSettings } from "@shared/BrowserSettings"
 import { TelemetrySetting } from "@shared/TelemetrySetting"
 import { UserInfo } from "@shared/UserInfo"
 import { ClineRulesToggles } from "@shared/cline-rules"
+import { ChatSettings, DEFAULT_CHAT_SETTINGS } from "@shared/ChatSettings"
 import { DEFAULT_MCP_DISPLAY_MODE, McpDisplayMode } from "@shared/McpDisplayMode"
 import { migrateEnableCheckpointsSetting, migrateMcpMarketplaceEnableSetting } from "./state-migrations"
 import { Controller } from "../controller"
@@ -279,6 +280,9 @@ export async function getAllExtensionState(context: vscode.ExtensionContext) {
 		localWorkflowToggles,
 		localCaretRulesToggles,
 		uiLanguage,
+		chatSettings,
+		caretPlan,
+		isPayAsYouGo,
 	] = await Promise.all([
 		getWorkspaceState(context, "localClineRulesToggles") as Promise<ClineRulesToggles | undefined>,
 		getWorkspaceState(context, "localWindsurfRulesToggles") as Promise<ClineRulesToggles | undefined>,
@@ -287,6 +291,9 @@ export async function getAllExtensionState(context: vscode.ExtensionContext) {
 		// CARET MODIFICATION: Add Caret-specific state properties
 		getWorkspaceState(context, "localCaretRulesToggles") as Promise<ClineRulesToggles | undefined>,
 		getGlobalState(context, "uiLanguage") as Promise<string | undefined>,
+		getWorkspaceState(context, "chatSettings") as Promise<ChatSettings | undefined>,
+		getGlobalState(context, "caretPlan") as Promise<string | undefined>, // Caret subscription plan
+		getGlobalState(context, "isPayAsYouGo") as Promise<boolean | undefined>,
 	])
 
 	const [
@@ -589,6 +596,14 @@ export async function getAllExtensionState(context: vscode.ExtensionContext) {
 		// CARET MODIFICATION: Add Caret-specific state properties
 		localCaretRulesToggles: localCaretRulesToggles || {},
 		uiLanguage: uiLanguage,
+		chatSettings: {
+			...DEFAULT_CHAT_SETTINGS, // Apply defaults first
+			...(chatSettings || {}), // Spread fetched chatSettings, which includes preferredLanguage, and openAIReasoningEffort
+			// CARET MODIFICATION: Use uiLanguage from globalState (app-wide setting)
+			uiLanguage,
+		},
+		caretPlan: caretPlan, // CARET MODIFICATION: Include Caret plan in returned state (renamed to avoid confusion with Cline plan mode)
+		isPayAsYouGo, // CARET MODIFICATION: Include isPayAsYouGo in returned state
 	}
 }
 

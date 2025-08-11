@@ -90,10 +90,10 @@ export type GlobalStateKey =
 	| "lastApiProvider"
 	| "lastApiModelId"
 	| "uiLanguage"
-	| "plan" // CARET MODIFICATION: Add plan
+	| "caretPlan" // CARET MODIFICATION: Add Caret subscription plan
 	| "isPayAsYouGo" // CARET MODIFICATION: Add isPayAsYouGo
 	| "claudeCodePath"
-	| "strictPlanModeEnabled"
+	| "strictChatbotModeEnabled"
 	// Settings around plan/act and ephemeral model configuration
 	| "preferredLanguage"
 	| "openaiReasoningEffort"

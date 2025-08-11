@@ -1241,73 +1241,90 @@ Copy-Item "cline-latest\.clinerules" ".clinerules.cline" -Force
 - **파일 크기/구조 변화 수치 확인** 필수
 - **Cline 신규 구조에 Caret 기능 적응** 우선
 
-### 8.3 AI 오판 방지 프로토콜 (2025-01-23 신규 - 실제 사례 기반)
+### 8.3 AI 파일 수정 필수 절차 (2025-01-23 신규 - 무작정 덮어쓰기 방지)
 
-**배경**: AI가 머징 중 "Caret 고유 기능"으로 오인하여 임시 구현(`{} as any`)하는 문제 발생
+**배경**: AI가 머징 중 **3-레포 비교 분석 없이** 무작정 파일을 덮어쓰는 문제 발생
 
-**실제 사례**:
-
-```typescript
-// ❌ AI 오판 예시 (host-grpc-client.ts)
-// CARET MODIFICATION: Use generated host bridge clients instead of creating here
-export const vscodeHostBridgeClient: HostBridgeClientProvider = {
-	workspaceClient: {} as any, // TODO: Use generated clients ← 런타임 오류!
-}
-```
-
-#### **AI 오판 패턴 분석**
-
-1. **"파일이 Caret 원본에 없음" = "Caret 기능"이라는 잘못된 추론**
-    - 실제: Cline 신규 추가 기능
-    - AI 판단: Caret에서 추가한 기능으로 오인
-
-2. **빌드 에러 회피 우선 접근법**
-    - 목표: "일단 빌드만 성공하자"
-    - 방법: `{} as any` 임시 구현
-    - 결과: 런타임 오류 (`getWorkspacePaths is not a function`)
-
-#### **필수 검증 절차**
-
-**Phase 1: 파일 출처 정확한 판단**
+#### **🚨 절대 금지 행위**
 
 ```bash
-# 1. Caret 원본 존재 여부 확인
-test -f main-caret/[파일경로] && echo "Caret 원본 있음" || echo "Caret 원본 없음"
+# ❌ 절대 금지: 분석 없이 무작정 덮어쓰기
+cp cline-latest/src/core/task/index.ts src/core/task/index.ts
 
-# 2. Cline 최신 존재 여부 확인
-test -f cline-latest/[파일경로] && echo "Cline 신규 있음" || echo "Cline에도 없음"
+# ❌ 절대 금지: 백업 없이 수정
+# ❌ 절대 금지: Caret 수정사항 확인 없이 교체
 ```
 
-**Phase 2: 신규 파일 분류 매트릭스**
-| Caret 원본 | Cline 최신 | 판단 | 대응 방법 |
-|------------|------------|------|-----------|
-| ❌ 없음 | ✅ 있음 | **Cline 신규 기능** | **Cline 방식 그대로 적용** |
-| ✅ 있음 | ❌ 없음 | Caret 고유 기능 | Caret 방식 유지 |
-| ✅ 있음 | ✅ 있음 | 기존 기능 변화 | 차이 분석 후 적용 |
+#### **✅ 필수 3-레포 비교 분석 절차**
 
-**Phase 3: 임시 구현 금지 원칙**
+**Phase 1: 현재 상황 파악**
 
-- **절대 금지**: `{} as any`, `// TODO: 나중에 구현`
-- **필수 확인**: 런타임 동작 테스트
-- **우선 순위**: 기능 동작 > 빌드 성공
+```bash
+# 1. 현재 작업 중인 파일 상태
+git status
+git diff [대상파일]
 
-#### **AI 자체 점검 체크리스트**
+# 2. 기존 백업 파일 존재 확인
+ls -la src/core/task/index.ts.cline 2>/dev/null || echo "백업 없음"
+```
 
-머징 중 새 파일 발견 시:
+**Phase 2: 3-레포 비교 분석**
+
+```bash
+# 1. Caret 원본과 현재 비교 (Caret 수정사항 확인)
+diff main-caret/[파일경로] [현재파일경로]
+
+# 2. Cline 최신과 현재 비교 (Cline 변경사항 확인)
+diff cline-latest/[파일경로] [현재파일경로]
+
+# 3. Caret 원본과 Cline 최신 비교 (구조 차이 확인)
+diff main-caret/[파일경로] cline-latest/[파일경로]
+```
+
+**Phase 3: 수정사항 분류**
+
+| 비교 결과                             | 분류             | 대응 방법                      |
+| ------------------------------------- | ---------------- | ------------------------------ |
+| **Caret 수정 있음 + Cline 변경 있음** | 🔴 복잡 충돌     | 최소 수정 원칙으로 신중한 머징 |
+| **Caret 수정 없음 + Cline 변경 있음** | 🟡 단순 업데이트 | Cline 방식 적용                |
+| **Caret 수정 있음 + Cline 변경 없음** | 🟢 Caret 고유    | 현재 상태 유지                 |
+| **둘 다 변경 없음**                   | ✅ 변경 불필요   | 현재 상태 유지                 |
+
+**Phase 4: 신중한 수정 적용**
+
+```bash
+# 1. 반드시 백업 생성 (기존 백업 없을 때만)
+if [[ ! -f "파일경로.cline" ]]; then
+    cp 원본파일 파일경로.cline
+fi
+
+# 2. 최소 수정 원칙 적용
+# - Caret 수정사항은 CARET MODIFICATION 주석과 함께 보존
+# - Cline 구조 변경은 우선 적용
+# - 1-3라인 이내 최소 수정
+
+# 3. 즉시 검증
+npm run check-types
+```
+
+#### **AI 필수 자체 점검 체크리스트**
+
+모든 파일 수정 전 필수 확인:
 
 ```
-□ "이 파일이 Caret 원본에 없다고 해서 Caret 기능이라고 가정하지 않았는가?"
-□ "빌드 에러 해결을 위해 {} as any 같은 임시 구현을 사용하지 않았는가?"
-□ "Cline 최신 구현을 그대로 사용할 수 있는지 먼저 검토했는가?"
-□ "실제 런타임 동작을 확인했는가?"
+□ 3-레포 비교 분석을 완료했는가?
+□ Caret 수정사항을 정확히 파악했는가?
+□ 기존 백업 파일 존재 여부를 확인했는가?
+□ 무작정 덮어쓰지 않고 최소 수정 원칙을 적용했는가?
+□ CARET MODIFICATION 주석을 추가했는가?
 ```
 
 #### **교훈 및 원칙**
 
-1. **"빌드 성공 ≠ 기능 동작"** - 런타임 검증 필수
-2. **"파일 없음 ≠ Caret 기능"** - 출처 정확한 분석 필요
-3. **"임시 구현 금지"** - 완전한 구현만 허용
-4. **"Cline 우선 원칙"** - 의심스러우면 Cline 방식 채택
+1. **"3-레포 비교 없는 수정 금지"** - 반드시 분석 후 작업
+2. **"백업 확인 필수"** - 기존 백업 덮어쓰기 금지
+3. **"최소 수정 원칙"** - Caret 수정사항 최소한으로 보존
+4. **"즉시 검증"** - 수정 후 바로 컴파일 확인
 
 ## 정기적인 업스트림 동기화 권장사항
 

@@ -104,7 +104,6 @@ export class Task {
 
 	// Task configuration
 	private enableCheckpoints: boolean
-	private strictChatbotModeEnabled: boolean // CARET MODIFICATION: Add strictChatbotModeEnabled property
 
 	// Core dependencies
 	private context: vscode.ExtensionContext
@@ -206,7 +205,6 @@ export class Task {
 		this.preferredLanguage = preferredLanguage
 		this.openaiReasoningEffort = openaiReasoningEffort
 		this.mode = mode
-		this.strictChatbotModeEnabled = mode === "chatbot" // CARET MODIFICATION: Calculate strictChatbotModeEnabled from mode
 		this.enableCheckpoints = enableCheckpointsSetting
 		this.cwd = cwd
 		this.cacheService = cacheService
@@ -314,7 +312,6 @@ export class Task {
 		}
 
 		this.toolExecutor = new ToolExecutor(
-			this.strictChatbotModeEnabled, // CARET MODIFICATION: Chatbot mode restrictions (placed first for merge safety)
 			this.context,
 			this.taskState,
 			this.messageStateHandler,

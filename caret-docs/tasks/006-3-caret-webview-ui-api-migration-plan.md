@@ -32,6 +32,36 @@
 - **Phase 2** (API 매핑): 180개 에러 → 10개 이하로 감소 예상
 - **Phase 3-5**: 개별 컴포넌트 정리
 
+## 🔍 **중복 Mode 설정 구조 발견 (2025-01-22)**
+
+**문제**: `mode`와 `chatSettings.mode`가 중복되어 동기화 문제 발생
+- **GlobalState**: `mode` ("plan" | "act" | "chatbot" | "agent") 
+- **WorkspaceState**: `chatSettings.mode` (동일한 값들)
+- **문제점**: 두 값이 독립적으로 업데이트되어 불일치 가능성
+
+**영향 범위**:
+- Proto conversion에서 `chatSettings.mode` 사용
+- Task에서 `mode` 사용 (이미 수정 완료)
+- Extension.ts에서 migration 로직
+
+**해결 방안 검토 중**: `mode` 하나로 통합하되 기존 기능 영향 최소화
+
+**실제 적용된 수정사항**:
+1. **Task 클래스 단순화** ✅:
+   - `chatSettings` 매개변수 제거
+   - `mode === "chatbot"` 직접 사용으로 `strictChatbotModeEnabled` 계산
+   - 불필요한 중복 제거
+
+2. **Extension.ts 강제 변경 로직 제거** ✅:
+   - 무조건 "agent"로 변경하는 로직 주석 처리
+   - 사용자 선택 모드 존중
+
+3. **ToolExecutor 매개변수 순서 최적화** ✅:
+   - `strictChatbotModeEnabled`를 맨 앞으로 이동 (머징 안전성)
+   - 다른 매개변수와 패턴 통일
+
+**남은 과제**: Proto conversion 함수도 `mode` 기반으로 변경 검토
+
 ## 💾 **백업 파일 네이밍 규칙 업데이트 (2025-01-22)**
 
 **변경사항**: `.cline` 백업 파일 네이밍을 AI 친화적 DOT 방식으로 통일

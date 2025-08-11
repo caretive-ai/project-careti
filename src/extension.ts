@@ -78,14 +78,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	try {
 		const { getAllExtensionState, updateWorkspaceState } = await import("./core/storage/state")
 		const currentState = await getAllExtensionState(context)
-		if (currentState?.chatSettings?.mode !== "agent") {
-			const updatedChatSettings = {
-				...currentState.chatSettings,
-				mode: "agent" as const,
-			}
-			await updateWorkspaceState(context, "chatSettings", updatedChatSettings)
-			Logger.log("Chat mode normalized to 'agent' on activation")
-		}
+		// CARET MODIFICATION: Remove forced agent mode normalization - let user choose their preferred mode
 	} catch (error) {
 		Logger.log(`Failed to normalize chat mode: ${error}`)
 	}

@@ -1,7 +1,5 @@
 # Task 027: 세션 데이터 구조 호환성 문제 해결
 
-**⚠️ 작업 환경**: 새 머징 브랜치에서 작업 (main에서 새 브랜치 생성 후)
-
 ## 1. 문제 설명
 - 구버전 확장 프로그램에서 생성된 세션이 신버전으로 업데이트 후 열리지 않는 문제 발생.
 
@@ -14,18 +12,7 @@
 - 이 명령어는 `resetState` 컨트롤러를 호출하여 오래된 세션 데이터를 안전하게 삭제하고, 업데이트된 구조에 맞는 새 데이터 생성을 가능하게 함.
 
 ## 4. (제안) 구현 코드
-
-**작업 브랜치**: `feature/session-compatibility-fix`
-
-### 4.1 브랜치 생성 및 설정
-```bash
-# main에서 새 브랜치 생성
-git checkout main
-git pull origin main
-git checkout -b feature/session-compatibility-fix
-```
-
-### 4.2 구현 - `src/dev/commands/tasks.ts`에 명령어 추가
+- `src/dev/commands/tasks.ts`에 `caret.dev.resetWorkspaceState` 명령어 등록 추가.
 
 ```typescript
 // src/dev/commands/tasks.ts
@@ -60,7 +47,7 @@ vscode.commands.registerCommand("caret.dev.resetWorkspaceState", async () => {
 ## 5. 검증 절차
 1. 구버전 확장 프로그램에서 세션을 생성.
 2. 최신 버전으로 업데이트하고 세션이 열리지 않는 문제를 재현.
-3. 명령 팔레트에서 `Caret: Reset Workspace State` 실행.
+3. `caret.dev.resetWorkspaceState` 명령어 실행.
 4. 세션이 정상적으로 초기화되어 올바르게 열리는지 확인.
 
 ## 6. 추가 고려사항
@@ -77,37 +64,12 @@ vscode.commands.registerCommand("caret.dev.resetWorkspaceState", async () => {
 - 세션 상태 진단 명령어 추가
 - 디버깅을 위한 상세 로그 출력
 
-## 7. 작업 완료 후
-
-### 7.1 테스트
-```bash
-# 컴파일 확인
-npm run compile
-
-# 명령어 등록 확인
-# F5로 Extension Host 실행 후 명령 팔레트에서 "Caret: Reset Workspace State" 검색
-```
-
-### 7.2 커밋 및 PR
-```bash
-git add .
-git commit -m "feat: add workspace state reset command for session compatibility
-
-- Add caret.dev.resetWorkspaceState command
-- Resolves session compatibility issues after updates
-- Includes Korean localized messages"
-
-git push origin feature/session-compatibility-fix
-# GitHub에서 PR 생성
-```
-
 ---
 
 **우선순위**: HIGH  
 **예상 작업 시간**: 1-2시간  
-**연관 작업**: 026번 Priority Merge (선행 작업)  
-**작업 환경**: 새 브랜치 (`feature/session-compatibility-fix`)
+**연관 작업**: 026번 Clean Migration Strategy  
 
 **작성자**: Luke (Project Owner)  
-**수정자**: Alpha (AI Assistant)  
+**번역자**: Alpha (AI Assistant)  
 **작성일**: 2025-01-23

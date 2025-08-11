@@ -1,5 +1,5 @@
 import { activate } from "@/extension"
-import { Controller } from "@core/controller"
+import { Controller } from "caret-src/core/controller"
 import { CacheService } from "@core/storage/CacheService"
 import { ExternalDiffViewProvider } from "@hosts/external/ExternalDiffviewProvider"
 import { ExternalWebviewProvider } from "@hosts/external/ExternalWebviewProvider"

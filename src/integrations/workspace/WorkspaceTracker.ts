@@ -1,7 +1,7 @@
 import * as vscode from "vscode"
 import * as path from "path"
 import { listFiles } from "@services/glob/list-files"
-import { sendWorkspaceUpdateEvent } from "@core/controller/file/subscribeToWorkspaceUpdates"
+import { sendWorkspaceUpdateEvent } from "caret-src/core/controller/file/subscribeToWorkspaceUpdates"
 import { getCwd } from "@/utils/path"
 import { isDirectory } from "@/utils/fs"
 

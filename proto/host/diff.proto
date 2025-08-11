@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package caret;
-option java_package = "bot.caret.proto";
+package host;
+option java_package = "bot.cline.host.proto";
 option java_multiple_files = true;
 
 import "cline/common.proto";
@@ -24,7 +24,7 @@ service DiffService {
 }
 
 message OpenDiffRequest {
-  optional caret.Metadata metadata = 1;
+  optional cline.Metadata metadata = 1;
   // The absolute path of the document being edited.
   optional string path = 2;
   // The new content for the file.
@@ -37,7 +37,7 @@ message OpenDiffResponse {
 }
 
 message GetDocumentTextRequest {
-  optional caret.Metadata metadata = 1;
+  optional cline.Metadata metadata = 1;
   optional string diff_id = 2;
 }
 
@@ -46,7 +46,7 @@ message GetDocumentTextResponse {
 }
 
 message ReplaceTextRequest {
-  optional caret.Metadata metadata = 1;
+  optional cline.Metadata metadata = 1;
   optional string diff_id = 2;
   optional string content = 3;
   optional int32 start_line = 4;
@@ -63,7 +63,7 @@ message ScrollDiffRequest {
 message ScrollDiffResponse {}
 
 message TruncateDocumentRequest {
-  optional caret.Metadata metadata = 1;
+  optional cline.Metadata metadata = 1;
   optional string diff_id = 2;
   optional int32 end_line = 3;
 }
@@ -71,14 +71,14 @@ message TruncateDocumentRequest {
 message TruncateDocumentResponse {}
 
 message CloseDiffRequest {
-  optional caret.Metadata metadata = 1;
+  optional cline.Metadata metadata = 1;
   optional string diff_id = 2;
 }
 
 message CloseDiffResponse {}
 
 message SaveDocumentRequest {
-  optional caret.Metadata metadata = 1;
+  optional cline.Metadata metadata = 1;
   optional string diff_id = 2;
 }
 

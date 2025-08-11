@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package caret;
+package cline;
 import "cline/common.proto";
-option java_package = "bot.caret.proto";
+option java_package = "bot.cline.proto";
 option java_multiple_files = true;
 
 // Enum for webview provider types
@@ -41,9 +41,6 @@ enum ClineAsk {
   NEW_TASK = 13;
   CONDENSE = 14;
   REPORT_BUG = 15;
-  // CARET MODIFICATION: Added Caret-specific modes
-  CHATBOT_MODE_RESPOND = 16;
-  ASK_BROWSER_ACTION = 17;
 }
 
 // Enum for ClineSay types

@@ -1,12 +1,11 @@
-// CARET MODIFICATION: Added caretrules support with priority system. Original backed up as tasks-ts.cline
 import * as vscode from "vscode"
 import * as fs from "fs/promises"
 import * as path from "path"
 import { Controller } from "@core/controller"
 import { HistoryItem } from "@shared/HistoryItem"
 import { ClineMessage } from "@shared/ExtensionMessage"
-import { ShowMessageType } from "@shared/proto/host/window"
-import { HostProvider } from "@hosts/host-provider"
+import { ShowMessageType } from "@/shared/proto/host/window"
+import { HostProvider } from "@/hosts/host-provider"
 
 /**
  * Registers development-only commands for task manipulation.
@@ -14,8 +13,7 @@ import { HostProvider } from "@hosts/host-provider"
  */
 export function registerTaskCommands(context: vscode.ExtensionContext, controller: Controller): vscode.Disposable[] {
 	return [
-		// CARET MODIFICATION: modify caret id,from package.json
-		vscode.commands.registerCommand("caret.dev.createTestTasks", async () => {
+		vscode.commands.registerCommand("cline.dev.createTestTasks", async () => {
 			const count = (
 				await HostProvider.window.showInputBox({
 					title: "Test Tasks",
@@ -104,7 +102,7 @@ export function registerTaskCommands(context: vscode.ExtensionContext, controlle
 
 					const message = `Created ${tasksCount} test tasks`
 					HostProvider.window.showMessage({
-						type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+						type: ShowMessageType.INFORMATION,
 						message,
 					})
 				},

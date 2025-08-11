@@ -4,8 +4,8 @@ import { updateGlobalState } from "../../storage/state"
 
 export async function updateTerminalReuseEnabled(
 	controller: Controller,
-	request: proto.caret.BooleanRequest,
-): Promise<proto.caret.Empty> {
+	request: proto.cline.BooleanRequest,
+): Promise<proto.cline.Empty> {
 	const enabled = request.value
 
 	// Update the terminal reuse setting in the state
@@ -14,5 +14,5 @@ export async function updateTerminalReuseEnabled(
 	// Broadcast state update to all webviews
 	await controller.postStateToWebview()
 
-	return proto.caret.Empty.create({})
+	return proto.cline.Empty.create({})
 }

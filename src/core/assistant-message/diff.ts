@@ -532,8 +532,8 @@ class NewFileContentConstructor {
 			throw new Error(
 				`Invalid state transition.\n` +
 					"Valid transitions are:\n" +
-					"- Idle → StateSearch\n" +
-					"- StateSearch → StateReplace",
+					"- Idle ??StateSearch\n" +
+					"- StateSearch ??StateReplace",
 			)
 		}
 
@@ -598,7 +598,7 @@ class NewFileContentConstructor {
 			}
 			this.activateSearchState()
 		} else if (isSearchBlockEnd(line)) {
-			// 校验非标内容
+			// ?�验?�标?��?
 			if (!this.isSearchingActive()) {
 				this.tryFixSearchBlock(pendingNonStandardLineLimit)
 				canWritependingNonStandardLines && (this.pendingNonStandardLines.length = 0)
@@ -628,7 +628,7 @@ class NewFileContentConstructor {
 			} else {
 				let appendToPendingNonStandardLines = canWritependingNonStandardLines
 				if (appendToPendingNonStandardLines) {
-					// 处理非标内容
+					// 处理?�标?��?
 					this.pendingNonStandardLines.push(line)
 				}
 			}
@@ -739,7 +739,7 @@ class NewFileContentConstructor {
 		let replaceBeginTagRegexp = /^[=]{3,}$/
 		const replaceBeginTagIndex = this.findLastMatchingLineIndex(replaceBeginTagRegexp, lineLimit)
 		if (replaceBeginTagIndex !== -1) {
-			// // 校验非标内容
+			// // ?�验?�标?��?
 			// if (!this.isSearchingActive()) {
 			// 	removeLineCount += this.tryFixSearchBlock(replaceBeginTagIndex)
 			// }
@@ -767,7 +767,7 @@ class NewFileContentConstructor {
 		const replaceEndTagIndex = this.findLastMatchingLineIndex(replaceEndTagRegexp, lineLimit)
 		const likeReplaceEndTag = replaceEndTagIndex === lineLimit - 1
 		if (likeReplaceEndTag) {
-			// // 校验非标内容
+			// // ?�验?�标?��?
 			// if (!this.isReplacingActive()) {
 			// 	removeLineCount += this.tryFixReplaceBlock(replaceEndTagIndex)
 			// }

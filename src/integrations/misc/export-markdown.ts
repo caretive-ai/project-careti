@@ -48,7 +48,7 @@ export async function downloadTask(dateTs: number, conversationHistory: Anthropi
 			})
 		} catch (error) {
 			await HostProvider.window.showMessage({
-				type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+				type: ShowMessageType.ERROR,
 				message: `Failed to save markdown file: ${error instanceof Error ? error.message : String(error)}`,
 			})
 		}

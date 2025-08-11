@@ -1,8 +1,8 @@
-// CARET MODIFICATION: PostHog 완전 비활성화 (백업: PostHogClientProvider-ts.cline)
-// Caret에서는 PostHog를 사용하지 않으므로 더미 클라이언트로 교체
+// CARET MODIFICATION: PostHog completely disabled (backup: PostHogClientProvider-ts.cline)
+// Since Caret does not use PostHog, replaced with dummy client
 import { posthogConfig } from "@/shared/services/config/posthog-config"
 
-// PostHog 인터페이스를 모방하는 더미 클라이언트
+// Dummy client that mimics PostHog interface
 class DummyPostHogClient {
 	capture() {
 		/* no-op */
@@ -29,12 +29,12 @@ class PostHogClientProvider {
 	private client: any
 
 	private constructor() {
-		// CARET MODIFICATION: env 에 PostHog 설정이 있으면 실제 클라이언트를 사용
+		// CARET MODIFICATION: Check env for PostHog settings, use dummy client if not available
 		if (posthogConfig.apiKey && posthogConfig.host) {
 			// eslint-disable-next-line @typescript-eslint/no-var-requires
 			const { PostHog } = require("posthog-node")
 			this.client = new PostHog(posthogConfig.apiKey, { host: posthogConfig.host })
-			console.log(`[Caret] PostHog enabled → ${posthogConfig.host}`)
+			console.log(`[Caret] PostHog enabled at ${posthogConfig.host}`)
 		} else {
 			console.log("[Caret] PostHog disabled - using dummy client")
 			this.client = new DummyPostHogClient()

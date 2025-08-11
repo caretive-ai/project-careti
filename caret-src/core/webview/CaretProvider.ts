@@ -21,6 +21,7 @@ export class CaretProvider extends WebviewProvider {
 	private _personaProfileDataUri: string = ""
 	private _personaThinkingDataUri: string = ""
 	private static instance: CaretProvider | null = null
+	public view?: vscode.WebviewView | vscode.WebviewPanel
 
 	constructor(
 		public override readonly context: vscode.ExtensionContext,
@@ -66,7 +67,7 @@ export class CaretProvider extends WebviewProvider {
 			const { Controller } = require("../../../src/core/controller")
 			this.controller = new Controller(
 				this.context,
-				(message: any) => this.view?.webview.postMessage(message),
+				(message: any) => this.postMessageToWebview(message),
 				this.getClientId(),
 			)
 			this._controllerInitialized = true
@@ -82,20 +83,37 @@ export class CaretProvider extends WebviewProvider {
 		return CaretProvider.instance || undefined
 	}
 
-	public override async resolveWebviewView(webviewView: vscode.WebviewView | vscode.WebviewPanel) {
-		this.caretLogger.info(`resolveWebviewView started for ${this.providerType} with client ID: ${this.getClientId()}`)
+	public async resolveWebviewView(webviewView: vscode.WebviewView | vscode.WebviewPanel) {
+		this.caretLogger.info(`resolveWebviewView started with client ID: ${this.getClientId()}`)
 
 		// CARET MODIFICATION: Ensure Controller is initialized before proceeding
 		await this.ensureControllerInitialized()
 
-		await super.resolveWebviewView(webviewView)
+		this.view = webviewView
+
+		// Set up webview
+		webviewView.webview.options = {
+			enableScripts: true,
+			localResourceRoots: [this.context.extensionUri, this.context.globalStorageUri],
+		}
+
+		// Set HTML content and message listener
+		webviewView.webview.html = this.getHtmlContent()
+
+		// Set up message listener
+		webviewView.webview.onDidReceiveMessage((message) => {
+			this.controller.handleWebviewMessage(message)
+		})
+
 		this.controller.postStateToWebview()
-		this.caretLogger.info(
-			`resolveWebviewView finished for ${this.providerType} with client ID: ${this.getClientId()}. Controller is ready.`,
-		)
+		this.caretLogger.info(`resolveWebviewView finished with client ID: ${this.getClientId()}. Controller is ready.`)
 	}
 
-	protected override getHtmlContent(webview: vscode.Webview): string {
+	public override getHtmlContent(): string {
+		const webview = this.view?.webview
+		if (!webview) {
+			throw new Error("Webview not initialized")
+		}
 		const stylesUri = getUri(webview, this.context.extensionUri, ["caret-webview-ui", "build", "assets", "index.css"])
 		const scriptUri = getUri(webview, this.context.extensionUri, ["caret-webview-ui", "build", "assets", "index.js"])
 		const codiconsUri = getUri(webview, this.context.extensionUri, [
@@ -182,7 +200,7 @@ export class CaretProvider extends WebviewProvider {
 		`
 	}
 
-	protected override async getHMRHtmlContent(webview: vscode.Webview): Promise<string> {
+	protected override async getHMRHtmlContent(): Promise<string> {
 		const localPort = await super["getDevServerPort"]()
 		const localServerUrl = `localhost:${localPort}`
 
@@ -192,7 +210,12 @@ export class CaretProvider extends WebviewProvider {
 			vscode.window.showErrorMessage(
 				"Caret: Local webview dev server is not running, HMR will not work. Please run 'npm run dev:webview' before launching the extension to enable HMR. Using bundled assets.",
 			)
-			return this.getHtmlContent(webview)
+			return this.getHtmlContent()
+		}
+
+		const webview = this.view?.webview
+		if (!webview) {
+			throw new Error("Webview not initialized")
 		}
 
 		const nonce = getNonce()
@@ -460,5 +483,41 @@ export class CaretProvider extends WebviewProvider {
 		} catch (e) {
 			this.caretLogger.error(`[CaretProvider] 페르소나 이미지 업데이트 알림 실패: ${e}`)
 		}
+	}
+
+	// CARET MODIFICATION: Implement abstract methods from new WebviewProvider structure
+	override postMessageToWebview(message: any): Thenable<boolean> | undefined {
+		return this.view?.webview.postMessage(message)
+	}
+
+	override getWebview(): any {
+		return this.view?.webview
+	}
+
+	override getWebviewUri(uri: vscode.Uri): vscode.Uri {
+		if (!this.view?.webview) {
+			throw new Error("Webview not initialized")
+		}
+		return this.view.webview.asWebviewUri(uri)
+	}
+
+	override getCspSource(): string {
+		if (!this.view?.webview) {
+			throw new Error("Webview not initialized")
+		}
+		return this.view.webview.cspSource
+	}
+
+	override isVisible(): boolean {
+		if (!this.view) {
+			return false
+		}
+		if ("visible" in this.view) {
+			return this.view.visible
+		}
+		if ("active" in this.view) {
+			return (this.view as any).active
+		}
+		return false
 	}
 }

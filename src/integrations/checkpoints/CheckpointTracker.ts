@@ -174,7 +174,7 @@ class CheckpointTracker {
 	 */
 	public async commit(): Promise<string | undefined> {
 		try {
-			console.info(`========== 체크포인트 커밋 시작 (Task: ${this.taskId}) ==========`)
+			console.info(`========== 체크?�인??커밋 ?�작 (Task: ${this.taskId}) ==========`)
 			console.time("total-checkpoint-commit")
 			const startTime = performance.now()
 
@@ -183,40 +183,40 @@ class CheckpointTracker {
 			console.timeEnd("get-shadow-git-path")
 			const git = simpleGit(path.dirname(gitPath))
 
-			console.info(`🗂️ Shadow Git 경로: ${gitPath}`)
+			console.info(`?���?Shadow Git 경로: ${gitPath}`)
 
 			console.time("add-checkpoint-files")
-			console.info(`📁 파일 추가 작업 시작...`)
+			console.info(`?�� ?�일 추�? ?�업 ?�작...`)
 			const addFilesResult = await this.gitOperations.addCheckpointFiles(git)
 			console.timeEnd("add-checkpoint-files")
 			if (!addFilesResult.success) {
-				console.warn("⚠️ 일부 파일 추가 실패, 빈 커밋으로 진행")
+				console.warn("?�️ ?��? ?�일 추�? ?�패, �?커밋?�로 진행")
 			} else {
-				console.info("✅ 파일 추가 완료")
+				console.info("???�일 추�? ?�료")
 			}
 
 			const commitMessage = "checkpoint-" + this.cwdHash + "-" + this.taskId
 
 			console.time("git-commit")
-			console.info(`💾 Git 커밋 생성 중... 메시지: ${commitMessage}`)
+			console.info(`?�� Git 커밋 ?�성 �?.. 메시지: ${commitMessage}`)
 			const result = await git.commit(commitMessage, {
 				"--allow-empty": null,
 				"--no-verify": null,
 			})
 			console.timeEnd("git-commit")
 			const commitHash = (result.commit || "").replace(/^HEAD\s+/, "")
-			console.info(`✅ 체크포인트 커밋 생성 완료: ${commitHash}`)
+			console.info(`??체크?�인??커밋 ?�성 ?�료: ${commitHash}`)
 
 			const durationMs = Math.round(performance.now() - startTime)
 			console.timeEnd("total-checkpoint-commit")
-			console.info(`========== 체크포인트 커밋 완료 (${durationMs}ms) ==========`)
+			console.info(`========== 체크?�인??커밋 ?�료 (${durationMs}ms) ==========`)
 			telemetryService.captureCheckpointUsage(this.taskId, "commit_created", durationMs)
 
 			return commitHash
 		} catch (error) {
 			// CARET MODIFICATION: Enhanced error handling with automatic recovery
 			const errorMessage = error instanceof Error ? error.message : String(error)
-			console.error("❌ 체크포인트 생성 실패:", {
+			console.error("??체크?�인???�성 ?�패:", {
 				taskId: this.taskId,
 				error: errorMessage,
 				stack: error instanceof Error ? error.stack : undefined,
@@ -229,12 +229,12 @@ class CheckpointTracker {
 				errorMessage.includes("reference broken") ||
 				errorMessage.includes("index.lock")
 			) {
-				console.warn("🔧 손상된 체크포인트 Git 저장소 감지, 자동 복구 시도 중...")
+				console.warn("?�� ?�상??체크?�인??Git ?�?�소 감�?, ?�동 복구 ?�도 �?..")
 				await this.attemptCheckpointRecovery()
 			}
 
 			console.timeEnd("total-checkpoint-commit")
-			console.info("========== 체크포인트 커밋 실패 ==========")
+			console.info("========== 체크?�인??커밋 ?�패 ==========")
 
 			// CARET MODIFICATION: Return undefined instead of throwing to prevent system crash
 			// This allows Caret to continue working even if checkpoints fail

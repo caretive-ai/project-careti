@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package caret;
+package cline;
 import "cline/common.proto";
-option java_package = "bot.caret.proto";
+option java_package = "bot.cline.proto";
 option java_multiple_files = true;
 
 // Service for file-related operations
@@ -40,10 +40,6 @@ service FileService {
   // Toggle a Cline rule (enable or disable)
   rpc toggleClineRule(ToggleClineRuleRequest) returns (ToggleClineRules);
 
-  // CARET MODIFICATION: Add toggleCaretRule RPC for Caret-specific rules
-  // Toggle a Caret rule (enable or disable)
-  rpc toggleCaretRule(ToggleCaretRuleRequest) returns (ClineRulesToggles);
-
   // Toggle a Cursor rule (enable or disable)
   rpc toggleCursorRule(ToggleCursorRuleRequest) returns (ClineRulesToggles);
   
@@ -63,16 +59,14 @@ service FileService {
   rpc subscribeToWorkspaceUpdates(EmptyRequest) returns (stream StringArray);
 }
 
-// CARET MODIFICATION: Add local_caret_rules_toggles to RefreshedRules
 // Response for refreshRules operation
 message RefreshedRules {
   ClineRulesToggles global_cline_rules_toggles = 1;
   ClineRulesToggles local_cline_rules_toggles = 2;
-  ClineRulesToggles local_caret_rules_toggles = 3;
-  ClineRulesToggles local_cursor_rules_toggles = 4;
-  ClineRulesToggles local_windsurf_rules_toggles = 5;
-  ClineRulesToggles local_workflow_toggles = 6;
-  ClineRulesToggles global_workflow_toggles = 7;
+  ClineRulesToggles local_cursor_rules_toggles = 3;
+  ClineRulesToggles local_windsurf_rules_toggles = 4;
+  ClineRulesToggles local_workflow_toggles = 5;
+  ClineRulesToggles global_workflow_toggles = 6;
 }
 
 // Request to toggle a Windsurf rule
@@ -161,14 +155,6 @@ message ClineRulesToggles {
 message ToggleClineRules {
   ClineRulesToggles global_cline_rules_toggles = 1;
   ClineRulesToggles local_cline_rules_toggles = 2;
-}
-
-// CARET MODIFICATION: Add ToggleCaretRuleRequest for Caret-specific rules
-// Request to toggle a Caret rule
-message ToggleCaretRuleRequest {
-  Metadata metadata = 1;
-  string rule_path = 2;   // Path to the rule file
-  bool enabled = 3;       // Whether to enable or disable the rule
 }
 
 // Request to toggle a Cursor rule

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package caret;
-option java_package = "bot.caret.proto";
+package host;
+option java_package = "bot.cline.host.proto";
 option java_multiple_files = true;
 
 import "cline/common.proto";
@@ -20,7 +20,7 @@ service WindowService {
 }
 
 message ShowTextDocumentRequest {
-  caret.Metadata metadata = 1;
+  cline.Metadata metadata = 1;
   string path = 2;
   optional ShowTextDocumentOptions options = 3;
 }
@@ -39,7 +39,7 @@ message TextEditorInfo {
 }
 
 message ShowOpenDialogueRequest {
-  caret.Metadata metadata = 1;
+  cline.Metadata metadata = 1;
   optional bool can_select_many = 2;
   optional string open_label = 3;
   optional ShowOpenDialogueFilterOption filters = 4;
@@ -54,15 +54,13 @@ message SelectedResources {
 }
 
 enum ShowMessageType {
-  // CARET MODIFICATION: Renamed to avoid name collision with `ClineSay.ERROR`
-  // after unifying all proto packages to `caret`. Protobuf enums share a single namespace within a package.
-  WINDOW_MESSAGE_ERROR = 0;
-  WINDOW_MESSAGE_INFORMATION = 1;
-  WINDOW_MESSAGE_WARNING = 2;
+  ERROR = 0;
+  INFORMATION = 1;
+  WARNING = 2;
 }
 
 message ShowMessageRequest {
-  caret.Metadata metadata = 1;
+  cline.Metadata metadata = 1;
   ShowMessageType type = 2;
   string message = 3;
   optional ShowMessageRequestOptions options = 4;
@@ -80,14 +78,12 @@ message SelectedResponse {
 }
 
 message ShowSaveDialogRequest {
-  caret.Metadata metadata = 1;
+  cline.Metadata metadata = 1;
   optional ShowSaveDialogOptions options = 2;
 }
 
 message ShowSaveDialogOptions {
   optional string default_path = 1;
-  // A map of file types to extensions, e.g
-  // "Text Files": { "extensions": ["txt", "md"] }
   map<string, FileExtensionList> filters = 2;
 }
 
@@ -96,12 +92,11 @@ message FileExtensionList {
 }
 
 message ShowSaveDialogResponse {
-  // If the user cancelled the dialog, this will be empty.
   optional string selected_path = 1;
 }
 
 message ShowInputBoxRequest {
-  caret.Metadata metadata = 1;
+  cline.Metadata metadata = 1;
   string title = 2;
   optional string prompt = 3;
   optional string value = 4;
@@ -112,7 +107,7 @@ message ShowInputBoxResponse {
 }
 
 message OpenFileRequest {
-  caret.Metadata metadata = 1;
+  cline.Metadata metadata = 1;
   string file_path = 2;
 }
 

@@ -256,11 +256,11 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 		 * NOTE (intentional trade-off):
 		 * We use a coarse chars/4 heuristic here instead of a real tokenizer (e.g., js-tiktoken with o200k_base).
 		 * Rationale:
-		 *  - Avoid pulling multi‑MB rank files and increasing the extension install/download size.
+		 *  - Avoid pulling multi?�MB rank files and increasing the extension install/download size.
 		 *  - Eliminate encoder lifecycle/memory concerns in long-running sessions.
 		 * Consequences:
 		 *  - This is not model-accurate and can under/over-estimate tokens, especially with tool/function calls.
-		 *  - It is “good enough” for budgeting/context checks, and we accept the inaccuracy by design.
+		 *  - It is ?�good enough??for budgeting/context checks, and we accept the inaccuracy by design.
 		 * If precise accounting becomes a requirement, reintroduce a tokenizer behind a feature flag or backend-only path.
 		 */
 		const textContent = typeof text === "string" ? text : this.extractTextFromMessage(text)

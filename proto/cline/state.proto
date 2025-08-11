@@ -1,7 +1,7 @@
 syntax = "proto3";
-package caret;
+package cline;
 import "cline/common.proto";
-option java_package = "bot.caret.proto";
+option java_package = "bot.cline.proto";
 option java_multiple_files = true;
 
 service StateService {
@@ -14,8 +14,6 @@ service StateService {
   rpc toggleFavoriteModel(StringRequest) returns (Empty);
   rpc resetState(ResetStateRequest) returns (Empty);
   rpc togglePlanActModeProto(TogglePlanActModeRequest) returns (Boolean);
-  // CARET MODIFICATION: Chatbot/Agent mode toggle service
-  rpc toggleChatbotAgentMode(ToggleChatbotAgentModeRequest) returns (Empty);
   rpc updateAutoApprovalSettings(AutoApprovalSettingsRequest) returns (Empty);
   rpc updateSettings(UpdateSettingsRequest) returns (Empty);
   rpc updateTelemetrySetting(TelemetrySettingRequest) returns (Empty);
@@ -49,31 +47,9 @@ message TogglePlanActModeRequest {
   optional ChatContent chat_content = 3;
 }
 
-// CARET MODIFICATION: Chatbot/Agent 용어 통일
-message ToggleChatbotAgentModeRequest {
-  Metadata metadata = 1;
-  ChatSettings chat_settings = 2;
-  optional ChatContent chat_content = 3;
-}
-
 enum PlanActMode {
   PLAN = 0;
   ACT = 1;
-}
-
-// CARET MODIFICATION: Added Caret-specific mode enum
-enum ChatbotAgentMode {
-  CHATBOT_MODE = 0;
-  AGENT_MODE = 1;
-}
-
-// CARET MODIFICATION: Added ChatSettings message
-message ChatSettings {
-  ChatbotAgentMode mode = 1;
-  optional string preferred_language = 2;
-  optional string open_ai_reasoning_effort = 3;
-  optional string ui_language = 4;
-  optional string mode_system = 5;
 }
 
 message ChatContent {
@@ -126,7 +102,6 @@ message UpdateSettingsRequest {
   optional bool plan_act_separate_models_setting = 4;
   optional bool enable_checkpoints_setting = 5;
   optional bool mcp_marketplace_enabled = 6;
-  optional ChatSettings chat_settings = 7; // CARET MODIFICATION: Added chat settings
   optional int32 shell_integration_timeout = 8;
   optional bool terminal_reuse_enabled = 9;
   optional bool mcp_responses_collapsed = 10;
@@ -135,10 +110,6 @@ message UpdateSettingsRequest {
   optional PlanActMode mode = 13;
   optional string preferred_language = 14;
   optional string openai_reasoning_effort = 15;
-  optional bool strict_plan_mode_enabled = 16;
-  optional string ui_language = 17; // CARET MODIFICATION: UI display language (Caret specific)
-  optional bool mcp_rich_display_enabled = 18; // CARET MODIFICATION: Added MCP rich display setting
-  optional bool chatbot_agent_separate_models_setting = 19; // CARET MODIFICATION: Chatbot/Agent model separation
 }
 
 // Complete API Configuration message
@@ -146,7 +117,6 @@ message ApiConfiguration {
   // Global configuration fields (not mode-specific)
   optional string api_key = 1; // anthropic
   optional string cline_api_key = 2;
-  optional string caret_api_key = 1000; // CARET MODIFICATION: Added Caret API key (1000+ reserved for Caret)
   optional string task_id = 3;
   optional string lite_llm_base_url = 4;
   optional string lite_llm_api_key = 5;

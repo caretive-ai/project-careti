@@ -14,7 +14,7 @@ e2e("Diff editor", async ({ page, sidebar }) => {
 
 	// Verify the release banner is visible for new installs and can be closed.
 	const releaseBanner = sidebar.getByRole("heading", {
-		name: /^🎉 New in v\d/,
+		name: /^?�� New in v\d/,
 	})
 	await expect(releaseBanner).toBeVisible()
 	await sidebar.getByTestId("close-button").locator("span").first().click()
@@ -50,7 +50,7 @@ e2e("Diff editor", async ({ page, sidebar }) => {
 	await expect(sidebar.getByText("Cline wants to edit this file:")).toBeVisible()
 
 	// Cline Diff Editor should open with the file name and diff
-	await expect(page.getByText("test.ts: Original ↔ Cline's")).toBeVisible()
+	await expect(page.getByText("test.ts: Original ??Cline's")).toBeVisible()
 
 	// Diff editor should show the original and modified content
 	await expect(

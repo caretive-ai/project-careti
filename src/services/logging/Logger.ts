@@ -1,5 +1,5 @@
-// CARET MODIFICATION: Logger.ts를 CaretLogger와 유사한 기능으로 통합하되, Cline의 HostProvider 구조를 따름.
-// 개발 모드에서만 DEBUG, TRACE 로그를 출력하도록 필터링 기능을 유지.
+// CARET MODIFICATION: Logger.ts�?CaretLogger?� ?�사??기능?�로 ?�합?�되, Cline??HostProvider 구조�??�름.
+// 개발 모드?�서�?DEBUG, TRACE 로그�?출력?�도�??�터�?기능???��?.
 import { HostProvider } from "@/hosts/host-provider"
 import { ErrorService } from "../error/ErrorService"
 
@@ -23,8 +23,10 @@ export class Logger {
 	}
 
 	static debug(message: string) {
-		// CARET MODIFICATION: 개발 모드에서만 디버그 로그 출력
-		if (process.env.IS_DEV !== "true") {return}
+		// CARET MODIFICATION: 개발 모드?�서�??�버�?로그 출력
+		if (process.env.IS_DEV !== "true") {
+			return
+		}
 		Logger.#output("DEBUG", message)
 	}
 
@@ -33,8 +35,10 @@ export class Logger {
 	}
 
 	static trace(message: string) {
-		// CARET MODIFICATION: 개발 모드에서만 트레이스 로그 출력
-		if (process.env.IS_DEV !== "true") {return}
+		// CARET MODIFICATION: 개발 모드?�서�??�레?�스 로그 출력
+		if (process.env.IS_DEV !== "true") {
+			return
+		}
 		Logger.#output("TRACE", message)
 	}
 

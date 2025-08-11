@@ -29,22 +29,22 @@ Usage example:
 const results = await regexSearchFiles('/path/to/cwd', '/path/to/search', 'TODO:', '*.ts');
 
 rel/path/to/app.ts
-│----
-│function processData(data: any) {
-│  // Some processing logic here
-│  // TODO: Implement error handling
-│  return processedData;
-│}
-│----
+??---
+?�function processData(data: any) {
+?? // Some processing logic here
+?? // TODO: Implement error handling
+?? return processedData;
+??
+??---
 
 rel/path/to/helper.ts
-│----
-│  let result = 0;
-│  for (let i = 0; i < input; i++) {
-│    // TODO: Optimize this function for performance
-│    result += Math.pow(i, 2);
-│  }
-│----
+??---
+?? let result = 0;
+?? for (let i = 0; i < input; i++) {
+??   // TODO: Optimize this function for performance
+??   result += Math.pow(i, 2);
+?? }
+??---
 */
 
 const isWindows = /^win/.test(process.platform)
@@ -209,7 +209,7 @@ function formatResults(results: SearchResult[], cwd: string): string {
 
 	for (const [filePath, fileResults] of Object.entries(groupedResults)) {
 		// Check if adding this file's path would exceed the byte limit
-		const filePathString = `${filePath.toPosix()}\n│----\n`
+		const filePathString = `${filePath.toPosix()}\n??---\n`
 		const filePathBytes = Buffer.byteLength(filePathString, "utf8")
 
 		if (byteSize + filePathBytes >= MAX_BYTE_SIZE) {
@@ -230,7 +230,7 @@ function formatResults(results: SearchResult[], cwd: string): string {
 
 			for (const line of allLines) {
 				const trimmedLine = line?.trimEnd() ?? ""
-				const lineString = `│${trimmedLine}\n`
+				const lineString = `??{trimmedLine}\n`
 				const lineBytes = Buffer.byteLength(lineString, "utf8")
 
 				// Check if adding this line would exceed the byte limit
@@ -256,7 +256,7 @@ function formatResults(results: SearchResult[], cwd: string): string {
 
 			// Add separator between results if needed
 			if (resultIndex < fileResults.length - 1) {
-				const separatorString = "│----\n"
+				const separatorString = "??---\n"
 				const separatorBytes = Buffer.byteLength(separatorString, "utf8")
 
 				if (byteSize + separatorBytes >= MAX_BYTE_SIZE) {
@@ -280,7 +280,7 @@ function formatResults(results: SearchResult[], cwd: string): string {
 			break
 		}
 
-		const closingString = "│----\n\n"
+		const closingString = "??---\n\n"
 		const closingBytes = Buffer.byteLength(closingString, "utf8")
 
 		if (byteSize + closingBytes >= MAX_BYTE_SIZE) {

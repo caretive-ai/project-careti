@@ -268,7 +268,7 @@ export interface ClineApiReqInfo {
 		delaySec: number
 		errorSnippet?: string
 	}
-	// CARET MODIFICATION: 시스템 프롬프트 검증을 위한 추가 필드들
+	// CARET MODIFICATION: ?�스???�롬?�트 검증을 ?�한 추�? ?�드??
 	messages?: Array<{ role: string; content: any }>
 	systemPromptInfo?: {
 		length: number
@@ -276,13 +276,13 @@ export interface ClineApiReqInfo {
 		preview: string
 		isCaretJson: boolean
 		isTrueCline: boolean
-		estimatedTokens?: number // CARET MODIFICATION: 토큰 추정값
-		mode?: string // CARET MODIFICATION: 현재 모드 (caret/cline)
+		estimatedTokens?: number // CARET MODIFICATION: ?�큰 추정�?
+		mode?: string // CARET MODIFICATION: ?�재 모드 (caret/cline)
 	}
 	conversationLength?: number
-	// CARET MODIFICATION: 실제 세션 정보 추가 (generate-report.js가 읽는 정보)
-	sessionMode?: string // 세션 모드 (caret/cline)
-	sessionType?: string // 세션 타입 (new/continuing)
+	// CARET MODIFICATION: ?�제 ?�션 ?�보 추�? (generate-report.js가 ?�는 ?�보)
+	sessionMode?: string // ?�션 모드 (caret/cline)
+	sessionType?: string // ?�션 ?�??(new/continuing)
 }
 
 export type ClineApiReqCancelReason = "streaming_failed" | "user_cancelled" | "retries_exhausted"

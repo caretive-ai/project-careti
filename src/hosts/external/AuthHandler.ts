@@ -220,7 +220,7 @@ const TOKEN_REQUEST_VIEW = `<!DOCTYPE html>
         }
         
         .checkmark::after {
-            content: '✓';
+            content: '??;
             font-size: 24px;
             color: #ffffff;
             font-weight: bold;

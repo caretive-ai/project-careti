@@ -14,10 +14,8 @@ export async function setUserOrganization(controller: Controller, request: UserO
 			throw new Error("Account service not available")
 		}
 
-		// CARET MODIFICATION: Temporarily disable organization switching as it's not yet implemented in CaretAccountService.
-		// TODO: Re-enable this feature when the backend API is ready.
 		// Switch to the specified organization using the account service
-		// await controller.accountService.switchAccount(request.organizationId)
+		await controller.accountService.switchAccount(request.organizationId)
 
 		return Empty.create({})
 	} catch (error) {

@@ -44,7 +44,7 @@ export async function createRuleFile(controller: Controller, request: RuleFileRe
 	if (fileExists) {
 		const message = `${fileTypeName} file "${request.filename}" already exists.`
 		HostProvider.window.showMessage({
-			type: ShowMessageType.WINDOW_MESSAGE_WARNING,
+			type: ShowMessageType.WARNING,
 			message,
 		})
 		// Still open it for editing
@@ -61,7 +61,7 @@ export async function createRuleFile(controller: Controller, request: RuleFileRe
 
 		const message = `Created new ${request.isGlobal ? "global" : "workspace"} ${fileTypeName} file: ${request.filename}`
 		HostProvider.window.showMessage({
-			type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+			type: ShowMessageType.INFORMATION,
 			message,
 		})
 	}

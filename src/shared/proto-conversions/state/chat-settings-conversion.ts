@@ -1,30 +1,31 @@
-import { ChatContent } from "@shared/ChatContent"
-import { ChatSettings } from "@shared/ChatSettings"
-// CARET MODIFICATION: Chatbot/Agent 용어 통일
-import { ChatContent as ProtoChatContent, ChatSettings as ProtoChatSettings, ChatbotAgentMode } from "@shared/proto/cline/state"
+import { ChatContent } from "../../ChatContent"
+import { ChatSettings } from "../../ChatSettings"
+// CARET MODIFICATION: Chatbot/Agent mode terminology alignment
+import { ChatContent as ProtoChatContent } from "../../proto/cline/state"
+import { ChatSettings as ProtoChatSettings, ChatbotAgentMode } from "../../proto/caret/chat"
 
 /**
  * Converts domain ChatSettings objects to proto ChatSettings objects
  */
 export function convertChatSettingsToProtoChatSettings(chatSettings: ChatSettings): ProtoChatSettings {
-	// CARET MODIFICATION: Mission 2 - Cline/Caret 모드 용어를 enum으로 변환
+	// CARET MODIFICATION: Mission 2 - Cline/Caret 모드 ?�어�?enum?�로 변??
 	let protoMode: ChatbotAgentMode
-	
+
 	if (chatSettings.mode === "chatbot" || chatSettings.mode === "plan") {
 		protoMode = ChatbotAgentMode.CHATBOT_MODE
 	} else if (chatSettings.mode === "agent" || chatSettings.mode === "act") {
 		protoMode = ChatbotAgentMode.AGENT_MODE
 	} else {
-		// 기본값
+		// 기본�?
 		protoMode = ChatbotAgentMode.AGENT_MODE
 	}
-	
+
 	return ProtoChatSettings.create({
-		mode: protoMode, // CARET MODIFICATION: Mission 2 - 통합 모드 매핑
+		mode: protoMode, // CARET MODIFICATION: Mission 2 - ?�합 모드 매핑
 		preferredLanguage: chatSettings.preferredLanguage,
 		openAiReasoningEffort: chatSettings.openAIReasoningEffort,
-		uiLanguage: chatSettings.uiLanguage, // CARET MODIFICATION: UI 언어 필드 추가
-		modeSystem: chatSettings.modeSystem, // CARET MODIFICATION: Mode system 필드 추가
+		uiLanguage: chatSettings.uiLanguage, // CARET MODIFICATION: UI ?�어 ?�드 추�?
+		modeSystem: chatSettings.modeSystem, // CARET MODIFICATION: Mode system ?�드 추�?
 	})
 }
 
@@ -32,10 +33,10 @@ export function convertChatSettingsToProtoChatSettings(chatSettings: ChatSetting
  * Converts proto ChatSettings objects to domain ChatSettings objects
  */
 export function convertProtoChatSettingsToChatSettings(protoChatSettings: ProtoChatSettings): ChatSettings {
-	// CARET MODIFICATION: Mission 2 - modeSystem에 따른 모드 용어 변환
-	const modeSystem = protoChatSettings.modeSystem || "caret" // 기본값은 caret
+	// CARET MODIFICATION: Mission 2 - modeSystem???�른 모드 ?�어 변??
+	const modeSystem = protoChatSettings.modeSystem || "caret" // 기본값�? caret
 	let modeString: "chatbot" | "agent" | "plan" | "act"
-	
+
 	if (modeSystem === "cline") {
 		// Cline 모드: CHATBOT_MODE=plan, AGENT_MODE=act
 		modeString = protoChatSettings.mode === ChatbotAgentMode.CHATBOT_MODE ? "plan" : "act"
@@ -45,11 +46,11 @@ export function convertProtoChatSettingsToChatSettings(protoChatSettings: ProtoC
 	}
 
 	return {
-		mode: modeString, // CARET MODIFICATION: Mission 2 - Cline/Caret 모드 용어 지원
+		mode: modeString, // CARET MODIFICATION: Mission 2 - Cline/Caret 모드 ?�어 지??
 		preferredLanguage: protoChatSettings.preferredLanguage,
 		openAIReasoningEffort: protoChatSettings.openAiReasoningEffort as "low" | "medium" | "high" | undefined,
-		uiLanguage: protoChatSettings.uiLanguage, // CARET MODIFICATION: UI 언어 필드 추가
-		modeSystem: protoChatSettings.modeSystem, // CARET MODIFICATION: Mode system 필드 추가
+		uiLanguage: protoChatSettings.uiLanguage, // CARET MODIFICATION: UI ?�어 ?�드 추�?
+		modeSystem: protoChatSettings.modeSystem, // CARET MODIFICATION: Mode system ?�드 추�?
 	}
 }
 

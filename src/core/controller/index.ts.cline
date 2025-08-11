@@ -1,54 +1,42 @@
-// CARET MODIFICATION: Added 'start' message handler to handleWebviewMessage. Original backed up as index-ts.cline
-// Purpose: Enable start button functionality in Caret welcome view
+import { clineEnvConfig } from "@/config"
+import { HostProvider } from "@/hosts/host-provider"
+import { AuthService } from "@/services/auth/AuthService"
+import { telemetryService } from "@/services/posthog/telemetry/TelemetryService"
+import { ShowMessageType } from "@/shared/proto/host/window"
+import { getCwd, getDesktopDir } from "@/utils/path"
 import { Anthropic } from "@anthropic-ai/sdk"
-import axios from "axios"
-import { v4 as uuidv4 } from "uuid"
-import fs from "fs/promises"
-import { setTimeout as setTimeoutPromise } from "node:timers/promises"
-import pWaitFor from "p-wait-for"
-import * as path from "path"
-import * as vscode from "vscode"
-import { handleGrpcRequest, handleGrpcRequestCancel } from "./grpc-handler"
 import { buildApiHandler } from "@api/index"
 import { cleanupLegacyCheckpoints } from "@integrations/checkpoints/CheckpointMigration"
 import { downloadTask } from "@integrations/misc/export-markdown"
 import WorkspaceTracker from "@integrations/workspace/WorkspaceTracker"
 import { ClineAccountService } from "@services/account/ClineAccountService"
 import { McpHub } from "@services/mcp/McpHub"
-import { telemetryService } from "@/services/posthog/telemetry/TelemetryService"
-import { ApiProvider, ModelInfo, ApiConfiguration } from "@shared/api" // ApiConfiguration import 추가
+import { ApiProvider, ModelInfo } from "@shared/api"
 import { ChatContent } from "@shared/ChatContent"
-import { ChatSettings } from "@shared/ChatSettings"
+import { Mode } from "@shared/storage/types"
+import { ClineRulesToggles } from "@shared/cline-rules"
 import { ExtensionMessage, ExtensionState, Platform } from "@shared/ExtensionMessage"
 import { HistoryItem } from "@shared/HistoryItem"
 import { McpMarketplaceCatalog } from "@shared/mcp"
 import { TelemetrySetting } from "@shared/TelemetrySetting"
+import { UserInfo } from "@shared/UserInfo"
 import { WebviewMessage } from "@shared/WebviewMessage"
 import { fileExistsAtPath } from "@utils/fs"
-import { getWorkingState } from "@utils/git"
-import { extractCommitMessage } from "@integrations/git/commit-message-generator"
+import axios from "axios"
+import fs from "fs/promises"
+import { setTimeout as setTimeoutPromise } from "node:timers/promises"
+import pWaitFor from "p-wait-for"
+import * as path from "path"
+import * as vscode from "vscode"
 import { ensureMcpServersDirectoryExists, ensureSettingsDirectoryExists, GlobalFileNames } from "../storage/disk"
-import {
-	getAllExtensionState,
-	getGlobalState,
-	getSecret,
-	getWorkspaceState,
-	storeSecret,
-	updateApiConfiguration,
-	updateGlobalState,
-	updateWorkspaceState,
-} from "../storage/state"
-// CARET MODIFICATION: Use Cline Task instead of caret-src Task to fix "Class extends value undefined" error (백업: index-ts.cline)
+import { getAllExtensionState, getGlobalState, getWorkspaceState, storeSecret, updateGlobalState } from "../storage/state"
+import { CacheService, PersistenceErrorEvent } from "../storage/CacheService"
 import { Task } from "../task"
-import { ClineRulesToggles } from "@shared/cline-rules"
+import { handleGrpcRequest, handleGrpcRequestCancel } from "./grpc-handler"
+import { sendMcpMarketplaceCatalogEvent } from "./mcp/subscribeToMcpMarketplaceCatalog"
 import { sendStateUpdate } from "./state/subscribeToState"
 import { sendAddToInputEvent } from "./ui/subscribeToAddToInput"
-import { sendAuthCallbackEvent } from "./account/subscribeToAuthCallback"
-import { sendMcpMarketplaceCatalogEvent } from "./mcp/subscribeToMcpMarketplaceCatalog"
-import { sendRelinquishControlEvent } from "./ui/subscribeToRelinquishControl"
-import type { PersonaInstruction } from "../../shared/persona"
-import { updateRuleFileContent } from "../../../caret-src/core/updateRuleFileContent"
-import { caretLogger } from "../../../caret-src/utils/caret-logger"
+import { getLatestAnnouncementId } from "@/utils/announcements"
 
 /*
 https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -57,49 +45,75 @@ https://github.com/KumarVariable/vscode-extension-sidebar-html/blob/master/src/c
 */
 
 export class Controller {
-	readonly id: string = uuidv4()
+	readonly id: string
 	private postMessage: (message: ExtensionMessage) => Thenable<boolean> | undefined
 
 	private disposables: vscode.Disposable[] = []
 	task?: Task
+
 	workspaceTracker: WorkspaceTracker
 	mcpHub: McpHub
 	accountService: ClineAccountService
-	latestAnnouncementId = "may-22-2025_16:11:00" // update to some unique identifier when we add a new announcement
+	readonly cacheService: CacheService
 
 	constructor(
 		readonly context: vscode.ExtensionContext,
-		private outputChannel: vscode.OutputChannel, // CARET MODIFICATION: Removed 'readonly' to resolve type inference issues with OutputChannel.
 		postMessage: (message: ExtensionMessage) => Thenable<boolean> | undefined,
+		id: string,
 	) {
-		caretLogger.info(`Controller constructor called. ID: ${this.id}`)
-		// CARET MODIFICATION: Ensure outputChannel is defined before using appendLine.
-		if (this.outputChannel) {
-			this.outputChannel.appendLine("ClineProvider instantiated")
-		} else {
-			console.warn("Controller: outputChannel is undefined during instantiation.")
-		}
+		this.id = id
+
+		HostProvider.get().logToChannel("ClineProvider instantiated")
 		this.postMessage = postMessage
+		this.accountService = ClineAccountService.getInstance()
+		this.cacheService = new CacheService(context)
+		const authService = AuthService.getInstance(this)
+
+		// Initialize cache service asynchronously - critical for extension functionality
+		this.cacheService
+			.initialize()
+			.then(() => {
+				authService.restoreRefreshTokenAndRetrieveAuthInfo()
+			})
+			.catch((error) => {
+				console.error("CRITICAL: Failed to initialize CacheService - extension may not function properly:", error)
+			})
+
+		// Set up persistence error recovery
+		this.cacheService.onPersistenceError = async ({ error }: PersistenceErrorEvent) => {
+			console.error("Cache persistence failed, recovering:", error)
+			try {
+				await this.cacheService.reInitialize()
+				await this.postStateToWebview()
+				HostProvider.window.showMessage({
+					type: ShowMessageType.WARNING,
+					message: "Saving settings to storage failed.",
+				})
+			} catch (recoveryError) {
+				console.error("Cache recovery failed:", recoveryError)
+				HostProvider.window.showMessage({
+					type: ShowMessageType.ERROR,
+					message: "Failed to save settings. Please restart the extension.",
+				})
+			}
+		}
 
 		this.workspaceTracker = new WorkspaceTracker()
 		this.mcpHub = new McpHub(
 			() => ensureMcpServersDirectoryExists(),
 			() => ensureSettingsDirectoryExists(this.context),
-			(msg) => this.postMessageToWebview(msg),
+			// CARET MODIFICATION: McpHub constructor parameter changed - removed postMessageToWebview parameter
 			this.context.extension?.packageJSON?.version ?? "1.0.0",
-		)
-		this.accountService = new ClineAccountService(
-			(msg) => this.postMessageToWebview(msg),
-			async () => {
-				const { apiConfiguration } = await this.getStateToPostToWebview()
-				return apiConfiguration?.caretApiKey // CARET MODIFICATION: Return caretApiKey instead of apiKey
-			},
 		)
 
 		// Clean up legacy checkpoints
-		cleanupLegacyCheckpoints(this.context.globalStorageUri.fsPath, this.outputChannel).catch((error) => {
+		cleanupLegacyCheckpoints(this.context.globalStorageUri.fsPath).catch((error) => {
 			console.error("Failed to cleanup legacy checkpoints:", error)
 		})
+	}
+
+	async getCurrentMode(): Promise<Mode> {
+		return ((await getGlobalState(this.context, "mode")) as Mode | undefined) || "act"
 	}
 
 	/*
@@ -124,27 +138,48 @@ export class Controller {
 	// Auth methods
 	async handleSignOut() {
 		try {
-			await storeSecret(this.context, "caretApiKey", undefined)
+			// TODO: update to clineAccountId and then move clineApiKey to a clear function.
+			this.cacheService.setSecret("clineAccountId", undefined)
 			await updateGlobalState(this.context, "userInfo", undefined)
-			await updateWorkspaceState(this.context, "apiProvider", "openrouter")
+
+			// Update API providers through cache service
+			const apiConfiguration = this.cacheService.getApiConfiguration()
+			const updatedConfig = {
+				...apiConfiguration,
+				planModeApiProvider: "openrouter" as ApiProvider,
+				actModeApiProvider: "openrouter" as ApiProvider,
+			}
+			this.cacheService.setApiConfiguration(updatedConfig)
+
 			await this.postStateToWebview()
-			vscode.window.showInformationMessage("Successfully logged out of Cline")
+			HostProvider.window.showMessage({
+				type: ShowMessageType.INFORMATION,
+				message: "Successfully logged out of Cline",
+			})
 		} catch (error) {
-			vscode.window.showErrorMessage("Logout failed")
+			HostProvider.window.showMessage({
+				type: ShowMessageType.INFORMATION,
+				message: "Logout failed",
+			})
 		}
 	}
 
-	async setUserInfo(info?: { displayName: string | null; email: string | null; photoURL: string | null }) {
+	async setUserInfo(info?: UserInfo) {
 		await updateGlobalState(this.context, "userInfo", info)
 	}
 
 	async initTask(task?: string, images?: string[], files?: string[], historyItem?: HistoryItem) {
 		await this.clearTask() // ensures that an existing task doesn't exist before starting a new one, although this shouldn't be possible since user must clear task before starting a new one
+
+		// Get API configuration from cache for immediate access
+		const apiConfiguration = this.cacheService.getApiConfiguration()
+
 		const {
-			apiConfiguration,
 			autoApprovalSettings,
 			browserSettings,
-			chatSettings,
+			preferredLanguage,
+			openaiReasoningEffort,
+			mode,
 			shellIntegrationTimeout,
 			terminalReuseEnabled,
 			terminalOutputLineLimit,
@@ -175,18 +210,21 @@ export class Controller {
 			this.workspaceTracker,
 			(historyItem) => this.updateTaskHistory(historyItem),
 			() => this.postStateToWebview(),
-			(message) => this.postMessageToWebview(message),
 			(taskId) => this.reinitExistingTaskFromId(taskId),
 			() => this.cancelTask(),
 			apiConfiguration,
 			autoApprovalSettings,
 			browserSettings,
-			chatSettings,
+			preferredLanguage,
+			openaiReasoningEffort,
+			mode,
 			shellIntegrationTimeout,
 			terminalReuseEnabled ?? true,
 			terminalOutputLineLimit ?? 500,
 			defaultTerminalProfile ?? "default",
 			enableCheckpointsSetting ?? true,
+			await getCwd(getDesktopDir()),
+			this.cacheService,
 			task,
 			images,
 			files,
@@ -214,54 +252,8 @@ export class Controller {
 	 */
 	async handleWebviewMessage(message: WebviewMessage) {
 		switch (message.type) {
-			// CARET MODIFICATION: 웰컴 페이지 상태를 VSCode 컨텍스트에 설정
-			case "setWelcomeContext":
-				if (message.showWelcome !== undefined) {
-					await vscode.commands.executeCommand("setContext", "caret.showWelcome", message.showWelcome)
-					console.log(`[DEBUG] Set VSCode context: caret.showWelcome=${message.showWelcome}`)
-				}
-				break
-
-			case "authStateChanged":
-				await this.setUserInfo(message.user || undefined)
-				await this.postStateToWebview()
-				break
-
-			case "fetchUserCreditsData": {
-				await this.fetchUserCreditsData()
-				break
-			}
 			case "fetchMcpMarketplace": {
 				await this.fetchMcpMarketplace(message.bool)
-				break
-			}
-
-			// telemetry
-			case "telemetrySetting": {
-				if (message.telemetrySetting) {
-					await this.updateTelemetrySetting(message.telemetrySetting)
-				}
-				await this.postStateToWebview()
-				break
-			}
-
-			case "clearAllTaskHistory": {
-				const answer = await vscode.window.showWarningMessage(
-					"What would you like to delete?",
-					{ modal: true },
-					"Delete All Except Favorites",
-					"Delete Everything",
-					"Cancel",
-				)
-
-				if (answer === "Delete All Except Favorites") {
-					await this.deleteNonFavoriteTaskHistory()
-					await this.postStateToWebview()
-				} else if (answer === "Delete Everything") {
-					await this.deleteAllTaskHistory()
-					await this.postStateToWebview()
-				}
-				sendRelinquishControlEvent()
 				break
 			}
 			case "grpc_request": {
@@ -277,370 +269,6 @@ export class Controller {
 				break
 			}
 
-			// CARET MODIFICATION: Handle UPDATE_PERSONA_CUSTOM_INSTRUCTION to update the global custom instructions file.
-			case "UPDATE_PERSONA_CUSTOM_INSTRUCTION": {
-				if (message.payload?.personaInstruction) {
-					caretLogger.info(
-						`[Controller] Received UPDATE_PERSONA_CUSTOM_INSTRUCTION - personaInstruction: ${JSON.stringify(
-							message.payload.personaInstruction,
-							null,
-							2,
-						)}`,
-					)
-
-					await updateRuleFileContent({
-						rulePath: "custom_instructions.md",
-						isGlobal: true,
-						content: JSON.stringify(message.payload.personaInstruction, null, 2),
-					})
-
-					// CARET MODIFICATION: Update agent_profile.png and agent_thinking.png with selected template images
-					// Check if avatarUri and thinkingAvatarUri exist in the payload
-					if (message.payload?.avatarUri && message.payload?.thinkingAvatarUri) {
-						// Use the same persona-storage system as file uploads
-						const { saveCustomPersonaImage } = await import("../../../caret-src/utils/persona-storage")
-						try {
-							// Save template images to globalStorage (same as file upload)
-							await saveCustomPersonaImage(this.context, "normal", message.payload.avatarUri)
-							await saveCustomPersonaImage(this.context, "thinking", message.payload.thinkingAvatarUri)
-							caretLogger.info("[Controller] Persona images updated successfully from template selection.")
-
-							// CARET MODIFICATION: 템플릿 선택 후 CaretProvider의 notifyPersonaImagesChanged 호출
-							try {
-								const { CaretProvider } = await import("../../../caret-src/core/webview/CaretProvider")
-								const provider = CaretProvider.getInstance()
-								if (provider) {
-									provider.notifyPersonaImagesChanged()
-									caretLogger.info("[Controller] 페르소나 템플릿 선택 후 알림 전송 완료")
-								} else {
-									caretLogger.warn(
-										"[Controller] CaretProvider 인스턴스를 찾을 수 없어 알림을 보내지 못했습니다",
-									)
-								}
-							} catch (error) {
-								caretLogger.error(`[Controller] 페르소나 템플릿 선택 후 알림 전송 실패: ${error}`)
-							}
-						} catch (error) {
-							caretLogger.error(`[Controller] Failed to replace persona images from template: ${error}`)
-						}
-					}
-
-					// Send confirmation back to webview
-					this.postMessageToWebview({
-						type: "PERSONA_UPDATED",
-						payload: { success: true },
-					})
-
-					await this.postStateToWebview()
-				}
-				break
-			}
-
-			// CARET MODIFICATION: Handle UPLOAD_CUSTOM_PERSONA_IMAGE to save user-uploaded custom persona images.
-			case "UPLOAD_CUSTOM_PERSONA_IMAGE": {
-				if (message.payload?.imageType && message.payload?.imageData && message.payload?.personaCharacter) {
-					caretLogger.info(
-						`[Controller] Received UPLOAD_CUSTOM_PERSONA_IMAGE - imageType: ${message.payload.imageType}, personaCharacter: ${message.payload.personaCharacter}, dataLength: ${message.payload.imageData.length}`,
-						"PERSONA_UPLOAD",
-					)
-
-					try {
-						// CARET MODIFICATION: Use new globalStorage-based persona-storage.ts system
-						const { saveCustomPersonaImage } = await import("../../../caret-src/utils/persona-storage")
-						const savedImageUri = await saveCustomPersonaImage(
-							this.context,
-							message.payload.imageType,
-							message.payload.imageData,
-						)
-
-						caretLogger.info(
-							`[Controller] Custom persona image saved successfully to globalStorage: ${savedImageUri}`,
-						)
-
-						// Send success response back to webview
-						this.postMessageToWebview({
-							type: "UPLOAD_CUSTOM_PERSONA_IMAGE_RESPONSE",
-							payload: {
-								success: true,
-								savedPath: savedImageUri, // CARET MODIFICATION: Include actual saved URI
-								imageType: message.payload.imageType,
-								personaCharacter: message.payload.personaCharacter,
-							},
-						})
-
-						// CARET MODIFICATION: 이미지 업로드 후 CaretProvider의 notifyPersonaImagesChanged 호출
-						try {
-							const { CaretProvider } = await import("../../../caret-src/core/webview/CaretProvider")
-							const provider = CaretProvider.getInstance()
-							if (provider) {
-								provider.notifyPersonaImagesChanged()
-								caretLogger.info("[Controller] 페르소나 이미지 업로드 후 알림 전송 완료")
-							} else {
-								caretLogger.warn("[Controller] CaretProvider 인스턴스를 찾을 수 없어 알림을 보내지 못했습니다")
-							}
-						} catch (error) {
-							caretLogger.error(`[Controller] 페르소나 이미지 업로드 후 알림 전송 실패: ${error}`)
-						}
-
-						// CARET MODIFICATION: 이미지 업로드 후 상태를 새로고침하여 웹뷰에 반영
-						this.postMessageToWebview({
-							type: "PERSONA_UPDATED",
-							payload: { success: true },
-						})
-					} catch (error) {
-						caretLogger.error(`[Controller] Error saving custom persona image: ${error}`)
-
-						// Send error response back to webview
-						this.postMessageToWebview({
-							type: "UPLOAD_CUSTOM_PERSONA_IMAGE_RESPONSE",
-							payload: {
-								success: false,
-								error: error instanceof Error ? error.message : "Unknown error",
-								imageType: message.payload.imageType,
-								personaCharacter: message.payload.personaCharacter,
-							},
-						})
-					}
-				}
-				break
-			}
-
-			// CARET MODIFICATION: Handle initializeDefaultPersona for welcome page completion
-			case "initializeDefaultPersona": {
-				if (message.language) {
-					caretLogger.info(`[Controller] Received initializeDefaultPersona for language: ${message.language}`)
-					try {
-						const { PersonaInitializer } = await import("../../../caret-src/utils/persona-initializer")
-						const personaInitializer = new PersonaInitializer(this.context)
-						await personaInitializer.initializeOnLanguageSet(message.language)
-						caretLogger.info(
-							`[Controller] Default persona initialized successfully for language: ${message.language}`,
-						)
-					} catch (error) {
-						caretLogger.warn(`[Controller] Failed to initialize default persona: ${error}`)
-					}
-				}
-				break
-			}
-
-			// CARET MODIFICATION: Handle REQUEST_PERSONA_IMAGES to provide current persona images to PersonaAvatar
-			case "REQUEST_PERSONA_IMAGES": {
-				caretLogger.info("[Controller] Received REQUEST_PERSONA_IMAGES")
-				try {
-					const { loadPersonaImagesFromStorage } = await import("../../../caret-src/utils/persona-storage")
-					const currentPersonaImages = await loadPersonaImagesFromStorage(this.context)
-
-					caretLogger.info("[Controller] Sending current persona images to PersonaAvatar")
-					this.postMessageToWebview({
-						type: "RESPONSE_PERSONA_IMAGES",
-						payload: currentPersonaImages,
-					})
-				} catch (error) {
-					caretLogger.error(`[Controller] Error loading current persona images: ${error}`)
-				}
-				break
-			}
-
-			// CARET MODIFICATION: Handle REQUEST_TEMPLATE_CHARACTERS to provide persona templates to the webview.
-			case "REQUEST_TEMPLATE_CHARACTERS": {
-				caretLogger.info("[Controller] Received REQUEST_TEMPLATE_CHARACTERS")
-				try {
-					const templatePath = path.join(
-						this.context.extensionPath,
-						"caret-assets",
-						"template_characters",
-						"template_characters.json",
-					)
-					const templatesRaw = await fs.readFile(templatePath, "utf-8")
-					const templates = JSON.parse(templatesRaw)
-
-					// CARET MODIFICATION: Load current persona images from globalStorage
-					const { loadPersonaImagesFromStorage } = await import("../../../caret-src/utils/persona-storage")
-					const currentPersonaImages = await loadPersonaImagesFromStorage(this.context)
-
-					const templatesWithBase64Images = await Promise.all(
-						templates.map(async (template: any, index: number) => {
-							// CARET MODIFICATION: Removed first template override - let all templates show their own images
-							const convertImageUri = async (uri: string): Promise<string> => {
-								if (!uri || !uri.startsWith("asset:/assets/")) {
-									return uri
-								}
-
-								// CARET MODIFICATION: Template characters use caret-assets, convert to base64
-								if (uri.startsWith("asset:/assets/template_characters/")) {
-									try {
-										// Load from caret-assets directory (same as other assets)
-										const imagePath = path.join(
-											this.context.extensionPath,
-											"caret-assets",
-											uri.replace("asset:/assets/", ""),
-										)
-										caretLogger.info(`[Controller] Loading template image: ${imagePath}`)
-
-										if (
-											await fs
-												.access(imagePath)
-												.then(() => true)
-												.catch(() => false)
-										) {
-											// CARET MODIFICATION: Convert to base64 like other assets for CSP compliance
-											const imageBuffer = await fs.readFile(imagePath)
-											const ext = path.extname(imagePath).toLowerCase()
-											const mimeType =
-												ext === ".png"
-													? "image/png"
-													: ext === ".jpg" || ext === ".jpeg"
-														? "image/jpeg"
-														: ext === ".webp"
-															? "image/webp"
-															: "image/png"
-											const base64 = `data:${mimeType};base64,${imageBuffer.toString("base64")}`
-											caretLogger.info(
-												`[Controller] Template image converted to base64: ${uri} -> data:${mimeType} (${imageBuffer.length} bytes)`,
-											)
-											return base64
-										} else {
-											caretLogger.warn(
-												`[Controller] Template image not found in caret-assets: ${imagePath}`,
-											)
-											return uri
-										}
-									} catch (error) {
-										caretLogger.error(`[Controller] Error converting template image URI ${uri}: ${error}`)
-										return uri
-									}
-								}
-
-								// For other asset URIs, load from caret-assets as before
-								try {
-									const imagePath = path.join(
-										this.context.extensionPath,
-										"caret-assets",
-										uri.replace("asset:/assets/", ""),
-									)
-									caretLogger.info(`[Controller] Loading image: ${imagePath}`)
-
-									if (
-										await fs
-											.access(imagePath)
-											.then(() => true)
-											.catch(() => false)
-									) {
-										const imageBuffer = await fs.readFile(imagePath)
-										const ext = path.extname(imagePath).toLowerCase()
-										const mimeType =
-											ext === ".png"
-												? "image/png"
-												: ext === ".jpg" || ext === ".jpeg"
-													? "image/jpeg"
-													: ext === ".webp"
-														? "image/webp"
-														: "image/png"
-										const base64 = `data:${mimeType};base64,${imageBuffer.toString("base64")}`
-										caretLogger.info(
-											`[Controller] Image loaded successfully, size: ${imageBuffer.length} bytes`,
-										)
-										return base64
-									} else {
-										caretLogger.warn(`[Controller] Image not found: ${imagePath}`)
-										return uri
-									}
-								} catch (error) {
-									caretLogger.error(`[Controller] Error loading image ${uri}: ${error}`)
-									return uri
-								}
-							}
-
-							// CARET MODIFICATION: Removed loadCustomImage as all images now come from caret-assets
-							// const loadCustomImage = async (imageType: "normal" | "thinking"): Promise<string | undefined> => {
-							//     try {
-							//         const customImagePath = path.join(customAssetsDir, `${template.character}_${imageType}.png`)
-							//         if (
-							//             await fs
-							//                 .access(customImagePath)
-							//                 .then(() => true)
-							//                 .catch(() => false)
-							//         ) {
-							//             const imageBuffer = await fs.readFile(customImagePath)
-							//             const base64 = `data:image/png;base64,${imageBuffer.toString("base64")}`
-							//             caretLogger.info(`[Controller] Custom image loaded: ${customImagePath}`)
-							//             return base64
-							//         }
-							//     } catch (error) {
-							//         caretLogger.error(
-							//             `[Controller] Error loading custom image for ${template.character}: ${error}`,
-							//         )
-							//     }
-							//     return undefined
-							// }
-
-							// const customAvatarUri = await loadCustomImage("normal")
-							// const customThinkingAvatarUri = await loadCustomImage("thinking")
-
-							return {
-								...template,
-								avatarUri: await convertImageUri(template.avatarUri),
-								thinkingAvatarUri: await convertImageUri(template.thinkingAvatarUri),
-								introIllustrationUri: await convertImageUri(template.introIllustrationUri),
-								// CARET MODIFICATION: Removed custom image URIs as they are no longer needed
-								// customAvatarUri,
-								// customThinkingAvatarUri,
-							}
-						}),
-					)
-
-					this.postMessageToWebview({
-						type: "RESPONSE_TEMPLATE_CHARACTERS",
-						payload: templatesWithBase64Images,
-					})
-				} catch (error) {
-					caretLogger.error(`[Controller] Error reading template_characters.json: ${error}`)
-				}
-				break
-			}
-
-			// CARET MODIFICATION: Handle REQUEST_RULE_FILE_CONTENT to get the content of a rule file.
-			case "REQUEST_RULE_FILE_CONTENT": {
-				const ruleName = message.payload?.ruleName
-				if (!ruleName) {
-					break
-				}
-
-				try {
-					let ruleDir
-					if (message.payload.isGlobal) {
-						const { ensureRulesDirectoryExists } = await import("../storage/disk")
-						ruleDir = await ensureRulesDirectoryExists()
-					} else {
-						const cwd = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
-						if (!cwd) {
-							break
-						}
-						ruleDir = path.join(cwd, ".clinerules")
-						if (!(await fileExistsAtPath(ruleDir))) {
-							await fs.mkdir(ruleDir, { recursive: true })
-						}
-					}
-					const rulePath = path.join(ruleDir, ruleName)
-					const content = await fs.readFile(rulePath, "utf-8")
-					this.postMessageToWebview({
-						type: "RESPONSE_RULE_FILE_CONTENT",
-						payload: { ruleName, content },
-					})
-				} catch (error) {
-					// It's okay if the file doesn't exist, just send back empty content
-					if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-						this.postMessageToWebview({
-							type: "RESPONSE_RULE_FILE_CONTENT",
-							payload: { ruleName, content: "" },
-						})
-					} else {
-						caretLogger.error(`[Controller] Error reading rule file ${ruleName}: ${error}`)
-					}
-				}
-				break
-			}
-
 			// Add more switch case statements here as more webview message commands
 			// are created within the webview context (i.e. inside media/main.js)
 		}
@@ -650,231 +278,30 @@ export class Controller {
 		await updateGlobalState(this.context, "telemetrySetting", telemetrySetting)
 		const isOptedIn = telemetrySetting !== "disabled"
 		telemetryService.updateTelemetryState(isOptedIn)
+		await this.postStateToWebview()
 	}
 
-	// CARET MODIFICATION: Chatbot/Agent 통일 - 메서드명과 로직 변경
-	async toggleChatbotAgentModeWithChatSettings(chatSettings: ChatSettings, chatContent?: ChatContent) {
-		const didSwitchToAgentMode = chatSettings.mode === "agent"
+	async togglePlanActMode(modeToSwitchTo: Mode, chatContent?: ChatContent): Promise<boolean> {
+		const didSwitchToActMode = modeToSwitchTo === "act"
 
-		// CARET MODIFICATION: Mission 2 - Controller 모드 토글 로깅 (상세)
-		const { caretLogger } = await import("../../../caret-src/utils/caret-logger")
-		caretLogger.info(
-			`🎛️ [CONTROLLER] toggleChatbotAgentModeWithChatSettings: receivedMode=${chatSettings.mode}, didSwitchToAgent=${didSwitchToAgentMode}, currentTaskMode=${this.task?.chatSettings?.mode}`,
-			"STATE",
-		)
+		// Store mode to global state
+		await updateGlobalState(this.context, "mode", modeToSwitchTo)
 
 		// Capture mode switch telemetry | Capture regardless of if we know the taskId
-		// CARET MODIFICATION: Chatbot/Agent 모드로 telemetry 수정 (기존 plan/act 호환)
-		// CARET MODIFICATION: Chatbot/Agent 모드 텔레메트리 호환성 매핑
-		const telemetryMode = chatSettings.mode === "chatbot" ? "plan" : "act"
-		telemetryService.captureModeSwitch(this.task?.taskId ?? "0", telemetryMode)
+		telemetryService.captureModeSwitch(this.task?.taskId ?? "0", modeToSwitchTo)
 
-		// Get previous model info that we will revert to after saving current mode api info
-		const {
-			apiConfiguration, // apiConfiguration을 여기서 가져옵니다.
-			previousModeApiProvider: newApiProvider,
-			previousModeModelId: newModelId,
-			previousModeModelInfo: newModelInfo,
-			previousModeVsCodeLmModelSelector: newVsCodeLmModelSelector,
-			previousModeThinkingBudgetTokens: newThinkingBudgetTokens,
-			previousModeReasoningEffort: newReasoningEffort,
-			previousModeAwsBedrockCustomSelected: newAwsBedrockCustomSelected,
-			previousModeAwsBedrockCustomModelBaseId: newAwsBedrockCustomModelBaseId,
-			previousModeSapAiCoreClientId: newSapAiCoreClientId,
-			previousModeSapAiCoreClientSecret: newSapAiCoreClientSecret,
-			previousModeSapAiCoreBaseUrl: newSapAiCoreBaseUrl,
-			previousModeSapAiCoreTokenUrl: newSapAiCoreTokenUrl,
-			previousModeSapAiCoreResourceGroup: newSapAiResourceGroup,
-			previousModeSapAiCoreModelId: newSapAiCoreModelId,
-			planActSeparateModelsSetting,
-		} = await getAllExtensionState(this.context)
-
-		const currentApiConfiguration = apiConfiguration as ApiConfiguration // apiConfiguration을 명시적으로 캐스팅
-
-		const shouldSwitchModel = planActSeparateModelsSetting === true
-
-		if (shouldSwitchModel) {
-			// Save the last model used in this mode
-			await updateWorkspaceState(this.context, "previousModeApiProvider", currentApiConfiguration.apiProvider)
-			await updateWorkspaceState(
-				this.context,
-				"previousModeThinkingBudgetTokens",
-				currentApiConfiguration.thinkingBudgetTokens,
-			)
-			await updateWorkspaceState(this.context, "previousModeReasoningEffort", currentApiConfiguration.reasoningEffort)
-			switch (currentApiConfiguration.apiProvider) {
-				case "anthropic":
-				case "vertex":
-				case "gemini":
-				case "asksage":
-				case "openai-native":
-				case "qwen":
-				case "deepseek":
-				case "xai":
-					await updateWorkspaceState(this.context, "previousModeModelId", currentApiConfiguration.apiModelId)
-					break
-				case "bedrock":
-					await updateWorkspaceState(this.context, "previousModeModelId", currentApiConfiguration.apiModelId)
-					await updateWorkspaceState(
-						this.context,
-						"previousModeAwsBedrockCustomSelected",
-						currentApiConfiguration.awsBedrockCustomSelected,
-					)
-					await updateWorkspaceState(
-						this.context,
-						"previousModeAwsBedrockCustomModelBaseId",
-						currentApiConfiguration.awsBedrockCustomModelBaseId,
-					)
-					break
-				case "openrouter":
-				case "caret":
-					await updateWorkspaceState(this.context, "previousModeModelId", currentApiConfiguration.openRouterModelId)
-					await updateWorkspaceState(this.context, "previousModeModelInfo", currentApiConfiguration.openRouterModelInfo)
-					break
-				case "vscode-lm":
-					// Important we don't set modelId to this, as it's an object not string (webview expects model id to be a string)
-					await updateWorkspaceState(
-						this.context,
-						"previousModeVsCodeLmModelSelector",
-						currentApiConfiguration.vsCodeLmModelSelector,
-					)
-					break
-				case "openai":
-					await updateWorkspaceState(this.context, "previousModeModelId", currentApiConfiguration.openAiModelId)
-					await updateWorkspaceState(this.context, "previousModeModelInfo", currentApiConfiguration.openAiModelInfo)
-					break
-				case "ollama":
-					await updateWorkspaceState(this.context, "previousModeModelId", currentApiConfiguration.ollamaModelId)
-					break
-				case "lmstudio":
-					await updateWorkspaceState(this.context, "previousModeModelId", currentApiConfiguration.lmStudioModelId) // lmStudioModelId 변수 직접 사용
-					break
-				case "litellm":
-					await updateWorkspaceState(this.context, "previousModeModelId", currentApiConfiguration.liteLlmModelId)
-					await updateWorkspaceState(this.context, "previousModeModelInfo", currentApiConfiguration.liteLlmModelInfo)
-					break
-				case "requesty":
-					await updateWorkspaceState(this.context, "previousModeModelId", currentApiConfiguration.requestyModelId)
-					await updateWorkspaceState(this.context, "previousModeModelInfo", currentApiConfiguration.requestyModelInfo)
-					break
-				case "sapaicore":
-					await updateWorkspaceState(this.context, "previousModeModelId", currentApiConfiguration.apiModelId)
-					await updateWorkspaceState(
-						this.context,
-						"previousModeSapAiCoreClientId",
-						currentApiConfiguration.sapAiCoreClientId,
-					)
-					await updateWorkspaceState(
-						this.context,
-						"previousModeSapAiCoreClientSecret",
-						currentApiConfiguration.sapAiCoreClientSecret,
-					)
-					await updateWorkspaceState(
-						this.context,
-						"previousModeSapAiCoreBaseUrl",
-						currentApiConfiguration.sapAiCoreBaseUrl,
-					)
-					await updateWorkspaceState(
-						this.context,
-						"previousModeSapAiCoreTokenUrl",
-						currentApiConfiguration.sapAiCoreTokenUrl,
-					)
-					await updateWorkspaceState(
-						this.context,
-						"previousModeSapAiCoreResourceGroup",
-						currentApiConfiguration.sapAiResourceGroup,
-					)
-					await updateWorkspaceState(
-						this.context,
-						"previousModeSapAiCoreModelId",
-						currentApiConfiguration.sapAiCoreModelId,
-					)
-					break
-			}
-
-			// Restore the model used in previous mode
-			if (
-				newApiProvider ||
-				newModelId ||
-				newThinkingBudgetTokens !== undefined ||
-				newReasoningEffort ||
-				newVsCodeLmModelSelector
-			) {
-				await updateWorkspaceState(this.context, "apiProvider", newApiProvider)
-				await updateWorkspaceState(this.context, "thinkingBudgetTokens", newThinkingBudgetTokens)
-				await updateWorkspaceState(this.context, "reasoningEffort", newReasoningEffort)
-				switch (newApiProvider) {
-					case "anthropic":
-					case "vertex":
-					case "gemini":
-					case "asksage":
-					case "openai-native":
-					case "qwen":
-					case "deepseek":
-					case "xai":
-						await updateWorkspaceState(this.context, "apiModelId", newModelId)
-						break
-					case "bedrock":
-						await updateWorkspaceState(this.context, "apiModelId", newModelId)
-						await updateWorkspaceState(this.context, "awsBedrockCustomSelected", newAwsBedrockCustomSelected)
-						await updateWorkspaceState(this.context, "awsBedrockCustomModelBaseId", newAwsBedrockCustomModelBaseId)
-						break
-					case "openrouter":
-					case "caret":
-						await updateWorkspaceState(this.context, "openRouterModelId", newModelId)
-						await updateWorkspaceState(this.context, "openRouterModelInfo", newModelInfo)
-						break
-					case "vscode-lm":
-						await updateWorkspaceState(this.context, "vsCodeLmModelSelector", newVsCodeLmModelSelector)
-						break
-					case "openai":
-						await updateWorkspaceState(this.context, "openAiModelId", newModelId)
-						await updateWorkspaceState(this.context, "openAiModelInfo", newModelInfo)
-						break
-					case "ollama":
-						await updateWorkspaceState(this.context, "ollamaModelId", newModelId)
-						break
-					case "lmstudio":
-						await updateWorkspaceState(this.context, "lmStudioModelId", newModelId)
-						break
-					case "litellm":
-						await updateWorkspaceState(this.context, "previousModeModelId", currentApiConfiguration.liteLlmModelId)
-						await updateWorkspaceState(
-							this.context,
-							"previousModeModelInfo",
-							currentApiConfiguration.liteLlmModelInfo,
-						)
-						break
-					case "requesty":
-						await updateWorkspaceState(this.context, "requestyModelId", newModelId)
-						await updateWorkspaceState(this.context, "requestyModelInfo", newModelInfo)
-						break
-					case "sapaicore":
-						await updateWorkspaceState(this.context, "apiModelId", newModelId)
-						break
-				}
-
-				if (this.task) {
-					const { apiConfiguration: updatedApiConfiguration } = await getAllExtensionState(this.context)
-					this.task.api = buildApiHandler(updatedApiConfiguration)
-				}
-			}
+		// Update API handler with new mode (buildApiHandler now selects provider based on mode)
+		if (this.task) {
+			const apiConfiguration = this.cacheService.getApiConfiguration()
+			this.task.api = buildApiHandler({ ...apiConfiguration, taskId: this.task.taskId }, modeToSwitchTo)
 		}
 
-		await updateWorkspaceState(this.context, "chatSettings", chatSettings)
-		caretLogger.info(`💾 [CONTROLLER-SAVE] chatSettings saved to workspaceState: mode=${chatSettings.mode}`, "STATE")
-
 		await this.postStateToWebview()
-		caretLogger.info(
-			`📤 [CONTROLLER-BROADCAST] postStateToWebview() called - broadcastingMode=${this.task?.chatSettings?.mode}`,
-			"STATE",
-		)
 
 		if (this.task) {
-			this.task.chatSettings = chatSettings
-			caretLogger.info(`🔄 [CONTROLLER-SYNC] task.chatSettings updated: mode=${chatSettings.mode}`, "STATE")
-			if (this.task.isAwaitingPlanResponse && didSwitchToAgentMode) {
-				this.task.didRespondToPlanAskBySwitchingMode = true
+			this.task.mode = modeToSwitchTo
+			if (this.task.taskState.isAwaitingPlanResponse && didSwitchToActMode) {
+				this.task.taskState.didRespondToPlanAskBySwitchingMode = true
 				// Use chatContent if provided, otherwise use default message
 				await this.task.handleWebviewAskResponse(
 					"messageResponse",
@@ -882,10 +309,15 @@ export class Controller {
 					chatContent?.images || [],
 					chatContent?.files || [],
 				)
+
+				return true
 			} else {
 				this.cancelTask()
+				return false
 			}
 		}
+
+		return false
 	}
 
 	async cancelTask() {
@@ -899,9 +331,9 @@ export class Controller {
 			await pWaitFor(
 				() =>
 					this.task === undefined ||
-					this.task.isStreaming === false ||
-					this.task.didFinishAbortingStream ||
-					this.task.isWaitingForFirstChunk, // if only first chunk is processed, then there's no need to wait for graceful abort (closes edits, browser, etc)
+					this.task.taskState.isStreaming === false ||
+					this.task.taskState.didFinishAbortingStream ||
+					this.task.taskState.isWaitingForFirstChunk, // if only first chunk is processed, then there's no need to wait for graceful abort (closes edits, browser, etc)
 				{
 					timeout: 3_000,
 				},
@@ -910,90 +342,67 @@ export class Controller {
 			})
 			if (this.task) {
 				// 'abandoned' will prevent this cline instance from affecting future cline instance gui. this may happen if its hanging on a streaming request
-				this.task.abandoned = true
+				this.task.taskState.abandoned = true
 			}
 			await this.initTask(undefined, undefined, undefined, historyItem) // clears task again, so we need to abortTask manually above
 			// await this.postStateToWebview() // new Cline instance will post state when it's ready. having this here sent an empty messages array to webview leading to virtuoso having to reload the entire list
 		}
 	}
 
-	// Account
-
-	async fetchUserCreditsData() {
+	async handleAuthCallback(customToken: string, provider: string | null = null) {
 		try {
-			const [_, __, ___, accountPlanData] = await Promise.all([
-				this.accountService?.fetchBalance(),
-				this.accountService?.fetchUsageTransactions(),
-				this.accountService?.fetchPaymentTransactions(),
-				this.accountService?.fetchAccountPlan(), // CARET MODIFICATION: Fetch account plan
-			])
+			await AuthService.getInstance(this).handleAuthCallback(customToken, provider ? provider : "google")
 
-			// CARET MODIFICATION: Merge plan and isPayAsYouGo into userInfo
-			if (accountPlanData) {
-				const { userInfo } = await getAllExtensionState(this.context)
-				const updatedUserInfo = {
-					...userInfo,
-					plan: accountPlanData.plan,
-					isPayAsYouGo: accountPlanData.isPayAsYouGo,
+			const clineProvider: ApiProvider = "cline"
+
+			// Get current settings to determine how to update providers
+			const { planActSeparateModelsSetting } = await getAllExtensionState(this.context)
+			const currentMode = await this.getCurrentMode()
+
+			// Get current API configuration from cache
+			const currentApiConfiguration = this.cacheService.getApiConfiguration()
+
+			let updatedConfig = { ...currentApiConfiguration }
+
+			if (planActSeparateModelsSetting) {
+				// Only update the current mode's provider
+				if (currentMode === "plan") {
+					updatedConfig.planModeApiProvider = clineProvider
+				} else {
+					updatedConfig.actModeApiProvider = clineProvider
 				}
-				await updateGlobalState(this.context, "userInfo", updatedUserInfo)
-				await this.postStateToWebview() // Update webview with new userInfo
+			} else {
+				// Update both modes to keep them in sync
+				updatedConfig.planModeApiProvider = clineProvider
+				updatedConfig.actModeApiProvider = clineProvider
 			}
-		} catch (error) {
-			console.error("Failed to fetch user credits data:", error)
-		}
-	}
 
-	// Auth
+			// Update the API configuration through cache service
+			this.cacheService.setApiConfiguration(updatedConfig)
 
-	public async validateAuthState(state: string | null): Promise<boolean> {
-		const storedNonce = await getSecret(this.context, "authNonce")
-		if (!state || state !== storedNonce) {
-			return false
-		}
-		await storeSecret(this.context, "authNonce", undefined) // Clear after use
-		return true
-	}
-
-	async handleAuthCallback(customToken: string, apiKey: string) {
-		try {
-			// Store API key for API calls
-			await storeSecret(this.context, "caretApiKey", apiKey)
-
-			// Send custom token to webview for Firebase auth
-			await sendAuthCallbackEvent(customToken)
-
-			const caretProvider: ApiProvider = "caret"
-			await updateWorkspaceState(this.context, "apiProvider", caretProvider)
-
-			// Update API configuration with the new provider and API key
-			const { apiConfiguration } = await getAllExtensionState(this.context)
-			const updatedConfig = {
-				...apiConfiguration,
-				apiProvider: caretProvider,
-				caretApiKey: apiKey,
-			}
+			// Mark welcome view as completed since user has successfully logged in
+			await updateGlobalState(this.context, "welcomeViewCompleted", true)
 
 			if (this.task) {
-				this.task.api = buildApiHandler(updatedConfig)
+				this.task.api = buildApiHandler({ ...updatedConfig, taskId: this.task.taskId }, currentMode)
 			}
 
 			await this.postStateToWebview()
-			// vscode.window.showInformationMessage("Successfully logged in to Cline")
 		} catch (error) {
 			console.error("Failed to handle auth callback:", error)
-			vscode.window.showErrorMessage("Failed to log in to Cline")
+			HostProvider.window.showMessage({
+				type: ShowMessageType.ERROR,
+				message: "Failed to log in to Cline",
+			})
 			// Even on login failure, we preserve any existing tokens
 			// Only clear tokens on explicit logout
 		}
 	}
 
 	// MCP Marketplace
-
 	private async fetchMcpMarketplaceFromApi(silent: boolean = false): Promise<McpMarketplaceCatalog | undefined> {
 		try {
-			// CARET MODIFICATION: Change MCP marketplace API URL to Caret development API
-			const response = await axios.get("https://dev-api.caret.team/api/auth/mcp/marketplace", {
+			const response = await axios.get(`${clineEnvConfig.mcpBaseUrl}/marketplace`, {
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -1019,7 +428,10 @@ export class Controller {
 			console.error("Failed to fetch MCP marketplace:", error)
 			if (!silent) {
 				const errorMessage = error instanceof Error ? error.message : "Failed to fetch MCP marketplace"
-				vscode.window.showErrorMessage(errorMessage)
+				HostProvider.window.showMessage({
+					type: ShowMessageType.ERROR,
+					message: errorMessage,
+				})
 			}
 			return undefined
 		}
@@ -1027,8 +439,7 @@ export class Controller {
 
 	private async fetchMcpMarketplaceFromApiRPC(silent: boolean = false): Promise<McpMarketplaceCatalog | undefined> {
 		try {
-			// CARET MODIFICATION: Change MCP marketplace API URL to Caret development API
-			const response = await axios.get("https://dev-api.caret.team/api/auth/mcp/marketplace", {
+			const response = await axios.get(`${clineEnvConfig.mcpBaseUrl}/marketplace`, {
 				headers: {
 					"Content-Type": "application/json",
 					"User-Agent": "cline-vscode-extension",
@@ -1104,7 +515,10 @@ export class Controller {
 		} catch (error) {
 			console.error("Failed to handle cached MCP marketplace:", error)
 			const errorMessage = error instanceof Error ? error.message : "Failed to handle cached MCP marketplace"
-			vscode.window.showErrorMessage(errorMessage)
+			HostProvider.window.showMessage({
+				type: ShowMessageType.ERROR,
+				message: errorMessage,
+			})
 		}
 	}
 
@@ -1125,14 +539,21 @@ export class Controller {
 		}
 
 		const openrouter: ApiProvider = "openrouter"
-		await updateWorkspaceState(this.context, "apiProvider", openrouter)
-		await storeSecret(this.context, "openRouterApiKey", apiKey)
+		const currentMode = await this.getCurrentMode()
+
+		// Update API configuration through cache service
+		const currentApiConfiguration = this.cacheService.getApiConfiguration()
+		const updatedConfig = {
+			...currentApiConfiguration,
+			planModeApiProvider: openrouter,
+			actModeApiProvider: openrouter,
+			openRouterApiKey: apiKey,
+		}
+		this.cacheService.setApiConfiguration(updatedConfig)
+
 		await this.postStateToWebview()
 		if (this.task) {
-			this.task.api = buildApiHandler({
-				apiProvider: openrouter,
-				openRouterApiKey: apiKey,
-			})
+			this.task.api = buildApiHandler({ ...updatedConfig, taskId: this.task.taskId }, currentMode)
 		}
 		// await this.postMessageToWebview({ type: "action", action: "settingsButtonClicked" }) // bad ux if user is on welcome
 	}
@@ -1156,8 +577,8 @@ export class Controller {
 
 	// Context menus and code actions
 
-	getFileMentionFromPath(filePath: string) {
-		const cwd = vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath).at(0)
+	async getFileMentionFromPath(filePath: string) {
+		const cwd = await getCwd()
 		if (!cwd) {
 			return "@/" + filePath
 		}
@@ -1168,11 +589,11 @@ export class Controller {
 	// 'Add to Cline' context menu in editor and code action
 	async addSelectedCodeToChat(code: string, filePath: string, languageId: string, diagnostics?: vscode.Diagnostic[]) {
 		// Ensure the sidebar view is visible
-		await vscode.commands.executeCommand("caret.SidebarProvider.focus")
+		await vscode.commands.executeCommand("claude-dev.SidebarProvider.focus")
 		await setTimeoutPromise(100)
 
 		// Post message to webview with the selected code
-		const fileMention = this.getFileMentionFromPath(filePath)
+		const fileMention = await this.getFileMentionFromPath(filePath)
 
 		let input = `${fileMention}\n\`\`\`\n${code}\n\`\`\``
 		if (diagnostics) {
@@ -1188,7 +609,7 @@ export class Controller {
 	// 'Add to Cline' context menu in Terminal
 	async addSelectedTerminalOutputToChat(output: string, terminalName: string) {
 		// Ensure the sidebar view is visible
-		await vscode.commands.executeCommand("caret.SidebarProvider.focus")
+		await vscode.commands.executeCommand("claude-dev.SidebarProvider.focus")
 		await setTimeoutPromise(100)
 
 		// Post message to webview with the selected terminal output
@@ -1206,10 +627,10 @@ export class Controller {
 	// 'Fix with Cline' in code actions
 	async fixWithCline(code: string, filePath: string, languageId: string, diagnostics: vscode.Diagnostic[]) {
 		// Ensure the sidebar view is visible
-		await vscode.commands.executeCommand("caret.SidebarProvider.focus")
+		await vscode.commands.executeCommand("claude-dev.SidebarProvider.focus")
 		await setTimeoutPromise(100)
 
-		const fileMention = this.getFileMentionFromPath(filePath)
+		const fileMention = await this.getFileMentionFromPath(filePath)
 		const problemsString = this.convertDiagnosticsToProblemsString(diagnostics)
 		await this.initTask(`Fix the following code in ${fileMention}\n\`\`\`\n${code}\n\`\`\`\n\nProblems:\n${problemsString}`)
 
@@ -1288,113 +709,9 @@ export class Controller {
 		await downloadTask(historyItem.ts, apiConversationHistory)
 	}
 
-	async deleteAllTaskHistory() {
-		await this.clearTask()
-		await updateGlobalState(this.context, "taskHistory", undefined)
-		try {
-			// Remove all contents of tasks directory
-			const taskDirPath = path.join(this.context.globalStorageUri.fsPath, "tasks")
-			if (await fileExistsAtPath(taskDirPath)) {
-				await fs.rm(taskDirPath, { recursive: true, force: true })
-			}
-			// Remove checkpoints directory contents
-			const checkpointsDirPath = path.join(this.context.globalStorageUri.fsPath, "checkpoints")
-			if (await fileExistsAtPath(checkpointsDirPath)) {
-				await fs.rm(checkpointsDirPath, { recursive: true, force: true })
-			}
-		} catch (error) {
-			vscode.window.showErrorMessage(
-				`Encountered error while deleting task history, there may be some files left behind. Error: ${error instanceof Error ? error.message : String(error)}`,
-			)
-		}
-		// await this.postStateToWebview()
-	}
-
-	async deleteNonFavoriteTaskHistory() {
-		await this.clearTask()
-
-		const taskHistory = ((await getGlobalState(this.context, "taskHistory")) as HistoryItem[]) || []
-		const favoritedTasks = taskHistory.filter((task) => task.isFavorited === true)
-
-		// If user has no favorited tasks, show a warning message
-		if (favoritedTasks.length === 0) {
-			vscode.window.showWarningMessage("No favorited tasks found. Please favorite tasks before using this option.")
-			await this.postStateToWebview()
-			return
-		}
-
-		await updateGlobalState(this.context, "taskHistory", favoritedTasks)
-
-		// Delete non-favorited task directories
-		try {
-			const preserveTaskIds = favoritedTasks.map((task) => task.id)
-			const taskDirPath = path.join(this.context.globalStorageUri.fsPath, "tasks")
-
-			if (await fileExistsAtPath(taskDirPath)) {
-				const taskDirs = await fs.readdir(taskDirPath)
-				for (const taskDir of taskDirs) {
-					if (!preserveTaskIds.includes(taskDir)) {
-						await fs.rm(path.join(taskDirPath, taskDir), { recursive: true, force: true })
-					}
-				}
-			}
-		} catch (error) {
-			vscode.window.showErrorMessage(
-				`Error deleting task history: ${error instanceof Error ? error.message : String(error)}`,
-			)
-		}
-
-		await this.postStateToWebview()
-	}
-
-	async deleteTaskWithId(id: string) {
-		console.info("deleteTaskWithId: ", id)
-
-		try {
-			if (id === this.task?.taskId) {
-				await this.clearTask()
-				console.debug("cleared task")
-			}
-
-			const {
-				taskDirPath,
-				apiConversationHistoryFilePath,
-				uiMessagesFilePath,
-				contextHistoryFilePath,
-				taskMetadataFilePath,
-			} = await this.getTaskWithId(id)
-			const legacyMessagesFilePath = path.join(taskDirPath, "claude_messages.json")
-			const updatedTaskHistory = await this.deleteTaskFromState(id)
-
-			// Delete the task files
-			for (const filePath of [
-				apiConversationHistoryFilePath,
-				uiMessagesFilePath,
-				contextHistoryFilePath,
-				taskMetadataFilePath,
-				legacyMessagesFilePath,
-			]) {
-				const fileExists = await fileExistsAtPath(filePath)
-				if (fileExists) {
-					await fs.unlink(filePath)
-				}
-			}
-
-			await fs.rmdir(taskDirPath) // succeeds if the dir is empty
-
-			if (updatedTaskHistory.length === 0) {
-				await this.deleteAllTaskHistory()
-			}
-		} catch (error) {
-			console.debug(`Error deleting task:`, error)
-		}
-
-		await this.postStateToWebview()
-	}
-
 	async deleteTaskFromState(id: string) {
 		// Remove the task from history
-		const taskHistory = ((await getGlobalState(this.context, "taskHistory")) as HistoryItem[]) || []
+		const taskHistory = ((await getGlobalState(this.context, "taskHistory")) as HistoryItem[] | undefined) || []
 		const updatedTaskHistory = taskHistory.filter((task) => task.id !== id)
 		await updateGlobalState(this.context, "taskHistory", updatedTaskHistory)
 
@@ -1406,25 +723,24 @@ export class Controller {
 
 	async postStateToWebview() {
 		const state = await this.getStateToPostToWebview()
-
-		// CARET MODIFICATION: Mission 2 - 실제 브로드캐스트 값 로깅
-		const { caretLogger } = await import("../../../caret-src/utils/caret-logger")
-		caretLogger.info(`📡 [WEBVIEW-SEND] Sending state to webview - chatSettings.mode=${state.chatSettings.mode}`, "STATE")
-
-		await sendStateUpdate(state)
+		await sendStateUpdate(this.id, state)
 	}
 
 	async getStateToPostToWebview(): Promise<ExtensionState> {
+		// Get API configuration from cache for immediate access
+		const apiConfiguration = this.cacheService.getApiConfiguration()
+
 		const {
-			apiConfiguration,
 			lastShownAnnouncementId,
 			taskHistory,
 			autoApprovalSettings,
 			browserSettings,
-			chatSettings,
+			preferredLanguage,
+			openaiReasoningEffort,
+			mode,
 			userInfo,
 			mcpMarketplaceEnabled,
-			mcpRichDisplayEnabled,
+			mcpDisplayMode,
 			telemetrySetting,
 			planActSeparateModelsSetting,
 			enableCheckpointsSetting,
@@ -1434,55 +750,55 @@ export class Controller {
 			terminalReuseEnabled,
 			defaultTerminalProfile,
 			isNewUser,
+			welcomeViewCompleted,
 			mcpResponsesCollapsed,
 			terminalOutputLineLimit,
-			plan, // CARET MODIFICATION: Add plan to destructuring
-			isPayAsYouGo, // CARET MODIFICATION: Add isPayAsYouGo to destructuring
+			localClineRulesToggles,
+			localWindsurfRulesToggles,
+			localCursorRulesToggles,
+			localWorkflowToggles,
 		} = await getAllExtensionState(this.context)
 
-		// CARET MODIFICATION: Get UI Language setting separately (app-wide)
-		const uiLanguage = (await getAllExtensionState(this.context)).chatSettings.uiLanguage
+		const currentTaskItem = this.task?.taskId ? (taskHistory || []).find((item) => item.id === this.task?.taskId) : undefined
+		const checkpointTrackerErrorMessage = this.task?.taskState.checkpointTrackerErrorMessage
+		const clineMessages = this.task?.messageStateHandler.getClineMessages() || []
 
-		const localClineRulesToggles =
-			((await getWorkspaceState(this.context, "localClineRulesToggles")) as ClineRulesToggles) || {}
+		const processedTaskHistory = (taskHistory || [])
+			.filter((item) => item.ts && item.task)
+			.sort((a, b) => b.ts - a.ts)
+			.slice(0, 100) // for now we're only getting the latest 100 tasks, but a better solution here is to only pass in 3 for recent task history, and then get the full task history on demand when going to the task history view (maybe with pagination?)
 
-		const localWindsurfRulesToggles =
-			((await getWorkspaceState(this.context, "localWindsurfRulesToggles")) as ClineRulesToggles) || {}
-
-		const localCaretRulesToggles =
-			((await getWorkspaceState(this.context, "localCaretRulesToggles")) as ClineRulesToggles) || {}
-
-		const localCursorRulesToggles =
-			((await getWorkspaceState(this.context, "localCursorRulesToggles")) as ClineRulesToggles) || {}
-
-		const localWorkflowToggles = ((await getWorkspaceState(this.context, "workflowToggles")) as ClineRulesToggles) || {}
+		const latestAnnouncementId = getLatestAnnouncementId(this.context)
+		const shouldShowAnnouncement = lastShownAnnouncementId !== latestAnnouncementId
+		const platform = process.platform as Platform
+		const distinctId = telemetryService.distinctId
+		const version = this.context.extension?.packageJSON?.version ?? ""
+		const uriScheme = vscode.env.uriScheme
 
 		return {
-			version: this.context.extension?.packageJSON?.version ?? "",
+			version,
 			apiConfiguration,
-			uriScheme: vscode.env.uriScheme,
-			currentTaskItem: this.task?.taskId ? (taskHistory || []).find((item) => item.id === this.task?.taskId) : undefined,
-			checkpointTrackerErrorMessage: this.task?.checkpointTrackerErrorMessage,
-			clineMessages: this.task?.clineMessages || [],
-			taskHistory: (taskHistory || [])
-				.filter((item) => item.ts && item.task)
-				.sort((a, b) => b.ts - a.ts)
-				.slice(0, 100), // for now we're only getting the latest 100 tasks, but a better solution here is to only pass in 3 for recent task history, and then get the full task history on demand when going to the task history view (maybe with pagination?)
-			shouldShowAnnouncement: lastShownAnnouncementId !== this.latestAnnouncementId,
-			platform: process.platform as Platform,
+			uriScheme,
+			currentTaskItem,
+			checkpointTrackerErrorMessage,
+			clineMessages,
+			taskHistory: processedTaskHistory,
+			shouldShowAnnouncement,
+			platform,
 			autoApprovalSettings,
 			browserSettings,
-			chatSettings,
+			preferredLanguage,
+			openaiReasoningEffort,
+			mode,
 			userInfo,
 			mcpMarketplaceEnabled,
-			mcpRichDisplayEnabled,
+			mcpDisplayMode,
 			telemetrySetting,
 			planActSeparateModelsSetting,
 			enableCheckpointsSetting: enableCheckpointsSetting ?? true,
-			distinctId: telemetryService.distinctId,
+			distinctId,
 			globalClineRulesToggles: globalClineRulesToggles || {},
 			localClineRulesToggles: localClineRulesToggles || {},
-			localCaretRulesToggles: localCaretRulesToggles || {},
 			localWindsurfRulesToggles: localWindsurfRulesToggles || {},
 			localCursorRulesToggles: localCursorRulesToggles || {},
 			localWorkflowToggles: localWorkflowToggles || {},
@@ -1491,19 +807,16 @@ export class Controller {
 			terminalReuseEnabled,
 			defaultTerminalProfile,
 			isNewUser,
+			welcomeViewCompleted: welcomeViewCompleted as boolean, // Can be undefined but is set to either true or false by the migration that runs on extension launch in extension.ts
 			mcpResponsesCollapsed,
 			terminalOutputLineLimit,
-			uiLanguage, // CARET MODIFICATION: UI Language setting (app-wide)
-			plan, // CARET MODIFICATION: Include plan in returned state
-			isPayAsYouGo, // CARET MODIFICATION: Include isPayAsYouGo in returned state
 		}
 	}
 
 	async clearTask() {
 		if (this.task) {
-			await telemetryService.sendCollectedEvents(this.task.taskId)
 		}
-		this.task?.abortTask()
+		await this.task?.abortTask()
 		this.task = undefined // removes reference to it, so once promises end it will be garbage collected
 	}
 
@@ -1558,121 +871,4 @@ export class Controller {
 		await updateGlobalState(this.context, "taskHistory", history)
 		return history
 	}
-
-	// private async clearState() {
-	// 	this.context.workspaceState.keys().forEach((key) => {
-	// 		this.context.workspaceState.update(key, undefined)
-	// 	})
-	// 	this.context.globalState.keys().forEach((key) => {
-	// 		this.context.globalState.update(key, undefined)
-	// 	})
-	// 	this.context.secrets.delete("apiKey")
-	// }
-
-	// secrets
-
-	// Git commit message generation
-
-	async generateGitCommitMessage() {
-		try {
-			// Check if there's a workspace folder open
-			const cwd = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
-			if (!cwd) {
-				vscode.window.showErrorMessage("No workspace folder open")
-				return
-			}
-
-			// Get the git diff
-			const gitDiff = await getWorkingState(cwd)
-			if (gitDiff === "No changes in working directory") {
-				vscode.window.showInformationMessage("No changes in workspace for commit message")
-				return
-			}
-
-			// Show a progress notification
-			await vscode.window.withProgress(
-				{
-					location: vscode.ProgressLocation.Notification,
-					title: "Generating commit message...",
-					cancellable: false,
-				},
-				async (progress, token) => {
-					try {
-						// Format the git diff into a prompt
-						const prompt = `Based on the following git diff, generate a concise and descriptive commit message:
-
-${gitDiff.length > 5000 ? gitDiff.substring(0, 5000) + "\n\n[Diff truncated due to size]" : gitDiff}
-
-The commit message should:
-1. Start with a short summary (50-72 characters)
-2. Use the imperative mood (e.g., "Add feature" not "Added feature")
-3. Describe what was changed and why
-4. Be clear and descriptive
-
-Commit message:`
-
-						// Get the current API configuration
-						const { apiConfiguration } = await getAllExtensionState(this.context)
-
-						// Build the API handler
-						const apiHandler = buildApiHandler(apiConfiguration)
-
-						// Create a system prompt
-						const systemPrompt =
-							"You are a helpful assistant that generates concise and descriptive git commit messages based on git diffs."
-
-						// Create a message for the API
-						const messages = [
-							{
-								role: "user" as const,
-								content: prompt,
-							},
-						]
-
-						// Call the API directly
-						const stream = apiHandler.createMessage(systemPrompt, messages)
-
-						// Collect the response
-						let response = ""
-						for await (const chunk of stream) {
-							if (chunk.type === "text") {
-								response += chunk.text
-							}
-						}
-
-						// Extract the commit message
-						const commitMessage = extractCommitMessage(response)
-
-						// Apply the commit message to the Git input box
-						if (commitMessage) {
-							// Get the Git extension API
-							const gitExtension = vscode.extensions.getExtension("vscode.git")?.exports
-							if (gitExtension) {
-								const api = gitExtension.getAPI(1)
-								if (api && api.repositories.length > 0) {
-									const repo = api.repositories[0]
-									repo.inputBox.value = commitMessage
-									vscode.window.showInformationMessage("Commit message generated and applied")
-								} else {
-									vscode.window.showErrorMessage("No Git repositories found")
-								}
-							} else {
-								vscode.window.showErrorMessage("Git extension not found")
-							}
-						} else {
-							vscode.window.showErrorMessage("Failed to generate commit message")
-						}
-					} catch (innerError) {
-						const innerErrorMessage = innerError instanceof Error ? innerError.message : String(innerError)
-						vscode.window.showErrorMessage(`Failed to generate commit message: ${innerErrorMessage}`)
-					}
-				},
-			)
-		} catch (error) {
-			const errorMessage = error instanceof Error ? error.message : String(error)
-			vscode.window.showErrorMessage(`Failed to generate commit message: ${errorMessage}`)
-		}
-	}
-
-	// dev
 }

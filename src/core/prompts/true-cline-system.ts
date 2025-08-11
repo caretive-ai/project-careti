@@ -7,21 +7,21 @@ import { SYSTEM_PROMPT_CLAUDE4_EXPERIMENTAL } from "@core/prompts/model_prompts/
 import { SYSTEM_PROMPT_CLAUDE4 } from "@core/prompts/model_prompts/claude4"
 import { USE_EXPERIMENTAL_CLAUDE4_FEATURES } from "@core/task/index"
 
-// CARET MODIFICATION: 진짜 Cline 원본 시스템 프롬프트 함수
-// system-ts.cline 파일 내용을 기반으로 생성
-// Plan/Act 모드 지원을 위한 mode 파라미터 추가 (environment_details에서 처리됨)
+// CARET MODIFICATION: 진짜 Cline ?�본 ?�스???�롬?�트 ?�수
+// system-ts.cline ?�일 ?�용??기반?�로 ?�성
+// Plan/Act 모드 지?�을 ?�한 mode ?�라미터 추�? (environment_details?�서 처리??
 export const TRUE_CLINE_SYSTEM_PROMPT = async (
 	cwd: string,
 	supportsBrowserUse: boolean,
 	mcpHub: McpHub,
 	browserSettings: BrowserSettings,
 	isClaude4ModelFamily: boolean = false,
-	mode: "plan" | "act" = "act", // Plan/Act 모드 지원 (environment_details에서 사용)
+	mode: "plan" | "act" = "act", // Plan/Act 모드 지??(environment_details?�서 ?�용)
 ) => {
-	// CARET MODIFICATION: 진짜 Cline 원본 시스템 프롬프트 사용 로그
+	// CARET MODIFICATION: 진짜 Cline ?�본 ?�스???�롬?�트 ?�용 로그
 	const { caretLogger } = await import("../../../caret-src/utils/caret-logger")
 	caretLogger.success(
-		`✅ [TRUE-CLINE-SYSTEM] 진짜 Cline 원본 시스템 프롬프트 사용: mode=${mode}, isClaude4=${isClaude4ModelFamily}`,
+		`??[TRUE-CLINE-SYSTEM] 진짜 Cline ?�본 ?�스???�롬?�트 ?�용: mode=${mode}, isClaude4=${isClaude4ModelFamily}`,
 		"MODE_CHECK",
 	)
 

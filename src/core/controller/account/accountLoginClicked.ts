@@ -2,14 +2,7 @@ import { Controller } from "../index"
 import { AuthService } from "@/services/auth/AuthService"
 import { EmptyRequest, String } from "@shared/proto/cline/common"
 
-// CARET MODIFICATION: Lazy initialization to avoid undefined controller during module loading
-let authService: AuthService | null = null
-const getAuthService = (controller: Controller) => {
-	if (!authService) {
-		authService = AuthService.getInstance(controller)
-	}
-	return authService
-}
+const authService = AuthService.getInstance()
 
 /**
  * Handles the user clicking the login link in the UI.
@@ -19,8 +12,6 @@ const getAuthService = (controller: Controller) => {
  * @param controller The controller instance.
  * @returns The login URL as a string.
  */
-// CARET MODIFICATION: The core logic is now delegated to AuthService,
-// but Caret's specific authentication URL construction will be implemented within the AuthService.createAuthRequest method.
 export async function accountLoginClicked(controller: Controller, _: EmptyRequest): Promise<String> {
-	return await getAuthService(controller).createAuthRequest(controller)
+	return await authService.createAuthRequest(controller)
 }

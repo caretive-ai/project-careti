@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package caret;
+import "caret/common.proto";
+option java_package = "bot.caret.proto";
+option java_multiple_files = true;
+
+// Service for Caret-specific rule management
+service RulesService {
+  // Toggle a Caret rule (enable or disable)
+  rpc toggleCaretRule(ToggleCaretRuleRequest) returns (ClineRulesToggles);
+}
+
+// Request to toggle a Caret rule
+message ToggleCaretRuleRequest {
+  Metadata metadata = 1;
+  string rule_name = 2;
+  bool enabled = 3;
+}
+
+// Response for rule toggles (reuse from Cline)
+message ClineRulesToggles {
+  repeated string enabled_rules = 1;
+  repeated string disabled_rules = 2;
+}

@@ -47,7 +47,7 @@ export async function selectFiles(imagesAllowed: boolean): Promise<{ images: str
 				if (dimensions.width! > 7680 || dimensions.height! > 7680) {
 					console.warn(`Image dimensions exceed 7500px, skipping: ${filePath}`)
 					HostProvider.window.showMessage({
-						type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+						type: ShowMessageType.ERROR,
 						message: `Image too large: ${path.basename(filePath)} was skipped (dimensions exceed 7500px).`,
 					})
 					return null
@@ -55,7 +55,7 @@ export async function selectFiles(imagesAllowed: boolean): Promise<{ images: str
 			} catch (error) {
 				console.error(`Error reading file or getting dimensions for ${filePath}:`, error)
 				HostProvider.window.showMessage({
-					type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+					type: ShowMessageType.ERROR,
 					message: `Could not read dimensions for ${path.basename(filePath)}, skipping.`,
 				})
 				return null
@@ -73,7 +73,7 @@ export async function selectFiles(imagesAllowed: boolean): Promise<{ images: str
 				if (stats.size > 20 * 1000 * 1024) {
 					console.warn(`File too large, skipping: ${filePath}`)
 					HostProvider.window.showMessage({
-						type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+						type: ShowMessageType.ERROR,
 						message: `File too large: ${path.basename(filePath)} was skipped (size exceeds 20MB).`,
 					})
 					return null
@@ -81,7 +81,7 @@ export async function selectFiles(imagesAllowed: boolean): Promise<{ images: str
 			} catch (error) {
 				console.error(`Error checking file size for ${filePath}:`, error)
 				HostProvider.window.showMessage({
-					type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+					type: ShowMessageType.ERROR,
 					message: `Could not check file size for ${path.basename(filePath)}, skipping.`,
 				})
 				return null

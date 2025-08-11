@@ -83,6 +83,10 @@ export interface WebviewMessage {
 	shellIntegrationTimeout?: number
 	terminalReuseEnabled?: boolean
 	defaultTerminalProfile?: string
+	// CARET MODIFICATION: Cline build bug fix - missing bool property for fetchMcpMarketplace
+	// This property is used in Controller but missing from interface definition
+	// Will be removed when Cline fixes this issue upstream
+	bool?: boolean
 
 	// For Caret webview logging
 	entry?: any

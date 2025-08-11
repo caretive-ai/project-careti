@@ -213,7 +213,7 @@ export class AuthService {
 		const authUrl = vscode.Uri.parse(
 			`${audience}/api/auth?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`,
 		)
-		
+
 		const authUrlString = authUrl.toString()
 
 		await openExternal(authUrlString)

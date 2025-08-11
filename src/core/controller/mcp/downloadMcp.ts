@@ -1,5 +1,3 @@
-// CARET MODIFICATION: Merged with upstream/main. Proto paths updated to 'caret' package.
-// Unified Chatbot/Agent terminology, replacing plan/act mode.
 import { Controller } from ".."
 import { StringRequest } from "@shared/proto/cline/common"
 import { McpDownloadResponse } from "@shared/proto/cline/mcp"
@@ -68,12 +66,9 @@ export async function downloadMcp(controller: Controller, request: StringRequest
 - Once installed, demonstrate the server's capabilities by using one of its tools.
 Here is the project's README to help you get started:\n\n${mcpDetails.readmeContent}\n${mcpDetails.llmsInstallationContent}`
 
-		// CARET MODIFICATION: Chatbot/Agent 용어 통일 - plan/act → Chatbot/Agent
-		const { chatSettings } = await controller.getStateToPostToWebview()
-		// CARET MODIFICATION: Chatbot 모드에서는 MCP 설치 제한
-		if (chatSettings && chatSettings.mode === "chatbot") {
-			// CARET MODIFICATION: Chatbot/Agent 통일 - 올바른 메서드명 사용
-			await controller.toggleChatbotAgentModeWithChatSettings({ ...chatSettings, mode: "agent" })
+		const { mode } = await controller.getStateToPostToWebview()
+		if (mode === "plan") {
+			await controller.togglePlanActMode("act")
 		}
 
 		// Initialize task and show chat view

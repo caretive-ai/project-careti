@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package caret;
-option java_package = "bot.caret.proto";
+package host;
+option java_package = "bot.cline.host.proto";
 option java_multiple_files = true;
 
 import "cline/common.proto";
@@ -18,7 +18,7 @@ service WatchService {
 
 // Request to subscribe to file changes
 message SubscribeToFileRequest {
-  caret.Metadata metadata = 1;
+  cline.Metadata metadata = 1;
   string path = 2;
 }
 

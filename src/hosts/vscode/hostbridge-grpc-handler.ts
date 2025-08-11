@@ -1,6 +1,6 @@
 import { StreamingCallbacks } from "@/hosts/host-provider-types"
 import { hostServiceHandlers } from "@generated/hosts/vscode/hostbridge-grpc-service-config"
-import { GrpcRequestRegistry } from "@core/controller/grpc-request-registry"
+import { GrpcRequestRegistry } from "caret-src/core/controller/grpc-request-registry"
 
 /**
  * Type definition for a streaming response handler

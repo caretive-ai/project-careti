@@ -3,14 +3,7 @@ import { Empty } from "@shared/proto/cline/common"
 import type { EmptyRequest } from "@shared/proto/cline/common"
 import type { Controller } from "../index"
 
-// CARET MODIFICATION: Lazy initialization to avoid undefined controller during module loading
-let authService: AuthService | null = null
-const getAuthService = (controller: Controller) => {
-	if (!authService) {
-		authService = AuthService.getInstance(controller)
-	}
-	return authService
-}
+const authService = AuthService.getInstance()
 /**
  * Handles the account logout action
  * @param controller The controller instance
@@ -19,6 +12,6 @@ const getAuthService = (controller: Controller) => {
  */
 export async function accountLogoutClicked(controller: Controller, _request: EmptyRequest): Promise<Empty> {
 	await controller.handleSignOut()
-	await getAuthService(controller).handleDeauth()
+	await authService.handleDeauth()
 	return Empty.create({})
 }

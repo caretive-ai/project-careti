@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package caret;
+import "caret/common.proto";
+option java_package = "bot.caret.proto";
+option java_multiple_files = true;
+
+// Service for Caret-specific chat functionality
+service ChatService {
+  // Set chatbot/agent mode and related settings
+  rpc setChatbotAgentMode(SetChatbotAgentModeRequest) returns (Empty);
+  
+  // Get current chat settings
+  rpc getChatSettings(EmptyRequest) returns (ChatSettings);
+  
+  // Update chat settings
+  rpc updateChatSettings(UpdateChatSettingsRequest) returns (Empty);
+}
+
+// Caret-specific mode enum
+enum ChatbotAgentMode {
+  CHATBOT_MODE = 0;
+  AGENT_MODE = 1;
+}
+
+// Chat settings message
+message ChatSettings {
+  ChatbotAgentMode mode = 1;
+  optional string preferred_language = 2;
+  optional string open_ai_reasoning_effort = 3;
+  optional string ui_language = 4;
+  optional string mode_system = 5;
+}
+
+// Request to set chatbot/agent mode
+message SetChatbotAgentModeRequest {
+  Metadata metadata = 1;
+  ChatbotAgentMode mode = 2;
+}
+
+// Request to update chat settings
+message UpdateChatSettingsRequest {
+  Metadata metadata = 1;
+  ChatSettings chat_settings = 2;
+}

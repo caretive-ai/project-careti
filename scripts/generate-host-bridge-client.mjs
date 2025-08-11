@@ -103,12 +103,6 @@ import { BaseGrpcClient } from "@/hosts/external/grpc-types"
 
 ${imports.join("\n")}
 
-// CARET MODIFICATION: Temporary type definitions until nice-grpc generation is fixed
-// TODO: Fix proto generation to properly export ServiceDefinition and ServiceClient types
-${Object.keys(hostServices).map(serviceName => `
-type ${serviceName}Client = any
-const ${serviceName}Definition = {} as any`).join("")}
-
 ${clientImplementations.join("\n\n")}
 `
 	// Write output file

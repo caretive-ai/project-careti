@@ -38,7 +38,7 @@ describe("Mention Regex", () => {
 	describe("Edge Cases", () => {
 		it("handles edge cases correctly", () => {
 			const cases: Array<[string, string]> = [
-				["@/C:\\Users\\name\\path\\to\\文件夹\\file.txt", "@/C:\\Users\\name\\path\\to\\文件夹\\file.txt"],
+				["@/C:\\Users\\name\\path\\to\\?�件�?\file.txt", "@/C:\\Users\\name\\path\\to\\?�件�?\file.txt"],
 				["@/path123/file-name_2.0.txt", "@/path123/file-name_2.0.txt"],
 			]
 
@@ -182,9 +182,9 @@ describe("Mention Regex", () => {
 	describe("Non-Latin Character Support", () => {
 		it("handles international characters in paths", () => {
 			const cases: Array<[string, string]> = [
-				["@/path/to/你好/file.txt", "@/path/to/你好/file.txt"],
-				["@/C:\\用户\\документы\\файл.txt", "@/C:\\用户\\документы\\файл.txt"],
-				["@/путь/к/файлу.txt", "@/путь/к/файлу.txt"],
+				["@/path/to/你�?/file.txt", "@/path/to/你�?/file.txt"],
+				["@/C:\\?�户\\док?мен??\\?айл.txt", "@/C:\\?�户\\док?мен??\\?айл.txt"],
+				["@/п???/к/?айл?.txt", "@/п???/к/?айл?.txt"],
 				["@/C:\\folder\\file_äöü.txt", "@/C:\\folder\\file_äöü.txt"],
 			]
 

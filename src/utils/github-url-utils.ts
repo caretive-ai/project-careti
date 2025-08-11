@@ -155,7 +155,7 @@ export async function openUrlInBrowser(url: string): Promise<void> {
 			// Last fallback: Show a message with instructions
 			HostProvider.window
 				.showMessage({
-					type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+					type: ShowMessageType.INFORMATION,
 					message: "Couldn't open the URL automatically. It has been copied to your clipboard.",
 					options: {
 						items: ["Copy URL Again"],

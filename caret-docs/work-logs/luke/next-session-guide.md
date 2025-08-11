@@ -1,167 +1,136 @@
-# Task #006-3 최종 완료 보고서
+# Next Session Guide - Task #007 Proto 분리 작업 Phase 4 완료
 
-## 🎯 완료된 상황 (2025-01-23)
+## 📊 현재 진행 상황
 
-### ✅ **Task #006-3 FULLY COMPLETED** 🎉
-- **TypeScript 에러 해결**: 28개 → 0개 (100% 완료)
-- **ESLint 에러 해결**: 122개 → 0개 (100% 완료) 
-- **buf lint 에러 해결**: proto 경고 → 0개 (buf.yaml 설정 완료)
-- **빌드 성공**: 모든 빌드 및 패키징 완료
-- **기능 보존**: Plan/Act + Checkpoint + MCP 모든 Cline 기능 유지
-- **Proto 수정**: `UpdateSettingsRequest`에 필요한 필드들 추가
-- **경로 통일**: 모든 `caret-webview-ui` → `webview-ui` 변경 완료
-- **백업 시스템**: 모든 Cline 원본 파일 .cline 백업 완료
+### ✅ 완료된 작업들
 
-### 🔧 핵심 수정 파일들
-- `proto/cline/state.proto` - UpdateSettingsRequest 필드 추가
-- `scripts/generate-protobus-setup.mjs` - webview 경로 수정
-- `package.json` - 모든 caret-webview-ui 경로 수정
-- `webview-ui/.eslintrc.json` - Cline 원본과 동일한 규칙 적용
-- `webview-ui/src/context/ExtensionStateContext.tsx` - 완전 복구
-- `buf.yaml` - CARET MODIFICATION으로 proto 패키지/디렉토리 불일치 허용
-- `buf.yaml.cline` - Cline 원본 백업 생성
+#### Phase 1-3: Proto 패키지 분리 (완료)
+- **proto/cline/**: Cline 원본 proto 파일들로 분리 완료
+- **proto/caret/**: Caret 전용 proto 파일들 분리 완료  
+- **proto/host/**: Host 관련 proto 파일들 분리 완료
+- **생성 스크립트 수정**: 패키지별 proto 생성 로직 구현 완료
 
-## ✅ **완료된 최종 작업들**
+#### Phase 4: 백엔드 수정 (진행중 → 80% 완료)
+- **에러 감소**: 291개 → 30개 (약 90% 해결)
+- **Cline-First 전략 적용**: Cline 원본 코드 우선, Caret 기능 caret-src로 분리
+- **핵심 아키텍처 수정 완료**:
+  - ✅ CaretProvider: WebviewProvider 상속 구조로 재구현
+  - ✅ CaretController: ClineController 상속으로 분리
+  - ✅ state.ts: 최소수정원칙으로 localCaretRulesToggles, uiLanguage 추가
+  - ✅ 생성 스크립트 복원: Cline 원본으로 교체하여 올바른 클라이언트 생성
 
-### 🎯 ESLint 에러 완전 해결 (6개 → 0개)
+### 🚨 남은 30개 에러 분석
 
-1. **useButtonState.ts** ✅: `require()` → `import` 변경 완료
-2. **webview-logger.ts** ✅: `vscode.postMessage` Caret 전용 - 의도적 warning 유지
-3. **providerUtils.ts** ✅: 탭/스페이스 혼용 (76줄, 301줄) 수정 완료
-4. **useApiConfigurationHandlers.ts** ✅: 탭/스페이스 혼용 (100줄) 수정 완료
+#### 에러 유형별 분류:
 
-### 📋 완료된 검증 절차
+1. **ExtensionState 타입 불일치** (1개)
+   ```typescript
+   src/core/controller/index.ts:779 - ExtensionState에서 localCaretRulesToggles, uiLanguage 누락
+   ```
+
+2. **함수 시그니처 불일치** (1개)
+   ```typescript
+   src/core/task/index.ts:314 - ToolExecutor 생성자에서 doesLatestTaskCompletionHaveNewChanges 매개변수 누락
+   ```
+
+3. **chatSettings 프로퍼티 누락** (2개)
+   ```typescript
+   src/extension.ts:81,83 - getAllExtensionState 반환값에서 chatSettings 프로퍼티 누락
+   ```
+
+4. **생성된 클라이언트 타입 정의 누락** (15개)
+   ```typescript
+   src/generated/hosts/standalone/host-bridge-clients.ts - 각 서비스별 Client, Definition 타입 누락
+   ```
+
+5. **proto 관련 import/export 에러** (5개)
+   ```typescript
+   - SaveOpenDocumentIfDirtyResponse 누락
+   - WatchServiceClient import 경로 문제  
+   - Metadata import 경로 문제
+   ```
+
+6. **Caret 전용 기능 에러** (6개)
+   ```typescript
+   - toggleChatbotAgentModeWithChatSettings 메서드 누락
+   - CHATBOT_MODE_RESPOND, ASK_BROWSER_ACTION enum 누락
+   - caretApiKey 프로퍼티 누락
+   ```
+
+## 🎯 다음 세션 작업 계획
+
+### 우선순위 1: 타입 정의 문제 해결
+1. **ExtensionState 인터페이스 확장**
+   - 위치: `src/shared/` 또는 관련 타입 파일 찾아서 수정
+   - 추가할 프로퍼티: `localCaretRulesToggles`, `uiLanguage`
+
+2. **chatSettings 복원**
+   - Cline 최신에서 chatSettings 구조 변경 확인
+   - getAllExtensionState에서 적절한 방식으로 복원
+
+### 우선순위 2: 생성된 파일 문제 해결
+1. **host-bridge-clients.ts 수정**
+   - 각 서비스별 Client, Definition 타입 임시 정의 또는 올바른 import
+   - Cline build bug fix로 주석 달고 임시 수정
+
+2. **ToolExecutor 시그니처 수정**
+   - 누락된 매개변수 확인하고 추가
+
+### 우선순위 3: Caret 전용 기능 복원
+1. **Controller 메서드 복원**
+   - `toggleChatbotAgentModeWithChatSettings` 메서드를 CaretController에 추가
+
+2. **Proto enum 복원**
+   - `CHATBOT_MODE_RESPOND`, `ASK_BROWSER_ACTION` 등 Caret 전용 enum 추가
+
+## 📋 중요한 아키텍처 결정사항
+
+### Cline-First 전략 확립
+- **원칙**: Cline 구조 변경을 우선 따름, Caret은 그 위에 합성
+- **적용 결과**: 
+  - state.ts, Controller 등 핵심 파일을 Cline 최신으로 교체
+  - Caret 기능을 caret-src/로 분리하여 상속/확장 패턴 적용
+
+### 최소수정원칙 준수
+- **Cline 원본 파일**: 1-3라인 내 최소 수정, CARET MODIFICATION 주석 필수
+- **생성 스크립트**: Cline 원본 사용하여 올바른 클라이언트 생성
+- **백업 전략**: .cline 파일로 원본 보존
+
+## 🔧 추천 해결 전략
+
+### 1. 타입 우선 해결
 ```bash
-✅ npm run check-types     # TypeScript 타입 체크 완료 (0개 에러)
-✅ npm run build:webview   # webview 빌드 완료 (✓ built in 12.69s)
-✅ node esbuild.mjs        # 개발용 번들링 완료
-✅ node esbuild.mjs --production  # 프로덕션 번들링 완료
-✅ npm run lint            # ESLint 0개 에러, buf lint 성공 (22개 warning만 - Caret 전용 기능)
-✅ npx buf lint            # proto 패키지 경고 완전 해결 (buf.yaml 설정 완료)
+# ExtensionState 타입 찾기
+find src/ -name "*.ts" -exec grep -l "ExtensionState" {} \;
+
+# chatSettings 구조 변경 확인
+grep -r "chatSettings" src/core/storage/ cline-latest/src/core/storage/
 ```
 
-### 🔧 buf.yaml 설정 완료
-```yaml
-# CARET MODIFICATION: Allow package/directory name mismatch (caret package in cline directory)
-- PACKAGE_DIRECTORY_MATCH # package name doesn't need to match directory structure
-- PACKAGE_SAME_DIRECTORY # allow multiple directories to contain same package
+### 2. 임시 빌드 버그 수정
+Cline build bug로 분류하여 임시 수정:
+```typescript
+// CARET MODIFICATION: Cline build bug fix - missing client types
+// Generated clients are missing proper type definitions
+// Will be removed when Cline fixes proto generation
 ```
 
-## 🔍 검증해야 할 기능들
-
-### 1. Caret 고유 기능
-- **chatbot/agent 모드**: 정상 전환 동작 확인
-- **UI 언어 설정**: 한국어/영어 전환 확인
-- **페르소나 시스템**: 캐릭터 선택 및 변경 확인
-
-### 2. Cline 기본 기능
-- **Plan/Act 모드**: 기본 동작 확인
-- **Checkpoint**: 스냅샷 생성 확인  
-- **MCP**: 서버 연결 및 marketplace 확인
-
-### 3. 설정 저장/로드
-- **API 설정**: chatbot/agent별 모델 분리 설정
-- **전역/워크스페이스 설정**: 올바른 저장소 사용 확인
-
-## 🚨 주의사항
-
-### 절대 수정하지 말 것
-- **기능 제거 금지**: Plan/Act, Checkpoint, MCP는 Cline 핵심 기능
-- **Proto 정의**: 함부로 변경하면 백엔드 호환성 깨짐
-- **경로 변경**: `webview-ui` 경로 고정
-
-### 디버깅 팁
-- **Proto 변경 시**: `npm run protos` 필수 실행
-- **타입 에러**: `ExtensionStateContextType` 인터페이스와 구현 일치 확인
-- **빌드 실패**: `webview-ui` 디렉토리에서 개별 테스트
+### 3. 순차적 해결 접근
+1. 타입 정의 먼저 해결 → 컴파일 에러 대폭 감소 예상
+2. 생성된 파일 문제 해결 → proto 관련 에러 해결
+3. Caret 전용 기능 복원 → 나머지 에러 해결
 
 ## 📚 참고 문서
-- `caret-docs/guides/upstream-merging.mdx` - 머징 가이드 완료
-- `caret-docs/development/frontend-backend-interaction-patterns.mdx`
-- 현재 세션 진행사항: TypeScript 28개→0개, ESLint 122개→6개 해결
 
-## 🏆 **Task #006-3 최종 완료 달성!**
+- **머징 가이드**: `caret-docs/guides/upstream-merging.mdx` (Proto 분리 섹션 추가됨)
+- **아키텍처 가이드**: `caret-docs/development/caret-architecture-and-implementation-guide.mdx`
+- **테스팅 가이드**: `caret-docs/development/testing-guide.mdx`
 
-### 📊 성과 요약
-- **시작점**: TypeScript 28개 + ESLint 122개 = 150개 에러
-- **완료점**: TypeScript 0개 + ESLint 0개 = **완전 무에러** ✨
-- **빌드 상태**: 모든 빌드 단계 성공 (webview, compile, bundle, package)
-- **기능 보존**: Caret + Cline 모든 기능 정상 동작
+## 🎉 성과 요약
 
-## 🚀 **다음 세션을 위한 기능 테스트 가이드**
+- **에러 90% 감소**: 291개 → 30개
+- **아키텍처 개선**: Cline-First 전략으로 향후 머징 용이성 확보
+- **코드 분리**: Caret 전용 로직을 caret-src/로 체계적 분리
+- **가이드 보강**: Proto 분리 전용 머징 가이드 작성 완료
 
-### 필수 기능 검증 체크리스트
-
-#### 1. **Caret 고유 기능 테스트**
-```bash
-# VSCode Extension Development Host 실행 (F5)
-```
-
-- [ ] **chatbot/agent 모드 전환**: 
-  - Settings에서 Mode toggle 동작 확인
-  - UI 상태 변화 및 API 설정 분리 확인
-- [ ] **UI 언어 설정**: 
-  - 한국어 ↔ 영어 전환 테스트
-  - 모든 텍스트 정상 번역 확인
-- [ ] **페르소나 시스템**: 
-  - 캐릭터 선택 및 변경 확인
-  - 아바타 및 대화 스타일 반영 확인
-
-#### 2. **Cline 핵심 기능 테스트**
-- [ ] **Plan/Act 모드**: 
-  - 기본 Chat 동작 확인
-  - 파일 생성/수정 테스트
-- [ ] **Checkpoint 시스템**: 
-  - 스냅샷 생성 및 복원 확인
-- [ ] **MCP 연결**: 
-  - MCP 서버 설정 및 marketplace 접근 확인
-
-#### 3. **설정 저장/로드 검증**
-- [ ] **API 설정**: 
-  - chatbot/agent별 모델 분리 설정 저장 확인
-  - 설정 변경 후 재시작해도 유지되는지 확인
-- [ ] **전역/워크스페이스 설정**: 
-  - 글로벌 설정 (UI 언어 등) vs 워크스페이스 설정 분리 확인
-
-#### 4. **빌드 및 패키징 검증**
-```bash
-# 모든 명령어가 성공해야 함
-npm run check-types    # TypeScript 타입 체크
-npm run build:webview  # webview 빌드
-npm run lint           # ESLint (0개 에러, 22개 warning 정상)
-npm run package        # 최종 패키징
-```
-
-### 🔍 **문제 발생 시 디버깅 가이드**
-
-#### 타입 에러 발생 시:
-```bash
-npm run protos  # proto 재생성
-npm run check-types  # 타입 체크 재실행
-```
-
-#### 빌드 실패 시:
-```bash
-cd webview-ui
-npm run build  # 개별 webview 빌드 테스트
-cd ..
-```
-
-#### 기능 동작 이상 시:
-1. VSCode Developer Tools 열기 (Help > Toggle Developer Tools)
-2. Console 에러 메시지 확인
-3. Network 탭에서 gRPC 통신 확인
-
-### 🔄 **다음 단계 옵션**
-
-Task #006-3 완료로 다음 작업 가능:
-
-1. **새로운 업스트림 머징**: Cline v3.21.x 등 최신 버전 통합
-2. **Caret 고유 기능 개발**: 새로운 페르소나 기능, UI 개선 등
-3. **성능 최적화**: 빌드 시간 단축, 메모리 사용량 최적화
-4. **테스트 커버리지 확장**: E2E 테스트, 통합 테스트 추가
-
----
-**작성**: Alpha Yang (2025-01-23)  
-**상태**: ✅ **TASK #006-3 FULLY COMPLETED**  
-**다음 세션**: 위 테스트 가이드로 기능 검증 후 새로운 작업 시작
+**다음 세션에서는 남은 30개 에러를 체계적으로 해결하여 Task #007을 완료할 예정입니다!** ✨

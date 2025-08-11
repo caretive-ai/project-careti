@@ -16,13 +16,13 @@ export async function resetState(controller: Controller, request: ResetStateRequ
 	try {
 		if (request.global) {
 			HostProvider.window.showMessage({
-				type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+				type: ShowMessageType.INFORMATION,
 				message: "Resetting global state...",
 			})
 			await resetGlobalState(controller)
 		} else {
 			HostProvider.window.showMessage({
-				type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+				type: ShowMessageType.INFORMATION,
 				message: "Resetting workspace state...",
 			})
 			await resetWorkspaceState(controller)
@@ -34,7 +34,7 @@ export async function resetState(controller: Controller, request: ResetStateRequ
 		}
 
 		HostProvider.window.showMessage({
-			type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+			type: ShowMessageType.INFORMATION,
 			message: "State reset",
 		})
 		await controller.postStateToWebview()
@@ -45,7 +45,7 @@ export async function resetState(controller: Controller, request: ResetStateRequ
 	} catch (error) {
 		console.error("Error resetting state:", error)
 		HostProvider.window.showMessage({
-			type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+			type: ShowMessageType.ERROR,
 			message: `Failed to reset state: ${error instanceof Error ? error.message : String(error)}`,
 		})
 		throw error

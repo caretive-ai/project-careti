@@ -14,13 +14,20 @@ export async function getUserOrganizations(controller: Controller, request: Empt
 			throw new Error("Account service not available")
 		}
 
-		// CARET MODIFICATION: Temporarily disable organization fetching as it's not yet implemented in CaretAccountService.
-		// TODO: Re-enable this feature when the backend API is ready.
 		// Fetch user organizations from the account service
-		// const organizations = await controller.accountService.fetchUserOrganizationsRPC()
+		const organizations = await controller.accountService.fetchUserOrganizationsRPC()
 
 		return UserOrganizationsResponse.create({
-			organizations: [],
+			organizations:
+				organizations?.map((org) =>
+					UserOrganization.create({
+						active: org.active,
+						memberId: org.memberId,
+						name: org.name,
+						organizationId: org.organizationId,
+						roles: org.roles ? [...org.roles] : [],
+					}),
+				) || [],
 		})
 	} catch (error) {
 		throw error

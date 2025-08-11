@@ -34,7 +34,6 @@ export async function subscribeToTheme(
 
 	// Send the current theme immediately upon subscription
 	const theme = await getTheme()
-	// CARET MODIFICATION: Check if theme is not undefined before processing.
 	if (theme) {
 		try {
 			const themeEvent = String.create({
@@ -48,8 +47,6 @@ export async function subscribeToTheme(
 			console.error("Error sending initial theme:", error)
 			activeThemeSubscriptions.delete(responseStream)
 		}
-	} else {
-		console.log("Theme could not be loaded, skipping initial theme event.")
 	}
 }
 

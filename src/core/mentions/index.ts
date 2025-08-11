@@ -79,7 +79,7 @@ export async function parseMentions(
 		} catch (error) {
 			launchBrowserError = error
 			HostProvider.window.showMessage({
-				type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+				type: ShowMessageType.ERROR,
 				message: `Error fetching content for ${urlMention}: ${error.message}`,
 			})
 		}
@@ -99,7 +99,7 @@ export async function parseMentions(
 					result = markdown
 				} catch (error) {
 					HostProvider.window.showMessage({
-						type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+						type: ShowMessageType.ERROR,
 						message: `Error fetching content for ${mention}: ${error.message}`,
 					})
 					result = `Error fetching content: ${error.message}`
@@ -187,7 +187,7 @@ async function getFileOrFolderContent(mentionPath: string, cwd: string): Promise
 			const fileContentPromises: Promise<string | undefined>[] = []
 			entries.forEach((entry, index) => {
 				const isLast = index === entries.length - 1
-				const linePrefix = isLast ? "└── " : "├── "
+				const linePrefix = isLast ? "?��??� " : "?��??� "
 				if (entry.isFile()) {
 					folderContent += `${linePrefix}${entry.name}\n`
 					const filePath = path.join(mentionPath, entry.name)

@@ -1,4 +1,4 @@
-// CARET MODIFICATION: PostHog 완전 비활성화 (백업: TelemetryService-ts.cline)
+// CARET MODIFICATION: PostHog ?�전 비활?�화 (백업: TelemetryService-ts.cline)
 import * as vscode from "vscode"
 import { version as extensionVersion } from "../../../../package.json"
 import { HostProvider } from "@hosts/host-provider"
@@ -140,7 +140,7 @@ class TelemetryService {
 			if (didUserOptIn) {
 				void HostProvider.window
 					.showMessage({
-						type: ShowMessageType.WINDOW_MESSAGE_WARNING,
+						type: ShowMessageType.WARNING,
 						message:
 							"Anonymous Cline error and usage reporting is enabled, but VSCode telemetry is disabled. To enable error and usage reporting for this extension, enable VSCode telemetry in settings.",
 						options: {

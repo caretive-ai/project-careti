@@ -14,7 +14,7 @@ import { BrowserActionResult } from "@shared/ExtensionMessage"
 import { BrowserSettings } from "@shared/BrowserSettings"
 import { discoverChromeInstances, testBrowserConnection, isPortOpen } from "./BrowserDiscovery"
 import * as chromeLauncher from "chrome-launcher"
-import { Controller } from "@core/controller"
+import { Controller } from "caret-src/core/controller"
 import { telemetryService } from "@/services/posthog/telemetry/TelemetryService"
 import os from "os"
 

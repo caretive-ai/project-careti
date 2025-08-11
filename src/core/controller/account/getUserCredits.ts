@@ -16,9 +16,9 @@ export async function getUserCredits(controller: Controller, request: EmptyReque
 
 		// Call the individual RPC variants in parallel
 		const [balance, usageTransactions, paymentTransactions] = await Promise.all([
-			controller.accountService.fetchBalance(),
-			controller.accountService.fetchUsageTransactions(),
-			controller.accountService.fetchPaymentTransactions(),
+			controller.accountService.fetchBalanceRPC(),
+			controller.accountService.fetchUsageTransactionsRPC(),
+			controller.accountService.fetchPaymentTransactionsRPC(),
 		])
 
 		// If either call fails (returns undefined), throw an error

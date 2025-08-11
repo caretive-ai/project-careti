@@ -23,9 +23,9 @@ describe("CheckpointIssueResolution", () => {
 		}
 	})
 
-	describe("긴 파일명 문제 해결", () => {
-		it("새로운 shadow git에서 core.longpaths=true 설정이 적용되어야 한다", async () => {
-			// RED: 이 테스트는 현재 실패할 것입니다
+	describe("�??�일�?문제 ?�결", () => {
+		it("?�로??shadow git?�서 core.longpaths=true ?�정???�용?�어???�다", async () => {
+			// RED: ???�스?�는 ?�재 ?�패??것입?�다
 			const gitPath = path.join(tempDir, ".git")
 
 			await gitOperations.initShadowGit(gitPath, tempDir, "test-task")
@@ -36,25 +36,25 @@ describe("CheckpointIssueResolution", () => {
 			expect(longpathsConfig.value).toBe("true")
 		})
 
-		it("기존 shadow git에서 core.longpaths=true 설정이 적용되어야 한다", async () => {
-			// RED: 이 테스트는 현재 실패할 것입니다
+		it("기존 shadow git?�서 core.longpaths=true ?�정???�용?�어???�다", async () => {
+			// RED: ???�스?�는 ?�재 ?�패??것입?�다
 			const gitPath = path.join(tempDir, ".git")
 
-			// 먼저 기존 git repo 생성 (longpaths 없이)
+			// 먼�? 기존 git repo ?�성 (longpaths ?�이)
 			const git = simpleGit(tempDir)
 			await git.init()
 			await git.addConfig("core.worktree", tempDir)
 			await git.addConfig("user.name", "Test User")
 			await git.addConfig("user.email", "test@example.com")
 
-			// 기존 repo에 대해 initShadowGit 호출
+			// 기존 repo???�??initShadowGit ?�출
 			await gitOperations.initShadowGit(gitPath, tempDir, "test-task")
 
 			const longpathsConfig = await git.getConfig("core.longpaths")
 			expect(longpathsConfig.value).toBe("true")
 		})
 
-		it("Windows에서만 core.longpaths 설정이 적용되어야 한다", async () => {
+		it("Windows?�서�?core.longpaths ?�정???�용?�어???�다", async () => {
 			const gitPath = path.join(tempDir, ".git")
 
 			await gitOperations.initShadowGit(gitPath, tempDir, "test-task")
@@ -70,18 +70,18 @@ describe("CheckpointIssueResolution", () => {
 		})
 	})
 
-	describe("Globbing timeout 문제 해결", () => {
-		it("심볼릭 링크가 있어도 followSymbolicLinks=false로 무한 루프를 방지해야 한다", async () => {
-			// 테스트 파일 구조 생성
+	describe("Globbing timeout 문제 ?�결", () => {
+		it("?�볼�?링크가 ?�어??followSymbolicLinks=false�?무한 루프�?방�??�야 ?�다", async () => {
+			// ?�스???�일 구조 ?�성
 			const testFile = path.join(tempDir, "test.txt")
 			await fs.writeFile(testFile, "test content")
 
-			// 심볼릭 링크 생성 (Windows에서는 권한 문제로 건너뛸 수 있음)
+			// ?�볼�?링크 ?�성 (Windows?�서??권한 문제�?건너?????�음)
 			try {
 				const symlinkPath = path.join(tempDir, "symlink")
 				await fs.symlink(tempDir, symlinkPath)
 			} catch (error) {
-				// Windows에서 권한 없으면 테스트 건너뛰기
+				// Windows?�서 권한 ?�으�??�스??건너?�기
 				if (process.platform === "win32") {
 					console.warn("Skipping symlink test on Windows due to permissions")
 					return
@@ -89,19 +89,19 @@ describe("CheckpointIssueResolution", () => {
 				throw error
 			}
 
-			// RED: 현재 followSymbolicLinks 설정이 없어서 시간이 오래 걸리거나 무한 루프가 발생할 수 있습니다
+			// RED: ?�재 followSymbolicLinks ?�정???�어???�간???�래 걸리거나 무한 루프가 발생?????�습?�다
 			const startTime = Date.now()
 			const [files] = await listFiles(tempDir, true, 1000)
 			const duration = Date.now() - startTime
 
-			// 5초 이내에 완료되어야 함 (무한 루프 방지)
+			// 5�??�내???�료?�어????(무한 루프 방�?)
 			expect(duration).toBeLessThan(5000)
 			expect(files.length).toBeGreaterThan(0)
 		})
 
-		it("followSymbolicLinks=false 옵션이 적용되어 있어야 한다", async () => {
-			// 이 테스트는 구현을 확인하는 용도
-			// RED: 현재 list-files.ts에 followSymbolicLinks: false가 없어서 실패할 것입니다
+		it("followSymbolicLinks=false ?�션???�용?�어 ?�어???�다", async () => {
+			// ???�스?�는 구현???�인?�는 ?�도
+			// RED: ?�재 list-files.ts??followSymbolicLinks: false가 ?�어???�패??것입?�다
 
 			const listFilesPath = path.join(__dirname, "../../../services/glob/list-files.ts")
 			const content = await fs.readFile(listFilesPath, "utf8")

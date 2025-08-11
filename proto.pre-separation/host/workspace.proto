@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package caret;
+option java_package = "bot.caret.proto";
+option java_multiple_files = true;
+
+// Provides methods for working with workspaces/projects.
+service WorkspaceService {
+  // Returns a list of the top level directories of the workspace.
+  rpc getWorkspacePaths(GetWorkspacePathsRequest) returns (GetWorkspacePathsResponse);
+  // Saves an open document if it's open in the editor and has unsaved changes. 
+  // Returns true if the document was saved, returns false if the document was not found, or did not
+  // need to be saved.
+  rpc saveOpenDocumentIfDirty(SaveOpenDocumentIfDirtyRequest) returns (SaveOpenDocumentIfDirtyResponse);
+}
+
+message GetWorkspacePathsRequest {
+  // The unique ID for the workspace/project.
+  // This is currently optional in vscode. It is required in other environments where cline is running at
+  // the application level, and the user can open multiple projects.
+  optional string id = 1;
+}
+
+message GetWorkspacePathsResponse {
+  // The unique ID for the workspace/project.
+  optional string id = 1;
+  repeated string paths = 2;
+}
+
+message SaveOpenDocumentIfDirtyRequest {
+  optional string file_path = 2;
+}
+message SaveOpenDocumentIfDirtyResponse {
+  // Returns true if the document was saved. 
+  optional bool was_saved = 1;
+}

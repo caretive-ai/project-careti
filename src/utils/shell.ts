@@ -146,7 +146,7 @@ function getLinuxShellFromVSCode(): string | null {
 // -----------------------------------------------------
 
 /**
- * Tries to get a user’s shell from os.userInfo() (works on Unix if the
+ * Tries to get a user?�s shell from os.userInfo() (works on Unix if the
  * underlying system call is supported). Returns null on error or if not found.
  */
 function getShellFromUserInfo(): string | null {

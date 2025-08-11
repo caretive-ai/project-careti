@@ -166,27 +166,27 @@ export class GitOperations {
 	 * - LFS pattern setup fails
 	 */
 	public async initShadowGit(gitPath: string, cwd: string, taskId: string): Promise<string> {
-		console.info(`[Caret Checkpoint] ========== Shadow Git 초기화 시작 ==========`)
+		console.info(`[Caret Checkpoint] ========== Shadow Git 초기???�작 ==========`)
 		console.info(`[Caret Checkpoint] Git 경로: ${gitPath}`)
-		console.info(`[Caret Checkpoint] 작업 디렉토리: ${cwd}`)
+		console.info(`[Caret Checkpoint] ?�업 ?�렉?�리: ${cwd}`)
 
-		// CARET MODIFICATION: index.lock 파일 사전 정리
+		// CARET MODIFICATION: index.lock ?�일 ?�전 ?�리
 		await this.ensureNoIndexLock(gitPath)
 
 		// If repo exists, just verify worktree
 		if (await fileExistsAtPath(gitPath)) {
 			console.time("existing-repo-setup")
-			console.info(`[Caret Checkpoint] 기존 Shadow Git 저장소 발견, 설정 확인 중...`)
+			console.info(`[Caret Checkpoint] 기존 Shadow Git ?�?�소 발견, ?�정 ?�인 �?..`)
 			const git = simpleGit(path.dirname(gitPath))
 			const worktree = await git.getConfig("core.worktree")
 			if (worktree.value !== cwd) {
 				throw new Error("Checkpoints can only be used in the original workspace: " + worktree.value)
 			}
-			console.warn(`[Caret Checkpoint] 기존 Shadow Git 사용: ${gitPath}`)
+			console.warn(`[Caret Checkpoint] 기존 Shadow Git ?�용: ${gitPath}`)
 
 			// CARET MODIFICATION: Ensure long path support is enabled for existing repos on Windows.
 			if (process.platform === "win32") {
-				console.info(`[Caret Checkpoint] Windows에서 longpaths 설정 적용 중...`)
+				console.info(`[Caret Checkpoint] Windows?�서 longpaths ?�정 ?�용 �?..`)
 				await git.addConfig("core.longpaths", "true")
 			}
 
@@ -289,12 +289,12 @@ export class GitOperations {
 	 */
 	public async renameNestedGitRepos(disable: boolean) {
 		const startTime = performance.now()
-		console.info(`[Caret Checkpoint] ${disable ? "비활성화" : "활성화"} 중첩 Git 저장소 in: ${this.cwd}`)
-		console.info(`[Caret Checkpoint] 스캔 패턴: **/.git${disable ? "" : GIT_DISABLED_SUFFIX}`)
+		console.info(`[Caret Checkpoint] ${disable ? "Disabling" : "Enabling"} nested Git repositories in: ${this.cwd}`)
+		console.info(`[Caret Checkpoint] Scan pattern: **/.git${disable ? "" : GIT_DISABLED_SUFFIX}`)
 
 		// Find all .git directories that are not at the root level
 		console.time("globby-scan-nested-git")
-		console.info(`[Caret Checkpoint] 📁 중첩 .git 디렉토리 스캔 시작... (시간이 오래 걸릴 수 있음)`)
+		console.info(`[Caret Checkpoint] Starting nested .git directory scan... (this may take a while)`)
 		const scanStartTime = performance.now()
 		const gitPaths = await globby("**/.git" + (disable ? "" : GIT_DISABLED_SUFFIX), {
 			cwd: this.cwd,
@@ -318,15 +318,15 @@ export class GitOperations {
 		const scanDurationMs = Math.round(performance.now() - scanStartTime)
 		console.timeEnd("globby-scan-nested-git")
 		console.info(
-			`[Caret Checkpoint] 📊 스캔 완료: ${gitPaths.length}개 중첩 Git ${disable ? "저장소" : "비활성화된 저장소"} 발견 (${scanDurationMs}ms 소요)`,
+			`[Caret Checkpoint] Scan completed: ${gitPaths.length} nested Git ${disable ? "repositories" : "disabled repositories"} found (${scanDurationMs}ms required)`,
 		)
 
 		if (gitPaths.length > 0) {
 			console.info(
-				`[Caret Checkpoint] 🔄 처리할 Git 저장소들: ${gitPaths.slice(0, 3).join(", ")}${gitPaths.length > 3 ? `... 외 ${gitPaths.length - 3}개` : ""}`,
+				`[Caret Checkpoint] Git repositories to process: ${gitPaths.slice(0, 3).join(", ")}${gitPaths.length > 3 ? `... and ${gitPaths.length - 3} more` : ""}`,
 			)
 		} else {
-			console.info(`[Caret Checkpoint] ✅ 처리할 중첩 Git 저장소가 없습니다.`)
+			console.info(`[Caret Checkpoint] No nested Git repositories to process.`)
 		}
 
 		// For each nested .git directory, rename it based on operation
@@ -335,8 +335,8 @@ export class GitOperations {
 		for (let i = 0; i < gitPaths.length; i++) {
 			const gitPath = gitPaths[i]
 			if (i % 10 === 0 || i < 5) {
-				// 처음 5개와 10개마다 로그
-				console.info(`[Caret Checkpoint] 🔄 처리 중 ${i + 1}/${gitPaths.length}: ${gitPath}`)
+				// 처음 5개�? 10개마??로그
+				console.info(`[Caret Checkpoint] ?�� 처리 �?${i + 1}/${gitPaths.length}: ${gitPath}`)
 			}
 
 			const fullPath = path.join(this.cwd, gitPath)
@@ -361,7 +361,7 @@ export class GitOperations {
 		const renameDurationMs = Math.round(performance.now() - renameStartTime)
 
 		const durationMs = Math.round(performance.now() - startTime)
-		console.info(`[Caret Checkpoint] ✅ 중첩 Git 저장소 처리 완료 (이름변경: ${renameDurationMs}ms, 전체: ${durationMs}ms)`)
+		console.info(`[Caret Checkpoint] ??중첩 Git ?�?�소 처리 ?�료 (?�름변�? ${renameDurationMs}ms, ?�체: ${durationMs}ms)`)
 	}
 
 	/**
@@ -386,32 +386,32 @@ export class GitOperations {
 	 */
 	public async addCheckpointFiles(git: SimpleGit): Promise<CheckpointAddResult> {
 		const startTime = performance.now()
-		console.info("[Caret Checkpoint] ========== 체크포인트 파일 추가 시작 ==========")
+		console.info("[Caret Checkpoint] ========== 체크?�인???�일 추�? ?�작 ==========")
 		console.time("total-addCheckpointFiles")
 
 		try {
-			// CARET MODIFICATION: 각 단계별 상세 로깅 추가
+			// CARET MODIFICATION: �??�계�??�세 로깅 추�?
 			console.time("rename-nested-git-repos")
-			console.info("[Caret Checkpoint] 1단계: 중첩 Git 저장소 비활성화 중...")
+			console.info("[Caret Checkpoint] 1?�계: 중첩 Git ?�?�소 비활?�화 �?..")
 			await this.renameNestedGitRepos(true)
 			console.timeEnd("rename-nested-git-repos")
-			console.info("[Caret Checkpoint] 1단계 완료: 중첩 Git 저장소 비활성화 완료")
+			console.info("[Caret Checkpoint] 1?�계 ?�료: 중첩 Git ?�?�소 비활?�화 ?�료")
 
-			console.info("[Caret Checkpoint] 2단계: Git add 작업 시작...")
+			console.info("[Caret Checkpoint] 2?�계: Git add ?�업 ?�작...")
 
-			// CARET MODIFICATION: 선별적 파일 추가로 node_modules 제외
-			// 기존 "git add ." 대신 필수 파일만 추가하여 성능 개선
+			// CARET MODIFICATION: ?�별???�일 추�?�?node_modules ?�외
+			// 기존 "git add ." ?�???�수 ?�일�?추�??�여 ?�능 개선
 			try {
 				console.time("git-add-files")
-				console.info("[Caret Checkpoint] 2단계: Git index에 파일 추가 중...")
-				console.info("[Caret Checkpoint] 현재 작업 디렉토리:", process.cwd())
-				console.info("[Caret Checkpoint] 최적화된 Git 명령: 필수 파일만 선별 추가")
+				console.info("[Caret Checkpoint] 2?�계: Git index???�일 추�? �?..")
+				console.info("[Caret Checkpoint] ?�재 ?�업 ?�렉?�리:", process.cwd())
+				console.info("[Caret Checkpoint] 최적?�된 Git 명령: ?�수 ?�일�??�별 추�?")
 
-				// CARET MODIFICATION: node_modules를 완전히 제외한 선별적 파일 추가
+				// CARET MODIFICATION: node_modules�??�전???�외???�별???�일 추�?
 				const addStartTime = performance.now()
 				const controller = new AbortController()
 
-				// 필수 파일 패턴들 (node_modules 제외)
+				// ?�수 ?�일 ?�턴??(node_modules ?�외)
 				const essentialPatterns = [
 					"src/**/*",
 					"*.js",
@@ -440,13 +440,13 @@ export class GitOperations {
 				]
 
 				console.info(
-					`[Caret Checkpoint] 추가할 패턴: ${essentialPatterns.slice(0, 3).join(", ")}... (총 ${essentialPatterns.length}개)`,
+					`[Caret Checkpoint] 추�????�턴: ${essentialPatterns.slice(0, 3).join(", ")}... (�?${essentialPatterns.length}�?`,
 				)
 				const addPromise = git.add([...essentialPatterns, "-f", "--ignore-errors"])
 				const timeoutPromise = new Promise((_, reject) => {
 					setTimeout(() => {
 						const elapsedMs = Math.round(performance.now() - addStartTime)
-						console.warn(`[Caret Checkpoint] ⚠️ Git add 타임아웃! ${elapsedMs}ms 경과 - Git 프로세스 강제 종료 중...`)
+						console.warn(`[Caret Checkpoint] ?�️ Git add ?�?�아?? ${elapsedMs}ms 경과 - Git ?�로?�스 강제 종료 �?..`)
 						controller.abort()
 						reject(new Error(`Git add operation timed out after ${elapsedMs}ms`))
 					}, 10000)
@@ -460,11 +460,11 @@ export class GitOperations {
 					console.timeEnd("git-add-files")
 					console.warn("[Caret Checkpoint] Git add timed out, trying alternative approach...")
 
-					// Fallback: 더 제한적인 파일 추가
+					// Fallback: ???�한?�인 ?�일 추�?
 					try {
 						console.time("fallback-git-add")
-						console.warn("[Caret Checkpoint] 기본 패턴 실패, 최소 필수 파일만 추가 시도...")
-						// 가장 핵심적인 파일들만 추가
+						console.warn("[Caret Checkpoint] 기본 ?�턴 ?�패, 최소 ?�수 ?�일�?추�? ?�도...")
+						// 가???�심?�인 ?�일?�만 추�?
 						const minimalPatterns = [
 							"src/**/*.ts",
 							"src/**/*.tsx",
@@ -476,10 +476,10 @@ export class GitOperations {
 						]
 						await git.add([...minimalPatterns, "-f", "--ignore-errors"])
 						console.timeEnd("fallback-git-add")
-						console.info("[Caret Checkpoint] 최소 필수 파일 추가 완료")
+						console.info("[Caret Checkpoint] 최소 ?�수 ?�일 추�? ?�료")
 					} catch (fallbackError) {
 						console.timeEnd("fallback-git-add")
-						console.warn("[Caret Checkpoint] 모든 파일 추가 시도 실패, 빈 커밋으로 진행")
+						console.warn("[Caret Checkpoint] 모든 ?�일 추�? ?�도 ?�패, �?커밋?�로 진행")
 						// Don't fail - allow empty commits to work
 					}
 				}
@@ -496,15 +496,15 @@ export class GitOperations {
 		} catch (error) {
 			return { success: false }
 		} finally {
-			console.info("[Caret Checkpoint] 3단계: 중첩 Git 저장소 재활성화 중...")
+			console.info("[Caret Checkpoint] 3?�계: 중첩 Git ?�?�소 ?�활?�화 �?..")
 			console.time("restore-nested-git-repos")
 			await this.renameNestedGitRepos(false)
 			console.timeEnd("restore-nested-git-repos")
-			console.info("[Caret Checkpoint] 3단계 완료: 중첩 Git 저장소 재활성화 완료")
+			console.info("[Caret Checkpoint] 3?�계 ?�료: 중첩 Git ?�?�소 ?�활?�화 ?�료")
 
 			console.timeEnd("total-addCheckpointFiles")
 			const totalDurationMs = Math.round(performance.now() - startTime)
-			console.info(`[Caret Checkpoint] ========== 체크포인트 파일 추가 완료 (${totalDurationMs}ms) ==========`)
+			console.info(`[Caret Checkpoint] ========== 체크?�인???�일 추�? ?�료 (${totalDurationMs}ms) ==========`)
 		}
 	}
 }

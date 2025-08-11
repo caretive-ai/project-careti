@@ -18,4 +18,4 @@ export const chatbotModeRespondToolDefinition: ToolDefinition = {
 		},
 		required: ["response"],
 	},
-} 
+}

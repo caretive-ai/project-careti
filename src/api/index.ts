@@ -380,13 +380,7 @@ export function buildApiHandler(configuration: ApiConfiguration, mode: Mode): Ap
 		apiProvider = mode === "plan" ? tempOptions.planModeApiProvider : tempOptions.actModeApiProvider
 	}
 
-	const {
-		planModeApiProvider,
-		actModeApiProvider,
-		chatbotModeApiProvider,
-		agentModeApiProvider,
-		...options
-	} = tempOptions
+	const { planModeApiProvider, actModeApiProvider, chatbotModeApiProvider, agentModeApiProvider, ...options } = tempOptions
 	// CARET MODIFICATION: End
 
 	// CARET MODIFICATION: Debug logging to track API provider selection and parameters

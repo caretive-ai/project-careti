@@ -76,18 +76,9 @@ class WebviewLogger {
 			}
 		}
 
-		// CARET MODIFICATION: Safe Extension Host communication
-		try {
-			if (vscode && typeof vscode.postMessage === "function") {
-				vscode.postMessage({
-					type: "log",
-					entry,
-				})
-			}
-		} catch (vscodeError) {
-			// Silently ignore vscode communication errors to prevent webview loading issues
-			// This ensures the webview can still load even if Extension Host communication fails
-		}
+		// CARET MODIFICATION: Console-only logging (removed deprecated WebviewMessage 'log' type)
+		// Note: Previously sent logs to Extension Host via vscode.postMessage, but this was
+		// removed in Cline v3.17.13+ due to architecture simplification. Console logging only.
 	}
 
 	debug(message: string, data?: any): void {

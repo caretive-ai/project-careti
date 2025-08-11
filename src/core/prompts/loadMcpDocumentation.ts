@@ -27,7 +27,7 @@ This will create a new project with the following structure:
 
 \`\`\`
 weather-server/
-  ├── package.json
+  ?��??� package.json
       {
         ...
         "type": "module", // added by default, uses ES module syntax (import/export) rather than CommonJS (require/module.exports) (Important to know if you create additional scripts in this server repository like a get-refresh-token.js script)
@@ -37,10 +37,10 @@ weather-server/
         }
         ...
       }
-  ├── tsconfig.json
-  └── src/
-      └── weather-server/
-          └── index.ts      # Main server implementation
+  ?��??� tsconfig.json
+  ?��??� src/
+      ?��??� weather-server/
+          ?��??� index.ts      # Main server implementation
 \`\`\`
 
 2. Replace \`src/index.ts\` with the following:
@@ -306,7 +306,7 @@ const server = new WeatherServer();
 server.run().catch(console.error);
 \`\`\`
 
-(Remember: This is just an example–you may use different dependencies, break the implementation up into multiple files, etc.)
+(Remember: This is just an example?�you may use different dependencies, break the implementation up into multiple files, etc.)
 
 3. Build and compile the executable JavaScript file
 

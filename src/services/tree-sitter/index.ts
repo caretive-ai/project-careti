@@ -159,11 +159,11 @@ async function parseFile(
 			// Only add the first line of the definition
 			// query captures includes the definition name and the definition implementation, but we only want the name (I found discrepancies in the naming structure for various languages, i.e. javascript names would be 'name' and typescript names would be 'name.definition)
 			if (name.includes("name") && lines[startLine]) {
-				formattedOutput += `│${lines[startLine]}\n`
+				formattedOutput += `??{lines[startLine]}\n`
 			}
 			// Adds all the captured lines
 			// for (let i = startLine; i <= endLine; i++) {
-			// 	formattedOutput += `│${lines[i]}\n`
+			// 	formattedOutput += `??{lines[i]}\n`
 			// }
 			//}
 

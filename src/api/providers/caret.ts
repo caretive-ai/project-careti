@@ -1,5 +1,5 @@
-// CARET MODIFICATION: Caret 전용 API Provider
-// Cline Provider를 기반으로 Caret 서비스 연동을 위한 Provider 구현
+// CARET MODIFICATION: Caret ?�용 API Provider
+// Cline Provider�?기반?�로 Caret ?�비???�동???�한 Provider 구현
 
 import { Anthropic } from "@anthropic-ai/sdk"
 import OpenAI from "openai"
@@ -31,23 +31,23 @@ export class CaretHandler implements ApiHandler {
 	constructor(options: CaretHandlerOptions) {
 		this.options = options
 
-		// CARET MODIFICATION: Caret 서비스 URL 사용
+		// CARET MODIFICATION: Caret ?�비??URL ?�용
 		this.client = new OpenAI({
 			baseURL: "https://api.caret.team/v1",
 			apiKey: this.options.caretApiKey || "",
 			defaultHeaders: {
-				"HTTP-Referer": "https://caret.team", // Caret 랭킹 및 통계
-				"X-Title": "Caret", // Caret 서비스명
+				"HTTP-Referer": "https://caret.team", // Caret ??�� �??�계
+				"X-Title": "Caret", // Caret ?�비?�명
 				"X-Task-ID": this.options.taskId || "",
 			},
 		})
 
-		// CARET MODIFICATION: 초기화 로깅 (동적 import)
+		// CARET MODIFICATION: 초기??로깅 (?�적 import)
 		this.logInit()
 	}
 
 	private async logInit() {
-		// CARET MODIFICATION: 일시적으로 Logger 사용 (rootDir 문제 해결용)
+		// CARET MODIFICATION: ?�시?�으�?Logger ?�용 (rootDir 문제 ?�결??
 		Logger.info("[CARET-PROVIDER] CaretHandler initialized")
 		Logger.debug(`[CARET-PROVIDER] Task ID: ${this.options.taskId}`)
 		Logger.debug(`[CARET-PROVIDER] API Key: ${this.options.caretApiKey ? "SET" : "NOT SET"}`)
@@ -69,7 +69,7 @@ export class CaretHandler implements ApiHandler {
 	async *createMessage(systemPrompt: string, messages: Anthropic.Messages.MessageParam[]): ApiStream {
 		this.lastGenerationId = undefined
 
-		// CARET MODIFICATION: 메시지 생성 로깅
+		// CARET MODIFICATION: 메시지 ?�성 로깅
 		Logger.info("[CARET-PROVIDER] Creating message stream")
 		Logger.debug(`[CARET-PROVIDER] System prompt length: ${systemPrompt.length}`)
 		Logger.debug(`[CARET-PROVIDER] Message count: ${messages.length}`)
@@ -91,7 +91,7 @@ export class CaretHandler implements ApiHandler {
 			if ("error" in chunk) {
 				const error = chunk.error as OpenRouterErrorResponse["error"]
 
-				// CARET MODIFICATION: 에러 로깅
+				// CARET MODIFICATION: ?�러 로깅
 				Logger.error(`[CARET] Caret API Error: ${error?.code} - ${error?.message}`)
 
 				// Include metadata in the error message if available
@@ -132,7 +132,7 @@ export class CaretHandler implements ApiHandler {
 					totalCost = 0
 				}
 
-				// CARET MODIFICATION: 사용량 로깅
+				// CARET MODIFICATION: ?�용??로깅
 				Logger.debug(
 					`[CARET-PROVIDER] Token usage - Input: ${chunk.usage.prompt_tokens}, Output: ${chunk.usage.completion_tokens}, Cost: ${totalCost}`,
 				)
@@ -158,13 +158,13 @@ export class CaretHandler implements ApiHandler {
 			}
 		}
 
-		Logger.info("[CARET-PROVIDER] ✅ Message stream completed")
+		Logger.info("[CARET-PROVIDER] ??Message stream completed")
 	}
 
 	async getApiStreamUsage(): Promise<ApiStreamUsageChunk | undefined> {
 		if (this.lastGenerationId) {
 			try {
-				// CARET MODIFICATION: Caret API 엔드포인트 사용
+				// CARET MODIFICATION: Caret API ?�드?�인???�용
 				Logger.debug(`[CARET-PROVIDER] Fetching usage data for generation: ${this.lastGenerationId}`)
 
 				const response = await axios.get(`https://api.caret.team/v1/generation?id=${this.lastGenerationId}`, {
@@ -189,8 +189,8 @@ export class CaretHandler implements ApiHandler {
 					totalCost: generation?.total_cost || 0,
 				}
 			} catch (error) {
-				// CARET MODIFICATION: 에러 로깅 개선
-				Logger.error(`[CARET-PROVIDER] ❌ Error fetching Caret generation details: ${error}`)
+				// CARET MODIFICATION: ?�러 로깅 개선
+				Logger.error(`[CARET-PROVIDER] ??Error fetching Caret generation details: ${error}`)
 			}
 		}
 		return undefined

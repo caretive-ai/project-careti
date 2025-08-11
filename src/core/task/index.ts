@@ -36,10 +36,10 @@ import pWaitFor from "p-wait-for"
 import * as path from "path"
 import * as vscode from "vscode"
 
-import { HostProvider } from "@hosts/host-provider"
-import { ClineErrorType } from "@services/error/ClineError"
-import { ErrorService } from "@services/error/ErrorService"
-import { parseAssistantMessageV2, parseAssistantMessageV3 } from "@core/assistant-message"
+import { HostProvider } from "@/hosts/host-provider"
+import { ClineErrorType } from "@/services/error/ClineError"
+import { ErrorService } from "@/services/error/ErrorService"
+import { parseAssistantMessageV2, parseAssistantMessageV3, ToolUseName } from "@core/assistant-message"
 import {
 	checkIsAnthropicContextWindowError,
 	checkIsOpenRouterContextWindowError,
@@ -57,7 +57,6 @@ import {
 	getLocalCursorRules,
 	getLocalWindsurfRules,
 	refreshExternalRulesToggles,
-	getLocalCaretRules, // CARET MODIFICATION
 } from "@core/context/instructions/user-instructions/external-rules"
 import { sendPartialMessageEvent } from "@core/controller/ui/subscribeToPartialMessage"
 import { sendRelinquishControlEvent } from "@core/controller/ui/subscribeToRelinquishControl"
@@ -73,7 +72,7 @@ import {
 	getSavedClineMessages,
 	GlobalFileNames,
 } from "@core/storage/disk"
-import { getWorkspaceState } from "@core/storage/state" // CARET MODIFICATION
+import { getGlobalState } from "@core/storage/state"
 import { processFilesIntoText } from "@integrations/misc/extract-text"
 import WorkspaceTracker from "@integrations/workspace/WorkspaceTracker"
 import { McpHub } from "@services/mcp/McpHub"
@@ -88,8 +87,7 @@ import { ToolExecutor } from "./ToolExecutor"
 import { updateApiReqMsg } from "./utils"
 import { CacheService } from "../storage/CacheService"
 import { Mode, OpenaiReasoningEffort } from "@shared/storage/types"
-import { ShowMessageType } from "@shared/proto/host/window"
-import { ChatSettings } from "@shared/ChatSettings" // CARET MODIFICATION
+import { ShowMessageType } from "@/shared/proto/index.host"
 
 export const USE_EXPERIMENTAL_CLAUDE4_FEATURES = false
 
@@ -142,7 +140,6 @@ export class Task {
 	preferredLanguage: string
 	openaiReasoningEffort: OpenaiReasoningEffort
 	mode: Mode
-	chatSettings: ChatSettings // CARET MODIFICATION
 
 	// Message and conversation state
 	messageStateHandler: MessageStateHandler
@@ -160,8 +157,6 @@ export class Task {
 		preferredLanguage: string,
 		openaiReasoningEffort: OpenaiReasoningEffort,
 		mode: Mode,
-		chatSettings: ChatSettings, // CARET MODIFICATION
-		strictPlanModeEnabled: boolean,
 		shellIntegrationTimeout: number,
 		terminalReuseEnabled: boolean,
 		terminalOutputLineLimit: number,
@@ -210,7 +205,6 @@ export class Task {
 		this.preferredLanguage = preferredLanguage
 		this.openaiReasoningEffort = openaiReasoningEffort
 		this.mode = mode
-		this.chatSettings = chatSettings // CARET MODIFICATION
 		this.enableCheckpoints = enableCheckpointsSetting
 		this.cwd = cwd
 		this.cacheService = cacheService
@@ -248,7 +242,7 @@ export class Task {
 		this.modelContextTracker = new ModelContextTracker(context, this.taskId)
 
 		// Prepare effective API configuration
-		const effectiveApiConfiguration: ApiConfiguration = {
+		let effectiveApiConfiguration: ApiConfiguration = {
 			...apiConfiguration,
 			taskId: this.taskId,
 			onRetryAttempt: async (attempt: number, maxRetries: number, delay: number, error: any) => {
@@ -336,7 +330,6 @@ export class Task {
 			cwd,
 			this.taskId,
 			this.mode,
-			strictPlanModeEnabled,
 			this.say.bind(this),
 			this.ask.bind(this),
 			this.saveCheckpoint.bind(this),
@@ -345,19 +338,6 @@ export class Task {
 			this.executeCommandTool.bind(this),
 			this.doesLatestTaskCompletionHaveNewChanges.bind(this),
 		)
-	}
-
-	public updateMode(mode: Mode): void {
-		this.mode = mode
-		this.toolExecutor.updateMode(mode)
-	}
-
-	public updateStrictPlanMode(strictPlanModeEnabled: boolean): void {
-		this.toolExecutor.updateStrictPlanModeEnabled(strictPlanModeEnabled)
-	}
-
-	public getCwd(): string {
-		return this.cwd
 	}
 
 	// While a task is ref'd by a controller, it will always have access to the extension context
@@ -409,7 +389,7 @@ export class Task {
 			case "workspace":
 				if (!this.enableCheckpoints) {
 					HostProvider.window.showMessage({
-						type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+						type: ShowMessageType.ERROR,
 						message: "Checkpoints are disabled in settings.",
 					})
 					didWorkspaceRestoreFail = true
@@ -430,7 +410,7 @@ export class Task {
 						this.taskState.checkpointTrackerErrorMessage = errorMessage
 						await this.postStateToWebview()
 						HostProvider.window.showMessage({
-							type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+							type: ShowMessageType.ERROR,
 							message: errorMessage,
 						})
 						didWorkspaceRestoreFail = true
@@ -442,7 +422,7 @@ export class Task {
 					} catch (error) {
 						const errorMessage = error instanceof Error ? error.message : "Unknown error"
 						HostProvider.window.showMessage({
-							type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+							type: ShowMessageType.ERROR,
 							message: "Failed to restore checkpoint: " + errorMessage,
 						})
 						didWorkspaceRestoreFail = true
@@ -453,7 +433,7 @@ export class Task {
 					} catch (error) {
 						const errorMessage = error instanceof Error ? error.message : "Unknown error"
 						HostProvider.window.showMessage({
-							type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+							type: ShowMessageType.ERROR,
 							message: "Failed to restore offsetcheckpoint: " + errorMessage,
 						})
 						didWorkspaceRestoreFail = true
@@ -466,14 +446,14 @@ export class Task {
 					} catch (error) {
 						const errorMessage = error instanceof Error ? error.message : "Unknown error"
 						HostProvider.window.showMessage({
-							type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+							type: ShowMessageType.ERROR,
 							message: "Failed to restore checkpoint: " + errorMessage,
 						})
 						didWorkspaceRestoreFail = true
 					}
 				} else {
 					HostProvider.window.showMessage({
-						type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+						type: ShowMessageType.ERROR,
 						message: "Failed to restore checkpoint",
 					})
 				}
@@ -483,7 +463,7 @@ export class Task {
 		if (!didWorkspaceRestoreFail) {
 			switch (restoreType) {
 				case "task":
-				case "taskAndWorkspace": {
+				case "taskAndWorkspace":
 					this.taskState.conversationHistoryDeletedRange = message.conversationHistoryDeletedRange
 					const apiConversationHistory = this.messageStateHandler.getApiConversationHistory()
 					const newConversationHistory = apiConversationHistory.slice(0, (message.conversationHistoryIndex || 0) + 2) // +1 since this index corresponds to the last user message, and another +1 since slice end index is exclusive
@@ -526,7 +506,6 @@ export class Task {
 						} satisfies ClineApiReqInfo),
 					)
 					break
-				}
 				case "workspace":
 					break
 			}
@@ -534,19 +513,19 @@ export class Task {
 			switch (restoreType) {
 				case "task":
 					HostProvider.window.showMessage({
-						type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+						type: ShowMessageType.INFORMATION,
 						message: "Task messages have been restored to the checkpoint",
 					})
 					break
 				case "workspace":
 					HostProvider.window.showMessage({
-						type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+						type: ShowMessageType.INFORMATION,
 						message: "Workspace files have been restored to the checkpoint",
 					})
 					break
 				case "taskAndWorkspace":
 					HostProvider.window.showMessage({
-						type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+						type: ShowMessageType.INFORMATION,
 						message: "Task and workspace have been restored to the checkpoint",
 					})
 					break
@@ -580,7 +559,7 @@ export class Task {
 		}
 		if (!this.enableCheckpoints) {
 			HostProvider.window.showMessage({
-				type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+				type: ShowMessageType.INFORMATION,
 				message: "Checkpoints are disabled in settings. Cannot show diff.",
 			})
 			relinquishButton()
@@ -618,7 +597,7 @@ export class Task {
 				this.taskState.checkpointTrackerErrorMessage = errorMessage
 				await this.postStateToWebview()
 				HostProvider.window.showMessage({
-					type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+					type: ShowMessageType.ERROR,
 					message: errorMessage,
 				})
 				relinquishButton()
@@ -656,7 +635,7 @@ export class Task {
 
 				if (!previousCheckpointHash) {
 					HostProvider.window.showMessage({
-						type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+						type: ShowMessageType.ERROR,
 						message: "Unexpected error: No checkpoint hash found",
 					})
 					relinquishButton()
@@ -667,7 +646,7 @@ export class Task {
 				changedFiles = await this.checkpointTracker?.getDiffSet(previousCheckpointHash, hash)
 				if (!changedFiles?.length) {
 					HostProvider.window.showMessage({
-						type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+						type: ShowMessageType.INFORMATION,
 						message: "No changes found",
 					})
 					relinquishButton()
@@ -678,7 +657,7 @@ export class Task {
 				changedFiles = await this.checkpointTracker?.getDiffSet(hash)
 				if (!changedFiles?.length) {
 					HostProvider.window.showMessage({
-						type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+						type: ShowMessageType.INFORMATION,
 						message: "No changes found",
 					})
 					relinquishButton()
@@ -688,7 +667,7 @@ export class Task {
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : "Unknown error"
 			HostProvider.window.showMessage({
-				type: ShowMessageType.WINDOW_MESSAGE_ERROR,
+				type: ShowMessageType.ERROR,
 				message: "Failed to retrieve diff set: " + errorMessage,
 			})
 			relinquishButton()
@@ -1014,14 +993,13 @@ export class Task {
 		}
 	}
 
-	async sayAndCreateMissingParamError(toolName: string, paramName: string) {
-		// CARET MODIFICATION: 다국어 지원을 위한 백엔드 i18n 시스템 사용
-		const { backendT } = await import("../../../caret-src/utils/backend-i18n")
-		const errorMessage = backendT("task.missingParam", this.chatSettings, {
-			toolName,
-			paramName,
-		})
-		await this.say("error", errorMessage)
+	async sayAndCreateMissingParamError(toolName: ToolUseName, paramName: string, relPath?: string) {
+		await this.say(
+			"error",
+			`Cline tried to use ${toolName}${
+				relPath ? ` for '${relPath.toPosix()}'` : ""
+			} without value for required parameter '${paramName}'. Retrying...`,
+		)
 		return formatResponse.toolError(formatResponse.missingToolParameterError(paramName))
 	}
 
@@ -1054,9 +1032,9 @@ export class Task {
 
 		this.taskState.isInitialized = true
 
-		const imageBlocks: Anthropic.ImageBlockParam[] = formatResponse.imageBlocks(images)
+		let imageBlocks: Anthropic.ImageBlockParam[] = formatResponse.imageBlocks(images)
 
-		const userContent: UserContent = [
+		let userContent: UserContent = [
 			{
 				type: "text",
 				text: `<task>\n${task}\n</task>`,
@@ -1183,7 +1161,7 @@ export class Task {
 			throw new Error("Unexpected: No existing API conversation history")
 		}
 
-		const newUserContent: UserContent = [...modifiedOldUserContent]
+		let newUserContent: UserContent = [...modifiedOldUserContent]
 
 		const agoText = (() => {
 			const timestamp = lastClineMessage?.ts ?? Date.now()
@@ -1211,11 +1189,8 @@ export class Task {
 		const pendingContextWarning = await this.fileContextTracker.retrieveAndClearPendingFileContextWarning()
 		const hasPendingFileContextWarnings = pendingContextWarning && pendingContextWarning.length > 0
 
-		// CARET MODIFICATION: Mission 2 - Cline/Caret 모드 용어 통합 처리
-		// CARET MODIFICATION: 모든 모드를 Cline 호환 plan/act로 매핑
-		const clineCompatibleMode = this.chatSettings?.mode === "chatbot" || this.chatSettings?.mode === "plan" ? "plan" : "act"
 		const [taskResumptionMessage, userResponseMessage] = formatResponse.taskResumption(
-			clineCompatibleMode,
+			this.mode === "plan" ? "plan" : "act",
 			agoText,
 			this.cwd,
 			wasRecent,
@@ -1397,37 +1372,57 @@ export class Task {
 				this.checkpointTracker &&
 				!this.taskState.checkpointTrackerErrorMessage?.includes("Checkpoints initialization timed out.")
 			) {
-				// CARET MODIFICATION: Added defensive error handling for attempt completion checkpoint
-				try {
-					const commitHash = await this.checkpointTracker.commit()
+				const commitHash = await this.checkpointTracker.commit()
 
-					// For attempt_completion, find the last completion_result message and set its checkpoint hash. This will be used to present the 'see new changes' button
-					const lastCompletionResultMessage = findLast(
-						this.messageStateHandler.getClineMessages(),
-						(m) => m.say === "completion_result" || m.ask === "completion_result",
-					)
-					if (lastCompletionResultMessage && commitHash) {
-						lastCompletionResultMessage.lastCheckpointHash = commitHash
-						await this.messageStateHandler.saveClineMessagesAndUpdateHistory()
-					} else if (lastCompletionResultMessage && !commitHash) {
-						// CARET MODIFICATION: Handle case where commit failed but returned undefined
-						console.warn("Checkpoint commit failed for attempt completion but task will continue")
-						// Still save the messages without checkpoint hash
-						await this.messageStateHandler.saveClineMessagesAndUpdateHistory()
-					}
-				} catch (error) {
-					// CARET MODIFICATION: Catch any remaining errors from checkpoint commit
-					const errorMessage = error instanceof Error ? error.message : "Unknown error"
-					console.error("Checkpoint commit failed unexpectedly for attempt completion:", errorMessage)
-					this.taskState.checkpointTrackerErrorMessage =
-						"Checkpoint system temporarily unavailable. Your work will continue normally."
-					// Still save the messages without checkpoint hash
+				// For attempt_completion, find the last completion_result message and set its checkpoint hash. This will be used to present the 'see new changes' button
+				const lastCompletionResultMessage = findLast(
+					this.messageStateHandler.getClineMessages(),
+					(m) => m.say === "completion_result" || m.ask === "completion_result",
+				)
+				if (lastCompletionResultMessage) {
+					lastCompletionResultMessage.lastCheckpointHash = commitHash
 					await this.messageStateHandler.saveClineMessagesAndUpdateHistory()
 				}
 			} else {
 				console.error("Checkpoint tracker does not exist and could not be initialized for attempt completion")
 			}
 		}
+
+		// if (commitHash) {
+
+		// Previously we checkpointed every message, but this is excessive and unnecessary.
+		// // Start from the end and work backwards until we find a tool use or another message with a hash
+		// for (let i = this.clineMessages.length - 1; i >= 0; i--) {
+		// 	const message = this.clineMessages[i]
+		// 	if (message.lastCheckpointHash) {
+		// 		// Found a message with a hash, so we can stop
+		// 		break
+		// 	}
+		// 	// Update this message with a hash
+		// 	message.lastCheckpointHash = commitHash
+
+		// 	// We only care about adding the hash to the last tool use (we don't want to add this hash to every prior message ie for tasks pre-checkpoint)
+		// 	const isToolUse =
+		// 		message.say === "tool" ||
+		// 		message.ask === "tool" ||
+		// 		message.say === "command" ||
+		// 		message.ask === "command" ||
+		// 		message.say === "completion_result" ||
+		// 		message.ask === "completion_result" ||
+		// 		message.ask === "followup" ||
+		// 		message.say === "use_mcp_server" ||
+		// 		message.ask === "use_mcp_server" ||
+		// 		message.say === "browser_action" ||
+		// 		message.say === "browser_action_launch" ||
+		// 		message.ask === "browser_action_launch"
+
+		// 	if (isToolUse) {
+		// 		break
+		// 	}
+		// }
+		// // Save the updated messages
+		// await this.saveClineMessagesAndUpdateHistory()
+		// }
 	}
 
 	// Tools
@@ -1622,7 +1617,7 @@ export class Task {
 		// grouping command_output messages despite any gaps anyways)
 		await setTimeoutPromise(50)
 
-		const result = this.terminalManager.processOutput(outputLines)
+		let result = this.terminalManager.processOutput(outputLines)
 
 		if (userFeedback) {
 			await this.say("user_feedback", userFeedback.text, userFeedback.images, userFeedback.files)
@@ -1692,36 +1687,9 @@ export class Task {
 
 		const supportsBrowserUse = modelSupportsBrowserUse && !disableBrowserTool // only enable browser use if the model supports it and the user hasn't disabled it
 
-		// CARET MODIFICATION: Use isNextGenModel from upstream and combine with Caret's logic
 		const isNextGenModel =
 			isClaude4ModelFamily(this.api) || isGemini2dot5ModelFamily(this.api) || isGrok4ModelFamily(this.api)
-
-		// CARET MODIFICATION: Plan/Act 모드 지원 - modeSystem에 따른 프롬프트 생성
-		let systemPrompt: string
-		if (this.chatSettings.modeSystem === "cline") {
-			const { TRUE_CLINE_SYSTEM_PROMPT } = await import("../prompts/true-cline-system")
-			systemPrompt = await TRUE_CLINE_SYSTEM_PROMPT(
-				this.cwd,
-				supportsBrowserUse,
-				this.mcpHub,
-				this.browserSettings,
-				isNextGenModel,
-				this.chatSettings.mode as "plan" | "act",
-			)
-		} else {
-			const caretCompatibleMode: "chatbot" | "agent" =
-				this.chatSettings.mode === "chatbot" || this.chatSettings.mode === "plan" ? "chatbot" : "agent"
-
-			systemPrompt = await SYSTEM_PROMPT(
-				this.cwd,
-				supportsBrowserUse,
-				this.mcpHub,
-				this.browserSettings,
-				isNextGenModel,
-				this.context.extensionPath,
-				caretCompatibleMode,
-			)
-		}
+		let systemPrompt = await SYSTEM_PROMPT(this.cwd, supportsBrowserUse, this.mcpHub, this.browserSettings, isNextGenModel)
 
 		const preferredLanguage = getLanguageKey(this.preferredLanguage as LanguageDisplay)
 		const preferredLanguageInstructions =
@@ -1729,18 +1697,13 @@ export class Task {
 				? `# Preferred Language\n\nSpeak in ${preferredLanguage}.`
 				: ""
 
-		// CARET MODIFICATION: Added caretrules support with priority system.
 		const { globalToggles, localToggles } = await refreshClineRulesToggles(this.getContext(), this.cwd)
-		const { caretLocalToggles, windsurfLocalToggles, cursorLocalToggles } = await refreshExternalRulesToggles(
-			this.getContext(),
-			this.cwd,
-		)
+		const { windsurfLocalToggles, cursorLocalToggles } = await refreshExternalRulesToggles(this.getContext(), this.cwd)
 
 		const globalClineRulesFilePath = await ensureRulesDirectoryExists()
 		const globalClineRulesFileInstructions = await getGlobalClineRules(globalClineRulesFilePath, globalToggles)
 
 		const localClineRulesFileInstructions = await getLocalClineRules(this.cwd, localToggles)
-		const localCaretRulesFileInstructions = await getLocalCaretRules(this.cwd, caretLocalToggles)
 		const [localCursorRulesFileInstructions, localCursorRulesDirInstructions] = await getLocalCursorRules(
 			this.cwd,
 			cursorLocalToggles,
@@ -1756,7 +1719,6 @@ export class Task {
 		if (
 			globalClineRulesFileInstructions ||
 			localClineRulesFileInstructions ||
-			localCaretRulesFileInstructions ||
 			localCursorRulesFileInstructions ||
 			localCursorRulesDirInstructions ||
 			localWindsurfRulesFileInstructions ||
@@ -1767,7 +1729,6 @@ export class Task {
 			const userInstructions = addUserInstructions(
 				globalClineRulesFileInstructions,
 				localClineRulesFileInstructions,
-				localCaretRulesFileInstructions,
 				localCursorRulesFileInstructions,
 				localCursorRulesDirInstructions,
 				localWindsurfRulesFileInstructions,
@@ -1791,43 +1752,7 @@ export class Task {
 			// saves task history item which we use to keep track of conversation history deleted range
 		}
 
-		// CARET MODIFICATION: API 호출 직전에 전체 메시지 배열 로깅 (시스템 프롬프트 검증용)
-		const fullMessageArray = [
-			{ role: "system", content: systemPrompt },
-			...contextManagementMetadata.truncatedConversationHistory,
-		]
-
-		// CARET MODIFICATION: 시스템 프롬프트 사용량 추적
-		const { SystemPromptUsageTracker } = await import("../../../caret-src/core/prompts/SystemPromptUsageTracker")
-		const usageTracker = new SystemPromptUsageTracker()
-		const currentMode = this.chatSettings.modeSystem === "cline" ? "cline" : "caret"
-		const estimatedTokens = Math.ceil(systemPrompt.length / 4)
-
-		// API 요청 로그 업데이트 - 시스템 프롬프트 정보 포함
-		const lastApiReqIndex = findLastIndex(this.messageStateHandler.getClineMessages(), (m) => m.say === "api_req_started")
-		if (lastApiReqIndex !== -1) {
-			const clineMessages = this.messageStateHandler.getClineMessages()
-			const currentApiReqInfo: ClineApiReqInfo = JSON.parse(clineMessages[lastApiReqIndex].text || "{}")
-
-			await this.messageStateHandler.updateClineMessage(lastApiReqIndex, {
-				text: JSON.stringify({
-					...currentApiReqInfo,
-					messages: fullMessageArray,
-					systemPromptInfo: {
-						length: systemPrompt.length,
-						wordCount: systemPrompt.split(/\s+/).length,
-						preview: systemPrompt.substring(0, 200) + "...",
-						isCaretJson: systemPrompt.includes("BASE_PROMPT_INTRO") || systemPrompt.includes("COLLABORATIVE_PRINCIPLES"),
-						isTrueCline: systemPrompt.includes("# Cline") && systemPrompt.includes("a highly skilled software engineer"),
-						estimatedTokens,
-						mode: currentMode,
-					},
-					conversationLength: contextManagementMetadata.truncatedConversationHistory.length,
-				} satisfies ClineApiReqInfo),
-			})
-		}
-
-		const stream = this.api.createMessage(systemPrompt, contextManagementMetadata.truncatedConversationHistory)
+		let stream = this.api.createMessage(systemPrompt, contextManagementMetadata.truncatedConversationHistory)
 
 		const iterator = stream[Symbol.asyncIterator]()
 
@@ -1932,24 +1857,12 @@ export class Task {
 					throw new Error("API request failed")
 				}
 
-				// Clear streamingFailedMessage when user manually retries
-				const manualRetryApiReqIndex = findLastIndex(
-					this.messageStateHandler.getClineMessages(),
-					(m) => m.say === "api_req_started",
-				)
-				if (manualRetryApiReqIndex !== -1) {
-					const clineMessages = this.messageStateHandler.getClineMessages()
-					const currentApiReqInfo: ClineApiReqInfo = JSON.parse(clineMessages[manualRetryApiReqIndex].text || "{}")
-					delete currentApiReqInfo.streamingFailedMessage
-					await this.messageStateHandler.updateClineMessage(manualRetryApiReqIndex, {
-						text: JSON.stringify(currentApiReqInfo),
-					})
+				// Do not retry automatically again if currently unauthenticated
+				if (clineError.isErrorType(ClineErrorType.Auth)) {
+					return
 				}
 
 				await this.say("api_req_retried")
-
-				// Reset the automatic retry flag so the request can proceed
-				this.taskState.didAutomaticallyRetryFailedApiRequest = false
 			}
 			// delegate generator output from the recursive call
 			yield* this.attemptApiRequest(previousApiReqIndex)
@@ -2257,6 +2170,9 @@ export class Task {
 				await this.messageStateHandler.updateClineMessage(lastCheckpointMessageIndex, {
 					lastCheckpointHash: commitHash,
 				})
+				// saveClineMessagesAndUpdateHistory will be called later after API response,
+				// so no need to call it here unless this is the only modification to this message.
+				// For now, assuming it's handled later.
 			}
 		} else if (
 			isFirstRequest &&
@@ -2405,7 +2321,7 @@ export class Task {
 								await this.say("reasoning", reasoningMessage, undefined, undefined, true)
 							}
 							break
-						case "text": {
+						case "text":
 							if (reasoningMessage && assistantMessage.length === 0) {
 								// complete reasoning message
 								await this.say("reasoning", reasoningMessage, undefined, undefined, false)
@@ -2426,7 +2342,6 @@ export class Task {
 							// present content to user
 							this.presentAssistantMessage()
 							break
-						}
 					}
 
 					if (this.taskState.abort) {
@@ -2541,6 +2456,14 @@ export class Task {
 					content: [{ type: "text", text: assistantMessage }],
 				})
 
+				// NOTE: this comment is here for future reference - this was a workaround for userMessageContent not getting set to true. It was due to it not recursively calling for partial blocks when didRejectTool, so it would get stuck waiting for a partial block to complete before it could continue.
+				// in case the content blocks finished
+				// it may be the api stream finished after the last parsed content block was executed, so  we are able to detect out of bounds and set userMessageContentReady to true (note you should not call presentAssistantMessage since if the last block is completed it will be presented again)
+				// const completeBlocks = this.assistantMessageContent.filter((block) => !block.partial) // if there are any partial blocks after the stream ended we can consider them invalid
+				// if (this.currentStreamingContentIndex >= completeBlocks.length) {
+				// 	this.userMessageContentReady = true
+				// }
+
 				await pWaitFor(() => this.taskState.userMessageContentReady)
 
 				// if the model did not tool use, then we need to tell it to either use a tool or attempt_completion
@@ -2653,7 +2576,7 @@ export class Task {
 
 		// It could be useful for cline to know if the user went from one or no file to another between messages, so we always include this context
 		details += "\n\n# VSCode Visible Files"
-		const visibleFilePaths = (await HostProvider.window.getVisibleTabs({})).paths.map((absolutePath: string) =>
+		const visibleFilePaths = (await HostProvider.window.getVisibleTabs({})).paths.map((absolutePath) =>
 			path.relative(this.cwd, absolutePath),
 		)
 
@@ -2670,7 +2593,7 @@ export class Task {
 		}
 
 		details += "\n\n# VSCode Open Tabs"
-		const openTabPaths = (await HostProvider.window.getOpenTabs({})).paths.map((absolutePath: string) =>
+		const openTabPaths = (await HostProvider.window.getOpenTabs({})).paths.map((absolutePath) =>
 			path.relative(this.cwd, absolutePath),
 		)
 
@@ -2705,6 +2628,23 @@ export class Task {
 			}).catch(() => {})
 		}
 
+		// we want to get diagnostics AFTER terminal cools down for a few reasons: terminal could be scaffolding a project, dev servers (compilers like webpack) will first re-compile and then send diagnostics, etc
+		/*
+		let diagnosticsDetails = ""
+		const diagnostics = await this.diagnosticsMonitor.getCurrentDiagnostics(this.didEditFile || terminalWasBusy) // if cline ran a command (ie npm install) or edited the workspace then wait a bit for updated diagnostics
+		for (const [uri, fileDiagnostics] of diagnostics) {
+			const problems = fileDiagnostics.filter((d) => d.severity === vscode.DiagnosticSeverity.Error)
+			if (problems.length > 0) {
+				diagnosticsDetails += `\n## ${path.relative(cwd, uri.fsPath)}`
+				for (const diagnostic of problems) {
+					// let severity = diagnostic.severity === vscode.DiagnosticSeverity.Error ? "Error" : "Warning"
+					const line = diagnostic.range.start.line + 1 // VSCode lines are 0-indexed
+					const source = diagnostic.source ? `[${diagnostic.source}] ` : ""
+					diagnosticsDetails += `\n- ${source}Line ${line}: ${diagnostic.message}`
+				}
+			}
+		}
+		*/
 		this.taskState.didEditFile = false // reset, this lets us know when to wait for saved files to update terminals
 
 		// waiting for updated diagnostics lets terminal output be the most up-to-date possible
@@ -2742,6 +2682,13 @@ export class Task {
 				}
 			}
 		}
+
+		// details += "\n\n# VSCode Workspace Errors"
+		// if (diagnosticsDetails) {
+		// 	details += diagnosticsDetails
+		// } else {
+		// 	details += "\n(No errors detected)"
+		// }
 
 		if (terminalDetails) {
 			details += terminalDetails
@@ -2823,24 +2770,11 @@ export class Task {
 		details += "\n\n# Context Window Usage"
 		details += `\n${lastApiReqTotalTokens.toLocaleString()} / ${(contextWindow / 1000).toLocaleString()}K tokens used (${usagePercentage}%)`
 
-		// CARET MODIFICATION: Cline 모드에서는 환경 세부사항에 모드 정보 포함 (원래 Cline 방식)
-		if (this.chatSettings.modeSystem === "cline") {
-			details += "\n\n# Current Mode"
-			if (this.chatSettings.mode === "plan") {
-				details += "\nPLAN MODE\n" + formatResponse.planModeInstructions()
-			} else {
-				details += "\nACT MODE"
-			}
+		details += "\n\n# Current Mode"
+		if (this.mode === "plan") {
+			details += "\nPLAN MODE\n" + formatResponse.planModeInstructions()
 		} else {
-			// CARET MODIFICATION: Caret 모드에서도 현재 모드 정보 제공
-			details += "\n\n# Current Mode"
-			if (this.chatSettings.mode === "chatbot") {
-				details +=
-					"\nCHATBOT MODE\nIn this mode, you should provide expert consultation and analysis without making changes to the codebase. You act as an expert consultant who can read files and examine the codebase for analysis purposes, but should not make any modifications. Use the chatbot_mode_respond tool to provide thoughtful, expert consultation."
-			} else {
-				details +=
-					"\nAGENT MODE\nIn this mode, you have access to all tools and can make changes to accomplish the user's task."
-			}
+			details += "\nACT MODE"
 		}
 
 		return `<environment_details>\n${details.trim()}\n</environment_details>`

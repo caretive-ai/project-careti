@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package caret;
+import "caret/common.proto";
+option java_package = "bot.caret.proto";
+option java_multiple_files = true;
+
+// Service for Caret-specific UI functionality
+service UIService {
+  // Handle Caret-specific chatbot mode responses
+  rpc handleChatbotModeResponse(ChatbotModeResponseRequest) returns (Empty);
+  
+  // Handle browser action requests
+  rpc handleBrowserActionRequest(BrowserActionRequest) returns (Empty);
+}
+
+// Caret-specific Ask types (extends Cline's ClineAsk)
+enum CaretAsk {
+  CHATBOT_MODE_RESPOND = 0;
+  ASK_BROWSER_ACTION = 1;
+}
+
+// Request for chatbot mode response
+message ChatbotModeResponseRequest {
+  Metadata metadata = 1;
+  string response = 2;
+}
+
+// Request for browser action
+message BrowserActionRequest {
+  Metadata metadata = 1;
+  string action = 2;
+  optional string target = 3;
+}

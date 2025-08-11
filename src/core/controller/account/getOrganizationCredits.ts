@@ -16,44 +16,37 @@ export async function getOrganizationCredits(
 			throw new Error("Account service not available")
 		}
 
-		// CARET MODIFICATION: Temporarily disable organization credit fetching as it's not yet implemented in CaretAccountService.
-		// TODO: Re-enable this feature when the backend API is ready.
 		// Call the individual RPC variants in parallel
-		// const [balanceData, usageTransactions] = await Promise.all([
-		// 	controller.accountService.fetchOrganizationCreditsRPC(request.organizationId),
-		// 	controller.accountService.fetchOrganizationUsageTransactionsRPC(request.organizationId),
-		// ])
+		const [balanceData, usageTransactions] = await Promise.all([
+			controller.accountService.fetchOrganizationCreditsRPC(request.organizationId),
+			controller.accountService.fetchOrganizationUsageTransactionsRPC(request.organizationId),
+		])
 
-		// // If balance call fails (returns undefined), throw an error
-		// if (!balanceData) {
-		// 	throw new Error("Failed to fetch organization credits data")
-		// }
+		// If balance call fails (returns undefined), throw an error
+		if (!balanceData) {
+			throw new Error("Failed to fetch organization credits data")
+		}
 
-		// return OrganizationCreditsData.create({
-		// 	balance: balanceData ? { currentBalance: balanceData.balance / 100 } : { currentBalance: 0 },
-		// 	organizationId: balanceData?.organizationId || "",
-		// 	usageTransactions:
-		// 		usageTransactions?.map((tx: OrganizationUsageTransaction) =>
-		// 			OrganizationUsageTransaction.create({
-		// 				aiInferenceProviderName: tx.aiInferenceProviderName,
-		// 				aiModelName: tx.aiModelName,
-		// 				aiModelTypeName: tx.aiModelTypeName,
-		// 				completionTokens: tx.completionTokens,
-		// 				costUsd: tx.costUsd,
-		// 				createdAt: tx.createdAt,
-		// 				creditsUsed: tx.creditsUsed,
-		// 				generationId: tx.generationId,
-		// 				organizationId: tx.organizationId,
-		// 				promptTokens: tx.promptTokens,
-		// 				totalTokens: tx.totalTokens,
-		// 				userId: tx.userId,
-		// 			}),
-		// 		) || [],
-		// })
 		return OrganizationCreditsData.create({
-			balance: { currentBalance: 0 },
-			organizationId: request.organizationId,
-			usageTransactions: [],
+			balance: balanceData ? { currentBalance: balanceData.balance / 100 } : { currentBalance: 0 },
+			organizationId: balanceData?.organizationId || "",
+			usageTransactions:
+				usageTransactions?.map((tx) =>
+					OrganizationUsageTransaction.create({
+						aiInferenceProviderName: tx.aiInferenceProviderName,
+						aiModelName: tx.aiModelName,
+						aiModelTypeName: tx.aiModelTypeName,
+						completionTokens: tx.completionTokens,
+						costUsd: tx.costUsd,
+						createdAt: tx.createdAt,
+						creditsUsed: tx.creditsUsed,
+						generationId: tx.generationId,
+						organizationId: tx.organizationId,
+						promptTokens: tx.promptTokens,
+						totalTokens: tx.totalTokens,
+						userId: tx.userId,
+					}),
+				) || [],
 		})
 	} catch (error) {
 		console.error(`Failed to fetch organization credits data: ${error}`)

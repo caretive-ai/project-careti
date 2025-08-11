@@ -38,18 +38,16 @@ export async function subscribeToAccountButtonClicked(
  * @param controllerId The ID of the controller to send the event to
  */
 export async function sendAccountButtonClickedEvent(controllerId: string): Promise<void> {
-	console.log(`[AUTH] sendAccountButtonClickedEvent called for controller: ${controllerId}`)
 	const responseStream = activeSubscriptions.get(controllerId)
 
 	if (!responseStream) {
-		console.warn(`[AUTH] No active subscription found for controller ${controllerId}. Cannot navigate to account view.`)
+		console.log(`No active subscription for controller ${controllerId}`)
 		return
 	}
 
 	try {
 		const event: Empty = Empty.create({})
 		await responseStream(event, false)
-		console.log(`[AUTH] Successfully sent accountButtonClicked event to controller ${controllerId}`)
 	} catch (error) {
 		console.error(`Error sending account button clicked event to controller ${controllerId}:`, error)
 		activeSubscriptions.delete(controllerId)

@@ -7,8 +7,8 @@ import { ShowMessageRequest, ShowMessageType } from "@/shared/proto/host/window"
 
 export async function updateDefaultTerminalProfile(
 	controller: Controller,
-	request: proto.caret.StringRequest,
-): Promise<proto.caret.TerminalProfileUpdateResponse> {
+	request: proto.cline.StringRequest,
+): Promise<proto.cline.TerminalProfileUpdateResponse> {
 	const profileId = request.value
 
 	// Update the terminal profile in the state
@@ -28,7 +28,7 @@ export async function updateDefaultTerminalProfile(
 		if (closedCount > 0) {
 			const message = `Closed ${closedCount} ${closedCount === 1 ? "terminal" : "terminals"} with different profile.`
 			HostProvider.window.showMessage({
-				type: ShowMessageType.WINDOW_MESSAGE_INFORMATION,
+				type: ShowMessageType.INFORMATION,
 				message,
 			})
 		}
@@ -39,7 +39,7 @@ export async function updateDefaultTerminalProfile(
 				`${busyTerminals.length} busy ${busyTerminals.length === 1 ? "terminal has" : "terminals have"} a different profile. ` +
 				`Close ${busyTerminals.length === 1 ? "it" : "them"} to use the new profile for all commands.`
 			HostProvider.window.showMessage({
-				type: ShowMessageType.WINDOW_MESSAGE_WARNING,
+				type: ShowMessageType.WARNING,
 				message,
 			})
 		}
@@ -48,7 +48,7 @@ export async function updateDefaultTerminalProfile(
 	// Broadcast state update to all webviews
 	await controller.postStateToWebview()
 
-	return proto.caret.TerminalProfileUpdateResponse.create({
+	return proto.cline.TerminalProfileUpdateResponse.create({
 		closedCount,
 		busyTerminalsCount: busyTerminals.length,
 		hasBusyTerminals: busyTerminals.length > 0,

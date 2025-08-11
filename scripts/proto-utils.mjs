@@ -32,23 +32,22 @@ export async function loadProtoDescriptorSet() {
 export async function loadServicesFromProtoDescriptor() {
 	// Load service definitions from descriptor set
 	const proto = await loadProtoDescriptorSet()
-	// console.log("Inspecting proto object structure:", JSON.stringify(proto, null, 2))
 
 	// Extract host services and proto messages from the proto definition
 	const hostServices = {}
-	const protobusServices = {}
-	// CARET MODIFICATION: Properly separate host services (Window, Env, Watch, Diff, Workspace) from protobus services
-	const hostServiceNames = new Set(["WindowService", "EnvService", "WatchService", "DiffService", "WorkspaceService"])
-	
-	for (const [name, def] of Object.entries(proto.caret)) {
+	for (const [name, def] of Object.entries(proto.host)) {
 		if (def && "service" in def) {
-			if (hostServiceNames.has(name)) {
-				hostServices[name] = def
-			} else {
-				protobusServices[name] = def
-			}
+			hostServices[name] = def
 		} else {
-			addTypeNameToFqn(name, `proto.caret.${name}`)
+			addTypeNameToFqn(name, `proto.host.${name}`)
+		}
+	}
+	const protobusServices = {}
+	for (const [name, def] of Object.entries(proto.cline)) {
+		if (def && "service" in def) {
+			protobusServices[name] = def
+		} else {
+			addTypeNameToFqn(name, `proto.cline.${name}`)
 		}
 	}
 	return { protobusServices, hostServices }

@@ -141,11 +141,7 @@ export const formatResponse = {
 			mode === "plan"
 				? CaretResponses.taskResumptionPlanMode(agoText, cwd.toPosix())
 				: CaretResponses.taskResumptionActMode(agoText, cwd.toPosix())
-		}${
-			wasRecent && !hasPendingFileContextWarnings
-				? `\n\n${CaretResponses.taskResumptionImportantNote()}`
-				: ""
-		}`
+		}${wasRecent && !hasPendingFileContextWarnings ? `\n\n${CaretResponses.taskResumptionImportantNote()}` : ""}`
 
 		const userResponseMessage = `${
 			responseText
@@ -170,15 +166,16 @@ export const formatResponse = {
 		newProblemsMessage: string | undefined,
 	) =>
 		CaretResponses.fileEditWithUserChangesUserUpdates(userEdits) +
-		(autoFormattingEdits
-			? CaretResponses.fileEditWithUserChangesAutoFormatting(autoFormattingEdits)
-			: "") +
+		(autoFormattingEdits ? CaretResponses.fileEditWithUserChangesAutoFormatting(autoFormattingEdits) : "") +
 		CaretResponses.fileEditWithUserChangesSavedContent(relPath.toPosix()) +
 		`<final_file_content path="${relPath.toPosix()}">\n${finalContent}\n</final_file_content>\n\n` +
 		`Please note:\n` +
-		CaretResponses.fileEditWithUserChangesNote1() + `\n` +
-		CaretResponses.fileEditWithUserChangesNote2() + `\n` +
-		CaretResponses.fileEditWithUserChangesNote3() + `\n` +
+		CaretResponses.fileEditWithUserChangesNote1() +
+		`\n` +
+		CaretResponses.fileEditWithUserChangesNote2() +
+		`\n` +
+		CaretResponses.fileEditWithUserChangesNote3() +
+		`\n` +
 		CaretResponses.fileEditWithUserChangesNote4() +
 		`${newProblemsMessage}`,
 
@@ -189,9 +186,7 @@ export const formatResponse = {
 		newProblemsMessage: string | undefined,
 	) =>
 		CaretResponses.fileEditWithoutUserChangesSavedContent(relPath.toPosix()) +
-		(autoFormattingEdits
-			? CaretResponses.fileEditWithoutUserChangesAutoFormatting(autoFormattingEdits)
-			: "") +
+		(autoFormattingEdits ? CaretResponses.fileEditWithoutUserChangesAutoFormatting(autoFormattingEdits) : "") +
 		`Here is the full, updated content of the file that was saved:\n\n` +
 		`<final_file_content path="${relPath.toPosix()}">\n${finalContent}\n</final_file_content>\n\n` +
 		CaretResponses.fileEditWithoutUserChangesImportantNote() +
@@ -203,11 +198,9 @@ export const formatResponse = {
 		`<file_content path="${relPath.toPosix()}">\n${originalContent}\n</file_content>\n\n` +
 		CaretResponses.diffErrorRetryInstructions(),
 
-	toolAlreadyUsed: (toolName: string) =>
-		CaretResponses.toolAlreadyUsed(toolName),
+	toolAlreadyUsed: (toolName: string) => CaretResponses.toolAlreadyUsed(toolName),
 
-	clineIgnoreInstructions: (content: string) =>
-		CaretResponses.clineIgnoreInstructions(content),
+	clineIgnoreInstructions: (content: string) => CaretResponses.clineIgnoreInstructions(content),
 
 	clineRulesGlobalDirectoryInstructions: (globalClineRulesFilePath: string, content: string) =>
 		CaretResponses.clineRulesGlobalDirectoryInstructions(globalClineRulesFilePath.toPosix(), content),

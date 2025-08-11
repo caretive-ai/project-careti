@@ -13,7 +13,7 @@ import { HistoryItem } from "@shared/HistoryItem"
 import { getSavedClineMessages, getSavedApiConversationHistory } from "@core/storage/disk"
 import { AskResponseRequest } from "@shared/proto/cline/task"
 import { getCwd } from "@/utils/path"
-import { askResponse } from "@core/controller/task/askResponse"
+import { askResponse } from "caret-src/core/controller/task/askResponse"
 import { ChatMode, ChatSettings } from "@shared/storage/types"
 
 /**
@@ -72,9 +72,9 @@ let messageCatcherDisposable: vscode.Disposable | undefined
  */
 async function updateAutoApprovalSettings(context: vscode.ExtensionContext, provider?: WebviewProvider) {
 	try {
-        if (!provider?.controller) {
-            return
-        }
+		if (!provider?.controller) {
+			return
+		}
 		// CARET MODIFICATION: Use controller to get state and update settings
 		const { autoApprovalSettings } = await provider.controller.getStateToPostToWebview()
 
@@ -554,7 +554,7 @@ async function autoRespondToAsk(webviewProvider: WebviewProvider, askType: strin
 			// Decline creating a new task to keep the current task running
 			responseType = "messageResponse"
 			responseText = "Continue with the current task."
-			break;
+			break
 
 		// CARET MODIFICATION: This case is no longer relevant with the new mode handling
 		// case "plan_mode_respond":

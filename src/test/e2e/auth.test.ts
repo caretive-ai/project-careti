@@ -54,7 +54,7 @@ e2e("Auth - can set up API keys", async ({ page, sidebar }) => {
 
 	// Verify the release banner is visible for new installs and can be closed.
 	const releaseBanner = sidebar.getByRole("heading", {
-		name: /^🎉 New in v\d/,
+		name: /^?�� New in v\d/,
 	})
 	await expect(releaseBanner).toBeVisible()
 	await sidebar.getByTestId("close-button").locator("span").first().click()

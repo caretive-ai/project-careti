@@ -157,9 +157,9 @@ Error fetching content: Failed to access path "missing.txt": ENOENT: no such fil
 			const expectedOutput = `Look in 'src/' (see below for folder content) folder
 
 <folder_content path="src/">
-├── index.ts
-├── utils/
-└── README.md
+?��??� index.ts
+?��??� utils/
+?��??� README.md
 
 <file_content path="src/index.ts">
 export const main = () => {};

@@ -13,7 +13,7 @@ export function fixModelHtmlEscaping(text: string): string {
 }
 
 /**
- * Removes invalid characters (like the replacement character �) from a string
+ * Removes invalid characters (like the replacement character �? from a string
  * @param text String potentially containing invalid characters
  * @returns String with invalid characters removed
  */

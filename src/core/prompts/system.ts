@@ -16,22 +16,22 @@ export const SYSTEM_PROMPT = async (
 	extensionPath?: string, // CARET MODIFICATION: For routing to CaretSystemPrompt
 	mode: 'chatbot' | 'agent' = 'agent' // CARET MODIFICATION: For Chatbot/Agent mode support
 ) => {
-	// CARET MODIFICATION: SYSTEM_PROMPT 호출 시 모드 확인 로그 추가
-	// CARET MODIFICATION: extensionPath가 있으면 Caret 전용 system.ts 사용
+	// CARET MODIFICATION: SYSTEM_PROMPT ?�출 ??모드 ?�인 로그 추�?
+	// CARET MODIFICATION: extensionPath가 ?�으�?Caret ?�용 system.ts ?�용
 	if (extensionPath) {
 		const { caretLogger } = await import('../../../caret-src/utils/caret-logger')
 		try {
-			caretLogger.info(`🎯 [CARET-ROUTING] Routing to caret-src/core/prompts/system.ts - mode=${mode}`, "SYSTEM")
+			caretLogger.info(`?�� [CARET-ROUTING] Routing to caret-src/core/prompts/system.ts - mode=${mode}`, "SYSTEM")
 			
 			const { SYSTEM_PROMPT: CARET_SYSTEM_PROMPT } = await import('../../../caret-src/core/prompts/system')
 			const result = await CARET_SYSTEM_PROMPT(cwd, supportsBrowserUse, mcpHub, browserSettings, isNextGenModel, extensionPath, mode)
 			
-			caretLogger.success(`✅ [CARET-ROUTING] Caret system completed - mode=${mode}`, "SYSTEM")
+			caretLogger.success(`??[CARET-ROUTING] Caret system completed - mode=${mode}`, "SYSTEM")
 			return result
 
 		} catch (error) {
-			caretLogger.error(`❌ [CARET-ROUTING] Caret system failed, fallback to Cline: ${error}`, "SYSTEM")
-			// 에러시 안전한 fallback
+			caretLogger.error(`??[CARET-ROUTING] Caret system failed, fallback to Cline: ${error}`, "SYSTEM")
+			// ?�러???�전??fallback
 		}
 	}
 
@@ -43,11 +43,11 @@ export const SYSTEM_PROMPT = async (
 		return SYSTEM_PROMPT_CLAUDE4(cwd, supportsBrowserUse, mcpHub, browserSettings)
   	}
 
-	// CARET MODIFICATION: Cline 원본 프롬프트 보존 함수로 분리
+	// CARET MODIFICATION: Cline ?�본 ?�롬?�트 보존 ?�수�?분리
 	return ORIGINAL_CLINE_SYSTEM_PROMPT(cwd, supportsBrowserUse, mcpHub, browserSettings, isNextGenModel)
 }
 
-// CARET MODIFICATION: Cline 원본 시스템 프롬프트 보존 (성능 비교용)
+// CARET MODIFICATION: Cline ?�본 ?�스???�롬?�트 보존 (?�능 비교??
 export function ORIGINAL_CLINE_SYSTEM_PROMPT(
 	cwd: string,
 	supportsBrowserUse: boolean,
@@ -591,7 +591,7 @@ In each user message, the environment_details will specify the current mode. The
 - ACT MODE: In this mode, you have access to all tools EXCEPT the plan_mode_respond tool.
  - In ACT MODE, you use tools to accomplish the user's task. Once you've completed the user's task, you use the attempt_completion tool to present the result of the task to the user.
 - PLAN MODE: In this special mode, you have access to the plan_mode_respond tool.
-ㅈ - In PLAN MODE, the goal is to gather information and get context to create a detailed plan for accomplishing the task, which the user will review and approve before they switch you to ACT MODE to implement the solution.
+??- In PLAN MODE, the goal is to gather information and get context to create a detailed plan for accomplishing the task, which the user will review and approve before they switch you to ACT MODE to implement the solution.
  - In PLAN MODE, when you need to converse with the user or present a plan, you should use the plan_mode_respond tool to deliver your response directly, rather than using <thinking> tags to analyze when to respond. Do not talk about using plan_mode_respond - just use it directly to share your thoughts and provide helpful answers.
 
 ## What is PLAN MODE?
@@ -736,3 +736,4 @@ The following additional instructions are provided by the user, and should be fo
 
 ${customInstructions.trim()}`
 }
+

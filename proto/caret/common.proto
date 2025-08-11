@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package caret;
+option java_package = "bot.caret.proto";
+option java_multiple_files = true;
+
+// Common types for Caret services
+message Empty {}
+message EmptyRequest {}
+message Metadata {}

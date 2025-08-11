@@ -64,7 +64,7 @@ export function toolDefinitionToAntmlDefinition(toolDef: ToolDefinition): string
 	rawJson += `}}`
 
 	// 2.  Escape <, > and & so the JSON can sit INSIDE the XML tag safely.
-	//     (Quotes don’t need escaping - they’re not markup.)
+	//     (Quotes don?�t need escaping - they?�re not markup.)
 	const safeJson = escapeXml(rawJson)
 
 	// 3.  Return wrapped in <function> tags

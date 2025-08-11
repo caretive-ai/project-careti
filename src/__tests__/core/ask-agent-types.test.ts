@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from "vitest"
 
-describe("Chatbot/Agent 핵심 타입 시스템", () => {
+describe("Chatbot/Agent core type tests", () => {
 	it("should define ChatbotAgentMode enum correctly", () => {
-		// TDD: Chatbot/Agent 열거형이 올바르게 정의되어야 함
+		// TDD: Chatbot/Agent category should be defined correctly
 		const { ChatbotAgentMode } = require("../../shared/proto/state")
 
 		expect(ChatbotAgentMode.CHATBOT).toBe(0)
@@ -11,7 +11,7 @@ describe("Chatbot/Agent 핵심 타입 시스템", () => {
 	})
 
 	it("should convert ChatSettings with Chatbot/Agent types correctly", () => {
-		// TDD: ChatSettings가 Chatbot/Agent 타입을 올바르게 처리해야 함
+		// TDD: ChatSettings should handle Chatbot/Agent types correctly
 		const { ChatSettings } = require("../../shared/ChatSettings")
 
 		const chatbotSettings = { mode: "chatbot" as const }
@@ -22,7 +22,7 @@ describe("Chatbot/Agent 핵심 타입 시스템", () => {
 	})
 
 	it("should have consistent Chatbot/Agent terminology in enum functions", () => {
-		// TDD: JSON 변환 함수들이 Chatbot/Agent 용어를 사용해야 함
+		// TDD: JSON conversion functions should use Chatbot/Agent terminology
 		const { ChatbotAgentModeFromJSON, ChatbotAgentModeToJSON, ChatbotAgentMode } = require("../../shared/proto/state")
 
 		expect(ChatbotAgentModeFromJSON("CHATBOT")).toBe(ChatbotAgentMode.CHATBOT)
@@ -32,7 +32,7 @@ describe("Chatbot/Agent 핵심 타입 시스템", () => {
 	})
 
 	it("should define ToggleChatbotAgentModeRequest interface correctly", () => {
-		// TDD: Chatbot/Agent 토글 요청 인터페이스가 올바르게 정의되어야 함
+		// TDD: Chatbot/Agent toggle request interface should be defined correctly
 		const { ToggleChatbotAgentModeRequest } = require("../../shared/proto/state")
 
 		expect(ToggleChatbotAgentModeRequest).toBeDefined()
@@ -41,10 +41,10 @@ describe("Chatbot/Agent 핵심 타입 시스템", () => {
 	})
 
 	it("should maintain Cline compatibility through mapping functions", () => {
-		// TDD: Cline 호환성을 위한 매핑 함수들이 있어야 함 (나중에 구현 예정)
-		// 현재는 테스트만 정의, 구현은 Phase 2에서
+		// TDD: Mapping functions for Cline compatibility should exist (detailed implementation pending)
+		// Currently only interface definition, implementation in Phase 2
 
-		// 예상 매핑 동작
+		// Expected mapping behavior
 		const expectedMappings = {
 			chatbot: "plan",
 			agent: "act",
@@ -55,15 +55,15 @@ describe("Chatbot/Agent 핵심 타입 시스템", () => {
 	})
 
 	it("should have default mode as Agent", () => {
-		// TDD: 기본 모드는 Agent여야 함 (마스터 정책)
+		// TDD: Default mode should be Agent (Master's policy)
 		const defaultMode = "agent" as const
 		expect(defaultMode).toBe("agent")
 	})
 })
 
-describe("Chatbot/Agent 타입 안전성 테스트", () => {
+describe("Chatbot/Agent type validation tests", () => {
 	it("should only accept valid Chatbot/Agent mode strings", () => {
-		// TDD: 타입 안전성 검증
+		// TDD: Type validation check
 		const validModes = ["chatbot", "agent"] as const
 		const invalidModes = ["plan", "act", "invalid", ""]
 
@@ -77,7 +77,7 @@ describe("Chatbot/Agent 타입 안전성 테스트", () => {
 	})
 
 	it("should convert between string and enum correctly", () => {
-		// TDD: 문자열과 열거형 간 변환이 정확해야 함
+		// TDD: String and enum conversion should be accurate
 		const modeMap = {
 			ask: 0,
 			agent: 1,

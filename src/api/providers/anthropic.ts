@@ -71,7 +71,7 @@ export class AnthropicHandler implements ApiHandler {
 						model: modelId,
 						thinking: reasoningOn ? { type: "enabled", budget_tokens: budget_tokens } : undefined,
 						max_tokens: model.info.maxTokens || 8192,
-						// "Thinking isn’t compatible with temperature, top_p, or top_k modifications as well as forced tool use."
+						// "Thinking isn?�t compatible with temperature, top_p, or top_k modifications as well as forced tool use."
 						// (https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking#important-considerations-when-using-extended-thinking)
 						temperature: reasoningOn ? undefined : 0,
 						system: [

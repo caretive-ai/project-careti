@@ -390,7 +390,7 @@
 		"package": "npm run check-types && npm run build:webview && npm run lint && node esbuild.mjs --production",
 		"package:release": "node ./caret-scripts/package-release.js",
 		"protos": "node scripts/build-proto.mjs",
-		"postprotos": "prettier src/shared/proto src/core/controller src/hosts/ webview-ui/src/services src/generated --write --log-level warn",
+		"postprotos": "prettier src/shared/proto caret-src/core/controller src/hosts/ webview-ui/src/services src/generated --write --log-level warn",
 		"clean": "rimraf dist dist-standalone webview-ui/build src/generated out/",
 		"compile-tests": "node ./scripts/build-tests.js",
 		"watch-tests": "tsc -p . -w --outDir out",

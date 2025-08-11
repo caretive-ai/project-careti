@@ -9,7 +9,6 @@ import { OpenRouterCompatibleModelInfo } from "@shared/proto/cline/models"
 import { McpMarketplaceCatalog } from "@shared/mcp"
 import { refreshOpenRouterModels } from "../models/refreshOpenRouterModels"
 import { refreshGroqModels } from "../models/refreshGroqModels"
-import { refreshBasetenModels } from "../models/refreshBasetenModels"
 
 /**
  * Initialize webview when it launches
@@ -22,14 +21,12 @@ export async function initializeWebview(controller: Controller, request: EmptyRe
 		// Populate file paths for workspace tracker (don't await)
 		controller.workspaceTracker?.populateFilePaths()
 
-		// CARET MODIFICATION: The 'readOpenRouterModels' method was removed in an upstream update.
-		// The logic is now handled by 'refreshOpenRouterModels', so this call is obsolete.
-		// // Post last cached models in case the call to endpoint fails
-		// controller.readOpenRouterModels().then((openRouterModels) => {
-		// 	if (openRouterModels) {
-		// 		sendOpenRouterModelsEvent(OpenRouterCompatibleModelInfo.create({ models: openRouterModels }))
-		// 	}
-		// })
+		// Post last cached models in case the call to endpoint fails
+		controller.readOpenRouterModels().then((openRouterModels) => {
+			if (openRouterModels) {
+				sendOpenRouterModelsEvent(OpenRouterCompatibleModelInfo.create({ models: openRouterModels }))
+			}
+		})
 
 		// Refresh OpenRouter models from API
 		refreshOpenRouterModels(controller, EmptyRequest.create()).then(async (response) => {
@@ -118,45 +115,6 @@ export async function initializeWebview(controller: Controller, request: EmptyRe
 					// Post state update if we updated any model info
 					if ((planModelId && response.models[planModelId]) || (actModelId && response.models[actModelId])) {
 						controller.cacheService.setApiConfiguration(updatedConfig)
-						await controller.postStateToWebview()
-					}
-				}
-			}
-		})
-
-		refreshBasetenModels(controller, EmptyRequest.create()).then(async (response) => {
-			if (response && response.models) {
-				// Update model info in state for Baseten (this needs to be done here since we don't want to update state while settings is open, and we may refresh models there)
-				const { apiConfiguration, planActSeparateModelsSetting } = await getAllExtensionState(controller.context)
-				const currentMode = await controller.getCurrentMode()
-
-				if (planActSeparateModelsSetting) {
-					// Separate models: update only current mode
-					const modelIdField = currentMode === "plan" ? "planModeBasetenModelId" : "actModeBasetenModelId"
-					const modelInfoField = currentMode === "plan" ? "planModeBasetenModelInfo" : "actModeBasetenModelInfo"
-					const modelId = apiConfiguration[modelIdField]
-
-					if (modelId && response.models[modelId]) {
-						await updateGlobalState(controller.context, modelInfoField, response.models[modelId])
-						await controller.postStateToWebview()
-					}
-				} else {
-					// Shared models: update both plan and act modes
-					const planModelId = apiConfiguration.planModeBasetenModelId
-					const actModelId = apiConfiguration.actModeBasetenModelId
-
-					// Update plan mode model info if we have a model ID
-					if (planModelId && response.models[planModelId]) {
-						await updateGlobalState(controller.context, "planModeBasetenModelInfo", response.models[planModelId])
-					}
-
-					// Update act mode model info if we have a model ID
-					if (actModelId && response.models[actModelId]) {
-						await updateGlobalState(controller.context, "actModeBasetenModelInfo", response.models[actModelId])
-					}
-
-					// Post state update if we updated any model info
-					if ((planModelId && response.models[planModelId]) || (actModelId && response.models[actModelId])) {
 						await controller.postStateToWebview()
 					}
 				}

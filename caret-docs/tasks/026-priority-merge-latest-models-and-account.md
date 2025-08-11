@@ -25,11 +25,11 @@
 diff main-caret/src/shared/api.ts cline-latest/src/shared/api.ts | grep -A5 -B5 "Model\|Provider"
 ```
 
-**예상 추가 모델들**:
-- Claude 3.5 Sonnet (최신 버전)
-- GPT-4o (최신)
-- Gemini Pro 2.0
-- 기타 새로운 Provider
+**필요 추가 모델들** (마스터 지정):
+- **ChatGPT-5** (최신 OpenAI 모델)
+- **gpt-oss-120b** (OSS 대형 모델)
+- **gpt-oss-20b** (OSS 중형 모델)
+- 기타 Cline latest에서 새로 추가된 모델들
 
 #### **1-2. 머징 대상 파일들**
 - `src/shared/api.ts` (새 모델 정의)
@@ -108,7 +108,8 @@ npm run protos
 npm run compile
 
 # 2. 새 모델 동작 확인
-# Settings에서 새 모델 선택 가능한지 확인
+# Settings에서 ChatGPT-5, gpt-oss-120b, gpt-oss-20b 선택 가능한지 확인
+# 각 모델로 간단한 대화 테스트
 
 # 3. Account 기능 확인
 # Account 로그인/로그아웃 정상 동작 확인
@@ -117,9 +118,9 @@ npm run compile
 ## ✅ **완료 기준**
 
 ### **필수 조건**
-- [ ] 새로 추가된 AI 모델들이 Settings에서 선택 가능
-- [ ] 선택한 새 모델로 정상 대화 가능
-- [ ] Account 로그인/로그아웃 정상 동작
+- [ ] **ChatGPT-5, gpt-oss-120b, gpt-oss-20b**가 Settings에서 선택 가능
+- [ ] 선택한 새 모델들로 정상 대화 가능
+- [ ] Account 로그인/로그아웃 정상 동작  
 - [ ] Caret 브랜딩 유지 (로고, 이름 등)
 - [ ] `npm run compile` 성공
 - [ ] `npm run build:webview` 성공
@@ -145,7 +146,7 @@ npm run compile
 ## 📈 **예상 효과**
 
 ### **즉시 얻을 수 있는 것들**
-- 🚀 **최신 AI 모델 사용**: Claude 3.5 Sonnet, GPT-4o 등
+- 🚀 **최신 AI 모델 사용**: ChatGPT-5, gpt-oss-120b, gpt-oss-20b
 - 🔐 **개선된 Account 시스템**: 더 안정적이고 기능이 풍부한 계정 관리
 - ⚡ **빠른 적용**: 2-3시간 내 완료
 

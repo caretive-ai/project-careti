@@ -48,6 +48,12 @@
 				"caret": "캐럿",
 				"cline": "클라인"
 			}
+		},
+		"apiOptions": {
+			"apiProviderLabel": "API 제공자",
+			"caret": {
+				"apiKeyLabel": "Gemini API 키"
+			}
 		}
 	},
 	"buttons": {
@@ -266,4 +272,4 @@
 		"freeOptions": "현재 사용 가능한 무료 옵션을 찾으려면 \"free\"를 검색해보세요.",
 		"seeMore": "더 보기"
 	}
-} 
+}

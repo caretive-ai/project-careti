@@ -1,6 +1,6 @@
 import { VSCodeDataGrid, VSCodeDataGridRow, VSCodeDataGridCell } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
-import { TabButton } from "../mcp/configuration/McpConfigurationView"
+import TabButton from "@/components/common/TabButton"
 import { UsageTransaction, PaymentTransaction } from "@shared/ClineAccount"
 import { formatDollars, formatTimestamp } from "@/utils/format"
 

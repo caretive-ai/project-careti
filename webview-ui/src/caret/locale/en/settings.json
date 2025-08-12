@@ -10,6 +10,12 @@
 				"caret": "Caret",
 				"cline": "Cline"
 			}
+		},
+		"apiOptions": {
+			"apiProviderLabel": "API Provider",
+			"caret": {
+				"apiKeyLabel": "Gemini API Key"
+			}
 		}
 	},
 	"tabs": {
@@ -261,4 +267,4 @@
 		"freeOptions": "You can also try searching \"free\" for no-cost options currently available.",
 		"seeMore": "See more"
 	}
-} 
+}

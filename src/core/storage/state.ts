@@ -282,6 +282,11 @@ export async function getAllExtensionState(context: vscode.ExtensionContext) {
 	const chatSettings = (await getWorkspaceState(context, "chatSettings")) as ChatSettings | undefined
 	const storedApiProvider = (await getWorkspaceState(context, "apiProvider")) as ApiProvider | undefined
 	const apiModelId = (await getWorkspaceState(context, "apiModelId")) as string | undefined
+	// Plan/Act mode specific fields
+	const planModeApiProvider = (await getWorkspaceState(context, "planModeApiProvider")) as ApiProvider | undefined
+	const actModeApiProvider = (await getWorkspaceState(context, "actModeApiProvider")) as ApiProvider | undefined
+	const planModeApiModelId = (await getWorkspaceState(context, "planModeApiModelId")) as string | undefined
+	const actModeApiModelId = (await getWorkspaceState(context, "actModeApiModelId")) as string | undefined
 	const thinkingBudgetTokens = (await getWorkspaceState(context, "thinkingBudgetTokens")) as number | undefined
 	const reasoningEffort = (await getWorkspaceState(context, "reasoningEffort")) as string | undefined
 	const vsCodeLmModelSelector = (await getWorkspaceState(context, "vsCodeLmModelSelector")) as
@@ -379,6 +384,11 @@ export async function getAllExtensionState(context: vscode.ExtensionContext) {
 		apiConfiguration: {
 			apiProvider,
 			apiModelId,
+			// Plan/Act mode specific fields
+			planModeApiProvider,
+			actModeApiProvider,
+			planModeApiModelId,
+			actModeApiModelId,
 			apiKey,
 			openRouterApiKey,
 			caretApiKey,
@@ -494,9 +504,19 @@ export async function getAllExtensionState(context: vscode.ExtensionContext) {
 }
 
 export async function updateApiConfiguration(context: vscode.ExtensionContext, apiConfiguration: ApiConfiguration) {
+	// CARET MODIFICATION: 저장 로깅 추가
+	const { caretLogger } = await import("../../../caret-src/utils/caret-logger")
+	caretLogger.info("💾 [BACKEND-SAVE] updateApiConfiguration called", "STATE")
+	caretLogger.debug(`💾 [BACKEND-SAVE] Full config to save: ${JSON.stringify(apiConfiguration)}`, "STATE")
+
 	const {
 		apiProvider,
 		apiModelId,
+		// Plan/Act mode specific fields
+		planModeApiProvider,
+		actModeApiProvider,
+		planModeApiModelId,
+		actModeApiModelId,
 		apiKey,
 		openRouterApiKey,
 		awsAccessKey,
@@ -568,8 +588,17 @@ export async function updateApiConfiguration(context: vscode.ExtensionContext, a
 		sapAiCoreModelId,
 	} = apiConfiguration
 	// Workspace state updates
+	caretLogger.debug(`💾 [BACKEND-SAVE] Saving apiProvider: ${apiProvider}`, "STATE")
 	await updateWorkspaceState(context, "apiProvider", apiProvider)
 	await updateWorkspaceState(context, "apiModelId", apiModelId)
+
+	// Plan/Act mode specific fields
+	caretLogger.debug(`💾 [BACKEND-SAVE] Saving planModeApiProvider: ${planModeApiProvider}`, "STATE")
+	caretLogger.debug(`💾 [BACKEND-SAVE] Saving actModeApiProvider: ${actModeApiProvider}`, "STATE")
+	await updateWorkspaceState(context, "planModeApiProvider", planModeApiProvider)
+	await updateWorkspaceState(context, "actModeApiProvider", actModeApiProvider)
+	await updateWorkspaceState(context, "planModeApiModelId", planModeApiModelId)
+	await updateWorkspaceState(context, "actModeApiModelId", actModeApiModelId)
 	await updateWorkspaceState(context, "thinkingBudgetTokens", thinkingBudgetTokens)
 	await updateWorkspaceState(context, "reasoningEffort", reasoningEffort)
 	await updateWorkspaceState(context, "vsCodeLmModelSelector", vsCodeLmModelSelector)

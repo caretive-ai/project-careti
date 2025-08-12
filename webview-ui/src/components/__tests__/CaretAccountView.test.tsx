@@ -1,14 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { render, screen, fireEvent } from "@testing-library/react"
-import { ClineAccountView } from "../CaretAccountView"
-import { useFirebaseAuth } from "@/context/FirebaseAuthContext"
+import { CaretAccountView } from "../CaretAccountView"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
 import { t, getLink } from "@/caret/utils/i18n"
 import { getUrl } from "@/caret/constants/urls"
 
 // Mock dependencies
-vi.mock("@/context/FirebaseAuthContext")
 vi.mock("@/context/ExtensionStateContext")
 vi.mock("@/services/grpc-client", () => ({
 	AccountServiceClient: {
@@ -79,7 +77,6 @@ vi.mock("@/utils/vscode", () => ({
 	},
 }))
 
-const mockUseFirebaseAuth = vi.mocked(useFirebaseAuth)
 const mockUseExtensionState = vi.mocked(useExtensionState)
 const mockAccountServiceClient = vi.mocked(AccountServiceClient)
 const mockT = vi.mocked(t)
@@ -91,11 +88,6 @@ describe("CaretAccountView - TDD Implementation", () => {
 		vi.clearAllMocks()
 
 		// Default mock implementations
-		mockUseFirebaseAuth.mockReturnValue({
-			user: null,
-			handleSignOut: vi.fn(),
-		} as any)
-
 		mockUseExtensionState.mockReturnValue({
 			userInfo: null,
 			apiConfiguration: { caretApiKey: null },
@@ -119,17 +111,12 @@ describe("CaretAccountView - TDD Implementation", () => {
 		})
 
 		it("should use Caret URLs instead of Cline URLs for logged in users", () => {
-			mockUseFirebaseAuth.mockReturnValue({
-				user: { uid: "test-user", displayName: "Test User", email: "test@example.com" },
-				handleSignOut: vi.fn(),
-			} as any)
-
 			mockUseExtensionState.mockReturnValue({
-				userInfo: { uid: "test-user" },
+				userInfo: { uid: "test-user", displayName: "Test User", email: "test@example.com" },
 				apiConfiguration: { caretApiKey: "test-key" },
 			} as any)
 
-			render(<ClineAccountView />)
+			render(<CaretAccountView />)
 
 			// Verify Caret URLs are used for logged in users
 			expect(mockGetUrl).toHaveBeenCalledWith("CARET_APP_CREDITS")
@@ -138,17 +125,12 @@ describe("CaretAccountView - TDD Implementation", () => {
 
 		it("should use Caret URLs for terms and privacy when user is not logged in", () => {
 			// Not logged in user state
-			mockUseFirebaseAuth.mockReturnValue({
-				user: null,
-				handleSignOut: vi.fn(),
-			} as any)
-
 			mockUseExtensionState.mockReturnValue({
 				userInfo: null,
 				apiConfiguration: { caretApiKey: null },
 			} as any)
 
-			render(<ClineAccountView />)
+			render(<CaretAccountView />)
 
 			// Verify Caret URLs are used for terms and privacy - using getLink instead of getUrl
 			expect(mockGetLink).toHaveBeenCalledWith("CARETIVE_TERMS")
@@ -156,17 +138,12 @@ describe("CaretAccountView - TDD Implementation", () => {
 		})
 
 		it("should display Dashboard and Add Credits buttons for logged in users", () => {
-			mockUseFirebaseAuth.mockReturnValue({
-				user: { uid: "test-user", displayName: "Test User", email: "test@example.com" },
-				handleSignOut: vi.fn(),
-			} as any)
-
 			mockUseExtensionState.mockReturnValue({
-				userInfo: { uid: "test-user" },
+				userInfo: { uid: "test-user", displayName: "Test User", email: "test@example.com" },
 				apiConfiguration: { caretApiKey: "test-key" },
 			} as any)
 
-			render(<ClineAccountView />)
+			render(<CaretAccountView />)
 
 			expect(screen.getByText("Dashboard")).toBeInTheDocument()
 			expect(screen.getByText("Add Credits")).toBeInTheDocument()
@@ -194,39 +171,26 @@ describe("CaretAccountView - TDD Implementation", () => {
 		})
 
 		it("should call AccountServiceClient.accountLogoutClicked when logout button is clicked", async () => {
-			const mockHandleSignOut = vi.fn()
-
-			mockUseFirebaseAuth.mockReturnValue({
-				user: { uid: "test-user", displayName: "Test User", email: "test@example.com" },
-				handleSignOut: mockHandleSignOut,
-			} as any)
-
 			mockUseExtensionState.mockReturnValue({
-				userInfo: { uid: "test-user" },
+				userInfo: { uid: "test-user", displayName: "Test User", email: "test@example.com" },
 				apiConfiguration: { caretApiKey: "test-key" },
 			} as any)
 
-			render(<ClineAccountView />)
+			render(<CaretAccountView />)
 
 			const logoutButton = screen.getByText("Log out")
 			fireEvent.click(logoutButton)
 
 			expect(mockAccountServiceClient.accountLogoutClicked).toHaveBeenCalledWith({})
-			expect(mockHandleSignOut).toHaveBeenCalled()
 		})
 
 		it("should display current balance with CountUp animation", () => {
-			mockUseFirebaseAuth.mockReturnValue({
-				user: { uid: "test-user", displayName: "Test User", email: "test@example.com" },
-				handleSignOut: vi.fn(),
-			} as any)
-
 			mockUseExtensionState.mockReturnValue({
-				userInfo: { uid: "test-user" },
+				userInfo: { uid: "test-user", displayName: "Test User", email: "test@example.com" },
 				apiConfiguration: { caretApiKey: "test-key" },
 			} as any)
 
-			render(<ClineAccountView />)
+			render(<CaretAccountView />)
 
 			// The component converts to uppercase, so it shows "CURRENT BALANCE"
 			expect(screen.getByText("CURRENT BALANCE")).toBeInTheDocument()
@@ -298,22 +262,17 @@ describe("CaretAccountView - TDD Implementation", () => {
 
 	describe("🔄 REFACTOR Phase - Quality Verification", () => {
 		it("should follow Caret naming conventions", () => {
-			// Component should use ClineAccountView as alias for compatibility
-			expect(ClineAccountView.name).toBe("ClineAccountView")
+			// Component should use CaretAccountView as alias for compatibility
+			expect(CaretAccountView.name).toBe("CaretAccountView")
 		})
 
 		it("should use Caret URLs and i18n system properly", () => {
-			mockUseFirebaseAuth.mockReturnValue({
-				user: { uid: "test-user", displayName: "Test User", email: "test@example.com" },
-				handleSignOut: vi.fn(),
-			} as any)
-
 			mockUseExtensionState.mockReturnValue({
-				userInfo: { uid: "test-user" },
+				userInfo: { uid: "test-user", displayName: "Test User", email: "test@example.com" },
 				apiConfiguration: { caretApiKey: "test-key" },
 			} as any)
 
-			render(<ClineAccountView />)
+			render(<CaretAccountView />)
 
 			// Verify all required translations are used
 			expect(mockT).toHaveBeenCalledWith("account.dashboard", "common")

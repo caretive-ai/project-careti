@@ -114,7 +114,7 @@ const WelcomeView = () => {
 				{showApiOptions && (
 					<div style={{ marginTop: "25px", padding: "20px", border: "1px solid var(--vscode-inputValidation-infoBorder)", borderRadius: "8px", backgroundColor: "var(--vscode-sideBar-background)" }}>
 						<h4>API Key Settings</h4>
-						<ApiOptions showModelOptions={true} />
+						<ApiOptions showModelOptions={true} currentMode="agent" />
 						<VSCodeButton onClick={handleSubmitApiKey} disabled={disableLetsGoButton} style={{ width: "100%", marginTop: "15px" }}>
 							Save and Start
 						</VSCodeButton>

@@ -33,7 +33,8 @@ import { OpenRouterCompatibleModelInfo } from "@shared/proto/models"
 
 // CARET MODIFICATION: Added caretBanner property for Caret welcome page
 // Original backed up to: ExtensionStateContext-tsx.cline
-export interface ExtensionStateContextType extends ExtensionState { // CARET MODIFICATION: ExtensionStateContextType export
+export interface ExtensionStateContextType extends ExtensionState {
+	// CARET MODIFICATION: ExtensionStateContextType export
 	didHydrateState: boolean
 	showWelcome: boolean
 	theme: Record<string, string> | undefined
@@ -60,6 +61,8 @@ export interface ExtensionStateContextType extends ExtensionState { // CARET MOD
 
 	// Setters
 	setApiConfiguration: (config: ApiConfiguration) => void
+	// CARET MODIFICATION: API Configuration 보호 함수
+	setPendingApiConfigChange: (value: boolean) => void
 	setTelemetrySetting: (value: TelemetrySetting) => void
 	setShowAnnouncement: (value: boolean) => void
 	setShouldShowAnnouncement: (value: boolean) => void
@@ -219,6 +222,8 @@ export const ExtensionStateContextProvider: React.FC<{
 	const [didHydrateState, setDidHydrateState] = useState(false)
 	const [showWelcome, setShowWelcome] = useState(false)
 	const [theme, setTheme] = useState<Record<string, string>>()
+
+	// CARET MODIFICATION: 보호 메커니즘 제거 - 근본 원인(저장 문제) 해결됨
 	const [filePaths, setFilePaths] = useState<string[]>([])
 	const [openRouterModels, setOpenRouterModels] = useState<Record<string, ModelInfo>>({
 		[openRouterDefaultModelId]: openRouterDefaultModelInfo,
@@ -323,7 +328,7 @@ export const ExtensionStateContextProvider: React.FC<{
 			onResponse: (response) => {
 				if (response.stateJson) {
 					try {
-						const stateData = JSON.parse(response.stateJson) as ExtensionState
+						let stateData = JSON.parse(response.stateJson) as ExtensionState
 						console.log("[DEBUG] parsed state JSON, updating state")
 
 						// CARET MODIFICATION: Mission 2 - 상태 업데이트 수신 로깅
@@ -346,6 +351,9 @@ export const ExtensionStateContextProvider: React.FC<{
 									})
 								})
 							}
+
+							// CARET MODIFICATION: 보호 메커니즘 제거됨 - planModeApiProvider/actModeApiProvider 저장 문제 해결
+
 							// Versioning logic for autoApprovalSettings
 							const incomingVersion = stateData.autoApprovalSettings?.version ?? 1
 							const currentVersion = prevState.autoApprovalSettings?.version ?? 1
@@ -791,6 +799,8 @@ export const ExtensionStateContextProvider: React.FC<{
 				...prevState,
 				apiConfiguration: value,
 			})),
+		// CARET MODIFICATION: API Configuration 보호 함수들
+
 		setTelemetrySetting: (value) =>
 			setState((prevState) => ({
 				...prevState,

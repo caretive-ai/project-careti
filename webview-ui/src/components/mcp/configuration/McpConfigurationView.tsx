@@ -7,8 +7,8 @@ import { McpViewTab } from "@shared/mcp"
 import { EmptyRequest } from "@shared/proto/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useEffect, useState } from "react"
-import styled from "styled-components"
 import AddRemoteServerForm from "./tabs/add-server/AddRemoteServerForm"
+import TabButton from "@/components/common/TabButton"
 import InstalledServersView from "./tabs/installed/InstalledServersView"
 import McpMarketplaceView from "./tabs/marketplace/McpMarketplaceView"
 import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mcp/mcp-server-conversion"
@@ -115,35 +115,5 @@ const McpConfigurationView = ({ onDone, initialTab }: McpViewProps) => {
 		</div>
 	)
 }
-
-const StyledTabButton = styled.button<{ isActive: boolean }>`
-	background: none;
-	border: none;
-	border-bottom: 2px solid ${(props) => (props.isActive ? "var(--vscode-foreground)" : "transparent")};
-	color: ${(props) => (props.isActive ? "var(--vscode-foreground)" : "var(--vscode-descriptionForeground)")};
-	padding: 8px 16px;
-	cursor: pointer;
-	font-size: 13px;
-	margin-bottom: -1px;
-	font-family: inherit;
-
-	&:hover {
-		color: var(--vscode-foreground);
-	}
-`
-
-export const TabButton = ({
-	children,
-	isActive,
-	onClick,
-}: {
-	children: React.ReactNode
-	isActive: boolean
-	onClick: () => void
-}) => (
-	<StyledTabButton isActive={isActive} onClick={onClick}>
-		{children}
-	</StyledTabButton>
-)
 
 export default McpConfigurationView

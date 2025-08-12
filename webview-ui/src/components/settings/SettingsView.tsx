@@ -681,6 +681,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 													showModelOptions={true}
 													apiErrorMessage={apiErrorMessage}
 													modelIdErrorMessage={modelIdErrorMessage}
+													currentMode={chatSettings.mode}
 												/>
 											</div>
 										</div>
@@ -780,7 +781,8 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 												{t("telemetry.title", "settings")}
 											</VSCodeCheckbox>
 											<p className="text-xs text-[var(--vscode-descriptionForeground)] mb-[15px]">
-												{t("telemetry.description", "settings")} {t("telemetry.forMoreDetails", "settings")}{" "}
+												{t("telemetry.description", "settings")}{" "}
+												{t("telemetry.forMoreDetails", "settings")}{" "}
 												<VSCodeLink href={getGlobalLink("CARET_PRIVACY_POLICY")}>
 													{t("telemetry.privacyPolicy", "settings")}
 												</VSCodeLink>

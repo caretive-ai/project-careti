@@ -4,7 +4,19 @@ const path = require("path")
 const dotenv = require("dotenv")
 
 // Load .env file
-const env = dotenv.config({ path: path.resolve(__dirname, ".env") }).parsed || {}
+const dotenvResult = dotenv.config({ path: path.resolve(__dirname, ".env") })
+let env = dotenvResult.parsed || {}
+
+// CARET MODIFICATION: Fallback to direct environment variables if .env parsing fails
+if (!env.AUTH0_AUDIENCE) {
+	env = {
+		AUTH0_AUDIENCE: "https://api.caret.team",
+		AUTH0_DOMAIN: "api.caret.team",
+		AUTH0_CLIENT_ID: "caret-vscode-extension",
+		...env,
+	}
+	console.log("Using fallback environment variables for Caret")
+}
 
 const production = process.argv.includes("--production")
 const watch = process.argv.includes("--watch")
@@ -129,21 +141,18 @@ const copyWasmFiles = {
 			supportedLanguages.forEach((lang) => {
 				const langSourceDir = path.join(localeSourceDir, lang)
 				const langTargetDir = path.join(localeTargetDir, lang)
-				
+
 				if (fs.existsSync(langSourceDir)) {
 					// Create target directory if it doesn't exist
 					if (!fs.existsSync(langTargetDir)) {
 						fs.mkdirSync(langTargetDir, { recursive: true })
 					}
-					
+
 					// Copy all JSON files in the language directory
 					const files = fs.readdirSync(langSourceDir)
 					files.forEach((file) => {
-						if (file.endsWith('.json')) {
-							fs.copyFileSync(
-								path.join(langSourceDir, file),
-								path.join(langTargetDir, file)
-							)
+						if (file.endsWith(".json")) {
+							fs.copyFileSync(path.join(langSourceDir, file), path.join(langTargetDir, file))
 						}
 					})
 				}

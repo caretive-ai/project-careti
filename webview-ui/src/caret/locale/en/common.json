@@ -152,6 +152,7 @@
 		"subscriptionFree": "Free",
 		"subscriptionBasic": "Basic",
 		"payAsYouGo": "Pay as you go",
+		"organization": "Organization",
 		"payAsYouGoDescription": "* Additional charges apply after all subscription usage is exhausted."
 	},
 	"common": {

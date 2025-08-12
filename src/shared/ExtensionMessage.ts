@@ -9,6 +9,8 @@ import { HistoryItem } from "./HistoryItem"
 import { McpServer, McpMarketplaceCatalog, McpDownloadResponse, McpViewTab } from "./mcp"
 import { TelemetrySetting } from "./TelemetrySetting"
 import type { BalanceResponse, UsageTransaction, PaymentTransaction } from "../shared/ClineAccount"
+// ✨ NEW: Import enhanced account types
+import type { UserCreditsData, UserOrganizationsResponse } from "./proto/account"
 import { ClineRulesToggles } from "./cline-rules"
 
 // webview will hold state
@@ -23,6 +25,9 @@ export interface ExtensionMessage {
 		| "userCreditsBalance"
 		| "userCreditsUsage"
 		| "userCreditsPayments"
+		| "userCreditsData" // ✨ NEW: Enhanced credits data
+		| "userOrganizations" // ✨ NEW: User organizations
+		| "userOrganizationChanged" // ✨ NEW: Organization change notification
 		| "grpc_response"
 		| "RESPONSE_TEMPLATE_CHARACTERS"
 		| "RESPONSE_PERSONA_IMAGES"
@@ -51,6 +56,10 @@ export interface ExtensionMessage {
 	userCreditsBalance?: BalanceResponse
 	userCreditsUsage?: UsageTransaction[]
 	userCreditsPayments?: PaymentTransaction[]
+	// ✨ NEW: Enhanced account data fields
+	userCreditsData?: UserCreditsData
+	userOrganizations?: UserOrganizationsResponse
+	organizationId?: string
 	success?: boolean
 	endpoint?: string
 	isBundled?: boolean

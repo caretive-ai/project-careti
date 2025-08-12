@@ -35,7 +35,7 @@ export async function accountLoginClicked(controller: Controller, _: EmptyReques
 
 	const vsCodeCallbackUrl = `${uriScheme || "vscode"}://caretive.caret/auth`
 
-	// CARET MODIFICATION: Use environment variables to construct the auth URL, pointing to our backend
+	// CARET MODIFICATION: Use Caret API to construct the auth URL
 	const authUrl = vscode.Uri.parse(
 		`${audience}/api/auth?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`,
 	)

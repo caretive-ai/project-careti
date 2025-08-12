@@ -8,6 +8,15 @@ import { UsageTransaction, PaymentTransaction } from "@shared/ClineAccount"
 import { useExtensionState, ExtensionStateContextType } from "@/context/ExtensionStateContext" // CARET MODIFICATION: ExtensionStateContextType 임포트 추가
 import { AccountServiceClient } from "@/services/grpc-client"
 import { EmptyRequest } from "@shared/proto/common"
+// ✨ NEW: Import enhanced account types
+import type {
+	UserCreditsData,
+	UserOrganizationsResponse,
+	UserOrganization,
+	UsageTransaction as ProtoUsageTransaction,
+	PaymentTransaction as ProtoPaymentTransaction,
+} from "@shared/proto/account"
+import { UserOrganizationUpdateRequest } from "@shared/proto/account"
 import WebviewLogger from "@/caret/utils/webview-logger"
 import { t, getLink } from "@/caret/utils/i18n" // CARET MODIFICATION: getLink 함수 임포트
 import { getUrl } from "@/caret/constants/urls"
@@ -23,6 +32,10 @@ export const CaretAccountView = () => {
 	const [isLoading, setIsLoading] = useState(true)
 	const [usageData, setUsageData] = useState<UsageTransaction[]>([])
 	const [paymentsData, setPaymentsData] = useState<PaymentTransaction[]>([])
+	// ✨ NEW: Enhanced account state
+	const [organizations, setOrganizations] = useState<UserOrganization[]>([])
+	const [activeOrganization, setActiveOrganization] = useState<UserOrganization | null>(null)
+	const [enhancedCreditsData, setEnhancedCreditsData] = useState<UserCreditsData | null>(null)
 
 	// Listen for balance and transaction data updates from the extension
 	useEffect(() => {
@@ -38,6 +51,27 @@ export const CaretAccountView = () => {
 				setPaymentsData(message.userCreditsPayments.paymentTransactions)
 				logger.debug("Payments data updated", { count: message.userCreditsPayments.paymentTransactions.length })
 			}
+			// ✨ NEW: Handle enhanced account messages
+			else if (message.type === "userCreditsData" && message.userCreditsData) {
+				const creditsData = message.userCreditsData as UserCreditsData
+				setEnhancedCreditsData(creditsData)
+				if (creditsData.balance) {
+					setBalance(creditsData.balance.currentBalance)
+				}
+				logger.debug("Enhanced credits data updated", { creditsData })
+			} else if (message.type === "userOrganizations" && message.userOrganizations) {
+				const orgResponse = message.userOrganizations as UserOrganizationsResponse
+				setOrganizations(orgResponse.organizations)
+				// Set active organization (find the one marked as active)
+				const active = orgResponse.organizations.find((org) => org.active)
+				setActiveOrganization(active || null)
+				logger.debug("Organizations updated", { count: orgResponse.organizations.length, active: active?.name })
+			} else if (message.type === "userOrganizationChanged" && message.organizationId) {
+				// Handle organization change notification
+				const newActiveOrg = organizations.find((org) => org.organizationId === message.organizationId)
+				setActiveOrganization(newActiveOrg || null)
+				logger.debug("Active organization changed", { organizationId: message.organizationId })
+			}
 			setIsLoading(false)
 		}
 
@@ -48,6 +82,17 @@ export const CaretAccountView = () => {
 			setIsLoading(true)
 			logger.info("Fetching user credits data for logged in user")
 			vscode.postMessage({ type: "fetchUserCreditsData" })
+			// ✨ NEW: Fetch enhanced account data
+			try {
+				AccountServiceClient.getUserCredits(EmptyRequest.create()).catch((err) => {
+					logger.error("Failed to fetch enhanced credits data:", err)
+				})
+				AccountServiceClient.getUserOrganizations(EmptyRequest.create()).catch((err) => {
+					logger.error("Failed to fetch user organizations:", err)
+				})
+			} catch (error) {
+				logger.error("Error setting up enhanced account data fetch:", error)
+			}
 		}
 
 		return () => {
@@ -99,6 +144,39 @@ export const CaretAccountView = () => {
 							</div>
 						</div>
 					</div>
+
+					{/* ✨ NEW: Organization selection */}
+					{organizations.length > 1 && (
+						<div className="flex items-center mt-4">
+							<span className="text-sm text-[var(--vscode-descriptionForeground)] mr-2">
+								{t("account.organization", "common")}:
+							</span>
+							<select
+								className="text-sm bg-[var(--vscode-input-background)] text-[var(--vscode-input-foreground)] border border-[var(--vscode-input-border)] rounded px-2 py-1"
+								value={activeOrganization?.organizationId || ""}
+								onChange={async (e) => {
+									const orgId = e.target.value
+									try {
+										await AccountServiceClient.setUserOrganization(
+											UserOrganizationUpdateRequest.create({ organizationId: orgId }),
+										)
+									} catch (error) {
+										logger.error("Failed to set organization:", error)
+									}
+								}}>
+								{organizations.map((org) => (
+									<option key={org.organizationId} value={org.organizationId}>
+										{org.name}{" "}
+										{org.roles.includes("owner")
+											? "(Owner)"
+											: org.roles.includes("admin")
+												? "(Admin)"
+												: "(Member)"}
+									</option>
+								))}
+							</select>
+						</div>
+					)}
 
 					{/* CARET MODIFICATION: Display account plan and pay-as-you-go option */}
 					{plan && (

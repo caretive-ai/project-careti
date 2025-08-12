@@ -1737,5 +1737,10 @@ Commit message:`
 		}
 	}
 
+	// ✨ NEW: Get CaretAccountService instance
+	getCaretAccountService(): CaretAccountService {
+		return this.accountService
+	}
+
 	// dev
 }

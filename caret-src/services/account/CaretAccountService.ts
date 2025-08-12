@@ -1,6 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 import type { BalanceResponse, PaymentTransaction, UsageTransaction } from "../../shared/CaretAccount"
 import { ExtensionMessage } from "@shared/ExtensionMessage"
+// ✨ NEW: Import new proto types for enhanced account features
+import type { UserCreditsData, UserOrganizationsResponse, UserOrganization, AuthState, UserInfo } from "@shared/proto/account"
 
 export class CaretAccountService {
 	// CARET MODIFICATION: Change base URL to Caret development API
@@ -126,6 +128,97 @@ export class CaretAccountService {
 			return mockPlanData
 		} catch (error) {
 			console.error("Failed to fetch account plan:", error)
+			return undefined
+		}
+	}
+
+	// ✨ NEW: Enhanced account methods based on Cline v3.23.0
+
+	/**
+	 * Fetches comprehensive user credits data including balance, usage, and payment history
+	 */
+	async getUserCredits(): Promise<UserCreditsData | undefined> {
+		try {
+			const data = await this.authenticatedRequest<UserCreditsData>("/user/credits")
+
+			// Post to webview with new message type
+			await this.postMessageToWebview({
+				type: "userCreditsData",
+				userCreditsData: data,
+			})
+
+			return data
+		} catch (error) {
+			console.error("Failed to fetch user credits data:", error)
+			return undefined
+		}
+	}
+
+	/**
+	 * Fetches user's organizations data
+	 */
+	async getUserOrganizations(): Promise<UserOrganizationsResponse | undefined> {
+		try {
+			const data = await this.authenticatedRequest<UserOrganizationsResponse>("/user/organizations")
+
+			// Post to webview
+			await this.postMessageToWebview({
+				type: "userOrganizations",
+				userOrganizations: data,
+			})
+
+			return data
+		} catch (error) {
+			console.error("Failed to fetch user organizations:", error)
+			return undefined
+		}
+	}
+
+	/**
+	 * Sets the user's active organization
+	 */
+	async setUserOrganization(organizationId: string | undefined): Promise<boolean> {
+		try {
+			const requestConfig: AxiosRequestConfig = {
+				method: "POST",
+				data: { organizationId },
+			}
+
+			await this.authenticatedRequest<void>("/user/organization", requestConfig)
+
+			// Notify webview of organization change
+			await this.postMessageToWebview({
+				type: "userOrganizationChanged",
+				organizationId,
+			})
+
+			return true
+		} catch (error) {
+			console.error("Failed to set user organization:", error)
+			return false
+		}
+	}
+
+	/**
+	 * Gets current authentication state
+	 * CARET MODIFICATION: Mock implementation for now
+	 */
+	async getAuthState(): Promise<AuthState | undefined> {
+		try {
+			// For now, return a basic auth state
+			// In a real implementation, this would check actual auth status
+			const mockAuthState: AuthState = {
+				user: {
+					uid: "caret-user-123",
+					displayName: "Caret User",
+					email: "user@caret.team",
+					appBaseUrl: "https://caret.team",
+				} as UserInfo,
+			}
+
+			return mockAuthState
+		} catch (error) {
+			console.error("Failed to get auth state:", error)
 			return undefined
 		}
 	}

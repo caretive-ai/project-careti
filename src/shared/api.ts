@@ -2,6 +2,7 @@ import type { LanguageModelChatSelector } from "../api/providers/types"
 
 export type ApiProvider =
 	| "anthropic"
+	| "claude-code"
 	| "openrouter"
 	| "bedrock"
 	| "vertex"
@@ -20,6 +21,7 @@ export type ApiProvider =
 	| "caret" // CARET MODIFICATION: Ensure 'caret' is present in ApiProvider type
 	| "cline" // CARET MODIFICATION: Add 'cline' provider for compatibility
 	| "litellm"
+	| "moonshot"
 	| "nebius"
 	| "fireworks"
 	| "asksage"
@@ -27,6 +29,10 @@ export type ApiProvider =
 	| "sambanova"
 	| "cerebras"
 	| "sapaicore"
+	| "groq"
+	| "huggingface"
+	| "huawei-cloud-maas"
+	| "baseten"
 
 export interface ApiHandlerOptions {
 	apiModelId?: string
@@ -83,6 +89,16 @@ export interface ApiHandlerOptions {
 	qwenApiKey?: string
 	doubaoApiKey?: string
 	mistralApiKey?: string
+	claudeCodePath?: string
+	xaiApiKey?: string
+	sambaNovaApiKey?: string
+	cerebrasApiKey?: string
+	sapAiCoreApiKey?: string
+	groqApiKey?: string
+	huggingFaceApiKey?: string
+	huaweiCloudMaasApiKey?: string
+	basetenApiKey?: string
+	moonshotApiKey?: string
 	azureApiVersion?: string
 	vsCodeLmModelSelector?: LanguageModelChatSelector
 	qwenApiLine?: string
@@ -162,6 +178,16 @@ export const anthropicModels = {
 		cacheWritesPrice: 3.75,
 		cacheReadsPrice: 0.3,
 	},
+	"claude-opus-4-1-20250805": {
+		maxTokens: 8192,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 15.0,
+		outputPrice: 75.0,
+		cacheWritesPrice: 18.75,
+		cacheReadsPrice: 1.5,
+	},
 	"claude-opus-4-20250514": {
 		maxTokens: 8192,
 		contextWindow: 200_000,
@@ -226,6 +252,42 @@ export const anthropicModels = {
 	},
 } as const satisfies Record<string, ModelInfo> // as const assertion makes the object deeply readonly
 
+// Claude Code
+export type ClaudeCodeModelId = keyof typeof claudeCodeModels
+export const claudeCodeDefaultModelId: ClaudeCodeModelId = "claude-sonnet-4-20250514"
+export const claudeCodeModels = {
+	"claude-sonnet-4-20250514": {
+		...anthropicModels["claude-sonnet-4-20250514"],
+		supportsImages: false,
+		supportsPromptCache: false,
+	},
+	"claude-opus-4-1-20250805": {
+		...anthropicModels["claude-opus-4-1-20250805"],
+		supportsImages: false,
+		supportsPromptCache: false,
+	},
+	"claude-opus-4-20250514": {
+		...anthropicModels["claude-opus-4-20250514"],
+		supportsImages: false,
+		supportsPromptCache: false,
+	},
+	"claude-3-7-sonnet-20250219": {
+		...anthropicModels["claude-3-7-sonnet-20250219"],
+		supportsImages: false,
+		supportsPromptCache: false,
+	},
+	"claude-3-5-sonnet-20241022": {
+		...anthropicModels["claude-3-5-sonnet-20241022"],
+		supportsImages: false,
+		supportsPromptCache: false,
+	},
+	"claude-3-5-haiku-20241022": {
+		...anthropicModels["claude-3-5-haiku-20241022"],
+		supportsImages: false,
+		supportsPromptCache: false,
+	},
+} as const satisfies Record<string, ModelInfo>
+
 // AWS Bedrock
 // https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html
 export type BedrockModelId = keyof typeof bedrockModels
@@ -240,6 +302,16 @@ export const bedrockModels = {
 		outputPrice: 15.0,
 		cacheWritesPrice: 3.75,
 		cacheReadsPrice: 0.3,
+	},
+	"anthropic.claude-opus-4-1-20250805-v1:0": {
+		maxTokens: 8192,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 15.0,
+		outputPrice: 75.0,
+		cacheWritesPrice: 18.75,
+		cacheReadsPrice: 1.5,
 	},
 	"anthropic.claude-opus-4-20250514-v1:0": {
 		maxTokens: 8192,
@@ -398,6 +470,16 @@ export const vertexModels = {
 		outputPrice: 15.0,
 		cacheWritesPrice: 3.75,
 		cacheReadsPrice: 0.3,
+	},
+	"claude-opus-4-1@20250805": {
+		maxTokens: 8192,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 15.0,
+		outputPrice: 75.0,
+		cacheWritesPrice: 18.75,
+		cacheReadsPrice: 1.5,
 	},
 	"claude-opus-4@20250514": {
 		maxTokens: 8192,
@@ -560,57 +642,7 @@ export const vertexModels = {
 		inputPrice: 0,
 		outputPrice: 0,
 	},
-	"gemini-2.5-pro-preview-05-06": {
-		maxTokens: 65536,
-		contextWindow: 1_048_576,
-		supportsImages: true,
-		supportsPromptCache: true,
-		supportsGlobalEndpoint: true,
-		inputPrice: 2.5,
-		outputPrice: 15,
-		cacheReadsPrice: 0.31,
-		tiers: [
-			{
-				contextWindow: 200000,
-				inputPrice: 1.25,
-				outputPrice: 10,
-				cacheReadsPrice: 0.31,
-			},
-			{
-				contextWindow: Infinity,
-				inputPrice: 2.5,
-				outputPrice: 15,
-				cacheReadsPrice: 0.625,
-			},
-		],
-	},
-	"gemini-2.5-pro-preview-06-05": {
-		maxTokens: 65536,
-		contextWindow: 1_048_576,
-		supportsImages: true,
-		supportsPromptCache: true,
-		supportsGlobalEndpoint: true,
-		inputPrice: 2.5,
-		outputPrice: 15,
-		cacheReadsPrice: 0.31,
-		tiers: [
-			{
-				contextWindow: 200000,
-				inputPrice: 1.25,
-				outputPrice: 10,
-				cacheReadsPrice: 0.31,
-			},
-			{
-				contextWindow: Infinity,
-				inputPrice: 2.5,
-				outputPrice: 15,
-				cacheReadsPrice: 0.625,
-			},
-		],
-		thinkingConfig: {
-			maxBudget: 32768,
-		},
-	},
+
 	"gemini-2.5-flash-preview-04-17": {
 		maxTokens: 65536,
 		contextWindow: 1_048_576,
@@ -2373,8 +2405,8 @@ export const cerebrasModels = {
 		description: "Efficient model with ~2100 tokens/s",
 	},
 	"llama-3.3-70b": {
-		maxTokens: 8192,
-		contextWindow: 8192,
+		maxTokens: 64000,
+		contextWindow: 64000,
 		supportsImages: false,
 		supportsPromptCache: false,
 		inputPrice: 0,
@@ -2382,8 +2414,8 @@ export const cerebrasModels = {
 		description: "Powerful model with ~2600 tokens/s",
 	},
 	"qwen-3-32b": {
-		maxTokens: 16382,
-		contextWindow: 16382,
+		maxTokens: 64000,
+		contextWindow: 64000,
 		supportsImages: false,
 		supportsPromptCache: false,
 		inputPrice: 0,
@@ -2463,19 +2495,21 @@ export const sapAiCoreModels = {
 	},
 	"gpt-4o": {
 		maxTokens: 4096,
-		contextWindow: 200_000,
+		contextWindow: 128_000,
 		supportsImages: true,
-		supportsPromptCache: false,
-		inputPrice: 3.0,
-		outputPrice: 15.0,
+		supportsPromptCache: true,
+		inputPrice: 2.5,
+		outputPrice: 10.0,
+		cacheReadsPrice: 1.25,
 	},
 	"gpt-4o-mini": {
-		maxTokens: 4096,
-		contextWindow: 200_000,
+		maxTokens: 16384,
+		contextWindow: 128_000,
 		supportsImages: true,
-		supportsPromptCache: false,
-		inputPrice: 3.0,
-		outputPrice: 15.0,
+		supportsPromptCache: true,
+		inputPrice: 0.15,
+		outputPrice: 0.6,
+		cacheReadsPrice: 0.075,
 	},
 	"gpt-4": {
 		maxTokens: 4096,
@@ -2494,12 +2528,13 @@ export const sapAiCoreModels = {
 		outputPrice: 15.0,
 	},
 	"o3-mini": {
-		maxTokens: 4096,
+		maxTokens: 100_000,
 		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: false,
-		inputPrice: 3.0,
-		outputPrice: 15.0,
+		supportsImages: false,
+		supportsPromptCache: true,
+		inputPrice: 1.1,
+		outputPrice: 4.4,
+		cacheReadsPrice: 0.55,
 	},
 	"gpt-4.1": {
 		maxTokens: 32_768,

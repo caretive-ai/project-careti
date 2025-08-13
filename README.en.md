@@ -38,7 +38,7 @@ Caret is a VS Code extension that aims to create a next-generation development e
 
 ## Supported Models
 
-Caret supports **105 models** from **20 providers**, giving you the freedom to choose the tools that best fit your needs.
+Caret supports **256 models** from **17 providers**, giving you the freedom to choose the tools that best fit your needs.
 
 ### 🔥 Key Providers
 

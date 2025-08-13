@@ -116,14 +116,26 @@ case "caret": return new ClineHandler(options) // 고유 핸들러 로직
     - 유니크 모델 수 정확 계산 (Caret 207개, Cline 205개)
     - 파라미터 레벨 정확한 비교 분석 가능
     - **정확한 현황**: 추가 2개, 삭제 2개 모델만 필요
+    - **🚀 OS 무관 호환성**: Windows/Linux/Mac 모든 환경에서 작동
+    - **📁 자동 경로 탐지**: package.json 기반 프로젝트 루트 자동 감지
+
+### **Phase 1.5: 백업 및 준비 작업 (✅ 완료)**
+
+-   **상태**: ✅ **완료** - `backup-api.js` 완성
+-   **결과**:
+    - **💾 안전한 백업**: 현재 Caret api.ts 타임스탬프 백업 완료
+    - **🚀 OS 무관 호환성**: Windows/Linux/Mac 모든 환경 지원
+    - **📁 자동 백업 관리**: backups/ 디렉토리 자동 생성 및 관리
+    - **⚠️ 백업 파일 추적**: 기존 백업 파일 개수 모니터링
 
 ### **Phase 2: api.ts 자동생성 스크립트 개발 (🔄 진행 예정)**
 
--   **목표**: Cline api.ts → Caret api.ts 자동 변환기 제작
+-   **목표**: Cline api.ts → Caret 단일 구조 자동 변환기 제작
+-   **핵심 전략**: Plan/Act 이중 모드 → 단일 모드 변환 (Caret 철학 유지)
 -   **자동생성 대상**: 
     - 모든 모델 정의 섹션 (22개): `anthropicModels`, `geminiModels`, 등
-    - 기본 프로바이더 타입 정의  
-    - 기본 API 핸들러 옵션
+    - 기본 프로바이더 타입 정의 (Plan/Act 제외)
+    - 기본 API 핸들러 옵션 (단일 모드 구조)
 -   **예상 결과**: 274개 모델 × 10개 파라미터 = 2,740개 수정점 완전 자동화
 
 ### **Phase 3: Caret 고유성 수동 병합 (🔄 진행 예정)**
@@ -208,7 +220,9 @@ case "caret": return new ClineHandler(options) // 고유 핸들러 로직
 ## ✅ **완료 기준 (하이브리드 자동화 방식)**
 
 ### **🎯 핵심 목표 달성 기준**
-- [ ] **api.ts 자동생성 스크립트 완성**: Cline → Caret 완벽 변환
+- [x] **OS 무관 검증 스크립트**: `accurate-merge-analysis.js` Windows/Linux/Mac 호환 완성
+- [x] **안전한 백업 시스템**: `backup-api.js` 타임스탬프 백업 완성
+- [ ] **api.ts 자동생성 스크립트 완성**: Cline → Caret 단일 구조 완벽 변환
 - [ ] **Caret 고유성 수동 보존**: caret/cline 프로바이더, CARET MODIFICATION 주석
 - [ ] **완벽한 파라미터 동기화**: `accurate-merge-analysis.js` → "차이 없음" 달성
 - [ ] **최종 목표 수치 달성**: 31개 프로바이더, 274개 모델, 205개 유니크 모델

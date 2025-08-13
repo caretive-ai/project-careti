@@ -65,6 +65,27 @@ Clean-Cline-v3.23.0 - Y (모든 caret 기능을 하나의 완벽한 커밋으로
   - **매핑 로직 중복**: chatbot↔plan, agent↔act 변환이 여러 파일에서 중복 구현
   - **복잡한 setModeSystem**: modeSystem 변경 → 기본 모드 결정 → 두 번 전송 → 자동 New Task (??) 의 과도한 로직
 
+- **🚨 CRITICAL: Plan/Act vs Chatbot/Agent 모드 매핑 전략 결정 필요**:
+  - **핵심 이슈**: Cline의 Plan/Act 모드는 각각 독립적인 API 설정을 가지는데, Caret의 Chatbot/Agent 모드를 어떻게 매핑할지 결정 필요
+  - **옵션 A - 동기화 방식**: Chatbot/Agent 모드가 같은 API 설정 공유
+    ```typescript
+    // 두 모드 모두 동일한 설정 사용
+    chatbotMode → planMode: "anthropic/claude-sonnet"
+    agentMode → actMode: "anthropic/claude-sonnet" (동일)
+    ```
+  - **옵션 B - 분리 방식**: 각 모드가 용도에 맞는 다른 모델 사용
+    ```typescript
+    // 용도별 최적화된 모델 사용
+    chatbotMode → planMode: "anthropic/claude-haiku" (빠른 대화)
+    agentMode → actMode: "anthropic/claude-sonnet" (정확한 작업)
+    ```
+  - **⚠️ 개발 시 고려사항**:
+    - 사용자 경험: 모드 전환 시 예상되는 동작은?
+    - 비용 효율성: 대화용 vs 작업용 모델 분리의 장점은?
+    - UI 복잡성: 각 모드별 설정 UI를 어떻게 구성할지?
+    - 기본값 설정: 초기 사용자에게 어떤 설정을 제공할지?
+  - **🔧 작업 시 필수 논의**: 이 작업을 진행하는 개발자는 반드시 이 매핑 전략을 먼저 결정하고 구현 방향을 정해야 함
+
 - **발견 경로**: 006-3 WebView 에러 분석 중 Mode별 API 필드 접근 문제에서 시작
 - **영향 범위**: 프론트엔드 ↔ 백엔드 전체 통신
 
@@ -246,7 +267,7 @@ mkdir proto/caret/
 # ChatbotAgentMode, ToggleChatbotAgentMode 등 Caret 고유 기능만 분리
 ```
 
-#### **1-2. Mode 시스템 중앙화**
+#### **1-2. Mode 시스템 중앙화 및 매핑 전략 구현**
 ```typescript
 // src/utils/mode-manager.ts 신규 생성
 export class ModeManager {
@@ -254,6 +275,37 @@ export class ModeManager {
   static async setMode(mode: Mode): Promise<void>
   static getEffectiveMode(mode: Mode): "plan" | "act"
   static getApiFields(config: ApiConfiguration, mode: Mode)
+  
+  // 🔧 TODO: Chatbot/Agent 매핑 전략 결정 후 구현
+  static mapChatbotAgentToPlanAct(config: ApiConfiguration, strategy: 'sync' | 'separate'): ApiConfiguration {
+    if (strategy === 'sync') {
+      // 옵션 A: 동기화 방식 - 두 모드 모두 같은 설정 사용
+      const sharedProvider = config.planModeApiProvider || config.actModeApiProvider
+      const sharedModel = config.planModeApiModelId || config.actModeApiModelId
+      return {
+        ...config,
+        planModeApiProvider: sharedProvider,
+        actModeApiProvider: sharedProvider,
+        planModeApiModelId: sharedModel,
+        actModeApiModelId: sharedModel,
+        // ... 모든 API 필드 동기화
+      }
+    } else {
+      // 옵션 B: 분리 방식 - 각 모드별 최적화된 설정 사용
+      return {
+        ...config,
+        // chatbotMode → planMode: 빠른 대화용 모델 (예: claude-haiku)
+        // agentMode → actMode: 정확한 작업용 모델 (예: claude-sonnet)
+        // 구체적 매핑은 개발자와 논의 후 결정
+      }
+    }
+  }
+  
+  // ⚠️ 개발자 주의: 이 메서드 구현 전에 반드시 매핑 전략 논의 필요
+  static async updateApiSettings(updates: Partial<ApiConfiguration>): Promise<void> {
+    // TODO: 결정된 전략에 따라 구현
+    throw new Error("매핑 전략 결정 후 구현 필요")
+  }
 }
 ```
 
@@ -426,10 +478,13 @@ python3 merge-conflict-resolver.py <file> caret
    - buf.yaml 설정 최적화
    - proto 생성 스크립트 정리
 
-4. **Mode 시스템 완전 재설계**
+4. **Mode 시스템 완전 재설계 및 매핑 전략 결정**
    - 깨끗한 Cline Plan/Act 기반
-   - Caret Chatbot/Agent 매핑 최적화
+   - 🔧 **개발자와 필수 논의**: Chatbot/Agent → Plan/Act 매핑 전략 결정
+     - 옵션 A: 동기화 방식 (같은 모델 사용)
+     - 옵션 B: 분리 방식 (용도별 다른 모델 사용)
    - 중앙화된 Mode Manager 구현
+   - 결정된 전략에 따른 UI 설계 및 로직 구현
 ```
 
 ### **Phase 3: 완벽한 통합 커밋 생성** (30분)
@@ -486,6 +541,11 @@ achieved through innovative reverse squash merge strategy."
    - [ ] 다국어 지원 정상
    - [ ] Account 시스템 정상
    - [ ] Mode 전환 완벽 동작
+   - [ ] 🚨 **CRITICAL**: Chatbot/Agent 모드 설정 동기화 검증
+     - [ ] Chatbot 모드에서 API 설정 변경 → Agent 모드에서도 동일 설정 확인
+     - [ ] Agent 모드에서 모델 변경 → Chatbot 모드에서도 동일 모델 확인
+     - [ ] 모드 전환 시 예상과 다른 API 키/모델 사용 안됨 확인
+     - [ ] UI에서 하나의 설정만 노출되지만 내부적으로 Plan/Act 모두 업데이트됨 확인
    - [ ] Proto 생성 완전 성공
 ```
 

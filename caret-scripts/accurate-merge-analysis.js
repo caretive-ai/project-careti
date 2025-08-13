@@ -5,9 +5,34 @@ const path = require("path")
 
 console.log("🔍 정확한 모델 병합 분석 스크립트 시작...\n")
 
-// 파일 경로들
-const caretApiPath = "/home/luke/caret/src/shared/api.ts"
-const clineApiPath = "/home/luke/caret/cline-latest/src/shared/api.ts"
+// OS 무관 경로 설정 함수
+function getProjectRoot() {
+	let currentDir = __dirname
+	while (currentDir !== path.dirname(currentDir)) {
+		if (fs.existsSync(path.join(currentDir, "package.json"))) {
+			return currentDir
+		}
+		currentDir = path.dirname(currentDir)
+	}
+	throw new Error("프로젝트 루트를 찾을 수 없습니다. package.json이 있는 디렉토리를 찾지 못했습니다.")
+}
+
+// OS 무관 파일 경로들
+const projectRoot = getProjectRoot()
+const caretApiPath = path.join(projectRoot, "src", "shared", "api.ts")
+const clineApiPath = path.join(projectRoot, "cline-latest", "src", "shared", "api.ts")
+
+console.log(`📁 프로젝트 루트: ${projectRoot}`)
+console.log(`📄 Caret API: ${caretApiPath}`)
+console.log(`📄 Cline API: ${clineApiPath}`)
+
+// 파일 존재 확인
+if (!fs.existsSync(caretApiPath)) {
+	throw new Error(`Caret API 파일을 찾을 수 없습니다: ${caretApiPath}`)
+}
+if (!fs.existsSync(clineApiPath)) {
+	throw new Error(`Cline API 파일을 찾을 수 없습니다: ${clineApiPath}`)
+}
 
 // API 파일들 읽기
 const caretContent = fs.readFileSync(caretApiPath, "utf8")

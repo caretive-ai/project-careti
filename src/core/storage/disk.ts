@@ -22,6 +22,7 @@ export const GlobalFileNames = {
 	cursorRulesFile: ".cursorrules",
 	windsurfRules: ".windsurfrules",
 	taskMetadata: "task_metadata.json",
+	taskHistory: "task_history.json", // CARET MODIFICATION: Add task history disk storage
 }
 
 export async function getDocumentsPath(): Promise<string> {
@@ -177,5 +178,28 @@ export async function saveTaskMetadata(context: vscode.ExtensionContext, taskId:
 		await fs.writeFile(filePath, JSON.stringify(metadata, null, 2))
 	} catch (error) {
 		console.error("Failed to save task metadata:", error)
+	}
+}
+
+// CARET MODIFICATION: Add task history disk storage functions
+export async function getSavedTaskHistory(context: vscode.ExtensionContext): Promise<any[]> {
+	const filePath = path.join(context.globalStorageUri.fsPath, GlobalFileNames.taskHistory)
+	try {
+		if (await fileExistsAtPath(filePath)) {
+			return JSON.parse(await fs.readFile(filePath, "utf8"))
+		}
+	} catch (error) {
+		console.error("Failed to read task history:", error)
+	}
+	return []
+}
+
+export async function saveTaskHistory(context: vscode.ExtensionContext, taskHistory: any[]) {
+	try {
+		await fs.mkdir(context.globalStorageUri.fsPath, { recursive: true })
+		const filePath = path.join(context.globalStorageUri.fsPath, GlobalFileNames.taskHistory)
+		await fs.writeFile(filePath, JSON.stringify(taskHistory, null, 2))
+	} catch (error) {
+		console.error("Failed to save task history:", error)
 	}
 }

@@ -65,6 +65,10 @@ docs/**
 evals/**
 new-docs/**
 
+# 🚨 CRITICAL: Exclude cline-latest directory (24MB+ of reference code)
+cline-latest/**
+caret-main/**
+
 # Ignore test templates
 caret-assets/test-templates/**
 
@@ -76,6 +80,10 @@ caret-assets/test-templates/**
 **/*.tgz
 **/*.zip
 *.vsix
+
+# 🚨 CRITICAL: Exclude backup directories
+backups/**
+agents-rules/**
 
 # Ignore test and analysis files
 test-setup.js

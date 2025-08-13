@@ -1,19 +1,17 @@
 {
-  "header": "🎉 New in v{{version}}",
-  "previousHeader": "Previous Updates:",
-  "bullets": {
-    "current": {
-      "1": "Fixed persona application bugs",
-      "2": "Resolved project opening failures due to corrupted checkpoints with exception handling",
-      "3": "Changed non-Caret API providers to Native and applied caching",
-      "4": "Optimized token costs through dynamic system prompt loading"
-    }
-  },
-  "links": {
-    "intro": "Join our community at",
-    "and": "and",
-    "facebook": "Facebook Group",
-    "github": "GitHub",
-    "outro": "!"
-  }
-} 
+	"header": "🎉 New in v{{version}}",
+	"previousHeader": "Previous Updates:",
+	"bullets": {
+		"current": {
+			"1": "GPT-5 model family support",
+			"2": "Added 15 new providers, integrated 274 AI models"
+		}
+	},
+	"links": {
+		"intro": "Join our community at",
+		"and": "and",
+		"facebook": "Facebook Group",
+		"github": "GitHub",
+		"outro": "!"
+	}
+}

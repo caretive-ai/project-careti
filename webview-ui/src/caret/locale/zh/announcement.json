@@ -1,19 +1,17 @@
 {
-  "header": "🎉 v{{version}} 新功能",
-  "previousHeader": "历史更新:",
-  "bullets": {
-    "current": {
-      "1": "修复了人格应用相关的错误",
-      "2": "通过异常处理修复因损坏的检查点导致项目无法打开的问题",
-      "3": "除Caret外的API提供者改为Native并应用缓存",
-      "4": "通过系统提示动态加载优化令牌成本"
-    }
-  },
-  "links": {
-    "intro": "社区：",
-    "and": "与",
-    "facebook": "Facebook 群组",
-    "github": "GitHub",
-    "outro": "！"
-  }
-} 
+	"header": "🎉 v{{version}} 新功能",
+	"previousHeader": "历史更新:",
+	"bullets": {
+		"current": {
+			"1": "GPT-5 模型系列支持",
+			"2": "新增15个提供商，集成274个AI模型"
+		}
+	},
+	"links": {
+		"intro": "社区：",
+		"and": "与",
+		"facebook": "Facebook 群组",
+		"github": "GitHub",
+		"outro": "！"
+	}
+}

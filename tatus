@@ -1,0 +1,10 @@
+[33m327e5af80[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mtask/026-2-model-merging-hybrid[m[33m)[m feat: Complete Task 026-2 Model System Integration
+[33mbc3a576d0[m feat: 026-2 모델 머징 준비 작업 완료
+[33mde1531fe0[m[33m ([m[1;31morigin/task/026-2-model-merging-hybrid[m[33m)[m feat: 026-2 하이브리드 자동화 모델 머징 계획 및 정확한 분석 스크립트 완성
+[33ma0f9565c9[m feat: Phase 1-2 완료 - 14개 프로바이더 추가, Claude Code 섹션 구현, 모델 파라미터 정정
+[33m0ba308940[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/feature/026-1-account-upgrade[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m, [m[1;32mfeature/026-2-model-merging-wip[m[33m, [m[1;32mfeature/026-1-account-upgrade[m[33m)[m feat: Complete 026-1 Account System Upgrade
+[33me60766c90[m feat: 026번 머징 전략 최소화 및 넥스트 세션 가이드 완성
+[33m277dd97ea[m feat: 머징 관련 026~030 작업 및 머징 도구들 추가
+[33m58b60b2f8[m[33m ([m[1;32mlist[m[33m)[m feat: Add cross-platform development environment setup automation
+[33ma6fd6b0cf[m 빌드시 웹뷰 test폴더 제거, 릴리즈 빌드 불필요한것 삭제
+[33m10d455776[m Dev login (#14)

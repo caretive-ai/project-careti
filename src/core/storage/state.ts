@@ -11,7 +11,7 @@ import { ChatSettings } from "@shared/ChatSettings"
 import { TelemetrySetting } from "@shared/TelemetrySetting"
 import { UserInfo } from "@shared/UserInfo"
 import { ClineRulesToggles } from "@shared/cline-rules"
-import { ensureRulesDirectoryExists } from "./disk"
+import { ensureRulesDirectoryExists, getSavedTaskHistory, saveTaskHistory } from "./disk"
 import fs from "fs/promises"
 import path from "path"
 /*
@@ -23,10 +23,21 @@ import path from "path"
 // global
 
 export async function updateGlobalState(context: vscode.ExtensionContext, key: GlobalStateKey, value: any) {
+	// CARET MODIFICATION: Store taskHistory on disk instead of memory to reduce extension state size
+	if (key === "taskHistory") {
+		await saveTaskHistory(context, value || [])
+		return
+	}
+
 	await context.globalState.update(key, value)
 }
 
 export async function getGlobalState(context: vscode.ExtensionContext, key: GlobalStateKey) {
+	// CARET MODIFICATION: Load taskHistory from disk instead of memory to reduce extension state size
+	if (key === "taskHistory") {
+		return await getSavedTaskHistory(context)
+	}
+
 	return await context.globalState.get(key)
 }
 
@@ -197,7 +208,24 @@ export async function migrateCustomInstructionsToGlobalRules(context: vscode.Ext
 	}
 }
 
+// CARET MODIFICATION: Migrate taskHistory from memory to disk
+async function migrateTaskHistoryToDisk(context: vscode.ExtensionContext) {
+	try {
+		const memoryTaskHistory = await context.globalState.get("taskHistory")
+		if (memoryTaskHistory && Array.isArray(memoryTaskHistory)) {
+			console.log("Migrating taskHistory from memory to disk...")
+			await saveTaskHistory(context, memoryTaskHistory)
+			await context.globalState.update("taskHistory", undefined) // Clear from memory
+			console.log("Successfully migrated taskHistory to disk")
+		}
+	} catch (error) {
+		console.error("Failed to migrate taskHistory to disk:", error)
+	}
+}
+
 export async function getAllExtensionState(context: vscode.ExtensionContext) {
+	// Migrate taskHistory to disk if it exists in memory
+	await migrateTaskHistoryToDisk(context)
 	const isNewUser = (await getGlobalState(context, "isNewUser")) as boolean | undefined
 	const apiKey = (await getSecret(context, "apiKey")) as string | undefined
 	const openRouterApiKey = (await getSecret(context, "openRouterApiKey")) as string | undefined
@@ -232,7 +260,8 @@ export async function getAllExtensionState(context: vscode.ExtensionContext) {
 	const azureApiVersion = (await getGlobalState(context, "azureApiVersion")) as string | undefined
 	const openRouterProviderSorting = (await getGlobalState(context, "openRouterProviderSorting")) as string | undefined
 	const lastShownAnnouncementId = (await getGlobalState(context, "lastShownAnnouncementId")) as string | undefined
-	const taskHistory = (await getGlobalState(context, "taskHistory")) as HistoryItem[] | undefined
+	// CARET MODIFICATION: Load taskHistory from disk instead of memory to reduce extension state size
+	const taskHistory = (await getSavedTaskHistory(context)) as HistoryItem[] | undefined
 	const autoApprovalSettings = (await getGlobalState(context, "autoApprovalSettings")) as AutoApprovalSettings | undefined
 	const browserSettings = (await getGlobalState(context, "browserSettings")) as BrowserSettings | undefined
 	const liteLlmBaseUrl = (await getGlobalState(context, "liteLlmBaseUrl")) as string | undefined

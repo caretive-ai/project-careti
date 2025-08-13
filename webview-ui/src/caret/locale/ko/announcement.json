@@ -1,19 +1,17 @@
 {
-  "header": "🎉 v{{version}}의 새로운 기능",
-  "previousHeader": "이전 업데이트:",
-  "bullets": {
-    "current": {
-      "1": "페르소나 적용 오류 버그 패치",
-      "2": "깨진 체크포인트의 예외처리를 통한 프로젝트 열림 실패 문제 해결",
-      "3": "Caret외 API 프로바이더, Native로 변경, 캐싱 적용",
-      "4": "시스템프롬프트 동적 로딩 적용 통한 토큰 비용 효율화"
-    }
-  },
-  "links": {
-    "intro": "커뮤니티는",
-    "and": "및",
-    "facebook": "페이스북 그룹",
-    "github": "GitHub",
-    "outro": "에서 만나보세요!"
-  }
-} 
+	"header": "🎉 v{{version}}의 새로운 기능",
+	"previousHeader": "이전 업데이트:",
+	"bullets": {
+		"current": {
+			"1": "GPT-5 모델 패밀리 지원",
+			"2": "15개 새 프로바이더 추가, 274개 AI 모델 통합"
+		}
+	},
+	"links": {
+		"intro": "커뮤니티는",
+		"and": "및",
+		"facebook": "페이스북 그룹",
+		"github": "GitHub",
+		"outro": "에서 만나보세요!"
+	}
+}

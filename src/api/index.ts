@@ -100,7 +100,10 @@ export function buildApiHandler(configuration: ApiConfiguration): ApiHandler {
 			return new TogetherHandler(options)
 		case "qwen":
 			Logger.debug("[API] Creating QwenHandler")
-			return new QwenHandler(options)
+			return new QwenHandler({
+				...options,
+				qwenApiLine: options.qwenApiLine as any, // Type cast for compatibility
+			})
 		case "doubao":
 			Logger.debug("[API] Creating DoubaoHandler")
 			return new DoubaoHandler(options)

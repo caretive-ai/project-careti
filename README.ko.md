@@ -1,4 +1,4 @@
-dmd[Read this document in English](./README.md) | [한국어로 읽기](./README.ko.md) | [日本語で読む](./README.ja.md) | [阅读中文版](./README.zh-cn.md)
+[Read this document in English](./README.md) | [한국어로 읽기](./README.ko.md) | [日本語で読む](./README.ja.md) | [阅读中文版](./README.zh-cn.md)
 
 <div align="center">
   <img src="caret-assets/icons/icon.png" alt="Caret icon" width="128">
@@ -15,6 +15,17 @@ dmd[Read this document in English](./README.md) | [한국어로 읽기](./README
 </div>
 
 Caret은 단순한 AI 코딩 도구를 넘어, **개발자와 함께 성장하는 AI 동료**를 목표로 하는 VS Code 확장 프로그램입니다. 안정성이 검증된 오픈소스 [Cline](https://github.com/cline/cline)의 장점은 그대로 유지하면서, 그 위에 더욱 강력한 성능, 낮은 비용, 유연한 기능들을 '오버레이'하여 개발 경험을 극대화합니다.
+
+## 🚀 AI 모델 지원 현황
+
+<div align="center">
+  <h3>🎯 <strong>32개 제공자</strong> | 🤖 <strong>205개 고유 모델</strong> | 📊 <strong>274개 모델 정의</strong></h3>
+  <p>
+    <a href="./caret-docs/development/support-model-list.mdx">
+      <strong>📋 전체 지원 모델 목록 보기 →</strong>
+    </a>
+  </p>
+</div>
 
 ## ✨ 캐럿, 무엇이 다른가요?
 

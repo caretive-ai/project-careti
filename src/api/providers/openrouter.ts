@@ -2,39 +2,69 @@ import { Anthropic } from "@anthropic-ai/sdk"
 import axios from "axios"
 import { setTimeout as setTimeoutPromise } from "node:timers/promises"
 import OpenAI from "openai"
-import { ApiHandler } from "../"
-import { ApiHandlerOptions, ModelInfo, openRouterDefaultModelId, openRouterDefaultModelInfo } from "@shared/api"
+import { ApiHandler } from ".."
+import { ModelInfo, openRouterDefaultModelId, openRouterDefaultModelInfo } from "@shared/api"
 import { withRetry } from "../retry"
 import { createOpenRouterStream } from "../transform/openrouter-stream"
 import { ApiStream, ApiStreamUsageChunk } from "../transform/stream"
 import { OpenRouterErrorResponse } from "./types"
+import { shouldSkipReasoningForModel } from "@utils/model-utils"
+
+interface OpenRouterHandlerOptions {
+	openRouterApiKey?: string
+	openRouterModelId?: string
+	openRouterModelInfo?: ModelInfo
+	openRouterProviderSorting?: string
+	reasoningEffort?: string
+	thinkingBudgetTokens?: number
+}
+
+interface OpenRouterHandlerOptions {
+	openRouterApiKey?: string
+	openRouterModelId?: string
+	openRouterModelInfo?: ModelInfo
+	openRouterProviderSorting?: string
+	reasoningEffort?: string
+	thinkingBudgetTokens?: number
+}
 
 export class OpenRouterHandler implements ApiHandler {
-	private options: ApiHandlerOptions
-	private client: OpenAI
+	private options: OpenRouterHandlerOptions
+	private client: OpenAI | undefined
 	lastGenerationId?: string
 
-	constructor(options: ApiHandlerOptions) {
+	constructor(options: OpenRouterHandlerOptions) {
 		this.options = options
-		// CARET MODIFICATION: Prevent OpenAI SDK from looking for OPENAI_API_KEY environment variable
-		// when openRouterApiKey is undefined or empty by providing a fallback dummy value
-		const apiKey = this.options.openRouterApiKey || "dummy-key-to-prevent-env-lookup"
-		this.client = new OpenAI({
-			baseURL: "https://openrouter.ai/api/v1",
-			apiKey: apiKey,
-			defaultHeaders: {
-				"HTTP-Referer": "https://caret.team", // Optional, for including your app on openrouter.ai rankings.
-				"X-Title": "Caret", // Optional. Shows in rankings on openrouter.ai.
-			},
-		})
+	}
+
+	private ensureClient(): OpenAI {
+		if (!this.client) {
+			if (!this.options.openRouterApiKey) {
+				throw new Error("OpenRouter API key is required")
+			}
+			try {
+				this.client = new OpenAI({
+					baseURL: "https://openrouter.ai/api/v1",
+					apiKey: this.options.openRouterApiKey,
+					defaultHeaders: {
+						"HTTP-Referer": "https://cline.bot", // Optional, for including your app on openrouter.ai rankings.
+						"X-Title": "Cline", // Optional. Shows in rankings on openrouter.ai.
+					},
+				})
+			} catch (error: any) {
+				throw new Error(`Error creating OpenRouter client: ${error.message}`)
+			}
+		}
+		return this.client
 	}
 
 	@withRetry()
 	async *createMessage(systemPrompt: string, messages: Anthropic.Messages.MessageParam[]): ApiStream {
+		const client = this.ensureClient()
 		this.lastGenerationId = undefined
 
 		const stream = await createOpenRouterStream(
-			this.client,
+			client,
 			systemPrompt,
 			messages,
 			this.getModel(),
@@ -47,12 +77,36 @@ export class OpenRouterHandler implements ApiHandler {
 
 		for await (const chunk of stream) {
 			// openrouter returns an error object instead of the openai sdk throwing an error
+			// Check for error field directly on chunk
 			if ("error" in chunk) {
 				const error = chunk.error as OpenRouterErrorResponse["error"]
 				console.error(`OpenRouter API Error: ${error?.code} - ${error?.message}`)
 				// Include metadata in the error message if available
 				const metadataStr = error.metadata ? `\nMetadata: ${JSON.stringify(error.metadata, null, 2)}` : ""
 				throw new Error(`OpenRouter API Error ${error.code}: ${error.message}${metadataStr}`)
+			}
+
+			// Check for error in choices[0].finish_reason
+			// OpenRouter may return errors in a non-standard way within choices
+			const choice = chunk.choices?.[0]
+			// Use type assertion since OpenRouter uses non-standard "error" finish_reason
+			if ((choice?.finish_reason as string) === "error") {
+				// Use type assertion since OpenRouter adds non-standard error property
+				const choiceWithError = choice as any
+				if (choiceWithError.error) {
+					const error = choiceWithError.error
+					console.error(
+						`OpenRouter Mid-Stream Error: ${error?.code || "Unknown"} - ${error?.message || "Unknown error"}`,
+					)
+					// Format error details
+					const errorDetails = typeof error === "object" ? JSON.stringify(error, null, 2) : String(error)
+					throw new Error(`OpenRouter Mid-Stream Error: ${errorDetails}`)
+				} else {
+					// Fallback if error details are not available
+					throw new Error(
+						`OpenRouter Mid-Stream Error: Stream terminated with error status but no error details provided`,
+					)
+				}
 			}
 
 			if (!this.lastGenerationId && chunk.id) {
@@ -68,7 +122,8 @@ export class OpenRouterHandler implements ApiHandler {
 			}
 
 			// Reasoning tokens are returned separately from the content
-			if ("reasoning" in delta && delta.reasoning) {
+			// Skip reasoning content for Grok 4 models since it only displays "thinking" without providing useful information
+			if ("reasoning" in delta && delta.reasoning && !shouldSkipReasoningForModel(this.options.openRouterModelId)) {
 				yield {
 					type: "reasoning",
 					// @ts-ignore-next-line
@@ -81,10 +136,10 @@ export class OpenRouterHandler implements ApiHandler {
 					type: "usage",
 					cacheWriteTokens: 0,
 					cacheReadTokens: chunk.usage.prompt_tokens_details?.cached_tokens || 0,
-					inputTokens: chunk.usage.prompt_tokens || 0,
+					inputTokens: (chunk.usage.prompt_tokens || 0) - (chunk.usage.prompt_tokens_details?.cached_tokens || 0),
 					outputTokens: chunk.usage.completion_tokens || 0,
 					// @ts-ignore-next-line
-					totalCost: chunk.usage.cost || 0,
+					totalCost: (chunk.usage.cost || 0) + (chunk.usage.cost_details?.upstream_inference_cost || 0),
 				}
 				didOutputUsage = true
 			}
@@ -111,7 +166,7 @@ export class OpenRouterHandler implements ApiHandler {
 					cacheWriteTokens: 0,
 					cacheReadTokens: generation?.native_tokens_cached || 0,
 					// openrouter generation endpoint fails often
-					inputTokens: generation?.native_tokens_prompt || 0,
+					inputTokens: (generation?.native_tokens_prompt || 0) - (generation?.native_tokens_cached || 0),
 					outputTokens: generation?.native_tokens_completion || 0,
 					totalCost: generation?.total_cost || 0,
 				}
@@ -143,9 +198,6 @@ export class OpenRouterHandler implements ApiHandler {
 
 	getModel(): { id: string; info: ModelInfo } {
 		let modelId = this.options.openRouterModelId
-		if (modelId === "x-ai/grok-3") {
-			modelId = "x-ai/grok-3-beta"
-		}
 		const modelInfo = this.options.openRouterModelInfo
 		if (modelId && modelInfo) {
 			return { id: modelId, info: modelInfo }

@@ -1,14 +1,8 @@
-// 🎯 Caret API - 완벽한 자동생성 v2.0
-// 📅 생성 시간: 2025-08-13T16:13:44.018Z
-// 🎯 베이스: 원본 Caret 구조 100% 보존
-// 📋 통합: Cline 모델 + 새 프로바이더
-// ✅ 에러 없음, 함수 완전 보존 보장
-//
-
 import type { LanguageModelChatSelector } from "../api/providers/types"
 
 export type ApiProvider =
 	| "anthropic"
+	| "claude-code"
 	| "openrouter"
 	| "bedrock"
 	| "vertex"
@@ -24,8 +18,8 @@ export type ApiProvider =
 	| "doubao"
 	| "mistral"
 	| "vscode-lm"
-	| "claude-code"
-	| "cline"
+	| "caret" // CARET MODIFICATION: Ensure 'caret' is present in ApiProvider type
+	| "cline" // CARET MODIFICATION: Add 'cline' provider for compatibility
 	| "litellm"
 	| "moonshot"
 	| "nebius"
@@ -39,16 +33,6 @@ export type ApiProvider =
 	| "huggingface"
 	| "huawei-cloud-maas"
 	| "baseten"
-	| "caret" // CARET MODIFICATION: Ensure 'caret' is present in ApiProvider type
-	| "cline" // CARET MODIFICATION: Add 'cline' provider for compatibility
-	| "litellm"
-	| "nebius"
-	| "fireworks"
-	| "asksage"
-	| "xai"
-	| "sambanova"
-	| "cerebras"
-	| "sapaicore"
 
 export interface ApiHandlerOptions {
 	apiModelId?: string
@@ -105,6 +89,16 @@ export interface ApiHandlerOptions {
 	qwenApiKey?: string
 	doubaoApiKey?: string
 	mistralApiKey?: string
+	claudeCodePath?: string
+	xaiApiKey?: string
+	sambaNovaApiKey?: string
+	cerebrasApiKey?: string
+	sapAiCoreApiKey?: string
+	groqApiKey?: string
+	huggingFaceApiKey?: string
+	huaweiCloudMaasApiKey?: string
+	basetenApiKey?: string
+	moonshotApiKey?: string
 	azureApiVersion?: string
 	vsCodeLmModelSelector?: LanguageModelChatSelector
 	qwenApiLine?: string
@@ -138,8 +132,6 @@ interface PriceTier {
 	price: number // Price per million tokens for this tier.
 }
 
-// Models
-
 export interface ModelInfo {
 	maxTokens?: number
 	contextWindow?: number
@@ -172,12 +164,6 @@ export interface OpenAiCompatibleModelInfo extends ModelInfo {
 
 // Anthropic
 // https://docs.anthropic.com/en/docs/about-claude/models // prices updated 2025-01-02
-
-export interface LiteLLMModelInfo extends ModelInfo {
-	temperature?: number
-}
-
-// 🔄 anthropicModels - Cline에서 업데이트됨
 export type AnthropicModelId = keyof typeof anthropicModels
 export const anthropicDefaultModelId: AnthropicModelId = "claude-sonnet-4-20250514"
 export const anthropicModels = {
@@ -266,7 +252,44 @@ export const anthropicModels = {
 	},
 } as const satisfies Record<string, ModelInfo> // as const assertion makes the object deeply readonly
 
-// 🔄 bedrockModels - Cline에서 업데이트됨
+// Claude Code
+export type ClaudeCodeModelId = keyof typeof claudeCodeModels
+export const claudeCodeDefaultModelId: ClaudeCodeModelId = "claude-sonnet-4-20250514"
+export const claudeCodeModels = {
+	"claude-sonnet-4-20250514": {
+		...anthropicModels["claude-sonnet-4-20250514"],
+		supportsImages: false,
+		supportsPromptCache: false,
+	},
+	"claude-opus-4-1-20250805": {
+		...anthropicModels["claude-opus-4-1-20250805"],
+		supportsImages: false,
+		supportsPromptCache: false,
+	},
+	"claude-opus-4-20250514": {
+		...anthropicModels["claude-opus-4-20250514"],
+		supportsImages: false,
+		supportsPromptCache: false,
+	},
+	"claude-3-7-sonnet-20250219": {
+		...anthropicModels["claude-3-7-sonnet-20250219"],
+		supportsImages: false,
+		supportsPromptCache: false,
+	},
+	"claude-3-5-sonnet-20241022": {
+		...anthropicModels["claude-3-5-sonnet-20241022"],
+		supportsImages: false,
+		supportsPromptCache: false,
+	},
+	"claude-3-5-haiku-20241022": {
+		...anthropicModels["claude-3-5-haiku-20241022"],
+		supportsImages: false,
+		supportsPromptCache: false,
+	},
+} as const satisfies Record<string, ModelInfo>
+
+// AWS Bedrock
+// https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html
 export type BedrockModelId = keyof typeof bedrockModels
 export const bedrockDefaultModelId: BedrockModelId = "anthropic.claude-sonnet-4-20250514-v1:0"
 export const bedrockModels = {
@@ -280,7 +303,7 @@ export const bedrockModels = {
 		cacheWritesPrice: 3.75,
 		cacheReadsPrice: 0.3,
 	},
-	"anthropic.claude-opus-4-20250514-v1:0": {
+	"anthropic.claude-opus-4-1-20250805-v1:0": {
 		maxTokens: 8192,
 		contextWindow: 200_000,
 		supportsImages: true,
@@ -290,7 +313,7 @@ export const bedrockModels = {
 		cacheWritesPrice: 18.75,
 		cacheReadsPrice: 1.5,
 	},
-	"anthropic.claude-opus-4-1-20250805-v1:0": {
+	"anthropic.claude-opus-4-20250514-v1:0": {
 		maxTokens: 8192,
 		contextWindow: 200_000,
 		supportsImages: true,
@@ -416,7 +439,25 @@ export const bedrockModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
-// 🔄 vertexModels - Cline에서 업데이트됨
+// OpenRouter
+// https://openrouter.ai/models?order=newest&supported_parameters=tools
+export const openRouterDefaultModelId = "anthropic/claude-3.7-sonnet" // will always exist in openRouterModels
+export const openRouterDefaultModelInfo: ModelInfo = {
+	maxTokens: 8192,
+	contextWindow: 200_000,
+	supportsImages: true,
+
+	supportsPromptCache: true,
+	inputPrice: 3.0,
+	outputPrice: 15.0,
+	cacheWritesPrice: 3.75,
+	cacheReadsPrice: 0.3,
+	description:
+		"Claude 3.7 Sonnet is an advanced large language model with improved reasoning, coding, and problem-solving capabilities. It introduces a hybrid reasoning approach, allowing users to choose between rapid responses and extended, step-by-step processing for complex tasks. The model demonstrates notable improvements in coding, particularly in front-end development and full-stack updates, and excels in agentic workflows, where it can autonomously navigate multi-step processes. \n\nClaude 3.7 Sonnet maintains performance parity with its predecessor in standard mode while offering an extended reasoning mode for enhanced accuracy in math, coding, and instruction-following tasks.\n\nRead more at the [blog post here](https://www.anthropic.com/news/claude-3-7-sonnet)",
+}
+// Vertex AI
+// https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude
+// https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models
 export type VertexModelId = keyof typeof vertexModels
 export const vertexDefaultModelId: VertexModelId = "claude-sonnet-4@20250514"
 export const vertexModels = {
@@ -601,61 +642,7 @@ export const vertexModels = {
 		inputPrice: 0,
 		outputPrice: 0,
 	},
-	"gemini-2.5-pro": {
-		maxTokens: 65536,
-		contextWindow: 1_048_576,
-		supportsImages: true,
-		supportsPromptCache: true,
-		supportsGlobalEndpoint: true,
-		inputPrice: 2.5,
-		outputPrice: 15,
-		cacheReadsPrice: 0.625,
-		thinkingConfig: {
-			maxBudget: 32767,
-		},
-		tiers: [
-			{
-				contextWindow: 200000,
-				inputPrice: 1.25,
-				outputPrice: 10,
-				cacheReadsPrice: 0.31,
-			},
-			{
-				contextWindow: Infinity,
-				inputPrice: 2.5,
-				outputPrice: 15,
-				cacheReadsPrice: 0.625,
-			},
-		],
-	},
-	"gemini-2.5-flash": {
-		maxTokens: 65536,
-		contextWindow: 1_048_576,
-		supportsImages: true,
-		supportsPromptCache: true,
-		supportsGlobalEndpoint: true,
-		inputPrice: 0.3,
-		outputPrice: 2.5,
-		thinkingConfig: {
-			maxBudget: 24576,
-			outputPrice: 3.5,
-		},
-	},
 
-	"gemini-2.5-flash-lite-preview-06-17": {
-		maxTokens: 64000,
-		contextWindow: 1_000_000,
-		supportsImages: true,
-		supportsPromptCache: true,
-		supportsGlobalEndpoint: true,
-		inputPrice: 0.1,
-		outputPrice: 0.4,
-		cacheReadsPrice: 0.025,
-		description: "Preview version - may not be available in all regions",
-		thinkingConfig: {
-			maxBudget: 24576,
-		},
-	},
 	"gemini-2.0-flash-thinking-exp-01-21": {
 		maxTokens: 65_536,
 		contextWindow: 1_048_576,
@@ -729,52 +716,6 @@ export const vertexModels = {
 		inputPrice: 0,
 		outputPrice: 0,
 	},
-} as const satisfies Record<string, ModelInfo>
-
-// 🔄 geminiModels - Cline에서 업데이트됨
-export type GeminiModelId = keyof typeof geminiModels
-export const geminiDefaultModelId: GeminiModelId = "gemini-2.5-flash"
-export const geminiModels = {
-	"gemini-2.5-pro": {
-		maxTokens: 65536,
-		contextWindow: 1_048_576,
-		supportsImages: true,
-		supportsPromptCache: true,
-		inputPrice: 2.5,
-		outputPrice: 15,
-		cacheReadsPrice: 0.625,
-		thinkingConfig: {
-			maxBudget: 32767,
-		},
-		tiers: [
-			{
-				contextWindow: 200000,
-				inputPrice: 1.25,
-				outputPrice: 10,
-				cacheReadsPrice: 0.31,
-			},
-			{
-				contextWindow: Infinity,
-				inputPrice: 2.5,
-				outputPrice: 15,
-				cacheReadsPrice: 0.625,
-			},
-		],
-	},
-	"gemini-2.5-flash-lite-preview-06-17": {
-		maxTokens: 64000,
-		contextWindow: 1_000_000,
-		supportsImages: true,
-		supportsPromptCache: true,
-		supportsGlobalEndpoint: true,
-		inputPrice: 0.1,
-		outputPrice: 0.4,
-		cacheReadsPrice: 0.025,
-		description: "Preview version - may not be available in all regions",
-		thinkingConfig: {
-			maxBudget: 24576,
-		},
-	},
 	"gemini-2.5-flash": {
 		maxTokens: 65536,
 		contextWindow: 1_048_576,
@@ -783,6 +724,52 @@ export const geminiModels = {
 		inputPrice: 0.3,
 		outputPrice: 2.5,
 		cacheReadsPrice: 0.075,
+		thinkingConfig: {
+			maxBudget: 24576,
+			outputPrice: 3.5,
+		},
+	},
+} as const satisfies Record<string, ModelInfo>
+
+export const vertexGlobalModels: Record<string, ModelInfo> = Object.fromEntries(
+	Object.entries(vertexModels).filter(([_k, v]) => v.hasOwnProperty("supportsGlobalEndpoint")),
+) as Record<string, ModelInfo>
+
+export const openAiModelInfoSaneDefaults: OpenAiCompatibleModelInfo = {
+	maxTokens: -1,
+	contextWindow: 128_000,
+	supportsImages: true,
+	supportsPromptCache: false,
+	isR1FormatRequired: false,
+	inputPrice: 0,
+	outputPrice: 0,
+	temperature: 0,
+}
+
+// Gemini
+// https://ai.google.dev/gemini-api/docs/models/gemini
+export type GeminiModelId = keyof typeof geminiModels
+export const geminiDefaultModelId: GeminiModelId = "gemini-2.5-flash-preview-05-20"
+export const geminiModels = {
+	"gemini-2.5-flash-preview-05-20": {
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 0.15,
+		outputPrice: 0.6,
+		thinkingConfig: {
+			maxBudget: 24576,
+			outputPrice: 3.5,
+		},
+	},
+	"gemini-2.5-flash-preview-04-17": {
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 0.15,
+		outputPrice: 0.6,
 		thinkingConfig: {
 			maxBudget: 24576,
 			outputPrice: 3.5,
@@ -902,14 +889,67 @@ export const geminiModels = {
 		inputPrice: 0,
 		outputPrice: 0,
 	},
+	"gemini-2.5-pro": {
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 2.5,
+		outputPrice: 15,
+		cacheReadsPrice: 0.625,
+		thinkingConfig: {
+			maxBudget: 32767,
+		},
+		tiers: [
+			{
+				contextWindow: 200000,
+				inputPrice: 1.25,
+				outputPrice: 10,
+				cacheReadsPrice: 0.31,
+			},
+			{
+				contextWindow: Infinity,
+				inputPrice: 2.5,
+				outputPrice: 15,
+				cacheReadsPrice: 0.625,
+			},
+		],
+	},
+	"gemini-2.5-flash": {
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 0.3,
+		outputPrice: 2.5,
+		cacheReadsPrice: 0.075,
+		thinkingConfig: {
+			maxBudget: 24576,
+			outputPrice: 3.5,
+		},
+	},
+	"gemini-2.5-flash-lite-preview-06-17": {
+		maxTokens: 64000,
+		contextWindow: 1_000_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		supportsGlobalEndpoint: true,
+		inputPrice: 0.1,
+		outputPrice: 0.4,
+		thinkingConfig: {
+			maxBudget: 24576,
+			outputPrice: 1.0,
+		},
+	},
 } as const satisfies Record<string, ModelInfo>
 
-// 🔄 openAiNativeModels - Cline에서 업데이트됨
+// OpenAI Native
+// https://openai.com/api/pricing/
 export type OpenAiNativeModelId = keyof typeof openAiNativeModels
 export const openAiNativeDefaultModelId: OpenAiNativeModelId = "gpt-4.1"
 export const openAiNativeModels = {
 	"gpt-5-2025-08-07": {
-		maxTokens: 8_192, // 128000 breaks context window truncation
+		maxTokens: 128000,
 		contextWindow: 272000,
 		supportsImages: true,
 		supportsPromptCache: true,
@@ -918,7 +958,7 @@ export const openAiNativeModels = {
 		cacheReadsPrice: 0.125,
 	},
 	"gpt-5-mini-2025-08-07": {
-		maxTokens: 8_192,
+		maxTokens: 128000,
 		contextWindow: 272000,
 		supportsImages: true,
 		supportsPromptCache: true,
@@ -927,7 +967,7 @@ export const openAiNativeModels = {
 		cacheReadsPrice: 0.025,
 	},
 	"gpt-5-nano-2025-08-07": {
-		maxTokens: 8_192,
+		maxTokens: 128000,
 		contextWindow: 272000,
 		supportsImages: true,
 		supportsPromptCache: true,
@@ -936,7 +976,7 @@ export const openAiNativeModels = {
 		cacheReadsPrice: 0.005,
 	},
 	"nectarine-alpha-new-reasoning-effort-2025-07-25": {
-		maxTokens: 8_192,
+		maxTokens: 128000,
 		contextWindow: 256000,
 		supportsImages: true,
 		supportsPromptCache: true,
@@ -1062,7 +1102,13 @@ export const openAiNativeModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
-// 🔄 deepSeekModels - Cline에서 업데이트됨
+// Azure OpenAI
+// https://learn.microsoft.com/en-us/azure/ai-services/openai/api-version-deprecation
+// https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#api-specs
+export const azureOpenAiDefaultApiVersion = "2024-08-01-preview"
+
+// DeepSeek
+// https://api-docs.deepseek.com/quick_start/pricing
 export type DeepSeekModelId = keyof typeof deepSeekModels
 export const deepSeekDefaultModelId: DeepSeekModelId = "deepseek-chat"
 export const deepSeekModels = {
@@ -1088,9 +1134,12 @@ export const deepSeekModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
-// 🔄 internationalQwenModels - Cline에서 업데이트됨
+// Qwen
+// https://bailian.console.aliyun.com/
+export type MainlandQwenModelId = keyof typeof mainlandQwenModels
 export type InternationalQwenModelId = keyof typeof internationalQwenModels
 export const internationalQwenDefaultModelId: InternationalQwenModelId = "qwen-coder-plus-latest"
+export const mainlandQwenDefaultModelId: MainlandQwenModelId = "qwen-coder-plus-latest"
 export const internationalQwenModels = {
 	"qwen3-coder-plus": {
 		maxTokens: 65_536,
@@ -1105,8 +1154,8 @@ export const internationalQwenModels = {
 		contextWindow: 204_800,
 		supportsImages: false,
 		supportsPromptCache: false,
-		inputPrice: 1.5,
-		outputPrice: 7.5,
+		inputPrice: 6,
+		outputPrice: 30,
 	},
 	"qwen3-235b-a22b": {
 		maxTokens: 16_384,
@@ -1430,9 +1479,6 @@ export const internationalQwenModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
-// 🔄 mainlandQwenModels - Cline에서 업데이트됨
-export type MainlandQwenModelId = keyof typeof mainlandQwenModels
-export const mainlandQwenDefaultModelId: MainlandQwenModelId = "qwen-coder-plus-latest"
 export const mainlandQwenModels = {
 	"qwen3-235b-a22b": {
 		maxTokens: 16_384,
@@ -1776,7 +1822,9 @@ export const mainlandQwenModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
-// 🔄 doubaoModels - Cline에서 업데이트됨
+// Doubao
+// https://www.volcengine.com/docs/82379/1298459
+// https://console.volcengine.com/ark/region:ark+cn-beijing/openManagement
 export type DoubaoModelId = keyof typeof doubaoModels
 export const doubaoDefaultModelId: DoubaoModelId = "doubao-1-5-pro-256k-250115"
 export const doubaoModels = {
@@ -1822,7 +1870,8 @@ export const doubaoModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
-// 🔄 mistralModels - Cline에서 업데이트됨
+// Mistral
+// https://docs.mistral.ai/getting-started/models/models_overview/
 export type MistralModelId = keyof typeof mistralModels
 export const mistralDefaultModelId: MistralModelId = "devstral-small-2505"
 export const mistralModels = {
@@ -1932,9 +1981,31 @@ export const mistralModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
-// 🔄 askSageModels - Cline에서 업데이트됨
+// LiteLLM
+// https://docs.litellm.ai/docs/
+export type LiteLLMModelId = string
+export const liteLlmDefaultModelId = "anthropic/claude-3-7-sonnet-20250219"
+export interface LiteLLMModelInfo extends ModelInfo {
+	temperature?: number
+}
+
+export const liteLlmModelInfoSaneDefaults: LiteLLMModelInfo = {
+	maxTokens: -1,
+	contextWindow: 128_000,
+	supportsImages: true,
+	supportsPromptCache: true,
+	inputPrice: 0,
+	outputPrice: 0,
+	cacheWritesPrice: 0,
+	cacheReadsPrice: 0,
+	temperature: 0,
+}
+
+// AskSage Models
+// https://docs.asksage.ai/
 export type AskSageModelId = keyof typeof askSageModels
 export const askSageDefaultModelId: AskSageModelId = "claude-35-sonnet"
+export const askSageDefaultURL: string = "https://api.asksage.ai/server"
 export const askSageModels = {
 	"gpt-4o": {
 		maxTokens: 4096,
@@ -2010,9 +2081,8 @@ export const askSageModels = {
 	},
 }
 
-// 🔄 nebiusModels - Cline에서 업데이트됨
-export type NebiusModelId = keyof typeof nebiusModels
-export const nebiusDefaultModelId = "Qwen/Qwen2.5-32B-Instruct-fast" satisfies NebiusModelId
+// Nebius AI Studio
+// https://docs.nebius.com/studio/inference/models
 export const nebiusModels = {
 	"deepseek-ai/DeepSeek-V3": {
 		maxTokens: 32_000,
@@ -2103,22 +2173,20 @@ export const nebiusModels = {
 		outputPrice: 0.6,
 	},
 } as const satisfies Record<string, ModelInfo>
+export type NebiusModelId = keyof typeof nebiusModels
+export const nebiusDefaultModelId = "Qwen/Qwen2.5-32B-Instruct-fast" satisfies NebiusModelId
 
-// 🔄 xaiModels - Cline에서 업데이트됨
-export type XaiModelId = keyof typeof xaiModels
-export const xaiDefaultModelId: XaiModelId = "grok-3"
-export enum QwenApiRegions {
-	CHINA = "china",
-	INTERNATIONAL = "international",
-}
-
+// X AI
+// https://docs.x.ai/docs/api-reference
+export type XAIModelId = keyof typeof xaiModels
+export const xaiDefaultModelId: XAIModelId = "grok-3"
 export const xaiModels = {
 	"grok-4": {
 		maxTokens: 8192,
 		contextWindow: 262144,
 		supportsImages: true,
 		supportsPromptCache: true,
-		inputPrice: 3.0, // will have different pricing for long context vs short context
+		inputPrice: 3.0,
 		cacheReadsPrice: 0.75,
 		outputPrice: 15.0,
 	},
@@ -2268,7 +2336,8 @@ export const xaiModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
-// 🔄 sambanovaModels - Cline에서 업데이트됨
+// SambaNova
+// https://docs.sambanova.ai/cloud/docs/get-started/supported-models
 export type SambanovaModelId = keyof typeof sambanovaModels
 export const sambanovaDefaultModelId: SambanovaModelId = "Meta-Llama-3.3-70B-Instruct"
 export const sambanovaModels = {
@@ -2370,10 +2439,29 @@ export const sambanovaModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
-// 🔄 cerebrasModels - Cline에서 업데이트됨
+// Cerebras
+// https://inference-docs.cerebras.ai/api-reference/models
 export type CerebrasModelId = keyof typeof cerebrasModels
-export const cerebrasDefaultModelId: CerebrasModelId = "gpt-oss-120b"
+export const cerebrasDefaultModelId: CerebrasModelId = "llama3.1-8b"
 export const cerebrasModels = {
+	"llama-3.3-70b": {
+		maxTokens: 64000,
+		contextWindow: 64000,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+		description: "Powerful model with ~2600 tokens/s",
+	},
+	"qwen-3-32b": {
+		maxTokens: 64000,
+		contextWindow: 64000,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+		description: "SOTA coding performance with ~2500 tokens/s",
+	},
 	"gpt-oss-120b": {
 		maxTokens: 65536,
 		contextWindow: 128000,
@@ -2412,24 +2500,6 @@ export const cerebrasModels = {
 		outputPrice: 0,
 		description: "Intelligent model with ~1400 tokens/s",
 	},
-	"llama-3.3-70b": {
-		maxTokens: 64000,
-		contextWindow: 64000,
-		supportsImages: false,
-		supportsPromptCache: false,
-		inputPrice: 0,
-		outputPrice: 0,
-		description: "Powerful model with ~2600 tokens/s",
-	},
-	"qwen-3-32b": {
-		maxTokens: 64000,
-		contextWindow: 64000,
-		supportsImages: false,
-		supportsPromptCache: false,
-		inputPrice: 0,
-		outputPrice: 0,
-		description: "SOTA coding performance with ~2500 tokens/s",
-	},
 	"qwen-3-235b-a22b-thinking-2507": {
 		maxTokens: 32000,
 		contextWindow: 65000,
@@ -2441,278 +2511,11 @@ export const cerebrasModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
-// 🛡️ sapAiCoreModelDescription - 기본값 생성
-const sapAiCoreModelDescription = "SAP AI Core model"
-
-// 🔄 sapAiCoreModels - Cline에서 업데이트됨
-export type SapAiCoreModelId = keyof typeof sapAiCoreModels
-export const sapAiCoreDefaultModelId: SapAiCoreModelId = "anthropic--claude-3.5-sonnet"
-export const sapAiCoreModels = {
-	"anthropic--claude-4-sonnet": {
-		maxTokens: 8192,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: true,
-		description: sapAiCoreModelDescription,
-	},
-	"anthropic--claude-4-opus": {
-		maxTokens: 8192,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: true,
-		description: sapAiCoreModelDescription,
-	},
-	"anthropic--claude-3.7-sonnet": {
-		maxTokens: 64_000,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: true,
-		description: sapAiCoreModelDescription,
-	},
-	"anthropic--claude-3.5-sonnet": {
-		maxTokens: 8192,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: false,
-		description: sapAiCoreModelDescription,
-	},
-	"anthropic--claude-3-sonnet": {
-		maxTokens: 4096,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: false,
-		description: sapAiCoreModelDescription,
-	},
-	"anthropic--claude-3-haiku": {
-		maxTokens: 4096,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: false,
-		description: sapAiCoreModelDescription,
-	},
-	"anthropic--claude-3-opus": {
-		maxTokens: 4096,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: false,
-		description: sapAiCoreModelDescription,
-	},
-	"gemini-2.5-pro": {
-		maxTokens: 65536,
-		contextWindow: 1_048_576,
-		supportsImages: true,
-		supportsPromptCache: true,
-		thinkingConfig: {
-			maxBudget: 32767,
-		},
-		description: sapAiCoreModelDescription,
-	},
-	"gemini-2.5-flash": {
-		maxTokens: 65536,
-		contextWindow: 1_048_576,
-		supportsImages: true,
-		supportsPromptCache: true,
-		thinkingConfig: {
-			maxBudget: 24576,
-		},
-		description: sapAiCoreModelDescription,
-	},
-	"gpt-4": {
-		maxTokens: 4096,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: false,
-		description: sapAiCoreModelDescription,
-	},
-	"gpt-4o": {
-		maxTokens: 4096,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: false,
-		description: sapAiCoreModelDescription,
-	},
-	"gpt-4o-mini": {
-		maxTokens: 4096,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: false,
-		description: sapAiCoreModelDescription,
-	},
-	"gpt-4.1": {
-		maxTokens: 32_768,
-		contextWindow: 1_047_576,
-		supportsImages: true,
-		supportsPromptCache: true,
-		description: sapAiCoreModelDescription,
-	},
-	"gpt-4.1-nano": {
-		maxTokens: 32_768,
-		contextWindow: 1_047_576,
-		supportsImages: true,
-		supportsPromptCache: true,
-		description: sapAiCoreModelDescription,
-	},
-	"gpt-5": {
-		maxTokens: 128_000,
-		contextWindow: 272_000,
-		supportsImages: true,
-		supportsPromptCache: true,
-		description: sapAiCoreModelDescription,
-	},
-	"gpt-5-nano": {
-		maxTokens: 128_000,
-		contextWindow: 272_000,
-		supportsImages: true,
-		supportsPromptCache: true,
-		description: sapAiCoreModelDescription,
-	},
-	"gpt-5-mini": {
-		maxTokens: 128_000,
-		contextWindow: 272_000,
-		supportsImages: true,
-		supportsPromptCache: true,
-		description: sapAiCoreModelDescription,
-	},
-	o1: {
-		maxTokens: 4096,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: false,
-		description: sapAiCoreModelDescription,
-	},
-	o3: {
-		maxTokens: 100_000,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: true,
-		description: sapAiCoreModelDescription,
-	},
-	"o3-mini": {
-		maxTokens: 4096,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: false,
-		description: sapAiCoreModelDescription,
-	},
-	"o4-mini": {
-		maxTokens: 100_000,
-		contextWindow: 200_000,
-		supportsImages: true,
-		supportsPromptCache: true,
-		description: sapAiCoreModelDescription,
-	},
-} as const satisfies Record<string, ModelInfo>
-
-export type ClaudeCodeModelId = keyof typeof claudeCodeModels
-export const claudeCodeDefaultModelId: ClaudeCodeModelId = "claude-sonnet-4-20250514"
-// ➕ claudeCodeModels - Cline에서 새로 추가됨
-export const claudeCodeModels = {
-	"claude-sonnet-4-20250514": {
-		...anthropicModels["claude-sonnet-4-20250514"],
-		supportsImages: false,
-		supportsPromptCache: false,
-	},
-	"claude-opus-4-1-20250805": {
-		...anthropicModels["claude-opus-4-1-20250805"],
-		supportsImages: false,
-		supportsPromptCache: false,
-	},
-	"claude-opus-4-20250514": {
-		...anthropicModels["claude-opus-4-20250514"],
-		supportsImages: false,
-		supportsPromptCache: false,
-	},
-	"claude-3-7-sonnet-20250219": {
-		...anthropicModels["claude-3-7-sonnet-20250219"],
-		supportsImages: false,
-		supportsPromptCache: false,
-	},
-	"claude-3-5-sonnet-20241022": {
-		...anthropicModels["claude-3-5-sonnet-20241022"],
-		supportsImages: false,
-		supportsPromptCache: false,
-	},
-	"claude-3-5-haiku-20241022": {
-		...anthropicModels["claude-3-5-haiku-20241022"],
-		supportsImages: false,
-		supportsPromptCache: false,
-	},
-} as const satisfies Record<string, ModelInfo>
-
-export type HuggingFaceModelId = keyof typeof huggingFaceModels
-export const huggingFaceDefaultModelId: HuggingFaceModelId = "openai/gpt-oss-120b"
-// ➕ huggingFaceModels - Cline에서 새로 추가됨
-export const huggingFaceModels = {
-	"openai/gpt-oss-120b": {
-		maxTokens: 32766,
-		contextWindow: 131_072,
-		supportsImages: false,
-		supportsPromptCache: false,
-		inputPrice: 0,
-		outputPrice: 0,
-		description:
-			"Large open-weight reasoning model for high-end desktops and data centers, built for complex coding, math, and general AI tasks.",
-	},
-	"openai/gpt-oss-20b": {
-		maxTokens: 32766,
-		contextWindow: 131_072,
-		supportsImages: false,
-		supportsPromptCache: false,
-		inputPrice: 0,
-		outputPrice: 0,
-		description:
-			"Medium open-weight reasoning model that runs on most desktops, balancing strong reasoning with broad accessibility.",
-	},
-	"moonshotai/Kimi-K2-Instruct": {
-		maxTokens: 131_072,
-		contextWindow: 131_072,
-		supportsImages: false,
-		supportsPromptCache: false,
-		inputPrice: 0,
-		outputPrice: 0,
-		description: "Advanced reasoning model with superior performance across coding, math, and general capabilities.",
-	},
-	"deepseek-ai/DeepSeek-V3-0324": {
-		maxTokens: 8192,
-		contextWindow: 64_000,
-		supportsImages: false,
-		supportsPromptCache: false,
-		inputPrice: 0,
-		outputPrice: 0,
-		description: "Advanced reasoning model with superior performance across coding, math, and general capabilities.",
-	},
-	"deepseek-ai/DeepSeek-R1": {
-		maxTokens: 8192,
-		contextWindow: 64_000,
-		supportsImages: false,
-		supportsPromptCache: false,
-		inputPrice: 0,
-		outputPrice: 0,
-		description: "DeepSeek's reasoning model with step-by-step thinking capabilities.",
-	},
-	"deepseek-ai/DeepSeek-R1-0528": {
-		maxTokens: 64_000,
-		contextWindow: 64_000,
-		supportsImages: false,
-		supportsPromptCache: false,
-		inputPrice: 0,
-		outputPrice: 0,
-		description: "DeepSeek's reasoning model's latest version with step-by-step thinking capabilities",
-	},
-	"meta-llama/Llama-3.1-8B-Instruct": {
-		maxTokens: 8192,
-		contextWindow: 128_000,
-		supportsImages: false,
-		supportsPromptCache: false,
-		inputPrice: 0,
-		outputPrice: 0,
-		description: "Efficient 8B parameter Llama model for general-purpose tasks.",
-	},
-} as const satisfies Record<string, ModelInfo>
-
+// Groq
+// https://console.groq.com/docs/models
+// https://groq.com/pricing/
 export type GroqModelId = keyof typeof groqModels
 export const groqDefaultModelId: GroqModelId = "openai/gpt-oss-120b"
-// ➕ groqModels - Cline에서 새로 추가됨
 export const groqModels = {
 	"openai/gpt-oss-120b": {
 		maxTokens: 32766, // Model fails if you try to use more than 32K tokens
@@ -2817,9 +2620,300 @@ export const groqModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
+// HuggingFace
+// https://huggingface.co/pricing
+export type HuggingFaceModelId = keyof typeof huggingFaceModels
+export const huggingFaceDefaultModelId: HuggingFaceModelId = "moonshotai/Kimi-K2-Instruct"
+export const huggingFaceModels = {
+	"openai/gpt-oss-120b": {
+		maxTokens: 32766,
+		contextWindow: 131_072,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+		description:
+			"Large open-weight reasoning model for high-end desktops and data centers, built for complex coding, math, and general AI tasks.",
+	},
+	"openai/gpt-oss-20b": {
+		maxTokens: 32766,
+		contextWindow: 131_072,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+		description:
+			"Medium open-weight reasoning model that runs on most desktops, balancing strong reasoning with broad accessibility.",
+	},
+	"moonshotai/Kimi-K2-Instruct": {
+		maxTokens: 131_072,
+		contextWindow: 131_072,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+		description: "Advanced reasoning model with superior performance across coding, math, and general capabilities.",
+	},
+	"deepseek-ai/DeepSeek-V3-0324": {
+		maxTokens: 131_072,
+		contextWindow: 131_072,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+		description: "DeepSeek's latest V3 model with exceptional reasoning and code generation capabilities.",
+	},
+	"deepseek-ai/DeepSeek-R1": {
+		maxTokens: 131_072,
+		contextWindow: 131_072,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+		description: "DeepSeek R1 with advanced reasoning capabilities for complex problem-solving.",
+	},
+	"deepseek-ai/DeepSeek-R1-0528": {
+		maxTokens: 131_072,
+		contextWindow: 131_072,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+		description: "DeepSeek R1 May 2024 release with improved accuracy and performance.",
+	},
+	"meta-llama/Llama-3.1-8B-Instruct": {
+		maxTokens: 131_072,
+		contextWindow: 131_072,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+		description: "Meta's Llama 3.1 8B Instruct model for general language understanding and generation.",
+	},
+} as const satisfies Record<string, ModelInfo>
+
+// xAI
+// https://docs.x.ai/api
+export type XaiModelId = keyof typeof xaiModels
+export const xaiDefaultModelId: XaiModelId = "grok-4"
+
+// Requesty
+// https://requesty.ai/models
+export const requestyDefaultModelId = "anthropic/claude-3-7-sonnet-latest"
+export const requestyDefaultModelInfo: ModelInfo = {
+	maxTokens: 8192,
+	contextWindow: 200_000,
+	supportsImages: true,
+
+	supportsPromptCache: true,
+	inputPrice: 3.0,
+	outputPrice: 15.0,
+	cacheWritesPrice: 3.75,
+	cacheReadsPrice: 0.3,
+	description: "Anthropic's most intelligent model. Highest level of intelligence and capability.",
+}
+
+// SAP AI Core
+export type SapAiCoreModelId = keyof typeof sapAiCoreModels
+export const sapAiCoreDefaultModelId: SapAiCoreModelId = "anthropic--claude-3.5-sonnet"
+export const sapAiCoreModels = {
+	"anthropic--claude-3.7-sonnet": {
+		maxTokens: 64_000,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 3.0,
+		outputPrice: 15.0,
+	},
+	"anthropic--claude-3.5-sonnet": {
+		maxTokens: 8192,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 3.0,
+		outputPrice: 15.0,
+	},
+	"anthropic--claude-3-sonnet": {
+		maxTokens: 4096,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 3.0,
+		outputPrice: 15.0,
+	},
+	"anthropic--claude-3-haiku": {
+		maxTokens: 4096,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 3.0,
+		outputPrice: 15.0,
+	},
+	"anthropic--claude-3-opus": {
+		maxTokens: 4096,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 3.0,
+		outputPrice: 15.0,
+	},
+	"gpt-4o": {
+		maxTokens: 4096,
+		contextWindow: 128_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 2.5,
+		outputPrice: 10.0,
+		cacheReadsPrice: 1.25,
+	},
+	"gpt-4o-mini": {
+		maxTokens: 16384,
+		contextWindow: 128_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 0.15,
+		outputPrice: 0.6,
+		cacheReadsPrice: 0.075,
+	},
+	"gpt-4": {
+		maxTokens: 4096,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 3.0,
+		outputPrice: 15.0,
+	},
+	o1: {
+		maxTokens: 4096,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 3.0,
+		outputPrice: 15.0,
+	},
+	"o3-mini": {
+		maxTokens: 100_000,
+		contextWindow: 200_000,
+		supportsImages: false,
+		supportsPromptCache: true,
+		inputPrice: 1.1,
+		outputPrice: 4.4,
+		cacheReadsPrice: 0.55,
+	},
+	"gpt-4.1": {
+		maxTokens: 32_768,
+		contextWindow: 1_047_576,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 2,
+		outputPrice: 8,
+		cacheReadsPrice: 0.5,
+	},
+	"gpt-4.1-nano": {
+		maxTokens: 32_768,
+		contextWindow: 1_047_576,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 0.1,
+		outputPrice: 0.4,
+		cacheReadsPrice: 0.025,
+	},
+	o3: {
+		maxTokens: 100_000,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 10.0,
+		outputPrice: 40.0,
+		cacheReadsPrice: 2.5,
+	},
+	"o4-mini": {
+		maxTokens: 100_000,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 1.1,
+		outputPrice: 4.4,
+		cacheReadsPrice: 0.275,
+	},
+	"anthropic--claude-4-sonnet": {
+		maxTokens: 8192,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		description: sapAiCoreModelDescription,
+	},
+	"anthropic--claude-4-opus": {
+		maxTokens: 8192,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		description: sapAiCoreModelDescription,
+	},
+	"gemini-2.5-pro": {
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: true,
+		thinkingConfig: {
+			maxBudget: 32767,
+		},
+		description: sapAiCoreModelDescription,
+	},
+	"gemini-2.5-flash": {
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: true,
+		thinkingConfig: {
+			maxBudget: 24576,
+		},
+		description: sapAiCoreModelDescription,
+	},
+	"gpt-5": {
+		maxTokens: 128_000,
+		contextWindow: 272_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		description: sapAiCoreModelDescription,
+	},
+	"gpt-5-mini": {
+		maxTokens: 128_000,
+		contextWindow: 272_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		description: sapAiCoreModelDescription,
+	},
+	"gpt-5-nano": {
+		maxTokens: 128_000,
+		contextWindow: 272_000,
+		supportsImages: false,
+		supportsPromptCache: true,
+		description: sapAiCoreModelDescription,
+	},
+} as const satisfies Record<string, ModelInfo>
+
+export function normalizeApiConfiguration(apiConfiguration?: ApiConfiguration): {
+	// CARET MODIFICATION: Export normalizeApiConfiguration function
+	selectedProvider: ApiProvider
+	selectedModelId: string
+	selectedModelInfo: ModelInfo
+} {
+	if (!apiConfiguration) {
+		throw new Error("Invalid API configuration")
+	}
+
+	const selectedProvider = apiConfiguration.apiProvider || "anthropic"
+	const selectedModelId = apiConfiguration.apiModelId || "claude-sonnet-4-20250514"
+	const selectedModelInfo = vertexGlobalModels[selectedModelId] || openAiModelInfoSaneDefaults
+
+	return { selectedProvider, selectedModelId, selectedModelInfo }
+}
+
+// Moonshot AI Studio
+// https://platform.moonshot.ai/docs/pricing/chat
 export type MoonshotModelId = keyof typeof moonshotModels
 export const moonshotDefaultModelId: MoonshotModelId = "kimi-k2-0711-preview"
-// ➕ moonshotModels - Cline에서 새로 추가됨
 export const moonshotModels = {
 	"kimi-k2-0711-preview": {
 		maxTokens: 131_072,
@@ -2847,9 +2941,9 @@ export const moonshotModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
+// Huawei Cloud MaaS
 export type HuaweiCloudMaasModelId = keyof typeof huaweiCloudMaasModels
 export const huaweiCloudMaasDefaultModelId: HuaweiCloudMaasModelId = "DeepSeek-V3"
-// ➕ huaweiCloudMaasModels - Cline에서 새로 추가됨
 export const huaweiCloudMaasModels = {
 	"DeepSeek-V3": {
 		maxTokens: 16_384,
@@ -2919,9 +3013,10 @@ export const huaweiCloudMaasModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
+// Baseten
+// https://baseten.co/products/model-apis/
 export type BasetenModelId = keyof typeof basetenModels
-export const basetenDefaultModelId: BasetenModelId = "deepseek-ai/DeepSeek-R1-0528"
-// ➕ basetenModels - Cline에서 새로 추가됨
+export const basetenDefaultModelId: BasetenModelId = "moonshotai/Kimi-K2-Instruct"
 export const basetenModels = {
 	"deepseek-ai/DeepSeek-R1-0528": {
 		maxTokens: 131072,
@@ -3004,98 +3099,3 @@ export const basetenModels = {
 			"Qwen3-Coder-480B-A35B-Instruct is a 480B parameter, instruction-tuned, agentic coding model that excels at function calling, tool use, and long-context reasoning over repositories.",
 	},
 } as const satisfies Record<string, ModelInfo>
-
-// 🛡️ LiteLLMModelId - Caret 원본 타입 보존
-export type LiteLLMModelId = string
-
-// 🛡️ openRouterDefaultModelId - Caret 원본 함수 보존
-export const openRouterDefaultModelId = "anthropic/claude-3.7-sonnet" // will always exist in openRouterModels
-
-// 🛡️ openRouterDefaultModelInfo - Caret 원본 함수 보존
-export const openRouterDefaultModelInfo: ModelInfo = {
-	maxTokens: 8192,
-	contextWindow: 200_000,
-	supportsImages: true,
-
-	supportsPromptCache: true,
-	inputPrice: 3.0,
-	outputPrice: 15.0,
-	cacheWritesPrice: 3.75,
-	cacheReadsPrice: 0.3,
-	description:
-		"Claude 3.7 Sonnet is an advanced large language model with improved reasoning, coding, and problem-solving capabilities. It introduces a hybrid reasoning approach, allowing users to choose between rapid responses and extended, step-by-step processing for complex tasks. The model demonstrates notable improvements in coding, particularly in front-end development and full-stack updates, and excels in agentic workflows, where it can autonomously navigate multi-step processes. \n\nClaude 3.7 Sonnet maintains performance parity with its predecessor in standard mode while offering an extended reasoning mode for enhanced accuracy in math, coding, and instruction-following tasks.\n\nRead more at the [blog post here](https://www.anthropic.com/news/claude-3-7-sonnet)",
-}
-
-// 🛡️ vertexGlobalModels - Caret 원본 함수 보존
-export const vertexGlobalModels: Record<string, ModelInfo> = Object.fromEntries(
-	Object.entries(vertexModels).filter(([_k, v]) => v.hasOwnProperty("supportsGlobalEndpoint")),
-) as Record<string, ModelInfo>
-
-// 🛡️ openAiModelInfoSaneDefaults - Caret 원본 함수 보존
-export const openAiModelInfoSaneDefaults: OpenAiCompatibleModelInfo = {
-	maxTokens: -1,
-	contextWindow: 128_000,
-	supportsImages: true,
-	supportsPromptCache: false,
-	isR1FormatRequired: false,
-	inputPrice: 0,
-	outputPrice: 0,
-	temperature: 0,
-}
-
-// 🛡️ azureOpenAiDefaultApiVersion - Caret 원본 함수 보존
-export const azureOpenAiDefaultApiVersion = "2024-08-01-preview"
-
-// 🛡️ liteLlmDefaultModelId - Caret 원본 함수 보존
-export const liteLlmDefaultModelId = "anthropic/claude-3-7-sonnet-20250219"
-
-// 🛡️ liteLlmModelInfoSaneDefaults - Caret 원본 함수 보존
-export const liteLlmModelInfoSaneDefaults: LiteLLMModelInfo = {
-	maxTokens: -1,
-	contextWindow: 128_000,
-	supportsImages: true,
-	supportsPromptCache: true,
-	inputPrice: 0,
-	outputPrice: 0,
-	cacheWritesPrice: 0,
-	cacheReadsPrice: 0,
-	temperature: 0,
-}
-
-// 🛡️ askSageDefaultURL - Caret 원본 함수 보존
-export const askSageDefaultURL: string = "https://api.asksage.ai/server"
-
-// 🛡️ requestyDefaultModelId - Caret 원본 함수 보존
-export const requestyDefaultModelId = "anthropic/claude-3-7-sonnet-latest"
-
-// 🛡️ requestyDefaultModelInfo - Caret 원본 함수 보존
-export const requestyDefaultModelInfo: ModelInfo = {
-	maxTokens: 8192,
-	contextWindow: 200_000,
-	supportsImages: true,
-
-	supportsPromptCache: true,
-	inputPrice: 3.0,
-	outputPrice: 15.0,
-	cacheWritesPrice: 3.75,
-	cacheReadsPrice: 0.3,
-	description: "Anthropic's most intelligent model. Highest level of intelligence and capability.",
-}
-
-// 🛡️ normalizeApiConfiguration - Caret 원본 함수 보존
-export function normalizeApiConfiguration(apiConfiguration?: ApiConfiguration): {
-	// CARET MODIFICATION: Export normalizeApiConfiguration function
-	selectedProvider: ApiProvider
-	selectedModelId: string
-	selectedModelInfo: ModelInfo
-} {
-	if (!apiConfiguration) {
-		throw new Error("Invalid API configuration")
-	}
-
-	const selectedProvider = apiConfiguration.apiProvider || "anthropic"
-	const selectedModelId = apiConfiguration.apiModelId || "claude-sonnet-4-20250514"
-	const selectedModelInfo = vertexGlobalModels[selectedModelId] || openAiModelInfoSaneDefaults
-
-	return { selectedProvider, selectedModelId, selectedModelInfo }
-}

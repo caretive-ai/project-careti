@@ -17,6 +17,16 @@
 
 Caret is more than just an AI coding tool; it's a VS Code extension that aims to be an **AI companion growing with developers**. It preserves the proven advantages of the open-source [Cline](https://github.com/cline/cline) while 'overlaying' more powerful and flexible features to maximize the development experience.
 
+
+<div align="center">
+  <h3>🎯 <strong>32 Providers</strong> | 🤖 <strong>205 Unique Models</strong> | 📊 <strong>274 Model Definitions</strong></h3>
+  <p>
+    <a href="./caret-docs/development/support-model-list.en.mdx">
+      <strong>📋 View Complete Model List →</strong>
+    </a>
+  </p>
+</div>
+
 ## ✨ What Makes Caret Different?
 
 | Feature | Cline | Cursor | **Caret** |

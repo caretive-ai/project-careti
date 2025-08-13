@@ -1,37 +1,35 @@
 import { Anthropic } from "@anthropic-ai/sdk"
 import OpenAI from "openai"
 import { withRetry } from "../retry"
-import { ModelInfo, openAiModelInfoSaneDefaults } from "@shared/api"
 import { ApiHandler } from "../index"
-import { convertToOpenAiMessages } from "@api/transform/openai-format"
-import { ApiStream } from "@api/transform/stream"
-import { convertToR1Format } from "@api/transform/r1-format"
+import { convertToOpenAiMessages } from "../transform/openai-format"
+import { ApiStream } from "../transform/stream"
+import { ModelInfo, MoonshotModelId, moonshotModels, moonshotDefaultModelId } from "@/shared/api"
 
-interface TogetherHandlerOptions {
-	togetherApiKey?: string
-	togetherModelId?: string
+interface MoonshotHandlerOptions {
+	moonshotApiKey?: string
+	moonshotApiLine?: string
+	apiModelId?: string
 }
 
-export class TogetherHandler implements ApiHandler {
-	private options: TogetherHandlerOptions
+export class MoonshotHandler implements ApiHandler {
 	private client: OpenAI | undefined
 
-	constructor(options: TogetherHandlerOptions) {
-		this.options = options
-	}
+	constructor(private readonly options: MoonshotHandlerOptions) {}
 
 	private ensureClient(): OpenAI {
 		if (!this.client) {
-			if (!this.options.togetherApiKey) {
-				throw new Error("Together API key is required")
+			if (!this.options.moonshotApiKey) {
+				throw new Error("Moonshot API key is required")
 			}
 			try {
 				this.client = new OpenAI({
-					baseURL: "https://api.together.xyz/v1",
-					apiKey: this.options.togetherApiKey,
+					baseURL:
+						this.options.moonshotApiLine === "china" ? "https://api.moonshot.cn/v1" : "https://api.moonshot.ai/v1",
+					apiKey: this.options.moonshotApiKey,
 				})
-			} catch (error: any) {
-				throw new Error(`Error creating Together client: ${error.message}`)
+			} catch (error) {
+				throw new Error(`Error creating Moonshot client: ${error.message}`)
 			}
 		}
 		return this.client
@@ -40,20 +38,15 @@ export class TogetherHandler implements ApiHandler {
 	@withRetry()
 	async *createMessage(systemPrompt: string, messages: Anthropic.Messages.MessageParam[]): ApiStream {
 		const client = this.ensureClient()
-		const modelId = this.options.togetherModelId ?? ""
-		const isDeepseekReasoner = modelId.includes("deepseek-reasoner")
+		const model = this.getModel()
 
-		let openAiMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+		const openAiMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
 			{ role: "system", content: systemPrompt },
 			...convertToOpenAiMessages(messages),
 		]
 
-		if (isDeepseekReasoner) {
-			openAiMessages = convertToR1Format([{ role: "user", content: systemPrompt }, ...messages])
-		}
-
 		const stream = await client.chat.completions.create({
-			model: modelId,
+			model: model.id,
 			messages: openAiMessages,
 			temperature: 0,
 			stream: true,
@@ -85,10 +78,13 @@ export class TogetherHandler implements ApiHandler {
 		}
 	}
 
-	getModel(): { id: string; info: ModelInfo } {
-		return {
-			id: this.options.togetherModelId ?? "",
-			info: openAiModelInfoSaneDefaults,
+	getModel(): { id: MoonshotModelId; info: ModelInfo } {
+		const modelId = this.options.apiModelId
+
+		if (modelId && modelId in moonshotModels) {
+			const id = modelId as MoonshotModelId
+			return { id, info: moonshotModels[id] }
 		}
+		return { id: moonshotDefaultModelId, info: moonshotModels[moonshotDefaultModelId] }
 	}
 }

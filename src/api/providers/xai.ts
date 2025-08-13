@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk"
 import OpenAI from "openai"
-import { ApiHandler } from "../"
-import { ApiHandlerOptions, XAIModelId, ModelInfo, xaiDefaultModelId, xaiModels } from "@shared/api"
+import { ApiHandler } from ".."
+import { ApiHandlerOptions, XaiModelId, ModelInfo, xaiDefaultModelId, xaiModels } from "@shared/api"
 import { convertToOpenAiMessages } from "@api/transform/openai-format"
 import { ApiStream } from "@api/transform/stream"
 import { ChatCompletionReasoningEffort } from "openai/resources/chat/completions"
@@ -71,10 +71,10 @@ export class XAIHandler implements ApiHandler {
 		}
 	}
 
-	getModel(): { id: XAIModelId; info: ModelInfo } {
+	getModel(): { id: XaiModelId; info: ModelInfo } {
 		const modelId = this.options.apiModelId
 		if (modelId && modelId in xaiModels) {
-			const id = modelId as XAIModelId
+			const id = modelId as XaiModelId
 			return { id, info: xaiModels[id] }
 		}
 		return {

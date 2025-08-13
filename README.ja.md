@@ -16,6 +16,17 @@
 
 Caretは単なるAIコーディングツールを超え、**開発者と共に成長するAIパートナー**を目指すVS Code拡張機能です。安定性が実証されたオープンソース[Cline](https://github.com/cline/cline)の利点を維持しながら、より強力な機能、低コスト、柔軟な機能を'オーバーレイ'として追加し、開発体験を最大化します。
 
+## 🚀 AIモデルサポート状況
+
+<div align="center">
+  <h3>🎯 <strong>32のプロバイダー</strong> | 🤖 <strong>205のユニークモデル</strong> | 📊 <strong>274のモデル定義</strong></h3>
+  <p>
+    <a href="./caret-docs/development/support-model-list.en.mdx">
+      <strong>📋 完全なモデルリストを見る →</strong>
+    </a>
+  </p>
+</div>
+
 ## ✨ Caretの特徴
 
 | 特徴 | Cline | Cursor | **Caret** |

@@ -6,7 +6,7 @@ import {
 	OpenaiReasoningEffort as ProtoOpenaiReasoningEffort,
 	McpDisplayMode as ProtoMcpDisplayMode,
 } from "@shared/proto/cline/state"
-import { buildApiHandler } from "../../../api"
+import { buildApiHandler } from "../../api"
 import { convertProtoApiConfigurationToApiConfiguration } from "../../../shared/proto-conversions/state/settings-conversion"
 import { TelemetrySetting } from "@/shared/TelemetrySetting"
 import { OpenaiReasoningEffort } from "@/shared/storage/types"

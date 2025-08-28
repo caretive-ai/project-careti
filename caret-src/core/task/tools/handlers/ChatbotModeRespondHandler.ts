@@ -1,23 +1,37 @@
-// CARET MODIFICATION: Chatbot Mode Response Handler
-import { ClineAsk } from "@shared/ExtensionMessage"
-import type { ToolResponse } from "@/core/task"
+import type { ToolUse } from "@core/assistant-message"
+import { PlanModeRespondHandler } from "@core/task/tools/handlers/PlanModeRespondHandler"
+import type { ToolResponse } from "@core/task"
+import type { TaskConfig } from "@core/task/tools/types/TaskConfig"
 
 /**
- * Handler for chatbot_mode_respond ask type
- * Enables approval-based conversation flow in Chatbot mode
+ * Handler for Chatbot mode responses - extends PlanModeRespondHandler with safety restrictions
+ * Based on v3.26.6 Handler architecture
  */
-export class ChatbotModeRespondHandler {
+export class ChatbotModeRespondHandler extends PlanModeRespondHandler {
 	readonly name = "chatbot_mode_respond"
 
-	async handlePartialBlock(uiHelpers: any): Promise<void> {
-		// Show chatbot mode response UI with approval buttons
-		await uiHelpers.ask("chatbot_mode_respond", "Chatbot response ready for approval")
+	constructor() {
+		super()
 	}
 
-	async execute(block: any): Promise<ToolResponse> {
-		return {
-			text: "Chatbot mode response approved and executed...",
-			images: [],
-		}
+	getDescription(block: ToolUse): string {
+		return `[${block.name}] Chatbot mode response`
+	}
+
+	async execute(config: TaskConfig, block: ToolUse): Promise<ToolResponse> {
+		// Chatbot mode specific logic:
+		// - Limited tools (safe consultation only)
+		// - Structured conversation flow
+		// - May require approval for certain actions
+		
+		// Use parent PlanModeRespondHandler execution
+		const result = await super.execute(config, block)
+		
+		// Chatbot mode customizations:
+		// - Could restrict certain tool usage
+		// - Could add approval workflows
+		// For now, we use the same behavior as Plan mode
+		
+		return result
 	}
 }

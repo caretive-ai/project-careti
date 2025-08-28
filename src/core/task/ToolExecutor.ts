@@ -1,25 +1,17 @@
-import { showSystemNotification } from "@/integrations/notifications"
-import { listFiles } from "@/services/glob/list-files"
-// CARET MODIFICATION: Import mode registry for tool restrictions
-import { modeRegistry } from "@/../caret-src/core/mode-system/ModeSystemRegistry"
-import { telemetryService } from "@/services/posthog/PostHogClientProvider"
-import { regexSearchFiles } from "@/services/ripgrep"
-import { parseSourceCodeForDefinitionsTopLevel } from "@/services/tree-sitter"
-import { findLast, findLastIndex, parsePartialArrayString } from "@/shared/array"
-import { createAndOpenGitHubIssue } from "@/utils/github-url-utils"
-import { getReadablePath, isLocatedInWorkspace } from "@/utils/path"
+import { setTimeout as setTimeoutPromise } from "node:timers/promises"
 import Anthropic from "@anthropic-ai/sdk"
-import { ApiHandler } from "@api/index"
+import { ApiHandler } from "@core/api"
 import { FileContextTracker } from "@core/context/context-tracking/FileContextTracker"
 import { ClineIgnoreController } from "@core/ignore/ClineIgnoreController"
 import { DiffViewProvider } from "@integrations/editor/DiffViewProvider"
+import { extractFileContent } from "@integrations/misc/extract-file-content"
 import { processFilesIntoText } from "@integrations/misc/extract-text"
 import { BrowserSession } from "@services/browser/BrowserSession"
 import { UrlContentFetcher } from "@services/browser/UrlContentFetcher"
 import { McpHub } from "@services/mcp/McpHub"
 import { AutoApprovalSettings } from "@shared/AutoApprovalSettings"
 import { BrowserSettings } from "@shared/BrowserSettings"
-import { FocusChainSettings } from "@shared/FocusChainSettings"
+import { COMMAND_REQ_APP_STRING } from "@shared/combineCommandSequences"
 import {
 	BrowserAction,
 	BrowserActionResult,
@@ -33,32 +25,38 @@ import {
 	ClineSayTool,
 	COMPLETION_RESULT_CHANGES_FLAG,
 } from "@shared/ExtensionMessage"
+import { FocusChainSettings } from "@shared/FocusChainSettings"
+import { Mode } from "@shared/storage/types"
 import { ClineAskResponse } from "@shared/WebviewMessage"
-import { extractFileContent } from "@integrations/misc/extract-file-content"
-import { COMMAND_REQ_APP_STRING } from "@shared/combineCommandSequences"
 import { fileExistsAtPath } from "@utils/fs"
 import { modelDoesntSupportWebp } from "@utils/model-utils"
-import { isNextGenModelFamily } from "@core/prompts/system-prompt/utils"
 import { fixModelHtmlEscaping, removeInvalidChars } from "@utils/string"
-import { setTimeout as setTimeoutPromise } from "node:timers/promises"
 import os from "os"
 import * as path from "path"
 import { serializeError } from "serialize-error"
 import * as vscode from "vscode"
-import { ToolResponse } from "."
+import { HostProvider } from "@/hosts/host-provider"
+import { showSystemNotification } from "@/integrations/notifications"
+import { listFiles } from "@/services/glob/list-files"
+import { telemetryService } from "@/services/posthog/PostHogClientProvider"
+import { regexSearchFiles } from "@/services/ripgrep"
+import { parseSourceCodeForDefinitionsTopLevel } from "@/services/tree-sitter"
+import { findLast, findLastIndex, parsePartialArrayString } from "@/shared/array"
+import { createAndOpenGitHubIssue } from "@/utils/github-url-utils"
+import { getReadablePath, isLocatedInWorkspace } from "@/utils/path"
 import { ToolParamName, ToolUse, ToolUseName } from "../assistant-message"
 import { constructNewFileContent } from "../assistant-message/diff"
 import { ContextManager } from "../context/context-management/ContextManager"
+import { continuationPrompt } from "../prompts/contextManagement"
 import { loadMcpDocumentation } from "../prompts/loadMcpDocumentation"
 import { formatResponse } from "../prompts/responses"
-import { ensureTaskDirectoryExists } from "../storage/disk"
 import { CacheService } from "../storage/CacheService"
-import { TaskState } from "./TaskState"
+import { ensureTaskDirectoryExists } from "../storage/disk"
+import { ToolResponse } from "."
 import { MessageStateHandler } from "./message-state"
+import { TaskState } from "./TaskState"
 import { AutoApprove } from "./tools/autoApprove"
 import { showNotificationForApprovalIfAutoApprovalEnabled } from "./utils"
-import { Mode } from "@shared/storage/types"
-import { continuationPrompt } from "../prompts/contextManagement"
 
 export class ToolExecutor {
 	private autoApprover: AutoApprove
@@ -126,15 +124,6 @@ export class ToolExecutor {
 		private updateFCListFromToolResponse: (taskProgress: string | undefined) => Promise<void>,
 	) {
 		this.autoApprover = new AutoApprove(autoApprovalSettings)
-	}
-
-	// CARET MODIFICATION: Check for Caret tool restrictions (minimal implementation)
-	private isCaretToolRestricted(toolName: string): boolean {
-		// Apply Caret-specific restrictions only in plan mode (Chatbot mode in Caret)
-		if (this.mode === "plan" && modeRegistry.isToolRestricted("caret", this.mode, toolName)) {
-			return true
-		}
-		return false
 	}
 
 	/**
@@ -207,8 +196,6 @@ export class ToolExecutor {
 				return `[${block.name} for '${block.params.question}']`
 			case "plan_mode_respond":
 				return `[${block.name}]`
-			case "chatbot_mode_respond":
-				return `[${block.name}]` // CARET MODIFICATION: Use ModeSystemRegistry for tool handling
 			case "load_mcp_documentation":
 				return `[${block.name}]`
 			case "attempt_completion":
@@ -343,15 +330,6 @@ export class ToolExecutor {
 		// Logic for plan-model tool call restrictions
 		if (this.strictPlanModeEnabled && this.mode === "plan" && block.name && this.isPlanModeToolRestricted(block.name)) {
 			const errorMessage = `Tool '${block.name}' is not available in PLAN MODE. This tool is restricted to ACT MODE for file modifications. Only use tools available for PLAN MODE when in that mode.`
-			await this.say("error", errorMessage)
-			this.pushToolResult(formatResponse.toolError(errorMessage), block)
-			await this.saveCheckpoint()
-			return
-		}
-
-		// CARET MODIFICATION: Tool restriction using adapter pattern (minimal Cline modification)
-		if (block.name && this.isCaretToolRestricted(block.name)) {
-			const errorMessage = modeRegistry.getToolRestrictionMessage("caret", this.mode, block.name)
 			await this.say("error", errorMessage)
 			this.pushToolResult(formatResponse.toolError(errorMessage), block)
 			await this.saveCheckpoint()
@@ -1370,7 +1348,7 @@ export class ToolExecutor {
 						if (mcp_arguments) {
 							try {
 								parsedArguments = JSON.parse(mcp_arguments)
-							} catch (error) {
+							} catch (_error) {
 								this.taskState.consecutiveMistakeCount++
 								await this.say(
 									"error",
@@ -1423,7 +1401,7 @@ export class ToolExecutor {
 							await this.say("mcp_notification", `[${notification.serverName}] ${notification.message}`)
 						}
 
-						const toolResult = await this.mcpHub.callTool(server_name, tool_name, parsedArguments)
+						const toolResult = await this.mcpHub.callTool(server_name, tool_name, parsedArguments, this.ulid)
 
 						// Check for any pending notifications after the tool call
 						const notificationsAfter = this.mcpHub.getPendingNotifications()
@@ -1746,6 +1724,7 @@ export class ToolExecutor {
 						await this.contextManager.triggerApplyStandardContextTruncationNoticeChange(
 							Date.now(),
 							await ensureTaskDirectoryExists(this.context, this.taskId),
+							apiConversationHistory,
 						)
 					}
 					await this.saveCheckpoint()
@@ -1765,6 +1744,10 @@ export class ToolExecutor {
 							telemetryData.tokensUsed,
 							telemetryData.maxContextWindow,
 						)
+					}
+
+					if (!block.partial && this.focusChainSettings.enabled) {
+						await this.updateFCListFromToolResponse(block.params.task_progress)
 					}
 
 					break
@@ -1834,6 +1817,7 @@ export class ToolExecutor {
 							await this.contextManager.triggerApplyStandardContextTruncationNoticeChange(
 								Date.now(),
 								await ensureTaskDirectoryExists(this.context, this.taskId),
+								apiConversationHistory,
 							)
 						}
 						await this.saveCheckpoint()
@@ -1918,9 +1902,9 @@ export class ToolExecutor {
 
 						// Derive system information values algorithmically
 						const operatingSystem = os.platform() + " " + os.release()
-						const clineVersion =
-							vscode.extensions.getExtension("saoudrizwan.claude-dev")?.packageJSON.version || "Unknown"
-						const systemInfo = `VSCode: ${vscode.version}, Node.js: ${process.version}, Architecture: ${os.arch()}`
+						const clineVersion = this.context.extension.packageJSON.version || "Unknown"
+						const host = await HostProvider.env.getHostVersion({})
+						const systemInfo = `${host.platform}: ${host.version}, Node.js: ${process.version}, Architecture: ${os.arch()}`
 						const currentMode = this.mode
 						const apiConfig = this.cacheService.getApiConfiguration()
 						const apiProvider = currentMode === "plan" ? apiConfig.planModeApiProvider : apiConfig.actModeApiProvider
@@ -2409,52 +2393,6 @@ export class ToolExecutor {
 				} catch (error) {
 					await this.handleError("attempting completion", error, block)
 					await this.saveCheckpoint()
-					break
-				}
-			}
-			// CARET MODIFICATION: Add chatbot_mode_respond case to fix continuous response issue
-			case "chatbot_mode_respond": {
-				const response: string | undefined = block.params.response
-				const sharedMessage = {
-					response: this.removeClosingTag(block, "response", response),
-				}
-				try {
-					if (block.partial) {
-						await this.ask("chatbot_mode_respond", JSON.stringify(sharedMessage), block.partial).catch(() => {})
-						break
-					} else {
-						if (!response) {
-							this.taskState.consecutiveMistakeCount++
-							this.pushToolResult(
-								await this.sayAndCreateMissingParamError("chatbot_mode_respond", "response"),
-								block,
-							)
-							break
-						}
-						this.taskState.consecutiveMistakeCount = 0
-
-						// CARET MODIFICATION: Similar to plan_mode_respond, ask user and wait for response to end conversation
-						this.taskState.isAwaitingPlanResponse = true
-						let {
-							text,
-							images,
-							files: chatbotResponseFiles,
-						} = await this.ask("chatbot_mode_respond", JSON.stringify(sharedMessage), false)
-						this.taskState.isAwaitingPlanResponse = false
-
-						// CARET MODIFICATION: Save user feedback like plan_mode_respond does
-						if (text || (images && images.length > 0) || (chatbotResponseFiles && chatbotResponseFiles.length > 0)) {
-							await this.say("user_feedback", text ?? "", images, chatbotResponseFiles)
-							await this.saveCheckpoint()
-						}
-
-						// CARET MODIFICATION: End conversation like plan_mode_respond does
-						this.taskState.didAlreadyUseTool = true
-						this.pushToolResult(formatResponse.toolResult(`<user_message>\n${text}\n</user_message>`), block)
-						break
-					}
-				} catch (error) {
-					await this.handleError("responding to inquiry", error, block)
 					break
 				}
 			}

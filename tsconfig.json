@@ -4,7 +4,10 @@
 		"experimentalDecorators": true,
 		"forceConsistentCasingInFileNames": true,
 		"isolatedModules": true,
-		"lib": ["es2022", "DOM"],
+		"lib": [
+			"es2022",
+			"DOM"
+		],
 		"module": "esnext",
 		"moduleResolution": "Bundler",
 		"noFallthroughCasesInSwitch": true,
@@ -22,22 +25,48 @@
 		"baseUrl": ".",
 		"types": ["vitest/globals", "should"],
 		"paths": {
-			"@/*": ["src/*"],
-			"@caret/*": ["caret-src/*"],
+			"@/*": [
+				"src/*"
+			],
+			"@caret/*": ["caret-src/*"], // CARET MODIFICATION: Add caret-src alias
 			"@caret-src/*": ["caret-src/*"], // CARET MODIFICATION: Add caret-src alias
-			"@caret/core/controller/*": ["caret-src/core/controller/*"],
-			"@caret-shared/*": ["caret-src/shared/*"],
-			"@api/*": ["src/api/*"],
-			"@core/*": ["src/core/*"],
-			"@generated/*": ["src/generated/*"],
-			"@hosts/*": ["src/hosts/*"],
-			"@integrations/*": ["src/integrations/*"],
-			"@packages/*": ["src/packages/*"],
-			"@services/*": ["src/services/*"],
-			"@shared/*": ["src/shared/*"],
-			"@utils/*": ["src/utils/*"]
+			"@caret/core/controller/*": ["caret-src/core/controller/*"], // CARET MODIFICATION: Add caret-src alias
+			"@caret-shared/*": ["caret-src/shared/*"], // CARET MODIFICATION: Add caret-src alias
+			"@api/*": ["src/api/*"], // CARET MODIFICATION: Add api alias
+			"@core/*": [
+				"src/core/*"
+			],
+			"@generated/*": [
+				"src/generated/*"
+			],
+			"@hosts/*": [
+				"src/hosts/*"
+			],
+			"@integrations/*": [
+				"src/integrations/*"
+			],
+			"@packages/*": [
+				"src/packages/*"
+			],
+			"@services/*": [
+				"src/services/*"
+			],
+			"@shared/*": [
+				"src/shared/*"
+			],
+			"@utils/*": [
+				"src/utils/*"
+			]
 		}
 	},
-	"include": ["src/**/*", "caret-src/**/*"],
-	"exclude": ["node_modules", ".vscode-test", "webview-ui", "src/test/e2e/**/*"]
+	"include": [
+		"src/**/*",
+		"caret-src/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		".vscode-test",
+		"webview-ui",
+		"src/test/e2e/**/*"
+	]
 }

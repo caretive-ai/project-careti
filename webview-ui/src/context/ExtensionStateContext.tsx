@@ -1,12 +1,11 @@
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
+import type React from "react"
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import "../../../src/shared/webview/types"
 import { DEFAULT_AUTO_APPROVAL_SETTINGS } from "@shared/AutoApprovalSettings"
 import { findLastIndex } from "@shared/array"
 import { DEFAULT_BROWSER_SETTINGS } from "@shared/BrowserSettings"
-import { DEFAULT_FOCUS_CHAIN_SETTINGS } from "@shared/FocusChainSettings"
 import { DEFAULT_PLATFORM, type ExtensionState } from "@shared/ExtensionMessage"
-import type { CaretSettings } from "@caret-src/shared/CaretSettings"
-import { DEFAULT_CARET_SETTINGS } from "@caret-src/shared/CaretSettings"
+import { DEFAULT_FOCUS_CHAIN_SETTINGS } from "@shared/FocusChainSettings"
 import { DEFAULT_MCP_DISPLAY_MODE } from "@shared/McpDisplayMode"
 import type { UserInfo } from "@shared/proto/cline/account"
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
@@ -16,37 +15,31 @@ import { WebviewProviderType as WebviewProviderTypeEnum, WebviewProviderTypeRequ
 import { convertProtoToClineMessage } from "@shared/proto-conversions/cline-message"
 import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mcp/mcp-server-conversion"
 import {
-	groqDefaultModelId,
-	groqModels,
 	basetenDefaultModelId,
 	basetenModels,
+	groqDefaultModelId,
+	groqModels,
 	type ModelInfo,
 	openRouterDefaultModelId,
 	openRouterDefaultModelInfo,
 	requestyDefaultModelId,
 	requestyDefaultModelInfo,
+	vercelAiGatewayDefaultModelId,
+	vercelAiGatewayDefaultModelInfo,
 } from "../../../src/shared/api"
 import type { McpMarketplaceCatalog, McpServer, McpViewTab } from "../../../src/shared/mcp"
-import {
-	FileServiceClient,
-	McpServiceClient,
-	ModelsServiceClient,
-	StateServiceClient,
-	UiServiceClient,
-} from "../services/grpc-client"
-import { convertTextMateToHljs } from "../utils/textMateToHljs"
+import { McpServiceClient, ModelsServiceClient, StateServiceClient, UiServiceClient } from "../services/grpc-client"
 
 interface ExtensionStateContextType extends ExtensionState {
-	caretSettings?: CaretSettings
 	didHydrateState: boolean
 	showWelcome: boolean
-	theme: Record<string, string> | undefined
 	openRouterModels: Record<string, ModelInfo>
 	openAiModels: string[]
 	requestyModels: Record<string, ModelInfo>
 	groqModels: Record<string, ModelInfo>
 	basetenModels: Record<string, ModelInfo>
 	huggingFaceModels: Record<string, ModelInfo>
+	vercelAiGatewayModels: Record<string, ModelInfo>
 	mcpServers: McpServer[]
 	mcpMarketplaceCatalog: McpMarketplaceCatalog
 	totalTasksSize: number | null
@@ -68,9 +61,9 @@ interface ExtensionStateContextType extends ExtensionState {
 	setGroqModels: (value: Record<string, ModelInfo>) => void
 	setBasetenModels: (value: Record<string, ModelInfo>) => void
 	setHuggingFaceModels: (value: Record<string, ModelInfo>) => void
+	setVercelAiGatewayModels: (value: Record<string, ModelInfo>) => void
 	setGlobalClineRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalClineRulesToggles: (toggles: Record<string, boolean>) => void
-	setLocalCaretRulesToggles: (toggles: Record<string, boolean>) => void // CARET MODIFICATION: Add missing setter
 	setLocalCursorRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalWindsurfRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalWorkflowToggles: (toggles: Record<string, boolean>) => void
@@ -186,7 +179,6 @@ export const ExtensionStateContextProvider: React.FC<{
 		preferredLanguage: "English",
 		openaiReasoningEffort: "medium",
 		mode: "act",
-		modeSystem: "caret", // CARET MODIFICATION: Default to caret mode system
 		platform: DEFAULT_PLATFORM,
 		telemetrySetting: "unset",
 		distinctId: "",
@@ -195,7 +187,6 @@ export const ExtensionStateContextProvider: React.FC<{
 		mcpDisplayMode: DEFAULT_MCP_DISPLAY_MODE,
 		globalClineRulesToggles: {},
 		localClineRulesToggles: {},
-		localCaretRulesToggles: {}, // CARET MODIFICATION: Add initial state
 		localCursorRulesToggles: {},
 		localWindsurfRulesToggles: {},
 		localWorkflowToggles: {},
@@ -208,17 +199,18 @@ export const ExtensionStateContextProvider: React.FC<{
 		welcomeViewCompleted: false,
 		mcpResponsesCollapsed: false, // Default value (expanded), will be overwritten by extension state
 		strictPlanModeEnabled: false,
+		customPrompt: undefined,
+		useAutoCondense: true,
 	})
 	const [didHydrateState, setDidHydrateState] = useState(false)
 	const [showWelcome, setShowWelcome] = useState(false)
-	const [theme, setTheme] = useState<Record<string, string>>()
 	const [openRouterModels, setOpenRouterModels] = useState<Record<string, ModelInfo>>({
 		[openRouterDefaultModelId]: openRouterDefaultModelInfo,
 	})
 	const [totalTasksSize, setTotalTasksSize] = useState<number | null>(null)
 	const [availableTerminalProfiles, setAvailableTerminalProfiles] = useState<TerminalProfile[]>([])
 
-	const [openAiModels, setOpenAiModels] = useState<string[]>([])
+	const [openAiModels, _setOpenAiModels] = useState<string[]>([])
 	const [requestyModels, setRequestyModels] = useState<Record<string, ModelInfo>>({
 		[requestyDefaultModelId]: requestyDefaultModelInfo,
 	})
@@ -229,6 +221,9 @@ export const ExtensionStateContextProvider: React.FC<{
 		[basetenDefaultModelId]: basetenModels[basetenDefaultModelId],
 	})
 	const [huggingFaceModels, setHuggingFaceModels] = useState<Record<string, ModelInfo>>({})
+	const [vercelAiGatewayModels, setVercelAiGatewayModels] = useState<Record<string, ModelInfo>>({
+		[vercelAiGatewayDefaultModelId]: vercelAiGatewayDefaultModelInfo,
+	})
 	const [mcpServers, setMcpServers] = useState<McpServer[]>([])
 	const [mcpMarketplaceCatalog, setMcpMarketplaceCatalog] = useState<McpMarketplaceCatalog>({ items: [] })
 
@@ -244,7 +239,6 @@ export const ExtensionStateContextProvider: React.FC<{
 	const settingsButtonClickedSubscriptionRef = useRef<(() => void) | null>(null)
 	const partialMessageUnsubscribeRef = useRef<(() => void) | null>(null)
 	const mcpMarketplaceUnsubscribeRef = useRef<(() => void) | null>(null)
-	const themeSubscriptionRef = useRef<(() => void) | null>(null)
 	const openRouterModelsUnsubscribeRef = useRef<(() => void) | null>(null)
 	const workspaceUpdatesUnsubscribeRef = useRef<(() => void) | null>(null)
 	const relinquishControlUnsubscribeRef = useRef<(() => void) | null>(null)
@@ -274,16 +268,16 @@ export const ExtensionStateContextProvider: React.FC<{
 					try {
 						const stateData = JSON.parse(response.stateJson) as ExtensionState
 						setState((prevState) => {
-							// luke 수정 : mode업데아트 확인 (stateData의 언디파인드 문제도 해결 필요할 수 있음)
-							console.log(" M A S T E R  C H E C K ", {
-								"Received Mode": stateData.mode,
-								"Received Mode System": stateData.modeSystem,
-							})
-
 							// Versioning logic for autoApprovalSettings
 							const incomingVersion = stateData.autoApprovalSettings?.version ?? 1
 							const currentVersion = prevState.autoApprovalSettings?.version ?? 1
 							const shouldUpdateAutoApproval = incomingVersion > currentVersion
+							// HACK: Preserve clineMessages if currentTaskItem is the same
+							if (stateData.currentTaskItem?.id === prevState.currentTaskItem?.id) {
+								stateData.clineMessages = stateData.clineMessages?.length
+									? stateData.clineMessages
+									: prevState.clineMessages
+							}
 
 							const newState = {
 								...stateData,
@@ -427,7 +421,7 @@ export const ExtensionStateContextProvider: React.FC<{
 					const partialMessage = convertProtoToClineMessage(protoMessage)
 					setState((prevState) => {
 						// worth noting it will never be possible for a more up-to-date message to be sent here or in normal messages post since the presentAssistantContent function uses lock
-						const lastIndex = findLastIndex(prevState.clineMessages, (msg: any) => msg.ts === partialMessage.ts)
+						const lastIndex = findLastIndex(prevState.clineMessages, (msg) => msg.ts === partialMessage.ts)
 						if (lastIndex !== -1) {
 							const newClineMessages = [...prevState.clineMessages]
 							newClineMessages[lastIndex] = partialMessage
@@ -458,27 +452,6 @@ export const ExtensionStateContextProvider: React.FC<{
 			},
 			onComplete: () => {
 				console.log("MCP marketplace catalog subscription completed")
-			},
-		})
-
-		// Subscribe to theme changes
-		themeSubscriptionRef.current = UiServiceClient.subscribeToTheme(EmptyRequest.create({}), {
-			onResponse: (response) => {
-				if (response.value) {
-					try {
-						const themeData = JSON.parse(response.value)
-						setTheme(convertTextMateToHljs(themeData))
-						console.log("[DEBUG] Received theme update from gRPC stream")
-					} catch (error) {
-						console.error("Error parsing theme data:", error)
-					}
-				}
-			},
-			onError: (error) => {
-				console.error("Error in theme subscription:", error)
-			},
-			onComplete: () => {
-				console.log("Theme subscription completed")
 			},
 		})
 
@@ -537,7 +510,9 @@ export const ExtensionStateContextProvider: React.FC<{
 		relinquishControlUnsubscribeRef.current = UiServiceClient.subscribeToRelinquishControl(EmptyRequest.create({}), {
 			onResponse: () => {
 				// Call all registered callbacks
-				relinquishControlCallbacks.current.forEach((callback) => callback())
+				relinquishControlCallbacks.current.forEach((callback) => {
+					callback()
+				})
 			},
 			onError: (error) => {
 				console.error("Error in relinquishControl subscription:", error)
@@ -597,10 +572,6 @@ export const ExtensionStateContextProvider: React.FC<{
 				mcpMarketplaceUnsubscribeRef.current()
 				mcpMarketplaceUnsubscribeRef.current = null
 			}
-			if (themeSubscriptionRef.current) {
-				themeSubscriptionRef.current()
-				themeSubscriptionRef.current = null
-			}
 			if (openRouterModelsUnsubscribeRef.current) {
 				openRouterModelsUnsubscribeRef.current()
 				openRouterModelsUnsubscribeRef.current = null
@@ -640,27 +611,17 @@ export const ExtensionStateContextProvider: React.FC<{
 			.catch((error: Error) => console.error("Failed to refresh OpenRouter models:", error))
 	}, [])
 
-	// Create CaretSettings from ExtensionState fields
-	const caretSettings: CaretSettings = {
-		...DEFAULT_CARET_SETTINGS,
-		mode: state.mode as "chatbot" | "agent" | "plan" | "act",
-		modeSystem: state.modeSystem,
-		preferredLanguage: state.preferredLanguage,
-		openAIReasoningEffort: state.openaiReasoningEffort,
-	}
-
 	const contextValue: ExtensionStateContextType = {
 		...state,
-		caretSettings,
 		didHydrateState,
 		showWelcome,
-		theme,
 		openRouterModels,
 		openAiModels,
 		requestyModels,
 		groqModels: groqModelsState,
 		basetenModels: basetenModelsState,
 		huggingFaceModels,
+		vercelAiGatewayModels,
 		mcpServers,
 		mcpMarketplaceCatalog,
 		totalTasksSize,
@@ -673,7 +634,6 @@ export const ExtensionStateContextProvider: React.FC<{
 		showAnnouncement,
 		globalClineRulesToggles: state.globalClineRulesToggles || {},
 		localClineRulesToggles: state.localClineRulesToggles || {},
-		localCaretRulesToggles: state.localCaretRulesToggles || {}, // CARET MODIFICATION: Add missing state
 		localCursorRulesToggles: state.localCursorRulesToggles || {},
 		localWindsurfRulesToggles: state.localWindsurfRulesToggles || {},
 		localWorkflowToggles: state.localWorkflowToggles || {},
@@ -704,6 +664,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		setGroqModels: (models: Record<string, ModelInfo>) => setGroqModels(models),
 		setBasetenModels: (models: Record<string, ModelInfo>) => setBasetenModels(models),
 		setHuggingFaceModels: (models: Record<string, ModelInfo>) => setHuggingFaceModels(models),
+		setVercelAiGatewayModels: (models: Record<string, ModelInfo>) => setVercelAiGatewayModels(models),
 		setMcpMarketplaceCatalog: (catalog: McpMarketplaceCatalog) => setMcpMarketplaceCatalog(catalog),
 		setShowMcp,
 		closeMcpView,
@@ -716,13 +677,6 @@ export const ExtensionStateContextProvider: React.FC<{
 			setState((prevState) => ({
 				...prevState,
 				localClineRulesToggles: toggles,
-			})),
-		setLocalCaretRulesToggles: (
-			toggles, // CARET MODIFICATION: Add missing setter
-		) =>
-			setState((prevState) => ({
-				...prevState,
-				localCaretRulesToggles: toggles,
 			})),
 		setLocalCursorRulesToggles: (toggles) =>
 			setState((prevState) => ({

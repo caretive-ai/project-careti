@@ -84,7 +84,6 @@ export interface GlobalState {
 	focusChainSettings: FocusChainSettings
 	focusChainFeatureFlagEnabled: boolean
 	customPrompt: "compact" | undefined
-	difyBaseUrl: string | undefined
 	// CARET MODIFICATION: Add persona image properties
 	caret_persona_avatar: Buffer | undefined
 	caret_persona_thinking_avatar: Buffer | undefined
@@ -188,7 +187,6 @@ export interface Secrets {
 	huaweiCloudMaasApiKey: string | undefined
 	basetenApiKey: string | undefined
 	vercelAiGatewayApiKey: string | undefined
-	difyApiKey: string | undefined
 }
 
 export interface LocalState {

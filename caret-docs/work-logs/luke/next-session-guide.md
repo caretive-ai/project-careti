@@ -1,22 +1,32 @@
 # Agent/Chatbot 대화 흐름 완성 - Next Session Workflow Guide
 
 **작성일**: 2025-08-28  
-**상태**: 📋 **실행 준비 완료**  
-**다음 작업**: Handler 아키텍처 전환
+**상태**: ✅ **최종 전략 확정 - Plan Mode 직접 활용**  
+**마지막 업데이트**: 2025-08-28 오후 (전략 재정립 및 문서화 완료)
 
 ---
 
-## 🎯 **이번 세션 목표**
+## 🎉 **최종 발견: v3.26.6 Plan Mode가 완벽한 솔루션**
 
-Agent/Chatbot 모드의 대화 흐름 완성을 위해 **최신 Cline Handler 아키텍처**로 전환합니다.
+**핵심 브레이크스루**: v3.26.6의 `plan_mode_respond`가 우리가 원하는 모든 기능을 제공합니다!
 
-### **핵심 문제**
-- Agent 모드에서 AI 응답 후 대화 입력창 비활성화
-- 현재 ToolExecutor 방식 vs 최신 Handler 방식 차이
-- `plan_mode_respond` 직접 사용 불가 (PLAN MODE 전용)
+### **확정된 사실**
+- ✅ **cline-reference v3.26.6 확보**: `D:\dev\caret\cline-reference/`
+- ✅ **plan_mode_respond 완벽성**: 연속 대화, 스트리밍, 옵션 선택 모두 지원
+- ✅ **Handler 시스템 불필요**: Caret 독자 구현이며 v3.26.6에 없음 → 제거
+- ✅ **최소 수정 가능**: ToolExecutor에 2개 case만 추가하면 완성
 
-### **해결책**
-최신 `PlanModeRespondHandler`를 기반으로 Caret 전용 Handler 구현
+### **최적화된 접근 방법**
+~~Handler 아키텍처 전환~~ → **Plan Mode 로직 직접 활용으로 최소 수정 구현**
+
+### **핵심 발견**
+- v3.26.6 `plan_mode_respond`: 정확히 우리가 원하는 연속 대화 UX
+- `needs_more_exploration` 플래그: 대화 지속 제어
+- `block.partial`: 실시간 스트리밍 지원
+- `options`: 사용자 선택지 제공
+
+### **결론**
+~~복잡한 Handler 구현~~ → **Plan Mode 로직 복사**로 2시간 내 완성 가능
 
 ---
 
@@ -46,57 +56,63 @@ Agent/Chatbot 모드의 대화 흐름 완성을 위해 **최신 Cline Handler �
 
 ---
 
-## 🚀 **실행 순서**
+## 🚀 **최적화된 실행 순서** ⏱️ **총 2시간**
 
 ### **Step 1: 환경 정리** ⏱️ 30분
 
 ```bash
-# 1. 현재 작업 백업
-cd D:\dev\caret\cline-latest
-git stash push -m "WIP: Before Handler architecture transition - $(date)"
+# 1. 불필요한 Handler 시스템 제거 (v3.26.6에 없음)
+rm -rf D:\dev\caret\src\core\task\tools\handlers\
+rm -rf D:\dev\caret\caret-src\core\task\tools\handlers\
 
-# 2. 중복 디렉토리 제거 (헷갈림 방지)
-rm -rf D:\dev\caret\cline-latest-new
+# 2. 컴파일 상태 확인 
+npm run compile
 
-# 3. 상태 확인
-git status
+# 3. buildSystemPrompt 시그니처는 이미 수정 완료 ✅
 ```
 
-### **Step 2: 027-4 계획서 실행** ⏱️ 7-11시간
+### **Step 2: ToolExecutor에 Caret 모드 추가** ⏱️ 1시간
 
-**[027-4-independent-chatbot-agent-system.md](../tasks/027-4-independent-chatbot-agent-system.md)** 계획서를 따라 단계별 실행:
+**핵심 파일 3개만 수정**:
 
-#### **Phase 1: 환경 준비 및 Upstream 머징**
-- Upstream 원격 저장소 추가
-- 최신 Cline 버전 머징
-- 충돌 해결 및 빌드 테스트
+#### **2.1 ToolExecutor.ts** - plan_mode_respond 로직 복사
+```typescript
+// src/core/task/ToolExecutor.ts
+case "agent_mode_respond": 
+case "chatbot_mode_respond": {
+    // plan_mode_respond 케이스와 100% 동일한 로직
+    const response = block.params.response
+    const optionsRaw = block.params.options  
+    const needsMoreExploration = block.params.needs_more_exploration === "true"
+    // ... 동일한 처리
+}
+```
 
-#### **Phase 2: Handler 아키텍처 도입**
-- 최신 `PlanModeRespondHandler` 분석
-- `ToolExecutorCoordinator` 업데이트
-- Handler 등록 시스템 구현
+#### **2.2 ExtensionMessage.ts** - 타입 추가
+```typescript
+// src/shared/ExtensionMessage.ts  
+export type ClineAsk = 
+    | "plan_mode_respond" 
+    | "agent_mode_respond"    // CARET MODIFICATION
+    | "chatbot_mode_respond"  // CARET MODIFICATION
+```
 
-#### **Phase 3: Caret 전용 Handler 구현**
-- `AgentModeRespondHandler` 생성
-- `ChatbotModeRespondHandler` 생성
-- ButtonConfig 최신화
+#### **2.3 buttonConfig.ts** - UI 스타일링
+```typescript
+// webview-ui/src/components/chat/buttonConfig.ts
+agent_mode_respond: {
+    enableButtons: false,  // Plan Mode 스타일 적용
+}
+```
 
-#### **Phase 4: 테스트 및 검증**
-- 기존 테스트 업데이트
-- 새 Handler 테스트 작성
-- 실제 환경 검증
-
-### **Step 3: 검증 및 완료**
+### **Step 3: 테스트 및 완료** ⏱️ 30분
 
 ```bash
-# 빌드 및 테스트 실행
+# 1. 컴파일 성공 확인
 npm run compile
-npm run build:webview
-npm run test:caret
 
-# F5 디버그 모드로 실제 테스트
-# - Agent 모드 연속 대화 확인
-# - Chatbot 모드 기능 보존 확인
+# 2. F5 디버그 실행으로 Agent 모드 연속 대화 테스트
+# 3. 기존 Caret 기능 회귀 테스트
 ```
 
 ---
@@ -118,16 +134,19 @@ npm run test:caret
 ## 📊 **성공 기준**
 
 ### **최소 성공 기준 (MVP)**
+- [x] ✅ v3.26.6 머징 및 환경 정리 완료
+- [x] ✅ buildSystemPrompt 시그니처 v3.26.6 적용
+- [x] ✅ 최종 전략 수립 및 문서화 완료
+- [ ] 불필요한 Handler 시스템 제거
+- [ ] ToolExecutor에 agent_mode_respond/chatbot_mode_respond 추가
 - [ ] Agent 모드에서 AI 응답 후 연속 대화 가능
-- [ ] Chatbot 모드 기존 기능 100% 보존
-- [ ] 기존 Persona 시스템 등 영향 없음
-- [ ] 컴파일 및 기본 테스트 통과
 
 ### **완전 성공 기준**
-- [ ] 최신 Cline Handler 아키텍처 완전 적용
-- [ ] 스트리밍 지원으로 실시간 응답
-- [ ] 옵션 선택 기능으로 향상된 UX
-- [ ] 모든 테스트 통과 및 문서화 완료
+- [ ] ExtensionMessage 타입에 새 ask 타입 추가
+- [ ] ButtonConfig에 새 모드 스타일링 적용  
+- [ ] v3.26.6 Plan Mode의 모든 기능 (스트리밍, 옵션) 활용
+- [ ] 기존 Persona, ModeSystem 등 모든 Caret 기능 100% 보존
+- [ ] 컴파일 성공 및 F5 디버그 테스트 통과
 
 ---
 
@@ -151,24 +170,28 @@ npm run test:caret
 # 작업 디렉토리로 이동
 cd D:\dev\caret
 
-# 027-4 계획서 열기
-code caret-docs/tasks/027-4-independent-chatbot-agent-system.md
+# 불필요한 Handler 시스템 제거 (v3.26.6에 없음)
+rm -rf src/core/task/tools/handlers/
+rm -rf caret-src/core/task/tools/handlers/
 
-# 환경 정리부터 시작
-cd cline-latest
-git stash push -m "WIP: Before Handler transition - $(date)"
-rm -rf ../cline-latest-new
+# 컴파일 상태 확인
+npm run compile
+
+# 핵심 파일 3개 수정 시작:
+# 1. src/core/task/ToolExecutor.ts
+# 2. src/shared/ExtensionMessage.ts  
+# 3. webview-ui/src/components/chat/buttonConfig.ts
 ```
 
 ---
 
-**✨ 이 워크플로우를 통해 Caret의 Agent/Chatbot 모드가 최신 Cline의 자연스러운 대화 흐름을 완벽히 구현할 수 있습니다!**
+**✨ v3.26.6 Plan Mode를 직접 활용하여 최소 수정으로 Caret Agent/Chatbot 모드의 연속 대화 기능을 완벽 구현합니다!**
 
 ---
 
 **작성**: Claude Code Assistant  
-**기반**: Handler 아키텍처 전환 계획  
-**실행 예정**: 즉시 시작 가능
+**전략**: Plan Mode 직접 활용 최적화  
+**예상 완료**: 2시간 내 (기존 7-11시간 대비 75% 단축)
 
 
 --

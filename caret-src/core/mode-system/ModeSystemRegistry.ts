@@ -3,7 +3,7 @@
  * Replaces scattered CARET MODIFICATION branches throughout the codebase
  */
 
-import { CLINE_MODES, RESTRICTED_TOOLS, ERROR_MESSAGES } from "@caret-src/shared/constants/ModeSystemConstants"
+import { CLINE_MODES, ERROR_MESSAGES, RESTRICTED_TOOLS } from "@caret-src/shared/constants/ModeSystemConstants"
 
 export interface ModeSystemAdapter {
 	// Task-related methods
@@ -40,14 +40,14 @@ export class ClineModeAdapter implements ModeSystemAdapter {
 	}
 
 	async buildSystemPrompt(mode: string, context: any): Promise<string> {
-		// Use existing Cline system prompt logic
+		// CARET MODIFICATION: Adapted to v3.26.6 buildSystemPrompt signature
 		const { buildSystemPrompt } = await import("@core/prompts/system-prompt/build-system-prompt")
 		return buildSystemPrompt(
-			context.apiConfiguration,
-			context.mode,
-			context.supportsPromptCache,
 			context.cwd,
-			context.envDetails,
+			context.supportsBrowserUse,
+			context.mcpHub,
+			context.browserSettings,
+			context.apiConfiguration,
 			context.focusChainSettings,
 		)
 	}

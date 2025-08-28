@@ -1,8 +1,25 @@
-# 027-4: Agent/Chatbot 대화 흐름 완성 - Handler 아키텍처 전환
+# 027-4: Agent/Chatbot 대화 흐름 완성 - v3.26.6 Plan Mode 활용
 
 **작성일**: 2025-08-28  
-**상태**: 🚧 **계획 수립 완료**  
+**상태**: ✅ **최종 전략 확정 - Plan Mode 직접 활용**  
 **우선순위**: ✨ **CRITICAL** - Agent 모드 대화 불가 문제 해결  
+**마지막 업데이트**: 2025-08-28 오후 (전략 재정립 완료)
+
+---
+
+## 🎉 **최종 발견: v3.26.6 Plan Mode가 완벽한 솔루션**
+
+### **핵심 발견사항**
+- ✅ **v3.26.6 plan_mode_respond**: 정확히 우리가 원하는 연속 대화 기능
+- ✅ **실시간 스트리밍**: `block.partial` 완벽 지원
+- ✅ **옵션 선택**: `options` 파라미터로 사용자 선택지 제공
+- ✅ **탐색 연속성**: `needs_more_exploration` 플래그로 대화 지속
+- ✅ **최소 수정 원칙**: Handler 시스템 불필요, ToolExecutor만 수정
+
+### **전략 전환 이유**
+1. **Handler 시스템**: Caret 독자 구현이며 v3.26.6에 없음 → 제거 필요
+2. **Plan Mode 완성도**: v3.26.6에서 우리가 원하는 모든 기능 제공
+3. **Cline 호환성**: 최소 수정으로 향후 업스트림 머징 용이  
 
 ---
 
@@ -37,152 +54,102 @@ export class PlanModeRespondHandler implements IToolHandler {
 
 ---
 
-## 🚀 **해결 전략: Handler 아키텍처 전환**
+## 🚀 **최종 해결 전략: Plan Mode 직접 활용**
 
 ### **핵심 아이디어**
-1. **plan_mode_respond 직접 사용 불가**: PLAN MODE 전용 제약
-2. **최신 Handler 아키텍처 활용**: `PlanModeRespondHandler`를 기반으로 확장
-3. **Upstream 머징 필요**: 최신 Cline 기능을 통합해야 함
+1. **plan_mode_respond 완벽한 기능**: v3.26.6에서 연속 대화, 스트리밍, 옵션 선택 모두 지원
+2. **최소 수정 원칙**: ToolExecutor에 2개 case만 추가하여 Caret 모드 구현  
+3. **기존 시스템 활용**: ModeSystemRegistry, MessageHandlerFactory 등 보존
 
-### **전략적 접근**
-```mermaid
-graph TD
-    A[현재 ToolExecutor 방식] --> B[최신 Handler 방식]
-    B --> C[AgentModeRespondHandler]
-    B --> D[ChatbotModeRespondHandler]
-    C --> E[자연스러운 대화 흐름]
-    D --> F[구조화된 상담 흐름]
+### **최적 구현 방법**
+```typescript
+// ToolExecutor.ts에 최소 수정 추가
+case "agent_mode_respond": 
+case "chatbot_mode_respond": {
+    // plan_mode_respond와 100% 동일한 로직
+    // UI에서만 다른 스타일링 적용
+    const response = block.params.response
+    const options = block.params.options  
+    const needsMoreExploration = block.params.needs_more_exploration === "true"
+    // ... plan_mode_respond 로직 재사용
+}
 ```
 
 ---
 
-## 📋 **4단계 실행 계획**
+## 📋 **3단계 최적화된 실행 계획**
 
-### **Phase 1: 환경 준비 및 Upstream 머징** ⏱️ 1-2시간
+### **Phase 1: 환경 정리 및 시그니처 수정** ⏱️ 30분
 
-#### **1.1 작업 백업**
+#### **1.1 불필요한 Handler 시스템 제거**
 ```bash
-cd D:\dev\caret\cline-latest
-git stash push -m "WIP: Agent conversation flow work - before upstream merge"
+# Caret에서 만든 Handler 파일들 제거 (v3.26.6에 없음)
+rm -rf D:\dev\caret\src\core\task\tools\handlers\
+rm -rf D:\dev\caret\caret-src\core\task\tools\handlers\
 ```
 
-#### **1.2 Upstream 머징**
-```bash
-# Upstream 원격 저장소 추가
-git remote add upstream https://github.com/cline/cline.git
-
-# 최신 버전 가져오기
-git fetch upstream
-
-# 머징 (충돌 해결 필요할 수 있음)
-git merge upstream/main
-```
-
-#### **1.3 환경 정리**
-```bash
-# 중복 디렉토리 제거
-rm -rf D:\dev\cline-latest-new
-
-# 빌드 테스트
-npm run compile
-npm run build:webview
-```
-
-### **Phase 2: Handler 아키텍처 도입** ⏱️ 3-4시간
-
-#### **2.1 Handler 클래스 분석 및 적용**
+#### **1.2 buildSystemPrompt 시그니처 수정**
 ```typescript
-// 목표: 최신 PlanModeRespondHandler 구조 분석
-// 위치: D:\dev\caret\cline-latest\src\core\task\tools\handlers\PlanModeRespondHandler.ts
-
-interface IToolHandler {
-    readonly name: string
-    getDescription(block: ToolUse): string
-    execute(config: TaskConfig, block: ToolUse): Promise<ToolResponse>
-}
-
-interface IPartialBlockHandler {
-    handlePartialBlock(block: ToolUse, uiHelpers: StronglyTypedUIHelpers): Promise<void>
-}
+// caret-src/core/mode-system/ModeSystemRegistry.ts
+// v3.26.6 시그니처에 맞춰 수정 (7인자 → 6인자)
+return buildSystemPrompt(
+    context.cwd,
+    context.supportsBrowserUse, 
+    context.mcpHub,
+    context.browserSettings,
+    context.apiConfiguration,
+    context.focusChainSettings,
+)
 ```
 
-#### **2.2 ToolExecutorCoordinator 업데이트**
-- Handler 등록 시스템 확인
-- Caret 전용 Handler 등록 방법 구현
+### **Phase 2: ToolExecutor에 Caret 모드 추가** ⏱️ 1시간
 
-### **Phase 3: Caret 전용 Handler 구현** ⏱️ 2-3시간
-
-#### **3.1 AgentModeRespondHandler 구현**
-```typescript
-// caret-src/core/task/tools/handlers/AgentModeRespondHandler.ts
-export class AgentModeRespondHandler extends PlanModeRespondHandler {
-    readonly name = "agent_mode_respond"
+#### **2.1 plan_mode_respond 로직 복사**
+```typescript 
+// src/core/task/ToolExecutor.ts에 추가
+case "agent_mode_respond": 
+case "chatbot_mode_respond": {
+    // plan_mode_respond 케이스와 동일한 로직
+    const response = block.params.response
+    const optionsRaw = block.params.options  
+    const needsMoreExploration = block.params.needs_more_exploration === "true"
     
-    async execute(config: TaskConfig, block: ToolUse): Promise<ToolResponse> {
-        // Agent 모드 전용 로직
-        // - 모든 도구 사용 가능
-        // - 자유로운 대화 흐름
-        // - 버튼 없는 자연스러운 UX
-        
-        return super.execute(config, block)
-    }
-}
-```
-
-#### **3.2 ChatbotModeRespondHandler 구현**
-```typescript
-// caret-src/core/task/tools/handlers/ChatbotModeRespondHandler.ts
-export class ChatbotModeRespondHandler extends PlanModeRespondHandler {
-    readonly name = "chatbot_mode_respond"
+    const sharedMessage = {
+        response: this.removeClosingTag(block, "response", response),
+        options: parsePartialArrayString(this.removeClosingTag(block, "options", optionsRaw)),
+    } satisfies ClinePlanModeResponse
     
-    async execute(config: TaskConfig, block: ToolUse): Promise<ToolResponse> {
-        // Chatbot 모드 전용 로직
-        // - 안전한 도구만 사용
-        // - 구조화된 상담 흐름
-        // - 필요시 승인 워크플로우
-        
-        return super.execute(config, block)
-    }
+    // 동일한 처리 로직...
 }
 ```
 
-#### **3.3 ButtonConfig 최신화**
+#### **2.2 ExtensionMessage 타입 추가**
 ```typescript
-// 최신 Cline 스타일 적용
+// src/shared/ExtensionMessage.ts
+export type ClineAsk = 
+    | "attempt_completion"
+    | "plan_mode_respond" 
+    | "agent_mode_respond"    // CARET MODIFICATION 
+    | "chatbot_mode_respond"  // CARET MODIFICATION
+    // ... 기존 타입들
+```
+
+### **Phase 3: UI 연동 및 테스트** ⏱️ 30분
+
+#### **3.1 ButtonConfig 업데이트**
+```typescript
+// webview-ui/src/components/chat/buttonConfig.ts
 agent_mode_respond: {
     sendingDisabled: false,
-    enableButtons: false,
+    enableButtons: false,  // Plan Mode 스타일
     primaryText: undefined,
     secondaryText: undefined,
-    primaryAction: undefined,
-    secondaryAction: undefined,
 }
 ```
 
-### **Phase 4: 테스트 및 검증** ⏱️ 1-2시간
-
-#### **4.1 기존 테스트 업데이트**
-- Handler 기반 테스트로 전환
-- Mock Handler 생성
-- Integration 테스트 수정
-
-#### **4.2 새로운 Handler 테스트 작성**
-```typescript
-describe('AgentModeRespondHandler', () => {
-    it('should enable all tools', () => {
-        // Agent 모드 도구 제한 없음 테스트
-    })
-    
-    it('should provide continuous conversation flow', () => {
-        // 연속 대화 흐름 테스트
-    })
-})
-```
-
-#### **4.3 실제 환경 검증**
-- F5 디버그 모드 실행
-- Agent 모드 대화 연속성 확인
-- Chatbot 모드 안전성 확인
+#### **3.2 실제 환경 테스트**
+- F5 디버그 실행
+- Agent 모드에서 연속 대화 확인 
 - 기존 기능 회귀 테스트
 
 ---
@@ -190,53 +157,54 @@ describe('AgentModeRespondHandler', () => {
 ## 🎯 **예상 성과**
 
 ### **기능적 개선**
-- ✅ **Agent 모드 연속 대화**: AI 응답 후 즉시 추가 질문 가능
-- ✅ **최신 UX**: Cline의 최신 사용자 경험 적용
-- ✅ **스트리밍 지원**: 실시간 응답 표시
-- ✅ **옵션 선택**: 사용자 선택지 제공 및 추적
+- ✅ **Agent 모드 연속 대화**: AI 응답 후 즉시 추가 질문 가능  
+- ✅ **v3.26.6 Plan Mode UX**: 연속 대화, 실시간 스트리밍, 옵션 선택 완벽 적용
+- ✅ **기존 시스템 보존**: ModeSystemRegistry, MessageHandlerFactory 등 활용
 
 ### **기술적 혜택**
-- ✅ **최신 아키텍처**: Handler 패턴으로 현대적 구조
-- ✅ **Forward Compatibility**: 향후 Cline 업데이트 자동 반영
-- ✅ **코드 일관성**: Cline 표준과 일치
-- ✅ **확장성**: 새로운 도구/모드 쉽게 추가
+- ✅ **최소 수정 원칙**: ToolExecutor 2개 case 추가로 완성
+- ✅ **Forward Compatibility**: v3.26.6 구조 그대로 사용으로 향후 머징 용이  
+- ✅ **코드 중복 제거**: plan_mode_respond 로직 100% 재사용
+- ✅ **안정성**: 검증된 Cline 로직 활용
 
-### **아키텍처 개선**
-- ✅ **분리된 관심사**: Handler별 독립적 로직
-- ✅ **테스트 용이성**: 단위 테스트 작성 간편
-- ✅ **유지보수성**: 명확한 책임 분리
+### **아키텍처 개선**  
+- ✅ **Cline 호환성**: 원본 구조 최대 보존
+- ✅ **확장성**: 새로운 Caret 모드 쉽게 추가 가능
+- ✅ **유지보수성**: 기존 Caret 시스템과 완벽 통합
 
 ---
 
 ## ⚠️ **위험 요소 및 대응**
 
-### **머징 충돌 위험**
-- **문제**: 6개월간 누적된 변경사항으로 충돌 가능
-- **대응**: 단계별 머징, 충돌 해결 시간 충분히 확보
+### **컴파일 에러 위험**
+- **문제**: buildSystemPrompt 시그니처 변경으로 인한 타입 에러
+- **대응**: ✅ **이미 수정 완료** - v3.26.6 시그니처로 업데이트
 
-### **기존 기능 영향**
-- **문제**: Handler 전환으로 기존 Caret 기능 영향 가능
-- **대응**: 철저한 회귀 테스트, 단계별 검증
+### **기존 Caret 기능 영향**
+- **문제**: ToolExecutor 수정으로 기존 동작 영향 가능
+- **대응**: plan_mode_respond 로직 완전 복사로 안전성 확보
 
-### **작업 시간 초과**
-- **문제**: 예상보다 복잡한 구조 변경 필요 가능
-- **대응**: Phase별 완료 기준 명확화, 단계적 접근
+### **UI 연동 실패**
+- **문제**: ButtonConfig나 MessageHandler에서 새 타입 인식 실패
+- **대응**: 기존 Caret 시스템의 잘 정의된 인터페이스 활용
 
 ---
 
 ## 📊 **성공 기준**
 
 ### **최소 성공 기준 (MVP)**
+- [x] ✅ v3.26.6 머징 및 환경 정리 완료
+- [x] ✅ buildSystemPrompt 시그니처 v3.26.6 적용
+- [ ] 불필요한 Handler 시스템 제거
+- [ ] ToolExecutor에 agent_mode_respond/chatbot_mode_respond 추가
 - [ ] Agent 모드에서 AI 응답 후 연속 대화 가능
-- [ ] Chatbot 모드 기존 기능 100% 보존
-- [ ] 기존 Persona 시스템 등 영향 없음
-- [ ] 컴파일 및 기본 테스트 통과
 
-### **완전 성공 기준**
-- [ ] 최신 Cline Handler 아키텍처 완전 적용
-- [ ] 스트리밍 지원으로 실시간 응답
-- [ ] 옵션 선택 기능으로 향상된 UX
-- [ ] 모든 테스트 통과 및 문서화 완료
+### **완전 성공 기준**  
+- [ ] ExtensionMessage 타입에 새 ask 타입 추가
+- [ ] ButtonConfig에 새 모드 스타일링 적용
+- [ ] v3.26.6 Plan Mode의 모든 기능 (스트리밍, 옵션) 활용
+- [ ] 기존 Persona, ModeSystem 등 모든 Caret 기능 100% 보존
+- [ ] 컴파일 성공 및 F5 디버그 테스트 통과
 
 ---
 
@@ -255,31 +223,30 @@ describe('AgentModeRespondHandler', () => {
 
 ---
 
-## 🚀 **시작하기**
+## 🚀 **즉시 실행 가능**
 
-### **즉시 실행 명령어**
+### **다음 단계 명령어**
 ```bash
-# 1. 현재 작업 백업
-cd D:\dev\caret\cline-latest
-git stash push -m "WIP: Before handler architecture transition"
+# 1. 불필요한 Handler 시스템 제거
+rm -rf D:\dev\caret\src\core\task\tools\handlers\
+rm -rf D:\dev\caret\caret-src\core\task\tools\handlers\
 
-# 2. Upstream 머징 준비
-git remote add upstream https://github.com/cline/cline.git
-git fetch upstream
+# 2. 컴파일 테스트
+npm run compile
 
-# 3. 머징 실행 (주의: 충돌 해결 필요)
-git merge upstream/main
+# 3. ToolExecutor 수정 (plan_mode_respond 로직 복사)
 ```
 
-### **다음 세션 시작점**
-1. **`next-session-guide.md`** 읽고 현재 상황 파악
-2. **Phase 1** 부터 단계적 실행
-3. 각 Phase 완료 후 **체크포인트** 생성
-4. 문제 발생 시 **백업 지점**으로 복구
+### **핵심 수정 파일 3개**
+1. **src/core/task/ToolExecutor.ts**: agent_mode_respond, chatbot_mode_respond case 추가
+2. **src/shared/ExtensionMessage.ts**: ClineAsk 타입에 새 ask 추가  
+3. **webview-ui/src/components/chat/buttonConfig.ts**: 새 모드 스타일링
+
+### **예상 완료 시간**: ⏱️ 2시간 (기존 7-11시간에서 대폭 단축)
 
 ---
 
-**✨ 이 계획을 통해 Caret의 Agent/Chatbot 모드가 최신 Cline의 자연스러운 대화 흐름을 완벽히 구현할 수 있습니다!**
+**✨ v3.26.6 Plan Mode를 직접 활용하여 최소 수정으로 Caret Agent/Chatbot 모드의 연속 대화 기능을 완벽 구현합니다!**
 
 ---
 

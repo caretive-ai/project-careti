@@ -382,6 +382,40 @@ npm run analyze:errors
 npm run coverage:caret
 ```
 
+### **🔗 Cline 참조 소스 설정**
+
+#### **참조 소스 준비 (필수)**
+```bash
+# Caret 프로젝트 내부에 Cline 최신 소스 받기
+cd D:\dev\caret
+git clone https://github.com/cline/cline.git cline-reference
+cd cline-reference && git checkout v3.26.6
+
+# .gitignore에 추가하여 git 추적 방지
+echo "cline-reference/" >> .gitignore
+```
+
+**활용 방법:**
+```bash
+# 1. v3.26.6의 실제 파일 구조 확인
+ls cline-reference/src/core/task/
+
+# 2. 우리가 없는 파일이 v3.26.6에 있는지 확인
+ls cline-reference/src/core/task/ToolExecutor.ts
+
+# 3. 파일 내용 비교 및 교체
+diff src/core/task/ToolExecutor.ts cline-reference/src/core/task/ToolExecutor.ts
+cp cline-reference/src/core/task/ToolExecutor.ts src/core/task/ToolExecutor.ts
+
+# 4. 누락된 파일 확인 및 복사
+find cline-reference/src -name "*.ts" | grep -v node_modules
+```
+
+**중요 원칙:**
+- ⚠️ **v3.26.6에 없는 파일은 절대 추가하지 않음**
+- ✅ **v3.26.6 실제 구조를 따라 정확히 복사**
+- 🔍 **항상 cline-reference와 대조하여 검증**
+
 ### **자동화 스크립트**
 
 #### **백업 자동화**

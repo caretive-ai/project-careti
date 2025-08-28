@@ -1,5 +1,4 @@
 import { mentionRegexGlobal } from "@shared/context-mentions"
-import { isFocusChainItem, isCompletedFocusChainItem, FOCUS_CHAIN_ITEM_REGEX } from "@shared/focus-chain-utils"
 import { ClineMessage } from "@shared/ExtensionMessage"
 import { FOCUS_CHAIN_ITEM_REGEX, isCompletedFocusChainItem, isFocusChainItem } from "@shared/focus-chain-utils"
 import { StringRequest } from "@shared/proto/cline/common"

@@ -212,6 +212,10 @@ export class ToolExecutor {
 				return `[${block.name} for '${block.params.path}']`
 			case "web_fetch":
 				return `[${block.name} for '${block.params.url}']`
+			case "chatbot_mode_respond": // CARET MODIFICATION: Add chatbot mode response description
+				return `[${block.name}]`
+			default:
+				return `[${block.name}]`
 		}
 	}
 

@@ -781,6 +781,10 @@ export class CacheService {
 			lastShownAnnouncementId: state.lastShownAnnouncementId,
 			mcpMarketplaceCatalog: state.mcpMarketplaceCatalog,
 			customPrompt: state.customPrompt,
+			sapAiCoreUseOrchestrationMode: state.sapAiCoreUseOrchestrationMode,
+			modeSystem: state.modeSystem,
+			caret_persona_avatar: state.caret_persona_avatar,
+			caret_persona_thinking_avatar: state.caret_persona_thinking_avatar,
 
 			// Plan mode configuration updates
 			planModeApiProvider,
@@ -854,7 +858,6 @@ export class CacheService {
 			awsProfile,
 			awsUseProfile,
 			awsAuthentication,
-			awsBedrockApiKey,
 			vertexProjectId,
 			vertexRegion,
 			requestyBaseUrl,
@@ -932,8 +935,9 @@ export class CacheService {
 		// Populate workspace state cache directly
 		const workspaceStateFields = {
 			localClineRulesToggles: state.localClineRulesToggles,
-			localWindsurfRulesToggles: state.localWindsurfRulesToggles,
+			localCaretRulesToggles: state.localCaretRulesToggles,
 			localCursorRulesToggles: state.localCursorRulesToggles,
+			localWindsurfRulesToggles: state.localWindsurfRulesToggles,
 			workflowToggles: state.localWorkflowToggles, // Note: key name is "workflowToggles" in LocalStateKey
 		}
 

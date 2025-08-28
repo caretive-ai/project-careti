@@ -40,7 +40,7 @@ export class ClineModeAdapter implements ModeSystemAdapter {
 	}
 
 	async buildSystemPrompt(mode: string, context: any): Promise<string> {
-		// CARET MODIFICATION: Adapted to v3.26.6 buildSystemPrompt signature
+		// CARET MODIFICATION: Adapted to v3.26.6 buildSystemPrompt signature (7 parameters)
 		const { buildSystemPrompt } = await import("@core/prompts/system-prompt/build-system-prompt")
 		return buildSystemPrompt(
 			context.cwd,
@@ -49,6 +49,7 @@ export class ClineModeAdapter implements ModeSystemAdapter {
 			context.browserSettings,
 			context.apiConfiguration,
 			context.focusChainSettings,
+			context.providerInfo,
 		)
 	}
 

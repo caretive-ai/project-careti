@@ -223,26 +223,44 @@ agent_mode_respond: {
 
 ---
 
-## 🚀 **즉시 실행 가능**
+## 🚨 **중요 발견: 기존 완성된 시스템 존재**
 
-### **다음 단계 명령어**
+### **⚠️ 실수 방지 - 중복 구현 금지**
+
+**중대한 발견**: `@caret-docs\features\caret-independent-system.mdx`에 따르면 이미 **완전한 Agent/Chatbot 시스템이 구현 완료**되어 있습니다!
+
+#### **✅ 기존 완성된 시스템 (Level 1 독립 모듈)**
+- **ModeSystemRegistry**: 어댑터 패턴으로 중앙 집중화
+- **MessageHandlerFactory**: Factory 패턴으로 완전 분리  
+- **JSON 프롬프트 시스템**: 18개 섹션으로 구조화
+- **이중 보안 레이어**: 42개 테스트로 검증 완료
+
+#### **✅ 최소 수정 달성**
+- **Cline 파일 수정**: 단 **5개 핵심 파일**
+- **수정 라인**: 총 **13라인 이하**
+- **아키텍처**: **Level 1 독립 모듈** 등급
+
+### **🚫 실수한 중복 작업들 (즉시 되돌리기)**
+
+1. **ToolExecutor에 case 추가**: ❌ **불필요** - MessageHandlerFactory가 처리
+2. **ExtensionMessage 타입 추가**: ❌ **불필요** - 이미 chatbot_mode_respond 존재  
+3. **ButtonConfig 수정**: ❌ **불필요** - ButtonConfigFactory가 처리
+
+### **✅ 올바른 다음 작업**
+
+**기존 완성된 시스템의 v3.26.6 적용**만 필요:
+
 ```bash
-# 1. 불필요한 Handler 시스템 제거
-rm -rf D:\dev\caret\src\core\task\tools\handlers\
-rm -rf D:\dev\caret\caret-src\core\task\tools\handlers\
+# 1. 기존 시스템 컴파일 에러 해결
+npm run compile  # buildSystemPrompt 시그니처 이미 수정됨
 
-# 2. 컴파일 테스트
-npm run compile
+# 2. 기존 시스템 동작 테스트
+# F5 디버그 → Agent/Chatbot 모드 확인
 
-# 3. ToolExecutor 수정 (plan_mode_respond 로직 복사)
+# 3. 문서 정리 및 완료
 ```
 
-### **핵심 수정 파일 3개**
-1. **src/core/task/ToolExecutor.ts**: agent_mode_respond, chatbot_mode_respond case 추가
-2. **src/shared/ExtensionMessage.ts**: ClineAsk 타입에 새 ask 추가  
-3. **webview-ui/src/components/chat/buttonConfig.ts**: 새 모드 스타일링
-
-### **예상 완료 시간**: ⏱️ 2시간 (기존 7-11시간에서 대폭 단축)
+### **예상 완료 시간**: ⏱️ **30분** (컴파일 에러 해결만)
 
 ---
 

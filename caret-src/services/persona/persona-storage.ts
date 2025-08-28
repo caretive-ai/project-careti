@@ -1,12 +1,12 @@
-import * as vscode from "vscode"
-import * as path from "path"
-import * as fs from "fs/promises"
-import { writeFile } from "@utils/fs"
-import { GlobalFileNames, ensureRulesDirectoryExists } from "@/core/storage/disk"
+import { Controller } from "@core/controller"
 import { PersonaProfile } from "@shared/proto/caret/persona"
+import { writeFile } from "@utils/fs"
+import * as fs from "fs/promises"
+import * as path from "path"
+import * as vscode from "vscode"
+import { ensureRulesDirectoryExists, GlobalFileNames } from "@/core/storage/disk"
 import { Logger } from "@/services/logging/Logger"
 import { SimplePersona, SimplePersonaImages } from "./simple-persona"
-import { Controller } from "@core/controller"
 
 export class PersonaStorage {
 	public async getPersona(controller: Controller): Promise<SimplePersona> {
@@ -31,8 +31,24 @@ export class PersonaStorage {
 
 	public async loadSimplePersonaImages(controller: Controller): Promise<SimplePersonaImages | null> {
 		try {
-			const avatar = await controller.cacheService.getGlobalStateKey("caret_persona_avatar")
-			const thinkingAvatar = await controller.cacheService.getGlobalStateKey("caret_persona_thinking_avatar")
+			const globalStoragePath = controller.context.globalStorageUri.fsPath
+			const avatarPath = path.join(globalStoragePath, "caret_persona_avatar.txt")
+			const thinkingAvatarPath = path.join(globalStoragePath, "caret_persona_thinking_avatar.txt")
+
+			let avatar: string | null = null
+			let thinkingAvatar: string | null = null
+
+			try {
+				avatar = await fs.readFile(avatarPath, "utf-8")
+			} catch {
+				// File doesn't exist, that's ok
+			}
+
+			try {
+				thinkingAvatar = await fs.readFile(thinkingAvatarPath, "utf-8")
+			} catch {
+				// File doesn't exist, that's ok
+			}
 
 			if (!avatar || !thinkingAvatar) {
 				return null
@@ -61,8 +77,14 @@ export class PersonaStorage {
 
 	public async savePersonaImages(controller: Controller, images: SimplePersonaImages): Promise<void> {
 		try {
-			await controller.context.globalState.update("caret_persona_avatar", images.avatar)
-			await controller.context.globalState.update("caret_persona_thinking_avatar", images.thinkingAvatar)
+			const globalStoragePath = controller.context.globalStorageUri.fsPath
+			await fs.mkdir(globalStoragePath, { recursive: true })
+
+			const avatarPath = path.join(globalStoragePath, "caret_persona_avatar.txt")
+			const thinkingAvatarPath = path.join(globalStoragePath, "caret_persona_thinking_avatar.txt")
+
+			await fs.writeFile(avatarPath, images.avatar, "utf-8")
+			await fs.writeFile(thinkingAvatarPath, images.thinkingAvatar, "utf-8")
 		} catch (error) {
 			Logger.error(`Failed to save persona images: ${error}`)
 			throw error

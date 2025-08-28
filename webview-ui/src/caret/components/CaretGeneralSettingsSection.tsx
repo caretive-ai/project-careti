@@ -1,10 +1,10 @@
 // CARET MODIFICATION: Copy-and-Modify from caret-main - General Settings Section with i18n
 import React from "react"
-import Section from "@/components/settings/Section"
 import PreferredLanguageSetting from "@/components/settings/PreferredLanguageSetting"
+import Section from "@/components/settings/Section"
 import { t } from "../utils/i18n"
-import CaretUILanguageSetting from "./CaretUILanguageSetting"
 import CaretModeSystemSetting from "./CaretModeSystemSetting"
+import CaretUILanguageSetting from "./CaretUILanguageSetting"
 
 interface CaretGeneralSettingsSectionProps {
 	renderSectionHeader: (tabId: string) => JSX.Element | null

@@ -1,11 +1,11 @@
-import { handleUnaryCall, sendUnaryData, status } from "@grpc/grpc-js"
-import { UploadCustomImageRequest, PersonaProfile } from "@shared/proto/caret/persona"
-import { Empty } from "@shared/proto/cline/common"
-import { ServerErrorResponse } from "@grpc/grpc-js/build/src/server-call"
-import { Logger } from "@/services/logging/Logger"
-import { PersonaStorage } from "@caret/services/persona/persona-storage"
 import { PersonaService } from "@caret/services/persona/persona-service"
+import { PersonaStorage } from "@caret/services/persona/persona-storage"
 import { Controller } from "@core/controller"
+import { handleUnaryCall, sendUnaryData, status } from "@grpc/grpc-js"
+import { ServerErrorResponse } from "@grpc/grpc-js/build/src/server-call"
+import { PersonaProfile, UploadCustomImageRequest } from "@shared/proto/caret/persona"
+import { Empty } from "@shared/proto/cline/common"
+import { Logger } from "@/services/logging/Logger"
 
 // CARET MODIFICATION: This file is a Caret addition for the PersonaService.
 // It now exports two handlers: one for VSCode protobus and one for standalone gRPC server.
@@ -23,14 +23,15 @@ export function uploadCustomImageHandler(personaStorage: PersonaStorage, persona
 
 			const currentImages = await personaStorage.loadSimplePersonaImages(controller)
 			const newImages = {
-				avatar: currentImages?.avatar || Buffer.from(""),
-				thinkingAvatar: currentImages?.thinkingAvatar || Buffer.from(""),
+				avatar: currentImages?.avatar || "",
+				thinkingAvatar: currentImages?.thinkingAvatar || "",
 			}
 
+			const imageDataBase64 = imageData.toString("base64")
 			if (imageType === "avatar") {
-				newImages.avatar = imageData
+				newImages.avatar = imageDataBase64
 			} else if (imageType === "thinkingAvatar") {
-				newImages.thinkingAvatar = imageData
+				newImages.thinkingAvatar = imageDataBase64
 			}
 
 			await personaStorage.savePersonaImages(controller, newImages)
@@ -40,10 +41,8 @@ export function uploadCustomImageHandler(personaStorage: PersonaStorage, persona
 				personaStorage.loadSimplePersonaImages(controller),
 			])
 
-			const avatarUri = savedImages?.avatar ? `data:image/png;base64,${savedImages.avatar.toString("base64")}` : ""
-			const thinkingAvatarUri = savedImages?.thinkingAvatar
-				? `data:image/png;base64,${savedImages.thinkingAvatar.toString("base64")}`
-				: ""
+			const avatarUri = savedImages?.avatar ? `data:image/png;base64,${savedImages.avatar}` : ""
+			const thinkingAvatarUri = savedImages?.thinkingAvatar ? `data:image/png;base64,${savedImages.thinkingAvatar}` : ""
 
 			const profile = PersonaProfile.create({
 				name: profileDetails.name,

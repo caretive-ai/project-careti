@@ -13,6 +13,6 @@ export interface SimplePersona {
  * Represents the avatar images for a persona.
  */
 export interface SimplePersonaImages {
-	avatar: Buffer
-	thinkingAvatar: Buffer
+	avatar: string
+	thinkingAvatar: string
 }

@@ -1,5 +1,5 @@
-import { MessageHandlerInterface } from "./interfaces/MessageHandlerInterface"
 import { AskResponseRequest, NewTaskRequest } from "../../../src/shared/proto/cline/task"
+import { MessageHandlerInterface } from "./interfaces/MessageHandlerInterface"
 
 // Access vscode through globalThis for webview compatibility
 
@@ -59,33 +59,6 @@ export class CaretMessageHandler implements MessageHandlerInterface {
 			})
 			return
 		}
-
-		// CARET MODIFICATION: This fallback should never be reached now
-		console.log("[CaretMessageHandler] Using legacy TaskServiceClient (no tool integration)")
-
-		// For new conversations, create new task
-		if (this.isNewConversation(messagesLength)) {
-			console.log("[CaretMessageHandler] Starting new task (legacy)")
-			await taskServiceClient.newTask(
-				NewTaskRequest.create({
-					text: trimmedText,
-					images,
-					files,
-				}),
-			)
-			return
-		}
-
-		// For ongoing conversations, send direct message response
-		console.log("[CaretMessageHandler] Sending message response (legacy)")
-		await taskServiceClient.askResponse(
-			AskResponseRequest.create({
-				responseType: "messageResponse",
-				text: trimmedText,
-				images,
-				files,
-			}),
-		)
 	}
 
 	/**

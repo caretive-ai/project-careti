@@ -14,6 +14,7 @@ import { type TerminalProfile } from "@shared/proto/cline/state"
 import { WebviewProviderType as WebviewProviderTypeEnum, WebviewProviderTypeRequest } from "@shared/proto/cline/ui"
 import { convertProtoToClineMessage } from "@shared/proto-conversions/cline-message"
 import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mcp/mcp-server-conversion"
+import type { CaretSettings } from "../../../caret-src/shared/CaretSettings"
 import {
 	basetenDefaultModelId,
 	basetenModels,
@@ -44,6 +45,7 @@ interface ExtensionStateContextType extends ExtensionState {
 	mcpMarketplaceCatalog: McpMarketplaceCatalog
 	totalTasksSize: number | null
 	availableTerminalProfiles: TerminalProfile[]
+	caretSettings?: CaretSettings
 
 	// View state
 	showMcp: boolean
@@ -64,6 +66,7 @@ interface ExtensionStateContextType extends ExtensionState {
 	setVercelAiGatewayModels: (value: Record<string, ModelInfo>) => void
 	setGlobalClineRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalClineRulesToggles: (toggles: Record<string, boolean>) => void
+	setLocalCaretRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalCursorRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalWindsurfRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalWorkflowToggles: (toggles: Record<string, boolean>) => void
@@ -187,6 +190,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		mcpDisplayMode: DEFAULT_MCP_DISPLAY_MODE,
 		globalClineRulesToggles: {},
 		localClineRulesToggles: {},
+		localCaretRulesToggles: {},
 		localCursorRulesToggles: {},
 		localWindsurfRulesToggles: {},
 		localWorkflowToggles: {},
@@ -626,6 +630,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		mcpMarketplaceCatalog,
 		totalTasksSize,
 		availableTerminalProfiles,
+		caretSettings: undefined,
 		showMcp,
 		mcpTab,
 		showSettings,
@@ -677,6 +682,11 @@ export const ExtensionStateContextProvider: React.FC<{
 			setState((prevState) => ({
 				...prevState,
 				localClineRulesToggles: toggles,
+			})),
+		setLocalCaretRulesToggles: (toggles) =>
+			setState((prevState) => ({
+				...prevState,
+				localCaretRulesToggles: toggles,
 			})),
 		setLocalCursorRulesToggles: (toggles) =>
 			setState((prevState) => ({

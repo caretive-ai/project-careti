@@ -2,10 +2,10 @@
 // Addresses user feedback about Cancel button appearing after AI responses
 // Tests that Agent mode allows free conversation without unwanted Cancel buttons
 
-import { describe, test, expect, beforeEach, vi } from "vitest"
-import { getButtonConfig, BUTTON_CONFIGS } from "../buttonConfig"
+import { CARET_MODES, MODE_SYSTEMS, STORAGE_KEYS } from "@caret-src/shared/constants/ModeSystemConstants"
 import type { ClineMessage } from "@shared/ExtensionMessage"
-import { MODE_SYSTEMS, STORAGE_KEYS, CARET_MODES } from "@caret-src/shared/constants/ModeSystemConstants"
+import { beforeEach, describe, expect, test, vi } from "vitest"
+import { BUTTON_CONFIGS, getButtonConfig } from "../buttonConfig"
 
 // Mock localStorage
 const mockLocalStorage = {
@@ -39,7 +39,7 @@ describe("Agent Mode Button Flow Fix", () => {
 
 			// Create a typical AI text response message
 			const aiTextMessage: ClineMessage = {
-				id: "test-1",
+				ts: Date.now(),
 				type: "say",
 				say: "text",
 				text: "Here's my analysis of your code...",
@@ -61,7 +61,7 @@ describe("Agent Mode Button Flow Fix", () => {
 			mockLocalStorage.setItem(STORAGE_KEYS.CURRENT_MODE, CARET_MODES.AGENT)
 
 			const aiReasoningMessage: ClineMessage = {
-				id: "test-2",
+				ts: Date.now(),
 				type: "say",
 				say: "reasoning",
 				text: "I think the best approach would be...",
@@ -81,7 +81,7 @@ describe("Agent Mode Button Flow Fix", () => {
 			mockLocalStorage.setItem(STORAGE_KEYS.CURRENT_MODE, CARET_MODES.AGENT)
 
 			const streamingMessage: ClineMessage = {
-				id: "test-3",
+				ts: Date.now(),
 				type: "say",
 				say: "text",
 				text: "I'm still thinking...",
@@ -102,7 +102,7 @@ describe("Agent Mode Button Flow Fix", () => {
 			mockLocalStorage.setItem(STORAGE_KEYS.CURRENT_MODE, CARET_MODES.AGENT)
 
 			const toolMessage: ClineMessage = {
-				id: "test-4",
+				ts: Date.now(),
 				type: "ask",
 				ask: "tool",
 				text: JSON.stringify({ tool: "write_to_file", path: "test.txt" }),
@@ -121,7 +121,7 @@ describe("Agent Mode Button Flow Fix", () => {
 			mockLocalStorage.setItem(STORAGE_KEYS.CURRENT_MODE, CARET_MODES.AGENT)
 
 			const apiStartMessage: ClineMessage = {
-				id: "test-5",
+				ts: Date.now(),
 				type: "say",
 				say: "api_req_started",
 				text: "Making API request...",
@@ -142,7 +142,7 @@ describe("Agent Mode Button Flow Fix", () => {
 			mockLocalStorage.setItem(STORAGE_KEYS.MODE_SYSTEM, MODE_SYSTEMS.CLINE)
 
 			const aiTextMessage: ClineMessage = {
-				id: "test-6",
+				ts: Date.now(),
 				type: "say",
 				say: "text",
 				text: "Here's my analysis...",
@@ -163,7 +163,7 @@ describe("Agent Mode Button Flow Fix", () => {
 			mockLocalStorage.setItem(STORAGE_KEYS.CURRENT_MODE, CARET_MODES.CHATBOT)
 
 			const aiTextMessage: ClineMessage = {
-				id: "test-7",
+				ts: Date.now(),
 				type: "say",
 				say: "text",
 				text: "Here's my analysis...",

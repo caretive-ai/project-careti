@@ -1,9 +1,10 @@
-import React from "react"
+// CARET MODIFICATION: Fix import path for persona proto
+import { PersonaProfile } from "@shared/proto/caret/persona"
 import { render, screen, waitFor } from "@testing-library/react"
-import { vi, describe, it, expect, beforeEach } from "vitest"
-import { CaretStateContextProvider, useCaretState } from "../CaretStateContext"
+import React from "react"
+import { beforeEach, describe, expect, it, type Mock, vi } from "vitest"
 import { PersonaServiceClient } from "../../services/CaretGrpcClient"
-import { PersonaProfile } from "@shared/proto/index.caret.persona"
+import { CaretStateContextProvider, useCaretState } from "../CaretStateContext"
 
 // CARET MODIFICATION: This entire file is a Caret addition for TDD.
 
@@ -16,13 +17,15 @@ vi.mock("../../services/CaretGrpcClient", () => ({
 	},
 }))
 
-const mockGetPersonaProfile = PersonaServiceClient.getPersonaProfile as vi.Mock
-const mockUpdatePersona = PersonaServiceClient.updatePersona as vi.Mock
+const mockGetPersonaProfile = PersonaServiceClient.getPersonaProfile as Mock
+const mockUpdatePersona = PersonaServiceClient.updatePersona as Mock
 
 const mockProfile: PersonaProfile = {
 	name: "Oh Sarang",
 	description: "K-pop idol",
 	customInstruction: "Be energetic",
+	avatarUri: "",
+	thinkingAvatarUri: "",
 }
 
 // A simple component to consume and display the context state

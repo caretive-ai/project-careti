@@ -1,11 +1,11 @@
+import { PersonaService } from "@caret/services/persona/persona-service"
+import { PersonaStorage } from "@caret/services/persona/persona-storage"
+import { Controller } from "@core/controller"
 import { handleUnaryCall, sendUnaryData, status } from "@grpc/grpc-js"
+import { ServerErrorResponse } from "@grpc/grpc-js/build/src/server-call"
 import { UpdatePersonaRequest } from "@shared/proto/caret/persona"
 import { Empty } from "@shared/proto/cline/common"
-import { ServerErrorResponse } from "@grpc/grpc-js/build/src/server-call"
 import { Logger } from "@/services/logging/Logger"
-import { PersonaStorage } from "@caret/services/persona/persona-storage"
-import { PersonaService } from "@caret/services/persona/persona-service"
-import { Controller } from "@core/controller"
 
 // CARET MODIFICATION: This file is a Caret addition for the PersonaService.
 // It now exports two handlers: one for VSCode protobus and one for standalone gRPC server.
@@ -21,14 +21,14 @@ export function updatePersonaHandler(personaStorage: PersonaStorage, personaServ
 				throw new Error("Profile is missing in the request")
 			}
 
-			const avatarBuffer = Buffer.from(profile.avatarUri.replace(/^data:image\/png;base64,/, ""), "base64")
-			const thinkingAvatarBuffer = Buffer.from(profile.thinkingAvatarUri.replace(/^data:image\/png;base64,/, ""), "base64")
+			const avatarData = profile.avatarUri.replace(/^data:image\/png;base64,/, "")
+			const thinkingAvatarData = profile.thinkingAvatarUri.replace(/^data:image\/png;base64,/, "")
 
 			await Promise.all([
 				personaStorage.savePersonaProfile(controller, profile),
 				personaStorage.savePersonaImages(controller, {
-					avatar: avatarBuffer,
-					thinkingAvatar: thinkingAvatarBuffer,
+					avatar: avatarData,
+					thinkingAvatar: thinkingAvatarData,
 				}),
 			])
 

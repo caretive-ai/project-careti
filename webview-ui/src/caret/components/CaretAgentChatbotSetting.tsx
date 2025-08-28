@@ -1,8 +1,11 @@
 // CARET MODIFICATION: Agent/Chatbot Mode Toggle Component
-import React, { useState, useEffect } from "react"
-import { t } from "../utils/i18n"
-import { STORAGE_KEYS, CARET_MODES } from "@caret-src/shared/constants/ModeSystemConstants"
+
+import { CARET_MODES, MODE_MAPPINGS, SETTING_KEYS, STORAGE_KEYS } from "@caret-src/shared/constants/ModeSystemConstants"
 import { Mode } from "@shared/storage/types"
+import React, { useEffect, useState } from "react"
+import { updateSetting } from "@/components/settings/utils/settingsHandlers"
+import { useExtensionState } from "@/context/ExtensionStateContext"
+import { t } from "../utils/i18n"
 
 interface CaretAgentChatbotSettingProps {
 	hideLabel?: boolean
@@ -47,34 +50,36 @@ const modeSwitchOptionStyle = (isActive: boolean): React.CSSProperties => ({
 })
 
 const CaretAgentChatbotSetting: React.FC<CaretAgentChatbotSettingProps> = ({ hideLabel = false }) => {
+	const { mode } = useExtensionState()
 	const [currentMode, setCurrentMode] = useState<Mode>(CARET_MODES.CHATBOT)
 
-	// Load current mode from localStorage on mount
+	// Sync with ExtensionState mode
 	useEffect(() => {
-		const savedMode = localStorage.getItem(STORAGE_KEYS.CURRENT_MODE) as Mode
-		if (savedMode && (savedMode === CARET_MODES.AGENT || savedMode === CARET_MODES.CHATBOT)) {
-			setCurrentMode(savedMode)
-		} else {
-			// Set default and save to localStorage
+		// Map backend mode (plan/act) to Caret mode (chatbot/agent)
+		if (mode === "plan") {
 			setCurrentMode(CARET_MODES.CHATBOT)
-			localStorage.setItem(STORAGE_KEYS.CURRENT_MODE, CARET_MODES.CHATBOT)
+		} else if (mode === "act") {
+			setCurrentMode(CARET_MODES.AGENT)
 		}
-	}, [])
+	}, [mode])
 
 	const handleModeChange = () => {
-		const newMode: Mode = currentMode === CARET_MODES.CHATBOT ? CARET_MODES.AGENT : CARET_MODES.CHATBOT
-		console.log("🔄 Caret mode change requested:", newMode)
+		const newCaretMode: Mode = currentMode === CARET_MODES.CHATBOT ? CARET_MODES.AGENT : CARET_MODES.CHATBOT
+		console.log("🔄 Caret mode change requested:", newCaretMode)
 
-		setCurrentMode(newMode)
-		localStorage.setItem(STORAGE_KEYS.CURRENT_MODE, newMode)
+		setCurrentMode(newCaretMode)
 
-		console.log("✅ Caret mode saved to localStorage:", newMode)
+		// Map Caret mode to backend mode
+		const backendMode = MODE_MAPPINGS.CARET_TO_BACKEND[newCaretMode as keyof typeof MODE_MAPPINGS.CARET_TO_BACKEND]
+		console.log("🔄 Mapping to backend mode:", backendMode)
 
-		// Optionally refresh the chat view to apply new mode
-		// Note: This will reload the entire chat interface
-		if (typeof window !== "undefined" && window.location) {
-			window.location.reload()
-		}
+		// Update backend mode using settings handler
+		updateSetting(SETTING_KEYS.MODE, backendMode)
+
+		// Save to localStorage for UI consistency (backup)
+		localStorage.setItem(STORAGE_KEYS.CURRENT_MODE, newCaretMode)
+
+		console.log("✅ Caret mode updated:", newCaretMode, "→", backendMode)
 	}
 
 	return (
@@ -91,7 +96,7 @@ const CaretAgentChatbotSetting: React.FC<CaretAgentChatbotSettingProps> = ({ hid
 				</div>
 			)}
 
-			<div style={modeSwitchContainerStyle} onClick={handleModeChange}>
+			<div onClick={handleModeChange} style={modeSwitchContainerStyle}>
 				{/* Slider background */}
 				<div style={modeSliderStyle(currentMode === CARET_MODES.AGENT)} />
 

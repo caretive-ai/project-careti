@@ -340,6 +340,7 @@
 	"scripts": {
 		"vscode:prepublish": "npm run package",
 		"compile": "npm run check-types && npm run lint && node esbuild.mjs",
+		"build": "npm run protos && npm run build:webview && node esbuild.mjs --production",
 		"compile-standalone": "npm run check-types && npm run lint && node esbuild.mjs --standalone",
 		"postcompile-standalone": "node scripts/package-standalone.mjs",
 		"watch": "npm-run-all -p watch:*",

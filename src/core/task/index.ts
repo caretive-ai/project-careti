@@ -2846,10 +2846,23 @@ export class Task {
 		details += `\n${lastApiReqTotalTokens.toLocaleString()} / ${(contextWindow / 1000).toLocaleString()}K tokens used (${usagePercentage}%)`
 
 		details += "\n\n# Current Mode"
-		if (this.mode === "plan") {
-			details += "\nPLAN MODE\n" + formatResponse.planModeInstructions()
+		// CARET MODIFICATION: Support Caret's chatbot/agent mode system
+		const modeSystem = this.controller.cacheService.getGlobalStateKey("modeSystem")
+		if (modeSystem === "caret") {
+			// For Caret system, determine actual mode from localStorage in frontend
+			// But for environment details, we use the backend mode mapping
+			if (this.mode === "plan") {
+				details += "\nCHATBOT MODE\nExpert consultation and guidance mode - focus on analysis without making changes"
+			} else {
+				details += "\nAGENT MODE\nExecutive mode with full tool access for implementing solutions"
+			}
 		} else {
-			details += "\nACT MODE"
+			// Original Cline system
+			if (this.mode === "plan") {
+				details += "\nPLAN MODE\n" + formatResponse.planModeInstructions()
+			} else {
+				details += "\nACT MODE"
+			}
 		}
 
 		return `<environment_details>\n${details.trim()}\n</environment_details>`

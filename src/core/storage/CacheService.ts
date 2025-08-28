@@ -783,8 +783,7 @@ export class CacheService {
 			customPrompt: state.customPrompt,
 			sapAiCoreUseOrchestrationMode: state.sapAiCoreUseOrchestrationMode,
 			modeSystem: state.modeSystem,
-			caret_persona_avatar: state.caret_persona_avatar,
-			caret_persona_thinking_avatar: state.caret_persona_thinking_avatar,
+			// CARET MODIFICATION: Persona images now stored on disk via globalStorageUri
 
 			// Plan mode configuration updates
 			planModeApiProvider,

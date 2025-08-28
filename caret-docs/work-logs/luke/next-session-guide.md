@@ -193,6 +193,154 @@ npm run compile
 **전략**: Plan Mode 직접 활용 최적화  
 **예상 완료**: 2시간 내 (기존 7-11시간 대비 75% 단축)
 
+---
+
+## 🚨 **2025-08-28 19:15 세션 종료 - 현재 상황 리포트**
+
+### **✅ 해결 완료된 문제들**
+1. **TypeScript Buffer Type 에러 완전 해결** 
+   - persona-storage.ts, getPersonaProfile.ts, updatePersona.ts, uploadCustomImage.ts 등 모든 파일 수정
+   - Buffer ↔ string 타입 불일치 해결
+   - 모든 테스트 파일 업데이트 완료
+
+2. **Large Extension State 경고 부분 해결**
+   - 페르소나 이미지를 VSCode globalState → 디스크 파일 저장으로 변경
+   - state-keys.ts, CacheService.ts에서 persona 관련 항목 제거
+   - 하지만 여전히 1346KB 경고 발생 (다른 데이터 원인)
+
+3. **환경 세부사항 수정**
+   - src/core/task/index.ts에서 Caret 모드 시 "CHATBOT MODE"/"AGENT MODE" 표시 추가
+   - 모드별 설명문 포함
+
+### **🔧 진행 중인 문제들**
+
+#### **1. UI 탭 표시 문제** - **⚠️ CRITICAL**
+**문제**: Caret 모드에서 "Plan Mode"/"Act Mode" 탭이 "Chatbot Mode"/"Agent Mode"로 변경되지 않음
+
+**현재 상태**:
+- ✅ 백엔드 로직: 모드 시스템이 올바르게 작동 (`modeSystem: caret`, `finalMode: agent`)
+- ✅ 코드 수정 완료: ApiConfigurationSection.tsx 조건 수정 (`currentModeSystem === MODE_SYSTEMS.CARET || planActSeparateModelsSetting`)
+- ✅ 빌드 완료: 디버그 로그가 빌드된 파일에 포함되어 있음
+- ❌ **UI 표시 문제**: 여전히 Plan/Act 탭으로 보임
+
+**디버그 로그 분석**:
+```javascript
+// 로그에서 확인된 올바른 작동
+ExtensionStateContext.tsx:278  M A S T E R  C H E C K  
+{Received Mode: 'act', Received Mode System: 'caret'} ✅
+
+buttonConfig.ts:240 [ButtonConfig] DEBUG - localStorage modeSystem: caret resolved: caret ✅
+
+useMessageHandlers.ts:58 [useMessageHandlers] Mode system resolution: 
+{localModeSystem: 'caret', forcedModeSystem: 'caret', currentMode: 'act', finalMode: 'agent', storageKeys: {…}} ✅
+```
+
+**미싱한 로그**: ApiConfigurationSection 관련 디버그 로그가 전혀 나타나지 않음
+- `🔧 [ApiConfigurationSection] Loading mode system from localStorage:` - 없음
+- `🔧 [ApiConfigurationSection] Rendering with currentModeSystem:` - 없음
+
+**가능한 원인**:
+1. **설정 페이지 미접근**: 사용자가 설정 페이지(톱니바퀴)로 이동하지 않았을 가능성
+2. **조건 미만족**: `planActSeparateModelsSetting`이 false이고 `currentModeSystem`이 제대로 설정되지 않았을 가능성
+3. **컴포넌트 미렌더링**: ApiConfigurationSection 컴포넌트가 실제로 렌더링되지 않았을 가능성
+
+#### **2. AI 모드 인식 문제** - **⚠️ CRITICAL**
+**문제**: AI가 여전히 Cline의 "PLAN MODE"/"ACT MODE"로 인식하고 응답
+
+**AI 응답 예시**:
+```
+마스터~ 챗봇 모드에 대해 궁금해하시는 것 같아서 Cline 문서에서 정보를 찾아봤어요.
+Cline은 '에이전트 모드(AGENT MODE)'와 '플랜 모드(PLAN MODE)' 두 가지 주요 모드로 작동해요.
+```
+
+**현재 상태**:
+- ✅ 환경 세부사항 수정 완료: `src/core/task/index.ts`에서 modeSystem === "caret" 시 "CHATBOT MODE" 출력
+- ❌ **시스템 프롬프트 문제**: 여전히 Cline의 기본 formatResponse 시스템 사용
+- ❌ **JSON 프롬프트 미사용**: Caret의 JSON 시스템 프롬프트가 실제로 사용되지 않고 있음
+
+**분석 결과**:
+- Caret은 여전히 표준 Cline의 `formatResponse.planModeInstructions()` 사용
+- `caret-src/core/prompts/sections/CHATBOT_AGENT_MODES.json`는 존재하지만 실제 사용되지 않음
+- CaretSystemPrompt 클래스는 caret-src에 있지만 src에서 사용되지 않음
+
+### **🔍 다음 세션 즉시 확인사항**
+
+#### **UI 디버깅 체크리스트**
+1. **설정 페이지 접근 확인**:
+   ```
+   VSCode → Caret 확장 → 톱니바퀴 아이콘 클릭 → API Configuration 섹션 확인
+   ```
+
+2. **브라우저 개발자 도구에서 확인**:
+   ```javascript
+   // 콘솔에서 실행
+   localStorage.getItem('caret.modeSystem')  // "caret" 이어야 함
+   
+   // ApiConfigurationSection 로그 확인
+   // 🔧 [ApiConfigurationSection] 로그들이 나타나는지 확인
+   ```
+
+3. **planActSeparateModelsSetting 확인**:
+   - 설정에서 "Use different models for Plan and Act modes" 체크박스 상태 확인
+
+#### **시스템 프롬프트 조사 체크리스트**
+1. **현재 시스템 프롬프트 소스 파악**:
+   - formatResponse.planModeInstructions() 위치 및 내용 확인
+   - CaretSystemPrompt vs 표준 Cline 프롬프트 사용 여부 확인
+
+2. **환경 세부사항 실제 전달 확인**:
+   - AI에게 "현재 어떤 모드야?" 질문해서 "CHATBOT MODE" 인식하는지 확인
+
+### **🛠️ 다음 세션 작업 우선순위**
+
+#### **Priority 1: UI 탭 표시 수정** (예상 30분)
+1. 설정 페이지 접근해서 실제 탭 상태 확인
+2. ApiConfigurationSection 디버그 로그 출력 여부 확인
+3. localStorage와 currentModeSystem 상태 매치 확인
+
+#### **Priority 2: 시스템 프롬프트 수정** (예상 1시간)
+1. 현재 사용되는 시스템 프롬프트 소스 파악
+2. CaretSystemPrompt를 실제로 사용하도록 연결
+3. 또는 기존 formatResponse에 Caret 모드 추가
+
+#### **Priority 3: 최종 검증** (예상 30분)
+1. UI에서 "Chatbot Mode"/"Agent Mode" 탭 표시 확인
+2. AI가 "CHATBOT MODE"로 인식하는지 확인
+3. 모든 기존 기능 회귀 테스트
+
+### **📁 수정된 파일 목록**
+```
+✅ 완료:
+- src/core/storage/state-keys.ts (persona 항목 제거)
+- src/core/storage/CacheService.ts (persona 항목 제거)
+- src/core/task/index.ts (환경 세부사항 Caret 모드 추가)
+- caret-src/services/persona/persona-storage.ts (디스크 저장으로 변경)
+- caret-src/services/persona/simple-persona.ts (Buffer → string 변경)
+- webview-ui/src/components/settings/sections/ApiConfigurationSection.tsx (조건 수정 + 디버그 로그)
+- 모든 persona 관련 controller, test 파일들
+
+🔧 빌드 완료:
+- npm run compile ✅
+- npm run build:webview ✅
+```
+
+### **⚠️ 중요 메모**
+- **LocalStorage 확인 필수**: `localStorage.getItem('caret.modeSystem')`가 "caret"인지 확인
+- **설정 페이지 접근 필수**: ApiConfigurationSection 로그가 나타나는지 확인
+- **시스템 프롬프트 우선순위**: UI보다 AI 인식 문제가 더 중요할 수 있음
+
+---
+
+**다음 세션에서 즉시 실행할 명령어**:
+```bash
+# 1. 확장 리로드 후 설정 페이지 이동
+# 2. 개발자 도구에서 localStorage 확인
+localStorage.getItem('caret.modeSystem')
+
+# 3. AI 테스트
+# "현재 어떤 모드야?" 질문해서 응답 확인
+```
+
 
 --
 

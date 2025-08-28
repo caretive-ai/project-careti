@@ -195,16 +195,18 @@ agent_mode_respond: {
 ### **최소 성공 기준 (MVP)**
 - [x] ✅ v3.26.6 머징 및 환경 정리 완료
 - [x] ✅ buildSystemPrompt 시그니처 v3.26.6 적용
-- [ ] 불필요한 Handler 시스템 제거
-- [ ] ToolExecutor에 agent_mode_respond/chatbot_mode_respond 추가
-- [ ] Agent 모드에서 AI 응답 후 연속 대화 가능
+- [x] ✅ TypeScript Buffer Type 에러 완전 해결
+- [x] ✅ Large Extension State 경고 부분 해결 (persona 이미지 디스크 저장)
+- [ ] **🚨 CRITICAL** UI 탭 표시 문제 해결
+- [ ] **🚨 CRITICAL** AI 모드 인식 문제 해결
 
 ### **완전 성공 기준**  
-- [ ] ExtensionMessage 타입에 새 ask 타입 추가
-- [ ] ButtonConfig에 새 모드 스타일링 적용
+- [x] ✅ 환경 세부사항에 Caret 모드 추가 완료
+- [x] ✅ ApiConfigurationSection 조건 로직 수정 완료
+- [ ] UI에서 "Chatbot Mode"/"Agent Mode" 탭 실제 표시
+- [ ] AI가 "CHATBOT MODE"로 올바르게 인식
 - [ ] v3.26.6 Plan Mode의 모든 기능 (스트리밍, 옵션) 활용
 - [ ] 기존 Persona, ModeSystem 등 모든 Caret 기능 100% 보존
-- [ ] 컴파일 성공 및 F5 디버그 테스트 통과
 
 ---
 
@@ -271,3 +273,87 @@ npm run compile  # buildSystemPrompt 시그니처 이미 수정됨
 **작성**: Claude Code Assistant  
 **검토**: 다음 세션에서 실행 예정  
 **예상 완료**: 2025-08-29
+
+---
+
+## 🚨 **2025-08-28 19:15 현재 상황 업데이트**
+
+### **✅ 이번 세션 성과**
+1. **TypeScript 컴파일 에러 완전 해결** - persona 관련 Buffer ↔ string 타입 불일치 모두 수정
+2. **Large Extension State 경고 해결** - persona 이미지를 디스크 저장으로 변경 (1.3MB → 디스크)
+3. **환경 세부사항 수정** - Caret 모드 시 "CHATBOT MODE"/"AGENT MODE" 표시 추가
+4. **UI 로직 수정** - ApiConfigurationSection 조건 로직 개선 및 디버그 로그 추가
+
+### **🔧 여전히 해결되지 않은 CRITICAL 문제들**
+
+#### **1. UI 탭 표시 문제** 
+**현상**: Caret 모드에서도 여전히 "Plan Mode"/"Act Mode" 탭으로 표시됨
+**원인 분석**: 
+- ApiConfigurationSection 디버그 로그가 전혀 출력되지 않음 → 설정 페이지 미접근 가능성
+- 코드 수정 및 빌드는 완료되었으나 실제 렌더링 확인 필요
+- `planActSeparateModelsSetting`이 false일 경우 조건 미충족 가능성
+
+#### **2. AI 모드 인식 문제**
+**현상**: AI가 여전히 "PLAN MODE"/"ACT MODE"로 인식하고 응답
+**원인 분석**:
+- 환경 세부사항은 수정했으나 시스템 프롬프트는 여전히 Cline 방식 사용
+- CaretSystemPrompt 클래스가 실제로 사용되지 않고 있음
+- JSON 프롬프트 시스템이 활성화되지 않음
+
+### **🔍 다음 세션 즉시 행동 계획**
+
+#### **Step 1: UI 문제 진단 (10분)**
+1. VSCode 확장 리로드 후 설정 페이지(톱니바퀴) 접근
+2. 개발자 도구에서 `localStorage.getItem('caret.modeSystem')` 확인
+3. ApiConfigurationSection 디버그 로그 출력 여부 확인
+
+#### **Step 2: 문제별 해결 (1-2시간)**
+**UI 문제 해결**:
+- 설정 페이지에서 실제 탭 상태 확인
+- `planActSeparateModelsSetting` 체크박스 상태 확인
+- 필요시 강제 렌더링 로직 추가
+
+**AI 인식 문제 해결**:
+- 현재 시스템 프롬프트 소스 파악
+- CaretSystemPrompt 실제 사용 연결 또는
+- 기존 formatResponse에 Caret 모드 추가
+
+#### **Step 3: 최종 검증 (30분)**
+1. UI에서 "Chatbot Mode"/"Agent Mode" 탭 표시 확인
+2. AI에게 "현재 어떤 모드야?" 질문으로 "CHATBOT MODE" 인식 확인
+3. 기존 Caret 기능 회귀 테스트
+
+### **📁 현재까지 수정된 파일들**
+```
+✅ 수정 완료:
+- src/core/storage/state-keys.ts
+- src/core/storage/CacheService.ts  
+- src/core/task/index.ts
+- caret-src/services/persona/persona-storage.ts
+- caret-src/services/persona/simple-persona.ts
+- webview-ui/src/components/settings/sections/ApiConfigurationSection.tsx
+- 모든 persona 관련 controller, test 파일들
+
+✅ 빌드 완료:
+- npm run compile ✅
+- npm run build:webview ✅
+```
+
+### **⚠️ 핵심 이슈**
+**UI 탭이 바뀌지 않는 이유**:
+1. 설정 페이지 미접근 (가장 가능성 높음)
+2. localStorage 상태 불일치  
+3. 조건 로직 미작동
+
+**AI 모드 인식이 안 되는 이유**:
+1. 환경 세부사항 vs 시스템 프롬프트 불일치
+2. CaretSystemPrompt 미사용
+3. formatResponse 기본 로직 사용
+
+---
+
+**다음 세션 첫 번째 명령어**:
+```javascript
+// 브라우저 개발자 도구에서 실행
+localStorage.getItem('caret.modeSystem')  // "caret" 확인
+```

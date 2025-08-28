@@ -1,10 +1,10 @@
-import { handleUnaryCall, sendUnaryData, status } from "@grpc/grpc-js"
-import { PersonaProfile } from "@shared/proto/caret/persona"
-import { EmptyRequest } from "@shared/proto/cline/common"
-import { ServerErrorResponse } from "@grpc/grpc-js/build/src/server-call"
-import { Logger } from "@/services/logging/Logger"
 import { PersonaStorage } from "@caret/services/persona/persona-storage"
 import { Controller } from "@core/controller"
+import { handleUnaryCall, sendUnaryData, status } from "@grpc/grpc-js"
+import { ServerErrorResponse } from "@grpc/grpc-js/build/src/server-call"
+import { PersonaProfile } from "@shared/proto/caret/persona"
+import { EmptyRequest } from "@shared/proto/cline/common"
+import { Logger } from "@/services/logging/Logger"
 
 // CARET MODIFICATION: This file is a Caret addition for the PersonaService.
 // It now exports two handlers: one for VSCode protobus and one for standalone gRPC server.
@@ -21,10 +21,8 @@ export function getPersonaProfileHandler(personaStorage: PersonaStorage): GetPer
 				personaStorage.loadSimplePersonaImages(controller),
 			])
 
-			const avatarUri = images?.avatar ? `data:image/png;base64,${images.avatar.toString("base64")}` : ""
-			const thinkingAvatarUri = images?.thinkingAvatar
-				? `data:image/png;base64,${images.thinkingAvatar.toString("base64")}`
-				: ""
+			const avatarUri = images?.avatar ? `data:image/png;base64,${images.avatar}` : ""
+			const thinkingAvatarUri = images?.thinkingAvatar ? `data:image/png;base64,${images.thinkingAvatar}` : ""
 
 			const profile = PersonaProfile.create({
 				name: profileDetails.name,

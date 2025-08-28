@@ -84,9 +84,7 @@ export interface GlobalState {
 	focusChainSettings: FocusChainSettings
 	focusChainFeatureFlagEnabled: boolean
 	customPrompt: "compact" | undefined
-	// CARET MODIFICATION: Add persona image properties
-	caret_persona_avatar: Buffer | undefined
-	caret_persona_thinking_avatar: Buffer | undefined
+	// CARET MODIFICATION: Persona images now stored on disk via globalStorageUri
 
 	// Plan mode configurations
 	planModeApiProvider: ApiProvider

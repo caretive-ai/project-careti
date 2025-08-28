@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from "vitest"
-import { PersonaStorage } from "../persona-storage"
+import { PersonaProfile } from "@shared/proto/caret/persona"
+import { writeFile } from "@utils/fs"
 import * as fs from "fs/promises"
 import * as path from "path"
-import { writeFile } from "@utils/fs"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 import { ensureRulesDirectoryExists } from "@/core/storage/disk"
-import { PersonaProfile } from "@shared/proto/caret/persona"
+import { PersonaStorage } from "../persona-storage"
 
 // Mock dependencies
 vi.mock("fs/promises")
@@ -58,19 +58,19 @@ describe("PersonaStorage", () => {
 	})
 
 	describe("savePersonaImages", () => {
-		it("should save avatar and thinking avatar to global storage", async () => {
+		it("should save avatar and thinking avatar to disk files", async () => {
 			const mockImages = {
-				avatar: Buffer.from("avatar_image_data"),
-				thinkingAvatar: Buffer.from("thinking_image_data"),
+				avatar: "YXZhdGFyX2ltYWdlX2RhdGE=", // Base64 encoded "avatar_image_data"
+				thinkingAvatar: "dGhpbmtpbmdfaW1hZ2VfZGF0YQ==", // Base64 encoded "thinking_image_data"
 			}
 
 			await personaStorage.savePersonaImages(mockContext, mockImages)
 
-			expect(mockContext.context.globalState.update).toHaveBeenCalledWith("caret_persona_avatar", mockImages.avatar)
-			expect(mockContext.context.globalState.update).toHaveBeenCalledWith(
-				"caret_persona_thinking_avatar",
-				mockImages.thinkingAvatar,
-			)
+			const expectedAvatarPath = "/mock/global/storage/avatar.txt"
+			const expectedThinkingAvatarPath = "/mock/global/storage/thinking_avatar.txt"
+
+			expect(fs.writeFile).toHaveBeenCalledWith(expectedAvatarPath, mockImages.avatar, "utf-8")
+			expect(fs.writeFile).toHaveBeenCalledWith(expectedThinkingAvatarPath, mockImages.thinkingAvatar, "utf-8")
 		})
 	})
 })

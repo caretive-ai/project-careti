@@ -1,12 +1,12 @@
-import React from "react"
-import { render, screen, fireEvent, waitFor } from "@testing-library/react"
-import { describe, it, expect, vi, beforeEach } from "vitest"
-import { I18nextProvider } from "react-i18next"
+// CARET MODIFICATION: Fix import path for persona proto
+import { PersonaProfile } from "@shared/proto/caret/persona"
+import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import i18n from "i18next"
-import { initReactI18next } from "react-i18next"
-import { PersonaProfile } from "@shared/proto/index.caret.persona"
-import PersonaManagement from "../PersonaManagement"
+import React from "react"
+import { I18nextProvider, initReactI18next } from "react-i18next"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 import * as CaretStateContext from "@/caret/context/CaretStateContext"
+import PersonaManagement from "../PersonaManagement"
 
 // CARET MODIFICATION: This test has been completely rewritten to test the component
 // with the new `useCaretState` hook. Instead of mocking the gRPC client, we now

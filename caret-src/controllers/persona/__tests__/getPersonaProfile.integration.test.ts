@@ -1,10 +1,10 @@
-import { vi, describe, it, expect, beforeEach, afterEach, type Mocked } from "vitest"
-import { getPersonaProfileHandler } from "../getPersonaProfile"
 import { PersonaStorage } from "@caret/services/persona/persona-storage"
 import { SimplePersona } from "@caret/services/persona/simple-persona"
-import { PersonaProfile } from "@shared/proto/caret/persona"
 import { Controller } from "@core/controller"
+import { PersonaProfile } from "@shared/proto/caret/persona"
 import { EmptyRequest } from "@shared/proto/cline/common"
+import { afterEach, beforeEach, describe, expect, it, type Mocked, vi } from "vitest"
+import { getPersonaProfileHandler } from "../getPersonaProfile"
 
 // Mock PersonaStorage
 vi.mock("@caret/services/persona/persona-storage")
@@ -32,8 +32,8 @@ describe("getPersonaProfileHandler", () => {
 			customInstruction: "Test instruction",
 		}
 		const mockImages = {
-			avatar: Buffer.from("avatar_image_data"),
-			thinkingAvatar: Buffer.from("thinking_image_data"),
+			avatar: "YXZhdGFyX2ltYWdlX2RhdGE=", // Base64 encoded "avatar_image_data"
+			thinkingAvatar: "dGhpbmtpbmdfaW1hZ2VfZGF0YQ==", // Base64 encoded "thinking_image_data"
 		}
 		mockPersonaStorage.getPersona.mockResolvedValue(mockProfile)
 		mockPersonaStorage.loadSimplePersonaImages.mockResolvedValue(mockImages)

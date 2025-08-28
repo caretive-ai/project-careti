@@ -69,7 +69,10 @@
 				"noControlCharactersInRegex": "off",
 				"noShadowRestrictedNames": "off",
 				"noArrayIndexKey": "info",
-				"noAssignInExpressions": "warn"
+				"noAssignInExpressions": "warn",
+				"useIterableCallbackReturn": "off",
+				"noDuplicateObjectKeys": "off",
+				"noUnknownAtRules": "off"
 			},
 			"complexity": {
 				"noUselessConstructor": "off",
@@ -113,16 +116,20 @@
 	"files": {
 		"includes": [
 			"**",
-			"!**/dist/**",
-			"!**/dist-*/**",
-			"!**/out/**",
-			"!**/evals/**",
-			"!**/playwright/**",
-			"!**/test-results/**",
-			"!**/node_modules/**",
-			"!**/webview-ui/build/**",
-			"!**/generated/**",
-			"!**/proto/**"
+			"!**/dist",
+			"!**/dist-*",
+			"!**/out",
+			"!**/evals",
+			"!**/playwright",
+			"!**/test-results",
+			"!**/node_modules",
+			"!**/webview-ui/build",
+			"!**/generated",
+			"!**/proto",
+			"!**/backups",
+			"!**/caret-main",
+			"!**/caret-scripts",
+			"!**/caret-docs"
 		]
 	},
 	"plugins": [

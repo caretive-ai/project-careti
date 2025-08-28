@@ -54,7 +54,7 @@ async function compileProtos() {
 	}
 
 	// Process all proto files
-	const protoFiles = await globby("**/*.proto", { cwd: PROTO_DIR, realpath: true })
+	const protoFiles = await globby("**/*.proto", { cwd: PROTO_DIR })
 	console.log(chalk.cyan(`Processing ${protoFiles.length} proto files from`), PROTO_DIR)
 
 	tsProtoc(TS_OUT_DIR, protoFiles, TS_PROTO_OPTIONS)

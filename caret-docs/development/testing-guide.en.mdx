@@ -1,0 +1,1025 @@
+# Caret Testing Guide
+
+## 1. Overview
+
+This document is a comprehensive guide to Caret project's testing strategy, writing methods, and execution methods. Caret aims for **100% test coverage** and recommends **Test-Driven Development (TDD)**.
+
+## 1.1 Quick Start - Test Execution Commands
+
+### 🚨 Important: Use Correct Test Commands
+
+**❌ Caution: Do not use `npm test`**
+
+- The `npm test` command runs full build + compile + lint + all tests, which is very slow.
+- It is recommended to use the **individual test commands** below during development.
+
+### 🎯 Individual Test Execution (Recommended for Development)
+
+```bash
+# ✅ Backend individual test (specific file)
+npm run test:backend caret-src/__tests__/your-test-file.test.ts
+
+# ✅ Backend individual test (specific test name)
+npm run test:backend caret-src/__tests__/your-test-file.test.ts -t "your test name"
+
+# ✅ Frontend test (React components, UI logic)
+npm run test:webview
+
+# ✅ Backend watch mode (auto-run during development)
+npm run test:backend:watch
+
+# ✅ Fast development test (excluding webview, stops immediately on failure)
+npm run dev:build-test:fast
+```
+
+### 📊 Full Test + Coverage Execution (For CI/CD or Final Verification)
+
+```bash
+# 🌟 Most Recommended: Full test + coverage analysis at once
+npm run test:all; npm run caret:coverage
+
+# Or including backend detailed coverage
+npm run test:all; npm run test:backend:coverage; npm run caret:coverage
+
+# Integration test (VSCode Extension environment)
+npm run test:integration
+```
+
+### 📈 Coverage Analysis
+
+```bash
+# Caret-specific code coverage analysis (detailed by file)
+npm run caret:coverage
+
+# Backend Vitest coverage (detailed by line)
+npm run test:backend:coverage
+
+# VSCode Extension integration coverage
+npm run test:coverage
+```
+
+### 📝 Practical Test Workflow Example
+
+```bash
+# 1. During development: Test a specific feature
+npm run test:backend caret-src/__tests__/json-overlay-real-files.test.ts
+
+# 2. During development: Only a specific test case
+npm run test:backend caret-src/__tests__/json-overlay-real-files.test.ts -t "should load and apply Alpha personality"
+
+# 3. Develop in watch mode (auto-test on code changes)
+npm run test:backend:watch
+
+# 4. Fast full verification (stops immediately on failure)
+npm run dev:build-test:fast
+
+# 5. Final verification (before PR)
+npm run test:all && npm run caret:coverage
+```
+
+## 2. Testing Strategy
+
+### 2.1 Test Coverage Goals
+
+**100% Coverage Principle for Caret-specific Code:**
+
+- **🥕 Caret New Logic**: Business logic and feature code in `caret-src/` and `webview-ui/src/caret/` directories **must have 100% test coverage**.
+- **🔗 Re-export Files**: Simple re-export files of Cline modules (e.g., `export { ... } from "..."`) can be excluded from testing.
+- **📦 Type Definitions**: Files containing only interface/type definitions without runtime logic can be excluded from testing.
+- **🤖 Cline Original Code**: `src/` and `webview-ui/src/` (excluding caret folders) utilize existing Cline tests, and additional test writing is not enforced.
+- **📊 Coverage Analysis**: `caret-scripts/caret-coverage-check.js` is used to analyze Caret vs. Cline code coverage separately.
+- **🔍 Testing Cline Code Modifications**: If Cline original code needs modification and requires additional tests, it is recommended to create separate test files in the `caret-src/__tests__/` directory to manage them. This prevents excessive expansion of the test scope.
+
+#### Currently Excluded Files (with valid reasons)
+
+- `caret-src/core/prompts/system.ts` - Re-export of Cline module
+- `caret-src/shared/providers/types.ts` - Contains only TypeScript interface definitions
+- `caret-src/core/task/index.ts` - Some wrapper logic (tests to be added later)
+
+### 2.2 Test Types
+
+#### 2.2.1 Unit Tests
+
+- **Target**: Individual functions, classes, components
+- **Tool**: Vitest (unified for backend/frontend)
+- **Location**: `__tests__/` folder or `.test.ts/.test.tsx` files
+
+#### 2.2.2 Integration Tests
+
+- **Target**: Interactions between multiple modules, actual build verification, overall system behavior
+- **Tool**: Vitest (backend), VSCode Extension Test Runner, React Testing Library
+- **Location**: `caret-src/__tests__/integration.test.ts`, `src/test/`, `webview-ui/src/__tests__/`
+- **Characteristics**: Verification of build/compilation through actual command execution (Updated 2025-01-21)
+- **New Approach**: Changed from mocked environment to actual build process verification
+
+#### 2.2.3 E2E Tests (End-to-End Tests)
+
+- **Target**: Entire workflow
+- **Tool**: VSCode Extension Development Host
+- **Method**: Manual/automated testing via F5 debugging
+
+### 2.3 TDD (Test-Driven Development) Approach ⚡ **Mandatory**
+
+Caret **mandates TDD**:
+
+1. **Red**: Write failing tests
+2. **Green**: Write the minimum code to pass the tests
+3. **Refactor**: Improve code quality (tests continue to pass)
+
+**🚨 AI Developer Mandatory Principles**:
+
+- ❌ **No Implementation First**: Always write tests before writing code.
+- ✅ **Test First**: Must declare "I will write tests first."
+- ✅ **Step-by-Step Progress**: Strictly adhere to RED → GREEN → REFACTOR order.
+
+**Practical Example (UI Language Setting)**:
+
+```typescript
+// RED: Write a failing test
+it("should update only uiLanguage without affecting other settings", async () => {
+	await setUILanguage("ja")
+	expect(mockUpdateSettings).toHaveBeenCalledWith({
+		uiLanguage: "ja", // Only this
+	})
+	expect(state.chatSettings.model).toBe("claude-3") // No impact on other settings
+})
+
+// GREEN: Minimum implementation
+const setUILanguage = async (language: string) => {
+	await StateServiceClient.updateSettings({ uiLanguage: language })
+}
+
+// REFACTOR: Improve error handling, state updates, etc.
+```
+
+### 2.4 Test Code Architecture Principles 🏗️ **Mandatory**
+
+#### 2.4.1 Separation of Test-Specific Code
+
+**🚨 Absolutely Forbidden: Including test-specific methods in service code**
+
+```typescript
+// ❌ Absolutely Forbidden: Test-specific methods in service class
+export class CaretSystemPrompt {
+  // ✅ Operational method
+  generateFromJsonSections() { ... }
+
+  // ❌ Forbidden: Test-specific method in service class
+  generateSystemPrompt() { ... }          // Used only in tests
+  generateSystemPromptWithTemplates() { ... } // Used only in tests
+  callOriginalSystemPrompt() { ... }      // Used only in tests
+}
+```
+
+**✅ Correct Method: Separate TestHelper Class**
+
+```typescript
+// ✅ Service Class: Only operational code
+export class CaretSystemPrompt {
+  generateFromJsonSections() { ... }
+  getMetrics() { ... }
+  clearMetrics() { ... }
+}
+
+// ✅ Test Helper: Test-specific methods
+export class CaretSystemPromptTestHelper {
+  generateSystemPrompt() { ... }          // Test-specific
+  generateSystemPromptWithTemplates() { ... } // Test-specific
+  callOriginalSystemPrompt() { ... }      // Test-specific
+}
+```
+
+#### 2.4.2 How to Use TestHelper Pattern
+
+**Directory Structure:**
+
+```
+caret-src/
+├── core/prompts/
+│   └── CaretSystemPrompt.ts           // Operational service class
+└── __tests__/
+    ├── helpers/
+    │   └── CaretSystemPromptTestHelper.ts  // Test-specific helper
+    └── caret-system-prompt-simple.test.ts
+```
+
+**Using TestHelper in Tests:**
+
+```typescript
+import { CaretSystemPromptTestHelper } from "./helpers/CaretSystemPromptTestHelper"
+
+describe("CaretSystemPrompt - Basic Wrapper Implementation", () => {
+	let testHelper: CaretSystemPromptTestHelper
+
+	beforeEach(() => {
+		testHelper = new CaretSystemPromptTestHelper("/test/extension/path")
+	})
+
+	it("should generate system prompt successfully", async () => {
+		const result = await testHelper.generateSystemPrompt(mockContext)
+		expect(result.prompt).toBeDefined()
+	})
+})
+```
+
+#### 2.4.3 Exception: Explicit Marking When Absolutely Necessary
+
+**If a test-specific method is truly necessary in service code:**
+
+```typescript
+export class SomeService {
+  // ✅ Operational method
+  doBusinessLogic() { ... }
+
+  // ⚠️ Exceptionally allowed: Explicit forTest marking
+  forTestOnly_getInternalState() { ... }
+  forTestOnly_resetState() { ... }
+}
+```
+
+**Conditions for `forTest` usage:**
+
+- When internal state access is unavoidable.
+- Testing private methods that cannot be mocked.
+- **Method name must have `forTestOnly_` or `forTest_` prefix.**
+
+#### 2.4.4 Advantages of Architecture Separation
+
+**✅ Clear Separation of Responsibilities:**
+
+- Service classes: Focus only on business logic.
+- TestHelper: Focus only on test scenarios.
+
+**✅ Improved Code Readability:**
+
+- No confusion for operators viewing service code.
+- Test-specific code is not exposed in API documentation.
+
+**✅ Improved Maintainability:**
+
+- Changes to test-specific code do not affect operational code.
+- Scope is clearly separated during refactoring.
+
+## 3. Test Frameworks and Tools
+
+### 3.1 Backend Tests (caret-src/)
+
+#### 3.1.1 Test Framework
+
+```json
+{
+	"devDependencies": {
+		"vitest": "^3.0.5",
+		"@vitest/coverage-v8": "^3.0.9",
+		"@types/node": "^22.13.4"
+	}
+}
+```
+
+#### 3.1.2 Vitest Configuration (vitest.config.ts)
+
+```typescript
+import { defineConfig } from "vitest/config"
+import path from "path"
+
+export default defineConfig({
+	test: {
+		environment: "node",
+		globals: true,
+		include: [
+			"caret-src/**/*.test.ts",
+			"!src/**/*", // Exclude Cline original tests
+		],
+		coverage: {
+			provider: "v8",
+			include: ["caret-src/**/*.ts", "!caret-src/**/*.test.ts", "!caret-src/**/*.d.ts"],
+			reportOnFailure: true,
+			reporter: ["text", "json", "html"],
+		},
+		logHeapUsage: false,
+		silent: false,
+	},
+	resolve: {
+		alias: {
+			"@": path.resolve(__dirname, "./caret-src"),
+			"@shared": path.resolve(__dirname, "./src/shared"),
+		},
+	},
+})
+```
+
+### 3.2 Frontend Tests (webview-ui/src/caret/)
+
+#### 3.2.1 Test Framework
+
+```json
+{
+	"devDependencies": {
+		"@testing-library/react": "^14.0.0",
+		"@testing-library/jest-dom": "^6.0.0",
+		"@testing-library/user-event": "^14.0.0",
+		"vitest": "^1.0.0",
+		"@vitejs/plugin-react": "^4.0.0"
+	}
+}
+```
+
+#### 3.2.2 Vitest Configuration (vitest.config.ts)
+
+```typescript
+import { defineConfig } from "vitest/config"
+import react from "@vitejs/plugin-react"
+
+export default defineConfig({
+	plugins: [react()],
+	test: {
+		environment: "jsdom",
+		setupFiles: ["./src/test-setup.ts"],
+		include: ["src/caret/**/*.test.{ts,tsx}"],
+		coverage: {
+			include: ["src/caret/**/*.{ts,tsx}"],
+			exclude: ["src/caret/**/*.test.{ts,tsx}", "src/caret/**/*.d.ts"],
+			reporter: ["text", "lcov", "html"],
+			reportsDirectory: "coverage/caret-frontend",
+		},
+	},
+})
+```
+
+## 4. Test Writing Guide
+
+### 4.1 File Naming Conventions
+
+#### 4.1.1 Test File Location
+
+```
+caret-src/
+├── core/
+│   ├── webview/
+│   │   ├── CaretProvider.ts
+│   │   └── __tests__/
+│   │       └── CaretProvider.test.ts
+│   └── utils/
+│       ├── caret-logger.ts
+│       └── caret-logger.test.ts
+
+webview-ui/src/caret/
+├── components/
+│   ├── CaretWelcome.tsx
+│   └── __tests__/
+│       └── CaretWelcome.test.tsx
+└── utils/
+    ├── i18n.ts
+    └── i18n.test.ts
+```
+
+#### 4.1.2 Test File Naming Conventions
+
+- **Unit Tests**: `{ComponentName}.test.{ts|tsx}`
+- **Integration Tests**: `{FeatureName}.integration.test.{ts|tsx}`
+- **Test Directory**: `__tests__/` (optional)
+
+### 4.2 Backend Test Writing
+
+#### 4.2.1 Basic Test Structure
+
+```typescript
+// caret-src/utils/__tests__/caret-logger.test.ts
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
+import { CaretLogger, CaretLogLevel } from "../caret-logger"
+
+describe("CaretLogger", () => {
+	let logger: CaretLogger
+	let mockOutputChannel: any
+
+	beforeEach(() => {
+		mockOutputChannel = {
+			appendLine: vi.fn(),
+		}
+		logger = new CaretLogger(mockOutputChannel)
+	})
+
+	afterEach(() => {
+		vi.clearAllMocks()
+	})
+
+	describe("constructor", () => {
+		it("should create logger with output channel", () => {
+			expect(logger).toBeDefined()
+		})
+	})
+
+	describe("log methods", () => {
+		it("should log info message", () => {
+			const consoleSpy = vi.spyOn(console, "info")
+			logger.info("test message", "TEST")
+
+			expect(mockOutputChannel.appendLine).toHaveBeenCalled()
+			expect(consoleSpy).toHaveBeenCalled()
+		})
+
+		it("should log error message", () => {
+			const consoleSpy = vi.spyOn(console, "error")
+			logger.error("error message", "ERROR")
+
+			expect(mockOutputChannel.appendLine).toHaveBeenCalled()
+			expect(consoleSpy).toHaveBeenCalled()
+		})
+	})
+})
+```
+
+#### 4.2.2 VSCode API Mocking
+
+```typescript
+// caret-src/__tests__/setup.ts
+import { vi } from "vitest"
+
+// VSCode API Mocking (Vitest)
+vi.mock("vscode", () => ({
+	window: {
+		createOutputChannel: vi.fn(() => ({
+			appendLine: vi.fn(),
+			show: vi.fn(),
+			dispose: vi.fn(),
+		})),
+		showErrorMessage: vi.fn(),
+		showInformationMessage: vi.fn(),
+	},
+	ExtensionContext: vi.fn(),
+	Uri: {
+		file: vi.fn(),
+		parse: vi.fn(),
+	},
+}))
+```
+
+### 4.3 Frontend Test Writing
+
+#### 4.3.1 React Component Testing
+
+```typescript
+// webview-ui/src/caret/components/__tests__/CaretWelcome.test.tsx
+import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { CaretWelcome } from '../CaretWelcome';
+
+describe('CaretWelcome', () => {
+  it('should render welcome message', () => {
+    render(<CaretWelcome />);
+    expect(screen.getByText(/Welcome to Caret/)).toBeInTheDocument();
+  });
+
+  it('should handle button click', async () => {
+    const mockOnClick = vi.fn();
+    render(<CaretWelcome onStartClick={mockOnClick} />);
+
+    const startButton = screen.getByRole('button', { name: /Get Started/ });
+    fireEvent.click(startButton);
+
+    expect(mockOnClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('should display Korean text correctly', () => {
+    render(<CaretWelcome />);
+    expect(screen.getByText('Vibe Coding')).toBeInTheDocument();
+  });
+});
+```
+
+#### 4.3.2 Custom Hook Testing
+
+```typescript
+// webview-ui/src/caret/hooks/__tests__/useCaretState.test.ts
+import { renderHook, act } from "@testing-library/react"
+import { describe, it, expect } from "vitest"
+import { useCaretState } from "../useCaretState"
+
+describe("useCaretState", () => {
+	it("should initialize with default state", () => {
+		const { result } = renderHook(() => useCaretState())
+
+		expect(result.current.isReady).toBe(false)
+		expect(result.current.currentMode).toBe("welcome")
+	})
+
+	it("should update state correctly", () => {
+		const { result } = renderHook(() => useCaretState())
+
+		act(() => {
+			result.current.setReady(true)
+		})
+
+		expect(result.current.isReady).toBe(true)
+	})
+})
+```
+
+### 4.4 Integration Test Writing
+
+#### 4.4.1 System-Level Integration Tests (New Approach)
+
+```typescript
+// caret-src/__tests__/integration.test.ts
+import { describe, it, expect } from "vitest"
+import { spawn } from "child_process"
+import { promisify } from "util"
+
+const execAsync = promisify(require("child_process").exec)
+
+describe("Integration Tests", () => {
+	it("should compile backend successfully", async () => {
+		try {
+			const { stdout, stderr } = await execAsync("npm run check-types")
+			expect(stderr).toBe("")
+			expect(stdout).toContain("tsc --noEmit")
+		} catch (error: any) {
+			throw new Error(`Backend compilation failed: ${error.message}`)
+		}
+	}, 30000)
+
+	it("should build webview-ui successfully", async () => {
+		try {
+			const { stdout, stderr } = await execAsync("cd webview-ui && npm run build")
+			expect(stdout).toContain("vite")
+			expect(stdout).toContain("building for production")
+			expect(stderr).not.toContain("Build failed")
+			expect(stderr).not.toContain("error during build")
+		} catch (error: any) {
+			throw new Error(`Webview-UI build failed: ${error.message}`)
+		}
+	}, 60000)
+
+	it("should have grpc-client files in ES6 module format", async () => {
+		const fs = require("fs")
+		const path = require("path")
+
+		try {
+			const grpcClientPath = path.join(process.cwd(), "webview-ui/src/services/grpc-client.js")
+			const content = fs.readFileSync(grpcClientPath, "utf8")
+
+			expect(content).toContain("import {")
+			expect(content).toContain("export const")
+			expect(content).not.toContain("require(")
+			expect(content).not.toContain("exports.")
+			expect(content).toContain("StateServiceClient")
+		} catch (error: any) {
+			throw new Error(`GRPC client format check failed: ${error.message}`)
+		}
+	})
+
+	it("should have consistent rule priority logic", async () => {
+		try {
+			const { stdout } = await execAsync("npm run test:backend -- rule-priority")
+			expect(stdout).toContain("6 passed")
+		} catch (error: any) {
+			throw new Error(`Rule priority tests failed: ${error.message}`)
+		}
+	}, 30000)
+})
+```
+
+**Key Features:**
+
+- **Actual Command Execution**: Verifies actual build processes like `npm run build`, `npm run compile`.
+- **Cross-Platform Compatibility**: Considers Windows/Linux/Mac environments.
+- **Build Error Detection**: Early detection of actual build issues that tests might miss.
+- **ES6 Module Format Verification**: Detects CommonJS/ES6 module compatibility issues.
+- **Long Timeouts**: Timeouts set to account for actual build times.
+
+#### 4.4.2 Backend-Frontend Communication Test (Existing Approach)
+
+```typescript
+// src/test/integration/webview-communication.test.ts
+import * as vscode from "vscode"
+import { CaretProvider } from "../../caret-src/core/webview/CaretProvider"
+
+describe("Webview Communication Integration", () => {
+	let provider: CaretProvider
+	let mockContext: vscode.ExtensionContext
+
+	beforeEach(() => {
+		mockContext = {
+			subscriptions: [],
+			extensionUri: vscode.Uri.file("/test"),
+		} as any
+		provider = new CaretProvider(mockContext)
+	})
+
+	it("should handle message from webview", async () => {
+		const testMessage = { type: "test", data: "hello" }
+
+		// Simulate message transmission
+		await provider.handleWebviewMessage(testMessage)
+
+		// Verify response
+		expect(provider.lastResponse).toEqual({
+			type: "response",
+			data: "received: hello",
+		})
+	})
+})
+```
+
+## 5. Test Execution
+
+### 5.1 Running Tests During Development
+
+#### 5.1.1 Backend Tests
+
+```bash
+# Run unit tests
+npm run test:backend
+
+# Run with coverage
+npm run test:backend:coverage
+
+# Test a specific file
+npm run test:backend -- CaretProvider.test.ts
+
+# Run integration tests only
+npm run test:backend -- integration
+
+# Watch mode
+npm run test:backend:watch
+```
+
+#### 5.1.2 Frontend Tests
+
+```bash
+# Run unit tests
+npm run test:frontend
+
+# Run with coverage
+npm run test:frontend:coverage
+
+# Test a specific component
+npm run test:frontend -- CaretWelcome.test.tsx
+
+# Watch mode
+npm run test:frontend:watch
+```
+
+### 5.2 Running All Tests
+
+#### 5.2.1 Running All Tests
+
+```bash
+# All tests (backend + frontend)
+npm test
+
+# All tests including coverage
+npm run test:coverage
+
+# Tests for CI/CD (parallel execution)
+npm run test:ci
+```
+
+#### 5.2.2 Coverage Analysis
+
+```bash
+# Caret-specific coverage analysis
+node caret-scripts/caret-coverage-check.js
+
+# Detailed coverage report
+npm run coverage:report
+```
+
+### 5.1 Test Execution Commands
+
+#### 5.1.1 `npm run test:all` ⭐ **(Recommended) Integration Tests (Backend + Frontend)**
+
+- **Description**: The most stable and comprehensive full testing method. Runs all Vitest-based tests for both backend and frontend.
+- **Execution**: `npm run test:all`
+- **When to Use**:
+    - Run frequently during local development to verify code changes.
+    - Mandatory execution before Git commit and push to ensure all tests pass.
+- **Target State**: **Always All Tests Pass**. This is a core verification step in the CI/CD pipeline.
+- **Current Status**: All tests pass successfully.
+
+#### 5.1.2 `npm test` ⚠️ **(Caution) Full Tests (Unit + Integration)**
+
+- **Description**: The main test script in `package.json`, which can be configured to run additional unit/integration tests after `pretest` (potentially including `test:all`). (Currently behaves similarly to `test:all`, but had past ESM issues.)
+- **Execution**: `npm test`
+- **When to Use**: Can be used as the official test script for the project, but `npm run test:all` is currently more recommended for stability.
+- **Caution**: Due to past `@google/genai` ESM-related issues, it might fail, so `npm run test:all` is prioritized. Currently, all tests pass with `npm run test:all`.
+
+#### 5.1.3 Individual Test Execution
+
+```bash
+# Run unit tests
+npm run test:backend
+
+# Run with coverage
+npm run test:backend:coverage
+
+# Test a specific file
+npm run test:backend -- CaretProvider.test.ts
+
+# Run integration tests only
+npm run test:backend -- integration
+
+# Watch mode
+npm run test:backend:watch
+```
+
+## 6. Integration Test Implementation Changes (Updated 2025-01-21)
+
+### 6.1 New Integration Testing Approach
+
+#### 6.1.1 Background of Change
+
+Existing integration tests only worked in mocked environments, leading to a **failure to detect actual build errors**.
+Specifically, the following issues occurred:
+
+- **CommonJS vs. ES6 Module Compatibility Issues**: `grpc-client.js` was in CommonJS format, but ES6 imports were used in TypeScript.
+- **Mismatch between Build Success and Test Pass**: Situations where tests passed but the actual build failed.
+- **Insufficient Verification of Protocol Buffer Generated Files**: Lack of format verification for auto-generated files.
+
+#### 6.1.2 New Approach
+
+Changed to **actual command execution-based integration tests** to verify the following:
+
+1. **Actual Backend Compilation**: Verifies TypeScript compilation by running `npm run check-types`.
+2. **Actual Frontend Build**: Verifies Vite build by running `npm run build`.
+3. **File Format Verification**: Verifies the actual content of auto-generated files.
+4. **Feature-Specific Test Linking**: Verifies the execution of specific feature tests.
+
+#### 6.1.3 Implemented Verification Items
+
+```typescript
+// Actual implemented integration test items
+describe("Integration Tests", () => {
+	// 1. Backend TypeScript compilation verification
+	it("should compile backend successfully", async () => {
+		const { stdout, stderr } = await execAsync("npm run check-types")
+		expect(stderr).toBe("")
+		expect(stdout).toContain("tsc --noEmit")
+	}, 30000)
+
+	// 2. Frontend Vite build verification
+	it("should build webview-ui successfully", async () => {
+		const { stdout, stderr } = await execAsync("cd webview-ui && npm run build")
+		expect(stdout).toContain("vite")
+		expect(stdout).toContain("building for production")
+		expect(stderr).not.toContain("Build failed")
+	}, 60000)
+
+	// 3. Auto-generated file format verification
+	it("should have grpc-client files in ES6 module format", async () => {
+		const content = fs.readFileSync("webview-ui/src/services/grpc-client.js", "utf8")
+		expect(content).toContain("import {")
+		expect(content).toContain("export const")
+		expect(content).not.toContain("require(")
+	})
+
+	// 4. Specific feature test verification
+	it("should have consistent rule priority logic", async () => {
+		const { stdout } = await execAsync("npm run test:backend -- rule-priority")
+		expect(stdout).toContain("6 passed")
+	}, 30000)
+})
+```
+
+#### 6.1.4 Cross-Platform Considerations
+
+To resolve the issue of missing `head` command in Windows environments:
+
+- **Use File System API**: Directly use `fs.readFileSync()`.
+- **PowerShell Compatibility**: Use only commands executable in Windows PowerShell.
+- **Path Handling**: Use `path.join()` for cross-platform path handling.
+
+### 6.2 Integration Test Execution Method and Results
+
+#### 6.2.1 Individual Execution
+
+```bash
+# Run integration tests only
+npx vitest run caret-src/__tests__/integration.test.ts
+
+# Run a specific integration test
+npx vitest run caret-src/__tests__/integration.test.ts -t "should build webview-ui"
+```
+
+#### 6.2.2 Role and Results in Full Tests
+
+```bash
+# Integration tests are included when running full tests
+npm test
+# → pretest → compile → test:all
+# → Frontend: 80 tests passed ✅
+# → Backend: 30 tests passed (including 5 integration tests) ✅
+# → Total 110 tests all passed 🎉
+```
+
+#### 6.2.3 Utilization in CI/CD
+
+Since integration tests detect actual build issues early:
+
+- **Improved Build Pipeline Reliability**
+- **Verification of Actual Behavior Before Deployment**
+- **Consistency Check Between Developer Local Environment and CI Environment**
+
+## 7. Test Quality Standards
+
+### 7.1 Coverage Standards
+
+#### 7.1.1 Caret-specific Code
+
+- **Statement Coverage**: 100%
+- **Function Coverage**: 100%
+- **Branch Coverage**: 100%
+- **Line Coverage**: 100%
+
+#### 7.1.2 Cline Original Code
+
+- **Monitoring for Reference**: Maintain current status.
+- **Regression Testing**: Verify existing tests pass.
+
+### 7.2 Test Case Quality
+
+#### 7.2.1 Essential Test Cases
+
+- **Happy Path**: Basic feature operation.
+- **Boundary Value Tests**: Minimum/maximum values, empty values, etc.
+- **Exception Handling**: Error situation response.
+- **Edge Cases**: Special situations.
+- **Integration Scenarios**: Verification of actual build/deployment processes (newly added).
+
+#### 7.2.2 Test Code Quality
+
+- **Readability**: Clear test names and structure.
+- **Independence**: No dependencies between tests.
+- **Repeatability**: Guarantees identical results.
+- **Speed**: Fast execution time.
+
+## 7. CI/CD Integration
+
+### 7.1 GitHub Actions Setup
+
+```yaml
+# .github/workflows/test.yml
+name: Test Coverage
+
+on: [push, pull_request]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: "18"
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Run tests with coverage
+              run: npm run test:coverage
+
+            - name: Check Caret coverage
+              run: node caret-scripts/caret-coverage-check.js
+
+            - name: Upload coverage
+              uses: codecov/codecov-action@v3
+              with:
+                  file: ./coverage/lcov.info
+```
+
+### 7.2 Pre-commit Hook
+
+```bash
+# .husky/pre-commit
+#!/bin/sh
+npm run test:quick
+npm run lint
+```
+
+## 8. Best Practices
+
+### 8.1 Test Writing Best Practices
+
+#### 8.1.1 AAA Pattern
+
+```typescript
+describe("CaretLogger", () => {
+	it("should format log message correctly", () => {
+		// Arrange
+		const logger = new CaretLogger("test")
+		const message = "test message"
+
+		// Act
+		const result = logger.formatMessage("INFO", message)
+
+		// Assert
+		expect(result).toBe("[INFO][test] test message")
+	})
+})
+```
+
+#### 8.1.2 Clear Test Names
+
+```typescript
+// Good Example
+it("should return error when API key is missing", () => {})
+it("should render loading spinner while fetching data", () => {})
+
+// Bad Example
+it("should work", () => {})
+it("test API", () => {})
+```
+
+### 8.2 Mock Usage Guide
+
+#### 8.2.1 Mocking External Dependencies
+
+```typescript
+// Mocking API calls
+jest.mock("../api/client", () => ({
+	fetchData: jest.fn().mockResolvedValue({ data: "test" }),
+}))
+
+// Mocking VSCode API
+jest.mock("vscode", () => ({
+	window: {
+		showInformationMessage: jest.fn(),
+	},
+}))
+```
+
+#### 8.2.2 Time-Related Tests
+
+```typescript
+describe("timestamp functionality", () => {
+	beforeEach(() => {
+		jest.useFakeTimers()
+		jest.setSystemTime(new Date("2024-01-01"))
+	})
+
+	afterEach(() => {
+		jest.useRealTimers()
+	})
+
+	it("should generate correct timestamp", () => {
+		const timestamp = generateTimestamp()
+		expect(timestamp).toBe("2024-01-01T00:00:00.000Z")
+	})
+})
+```
+
+## 9. Troubleshooting
+
+### 9.1 Common Issues
+
+#### 9.1.1 VSCode API Test Errors
+
+```typescript
+// Solution: Appropriate mocking setup
+jest.mock("vscode", () => ({
+	// Mock only necessary APIs
+}))
+```
+
+#### 9.1.2 Asynchronous Test Errors
+
+```typescript
+// Solution: Use async/await
+it("should handle async operation", async () => {
+	const result = await asyncFunction()
+	expect(result).toBeDefined()
+})
+```
+
+### 9.2 Performance Optimization
+
+#### 9.2.1 Improving Test Speed
+
+- Remove unnecessary mocking.
+- Minimize test data.
+- Utilize parallel execution.
+
+#### 9.2.2 Optimizing Memory Usage
+
+- Cleanup after tests.
+- Be cautious when using large datasets.
+
+## 10. References
+
+### 10.1 Related Documents
+
+- [Test Code Writing Standards](./testing-guide.mdx)
+- [Documentation Guide](./documentation-guide.mdx)
+- [AI Work Methodology Guide](../guides/ai-work-method-guide.mdx)
+
+### 10.2 Tool Documentation
+
+- [Jest Official Documentation](https://jestjs.io/)
+- [Vitest Official Documentation](https://vitest.dev/)
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+
+---
+
+**Last Updated**: January 21, 2025 - Integration test implementation changes and Vitest unification completed
+**Authored by**: Alpha (AI Assistant)
+**Reviewed by**: Luke (Developer)

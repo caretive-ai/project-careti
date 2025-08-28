@@ -38,6 +38,7 @@ https://github.com/KumarVariable/vscode-extension-sidebar-html/blob/master/src/c
 */
 
 export class Controller {
+	public static instance: Controller | undefined
 	readonly id: string
 	private disposables: vscode.Disposable[] = []
 	task?: Task
@@ -52,6 +53,7 @@ export class Controller {
 		id: string,
 	) {
 		this.id = id
+		Controller.instance = this
 
 		HostProvider.get().logToChannel("ClineProvider instantiated")
 		this.accountService = ClineAccountService.getInstance()
@@ -582,6 +584,7 @@ export class Controller {
 		const preferredLanguage = this.cacheService.getGlobalStateKey("preferredLanguage")
 		const openaiReasoningEffort = this.cacheService.getGlobalStateKey("openaiReasoningEffort")
 		const mode = this.cacheService.getGlobalStateKey("mode")
+		const modeSystem = this.cacheService.getGlobalStateKey("modeSystem") // CARET MODIFICATION: Get modeSystem from cache
 		const strictPlanModeEnabled = this.cacheService.getGlobalStateKey("strictPlanModeEnabled")
 		const userInfo = this.cacheService.getGlobalStateKey("userInfo")
 		const mcpMarketplaceEnabled = this.cacheService.getGlobalStateKey("mcpMarketplaceEnabled")
@@ -601,6 +604,7 @@ export class Controller {
 		const mcpResponsesCollapsed = this.cacheService.getGlobalStateKey("mcpResponsesCollapsed")
 		const terminalOutputLineLimit = this.cacheService.getGlobalStateKey("terminalOutputLineLimit")
 		const localClineRulesToggles = this.cacheService.getWorkspaceStateKey("localClineRulesToggles")
+		const localCaretRulesToggles = this.cacheService.getWorkspaceStateKey("localCaretRulesToggles") // CARET MODIFICATION: Add .caretrules state
 		const localWindsurfRulesToggles = this.cacheService.getWorkspaceStateKey("localWindsurfRulesToggles")
 		const localCursorRulesToggles = this.cacheService.getWorkspaceStateKey("localCursorRulesToggles")
 		const workflowToggles = this.cacheService.getWorkspaceStateKey("workflowToggles")
@@ -639,6 +643,7 @@ export class Controller {
 			preferredLanguage,
 			openaiReasoningEffort,
 			mode,
+			modeSystem: modeSystem as "caret" | "cline" | undefined, // CARET MODIFICATION: Add modeSystem to ExtensionState
 			strictPlanModeEnabled,
 			userInfo,
 			mcpMarketplaceEnabled,
@@ -649,6 +654,7 @@ export class Controller {
 			distinctId,
 			globalClineRulesToggles: globalClineRulesToggles || {},
 			localClineRulesToggles: localClineRulesToggles || {},
+			localCaretRulesToggles: localCaretRulesToggles || {}, // CARET MODIFICATION: Add .caretrules state
 			localWindsurfRulesToggles: localWindsurfRulesToggles || {},
 			localCursorRulesToggles: localCursorRulesToggles || {},
 			localWorkflowToggles: workflowToggles || {},

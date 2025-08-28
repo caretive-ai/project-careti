@@ -1,0 +1,80 @@
+{
+	"greeting": "こんにちは！AI開発パートナー、^Caretです。",
+	"catchPhrase": "AIを単純なコード生成器を超えて、プロジェクトの文脈を理解し、一緒に問題を解決する真の開発パートナーにしましょう！",
+	"bannerAlt": "Caret メイン画像",
+
+	"geminiOffer": {
+		"header": "✨ Google Gemini 開始特別オファー！",
+		"body": "強力なGoogle Geminiモデルで、AIコーディングの世界を体験してください！GCPに新規登録し、Gemini APIキーを発行された方には、<strong>3ヶ月間利用可能な$300の無料クレジット</strong>が提供されます。この特別な機会をお見逃しなく！（詳細：<vscode-link href=\"https://blog.naver.com/fstory97/223887376667\">こちら</vscode-link>）"
+	},
+
+	"coreFeatures": {
+		"header": "共に成長するAIコーディングエージェントCaretと「バイブコーディング」を始めましょう。",
+		"description": "多言語サポート、開発者主導のAIオーケストレーション、ワークフローのカスタマイズ、透明なAI制御、そして強力なローカルLLM連携。単純な対話を超えて、Caretは AIと一緒に体系的にドキュメントを作成し、その記録に基づいて一緒に成長する「バイブコーディング」開発文化を提案します。"
+	},
+
+	"modelFlexibility": {
+		"header": "モデル選択は自由に、可能性は無限に",
+		"body": "Caretは特定のベンダーに依存しません。<strong>Ollamaなどを通じて自分だけのローカルsLLMを簡単に接続</strong>したり、Anthropic Claude、OpenAIなど既に使用中の様々な外部APIキーも活用できます。あなたのプロジェクトとスタイルに合った最適なAIを選択してください。"
+	},
+
+	"caretAccount": {
+		"header": "もうすぐお会いします！Caret統合サブスクリプションサービス（月額）",
+		"body": "複雑なAPIキー設定はもう終わり！間もなく登場するCaret統合アカウント（月額）をご利用いただければ、Google Geminiを含む厳選された高性能AIエージェントをすぐにお使いいただけます。最新ニュースを最初に受け取ってください！"
+	},
+
+	"educationOffer": {
+		"header": "✨ 今すぐ始めよう！無料「バイブコーディング」教育＆Google Gemini $300クレジットのコツ！",
+		"body": "Caretと一緒に本格的な「バイブコーディング」を学び、AIブロガーエージェント開発の全プロセスを体験できる<strong>オープンソース教育プログラム</strong>に参加してみませんか！このプログラムは無料で提供され、AI開発の実質的な第一歩を踏み出すために必要な温かなガイダンスと豊富な実習環境を提供します。また、Google Gemini APIを初めて使用される方のために<strong>3か月間使用可能な$300のGCPクレジット活用のコツ</strong>もご案内いたします。コスト負担なしでAI開発の楽しさを体験してください！（教育プログラムおよびGeminiクレジット活用のコツ <VSCodeLink href=\"{{educationLink}}\">詳細を見る</VSCodeLink>）"
+	},
+
+	"getStarted": {
+		"header": "",
+		"body": "",
+		"button": "始める",
+		"preferredLanguage": "AI応答言語",
+		"uiLanguage": "インターフェース言語"
+	},
+
+	"community": {
+		"header": "Caretコミュニティに参加",
+		"body": "Caretを使用している他の開発者と繋がりましょう！<a href=\"https://github.com/aicoding-caret/caret\" target=\"_blank\">GitHubリポジトリ</a>を訪問して、貢献、問題報告、またはコミュニティから学びましょう。",
+		"button": "Caretアカウント通知を受け取る"
+	},
+
+	"footer": {
+		"links": {
+			"caretGithub": "Caret GitHub",
+			"basedOnCline": "Clineベース",
+			"caretService": "Caretサービス",
+			"caretiveInc": "Caretive Inc",
+			"about": "会社紹介",
+			"terms": "利用規約",
+			"privacy": "個人情報保護方針",
+			"youthProtection": "青少年保護方針",
+			"support": "カスタマーサポート"
+		},
+		"company": {
+			"name": "Caretive INC",
+			"businessNumber": "事業者登録番号：459-81-03703",
+			"address": "京畿道華城市東潭循環大路823、4階409-681号（霊泉洞、エイプレックスシティ）"
+		},
+		"copyright": {
+			"text": "© 2025 Caretive INC. All rights reserved.",
+			"builtWith": "Built with ❤️ by Caret Team",
+			"version": "Caret v1.0.0"
+		}
+	},
+
+	"apiSetup": {
+		"backButton": "← 戻る",
+		"title": "🔧 API設定",
+		"description": "CaretをするためにAI APIを設定してください。",
+		"instructions": "Caretを購読するか、OpenAI、Anthropic、または他のAIサービスのAPIキーを設定するか、ローカルLLMを設定してください。",
+		"saveButton": "保存して開始",
+		"help": {
+			"title": "ヘルプが必要ですか？",
+			"button": "ドキュメントを見る"
+		}
+	}
+}

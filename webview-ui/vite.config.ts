@@ -92,6 +92,10 @@ export default defineConfig({
 			"@context": resolve(__dirname, "./src/context"),
 			"@shared": resolve(__dirname, "../src/shared"),
 			"@utils": resolve(__dirname, "./src/utils"),
+			"@caret-src": resolve(__dirname, "../caret-src"),
+			"@caret-shared": resolve(__dirname, "..", "caret-src", "shared"),
+			// CARET MODIFICATION: Alias for root-level generated proto files, as per testing guide findings.
+			"@generated": resolve(__dirname, "../src/generated"),
 		},
 	},
 })

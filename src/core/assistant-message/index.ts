@@ -21,6 +21,7 @@ export const toolUseNames = [
 	"access_mcp_resource",
 	"ask_followup_question",
 	"plan_mode_respond",
+	"chatbot_mode_respond", // CARET MODIFICATION: Add chatbot mode response tool
 	"load_mcp_documentation",
 	"attempt_completion",
 	"new_task",

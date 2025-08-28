@@ -1,0 +1,308 @@
+{
+	"button": {
+		"freeStart": "免费开始",
+		"useOwnKey": "使用您自己的API密钥",
+		"letsGo": "开始吧！",
+		"save": "保存",
+		"cancel": "取消",
+		"setupApiOrLocal": "设置我的API密钥或本地LLM",
+		"notifyCaretAccount": "通知我Caret订阅服务",
+		"saveAndStart": "保存并开始"
+	},
+	"error": {
+		"generic": "发生了错误。"
+	},
+	"imageAlt": {
+		"caretBanner": "Caret标志横幅"
+	},
+	"title": {
+		"apiKeySettings": "API密钥设置"
+	},
+	"text": {
+		"finalThoughts": "与{{appName}}一起开始您精彩的开发之旅！"
+	},
+	"link": {
+		"learnMoreCaretGit": "在Caret GitHub上了解更多"
+	},
+	"rules": {
+		"tab": {
+			"rules": "规则",
+			"workflows": "工作流"
+		},
+		"section": {
+			"personaManagement": "角色管理",
+			"globalRules": "全局规则",
+			"workspaceRules": "工作空间规则",
+			"globalWorkflows": "全局工作流",
+			"localWorkflows": "本地工作流"
+		},
+		"subTitle": {
+			"caretRules": "Caret规则 (.caretrules)",
+			"CaretRules": "Caret规则 (.Caretrules)",
+			"cursorRules": "Cursor规则 (.cursorrules)",
+			"windsurfRules": "Windsurf规则 (.windsurfrules)"
+		},
+		"button": {
+			"selectPersonaTemplate": "选择模板角色",
+			"changePersonaTemplate": "更改角色模板"
+		},
+		"description": {
+			"personaManagement": "选择符合您编码风格和偏好的AI角色。",
+			"rulesDescription": "规则允许您为Caret提供系统级指导。将其视为为您的项目或全局的每次对话持续包含上下文和偏好的方法。",
+			"workflowsDescription": "工作流允许您定义一系列步骤，让Caret执行部署服务或提交PR等重复性任务。要运行工作流，请在聊天中输入 /工作流名称。"
+		},
+		"action": {
+			"newRuleFile": "新建规则文件..."
+		},
+		"title": "Caret规则和工作流管理",
+		"toggleError": "规则切换错误"
+	},
+	"mode": {
+		"chatbot": {
+			"label": "💬 聊天机器人",
+			"title": "聊天机器人模式",
+			"description": "专家咨询和分析模式"
+		},
+		"agent": {
+			"label": "🤖 智能体",
+			"title": "智能体模式",
+			"description": "协作开发和实现模式"
+		},
+		"plan": {
+			"label": "📋 Plan",
+			"title": "计划模式",
+			"description": "策略制定和设计模式"
+		},
+		"act": {
+			"label": "⚡ Act",
+			"title": "执行模式",
+			"description": "实施和执行模式"
+		},
+		"tooltip": {
+			"chatbot": "在聊天机器人模式下，Caret提供专家咨询和分析",
+			"agent": "在智能体模式下，Caret协作实现解决方案",
+			"plan": "在计划模式下制定策略和计划",
+			"act": "在执行模式下执行和实施计划",
+			"toggle": "切换：{{metaKey}}+Shift+A"
+		}
+	},
+	"settings": {
+		"uiLanguage": {
+			"label": "UI语言",
+			"description": "Caret用户界面元素（菜单、按钮、消息等）使用的语言。"
+		},
+		"preferredLanguage": {
+			"label": "AI回应语言",
+			"description": "Caret用于对话的语言。"
+		},
+		"modeSystem": {
+			"label": "模式设置",
+			"description": "设置Caret模式后，您可以使用Caret的Plan/Act模式。",
+			"options": {
+				"caret": "Caret",
+				"Caret": "Caret",
+				"cline": "Cline"
+			}
+		},
+		"separateModels": {
+			"label": "为聊天机器人和智能体模式使用不同的模型",
+			"description": "在聊天机器人和智能体模式之间切换时，每种模式使用的API和模型设置将被保持。例如，在专家咨询（聊天机器人）中使用强大的推理模型，在协作开发（智能体）中使用成本效益高的编码模型时非常有用。"
+		}
+	},
+	"account": {
+		"signUpWithCaret": "登录并注册",
+		"viewBillingUsage": "查看账单和使用情况",
+		"dashboard": "仪表板",
+		"addCredits": "添加积分",
+		"currentBalance": "当前余额",
+		"logOut": "注销",
+		"loading": "加载中...",
+		"signUpDescription": "创建账户以访问最新模型、查看使用情况和积分的账单仪表板，以及更多即将推出的功能。",
+		"termsOfService": "服务条款",
+		"privacyPolicy": "隐私政策",
+		"byContining": "继续使用即表示您同意：",
+		"subscription": "订阅计划",
+		"subscriptionFree": "免费",
+		"subscriptionBasic": "基础",
+		"payAsYouGo": "按量付费",
+		"payAsYouGoDescription": "* 订阅使用量耗尽后将额外收费。"
+	},
+	"common": {
+		"and": "和"
+	},
+	"chat": {
+		"caretHasQuestion": "Caret有问题",
+		"typeMessage": "输入消息...",
+		"typeTaskHere": "在这里输入您的任务...",
+		"cancel": "取消",
+		"apiRequestCancelled": "API请求已取消",
+		"apiStreamingFailed": "API流传输失败",
+		"apiRequest": "API请求",
+		"apiRequestFailed": "API请求失败",
+		"apiRequestPending": "API请求中...",
+		"caretWantsToCreateNewFile": "Caret想要创建新文件：",
+		"placeholderHint": "输入@添加上下文，输入/添加斜杠命令和工作流，按住Shift拖拽添加文件/图片",
+		"caretIsUsingBrowser": "Caret正在使用浏览器：",
+		"caretWantsToUseBrowser": "Caret想要使用浏览器："
+	},
+	"modelInfo": {
+		"supportsImages": "支持图片",
+		"doesNotSupportImages": "不支持图片",
+		"supportsBrowserUse": "支持浏览器使用",
+		"doesNotSupportBrowserUse": "不支持浏览器使用",
+		"supportsPromptCaching": "支持提示词缓存",
+		"doesNotSupportPromptCaching": "不支持提示词缓存",
+		"maxOutput": "最大输出",
+		"inputPrice": "输入价格",
+		"outputPrice": "输出价格",
+		"outputPriceStandard": "输出价格 (标准)",
+		"outputPriceThinkingBudget": "输出价格 (思考预算 > 0)",
+		"basedOnInputTokens": "(基于输入令牌)",
+		"cacheWritesPrice": "缓存写入价格",
+		"cacheReadsPrice": "缓存读取价格",
+		"freeRequestsPerMinute": "* 每分钟免费请求上限为 {{count}} 次。之后，费用取决于提示大小。",
+		"forMoreInfo": "了解更多信息，请参阅定价详情。"
+	},
+	"caretProvider": {
+		"futureSupport": "未来支持",
+		"futureProviders": "ChatGPT 和 Claude 将在未来支持",
+		"modelLabel": "模型",
+		"geminiProModel": "Gemini 2.5 Pro",
+		"geminiFlashModel": "Gemini 2.5 Flash",
+		"bestLabel": "最佳",
+		"valueLabel": "性价比",
+		"geminiProDescription": "针对复杂任务和高级推理优化的高端性能模型",
+		"geminiFlashDescription": "适用于一般任务的快速高效模型，具有出色的性价比",
+		"tagBest": "最佳",
+		"tagCostEffective": "性价比"
+	},
+	"apiOptions": {
+		"apiProvider": "API提供商",
+		"selectModel": "选择模型...",
+		"selectRegion": "选择地区...",
+		"enterApiKey": "输入API密钥...",
+		"loading": "加载中...",
+		"caretComplexPrompts": "Caret使用复杂的提示词，在Claude模型上效果最佳。性能较低的模型可能无法按预期工作。",
+		"note": "注意：",
+		"model": "模型",
+		"custom": "自定义",
+		"modelId": "模型ID",
+		"enterModelId": "输入自定义模型ID...",
+		"baseInferenceModel": "基础推理模型",
+		"askSageApiKey": "AskSage API密钥",
+		"askSageApiUrl": "AskSage API URL",
+		"enterAskSageUrl": "输入AskSage API URL...",
+		"anthropicApiKey": "Anthropic API密钥",
+		"anthropicBaseUrl": "Anthropic基础URL",
+		"anthropicBaseUrlPlaceholder": "默认：https://api.anthropic.com",
+		"openAiApiKey": "OpenAI API密钥",
+		"deepSeekApiKey": "DeepSeek API密钥",
+		"alibabaApiLine": "阿里巴巴API线路",
+		"chinaApi": "中国API",
+		"internationalApi": "国际API",
+		"qwenApiKey": "通义千问API密钥",
+		"doubaoApiKey": "豆包API密钥",
+		"mistralApiKey": "Mistral API密钥",
+		"openRouterApiKey": "OpenRouter API密钥",
+		"openRouterRecommended": "推荐使用OpenRouter，具有高速率限制和多种模型。",
+		"awsCredentials": "AWS凭证",
+		"awsProfile": "AWS配置文件",
+		"awsProfileName": "AWS配置文件名",
+		"awsProfilePlaceholder": "输入配置文件名（空则使用默认）",
+		"awsAccessKey": "AWS访问密钥",
+		"awsSecretKey": "AWS密钥",
+		"awsSessionToken": "AWS会话令牌",
+		"awsRegion": "AWS地区",
+		"gcpProjectId": "Google Cloud项目ID",
+		"gcpRegion": "Google Cloud地区",
+		"languageModel": "语言模型",
+		"apiKey": "API密钥",
+		"fireworksApiKey": "Fireworks API密钥",
+		"maxCompletionTokens": "最大完成令牌",
+		"maxContextTokens": "最大上下文令牌",
+		"enterSecretKey": "输入密钥...",
+		"enterAccessKey": "输入访问密钥...",
+		"enterSessionToken": "输入会话令牌...",
+		"enterVpcEndpoint": "输入VPC端点URL（可选）",
+		"enterCustomModelId": "输入自定义模型ID...",
+		"enterProjectId": "输入项目ID...",
+		"useCustomBaseUrl": "使用自定义基础URL",
+		"defaultAnthropicUrl": "默认：https://api.anthropic.com",
+		"thisKeyStoredLocally": "此密钥本地存储，仅用于从此扩展程序发出API请求。",
+		"getApiKeySignUp": "您可以在此注册获取API密钥。",
+		"getAnthropicApiKey": "您可以在此注册获取Anthropic API密钥。",
+		"getOpenAiApiKey": "您可以在此注册获取OpenAI API密钥。",
+		"getGeminiApiKey": "您可以在此注册获取Gemini API密钥。",
+		"comingSoon": "即将推出",
+		"providerComingSoon": "{{provider}}支持将在未来更新中添加。",
+		"geminiApiKey": "Gemini API密钥",
+		"geminiModelStrong": "Gemini 2.5 Pro Preview 06-05 (强大)",
+		"geminiModelCostEffective": "Gemini 2.5 Flash Preview 05-20 (性价比)",
+		"reasoningEnabled": "默认启用推理功能"
+	},
+	"welcome": {
+		"whatCanIDo": "我能为您做什么？",
+		"recentTasks": "最近任务",
+		"noRecentTasks": "没有最近任务",
+		"viewAllHistory": "查看所有历史"
+	},
+	"telemetry": {
+		"helpImprove": "帮助改进Caret",
+		"experimentalFeatures": "（并访问实验性功能）",
+		"description": "Caret收集匿名错误和使用数据以帮助我们修复错误并改进扩展。不会发送任何代码、提示或个人信息。",
+		"settingsLink": "您可以在设置中关闭此功能。",
+		"closeBannerAria": "关闭横幅并启用遥测"
+	},
+	"history": {
+		"title": "历史",
+		"deleteAllHistory": "删除所有历史",
+		"fuzzySearchPlaceholder": "模糊搜索历史...",
+		"sortNewest": "最新",
+		"sortOldest": "最旧",
+		"sortMostExpensive": "最昂贵",
+		"sortMostTokens": "最多令牌",
+		"sortMostRelevant": "最相关",
+		"filterWorkspace": "工作区",
+		"filterFavorites": "收藏夹",
+		"selectAll": "全选",
+		"selectNone": "取消选择"
+	},
+	"mcp": {
+		"title": "MCP服务器",
+		"marketplace": "市场",
+		"remoteServers": "远程服务器",
+		"installed": "已安装",
+		"noServersInstalled": "未安装MCP服务器",
+		"configureServers": "配置MCP服务器",
+		"noMatchingServers": "未找到匹配的MCP服务器",
+		"noServersFound": "市场中未找到MCP服务器",
+		"description": "模型上下文协议使您能够与本地运行的MCP服务器通信，提供额外的工具和资源来扩展Cline的功能。",
+		"autoApprove": "自动批准",
+		"autoApproveAllTools": "自动批准所有工具"
+	},
+	"autoApprove": {
+		"addQuickAccess": "添加到快速访问菜单",
+		"removeQuickAccess": "从快速访问菜单中移除"
+	},
+	"settings": {
+		"label": "常规设置"
+	},
+	"features": {
+		"label": "功能"
+	},
+	"browser": {
+		"label": "浏览器"
+	},
+	"terminal": {
+		"label": "终端"
+	},
+	"debug": {
+		"label": "调试"
+	},
+	"about": {
+		"title": "关于"
+	},
+	"apiOptions": {
+		"apiProvider": "API配置"
+	}
+}

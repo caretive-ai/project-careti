@@ -56,6 +56,13 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 	// Apply button configuration with a single batched update
 	useEffect(() => {
 		const buttonConfig = getButtonConfig(lastMessage, mode)
+		console.log("[ActionButtons] Button config:", {
+			messageType: lastMessage?.type,
+			ask: lastMessage?.ask,
+			mode,
+			sendingDisabled: buttonConfig.sendingDisabled,
+			enableButtons: buttonConfig.enableButtons,
+		})
 		setEnableButtons(buttonConfig.enableButtons)
 		setSendingDisabled(buttonConfig.sendingDisabled)
 		setPrimaryButtonText(buttonConfig.primaryText)

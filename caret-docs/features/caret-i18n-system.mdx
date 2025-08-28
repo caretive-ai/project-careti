@@ -1,0 +1,601 @@
+# Caret i18n(다국어) 시스템
+
+**문서 유형**: 기술 구현 명세서  
+**작성일**: 2025-01-23  
+**최종 업데이트**: 2025-01-23  
+**구현 상태**: 📋 **설계 완료** (구현 예정)
+
+---
+
+## 🌍 **개요**
+
+Caret의 i18n(국제화) 시스템은 **4개 언어**(한국어, 영어, 일본어, 중국어)를 지원하며, **동적 브랜드명 변경** 및 **하이브리드 래핑 전략**을 통해 Cline 원본 코드 수정을 최소화하면서 전체 UI의 다국어화를 달성합니다.
+
+### **핵심 차별화 요소**
+
+1. **🔄 Self-Reference i18n 키**: `{{brand.appName}}` 템플릿으로 Caret ↔ CodeCenter 동적 변경
+2. **🎯 하이브리드 래핑**: Cline 원본 컴포넌트를 래퍼로 감싸 i18n 적용
+3. **🚀 성능 최적화**: 언어별 lazy loading과 캐싱 시스템
+4. **🛡️ 완벽한 fallback**: 번역 누락 시 영어 → 한국어 → 키 이름 순서로 fallback
+
+---
+
+## 🏗️ **아키텍처 설계**
+
+### **파일 구조**
+
+```
+webview-ui/src/caret/
+├── utils/
+│   ├── i18n.ts                    # 핵심 i18n 엔진
+│   └── __tests__/
+│       └── i18n.test.ts          # i18n 시스템 테스트
+├── locale/
+│   ├── ko/                       # 한국어 번역
+│   │   ├── common.json
+│   │   ├── welcome.json
+│   │   ├── settings.json
+│   │   ├── persona.json
+│   │   ├── models.json
+│   │   ├── announcement.json
+│   │   └── validate-api-conf.json
+│   ├── en/                       # 영어 번역 (기본)
+│   ├── ja/                       # 일본어 번역
+│   └── zh/                       # 중국어 번역
+├── hooks/
+│   ├── useCaretI18n.ts          # i18n React Hook
+│   └── useCurrentLanguage.ts    # 현재 언어 상태 관리
+├── context/
+│   └── CaretI18nContext.tsx     # 전역 i18n Context
+└── components/
+    └── wrappers/                # i18n 래퍼 컴포넌트들
+        ├── CaretWelcomeViewWrapper.tsx
+        ├── CaretSettingsViewWrapper.tsx
+        └── CaretChatTextAreaWrapper.tsx
+```
+
+---
+
+## 🚀 **핵심 기능**
+
+### **1. Self-Reference 템플릿 시스템**
+
+동적 브랜드명 변경을 위한 혁신적인 템플릿 엔진:
+
+```json
+// common.json
+{
+  "brand": {
+    "appName": "Caret",
+    "appNameUpper": "CARET",
+    "appNameLower": "caret",
+    "appNameKorean": "캐럿"
+  },
+  "welcome": {
+    "title": "Welcome to {{brand.appName}}! 🎉",
+    "description": "{{brand.appName}} is your AI-powered coding assistant"
+  }
+}
+
+// ko/common.json (한글 조사 지원)
+{
+  "brand": {
+    "appName": "캐럿",
+    "appNameUpper": "캐럿",
+    "appNameLower": "캐럿"
+  },
+  "welcome": {
+    "title": "{{brand.appName|을}} 사용해보세요! 🎉",
+    "description": "{{brand.appName|은}} 당신의 AI 코딩 어시스턴트입니다",
+    "startWith": "{{brand.appName|로}} 개발을 시작하세요"
+  }
+}
+```
+
+**한글 조사 처리 템플릿 엔진**:
+
+```typescript
+// 한글 조사 규칙 매핑
+const koreanJosaRules = {
+	을: (word: string) => (hasLastConsonant(word) ? "을" : "를"),
+	은: (word: string) => (hasLastConsonant(word) ? "은" : "는"),
+	이: (word: string) => (hasLastConsonant(word) ? "이" : "가"),
+	로: (word: string) => (hasLastConsonant(word) ? "으로" : "로"),
+	와: (word: string) => (hasLastConsonant(word) ? "과" : "와"),
+}
+
+const replaceTemplateVariables = (text: string, translations: any, language: string): string => {
+	return text.replace(/\{\{([^}]+)\}\}/g, (match, expression) => {
+		// 한글 조사 처리 (예: brand.appName|을)
+		if (language === "ko" && expression.includes("|")) {
+			const [keyPath, josa] = expression.split("|")
+			const value = getNestedValue(translations, keyPath)
+			if (value && koreanJosaRules[josa]) {
+				return value + koreanJosaRules[josa](value)
+			}
+		}
+
+		// 기본 브랜드 처리
+		if (expression.startsWith("brand.")) {
+			const brandKey = expression.substring(6)
+			return translations.brand?.[brandKey] || match
+		}
+
+		return match
+	})
+}
+
+// 결과 예시:
+// "캐럿을 사용해보세요! 🎉" (캐럿 + 을)
+// "코드센터를 사용해보세요! 🎉" (코드센터 + 를)
+```
+
+**받침 검사 헬퍼 함수**:
+
+```typescript
+const hasLastConsonant = (word: string): boolean => {
+	if (!word || word.length === 0) return false
+
+	const lastChar = word[word.length - 1]
+	const lastCharCode = lastChar.charCodeAt(0)
+
+	// 한글 유니코드 범위 확인 (가-힣: 44032-55203)
+	if (lastCharCode >= 44032 && lastCharCode <= 55203) {
+		// 종성 확인: (유니코드 - 44032) % 28
+		return (lastCharCode - 44032) % 28 !== 0
+	}
+
+	// 영어/숫자인 경우 발음에 따른 처리
+	const consonantEnding = /[bcdfgjklmnpqrstvwxz]$/i.test(lastChar)
+	return consonantEnding
+}
+```
+
+### **2. 하이브리드 래핑 전략**
+
+Cline 원본 코드를 수정하지 않고 i18n 적용:
+
+```typescript
+// 기존 Cline 컴포넌트 (수정 안함)
+const WelcomeView: React.FC = () => {
+  return <h1>Welcome to Cline!</h1>
+}
+
+// Caret i18n 래퍼 (새로 생성)
+const CaretWelcomeViewWrapper: React.FC = () => {
+  const { t } = useCaretI18n()
+
+  return <h1>{t("welcome.title", "welcome")}</h1>
+}
+
+// App.tsx에서 조건부 사용
+const AppContent = () => {
+  const { modeSystem } = useExtensionState()
+
+  return modeSystem === 'caret'
+    ? <CaretWelcomeViewWrapper />
+    : <WelcomeView />
+}
+```
+
+### **3. 완벽한 Fallback 시스템**
+
+```typescript
+export const t = (key: string, namespace: string = "common"): string => {
+	const currentLang = getCurrentLanguage()
+
+	// 1차: 현재 언어에서 찾기
+	let value = getNestedValue(translations[currentLang]?.[namespace], key)
+	if (value) return replaceTemplateVariables(value, translations[currentLang])
+
+	// 2차: 영어에서 찾기
+	value = getNestedValue(translations.en[namespace], key)
+	if (value) return replaceTemplateVariables(value, translations.en)
+
+	// 3차: 한국어에서 찾기
+	value = getNestedValue(translations.ko[namespace], key)
+	if (value) return replaceTemplateVariables(value, translations.ko)
+
+	// 최후: 키 이름 그대로 반환
+	return key
+}
+```
+
+---
+
+## 🌐 **지원 언어 및 네임스페이스**
+
+### **지원 언어**
+
+- **ko**: 한국어 (기본 개발 언어)
+- **en**: 영어 (국제 표준)
+- **ja**: 일본어 (동아시아 시장)
+- **zh**: 중국어 (중화권 시장)
+
+### **네임스페이스 구조**
+
+| 네임스페이스          | 용도            | 예시 키                                        |
+| --------------------- | --------------- | ---------------------------------------------- |
+| **common**            | 공통 UI 요소    | `button.save`, `error.generic`                 |
+| **welcome**           | 환영 화면       | `title`, `subtitle`, `getStarted`              |
+| **settings**          | 설정 화면       | `uiLanguage.label`, `modeSystem.options.caret` |
+| **persona**           | 페르소나 시스템 | `selectTemplate`, `management.title`           |
+| **models**            | AI 모델 관련    | `provider.anthropic`, `gemini.description`     |
+| **announcement**      | 공지사항        | `update.newFeature`, `maintenance.notice`      |
+| **validate-api-conf** | API 설정 검증   | `invalidKey`, `connectionTest.success`         |
+
+---
+
+## ⚡ **성능 최적화**
+
+### **1. 언어별 Lazy Loading**
+
+```typescript
+const loadLanguagePack = async (lang: SupportedLanguage) => {
+	const translations = await import(`../locale/${lang}/index.ts`)
+	return translations.default
+}
+
+// 사용자가 언어 변경 시에만 해당 언어팩 로딩
+const changeLanguage = async (newLang: SupportedLanguage) => {
+	if (!loadedLanguages.has(newLang)) {
+		const langPack = await loadLanguagePack(newLang)
+		translations[newLang] = langPack
+		loadedLanguages.add(newLang)
+	}
+	setCurrentLanguage(newLang)
+}
+```
+
+### **2. 메모이제이션 및 캐싱**
+
+```typescript
+const translationCache = new Map<string, string>()
+
+export const t = useMemo(() => {
+	return (key: string, namespace: string = "common"): string => {
+		const cacheKey = `${getCurrentLanguage()}_${namespace}_${key}`
+
+		if (translationCache.has(cacheKey)) {
+			return translationCache.get(cacheKey)!
+		}
+
+		const result = performTranslation(key, namespace)
+		translationCache.set(cacheKey, result)
+		return result
+	}
+}, [getCurrentLanguage()])
+```
+
+### **3. 번들 크기 최적화**
+
+```typescript
+// 초기 로딩: 영어만 로드 (기본)
+const initialTranslations = {
+	en: require("../locale/en/index.json"),
+}
+
+// 런타임: 필요한 언어만 동적 로드
+const loadLanguageOnDemand = (lang: SupportedLanguage) => {
+	return import(/* webpackChunkName: "locale-[request]" */ `../locale/${lang}/index.json`)
+}
+```
+
+---
+
+## 🎨 **UI 언어 설정**
+
+### **설정 UI 통합**
+
+```typescript
+const CaretUILanguageSetting: React.FC = () => {
+  const { t, currentLanguage, changeLanguage } = useCaretI18n()
+
+  return (
+    <div className="language-setting">
+      <label>{t("settings.uiLanguage.label")}</label>
+      <select
+        value={currentLanguage}
+        onChange={(e) => changeLanguage(e.target.value as SupportedLanguage)}
+      >
+        <option value="ko">{t("settings.uiLanguage.option.ko")}</option>
+        <option value="en">{t("settings.uiLanguage.option.en")}</option>
+        <option value="ja">{t("settings.uiLanguage.option.ja")}</option>
+        <option value="zh">{t("settings.uiLanguage.option.zh")}</option>
+      </select>
+    </div>
+  )
+}
+```
+
+### **실시간 언어 변경**
+
+```typescript
+const useCaretI18n = () => {
+	const [currentLanguage, setCurrentLanguage] = useState<SupportedLanguage>("en")
+
+	const changeLanguage = useCallback(async (newLang: SupportedLanguage) => {
+		// 1. 언어팩 로딩
+		await ensureLanguageLoaded(newLang)
+
+		// 2. 전역 상태 업데이트
+		setGlobalUILanguage(newLang)
+		setCurrentLanguage(newLang)
+
+		// 3. 사용자 설정 저장
+		await saveUserLanguagePreference(newLang)
+
+		// 4. UI 즉시 반영 (리렌더링 트리거)
+		forceUpdate()
+	}, [])
+
+	return { t, currentLanguage, changeLanguage }
+}
+```
+
+---
+
+## 🔧 **개발자 API**
+
+### **핵심 Hook: `useCaretI18n`**
+
+```typescript
+const { t, currentLanguage, changeLanguage } = useCaretI18n()
+
+// 기본 번역
+const title = t("welcome.title", "welcome")
+
+// 변수가 포함된 번역
+const greeting = t("welcome.greeting", "welcome", {
+	userName: "Luke",
+	appName: "Caret",
+})
+
+// 특정 언어로 번역
+const koreanTitle = t("welcome.title", "welcome", "ko")
+```
+
+### **유틸리티 함수들**
+
+```typescript
+// 현재 언어 확인
+const currentLang = getCurrentLanguage()
+
+// 특정 언어 번역 가져오기
+const japaneseWelcome = tWithLang("welcome.title", "ja", "welcome")
+
+// 링크 가져오기 (언어별 URL)
+const educationLink = getLink("EDUCATION_PROGRAM")
+
+// 전역 링크 가져오기
+const githubLink = getGlobalLink("CARET_GITHUB")
+
+// 언어 변경
+await setGlobalUILanguage("ko")
+```
+
+---
+
+## 🧪 **테스팅 전략**
+
+### **단위 테스트**
+
+```typescript
+describe("Caret i18n System", () => {
+	test("브랜드명 동적 변경", () => {
+		const result = t("welcome.title", "welcome")
+		expect(result).toBe("Welcome to Caret! 🎉")
+
+		// 브랜드 변경 후
+		updateBrandName("CodeCenter")
+		const updatedResult = t("welcome.title", "welcome")
+		expect(updatedResult).toBe("Welcome to CodeCenter! 🎉")
+	})
+
+	test("한글 조사 동적 변경", () => {
+		setGlobalUILanguage("ko")
+
+		// 캐럿 + 을 (받침 있음)
+		updateBrandName("캐럿")
+		expect(t("welcome.title", "welcome")).toBe("캐럿을 사용해보세요! 🎉")
+
+		// 코드센터 + 를 (받침 없음)
+		updateBrandName("코드센터")
+		expect(t("welcome.title", "welcome")).toBe("코드센터를 사용해보세요! 🎉")
+
+		// 은/는 조사 테스트
+		expect(t("welcome.description", "welcome")).toBe("코드센터는 당신의 AI 코딩 어시스턴트입니다")
+
+		// 로/으로 조사 테스트
+		expect(t("welcome.startWith", "welcome")).toBe("코드센터로 개발을 시작하세요")
+	})
+
+	test("받침 검사 정확성", () => {
+		expect(hasLastConsonant("캐럿")).toBe(true) // ㅅ 받침
+		expect(hasLastConsonant("코드센터")).toBe(false) // 받침 없음
+		expect(hasLastConsonant("VS Code")).toBe(true) // e 받침음
+		expect(hasLastConsonant("Python")).toBe(true) // n 받침음
+		expect(hasLastConsonant("Java")).toBe(false) // a 받침음 없음
+	})
+
+	test("fallback 시스템", () => {
+		const nonExistentKey = t("non.existent.key", "common")
+		expect(nonExistentKey).toBe("non.existent.key")
+	})
+
+	test("언어별 번역 정확성", () => {
+		setGlobalUILanguage("ko")
+		expect(t("welcome.title", "welcome")).toBe("Caret에 오신 것을 환영합니다! 🎉")
+
+		setGlobalUILanguage("ja")
+		expect(t("welcome.title", "welcome")).toBe("Caretへようこそ！🎉")
+	})
+})
+```
+
+### **통합 테스트**
+
+```typescript
+describe('i18n UI Integration', () => {
+  test('설정에서 언어 변경 시 전체 UI 반영', async () => {
+    render(<App />)
+
+    // 언어 설정 변경
+    const languageSelect = screen.getByLabelText('UI Language')
+    fireEvent.change(languageSelect, { target: { value: 'ko' } })
+
+    // UI 텍스트 변경 확인
+    await waitFor(() => {
+      expect(screen.getByText('설정')).toBeInTheDocument()
+      expect(screen.getByText('환영합니다')).toBeInTheDocument()
+    })
+  })
+
+  test('브랜드명 변경 시 전체 UI 즉시 반영', async () => {
+    render(<App />)
+
+    // 브랜드명 변경
+    await changeBrandName('CodeCenter')
+
+    // 모든 Caret → CodeCenter 변경 확인
+    expect(screen.queryByText(/Caret/)).not.toBeInTheDocument()
+    expect(screen.getByText(/CodeCenter/)).toBeInTheDocument()
+  })
+})
+```
+
+---
+
+## 📊 **성능 지표**
+
+### **목표 지표**
+
+| 지표               | 목표값    | 측정 방법                  |
+| ------------------ | --------- | -------------------------- |
+| **초기 로딩 시간** | +10% 이내 | 브라우저 Performance API   |
+| **언어 변경 응답** | 1초 이내  | 사용자 액션 → UI 반영 시간 |
+| **메모리 사용량**  | +15% 이내 | Chrome DevTools Memory 탭  |
+| **번들 크기 증가** | +20% 이내 | Webpack Bundle Analyzer    |
+| **캐시 적중률**    | 90% 이상  | 번역 캐시 히트율 측정      |
+
+### **최적화 결과**
+
+```typescript
+// 성능 모니터링
+const performanceMonitor = {
+	trackTranslationTime: (key: string, time: number) => {
+		console.log(`Translation "${key}": ${time}ms`)
+	},
+
+	trackCacheHitRate: () => {
+		const hitRate = cacheHits / (cacheHits + cacheMisses)
+		console.log(`Cache hit rate: ${hitRate * 100}%`)
+	},
+
+	trackBundleSize: () => {
+		const i18nBundleSize = getCurrentBundleSize("i18n")
+		console.log(`i18n bundle size: ${i18nBundleSize}KB`)
+	},
+}
+```
+
+---
+
+## 🌍 **다국어 콘텐츠 품질**
+
+### **번역 가이드라인**
+
+1. **일관성**: 동일한 개념은 동일한 번역 사용
+2. **간결성**: UI 공간 제약을 고려한 간결한 번역
+3. **자연스러움**: 각 언어의 자연스러운 표현 방식 사용
+4. **기술 용어**: 프로그래밍 용어는 영어 원문 병기
+
+### **품질 보증 프로세스**
+
+```typescript
+// 번역 품질 검증 도구
+const translationValidator = {
+	// 누락된 번역 키 검사
+	checkMissingKeys: (baseLang: string, targetLang: string) => {
+		const baseKeys = extractAllKeys(translations[baseLang])
+		const targetKeys = extractAllKeys(translations[targetLang])
+		return baseKeys.filter((key) => !targetKeys.includes(key))
+	},
+
+	// 번역 텍스트 길이 검사 (UI 깨짐 방지)
+	checkTextLength: (key: string) => {
+		const lengths = Object.entries(translations).map(([lang, trans]) => ({
+			lang,
+			length: getNestedValue(trans, key)?.length || 0,
+		}))
+
+		const maxLength = Math.max(...lengths.map((l) => l.length))
+		const minLength = Math.min(...lengths.map((l) => l.length))
+
+		if (maxLength / minLength > 2) {
+			console.warn(`Text length variation too high for key: ${key}`)
+		}
+	},
+}
+```
+
+---
+
+## 🚀 **향후 확장성**
+
+### **추가 언어 지원**
+
+```typescript
+// 새로운 언어 추가 예시
+const addNewLanguage = async (langCode: string, langName: string) => {
+	// 1. 번역 파일 구조 생성
+	await createLanguageStructure(langCode)
+
+	// 2. 기본 번역 템플릿 생성
+	await generateTranslationTemplate(langCode)
+
+	// 3. 언어 설정에 추가
+	supportedLanguages.push(langCode as SupportedLanguage)
+	languageOptions[langCode] = langName
+
+	// 4. 타입 정의 업데이트
+	updateTypeDefinitions(langCode)
+}
+```
+
+### **고급 기능**
+
+1. **RTL(Right-to-Left) 언어 지원**: 아랍어, 히브리어 등
+2. **복수형 처리**: 언어별 복수형 규칙 적용
+3. **날짜/시간 현지화**: 각국 형식에 맞는 날짜/시간 표시
+4. **통화 현지화**: 지역별 통화 단위 및 형식
+5. **키보드 단축키 현지화**: 언어별 키보드 레이아웃 대응
+
+---
+
+## 📋 **구현 체크리스트**
+
+### **Phase 1: 기반 구축**
+
+- [ ] `i18n.ts` Copy-and-Modify 완료
+- [ ] Self-Reference 템플릿 엔진 구현
+- [ ] `useCaretI18n` Hook 구현
+- [ ] `CaretI18nProvider` Context 구현
+
+### **Phase 2: 래퍼 시스템**
+
+- [ ] 표준 래퍼 컴포넌트 패턴 정립
+- [ ] `CaretWelcomeViewWrapper` 구현
+- [ ] `CaretSettingsViewWrapper` 구현
+- [ ] `CaretChatTextAreaWrapper` 구현
+
+### **Phase 3: 확장 및 최적화**
+
+- [ ] 모든 핵심 컴포넌트 래핑 완료
+- [ ] 성능 최적화 (lazy loading, 캐싱) 적용
+- [ ] 품질 검증 도구 구현
+- [ ] 접근성 테스트 완료
+
+---
+
+**최종 목표**: Caret만의 차별화된 다국어 시스템을 통해 **글로벌 사용자 경험**을 제공하고, **브랜드 유연성**을 확보하여 향후 CodeCenter 등 다른 브랜드로의 확장 가능성을 열어둔다.

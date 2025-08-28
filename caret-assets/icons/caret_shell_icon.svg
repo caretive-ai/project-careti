@@ -1,0 +1,10 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Thick white outer outline -->
+  <rect x="0" y="0" width="32" height="32" rx="6" ry="6" fill="none" stroke="#ffffff" stroke-width="3"/>
+
+  <!-- Inner black box -->
+  <rect x="2" y="2" width="28" height="28" rx="4" ry="4" fill="#000000"/>
+
+  <!-- Caret symbol (^) -->
+  <path d="M8 20 L16 8 L24 20" stroke="#ffffff" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>

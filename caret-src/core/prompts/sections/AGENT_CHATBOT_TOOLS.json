@@ -1,0 +1,24 @@
+{
+	"agent_mode_respond": {
+		"name": "agent_mode_respond",
+		"description": "Respond to the user's inquiry in AGENT mode with collaborative development approach. Use this tool for conversational responses in Agent mode.",
+		"parameters": {
+			"response": "(required) The response to provide to the user. This is a chat response for Agent mode interaction.",
+			"options": "(optional) Array of option strings to present to the user for selection. Each option should be a clear, actionable choice.",
+			"needs_more_exploration": "(optional) Set to 'true' if you need to do more exploration with tools before providing a complete response. Defaults to false if not specified."
+		},
+		"usage_example": "agent_mode_respond>\n<response>Your response here</response>\n<options>[\"Option 1\", \"Option 2\"]</options>\n<needs_more_exploration>true or false</needs_more_exploration>\n</agent_mode_respond>",
+		"when_to_use": "Use this tool in AGENT mode when you need to converse with the user, present plans, ask clarifying questions, or provide collaborative development guidance."
+	},
+	"chatbot_mode_respond": {
+		"name": "chatbot_mode_respond",
+		"description": "Respond to the user's inquiry in CHATBOT mode with expert consultation approach. Use this tool for conversational responses in Chatbot mode.",
+		"parameters": {
+			"response": "(required) The response to provide to the user. This is a chat response for Chatbot mode interaction.",
+			"options": "(optional) Array of option strings to present to the user for selection. Each option should be a clear, actionable choice.",
+			"needs_more_exploration": "(optional) Set to 'true' if you need to do more exploration with tools before providing a complete response. Defaults to false if not specified."
+		},
+		"usage_example": "<chatbot_mode_respond>\n<response>Your response here</response>\n<options>[\"Option 1\", \"Option 2\"]</options>\n<needs_more_exploration>true or false</needs_more_exploration>\n</chatbot_mode_respond>",
+		"when_to_use": "Use this tool in CHATBOT mode when you need to provide expert consultation, analysis, or guidance without making system changes."
+	}
+}

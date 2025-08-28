@@ -1,16 +1,17 @@
-import type React from "react"
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import "../../../src/shared/webview/types"
 import { DEFAULT_AUTO_APPROVAL_SETTINGS } from "@shared/AutoApprovalSettings"
 import { findLastIndex } from "@shared/array"
 import { DEFAULT_BROWSER_SETTINGS } from "@shared/BrowserSettings"
 import { DEFAULT_FOCUS_CHAIN_SETTINGS } from "@shared/FocusChainSettings"
 import { DEFAULT_PLATFORM, type ExtensionState } from "@shared/ExtensionMessage"
+import type { CaretSettings } from "@caret-src/shared/CaretSettings"
+import { DEFAULT_CARET_SETTINGS } from "@caret-src/shared/CaretSettings"
 import { DEFAULT_MCP_DISPLAY_MODE } from "@shared/McpDisplayMode"
 import type { UserInfo } from "@shared/proto/cline/account"
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import type { OpenRouterCompatibleModelInfo } from "@shared/proto/cline/models"
-import { type TerminalProfile, UpdateSettingsRequest } from "@shared/proto/cline/state"
+import { type TerminalProfile } from "@shared/proto/cline/state"
 import { WebviewProviderType as WebviewProviderTypeEnum, WebviewProviderTypeRequest } from "@shared/proto/cline/ui"
 import { convertProtoToClineMessage } from "@shared/proto-conversions/cline-message"
 import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mcp/mcp-server-conversion"
@@ -36,6 +37,7 @@ import {
 import { convertTextMateToHljs } from "../utils/textMateToHljs"
 
 interface ExtensionStateContextType extends ExtensionState {
+	caretSettings?: CaretSettings
 	didHydrateState: boolean
 	showWelcome: boolean
 	theme: Record<string, string> | undefined
@@ -68,6 +70,7 @@ interface ExtensionStateContextType extends ExtensionState {
 	setHuggingFaceModels: (value: Record<string, ModelInfo>) => void
 	setGlobalClineRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalClineRulesToggles: (toggles: Record<string, boolean>) => void
+	setLocalCaretRulesToggles: (toggles: Record<string, boolean>) => void // CARET MODIFICATION: Add missing setter
 	setLocalCursorRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalWindsurfRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalWorkflowToggles: (toggles: Record<string, boolean>) => void
@@ -183,6 +186,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		preferredLanguage: "English",
 		openaiReasoningEffort: "medium",
 		mode: "act",
+		modeSystem: "caret", // CARET MODIFICATION: Default to caret mode system
 		platform: DEFAULT_PLATFORM,
 		telemetrySetting: "unset",
 		distinctId: "",
@@ -191,6 +195,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		mcpDisplayMode: DEFAULT_MCP_DISPLAY_MODE,
 		globalClineRulesToggles: {},
 		localClineRulesToggles: {},
+		localCaretRulesToggles: {}, // CARET MODIFICATION: Add initial state
 		localCursorRulesToggles: {},
 		localWindsurfRulesToggles: {},
 		localWorkflowToggles: {},
@@ -269,6 +274,12 @@ export const ExtensionStateContextProvider: React.FC<{
 					try {
 						const stateData = JSON.parse(response.stateJson) as ExtensionState
 						setState((prevState) => {
+							// luke 수정 : mode업데아트 확인 (stateData의 언디파인드 문제도 해결 필요할 수 있음)
+							console.log(" M A S T E R  C H E C K ", {
+								"Received Mode": stateData.mode,
+								"Received Mode System": stateData.modeSystem,
+							})
+
 							// Versioning logic for autoApprovalSettings
 							const incomingVersion = stateData.autoApprovalSettings?.version ?? 1
 							const currentVersion = prevState.autoApprovalSettings?.version ?? 1
@@ -416,7 +427,7 @@ export const ExtensionStateContextProvider: React.FC<{
 					const partialMessage = convertProtoToClineMessage(protoMessage)
 					setState((prevState) => {
 						// worth noting it will never be possible for a more up-to-date message to be sent here or in normal messages post since the presentAssistantContent function uses lock
-						const lastIndex = findLastIndex(prevState.clineMessages, (msg) => msg.ts === partialMessage.ts)
+						const lastIndex = findLastIndex(prevState.clineMessages, (msg: any) => msg.ts === partialMessage.ts)
 						if (lastIndex !== -1) {
 							const newClineMessages = [...prevState.clineMessages]
 							newClineMessages[lastIndex] = partialMessage
@@ -629,8 +640,18 @@ export const ExtensionStateContextProvider: React.FC<{
 			.catch((error: Error) => console.error("Failed to refresh OpenRouter models:", error))
 	}, [])
 
+	// Create CaretSettings from ExtensionState fields
+	const caretSettings: CaretSettings = {
+		...DEFAULT_CARET_SETTINGS,
+		mode: state.mode as "chatbot" | "agent" | "plan" | "act",
+		modeSystem: state.modeSystem,
+		preferredLanguage: state.preferredLanguage,
+		openAIReasoningEffort: state.openaiReasoningEffort,
+	}
+
 	const contextValue: ExtensionStateContextType = {
 		...state,
+		caretSettings,
 		didHydrateState,
 		showWelcome,
 		theme,
@@ -652,6 +673,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		showAnnouncement,
 		globalClineRulesToggles: state.globalClineRulesToggles || {},
 		localClineRulesToggles: state.localClineRulesToggles || {},
+		localCaretRulesToggles: state.localCaretRulesToggles || {}, // CARET MODIFICATION: Add missing state
 		localCursorRulesToggles: state.localCursorRulesToggles || {},
 		localWindsurfRulesToggles: state.localWindsurfRulesToggles || {},
 		localWorkflowToggles: state.localWorkflowToggles || {},
@@ -694,6 +716,13 @@ export const ExtensionStateContextProvider: React.FC<{
 			setState((prevState) => ({
 				...prevState,
 				localClineRulesToggles: toggles,
+			})),
+		setLocalCaretRulesToggles: (
+			toggles, // CARET MODIFICATION: Add missing setter
+		) =>
+			setState((prevState) => ({
+				...prevState,
+				localCaretRulesToggles: toggles,
 			})),
 		setLocalCursorRulesToggles: (toggles) =>
 			setState((prevState) => ({

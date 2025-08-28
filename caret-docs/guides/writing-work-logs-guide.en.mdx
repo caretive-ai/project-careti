@@ -1,0 +1,94 @@
+# Work Log Writing and Usage Guide (For AI & Developers)
+
+## 1. Overview
+
+This document guides the writing methods, purposes, and standard templates for Work Logs used by AI assistants and developers in the Caret project. Work logs record daily work progress, key decisions, issues encountered, and plans for the next tasks to support transparent and efficient collaboration.
+
+**Note**: For general document writing standards, styles, terminology usage, file naming conventions, and other project-wide documentation guidelines, please refer to the [Project Documentation Guide](../development/documentation-guide.mdx).
+
+Work logs are created daily for each user in the `caret-docs/work-logs/{username}/` directory in `YYYY-MM-DD.md` format.
+
+## 2. Purpose of Work Logs
+
+- **Track Progress**: Clearly record tasks performed and goals achieved for the day.
+- **Issue Management**: Record and share encountered problems, resolution efforts, and unresolved issues.
+- **Context Sharing**: Provide necessary context information for the next work session or when another team member takes over the task.
+- **Communication Aid**: Support asynchronous communication between AI and developers.
+
+## 3. Work Log Update Timing (AI Standard)
+
+AI must update the work log at the following times:
+
+1.  **At the start of a work session**:
+    - Create a log file (for the first task of the day) or append to an existing file.
+    - Specify the date and session start time.
+    - Briefly mention the main task goals for the day (Task number, core content).
+    - (Example: "[2024-03-20 09:00] Work started. Proceeding with Task #001 - Webview UI error resolution and logging system verification.")
+
+2.  **Upon completion/progress of major checklist items**:
+    - Record when major items in the task checklist (`...-02-action-checklist-*.md`) are completed or have made significant progress.
+    - Mention completed items, brief results, or next steps.
+    - (Example: "[11:30] Task #001 - Attempting to resolve `WelcomeView.tsx` overlay issue, checklist item 1.1 completed. Vite configuration analysis done. Proceeding with alias-related code modification.")
+
+3.  **Upon occurrence and resolution attempt/result of important issues**:
+    - Record when unexpected errors, technical difficulties, or matters requiring decisions occur.
+    - Briefly include the problem situation, attempted solutions, results (success/failure/partial success), and questions for the developer.
+    - (Example: "[14:00] Issue: `WelcomeView.tsx` still shows `cannot find module '@cline/utils/...'` error. Need to re-check `tsconfig.json` path aliases and review `vite.config.ts` settings. Will ask developer for advice on related configurations.")
+
+4.  **At the end of a work session**:
+    - Specify the session end time.
+    - Summarize major tasks completed today.
+    - Unfinished tasks and current status.
+    - Summary of unresolved major issues.
+    - Briefly mention tasks planned for the next work session.
+    - (Example: "[18:00] Work ended. Today's work included `WelcomeView.tsx` rendering error analysis and some Vite configuration modifications. Basic logging system verification completed. Unresolved issue: `@cline/utils` path problem. Will focus on resolving this issue tomorrow morning.")
+
+## 4. Work Log Writing Format and Content
+
+- **Conciseness**: Write concisely and clearly, focusing on core content.
+- **Fact-Based**: Record based on confirmed facts rather than speculation.
+- **Time Recording**: Record time with major events or when writing log entries (e.g., `[HH:MM]`).
+- **Task Number Reference**: Specify the Task number if related (e.g., `Task #001`).
+- **Markdown Utilization**: Use Markdown lists, emphasis, etc., appropriately to improve readability.
+
+### 4.1. Recommended Template (Daily Log File Content)
+
+```markdown
+# YYYY-MM-DD Work Log - AI
+
+## Work Goals (Today)
+
+- Task #00X: [Main Goal 1]
+- Task #00Y: [Main Goal 2]
+
+## Timeline
+
+[09:00] Work started. Proceeding with Task #00X - [Detailed Goal].
+
+[10:30] Task #00X - Checklist item [X.Y] completed. [Brief result or next step].
+
+[11:15] Issue occurred: [Summary of problem situation] during Task #00X. [Attempted solution] -> [Result].
+
+[14:00] Discussion with developer: [Discussion topic] -> [Decision or next action].
+
+[16:45] Task #00X - [Progress description] related to checklist item [X.Z].
+
+[18:00] Work ended.
+
+- Completed today:
+    - Task #00X: [Summary of major completed content]
+- In progress/Unfinished:
+    - Task #00X: [Unfinished parts and current status]
+- Key Issues:
+    - [Unresolved issues or special notes]
+- Planned for tomorrow:
+    - [First task for tomorrow]
+```
+
+## 5. Work Log Utilization (Developer Standard)
+
+- Understand AI's daily work progress.
+- Identify problems AI faces or support needed.
+- Utilize as a basis for asynchronous feedback or next task instructions.
+
+These guidelines are important for effective task tracking and clear communication. AI should always strive to follow these instructions.

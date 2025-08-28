@@ -1,0 +1,249 @@
+# Cline Upstream Merging Guide
+
+Caret is a **Fork** of the Cline project, and it must continuously integrate the latest changes from Cline to maintain stability and feature improvements. This document guides the procedure for safely merging changes from the Cline upstream into Caret and resolving conflicts.
+
+## Fork-Based Upstream Synchronization Principles
+
+### Core Principles
+
+- **Preserve Cline Code**: Preserve Cline original code in `src/` and `webview-ui/` directories as much as possible without modification.
+- **Utilize Git Merge**: Use Git's standard merge workflow, not an overlay method.
+- **Minimize Conflicts**: Separate Caret extension code into `caret-src/` to minimize conflicts.
+- **Systematic Testing**: Verify overall system behavior after merging.
+
+## Upstream Synchronization Procedure
+
+### 1. Set Up Upstream Remote (First Time Only)
+
+```bash
+# Add Cline original repository as upstream
+git remote add upstream https://github.com/cline/cline.git
+
+# Verify upstream
+git remote -v
+```
+
+### 2. Check Upstream Changes
+
+```bash
+# Fetch latest information from upstream
+git fetch upstream
+
+# Check changes
+git log --oneline main..upstream/main
+
+# Check changed files
+git diff --name-only main upstream/main
+```
+
+### 3. Pre-Merge Preparation
+
+```bash
+# Check and clean up current working status
+git status
+git stash  # Temporarily save ongoing changes if necessary
+
+# Switch to main branch
+git checkout main
+
+# Update local main branch
+git pull origin main
+```
+
+### 4. Execute Upstream Merge
+
+```bash
+# Merge upstream/main into current branch
+git merge upstream/main
+
+# Or rebase method (to maintain linear history)
+# git rebase upstream/main
+```
+
+## Conflict Resolution Strategy
+
+### Common Conflict Types and Solutions
+
+#### 1. **Cline Original File Conflicts** (`src/`, `webview-ui/`)
+
+- **Principle**: Prioritize Cline original, but review for Caret compatibility.
+- **Solution**: In most cases, accept upstream changes.
+
+```bash
+# Accept upstream changes
+git checkout --theirs <conflicting-file>
+```
+
+#### 2. **Build Configuration File Conflicts** (`package.json`, `tsconfig.json`, etc.)
+
+- **Principle**: Maintain Fork characteristics while applying upstream improvements.
+- **Solution**: Manually merge to reflect both Caret settings and Cline improvements.
+
+#### 3. **Document File Conflicts** (`README.md`, `CHANGELOG.md`, etc.)
+
+- **Principle**: Preserve Caret's unique content.
+- **Solution**: Prioritize Caret version, selectively apply Cline improvements if necessary.
+
+### Conflict Resolution Example
+
+```bash
+# When conflicts occur
+git status  # Check conflicting files
+
+# Resolve each file
+git mergetool  # Use GUI tool
+# Or manual editing
+
+# Commit after resolution
+git add .
+git commit -m "merge: integrate upstream changes from Cline"
+```
+
+## Post-Merge Verification Procedure
+
+### 1. Build System Verification
+
+```bash
+# Install dependencies
+npm install
+cd webview-ui && npm install && cd ..
+
+# Build tests
+npm run compile
+npm run build:webview
+```
+
+### 2. Functional Testing
+
+```bash
+# Run tests
+npm run test
+
+# VSCode Extension Development Host testing
+# Run in debug mode with F5 to confirm basic functionality
+```
+
+### 3. Caret Specific Feature Verification
+
+- Confirm CaretProvider operates normally.
+- Confirm webview UI rendering.
+- Confirm logging system operation.
+
+### 4. System Prompt Verification (ClineFeatureValidator)
+
+```bash
+# Test system prompt verification system (only 25 tests)
+npx vitest run "caret-src/__tests__/cline-feature-validation.test.ts"
+
+# Confirm all 25 tests pass (100%)
+✓ caret-src/__tests__/cline-feature-validation.test.ts (25)
+```
+
+**Verification Items**:
+
+- **Tool Preservation**: No missing 25 core Cline tools.
+- **MCP Integration**: MCP server settings maintained.
+- **System Information**: OS/environment information preserved.
+- **Performance**: Verification time maintained under 100ms.
+
+## Version Compatibility Management
+
+### Maintain VSCode API Compatibility
+
+Key versions managed in Caret's `package.json`:
+
+- `@types/vscode`: Managed carefully for compatibility with Cline.
+- `engines.vscode`: Minimum VSCode version requirement.
+
+**Caution during Upgrade**:
+
+1. Check Cline's VSCode API usage patterns.
+2. Review for potential type conflicts.
+3. Run full build and tests.
+
+### Resolve Dependency Conflicts
+
+```bash
+# If package-lock.json conflict
+rm package-lock.json
+npm install
+
+# If webview-ui dependency conflict
+cd webview-ui
+rm package-lock.json
+npm install
+cd ..
+```
+
+## Recovery Method in Case of Issues
+
+### Cancel Merge
+
+```bash
+# Cancel merge commit (immediately after merge)
+git reset --hard HEAD~1
+
+# Revert to a specific commit
+git reset --hard <commit-hash>
+```
+
+### Branch Strategy for Safe Merging
+
+```bash
+# Test merge in a separate branch
+git checkout -b upstream-merge-test
+git merge upstream/main
+
+# Apply to main after testing
+git checkout main
+git merge upstream-merge-test
+git branch -d upstream-merge-test
+```
+
+## 🔧 **System Prompt Compatibility Verification**
+
+Caret has implemented the **ClineFeatureValidator** verification system to prevent feature loss when modifying Cline's system prompt.
+
+### Usage
+
+```bash
+# Verify current state before upstream merge
+npx vitest run "caret-src/__tests__/cline-feature-validation.test.ts"
+
+# Verify after merge (all 25 tests must pass)
+✓ caret-src/__tests__/cline-feature-validation.test.ts (25)
+```
+
+### Verification Items
+
+1. **Tool Preservation**: Preserve 25 core Cline tools.
+2. **MCP Integration**: Maintain MCP server configuration integrity.
+3. **System Information**: OS/environment information consistency.
+4. **Parameter Consistency**: Preserve tool-specific parameter definitions.
+
+### Response to Verification Failure
+
+```typescript
+// Auto-generate report on verification failure
+const report = await validator.generateDetailedReport(prompt)
+console.log(report.missingTools) // Check missing tools
+console.log(report.modifiedTools) // Check modified tools
+```
+
+This system ensures **100% preservation of Cline features** even during upstream merges.
+
+---
+
+## Recommended Regular Upstream Synchronization
+
+- **Frequency**: Regularly check upstream 1-2 times a month.
+- **Timing**: After major feature development is complete, proceed when in a stable state.
+- **Documentation**: Record merge content and changes in `CHANGELOG-caret.md`.
+- **Team Sharing**: Share merge results and key changes with the team.
+
+---
+
+**Reference Documents**:
+
+- [Caret Fork-Based Architecture Guide](../development/caret-architecture-and-implementation-guide.mdx)
+- [Development Environment Setup Guide](../development/index.mdx)

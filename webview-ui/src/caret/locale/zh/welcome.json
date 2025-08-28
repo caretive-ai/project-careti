@@ -1,0 +1,80 @@
+{
+	"greeting": "您好！AI 开发伙伴，^Caret。",
+	"catchPhrase": "让AI超越简单的代码生成器，成为理解项目上下文并共同解决问题的真正开发伙伴！",
+	"bannerAlt": "Caret 主图",
+
+	"geminiOffer": {
+		"header": "✨ Google Gemini 启动特惠！",
+		"body": "使用强大的Google Gemini模型体验AI编程的世界！新注册GCP并获得Gemini API密钥的用户将获得<strong>价值$300的3个月免费积分</strong>。不要错过这个特别的机会！（详情：<vscode-link href=\"https://blog.naver.com/fstory97/223887376667\">点击这里</vscode-link>）"
+	},
+
+	"coreFeatures": {
+		"header": "与共同成长的AI编程助手Caret一起开始'Vibe Coding'。",
+		"description": "多语言支持、开发者主导的AI编排、工作流定制、透明的AI控制，以及强大的本地LLM集成。超越简单对话，Caret提出'氛围编程'开发文化，与AI系统性地创建文档，并基于这些记录共同成长。"
+	},
+
+	"modelFlexibility": {
+		"header": "自由选择模型，无限可能",
+		"body": "Caret不依赖特定供应商。<strong>通过Ollama等轻松连接您自己的本地sLLM</strong>，或使用您已经在使用的各种外部API密钥，如Anthropic Claude、OpenAI等。选择最适合您的项目和风格的AI。"
+	},
+
+	"caretAccount": {
+		"header": "即将推出！Caret集成订阅服务（月付）",
+		"body": "告别复杂的API密钥设置！即将推出的Caret集成账户（月付订阅），您将能够立即使用包括Google Gemini在内的精选高性能AI代理。第一时间获取最新消息！"
+	},
+
+	"educationOffer": {
+		"header": "✨ 立即开始！免费'Vibe Coding'教育和Google Gemini $300积分技巧！",
+		"body": "加入我们的<strong>开源教育计划</strong>，与Caret一起学习真正的'Vibe Coding'，体验AI博客代理开发的完整过程！该计划免费提供，为您迈出AI开发实质性第一步所需的温暖指导和丰富的实践环境。我们还为首次使用Google Gemini API的用户提供<strong>3个月可用的$300 GCP积分使用技巧</strong>。无成本负担地体验AI开发的乐趣！（教育计划和Gemini积分使用技巧 <VSCodeLink href=\"{{educationLink}}\">了解更多</VSCodeLink>）"
+	},
+
+	"getStarted": {
+		"header": "",
+		"body": "",
+		"button": "开始使用",
+		"preferredLanguage": "AI响应语言",
+		"uiLanguage": "界面语言"
+	},
+
+	"community": {
+		"header": "加入Caret社区",
+		"body": "与其他使用Caret的开发者建立联系！访问我们的<a href=\"https://github.com/aicoding-caret/caret\" target=\"_blank\">GitHub仓库</a>来贡献代码、报告问题或从社区中学习。",
+		"button": "接收Caret账户通知"
+	},
+
+	"footer": {
+		"links": {
+			"caretGithub": "Caret GitHub",
+			"basedOnCline": "基于Cline",
+			"caretService": "Caret服务",
+			"caretiveInc": "Caretive Inc",
+			"about": "公司介绍",
+			"terms": "使用条款",
+			"privacy": "隐私政策",
+			"youthProtection": "青少年保护政策",
+			"support": "客户支持"
+		},
+		"company": {
+			"name": "Caretive INC",
+			"businessNumber": "营业执照号：459-81-03703",
+			"address": "韩国京畿道华城市东滩循环大路823号4层409-681号（永泉洞，A-PLEX城市）"
+		},
+		"copyright": {
+			"text": "© 2025 Caretive INC. All rights reserved.",
+			"builtWith": "Built with ❤️ by Caret Team",
+			"version": "Caret v1.0.0"
+		}
+	},
+
+	"apiSetup": {
+		"backButton": "← 返回",
+		"title": "🔧 API设置",
+		"description": "设置您的AI API以使用Caret。",
+		"instructions": "订阅Caret或为OpenAI、Anthropic或其他AI服务设置API密钥，或配置本地LLM。",
+		"saveButton": "保存并开始",
+		"help": {
+			"title": "需要帮助？",
+			"button": "查看文档"
+		}
+	}
+}

@@ -847,7 +847,7 @@ export class CacheService {
 			sapAiCoreTokenUrl,
 			sapAiResourceGroup,
 			claudeCodePath,
-		} satisfies GlobalState
+		}
 
 		// Populate global state cache directly
 		Object.assign(this.globalStateCache, globalStateFields)

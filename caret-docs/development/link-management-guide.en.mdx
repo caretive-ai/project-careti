@@ -1,0 +1,329 @@
+# 🔗 Caret Link Management System Guide
+
+Caret's integrated link management system is a powerful system that consistently manages URLs across the project and can provide different links per language.
+
+## 📋 System Overview
+
+### Problem Solving
+
+- **URL Duplication Management**: Resolves the issue of hardcoded URLs being scattered across multiple components.
+- **Multilingual Link Support**: Fulfills the requirement to provide different URLs per language.
+- **Maintainability**: Centralized management where changes to links only require modification in one place.
+- **Type Safety**: Link key validation through TypeScript.
+
+### Core Components
+
+1.  **URL Constant Definition** (`webview-ui/src/caret/constants/urls.ts`)
+2.  **i18n Integration** (`webview-ui/src/caret/utils/i18n.ts`)
+3.  **Template Variable System**
+4.  **Ensuring Type Safety**
+
+## 📁 File Structure
+
+```
+webview-ui/src/caret/
+├── constants/
+│   └── urls.ts                 # URL Constant Definitions
+├── utils/
+│   └── i18n.ts                # Translation & Link Integration Utility
+├── locale/
+│   ├── ko/welcome.json        # Korean Translation (includes template variables)
+│   ├── en/welcome.json        # English Translation
+│   ├── ja/welcome.json        # Japanese Translation
+│   └── zh/welcome.json        # Chinese Translation
+└── components/
+    ├── CaretWelcome.tsx       # Link System Usage Example
+    └── CaretFooter.tsx        # Link System Usage Example
+```
+
+## 🔧 URL Constant Definition
+
+### General URL Constants (Language-Independent)
+
+```typescript
+// webview-ui/src/caret/constants/urls.ts
+export const CARET_URLS = {
+	// Service-related (language-independent)
+	CARET_SERVICE: "https://caret.team",
+	CARET_GITHUB: "https://github.com/aicoding-caret/caret",
+
+	// Company-related (language-independent)
+	CARETIVE_COMPANY: "https://caretive.ai",
+	CARETIVE_ABOUT: "https://caretive.ai/about",
+	// ... other URLs
+} as const
+```
+
+### Language-Specific URL Constants
+
+```typescript
+// If different links are needed per language
+export const CARET_LOCALIZED_URLS = {
+	// Education program link (different anchors per language)
+	EDUCATION_PROGRAM: {
+		ko: "https://github.com/aicoding-caret/multi-post-agent/blob/main/docs/education-scenario.md#2-%EA%B0%9C%EB%B0%9C-%ED%99%98%EA%B2%BD-%EC%84%A4%EC%A0%95-%EC%95%BD-30%EB%B6%84",
+		en: "https://github.com/aicoding-caret/multi-post-agent/blob/main/docs/education-scenario.md#2-development-environment-setup-approximately-30-minutes",
+		ja: "https://github.com/aicoding-caret/multi-post-agent/blob/main/docs/education-scenario.md#2-%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A-%E7%B4%8430%E5%88%86",
+		zh: "https://github.com/aicoding-caret/multi-post-agent/blob/main/docs/education-scenario.md#2-development-environment-setup-approximately-30-minutes",
+	},
+
+	// Gemini credit guide (different documents per language)
+	GEMINI_CREDIT_GUIDE: {
+		ko: "https://blog.naver.com/fstory97/223887376667",
+		en: "https://cloud.google.com/pricing/free-trial",
+		ja: "https://cloud.google.com/pricing/free-trial",
+		zh: "https://cloud.google.com/pricing/free-trial",
+	},
+} as const
+```
+
+## 🌍 i18n Integration System
+
+### Helper Functions
+
+```typescript
+// webview-ui/src/caret/utils/i18n.ts
+
+// Get localized URL for current language
+export function getLocalizedUrl(key: CaretLocalizedUrlKey, language: SupportedLanguage = "ko"): string {
+	const urlMap = CARET_LOCALIZED_URLS[key]
+	return urlMap[language] || urlMap.ko // fallback to Korean
+}
+
+// Get general URL
+export function getUrl(key: CaretUrlKey): string {
+	return CARET_URLS[key]
+}
+
+// Get link directly from translated text
+export const getLink = (key: CaretLocalizedUrlKey, language?: SupportedLanguage): string => {
+	return getLocalizedUrl(key, language || getCurrentLanguage())
+}
+
+export const getGlobalLink = (key: CaretUrlKey): string => {
+	return getUrl(key)
+}
+```
+
+### Template Variable System
+
+Links can be dynamically inserted into translation JSON files using the `{{variableName}}` format:
+
+```json
+{
+	"educationOffer": {
+		"header": "✨ Start Now! Free 'Vibe Coding' Education Program!",
+		"body": "Participate in an education program where you can practice with Caret! <VSCodeLink href=\"{{educationLink}}\">Learn More</VSCodeLink>"
+	}
+}
+```
+
+Supported template variables:
+
+- `{{educationLink}}` → Education program link for the current language
+- `{{geminiCreditLink}}` → Gemini credit guide link for the current language
+- `{{caretGitLink}}` → Caret GitHub link for the current language
+- `{{caretService}}` → Caret service link
+- `{{caretGithub}}` → Caret GitHub link
+- `{{caretiveCompany}}` → Caretive company link
+
+## 💡 Usage
+
+### Direct Link Usage in Components
+
+```tsx
+import { getGlobalLink, getLink } from "../utils/i18n"
+
+const MyComponent: React.FC = () => {
+	return (
+		<div>
+			{/* General link (language-independent) */}
+			<a href={getGlobalLink("CARET_SERVICE")}>Caret Service</a>
+
+			{/* Language-specific link */}
+			<a href={getLink("EDUCATION_PROGRAM")}>Education Program</a>
+		</div>
+	)
+}
+```
+
+### Automatic Link Substitution via Translated Text
+
+```tsx
+import { t } from "../utils/i18n"
+
+const MyComponent: React.FC = () => {
+	return (
+		<div>
+			{/* Template variables are automatically substituted with actual links */}
+			<p
+				dangerouslySetInnerHTML={{
+					__html: t("educationOffer.body", "welcome"),
+				}}
+			/>
+		</div>
+	)
+}
+```
+
+## 🛠️ Adding New Links
+
+### 1. Add General Link (Language-Independent)
+
+```typescript
+// webview-ui/src/caret/constants/urls.ts
+export const CARET_URLS = {
+	// Existing links...
+	NEW_SERVICE_LINK: "https://example.com/new-service",
+} as const
+```
+
+### 2. Add Language-Specific Link
+
+```typescript
+// webview-ui/src/caret/constants/urls.ts
+export const CARET_LOCALIZED_URLS = {
+	// Existing links...
+	NEW_LOCALIZED_LINK: {
+		ko: "https://example.com/ko/new-feature",
+		en: "https://example.com/en/new-feature",
+		ja: "https://example.com/ja/new-feature",
+		zh: "https://example.com/zh/new-feature",
+	},
+} as const
+```
+
+### 3. Add Template Variable
+
+```typescript
+// Add to replaceTemplateVariables function in webview-ui/src/caret/utils/i18n.ts
+const replaceTemplateVariables = (text: string, language: SupportedLanguage): string => {
+	return (
+		text
+			// Existing substitutions...
+			.replace(/\{\{newTemplateVar\}\}/g, getLocalizedUrl("NEW_LOCALIZED_LINK", language))
+	)
+}
+```
+
+### 4. Use in Translation File
+
+```json
+{
+	"mySection": {
+		"title": "New Feature",
+		"description": "Learn more about the new feature <VSCodeLink href=\"{{newTemplateVar}}\">here</VSCodeLink>!"
+	}
+}
+```
+
+## 🔍 Type Safety
+
+Type safety of link keys is ensured through TypeScript:
+
+```typescript
+// Detect typos or non-existent keys at compile time
+getGlobalLink("NONEXISTENT_KEY") // ❌ Type error!
+getGlobalLink("CARET_SERVICE") // ✅ OK
+
+getLink("INVALID_LOCALIZED_KEY") // ❌ Type error!
+getLink("EDUCATION_PROGRAM") // ✅ OK
+```
+
+## 📋 Best Practices
+
+### 1. Link Classification Principles
+
+- **CARET_URLS**: Fixed links independent of language (service URLs, API endpoints, etc.)
+- **CARET_LOCALIZED_URLS**: Links that vary by language (documents, guides, anchors, etc.)
+
+### 2. Naming Convention
+
+- Constant names: `SCREAMING_SNAKE_CASE`
+- Use meaningful names (e.g., `EDUCATION_PROGRAM` vs `LINK1`)
+- Consider category prefixes (e.g., `DOCS_`, `API_`, `SERVICE_`)
+
+### 3. Template Variable Usage Guide
+
+- Prioritize when links are included in translated text.
+- Variable names in camelCase (e.g., `{{educationLink}}`).
+- Use helper functions directly when links are needed directly in components.
+
+### 4. Language-Specific Link Management
+
+- Provide links for all supported languages.
+- Fallback to Korean if no translation is available.
+- Consider differences in anchor IDs per language.
+
+## 🚀 Extensibility
+
+### Support for Dynamic Language Change
+
+The `getCurrentLanguage()` function can be extended to support dynamic language changes based on user settings in the future:
+
+```typescript
+export const getCurrentLanguage = (): SupportedLanguage => {
+	// Read language from user settings
+	const userLang = getUserSetting("language")
+	return userLang || "ko"
+}
+```
+
+### External Link Validation
+
+A system can be added to validate the validity of links:
+
+```typescript
+export const validateLinks = async (): Promise<LinkValidationResult[]> => {
+	// Check HTTP status for all links
+	// Can be used in CI/CD
+}
+```
+
+### Link Analysis and Tracking
+
+Wrapper functions can be added for link click tracking or analysis:
+
+```typescript
+export const getTrackedLink = (key: CaretUrlKey, context?: string): string => {
+	const baseUrl = getUrl(key)
+	// Add tracking parameters
+	return `${baseUrl}?utm_source=caret&utm_context=${context}`
+}
+```
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+1.  **Links not being substituted correctly**
+    - Check template variable name (e.g., `{{educationLink}}` for correct spelling).
+    - Check if the variable is added to the `replaceTemplateVariables` function.
+
+2.  **Type errors occurring**
+    - Check if the new key is correctly added to the URL constants.
+    - Recompile with TypeScript and try again.
+
+3.  **Language-specific links not appearing differently**
+    - Check if the `getCurrentLanguage()` function returns the correct language.
+    - Check if the translation file for that language is correctly imported.
+
+## ✅ Checklist
+
+Things to check when adding new links:
+
+- [ ] Added to URL constants (`CARET_URLS` or `CARET_LOCALIZED_URLS`)
+- [ ] Confirm type definitions are automatically updated.
+- [ ] Added to `replaceTemplateVariables` if a template variable is needed.
+- [ ] Provide links for all supported languages (if language-specific).
+- [ ] Use template variables in translation files (if needed).
+- [ ] Test webview build (`npm run build:webview`).
+- [ ] Verify actual link behavior.
+
+---
+
+## 🔗 Related Documents
+
+- [Caret Internationalization (i18n) Guide](./locale.en.mdx)
+- [Webview-Extension Communication](./webview-extension-communication.en.mdx)
+- [Development Guide Index](./index.en.mdx)

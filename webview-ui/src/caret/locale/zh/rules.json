@@ -1,0 +1,19 @@
+{
+	"section": {
+		"globalRules": "全局规则",
+		"workspaceRules": "工作区规则",
+		"personaManagement": "角色管理"
+	},
+	"subTitle": {
+		"caretRules": "Caret规则",
+		"clineRules": "Cline规则",
+		"cursorRules": "Cursor规则",
+		"windsurfRules": "Windsurf规则"
+	},
+	"button": {
+		"selectPersonaTemplate": "选择模板角色"
+	},
+	"description": {
+		"personaManagement": "选择符合您编码风格和偏好的AI角色。"
+	}
+}

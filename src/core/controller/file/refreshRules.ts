@@ -16,12 +16,18 @@ export async function refreshRules(controller: Controller, _request: EmptyReques
 	try {
 		const cwd = await getCwd(getDesktopDir())
 		const { globalToggles, localToggles } = await refreshClineRulesToggles(controller, cwd)
-		const { cursorLocalToggles, windsurfLocalToggles } = await refreshExternalRulesToggles(controller, cwd)
+		const { caretLocalToggles, cursorLocalToggles, windsurfLocalToggles } = await refreshExternalRulesToggles(controller, cwd)
 		const { localWorkflowToggles, globalWorkflowToggles } = await refreshWorkflowToggles(controller, cwd)
+
+		// CARET MODIFICATION: Apply rule priority system - only disable when files exist AND user hasn't manually toggled
+		let prioritizedLocalToggles = localToggles
+		// Priority system is handled in external-rules.ts during file discovery, not here
+		// This preserves user's manual toggle states
 
 		return RefreshedRules.create({
 			globalClineRulesToggles: { toggles: globalToggles },
-			localClineRulesToggles: { toggles: localToggles },
+			localClineRulesToggles: { toggles: prioritizedLocalToggles }, // CARET MODIFICATION: Use prioritized toggles
+			localCaretRulesToggles: { toggles: caretLocalToggles }, // CARET MODIFICATION: Add missing caretLocalToggles for UI
 			localCursorRulesToggles: { toggles: cursorLocalToggles },
 			localWindsurfRulesToggles: { toggles: windsurfLocalToggles },
 			localWorkflowToggles: { toggles: localWorkflowToggles },

@@ -38,6 +38,7 @@ export interface ExtensionState {
 	preferredLanguage?: string
 	openaiReasoningEffort?: OpenaiReasoningEffort
 	mode: Mode
+	modeSystem?: "caret" | "cline" // CARET MODIFICATION: Add mode system field
 	checkpointTrackerErrorMessage?: string
 	clineMessages: ClineMessage[]
 	currentTaskItem?: HistoryItem
@@ -60,6 +61,7 @@ export interface ExtensionState {
 	distinctId: string
 	globalClineRulesToggles: ClineRulesToggles
 	localClineRulesToggles: ClineRulesToggles
+	localCaretRulesToggles: ClineRulesToggles // CARET MODIFICATION: Add .caretrules state
 	localWorkflowToggles: ClineRulesToggles
 	globalWorkflowToggles: ClineRulesToggles
 	localCursorRulesToggles: ClineRulesToggles
@@ -90,6 +92,7 @@ export interface ClineMessage {
 export type ClineAsk =
 	| "followup"
 	| "plan_mode_respond"
+	| "chatbot_mode_respond" // CARET MODIFICATION: Add chatbot mode response type
 	| "command"
 	| "command_output"
 	| "completion_result"

@@ -1,0 +1,552 @@
+# Caret Utility Functions Guide
+
+## 1. State Management Utilities
+
+### 1.1 Storage Manager (Extension)
+
+Actual implementation location: `caret-src/core/storage/StorageManager.ts`
+
+```typescript
+export class StorageManager {
+	constructor(private context: vscode.ExtensionContext) {}
+
+	// Manage Global State
+	async save(key: string, value: any): Promise<void> {
+		try {
+			await this.context.globalState.update(key, value)
+			caretLogger.debug(`Saved data for key: ${key}`, "StorageManager")
+		} catch (error) {
+			caretLogger.error(`Failed to save data for key ${key}: ${error.message}`, "StorageManager")
+			throw error
+		}
+	}
+
+	async load(key: string): Promise<any> {
+		try {
+			const value = this.context.globalState.get(key)
+			caretLogger.debug(`Loaded data for key: ${key}`, "StorageManager")
+			return value
+		} catch (error) {
+			caretLogger.error(`Failed to load data for key ${key}: ${error.message}`, "StorageManager")
+			throw error
+		}
+	}
+
+	// Manage Workspace State
+	async saveWorkspace(key: string, value: any): Promise<void> {
+		try {
+			await this.context.workspaceState.update(key, value)
+			caretLogger.debug(`Saved workspace data for key: ${key}`, "StorageManager")
+		} catch (error) {
+			caretLogger.error(`Failed to save workspace data for key ${key}: ${error.message}`, "StorageManager")
+			throw error
+		}
+	}
+
+	async loadWorkspace(key: string): Promise<any> {
+		try {
+			const value = this.context.workspaceState.get(key)
+			caretLogger.debug(`Loaded workspace data for key: ${key}`, "StorageManager")
+			return value
+		} catch (error) {
+			caretLogger.error(`Failed to load workspace data for key ${key}: ${error.message}`, "StorageManager")
+			throw error
+		}
+	}
+}
+```
+
+### 1.2 Secret Manager (Extension)
+
+Actual implementation location: `caret-src/core/storage/SecretManager.ts`
+
+```typescript
+export class SecretManager {
+	constructor(private context: vscode.ExtensionContext) {}
+
+	// Store Secret
+	async store(key: string, value: string): Promise<void> {
+		try {
+			await this.context.secrets.store(key, value)
+			caretLogger.debug(`Secret stored for key: ${key}`, "SecretManager")
+		} catch (error) {
+			caretLogger.error(`Failed to store secret for key ${key}: ${error.message}`, "SecretManager")
+			throw error
+		}
+	}
+
+	// Load Secret
+	async get(key: string): Promise<string | undefined> {
+		try {
+			const value = await this.context.secrets.get(key)
+			caretLogger.debug(`Secret retrieved for key: ${key}`, "SecretManager")
+			return value
+		} catch (error) {
+			caretLogger.error(`Failed to get secret for key ${key}: ${error.message}`, "SecretManager")
+			throw error
+		}
+	}
+
+	// Delete Secret
+	async delete(key: string): Promise<void> {
+		try {
+			await this.context.secrets.delete(key)
+			caretLogger.debug(`Secret deleted for key: ${key}`, "SecretManager")
+		} catch (error) {
+			caretLogger.error(`Failed to delete secret for key ${key}: ${error.message}`, "SecretManager")
+			throw error
+		}
+	}
+}
+```
+
+## 2. File System Utilities
+
+### 2.1 Path Management
+
+```typescript
+// Extension storage path
+function getExtensionStoragePath(context: vscode.ExtensionContext): string {
+	return context.globalStorageUri.fsPath
+}
+
+// Workspace path
+function getWorkspacePath(): string {
+	return vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || ""
+}
+
+// Resolve relative path
+function resolveWorkspacePath(relativePath: string): string {
+	const workspacePath = getWorkspacePath()
+	if (!workspacePath) {
+		throw new Error("No workspace folder found")
+	}
+	return path.join(workspacePath, relativePath)
+}
+```
+
+### 2.2 File Operations (Node.js fs/promises based)
+
+```typescript
+import * as fs from "fs/promises"
+import * as path from "path"
+
+// Read file
+async function readFile(filePath: string): Promise<string> {
+	try {
+		return await fs.readFile(filePath, "utf-8")
+	} catch (error) {
+		caretLogger.error(`Failed to read file: ${filePath}`, "FileUtils")
+		throw error
+	}
+}
+
+// Write file
+async function writeFile(filePath: string, content: string): Promise<void> {
+	try {
+		await ensureDirectory(path.dirname(filePath))
+		await fs.writeFile(filePath, content, "utf-8")
+		caretLogger.debug(`File written: ${filePath}`, "FileUtils")
+	} catch (error) {
+		caretLogger.error(`Failed to write file: ${filePath}`, "FileUtils")
+		throw error
+	}
+}
+
+// Create directory (recursive)
+async function ensureDirectory(dirPath: string): Promise<void> {
+	try {
+		await fs.mkdir(dirPath, { recursive: true })
+	} catch (error) {
+		caretLogger.error(`Failed to create directory: ${dirPath}`, "FileUtils")
+	}
+}
+
+// Check if file exists
+async function fileExists(filePath: string): Promise<boolean> {
+	try {
+		await fs.access(filePath)
+		return true
+	} catch {
+		return false
+	}
+}
+```
+
+## 3. Message Utilities
+
+### 3.1 Webview Message System
+
+Actual implementation location: `caret-src/core/webview/CaretProvider.ts`
+
+```typescript
+export class CaretProvider extends WebviewProvider {
+	// Send message
+	protected postMessage(message: any): void {
+		try {
+			this.webviewPanel?.webview.postMessage(message)
+			caretLogger.debug(`Message sent: ${message.type}`, "CaretProvider")
+		} catch (error) {
+			caretLogger.error(`Failed to send message: ${error.message}`, "CaretProvider")
+		}
+	}
+
+	// Message handler
+	protected async handleWebviewMessage(message: any): Promise<any> {
+		try {
+			caretLogger.debug(`Message received: ${message.type}`, "CaretProvider")
+
+			switch (message.type) {
+				case "saveData":
+					return await this.handleSaveData(message)
+				case "loadData":
+					return await this.handleLoadData(message)
+				case "saveSecret":
+					return await this.handleSaveSecret(message)
+				case "loadSecret":
+					return await this.handleLoadSecret(message)
+				default:
+					throw new Error(`Unknown message type: ${message.type}`)
+			}
+		} catch (error) {
+			caretLogger.error(`Message handling failed: ${error.message}`, "CaretProvider")
+			return { type: "error", error: error.message }
+		}
+	}
+}
+```
+
+### 3.2 Notification Messages
+
+```typescript
+// Info message
+function showInfo(message: string): Thenable<string | undefined> {
+	caretLogger.info(`Showing info: ${message}`, "Notifications")
+	return vscode.window.showInformationMessage(message)
+}
+
+// Warning message
+function showWarning(message: string): Thenable<string | undefined> {
+	caretLogger.warn(`Showing warning: ${message}`, "Notifications")
+	return vscode.window.showWarningMessage(message)
+}
+
+// Error message
+function showError(message: string): Thenable<string | undefined> {
+	caretLogger.error(`Showing error: ${message}`, "Notifications")
+	return vscode.window.showErrorMessage(message)
+}
+
+// Quick pick message
+function showQuickPick(items: string[], options?: vscode.QuickPickOptions): Thenable<string | undefined> {
+	caretLogger.debug(`Showing quick pick with ${items.length} items`, "Notifications")
+	return vscode.window.showQuickPick(items, options)
+}
+```
+
+## 4. Logging Utilities
+
+### 4.1 Caret Logger Integration
+
+Actual implementation location: `caret-src/utils/caret-logger.ts`
+
+```typescript
+import { caretLogger } from "../utils/caret-logger"
+
+// Structured logging
+function logOperation(operation: string, details?: any): void {
+	caretLogger.info(`Operation: ${operation}`, "Utils", details)
+}
+
+function logError(operation: string, error: Error, context?: string): void {
+	caretLogger.error(`${operation} failed: ${error.message}`, context || "Utils", {
+		error: error.stack,
+		operation,
+	})
+}
+
+function logPerformance(operation: string, startTime: number): void {
+	const duration = Date.now() - startTime
+	caretLogger.debug(`${operation} completed in ${duration}ms`, "Performance")
+}
+```
+
+### 4.2 Webview Logger Integration
+
+Actual implementation location: `webview-ui/src/caret/utils/webview-logger.ts`
+
+```typescript
+import WebviewLogger from "./webview-logger"
+
+// Used in frontend
+const logger = new WebviewLogger("Utils")
+
+function logUIOperation(operation: string, data?: any): void {
+	logger.info(`UI Operation: ${operation}`, data)
+}
+
+function logUIError(operation: string, error: Error): void {
+	logger.error(`UI Operation failed: ${operation}`, {
+		message: error.message,
+		stack: error.stack,
+	})
+}
+```
+
+## 5. Validation Utilities
+
+### 5.1 Data Validation
+
+```typescript
+// Validate required fields
+function validateRequiredFields(data: any, fields: string[]): boolean {
+	if (!data || typeof data !== "object") {
+		return false
+	}
+
+	return fields.every((field) => {
+		const value = data[field]
+		return value !== undefined && value !== null && value !== ""
+	})
+}
+
+// Type validation
+function validateType(value: any, expectedType: string): boolean {
+	const actualType = typeof value
+	return actualType === expectedType
+}
+
+// Array validation
+function validateArray<T>(value: any, validator?: (item: T) => boolean): value is T[] {
+	if (!Array.isArray(value)) {
+		return false
+	}
+
+	if (validator) {
+		return value.every(validator)
+	}
+
+	return true
+}
+
+// String length validation
+function validateStringLength(value: string, minLength?: number, maxLength?: number): boolean {
+	if (typeof value !== "string") {
+		return false
+	}
+
+	if (minLength !== undefined && value.length < minLength) {
+		return false
+	}
+
+	if (maxLength !== undefined && value.length > maxLength) {
+		return false
+	}
+
+	return true
+}
+```
+
+### 5.2 Configuration Validation
+
+```typescript
+// API Key validation
+function validateApiKey(key: string): boolean {
+	if (!key || typeof key !== "string") {
+		return false
+	}
+
+	// Basic API key format validation (alphanumeric, hyphens, underscores)
+	return /^[A-Za-z0-9\-_]{8,}$/.test(key)
+}
+
+// URL validation
+function validateUrl(url: string): boolean {
+	try {
+		new URL(url)
+		return true
+	} catch {
+		return false
+	}
+}
+
+// Mode configuration validation
+function validateModeConfig(config: any): boolean {
+	const requiredFields = ["id", "name", "description"]
+
+	return (
+		validateRequiredFields(config, requiredFields) &&
+		validateType(config.id, "string") &&
+		validateType(config.name, "string") &&
+		validateType(config.description, "string") &&
+		validateStringLength(config.id, 1, 50) &&
+		validateStringLength(config.name, 1, 100)
+	)
+}
+```
+
+## 6. Asynchronous Utilities
+
+### 6.1 Retry Mechanism
+
+```typescript
+// Retry utility
+async function retry<T>(operation: () => Promise<T>, maxRetries: number = 3, delay: number = 1000): Promise<T> {
+	let lastError: Error
+
+	for (let i = 0; i < maxRetries; i++) {
+		try {
+			return await operation()
+		} catch (error) {
+			lastError = error as Error
+			caretLogger.warn(`Operation failed, retry ${i + 1}/${maxRetries}: ${error.message}`, "RetryUtils")
+
+			if (i < maxRetries - 1) {
+				await new Promise((resolve) => setTimeout(resolve, delay))
+			}
+		}
+	}
+
+	throw lastError!
+}
+
+// Exponential backoff
+async function retryWithBackoff<T>(operation: () => Promise<T>, maxRetries: number = 3, baseDelay: number = 1000): Promise<T> {
+	let lastError: Error
+
+	for (let i = 0; i < maxRetries; i++) {
+		try {
+			return await operation()
+		} catch (error) {
+			lastError = error as Error
+
+			if (i < maxRetries - 1) {
+				const delay = baseDelay * Math.pow(2, i)
+				caretLogger.warn(`Operation failed, retrying in ${delay}ms (attempt ${i + 1}/${maxRetries})`, "RetryUtils")
+				await new Promise((resolve) => setTimeout(resolve, delay))
+			}
+		}
+	}
+
+	throw lastError!
+}
+```
+
+### 6.2 Timeout Utility
+
+```typescript
+// Timeout wrapper
+async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, timeoutMessage?: string): Promise<T> {
+	const timeoutPromise = new Promise<never>((_, reject) => {
+		setTimeout(() => {
+			reject(new Error(timeoutMessage || `Operation timed out after ${timeoutMs}ms`))
+		}, timeoutMs)
+	})
+
+	return Promise.race([promise, timeoutPromise])
+}
+
+// Batch processing
+async function processBatch<T, R>(
+	items: T[],
+	processor: (item: T) => Promise<R>,
+	batchSize: number = 10,
+	delayMs: number = 100,
+): Promise<R[]> {
+	const results: R[] = []
+
+	for (let i = 0; i < items.length; i += batchSize) {
+		const batch = items.slice(i, i + batchSize)
+		const batchResults = await Promise.all(batch.map(processor))
+		results.push(...batchResults)
+
+		if (i + batchSize < items.length && delayMs > 0) {
+			await new Promise((resolve) => setTimeout(resolve, delayMs))
+		}
+	}
+
+	return results
+}
+```
+
+## 7. Test Utilities
+
+### 7.1 Mock Helpers
+
+```typescript
+// VSCode Extension Context Mock
+export function createMockExtensionContext(): Partial<vscode.ExtensionContext> {
+	return {
+		globalState: {
+			get: vi.fn(),
+			update: vi.fn(),
+			keys: vi.fn().mockReturnValue([]),
+		},
+		workspaceState: {
+			get: vi.fn(),
+			update: vi.fn(),
+			keys: vi.fn().mockReturnValue([]),
+		},
+		secrets: {
+			get: vi.fn(),
+			store: vi.fn(),
+			delete: vi.fn(),
+		},
+		globalStorageUri: vscode.Uri.file("/test/storage"),
+		extensionUri: vscode.Uri.file("/test/extension"),
+	} as any
+}
+
+// Webview Mock
+export function createMockWebview(): Partial<vscode.Webview> {
+	return {
+		postMessage: vi.fn(),
+		onDidReceiveMessage: vi.fn(),
+	} as any
+}
+```
+
+### 7.2 Test Data Generation
+
+```typescript
+// Test Data Factory
+export class TestDataFactory {
+	static createMessage(type: string, payload?: any) {
+		return {
+			type,
+			timestamp: new Date().toISOString(),
+			...payload,
+		}
+	}
+
+	static createConfig(overrides?: Partial<any>) {
+		return {
+			id: "test-config",
+			name: "Test Configuration",
+			description: "Test configuration for unit tests",
+			enabled: true,
+			...overrides,
+		}
+	}
+
+	static createLogEntry(level: string = "info", message: string = "Test message") {
+		return {
+			timestamp: new Date().toISOString(),
+			level,
+			component: "Test",
+			message,
+			data: {},
+		}
+	}
+}
+```
+
+## 8. Update History
+
+- 2024-03-21: Initial document creation
+- 2024-03-21: Utility functions organized
+- 2024-03-21: Example code added
+- 2024-03-21: Validation utilities added
+- 2025-06-21: Converted to .mdx and updated to match actual code structure
+- 2025-06-21: Caret Logger integration, Vitest test utilities added
+- 2025-07-07: Translated to English.

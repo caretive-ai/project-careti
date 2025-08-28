@@ -1,0 +1,16 @@
+{
+	"normalState": "正常图像",
+	"thinkingState": "思考图像",
+	"selector": {
+		"title": "AI助手模板角色设置",
+		"description": "请选择您想要的角色。您可以自由编辑所选角色，创建自己的个性化助手。",
+		"selectButtonText": "选择",
+		"selectedButtonText": "已选择",
+		"infoTextCustomInstructions": "选定的角色指令将保存到 custom_instructions.md (全局规则)文件中"
+	},
+	"selectorTitle": "AI助手模板角色设置",
+	"selectorDescription": "请选择您想要的角色。您可以自由编辑所选角色，创建自己的个性化助手。",
+	"selectButtonText": "选择",
+	"infoTextCustomInstructions": "选定的角色指令将保存到 custom_instructions.md (全局规则)文件中",
+	"selectedButtonText": "已选择"
+}

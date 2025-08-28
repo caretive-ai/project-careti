@@ -8,6 +8,7 @@ import {
 	ClineRulesToggles,
 	RefreshedRules,
 	ToggleClineRuleRequest,
+	ToggleCaretRuleRequest, // CARET MODIFICATION: Add ToggleCaretRuleRequest
 	ToggleCursorRuleRequest,
 	ToggleWindsurfRuleRequest,
 	ToggleWorkflowRequest,
@@ -17,17 +18,22 @@ import React, { useEffect, useRef, useState } from "react"
 import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
 import RulesToggleList from "./RulesToggleList"
+import PersonaManagement from "@/caret/components/PersonaManagement"
+import { t } from "@/caret/utils/i18n"
+import { caretWebviewLogger } from "@/caret/utils/webview-logger"
 
 const ClineRulesToggleModal: React.FC = () => {
 	const {
 		globalClineRulesToggles = {},
 		localClineRulesToggles = {},
+		localCaretRulesToggles = {}, // CARET MODIFICATION: Add missing localCaretRulesToggles
 		localCursorRulesToggles = {},
 		localWindsurfRulesToggles = {},
 		localWorkflowToggles = {},
 		globalWorkflowToggles = {},
 		setGlobalClineRulesToggles,
 		setLocalClineRulesToggles,
+		setLocalCaretRulesToggles, // CARET MODIFICATION: Add setter
 		setLocalCursorRulesToggles,
 		setLocalWindsurfRulesToggles,
 		setLocalWorkflowToggles,
@@ -43,14 +49,29 @@ const ClineRulesToggleModal: React.FC = () => {
 
 	useEffect(() => {
 		if (isVisible) {
+			caretWebviewLogger.debug("Rules modal opened, refreshing rules...")
 			FileServiceClient.refreshRules({} as EmptyRequest)
 				.then((response: RefreshedRules) => {
+					caretWebviewLogger.debug("Rules refresh response:", response)
 					// Update state with the response data using all available setters
 					if (response.globalClineRulesToggles?.toggles) {
 						setGlobalClineRulesToggles(response.globalClineRulesToggles.toggles)
 					}
 					if (response.localClineRulesToggles?.toggles) {
 						setLocalClineRulesToggles(response.localClineRulesToggles.toggles)
+					}
+					if (response.localCaretRulesToggles?.toggles) {
+						// CARET MODIFICATION: Add missing handler
+						caretWebviewLogger.debug(
+							`[CARET UI] RefreshRules - received caret toggles:`,
+							response.localCaretRulesToggles.toggles,
+						)
+						setLocalCaretRulesToggles(response.localCaretRulesToggles.toggles)
+					} else {
+						caretWebviewLogger.debug(
+							`[CARET UI] RefreshRules - NO caret toggles received`,
+							response.localCaretRulesToggles,
+						)
 					}
 					if (response.localCursorRulesToggles?.toggles) {
 						setLocalCursorRulesToggles(response.localCursorRulesToggles.toggles)
@@ -66,7 +87,7 @@ const ClineRulesToggleModal: React.FC = () => {
 					}
 				})
 				.catch((error) => {
-					console.error("Failed to refresh rules:", error)
+					caretWebviewLogger.error("Failed to refresh rules:", error)
 				})
 		}
 	}, [isVisible])
@@ -78,6 +99,11 @@ const ClineRulesToggleModal: React.FC = () => {
 
 	// Format local rules for display with proper typing
 	const localRules = Object.entries(localClineRulesToggles || {})
+		.map(([path, enabled]): [string, boolean] => [path, enabled as boolean])
+		.sort(([a], [b]) => a.localeCompare(b))
+
+	// CARET MODIFICATION: Add caretRules for display
+	const caretRules = Object.entries(localCaretRulesToggles || {})
 		.map(([path, enabled]): [string, boolean] => [path, enabled as boolean])
 		.sort(([a], [b]) => a.localeCompare(b))
 
@@ -152,6 +178,28 @@ const ClineRulesToggleModal: React.FC = () => {
 			})
 			.catch((error) => {
 				console.error("Error toggling Windsurf rule:", error)
+			})
+	}
+
+	// CARET MODIFICATION: Add caret rules toggle function - uses dedicated caret backend
+	const toggleCaretRule = (rulePath: string, enabled: boolean) => {
+		caretWebviewLogger.debug(`[CARET UI] Toggle clicked - rulePath: ${rulePath}, enabled: ${enabled}`)
+		FileServiceClient.toggleCaretRule(
+			ToggleCaretRuleRequest.create({
+				rulePath,
+				enabled,
+			} as ToggleCaretRuleRequest),
+		)
+			.then((response) => {
+				caretWebviewLogger.debug(`[CARET UI] Toggle response received:`, response)
+				// Update caret toggles state with dedicated response
+				if (response.toggles) {
+					caretWebviewLogger.debug(`[CARET UI] Updating UI state with:`, response.toggles)
+					setLocalCaretRulesToggles(response.toggles)
+				}
+			})
+			.catch((error) => {
+				caretWebviewLogger.error("Error toggling Caret rule:", error)
 			})
 	}
 
@@ -288,9 +336,12 @@ const ClineRulesToggleModal: React.FC = () => {
 
 					{currentView === "rules" ? (
 						<>
+							{/* Persona Management Section */}
+							<PersonaManagement className="mb-3" />
+
 							{/* Global Rules Section */}
 							<div className="mb-3">
-								<div className="text-sm font-normal mb-2">Global Rules</div>
+								<div className="text-sm font-normal mb-2">{t("rules.section.globalRules")}</div>
 								<RulesToggleList
 									rules={globalRules}
 									toggleRule={(rulePath, enabled) => toggleRule(true, rulePath, enabled)}
@@ -304,7 +355,17 @@ const ClineRulesToggleModal: React.FC = () => {
 
 							{/* Local Rules Section */}
 							<div style={{ marginBottom: -10 }}>
-								<div className="text-sm font-normal mb-2">Workspace Rules</div>
+								<div className="text-sm font-normal mb-2">{t("rules.section.workspaceRules")}</div>
+								{/* CARET MODIFICATION: Add .caretrules display */}
+								<RulesToggleList
+									rules={caretRules}
+									toggleRule={toggleCaretRule} // CARET MODIFICATION: Use dedicated caret toggle
+									listGap="small"
+									isGlobal={false}
+									ruleType={"caret"}
+									showNewRule={false}
+									showNoRules={false}
+								/>
 								<RulesToggleList
 									rules={localRules}
 									toggleRule={(rulePath, enabled) => toggleRule(false, rulePath, enabled)}

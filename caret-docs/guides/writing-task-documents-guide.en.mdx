@@ -1,0 +1,232 @@
+# Task Document Writing Guide (AI Conversation Session Based)
+
+## 1. Overview
+
+This document guides how to write task documents for **collaboration with AI** in the Caret project. All tasks should be designed to be **completable within a single AI conversation session**, using a unified document format that integrates Plan and Checklist.
+
+**Core Principles**:
+
+- 🎯 **One Conversation Completion**: All tasks should be completable within a single conversation with AI.
+- 📏 **Appropriate Size**: Within 50% of context window, 1-3 file modifications, 2-4 hours of work.
+- 🔄 **Independence**: Each task should be completable independently without relying on other tasks.
+
+## 2. Task Size Criteria (AI Conversation Session Based)
+
+### 2.1. Mandatory Task Separation Criteria 🔴
+
+If any of the following apply, you **must separate the task**:
+
+**Technical Criteria:**
+
+- Expected context window usage over 70%.
+- Requires modification of 6 or more files.
+- Changes affecting the entire system.
+- Requires E2E testing + multi-environment verification.
+
+**Time Criteria:**
+
+- Estimated work time over 6 hours.
+- Requires 9 or more Phases.
+- Requires work spanning multiple days.
+
+**Complexity Criteria:**
+
+- Involves 4 or more components.
+- Requires multiple API changes.
+- Architecture-level changes.
+
+### 2.2. Appropriate Task Size 🟢
+
+**Ideal Task Size:**
+
+- Context Window: 30-50% usage.
+- File Modifications: 1-3 files.
+- Work Time: 2-4 hours (single conversation session).
+- Number of Phases: 3-5.
+- Complexity: Single feature/bug fix.
+
+## 3. Integrated Task Document Structure
+
+### 3.1. File Naming Conventions
+
+**Master Task:**
+
+```
+{task-number}-{task-name}.md
+```
+
+Example: `002-language-settings-restoration.md`
+
+**Sub-Task:**
+
+```
+{task-number}-{sub-number}-{sub-task-name}.md
+```
+
+Example: `002-1-storage-consistency-fix.md`, `002-2-ui-reactivity-improvement.md`
+
+### 3.2. Document Structure Template
+
+```markdown
+# Task #{task-number}: {Task Name}
+
+**Work Period**: {Estimated Period} (Less than 1 day)
+**Assignee**: {Assignee Name}
+**Priority**: {High/Medium/Low}
+**Estimated Time**: {2-4 hours}
+
+## 🎯 Task Overview
+
+### Goal
+
+- {Clear goal in 1-2 sentences}
+
+### Background
+
+- {Brief explanation of why this task is needed}
+
+### Scope
+
+- ✅ **Included**: {Content to be covered in this task}
+- ❌ **Excluded**: {Content not to be covered in this task}
+
+### Key Deliverables
+
+- {List of deliverables}
+
+## 📚 Pre-Task Knowledge (AI Mandatory)
+
+- `{Document Path 1}`: {Information to be gained from the document}
+- `{Document Path 2}`: {Information to be gained from the document}
+
+## ✅ Execution Checklist
+
+### Phase 1: {Phase Name}
+
+- [ ] **1.1**: {Specific execution item}
+- [ ] **1.2**: {Specific execution item}
+
+### Phase 2: {Phase Name}
+
+- [ ] **2.1**: {Specific execution item}
+- [ ] **2.2**: {Specific execution item}
+
+### Phase 3: {Phase Name}
+
+- [ ] **3.1**: {Specific execution item}
+- [ ] **3.2**: {Specific execution item}
+
+## 🔧 Technical Constraints
+
+- {Mandatory backup when modifying Cline original files}
+- {Restrictions on specific libraries/patterns}
+- {Test coverage requirements}
+
+## 📝 Progress Notes (Real-time Updates)
+
+- {Record issues, decisions, important findings}
+
+## ✅ Completion Criteria
+
+- [ ] All checklist items completed
+- [ ] Tests passed
+- [ ] Code review completed (if necessary)
+- [ ] Document updates completed
+```
+
+## 4. Task Separation Strategy
+
+### 4.1. Master-Sub Structure (Sequential Separation)
+
+Divide complex tasks into stages and proceed sequentially:
+
+```
+Task #002: Restore Language Settings System (Master)
+├── Task #002-1: Resolve Storage Inconsistency (1 day)
+├── Task #002-2: Improve UI Reactivity (1 day)
+└── Task #002-3: Build Integration Tests (1 day)
+```
+
+**Characteristics:**
+
+- Master task provides overall context and goals.
+- Sub-tasks have sequential dependencies.
+- Easy to track progress.
+
+### 4.2. Independent Separation (Feature-Based Separation)
+
+Separate independent features into separate tasks:
+
+```
+Task #010: Implement New Feature A (1 day)
+Task #011: Implement New Feature B (1 day)
+Task #012: Implement New Feature C (1 day)
+```
+
+**Characteristics:**
+
+- Each task is completely independent.
+- Can proceed in parallel.
+- Easy to adjust priorities.
+
+## 5. AI Task Start Protocol
+
+Things AI must confirm when starting a task:
+
+1. **Task Size Verification**: Can it be completed in one conversation?
+2. **Dependency Check**: Does it need to wait for other tasks to complete?
+3. **Document Familiarity**: Have all mandatory reference documents been read?
+4. **Environment Preparation**: Is the development environment ready?
+5. **Completion Criteria**: What needs to be achieved for completion?
+
+## 6. Task Document Management
+
+### 6.1. Status Management
+
+- Manage overall task status in `caret-docs/tasks/task-status.md`.
+- **Provide stable information for collaboration**: Update only at major milestone completion, not real-time changes.
+- **Update Responsibility**: Task owner updates status upon completion of major Phases.
+- Move to `completed/` folder upon task completion.
+
+### 6.2. task-status.md Collaboration Guide
+
+**Purpose**: A reliable source of information for team members to understand the overall project status at any time.
+
+**Update Principles**:
+
+- ✅ **Update Timing**: Only at major milestones (Phase completion, Task completion).
+- ❌ **No Real-time Changes**: Do not update detailed progress during work.
+- 📊 **Stable Information**: Include only completed achievements and confirmed plans.
+
+**Structural Elements**:
+
+- **Project Status Summary**: Overall progress and currently active tasks.
+- **Completed Tasks**: Achievements of verified completed tasks.
+- **In-Progress Tasks**: Status of currently active tasks.
+- **Planned Tasks**: Confirmed next tasks.
+- **Milestones**: Key achievements and schedule.
+- **Collaboration Guide**: Guide for new team members.
+
+### 6.3. Task Log Integration
+
+- Daily work log: `caret-docs/work-logs/{username}/{date}.md`
+- Update work log at task start/completion.
+
+## 7. Quality Management
+
+### 7.1. Pre-Task Checklist
+
+- [ ] Is the task size appropriate?
+- [ ] Are the completion criteria clear?
+- [ ] Are mandatory reference documents specified?
+- [ ] Are technical constraints considered?
+
+### 7.2. Task Completion Checklist
+
+- [ ] All Phases completed
+- [ ] Tests passed
+- [ ] Document updates
+- [ ] Work log recorded
+- [ ] Connection to next task confirmed
+
+Following this guide enables efficient collaboration with AI, and each task is completed independently, ensuring smooth project progress.

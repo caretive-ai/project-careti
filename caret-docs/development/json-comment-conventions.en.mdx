@@ -1,0 +1,85 @@
+# Caret JSON File Commenting Rules
+
+**Important:** Standard JSON does not support comments. The following rules are for internal documentation and tracking Caret-specific changes, especially in shared files like `cline/webview-ui/package.json`. These comments may need to be removed or processed by a preprocessor if they cause issues with linters or build processes.
+
+## Single-Line Comments
+
+Use a concise marker and description after `//`.
+
+- **Marker:** `[CARET]`
+- **Format:** `// [CARET] Concise comment content`
+
+**Example (in `package.json` context):**
+
+```json
+{
+	"dependencies": {
+		"some-dependency": "^1.0.0", // [CARET] Reason why this dependency is needed.
+		"another-dependency": "^2.1.0"
+	}
+}
+```
+
+## Multi-Line Comment Blocks
+
+Use start and end markers for extensive comments spanning multiple lines or grouping related items.
+
+- **Start Marker:** `// [CARET_BLOCK_START] Brief description of the block (optional)`
+- **Content:** Each line of the multi-line comment must also start with `//`.
+- **End Marker:** `// [CARET_BLOCK_END] Brief description (can match start)`
+
+**Example (in `package.json` context):**
+
+```json
+{
+	"dependencies": {
+		// [CARET_BLOCK_START] Internationalization dependencies
+		// These packages are essential for providing multilingual support in
+		// Caret WelcomeView and other future UI components.
+		"i18next": "^23.11.5", // [CARET] Core i18n library.
+		"react-i18next": "^15.5.3", // [CARET] React bindings for i18next.
+		// [CARET_BLOCK_END] Internationalization dependencies
+		"other-package": "1.0.0"
+	}
+}
+```
+
+## Single-Line Comments for Key-Value Pairs
+
+To comment on a specific key-value pair, add a new key-value pair **immediately after** the target item.
+
+- **Comment Key Format:** `comment_[original_key_name]_caret` (if Caret-related) or `comment_[original_key_name]`
+- **Comment Value:** The descriptive comment string.
+
+**Example:**
+
+```json
+{
+	"someSetting": true,
+	"comment_someSetting_caret": "Enabled for Caret's enhanced feature X."
+}
+```
+
+## Comment Blocks
+
+To define a descriptive block for a group of settings:
+
+- **Block Start Key:** `_comment_block_start_[description]_caret`
+    - Value: Comment text for the block start.
+- **Block End Key:** `_comment_block_end_[description]_caret`
+    - Value: Comment text for the block end (can be simple like "... end of block").
+
+**Example:**
+
+```json
+{
+	"_comment_block_start_feature_Y_settings_caret": "Settings related to Caret's feature Y.",
+	"settingA": "valueA",
+	"comment_settingA_caret": "Specific to feature Y.",
+	"settingB": false,
+	"comment_settingB_caret": "Disabled by default in feature Y.",
+	"_comment_block_end_feature_Y_settings_caret": "End of Caret's feature Y settings."
+}
+```
+
+Always ensure these comment keys are unique and do not conflict with actual setting keys.

@@ -1,0 +1,419 @@
+# Caret Development Guide
+
+Caret is a VSCode extension based on Cline. This guide contains all the information developers need to contribute to the project.
+
+## 🏗️ Project Architecture
+
+### Fork-Based Structure
+
+Caret is a complete Fork of [Cline](https://github.com/cline/cline):
+
+- **`src/`**: Cline original code (preserved as much as possible)
+- **`caret-src/`**: Caret unique extension features (minimized)
+- **`webview-ui/`**: React frontend (utilizes Cline build system)
+
+For detailed architecture information, refer to the [Caret Architecture Guide](./caret-architecture-and-implementation-guide.en.mdx).
+
+### ⚡ Frontend-Backend Interaction Patterns
+
+Use **proven standard patterns** for communication between Caret's webview and Extension Host:
+
+- **Single Field Update**: Send only changed fields to prevent circular messages.
+- **Optimistic Update**: Immediately update UI, then synchronize with backend.
+- **Separate Update Functions**: Create dedicated functions like `setUILanguage`, `setPersona`, etc.
+
+For detailed patterns, refer to the [Frontend-Backend Interaction Guide](./frontend-backend-interaction-patterns.en.mdx).
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+- VSCode (for development and testing)
+- Git
+
+### Installation and Execution
+
+1.  **Clone Repository**
+
+    ```bash
+    git clone https://github.com/aicoding-caret/caret.git
+    cd caret
+    ```
+
+2.  **Install Dependencies**
+
+    ```bash
+    npm install
+    cd webview-ui && npm install && cd ..
+    ```
+
+3.  **Compile Protocol Buffers**
+
+    ```bash
+    npm run protos
+    ```
+
+4.  **Compile TypeScript**
+
+    ```bash
+    npm run compile
+    # Or for quick development
+    npm run compile:fast
+    ```
+
+5.  **Run Extension (Development Mode)**
+    - Press F5 in VSCode or Debug > Start Debugging.
+    - A new VSCode window will open with the Caret extension activated.
+
+## 🧪 Testing
+
+Caret aims for **100% test coverage** (based on Caret-specific code) and **TDD (Test-Driven Development)**, and all code must pass all tests before pushing.
+
+### Test Framework
+
+Caret uses **Vitest** to manage both frontend and backend tests.
+
+### Key Test Commands
+
+```bash
+# ⭐ Recommended: Run all tests (frontend + backend)
+# You must run this command to ensure all tests pass before pushing to Git.
+npm run test:all
+
+# ⚠️ Caution: Command with past ESM-related issues
+# Currently behaves the same as 'npm run test:all' and all tests pass.
+# However, 'npm run test:all' is still recommended as a priority.
+npm test
+
+# Run individual tests (refer to Testing Guide for details)
+npm run test:backend    # Backend only
+npm run test:webview    # Frontend only (Webview UI)
+
+# Test watch mode (during development)
+npm run test:backend:watch # Backend watch
+# npm run test:webview:watch # Frontend watch (add to package.json if needed)
+```
+
+### Test Execution Flow and Principles
+
+1.  **During Development**: When changes occur, frequently run `npm run test:all` or related individual tests (`test:backend`, `test:webview`) to get immediate feedback.
+2.  **Before Commit and Push**: **You must run `npm run compile && npm run test:all`** to ensure all builds succeed and all tests pass.
+    - **Principle**: If even a single test fails, do not push the code until the root cause is resolved.
+3.  **CI/CD**: `npm run test:all` will be automatically executed for pushed code via GitHub Actions to verify quality. (Planned for future implementation)
+
+For detailed testing strategies, test writing methods, and various test command options, please refer to the **[Caret Testing Guide](./testing-guide.en.mdx)** document. This guide provides the most detailed and accurate information regarding testing.
+
+### Check Test Coverage
+
+```bash
+# Check overall coverage (integrated backend + frontend coverage may require further configuration review)
+npm run test:coverage # May primarily indicate backend coverage
+
+# Detailed analysis of Caret-specific code coverage (utilize script)
+node caret-scripts/caret-coverage-check.js
+```
+
+For more details, refer to the coverage section of the [Testing Guide](./testing-guide.en.mdx).
+
+## 🏗️ Build System
+
+### Key Build Commands
+
+```bash
+# Compile Protocol Buffers (for gRPC communication)
+npm run protos
+
+# Compile TypeScript (backend) - includes full verification
+npm run compile
+
+# Fast compile (for quick builds during development)
+npm run compile:fast
+
+# Build Webview UI (frontend)
+cd webview-ui
+npm run build
+
+# Create VSIX package
+npm run package
+
+# Create VSIX release package (includes timestamp)
+npm run package:release
+
+# Watch mode for development
+npm run watch
+```
+
+### Detailed Explanation of Build Commands
+
+#### `npm run compile`
+
+- **Full Build**: Type check + linting + compilation
+- **Usage**: Before PR submission, final check before deployment
+- **Time**: Relatively long (full verification)
+
+#### `npm run compile:fast`
+
+- **Fast Build**: Only compilation (skips verification)
+- **Usage**: Quick tests during development, iterative development
+- **Time**: Very fast (1-2 seconds)
+
+### Cline Pattern-Based Build Optimization
+
+- **Protocol Buffer**: Protobuf compilation for MCP server communication.
+- **esbuild**: Fast TypeScript bundling.
+- **Vite**: React component build and HMR.
+
+## 🔧 Development Workflow
+
+### 1. New Feature Development (Utilizing Cline Patterns)
+
+#### Backend Extension
+
+```typescript
+// caret-src/core/feature/NewFeature.ts
+import { WebviewProvider } from "../../../src/core/webview/WebviewProvider"
+
+export class NewFeature extends WebviewProvider {
+	// Extend Cline functionality
+	override async handleRequest(request: any) {
+		// Caret-specific logic
+		const caretResult = await this.processCaretSpecific(request)
+
+		// Combine with Cline's default processing
+		const baseResult = await super.handleRequest(request)
+
+		return { ...baseResult, ...caretResult }
+	}
+}
+```
+
+#### Frontend Extension
+
+```typescript
+// webview-ui/src/caret/components/NewComponent.tsx
+import React from 'react'
+import { useExtensionState } from '../../context/ExtensionStateContext'
+
+export const NewComponent: React.FC = () => {
+  const { state } = useExtensionState()
+
+  return (
+    <div className="caret-new-component">
+      {/* Caret-specific UI */}
+    </div>
+  )
+}
+```
+
+### 2. Utilizing Task Execution System
+
+Extending Cline's proven Task execution pattern:
+
+```typescript
+// caret-src/core/task/CaretTask.ts
+import { Task } from "../../../src/core/task/Task"
+
+export class CaretTask extends Task {
+	async initiateTaskLoop(userContent: UserContent, isNewTask: boolean) {
+		while (!this.abort) {
+			// 1. API Streaming (Cline Pattern)
+			const stream = this.attemptApiRequest()
+
+			// 2. Real-time message processing (Cline Pattern)
+			for await (const chunk of stream) {
+				await this.handleStreamingChunk(chunk)
+			}
+
+			// 3. Add Caret-specific processing
+			await this.processCaretSpecificTasks()
+		}
+	}
+}
+```
+
+### 3. State Management (Cline Pattern)
+
+```typescript
+// caret-src/core/state/CaretStateManager.ts
+export class CaretStateManager {
+	async initializeState() {
+		// Global State (shared across all VSCode instances)
+		const globalSettings = await this.context.globalState.get("caret.settings")
+
+		// Workspace State (current workspace)
+		const workspaceData = await this.context.workspaceState.get("caret.workspace")
+
+		// Secrets (secure storage)
+		const apiKeys = await this.context.secrets.get("caret.apiKeys")
+	}
+}
+```
+
+## 📝 Documentation
+
+### Code Documentation
+
+- **TSDoc**: TSDoc comments for all public methods.
+- **README**: Write README for each package/module.
+- **Architecture**: Document key design decisions.
+
+````typescript
+/**
+ * Main class for processing Caret-specific features
+ * @example
+ * ```typescript
+ * const caret = new CaretProvider()
+ * await caret.initialize()
+ * ```
+ */
+export class CaretProvider extends WebviewProvider {
+	/**
+	 * Processes Caret-specific messages
+	 * @param message - Message object to process
+	 * @returns Promise of processing result
+	 */
+	async handleCaretMessage(message: CaretMessage): Promise<CaretResponse> {
+		// Implementation...
+	}
+}
+````
+
+### Document Writing Guide
+
+All documents should be written following the [Document Writing Guide](./documentation-guide.en.mdx).
+
+## 🔍 Debugging
+
+### VSCode Extension Debugging
+
+1.  **F5** or **Run > Start Debugging**.
+2.  Test extension in a new VSCode window.
+3.  Debug webview in **Developer Tools**.
+4.  Check logs in **Output** panel.
+
+### Logging System (Extending Cline Patterns)
+
+```typescript
+// caret-src/utils/caret-logger.ts
+import { Logger } from "../../src/services/logging/Logger"
+
+export class CaretLogger extends Logger {
+	constructor(name: string) {
+		super(`Caret.${name}`)
+	}
+
+	logWithContext(level: LogLevel, message: string, context?: any) {
+		const caretContext = {
+			...context,
+			caretVersion: this.getCaretVersion(),
+			timestamp: new Date().toISOString(),
+		}
+
+		super.log(level, message, caretContext)
+	}
+}
+
+// Usage example
+const logger = new CaretLogger("FeatureName")
+logger.logWithContext("info", "Feature initialized", { feature: "newFeature" })
+```
+
+For detailed logging guide, refer to the [Logging Guide](./logging.en.mdx).
+
+## 🎯 Quality Assurance
+
+### Code Quality
+
+- **ESLint**: Code style and quality checks.
+- **Prettier**: Code formatting.
+- **TypeScript**: Strict type checking.
+
+```bash
+# Run linting
+npm run lint
+
+# Run formatting
+npm run format
+
+# Run type checking (includes Protocol Buffer)
+npm run check-types
+
+# Command combination for fast development
+npm run compile:fast  # Fast compile (skips type check + linting)
+npm run compile       # Full compile (includes all verifications)
+```
+
+### Development Efficiency Tips
+
+#### Fast Development Cycle
+
+```bash
+# 1. Quick check after code modification
+npm run compile:fast
+
+# 2. Check test status
+npm run test:all
+
+# 3. Final verification (before PR submission)
+npm run compile && npm run test:all
+# Note: npm test currently fails due to ESM/CJS issues, so use test:all
+```
+
+#### Utilize Watch Mode
+
+```bash
+# Automatic compile in background
+npm run watch
+
+# Test watch in separate terminal
+npm run test:backend:watch
+```
+
+### Commit Convention
+
+```
+feat: Add new feature
+fix: Fix bug
+docs: Document changes
+style: Code formatting
+refactor: Code refactoring
+test: Test code
+chore: Build/configuration changes
+```
+
+## 🔄 Upstream Merging
+
+Process of integrating Cline updates into Caret:
+
+1.  **Check for changes in Cline repository**.
+2.  **Resolve conflicts** (primarily in `src/` directory).
+3.  **Test Caret feature compatibility**.
+4.  **Update documentation**.
+
+For detailed merging guide, refer to the [Upstream Merging Guide](../guides/upstream-merging.mdx).
+
+## 📚 Additional Resources
+
+### Core Documents
+
+- [Architecture Guide](./caret-architecture-and-implementation-guide.mdx) - Overall system structure
+- [Testing Guide](./testing-guide.mdx) - Test writing and execution
+- [Logging Guide](./logging.mdx) - Logging system usage
+- [Documentation Guide](./documentation-guide.mdx) - Document writing standards
+- [UI-Storage Flow Guide](./ui-to-storage-flow.mdx) - Understanding data flow
+
+### Cline Pattern Utilization Guide
+
+- **Streaming Processing**: Race condition prevention locking mechanism.
+- **State Management**: Global/Workspace/Secrets multi-store.
+- **API Management**: Token tracking and context management.
+- **Error Handling**: Automatic retry and user confirmation processes.
+
+### Development Tools
+
+- [Utilities Guide](./utilities.mdx) - How to use development utilities.
+- [Webview Communication Guide](./webview-extension-communication.mdx) - Frontend-Backend communication.
+
+This guide will help you effectively participate in Caret development. If you have any further questions or need assistance, please feel free to ask!

@@ -5,6 +5,8 @@ import { useCallback } from "react"
 import { SlashServiceClient, TaskServiceClient } from "@/services/grpc-client"
 import type { ButtonActionType } from "../shared/buttonConfig"
 import type { ChatState, MessageHandlers } from "../types/chatTypes"
+import { MODE_SYSTEMS, STORAGE_KEYS, CARET_MODES } from "@caret-src/shared/constants/ModeSystemConstants"
+import { MessageHandlerAdapter } from "@caret-src/core/messaging/MessageHandlerFactory"
 
 /**
  * Custom hook for managing message handlers
@@ -38,38 +40,43 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 			}
 
 			if (hasContent) {
-				console.log("[ChatView] handleSendMessage - Sending message:", messageToSend)
-				if (messages.length === 0) {
-					await TaskServiceClient.newTask(NewTaskRequest.create({ text: messageToSend, images, files }))
-				} else if (clineAsk) {
-					switch (clineAsk) {
-						case "followup":
-						case "plan_mode_respond":
-						case "tool":
-						case "browser_action_launch":
-						case "command":
-						case "command_output":
-						case "use_mcp_server":
-						case "completion_result":
-						case "resume_task":
-						case "resume_completed_task":
-						case "mistake_limit_reached":
-						case "auto_approval_max_req_reached":
-						case "api_req_failed":
-						case "new_task":
-						case "condense":
-						case "report_bug":
-							await TaskServiceClient.askResponse(
-								AskResponseRequest.create({
-									responseType: "messageResponse",
-									text: messageToSend,
-									images,
-									files,
-								}),
-							)
-							break
-					}
+				// CARET MODIFICATION: Use MessageHandlerAdapter directly (no factory pattern)
+				// Get modeSystem from localStorage - force to "caret" if not set
+				const localModeSystem = localStorage.getItem(STORAGE_KEYS.MODE_SYSTEM) as "caret" | "cline"
+				const modeSystem = localModeSystem || MODE_SYSTEMS.CARET // Default to CARET
+				const currentMode = (localStorage.getItem(STORAGE_KEYS.CURRENT_MODE) as any) || "act"
+
+				// Force modeSystem to "caret" if it's not explicitly set
+				const finalModeSystem = modeSystem === "cline" ? "cline" : "caret"
+
+				// CARET MODIFICATION: Translate Cline modes to Caret modes when using Caret system
+				let finalMode = currentMode
+				if (finalModeSystem === "caret") {
+					finalMode = currentMode === "act" ? CARET_MODES.AGENT : CARET_MODES.CHATBOT
 				}
+
+				console.log("[useMessageHandlers] Mode system resolution:", {
+					localModeSystem,
+					forcedModeSystem: finalModeSystem,
+					currentMode,
+					finalMode,
+					storageKeys: {
+						modeSystemKey: STORAGE_KEYS.MODE_SYSTEM,
+						currentModeKey: STORAGE_KEYS.CURRENT_MODE,
+					},
+				})
+
+				await MessageHandlerAdapter.handleSendMessage(
+					messageToSend,
+					images,
+					files,
+					TaskServiceClient,
+					clineAsk,
+					messages.length,
+					finalModeSystem,
+					finalMode,
+				)
+
 				setInputValue("")
 				setActiveQuote(null)
 				setSendingDisabled(true)

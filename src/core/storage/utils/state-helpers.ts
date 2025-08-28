@@ -68,6 +68,8 @@ export async function readStateFromDisk(context: ExtensionContext) {
 	const claudeCodePath = context.globalState.get("claudeCodePath") as string | undefined
 	const openaiReasoningEffort = context.globalState.get("openaiReasoningEffort") as OpenaiReasoningEffort | undefined
 	const preferredLanguage = context.globalState.get("preferredLanguage") as string | undefined
+	// CARET MODIFICATION: Add modeSystem loading
+	const modeSystem = context.globalState.get("modeSystem") as string | undefined
 
 	// Get all secret values
 	const [
@@ -137,6 +139,7 @@ export async function readStateFromDisk(context: ExtensionContext) {
 	])
 
 	const localClineRulesToggles = context.workspaceState.get("localClineRulesToggles") as ClineRulesToggles | undefined
+	const localCaretRulesToggles = context.workspaceState.get("localCaretRulesToggles") as ClineRulesToggles | undefined // CARET MODIFICATION
 	const localWindsurfRulesToggles = context.workspaceState.get("localWindsurfRulesToggles") as ClineRulesToggles | undefined
 	const localCursorRulesToggles = context.workspaceState.get("localCursorRulesToggles") as ClineRulesToggles | undefined
 	const localWorkflowToggles = context.workspaceState.get("workflowToggles") as ClineRulesToggles | undefined
@@ -377,6 +380,8 @@ export async function readStateFromDisk(context: ExtensionContext) {
 		preferredLanguage: preferredLanguage || "English",
 		openaiReasoningEffort: (openaiReasoningEffort as OpenaiReasoningEffort) || "medium",
 		mode: mode || "act",
+		// CARET MODIFICATION: Add modeSystem with default value
+		modeSystem: modeSystem || "caret",
 		userInfo,
 		mcpMarketplaceEnabled: mcpMarketplaceEnabledRaw || true,
 		mcpDisplayMode: mcpDisplayMode ?? DEFAULT_MCP_DISPLAY_MODE,

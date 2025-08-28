@@ -1,0 +1,6 @@
+{
+	"description": "Information about connected SLLM servers.",
+	"tools": ["use_sllm_tool", "access_sllm_resource"],
+	"content": "When a server is connected, you can use the server's tools via the `use_sllm_tool` tool, and access the server's resources via the `access_sllm_resource` tool.",
+	"sllm_connected_servers_list": "{{sllm_connected_servers_list}}"
+}

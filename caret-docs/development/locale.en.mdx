@@ -1,0 +1,205 @@
+# 🌍 Caret Internationalization (i18n) Guide
+
+Caret establishes an internationalization system for multilingual users to provide services to the global developer community.
+
+## 📋 Supported Languages and Default Settings
+
+The Caret webview UI supports the following languages, and language settings follow this priority:
+
+1.  **VSCode Editor Display Language**: The language set in VSCode is used with the highest priority.
+2.  **English (en)**: If the VSCode language setting cannot be retrieved, or if the set language is not in the supported list below, English is used as the default language.
+
+### Supported Languages List:
+
+- **🇰🇷 Korean (ko)** - Fully supported
+- **🇺🇸 English (en)** - Fully supported (default fallback language)
+- **🇯🇵 Japanese (ja)** - Fully supported
+- **🇨🇳 Chinese (zh)** - Fully supported
+
+## 📁 File Structure
+
+```
+webview-ui/src/caret/locale/
+├── ko/
+│   ├── welcome.json     # Korean Welcome Page Translation ✅
+│   ├── common.json      # Korean Common UI Translation ✅
+│   ├── settings.json    # Korean Settings Page Translation ✅
+│   └── rules.json       # Korean Rule Management Translation ✅
+├── en/
+│   ├── welcome.json     # English Welcome Page Translation ✅
+│   ├── common.json      # English Common UI Translation ✅
+│   ├── settings.json    # English Settings Page Translation ✅
+│   └── rules.json       # English Rule Management Translation ✅
+├── ja/
+│   ├── welcome.json     # Japanese Welcome Page Translation ✅
+│   ├── common.json      # Japanese Common UI Translation ✅
+│   ├── settings.json    # Japanese Settings Page Translation ✅
+│   └── rules.json       # Japanese Rule Management Translation ✅
+└── zh/
+    ├── welcome.json     # Chinese Welcome Page Translation ✅
+    ├── common.json      # Chinese Common UI Translation ✅
+    ├── settings.json    # Chinese Settings Page Translation ✅
+    └── rules.json       # Chinese Rule Management Translation ✅
+```
+
+### ⚠️ Currently Missing Multilingual Support Areas
+
+#### Main Page and Chat Window UI
+
+- Auto-approval settings related text
+- Chat window top Task/Tokens area
+- Display of conversation states like API Request, Checkpoint, Thinking
+- "Cline has a question" → "Caret has a question" display
+
+#### Welcome View Footer
+
+- Missing footer link translations in some languages
+
+## 🔧 Usage
+
+### Using Translations in Components
+
+```tsx
+import { t } from "../utils/i18n"
+
+// Basic usage
+const greeting = t("greeting", "welcome")
+
+// Footer translation usage
+const footerText = t("footer.links.about", "welcome")
+```
+
+### i18n Utility Function
+
+```typescript
+// webview-ui/src/caret/utils/i18n.ts
+export function t(key: string, namespace: string = "common"): string {
+	// Returns the appropriate translation based on the current language setting
+	// key: Translation key (e.g., 'footer.company.name')
+	// namespace: Translation file name (e.g., 'welcome')
+}
+```
+
+## 📝 Translation Key Structure
+
+### Welcome Page Translation Keys
+
+```json
+{
+	"greeting": "Greeting",
+	"catchPhrase": "Catchphrase",
+	"bannerAlt": "Banner image alt text",
+
+	"geminiOffer": {
+		"header": "Gemini Offer Title",
+		"body": "Gemini Offer Content"
+	},
+
+	"footer": {
+		"links": {
+			"caretGithub": "Caret GitHub",
+			"caretService": "Caret Service",
+			"caretiveInc": "Caretive Inc",
+			"about": "About Us",
+			"terms": "Terms of Use",
+			"privacy": "Privacy Policy",
+			"youthProtection": "Youth Protection Policy",
+			"support": "Customer Support"
+		},
+		"company": {
+			"name": "Company Name",
+			"businessNumber": "Business Registration Number",
+			"address": "Company Address"
+		},
+		"copyright": {
+			"text": "Copyright Text",
+			"builtWith": "Built With Information",
+			"version": "Version Information"
+		}
+	}
+}
+```
+
+## 🚀 Adding New Languages
+
+### 1. Create Translation Files
+
+```bash
+# Create new language directory (e.g., French)
+mkdir webview-ui/src/caret/locale/fr
+
+# Create translation files
+touch webview-ui/src/caret/locale/fr/welcome.json
+```
+
+### 2. Write Translation Content
+
+Write the translation content in the new language file based on the Korean `ko/welcome.json`.
+
+### 3. Add Language to i18n System
+
+```typescript
+// Update supported languages list in webview-ui/src/caret/utils/i18n.ts
+const SUPPORTED_LANGUAGES = ["ko", "en", "ja", "zh", "fr"] // Add new language
+```
+
+## 📋 Translation Guidelines
+
+### 1. Maintain Consistency
+
+- Use consistent terminology for the same concepts/features across translations.
+- Do not translate brand names (Caret, Caretive).
+
+### 2. Cultural Appropriateness
+
+- Use expressions appropriate for the culture and customs of each language region.
+- Maintain a formal and friendly tone.
+
+### 3. Technical Terms
+
+- Use commonly accepted translations for technical terms related to development in each language region.
+- Maintain original spelling for proper nouns like API, GitHub.
+
+### 4. Consider Length
+
+- Avoid excessively long translations, considering UI layout.
+- Prefer concise expressions for buttons, labels, etc.
+
+## 🔍 Testing
+
+### Translation Verification Checklist
+
+- [ ] Confirm UI displays correctly in all supported languages.
+- [ ] Confirm long texts do not break the layout.
+- [ ] Confirm special characters (emojis, symbols, etc.) display correctly.
+- [ ] Confirm links and variable substitutions work correctly.
+
+### Testing in VSCode Extension Environment
+
+```bash
+# Test by language in Extension Development Host
+F5 → Extension Development Host → Run Caret → Check welcome page in each language setting
+```
+
+## 🔧 Maintenance
+
+### Translation Update Process
+
+1.  **Update based on Korean (ko)**: Apply new features/changes to Korean first.
+2.  **Synchronize other languages**: Reflect Korean changes in other languages.
+3.  **Consistency Review**: Confirm consistent structure and keys across all languages.
+4.  **Testing**: Verify operation for each language in Extension Development Host.
+
+### Translation Quality Management
+
+- Native speaker review recommended.
+- Regular translation quality checks.
+- Collect and incorporate user feedback.
+
+---
+
+## 🔗 Related Documents
+
+- [Caret Architecture Guide](./caret-architecture-and-implementation-guide.en.mdx)
+- [Webview-Extension Communication](./webview-extension-communication.en.mdx)
+- [Development Guide Index](./index.en.mdx)

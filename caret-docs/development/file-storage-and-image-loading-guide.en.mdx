@@ -1,0 +1,359 @@
+# File Storage and Image Loading Troubleshooting Guide
+
+> 🎯 **Purpose**: A guide to prevent and resolve file storage permissions and image loading issues during VSCode extension development.
+
+## 1. VSCode Webview CSP (Content Security Policy) Issues
+
+### 1.1. Problem Situation
+
+CSP policy violation error occurs when loading images using the `asset://` protocol in VSCode webviews:
+
+```
+Refused to load the image 'asset:/assets/template_characters/ichika.png'
+because it violates the following Content Security Policy directive:
+"img-src 'self' https://*.vscode-cdn.net https: data:".
+```
+
+### 1.2. Cause Analysis
+
+- VSCode webviews do not allow the `asset://` protocol for security reasons.
+- Allowed image sources: `'self'`, `https://*.vscode-cdn.net`, `https:`, `data:`.
+- Only the `data:` URI scheme can safely load local images.
+
+### 1.3. Solution
+
+**Use Base64 Data URI Conversion:**
+
+```typescript
+// ❌ Incorrect Method: Using asset:// protocol
+const imageUri = "asset:/assets/template_characters/sarang.png"
+
+// ✅ Correct Method: Base64 Data URI Conversion
+const convertImageUri = async (assetUri: string): Promise<string> => {
+	if (!assetUri.startsWith("asset:/assets/")) {
+		return assetUri
+	}
+
+	try {
+		// Construct file path
+		const imagePath = path.join(context.extensionPath, "caret-assets", assetUri.replace("asset:/assets/", ""))
+
+		// Base64 conversion
+		const imageBuffer = await fs.readFile(imagePath)
+		const ext = path.extname(imagePath).toLowerCase()
+		const mimeType =
+			ext === ".png"
+				? "image/png"
+				: ext === ".jpg" || ext === ".jpeg"
+					? "image/jpeg"
+					: ext === ".webp"
+						? "image/webp"
+						: "image/png"
+
+		return `data:${mimeType};base64,${imageBuffer.toString("base64")}`
+	} catch (error) {
+		caretLogger.error(`Failed to convert image URI: ${assetUri}`, error)
+		return assetUri // Fallback to original URI
+	}
+}
+```
+
+### 1.4. Implementation Considerations
+
+1.  **Set MIME Type Accurately**: Use the correct MIME type for the file extension.
+2.  **Error Handling**: Provide appropriate fallback if the file does not exist.
+3.  **Logging**: Log the conversion process to aid debugging.
+4.  **Performance Considerations**: Consider caching for large images.
+
+## 2. Image File Path and Storage Mixing Issues
+
+### 2.1. Problem Situation
+
+Failure to find template images due to searching in incorrect paths:
+
+```typescript
+// ❌ Problem: Attempting to find template images in globalStorage
+const globalStoragePath = path.join(context.globalStorageUri.fsPath, "personas", fileName)
+// Result: File not found, loading fails
+```
+
+### 2.2. Path Separation Rules
+
+| Image Type                   | Storage Location                    | Purpose                         | Access Method                |
+| ---------------------------- | ----------------------------------- | ------------------------------- | ---------------------------- |
+| **Template Character Image** | `caret-assets/template_characters/` | Fixed template character images | Extension path + filename    |
+| **Current Persona Image**    | `globalStorage/personas/`           | User-uploaded current persona   | GlobalStorage URI + filename |
+| **User Uploaded Image**      | `globalStorage/personas/`           | User custom images              | GlobalStorage URI + filename |
+
+### 2.3. Correct Implementation Pattern
+
+```typescript
+const loadTemplateImage = async (templateImageUri: string): Promise<string> => {
+	if (templateImageUri.startsWith("asset:/assets/template_characters/")) {
+		// Template images are loaded from caret-assets
+		const imagePath = path.join(context.extensionPath, "caret-assets", templateImageUri.replace("asset:/assets/", ""))
+		return await convertToBase64(imagePath)
+	}
+	return templateImageUri
+}
+
+const loadCurrentPersonaImage = async (): Promise<{ avatarUri: string; thinkingAvatarUri: string }> => {
+	// Current persona images are loaded from globalStorage
+	const globalStoragePath = path.join(context.globalStorageUri.fsPath, "personas")
+
+	const avatarPath = path.join(globalStoragePath, "agent_profile.png")
+	const thinkingPath = path.join(globalStoragePath, "agent_thinking.png")
+
+	return {
+		avatarUri: await convertToBase64(avatarPath),
+		thinkingAvatarUri: await convertToBase64(thinkingPath),
+	}
+}
+```
+
+## 3. Persona Image Display Logic Mixing Issues
+
+### 3.1. Problem Situation
+
+Components with different purposes use the same data source, displaying incorrect images:
+
+- **PersonaAvatar** (for chat): Should display the current persona image.
+- **PersonaManagement** (for settings): Should display the current persona image.
+- **PersonaTemplateSelector** (for selection): Should display template character images.
+
+However, all use `REQUEST_TEMPLATE_CHARACTERS`, causing template images to be incorrectly displayed as the current persona.
+
+### 3.2. Message Type Separation Solution
+
+**Define Message Types by Purpose:**
+
+```typescript
+// WebviewMessage.ts
+export interface WebviewMessage {
+  type:
+    | "REQUEST_TEMPLATE_CHARACTERS"  // For template selection
+    | "REQUEST_PERSONA_IMAGES"       // For displaying current persona
+    | // ... other types
+}
+
+// ExtensionMessage.ts
+export interface ExtensionMessage {
+  type:
+    | "RESPONSE_TEMPLATE_CHARACTERS" // Response for template list
+    | "RESPONSE_PERSONA_IMAGES"      // Response for current persona images
+    | // ... other types
+}
+```
+
+**Separate Handling in Controller:**
+
+```typescript
+// Controller
+case "REQUEST_TEMPLATE_CHARACTERS": {
+  // Return template character list (for selection)
+  const templates = await loadTemplateCharacters()
+  this.postMessageToWebview({
+    type: "RESPONSE_TEMPLATE_CHARACTERS",
+    payload: templates
+  })
+  break
+}
+
+case "REQUEST_PERSONA_IMAGES": {
+  // Return only current persona images (for display)
+  const personaImages = await loadCurrentPersonaImages()
+  this.postMessageToWebview({
+    type: "RESPONSE_PERSONA_IMAGES",
+    payload: personaImages
+  })
+  break
+}
+```
+
+### 3.3. Usage Pattern by Component
+
+```typescript
+// PersonaAvatar.tsx - Display current persona for chat
+useEffect(() => {
+	vscode.postMessage({ type: "REQUEST_PERSONA_IMAGES" })
+}, [])
+
+// PersonaManagement.tsx - Display current persona for settings
+useEffect(() => {
+	vscode.postMessage({ type: "REQUEST_PERSONA_IMAGES" })
+	vscode.postMessage({ type: "REQUEST_TEMPLATE_CHARACTERS" }) // Also needs template list
+}, [])
+
+// PersonaTemplateSelector.tsx - For template selection
+useEffect(() => {
+	vscode.postMessage({ type: "REQUEST_TEMPLATE_CHARACTERS" })
+}, [])
+```
+
+## 4. File Upload and Permissions Issues
+
+### 4.1. globalStorage Directory Permissions
+
+VSCode automatically provides read/write permissions for the globalStorage directory, but the directory might not exist:
+
+```typescript
+const ensurePersonaDirectoryExists = async (context: vscode.ExtensionContext): Promise<string> => {
+	const personaDir = path.join(context.globalStorageUri.fsPath, "personas")
+
+	try {
+		await fs.access(personaDir)
+	} catch {
+		// Create directory if it doesn't exist
+		await fs.mkdir(personaDir, { recursive: true })
+		caretLogger.info(`Created personas directory: ${personaDir}`)
+	}
+
+	return personaDir
+}
+```
+
+### 4.2. Permission Check During File Upload
+
+```typescript
+const savePersonaImage = async (
+	context: vscode.ExtensionContext,
+	imageType: "normal" | "thinking",
+	base64Data: string,
+): Promise<string> => {
+	const personaDir = await ensurePersonaDirectoryExists(context)
+	const fileName = imageType === "normal" ? "agent_profile.png" : "agent_thinking.png"
+	const filePath = path.join(personaDir, fileName)
+
+	try {
+		// Convert Base64 data to buffer
+		const imageBuffer = Buffer.from(base64Data.split(",")[1], "base64")
+
+		// Check file write permissions
+		await fs.access(path.dirname(filePath), fs.constants.W_OK)
+
+		// Save file
+		await fs.writeFile(filePath, imageBuffer)
+
+		caretLogger.info(`Persona image saved: ${filePath}`)
+		return filePath
+	} catch (error) {
+		caretLogger.error(`Failed to save persona image: ${filePath}`, error)
+		throw new Error(`Failed to save persona image: ${error.message}`)
+	}
+}
+```
+
+## 5. Ensuring TypeScript Type Safety
+
+### 5.1. Completeness of Message Type Definitions
+
+When adding new message types, all related type definitions must be updated:
+
+```typescript
+// 1. Update WebviewMessage.ts
+export interface WebviewMessage {
+  type:
+    | "REQUEST_PERSONA_IMAGES"  // Add new type
+    | // ... existing types
+}
+
+// 2. Update ExtensionMessage.ts
+export interface ExtensionMessage {
+  type:
+    | "RESPONSE_PERSONA_IMAGES" // Add new type
+    | // ... existing types
+}
+
+// 3. Define payload type
+export interface PersonaImagesPayload {
+  avatarUri: string
+  thinkingAvatarUri: string
+}
+```
+
+### 5.2. Preventing Compile Errors in Advance
+
+Immediately check compilation after adding types:
+
+```bash
+npm run compile
+```
+
+If type errors occur, all related files must be updated and recompiled.
+
+## 6. Debugging and Logging Strategy
+
+### 6.1. Logging Image Loading Process
+
+```typescript
+const convertImageUri = async (uri: string): Promise<string> => {
+	caretLogger.info(`[ImageLoading] Converting URI: ${uri}`)
+
+	try {
+		const result = await performConversion(uri)
+		caretLogger.info(`[ImageLoading] Success: ${uri} -> data:${mimeType} (${buffer.length} bytes)`)
+		return result
+	} catch (error) {
+		caretLogger.error(`[ImageLoading] Failed: ${uri}`, error)
+		throw error
+	}
+}
+```
+
+### 6.2. Diagnosing File Permission Issues
+
+```typescript
+const diagnoseFilePermissions = async (filePath: string): Promise<void> => {
+	try {
+		const stats = await fs.stat(filePath)
+		caretLogger.info(`[FilePermissions] ${filePath}:`, {
+			exists: true,
+			size: stats.size,
+			isFile: stats.isFile(),
+			isDirectory: stats.isDirectory(),
+		})
+
+		// Check read permissions
+		await fs.access(filePath, fs.constants.R_OK)
+		caretLogger.info(`[FilePermissions] Read access: OK`)
+
+		// Check write permissions (for directories)
+		if (stats.isDirectory()) {
+			await fs.access(filePath, fs.constants.W_OK)
+			caretLogger.info(`[FilePermissions] Write access: OK`)
+		}
+	} catch (error) {
+		caretLogger.error(`[FilePermissions] ${filePath}:`, error)
+	}
+}
+```
+
+## 7. Checklist
+
+### 7.1. Image Loading Implementation Checklist
+
+- [ ] Adherence to CSP policy (use data: URI instead of asset://)
+- [ ] Use correct file paths (template vs. user images)
+- [ ] Set MIME type accurately
+- [ ] Provide error handling and fallback
+- [ ] Support debugging with logging
+- [ ] Complete TypeScript type definitions
+
+### 7.2. File Saving Implementation Checklist
+
+- [ ] Check and create directory if it doesn't exist
+- [ ] Check file permissions
+- [ ] Correct Base64 data conversion
+- [ ] Log save success/failure
+- [ ] Provide appropriate feedback to user
+
+### 7.3. Component Separation Checklist
+
+- [ ] Separate message types by purpose
+- [ ] Appropriate response by request type in Controller
+- [ ] Use correct message types per component
+- [ ] Resolve TypeScript compile errors
+
+---
+
+> 💡 **Tip**: Following the patterns in this guide can effectively prevent file storage and image loading issues in VSCode extensions. Especially, considering CSP policies and path mixing issues during the design phase is crucial.

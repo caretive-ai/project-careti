@@ -22,7 +22,8 @@ export abstract class WebviewProvider {
 
 	constructor(
 		readonly context: vscode.ExtensionContext,
-		private readonly providerType: WebviewProviderType,
+		// CARET MODIFICATION: Changed providerType to protected to allow access in child classes.
+		protected readonly providerType: WebviewProviderType,
 	) {
 		WebviewProvider.activeInstances.add(this)
 		this.clientId = uuidv4()
@@ -197,8 +198,8 @@ export abstract class WebviewProvider {
                     // Inject the client ID
                     window.clineClientId = "${this.clientId}";
                 </script>
-				<script type="module" nonce="${nonce}" src="${scriptUri}"></script>
-				<script src="http://localhost:8097"></script> 
+				<script type="module" nonce="${nonce}" src="${scriptUri}" defer></script>
+				<!-- CARET MODIFICATION: Removed problematic localhost:8097 script causing webview load failure -->
 			</body>
 		</html>
 		`
@@ -286,7 +287,7 @@ export abstract class WebviewProvider {
 			<!DOCTYPE html>
 			<html lang="en">
 				<head>
-					${process.env.IS_DEV ? '<script src="http://localhost:8097"></script>' : ""}
+					<!-- CARET MODIFICATION: Removed problematic localhost:8097 script causing webview load failure -->
 					<meta charset="utf-8">
 					<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 					<meta http-equiv="Content-Security-Policy" content="${csp.join("; ")}">

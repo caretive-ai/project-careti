@@ -1,0 +1,183 @@
+// ⚠️ DEPRECATED: This file is no longer used in v3.0+
+// The CaretProviderWrapper pattern has replaced this direct provider approach
+// This file is kept for reference but should not be imported or used
+// See: CaretProviderWrapper.ts for the new wrapper pattern implementation
+
+import * as vscode from "vscode"
+import * as fs from "fs"
+import * as path from "path"
+import { WebviewProviderType } from "@/shared/webview/types"
+import { getNonce } from "@/core/webview/getNonce"
+import { getUri } from "@caret/utils/getUri"
+import { Logger } from "@/services/logging/Logger"
+import { Controller } from "@/core/controller/index"
+import { WebviewProvider } from "@/core/webview"
+import { v4 as uuidv4 } from "uuid"
+
+// DEPRECATED: Use VscodeWebviewProvider.SIDEBAR_ID instead
+export const CARET_SIDEBAR_ID = "claude-dev.SidebarProvider"
+
+export class CaretProvider extends WebviewProvider implements vscode.WebviewViewProvider {
+	public view?: vscode.WebviewView
+	private disposables: vscode.Disposable[] = []
+	private static instance: CaretProvider | null = null
+
+	constructor(
+		public override readonly context: vscode.ExtensionContext,
+		providerType: WebviewProviderType = WebviewProviderType.SIDEBAR,
+	) {
+		super(context, providerType)
+		CaretProvider.instance = this
+		Logger.info(`CaretProvider constructor called for ${providerType}.`)
+	}
+
+	public static getInstance(): CaretProvider | null {
+		return CaretProvider.instance
+	}
+
+	public async resolveWebviewView(webviewView: vscode.WebviewView) {
+		Logger.info(`resolveWebviewView started for ${this.providerType} with client ID: ${this.getClientId()}`)
+		this.view = webviewView
+
+		webviewView.webview.options = {
+			enableScripts: true,
+			localResourceRoots: [this.context.extensionUri],
+		}
+
+		// CARET MODIFICATION: Use conditional HMR with proper override to avoid Service Worker conflicts
+		webviewView.webview.html =
+			this.context.extensionMode === vscode.ExtensionMode.Development
+				? await this.getHMRHtmlContent()
+				: this.getHtmlContent()
+
+		this.setWebviewMessageListener(webviewView.webview)
+
+		webviewView.onDidChangeVisibility(
+			() => {
+				if (this.view?.visible) {
+					// This is where you might want to send a message to the webview
+					// In cline-latest, this is handled differently, often through state updates.
+				}
+			},
+			null,
+			this.disposables,
+		)
+
+		webviewView.onDidDispose(() => this.dispose(), null, this.disposables)
+
+		this.controller.postStateToWebview()
+		Logger.info(`resolveWebviewView finished for ${this.providerType}. Controller is ready.`)
+	}
+
+	// CARET MODIFICATION: Override HMR to prevent Service Worker conflicts
+	// Always use bundled assets for stability, even in development mode
+	public override async getHMRHtmlContent(): Promise<string> {
+		Logger.info("[CaretProvider] getHMRHtmlContent called - using bundled assets to prevent Service Worker conflicts")
+		return this.getHtmlContent()
+	}
+
+	public override getHtmlContent(): string {
+		const nonce = getNonce()
+		const scriptUri = this.getWebviewUri(
+			vscode.Uri.joinPath(this.context.extensionUri, "webview-ui", "build", "assets", "index.js"),
+		)
+		const stylesUri = this.getWebviewUri(
+			vscode.Uri.joinPath(this.context.extensionUri, "webview-ui", "build", "assets", "index.css"),
+		)
+		const codiconsUri = this.getWebviewUri(
+			vscode.Uri.joinPath(this.context.extensionUri, "node_modules", "@vscode", "codicons", "dist", "codicon.css"),
+		)
+		const katexCssUri = this.getWebviewUri(
+			vscode.Uri.joinPath(this.context.extensionUri, "webview-ui", "node_modules", "katex", "dist", "katex.min.css"),
+		)
+
+		let personaProfileDataUri = ""
+		let personaThinkingDataUri = ""
+		try {
+			const personaDir = path.join(this.context.globalStorageUri.fsPath, "personas")
+			const profilePath = path.join(personaDir, "agent_profile.png")
+			const thinkingPath = path.join(personaDir, "agent_thinking.png")
+
+			if (fs.existsSync(profilePath)) {
+				const profileBuffer = fs.readFileSync(profilePath)
+				personaProfileDataUri = `data:image/png;base64,${profileBuffer.toString("base64")}`
+			}
+
+			if (fs.existsSync(thinkingPath)) {
+				const thinkingBuffer = fs.readFileSync(thinkingPath)
+				personaThinkingDataUri = `data:image/png;base64,${thinkingBuffer.toString("base64")}`
+			}
+		} catch (e) {
+			Logger.error(`[CaretProvider] No persona images found or error loading:`, e as Error)
+		}
+
+		return /*html*/ `
+			<!DOCTYPE html>
+			<html lang="en">
+				<head>
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+				<meta name="theme-color" content="#000000">
+				<link rel="stylesheet" type="text/css" href="${stylesUri}">
+				<link href="${codiconsUri}" rel="stylesheet" />
+				<link href="${katexCssUri}" rel="stylesheet" />
+				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src https://*.posthog.com https://*.firebaseauth.com https://*.firebaseio.com https://*.googleapis.com https://*.firebase.com; font-src ${this.getCspSource()} data:; style-src ${this.getCspSource()} 'unsafe-inline'; img-src ${this.getCspSource()} https: data: blob: asset: vscode-resource: *; script-src 'nonce-${nonce}' 'unsafe-eval';">
+				<title>Caret</title>
+			</head>
+			<body>
+				<noscript>You need to enable JavaScript to run this app.</noscript>
+				<div id="root"></div>
+				 <script type="text/javascript" nonce="${nonce}">
+                    window.WEBVIEW_PROVIDER_TYPE = ${JSON.stringify(this.providerType)};
+                    window.clineClientId = "${this.getClientId()}";
+                    window.personaProfile = "${personaProfileDataUri}";
+                    window.personaThinking = "${personaThinkingDataUri}";
+                </script>
+				<script type="module" nonce="${nonce}" src="${scriptUri}"></script>
+			</body>
+		</html>
+		`
+	}
+
+	private setWebviewMessageListener(webview: vscode.Webview) {
+		webview.onDidReceiveMessage(
+			(message: any) => {
+				// In cline-latest, message handling is done via Protobuf/gRPC
+				// This direct message listener might be used for simpler, non-gRPC communication if needed.
+				Logger.debug(`Received message from webview: ${JSON.stringify(message)}`)
+			},
+			null,
+			this.disposables,
+		)
+	}
+
+	public override async dispose(): Promise<void> {
+		Logger.info(`Disposing CaretProvider for ${this.providerType} with client ID: ${this.getClientId()}.`)
+		CaretProvider.instance = null
+		await super.dispose()
+		while (this.disposables.length) {
+			const x = this.disposables.pop()
+			if (x) {
+				x.dispose()
+			}
+		}
+	}
+
+	// These methods are required by the abstract base class `WebviewProvider`
+	public override getWebviewUri(uri: vscode.Uri): vscode.Uri {
+		return this.view?.webview.asWebviewUri(uri) || uri
+	}
+
+	public override getCspSource(): string {
+		return this.view?.webview.cspSource || ""
+	}
+
+	public override isVisible(): boolean {
+		return this.view?.visible || false
+	}
+
+	protected override isActive(): boolean {
+		// This logic might need to be adjusted based on how "active" is defined in your extension.
+		return this.isVisible()
+	}
+}

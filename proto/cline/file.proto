@@ -40,6 +40,9 @@ service FileService {
   // Toggle a Cline rule (enable or disable)
   rpc toggleClineRule(ToggleClineRuleRequest) returns (ToggleClineRules);
 
+  // CARET MODIFICATION: Toggle a Caret rule (enable or disable)
+  rpc toggleCaretRule(ToggleCaretRuleRequest) returns (ClineRulesToggles);
+
   // Toggle a Cursor rule (enable or disable)
   rpc toggleCursorRule(ToggleCursorRuleRequest) returns (ClineRulesToggles);
   
@@ -69,10 +72,11 @@ service FileService {
 message RefreshedRules {
   ClineRulesToggles global_cline_rules_toggles = 1;
   ClineRulesToggles local_cline_rules_toggles = 2;
-  ClineRulesToggles local_cursor_rules_toggles = 3;
-  ClineRulesToggles local_windsurf_rules_toggles = 4;
-  ClineRulesToggles local_workflow_toggles = 5;
-  ClineRulesToggles global_workflow_toggles = 6;
+  ClineRulesToggles local_caret_rules_toggles = 3; // CARET MODIFICATION: Add .caretrules support
+  ClineRulesToggles local_cursor_rules_toggles = 4;
+  ClineRulesToggles local_windsurf_rules_toggles = 5;
+  ClineRulesToggles local_workflow_toggles = 6;
+  ClineRulesToggles global_workflow_toggles = 7;
 }
 
 // Request to toggle a Windsurf rule
@@ -171,6 +175,13 @@ message ToggleClineRules {
 }
 
 // Request to toggle a Cursor rule
+// CARET MODIFICATION: Toggle caret rule request
+message ToggleCaretRuleRequest {
+  Metadata metadata = 1;
+  string rule_path = 2;   // Path to the rule file
+  bool enabled = 3;       // Whether to enable or disable the rule
+}
+
 message ToggleCursorRuleRequest {
   Metadata metadata = 1;
   string rule_path = 2;   // Path to the rule file

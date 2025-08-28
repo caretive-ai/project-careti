@@ -1,0 +1,21 @@
+{
+	"title": "SYSTEM INFORMATION",
+	"fields": [
+		{
+			"name": "Operating System",
+			"value": "{{osName}}"
+		},
+		{
+			"name": "Default Shell",
+			"value": "{{shell}}"
+		},
+		{
+			"name": "Home Directory",
+			"value": "{{homeDir}}"
+		},
+		{
+			"name": "Current Working Directory",
+			"value": "{{cwd}}"
+		}
+	]
+}

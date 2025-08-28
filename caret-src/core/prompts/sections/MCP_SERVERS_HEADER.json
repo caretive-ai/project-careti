@@ -1,0 +1,4 @@
+{
+	"description": "Introduction to SLLM servers.",
+	"purpose": "The Server-Local Language Model (SLLM) protocol enables communication between the system and locally running SLLM servers that provide additional tools and resources to extend your capabilities."
+}

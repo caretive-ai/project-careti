@@ -16,12 +16,14 @@ export const GlobalFileNames = {
 	groqModels: "groq_models.json",
 	basetenModels: "baseten_models.json",
 	mcpSettings: "cline_mcp_settings.json",
+	caretRules: ".caretrules", // CARET MODIFICATION: Added .caretrules support for rule priority system
 	clineRules: ".clinerules",
 	workflows: ".clinerules/workflows",
 	cursorRulesDir: ".cursor/rules",
 	cursorRulesFile: ".cursorrules",
 	windsurfRules: ".windsurfrules",
 	taskMetadata: "task_metadata.json",
+	persona: "persona.md", // CARET MODIFICATION: Added for persona feature
 }
 
 export async function getDocumentsPath(): Promise<string> {

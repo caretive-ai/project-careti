@@ -16,6 +16,7 @@ import {
 	refreshClineRulesToggles,
 } from "@core/context/instructions/user-instructions/cline-rules"
 import {
+	getLocalCaretRules,
 	getLocalCursorRules,
 	getLocalWindsurfRules,
 	refreshExternalRulesToggles,
@@ -25,7 +26,8 @@ import { sendRelinquishControlEvent } from "@core/controller/ui/subscribeToRelin
 import { ClineIgnoreController } from "@core/ignore/ClineIgnoreController"
 import { parseMentions } from "@core/mentions"
 import { formatResponse } from "@core/prompts/responses"
-import { addUserInstructions, SYSTEM_PROMPT } from "@core/prompts/system"
+import { buildSystemPrompt } from "@/core/prompts/system-prompt/build-system-prompt"
+import { modeRegistry } from "../../../caret-src/core/mode-system/ModeSystemRegistry"
 import { parseSlashCommands } from "@core/slash-commands"
 import {
 	ensureRulesDirectoryExists,
@@ -61,7 +63,6 @@ import { convertClineMessageToProto } from "@shared/proto-conversions/cline-mess
 import { Mode, OpenaiReasoningEffort } from "@shared/storage/types"
 import { ClineAskResponse, ClineCheckpointRestore } from "@shared/WebviewMessage"
 import { getGitRemoteUrls, getLatestGitCommitHash } from "@utils/git"
-import { isNextGenModelFamily } from "@utils/model-utils"
 import { arePathsEqual, getDesktopDir } from "@utils/path"
 import cloneDeep from "clone-deep"
 import { execa } from "execa"
@@ -83,6 +84,7 @@ import { ToolExecutor } from "./ToolExecutor"
 import { updateApiReqMsg } from "./utils"
 import { FocusChainManager } from "./focus-chain"
 import { summarizeTask } from "@core/prompts/contextManagement"
+import { addUserInstructions } from "../prompts/system-prompt/user-instructions/addUserInstructions"
 
 export type ToolResponse = string | Array<Anthropic.TextBlockParam | Anthropic.ImageBlockParam>
 type UserContent = Array<Anthropic.ContentBlockParam>
@@ -1652,14 +1654,26 @@ export class Task {
 
 		const supportsBrowserUse = modelSupportsBrowserUse && !disableBrowserTool // only enable browser use if the model supports it and the user hasn't disabled it
 
-		const isNextGenModel = isNextGenModelFamily(this.api)
-		let systemPrompt = await SYSTEM_PROMPT(
+		// CARET MODIFICATION: Get modeSystem and extensionPath for Caret system prompt generation
+		const state = await this.controller.getStateToPostToWebview()
+		const modeSystem = state.modeSystem || "caret" // Default to Caret system
+		const extensionPath = this.controller.context.extensionPath
+
+		console.log(
+			`[CARET-DEBUG] Task.say() - state.modeSystem: "${state.modeSystem}", resolved modeSystem: "${modeSystem}", this.mode: "${this.mode}"`,
+		)
+
+		let systemPrompt = await buildSystemPrompt(
 			this.cwd,
 			supportsBrowserUse,
 			this.mcpHub,
 			this.browserSettings,
+			this.api.getModel(),
 			this.focusChainSettings,
-			isNextGenModel,
+			// CARET MODIFICATION: Pass additional parameters for Caret system
+			modeSystem,
+			this.mode,
+			extensionPath,
 		)
 
 		const preferredLanguage = getLanguageKey(this.preferredLanguage as LanguageDisplay)
@@ -1669,17 +1683,36 @@ export class Task {
 				: ""
 
 		const { globalToggles, localToggles } = await refreshClineRulesToggles(this.controller, this.cwd)
-		const { windsurfLocalToggles, cursorLocalToggles } = await refreshExternalRulesToggles(this.controller, this.cwd)
+		const { caretLocalToggles, windsurfLocalToggles, cursorLocalToggles } = await refreshExternalRulesToggles(
+			this.controller,
+			this.cwd,
+		)
 
 		const globalClineRulesFilePath = await ensureRulesDirectoryExists()
 		const globalClineRulesFileInstructions = await getGlobalClineRules(globalClineRulesFilePath, globalToggles)
 
+		// CARET MODIFICATION: Rule priority system (.caretrules > .clinerules > .cursorrules > .windsurfrules)
+		const localCaretRulesFileInstructions = await getLocalCaretRules(this.cwd, caretLocalToggles)
 		const localClineRulesFileInstructions = await getLocalClineRules(this.cwd, localToggles)
 		const [localCursorRulesFileInstructions, localCursorRulesDirInstructions] = await getLocalCursorRules(
 			this.cwd,
 			cursorLocalToggles,
 		)
 		const localWindsurfRulesFileInstructions = await getLocalWindsurfRules(this.cwd, windsurfLocalToggles)
+
+		// Apply priority system: Use the highest priority rule that exists and is enabled
+		let activeRuleInstructions: string | undefined
+		if (localCaretRulesFileInstructions) {
+			activeRuleInstructions = localCaretRulesFileInstructions
+		} else if (localClineRulesFileInstructions) {
+			activeRuleInstructions = localClineRulesFileInstructions
+		} else if (localCursorRulesFileInstructions) {
+			activeRuleInstructions = localCursorRulesFileInstructions
+		} else if (localCursorRulesDirInstructions) {
+			activeRuleInstructions = localCursorRulesDirInstructions
+		} else if (localWindsurfRulesFileInstructions) {
+			activeRuleInstructions = localWindsurfRulesFileInstructions
+		}
 
 		const clineIgnoreContent = this.clineIgnoreController.clineIgnoreContent
 		let clineIgnoreInstructions: string | undefined
@@ -1689,20 +1722,18 @@ export class Task {
 
 		if (
 			globalClineRulesFileInstructions ||
-			localClineRulesFileInstructions ||
-			localCursorRulesFileInstructions ||
-			localCursorRulesDirInstructions ||
-			localWindsurfRulesFileInstructions ||
+			activeRuleInstructions ||
 			clineIgnoreInstructions ||
 			preferredLanguageInstructions
 		) {
 			// altering the system prompt mid-task will break the prompt cache, but in the grand scheme this will not change often so it's better to not pollute user messages with it the way we have to with <potentially relevant details>
+			// CARET MODIFICATION: Use priority system - only pass the active rule instead of all rules
 			const userInstructions = addUserInstructions(
 				globalClineRulesFileInstructions,
-				localClineRulesFileInstructions,
-				localCursorRulesFileInstructions,
-				localCursorRulesDirInstructions,
-				localWindsurfRulesFileInstructions,
+				activeRuleInstructions, // Only the highest priority active rule
+				undefined, // localCursorRulesFileInstructions - handled by priority system
+				undefined, // localCursorRulesDirInstructions - handled by priority system
+				undefined, // localWindsurfRulesFileInstructions - handled by priority system
 				clineIgnoreInstructions,
 				preferredLanguageInstructions,
 			)
@@ -2194,6 +2225,7 @@ export class Task {
 			parsedUserContent = userContent
 			environmentDetails = ""
 			clinerulesError = false
+			this.taskState.lastAutoCompactTriggerIndex = previousApiReqIndex
 		} else {
 			;[parsedUserContent, environmentDetails, clinerulesError] = await this.loadContext(userContent, includeFileDetails)
 		}
@@ -2485,16 +2517,28 @@ export class Task {
 				const didToolUse = this.taskState.assistantMessageContent.some((block) => block.type === "tool_use")
 
 				if (!didToolUse) {
-					// normal request where tool use is required
-					this.taskState.userMessageContent.push({
-						type: "text",
-						text: formatResponse.noToolsUsed(),
-					})
-					this.taskState.consecutiveMistakeCount++
+					// CARET MODIFICATION: Check if current mode allows conversation without tools
+					const state = await this.controller.getStateToPostToWebview()
+					const modeSystem = state.modeSystem || "caret"
+					const allowsConversation = modeRegistry.allowsConversationWithoutTools(modeSystem, this.mode)
+
+					if (!allowsConversation) {
+						// normal request where tool use is required
+						this.taskState.userMessageContent.push({
+							type: "text",
+							text: formatResponse.noToolsUsed(),
+						})
+						this.taskState.consecutiveMistakeCount++
+					} else {
+						// CARET MODIFICATION: Conversation is allowed, end the loop gracefully
+						didEndLoop = true
+					}
 				}
 
-				const recDidEndLoop = await this.recursivelyMakeClineRequests(this.taskState.userMessageContent)
-				didEndLoop = recDidEndLoop
+				if (!didEndLoop) {
+					const recDidEndLoop = await this.recursivelyMakeClineRequests(this.taskState.userMessageContent)
+					didEndLoop = recDidEndLoop
+				}
 			} else {
 				// if there's no assistant_responses, that means we got no text or tool_use content blocks from API which we should assume is an error
 				await this.say(
@@ -2611,11 +2655,15 @@ export class Task {
 	}
 
 	async getEnvironmentDetails(includeFileDetails: boolean = false) {
-		let details = ""
+		// CARET MODIFICATION: Use ModeSystemRegistry for centralized mode handling
+		const state = await this.controller.getStateToPostToWebview()
+		const modeSystem = state.modeSystem || "caret"
+		const modeDetails = modeRegistry.getEnvironmentDetails(modeSystem, this.mode)
+		let details = modeDetails // Start with mode-specific environment details
 
 		// It could be useful for cline to know if the user went from one or no file to another between messages, so we always include this context
 		details += "\n\n# VSCode Visible Files"
-		const visibleFilePaths = (await HostProvider.window.getVisibleTabs({})).paths.map((absolutePath) =>
+		const visibleFilePaths = (await HostProvider.window.getVisibleTabs({})).paths.map((absolutePath: string) =>
 			path.relative(this.cwd, absolutePath),
 		)
 
@@ -2632,7 +2680,7 @@ export class Task {
 		}
 
 		details += "\n\n# VSCode Open Tabs"
-		const openTabPaths = (await HostProvider.window.getOpenTabs({})).paths.map((absolutePath) =>
+		const openTabPaths = (await HostProvider.window.getOpenTabs({})).paths.map((absolutePath: string) =>
 			path.relative(this.cwd, absolutePath),
 		)
 
@@ -2815,11 +2863,7 @@ export class Task {
 		details += `\n${lastApiReqTotalTokens.toLocaleString()} / ${(contextWindow / 1000).toLocaleString()}K tokens used (${usagePercentage}%)`
 
 		details += "\n\n# Current Mode"
-		if (this.mode === "plan") {
-			details += "\nPLAN MODE\n" + formatResponse.planModeInstructions()
-		} else {
-			details += "\nACT MODE"
-		}
+		details += modeRegistry.getEnvironmentDetails(modeSystem, this.mode)
 
 		return `<environment_details>\n${details.trim()}\n</environment_details>`
 	}

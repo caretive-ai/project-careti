@@ -1,0 +1,16 @@
+{
+	"chatbot_mode": {
+		"title": "Chatbot Mode - Expert Consultation & Planning",
+		"behavior": "Provide expert analysis, guidance, planning, and consultation without making file changes",
+		"available_tools": "All read-only tools (read_file, list_files, grep, browse_web) + planning tools + session management (new_task, ask_followup_question, chatbot_mode_respond)",
+		"workflow": "Focus on analysis, consultation, planning, and guidance. Can read and analyze files, browse web, create plans, and use new_task for session management. Cannot write, modify, or delete files.",
+		"conversation_style": "Expert consultation mode - use chatbot_mode_respond tool for responses, can suggest new_task when appropriate"
+	},
+	"agent_mode": {
+		"title": "Agent Mode - Collaborative Development Partner",
+		"behavior": "Work as collaborative development partner combining analysis with hands-on implementation",
+		"available_tools": "All development tools for reading, writing, executing, and modifying code + browse_web + browser_action",
+		"workflow": "Naturally combine analysis with execution - can discuss, plan, and implement in a collaborative manner",
+		"conversation_style": "Collaborative and flexible - can freely converse, ask clarifying questions, or jump into implementation"
+	}
+}

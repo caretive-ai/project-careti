@@ -1,0 +1,155 @@
+# Caret Backend Internationalization System
+
+## Overview
+
+This document describes the simple template-based multilingual system used in the Caret backend. It translates system messages generated in the backend into appropriate languages according to the user's language settings.
+
+## Structure
+
+### 1. Backend i18n Utility
+
+- **Location**: `caret-src/utils/backend-i18n.ts`
+- **Functionality**: Template-based message translation and parameter substitution
+
+### 2. Key Functions
+
+#### `backendT(key: string, chatSettings: ChatSettings, params?: Record<string, string>): string`
+
+```typescript
+import { backendT } from "../../../caret-src/utils/backend-i18n"
+
+const errorMessage = backendT("task.retryWithoutParam", this.chatSettings, {
+	toolName: "readFile",
+	pathInfo: " for '/path/to/file'",
+	paramName: "content",
+})
+```
+
+**Parameters:**
+
+- `key`: Translation key (e.g., "task.retryWithoutParam")
+- `chatSettings`: Current chat settings (including language information)
+- `params`: Optional parameter object for template substitution
+
+## Supported Languages
+
+- **English (en)**: Default language
+- **Korean (ko)**: Korean
+- **Japanese (ja)**: Japanese
+- **Chinese (zh)**: Chinese
+
+## Message Definitions
+
+### Currently Supported Messages
+
+#### `task.retryWithoutParam`
+
+Error message displayed when a required parameter is missing during tool use.
+
+**Template variables:**
+
+- `{toolName}`: Name of the tool attempted to use
+- `{pathInfo}`: Path information (if any)
+- `{paramName}`: Name of the missing parameter
+
+**Translation example:**
+
+```typescript
+{
+    "task.retryWithoutParam": {
+        en: "Cline tried to use {toolName}{pathInfo} without value for required parameter '{paramName}'. Retrying...",
+        ko: "Cline이 {toolName}{pathInfo}을(를) 필수 매개변수 '{paramName}' 값 없이 사용하려고 했습니다. 재시도 중...",
+        ja: "Clineが{toolName}{pathInfo}を必須パラメータ'{paramName}'の値なしで使用しようとしました。再試行中...",
+        zh: "Cline试图在没有必需参数'{paramName}'值的情况下使用{toolName}{pathInfo}。重试中..."
+    }
+}
+```
+
+## Usage
+
+### 1. Add New Message
+
+Add new key and translation to the `messages` object in `caret-src/utils/backend-i18n.ts`:
+
+```typescript
+const messages: BackendMessages = {
+	// Existing messages...
+	"new.key": {
+		en: "English message with {param}",
+		ko: "한국어 메시지 {param}와 함께",
+		ja: "日本語メッセージ{param}付き",
+		zh: "中文消息与{param}",
+	},
+}
+```
+
+### 2. Use in Backend
+
+```typescript
+// 1. Add import
+const { backendT } = await import("../../../caret-src/utils/backend-i18n")
+
+// 2. Translate message
+const translatedMessage = backendT("new.key", this.chatSettings, {
+	param: "actualValue",
+})
+
+// 3. Use
+await this.say("error", translatedMessage)
+```
+
+## Template System
+
+### Substitution Rules
+
+- Template variables are defined in `{variableName}` format
+- Substituted with key-value pairs from `params` object
+- Case-sensitive
+- Global substitution using regular expressions
+
+### Example
+
+```typescript
+// Template: "Hello {name}, you have {count} messages"
+// Parameters: { name: "John", count: "5" }
+// Result: "Hello John, you have 5 messages"
+```
+
+## Extensibility
+
+### Add New Language
+
+1. Add new language code to each key in the `messages` object
+2. Provide translations for that language
+3. Verify support for the language in frontend language settings
+
+### Add New Features
+
+- Pluralization
+- Number formatting
+- Date/time formatting
+- Contextual translations
+
+## Notes
+
+1. **Language Fallback**: Falls back to English if the requested language is not found
+2. **Missing Key**: Returns the key itself with a warning log if the key is not found
+3. **Missing Parameter**: Keeps the template variable as is if the corresponding parameter is missing
+4. **Asynchronous Import**: Use dynamic imports in the backend to prevent circular references
+
+## Applied Files
+
+### Backend
+
+- `src/core/task/index.ts`: `sayAndCreateMissingParamError()` method
+
+### Frontend
+
+- `webview-ui/src/components/chat/ChatRow.tsx`: Various system messages
+- `webview-ui/src/components/chat/task-header/TaskTimelineTooltip.tsx`: Task completion messages
+
+## Performance Considerations
+
+- Minimize initial loading time using dynamic imports
+- Message object loaded into memory only once
+- Regex caching currently not implemented (can be added if needed)

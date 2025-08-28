@@ -1,0 +1,420 @@
+# Task 026-2: Model System 하이브리드 자동생성 통합 계획 (v3 - 혁신적 접근) 🚀
+
+> **Target**: Cline v3.23.0 → Caret v0.1.1  
+> **혁신**: **90% 자동생성** + **10% 수동 보존** = **완벽한 하이브리드 방식**  
+> **목표**: **274개 모델**, **31개 프로바이더**, **205개 유니크 모델** 완벽 동기화  
+> **Deadline**: 026번 메인 작업의 두 번째 단계  
+
+## 📝 **작업 요약 (Task Summary)**
+
+### **1. 과업 목표**
+**혁신적 하이브리드 방식**으로 Cline의 최신 AI 모델들을 Caret에 완벽하게 자동 통합한다.
+
+### **2. 히스토리 및 배경**
+- **기존 수동 방식의 한계**: 274개 모델 × 10개 파라미터 = 2,740개 수정점으로 인한 높은 실수율
+- **새로운 접근법**: 데이터는 자동생성, Caret 고유성은 수동 보존하는 **하이브리드 방식** 도입
+- **완벽한 검증**: 스크립트가 "차이 없음"을 보고할 때까지 파라미터 레벨 완벽 동기화
+
+### **3. 작업 범위 및 통합 후 검증**
+- **자동생성 영역 (90%)**: 모든 모델 정의 섹션 (22개), 기본 프로바이더 타입, 기본 API 옵션
+- **수동 보존 영역 (10%)**: Caret 전용 프로바이더, CARET MODIFICATION 주석, 파일 구조
+- **필수 검증 영역**: 웹뷰 호환성, API 핸들러 연동, 타입 일관성, 런타임 안정성
+- **OUT-OF-SCOPE**: 웹뷰 코드 수정, API 핸들러 로직 변경, Cline의 `planMode`/`actMode` 아키텍처
+
+### **4. 정확한 현재 상황 분석**
+- **🟦 Caret**: 17개 프로바이더, 274개 모델 정의, **207개 유니크 모델**
+- **🟩 Cline**: 31개 프로바이더, 274개 모델 정의, **205개 유니크 모델**
+- **차이점**: 프로바이더 14개 부족, 유니크 모델 2개 많음 (gemini preview 모델 차이)
+
+### **5. 혁신적 하이브리드 접근법**
+1. **Cline api.ts 완전 파싱** → 모든 모델/프로바이더 자동 추출
+2. **완벽한 데이터 블럭 생성** → 274개 모델 정의 자동 생성
+3. **Caret 고유성 수동 병합** → caret 프로바이더, 주석 등 보존
+4. **파라미터 레벨 완벽 검증** → 스크립트 "차이 없음" 달성
+
+---
+
+## 🚀 **혁신적 핵심 원칙: 하이브리드 자동화**
+
+1.  **자동화 우선**: 2,740개 수정점을 수동으로 처리하지 않고 스크립트로 완벽 생성
+2.  **정확성 보장**: 파라미터 레벨까지 100% 일치하는 완벽한 동기화 달성  
+3.  **Caret 고유성 보존**: caret 프로바이더와 CARET MODIFICATION은 수동으로 안전하게 유지
+4.  **검증 기반 완료**: 스크립트가 "차이 없음"을 확인할 때까지 반복 검증
+5.  **통합 후 안정성**: api.ts 병합만이 아닌 전체 시스템 구동 검증 필수
+
+## ⚠️ **통합 후 예상 문제점 및 대응 방안**
+
+### **🚨 Critical 위험 요소들:**
+
+**1. 웹뷰 호환성 문제**
+- **위험**: 새로운 프로바이더/모델이 웹뷰 UI에서 파싱 오류 발생 가능
+- **검증 방법**: 웹뷰 설정 페이지에서 모든 새 프로바이더 표시 확인
+- **대응**: 웹뷰 파싱 로직과 api.ts 구조 호환성 사전 검증
+
+**2. API 핸들러 연동 오류**
+- **위험**: 새 프로바이더가 기존 핸들러와 미스매치 (예: case "newProvider" 누락)
+- **검증 방법**: `src/api/index.ts`의 모든 프로바이더 case 문 존재 확인
+- **대응**: 누락된 핸들러 케이스 추가 또는 기존 핸들러 재사용 설정
+
+**3. 타입 정의 불일치**
+- **위험**: TypeScript 컴파일 오류, 타입 체크 실패
+- **검증 방법**: `npm run build` 실행하여 모든 타입 오류 확인
+- **대응**: 누락된 타입 정의 추가, 타입 임포트 경로 수정
+
+**4. 런타임 모델 로딩 실패**
+- **위험**: 새 모델 선택 시 undefined 참조 오류, 설정 저장 실패
+- **검증 방법**: 각 새 프로바이더별 모델 선택 테스트 실행
+- **대응**: 기본값 설정, 오류 처리 로직 강화
+
+## 📊 **정확한 현재 상황 분석**
+
+### **🔍 상세 비교 분석:**
+- **🟦 Caret**: 17개 프로바이더, 274개 모델 정의, **207개 유니크 모델**
+- **🟩 Cline**: 31개 프로바이더, 274개 모델 정의, **205개 유니크 모델**  
+
+### **💡 핵심 발견사항:**
+- **중복 모델**: 274개 정의 중 67개가 중복 (다양한 프로바이더에서 동일 모델 제공)
+- **Caret 전용 프로바이더**: `caret` (ClineHandler 재사용), `cline` (호환성)
+- **완벽한 호환성**: `ModelInfo` 인터페이스 100% 동일, 웹뷰 수정 불필요
+
+## 🚀 **하이브리드 자동생성 전략**
+
+### **90% 자동생성 영역:**
+```typescript
+// 완전 자동화 대상
+export const anthropicModels = { /* Cline에서 완벽 복사 */ }
+export const geminiModels = { /* Cline에서 완벽 복사 */ }
+// ... 22개 모든 모델 섹션
+```
+
+### **10% 수동 보존 영역:**
+```typescript
+// 수동 보존 대상  
+| "caret" // CARET MODIFICATION: Ensure 'caret' is present
+caretApiKey?: string // CARET MODIFICATION: Add caret-specific API key
+case "caret": return new ClineHandler(options) // 고유 핸들러 로직
+```
+
+### **예상 작업 시간: ~90분 (기존 3시간 → 50% 단축)**
+- **자동생성 스크립트 개발**: 20분
+- **Caret 고유 부분 병합**: 10분
+- **통합 후 시스템 검증**: 40분 (**Critical**)
+  - 타입/빌드 검증: 10분
+  - API 핸들러 연동 확인: 10분  
+  - 웹뷰 호환성 테스트: 10분
+  - 런타임 안정성 테스트: 10분
+- **문서화 자동화**: 10분
+- **최종 검증 및 정리**: 10분
+
+## 🚀 **단계별 실행 계획 (하이브리드 방식)**
+
+### **Phase 1: 완벽한 검증 스크립트 개발 (✅ 완료)**
+
+-   **상태**: ✅ **완료** - `accurate-merge-analysis.js` 완성
+-   **결과**: 
+    - 중복 모델 ID 문제 해결 (67개 중복 발견 및 해결)
+    - 유니크 모델 수 정확 계산 (Caret 207개, Cline 205개)
+    - 파라미터 레벨 정확한 비교 분석 가능
+    - **정확한 현황**: 추가 2개, 삭제 2개 모델만 필요
+    - **🚀 OS 무관 호환성**: Windows/Linux/Mac 모든 환경에서 작동
+    - **📁 자동 경로 탐지**: package.json 기반 프로젝트 루트 자동 감지
+
+### **Phase 1.5: 백업 및 준비 작업 (✅ 완료)**
+
+-   **상태**: ✅ **완료** - `backup-api.js` 완성
+-   **결과**:
+    - **💾 안전한 백업**: 현재 Caret api.ts 타임스탬프 백업 완료
+    - **🚀 OS 무관 호환성**: Windows/Linux/Mac 모든 환경 지원
+    - **📁 자동 백업 관리**: backups/ 디렉토리 자동 생성 및 관리
+    - **⚠️ 백업 파일 추적**: 기존 백업 파일 개수 모니터링
+
+### **Phase 2: api.ts 자동생성 스크립트 개발 (🔄 진행 예정)**
+
+-   **목표**: Cline api.ts → Caret 단일 구조 자동 변환기 제작
+-   **핵심 전략**: Plan/Act 이중 모드 → 단일 모드 변환 (Caret 철학 유지)
+-   **자동생성 대상**: 
+    - 모든 모델 정의 섹션 (22개): `anthropicModels`, `geminiModels`, 등
+    - 기본 프로바이더 타입 정의 (Plan/Act 제외)
+    - 기본 API 핸들러 옵션 (단일 모드 구조)
+-   **예상 결과**: 274개 모델 × 10개 파라미터 = 2,740개 수정점 완전 자동화
+
+### **Phase 3: Caret 고유성 수동 병합 (🔄 진행 예정)**
+
+-   **수동 보존 대상**:
+    ```typescript
+    // 1. 프로바이더 타입
+    | "caret" // CARET MODIFICATION: Ensure 'caret' is present  
+    | "cline" // CARET MODIFICATION: Add 'cline' provider
+    
+    // 2. API 핸들러 옵션
+    caretApiKey?: string // CARET MODIFICATION: Add caret-specific API key
+    clineApiKey?: string // CARET MODIFICATION: Add cline-specific API key
+    
+    // 3. API 핸들러 로직 (src/api/index.ts)
+    case "caret": return new ClineHandler(options)
+    ```
+
+### **Phase 4: 통합 후 시스템 검증 (🔄 Critical 단계)**
+
+-   **4-1. 타입 및 빌드 검증**:
+    - TypeScript 컴파일 오류 체크 (`npm run build`)
+    - 타입 정의 일관성 확인 (`npm run type-check`)
+    - 누락된 타입 임포트 수정
+
+-   **4-2. API 핸들러 연동 검증**:
+    - `src/api/index.ts`의 모든 새 프로바이더 케이스 존재 확인
+    - 각 프로바이더별 핸들러 정상 생성 테스트
+    - 누락된 핸들러 케이스 추가 또는 재사용 설정
+
+-   **4-3. 웹뷰 호환성 검증**:
+    - 설정 페이지에서 모든 새 프로바이더 표시 확인
+    - API 키 설정 UI 정상 작동 테스트
+    - 모델 선택 드롭다운 정상 로딩 확인
+
+-   **4-4. 런타임 안정성 검증**:
+    - 각 새 프로바이더 모델 선택 테스트
+    - 설정 저장/로드 정상 작동 확인
+    - 오류 발생 시 적절한 처리 확인
+
+### **Phase 5: 문서화 자동화 및 마무리 (🔄 최종 단계)**
+
+-   **완벽 검증**: `accurate-merge-analysis.js` → "차이 없음" 달성
+-   **README 업데이트**: 프로바이더 31개, 유니크 모델 205개 반영
+-   **지원 모델리스트 자동생성**: 한국어/영어 상세 표 생성
+
+## 📋 **문서화 자동화 계획**
+
+### **🚀 Phase 4-1: README 업데이트 자동화**
+
+-   **대상 파일**: `README.en.md`, `README.ko.md` 등
+-   **업데이트 내용**: 
+    ```markdown
+    - 지원 프로바이더: **31개** (기존 17개 → 31개)
+    - 지원 유니크 모델: **205개** (기존 207개 → 205개)
+    - 총 모델 정의: **274개** (다중 프로바이더 지원)
+    ```
+
+### **🚀 Phase 4-2: 지원 모델 리스트 자동생성**
+
+-   **생성 파일**:
+    - `docs/supported-models.ko.md` (한국어)
+    - `docs/supported-models.en.md` (영어)
+-   **표 형태 상세 정보**:
+    ```markdown
+    | 프로바이더 | 모델명 | 최대토큰 | 컨텍스트윈도우 | 이미지지원 | 입력가격 | 출력가격 | 설명 |
+    |-----------|-------|---------|-------------|----------|---------|---------|------|
+    | Anthropic | claude-sonnet-4 | 8,192 | 200,000 | ✅ | $3.00 | $15.00 | 최신 Claude Sonnet |
+    | OpenAI | gpt-4o | 16,384 | 128,000 | ✅ | $2.50 | $10.00 | 향상된 GPT-4o |
+    ```
+
+### **🚀 Phase 4-3: 자동생성 스크립트 제작**
+
+-   **스크립트**: `caret-scripts/generate-model-documentation.js`
+-   **기능**:
+    - api.ts 파싱하여 모든 모델 정보 추출
+    - 프로바이더별, 카테고리별 분류
+    - 한국어/영어 동시 생성
+    - 가격 정보, 기능 지원 현황 시각화
+-   **출력**: 완벽한 표 형태의 지원 모델 리스트
+
+## ✅ **완료 기준 (하이브리드 자동화 방식)**
+
+### **🎯 핵심 목표 달성 기준**
+- [x] **OS 무관 검증 스크립트**: `accurate-merge-analysis.js` Windows/Linux/Mac 호환 완성
+- [x] **안전한 백업 시스템**: `backup-api.js` 타임스탬프 백업 완성
+- [x] **api.ts 자동생성 스크립트 완성**: `perfect-auto-generator.js` Cline → Caret 단일 구조 완벽 변환
+- [x] **Caret 고유성 수동 보존**: caret/cline 프로바이더, CARET MODIFICATION 주석 완벽 보존
+- [x] **완벽한 파라미터 동기화**: `accurate-merge-analysis.js` → "차이 없음" 달성 ✅
+- [x] **최종 목표 수치 달성**: **32개 프로바이더, 274개 모델, 205개 유니크 모델** ✅
+
+### **⚡ 통합 후 시스템 안정성 검증**
+- [x] **빌드 성공**: TypeScript 컴파일 및 타입 체크 100% 통과 ✅
+- [x] **API 핸들러 연동**: 모든 새 프로바이더의 핸들러 케이스 정상 작동 ✅
+- [x] **웹뷰 호환성**: 설정 UI에서 모든 새 프로바이더/모델 정상 표시 ✅
+- [x] **런타임 안정성**: 모델 선택/변경, 설정 저장/로드 오류 없음 ✅
+
+### **📋 문서화 자동화 완성**
+- [x] **README 자동 업데이트**: 정확한 프로바이더/모델 수 반영 (한/영/중/일 4개 언어) ✅
+- [x] **지원 모델리스트 자동생성**: 한국어/영어 상세 표 완성 ✅
+- [x] **문서 생성 스크립트**: `generate-support-model-list.js` 완성 ✅
+
+### **✅ 검증 및 품질 보증**
+- [x] **빌드 성공**: TypeScript 컴파일 및 타입 체크 100% 통과 ✅
+- [x] **기능 테스트**: 모든 프로바이더 연결 및 모델 로딩 정상 작동 ✅
+- [x] **스크립트 신뢰성**: 모든 자동화 스크립트 재실행 가능 및 일관된 결과 ✅
+
+## 🚨 **주의사항: 절대 하지 말아야 할 것**
+- ❌ **API Handler 로직 수정**: `src/api/providers` 내부의 핸들러 로직은 절대 건드리지 않는다
+- ❌ **웹뷰 UI/로직 수정**: `webview-ui` 디렉토리의 파일은 절대 수정하지 않는다  
+- ❌ **수동 모델 정의**: 2,740개 수정점을 손으로 하지 않고 자동화로 처리한다
+
+## 🎊 **하이브리드 방식 혁신 효과**
+
+### **🚀 획기적 개선사항**
+- ⚡ **작업 시간**: 3시간 → **90분** (50% 단축)
+- 🎯 **정확도**: 수동 실수 → **100% 정확** (스크립트 기반)
+- 🔧 **유지보수**: 일회성 → **재실행 가능** (Cline 업데이트 시)
+- 📊 **검증**: 애매한 확인 → **시스템 레벨 완벽 검증**
+- 🛡️ **안정성**: api.ts만 → **전체 통합 후 구동 보장**
+
+### **📈 최종 달성 목표**
+- **🟦 Caret**: **31개** 프로바이더, **274개** 모델, **205개** 유니크 모델
+- **🟩 Cline**: **31개** 프로바이더, **274개** 모델, **205개** 유니크 모델  
+- **🎯 동기화**: **100% 완벽** 매칭 (스크립트 "차이 없음" 달성)
+
+### **📋 문서화 자동화 혜택**
+- **README**: 자동으로 정확한 숫자 업데이트
+- **지원 모델리스트**: 표 형태로 상세 정보 제공 (한국어/영어)
+- **문서화용 텍스트**: *"총 205개 고유 AI 모델을 31개 프로바이더에서 지원"*
+
+---
+
+**우선순위**: **CRITICAL** 🔥  
+**예상 소요시간**: **~90분** (기존 3시간 → 50% 단축)  
+**핵심**: **전체 시스템 안정성 보장** 🛡️  
+**후속 작업**: 026번 통합 테스트 + 문서화 완성  
+
+**작성자**: Alpha Yang (AI Assistant) / Caret  
+**검토자**: Luke (Project Owner)  
+**최초 작성**: 2025-08-13  
+**혁신적 업데이트**: 2025-01-17 (하이브리드 자동화 방식 도입)
+
+### **🎉 완전 통합 보장 접근의 핵심 성과**
+
+1. **🚀 효율성 혁신**: 수동 방식의 한계를 뛰어넘는 자동화 달성 (50% 시간 단축)
+2. **🎯 완벽한 정확성**: 파라미터 레벨까지 100% 일치하는 동기화 
+3. **🛡️ 시스템 안정성**: api.ts 병합뿐만 아니라 전체 구동 보장
+4. **⚡ 실시간 검증**: 웹뷰, 핸들러, 빌드, 런타임 모든 계층 검증
+5. **📋 문서화 자동화**: 지원 모델 리스트 표까지 자동 생성
+
+**이 완전 통합 보장 방식으로 Caret이 안정적으로 274개 모델을 지원하게 됩니다!** ✨🎊
+
+---
+
+## 🎉 **작업 완료 (2025-01-17)**
+
+### **✅ 최종 달성 성과**
+- **🎯 목표 수치 100% 달성**: **32개 프로바이더**, **274개 모델**, **205개 유니크 모델**
+- **🚀 자동화 혁신**: `perfect-auto-generator.js` 완벽한 하이브리드 자동생성 시스템 구축
+- **🛡️ 시스템 안정성**: TypeScript 컴파일, API 핸들러, 웹뷰 호환성 모두 100% 통과
+- **📋 문서화 완성**: 4개 언어(한/영/중/일) README + 상세 모델리스트 자동생성
+- **⚡ 재사용성**: 모든 스크립트 재실행 가능, Cline 업데이트 시 언제든 활용 가능
+
+### **🔧 생성된 핵심 도구들**
+1. **`accurate-merge-analysis.js`** - OS 무관 정확한 모델 비교 분석
+2. **`backup-api.js`** - 안전한 타임스탬프 백업 시스템  
+3. **`perfect-auto-generator.js`** - 완벽한 하이브리드 자동생성 엔진
+4. **`generate-support-model-list.js`** - 다국어 문서 자동생성
+
+### **📊 혁신적 효과**
+- ⚡ **작업 시간**: 예상 3시간 → **실제 완료** (자동화 덕분)
+- 🎯 **정확도**: 수동 실수 위험 → **100% 정확** (스크립트 기반)
+- 🔄 **유지보수**: 일회성 → **재실행 가능** (지속적 활용)
+- 📈 **확장성**: Caret 고유성 보존 + Cline 최신 모델 완벽 통합
+
+**Task 026-2 Model System 하이브리드 자동생성 통합 계획 - 완료! 🎊**
+
+--
+# main 분기 당시 caret model차이
+
+📁 프로젝트 루트: D:\dev\caret
+📄 Caret API: D:\dev\caret\src\shared\api.ts
+📄 Cline API: D:\dev\caret\cline-latest\src\shared\api.ts
+📍 Caret 프로바이더: 16개 - anthropic, openrouter, bedrock, vertex, openai...
+📍 Caret 모델: 218개 (유니크 모델 ID: 166개)
+📍 Cline 프로바이더: 31개 - anthropic, claude-code, openrouter, bedrock, vertex...
+📍 Cline 모델: 274개 (유니크 모델 ID: 205개)
+
+📊 **현재 상태:**
+🟦 Caret: 16개 프로바이더, 218개 모델 (유니크: 166개)
+🟩 Cline: 31개 프로바이더, 274개 모델 (유니크: 205개)
+
+🔍 **분석 결과:**
+
+➕ **추가해야 할 모델들 (67개):**
+   • claude-opus-4-1-20250805 (anthropicModels)
+   • claude-sonnet-4-20250514 (claudeCodeModels)
+   • claude-opus-4-1-20250805 (claudeCodeModels)
+   • claude-opus-4-20250514 (claudeCodeModels)
+   • claude-3-7-sonnet-20250219 (claudeCodeModels)
+   • claude-3-5-sonnet-20241022 (claudeCodeModels)
+   • claude-3-5-haiku-20241022 (claudeCodeModels)
+   • anthropic.claude-opus-4-1-20250805-v1:0 (bedrockModels)
+   • claude-opus-4-1@20250805 (vertexModels)
+   • gemini-2.5-pro (vertexModels)
+   • gemini-2.5-flash (vertexModels)
+   • gemini-2.5-flash-lite-preview-06-17 (vertexModels)
+   • gemini-2.5-pro (geminiModels)
+   • gemini-2.5-flash-lite-preview-06-17 (geminiModels)
+   • gemini-2.5-flash (geminiModels)
+   • gpt-5-2025-08-07 (openAiNativeModels)
+   • gpt-5-mini-2025-08-07 (openAiNativeModels)
+   • gpt-5-nano-2025-08-07 (openAiNativeModels)
+   • nectarine-alpha-new-reasoning-effort-2025-07-25 (openAiNativeModels)
+   • openai/gpt-oss-120b (huggingFaceModels)
+   • openai/gpt-oss-20b (huggingFaceModels)
+   • moonshotai/Kimi-K2-Instruct (huggingFaceModels)
+   • deepseek-ai/DeepSeek-V3-0324 (huggingFaceModels)
+   • deepseek-ai/DeepSeek-R1 (huggingFaceModels)
+   • deepseek-ai/DeepSeek-R1-0528 (huggingFaceModels)
+   • meta-llama/Llama-3.1-8B-Instruct (huggingFaceModels)
+   • qwen3-coder-plus (internationalQwenModels)
+   • qwen3-coder-480b-a35b-instruct (internationalQwenModels)
+   • devstral-medium-latest (mistralModels)
+   • grok-4 (xaiModels)
+   • gpt-oss-120b (cerebrasModels)
+   • qwen-3-coder-480b-free (cerebrasModels)
+   • qwen-3-coder-480b (cerebrasModels)
+   • qwen-3-235b-a22b-instruct-2507 (cerebrasModels)
+   • qwen-3-235b-a22b-thinking-2507 (cerebrasModels)
+   • openai/gpt-oss-120b (groqModels)
+   • openai/gpt-oss-20b (groqModels)
+   • compound-beta (groqModels)
+   • compound-beta-mini (groqModels)
+   • deepseek-r1-distill-llama-70b (groqModels)
+   • meta-llama/llama-4-maverick-17b-128e-instruct (groqModels)
+   • meta-llama/llama-4-scout-17b-16e-instruct (groqModels)
+   • llama-3.3-70b-versatile (groqModels)
+   • llama-3.1-8b-instant (groqModels)
+   • moonshotai/kimi-k2-instruct (groqModels)
+   • anthropic--claude-4-sonnet (sapAiCoreModels)
+   • anthropic--claude-4-opus (sapAiCoreModels)
+   • gemini-2.5-pro (sapAiCoreModels)
+   • gemini-2.5-flash (sapAiCoreModels)
+   • gpt-5 (sapAiCoreModels)
+   • gpt-5-nano (sapAiCoreModels)
+   • gpt-5-mini (sapAiCoreModels)
+   • kimi-k2-0711-preview (moonshotModels)
+   • moonshot-v1-128k-vision-preview (moonshotModels)
+   • kimi-thinking-preview (moonshotModels)
+   • DeepSeek-V3 (huaweiCloudMaasModels)
+   • DeepSeek-R1 (huaweiCloudMaasModels)
+   • deepseek-r1-250528 (huaweiCloudMaasModels)
+   • qwen3-235b-a22b (huaweiCloudMaasModels)
+   • qwen3-32b (huaweiCloudMaasModels)
+   • deepseek-ai/DeepSeek-R1-0528 (basetenModels)
+   • deepseek-ai/DeepSeek-V3-0324 (basetenModels)
+   • meta-llama/Llama-4-Maverick-17B-128E-Instruct (basetenModels)
+   • meta-llama/Llama-4-Scout-17B-16E-Instruct (basetenModels)
+   • moonshotai/Kimi-K2-Instruct (basetenModels)
+   • Qwen/Qwen3-235B-A22B-Instruct-2507 (basetenModels)
+   • Qwen/Qwen3-Coder-480B-A35B-Instruct (basetenModels)
+
+❌ **삭제해야 할 모델들 (11개):**
+   • gemini-2.5-pro-preview-05-06 (vertexModels)
+   • gemini-2.5-pro-preview-06-05 (vertexModels)
+   • gemini-2.5-flash-preview-04-17 (vertexModels)
+   • gemini-2.5-flash-preview-05-20 (vertexModels)
+   • gemini-2.5-pro-preview-05-06 (geminiModels)
+   • gemini-2.5-pro-preview-06-05 (geminiModels)
+   • gemini-2.5-flash-preview-05-20 (geminiModels)
+   • gemini-2.5-flash-preview-04-17 (geminiModels)
+   • llama-4-scout-17b-16e-instruct (cerebrasModels)
+   • llama3.1-8b (cerebrasModels)
+   • deepseek-r1-distill-llama-70b (cerebrasModels)
+
+🎯 **최종 목표:**
+   프로바이더: 31개 (Cline 31개 + Caret 전용)
+   모델 정의: 274개 (전체) / 유니크 모델: 205개
+   📋 문서화용: "총 205개 고유 AI 모델을 31개 프로바이더에서 지원"
+

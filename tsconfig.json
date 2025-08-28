@@ -20,8 +20,13 @@
 		"useDefineForClassFields": true,
 		"useUnknownInCatchVariables": false,
 		"baseUrl": ".",
+		"types": ["vitest/globals", "should"],
 		"paths": {
 			"@/*": ["src/*"],
+			"@caret/*": ["caret-src/*"],
+			"@caret-src/*": ["caret-src/*"], // CARET MODIFICATION: Add caret-src alias
+			"@caret/core/controller/*": ["caret-src/core/controller/*"],
+			"@caret-shared/*": ["caret-src/shared/*"],
 			"@api/*": ["src/api/*"],
 			"@core/*": ["src/core/*"],
 			"@generated/*": ["src/generated/*"],
@@ -33,6 +38,6 @@
 			"@utils/*": ["src/utils/*"]
 		}
 	},
-	"include": ["src/**/*", "scripts/**/*"],
+	"include": ["src/**/*", "caret-src/**/*"],
 	"exclude": ["node_modules", ".vscode-test", "webview-ui", "src/test/e2e/**/*"]
 }

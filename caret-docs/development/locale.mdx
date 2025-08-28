@@ -1,0 +1,205 @@
+# 🌍 Caret 국제화 (i18n) 가이드
+
+Caret은 다국어 사용자들을 위한 국제화 시스템을 구축하여 글로벌 개발자 커뮤니티에 서비스를 제공합니다.
+
+## 📋 지원 언어 및 기본 설정
+
+Caret 웹뷰 UI는 다음 언어들을 지원하며, 언어 설정은 다음 우선순위를 따릅니다:
+
+1.  **VSCode 편집기의 표시 언어**: VSCode에서 설정된 언어를 최우선으로 사용합니다.
+2.  **영어 (en)**: VSCode 언어 설정을 가져올 수 없거나, 설정된 언어가 아래 지원 목록에 없는 경우 영어를 기본 언어로 사용합니다.
+
+### 지원 언어 목록:
+
+- **🇰🇷 한국어 (ko)** - 완전 지원
+- **🇺🇸 영어 (en)** - 완전 지원 (기본 대체 언어)
+- **🇯🇵 일본어 (ja)** - 완전 지원
+- **🇨🇳 중국어 (zh)** - 완전 지원
+
+## 📁 파일 구조
+
+```
+webview-ui/src/caret/locale/
+├── ko/
+│   ├── welcome.json     # 한국어 웰컴페이지 번역 ✅
+│   ├── common.json      # 한국어 공통 UI 번역 ✅
+│   ├── settings.json    # 한국어 설정 페이지 번역 ✅
+│   └── rules.json       # 한국어 규칙 관리 번역 ✅
+├── en/
+│   ├── welcome.json     # 영어 웰컴페이지 번역 ✅
+│   ├── common.json      # 영어 공통 UI 번역 ✅
+│   ├── settings.json    # 영어 설정 페이지 번역 ✅
+│   └── rules.json       # 영어 규칙 관리 번역 ✅
+├── ja/
+│   ├── welcome.json     # 일본어 웰컴페이지 번역 ✅
+│   ├── common.json      # 일본어 공통 UI 번역 ✅
+│   ├── settings.json    # 일본어 설정 페이지 번역 ✅
+│   └── rules.json       # 일본어 규칙 관리 번역 ✅
+└── zh/
+    ├── welcome.json     # 중국어 웰컴페이지 번역 ✅
+    ├── common.json      # 중국어 공통 UI 번역 ✅
+    ├── settings.json    # 중국어 설정 페이지 번역 ✅
+    └── rules.json       # 중국어 규칙 관리 번역 ✅
+```
+
+### ⚠️ 현재 누락된 다국어 지원 영역
+
+#### 메인 페이지 및 채팅창 UI
+
+- 자동 승인 설정 관련 텍스트
+- 채팅창 상단 Task/Tokens 영역
+- API Request, Checkpoint, Thinking 등 대화 상태 표시
+- "Cline has a question" → "Caret has a question" 표시
+
+#### 웰컴뷰 풋터
+
+- 일부 언어에서 풋터 링크 번역 누락
+
+## 🔧 사용법
+
+### 컴포넌트에서 번역 사용
+
+```tsx
+import { t } from "../utils/i18n"
+
+// 기본 사용법
+const greeting = t("greeting", "welcome")
+
+// 풋터 번역 사용법
+const footerText = t("footer.links.about", "welcome")
+```
+
+### i18n 유틸리티 함수
+
+```typescript
+// webview-ui/src/caret/utils/i18n.ts
+export function t(key: string, namespace: string = "common"): string {
+	// 현재 언어 설정에 따라 적절한 번역 반환
+	// key: 번역 키 (예: 'footer.company.name')
+	// namespace: 번역 파일명 (예: 'welcome')
+}
+```
+
+## 📝 번역 키 구조
+
+### 웰컴페이지 번역 키
+
+```json
+{
+	"greeting": "인사말",
+	"catchPhrase": "캐치프레이즈",
+	"bannerAlt": "배너 이미지 alt 텍스트",
+
+	"geminiOffer": {
+		"header": "Gemini 오퍼 제목",
+		"body": "Gemini 오퍼 내용"
+	},
+
+	"footer": {
+		"links": {
+			"caretGithub": "Caret GitHub",
+			"caretService": "Caret Service",
+			"caretiveInc": "Caretive Inc",
+			"about": "회사소개",
+			"terms": "이용약관",
+			"privacy": "개인정보처리방침",
+			"youthProtection": "청소년보호정책",
+			"support": "고객센터"
+		},
+		"company": {
+			"name": "회사명",
+			"businessNumber": "사업자등록번호",
+			"address": "회사 주소"
+		},
+		"copyright": {
+			"text": "저작권 텍스트",
+			"builtWith": "제작진 정보",
+			"version": "버전 정보"
+		}
+	}
+}
+```
+
+## 🚀 새 언어 추가하기
+
+### 1. 번역 파일 생성
+
+```bash
+# 새 언어 디렉토리 생성 (예: 프랑스어)
+mkdir webview-ui/src/caret/locale/fr
+
+# 번역 파일 생성
+touch webview-ui/src/caret/locale/fr/welcome.json
+```
+
+### 2. 번역 내용 작성
+
+한국어 `ko/welcome.json`을 기준으로 번역하여 새 언어 파일에 작성합니다.
+
+### 3. i18n 시스템에 언어 추가
+
+```typescript
+// webview-ui/src/caret/utils/i18n.ts에서 지원 언어 목록 업데이트
+const SUPPORTED_LANGUAGES = ["ko", "en", "ja", "zh", "fr"] // 새 언어 추가
+```
+
+## 📋 번역 가이드라인
+
+### 1. 일관성 유지
+
+- 같은 개념/기능에 대해서는 번역에서도 동일한 용어 사용
+- 브랜드명 (Caret, Caretive)은 번역하지 않음
+
+### 2. 문화적 적합성
+
+- 각 언어권의 문화와 관습에 맞는 표현 사용
+- 공식적이고 친근한 톤 유지
+
+### 3. 기술 용어
+
+- 개발 관련 전문 용어는 해당 언어권에서 통용되는 번역 사용
+- API, GitHub 등 고유명사는 원어 유지
+
+### 4. 길이 고려
+
+- UI 레이아웃을 고려하여 과도하게 긴 번역 지양
+- 버튼, 라벨 등에서는 간결한 표현 선호
+
+## 🔍 테스트
+
+### 번역 확인 체크리스트
+
+- [ ] 모든 지원 언어에서 UI가 정상 표시되는지 확인
+- [ ] 긴 텍스트가 레이아웃을 깨뜨리지 않는지 확인
+- [ ] 특수 문자 (이모지, 기호 등)가 정상 표시되는지 확인
+- [ ] 링크와 변수 치환이 정상 동작하는지 확인
+
+### VSCode Extension 환경에서 테스트
+
+```bash
+# Extension Development Host에서 언어별 테스트
+F5 → Extension Development Host → Caret 실행 → 각 언어 설정에서 웰컴페이지 확인
+```
+
+## 🔧 유지보수
+
+### 번역 업데이트 프로세스
+
+1. **한국어 (ko) 기준 업데이트**: 새 기능/변경사항을 한국어에 먼저 적용
+2. **다른 언어 동기화**: 한국어 변경사항을 다른 언어에 반영
+3. **일관성 검토**: 모든 언어에서 동일한 구조와 키 사용 확인
+4. **테스트**: Extension Development Host에서 각 언어별 동작 확인
+
+### 번역 품질 관리
+
+- 네이티브 스피커 검토 권장
+- 정기적인 번역 품질 점검
+- 사용자 피드백 수집 및 반영
+
+---
+
+## 🔗 관련 문서
+
+- [Caret 아키텍처 가이드](./caret-architecture-and-implementation-guide.mdx)
+- [웹뷰-확장 통신](./webview-extension-communication.mdx)
+- [개발 가이드 인덱스](./index.mdx)

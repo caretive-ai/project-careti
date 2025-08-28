@@ -6,6 +6,7 @@ import fs from "fs/promises"
 import { ClineRulesToggles } from "@shared/cline-rules"
 import { synchronizeRuleToggles, getRuleFilesTotalContent } from "@core/context/instructions/user-instructions/rule-helpers"
 import { Controller } from "@/core/controller"
+import { Logger } from "@/services/logging/Logger" // CARET MODIFICATION: Add Logger for debugging
 
 export const getGlobalClineRules = async (globalClineRulesFilePath: string, toggles: ClineRulesToggles) => {
 	if (await fileExistsAtPath(globalClineRulesFilePath)) {
@@ -76,17 +77,25 @@ export async function refreshClineRulesToggles(
 	// Global toggles
 	const globalClineRulesToggles = controller.cacheService.getGlobalStateKey("globalClineRulesToggles")
 	const globalClineRulesFilePath = await ensureRulesDirectoryExists()
+	Logger.debug(`[CLINE] Global rules path: ${globalClineRulesFilePath}`)
+	Logger.debug(`[CLINE] Current global toggles: ${JSON.stringify(globalClineRulesToggles)}`)
 	const updatedGlobalToggles = await synchronizeRuleToggles(globalClineRulesFilePath, globalClineRulesToggles)
+	Logger.debug(`[CLINE] Updated global toggles: ${JSON.stringify(updatedGlobalToggles)}`)
 	controller.cacheService.setGlobalState("globalClineRulesToggles", updatedGlobalToggles)
 
 	// Local toggles
 	const localClineRulesToggles = controller.cacheService.getWorkspaceStateKey("localClineRulesToggles")
 	const localClineRulesFilePath = path.resolve(workingDirectory, GlobalFileNames.clineRules)
+	Logger.debug(`[CLINE] Local rules path: ${localClineRulesFilePath}`)
+	Logger.debug(`[CLINE] Current local toggles: ${JSON.stringify(localClineRulesToggles)}`)
 	const updatedLocalToggles = await synchronizeRuleToggles(localClineRulesFilePath, localClineRulesToggles, "", [
 		[".clinerules", "workflows"],
 	])
+	Logger.debug(`[CLINE] Updated local toggles: ${JSON.stringify(updatedLocalToggles)}`)
 	controller.cacheService.setWorkspaceState("localClineRulesToggles", updatedLocalToggles)
 
+	Logger.debug(`[CLINE] FINAL - returning global: ${JSON.stringify(updatedGlobalToggles)}`)
+	Logger.debug(`[CLINE] FINAL - returning local: ${JSON.stringify(updatedLocalToggles)}`)
 	return {
 		globalToggles: updatedGlobalToggles,
 		localToggles: updatedLocalToggles,

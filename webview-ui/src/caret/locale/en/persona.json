@@ -1,0 +1,22 @@
+{
+	"normalState": "Normal Image",
+	"thinkingState": "Thinking Image",
+	"selector": {
+		"title": "AI Agent Template Character Settings",
+		"description": "Please select your desired character. You can freely edit the selected character to create your own persona.",
+		"selectButtonText": "Select",
+		"selectedButtonText": "Selected",
+		"infoTextCustomInstructions": "The selected persona's instructions will be saved to custom_instructions.md (global rules.)"
+	},
+	"selectorTitle": "AI Agent Template Character Settings",
+	"selectorDescription": "Please select your desired character. You can freely edit the selected character to create your own persona.",
+	"selectButtonText": "Select",
+	"infoTextCustomInstructions": "The selected persona's instructions will be saved to custom_instructions.md (global rules.)",
+	"selectedButtonText": "Selected",
+	"upload": {
+		"normal": "Upload Normal Image",
+		"thinking": "Upload Thinking Image",
+		"success": "Image uploaded successfully",
+		"error": "Failed to upload image"
+	}
+}

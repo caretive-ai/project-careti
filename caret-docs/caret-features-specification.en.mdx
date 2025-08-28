@@ -1,0 +1,261 @@
+# Caret Feature Specification
+
+## Overview
+
+Caret is a VSCode AI coding assistant extension based on Cline. It includes all of Cline's features while providing additional functionalities and improvements.
+
+> **Caret** Name Origin: The name is derived from the '^' (caret) symbol used in programming to denote position and direction.
+
+## Differences from Cline
+
+### 1. Rule System Improvements
+
+#### 1.1 Priority-Based Rule Loading ✅ Implemented
+
+**Existing Cline Issues:**
+
+- `.clinerules`, `.cursorrules`, and `.windsurfrules` files are all loaded redundantly when present.
+- Identical content is included multiple times in the prompt, leading to token waste.
+
+**Caret's Solution:**
+
+- **Priority Logic**: `.clinerules` > `.cursorrules` > `.windsurfrules`
+- **Single Selection**: If a higher-priority rule file exists, others are ignored.
+- **Duplicate Prevention**: Prevents the same rule from being loaded multiple times.
+
+**Technical Implementation:**
+
+- Modified `addUserInstructions` function in `src/core/prompts/system.ts`
+- Modified the same function in `src/core/prompts/model_prompts/claude4.ts`
+- Backup files: `system-ts.cline`, `claude4-ts.cline`
+
+**Test Coverage:**
+
+- `caret-src/__tests__/rule-priority.test.ts` (All 6 tests passed)
+
+#### 1.2 UI Rule Display Improvements 🔄 Under Development
+
+**Planned Improvements:**
+
+- Reflect priority logic in the Rules Toggle Modal.
+- Display only active rules in the UI.
+- Provide guidance messages for inactive rules.
+
+### 2. Persona System 🔄 Under Development
+
+#### 2.1 AI Agent Persona Selection Feature
+
+**Feature Overview:**
+
+- Ability to select from predefined AI character personas.
+- Unique conversation styles and behavior patterns for each persona.
+- Multilingual support (Korean, English).
+
+**Supported Personas:**
+
+1.  **Oh Sarang** - K-pop idol, mathematical emotion analysis, tsundere.
+2.  **Madobe Ichika** - Windows 11 based, clean and reliable assistant.
+3.  **Cyan Mackin** - macOS based, minimalist and efficient.
+4.  **Thando Ubuntu** - Ubuntu based, open-source spirit, collaboration-focused.
+
+**Data Structure:**
+
+- `caret-assets/template_characters/template_characters.json`
+- Includes image, description, and custom instructions for each persona.
+
+#### 2.2 Implementation Plan
+
+**Phase 3: UI Implementation**
+
+- Develop `PersonaTemplateSelector.tsx` component.
+- Persona selection modal UI.
+- Display character images and descriptions.
+
+**Phase 4: Backend Integration**
+
+- Save selected persona to `custom_instructions.md`.
+- Automatic selection based on language settings.
+- Message processing via CaretProvider.
+
+### 3. Test System Improvements ✅ Implemented
+
+#### 3.1 Test Command Refinement
+
+**Existing Issues:**
+
+- Confusing relationship between `npm test` and `npm run test:all`.
+- Hardcoded fake test metrics.
+
+**Caret's Improvements:**
+
+- `npm test` redirects to `npm run test:all` (successful test execution).
+- `npm run test:unit` provides clear ESM/CJS error messages.
+- Added `npm run compile:fast` (for quick development).
+- Changed to dynamic test metric parsing.
+
+#### 3.2 Test Framework
+
+**Caret Test System:**
+
+- **Framework**: Vitest
+- **Configuration File**: `vitest.config.ts`
+- **Test Location**: `caret-src/__tests__/`
+- **Execution Command**: `npm run test:backend`
+
+**Cline Original Tests:**
+
+- **Framework**: Mocha + ts-node
+- **Current Status**: Cannot execute due to ESM/CJS compatibility issues.
+- **Cause**: `@google/genai 1.0.0` Pure ESM module conflict.
+
+### 4. Logging System
+
+#### 4.1 Caret-Specific Logger
+
+**Backend Logger:**
+
+- **File**: `caret-src/utils/caret-logger.ts`
+- **Purpose**: Logging for Caret extension features.
+
+**Frontend Logger:**
+
+- **File**: `webview-ui/src/caret/utils/webview-logger.ts`
+- **Purpose**: Logging for Caret features within the webview.
+
+### 5. Development Environment and Build System
+
+#### 5.1 Directory Structure
+
+**Caret-Specific Directories:**
+
+- `caret-src/` - Caret extension source code.
+- `caret-docs/` - Caret documentation system.
+- `caret-assets/` - Caret-specific resources.
+- `caret-scripts/` - Caret automation scripts.
+
+**Preservation of Cline Originals:**
+
+- `src/` - Cline original code (minimal modifications).
+- `webview-ui/` - React frontend (utilizing Cline build system).
+- `proto/`, `scripts/`, `evals/`, `docs/`, `locales/` - Cline originals maintained.
+
+#### 5.2 Development Principles
+
+**Code Management Principles:**
+
+1.  **Preserve Cline Code**: Minimal modifications to the `src/` directory.
+2.  **Backup Mandatory**: Create `.cline` backup when modifying Cline originals.
+3.  **Prefer Inheritance**: Favor class inheritance over file replacement.
+4.  **Modification Marker**: Mark modified sections with `// CARET MODIFICATION:` comments.
+
+**Architecture Patterns:**
+
+- **Fork-based**: Direct integration of Cline codebase.
+- **Minimal Extension**: Free modification only within `caret-src/`.
+- **Utilize Cline Patterns**: Task execution, streaming, state management, API management.
+
+### 6. Documentation System ✅ Standardization Completed
+
+#### 6.1 Document Standardization (Completed on 2025-01-21)
+
+**Key Achievements:**
+
+- **MDX Format**: All development documents unified to .mdx format.
+- **Document Integration**: 10 dispersed UI-to-Storage-Flow related documents merged into one.
+- **Real Code Alignment**: All paths/examples match the actual codebase.
+- **Test Framework Update**: Jest → Vitest conversion completed.
+
+**Core Documents:**
+
+- `./development/index.mdx` - Development Guide
+- `./development/caret-architecture-and-implementation-guide.mdx` - Architecture Guide
+- `./development/testing-guide.mdx` - Testing Guide (Vitest-based)
+- `./development/logging.mdx` - Logging Guide
+
+### 7. Project Management
+
+#### 7.1 Version Control
+
+**Release Information:**
+
+- **Current Version**: 0.1.0
+- **Build Script**: `caret-release-build.ps1`
+- **Package Output**: `caret-0.1.0.vsix`
+
+#### 7.2 Script Management
+
+**Caret-Specific Scripts:**
+
+- `caret-scripts/caret-coverage-check.js` - Test coverage check.
+- `caret-scripts/sync-caretrules.js` - Rule file synchronization.
+- `caret-scripts/test-report.js` - Test report generation.
+
+#### 7.3 Rule Management
+
+**Master Rule File:**
+
+- `caret-docs/caretrules.ko.md` (Korean template)
+- Automatic Synchronization: JSON files (`.caretrules`, `.windsurfrules`, `.cursorrules`)
+
+## Future Development Plan
+
+### Short-Term Goals (1-2 weeks)
+
+1.  **Complete Persona System**
+    - Implement UI components.
+    - Complete backend integration.
+    - Write test code.
+2.  **Improve Rules UI**
+    - Reflect priority logic in UI.
+    - Add user guidance messages.
+
+### Mid-Term Goals (1-2 months)
+
+1.  **Develop Additional Personas**
+    - Support user custom personas.
+    - Persona editing functionality.
+2.  **Performance Optimization**
+    - Optimize token usage.
+    - Improve response speed.
+
+### Long-Term Goals (3-6 months)
+
+1.  **AI Model Expansion**
+    - Support various AI models.
+    - Model-specific optimization.
+2.  **Community Features**
+    - Persona sharing platform.
+    - User contribution system.
+
+## Tech Stack
+
+**Frontend:**
+
+- React + TypeScript
+- Vite (Build Tool)
+- VSCode Webview UI Toolkit
+
+**Backend:**
+
+- Node.js + TypeScript
+- Protocol Buffers (gRPC)
+- VSCode Extension API
+
+**Testing:**
+
+- Vitest (Caret Tests)
+- Mocha + ts-node (Cline Originals, currently inactive)
+
+**Development Tools:**
+
+- ESLint + Prettier
+- Buf (Protocol Buffer Linting)
+- PowerShell (Build Scripts)
+
+## License
+
+Caret follows the same Apache 2.0 License as Cline.
+
+---
+
+_This document reflects the current status and plans of the Caret project and will be continuously updated as development progresses._

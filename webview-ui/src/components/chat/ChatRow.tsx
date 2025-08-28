@@ -37,6 +37,9 @@ import UserMessage from "./UserMessage"
 import QuoteButton from "./QuoteButton"
 import ErrorRow from "./ErrorRow"
 import { ErrorBlockTitle } from "./ErrorBlockTitle"
+// CARET MODIFICATION: Added PersonaAvatar imports to show persona avatars in AI chat responses
+import PersonaAvatar from "@/caret/components/PersonaAvatar"
+import { useCaretState } from "@/caret/context/CaretStateContext"
 
 const normalColor = "var(--vscode-foreground)"
 const errorColor = "var(--vscode-errorForeground)"
@@ -150,6 +153,8 @@ export const ChatRowContent = memo(
 		onSetQuote,
 	}: ChatRowContentProps) => {
 		const { mcpServers, mcpMarketplaceCatalog, onRelinquishControl, apiConfiguration } = useExtensionState()
+		// CARET MODIFICATION: Get persona profile from CaretStateContext for avatar display
+		const { personaProfile } = useCaretState()
 		const [seeNewChangesDisabled, setSeeNewChangesDisabled] = useState(false)
 		const [quoteButtonState, setQuoteButtonState] = useState<QuoteButtonState>({
 			visible: false,
@@ -991,80 +996,105 @@ export const ChatRowContent = memo(
 							</div>
 						)
 					case "text":
+						// CARET MODIFICATION: Added PersonaAvatar to AI text responses for visual persona identification
 						return (
-							<WithCopyButton
-								ref={contentRef}
-								onMouseUp={handleMouseUp}
-								textToCopy={message.text}
-								position="bottom-right">
-								<Markdown markdown={message.text} />
-								{quoteButtonState.visible && (
-									<QuoteButton
-										top={quoteButtonState.top}
-										left={quoteButtonState.left}
-										onClick={() => {
-											handleQuoteClick()
-										}}
-									/>
-								)}
-							</WithCopyButton>
+							<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+								<PersonaAvatar
+									personaProfile={personaProfile}
+									isThinking={false}
+									size={64}
+									style={{
+										marginTop: "2px",
+										flexShrink: 0,
+									}}
+								/>
+								<div style={{ flex: 1, minWidth: 0 }}>
+									<WithCopyButton
+										ref={contentRef}
+										onMouseUp={handleMouseUp}
+										textToCopy={message.text}
+										position="bottom-right">
+										<Markdown markdown={message.text} />
+										{quoteButtonState.visible && (
+											<QuoteButton
+												top={quoteButtonState.top}
+												left={quoteButtonState.left}
+												onClick={() => {
+													handleQuoteClick()
+												}}
+											/>
+										)}
+									</WithCopyButton>
+								</div>
+							</div>
 						)
 					case "reasoning":
+						// CARET MODIFICATION: Added PersonaAvatar to AI reasoning responses with thinking state
 						return (
-							<>
-								{message.text && (
-									<div
-										onClick={handleToggle}
-										style={{
-											// marginBottom: 15,
-											cursor: "pointer",
-											color: "var(--vscode-descriptionForeground)",
-
-											fontStyle: "italic",
-											overflow: "hidden",
-										}}>
-										{isExpanded ? (
-											<div style={{ marginTop: -3 }}>
-												<span style={{ fontWeight: "bold", display: "block", marginBottom: "4px" }}>
-													Thinking
+							<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+								<PersonaAvatar
+									personaProfile={personaProfile}
+									isThinking={true}
+									size={64}
+									style={{
+										marginTop: "2px",
+										flexShrink: 0,
+									}}
+								/>
+								<div style={{ flex: 1, minWidth: 0 }}>
+									{message.text && (
+										<div
+											onClick={handleToggle}
+											style={{
+												// marginBottom: 15,
+												cursor: "pointer",
+												color: "var(--vscode-descriptionForeground)",
+												fontStyle: "italic",
+												overflow: "hidden",
+											}}>
+											{isExpanded ? (
+												<div style={{ marginTop: -3 }}>
+													<span style={{ fontWeight: "bold", display: "block", marginBottom: "4px" }}>
+														Thinking
+														<span
+															className="codicon codicon-chevron-down"
+															style={{
+																display: "inline-block",
+																transform: "translateY(3px)",
+																marginLeft: "1.5px",
+															}}
+														/>
+													</span>
+													<span className="ph-no-capture">{message.text}</span>
+												</div>
+											) : (
+												<div style={{ display: "flex", alignItems: "center" }}>
+													<span style={{ fontWeight: "bold", marginRight: "4px" }}>Thinking:</span>
 													<span
-														className="codicon codicon-chevron-down"
+														className="ph-no-capture"
 														style={{
-															display: "inline-block",
-															transform: "translateY(3px)",
-															marginLeft: "1.5px",
+															whiteSpace: "nowrap",
+															overflow: "hidden",
+															textOverflow: "ellipsis",
+															direction: "rtl",
+															textAlign: "left",
+															flex: 1,
+														}}>
+														{message.text + "\u200E"}
+													</span>
+													<span
+														className="codicon codicon-chevron-right"
+														style={{
+															marginLeft: "4px",
+															flexShrink: 0,
 														}}
 													/>
-												</span>
-												<span className="ph-no-capture">{message.text}</span>
-											</div>
-										) : (
-											<div style={{ display: "flex", alignItems: "center" }}>
-												<span style={{ fontWeight: "bold", marginRight: "4px" }}>Thinking:</span>
-												<span
-													className="ph-no-capture"
-													style={{
-														whiteSpace: "nowrap",
-														overflow: "hidden",
-														textOverflow: "ellipsis",
-														direction: "rtl",
-														textAlign: "left",
-														flex: 1,
-													}}>
-													{message.text + "\u200E"}
-												</span>
-												<span
-													className="codicon codicon-chevron-right"
-													style={{
-														marginLeft: "4px",
-														flexShrink: 0,
-													}}
-												/>
-											</div>
-										)}
-									</div>
-								)}
-							</>
+												</div>
+											)}
+										</div>
+									)}
+								</div>
+							</div>
 						)
 					case "user_feedback":
 						return (
@@ -1466,6 +1496,35 @@ export const ChatRowContent = memo(
 									}
 									inputValue={inputValue}
 								/>
+								{quoteButtonState.visible && (
+									<QuoteButton
+										top={quoteButtonState.top}
+										left={quoteButtonState.left}
+										onClick={() => {
+											handleQuoteClick()
+										}}
+									/>
+								)}
+							</WithCopyButton>
+						)
+					}
+					case "chatbot_mode_respond": {
+						// CARET MODIFICATION: Add chatbot_mode_respond case for clean display
+						let response: string | undefined
+						try {
+							const parsedMessage = JSON.parse(message.text || "{}")
+							response = parsedMessage.response
+						} catch (e) {
+							// legacy messages would pass response directly
+							response = message.text
+						}
+						return (
+							<WithCopyButton
+								ref={contentRef}
+								onMouseUp={handleMouseUp}
+								textToCopy={response}
+								position="bottom-right">
+								<Markdown markdown={response} />
 								{quoteButtonState.visible && (
 									<QuoteButton
 										top={quoteButtonState.top}

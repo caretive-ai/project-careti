@@ -1,0 +1,345 @@
+# Frontend-Backend Interaction Standard Patterns Guide
+
+## 1. Overview
+
+This document presents standardized patterns for interaction between **webview (React) ↔ Extension Host (Node.js)** in the Caret project. It contains proven patterns to resolve **circular message issues** and **state inconsistency issues** discovered during the UI language setting implementation process.
+
+## 2. Core Principles
+
+### 2.1 Single Field Update Principle
+
+**❌ Incorrect Pattern:**
+
+```typescript
+// Sends all settings even if only one field changes
+setChatSettings({
+	...currentSettings,
+	uiLanguage: "ja", // Only this changes
+	// But all fields like apiConfiguration, telemetrySetting, etc., are sent together
+})
+```
+
+**✅ Correct Pattern:**
+
+```typescript
+// Sends only changed fields
+setUILanguage: async (language: string) => {
+	setState((prev) => ({ ...prev, uiLanguage: language }))
+
+	await StateServiceClient.updateSettings({
+		uiLanguage: language, // Only this field
+	})
+}
+```
+
+### 2.2 Optimistic Update Pattern
+
+```typescript
+const updateSingleField = async <T>(fieldName: keyof ExtensionState, newValue: T, updateFn: (value: T) => Promise<void>) => {
+	// 1. Backup previous value
+	const previousValue = state[fieldName]
+
+	// 2. Immediately update UI (improve user experience)
+	setState((prev) => ({ ...prev, [fieldName]: newValue }))
+
+	try {
+		// 3. Backend update
+		await updateFn(newValue)
+	} catch (error) {
+		// 4. Rollback on failure
+		setState((prev) => ({ ...prev, [fieldName]: previousValue }))
+		throw error
+	}
+}
+
+// Usage example
+const setPersona = (persona: PersonaConfig) =>
+	updateSingleField("currentPersona", persona, async (value) => {
+		await StateServiceClient.updateSettings({
+			currentPersona: convertPersonaToProto(value),
+		})
+	})
+```
+
+### 2.4 Type Sharing Principle (tsconfig)
+
+> **CRITICAL**: The webview (`webview-ui`) is prohibited from directly referencing the source code of the backend (`src`, `caret-src`). Type information must be shared exclusively through the `src/shared` directory.
+
+**`webview-ui/tsconfig.app.json` Configuration Rules:**
+
+1.  **Use `@shared` Path Alias**: Type definitions (including gRPC-generated types) shared with the backend must be referenced using the `@shared/*": ["../src/shared/*"]` path alias.
+2.  **No Direct Backend References**: Do not add path aliases like `@/` or `@caret/*` that point directly to the backend's source directories. This increases coupling between the frontend and backend and can lead to unexpected build errors.
+3.  **Adhere to `cline` Standard**: The overall structure and settings of the `tsconfig.app.json` file must always be maintained based on the `cline-latest` configuration.
+
+**Expected Benefits**:
+
+- **Clear Dependencies**: The dependency between the frontend and backend is unified to `src/shared`, clarifying the code structure.
+- **Build Stability**: Eliminates unnecessary dependencies, increasing the stability of the webview build and preventing potential errors.
+
+### 2.3 Circular Message Prevention Pattern
+
+**Problem Scenario:**
+
+```
+1. webview: Change setting → updateSettings request
+2. backend: Save all settings → call postStateToWebview()
+3. webview: Receive new state via subscription → user changes overwritten ❌
+```
+
+**Solution Pattern:**
+
+```typescript
+// Backend: src/core/controller/state/updateSettings.ts
+export async function updateSettings(request: UpdateSettingsRequest): Promise<Empty> {
+	// Calculate number of changed fields
+	const changedFields = Object.keys(request).filter((key) => request[key] !== undefined && request[key] !== null)
+
+	// Process each field individually
+	if (request.uiLanguage) {
+		await saveUILanguage(request.uiLanguage)
+	}
+
+	if (request.currentPersona) {
+		await savePersona(request.currentPersona)
+	}
+
+	if (request.chatSettings) {
+		await saveChatSettings(request.chatSettings)
+	}
+
+	// Skip broadcast if only a single field changed (prevent circular messages)
+	if (changedFields.length > 1) {
+		await controller.postStateToWebview()
+	}
+
+	return Empty.create()
+}
+```
+
+## 3. Standard Implementation Templates
+
+### 3.1 Frontend Setting Update Function
+
+```typescript
+// webview-ui/src/context/ExtensionStateContext.tsx
+interface SettingUpdateFunctions {
+	setUILanguage: (language: string) => Promise<void>
+	setPersona: (persona: PersonaConfig) => Promise<void>
+	setTheme: (theme: ThemeConfig) => Promise<void>
+	// ... other single field update functions
+}
+
+const createSettingUpdater =
+	<T>(fieldName: keyof ExtensionState, protoConverter: (value: T) => any) =>
+	async (value: T) => {
+		const previousValue = state[fieldName]
+
+		// Optimistic update
+		setState((prev) => ({ ...prev, [fieldName]: value }))
+
+		try {
+			await StateServiceClient.updateSettings({
+				[fieldName]: protoConverter(value),
+			})
+		} catch (error) {
+			// Rollback on failure
+			setState((prev) => ({ ...prev, [fieldName]: previousValue }))
+			console.error(`Failed to update ${fieldName}:`, error)
+			throw error
+		}
+	}
+
+// Specific functions
+const setUILanguage = createSettingUpdater("uiLanguage", (lang: string) => lang)
+const setPersona = createSettingUpdater("currentPersona", convertPersonaToProto)
+```
+
+### 3.2 Backend Processing Template
+
+```typescript
+// Pattern to follow when adding new setting fields
+export async function updateSettings(request: UpdateSettingsRequest): Promise<Empty> {
+	const updates: Array<() => Promise<void>> = []
+
+	// Individual processing for each field
+	if (request.uiLanguage) {
+		updates.push(() => saveToGlobalState("uiLanguage", request.uiLanguage))
+	}
+
+	if (request.currentPersona) {
+		updates.push(() => saveToWorkspaceState("currentPersona", request.currentPersona))
+	}
+
+	if (request.chatSettings) {
+		updates.push(() => saveToWorkspaceState("chatSettings", request.chatSettings))
+	}
+
+	// Execute all updates
+	await Promise.all(updates.map((update) => update()))
+
+	// Determine broadcast condition
+	const shouldBroadcast = updates.length > 1 || isComplexUpdate(request)
+	if (shouldBroadcast) {
+		await controller.postStateToWebview()
+	}
+
+	return Empty.create()
+}
+
+function isComplexUpdate(request: UpdateSettingsRequest): boolean {
+	// Complex updates (e.g., API setting changes) require broadcast
+	return !!(request.apiConfiguration || request.telemetrySetting)
+}
+```
+
+## 4. TDD-Based Development Flow
+
+### 4.1 Test-First Development
+
+```typescript
+// RED: Write failing test
+describe("Persona Setting Update", () => {
+	it("should update persona without affecting other settings", async () => {
+		// Given
+		const initialState = {
+			uiLanguage: "en",
+			currentPersona: null,
+			chatSettings: { model: "claude-3" },
+		}
+		const newPersona = { name: "Alpha", mode: "helper" }
+
+		// When
+		await setPersona(newPersona)
+
+		// Then
+		expect(mockUpdateSettings).toHaveBeenCalledWith({
+			currentPersona: convertPersonaToProto(newPersona),
+		})
+		expect(state.uiLanguage).toBe("en") // No impact on other settings
+		expect(state.chatSettings.model).toBe("claude-3") // No impact on other settings
+	})
+
+	it("should rollback on backend failure", async () => {
+		// Given
+		const initialPersona = { name: "Default", mode: "standard" }
+		const newPersona = { name: "Alpha", mode: "helper" }
+		mockUpdateSettings.mockRejectedValue(new Error("Network error"))
+
+		// When & Then
+		await expect(setPersona(newPersona)).rejects.toThrow("Network error")
+		expect(state.currentPersona).toEqual(initialPersona) // Rolled back
+	})
+})
+```
+
+### 4.2 Integration Test Pattern
+
+```typescript
+// E2E test in actual Extension Host environment
+describe("Settings Integration", () => {
+	it("should persist persona setting across webview reloads", async () => {
+		// Given
+		const persona = { name: "Alpha", mode: "helper" }
+
+		// When
+		await setPersona(persona)
+		await simulateWebviewReload()
+
+		// Then
+		const newState = await getExtensionState()
+		expect(newState.currentPersona).toEqual(persona)
+	})
+})
+```
+
+## 5. Debugging Guide
+
+### 5.1 Circular Message Debugging
+
+```typescript
+// Track message flow in Frontend
+const debugMessageFlow = (actionName: string, data: any) => {
+	console.log(`[${actionName}] Frontend → Backend:`, data)
+}
+
+// Track broadcast in Backend
+const debugBroadcast = (reason: string, stateSnapshot: any) => {
+	console.log(`[Broadcast] ${reason}:`, Object.keys(stateSnapshot))
+}
+```
+
+### 5.2 State Inconsistency Detection
+
+```typescript
+// Detect state inconsistency in Frontend
+useEffect(() => {
+	const checkStateConsistency = () => {
+		if (state.uiLanguage !== expectedLanguage) {
+			console.warn("State inconsistency detected:", {
+				expected: expectedLanguage,
+				actual: state.uiLanguage,
+				timestamp: Date.now(),
+			})
+		}
+	}
+
+	checkStateConsistency()
+}, [state.uiLanguage])
+```
+
+## 6. Checklist
+
+### 6.1 When Adding New Setting Fields
+
+- [ ] Add field definition to Proto file
+- [ ] Frontend: Write single field update function
+- [ ] Backend: Add individual processing logic to updateSettings.ts
+- [ ] Verify circular message prevention logic
+- [ ] Write TDD tests (RED → GREEN → REFACTOR)
+- [ ] Verify E2E flow with integration tests
+- [ ] Manual testing in Extension Host environment
+
+### 6.2 When Modifying Existing Settings
+
+- [ ] Confirm no impact on existing functionality
+- [ ] Review possibility of circular messages
+- [ ] Update related tests
+- [ ] Run regression tests
+
+## 7. Persona Development Application Example
+
+```typescript
+// Apply standard pattern for persona settings
+interface PersonaConfig {
+	name: string
+	mode: "helper" | "expert" | "creative"
+	personality: PersonalityTraits
+	avatar: string
+}
+
+// Frontend
+const setPersona = async (persona: PersonaConfig) => {
+	const previous = state.currentPersona
+
+	setState((prev) => ({ ...prev, currentPersona: persona }))
+
+	try {
+		await StateServiceClient.updateSettings({
+			currentPersona: convertPersonaToProto(persona),
+		})
+	} catch (error) {
+		setState((prev) => ({ ...prev, currentPersona: previous }))
+		throw error
+	}
+}
+
+// Backend
+if (request.currentPersona) {
+	await saveToWorkspaceState("currentPersona", request.currentPersona)
+	// Persona change is a single field, so skip broadcast
+}
+```
+
+---
+
+**By following these patterns, you can implement persona development stably without encountering the same issues.** ✨

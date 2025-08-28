@@ -1,0 +1,405 @@
+# Caret Logging System Guide
+
+## 1. Overview
+
+This document explains Caret's integrated logging system. **Updated January 2025**: Cline Logger and CaretLogger have been integrated, enabling automatic log level management based on development/production modes.
+
+### 1.1 Key Features
+
+- **Integrated Logging**: Full integration of Cline Logger based on CaretLogger.
+- **Automatic Mode Detection**: Automatic configuration based on the `IS_DEV` environment variable determined at build time.
+- **Development/Production Separation**:
+    - **Development Mode**: DEBUG level + console output enabled.
+    - **Production Mode**: INFO level + VSCode output channel only.
+- **API Compatibility**: 100% compatible with existing Cline Logger API.
+
+## 2. Logging Structure
+
+### 2.1 Log Levels
+
+```typescript
+export enum LogLevel {
+	DEBUG = "debug",
+	INFO = "info",
+	WARN = "warn",
+	ERROR = "error",
+}
+
+// For Backend (CaretLogger)
+export enum CaretLogLevel {
+	DEBUG = "DEBUG",
+	INFO = "INFO",
+	WARN = "WARN",
+	ERROR = "ERROR",
+	SUCCESS = "SUCCESS",
+}
+```
+
+### 2.2 Log Format
+
+```typescript
+export interface LogEntry {
+	timestamp: string
+	level: LogLevel
+	component: string
+	message: string
+	data?: any
+}
+```
+
+## 3. Backend Logging (Integrated System)
+
+### 3.1 Integrated Logger Class
+
+**Location**: `src/services/logging/Logger.ts` (Integrated based on CaretLogger)
+
+```typescript
+// CARET MODIFICATION: Integrated Logger.ts with CaretLogger to add development/production mode filtering
+// Original backed up to: src/services/logging/Logger.ts.cline
+// Purpose: Solves Cline Logger's unconditional output issue and utilizes CaretLogger's advanced features
+
+import { CaretLogger, CaretLogLevel } from "../../../caret-src/utils/caret-logger"
+
+export class Logger {
+	private static caretLogger: CaretLogger
+	private static isDev: boolean = false
+
+	static initialize(outputChannel: OutputChannel) {
+		Logger.caretLogger = new CaretLogger(outputChannel)
+		Logger.isDev = process.env.IS_DEV === "true"
+		// Log level is automatically set in CaretLogger constructor
+	}
+
+	// Existing Cline Logger API compatibility
+	static debug(message: string) {
+		// Output debug logs only in development mode
+		if (Logger.isDev) {
+			Logger.caretLogger.debug(message, "CLINE")
+		}
+	}
+	}
+
+	setOutputChannel(outputChannel: OutputChannel): void {
+		this.outputChannel = outputChannel
+	}
+
+	debug(message: string, context?: string): void {
+		this.log(CaretLogLevel.DEBUG, message, context)
+	}
+
+	info(message: string, context?: string): void {
+		this.log(CaretLogLevel.INFO, message, context)
+	}
+
+	warn(message: string, context?: string): void {
+		this.log(CaretLogLevel.WARN, message, context)
+	}
+
+	error(message: string, context?: string): void {
+		this.log(CaretLogLevel.ERROR, message, context)
+	}
+
+	success(message: string, context?: string): void {
+		this.log(CaretLogLevel.SUCCESS, message, context)
+	}
+
+	// Caret-specific logging methods
+	welcomePageLoaded(): void {
+		this.info("Caret welcome page loaded", "UI")
+	}
+
+	apiConfigured(provider: string): void {
+		this.success(`API configuration completed: ${provider}`, "CONFIG")
+	}
+
+	extensionActivated(): void {
+		this.success("Caret extension activated", "EXTENSION")
+	}
+}
+
+// Singleton instance
+export const caretLogger = new CaretLogger()
+```
+
+### 3.2 Usage Example
+
+```typescript
+import { caretLogger, logCaretWelcome, logCaretApiConfig } from "../utils/caret-logger"
+
+// Direct usage
+caretLogger.info("Component initialized", "MyComponent")
+caretLogger.error("Error occurred", "ERROR_CONTEXT")
+
+// Using utility functions
+logCaretWelcome()
+logCaretApiConfig("OpenAI")
+```
+
+## 4. Frontend Logging (webview-ui)
+
+### 4.1 WebviewLogger Class
+
+Actual implementation location: `webview-ui/src/caret/utils/webview-logger.ts`
+
+The Caret webview uses the `WebviewLogger` class as its standard logger.
+
+Key features:
+
+- Sends log messages to both the browser console and the VSCode Extension Host.
+- Manages log levels using the `LogLevel` enum (DEBUG, INFO, WARN, ERROR).
+- Processes `DEBUG` level logs only in development mode (`import.meta.env.MODE !== 'production'`).
+
+**Note:** To use Vite environment variables in TypeScript, the `webview-ui/src/vite-env.d.ts` file is required:
+
+```typescript
+/// <reference types="vite/client" />
+```
+
+### 4.2 WebviewLogger Actual Implementation
+
+```typescript
+import { vscode } from "../../utils/vscode"
+
+interface LogEntry {
+	timestamp: string
+	level: LogLevel
+	component: string
+	message: string
+	data?: any
+}
+
+export enum LogLevel {
+	DEBUG = "debug",
+	INFO = "info",
+	WARN = "warn",
+	ERROR = "error",
+}
+
+class WebviewLogger {
+	private component: string
+	private isDev: boolean
+
+	constructor(component: string) {
+		this.component = component
+		this.isDev = import.meta.env.MODE !== "production"
+	}
+
+	private log(level: LogLevel, message: string, data?: any): void {
+		// Do not process DEBUG level logs if not in development mode
+		if (level === LogLevel.DEBUG && !this.isDev) {
+			return
+		}
+
+		const entry: LogEntry = {
+			timestamp: new Date().toISOString(),
+			level,
+			component: this.component,
+			message,
+			data,
+		}
+
+		// Output logs to browser console
+		switch (level) {
+			case LogLevel.DEBUG:
+				console.debug(`[${this.component}] ${message}`, data || "")
+				break
+			case LogLevel.INFO:
+				console.info(`[${this.component}] ${message}`, data || "")
+				break
+			case LogLevel.WARN:
+				console.warn(`[${this.component}] ${message}`, data || "")
+				break
+			case LogLevel.ERROR:
+				console.error(`[${this.component}] ${message}`, data || "")
+				break
+		}
+
+		// Send logs to Extension Host
+		vscode.postMessage({
+			type: "log",
+			entry,
+		})
+	}
+
+	debug(message: string, data?: any): void {
+		this.log(LogLevel.DEBUG, message, data)
+	}
+
+	info(message: string, data?: any): void {
+		this.log(LogLevel.INFO, message, data)
+	}
+
+	warn(message: string, data?: any): void {
+		this.log(LogLevel.WARN, message, data)
+	}
+
+	error(message: string, data?: any): void {
+		this.log(LogLevel.ERROR, message, data)
+	}
+}
+
+export default WebviewLogger
+
+// Named export for convenience
+export const caretWebviewLogger = new WebviewLogger("Caret")
+```
+
+## 5. Log Management
+
+### 5.1 Log File Management
+
+```typescript
+class LogManager {
+	constructor(private context: vscode.ExtensionContext) {}
+
+	// Retrieve list of log files
+	async getLogFiles(): Promise<string[]> {
+		const logPath = path.join(this.context.globalStoragePath, "logs")
+		return fs.readdir(logPath)
+	}
+
+	// Read log file
+	async readLogFile(filename: string): Promise<string> {
+		const logPath = path.join(this.context.globalStoragePath, "logs", filename)
+		return fs.readFile(logPath, "utf-8")
+	}
+
+	// Delete old log files
+	async cleanupOldLogs(daysToKeep: number): Promise<void> {
+		const logPath = path.join(this.context.globalStoragePath, "logs")
+		const files = await fs.readdir(logPath)
+
+		const now = new Date()
+		for (const file of files) {
+			const filePath = path.join(logPath, file)
+			const stats = await fs.stat(filePath)
+			const daysOld = (now.getTime() - stats.mtime.getTime()) / (1000 * 60 * 60 * 24)
+
+			if (daysOld > daysToKeep) {
+				await fs.unlink(filePath)
+			}
+		}
+	}
+}
+```
+
+### 5.2 Log Viewer
+
+```typescript
+class LogViewer {
+	constructor(private context: vscode.ExtensionContext) {}
+
+	// Create log viewer panel
+	createLogViewer(): void {
+		const panel = vscode.window.createWebviewPanel("logViewer", "Log Viewer", vscode.ViewColumn.One, { enableScripts: true })
+
+		panel.webview.html = this.getWebviewContent()
+	}
+
+	// Filter logs
+	filterLogs(logs: LogEntry[], level?: LogLevel, component?: string): LogEntry[] {
+		return logs.filter((log) => {
+			if (level && log.level !== level) return false
+			if (component && log.component !== component) return false
+			return true
+		})
+	}
+}
+```
+
+## 6. Test Setup
+
+### 6.1 Vitest Test Setup
+
+Logger tests use Vitest:
+
+```typescript
+// caret-src/utils/__tests__/caret-logger.test.ts
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
+import { CaretLogger, CaretLogLevel } from "../caret-logger"
+
+describe("CaretLogger", () => {
+	let logger: CaretLogger
+	let mockOutputChannel: any
+
+	beforeEach(() => {
+		mockOutputChannel = {
+			appendLine: vi.fn(),
+		}
+		logger = new CaretLogger(mockOutputChannel)
+	})
+
+	afterEach(() => {
+		vi.clearAllMocks()
+	})
+
+	it("should log info message", () => {
+		const consoleSpy = vi.spyOn(console, "info")
+		logger.info("test message", "TEST")
+
+		expect(mockOutputChannel.appendLine).toHaveBeenCalled()
+		expect(consoleSpy).toHaveBeenCalled()
+	})
+})
+```
+
+### 6.2 Frontend Test Setup
+
+```typescript
+// webview-ui/src/caret/utils/__tests__/webview-logger.test.ts
+import { describe, it, expect, vi, beforeEach } from "vitest"
+import WebviewLogger, { LogLevel } from "../webview-logger"
+
+// Mock vscode
+vi.mock("../../../utils/vscode", () => ({
+	vscode: {
+		postMessage: vi.fn(),
+	},
+}))
+
+describe("WebviewLogger", () => {
+	let logger: WebviewLogger
+
+	beforeEach(() => {
+		logger = new WebviewLogger("TestComponent")
+		vi.clearAllMocks()
+	})
+
+	it("should log info message to console", () => {
+		const consoleSpy = vi.spyOn(console, "info")
+		logger.info("test message")
+
+		expect(consoleSpy).toHaveBeenCalledWith("[TestComponent] test message", "")
+	})
+})
+```
+
+## 7. Best Practices
+
+### 7.1 Logging Principles
+
+- Use appropriate log levels (DEBUG → INFO → WARN → ERROR → SUCCESS).
+- Write meaningful messages.
+- Exclude sensitive information.
+- Include structured data.
+
+### 7.2 Performance Considerations
+
+- Be cautious with large volume data logging.
+- Manage log file size.
+- Periodically clean up logs.
+- Use DEBUG level only in development mode.
+
+### 7.3 Security Considerations
+
+- Mask sensitive information.
+- Restrict log file access.
+- Prohibit logging of API keys and other secret information.
+
+## 8. Update History
+
+- 2024-03-21: Initial document creation
+- 2024-03-21: Added logging class implementation
+- 2024-03-21: Added log management features
+- 2024-03-21: Added best practices
+- 2025-06-21: Modified paths to match actual code structure and added Vitest test examples (md → mdx conversion)

@@ -1,0 +1,19 @@
+{
+	"section": {
+		"globalRules": "グローバルルール",
+		"workspaceRules": "ワークスペースルール",
+		"personaManagement": "ペルソナ管理"
+	},
+	"subTitle": {
+		"caretRules": "Caretルール",
+		"clineRules": "Clineルール",
+		"cursorRules": "Cursorルール",
+		"windsurfRules": "Windsurfルール"
+	},
+	"button": {
+		"selectPersonaTemplate": "テンプレートキャラクター選択"
+	},
+	"description": {
+		"personaManagement": "あなたのコーディングスタイルと好みに合うAIペルソナを選択してください。"
+	}
+}

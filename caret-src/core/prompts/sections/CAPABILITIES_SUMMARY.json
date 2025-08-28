@@ -1,0 +1,3 @@
+{
+	"content": "CAPABILITIES\n\n- Tools: Execute CLI, list files, view code defs, regex search, read/edit files, ask questions. For tasks like coding, editing, project understanding, system ops.\n- Initial Task Context: environment_details includes recursive file list of CWD. Provides project structure overview (dir/file names, extensions) for insights & guidance.\n- search_files: Regex search files in dir. Context-rich results (surrounding lines). Useful for code patterns, finding impls, refactoring areas.\n- execute_command: Run CLI commands anytime to help accomplish tasks."
+}

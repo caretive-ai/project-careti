@@ -37,6 +37,9 @@ import { AuthService } from "./services/auth/AuthService"
 import { telemetryService } from "./services/posthog/PostHogClientProvider"
 import { SharedUriHandler } from "./services/uri/SharedUriHandler"
 import { ShowMessageType } from "./shared/proto/host/window"
+// CARET MODIFICATION: Import Caret components using wrapper pattern
+import { PersonaInitializer } from "@caret/services/persona/persona-initializer"
+import { CaretProviderWrapper } from "@caret/core/webview/CaretProviderWrapper"
 /*
 Built using https://github.com/microsoft/vscode-webview-ui-toolkit
 
@@ -51,21 +54,50 @@ https://github.com/microsoft/vscode-webview-ui-toolkit-samples/tree/main/framewo
 export async function activate(context: vscode.ExtensionContext) {
 	setupHostProvider(context)
 
-	const sidebarWebview = (await initialize(context)) as VscodeWebviewProvider
+	// CARET MODIFICATION: Use Cline's complete initialization flow first
+	// This ensures all required services (PostHog, migrations, FileContextTracker, etc.) are properly initialized
+	const clineWebviewProvider = (await initialize(context)) as VscodeWebviewProvider
 
 	Logger.log("Cline extension activated")
 
-	const testModeWatchers = await initializeTestMode(sidebarWebview)
+	// CARET MODIFICATION: Initialize Caret-specific services
+	const personaInitializer = new PersonaInitializer(context)
+	await personaInitializer.initialize()
+
+	// CARET MODIFICATION: Register the original Cline provider first so it's tracked in WebviewProvider.activeInstances
+	context.subscriptions.push(
+		vscode.window.registerWebviewViewProvider(VscodeWebviewProvider.SIDEBAR_ID, clineWebviewProvider, {
+			webviewOptions: { retainContextWhenHidden: true },
+		}),
+	)
+
+	// CARET MODIFICATION: Create wrapper and hook it into the provider's resolveWebviewView method
+	const caretProviderWrapper = new CaretProviderWrapper(context, clineWebviewProvider)
+
+	// Monkey patch the resolveWebviewView method to add Caret enhancements
+	const originalResolveWebviewView = clineWebviewProvider.resolveWebviewView.bind(clineWebviewProvider)
+	clineWebviewProvider.resolveWebviewView = async (webviewView: vscode.WebviewView) => {
+		console.error("[CARET-TEST] ===== MONKEY PATCH CALLED! =====")
+		console.error("[CARET-TEST] Intercepting resolveWebviewView to add Caret enhancements")
+
+		// First, call the original Cline logic
+		await originalResolveWebviewView(webviewView)
+
+		// Then add Caret enhancements
+		try {
+			await caretProviderWrapper.enhanceWebviewWithCaretFeatures(webviewView)
+			console.error("[CARET-TEST] Caret enhancements applied successfully")
+		} catch (error) {
+			console.error("[CARET-TEST] Error applying Caret enhancements:", error)
+		}
+	}
+
+	// Use the original provider's controller for test mode initialization
+	const testModeWatchers = await initializeTestMode(clineWebviewProvider)
 	// Initialize test mode and add disposables to context
 	context.subscriptions.push(...testModeWatchers)
 
 	vscode.commands.executeCommand("setContext", "cline.isDevMode", IS_DEV && IS_DEV === "true")
-
-	context.subscriptions.push(
-		vscode.window.registerWebviewViewProvider(VscodeWebviewProvider.SIDEBAR_ID, sidebarWebview, {
-			webviewOptions: { retainContextWhenHidden: true },
-		}),
-	)
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand("cline.plusButtonClicked", async (webview: any) => {
@@ -135,7 +167,8 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 		const targetCol = hasVisibleEditors ? Math.max(lastCol + 1, 1) : vscode.ViewColumn.Two
 
-		const panel = vscode.window.createWebviewPanel(VscodeWebviewProvider.TAB_PANEL_ID, "Cline", targetCol, {
+		const panel = vscode.window.createWebviewPanel(VscodeWebviewProvider.TAB_PANEL_ID, "Caret", targetCol, {
+			// CARET MODIFICATION: Change panel title
 			enableScripts: true,
 			retainContextWhenHidden: true,
 			localResourceRoots: [context.extensionUri],
@@ -232,7 +265,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		// Use dynamic import to avoid loading the module in production
 		import("./dev/commands/tasks")
 			.then((module) => {
-				const devTaskCommands = module.registerTaskCommands(context, sidebarWebview.controller)
+				const devTaskCommands = module.registerTaskCommands(context, clineWebviewProvider.controller)
 				context.subscriptions.push(...devTaskCommands)
 				Logger.log("Cline dev task commands registered")
 			})
@@ -511,7 +544,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		}),
 	)
 
-	return createClineAPI(sidebarWebview.controller)
+	return createClineAPI(clineWebviewProvider.controller)
 }
 
 function setupHostProvider(context: ExtensionContext) {
@@ -519,7 +552,7 @@ function setupHostProvider(context: ExtensionContext) {
 
 	const createWebview = (type: WebviewProviderType) => new VscodeWebviewProvider(context, type)
 	const createDiffView = () => new VscodeDiffViewProvider()
-	const outputChannel = vscode.window.createOutputChannel("Cline")
+	const outputChannel = vscode.window.createOutputChannel("Caret") // CARET MODIFICATION: Change output channel name
 	context.subscriptions.push(outputChannel)
 
 	const getCallbackUri = async () => `${vscode.env.uriScheme || "vscode"}://saoudrizwan.claude-dev`

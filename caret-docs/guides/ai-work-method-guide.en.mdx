@@ -1,0 +1,226 @@
+# AI Work Method Guide (For AI Assistance)
+
+## 1. Overview
+
+This document defines the standard procedures and principles for AI assistants to perform tasks. AI must be familiar with these guidelines and perform all tasks according to these procedures.
+
+**🚨 Core Principle**: **Do not start coding without checking mandatory documents based on task nature.**
+
+## 2. Task Commencement Protocol (Enhanced Checkpoints)
+
+Upon receiving task instructions from the developer, AI must **strictly follow** the steps below in order. Completing this protocol before starting coding or file modifications is **CRITICAL**.
+
+### **Phase 0: Mandatory Pre-Review & Architecture Decision (MANDATORY)**
+
+1. **User Identification**: Confirm current user with `git config user.name`.
+2. **Date Confirmation**: Confirm current date with OS-specific commands.
+3. **Work Log Check**: Check/create `caret-docs/work-logs/{username}/{date}.md`.
+
+**🚨 CRITICAL: Task Nature Analysis & Mandatory Document Check**
+
+**🚨 CRITICAL: Architecture Decision Checklist**
+
+- **Caret vs Cline Directory Decision**: New features go into `caret/` folders; Cline originals require minimal modification.
+- **Backup Requirements**: `.cline` backup file creation is mandatory when modifying Cline originals.
+- **Test File Location**: Webview tests are only allowed in `src/caret/**/*.test.tsx`.
+
+**🚨 Mandatory Documents to Check by Task Nature:**
+
+#### **Frontend-Backend Interaction Related Tasks**
+
+**Task Examples**: UI settings, state management, message communication, gRPC related.
+**Mandatory Documents to Check**:
+
+- `caret-docs/development/frontend-backend-interaction-patterns.mdx` ⚡ **MANDATORY**
+- `caret-docs/development/caret-architecture-and-implementation-guide.mdx` (Sections 10-11)
+- `caret-docs/development/message-processing-architecture.mdx`
+
+#### **Cline Original File Modification Related Tasks**
+
+**Task Examples**: Modifying `src/`, `webview-ui/`, `proto/` files.
+**Mandatory Documents to Check**:
+
+- **File Modification Checklist** (Checklist within `caret-docs/caretrules.en.md`) ⚡ **MANDATORY**
+- **Backup Creation Rules** must be confirmed.
+- **CARET MODIFICATION Comment** addition rules must be confirmed.
+
+#### **Component/UI Development Related Tasks**
+
+**Task Examples**: React components, CSS, user interface.
+**Mandatory Documents to Check**:
+
+- `caret-docs/development/component-architecture-principles.mdx` ⚡ **MANDATORY**
+- VSCode Theme Integration Guide
+- i18n Internationalization Patterns
+
+#### **Testing Related Tasks**
+
+**Task Examples**: Test writing, TDD, test modification.
+**Mandatory Documents to Check**:
+
+- `caret-docs/development/testing-guide.mdx` ⚡ **MANDATORY**
+- **TDD Mandatory Principles** must be confirmed (RED → GREEN → REFACTOR).
+- **Test-First Writing** must be enforced.
+
+#### **Persona/AI Character Development Related Tasks**
+
+**Task Examples**: Persona setup, AI characters, mode development.
+**Mandatory Documents to Check**:
+
+- `caret-docs/development/frontend-backend-interaction-patterns.mdx` (setPersona pattern)
+- `caret-docs/development/component-architecture-principles.mdx`
+- `caret-assets/template_characters/` structure analysis
+
+### **Phase 3: Technical Constraints and Architecture Pattern Analysis**
+
+4. **Identify Related Task Documents**:
+    - Check `caret-docs/tasks/task-status.md` or specified task documents.
+    - Understand the task's purpose, scope, and constraints.
+
+5. **Analyze Architecture Patterns** ⚡ **NEW**:
+    - Identify Cline patterns applicable to the task.
+    - Analyze existing similar implementations.
+    - Check for circular messages, state inconsistencies, and other caveats.
+
+6. **Check Technical Constraints**:
+    - Backup and comment rules for Cline original code modifications.
+    - Storage usage patterns (globalState vs workspaceState).
+    - Build order when changing Protocol Buffers (`npm run protos` → `npm run compile`).
+
+### **Phase 4: Task Planning and Verification**
+
+7. **Develop Task Plan**:
+    - Create a concrete execution plan **based on the analysis results**.
+    - Select an approach that **reflects** relevant patterns and constraints.
+    - Determine the execution order for each Phase.
+
+8. **Report to Developer and Obtain Approval** ⚡ **MANDATORY**:
+    - Report the list of checked documents.
+    - Explain analysis results and the plan.
+    - Share anticipated risks and considerations.
+    - **Start coding only after receiving approval.**
+
+**🚨 Reporting Template**:
+
+```
+Master, I have completed the document analysis for {Task Name}.
+
+📚 Checked Documents:
+- {Document 1}: {Summary of information gained}
+- {Document 2}: {Summary of information gained}
+
+🎯 Task Plan:
+- Phase 1: {Plan}
+- Phase 2: {Plan}
+
+⚠️ Cautions:
+- {Constraint 1}
+- {Constraint 2}
+
+I will proceed.
+```
+
+## 3. TDD-Based Task Execution (Enhanced STOP POINT Application)
+
+### **Phase 1: TDD RED - Write Tests First**
+
+**🛑 STOP POINT 1: Test File Location Verification**
+
+- Must verify include path before creating test files.
+- Immediately run `npm run test:webview` for verification.
+- Proceed to the next step only after confirming test failure.
+
+### **Phase 2: TDD GREEN - Implementation (STOP POINT Application)**
+
+**🛑 STOP POINT 2: Cline Original File Modification Checklist**
+
+- Create backup (`{filename}-{extension}.cline`).
+- Add CARET MODIFICATION comment.
+- Adhere to minimal modification principle (1-3 lines).
+- Immediately run `npm run compile` for verification.
+
+**🛑 STOP POINT 3: New File Creation Directory Check**
+
+- Verify correct directory (`caret/` vs `src/`).
+- Validate import paths.
+- Immediately verify with compile/test.
+
+### **Phase 3: TDD REFACTOR - Improve Code Quality & Full System Verification**
+
+**Immediate Verification Principle**: Immediately compile/test after file creation/modification for early problem detection.
+
+1. **Strict TDD Adherence** ⚡ **MANDATORY**:
+    - **Always write tests before** any code changes.
+    - Strictly adhere to RED → GREEN → REFACTOR order.
+    - Must declare "I will write tests first."
+
+2. **Pattern-Based Implementation**:
+    - Apply analyzed architecture patterns.
+    - Refer to existing implementation examples.
+    - Maintain consistent implementation style.
+
+3. **Real-time Document Updates**:
+    - Update task checklists and reports in real-time.
+    - Suggest updating relevant documents when new patterns are discovered.
+    - Document problem-solving processes.
+
+4. **Verification and Testing**:
+    - Verify after each Phase completion.
+    - Run relevant tests and confirm they pass.
+    - Confirm no regressions in existing functionality.
+
+## 4. Prohibitions ❌
+
+1. **No Immediate Coding**: Do not start modifying code directly without checking relevant documents.
+2. **No Pattern Disregard**: Do not implement arbitrarily, ignoring existing architecture patterns.
+3. **No Test Skipping**: Do not follow the incorrect order of implementing then writing tests.
+4. **No Document Update Skipping**: Do not skip documenting new patterns when discovered.
+
+## 5. Task Nature Checklist Summary
+
+### Frontend-Backend Interaction
+
+- [ ] Check `frontend-backend-interaction-patterns.mdx`
+- [ ] Confirm circular message prevention patterns
+- [ ] Apply single-field update pattern
+- [ ] Adhere to gRPC communication patterns
+
+### Cline Original Modification
+
+- [ ] Create backup file (`{filename}-{extension}.cline`)
+- [ ] Add CARET MODIFICATION comment
+- [ ] Adhere to minimal modification principle (1-3 lines)
+- [ ] Complete file modification checklist
+
+### Component Development
+
+- [ ] Confirm component architecture principles
+- [ ] Confirm VSCode theme integration
+- [ ] Apply i18n internationalization patterns
+- [ ] Consider reusability
+
+### Test Development
+
+- [ ] Strictly adhere to TDD (RED → GREEN → REFACTOR)
+- [ ] Declare test-first writing
+- [ ] Apply AAA pattern (Arrange, Act, Assert)
+- [ ] Include integration tests
+
+## 6. AI Mistake Prevention Summary ⚡ **NEW**
+
+### **Preventing Architecture Decision Mistakes**
+
+- **Caret-specific features**: Place in `caret/` folders.
+- **Cline originals**: Apply minimal modification principle.
+
+### **Preventing Test Location Mistakes**
+
+- **Webview tests**: Only allowed in `src/caret/**/*.test.tsx`.
+- **Include path settings**: Mandatory verification before test creation.
+
+### **Preventing Backup Omission**
+
+- **Cline original modification**: Backup creation and CARET MODIFICATION comment are mandatory before any changes.
+- **Immediate Verification Principle**: Immediately compile/test after file creation/modification for early problem detection.
+
+Through this guide, AI will proceed with tasks after establishing appropriate analysis and plans based on the nature of the work.

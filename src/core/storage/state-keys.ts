@@ -102,10 +102,15 @@ export type GlobalStateKey =
 	| "strictPlanModeEnabled"
 	| "focusChainSettings"
 	| "focusChainFeatureFlagEnabled"
+	// CARET MODIFICATION: Add persona image keys
+	| "caret_persona_avatar"
+	| "caret_persona_thinking_avatar"
 	// Settings around plan/act and ephemeral model configuration
 	| "preferredLanguage"
 	| "openaiReasoningEffort"
 	| "mode"
+	// CARET MODIFICATION: Add modeSystem for Caret/Cline system selection
+	| "modeSystem"
 	// Plan mode configurations
 	| "planModeApiProvider"
 	| "planModeApiModelId"
@@ -165,7 +170,12 @@ export type GlobalStateKey =
 	| "actModeHuaweiCloudMaasModelId"
 	| "actModeHuaweiCloudMaasModelInfo"
 
-export type LocalStateKey = "localClineRulesToggles" | "localCursorRulesToggles" | "localWindsurfRulesToggles" | "workflowToggles"
+export type LocalStateKey =
+	| "localClineRulesToggles"
+	| "localCaretRulesToggles"
+	| "localCursorRulesToggles"
+	| "localWindsurfRulesToggles"
+	| "workflowToggles"
 
 export interface GlobalState {
 	awsRegion: string | undefined
@@ -225,8 +235,13 @@ export interface GlobalState {
 	preferredLanguage: string
 	openaiReasoningEffort: OpenaiReasoningEffort
 	mode: Mode
+	// CARET MODIFICATION: Add modeSystem for Caret/Cline system selection
+	modeSystem: string | undefined
 	focusChainSettings: FocusChainSettings
 	focusChainFeatureFlagEnabled: boolean
+	// CARET MODIFICATION: Add persona image properties
+	caret_persona_avatar: Buffer | undefined
+	caret_persona_thinking_avatar: Buffer | undefined
 	// Plan mode configurations
 	planModeApiProvider: ApiProvider
 	planModeApiModelId: string | undefined
@@ -324,6 +339,7 @@ export interface Secrets {
 
 export interface LocalState {
 	localClineRulesToggles: ClineRulesToggles
+	localCaretRulesToggles: ClineRulesToggles // CARET MODIFICATION: Added .caretrules support
 	localCursorRulesToggles: ClineRulesToggles
 	localWindsurfRulesToggles: ClineRulesToggles
 	workflowToggles: ClineRulesToggles

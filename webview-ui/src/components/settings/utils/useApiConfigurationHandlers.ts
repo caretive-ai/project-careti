@@ -60,8 +60,14 @@ export const useApiConfigurationHandlers = () => {
 		value: ApiConfiguration[PlanK] & ApiConfiguration[ActK], // Intersection ensures value is compatible with both field types
 		currentMode: Mode,
 	) => {
+		// CARET MODIFICATION: Only handle plan/act modes, skip caret modes
+		if (currentMode !== "plan" && currentMode !== "act") {
+			// Caret modes (chatbot/agent) don't use plan/act specific fields
+			return
+		}
+
 		if (planActSeparateModelsSetting) {
-			const targetField = fieldPair[currentMode]
+			const targetField = currentMode === "plan" ? fieldPair.plan : fieldPair.act
 			await handleFieldChange(targetField, value)
 		} else {
 			await handleFieldsChange({
@@ -86,6 +92,12 @@ export const useApiConfigurationHandlers = () => {
 		values: T,
 		currentMode: Mode,
 	) => {
+		// CARET MODIFICATION: Only handle plan/act modes, skip caret modes
+		if (currentMode !== "plan" && currentMode !== "act") {
+			// Caret modes (chatbot/agent) don't use plan/act specific fields
+			return
+		}
+
 		if (planActSeparateModelsSetting) {
 			// Update only the current mode's fields
 			const updates: Partial<ApiConfiguration> = {}

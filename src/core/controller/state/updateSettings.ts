@@ -12,7 +12,6 @@ import { TelemetrySetting } from "@/shared/TelemetrySetting"
 import { OpenaiReasoningEffort } from "@/shared/storage/types"
 import { McpDisplayMode } from "@/shared/McpDisplayMode"
 import { telemetryService } from "../../../services/posthog/PostHogClientProvider"
-import { FocusChainSettings } from "@shared/FocusChainSettings"
 
 /**
  * Updates multiple extension settings in a single request
@@ -79,11 +78,15 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 		}
 
 		if (request.mode !== undefined) {
-			const mode = request.mode === PlanActMode.PLAN ? "plan" : "act"
+			const newMode = request.mode === PlanActMode.PLAN ? "plan" : "act"
+
+			// Update the mode directly in GlobalState (consistent with ExtensionState)
+			controller.cacheService.setGlobalState("mode", newMode)
+
+			// Also, update the mode in the currently active task to ensure immediate consistency.
 			if (controller.task) {
-				controller.task.updateMode(mode)
+				controller.task.updateMode(newMode)
 			}
-			controller.cacheService.setGlobalState("mode", mode)
 		}
 
 		if (request.openaiReasoningEffort !== undefined) {
@@ -161,6 +164,11 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 					telemetryService.captureFocusChainToggle(isEnabled)
 				}
 			}
+		}
+
+		// CARET MODIFICATION: Update mode system setting (caret | cline)
+		if (request.modeSystem !== undefined) {
+			controller.cacheService.setGlobalState("modeSystem", request.modeSystem)
 		}
 
 		// Post updated state to webview

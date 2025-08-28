@@ -3,6 +3,8 @@ import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import { FileSearchRequest, FileSearchType, RelativePathsRequest } from "@shared/proto/cline/file"
 import { UpdateApiConfigurationRequest } from "@shared/proto/cline/models"
 import { PlanActMode, TogglePlanActModeRequest } from "@shared/proto/cline/state"
+// CARET MODIFICATION: Import ModeRendererFactory for centralized UI rendering
+import { modeRendererFactory } from "../../../../caret-src/ui/renderers/ModeRendererFactory"
 import { convertApiConfigurationToProto } from "@shared/proto-conversions/models/api-configuration-conversion"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import type React from "react"
@@ -12,6 +14,7 @@ import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
 import ContextMenu from "@/components/chat/ContextMenu"
 import { CHAT_CONSTANTS } from "@/components/chat/chat-view/constants"
+import { MODE_SYSTEMS, STORAGE_KEYS, type ModeSystem } from "@caret-src/shared/constants/ModeSystemConstants"
 import SlashCommandMenu from "@/components/chat/SlashCommandMenu"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import Thumbnails from "@/components/common/Thumbnails"
@@ -20,6 +23,7 @@ import ApiOptions from "@/components/settings/ApiOptions"
 import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
+import { updateSetting } from "@/components/settings/utils/settingsHandlers" // CARET MODIFICATION: Import updateSetting for backend state updates
 import {
 	ContextMenuOptionType,
 	getContextMenuOptionIndex,
@@ -45,6 +49,7 @@ import ClineRulesToggleModal from "../cline-rules/ClineRulesToggleModal"
 import ServersToggleModal from "./ServersToggleModal"
 import { Mode } from "@shared/storage/types"
 import { isSafari } from "@/utils/platformUtils"
+import { t } from "@/caret/utils/i18n"
 
 const { MAX_IMAGES_AND_FILES_PER_MESSAGE } = CHAT_CONSTANTS
 
@@ -99,13 +104,17 @@ const ACT_MODE_COLOR = "var(--vscode-focusBorder)"
 const SwitchOption = styled.div.withConfig({
 	shouldForwardProp: (prop) => !["isActive"].includes(prop),
 })<{ isActive: boolean }>`
-	padding: 2px 8px;
+	padding: 2px 6px;
 	color: ${(props) => (props.isActive ? "white" : "var(--vscode-input-foreground)")};
 	z-index: 1;
 	transition: color 0.2s ease;
-	font-size: 12px;
+	font-size: 11px;
 	width: 50%;
 	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	min-width: 0;
 
 	&:hover {
 		background-color: ${(props) => (!props.isActive ? "var(--vscode-toolbar-hoverBackground)" : "transparent")};
@@ -318,9 +327,32 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		const [showDimensionError, setShowDimensionError] = useState(false)
 		const dimensionErrorTimerRef = useRef<NodeJS.Timeout | null>(null)
 
+		// CARET MODIFICATION: Use ModeRendererFactory for centralized mode UI handling
+		const [modeSystem, setModeSystem] = useState<ModeSystem>(MODE_SYSTEMS.CLINE)
+
 		const [fileSearchResults, setFileSearchResults] = useState<SearchResult[]>([])
 		const [searchLoading, setSearchLoading] = useState(false)
 		const [, metaKeyChar] = useMetaKeyDetection(platform)
+
+		// CARET MODIFICATION: Simplified modeSystem state management
+		useEffect(() => {
+			const savedMode = localStorage.getItem(STORAGE_KEYS.MODE_SYSTEM) as ModeSystem | null
+			if (savedMode) setModeSystem(savedMode)
+
+			const handleModeSystemChange = (e: any) => setModeSystem(e.detail.newMode)
+			const handleStorageChange = (e: StorageEvent) => {
+				if (e.key === STORAGE_KEYS.MODE_SYSTEM && e.newValue) {
+					setModeSystem(e.newValue as ModeSystem)
+				}
+			}
+
+			window.addEventListener("caretModeSystemChanged", handleModeSystemChange)
+			window.addEventListener("storage", handleStorageChange)
+			return () => {
+				window.removeEventListener("caretModeSystemChanged", handleModeSystemChange)
+				window.removeEventListener("storage", handleStorageChange)
+			}
+		}, [])
 
 		// Add a ref to track previous menu state
 		const prevShowModelSelector = useRef(showModelSelector)
@@ -1025,26 +1057,40 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				changeModeDelay = 250 // necessary to let the api config update (we send message and wait for it to be saved) FIXME: this is a hack and we ideally should check for api config changes, then wait for it to be saved, before switching modes
 			}
 			setTimeout(async () => {
-				const convertedProtoMode = mode === "plan" ? PlanActMode.ACT : PlanActMode.PLAN
-				const response = await StateServiceClient.togglePlanActModeProto(
-					TogglePlanActModeRequest.create({
-						mode: convertedProtoMode,
-						chatContent: {
-							message: inputValue.trim() ? inputValue : undefined,
-							images: selectedImages,
-							files: selectedFiles,
-						},
-					}),
-				)
-				// Focus the textarea after mode toggle with slight delay
-				setTimeout(() => {
-					if (response.value) {
-						setInputValue("")
-					}
+				// CARET MODIFICATION: Handle mode toggle for both Caret and Cline systems
+				if (modeSystem === MODE_SYSTEMS.CARET) {
+					// Caret system: Send enum directly to backend
+					const newModeEnum = mode === "plan" ? PlanActMode.ACT : PlanActMode.PLAN
+					updateSetting("mode", newModeEnum)
+					const newModeString = newModeEnum === PlanActMode.ACT ? "act" : "plan"
+					console.log(`[ChatTextArea] Caret mode toggle: ${mode} -> ${newModeString}`)
+
+					// Clear input after mode change (Caret behavior)
+					setInputValue("")
 					textAreaRef.current?.focus()
-				}, 100)
+				} else {
+					// Cline system: Use original proto-based toggle
+					const convertedProtoMode = mode === "plan" ? PlanActMode.ACT : PlanActMode.PLAN
+					const response = await StateServiceClient.togglePlanActModeProto(
+						TogglePlanActModeRequest.create({
+							mode: convertedProtoMode,
+							chatContent: {
+								message: inputValue.trim() ? inputValue : undefined,
+								images: selectedImages,
+								files: selectedFiles,
+							},
+						}),
+					)
+					// Focus the textarea after mode toggle with slight delay
+					setTimeout(() => {
+						if (response.value) {
+							setInputValue("")
+						}
+						textAreaRef.current?.focus()
+					}, 100)
+				}
 			}, changeModeDelay)
-		}, [mode, showModelSelector, submitApiConfig, inputValue, selectedImages, selectedFiles])
+		}, [mode, modeSystem, showModelSelector, submitApiConfig, inputValue, selectedImages, selectedFiles, updateSetting])
 
 		useShortcut("Meta+Shift+a", onModeToggle, { disableTextInputs: false }) // important that we don't disable the text input here
 
@@ -1664,6 +1710,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								data-testid="send-button"
 								className={`input-icon-button ${sendingDisabled ? "disabled" : ""} codicon codicon-send`}
 								onClick={() => {
+									console.log("[ChatTextArea] Send button clicked, sendingDisabled:", sendingDisabled)
 									if (!sendingDisabled) {
 										setIsTextAreaFocused(false)
 										onSend()
@@ -1767,7 +1814,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					<Tooltip
 						style={{ zIndex: 1000 }}
 						visible={shownTooltipMode !== null}
-						tipText={`In ${shownTooltipMode === "act" ? "Act" : "Plan"}  mode, Cline will ${shownTooltipMode === "act" ? "complete the task immediately" : "gather information to architect a plan"}`}
+						tipText={shownTooltipMode ? modeRendererFactory.getModeTooltip(modeSystem, shownTooltipMode) : ""}
 						hintText={`Toggle w/ ${metaKeyChar}+Shift+A`}>
 						<SwitchContainer data-testid="mode-switch" disabled={false} onClick={onModeToggle}>
 							<Slider isAct={mode === "act"} isPlan={mode === "plan"} />
@@ -1777,7 +1824,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								aria-checked={mode === "plan"}
 								onMouseOver={() => setShownTooltipMode("plan")}
 								onMouseLeave={() => setShownTooltipMode(null)}>
-								Plan
+								{modeRendererFactory.getModeLabel(modeSystem, "plan")}
 							</SwitchOption>
 							<SwitchOption
 								isActive={mode === "act"}
@@ -1785,7 +1832,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								aria-checked={mode === "act"}
 								onMouseOver={() => setShownTooltipMode("act")}
 								onMouseLeave={() => setShownTooltipMode(null)}>
-								Act
+								{modeRendererFactory.getModeLabel(modeSystem, "act")}
 							</SwitchOption>
 						</SwitchContainer>
 					</Tooltip>

@@ -23,9 +23,14 @@ export function getFqn(name) {
 	return typeNameToFQN.get(name)
 }
 
-export async function loadProtoDescriptorSet() {
+export async function getPackageDefinition() {
 	const descriptorBuffer = await fs.readFile(DESCRIPTOR_SET)
-	const packageDefinition = protoLoader.loadFileDescriptorSetFromBuffer(descriptorBuffer)
+	const options = { longs: Number } // Encode int64 fields as numbers
+	return protoLoader.loadFileDescriptorSetFromBuffer(descriptorBuffer, options)
+}
+
+export async function loadProtoDescriptorSet() {
+	const packageDefinition = await getPackageDefinition()
 	return grpc.loadPackageDefinition(packageDefinition)
 }
 
@@ -46,8 +51,26 @@ export async function loadServicesFromProtoDescriptor() {
 	for (const [name, def] of Object.entries(proto.cline)) {
 		if (def && "service" in def) {
 			protobusServices[name] = def
+			// CARET MODIFICATION: Add a flag for the special case toggleCaretRule RPC
+			if (name === "FileService") {
+				for (const rpcName in def.service) {
+					if (rpcName === "toggleCaretRule") {
+						def.service[rpcName].isCaretRpc = true
+					}
+				}
+			}
 		} else {
 			addTypeNameToFqn(name, `proto.cline.${name}`)
+		}
+	}
+	// CARET MODIFICATION: Load Caret-specific services
+	if (proto.caret) {
+		for (const [name, def] of Object.entries(proto.caret)) {
+			if (def && "service" in def) {
+				protobusServices[name] = { ...def, isCaretService: true }
+			} else {
+				addTypeNameToFqn(name, `proto.caret.${name}`)
+			}
 		}
 	}
 	return { protobusServices, hostServices }

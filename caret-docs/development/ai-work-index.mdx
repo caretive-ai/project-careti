@@ -1,0 +1,158 @@
+# 🤖 AI 작업 인덱스 가이드
+
+**목적**: AI가 작업 성격을 파악하고 필요한 문서만 선택적으로 읽어 컨텍스트 효율성을 극대화
+
+## 📋 **단계별 작업 프로세스**
+
+### Phase 0: 필수 선행 독해 (항상 읽기)
+
+AI는 모든 작업 시작 전에 다음 문서들을 **반드시** 읽어야 합니다:
+
+1. **`.caretrules`** - 프로젝트 절대 규칙
+2. **`caret-docs/development/index.mdx`** - 개발 가이드 개요 (빠른 스캔)
+3. **이 파일 (`ai-work-index.mdx`)** - 작업 인덱스 가이드
+
+### Phase 1: 작업 성격 판단 (키워드 기반)
+
+사용자 요청에서 키워드를 추출하여 작업 성격을 분류:
+
+## 🎯 **작업 성격별 필수 문서 매핑**
+
+### 🏗️ **아키텍처 & 설계 관련**
+
+**키워드**: 아키텍처, 설계, 구조, 시스템, 확장, Fork, Cline 수정
+**필수 문서**:
+
+- `caret-architecture-and-implementation-guide.mdx` (전체 아키텍처)
+- `extension-architecture.mmd` (시각적 구조도)
+- `new-developer-guide.mdx` (신입 개발자용)
+
+### 🤖 **AI 시스템 개발**
+
+**키워드**: AI, 메시지, 시스템 프롬프트, chatbot, agent, 대화
+**필수 문서**:
+
+- `ai-message-flow-guide.mdx` (메시지 플로우)
+- `system-prompt-implementation.mdx` (시스템 프롬프트)
+- `message-processing-architecture.mdx` (메시지 처리)
+
+### 🔄 **Frontend-Backend 통신**
+
+**키워드**: webview, 통신, 상태 관리, 메시지 전송, UI 연동
+**필수 문서**:
+
+- `frontend-backend-interaction-patterns.mdx` (상호작용 패턴)
+- `webview-extension-communication.mdx` (통신 구조)
+- `ui-to-storage-flow.mdx` (데이터 플로우)
+
+### 🎨 **UI/UX 개발**
+
+**키워드**: 컴포넌트, React, UI, UX, 페르소나, 다국어, i18n
+**필수 문서**:
+
+- `component-architecture-principles.mdx` (컴포넌트 원칙)
+- `locale.mdx` (프론트엔드 i18n)
+- `backend-i18n-system.mdx` (백엔드 i18n)
+
+### 🧪 **테스트 & 품질 관리**
+
+**키워드**: 테스트, TDD, 품질, 커버리지, 검증, 버그
+**필수 문서**:
+
+- `testing-guide.mdx` (테스트 가이드)
+- `logging.mdx` (로깅 시스템)
+
+### 🔧 **개발 도구 & 유틸리티**
+
+**키워드**: 유틸리티, 도구, 파일 처리, 이미지, 링크, 빌드
+**필수 문서**:
+
+- `utilities.mdx` (유틸리티)
+- `file-storage-and-image-loading-guide.mdx` (파일 처리)
+- `link-management-guide.mdx` (링크 관리)
+
+### 📖 **문서화 & 규약**
+
+**키워드**: 문서, 규약, 작성, 표준, 가이드, 주석
+**필수 문서**:
+
+- `documentation-guide.mdx` (문서화 가이드)
+- `json-comment-conventions.mdx` (JSON 주석 규약)
+
+### 🚨 **Cline 원본 수정**
+
+**키워드**: Cline 수정, 원본 변경, src/ 디렉토리, 백업
+**필수 문서**:
+
+- `caret-architecture-and-implementation-guide.mdx` (수정 원칙)
+- **+** `.caretrules`의 파일 수정 체크리스트 재확인
+
+## ⚡ **효율적인 독해 전략**
+
+### 🎯 **단계별 접근**
+
+1. **작업 성격 파악** (30초): 키워드 추출 → 카테고리 분류
+2. **필수 문서 선택** (1분): 매핑 테이블 기반 문서 선택
+3. **선택적 독해** (5-10분): 필요한 섹션만 집중 독해
+4. **실행 전 체크** (1분): .caretrules 체크리스트 재확인
+
+### 📚 **독해 우선순위**
+
+1. **High Priority**: 직접 관련된 핵심 문서 (1-2개)
+2. **Medium Priority**: 간접 관련 문서 (필요시만)
+3. **Low Priority**: 참고용 문서 (링크만 확인)
+
+### 🔍 **스마트 독해 방법**
+
+- **목차 우선 스캔**: 관련 섹션만 식별
+- **키워드 검색**: 구체적인 내용 빠르게 찾기
+- **예제 코드 우선**: 실제 구현 패턴 확인
+- **체크리스트 활용**: 놓치기 쉬운 필수 사항 점검
+
+## 🚨 **절대 놓치면 안 되는 필수 체크**
+
+### 모든 작업 공통
+
+- [ ] `.caretrules` 파일 수정 체크리스트 확인
+- [ ] TDD 원칙 (Red → Green → Refactor)
+- [ ] 백업 생성 (Cline 원본 수정 시)
+- [ ] CARET MODIFICATION 주석 (Cline 원본 수정 시)
+
+### 작업 성격별 체크
+
+- [ ] **AI 시스템**: 시스템 프롬프트 구조 이해
+- [ ] **Frontend-Backend**: 순환 메시지 방지 패턴
+- [ ] **UI 개발**: 컴포넌트 설계 원칙
+- [ ] **테스트**: 테스트 커버리지 100% 목표
+
+## 🎁 **AI 작업 효율화 팁**
+
+### 🔄 **반복 작업 최적화**
+
+- 자주 사용하는 문서 조합 기억하기
+- 작업 패턴별 템플릿 활용
+- 체크리스트 자동화
+
+### 🎯 **컨텍스트 관리**
+
+- 필수 정보만 메모리에 유지
+- 불필요한 세부사항 제거
+- 핵심 패턴과 원칙 우선
+
+### 📈 **학습 곡선 최적화**
+
+- 첫 작업은 더 많은 문서 참조
+- 경험 축적 후 선택적 독해
+- 실수 패턴 기록 및 개선
+
+---
+
+**💡 AI 작업 시작 전 체크리스트:**
+
+- [ ] 작업 성격 파악 완료
+- [ ] 필수 문서 선택 완료
+- [ ] 선택적 독해 완료
+- [ ] .caretrules 체크리스트 확인 완료
+- [ ] 실행 계획 수립 완료
+
+**🎯 목표**: 최소한의 컨텍스트로 최대한의 효율성 달성!

@@ -42,6 +42,7 @@ enum ClineAsk {
   CONDENSE = 14;
   REPORT_BUG = 15;
   SUMMARIZE_TASK = 16;
+  CHATBOT_MODE_RESPOND = 100; // CARET MODIFICATION: Add chatbot mode response with safe number
 }
 
 // Enum for ClineSay types

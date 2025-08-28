@@ -1,5 +1,7 @@
 import { showSystemNotification } from "@/integrations/notifications"
 import { listFiles } from "@/services/glob/list-files"
+// CARET MODIFICATION: Import mode registry for tool restrictions
+import { modeRegistry } from "@/../caret-src/core/mode-system/ModeSystemRegistry"
 import { telemetryService } from "@/services/posthog/PostHogClientProvider"
 import { regexSearchFiles } from "@/services/ripgrep"
 import { parseSourceCodeForDefinitionsTopLevel } from "@/services/tree-sitter"
@@ -35,7 +37,8 @@ import { ClineAskResponse } from "@shared/WebviewMessage"
 import { extractFileContent } from "@integrations/misc/extract-file-content"
 import { COMMAND_REQ_APP_STRING } from "@shared/combineCommandSequences"
 import { fileExistsAtPath } from "@utils/fs"
-import { modelDoesntSupportWebp, isNextGenModelFamily } from "@utils/model-utils"
+import { modelDoesntSupportWebp } from "@utils/model-utils"
+import { isNextGenModelFamily } from "@core/prompts/system-prompt/utils"
 import { fixModelHtmlEscaping, removeInvalidChars } from "@utils/string"
 import { setTimeout as setTimeoutPromise } from "node:timers/promises"
 import os from "os"
@@ -125,6 +128,15 @@ export class ToolExecutor {
 		this.autoApprover = new AutoApprove(autoApprovalSettings)
 	}
 
+	// CARET MODIFICATION: Check for Caret tool restrictions (minimal implementation)
+	private isCaretToolRestricted(toolName: string): boolean {
+		// Apply Caret-specific restrictions only in plan mode (Chatbot mode in Caret)
+		if (this.mode === "plan" && modeRegistry.isToolRestricted("caret", this.mode, toolName)) {
+			return true
+		}
+		return false
+	}
+
 	/**
 	 * Updates the auto approval settings
 	 */
@@ -149,12 +161,9 @@ export class ToolExecutor {
 	}
 
 	private pushToolResult = (content: ToolResponse, block: ToolUse) => {
-		const isNextGenModel = isNextGenModelFamily(this.api)
-
 		if (typeof content === "string") {
 			const resultText = content || "(tool did not return anything)"
 
-			// Non-Claude 4: Use traditional format with header
 			this.taskState.userMessageContent.push({
 				type: "text",
 				text: `${this.toolDescription(block)} Result:`,
@@ -198,6 +207,8 @@ export class ToolExecutor {
 				return `[${block.name} for '${block.params.question}']`
 			case "plan_mode_respond":
 				return `[${block.name}]`
+			case "chatbot_mode_respond":
+				return `[${block.name}]` // CARET MODIFICATION: Use ModeSystemRegistry for tool handling
 			case "load_mcp_documentation":
 				return `[${block.name}]`
 			case "attempt_completion":
@@ -332,6 +343,15 @@ export class ToolExecutor {
 		// Logic for plan-model tool call restrictions
 		if (this.strictPlanModeEnabled && this.mode === "plan" && block.name && this.isPlanModeToolRestricted(block.name)) {
 			const errorMessage = `Tool '${block.name}' is not available in PLAN MODE. This tool is restricted to ACT MODE for file modifications. Only use tools available for PLAN MODE when in that mode.`
+			await this.say("error", errorMessage)
+			this.pushToolResult(formatResponse.toolError(errorMessage), block)
+			await this.saveCheckpoint()
+			return
+		}
+
+		// CARET MODIFICATION: Tool restriction using adapter pattern (minimal Cline modification)
+		if (block.name && this.isCaretToolRestricted(block.name)) {
+			const errorMessage = modeRegistry.getToolRestrictionMessage("caret", this.mode, block.name)
 			await this.say("error", errorMessage)
 			this.pushToolResult(formatResponse.toolError(errorMessage), block)
 			await this.saveCheckpoint()
@@ -1078,7 +1098,8 @@ export class ToolExecutor {
 							if (this.context) {
 								await this.browserSession.dispose()
 
-								const useWebp = this.api ? !modelDoesntSupportWebp(this.api) : true
+								const apiHandlerModel = this.api.getModel()
+								const useWebp = this.api ? !modelDoesntSupportWebp(apiHandlerModel) : true
 								this.browserSession = new BrowserSession(this.context, this.browserSettings, useWebp)
 							} else {
 								console.warn("no controller context available for browserSession")
@@ -1729,6 +1750,23 @@ export class ToolExecutor {
 					}
 					await this.saveCheckpoint()
 					this.taskState.currentlySummarizing = true
+
+					// Capture telemetry after main business logic is complete
+					const telemetryData = this.contextManager.getContextTelemetryData(
+						this.messageStateHandler.getClineMessages(),
+						this.api,
+						this.taskState.lastAutoCompactTriggerIndex,
+					)
+
+					if (telemetryData) {
+						telemetryService.captureSummarizeTask(
+							this.ulid,
+							this.api.getModel().id,
+							telemetryData.tokensUsed,
+							telemetryData.maxContextWindow,
+						)
+					}
+
 					break
 				} catch (error) {
 					await this.handleError("summarizing context window", error, block)
@@ -2371,6 +2409,52 @@ export class ToolExecutor {
 				} catch (error) {
 					await this.handleError("attempting completion", error, block)
 					await this.saveCheckpoint()
+					break
+				}
+			}
+			// CARET MODIFICATION: Add chatbot_mode_respond case to fix continuous response issue
+			case "chatbot_mode_respond": {
+				const response: string | undefined = block.params.response
+				const sharedMessage = {
+					response: this.removeClosingTag(block, "response", response),
+				}
+				try {
+					if (block.partial) {
+						await this.ask("chatbot_mode_respond", JSON.stringify(sharedMessage), block.partial).catch(() => {})
+						break
+					} else {
+						if (!response) {
+							this.taskState.consecutiveMistakeCount++
+							this.pushToolResult(
+								await this.sayAndCreateMissingParamError("chatbot_mode_respond", "response"),
+								block,
+							)
+							break
+						}
+						this.taskState.consecutiveMistakeCount = 0
+
+						// CARET MODIFICATION: Similar to plan_mode_respond, ask user and wait for response to end conversation
+						this.taskState.isAwaitingPlanResponse = true
+						let {
+							text,
+							images,
+							files: chatbotResponseFiles,
+						} = await this.ask("chatbot_mode_respond", JSON.stringify(sharedMessage), false)
+						this.taskState.isAwaitingPlanResponse = false
+
+						// CARET MODIFICATION: Save user feedback like plan_mode_respond does
+						if (text || (images && images.length > 0) || (chatbotResponseFiles && chatbotResponseFiles.length > 0)) {
+							await this.say("user_feedback", text ?? "", images, chatbotResponseFiles)
+							await this.saveCheckpoint()
+						}
+
+						// CARET MODIFICATION: End conversation like plan_mode_respond does
+						this.taskState.didAlreadyUseTool = true
+						this.pushToolResult(formatResponse.toolResult(`<user_message>\n${text}\n</user_message>`), block)
+						break
+					}
+				} catch (error) {
+					await this.handleError("responding to inquiry", error, block)
 					break
 				}
 			}

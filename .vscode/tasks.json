@@ -217,7 +217,7 @@
 			"type": "npm",
 			"script": "watch:tsc",
 			"group": "build",
-			"problemMatcher": "$tsc-watch",
+			"problemMatcher": [],
 			"isBackground": true,
 			"label": "npm: watch:tsc",
 			"dependsOn": [

@@ -36,3 +36,8 @@ test-results
 ## CLI pre-release  ##
 /cli 
 cline-reference/
+
+## Claude Code settings ##
+.claude/
+claude-code.json
+.claude-code.json

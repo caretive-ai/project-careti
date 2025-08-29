@@ -16,6 +16,20 @@
 				"path": "example.json",
 				"content": "sample content"
 			}
+		},
+		{
+			"name": "Agent mode conversation",
+			"tool": "agent_mode_respond",
+			"params": {
+				"response": "I understand you want to implement user authentication. Let me analyze the current codebase first to understand the existing architecture before suggesting the best approach."
+			}
+		},
+		{
+			"name": "Chatbot mode consultation",
+			"tool": "chatbot_mode_respond",
+			"params": {
+				"response": "Based on my analysis of your React application, I recommend implementing JWT-based authentication with refresh tokens. This approach provides good security while maintaining a smooth user experience."
+			}
 		}
 	]
 }

@@ -214,6 +214,8 @@ export class ToolExecutor {
 				return `[${block.name} for '${block.params.url}']`
 			case "chatbot_mode_respond": // CARET MODIFICATION: Add chatbot mode response description
 				return `[${block.name}]`
+			case "agent_mode_respond": // CARET MODIFICATION: Add agent mode response description
+				return `[${block.name}]`
 			default:
 				return `[${block.name}]`
 		}
@@ -2216,6 +2218,129 @@ export class ToolExecutor {
 					}
 				} catch (error) {
 					await this.handleError("loading MCP documentation", error, block)
+					break
+				}
+			}
+			case "chatbot_mode_respond": {
+				// CARET MODIFICATION: Implement chatbot mode response tool
+				const response: string | undefined = block.params.response
+				const sharedMessage = {
+					response: this.removeClosingTag(block, "response", response),
+				}
+				try {
+					if (block.partial) {
+						await this.ask("chatbot_mode_respond", JSON.stringify(sharedMessage), block.partial).catch(() => {})
+						break
+					} else {
+						if (!response) {
+							this.taskState.consecutiveMistakeCount++
+							this.pushToolResult(
+								await this.sayAndCreateMissingParamError("chatbot_mode_respond", "response"),
+								block,
+							)
+							break
+						}
+						this.taskState.consecutiveMistakeCount = 0
+
+						// For chatbot mode, we directly send the response and end the conversation
+						// This is different from plan_mode_respond which waits for user input
+						this.pushToolResult(formatResponse.toolResult(response), block)
+						await this.saveCheckpoint()
+
+						// CARET MODIFICATION: End the conversation loop to prevent infinite API calls
+						// Similar to how attempt_completion ends the task
+						return // Exit the tool execution loop
+					}
+				} catch (error) {
+					await this.handleError("responding in chatbot mode", error, block)
+					break
+				}
+			}
+			case "agent_mode_respond": {
+				// CARET MODIFICATION: Implement agent mode response tool
+				const response: string | undefined = block.params.response
+				const options: string | undefined = block.params.options
+				const needsMoreExploration: boolean = block.params.needs_more_exploration === "true"
+
+				const sharedMessage = {
+					response: this.removeClosingTag(block, "response", response),
+					options: options ? JSON.parse(options || "[]") : undefined,
+				}
+
+				try {
+					if (block.partial) {
+						await this.ask("agent_mode_respond", JSON.stringify(sharedMessage), block.partial).catch(() => {})
+						break
+					} else {
+						if (!response) {
+							this.taskState.consecutiveMistakeCount++
+							this.pushToolResult(await this.sayAndCreateMissingParamError("agent_mode_respond", "response"), block)
+							break
+						}
+						this.taskState.consecutiveMistakeCount = 0
+
+						// Check if needs more exploration first
+						if (needsMoreExploration) {
+							this.pushToolResult(
+								formatResponse.toolResult(
+									`[You have indicated that you need more exploration. Proceed with calling tools to continue the collaborative development process.]`,
+								),
+								block,
+							)
+							break
+						}
+
+						// For agent mode, we send the response and allow conversation to continue
+						// This enables collaborative development dialogue
+						const {
+							text,
+							images,
+							files: agentResponseFiles,
+						} = await this.ask("agent_mode_respond", JSON.stringify(sharedMessage), false)
+
+						// Process any files attached to the response
+						let fileContentString = ""
+						if (agentResponseFiles && agentResponseFiles.length > 0) {
+							fileContentString = await processFilesIntoText(agentResponseFiles)
+						}
+
+						// Check if options contains the text response for telemetry
+						if (options && text && JSON.parse(options || "[]").includes(text)) {
+							// Valid option selected - don't show user message in UI
+							const lastAgentMessage = findLast(
+								this.messageStateHandler.getClineMessages(),
+								(m) => m.ask === "agent_mode_respond",
+							)
+							if (lastAgentMessage) {
+								lastAgentMessage.text = JSON.stringify({
+									...sharedMessage,
+									selected: text,
+								})
+								await this.messageStateHandler.saveClineMessagesAndUpdateHistory()
+							}
+						} else {
+							// Regular agent conversation - send user feedback and continue
+							if (text || (images && images.length > 0) || (agentResponseFiles && agentResponseFiles.length > 0)) {
+								await this.say("user_feedback", text ?? "", images, agentResponseFiles)
+								await this.saveCheckpoint()
+							}
+						}
+
+						// Send the user response back to continue collaborative development
+						this.pushToolResult(
+							formatResponse.toolResult(`<user_message>\n${text}\n</user_message>`, images, fileContentString),
+							block,
+						)
+
+						if (!block.partial && this.focusChainSettings.enabled) {
+							await this.updateFCListFromToolResponse(block.params.task_progress)
+						}
+
+						// Continue the conversation - don't return like in chatbot_mode_respond
+						break
+					}
+				} catch (error) {
+					await this.handleError("responding in agent mode", error, block)
 					break
 				}
 			}

@@ -3,9 +3,16 @@
 		"name": "TOOL_DEFINITIONS",
 		"version": "1.0.0",
 		"description": "Complete tool definitions and usage instructions for Caret system",
-		"compatibleWith": ["caret-1.0", "cline-compatible"],
+		"compatibleWith": [
+			"caret-1.0",
+			"cline-compatible"
+		],
 		"author": "Caret Team",
-		"tags": ["tools", "definitions", "usage"]
+		"tags": [
+			"tools",
+			"definitions",
+			"usage"
+		]
 	},
 	"add": {
 		"sections": [
@@ -276,61 +283,27 @@
 			],
 			"usage": "<chatbot_mode_respond>\n<response>Your expert consultation response here. You can suggest using new_task if needed for session management.</response>\n</chatbot_mode_respond>"
 		},
-		"caret_chatbot_respond": {
-			"title": "caret_chatbot_respond",
-			"description": "Caret-specific chatbot response tool for conversational interactions. Use this in Caret chatbot mode when you need to provide expert consultation, analysis, or guidance without making changes to the codebase. This tool is only available when modeSystem is 'caret' and mode is 'chatbot'.",
-			"mode_restriction": "chatbot_only",
-			"system_restriction": "caret_only",
+		"agent_mode_respond": {
+			"title": "agent_mode_respond",
+			"description": "Respond to the user's inquiry in AGENT MODE. Use this for collaborative development conversations where you can freely discuss, analyze, and plan before or instead of taking action. This tool enables natural conversation flow in Agent mode without requiring tool usage.",
 			"parameters": [
 				{
 					"name": "response",
 					"required": true,
-					"description": "The conversational response to provide to the user. Focus on analysis, guidance, recommendations, and expert consultation."
-				}
-			],
-			"usage": "<caret_chatbot_respond>\n<response>Your expert consultation response here</response>\n</caret_chatbot_respond>",
-			"behaviors": [
-				"Provide thoughtful analysis and expert guidance",
-				"Focus on consultation rather than execution",
-				"Read files for analysis purposes only",
-				"No code modifications or system changes"
-			]
-		},
-		"caret_agent_execute": {
-			"title": "caret_agent_execute",
-			"description": "Caret-specific agent execution tool for collaborative development tasks. Use this in Caret agent mode when you need to perform actual development work including code modifications, file operations, and system commands. This tool is only available when modeSystem is 'caret' and mode is 'agent'.",
-			"mode_restriction": "agent_only",
-			"system_restriction": "caret_only",
-			"parameters": [
-				{
-					"name": "action_type",
-					"required": true,
-					"description": "The type of action to perform: 'code_modification', 'file_operation', 'analysis_with_action', or 'system_command'"
+					"description": "The conversational response to provide to the user. This can include analysis, planning, questions, or collaborative discussion."
 				},
 				{
-					"name": "target",
-					"required": true,
-					"description": "The target for the action (file path, command, etc.)"
-				},
-				{
-					"name": "content",
+					"name": "options",
 					"required": false,
-					"description": "The content for the action (code changes, file content, etc.)"
+					"description": "Array of option strings to present to the user for selection. Each option should be a clear, actionable choice."
 				},
 				{
-					"name": "rationale",
-					"required": true,
-					"description": "Brief explanation of why this action is needed and how it contributes to the user's goal"
+					"name": "needs_more_exploration",
+					"required": false,
+					"description": "Set to 'true' if you need to do more exploration with tools before providing a complete response. Defaults to false if not specified."
 				}
 			],
-			"usage": "<caret_agent_execute>\n<action_type>code_modification</action_type>\n<target>path/to/file.ts</target>\n<content>new code content</content>\n<rationale>explanation of the change</rationale>\n</caret_agent_execute>",
-			"behaviors": [
-				"Combine analysis with immediate execution",
-				"Make thoughtful code modifications",
-				"Perform comprehensive file operations",
-				"Execute system commands when needed",
-				"Maintain development workflow continuity"
-			]
+			"usage": "<agent_mode_respond>\n<response>Your conversational response here</response>\n<options>[\"Option 1\", \"Option 2\"]</options>\n<needs_more_exploration>true or false</needs_more_exploration>\n</agent_mode_respond>"
 		}
 	}
 }

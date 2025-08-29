@@ -131,7 +131,8 @@
 			"!**/node_modules",
 			"!**/webview-ui/build",
 			"!**/generated",
-			"!**/proto"
+			"!**/proto",
+			"!**/webview-ui/src/caret/locale"
 		]
 	},
 	"plugins": [

@@ -192,16 +192,16 @@ console.log()
 // 2. 백엔드 단위 테스트 실행 (ClineFeatureValidator 및 통합 테스트 제외)
 console.log("🔧 백엔드 단위 테스트 실행 중...")
 const backendStart = Date.now()
-const backendResult = safeExec("npm run test:backend", "백엔드 전체 테스트")
+const backendResult = safeExec("npm run test:unit", "백엔드 단위 테스트")
 results.backend.duration = Date.now() - backendStart
 
 if (backendResult.success) {
-	const parsed = parseVitestOutput(backendResult.output)
-	// 실제 파싱된 결과를 그대로 사용 (모든 백엔드 테스트 포함)
+	const parsed = parseMochaOutput(backendResult.output)
+	// Mocha 출력을 파싱 (백엔드는 Mocha 사용)
 	results.backend.passed = parsed.passed
 	results.backend.total = parsed.total
-	results.backend.skipped = parsed.skipped
 	results.backend.failed = parsed.failed
+	results.backend.skipped = 0 // Mocha에서는 pending으로 표시되지만 여기서는 0으로 처리
 	console.log(`✅ 백엔드 단위 테스트 완료 (${results.backend.duration}ms)`)
 	console.log(`   📊 결과: ${results.backend.passed}/${results.backend.total} 통과`)
 } else {

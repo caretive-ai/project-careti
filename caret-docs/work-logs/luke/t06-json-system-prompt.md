@@ -2,8 +2,9 @@
 
 ## 기능 개요
 - **목적**: 구조화된 JSON 기반 시스템 프롬프트로 707라인 하드코딩 대체
-- **현재 상태**: ✅ f08(Chatbot/Agent 모드)과 통합하여 완전 구현 완료
-- **우선순위**: HIGH - 토큰 효율성 15% 향상 및 유지보수성 개선
+- **현재 상태**: ⚠️ 미이식 (caret-main에서 구현 완료, 머징 대기)
+- **우선순위**: HIGH - Mission 1B-1 테스트 의존성 및 토큰 효율성 15% 향상
+- **블로킹 이슈**: Mission 1B-1 테스트가 `@utils/shell` 경로 별칭 오류로 실패 중
 
 ## 주요 구성 요소
 
@@ -53,6 +54,12 @@ caret-src/core/prompts/
 - **f08 통합**: Chatbot/Agent 모드와 완벽 통합
 
 ## 머징 계획
+
+### ⚠️ 블로킹 이슈 우선 해결
+- [ ] **Mission 1B-1 테스트 의존성 해결**
+  - 현재 `npm run test:all`에서 Mission 1B-1 테스트가 실패
+  - Cline 원본 시스템 (`src/core/prompts/system.ts`)에서 `@utils/shell` 경로 별칭 오류
+  - **해결 방안**: t06 JSON 시스템 이식으로 Cline 하드코딩 의존성 제거
 
 ### Phase 1: TDD 테스트 환경 구축
 - [ ] JSON 어셈블러 테스트 이식
@@ -265,12 +272,13 @@ export async function buildSystemPrompt(
 - [ ] 토큰 최적화: 벤치마크로 실제 15% 향상 검증
 
 ### 완료 기준
+- [ ] **Mission 1B-1 테스트 통과** (우선 해결 필수)
 - [ ] 18개 JSON 섹션 모두 정상 로딩
 - [ ] JSON 어셈블러 정상 동작
 - [ ] 토큰 효율성 15% 향상 검증
 - [ ] f08 Chatbot/Agent 모드와 완벽 통합
 - [ ] 하드코딩 707라인과 독립성 100%
-- [ ] 모든 테스트 통과
+- [ ] 모든 테스트 통과 (`npm run test:all` 성공)
 
 ## 향후 확장 계획
 
@@ -284,7 +292,21 @@ export async function buildSystemPrompt(
 - **Claude 최적화**: Anthropic 모델에 특화된 프롬프트
 - **Gemini 최적화**: Google 모델에 특화된 프롬프트
 
+## 현재 상황 요약
+
+### 🚫 블로킹 이슈
+- **Mission 1B-1 테스트 실패**: Cline vs Caret 비교 테스트가 `@utils/shell` 경로 별칭 오류로 실패
+- **근본 원인**: Cline 하드코딩 시스템 (`src/core/prompts/system.ts`)이 테스트 환경에서 경로 별칭 해결 불가
+- **해결책**: t06 JSON 시스템 이식으로 Cline 의존성 완전 제거
+
+### 📊 테스트 현황 
+- ✅ **프론트엔드**: 128/128 통과
+- ✅ **백엔드 단위**: 153/153 통과  
+- ❌ **Mission 1B-1**: `@utils/shell` 경로 별칭 오류
+- ❌ **전체 테스트**: Mission 1B-1 실패로 인한 `npm run test:all` 실패
+
 ## 예상 소요 시간
 - **총 시간**: 4-6시간
-- **복잡도**: MEDIUM
-- **위험도**: LOW (f08과 통합 구현되어 안정성 검증됨)
+- **복잡도**: MEDIUM → **HIGH** (Mission 1B-1 의존성 추가)
+- **위험도**: LOW → **MEDIUM** (테스트 블로킹 이슈)
+- **우선순위**: HIGH (전체 테스트 통과를 위한 필수 작업)

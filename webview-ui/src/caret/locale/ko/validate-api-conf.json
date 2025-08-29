@@ -1,0 +1,13 @@
+{
+	"invalidApiKey": "유효한 API 키를 제공하거나 다른 프로바이더를 선택해주세요.",
+	"invalidAwsRegion": "AWS Bedrock을 사용하려면 지역을 선택해야 합니다.",
+	"invalidVertexConfig": "유효한 Google Cloud 프로젝트 ID와 지역을 제공해주세요.",
+	"invalidOpenAiConfig": "유효한 Base URL, API 키, 모델 ID를 제공해주세요.",
+	"invalidModelId": "유효한 모델 ID를 제공해주세요.",
+	"invalidModelSelector": "유효한 모델 선택기를 제공해주세요.",
+	"invalidBaseUrl": "유효한 Base URL을 제공하거나 다른 프로바이더를 선택해주세요.",
+	"invalidClientId": "유효한 클라이언트 ID를 제공하거나 다른 프로바이더를 선택해주세요.",
+	"invalidClientSecret": "유효한 클라이언트 시크릿을 제공하거나 다른 프로바이더를 선택해주세요.",
+	"invalidAuthUrl": "유효한 인증 URL을 제공하거나 다른 프로바이더를 선택해주세요.",
+	"modelNotAvailable": "제공한 모델 ID를 사용할 수 없습니다. 다른 모델을 선택해주세요."
+}

@@ -1,313 +1,156 @@
 # Multilingual i18n System
 
-Caret의 **다국어 지원 시스템**은 한국어, 영어, 일본어, 중국어 4개국을 완전 지원하는 포괄적인 국제화 시스템입니다.
+Caret의 **다국어 지원 시스템**은 한국어, 영어, 일본어, 중국어 4개 언어를 완전 지원하는 포괄적인 국제화 시스템입니다.
 
 ## 📋 **기능 개요**
 
 ### **지원 언어**
-
-- 🇰🇷 **한국어 (ko)**: 완전 번역 및 현지화
+- 🇰🇷 **한국어 (ko)**: 완전 번역 및 현지화 (조사 자동 처리 포함)
 - 🇺🇸 **영어 (en)**: 기본 언어 및 fallback
 - 🇯🇵 **일본어 (ja)**: 완전 번역 및 현지화
 - 🇨🇳 **중국어 (zh)**: 완전 번역 및 현지화
 
-### **네임스페이스별 분류**
-
+### **네임스페이스 구조**
 각 언어마다 **7개 네임스페이스**로 체계적 관리:
 
-| 네임스페이스          | 용도         | 파일 개수 | 예시                    |
-| --------------------- | ------------ | --------- | ----------------------- |
-| **common**            | 공통 UI 요소 | 4개       | 버튼, 메뉴, 일반 메시지 |
-| **welcome**           | 환영 페이지  | 4개       | 온보딩, 시작 가이드     |
-| **persona**           | AI 페르소나  | 4개       | 캐릭터 설명, 특성       |
-| **settings**          | 설정 페이지  | 4개       | 옵션, 구성 항목         |
-| **validate-api-conf** | API 검증     | 4개       | 오류 메시지, 검증 안내  |
-| **announcement**      | 공지사항     | 4개       | 업데이트, 알림          |
-| **models**            | AI 모델 설명 | 4개       | 모델 특성, 사용법       |
+| 네임스페이스 | 용도 | 예시 |
+|-------------|------|------|
+| **common** | 공통 UI 요소 | 버튼, 메뉴, 일반 메시지 |
+| **welcome** | 환영 페이지 | 온보딩, 시작 가이드 |
+| **persona** | AI 페르소나 | 캐릭터 설명, 특성 |
+| **settings** | 설정 페이지 | 옵션, 구성 항목 |
+| **validate-api-conf** | API 검증 | 오류 메시지, 검증 안내 |
+| **announcement** | 공지사항 | 업데이트, 알림 |
+| **models** | AI 모델 설명 | 모델 특성, 사용법 |
 
-**총 파일 수**: **30개 JSON 파일** (7 네임스페이스 × 4 언어 + 추가 확장)
+**총 30개 JSON 파일** (7 네임스페이스 × 4 언어 + 일본어/중국어 rules.json 추가)
 
-## 🏗️ **구현 아키텍처**
+## 🏗️ **시스템 아키텍처**
 
-### **언어 파일 구조**
-
+### **파일 구조**
 ```
-webview-ui/src/caret/locale/
-├── en/                            # 🇺🇸 영어 (기본)
-│   ├── common.json               # 공통 UI 요소
-│   ├── welcome.json              # 환영 페이지
-│   ├── persona.json              # 페르소나 관련
-│   ├── settings.json             # 설정 페이지
-│   ├── validate-api-conf.json    # API 검증
-│   ├── announcement.json         # 공지사항
-│   └── models.json               # 모델 설명
-├── ko/                            # 🇰🇷 한국어 (동일 구조)
-│   ├── common.json
-│   ├── welcome.json
-│   ├── persona.json
-│   ├── settings.json
-│   ├── validate-api-conf.json
-│   ├── announcement.json
-│   └── models.json
-├── ja/                            # 🇯🇵 일본어 (동일 구조)
-│   └── [7개 JSON 파일]
-└── zh/                            # 🇨🇳 중국어 (동일 구조)
-    └── [7개 JSON 파일]
+webview-ui/src/caret/
+├── locale/                        # 다국어 JSON 파일
+│   ├── en/ (7개)                  # 영어 (기본)
+│   ├── ko/ (7개)                  # 한국어
+│   ├── ja/ (8개)                  # 일본어 (+rules.json)
+│   └── zh/ (8개)                  # 중국어 (+rules.json)
+├── utils/
+│   ├── i18n.ts                    # 메인 i18n 유틸리티
+│   ├── i18n-performance.ts        # 성능 모니터링 & 캐싱
+│   └── lazy-i18n.ts              # 지연 로딩 시스템
+├── hooks/
+│   └── useCaretI18n.ts           # React i18n Hook
+├── context/
+│   └── CaretI18nContext.tsx      # i18n Context Provider  
+└── components/
+    ├── CaretUILanguageSetting.tsx        # 언어 설정 UI
+    └── CaretGeneralSettingsSection.tsx   # 설정 페이지 통합
 ```
 
-### **i18n 시스템 코어**
-
-```
-webview-ui/src/caret/utils/
-├── i18n.ts                        # 🎯 다국어 유틸리티 핵심
-└── __tests__/
-    └── i18n.test.ts               # 🧪 i18n 시스템 테스트
-
-webview-ui/src/caret/hooks/
-└── useCurrentLanguage.ts          # 🔗 언어 설정 Hook
-
-webview-ui/src/caret/components/
-└── CaretUILanguageSetting.tsx     # ⚙️ 언어 설정 UI
-```
-
-### **핵심 로직**
-
+### **핵심 API**
 ```typescript
-// webview-ui/src/caret/utils/i18n.ts
-export interface I18nConfig {
-	language: "ko" | "en" | "ja" | "zh"
-	namespace: "common" | "welcome" | "persona" | "settings" | "validate-api-conf" | "announcement" | "models"
-	fallback: "en" // 번역 누락 시 영어로 fallback
-}
-
 // 번역 함수
-export function t(key: string, namespace: string, language?: string): string {
-	const lang = language || getCurrentLanguage()
-	const translations = loadNamespace(namespace, lang)
+export const t = (
+    key: string, 
+    namespace: string = "common",
+    options?: Record<string, string | number>,
+    language?: SupportedLanguage
+): string
 
-	return (
-		translations[key] ||
-		loadNamespace(namespace, "en")[key] || // fallback
-		key
-	) // 최후 방안
-}
+// React Hook 사용법
+const { t, currentLanguage, changeLanguage } = useCaretI18n()
 
 // 사용 예시
-t("account.signUpWithCaret", "common") // → "Sign up with Caret"
-t("persona.ohSarang.description", "persona") // → "K-pop idol assistant"
+t("settings.telemetry.label", "settings")           // → "Allow anonymous error reporting"
+t("welcome.title", "welcome")                       // → "Welcome to Caret"
+changeLanguage("ko")                                // 언어 변경
 ```
 
-### **동적 언어 로딩**
+### **한국어 조사 처리**
+```typescript
+// 한국어 자동 조사 처리 예시
+t("message.save", "common", { name: "파일" })    // → "파일을 저장합니다"
+t("message.save", "common", { name: "이미지" })   // → "이미지를 저장합니다"
+```
+
+## 🌐 **언어별 번역 예시**
+
+### **공통 UI 요소 (common 네임스페이스)**
+| 키 | 한국어 (ko) | 영어 (en) | 일본어 (ja) | 중국어 (zh) |
+|----|------------|----------|------------|------------|
+| `button.confirm` | 확인 | Confirm | 確認 | 确认 |
+| `button.cancel` | 취소 | Cancel | キャンセル | 取消 |
+| `ui.loading` | 로딩 중... | Loading... | 読み込み中... | 加载中... |
+| `error.networkError` | 네트워크 오류가 발생했습니다 | Network error occurred | ネットワークエラーが発生しました | 网络错误 |
+
+### **설정 페이지 (settings 네임스페이스)**
+| 키 | 한국어 (ko) | 영어 (en) | 일본어 (ja) | 중국어 (zh) |
+|----|------------|----------|------------|------------|  
+| `settings.uiLanguage.label` | UI 언어 | UI Language | UI言語 | UI语言 |
+| `telemetry.label` | 익명 오류 및 사용 보고 허용 | Allow anonymous error reporting | 匿名エラーレポートを許可 | 允许匿名错误报告 |
+
+## 🧪 **테스트 및 검증**
+
+### **테스트 파일**
+```
+webview-ui/src/caret/utils/__tests__/i18n.test.ts
+webview-ui/src/caret/hooks/__tests__/useCaretI18n.test.tsx  
+webview-ui/src/caret/components/__tests__/CaretUILanguageSetting.test.tsx
+```
+
+### **검증 완료 사항**
+- ✅ **TypeScript 타입 체크** (`npm run check-types`)
+- ✅ **웹뷰 빌드 성공** (`npm run build:webview`) 
+- ✅ **JSON 파일 유효성** (30개 파일 모두 유효)
+- ✅ **번역 함수 정상 동작** (fallback 포함)
+- ✅ **언어 전환 UI** (설정 페이지 통합)
+- ✅ **React Context 통합** (전체 앱 적용)
+
+## 🎯 **사용법**
+
+### **기본 사용법**
 
 ```typescript
-// 성능 최적화: 필요한 언어+네임스페이스만 로딩
-const loadNamespace = async (namespace: string, language: string) => {
-    const module = await import(`../locale/${language}/${namespace}.json`)
-    return module.default
-}
-
-// React 컴포넌트에서 사용
-import { useCurrentLanguage } from '@/caret/hooks/useCurrentLanguage'
+import { useCaretI18n } from '@/caret/hooks/useCaretI18n'
 
 function MyComponent() {
-    const { currentLanguage, setLanguage } = useCurrentLanguage()
+    const { t, currentLanguage, changeLanguage } = useCaretI18n()
 
     return (
-        <button onClick={() => setLanguage('ko')}>
-            {t("ui.changeLanguage", "common")}
-        </button>
+        <div>
+            <h1>{t("welcome.title", "welcome")}</h1>
+            <p>{t("common.button.save")}</p>
+            <button onClick={() => changeLanguage('ko')}>
+                한국어로 변경
+            </button>
+        </div>
     )
 }
 ```
 
-## 🌐 **언어별 특성 및 현지화**
+### **한국어 조사 자동 처리**
 
-### **한국어 (ko)**
+```typescript
+// 한국어에서 자동으로 조사가 처리됩니다
+t("message.save", "common", { name: "파일" })
+// "파일을 저장합니다" (받침 있음)
 
-```json
-// ko/common.json
-{
-    "account.signUpWithCaret": "Caret으로 시작하기",
-    "ui.loading": "로딩 중...",
-    "error.networkError": "네트워크 오류가 발생했습니다",
-    "button.confirm": "확인",
-    "button.cancel": "취소"
-}
-
-// ko/persona.json
-{
-    "ohSarang.name": "오사랑",
-    "ohSarang.description": "K-pop 아이돌 컨셉의 수학적 감정 분석 AI",
-    "ohSarang.personality": "츤데레, 활발함, 창의적"
-}
+t("message.save", "common", { name: "이미지" })  
+// "이미지를 저장합니다" (받침 없음)
 ```
 
-### **일본어 (ja)**
+### **성능 최적화**
 
-```json
-// ja/common.json
-{
-	"account.signUpWithCaret": "Caretで始める",
-	"ui.loading": "読み込み中...",
-	"error.networkError": "ネットワークエラーが発生しました",
-	"button.confirm": "確認",
-	"button.cancel": "キャンセル"
-}
+```typescript
+// 언어팩 미리 로딩
+const { preloadLanguages } = useCaretI18n()
+await preloadLanguages(['ko', 'ja'])
+
+// 성능 메트릭 확인
+const metrics = getI18nPerformanceMetrics()
+console.log(`캐시 적중률: ${metrics.cacheHitRate * 100}%`)
 ```
-
-### **중국어 (zh)**
-
-```json
-// zh/common.json
-{
-	"account.signUpWithCaret": "开始使用 Caret",
-	"ui.loading": "加载中...",
-	"error.networkError": "网络错误",
-	"button.confirm": "确认",
-	"button.cancel": "取消"
-}
-```
-
-## 🧪 **TDD 및 테스트**
-
-### **테스트 커버리지**: ✅ **100%**
-
-**테스트 파일들**:
-
-```
-webview-ui/src/caret/utils/__tests__/
-└── i18n.test.ts                   # i18n 시스템 테스트
-
-webview-ui/src/caret/components/__tests__/
-└── CaretUILanguageSetting.test.tsx # 언어 설정 UI 테스트
-```
-
-**테스트 케이스 (8개 시나리오)**:
-
-1. **기본 번역**: 영어 키에 대한 정확한 번역 반환
-2. **언어 전환**: 언어 변경 시 즉시 UI 업데이트
-3. **네임스페이스 로딩**: 올바른 네임스페이스에서 번역 로드
-4. **Fallback 처리**: 번역 누락 시 영어로 fallback
-5. **키 누락 처리**: 존재하지 않는 키에 대한 키 자체 반환
-6. **동적 로딩**: 필요한 언어 파일만 로딩
-7. **언어 설정 저장**: 선택한 언어 localStorage 저장
-8. **실시간 업데이트**: 언어 변경 시 모든 컴포넌트 업데이트
-
-**실행 방법**:
-
-```bash
-npm run test:frontend -- i18n
-```
-
-## 🔧 **머징 구현 가이드**
-
-### **이식 우선순위**: 🚨 **HIGH**
-
-- **이유**: 사용자 경험 핵심, 국제화 필수
-- **Phase**: Phase 6-1 (다국어 i18n 시스템 이식)
-
-### **충돌 위험도**: 🟢 **LOW**
-
-- **원인**: Cline 원본과 완전 독립적
-- **장점**: 기존 시스템과 전혀 충돌하지 않음
-
-### **Phase별 이식 단계**
-
-#### **🧪 TDD 1단계: 테스트 환경 구축**
-
-```bash
-# 1. 테스트 파일 이식
-cp caret-main/webview-ui/src/caret/utils/__tests__/i18n.test.ts \
-   webview-ui/src/caret/utils/__tests__/
-
-cp caret-main/webview-ui/src/caret/components/__tests__/CaretUILanguageSetting.test.tsx \
-   webview-ui/src/caret/components/__tests__/
-
-# 2. 테스트 실행 확인
-npm run test:frontend -- i18n
-```
-
-#### **🌐 언어 파일 이식 (30개 JSON)**
-
-```bash
-# 1. locale 디렉토리 전체 이식
-cp -r caret-main/webview-ui/src/caret/locale/ \
-      webview-ui/src/caret/locale/
-
-# 2. 파일 구조 확인
-find webview-ui/src/caret/locale -name "*.json" | wc -l  # 30개 확인
-
-# 3. JSON 유효성 검증
-for file in webview-ui/src/caret/locale/*/*.json; do
-    echo "Validating: $file"
-    jq empty "$file" || echo "Invalid JSON: $file"
-done
-```
-
-#### **🔧 i18n 시스템 코어 이식**
-
-```bash
-# 1. i18n 유틸리티 이식
-cp caret-main/webview-ui/src/caret/utils/i18n.ts \
-   webview-ui/src/caret/utils/
-
-# 2. 언어 설정 Hook 이식
-cp caret-main/webview-ui/src/caret/hooks/useCurrentLanguage.ts \
-   webview-ui/src/caret/hooks/
-
-# 3. 언어 설정 UI 컴포넌트 이식
-cp caret-main/webview-ui/src/caret/components/CaretUILanguageSetting.tsx \
-   webview-ui/src/caret/components/
-```
-
-#### **🔗 기존 컴포넌트 통합**
-
-```bash
-# 1. 기존 컴포넌트에 i18n 적용
-# 하드코딩된 텍스트를 t() 함수로 교체
-
-# 예시: CaretAccountInfoCard.tsx
-# Before: "Sign up with Caret"
-# After: {t("account.signUpWithCaret", "common")}
-
-# 2. import 문 추가
-# import { t } from "@/caret/utils/i18n"
-```
-
-#### **🧪 TDD 2단계: 통합 테스트**
-
-```bash
-# 1. i18n 시스템 테스트
-npm run test:frontend -- i18n
-
-# 2. 언어 설정 UI 테스트
-npm run test:frontend -- CaretUILanguageSetting
-
-# 3. 통합 빌드
-npm run build:webview
-
-# 4. 수동 테스트
-# F5로 확장 실행 후 언어 변경 기능 테스트
-```
-
-### **주의사항 및 체크리스트**
-
-#### **⚠️ 머징 시 주의사항**
-
-- [ ] **JSON 유효성**: 모든 언어 파일이 유효한 JSON 형식인지 확인
-- [ ] **키 일관성**: 모든 언어에서 동일한 키 구조 유지
-- [ ] **fallback 처리**: 영어 번역이 모든 키에 대해 존재하는지 확인
-- [ ] **성능**: 불필요한 언어 파일 로딩 방지
-- [ ] **타입 안전성**: TypeScript 타입 정의 일치 확인
-
-#### **✅ 완료 기준**
-
-- [ ] 30개 언어 파일 모두 정상 로딩
-- [ ] 4개 언어 간 실시간 전환 동작
-- [ ] 모든 UI 요소에서 번역 정상 표시
-- [ ] fallback 시스템 정상 동작
-- [ ] 언어 설정 저장 및 복원 정상
-- [ ] 100% 테스트 커버리지 달성
 
 ## 📊 **번역 품질 및 관리**
 
@@ -327,11 +170,113 @@ npm run build:webview
 # 2. 번역 검증
 # 각 언어별 네이티브 스피커 검토
 
-# 3. 자동화 도구
-npm run i18n:validate    # 키 일관성 검증
-npm run i18n:missing     # 누락된 번역 찾기
-npm run i18n:unused      # 사용되지 않는 키 찾기
+# 3. 자동화 도구 (향후 구현 예정)
+# npm run i18n:validate    # 키 일관성 검증
+# npm run i18n:missing     # 누락된 번역 찾기  
+# npm run i18n:unused      # 사용되지 않는 키 찾기
 ```
+
+### **현재 상태**
+
+- ✅ **i18n 시스템 구축 완료**: 모든 핵심 파일 이식
+- ✅ **30개 언어 파일 준비**: 모든 번역 데이터 사용 가능
+- ✅ **Settings 페이지 UI 통합 완료**: 언어 설정 및 다국어 처리 완료
+- ⏳ **전체 UI 통합 작업 대기**: 나머지 컴포넌트들에서 i18n 사용 미구현
+- ⏳ **자동화 도구 구현 예정**: 키 관리 및 검증 도구
+
+## 📁 **이식된 파일 목록**
+
+### **Caret 전용 파일 (webview-ui/src/caret/)**
+
+#### 다국어 locale 파일 (30개)
+```
+webview-ui/src/caret/locale/
+├── en/ (7개)
+│   ├── common.json, welcome.json, persona.json
+│   ├── settings.json, validate-api-conf.json
+│   └── announcement.json, models.json
+├── ko/ (7개)
+│   ├── common.json, welcome.json, persona.json
+│   ├── settings.json, validate-api-conf.json
+│   └── announcement.json, models.json  
+├── ja/ (8개)
+│   ├── common.json, welcome.json, persona.json
+│   ├── settings.json, validate-api-conf.json
+│   ├── announcement.json, models.json
+│   └── rules.json
+└── zh/ (8개)
+    ├── common.json, welcome.json, persona.json
+    ├── settings.json, validate-api-conf.json
+    ├── announcement.json, models.json
+    └── rules.json
+```
+
+#### i18n 시스템 코어 (6개)
+```
+webview-ui/src/caret/utils/
+├── i18n.ts                           # 메인 i18n 유틸리티
+├── i18n-performance.ts               # 성능 모니터링
+├── lazy-i18n.ts                      # 지연 로딩 시스템
+└── __tests__/
+    └── i18n.test.ts                   # i18n 시스템 테스트
+
+webview-ui/src/caret/hooks/
+├── useCaretI18n.ts                   # i18n Hook
+└── __tests__/
+    └── useCaretI18n.test.tsx         # Hook 테스트
+
+webview-ui/src/caret/context/
+└── CaretI18nContext.tsx              # i18n Context Provider
+```
+
+#### UI 컴포넌트 (3개)
+```
+webview-ui/src/caret/components/
+├── CaretUILanguageSetting.tsx        # 언어 설정 UI
+├── CaretGeneralSettingsSection.tsx   # 다국어 적용된 General 설정
+└── __tests__/
+    └── CaretUILanguageSetting.test.tsx # UI 컴포넌트 테스트
+```
+
+### **수정된 Cline 파일 (CARET MODIFICATION)**
+
+#### 프론트엔드 핵심
+```
+webview-ui/src/App.tsx
+- 추가: CaretI18nProvider import 및 앱 전체 감싸기
+- 변경 내용: 89-92행 Provider 추가
+
+webview-ui/src/components/settings/sections/GeneralSettingsSection.tsx  
+- 추가: CaretGeneralSettingsSection import
+- 변경 내용: 3-4, 14-15행 i18n 통합
+```
+
+### **테스트 파일**
+
+#### 단위 테스트
+```
+webview-ui/src/caret/utils/__tests__/i18n.test.ts
+webview-ui/src/caret/hooks/__tests__/useCaretI18n.test.tsx  
+webview-ui/src/caret/components/__tests__/CaretUILanguageSetting.test.tsx
+```
+
+#### 통합 테스트
+```
+npm run check-types     # TypeScript 타입 체크 ✅ 통과
+npm run build:webview   # 웹뷰 빌드 ✅ 성공
+```
+
+### **머징 시 주의사항**
+
+#### Cline 소스 수정 최소화
+- **App.tsx**: 단 4줄만 추가 (import 1줄 + Provider 감싸기 3줄)
+- **GeneralSettingsSection.tsx**: 단 3줄만 추가 (import 2줄 + 위임 1줄)
+- 모든 i18n 로직은 `webview-ui/src/caret/` 디렉토리에 격리
+
+#### 충돌 위험도
+- 🟢 **매우 낮음**: Cline에는 i18n 시스템이 전혀 없음
+- 🟢 **독립적**: 모든 Caret i18n 파일이 별도 디렉토리에 위치
+- 🟢 **최소 침입**: Cline 원본 로직 변경 없이 Wrapper 패턴 사용
 
 ## 🔄 **다국어 확장성**
 

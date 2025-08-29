@@ -1,0 +1,13 @@
+{
+	"invalidApiKey": "You must provide a valid API key or choose a different provider.",
+	"invalidAwsRegion": "You must choose a region to use with AWS Bedrock.",
+	"invalidVertexConfig": "You must provide a valid Google Cloud Project ID and Region.",
+	"invalidOpenAiConfig": "You must provide a valid base URL, API key, and model ID.",
+	"invalidModelId": "You must provide a valid model ID.",
+	"invalidModelSelector": "You must provide a valid model selector.",
+	"invalidBaseUrl": "You must provide a valid Base URL key or choose a different provider.",
+	"invalidClientId": "You must provide a valid Client Id or choose a different provider.",
+	"invalidClientSecret": "You must provide a valid Client Secret or choose a different provider.",
+	"invalidAuthUrl": "You must provide a valid Auth URL or choose a different provider.",
+	"modelNotAvailable": "The model ID you provided is not available. Please choose a different model."
+}

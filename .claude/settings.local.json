@@ -18,7 +18,15 @@
       "Bash(npm run check-types:*)",
       "Bash(npm run test:all:*)",
       "Bash(npm run package:release:*)",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "Bash(for:*)",
+      "Bash(do echo \"Validating: $file\")",
+      "Bash(jq:*)",
+      "Bash(echo:*)",
+      "Bash(done)",
+      "Bash(mkdir:*)",
+      "Bash(npm run test:backend:*)",
+      "Bash(npm run:*)"
     ],
     "deny": [],
     "ask": []

@@ -71,6 +71,8 @@ import { buildSystemPrompt } from "@/core/prompts/system-prompt/build-system-pro
 import { HostProvider } from "@/hosts/host-provider"
 import { errorService } from "@/services/posthog/PostHogClientProvider"
 import { ShowMessageType } from "@/shared/proto/index.host"
+// CARET MODIFICATION: Import Caret's JSON-based system prompt
+import { CaretSystemPrompt } from "../../../caret-src/core/prompts/CaretSystemPrompt"
 import { isInTestMode } from "../../services/test/TestMode"
 import { ensureLocalClineDirExists } from "../context/instructions/user-instructions/rule-helpers"
 import { refreshWorkflowToggles } from "../context/instructions/user-instructions/workflows"
@@ -1667,15 +1669,34 @@ export class Task {
 
 		const supportsBrowserUse = modelSupportsBrowserUse && !disableBrowserTool // only enable browser use if the model supports it and the user hasn't disabled it
 
-		let systemPrompt = await buildSystemPrompt(
-			this.cwd,
-			supportsBrowserUse,
-			this.mcpHub,
-			this.browserSettings,
-			this.api.getModel(),
-			this.focusChainSettings,
-			providerInfo,
-		)
+		// CARET MODIFICATION: Use Caret's JSON-based system prompt system
+		let systemPrompt: string
+		try {
+			const extensionPath = this.controller.context.extensionPath
+			const caretSystemPrompt = new CaretSystemPrompt(extensionPath)
+			const caretResult = await caretSystemPrompt.generateSystemPrompt({
+				mode: "agent", // Default to agent mode, will be determined by UI later
+				system: "caret",
+				extensionPath: extensionPath,
+				currentWorkingDirectory: this.cwd,
+				supportsBrowserUse,
+				mcpHub: this.mcpHub,
+				browserSettings: this.browserSettings,
+			})
+			systemPrompt = caretResult.systemPrompt
+		} catch (error) {
+			// Fallback to original Cline system prompt if Caret fails
+			console.warn("Caret system prompt failed, falling back to Cline:", error)
+			systemPrompt = await buildSystemPrompt(
+				this.cwd,
+				supportsBrowserUse,
+				this.mcpHub,
+				this.browserSettings,
+				this.api.getModel(),
+				this.focusChainSettings,
+				providerInfo,
+			)
+		}
 
 		const preferredLanguage = getLanguageKey(this.preferredLanguage as LanguageDisplay)
 		const preferredLanguageInstructions =

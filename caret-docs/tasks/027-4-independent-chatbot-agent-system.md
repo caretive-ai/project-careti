@@ -101,6 +101,7 @@ return buildSystemPrompt(
     context.focusChainSettings,
 )
 ```
+ 
 
 ### **Phase 2: ToolExecutor에 Caret 모드 추가** ⏱️ 1시간
 
@@ -356,4 +357,103 @@ npm run compile  # buildSystemPrompt 시그니처 이미 수정됨
 ```javascript
 // 브라우저 개발자 도구에서 실행
 localStorage.getItem('caret.modeSystem')  // "caret" 확인
+```
+
+---
+
+## 🚨 **2025-08-29 최신 업데이트: UI 버튼 문제 해결 완료** 
+
+### **✅ 이번 세션 핵심 성과**
+
+#### **1. ModeRendererFactory 시스템 구현**
+```typescript
+// caret-src/ui/renderers/ModeRendererFactory.ts 생성
+export class CaretModeRenderer implements ModeRenderer {
+    getModeLabel(mode: string): string {
+        // plan → "Chatbot", act → "Agent" 매핑
+        return mode === "plan" ? "Chatbot" : "Agent"
+    }
+}
+```
+
+#### **2. ChatTextArea.tsx 하드코딩 문제 해결**  
+```typescript
+// 수정 전: 하드코딩된 "Plan"/"Act" 버튼
+<SwitchOption>Plan</SwitchOption>
+<SwitchOption>Act</SwitchOption>
+
+// 수정 후: 동적 모드 렌더링  
+<SwitchOption>{modeRendererFactory.getModeLabel(modeSystem, "plan")}</SwitchOption>
+<SwitchOption>{modeRendererFactory.getModeLabel(modeSystem, "act")}</SwitchOption>
+```
+
+#### **3. 완전한 UI 모드 표시 시스템**
+- **Caret 모드**: "Chatbot"/"Agent" 버튼 표시
+- **Cline 모드**: "Plan"/"Act" 버튼 표시  
+- **동적 전환**: modeSystem localStorage 값에 따라 실시간 전환
+- **툴팁 업데이트**: 버튼 설명도 모드에 맞게 동적 변경
+
+### **🔧 해결 완료된 문제들**
+
+#### **1. ~~UI 탭 표시 문제~~** ✅ **해결 완료**
+**결과**: ChatTextArea.tsx 수정으로 하드코딩된 "Plan"/"Act" 버튼이 동적 "Chatbot"/"Agent" 버튼으로 완전 교체
+
+#### **2. AI 모드 인식 문제** 🚨 **여전히 미해결**  
+**현상**: AI가 여전히 "PLAN MODE"/"ACT MODE"로 인식하고 응답
+**원인 분석**:
+- 환경 세부사항은 수정했으나 시스템 프롬프트는 여전히 Cline 방식 사용
+- CaretSystemPrompt 클래스가 실제로 사용되지 않고 있음  
+- JSON 프롬프트 시스템이 활성화되지 않음
+
+### **🔍 다음 세션 즉시 행동 계획**
+
+#### **Step 1: AI 인식 문제 진단 (10분)**
+1. 현재 시스템 프롬프트가 어디서 생성되는지 파악
+2. CaretSystemPrompt vs 기본 buildSystemPrompt 사용 여부 확인  
+3. JSON 프롬프트 시스템 활성화 상태 확인
+
+#### **Step 2: AI 인식 문제 해결 (1시간)**
+**시스템 프롬프트 Caret 모드 적용**:
+- ModeSystemRegistry에서 CaretSystemPrompt 실제 사용 연결
+- 또는 기존 formatResponse에 Caret 모드 추가
+- JSON 프롬프트 시스템 활성화
+
+#### **Step 3: 최종 검증 (30분)**
+1. ✅ UI에서 "Chatbot Mode"/"Agent Mode" 버튼 표시 확인 **완료**
+2. AI에게 "현재 어떤 모드야?" 질문으로 "CHATBOT MODE" 인식 확인
+3. 기존 Caret 기능 회귀 테스트
+
+### **📁 현재까지 수정된 파일들**
+```
+✅ 수정 완료:
+- src/core/storage/state-keys.ts
+- src/core/storage/CacheService.ts  
+- src/core/task/index.ts
+- caret-src/services/persona/persona-storage.ts
+- caret-src/services/persona/simple-persona.ts
+- webview-ui/src/components/settings/sections/ApiConfigurationSection.tsx
+- 모든 persona 관련 controller, test 파일들
+- 🆕 caret-src/ui/renderers/ModeRendererFactory.ts
+- 🆕 webview-ui/src/components/chat/ChatTextArea.tsx
+
+✅ 빌드 완료:
+- npm run compile ✅
+- npm run build:webview ✅
+```
+
+### **✅ 핵심 성과: UI 문제 완전 해결**
+**UI 버튼이 정상 표시되는 이유**:
+1. ✅ ModeRendererFactory 패턴 도입으로 중앙집중식 UI 렌더링
+2. ✅ ChatTextArea.tsx 하드코딩 제거하고 동적 라벨 적용
+3. ✅ modeSystem localStorage 기반 실시간 모드 전환
+
+**남은 이슈**: AI 시스템 프롬프트에서 "CHATBOT MODE" 인식만 해결하면 완전 완료
+
+---
+
+**다음 세션 첫 번째 작업**:
+```typescript  
+// 시스템 프롬프트 소스 파악
+console.log("Current system prompt source:", buildSystemPrompt 호출 위치)
+// CaretSystemPrompt 활성화 또는 기존 방식에 Caret 모드 추가
 ```

@@ -1,9 +1,11 @@
+import { CARET_MODES, MODE_SYSTEMS, STORAGE_KEYS } from "@caret-src/shared/constants/ModeSystemConstants"
 import { findLast } from "@shared/array"
 import { combineApiRequests } from "@shared/combineApiRequests"
 import { combineCommandSequences } from "@shared/combineCommandSequences"
 import type { ClineApiReqInfo, ClineMessage } from "@shared/ExtensionMessage"
 import { getApiMetrics } from "@shared/getApiMetrics"
 import { BooleanRequest, StringRequest } from "@shared/proto/cline/common"
+import type { Mode } from "@shared/storage/types"
 import { useCallback, useEffect, useMemo } from "react"
 import { useMount } from "react-use"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
@@ -55,6 +57,16 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 	} = useExtensionState()
 	const isProdHostedApp = userInfo?.apiBaseUrl === "https://app.cline.bot"
 	const shouldShowQuickWins = isProdHostedApp && (!taskHistory || taskHistory.length < QUICK_WINS_HISTORY_THRESHOLD)
+
+	// CARET MODIFICATION: Convert mode for Caret system
+	const actualMode = useMemo(() => {
+		const modeSystem = (localStorage.getItem(STORAGE_KEYS.MODE_SYSTEM) as "caret" | "cline") || MODE_SYSTEMS.CARET
+		if (modeSystem === MODE_SYSTEMS.CARET) {
+			const caretMode = localStorage.getItem(STORAGE_KEYS.CURRENT_MODE) || CARET_MODES.AGENT
+			return caretMode as Mode
+		}
+		return mode
+	}, [mode])
 
 	//const task = messages.length > 0 ? (messages[0].say === "task" ? messages[0] : undefined) : undefined) : undefined
 	const task = useMemo(() => messages.at(0), [messages]) // leaving this less safe version here since if the first message is not a task, then the extension is in a bad state and needs to be debugged (see Cline.abort)
@@ -385,7 +397,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 					chatState={chatState}
 					messageHandlers={messageHandlers}
 					messages={messages}
-					mode={mode}
+					mode={actualMode}
 					scrollBehavior={{
 						scrollToBottomSmooth: scrollBehavior.scrollToBottomSmooth,
 						disableAutoScrollRef: scrollBehavior.disableAutoScrollRef,

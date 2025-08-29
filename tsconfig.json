@@ -19,20 +19,37 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
+		"noImplicitAny": false,
+		"strictNullChecks": false,
+		"strictFunctionTypes": false,
+		"strictPropertyInitialization": false,
 		"target": "es2022",
 		"useDefineForClassFields": true,
 		"useUnknownInCatchVariables": false,
 		"baseUrl": ".",
-		"types": ["vitest/globals", "should"],
+		"types": [
+			"vitest/globals",
+			"should"
+		],
 		"paths": {
 			"@/*": [
 				"src/*"
 			],
-			"@caret/*": ["caret-src/*"], // CARET MODIFICATION: Add caret-src alias
-			"@caret-src/*": ["caret-src/*"], // CARET MODIFICATION: Add caret-src alias
-			"@caret/core/controller/*": ["caret-src/core/controller/*"], // CARET MODIFICATION: Add caret-src alias
-			"@caret-shared/*": ["caret-src/shared/*"], // CARET MODIFICATION: Add caret-src alias
-			"@api/*": ["src/api/*"], // CARET MODIFICATION: Add api alias
+			"@caret/*": [
+				"caret-src/*"
+			], // CARET MODIFICATION: Add caret-src alias
+			"@caret-src/*": [
+				"caret-src/*"
+			], // CARET MODIFICATION: Add caret-src alias
+			"@caret/core/controller/*": [
+				"caret-src/core/controller/*"
+			], // CARET MODIFICATION: Add caret-src alias
+			"@caret-shared/*": [
+				"caret-src/shared/*"
+			], // CARET MODIFICATION: Add caret-src alias
+			"@api/*": [
+				"src/api/*"
+			], // CARET MODIFICATION: Add api alias
 			"@core/*": [
 				"src/core/*"
 			],

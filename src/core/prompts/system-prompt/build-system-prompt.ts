@@ -16,6 +16,7 @@ export const buildSystemPrompt = async (
 	focusChainSettings: FocusChainSettings,
 	providerInfo: ApiProviderInfo,
 ) => {
+	// Original Cline system prompt generation
 	// Compact prompt is only available for local models with custom prompt set to compact
 	if (providerInfo.customPrompt === "compact" && isLocalModelFamily(providerInfo.providerId)) {
 		return SYSTEM_PROMPT_COMPACT(cwd, supportsBrowserUse, mcpHub, browserSettings, focusChainSettings)

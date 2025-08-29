@@ -10,6 +10,8 @@
  * - 기존 CARET MODIFICATION 코드를 renderer.render() 호출로 교체
  */
 
+import { t } from "../i18n"
+
 export interface ModeRenderer {
 	// 모드 라벨 렌더링
 	getModeLabel(mode: string): string
@@ -27,21 +29,19 @@ export interface ModeRenderer {
 // Cline 모드 렌더러 (기존 Plan/Act 용어 유지)
 export class ClineModeRenderer implements ModeRenderer {
 	getModeLabel(mode: string): string {
-		return mode === "plan" ? "Plan" : "Act"
+		return mode === "plan" ? t("mode.plan.label", "common") : t("mode.act.label", "common")
 	}
 
 	getToggleLabel(currentMode: string, targetMode: string): string {
-		return targetMode === "plan" ? "Plan" : "Act"
+		return targetMode === "plan" ? t("mode.plan.label", "common") : t("mode.act.label", "common")
 	}
 
 	getModeTooltip(mode: string): string {
-		return mode === "plan"
-			? "Plan mode: Analyze and strategize before taking action"
-			: "Act mode: Execute tasks and make changes directly"
+		return mode === "plan" ? t("mode.tooltip.plan", "common") : t("mode.tooltip.act", "common")
 	}
 
 	getModeDescription(mode: string): string {
-		return mode === "plan" ? "Focus on planning and analysis" : "Focus on execution and implementation"
+		return mode === "plan" ? t("mode.plan.description", "common") : t("mode.act.description", "common")
 	}
 
 	getModeIcon(mode: string): string {
@@ -57,21 +57,19 @@ export class ClineModeRenderer implements ModeRenderer {
 export class CaretModeRenderer implements ModeRenderer {
 	getModeLabel(mode: string): string {
 		// Caret 모드에서는 plan → Chatbot, act → Agent로 매핑
-		return mode === "plan" ? "Chatbot" : "Agent"
+		return mode === "plan" ? t("mode.chatbot.label", "common") : t("mode.agent.label", "common")
 	}
 
 	getToggleLabel(currentMode: string, targetMode: string): string {
-		return targetMode === "plan" ? "Chatbot" : "Agent"
+		return targetMode === "plan" ? t("mode.chatbot.label", "common") : t("mode.agent.label", "common")
 	}
 
 	getModeTooltip(mode: string): string {
-		return mode === "plan"
-			? "Chatbot mode: Expert consultation and guidance"
-			: "Agent mode: Collaborative development and execution"
+		return mode === "plan" ? t("mode.tooltip.chatbot", "common") : t("mode.tooltip.agent", "common")
 	}
 
 	getModeDescription(mode: string): string {
-		return mode === "plan" ? "Focus on analysis and consultation" : "Focus on collaborative implementation"
+		return mode === "plan" ? t("mode.chatbot.description", "common") : t("mode.agent.description", "common")
 	}
 
 	getModeIcon(mode: string): string {

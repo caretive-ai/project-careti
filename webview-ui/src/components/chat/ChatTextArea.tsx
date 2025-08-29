@@ -1,3 +1,4 @@
+import { MODE_SYSTEMS, STORAGE_KEYS } from "@caret-src/shared/constants/ModeSystemConstants"
 import { mentionRegex, mentionRegexGlobal } from "@shared/context-mentions"
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import { FileSearchRequest, FileSearchType, RelativePathsRequest } from "@shared/proto/cline/file"
@@ -43,6 +44,7 @@ import {
 	validateSlashCommand,
 } from "@/utils/slash-commands"
 import { validateApiConfiguration, validateModelId } from "@/utils/validate"
+import { modeRendererFactory } from "../../caret/utils/ui/ModeRendererFactory"
 import ClineRulesToggleModal from "../cline-rules/ClineRulesToggleModal"
 import ServersToggleModal from "./ServersToggleModal"
 
@@ -281,6 +283,8 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 	) => {
 		const { mode, apiConfiguration, openRouterModels, platform, localWorkflowToggles, globalWorkflowToggles } =
 			useExtensionState()
+		// CARET MODIFICATION: Get mode system for dynamic button labels
+		const modeSystem = (localStorage.getItem(STORAGE_KEYS.MODE_SYSTEM) as "caret" | "cline") || MODE_SYSTEMS.CARET
 		const [isTextAreaFocused, setIsTextAreaFocused] = useState(false)
 		const [isDraggingOver, setIsDraggingOver] = useState(false)
 		const [gitCommits, setGitCommits] = useState<GitCommit[]>([])
@@ -1773,7 +1777,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					<Tooltip
 						hintText={`Toggle w/ ${metaKeyChar}+Shift+A`}
 						style={{ zIndex: 1000 }}
-						tipText={`In ${shownTooltipMode === "act" ? "Act" : "Plan"}  mode, Cline will ${shownTooltipMode === "act" ? "complete the task immediately" : "gather information to architect a plan"}`}
+						tipText={`In ${shownTooltipMode === "act" ? modeRendererFactory.getModeLabel(modeSystem, "act") : modeRendererFactory.getModeLabel(modeSystem, "plan")}  mode, Cline will ${shownTooltipMode === "act" ? "complete the task immediately" : "gather information to architect a plan"}`}
 						visible={shownTooltipMode !== null}>
 						<SwitchContainer data-testid="mode-switch" disabled={false} onClick={onModeToggle}>
 							<Slider isAct={mode === "act"} isPlan={mode === "plan"} />
@@ -1783,7 +1787,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("plan")}
 								role="switch">
-								Plan
+								{modeRendererFactory.getModeLabel(modeSystem, "plan")}
 							</SwitchOption>
 							<SwitchOption
 								aria-checked={mode === "act"}
@@ -1791,7 +1795,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("act")}
 								role="switch">
-								Act
+								{modeRendererFactory.getModeLabel(modeSystem, "act")}
 							</SwitchOption>
 						</SwitchContainer>
 					</Tooltip>

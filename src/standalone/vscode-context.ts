@@ -57,6 +57,12 @@ const extensionContext: ExtensionContext = {
 
 	// TODO(sjf): Workspace state needs to be per project/workspace.
 	workspaceState: new MementoStore(path.join(DATA_DIR, "workspaceState.json")),
+
+	// CLINE BUG FIX: Add missing languageModelAccessInformation property for VSCode API compatibility
+	languageModelAccessInformation: {
+		onDidChange: () => ({ dispose: () => {} }),
+		canSendRequest: () => true,
+	},
 }
 
 function getPackageVersion(): string {

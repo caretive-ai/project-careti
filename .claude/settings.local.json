@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run compile:*)",
+      "Bash(npm run build:webview:*)",
+      "Read(/home/luke/**)",
+      "Read(/home/luke/caret/**)",
+      "Read(/home/luke/caret/webview-ui/src/**)",
+      "Read(/home/luke/caret/webview-ui/src/**)",
+      "Read(/home/luke/caret/webview-ui/**)",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(npx tsc:*)",
+      "Bash(node:*)",
+      "Bash(grep:*)",
+      "Bash(cp:*)",
+      "Bash(npm run setup:*)",
+      "Bash(npm run check-types:*)",
+      "Bash(npm run test:all:*)",
+      "Bash(npm run package:release:*)",
+      "Bash(npm run lint)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

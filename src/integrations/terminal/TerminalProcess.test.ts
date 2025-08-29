@@ -3,20 +3,12 @@ import { setVscodeHostProviderMock } from "@/test/host-provider-test-utils"
 import "should"
 import * as sinon from "sinon"
 import * as vscode from "vscode"
+// CLINE BUG FIX: Import centralized VSCode type extensions to prevent duplicate declarations
+import "../../types/vscode-extensions"
 import { TerminalProcess } from "./TerminalProcess"
 import { TerminalRegistry } from "./TerminalRegistry"
 
-declare module "vscode" {
-	// https://github.com/microsoft/vscode/blob/f0417069c62e20f3667506f4b7e53ca0004b4e3e/src/vscode-dts/vscode.d.ts#L7442
-	interface Terminal {
-		shellIntegration?: {
-			cwd?: vscode.Uri
-			executeCommand?: (command: string) => {
-				read: () => AsyncIterable<string>
-			}
-		}
-	}
-}
+// CLINE BUG FIX: VSCode type extensions moved to centralized location (src/types/vscode-extensions.d.ts)
 
 // Create a mock stream for simulating terminal output - this is only used for tests
 // that need controlled output which can't be guaranteed with real terminals

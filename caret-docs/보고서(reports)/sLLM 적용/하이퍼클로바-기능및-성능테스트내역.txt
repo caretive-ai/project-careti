@@ -1,0 +1,59 @@
+PS D:\dev\caret\sllm-servers\hyperclovax-server> python .\test_call_all_modes.py
+--- 일반(이미지X) ---
+{'result': 'tool_list\n\nsystem\nYou are a helpful assistant.\nuser\n이 모델의 주요 특징을 요약해줘.\nassistant\n사용자님께서 말씀하시는 모델이 어떤 모델인지 확인이 어려워 답변을 드리기 어렵습니다.\n\n모델명을 알려주시거나 모델에 대한 설명해 주시면 그 정보를 바탕으로 주요 특징을 요약해 드리겠 습니다. '}
+[일반(이미지X) TPS] 전체 소요: 2.28s, 토큰 수: 37, TPS: 16.24
+--- 일반(이미지O) ---
+{'result': '이미지는 두 개의 열로 나뉘어 있으며, 각각 다른 주제를 다루고 있습니다. 왼쪽 열은 "SaaS AIIDE Limitations" 즉, SaaS(Software as a Service) AI(인공지능) IDE(Integrated Development Environment)의 제한 사항들을 나열하고 있고, 오른쪽 열은 "Caret Features" 즉, 케어(Care)의 기능들을 나열 하고 있습니다.\n\n왼쪽 열의 제한 사항들은 다음과 같습니다:\n1. Black-box Context & Model Version: 블랙 박스 컨텍스트 및 모델 버전\n2. Reproducibility & Debugging Impossable: 재현 가능성과 디버깅 불가능\n3. Unpredictable Quotas & Pricing: 예측 불가능한 쿼타와 가격\n4. Team Budget Overruns: 팀  예산 초과\n5. Code & Logs Stored on External Servers: 코드 및 로그가 외부 서버에 저장됨\n6. Potential Security & Compliance Violations: 보안 및 준수 위반 가능성\n7. No Support for Local sLLM: 로컬 sLLM 지원 없음\n\n오른쪽 열의 기능들은 다음과 같습니다:\n1. Context & Models Defined in Code: 컨 텍스트 및 모델이 코드로 정의됨\n2. Full Traceability: 전체 추적 가능성\n3. Local sLLM Hot-swap & Cloud-ready: 로컬 sLLM 핫 스왑 및 클라우드 준비\n4. Self-hosted Data & Compute: 자체 호스팅 데이터 및 컴퓨팅\n5. Security for Regulated Industries: 규제 산업을 위한 보안\n6. Rules & Workflow Customization: 규칙 및 워크플로우 커스터마이징\n7. Domain Policies & Coding Standards: 도메인 정책 및 코딩 표준\n\n이미지는 두 가지 다른 소프트웨어 또는 시스템의 장단점을 비교하는 데 사용될 수 있으며, 왼쪽 열은 제한 사항을, 오른쪽 열은 기능들을 강조하고 있습니다. 각 항목은 아이콘과 함께 설명되어 있 어 한눈에 이해하기 쉽게 정리되어 있습니다.'}
+[일반(이미지O) TPS] 전체 소요: 19.33s, 토큰 수: 224, TPS: 11.59
+--- 스트리밍(이미지X) ---
+사용자님께서 말씀하시는 모델이 어떤 모델인지 확인이 어려워 답변을 드리기 어렵습니다.
+
+모델명을 알려주시거나 모델에 대한 설명해 주시면 그 정보를 바탕으로 주요 특징을 요약해 드리겠습니다. 
+[스트리밍(이미지X) TPS] 전체 소요: 1.94s, 총 바이트: 266, 토큰 수: 23, TPS: 11.85
+--- 스트리밍(이미지O) ---
+이미지는 두 개의 열로 나뉘어 있으며, 각각 다른 주제를 다루고 있습니다. 왼쪽 열은 "SaaS AIIDE Limitations" 즉, SaaS 기반 AI 기반 IDE(Integrated Development Environment)의 제한 사항들을 나열하고 있고, 오른쪽 열은 "Caret Features" 즉, 이러한 제한 사항들을 극복하기 위한 케어 기능을 소개하고 있습니다.
+
+왼쪽 열의 제한 사항들은 다음과 같습니다.
+1. Black-box Context & Model Version: 모델 버전과 블랙박스 컨텍스트가 숨겨져 있어 예측이 어렵습니다.
+2. Reproducibility & Debugging Impossibility: 재현 가능성과 디버깅이 불가능하여 문제를 찾기 어렵습니다.
+3. Unpredictable Quotas & Pricing: 예측 불가능한 쿼터와 가격으로 인해 비용 관리가 어렵습니다.
+4. Team Budget Overruns: 팀 예산 초과로 인한 비용 문제가 발생할 수 있습니다.
+5. Code & Logs Stored on External Servers: 코드와 로그가 외부 서버에 저장되어 보안 문제가 발생할 수 있습니다.
+6. Potential Security & Compliance Violations: 보안 및 규제 준수 위반 가능성이 있습니다.
+7. No Support for Local sLLM: 로컬에서 sLLM을 지원하지 않습니다.
+
+오른쪽 열의 케어 기능들은 다음과 같습니다.
+1. Context & Models Defined in Code: 컨텍스트와 모델을 코드로 정의하여 투명성을 높입니다.
+2. Full Traceability: 전체 추적 가능성을 제공합니다.
+3. Local sLLM Hot-swap & Cloud-ready: 로컬 및 클라우드에서 sLLM을 핫 스왑할 수 있고 클라우드 준비가 되어 있습니다.
+4. Self-hosted Data & Compute: 자체 호스팅된 데이터 및 컴퓨팅을 제공합니다.
+5. Security for Regulated Industries: 규제 산업을 위한 보안을 강화합니다.
+6. Rules & Workflow Customization: 규칙 및 워크플로우 커스터마이징이 가능합니다.
+7. Domain Policies & Coding Standards: 도메인 정책 및 코딩 표준을 준수합니다.
+
+이 이미지는 SaaS 기반 AI 기반 IDE의 제한 사항을 이해하고 이를 극복하기 위한 케어 기능을 제공함으로써 개발자들이 보다 안전하고 효율적으로 작업할 수 있도록 돕기 위한 내용을 담고 있습니다.
+알겠습니다. 텍스트 설명이 필요하시면 어떤 텍스트인지 알려주시면 도와드리겠습니다.
+[별도 스트림 엔드포인트(이미지X) TPS] 전체 소요: 1.07s, 총 바이트: 117, 토큰 수: 8, TPS: 7.50
+--- 별도 스트림 엔드포인트(이미지O) ---
+이미지는 두 개의 열로 나뉘어 있으며, 왼쪽 열은 "SaaS AIIDE Limitations" 즉, SaaS 기반 AI 서비스의 한계점을, 오른쪽 열은 "Caret Features" 즉, 이러한 한계를 극복하기 위한 기능들을 나열하고 있습니다.
+
+왼쪽 열에는 다음과 같은 한계점들이 나열되어 있습니다:
+1. Black-box Context & Model Version: 모델 버전과 블랙박스 컨텍스트가 숨겨져 있어 이해하기 어렵습니다.
+2. Reproducibility & Debugging Impossibility: 재현 가능성과 디버깅이 불가능하여 문제를 찾기 어렵습니다.
+3. Unpredictable Quotas & Pricing: 예측 불가능한 제한과 가격 정책으로 인해 비용 관리가 어렵습니다.
+4. Team Budget Overruns: 팀 예산 초과로 인한 비용 문제가 발생할 수 있습니다.
+5. Code & Logs Stored on External Servers: 코드와 로그가 외부 서버에 저장되어 보안 문제가 발생할 수 있습니다.
+6. Potential Security & Compliance Violations: 보안 및 규제 준수 위반 가능성이 있습니다.
+7. No Support for Local sLLM: 로컬에서 사용할 수 있는 지원이 없습니다.
+
+오른쪽 열에는 이러한 한계를 극복하기 위한 기능들이 나열되어 있습니다:
+1. Context & Models Defined in Code: 모든 컨텍스트와 모델이 코드로 정의되어 투명성을 높입니다.
+2. Full Traceability: 전체 추적 가능성을 제공하여 문제 발생 시 추적이 가능합니다.
+3. Local sLLM Hot-swap & Cloud-ready: 로컬 및 클라우드에서 쉽게 업데이트할 수 있는 모델과 호환성을 제공합니다.
+4. Self-hosted Data & Compute: 자체 호스팅된 데이터와 컴퓨팅 자원을 활용하여 보안성을 강화합니다.
+5. Security for Regulated Industries: 규제 산업에 맞는 보안 기능을 제공합니다.
+6. Rules & Workflow Customization: 규칙과 워크플로우를 사용자 맞춤형으로 설정할 수 있습니다.
+7. Domain Policies & Coding Standards: 도메인별 정책과 코딩 표준을 적용하여 일관성을 유지합니다.
+
+이 이미지는 SaaS 기반 AI 서비스를 사용할 때 발생할 수 있는 문제점과 이를 해결하기 위한 기능들을 비교하여 보여주고 있어, 사용자가 이러한 서비스를 선택할 때 고려해야 할 중요한 요소들을 이해하는 데 도움을 줍니다.
+[별도 스트림 엔드포인트(이미지O) TPS] 전체 소요: 25.82s, 총 바이트: 2379, 토큰 수: 264, TPS: 10.22

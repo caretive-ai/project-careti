@@ -1,0 +1,155 @@
+# Caret Backend Internationalization System
+
+## 개요
+
+Caret 백엔드에서 사용하는 간단한 템플릿 기반 다국어 시스템입니다. 백엔드에서 발생하는 시스템 메시지들을 사용자의 언어 설정에 따라 적절한 언어로 번역하여 제공합니다.
+
+## 구조
+
+### 1. 백엔드 i18n 유틸리티
+
+- **위치**: `caret-src/utils/backend-i18n.ts`
+- **기능**: 템플릿 기반 메시지 번역 및 매개변수 치환
+
+### 2. 주요 함수
+
+#### `backendT(key: string, chatSettings: ChatSettings, params?: Record<string, string>): string`
+
+```typescript
+import { backendT } from "../../../caret-src/utils/backend-i18n"
+
+const errorMessage = backendT("task.retryWithoutParam", this.chatSettings, {
+	toolName: "readFile",
+	pathInfo: " for '/path/to/file'",
+	paramName: "content",
+})
+```
+
+**매개변수:**
+
+- `key`: 번역 키 (예: "task.retryWithoutParam")
+- `chatSettings`: 현재 채팅 설정 (언어 정보 포함)
+- `params`: 템플릿 치환용 매개변수 객체 (선택사항)
+
+## 지원 언어
+
+- **English (en)**: 기본 언어
+- **Korean (ko)**: 한국어
+- **Japanese (ja)**: 일본어
+- **Chinese (zh)**: 중국어
+
+## 메시지 정의
+
+### 현재 지원 메시지
+
+#### `task.retryWithoutParam`
+
+도구 사용 시 필수 매개변수가 누락되었을 때 표시되는 오류 메시지
+
+**템플릿 변수:**
+
+- `{toolName}`: 사용하려던 도구 이름
+- `{pathInfo}`: 경로 정보 (있는 경우)
+- `{paramName}`: 누락된 매개변수 이름
+
+**번역 예시:**
+
+```typescript
+{
+    "task.retryWithoutParam": {
+        en: "Cline tried to use {toolName}{pathInfo} without value for required parameter '{paramName}'. Retrying...",
+        ko: "Cline이 {toolName}{pathInfo}을(를) 필수 매개변수 '{paramName}' 값 없이 사용하려고 했습니다. 재시도 중...",
+        ja: "Clineが{toolName}{pathInfo}を必須パラメータ'{paramName}'の値なしで使用しようとしました。再試行中...",
+        zh: "Cline试图在没有必需参数'{paramName}'值的情况下使用{toolName}{pathInfo}。重试中..."
+    }
+}
+```
+
+## 사용 방법
+
+### 1. 새로운 메시지 추가
+
+`caret-src/utils/backend-i18n.ts`의 `messages` 객체에 새로운 키와 번역을 추가:
+
+```typescript
+const messages: BackendMessages = {
+	// 기존 메시지들...
+	"새로운.키": {
+		en: "English message with {param}",
+		ko: "한국어 메시지 {param}와 함께",
+		ja: "日本語メッセージ{param}付き",
+		zh: "中文消息与{param}",
+	},
+}
+```
+
+### 2. 백엔드에서 사용
+
+```typescript
+// 1. import 추가
+const { backendT } = await import("../../../caret-src/utils/backend-i18n")
+
+// 2. 메시지 번역
+const translatedMessage = backendT("새로운.키", this.chatSettings, {
+	param: "실제값",
+})
+
+// 3. 사용
+await this.say("error", translatedMessage)
+```
+
+## 템플릿 시스템
+
+### 치환 규칙
+
+- 템플릿 변수는 `{변수명}` 형식으로 정의
+- `params` 객체의 키-값 쌍으로 치환
+- 대소문자 구분
+- 정규표현식을 사용한 전역 치환
+
+### 예시
+
+```typescript
+// 템플릿: "Hello {name}, you have {count} messages"
+// 매개변수: { name: "John", count: "5" }
+// 결과: "Hello John, you have 5 messages"
+```
+
+## 확장 가능성
+
+### 새로운 언어 추가
+
+1. `messages` 객체의 각 키에 새 언어 코드 추가
+2. 해당 언어의 번역 제공
+3. 프론트엔드 언어 설정에서 해당 언어 지원 확인
+
+### 새로운 기능 추가
+
+- 복수형 처리
+- 숫자 포맷팅
+- 날짜/시간 포맷팅
+- 컨텍스트별 번역
+
+## 주의사항
+
+1. **언어 폴백**: 요청된 언어가 없으면 영어로 폴백
+2. **키 누락**: 키가 없으면 경고 로그와 함께 키 자체를 반환
+3. **매개변수 누락**: 템플릿 변수에 해당하는 매개변수가 없으면 그대로 유지
+4. **비동기 import**: 백엔드에서는 동적 import를 사용하여 순환 참조 방지
+
+## 적용된 파일
+
+### 백엔드
+
+- `src/core/task/index.ts`: `sayAndCreateMissingParamError()` 메서드
+
+### 프론트엔드
+
+- `webview-ui/src/components/chat/ChatRow.tsx`: 다양한 시스템 메시지
+- `webview-ui/src/components/chat/task-header/TaskTimelineTooltip.tsx`: 작업 완료 메시지
+
+## 성능 고려사항
+
+- 동적 import 사용으로 초기 로딩 시간 최소화
+- 메시지 객체는 메모리에 한 번만 로드
+- 정규표현식 캐싱은 현재 미구현 (필요시 추가 가능)

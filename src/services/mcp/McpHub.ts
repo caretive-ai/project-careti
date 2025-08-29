@@ -872,9 +872,10 @@ export class McpHub {
 				toolArguments ? Object.keys(toolArguments) : undefined,
 			)
 
+			// CLINE BUG FIX: Type assertion to resolve Zod schema output type mismatch
 			return {
 				...result,
-				content: result.content ?? [],
+				content: (result.content ?? []) as McpToolCallResponse["content"],
 			}
 		} catch (error) {
 			this.telemetryService.captureMcpToolCall(

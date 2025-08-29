@@ -69,7 +69,9 @@
 				"noControlCharactersInRegex": "off",
 				"noShadowRestrictedNames": "off",
 				"noArrayIndexKey": "info",
-				"noAssignInExpressions": "warn"
+				"noAssignInExpressions": "warn",
+				"useIterableCallbackReturn": "off",
+				"noUnknownAtRules": "off"
 			},
 			"complexity": {
 				"noUselessConstructor": "off",
@@ -112,17 +114,24 @@
 	},
 	"files": {
 		"includes": [
-			"**",
-			"!**/dist/**",
-			"!**/dist-*/**",
-			"!**/out/**",
-			"!**/evals/**",
-			"!**/playwright/**",
-			"!**/test-results/**",
-			"!**/node_modules/**",
-			"!**/webview-ui/build/**",
-			"!**/generated/**",
-			"!**/proto/**"
+			"src/**",
+			"webview-ui/src/**",
+			"scripts/**",
+			"caret-scripts/**",
+			"*.ts",
+			"*.js",
+			"*.json",
+			"*.jsonc",
+			"webview-ui/*.ts",
+			"webview-ui/*.js",
+			"webview-ui/*.json",
+			"!**/dist",
+			"!**/dist-*",
+			"!**/out",
+			"!**/node_modules",
+			"!**/webview-ui/build",
+			"!**/generated",
+			"!**/proto"
 		]
 	},
 	"plugins": [

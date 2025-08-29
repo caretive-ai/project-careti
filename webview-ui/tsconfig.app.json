@@ -49,6 +49,7 @@
 		}
 	},
 	"include": [
-		"src"
+		"src",
+		"src/caret/utils"
 	]
 }

@@ -1,20 +1,20 @@
-# 027-4: Agent/Chatbot 대화 흐름 완성 - v3.26.6 Plan Mode 활용
+# 027-4: Caret JSON System Prompt Integration Complete 
 
 **작성일**: 2025-08-28  
-**상태**: ✅ **최종 전략 확정 - Plan Mode 직접 활용**  
-**우선순위**: ✨ **CRITICAL** - Agent 모드 대화 불가 문제 해결  
-**마지막 업데이트**: 2025-08-28 오후 (전략 재정립 완료)
+**상태**: ✅ **JSON System Prompt 통합 완료** - **2025-08-29**  
+**우선순위**: ✨ **COMPLETED** - CaretSystemPrompt 완전 통합 성공  
+**마지막 업데이트**: 2025-08-29 오후 (통합 완료 및 검증)
 
 ---
 
-## 🎉 **최종 발견: v3.26.6 Plan Mode가 완벽한 솔루션**
+## 🎉 **JSON System Prompt 통합 완료 - 2025-08-29**
 
-### **핵심 발견사항**
-- ✅ **v3.26.6 plan_mode_respond**: 정확히 우리가 원하는 연속 대화 기능
-- ✅ **실시간 스트리밍**: `block.partial` 완벽 지원
-- ✅ **옵션 선택**: `options` 파라미터로 사용자 선택지 제공
-- ✅ **탐색 연속성**: `needs_more_exploration` 플래그로 대화 지속
-- ✅ **최소 수정 원칙**: Handler 시스템 불필요, ToolExecutor만 수정
+### **핵심 달성사항**
+- ✅ **CaretSystemPrompt 완전 통합**: `src/core/task/index.ts`에서 Cline buildSystemPrompt 대체
+- ✅ **JSON 템플릿 시스템 작동**: 15개 섹션, 24,667 chars, 21ms 고속 생성
+- ✅ **Agent 모드 시스템 프롬프트**: `[CARET-PROMPT]` 로그로 정상 작동 확인
+- ✅ **Fallback 시스템**: 에러 시 Cline 기본 프롬프트로 안전 복구
+- ✅ **최소 수정 원칙**: 기존 Cline 아키텍처 보존하며 확장
 
 ### **전략 전환 이유**
 1. **Handler 시스템**: Caret 독자 구현이며 v3.26.6에 없음 → 제거 필요

@@ -41,8 +41,8 @@ npm clean
 # Run all tests (backend + webview)
 npm test
 
-# Backend tests only (Vitest)
-npm run test:backend
+# Run Caret-specific tests (Vitest)
+npm run test:caret
 
 # Backend tests with watch mode
 npm run test:backend:watch
@@ -53,8 +53,11 @@ npm run test:webview
 # Run tests with coverage
 npm run test:coverage
 
-# Caret-specific tests
-npm run test:caret
+# E2E tests
+npm run test:e2e
+
+# Run specific test file
+npx vitest path/to/test.ts
 ```
 
 ### Code Quality Commands
@@ -62,11 +65,14 @@ npm run test:caret
 # Type checking
 npm run check-types
 
-# Linting
+# Linting (Biome)
 npm run lint
 
 # Code formatting
 npm run format:fix
+
+# Fix all formatting issues (including unsafe)
+npm run fix:all
 ```
 
 ## Architecture Overview
@@ -83,11 +89,12 @@ This project extends Cline using a **minimal modification strategy**:
 
 ### Core Principle: Minimal Modification
 
-When modifying Cline original files:
+When modifying Cline original files (`src/`, `webview-ui/`, `proto/`, `scripts/`):
 1. **Always create backup**: `cp file.ts file-ts.cline`
 2. **Add modification comment**: `// CARET MODIFICATION: description`
 3. **Keep changes minimal**: 1-3 lines preferred
 4. **Replace completely**: Don't comment out old code
+5. **Prefer inheritance**: Extend via `caret-src/` when possible instead of direct modification
 
 ### Key Entry Points
 
@@ -135,6 +142,7 @@ Configuration in `vitest.config.ts`:
 2. **TestHelper Pattern**: Use separate `*TestHelper.ts` classes in `__tests__/helpers/`
 3. **TDD Methodology**: Red-Green-Refactor cycle mandatory
 4. **Integration Testing**: Test complete flows in Extension Host environment
+5. **Caret Testing**: Only test files in `caret-src/` to avoid Cline conflicts
 
 ### Test Categories
 
@@ -237,10 +245,11 @@ Generated files go to `src/generated/` and are used for type-safe gRPC communica
 
 ### Development Dependencies
 
-- **vitest**: Testing framework
-- **@typescript-eslint**: Linting
-- **prettier**: Code formatting
-- **esbuild**: Build system
+- **vitest**: Testing framework (3.2.4)
+- **@biomejs/biome**: Modern linting and formatting
+- **esbuild**: Ultra-fast build system
+- **@vscode/test-cli**: VSCode extension testing
+- **@playwright/test**: E2E testing framework
 
 ## Documentation System
 
@@ -256,6 +265,7 @@ Generated files go to `src/generated/` and are used for type-safe gRPC communica
 3. **Backup Strategy**: Critical for Cline file modifications - prevents merge conflicts
 4. **TypeScript Paths**: Configured with aliases (`@caret/*`, `@src/*`, etc.)
 5. **Mode System**: Central to Caret's architecture - understand before making changes
+6. **Git Integration**: Claude Code settings are already excluded in `.gitignore` to prevent initialization conflicts
 
 ## Common Issues
 

@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "description": "Branding display text replacement system (UI text only)",
+    "created_by": "t03-branding-ui system"
+  },
+  "brand_mappings": {
+    "source": "cline",
+    "target": "caret",
+    "pairs": {
+      "cline": "caret",
+      "Cline": "Caret", 
+      "CLINE": "CARET",
+      "클라인": "캐럿"
+    }
+  },
+  "target_files": {
+    "package.json": ["displayName", "author.name", "keywords", "walkthroughs.*.title", "walkthroughs.*.description", "commands.*.title", "commands.*.category"],
+    "webview-ui/src/caret/locale/*/common.json": ["brand.appName", "brand.appNameUpper", "brand.appNameLower", "brand.appNameKorean"],
+    "webview-ui/src/caret/locale/*/settings.json": ["settings.modeSystem.options.caret", "settings.modeSystem.options.Caret"],
+    "locales/*/": "all_text_content",
+    ".clinerules": ".caretrules"
+  },
+  "script_usage": {
+    "forward": "node caret-scripts/brand-change.js --direction=forward",
+    "reverse": "node caret-scripts/brand-change.js --direction=reverse"
+  }
+}

@@ -39,7 +39,8 @@
       "Bash(git submodule:*)",
       "Read(/home/luke/**)",
       "Bash(git commit:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(npm test:*)"
     ],
     "deny": [],
     "ask": []

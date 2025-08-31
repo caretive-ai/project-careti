@@ -1,8 +1,16 @@
 /**
- * 🟢 GREEN Phase: 브랜드별 i18n 백엔드 메시지 토글 시스템
+ * 🎯 브랜드별 i18n 백엔드 메시지 토글 시스템
+ * Luke 피드백 1차: "프론트는 i18n 넣고 가자.. 주석으로 잘 분리해서"
  *
- * Cline 모드일 때: i18n 기능을 비활성화하여 최대한 Cline처럼 보이게 함
- * Caret 모드일 때: 전체 i18n 기능 활성화
+ * 🔄 핵심 개념:
+ * - 브랜드 인식: 브랜드에 따라 동적으로 변경되는 텍스트 시스템
+ * - i18n 토글: Cline 모드에서는 비활성화, Caret 모드에서는 활성화
+ * - 백엔드 매핑: 하드코딩된 백엔드 메시지를 i18n 키로 변환
+ *
+ * 🎯 목표:
+ * - Cline 모드: i18n 기능을 비활성화하여 최대한 Cline처럼 보이게 함
+ * - Caret 모드: 전체 i18n 기능 활성화하여 다국어 지원
+ * - B2B 모드: 브랜드별 커스텀 템플릿 지원 (codecenter 등)
  */
 
 export interface BrandConfig {
@@ -14,23 +22,26 @@ export interface BrandConfig {
 	enableBackendMessages: boolean // 백엔드 메시지 i18n 활성화 여부
 }
 
-// 브랜드별 설정
+// 브랜드별 설정 (Luke 요청: 한글 주석으로 코드 이해 돕기)
+// brand-i18n.json의 BRAND_CONFIGS와 동기화된 설정
 const BRAND_CONFIGS: Record<string, BrandConfig> = {
+	// Cline 모드: 원본 호환성을 위해 i18n 비활성화
 	cline: {
 		appName: "Cline",
 		appNameUpper: "CLINE",
 		appNameLower: "cline",
 		appNameKorean: "클라인",
-		enableI18n: false, // Cline 모드에서는 i18n 비활성화
-		enableBackendMessages: false, // 백엔드 메시지도 원본 영어로
+		enableI18n: false, // 업스트림 머징 호환을 위해 i18n 꺼둠
+		enableBackendMessages: false, // 백엔드 메시지도 원본 영어 유지
 	},
+	// Caret 모드: 완전한 다국어 지원 활성화
 	caret: {
 		appName: "Caret",
 		appNameUpper: "CARET",
 		appNameLower: "caret",
 		appNameKorean: "캐럿",
-		enableI18n: true, // Caret 모드에서는 i18n 활성화
-		enableBackendMessages: true, // 백엔드 메시지도 번역
+		enableI18n: true, // 다국어 지원 완전 활성화
+		enableBackendMessages: true, // 백엔드 메시지도 브랜드별 번역
 	},
 }
 

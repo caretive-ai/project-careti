@@ -465,11 +465,17 @@ node caret-b2b/tools/cline-brand-change.js status
 ```
 
 **자동 처리 과정:**
-1. 🔧 package.json 브랜드 메타데이터 변경
+1. 🔧 package.json 브랜드 메타데이터 변경 (displayName, author 등)
 2. 🖼️ 아이콘 에셋 경로 변환 (assets ↔ caret-assets)
 3. 📁 규칙 파일 경로 변환 (.clinerules ↔ .caretrules)
-4. 🏗️ 자동 빌드: `npm run compile` 실행
+4. 🏗️ 자동 빌드: `npm run compile` 실행 (proto 재생성 포함)
 5. ✅ 변환 완료 상태 검증
+
+**개선된 백업 시스템:**
+- 🗂️ **통합 관리**: `caret-b2b/backups/` 폴더에 6개 파일만 유지
+- ♻️ **중복 제거**: 기존 166개+ 백업파일 완전 정리
+- 🎯 **브랜드별 백업**: cline/caret 상태별로 체계적 관리
+- 🔄 **자동 감지**: getCurrentBrand() 메소드로 현재 상태 자동 판단
 
 #### **✅ 구현 완료 영역**
 

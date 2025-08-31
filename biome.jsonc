@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -132,7 +132,8 @@
 			"!**/webview-ui/build",
 			"!**/generated",
 			"!**/proto",
-			"!**/webview-ui/src/caret/locale"
+			"!**/webview-ui/src/caret/locale",
+			"!**/cline-latest"
 		]
 	},
 	"plugins": [

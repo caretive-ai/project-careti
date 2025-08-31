@@ -134,47 +134,47 @@ chore: 빌드/설정 변경
 
 ## AI 작업 프로토콜
 
-**🚨 중요: AI 어시스턴트는 다음 프로토콜을 수행하기 위한 상세 실행 절차서로 [`./guides/ai-work-method-guide.mdx`](./guides/ai-work-method-guide.mdx)를 최우선으로 숙지하고, 모든 작업을 해당 문서의 지시에 따라 수행해야 합니다.**
+**🚨 핵심 원칙**: **업무 성격별 필수 문서 체크 없이는 코딩 시작 금지**
 
 **작업 시작 프로토콜 (CRITICAL)** - AI 어시스턴트는 다음 순서를 **반드시** 준수:
 
-**Phase 0: 필수 사전 검토 - AI 작업 인덱스 가이드 우선 독해 (MANDATORY)**
-*   **목표:** 효율적인 컨텍스트 관리를 통해 작업 성격에 맞는 문서만 선택적으로 독해하여 개발 효율성을 극대화하는 단계입니다.
+**Phase 0: 필수 사전 검토 및 아키텍처 결정 (MANDATORY)**
 
-**STEP 1: AI 작업 인덱스 가이드 독해**
-- [ ] **필수 독해**: `caret-docs/development/ai-work-index.en.mdx` (AI 작업 인덱스 가이드) 완전 독해
-- [ ] **컨텍스트 효율성**: 모든 문서를 읽지 말고 작업에 필요한 문서만 선택적으로 독해
+1. **사용자 식별**: `git config user.name`으로 현재 사용자 확인
+2. **날짜 확인**: OS별 명령어로 현재 날짜 확인  
+3. **작업 로그 확인**: `caret-docs/work-logs/{username}/{date}.md` 체크/생성
 
-**STEP 2: 작업 성격 분석**
-- [ ] **키워드 추출**: 사용자 요청에서 핵심 키워드 추출
-- [ ] **카테고리 식별**: 키워드 기반으로 작업 카테고리 분류
-  - 🏗️ 아키텍처 & 설계 관련
-  - 🤖 AI 시스템 개발
-  - 🔄 Frontend-Backend 통신
-  - 🎨 UI/UX 개발
-  - 🧪 테스트 & 품질 관리
-  - 🔧 개발 도구 & 유틸리티
-  - 📖 문서화 & 규약
-  - 🚨 Cline 원본 수정
+**🚨 CRITICAL: 작업 성격 분석 및 필수 문서 확인**
 
-**STEP 3: 선택적 문서 독해**
-- [ ] **High Priority**: 직접 관련된 핵심 문서 (1-2개) 완전 독해
-- [ ] **Medium Priority**: 간접 관련 문서 (필요시만 부분 독해)
-- [ ] **Low Priority**: 참고용 문서 (링크만 확인)
+**🚨 CRITICAL: 아키텍처 결정 체크리스트**
 
-**STEP 4: 아키텍처 결정 체크리스트**
-- [ ] 이 기능은 Caret 전용인가? 
-  - YES → `caret-src/` 또는 `webview-ui/src/caret/`
-  - NO → Cline 원본 최소 수정 + 백업 필수
-- [ ] Cline 원본 파일 수정이 필요한가?
-  - YES → 백업 생성 + CARET MODIFICATION 주석 + 최소 수정 원칙
-- [ ] 새로운 컴포넌트가 필요한가?
-  - YES → 적절한 디렉토리 선택 (caret/ vs src/)
-- [ ] 테스트 파일 위치는?
-  - webview → `webview-ui/src/caret/**/*.test.tsx`
-  - 백엔드 → `caret-src/__tests__/`
+- **Caret vs Cline 디렉토리 결정**: 새 기능은 `caret/` 폴더, Cline 원본은 최소 수정
+- **백업 요구사항**: Cline 원본 수정 시 `.cline` 백업 파일 생성 필수
+- **테스트 파일 위치**: webview 테스트는 `src/caret/**/*.test.tsx`만 허용
 
-**STEP 5: 계획 수립 및 개발자 승인**: 아키텍처 결정 사항 명시 후 개발자 승인 요청
+**🚨 업무 성격별 필수 체크 문서:**
+
+#### **Frontend-Backend 상호작용 관련 업무**
+**업무 예시**: UI 설정, 상태 관리, 메시지 통신, gRPC 관련
+**필수 체크 문서**: 관련 아키텍처 패턴 문서
+
+#### **Cline 원본 파일 수정 관련 업무**
+**업무 예시**: `src/`, `webview-ui/`, `proto/` 파일 수정
+**필수 체크 문서**: 
+- **파일 수정 체크리스트** (백업 생성 규칙, CARET MODIFICATION 주석 추가)
+
+#### **컴포넌트/UI 개발 관련 업무**
+**업무 예시**: React 컴포넌트, CSS, 사용자 인터페이스
+**필수 체크 문서**: 컴포넌트 아키텍처 원칙, 테마 통합 가이드
+
+#### **테스트 관련 업무**
+**업무 예시**: 테스트 작성, TDD, 테스트 수정, 모킹 설정
+**필수 체크 문서**: TDD 필수 원칙 (RED → GREEN → REFACTOR), 테스트 우선 작성
+
+**⚠️ 반복 실수 방지 - 모킹 관련 체크포인트**:
+- `vi.mock` 호이스팅 문제 방지 패턴 확인
+- `vi.resetAllMocks()` vs `vi.clearAllMocks()` 구분 사용  
+- 복잡한 의존성 주입 테스트 패턴 활용
 
 **핵심 개발 원칙**:
 - **품질 우선**: 속도보다 정확성과 품질 우선
@@ -190,12 +190,21 @@ chore: 빌드/설정 변경
 **Phase 1: TDD RED - 실패하는 테스트 작성**
 *   **목표:** 구현할 기능의 요구사항을 명확히 정의하는 '실패하는' 테스트 코드를 먼저 작성합니다.
 
+**🚨 올바른 TDD 접근 (통합 시나리오부터)**:
+1. **RED**: 실제 사용 시나리오의 **통합 테스트**부터 작성 (E2E 또는 Integration)
+2. **GREEN**: 통합 테스트가 통과하도록 필요한 모든 코드 구현 (단위 함수들 포함)
+3. **REFACTOR**: 코드 품질 개선 (테스트는 계속 통과)
+
+**웹뷰 기능 개발 예시**:
+- ❌ 잘못: `isBackendMessage()` 단위 함수 테스트부터
+- ✅ 올바름: "웹뷰에서 ClineMessage 렌더링 시 백엔드 메시지가 번역되어야 함" 통합 테스트부터
+
 🚨 **STOP POINT 1: 테스트 파일 생성 전 경로 확인**
 - [ ] 테스트 설정의 include 경로 확인:
   - webview: `src/caret/**/*.test.{ts,tsx}`
   - 백엔드: `caret-src/__tests__/`
 - [ ] 테스트 파일이 올바른 디렉토리에 생성되는가?
-- [ ] **즉시 검증**: 테스트 파일 생성 후 `npm run test:webview` 실행으로 인식 확인
+- [ ] **즉시 검증**: 테스트 파일 생성 후 테스트 실행으로 인식 확인
 
 **Phase 2: TDD GREEN - 테스트 통과 구현**
 *   **목표:** 앞에서 작성한 테스트를 통과시키는 '최소한의' 코드를 작성하여 기능을 구현합니다.
@@ -214,16 +223,41 @@ chore: 빌드/설정 변경
 🚨 **STOP POINT 3: 새 파일 생성 전 디렉토리 확인**
 - [ ] Caret 전용 기능이 `caret/` 폴더에 구현되는가?
 - [ ] import 경로가 올바른가?
-- [ ] **즉시 검증**: Cline 원본 수정 후 `npm run compile`로 에러 확인
+- [ ] **즉시 검증**: Cline 원본 수정 후 컴파일로 에러 확인
 
 **Phase 3: TDD REFACTOR - 코드 품질 개선 및 전체 검증**
 *   **목표:** 기능은 그대로 유지하면서 코드의 구조를 개선하고, 전체 시스템이 정상 동작하는지 최종 확인합니다.
 
-- [ ] 전체 시스템 검증: `npm run compile` 성공
-- [ ] 모든 테스트 통과: `npm run test:webview`, `npm run test:backend`
+- [ ] 전체 시스템 검증: 컴파일 성공
+- [ ] 모든 테스트 통과
 - [ ] 기존 기능에 영향 없음 확인
 
 **실행 원칙**: 각 Phase 시작 전 관련 가이드 문서 및 원칙 재확인 **필수**
+
+**🔄 TDD 사이클 체크리스트**
+- [ ] **1. RED**: 실제 사용 시나리오의 통합/E2E 테스트 작성 (실패 확인)
+- [ ] **2. GREEN**: 통합 테스트가 통과하도록 최소 구현  
+- [ ] **3. REFACTOR**: 통합 테스트를 유지하며 코드 품질 개선
+- [ ] **4. 반복**: 다음 시나리오로 사이클 반복
+
+**🚨 개발자 승인 보고 템플릿**:
+```
+마스터, {업무명} 관련 문서 분석 완료했습니다.
+
+📚 체크한 문서:
+- {문서1}: {얻은 정보 요약}
+- {문서2}: {얻은 정보 요약}
+
+🎯 작업 계획:
+- Phase 1: {계획}
+- Phase 2: {계획}
+
+⚠️ 주의사항:
+- {제약사항1}
+- {제약사항2}
+
+진행하겠습니다.
+```
 
 ## 🚨 **코딩 작업 강제 체크리스트 (AI 필수 준수)**
 
@@ -632,15 +666,16 @@ node caret-scripts/test-report.js             # 테스트 리포트 생성
 
 **규칙 파일 관리**: 
 - **마스터 파일**: `caretrules.ko.md` (인간이 읽기 위한 한국어 템플릿)
-- **소스 오브 트루스(Source of Truth)**: `.caretrules` (JSON 형식의 실제 룰 데이터)
-- **룰 수정 절차 (MANDATORY)**:
+- **소스 오브 트루스(Source of Truth)**: `.caretrules/workflows/caretrules.md` (JSON 형식의 실제 룰 데이터)
+- **새로운 구조**: `.caretrules` 파일 → `.caretrules/workflows/caretrules.md` 로 변경
+- **룰 수정 절차 (MANDATORY 3단계)**:
     1. `caretrules.ko.md` 파일을 수정하여, 변경될 규칙의 내용을 기록하고 가독성을 확보합니다.
-    2. **`.caretrules` JSON 파일을 직접 수정**하여, 실제 룰 데이터를 변경합니다.
-    3. `node caret-scripts/sync-caretrules.js` 스크립트를 실행하여, `.caretrules`의 변경사항을 다른 룰 파일(`.cursorrules` 등)에 동기화합니다.
+    2. **`.caretrules/workflows/caretrules.md` JSON 파일을 직접 수정**하여, 실제 룰 데이터를 변경합니다.
+    3. `node caret-scripts/sync-caretrules.js` 스크립트를 실행하여, caretrules.md의 변경사항을 다른 룰 파일(`.cursorrules` 등)에 동기화합니다.
 - **AI 필수 작업**: 위 3단계 절차를 **절대** 생략하거나 순서를 바꾸지 않습니다.
-- **동기화 대상**: `.cursorrules`, `.windsurfrules` (JSON 형식)
+- **동기화 대상**: `.cursorrules`, `.windsurfrules`, `.clinerules` (JSON 형식)
 
-**🚨 .caretrules 파일 내용 원칙 (CRITICAL)**:
+**🚨 .caretrules/workflows/ 파일 내용 원칙 (CRITICAL)**:
 - **불변 원칙만 포함**: 시간이 지나도 변하지 않는 핵심 프로젝트 원칙만 포함
 - **시간 민감 정보 금지**: 
   - 날짜가 포함된 상태 정보 (`"2025-01-21 완료"` 등)
@@ -656,11 +691,11 @@ node caret-scripts/test-report.js             # 테스트 리포트 생성
   - 개발 방법론 (TDD, 백업 규칙 등)
   - 파일 구조와 네이밍 컨벤션
   - 품질 표준과 테스트 원칙
-- **AI 실수 방지**: AI가 .caretrules 업데이트 시 위 원칙 위반 시 작업 중단 및 검토 요청
+- **AI 실수 방지**: AI가 .caretrules/workflows/ 파일 업데이트 시 위 원칙 위반 시 작업 중단 및 검토 요청
 
 ## 핵심 참조 파일
 
-**설정 파일**: `.caretrules`, `caret-docs/caretrules.ko.md`, `caret-docs/development/index.mdx`
+**설정 파일**: `.caretrules/workflows/caretrules.md`, `caret-docs/caretrules.ko.md`, `caret-docs/development/index.mdx`
 **진입점**: `caret-src/extension.ts`, `caret-src/core/webview/CaretProvider.ts`, `src/extension.ts`
 **프론트엔드**: `webview-ui/src/App.tsx`, `webview-ui/src/context/ExtensionStateContext.tsx`, `webview-ui/src/caret/`
 

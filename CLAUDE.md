@@ -6,6 +6,38 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Cline is an autonomous AI coding assistant VS Code extension that can create/edit files, run terminal commands, use the browser, and integrate with various AI models. It's built with TypeScript and React, supporting multiple AI providers (Anthropic, OpenAI, OpenRouter, etc.) and the Model Context Protocol (MCP) for extensibility.
 
+## TDD Development Guidelines
+
+### 🚨 Critical: Proper TDD Order
+
+**❌ Wrong Approach (Bottom-up)**:
+```
+1. Write unit tests for helper functions → Implement helpers → Refactor
+2. Later: "Integrate into actual usage"
+```
+
+**✅ Correct Approach (Top-down)**:
+```  
+1. RED: Write integration/E2E test for actual usage scenario
+2. GREEN: Implement all necessary code to make integration test pass
+3. REFACTOR: Improve code quality while keeping integration test passing
+```
+
+**Example - WebView Feature Development**:
+- ❌ Wrong: Start with `isValidInput()` unit test
+- ✅ Correct: Start with "User clicks button → Expected result shown" component test
+
+**Example - Backend Feature Development**:
+- ❌ Wrong: Start with `parseConfig()` unit test  
+- ✅ Correct: Start with "Config change → System behavior change" integration test
+
+### TDD Checklist
+- [ ] Start with actual usage scenario test (integration/E2E)
+- [ ] Verify test fails (RED)
+- [ ] Implement minimum code to make test pass (GREEN)
+- [ ] Refactor while keeping test passing
+- [ ] Unit tests are byproducts, not starting points
+
 ## Common Commands
 
 ### Development
@@ -181,6 +213,7 @@ The project uses protobuf for type-safe communication:
 - **Directory Rule**: caret-scripts/ for new features, minimal Cline changes only
 - **Testing Rule**: Git-based verification (git status/diff) for all changes
 - **Merging Strategy**: Follow merging-strategy-guide.md - Level 1 독립 모듈 권장
+- **Rule Files Structure**: `.caretrules/workflows/caretrules.md` (JSON) + sync to `.cursorrules/.windsurfrules`
 
 ## Implementation Plan:
 1. **Step 1**: brand-change.js with comment recognition system

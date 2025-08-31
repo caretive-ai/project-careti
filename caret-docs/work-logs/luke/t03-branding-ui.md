@@ -66,3 +66,14 @@
 - ✅ 설계 및 계획 완료 (brand.json 생성, 아키텍처 확정)
 - 🔄 **다음**: Step 1 브랜딩 스크립트 구현
 
+
+# 피드백 1차
+ - caret으로 완전히 전향 되었다고 하지만 요구한바가 안된 것 있음
+ * 초기화 버튼 삭제로 완전한 확인의 어려움
+   - cline 최신 버전은 초기화 버튼이 사라진것 같음. 어디있는지 알려주길 바람. 없어진거라면 이전 버전 caret-main 을 참고하여 부활 시켜 줄것
+ * 룰과 워크프레이스 링크가 Cline 으로 되어있음. 모두 Caret, CaretRules로 변경필요.
+   - 브랜딩 전환도 동일해야 함
+ * 아이콘, 이미지 전환 안된 것으로 보임, cline그대로 보임 
+ * about은 cline 그대로 임, 버전도 changelog-caret.md 참고하여 진행. 버전관리도 brand.json 처럼 관리할건지 같이 고민.
+ * 페르소나와 각종 기능들이 붙을때 caret -> codecenter 등으로 역시 교체되야함. 이것도 고려할것. codecneter는 caretbot대신 codecenterbot이 템플릿이 다름
+ 

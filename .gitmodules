@@ -1,0 +1,3 @@
+[submodule "cline-latest"]
+	path = cline-latest
+	url = https://github.com/cline/cline.git

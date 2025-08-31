@@ -38,7 +38,8 @@
       "Read(/home/luke/caret-b2b/**)",
       "Bash(git submodule:*)",
       "Read(/home/luke/**)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []

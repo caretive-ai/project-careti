@@ -1,4 +1,4 @@
-# f05 - Caret 계정 시스템 머징 작업
+# f04 - Caret 계정 시스템 머징 작업
 
 ## 기능 개요
 - **목적**: Cline 프로바이더 대체 (cline.bot → caret.team)

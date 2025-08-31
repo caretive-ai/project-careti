@@ -24,6 +24,12 @@
   - Remote: https://github.com/cline/cline.git
   - 용도: 최신 Cline 원본 참조
 
+- **caret-b2b**: `/home/luke/caret-merge/caret-b2b`
+  - Remote: https://github.com/aicoding-caret/caret-b2b
+  - 현재 commit: `ecd54ba` (feat: Complete t03 branding system with unified backup and CLI automation)
+  - 브랜치: main
+  - 용도: B2B 브랜딩 도구 및 자동화 스크립트 저장소
+
 ## 🎯 작업 개요 및 현재 상태
 
 ### 목표 (2025-08-31 Luke 지시사항)

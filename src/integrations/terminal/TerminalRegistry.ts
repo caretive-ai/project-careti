@@ -23,8 +23,24 @@ export class TerminalRegistry {
 	static createTerminal(cwd?: string | vscode.Uri | undefined, shellPath?: string): TerminalInfo {
 		const terminalOptions: vscode.TerminalOptions = {
 			cwd,
-			name: "Cline",
-			iconPath: new vscode.ThemeIcon("robot"),
+			name: "Caret",
+			// CARET MODIFICATION: Use custom Caret shell icon instead of default VSCode robot icon
+			iconPath: (() => {
+				return {
+					light: vscode.Uri.joinPath(
+						vscode.extensions.getExtension("caretive.caret")!.extensionUri,
+						"assets",
+						"icons",
+						"robot_panel_light.png",
+					),
+					dark: vscode.Uri.joinPath(
+						vscode.extensions.getExtension("caretive.caret")!.extensionUri,
+						"assets",
+						"icons",
+						"robot_panel_dark.png",
+					),
+				}
+			})(),
 			env: {
 				CLINE_ACTIVE: "true",
 			},

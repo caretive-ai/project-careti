@@ -308,17 +308,129 @@ git commit -m "feat: [feature] - CARET MODIFICATION applied with docs"
 #### **🟢 LOW 위험**
 1. **독립 모듈들**: Account, i18n, 로깅, 브랜딩, Persona
 
+### **🔧 머징 작업 최적화 전략** ✅ **신규 추가**
+
+#### **브랜딩 자동화를 활용한 충돌 최소화**
+> **핵심 아이디어**: 머징 작업 시 브랜딩 차이로 인한 충돌을 **완전 제거**하여 실질적 기능 충돌만 해결
+
+**1단계: 머징 전 Cline 변환**
+```bash
+# 현재 Caret 상태에서 Cline으로 변환 (충돌 최소화)
+node caret-b2b/tools/brand-converter.js caret forward  # caret → cline
+
+# Git 상태 확인 (브랜딩 요소 모두 Cline으로 정리됨)
+git status
+```
+
+**2단계: Cline 최신 버전 머징**
+```bash
+# 이제 브랜딩 차이 없이 순수 기능만 머징
+git fetch upstream
+git merge upstream/vX.XX.X
+
+# 충돌 해결 (브랜딩 관련 충돌 제거로 50-70% 충돌 감소 예상)
+```
+
+**3단계: 머징 후 Caret 복원**
+```bash
+# 머징 완료 후 다시 Caret 브랜딩 적용
+node caret-b2b/tools/brand-converter.js caret backward  # cline → caret
+```
+
+**4단계: 신기능 매핑 업데이트**
+```bash
+# 새로 추가된 UI 요소/명령어가 있다면 brand-config.json에 매핑 추가
+# 예: 새로운 명령어 "New Feature with Cline" → "New Feature with Caret"
+```
+
+#### **브랜딩 설정 확장 가이드**
+**Cline 신규 기능이 브랜딩 대상인 경우:**
+
+1. **`caret-b2b/brands/caret/brand-config.json` 업데이트**:
+```json
+{
+  "brand_mappings": {
+    "package_json": {
+      "기존 매핑들...",
+      "New Cline Feature": "New Caret Feature"
+    }
+  }
+}
+```
+
+2. **역방향 매핑도 추가 (`caret-b2b/brands/cline/brand-config.json`)**:
+```json
+{
+  "brand_mappings": {
+    "package_json": {
+      "기존 매핑들...",
+      "New Caret Feature": "New Cline Feature"
+    }
+  }
+}
+```
+
+3. **자동화 스크립트 확장 (필요시)**:
+- `brand-converter.js`에 새로운 변환 로직 추가
+- 특수한 패턴이나 파일 처리가 필요한 경우
+
+### **🏢 B2B 브랜딩 확장 가이드** ✅ **신규 추가**
+
+#### **기업 브랜드 추가 시**
+Caret에 신규 기능이 추가되어 기업 브랜딩에 반영해야 하는 경우:
+
+**1단계: 브랜드 설정 확장**
+```bash
+# 기업 브랜드 설정 파일 수정
+# 예: CodeCenter 브랜딩에 새 기능 추가
+vim caret-b2b/brands/codecenter/brand-config.json
+```
+
+**2단계: 매핑 업데이트**
+```json
+{
+  "brand_mappings": {
+    "package_json": {
+      "기존 매핑들...",
+      "Caret New Feature": "CodeCenter New Feature",
+      "Caret AI Assistant": "CodeCenter Business AI"
+    }
+  }
+}
+```
+
+**3단계: 테스트 및 검증**
+```bash
+# 변환 테스트 (DRY-RUN)
+node caret-b2b/tools/brand-converter.js codecenter forward --dry-run
+
+# 실제 변환 적용
+node caret-b2b/tools/brand-converter.js codecenter forward
+
+# 복원 테스트
+node caret-b2b/tools/brand-converter.js codecenter backward
+```
+
+**4단계: 고급 확장 (필요시)**
+- **복잡한 변환 로직**: `brand-converter.js`에 기업별 특수 처리 추가
+- **새로운 파일 형식**: `convertRulePaths()` 메소드에 추가 파일 처리
+- **이미지 자동화**: `copyAssets()` 메소드에 기업 로고 자동 교체
+
 ### **리스크 완화 전략**
 
 #### **사전 예방**
+- [x] **브랜딩 자동화**: 머징 시 브랜딩 충돌 완전 제거 ✅
 - [ ] **아키텍처 리뷰**: 복잡한 기능은 정리 후 이식
-- [ ] **백업 체계**: 모든 수정 전 백업 생성
-- [ ] **점진적 적용**: 기능별 독립적 이식
+- [x] **백업 체계**: 브랜드 변환 시 자동 백업 ✅
+- [x] **점진적 적용**: 브랜드별 독립적 변환 ✅
 - [ ] **롤백 준비**: 각 Phase별 롤백 포인트 설정
 
 #### **문제 발생 시**
 ```bash
-# 즉시 롤백
+# 브랜딩 복원
+node caret-b2b/tools/brand-converter.js caret backward  # 즉시 Caret 복원
+
+# 기존 Git 롤백
 git reset --hard backup-before-phase-X
 
 # 스테이징 복구

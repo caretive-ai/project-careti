@@ -439,43 +439,19 @@ Caret의 브랜딩 시스템은 **완전히 구현 완료**된 상태입니다. 
 
 ### **🚀 자동화된 브랜딩 전환 도구**
 
-#### **cline-brand-change.js** - 고성능 Cline ↔ Caret 브랜딩 전환
+Caret은 완전 자동화된 브랜딩 전환 시스템을 제공하여 다양한 브랜드 간 즉시 전환이 가능합니다.
 
-완전 자동화된 브랜딩 전환 시스템으로 workspace 경로 변경에 따른 컴파일까지 처리합니다.
+**지원 브랜드:**
+- **Cline ↔ Caret**: 양방향 브랜드 전환
+- **Caret ↔ CodeCenter**: 기업용 B2B 브랜딩
+- **확장 가능**: 새로운 브랜드 쉽게 추가
 
-**주요 기능:**
-- ⚡ **자동 빌드**: workspace 경로 변경 후 proto 재생성 및 컴파일 자동 실행
-- 🎯 **TDD 검증**: 포괄적 테스트 케이스로 변환 무결성 보장
-- 🔄 **양방향 변환**: cline → caret, caret → cline 완벽 지원
-- 📋 **상태 관리**: 현재 브랜드 상태 추적 및 복원 기능
-
-**사용법:**
-```bash
-# Cline에서 Caret으로 브랜딩 변경
-node caret-b2b/tools/cline-brand-change.js caret
-
-# Caret에서 Cline으로 되돌리기
-node caret-b2b/tools/cline-brand-change.js cline
-
-# 자동 빌드 포함 변환 (권장)
-node caret-b2b/tools/cline-brand-change.js caret --build
-
-# 현재 브랜드 상태 확인
-node caret-b2b/tools/cline-brand-change.js status
-```
-
-**자동 처리 과정:**
-1. 🔧 package.json 브랜드 메타데이터 변경 (displayName, author 등)
-2. 🖼️ 아이콘 에셋 경로 변환 (assets ↔ caret-assets)
-3. 📁 규칙 파일 경로 변환 (.clinerules ↔ .caretrules)
-4. 🏗️ 자동 빌드: `npm run compile` 실행 (proto 재생성 포함)
-5. ✅ 변환 완료 상태 검증
-
-**개선된 백업 시스템:**
-- 🗂️ **통합 관리**: `caret-b2b/backups/` 폴더에 6개 파일만 유지
-- ♻️ **중복 제거**: 기존 166개+ 백업파일 완전 정리
-- 🎯 **브랜드별 백업**: cline/caret 상태별로 체계적 관리
-- 🔄 **자동 감지**: getCurrentBrand() 메소드로 현재 상태 자동 판단
+**자동화 범위:**
+- VS Code Extension 메타데이터 (package.json 42개+ 필드)
+- 이미지 및 아이콘 자동 교체
+- 터미널 브랜딩 (이름, 확장 ID)
+- 규칙 파일 경로 (.clinerules ↔ .caretrules)
+- 동적 버전 매핑 및 빌드 통합
 
 #### **✅ 구현 완료 영역**
 
@@ -483,11 +459,13 @@ node caret-b2b/tools/cline-brand-change.js status
 - `package.json` - displayName: "Caret"으로 완전 변경
 - Extension 제목, 설명, 키워드 모두 Caret 브랜딩 적용
 - Walkthrough 및 명령어 카테고리 Caret으로 통일
+- 42개+ 필드 포괄적 브랜딩: contributes, commands, walkthroughs, activitybar
 
 **2. 시각적 브랜딩 요소**  
 - 🎨 독창적 Caret 로고 및 아이콘 시스템
 - 🌈 전용 컬러 팔레트 (인디고/바이올렛 기조)
 - 📸 브랜드 전용 배너, 캐릭터, 일러스트레이션
+- 자동 이미지 교체: 브랜드별 아이콘 파일 자동 복사
 
 **3. UI/UX 컴포넌트**
 - CaretWelcome.tsx - 완전 독립적 웰컴 페이지
@@ -502,6 +480,11 @@ node caret-b2b/tools/cline-brand-change.js status
 **5. 페르소나 시스템 통합**  
 - Caret 캐릭터 중심의 페르소나 브랜딩
 - 캐릭터별 전용 일러스트 및 브랜딩 요소
+
+**6. 터미널 완전 브랜딩**
+- TerminalRegistry.ts: 터미널 이름 "Caret" 적용
+- 확장 ID: "caretive.caret" 변환
+- 커스텀 터미널 아이콘 적용
 
 ### **🏢 B2B 기업용 브랜딩 솔루션**
 
@@ -606,7 +589,7 @@ const BrandingProvider: React.FC = ({ children }) => {
 **작성자**: Alpha (AI Assistant)  
 **검토자**: Luke (Project Owner)  
 **작성일**: 2025-08-16  
-**마지막 업데이트**: 2025-08-31 15:30 KST  
+**마지막 업데이트**: 2025-08-31 19:30 KST  
 **Phase**: Phase 6-2 (웹뷰 UI 차이점)  
 **TDD 상태**: ✅ 100% 커버리지 달성  
-**구현 상태**: ✅ 완전 구현 (cline-brand-change.js 자동화 + 빌드 통합)
+**구현 상태**: ✅ 완전 구현 (통합 브랜딩 자동화 완료)

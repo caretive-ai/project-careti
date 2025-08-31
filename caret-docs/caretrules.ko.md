@@ -28,34 +28,39 @@ caret/
 
 **코드 관리 원칙 (CRITICAL - AI 필수 준수)**:
 
-### 1. Cline 원본 파일 수정 시 절대 원칙
+### 1. Level 1 독립 모듈 우선 원칙 (MANDATORY)
+- **우선 고려**: `caret/`, `caret-*` 디렉토리 사용으로 충돌 최소화
+- **Cline 원본 보전**: upstream 머징을 위해 원본 파일 최대한 보존
+- **버전 관리**: upstream 머징 추적은 `CHANGELOG-CARET.md`에서 관리
+
+### 2. Cline 원본 파일 수정 시 절대 원칙 (최후 수단)
 - **디렉토리**: `src/`, `webview-ui/`, `proto/`, `scripts/`, `evals/`, `docs/`, `locales/` 및 루트 설정 파일
-- **원칙 1 (확장성의 원칙): 상속 vs 직접 수정**
-    - **신규 기능 추가**: 기존 클래스의 기능을 확장하여 새로운 기능을 추가할 때는 `상속`을 우선적으로 사용한다. (`caret-src` 내에 새로운 클래스 파일 생성)
-    - **기존 기능 수정**: 기존 기능의 동작을 일부 변경해야 할 때, 상속을 통한 `오버라이딩(overriding)`이 가능하다면 그 방법을 사용한다.
-    - **직접 수정의 조건**: 상속하려는 부모 클래스의 핵심 속성이나 메소드가 `private`으로 선언되어 있어 상속을 통한 확장이 불가능할 경우, 예외적으로 해당 원본 파일을 **백업 후 직접 수정**하는 것을 허용한다. 이는 '최소 수정의 원칙'에 더 부합하는 방법이다.
+- **원칙 1 (Level 1 독립 모듈 우선)**
+    - **신규 기능**: `caret/` 폴더에 독립 모듈로 구현 우선
+    - **기존 기능 확장**: 상속을 통한 오버라이딩 우선 고려
+    - **최후 수단**: private 속성/메소드로 상속 불가능한 경우에만 직접 수정
 - **원칙 2**: **주석처리된 안 쓰는 코드도 절대 건드리지 말 것** (머징 고려)
 - **원칙 3**: **최소 수정의 원칙** - 1-3라인 이내 권장
 - **원칙 4**: **수정 시 주석처리하지 말고 완전히 대체**
 - **원칙 5**: **반드시 CARET MODIFICATION 주석 추가**
 
-### 2. 백업 규칙 (MANDATORY)
-```bash
-# 1단계: 백업 생성 (수정 전 필수)
-cp src/extension.ts src/extension-ts.cline
-
-# 2단계: 파일 상단에 CARET MODIFICATION 주석 추가
+### 3. CARET MODIFICATION 주석 규칙 (Cline 원본 수정 시)
+```typescript
 // CARET MODIFICATION: 구체적인 수정 내용 설명
-// Original backed up to: src/extension-ts.cline
 // Purpose: 수정 목적
+// Modified for: 기능명
+
+// 수정된 코드
+const newValue = "caret-specific-value";
 ```
 
-### 3. 자유 수정 가능 영역
-- **caret-src/**: Caret 전용 디렉토리 - 완전 자유 수정
+### 4. 자유 수정 가능 영역
+- **caret/**: Caret 전용 디렉토리 - 완전 자유 수정
+- **caret-***: Caret 독립 모듈 - 완전 자유 수정
 - **caret-docs/**: Caret 문서 - 완전 자유 수정  
 - **caret-assets/**: Caret 리소스 - 완전 자유 수정
 
-### 4. 수정 예시 (올바른 방법)
+### 5. 수정 예시 (올바른 방법)
 ```typescript
 // ❌ 잘못된 방법 - 주석처리로 남김
 // const oldValue = "claude-dev.SidebarProvider"  // 원본

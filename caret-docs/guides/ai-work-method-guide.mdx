@@ -142,8 +142,9 @@
 
 **🛑 STOP POINT 2: Cline 원본 파일 수정 체크리스트**
 
-- 백업 생성 (`{filename}-{extension}.cline`)
-- CARET MODIFICATION 주석 추가
+- **Level 1 독립 모듈 우선 고려**: `caret-*` 디렉토리 사용 검토
+- 불가피한 경우에만 백업 생성: `{filename}-{extension}.cline`
+- `// CARET MODIFICATION: [간단한 설명]` 주석 필수 추가
 - 최소 수정 원칙 (1-3라인) 준수
 - 즉시 `npm run compile` 실행으로 검증
 
@@ -197,8 +198,9 @@
 
 ### Cline 원본 수정
 
-- [ ] 백업 파일 생성 (`{filename}-{extension}.cline`)
-- [ ] CARET MODIFICATION 주석 추가
+- [ ] **Level 1 독립 모듈 우선 고려** (`caret-*` 디렉토리 사용)
+- [ ] 불가피한 경우에만 백업 파일 생성: `{filename}-{extension}.cline`
+- [ ] `// CARET MODIFICATION: [간단한 설명]` 주석 필수 추가
 - [ ] 최소 수정 원칙 (1-3라인) 준수
 - [ ] 파일 수정 체크리스트 완료
 
@@ -247,9 +249,10 @@
 - **webview 테스트**: `src/caret/**/*.test.tsx`만 허용
 - **include path 설정**: 테스트 생성 전 검증 필수
 
-### **백업 누락 방지**
+### **독립 모듈 우선 원칙**
 
-- **Cline 원본 수정**: 백업 생성 및 CARET MODIFICATION 주석 필수
+- **Level 1 독립 모듈**: `caret-*` 디렉토리 사용 우선 고려 (충돌 최소화)
+- **불가피한 Cline 수정**: 백업 생성 및 `// CARET MODIFICATION:` 주석 필수
 - **즉시 검증 원칙**: 파일 생성/수정 후 즉시 컴파일/테스트
 
 이 가이드를 통해 AI는 업무 성격에 맞는 적절한 분석과 계획을 수립한 후 작업을 진행하게 됩니다.

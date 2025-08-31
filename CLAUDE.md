@@ -164,3 +164,28 @@ The project uses protobuf for type-safe communication:
 - Install recommended VS Code extensions when prompted
 - Use F5 to launch development instance
 - Webview changes require extension reload in development window
+
+## t03-branding-work-context
+**Current Work**: t03 브랜딩 시스템 구현 (2025-08-31)
+**User**: Luke Yang  
+**Work Nature**: Cline 원본 파일 수정 관련 업무
+
+## Mandatory Documents Analysis Complete:
+- ✅ ai-work-method-guide.mdx: Work protocol phases (Phase 0-4)
+- ✅ caretrules.ko.md: CARET MODIFICATION rules, backup requirements
+- Key Finding: Script must recognize `// CARET MODIFICATION:` comments for safe processing
+
+## Critical Constraints (Updated):
+- **Backup Rule**: {filename}-{extension}.cline before any Cline file modification
+- **Comment Rule**: `// CARET MODIFICATION: [description]` mandatory for tracking changes  
+- **Directory Rule**: caret-scripts/ for new features, minimal Cline changes only
+- **Testing Rule**: Git-based verification (git status/diff) for all changes
+- **Merging Strategy**: Follow merging-strategy-guide.md - Level 1 독립 모듈 권장
+
+## Implementation Plan:
+1. **Step 1**: brand-change.js with comment recognition system
+2. **Step 2**: Git-based change/restoration testing (cline ↔ caret)
+3. **Step 3**: i18n backend message mapping integration  
+4. **Step 4**: Complete system integration testing
+5. **Step 5**: Documentation updates (f02 + f03)
+6. **Step 6**: Final validation and completion

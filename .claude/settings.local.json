@@ -26,7 +26,8 @@
       "Bash(done)",
       "Bash(mkdir:*)",
       "Bash(npm run test:backend:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Complete multilingual i18n system implementation with UI integration\n\n- Implement comprehensive i18n system supporting Korean, English, Japanese, Chinese\n- Add 30 JSON locale files with 7 namespaces (common, welcome, persona, settings, etc.)\n- Integrate performance monitoring, caching, and lazy loading for optimal performance\n- Include Korean particle processing for natural language support\n- Add language selection UI in Settings page with telemetry text translation\n- Wrap entire app with CaretI18nProvider for global i18n support\n- Fix test infrastructure: exclude JSON files from lint and correct test script paths\n- Update work logs to reflect Mission 1B-1 test dependency on t06 JSON system\n- Reorganize f02-multilingual-i18n.mdx documentation for clarity and completeness\n\nAffected files:\n- 30 locale JSON files (webview-ui/src/caret/locale/)\n- 3 i18n utilities with performance monitoring\n- 2 React hooks and context providers  \n- 2 UI components with language selection\n- 3 test files with TDD coverage\n- 2 modified Cline files (App.tsx, GeneralSettingsSection.tsx) - minimal changes\n- Build configuration fixes (biome.jsonc, test-report.js)\n\n🤖 Generated with [Claude Code](https://claude.ai/code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []

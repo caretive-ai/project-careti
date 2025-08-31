@@ -1,0 +1,64 @@
+{
+  "description": "브랜딩 필드 정의 - UI 요소별 세부 필드 관리",
+  "version": "2.0.0",
+  "last_updated": "2025-08-31",
+  
+  "ui_fields": {
+    "display": {
+      "displayName": {
+        "description": "VS Code 확장 표시 이름",
+        "priority": "high",
+        "ui_impact": "확장 목록, 설치 화면"
+      },
+      "author.name": {
+        "description": "확장 제작자 이름", 
+        "priority": "medium",
+        "ui_impact": "확장 상세 정보"
+      }
+    },
+    
+    "activitybar": {
+      "contributes.viewsContainers.activitybar[0].title": {
+        "description": "Mac용 ActivityBar 제목",
+        "priority": "high", 
+        "ui_impact": "ActivityBar 호버 시 툴팁"
+      },
+      "contributes.viewsContainers.activitybar[1].title": {
+        "description": "Windows/Linux용 ActivityBar 제목",
+        "priority": "high",
+        "ui_impact": "ActivityBar 호버 시 툴팁"
+      }
+    },
+    
+    "commands": {
+      "title_fields": [
+        "contributes.commands[*].title",
+        "contributes.commands[*].category"
+      ],
+      "description": "명령어 제목과 카테고리",
+      "priority": "medium",
+      "ui_impact": "Command Palette, 컨텍스트 메뉴"
+    },
+    
+    "walkthrough": {
+      "contributes.walkthroughs[0].title": {
+        "description": "안내 투어 제목",
+        "priority": "low",
+        "ui_impact": "Welcome 화면"
+      },
+      "contributes.walkthroughs[0].description": {
+        "description": "안내 투어 설명",
+        "priority": "low", 
+        "ui_impact": "Welcome 화면"
+      }
+    },
+    
+    "configuration": {
+      "contributes.configuration.title": {
+        "description": "설정 섹션 제목",
+        "priority": "medium",
+        "ui_impact": "VS Code 설정 화면"
+      }
+    }
+  }
+}

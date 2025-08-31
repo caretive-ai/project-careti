@@ -437,6 +437,40 @@ npm run test:a11y
 
 Caret의 브랜딩 시스템은 **완전히 구현 완료**된 상태입니다. 다음 영역에서 Cline과 차별화된 독창적 브랜딩을 제공합니다:
 
+### **🚀 자동화된 브랜딩 전환 도구**
+
+#### **cline-brand-change.js** - 고성능 Cline ↔ Caret 브랜딩 전환
+
+완전 자동화된 브랜딩 전환 시스템으로 workspace 경로 변경에 따른 컴파일까지 처리합니다.
+
+**주요 기능:**
+- ⚡ **자동 빌드**: workspace 경로 변경 후 proto 재생성 및 컴파일 자동 실행
+- 🎯 **TDD 검증**: 포괄적 테스트 케이스로 변환 무결성 보장
+- 🔄 **양방향 변환**: cline → caret, caret → cline 완벽 지원
+- 📋 **상태 관리**: 현재 브랜드 상태 추적 및 복원 기능
+
+**사용법:**
+```bash
+# Cline에서 Caret으로 브랜딩 변경
+node caret-b2b/tools/cline-brand-change.js caret
+
+# Caret에서 Cline으로 되돌리기
+node caret-b2b/tools/cline-brand-change.js cline
+
+# 자동 빌드 포함 변환 (권장)
+node caret-b2b/tools/cline-brand-change.js caret --build
+
+# 현재 브랜드 상태 확인
+node caret-b2b/tools/cline-brand-change.js status
+```
+
+**자동 처리 과정:**
+1. 🔧 package.json 브랜드 메타데이터 변경
+2. 🖼️ 아이콘 에셋 경로 변환 (assets ↔ caret-assets)
+3. 📁 규칙 파일 경로 변환 (.clinerules ↔ .caretrules)
+4. 🏗️ 자동 빌드: `npm run compile` 실행
+5. ✅ 변환 완료 상태 검증
+
 #### **✅ 구현 완료 영역**
 
 **1. VS Code Extension 메타데이터**
@@ -467,7 +501,7 @@ Caret의 브랜딩 시스템은 **완전히 구현 완료**된 상태입니다. 
 
 #### **⚠️ 비공개 기업 솔루션**
 
-Caret → CodeCenter, DevAssist 등 **기업 맞춤형 브랜딩 자동화**는 Caretive의 **독점 기술 노하우**입니다.
+기업 맞춤형 브랜딩 자동화는 Caretive의 독점 기술 노하우로 **비공개 저장소**를 통해서만 제공됩니다.
 
 **기업용 브랜딩 서비스 문의:**
 - 📧 **이메일**: business@caretive.com
@@ -482,10 +516,10 @@ Caret → CodeCenter, DevAssist 등 **기업 맞춤형 브랜딩 자동화**는 
 - **📦 배포 지원**: 기업 전용 VSIX 패키징
 - **🔧 기술 지원**: 전담 엔지니어 기술 지원
 
-**지원 브랜드 예시:**
-- Samsung Dev, LG Code, NAVER Dev
-- 대학교: 서울대코드, KAIST코드, POSTECH코드  
-- 연구기관: ETRI코드, KISTI코드, AIRI코드
+**서비스 제공 방식:**
+- 비공개 저장소를 통한 기업별 맞춤 솔루션 제공
+- Caretive 기업 문의를 통한 개별 컨설팅 및 구축 지원
+- 보안이 보장된 독립적인 브랜딩 환경 구성
 
 ### **💡 일반 사용자 브랜딩**
 
@@ -566,7 +600,7 @@ const BrandingProvider: React.FC = ({ children }) => {
 **작성자**: Alpha (AI Assistant)  
 **검토자**: Luke (Project Owner)  
 **작성일**: 2025-08-16  
-**마지막 업데이트**: 2025-08-16 17:45 KST  
+**마지막 업데이트**: 2025-08-31 15:30 KST  
 **Phase**: Phase 6-2 (웹뷰 UI 차이점)  
 **TDD 상태**: ✅ 100% 커버리지 달성  
-**구현 상태**: ✅ 완전 구현 (독립적 브랜딩 시스템)
+**구현 상태**: ✅ 완전 구현 (자동화 브랜딩 시스템 + 빌드 통합)

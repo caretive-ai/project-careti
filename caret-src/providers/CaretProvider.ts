@@ -3,10 +3,11 @@
 
 import type { CaretModeSystem } from "@caret/shared/ModeSystem"
 import { 
-	getCurrentBrandName,
-	isBrandI18nEnabled,
+	detectCurrentBrandName,
+	getCurrentUserMode,
+	isModeI18nEnabled,
 	isBrandingEnabled,
-	getBrandDefaultLanguage 
+	getModeDefaultLanguage 
 } from "@caret/utils/brand-utils"
 
 /**
@@ -66,11 +67,11 @@ export class CaretProvider {
 	}
 
 	public getCurrentBrandName(): string {
-		return getCurrentBrandName()
+		return detectCurrentBrandName()
 	}
 
 	public isI18nEnabled(): boolean {
-		return isBrandI18nEnabled()
+		return isModeI18nEnabled()
 	}
 
 	public isBrandingEnabled(): boolean {
@@ -78,7 +79,7 @@ export class CaretProvider {
 	}
 
 	public getDefaultLanguage(): "ko" | "en" {
-		return getBrandDefaultLanguage()
+		return getModeDefaultLanguage()
 	}
 
 	// Static accessors for concise access (following HostProvider pattern)

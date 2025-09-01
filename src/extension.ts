@@ -6,10 +6,6 @@ import { setTimeout as setTimeoutPromise } from "node:timers/promises"
 import { DIFF_VIEW_URI_SCHEME } from "@hosts/vscode/VscodeDiffViewProvider"
 import { WebviewProviderType as WebviewProviderTypeEnum } from "@shared/proto/cline/ui"
 import * as vscode from "vscode"
-// CARET MODIFICATION: Import CaretProvider for global Caret functionality access
-import { CaretProvider } from "../caret-src/providers/CaretProvider"
-// CARET MODIFICATION: Import brand utilities from caret-src for global access
-import { getCurrentBrandName } from "../caret-src/utils/brand-utils"
 import { sendAccountButtonClickedEvent } from "./core/controller/ui/subscribeToAccountButtonClicked"
 import { sendChatButtonClickedEvent } from "./core/controller/ui/subscribeToChatButtonClicked"
 import { sendHistoryButtonClickedEvent } from "./core/controller/ui/subscribeToHistoryButtonClicked"
@@ -57,7 +53,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const sidebarWebview = (await initialize(context)) as VscodeWebviewProvider
 
-	Logger.log("Cline extension activated")
+	Logger.log("Caret extension activated")
 
 	const testModeWatchers = await initializeTestMode(sidebarWebview)
 	// Initialize test mode and add disposables to context
@@ -125,7 +121,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	)
 
 	const openClineInNewTab = async () => {
-		Logger.log("Opening Cline in new tab")
+		Logger.log("Opening Caret in new tab")
 		// (this example uses webviewProvider activation event which is necessary to deserialize cached webview, but since we use retainContextWhenHidden, we don't need to use that event)
 		// https://github.com/microsoft/vscode-extension-samples/blob/main/webview-sample/src/extension.ts
 		const tabWebview = HostProvider.get().createWebviewProvider(WebviewProviderType.TAB) as VscodeWebviewProvider
@@ -138,7 +134,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 		const targetCol = hasVisibleEditors ? Math.max(lastCol + 1, 1) : vscode.ViewColumn.Two
 
-		const panel = vscode.window.createWebviewPanel(VscodeWebviewProvider.TAB_PANEL_ID, "Cline", targetCol, {
+		const panel = vscode.window.createWebviewPanel(VscodeWebviewProvider.TAB_PANEL_ID, "Caret", targetCol, {
 			enableScripts: true,
 			retainContextWhenHidden: true,
 			localResourceRoots: [context.extensionUri],
@@ -237,7 +233,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			.then((module) => {
 				const devTaskCommands = module.registerTaskCommands(context, sidebarWebview.controller)
 				context.subscriptions.push(...devTaskCommands)
-				Logger.log("Cline dev task commands registered")
+				Logger.log("Caret dev task commands registered")
 			})
 			.catch((error) => {
 				Logger.log("Failed to register dev task commands: " + error)
@@ -333,40 +329,40 @@ export async function activate(context: vscode.ExtensionContext) {
 						)
 					}
 
-					// Add to Cline (Always available)
-					const addAction = new vscode.CodeAction("Add to Cline", vscode.CodeActionKind.QuickFix)
+					// Add to Caret (Always available)
+					const addAction = new vscode.CodeAction("Add to Caret", vscode.CodeActionKind.QuickFix)
 					addAction.command = {
 						command: "cline.addToChat",
-						title: "Add to Cline",
+						title: "Add to Caret",
 						arguments: [expandedRange, context.diagnostics],
 					}
 					actions.push(addAction)
 
-					// Explain with Cline (Always available)
-					const explainAction = new vscode.CodeAction("Explain with Cline", vscode.CodeActionKind.RefactorExtract) // Using a refactor kind
+					// Explain with Caret (Always available)
+					const explainAction = new vscode.CodeAction("Explain with Caret", vscode.CodeActionKind.RefactorExtract) // Using a refactor kind
 					explainAction.command = {
 						command: "cline.explainCode",
-						title: "Explain with Cline",
+						title: "Explain with Caret",
 						arguments: [expandedRange],
 					}
 					actions.push(explainAction)
 
-					// Improve with Cline (Always available)
-					const improveAction = new vscode.CodeAction("Improve with Cline", vscode.CodeActionKind.RefactorRewrite) // Using a refactor kind
+					// Improve with Caret (Always available)
+					const improveAction = new vscode.CodeAction("Improve with Caret", vscode.CodeActionKind.RefactorRewrite) // Using a refactor kind
 					improveAction.command = {
 						command: "cline.improveCode",
-						title: "Improve with Cline",
+						title: "Improve with Caret",
 						arguments: [expandedRange],
 					}
 					actions.push(improveAction)
 
-					// Fix with Cline (Only if diagnostics exist)
+					// Fix with Caret (Only if diagnostics exist)
 					if (context.diagnostics.length > 0) {
-						const fixAction = new vscode.CodeAction("Fix with Cline", vscode.CodeActionKind.QuickFix)
+						const fixAction = new vscode.CodeAction("Fix with Caret", vscode.CodeActionKind.QuickFix)
 						fixAction.isPreferred = true
 						fixAction.command = {
 							command: "cline.fixWithCline",
-							title: "Fix with Cline",
+							title: "Fix with Caret",
 							arguments: [expandedRange, context.diagnostics],
 						}
 						actions.push(fixAction)
@@ -463,10 +459,10 @@ export async function activate(context: vscode.ExtensionContext) {
 			// Send focus event
 			const clientId = activeWebview?.getClientId()
 			if (!clientId) {
-				console.error("FocusChatInput: Could not find or activate a Cline webview to focus.")
+				console.error("FocusChatInput: Could not find or activate a Caret webview to focus.")
 				HostProvider.window.showMessage({
 					type: ShowMessageType.ERROR,
-					message: "Could not activate Cline view. Please try opening it manually from the Activity Bar.",
+					message: "Could not activate Caret view. Please try opening it manually from the Activity Bar.",
 				})
 				return
 			}
@@ -479,7 +475,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	// Register the openWalkthrough command handler
 	context.subscriptions.push(
 		vscode.commands.registerCommand("cline.openWalkthrough", async () => {
-			await vscode.commands.executeCommand("workbench.action.openWalkthrough", "saoudrizwan.claude-dev#ClineWalkthrough")
+			await vscode.commands.executeCommand("workbench.action.openWalkthrough", "caretive.caret#CaretWalkthrough")
 			telemetryService.captureButtonClick("command_openWalkthrough")
 		}),
 	)
@@ -522,24 +518,11 @@ function setupHostProvider(context: ExtensionContext) {
 
 	const createWebview = (type: WebviewProviderType) => new VscodeWebviewProvider(context, type)
 	const createDiffView = () => new VscodeDiffViewProvider()
-	// CARET MODIFICATION: Use dynamic brand name from env utils
-	const brandName = getCurrentBrandName()
-	const outputChannel = vscode.window.createOutputChannel(brandName)
+	const outputChannel = vscode.window.createOutputChannel("Caret")
 	context.subscriptions.push(outputChannel)
 
-	// CARET MODIFICATION: Use package.json publisher and name for dynamic callback URI
-	const getCallbackUri = async () => {
-		const currentExtension = vscode.extensions.all.find((ext) => ext.isActive && ext.packageJSON.displayName === brandName)
-		const publisher = currentExtension?.packageJSON.publisher || "caretive"
-		const name = currentExtension?.packageJSON.name || "caret"
-		return `${vscode.env.uriScheme || "vscode"}://${publisher}.${name}`
-	}
+	const getCallbackUri = async () => `${vscode.env.uriScheme || "vscode"}://saoudrizwan.claude-dev`
 	HostProvider.initialize(createWebview, createDiffView, vscodeHostBridgeClient, outputChannel.appendLine, getCallbackUri)
-
-	// CARET MODIFICATION: Initialize CaretProvider with dynamic mode based on brand name
-	const isCaretBrand = brandName.toLowerCase() === "caret"
-	const initialMode = isCaretBrand ? "caret" : "cline"
-	CaretProvider.initialize(initialMode)
 }
 
 // This method is called when your extension is deactivated
@@ -549,7 +532,7 @@ export async function deactivate() {
 	// Clean up test mode
 	cleanupTestMode()
 
-	Logger.log("Cline extension deactivated")
+	Logger.log("Caret extension deactivated")
 }
 
 // TODO: Find a solution for automatically removing DEV related content from production builds.

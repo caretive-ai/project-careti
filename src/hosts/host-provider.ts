@@ -109,7 +109,7 @@ export class HostProvider {
 
 	// CARET MODIFICATION: Add CaretProvider access through HostProvider pattern
 	public static get caret() {
-		const { CaretProvider } = require("@/caret/providers/CaretProvider")
+		const { CaretProvider } = require("@caret/providers/CaretProvider")
 		return CaretProvider.get()
 	}
 }

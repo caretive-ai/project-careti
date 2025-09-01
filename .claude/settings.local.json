@@ -40,7 +40,8 @@
       "Read(/home/luke/**)",
       "Bash(git commit:*)",
       "Bash(git reset:*)",
-      "Bash(npm test:*)"
+      "Bash(npm test:*)",
+      "Bash(git rm:*)"
     ],
     "deny": [],
     "ask": []

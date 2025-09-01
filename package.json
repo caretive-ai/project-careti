@@ -1,7 +1,7 @@
 {
 	"name": "caret",
 	"displayName": "Caret",
-	"description": "An autonomous coding AI agent, forked from Cline. For context-aware pair programming, refactoring, and 'vibe coding' with customizable AI personas. Supports: 한국어, 日본語, 중문.",
+	"description": "An autonomous coding AI agent, forked from Caret. For context-aware pair programming, refactoring, and 'vibe coding' with customizable AI personas. Supports: 한국어, 日본語, 중문.",
 	"version": "0.1.3",
 	"icon": "assets/icons/icon.png",
 	"engines": {
@@ -377,7 +377,8 @@
 		"docs": "cd docs && npm run dev",
 		"docs:check-links": "cd docs && npm run check",
 		"docs:rename-file": "cd docs && npm run rename",
-		"report-issue": "node scripts/report-issue.js"
+		"report-issue": "node scripts/report-issue.js",
+		"package:release": "node scripts/package-release.js"
 	},
 	"lint-staged": {
 		"*": [
@@ -426,12 +427,10 @@
 		"@anthropic-ai/vertex-sdk": "^0.6.4",
 		"@aws-sdk/client-bedrock-runtime": "^3.840.0",
 		"@aws-sdk/credential-providers": "^3.840.0",
-		"@sap-ai-sdk/ai-api": "^1.17.0",
-		"@sap-ai-sdk/orchestration": "^1.17.0",
 		"@bufbuild/protobuf": "^2.2.5",
 		"@cerebras/cerebras_cloud_sdk": "^1.35.0",
 		"@google-cloud/vertexai": "^1.9.3",
-		"@google/genai": "^1.11.0",
+		"@google/genai": "^1.16.0",
 		"@grpc/grpc-js": "^1.9.15",
 		"@grpc/reflection": "^1.0.4",
 		"@mistralai/mistralai": "^1.5.0",
@@ -443,6 +442,8 @@
 		"@opentelemetry/sdk-trace-node": "^1.30.1",
 		"@opentelemetry/semantic-conventions": "^1.30.0",
 		"@playwright/test": "^1.53.2",
+		"@sap-ai-sdk/ai-api": "^1.17.0",
+		"@sap-ai-sdk/orchestration": "^1.17.0",
 		"@sentry/browser": "^9.12.0",
 		"@streamparser/json": "^0.0.22",
 		"@types/uuid": "^10.0.0",
@@ -479,7 +480,7 @@
 		"p-timeout": "^6.1.4",
 		"p-wait-for": "^5.0.2",
 		"pdf-parse": "^1.1.1",
-		"posthog-node": "^5.8.0",
+		"posthog-node": "^5.8.1",
 		"puppeteer-chromium-resolver": "^23.0.0",
 		"puppeteer-core": "^23.4.0",
 		"reconnecting-eventsource": "^1.6.4",

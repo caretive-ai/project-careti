@@ -47,6 +47,44 @@ AGENT MODE: "Collaborative development mode -
             분석과 실행을 결합하여 협력적으로 개발하세요"
 ```
 
+## 🔧 **모드 시스템 전역 관리 (CaretProvider)**
+
+### **전역 상태 관리 시스템**
+
+Caret은 **CaretProvider**를 통해 모드 상태를 전역적으로 관리합니다:
+
+```typescript
+// 전역 접근: HostProvider 패턴 확장
+HostProvider.caret.getCurrentMode()      // "caret" | "cline"
+HostProvider.caret.getCurrentBrandName() // "Cline" | "Caret" | "CodeCenter"
+HostProvider.caret.isI18nEnabled()       // i18n 활성화 여부
+```
+
+### **브랜드 vs 모드 분리**
+
+**브랜드 (Brand)**:
+- **목적**: 제품 식별 (`package.json`의 `displayName`)
+- **값**: `"Cline"`, `"Caret"`, `"CodeCenter"` 등
+- **역할**: 텍스트 치환, 브랜딩 요소 제어
+
+**모드 (Mode)**:
+- **목적**: 사용자 경험 설정 (사용자가 선택)
+- **값**: `"caret"` 모드 (한국어 i18n), `"cline"` 모드 (영어 원본)
+- **역할**: UI 언어, 기능 활성화/비활성화
+
+### **JSON 시스템 프롬프트와의 연동**
+
+```typescript
+// JSON 섹션에서 동적 모드 인식
+const currentMode = HostProvider.caret.getCurrentMode()
+const isI18nEnabled = HostProvider.caret.isI18nEnabled()
+
+// 모드별 도구 제한 적용
+if (tool.mode_restriction && tool.mode_restriction !== currentMode) {
+  // 해당 모드에서 도구 비활성화
+}
+```
+
 ## 🏗️ **기술 아키텍처: 어댑터 패턴**
 
 ### **핵심 설계 원칙**

@@ -1,66 +1,62 @@
-# Default
-.vscode/**
-.vscode-test/**
-out/
-dist-standalone/
-node_modules/
+# 🚨 WHITELIST APPROACH: Exclude everything, then include only needed files
+# This prevents accidentally including merge project subdirectories
+**
+
+# ✅ REQUIRED FILES - Core extension files
+!package.json
+!README.md
+!LICENSE
+!CHANGELOG.md
+
+# ✅ REQUIRED DIRECTORIES - Built extension code
+!dist/**
+!webview-ui/build/**
+
+# ✅ REQUIRED ASSETS - All assets and themes  
+!assets/**
+!src/integrations/theme/default-themes/**
+
+# ✅ REQUIRED DEPENDENCIES - Codicons for VS Code
+!node_modules/@vscode/codicons/dist/codicon.css
+!node_modules/@vscode/codicons/dist/codicon.ttf
+
+# ❌ EXCLUDE merge project subdirectories
+caret-main/**
+caret-compare/**
+caret-b2b/**
+caret-docs/**
+cline-latest/**
+
+# ❌ EXCLUDE development files
 src/**
-standalone/**
-.gitignore
-.yarnrc
-esbuild.js
-vsc-extension-quickstart.md
-tsconfig*.json
-**/.eslintrc.json
-**/*.map
-**/*.ts
-**/.vscode-test.*
-eslint-rules/**
+webview-ui/src/**
+webview-ui/public/**
+webview-ui/node_modules/**
+scripts/**
+.vscode/**
 .github/**
 .husky/**
+node_modules/**
+!node_modules/@vscode/codicons/dist/codicon.css
+!node_modules/@vscode/codicons/dist/codicon.ttf
 
-# Custom
-**/demo.gif
+# ❌ EXCLUDE config and build files
+.gitignore
 .nvmrc
-.gitattributes
 .prettierignore
-.husky/
-.github/
-eslint-rules/
-old_docs/
-evals/
 .changie.yaml
 .codespellrc
 .mocharc.json
 buf.yaml
-.changeset/
-.clinerules/
-
-# Ignore all webview-ui files except the build directory (https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/frameworks/hello-world-react-cra/.vscodeignore)
-webview-ui/src/**
-webview-ui/public/**
-webview-ui/index.html
-webview-ui/README.md
-webview-ui/package.json
-webview-ui/package-lock.json
-webview-ui/node_modules/**
-**/.gitignore
-
-# Ignore docs
-docs/**
-old_docs/**
-
-# Fix issue where codicons don't get packaged (https://github.com/microsoft/vscode-extension-samples/issues/692)
-!node_modules/@vscode/codicons/dist/codicon.css
-!node_modules/@vscode/codicons/dist/codicon.ttf
-
-# Include default themes JSON files used in getTheme
-!src/integrations/theme/default-themes/**
-
-# Include icons
-!assets/icons/**
-
-# Ignore E2E build files
+.changeset/**
+.clinerules/**
+tsconfig*.json
+esbuild.mjs
+vsc-extension-quickstart.md
+biome.jsonc
+**/*.map
 e2e-build.mjs
 e2e.vsix
-test-results/
+test-results/**
+out/**
+dist-standalone/**

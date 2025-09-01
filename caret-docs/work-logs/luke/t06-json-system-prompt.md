@@ -47,6 +47,30 @@ caret-src/core/prompts/
 └── sections/                         # 18개 JSON 섹션
 ```
 
+### 모드 시스템 연동 (CaretProvider)
+
+**CaretProvider 전역 상태 관리**:
+- **위치**: `caret-src/providers/CaretProvider.ts`
+- **역할**: Caret 시스템의 전역 모드 상태 저장 및 관리
+- **접근**: `HostProvider.caret.*` 를 통한 전역 접근
+
+**주요 기능**:
+```typescript
+// 사용자 모드 관리
+HostProvider.caret.getCurrentMode()    // "caret" or "cline"  
+HostProvider.caret.setCurrentMode()    // 모드 변경
+
+// 브랜드 정보 접근
+HostProvider.caret.getCurrentBrandName() // "Cline", "Caret", "CodeCenter"
+HostProvider.caret.isI18nEnabled()       // i18n 활성화 여부
+HostProvider.caret.isBrandingEnabled()   // 브랜딩 활성화 여부
+```
+
+**JSON 프롬프트 시스템과의 연동**:
+- JSON 섹션에서 `HostProvider.caret.*` 을 통해 동적 모드 인식
+- 모드별 도구 제한 (`mode_restriction`) 적용
+- 브랜드별 시스템 정보 동적 생성
+
 ## 차별화 포인트
 - **토큰 효율성**: 15% 향상으로 API 비용 절약
 - **완전 독립성**: Cline 707라인 하드코딩과 0% 의존성

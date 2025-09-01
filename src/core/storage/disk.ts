@@ -8,7 +8,6 @@ import fs from "fs/promises"
 import os from "os"
 import * as path from "path"
 import * as vscode from "vscode"
-import { getCurrentBrandName } from "../../../caret-src/utils/brand-utils"
 
 export const GlobalFileNames = {
 	apiConversationHistory: "api_conversation_history.json",
@@ -72,39 +71,33 @@ export async function ensureTaskDirectoryExists(context: vscode.ExtensionContext
 
 export async function ensureRulesDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
-	// CARET MODIFICATION: Use dynamic brand name from package.json
-	const brandName = getCurrentBrandName()
-	const clineRulesDir = path.join(userDocumentsPath, brandName, "Rules")
+	const clineRulesDir = path.join(userDocumentsPath, "Caret", "Rules")
 	try {
 		await fs.mkdir(clineRulesDir, { recursive: true })
 	} catch (_error) {
-		return path.join(os.homedir(), "Documents", brandName, "Rules") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
+		return path.join(os.homedir(), "Documents", "Caret", "Rules") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
 	}
 	return clineRulesDir
 }
 
 export async function ensureWorkflowsDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
-	// CARET MODIFICATION: Use dynamic brand name from package.json
-	const brandName = getCurrentBrandName()
-	const clineWorkflowsDir = path.join(userDocumentsPath, brandName, "Workflows")
+	const clineWorkflowsDir = path.join(userDocumentsPath, "Caret", "Workflows")
 	try {
 		await fs.mkdir(clineWorkflowsDir, { recursive: true })
 	} catch (_error) {
-		return path.join(os.homedir(), "Documents", brandName, "Workflows") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
+		return path.join(os.homedir(), "Documents", "Caret", "Workflows") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
 	}
 	return clineWorkflowsDir
 }
 
 export async function ensureMcpServersDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
-	// CARET MODIFICATION: Use dynamic brand name from package.json
-	const brandName = getCurrentBrandName()
-	const mcpServersDir = path.join(userDocumentsPath, brandName, "MCP")
+	const mcpServersDir = path.join(userDocumentsPath, "Caret", "MCP")
 	try {
 		await fs.mkdir(mcpServersDir, { recursive: true })
 	} catch (_error) {
-		return `~/Documents/${brandName}/MCP` // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine since this path is only ever used in the system prompt
+		return "~/Documents/Caret/MCP" // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine since this path is only ever used in the system prompt
 	}
 	return mcpServersDir
 }

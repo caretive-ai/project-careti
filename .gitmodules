@@ -1,3 +1,6 @@
 [submodule "cline-latest"]
 	path = cline-latest
 	url = https://github.com/cline/cline.git
+[submodule "caret-b2b"]
+	path = caret-b2b
+	url = https://github.com/aicoding-caret/caret-b2b

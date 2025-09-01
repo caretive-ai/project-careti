@@ -6,6 +6,10 @@ import { setTimeout as setTimeoutPromise } from "node:timers/promises"
 import { DIFF_VIEW_URI_SCHEME } from "@hosts/vscode/VscodeDiffViewProvider"
 import { WebviewProviderType as WebviewProviderTypeEnum } from "@shared/proto/cline/ui"
 import * as vscode from "vscode"
+// CARET MODIFICATION: Import CaretProvider for global Caret functionality access
+import { CaretProvider } from "../caret-src/providers/CaretProvider"
+// CARET MODIFICATION: Import brand utilities from caret-src for global access
+import { getCurrentBrandName } from "../caret-src/utils/brand-utils"
 import { sendAccountButtonClickedEvent } from "./core/controller/ui/subscribeToAccountButtonClicked"
 import { sendChatButtonClickedEvent } from "./core/controller/ui/subscribeToChatButtonClicked"
 import { sendHistoryButtonClickedEvent } from "./core/controller/ui/subscribeToHistoryButtonClicked"
@@ -518,11 +522,24 @@ function setupHostProvider(context: ExtensionContext) {
 
 	const createWebview = (type: WebviewProviderType) => new VscodeWebviewProvider(context, type)
 	const createDiffView = () => new VscodeDiffViewProvider()
-	const outputChannel = vscode.window.createOutputChannel("Cline")
+	// CARET MODIFICATION: Use dynamic brand name from env utils
+	const brandName = getCurrentBrandName()
+	const outputChannel = vscode.window.createOutputChannel(brandName)
 	context.subscriptions.push(outputChannel)
 
-	const getCallbackUri = async () => `${vscode.env.uriScheme || "vscode"}://saoudrizwan.claude-dev`
+	// CARET MODIFICATION: Use package.json publisher and name for dynamic callback URI
+	const getCallbackUri = async () => {
+		const currentExtension = vscode.extensions.all.find((ext) => ext.isActive && ext.packageJSON.displayName === brandName)
+		const publisher = currentExtension?.packageJSON.publisher || "caretive"
+		const name = currentExtension?.packageJSON.name || "caret"
+		return `${vscode.env.uriScheme || "vscode"}://${publisher}.${name}`
+	}
 	HostProvider.initialize(createWebview, createDiffView, vscodeHostBridgeClient, outputChannel.appendLine, getCallbackUri)
+
+	// CARET MODIFICATION: Initialize CaretProvider with dynamic mode based on brand name
+	const isCaretBrand = brandName.toLowerCase() === "caret"
+	const initialMode = isCaretBrand ? "caret" : "cline"
+	CaretProvider.initialize(initialMode)
 }
 
 // This method is called when your extension is deactivated

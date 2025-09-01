@@ -619,6 +619,8 @@ export class Controller {
 		const customPrompt = this.stateManager.getGlobalStateKey("customPrompt")
 		const mcpResponsesCollapsed = this.stateManager.getGlobalStateKey("mcpResponsesCollapsed")
 		const terminalOutputLineLimit = this.stateManager.getGlobalStateKey("terminalOutputLineLimit")
+		// CARET MODIFICATION: Add caretModeSystem to state transmission
+		const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem")
 		const localClineRulesToggles = this.stateManager.getWorkspaceStateKey("localClineRulesToggles")
 		const localWindsurfRulesToggles = this.stateManager.getWorkspaceStateKey("localWindsurfRulesToggles")
 		const localCursorRulesToggles = this.stateManager.getWorkspaceStateKey("localCursorRulesToggles")
@@ -681,6 +683,8 @@ export class Controller {
 			mcpResponsesCollapsed,
 			terminalOutputLineLimit,
 			customPrompt,
+			// CARET MODIFICATION: Include modeSystem in state transmission
+			modeSystem,
 		}
 	}
 

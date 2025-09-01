@@ -1,12 +1,13 @@
 // CARET MODIFICATION: Copy-and-Modify from caret-main - General Settings Section with i18n
 import { VSCodeCheckbox, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import React from "react"
-import PreferredLanguageSetting from "@/components/settings/PreferredLanguageSetting"
 import Section from "@/components/settings/Section"
 import { updateSetting } from "@/components/settings/utils/settingsHandlers"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { t } from "../utils/i18n"
-import CaretUILanguageSetting from "./CaretUILanguageSetting"
+// CARET MODIFICATION: 통합 언어 설정 컴포넌트와 전역 브랜드 모드 토글
+import ModeSystemToggle from "./ModeSystemToggle"
+import UnifiedLanguageSetting from "./UnifiedLanguageSetting"
 
 interface CaretGeneralSettingsSectionProps {
 	renderSectionHeader: (tabId: string) => JSX.Element | null
@@ -21,14 +22,14 @@ const CaretGeneralSettingsSection: React.FC<CaretGeneralSettingsSectionProps> = 
 			{renderSectionHeader("general")}
 
 			<Section>
-				{/* CARET MODIFICATION: UI Language Setting */}
+				{/* CARET MODIFICATION: 전역 브랜드 모드 토글 - 최상단에 배치 */}
 				<div className="mb-6">
-					<CaretUILanguageSetting />
+					<ModeSystemToggle />
 				</div>
 
-				{/* Original Preferred Language Setting (LLM messages) */}
+				{/* CARET MODIFICATION: 통합 언어 설정 - LLM과 UI 언어 자동 동기화 */}
 				<div className="mb-6">
-					<PreferredLanguageSetting />
+					<UnifiedLanguageSetting />
 				</div>
 
 				{/* CARET MODIFICATION: Telemetry setting with i18n */}

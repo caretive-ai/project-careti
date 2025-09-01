@@ -146,6 +146,8 @@ export interface GlobalState {
 	planModeVercelAiGatewayModelInfo: ModelInfo | undefined
 	actModeVercelAiGatewayModelId: string | undefined
 	actModeVercelAiGatewayModelInfo: ModelInfo | undefined
+	// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 (Caret/Cline 구분)
+	caretModeSystem: "caret" | "cline" | undefined
 }
 
 export interface Secrets {

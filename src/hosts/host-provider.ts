@@ -106,6 +106,12 @@ export class HostProvider {
 	public static get diff() {
 		return HostProvider.get().hostBridge.diffClient
 	}
+
+	// CARET MODIFICATION: Add CaretProvider access through HostProvider pattern
+	public static get caret() {
+		const { CaretProvider } = require("@/caret/providers/CaretProvider")
+		return CaretProvider.get()
+	}
 }
 
 /**

@@ -50,11 +50,18 @@
 			],
 			"@utils/*": [
 				"src/utils/*"
+			],
+			"@caret/*": [
+				"caret-src/*"
+			],
+			"@/caret-src/*": [
+				"caret-src/*"
 			]
 		}
 	},
 	"include": [
-		"src/**/*"
+		"src/**/*",
+		"caret-src/**/*"
 	],
 	"exclude": [
 		"node_modules",

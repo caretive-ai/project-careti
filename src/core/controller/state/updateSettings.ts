@@ -176,6 +176,14 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			controller.stateManager.setGlobalState("customPrompt", value)
 		}
 
+		// CARET MODIFICATION: Update mode system setting
+		if (request.modeSystem !== undefined) {
+			const previousMode = controller.stateManager.getGlobalStateKey("caretModeSystem")
+			const modeSystem = request.modeSystem === "caret" ? "caret" : "cline"
+			controller.stateManager.setGlobalState("caretModeSystem", modeSystem)
+			console.log(`[BACKEND] caretModeSystem changed: ${previousMode} -> ${modeSystem}`)
+		}
+
 		// Post updated state to webview
 		await controller.postStateToWebview()
 

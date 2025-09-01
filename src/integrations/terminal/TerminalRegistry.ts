@@ -1,4 +1,5 @@
 import * as vscode from "vscode"
+import { getCurrentBrandName } from "../../../caret-src/utils/brand-utils"
 
 export interface TerminalInfo {
 	terminal: vscode.Terminal
@@ -21,28 +22,25 @@ export class TerminalRegistry {
 	private static nextTerminalId = 1
 
 	static createTerminal(cwd?: string | vscode.Uri | undefined, shellPath?: string): TerminalInfo {
+		// CARET MODIFICATION: Use package.json values for dynamic branding
+		const brandName = getCurrentBrandName()
+
+		// Get current extension - this extension itself
+		const currentExtension = vscode.extensions.all.find((ext) => ext.isActive && ext.packageJSON.displayName === brandName)
+
 		const terminalOptions: vscode.TerminalOptions = {
 			cwd,
-			name: "Caret",
-			// CARET MODIFICATION: Use custom Caret shell icon instead of default VSCode robot icon
+			name: brandName, // Use package.json displayName
+			// CARET MODIFICATION: Use custom shell icon with dynamic extension lookup
 			iconPath: (() => {
 				return {
-					light: vscode.Uri.joinPath(
-						vscode.extensions.getExtension("caretive.caret")!.extensionUri,
-						"assets",
-						"icons",
-						"robot_panel_light.png",
-					),
-					dark: vscode.Uri.joinPath(
-						vscode.extensions.getExtension("caretive.caret")!.extensionUri,
-						"assets",
-						"icons",
-						"robot_panel_dark.png",
-					),
+					light: vscode.Uri.joinPath(currentExtension!.extensionUri, "assets", "icons", "robot_panel_light.png"),
+					dark: vscode.Uri.joinPath(currentExtension!.extensionUri, "assets", "icons", "robot_panel_dark.png"),
 				}
 			})(),
 			env: {
-				CLINE_ACTIVE: "true",
+				// Use brand-aware environment variable
+				[`${brandName.toUpperCase()}_ACTIVE`]: "true",
 			},
 		}
 

@@ -1,18 +1,31 @@
 import { ApiHandler } from "@core/api"
+import { HostProvider } from "@/hosts/host-provider"
 import { showSystemNotification } from "@/integrations/notifications"
 import { ClineApiReqCancelReason, ClineApiReqInfo } from "@/shared/ExtensionMessage"
 import { calculateApiCostAnthropic } from "@/utils/cost"
 import { MessageStateHandler } from "./message-state"
 
-export const showNotificationForApprovalIfAutoApprovalEnabled = (
+export const showNotificationForApprovalIfAutoApprovalEnabled = async (
 	message: string,
 	autoApprovalSettingsEnabled: boolean,
 	notificationsEnabled: boolean,
 ) => {
 	if (autoApprovalSettingsEnabled && notificationsEnabled) {
+		// CARET MODIFICATION: Universal backend message processing using package.json displayName
+		const { processUniversalBackendMessage } = await import("../../../caret-src/i18n/backend-message-filter")
+
+		let processedMessage = message
+		try {
+			// Process as OS notification (enables full i18n if in Caret mode)
+			processedMessage = processUniversalBackendMessage(message, true)
+		} catch (error) {
+			console.warn("Failed to process universal backend message:", error)
+			// Fallback to original message
+		}
+
 		showSystemNotification({
 			subtitle: "Approval Required",
-			message,
+			message: processedMessage,
 		})
 	}
 }

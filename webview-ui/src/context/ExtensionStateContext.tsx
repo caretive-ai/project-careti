@@ -1,6 +1,8 @@
 import type React from "react"
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import "../../../src/shared/webview/types"
+// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 타입과 유틸리티 임포트 (caret-src에서)
+import { type CaretModeSystem, DEFAULT_CARET_MODE_SYSTEM } from "@caret/shared/ModeSystem"
 import { DEFAULT_AUTO_APPROVAL_SETTINGS } from "@shared/AutoApprovalSettings"
 import { findLastIndex } from "@shared/array"
 import { DEFAULT_BROWSER_SETTINGS } from "@shared/BrowserSettings"
@@ -56,6 +58,8 @@ interface ExtensionStateContextType extends ExtensionState {
 	// Setters
 	setShowAnnouncement: (value: boolean) => void
 	setShouldShowAnnouncement: (value: boolean) => void
+	// CARET MODIFICATION: 전역 브랜드 모드 플래그 설정 함수
+	setModeSystem: (modeSystem: CaretModeSystem) => void
 	setMcpServers: (value: McpServer[]) => void
 	setRequestyModels: (value: Record<string, ModelInfo>) => void
 	setGroqModels: (value: Record<string, ModelInfo>) => void
@@ -179,6 +183,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		preferredLanguage: "English",
 		openaiReasoningEffort: "medium",
 		mode: "act",
+		// CARET MODIFICATION: Caret 전역 브랜드 모드 플래그 기본값 - Caret 모드로 시작
+		modeSystem: "caret" as CaretModeSystem,
 		platform: DEFAULT_PLATFORM,
 		telemetrySetting: "unset",
 		distinctId: "",
@@ -659,6 +665,44 @@ export const ExtensionStateContextProvider: React.FC<{
 				...prevState,
 				shouldShowAnnouncement: value,
 			})),
+		// CARET MODIFICATION: 전역 브랜드 모드 플래그 설정 함수 - 백엔드/프론트엔드 로깅 포함
+		setModeSystem: (modeSystem: CaretModeSystem) => {
+			const previousMode = state.modeSystem
+			const timestamp = new Date().toISOString()
+
+			// 백엔드 전역 변수 로깅
+			console.log("[GLOBAL-BACKEND] modeSystem state:", {
+				before: previousMode,
+				after: modeSystem,
+				timestamp,
+			})
+			console.log(`[BACKEND] modeSystem changed: ${previousMode} -> ${modeSystem}`)
+
+			// 프론트엔드 전역 변수 로깅
+			console.debug("[GLOBAL-FRONTEND] modeSystem state:", {
+				before: previousMode,
+				after: modeSystem,
+				timestamp,
+			})
+			console.debug(`[FRONTEND] Global modeSystem updated: ${modeSystem}`)
+
+			// 상태 업데이트
+			setState((prevState) => ({
+				...prevState,
+				modeSystem,
+			}))
+
+			// CARET MODIFICATION: 백엔드 API 호출 - StateServiceClient.updateSettings
+			try {
+				// 백엔드에 modeSystem 변경 전송
+				StateServiceClient.updateSettings({
+					modeSystem: modeSystem,
+				})
+				console.log(`[API] StateServiceClient.updateSettings called with modeSystem: ${modeSystem}`)
+			} catch (error) {
+				console.error("[API] Failed to update modeSystem via StateServiceClient:", error)
+			}
+		},
 		setMcpServers: (mcpServers: McpServer[]) => setMcpServers(mcpServers),
 		setRequestyModels: (models: Record<string, ModelInfo>) => setRequestyModels(models),
 		setGroqModels: (models: Record<string, ModelInfo>) => setGroqModels(models),

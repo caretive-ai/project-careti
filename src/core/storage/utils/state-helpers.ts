@@ -203,6 +203,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 	const preferredLanguage = context.globalState.get("preferredLanguage") as string | undefined
 	const focusChainSettings = context.globalState.get("focusChainSettings") as FocusChainSettings | undefined
 	const focusChainFeatureFlagEnabled = context.globalState.get("focusChainFeatureFlagEnabled") as boolean | undefined
+	// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 (Caret/Cline 구분)
+	const modeSystem = context.globalState.get("caretModeSystem") as "caret" | "cline" | undefined
 
 	const mcpMarketplaceCatalog = context.globalState.get("mcpMarketplaceCatalog") as GlobalState["mcpMarketplaceCatalog"]
 	const qwenCodeOauthPath = context.globalState.get("qwenCodeOauthPath") as GlobalState["qwenCodeOauthPath"]
@@ -439,6 +441,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		mcpMarketplaceCatalog,
 		qwenCodeOauthPath,
 		customPrompt,
+		// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 (Caret/Cline 구분)
+		caretModeSystem: modeSystem || "caret",
 	}
 }
 

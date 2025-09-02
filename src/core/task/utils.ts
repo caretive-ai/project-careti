@@ -4,27 +4,15 @@ import { ClineApiReqCancelReason, ClineApiReqInfo } from "@/shared/ExtensionMess
 import { calculateApiCostAnthropic } from "@/utils/cost"
 import { MessageStateHandler } from "./message-state"
 
-export const showNotificationForApprovalIfAutoApprovalEnabled = async (
+export const showNotificationForApprovalIfAutoApprovalEnabled = (
 	message: string,
 	autoApprovalSettingsEnabled: boolean,
 	notificationsEnabled: boolean,
 ) => {
 	if (autoApprovalSettingsEnabled && notificationsEnabled) {
-		// CARET MODIFICATION: Universal backend message processing for OS notifications
-		const { processUniversalBackendMessage } = await import("../../../caret-src/i18n/backend-message-filter")
-
-		let processedMessage = message
-		try {
-			// Process as OS notification (enables brand replacement)
-			processedMessage = processUniversalBackendMessage(message, true)
-		} catch (error) {
-			console.warn("Failed to process universal backend message:", error)
-			// Fallback to original message
-		}
-
 		showSystemNotification({
 			subtitle: "Approval Required",
-			message: processedMessage,
+			message,
 		})
 	}
 }

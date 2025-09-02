@@ -60,8 +60,6 @@ export function getCurrentBrandName(): string {
 	return detectCurrentBrandName()
 }
 
-// Import shared brand replacement function
-export { replaceBrandInMessage } from "../shared/brand-utils"
 
 /**
  * Check if current mode supports i18n features

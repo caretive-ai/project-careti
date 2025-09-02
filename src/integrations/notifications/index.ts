@@ -64,18 +64,38 @@ async function showLinuxNotification(options: NotificationOptions): Promise<void
 }
 
 export async function showSystemNotification(options: NotificationOptions): Promise<void> {
+	// CARET MODIFICATION: Brand replacement in OS notifications
+	const { Logger } = require("@/services/logging/Logger")
+
+	// Simple brand replacement function
+	const replaceBrand = (text: string | undefined): string | undefined => {
+		if (!text) return text
+		return text.replace(/Cline/g, "Caret").replace(/cline/g, "caret").replace(/CLINE/g, "CARET")
+	}
+
 	try {
-		const { title = "Cline", message } = options
+		// Apply brand replacement to all text
+		const processedOptions = {
+			title: replaceBrand(options.title) || "Caret",
+			subtitle: replaceBrand(options.subtitle),
+			message: replaceBrand(options.message) || options.message,
+		}
+
+		// Log for verification
+		Logger.info(`[NOTIFICATION] Original: "${options.message}"`)
+		Logger.info(`[NOTIFICATION] Processed: "${processedOptions.message}"`)
+
+		const { title = "Caret", message } = processedOptions
 
 		if (!message) {
 			throw new Error("Message is required")
 		}
 
 		const escapedOptions = {
-			...options,
+			...processedOptions,
 			title: title.replace(/"/g, '\\"'),
 			message: message.replace(/"/g, '\\"'),
-			subtitle: options.subtitle?.replace(/"/g, '\\"') || "",
+			subtitle: processedOptions.subtitle?.replace(/"/g, '\\"') || "",
 		}
 
 		switch (platform()) {

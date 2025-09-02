@@ -1,0 +1,28 @@
+한글 폴더(caret-docs/development/)에만 있는 파일들:
+
+1. caret-docs/development/ai-message-flow-guide.mdx
+2. caret-docs/development/backend-i18n-system.mdx
+3. caret-docs/development/button-system-architecture-guide.md
+4. caret-docs/development/caret-architecture-and-implementation-guide.mdx
+5. caret-docs/development/caret-rules.ko.md
+6. caret-docs/development/checkpoint-architecture.mdx
+7. caret-docs/development/component-architecture-principles.mdx
+8. caret-docs/development/documentation-guide.mdx
+9. caret-docs/development/extension-architecture.mmd
+10. caret-docs/development/file-storage-and-image-loading-guide.mdx
+11. caret-docs/development/frontend-backend-interaction-patterns.mdx
+12. caret-docs/development/index.mdx
+13. caret-docs/development/json-comment-conventions.mdx
+14. caret-docs/development/korean-docs-cleanup.md
+15. caret-docs/development/link-management-guide.mdx
+16. caret-docs/development/locale.mdx
+17. caret-docs/development/logging.mdx
+18. caret-docs/development/message-processing-architecture.mdx
+19. caret-docs/development/new-developer-guide.mdx
+20. caret-docs/development/support-model-list.mdx
+21. caret-docs/development/system-prompt-implementation.mdx
+22. caret-docs/development/ui-to-storage-flow.mdx
+23. caret-docs/development/utilities.mdx
+24. caret-docs/development/webview-extension-communication.mdx
+
+총 24개 파일

@@ -12,17 +12,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Critical Caret-Specific Rules
 
-### 🚨 File Modification Protocol
+### 🚨 File Modification Protocol (.cline backup deprecated - use CARET MODIFICATION only)
 Before modifying ANY Cline original file:
 1. **Check if it's protected**: `src/`, `webview-ui/`, `proto/`, `scripts/`, `evals/`, `docs/`, `locales/`, root configs
-2. **Create backup**: `cp filename.ts filename.ts.cline` (NEVER overwrite existing .cline files)
-3. **Add comment**: `// CARET MODIFICATION: [clear description]`
-4. **Minimal changes**: Maximum 1-3 lines per file
-5. **Complete replacement**: Never comment out old code
+2. **Add comment**: `// CARET MODIFICATION: [clear description]`
+3. **Minimal changes**: Maximum 1-3 lines per file
+4. **Complete replacement**: Never comment out old code
+5. **Verify compilation**: `npm run compile` must pass
 
-### Architecture Levels
+### Architecture Levels (L1→L2→L3 Framework)
 - **Level 1 (Preferred)**: Independent modules in `caret-src/`, `caret-docs/` (full freedom)
-- **Level 2 (Conditional)**: Minimal Cline modifications with backup + comment
+- **Level 2 (Conditional)**: Minimal Cline modifications with CARET MODIFICATION comment
 - **Level 3 (Last Resort)**: Direct modification with complete documentation
 
 ### Caret Extensions
@@ -285,14 +285,28 @@ npm run test:all      # Full verification
 ```
 
 ### Rule Management System
-- **AI Reference**: `.caretrules/caret-rules.json` (compact, English)
-- **Human Reference**: `caret-docs/development/caret-rules.ko.md` (detailed, Korean)
-- **Auto-Sync**: AI automatically syncs JSON ↔ Korean docs when rules change
-- **No External Sync**: Cursor/Windsurf excluded (complexity prevention)
+- **AI Reference**: `.caretrules/` directory (workflows and rules)
+- **Workflows**: `.caretrules/workflows/*.md` (English, AI procedures)
+- **Korean Dev Docs**: `caret-docs/development/*.mdx` (Korean architecture guides)
+- **English Workflows**: `caret-docs/development-en/*.md` (English workflows)
+- **Note**: Korean folder has MDX architecture docs, English folder has MD workflows
 
-### Emergency Backup Restoration
-```bash
-# Restore from backup if needed
-cp filename.ts.cline filename.ts
-npm run compile  # Verify restoration works
-```
+### Available Workflows and Documentation
+
+#### Workflows (`.caretrules/workflows/`)
+- **Main**: `ai-work-index.md`, `ai-work-protocol.md`, `caret-development.md`
+- **Architecture**: `merge-strategy.md`, `architecture-guide.md`
+- **Development**: `cline-modification.md`, `new-component.md`, `testing-work.md`
+- **Atoms**: `tdd-cycle.md`, `naming-conventions.md`, `storage-patterns.md`
+
+#### Korean Dev Docs (`caret-docs/development/`)
+- **Architecture**: `caret-architecture-and-implementation-guide.mdx`
+- **Components**: `component-architecture-principles.mdx`
+- **Frontend-Backend**: `frontend-backend-interaction-patterns.mdx`
+- **AI Flow**: `ai-message-flow-guide.mdx`
+- **Testing**: `testing-guide.mdx`
+
+#### Utility Scripts (`caret-scripts/`)
+- `ai-semantic-analyzer.js` - AI-powered semantic comparison
+- `universal-semantic-analyzer.js` - Format comparison tool
+- `token-efficiency-analyzer.js` - Token usage analysis

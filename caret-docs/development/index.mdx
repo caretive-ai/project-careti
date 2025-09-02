@@ -24,6 +24,21 @@ Caret의 webview와 Extension Host 간 통신에는 **검증된 표준 패턴**�
 
 자세한 패턴은 [Frontend-Backend 상호작용 가이드](./frontend-backend-interaction-patterns.mdx)를 참조하세요.
 
+### 🛠️ 개발 지원 스크립트
+
+프로젝트 루트의 `caret-scripts/` 폴더에는 개발 과정에서 유용한 도구들이 체계적으로 구성되어 있습니다:
+
+#### 📊 분석 유틸리티 (`utils/`)
+- **`semantic-equivalence-checker.js`** - Markdown/JSON 워크플로우 간 의미론적 동등성 검증
+- **`token-efficiency-analyzer.js`** - 문서 포맷 간 토큰 효율성 분석  
+- **`universal-semantic-analyzer.js`** - 범용 의미론적 동등성 분석기 (특허 기술)
+
+#### 🔧 개발 도구 (`tools/`)
+- **`caret-cline-comparison.js`** - Caret vs Cline 기능 커버리지 비교
+- **`package-release.js`** - 패키지 빌드 및 릴리스 관리
+
+사용법은 각 스크립트 파일의 주석을 참조하거나 [Caret 규칙 가이드](./caret-rules.ko.md)를 확인하세요.
+
 ## 📝 **Caret 개발 원칙**
 
 ### **🏷️ 코드 수정 표준 (필수 준수)**

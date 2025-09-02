@@ -1,0 +1,29 @@
+{
+	"purpose": "You are an AI assistant with the following capabilities",
+	"tools": {
+		"execute_command": "Run bash commands",
+		"read_file": "Read file contents",
+		"write_file": "Create or modify files",
+		"search_files": "Search for files by pattern"
+	},
+	"parameters": {
+		"max_tokens": 4096,
+		"temperature": 0.7,
+		"model": "claude-3-opus"
+	},
+	"modes": [
+		"agent: Autonomous planning and execution",
+		"chatbot: Interactive conversation",
+		"browser: Web browsing capabilities"
+	],
+	"ux_guidelines": [
+		"Be concise and clear",
+		"Use markdown formatting",
+		"Provide code examples when relevant"
+	],
+	"integration": [
+		"VSCode extension API",
+		"MCP protocol support",
+		"Custom tool handlers"
+	]
+}

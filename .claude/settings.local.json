@@ -41,7 +41,20 @@
       "Bash(git commit:*)",
       "Bash(git reset:*)",
       "Bash(npm test:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(find:*)",
+      "Read(D:\\dev\\caret/**)",
+      "Read(D:\\dev\\caret/**)",
+      "Read(D:\\dev\\caret/**)",
+      "Read(D:\\dev\\caret\\caret-main/**)",
+      "Read(D:\\dev\\caret\\caret-main\\caret-docs\\reports\\json-caret/**)",
+      "Read(D:\\dev\\caret\\caret-main\\caret-src\\__tests__/**)",
+      "Read(D:\\dev\\caret\\caret-main/**)",
+      "Read(D:\\dev\\caret\\caret-main\\caret-src\\__tests__/**)",
+      "Read(D:\\dev\\caret\\caret-main/**)",
+      "Read(D:\\dev\\caret\\caret-main/**)",
+      "Read(D:\\dev\\caret\\caret-main\\caret-docs\\reports\\json-caret/**)",
+      "Read(D:\\dev\\caret\\caret-main\\caret-docs\\reports\\json-caret/**)"
     ],
     "deny": [],
     "ask": []

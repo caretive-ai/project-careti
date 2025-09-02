@@ -1,0 +1,31 @@
+{
+  "backup_protocol": {
+    "core_principle": "Never modify Cline original files without backup + comment",
+    "protected_dirs": ["src/", "webview-ui/", "proto/", "scripts/", "evals/", "docs/", "locales/", "configs/"],
+    "backup_format": "{filename-extension}.cline",
+    "pre_checks": [
+      "Is this a Cline original file?",
+      "Does .cline backup exist? 'ls filename.ext.cline'",
+      "If exists: NEVER overwrite existing .cline backup"
+    ],
+    "backup_commands": [
+      "cp original.ts original.ts.cline",
+      "cp package.json package.json.cline",
+      "cp README.md README.md.cline"
+    ],
+    "modification_rules": {
+      "comment": "// CARET MODIFICATION: [clear description]",
+      "max_lines": 3,
+      "replacement": "complete, never comment out old code",
+      "verification": "npm run compile after change"
+    },
+    "verification_steps": [
+      "Backup exists and contains original content",
+      "CARET MODIFICATION comment present", 
+      "Code compiles successfully",
+      "Modification is minimal and focused"
+    ],
+    "recovery": "cp filename.ext.cline filename.ext",
+    "related_workflows": ["/modification-levels", "/comment-protocol", "/verification-steps"]
+  }
+}

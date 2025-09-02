@@ -10,7 +10,7 @@ import * as fs from "fs/promises"
 import os from "os"
 import pWaitFor from "p-wait-for"
 import * as path from "path"
-// @ts-ignore
+// @ts-expect-error
 import PCR from "puppeteer-chromium-resolver"
 import type { ConsoleMessage, ScreenshotOptions } from "puppeteer-core"
 import { Browser, connect, launch, Page, TimeoutError } from "puppeteer-core"
@@ -83,8 +83,8 @@ export class BrowserSession {
 	 * Migrates the chromeExecutablePath setting from VSCode configuration to browserSettings
 	 */
 	private async migrateChromeExecutablePathSetting(): Promise<void> {
-		const config = vscode.workspace.getConfiguration("cline")
-		const configPath = vscode.workspace.getConfiguration("cline").get<string>("chromeExecutablePath")
+		const config = vscode.workspace.getConfiguration("caret")
+		const configPath = vscode.workspace.getConfiguration("caret").get<string>("chromeExecutablePath")
 
 		if (configPath !== undefined) {
 			this.browserSettings.chromeExecutablePath = configPath

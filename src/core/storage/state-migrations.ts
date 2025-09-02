@@ -67,7 +67,7 @@ export async function migrateWorkspaceToGlobalStorage(context: vscode.ExtensionC
 }
 
 export async function migrateMcpMarketplaceEnableSetting(mcpMarketplaceEnabledRaw: boolean | undefined): Promise<boolean> {
-	const config = vscode.workspace.getConfiguration("cline")
+	const config = vscode.workspace.getConfiguration("caret")
 	const mcpMarketplaceEnabled = config.get<boolean>("mcpMarketplace.enabled")
 	if (mcpMarketplaceEnabled !== undefined) {
 		// Remove from VSCode configuration
@@ -79,7 +79,7 @@ export async function migrateMcpMarketplaceEnableSetting(mcpMarketplaceEnabledRa
 }
 
 export async function migrateEnableCheckpointsSetting(enableCheckpointsSettingRaw: boolean | undefined): Promise<boolean> {
-	const config = vscode.workspace.getConfiguration("cline")
+	const config = vscode.workspace.getConfiguration("caret")
 	const enableCheckpoints = config.get<boolean>("enableCheckpoints")
 	if (enableCheckpoints !== undefined) {
 		// Remove from VSCode configuration

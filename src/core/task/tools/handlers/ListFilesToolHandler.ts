@@ -94,7 +94,7 @@ export class ListFilesToolHandler implements IFullyManagedTool {
 			telemetryService.captureToolUsage(config.ulid, block.name, config.api.getModel().id, true, true)
 		} else {
 			// Manual approval flow
-			const notificationMessage = `Cline wants to view directory ${path.basename(absolutePath)}/`
+			const notificationMessage = `Caret wants to view directory ${path.basename(absolutePath)}/`
 
 			// Show notification
 			showNotificationForApprovalIfAutoApprovalEnabled(

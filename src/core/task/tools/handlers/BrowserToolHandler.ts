@@ -102,7 +102,7 @@ export class BrowserToolHandler implements IFullyManagedTool {
 					// Show notification for approval if auto approval enabled
 					const { showNotificationForApprovalIfAutoApprovalEnabled } = require("../../utils")
 					showNotificationForApprovalIfAutoApprovalEnabled(
-						`Cline wants to use a browser and launch ${url}`,
+						`Caret wants to use a browser and launch ${url}`,
 						config.autoApprovalSettings.enabled,
 						config.autoApprovalSettings.enableNotifications,
 					)

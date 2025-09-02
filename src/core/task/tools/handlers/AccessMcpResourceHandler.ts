@@ -90,7 +90,7 @@ export class AccessMcpResourceHandler implements IFullyManagedTool {
 			telemetryService.captureToolUsage(config.ulid, block.name, config.api.getModel().id, true, true)
 		} else {
 			// Manual approval flow
-			const notificationMessage = `Cline wants to access ${uri || "unknown resource"} on ${server_name || "unknown server"}`
+			const notificationMessage = `Caret wants to access ${uri || "unknown resource"} on ${server_name || "unknown server"}`
 
 			// Show notification
 			showNotificationForApprovalIfAutoApprovalEnabled(

@@ -105,7 +105,7 @@ export class ReadFileToolHandler implements IFullyManagedTool {
 			telemetryService.captureToolUsage(config.ulid, block.name, config.api.getModel().id, true, true)
 		} else {
 			// Manual approval flow
-			const notificationMessage = `Cline wants to read ${path.basename(absolutePath)}`
+			const notificationMessage = `Caret wants to read ${path.basename(absolutePath)}`
 
 			// Show notification
 			showNotificationForApprovalIfAutoApprovalEnabled(

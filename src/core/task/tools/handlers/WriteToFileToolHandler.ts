@@ -266,7 +266,7 @@ export class WriteToFileToolHandler implements IFullyManagedTool {
 			await setTimeoutPromise(3_500)
 		} else {
 			// Manual approval flow with detailed feedback handling
-			const notificationMessage = `Cline wants to ${fileExists ? "edit" : "create"} ${path.basename(relPath)}`
+			const notificationMessage = `Caret wants to ${fileExists ? "edit" : "create"} ${path.basename(relPath)}`
 
 			// Show notification
 			showNotificationForApprovalIfAutoApprovalEnabled(

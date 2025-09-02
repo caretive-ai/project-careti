@@ -54,7 +54,9 @@
       "Read(D:\\dev\\caret\\caret-main/**)",
       "Read(D:\\dev\\caret\\caret-main/**)",
       "Read(D:\\dev\\caret\\caret-main\\caret-docs\\reports\\json-caret/**)",
-      "Read(D:\\dev\\caret\\caret-main\\caret-docs\\reports\\json-caret/**)"
+      "Read(D:\\dev\\caret\\caret-main\\caret-docs\\reports\\json-caret/**)",
+      "Bash(git -C caret-b2b status --short)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

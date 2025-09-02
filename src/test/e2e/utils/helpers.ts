@@ -62,7 +62,7 @@ export class E2ETestHelper {
 
 				try {
 					const title = await frame.title()
-					if (title.startsWith("Cline")) {
+					if (title.startsWith("Caret")) {
 						this.cachedFrame = frame
 						return frame
 					}

@@ -89,7 +89,7 @@ export class ListCodeDefinitionNamesToolHandler implements IFullyManagedTool {
 			telemetryService.captureToolUsage(config.ulid, block.name, config.api.getModel().id, true, true)
 		} else {
 			// Manual approval flow
-			const notificationMessage = `Cline wants to analyze code definitions in ${path.basename(absolutePath)}`
+			const notificationMessage = `Caret wants to analyze code definitions in ${path.basename(absolutePath)}`
 
 			// Show notification
 			showNotificationForApprovalIfAutoApprovalEnabled(

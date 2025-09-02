@@ -52,7 +52,7 @@ export class PostHogClientProvider {
 			this.telemetrySettings.host = false
 		}
 
-		const config = vscode.workspace.getConfiguration("cline")
+		const config = vscode.workspace.getConfiguration("caret")
 		if (config.get("telemetrySetting") === "disabled") {
 			this.telemetrySettings.cline = false
 		}

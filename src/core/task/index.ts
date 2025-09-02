@@ -870,19 +870,6 @@ export class Task {
 			throw new Error("Cline instance aborted")
 		}
 
-		// CARET MODIFICATION: Process webview message for brand replacement
-		let processedText = text
-		try {
-			const { processUniversalBackendMessage } = await import("../../../caret-src/i18n/backend-message-filter")
-			if (text) {
-				// Process as webview message (brand replacement only, no full i18n)
-				processedText = processUniversalBackendMessage(text, false)
-			}
-		} catch (error) {
-			console.warn("Failed to process webview message:", error)
-			// Fallback to original text
-		}
-
 		if (partial !== undefined) {
 			const lastMessage = this.messageStateHandler.getClineMessages().at(-1)
 			const isUpdatingPreviousPartial =
@@ -890,7 +877,7 @@ export class Task {
 			if (partial) {
 				if (isUpdatingPreviousPartial) {
 					// existing partial message, so update it
-					lastMessage.text = processedText
+					lastMessage.text = text
 					lastMessage.images = images
 					lastMessage.files = files
 					lastMessage.partial = partial
@@ -904,7 +891,7 @@ export class Task {
 						ts: sayTs,
 						type: "say",
 						say: type,
-						text: processedText,
+						text,
 						images,
 						files,
 						partial,
@@ -917,7 +904,7 @@ export class Task {
 					// this is the complete version of a previously partial message, so replace the partial with the complete version
 					this.taskState.lastMessageTs = lastMessage.ts
 					// lastMessage.ts = sayTs
-					lastMessage.text = processedText
+					lastMessage.text = text
 					lastMessage.images = images
 					lastMessage.files = files // Ensure files is updated
 					lastMessage.partial = false
@@ -935,7 +922,7 @@ export class Task {
 						ts: sayTs,
 						type: "say",
 						say: type,
-						text: processedText,
+						text,
 						images,
 						files,
 					})
@@ -950,7 +937,7 @@ export class Task {
 				ts: sayTs,
 				type: "say",
 				say: type,
-				text: processedText,
+				text,
 				images,
 				files,
 			})

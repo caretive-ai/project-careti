@@ -247,6 +247,7 @@
         "Did you check storage type? (globalState vs workspaceState)",
         "Do save and load locations match?",
         "Do related files use consistent storage patterns?",
+        "Did you follow Cline file naming conventions? (utility: kebab-case, class: PascalCase)",
         "🚨 Rule file modification: Did you run node caret-scripts/sync-caretrules.js after caretrules.ko.md changes?"
       ],
       "backup_safety_rules": {

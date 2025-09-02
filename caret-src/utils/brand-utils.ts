@@ -53,6 +53,17 @@ export function getCurrentBrandDisplayName(): string {
 }
 
 /**
+ * Get current brand name (alias for getCurrentBrandDisplayName for compatibility)
+ * @returns Brand name from package.json displayName
+ */
+export function getCurrentBrandName(): string {
+	return detectCurrentBrandName()
+}
+
+// Import shared brand replacement function
+export { replaceBrandInMessage } from "../shared/brand-utils"
+
+/**
  * Check if current mode supports i18n features
  * @returns true if i18n is enabled for current mode
  */

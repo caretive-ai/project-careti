@@ -1,0 +1,329 @@
+# 🔗 Caret 링크 관리 시스템 가이드
+
+Caret의 통합 링크 관리 시스템은 프로젝트 전체에서 URL을 일관되게 관리하고, 언어별로 다른 링크를 제공할 수 있는 강력한 시스템입니다.
+
+## 📋 시스템 개요
+
+### 문제 해결
+
+- **URL 중복 관리**: 하드코딩된 URL들이 여러 컴포넌트에 분산되어 있는 문제 해결
+- **다국어 링크 지원**: 언어별로 다른 URL을 제공해야 하는 요구사항 충족
+- **유지보수성**: 링크 변경 시 한 곳에서만 수정하면 되는 중앙집중식 관리
+- **타입 안전성**: TypeScript를 통한 링크 키 검증
+
+### 핵심 구성요소
+
+1. **URL 상수 정의** (`webview-ui/src/caret/utils/urls.ts`)
+2. **i18n 통합** (`webview-ui/src/caret/utils/i18n.ts`)
+3. **템플릿 변수 시스템**
+4. **타입 안전성 보장**
+
+## 📁 파일 구조
+
+```
+webview-ui/src/caret/
+├── utils/
+│   ├── urls.ts                # URL 상수 정의
+│   ├── CaretWebviewLogger.ts       # 웹뷰 로깅 시스템 
+│   └── i18n.ts                # 번역 & 링크 통합 유틸리티 (향후 추가)
+├── locale/                    # 다국어 JSON 파일들 (향후 추가)
+│   ├── ko/welcome.json        # 한국어 번역 (템플릿 변수 포함)
+│   ├── en/welcome.json        # 영어 번역
+│   ├── ja/welcome.json        # 일본어 번역
+│   └── zh/welcome.json        # 중국어 번역
+└── components/                # Caret 컴포넌트들 (향후 추가)
+    ├── CaretWelcome.tsx       # 링크 시스템 사용 예제
+    └── CaretFooter.tsx        # 링크 시스템 사용 예제
+```
+
+## 🔧 URL 상수 정의
+
+### 일반 URL 상수 (언어 무관)
+
+```typescript
+// webview-ui/src/caret/utils/urls.ts
+export const CARET_URLS = {
+	// 서비스 관련 (언어 무관)
+	CARET_SERVICE: "https://caret.team",
+	CARET_GITHUB: "https://github.com/aicoding-caret/caret",
+
+	// 회사 관련 (언어 무관)
+	CARETIVE_COMPANY: "https://caretive.ai",
+	CARETIVE_ABOUT: "https://caretive.ai/about",
+	// ... 기타 URL들
+} as const
+```
+
+### 언어별 URL 상수
+
+```typescript
+// 언어별로 다른 링크가 필요한 경우
+export const CARET_LOCALIZED_URLS = {
+	// 교육 프로그램 링크 (언어별 앵커 다름)
+	EDUCATION_PROGRAM: {
+		ko: "https://github.com/aicoding-caret/multi-post-agent/blob/main/docs/education-scenario.md#2-%EA%B0%9C%EB%B0%9C-%ED%99%98%EA%B2%BD-%EC%84%A4%EC%A0%95-%EC%95%BD-30%EB%B6%84",
+		en: "https://github.com/aicoding-caret/multi-post-agent/blob/main/docs/education-scenario.md#2-development-environment-setup-approximately-30-minutes",
+		ja: "https://github.com/aicoding-caret/multi-post-agent/blob/main/docs/education-scenario.md#2-%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A-%E7%B4%8430%E5%88%86",
+		zh: "https://github.com/aicoding-caret/multi-post-agent/blob/main/docs/education-scenario.md#2-development-environment-setup-approximately-30-minutes",
+	},
+
+	// Gemini 크레딧 가이드 (언어별 문서 다름)
+	GEMINI_CREDIT_GUIDE: {
+		ko: "https://blog.naver.com/fstory97/223887376667",
+		en: "https://cloud.google.com/pricing/free-trial",
+		ja: "https://cloud.google.com/pricing/free-trial",
+		zh: "https://cloud.google.com/pricing/free-trial",
+	},
+} as const
+```
+
+## 🌍 i18n 통합 시스템
+
+### 헬퍼 함수들
+
+```typescript
+// webview-ui/src/caret/utils/i18n.ts
+
+// 현재 언어에 맞는 링크 가져오기
+export function getLocalizedUrl(key: CaretLocalizedUrlKey, language: SupportedLanguage = "ko"): string {
+	const urlMap = CARET_LOCALIZED_URLS[key]
+	return urlMap[language] || urlMap.ko // fallback to Korean
+}
+
+// 일반 URL 가져오기
+export function getUrl(key: CaretUrlKey): string {
+	return CARET_URLS[key]
+}
+
+// 번역 텍스트에서 링크 바로 가져오기
+export const getLink = (key: CaretLocalizedUrlKey, language?: SupportedLanguage): string => {
+	return getLocalizedUrl(key, language || getCurrentLanguage())
+}
+
+export const getGlobalLink = (key: CaretUrlKey): string => {
+	return getUrl(key)
+}
+```
+
+### 템플릿 변수 시스템
+
+번역 JSON 파일에서 `{{변수명}}` 형태로 링크를 동적으로 삽입할 수 있습니다:
+
+```json
+{
+	"educationOffer": {
+		"header": "✨ 지금 바로 시작! 무료 '바이브 코딩' 교육 프로그램!",
+		"body": "Caret과 함께 실습할 수 있는 교육 프로그램에 참여하세요! <VSCodeLink href=\"{{educationLink}}\">자세히 보기</VSCodeLink>"
+	}
+}
+```
+
+지원되는 템플릿 변수:
+
+- `{{educationLink}}` → 현재 언어의 교육 프로그램 링크
+- `{{geminiCreditLink}}` → 현재 언어의 Gemini 크레딧 가이드 링크
+- `{{caretGitLink}}` → 현재 언어의 Caret GitHub 링크
+- `{{caretService}}` → Caret 서비스 링크
+- `{{caretGithub}}` → Caret GitHub 링크
+- `{{caretiveCompany}}` → Caretive 회사 링크
+
+## 💡 사용법
+
+### 컴포넌트에서 직접 링크 사용
+
+```tsx
+import { getGlobalLink, getLink } from "../utils/i18n"
+
+const MyComponent: React.FC = () => {
+	return (
+		<div>
+			{/* 일반 링크 (언어 무관) */}
+			<a href={getGlobalLink("CARET_SERVICE")}>Caret Service</a>
+
+			{/* 언어별 링크 */}
+			<a href={getLink("EDUCATION_PROGRAM")}>교육 프로그램</a>
+		</div>
+	)
+}
+```
+
+### 번역 텍스트를 통한 자동 링크 치환
+
+```tsx
+import { t } from "../utils/i18n"
+
+const MyComponent: React.FC = () => {
+	return (
+		<div>
+			{/* 템플릿 변수가 자동으로 실제 링크로 치환됨 */}
+			<p
+				dangerouslySetInnerHTML={{
+					__html: t("educationOffer.body", "welcome"),
+				}}
+			/>
+		</div>
+	)
+}
+```
+
+## 🛠️ 새 링크 추가하기
+
+### 1. 일반 링크 추가 (언어 무관)
+
+```typescript
+// webview-ui/src/caret/utils/urls.ts
+export const CARET_URLS = {
+	// 기존 링크들...
+	NEW_SERVICE_LINK: "https://example.com/new-service",
+} as const
+```
+
+### 2. 언어별 링크 추가
+
+```typescript
+// webview-ui/src/caret/utils/urls.ts
+export const CARET_LOCALIZED_URLS = {
+	// 기존 링크들...
+	NEW_LOCALIZED_LINK: {
+		ko: "https://example.com/ko/new-feature",
+		en: "https://example.com/en/new-feature",
+		ja: "https://example.com/ja/new-feature",
+		zh: "https://example.com/zh/new-feature",
+	},
+} as const
+```
+
+### 3. 템플릿 변수 추가
+
+```typescript
+// webview-ui/src/caret/utils/i18n.ts의 replaceTemplateVariables 함수에 추가
+const replaceTemplateVariables = (text: string, language: SupportedLanguage): string => {
+	return (
+		text
+			// 기존 치환들...
+			.replace(/\{\{newTemplateVar\}\}/g, getLocalizedUrl("NEW_LOCALIZED_LINK", language))
+	)
+}
+```
+
+### 4. 번역 파일에서 사용
+
+```json
+{
+	"mySection": {
+		"title": "새로운 기능",
+		"description": "새로운 기능에 대해 <VSCodeLink href=\"{{newTemplateVar}}\">자세히 알아보세요</VSCodeLink>!"
+	}
+}
+```
+
+## 🔍 타입 안전성
+
+TypeScript를 통해 링크 키의 타입 안전성이 보장됩니다:
+
+```typescript
+// 컴파일 타임에 오타나 존재하지 않는 키 검출
+getGlobalLink("NONEXISTENT_KEY") // ❌ 타입 에러!
+getGlobalLink("CARET_SERVICE") // ✅ 정상
+
+getLink("INVALID_LOCALIZED_KEY") // ❌ 타입 에러!
+getLink("EDUCATION_PROGRAM") // ✅ 정상
+```
+
+## 📋 모범 사례
+
+### 1. 링크 분류 원칙
+
+- **CARET_URLS**: 언어와 무관한 고정 링크 (서비스 URL, API 엔드포인트 등)
+- **CARET_LOCALIZED_URLS**: 언어별로 다른 링크 (문서, 가이드, 앵커 등)
+
+### 2. 네이밍 컨벤션
+
+- 상수명: `SCREAMING_SNAKE_CASE`
+- 의미있는 이름 사용 (예: `EDUCATION_PROGRAM` vs `LINK1`)
+- 카테고리별 접두사 고려 (예: `DOCS_`, `API_`, `SERVICE_`)
+
+### 3. 템플릿 변수 사용 가이드
+
+- 번역 텍스트에 링크가 포함될 때 우선 고려
+- 변수명은 camelCase로 (예: `{{educationLink}}`)
+- 컴포넌트에서 직접 링크가 필요할 때는 헬퍼 함수 직접 사용
+
+### 4. 언어별 링크 관리
+
+- 모든 지원 언어에 대해 링크 제공
+- 번역이 없는 경우 한국어로 fallback
+- 언어별 앵커 ID 차이 고려
+
+## 🚀 확장 가능성
+
+### 동적 언어 변경 지원
+
+향후 사용자 설정에 따른 동적 언어 변경을 지원하기 위해 `getCurrentLanguage()` 함수를 확장할 수 있습니다:
+
+```typescript
+export const getCurrentLanguage = (): SupportedLanguage => {
+	// 사용자 설정에서 언어 읽어오기
+	const userLang = getUserSetting("language")
+	return userLang || "ko"
+}
+```
+
+### 외부 링크 검증
+
+링크의 유효성을 검증하는 시스템을 추가할 수 있습니다:
+
+```typescript
+export const validateLinks = async (): Promise<LinkValidationResult[]> => {
+	// 모든 링크에 대해 HTTP 상태 확인
+	// CI/CD에서 활용 가능
+}
+```
+
+### 링크 분석 및 추적
+
+링크 클릭 추적이나 분석을 위한 래퍼 함수를 추가할 수 있습니다:
+
+```typescript
+export const getTrackedLink = (key: CaretUrlKey, context?: string): string => {
+	const baseUrl = getUrl(key)
+	// 추적 파라미터 추가
+	return `${baseUrl}?utm_source=caret&utm_context=${context}`
+}
+```
+
+## 🔧 문제 해결
+
+### 자주 발생하는 문제들
+
+1. **링크가 제대로 치환되지 않는 경우**
+    - 템플릿 변수명 확인 (`{{educationLink}}` 정확한 스펠링)
+    - `replaceTemplateVariables` 함수에 해당 변수 추가 여부 확인
+
+2. **타입 에러가 발생하는 경우**
+    - URL 상수에 새 키가 제대로 추가되었는지 확인
+    - TypeScript 컴파일 후 다시 시도
+
+3. **언어별 링크가 다르게 나오지 않는 경우**
+    - `getCurrentLanguage()` 함수가 올바른 언어를 반환하는지 확인
+    - 해당 언어의 번역 파일이 올바르게 import되었는지 확인
+
+## ✅ 체크리스트
+
+새 링크를 추가할 때 확인해야 할 사항들:
+
+- [ ] URL 상수에 추가 (`CARET_URLS` 또는 `CARET_LOCALIZED_URLS`)
+- [ ] 타입 정의가 자동으로 업데이트되는지 확인
+- [ ] 템플릿 변수가 필요한 경우 `replaceTemplateVariables`에 추가
+- [ ] 모든 지원 언어에 대해 링크 제공 (언어별 링크인 경우)
+- [ ] 번역 파일에서 템플릿 변수 사용 (필요한 경우)
+- [ ] 웹뷰 빌드 테스트 (`npm run build:webview`)
+- [ ] 실제 링크 동작 확인
+
+---
+
+## 🔗 관련 문서
+
+- [Caret 국제화 (i18n) 가이드](./locale.mdx)
+- [웹뷰-확장 통신](./webview-extension-communication.mdx)
+- [개발 가이드 인덱스](./index.mdx)

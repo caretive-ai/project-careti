@@ -1,0 +1,86 @@
+{
+  "rule_management": {
+    "ai_reads": ".caretrules/caret-rules.json (English JSON, core principles only)",
+    "ai_workflows": ".caretrules/workflows/*.md (English MD, detailed procedures when needed)",
+    "human_reads": "caret-docs/development/caret-rules.ko.md (Korean MD, developer reference)",
+    "sync_method": "AI auto-syncs all 3 formats when editing rules",
+    "reading_flow": "AI: JSON rules → (if needed) workflow MD → implementation",
+    "file_mapping": {
+      ".caretrules/caret-rules.json": "caret-docs/development/caret-rules.ko.md",
+      ".caretrules/workflows/ai-work-index.md": "caret-docs/development/ai-work-index.mdx",
+      ".caretrules/workflows/ai-work-protocol.md": "caret-docs/guides/ai-work-method-guide.mdx",
+      ".caretrules/workflows/caret-development.md": "caret-docs/development/caret-rules.ko.md",
+      ".caretrules/workflows/merge-strategy.md": "caret-docs/guides/merging-strategy-guide.md"
+    }
+  },
+  "core_principles": {
+    "identity": "Caret ('^' symbol, NOT carrot), Cline-based fork with minimal extension",
+    "quality_first": "Accuracy > speed, complete work, no technical debt",
+    "tdd_mandatory": "RED->GREEN->REFACTOR, integration tests first",
+    "verification": "Test->Compile->Execute after every change"
+  },
+  "architecture": {
+    "levels": {
+      "L1_independent": "caret-src/, caret-docs/ (full freedom)",
+      "L2_conditional": "minimal Cline changes with backup + comment",
+      "L3_direct": "last resort with full documentation"
+    },
+    "protected_dirs": "src/, webview-ui/, proto/, scripts/, evals/, docs/, locales/, configs",
+    "backup_format": "{filename-extension}.cline",
+    "comment_required": "// CARET MODIFICATION: [description]",
+    "max_changes": "1-3 lines per Cline file"
+  },
+  "development": {
+    "framework": "Vitest (NOT Jest), Biome (NOT Prettier)",
+    "fast_tests": "npm run test:backend, npm run test:webview", 
+    "never_use": "npm test (too slow)",
+    "storage_rules": "chatSettings=workspaceState, globalSettings=globalState"
+  },
+  "file_modification_checklist": [
+    "Is Cline original file?",
+    "Backup exists? cp file file.cline",
+    "CARET MODIFICATION comment added?",
+    "1-3 lines max?",
+    "Complete replacement not commenting?",
+    "npm run compile passes?"
+  ],
+  "naming": {
+    "utilities": "kebab-case (brand-utils.ts)",
+    "components": "PascalCase (CaretProvider.ts)", 
+    "tests": "match source (brand-utils.test.ts)",
+    "docs": "kebab-case (new-developer-guide.mdx)"
+  },
+  "ai_work_flow": {
+    "step1_rules": "Always read this JSON first for core principles",
+    "step2_workflows": "If needed, read specific .caretrules/workflows/*.md for detailed procedures",
+    "step3_implement": "Follow TDD approach with proper verification",
+    "knowledge_principle": "AI knowledge = Developer knowledge (1:1 parity required)",
+    "mandatory_pre_checks": [
+      "NO coding without document review first",
+      "Identify work nature: architecture/ai/frontend/ui/test/cline-modification", 
+      "TDD mandatory: integration test first, NEVER unit test first",
+      "Cline file modification: backup + CARET MODIFICATION comment required",
+      "AI must access same information developers have via workflows"
+    ],
+    "available_workflows": {
+      "/ai-work-index": "Select relevant docs based on work nature (context efficiency)",
+      "/ai-work-protocol": "Detailed Phase 0-3 implementation protocol", 
+      "/caret-development": "Caret-specific development workflow",
+      "/merge-strategy": "Cline merging strategy workflow",
+      "/document-organization": "1:1 knowledge parity system via atomic workflows"
+    }
+  },
+  "tdd_phases": {
+    "phase_0": "MANDATORY doc check for work nature (architecture/ai/frontend/ui/test/cline-mod)",
+    "phase_1_red": "Write integration test first (NEVER unit test first)",
+    "phase_2_green": "Minimal code to pass integration test",
+    "phase_3_refactor": "Improve while keeping integration test passing"
+  },
+  "forbidden": [
+    "Modify Cline files without backup",
+    "Overwrite existing .cline backups", 
+    "Start with unit tests",
+    "Comment out old code",
+    "Skip CARET MODIFICATION comment"
+  ]
+}

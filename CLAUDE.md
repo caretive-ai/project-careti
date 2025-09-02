@@ -4,7 +4,32 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Cline is an autonomous AI coding assistant VS Code extension that can create/edit files, run terminal commands, use the browser, and integrate with various AI models. It's built with TypeScript and React, supporting multiple AI providers (Anthropic, OpenAI, OpenRouter, etc.) and the Model Context Protocol (MCP) for extensibility.
+**Caret** is an autonomous AI coding assistant VS Code extension that can create/edit files, run terminal commands, use the browser, and integrate with various AI models. It's a **Cline-based fork** with minimal extension strategy - preserving Cline core functionality while adding Caret-specific features through `caret-src/` directory.
+
+- **Name Origin**: Caret refers to the '^' symbol (NOT carrot 🥕)
+- **Architecture**: Direct Cline integration with Level 1-3 modification strategy
+- **Repository**: https://github.com/aicoding-caret/caret
+
+## Critical Caret-Specific Rules
+
+### 🚨 File Modification Protocol
+Before modifying ANY Cline original file:
+1. **Check if it's protected**: `src/`, `webview-ui/`, `proto/`, `scripts/`, `evals/`, `docs/`, `locales/`, root configs
+2. **Create backup**: `cp filename.ts filename.ts.cline` (NEVER overwrite existing .cline files)
+3. **Add comment**: `// CARET MODIFICATION: [clear description]`
+4. **Minimal changes**: Maximum 1-3 lines per file
+5. **Complete replacement**: Never comment out old code
+
+### Architecture Levels
+- **Level 1 (Preferred)**: Independent modules in `caret-src/`, `caret-docs/` (full freedom)
+- **Level 2 (Conditional)**: Minimal Cline modifications with backup + comment
+- **Level 3 (Last Resort)**: Direct modification with complete documentation
+
+### Caret Extensions
+- **caret-src/**: Caret-specific code (complete freedom)
+- **caret-docs/**: Caret documentation system
+- **caret-assets/**: Caret resources
+- **caret-scripts/**: Caret automation scripts
 
 ## TDD Development Guidelines
 
@@ -60,17 +85,17 @@ npm run compile-standalone
 
 ### Testing
 ```bash
-# Run all tests
-npm run test
+# 🚨 CARET SPECIFIC: Fast testing commands (use these)
+npm run test:backend        # Backend tests (fast)
+npm run test:webview       # Frontend tests (fast)
+npm run test:backend:watch # Watch mode
 
-# Run specific test suites
-npm run test:unit          # Unit tests only
-npm run test:integration   # Integration tests
-npm run test:e2e          # End-to-end tests
-npm run test:ci           # Full CI test suite
+# Full test suites (slower)
+npm run test:all           # Complete test suite
+npm run test:ci            # Full CI test suite
+npm run caret:coverage     # Coverage report
 
-# Run webview tests
-npm run test:webview
+# ❌ NEVER USE: npm test (extremely slow - full build+compile+lint+all tests)
 ```
 
 ### Code Quality
@@ -102,28 +127,41 @@ npm run build:webview
 
 ## Architecture Overview
 
-### Core Structure
+### Core Structure (Caret Fork)
 ```
-src/
-├── extension.ts         # VS Code extension entry point
-├── core/               # Main extension logic
-│   ├── webview/        # Webview lifecycle management
-│   ├── controller/     # Message handling & task management
-│   ├── task/          # Tool execution & API requests
-│   ├── api/           # AI provider integrations
-│   ├── context/       # Context management & tracking
-│   ├── prompts/       # System prompt generation
-│   └── storage/       # State persistence
-├── integrations/      # External service integrations
-├── services/         # Shared services (auth, logging, etc.)
-├── shared/           # Types & utilities shared between extension/webview
-├── hosts/            # Host platform abstractions (VS Code, external)
-└── utils/           # General utilities
+src/                   # Cline original (preserve, backup before changes)
+├── extension.ts       # VS Code extension entry point
+├── core/             # Main extension logic
+│   ├── webview/      # Webview lifecycle management
+│   ├── controller/   # Message handling & task management
+│   ├── task/        # Tool execution & API requests
+│   ├── api/         # AI provider integrations
+│   ├── context/     # Context management & tracking
+│   ├── prompts/     # System prompt generation
+│   └── storage/     # State persistence
+├── integrations/    # External service integrations
+├── services/       # Shared services (auth, logging, etc.)
+├── shared/         # Types & utilities shared between extension/webview
+├── hosts/          # Host platform abstractions (VS Code, external)
+└── utils/         # General utilities
+
+caret-src/            # Caret extensions (full freedom)
+├── extension.ts      # Caret-specific entry points
+├── core/            # Caret-specific core logic
+├── shared/         # Caret-specific shared utilities
+└── utils/          # Caret-specific utilities
+
+caret-docs/          # Caret documentation (full freedom)
+caret-assets/        # Caret resources (full freedom)
+caret-scripts/       # Caret automation (full freedom)
+webview-ui/          # React frontend (Cline original, backup before changes)
 ```
 
 ### Key Components
 
 **Extension Flow**: `extension.ts` → `WebviewProvider` → `Controller` → `Task` execution
+
+**Caret Extensions**: `CaretProvider extends WebviewProvider` (Level 1 architecture)
 
 **Webview**: React-based UI built separately in `webview-ui/` directory using Vite
 
@@ -134,6 +172,12 @@ src/
 **Context Management**: Smart context window management with file tracking and AST parsing
 
 **MCP Integration**: Model Context Protocol support for custom tool extensions
+
+### Caret-Specific Components
+- **Brand Management**: Dynamic branding system (Caret ↔ CodeCenter switching)
+- **Backend Message Processing**: OS notification and webview message branding
+- **Storage Patterns**: globalState vs workspaceState consistency
+- **Rule System**: JSON-based rules (`.caretrules/caret-rules.json`) with Korean docs
 
 ## Development Patterns
 
@@ -147,11 +191,19 @@ The project uses TypeScript path aliases defined in `tsconfig.json`:
 - `@utils/*` → `src/utils/*`
 
 ### Code Style
-- **Formatter**: Biome (configured in `biome.jsonc`)
+- **Formatter**: Biome (configured in `biome.jsonc`) - NOT Prettier
+- **Testing**: Vitest - NOT Jest
 - **Indentation**: Tabs (width 4)
 - **Line width**: 130 characters
 - **Semicolons**: As needed
 - **Quotes**: Double quotes for JSX, preference for consistency elsewhere
+
+### Naming Conventions (Caret-Specific)
+- **Utilities**: kebab-case (`brand-utils.ts`)
+- **Components**: PascalCase (`CaretProvider.ts`)
+- **Tests**: Match source (`brand-utils.test.ts`)
+- **Docs**: kebab-case (`new-developer-guide.mdx`)
+- **Backups**: `{filename-extension}.cline`
 
 ### Testing Strategy
 - **Unit tests**: Core logic and utilities
@@ -172,6 +224,7 @@ The project uses protobuf for type-safe communication:
 
 ## Key Files to Understand
 
+### Cline Original Files (Backup Before Modifying)
 - `src/extension.ts` - Extension activation and command registration
 - `src/core/webview/WebviewProvider.ts` - Webview lifecycle and communication
 - `src/core/controller/index.ts` - Main message routing and task coordination
@@ -179,6 +232,14 @@ The project uses protobuf for type-safe communication:
 - `src/core/prompts/system-prompt/` - Dynamic system prompt generation
 - `src/shared/ExtensionMessage.ts` - Message types between extension and webview
 - `webview-ui/src/App.tsx` - Main React application entry point
+
+### Caret-Specific Files (Full Freedom)
+- `caret-src/extension.ts` - Caret extension entry points
+- `caret-src/core/webview/CaretProvider.ts` - Caret webview provider
+- `caret-src/shared/brand-utils.ts` - Brand management utilities
+- `caret-src/utils/` - Caret-specific utilities
+- `.caretrules/caret-rules.json` - Caret development rules (AI reference)
+- `caret-docs/development/caret-rules.ko.md` - Korean rule documentation
 
 ## Common Issues
 
@@ -197,28 +258,41 @@ The project uses protobuf for type-safe communication:
 - Use F5 to launch development instance
 - Webview changes require extension reload in development window
 
-## t03-branding-work-context
-**Current Work**: t03 브랜딩 시스템 구현 (2025-08-31)
-**User**: Luke Yang  
-**Work Nature**: Cline 원본 파일 수정 관련 업무
+## Caret Development Quick Reference
 
-## Mandatory Documents Analysis Complete:
-- ✅ ai-work-method-guide.mdx: Work protocol phases (Phase 0-4)
-- ✅ caretrules.ko.md: CARET MODIFICATION rules, backup requirements
-- Key Finding: Script must recognize `// CARET MODIFICATION:` comments for safe processing
+### 🚨 Pre-Development Checklist
+1. **Read Rules**: Check `.caretrules/caret-rules.json` for current constraints
+2. **Korean Docs**: Reference `caret-docs/development/caret-rules.ko.md` for detailed explanations
+3. **TDD First**: Always start with integration tests, not unit tests
+4. **Backup Required**: Before modifying any `src/`, `webview-ui/` files
 
-## Critical Constraints (Updated):
-- **Backup Rule**: {filename}-{extension}.cline before any Cline file modification
-- **Comment Rule**: `// CARET MODIFICATION: [description]` mandatory for tracking changes  
-- **Directory Rule**: caret-scripts/ for new features, minimal Cline changes only
-- **Testing Rule**: Git-based verification (git status/diff) for all changes
-- **Merging Strategy**: Follow merging-strategy-guide.md - Level 1 독립 모듈 권장
-- **Rule Files Structure**: `.caretrules/workflows/caretrules.md` (JSON) + sync to `.cursorrules/.windsurfrules`
+### Storage Usage Patterns
+- **chatSettings**: Use `workspaceState` (project-specific)
+- **globalSettings**: Use `globalState` (user-wide)
+- **Consistency Rule**: Save and load must use same storage type
 
-## Implementation Plan:
-1. **Step 1**: brand-change.js with comment recognition system
-2. **Step 2**: Git-based change/restoration testing (cline ↔ caret)
-3. **Step 3**: i18n backend message mapping integration  
-4. **Step 4**: Complete system integration testing
-5. **Step 5**: Documentation updates (f02 + f03)
-6. **Step 6**: Final validation and completion
+### Testing Workflow
+```bash
+# 1. Write integration test first (TDD RED)
+npm run test:webview  # Verify test fails
+
+# 2. Implement minimal code (TDD GREEN)
+npm run compile       # Verify compilation
+npm run test:backend  # Verify backend tests
+
+# 3. Refactor (TDD REFACTOR)
+npm run test:all      # Full verification
+```
+
+### Rule Management System
+- **AI Reference**: `.caretrules/caret-rules.json` (compact, English)
+- **Human Reference**: `caret-docs/development/caret-rules.ko.md` (detailed, Korean)
+- **Auto-Sync**: AI automatically syncs JSON ↔ Korean docs when rules change
+- **No External Sync**: Cursor/Windsurf excluded (complexity prevention)
+
+### Emergency Backup Restoration
+```bash
+# Restore from backup if needed
+cp filename.ts.cline filename.ts
+npm run compile  # Verify restoration works
+```

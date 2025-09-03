@@ -390,6 +390,7 @@
 		"@bufbuild/buf": "^1.54.0",
 		"@changesets/cli": "^2.27.12",
 		"@types/chai": "^5.0.1",
+		"@types/cheerio": "^0.22.35",
 		"@types/clone-deep": "^4.0.4",
 		"@types/diff": "^5.2.1",
 		"@types/get-folder-size": "^3.0.4",

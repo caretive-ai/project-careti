@@ -173,6 +173,8 @@
 		"signUpDescription": "Sign up for an account to get access to the latest models, billing dashboard to view usage and credits, and more upcoming features.",
 		"termsOfService": "Terms of Service",
 		"privacyPolicy": "Privacy Policy",
+		"termsOfServiceUrl": "https://caretive.ai/terms.en.html",
+		"privacyPolicyUrl": "https://caretive.ai/privacy.en.html",
 		"byContining": "By continuing, you agree to the",
 		"subscription": "Subscription Plan",
 		"subscriptionFree": "Free",

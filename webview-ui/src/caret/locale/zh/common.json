@@ -120,6 +120,8 @@
 		"signUpDescription": "创建账户以访问最新模型、查看使用情况和积分的账单仪表板，以及更多即将推出的功能。",
 		"termsOfService": "服务条款",
 		"privacyPolicy": "隐私政策",
+		"termsOfServiceUrl": "https://caretive.ai/terms.en.html",
+		"privacyPolicyUrl": "https://caretive.ai/privacy.en.html",
 		"byContining": "继续使用即表示您同意：",
 		"subscription": "订阅计划",
 		"subscriptionFree": "免费",
@@ -301,8 +303,5 @@
 	},
 	"about": {
 		"title": "关于"
-	},
-	"apiOptions": {
-		"apiProvider": "API配置"
 	}
 }

@@ -2,7 +2,7 @@
 **총 154개 컴포넌트 중 146개 파일이 i18n 적용 필요**
 
 ### **Account 관련 (6개)**
-[ ] `webview-ui/src/components/account\AccountOptions.tsx` (하드코딩:1)
+[x] `webview-ui/src/components/account\AccountOptions.tsx` (하드코딩:1) ✅ 완료
 [ ] `webview-ui/src/components/account\AccountView.tsx` (하드코딩:31)
 [ ] `webview-ui/src/components/account\AccountWelcomeView.tsx` (하드코딩:6)
 [ ] `webview-ui/src/components/account\CreditBalance.tsx` (하드코딩:8)
@@ -43,6 +43,7 @@
 [ ] `webview-ui/src/components/chat\task-header\TaskTimelineTooltip.tsx` (하드코딩:52)
 [ ] `webview-ui/src/components/chat\TaskFeedbackButtons.tsx` (하드코딩:16)
 [ ] `webview-ui/src/components/chat\UserMessage.tsx` (하드코딩:17)
+[ ] 위 체크리스트 문서 업데이트하고 커밋 푸시 진행
 
 ### **Cline Rules 관련 (4개)**
 [ ] `webview-ui/src/components/cline-rules\ClineRulesToggleModal.tsx` (하드코딩:37)
@@ -77,6 +78,7 @@
 ### **History 관련 (2개)**
 [ ] `webview-ui/src/components/history\HistoryPreview.tsx` (하드코딩:24)
 [ ] `webview-ui/src/components/history\HistoryView.tsx` (하드코딩:66)
+[ ] 위 체크리스트 문서 업데이트하고 커밋 푸시 진행
 
 ### **MCP 관련 (14개)**
 [ ] `webview-ui/src/components/mcp\chat-display\ImagePreview.tsx` (하드코딩:44)
@@ -166,6 +168,9 @@
 
 ### **Menu 관련 (1개)**
 [ ] `webview-ui/src/components/menu\Navbar.tsx` (하드코딩:17)
+[ ] 위 체크리스트 문서 업데이트하고 커밋 푸시 진행
+[ ] i18n 체크리스트 스크립트로 재생성하여 전부 체크되었는지 확인, 누락 있으면 다시 확인 할 것, 누락이 없으면 
+   t03-3-프론트i18n및상호이식개선.md 의 2.3 항목에 체크하고 커밋 푸시하고  완료 다음 단계로 진행
 
 ### **불필요한 파일들 (8개) - i18n 적용 불필요**
 - `webview-ui/src/components/chat\chat-view\components\layout\TaskSection.tsx` (순수 로직/스타일링)

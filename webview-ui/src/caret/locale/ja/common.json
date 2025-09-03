@@ -87,29 +87,6 @@
 			"toggle": "切り替え: {{metaKey}}+Shift+A"
 		}
 	},
-	"settings": {
-		"uiLanguage": {
-			"label": "UI言語",
-			"description": "Caretのユーザーインターフェース要素（メニュー、ボタン、メッセージなど）に使用される言語です。"
-		},
-		"preferredLanguage": {
-			"label": "AI応答言語",
-			"description": "Caretが会話に使用する言語です。"
-		},
-		"modeSystem": {
-			"label": "モード設定",
-			"description": "Caretモード設定を有効にすると、CaretのPlan/Actモードを使用できます。",
-			"options": {
-				"caret": "Caret",
-				"Caret": "Caret",
-				"cline": "Cline"
-			}
-		},
-		"separateModels": {
-			"label": "チャットボットとエージェントモードで異なるモデルを使用",
-			"description": "チャットボットとエージェントモードを切り替える際、各モードで使用したAPIとモデル設定が維持されます。例えば、専門相談（チャットボット）には強力な推論モデルを、協力開発（エージェント）にはコスト効率的なコーディングモデルを使用する場合に便利です。"
-		}
-	},
 	"account": {
 		"signUpWithCaret": "ログインおよびサインアップ",
 		"viewBillingUsage": "請求と使用量を表示",
@@ -121,6 +98,8 @@
 		"signUpDescription": "アカウントを作成して、最新のモデルにアクセスし、使用量とクレジットを確認できる請求ダッシュボード、その他の今後の機能をご利用ください。",
 		"termsOfService": "利用規約",
 		"privacyPolicy": "プライバシーポリシー",
+		"termsOfServiceUrl": "https://caretive.ai/terms.en.html",
+		"privacyPolicyUrl": "https://caretive.ai/privacy.en.html",
 		"byContining": "続行することで、以下に同意したことになります：",
 		"subscription": "サブスクリプションプラン",
 		"subscriptionFree": "無料",
@@ -306,6 +285,27 @@
 		"removeQuickAccess": "クイックアクセスメニューから削除"
 	},
 	"settings": {
+		"uiLanguage": {
+			"label": "UI言語",
+			"description": "Caretのユーザーインターフェース要素（メニュー、ボタン、メッセージなど）に使用される言語です。"
+		},
+		"preferredLanguage": {
+			"label": "AI応答言語",
+			"description": "Caretが会話に使用する言語です。"
+		},
+		"modeSystem": {
+			"label": "モード設定",
+			"description": "Caretモード設定を有効にすると、CaretのPlan/Actモードを使用できます。",
+			"options": {
+				"caret": "Caret",
+				"Caret": "Caret",
+				"cline": "Cline"
+			}
+		},
+		"separateModels": {
+			"label": "チャットボットとエージェントモードで異なるモデルを使用",
+			"description": "チャットボットとエージェントモードを切り替える際、各モードで使用したAPIとモデル設定が維持されます。例えば、専門相談（チャットボット）には強力な推論モデルを、協力開発（エージェント）にはコスト効率的なコーディングモデルを使用する場合に便利です。"
+		},
 		"label": "一般設定"
 	},
 	"features": {
@@ -322,8 +322,5 @@
 	},
 	"about": {
 		"title": "情報"
-	},
-	"apiOptions": {
-		"apiProvider": "API設定"
 	}
 }

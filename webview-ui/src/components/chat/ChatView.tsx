@@ -6,6 +6,7 @@ import { getApiMetrics } from "@shared/getApiMetrics"
 import { BooleanRequest, StringRequest } from "@shared/proto/cline/common"
 import { useCallback, useEffect, useMemo } from "react"
 import { useMount } from "react-use"
+import { t } from "@/caret/utils/i18n"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { FileServiceClient, UiServiceClient } from "@/services/grpc-client"
@@ -95,6 +96,9 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 		expandedRows,
 		setExpandedRows,
 		textAreaRef,
+		handleFocusChange,
+		activeQuote,
+		setActiveQuote,
 	} = chatState
 
 	useEffect(() => {
@@ -229,9 +233,9 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				}
 			}
 		} catch (error) {
-			console.error("Error selecting images & files:", error)
+			console.error(t("errorSelectingFilesImages", "chat"), error)
 		}
-	}, [selectedModelInfo.supportsImages])
+	}, [selectedModelInfo.supportsImages, selectedImages, selectedFiles])
 
 	const shouldDisableFilesAndImages = selectedImages.length + selectedFiles.length >= MAX_IMAGES_AND_FILES_PER_MESSAGE
 
@@ -249,13 +253,13 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 		return () => {
 			window.removeEventListener("focusChatInput", handleFocusChatInput)
 		}
-	}, [isHidden])
+	}, [isHidden, navigateToChat, textAreaRef])
 
 	// Set up addToInput subscription
 	useEffect(() => {
 		const clientId = (window as { clineClientId?: string }).clineClientId
 		if (!clientId) {
-			console.error("Client ID not found in window object for addToInput subscription")
+			console.error(t("clientIdNotFound", "chat"))
 			return
 		}
 
@@ -279,15 +283,15 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				}
 			},
 			onError: (error) => {
-				console.error("Error in addToInput subscription:", error)
+				console.error(t("errorInAddToInputSubscription", "chat"), error)
 			},
 			onComplete: () => {
-				console.log("addToInput subscription completed")
+				console.log(t("addToInputSubscriptionCompleted", "chat"))
 			},
 		})
 
 		return cleanup
-	}, [])
+	}, [setInputValue, textAreaRef])
 
 	useMount(() => {
 		// NOTE: the vscode window needs to be focused for this to work
@@ -296,14 +300,15 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
-			if (!isHidden && !sendingDisabled && !enableButtons) {
+			if (!isHidden && !sendingDisabled && enableButtons) {
+				// Corrected enableButtons condition
 				textAreaRef.current?.focus()
 			}
 		}, 50)
 		return () => {
 			clearTimeout(timer)
 		}
-	}, [isHidden, sendingDisabled, enableButtons])
+	}, [isHidden, sendingDisabled, enableButtons, textAreaRef])
 
 	const visibleMessages = useMemo(() => {
 		return filterVisibleMessages(modifiedMessages)
@@ -328,7 +333,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 	const scrollBehavior = useScrollBehavior(messages, visibleMessages, groupedMessages, expandedRows, setExpandedRows)
 
 	const placeholderText = useMemo(() => {
-		const text = task ? "Type a message..." : "Type your task here..."
+		const text = task ? t("typeMessage", "chat") : t("typeTaskHere", "chat")
 		return text
 	}, [task])
 

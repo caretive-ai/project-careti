@@ -391,7 +391,7 @@ function generateChecklistOutput(result, componentsDir) {
 
 // Main execution if run directly
 if (require.main === module) {
-	const componentsDir = process.argv[2] || path.join(process.cwd(), "../../webview-ui/src/components")
+	const componentsDir = process.argv[2] || path.resolve(__dirname, "../../../webview-ui/src/components")
 	const outputFormat = process.argv[3] || "detailed" // 'detailed', 'checklist'
 
 	findI18nMissingFiles(componentsDir)

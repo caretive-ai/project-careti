@@ -1,7 +1,7 @@
 ## 2.3. i18n 적용 필요 파일 체크리스트
 **총 154개 컴포넌트 중 146개 파일이 i18n 적용 필요**
 
-### **Account 관련 (5개) ✅ 완료**
+### **Account 관련 (5개)**
 [x] `webview-ui/src/components/account\AccountView.tsx` (하드코딩:26) ✅ 완료
 [x] `webview-ui/src/components/account\AccountWelcomeView.tsx` (하드코딩:7) ✅ 완료
 [x] `webview-ui/src/components/account\CreditBalance.tsx` (하드코딩:8) ✅ 완료
@@ -11,18 +11,18 @@
 ### **Chat 관련 (33개) - 진행중**
 [x] `webview-ui/src/components/chat\Announcement.tsx` (하드코딩:13) ✅ 완료
 [x] `webview-ui/src/components/chat\auto-approve-menu\AutoApproveBar.tsx` (하드코딩:8) ✅ 완료
-[ ] `webview-ui/src/components/chat\auto-approve-menu\AutoApproveMenuItem.tsx` (하드코딩:7)
-[ ] `webview-ui/src/components/chat\auto-approve-menu\AutoApproveModal.tsx` (하드코딩:19)
-[ ] `webview-ui/src/components/chat\BrowserSessionRow.tsx` (하드코딩:54)
-[ ] `webview-ui/src/components/chat\chat-view\components\layout\ActionButtons.tsx` (하드코딩:12)
-[ ] `webview-ui/src/components/chat\chat-view\components\layout\ChatLayout.tsx` (하드코딩:2)
-[ ] `webview-ui/src/components/chat\chat-view\components\layout\InputSection.tsx` (하드코딩:1)
-[ ] `webview-ui/src/components/chat\chat-view\components\layout\MessagesArea.tsx` (하드코딩:2)
-[ ] `webview-ui/src/components/chat\chat-view\components\layout\WelcomeSection.tsx` (하드코딩:5)
-[ ] `webview-ui/src/components/chat\ChatErrorBoundary.tsx` (하드코딩:9)
-[ ] `webview-ui/src/components/chat\ChatRow.tsx` (하드코딩:216)
-[ ] `webview-ui/src/components/chat\ChatTextArea.tsx` (하드코딩:131)
-[ ] `webview-ui/src/components/chat\ChatView.tsx` (하드코딩:15)
+[x] `webview-ui/src/components/chat\auto-approve-menu\AutoApproveMenuItem.tsx` (하드코딩:7) ✅ 완료
+[x] `webview-ui/src/components/chat\auto-approve-menu\AutoApproveModal.tsx` (하드코딩:19) ✅ 완료
+[x] `webview-ui/src/components/chat\BrowserSessionRow.tsx` (하드코딩:54) ✅ 완료
+[x] `webview-ui/src/components/chat\chat-view\components\layout\ActionButtons.tsx` (하드코딩:12) ✅ 완료
+[x] `webview-ui/src/components/chat\chat-view\components\layout\ChatLayout.tsx` (하드코딩:2) ✅ 완료
+[x] `webview-ui/src/components/chat\chat-view\components\layout\InputSection.tsx` (하드코딩:1) ✅ 완료
+[x] `webview-ui/src/components/chat\chat-view\components\layout\MessagesArea.tsx` (하드코딩:2) ✅ 완료
+[x] `webview-ui/src/components/chat\chat-view\components\layout\WelcomeSection.tsx` (하드코딩:5) ✅ 완료
+[x] `webview-ui/src/components/chat\ChatErrorBoundary.tsx` (하드코딩:9) ✅ 완료
+[x] `webview-ui/src/components/chat\ChatRow.tsx` (하드코딩:216) ✅ 완료
+[x] `webview-ui/src/components/chat\ChatTextArea.tsx` (하드코딩:131) ✅ 완료
+[x] `webview-ui/src/components/chat\ChatView.tsx` (하드코딩:15) ✅ 완료
 [ ] `webview-ui/src/components/chat\ContextMenu.tsx` (하드코딩:21)
 [ ] `webview-ui/src/components/chat\CreditLimitError.tsx` (하드코딩:18)
 [ ] `webview-ui/src/components/chat\ErrorBlockTitle.tsx` (하드코딩:13)
@@ -115,7 +115,7 @@
 [ ] `webview-ui/src/components/settings\providers\DifyProvider.tsx` (하드코딩:14)
 [ ] `webview-ui/src/components/settings\providers\DoubaoProvider.tsx` (하드코딩:5)
 [ ] `webview-ui/src/components/settings\providers\FireworksProvider.tsx` (하드코딩:4)
-[ ] `webview-ui/src/components/settings\providers\GeminiProvider.tsx` (하드코딩:9)
+[x] `webview-ui/src/components/settings\providers\GeminiProvider.tsx` (하드코딩:9) ✅ 완료
 [ ] `webview-ui/src/components/settings\providers\GroqProvider.tsx` (하드코딩:2)
 [ ] `webview-ui/src/components/settings\providers\HuaweiCloudMaasProvider.tsx` (하드코딩:6)
 [ ] `webview-ui/src/components/settings\providers\HuggingFaceProvider.tsx` (하드코딩:6)
@@ -141,18 +141,18 @@
 [ ] `webview-ui/src/components/settings\providers\ZAiProvider.tsx` (하드코딩:4)
 [ ] `webview-ui/src/components/settings\RequestyModelPicker.tsx` (하드코딩:26)
 [ ] `webview-ui/src/components/settings\SapAiCoreModelPicker.tsx` (하드코딩:6)
-[ ] `webview-ui/src/components/settings\Section.tsx` (하드코딩:1)
-[ ] `webview-ui/src/components/settings\SectionHeader.tsx` (하드코딩:2)
-[ ] `webview-ui/src/components/settings\sections\AboutSection.tsx` (하드코딩:3)
-[ ] `webview-ui/src/components/settings\sections\ApiConfigurationSection.tsx` (하드코딩:7)
-[ ] `webview-ui/src/components/settings\sections\BrowserSettingsSection.tsx` (하드코딩:49)
-[ ] `webview-ui/src/components/settings\sections\DebugSection.tsx` (하드코딩:2)
-[ ] `webview-ui/src/components/settings\sections\FeatureSettingsSection.tsx` (하드코딩:10)
-[ ] `webview-ui/src/components/settings\sections\TerminalSettingsSection.tsx` (하드코딩:22)
-[ ] `webview-ui/src/components/settings\SettingsView.tsx` (하드코딩:41)
-[ ] `webview-ui/src/components/settings\TerminalOutputLineLimitSlider.tsx` (하드코딩:7)
-[ ] `webview-ui/src/components/settings\ThinkingBudgetSlider.tsx` (하드코딩:8)
-[ ] `webview-ui/src/components/settings\UseCustomPromptCheckbox.tsx` (하드코딩:3)
+[x] `webview-ui/src/components/settings\Section.tsx` (하드코딩:1) ✅ 완료
+[x] `webview-ui/src/components/settings\SectionHeader.tsx` (하드코딩:2) ✅ 완료
+[x] `webview-ui/src/components/settings\sections\AboutSection.tsx` (하드코딩:3) ✅ 완료
+[x] `webview-ui/src/components/settings\sections\ApiConfigurationSection.tsx` (하드코딩:7) ✅ 완료
+[x] `webview-ui/src/components/settings\sections\BrowserSettingsSection.tsx` (하드코딩:49) ✅ 완료
+[x] `webview-ui/src/components/settings\sections\DebugSection.tsx` (하드코딩:2) ✅ 완료
+[x] `webview-ui/src/components/settings\sections\FeatureSettingsSection.tsx` (하드코딩:10) ✅ 완료
+[x] `webview-ui/src/components/settings\sections\TerminalSettingsSection.tsx` (하드코딩:22) ✅ 완료
+[x] `webview-ui/src/components/settings\SettingsView.tsx` (하드코딩:41) ✅ 완료
+[x] `webview-ui/src/components/settings\TerminalOutputLineLimitSlider.tsx` (하드코딩:7) ✅ 완료
+[x] `webview-ui/src/components/settings\ThinkingBudgetSlider.tsx` (하드코딩:8) ✅ 완료
+[x] `webview-ui/src/components/settings\UseCustomPromptCheckbox.tsx` (하드코딩:3) ✅ 완료
 
 ### **Welcome 관련 (4개)**
 [ ] `webview-ui/src/components/welcome\HomeHeader.tsx` (하드코딩:10)
@@ -180,5 +180,3 @@
 3. 하드코딩 텍스트를 `t("key", "namespace")` 형식으로 변환
 4. 필요한 JSON 키를 locale 파일에 추가
 5. 체크박스를 체크하여 진행상황 추적
-
-

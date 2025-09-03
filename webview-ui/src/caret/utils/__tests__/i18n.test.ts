@@ -1,43 +1,36 @@
 // CARET MODIFICATION: TDD tests for Caret i18n system
-import { hasLastConsonant, setGlobalUILanguage, t } from "../i18n"
-
-// Test helper to check if setGlobalUILanguage is working
-const _testLanguageChange = () => {
-	setGlobalUILanguage("en")
-	console.log("After setting EN - should process templates:")
-	const enResult = t("brand.appName", "common")
-	console.log("EN brand direct:", enResult)
-
-	setGlobalUILanguage("ko")
-	console.log("After setting KO - should process templates:")
-	const koResult = t("brand.appName", "common")
-	console.log("KO brand direct:", koResult)
-
-	return { en: enResult, ko: koResult }
-}
+import { hasLastConsonant, setGlobalUILanguage, setTranslationsForTesting, t } from "../i18n"
 
 // Mock translations for testing
 const _mockTranslations = {
 	ko: {
-		brand: { appName: "캐럿" },
-		welcome: {
-			title: "{{brand.appName|을}} 사용해보세요! 🎉",
-			description: "{{brand.appName|은}} AI 코딩 어시스턴트입니다",
+		common: {
+			brand: { appName: "캐럿" },
+			welcome: {
+				title: "{{brand.appName|을}} 사용해보세요! 🎉",
+				description: "{{brand.appName|은}} AI 코딩 어시스턴트입니다. 시작해보세요!",
+			},
 		},
 	},
 	en: {
-		brand: { appName: "Caret" },
-		welcome: {
-			title: "Welcome to {{brand.appName}}! 🎉",
-			description: "{{brand.appName}} is an AI coding assistant",
+		common: {
+			brand: { appName: "Caret" },
+			welcome: {
+				title: "Welcome to {{brand.appName}}! 🎉",
+				description: "{{brand.appName}} is an AI coding assistant. Get started!",
+			},
 		},
 	},
-}
+	ja: {}, // 빈 객체로 추가
+	zh: {}, // 빈 객체로 추가
+} as any // 타입 불일치 임시 해결
 
 describe("Caret i18n System", () => {
 	beforeEach(() => {
 		// Reset to English before each test
 		setGlobalUILanguage("en")
+		// 테스트 시작 전 목업 번역 데이터 주입
+		setTranslationsForTesting(_mockTranslations)
 	})
 
 	describe("브랜드명 동적 변경", () => {
@@ -62,14 +55,39 @@ describe("Caret i18n System", () => {
 		test("브랜드명 변경 후 즉시 반영", () => {
 			// Mock brand name change (실제로는 JSON 파일 수정)
 			const _mockBrandChange = {
-				ko: { brand: { appName: "코드센터" } },
-				en: { brand: { appName: "CodeCenter" } },
-			}
+				ko: {
+					common: {
+						brand: { appName: "코드센터" },
+						welcome: {
+							title: "{{brand.appName|을}} 사용해보세요! 🎉",
+							description: "{{brand.appName|은}} AI 코딩 어시스턴트입니다. 시작해보세요!",
+						},
+					},
+				},
+				en: {
+					common: {
+						brand: { appName: "CodeCenter" },
+						welcome: {
+							title: "Welcome to {{brand.appName}}! 🎉",
+							description: "{{brand.appName}} is an AI coding assistant. Get started!",
+						},
+					},
+				},
+				ja: {},
+				zh: {},
+			} as any
+
+			setTranslationsForTesting(_mockBrandChange) // 변경된 목업 데이터 주입
 
 			// English test
 			setGlobalUILanguage("en")
-			// Note: 실제 구현에서는 translations 객체를 업데이트해야 함
-			expect("Welcome to CodeCenter! 🎉").toMatch(/CodeCenter/)
+			const result = t("welcome.title", "common")
+			expect(result).toBe("Welcome to CodeCenter! 🎉")
+
+			// Korean test
+			setGlobalUILanguage("ko")
+			const koResult = t("welcome.title", "common")
+			expect(koResult).toBe("코드센터를 사용해보세요! 🎉")
 		})
 	})
 
@@ -84,15 +102,37 @@ describe("Caret i18n System", () => {
 		})
 
 		test("받침 없는 단어 + 을/를 조사", () => {
-			// Mock brand change to 코드센터 (no final consonant)
-			// 실제로는 브랜드명을 '코드센터'로 변경했을 때의 테스트
-			const expectedWithNoConsonant = "코드센터를 사용해보세요! 🎉"
-			expect(expectedWithNoConsonant).toContain("를")
+			const _mockBrandChange = {
+				ko: {
+					common: {
+						brand: { appName: "코드센터" },
+						welcome: {
+							title: "{{brand.appName|을}} 사용해보세요! 🎉",
+							description: "{{brand.appName|은}} AI 코딩 어시스턴트입니다. 시작해보세요!",
+						},
+					},
+				},
+				en: {
+					common: {
+						brand: { appName: "CodeCenter" },
+						welcome: {
+							title: "Welcome to {{brand.appName}}! 🎉",
+							description: "{{brand.appName}} is an AI coding assistant. Get started!",
+						},
+					},
+				},
+				ja: {},
+				zh: {},
+			} as any
+			setTranslationsForTesting(_mockBrandChange)
+
+			const result = t("welcome.title", "common")
+			expect(result).toBe("코드센터를 사용해보세요! 🎉")
 		})
 
 		test("은/는 조사 테스트", () => {
 			const result = t("welcome.description", "common")
-			expect(result).toBe("캐럿은 코드 작성, 디버깅, 개선을 도와주는 AI 코딩 어시스턴트입니다. 시작해보세요!")
+			expect(result).toBe("캐럿은 AI 코딩 어시스턴트입니다. 시작해보세요!")
 		})
 	})
 
@@ -136,6 +176,7 @@ describe("Caret i18n System", () => {
 			const result = t("welcome.title", "common")
 			expect(result).toContain("캐럿")
 			expect(result).toContain("🎉")
+			expect(result).toBe("캐럿을 사용해보세요! 🎉")
 		})
 
 		test("영어 설정 (기본)", () => {
@@ -156,7 +197,7 @@ describe("Caret i18n System", () => {
 		test("한글 조사가 포함된 브랜드 참조", () => {
 			setGlobalUILanguage("ko")
 			const result = t("welcome.title", "common")
-			expect(result).toMatch(/캐럿[을를]/)
+			expect(result).toMatch(/캐럿을/)
 		})
 	})
 })

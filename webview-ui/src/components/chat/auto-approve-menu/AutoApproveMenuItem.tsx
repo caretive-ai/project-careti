@@ -1,6 +1,7 @@
 import { VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react"
 import React from "react"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { ActionMetadata } from "./types"
 
@@ -94,7 +95,7 @@ const AutoApproveMenuItem = ({
 						<div className="left-content">
 							{onToggleFavorite && !condensed && (
 								<HeroTooltip
-									content={favorited ? "Remove from quick-access menu" : "Add to quick-access menu"}
+									content={favorited ? t("autoApprove.removeQuickAccess") : t("autoApprove.addQuickAccess")}
 									delay={500}>
 									<span
 										className={`p-0.5 codicon codicon-${favorited ? "star-full" : "star-empty"} star`}

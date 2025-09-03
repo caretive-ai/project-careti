@@ -3,6 +3,7 @@ import type { Mode } from "@shared/storage/types"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import type React from "react"
 import { useEffect, useMemo, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { BUTTON_CONFIGS, getButtonConfig } from "../../shared/buttonConfig"
 import type { ChatState, MessageHandlers } from "../../types/chatTypes"
 
@@ -88,7 +89,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 			<div className="flex px-[15px]">
 				<VSCodeButton
 					appearance="icon"
-					aria-label="Scroll to bottom"
+					aria-label={t("scrollToBottom", "common")}
 					className="text-lg text-[var(--vscode-primaryButton-foreground)] bg-[color-mix(in_srgb,var(--vscode-toolbar-hoverBackground)_55%,transparent)] rounded-[3px] overflow-hidden cursor-pointer flex justify-center items-center flex-1 h-[25px] hover:bg-[color-mix(in_srgb,var(--vscode-toolbar-hoverBackground)_90%,transparent)] active:bg-[color-mix(in_srgb,var(--vscode-toolbar-hoverBackground)_70%,transparent)] border-0"
 					onClick={handleScrollToBottom}
 					onKeyDown={(e) => {
@@ -114,7 +115,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 					className={`${secondaryButtonText ? "flex-1 mr-[6px]" : "flex-[2]"}`}
 					disabled={!enableButtons}
 					onClick={() => {
-						if (primaryButtonText === "Start New Task") {
+						if (primaryButtonText === t("chat.startNewTask", "chat")) {
 							messageHandlers.startNewTask()
 						} else {
 							messageHandlers.handleButtonClick(primaryButtonText, inputValue, selectedImages, selectedFiles)

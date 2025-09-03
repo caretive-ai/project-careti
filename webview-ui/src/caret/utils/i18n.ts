@@ -32,7 +32,7 @@ import { performanceMonitor } from "./i18n-performance"
 export type SupportedLanguage = "ko" | "en" | "ja" | "zh"
 
 // JSON 파일에서 번역 데이터 로드
-const translations = {
+let translations = {
 	ko: {
 		common: koCommon,
 		welcome: koWelcome,
@@ -65,6 +65,12 @@ const translations = {
 		"validate-api-conf": zhValidateApiConf,
 		announcement: zhAnnouncement,
 	},
+}
+
+// CARET MODIFICATION: 테스트 목적으로 translations 객체를 설정하는 함수 추가
+export const setTranslationsForTesting = (mockTranslations: typeof translations) => {
+	translations = mockTranslations
+	performanceMonitor.reset() // 캐시 초기화 (resetCache 대신 reset 사용)
 }
 
 // CARET MODIFICATION: 웹뷰 전역 UI 언어 관리

@@ -11,6 +11,7 @@ import { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, u
 import DynamicTextArea from "react-textarea-autosize"
 import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import ContextMenu from "@/components/chat/ContextMenu"
 import { CHAT_CONSTANTS } from "@/components/chat/chat-view/constants"
 import SlashCommandMenu from "@/components/chat/SlashCommandMenu"
@@ -1446,7 +1447,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 									fontSize: "12px",
 									textAlign: "center",
 								}}>
-								Image dimensions exceed 7500px
+								{t("image.dimensionError", "chat")}
 							</span>
 						</div>
 					)}
@@ -1470,7 +1471,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 									fontWeight: "bold",
 									fontSize: "12px",
 								}}>
-								Files other than images are currently disabled
+								{t("image.unsupportedFileError", "chat")}
 							</span>
 						</div>
 					)}
@@ -1617,7 +1618,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					/>
 					{!inputValue && selectedImages.length === 0 && selectedFiles.length === 0 && (
 						<div className="absolute bottom-4 left-[25px] right-[60px] text-[10px] text-[var(--vscode-input-placeholderForeground)] opacity-70 whitespace-nowrap overflow-hidden text-ellipsis pointer-events-none z-[1]">
-							Type @ for context, / for slash commands & workflows, hold shift to drag in files/images
+							{t("placeholderHint", "chat")}
 						</div>
 					)}
 					{(selectedImages.length > 0 || selectedFiles.length > 0) && (
@@ -1701,10 +1702,10 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								height: "100%",
 								zIndex: 6,
 							}}>
-							<Tooltip style={{ left: 0 }} tipText="Add Context">
+							<Tooltip style={{ left: 0 }} tipText={t("addContext", "chat")}>
 								<VSCodeButton
 									appearance="icon"
-									aria-label="Add Context"
+									aria-label={t("addContext", "chat")}
 									data-testid="context-button"
 									onClick={handleContextButtonClick}
 									style={{ padding: "0px 0px", height: "20px" }}>
@@ -1716,10 +1717,10 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								</VSCodeButton>
 							</Tooltip>
 
-							<Tooltip tipText="Add Files & Images">
+							<Tooltip tipText={t("addFilesImages", "chat")}>
 								<VSCodeButton
 									appearance="icon"
-									aria-label="Add Files & Images"
+									aria-label={t("addFilesImages", "chat")}
 									data-testid="files-button"
 									disabled={shouldDisableFilesAndImages}
 									onClick={() => {
@@ -1746,7 +1747,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 										onClick={handleModelButtonClick}
 										role="button"
 										tabIndex={0}
-										title="Select Model / API Provider">
+										title={t("selectModelApiProvider", "chat")}>
 										<ModelButtonContent>{modelDisplayName}</ModelButtonContent>
 									</ModelDisplayButton>
 								</ModelButtonWrapper>
@@ -1771,9 +1772,12 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					</div>
 					{/* Tooltip for Plan/Act toggle remains outside the conditional rendering */}
 					<Tooltip
-						hintText={`Toggle w/ ${metaKeyChar}+Shift+A`}
+						hintText={t("mode.tooltip.toggle", "chat", { metaKey: metaKeyChar })}
 						style={{ zIndex: 1000 }}
-						tipText={`In ${shownTooltipMode === "act" ? "Act" : "Plan"}  mode, Cline will ${shownTooltipMode === "act" ? "complete the task immediately" : "gather information to architect a plan"}`}
+						tipText={t("mode.tooltip.description", "chat", {
+							mode: shownTooltipMode === "act" ? t("mode.act.label", "chat") : t("mode.plan.label", "chat"),
+							action: shownTooltipMode === "act" ? t("mode.act.action", "chat") : t("mode.plan.action", "chat"),
+						})}
 						visible={shownTooltipMode !== null}>
 						<SwitchContainer data-testid="mode-switch" disabled={false} onClick={onModeToggle}>
 							<Slider isAct={mode === "act"} isPlan={mode === "plan"} />
@@ -1783,7 +1787,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("plan")}
 								role="switch">
-								Plan
+								{t("mode.plan.label", "chat")}
 							</SwitchOption>
 							<SwitchOption
 								aria-checked={mode === "act"}
@@ -1791,7 +1795,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("act")}
 								role="switch">
-								Act
+								{t("mode.act.label", "chat")}
 							</SwitchOption>
 						</SwitchContainer>
 					</Tooltip>

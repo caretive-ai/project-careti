@@ -1,0 +1,72 @@
+{
+	"chat": {
+		"startNewTask": "Start New Task",
+		"error": {
+			"displayContent": "Something went wrong displaying this content",
+			"unknown": "Error: {{message}}",
+			"unknownError": "Unknown error",
+			"label": "Error",
+			"mistakeLimitReached": "Caret is having trouble...",
+			"maxRequestsReached": "Maximum Requests Reached"
+		},
+		"mcp": {
+			"useServer": "Caret wants to {{type}} on the {{serverName}} MCP server:",
+			"tool": "use a tool",
+			"resource": "access a resource"
+		},
+		"taskCompleted": "Task Completed",
+		"tool": {
+			"outsideWorkspace": "This file is outside of your workspace",
+			"editFile": "Caret wants to edit this file",
+			"createFile": "Caret wants to create a new file",
+			"readFile": "Caret wants to read this file",
+			"listFilesTopLevel": "Caret wants to view the top level files in this directory",
+			"listFilesRecursive": "Caret wants to recursively view all files in this directory",
+			"listCodeDefinitionNames": "Caret wants to view source code definition names used in this directory",
+			"searchFiles": "Caret wants to search this directory for",
+			"summarizeTask": "Caret is condensing the conversation",
+			"summary": "Summary",
+			"externalUrl": "This URL is external",
+			"webFetch": "Caret wants to fetch content from this URL",
+			"commandOutput": "Command Output",
+			"commandApprovalRequired": "The model has determined this command requires explicit approval.",
+			"mcpNotification": "MCP Notification",
+			"thinking": {
+				"label": "Thinking"
+			},
+			"mcpLoadingDocumentation": "Loading MCP documentation",
+			"seeNewChanges": "See new changes",
+			"shellIntegration": {
+				"unavailable": "Shell Integration Unavailable",
+				"description": "Cline may have trouble viewing the command's output. Please update VSCode (<code>CMD/CTRL + Shift + P</code> → \"Update\") and make sure you're using a supported shell: zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\").",
+				"troubleshooting": "Still having trouble?"
+			},
+			"condenseConversation": "Caret wants to condense your conversation",
+			"createGithubIssue": "Caret wants to create a Github issue"
+		},
+		"image": {
+			"dimensionError": "Image dimensions exceed 7500px",
+			"unsupportedFileError": "Files other than images are currently disabled"
+		},
+		"selectModelApiProvider": "Select Model / API Provider",
+		"addContext": "Add Context",
+		"addFilesImages": "Add Files & Images",
+		"mode": {
+			"tooltip": {
+				"description": "In {{mode}} mode, Caret will {{action}}",
+				"act": {
+					"action": "complete the task immediately"
+				},
+				"plan": {
+					"action": "gather information to architect a plan"
+				}
+			},
+			"act": {
+				"label": "Act"
+			},
+			"plan": {
+				"label": "Plan"
+			}
+		}
+	}
+}

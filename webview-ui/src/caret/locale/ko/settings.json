@@ -2,20 +2,6 @@
 	"settingsView": {
 		"title": "캐럿 설정"
 	},
-	"settings": {
-		"modeSystem": {
-			"label": "모드 시스템",
-			"description": "Caret 모드는 Cursor와 유사한 유연한 Chatbot/Agent 모드를 지원하고 효율적인 시스템 프롬프트를 제공합니다. Cline 모드는 기존의 Plan/Act 구조를 유지합니다.",
-			"options": {
-				"caret": "캐럿",
-				"cline": "클라인"
-			}
-		},
-		"uiLanguage": {
-			"label": "UI 언어",
-			"description": "캐럿의 인터페이스 언어를 선택하세요."
-		}
-	},
 	"tabs": {
 		"apiConfiguration": {
 			"name": "API 설정",
@@ -53,6 +39,16 @@
 			"header": "정보"
 		},
 		"title": "Caret 설정"
+	},
+	"settings": {
+		"modeSystem": {
+			"label": "모드 시스템",
+			"description": "Caret 또는 Cline 모드를 선택하세요.",
+			"options": {
+				"caret": "캐럿",
+				"cline": "클라인"
+			}
+		}
 	},
 	"buttons": {
 		"save": "저장",

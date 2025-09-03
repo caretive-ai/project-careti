@@ -1,17 +1,1 @@
-{
-	"header": "🎉 v{{version}} 新功能",
-	"previousHeader": "历史更新:",
-	"bullets": {
-		"current": {
-			"1": "GPT-5 模型系列支持",
-			"2": "新增15个提供商，集成274个AI模型"
-		}
-	},
-	"links": {
-		"intro": "社区：",
-		"and": "与",
-		"facebook": "Facebook 群组",
-		"github": "GitHub",
-		"outro": "！"
-	}
-}
+{}

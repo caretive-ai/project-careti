@@ -64,7 +64,9 @@
       "Bash(npx biome check:*)",
       "Read(D:\\/**)",
       "Read(D:\\/**)",
-      "Read(D:\\/**)"
+      "Read(D:\\/**)",
+      "Read(D:\\dev\\caret\\caret-main\\webview-ui\\src\\caret\\locale\\ko/**)",
+      "Read(D:\\dev\\caret\\caret-main\\webview-ui\\src\\caret\\locale\\ko/**)"
     ],
     "deny": [],
     "ask": []

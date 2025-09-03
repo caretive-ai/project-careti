@@ -75,7 +75,10 @@ async function findI18nMissingFiles(componentsDir) {
 		// Always add to analysis for comprehensive reporting
 		result.analysis.push(analysis)
 
-		// Categorize by status
+		// Categorize by status (ensure array exists)
+		if (!result.byStatus[analysis.i18nStatus]) {
+			result.byStatus[analysis.i18nStatus] = []
+		}
 		result.byStatus[analysis.i18nStatus].push(analysis)
 
 		if (analysis.needsI18n) {
@@ -83,6 +86,9 @@ async function findI18nMissingFiles(componentsDir) {
 
 			// Categorize by component type
 			const category = categorizeComponent(filePath)
+			if (!result.categorized[category]) {
+				result.categorized[category] = []
+			}
 			result.categorized[category].push(filePath)
 
 			result.summary.missingI18nCount++
@@ -340,6 +346,7 @@ function generateChecklistOutput(result, componentsDir) {
 				})
 			} else {
 				// Fallback to 'other' if category not found
+				console.warn(`Unknown category: ${category} for file ${analysis.file}`)
 				categoryGroups["other"].files.push({
 					path: relativePath,
 					hardcodedCount: analysis.hardcodedCount,

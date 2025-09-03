@@ -285,12 +285,12 @@ export const t = (
 			}
 		}
 
-		// Fallback to English
-		const enNamespaceData = translations.en[namespace as keyof (typeof translations)["en"]]
-		if (enNamespaceData) {
-			const value = getNestedValue(enNamespaceData, key)
+		// Fallback to Korean (temporary for development)
+		const koNamespaceData = translations.ko[namespace as keyof (typeof translations)["ko"]]
+		if (koNamespaceData) {
+			const value = getNestedValue(koNamespaceData, key)
 			if (value !== undefined && value !== null) {
-				result = replaceTemplateVariables(value, "en", options, namespace)
+				result = replaceTemplateVariables(value, "ko", options, namespace)
 				// Cache the fallback result
 				performanceMonitor.setCachedTranslation(cacheKey, result)
 				return result
@@ -331,12 +331,12 @@ export const tWithLang = (key: string, language: SupportedLanguage, namespace: s
 			}
 		}
 
-		// Fallback to English (not Korean as originally)
-		const enNamespaceData = translations.en[namespace as keyof (typeof translations)["en"]]
-		if (enNamespaceData) {
-			const value = getNestedValue(enNamespaceData, key)
+		// Fallback to Korean (temporary for development)
+		const koNamespaceData = translations.ko[namespace as keyof (typeof translations)["ko"]]
+		if (koNamespaceData) {
+			const value = getNestedValue(koNamespaceData, key)
 			if (value) {
-				result = replaceTemplateVariables(value, "en", undefined, namespace)
+				result = replaceTemplateVariables(value, "ko", undefined, namespace)
 				performanceMonitor.setCachedTranslation(cacheKey, result)
 				return result
 			}

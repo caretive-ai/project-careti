@@ -1,13 +1,12 @@
 ## 2.3. i18n 적용 필요 파일 체크리스트
 **총 154개 컴포넌트 중 146개 파일이 i18n 적용 필요**
 
-### **Account 관련 (6개)**
-[x] `webview-ui/src/components/account\AccountOptions.tsx` (하드코딩:1) ✅ 완료
-[x] `webview-ui/src/components/account\AccountView.tsx` (하드코딩:31) ✅ 완료
-[x] `webview-ui/src/components/account\AccountWelcomeView.tsx` (하드코딩:6) ✅ 완료
-[x] `webview-ui/src/components/account\CreditBalance.tsx` (하드코딩:8) ✅ 완료
-[x] `webview-ui/src/components/account\CreditsHistoryTable.tsx` (하드코딩:23) ✅ 완료
-[x] `webview-ui/src/components/account\StyledCreditDisplay.tsx` (하드코딩:1) ✅ 완료
+### **Account 관련 (5개)**
+[ ] `webview-ui/src/components/account\AccountView.tsx` (하드코딩:26)
+[ ] `webview-ui/src/components/account\AccountWelcomeView.tsx` (하드코딩:7)
+[ ] `webview-ui/src/components/account\CreditBalance.tsx` (하드코딩:8)
+[ ] `webview-ui/src/components/account\CreditsHistoryTable.tsx` (하드코딩:14)
+[ ] `webview-ui/src/components/account\StyledCreditDisplay.tsx` (하드코딩:1)
 
 ### **Chat 관련 (33개)**
 [ ] `webview-ui/src/components/chat\Announcement.tsx` (하드코딩:13)
@@ -35,7 +34,7 @@
 [ ] `webview-ui/src/components/chat\ReportBugPreview.tsx` (하드코딩:13)
 [ ] `webview-ui/src/components/chat\ServersToggleModal.tsx` (하드코딩:12)
 [ ] `webview-ui/src/components/chat\SlashCommandMenu.tsx` (하드코딩:10)
-[ ] `webview-ui/src/components/chat\task-header\buttons\CopyTaskButton.tsx` (하드코딩:6)
+[ ] `webview-ui/src/components/chat\task-header\buttons\CopyTaskButton.tsx` (하드코딩:4)
 [ ] `webview-ui/src/components/chat\task-header\buttons\DeleteTaskButton.tsx` (하드코딩:1)
 [ ] `webview-ui/src/components/chat\task-header\buttons\OpenDiskTaskHistoryButton.tsx` (하드코딩:5)
 [ ] `webview-ui/src/components/chat\task-header\TaskHeader.tsx` (하드코딩:77)
@@ -43,7 +42,6 @@
 [ ] `webview-ui/src/components/chat\task-header\TaskTimelineTooltip.tsx` (하드코딩:52)
 [ ] `webview-ui/src/components/chat\TaskFeedbackButtons.tsx` (하드코딩:16)
 [ ] `webview-ui/src/components/chat\UserMessage.tsx` (하드코딩:17)
-[ ] 위 체크리스트 문서 업데이트하고 커밋 푸시 진행
 
 ### **Cline Rules 관련 (4개)**
 [ ] `webview-ui/src/components/cline-rules\ClineRulesToggleModal.tsx` (하드코딩:37)
@@ -51,7 +49,7 @@
 [ ] `webview-ui/src/components/cline-rules\RuleRow.tsx` (하드코딩:23)
 [ ] `webview-ui/src/components/cline-rules\RulesToggleList.tsx` (하드코딩:4)
 
-### **Common 관련 (22개)**
+### **Common 관련 (17개)**
 [ ] `webview-ui/src/components/common\AlertDialog.tsx` (하드코딩:8)
 [ ] `webview-ui/src/components/common\ChecklistRenderer.tsx` (하드코딩:5)
 [ ] `webview-ui/src/components/common\CheckmarkControl.tsx` (하드코딩:17)
@@ -69,16 +67,10 @@
 [ ] `webview-ui/src/components/common\TelemetryBanner.tsx` (하드코딩:4)
 [ ] `webview-ui/src/components/common\Thumbnails.tsx` (하드코딩:10)
 [ ] `webview-ui/src/components/common\Tooltip.tsx` (하드코딩:2)
-[ ] `webview-ui/src/components/settings\common\ApiKeyField.tsx` (하드코딩:6)
-[ ] `webview-ui/src/components/settings\common\BaseUrlField.tsx` (하드코딩:4)
-[ ] `webview-ui/src/components/settings\common\ErrorMessage.tsx` (하드코딩:1)
-[ ] `webview-ui/src/components/settings\common\ModelInfoView.tsx` (하드코딩:14)
-[ ] `webview-ui/src/components/settings\common\ModelSelector.tsx` (하드코딩:5)
 
 ### **History 관련 (2개)**
 [ ] `webview-ui/src/components/history\HistoryPreview.tsx` (하드코딩:24)
 [ ] `webview-ui/src/components/history\HistoryView.tsx` (하드코딩:66)
-[ ] 위 체크리스트 문서 업데이트하고 커밋 푸시 진행
 
 ### **MCP 관련 (14개)**
 [ ] `webview-ui/src/components/mcp\chat-display\ImagePreview.tsx` (하드코딩:44)
@@ -96,10 +88,15 @@
 [ ] `webview-ui/src/components/mcp\configuration\tabs\marketplace\McpMarketplaceView.tsx` (하드코딩:35)
 [ ] `webview-ui/src/components/mcp\configuration\tabs\marketplace\McpSubmitCard.tsx` (하드코딩:9)
 
-### **Settings 관련 (59개)**
+### **Settings 관련 (64개)**
 [ ] `webview-ui/src/components/settings\ApiOptions.tsx` (하드코딩:133)
 [ ] `webview-ui/src/components/settings\BasetenModelPicker.tsx` (하드코딩:15)
 [ ] `webview-ui/src/components/settings\ClineAccountInfoCard.tsx` (하드코딩:2)
+[ ] `webview-ui/src/components/settings\common\ApiKeyField.tsx` (하드코딩:6)
+[ ] `webview-ui/src/components/settings\common\BaseUrlField.tsx` (하드코딩:4)
+[ ] `webview-ui/src/components/settings\common\ErrorMessage.tsx` (하드코딩:1)
+[ ] `webview-ui/src/components/settings\common\ModelInfoView.tsx` (하드코딩:14)
+[ ] `webview-ui/src/components/settings\common\ModelSelector.tsx` (하드코딩:5)
 [ ] `webview-ui/src/components/settings\FeaturedModelCard.tsx` (하드코딩:2)
 [ ] `webview-ui/src/components/settings\GroqModelPicker.tsx` (하드코딩:14)
 [ ] `webview-ui/src/components/settings\HuggingFaceModelPicker.tsx` (하드코딩:10)
@@ -163,14 +160,9 @@
 [ ] `webview-ui/src/components/welcome\SuggestedTasks.tsx` (하드코딩:4)
 [ ] `webview-ui/src/components/welcome\WelcomeView.tsx` (하드코딩:11)
 
-### **Browser 관련 (1개)**
+### **기타 (2개)**
 [ ] `webview-ui/src/components/browser\BrowserSettingsMenu.tsx` (하드코딩:21)
-
-### **Menu 관련 (1개)**
 [ ] `webview-ui/src/components/menu\Navbar.tsx` (하드코딩:17)
-[ ] 위 체크리스트 문서 업데이트하고 커밋 푸시 진행
-[ ] i18n 체크리스트 스크립트로 재생성하여 전부 체크되었는지 확인, 누락 있으면 다시 확인 할 것, 누락이 없으면 
-   t03-3-프론트i18n및상호이식개선.md 의 2.3 항목에 체크하고 커밋 푸시하고  완료 다음 단계로 진행
 
 ### **불필요한 파일들 (8개) - i18n 적용 불필요**
 - `webview-ui/src/components/chat\chat-view\components\layout\TaskSection.tsx` (순수 로직/스타일링)
@@ -188,4 +180,5 @@
 3. 하드코딩 텍스트를 `t("key", "namespace")` 형식으로 변환
 4. 필요한 JSON 키를 locale 파일에 추가
 5. 체크박스를 체크하여 진행상황 추적
+
 

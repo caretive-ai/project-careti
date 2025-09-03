@@ -5,6 +5,7 @@ import { VSCodeButton, VSCodeDivider, VSCodeDropdown, VSCodeOption, VSCodeTag } 
 import deepEqual from "fast-deep-equal"
 import { memo, useCallback, useEffect, useRef, useState } from "react"
 import { useInterval } from "react-use"
+import { t } from "@/caret/utils/i18n"
 import { type ClineUser, handleSignOut } from "@/context/ClineAuthContext"
 import { AccountServiceClient } from "@/services/grpc-client"
 import VSCodeButtonLink from "../common/VSCodeButtonLink"
@@ -12,7 +13,6 @@ import { AccountWelcomeView } from "./AccountWelcomeView"
 import { CreditBalance } from "./CreditBalance"
 import CreditsHistoryTable from "./CreditsHistoryTable"
 import { convertProtoUsageTransactions, getClineUris, getMainRole } from "./helpers"
-import { t } from "@/caret/utils/i18n"
 
 type AccountViewProps = {
 	clineUser: ClineUser | null
@@ -282,7 +282,7 @@ export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganizat
 									disabled={isLoading}
 									onChange={handleOrganizationChange}>
 									<VSCodeOption key="personal" value={uid}>
-										Personal
+										{t("account.personal", "common")}
 									</VSCodeOption>
 									{userOrganizations?.map((org: UserOrganization) => (
 										<VSCodeOption key={org.organizationId} value={org.organizationId}>

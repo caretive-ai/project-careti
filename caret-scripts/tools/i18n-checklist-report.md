@@ -3,11 +3,11 @@
 
 ### **Account 관련 (6개)**
 [x] `webview-ui/src/components/account\AccountOptions.tsx` (하드코딩:1) ✅ 완료
-[ ] `webview-ui/src/components/account\AccountView.tsx` (하드코딩:31)
-[ ] `webview-ui/src/components/account\AccountWelcomeView.tsx` (하드코딩:6)
-[ ] `webview-ui/src/components/account\CreditBalance.tsx` (하드코딩:8)
-[ ] `webview-ui/src/components/account\CreditsHistoryTable.tsx` (하드코딩:23)
-[ ] `webview-ui/src/components/account\StyledCreditDisplay.tsx` (하드코딩:1)
+[x] `webview-ui/src/components/account\AccountView.tsx` (하드코딩:31) ✅ 완료
+[x] `webview-ui/src/components/account\AccountWelcomeView.tsx` (하드코딩:6) ✅ 완료
+[x] `webview-ui/src/components/account\CreditBalance.tsx` (하드코딩:8) ✅ 완료
+[x] `webview-ui/src/components/account\CreditsHistoryTable.tsx` (하드코딩:23) ✅ 완료
+[x] `webview-ui/src/components/account\StyledCreditDisplay.tsx` (하드코딩:1) ✅ 완료
 
 ### **Chat 관련 (33개)**
 [ ] `webview-ui/src/components/chat\Announcement.tsx` (하드코딩:13)

@@ -399,13 +399,6 @@
 			"maxRequestsTooltip": "{{brand.appName}} will automatically make this many API requests before asking for approval to proceed with the task."
 		}
 	},
-	"error": {
-		"creditLimit": {
-			"message": "You have run out of credits.",
-			"buyCredits": "Buy Credits",
-			"retryRequest": "Retry Request"
-		}
-	},
 	"feedback": {
 		"helpful": "This was helpful",
 		"notHelpful": "This wasn't helpful"

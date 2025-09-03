@@ -399,14 +399,6 @@
 			"maxRequestsTooltip": "{{brand.appName|이}} 작업 진행에 대한 승인을 요청하기 전에 자동으로 이만큼 API 요청을 수행합니다."
 		}
 	},
-	"error": {
-		"generic": "오류가 발생했습니다.",
-		"creditLimit": {
-			"message": "크레딧이 부족합니다.",
-			"buyCredits": "크레딧 구매",
-			"retryRequest": "요청 재시도"
-		}
-	},
 	"feedback": {
 		"helpful": "도움이 되었습니다",
 		"notHelpful": "도움이 되지 않았습니다"

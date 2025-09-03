@@ -58,7 +58,13 @@
       "Bash(git -C caret-b2b status --short)",
       "Bash(cat:*)",
       "Bash(git checkout:*)",
-      "Bash(start test-i18n-brand.html)"
+      "Bash(start test-i18n-brand.html)",
+      "Bash(sed:*)",
+      "Read(D:\\/**)",
+      "Bash(npx biome check:*)",
+      "Read(D:\\/**)",
+      "Read(D:\\/**)",
+      "Read(D:\\/**)"
     ],
     "deny": [],
     "ask": []

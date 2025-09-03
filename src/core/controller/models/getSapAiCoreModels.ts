@@ -94,7 +94,7 @@ async function fetchAiCoreModelsAndOrchestration(
  * @returns SapAiCoreModelsResponse with model names and orchestration availability
  */
 export async function getSapAiCoreModels(
-	_controller: Controller,
+	controller: Controller,
 	request: SapAiCoreModelsRequest,
 ): Promise<SapAiCoreModelsResponse> {
 	try {

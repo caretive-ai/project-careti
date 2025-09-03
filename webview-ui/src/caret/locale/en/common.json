@@ -7,7 +7,8 @@
 		"cancel": "Cancel",
 		"setupApiOrLocal": "Setup My API Key or Local LLM",
 		"notifyCaretAccount": "Notify Me for Caret Subscription",
-		"saveAndStart": "Save and Start"
+		"saveAndStart": "Save and Start",
+		"done": "Done"
 	},
 	"error": {
 		"generic": "An error occurred."
@@ -179,7 +180,22 @@
 		"payAsYouGo": "Pay as you go",
 		"organization": "Organization",
 		"payAsYouGoDescription": "* Additional charges apply after all subscription usage is exhausted.",
-		"failedToGetLoginUrl": "Failed to get login URL:"
+		"failedToGetLoginUrl": "Failed to get login URL:",
+		"title": "Account",
+		"failedToFetchUserCredit": "Failed to fetch user credit:",
+		"failedToFetchCreditBalance": "Failed to fetch credit balance:",
+		"profileAlt": "Profile",
+		"role": "Role",
+		"lastUpdated": "Last updated",
+		"usageHistory": "Usage History",
+		"paymentsHistory": "Payments History",
+		"date": "Date",
+		"model": "Model",
+		"creditsUsed": "Credits Used",
+		"noUsageHistory": "No usage history",
+		"totalCost": "Total Cost",
+		"credits": "Credits",
+		"noPaymentHistory": "No payment history"
 	},
 	"common": {
 		"and": "and"

@@ -7,7 +7,8 @@
 		"cancel": "キャンセル",
 		"setupApiOrLocal": "APIキーまたはローカルLLMをセットアップする",
 		"notifyCaretAccount": "Caretサブスクリプションの通知を受け取る",
-		"saveAndStart": "保存して開始"
+		"saveAndStart": "保存して開始",
+		"done": "完了"
 	},
 	"error": {
 		"generic": "エラーが発生しました。"
@@ -126,7 +127,22 @@
 		"subscriptionBasic": "ベーシック",
 		"payAsYouGo": "従量課金",
 		"payAsYouGoDescription": "* サブスクリプションの使用量をすべて使い切った後、追加料金が発生します。",
-		"failedToGetLoginUrl": "ログインURLの取得に失敗しました："
+		"failedToGetLoginUrl": "ログインURLの取得に失敗しました：",
+		"title": "アカウント",
+		"failedToFetchUserCredit": "ユーザークレジットの取得に失敗しました：",
+		"failedToFetchCreditBalance": "クレジット残高の取得に失敗しました：",
+		"profileAlt": "プロフィール",
+		"role": "ロール",
+		"lastUpdated": "最終更新",
+		"usageHistory": "使用履歴",
+		"paymentsHistory": "支払い履歴",
+		"date": "日付",
+		"model": "モデル",
+		"creditsUsed": "使用クレジット",
+		"noUsageHistory": "使用履歴がありません",
+		"totalCost": "総額",
+		"credits": "クレジット",
+		"noPaymentHistory": "支払い履歴がありません"
 	},
 	"common": {
 		"and": "と"

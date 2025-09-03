@@ -7,7 +7,8 @@
 		"cancel": "취소",
 		"setupApiOrLocal": "내 API 키 또는 로컬 LLM 설정",
 		"notifyCaretAccount": "{{brand.appName}} 구독 알림 받기",
-		"saveAndStart": "저장하고 시작"
+		"saveAndStart": "저장하고 시작",
+		"done": "완료"
 	},
 	"error": {
 		"generic": "오류가 발생했습니다."
@@ -195,7 +196,22 @@
 		"payAsYouGo": "사용한 만큼 지불",
 		"organization": "조직",
 		"payAsYouGoDescription": "* 모든 구독 사용량이 소진된 후 추가 요금이 적용됩니다.",
-		"failedToGetLoginUrl": "로그인 URL을 가져오지 못했습니다:"
+		"failedToGetLoginUrl": "로그인 URL을 가져오지 못했습니다:",
+		"title": "계정",
+		"failedToFetchUserCredit": "사용자 크레딧을 가져오지 못했습니다:",
+		"failedToFetchCreditBalance": "크레딧 잔액을 가져오지 못했습니다:",
+		"profileAlt": "프로필",
+		"role": "역할",
+		"lastUpdated": "마지막 업데이트",
+		"usageHistory": "사용 기록",
+		"paymentsHistory": "결제 기록",
+		"date": "날짜",
+		"model": "모델",
+		"creditsUsed": "사용 크레딧",
+		"noUsageHistory": "사용 기록이 없습니다",
+		"totalCost": "총 비용",
+		"credits": "크레딧",
+		"noPaymentHistory": "결제 기록이 없습니다"
 	},
 	"common": {
 		"and": "그리고"

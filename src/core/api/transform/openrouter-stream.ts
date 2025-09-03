@@ -1,6 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk"
 import { CLAUDE_SONNET_4_1M_SUFFIX, ModelInfo, openRouterClaudeSonnet41mModelId } from "@shared/api"
 import OpenAI from "openai"
+import { isGPT5ModelFamily } from "../../prompts/system-prompt/utils"
 import { convertToOpenAiMessages } from "./openai-format"
 import { convertToR1Format } from "./r1-format"
 
@@ -55,7 +56,7 @@ export async function createOpenRouterStream(
 					{
 						type: "text",
 						text: systemPrompt,
-						// @ts-expect-error-next-line
+						// @ts-ignore-next-line
 						cache_control: { type: "ephemeral" },
 					},
 				],
@@ -75,7 +76,7 @@ export async function createOpenRouterStream(
 						lastTextPart = { type: "text", text: "..." }
 						msg.content.push(lastTextPart)
 					}
-					// @ts-expect-error-next-line
+					// @ts-ignore-next-line
 					lastTextPart["cache_control"] = { type: "ephemeral" }
 				}
 			})
@@ -155,7 +156,7 @@ export async function createOpenRouterStream(
 	const isKimiK2 = model.id === "moonshotai/kimi-k2"
 	openRouterProviderSorting = isKimiK2 ? undefined : openRouterProviderSorting
 
-	// @ts-expect-error-next-line
+	// @ts-ignore-next-line
 	const stream = await client.chat.completions.create({
 		model: model.id,
 		max_tokens: maxTokens,

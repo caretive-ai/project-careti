@@ -69,9 +69,7 @@ export async function showSystemNotification(options: NotificationOptions): Prom
 
 	// Simple brand replacement function
 	const replaceBrand = (text: string | undefined): string | undefined => {
-		if (!text) {
-			return text
-		}
+		if (!text) return text
 		return text.replace(/Cline/g, "Caret").replace(/cline/g, "caret").replace(/CLINE/g, "CARET")
 	}
 

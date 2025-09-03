@@ -3,6 +3,7 @@ import { VSCodeDataGrid, VSCodeDataGridCell, VSCodeDataGridRow } from "@vscode/w
 import { useState } from "react"
 import { formatDollars, formatTimestamp } from "@/utils/format"
 import { TabButton } from "../mcp/configuration/McpConfigurationView"
+import { t } from "@/caret/utils/i18n"
 
 interface CreditsHistoryTableProps {
 	isLoading: boolean
@@ -19,11 +20,11 @@ const CreditsHistoryTable = ({ isLoading, usageData, paymentsData, showPayments 
 			{/* Tabs container */}
 			<div className="flex border-b border-[var(--vscode-panel-border)]">
 				<TabButton isActive={activeTab === "usage"} onClick={() => setActiveTab("usage")}>
-					USAGE HISTORY
+					{t("account.usageHistory", "common").toUpperCase()}
 				</TabButton>
 				{showPayments && (
 					<TabButton isActive={activeTab === "payments"} onClick={() => setActiveTab("payments")}>
-						PAYMENTS HISTORY
+						{t("account.paymentsHistory", "common").toUpperCase()}
 					</TabButton>
 				)}
 			</div>
@@ -32,7 +33,7 @@ const CreditsHistoryTable = ({ isLoading, usageData, paymentsData, showPayments 
 			<div className="mt-[15px] mb-[0px] rounded-md overflow-auto flex-grow">
 				{isLoading ? (
 					<div className="flex justify-center items-center p-4">
-						<div className="text-[var(--vscode-descriptionForeground)]">Loading...</div>
+						<div className="text-[var(--vscode-descriptionForeground)]">{t("account.loading", "common")}</div>
 					</div>
 				) : (
 					<>
@@ -41,16 +42,16 @@ const CreditsHistoryTable = ({ isLoading, usageData, paymentsData, showPayments 
 								<VSCodeDataGrid>
 									<VSCodeDataGridRow row-type="header">
 										<VSCodeDataGridCell cell-type="columnheader" grid-column="1">
-											Date
+											{t("account.date", "common")}
 										</VSCodeDataGridCell>
 										<VSCodeDataGridCell cell-type="columnheader" grid-column="2">
-											Model
+											{t("account.model", "common")}
 										</VSCodeDataGridCell>
 										{/* <VSCodeDataGridCell cell-type="columnheader" grid-column="3">
 												Tokens Used
 											</VSCodeDataGridCell> */}
 										<VSCodeDataGridCell cell-type="columnheader" grid-column="3">
-											Credits Used
+											{t("account.creditsUsed", "common")}
 										</VSCodeDataGridCell>
 									</VSCodeDataGridRow>
 
@@ -67,7 +68,7 @@ const CreditsHistoryTable = ({ isLoading, usageData, paymentsData, showPayments 
 								</VSCodeDataGrid>
 							) : (
 								<div className="flex justify-center items-center p-4">
-									<div className="text-[var(--vscode-descriptionForeground)]">No usage history</div>
+									<div className="text-[var(--vscode-descriptionForeground)]">{t("account.noUsageHistory", "common")}</div>
 								</div>
 							))}
 
@@ -77,13 +78,13 @@ const CreditsHistoryTable = ({ isLoading, usageData, paymentsData, showPayments 
 								<VSCodeDataGrid>
 									<VSCodeDataGridRow row-type="header">
 										<VSCodeDataGridCell cell-type="columnheader" grid-column="1">
-											Date
+											{t("account.date", "common")}
 										</VSCodeDataGridCell>
 										<VSCodeDataGridCell cell-type="columnheader" grid-column="2">
-											Total Cost
+											{t("account.totalCost", "common")}
 										</VSCodeDataGridCell>
 										<VSCodeDataGridCell cell-type="columnheader" grid-column="3">
-											Credits
+											{t("account.credits", "common")}
 										</VSCodeDataGridCell>
 									</VSCodeDataGridRow>
 
@@ -97,7 +98,7 @@ const CreditsHistoryTable = ({ isLoading, usageData, paymentsData, showPayments 
 								</VSCodeDataGrid>
 							) : (
 								<div className="flex justify-center items-center p-4">
-									<div className="text-[var(--vscode-descriptionForeground)]">No payment history</div>
+									<div className="text-[var(--vscode-descriptionForeground)]">{t("account.noPaymentHistory", "common")}</div>
 								</div>
 							))}
 					</>

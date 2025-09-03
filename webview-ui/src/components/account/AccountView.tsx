@@ -12,6 +12,7 @@ import { AccountWelcomeView } from "./AccountWelcomeView"
 import { CreditBalance } from "./CreditBalance"
 import CreditsHistoryTable from "./CreditsHistoryTable"
 import { convertProtoUsageTransactions, getClineUris, getMainRole } from "./helpers"
+import { t } from "@/caret/utils/i18n"
 
 type AccountViewProps = {
 	clineUser: ClineUser | null
@@ -37,8 +38,8 @@ const AccountView = ({ onDone, clineUser, organizations, activeOrganization }: A
 	return (
 		<div className="fixed inset-0 flex flex-col overflow-hidden pt-[10px] pl-[20px]">
 			<div className="flex justify-between items-center mb-[17px] pr-[17px]">
-				<h3 className="text-[var(--vscode-foreground)] m-0">Account</h3>
-				<VSCodeButton onClick={onDone}>Done</VSCodeButton>
+				<h3 className="text-[var(--vscode-foreground)] m-0">{t("account.title", "common")}</h3>
+				<VSCodeButton onClick={onDone}>{t("button.done", "common")}</VSCodeButton>
 			</div>
 			<div className="flex-grow overflow-hidden pr-[8px] flex flex-col">
 				<div className="h-full mb-[5px]">
@@ -115,7 +116,7 @@ export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganizat
 			const newPaymentsData = response.paymentTransactions
 			setPaymentsData((prev) => (deepEqual(newPaymentsData, prev) ? prev : newPaymentsData))
 		} catch (error) {
-			console.error("Failed to fetch user credit:", error)
+			console.error(t("account.failedToFetchUserCredit", "common"), error)
 		}
 	}, [])
 
@@ -150,7 +151,7 @@ export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganizat
 				// Cache the updated data
 				cacheCurrentData(id)
 			} catch (error) {
-				console.error("Failed to fetch credit balance:", error)
+				console.error(t("account.failedToFetchCreditBalance", "common"), error)
 			} finally {
 				setLastFetchTime(Date.now())
 				setIsLoading(false)
@@ -260,7 +261,7 @@ export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganizat
 				<div className="flex flex-col w-full">
 					<div className="flex items-center mb-6 flex-wrap gap-y-4">
 						{/* {user.photoUrl ? (
-								<img src={user.photoUrl} alt="Profile" className="size-16 rounded-full mr-4" />
+								<img src={user.photoUrl} alt={t("account.profileAlt", "common")} className="size-16 rounded-full mr-4" />
 							) : ( */}
 						<div className="size-16 rounded-full bg-[var(--vscode-button-background)] flex items-center justify-center text-2xl text-[var(--vscode-button-foreground)] mr-4">
 							{displayName?.[0] || email?.[0] || "?"}
@@ -290,7 +291,7 @@ export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganizat
 									))}
 								</VSCodeDropdown>
 								{activeOrganization && (
-									<VSCodeTag className="text-xs p-2" title="Role">
+									<VSCodeTag className="text-xs p-2" title={t("account.role", "common")}>
 										{getMainRole(activeOrganization.roles)}
 									</VSCodeTag>
 								)}
@@ -302,11 +303,11 @@ export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganizat
 				<div className="w-full flex gap-2 flex-col min-[225px]:flex-row">
 					<div className="w-full min-[225px]:w-1/2">
 						<VSCodeButtonLink appearance="primary" className="w-full" href={getClineUris(clineUrl, "dashboard").href}>
-							Dashboard
+							{t("account.dashboard", "common")}
 						</VSCodeButtonLink>
 					</div>
 					<VSCodeButton appearance="secondary" className="w-full min-[225px]:w-1/2" onClick={() => handleSignOut()}>
-						Log out
+						{t("account.logOut", "common")}
 					</VSCodeButton>
 				</div>
 

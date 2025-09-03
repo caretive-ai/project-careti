@@ -1,5 +1,5 @@
 // CARET MODIFICATION: Tests for CaretUILanguageSetting component
-import { fireEvent, render, waitFor } from "@testing-library/react"
+import { render } from "@testing-library/react"
 import React from "react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { CaretI18nProvider } from "../../context/CaretI18nContext"

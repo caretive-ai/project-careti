@@ -7,7 +7,7 @@
  */
 
 const fs = require("fs")
-const path = require("path")
+const _path = require("path")
 
 function estimateTokens(text) {
 	const wordCount = text.split(/\s+/).length

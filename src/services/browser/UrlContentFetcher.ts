@@ -3,7 +3,7 @@ import { fileExistsAtPath } from "@utils/fs"
 import * as cheerio from "cheerio"
 import * as fs from "fs/promises"
 import * as path from "path"
-// @ts-ignore
+// @ts-expect-error
 import PCR from "puppeteer-chromium-resolver"
 import { Browser, launch, Page } from "puppeteer-core"
 import TurndownService from "turndown"

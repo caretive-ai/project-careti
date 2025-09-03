@@ -178,7 +178,8 @@
 		"subscriptionBasic": "Basic",
 		"payAsYouGo": "Pay as you go",
 		"organization": "Organization",
-		"payAsYouGoDescription": "* Additional charges apply after all subscription usage is exhausted."
+		"payAsYouGoDescription": "* Additional charges apply after all subscription usage is exhausted.",
+		"failedToGetLoginUrl": "Failed to get login URL:"
 	},
 	"common": {
 		"and": "and"

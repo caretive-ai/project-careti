@@ -72,7 +72,7 @@ class WebviewLogger {
 					default:
 						console.log(`[${this.component}] ${message}`, data || "")
 				}
-			} catch (consoleError) {
+			} catch (_consoleError) {
 				// Silently ignore console errors to prevent webview loading issues
 			}
 		}
@@ -86,7 +86,7 @@ class WebviewLogger {
 					entry,
 				})
 			}
-		} catch (vscodeError) {
+		} catch (_vscodeError) {
 			// Silently ignore vscode communication errors to prevent webview loading issues
 			// This ensures the webview can still load even if Extension Host communication fails
 		}

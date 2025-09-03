@@ -18,7 +18,7 @@ function extractWorkflowInstructions(content, isJSON = false) {
 
 		// Extract from JSON structure
 		function extractFromObject(obj) {
-			for (const [key, value] of Object.entries(obj)) {
+			for (const [_key, value] of Object.entries(obj)) {
 				if (typeof value === "string" && value.length > 10) {
 					// Extract meaningful instructions
 					if (
@@ -104,8 +104,12 @@ function extractWorkflowConcepts(content) {
 
 // Calculate instruction equivalence
 function calculateInstructionEquivalence(instructions1, instructions2) {
-	if (instructions1.length === 0 && instructions2.length === 0) return 100
-	if (instructions1.length === 0 || instructions2.length === 0) return 0
+	if (instructions1.length === 0 && instructions2.length === 0) {
+		return 100
+	}
+	if (instructions1.length === 0 || instructions2.length === 0) {
+		return 0
+	}
 
 	let matchCount = 0
 
@@ -115,7 +119,9 @@ function calculateInstructionEquivalence(instructions1, instructions2) {
 			const similarity = calculateSimilarity(inst1, inst2)
 			return similarity > 0.7
 		})
-		if (hasMatch) matchCount++
+		if (hasMatch) {
+			matchCount++
+		}
 	})
 
 	return Math.round((matchCount / Math.max(instructions1.length, instructions2.length)) * 100)
@@ -133,7 +139,7 @@ function calculateSimilarity(str1, str2) {
 }
 
 // Analyze workflow completeness
-function analyzeWorkflowCompleteness(content, isJSON = false) {
+function analyzeWorkflowCompleteness(content, _isJSON = false) {
 	const contentStr = typeof content === "string" ? content : JSON.stringify(content)
 
 	const essentialElements = {
@@ -149,7 +155,9 @@ function analyzeWorkflowCompleteness(content, isJSON = false) {
 
 	Object.entries(essentialElements).forEach(([element, pattern]) => {
 		completeness[element] = pattern.test(contentStr)
-		if (completeness[element]) foundCount++
+		if (completeness[element]) {
+			foundCount++
+		}
 	})
 
 	return {

@@ -9,13 +9,13 @@
  * 5. 지원하지 않는 언어(아랍어): LLM만 변경, UI는 영어 유지
  */
 
-import { fireEvent, render, screen, waitFor } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest"
 import { updateSetting } from "../../../components/settings/utils/settingsHandlers"
-import { ExtensionStateContextProvider, useExtensionState } from "../../../context/ExtensionStateContext"
+import { ExtensionStateContextProvider } from "../../../context/ExtensionStateContext"
 import { TaskServiceClient } from "../../../services/grpc-client"
 import UnifiedLanguageSetting from "../../components/UnifiedLanguageSetting"
-import { CaretI18nProvider, useCaretI18nContext } from "../../context/CaretI18nContext"
+import { CaretI18nProvider } from "../../context/CaretI18nContext"
 
 // Mock dependencies
 vi.mock("../../../components/settings/utils/settingsHandlers", () => ({

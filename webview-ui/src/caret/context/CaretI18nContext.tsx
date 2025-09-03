@@ -30,7 +30,9 @@ export const CaretI18nProvider: React.FC<CaretI18nProviderProps> = ({ children, 
 
 	const setLanguage = useCallback(
 		async (newLanguage: SupportedLanguage) => {
-			if (newLanguage === language) return
+			if (newLanguage === language) {
+				return
+			}
 
 			setIsLoading(true)
 			try {

@@ -15,7 +15,7 @@ console.log("🔍 Caret vs Cline 정확한 비교 스크립트 시작...\n")
 function safeReadFile(filePath) {
 	try {
 		return fs.readFileSync(filePath, "utf8")
-	} catch (error) {
+	} catch (_error) {
 		console.warn(`⚠️ 파일을 읽을 수 없습니다: ${filePath}`)
 		return null
 	}
@@ -23,10 +23,14 @@ function safeReadFile(filePath) {
 
 // 프로바이더 추출 함수
 function extractProviders(content) {
-	if (!content) return []
+	if (!content) {
+		return []
+	}
 
 	const providerMatch = content.match(/export type ApiProvider =[\s\S]*?(?=export|interface|type|const|$)/)
-	if (!providerMatch) return []
+	if (!providerMatch) {
+		return []
+	}
 
 	const providers = []
 	const lines = providerMatch[0].split("\n")
@@ -43,7 +47,9 @@ function extractProviders(content) {
 
 // 모델 섹션 추출 함수 (중복 제거)
 function extractModelSections(content) {
-	if (!content) return new Map()
+	if (!content) {
+		return new Map()
+	}
 
 	const sectionRegex = /export const (\w+Models) = \{([\s\S]*?)\} as const satisfies Record<string, ModelInfo>/g
 	const sections = new Map()
@@ -54,7 +60,9 @@ function extractModelSections(content) {
 		const sectionContent = match[2]
 
 		// 중복 스킵
-		if (sections.has(sectionName)) continue
+		if (sections.has(sectionName)) {
+			continue
+		}
 
 		// 모델들 찾기
 		const modelRegex = /^\s*"([^"]+)"\s*:\s*\{/gm

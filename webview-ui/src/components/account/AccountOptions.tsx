@@ -1,11 +1,12 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { memo } from "react"
+import { t } from "@/caret/utils/i18n"
 import { AccountServiceClient } from "@/services/grpc-client"
 
 const AccountOptions = () => {
 	const handleAccountClick = () => {
 		AccountServiceClient.accountLoginClicked(EmptyRequest.create()).catch((err) =>
-			console.error("Failed to get login URL:", err),
+			console.error(t("account.failedToGetLoginUrl"), err),
 		)
 	}
 

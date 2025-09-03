@@ -1,0 +1,19 @@
+feat: Complete unified branding system - remove deprecated tools
+
+- Delete deprecated tools folder containing 11 old branding scripts
+- Remove old brand assets and backup files from previous implementations
+- Consolidate to unified brand-converter.js with brand-config-validator.js
+- Reorganize brand structure: brands/caret, brands/cline, brands/codecenter
+- Update branding manual with new unified system documentation
+- Achieve clean architecture: 2 main tools instead of 11 scattered scripts
+
+System Benefits:
+- 11 deprecated scripts → 1 unified brand-converter.js
+- TDD complete: 7/7 tests passing (100% success rate)
+- 3-brand support: cline ↔ caret ↔ codecenter
+- Quality assurance: brand-config-validator.js integration
+- Forward/backward conversion with --include-i18n capability
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>

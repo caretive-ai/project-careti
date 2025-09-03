@@ -2,7 +2,7 @@
 import { hasLastConsonant, setGlobalUILanguage, t } from "../i18n"
 
 // Test helper to check if setGlobalUILanguage is working
-const testLanguageChange = () => {
+const _testLanguageChange = () => {
 	setGlobalUILanguage("en")
 	console.log("After setting EN - should process templates:")
 	const enResult = t("brand.appName", "common")
@@ -17,7 +17,7 @@ const testLanguageChange = () => {
 }
 
 // Mock translations for testing
-const mockTranslations = {
+const _mockTranslations = {
 	ko: {
 		brand: { appName: "캐럿" },
 		welcome: {
@@ -61,7 +61,7 @@ describe("Caret i18n System", () => {
 
 		test("브랜드명 변경 후 즉시 반영", () => {
 			// Mock brand name change (실제로는 JSON 파일 수정)
-			const mockBrandChange = {
+			const _mockBrandChange = {
 				ko: { brand: { appName: "코드센터" } },
 				en: { brand: { appName: "CodeCenter" } },
 			}

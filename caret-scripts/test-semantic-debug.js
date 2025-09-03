@@ -17,7 +17,7 @@ function extractSemanticElements(content, isJSON = false, analysisType = "workfl
 	if (isJSON && typeof content === "string") {
 		try {
 			parsedContent = JSON.parse(content)
-		} catch (e) {
+		} catch (_e) {
 			parsedContent = content
 		}
 	}
@@ -58,9 +58,11 @@ function extractFromJSONStructure(data, elements, analysisType) {
 function extractFromTextStructure(content, elements, analysisType) {
 	const lines = content.split("\n")
 
-	lines.forEach((line, index) => {
+	lines.forEach((line, _index) => {
 		const trimmed = line.trim()
-		if (trimmed.length < 3) return
+		if (trimmed.length < 3) {
+			return
+		}
 
 		// Categorize based on patterns
 		if (trimmed.match(/^\d+\.\s/) || trimmed.match(/^[-*]\s/) || trimmed.includes("```")) {
@@ -80,7 +82,9 @@ function categorizeContent(key, value, elements, analysisType) {
 	const normalizedKey = key.toLowerCase()
 	const normalizedValue = normalizeText(value)
 
-	if (value.length < 3) return
+	if (value.length < 3) {
+		return
+	}
 
 	// Instructions
 	if (

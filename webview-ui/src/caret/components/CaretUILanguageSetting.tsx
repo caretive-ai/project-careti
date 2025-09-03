@@ -2,10 +2,9 @@
 import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import React from "react"
 import { updateSetting } from "@/components/settings/utils/settingsHandlers"
-import { useExtensionState } from "@/context/ExtensionStateContext"
 import { TaskServiceClient } from "@/services/grpc-client"
 import { useCaretI18n } from "../hooks/useCaretI18n"
-import { type SupportedLanguage, setGlobalUILanguage, t } from "../utils/i18n"
+import { type SupportedLanguage, t } from "../utils/i18n"
 
 interface CaretUILanguageSettingProps {
 	hideLabel?: boolean

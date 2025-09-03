@@ -115,7 +115,9 @@ const koreanJosaRules = {
 
 // CARET MODIFICATION: 받침 검사 헬퍼 함수 (export 추가)
 export const hasLastConsonant = (word: string): boolean => {
-	if (!word || word.length === 0) return false
+	if (!word || word.length === 0) {
+		return false
+	}
 
 	const lastChar = word[word.length - 1]
 	const lastCharCode = lastChar.charCodeAt(0)
@@ -191,18 +193,24 @@ const replaceTemplateVariables = (
 				// namespace 내에서 브랜드 참조 처리
 				const namespaceData = translations[language]?.[namespace as keyof (typeof translations)[typeof language]]
 				const brandValue = getNestedValue(namespaceData, `brand.${brandKey}`)
-				if (brandValue) return brandValue
+				if (brandValue) {
+					return brandValue
+				}
 
 				// Fallback to English
 				const enNamespaceData = translations.en[namespace as keyof (typeof translations)["en"]]
 				const enBrandValue = getNestedValue(enNamespaceData, `brand.${brandKey}`)
-				if (enBrandValue) return enBrandValue
+				if (enBrandValue) {
+					return enBrandValue
+				}
 			}
 
 			// 기존 변수 처리
 			const namespaceData = translations[language]?.[namespace as keyof (typeof translations)[typeof language]]
 			const value = getNestedValue(namespaceData, expression)
-			if (value) return value
+			if (value) {
+				return value
+			}
 
 			return match
 		})

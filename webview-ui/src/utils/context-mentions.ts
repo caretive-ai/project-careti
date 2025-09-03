@@ -98,7 +98,7 @@ const DEFAULT_CONTEXT_MENU_OPTIONS = [
 ]
 
 export function getContextMenuOptionIndex(option: ContextMenuOptionType) {
-	return DEFAULT_CONTEXT_MENU_OPTIONS.findIndex((item) => item === option)
+	return DEFAULT_CONTEXT_MENU_OPTIONS.indexOf(option)
 }
 
 export function getContextMenuOptions(

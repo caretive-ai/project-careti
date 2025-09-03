@@ -7,7 +7,7 @@
  */
 
 const fs = require("fs")
-const path = require("path")
+const _path = require("path")
 
 // Token estimation (based on caret-main system-prompt-token-measurement.js)
 function estimateTokens(text) {
@@ -113,8 +113,11 @@ function parseJsonInstructions(jsonData) {
 				instructions.push(value)
 			} else if (Array.isArray(value)) {
 				value.forEach((item) => {
-					if (typeof item === "string") instructions.push(item)
-					else if (typeof item === "object") extractFromObject(item, `${prefix}.${key}`)
+					if (typeof item === "string") {
+						instructions.push(item)
+					} else if (typeof item === "object") {
+						extractFromObject(item, `${prefix}.${key}`)
+					}
 				})
 			} else if (typeof value === "object" && value !== null) {
 				extractFromObject(value, `${prefix}.${key}`)

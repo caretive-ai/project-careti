@@ -1,5 +1,4 @@
 import { Mode } from "@shared/storage/types"
-import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { DebouncedTextField } from "../common/DebouncedTextField"
@@ -19,11 +18,11 @@ export const DifyProvider = ({ showModelOptions, isPopup, currentMode }: DifyPro
 	const { handleFieldChange } = useApiConfigurationHandlers()
 
 	// Use debounced input for proper state management
-	const [baseUrlValue, setBaseUrlValue] = useDebouncedInput(apiConfiguration?.difyBaseUrl || "", (value) =>
+	const [_baseUrlValue, _setBaseUrlValue] = useDebouncedInput(apiConfiguration?.difyBaseUrl || "", (value) =>
 		handleFieldChange("difyBaseUrl", value),
 	)
 
-	const [apiKeyValue, setApiKeyValue] = useDebouncedInput(apiConfiguration?.difyApiKey || "", (value) =>
+	const [_apiKeyValue, _setApiKeyValue] = useDebouncedInput(apiConfiguration?.difyApiKey || "", (value) =>
 		handleFieldChange("difyApiKey", value),
 	)
 

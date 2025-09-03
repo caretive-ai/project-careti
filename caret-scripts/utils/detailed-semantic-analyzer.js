@@ -7,7 +7,7 @@
  */
 
 const fs = require("fs")
-const path = require("path")
+const _path = require("path")
 
 // Tool comparison analysis
 function analyzeToolCoverage(system1Data, system2Data) {
@@ -47,8 +47,11 @@ function extractTools(data) {
 	toolPatterns.forEach((pattern) => {
 		let match
 		while ((match = pattern.exec(dataStr)) !== null) {
-			if (match[1]) tools.add(match[1])
-			else tools.add(match[0])
+			if (match[1]) {
+				tools.add(match[1])
+			} else {
+				tools.add(match[0])
+			}
 		}
 	})
 
@@ -90,7 +93,9 @@ function extractParameters(data) {
 	paramPatterns.forEach((pattern) => {
 		let match
 		while ((match = pattern.exec(dataStr)) !== null) {
-			if (match[1]) params.add(match[1])
+			if (match[1]) {
+				params.add(match[1])
+			}
 		}
 	})
 
@@ -142,7 +147,9 @@ function calculateModeEquivalence(modes1, modes2) {
 	let matchCount = 0
 	const totalModes = Math.max(modes1.length, modes2.length)
 
-	if (totalModes === 0) return 100
+	if (totalModes === 0) {
+		return 100
+	}
 
 	modes1.forEach((mode1) => {
 		const hasDirectMatch = modes2.includes(mode1)
@@ -150,8 +157,11 @@ function calculateModeEquivalence(modes1, modes2) {
 			equivalentPairs.some((pair) => (pair[0] === mode1 && pair[1] === mode2) || (pair[1] === mode1 && pair[0] === mode2)),
 		)
 
-		if (hasDirectMatch) matchCount += 1
-		else if (hasEquivalentMatch) matchCount += 0.9 // 90% for equivalent but different
+		if (hasDirectMatch) {
+			matchCount += 1
+		} else if (hasEquivalentMatch) {
+			matchCount += 0.9 // 90% for equivalent but different
+		}
 	})
 
 	return Math.round((matchCount / totalModes) * 100)
@@ -257,7 +267,7 @@ function performDetailedSemanticAnalysis(system1Path, system2Path, system1Name =
 	let system2ParsedData = system2Data
 	try {
 		system2ParsedData = JSON.parse(system2Data)
-	} catch (e) {
+	} catch (_e) {
 		// Keep as string if not valid JSON
 	}
 

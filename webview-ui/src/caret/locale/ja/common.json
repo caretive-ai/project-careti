@@ -125,7 +125,8 @@
 		"subscriptionFree": "無料",
 		"subscriptionBasic": "ベーシック",
 		"payAsYouGo": "従量課金",
-		"payAsYouGoDescription": "* サブスクリプションの使用量をすべて使い切った後、追加料金が発生します。"
+		"payAsYouGoDescription": "* サブスクリプションの使用量をすべて使い切った後、追加料金が発生します。",
+		"failedToGetLoginUrl": "ログインURLの取得に失敗しました："
 	},
 	"common": {
 		"and": "と"

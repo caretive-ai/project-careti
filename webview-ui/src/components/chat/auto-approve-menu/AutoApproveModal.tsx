@@ -208,7 +208,7 @@ const AutoApproveModal: React.FC<AutoApproveModalProps> = ({
 									const input = e.target as HTMLInputElement
 									// Remove any non-numeric characters
 									input.value = input.value.replace(/[^0-9]/g, "")
-									const value = parseInt(input.value)
+									const value = parseInt(input.value, 10)
 									if (!Number.isNaN(value) && value > 0) {
 										await updateMaxRequests(value)
 									}

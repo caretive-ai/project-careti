@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>i18n Brand Dynamic Template Test</title>
+</head>
+<body>
+    <h1>i18n Brand Dynamic Template Test</h1>
+    <div id="test-results"></div>
+
+    <script type="module">
+        // 간단한 테스트를 위해 i18n 함수들을 임포트하지 않고 직접 구현
+        const testTranslations = {
+            en: {
+                common: {
+                    "brand": {
+                        "appName": "Caret",
+                        "appNameUpper": "CARET",
+                        "appNameLower": "caret"
+                    },
+                    "welcome": {
+                        "title": "Welcome to {{brand.appName}}! 🎉",
+                        "description": "{{brand.appName}} is an AI coding assistant"
+                    }
+                }
+            }
+        };
+
+        // 간단한 템플릿 변환 함수
+        function replaceTemplateVariables(text, translations, namespace = "common") {
+            return text.replace(/\{\{([^}]+)\}\}/g, (match, expression) => {
+                if (expression.startsWith("brand.")) {
+                    const brandKey = expression.substring(6);
+                    const brandValue = translations.en.common.brand[brandKey];
+                    if (brandValue) return brandValue;
+                }
+                return match;
+            });
+        }
+
+        // 테스트 실행
+        function runTest() {
+            const results = document.getElementById('test-results');
+            
+            const testCases = [
+                {
+                    input: "Welcome to {{brand.appName}}! 🎉",
+                    expected: "Welcome to Caret! 🎉"
+                },
+                {
+                    input: "{{brand.appName}} is an AI coding assistant",
+                    expected: "Caret is an AI coding assistant"
+                },
+                {
+                    input: "{{brand.appNameUpper}} - {{brand.appNameLower}}",
+                    expected: "CARET - caret"
+                }
+            ];
+
+            let html = '<h2>Test Results:</h2>';
+            
+            testCases.forEach((testCase, index) => {
+                const result = replaceTemplateVariables(testCase.input, testTranslations);
+                const passed = result === testCase.expected;
+                
+                html += `
+                    <div style="margin: 10px 0; padding: 10px; border: 1px solid ${passed ? 'green' : 'red'};">
+                        <strong>Test ${index + 1}: ${passed ? '✅ PASSED' : '❌ FAILED'}</strong><br>
+                        Input: ${testCase.input}<br>
+                        Expected: ${testCase.expected}<br>
+                        Actual: ${result}
+                    </div>
+                `;
+            });
+
+            results.innerHTML = html;
+        }
+
+        runTest();
+    </script>
+</body>
+</html>

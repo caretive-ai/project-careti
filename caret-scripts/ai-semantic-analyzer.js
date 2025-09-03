@@ -240,7 +240,9 @@ Output a detailed equivalence report in JSON:
 	}
 
 	calculateSimilarity(textA, textB) {
-		if (textA === textB) return 100
+		if (textA === textB) {
+			return 100
+		}
 
 		const wordsA = new Set(textA.toLowerCase().split(/\W+/))
 		const wordsB = new Set(textB.toLowerCase().split(/\W+/))

@@ -194,7 +194,8 @@
 		"subscriptionBasic": "기본",
 		"payAsYouGo": "사용한 만큼 지불",
 		"organization": "조직",
-		"payAsYouGoDescription": "* 모든 구독 사용량이 소진된 후 추가 요금이 적용됩니다."
+		"payAsYouGoDescription": "* 모든 구독 사용량이 소진된 후 추가 요금이 적용됩니다.",
+		"failedToGetLoginUrl": "로그인 URL을 가져오지 못했습니다:"
 	},
 	"common": {
 		"and": "그리고"

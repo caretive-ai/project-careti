@@ -1,16 +1,16 @@
 ## 2.3. i18n 적용 필요 파일 체크리스트
 **총 154개 컴포넌트 중 146개 파일이 i18n 적용 필요**
 
-### **Account 관련 (5개)**
-[ ] `webview-ui/src/components/account\AccountView.tsx` (하드코딩:26)
-[ ] `webview-ui/src/components/account\AccountWelcomeView.tsx` (하드코딩:7)
-[ ] `webview-ui/src/components/account\CreditBalance.tsx` (하드코딩:8)
-[ ] `webview-ui/src/components/account\CreditsHistoryTable.tsx` (하드코딩:14)
-[ ] `webview-ui/src/components/account\StyledCreditDisplay.tsx` (하드코딩:1)
+### **Account 관련 (5개) ✅ 완료**
+[x] `webview-ui/src/components/account\AccountView.tsx` (하드코딩:26) ✅ 완료
+[x] `webview-ui/src/components/account\AccountWelcomeView.tsx` (하드코딩:7) ✅ 완료
+[x] `webview-ui/src/components/account\CreditBalance.tsx` (하드코딩:8) ✅ 완료
+[x] `webview-ui/src/components/account\CreditsHistoryTable.tsx` (하드코딩:14) ✅ 완료
+[x] `webview-ui/src/components/account\StyledCreditDisplay.tsx` (하드코딩:1) ✅ 완료
 
-### **Chat 관련 (33개)**
-[ ] `webview-ui/src/components/chat\Announcement.tsx` (하드코딩:13)
-[ ] `webview-ui/src/components/chat\auto-approve-menu\AutoApproveBar.tsx` (하드코딩:8)
+### **Chat 관련 (33개) - 진행중**
+[x] `webview-ui/src/components/chat\Announcement.tsx` (하드코딩:13) ✅ 완료
+[x] `webview-ui/src/components/chat\auto-approve-menu\AutoApproveBar.tsx` (하드코딩:8) ✅ 완료
 [ ] `webview-ui/src/components/chat\auto-approve-menu\AutoApproveMenuItem.tsx` (하드코딩:7)
 [ ] `webview-ui/src/components/chat\auto-approve-menu\AutoApproveModal.tsx` (하드코딩:19)
 [ ] `webview-ui/src/components/chat\BrowserSessionRow.tsx` (하드코딩:54)
@@ -34,8 +34,8 @@
 [ ] `webview-ui/src/components/chat\ReportBugPreview.tsx` (하드코딩:13)
 [ ] `webview-ui/src/components/chat\ServersToggleModal.tsx` (하드코딩:12)
 [ ] `webview-ui/src/components/chat\SlashCommandMenu.tsx` (하드코딩:10)
-[ ] `webview-ui/src/components/chat\task-header\buttons\CopyTaskButton.tsx` (하드코딩:4)
-[ ] `webview-ui/src/components/chat\task-header\buttons\DeleteTaskButton.tsx` (하드코딩:1)
+[x] `webview-ui/src/components/chat\task-header\buttons\CopyTaskButton.tsx` (하드코딩:4) ✅ 완료
+[x] `webview-ui/src/components/chat\task-header\buttons\DeleteTaskButton.tsx` (하드코딩:1) ✅ 완료
 [ ] `webview-ui/src/components/chat\task-header\buttons\OpenDiskTaskHistoryButton.tsx` (하드코딩:5)
 [ ] `webview-ui/src/components/chat\task-header\TaskHeader.tsx` (하드코딩:77)
 [ ] `webview-ui/src/components/chat\task-header\TaskTimeline.tsx` (하드코딩:23)

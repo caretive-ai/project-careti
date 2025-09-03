@@ -1,6 +1,7 @@
 import { Accordion, AccordionItem } from "@heroui/react"
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { CSSProperties, memo } from "react"
+import { t } from "@/caret/utils/i18n"
 import { getAsVar, VSC_DESCRIPTION_FOREGROUND, VSC_INACTIVE_SELECTION_BACKGROUND } from "@/utils/vscStyles"
 
 interface AnnouncementProps {
@@ -41,31 +42,28 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 			<VSCodeButton appearance="icon" data-testid="close-button" onClick={hideAnnouncement} style={closeIconStyle}>
 				<span className="codicon codicon-close"></span>
 			</VSCodeButton>
-			<h3 style={h3TitleStyle}>
-				🎉{"  "}New in v{minorVersion}
-			</h3>
+			<h3 style={h3TitleStyle}>{t("announcement.newVersion", "common", { version: minorVersion })}</h3>
 			<ul style={ulStyle}>
 				<li>
-					<b>Free Stealth Model</b> Advanced stealth model with 262K context window designed for complex coding tasks.
-					Available in the Cline provider for free.
+					<b>{t("announcement.features.freeStealth.title", "common")}</b>{" "}
+					{t("announcement.features.freeStealth.description", "common")}
 				</li>
 				<li>
-					<b>Focus Chain:</b> Keeps cline focused on long-horizon tasks with automatic todo list management, breaking
-					down complex tasks into manageable steps with real-time progress tracking and passive reminders.
+					<b>{t("announcement.features.focusChain.title", "common")}:</b>{" "}
+					{t("announcement.features.focusChain.description", "common")}
 				</li>
 				<li>
-					<b>Auto Compact:</b> Auto summarizes your task and next steps when your conversation approaches the model's
-					context window limit. This significantly helps Cline stay on track for long task sessions!
+					<b>{t("announcement.features.autoCompact.title", "common")}:</b>{" "}
+					{t("announcement.features.autoCompact.description", "common")}
 				</li>
 				<li>
-					<b>Deep Planning:</b> New <code>/deep-planning</code> slash command transforms Cline into an architect who
-					investigates your codebase, asks clarifying questions, and creates a comprehensive plan before writing any
-					code.
+					<b>{t("announcement.features.deepPlanning.title", "common")}:</b>{" "}
+					{t("announcement.features.deepPlanning.description", "common")}
 				</li>
 			</ul>
 			<Accordion className="pl-0" isCompact>
 				<AccordionItem
-					aria-label="Previous Updates"
+					aria-label={t("announcement.previousUpdates", "common")}
 					classNames={{
 						trigger: "bg-transparent border-0 pl-0 pb-0 w-fit",
 						title: "font-bold text-[var(--vscode-foreground)]",
@@ -73,26 +71,26 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 							"text-[var(--vscode-foreground)] mb-0.5 -rotate-180 data-[open=true]:-rotate-90 rtl:rotate-0 rtl:data-[open=true]:-rotate-90",
 					}}
 					key="1"
-					title="Previous Updates:">
+					title={t("announcement.previousUpdates", "common")}>
 					<ul style={ulStyle}>
 						<li>
-							<b>1M Context for Claude Sonnet 4:</b> Cline/OpenRouter users get instant access, Anthropic users need
-							Tier 4, and Bedrock users must be on a supported region.
+							<b>{t("announcement.previousFeatures.claude1M.title", "common")}:</b>{" "}
+							{t("announcement.previousFeatures.claude1M.description", "common")}
 						</li>
 						<li>
-							<b>Optimized for Claude 4:</b> Cline is now optimized to work with the Claude 4 family of models,
-							resulting in improved performance, reliability, and new capabilities.
+							<b>{t("announcement.previousFeatures.optimizedClaude4.title", "common")}:</b>{" "}
+							{t("announcement.previousFeatures.optimizedClaude4.description", "common")}
 						</li>
 						<li>
-							<b>Workflows:</b> Create and manage workflow files that can be injected into conversations via slash
-							commands, making it easy to automate repetitive tasks.
+							<b>{t("announcement.previousFeatures.workflows.title", "common")}:</b>{" "}
+							{t("announcement.previousFeatures.workflows.description", "common")}
 						</li>
 					</ul>
 				</AccordionItem>
 			</Accordion>
 			<div style={hrStyle} />
 			<p style={linkContainerStyle}>
-				Join us on{" "}
+				{t("announcement.joinUs", "common")}{" "}
 				<VSCodeLink href="https://x.com/cline" style={linkStyle}>
 					X,
 				</VSCodeLink>{" "}
@@ -103,7 +101,7 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 				<VSCodeLink href="https://www.reddit.com/r/cline/" style={linkStyle}>
 					r/cline
 				</VSCodeLink>
-				for more updates!
+				{t("announcement.forMoreUpdates", "common")}
 			</p>
 		</div>
 	)

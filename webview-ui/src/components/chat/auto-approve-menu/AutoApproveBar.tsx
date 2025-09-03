@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { useAutoApproveActions } from "@/hooks/useAutoApproveActions"
@@ -93,7 +94,7 @@ const AutoApproveBar = ({ style }: AutoApproveBarProps) => {
 						scrollbarWidth: "none",
 						WebkitOverflowScrolling: "touch",
 					}}>
-					<span>Auto-approve:</span>
+					<span>{t("autoApprove.autoApproveLabel", "common")}</span>
 					{getQuickAccessItems()}
 				</div>
 				{isModalVisible ? (

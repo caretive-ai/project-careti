@@ -47,7 +47,6 @@
 			"changePersonaTemplate": "페르소나 템플릿 변경"
 		},
 		"description": {
-			"personaManagement": "당신의 코딩 스타일과 선호도에 맞는 AI 페르소나를 선택하세요.",
 			"rulesDescription": "규칙을 통해 Caret에게 시스템 수준의 지침을 제공할 수 있습니다. 프로젝트별 또는 모든 대화에 대한 컨텍스트와 선호사항을 지속적으로 포함하는 방법으로 생각하세요.",
 			"workflowsDescription": "워크플로우를 통해 서비스 배포나 PR 제출과 같은 반복적인 작업들을 Caret이 수행할 수 있도록 일련의 단계를 정의할 수 있습니다. 워크플로우를 실행하려면 채팅에서 /워크플로우명을 입력하세요."
 		},
@@ -63,21 +62,9 @@
 			"title": "챗봇 모드",
 			"description": "전문가 상담 및 분석 모드"
 		},
-		"agent": {
-			"label": "🤖 에이전트",
-			"title": "에이전트 모드",
-			"description": "협업 개발 및 구현 모드"
-		},
-		"plan": {
-			"label": "📋 Plan",
-			"title": "계획 모드",
-			"description": "전략 수립 및 설계 모드"
-		},
-		"act": {
-			"label": "⚡ Act",
-			"title": "실행 모드",
-			"description": "구현 및 실행 모드"
-		},
+		"agent": {},
+		"plan": {},
+		"act": {},
 		"tooltip": {
 			"chatbot": "챗봇 모드에서 Caret은 전문가 상담과 분석을 제공합니다",
 			"agent": "에이전트 모드에서 Caret은 솔루션 구현을 위해 협업합니다",
@@ -87,27 +74,16 @@
 		}
 	},
 	"settings": {
-		"uiLanguage": {
-			"label": "UI 언어",
-			"description": "Caret의 사용자 인터페이스 요소(메뉴, 버튼, 메시지 등)에 사용되는 언어입니다."
-		},
-		"preferredLanguage": {
-			"label": "AI 응답 언어",
-			"description": "Caret이 대화에 사용할 언어입니다."
-		},
+		"uiLanguage": {},
+		"preferredLanguage": {},
 		"modeSystem": {
-			"label": "모드 설정",
-			"description": "Caret모드 설정을 하면, Caret의 Plan/Act모드를 이용할 수 있습니다.",
 			"options": {
 				"caret": "Caret",
 				"Caret": "Caret",
 				"cline": "Cline"
 			}
 		},
-		"separateModels": {
-			"label": "챗봇과 에이전트 모드에 각각 다른 모델 사용",
-			"description": "챗봇과 에이전트 모드를 전환할 때 각 모드에서 사용한 API와 모델 설정이 유지됩니다. 예를 들어 전문가 상담(챗봇)에는 강력한 추론 모델을, 협업 개발(에이전트)에는 비용 효율적인 코딩 모델을 사용할 때 유용합니다."
-		}
+		"separateModels": {}
 	},
 	"account": {
 		"signUpWithCaret": "로그인 및 회원가입",
@@ -135,7 +111,6 @@
 		"caretHasQuestion": "캐럿이 질문이 있습니다",
 		"typeMessage": "메시지를 입력하세요...",
 		"typeTaskHere": "작업을 입력하세요...",
-		"cancel": "취소",
 		"apiRequestCancelled": "API 요청이 취소되었습니다",
 		"apiStreamingFailed": "API 스트리밍이 실패했습니다",
 		"apiRequest": "API 요청",
@@ -186,7 +161,6 @@
 		"selectModel": "모델을 선택하세요...",
 		"selectRegion": "지역을 선택하세요...",
 		"enterApiKey": "API 키를 입력하세요...",
-		"loading": "로딩 중...",
 		"caretComplexPrompts": "Caret은 복잡한 프롬프트를 사용하며 Claude 모델에서 가장 잘 작동합니다. 성능이 낮은 모델은 예상대로 작동하지 않을 수 있습니다.",
 		"note": "참고:",
 		"model": "모델",
@@ -268,12 +242,10 @@
 	"telemetry": {
 		"helpImprove": "Caret 개선에 도움주기",
 		"experimentalFeatures": "(실험적 기능에 액세스)",
-		"description": "Caret은 버그 수정과 확장 프로그램 개선을 위해 익명의 오류 및 사용 데이터를 수집합니다. 코드, 프롬프트 또는 개인 정보는 전송되지 않습니다.",
 		"settingsLink": "설정에서 이 기능을 끌 수 있습니다.",
 		"closeBannerAria": "배너 닫기 및 텔레메트리 활성화"
 	},
 	"history": {
-		"title": "기록",
 		"deleteAllHistory": "모든 기록 삭제",
 		"fuzzySearchPlaceholder": "기록 검색...",
 		"sortNewest": "최신순",
@@ -287,7 +259,6 @@
 		"selectNone": "선택 해제"
 	},
 	"mcp": {
-		"title": "MCP 서버",
 		"marketplace": "마켓플레이스",
 		"remoteServers": "원격 서버",
 		"installed": "설치됨",
@@ -295,17 +266,55 @@
 		"configureServers": "MCP 서버 구성",
 		"noMatchingServers": "일치하는 MCP 서버를 찾을 수 없습니다",
 		"noServersFound": "마켓플레이스에서 MCP 서버를 찾을 수 없습니다",
-		"description": "모델 컨텍스트 프로토콜을 통해 로컬에서 실행되는 MCP 서버와 통신하여 Cline의 기능을 확장할 수 있는 추가 도구와 리소스를 제공합니다.",
 		"autoApprove": "자동 승인",
 		"autoApproveAllTools": "모든 도구 자동 승인"
 	},
 	"autoApprove": {
 		"addQuickAccess": "빠른 액세스 메뉴에 추가",
-		"removeQuickAccess": "빠른 액세스 메뉴에서 제거"
+		"removeQuickAccess": "빠른 액세스 메뉴에서 제거",
+		"autoApproveLabel": "자동 승인:"
 	},
 	"task": {
 		"deleteTask": "작업 삭제",
 		"deleteTaskAriaLabel": "작업 삭제",
 		"copyTask": "작업 복사"
+	},
+	"announcement": {
+		"newVersion": "🎉  v{version}의 새로운 기능",
+		"features": {
+			"freeStealth": {
+				"title": "무료 스텔스 모델",
+				"description": "복잡한 코딩 작업을 위해 설계된 262K 컨텍스트 윈도우를 가진 고급 스텔스 모델. Cline 프로바이더에서 무료로 이용 가능합니다."
+			},
+			"focusChain": {
+				"title": "집중 체인",
+				"description": "자동 할 일 목록 관리, 복잡한 작업을 관리 가능한 단계로 나누고 실시간 진행 상황 추적 및 수동적 알림을 통해 cline이 장기 작업에 집중할 수 있도록 도움니다."
+			},
+			"autoCompact": {
+				"title": "자동 압축",
+				"description": "대화가 모델의 컨텍스트 윈도우 제한에 근접할 때 작업과 다음 단계를 자동으로 요약합니다. 이는 Cline이 긴 작업 세션에서 궤도를 유지하는 데 크게 도움이 됩니다!"
+			},
+			"deepPlanning": {
+				"title": "심층 계획",
+				"description": "새로운 /deep-planning 슬래시 명령으로 Cline을 코드를 작성하기 전에 코드베이스를 조사하고 명확한 질문을 하며 포괄적인 계획을 세우는 건축가로 변환합니다."
+			}
+		},
+		"previousUpdates": "이전 업데이트:",
+		"previousFeatures": {
+			"claude1M": {
+				"title": "Claude Sonnet 4용 1M 컨텍스트",
+				"description": "Cline/OpenRouter 사용자는 즉시 액세스, Anthropic 사용자는 Tier 4가 필요하며, Bedrock 사용자는 지원되는 지역에 있어야 합니다."
+			},
+			"optimizedClaude4": {
+				"title": "Claude 4에 최적화",
+				"description": "Cline은 이제 Claude 4 모델 제품군에서 작동하도록 최적화되어 성능, 신뢰성 및 새로운 기능이 향상되었습니다."
+			},
+			"workflows": {
+				"title": "워크플로우",
+				"description": "슬래시 명령을 통해 대화에 주입할 수 있는 워크플로우 파일을 생성하고 관리하여 반복적인 작업을 쉽게 자동화할 수 있습니다."
+			}
+		},
+		"joinUs": "다음에서 함께하세요",
+		"forMoreUpdates": "더 많은 업데이트를 확인하세요!"
 	}
 }

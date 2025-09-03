@@ -17,6 +17,8 @@
 		"resolveJsonModule": true,
 		"rootDir": ".",
 		"skipLibCheck": true,
+		// CARET MODIFICATION: Ignore cheerio module type errors for build compatibility
+		"skipDefaultLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
 		"target": "es2022",

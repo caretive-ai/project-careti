@@ -157,6 +157,7 @@ enum ApiProvider {
   VERCEL_AI_GATEWAY = 32;
   QWEN_CODE = 33;
   DIFY = 34;
+  CARET = 35;
 }
 
 // Model info for OpenAI-compatible models

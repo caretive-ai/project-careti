@@ -1,9 +1,9 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { Mode } from "@shared/storage/types"
-import { VSCodeButton, VSCodeCheckbox, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
-import { DebouncedTextField } from "../common/DebouncedTextField"
+import { ApiKeyField } from "../common/ApiKeyField"
 import { useApiConfigurationHandlers } from "../utils/useApiConfigurationHandlers"
 
 interface CaretProviderProps {
@@ -14,7 +14,7 @@ interface CaretProviderProps {
 
 const CaretProvider = ({ currentMode, isPopup, showModelOptions }: CaretProviderProps) => {
 	const { apiConfiguration } = useExtensionState()
-	const { handleModeFieldChange } = useApiConfigurationHandlers()
+	const { handleFieldChange } = useApiConfigurationHandlers()
 
 	const handleLogin = () => {
 		AccountServiceClient.accountLoginClicked(EmptyRequest.create()).catch((err) =>
@@ -22,7 +22,7 @@ const CaretProvider = ({ currentMode, isPopup, showModelOptions }: CaretProvider
 		)
 	}
 
-	const caretApiKey = currentMode === "caret" ? apiConfiguration?.caretApiKey : apiConfiguration?.caretActApiKey
+	// Use caretApiKey field directly (no mode-specific variants needed)
 
 	return (
 		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
@@ -37,17 +37,17 @@ const CaretProvider = ({ currentMode, isPopup, showModelOptions }: CaretProvider
 
 				<div style={{ textAlign: "center", color: "var(--vscode-descriptionForeground)", fontSize: 12 }}>or</div>
 
-				<DebouncedTextField
-					autoFocus={false}
-					label="Caret API Key (Optional)"
-					onInput={(value) => handleModeFieldChange({ plan: "caretApiKey", act: "caretActApiKey" }, value, currentMode)}
-					placeholder="Enter your Caret API key..."
-					type="password"
-					value={caretApiKey || ""}
+				<ApiKeyField
+					initialValue={apiConfiguration?.caretApiKey || ""}
+					onChange={(value) => handleFieldChange("caretApiKey", value)}
+					providerName="Caret"
+					signupUrl="https://caret.team"
 				/>
 			</div>
 
-			{caretApiKey && <p style={{ fontSize: 12, color: "var(--vscode-foreground)", margin: 0 }}>✓ API key configured</p>}
+			{apiConfiguration?.caretApiKey && (
+				<p style={{ fontSize: 12, color: "var(--vscode-foreground)", margin: 0 }}>✓ API key configured</p>
+			)}
 
 			<div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 8 }}>
 				<p style={{ fontSize: 12, color: "var(--vscode-descriptionForeground)", margin: 0 }}>Features:</p>

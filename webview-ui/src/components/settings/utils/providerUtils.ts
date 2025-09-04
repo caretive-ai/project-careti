@@ -345,6 +345,19 @@ export function normalizeApiConfiguration(
 						? fireworksModels[fireworksModelId as keyof typeof fireworksModels]
 						: fireworksModels[fireworksDefaultModelId],
 			}
+		case "caret":
+			// Use OpenRouter-style pattern for Caret API
+			const caretModelId =
+				currentMode === "plan" ? apiConfiguration?.planModeOpenRouterModelId : apiConfiguration?.actModeOpenRouterModelId
+			const caretModelInfo =
+				currentMode === "plan"
+					? apiConfiguration?.planModeOpenRouterModelInfo
+					: apiConfiguration?.actModeOpenRouterModelInfo
+			return {
+				selectedProvider: provider,
+				selectedModelId: caretModelId || openRouterDefaultModelId,
+				selectedModelInfo: caretModelInfo || openRouterDefaultModelInfo,
+			}
 		default:
 			return getProviderData(anthropicModels, anthropicDefaultModelId)
 	}

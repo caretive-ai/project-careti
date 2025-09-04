@@ -2,8 +2,13 @@ import { ExtensionMessage } from "@shared/ExtensionMessage"
 import { ResetStateRequest } from "@shared/proto/cline/state"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { CheckCheck, FlaskConical, Info, LucideIcon, Settings, SquareMousePointer, SquareTerminal, Webhook } from "lucide-react"
-import { useCallback, useEffect, useRef, useState } from "react"
+// CARET MODIFICATION: Added useMemo for i18n reactivity
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useEvent } from "react-use"
+// CARET MODIFICATION: Import CaretFooter for About tab
+import CaretFooter from "@/caret/components/CaretFooter"
+// CARET MODIFICATION: Import i18n context for language reactivity
+import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
 import { t } from "@/caret/utils/i18n"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -38,7 +43,8 @@ interface SettingsTab {
 	icon: LucideIcon
 }
 
-export const SETTINGS_TABS: SettingsTab[] = [
+// CARET MODIFICATION: Convert static constant to dynamic function for i18n support
+export const getSettingsTabs = (): SettingsTab[] => [
 	{
 		id: "api-config",
 		name: t("tabs.apiConfiguration.name", "settings"),
@@ -86,6 +92,14 @@ export const SETTINGS_TABS: SettingsTab[] = [
 				},
 			]
 		: []),
+	// CARET MODIFICATION: Add About tab (restored from caret-main)
+	{
+		id: "about",
+		name: t("tabs.about.name", "settings"),
+		tooltipText: t("tabs.about.tooltip", "settings"),
+		headerText: t("tabs.about.header", "settings"),
+		icon: Info,
+	},
 ]
 
 type SettingsViewProps = {
@@ -94,8 +108,14 @@ type SettingsViewProps = {
 }
 
 const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
+	// CARET MODIFICATION: Use i18n context to detect language changes
+	const { language } = useCaretI18nContext()
+
+	// CARET MODIFICATION: Use dynamic function with language dependency for i18n updates
+	const settingsTabs = useMemo(() => getSettingsTabs(), [language])
+
 	// Track active tab
-	const [activeTab, setActiveTab] = useState<string>(targetSection || SETTINGS_TABS[0].id)
+	const [activeTab, setActiveTab] = useState<string>(targetSection || settingsTabs[0].id)
 	// Track if we're currently switching modes
 
 	const { version } = useExtensionState()
@@ -110,7 +130,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 					if (tabId) {
 						console.log("Opening settings tab from GRPC response:", tabId)
 						// Check if the value corresponds to a valid tab ID
-						const isValidTabId = SETTINGS_TABS.some((tab) => tab.id === tabId)
+						const isValidTabId = settingsTabs.some((tab) => tab.id === tabId)
 
 						if (isValidTabId) {
 							// Set the active tab directly
@@ -216,7 +236,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 					data-compact={isCompactMode}
 					onValueChange={handleTabChange}
 					value={activeTab}>
-					{SETTINGS_TABS.map((tab) =>
+					{settingsTabs.map((tab) =>
 						isCompactMode ? (
 							<HeroTooltip content={tab.tooltipText} key={tab.id} placement="right">
 								<div
@@ -261,7 +281,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 				{/* Helper function to render section header */}
 				{(() => {
 					const renderSectionHeader = (tabId: string) => {
-						const tab = SETTINGS_TABS.find((t) => t.id === tabId)
+						const tab = settingsTabs.find((t) => t.id === tabId)
 						if (!tab) {
 							return null
 						}
@@ -299,6 +319,16 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 							{/* Debug Tab (only in dev mode) */}
 							{IS_DEV && activeTab === "debug" && (
 								<DebugSection onResetState={handleResetState} renderSectionHeader={renderSectionHeader} />
+							)}
+
+							{/* About Tab */}
+							{activeTab === "about" && (
+								<div>
+									{renderSectionHeader("about")}
+									<div className="mt-6 pt-4">
+										<CaretFooter />
+									</div>
+								</div>
 							)}
 						</TabContent>
 					)

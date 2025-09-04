@@ -5,6 +5,8 @@ import Fuse from "fuse.js"
 import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useInterval } from "react-use"
 import styled from "styled-components"
+// CARET MODIFICATION: Import i18n context for language reactivity
+import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
 // CARET MODIFICATION: Import i18n
 import { t } from "@/caret/utils/i18n"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
@@ -87,6 +89,9 @@ declare module "vscode" {
 const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, isPopup, currentMode }: ApiOptionsProps) => {
 	// Use full context state for immediate save payload
 	const { apiConfiguration } = useExtensionState()
+
+	// CARET MODIFICATION: Use i18n context to detect language changes
+	const { language } = useCaretI18nContext()
 
 	const { selectedProvider } = normalizeApiConfiguration(apiConfiguration, currentMode)
 
@@ -176,7 +181,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 		}
 
 		return baseProviders
-	}, [])
+	}, [language]) // CARET MODIFICATION: Add language dependency for i18n updates
 
 	const currentProviderLabel = useMemo(() => {
 		return providerOptions.find((option) => option.value === selectedProvider)?.label || selectedProvider

@@ -139,6 +139,63 @@ caret-src/feature-name/
     └── feature.test.ts
 ```
 
+## 🌐 **다국어 i18n 머징 전략**
+
+### **정적 번역 문제 해결 패턴**
+모듈 로딩 시점의 번역 고정 문제는 다국어 시스템에서 가장 흔한 문제입니다.
+
+#### **🔍 문제 감지 방법**
+```bash
+# 정적 상수에서 t() 함수 사용 패턴 검색
+grep -r "export const.*=" webview-ui/src/ | grep "t("
+
+# 모듈 최상위에서 번역 함수 호출 검색  
+grep -r "^.*t(" webview-ui/src/ --include="*.ts" --include="*.tsx"
+```
+
+#### **⚠️ 문제가 있는 패턴**
+```typescript
+// ❌ 모듈 로딩 시점에 영어로 고정
+export const MENU_ITEMS = [
+    { name: t("menu.file", "common") },  // 언어 변경 불가
+    { name: t("menu.edit", "common") }
+]
+```
+
+#### **✅ 올바른 해결 패턴**
+```typescript
+// 1. 동적 함수로 변경
+export const getMenuItems = () => [
+    { name: t("menu.file", "common") },  // 호출 시점에 번역
+    { name: t("menu.edit", "common") }
+]
+
+// 2. 컴포넌트에서 언어 변경 감지
+function Component() {
+    const { language } = useCaretI18nContext()
+    const menuItems = useMemo(() => getMenuItems(), [language])
+    // ...
+}
+```
+
+#### **🔧 적용된 수정사항**
+- ✅ `AutoApproveBar.tsx`: ACTION_METADATA → getActionMetadata()
+- ✅ `SettingsView.tsx`: SETTINGS_TABS → getSettingsTabs()
+- ✅ `ApiOptions.tsx`: providerOptions useMemo 의존성에 [language] 추가
+- 🔄 향후 확장: ChatTextArea, 기타 정적 번역 패턴
+
+### **번역 누락 체크리스트**
+```bash
+# 1. Plan/Act 버튼 번역 확인
+grep -r "mode\..*\.label" webview-ui/src/
+
+# 2. Placeholder 텍스트 확인  
+grep -r "placeholderHint\|typeTaskHere" webview-ui/src/
+
+# 3. 설정 페이지 탭 번역 확인
+grep -r "tabs\..*\.name" webview-ui/src/components/settings/
+```
+
 ## 🧪 **TDD 머징 전략**
 
 ### **Test-First 머징 워크플로우**

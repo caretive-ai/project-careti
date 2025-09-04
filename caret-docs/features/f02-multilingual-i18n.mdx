@@ -105,5 +105,68 @@ Caret의 i18n 시스템은 한국어의 복잡한 조사를 자동으로 처리�
 4.  **네임스페이스 등록**: 새 네임스페이스를 생성한 경우, `webview-ui/src/caret/utils/i18n.ts` 파일의 `translations` 객체에 반드시 추가해야 합니다. **이 과정을 누락하는 것이 가장 흔한 실수입니다.**
 5.  **코드 적용**: `t('your.key', 'your_namespace')` 형태로 코드에 적용합니다.
 
+## ⚠️ **모듈 로딩 시점의 정적 번역 문제와 해결책**
+
+### **문제 상황**
+모듈이 처음 로드되는 시점에 `t()` 함수를 호출하여 번역된 값을 상수에 저장하면, 이후 언어 설정이 변경되어도 번역이 업데이트되지 않는 문제가 발생합니다.
+
+**❌ 문제가 있는 패턴:**
+```typescript
+// 모듈 로딩 시점에 번역이 고정됨
+export const SETTINGS_TABS = [
+    {
+        id: "general",
+        name: t("tabs.general.name", "settings"),  // 영어로 고정
+        tooltip: t("tabs.general.tooltip", "settings")  // 영어로 고정
+    }
+]
+```
+
+### **해결책: 동적 함수 + useMemo 패턴**
+
+**✅ 해결된 패턴:**
+```typescript
+// 1. 정적 상수를 동적 함수로 변경
+export const getSettingsTabs = (): SettingsTab[] => [
+    {
+        id: "general", 
+        name: t("tabs.general.name", "settings"),  // 호출 시점에 번역
+        tooltip: t("tabs.general.tooltip", "settings")
+    }
+]
+
+// 2. 컴포넌트에서 언어 변경 감지 및 useMemo 사용
+function SettingsView() {
+    const { language } = useCaretI18nContext()
+    
+    // 언어가 변경될 때마다 번역 재실행
+    const settingsTabs = useMemo(() => getSettingsTabs(), [language])
+    
+    // settingsTabs 사용
+}
+```
+
+### **적용된 수정사항**
+- ✅ **AutoApproveBar**: `ACTION_METADATA`, `NOTIFICATIONS_SETTING` 상수 → `getActionMetadata()`, `getNotificationsSetting()` 함수로 변경
+- ✅ **SettingsView**: `SETTINGS_TABS` 상수 → `getSettingsTabs()` 함수로 변경
+- ✅ **ApiOptions**: `providerOptions` useMemo 의존성에 `[language]` 추가
+
+### **useMemo 의존성 누락 패턴**
+일부 경우는 이미 useMemo를 사용하고 있지만 **언어 의존성이 누락**된 경우입니다:
+
+```typescript
+// ❌ 언어 의존성 누락
+const providerOptions = useMemo(() => [
+    { value: "anthropic", label: t("providers.anthropic", "settings") }
+], []) // 빈 의존성 배열
+
+// ✅ 언어 의존성 추가
+const providerOptions = useMemo(() => [
+    { value: "anthropic", label: t("providers.anthropic", "settings") }  
+], [language]) // 언어 변경시 재실행
+```
+
+이 패턴을 통해 언어 설정 변경 시 UI가 즉시 올바른 번역으로 업데이트됩니다.
+
 ---
 **문서 상태**: `2025-09-05` 기준 최신화 완료

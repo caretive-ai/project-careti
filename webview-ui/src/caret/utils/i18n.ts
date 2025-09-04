@@ -385,7 +385,7 @@ const replaceTemplateVariables = (
 		performanceMonitor.recordTemplateProcessing(duration)
 
 		// Record Korean particle processing if applicable
-		if (language === "ko" && text.includes("|")) {
+		if (language === "ko" && typeof text === "string" && text.includes("|")) {
 			performanceMonitor.recordKoreanParticleProcessing(duration)
 		}
 	}

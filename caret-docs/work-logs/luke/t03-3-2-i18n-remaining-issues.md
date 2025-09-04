@@ -30,11 +30,16 @@
 
 ## 2. 기능 및 구조 문제
 
--   **[ ] 설정 페이지 'About' 탭 복구**
+-   **[x] 설정 페이지 'About' 탭 복구** ✅ **완료 (2025-09-04)**
     -   **문제**: 현재 설정 페이지에 `About` 탭이 없음.
     -   **요구사항**: `caret-main`과 동일하게 `About` 탭을 복구해야 함.
-    -   **구현**: `SettingsView.tsx`의 `SETTINGS_TABS` 배열에 `About` 탭 정보를 다시 추가.
+    -   **구현**: `SettingsView.tsx`의 `getSettingsTabs()` 함수에 `About` 탭 정보를 다시 추가.
     -   `About` 탭의 내용은 `WelcomeView`에 사용된 `CaretFooter` 컴포넌트를 렌더링하도록 구현.
+    -   **적용된 수정사항**:
+        - `SettingsView.tsx` 라인 93-100: About 탭 정의 추가 (CARET MODIFICATION 코멘트 포함)
+        - `SettingsView.tsx` 라인 24: CaretFooter 컴포넌트 import 추가
+        - `SettingsView.tsx` 라인 324-332: About 탭 렌더링 구현 추가
+        - 한국어 번역은 이미 `settings.json` 라인 36-40에 존재함을 확인
 
 ## 3. 아이콘 변경
 
@@ -44,7 +49,7 @@
     -   **참고**: 마스터께서 제공해주신 예제 코드(`convertAssetToBase64`)와 같이, 백엔드(Extension)에서 이미지를 읽어 Base64 문자열로 변환한 뒤, 이를 `window` 객체를 통해 웹뷰에 전달하는 방식 적용 필요.
 
 
-## 4. i18n 누락 범위 분석 결과 (f02-multilingual-i18n.mdx 기반)
+## 4.  i18n 누락 범위 분석 결과 (f02-multilingual-i18n.mdx 기반)
 `f02-multilingual-i18n.mdx` 와 현재 작업 로그(`t03-3`)를 교차 검증하여 다음과 같이 누락된 i18n 범위를 분석했습니다. 이 내용은 `Step4` 작업을 위한 구체적인 지침이 됩니다.
 
 #### 1. 네임스페이스 불일치 문제

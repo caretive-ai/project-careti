@@ -14,6 +14,8 @@ import { AnthropicProvider } from "./providers/AnthropicProvider"
 import { AskSageProvider } from "./providers/AskSageProvider"
 import { BasetenProvider } from "./providers/BasetenProvider"
 import { BedrockProvider } from "./providers/BedrockProvider"
+// CARET MODIFICATION: Add Caret Provider
+import CaretProvider from "./providers/CaretProvider"
 import { CerebrasProvider } from "./providers/CerebrasProvider"
 import { ClaudeCodeProvider } from "./providers/ClaudeCodeProvider"
 // CARET MODIFICATION: Hide Cline Provider and use Caret Provider instead
@@ -128,6 +130,8 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 		const showClineProvider = typeof process !== "undefined" && process.env?.CARET_SHOW_CLINE_PROVIDER === "true"
 
 		const baseProviders = [
+			// CARET MODIFICATION: Add Caret as top priority provider
+			{ value: "caret", label: "Caret" },
 			{ value: "openrouter", label: "OpenRouter" },
 			{ value: "gemini", label: "Google Gemini" },
 			{ value: "openai", label: "OpenAI Compatible" },
@@ -366,6 +370,11 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 
 			{apiConfiguration && selectedProvider === "anthropic" && (
 				<AnthropicProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
+			)}
+
+			{/* CARET MODIFICATION: Add Caret Provider UI */}
+			{apiConfiguration && selectedProvider === "caret" && (
+				<CaretProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 			)}
 
 			{apiConfiguration && selectedProvider === "claude-code" && (

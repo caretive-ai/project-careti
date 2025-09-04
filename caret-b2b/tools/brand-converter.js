@@ -501,36 +501,27 @@ class BrandConverter {
      * 규칙 파일 경로 변환 (src/core/storage/disk.ts, src/integrations/terminal/TerminalRegistry.ts 등)
      */
     async convertRulePaths(fromBrand, toBrand, config) {
-        // JSON 설정에서 파일 경로 읽기
-        const filePaths = config.file_paths || {}
-        const filesToProcess = []
-        
-        // JSON 설정의 file_paths를 기반으로 파일 목록 생성
-        for (const [filePath, mappingKey] of Object.entries(filePaths)) {
-            const fullPath = path.join(this.projectRoot, filePath)
-            const fileName = path.basename(filePath)
-            
-            filesToProcess.push({
-                path: fullPath,
-                name: fileName,
-                mappingKey: mappingKey
-            })
-        }
+        const filesToProcess = [
+            {
+                path: path.join(this.projectRoot, 'src', 'core', 'storage', 'disk.ts'),
+                name: 'disk.ts'
+            },
+            {
+                path: path.join(this.projectRoot, 'src', 'integrations', 'terminal', 'TerminalRegistry.ts'),
+                name: 'TerminalRegistry.ts'
+            }
+        ]
 
         let processedCount = 0
         
         for (const file of filesToProcess) {
             if (!fs.existsSync(file.path)) {
-                this.log(`  ⚠️ ${file.name} 파일이 없어서 스킵합니다: ${file.path}`)
+                this.log(`  ⚠️ ${file.name} 파일이 없어서 스킵합니다`)
                 continue
             }
 
-            // 디버그: 파일 처리 중임을 표시
-            if (file.name.includes('Handler')) {
-                this.log(`  🔄 백엔드 핸들러 처리: ${file.name}`)
-            }
 
-            await this.processRulePathFile(file.path, file.mappingKey, fromBrand, toBrand, config)
+            await this.processRulePathFile(file.path, file.name, fromBrand, toBrand, config)
             processedCount++
         }
 
@@ -540,13 +531,19 @@ class BrandConverter {
     /**
      * 개별 파일의 규칙 경로 변환 처리
      */
-    async processRulePathFile(filePath, mappingKey, fromBrand, toBrand, config) {
+    async processRulePathFile(filePath, fileName, fromBrand, toBrand, config) {
         let content = fs.readFileSync(filePath, 'utf8')
         const originalContent = content
-        const fileName = path.basename(filePath)
         
-        // JSON 설정에서 해당 mappingKey의 매핑 가져오기
-        const mappings = config.brand_mappings?.[mappingKey] || {}
+        // 파일별 매핑 선택
+        let mappings = {}
+        if (fileName === 'TerminalRegistry.ts') {
+            // TerminalRegistry는 terminal 매핑 사용
+            mappings = config.brand_mappings?.terminal || {}
+        } else {
+            // 다른 파일들은 file_paths 매핑 사용
+            mappings = config.brand_mappings?.file_paths || {}
+        }
         
         const reverseMappings = {}
         for (const [key, value] of Object.entries(mappings)) {
@@ -569,14 +566,6 @@ class BrandConverter {
         }
 
         let changeCount = 0
-        
-        // 디버그: 핸들러 파일의 매핑 확인
-        if (fileName.includes('Handler')) {
-            this.log(`    📋 ${fileName} 매핑: ${Object.keys(effectiveMappings).length}개`)
-            for (const [from, to] of Object.entries(effectiveMappings)) {
-                this.log(`      - "${from}" → "${to}"`)
-            }
-        }
         
         // path.join 패턴만 안전하게 변환
         for (const [from, to] of Object.entries(effectiveMappings)) {
@@ -614,64 +603,13 @@ class BrandConverter {
     }
 
     /**
-     * 브랜드 환경변수 설정 (단일 브랜드 모드)
-     */
-    setBrandEnvironment(brandName) {
-        const envPath = path.join(this.projectRoot, '.env')
-        let envContent = ''
-        
-        // 기존 .env 파일 읽기 (있는 경우)
-        if (fs.existsSync(envPath)) {
-            envContent = fs.readFileSync(envPath, 'utf8')
-        }
-
-        let changeCount = 0
-
-        if (brandName !== 'caret') {
-            // 브랜드 모드 활성화
-            if (!envContent.includes('CARET_BRAND_MODE=')) {
-                envContent += '\n# CARET MODIFICATION: Brand mode configuration\nCARET_BRAND_MODE=true\n'
-                changeCount++
-            } else {
-                envContent = envContent.replace(/CARET_BRAND_MODE=.*/g, 'CARET_BRAND_MODE=true')
-                changeCount++
-            }
-
-            // 현재 브랜드 설정
-            if (!envContent.includes('CARET_CURRENT_BRAND=')) {
-                envContent += `CARET_CURRENT_BRAND=${brandName}\n`
-                changeCount++
-            } else {
-                envContent = envContent.replace(/CARET_CURRENT_BRAND=.*/g, `CARET_CURRENT_BRAND=${brandName}`)
-                changeCount++
-            }
-
-            this.log(`  🔧 브랜드 환경변수 설정: BRAND_MODE=true, CURRENT_BRAND=${brandName}`)
-        } else {
-            // Caret으로 복원 - 브랜드 모드 비활성화
-            envContent = envContent.replace(/CARET_BRAND_MODE=.*/g, 'CARET_BRAND_MODE=false')
-            envContent = envContent.replace(/CARET_CURRENT_BRAND=.*/g, '')
-            changeCount++
-            this.log(`  🔧 브랜드 환경변수 해제: BRAND_MODE=false`)
-        }
-
-        if (!this.isDryRun && changeCount > 0) {
-            fs.writeFileSync(envPath, envContent)
-            this.log(`  ✅ 환경변수 설정 완료`)
-        }
-
-        return changeCount > 0
-    }
-
-    /**
      * 통합 브랜드 변환 실행
      */
     async executeConversion(fromBrand, toBrand, options = {}) {
-        const { noBuild = false, brandConfig, includeBackend = true, includeFrontend = false } = options
+        const { noBuild = false, brandConfig } = options
 
         // 브랜드 설정 로드 - 전달받은 config 사용 또는 자동 탐지
         let config = brandConfig || null
-        let frontConfig = null
         
         if (!config) {
             // 1. 현재 브랜드 설정 시도  
@@ -700,66 +638,26 @@ class BrandConverter {
         }
         
         // 3. 설정을 찾지 못한 경우 에러
-        if (!config && includeBackend) {
+        if (!config) {
             this.error(`❌ 변환을 위한 브랜드 설정을 찾을 수 없습니다: ${fromBrand} → ${toBrand}`)
             return false
         }
 
-        // 프론트엔드 설정 로드
-        if (includeFrontend) {
-            const frontConfigPath = path.join(this.brandsDir, fromBrand, 'brand-config-front.json')
-            if (fs.existsSync(frontConfigPath)) {
-                frontConfig = JSON.parse(fs.readFileSync(frontConfigPath, 'utf8'))
-                this.log(`📱 프론트엔드 설정 로드됨: ${frontConfigPath}`)
-            } else {
-                // 목표 브랜드에서 찾기
-                const targetFrontConfigPath = path.join(this.brandsDir, toBrand, 'brand-config-front.json')
-                if (fs.existsSync(targetFrontConfigPath)) {
-                    frontConfig = JSON.parse(fs.readFileSync(targetFrontConfigPath, 'utf8'))
-                    this.log(`📱 프론트엔드 설정 로드됨: ${targetFrontConfigPath}`)
-                }
-            }
-        }
-
         try {
-            let textConverted = false
-            let rulesConverted = false
-            let frontConverted = false
+            // 1. 텍스트 변환
+            this.log(`📝 텍스트 매핑 변환 시작`)
+            const textConverted = await this.convertText(fromBrand, toBrand, config)
 
-            // 백엔드 변환
-            if (includeBackend && config) {
-                // 1. 텍스트 변환
-                this.log(`📝 백엔드 텍스트 매핑 변환 시작`)
-                textConverted = await this.convertText(fromBrand, toBrand, config)
-
-                // 2. 규칙 파일 경로 변환
-                this.log(`📋 백엔드 규칙 파일 경로 변환 시작`)
-                rulesConverted = await this.convertRulePaths(fromBrand, toBrand, config)
-
-                // 3. 환경변수 기반 브랜드 모드 설정
-                this.log(`🔧 환경변수 기반 브랜드 모드 설정 시작`)
-                this.setBrandEnvironment(toBrand)
-            }
-
-            // 프론트엔드 변환
-            if (includeFrontend && frontConfig) {
-                this.log(`📱 프론트엔드 파일 변환 시작`)
-                frontConverted = await this.convertRulePaths(fromBrand, toBrand, frontConfig)
-            }
+            // 2. 규칙 파일 경로 변환
+            this.log(`📋 규칙 파일 경로 변환 시작`)
+            const rulesConverted = await this.convertRulePaths(fromBrand, toBrand, config)
 
             // 3. 이미지 복사
             this.log(`📂 이미지 파일 복사 시작`)
             const assetsConverted = await this.copyAssets(toBrand, fromBrand)
 
-            if (textConverted || rulesConverted || frontConverted || assetsConverted) {
+            if (textConverted || rulesConverted || assetsConverted) {
                 this.log(`✅ 브랜드 변환 완료: ${fromBrand} → ${toBrand}`)
-                if (includeBackend && !includeFrontend) {
-                    this.log(`📌 백엔드 변환 완료`)
-                } else if (!includeBackend && includeFrontend) {
-                    this.log(`📌 프론트엔드 변환 완료`)
-                } else {
-                    this.log(`📌 백엔드 + 프론트엔드 변환 완료`)
-                }
                 
                 // 빌드 실행 (npm이 없는 환경에서는 스킵)
                 if (!this.isDryRun && !noBuild) {
@@ -916,9 +814,7 @@ class BrandConverter {
         }
 
         const noBuild = args.includes('--no-build')
-        const backendOnly = args.includes('--backend')
-        const frontendOnly = args.includes('--frontend')
-        const all = args.includes('--all') || (!backendOnly && !frontendOnly)
+
 
         this.currentBrand = this.detectCurrentBrand()
         
@@ -983,23 +879,7 @@ class BrandConverter {
             return
         }
 
-        // 실행 옵션 설정
-        const options = {
-            noBuild,
-            brandConfig: config,
-            includeBackend: all || backendOnly,
-            includeFrontend: all || frontendOnly
-        }
-
-        if (backendOnly) {
-            this.log(`📋 백엔드만 변환합니다`)
-        } else if (frontendOnly) {
-            this.log(`📱 프론트엔드만 변환합니다`)
-        } else {
-            this.log(`📋 백엔드 + 프론트엔드 모두 변환합니다`)
-        }
-
-        await this.executeConversion(fromBrand, toBrand, options)
+        await this.executeConversion(fromBrand, toBrand, { noBuild, brandConfig: config })
     }
 }
 

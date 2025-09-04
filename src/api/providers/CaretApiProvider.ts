@@ -1,5 +1,5 @@
 import { Anthropic } from "@anthropic-ai/sdk"
-import { CaretGlobalManager } from "@caret/providers/CaretProvider"
+import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
 import { ApiHandler, CommonApiHandlerOptions } from "@core/api"
 import { OpenRouterErrorResponse } from "@core/api/providers/types"
 import { withRetry } from "@core/api/retry"

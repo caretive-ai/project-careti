@@ -4,58 +4,9 @@
     "target": "caret",
     "description": "Caret ↔ CodeCenter branding conversion"
   },
-  "file_paths": {
-    "package.json": "package_json",
-    "src/core/storage/disk.ts": "disk_ts",
-    "src/integrations/terminal/TerminalRegistry.ts": "TerminalRegistry_ts",
-    "src/extension.ts": "extension_ts",
-    "src/core/task/tools/handlers/WriteToFileToolHandler.ts": "WriteToFileToolHandler_ts",
-    "src/core/task/tools/handlers/ExecuteCommandToolHandler.ts": "ExecuteCommandToolHandler_ts",
-    "src/core/task/tools/handlers/ReadFileToolHandler.ts": "ReadFileToolHandler_ts",
-    "src/core/task/tools/handlers/ListFilesToolHandler.ts": "ListFilesToolHandler_ts",
-    "src/core/task/tools/handlers/SearchFilesToolHandler.ts": "SearchFilesToolHandler_ts",
-    "src/core/task/tools/handlers/BrowserToolHandler.ts": "BrowserToolHandler_ts",
-    "src/core/task/tools/handlers/WebFetchToolHandler.ts": "WebFetchToolHandler_ts",
-    "src/core/task/tools/handlers/UseMcpToolHandler.ts": "UseMcpToolHandler_ts",
-    "src/core/task/tools/handlers/AccessMcpResourceHandler.ts": "AccessMcpResourceHandler_ts",
-    "src/core/task/tools/handlers/ListCodeDefinitionNamesToolHandler.ts": "ListCodeDefinitionNamesToolHandler_ts",
-    "src/core/task/tools/handlers/NewTaskHandler.ts": "NewTaskHandler_ts",
-    "src/core/task/tools/handlers/CondenseHandler.ts": "CondenseHandler_ts",
-    "src/core/task/tools/handlers/ReportBugHandler.ts": "ReportBugHandler_ts",
-    "src/integrations/notifications/index.ts": "notifications_index_ts",
-    "src/services/posthog/PostHogClientProvider.ts": "PostHogClientProvider_ts",
-    "src/services/browser/BrowserSession.ts": "BrowserSession_ts",
-    "src/core/task/index.ts": "task_index_ts",
-    "src/core/controller/index.ts": "controller_index_ts",
-    "src/core/storage/state-migrations.ts": "state_migrations_ts",
-    "src/services/mcp/McpHub.ts": "McpHub_ts",
-    "src/core/api/providers/dify.ts": "dify_ts",
-    "src/core/api/providers/cline.ts": "cline_provider_ts",
-    "src/core/api/providers/lmstudio.ts": "lmstudio_ts",
-    "src/core/api/providers/requesty.ts": "requesty_ts",
-    "src/core/api/providers/openrouter.ts": "openrouter_ts",
-    "src/core/api/providers/huggingface.ts": "huggingface_ts",
-    "src/core/api/providers/litellm.ts": "litellm_ts",
-    "src/core/api/providers/sapaicore.ts": "sapaicore_ts",
-    "src/core/api/providers/vercel-ai-gateway.ts": "vercel_ai_gateway_ts",
-    "src/core/api/providers/vscode-lm.ts": "vscode_lm_ts",
-    "src/core/api/providers/zai.ts": "zai_ts",
-    "src/core/storage/utils/state-helpers.ts": "state_helpers_ts",
-    "src/integrations/editor/detect-omission.ts": "detect_omission_ts",
-    "src/test/e2e/fixtures/server/api.ts": "e2e_api_ts",
-    "src/test/e2e/utils/helpers.ts": "e2e_helpers_ts",
-    "src/hosts/vscode/VscodeWebviewProvider.ts": "VscodeWebviewProvider_ts",
-    "src/hosts/vscode/hostbridge/workspace/openClineSidebarPanel.ts": "openClineSidebarPanel_ts",
-    "src/services/test/TestServer.ts": "TestServer_ts"
-  },
   "brand_mappings": {
     "package_json": {
-      "caret.SidebarProvider": "codecenter.SidebarProvider",
-      "caret.TabPanelProvider": "codecenter.TabPanelProvider",
-      "\"Caret\"": "\"CodeCenter\"",
       "Caret": "CodeCenter",
-      "CaretWalkthrough": "CodeCenterWalkthrough",
-      "caret-ActivityBar": "codecenter-ActivityBar",
       "CARET": "CODECENTER",
       "Caret Bot": "CodeCenter Bot",
       "Caret Team": "Slexn's Codecenter",
@@ -72,7 +23,7 @@
       "Explain with Caret": "Explain with CodeCenter",
       "Improve with Caret": "Improve with CodeCenter"
     },
-    "disk_ts": {
+    "file_paths": {
       ".caretrules": ".codecenterrules",
       "Documents/Caret": "Documents/CodeCenter",
       "\"Caret\"": "\"CodeCenter\"",
@@ -80,153 +31,9 @@
       "caret_mcp_settings.json": "codecenter_mcp_settings.json",
       ", \"Caret\",": ", \"CodeCenter\","
     },
-    "TerminalRegistry_ts": {
-      "caretive.caret": "slexn.codecenter",
+    "terminal": {
+      "caretive.caret": "slexn.codecenter",      
       "Caret": "CodeCenter"
-    },
-    "extension_ts": {
-      "Caret extension activated": "CodeCenter extension activated",
-      "Opening Caret in new tab": "Opening CodeCenter in new tab",
-      "\"Caret\"": "\"CodeCenter\"",
-      "Caret dev task commands registered": "CodeCenter dev task commands registered", 
-      "Add to Caret": "Add to CodeCenter",
-      "Explain with Caret": "Explain with CodeCenter",
-      "Improve with Caret": "Improve with CodeCenter",
-      "Fix with Caret": "Fix with CodeCenter",
-      "Could not find or activate a Caret webview to focus.": "Could not find or activate a CodeCenter webview to focus.",
-      "Could not activate Caret view. Please try opening it manually from the Activity Bar.": "Could not activate CodeCenter view. Please try opening it manually from the Activity Bar.",
-      "caretive.caret#CaretWalkthrough": "slexn.codecenter#CodeCenterWalkthrough",
-      "createOutputChannel(\"Caret\")": "createOutputChannel(\"CodeCenter\")",
-      "Caret extension deactivated": "CodeCenter extension deactivated",
-      "VscodeWebviewProvider.TAB_PANEL_ID, \"Caret\"": "VscodeWebviewProvider.TAB_PANEL_ID, \"CodeCenter\""
-    },
-    "WriteToFileToolHandler_ts": {
-      "Caret wants to": "CodeCenter wants to"
-    },
-    "ExecuteCommandToolHandler_ts": {
-      "Caret wants to execute a command:": "CodeCenter wants to execute a command:"
-    },
-    "ReadFileToolHandler_ts": {
-      "Caret wants to read": "CodeCenter wants to read"
-    },
-    "ListFilesToolHandler_ts": {
-      "Caret wants to view directory": "CodeCenter wants to view directory"
-    },
-    "SearchFilesToolHandler_ts": {
-      "Caret wants to search files for": "CodeCenter wants to search files for"
-    },
-    "BrowserToolHandler_ts": {
-      "Caret wants to use a browser and launch": "CodeCenter wants to use a browser and launch"
-    },
-    "WebFetchToolHandler_ts": {
-      "Caret wants to fetch content from": "CodeCenter wants to fetch content from"
-    },
-    "UseMcpToolHandler_ts": {
-      "Caret wants to use": "CodeCenter wants to use"
-    },
-    "AccessMcpResourceHandler_ts": {
-      "Caret wants to access": "CodeCenter wants to access"
-    },
-    "ListCodeDefinitionNamesToolHandler_ts": {
-      "Caret wants to analyze code definitions in": "CodeCenter wants to analyze code definitions in"
-    },
-    "NewTaskHandler_ts": {
-      "Caret wants to start a new task...": "CodeCenter wants to start a new task...",
-      "Caret is suggesting to start a new task with:": "CodeCenter is suggesting to start a new task with:"
-    },
-    "CondenseHandler_ts": {
-      "Caret wants to condense the conversation...": "CodeCenter wants to condense the conversation...",
-      "Caret is suggesting to condense your conversation with:": "CodeCenter is suggesting to condense your conversation with:"
-    },
-    "ReportBugHandler_ts": {
-      "Caret wants to create a github issue...": "CodeCenter wants to create a github issue...",
-      "Caret is suggesting to create a github issue with the title:": "CodeCenter is suggesting to create a github issue with the title:",
-      "vscode.extensions.getExtension(\"caretive.caret\")": "vscode.extensions.getExtension(\"slexn.codecenter\")",
-      "caret_version": "codecenter_version",
-      "params.set(\"caret-version\"": "params.set(\"codecenter-version\"",
-      "createAndOpenGitHubIssue(\"aicoding-caret\", \"caret\"": "createAndOpenGitHubIssue(\"slexn\", \"codecenter\""
-    },
-    "notifications_index_ts": {
-      "CreateToastNotifier(\"Caret\")": "CreateToastNotifier(\"CodeCenter\")"
-    },
-    "PostHogClientProvider_ts": {
-      "getConfiguration(\"caret\")": "getConfiguration(\"codecenter\")"
-    },
-    "BrowserSession_ts": {
-      "getConfiguration(\"caret\")": "getConfiguration(\"codecenter\")"
-    },
-    "task_index_ts": {
-      "getConfiguration(\"caret\")": "getConfiguration(\"codecenter\")",
-      "Caret is having trouble": "CodeCenter is having trouble",
-      "Caret has auto-approved": "CodeCenter has auto-approved"
-    },
-    "controller_index_ts": {},
-    "state_migrations_ts": {
-      "getConfiguration(\"caret\")": "getConfiguration(\"codecenter\")"
-    },
-    "McpHub_ts": {
-      "name: \"Caret\"": "name: \"CodeCenter\"",
-      "or Caret (and": "or CodeCenter (and",
-      "CARET BUG FIX": "CODECENTER BUG FIX"
-    },
-    "dify_ts": {
-      "\"caret-user\"": "\"codecenter-user\""
-    },
-    "cline_provider_ts": {},
-    "lmstudio_ts": {
-      "work with Caret's prompts": "work with CodeCenter's prompts"
-    },
-    "requesty_ts": {
-      "\"HTTP-Referer\": \"https://caret.team\"": "\"HTTP-Referer\": \"https://www.slexn.com/product/codecenter/\"",
-      "\"X-Title\": \"Caret\"": "\"X-Title\": \"CodeCenter\""
-    },
-    "openrouter_ts": {
-      "\"HTTP-Referer\": \"https://caret.team\"": "\"HTTP-Referer\": \"https://www.slexn.com/product/codecenter/\"",
-      "\"X-Title\": \"Caret\"": "\"X-Title\": \"CodeCenter\""
-    },
-    "huggingface_ts": {
-      "\"User-Agent\": \"Caret/1.0\"": "\"User-Agent\": \"CodeCenter/1.0\""
-    },
-    "litellm_ts": {
-      "litellm_session_id: `caret-${": "litellm_session_id: `codecenter-${"
-    },
-    "sapaicore_ts": {
-      "\"AI-Client-Type\": \"Caret\"": "\"AI-Client-Type\": \"CodeCenter\""
-    },
-    "vercel_ai_gateway_ts": {
-      "\"http-referer\": \"https://caret.team\"": "\"http-referer\": \"https://www.slexn.com/product/codecenter/\"",
-      "\"x-title\": \"Caret\"": "\"x-title\": \"CodeCenter\""
-    },
-    "vscode_lm_ts": {
-      "Caret <Language Model API>": "CodeCenter <Language Model API>",
-      "Caret would like to use": "CodeCenter would like to use"
-    },
-    "zai_ts": {
-      "\"HTTP-Referer\": \"https://caret.team\"": "\"HTTP-Referer\": \"https://www.slexn.com/product/codecenter/\"",
-      "\"X-Title\": \"Caret\"": "\"X-Title\": \"CodeCenter\"",
-      "\"X-Caret-Version\"": "\"X-CodeCenter-Version\""
-    },
-    "state_helpers_ts": {},
-    "detect_omission_ts": {
-      "https://github.com/aicoding-caret/caret": "https://github.com/slexn/codecenter"
-    },
-    "e2e_api_ts": {
-      "\"john\" with \"caret\"": "\"john\" with \"codecenter\"",
-      "export const name = \"caret\"": "export const name = \"codecenter\"",
-      "Hello! I'm a mock Caret API response": "Hello! I'm a mock CodeCenter API response"
-    },
-    "e2e_helpers_ts": {
-      "if (title.startsWith(\"Caret\"))": "if (title.startsWith(\"CodeCenter\"))"
-    },
-    "VscodeWebviewProvider_ts": {
-      "caret.SidebarProvider": "codecenter.SidebarProvider",
-      "caret.TabPanelProvider": "codecenter.TabPanelProvider"
-    },
-    "openClineSidebarPanel_ts": {
-      "caret.SidebarProvider": "codecenter.SidebarProvider"
-    },
-    "TestServer_ts": {
-      "caret.SidebarProvider": "codecenter.SidebarProvider"
     }
   },
   "package_fields": [
@@ -238,34 +45,5 @@
     "publisher",
     "repository.url",
     "homepage"
-  ],
-  "api": {
-    "baseUrl": "http://127.0.0.1:3000/api/v1",
-    "providerName": "codecenter",
-    "authType": "Bearer",
-    "timeout": 30000,
-    "retryAttempts": 3,
-    "headers": {
-      "User-Agent": "CodeCenter/1.0"
-    },
-    "mcpMarketplaceUrl": "http://127.0.0.1:3000/mcp-marketplace",
-    "status": "preparing"
-  },
-  "ui": {
-    "hideOtherProviders": false,
-    "showOnlyBrandedProvider": false,
-    "providerDisplayName": "CodeCenter",
-    "preparingMessage": "CodeCenter 서비스가 준비 중입니다."
-  },
-  "i18n": {
-    "mcpMarketplace": {
-      "tabName": "CodeCenter 마켓",
-      "preparing": "CodeCenter 서비스가 준비 중입니다.",
-      "error": "CodeCenter 연결 오류"
-    }
-  },
-  "terminal": {
-    "name": "CodeCenter",
-    "icon_file": "codecenter-icon.png"
-  }
+  ]  
 }

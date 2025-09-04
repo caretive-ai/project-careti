@@ -13,7 +13,8 @@ import { main as generateProtoBusSetup } from "./generate-protobus-setup.mjs"
 import { loadProtoDescriptorSet } from "./proto-utils.mjs"
 
 const require = createRequire(import.meta.url)
-const PROTOC = path.join(require.resolve("grpc-tools"), "../bin/protoc")
+// CARET MODIFICATION: Use downloaded protoc instead of grpc-tools version for Windows compatibility
+const PROTOC = path.resolve("protoc-temp/bin/protoc.exe")
 
 const PROTO_DIR = path.resolve("proto")
 const TS_OUT_DIR = path.resolve("src/shared/proto")

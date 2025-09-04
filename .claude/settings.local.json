@@ -172,7 +172,8 @@
       "Read(/D:\\dev\\caret-merge\\webview-ui\\src\\caret\\locale\\ko/**)",
       "Read(/D:\\dev\\caret-merge\\webview-ui\\src\\components\\welcome/**)",
       "Read(/D:\\dev\\caret-merge\\webview-ui/**)",
-      "Read(/D:\\dev\\caret-merge\\webview-ui\\src\\caret\\utils/**)"
+      "Read(/D:\\dev\\caret-merge\\webview-ui\\src\\caret\\utils/**)",
+      "Read(/D:\\dev\\caret-merge\\caret-docs\\work-logs\\luke/**)"
     ],
     "deny": [],
     "ask": []

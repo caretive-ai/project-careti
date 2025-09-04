@@ -4,6 +4,7 @@ import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mc
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useRef, useState } from "react"
 import { useClickAway, useWindowSize } from "react-use"
+import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import Tooltip from "@/components/common/Tooltip"
 import ServersToggleList from "@/components/mcp/configuration/tabs/installed/ServersToggleList"
@@ -54,10 +55,10 @@ const ServersToggleModal: React.FC = () => {
 	return (
 		<div ref={modalRef}>
 			<div className="inline-flex min-w-0 max-w-full" ref={buttonRef}>
-				<Tooltip tipText="Manage MCP Servers" visible={isVisible ? false : undefined}>
+				<Tooltip tipText={t("serversToggleModal.manageMcpServers", "chat")} visible={isVisible ? false : undefined}>
 					<VSCodeButton
 						appearance="icon"
-						aria-label="MCP Servers"
+						aria-label={t("serversToggleModal.mcpServers", "chat")}
 						onClick={() => setIsVisible(!isVisible)}
 						style={{ padding: "0px 0px", height: "20px" }}>
 						<div className="flex items-center gap-1 text-xs whitespace-nowrap min-w-0 w-full">
@@ -89,7 +90,7 @@ const ServersToggleModal: React.FC = () => {
 					/>
 
 					<div className="flex justify-between items-center mb-2.5">
-						<div className="m-0 text-base font-semibold">MCP Servers</div>
+						<div className="m-0 text-base font-semibold">{t("serversToggleModal.mcpServers", "chat")}</div>
 						<VSCodeButton
 							appearance="icon"
 							onClick={() => {

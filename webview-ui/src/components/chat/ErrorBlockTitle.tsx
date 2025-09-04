@@ -1,4 +1,5 @@
 import React from "react"
+import { t } from "@/caret/utils/i18n"
 import { ClineError, ClineErrorType } from "../../../../src/services/error/ClineError"
 import { ProgressIndicator } from "./ChatRow"
 
@@ -26,9 +27,9 @@ const RetryMessage = React.memo(
 
 		return (
 			<span className="font-bold text-[var(--vscode-foreground)]">
-				{`API Request (Retrying failed attempt ${attempt}/${retryOperations}`}
-				{remainingSeconds > 0 && ` in ${remainingSeconds} seconds`}
-				)...
+				{t("errorBlockTitle.apiRetryAttempt", "chat", { attempt: attempt, retryOperations: retryOperations })}
+				{remainingSeconds > 0 && t("errorBlockTitle.inSeconds", "chat", { remainingSeconds: remainingSeconds })}
+				{t("errorBlockTitle.ellipsis", "chat")}
 			</span>
 		)
 	},
@@ -75,22 +76,24 @@ export const ErrorBlockTitle = ({
 
 	const title = (() => {
 		// Default loading state
-		const details = { title: "API Request...", classNames: ["font-bold"] }
+		const details = { title: t("errorBlockTitle.apiRequestLoading", "chat"), classNames: ["font-bold"] }
 		// Handle cancellation states first
 		if (apiReqCancelReason === "user_cancelled") {
-			details.title = "API Request Cancelled"
+			details.title = t("errorBlockTitle.apiRequestCancelled", "chat")
 			details.classNames.push("text-[var(--vscode-foreground)]")
 		} else if (apiReqCancelReason != null) {
-			details.title = "API Streaming Failed"
+			details.title = t("errorBlockTitle.apiStreamingFailed", "chat")
 			details.classNames.push("text-[var(--vscode-errorForeground)]")
 		} else if (cost != null) {
 			// Handle completed request
-			details.title = "API Request"
+			details.title = t("errorBlockTitle.apiRequest", "chat")
 			details.classNames.push("text-[var(--vscode-foreground)]")
 		} else if (apiRequestFailedMessage) {
 			// Handle failed request
 			const clineError = ClineError.parse(apiRequestFailedMessage)
-			const titleText = clineError?.isErrorType(ClineErrorType.Balance) ? "Credit Limit Reached" : "API Request Failed"
+			const titleText = clineError?.isErrorType(ClineErrorType.Balance)
+				? t("errorBlockTitle.creditLimitReached", "chat")
+				: t("errorBlockTitle.apiRequestFailed", "chat")
 			details.title = titleText
 			details.classNames.push("font-bold text-[var(--vscode-errorForeground)]")
 		} else if (retryStatus) {

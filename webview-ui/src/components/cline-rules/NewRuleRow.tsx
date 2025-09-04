@@ -2,6 +2,7 @@ import { CreateRuleFileRequest } from "@shared/proto-conversions/file/rule-files
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useEffect, useRef, useState } from "react"
 import { useClickAway } from "react-use"
+import { t } from "@/caret/utils/i18n"
 import { FileServiceClient } from "@/services/grpc-client"
 
 interface NewRuleRowProps {
@@ -52,7 +53,7 @@ const NewRuleRow: React.FC<NewRuleRowProps> = ({ isGlobal, ruleType }) => {
 			const extension = getExtension(trimmedFilename)
 
 			if (!isValidExtension(extension)) {
-				setError("Only .md, .txt, or no file extension allowed")
+				setError(t("newRuleRow.invalidExtensionError", "chat"))
 				return
 			}
 
@@ -103,8 +104,8 @@ const NewRuleRow: React.FC<NewRuleRowProps> = ({ isGlobal, ruleType }) => {
 							onKeyDown={handleKeyDown}
 							placeholder={
 								ruleType === "workflow"
-									? "workflow-name (.md, .txt, or no extension)"
-									: "rule-name (.md, .txt, or no extension)"
+									? t("newRuleRow.workflowPlaceholder", "chat")
+									: t("newRuleRow.rulePlaceholder", "chat")
 							}
 							ref={inputRef}
 							style={{
@@ -117,9 +118,9 @@ const NewRuleRow: React.FC<NewRuleRowProps> = ({ isGlobal, ruleType }) => {
 						<div className="flex items-center ml-2 space-x-2">
 							<VSCodeButton
 								appearance="icon"
-								aria-label="Create rule file"
+								aria-label={t("newRuleRow.createRuleFile", "chat")}
 								style={{ padding: "0px" }}
-								title="Create rule file"
+								title={t("newRuleRow.createRuleFile", "chat")}
 								type="submit">
 								<span className="codicon codicon-add text-[14px]" />
 							</VSCodeButton>
@@ -128,18 +129,20 @@ const NewRuleRow: React.FC<NewRuleRowProps> = ({ isGlobal, ruleType }) => {
 				) : (
 					<>
 						<span className="flex-1 text-[var(--vscode-descriptionForeground)] bg-[var(--vscode-input-background)] italic text-xs">
-							{ruleType === "workflow" ? "New workflow file..." : "New rule file..."}
+							{ruleType === "workflow"
+								? t("newRuleRow.newWorkflowFile", "chat")
+								: t("newRuleRow.newRuleFile", "chat")}
 						</span>
 						<div className="flex items-center ml-2 space-x-2">
 							<VSCodeButton
 								appearance="icon"
-								aria-label="New rule file"
+								aria-label={t("newRuleRow.newRuleFile", "chat")}
 								onClick={(e) => {
 									e.stopPropagation()
 									setIsExpanded(true)
 								}}
 								style={{ padding: "0px" }}
-								title="New rule file">
+								title={t("newRuleRow.newRuleFile", "chat")}>
 								<span className="codicon codicon-add text-[14px]" />
 							</VSCodeButton>
 						</div>

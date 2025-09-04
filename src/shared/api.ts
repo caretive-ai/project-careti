@@ -36,6 +36,7 @@ export type ApiProvider =
 	| "baseten"
 	| "vercel-ai-gateway"
 	| "zai"
+	| "caret"
 
 export interface ApiHandlerOptions {
 	// Global configuration (not mode-specific)
@@ -111,6 +112,8 @@ export interface ApiHandlerOptions {
 	difyBaseUrl?: string
 	zaiApiKey?: string
 	zaiApiLine?: string
+	// CARET MODIFICATION: Add caretApiKey support
+	caretApiKey?: string
 	onRetryAttempt?: (attempt: number, maxRetries: number, delay: number, error: any) => void
 	// Plan mode configurations
 	planModeApiModelId?: string

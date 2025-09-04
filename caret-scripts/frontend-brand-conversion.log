@@ -1,0 +1,17 @@
+[2025-09-03T23:33:06.446Z] INFO: ✅ Configuration loaded: codecenter-frontend
+[2025-09-03T23:33:06.449Z] INFO: 🔧 Frontend Brand Converter v1.0.0
+[2025-09-03T23:33:06.450Z] INFO: 📋 Config: CodeCenter 프론트엔드 브랜드 변환 설정
+[2025-09-03T23:33:06.450Z] INFO: 🎯 Direction: forward
+[2025-09-03T23:33:06.450Z] INFO: 🏗️ Dry run: true
+[2025-09-03T23:33:06.450Z] INFO: 🚀 Starting Caret → CodeCenter conversion
+[2025-09-03T23:33:06.450Z] INFO: 🔄 Backing up current locale: D:\dev\caret-merging\webview-ui\src\caret\locale → D:\dev\caret-merging\caret-b2b\brands\caret\backup\locale
+[2025-09-03T23:33:06.450Z] DEBUG: [DRY RUN] Would backup locale files
+[2025-09-03T23:33:06.450Z] INFO: 🔄 Copying locale files: D:\dev\caret-merging\webview-ui\src\caret\locale-backup-step3 → D:\dev\caret-merging\webview-ui\src\caret\locale
+[2025-09-03T23:33:06.450Z] DEBUG: [DRY RUN] Would copy locale files
+[2025-09-03T23:33:06.450Z] INFO: 🔄 Applying brand replacements: caret → codecenter
+[2025-09-03T23:33:06.450Z] DEBUG: [DRY RUN] Would apply 9 replacements
+[2025-09-03T23:33:06.450Z] INFO: 🔄 Applying cost hiding feature
+[2025-09-03T23:33:06.450Z] DEBUG: [DRY RUN] Would apply cost hiding to 2 files
+[2025-09-03T23:33:06.451Z] INFO: 🔄 Validating 27 JSON files
+[2025-09-03T23:33:06.454Z] INFO: ✅ JSON validation completed: 27 files valid
+[2025-09-03T23:33:06.454Z] INFO: ✅ Caret → CodeCenter conversion completed successfully

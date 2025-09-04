@@ -3,6 +3,7 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import mermaid from "mermaid"
 import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { FileServiceClient } from "@/services/grpc-client"
 import { useDebounceEffect } from "@/utils/useDebounceEffect"
 
@@ -154,9 +155,12 @@ export default function MermaidBlock({ code }: MermaidBlockProps) {
 
 	return (
 		<MermaidBlockContainer>
-			{isLoading && <LoadingMessage>Generating mermaid diagram...</LoadingMessage>}
+			{isLoading && <LoadingMessage>{t("mermaidBlock.generatingDiagram", "chat")}</LoadingMessage>}
 			<ButtonContainer>
-				<StyledVSCodeButton aria-label="Copy Code" onClick={handleCopyCode} title="Copy Code">
+				<StyledVSCodeButton
+					aria-label={t("mermaidBlock.copyCode", "chat")}
+					onClick={handleCopyCode}
+					title={t("mermaidBlock.copyCode", "chat")}>
 					<span className="codicon codicon-copy"></span>
 				</StyledVSCodeButton>
 			</ButtonContainer>

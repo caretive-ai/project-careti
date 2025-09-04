@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef } from "react"
+import { t } from "@/caret/utils/i18n"
 import { getMatchingSlashCommands, SlashCommand } from "@/utils/slash-commands"
 
 interface SlashCommandMenuProps {
@@ -59,7 +60,7 @@ const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
 		return (
 			<>
 				<div className="text-xs text-[var(--vscode-descriptionForeground)] px-3 py-1 font-bold border-b border-[var(--vscode-editorGroup-border)]">
-					{title}
+					{t(title, "chat")}
 				</div>
 				{commands.map((command, index) => {
 					const itemIndex = index + indexOffset
@@ -99,12 +100,19 @@ const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
 				style={{ maxHeight: "min(200px, calc(50vh))", overscrollBehavior: "contain" }}>
 				{filteredCommands.length > 0 ? (
 					<>
-						{renderCommandSection(defaultCommands, "Default Commands", 0, true)}
-						{renderCommandSection(workflowCommands, "Workflow Commands", defaultCommands.length, false)}
+						{renderCommandSection(defaultCommands, "slashCommandMenu.defaultCommands", 0, true)}
+						{renderCommandSection(
+							workflowCommands,
+							"slashCommandMenu.workflowCommands",
+							defaultCommands.length,
+							false,
+						)}
 					</>
 				) : (
 					<div className="py-2 px-3 cursor-default flex flex-col">
-						<div className="text-[0.85em] text-[var(--vscode-descriptionForeground)]">No matching commands found</div>
+						<div className="text-[0.85em] text-[var(--vscode-descriptionForeground)]">
+							{t("slashCommandMenu.noMatchingCommandsFound", "chat")}
+						</div>
 					</div>
 				)}
 			</div>

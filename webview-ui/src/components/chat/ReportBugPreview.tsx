@@ -1,4 +1,5 @@
 import React from "react"
+import { t } from "@/caret/utils/i18n"
 import MarkdownBlock from "../common/MarkdownBlock"
 
 interface ReportBugPreviewProps {
@@ -18,61 +19,61 @@ const ReportBugPreview: React.FC<ReportBugPreviewProps> = ({ data }) => {
 
 	return (
 		<div className="bg-[var(--vscode-badge-background)] text-[var(--vscode-badge-foreground)] rounded-[3px] p-[14px]">
-			<h3 className="font-bold text-base mb-3 mt-0">{bugData.title || "Bug Report"}</h3>
+			<h3 className="font-bold text-base mb-3 mt-0">{bugData.title || t("bugReport.title", "chat")}</h3>
 
 			<div className="space-y-3 text-sm">
 				{bugData.what_happened && (
 					<div>
-						<div className="font-semibold">What Happened?</div>
+						<div className="font-semibold">{t("bugReport.whatHappened", "chat")}</div>
 						<MarkdownBlock markdown={bugData.what_happened} />
 					</div>
 				)}
 
 				{bugData.steps_to_reproduce && (
 					<div>
-						<div className="font-semibold">Steps to Reproduce</div>
+						<div className="font-semibold">{t("bugReport.stepsToReproduce", "chat")}</div>
 						<MarkdownBlock markdown={bugData.steps_to_reproduce} />
 					</div>
 				)}
 
 				{bugData.api_request_output && (
 					<div>
-						<div className="font-semibold">Relevant API Request Output</div>
+						<div className="font-semibold">{t("bugReport.relevantApiRequestOutput", "chat")}</div>
 						<MarkdownBlock markdown={bugData.api_request_output} />
 					</div>
 				)}
 
 				{bugData.provider_and_model && (
 					<div>
-						<div className="font-semibold">Provider/Model</div>
+						<div className="font-semibold">{t("bugReport.providerModel", "chat")}</div>
 						<MarkdownBlock markdown={bugData.provider_and_model} />
 					</div>
 				)}
 
 				{bugData.operating_system && (
 					<div>
-						<div className="font-semibold">Operating System</div>
+						<div className="font-semibold">{t("bugReport.operatingSystem", "chat")}</div>
 						<MarkdownBlock markdown={bugData.operating_system} />
 					</div>
 				)}
 
 				{bugData.system_info && (
 					<div>
-						<div className="font-semibold">System Info</div>
+						<div className="font-semibold">{t("bugReport.systemInfo", "chat")}</div>
 						<MarkdownBlock markdown={bugData.system_info} />
 					</div>
 				)}
 
 				{bugData.cline_version && (
 					<div>
-						<div className="font-semibold">Cline Version</div>
+						<div className="font-semibold">{t("bugReport.clineVersion", "chat")}</div>
 						<MarkdownBlock markdown={bugData.cline_version} />
 					</div>
 				)}
 
 				{bugData.additional_context && (
 					<div>
-						<div className="font-semibold">Additional Context</div>
+						<div className="font-semibold">{t("bugReport.additionalContext", "chat")}</div>
 						<MarkdownBlock markdown={bugData.additional_context} />
 					</div>
 				)}

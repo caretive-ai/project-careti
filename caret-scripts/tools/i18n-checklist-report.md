@@ -23,66 +23,66 @@
 [x] `webview-ui/src/components/chat\ChatRow.tsx` (하드코딩:216) ✅ 완료
 [x] `webview-ui/src/components/chat\ChatTextArea.tsx` (하드코딩:131) ✅ 완료
 [x] `webview-ui/src/components/chat\ChatView.tsx` (하드코딩:15) ✅ 완료
-[ ] `webview-ui/src/components/chat\ContextMenu.tsx` (하드코딩:21)
-[ ] `webview-ui/src/components/chat\CreditLimitError.tsx` (하드코딩:18)
-[ ] `webview-ui/src/components/chat\ErrorBlockTitle.tsx` (하드코딩:13)
-[ ] `webview-ui/src/components/chat\ErrorRow.test.tsx` (하드코딩:45)
-[ ] `webview-ui/src/components/chat\ErrorRow.tsx` (하드코딩:14)
-[ ] `webview-ui/src/components/chat\OptionsButtons.tsx` (하드코딩:10)
-[ ] `webview-ui/src/components/chat\QuoteButton.tsx` (하드코딩:5)
-[ ] `webview-ui/src/components/chat\QuotedMessagePreview.tsx` (하드코딩:4)
-[ ] `webview-ui/src/components/chat\ReportBugPreview.tsx` (하드코딩:13)
-[ ] `webview-ui/src/components/chat\ServersToggleModal.tsx` (하드코딩:12)
-[ ] `webview-ui/src/components/chat\SlashCommandMenu.tsx` (하드코딩:10)
+[x] `webview-ui/src/components/chat\ContextMenu.tsx` (하드코딩:21) ✅ 완료
+[x] `webview-ui/src/components/chat\CreditLimitError.tsx` (하드코딩:18) ✅ 완료
+[x] `webview-ui/src/components/chat\ErrorBlockTitle.tsx` (하드코딩:13) ✅ 완료
+[x] `webview-ui/src/components/chat\ErrorRow.test.tsx` (하드코딩:45) ✅ 완료 (i18n 적용 불필요)
+[x] `webview-ui/src/components/chat\ErrorRow.tsx` (하드코딩:14) ✅ 완료
+[x] `webview-ui/src/components/chat\OptionsButtons.tsx` (하드코딩:10) ✅ 완료 (i18n 적용 불필요)
+[x] `webview-ui/src/components/chat\QuoteButton.tsx` (하드코딩:5) ✅ 완료 (i18n 적용 불필요)
+[x] `webview-ui/src/components/chat\QuotedMessagePreview.tsx` (하드코딩:4) ✅ 완료 (i18n 적용 불필요)
+[x] `webview-ui/src/components/chat\ReportBugPreview.tsx` (하드코딩:13) ✅ 완료
+[x] `webview-ui/src/components/chat\ServersToggleModal.tsx` (하드코딩:12) ✅ 완료
+[x] `webview-ui/src/components/chat\SlashCommandMenu.tsx` (하드코딩:10) ✅ 완료
 [x] `webview-ui/src/components/chat\task-header\buttons\CopyTaskButton.tsx` (하드코딩:4) ✅ 완료
 [x] `webview-ui/src/components/chat\task-header\buttons\DeleteTaskButton.tsx` (하드코딩:1) ✅ 완료
-[ ] `webview-ui/src/components/chat\task-header\buttons\OpenDiskTaskHistoryButton.tsx` (하드코딩:5)
-[ ] `webview-ui/src/components/chat\task-header\TaskHeader.tsx` (하드코딩:77)
-[ ] `webview-ui/src/components/chat\task-header\TaskTimeline.tsx` (하드코딩:23)
-[ ] `webview-ui/src/components/chat\task-header\TaskTimelineTooltip.tsx` (하드코딩:52)
-[ ] `webview-ui/src/components/chat\TaskFeedbackButtons.tsx` (하드코딩:16)
-[ ] `webview-ui/src/components/chat\UserMessage.tsx` (하드코딩:17)
+[x] `webview-ui/src/components/chat\task-header\buttons\OpenDiskTaskHistoryButton.tsx` (하드코딩:5) ✅ 완료
+[x] `webview-ui/src/components/chat\task-header\TaskHeader.tsx` (하드코딩:77) ✅ 완료
+[x] `webview-ui/src/components/chat\task-header\TaskTimeline.tsx` (하드코딩:23) ✅ 완료 (i18n 적용 불필요)
+[x] `webview-ui/src/components/chat\task-header\TaskTimelineTooltip.tsx` (하드코딩:52) ✅ 완료
+[x] `webview-ui/src/components/chat\TaskFeedbackButtons.tsx` (하드코딩:16) ✅ 완료
+[x] `webview-ui/src/components/chat\UserMessage.tsx` (하드코딩:17) ✅ 완료
 
 ### **Cline Rules 관련 (4개)**
-[ ] `webview-ui/src/components/cline-rules\ClineRulesToggleModal.tsx` (하드코딩:37)
-[ ] `webview-ui/src/components/cline-rules\NewRuleRow.tsx` (하드코딩:24)
-[ ] `webview-ui/src/components/cline-rules\RuleRow.tsx` (하드코딩:23)
-[ ] `webview-ui/src/components/cline-rules\RulesToggleList.tsx` (하드코딩:4)
+[x] `webview-ui/src/components/cline-rules\ClineRulesToggleModal.tsx` (하드코딩:37) ✅ 완료
+[x] `webview-ui/src/components/cline-rules\NewRuleRow.tsx` (하드코딩:24) ✅ 완료
+[x] `webview-ui/src/components/cline-rules\RuleRow.tsx` (하드코딩:23) ✅ 완료
+[x] `webview-ui/src/components/cline-rules\RulesToggleList.tsx` (하드코딩:4) ✅ 완료
 
 ### **Common 관련 (17개)**
-[ ] `webview-ui/src/components/common\AlertDialog.tsx` (하드코딩:8)
-[ ] `webview-ui/src/components/common\ChecklistRenderer.tsx` (하드코딩:5)
-[ ] `webview-ui/src/components/common\CheckmarkControl.tsx` (하드코딩:17)
-[ ] `webview-ui/src/components/common\CheckpointControls.tsx` (하드코딩:8)
-[ ] `webview-ui/src/components/common\CodeAccordian.tsx` (하드코딩:17)
-[ ] `webview-ui/src/components/common\CodeBlock.tsx` (하드코딩:10)
-[ ] `webview-ui/src/components/common\CopyButton.tsx` (하드코딩:11)
-[ ] `webview-ui/src/components/common\DangerButton.tsx` (하드코딩:1)
-[ ] `webview-ui/src/components/common\Demo.tsx` (하드코딩:38)
-[ ] `webview-ui/src/components/common\HeroTooltip.tsx` (하드코딩:1)
-[ ] `webview-ui/src/components/common\MarkdownBlock.tsx` (하드코딩:40)
-[ ] `webview-ui/src/components/common\MermaidBlock.tsx` (하드코딩:31)
-[ ] `webview-ui/src/components/common\SuccessButton.tsx` (하드코딩:1)
-[ ] `webview-ui/src/components/common\Tab.tsx` (하드코딩:4)
-[ ] `webview-ui/src/components/common\TelemetryBanner.tsx` (하드코딩:4)
-[ ] `webview-ui/src/components/common\Thumbnails.tsx` (하드코딩:10)
-[ ] `webview-ui/src/components/common\Tooltip.tsx` (하드코딩:2)
+[x] `webview-ui/src/components/common\AlertDialog.tsx` (하드코딩:8) ✅ 완료
+[x] `webview-ui/src/components/common\ChecklistRenderer.tsx` (하드코딩:5) ✅ 완료 (i18n 적용 불필요)
+[x] `webview-ui/src/components/common\CheckmarkControl.tsx` (하드코딩:17) ✅ 완료
+[x] `webview-ui/src/components/common\CheckpointControls.tsx` (하드코딩:8) ✅ 완료
+[x] `webview-ui/src/components/common\CodeAccordian.tsx` (하드코딩:17) ✅ 완료
+[x] `webview-ui/src/components/common\CodeBlock.tsx` (하드코딩:10) ✅ 완료 (i18n 적용 불필요)
+[x] `webview-ui/src/components/common\CopyButton.tsx` (하드코딩:11) ✅ 완료
+[x] `webview-ui/src/components/common\DangerButton.tsx` (하드코딩:1) ✅ 완료 (i18n 적용 불필요)
+[x] `webview-ui/src/components/common\Demo.tsx` (하드코딩:38) ✅ 완료
+[x] `webview-ui/src/components/common\HeroTooltip.tsx` (하드코딩:1) ✅ 완료 (i18n 적용 불필요)
+[x] `webview-ui/src/components/common\MarkdownBlock.tsx` (하드코딩:40) ✅ 완료
+[x] `webview-ui/src/components/common\MermaidBlock.tsx` (하드코딩:31) ✅ 완료
+[x] `webview-ui/src/components/common\SuccessButton.tsx` (하드코딩:1) ✅ 완료 (i18n 적용 불필요)
+[x] `webview-ui/src/components/common\Tab.tsx` (하드코딩:4) ✅ 완료 (i18n 적용 불필요)
+[x] `webview-ui/src/components/common\TelemetryBanner.tsx` (하드코딩:4) ✅ 완료
+[x] `webview-ui/src/components/common\Thumbnails.tsx` (하드코딩:10) ✅ 완료
+[x] `webview-ui/src/components/common\Tooltip.tsx` (하드코딩:2) ✅ 완료 (i18n 적용 불필요)
 
 ### **History 관련 (2개)**
-[ ] `webview-ui/src/components/history\HistoryPreview.tsx` (하드코딩:24)
-[ ] `webview-ui/src/components/history\HistoryView.tsx` (하드코딩:66)
+[x] `webview-ui/src/components/history\HistoryPreview.tsx` (하드코딩:24) ✅ 완료
+[x] `webview-ui/src/components/history\HistoryView.tsx` (하드코딩:66) ✅ 완료
 
 ### **MCP 관련 (14개)**
-[ ] `webview-ui/src/components/mcp\chat-display\ImagePreview.tsx` (하드코딩:44)
-[ ] `webview-ui/src/components/mcp\chat-display\LinkPreview.tsx` (하드코딩:48)
-[ ] `webview-ui/src/components/mcp\chat-display\McpResponseDisplay.tsx` (하드코딩:24)
-[ ] `webview-ui/src/components/mcp\configuration\McpConfigurationView.tsx` (하드코딩:16)
-[ ] `webview-ui/src/components/mcp\configuration\tabs\add-server\AddLocalServerForm.tsx` (하드코딩:3)
-[ ] `webview-ui/src/components/mcp\configuration\tabs\add-server\AddRemoteServerForm.tsx` (하드코딩:20)
-[ ] `webview-ui/src/components/mcp\configuration\tabs\installed\InstalledServersView.tsx` (하드코딩:21)
-[ ] `webview-ui/src/components/mcp\configuration\tabs\installed\server-row\McpResourceRow.tsx` (하드코딩:7)
-[ ] `webview-ui/src/components/mcp\configuration\tabs\installed\server-row\McpToolRow.tsx` (하드코딩:17)
-[ ] `webview-ui/src/components/mcp\configuration\tabs\installed\server-row\ServerRow.tsx` (하드코딩:68)
+[x] `webview-ui/src/components/mcp\chat-display\ImagePreview.tsx` (하드코딩:44) ✅ 완료
+[x] `webview-ui/src/components/mcp\chat-display\LinkPreview.tsx` (하드코딩:48) ✅ 완료
+[x] `webview-ui/src/components/mcp\chat-display\McpResponseDisplay.tsx` (하드코딩:24) ✅ 완료
+[x] `webview-ui/src/components/mcp\configuration\McpConfigurationView.tsx` (하드코딩:16) ✅ 완료
+[x] `webview-ui/src/components/mcp\configuration\tabs\add-server\AddLocalServerForm.tsx` (하드코딩:3) ✅ 완료
+[x] `webview-ui/src/components/mcp\configuration\tabs\add-server\AddRemoteServerForm.tsx` (하드코딩:20) ✅ 완료
+[x] `webview-ui/src/components/mcp\configuration\tabs\installed\InstalledServersView.tsx` (하드코딩:21) ✅ 완료
+[x] `webview-ui/src/components/mcp\configuration\tabs\installed\server-row\McpResourceRow.tsx` (하드코딩:7) ✅ 완료
+[x] `webview-ui/src/components/mcp\configuration\tabs\installed\server-row\McpToolRow.tsx` (하드코딩:17) ✅ 완료
+[x] `webview-ui/src/components/mcp\configuration\tabs\installed\server-row\ServerRow.tsx` (하드코딩:68) ✅ 완료
 [ ] `webview-ui/src/components/mcp\configuration\tabs\installed\ServersToggleList.tsx` (하드코딩:1)
 [ ] `webview-ui/src/components/mcp\configuration\tabs\marketplace\McpMarketplaceCard.tsx` (하드코딩:33)
 [ ] `webview-ui/src/components/mcp\configuration\tabs\marketplace\McpMarketplaceView.tsx` (하드코딩:35)

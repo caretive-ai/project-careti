@@ -1,3 +1,4 @@
+import { t } from "@/caret/utils/i18n"
 import NewRuleRow from "./NewRuleRow"
 import RuleRow from "./RuleRow"
 
@@ -46,7 +47,9 @@ const RulesToggleList = ({
 				<>
 					{showNoRules && (
 						<div className="flex flex-col items-center gap-3 my-3 text-[var(--vscode-descriptionForeground)]">
-							{ruleType === "workflow" ? "No workflows found" : "No rules found"}
+							{ruleType === "workflow"
+								? t("rulesToggleList.noWorkflowsFound", "chat")
+								: t("rulesToggleList.noRulesFound", "chat")}
 						</div>
 					)}
 					{showNewRule && <NewRuleRow isGlobal={isGlobal} ruleType={ruleType} />}

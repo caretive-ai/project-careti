@@ -2,6 +2,7 @@ import { TelemetrySettingEnum, TelemetrySettingRequest } from "@shared/proto/cli
 import { VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { memo } from "react"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "@/services/grpc-client"
 
@@ -67,22 +68,21 @@ const TelemetryBanner = () => {
 
 	return (
 		<BannerContainer>
-			<CloseButton aria-label="Close banner and enable telemetry" onClick={handleClose}>
+			<CloseButton aria-label={t("telemetryBanner.closeAndEnable", "chat")} onClick={handleClose}>
 				✕
 			</CloseButton>
 			<div>
-				<strong>Help Improve Cline</strong>
+				<strong>{t("telemetryBanner.helpImproveCline", "chat")}</strong>
 				<i>
 					<br />
-					(and access experimental features)
+					{t("telemetryBanner.accessExperimentalFeatures", "chat")}
 				</i>
 				<div style={{ marginTop: 4 }}>
-					Cline collects error and usage data to help us fix bugs and improve the extension. No code, prompts, or
-					personal information is ever sent.
+					{t("telemetryBanner.dataCollectionInfo", "chat")}
 					<div style={{ marginTop: 4 }}>
-						You can turn this setting off in{" "}
+						{t("telemetryBanner.turnOffSetting", "chat")}{" "}
 						<VSCodeLink href="#" onClick={handleOpenSettings}>
-							settings
+							{t("telemetryBanner.settings", "chat")}
 						</VSCodeLink>
 						.
 					</div>

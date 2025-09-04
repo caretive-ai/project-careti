@@ -111,4 +111,5 @@ export interface McpDownloadResponse {
 	requiresApiKey: boolean
 }
 
-export type McpViewTab = "marketplace" | "addRemote" | "installed"
+// CARET MODIFICATION: Add brandMarketplace tab type for B2B branding
+export type McpViewTab = "marketplace" | "addRemote" | "installed" | "brandMarketplace"

@@ -614,6 +614,56 @@ class BrandConverter {
     }
 
     /**
+     * 브랜드 환경변수 설정 (단일 브랜드 모드)
+     */
+    setBrandEnvironment(brandName) {
+        const envPath = path.join(this.projectRoot, '.env')
+        let envContent = ''
+        
+        // 기존 .env 파일 읽기 (있는 경우)
+        if (fs.existsSync(envPath)) {
+            envContent = fs.readFileSync(envPath, 'utf8')
+        }
+
+        let changeCount = 0
+
+        if (brandName !== 'caret') {
+            // 브랜드 모드 활성화
+            if (!envContent.includes('CARET_BRAND_MODE=')) {
+                envContent += '\n# CARET MODIFICATION: Brand mode configuration\nCARET_BRAND_MODE=true\n'
+                changeCount++
+            } else {
+                envContent = envContent.replace(/CARET_BRAND_MODE=.*/g, 'CARET_BRAND_MODE=true')
+                changeCount++
+            }
+
+            // 현재 브랜드 설정
+            if (!envContent.includes('CARET_CURRENT_BRAND=')) {
+                envContent += `CARET_CURRENT_BRAND=${brandName}\n`
+                changeCount++
+            } else {
+                envContent = envContent.replace(/CARET_CURRENT_BRAND=.*/g, `CARET_CURRENT_BRAND=${brandName}`)
+                changeCount++
+            }
+
+            this.log(`  🔧 브랜드 환경변수 설정: BRAND_MODE=true, CURRENT_BRAND=${brandName}`)
+        } else {
+            // Caret으로 복원 - 브랜드 모드 비활성화
+            envContent = envContent.replace(/CARET_BRAND_MODE=.*/g, 'CARET_BRAND_MODE=false')
+            envContent = envContent.replace(/CARET_CURRENT_BRAND=.*/g, '')
+            changeCount++
+            this.log(`  🔧 브랜드 환경변수 해제: BRAND_MODE=false`)
+        }
+
+        if (!this.isDryRun && changeCount > 0) {
+            fs.writeFileSync(envPath, envContent)
+            this.log(`  ✅ 환경변수 설정 완료`)
+        }
+
+        return changeCount > 0
+    }
+
+    /**
      * 통합 브랜드 변환 실행
      */
     async executeConversion(fromBrand, toBrand, options = {}) {
@@ -685,6 +735,10 @@ class BrandConverter {
                 // 2. 규칙 파일 경로 변환
                 this.log(`📋 백엔드 규칙 파일 경로 변환 시작`)
                 rulesConverted = await this.convertRulePaths(fromBrand, toBrand, config)
+
+                // 3. 환경변수 기반 브랜드 모드 설정
+                this.log(`🔧 환경변수 기반 브랜드 모드 설정 시작`)
+                this.setBrandEnvironment(toBrand)
             }
 
             // 프론트엔드 변환

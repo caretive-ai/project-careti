@@ -48,6 +48,9 @@
 			],
 			"@caret/*": [
 				"../caret-src/*"
+			],
+			"@caret/utils/*": [
+				"src/caret/utils/*"
 			]
 		}
 	},

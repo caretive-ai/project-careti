@@ -1,6 +1,9 @@
 import { Anthropic } from "@anthropic-ai/sdk"
 import { ApiConfiguration, ModelInfo, QwenApiRegions } from "@shared/api"
 import { Mode } from "@shared/storage/types"
+import { BrandedApiProvider } from "../../../caret-src/api/providers/BrandedApiProvider"
+// CARET MODIFICATION: Import CaretApiProvider and BrandedApiProvider for t04 systems
+import { CaretApiProvider } from "../../../src/api/providers/CaretApiProvider"
 import { AnthropicHandler } from "./providers/anthropic"
 import { AskSageHandler } from "./providers/asksage"
 import { BasetenHandler } from "./providers/baseten"
@@ -68,6 +71,24 @@ function createHandlerForProvider(
 	options: Omit<ApiConfiguration, "apiProvider">,
 	mode: Mode,
 ): ApiHandler {
+	// CARET MODIFICATION: Single brand mode with environment variables
+	const BRAND_MODE = process.env.CARET_BRAND_MODE === "true"
+	const CURRENT_BRAND = process.env.CARET_CURRENT_BRAND || "caret"
+
+	// Check single brand mode before switch statement
+	if (BRAND_MODE && apiProvider === CURRENT_BRAND && CURRENT_BRAND !== "caret") {
+		return new BrandedApiProvider(CURRENT_BRAND, {
+			onRetryAttempt: options.onRetryAttempt,
+			openRouterApiKey: options.openRouterApiKey,
+			brandApiKey: options.brandApiKey,
+			reasoningEffort: mode === "plan" ? options.planModeReasoningEffort : options.actModeReasoningEffort,
+			thinkingBudgetTokens: mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
+			openRouterProviderSorting: options.openRouterProviderSorting,
+			openRouterModelId: mode === "plan" ? options.planModeOpenRouterModelId : options.actModeOpenRouterModelId,
+			openRouterModelInfo: mode === "plan" ? options.planModeOpenRouterModelInfo : options.actModeOpenRouterModelInfo,
+		})
+	}
+
 	switch (apiProvider) {
 		case "anthropic":
 			return new AnthropicHandler({
@@ -369,6 +390,19 @@ function createHandlerForProvider(
 				zaiApiLine: options.zaiApiLine,
 				zaiApiKey: options.zaiApiKey,
 				apiModelId: mode === "plan" ? options.planModeApiModelId : options.actModeApiModelId,
+			})
+		// CARET MODIFICATION: Add CaretApiProvider support
+		case "caret":
+			return new CaretApiProvider({
+				onRetryAttempt: options.onRetryAttempt,
+				ulid: options.ulid,
+				reasoningEffort: mode === "plan" ? options.planModeReasoningEffort : options.actModeReasoningEffort,
+				thinkingBudgetTokens:
+					mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
+				openRouterProviderSorting: options.openRouterProviderSorting,
+				openRouterModelId: mode === "plan" ? options.planModeOpenRouterModelId : options.actModeOpenRouterModelId,
+				openRouterModelInfo: mode === "plan" ? options.planModeOpenRouterModelInfo : options.actModeOpenRouterModelInfo,
+				caretApiKey: options.caretApiKey,
 			})
 		default:
 			return new AnthropicHandler({

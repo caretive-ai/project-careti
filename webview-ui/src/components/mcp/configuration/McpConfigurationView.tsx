@@ -5,6 +5,9 @@ import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mc
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
+// CARET MODIFICATION: Brand-specific MCP marketplace support
+import { getBrandInfo, getBrandMcpMarketplaceTab } from "@/caret/utils/brand-utils"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { McpServiceClient } from "@/services/grpc-client"
 import AddRemoteServerForm from "./tabs/add-server/AddRemoteServerForm"
@@ -19,6 +22,10 @@ type McpViewProps = {
 const McpConfigurationView = ({ onDone, initialTab }: McpViewProps) => {
 	const { mcpMarketplaceEnabled, setMcpServers } = useExtensionState()
 	const [activeTab, setActiveTab] = useState<McpViewTab>(initialTab || (mcpMarketplaceEnabled ? "marketplace" : "installed"))
+
+	// CARET MODIFICATION: Brand-specific marketplace tab
+	const brandInfo = getBrandInfo()
+	const brandMarketplaceTab = getBrandMcpMarketplaceTab()
 
 	const handleTabChange = (tab: McpViewTab) => {
 		setActiveTab(tab)
@@ -75,8 +82,8 @@ const McpConfigurationView = ({ onDone, initialTab }: McpViewProps) => {
 					alignItems: "center",
 					padding: "10px 17px 5px 20px",
 				}}>
-				<h3 style={{ color: "var(--vscode-foreground)", margin: 0 }}>MCP Servers</h3>
-				<VSCodeButton onClick={onDone}>Done</VSCodeButton>
+				<h3 style={{ color: "var(--vscode-foreground)", margin: 0 }}>{t("mcpConfigurationView.mcpServers", "chat")}</h3>
+				<VSCodeButton onClick={onDone}>{t("mcpConfigurationView.done", "chat")}</VSCodeButton>
 			</div>
 
 			<div style={{ flex: 1, overflow: "auto" }}>
@@ -90,20 +97,43 @@ const McpConfigurationView = ({ onDone, initialTab }: McpViewProps) => {
 					}}>
 					{mcpMarketplaceEnabled && (
 						<TabButton isActive={activeTab === "marketplace"} onClick={() => handleTabChange("marketplace")}>
-							Marketplace
+							{t("mcpConfigurationView.marketplace", "chat")}
+						</TabButton>
+					)}
+					{/* CARET MODIFICATION: Brand-specific marketplace tab */}
+					{brandInfo.isBrandMode && brandMarketplaceTab && (
+						<TabButton
+							isActive={activeTab === "brandMarketplace"}
+							onClick={() => handleTabChange("brandMarketplace")}>
+							{brandMarketplaceTab}
 						</TabButton>
 					)}
 					<TabButton isActive={activeTab === "addRemote"} onClick={() => handleTabChange("addRemote")}>
-						Remote Servers
+						{t("mcpConfigurationView.remoteServers", "chat")}
 					</TabButton>
 					<TabButton isActive={activeTab === "installed"} onClick={() => handleTabChange("installed")}>
-						Installed
+						{t("mcpConfigurationView.installed", "chat")}
 					</TabButton>
 				</div>
 
 				{/* Content container */}
 				<div style={{ width: "100%" }}>
 					{mcpMarketplaceEnabled && activeTab === "marketplace" && <McpMarketplaceView />}
+					{/* CARET MODIFICATION: Brand-specific marketplace content */}
+					{brandInfo.isBrandMode && activeTab === "brandMarketplace" && (
+						<div className="p-4 text-center">
+							<div className="text-[var(--vscode-foreground)] mb-2">
+								{brandInfo.brand === "codecenter"
+									? t("brandMarketplace.codecenterPreparing", "chat")
+									: t("brandMarketplace.preparing", "chat", { brandName: brandInfo.displayName })}
+							</div>
+							<div className="text-[var(--vscode-descriptionForeground)] text-sm">
+								{brandInfo.brand === "codecenter"
+									? t("brandMarketplace.codecenterPreparingDescription", "chat")
+									: t("brandMarketplace.preparingDescription", "chat", { brandName: brandInfo.displayName })}
+							</div>
+						</div>
+					)}
 					{activeTab === "addRemote" && <AddRemoteServerForm onServerAdded={() => handleTabChange("installed")} />}
 					{activeTab === "installed" && <InstalledServersView />}
 				</div>

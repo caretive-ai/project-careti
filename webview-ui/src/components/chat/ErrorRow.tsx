@@ -1,6 +1,7 @@
 import { ClineMessage } from "@shared/ExtensionMessage"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { memo } from "react"
+import { t } from "@/caret/utils/i18n"
 import CreditLimitError from "@/components/chat/CreditLimitError"
 import { handleSignIn, useClineAuth } from "@/context/ClineAuthContext"
 import { ClineError, ClineErrorType } from "../../../../src/services/error/ClineError"
@@ -49,7 +50,9 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 						return (
 							<p className="m-0 whitespace-pre-wrap text-[var(--vscode-errorForeground)] wrap-anywhere">
 								{clineErrorMessage}
-								{requestId && <div>Request ID: {requestId}</div>}
+								{requestId && (
+									<span className="block">{t("errorRow.requestId", "chat", { requestId: requestId })}</span>
+								)}
 							</p>
 						)
 					}
@@ -58,18 +61,20 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 					return (
 						<p className="m-0 whitespace-pre-wrap text-[var(--vscode-errorForeground)] wrap-anywhere">
 							{clineErrorMessage}
-							{requestId && <div>Request ID: {requestId}</div>}
+							{requestId && (
+								<span className="block">{t("errorRow.requestId", "chat", { requestId: requestId })}</span>
+							)}
 							{clineErrorMessage?.toLowerCase()?.includes("powershell") && (
 								<>
 									<br />
 									<br />
-									It seems like you're having Windows PowerShell issues, please see this{" "}
+									{t("errorRow.powershellIssue", "chat")}{" "}
 									<a
 										className="underline text-inherit"
 										href="https://github.com/cline/cline/wiki/TroubleShooting-%E2%80%90-%22PowerShell-is-not-recognized-as-an-internal-or-external-command%22">
-										troubleshooting guide
+										{t("errorRow.troubleshootingGuide", "chat")}
 									</a>
-									.
+									{t("errorRow.period", "chat")}
 								</>
 							)}
 							{clineError?.isErrorType(ClineErrorType.Auth) && (
@@ -79,11 +84,11 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 									{/* The user is signed in or not using cline provider */}
 									{clineUser && !isClineProvider ? (
 										<span className="mb-4 text-[var(--vscode-descriptionForeground)]">
-											(Click "Retry" below)
+											{t("errorRow.clickRetryBelow", "chat")}
 										</span>
 									) : (
 										<VSCodeButton className="w-full mb-4" onClick={handleSignIn}>
-											Sign in to Cline
+											{t("errorRow.signInToCline", "chat")}
 										</VSCodeButton>
 									)}
 								</>
@@ -100,7 +105,7 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 			case "diff_error":
 				return (
 					<div className="flex flex-col p-2 rounded text-xs opacity-80 bg-[var(--vscode-textBlockQuote-background)] text-[var(--vscode-foreground)]">
-						<div>The model used search patterns that don't match anything in the file. Retrying...</div>
+						<div>{t("errorRow.diffError", "chat")}</div>
 					</div>
 				)
 
@@ -108,8 +113,9 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 				return (
 					<div className="flex flex-col p-2 rounded text-xs bg-[var(--vscode-textBlockQuote-background)] text-[var(--vscode-foreground)] opacity-80">
 						<div>
-							Cline tried to access <code>{message.text}</code> which is blocked by the <code>.clineignore</code>
-							file.
+							{t("errorRow.clineTriedToAccess", "chat")} <code>{message.text}</code>{" "}
+							{t("errorRow.isBlockedBy", "chat")} <code>.clineignore</code>
+							{t("errorRow.file", "chat")}
 						</div>
 					</div>
 				)

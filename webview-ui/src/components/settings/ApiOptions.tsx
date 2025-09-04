@@ -16,7 +16,8 @@ import { BasetenProvider } from "./providers/BasetenProvider"
 import { BedrockProvider } from "./providers/BedrockProvider"
 import { CerebrasProvider } from "./providers/CerebrasProvider"
 import { ClaudeCodeProvider } from "./providers/ClaudeCodeProvider"
-import { ClineProvider } from "./providers/ClineProvider"
+// CARET MODIFICATION: Hide Cline Provider and use Caret Provider instead
+// import { ClineProvider } from "./providers/ClineProvider"
 import { DeepSeekProvider } from "./providers/DeepSeekProvider"
 import { DifyProvider } from "./providers/DifyProvider"
 import { DoubaoProvider } from "./providers/DoubaoProvider"
@@ -122,9 +123,11 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 	const itemRefs = useRef<(HTMLDivElement | null)[]>([])
 	const dropdownListRef = useRef<HTMLDivElement>(null)
 
-	const providerOptions = useMemo(
-		() => [
-			{ value: "cline", label: "Cline" },
+	const providerOptions = useMemo(() => {
+		// CARET MODIFICATION: Hide Cline Provider by default, show only if CARET_SHOW_CLINE_PROVIDER=true
+		const showClineProvider = typeof process !== "undefined" && process.env?.CARET_SHOW_CLINE_PROVIDER === "true"
+
+		const baseProviders = [
 			{ value: "openrouter", label: "OpenRouter" },
 			{ value: "gemini", label: "Google Gemini" },
 			{ value: "openai", label: "OpenAI Compatible" },
@@ -159,9 +162,15 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 			{ value: "sambanova", label: "SambaNova" },
 			{ value: "huawei-cloud-maas", label: "Huawei Cloud MaaS" },
 			{ value: "dify", label: "Dify.ai" },
-		],
-		[],
-	)
+		]
+
+		// CARET MODIFICATION: Only show Cline provider if explicitly enabled
+		if (showClineProvider) {
+			baseProviders.unshift({ value: "cline", label: "Cline" })
+		}
+
+		return baseProviders
+	}, [])
 
 	const currentProviderLabel = useMemo(() => {
 		return providerOptions.find((option) => option.value === selectedProvider)?.label || selectedProvider
@@ -346,8 +355,9 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 				</ProviderDropdownWrapper>
 			</DropdownContainer>
 
-			{apiConfiguration && selectedProvider === "cline" && (
-				<ClineProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
+			{/* CARET MODIFICATION: Hide Cline Provider from UI */}
+			{apiConfiguration && selectedProvider === "cline" && false && (
+				<div>Cline Provider Hidden - Use Caret API Provider instead</div>
 			)}
 
 			{apiConfiguration && selectedProvider === "asksage" && (

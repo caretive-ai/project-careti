@@ -4,17 +4,12 @@ import { SupportedLanguage, t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { updateSetting } from "./utils/settingsHandlers"
 
-const languageOptions: { value: SupportedLanguage; label: string }[] = [
-	{ value: "en", label: "🇺🇸 English" },
-	{ value: "ko", label: "🇰🇷 한국어 (Korean)" },
-	{ value: "ja", label: "🇯🇵 日本語 (Japanese)" },
-	{ value: "zh", label: "🇨🇳 中文 (Chinese)" },
-]
+const supportedLanguages: SupportedLanguage[] = ["en", "ko", "zh", "ja"]
 
 const PreferredLanguageSetting: React.FC = () => {
 	const { preferredLanguage } = useExtensionState()
 
-	const handleLanguageChange = (newLanguage: string) => {
+	const handleLanguageChange = (newLanguage: SupportedLanguage) => {
 		updateSetting("preferredLanguage", newLanguage)
 	}
 
@@ -30,11 +25,10 @@ const PreferredLanguageSetting: React.FC = () => {
 					handleLanguageChange(e.target.value)
 				}}
 				style={{ width: "100%" }}>
-				{languageOptions.map((option) => (
-					<VSCodeOption key={option.value} value={option.value}>
-						{option.label}
-					</VSCodeOption>
-				))}
+				<VSCodeOption value="en">🇺🇸 English</VSCodeOption>
+				<VSCodeOption value="ko">🇰🇷 한국어 (Korean)</VSCodeOption>
+				<VSCodeOption value="zh">🇨🇳 中文 (Chinese)</VSCodeOption>
+				<VSCodeOption value="ja">🇯🇵 日本語 (Japanese)</VSCodeOption>
 			</VSCodeDropdown>
 			<p className="text-xs text-[var(--vscode-descriptionForeground)] mt-1">
 				{t("settings.preferredLanguage.description", "settings")}

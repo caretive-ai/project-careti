@@ -1,6 +1,7 @@
 import { StringRequest } from "@shared/proto/cline/common"
 import { DeleteRuleFileRequest } from "@shared/proto-conversions/file/rule-files-conversion"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import { t } from "@/caret/utils/i18n"
 import { FileServiceClient } from "@/services/grpc-client"
 
 const RuleRow: React.FC<{
@@ -109,18 +110,18 @@ const RuleRow: React.FC<{
 					</div>
 					<VSCodeButton
 						appearance="icon"
-						aria-label="Edit rule file"
+						aria-label={t("ruleRow.editRuleFile", "chat")}
 						onClick={handleEditClick}
 						style={{ height: "20px" }}
-						title="Edit rule file">
+						title={t("ruleRow.editRuleFile", "chat")}>
 						<span className="codicon codicon-edit" style={{ fontSize: "14px" }} />
 					</VSCodeButton>
 					<VSCodeButton
 						appearance="icon"
-						aria-label="Delete rule file"
+						aria-label={t("ruleRow.deleteRuleFile", "chat")}
 						onClick={handleDeleteClick}
 						style={{ height: "20px" }}
-						title="Delete rule file">
+						title={t("ruleRow.deleteRuleFile", "chat")}>
 						<span className="codicon codicon-trash" style={{ fontSize: "14px" }} />
 					</VSCodeButton>
 				</div>

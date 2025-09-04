@@ -1,6 +1,7 @@
 import { AskResponseRequest } from "@shared/proto/cline/task"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React from "react"
+import { t } from "@/caret/utils/i18n"
 import VSCodeButtonLink from "@/components/common/VSCodeButtonLink"
 import { useClineAuth } from "@/context/ClineAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -18,7 +19,7 @@ const CreditLimitError: React.FC<CreditLimitErrorProps> = ({
 	currentBalance = 0,
 	totalSpent = 0,
 	totalPromotions = 0,
-	message = "You have run out of credits.",
+	message = t("creditLimitError.outOfCredits", "chat"),
 	// buyCreditsUrl = "https://app.cline.bot/dashboard/account?tab=credits&redirect=true",
 }) => {
 	const { uriScheme } = useExtensionState()
@@ -54,7 +55,7 @@ const CreditLimitError: React.FC<CreditLimitErrorProps> = ({
 					marginBottom: "8px",
 				}}>
 				<span className="codicon codicon-credit-card mr-[6px] text-[14px]" />
-				Buy Credits
+				{t("creditLimitError.buyCredits", "chat")}
 			</VSCodeButtonLink>
 
 			<VSCodeButton
@@ -76,7 +77,7 @@ const CreditLimitError: React.FC<CreditLimitErrorProps> = ({
 					width: "100%",
 				}}>
 				<span className="codicon codicon-refresh" style={{ fontSize: "14px", marginRight: "6px" }} />
-				Retry Request
+				{t("creditLimitError.retryRequest", "chat")}
 			</VSCodeButton>
 		</div>
 	)

@@ -1,4 +1,5 @@
 import { McpResource, McpResourceTemplate } from "@shared/mcp"
+import { t } from "@/caret/utils/i18n"
 
 type McpResourceRowProps = {
 	item: McpResource | McpResourceTemplate
@@ -35,13 +36,13 @@ const McpResourceRow = ({ item }: McpResourceRowProps) => {
 						? item.description
 						: !item.description && item.name
 							? item.name
-							: "No description"}
+							: t("mcpResourceRow.noDescription", "chat")}
 			</div>
 			<div
 				style={{
 					fontSize: "12px",
 				}}>
-				<span style={{ opacity: 0.8 }}>Returns </span>
+				<span style={{ opacity: 0.8 }}>{t("mcpResourceRow.returns", "chat")} </span>
 				<code
 					style={{
 						color: "var(--vscode-textPreformat-foreground)",
@@ -49,7 +50,7 @@ const McpResourceRow = ({ item }: McpResourceRowProps) => {
 						padding: "1px 4px",
 						borderRadius: "3px",
 					}}>
-					{item.mimeType || "Unknown"}
+					{item.mimeType || t("mcpResourceRow.unknown", "chat")}
 				</code>
 			</div>
 		</div>

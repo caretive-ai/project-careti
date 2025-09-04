@@ -1,6 +1,7 @@
 import { StringRequest } from "@shared/proto/cline/common"
 import DOMPurify from "dompurify"
 import React from "react"
+import { t } from "@/caret/utils/i18n"
 import ChatErrorBoundary from "@/components/chat/ChatErrorBoundary"
 import { WebServiceClient } from "@/services/grpc-client"
 import { getSafeHostname, normalizeRelativeUrl } from "./utils/mcpRichUtil"
@@ -135,7 +136,7 @@ class LinkPreview extends React.Component<LinkPreviewProps, LinkPreviewState> {
 			} else {
 				this.setState({
 					error: "network",
-					errorMessage: "Failed to fetch Open Graph data",
+					errorMessage: t("linkPreview.failedToFetchOpenGraphData", "chat"),
 					loading: false,
 					hasCompletedFetch: true,
 				})
@@ -155,7 +156,7 @@ class LinkPreview extends React.Component<LinkPreviewProps, LinkPreviewState> {
 		} catch (err) {
 			this.setState({
 				error: "general",
-				errorMessage: err instanceof Error ? err.message : "Unknown error occurred",
+				errorMessage: err instanceof Error ? err.message : t("linkPreview.unknownErrorOccurred", "chat"),
 				loading: false,
 				hasCompletedFetch: true, // Mark as completed on error
 			})
@@ -205,13 +206,16 @@ class LinkPreview extends React.Component<LinkPreviewProps, LinkPreviewState> {
 								}
 							`}
 						</style>
-						Loading preview for {getSafeHostname(url)}...
+						{t("linkPreview.loadingPreviewFor", "chat", { hostname: getSafeHostname(url) })}
 					</div>
 					{elapsedSeconds > 5 && (
 						<div style={{ fontSize: "11px", color: "var(--vscode-descriptionForeground)" }}>
 							{elapsedSeconds > 60
-								? `Waiting for ${Math.floor(elapsedSeconds / 60)}m ${elapsedSeconds % 60}s...`
-								: `Waiting for ${elapsedSeconds}s...`}
+								? t("linkPreview.waitingForMinutesSeconds", "chat", {
+										minutes: Math.floor(elapsedSeconds / 60),
+										seconds: elapsedSeconds % 60,
+									})
+								: t("linkPreview.waitingForSeconds", "chat", { seconds: elapsedSeconds })}
 						</div>
 					)}
 				</div>
@@ -220,12 +224,12 @@ class LinkPreview extends React.Component<LinkPreviewProps, LinkPreviewState> {
 
 		// Handle different error states with specific messages
 		if (error) {
-			let errorDisplay = "Unable to load preview"
+			let errorDisplay = t("linkPreview.unableToLoadPreview", "chat")
 
 			if (error === "timeout") {
-				errorDisplay = "Preview request timed out"
+				errorDisplay = t("linkPreview.previewRequestTimedOut", "chat")
 			} else if (error === "network") {
-				errorDisplay = "Network error loading preview"
+				errorDisplay = t("linkPreview.networkErrorLoadingPreview", "chat")
 			}
 
 			return (
@@ -255,7 +259,7 @@ class LinkPreview extends React.Component<LinkPreviewProps, LinkPreviewState> {
 					<div style={{ fontSize: "12px", marginTop: "4px" }}>{getSafeHostname(url)}</div>
 					{errorMessage && <div style={{ fontSize: "11px", marginTop: "4px", opacity: 0.8 }}>{errorMessage}</div>}
 					<div style={{ fontSize: "11px", marginTop: "8px", color: "var(--vscode-textLink-foreground)" }}>
-						Click to open in browser
+						{t("linkPreview.clickToOpenInBrowser", "chat")}
 					</div>
 				</div>
 			)
@@ -264,7 +268,7 @@ class LinkPreview extends React.Component<LinkPreviewProps, LinkPreviewState> {
 		// Create a fallback object if ogData is null
 		const data = ogData || {
 			title: getSafeHostname(url),
-			description: "No description available",
+			description: t("linkPreview.noDescriptionAvailable", "chat"),
 			siteName: getSafeHostname(url),
 			url: url,
 		}
@@ -348,7 +352,7 @@ class LinkPreview extends React.Component<LinkPreviewProps, LinkPreviewState> {
 								overflow: "hidden",
 								textOverflow: "ellipsis",
 							}}>
-							{data.title || "No title"}
+							{data.title || t("linkPreview.noTitle", "chat")}
 						</div>
 
 						<div
@@ -385,7 +389,7 @@ class LinkPreview extends React.Component<LinkPreviewProps, LinkPreviewState> {
 								WebkitBoxOrient: "vertical",
 								textOverflow: "ellipsis",
 							}}>
-							{data.description || "No description available"}
+							{data.description || t("linkPreview.noDescriptionAvailable", "chat")}
 						</div>
 					</div>
 				</div>
@@ -403,7 +407,7 @@ const MemoizedLinkPreview = React.memo(
 // Wrap the LinkPreview component with an error boundary
 const LinkPreviewWithErrorBoundary: React.FC<LinkPreviewProps> = (props) => {
 	return (
-		<ChatErrorBoundary errorTitle="Something went wrong displaying this link preview">
+		<ChatErrorBoundary errorTitle={t("linkPreview.errorDisplayingLinkPreview", "chat")}>
 			<MemoizedLinkPreview {...props} />
 		</ChatErrorBoundary>
 	)

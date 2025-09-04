@@ -238,5 +238,34 @@
     "publisher",
     "repository.url",
     "homepage"
-  ]  
+  ],
+  "api": {
+    "baseUrl": "http://127.0.0.1:3000/api/v1",
+    "providerName": "codecenter",
+    "authType": "Bearer",
+    "timeout": 30000,
+    "retryAttempts": 3,
+    "headers": {
+      "User-Agent": "CodeCenter/1.0"
+    },
+    "mcpMarketplaceUrl": "http://127.0.0.1:3000/mcp-marketplace",
+    "status": "preparing"
+  },
+  "ui": {
+    "hideOtherProviders": false,
+    "showOnlyBrandedProvider": false,
+    "providerDisplayName": "CodeCenter",
+    "preparingMessage": "CodeCenter 서비스가 준비 중입니다."
+  },
+  "i18n": {
+    "mcpMarketplace": {
+      "tabName": "CodeCenter 마켓",
+      "preparing": "CodeCenter 서비스가 준비 중입니다.",
+      "error": "CodeCenter 연결 오류"
+    }
+  },
+  "terminal": {
+    "name": "CodeCenter",
+    "icon_file": "codecenter-icon.png"
+  }
 }

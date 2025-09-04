@@ -2,6 +2,7 @@ import { McpTool } from "@shared/mcp"
 import { ToggleToolAutoApproveRequest } from "@shared/proto/cline/mcp"
 import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mcp/mcp-server-conversion"
 import { VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { McpServiceClient } from "@/services/grpc-client"
 
@@ -52,7 +53,7 @@ const McpToolRow = ({ tool, serverName }: McpToolRowProps) => {
 				</div>
 				{serverName && autoApprovalSettings.enabled && autoApprovalSettings.actions.useMcp && (
 					<VSCodeCheckbox checked={tool.autoApprove ?? false} data-tool={tool.name} onChange={handleAutoApproveChange}>
-						Auto-approve
+						{t("mcpToolRow.autoApprove", "chat")}
 					</VSCodeCheckbox>
 				)}
 			</div>
@@ -85,7 +86,7 @@ const McpToolRow = ({ tool, serverName }: McpToolRowProps) => {
 								fontSize: "11px",
 								textTransform: "uppercase",
 							}}>
-							Parameters
+							{t("mcpToolRow.parameters", "chat")}
 						</div>
 						{Object.entries(tool.inputSchema.properties as Record<string, any>).map(([paramName, schema]) => {
 							const isRequired =
@@ -123,7 +124,7 @@ const McpToolRow = ({ tool, serverName }: McpToolRowProps) => {
 											overflowWrap: "break-word",
 											wordBreak: "break-word",
 										}}>
-										{schema.description || "No description"}
+										{schema.description || t("mcpToolRow.noDescription", "chat")}
 									</span>
 								</div>
 							)

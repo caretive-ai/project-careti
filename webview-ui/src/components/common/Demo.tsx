@@ -19,6 +19,7 @@ import {
 	VSCodeTextArea,
 	VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react"
+import { t } from "@/caret/utils/i18n"
 
 function Demo() {
 	const rowData = [
@@ -44,23 +45,23 @@ function Demo() {
 
 	return (
 		<main>
-			<h1>Hello World!</h1>
-			<VSCodeButton>Howdy!</VSCodeButton>
+			<h1>{t("demo.helloWorld", "chat")}</h1>
+			<VSCodeButton>{t("demo.howdy", "chat")}</VSCodeButton>
 
 			<div className="grid gap-3 p-2 place-items-start">
 				<VSCodeDataGrid>
 					<VSCodeDataGridRow row-type="header">
 						<VSCodeDataGridCell cell-type="columnheader" grid-column="1">
-							A Custom Header Title
+							{t("demo.customHeaderTitle", "chat")}
 						</VSCodeDataGridCell>
 						<VSCodeDataGridCell cell-type="columnheader" grid-column="2">
-							Another Custom Title
+							{t("demo.anotherCustomTitle", "chat")}
 						</VSCodeDataGridCell>
 						<VSCodeDataGridCell cell-type="columnheader" grid-column="3">
-							Title Is Custom
+							{t("demo.titleIsCustom", "chat")}
 						</VSCodeDataGridCell>
 						<VSCodeDataGridCell cell-type="columnheader" grid-column="4">
-							Custom Title
+							{t("demo.customTitle", "chat")}
 						</VSCodeDataGridCell>
 					</VSCodeDataGridRow>
 					{rowData.map((row, index) => (
@@ -75,13 +76,13 @@ function Demo() {
 
 				<VSCodeTextField>
 					<section slot="end" style={{ display: "flex", alignItems: "center" }}>
-						<VSCodeButton appearance="icon" aria-label="Match Case">
+						<VSCodeButton appearance="icon" aria-label={t("demo.matchCase", "chat")}>
 							<span className="codicon codicon-case-sensitive"></span>
 						</VSCodeButton>
-						<VSCodeButton appearance="icon" aria-label="Match Whole Word">
+						<VSCodeButton appearance="icon" aria-label={t("demo.matchWholeWord", "chat")}>
 							<span className="codicon codicon-whole-word"></span>
 						</VSCodeButton>
-						<VSCodeButton appearance="icon" aria-label="Use Regular Expression">
+						<VSCodeButton appearance="icon" aria-label={t("demo.useRegularExpression", "chat")}>
 							<span className="codicon codicon-regex"></span>
 						</VSCodeButton>
 					</section>
@@ -91,30 +92,30 @@ function Demo() {
 				<span className="flex gap-3">
 					<VSCodeProgressRing />
 					<VSCodeTextField />
-					<VSCodeButton>Add</VSCodeButton>
-					<VSCodeButton appearance="secondary">Remove</VSCodeButton>
+					<VSCodeButton>{t("demo.add", "chat")}</VSCodeButton>
+					<VSCodeButton appearance="secondary">{t("demo.remove", "chat")}</VSCodeButton>
 				</span>
 
-				<VSCodeBadge>Badge</VSCodeBadge>
-				<VSCodeCheckbox>Checkbox</VSCodeCheckbox>
+				<VSCodeBadge>{t("demo.badge", "chat")}</VSCodeBadge>
+				<VSCodeCheckbox>{t("demo.checkbox", "chat")}</VSCodeCheckbox>
 				<VSCodeDivider />
 				<VSCodeDropdown>
-					<VSCodeOption>Option 1</VSCodeOption>
-					<VSCodeOption>Option 2</VSCodeOption>
+					<VSCodeOption>{t("demo.option1", "chat")}</VSCodeOption>
+					<VSCodeOption>{t("demo.option2", "chat")}</VSCodeOption>
 				</VSCodeDropdown>
-				<VSCodeLink href="#">Link</VSCodeLink>
+				<VSCodeLink href="#">{t("demo.link", "chat")}</VSCodeLink>
 				<VSCodePanels>
-					<VSCodePanelTab id="tab-1">Tab 1</VSCodePanelTab>
-					<VSCodePanelTab id="tab-2">Tab 2</VSCodePanelTab>
-					<VSCodePanelView id="view-1">Panel View 1</VSCodePanelView>
-					<VSCodePanelView id="view-2">Panel View 2</VSCodePanelView>
+					<VSCodePanelTab id="tab-1">{t("demo.tab1", "chat")}</VSCodePanelTab>
+					<VSCodePanelTab id="tab-2">{t("demo.tab2", "chat")}</VSCodePanelTab>
+					<VSCodePanelView id="view-1">{t("demo.panelView1", "chat")}</VSCodePanelView>
+					<VSCodePanelView id="view-2">{t("demo.panelView2", "chat")}</VSCodePanelView>
 				</VSCodePanels>
 				<VSCodeRadioGroup>
-					<VSCodeRadio>Radio 1</VSCodeRadio>
-					<VSCodeRadio>Radio 2</VSCodeRadio>
+					<VSCodeRadio>{t("demo.radio1", "chat")}</VSCodeRadio>
+					<VSCodeRadio>{t("demo.radio2", "chat")}</VSCodeRadio>
 				</VSCodeRadioGroup>
-				<VSCodeTag>Tag</VSCodeTag>
-				<VSCodeTextArea placeholder="Text Area" />
+				<VSCodeTag>{t("demo.tag", "chat")}</VSCodeTag>
+				<VSCodeTextArea placeholder={t("demo.textAreaPlaceholder", "chat")} />
 			</div>
 		</main>
 	)

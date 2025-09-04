@@ -1,5 +1,6 @@
 import { StringRequest } from "@shared/proto/cline/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import { t } from "@/caret/utils/i18n"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { FileServiceClient } from "@/services/grpc-client"
 
@@ -17,10 +18,10 @@ const OpenDiskTaskHistoryButton: React.FC<{
 	}
 
 	return (
-		<HeroTooltip content="Open Disk Task History">
+		<HeroTooltip content={t("openDiskTaskHistoryButton.openDiskTaskHistory", "chat")}>
 			<VSCodeButton
 				appearance="icon"
-				aria-label="Open Disk Task History"
+				aria-label={t("openDiskTaskHistoryButton.openDiskTaskHistory", "chat")}
 				className="p-0"
 				onClick={handleOpenDiskTaskHistory}
 				style={{ padding: "0px 0px" }}>

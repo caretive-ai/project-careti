@@ -129,7 +129,7 @@ export class Controller {
 			this.stateManager.setSecret("clineAccountId", undefined)
 			this.stateManager.setGlobalState("userInfo", undefined)
 
-			// Update API providers through cache service
+			// CARET MODIFICATION: Update API providers through cache service - default to openrouter
 			const apiConfiguration = this.stateManager.getApiConfiguration()
 			const updatedConfig = {
 				...apiConfiguration,
@@ -139,9 +139,10 @@ export class Controller {
 			this.stateManager.setApiConfiguration(updatedConfig)
 
 			await this.postStateToWebview()
+			// CARET MODIFICATION: Change logout success message from Cline to Caret
 			HostProvider.window.showMessage({
 				type: ShowMessageType.INFORMATION,
-				message: "Successfully logged out of Cline",
+				message: "Successfully logged out of Caret",
 			})
 		} catch (_error) {
 			HostProvider.window.showMessage({
@@ -324,19 +325,22 @@ export class Controller {
 			// Get current API configuration from cache
 			const currentApiConfiguration = this.stateManager.getApiConfiguration()
 
+			// CARET MODIFICATION: Set default provider to openrouter instead of cline for auth callback
+			const defaultProvider: ApiProvider = "openrouter" // Use openrouter as default instead of cline
+
 			const updatedConfig = { ...currentApiConfiguration }
 
 			if (planActSeparateModelsSetting) {
 				// Only update the current mode's provider
 				if (currentMode === "plan") {
-					updatedConfig.planModeApiProvider = clineProvider
+					updatedConfig.planModeApiProvider = defaultProvider
 				} else {
-					updatedConfig.actModeApiProvider = clineProvider
+					updatedConfig.actModeApiProvider = defaultProvider
 				}
 			} else {
 				// Update both modes to keep them in sync
-				updatedConfig.planModeApiProvider = clineProvider
-				updatedConfig.actModeApiProvider = clineProvider
+				updatedConfig.planModeApiProvider = defaultProvider
+				updatedConfig.actModeApiProvider = defaultProvider
 			}
 
 			// Update the API configuration through cache service
@@ -352,9 +356,10 @@ export class Controller {
 			await this.postStateToWebview()
 		} catch (error) {
 			console.error("Failed to handle auth callback:", error)
+			// CARET MODIFICATION: Change login error message from Cline to Caret
 			HostProvider.window.showMessage({
 				type: ShowMessageType.ERROR,
-				message: "Failed to log in to Cline",
+				message: "Failed to log in to Caret",
 			})
 			// Even on login failure, we preserve any existing tokens
 			// Only clear tokens on explicit logout

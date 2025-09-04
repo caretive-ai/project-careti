@@ -1,0 +1,77 @@
+/**
+ * CodeCenter Cost Hiding Styles
+ *
+ * CodeCenter 브랜드에서 비용 표시를 숨기기 위한 CSS
+ * frontend-brand-converter.js에 의해 동적으로 적용됨
+ */
+
+/* Task 윈도우 우측 상단 비용 표시 숨김 */
+.caret-codecenter-hide-cost.task-cost-display,
+.caret-codecenter-hide-cost .task-cost-display,
+[data-cost-display].caret-codecenter-hide-cost {
+	display: none !important;
+}
+
+/* API Request 옆 비용 표시 숨김 */
+.caret-codecenter-hide-cost.api-request-cost,
+.caret-codecenter-hide-cost .api-request-cost,
+.api-request-container .caret-codecenter-hide-cost {
+	display: none !important;
+}
+
+/* 일반적인 비용 관련 요소들 */
+.caret-codecenter-hide-cost[class*="cost"],
+.caret-codecenter-hide-cost[class*="price"],
+.caret-codecenter-hide-cost[class*="billing"] {
+	display: none !important;
+}
+
+/* 비용 텍스트 패턴 숨김 */
+.caret-codecenter-hide-cost .cost-text,
+.caret-codecenter-hide-cost .price-text,
+.caret-codecenter-hide-cost .billing-text {
+	display: none !important;
+}
+
+/* 복구를 위한 visibility 방식 (선택적) */
+.caret-codecenter-hide-cost-soft {
+	visibility: hidden !important;
+	opacity: 0 !important;
+	height: 0 !important;
+	overflow: hidden !important;
+}
+
+/* 개발/디버그용 - 숨겨진 요소 표시 */
+.caret-debug-show-hidden .caret-codecenter-hide-cost {
+	display: block !important;
+	border: 1px dashed red;
+	background: rgba(255, 0, 0, 0.1);
+}
+
+.caret-debug-show-hidden .caret-codecenter-hide-cost::before {
+	content: "[HIDDEN COST]";
+	color: red;
+	font-size: 10px;
+	font-weight: bold;
+}
+
+/* 반응형 디자인 고려 */
+@media (max-width: 768px) {
+	.caret-codecenter-hide-cost {
+		display: none !important;
+	}
+}
+
+/* 다크 모드 호환성 */
+[data-vscode-theme-kind="vscode-dark"] .caret-codecenter-hide-cost {
+	display: none !important;
+}
+
+[data-vscode-theme-kind="vscode-light"] .caret-codecenter-hide-cost {
+	display: none !important;
+}
+
+/* 고대비 테마 호환성 */
+[data-vscode-theme-kind="vscode-high-contrast"] .caret-codecenter-hide-cost {
+	display: none !important;
+}

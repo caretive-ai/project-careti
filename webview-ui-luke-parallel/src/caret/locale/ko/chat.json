@@ -1,0 +1,456 @@
+{
+	"chat": {
+		"startNewTask": "새 작업 시작",
+		"error": {
+			"displayContent": "이 콘텐츠를 표시하는 중 문제가 발생했습니다",
+			"unknown": "오류: {{message}}",
+			"unknownError": "알 수 없는 오류",
+			"label": "오류",
+			"mistakeLimitReached": "Caret이 문제를 겪고 있습니다...",
+			"maxRequestsReached": "최대 요청 수 도달"
+		},
+		"mcp": {
+			"useServer": "Caret이 {{serverName}} MCP 서버에서 {{type}}을(를) 사용하려고 합니다:",
+			"tool": "도구",
+			"resource": "리소스"
+		},
+		"taskCompleted": "작업 완료",
+		"tool": {
+			"outsideWorkspace": "이 파일은 작업 공간 외부에 있습니다",
+			"editFile": "Caret이 이 파일을 편집하려고 합니다",
+			"createFile": "Caret이 새 파일을 생성하려고 합니다",
+			"readFile": "Caret이 이 파일을 읽으려고 합니다",
+			"listFilesTopLevel": "Caret이 이 디렉토리의 최상위 파일들을 확인하려고 합니다",
+			"listFilesRecursive": "Caret이 이 디렉토리의 모든 파일들을 재귀적으로 확인하려고 합니다",
+			"listCodeDefinitionNames": "Caret이 이 디렉토리에서 사용된 소스 코드 정의명들을 확인하려고 합니다",
+			"searchFiles": "Caret이 이 디렉토리에서 검색하려고 합니다",
+			"summarizeTask": "Caret이 대화를 요약하고 있습니다",
+			"summary": "요약",
+			"externalUrl": "이 URL은 외부입니다",
+			"webFetch": "Caret이 이 URL에서 콘텐츠를 가져오려고 합니다",
+			"commandOutput": "명령어 출력",
+			"commandApprovalRequired": "모델이 이 명령에 명시적인 승인이 필요하다고 판단했습니다.",
+			"mcpNotification": "MCP 알림",
+			"thinking": {
+				"label": "생각 중"
+			},
+			"mcpLoadingDocumentation": "MCP 문서 로딩 중",
+			"seeNewChanges": "새 변경 사항 보기",
+			"shellIntegration": {
+				"unavailable": "쉘 통합 사용 불가",
+				"description": "Caret이 명령의 출력을 보는 데 문제가 있을 수 있습니다. VSCode를 업데이트하고(<code>CMD/CTRL + Shift + P</code> → \"업데이트\") 지원되는 쉘(zsh, bash, fish 또는 PowerShell (<code>CMD/CTRL + Shift + P</code> → \"터미널: 기본 프로필 선택\"))을 사용하고 있는지 확인하세요.",
+				"troubleshooting": "여전히 문제가 있나요?"
+			},
+			"condenseConversation": "Caret이 대화를 요약하려고 합니다",
+			"createGithubIssue": "Caret이 Github 이슈를 생성하려고 합니다"
+		},
+		"image": {
+			"dimensionError": "이미지 크기가 7500px을 초과합니다",
+			"unsupportedFileError": "이미지 외 파일은 현재 비활성화되어 있습니다"
+		},
+		"selectModelApiProvider": "모델/API 제공자 선택",
+		"addContext": "컨텍스트 추가",
+		"addFilesImages": "파일 및 이미지 추가",
+		"mode": {
+			"tooltip": {
+				"description": "{{mode}} 모드에서 Caret은 {{action}}",
+				"act": {
+					"action": "즉시 작업을 완료합니다"
+				},
+				"plan": {
+					"action": "계획을 수립하기 위해 정보를 수집합니다"
+				}
+			},
+			"act": {
+				"label": "Act"
+			},
+			"plan": {
+				"label": "Plan"
+			}
+		},
+		"contextMenu": {
+			"problems": "문제",
+			"terminal": "터미널",
+			"pasteUrlToFetchContents": "콘텐츠를 가져올 URL 붙여넣기",
+			"noResultsFound": "결과를 찾을 수 없습니다",
+			"gitCommits": "Git 커밋",
+			"add": "추가",
+			"file": "파일",
+			"folder": "폴더",
+			"searching": "검색 중..."
+		},
+		"creditLimitError": {
+			"outOfCredits": "크레딧이 부족합니다.",
+			"buyCredits": "크레딧 구매",
+			"retryRequest": "요청 재시도"
+		},
+		"errorBlockTitle": {
+			"apiRetryAttempt": "API 요청 (실패한 시도 {{attempt}}/{{retryOperations}} 재시도",
+			"inSeconds": " {{remainingSeconds}}초 후",
+			"ellipsis": ")...",
+			"apiRequestLoading": "API 요청 중...",
+			"apiRequestCancelled": "API 요청 취소됨",
+			"apiStreamingFailed": "API 스트리밍 실패",
+			"apiRequest": "API 요청",
+			"creditLimitReached": "크레딧 한도 도달",
+			"apiRequestFailed": "API 요청 실패"
+		},
+		"errorRow": {
+			"requestId": "요청 ID: {{requestId}}",
+			"powershellIssue": "Windows PowerShell 문제인 것 같습니다. 다음",
+			"troubleshootingGuide": "문제 해결 가이드",
+			"period": ".",
+			"clickRetryBelow": "(아래 \"재시도\" 클릭)",
+			"signInToCline": "Cline에 로그인",
+			"diffError": "모델이 파일에서 일치하는 검색 패턴을 사용하지 않았습니다. 재시도 중...",
+			"clineTriedToAccess": "Cline이 접근하려고 했습니다",
+			"isBlockedBy": "는 다음 파일에 의해 차단되었습니다.",
+			"file": "파일."
+		},
+		"bugReport": {
+			"title": "버그 보고서",
+			"whatHappened": "무슨 일이 있었나요?",
+			"stepsToReproduce": "재현 단계",
+			"relevantApiRequestOutput": "관련 API 요청 출력",
+			"providerModel": "제공자/모델",
+			"operatingSystem": "운영 체제",
+			"systemInfo": "시스템 정보",
+			"clineVersion": "Cline 버전",
+			"additionalContext": "추가 컨텍스트"
+		},
+		"serversToggleModal": {
+			"manageMcpServers": "MCP 서버 관리",
+			"mcpServers": "MCP 서버"
+		},
+		"slashCommandMenu": {
+			"defaultCommands": "기본 명령어",
+			"workflowCommands": "워크플로우 명령어",
+			"noMatchingCommandsFound": "일치하는 명령어를 찾을 수 없습니다"
+		},
+		"openDiskTaskHistoryButton.openDiskTaskHistory": "디스크 작업 기록 열기",
+		"taskHeader.task": "작업",
+		"taskHeader.closeTask": "작업 닫기",
+		"taskHeader.seeMore": "더 보기",
+		"taskHeader.seeLess": "간략히 보기",
+		"taskHeader.tokens": "토큰",
+		"taskHeader.promptTokens": "프롬프트 토큰",
+		"taskHeader.completionTokens": "완료 토큰",
+		"taskHeader.cache": "캐시",
+		"taskHeader.tokensWrittenToCache": "캐시에 기록된 토큰",
+		"taskHeader.tokensReadFromCache": "캐시에서 읽은 토큰",
+		"taskHeader.allStepsCompleted": "모든 {{totalCount}} 단계 완료!",
+		"taskHeader.newStepsGenerated": "작업을 계속하면 새로운 단계가 생성됩니다",
+		"taskHeader.editFocusChainList": "마크다운 파일에서 포커스 체인 목록 편집",
+		"taskHeader.disablingCheckpoints": "체크포인트 비활성화.",
+		"taskHeader.seeHereForInstructions": "지침은 여기를 참조하세요.",
+		"taskTimelineTooltip.taskMessage": "작업 메시지",
+		"taskTimelineTooltip.userMessage": "사용자 메시지",
+		"taskTimelineTooltip.assistantResponse": "어시스턴트 응답",
+		"taskTimelineTooltip.fileRead": "파일 읽기: {{tool}}",
+		"taskTimelineTooltip.fileEdit": "파일 편집: {{path}}",
+		"taskTimelineTooltip.newFile": "새 파일: {{path}}",
+		"taskTimelineTooltip.webFetch": "웹 가져오기: {{path}}",
+		"taskTimelineTooltip.tool": "도구: {{tool}}",
+		"taskTimelineTooltip.toolUse": "도구 사용",
+		"taskTimelineTooltip.terminalCommand": "터미널 명령어",
+		"taskTimelineTooltip.terminalOutput": "터미널 출력",
+		"taskTimelineTooltip.browserAction": "브라우저 액션",
+		"taskTimelineTooltip.browserResult": "브라우저 결과",
+		"taskTimelineTooltip.taskCompleted": "작업 완료",
+		"taskTimelineTooltip.checkpointCreated": "체크포인트 생성됨",
+		"taskTimelineTooltip.unknown": "알 수 없음",
+		"taskTimelineTooltip.assistantMessage": "어시스턴트 메시지",
+		"taskTimelineTooltip.planningResponse": "계획 응답",
+		"taskTimelineTooltip.fileReadApproval": "파일 읽기 승인: {{tool}}",
+		"taskTimelineTooltip.fileEditApproval": "파일 편집 승인: {{path}}",
+		"taskTimelineTooltip.newFileApproval": "새 파일 승인: {{path}}",
+		"taskTimelineTooltip.toolApproval": "도구 승인: {{tool}}",
+		"taskTimelineTooltip.terminalCommandApproval": "터미널 명령어 승인",
+		"taskTimelineTooltip.browserActionApproval": "브라우저 액션 승인",
+		"taskTimelineTooltip.unknownMessageType": "알 수 없는 메시지 유형",
+		"taskTimelineTooltip.unknownFile": "알 수 없는 파일",
+		"taskTimelineTooltip.unknownUrl": "알 수 없는 URL",
+		"taskFeedbackButtons.thisWasHelpful": "도움이 되었습니다",
+		"taskFeedbackButtons.thisWasNotHelpful": "도움이 되지 않았습니다",
+		"userMessage.restoreAll": "모두 복원",
+		"userMessage.restoreAllTooltip": "채팅 및 작업 공간 파일을 이 체크포인트로 복원하고 편집된 메시지 보내기",
+		"userMessage.restoreChat": "채팅 복원",
+		"userMessage.restoreChatTooltip": "채팅만 이 체크포인트로 복원하고 편집된 메시지 보내기"
+	},
+	"markdownBlock": {
+		"clickToToggleActMode": "클릭하여 Act 모드로 전환",
+		"alreadyInActMode": "이미 Act 모드입니다",
+		"actModeShortcut": "Act 모드 (⌘⇧A)",
+		"copyCode": "코드 복사",
+		"openFileInEditor": "편집기에서 {{filePath}} 열기"
+	},
+	"mermaidBlock": {
+		"generatingDiagram": "Mermaid 다이어그램 생성 중...",
+		"copyCode": "코드 복사"
+	},
+	"telemetryBanner": {
+		"closeAndEnable": "배너 닫기 및 원격 분석 활성화",
+		"helpImproveCline": "Cline 개선에 도움을 주세요",
+		"accessExperimentalFeatures": "(실험적 기능에 액세스)",
+		"dataCollectionInfo": "Cline은 버그를 수정하고 확장 기능을 개선하는 데 도움이 되는 오류 및 사용 데이터를 수집합니다. 코드, 프롬프트 또는 개인 정보는 전송되지 않습니다.",
+		"turnOffSetting": "이 설정은",
+		"settings": "설정"
+	},
+	"thumbnails": {
+		"thumbnailImage": "썸네일 이미지-{{index}}"
+	},
+	"historyPreview": {
+		"recentTasks": "최근 작업",
+		"tokens": "토큰: ↑{{tokensIn}} ↓{{tokensOut}}",
+		"cache": "캐시: +{{cacheWrites}} → {{cacheReads}}",
+		"apiCost": "API 비용: ${{totalCost}}",
+		"viewAllHistory": "모든 기록 보기",
+		"noRecentTasks": "최근 작업 없음",
+		"favorited": "즐겨찾기"
+	},
+	"linkPreview": {
+		"failedToFetchOpenGraphData": "Open Graph 데이터 가져오기 실패",
+		"unknownErrorOccurred": "알 수 없는 오류 발생",
+		"loadingPreviewFor": "{{hostname}}에 대한 미리보기 로딩 중...",
+		"waitingForMinutesSeconds": "{{minutes}}분 {{seconds}}초 대기 중...",
+		"waitingForSeconds": "{{seconds}}초 대기 중...",
+		"unableToLoadPreview": "미리보기를 로드할 수 없습니다",
+		"previewRequestTimedOut": "미리보기 요청 시간 초과",
+		"networkErrorLoadingPreview": "미리보기 로딩 중 네트워크 오류",
+		"clickToOpenInBrowser": "클릭하여 브라우저에서 열기",
+		"noDescriptionAvailable": "설명 없음",
+		"noTitle": "제목 없음",
+		"errorDisplayingLinkPreview": "이 링크 미리보기를 표시하는 중 문제가 발생했습니다"
+	},
+	"historyView": {
+		"history": "기록",
+		"done": "완료",
+		"fuzzySearchPlaceholder": "기록 퍼지 검색...",
+		"clearSearch": "검색 지우기",
+		"newest": "최신순",
+		"oldest": "오래된순",
+		"mostExpensive": "가장 비싼순",
+		"mostTokens": "가장 많은 토큰순",
+		"mostRelevant": "가장 관련성 높은순",
+		"workspace": "작업 공간",
+		"favorites": "즐겨찾기",
+		"selectAll": "모두 선택",
+		"selectNone": "선택 해제",
+		"deleteSelected": "선택된 항목 삭제",
+		"deleteAllHistory": "모든 기록 삭제",
+		"export": "내보내기",
+		"deleteSelectedWithCount": "{{count}}개 선택된 항목 삭제",
+		"deleteAllHistoryWithSize": "모든 기록 삭제 ({{size}})",
+		"selectedWithSize": "선택됨 ({{size}})"
+	},
+	"imagePreview": {
+		"timeoutLoadingImage": "이미지 로딩 시간 초과: {{url}}",
+		"failedToLoadImage": "이미지 로딩 실패: {{url}}",
+		"loadingImageFrom": "{{hostname}}에서 이미지 로딩 중...",
+		"waitingForMinutesSeconds": "{{minutes}}분 {{seconds}}초 대기 중...",
+		"waitingForSeconds": "{{seconds}}초 대기 중...",
+		"failedToLoadImageTitle": "이미지 로딩 실패",
+		"clickToOpenInBrowser": "클릭하여 브라우저에서 열기",
+		"svgFrom": "{{hostname}}에서 SVG",
+		"imageFrom": "{{hostname}}에서 이미지",
+		"errorDisplayingImage": "이 이미지를 표시하는 중 문제가 발생했습니다"
+	},
+	"mcpResponseDisplay": {
+		"response": "응답",
+		"responseError": "응답 (오류)",
+		"errorParsingResponse": "응답 구문 분석 오류:",
+		"loadingRichContent": "풍부한 콘텐츠 로딩 중..."
+	},
+	"mcpConfigurationView": {
+		"mcpServers": "MCP 서버",
+		"done": "완료",
+		"marketplace": "마켓플레이스",
+		"remoteServers": "원격 서버",
+		"installed": "설치됨"
+	},
+	"addLocalServerForm": {
+		"addLocalServerDescriptionPart1": "로컬 MCP 서버를 추가하려면 ",
+		"clineMcpSettingsJson": "cline_mcp_settings.json",
+		"addLocalServerDescriptionPart2": "에서 구성하세요. JSON 구성에서 서버 이름, 명령, 인수 및 필요한 환경 변수를 지정해야 합니다. 자세한 내용은 ",
+		"here": "여기",
+		"openClineMcpSettingsJson": "cline_mcp_settings.json 열기"
+	},
+	"addRemoteServerForm": {
+		"serverNameRequired": "서버 이름은 필수입니다",
+		"serverUrlRequired": "서버 URL은 필수입니다",
+		"invalidUrlFormat": "잘못된 URL 형식",
+		"failedToAddServer": "서버 추가 실패",
+		"addRemoteServerDescription": "이름과 URL 엔드포인트를 제공하여 원격 MCP 서버를 추가하세요. 자세한 내용은 ",
+		"here": "여기",
+		"serverNamePlaceholder": "mcp-server",
+		"serverNameLabel": "서버 이름",
+		"serverUrlPlaceholder": "https://example.com/mcp-server",
+		"serverUrlLabel": "서버 URL",
+		"adding": "추가 중...",
+		"addServer": "서버 추가",
+		"connectingToServer": "서버에 연결 중... 몇 초 정도 걸릴 수 있습니다.",
+		"editConfiguration": "구성 편집"
+	},
+	"brandMarketplace": {
+		"preparing": "{{brandName}} MCP 마켓플레이스가 준비 중입니다.",
+		"preparingDescription": "곧 {{brandName}} 전용 MCP 도구들을 만나보실 수 있습니다.",
+		"codecenterPreparing": "CodeCenter MCP 마켓플레이스가 준비 중입니다.",
+		"codecenterPreparingDescription": "곧 CodeCenter 전용 MCP 도구들을 만나보실 수 있습니다."
+	},
+	"installedServersView": {
+		"descriptionPart1": " ",
+		"modelContextProtocol": "모델 컨텍스트 프로토콜",
+		"descriptionPart2": "은(는) Cline의 기능을 확장하기 위한 추가 도구 및 리소스를 제공하는 로컬에서 실행되는 MCP 서버와의 통신을 가능하게 합니다. ",
+		"communityMadeServers": "커뮤니티에서 만든 서버",
+		"descriptionPart3": "를 사용하거나 Cline에게 워크플로우에 특정한 새 도구를 만들도록 요청할 수 있습니다 (예: \"최신 npm 문서를 가져오는 도구를 추가해 줘\"). ",
+		"seeDemoHere": "여기에서 데모를 확인하세요.",
+		"configureMcpServers": "MCP 서버 구성",
+		"advancedMcpSettings": "고급 MCP 설정"
+	},
+	"mcpResourceRow": {
+		"noDescription": "설명 없음",
+		"returns": "반환값",
+		"unknown": "알 수 없음"
+	},
+	"mcpToolRow": {
+		"autoApprove": "자동 승인",
+		"parameters": "매개변수",
+		"noDescription": "설명 없음"
+	},
+	"serverRow": {
+		"timeout30Seconds": "30초",
+		"timeout1Minute": "1분",
+		"timeout5Minutes": "5분",
+		"timeout10Minutes": "10분",
+		"timeout30Minutes": "30분",
+		"timeout1Hour": "1시간",
+		"restartServer": "서버 재시작",
+		"deleteServer": "서버 삭제",
+		"retrying": "재시도 중...",
+		"retryConnection": "연결 재시도",
+		"deleting": "삭제 중...",
+		"tools": "도구",
+		"resources": "리소스",
+		"autoApproveAllTools": "모든 도구 자동 승인",
+		"noToolsFound": "도구를 찾을 수 없습니다",
+		"noResourcesFound": "리소스를 찾을 수 없습니다",
+		"requestTimeout": "요청 시간 초과",
+		"restarting": "재시작 중..."
+	},
+		"serversToggleList": {
+			"noMcpServersInstalled": "설치된 MCP 서버가 없습니다"
+		},
+		"mcpMarketplaceCard": {
+			"logoAlt": "{{name}} 로고",
+			"installed": "설치됨",
+			"installing": "설치 중...",
+			"install": "설치",
+			"requiresApiKey": "API 키 필요",
+			"communityMadeWarning": "커뮤니티 제작 (사용자 책임 하에 사용)"
+		},
+		"mcpMarketplaceView": {
+			"failedToLoadMarketplaceData": "마켓플레이스 데이터를 로드하지 못했습니다.",
+			"retry": "재시도",
+			"searchMcps": "MCP 검색...",
+			"clearSearch": "검색 지우기",
+			"filter": "필터",
+			"allCategories": "모든 카테고리",
+			"sort": "정렬",
+			"mostInstalls": "가장 많이 설치된 순",
+			"newest": "최신순",
+			"githubStars": "GitHub 별점",
+			"name": "이름",
+			"noMatchingMcpServersFound": "일치하는 MCP 서버를 찾을 수 없습니다.",
+			"noMcpServersFoundInMarketplace": "마켓플레이스에서 MCP 서버를 찾을 수 없습니다."
+		},
+	"clineRulesToggleModal": {
+		"manageRulesWorkflows": "Cline 규칙 및 워크플로우 관리",
+		"rulesTab": "규칙",
+		"workflowsTab": "워크플로우",
+		"rulesDescription": "규칙을 통해 Cline에 시스템 수준 지침을 제공할 수 있습니다. 프로젝트 또는 모든 대화에 전역적으로 컨텍스트 및 기본 설정을 포함하는 영구적인 방법이라고 생각하세요.",
+		"docs": "문서",
+		"workflowsDescription": "워크플로우를 통해 Cline이 서비스 배포 또는 PR 제출과 같은 반복적인 작업 세트를 안내하는 일련의 단계를 정의할 수 있습니다. 워크플로우를 호출하려면 채팅에",
+		"workflowName": "/워크플로우-이름",
+		"globalRules": "전역 규칙",
+		"workspaceRules": "작업 공간 규칙",
+		"globalWorkflows": "전역 워크플로우",
+		"workspaceWorkflows": "작업 공간 워크플로우"
+	},
+	"newRuleRow": {
+		"invalidExtensionError": "'.md', '.txt' 또는 파일 확장자 없음만 허용됩니다",
+		"workflowPlaceholder": "워크플로우-이름 (.md, .txt 또는 확장자 없음)",
+		"rulePlaceholder": "규칙-이름 (.md, .txt 또는 확장자 없음)",
+		"createRuleFile": "규칙 파일 생성",
+		"newWorkflowFile": "새 워크플로우 파일...",
+		"newRuleFile": "새 규칙 파일..."
+	},
+	"ruleRow": {
+		"editRuleFile": "규칙 파일 편집",
+		"deleteRuleFile": "규칙 파일 삭제"
+	},
+	"rulesToggleList": {
+		"noWorkflowsFound": "워크플로우를 찾을 수 없습니다",
+		"noRulesFound": "규칙을 찾을 수 없습니다"
+	},
+	"alertDialog": {
+		"unsavedChangesTitle": "저장되지 않은 변경 사항",
+		"unsavedChangesDescription": "저장되지 않은 변경 사항이 있습니다. 정말 삭제하시겠습니까?",
+		"discardChanges": "변경 사항 삭제",
+		"saveAndContinue": "저장 및 계속",
+		"cancel": "취소"
+	},
+	"checkmarkControl": {
+		"compare": "비교",
+		"restore": "복원",
+		"restoreFiles": "파일 복원",
+		"restoreFilesDescription": "이 시점에 찍은 스냅샷으로 프로젝트 파일을 복원합니다 (\"비교\"를 사용하여 무엇이 되돌려질지 확인하세요)",
+		"restoreTaskOnly": "작업만 복원",
+		"restoreTaskOnlyDescription": "이 시점 이후의 메시지를 삭제합니다 (작업 공간 파일에는 영향을 미치지 않습니다)",
+		"restoreFilesAndTask": "파일 및 작업 복원",
+		"restoreFilesAndTaskDescription": "프로젝트 파일을 복원하고 이 시점 이후의 모든 메시지를 삭제합니다"
+	},
+	"checkpointControls": {
+		"compare": "비교",
+		"restore": "복원",
+		"restoreTaskAndWorkspace": "작업 및 작업 공간 복원",
+		"restoreTaskAndWorkspaceDescription": "이 시점에 찍은 스냅샷으로 작업 및 프로젝트 파일을 복원합니다",
+		"restoreTaskOnly": "작업만 복원",
+		"restoreTaskOnlyDescription": "이 시점 이후의 메시지를 삭제합니다 (작업 공간에는 영향을 미치지 않습니다)",
+		"restoreWorkspaceOnly": "작업 공간만 복원",
+		"restoreWorkspaceOnlyDescription": "이 시점에 찍은 스냅샷으로 프로젝트 파일을 복원합니다 (작업이 동기화되지 않을 수 있습니다)"
+	},
+	"codeAccordian": {
+		"userEdits": "사용자 편집",
+		"consoleLogs": "콘솔 로그"
+	},
+	"copyButton": {
+		"copied": "복사됨",
+		"copy": "복사"
+	},
+	"demo": {
+		"helloWorld": "안녕하세요!",
+		"howdy": "안녕!",
+		"customHeaderTitle": "사용자 정의 헤더 제목",
+		"anotherCustomTitle": "또 다른 사용자 정의 제목",
+		"titleIsCustom": "제목은 사용자 정의입니다",
+		"customTitle": "사용자 정의 제목",
+		"matchCase": "대소문자 일치",
+		"matchWholeWord": "단어 전체 일치",
+		"useRegularExpression": "정규 표현식 사용",
+		"add": "추가",
+		"remove": "제거",
+		"badge": "배지",
+		"checkbox": "체크박스",
+		"option1": "옵션 1",
+		"option2": "옵션 2",
+		"link": "링크",
+		"tab1": "탭 1",
+		"tab2": "탭 2",
+		"panelView1": "패널 뷰 1",
+		"panelView2": "패널 뷰 2",
+		"radio1": "라디오 1",
+		"radio2": "라디오 2",
+		"tag": "태그",
+		"textAreaPlaceholder": "텍스트 영역"
+	}
+}

@@ -80,7 +80,6 @@ function createHandlerForProvider(
 		return new BrandedApiProvider(CURRENT_BRAND, {
 			onRetryAttempt: options.onRetryAttempt,
 			openRouterApiKey: options.openRouterApiKey,
-			brandApiKey: options.brandApiKey,
 			reasoningEffort: mode === "plan" ? options.planModeReasoningEffort : options.actModeReasoningEffort,
 			thinkingBudgetTokens: mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
 			openRouterProviderSorting: options.openRouterProviderSorting,

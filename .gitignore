@@ -3,6 +3,7 @@ dist
 dist-standalone
 node_modules
 tmp
+webview-ui-luke-parallel
 .vscode-test/
 *.vsix
 

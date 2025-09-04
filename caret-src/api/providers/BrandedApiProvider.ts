@@ -14,7 +14,6 @@ import { BrandApiConfig, loadBrandConfig } from "@caret/utils/brand-config-loade
 interface BrandedApiHandlerOptions extends CommonApiHandlerOptions {
   brandName?: string
   openRouterApiKey?: string
-  brandApiKey?: string
   reasoningEffort?: string
   thinkingBudgetTokens?: number
   openRouterProviderSorting?: string
@@ -42,7 +41,7 @@ export class BrandedApiProvider implements ApiHandler {
 
   private ensureClient(): OpenAI {
     if (!this.client) {
-      const apiKey = this.options.brandApiKey || this.options.openRouterApiKey
+      const apiKey = this.options.openRouterApiKey
       
       if (!apiKey) {
         throw new Error(`${this.config.ui.providerDisplayName} API key is required`)
@@ -67,81 +66,80 @@ export class BrandedApiProvider implements ApiHandler {
 
   @withRetry()
   async *createMessage(systemPrompt: string, messages: Anthropic.Messages.MessageParam[]): ApiStream {
-    try {
-      const client = this.ensureClient()
-      
-      // Handle brand-specific status (preparing, maintenance, etc.)
-      if (this.config.api.status === "preparing") {
-        const preparingMsg = this.config.i18n?.mcpMarketplace?.preparing || 
-          `${this.config.ui.providerDisplayName} 서비스가 준비 중입니다.`
-        throw new Error(preparingMsg)
+    const client = this.ensureClient()
+    this.lastGenerationId = undefined
+    
+    // Handle brand-specific status (preparing, maintenance, etc.)
+    if (this.config.api.status === "preparing") {
+      const preparingMsg = this.config.i18n?.mcpMarketplace?.preparing || 
+        `${this.config.ui.providerDisplayName} 서비스가 준비 중입니다.`
+      throw new Error(preparingMsg)
+    }
+
+    const stream = await createOpenRouterStream(
+      client,
+      systemPrompt,
+      messages,
+      this.getModel(),
+      this.options.reasoningEffort,
+      this.options.thinkingBudgetTokens,
+      this.options.openRouterProviderSorting
+    )
+
+    let didOutputUsage: boolean = false
+
+    for await (const chunk of stream) {
+      // Brand-specific error handling for OpenRouter errors  
+      if ("error" in chunk) {
+        const error = chunk.error as any
+        throw new Error(`${this.config.ui.providerDisplayName} API Error ${error.code}: ${error.message}`)
       }
 
-      const modelId = this.options.openRouterModelId || openRouterDefaultModelId
-      const modelInfo = this.options.openRouterModelInfo || openRouterDefaultModelInfo
+      // Check for error in choices[0].finish_reason
+      const choice = chunk.choices?.[0]
+      if ((choice?.finish_reason as string) === "error") {
+        throw new Error(`${this.config.ui.providerDisplayName} Mid-Stream Error`)
+      }
 
-      // Check if reasoning should be skipped for this model
-      const skipReasoning = shouldSkipReasoningForModel(modelId)
-      const reasoningEffort = skipReasoning ? undefined : this.options.reasoningEffort
+      if (!this.lastGenerationId && chunk.id) {
+        this.lastGenerationId = chunk.id
+      }
 
-      // Prepare OpenRouter-compatible request
-      const openaiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
-        { role: "system", content: systemPrompt },
-        ...messages.map((msg) => ({
-          role: msg.role as "user" | "assistant",
-          content: Array.isArray(msg.content) 
-            ? msg.content.map((block) => {
-                if (block.type === "text") {
-                  return { type: "text" as const, text: block.text }
-                } else if (block.type === "image") {
-                  return {
-                    type: "image_url" as const,
-                    image_url: { url: block.source.data }
-                  }
-                }
-                return block
-              })
-            : msg.content
-        }))
-      ]
-
-      const stream = client.chat.completions.create({
-        model: modelId,
-        messages: openaiMessages,
-        stream: true,
-        max_tokens: modelInfo.maxTokens ? Math.min(8192, modelInfo.maxTokens) : 8192,
-        temperature: 0,
-        ...(reasoningEffort && {
-          reasoning_effort: reasoningEffort
-        }),
-        ...(this.options.thinkingBudgetTokens && {
-          max_completion_tokens: this.options.thinkingBudgetTokens
-        })
-      })
-
-      yield* createOpenRouterStream(
-        stream,
-        this.getModel(),
-        (genId) => { this.lastGenerationId = genId }
-      )
-
-    } catch (error) {
-      // Brand-specific error handling
-      if (axios.isAxiosError(error)) {
-        const data = error.response?.data as OpenRouterErrorResponse | undefined
-        if (data?.error) {
-          throw new Error(`${this.config.ui.providerDisplayName} API Error ${data.error.code}: ${data.error.message}`)
+      const delta = chunk.choices[0]?.delta
+      if (delta?.content) {
+        yield {
+          type: "text",
+          text: delta.content,
         }
       }
-      
-      // Network or connection errors - show preparing message
-      if (error.message.includes('ECONNREFUSED') || error.message.includes('timeout')) {
-        const preparingMsg = this.config.i18n?.mcpMarketplace?.preparing || 
-          `${this.config.ui.providerDisplayName} 서비스가 준비 중입니다.`
-        throw new Error(preparingMsg)
+
+      // Reasoning tokens - skip reasoning for Grok 4 models
+      if ("reasoning" in delta && delta.reasoning && !shouldSkipReasoningForModel(this.getModel().id)) {
+        yield {
+          type: "reasoning",
+          reasoning: delta.reasoning as string,
+        }
       }
-      
-      throw error
+
+      if (!didOutputUsage && chunk.usage) {
+        yield {
+          type: "usage",
+          cacheWriteTokens: 0,
+          cacheReadTokens: chunk.usage.prompt_tokens_details?.cached_tokens || 0,
+          inputTokens: (chunk.usage.prompt_tokens || 0) - (chunk.usage.prompt_tokens_details?.cached_tokens || 0),
+          outputTokens: chunk.usage.completion_tokens || 0,
+          totalCost: (chunk.usage as any).cost || 0,
+        }
+        didOutputUsage = true
+      }
+    }
+
+    // Fallback to generation endpoint if usage chunk not returned
+    if (!didOutputUsage) {
+      const apiStreamUsage = await this.getApiStreamUsage()
+      if (apiStreamUsage) {
+        yield apiStreamUsage
+      }
     }
   }
 
@@ -170,9 +168,10 @@ export class BrandedApiProvider implements ApiHandler {
         const { native_tokens_cached = 0, native_tokens_prompt = 0, native_tokens_completion = 0, total_cost = 0 } = response.data
         
         return {
+          type: "usage" as const,
           inputTokens: native_tokens_prompt,
           outputTokens: native_tokens_completion, 
-          inputCachedTokens: native_tokens_cached,
+          cacheReadTokens: native_tokens_cached,
           totalCost: total_cost
         }
       }

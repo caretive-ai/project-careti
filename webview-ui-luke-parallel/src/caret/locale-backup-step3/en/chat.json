@@ -1,0 +1,222 @@
+{
+	"chat": {
+		"startNewTask": "Start New Task",
+		"error": {
+			"displayContent": "Something went wrong displaying this content",
+			"unknown": "Error: {{message}}",
+			"unknownError": "Unknown error",
+			"label": "Error",
+			"mistakeLimitReached": "Caret is having trouble...",
+			"maxRequestsReached": "Maximum Requests Reached"
+		},
+		"mcp": {
+			"useServer": "Caret wants to {{type}} on the {{serverName}} MCP server:",
+			"tool": "use a tool",
+			"resource": "access a resource"
+		},
+		"taskCompleted": "Task Completed",
+		"tool": {
+			"outsideWorkspace": "This file is outside of your workspace",
+			"editFile": "Caret wants to edit this file",
+			"createFile": "Caret wants to create a new file",
+			"readFile": "Caret wants to read this file",
+			"listFilesTopLevel": "Caret wants to view the top level files in this directory",
+			"listFilesRecursive": "Caret wants to recursively view all files in this directory",
+			"listCodeDefinitionNames": "Caret wants to view source code definition names used in this directory",
+			"searchFiles": "Caret wants to search this directory for",
+			"summarizeTask": "Caret is condensing the conversation",
+			"summary": "Summary",
+			"externalUrl": "This URL is external",
+			"webFetch": "Caret wants to fetch content from this URL",
+			"commandOutput": "Command Output",
+			"commandApprovalRequired": "The model has determined this command requires explicit approval.",
+			"mcpNotification": "MCP Notification",
+			"thinking": {
+				"label": "Thinking"
+			},
+			"mcpLoadingDocumentation": "Loading MCP documentation",
+			"seeNewChanges": "See new changes",
+			"shellIntegration": {
+				"unavailable": "Shell Integration Unavailable",
+				"description": "Cline may have trouble viewing the command's output. Please update VSCode (<code>CMD/CTRL + Shift + P</code> → \"Update\") and make sure you're using a supported shell: zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\").",
+				"troubleshooting": "Still having trouble?"
+			},
+			"condenseConversation": "Caret wants to condense your conversation",
+			"createGithubIssue": "Caret wants to create a Github issue"
+		},
+		"image": {
+			"dimensionError": "Image dimensions exceed 7500px",
+			"unsupportedFileError": "Files other than images are currently disabled"
+		},
+		"selectModelApiProvider": "Select Model / API Provider",
+		"addContext": "Add Context",
+		"addFilesImages": "Add Files & Images",
+		"mode": {
+			"tooltip": {
+				"description": "In {{mode}} mode, Caret will {{action}}",
+				"act": {
+					"action": "complete the task immediately"
+				},
+				"plan": {
+					"action": "gather information to architect a plan"
+				}
+			},
+			"act": {
+				"label": "Act"
+			},
+			"plan": {
+				"label": "Plan"
+			}
+		},
+		"contextMenu": {
+			"problems": "Problems",
+			"terminal": "Terminal",
+			"pasteUrlToFetchContents": "Paste URL to fetch contents",
+			"noResultsFound": "No results found",
+			"gitCommits": "Git Commits",
+			"add": "Add",
+			"file": "File",
+			"folder": "Folder",
+			"searching": "Searching..."
+		},
+		"creditLimitError": {
+			"outOfCredits": "You have run out of credits.",
+			"buyCredits": "Buy Credits",
+			"retryRequest": "Retry Request"
+		},
+		"errorBlockTitle": {
+			"apiRetryAttempt": "API Request (Retrying failed attempt {{attempt}}/{{retryOperations}}",
+			"inSeconds": " in {{remainingSeconds}} seconds",
+			"ellipsis": ")...",
+			"apiRequestLoading": "API Request...",
+			"apiRequestCancelled": "API Request Cancelled",
+			"apiStreamingFailed": "API Streaming Failed",
+			"apiRequest": "API Request",
+			"creditLimitReached": "Credit Limit Reached",
+			"apiRequestFailed": "API Request Failed"
+		},
+		"errorRow": {
+			"requestId": "Request ID: {{requestId}}",
+			"powershellIssue": "It seems like you're having Windows PowerShell issues, please see this",
+			"troubleshootingGuide": "troubleshooting guide",
+			"period": ".",
+			"clickRetryBelow": "(Click \"Retry\" below)",
+			"signInToCline": "Sign in to Cline",
+			"diffError": "The model used search patterns that don't match anything in the file. Retrying...",
+			"clineTriedToAccess": "Cline tried to access",
+			"isBlockedBy": "which is blocked by the",
+			"file": "file."
+		},
+		"bugReport": {
+			"title": "Bug Report",
+			"whatHappened": "What Happened?",
+			"stepsToReproduce": "Steps to Reproduce",
+			"relevantApiRequestOutput": "Relevant API Request Output",
+			"providerModel": "Provider/Model",
+			"operatingSystem": "Operating System",
+			"systemInfo": "System Info",
+			"clineVersion": "Cline Version",
+			"additionalContext": "Additional Context"
+		},
+		"serversToggleModal": {
+			"manageMcpServers": "Manage MCP Servers",
+			"mcpServers": "MCP Servers"
+		},
+		"slashCommandMenu": {
+			"defaultCommands": "Default Commands",
+			"workflowCommands": "Workflow Commands",
+			"noMatchingCommandsFound": "No matching commands found"
+		},
+		"openDiskTaskHistoryButton.openDiskTaskHistory": "Open Disk Task History",
+		"taskHeader.task": "Task",
+		"taskHeader.closeTask": "Close task",
+		"taskHeader.seeMore": "See more",
+		"taskHeader.seeLess": "See less",
+		"taskHeader.tokens": "Tokens",
+		"taskHeader.promptTokens": "Prompt Tokens",
+		"taskHeader.completionTokens": "Completion Tokens",
+		"taskHeader.cache": "Cache",
+		"taskHeader.tokensWrittenToCache": "Tokens written to cache",
+		"taskHeader.tokensReadFromCache": "Tokens read from cache",
+		"taskHeader.allStepsCompleted": "All {{totalCount}} steps completed!",
+		"taskHeader.newStepsGenerated": "New steps will be generated if you continue the task",
+		"taskHeader.editFocusChainList": "Edit focus chain list in markdown file",
+		"taskHeader.disablingCheckpoints": "disabling checkpoints.",
+		"taskHeader.seeHereForInstructions": "See here for instructions.",
+		"taskTimelineTooltip.taskMessage": "Task Message",
+		"taskTimelineTooltip.userMessage": "User Message",
+		"taskTimelineTooltip.assistantResponse": "Assistant Response",
+		"taskTimelineTooltip.fileRead": "File Read: {{tool}}",
+		"taskTimelineTooltip.fileEdit": "File Edit: {{path}}",
+		"taskTimelineTooltip.newFile": "New File: {{path}}",
+		"taskTimelineTooltip.webFetch": "Web Fetch: {{path}}",
+		"taskTimelineTooltip.tool": "Tool: {{tool}}",
+		"taskTimelineTooltip.toolUse": "Tool Use",
+		"taskTimelineTooltip.terminalCommand": "Terminal Command",
+		"taskTimelineTooltip.terminalOutput": "Terminal Output",
+		"taskTimelineTooltip.browserAction": "Browser Action",
+		"taskTimelineTooltip.browserResult": "Browser Result",
+		"taskTimelineTooltip.taskCompleted": "Task Completed",
+		"taskTimelineTooltip.checkpointCreated": "Checkpoint Created",
+		"taskTimelineTooltip.unknown": "Unknown",
+		"taskTimelineTooltip.assistantMessage": "Assistant Message",
+		"taskTimelineTooltip.planningResponse": "Planning Response",
+		"taskTimelineTooltip.fileReadApproval": "File Read Approval: {{tool}}",
+		"taskTimelineTooltip.fileEditApproval": "File Edit Approval: {{path}}",
+		"taskTimelineTooltip.newFileApproval": "New File Approval: {{path}}",
+		"taskTimelineTooltip.toolApproval": "Tool Approval: {{tool}}",
+		"taskTimelineTooltip.terminalCommandApproval": "Terminal Command Approval",
+		"taskTimelineTooltip.browserActionApproval": "Browser Action Approval",
+		"taskTimelineTooltip.unknownMessageType": "Unknown Message Type",
+		"taskTimelineTooltip.unknownFile": "Unknown file",
+		"taskTimelineTooltip.unknownUrl": "Unknown URL",
+		"taskFeedbackButtons.thisWasHelpful": "This was helpful",
+		"taskFeedbackButtons.thisWasNotHelpful": "This wasn't helpful"
+	},
+	"clineRulesToggleModal": {
+		"manageRulesWorkflows": "Manage Cline Rules & Workflows",
+		"rulesTab": "Rules",
+		"workflowsTab": "Workflows",
+		"rulesDescription": "Rules allow you to provide Cline with system-level guidance. Think of them as a persistent way to include context and preferences for your projects or globally for every conversation.",
+		"docs": "Docs",
+		"workflowsDescription": "Workflows allow you to define a series of steps to guide Cline through a repetitive set of tasks, such as deploying a service or submitting a PR. To invoke a workflow, type",
+		"workflowName": "/workflow-name",
+		"globalRules": "Global Rules",
+		"workspaceRules": "Workspace Rules",
+		"globalWorkflows": "Global Workflows",
+		"workspaceWorkflows": "Workspace Workflows"
+	},
+	"newRuleRow": {
+		"invalidExtensionError": "Only .md, .txt, or no file extension allowed",
+		"workflowPlaceholder": "workflow-name (.md, .txt, or no extension)",
+		"rulePlaceholder": "rule-name (.md, .txt, or no extension)",
+		"createRuleFile": "Create rule file",
+		"newWorkflowFile": "New workflow file...",
+		"newRuleFile": "New rule file..."
+	},
+	"ruleRow": {
+		"editRuleFile": "Edit rule file",
+		"deleteRuleFile": "Delete rule file"
+	},
+	"rulesToggleList": {
+		"noWorkflowsFound": "No workflows found",
+		"noRulesFound": "No rules found"
+	},
+	"alertDialog": {
+		"unsavedChangesTitle": "Unsaved Changes",
+		"unsavedChangesDescription": "You have unsaved changes. Are you sure you want to discard them?",
+		"discardChanges": "Discard Changes",
+		"saveAndContinue": "Save & Continue",
+		"cancel": "Cancel"
+	},
+	"checkmarkControl": {
+		"compare": "Compare",
+		"restore": "Restore",
+		"restoreFiles": "Restore Files",
+		"restoreFilesDescription": "Restores your project's files back to a snapshot taken at this point (use \"Compare\" to see what will be reverted)",
+		"restoreTaskOnly": "Restore Task Only",
+		"restoreTaskOnlyDescription": "Deletes messages after this point (does not affect workspace files)",
+		"restoreFilesAndTask": "Restore Files & Task",
+		"restoreFilesAndTaskDescription": "Restores your project's files and deletes all messages after this point"
+	}
+}

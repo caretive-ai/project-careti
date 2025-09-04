@@ -102,7 +102,21 @@
       "Read(/D:\\dev\\caret-merging\\src\\core\\api/**)",
       "Read(/D:\\dev\\caret-merging\\src\\shared/**)",
       "Read(/D:\\dev\\caret-merging\\src\\core\\api/**)",
-      "Read(/D:\\dev\\caret-merging\\src\\api\\providers/**)"
+      "Read(/D:\\dev\\caret-merging\\src\\api\\providers/**)",
+      "Read(/D:\\dev\\caret-merging\\caret-src\\api\\providers/**)",
+      "Read(/D:\\dev\\caret-merging\\src\\core\\api\\transform/**)",
+      "Read(/D:\\dev\\caret-merging\\src\\api\\providers/**)",
+      "Read(/D:\\dev\\caret-merging\\src\\core\\api/**)",
+      "Read(/D:\\dev\\caret-merging\\src\\core\\api/**)",
+      "Read(/D:\\dev\\caret-merging\\src\\core\\api/**)",
+      "Read(/D:\\dev\\caret-merging\\src\\shared/**)",
+      "Read(/D:\\dev\\caret-merging\\src\\shared/**)",
+      "Read(/D:\\dev\\caret-merging\\src\\shared/**)",
+      "Read(/D:\\dev\\caret-merging\\src\\shared/**)",
+      "Read(/D:\\dev\\caret-merging\\src\\core\\api\\providers/**)",
+      "Read(/D:\\dev\\caret-merging\\src\\core\\api\\providers/**)",
+      "Read(/D:\\dev\\caret-merging\\src\\core\\api\\transform/**)",
+      "Read(/D:\\dev\\caret-merging\\caret-src\\api\\providers/**)"
     ],
     "deny": [],
     "ask": []

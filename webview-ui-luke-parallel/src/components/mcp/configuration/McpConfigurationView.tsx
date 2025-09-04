@@ -1,0 +1,183 @@
+import { McpViewTab } from "@shared/mcp"
+import { EmptyRequest } from "@shared/proto/cline/common"
+import { McpServers } from "@shared/proto/cline/mcp"
+import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mcp/mcp-server-conversion"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import { useEffect, useState } from "react"
+import styled from "styled-components"
+// CARET MODIFICATION: Brand-specific MCP marketplace support
+import { getBrandInfo, getBrandMcpMarketplaceTab } from "@/caret/utils/brand-utils"
+import { t } from "@/caret/utils/i18n"
+import { useExtensionState } from "@/context/ExtensionStateContext"
+import { McpServiceClient } from "@/services/grpc-client"
+import AddRemoteServerForm from "./tabs/add-server/AddRemoteServerForm"
+import InstalledServersView from "./tabs/installed/InstalledServersView"
+import McpMarketplaceView from "./tabs/marketplace/McpMarketplaceView"
+
+type McpViewProps = {
+	onDone: () => void
+	initialTab?: McpViewTab
+}
+
+const McpConfigurationView = ({ onDone, initialTab }: McpViewProps) => {
+	const { mcpMarketplaceEnabled, setMcpServers } = useExtensionState()
+	const [activeTab, setActiveTab] = useState<McpViewTab>(initialTab || (mcpMarketplaceEnabled ? "marketplace" : "installed"))
+
+	// CARET MODIFICATION: Brand-specific marketplace tab
+	const brandInfo = getBrandInfo()
+	const brandMarketplaceTab = getBrandMcpMarketplaceTab()
+
+	const handleTabChange = (tab: McpViewTab) => {
+		setActiveTab(tab)
+	}
+
+	useEffect(() => {
+		if (!mcpMarketplaceEnabled && activeTab === "marketplace") {
+			// If marketplace is disabled and we're on marketplace tab, switch to installed
+			setActiveTab("installed")
+		}
+	}, [mcpMarketplaceEnabled, activeTab])
+
+	// Get setter for MCP marketplace catalog from context
+	const { setMcpMarketplaceCatalog } = useExtensionState()
+
+	useEffect(() => {
+		if (mcpMarketplaceEnabled) {
+			McpServiceClient.refreshMcpMarketplace(EmptyRequest.create({}))
+				.then((response) => {
+					setMcpMarketplaceCatalog(response)
+				})
+				.catch((error) => {
+					console.error("Error refreshing MCP marketplace:", error)
+				})
+
+			McpServiceClient.getLatestMcpServers(EmptyRequest.create({}))
+				.then((response: McpServers) => {
+					if (response.mcpServers) {
+						const mcpServers = convertProtoMcpServersToMcpServers(response.mcpServers)
+						setMcpServers(mcpServers)
+					}
+				})
+				.catch((error) => {
+					console.error("Failed to fetch MCP servers:", error)
+				})
+		}
+	}, [mcpMarketplaceEnabled])
+
+	return (
+		<div
+			style={{
+				position: "fixed",
+				top: 0,
+				left: 0,
+				right: 0,
+				bottom: 0,
+				display: "flex",
+				flexDirection: "column",
+			}}>
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+					padding: "10px 17px 5px 20px",
+				}}>
+				<h3 style={{ color: "var(--vscode-foreground)", margin: 0 }}>{t("mcpConfigurationView.mcpServers", "chat")}</h3>
+				<VSCodeButton onClick={onDone}>{t("mcpConfigurationView.done", "chat")}</VSCodeButton>
+			</div>
+
+			<div style={{ flex: 1, overflow: "auto" }}>
+				{/* Tabs container */}
+				<div
+					style={{
+						display: "flex",
+						gap: "1px",
+						padding: "0 20px 0 20px",
+						borderBottom: "1px solid var(--vscode-panel-border)",
+					}}>
+					{mcpMarketplaceEnabled && (
+						<TabButton isActive={activeTab === "marketplace"} onClick={() => handleTabChange("marketplace")}>
+							{t("mcpConfigurationView.marketplace", "chat")}
+						</TabButton>
+					)}
+					{/* CARET MODIFICATION: Brand-specific marketplace tab */}
+					{brandInfo.isBrandMode && brandMarketplaceTab && (
+						<TabButton
+							isActive={activeTab === "brandMarketplace"}
+							onClick={() => handleTabChange("brandMarketplace")}>
+							{brandMarketplaceTab}
+						</TabButton>
+					)}
+					<TabButton isActive={activeTab === "addRemote"} onClick={() => handleTabChange("addRemote")}>
+						{t("mcpConfigurationView.remoteServers", "chat")}
+					</TabButton>
+					<TabButton isActive={activeTab === "installed"} onClick={() => handleTabChange("installed")}>
+						{t("mcpConfigurationView.installed", "chat")}
+					</TabButton>
+				</div>
+
+				{/* Content container */}
+				<div style={{ width: "100%" }}>
+					{mcpMarketplaceEnabled && activeTab === "marketplace" && <McpMarketplaceView />}
+					{/* CARET MODIFICATION: Brand-specific marketplace content */}
+					{brandInfo.isBrandMode && activeTab === "brandMarketplace" && (
+						<div className="p-4 text-center">
+							<div className="text-[var(--vscode-foreground)] mb-2">
+								{brandInfo.brand === "codecenter"
+									? t("brandMarketplace.codecenterPreparing", "chat")
+									: t("brandMarketplace.preparing", "chat", { brandName: brandInfo.displayName })}
+							</div>
+							<div className="text-[var(--vscode-descriptionForeground)] text-sm">
+								{brandInfo.brand === "codecenter"
+									? t("brandMarketplace.codecenterPreparingDescription", "chat")
+									: t("brandMarketplace.preparingDescription", "chat", { brandName: brandInfo.displayName })}
+							</div>
+						</div>
+					)}
+					{activeTab === "addRemote" && <AddRemoteServerForm onServerAdded={() => handleTabChange("installed")} />}
+					{activeTab === "installed" && <InstalledServersView />}
+				</div>
+			</div>
+		</div>
+	)
+}
+
+const StyledTabButton = styled.button.withConfig({
+	shouldForwardProp: (prop) => !["isActive"].includes(prop),
+})<{ isActive: boolean; disabled?: boolean }>`
+	background: none;
+	border: none;
+	border-bottom: 2px solid ${(props) => (props.isActive ? "var(--vscode-foreground)" : "transparent")};
+	color: ${(props) => (props.isActive ? "var(--vscode-foreground)" : "var(--vscode-descriptionForeground)")};
+	padding: 8px 16px;
+	cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+	font-size: 13px;
+	margin-bottom: -1px;
+	font-family: inherit;
+	opacity: ${(props) => (props.disabled ? 0.6 : 1)};
+	pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
+
+	&:hover {
+		color: ${(props) => (props.disabled ? "var(--vscode-descriptionForeground)" : "var(--vscode-foreground)")};
+	}
+`
+
+export const TabButton = ({
+	children,
+	isActive,
+	onClick,
+	disabled,
+	style,
+}: {
+	children: React.ReactNode
+	isActive: boolean
+	onClick: () => void
+	disabled?: boolean
+	style?: React.CSSProperties
+}) => (
+	<StyledTabButton disabled={disabled} isActive={isActive} onClick={onClick} style={style}>
+		{children}
+	</StyledTabButton>
+)
+
+export default McpConfigurationView

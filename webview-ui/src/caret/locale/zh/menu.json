@@ -1,0 +1,14 @@
+{
+	"navbar": {
+		"chatName": "聊天",
+		"newTaskTooltip": "新任务",
+		"mcpName": "MCP",
+		"mcpServersTooltip": "MCP 服务器",
+		"historyName": "历史",
+		"historyTooltip": "历史记录",
+		"accountName": "账户",
+		"accountTooltip": "账户",
+		"settingsName": "设置",
+		"settingsTooltip": "设置"
+	}
+}

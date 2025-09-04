@@ -26,5 +26,338 @@
 	},
 	"debug": {
 		"errorInSeconds": "Error in {{current}}/{{total}} seconds"
+	},
+	"apiOptions": {
+		"apiProvider": "API Provider",
+		"searchAndSelectProvider": "Search and select provider...",
+		"clearSearch": "Clear search",
+		"clineProviderHidden": "Cline Provider Hidden - Use Caret API Provider instead"
+	},
+	"clineAccountInfoCard": {
+		"viewBillingAndUsage": "View Billing & Usage",
+		"signUpWithCline": "Sign Up with Cline"
+	},
+	"apiKeyField": {
+		"placeholder": "Enter API Key...",
+		"apiKeyLabel": "{{providerName}} API Key",
+		"defaultHelpText": "This key is stored locally and only used to make API requests from this extension.",
+		"signupText": "You can get a {{providerName}} API key by signing up here."
+	},
+	"baseUrlField": {
+		"label": "Use custom base URL",
+		"placeholder": "Default: https://api.example.com"
+	},
+	"modelInfoView": {
+		"tokensSuffix": "tokens)",
+		"millionTokensLabel": "million tokens",
+		"inputPriceLabel": "Input price:",
+		"outputPriceStandardLabel": "Output price (Standard):",
+		"outputPriceThinkingBudgetLabel": "Output price (Thinking Budget > 0):",
+		"outputPriceLabel": "Output price:",
+		"basedOnInputTokens": "(based on input tokens)",
+		"doesNotSupportImages": "Does not support images",
+		"supportsImages": "Supports images",
+		"doesNotSupportBrowserUse": "Does not support browser use",
+		"supportsBrowserUse": "Supports browser use",
+		"doesNotSupportPromptCaching": "Does not support prompt caching",
+		"supportsPromptCaching": "Supports prompt caching",
+		"contextWindowLabel": "Context Window:",
+		"cacheWritesPriceLabel": "Cache writes price:",
+		"cacheReadsPriceLabel": "Cache reads price:"
+	},
+	"modelSelector": {
+		"label": "Model",
+		"selectModelPlaceholder": "Select a model..."
+	},
+	"groqModelPicker": {
+		"modelLabel": "Model",
+		"searchPlaceholder": "Search and select a model...",
+		"clearSearch": "Clear search",
+		"fetchModelsDescription": "The extension automatically fetches the latest list of models available on ",
+		"groqLinkText": "Groq.",
+		"unsureModelChoice": "If you're unsure which model to choose, Cline works best with ",
+		"recommendedModel": "llama-3.3-70b-versatile."
+	},
+	"huggingFaceModelPicker": {
+		"modelLabel": "Model",
+		"searchPlaceholder": "Search models...",
+		"clearSearch": "Clear search"
+	},
+	"ollamaModelPicker": {
+		"searchPlaceholder": "Search and select a model...",
+		"clearSearch": "Clear search"
+	},
+	"preferredLanguageSetting": {
+		"english": "🇺🇸 English",
+		"korean": "🇰🇷 Korean",
+		"chinese": "🇨🇳 Chinese",
+		"japanese": "🇯🇵 Japanese"
+	},
+	"anthropicProvider": {
+		"switchTo1MContext": "Switch to 1M context window model",
+		"switchTo200KContext": "Switch to 200K context window model"
+	},
+	"askSageProvider": {
+		"apiUrlPlaceholder": "Enter AskSage API URL...",
+		"apiUrlLabel": "AskSage API URL"
+	},
+	"bedrockProvider": {
+		"apiKey": "API Key",
+		"awsProfile": "AWS Profile",
+		"awsCredentials": "AWS Credentials",
+		"profileNamePlaceholder": "Enter profile name (default if empty)",
+		"profileNameLabel": "AWS Profile Name",
+		"bedrockApiKeyPlaceholder": "Enter Bedrock Api Key",
+		"bedrockApiKeyLabel": "AWS Bedrock Api Key",
+		"accessKeyPlaceholder": "Enter Access Key...",
+		"accessKeyLabel": "AWS Access Key",
+		"secretKeyPlaceholder": "Enter Secret Key...",
+		"secretKeyLabel": "AWS Secret Key",
+		"sessionTokenPlaceholder": "Enter Session Token...",
+		"sessionTokenLabel": "AWS Session Token",
+		"awsRegionLabel": "AWS Region",
+		"selectRegionPlaceholder": "Select a region...",
+		"useCustomVpcEndpoint": "Use custom VPC endpoint",
+		"vpcEndpointPlaceholder": "Enter VPC Endpoint URL (optional)",
+		"useCrossRegionInference": "Use cross-region inference",
+		"usePromptCaching": "Use prompt caching",
+		"profileCredentialsHelpText": "Using AWS Profile credentials from ~/.aws/credentials. Leave profile name empty to use the default profile. These credentials are only used locally to make API requests from this extension.",
+		"defaultCredentialsHelpText": "Authenticate by either providing the keys above or use the default AWS credential providers, i.e. ~/.aws/credentials or environment variables. These credentials are only used locally to make API requests from this extension.",
+		"modelLabel": "Model",
+		"selectModelPlaceholder": "Select a model...",
+		"customModelOption": "Custom",
+		"customModelDescription": "Select \"Custom\" when using the Application Inference Profile in Bedrock. Enter the Application Inference Profile ARN in the Model ID field.",
+		"customModelIdPlaceholder": "Enter custom model ID...",
+		"modelIdLabel": "Model ID",
+		"baseInferenceModelLabel": "Base Inference Model",
+		"selectBaseModelPlaceholder": "Select a model..."
+	},
+	"clineProvider": {
+		"sortUnderlyingProviderRouting": "Sort underlying provider routing",
+		"defaultOption": "Default",
+		"priceOption": "Price",
+		"throughputOption": "Throughput",
+		"latencyOption": "Latency",
+		"defaultSortingDescription": "Default behavior is to load balance requests across providers (like AWS, Google Vertex, Anthropic), prioritizing price while considering provider uptime",
+		"priceSortingDescription": "Sort providers by price, prioritizing the lowest cost provider",
+		"throughputSortingDescription": "Sort providers by throughput, prioritizing the provider with the highest throughput (may increase cost)",
+		"latencySortingDescription": "Sort providers by response time, prioritizing the provider with the lowest latency"
+	},
+	"doubaoProvider": {
+		"providerName": "Doubao",
+		"modelLabel": "Model"
+	},
+	"fireworksProvider": {
+		"providerName": "Fireworks",
+		"modelLabel": "Model"
+	},
+	"groqProvider": {
+		"providerName": "Groq"
+	},
+	"huaweiCloudMaasProvider": {
+		"providerName": "Huawei Cloud MaaS",
+		"modelLabel": "Model"
+	},
+	"huggingFaceProvider": {
+		"apiKeyPlaceholder": "Enter API Key...",
+		"apiKeyLabel": "Hugging Face API Key",
+		"apiKeyHelpText": "This key is stored locally and only used to make API requests from this extension. We don’t show pricing here because it depends on your Hugging Face provider settings and isn’t consistently available via their API.",
+		"getApiKeyLinkText": "Get your API key here"
+	},
+	"liteLlmProvider": {
+		"baseUrlPlaceholder": "Default: http://localhost:4000",
+		"baseUrlLabel": "Base URL (optional)",
+		"apiKeyPlaceholder": "Default: noop",
+		"apiKeyLabel": "API Key",
+		"modelIdPlaceholder": "e.g. anthropic/claude-sonnet-4-20250514",
+		"modelIdLabel": "Model ID",
+		"usePromptCachingLabel": "Use prompt caching (GA)",
+		"promptCachingHelpText": "Prompt caching requires a supported provider and model",
+		"extendedThinkingHelpText": "Extended thinking is available for models such as Sonnet-4, o3-mini, Deepseek R1, etc. More info on",
+		"thinkingModeConfigurationLinkText": "thinking mode configuration",
+		"modelConfigurationLabel": "Model Configuration",
+		"supportsImagesLabel": "Supports Images",
+		"contextWindowSizeLabel": "Context Window Size",
+		"maxOutputTokensLabel": "Max Output Tokens",
+		"temperatureLabel": "Temperature",
+		"unifiedInterfaceHelpText": "LiteLLM provides a unified interface to access various LLM providers' models. See their",
+		"quickstartGuideLinkText": "quickstart guide",
+		"forMoreInformationText": "for more information."
+	},
+	"moonshotProvider": {
+		"entrypoint": "Moonshot Entrypoint"
+	},
+	"mistralProvider": {
+		"name": "Mistral"
+	},
+	"nebiusProvider": {
+		"apiKeyHelpText": "This key is stored locally and only used to make API requests from this extension. (Note: Cline uses complex prompts and works best with Claude models. Less capable models may not work as expected.)"
+	},
+	"ollamaProvider": {
+		"baseUrlLabel": "Use custom base URL",
+		"baseUrlPlaceholder": "Default: http://localhost:11434",
+		"apiKeyHelpText": "Optional API key for authenticated Ollama instances or cloud services. Leave empty for local installations.",
+		"apiKeyPlaceholder": "Enter API Key (optional)...",
+		"modelLabel": "Model",
+		"modelPickerPlaceholder": {
+			"search": "Search and select a model...",
+			"example": "e.g. llama3.1"
+		},
+		"fetchModelsError": "Unable to fetch models from Ollama server. Please ensure Ollama is running and accessible, or enter the model ID manually above.",
+		"modelContextWindowLabel": "Model Context Window",
+		"requestTimeoutPlaceholder": "Default: 30000 (30 seconds)",
+		"requestTimeoutLabel": "Request Timeout (ms)",
+		"requestTimeoutDescription": "Maximum time in milliseconds to wait for API responses before timing out.",
+		"descriptionPart1": "Ollama allows you to run models locally on your computer. For instructions on how to get started, see their",
+		"quickstartGuideLinkText": "quickstart guide.",
+		"notePrefix": "Note:",
+		"noteText": "Cline uses complex prompts and works best with Claude models. Less capable models may not work as expected."
+	},
+	"openAiCompatibleProvider": {
+		"baseUrlPlaceholder": "Enter base URL...",
+		"baseUrlLabel": "Base URL",
+		"modelIdPlaceholder": "Enter Model ID...",
+		"modelIdLabel": "Model ID",
+		"customHeadersLabel": "Custom Headers",
+		"addHeaderButton": "Add Header",
+		"headerNamePlaceholder": "Header name",
+		"headerValuePlaceholder": "Header value",
+		"removeHeaderButton": "Remove",
+		"azureApiVersionLabel": "Set Azure API version",
+		"azureApiVersionPlaceholder": "Default: {{defaultValue}}",
+		"modelConfigurationLabel": "Model Configuration",
+		"supportsImagesCheckbox": "Supports Images",
+		"supportsBrowserUseCheckbox": "Supports browser use",
+		"enableR1FormatCheckbox": "Enable R1 messages format",
+		"contextWindowSizeLabel": "Context Window Size",
+		"maxOutputTokensLabel": "Max Output Tokens",
+		"inputPriceLabel": "Input Price / 1M tokens",
+		"outputPriceLabel": "Output Price / 1M tokens",
+		"temperatureLabel": "Temperature",
+		"notePrefix": "Note:",
+		"noteText": "Cline uses complex prompts and works best with Claude models. Less capable models may not work as expected."
+	},
+	"openRouterProvider": {
+		"balanceDisplay": {
+			"loading": "Loading...",
+			"tooltip": "Remaining balance: {{remainingBalance}}\\nLimit: {{limit}}\\nUsage: {{usage}}",
+			"label": "Balance: {{formattedBalance}}"
+		},
+		"apiKeyPlaceholder": "Enter API Key...",
+		"apiKeyLabel": "OpenRouter API Key",
+		"getApiKeyButton": "Get OpenRouter API Key",
+		"apiKeyHelpText": "This key is stored locally and only used to make API requests from this extension.",
+		"sortUnderlyingProviderRoutingCheckbox": "Sort underlying provider routing",
+		"defaultOption": "Default",
+		"priceOption": "Price",
+		"throughputOption": "Throughput",
+		"latencyOption": "Latency",
+		"defaultSortingDescription": "Default behavior is to load balance requests across providers (like AWS, Google Vertex, Anthropic), prioritizing price while considering provider uptime",
+		"priceSortingDescription": "Sort providers by price, prioritizing the lowest cost provider",
+		"throughputSortingDescription": "Sort providers by throughput, prioritizing the provider with the highest throughput (may increase cost)",
+		"latencySortingDescription": "Sort providers by response time, prioritizing the provider with the lowest latency"
+	},
+	"qwenCodeProvider": {
+		"apiConfigurationTitle": "Qwen Code API Configuration",
+		"oauthCredentialsPathPlaceholder": "~/.qwen/oauth_creds.json",
+		"oauthCredentialsPathLabel": "OAuth Credentials Path",
+		"oauthCredentialsPathDescription": "Path to your Qwen OAuth credentials file. Use ~/.qwen/oauth_creds.json or provide a custom path.",
+		"oauthAuthenticationDescription": "Qwen Code is an OAuth-based API that requires authentication through the official Qwen client. You'll need to set up OAuth credentials first.",
+		"getStartedTitle": "To get started:",
+		"installClientStep": "Install the official Qwen client",
+		"authenticateStep": "Authenticate using your account",
+		"credentialsStoredStep": "OAuth credentials will be stored automatically",
+		"setupInstructionsLinkText": "Setup Instructions"
+	},
+	"qwenProvider": {
+		"name": "Qwen",
+		"modelLabel": "Model"
+	},
+	"requestyProvider": {
+		"name": "Requesty",
+		"useCustomBaseUrlLabel": "Use custom base URL",
+		"customBaseUrlPlaceholder": "Custom base URL"
+	},
+	"sambanovaProvider": {
+		"name": "SambaNova"
+	},
+	"sapAiCoreProvider": {
+		"clientIdLabel": "AI Core Client Id",
+		"clientIdSetMessage": "Client Id is set. To change it, please re-enter the value.",
+		"clientSecretPlaceholder": "Enter AI Core Client Secret...",
+		"clientSecretLabel": "AI Core Client Secret",
+		"clientSecretSetMessage": "Client Secret is set. To change it, please re-enter the value.",
+		"baseUrlPlaceholder": "Enter AI Core Base URL...",
+		"baseUrlLabel": "AI Core Base URL",
+		"tokenUrlPlaceholder": "Enter AI Core Auth URL...",
+		"tokenUrlLabel": "AI Core Auth URL",
+		"resourceGroupPlaceholder": "Enter AI Core Resource Group...",
+		"resourceGroupLabel": "AI Core Resource Group",
+		"credentialsHelpText": "These credentials are stored locally and only used to make API requests from this extension.",
+		"apiAccessInfoLinkText": "You can find more information about SAP AI Core API access here.",
+		"orchestrationModeLabel": "Orchestration Mode",
+		"orchestrationModeDescriptionEnabled": "When enabled, provides access to all available models without requiring individual deployments.",
+		"orchestrationModeDescriptionDisabled": "When disabled, provides access only to deployed models in your AI Core service instance.",
+		"loadingModels": "Loading models...",
+		"modelFetchError": "Failed to fetch models. Please check your configuration.",
+		"noModelsFound": "Unable to fetch models from SAP AI Core service instance. Please check your SAP AI Core configuration or ensure your deployments are deployed and running in the service instance",
+		"configureCredentialsPrompt": "Please configure your SAP AI Core credentials to see available models."
+	},
+	"togetherProvider": {
+		"name": "Together",
+		"modelIdPlaceholder": "Enter Model ID...",
+		"modelIdLabel": "Model ID",
+		"notePrefix": "Note:",
+		"noteText": "Cline uses complex prompts and works best with Claude models. Less capable models may not work as expected."
+	},
+	"vercelAiGatewayProvider": {
+		"apiKeyLabel": "Vercel AI Gateway API Key",
+		"getApiKeyLinkText": "You can get a Vercel AI Gateway API key by signing up here.",
+		"modelIdPlaceholder": "Enter Model ID (e.g., openai/gpt-4o)...",
+		"modelIdLabel": "Model ID",
+		"fetchModelsError": "Unable to fetch models from Vercel AI Gateway.",
+		"noteText": "Note: Free tier users will see $0 costs as these requests are provided at no charge by Vercel AI Gateway."
+	},
+	"vertexProvider": {
+		"projectIdPlaceholder": "Enter Project ID...",
+		"projectIdLabel": "Google Cloud Project ID",
+		"regionLabel": "Google Cloud Region",
+		"selectRegionPlaceholder": "Select a region...",
+		"descriptionPart1": "To use Google Cloud Vertex AI, you need to",
+		"linkText1": "1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,",
+		"linkText2": "2) install the Google Cloud CLI › configure Application Default Credentials."
+	},
+	"vsCodeLmProvider": {
+		"languageModelLabel": "Language Model",
+		"selectModelPlaceholder": "Select a model...",
+		"descriptionPart1": "The VS Code Language Model API allows you to run models provided by other VS Code extensions (including but not limited to GitHub Copilot). The easiest way to get started is to install the",
+		"copilotExtensionLinkText": "Copilot extension",
+		"descriptionPart2": "from the VS Marketplace and enabling Claude 4 Sonnet.",
+		"noteText": "Note: This is a very experimental integration and may not work as expected."
+	},
+	"xaiProvider": {
+		"name": "X AI",
+		"notePrefix": "Note:",
+		"noteText": "Cline uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
+		"modifyReasoningEffortLabel": "Modify reasoning effort",
+		"reasoningEffortLabel": "Reasoning Effort",
+		"reasoningEffortDescription": "High effort may produce more thorough analysis but takes longer and uses more tokens."
+	},
+	"zaiProvider": {
+		"entrypointLabel": "Z AI Entrypoint",
+		"entrypointDescription": "Please select the appropriate API entrypoint based on your location. If you are in China, choose open.bigmodel.cn. Otherwise, choose api.z.ai.",
+		"name": "Z AI"
+	},
+	"requestyModelPicker": {
+		"searchPlaceholder": "Search and select a model...",
+		"clearSearch": "Clear search",
+		"descriptionPart1": "The extension automatically fetches the latest list of models available on ",
+		"requestyLinkText": "Requesty.",
+		"descriptionPart2": "If you're unsure which model to choose, Cline works best with ",
+		"recommendedModel": "anthropic/claude-3-7-sonnet-latest."
+	},
+	"sapAiCoreModelPicker": {
+		"deployedModelsHeader": "── Deployed Models ──",
+		"notDeployedModelsHeader": "── Not Deployed Models ──"
 	}
 }

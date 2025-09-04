@@ -1,5 +1,6 @@
 import { doubaoModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { ModelInfoView } from "../common/ModelInfoView"
@@ -38,7 +39,7 @@ export const DoubaoProvider = ({ showModelOptions, isPopup, currentMode }: Douba
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("doubaoProvider.modelLabel", "settings")}
 						models={doubaoModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

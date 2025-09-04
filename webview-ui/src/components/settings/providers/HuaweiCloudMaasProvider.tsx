@@ -1,5 +1,6 @@
 import { huaweiCloudMaasModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { ModelInfoView } from "../common/ModelInfoView"
@@ -24,13 +25,13 @@ export const HuaweiCloudMaasProvider = ({ showModelOptions, isPopup, currentMode
 			<ApiKeyField
 				initialValue={apiConfiguration?.huaweiCloudMaasApiKey || ""}
 				onChange={(value) => handleFieldChange("huaweiCloudMaasApiKey", value)}
-				providerName="Huawei Cloud MaaS"
+				providerName={t("huaweiCloudMaasProvider.providerName", "settings")}
 				signupUrl="https://support.huaweicloud.com/intl/zh-cn/usermanual-maas/maas_01_0001.html"
 			/>
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("settings.modelSelector.label", "settings")}
 						models={huaweiCloudMaasModels}
 						onChange={(e: any) => {
 							const modelId = e.target.value

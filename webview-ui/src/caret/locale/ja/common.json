@@ -39,23 +39,24 @@
 		"subTitle": {
 			"caretRules": "Caretルール (.caretrules)",
 			"CaretRules": "Caretルール (.Caretrules)",
-			"cursorRules": "Cursorルール (.cursorrules)",
-			"windsurfRules": "Windsurfルール (.windsurfrules)"
+			"cursorRules": "カーソルルール (.cursorrules)",
+			"windsurfRules": "ウィンドサーフ ルール (.windsurfrules)"
 		},
 		"button": {
 			"selectPersonaTemplate": "テンプレートキャラクターを選択",
 			"changePersonaTemplate": "ペルソナテンプレートを変更"
 		},
 		"description": {
-			"personaManagement": "あなたのコーディングスタイルと好みに合うAIペルソナを選択してください。",
 			"rulesDescription": "ルールを通じてCaretにシステムレベルのガイダンスを提供できます。プロジェクト別またはすべての会話に対するコンテキストと好みを持続的に含める方法と考えてください。",
-			"workflowsDescription": "ワークフローを通じて、サービスのデプロイやPRの提出のような反復的なタスクをCaretが実行できるよう一連のステップを定義できます。ワークフローを実行するには、チャットで /ワークフロー名 を入力してください。"
+			"workflowsDescription": "ワークフローを通じて、サービスのデプロイやPRの提出のような反復的なタスクをCaretが実行できるよう一連のステップを定義できます。ワークフローを実行するには、チャットで /ワークフロー名 を入力してください。",
+			"personaManagement": "Choose an AI persona that matches your coding style and preferences."
 		},
 		"action": {
 			"newRuleFile": "新しいルールファイル..."
 		},
 		"title": "Caretルール＆ワークフロー管理",
-		"toggleError": "ルールトグルエラー"
+		"toggleError": "ルールトグルエラー",
+		"docsLink": "Docs"
 	},
 	"mode": {
 		"chatbot": {
@@ -89,24 +90,35 @@
 	"settings": {
 		"uiLanguage": {
 			"label": "UI言語",
-			"description": "Caretのユーザーインターフェース要素（メニュー、ボタン、メッセージなど）に使用される言語です。"
+			"description": "Caretのユーザーインターフェース要素（メニュー、ボタン、メッセージなど）に使用される言語です。",
+			"option": {
+				"ko": "Korean (한국어)",
+				"en": "English",
+				"ja": "Japanese (日本語)",
+				"zh": "Chinese (中文)"
+			}
 		},
 		"preferredLanguage": {
 			"label": "AI応答言語",
 			"description": "Caretが会話に使用する言語です。"
 		},
 		"modeSystem": {
-			"label": "モード設定",
-			"description": "Caretモード設定を有効にすると、CaretのPlan/Actモードを使用できます。",
 			"options": {
 				"caret": "Caret",
 				"Caret": "Caret",
-				"cline": "Cline"
-			}
+				"cline": "Caret"
+			},
+			"label": "Mode Settings",
+			"description": "Enable Caret mode settings to use Caret's Plan/Act modes."
 		},
 		"separateModels": {
 			"label": "チャットボットとエージェントモードで異なるモデルを使用",
 			"description": "チャットボットとエージェントモードを切り替える際、各モードで使用したAPIとモデル設定が維持されます。例えば、専門相談（チャットボット）には強力な推論モデルを、協力開発（エージェント）にはコスト効率的なコーディングモデルを使用する場合に便利です。"
+		},
+		"openAIReasoningEffort": {
+			"high": "High (More detailed, slower, higher cost)",
+			"label": "OpenAI Reasoning Effort",
+			"description": "Adjust the reasoning effort for OpenAI models. Higher effort may lead to more detailed responses but can be slower and more costly."
 		}
 	},
 	"account": {
@@ -125,26 +137,30 @@
 		"subscriptionFree": "無料",
 		"subscriptionBasic": "ベーシック",
 		"payAsYouGo": "従量課金",
-		"payAsYouGoDescription": "* サブスクリプションの使用量をすべて使い切った後、追加料金が発生します。"
+		"payAsYouGoDescription": "* サブスクリプションの使用量をすべて使い切った後、追加料金が発生します。",
+		"organization": "Organization",
+		"title": "Account"
 	},
 	"common": {
-		"and": "と"
+		"and": "と",
+		"scrollToBottom": "一番下までスクロール",
+		"defaultValue": "0"
 	},
 	"chat": {
-		"caretHasQuestion": "キャレットから質問があります",
+		"caretHasQuestion": "Caretからの質問です",
 		"typeMessage": "メッセージを入力してください...",
 		"typeTaskHere": "タスクを入力してください...",
-		"cancel": "キャンセル",
-		"apiRequestCancelled": "APIリクエストがキャンセルされました",
-		"apiStreamingFailed": "APIストリーミングが失敗しました",
+		"apiRequestCancelled": "APIリクエストはキャンセルされました",
+		"apiStreamingFailed": "APIストリーミングに失敗しました",
 		"apiRequest": "APIリクエスト",
 		"apiRequestFailed": "APIリクエスト失敗",
 		"apiRequestPending": "APIリクエスト中...",
-		"caretWantsToCreateNewFile": "キャレットが新しいファイルを作成しようとしています:",
+		"caretWantsToCreateNewFile": "Caretは新しいファイルを作成しようとしています:",
 		"placeholderHint": "コンテキストには@、スラッシュコマンドとワークフローには/を入力し、Shiftキーを押しながらドラッグしてファイル/画像を追加",
-		"caretIsUsingBrowser": "キャレットがブラウザを使用しています:",
-		"caretWantsToUseBrowser": "キャレットがブラウザを使用しようとしています:",
-		"executeCommand": "Caretはこのコマンドを実行しようとしています:"
+		"caretIsUsingBrowser": "Caretはブラウザを使用しています:",
+		"caretWantsToUseBrowser": "Caretはブラウザを使用しようとしています:",
+		"executeCommand": "Caretはこのコマンドを実行しようとしています:",
+		"cancel": "Cancel"
 	},
 	"modelInfo": {
 		"supportsImages": "画像をサポート",
@@ -239,6 +255,20 @@
 		"getGeminiApiKey": "こちらでサインアップしてGemini APIキーを取得できます。",
 		"comingSoon": "近日追加予定",
 		"providerComingSoon": "{{provider}}サポートは今後のアップデートで追加される予定です。",
+		"millionTokens": "百万トークン",
+		"tokens": "トークン",
+		"systemMessages": {
+			"viewedTopLevelFiles": "Caretはこのディレクトリのトップレベルファイルを確認しました:",
+			"wantsToViewTopLevelFiles": "Caretはこのディレクトリのトップレベルファイルを確認しようとしています:",
+			"viewedFilesRecursively": "Caretはこのディレクトリ内のすべてのファイルを再帰的に確認しました:",
+			"wantsToViewFilesRecursively": "Caretはこのディレクトリ内のすべてのファイルを再帰的に確認しようとしています:",
+			"viewedCodeDefinitions": "Caretはこのディレクトリで使用されているソースコード定義名を確認しました:",
+			"wantsToViewCodeDefinitions": "Caretはこのディレクトリで使用されているソースコード定義名を確認しようとしています:",
+			"wantsToSearchDirectory": "Caretはこのディレクトリで検索しようとしています:",
+			"fetchedContentFromUrl": "CaretはこのURLからコンテンツを取得しました:",
+			"wantsToFetchContentFromUrl": "CaretはこのURLからコンテンツを取得しようとしています:",
+			"taskCompleted": "タスク完了"
+		},
 		"geminiApiKey": "Gemini APIキー",
 		"geminiModelStrong": "Gemini 2.5 Pro Preview 06-05 (強力)",
 		"geminiModelCostEffective": "Gemini 2.5 Flash Preview 05-20 (コスト効率)",
@@ -248,17 +278,21 @@
 		"whatCanIDo": "何をお手伝いしましょうか？",
 		"recentTasks": "最近のタスク",
 		"noRecentTasks": "最近のタスクはありません",
-		"viewAllHistory": "すべての履歴を表示"
+		"viewAllHistory": "すべての履歴を表示",
+		"title": "Welcome to Caret! 🎉",
+		"subtitle": "Your AI-powered coding assistant",
+		"description": "Caret is an AI coding assistant that helps you write, debug, and improve your code. Let's get started!",
+		"getStarted": "Get Started",
+		"learnMore": "Learn More"
 	},
 	"telemetry": {
 		"helpImprove": "Caretの改善にご協力ください",
 		"experimentalFeatures": "（実験的機能にアクセス）",
-		"description": "Caretはバグ修正と拡張機能の改善のために匿名のエラーと使用データを収集します。コード、プロンプト、個人情報は送信されません。",
 		"settingsLink": "この設定は設定で無効にできます。",
-		"closeBannerAria": "バナーを閉じてテレメトリを有効にする"
+		"closeBannerAria": "バナーを閉じてテレメトリを有効にする",
+		"description": "Caret collects anonymous error and usage data to help us fix bugs and improve the extension. No code, prompts, or personal information is ever sent."
 	},
 	"history": {
-		"title": "履歴",
 		"deleteAllHistory": "すべての履歴を削除",
 		"fuzzySearchPlaceholder": "履歴を検索...",
 		"sortNewest": "最新順",
@@ -269,10 +303,10 @@
 		"filterWorkspace": "ワークスペース",
 		"filterFavorites": "お気に入り",
 		"selectAll": "すべて選択",
-		"selectNone": "選択解除"
+		"selectNone": "選択解除",
+		"title": "History"
 	},
 	"mcp": {
-		"title": "MCPサーバー",
 		"marketplace": "マーケットプレイス",
 		"remoteServers": "リモートサーバー",
 		"installed": "インストール済み",
@@ -280,9 +314,10 @@
 		"configureServers": "MCPサーバーを設定",
 		"noMatchingServers": "一致するMCPサーバーが見つかりません",
 		"noServersFound": "マーケットプレイスにMCPサーバーが見つかりません",
-		"description": "モデルコンテキストプロトコルにより、ローカルで実行されているMCPサーバーと通信し、Clineの機能を拡張する追加のツールとリソースを提供します。",
 		"autoApprove": "自動承認",
-		"autoApproveAllTools": "すべてのツールを自動承認"
+		"autoApproveAllTools": "すべてのツールを自動承認",
+		"title": "MCP Servers",
+		"description": "The Model Context Protocol enables communication with locally running MCP servers that provide additional tools and resources to extend Caret's capabilities."
 	},
 	"autoApprove": {
 		"addQuickAccess": "クイックアクセスメニューに追加",
@@ -318,11 +353,11 @@
 		"previousFeatures": {
 			"claude1M": {
 				"title": "Claude Sonnet 4用1Mコンテキスト",
-				"description": "Cline/OpenRouterユーザーは即座にアクセス、Anthropicユーザーはティア4が必要、Bedrockユーザーはサポートされた地域にいる必要があります。"
+				"description": "Caret/OpenRouterユーザーは即座にアクセス、Anthropicユーザーはティア4が必要、Bedrockユーザーはサポートされた地域にいる必要があります。"
 			},
 			"optimizedClaude4": {
 				"title": "Claude 4に最適化",
-				"description": "ClineはClaude 4モデルファミリーで動作するように最適化され、パフォーマンス、信頼性、新機能が向上しました。"
+				"description": "CaretはClaude 4モデルファミリーで動作するように最適化され、パフォーマンス、信頼性、新機能が向上しました。"
 			},
 			"workflows": {
 				"title": "ワークフロー",
@@ -331,5 +366,9 @@
 		},
 		"joinUs": "次でご参加ください",
 		"forMoreUpdates": "さらなるアップデートのために！"
+	},
+	"rulesModal": {
+		"tooltip": {},
+		"ariaLabel": {}
 	}
 }

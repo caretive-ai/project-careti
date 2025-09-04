@@ -5,6 +5,9 @@
 		"letsGo": "Let's Go!",
 		"save": "Save",
 		"cancel": "Cancel",
+		"done": "Done",
+		"runCommand": "Run Command",
+		"reject": "Reject",
 		"setupApiOrLocal": "Setup My API Key or Local LLM",
 		"notifyCaretAccount": "Notify Me for Caret Subscription",
 		"saveAndStart": "Save and Start"
@@ -128,7 +131,7 @@
 			"options": {
 				"caret": "Caret",
 				"Caret": "Caret",
-				"cline": "Cline"
+				"cline": "Caret"
 			}
 		},
 		"separateModels": {
@@ -153,10 +156,13 @@
 		"subscriptionBasic": "Basic",
 		"payAsYouGo": "Pay as you go",
 		"organization": "Organization",
-		"payAsYouGoDescription": "* Additional charges apply after all subscription usage is exhausted."
+		"payAsYouGoDescription": "* Additional charges apply after all subscription usage is exhausted.",
+		"title": "Account"
 	},
 	"common": {
-		"and": "and"
+		"and": "and",
+		"scrollToBottom": "Scroll to bottom",
+		"defaultValue": "0"
 	},
 	"chat": {
 		"caretHasQuestion": "Caret has a question",
@@ -270,15 +276,15 @@
 		"millionTokens": "million tokens",
 		"tokens": "tokens",
 		"systemMessages": {
-			"viewedTopLevelFiles": "Cline viewed the top level files in this directory:",
-			"wantsToViewTopLevelFiles": "Cline wants to view the top level files in this directory:",
-			"viewedFilesRecursively": "Cline recursively viewed all files in this directory:",
-			"wantsToViewFilesRecursively": "Cline wants to recursively view all files in this directory:",
-			"viewedCodeDefinitions": "Cline viewed source code definition names used in this directory:",
-			"wantsToViewCodeDefinitions": "Cline wants to view source code definition names used in this directory:",
-			"wantsToSearchDirectory": "Cline wants to search this directory for:",
-			"fetchedContentFromUrl": "Cline fetched content from this URL:",
-			"wantsToFetchContentFromUrl": "Cline wants to fetch content from this URL:",
+			"viewedTopLevelFiles": "Caret viewed the top level files in this directory:",
+			"wantsToViewTopLevelFiles": "Caret wants to view the top level files in this directory:",
+			"viewedFilesRecursively": "Caret recursively viewed all files in this directory:",
+			"wantsToViewFilesRecursively": "Caret wants to recursively view all files in this directory:",
+			"viewedCodeDefinitions": "Caret viewed source code definition names used in this directory:",
+			"wantsToViewCodeDefinitions": "Caret wants to view source code definition names used in this directory:",
+			"wantsToSearchDirectory": "Caret wants to search this directory for:",
+			"fetchedContentFromUrl": "Caret fetched content from this URL:",
+			"wantsToFetchContentFromUrl": "Caret wants to fetch content from this URL:",
 			"taskCompleted": "Task Completed"
 		},
 		"geminiApiKey": "Gemini API Key",
@@ -316,7 +322,7 @@
 		"configureServers": "Configure MCP servers",
 		"noMatchingServers": "No matching MCP servers found",
 		"noServersFound": "No MCP servers found in marketplace",
-		"description": "The Model Context Protocol enables communication with locally running MCP servers that provide additional tools and resources to extend Cline's capabilities.",
+		"description": "The Model Context Protocol enables communication with locally running MCP servers that provide additional tools and resources to extend Caret's capabilities.",
 		"autoApprove": "Auto-approve",
 		"autoApproveAllTools": "Auto-approve all tools"
 	},
@@ -335,30 +341,30 @@
 		"features": {
 			"freeStealth": {
 				"title": "Free Stealth Model",
-				"description": "Advanced stealth model with 262K context window designed for complex coding tasks. Available in the Cline provider for free."
+				"description": "Advanced stealth model with 262K context window designed for complex coding tasks. Available in the Caret provider for free."
 			},
 			"focusChain": {
 				"title": "Focus Chain",
-				"description": "Keeps cline focused on long-horizon tasks with automatic todo list management, breaking down complex tasks into manageable steps with real-time progress tracking and passive reminders."
+				"description": "Keeps Caret focused on long-horizon tasks with automatic todo list management, breaking down complex tasks into manageable steps with real-time progress tracking and passive reminders."
 			},
 			"autoCompact": {
 				"title": "Auto Compact",
-				"description": "Auto summarizes your task and next steps when your conversation approaches the model's context window limit. This significantly helps Cline stay on track for long task sessions!"
+				"description": "Auto summarizes your task and next steps when your conversation approaches the model's context window limit. This significantly helps Caret stay on track for long task sessions!"
 			},
 			"deepPlanning": {
 				"title": "Deep Planning",
-				"description": "New /deep-planning slash command transforms Cline into an architect who investigates your codebase, asks clarifying questions, and creates a comprehensive plan before writing any code."
+				"description": "New /deep-planning slash command transforms Caret into an architect who investigates your codebase, asks clarifying questions, and creates a comprehensive plan before writing any code."
 			}
 		},
 		"previousUpdates": "Previous Updates:",
 		"previousFeatures": {
 			"claude1M": {
 				"title": "1M Context for Claude Sonnet 4",
-				"description": "Cline/OpenRouter users get instant access, Anthropic users need Tier 4, and Bedrock users must be on a supported region."
+				"description": "Caret/OpenRouter users get instant access, Anthropic users need Tier 4, and Bedrock users must be on a supported region."
 			},
 			"optimizedClaude4": {
 				"title": "Optimized for Claude 4",
-				"description": "Cline is now optimized to work with the Claude 4 family of models, resulting in improved performance, reliability, and new capabilities."
+				"description": "Caret is now optimized to work with the Claude 4 family of models, resulting in improved performance, reliability, and new capabilities."
 			},
 			"workflows": {
 				"title": "Workflows",

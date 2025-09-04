@@ -1,5 +1,6 @@
 import { fireworksModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { ModelInfoView } from "../common/ModelInfoView"
@@ -30,11 +31,11 @@ export const FireworksProvider = ({ currentMode, isPopup, showModelOptions }: Fi
 			<ApiKeyField
 				initialValue={apiConfiguration?.fireworksApiKey || ""}
 				onChange={(value) => handleFieldChange("fireworksApiKey", value)}
-				providerName="Fireworks"
+				providerName={t("fireworksProvider.providerName", "settings")}
 				signupUrl="https://fireworks.ai/"
 			/>
 			<ModelSelector
-				label="Model"
+				label={t("settings.modelSelector.label", "settings")}
 				models={fireworksModels}
 				onChange={(e: any) => {
 					handleModeFieldChange(

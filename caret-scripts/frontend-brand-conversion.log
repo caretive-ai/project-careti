@@ -15,3 +15,12 @@
 [2025-09-03T23:33:06.451Z] INFO: 🔄 Validating 27 JSON files
 [2025-09-03T23:33:06.454Z] INFO: ✅ JSON validation completed: 27 files valid
 [2025-09-03T23:33:06.454Z] INFO: ✅ Caret → CodeCenter conversion completed successfully
+[2025-09-04T16:58:37.855Z] INFO: ✅ Configuration loaded: undefined
+[2025-09-04T16:58:37.858Z] INFO: 🔧 Frontend Brand Converter vundefined
+[2025-09-04T16:58:37.858Z] INFO: 📋 Config: Frontend branding conversion for Caret ↔ CodeCenter
+[2025-09-04T16:58:37.858Z] INFO: 🎯 Direction: forward
+[2025-09-04T16:58:37.858Z] INFO: 🏗️ Dry run: true
+[2025-09-04T16:58:37.858Z] INFO: 🚀 Starting Caret → CodeCenter conversion
+[2025-09-04T16:58:37.858Z] ERROR: ❌ Conversion failed: The "paths[1]" argument must be of type string. Received undefined
+[2025-09-04T16:58:37.858Z] ERROR: ❌ Failed to restore backup: The "paths[1]" argument must be of type string. Received undefined
+[2025-09-04T16:58:37.858Z] ERROR: 💥 Conversion failed: The "paths[1]" argument must be of type string. Received undefined

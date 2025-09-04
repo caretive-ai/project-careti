@@ -66,6 +66,7 @@ export interface ExtensionState {
 	distinctId: string
 	globalClineRulesToggles: ClineRulesToggles
 	localClineRulesToggles: ClineRulesToggles
+	localCaretRulesToggles: ClineRulesToggles // CARET MODIFICATION: Add caret rules
 	localWorkflowToggles: ClineRulesToggles
 	globalWorkflowToggles: ClineRulesToggles
 	localCursorRulesToggles: ClineRulesToggles
@@ -76,6 +77,8 @@ export interface ExtensionState {
 	focusChainSettings: FocusChainSettings
 	focusChainFeatureFlagEnabled?: boolean
 	customPrompt?: string
+	// CARET MODIFICATION: Add caretBanner for Caret welcome page logo
+	caretBanner?: string
 }
 
 export interface ClineMessage {

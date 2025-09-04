@@ -23,6 +23,13 @@ export async function updateApiConfigurationProto(
 		// Convert proto ApiConfiguration to application ApiConfiguration
 		const appApiConfiguration = convertProtoToApiConfiguration(request.apiConfiguration)
 
+		// CARET MODIFICATION: Add logging for API configuration updates
+		console.log(`🔧 [Backend] API Config Update:`, {
+			provider: appApiConfiguration.planModeApiProvider || appApiConfiguration.actModeApiProvider,
+			caretApiKey: appApiConfiguration.caretApiKey ? "***SET***" : "not set",
+			hasApiKey: !!appApiConfiguration.apiKey,
+		})
+
 		// Update the API configuration in storage
 		controller.stateManager.setApiConfiguration(appApiConfiguration)
 
@@ -34,6 +41,13 @@ export async function updateApiConfigurationProto(
 
 		// Post updated state to webview
 		await controller.postStateToWebview()
+
+		// CARET MODIFICATION: Log final state for verification
+		const finalState = controller.stateManager.getApiConfiguration()
+		console.log(`✅ [Backend] Final stored state:`, {
+			provider: finalState?.planModeApiProvider || finalState?.actModeApiProvider,
+			caretApiKey: finalState?.caretApiKey ? "***STORED***" : "not stored",
+		})
 
 		return Empty.create()
 	} catch (error) {

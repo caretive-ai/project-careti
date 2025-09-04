@@ -270,6 +270,9 @@ message ModelsApiConfiguration {
   optional string qwen_code_oauth_path = 70;
   optional string dify_api_key = 71;
   optional string dify_base_url = 72;
+  
+  // CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
+  optional string caret_api_key = 1072;
 
   // Plan mode configurations
   optional ApiProvider plan_mode_api_provider = 100;

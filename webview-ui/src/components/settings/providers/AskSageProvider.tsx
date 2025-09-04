@@ -1,5 +1,6 @@
 import { askSageDefaultURL, askSageModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { DebouncedTextField } from "../common/DebouncedTextField"
@@ -30,7 +31,7 @@ export const AskSageProvider = ({ showModelOptions, isPopup, currentMode }: AskS
 	return (
 		<div>
 			<ApiKeyField
-				helpText="This key is stored locally and only used to make API requests from this extension."
+				helpText={t("askSageProvider.apiKeyHelpText", "settings")}
 				initialValue={apiConfiguration?.asksageApiKey || ""}
 				onChange={(value) => handleFieldChange("asksageApiKey", value)}
 				providerName="AskSage"
@@ -39,16 +40,16 @@ export const AskSageProvider = ({ showModelOptions, isPopup, currentMode }: AskS
 			<DebouncedTextField
 				initialValue={apiConfiguration?.asksageApiUrl || askSageDefaultURL}
 				onChange={(value) => handleFieldChange("asksageApiUrl", value)}
-				placeholder="Enter AskSage API URL..."
+				placeholder={t("askSageProvider.apiUrlPlaceholder", "settings")}
 				style={{ width: "100%" }}
 				type="url">
-				<span style={{ fontWeight: 500 }}>AskSage API URL</span>
+				<span style={{ fontWeight: 500 }}>{t("askSageProvider.apiUrlLabel", "settings")}</span>
 			</DebouncedTextField>
 
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("askSageProvider.modelLabel", "settings")}
 						models={askSageModels}
 						onChange={(e) =>
 							handleModeFieldChange(

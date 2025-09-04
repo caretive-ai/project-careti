@@ -2,6 +2,7 @@ import { EmptyRequest } from "@shared/proto/cline/common"
 import {
 	ClineRulesToggles,
 	RefreshedRules,
+	ToggleCaretRuleRequest,
 	ToggleClineRuleRequest,
 	ToggleCursorRuleRequest,
 	ToggleWindsurfRuleRequest,
@@ -22,12 +23,14 @@ const ClineRulesToggleModal: React.FC = () => {
 	const {
 		globalClineRulesToggles = {},
 		localClineRulesToggles = {},
+		localCaretRulesToggles = {}, // CARET MODIFICATION: Add missing localCaretRulesToggles
 		localCursorRulesToggles = {},
 		localWindsurfRulesToggles = {},
 		localWorkflowToggles = {},
 		globalWorkflowToggles = {},
 		setGlobalClineRulesToggles,
 		setLocalClineRulesToggles,
+		setLocalCaretRulesToggles,
 		setLocalCursorRulesToggles,
 		setLocalWindsurfRulesToggles,
 		setLocalWorkflowToggles,
@@ -51,6 +54,10 @@ const ClineRulesToggleModal: React.FC = () => {
 					}
 					if (response.localClineRulesToggles?.toggles) {
 						setLocalClineRulesToggles(response.localClineRulesToggles.toggles)
+					}
+					if (response.localCaretRulesToggles?.toggles) {
+						// CARET MODIFICATION: Add missing handler
+						setLocalCaretRulesToggles(response.localCaretRulesToggles.toggles)
 					}
 					if (response.localCursorRulesToggles?.toggles) {
 						setLocalCursorRulesToggles(response.localCursorRulesToggles.toggles)
@@ -82,6 +89,11 @@ const ClineRulesToggleModal: React.FC = () => {
 		.sort(([a], [b]) => a.localeCompare(b))
 
 	const cursorRules = Object.entries(localCursorRulesToggles || {})
+		.map(([path, enabled]): [string, boolean] => [path, enabled as boolean])
+		.sort(([a], [b]) => a.localeCompare(b))
+
+	// CARET MODIFICATION: Add caretRules for display
+	const caretRules = Object.entries(localCaretRulesToggles || {})
 		.map(([path, enabled]): [string, boolean] => [path, enabled as boolean])
 		.sort(([a], [b]) => a.localeCompare(b))
 
@@ -117,6 +129,25 @@ const ClineRulesToggleModal: React.FC = () => {
 			})
 			.catch((error) => {
 				console.error("Error toggling Cline rule:", error)
+			})
+	}
+
+	// CARET MODIFICATION: Add toggleCaretRule function
+	const toggleCaretRule = (rulePath: string, enabled: boolean) => {
+		FileServiceClient.toggleCaretRule(
+			ToggleCaretRuleRequest.create({
+				rulePath,
+				enabled,
+			}),
+		)
+			.then((response) => {
+				// Update the local state with the response
+				if (response.toggles) {
+					setLocalCaretRulesToggles(response.toggles)
+				}
+			})
+			.catch((error) => {
+				console.error("Error toggling Caret rule:", error)
 			})
 	}
 
@@ -304,9 +335,17 @@ const ClineRulesToggleModal: React.FC = () => {
 
 							{/* Local Rules Section */}
 							<div style={{ marginBottom: -10 }}>
-								<div className="text-sm font-normal mb-2">
-									{t("clineRulesToggleModal.workspaceRules", "chat")}
-								</div>
+								<div className="text-sm font-normal mb-2">{t("rules.section.workspaceRules", "settings")}</div>
+								{/* CARET MODIFICATION: Add .caretrules display */}
+								<RulesToggleList
+									rules={caretRules}
+									toggleRule={toggleCaretRule} // CARET MODIFICATION: Use dedicated caret toggle
+									listGap="small"
+									isGlobal={false}
+									ruleType={"caret"}
+									showNewRule={false}
+									showNoRules={false}
+								/>
 								<RulesToggleList
 									isGlobal={false}
 									listGap="small"

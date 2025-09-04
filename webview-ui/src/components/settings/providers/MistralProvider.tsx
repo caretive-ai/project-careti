@@ -1,3 +1,4 @@
+import { t } from "@/caret/utils/i18n"
 import { mistralModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -31,14 +32,14 @@ export const MistralProvider = ({ showModelOptions, isPopup, currentMode }: Mist
 			<ApiKeyField
 				initialValue={apiConfiguration?.mistralApiKey || ""}
 				onChange={(value) => handleFieldChange("mistralApiKey", value)}
-				providerName="Mistral"
+				providerName={t("mistralProvider.providerName", "settings")}
 				signupUrl="https://console.mistral.ai/codestral"
 			/>
 
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("settings.modelSelector.label", "settings")}
 						models={mistralModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

@@ -248,6 +248,13 @@ Otherwise, if you have not completed the task and do not need additional informa
 	clineRulesLocalFileInstructions: (cwd: string, content: string) =>
 		`# .clinerules\n\nThe following is provided by a root-level .clinerules file where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
 
+	// CARET MODIFICATION: Added .caretrules support for rule priority system
+	caretRulesLocalFileInstructions: (cwd: string, content: string) =>
+		`# .caretrules\n\nThe following is provided by a root-level .caretrules file where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
+
+	caretRulesLocalDirectoryInstructions: (cwd: string, content: string) =>
+		`# .caretrules/\n\nThe following is provided by a root-level .caretrules/ directory where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
+
 	windsurfRulesLocalFileInstructions: (cwd: string, content: string) =>
 		`# .windsurfrules\n\nThe following is provided by a root-level .windsurfrules file where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
 

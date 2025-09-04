@@ -7,12 +7,22 @@ import enPersona from "../locale/en/persona.json"
 import enSettings from "../locale/en/settings.json"
 import enValidateApiConf from "../locale/en/validate-api-conf.json"
 import enWelcome from "../locale/en/welcome.json"
+import enHistory from "../locale/en/history.json"
+import enBrowser from "../locale/en/browser.json"
+import enChat from "../locale/en/chat.json"
+import enMenu from "../locale/en/menu.json"
+import enModels from "../locale/en/models.json"
 import jaAnnouncement from "../locale/ja/announcement.json"
 import jaCommon from "../locale/ja/common.json"
 import jaPersona from "../locale/ja/persona.json"
 import jaSettings from "../locale/ja/settings.json"
 import jaValidateApiConf from "../locale/ja/validate-api-conf.json"
 import jaWelcome from "../locale/ja/welcome.json"
+import jaHistory from "../locale/ja/history.json"
+import jaBrowser from "../locale/ja/browser.json"
+import jaChat from "../locale/ja/chat.json"
+import jaMenu from "../locale/ja/menu.json"
+import jaModels from "../locale/ja/models.json"
 // CARET MODIFICATION: Announcement component translations
 import koAnnouncement from "../locale/ko/announcement.json"
 import koCommon from "../locale/ko/common.json"
@@ -20,13 +30,29 @@ import koPersona from "../locale/ko/persona.json"
 import koSettings from "../locale/ko/settings.json"
 import koValidateApiConf from "../locale/ko/validate-api-conf.json"
 import koWelcome from "../locale/ko/welcome.json"
+import koHistory from "../locale/ko/history.json"
+import koBrowser from "../locale/ko/browser.json"
+import koChat from "../locale/ko/chat.json"
+import koMenu from "../locale/ko/menu.json"
+import koModels from "../locale/ko/models.json"
 import zhAnnouncement from "../locale/zh/announcement.json"
 import zhCommon from "../locale/zh/common.json"
 import zhPersona from "../locale/zh/persona.json"
 import zhSettings from "../locale/zh/settings.json"
 import zhValidateApiConf from "../locale/zh/validate-api-conf.json"
 import zhWelcome from "../locale/zh/welcome.json"
+import zhHistory from "../locale/zh/history.json"
+import zhBrowser from "../locale/zh/browser.json"
+import zhChat from "../locale/zh/chat.json"
+import zhMenu from "../locale/zh/menu.json"
+import zhModels from "../locale/zh/models.json"
 import { performanceMonitor } from "./i18n-performance"
+// CARET MODIFICATION: 언어 변환 로직 import
+import { getLanguageKey, LLM_TO_UI_LANGUAGE_MAP, type LanguageDisplay } from "@shared/Languages"
+// CARET MODIFICATION: 로깅 유틸리티 import
+import { caretWebviewLogger } from "./CaretWebviewLogger"
+// CARET MODIFICATION: URL constants for template variable processing
+import { CARET_URLS, CARET_LOCALIZED_URLS, getLocalizedUrl } from "../constants/urls"
 
 // CARET MODIFICATION: Removed urls dependency for cline-latest compatibility
 export type SupportedLanguage = "ko" | "en" | "ja" | "zh"
@@ -40,6 +66,11 @@ let translations = {
 		settings: koSettings,
 		"validate-api-conf": koValidateApiConf,
 		announcement: koAnnouncement,
+		history: koHistory,
+		browser: koBrowser,
+		chat: koChat,
+		menu: koMenu,
+		models: koModels,
 	},
 	en: {
 		common: enCommon,
@@ -48,6 +79,11 @@ let translations = {
 		settings: enSettings,
 		"validate-api-conf": enValidateApiConf,
 		announcement: enAnnouncement,
+		history: enHistory,
+		browser: enBrowser,
+		chat: enChat,
+		menu: enMenu,
+		models: enModels,
 	},
 	ja: {
 		common: jaCommon,
@@ -56,6 +92,11 @@ let translations = {
 		settings: jaSettings,
 		"validate-api-conf": jaValidateApiConf,
 		announcement: jaAnnouncement,
+		history: jaHistory,
+		browser: jaBrowser,
+		chat: jaChat,
+		menu: jaMenu,
+		models: jaModels,
 	},
 	zh: {
 		common: zhCommon,
@@ -64,6 +105,11 @@ let translations = {
 		settings: zhSettings,
 		"validate-api-conf": zhValidateApiConf,
 		announcement: zhAnnouncement,
+		history: zhHistory,
+		browser: zhBrowser,
+		chat: zhChat,
+		menu: zhMenu,
+		models: zhModels,
 	},
 }
 
@@ -74,7 +120,7 @@ export const setTranslationsForTesting = (mockTranslations: typeof translations)
 }
 
 // CARET MODIFICATION: 웹뷰 전역 UI 언어 관리
-let currentEffectiveLanguage: SupportedLanguage = "en" // 기본 언어 'en'
+let currentEffectiveLanguage: SupportedLanguage | null = null // ExtensionState에서 동적으로 가져오기
 const SUPPORTED_LANGUAGES: SupportedLanguage[] = ["ko", "en", "ja", "zh"]
 
 /**
@@ -82,33 +128,126 @@ const SUPPORTED_LANGUAGES: SupportedLanguage[] = ["ko", "en", "ja", "zh"]
  * @param lang 설정할 언어 코드
  */
 export const setGlobalUILanguage = (lang: SupportedLanguage) => {
+	const previousLang = currentEffectiveLanguage
+	
 	if (SUPPORTED_LANGUAGES.includes(lang)) {
 		currentEffectiveLanguage = lang
+		// 실제 변경이 일어날 때만 로그 출력
+		if (previousLang !== lang) {
+			console.log(`🌐 [i18n] UI language changed: "${previousLang}" → "${lang}"`)
+		}
 	} else {
 		currentEffectiveLanguage = "en" // 지원하지 않는 경우 영어로 폴백
+		if (previousLang !== "en") {
+			console.log(`⚠️ [i18n] Unsupported language "${lang}", fallback to "en"`)
+		}
 	}
+}
+
+// CARET MODIFICATION: ExtensionState에서 언어를 가져오는 콜백 함수
+let getExtensionLanguage: (() => SupportedLanguage) | null = null
+
+/**
+ * ExtensionState의 preferredLanguage를 SupportedLanguage로 변환합니다.
+ * @param preferredLanguage ExtensionState에서 가져온 언어 ("Korean - 한국어" 등)
+ */
+// 성능 최적화: 변환 결과 캐싱
+const languageConversionCache = new Map<string, SupportedLanguage>()
+
+export const convertPreferredLanguageToSupported = (preferredLanguage: string | undefined): SupportedLanguage => {
+	// 캐시 확인으로 중복 로그 방지
+	if (preferredLanguage && languageConversionCache.has(preferredLanguage)) {
+		return languageConversionCache.get(preferredLanguage)!
+	}
+	
+	// 초기 변환 시에만 로그 출력
+	const isFirstConversion = !languageConversionCache.has(preferredLanguage || "")
+	if (isFirstConversion) {
+		console.log(`🔄 [i18n] Converting language: "${preferredLanguage}"`)
+	}
+	
+	if (!preferredLanguage) {
+		if (isFirstConversion) {
+			console.log(`❌ [i18n] No language provided, defaulting to "en"`)
+		}
+		return "en"
+	}
+	
+	// LanguageDisplay → LanguageKey 변환
+	const languageKey = getLanguageKey(preferredLanguage as LanguageDisplay)
+	
+	// LanguageKey → UILanguageKey 변환 (zh-CN → zh 등)
+	const uiLanguageKey = LLM_TO_UI_LANGUAGE_MAP[languageKey]
+	
+	if (!uiLanguageKey) {
+		if (isFirstConversion) {
+			console.log(`❌ [i18n] Language "${preferredLanguage}" not supported, fallback to "en"`)
+		}
+		return "en" // UI 지원하지 않는 언어는 영어로 fallback
+	}
+	
+	// UILanguageKey를 SupportedLanguage로 매핑 (zh-CN → zh)
+	const supportedLanguage = uiLanguageKey === "zh-CN" ? "zh" : uiLanguageKey
+	
+	// SupportedLanguage에 포함되는지 확인
+	if (SUPPORTED_LANGUAGES.includes(supportedLanguage as SupportedLanguage)) {
+		if (isFirstConversion) {
+			console.log(`✅ [i18n] Language converted: "${preferredLanguage}" → "${supportedLanguage}"`)
+		}
+		
+		// 결과 캐싱
+		if (preferredLanguage) {
+			languageConversionCache.set(preferredLanguage, supportedLanguage as SupportedLanguage)
+		}
+		return supportedLanguage as SupportedLanguage
+	}
+	
+	if (isFirstConversion) {
+		console.log(`❌ [i18n] Language "${supportedLanguage}" not supported, fallback to "en"`)
+	}
+	
+	// 결과 캐싱
+	if (preferredLanguage) {
+		languageConversionCache.set(preferredLanguage, "en")
+	}
+	return "en" // 지원하지 않으면 영어 fallback
+}
+
+/**
+ * ExtensionState에서 현재 언어를 가져오는 콜백을 설정합니다.
+ * CaretI18nContext에서 호출됩니다.
+ */
+export const setExtensionLanguageProvider = (provider: () => SupportedLanguage) => {
+	getExtensionLanguage = provider
 }
 
 // 내부적으로 현재 적용된 UI 언어를 가져오는 함수
 const getInternalCurrentLanguage = (): SupportedLanguage => {
-	return currentEffectiveLanguage
+	// ExtensionState에서 언어를 가져올 수 있으면 사용
+	if (getExtensionLanguage) {
+		const extensionLang = getExtensionLanguage()
+		return extensionLang
+	}
+	
+	// 설정된 전역 언어가 있으면 사용
+	if (currentEffectiveLanguage) {
+		return currentEffectiveLanguage
+	}
+	
+	// 마지막 fallback은 영어
+	return "en"
 }
 
-// 기존 getCurrentLanguage 함수는 외부에서 직접 사용하지 않도록 하거나, getInternalCurrentLanguage로 대체합니다.
-// 여기서는 혼동을 피하기 위해 주석 처리하거나 삭제하는 것을 고려할 수 있으나,
-// 일단은 내부 로직 변경을 우선합니다.
+// CARET MODIFICATION: getCurrentLanguage를 getInternalCurrentLanguage로 대체
 export const getCurrentLanguage = (): SupportedLanguage => {
-	// 이 함수는 이제 getInternalCurrentLanguage를 통해 전역 상태를 반영해야 합니다.
-	// 하지만 App.tsx에서 setGlobalUILanguage를 호출하기 전까지는
-	// Context가 완전히 준비되지 않았을 수 있으므로 주의가 필요합니다.
-	// 우선은 이전처럼 동작하되, t 함수 등에서는 getInternalCurrentLanguage를 사용합니다.
-	return "en" // 이 부분은 App.tsx 연동 후 역할 재검토 필요
+	return getInternalCurrentLanguage()
 }
 
 // Helper function to get nested value using dot notation
 const getNestedValue = (obj: any, path: string): any => {
 	return path.split(".").reduce((current, key) => current?.[key], obj)
 }
+
 
 // CARET MODIFICATION: 한글 조사 규칙 매핑
 const koreanJosaRules = {
@@ -220,6 +359,15 @@ const replaceTemplateVariables = (
 
 			return match
 		})
+
+		// CARET MODIFICATION: URL template variables replacement
+		result = result
+			.replace(/\{\{educationLink\}\}/g, getLocalizedUrl("EDUCATION_PROGRAM", language))
+			.replace(/\{\{geminiCreditLink\}\}/g, getLocalizedUrl("GEMINI_CREDIT_GUIDE", language))
+			.replace(/\{\{supportModelListLink\}\}/g, getLocalizedUrl("SUPPORT_MODEL_LIST", language))
+			.replace(/\{\{caretGithub\}\}/g, CARET_URLS.GITHUB_REPOSITORY)
+			.replace(/\{\{caretService\}\}/g, CARET_URLS.CARET_SERVICE)
+			.replace(/\{\{caretiveCompany\}\}/g, CARET_URLS.CARETIVE_COMPANY)
 
 		// 추가된 동적 옵션 변수 치환
 		if (options) {

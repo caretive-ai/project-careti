@@ -1,87 +1,208 @@
-import { BooleanRequest, EmptyRequest } from "@shared/proto/cline/common"
-import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
-import { memo, useEffect, useState } from "react"
-import ClineLogoWhite from "@/assets/ClineLogoWhite"
-// CARET MODIFICATION: Add i18n support
-import { t } from "@/caret/utils/i18n"
-import ApiOptions from "@/components/settings/ApiOptions"
+// CARET MODIFICATION: Refactored to use caret-main architecture with improved navigation
+// Original Cline backed up to: WelcomeView.tsx.cline
+import React from "react"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import { useEffect, useState } from "react"
+import { BooleanRequest } from "@shared/proto/cline/common"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { AccountServiceClient, StateServiceClient } from "@/services/grpc-client"
+import { StateServiceClient } from "@/services/grpc-client"
 import { validateApiConfiguration } from "@/utils/validate"
+import CaretWelcomeSection from "@/caret/components/CaretWelcomeSection"
+import CaretApiSetup from "@/caret/components/CaretApiSetup"
+import CaretFooter from "@/caret/components/CaretFooter"
+import { t } from "@/caret/utils/i18n"
+import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
+import PreferredLanguageSetting from "@/components/settings/PreferredLanguageSetting"
 
-const WelcomeView = memo(() => {
-	const { apiConfiguration, mode } = useExtensionState()
+const WelcomeView = () => {
+	const { apiConfiguration, mode, version, caretBanner } = useExtensionState()
+	const { currentLanguage } = useCaretI18n()
 	const [apiErrorMessage, setApiErrorMessage] = useState<string | undefined>(undefined)
 	const [showApiOptions, setShowApiOptions] = useState(false)
 
-	const disableLetsGoButton = apiErrorMessage != null
+	const disableLetsGoButton = !!apiErrorMessage
 
-	const handleLogin = () => {
-		AccountServiceClient.accountLoginClicked(EmptyRequest.create()).catch((err) =>
-			console.error("Failed to get login URL:", err),
-		)
+	const handleSubmitApiKey = async () => {
+		try {
+			// CARET MODIFICATION: API 설정 완료 후 History/Home으로 이동 (Cline의 Settings 페이지 대신)
+			console.log("[WelcomeView] API configuration saved, completing welcome flow")
+			
+			// Welcome view를 완료로 표시
+			await StateServiceClient.setWelcomeViewCompleted(BooleanRequest.create({ value: true }))
+			
+			// API 설정 페이지 닫기
+			setShowApiOptions(false)
+			
+			console.log("[WelcomeView] Welcome view completed, user will see History/Home")
+		} catch (error) {
+			console.error("Failed to complete welcome view:", error)
+		}
 	}
 
-	const handleSubmit = async () => {
-		try {
-			await StateServiceClient.setWelcomeViewCompleted(BooleanRequest.create({ value: true }))
-		} catch (error) {
-			console.error("Failed to update API configuration or complete welcome view:", error)
-		}
+	const handleShowApiOptions = async () => {
+		console.log("[WelcomeView] Starting API setup")
+		setShowApiOptions(true)
+	}
+
+	const handleHideApiOptions = () => {
+		setShowApiOptions(false)
+	}
+
+	const handleOpenLink = (link: string) => {
+		console.log(`Opening external link: ${link}`)
+		// TODO: Implement proper external link opening
 	}
 
 	useEffect(() => {
 		setApiErrorMessage(validateApiConfiguration(mode, apiConfiguration))
 	}, [apiConfiguration, mode])
 
-	return (
-		<div className="fixed inset-0 p-0 flex flex-col">
-			<div className="h-full px-5 overflow-auto">
-				<h2>{t("greeting", "welcome")}</h2>
-				<div className="flex justify-center my-5">
-					<ClineLogoWhite className="size-16" />
+	// Helper to render sections consistently
+	const renderSection = (
+		headerKey: string,
+		bodyKey: string,
+		buttonTextKey?: string,
+		buttonHandler?: () => void,
+		buttonAppearance: "primary" | "secondary" = "secondary",
+		children?: React.ReactNode,
+	) => (
+		<CaretWelcomeSection
+			headerKey={headerKey}
+			bodyKey={bodyKey}
+			buttonConfig={
+				buttonTextKey && buttonHandler
+					? {
+							textKey: buttonTextKey,
+							handler: buttonHandler,
+							appearance: buttonAppearance,
+						}
+					: undefined
+			}
+			allowHtml={true}>
+			{children}
+		</CaretWelcomeSection>
+	)
+
+	// API 설정 페이지를 완전히 별도 페이지로 렌더링
+	if (showApiOptions) {
+		return (
+			<div
+				data-testid="caret-api-setup-page"
+				className="caret-api-setup-page"
+				style={{
+					position: "fixed",
+					top: 0,
+					left: 0,
+					right: 0,
+					bottom: 0,
+					display: "flex",
+					flexDirection: "column",
+					backgroundColor: "var(--vscode-editor-background)",
+				}}>
+				<div
+					style={{
+						flex: 1,
+						padding: "20px",
+						overflowY: "auto",
+					}}>
+					{/* API 설정 컴포넌트 - 페이지 전체 */}
+					<CaretApiSetup
+						onSubmit={handleSubmitApiKey}
+						onBack={handleHideApiOptions}
+						disabled={disableLetsGoButton}
+						errorMessage={apiErrorMessage || undefined}
+					/>
 				</div>
-				<p>
-					I can do all kinds of tasks thanks to breakthroughs in{" "}
-					<VSCodeLink className="inline" href="https://www.anthropic.com/claude/sonnet">
-						Claude 4 Sonnet's
-					</VSCodeLink>
-					agentic coding capabilities and access to tools that let me create & edit files, explore complex projects, use
-					a browser, and execute terminal commands <i>(with your permission, of course)</i>. I can even use MCP to
-					create new tools and extend my own capabilities.
-				</p>
+			</div>
+		)
+	}
 
-				<p className="text-[var(--vscode-descriptionForeground)]">
-					Sign up for an account to get started for free, or use an API key that provides access to models like Claude
-					3.7 Sonnet.
-				</p>
+	// 메인 웰컴 페이지
+	return (
+		<div
+			data-testid="caret-welcome-view"
+			className="caret-welcome"
+			style={{
+				position: "fixed",
+				top: 0,
+				left: 0,
+				right: 0,
+				bottom: 0,
+				display: "flex",
+				flexDirection: "column",
+			}}>
+			<div
+				style={{
+					flex: 1,
+					padding: "15px",
+					overflowY: "auto",
+				}}>
+				<center style={{ marginBottom: "20px" }}>
+					{/* CARET MODIFICATION: Use agent_profile.png as the primary icon */}
+					<img
+						src={(window as any).agentProfileImage || 'D:/dev/caret-merging/assets/agent_profile.png'}
+						alt={t("imageAlt.caretBanner", "common")}
+						style={{
+							width: "80px",
+							height: "80px",
+							margin: "5px 0 15px",
+						}}
+					/>
+				</center>
 
-				<VSCodeButton appearance="primary" className="w-full mt-1" onClick={handleLogin}>
-					{t("getStarted.button", "welcome")}
-				</VSCodeButton>
+				{/* 첫 줄 타이틀 가운데 정렬 */}
+				<div style={{ textAlign: "center", marginBottom: "15px" }}>
+					<h2
+						style={{
+							fontSize: "16px",
+							fontWeight: "500",
+							margin: "0",
+							color: "var(--vscode-foreground)",
+						}}>
+						{t("coreFeatures.header", "welcome")}
+					</h2>
+				</div>
 
-				{!showApiOptions && (
-					<VSCodeButton
-						appearance="secondary"
-						className="mt-2.5 w-full"
-						onClick={() => setShowApiOptions(!showApiOptions)}>
-						Use your own API key
-					</VSCodeButton>
+				{renderSection("", "coreFeatures.description")}
+
+				{/* 언어 선택과 시작 섹션 */}
+				<CaretWelcomeSection headerKey="" bodyKey="" allowHtml={true}>
+					{/* CARET MODIFICATION: 언어 설정을 일반설정의 선호언어로 연결 */}
+					<div style={{ marginBottom: "20px" }}>
+						<PreferredLanguageSetting />
+					</div>
+
+					{/* 시작하기 버튼 */}
+					<div style={{ textAlign: "center" }}>
+						<VSCodeButton
+							appearance="primary"
+							onClick={handleShowApiOptions}
+							style={{
+								width: "90%",
+								padding: "8px 6px",
+								fontSize: "14px",
+								fontWeight: "bold",
+							}}>
+							{t("getStarted.button", "welcome")}
+						</VSCodeButton>
+					</div>
+				</CaretWelcomeSection>
+
+				{renderSection(
+					"community.header", 
+					"community.body", 
+					"community.githubLink", 
+					() => handleOpenLink("https://github.com/aicoding-caret/caret"), 
+					"secondary"
 				)}
 
-				<div className="mt-4.5">
-					{showApiOptions && (
-						<div>
-							<ApiOptions currentMode={mode} showModelOptions={false} />
-							<VSCodeButton className="mt-0.75" disabled={disableLetsGoButton} onClick={handleSubmit}>
-								Let's go!
-							</VSCodeButton>
-						</div>
-					)}
-				</div>
+				{renderSection("educationOffer.header", "educationOffer.body")}
+
+				{/* Footer 컴포넌트 */}
+				<CaretFooter />
 			</div>
 		</div>
 	)
-})
+}
 
 export default WelcomeView

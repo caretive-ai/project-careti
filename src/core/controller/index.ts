@@ -676,6 +676,7 @@ export class Controller {
 			distinctId,
 			globalClineRulesToggles: globalClineRulesToggles || {},
 			localClineRulesToggles: localClineRulesToggles || {},
+			localCaretRulesToggles: this.stateManager.getWorkspaceStateKey("localCaretRulesToggles") || {}, // CARET MODIFICATION: Add caret rules
 			localWindsurfRulesToggles: localWindsurfRulesToggles || {},
 			localCursorRulesToggles: localCursorRulesToggles || {},
 			localWorkflowToggles: workflowToggles || {},

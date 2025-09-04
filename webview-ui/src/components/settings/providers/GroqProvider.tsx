@@ -1,4 +1,5 @@
 import { Mode } from "@shared/storage/types"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import GroqModelPicker from "../GroqModelPicker"
@@ -25,7 +26,7 @@ export const GroqProvider = ({ showModelOptions, isPopup, currentMode }: GroqPro
 			<ApiKeyField
 				initialValue={apiConfiguration?.groqApiKey || ""}
 				onChange={(value) => handleFieldChange("groqApiKey", value)}
-				providerName="Groq"
+				providerName={t("groqProvider.providerName", "settings")}
 				signupUrl="https://console.groq.com/keys"
 			/>
 

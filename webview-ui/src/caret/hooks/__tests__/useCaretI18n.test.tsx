@@ -2,12 +2,13 @@
 import { act, renderHook } from "@testing-library/react"
 import React from "react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { CaretI18nProvider } from "../../context/CaretI18nContext"
-import { resetI18nPerformanceMetrics } from "../../utils/i18n"
-import { useCaretI18n } from "../useCaretI18n"
+import { CaretI18nProvider } from "@/caret/context/CaretI18nContext"
+import { ExtensionStateContextProvider } from "@/context/ExtensionStateContext"
+import { resetI18nPerformanceMetrics } from "@/caret/utils/i18n"
+import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
 
 // Mock the performance monitoring
-vi.mock("../../utils/i18n-performance", () => ({
+vi.mock("@/caret/utils/i18n-performance", () => ({
 	performanceMonitor: {
 		startTranslation: vi.fn(() => vi.fn()),
 		getCachedTranslation: vi.fn(() => undefined),
@@ -29,7 +30,9 @@ vi.mock("../../utils/i18n-performance", () => ({
 }))
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
-	<CaretI18nProvider defaultLanguage="en">{children}</CaretI18nProvider>
+	<ExtensionStateContextProvider>
+		<CaretI18nProvider defaultLanguage="en">{children}</CaretI18nProvider>
+	</ExtensionStateContextProvider>
 )
 
 describe("useCaretI18n Integration Tests", () => {

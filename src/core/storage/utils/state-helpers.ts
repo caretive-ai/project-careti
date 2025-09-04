@@ -129,12 +129,14 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 
 export async function readWorkspaceStateFromDisk(context: ExtensionContext): Promise<LocalState> {
 	const localClineRulesToggles = context.workspaceState.get("localClineRulesToggles") as ClineRulesToggles | undefined
+	const localCaretRulesToggles = context.workspaceState.get("localCaretRulesToggles") as ClineRulesToggles | undefined // CARET MODIFICATION: Add caret rules
 	const localWindsurfRulesToggles = context.workspaceState.get("localWindsurfRulesToggles") as ClineRulesToggles | undefined
 	const localCursorRulesToggles = context.workspaceState.get("localCursorRulesToggles") as ClineRulesToggles | undefined
 	const localWorkflowToggles = context.workspaceState.get("workflowToggles") as ClineRulesToggles | undefined
 
 	return {
 		localClineRulesToggles: localClineRulesToggles || {},
+		localCaretRulesToggles: localCaretRulesToggles || {}, // CARET MODIFICATION: Add caret rules
 		localWindsurfRulesToggles: localWindsurfRulesToggles || {},
 		localCursorRulesToggles: localCursorRulesToggles || {},
 		workflowToggles: localWorkflowToggles || {},

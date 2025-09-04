@@ -1,5 +1,6 @@
 import { liteLlmModelInfoSaneDefaults } from "@shared/api"
 import { Mode } from "@shared/storage/types"
+import { t } from "@/caret/utils/i18n"
 import { VSCodeCheckbox, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -40,27 +41,27 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 			<DebouncedTextField
 				initialValue={apiConfiguration?.liteLlmBaseUrl || ""}
 				onChange={(value) => handleFieldChange("liteLlmBaseUrl", value)}
-				placeholder={"Default: http://localhost:4000"}
+				placeholder={t("liteLlmProvider.baseUrlPlaceholder", "settings")}
 				style={{ width: "100%" }}
 				type="url">
-				<span style={{ fontWeight: 500 }}>Base URL (optional)</span>
+				<span style={{ fontWeight: 500 }}>{t("settings.baseUrlField.label", "settings")}</span>
 			</DebouncedTextField>
 			<DebouncedTextField
 				initialValue={apiConfiguration?.liteLlmApiKey || ""}
 				onChange={(value) => handleFieldChange("liteLlmApiKey", value)}
-				placeholder="Default: noop"
+				placeholder={t("liteLlmProvider.apiKeyPlaceholder", "settings")}
 				style={{ width: "100%" }}
 				type="password">
-				<span style={{ fontWeight: 500 }}>API Key</span>
+				<span style={{ fontWeight: 500 }}>{t("settings.apiKeyField.label", "settings")}</span>
 			</DebouncedTextField>
 			<DebouncedTextField
 				initialValue={liteLlmModelId || ""}
 				onChange={(value) =>
 					handleModeFieldChange({ plan: "planModeLiteLlmModelId", act: "actModeLiteLlmModelId" }, value, currentMode)
 				}
-				placeholder={"e.g. anthropic/claude-sonnet-4-20250514"}
+				placeholder={t("liteLlmProvider.modelIdPlaceholder", "settings")}
 				style={{ width: "100%" }}>
-				<span style={{ fontWeight: 500 }}>Model ID</span>
+				<span style={{ fontWeight: 500 }}>{t("settings.modelIdField.label", "settings")}</span>
 			</DebouncedTextField>
 
 			<div style={{ display: "flex", flexDirection: "column", marginTop: 10, marginBottom: 10 }}>
@@ -74,10 +75,10 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 								handleFieldChange("liteLlmUsePromptCache", isChecked)
 							}}
 							style={{ fontWeight: 500, color: "var(--vscode-charts-green)" }}>
-							Use prompt caching (GA)
+							{t("liteLlmProvider.usePromptCachingLabel", "settings")}
 						</VSCodeCheckbox>
 						<p style={{ fontSize: "12px", marginTop: 3, color: "var(--vscode-charts-green)" }}>
-							Prompt caching requires a supported provider and model
+							{t("liteLlmProvider.usePromptCachingDescription", "settings")}
 						</p>
 					</>
 				)}
@@ -90,11 +91,11 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 					marginTop: "5px",
 					color: "var(--vscode-descriptionForeground)",
 				}}>
-				Extended thinking is available for models such as Sonnet-4, o3-mini, Deepseek R1, etc. More info on{" "}
+				{t("liteLlmProvider.extendedThinkingDescription1", "settings")}{" "}
 				<VSCodeLink
 					href="https://docs.litellm.ai/docs/reasoning_content"
 					style={{ display: "inline", fontSize: "inherit" }}>
-					thinking mode configuration
+					{t("liteLlmProvider.extendedThinkingLink", "settings")}
 				</VSCodeLink>
 			</p>
 
@@ -117,7 +118,7 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 						fontWeight: 700,
 						textTransform: "uppercase",
 					}}>
-					Model Configuration
+					{t("liteLlmProvider.modelConfigurationLabel", "settings")}
 				</span>
 			</div>
 			{modelConfigurationSelected && (
@@ -135,7 +136,7 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 								currentMode,
 							)
 						}}>
-						Supports Images
+						{t("settings.modelInfoView.supportsImagesLabel", "settings")}
 					</VSCodeCheckbox>
 					<div style={{ display: "flex", gap: 10, marginTop: "5px" }}>
 						<DebouncedTextField
@@ -155,7 +156,7 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 								)
 							}}
 							style={{ flex: 1 }}>
-							<span style={{ fontWeight: 500 }}>Context Window Size</span>
+							<span style={{ fontWeight: 500 }}>{t("settings.modelInfoView.contextWindowLabel", "settings")}</span>
 						</DebouncedTextField>
 						<DebouncedTextField
 							initialValue={
@@ -174,7 +175,7 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 								)
 							}}
 							style={{ flex: 1 }}>
-							<span style={{ fontWeight: 500 }}>Max Output Tokens</span>
+							<span style={{ fontWeight: 500 }}>{t("settings.modelInfoView.maxOutputTokensLabel", "settings")}</span>
 						</DebouncedTextField>
 					</div>
 					<div style={{ display: "flex", gap: 10, marginTop: "5px" }}>
@@ -199,7 +200,7 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 									currentMode,
 								)
 							}}>
-							<span style={{ fontWeight: 500 }}>Temperature</span>
+							<span style={{ fontWeight: 500 }}>{t("settings.modelInfoView.temperatureLabel", "settings")}</span>
 						</DebouncedTextField>
 					</div>
 				</>
@@ -210,11 +211,11 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 					marginTop: "5px",
 					color: "var(--vscode-descriptionForeground)",
 				}}>
-				LiteLLM provides a unified interface to access various LLM providers' models. See their{" "}
+				{t("liteLlmProvider.description1", "settings")}{" "}
 				<VSCodeLink href="https://docs.litellm.ai/docs/" style={{ display: "inline", fontSize: "inherit" }}>
-					quickstart guide
+					{t("liteLlmProvider.quickstartGuideLink", "settings")}
 				</VSCodeLink>{" "}
-				for more information.
+				{t("liteLlmProvider.description2", "settings")}
 			</p>
 
 			{showModelOptions && (

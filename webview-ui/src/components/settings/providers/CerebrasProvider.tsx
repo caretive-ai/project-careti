@@ -1,5 +1,6 @@
 import { cerebrasModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { ModelInfoView } from "../common/ModelInfoView"
@@ -38,7 +39,7 @@ export const CerebrasProvider = ({ showModelOptions, isPopup, currentMode }: Cer
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("modelSelector.label", "settings")}
 						models={cerebrasModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

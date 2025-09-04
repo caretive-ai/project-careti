@@ -18,6 +18,7 @@ export const GlobalFileNames = {
 	groqModels: "groq_models.json",
 	basetenModels: "baseten_models.json",
 	mcpSettings: "caret_mcp_settings.json",
+	caretRules: ".caretrules", // CARET MODIFICATION: Added .caretrules support for rule priority system
 	clineRules: ".caretrules",
 	workflows: ".caretrules/workflows",
 	cursorRulesDir: ".cursor/rules",

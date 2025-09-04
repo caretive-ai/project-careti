@@ -46,6 +46,9 @@ service FileService {
   // Toggle a Windsurf rule (enable or disable)
   rpc toggleWindsurfRule(ToggleWindsurfRuleRequest) returns (ClineRulesToggles);
   
+  // CARET MODIFICATION: Toggle a Caret rule (enable or disable)
+  rpc toggleCaretRule(ToggleCaretRuleRequest) returns (ClineRulesToggles);
+  
   // Refreshes all rule toggles (Cline, External, and Workflows)
   rpc refreshRules(EmptyRequest) returns (RefreshedRules);
 
@@ -69,14 +72,22 @@ service FileService {
 message RefreshedRules {
   ClineRulesToggles global_cline_rules_toggles = 1;
   ClineRulesToggles local_cline_rules_toggles = 2;
-  ClineRulesToggles local_cursor_rules_toggles = 3;
-  ClineRulesToggles local_windsurf_rules_toggles = 4;
-  ClineRulesToggles local_workflow_toggles = 5;
-  ClineRulesToggles global_workflow_toggles = 6;
+  ClineRulesToggles local_caret_rules_toggles = 3; // CARET MODIFICATION: Add .caretrules support
+  ClineRulesToggles local_cursor_rules_toggles = 4;
+  ClineRulesToggles local_windsurf_rules_toggles = 5;
+  ClineRulesToggles local_workflow_toggles = 6;
+  ClineRulesToggles global_workflow_toggles = 7;
 }
 
 // Request to toggle a Windsurf rule
 message ToggleWindsurfRuleRequest {
+  Metadata metadata = 1;
+  string rule_path = 2;   // Path to the rule file
+  bool enabled = 3;       // Whether to enable or disable the rule
+}
+
+// CARET MODIFICATION: Request to toggle a Caret rule
+message ToggleCaretRuleRequest {
   Metadata metadata = 1;
   string rule_path = 2;   // Path to the rule file
   bool enabled = 3;       // Whether to enable or disable the rule

@@ -271,6 +271,12 @@ The project uses protobuf for type-safe communication:
 - **globalSettings**: Use `globalState` (user-wide)
 - **Consistency Rule**: Save and load must use same storage type
 
+### Protocol Buffer Field Numbering (Caret Extensions)
+- **Caret Fields**: Use `current_cline_max + 1000` to avoid merge conflicts
+- **Example**: If Cline's last field is `72`, Caret uses `1072+`
+- **Location**: `proto/cline/models.proto` ModelsApiConfiguration message
+- **Comment Format**: `// CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)`
+
 ### Testing Workflow
 ```bash
 # 1. Write integration test first (TDD RED)

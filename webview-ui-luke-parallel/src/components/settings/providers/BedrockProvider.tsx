@@ -54,7 +54,7 @@ export const BedrockProvider = ({ showModelOptions, isPopup, currentMode }: Bedr
 					placeholder="Enter profile name (default if empty)"
 					style={{ width: "100%" }}>
 					<span style={{ fontWeight: 500 }}>AWS Profile Name</span>
-				</DebouncedTextField>
+				</DebouncedTextField>i
 			) : apiConfiguration?.awsAuthentication === "apikey" ? (
 				<DebouncedTextField
 					initialValue={apiConfiguration?.awsBedrockApiKey ?? ""}

@@ -1,3 +1,4 @@
+import { t } from "@/caret/utils/i18n"
 import { UpdateSettingsRequest } from "@shared/proto/cline/state"
 import { Mode } from "@shared/storage/types"
 import { VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react"
@@ -34,7 +35,7 @@ const ApiConfigurationSection = ({ renderSectionHeader }: ApiConfigurationSectio
 									opacity: 1,
 									cursor: "pointer",
 								}}>
-								Plan Mode
+								{t("planMode", "settings")}
 							</TabButton>
 							<TabButton
 								disabled={currentTab === "act"}
@@ -44,7 +45,7 @@ const ApiConfigurationSection = ({ renderSectionHeader }: ApiConfigurationSectio
 									opacity: 1,
 									cursor: "pointer",
 								}}>
-								Act Mode
+								{t("actMode", "settings")}
 							</TabButton>
 						</div>
 
@@ -77,11 +78,10 @@ const ApiConfigurationSection = ({ renderSectionHeader }: ApiConfigurationSectio
 								console.error("Failed to update separate models setting:", error)
 							}
 						}}>
-						Use different models for Plan and Act modes
+						{t("useDifferentModels", "settings")}
 					</VSCodeCheckbox>
 					<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
-						Switching between Plan and Act mode will persist the API and model used in the previous mode. This may be
-						helpful e.g. when using a strong reasoning model to architect a plan for a cheaper coding model to act on.
+						{t("useDifferentModelsDescription", "settings")}
 					</p>
 				</div>
 			</Section>

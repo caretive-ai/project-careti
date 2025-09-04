@@ -1,6 +1,7 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
 import { ApiKeyField } from "../common/ApiKeyField"
@@ -27,15 +28,17 @@ const CaretProvider = ({ currentMode, isPopup, showModelOptions }: CaretProvider
 	return (
 		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
 			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
-				Caret provides high-quality AI models with optimized performance for coding tasks.
+				{t("providers.caret.description", "settings")}
 			</p>
 
 			<div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
 				<VSCodeButton appearance="primary" className="w-full" onClick={handleLogin} style={{ minWidth: "120px" }}>
-					Login to Caret
+					{t("providers.caret.login", "settings")}
 				</VSCodeButton>
 
-				<div style={{ textAlign: "center", color: "var(--vscode-descriptionForeground)", fontSize: 12 }}>or</div>
+				<div style={{ textAlign: "center", color: "var(--vscode-descriptionForeground)", fontSize: 12 }}>
+					{t("providers.caret.or", "settings")}
+				</div>
 
 				<ApiKeyField
 					initialValue={apiConfiguration?.caretApiKey || ""}
@@ -46,21 +49,27 @@ const CaretProvider = ({ currentMode, isPopup, showModelOptions }: CaretProvider
 			</div>
 
 			{apiConfiguration?.caretApiKey && (
-				<p style={{ fontSize: 12, color: "var(--vscode-foreground)", margin: 0 }}>✓ API key configured</p>
+				<p style={{ fontSize: 12, color: "var(--vscode-foreground)", margin: 0 }}>
+					{t("providers.caret.apiKeyConfigured", "settings")}
+				</p>
 			)}
 
 			<div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 8 }}>
-				<p style={{ fontSize: 12, color: "var(--vscode-descriptionForeground)", margin: 0 }}>Features:</p>
+				<p style={{ fontSize: 12, color: "var(--vscode-descriptionForeground)", margin: 0 }}>
+					{t("providers.caret.features", "settings")}
+				</p>
 				<ul style={{ fontSize: 11, color: "var(--vscode-descriptionForeground)", margin: 0, paddingLeft: 16 }}>
-					<li>Free tier available</li>
-					<li>Optimized models for coding</li>
-					<li>Fast response times</li>
-					<li>Korean language support</li>
+					<li>{t("providers.caret.feature1", "settings")}</li>
+					<li>{t("providers.caret.feature2", "settings")}</li>
+					<li>{t("providers.caret.feature3", "settings")}</li>
+					<li>{t("providers.caret.feature4", "settings")}</li>
 				</ul>
 			</div>
 
 			<p style={{ fontSize: 11, color: "var(--vscode-descriptionForeground)", margin: 0 }}>
-				Visit <VSCodeLink href="https://caret.team">caret.team</VSCodeLink> to sign up and get your API key.
+				{t("providers.caret.visit", "settings")}{" "}
+				<VSCodeLink href="https://caret.team">caret.team</VSCodeLink>{" "}
+				{t("providers.caret.getApiKey", "settings")}
 			</p>
 		</div>
 	)

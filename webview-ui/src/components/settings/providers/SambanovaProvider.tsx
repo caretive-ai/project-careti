@@ -1,3 +1,4 @@
+import { t } from "@/caret/utils/i18n"
 import { sambanovaModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -31,14 +32,14 @@ export const SambanovaProvider = ({ showModelOptions, isPopup, currentMode }: Sa
 			<ApiKeyField
 				initialValue={apiConfiguration?.sambanovaApiKey || ""}
 				onChange={(value) => handleFieldChange("sambanovaApiKey", value)}
-				providerName="SambaNova"
+				providerName={t("sambanovaProvider.providerName", "settings")}
 				signupUrl="https://docs.sambanova.ai/cloud/docs/get-started/overview"
 			/>
 
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("settings.modelSelector.label", "settings")}
 						models={sambanovaModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

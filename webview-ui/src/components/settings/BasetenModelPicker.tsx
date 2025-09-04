@@ -5,6 +5,7 @@ import { VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react"
 import { useMount } from "react-use"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { ModelsServiceClient } from "../../services/grpc-client"
 import { highlight } from "../history/HistoryView"
@@ -32,7 +33,7 @@ const BasetenModelPicker: React.FC<BasetenModelPickerProps> = ({ isPopup, curren
 	const handleModelChange = (newModelId: string) => {
 		// Only allow selection of models that are in the static basetenModels
 		if (!(newModelId in basetenModels)) {
-			console.warn(`Model ${newModelId} is not in the static basetenModels list`)
+			console.warn(t("settings.basetenModelPicker.modelNotStatic", "settings", { newModelId }))
 			return
 		}
 
@@ -76,7 +77,7 @@ const BasetenModelPicker: React.FC<BasetenModelPickerProps> = ({ isPopup, curren
 				setBasetenModels(filteredModels)
 			})
 			.catch((err) => {
-				console.error("Failed to refresh Baseten models:", err)
+				console.error(t("settings.basetenModelPicker.fetchModelsError", "settings"), err)
 				// On error, fall back to only static models
 				setBasetenModels({
 					[basetenDefaultModelId]: basetenModels[basetenDefaultModelId],
@@ -223,7 +224,7 @@ const BasetenModelPicker: React.FC<BasetenModelPickerProps> = ({ isPopup, curren
 			</style>
 			<div className="flex flex-col">
 				<label htmlFor="model-search">
-					<span className="font-medium">Model</span>
+					<span className="font-medium">{t("settings.modelSelector.label", "settings")}</span>
 				</label>
 				<div className="relative w-full" ref={dropdownRef}>
 					<VSCodeTextField
@@ -234,7 +235,7 @@ const BasetenModelPicker: React.FC<BasetenModelPickerProps> = ({ isPopup, curren
 							setIsDropdownVisible(true)
 						}}
 						onKeyDown={handleKeyDown}
-						placeholder="Search and select a model..."
+						placeholder={t("settings.basetenModelPicker.searchPlaceholder", "settings")}
 						style={{
 							width: "100%",
 							zIndex: BASETEN_MODEL_PICKER_Z_INDEX,
@@ -243,7 +244,7 @@ const BasetenModelPicker: React.FC<BasetenModelPickerProps> = ({ isPopup, curren
 						value={searchTerm}>
 						{searchTerm && (
 							<div
-								aria-label="Clear search"
+								aria-label={t("settings.basetenModelPicker.clearSearch", "settings")}
 								className="input-icon-button codicon codicon-close flex justify-center items-center h-full"
 								onClick={() => {
 									setSearchTerm("")
@@ -287,13 +288,15 @@ const BasetenModelPicker: React.FC<BasetenModelPickerProps> = ({ isPopup, curren
 				<ModelInfoView isPopup={isPopup} modelInfo={selectedModelInfo} selectedModelId={selectedModelId} />
 			) : (
 				<p className="text-xs mt-0 text-[var(--vscode-descriptionForeground)]">
-					The extension automatically fetches the latest list of models available on{" "}
+					{t("settings.basetenModelPicker.description", "settings")}{" "}
 					<VSCodeLink className="inline text-inherit" href="https://www.baseten.co/products/model-apis/">
 						Baseten.
 					</VSCodeLink>
-					If you're unsure which model to choose, Cline works best with{" "}
-					<VSCodeLink className="inline text-inherit" onClick={() => handleModelChange("moonshotai/Kimi-K2-Instruct")}>
-						moonshotai/Kimi-K2-Instruct.
+					{t("settings.modelPicker.unsureWhichModel", "settings")}{" "}
+					<VSCodeLink
+						className="inline text-inherit"
+						onClick={() => handleModelChange("moonshotai/Kimi-K2-Instruct")}>
+						{t("settings.basetenModelPicker.recommendedModel", "settings")}
 					</VSCodeLink>
 				</p>
 			)}

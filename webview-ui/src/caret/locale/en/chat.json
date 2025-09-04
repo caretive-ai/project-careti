@@ -38,7 +38,7 @@
 			"seeNewChanges": "See new changes",
 			"shellIntegration": {
 				"unavailable": "Shell Integration Unavailable",
-				"description": "Cline may have trouble viewing the command's output. Please update VSCode (<code>CMD/CTRL + Shift + P</code> → \"Update\") and make sure you're using a supported shell: zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\").",
+				"description": "Caret may have trouble viewing the command's output. Please update VSCode (<code>CMD/CTRL + Shift + P</code> → \"Update\") and make sure you're using a supported shell: zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\").",
 				"troubleshooting": "Still having trouble?"
 			},
 			"condenseConversation": "Caret wants to condense your conversation",
@@ -101,9 +101,9 @@
 			"troubleshootingGuide": "troubleshooting guide",
 			"period": ".",
 			"clickRetryBelow": "(Click \"Retry\" below)",
-			"signInToCline": "Sign in to Cline",
+			"signInToCline": "Sign in to Caret",
 			"diffError": "The model used search patterns that don't match anything in the file. Retrying...",
-			"clineTriedToAccess": "Cline tried to access",
+			"clineTriedToAccess": "Caret tried to access",
 			"isBlockedBy": "which is blocked by the",
 			"file": "file."
 		},
@@ -115,7 +115,7 @@
 			"providerModel": "Provider/Model",
 			"operatingSystem": "Operating System",
 			"systemInfo": "System Info",
-			"clineVersion": "Cline Version",
+			"clineVersion": "Caret Version",
 			"additionalContext": "Additional Context"
 		},
 		"serversToggleModal": {
@@ -129,6 +129,9 @@
 		},
 		"openDiskTaskHistoryButton.openDiskTaskHistory": "Open Disk Task History",
 		"taskHeader.task": "Task",
+		"taskHeader.tokens": "Tokens",
+		"taskHeader.cache": "Cache",
+		"taskHeader.disablingCheckpoints": "Disabling checkpoints.",
 		"taskHeader.closeTask": "Close task",
 		"taskHeader.seeMore": "See more",
 		"taskHeader.seeLess": "See less",
@@ -190,9 +193,9 @@
 	},
 	"telemetryBanner": {
 		"closeAndEnable": "Close banner and enable telemetry",
-		"helpImproveCline": "Help Improve Cline",
+		"helpImproveCline": "Help Improve Caret",
 		"accessExperimentalFeatures": "(and access experimental features)",
-		"dataCollectionInfo": "Cline collects error and usage data to help us fix bugs and improve the extension. No code, prompts, or personal information is ever sent.",
+		"dataCollectionInfo": "Caret collects error and usage data to help us fix bugs and improve the extension. No code, prompts, or personal information is ever sent.",
 		"turnOffSetting": "You can turn this setting off in ",
 		"settings": "settings"
 	},
@@ -222,6 +225,39 @@
 		"noTitle": "No title",
 		"errorDisplayingLinkPreview": "Something went wrong displaying this link preview"
 	},
+	"historyView": {
+		"history": "History",
+		"done": "Done",
+		"fuzzySearchPlaceholder": "Fuzzy search history...",
+		"clearSearch": "Clear search",
+		"newest": "Newest",
+		"oldest": "Oldest",
+		"mostExpensive": "Most Expensive",
+		"mostTokens": "Most Tokens",
+		"mostRelevant": "Most Relevant",
+		"workspace": "Workspace",
+		"favorites": "Favorites",
+		"selectAll": "Select all",
+		"selectNone": "Select none",
+		"deleteSelected": "Delete selected",
+		"deleteAllHistory": "Delete all history",
+		"export": "Export",
+		"deleteSelectedWithCount": "Delete {{count}} selected",
+		"deleteAllHistoryWithSize": "Delete all history ({{size}})",
+		"selectedWithSize": "Selected ({{size}})"
+	},
+	"imagePreview": {
+		"timeoutLoadingImage": "Timeout loading image: {{url}}",
+		"failedToLoadImage": "Failed to load image: {{url}}",
+		"loadingImageFrom": "Loading image from {{hostname}}...",
+		"waitingForMinutesSeconds": "Waiting for {{minutes}}m {{seconds}}s...",
+		"waitingForSeconds": "Waiting for {{seconds}}s...",
+		"failedToLoadImageTitle": "Failed to load image",
+		"clickToOpenInBrowser": "Click to open in browser",
+		"svgFrom": "SVG from {{hostname}}",
+		"imageFrom": "Image from {{hostname}}",
+		"errorDisplayingImage": "Something went wrong displaying this image"
+	},
 	"mcpResponseDisplay": {
 		"response": "Response",
 		"responseError": "Response (Error)",
@@ -237,10 +273,10 @@
 	},
 	"addLocalServerForm": {
 		"addLocalServerDescriptionPart1": "Add a local MCP server by configuring it in ",
-		"clineMcpSettingsJson": "cline_mcp_settings.json",
+		"clineMcpSettingsJson": "caret_mcp_settings.json",
 		"addLocalServerDescriptionPart2": "You'll need to specify the server name, command, arguments, and any required environment variables in the JSON configuration. Learn more",
 		"here": "here.",
-		"openClineMcpSettingsJson": "Open cline_mcp_settings.json"
+		"openClineMcpSettingsJson": "Open caret_mcp_settings.json"
 	},
 	"addRemoteServerForm": {
 		"serverNameRequired": "Server name is required",
@@ -261,15 +297,14 @@
 	"brandMarketplace": {
 		"preparing": "{{brandName}} MCP marketplace is preparing.",
 		"preparingDescription": "{{brandName}} exclusive MCP tools will be available soon.",
-		"codecenterPreparing": "CodeCenter MCP marketplace is preparing.",
-		"codecenterPreparingDescription": "CodeCenter exclusive MCP tools will be available soon."
+		"codecenterPreparing": "CodeCenter MCP marketplace is preparing.",		"codecenterPreparingDescription": "CodeCenter exclusive MCP tools will be available soon."
 	},
 	"installedServersView": {
 		"descriptionPart1": "The",
 		"modelContextProtocol": "Model Context Protocol",
-		"descriptionPart2": "enables communication with locally running MCP servers that provide additional tools and resources to extend Cline's capabilities. You can use",
+		"descriptionPart2": "enables communication with locally running MCP servers that provide additional tools and resources to extend Caret's capabilities. You can use",
 		"communityMadeServers": "community-made servers",
-		"descriptionPart3": "or ask Cline to create new tools specific to your workflow (e.g., \"add a tool that gets the latest npm docs\").",
+		"descriptionPart3": "or ask Caret to create new tools specific to your workflow (e.g., \"add a tool that gets the latest npm docs\").",
 		"seeDemoHere": "See a demo here.",
 		"configureMcpServers": "Configure MCP Servers",
 		"advancedMcpSettings": "Advanced MCP Settings"
@@ -307,13 +342,39 @@
 	"serversToggleList": {
 		"noMcpServersInstalled": "No MCP servers installed"
 	},
+	"mcpMarketplaceCard": {
+		"logoAlt": "{{name}} logo",
+		"installed": "Installed",
+		"installing": "Installing...",
+		"install": "Install",
+		"requiresApiKey": "Requires API key",
+		"communityMadeWarning": "Community made (use at your own risk)"
+	},
+	"mcpMarketplaceView": {
+		"failedToLoadMarketplaceData": "Failed to load marketplace data.",
+		"retry": "Retry",
+		"searchMcps": "Search MCPs...",
+		"clearSearch": "Clear search",
+		"filter": "Filter",
+		"allCategories": "All categories",
+		"sort": "Sort",
+		"mostInstalls": "Most installs",
+		"newest": "Newest",
+		"githubStars": "GitHub stars",
+		"name": "Name",
+		"noMatchingMcpServersFound": "No matching MCP servers found.",		"noMcpServersFoundInMarketplace": "No MCP servers found in marketplace."
+	},
+	"mcpSubmitCard": {
+		"submitMcpServer": "Submit MCP server",
+		"helpOthersDiscover": "Help others discover great MCP servers by submitting an issue to github.com/cline/mcp-marketplace."
+	},
 	"clineRulesToggleModal": {
-		"manageRulesWorkflows": "Manage Cline Rules & Workflows",
+		"manageRulesWorkflows": "Manage Caret Rules & Workflows",
 		"rulesTab": "Rules",
 		"workflowsTab": "Workflows",
-		"rulesDescription": "Rules allow you to provide Cline with system-level guidance. Think of them as a persistent way to include context and preferences for your projects or globally for every conversation.",
+		"rulesDescription": "Rules allow you to provide Caret with system-level guidance. Think of them as a persistent way to include context and preferences for your projects or globally for every conversation.",
 		"docs": "Docs",
-		"workflowsDescription": "Workflows allow you to define a series of steps to guide Cline through a repetitive set of tasks, such as deploying a service or submitting a PR. To invoke a workflow, type",
+		"workflowsDescription": "Workflows allow you to define a series of steps to guide Caret through a repetitive set of tasks, such as deploying a service or submitting a PR. To invoke a workflow, type",
 		"workflowName": "/workflow-name",
 		"globalRules": "Global Rules",
 		"workspaceRules": "Workspace Rules",

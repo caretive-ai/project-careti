@@ -1,3 +1,4 @@
+import { t } from "@/caret/utils/i18n"
 import { moonshotModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
@@ -31,7 +32,9 @@ export const MoonshotProvider = ({ showModelOptions, isPopup, currentMode }: Moo
 		<div>
 			<DropdownContainer className="dropdown-container" style={{ position: "inherit" }}>
 				<label htmlFor="moonshot-entrypoint">
-					<span style={{ fontWeight: 500, marginTop: 5 }}>Moonshot Entrypoint</span>
+					<span style={{ fontWeight: 500, marginTop: 5 }}>
+						{t("moonshotProvider.entrypoint", "settings")}
+					</span>
 				</label>
 				<VSCodeDropdown
 					id="moonshot-entrypoint"
@@ -46,10 +49,10 @@ export const MoonshotProvider = ({ showModelOptions, isPopup, currentMode }: Moo
 				</VSCodeDropdown>
 			</DropdownContainer>
 			<ApiKeyField
-				helpText="This key is stored locally and only used to make API requests from this extension."
+				helpText={t("apiKeyField.defaultHelpText", "settings")}
 				initialValue={apiConfiguration?.moonshotApiKey || ""}
 				onChange={(value) => handleFieldChange("moonshotApiKey", value)}
-				providerName="Moonshot"
+				providerName={t("moonshotProvider.providerName", "settings")}
 				signupUrl={
 					apiConfiguration?.moonshotApiLine === "china"
 						? "https://platform.moonshot.cn/console/api-keys"
@@ -60,7 +63,7 @@ export const MoonshotProvider = ({ showModelOptions, isPopup, currentMode }: Moo
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("settings.modelSelector.label", "settings")}
 						models={moonshotModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

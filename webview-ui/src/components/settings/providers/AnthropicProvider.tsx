@@ -2,6 +2,7 @@ import { anthropicModels, CLAUDE_SONNET_4_1M_SUFFIX } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { useMemo } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { BaseUrlField } from "../common/BaseUrlField"
@@ -46,13 +47,13 @@ export const AnthropicProvider = ({ showModelOptions, isPopup, currentMode }: An
 			return {
 				current: SONNET_4_MODEL_ID,
 				alternate: `${SONNET_4_MODEL_ID}${CLAUDE_SONNET_4_1M_SUFFIX}`,
-				linkText: "Switch to 1M context window model",
+				linkText: t("anthropicProvider.switchTo1MContext", "settings"),
 			}
 		} else if (selectedModelId === `${SONNET_4_MODEL_ID}${CLAUDE_SONNET_4_1M_SUFFIX}`) {
 			return {
 				current: `${SONNET_4_MODEL_ID}${CLAUDE_SONNET_4_1M_SUFFIX}`,
 				alternate: SONNET_4_MODEL_ID,
-				linkText: "Switch to 200K context window model",
+				linkText: t("anthropicProvider.switchTo200KContext", "settings"),
 			}
 		}
 		return null
@@ -69,15 +70,15 @@ export const AnthropicProvider = ({ showModelOptions, isPopup, currentMode }: An
 
 			<BaseUrlField
 				initialValue={apiConfiguration?.anthropicBaseUrl}
-				label="Use custom base URL"
+				label={t("baseUrlField.label", "settings")}
 				onChange={(value) => handleFieldChange("anthropicBaseUrl", value)}
-				placeholder="Default: https://api.anthropic.com"
+				placeholder={t("baseUrlField.placeholderAnthropic", "settings")}
 			/>
 
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("modelSelector.label", "settings")}
 						models={anthropicModels}
 						onChange={(e) =>
 							handleModeFieldChange(

@@ -378,7 +378,10 @@
 		"docs:check-links": "cd docs && npm run check",
 		"docs:rename-file": "cd docs && npm run rename",
 		"report-issue": "node scripts/report-issue.js",
-		"package:release": "node scripts/package-release.js"
+		"package:release": "node scripts/package-release.js",
+		"report:i18n-namespace": "node caret-scripts/tools/report-i18n-missing-namespace.js",
+		"report:i18n-keys": "node caret-scripts/tools/report-i18n-missing-keys.js",
+		"sync:i18n-keys": "node caret-scripts/tools/i18n-key-synchronizer.js"
 	},
 	"lint-staged": {
 		"*": [
@@ -402,6 +405,7 @@
 		"@types/sinon": "^17.0.4",
 		"@types/turndown": "^5.0.5",
 		"@types/vscode": "^1.84.0",
+		"@vitest/ui": "^3.2.4",
 		"@vscode/test-cli": "^0.0.10",
 		"@vscode/test-electron": "^2.5.2",
 		"@vscode/vsce": "^3.6.0",
@@ -421,7 +425,7 @@
 		"ts-node": "^10.9.2",
 		"ts-proto": "^2.6.1",
 		"tsconfig-paths": "^4.2.0",
-		"typescript": "^5.4.5"
+		"typescript": "^5.9.2"
 	},
 	"dependencies": {
 		"@anthropic-ai/sdk": "^0.37.0",

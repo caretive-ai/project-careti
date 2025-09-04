@@ -1,5 +1,6 @@
 import { deepSeekModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { ModelInfoView } from "../common/ModelInfoView"
@@ -38,7 +39,7 @@ export const DeepSeekProvider = ({ showModelOptions, isPopup, currentMode }: Dee
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("modelSelector.label", "settings")}
 						models={deepSeekModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

@@ -921,7 +921,8 @@ export const openAiModelInfoSaneDefaults: OpenAiCompatibleModelInfo = {
 // Gemini
 // https://ai.google.dev/gemini-api/docs/models/gemini
 export type GeminiModelId = keyof typeof geminiModels
-export const geminiDefaultModelId: GeminiModelId = "gemini-2.5-pro"
+// CARET MODIFICATION: Changed default from pro to flash for better cost-performance balance
+export const geminiDefaultModelId: GeminiModelId = "gemini-2.5-flash"
 export const geminiModels = {
 	"gemini-2.5-pro": {
 		maxTokens: 65536,

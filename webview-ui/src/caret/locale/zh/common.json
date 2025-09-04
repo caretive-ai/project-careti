@@ -55,7 +55,8 @@
 			"newRuleFile": "新建规则文件..."
 		},
 		"title": "Caret规则和工作流管理",
-		"toggleError": "规则切换错误"
+		"toggleError": "规则切换错误",
+		"docsLink": "Docs"
 	},
 	"mode": {
 		"chatbot": {
@@ -89,7 +90,13 @@
 	"settings": {
 		"uiLanguage": {
 			"label": "UI语言",
-			"description": "Caret用户界面元素（菜单、按钮、消息等）使用的语言。"
+			"description": "Caret用户界面元素（菜单、按钮、消息等）使用的语言。",
+			"option": {
+				"ko": "Korean (한국어)",
+				"en": "English",
+				"ja": "Japanese (日本語)",
+				"zh": "Chinese (中文)"
+			}
 		},
 		"preferredLanguage": {
 			"label": "AI回应语言",
@@ -101,12 +108,17 @@
 			"options": {
 				"caret": "Caret",
 				"Caret": "Caret",
-				"cline": "Cline"
+				"cline": "Caret"
 			}
 		},
 		"separateModels": {
 			"label": "为聊天机器人和智能体模式使用不同的模型",
 			"description": "在聊天机器人和智能体模式之间切换时，每种模式使用的API和模型设置将被保持。例如，在专家咨询（聊天机器人）中使用强大的推理模型，在协作开发（智能体）中使用成本效益高的编码模型时非常有用。"
+		},
+		"openAIReasoningEffort": {
+			"high": "High (More detailed, slower, higher cost)",
+			"label": "OpenAI Reasoning Effort",
+			"description": "Adjust the reasoning effort for OpenAI models. Higher effort may lead to more detailed responses but can be slower and more costly."
 		}
 	},
 	"account": {
@@ -125,10 +137,14 @@
 		"subscriptionFree": "免费",
 		"subscriptionBasic": "基础",
 		"payAsYouGo": "按量付费",
-		"payAsYouGoDescription": "* 订阅使用量耗尽后将额外收费。"
+		"payAsYouGoDescription": "* 订阅使用量耗尽后将额外收费。",
+		"organization": "Organization",
+		"title": "Account"
 	},
 	"common": {
-		"and": "和"
+		"and": "和",
+		"scrollToBottom": "滚动到底部",
+		"defaultValue": "0"
 	},
 	"chat": {
 		"caretHasQuestion": "Caret有问题",
@@ -143,7 +159,8 @@
 		"caretWantsToCreateNewFile": "Caret想要创建新文件：",
 		"placeholderHint": "输入@添加上下文，输入/添加斜杠命令和工作流，按住Shift拖拽添加文件/图片",
 		"caretIsUsingBrowser": "Caret正在使用浏览器：",
-		"caretWantsToUseBrowser": "Caret想要使用浏览器："
+		"caretWantsToUseBrowser": "Caret想要使用浏览器：",
+		"executeCommand": "Caret wants to execute this command:"
 	},
 	"modelInfo": {
 		"supportsImages": "支持图片",
@@ -238,13 +255,32 @@
 		"geminiApiKey": "Gemini API密钥",
 		"geminiModelStrong": "Gemini 2.5 Pro Preview 06-05 (强大)",
 		"geminiModelCostEffective": "Gemini 2.5 Flash Preview 05-20 (性价比)",
-		"reasoningEnabled": "默认启用推理功能"
+		"reasoningEnabled": "默认启用推理功能",
+		"millionTokens": "million tokens",
+		"tokens": "tokens",
+		"systemMessages": {
+			"viewedTopLevelFiles": "Caret viewed the top level files in this directory:",
+			"wantsToViewTopLevelFiles": "Caret wants to view the top level files in this directory:",
+			"viewedFilesRecursively": "Caret recursively viewed all files in this directory:",
+			"wantsToViewFilesRecursively": "Caret wants to recursively view all files in this directory:",
+			"viewedCodeDefinitions": "Caret viewed source code definition names used in this directory:",
+			"wantsToViewCodeDefinitions": "Caret wants to view source code definition names used in this directory:",
+			"wantsToSearchDirectory": "Caret wants to search this directory for:",
+			"fetchedContentFromUrl": "Caret fetched content from this URL:",
+			"wantsToFetchContentFromUrl": "Caret wants to fetch content from this URL:",
+			"taskCompleted": "Task Completed"
+		}
 	},
 	"welcome": {
 		"whatCanIDo": "我能为您做什么？",
 		"recentTasks": "最近任务",
 		"noRecentTasks": "没有最近任务",
-		"viewAllHistory": "查看所有历史"
+		"viewAllHistory": "查看所有历史",
+		"title": "Welcome to Caret! 🎉",
+		"subtitle": "Your AI-powered coding assistant",
+		"description": "Caret is an AI coding assistant that helps you write, debug, and improve your code. Let's get started!",
+		"getStarted": "Get Started",
+		"learnMore": "Learn More"
 	},
 	"telemetry": {
 		"helpImprove": "帮助改进Caret",
@@ -314,11 +350,11 @@
 		"previousFeatures": {
 			"claude1M": {
 				"title": "Claude Sonnet 4的1M上下文",
-				"description": "Cline/OpenRouter用户可即时访问，Anthropic用户需要第4级，Bedrock用户必须在支持的地区。"
+				"description": "Caret/OpenRouter用户可即时访问，Anthropic用户需要第4级，Bedrock用户必须在支持的地区。"
 			},
 			"optimizedClaude4": {
 				"title": "为Claude 4优化",
-				"description": "Cline现在针对Claude 4系列模型进行了优化，带来了改进的性能、可靠性和新功能。"
+				"description": "Caret现在针对Claude 4系列模型进行了优化，带来了改进的性能、可靠性和新功能。"
 			},
 			"workflows": {
 				"title": "工作流",
@@ -327,5 +363,12 @@
 		},
 		"joinUs": "在以下平台加入我们",
 		"forMoreUpdates": "获取更多更新！"
+	},
+	"rulesModal": {
+		"tooltip": {},
+		"ariaLabel": {}
+	},
+	"validation": {
+		"invalidApiKey": "You must provide a valid API key or choose a different provider."
 	}
 }

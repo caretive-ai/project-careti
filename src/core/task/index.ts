@@ -14,6 +14,7 @@ import {
 	refreshClineRulesToggles,
 } from "@core/context/instructions/user-instructions/cline-rules"
 import {
+	getLocalCaretRules,
 	getLocalCursorRules,
 	getLocalWindsurfRules,
 	refreshExternalRulesToggles,
@@ -1675,17 +1676,31 @@ export class Task {
 				: ""
 
 		const { globalToggles, localToggles } = await refreshClineRulesToggles(this.controller, this.cwd)
-		const { windsurfLocalToggles, cursorLocalToggles } = await refreshExternalRulesToggles(this.controller, this.cwd)
+		const { caretLocalToggles, windsurfLocalToggles, cursorLocalToggles } = await refreshExternalRulesToggles(this.controller, this.cwd)
 
 		const globalClineRulesFilePath = await ensureRulesDirectoryExists()
 		const globalClineRulesFileInstructions = await getGlobalClineRules(globalClineRulesFilePath, globalToggles)
-
+		// CARET MODIFICATION: Rule priority system (.caretrules > .clinerules > .cursorrules > .windsurfrules)
+		const localCaretRulesFileInstructions = await getLocalCaretRules(this.cwd, caretLocalToggles)
 		const localClineRulesFileInstructions = await getLocalClineRules(this.cwd, localToggles)
 		const [localCursorRulesFileInstructions, localCursorRulesDirInstructions] = await getLocalCursorRules(
 			this.cwd,
 			cursorLocalToggles,
 		)
 		const localWindsurfRulesFileInstructions = await getLocalWindsurfRules(this.cwd, windsurfLocalToggles)
+		// Apply priority system: Use the highest priority rule that exists and is enabled
+		let activeRuleInstructions: string | undefined
+		if (localCaretRulesFileInstructions) {
+			activeRuleInstructions = localCaretRulesFileInstructions
+		} else if (localClineRulesFileInstructions) {
+			activeRuleInstructions = localClineRulesFileInstructions
+		} else if (localCursorRulesFileInstructions) {
+			activeRuleInstructions = localCursorRulesFileInstructions
+		} else if (localCursorRulesDirInstructions) {
+			activeRuleInstructions = localCursorRulesDirInstructions
+		} else if (localWindsurfRulesFileInstructions) {
+			activeRuleInstructions = localWindsurfRulesFileInstructions
+		}
 
 		const clineIgnoreContent = this.clineIgnoreController.clineIgnoreContent
 		let clineIgnoreInstructions: string | undefined
@@ -1700,10 +1715,11 @@ export class Task {
 			mcpHub: this.mcpHub,
 			focusChainSettings: this.focusChainSettings,
 			globalClineRulesFileInstructions,
-			localClineRulesFileInstructions,
-			localCursorRulesFileInstructions,
-			localCursorRulesDirInstructions,
-			localWindsurfRulesFileInstructions,
+			// CARET MODIFICATION: Use priority system - only pass the active rule instead of all rules
+			localClineRulesFileInstructions: activeRuleInstructions || localClineRulesFileInstructions,
+			localCursorRulesFileInstructions: undefined, // handled by priority system
+			localCursorRulesDirInstructions: undefined, // handled by priority system
+			localWindsurfRulesFileInstructions: undefined, // handled by priority system
 			clineIgnoreInstructions,
 			preferredLanguageInstructions,
 			browserSettings: this.browserSettings,

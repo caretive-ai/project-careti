@@ -95,6 +95,79 @@ node tools/brand-change-v2.js --config=b2b-brands/new-client/brand-config.json -
 ## 📚 매뉴얼 및 문서
 
 - **[브랜딩 시스템 매뉴얼](docs/branding-manual.md)** - 브랜딩 도구 사용법 및 기능 가이드
+- **[I18n 자동화 도구](docs/i18n-script-manual.md)** - 머징을 위한 프론트엔드 국제화 자동 탐지 및 보고서 생성
+
+### Brand Converter 통합 도구
+
+`tools/brand-converter.js`는 cline ↔ caret ↔ codecenter 간의 통합 브랜딩 변환을 수행하는 핵심 도구입니다.
+  * cline ↔ caret : backend, asset 
+  * caret  ↔ codecenter :  backend, asset, front-i18n
+
+#### 주요 기능
+- **동적 브랜드 감지**: package.json을 분석하여 현재 브랜드 자동 감지
+- **양방향 변환**: forward/backward 방향 변환 지원
+- **백엔드/프론트엔드 분리**: 각각 독립적으로 변환 가능
+- **매핑 검증**: 중첩, 순환참조, 빈 값 등 자동 검증
+- **동적 버전 매핑**: CHANGELOG에서 버전 정보 추출하여 자동 매핑
+
+#### 사용법
+```bash
+# 기본 사용법
+node tools/brand-converter.js [브랜드] [방향] [옵션]
+
+# 예시: caret 브랜드로 forward 변환
+node tools/brand-converter.js caret forward
+
+# 예시: codecenter 브랜드로 backward 변환  
+node tools/brand-converter.js codecenter backward
+
+# 옵션
+--dry-run          # 실제 변경 없이 시뮬레이션
+--no-build         # 변환 후 빌드 스킵
+--backend          # 백엔드만 변환
+--frontend         # 프론트엔드만 변환 
+--all              # 백엔드 + 프론트엔드 변환 (기본값)
+--status           # 현재 브랜드 상태 확인
+```
+
+#### 변환 프로세스
+1. **브랜드 감지**: package.json의 displayName 분석
+2. **설정 로드**: `brands/[브랜드]/brand-config.json` 로드
+3. **텍스트 변환**: package.json 필드 매핑 적용
+4. **규칙 경로 변환**: 백엔드 파일의 규칙 경로 수정
+5. **이미지 복사**: 브랜드별 아이콘 및 에셋 복사
+6. **빌드 실행**: compile/build 스크립트 자동 실행
+
+#### 설정 파일 구조
+```json
+{
+  "metadata": {
+    "brand": "caret",
+    "target": "cline", 
+    "description": "cline → caret 변환"
+  },
+  "brand_mappings": {
+    "package_json": {
+      "Cline": "Caret",
+      "cline": "caret"
+    },
+    "rule_paths": {
+      ".cline": ".caret",
+      "cline-rules": "caret-rules"
+    }
+  },
+  "file_paths": {
+    "src/core/storage/disk.ts": "rule_paths",
+    "src/integrations/terminal/TerminalRegistry.ts": "rule_paths"
+  }
+}
+```
+
+#### 매핑 검증 기능
+- **중첩 매핑 감지**: 긴 문자열 안에 짧은 문자열 포함 여부
+- **순환참조 검증**: A→B, B→A 형태의 순환 매핑 감지  
+- **빈 값 검증**: 매핑 키나 값이 비어있는 경우 감지
+- **URL 형식 검증**: URL 매핑의 일관성 확인
 
 ## ⚠️ 중요 사항
 

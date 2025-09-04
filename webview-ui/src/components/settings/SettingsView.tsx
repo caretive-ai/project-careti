@@ -4,6 +4,7 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { CheckCheck, FlaskConical, Info, LucideIcon, Settings, SquareMousePointer, SquareTerminal, Webhook } from "lucide-react"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useEvent } from "react-use"
+import { t } from "@/caret/utils/i18n"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "@/services/grpc-client"
@@ -40,37 +41,37 @@ interface SettingsTab {
 export const SETTINGS_TABS: SettingsTab[] = [
 	{
 		id: "api-config",
-		name: "API Configuration",
-		tooltipText: "API Configuration",
-		headerText: "API Configuration",
+		name: t("tabs.apiConfiguration.name", "settings"),
+		tooltipText: t("tabs.apiConfiguration.tooltip", "settings"),
+		headerText: t("tabs.apiConfiguration.header", "settings"),
 		icon: Webhook,
 	},
 	{
 		id: "general",
-		name: "General",
-		tooltipText: "General Settings",
-		headerText: "General Settings",
+		name: t("tabs.general.name", "settings"),
+		tooltipText: t("tabs.general.tooltip", "settings"),
+		headerText: t("tabs.general.header", "settings"),
 		icon: Settings,
 	},
 	{
 		id: "features",
-		name: "Features",
-		tooltipText: "Feature Settings",
-		headerText: "Feature Settings",
+		name: t("tabs.features.name", "settings"),
+		tooltipText: t("tabs.features.tooltip", "settings"),
+		headerText: t("tabs.features.header", "settings"),
 		icon: CheckCheck,
 	},
 	{
 		id: "browser",
-		name: "Browser",
-		tooltipText: "Browser Settings",
-		headerText: "Browser Settings",
+		name: t("tabs.browser.name", "settings"),
+		tooltipText: t("tabs.browser.tooltip", "settings"),
+		headerText: t("tabs.browser.header", "settings"),
 		icon: SquareMousePointer,
 	},
 	{
 		id: "terminal",
-		name: "Terminal",
-		tooltipText: "Terminal Settings",
-		headerText: "Terminal Settings",
+		name: t("tabs.terminal.name", "settings"),
+		tooltipText: t("tabs.terminal.tooltip", "settings"),
+		headerText: t("tabs.terminal.header", "settings"),
 		icon: SquareTerminal,
 	},
 	// Only show in dev mode
@@ -78,20 +79,13 @@ export const SETTINGS_TABS: SettingsTab[] = [
 		? [
 				{
 					id: "debug",
-					name: "Debug",
-					tooltipText: "Debug Tools",
-					headerText: "Debug",
+					name: t("tabs.debug.name", "settings"),
+					tooltipText: t("tabs.debug.tooltip", "settings"),
+					headerText: t("tabs.debug.header", "settings"),
 					icon: FlaskConical,
 				},
 			]
 		: []),
-	{
-		id: "about",
-		name: "About",
-		tooltipText: "About Cline",
-		headerText: "About",
-		icon: Info,
-	},
 ]
 
 type SettingsViewProps = {
@@ -206,11 +200,11 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 		<Tab>
 			<TabHeader className="flex justify-between items-center gap-2">
 				<div className="flex items-center gap-1">
-					<h3 className="text-[var(--vscode-foreground)] m-0">Settings</h3>
+					<h3 className="text-[var(--vscode-foreground)] m-0">{t("settingsView.title", "settings")}</h3>
 				</div>
 				<div className="flex gap-2">
 					{/* All settings now save immediately, so only show Done button */}
-					<VSCodeButton onClick={onDone}>Done</VSCodeButton>
+					<VSCodeButton onClick={onDone}>{t("buttons.done", "settings")}</VSCodeButton>
 				</div>
 			</TabHeader>
 
@@ -305,11 +299,6 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 							{/* Debug Tab (only in dev mode) */}
 							{IS_DEV && activeTab === "debug" && (
 								<DebugSection onResetState={handleResetState} renderSectionHeader={renderSectionHeader} />
-							)}
-
-							{/* About Tab */}
-							{activeTab === "about" && (
-								<AboutSection renderSectionHeader={renderSectionHeader} version={version} />
 							)}
 						</TabContent>
 					)

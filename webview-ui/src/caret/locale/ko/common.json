@@ -5,6 +5,9 @@
 		"letsGo": "시작하기!",
 		"save": "저장",
 		"cancel": "취소",
+		"done": "완료",
+		"runCommand": "명령 실행",
+		"reject": "거절",
 		"setupApiOrLocal": "내 API 키 사용 또는 로컬 LLM 설정",
 		"notifyCaretAccount": "Caret 구독 서비스 알림받기",
 		"saveAndStart": "저장하고 시작하기"
@@ -48,13 +51,15 @@
 		},
 		"description": {
 			"rulesDescription": "규칙을 통해 Caret에게 시스템 수준의 지침을 제공할 수 있습니다. 프로젝트별 또는 모든 대화에 대한 컨텍스트와 선호사항을 지속적으로 포함하는 방법으로 생각하세요.",
-			"workflowsDescription": "워크플로우를 통해 서비스 배포나 PR 제출과 같은 반복적인 작업들을 Caret이 수행할 수 있도록 일련의 단계를 정의할 수 있습니다. 워크플로우를 실행하려면 채팅에서 /워크플로우명을 입력하세요."
+			"workflowsDescription": "워크플로우를 통해 서비스 배포나 PR 제출과 같은 반복적인 작업들을 Caret이 수행할 수 있도록 일련의 단계를 정의할 수 있습니다. 워크플로우를 실행하려면 채팅에서 /워크플로우명을 입력하세요.",
+			"personaManagement": "Choose an AI persona that matches your coding style and preferences."
 		},
 		"action": {
 			"newRuleFile": "새 규칙 파일..."
 		},
 		"title": "Caret 규칙 및 워크플로우 관리",
-		"toggleError": "규칙 토글 오류"
+		"toggleError": "규칙 토글 오류",
+		"docsLink": "Docs"
 	},
 	"mode": {
 		"chatbot": {
@@ -62,9 +67,21 @@
 			"title": "챗봇 모드",
 			"description": "전문가 상담 및 분석 모드"
 		},
-		"agent": {},
-		"plan": {},
-		"act": {},
+		"agent": {
+			"label": "🤖 Agent",
+			"title": "Agent Mode",
+			"description": "Collaborative development and implementation"
+		},
+		"plan": {
+			"label": "📋 Plan",
+			"title": "Plan Mode",
+			"description": "Strategy formulation and design"
+		},
+		"act": {
+			"label": "⚡ Act",
+			"title": "Act Mode",
+			"description": "Implementation and execution"
+		},
 		"tooltip": {
 			"chatbot": "챗봇 모드에서 Caret은 전문가 상담과 분석을 제공합니다",
 			"agent": "에이전트 모드에서 Caret은 솔루션 구현을 위해 협업합니다",
@@ -74,16 +91,38 @@
 		}
 	},
 	"settings": {
-		"uiLanguage": {},
-		"preferredLanguage": {},
+		"uiLanguage": {
+			"label": "UI Language",
+			"description": "Select the display language for the Caret UI.",
+			"option": {
+				"ko": "Korean (한국어)",
+				"en": "English",
+				"ja": "Japanese (日本語)",
+				"zh": "Chinese (中文)"
+			}
+		},
+		"preferredLanguage": {
+			"label": "AI Response Language",
+			"description": "The language that Caret should use for communication."
+		},
 		"modeSystem": {
 			"options": {
 				"caret": "Caret",
 				"Caret": "Caret",
-				"cline": "Cline"
-			}
+				"cline": "Caret"
+			},
+			"label": "Mode Settings",
+			"description": "Enable Caret mode settings to use Caret's Plan/Act modes."
 		},
-		"separateModels": {}
+		"separateModels": {
+			"label": "Use different models for Chatbot and Agent modes",
+			"description": "Switching between Chatbot and Agent mode will persist the API and model used in the previous mode. This may be helpful e.g. when using a strong reasoning model for expert consultation (Chatbot) and a cheaper coding model for collaborative development (Agent)."
+		},
+		"openAIReasoningEffort": {
+			"high": "High (More detailed, slower, higher cost)",
+			"label": "OpenAI Reasoning Effort",
+			"description": "Adjust the reasoning effort for OpenAI models. Higher effort may lead to more detailed responses but can be slower and more costly."
+		}
 	},
 	"account": {
 		"signUpWithCaret": "로그인 및 회원가입",
@@ -102,11 +141,13 @@
 		"subscriptionBasic": "Basic",
 		"payAsYouGo": "사용량만큼 지불",
 		"organization": "조직",
-		"payAsYouGoDescription": "* 구독 사용량을 모두 소진 후 추가 과금 됩니다."
+		"payAsYouGoDescription": "* 구독 사용량을 모두 소진 후 추가 과금 됩니다.",
+		"title": "계정"
 	},
 	"common": {
 		"and": "및",
-		"scrollToBottom": "맨 아래로 스크롤"
+		"scrollToBottom": "맨 아래로 스크롤",
+		"defaultValue": "0"
 	},
 	"chat": {
 		"caretHasQuestion": "캐럿이 질문이 있습니다",
@@ -121,7 +162,8 @@
 		"placeholderHint": "@ 입력으로 컨텍스트, / 입력으로 슬래시 명령어 및 워크플로우, Shift 키를 누른 채 드래그하여 파일/이미지 추가",
 		"caretIsUsingBrowser": "캐럿이 브라우저를 사용하고 있습니다:",
 		"caretWantsToUseBrowser": "캐럿이 브라우저를 사용하려고 합니다:",
-		"executeCommand": "Caret이 다음 명령을 실행하려고 합니다:"
+		"executeCommand": "Caret이 다음 명령을 실행하려고 합니다:",
+		"cancel": "Cancel"
 	},
 	"modelInfo": {
 		"supportsImages": "이미지 지원",
@@ -218,33 +260,40 @@
 		"millionTokens": "백만 토큰",
 		"tokens": "토큰",
 		"systemMessages": {
-			"viewedTopLevelFiles": "Cline이 이 디렉토리의 최상위 파일들을 확인했습니다:",
-			"wantsToViewTopLevelFiles": "Cline이 이 디렉토리의 최상위 파일들을 확인하려고 합니다:",
-			"viewedFilesRecursively": "Cline이 이 디렉토리의 모든 파일들을 재귀적으로 확인했습니다:",
-			"wantsToViewFilesRecursively": "Cline이 이 디렉토리의 모든 파일들을 재귀적으로 확인하려고 합니다:",
-			"viewedCodeDefinitions": "Cline이 이 디렉토리에서 사용된 소스 코드 정의명들을 확인했습니다:",
-			"wantsToViewCodeDefinitions": "Cline이 이 디렉토리에서 사용된 소스 코드 정의명들을 확인하려고 합니다:",
-			"wantsToSearchDirectory": "Cline이 이 디렉토리에서 검색하려고 합니다:",
-			"fetchedContentFromUrl": "Cline이 이 URL에서 콘텐츠를 가져왔습니다:",
-			"wantsToFetchContentFromUrl": "Cline이 이 URL에서 콘텐츠를 가져오려고 합니다:",
+			"viewedTopLevelFiles": "Caret이 이 디렉토리의 최상위 파일들을 확인했습니다:",
+			"wantsToViewTopLevelFiles": "Caret이 이 디렉토리의 최상위 파일들을 확인하려고 합니다:",
+			"viewedFilesRecursively": "Caret이 이 디렉토리의 모든 파일들을 재귀적으로 확인했습니다:",
+			"wantsToViewFilesRecursively": "Caret이 이 디렉토리의 모든 파일들을 재귀적으로 확인하려고 합니다:",
+			"viewedCodeDefinitions": "Caret이 이 디렉토리에서 사용된 소스 코드 정의명들을 확인했습니다:",
+			"wantsToViewCodeDefinitions": "Caret이 이 디렉토리에서 사용된 소스 코드 정의명들을 확인하려고 합니다:",
+			"wantsToSearchDirectory": "Caret이 이 디렉토리에서 검색하려고 합니다:",
+			"fetchedContentFromUrl": "Caret이 이 URL에서 콘텐츠를 가져왔습니다:",
+			"wantsToFetchContentFromUrl": "Caret이 이 URL에서 콘텐츠를 가져오려고 합니다:",
 			"taskCompleted": "작업 완료"
 		},
 		"geminiApiKey": "Gemini API 키",
 		"geminiModelStrong": "Gemini 2.5 Pro Preview 06-05 (강력함)",
 		"geminiModelCostEffective": "Gemini 2.5 Flash Preview 05-20 (가성비)",
-		"reasoningEnabled": "추론 기능 기본 활성화"
+		"reasoningEnabled": "추론 기능 기본 활성화",
+		"loading": "Loading..."
 	},
 	"welcome": {
 		"whatCanIDo": "무엇을 도와드릴까요?",
 		"recentTasks": "최근 작업",
 		"noRecentTasks": "최근 작업이 없습니다",
-		"viewAllHistory": "모든 기록 보기"
+		"viewAllHistory": "모든 기록 보기",
+		"title": "Welcome to Caret! 🎉",
+		"subtitle": "Your AI-powered coding assistant",
+		"description": "Caret is an AI coding assistant that helps you write, debug, and improve your code. Let's get started!",
+		"getStarted": "Get Started",
+		"learnMore": "Learn More"
 	},
 	"telemetry": {
 		"helpImprove": "Caret 개선에 도움주기",
 		"experimentalFeatures": "(실험적 기능에 액세스)",
 		"settingsLink": "설정에서 이 기능을 끌 수 있습니다.",
-		"closeBannerAria": "배너 닫기 및 텔레메트리 활성화"
+		"closeBannerAria": "배너 닫기 및 텔레메트리 활성화",
+		"description": "Caret collects anonymous error and usage data to help us fix bugs and improve the extension. No code, prompts, or personal information is ever sent."
 	},
 	"history": {
 		"deleteAllHistory": "모든 기록 삭제",
@@ -257,7 +306,8 @@
 		"filterWorkspace": "워크스페이스",
 		"filterFavorites": "즐겨찾기",
 		"selectAll": "모두 선택",
-		"selectNone": "선택 해제"
+		"selectNone": "선택 해제",
+		"title": "History"
 	},
 	"mcp": {
 		"marketplace": "마켓플레이스",
@@ -268,7 +318,9 @@
 		"noMatchingServers": "일치하는 MCP 서버를 찾을 수 없습니다",
 		"noServersFound": "마켓플레이스에서 MCP 서버를 찾을 수 없습니다",
 		"autoApprove": "자동 승인",
-		"autoApproveAllTools": "모든 도구 자동 승인"
+		"autoApproveAllTools": "모든 도구 자동 승인",
+		"title": "MCP Servers",
+		"description": "The Model Context Protocol enables communication with locally running MCP servers that provide additional tools and resources to extend Caret's capabilities."
 	},
 	"autoApprove": {
 		"addQuickAccess": "빠른 액세스 메뉴에 추가",
@@ -285,30 +337,30 @@
 		"features": {
 			"freeStealth": {
 				"title": "무료 스텔스 모델",
-				"description": "복잡한 코딩 작업을 위해 설계된 262K 컨텍스트 윈도우를 가진 고급 스텔스 모델. Cline 프로바이더에서 무료로 이용 가능합니다."
+				"description": "복잡한 코딩 작업을 위해 설계된 262K 컨텍스트 윈도우를 가진 고급 스텔스 모델. Caret 프로바이더에서 무료로 이용 가능합니다."
 			},
 			"focusChain": {
 				"title": "집중 체인",
-				"description": "자동 할 일 목록 관리, 복잡한 작업을 관리 가능한 단계로 나누고 실시간 진행 상황 추적 및 수동적 알림을 통해 cline이 장기 작업에 집중할 수 있도록 도움니다."
+				"description": "자동 할 일 목록 관리, 복잡한 작업을 관리 가능한 단계로 나누고 실시간 진행 상황 추적 및 수동적 알림을 통해 Caret이 장기 작업에 집중할 수 있도록 도움니다."
 			},
 			"autoCompact": {
 				"title": "자동 압축",
-				"description": "대화가 모델의 컨텍스트 윈도우 제한에 근접할 때 작업과 다음 단계를 자동으로 요약합니다. 이는 Cline이 긴 작업 세션에서 궤도를 유지하는 데 크게 도움이 됩니다!"
+				"description": "대화가 모델의 컨텍스트 윈도우 제한에 근접할 때 작업과 다음 단계를 자동으로 요약합니다. 이는 Caret이 긴 작업 세션에서 궤도를 유지하는 데 크게 도움이 됩니다!"
 			},
 			"deepPlanning": {
 				"title": "심층 계획",
-				"description": "새로운 /deep-planning 슬래시 명령으로 Cline을 코드를 작성하기 전에 코드베이스를 조사하고 명확한 질문을 하며 포괄적인 계획을 세우는 건축가로 변환합니다."
+				"description": "새로운 /deep-planning 슬래시 명령으로 Caret을 코드를 작성하기 전에 코드베이스를 조사하고 명확한 질문을 하며 포괄적인 계획을 세우는 건축가로 변환합니다."
 			}
 		},
 		"previousUpdates": "이전 업데이트:",
 		"previousFeatures": {
 			"claude1M": {
 				"title": "Claude Sonnet 4용 1M 컨텍스트",
-				"description": "Cline/OpenRouter 사용자는 즉시 액세스, Anthropic 사용자는 Tier 4가 필요하며, Bedrock 사용자는 지원되는 지역에 있어야 합니다."
+				"description": "Caret/OpenRouter 사용자는 즉시 액세스, Anthropic 사용자는 Tier 4가 필요하며, Bedrock 사용자는 지원되는 지역에 있어야 합니다."
 			},
 			"optimizedClaude4": {
 				"title": "Claude 4에 최적화",
-				"description": "Cline은 이제 Claude 4 모델 제품군에서 작동하도록 최적화되어 성능, 신뢰성 및 새로운 기능이 향상되었습니다."
+				"description": "Caret은 이제 Claude 4 모델 제품군에서 작동하도록 최적화되어 성능, 신뢰성 및 새로운 기능이 향상되었습니다."
 			},
 			"workflows": {
 				"title": "워크플로우",
@@ -317,5 +369,9 @@
 		},
 		"joinUs": "다음에서 함께하세요",
 		"forMoreUpdates": "더 많은 업데이트를 확인하세요!"
+	},
+	"rulesModal": {
+		"tooltip": {},
+		"ariaLabel": {}
 	}
 }

@@ -190,6 +190,7 @@ export interface Secrets {
 
 export interface LocalState {
 	localClineRulesToggles: ClineRulesToggles
+	localCaretRulesToggles: ClineRulesToggles // CARET MODIFICATION: Added .caretrules support
 	localCursorRulesToggles: ClineRulesToggles
 	localWindsurfRulesToggles: ClineRulesToggles
 	workflowToggles: ClineRulesToggles

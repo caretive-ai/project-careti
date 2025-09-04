@@ -1,3 +1,4 @@
+import { t } from "@/caret/utils/i18n"
 import { openAiNativeModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -31,14 +32,14 @@ export const OpenAINativeProvider = ({ showModelOptions, isPopup, currentMode }:
 			<ApiKeyField
 				initialValue={apiConfiguration?.openAiNativeApiKey || ""}
 				onChange={(value) => handleFieldChange("openAiNativeApiKey", value)}
-				providerName="OpenAI"
+				providerName={t("openAiNativeProvider.providerName", "settings")}
 				signupUrl="https://platform.openai.com/api-keys"
 			/>
 
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("settings.modelSelector.label", "settings")}
 						models={openAiNativeModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

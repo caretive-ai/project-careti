@@ -602,9 +602,48 @@ export class CaretProvider extends ClineWebviewProvider {
 
 이 절차는 "최소 수정의 원칙"을 지키면서, 동시에 깨끗하고 유지보수 가능한 코드를 작성하는 최선의 방법입니다.
 
-## 6. 빌드 시스템
+## 6. Protocol Buffer 필드 넘버링 규칙
 
-### 6.1. 통합 빌드 프로세스
+### 6.1. Caret 전용 필드 번호 할당
+
+Cline 업스트림 충돌을 방지하기 위해 Caret 전용 필드는 **현재 Cline 최대 필드 번호 + 1000**을 사용합니다:
+
+```protobuf
+// proto/cline/models.proto
+message ModelsApiConfiguration {
+  // Cline 기존 필드들 (0-72)
+  optional string dify_api_key = 71;
+  optional string dify_base_url = 72;
+  
+  // CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
+  optional string caret_api_key = 1072;
+  // 향후 Caret 필드들은 1073, 1074, 1075... 순차 증가
+}
+```
+
+### 6.2. 필드 번호 할당 가이드라인
+
+1. **현재 Cline 최대값 확인**: `proto/cline/models.proto`에서 마지막 필드 번호 확인
+2. **1000 더하기**: 충돌 방지를 위한 충분한 간격 확보  
+3. **순차 증가**: 새 Caret 필드는 이전 Caret 필드 + 1
+4. **주석 필수**: 계산 과정을 주석으로 명시
+
+```protobuf
+// 올바른 예시
+// CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
+optional string caret_api_key = 1072;
+optional string caret_model_id = 1073;
+```
+
+### 6.3. 업스트림 머지 시 주의사항
+
+- Cline이 새 필드를 추가할 때마다 기준점이 변경됨
+- 머지 후 필드 번호 중복 검사 필수
+- 필요시 Caret 필드들을 새로운 기준점 + 1000으로 이동
+
+## 7. 빌드 시스템
+
+### 7.1. 통합 빌드 프로세스
 
 Caret은 Cline의 기존 빌드 시스템을 최대한 활용:
 

@@ -1,6 +1,8 @@
 // CARET MODIFICATION: Context provider for Caret i18n system
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react"
-import { getCurrentLanguage, type SupportedLanguage, setGlobalUILanguage } from "../utils/i18n"
+import { getCurrentLanguage, type SupportedLanguage, setGlobalUILanguage, setExtensionLanguageProvider, convertPreferredLanguageToSupported } from "../utils/i18n"
+import { useExtensionState } from "../../context/ExtensionStateContext"
+import { caretWebviewLogger } from "../utils/CaretWebviewLogger"
 
 interface CaretI18nContextType {
 	language: SupportedLanguage
@@ -17,15 +19,43 @@ interface CaretI18nProviderProps {
 
 // CARET MODIFICATION: Provider component for Caret i18n context
 export const CaretI18nProvider: React.FC<CaretI18nProviderProps> = ({ children, defaultLanguage = "en" }) => {
+	const { preferredLanguage } = useExtensionState()
 	const [language, setLanguageState] = useState<SupportedLanguage>(defaultLanguage)
 	const [isLoading, setIsLoading] = useState(false)
 
+	// 초기화 로그는 한 번만 출력
+	const [hasInitialized, setHasInitialized] = useState(false)
+	
+	if (!hasInitialized) {
+		console.log(`🚀 [CaretI18nProvider] Initializing i18n system: defaultLang="${defaultLanguage}", ExtensionState="${preferredLanguage}"`)
+		setHasInitialized(true)
+	}
+
+	// ExtensionState의 preferredLanguage를 i18n으로 변환하는 함수
+	const getLanguageFromExtensionState = useCallback((): SupportedLanguage => {
+		return convertPreferredLanguageToSupported(preferredLanguage)
+	}, [preferredLanguage])
+
+	// i18n 시스템에 ExtensionState 언어 제공자 등록
+	useEffect(() => {
+		setExtensionLanguageProvider(getLanguageFromExtensionState)
+	}, [getLanguageFromExtensionState])
+
+	// ExtensionState의 preferredLanguage가 변경될 때마다 UI 언어 업데이트
+	useEffect(() => {
+		const newLanguage = getLanguageFromExtensionState()
+		if (newLanguage !== language) {
+			setLanguageState(newLanguage)
+			setGlobalUILanguage(newLanguage)
+		}
+	}, [preferredLanguage, language, getLanguageFromExtensionState])
+
 	// Initialize language on mount
 	useEffect(() => {
-		const currentLang = getCurrentLanguage()
-		if (currentLang !== language) {
-			setLanguageState(currentLang)
-		}
+		const initialLanguage = getLanguageFromExtensionState()
+		console.log(`🎯 [CaretI18nProvider] Initial language: "${initialLanguage}"`)
+		setLanguageState(initialLanguage)
+		setGlobalUILanguage(initialLanguage)
 	}, [])
 
 	const setLanguage = useCallback(
@@ -34,6 +64,7 @@ export const CaretI18nProvider: React.FC<CaretI18nProviderProps> = ({ children, 
 				return
 			}
 
+			console.log(`🔄 [CaretI18nProvider] Language change requested: "${language}" → "${newLanguage}"`)
 			setIsLoading(true)
 			try {
 				// Update global i18n state first
@@ -42,9 +73,9 @@ export const CaretI18nProvider: React.FC<CaretI18nProviderProps> = ({ children, 
 				// Force immediate state update
 				setLanguageState(newLanguage)
 
-				console.log(`Caret i18n: Language changed to ${newLanguage}`)
+				console.log(`✅ [CaretI18nProvider] Language change completed: "${newLanguage}"`)
 			} catch (error) {
-				console.error("Failed to change language:", error)
+				console.error(`❌ [CaretI18nProvider] Language change failed:`, error)
 				throw error // Re-throw to handle in component
 			} finally {
 				setIsLoading(false)

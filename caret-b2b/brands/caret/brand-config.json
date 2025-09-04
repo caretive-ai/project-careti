@@ -4,10 +4,59 @@
     "target": "cline",
     "description": "Cline ↔ Caret branding conversion"
   },
+  "file_paths": {
+    "package.json": "package_json",
+    "src/core/storage/disk.ts": "disk_ts",
+    "src/integrations/terminal/TerminalRegistry.ts": "TerminalRegistry_ts",
+    "src/extension.ts": "extension_ts",
+    "src/core/task/tools/handlers/WriteToFileToolHandler.ts": "WriteToFileToolHandler_ts",
+    "src/core/task/tools/handlers/ExecuteCommandToolHandler.ts": "ExecuteCommandToolHandler_ts",
+    "src/core/task/tools/handlers/ReadFileToolHandler.ts": "ReadFileToolHandler_ts",
+    "src/core/task/tools/handlers/ListFilesToolHandler.ts": "ListFilesToolHandler_ts",
+    "src/core/task/tools/handlers/SearchFilesToolHandler.ts": "SearchFilesToolHandler_ts",
+    "src/core/task/tools/handlers/BrowserToolHandler.ts": "BrowserToolHandler_ts",
+    "src/core/task/tools/handlers/WebFetchToolHandler.ts": "WebFetchToolHandler_ts",
+    "src/core/task/tools/handlers/UseMcpToolHandler.ts": "UseMcpToolHandler_ts",
+    "src/core/task/tools/handlers/AccessMcpResourceHandler.ts": "AccessMcpResourceHandler_ts",
+    "src/core/task/tools/handlers/ListCodeDefinitionNamesToolHandler.ts": "ListCodeDefinitionNamesToolHandler_ts",
+    "src/core/task/tools/handlers/NewTaskHandler.ts": "NewTaskHandler_ts",
+    "src/core/task/tools/handlers/CondenseHandler.ts": "CondenseHandler_ts",
+    "src/core/task/tools/handlers/ReportBugHandler.ts": "ReportBugHandler_ts",
+    "src/integrations/notifications/index.ts": "notifications_index_ts",
+    "src/services/posthog/PostHogClientProvider.ts": "PostHogClientProvider_ts",
+    "src/services/browser/BrowserSession.ts": "BrowserSession_ts",
+    "src/core/task/index.ts": "task_index_ts",
+    "src/core/controller/index.ts": "controller_index_ts",
+    "src/core/storage/state-migrations.ts": "state_migrations_ts",
+    "src/services/mcp/McpHub.ts": "McpHub_ts",
+    "src/core/api/providers/dify.ts": "dify_ts",
+    "src/core/api/providers/cline.ts": "cline_provider_ts",
+    "src/core/api/providers/lmstudio.ts": "lmstudio_ts",
+    "src/core/api/providers/requesty.ts": "requesty_ts",
+    "src/core/api/providers/openrouter.ts": "openrouter_ts",
+    "src/core/api/providers/huggingface.ts": "huggingface_ts",
+    "src/core/api/providers/litellm.ts": "litellm_ts",
+    "src/core/api/providers/sapaicore.ts": "sapaicore_ts",
+    "src/core/api/providers/vercel-ai-gateway.ts": "vercel_ai_gateway_ts",
+    "src/core/api/providers/vscode-lm.ts": "vscode_lm_ts",
+    "src/core/api/providers/zai.ts": "zai_ts",
+    "src/core/storage/utils/state-helpers.ts": "state_helpers_ts",
+    "src/integrations/editor/detect-omission.ts": "detect_omission_ts",
+    "src/test/e2e/fixtures/server/api.ts": "e2e_api_ts",
+    "src/test/e2e/utils/helpers.ts": "e2e_helpers_ts",
+    "src/hosts/vscode/VscodeWebviewProvider.ts": "VscodeWebviewProvider_ts",
+    "src/hosts/vscode/hostbridge/workspace/openClineSidebarPanel.ts": "openClineSidebarPanel_ts",
+    "src/services/test/TestServer.ts": "TestServer_ts"
+  },
   "brand_mappings": {
     "package_json": {
+      "claude-dev.SidebarProvider": "caret.SidebarProvider",
+      "claude-dev.TabPanelProvider": "caret.TabPanelProvider",
       "claude-dev": "caret",
+      "\"Cline\"": "\"Caret\"",
       "Cline": "Caret",
+      "ClineWalkthrough": "CaretWalkthrough",
+      "claude-dev-ActivityBar": "caret-ActivityBar",
       "CLINE": "CARET",
       "Cline Bot Inc.": "Caretive Inc.",
       "saoudrizwan": "caretive", 
@@ -22,7 +71,7 @@
       "Explain with Cline": "Explain with Caret",
       "Improve with Cline": "Improve with Caret"
     },
-    "file_paths": {
+    "disk_ts": {
       ".clinerules": ".caretrules",
       "Documents/Cline": "Documents/Caret",
       "\"Cline\"": "\"Caret\"",
@@ -31,9 +80,153 @@
       "~/Documents/Cline/MCP": "~/Documents/Caret/MCP",
       "cline_mcp_settings.json": "caret_mcp_settings.json"
     },
-    "terminal": {
+    "TerminalRegistry_ts": {
       "saoudrizwan.claude-dev": "caretive.caret",
-      "Cline": "Caret"      
+      "Cline": "Caret"
+    },
+    "extension_ts": {
+      "Cline extension activated": "Caret extension activated",
+      "Opening Cline in new tab": "Opening Caret in new tab", 
+      "\"Cline\"": "\"Caret\"",
+      "Cline dev task commands registered": "Caret dev task commands registered",
+      "Add to Cline": "Add to Caret",
+      "Explain with Cline": "Explain with Caret",
+      "Improve with Cline": "Improve with Caret",
+      "Fix with Cline": "Fix with Caret",
+      "Could not find or activate a Cline webview to focus.": "Could not find or activate a Caret webview to focus.",
+      "Could not activate Cline view. Please try opening it manually from the Activity Bar.": "Could not activate Caret view. Please try opening it manually from the Activity Bar.",
+      "saoudrizwan.claude-dev#ClineWalkthrough": "caretive.caret#CaretWalkthrough",
+      "createOutputChannel(\"Cline\")": "createOutputChannel(\"Caret\")",
+      "Cline extension deactivated": "Caret extension deactivated",
+      "VscodeWebviewProvider.TAB_PANEL_ID, \"Cline\"": "VscodeWebviewProvider.TAB_PANEL_ID, \"Caret\""
+    },
+    "WriteToFileToolHandler_ts": {
+      "Cline wants to": "Caret wants to"
+    },
+    "ExecuteCommandToolHandler_ts": {
+      "Cline wants to execute a command:": "Caret wants to execute a command:"
+    },
+    "ReadFileToolHandler_ts": {
+      "Cline wants to read": "Caret wants to read"
+    },
+    "ListFilesToolHandler_ts": {
+      "Cline wants to view directory": "Caret wants to view directory"
+    },
+    "SearchFilesToolHandler_ts": {
+      "Cline wants to search files for": "Caret wants to search files for"
+    },
+    "BrowserToolHandler_ts": {
+      "Cline wants to use a browser and launch": "Caret wants to use a browser and launch"
+    },
+    "WebFetchToolHandler_ts": {
+      "Cline wants to fetch content from": "Caret wants to fetch content from"
+    },
+    "UseMcpToolHandler_ts": {
+      "Cline wants to use": "Caret wants to use"
+    },
+    "AccessMcpResourceHandler_ts": {
+      "Cline wants to access": "Caret wants to access"
+    },
+    "ListCodeDefinitionNamesToolHandler_ts": {
+      "Cline wants to analyze code definitions in": "Caret wants to analyze code definitions in"
+    },
+    "NewTaskHandler_ts": {
+      "Cline wants to start a new task...": "Caret wants to start a new task...",
+      "Cline is suggesting to start a new task with:": "Caret is suggesting to start a new task with:"
+    },
+    "CondenseHandler_ts": {
+      "Cline wants to condense the conversation...": "Caret wants to condense the conversation...",
+      "Cline is suggesting to condense your conversation with:": "Caret is suggesting to condense your conversation with:"
+    },
+    "ReportBugHandler_ts": {
+      "Cline wants to create a github issue...": "Caret wants to create a github issue...",
+      "Cline is suggesting to create a github issue with the title:": "Caret is suggesting to create a github issue with the title:",
+      "vscode.extensions.getExtension(\"saoudrizwan.claude-dev\")": "vscode.extensions.getExtension(\"caretive.caret\")",
+      "cline_version": "caret_version",
+      "params.set(\"cline-version\"": "params.set(\"caret-version\"",
+      "createAndOpenGitHubIssue(\"cline\", \"cline\"": "createAndOpenGitHubIssue(\"aicoding-caret\", \"caret\""
+    },
+    "notifications_index_ts": {
+      "CreateToastNotifier(\"Cline\")": "CreateToastNotifier(\"Caret\")"
+    },
+    "PostHogClientProvider_ts": {
+      "getConfiguration(\"cline\")": "getConfiguration(\"caret\")"
+    },
+    "BrowserSession_ts": {
+      "getConfiguration(\"cline\")": "getConfiguration(\"caret\")"
+    },
+    "task_index_ts": {
+      "getConfiguration(\"cline\")": "getConfiguration(\"caret\")",
+      "Cline is having trouble": "Caret is having trouble",
+      "Cline has auto-approved": "Caret has auto-approved"
+    },
+    "controller_index_ts": {},
+    "state_migrations_ts": {
+      "getConfiguration(\"cline\")": "getConfiguration(\"caret\")"
+    },
+    "McpHub_ts": {
+      "name: \"Cline\"": "name: \"Caret\"",
+      "or Cline (and": "or Caret (and",
+      "CLINE BUG FIX": "CARET BUG FIX"
+    },
+    "dify_ts": {
+      "\"cline-user\"": "\"caret-user\""
+    },
+    "cline_provider_ts": {},
+    "lmstudio_ts": {
+      "work with Cline's prompts": "work with Caret's prompts"
+    },
+    "requesty_ts": {
+      "\"HTTP-Referer\": \"https://cline.bot\"": "\"HTTP-Referer\": \"https://caret.team\"",
+      "\"X-Title\": \"Cline\"": "\"X-Title\": \"Caret\""
+    },
+    "openrouter_ts": {
+      "\"HTTP-Referer\": \"https://cline.bot\"": "\"HTTP-Referer\": \"https://caret.team\"",
+      "\"X-Title\": \"Cline\"": "\"X-Title\": \"Caret\""
+    },
+    "huggingface_ts": {
+      "\"User-Agent\": \"Cline/1.0\"": "\"User-Agent\": \"Caret/1.0\""
+    },
+    "litellm_ts": {
+      "litellm_session_id: `cline-${": "litellm_session_id: `caret-${"
+    },
+    "sapaicore_ts": {
+      "\"AI-Client-Type\": \"Cline\"": "\"AI-Client-Type\": \"Caret\""
+    },
+    "vercel_ai_gateway_ts": {
+      "\"http-referer\": \"https://cline.bot\"": "\"http-referer\": \"https://caret.team\"",
+      "\"x-title\": \"Cline\"": "\"x-title\": \"Caret\""
+    },
+    "vscode_lm_ts": {
+      "Cline <Language Model API>": "Caret <Language Model API>",
+      "Cline would like to use": "Caret would like to use"
+    },
+    "zai_ts": {
+      "\"HTTP-Referer\": \"https://cline.bot\"": "\"HTTP-Referer\": \"https://caret.team\"",
+      "\"X-Title\": \"Cline\"": "\"X-Title\": \"Caret\"",
+      "\"X-Cline-Version\"": "\"X-Caret-Version\""
+    },
+    "state_helpers_ts": {},
+    "detect_omission_ts": {
+      "https://github.com/cline/cline": "https://github.com/aicoding-caret/caret"
+    },
+    "e2e_api_ts": {
+      "\"john\" with \"cline\"": "\"john\" with \"caret\"",
+      "export const name = \"cline\"": "export const name = \"caret\"",
+      "Hello! I'm a mock Cline API response": "Hello! I'm a mock Caret API response"
+    },
+    "e2e_helpers_ts": {
+      "if (title.startsWith(\"Cline\"))": "if (title.startsWith(\"Caret\"))"
+    },
+    "VscodeWebviewProvider_ts": {
+      "claude-dev.SidebarProvider": "caret.SidebarProvider",
+      "claude-dev.TabPanelProvider": "caret.TabPanelProvider"
+    },
+    "openClineSidebarPanel_ts": {
+      "claude-dev.SidebarProvider": "caret.SidebarProvider"
+    },
+    "TestServer_ts": {
+      "claude-dev.SidebarProvider": "caret.SidebarProvider"
     }
   },
   "package_fields": [

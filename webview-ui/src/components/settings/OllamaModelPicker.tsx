@@ -1,6 +1,7 @@
 import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import styled from "styled-components"
 import { highlight } from "../history/HistoryView"
 
@@ -17,7 +18,7 @@ const OllamaModelPicker: React.FC<OllamaModelPickerProps> = ({
 	ollamaModels,
 	selectedModelId,
 	onModelChange,
-	placeholder = "Search and select a model...",
+	placeholder,
 }) => {
 	const [searchTerm, setSearchTerm] = useState(selectedModelId || "")
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false)
@@ -138,7 +139,7 @@ const OllamaModelPicker: React.FC<OllamaModelPickerProps> = ({
 						setIsDropdownVisible(true)
 					}}
 					onKeyDown={handleKeyDown}
-					placeholder={placeholder}
+					placeholder={placeholder || t("settings.ollamaModelPicker.searchPlaceholder")}
 					style={{
 						width: "100%",
 						zIndex: OLLAMA_MODEL_PICKER_Z_INDEX,
@@ -147,7 +148,7 @@ const OllamaModelPicker: React.FC<OllamaModelPickerProps> = ({
 					value={searchTerm}>
 					{searchTerm && (
 						<div
-							aria-label="Clear search"
+							aria-label={t("settings.ollamaModelPicker.clearSearch")}
 							className="input-icon-button codicon codicon-close"
 							onClick={() => {
 								handleModelChange("")

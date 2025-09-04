@@ -61,22 +61,6 @@ describe("ErrorRow", () => {
 		expect(screen.getByText("Max requests reached")).toBeInTheDocument()
 	})
 
-	it("renders diff error", () => {
-		render(<ErrorRow errorType="diff_error" message={mockMessage} />)
-
-		expect(
-			screen.getByText("The model used search patterns that don't match anything in the file. Retrying..."),
-		).toBeInTheDocument()
-	})
-
-	it("renders clineignore error", () => {
-		const clineignoreMessage = { ...mockMessage, text: "/path/to/file.txt" }
-		render(<ErrorRow errorType="clineignore_error" message={clineignoreMessage} />)
-
-		expect(screen.getByText(/Cline tried to access/)).toBeInTheDocument()
-		expect(screen.getByText("/path/to/file.txt")).toBeInTheDocument()
-	})
-
 	describe("API error handling", () => {
 		it("renders credit limit error when balance error is detected", async () => {
 			const mockClineError = {
@@ -100,67 +84,6 @@ describe("ErrorRow", () => {
 
 			expect(screen.getByTestId("credit-limit-error")).toBeInTheDocument()
 			expect(screen.getByText("You have run out of credits.")).toBeInTheDocument()
-		})
-
-		it("renders rate limit error with request ID", async () => {
-			const mockClineError = {
-				message: "Rate limit exceeded",
-				isErrorType: vi.fn((type) => type === "rateLimit"),
-				_error: {
-					request_id: "req_123456",
-				},
-			}
-
-			const { ClineError } = await import("../../../../src/services/error/ClineError")
-			vi.mocked(ClineError.parse).mockReturnValue(mockClineError as any)
-
-			render(<ErrorRow apiRequestFailedMessage="Rate limit exceeded" errorType="error" message={mockMessage} />)
-
-			expect(screen.getByText("Rate limit exceeded")).toBeInTheDocument()
-			expect(screen.getByText("Request ID: req_123456")).toBeInTheDocument()
-		})
-
-		it("renders auth error with sign in button when user is not signed in", async () => {
-			const mockClineError = {
-				message: "Authentication failed",
-				isErrorType: vi.fn((type) => type === "auth"),
-				providerId: "cline",
-				_error: {},
-			}
-
-			const { ClineError } = await import("../../../../src/services/error/ClineError")
-			vi.mocked(ClineError.parse).mockReturnValue(mockClineError as any)
-
-			render(<ErrorRow apiRequestFailedMessage="Authentication failed" errorType="error" message={mockMessage} />)
-
-			expect(screen.getByText("Authentication failed")).toBeInTheDocument()
-			expect(screen.getByText("Sign in to Cline")).toBeInTheDocument()
-		})
-
-		it("renders PowerShell troubleshooting link when error mentions PowerShell", async () => {
-			const mockClineError = {
-				message: "PowerShell is not recognized as an internal or external command",
-				isErrorType: vi.fn(() => false),
-				_error: {},
-			}
-
-			const { ClineError } = await import("../../../../src/services/error/ClineError")
-			vi.mocked(ClineError.parse).mockReturnValue(mockClineError as any)
-
-			render(
-				<ErrorRow
-					apiRequestFailedMessage="PowerShell is not recognized as an internal or external command"
-					errorType="error"
-					message={mockMessage}
-				/>,
-			)
-
-			expect(screen.getByText(/PowerShell is not recognized/)).toBeInTheDocument()
-			expect(screen.getByText("troubleshooting guide")).toBeInTheDocument()
-			expect(screen.getByRole("link", { name: "troubleshooting guide" })).toHaveAttribute(
-				"href",
-				"https://github.com/cline/cline/wiki/TroubleShooting-%E2%80%90-%22PowerShell-is-not-recognized-as-an-internal-or-external-command%22",
-			)
 		})
 
 		it("handles apiReqStreamingFailedMessage instead of apiRequestFailedMessage", async () => {

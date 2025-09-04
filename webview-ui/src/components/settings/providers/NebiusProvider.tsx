@@ -1,3 +1,4 @@
+import { t } from "@/caret/utils/i18n"
 import { nebiusModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -28,17 +29,17 @@ export const NebiusProvider = ({ showModelOptions, isPopup, currentMode }: Nebiu
 	return (
 		<div>
 			<ApiKeyField
-				helpText="This key is stored locally and only used to make API requests from this extension. (Note: Cline uses complex prompts and works best with Claude models. Less capable models may not work as expected.)"
+				helpText={t("nebiusProvider.apiKeyHelpText", "settings")}
 				initialValue={apiConfiguration?.nebiusApiKey || ""}
 				onChange={(value) => handleFieldChange("nebiusApiKey", value)}
-				providerName="Nebius"
+				providerName={t("nebiusProvider.providerName", "settings")}
 				signupUrl="https://studio.nebius.com/settings/api-keys"
 			/>
 
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("settings.modelSelector.label", "settings")}
 						models={nebiusModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

@@ -256,6 +256,9 @@ function convertApiProviderToProto(provider: string | undefined): ProtoApiProvid
 			return ProtoApiProvider.ZAI
 		case "dify":
 			return ProtoApiProvider.DIFY
+		// CARET MODIFICATION: Add Caret provider support
+		case "caret":
+			return ProtoApiProvider.CARET
 		default:
 			return ProtoApiProvider.ANTHROPIC
 	}
@@ -334,6 +337,9 @@ function convertProtoToApiProvider(provider: ProtoApiProvider): ApiProvider {
 			return "zai"
 		case ProtoApiProvider.DIFY:
 			return "dify"
+		// CARET MODIFICATION: Add Caret provider support
+		case ProtoApiProvider.CARET:
+			return "caret"
 		default:
 			return "anthropic"
 	}
@@ -414,6 +420,8 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		zaiApiKey: config.zaiApiKey,
 		difyApiKey: config.difyApiKey,
 		difyBaseUrl: config.difyBaseUrl,
+		// CARET MODIFICATION: Add Caret API key support (field 1072)
+		caretApiKey: config.caretApiKey,
 
 		// Plan mode configurations
 		planModeApiProvider: config.planModeApiProvider ? convertApiProviderToProto(config.planModeApiProvider) : undefined,
@@ -559,6 +567,8 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		zaiApiKey: protoConfig.zaiApiKey,
 		difyApiKey: protoConfig.difyApiKey,
 		difyBaseUrl: protoConfig.difyBaseUrl,
+		// CARET MODIFICATION: Add Caret API key support (field 1072)
+		caretApiKey: protoConfig.caretApiKey,
 
 		// Plan mode configurations
 		planModeApiProvider:

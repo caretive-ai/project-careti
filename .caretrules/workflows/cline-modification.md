@@ -46,6 +46,20 @@ const caretIntegration = new CaretFeature();
 - Explain why it was necessary  
 - Note integration approach
 
+### Step 4.5: Protocol Buffer Field Numbering (For .proto files)
+**When modifying `proto/cline/models.proto`:**
+```protobuf
+// CARET MODIFICATION: Caret-specific fields (current_max + 1000 to avoid Cline conflicts)
+optional string caret_api_key = 1072; // If Cline's max is 72, use 72 + 1000 = 1072
+optional string next_caret_field = 1073; // Sequential increment
+```
+
+**Field Numbering Rules:**
+- Find current Cline maximum field number
+- Add 1000 for sufficient separation 
+- Use sequential numbering for multiple Caret fields
+- Always include calculation in comment
+
 ## Post-Modification Phase
 
 ### Step 5: Verification Sequence (`/verification-steps`)

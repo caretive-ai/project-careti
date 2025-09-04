@@ -1,5 +1,6 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import { t } from "@/caret/utils/i18n"
 import { useClineAuth } from "@/context/ClineAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
@@ -12,7 +13,7 @@ export const ClineAccountInfoCard = () => {
 
 	const handleLogin = () => {
 		AccountServiceClient.accountLoginClicked(EmptyRequest.create()).catch((err) =>
-			console.error("Failed to get login URL:", err),
+			console.error(t("clineAccountInfoCard.loginError", "settings"), err),
 		)
 	}
 
@@ -24,12 +25,12 @@ export const ClineAccountInfoCard = () => {
 		<div className="max-w-[600px]">
 			{user ? (
 				<VSCodeButton appearance="secondary" onClick={handleShowAccount}>
-					View Billing & Usage
+					{t("clineAccountInfoCard.viewBillingAndUsage", "settings")}
 				</VSCodeButton>
 			) : (
 				<div>
 					<VSCodeButton className="mt-0" onClick={handleLogin}>
-						Sign Up with Cline
+						{t("clineAccountInfoCard.signUpWithCline", "settings")}
 					</VSCodeButton>
 				</div>
 			)}

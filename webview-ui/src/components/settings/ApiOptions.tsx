@@ -5,6 +5,8 @@ import Fuse from "fuse.js"
 import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useInterval } from "react-use"
 import styled from "styled-components"
+// CARET MODIFICATION: Import i18n
+import { t } from "@/caret/utils/i18n"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ModelsServiceClient } from "@/services/grpc-client"
@@ -131,46 +133,46 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 
 		const baseProviders = [
 			// CARET MODIFICATION: Add Caret as top priority provider
-			{ value: "caret", label: "Caret" },
-			{ value: "openrouter", label: "OpenRouter" },
-			{ value: "gemini", label: "Google Gemini" },
-			{ value: "openai", label: "OpenAI Compatible" },
-			{ value: "anthropic", label: "Anthropic" },
-			{ value: "bedrock", label: "Amazon Bedrock" },
-			{ value: "vscode-lm", label: "VS Code LM API" },
-			{ value: "deepseek", label: "DeepSeek" },
-			{ value: "openai-native", label: "OpenAI" },
-			{ value: "ollama", label: "Ollama" },
-			{ value: "vertex", label: "GCP Vertex AI" },
-			{ value: "litellm", label: "LiteLLM" },
-			{ value: "claude-code", label: "Claude Code" },
-			{ value: "sapaicore", label: "SAP AI Core" },
-			{ value: "mistral", label: "Mistral" },
-			{ value: "zai", label: "Z AI" },
-			{ value: "groq", label: "Groq" },
-			{ value: "cerebras", label: "Cerebras" },
-			{ value: "vercel-ai-gateway", label: "Vercel AI Gateway" },
-			{ value: "baseten", label: "Baseten" },
-			{ value: "requesty", label: "Requesty" },
-			{ value: "fireworks", label: "Fireworks AI" },
-			{ value: "together", label: "Together" },
-			{ value: "qwen", label: "Alibaba Qwen" },
-			{ value: "qwen-code", label: "Qwen Code" },
-			{ value: "doubao", label: "Bytedance Doubao" },
-			{ value: "lmstudio", label: "LM Studio" },
-			{ value: "moonshot", label: "Moonshot" },
-			{ value: "huggingface", label: "Hugging Face" },
-			{ value: "nebius", label: "Nebius AI Studio" },
-			{ value: "asksage", label: "AskSage" },
-			{ value: "xai", label: "xAI" },
-			{ value: "sambanova", label: "SambaNova" },
-			{ value: "huawei-cloud-maas", label: "Huawei Cloud MaaS" },
-			{ value: "dify", label: "Dify.ai" },
+			{ value: "caret", label: t("providers.caret", "settings") },
+			{ value: "openrouter", label: t("providers.openrouter", "settings") },
+			{ value: "gemini", label: t("providers.gemini", "settings") },
+			{ value: "openai", label: t("providers.openai", "settings") },
+			{ value: "anthropic", label: t("providers.anthropic", "settings") },
+			{ value: "bedrock", label: t("providers.bedrock", "settings") },
+			{ value: "vscode-lm", label: t("providers.vscode-lm", "settings") },
+			{ value: "deepseek", label: t("providers.deepseek", "settings") },
+			{ value: "openai-native", label: t("providers.openai-native", "settings") },
+			{ value: "ollama", label: t("providers.ollama", "settings") },
+			{ value: "vertex", label: t("providers.vertex", "settings") },
+			{ value: "litellm", label: t("providers.litellm", "settings") },
+			{ value: "claude-code", label: t("providers.claude-code", "settings") },
+			{ value: "sapaicore", label: t("providers.sapaicore", "settings") },
+			{ value: "mistral", label: t("providers.mistral", "settings") },
+			{ value: "zai", label: t("providers.zai", "settings") },
+			{ value: "groq", label: t("providers.groq", "settings") },
+			{ value: "cerebras", label: t("providers.cerebras", "settings") },
+			{ value: "vercel-ai-gateway", label: t("providers.vercel-ai-gateway", "settings") },
+			{ value: "baseten", label: t("providers.baseten", "settings") },
+			{ value: "requesty", label: t("providers.requesty", "settings") },
+			{ value: "fireworks", label: t("providers.fireworks", "settings") },
+			{ value: "together", label: t("providers.together", "settings") },
+			{ value: "qwen", label: t("providers.qwen", "settings") },
+			{ value: "qwen-code", label: t("providers.qwen-code", "settings") },	
+			{ value: "doubao", label: t("providers.doubao", "settings") },
+			{ value: "lmstudio", label: t("providers.lmstudio", "settings") },
+			{ value: "moonshot", label: t("providers.moonshot", "settings") },
+			{ value: "huggingface", label: t("providers.huggingface", "settings") },
+			{ value: "nebius", label: t("providers.nebius", "settings") },
+			{ value: "asksage", label: t("providers.asksage", "settings") },	
+			{ value: "xai", label: t("providers.xai", "settings") },
+			{ value: "sambanova", label: t("providers.sambanova", "settings") },	
+			{ value: "huawei-cloud-maas", label: t("providers.huawei-cloud-maas", "settings") },
+			{ value: "dify", label: t("providers.dify", "settings") },
 		]
 
 		// CARET MODIFICATION: Only show Cline provider if explicitly enabled
 		if (showClineProvider) {
-			baseProviders.unshift({ value: "cline", label: "Cline" })
+			baseProviders.unshift({ value: "cline", label: t("providers.cline", "settings") })
 		}
 
 		return baseProviders
@@ -213,6 +215,8 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 	}, [searchableItems, searchTerm, fuse, currentProviderLabel])
 
 	const handleProviderChange = (newProvider: string) => {
+		// CARET MODIFICATION: Add logging for provider changes
+		console.log(`🔄 [ApiOptions] Provider change: "${selectedProvider}" → "${newProvider}" (mode: ${currentMode})`)
 		handleModeFieldChange({ plan: "planModeApiProvider", act: "actModeApiProvider" }, newProvider as any, currentMode)
 		setIsDropdownVisible(false)
 		setSelectedIndex(-1)
@@ -300,7 +304,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 			</style>
 			<DropdownContainer className="dropdown-container">
 				<label htmlFor="api-provider">
-					<span style={{ fontWeight: 500 }}>API Provider</span>
+					<span style={{ fontWeight: 500 }}>{t("apiOptions.apiProvider", "settings")}</span>
 				</label>
 				<ProviderDropdownWrapper ref={dropdownRef}>
 					<VSCodeTextField
@@ -315,7 +319,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							setIsDropdownVisible(true)
 						}}
 						onKeyDown={handleKeyDown}
-						placeholder="Search and select provider..."
+						placeholder={t("apiOptions.searchAndSelectProvider", "settings")}
 						style={{
 							width: "100%",
 							zIndex: DROPDOWN_Z_INDEX,
@@ -325,7 +329,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						value={searchTerm}>
 						{searchTerm && searchTerm !== currentProviderLabel && (
 							<div
-								aria-label="Clear search"
+								aria-label={t("apiOptions.clearSearch", "settings")}
 								className="input-icon-button codicon codicon-close"
 								onClick={() => {
 									setSearchTerm("")
@@ -361,7 +365,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 
 			{/* CARET MODIFICATION: Hide Cline Provider from UI */}
 			{apiConfiguration && selectedProvider === "cline" && false && (
-				<div>Cline Provider Hidden - Use Caret API Provider instead</div>
+				<div>{t("apiOptions.clineProviderHidden", "settings")}</div>
 			)}
 
 			{apiConfiguration && selectedProvider === "asksage" && (

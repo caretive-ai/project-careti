@@ -1,3 +1,4 @@
+import { t } from "@/caret/utils/i18n"
 import { Mode } from "@shared/storage/types"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
@@ -28,16 +29,16 @@ export const TogetherProvider = ({ showModelOptions, isPopup, currentMode }: Tog
 			<ApiKeyField
 				initialValue={apiConfiguration?.togetherApiKey || ""}
 				onChange={(value) => handleFieldChange("togetherApiKey", value)}
-				providerName="Together"
+				providerName={t("togetherProvider.providerName", "settings")}
 			/>
 			<DebouncedTextField
 				initialValue={togetherModelId || ""}
 				onChange={(value) =>
 					handleModeFieldChange({ plan: "planModeTogetherModelId", act: "actModeTogetherModelId" }, value, currentMode)
 				}
-				placeholder={"Enter Model ID..."}
+				placeholder={t("togetherProvider.modelIdPlaceholder", "settings")}
 				style={{ width: "100%" }}>
-				<span style={{ fontWeight: 500 }}>Model ID</span>
+				<span style={{ fontWeight: 500 }}>{t("togetherProvider.modelIdLabel", "settings")}</span>
 			</DebouncedTextField>
 			<p
 				style={{
@@ -46,8 +47,8 @@ export const TogetherProvider = ({ showModelOptions, isPopup, currentMode }: Tog
 					color: "var(--vscode-descriptionForeground)",
 				}}>
 				<span style={{ color: "var(--vscode-errorForeground)" }}>
-					(<span style={{ fontWeight: 500 }}>Note:</span> Cline uses complex prompts and works best with Claude models.
-					Less capable models may not work as expected.)
+					(<span style={{ fontWeight: 500 }}>{t("togetherProvider.notePrefix", "settings")}</span>{" "}
+					{t("togetherProvider.noteText", "settings")})
 				</span>
 			</p>
 		</div>

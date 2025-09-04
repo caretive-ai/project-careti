@@ -4,6 +4,7 @@ import { Mode } from "@shared/storage/types"
 import { VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useMount } from "react-use"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { ModelsServiceClient } from "../../services/grpc-client"
@@ -191,7 +192,7 @@ const GroqModelPicker: React.FC<GroqModelPickerProps> = ({ isPopup, currentMode 
 			</style>
 			<div className="flex flex-col">
 				<label htmlFor="model-search">
-					<span className="font-medium">Model</span>
+					<span className="font-medium">{t("settings.groqModelPicker.modelLabel")}</span>
 				</label>
 				<div className="relative w-full" ref={dropdownRef}>
 					<VSCodeTextField
@@ -202,7 +203,7 @@ const GroqModelPicker: React.FC<GroqModelPickerProps> = ({ isPopup, currentMode 
 							setIsDropdownVisible(true)
 						}}
 						onKeyDown={handleKeyDown}
-						placeholder="Search and select a model..."
+						placeholder={t("settings.groqModelPicker.searchPlaceholder")}
 						style={{
 							width: "100%",
 							zIndex: GROQ_MODEL_PICKER_Z_INDEX,
@@ -211,7 +212,7 @@ const GroqModelPicker: React.FC<GroqModelPickerProps> = ({ isPopup, currentMode 
 						value={searchTerm}>
 						{searchTerm && (
 							<div
-								aria-label="Clear search"
+								aria-label={t("settings.groqModelPicker.clearSearch")}
 								className="input-icon-button codicon codicon-close flex justify-center items-center h-full"
 								onClick={() => {
 									setSearchTerm("")
@@ -255,13 +256,13 @@ const GroqModelPicker: React.FC<GroqModelPickerProps> = ({ isPopup, currentMode 
 				<ModelInfoView isPopup={isPopup} modelInfo={selectedModelInfo} selectedModelId={selectedModelId} />
 			) : (
 				<p className="text-xs mt-0 text-[var(--vscode-descriptionForeground)]">
-					The extension automatically fetches the latest list of models available on{" "}
+					{t("settings.groqModelPicker.description.part1")}{" "}
 					<VSCodeLink className="inline text-inherit" href="https://console.groq.com/docs/models">
-						Groq.
+						{t("settings.groqModelPicker.description.groqLink")}
 					</VSCodeLink>
-					If you're unsure which model to choose, Cline works best with{" "}
+					{t("settings.groqModelPicker.description.part2")}{" "}
 					<VSCodeLink className="inline text-inherit" onClick={() => handleModelChange("llama-3.3-70b-versatile")}>
-						llama-3.3-70b-versatile.
+						{t("settings.groqModelPicker.description.modelLink")}
 					</VSCodeLink>
 				</p>
 			)}

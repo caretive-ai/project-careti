@@ -46,6 +46,8 @@ interface ExtensionStateContextType extends ExtensionState {
 	mcpMarketplaceCatalog: McpMarketplaceCatalog
 	totalTasksSize: number | null
 	availableTerminalProfiles: TerminalProfile[]
+	// CARET MODIFICATION: Add caretBanner for Caret welcome page logo
+	caretBanner: string
 
 	// View state
 	showMcp: boolean
@@ -68,6 +70,7 @@ interface ExtensionStateContextType extends ExtensionState {
 	setVercelAiGatewayModels: (value: Record<string, ModelInfo>) => void
 	setGlobalClineRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalClineRulesToggles: (toggles: Record<string, boolean>) => void
+	setLocalCaretRulesToggles: (toggles: Record<string, boolean>) => void // CARET MODIFICATION: Add caret rules setter
 	setLocalCursorRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalWindsurfRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalWorkflowToggles: (toggles: Record<string, boolean>) => void
@@ -193,6 +196,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		mcpDisplayMode: DEFAULT_MCP_DISPLAY_MODE,
 		globalClineRulesToggles: {},
 		localClineRulesToggles: {},
+		localCaretRulesToggles: {}, // CARET MODIFICATION: Add caret rules state
 		localCursorRulesToggles: {},
 		localWindsurfRulesToggles: {},
 		localWorkflowToggles: {},
@@ -207,6 +211,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		strictPlanModeEnabled: false,
 		customPrompt: undefined,
 		useAutoCondense: false,
+		// CARET MODIFICATION: Initialize caretBanner with actual banner image
+		caretBanner: "/assets/welcome-banner.webp",
 	})
 	const [didHydrateState, setDidHydrateState] = useState(false)
 	const [showWelcome, setShowWelcome] = useState(false)
@@ -632,6 +638,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		mcpMarketplaceCatalog,
 		totalTasksSize,
 		availableTerminalProfiles,
+		// CARET MODIFICATION: Add caretBanner to context value
+		caretBanner: state.caretBanner || "🐰 Caret",
 		showMcp,
 		mcpTab,
 		showSettings,
@@ -721,6 +729,11 @@ export const ExtensionStateContextProvider: React.FC<{
 			setState((prevState) => ({
 				...prevState,
 				localClineRulesToggles: toggles,
+			})),
+		setLocalCaretRulesToggles: (toggles) => // CARET MODIFICATION: Add caret rules setter implementation
+			setState((prevState) => ({
+				...prevState,
+				localCaretRulesToggles: toggles,
 			})),
 		setLocalCursorRulesToggles: (toggles) =>
 			setState((prevState) => ({

@@ -1,4 +1,5 @@
 import { Mode } from "@shared/storage/types"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { DebouncedTextField } from "../common/DebouncedTextField"
@@ -37,10 +38,10 @@ export const DifyProvider = ({ showModelOptions, isPopup, currentMode }: DifyPro
 					onChange={(value) => {
 						handleFieldChange("difyBaseUrl", value)
 					}}
-					placeholder={"Enter base URL..."}
+					placeholder={t("providers.dify.baseUrlPlaceholder", "settings")}
 					style={{ width: "100%", marginBottom: 10 }}
 					type="url">
-					<span style={{ fontWeight: 500 }}>Base URL</span>
+					<span style={{ fontWeight: 500 }}>{t("providers.dify.baseUrlLabel", "settings")}</span>
 				</DebouncedTextField>
 
 				<ApiKeyField
@@ -52,12 +53,10 @@ export const DifyProvider = ({ showModelOptions, isPopup, currentMode }: DifyPro
 				/>
 
 				<div style={{ fontSize: "12px", color: "var(--vscode-descriptionForeground)", marginTop: "5px" }}>
-					<p>
-						Dify is a platform that provides access to various AI models through a unified API. Configure your Dify
-						instance URL and API key to get started.
-					</p>
+					<p>{t("providers.dify.description", "settings")}</p>
 					<p style={{ marginTop: "8px" }}>
-						<strong>Note:</strong> The model selection is handled within your Dify application configuration.
+						<strong>{t("providers.dify.noteLabel", "settings")}</strong>{" "}
+						{t("providers.dify.noteText", "settings")}
 					</p>
 				</div>
 			</div>

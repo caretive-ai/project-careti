@@ -1,1 +1,17 @@
-{}
+{
+	"header": "🎉 v{{version}}の新機能",
+	"previousHeader": "以前の更新:",
+	"bullets": {
+		"current": {
+			"1": "GPT-5モデルファミリーをサポート",
+			"2": "15個の新しいプロバイダーを追加、274個のAIモデルを統合"
+		}
+	},
+	"links": {
+		"intro": "コミュニティは",
+		"and": "と",
+		"facebook": "Facebookグループ",
+		"github": "GitHub",
+		"outro": "で会えます！"
+	}
+}

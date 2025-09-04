@@ -267,7 +267,9 @@ export const BedrockProvider = ({ showModelOptions, isPopup, currentMode }: Bedr
 								<span style={{ fontWeight: 500 }}>{t("bedrockProvider.modelIdLabel", "settings")}</span>
 							</DebouncedTextField>
 							<label htmlFor="bedrock-base-model-dropdown">
-								<span style={{ fontWeight: 500 }}>{t("bedrockProvider.baseInferenceModelLabel", "settings")}</span>
+								<span style={{ fontWeight: 500 }}>
+									{t("bedrockProvider.baseInferenceModelLabel", "settings")}
+								</span>
 							</label>
 							<DropdownContainer className="dropdown-container" zIndex={DROPDOWN_Z_INDEX - 3}>
 								<VSCodeDropdown
@@ -284,7 +286,9 @@ export const BedrockProvider = ({ showModelOptions, isPopup, currentMode }: Bedr
 									}
 									style={{ width: "100%" }}
 									value={modeFields.awsBedrockCustomModelBaseId || bedrockDefaultModelId}>
-									<VSCodeOption value="">{t("bedrockProvider.selectBaseModelPlaceholder", "settings")}</VSCodeOption>
+									<VSCodeOption value="">
+										{t("bedrockProvider.selectBaseModelPlaceholder", "settings")}
+									</VSCodeOption>
 									{Object.keys(bedrockModels).map((modelId) => (
 										<VSCodeOption
 											key={modelId}

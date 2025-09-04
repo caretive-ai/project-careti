@@ -67,8 +67,7 @@ const CaretProvider = ({ currentMode, isPopup, showModelOptions }: CaretProvider
 			</div>
 
 			<p style={{ fontSize: 11, color: "var(--vscode-descriptionForeground)", margin: 0 }}>
-				{t("providers.caret.visit", "settings")}{" "}
-				<VSCodeLink href="https://caret.team">caret.team</VSCodeLink>{" "}
+				{t("providers.caret.visit", "settings")} <VSCodeLink href="https://caret.team">caret.team</VSCodeLink>{" "}
 				{t("providers.caret.getApiKey", "settings")}
 			</p>
 		</div>

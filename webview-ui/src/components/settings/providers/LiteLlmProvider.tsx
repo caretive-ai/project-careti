@@ -1,8 +1,8 @@
 import { liteLlmModelInfoSaneDefaults } from "@shared/api"
 import { Mode } from "@shared/storage/types"
-import { t } from "@/caret/utils/i18n"
 import { VSCodeCheckbox, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { getAsVar, VSC_DESCRIPTION_FOREGROUND } from "@/utils/vscStyles"
 import { DebouncedTextField } from "../common/DebouncedTextField"
@@ -175,7 +175,9 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 								)
 							}}
 							style={{ flex: 1 }}>
-							<span style={{ fontWeight: 500 }}>{t("settings.modelInfoView.maxOutputTokensLabel", "settings")}</span>
+							<span style={{ fontWeight: 500 }}>
+								{t("settings.modelInfoView.maxOutputTokensLabel", "settings")}
+							</span>
 						</DebouncedTextField>
 					</div>
 					<div style={{ display: "flex", gap: 10, marginTop: "5px" }}>

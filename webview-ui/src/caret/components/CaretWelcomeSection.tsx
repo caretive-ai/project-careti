@@ -1,7 +1,7 @@
-import React from "react"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
-import { t } from "../utils/i18n"
+import React from "react"
 import { useCaretI18n } from "../hooks/useCaretI18n"
+import { t } from "../utils/i18n"
 
 interface ButtonConfig {
 	textKey: string
@@ -41,19 +41,14 @@ const CaretWelcomeSection: React.FC<CaretWelcomeSectionProps> = ({
 	return (
 		<div className={`caret-welcome-section ${className}`} style={sectionStyle}>
 			{headerKey && <h3 style={{ fontSize: "1rem", marginBottom: "8px" }}>{t(headerKey, "welcome")}</h3>}
-			{bodyKey && (
-				allowHtml ? (
-					<p dangerouslySetInnerHTML={{ __html: t(bodyKey, "welcome") }} />
-				) : (
-					<p>{t(bodyKey, "welcome")}</p>
-				)
-			)}
+			{bodyKey &&
+				(allowHtml ? <p dangerouslySetInnerHTML={{ __html: t(bodyKey, "welcome") }} /> : <p>{t(bodyKey, "welcome")}</p>)}
 			{children}
 			{buttonConfig && (
 				<VSCodeButton
 					appearance={buttonConfig.appearance || "secondary"}
-					onClick={buttonConfig.handler}
 					disabled={buttonConfig.disabled || false}
+					onClick={buttonConfig.handler}
 					style={{ width: "100%", marginTop: "10px" }}>
 					{t(buttonConfig.textKey, "welcome")}
 				</VSCodeButton>

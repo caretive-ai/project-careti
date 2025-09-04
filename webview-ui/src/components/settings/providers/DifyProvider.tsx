@@ -55,8 +55,7 @@ export const DifyProvider = ({ showModelOptions, isPopup, currentMode }: DifyPro
 				<div style={{ fontSize: "12px", color: "var(--vscode-descriptionForeground)", marginTop: "5px" }}>
 					<p>{t("providers.dify.description", "settings")}</p>
 					<p style={{ marginTop: "8px" }}>
-						<strong>{t("providers.dify.noteLabel", "settings")}</strong>{" "}
-						{t("providers.dify.noteText", "settings")}
+						<strong>{t("providers.dify.noteLabel", "settings")}</strong> {t("providers.dify.noteText", "settings")}
 					</p>
 				</div>
 			</div>

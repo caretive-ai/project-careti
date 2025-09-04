@@ -1,11 +1,11 @@
-import React from "react"
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
-import { t } from "../utils/i18n"
-import { useCaretI18n } from "../hooks/useCaretI18n"
-import { getLocalizedUrl } from "../constants/urls"
-import ApiOptions from "../../components/settings/ApiOptions"
-import { useExtensionState } from "@/context/ExtensionStateContext"
+import React from "react"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
+import { useExtensionState } from "@/context/ExtensionStateContext"
+import ApiOptions from "../../components/settings/ApiOptions"
+import { getLocalizedUrl } from "../constants/urls"
+import { useCaretI18n } from "../hooks/useCaretI18n"
+import { t } from "../utils/i18n"
 
 interface CaretApiSetupProps {
 	onSubmit: () => void
@@ -116,12 +116,14 @@ const CaretApiSetup: React.FC<CaretApiSetupProps> = ({ onSubmit, onBack, disable
 			<div style={linkStyle}>
 				<p style={{ margin: "0 0 10px 0", fontWeight: "600" }}>{t("apiSetup.instructions", "welcome")}</p>
 				<div style={linkItemStyle}>
-					• <VSCodeLink href={getLocalizedUrl("SUPPORT_MODEL_LIST", currentLanguage)}>
+					•{" "}
+					<VSCodeLink href={getLocalizedUrl("SUPPORT_MODEL_LIST", currentLanguage)}>
 						{t("apiSetup.supportLinks.llmList", "welcome")}
 					</VSCodeLink>
 				</div>
 				<div style={linkItemStyle}>
-					• <VSCodeLink href={getLocalizedUrl("GEMINI_CREDIT_GUIDE", currentLanguage)}>
+					•{" "}
+					<VSCodeLink href={getLocalizedUrl("GEMINI_CREDIT_GUIDE", currentLanguage)}>
 						{t("apiSetup.supportLinks.geminiCredit", "welcome")}
 					</VSCodeLink>
 				</div>
@@ -134,7 +136,7 @@ const CaretApiSetup: React.FC<CaretApiSetupProps> = ({ onSubmit, onBack, disable
 
 				{/* Submit Button */}
 				{selectedProvider !== "caret" && (
-					<VSCodeButton onClick={onSubmit} disabled={disabled} appearance="primary" style={submitButtonStyle}>
+					<VSCodeButton appearance="primary" disabled={disabled} onClick={onSubmit} style={submitButtonStyle}>
 						{t("apiSetup.saveButton", "welcome")}
 					</VSCodeButton>
 				)}
@@ -147,9 +149,7 @@ const CaretApiSetup: React.FC<CaretApiSetupProps> = ({ onSubmit, onBack, disable
 			<div style={helpSectionStyle}>
 				<h4 style={{ marginBottom: "15px" }}>{t("apiSetup.help.title", "welcome")}</h4>
 				<VSCodeLink href="https://docs.caret.team">
-					<VSCodeButton appearance="secondary">
-						{t("apiSetup.help.button", "welcome")}
-					</VSCodeButton>
+					<VSCodeButton appearance="secondary">{t("apiSetup.help.button", "welcome")}</VSCodeButton>
 				</VSCodeLink>
 			</div>
 		</div>

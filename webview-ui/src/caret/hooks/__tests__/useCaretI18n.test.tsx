@@ -3,9 +3,9 @@ import { act, renderHook } from "@testing-library/react"
 import React from "react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { CaretI18nProvider } from "@/caret/context/CaretI18nContext"
-import { ExtensionStateContextProvider } from "@/context/ExtensionStateContext"
-import { resetI18nPerformanceMetrics } from "@/caret/utils/i18n"
 import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
+import { resetI18nPerformanceMetrics } from "@/caret/utils/i18n"
+import { ExtensionStateContextProvider } from "@/context/ExtensionStateContext"
 
 // Mock the performance monitoring
 vi.mock("@/caret/utils/i18n-performance", () => ({

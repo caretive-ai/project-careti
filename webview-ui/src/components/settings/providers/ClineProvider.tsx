@@ -60,7 +60,9 @@ export const ClineProvider = ({ showModelOptions, isPopup, currentMode }: ClineP
 									value={apiConfiguration?.openRouterProviderSorting}>
 									<VSCodeOption value="">{t("clineProvider.defaultOption", "settings")}</VSCodeOption>
 									<VSCodeOption value="price">{t("clineProvider.priceOption", "settings")}</VSCodeOption>
-									<VSCodeOption value="throughput">{t("clineProvider.throughputOption", "settings")}</VSCodeOption>
+									<VSCodeOption value="throughput">
+										{t("clineProvider.throughputOption", "settings")}
+									</VSCodeOption>
 									<VSCodeOption value="latency">{t("clineProvider.latencyOption", "settings")}</VSCodeOption>
 								</VSCodeDropdown>
 							</DropdownContainer>

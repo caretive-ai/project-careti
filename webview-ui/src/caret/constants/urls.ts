@@ -2,11 +2,11 @@
 export const CARET_URLS = {
 	// GitHub Repository
 	GITHUB_REPOSITORY: "https://github.com/aicoding-caret/caret",
-	
+
 	// Company and Service
 	CARETIVE_COMPANY: "https://caretive.co.kr",
 	CARET_SERVICE: "https://caret.kr",
-	
+
 	// Legal and Support
 	TERMS_OF_SERVICE: "https://caret.kr/terms",
 	PRIVACY_POLICY: "https://caret.kr/privacy",
@@ -25,7 +25,7 @@ export const CARET_LOCALIZED_URLS = {
 	GEMINI_CREDIT_GUIDE: {
 		ko: "https://blog.naver.com/fstory97/223887376667",
 		en: "https://blog.naver.com/fstory97/223887376667",
-		ja: "https://blog.naver.com/fstory97/223887376667", 
+		ja: "https://blog.naver.com/fstory97/223887376667",
 		zh: "https://blog.naver.com/fstory97/223887376667",
 	},
 	SUPPORT_MODEL_LIST: {

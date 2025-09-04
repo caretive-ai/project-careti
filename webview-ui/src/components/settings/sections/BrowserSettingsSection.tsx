@@ -1,8 +1,8 @@
-import { t } from "@/caret/utils/i18n"
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import { VSCodeButton, VSCodeCheckbox, VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import React, { useCallback, useEffect, useState } from "react"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { BROWSER_VIEWPORT_PRESETS } from "../../../../../src/shared/BrowserSettings"
 import { useExtensionState } from "../../../context/ExtensionStateContext"
 import { BrowserServiceClient } from "../../../services/grpc-client"
@@ -37,10 +37,14 @@ const ConnectionStatusIndicator = ({
 			) : isConnected === true ? (
 				<>
 					<CheckIcon className="codicon codicon-check" />
-					<StatusText style={{ color: "var(--vscode-terminal-ansiGreen)" }}>{t("browser.connected", "settings")}</StatusText>
+					<StatusText style={{ color: "var(--vscode-terminal-ansiGreen)" }}>
+						{t("browser.connected", "settings")}
+					</StatusText>
 				</>
 			) : isConnected === false ? (
-				<StatusText style={{ color: "var(--vscode-errorForeground)" }}>{t("browser.notConnected", "settings")}</StatusText>
+				<StatusText style={{ color: "var(--vscode-errorForeground)" }}>
+					{t("browser.notConnected", "settings")}
+				</StatusText>
 			) : null}
 		</StatusContainer>
 	)
@@ -262,8 +266,8 @@ export const BrowserSettingsSection: React.FC<BrowserSettingsSectionProps> = ({ 
 									? t("browser.chromeNotDetected", "settings")
 									: detectedChromePath
 										? ` (${detectedChromePath})`
-										: ""}.{" "}
-								{t("browser.remoteConnectionDescription2", "settings")}
+										: ""}
+								. {t("browser.remoteConnectionDescription2", "settings")}
 								{browserSettings.remoteBrowserEnabled ? (
 									<> {t("browser.remoteConnectionDescription3", "settings")}</>
 								) : (

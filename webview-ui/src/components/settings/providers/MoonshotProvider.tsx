@@ -1,7 +1,7 @@
-import { t } from "@/caret/utils/i18n"
 import { moonshotModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { ModelInfoView } from "../common/ModelInfoView"
@@ -32,9 +32,7 @@ export const MoonshotProvider = ({ showModelOptions, isPopup, currentMode }: Moo
 		<div>
 			<DropdownContainer className="dropdown-container" style={{ position: "inherit" }}>
 				<label htmlFor="moonshot-entrypoint">
-					<span style={{ fontWeight: 500, marginTop: 5 }}>
-						{t("moonshotProvider.entrypoint", "settings")}
-					</span>
+					<span style={{ fontWeight: 500, marginTop: 5 }}>{t("moonshotProvider.entrypoint", "settings")}</span>
 				</label>
 				<VSCodeDropdown
 					id="moonshot-entrypoint"

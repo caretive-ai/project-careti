@@ -1,8 +1,8 @@
-import { t } from "@/caret/utils/i18n"
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton, VSCodeCheckbox, VSCodeDropdown, VSCodeLink, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
 import { useOpenRouterKeyInfo } from "../../ui/hooks/useOpenRouterKeyInfo"
@@ -143,7 +143,9 @@ export const OpenRouterProvider = ({ showModelOptions, isPopup, currentMode }: O
 									<VSCodeOption value="throughput">
 										{t("openRouterProvider.throughputOption", "settings")}
 									</VSCodeOption>
-									<VSCodeOption value="latency">{t("openRouterProvider.latencyOption", "settings")}</VSCodeOption>
+									<VSCodeOption value="latency">
+										{t("openRouterProvider.latencyOption", "settings")}
+									</VSCodeOption>
 								</VSCodeDropdown>
 							</DropdownContainer>
 							<p style={{ fontSize: "12px", marginTop: 3, color: "var(--vscode-descriptionForeground)" }}>

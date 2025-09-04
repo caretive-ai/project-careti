@@ -62,7 +62,7 @@ export const useApiConfigurationHandlers = () => {
 	) => {
 		// CARET MODIFICATION: Add logging for mode field changes
 		console.log(`📝 [ApiConfigHandler] Mode field change: ${fieldPair[currentMode]} = "${value}" (mode: ${currentMode})`)
-		
+
 		if (planActSeparateModelsSetting) {
 			const targetField = fieldPair[currentMode]
 			await handleFieldChange(targetField, value)

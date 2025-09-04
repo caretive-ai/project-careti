@@ -1,9 +1,9 @@
-import { t } from "@/caret/utils/i18n"
 import { azureOpenAiDefaultApiVersion, openAiModelInfoSaneDefaults } from "@shared/api"
 import { OpenAiModelsRequest } from "@shared/proto/cline/models"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton, VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react"
 import { useCallback, useEffect, useRef, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ModelsServiceClient } from "@/services/grpc-client"
 import { getAsVar, VSC_DESCRIPTION_FOREGROUND } from "@/utils/vscStyles"
@@ -283,7 +283,9 @@ export const OpenAICompatibleProvider = ({ showModelOptions, isPopup, currentMod
 								)
 							}}
 							style={{ flex: 1 }}>
-							<span style={{ fontWeight: 500 }}>{t("openAiCompatibleProvider.maxOutputTokensLabel", "settings")}</span>
+							<span style={{ fontWeight: 500 }}>
+								{t("openAiCompatibleProvider.maxOutputTokensLabel", "settings")}
+							</span>
 						</DebouncedTextField>
 					</div>
 

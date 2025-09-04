@@ -293,9 +293,7 @@ const BasetenModelPicker: React.FC<BasetenModelPickerProps> = ({ isPopup, curren
 						Baseten.
 					</VSCodeLink>
 					{t("settings.modelPicker.unsureWhichModel", "settings")}{" "}
-					<VSCodeLink
-						className="inline text-inherit"
-						onClick={() => handleModelChange("moonshotai/Kimi-K2-Instruct")}>
+					<VSCodeLink className="inline text-inherit" onClick={() => handleModelChange("moonshotai/Kimi-K2-Instruct")}>
 						{t("settings.basetenModelPicker.recommendedModel", "settings")}
 					</VSCodeLink>
 				</p>

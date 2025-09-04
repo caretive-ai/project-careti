@@ -338,13 +338,13 @@ const ClineRulesToggleModal: React.FC = () => {
 								<div className="text-sm font-normal mb-2">{t("rules.section.workspaceRules", "settings")}</div>
 								{/* CARET MODIFICATION: Add .caretrules display */}
 								<RulesToggleList
-									rules={caretRules}
-									toggleRule={toggleCaretRule} // CARET MODIFICATION: Use dedicated caret toggle
-									listGap="small"
 									isGlobal={false}
+									listGap="small" // CARET MODIFICATION: Use dedicated caret toggle
+									rules={caretRules}
 									ruleType={"caret"}
 									showNewRule={false}
 									showNoRules={false}
+									toggleRule={toggleCaretRule}
 								/>
 								<RulesToggleList
 									isGlobal={false}

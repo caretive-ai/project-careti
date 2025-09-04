@@ -3,6 +3,7 @@ import { Mode } from "@shared/storage/types"
 import { VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { useCallback, useEffect, useState } from "react"
 import { useInterval } from "react-use"
+import { t } from "@/caret/utils/i18n"
 import UseCustomPromptCheckbox from "@/components/settings/UseCustomPromptCheckbox"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ModelsServiceClient } from "@/services/grpc-client"
@@ -12,7 +13,6 @@ import { DebouncedTextField } from "../common/DebouncedTextField"
 import OllamaModelPicker from "../OllamaModelPicker"
 import { getModeSpecificFields } from "../utils/providerUtils"
 import { useApiConfigurationHandlers } from "../utils/useApiConfigurationHandlers"
-import { t } from "@/caret/utils/i18n"
 
 /**
  * Props for the OllamaProvider component

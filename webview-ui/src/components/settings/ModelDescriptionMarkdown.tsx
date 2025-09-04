@@ -1,8 +1,8 @@
 import { VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { memo, useEffect, useRef, useState } from "react"
-import { t } from "@/caret/utils/i18n"
 import { useRemark } from "react-remark"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 
 const StyledMarkdown = styled.div`
@@ -64,7 +64,7 @@ export const ModelDescriptionMarkdown = memo(
 		setIsExpanded: (isExpanded: boolean) => void
 		isPopup?: boolean
 	}) => {
-			const [reactContent, setMarkdown] = useRemark()
+		const [reactContent, setMarkdown] = useRemark()
 		const [showSeeMore, setShowSeeMore] = useState(false)
 		const textContainerRef = useRef<HTMLDivElement>(null)
 		const textRef = useRef<HTMLDivElement>(null)

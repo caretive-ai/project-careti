@@ -1,6 +1,6 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
-import { t } from "@/caret/utils/i18n"
 import ClineLogoVariable from "@/assets/ClineLogoVariable"
+import { t } from "@/caret/utils/i18n"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { UiServiceClient } from "@/services/grpc-client"
 
@@ -24,10 +24,7 @@ const HomeHeader = ({ shouldShowQuickWins = false }: HomeHeaderProps) => {
 			</div>
 			<div className="text-center flex items-center justify-center">
 				<h2 className="m-0 text-lg">{t("welcome.whatCanIDo", "common")}</h2>
-				<HeroTooltip
-					className="max-w-[300px]"
-					content={t("welcome.tooltipContent", "welcome")}
-					placement="bottom">
+				<HeroTooltip className="max-w-[300px]" content={t("welcome.tooltipContent", "welcome")} placement="bottom">
 					<span className="codicon codicon-info ml-2 cursor-pointer text-link text-sm" />
 				</HeroTooltip>
 			</div>

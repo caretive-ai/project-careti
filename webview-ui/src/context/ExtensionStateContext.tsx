@@ -730,7 +730,9 @@ export const ExtensionStateContextProvider: React.FC<{
 				...prevState,
 				localClineRulesToggles: toggles,
 			})),
-		setLocalCaretRulesToggles: (toggles) => // CARET MODIFICATION: Add caret rules setter implementation
+		setLocalCaretRulesToggles: (
+			toggles, // CARET MODIFICATION: Add caret rules setter implementation
+		) =>
 			setState((prevState) => ({
 				...prevState,
 				localCaretRulesToggles: toggles,

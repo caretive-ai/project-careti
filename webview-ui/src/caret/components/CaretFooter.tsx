@@ -1,9 +1,8 @@
-import React from "react"
 import { VSCodeLink } from "@vscode/webview-ui-toolkit/react"
-import { t } from "../utils/i18n"
-import { useExtensionState } from "../../context/ExtensionStateContext"
-
 import type { CSSProperties } from "react"
+import React from "react"
+import { useExtensionState } from "../../context/ExtensionStateContext"
+import { t } from "../utils/i18n"
 
 const CaretFooter: React.FC = () => {
 	const { version } = useExtensionState()

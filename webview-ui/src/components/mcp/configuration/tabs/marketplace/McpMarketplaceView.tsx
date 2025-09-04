@@ -1,4 +1,3 @@
-import { t } from "@/caret/utils/i18n"
 import { EmptyRequest } from "@shared/proto/cline/common"
 import {
 	VSCodeButton,
@@ -10,6 +9,7 @@ import {
 	VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react"
 import { useEffect, useMemo, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { McpServiceClient } from "@/services/grpc-client"
 import McpMarketplaceCard from "./McpMarketplaceCard"

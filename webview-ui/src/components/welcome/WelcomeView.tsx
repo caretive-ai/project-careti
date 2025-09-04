@@ -1,18 +1,18 @@
 // CARET MODIFICATION: Refactored to use caret-main architecture with improved navigation
 // Original Cline backed up to: WelcomeView.tsx.cline
-import React from "react"
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
-import { useEffect, useState } from "react"
+
 import { BooleanRequest } from "@shared/proto/cline/common"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import React, { useEffect, useState } from "react"
+import CaretApiSetup from "@/caret/components/CaretApiSetup"
+import CaretFooter from "@/caret/components/CaretFooter"
+import CaretWelcomeSection from "@/caret/components/CaretWelcomeSection"
+import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
+import { t } from "@/caret/utils/i18n"
+import PreferredLanguageSetting from "@/components/settings/PreferredLanguageSetting"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "@/services/grpc-client"
 import { validateApiConfiguration } from "@/utils/validate"
-import CaretWelcomeSection from "@/caret/components/CaretWelcomeSection"
-import CaretApiSetup from "@/caret/components/CaretApiSetup"
-import CaretFooter from "@/caret/components/CaretFooter"
-import { t } from "@/caret/utils/i18n"
-import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
-import PreferredLanguageSetting from "@/components/settings/PreferredLanguageSetting"
 
 const WelcomeView = () => {
 	const { apiConfiguration, mode, version, caretBanner } = useExtensionState()
@@ -26,13 +26,13 @@ const WelcomeView = () => {
 		try {
 			// CARET MODIFICATION: API 설정 완료 후 History/Home으로 이동 (Cline의 Settings 페이지 대신)
 			console.log("[WelcomeView] API configuration saved, completing welcome flow")
-			
+
 			// Welcome view를 완료로 표시
 			await StateServiceClient.setWelcomeViewCompleted(BooleanRequest.create({ value: true }))
-			
+
 			// API 설정 페이지 닫기
 			setShowApiOptions(false)
-			
+
 			console.log("[WelcomeView] Welcome view completed, user will see History/Home")
 		} catch (error) {
 			console.error("Failed to complete welcome view:", error)
@@ -67,7 +67,7 @@ const WelcomeView = () => {
 		children?: React.ReactNode,
 	) => (
 		<CaretWelcomeSection
-			headerKey={headerKey}
+			allowHtml={true}
 			bodyKey={bodyKey}
 			buttonConfig={
 				buttonTextKey && buttonHandler
@@ -78,7 +78,7 @@ const WelcomeView = () => {
 						}
 					: undefined
 			}
-			allowHtml={true}>
+			headerKey={headerKey}>
 			{children}
 		</CaretWelcomeSection>
 	)
@@ -87,8 +87,8 @@ const WelcomeView = () => {
 	if (showApiOptions) {
 		return (
 			<div
-				data-testid="caret-api-setup-page"
 				className="caret-api-setup-page"
+				data-testid="caret-api-setup-page"
 				style={{
 					position: "fixed",
 					top: 0,
@@ -107,10 +107,10 @@ const WelcomeView = () => {
 					}}>
 					{/* API 설정 컴포넌트 - 페이지 전체 */}
 					<CaretApiSetup
-						onSubmit={handleSubmitApiKey}
-						onBack={handleHideApiOptions}
 						disabled={disableLetsGoButton}
 						errorMessage={apiErrorMessage || undefined}
+						onBack={handleHideApiOptions}
+						onSubmit={handleSubmitApiKey}
 					/>
 				</div>
 			</div>
@@ -120,8 +120,8 @@ const WelcomeView = () => {
 	// 메인 웰컴 페이지
 	return (
 		<div
-			data-testid="caret-welcome-view"
 			className="caret-welcome"
+			data-testid="caret-welcome-view"
 			style={{
 				position: "fixed",
 				top: 0,
@@ -140,8 +140,8 @@ const WelcomeView = () => {
 				<center style={{ marginBottom: "20px" }}>
 					{/* CARET MODIFICATION: Use agent_profile.png as the primary icon */}
 					<img
-						src={(window as any).agentProfileImage || 'D:/dev/caret-merging/assets/agent_profile.png'}
 						alt={t("imageAlt.caretBanner", "common")}
+						src={(window as any).agentProfileImage || "D:/dev/caret-merging/assets/agent_profile.png"}
 						style={{
 							width: "80px",
 							height: "80px",
@@ -166,7 +166,7 @@ const WelcomeView = () => {
 				{renderSection("", "coreFeatures.description")}
 
 				{/* 언어 선택과 시작 섹션 */}
-				<CaretWelcomeSection headerKey="" bodyKey="" allowHtml={true}>
+				<CaretWelcomeSection allowHtml={true} bodyKey="" headerKey="">
 					{/* CARET MODIFICATION: 언어 설정을 일반설정의 선호언어로 연결 */}
 					<div style={{ marginBottom: "20px" }}>
 						<PreferredLanguageSetting />
@@ -189,11 +189,11 @@ const WelcomeView = () => {
 				</CaretWelcomeSection>
 
 				{renderSection(
-					"community.header", 
-					"community.body", 
-					"community.githubLink", 
-					() => handleOpenLink("https://github.com/aicoding-caret/caret"), 
-					"secondary"
+					"community.header",
+					"community.body",
+					"community.githubLink",
+					() => handleOpenLink("https://github.com/aicoding-caret/caret"),
+					"secondary",
 				)}
 
 				{renderSection("educationOffer.header", "educationOffer.body")}

@@ -297,7 +297,8 @@
 	"brandMarketplace": {
 		"preparing": "{{brandName}} MCP marketplace is preparing.",
 		"preparingDescription": "{{brandName}} exclusive MCP tools will be available soon.",
-		"codecenterPreparing": "CodeCenter MCP marketplace is preparing.",		"codecenterPreparingDescription": "CodeCenter exclusive MCP tools will be available soon."
+		"codecenterPreparing": "CodeCenter MCP marketplace is preparing.",
+		"codecenterPreparingDescription": "CodeCenter exclusive MCP tools will be available soon."
 	},
 	"installedServersView": {
 		"descriptionPart1": "The",
@@ -362,7 +363,8 @@
 		"newest": "Newest",
 		"githubStars": "GitHub stars",
 		"name": "Name",
-		"noMatchingMcpServersFound": "No matching MCP servers found.",		"noMcpServersFoundInMarketplace": "No MCP servers found in marketplace."
+		"noMatchingMcpServersFound": "No matching MCP servers found.",
+		"noMcpServersFoundInMarketplace": "No MCP servers found in marketplace."
 	},
 	"mcpSubmitCard": {
 		"submitMcpServer": "Submit MCP server",

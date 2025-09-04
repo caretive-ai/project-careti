@@ -1,8 +1,14 @@
 // CARET MODIFICATION: Context provider for Caret i18n system
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react"
-import { getCurrentLanguage, type SupportedLanguage, setGlobalUILanguage, setExtensionLanguageProvider, convertPreferredLanguageToSupported } from "../utils/i18n"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { caretWebviewLogger } from "../utils/CaretWebviewLogger"
+import {
+	convertPreferredLanguageToSupported,
+	getCurrentLanguage,
+	type SupportedLanguage,
+	setExtensionLanguageProvider,
+	setGlobalUILanguage,
+} from "../utils/i18n"
 
 interface CaretI18nContextType {
 	language: SupportedLanguage
@@ -25,9 +31,11 @@ export const CaretI18nProvider: React.FC<CaretI18nProviderProps> = ({ children, 
 
 	// 초기화 로그는 한 번만 출력
 	const [hasInitialized, setHasInitialized] = useState(false)
-	
+
 	if (!hasInitialized) {
-		console.log(`🚀 [CaretI18nProvider] Initializing i18n system: defaultLang="${defaultLanguage}", ExtensionState="${preferredLanguage}"`)
+		console.log(
+			`🚀 [CaretI18nProvider] Initializing i18n system: defaultLang="${defaultLanguage}", ExtensionState="${preferredLanguage}"`,
+		)
 		setHasInitialized(true)
 	}
 

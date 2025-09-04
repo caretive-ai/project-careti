@@ -1,8 +1,8 @@
 import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from "react"
-import { t } from "@/caret/utils/i18n"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { highlight } from "../history/HistoryView"
 
 export const OLLAMA_MODEL_PICKER_Z_INDEX = 1_000
@@ -14,12 +14,7 @@ export interface OllamaModelPickerProps {
 	placeholder?: string
 }
 
-const OllamaModelPicker: React.FC<OllamaModelPickerProps> = ({
-	ollamaModels,
-	selectedModelId,
-	onModelChange,
-	placeholder,
-}) => {
+const OllamaModelPicker: React.FC<OllamaModelPickerProps> = ({ ollamaModels, selectedModelId, onModelChange, placeholder }) => {
 	const [searchTerm, setSearchTerm] = useState(selectedModelId || "")
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false)
 	const [selectedIndex, setSelectedIndex] = useState(-1)

@@ -24,3 +24,46 @@
 [2025-09-04T16:58:37.858Z] ERROR: ❌ Conversion failed: The "paths[1]" argument must be of type string. Received undefined
 [2025-09-04T16:58:37.858Z] ERROR: ❌ Failed to restore backup: The "paths[1]" argument must be of type string. Received undefined
 [2025-09-04T16:58:37.858Z] ERROR: 💥 Conversion failed: The "paths[1]" argument must be of type string. Received undefined
+[2025-09-04T17:20:55.681Z] INFO: ✅ Configuration loaded: Caret to CodeCenter Frontend Conversion
+[2025-09-04T17:20:55.684Z] INFO: 🔧 Frontend Brand Converter v1.0.0
+[2025-09-04T17:20:55.684Z] INFO: 📋 Config: Frontend branding conversion for Caret ↔ CodeCenter
+[2025-09-04T17:20:55.684Z] INFO: 🎯 Direction: forward
+[2025-09-04T17:20:55.684Z] INFO: 🏗️ Dry run: true
+[2025-09-04T17:20:55.684Z] INFO: 🚀 Starting Caret → CodeCenter conversion
+[2025-09-04T17:20:55.684Z] INFO: 🔄 Backing up current locale: D:\dev\caret-merging\webview-ui\src\caret\locale → D:\dev\caret-merging\webview-ui\src\caret\locale-backup-codecenter
+[2025-09-04T17:20:55.684Z] DEBUG: [DRY RUN] Would backup locale files
+[2025-09-04T17:20:55.684Z] INFO: 🔄 Copying locale files: D:\dev\caret-merging\caret-b2b\brands\codecenter\locale → D:\dev\caret-merging\webview-ui\src\caret\locale
+[2025-09-04T17:20:55.684Z] DEBUG: [DRY RUN] Would copy locale files
+[2025-09-04T17:20:55.684Z] INFO: 🔄 Applying brand replacements: Caret → CodeCenter
+[2025-09-04T17:20:55.684Z] DEBUG: [DRY RUN] Would apply 6 replacements
+[2025-09-04T17:20:55.684Z] INFO: 🔄 Applying cost hiding feature
+[2025-09-04T17:20:55.684Z] DEBUG: [DRY RUN] Would apply cost hiding to 2 files
+[2025-09-04T17:20:55.686Z] INFO: 🔄 Validating 44 JSON files
+[2025-09-04T17:20:55.692Z] INFO: ✅ JSON validation completed: 44 files valid
+[2025-09-04T17:20:55.692Z] INFO: ✅ Caret → CodeCenter conversion completed successfully
+[2025-09-04T17:21:00.251Z] INFO: ✅ Configuration loaded: Caret to CodeCenter Frontend Conversion
+[2025-09-04T17:21:00.254Z] INFO: 🔧 Frontend Brand Converter v1.0.0
+[2025-09-04T17:21:00.254Z] INFO: 📋 Config: Frontend branding conversion for Caret ↔ CodeCenter
+[2025-09-04T17:21:00.254Z] INFO: 🎯 Direction: backward
+[2025-09-04T17:21:00.254Z] INFO: 🏗️ Dry run: true
+[2025-09-04T17:21:00.255Z] INFO: 🔄 Starting CodeCenter → Caret conversion (rollback)
+[2025-09-04T17:21:00.255Z] INFO: 🔄 Restoring locale backup: D:\dev\caret-merging\webview-ui\src\caret\locale-backup-codecenter → D:\dev\caret-merging\webview-ui\src\caret\locale
+[2025-09-04T17:21:00.255Z] DEBUG: [DRY RUN] Would restore locale backup
+[2025-09-04T17:21:00.255Z] INFO: ✅ CodeCenter → Caret conversion completed successfully
+[2025-09-04T17:25:52.406Z] INFO: ✅ Configuration loaded: Caret to CodeCenter Frontend Conversion
+[2025-09-04T17:25:52.410Z] INFO: 🔧 Frontend Brand Converter v1.0.0
+[2025-09-04T17:25:52.410Z] INFO: 📋 Config: Frontend branding conversion for Caret ↔ CodeCenter
+[2025-09-04T17:25:52.410Z] INFO: 🎯 Direction: forward
+[2025-09-04T17:25:52.410Z] INFO: 🏗️ Dry run: true
+[2025-09-04T17:25:52.410Z] INFO: 🚀 Starting Caret → CodeCenter conversion
+[2025-09-04T17:25:52.410Z] INFO: 🔄 Backing up current locale: D:\dev\caret-merging\webview-ui\src\caret\locale → D:\dev\caret-merging\webview-ui\src\caret\locale-backup-codecenter
+[2025-09-04T17:25:52.410Z] DEBUG: [DRY RUN] Would backup locale files
+[2025-09-04T17:25:52.410Z] INFO: 🔄 Copying locale files: D:\dev\caret-merging\caret-b2b\brands\codecenter\locale → D:\dev\caret-merging\webview-ui\src\caret\locale
+[2025-09-04T17:25:52.410Z] DEBUG: [DRY RUN] Would copy locale files
+[2025-09-04T17:25:52.410Z] INFO: 🔄 Applying brand replacements: Caret → CodeCenter
+[2025-09-04T17:25:52.410Z] DEBUG: [DRY RUN] Would apply 6 replacements
+[2025-09-04T17:25:52.410Z] INFO: 🔄 Applying cost hiding feature
+[2025-09-04T17:25:52.410Z] DEBUG: [DRY RUN] Would apply cost hiding to 2 files
+[2025-09-04T17:25:52.412Z] INFO: 🔄 Validating 44 JSON files
+[2025-09-04T17:25:52.418Z] INFO: ✅ JSON validation completed: 44 files valid
+[2025-09-04T17:25:52.418Z] INFO: ✅ Caret → CodeCenter conversion completed successfully

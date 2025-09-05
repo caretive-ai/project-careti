@@ -28,7 +28,7 @@ export const HuaweiCloudMaasProvider = ({ showModelOptions, isPopup, currentMode
 			<ApiKeyField
 				initialValue={apiConfiguration?.huaweiCloudMaasApiKey || ""}
 				onChange={(value) => handleFieldChange("huaweiCloudMaasApiKey", value)}
-				providerName={t("huaweiCloudMaasProvider.providerName", "settings")}
+				providerName={t("providers.huawei-cloud-maas.name", "settings")}
 				signupUrl="https://support.huaweicloud.com/intl/zh-cn/usermanual-maas/maas_01_0001.html"
 			/>
 			{showModelOptions && (

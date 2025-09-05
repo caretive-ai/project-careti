@@ -35,7 +35,7 @@ export const MistralProvider = ({ showModelOptions, isPopup, currentMode }: Mist
 			<ApiKeyField
 				initialValue={apiConfiguration?.mistralApiKey || ""}
 				onChange={(value) => handleFieldChange("mistralApiKey", value)}
-				providerName={t("mistralProvider.providerName", "settings")}
+				providerName={t("providers.mistral.name", "settings")}
 				signupUrl="https://console.mistral.ai/codestral"
 			/>
 

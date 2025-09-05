@@ -61,7 +61,7 @@ const GroqModelPicker: React.FC<GroqModelPickerProps> = ({ isPopup, currentMode 
 				})
 			})
 			.catch((err) => {
-				console.error("Failed to refresh Groq models:", err)
+				console.error(t("settings.groqModelPicker.fetchModelsError", "settings"), err)
 			})
 	})
 
@@ -256,13 +256,13 @@ const GroqModelPicker: React.FC<GroqModelPickerProps> = ({ isPopup, currentMode 
 				<ModelInfoView isPopup={isPopup} modelInfo={selectedModelInfo} selectedModelId={selectedModelId} />
 			) : (
 				<p className="text-xs mt-0 text-[var(--vscode-descriptionForeground)]">
-					{t("settings.groqModelPicker.description.part1")}{" "}
+					{t("settings.groqModelPicker.fetchModelsDescription", "settings")}{" "}
 					<VSCodeLink className="inline text-inherit" href="https://console.groq.com/docs/models">
-						{t("settings.groqModelPicker.description.groqLink")}
+						{t("settings.groqModelPicker.groqLinkText", "settings")}
 					</VSCodeLink>
-					{t("settings.groqModelPicker.description.part2")}{" "}
+					{t("settings.groqModelPicker.unsureModelChoice", "settings")}{" "}
 					<VSCodeLink className="inline text-inherit" onClick={() => handleModelChange("llama-3.3-70b-versatile")}>
-						{t("settings.groqModelPicker.description.modelLink")}
+						{t("settings.groqModelPicker.recommendedModel", "settings")}
 					</VSCodeLink>
 				</p>
 			)}

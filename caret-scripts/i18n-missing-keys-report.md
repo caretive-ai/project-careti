@@ -2,26 +2,11 @@
 
 **기준 언어:** en
 **검증 대상:** ja, ko, zh
-**생성일:** 2025. 9. 5. 오후 12:17:53
+**생성일:** 2025. 9. 5. 오후 1:43:16
 
 ## 🚨 누락된 번역 키 목록
 
 ### `ja/common.json`
-- `button.done`
-- `button.runCommand`
-- `button.reject`
-- `persona.management`
-- `persona.description`
-- `persona.docs`
-- `persona.availablePersonas`
-- `persona.selectDescription`
-- `persona.select`
-- `persona.createNew`
-- `persona.creating`
-- `persona.uploadNormal`
-- `persona.uploadThinking`
-- `persona.default.name`
-- `persona.default.description`
 - `rulesModal.tooltip.manageRulesWorkflows`
 - `rulesModal.ariaLabel.CaretRulesButton`
 
@@ -30,43 +15,10 @@
 - `rulesModal.ariaLabel.CaretRulesButton`
 
 ### `zh/common.json`
-- `button.done`
-- `button.runCommand`
-- `button.reject`
-- `persona.management`
-- `persona.description`
-- `persona.docs`
-- `persona.availablePersonas`
-- `persona.selectDescription`
-- `persona.select`
-- `persona.createNew`
-- `persona.creating`
-- `persona.uploadNormal`
-- `persona.uploadThinking`
-- `persona.default.name`
-- `persona.default.description`
 - `rulesModal.tooltip.manageRulesWorkflows`
 - `rulesModal.ariaLabel.CaretRulesButton`
 
 ### `ja/settings.json`
-- `persona.enablePersonaSystem`
-- `persona.description`
-- `modelInfoView.inputPrice`
-- `modelInfoView.outputPriceStandard`
-- `modelInfoView.outputPriceThinking`
-- `modelInfoView.outputPrice`
-- `modelInfoView.doesNotSupportBrowser`
-- `modelInfoView.supportsBrowser`
-- `modelInfoView.doesNotSupportCache`
-- `modelInfoView.supportsCache`
-- `modelInfoView.contextWindow`
-- `modelInfoView.cacheWritesPrice`
-- `modelInfoView.cacheReadsPrice`
-- `xaiProvider.providerName`
-- `xaiProvider.modifyReasoningEffort`
-- `xaiProvider.reasoningEffortOptions.low`
-- `xaiProvider.reasoningEffortOptions.high`
-- `zaiProvider.providerName`
 - `providers.caret.name`
 - `providers.openrouter.name`
 - `providers.openrouter.description`
@@ -140,24 +92,6 @@
 - `providers.cline.description`
 
 ### `zh/settings.json`
-- `persona.enablePersonaSystem`
-- `persona.description`
-- `modelInfoView.inputPrice`
-- `modelInfoView.outputPriceStandard`
-- `modelInfoView.outputPriceThinking`
-- `modelInfoView.outputPrice`
-- `modelInfoView.doesNotSupportBrowser`
-- `modelInfoView.supportsBrowser`
-- `modelInfoView.doesNotSupportCache`
-- `modelInfoView.supportsCache`
-- `modelInfoView.contextWindow`
-- `modelInfoView.cacheWritesPrice`
-- `modelInfoView.cacheReadsPrice`
-- `xaiProvider.providerName`
-- `xaiProvider.modifyReasoningEffort`
-- `xaiProvider.reasoningEffortOptions.low`
-- `xaiProvider.reasoningEffortOptions.high`
-- `zaiProvider.providerName`
 - `providers.caret.name`
 - `providers.openrouter.name`
 - `providers.openrouter.description`

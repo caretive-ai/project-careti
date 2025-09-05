@@ -53,7 +53,7 @@ export const MoonshotProvider = ({ showModelOptions, isPopup, currentMode }: Moo
 				helpText={t("apiKeyField.defaultHelpText", "settings")}
 				initialValue={apiConfiguration?.moonshotApiKey || ""}
 				onChange={(value) => handleFieldChange("moonshotApiKey", value)}
-				providerName={t("moonshotProvider.providerName", "settings")}
+				providerName={t("providers.moonshot.name", "settings")}
 				signupUrl={
 					apiConfiguration?.moonshotApiLine === "china"
 						? "https://platform.moonshot.cn/console/api-keys"

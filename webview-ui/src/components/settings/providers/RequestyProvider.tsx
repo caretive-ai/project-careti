@@ -32,7 +32,7 @@ export const RequestyProvider = ({ showModelOptions, isPopup, currentMode }: Req
 			<ApiKeyField
 				initialValue={apiConfiguration?.requestyApiKey || ""}
 				onChange={(value) => handleFieldChange("requestyApiKey", value)}
-				providerName={t("requestyProvider.providerName", "settings")}
+				providerName={t("providers.requesty.name", "settings")}
 				signupUrl="https://app.requesty.ai/api-keys"
 			/>
 			<VSCodeCheckbox

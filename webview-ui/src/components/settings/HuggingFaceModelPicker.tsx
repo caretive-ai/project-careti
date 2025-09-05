@@ -60,7 +60,7 @@ const HuggingFaceModelPicker: React.FC<HuggingFaceModelPickerProps> = ({ isPopup
 				})
 			})
 			.catch((err) => {
-				console.error("Failed to refresh Hugging Face models:", err)
+				console.error(t("settings.huggingFaceModelPicker.fetchModelsError", "settings"), err)
 			})
 	})
 

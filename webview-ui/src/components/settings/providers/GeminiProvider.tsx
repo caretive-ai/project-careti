@@ -40,7 +40,7 @@ export const GeminiProvider = ({ showModelOptions, isPopup, currentMode }: Gemin
 			<ApiKeyField
 				initialValue={apiConfiguration?.geminiApiKey || ""}
 				onChange={(value) => handleFieldChange("geminiApiKey", value)}
-				providerName={t("providers.gemini", "settings")}
+				providerName={t("providers.gemini.name", "settings")}
 				signupUrl="https://aistudio.google.com/apikey"
 			/>
 

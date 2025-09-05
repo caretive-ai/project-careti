@@ -1,0 +1,13 @@
+{
+	"browserSettingsMenu": {
+		"browserConnectionInfo": "Browser connection info",
+		"browserConnection": "Browser Connection",
+		"status": "Status",
+		"connected": "Connected",
+		"disconnected": "Disconnected",
+		"type": "Type",
+		"remote": "Remote",
+		"local": "Local",
+		"remoteHost": "Remote Host"
+	}
+}

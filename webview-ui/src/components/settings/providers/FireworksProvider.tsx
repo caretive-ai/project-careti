@@ -34,7 +34,7 @@ export const FireworksProvider = ({ currentMode, isPopup, showModelOptions }: Fi
 			<ApiKeyField
 				initialValue={apiConfiguration?.fireworksApiKey || ""}
 				onChange={(value) => handleFieldChange("fireworksApiKey", value)}
-				providerName={t("fireworksProvider.providerName", "settings")}
+				providerName={t("providers.fireworks.name", "settings")}
 				signupUrl="https://fireworks.ai/"
 			/>
 			<ModelSelector

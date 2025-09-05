@@ -35,7 +35,7 @@ export const DoubaoProvider = ({ showModelOptions, isPopup, currentMode }: Douba
 			<ApiKeyField
 				initialValue={apiConfiguration?.doubaoApiKey || ""}
 				onChange={(value) => handleFieldChange("doubaoApiKey", value)}
-				providerName="Doubao"
+				providerName={t("providers.doubao.name", "settings")}
 				signupUrl="https://console.volcengine.com/home"
 			/>
 

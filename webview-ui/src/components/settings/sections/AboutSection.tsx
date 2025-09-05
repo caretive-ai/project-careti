@@ -19,7 +19,7 @@ const AboutSection = ({ version, renderSectionHeader }: AboutSectionProps) => {
 							{t("about.link", "settings")}
 						</VSCodeLink>
 					</p>
-					<p className="italic mt-[10px] mb-0 p-0">v{version}</p>
+					<p className="italic mt-[10px] mb-0 p-0">{t("about.version", "settings", { version })}</p>
 				</div>
 			</Section>
 		</div>

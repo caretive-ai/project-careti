@@ -30,7 +30,7 @@ export const TogetherProvider = ({ showModelOptions, isPopup, currentMode }: Tog
 			<ApiKeyField
 				initialValue={apiConfiguration?.togetherApiKey || ""}
 				onChange={(value) => handleFieldChange("togetherApiKey", value)}
-				providerName={t("togetherProvider.providerName", "settings")}
+				providerName={t("providers.together.name", "settings")}
 			/>
 			<DebouncedTextField
 				initialValue={togetherModelId || ""}

@@ -1,0 +1,255 @@
+{
+	"settingsView": {
+		"title": "캐럿 설정"
+	},
+	"tabs": {
+		"apiConfiguration": {
+			"name": "API 설정",
+			"tooltip": "API 설정",
+			"header": "API 설정"
+		},
+		"general": {
+			"name": "일반",
+			"tooltip": "일반 설정",
+			"header": "일반 설정"
+		},
+		"features": {
+			"name": "기능",
+			"tooltip": "기능 설정",
+			"header": "기능 설정"
+		},
+		"browser": {
+			"name": "브라우저",
+			"tooltip": "브라우저 설정",
+			"header": "브라우저 설정"
+		},
+		"terminal": {
+			"name": "터미널",
+			"tooltip": "터미널 설정",
+			"header": "터미널 설정"
+		},
+		"debug": {
+			"name": "디버그",
+			"tooltip": "디버그 도구",
+			"header": "디버그"
+		},
+		"about": {
+			"name": "정보",
+			"tooltip": "Caret 정보",
+			"header": "정보"
+		}
+	},
+	"planMode": "계획",
+	"actMode": "실행",
+	"useDifferentModels": "계획 및 실행 모드에 다른 모델 사용",
+	"useDifferentModelsDescription": "계획과 실행 모드 사이를 전환하면 이전 모드에서 사용된 API와 모델이 유지됩니다. 예를 들어, 저렴한 코딩 모델이 실행할 계획을 설계하기 위해 강력한 추론 모델을 사용할 때 유용할 수 있습니다.",
+	"preferredLanguage": {
+		"changeError": "언어 변경 실패:"
+	},
+	"about": {
+		"description": "질문이나 피드백이 있으시면 언제든지 GitHub에 이슈를 남겨주세요:",
+		"link": "https://github.com/aicoding-caret/caret",
+		"version": "v{{version}}"
+	},
+	"buttons": {
+		"done": "완료"
+	},
+	"modelPicker": {
+		"seeMore": "더 보기"
+	},
+	"apiKeyField": {
+		"placeholder": "API 키를 입력하세요..."
+	},
+	"baseUrlField": {
+		"label": "사용자 정의 기본 URL 사용"
+	},
+	"modelInfoView": {
+		"contextWindowLabel": "컨텍스트 창:",
+		"millionTokensLabel": "/백만 토큰",
+		"tokensSuffix": " 토큰)"
+	},
+	"modelSelector": {
+		"label": "모델"
+	},
+	"groqModelPicker": {
+		"modelLabel": "모델",
+		"searchPlaceholder": "모델 검색 및 선택...",
+		"clearSearch": "검색 지우기",
+		"fetchModelsError": "Groq 모델을 새로 고치는 데 실패했습니다:",
+		"fetchModelsDescription": "확장 프로그램이 다음에서 사용 가능한 최신 모델 목록을 자동으로 가져옵니다: ",
+		"groqLinkText": "Groq.",
+		"unsureModelChoice": "어떤 모델을 선택할지 확실하지 않다면, Caret은 다음과 함께 가장 잘 작동합니다: ",
+		"recommendedModel": "llama-3.3-70b-versatile."
+	},
+	"huggingFaceModelPicker": {
+		"modelLabel": "모델",
+		"searchPlaceholder": "모델 검색...",
+		"clearSearch": "검색 지우기",
+		"fetchModelsError": "Hugging Face 모델을 새로 고치는 데 실패했습니다:"
+	},
+	"ollamaModelPicker": {
+		"searchPlaceholder": "모델 검색 및 선택...",
+		"clearSearch": "검색 지우기"
+	},
+	"anthropicProvider": {
+		"switchTo1MContext": "1M 컨텍스트 창 모델로 전환",
+		"switchTo200KContext": "200K 컨텍스트 창 모델로 전환"
+	},
+	"bedrockProvider": {
+		"modelLabel": "모델",
+		"selectModelPlaceholder": "모델을 선택하세요..."
+	},
+	"basetenModelPicker": {
+		"modelNotStatic": "모델 {{newModelId}}는 정적 basetenModels 목록에 없습니다",
+		"fetchModelsError": "Baseten 모델을 새로 고치는 데 실패했습니다:",
+		"searchPlaceholder": "모델 검색 및 선택...",
+		"clearSearch": "검색 지우기",
+		"description": "확장 프로그램은 다음에서 사용 가능한 최신 모델 목록을 자동으로 가져옵니다.",
+		"basetenLink": "Baseten.",
+		"recommendedModel": "moonshotai/Kimi-K2-Instruct."
+	},
+	"doubaoProvider": {
+		"modelLabel": "모델"
+	},
+	"geminiProvider": {
+		"baseUrlPlaceholder": "기본값: https://generativelanguage.googleapis.com"
+	},
+	"fireworksProvider": {
+		"modelLabel": "Model"
+	},
+	"liteLlmProvider": {
+		"baseUrlLabel": "Base URL (optional)",
+		"apiKeyLabel": "API Key",
+		"modelIdLabel": "Model ID",
+		"supportsImagesLabel": "Supports Images",
+		"contextWindowSizeLabel": "Context Window Size",
+		"maxOutputTokensLabel": "Max Output Tokens",
+		"temperatureLabel": "Temperature"
+	},
+	"lmStudioProvider": {
+		"baseUrlLabel": "사용자 정의 기본 URL 사용",
+		"modelLabel": "모델",
+		"contextWindowLabel": "모델 컨텍스트 창"
+	},
+	"qwenProvider": {
+		"apiLineOptions": {
+			"international": "International API",
+			"china": "China API"
+		}
+	},
+	"sapAiCoreModelPicker": {
+		"deployedModelsHeader": "── 배포된 모델 ──",
+		"notDeployedModelsHeader": "── 배포되지 않은 모델 ──"
+	},
+	"providers": {
+		"caret": {
+			"name": "Caret",
+			"loginError": "Caret 로그인 URL을 가져오는 데 실패했습니다:"
+		},
+		"openrouter": {
+			"name": "OpenRouter"
+		},
+		"gemini": {
+			"name": "Google Gemini"
+		},
+		"openai": {
+			"name": "OpenAI 호환"
+		},
+		"anthropic": {
+			"name": "Anthropic"
+		},
+		"bedrock": {
+			"name": "Amazon Bedrock"
+		},
+		"vscode-lm": {
+			"name": "VS Code LM API"
+		},
+		"deepseek": {
+			"name": "DeepSeek"
+		},
+		"openai-native": {
+			"name": "OpenAI"
+		},
+		"ollama": {
+			"name": "Ollama"
+		},
+		"vertex": {
+			"name": "GCP Vertex AI"
+		},
+		"litellm": {
+			"name": "LiteLLM"
+		},
+		"claude-code": {
+			"name": "Claude Code"
+		},
+		"sapaicore": {
+			"name": "SAP AI Core"
+		},
+		"mistral": {
+			"name": "Mistral"
+		},
+		"zai": {
+			"name": "Z AI"
+		},
+		"groq": {
+			"name": "Groq"
+		},
+		"cerebras": {
+			"name": "Cerebras"
+		},
+		"vercel-ai-gateway": {
+			"name": "Vercel AI Gateway"
+		},
+		"baseten": {
+			"name": "Baseten"
+		},
+		"requesty": {
+			"name": "Requesty"
+		},
+		"fireworks": {
+			"name": "Fireworks AI"
+		},
+		"together": {
+			"name": "Together"
+		},
+		"qwen": {
+			"name": "Alibaba Qwen"
+		},
+		"qwen-code": {
+			"name": "Qwen Code"
+		},
+		"doubao": {
+			"name": "Bytedance Doubao"
+		},
+		"lmstudio": {
+			"name": "LM Studio"
+		},
+		"moonshot": {
+			"name": "Moonshot"
+		},
+		"huggingface": {
+			"name": "Hugging Face"
+		},
+		"nebius": {
+			"name": "Nebius AI Studio"
+		},
+		"asksage": {
+			"name": "AskSage"
+		},
+		"xai": {
+			"name": "xAI"
+		},
+		"sambanova": {
+			"name": "SambaNova"
+		},
+		"huawei-cloud-maas": {
+			"name": "Huawei Cloud MaaS"
+		},
+		"dify": {
+			"name": "Dify.ai"
+		},
+		"cline": {
+			"name": "Caret"
+		}
+	}
+}

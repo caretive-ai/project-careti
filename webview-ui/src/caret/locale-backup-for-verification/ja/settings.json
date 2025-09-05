@@ -1,0 +1,129 @@
+{
+	"settingsView": {
+		"title": "Caret設定"
+	},
+	"tabs": {
+		"apiConfiguration": {
+			"name": "API設定",
+			"tooltip": "API設定",
+			"header": "API設定"
+		},
+		"general": {
+			"name": "一般",
+			"tooltip": "一般設定",
+			"header": "一般設定"
+		},
+		"features": {
+			"name": "機能",
+			"tooltip": "機能設定",
+			"header": "機能設定"
+		},
+		"browser": {
+			"name": "ブラウザ",
+			"tooltip": "ブラウザ設定",
+			"header": "ブラウザ設定"
+		},
+		"terminal": {
+			"name": "ターミナル",
+			"tooltip": "ターミナル設定",
+			"header": "ターミナル設定"
+		},
+		"debug": {
+			"name": "デバッグ",
+			"tooltip": "デバッグツール",
+			"header": "デバッグ"
+		},
+		"about": {
+			"name": "情報",
+			"tooltip": "Caret情報",
+			"header": "情報"
+		}
+	},
+	"planMode": "Plan Mode",
+	"actMode": "Act Mode",
+	"useDifferentModels": "Use different models for Plan and Act modes",
+	"useDifferentModelsDescription": "Switching between Plan and Act mode will persist the API and model used in the previous mode. This may be helpful e.g. when using a strong reasoning model to architect a plan for a cheaper coding model to act on.",
+	"buttons": {
+		"done": "完了"
+	},
+	"modelPicker": {
+		"seeMore": "さらに表示"
+	},
+	"apiKeyField": {
+		"placeholder": "APIキーを入力してください..."
+	},
+	"baseUrlField": {
+		"label": "カスタムベースURLを使用する"
+	},
+	"modelInfoView": {
+		"contextWindowLabel": "コンテキストウィンドウ:"
+	},
+	"modelSelector": {
+		"label": "モデル"
+	},
+	"groqModelPicker": {
+		"modelLabel": "モデル",
+		"searchPlaceholder": "モデルを検索して選択...",
+		"clearSearch": "検索をクリア"
+	},
+	"huggingFaceModelPicker": {
+		"modelLabel": "モデル",
+		"searchPlaceholder": "モデルを検索...",
+		"clearSearch": "検索をクリア"
+	},
+	"ollamaModelPicker": {
+		"searchPlaceholder": "モデルを検索して選択...",
+		"clearSearch": "検索をクリア"
+	},
+	"anthropicProvider": {
+		"switchTo1MContext": "1Mコンテキストウィンドウモデルに切り替える",
+		"switchTo200KContext": "200Kコンテキストウィンドウモデルに切り替える"
+	},
+	"bedrockProvider": {
+		"modelLabel": "モデル",
+		"selectModelPlaceholder": "モデルを選択してください..."
+	},
+	"basetenModelPicker": {
+		"fetchModelsError": "Failed to refresh Baseten models:",
+		"searchPlaceholder": "Search and select a model...",
+		"clearSearch": "Clear search"
+	},
+	"doubaoProvider": {
+		"modelLabel": "モデル"
+	},
+	"geminiProvider": {
+		"baseUrlPlaceholder": "Default: https://generativelanguage.googleapis.com"
+	},
+	"fireworksProvider": {
+		"modelLabel": "モデル"
+	},
+	"liteLlmProvider": {
+		"baseUrlLabel": "ベースURL（オプション）",
+		"apiKeyLabel": "APIキー",
+		"modelIdLabel": "モデルID",
+		"supportsImagesLabel": "画像をサポートする",
+		"contextWindowSizeLabel": "コンテキストウィンドウサイズ",
+		"maxOutputTokensLabel": "最大出力トークン",
+		"temperatureLabel": "温度"
+	},
+	"lmStudioProvider": {
+		"baseUrlLabel": "カスタムベースURLを使用する",
+		"modelLabel": "モデル",
+		"contextWindowLabel": "モデルコンテキストウィンドウ"
+	},
+	"qwenProvider": {
+		"apiLineOptions": {
+			"international": "International API",
+			"china": "China API"
+		}
+	},
+	"sapAiCoreModelPicker": {
+		"deployedModelsHeader": "── デプロイ済みモデル ──",
+		"notDeployedModelsHeader": "── デプロイされていないモデル ──"
+	},
+	"providers": {
+		"caret": {
+			"name": "Caret"
+		}
+	}
+}

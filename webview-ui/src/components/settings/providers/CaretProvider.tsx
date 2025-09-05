@@ -19,7 +19,7 @@ const CaretProvider = ({ currentMode, isPopup, showModelOptions }: CaretProvider
 
 	const handleLogin = () => {
 		AccountServiceClient.accountLoginClicked(EmptyRequest.create()).catch((err) =>
-			console.error("Failed to get Caret login URL:", err),
+			console.error(t("providers.caret.loginError", "settings"), err),
 		)
 	}
 

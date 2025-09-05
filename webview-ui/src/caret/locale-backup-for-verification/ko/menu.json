@@ -1,0 +1,14 @@
+{
+	"navbar": {
+		"chatName": "채팅",
+		"newTaskTooltip": "새 작업",
+		"mcpName": "MCP",
+		"mcpServersTooltip": "MCP 서버",
+		"historyName": "기록",
+		"historyTooltip": "기록",
+		"accountName": "계정",
+		"accountTooltip": "계정",
+		"settingsName": "설정",
+		"settingsTooltip": "설정"
+	}
+}

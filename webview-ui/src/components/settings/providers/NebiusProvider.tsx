@@ -35,7 +35,7 @@ export const NebiusProvider = ({ showModelOptions, isPopup, currentMode }: Nebiu
 				helpText={t("nebiusProvider.apiKeyHelpText", "settings")}
 				initialValue={apiConfiguration?.nebiusApiKey || ""}
 				onChange={(value) => handleFieldChange("nebiusApiKey", value)}
-				providerName={t("nebiusProvider.providerName", "settings")}
+				providerName={t("providers.nebius.name", "settings")}
 				signupUrl="https://studio.nebius.com/settings/api-keys"
 			/>
 

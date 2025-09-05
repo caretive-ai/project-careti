@@ -29,7 +29,7 @@ export const GroqProvider = ({ showModelOptions, isPopup, currentMode }: GroqPro
 			<ApiKeyField
 				initialValue={apiConfiguration?.groqApiKey || ""}
 				onChange={(value) => handleFieldChange("groqApiKey", value)}
-				providerName={t("groqProvider.providerName", "settings")}
+				providerName={t("providers.groq.name", "settings")}
 				signupUrl="https://console.groq.com/keys"
 			/>
 

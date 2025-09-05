@@ -33,7 +33,7 @@ export const SambanovaProvider = ({ showModelOptions, isPopup, currentMode }: Sa
 			<ApiKeyField
 				initialValue={apiConfiguration?.sambanovaApiKey || ""}
 				onChange={(value) => handleFieldChange("sambanovaApiKey", value)}
-				providerName={t("sambanovaProvider.providerName", "settings")}
+				providerName={t("providers.sambanova.name", "settings")}
 				signupUrl="https://docs.sambanova.ai/cloud/docs/get-started/overview"
 			/>
 

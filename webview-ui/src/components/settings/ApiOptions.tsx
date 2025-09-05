@@ -137,50 +137,50 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 		const showClineProvider = typeof process !== "undefined" && process.env?.CARET_SHOW_CLINE_PROVIDER === "true"
 
 		const baseOptions = [
-			{ value: "caret", label: "Caret" }, // CARET MODIFICATION: Add Caret provider
-			{ value: "openrouter", label: "OpenRouter" },
-			{ value: "gemini", label: "Google Gemini" },
-			{ value: "openai", label: "OpenAI Compatible" },
-			{ value: "anthropic", label: "Anthropic" },
-			{ value: "bedrock", label: "Amazon Bedrock" },
-			{ value: "vscode-lm", label: "VS Code LM API" },
-			{ value: "deepseek", label: "DeepSeek" },
-			{ value: "openai-native", label: "OpenAI" },
-			{ value: "ollama", label: "Ollama" },
-			{ value: "vertex", label: "GCP Vertex AI" },
-			{ value: "litellm", label: "LiteLLM" },
-			{ value: "claude-code", label: "Claude Code" },
-			{ value: "sapaicore", label: "SAP AI Core" },
-			{ value: "mistral", label: "Mistral" },
-			{ value: "zai", label: "Z AI" },
-			{ value: "groq", label: "Groq" },
-			{ value: "cerebras", label: "Cerebras" },
-			{ value: "vercel-ai-gateway", label: "Vercel AI Gateway" },
-			{ value: "baseten", label: "Baseten" },
-			{ value: "requesty", label: "Requesty" },
-			{ value: "fireworks", label: "Fireworks AI" },
-			{ value: "together", label: "Together" },
-			{ value: "qwen", label: "Alibaba Qwen" },
-			{ value: "qwen-code", label: "Qwen Code" },
-			{ value: "doubao", label: "Bytedance Doubao" },
-			{ value: "lmstudio", label: "LM Studio" },
-			{ value: "moonshot", label: "Moonshot" },
-			{ value: "huggingface", label: "Hugging Face" },
-			{ value: "nebius", label: "Nebius AI Studio" },
-			{ value: "asksage", label: "AskSage" },
-			{ value: "xai", label: "xAI" },
-			{ value: "sambanova", label: "SambaNova" },
-			{ value: "huawei-cloud-maas", label: "Huawei Cloud MaaS" },
-			{ value: "dify", label: "Dify.ai" },
+			{ value: "caret", label: t("providers.caret.name", "settings") },
+			{ value: "openrouter", label: t("providers.openrouter.name", "settings") },
+			{ value: "gemini", label: t("providers.gemini.name", "settings") },
+			{ value: "openai", label: t("providers.openai.name", "settings") },
+			{ value: "anthropic", label: t("providers.anthropic.name", "settings") },
+			{ value: "bedrock", label: t("providers.bedrock.name", "settings") },
+			{ value: "vscode-lm", label: t("providers.vscode-lm.name", "settings") },
+			{ value: "deepseek", label: t("providers.deepseek.name", "settings") },
+			{ value: "openai-native", label: t("providers.openai-native.name", "settings") },
+			{ value: "ollama", label: t("providers.ollama.name", "settings") },
+			{ value: "vertex", label: t("providers.vertex.name", "settings") },
+			{ value: "litellm", label: t("providers.litellm.name", "settings") },
+			{ value: "claude-code", label: t("providers.claude-code.name", "settings") },
+			{ value: "sapaicore", label: t("providers.sapaicore.name", "settings") },
+			{ value: "mistral", label: t("providers.mistral.name", "settings") },
+			{ value: "zai", label: t("providers.zai.name", "settings") },
+			{ value: "groq", label: t("providers.groq.name", "settings") },
+			{ value: "cerebras", label: t("providers.cerebras.name", "settings") },
+			{ value: "vercel-ai-gateway", label: t("providers.vercel-ai-gateway.name", "settings") },
+			{ value: "baseten", label: t("providers.baseten.name", "settings") },
+			{ value: "requesty", label: t("providers.requesty.name", "settings") },
+			{ value: "fireworks", label: t("providers.fireworks.name", "settings") },
+			{ value: "together", label: t("providers.together.name", "settings") },
+			{ value: "qwen", label: t("providers.qwen.name", "settings") },
+			{ value: "qwen-code", label: t("providers.qwen-code.name", "settings") },
+			{ value: "doubao", label: t("providers.doubao.name", "settings") },
+			{ value: "lmstudio", label: t("providers.lmstudio.name", "settings") },
+			{ value: "moonshot", label: t("providers.moonshot.name", "settings") },
+			{ value: "huggingface", label: t("providers.huggingface.name", "settings") },
+			{ value: "nebius", label: t("providers.nebius.name", "settings") },
+			{ value: "asksage", label: t("providers.asksage.name", "settings") },
+			{ value: "xai", label: t("providers.xai.name", "settings") },
+			{ value: "sambanova", label: t("providers.sambanova.name", "settings") },
+			{ value: "huawei-cloud-maas", label: t("providers.huawei-cloud-maas.name", "settings") },
+			{ value: "dify", label: t("providers.dify.name", "settings") },
 		]
 
 		// CARET MODIFICATION: Only show Cline provider if environment variable is set
 		if (showClineProvider) {
-			baseOptions.unshift({ value: "cline", label: "Caret" })
+			baseOptions.unshift({ value: "cline", label: t("providers.cline.name", "settings") })
 		}
 
 		return baseOptions
-	}, [])
+	}, [language])
 
 	const currentProviderLabel = useMemo(() => {
 		const providerInfo = providerOptions.find((option) => option.value === selectedProvider)

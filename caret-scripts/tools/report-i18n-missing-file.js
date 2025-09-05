@@ -392,85 +392,13 @@ function generateChecklistOutput(result, componentsDir) {
 // Main execution if run directly
 if (require.main === module) {
 	const componentsDir = process.argv[2] || path.resolve(process.cwd(), "./webview-ui/src/components")
-	const outputFormat = process.argv[3] || "detailed" // 'detailed', 'checklist'
+	const outputFilePath = path.resolve(process.cwd(), "./caret-scripts/i18n-checklist-report.md")
 
 	findI18nMissingFiles(componentsDir)
 		.then((result) => {
-			if (outputFormat === "checklist") {
-				console.log(generateChecklistOutput(result, componentsDir))
-				return
-			}
-			console.log("\n📊 I18n Comprehensive Analysis Report\n")
-			console.log(`📁 Scanned Directory: ${componentsDir}`)
-			console.log(`📊 Summary:`)
-			console.log(`   • Total Files: ${result.summary.totalFiles}`)
-			console.log(`   • Complete (✅): ${result.summary.completeCount}`)
-			console.log(`   • Partial (⚠️): ${result.summary.partialCount}`)
-			console.log(`   • None (❌): ${result.summary.noneCount}`)
-			console.log(`   • Unnecessary (➖): ${result.summary.unnecessaryCount}`)
-			console.log(`   • Uncertain (❓): ${result.summary.uncertainCount}`)
-
-			console.log("\n📋 Files by i18n Status:")
-
-			// Complete files
-			if (result.byStatus.complete.length > 0) {
-				console.log(`\n   ✅ COMPLETE (${result.byStatus.complete.length} files):`)
-				result.byStatus.complete.forEach((analysis) => {
-					const relativePath = path.relative(componentsDir, analysis.file)
-					console.log(`   • ${relativePath} (t():${analysis.i18nUsageCount})`)
-				})
-			}
-
-			// Partial files
-			if (result.byStatus.partial.length > 0) {
-				console.log(`\n   ⚠️ PARTIAL (${result.byStatus.partial.length} files):`)
-				result.byStatus.partial.forEach((analysis) => {
-					const relativePath = path.relative(componentsDir, analysis.file)
-					console.log(`   • ${relativePath} (t():${analysis.i18nUsageCount}, hardcoded:${analysis.hardcodedCount})`)
-				})
-			}
-
-			// None files
-			if (result.byStatus.none.length > 0) {
-				console.log(`\n   ❌ NONE (${result.byStatus.none.length} files):`)
-				result.byStatus.none.forEach((analysis) => {
-					const relativePath = path.relative(componentsDir, analysis.file)
-					console.log(`   • ${relativePath} (hardcoded:${analysis.hardcodedCount})`)
-				})
-			}
-
-			// Unnecessary files
-			if (result.byStatus.unnecessary.length > 0) {
-				console.log(`\n   ➖ UNNECESSARY (${result.byStatus.unnecessary.length} files):`)
-				result.byStatus.unnecessary.forEach((analysis) => {
-					const relativePath = path.relative(componentsDir, analysis.file)
-					console.log(`   • ${relativePath} (pure logic/styling)`)
-				})
-			}
-
-			// Uncertain files
-			if (result.byStatus.uncertain.length > 0) {
-				console.log(`\n   ❓ UNCERTAIN (${result.byStatus.uncertain.length} files):`)
-				result.byStatus.uncertain.forEach((analysis) => {
-					const relativePath = path.relative(componentsDir, analysis.file)
-					console.log(`   • ${relativePath} (needs manual review)`)
-				})
-			}
-
-			console.log("\n📂 Files Needing i18n by Category:")
-			Object.entries(result.categorized).forEach(([category, files]) => {
-				if (files.length > 0) {
-					console.log(`\n   ${category.toUpperCase()} (${files.length} files):`)
-					files.forEach((file) => {
-						const relativePath = path.relative(componentsDir, file)
-						console.log(`   • ${relativePath}`)
-					})
-				}
-			})
-
-			console.log(`\n✅ Analysis complete! Status breakdown:`)
-			console.log(`   • Need i18n work: ${result.summary.missingI18nCount}`)
-			console.log(`   • Ready/Unnecessary: ${result.summary.i18nReadyCount}`)
+			const checklistOutput = generateChecklistOutput(result, componentsDir)
+			fs.writeFileSync(outputFilePath, checklistOutput, { encoding: "utf-8" })
+			console.log(`\n✅ i18n checklist report generated at: ${outputFilePath}\n`)
 		})
 		.catch((error) => {
 			console.error("❌ Error:", error.message)

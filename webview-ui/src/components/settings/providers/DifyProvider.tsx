@@ -52,7 +52,7 @@ export const DifyProvider = ({ showModelOptions, isPopup, currentMode }: DifyPro
 					onChange={(value) => {
 						handleFieldChange("difyApiKey", value)
 					}}
-					providerName="Dify"
+					providerName={t("providers.dify.name", "settings")}
 				/>
 			</div>
 

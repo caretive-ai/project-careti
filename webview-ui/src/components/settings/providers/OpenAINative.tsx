@@ -35,7 +35,7 @@ export const OpenAINativeProvider = ({ showModelOptions, isPopup, currentMode }:
 			<ApiKeyField
 				initialValue={apiConfiguration?.openAiNativeApiKey || ""}
 				onChange={(value) => handleFieldChange("openAiNativeApiKey", value)}
-				providerName={t("openAiNativeProvider.providerName", "settings")}
+				providerName={t("providers.openai-native.name", "settings")}
 				signupUrl="https://platform.openai.com/api-keys"
 			/>
 

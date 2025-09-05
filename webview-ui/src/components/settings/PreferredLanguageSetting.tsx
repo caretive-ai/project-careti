@@ -21,7 +21,7 @@ const PreferredLanguageSetting: React.FC = () => {
 
 			console.log(`✅ [PreferredLanguageSetting] Language setting updated: ${newLanguageDisplay}`)
 		} catch (error) {
-			console.error("❌ [PreferredLanguageSetting] Failed to change language:", error)
+			console.error(t("settings.preferredLanguage.changeError", "settings"), error)
 		}
 	}
 

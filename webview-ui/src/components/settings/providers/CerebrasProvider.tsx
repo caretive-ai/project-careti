@@ -35,7 +35,7 @@ export const CerebrasProvider = ({ showModelOptions, isPopup, currentMode }: Cer
 			<ApiKeyField
 				initialValue={apiConfiguration?.cerebrasApiKey || ""}
 				onChange={(value) => handleFieldChange("cerebrasApiKey", value)}
-				providerName="Cerebras"
+				providerName={t("providers.cerebras.name", "settings")}
 				signupUrl="https://cloud.cerebras.ai/"
 			/>
 

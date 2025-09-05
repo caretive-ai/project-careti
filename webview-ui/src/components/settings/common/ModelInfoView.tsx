@@ -34,7 +34,8 @@ const formatTiers = (
 
 			return (
 				<span key={index} style={{ paddingLeft: "15px" }}>
-					{formatPrice(price)}/million tokens (
+					{formatPrice(price)}
+					{t("modelInfoView.millionTokensLabel", "settings")} (
 					{tier.contextWindow === Number.POSITIVE_INFINITY || tier.contextWindow >= Number.MAX_SAFE_INTEGER ? (
 						<span>
 							{">"} {prevLimit.toLocaleString()}
@@ -44,7 +45,7 @@ const formatTiers = (
 							{"<="} {tier.contextWindow?.toLocaleString()}
 						</span>
 					)}
-					{" tokens)"}
+					{t("modelInfoView.tokensSuffix", "settings")}
 					{index < arr.length - 1 && <br />}
 				</span>
 			)
@@ -186,7 +187,7 @@ export const ModelInfoView = ({ selectedModelId, modelInfo, isPopup }: ModelInfo
 		modelInfo.contextWindow !== undefined && modelInfo.contextWindow > 0 && (
 			<span key="contextWindow">
 				<span style={{ fontWeight: 500 }}>{t("modelInfoView.contextWindow", "settings")}:</span>{" "}
-				{formatTokenLimit(modelInfo.contextWindow)} tokens
+				{formatTokenLimit(modelInfo.contextWindow)} {t("modelInfoView.tokensSuffix", "settings")}
 			</span>
 		),
 		inputPriceElement, // Add the generated input price block

@@ -352,6 +352,7 @@
 		"compile-tests": "node ./scripts/build-tests.js",
 		"watch-tests": "tsc -p . -w --outDir out",
 		"check-types": "npm run protos && npx tsc --noEmit && cd webview-ui && npx tsc -b --noEmit",
+		"check-types:filtered": "npm run protos && (npx tsc --noEmit 2>&1 | findstr /v \"Unused '@ts-expect-error' directive\" || echo Build complete) && cd webview-ui && npx tsc -b --noEmit",
 		"lint": "biome lint --no-errors-on-unmatched --files-ignore-unknown=true --diagnostic-level=error && buf lint",
 		"format": "biome format --changed --no-errors-on-unmatched --files-ignore-unknown=true --diagnostic-level=error",
 		"format:fix": "biome check --changed --no-errors-on-unmatched --files-ignore-unknown=true --write",

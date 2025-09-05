@@ -66,6 +66,8 @@ interface DifyConversationResponse {
 }
 
 export class DifyHandler implements ApiHandler {
+	// CARET MODIFICATION: Fixed missing options property for TypeScript compilation
+	private options: ApiHandlerOptions
 	private baseUrl: string
 	private apiKey: string
 	private conversationId: string | null = null
@@ -647,6 +649,6 @@ export class DifyHandler implements ApiHandler {
 	 */
 	resetConversation(): void {
 		this.conversationId = null
-		this.currentTaskId = null
+		// CARET MODIFICATION: Removed undefined currentTaskId property
 	}
 }

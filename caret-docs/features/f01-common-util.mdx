@@ -140,3 +140,149 @@ logger.debug("디버그 정보", { data: 123 })
 logger.warn("경고 메시지")
 logger.error("오류 발생", error)
 ```
+
+### 4. CaretGlobalManager 싱글톤 시스템
+
+**위치**: `caret-src/managers/CaretGlobalManager.ts`
+
+- 전역 브랜드 모드 시스템 중앙 관리자
+- ExtensionState와 CaretGlobalManager 완벽 동기화
+- 싱글톤 패턴으로 전역 접근 보장
+- 브랜드별 설정 및 i18n 기능 통합 관리
+
+```typescript
+// CaretGlobalManager 클래스 구조
+export class CaretGlobalManager {
+	private static _instance: CaretGlobalManager | null = null
+	private _currentMode: CaretModeSystem = "caret"
+	
+	// 싱글톤 접근
+	public static get(): CaretGlobalManager
+	
+	// 모드 시스템 관리
+	public getCurrentMode(): CaretModeSystem
+	public setCurrentMode(mode: CaretModeSystem): void
+	
+	// 브랜드 정보
+	public getCurrentBrandName(): string
+	public isI18nEnabled(): boolean
+	public isBrandingEnabled(): boolean
+	public getModeDefaultLanguage(): "ko" | "en"
+	
+	// 정적 접근자
+	public static get currentMode(): CaretModeSystem
+	public static get brandName(): string  
+	public static get isI18nEnabled(): boolean
+}
+```
+
+#### ExtensionStateContext 통합
+
+**위치**: `webview-ui/src/context/ExtensionStateContext.tsx`
+
+ExtensionState의 modeSystem과 CaretGlobalManager._currentMode가 완벽하게 동기화됩니다:
+
+```typescript
+// CARET MODIFICATION: CaretGlobalManager 통합
+import { CaretGlobalManager } from "../../../caret-src/managers/CaretGlobalManager"
+
+setModeSystem: (modeSystem: CaretModeSystem) => {
+    const previousMode = state.modeSystem
+    const timestamp = new Date().toISOString()
+
+    // 1. 종합 로깅 (프론트엔드/백엔드)
+    console.log("[GLOBAL-BACKEND] modeSystem state:", { before: previousMode, after: modeSystem, timestamp })
+    console.debug("[GLOBAL-FRONTEND] modeSystem state:", { before: previousMode, after: modeSystem, timestamp })
+    
+    // 2. CaretGlobalManager 싱글톤 업데이트 (핵심!)
+    try {
+        CaretGlobalManager.get().setCurrentMode(modeSystem)
+        console.log(`[GLOBAL-MANAGER] CaretGlobalManager.setCurrentMode called with: ${modeSystem}`)
+    } catch (error) {
+        console.error("[GLOBAL-MANAGER] Failed to update CaretGlobalManager:", error)
+    }
+    
+    // 3. ExtensionState 업데이트
+    setState((prevState) => ({ ...prevState, modeSystem }))
+    
+    // 4. 백엔드 API 호출
+    try {
+        StateServiceClient.updateSettings({ modeSystem: modeSystem })
+        console.log(`[API] StateServiceClient.updateSettings called with modeSystem: ${modeSystem}`)
+    } catch (error) {
+        console.error("[API] Failed to update modeSystem via StateServiceClient:", error)
+    }
+}
+```
+
+#### 브랜드 유틸리티 통합
+
+**위치**: `caret-src/utils/brand-utils.ts`
+
+CaretGlobalManager는 brand-utils의 함수들을 활용하여 동적 브랜드 정보를 제공합니다:
+
+```typescript
+import { 
+    getCurrentBrandName,
+    getCurrentUserMode,
+    isModeI18nEnabled,
+    isBrandingEnabled,
+    getModeDefaultLanguage 
+} from "../utils/brand-utils"
+
+// CaretGlobalManager 내부에서 활용
+public getCurrentBrandName(): string {
+    return getCurrentBrandName()  // package.json displayName 기반
+}
+
+public isI18nEnabled(): boolean {
+    return isModeI18nEnabled()    // 현재 모드의 i18n 활성화 여부
+}
+```
+
+### CaretGlobalManager 사용
+
+```typescript
+import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
+
+// 싱글톤 인스턴스 접근
+const manager = CaretGlobalManager.get()
+
+// 현재 모드 확인
+const currentMode = manager.getCurrentMode() // "caret" | "cline"
+
+// 모드 변경 (ExtensionStateContext에서 자동 호출됨)
+manager.setCurrentMode("caret")
+
+// 브랜드 정보 확인
+const brandName = manager.getCurrentBrandName()    // "Caret" | "Cline" 
+const isI18nEnabled = manager.isI18nEnabled()      // true | false
+const defaultLang = manager.getModeDefaultLanguage() // "ko" | "en"
+
+// 정적 접근자 사용 (편의성)
+const mode = CaretGlobalManager.currentMode        // 현재 모드
+const brand = CaretGlobalManager.brandName         // 브랜드명
+const i18nSupport = CaretGlobalManager.isI18nEnabled // i18n 지원 여부
+```
+
+## 🧪 동작 확인 방법
+
+### CaretGlobalManager 통합 테스트
+
+VS Code에서 **Settings → Mode System** 토글을 변경하면 다음과 같은 로그가 개발자 콘솔에 표시됩니다:
+
+```bash
+# Caret → Cline 모드로 변경시
+[GLOBAL-BACKEND] modeSystem state: { before: "caret", after: "cline", timestamp: "2025-09-05T18:30:00.000Z" }
+[BACKEND] modeSystem changed: caret -> cline
+[GLOBAL-FRONTEND] modeSystem state: { before: "caret", after: "cline", timestamp: "2025-09-05T18:30:00.000Z" }
+[FRONTEND] Global modeSystem updated: cline
+[GLOBAL-MANAGER] CaretGlobalManager.setCurrentMode called with: cline
+[API] StateServiceClient.updateSettings called with modeSystem: cline
+
+# Cline → Caret 모드로 변경시
+[BACKEND] modeSystem changed: cline -> caret
+[GLOBAL-MANAGER] CaretGlobalManager.setCurrentMode called with: caret
+```
+
+이 로그들이 정상적으로 표시되면 **CaretGlobalManager와 ExtensionState가 완벽하게 동기화**되고 있는 것입니다.

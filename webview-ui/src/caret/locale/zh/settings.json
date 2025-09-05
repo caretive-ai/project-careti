@@ -14,31 +14,7 @@
 	},
 	"rules": {
 		"section": {
-			"title": "规则管理",
-			"description": "管理项目规则文件和设置优先级。",
-			"workspaceRules": "工作区规则",
-			"globalRules": "全局规则",
-			"caretRules": ".caretrules 文件",
-			"clineRules": ".clinerules 文件",
-			"cursorRules": ".cursorrules 文件",
-			"windsurfRules": ".windsurfrules 文件"
-		},
-		"priority": {
-			"title": "规则优先级",
-			"description": "规则文件优先级：.caretrules > .clinerules > .cursorrules > .windsurfrules",
-			"info": "当存在更高优先级的规则时，较低优先级的规则会自动禁用。"
-		},
-		"buttons": {
-			"toggle": "切换",
-			"enable": "启用",
-			"disable": "禁用",
-			"refresh": "刷新"
-		},
-		"status": {
-			"enabled": "已启用",
-			"disabled": "已禁用",
-			"notFound": "文件未找到",
-			"loading": "加载中..."
+			"workspaceRules": "工作区规则"
 		}
 	},
 	"settingsView": {
@@ -79,116 +55,25 @@
 			"name": "About",
 			"tooltip": "About Caret",
 			"header": "About"
-		},
-		"title": "Caret Settings"
+		}
 	},
 	"planMode": "Plan Mode",
 	"actMode": "Act Mode",
 	"useDifferentModels": "Use different models for Plan and Act modes",
 	"useDifferentModelsDescription": "Switching between Plan and Act mode will persist the API and model used in the previous mode. This may be helpful e.g. when using a strong reasoning model to architect a plan for a cheaper coding model to act on.",
 	"settings": {
-		"modeSystem": {
-			"label": "Mode System",
-			"description": "Select Caret or Caret mode.",
-			"options": {
-				"caret": "Caret",
-				"cline": "Caret"
-			}
-		},
 		"preferredLanguage": {
 			"label": "Preferred Language",
 			"description": "Select the language Caret should use for communication."
-		},
-		"unifiedLanguage": {
-			"label": "Language",
-			"description": "Set language for AI responses and interface. Languages with 🎨 support both AI and UI."
 		}
 	},
 	"buttons": {
-		"save": "Save",
-		"cancel": "Cancel",
-		"reset": "Reset",
-		"done": "Done",
-		"close": "Close",
-		"apply": "Apply",
-		"test": "Test",
-		"refresh": "Refresh",
-		"launchBrowser": "Launch Browser",
-		"launchingBrowser": "Launching browser...",
-		"discardChanges": "Discard Changes"
-	},
-	"messages": {
-		"unsavedChanges": "You have unsaved changes. Continue anyway?",
-		"settingsSaved": "Settings saved.",
-		"settingsReset": "Settings reset.",
-		"errorSaving": "Error saving settings.",
-		"errorLoading": "Error loading settings.",
-		"confirmReset": "Are you sure you want to reset all settings to default? This action cannot be undone.",
-		"confirmResetGlobal": "Are you sure you want to reset global settings as well?",
-		"loading": "Loading...",
-		"noChanges": "No changes.",
-		"unsavedChangesTitle": "Unsaved Changes"
-	},
-	"sections": {
-		"apiConfiguration": {
-			"title": "API Configuration",
-			"description": "Configure API settings for connecting with AI models."
-		},
-		"general": {
-			"title": "General Settings",
-			"description": "Configure Caret's basic behavior and language settings."
-		},
-		"features": {
-			"title": "Feature Settings",
-			"description": "Enable or disable various features of Caret."
-		},
-		"browser": {
-			"title": "Browser Settings",
-			"description": "Configure web search and browser-related functionalities."
-		},
-		"terminal": {
-			"title": "Terminal Settings",
-			"description": "Configure terminal integration and command execution settings."
-		},
-		"debug": {
-			"title": "Debug Tools",
-			"description": "Tools for development and debugging."
-		},
-		"about": {
-			"title": "About Caret",
-			"description": "If you have any questions or feedback, feel free to open an issue at",
-			"link": "https://github.com/aicoding-caret/caret"
-		},
-		"launchingBrowser": "Launching browser...",
-		"discardChanges": "Discard Changes"
-	},
-	"labels": {
-		"version": "Version",
-		"license": "License",
-		"repository": "Repository",
-		"documentation": "Documentation",
-		"support": "Support",
-		"feedback": "Feedback",
-		"enabled": "Enabled",
-		"disabled": "Disabled",
-		"default": "Default",
-		"custom": "Custom",
-		"automatic": "Automatic",
-		"manual": "Manual"
-	},
-	"tooltips": {
-		"saveSettings": "Save current settings",
-		"resetSettings": "Reset all settings to default values",
-		"closeSettings": "Close settings window",
-		"unsavedChanges": "You have unsaved changes"
+		"done": "Done"
 	},
 	"browser": {
 		"checkingConnection": "Checking connection...",
 		"connected": "Connected",
 		"notConnected": "Not Connected",
-		"remoteBrowserEnabled": "Use remote browser",
-		"remoteBrowserHost": "Remote browser host",
-		"chromeExecutablePath": "Chrome executable path",
 		"disableToolUse": "Disable browser tool usage",
 		"disableToolUseDescription": "Prevent Caret from using browser actions (e.g. launch, click, type).",
 		"viewportSize": "Viewport size",
@@ -205,30 +90,7 @@
 		"chromePathDescription": "Leave blank to auto-detect.",
 		"customArgsOptional": "Custom Browser Arguments (Optional)",
 		"customArgsPlaceholder": "e.g., --no-sandbox --disable-setuid-sandbox",
-		"customArgsDescription": "Space-separated arguments to pass to the browser executable.",
-		"viewportWidth": "Viewport width",
-		"viewportHeight": "Viewport height",
-		"detectedChromePath": "Detected Chrome path",
-		"customChromePath": "Custom Chrome path",
-		"remoteBrowserDescription": "Using remote browser connection allows you to run a separate instance of Chrome. You can specify a custom path below. To use remote browser connection, you must start Chrome in debug mode.",
-		"debugModeDescription": "You can start it manually (<code>--remote-debugging-port=9222</code>) or using the button below. Please enter the host.",
-		"defaultUrlPlaceholder": "http",
-		"screenshotAlt": "Browser screenshot",
-		"consoleLogs": "Console Logs",
-		"noNewLogs": "(No new logs)",
-		"paginationStep": "Step {{current}} / {{total}}",
-		"previousButton": "Previous",
-		"nextButton": "Next",
-		"sessionStarted": "Browser Session Started",
-		"browseActionLabel": "Browser Action",
-		"action": {
-			"launch": "Launch browser at {{text}}",
-			"click": "Click ({{coordinate}})",
-			"type": "Type \"{{text}}\"",
-			"scrollDown": "Scroll down",
-			"scrollUp": "Scroll up",
-			"close": "Close browser"
-		}
+		"customArgsDescription": "Space-separated arguments to pass to the browser executable."
 	},
 	"terminal": {
 		"defaultProfile": "Default terminal profile",
@@ -239,8 +101,6 @@
 		"aggressiveReuse": "Aggressive terminal reuse",
 		"aggressiveReuseDescription": "Reuse existing available terminals when new terminal sessions are requested if possible.",
 		"positiveNumberError": "Please enter a positive number.",
-		"outputLimit": "Terminal output limit",
-		"outputLimitDescription": "Maximum number of lines to include in terminal output when executing commands. If this number is exceeded, intermediate lines will be removed to save tokens.",
 		"issuesTitle": "Having terminal issues?",
 		"checkOur": "Check our",
 		"quickFixesLink": "Terminal Quick Fixes",
@@ -252,8 +112,6 @@
 		"enableCheckpointsDescription": "Enables the extension to save checkpoints of your workspace during tasks. This uses git internally and may not work correctly for large workspaces.",
 		"enableMcpMarketplace": "Enable MCP Marketplace",
 		"enableMcpMarketplaceDescription": "Enables the MCP Marketplace tab, allowing you to discover and install MCP servers.",
-		"enableRichMcpDisplay": "Enable rich MCP display",
-		"enableRichMcpDisplayDescription": "Enables rich formatting for MCP responses. If disabled, responses will be displayed as plain text.",
 		"mcpDisplayMode": "MCP Display Mode",
 		"mcpDisplayModeDescription": "Controls how MCP responses are displayed: plain text, rich formatting with links/images, or markdown rendering.",
 		"collapseMcpResponses": "Collapse MCP responses",
@@ -277,14 +135,10 @@
 	},
 	"autoApprove": {
 		"title": "Auto-approve Settings",
-		"tooltip": "Configure auto-approval settings for various actions",
-		"label": "Auto-approve",
 		"actionsHeader": "Actions",
 		"quickSettingsHeader": "Quick Settings",
 		"maxRequestsLabel": "Max requests",
 		"maxRequestsTooltip": "Maximum number of consecutive requests that can be auto-approved",
-		"removeFromQuickAccess": "Remove from quick-access menu",
-		"addToQuickAccess": "Add to quick-access menu",
 		"enableAutoApprove": {
 			"label": "Enable auto-approve",
 			"shortName": "Enabled",
@@ -341,27 +195,13 @@
 			"description": "Receive system notifications when Caret requires approval for a step or when a task is completed."
 		}
 	},
-	"telemetry": {
-		"label": "Allow anonymous error and usage reporting",
-		"description": "You can help improve Caret by sending anonymous usage data and error reports. Anonymous usage and error data are sent to help improve the Caret product. No code, prompts, or personal information is ever sent, and no personal identifiable information is included.",
-		"telemetryOverview": "Telemetry Overview",
-		"and": "and",
-		"privacyPolicy": "Privacy Policy",
-		"forMoreDetails": "for more details.",
-		"title": "Telemetry Data"
-	},
 	"debug": {
 		"resetWorkspaceState": "Reset workspace state",
 		"resetGlobalState": "Reset global state",
-		"resetGlobalStateDescription": "Resets all global state and secrets storage of the extension.",
-		"title": "Debug Settings",
-		"description": "Manage debug mode and related settings.",
-		"errorInSeconds": "Error in {{current}}/{{total}} seconds"
+		"resetGlobalStateDescription": "Resets all global state and secrets storage of the extension."
 	},
 	"modelPicker": {
-		"extensionFetches": "The extension automatically fetches the latest list of models available on ",
 		"unsureWhichModel": "If you're unsure which model to choose, Caret works best with ",
-		"freeOptions": "To find free options currently available, try searching for \"free\".",
 		"seeMore": "See more"
 	},
 	"apiOptions": {
@@ -377,31 +217,18 @@
 	},
 	"apiKeyField": {
 		"placeholder": "Enter API Key...",
-		"apiKeyLabel": "{{providerName}} API Key",
-		"defaultHelpText": "This key is stored locally and only used to make API requests from this extension.",
-		"signupText": "You can get a {{providerName}} API key by signing up here."
+		"defaultHelpText": "This key is stored locally and only used to make API requests from this extension."
 	},
 	"baseUrlField": {
-		"label": "Use custom base URL",
-		"placeholder": "Default: https://api.example.com"
+		"label": "Use custom base URL"
 	},
 	"modelInfoView": {
 		"tokensSuffix": "tokens)",
 		"millionTokensLabel": "million tokens",
-		"inputPriceLabel": "Input price:",
-		"outputPriceStandardLabel": "Output price (Standard):",
-		"outputPriceThinkingBudgetLabel": "Output price (Thinking Budget > 0):",
-		"outputPriceLabel": "Output price:",
 		"basedOnInputTokens": "(based on input tokens)",
 		"doesNotSupportImages": "Does not support images",
 		"supportsImages": "Supports images",
-		"doesNotSupportBrowserUse": "Does not support browser use",
-		"supportsBrowserUse": "Supports browser use",
-		"doesNotSupportPromptCaching": "Does not support prompt caching",
-		"supportsPromptCaching": "Supports prompt caching",
 		"contextWindowLabel": "Context Window:",
-		"cacheWritesPriceLabel": "Cache writes price:",
-		"cacheReadsPriceLabel": "Cache reads price:",
 		"inputPrice": "Input price",
 		"outputPriceStandard": "Output price (Standard)",
 		"outputPriceThinking": "Output price (Thinking Budget > 0)",
@@ -415,8 +242,7 @@
 		"cacheReadsPrice": "Cache reads price"
 	},
 	"modelSelector": {
-		"label": "Model",
-		"selectModelPlaceholder": "Select a model..."
+		"label": "Model"
 	},
 	"groqModelPicker": {
 		"modelLabel": "Model",
@@ -435,32 +261,6 @@
 	"ollamaModelPicker": {
 		"searchPlaceholder": "Search and select a model...",
 		"clearSearch": "Clear search"
-	},
-	"openRouterModelPicker": {
-		"starIconFilled": "★",
-		"starIconEmpty": "☆",
-		"featuredModelDescriptionBest": "Recommended for Caret's agent coding",
-		"featuredModelLabelBest": "Best",
-		"featuredModelDescriptionNew": "Cutting-edge models for complex, long-horizon tasks",
-		"featuredModelLabelNew": "New",
-		"featuredModelDescriptionFree": "Advanced model with 262K context for complex coding",
-		"featuredModelLabelFree": "Free",
-		"modelLabel": "Model",
-		"searchPlaceholder": "Search and select a model...",
-		"clearSearch": "Clear search",
-		"switchToOneMContext": "Switch to 1M context window model",
-		"switchToTwoHundredKContext": "Switch to 200K context window model",
-		"fetchModelsDescription": "The extension automatically fetches the latest list of models available on ",
-		"openRouterLinkText": "OpenRouter.",
-		"unsureModelChoice": "If you're unsure which model to choose, Caret works best with ",
-		"recommendedModel": "anthropic/claude-3-7-sonnet-latest.",
-		"searchFreeOptions": "To find free options currently available, try searching for \"free\"."
-	},
-	"preferredLanguageSetting": {
-		"english": "🇺🇸 English",
-		"korean": "🇰🇷 Korean",
-		"chinese": "🇨🇳 Chinese",
-		"japanese": "🇯🇵 Japanese"
 	},
 	"anthropicProvider": {
 		"switchTo1MContext": "Switch to 1M context window model",
@@ -504,7 +304,6 @@
 		"selectBaseModelPlaceholder": "Select a model..."
 	},
 	"basetenModelPicker": {
-		"modelNotStatic": "Model {{newModelId}} is not in the static basetenModels list",
 		"fetchModelsError": "Failed to refresh Baseten models:",
 		"searchPlaceholder": "Search and select a model...",
 		"clearSearch": "Clear search",
@@ -523,18 +322,10 @@
 		"latencySortingDescription": "Sort providers by response time, prioritizing the provider with the lowest latency"
 	},
 	"doubaoProvider": {
-		"providerName": "Doubao",
 		"modelLabel": "Model"
 	},
 	"geminiProvider": {
 		"baseUrlPlaceholder": "Default: https://generativelanguage.googleapis.com"
-	},
-	"fireworksProvider": {
-		"providerName": "Fireworks",
-		"modelLabel": "Model"
-	},
-	"groqProvider": {
-		"providerName": "Groq"
 	},
 	"huggingFaceProvider": {
 		"apiKeyPlaceholder": "Enter API Key...",
@@ -542,35 +333,15 @@
 		"apiKeyHelpText": "This key is stored locally and only used to make API requests from this extension. We don’t show pricing here because it depends on your Hugging Face provider settings and isn’t consistently available via their API.",
 		"getApiKeyLinkText": "Get your API key here"
 	},
-	"huaweiCloudMaasProvider": {
-		"providerName": "Huawei Cloud MaaS"
-	},
 	"liteLlmProvider": {
 		"baseUrlPlaceholder": "Default: http://localhost:4000",
-		"baseUrlLabel": "Base URL (optional)",
 		"apiKeyPlaceholder": "Default: noop",
-		"apiKeyLabel": "API Key",
 		"modelIdPlaceholder": "e.g. anthropic/claude-sonnet-4-20250514",
-		"modelIdLabel": "Model ID",
 		"usePromptCachingLabel": "Use prompt caching (GA)",
-		"promptCachingHelpText": "Prompt caching requires a supported provider and model",
-		"extendedThinkingHelpText": "Extended thinking is available for models such as Sonnet-4, o3-mini, Deepseek R1, etc. More info on",
-		"thinkingModeConfigurationLinkText": "thinking mode configuration",
-		"modelConfigurationLabel": "Model Configuration",
-		"supportsImagesLabel": "Supports Images",
-		"contextWindowSizeLabel": "Context Window Size",
-		"maxOutputTokensLabel": "Max Output Tokens",
-		"temperatureLabel": "Temperature",
-		"unifiedInterfaceHelpText": "LiteLLM provides a unified interface to access various LLM providers' models. See their",
-		"quickstartGuideLinkText": "quickstart guide",
-		"forMoreInformationText": "for more information."
+		"modelConfigurationLabel": "Model Configuration"
 	},
 	"moonshotProvider": {
 		"entrypoint": "Moonshot Entrypoint"
-	},
-	"mistralProvider": {
-		"name": "Mistral",
-		"providerName": "Mistral"
 	},
 	"nebiusProvider": {
 		"apiKeyHelpText": "This key is stored locally and only used to make API requests from this extension. (Note: Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.)"
@@ -590,10 +361,6 @@
 		"requestTimeoutPlaceholder": "Default: 30000 (30 seconds)",
 		"requestTimeoutLabel": "Request Timeout (ms)",
 		"requestTimeoutDescription": "Maximum time in milliseconds to wait for API responses before timing out.",
-		"descriptionPart1": "Ollama allows you to run models locally on your computer. For instructions on how to get started, see their ",
-		"quickstartGuideLinkText": "quickstart guide.",
-		"notePrefix": "Note:",
-		"noteText": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
 		"fetchModelsErrorLog": "Failed to fetch Ollama models:",
 		"providerName": "Ollama",
 		"contextWindowPlaceholder": "e.g. 32768"
@@ -609,7 +376,6 @@
 		"headerValuePlaceholder": "Header value",
 		"removeHeaderButton": "Remove",
 		"azureApiVersionLabel": "Set Azure API version",
-		"azureApiVersionPlaceholder": "Default: {{defaultValue}}",
 		"modelConfigurationLabel": "Model Configuration",
 		"supportsImagesCheckbox": "Supports Images",
 		"supportsBrowserUseCheckbox": "Supports browser use",
@@ -619,19 +385,12 @@
 		"inputPriceLabel": "Input Price / 1M tokens",
 		"outputPriceLabel": "Output Price / 1M tokens",
 		"temperatureLabel": "Temperature",
-		"notePrefix": "Note:",
-		"noteText": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
 		"refreshModelsError": "Failed to refresh OpenAI models:",
 		"providerName": "OpenAI Compatible"
 	},
-	"openAiNativeProvider": {
-		"providerName": "OpenAI"
-	},
 	"openRouterProvider": {
 		"balanceDisplay": {
-			"loading": "Loading...",
-			"tooltip": "Remaining balance: {{remainingBalance}}\\nLimit: {{limit}}\\nUsage: {{usage}}",
-			"label": "Balance: {{formattedBalance}}"
+			"loading": "Loading..."
 		},
 		"apiKeyPlaceholder": "Enter API Key...",
 		"apiKeyLabel": "OpenRouter API Key",
@@ -662,22 +421,11 @@
 	},
 	"qwenProvider": {
 		"apiLineLabel": "Alibaba API Line",
-		"apiLineDescription": "Please select the appropriate API interface based on your location. If you are in China, choose the China API interface. Otherwise, choose the International API interface.",
-		"providerName": "Qwen",
-		"apiLineOptions": {
-			"international": "International API",
-			"china": "China API"
-		}
+		"apiLineDescription": "Please select the appropriate API interface based on your location. If you are in China, choose the China API interface. Otherwise, choose the International API interface."
 	},
 	"requestyProvider": {
-		"name": "Requesty",
 		"useCustomBaseUrlLabel": "Use custom base URL",
-		"customBaseUrlPlaceholder": "Custom base URL",
-		"providerName": "Requesty"
-	},
-	"sambanovaProvider": {
-		"name": "SambaNova",
-		"providerName": "SambaNova"
+		"customBaseUrlPlaceholder": "Custom base URL"
 	},
 	"sapAiCoreProvider": {
 		"clientIdLabel": "AI Core Client Id",
@@ -706,12 +454,10 @@
 		"selectModelPlaceholder": "Select a model..."
 	},
 	"togetherProvider": {
-		"name": "Together",
 		"modelIdPlaceholder": "Enter Model ID...",
 		"modelIdLabel": "Model ID",
 		"notePrefix": "Note:",
-		"noteText": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
-		"providerName": "Together"
+		"noteText": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected."
 	},
 	"vercelAiGatewayProvider": {
 		"apiKeyLabel": "Vercel AI Gateway API Key",
@@ -722,28 +468,9 @@
 		"noteText": "Note: Free tier users will see $0 costs as these requests are provided at no charge by Vercel AI Gateway.",
 		"fetchModelsErrorLog": "Failed to fetch Vercel AI Gateway models:"
 	},
-	"vertexProvider": {
-		"projectIdPlaceholder": "Enter Project ID...",
-		"projectIdLabel": "Google Cloud Project ID",
-		"regionLabel": "Google Cloud Region",
-		"selectRegionPlaceholder": "Select a region...",
-		"descriptionPart1": "To use Google Cloud Vertex AI, you need to",
-		"linkText1": "1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,",
-		"linkText2": "2) install the Google Cloud CLI › configure Application Default Credentials."
-	},
-	"vsCodeLmProvider": {
-		"languageModelLabel": "Language Model",
-		"selectModelPlaceholder": "Select a model...",
-		"descriptionPart1": "The VS Code Language Model API allows you to run models provided by other VS Code extensions (including but not limited to GitHub Copilot). The easiest way to get started is to install the",
-		"copilotExtensionLinkText": "Copilot extension",
-		"descriptionPart2": "from the VS Marketplace and enabling Claude 4 Sonnet.",
-		"noteText": "Note: This is a very experimental integration and may not work as expected."
-	},
 	"xaiProvider": {
-		"name": "X AI",
 		"notePrefix": "Note:",
 		"noteText": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
-		"modifyReasoningEffortLabel": "Modify reasoning effort",
 		"reasoningEffortLabel": "Reasoning Effort",
 		"reasoningEffortDescription": "High effort may produce more thorough analysis but takes longer and uses more tokens.",
 		"providerName": "xAI",
@@ -756,76 +483,12 @@
 	"zaiProvider": {
 		"entrypointLabel": "Z AI Entrypoint",
 		"entrypointDescription": "Please select the appropriate API entrypoint based on your location. If you are in China, choose open.bigmodel.cn. Otherwise, choose api.z.ai.",
-		"name": "Z AI",
 		"providerName": "Z AI"
 	},
 	"lmStudioProvider": {
 		"baseUrlPlaceholder": "Default: http://localhost:1234",
 		"modelPlaceholder": "e.g. meta-llama-3.1-8b-instruct",
 		"contextWindowTooltip": "Not editable - the value is returned by the connected endpoint",
-		"parseModelsError": "Failed to parse LM Studio models:",
-		"description1": "LM Studio allows you to run models locally on your computer. For instructions on how to get started, see their ",
-		"quickstartGuideLink": "quickstart guide.",
-		"description2": "You will also need to start LM Studio's ",
-		"localServerLink": "local server",
-		"description3": " feature with lms server start to use it with this extension. ",
-		"noteBody": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected."
-	},
-	"requestyModelPicker": {
-		"searchPlaceholder": "Search and select a model...",
-		"clearSearch": "Clear search",
-		"descriptionPart1": "The extension automatically fetches the latest list of models available on ",
-		"requestyLinkText": "Requesty.",
-		"descriptionPart2": "If you're unsure which model to choose, Caret works best with ",
-		"recommendedModel": "anthropic/claude-3-7-sonnet-latest."
-	},
-	"sapAiCoreModelPicker": {
-		"deployedModelsHeader": "── Deployed Models ──",
-		"notDeployedModelsHeader": "── Not Deployed Models ──"
-	},
-	"api-configuration": {
-		"title": "API Configuration"
-	},
-	"providers": {
-		"caret": "Caret",
-		"openrouter": "OpenRouter",
-		"gemini": "Google Gemini",
-		"openai": "OpenAI Compatible",
-		"anthropic": "Anthropic",
-		"bedrock": "Amazon Bedrock",
-		"vscode-lm": "VS Code LM API",
-		"deepseek": "DeepSeek",
-		"openai-native": "OpenAI",
-		"ollama": "Ollama",
-		"vertex": "GCP Vertex AI",
-		"litellm": "LiteLLM",
-		"claude-code": "Claude Code",
-		"sapaicore": "SAP AI Core",
-		"mistral": "Mistral",
-		"zai": "Z AI",
-		"groq": "Groq",
-		"cerebras": "Cerebras",
-		"vercel-ai-gateway": "Vercel AI Gateway",
-		"baseten": "Baseten",
-		"requesty": "Requesty",
-		"fireworks": "Fireworks AI",
-		"together": "Together",
-		"qwen": "Alibaba Qwen",
-		"qwen-code": "Qwen Code",
-		"doubao": "Bytedance Doubao",
-		"lmstudio": "LM Studio",
-		"moonshot": "Moonshot",
-		"huggingface": "Hugging Face",
-		"nebius": "Nebius AI Studio",
-		"asksage": "AskSage",
-		"xai": "xAI",
-		"sambanova": "SambaNova",
-		"huawei-cloud-maas": "Huawei Cloud MaaS",
-		"dify": "Dify.ai",
-		"cline": "Caret"
-	},
-	"persona": {
-		"enablePersonaSystem": "Enable Persona System",
-		"description": "Enable the persona system to customize your AI assistant's personality and response style."
+		"parseModelsError": "Failed to parse LM Studio models:"
 	}
 }

@@ -1,17 +1,1 @@
-{
-	"header": "🎉 New features in v{{version}}",
-	"previousHeader": "Previous updates:",
-	"bullets": {
-		"current": {
-			"1": "Support for GPT-5 model family",
-			"2": "Added 15 new providers, integrated 274 AI models"
-		}
-	},
-	"links": {
-		"intro": "Meet the community on",
-		"and": "and",
-		"facebook": "Facebook Group",
-		"github": "GitHub",
-		"outro": "!"
-	}
-}
+{}

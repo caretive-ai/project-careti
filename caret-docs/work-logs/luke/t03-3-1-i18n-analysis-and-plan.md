@@ -25,20 +25,24 @@
 -   `[ ]` **(Action)** 스크립트를 실행하여 현재 상태의 미사용 키 목록을 생성합니다.
 -   `[ ]` **(Action)** 생성된 목록의 일부를 **AI가 직접 수동으로 샘플링하여, 정말 코드베이스 어디에서도 사용되지 않는지 교차 검증**합니다. (예: `search_files` 사용)
 -   `[ ]` **(Action)** 스크립트의 신뢰성이 검증되면, 분석된 미사용 키를 모든 언어(`en`, `ko`, `ja`, `zh`)의 JSON 파일에서 안전하게 제거합니다.
+-   `[ ]` **(Action)** 현재 단계의 내용으로 커밋 푸시합니다. 
 
 ### Phase 2: i18n 적용 대상 분석 (Implementation Target Analysis)
 -   `[ ]` **(Action)** `report-i18n-missing-file.js` 스크립트를 실행하여 `i18n-checklist-report.md` 보고서를 생성합니다.
 -   `[ ]` **(Action)** 생성된 보고서를 기반으로, AI가 각 파일을 직접 열어보고 실제 UI 문자열이 있는지 수동으로 확인하여 `i18n-real-target-files.md` 작업 대상 목록을 생성합니다.
+-   `[ ]` **(Action)** 모두 마무리 되면 현재 단계의 내용으로 커밋 푸시합니다.
 
 ### Phase 3: i18n 전체 적용 (Implementation)
 -   `[ ]` **(Action)** `i18n-real-target-files.md` 목록의 파일을 대상으로 하드코딩된 UI 문자열을 `t()` 함수로 교체합니다.
 -   **작업 순서**: 사용자 영향이 큰 `Settings` → `Chat` → `Common` → 기타 컴포넌트 순으로 진행합니다.
 -   **규칙**: 새로운 번역 키는 `en`과 `ko` JSON 파일에 우선적으로 추가합니다.
+-   `[ ]` **(Action)** 모두 마무리 되면 현재 단계의 내용으로 커밋 푸시합니다.
 
 ### Phase 4: 최종 동기화 및 검증 (Final Sync & Verification)
 -   `[ ]` **(Action)** `npm run sync:i18n-keys`를 실행하여 `ja`, `zh` 파일에 누락된 키를 자동으로 추가합니다.
 -   `[ ]` **(Action)** 추가된 키에 대해 일본어 및 중국어 번역을 수행합니다. (이 단계는 별도 세션에서 진행될 수 있습니다.)
 -   `[ ]` **(Action)** 모든 분석 스크립트를 재실행하여 모든 문제가 해결되었는지 최종 확인합니다.
+-   `[ ]` **(Action)** 모두 마무리 되면 현재 단계의 내용으로 커밋 푸시합니다.
 -   `[ ]` **(Action)** `npm run compile && npm run check-types && npm run test:webview`를 실행하여 기술적 안정성을 확보합니다.
 
 ## 3. 다음 세션을 위한 인수인계

@@ -1,132 +1,6 @@
 {
 	"chat": {
 		"startNewTask": "开始新任务",
-		"error": {
-			"displayContent": "显示此内容时出现问题",
-			"unknown": "错误: {{message}}",
-			"unknownError": "未知错误",
-			"label": "错误",
-			"mistakeLimitReached": "Caret遇到了一些问题...",
-			"maxRequestsReached": "达到最大请求数"
-		},
-		"mcp": {
-			"useServer": "Caret将尝试在 {{serverName}} MCP 服务器上 {{type}}：",
-			"tool": "工具",
-			"resource": "资源"
-		},
-		"taskCompleted": "任务完成",
-		"tool": {
-			"outsideWorkspace": "此文件位于工作区之外",
-			"editFile": "Caret想要编辑此文件",
-			"createFile": "Caret想要创建一个新文件",
-			"readFile": "Caret想要读取此文件",
-			"listFilesTopLevel": "Caret想要查看此目录中的顶级文件",
-			"listFilesRecursive": "Caret想要递归查看此目录中的所有文件",
-			"listCodeDefinitionNames": "Caret想要查看此目录中使用的源代码定义名称",
-			"searchFiles": "Caret想要在此目录中搜索",
-			"summarizeTask": "Caret正在总结对话",
-			"summary": "摘要",
-			"externalUrl": "此URL是外部的",
-			"webFetch": "Caret想要从此URL获取内容",
-			"commandOutput": "命令输出",
-			"commandApprovalRequired": "模型已确定此命令需要明确批准。",
-			"mcpNotification": "MCP通知",
-			"thinking": {
-				"label": "思考中"
-			},
-			"mcpLoadingDocumentation": "正在加载MCP文档",
-			"seeNewChanges": "查看新更改",
-			"shellIntegration": {
-				"unavailable": "Shell集成不可用",
-				"description": "Caret查看命令输出时可能遇到问题。请更新VSCode（<code>CMD/CTRL + Shift + P</code> → \"Update\"）并确保您正在使用支持的shell：zsh、bash、fish或PowerShell（<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\"）。",
-				"troubleshooting": "仍然有问题？"
-			},
-			"condenseConversation": "Caret想要总结您的对话",
-			"createGithubIssue": "Caret想要创建一个Github问题"
-		},
-		"image": {
-			"dimensionError": "图像尺寸超过7500px",
-			"unsupportedFileError": "图像以外的文件目前已禁用"
-		},
-		"selectModelApiProvider": "选择模型/API提供商",
-		"addContext": "添加上下文",
-		"addFilesImages": "添加文件和图像",
-		"mode": {
-			"tooltip": {
-				"description": "在{{mode}}模式下，Caret将{{action}}",
-				"act": {
-					"action": "立即完成任务"
-				},
-				"plan": {
-					"action": "收集信息以规划方案"
-				}
-			},
-			"act": {
-				"label": "Act"
-			},
-			"plan": {
-				"label": "Plan"
-			}
-		},
-		"contextMenu": {
-			"problems": "问题",
-			"terminal": "终端",
-			"pasteUrlToFetchContents": "粘贴URL以获取内容",
-			"noResultsFound": "未找到结果",
-			"gitCommits": "Git提交",
-			"add": "添加",
-			"file": "文件",
-			"folder": "文件夹",
-			"searching": "搜索中..."
-		},
-		"creditLimitError": {
-			"outOfCredits": "您的积分已用完。",
-			"buyCredits": "购买积分",
-			"retryRequest": "重试请求"
-		},
-		"errorBlockTitle": {
-			"apiRetryAttempt": "API请求 (重试失败的第 {{attempt}}/{{retryOperations}} 次尝试",
-			"inSeconds": " 在 {{remainingSeconds}} 秒后",
-			"ellipsis": ")...",
-			"apiRequestLoading": "API请求中...",
-			"apiRequestCancelled": "API请求已取消",
-			"apiStreamingFailed": "API流式传输失败",
-			"apiRequest": "API请求",
-			"creditLimitReached": "达到积分限制",
-			"apiRequestFailed": "API请求失败"
-		},
-		"errorRow": {
-			"requestId": "请求ID: {{requestId}}",
-			"powershellIssue": "您似乎遇到了Windows PowerShell问题，请参阅此",
-			"troubleshootingGuide": "故障排除指南",
-			"period": "。",
-			"clickRetryBelow": "（点击下方的“重试”）",
-			"signInToCline": "登录到Cline",
-			"diffError": "模型使用的搜索模式与文件中任何内容都不匹配。正在重试...",
-			"clineTriedToAccess": "Caret尝试访问",
-			"isBlockedBy": "被以下文件阻止：",
-			"file": "文件。"
-		},
-		"bugReport": {
-			"title": "错误报告",
-			"whatHappened": "发生了什么？",
-			"stepsToReproduce": "重现步骤",
-			"relevantApiRequestOutput": "相关API请求输出",
-			"providerModel": "提供商/模型",
-			"operatingSystem": "操作系统",
-			"systemInfo": "系统信息",
-			"clineVersion": "Caret版本",
-			"additionalContext": "附加上下文"
-		},
-		"serversToggleModal": {
-			"manageMcpServers": "管理MCP服务器",
-			"mcpServers": "MCP服务器"
-		},
-		"slashCommandMenu": {
-			"defaultCommands": "默认命令",
-			"workflowCommands": "工作流命令",
-			"noMatchingCommandsFound": "未找到匹配的命令"
-		},
 		"openDiskTaskHistoryButton.openDiskTaskHistory": "打开磁盘任务历史记录",
 		"taskHeader.task": "任务",
 		"taskHeader.closeTask": "关闭任务",
@@ -181,8 +55,7 @@
 		"clickToToggleActMode": "点击切换到Act模式",
 		"alreadyInActMode": "已在Act模式",
 		"actModeShortcut": "Act模式 (⌘⇧A)",
-		"copyCode": "复制代码",
-		"openFileInEditor": "在编辑器中打开 {{filePath}}"
+		"copyCode": "复制代码"
 	},
 	"mermaidBlock": {
 		"generatingDiagram": "正在生成Mermaid图表...",
@@ -196,14 +69,8 @@
 		"turnOffSetting": "您可以在",
 		"settings": "设置"
 	},
-	"thumbnails": {
-		"thumbnailImage": "缩略图图像-{{index}}"
-	},
 	"historyPreview": {
 		"recentTasks": "最近任务",
-		"tokens": "令牌: ↑{{tokensIn}} ↓{{tokensOut}}",
-		"cache": "缓存: +{{cacheWrites}} → {{cacheReads}}",
-		"apiCost": "API成本: ${{totalCost}}",
 		"viewAllHistory": "查看所有历史记录",
 		"noRecentTasks": "无最近任务",
 		"favorited": "已收藏"
@@ -211,9 +78,6 @@
 	"linkPreview": {
 		"failedToFetchOpenGraphData": "未能获取Open Graph数据",
 		"unknownErrorOccurred": "发生未知错误",
-		"loadingPreviewFor": "正在加载 {{hostname}} 的预览...",
-		"waitingForMinutesSeconds": "等待 {{minutes}} 分 {{seconds}} 秒...",
-		"waitingForSeconds": "等待 {{seconds}} 秒...",
 		"unableToLoadPreview": "无法加载预览",
 		"previewRequestTimedOut": "预览请求超时",
 		"networkErrorLoadingPreview": "加载预览时出现网络错误",
@@ -222,44 +86,15 @@
 		"noTitle": "无标题",
 		"errorDisplayingLinkPreview": "显示此链接预览时出现问题"
 	},
-	"historyView": {
-		"history": "历史记录",
-		"done": "完成",
-		"fuzzySearchPlaceholder": "模糊搜索历史记录...",
-		"clearSearch": "清除搜索",
-		"newest": "最新",
-		"oldest": "最旧",
-		"mostExpensive": "最昂贵",
-		"mostTokens": "最多令牌",
-		"mostRelevant": "最相关",
-		"workspace": "工作区",
-		"favorites": "收藏",
-		"selectAll": "全选",
-		"selectNone": "取消全选",
-		"deleteSelected": "删除选中项",
-		"deleteAllHistory": "删除所有历史记录",
-		"export": "导出",
-		"deleteSelectedWithCount": "删除 {{count}} 个选中项",
-		"deleteAllHistoryWithSize": "删除所有历史记录 ({{size}})",
-		"selectedWithSize": "已选中 ({{size}})"
-	},
 	"imagePreview": {
-		"timeoutLoadingImage": "加载图像超时: {{url}}",
-		"failedToLoadImage": "加载图像失败: {{url}}",
-		"loadingImageFrom": "正在从 {{hostname}} 加载图像...",
-		"waitingForMinutesSeconds": "等待 {{minutes}} 分 {{seconds}} 秒...",
-		"waitingForSeconds": "等待 {{seconds}} 秒...",
 		"failedToLoadImageTitle": "加载图像失败",
 		"clickToOpenInBrowser": "点击在浏览器中打开",
-		"svgFrom": "来自 {{hostname}} 的SVG",
-		"imageFrom": "来自 {{hostname}} 的图像",
 		"errorDisplayingImage": "显示此图像时出现问题"
 	},
 	"mcpResponseDisplay": {
 		"response": "响应",
 		"responseError": "响应 (错误)",
-		"errorParsingResponse": "解析响应时出错:",
-		"loadingRichContent": "正在加载富文本内容..."
+		"errorParsingResponse": "解析响应时出错:"
 	},
 	"mcpConfigurationView": {
 		"mcpServers": "MCP服务器",
@@ -292,8 +127,6 @@
 		"editConfiguration": "编辑配置"
 	},
 	"brandMarketplace": {
-		"preparing": "{{brandName}} MCP市场正在准备中。",
-		"preparingDescription": "{{brandName}}专属MCP工具即将推出。",
 		"codecenterPreparing": "CodeCenter MCP市场正在准备中。",
 		"codecenterPreparingDescription": "CodeCenter专属MCP工具即将推出。"
 	},
@@ -340,14 +173,6 @@
 	"serversToggleList": {
 		"noMcpServersInstalled": "未安装MCP服务器"
 	},
-	"mcpMarketplaceCard": {
-		"logoAlt": "{{name}} 标志",
-		"installed": "已安装",
-		"installing": "正在安装...",
-		"install": "安装",
-		"requiresApiKey": "需要API密钥",
-		"communityMadeWarning": "社区制作（使用风险自负）"
-	},
 	"mcpMarketplaceView": {
 		"failedToLoadMarketplaceData": "未能加载市场数据。",
 		"retry": "重试",
@@ -363,10 +188,6 @@
 		"noMatchingMcpServersFound": "未找到匹配的MCP服务器。",
 		"noMcpServersFoundInMarketplace": "在市场中未找到MCP服务器。"
 	},
-	"mcpSubmitCard": {
-		"submitMcpServer": "提交MCP服务器",
-		"helpOthersDiscover": "通过向github.com/cline/mcp-marketplace提交问题，帮助他人发现优秀的MCP服务器。"
-	},
 	"clineRulesToggleModal": {
 		"manageRulesWorkflows": "管理Cline规则和工作流",
 		"rulesTab": "规则",
@@ -376,7 +197,6 @@
 		"workflowsDescription": "工作流允许您定义一系列步骤，以指导Cline完成重复的任务集，例如部署服务或提交PR。要调用工作流，请在聊天中键入",
 		"workflowName": "/工作流名称",
 		"globalRules": "全局规则",
-		"workspaceRules": "工作区规则",
 		"globalWorkflows": "全局工作流",
 		"workspaceWorkflows": "工作区工作流"
 	},

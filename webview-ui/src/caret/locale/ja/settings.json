@@ -37,136 +37,22 @@
 			"name": "情報",
 			"tooltip": "Caret情報",
 			"header": "情報"
-		},
-		"title": "Caret設定"
+		}
 	},
 	"settings": {
-		"modeSystem": {
-			"label": "モードシステム",
-			"description": "CaretまたはClineモードを選択してください。",
-			"options": {
-				"caret": "Caret",
-				"cline": "Caret"
-			}
-		},
 		"preferredLanguage": {
 			"label": "優先言語",
 			"description": "Caretがコミュニケーションに使用する言語を選択してください。"
-		},
-		"unifiedLanguage": {
-			"label": "Language",
-			"description": "Set language for AI responses and interface. Languages with 🎨 support both AI and UI."
 		}
 	},
 	"buttons": {
-		"save": "保存",
-		"cancel": "キャンセル",
-		"reset": "リセット",
-		"done": "完了",
-		"close": "閉じる",
-		"apply": "適用",
-		"test": "テスト",
-		"refresh": "更新",
-		"launchBrowser": "ブラウザを起動",
-		"launchingBrowser": "ブラウザ起動中...",
-		"discardChanges": "変更を破棄"
-	},
-	"messages": {
-		"unsavedChanges": "未保存の変更があります。続行しますか？",
-		"settingsSaved": "設定が保存されました。",
-		"settingsReset": "設定がリセットされました。",
-		"errorSaving": "設定の保存中にエラーが発生しました。",
-		"errorLoading": "設定の読み込み中にエラーが発生しました。",
-		"confirmReset": "すべての設定をデフォルトにリセットしますか？ この操作は元に戻せません。",
-		"confirmResetGlobal": "グローバル設定もリセットしますか？",
-		"loading": "読み込み中...",
-		"noChanges": "変更なし。",
-		"unsavedChangesTitle": "未保存の変更"
-	},
-	"sections": {
-		"apiConfiguration": {
-			"title": "API設定",
-			"description": "AIモデルとの接続のためのAPI設定を構成します。"
-		},
-		"general": {
-			"title": "一般設定",
-			"description": "Caretの基本動作と言語設定を構成します。"
-		},
-		"features": {
-			"title": "機能設定",
-			"description": "Caretの様々な機能を有効または無効にします。"
-		},
-		"browser": {
-			"title": "ブラウザ設定",
-			"description": "ウェブ検索とブラウザ関連機能を構成します。"
-		},
-		"terminal": {
-			"title": "ターミナル設定",
-			"description": "ターミナル統合とコマンド実行設定を構成します。"
-		},
-		"debug": {
-			"title": "デバッグツール",
-			"description": "開発とデバッグのためのツール。"
-		},
-		"about": {
-			"title": "Caret情報",
-			"description": "Caretのバージョン情報とライセンスを確認します。",
-			"link": "https://github.com/aicoding-caret/caret"
-		},
-		"launchingBrowser": "ブラウザ起動中...",
-		"discardChanges": "変更を破棄"
-	},
-	"labels": {
-		"version": "バージョン",
-		"license": "ライセンス",
-		"repository": "リポジトリ",
-		"documentation": "ドキュメント",
-		"support": "サポート",
-		"feedback": "フィードバック",
-		"enabled": "有効",
-		"disabled": "無効",
-		"default": "デフォルト",
-		"custom": "カスタム",
-		"automatic": "自動",
-		"manual": "手動"
-	},
-	"tooltips": {
-		"saveSettings": "現在の設定を保存します",
-		"resetSettings": "すべての設定をデフォルト値にリセットします",
-		"closeSettings": "設定ウィンドウを閉じます",
-		"unsavedChanges": "未保存の変更があります"
+		"done": "完了"
 	},
 	"browser": {
 		"checkingConnection": "接続確認中...",
 		"connected": "接続済み",
 		"notConnected": "未接続",
-		"remoteBrowserEnabled": "リモートブラウザを使用する",
-		"remoteBrowserHost": "リモートブラウザホスト",
-		"chromeExecutablePath": "Chrome実行ファイルのパス",
 		"disableToolUse": "ツール使用を無効にする",
-		"viewportWidth": "ビューポート幅",
-		"viewportHeight": "ビューポート高さ",
-		"detectedChromePath": "検出されたChromeパス",
-		"customChromePath": "カスタムChromeパス",
-		"remoteBrowserDescription": "リモートブラウザ接続を使用すると、別のChromeインスタンスを実行できます。カスタムパスは以下で指定できます。リモートブラウザ接続を使用するには、Chromeをデバッグモードで起動する必要があります。",
-		"debugModeDescription": "手動で (<code>--remote-debugging-port=9222</code>) または下のボタンを使用して起動できます。ホストを入力してください。",
-		"defaultUrlPlaceholder": "http",
-		"screenshotAlt": "ブラウザのスクリーンショット",
-		"consoleLogs": "コンソールログ",
-		"noNewLogs": "(新しいログなし)",
-		"paginationStep": "ステップ {{current}} / {{total}}",
-		"previousButton": "前へ",
-		"nextButton": "次へ",
-		"sessionStarted": "ブラウザセッションが開始されました",
-		"browseActionLabel": "ブラウザアクション",
-		"action": {
-			"launch": "ブラウザ起動: {{text}}",
-			"click": "クリック ({{coordinate}})",
-			"type": "入力: \"{{text}}\"",
-			"scrollDown": "下にスクロール",
-			"scrollUp": "上にスクロール",
-			"close": "ブラウザを閉じる"
-		},
 		"disableToolUseDescription": "Prevent Caret from using browser actions (e.g. launch, click, type).",
 		"viewportSize": "Viewport size",
 		"viewportSizeDescription": "Set the size of the browser viewport for screenshots and interactions.",
@@ -193,8 +79,6 @@
 		"aggressiveReuse": "ターミナルの積極的な再利用",
 		"aggressiveReuseDescription": "新しいターミナルセッションが要求されたときに、可能な場合は既存の利用可能なターミナルを再利用します。",
 		"positiveNumberError": "正の数を入力してください。",
-		"outputLimit": "ターミナル出力制限",
-		"outputLimitDescription": "コマンドを実行するときにターミナル出力に含める最大行数です。この数を超えると、トークンを節約するために中間の行が削除されます。",
 		"issuesTitle": "Having terminal issues?",
 		"checkOur": "Check our",
 		"quickFixesLink": "Terminal Quick Fixes",
@@ -206,8 +90,6 @@
 		"enableCheckpointsDescription": "作業中にワークスペースのチェックポイントを保存できるように拡張機能を有効にします。内部的にgitを使用するため、大規模なワークスペースでは正しく動作しない場合があります。",
 		"enableMcpMarketplace": "MCPマーケットプレイスを有効にする",
 		"enableMcpMarketplaceDescription": "MCPサーバーを検索してインストールできるMCPマーケットプレイスタブを有効にします。",
-		"enableRichMcpDisplay": "豊富なMCP表示を有効にする",
-		"enableRichMcpDisplayDescription": "MCP応答のリッチフォーマットを有効にします。無効にすると、応答はプレーンテキストで表示されます。",
 		"collapseMcpResponses": "MCP応答を折りたたむ",
 		"collapseMcpResponsesDescription": "MCP応答パネルのデフォルト表示モードを設定します",
 		"openaiReasoningEffort": "OpenAI推論の努力",
@@ -231,14 +113,10 @@
 	},
 	"autoApprove": {
 		"title": "自動承認設定",
-		"tooltip": "様々な操作に対する自動承認設定を構成します",
-		"label": "自動承認",
 		"actionsHeader": "アクション",
 		"quickSettingsHeader": "クイック設定",
 		"maxRequestsLabel": "最大リクエスト数",
 		"maxRequestsTooltip": "自動承認できる連続したリクエストの最大数",
-		"removeFromQuickAccess": "クイックアクセスメニューから削除",
-		"addToQuickAccess": "クイックアクセスメニューに追加",
 		"enableAutoApprove": {
 			"label": "自動承認を有効にする",
 			"shortName": "有効",
@@ -295,33 +173,16 @@
 			"description": "Caretが進行のために承認が必要な場合、またはタスクが完了したときにシステム通知を受け取ります。"
 		}
 	},
-	"telemetry": {
-		"label": "匿名のエラーと使用状況レポートを許可する",
-		"description": "匿名使用データとエラーレポートを送信してClineの改善に貢献できます。Caret製品改善のために使用状況およびエラーデータを匿名で送信します。コード、プロンプト、個人情報は決して送信されず、個人情報は含まれません。",
-		"telemetryOverview": "テレメトリの概要",
-		"and": "と",
-		"privacyPolicy": "プライバシーポリシー",
-		"forMoreDetails": "を参照してください。",
-		"title": "テレメトリデータ"
-	},
 	"debug": {
 		"resetWorkspaceState": "ワークスペースの状態をリセット",
 		"resetGlobalState": "グローバル状態をリセット",
-		"resetGlobalStateDescription": "拡張機能のすべてのグローバル状態とシークレットストアをリセットします。",
-		"title": "デバッグ設定",
-		"description": "デバッグモードと関連設定を管理します。",
-		"errorInSeconds": "エラー発生: {{current}}/{{total}}秒"
+		"resetGlobalStateDescription": "拡張機能のすべてのグローバル状態とシークレットストアをリセットします。"
 	},
 	"about": {
-		"feedbackPrompt": "ご質問やフィードバックはいつでも歓迎します。",
-		"version": "バージョン",
-		"title": "情報",
 		"description": "Caretのバージョン情報とライセンスを確認します。"
 	},
 	"modelPicker": {
-		"extensionFetches": "拡張機能は、利用可能な最新のモデルリストを自動的に取得します: ",
 		"unsureWhichModel": "どのモデルを選択すべきか不明な場合は、Caretは以下と最も良く動作します: ",
-		"freeOptions": "現在利用可能な無料オプションを検索するには、「free」を検索してください。",
 		"seeMore": "さらに表示"
 	},
 	"apiOptions": {
@@ -337,31 +198,18 @@
 	},
 	"apiKeyField": {
 		"placeholder": "APIキーを入力してください...",
-		"apiKeyLabel": "{{providerName}} APIキー",
-		"defaultHelpText": "このキーはローカルに保存され、この拡張機能からのAPIリクエストのためにのみ使用されます。",
-		"signupText": "{{providerName}} APIキーは、こちらでサインアップして取得できます。"
+		"defaultHelpText": "このキーはローカルに保存され、この拡張機能からのAPIリクエストのためにのみ使用されます。"
 	},
 	"baseUrlField": {
-		"label": "カスタムベースURLを使用する",
-		"placeholder": "デフォルト: https://api.example.com"
+		"label": "カスタムベースURLを使用する"
 	},
 	"modelInfoView": {
 		"tokensSuffix": "トークン)",
 		"millionTokensLabel": "百万トークン",
-		"inputPriceLabel": "入力価格:",
-		"outputPriceStandardLabel": "出力価格 (標準):",
-		"outputPriceThinkingBudgetLabel": "出力価格 (思考予算 > 0):",
-		"outputPriceLabel": "出力価格:",
 		"basedOnInputTokens": "(入力トークンに基づく)",
 		"doesNotSupportImages": "画像をサポートしていません",
 		"supportsImages": "画像をサポート",
-		"doesNotSupportBrowserUse": "ブラウザ使用をサポートしていません",
-		"supportsBrowserUse": "ブラウザ使用をサポート",
-		"doesNotSupportPromptCaching": "プロンプトキャッシングをサポートしていません",
-		"supportsPromptCaching": "プロンプトキャッシングをサポート",
 		"contextWindowLabel": "コンテキストウィンドウ:",
-		"cacheWritesPriceLabel": "キャッシュ書き込み価格:",
-		"cacheReadsPriceLabel": "キャッシュ読み取り価格:",
 		"inputPrice": "Input price",
 		"outputPriceStandard": "Output price (Standard)",
 		"outputPriceThinking": "Output price (Thinking Budget > 0)",
@@ -375,8 +223,7 @@
 		"cacheReadsPrice": "Cache reads price"
 	},
 	"modelSelector": {
-		"label": "モデル",
-		"selectModelPlaceholder": "モデルを選択してください..."
+		"label": "モデル"
 	},
 	"groqModelPicker": {
 		"modelLabel": "モデル",
@@ -395,32 +242,6 @@
 	"ollamaModelPicker": {
 		"searchPlaceholder": "モデルを検索して選択...",
 		"clearSearch": "検索をクリア"
-	},
-	"openRouterModelPicker": {
-		"starIconFilled": "★",
-		"starIconEmpty": "☆",
-		"featuredModelDescriptionBest": "Caretのエージェントコーディングに推奨されます",
-		"featuredModelLabelBest": "ベスト",
-		"featuredModelDescriptionNew": "複雑で長期的なタスクのための最先端モデル",
-		"featuredModelLabelNew": "新規",
-		"featuredModelDescriptionFree": "複雑なコーディングのための262Kコンテキストの高度なモデル",
-		"featuredModelLabelFree": "無料",
-		"modelLabel": "モデル",
-		"searchPlaceholder": "モデルを検索して選択...",
-		"clearSearch": "検索をクリア",
-		"switchToOneMContext": "1Mコンテキストウィンドウモデルに切り替える",
-		"switchToTwoHundredKContext": "200Kコンテキストウィンドウモデルに切り替える",
-		"fetchModelsDescription": "拡張機能は、利用可能な最新のモデルリストを自動的に取得します: ",
-		"openRouterLinkText": "OpenRouter.",
-		"unsureModelChoice": "どのモデルを選択すべきか不明な場合は、Clineは以下と最も良く動作します: ",
-		"recommendedModel": "anthropic/claude-sonnet-4.",
-		"searchFreeOptions": "現在利用可能な無料オプションを検索するには、「free」を検索してください。"
-	},
-	"preferredLanguageSetting": {
-		"english": "🇺🇸 英語",
-		"korean": "🇰🇷 韓国語",
-		"chinese": "🇨🇳 中国語",
-		"japanese": "🇯🇵 日本語"
 	},
 	"anthropicProvider": {
 		"switchTo1MContext": "1Mコンテキストウィンドウモデルに切り替える",
@@ -475,18 +296,6 @@
 		"latencySortingDescription": "プロバイダーを応答時間でソートし、最も低いレイテンシのプロバイダーを優先します。"
 	},
 	"doubaoProvider": {
-		"providerName": "Doubao",
-		"modelLabel": "モデル"
-	},
-	"fireworksProvider": {
-		"providerName": "Fireworks",
-		"modelLabel": "モデル"
-	},
-	"groqProvider": {
-		"providerName": "Groq"
-	},
-	"huaweiCloudMaasProvider": {
-		"providerName": "Huawei Cloud MaaS",
 		"modelLabel": "モデル"
 	},
 	"huggingFaceProvider": {
@@ -497,59 +306,18 @@
 	},
 	"rules": {
 		"section": {
-			"title": "ルール管理",
-			"description": "プロジェクトルールファイルの管理と優先順位の設定。",
-			"workspaceRules": "ワークスペースルール",
-			"globalRules": "グローバルルール",
-			"caretRules": ".caretrulesファイル",
-			"clineRules": ".clinerulesファイル",
-			"cursorRules": ".cursorrulesファイル",
-			"windsurfRules": ".windsurfrulesファイル"
-		},
-		"priority": {
-			"title": "ルール優先順位",
-			"description": "ルールファイル優先順位: .caretrules > .clinerules > .cursorrules > .windsurfrules",
-			"info": "優先順位の高いルールが存在する場合、低い優先順位のルールは自動的に無効化されます。"
-		},
-		"buttons": {
-			"toggle": "切り替え",
-			"enable": "有効化",
-			"disable": "無効化",
-			"refresh": "更新"
-		},
-		"status": {
-			"enabled": "有効",
-			"disabled": "無効",
-			"notFound": "ファイル未発見",
-			"loading": "読み込み中..."
+			"workspaceRules": "ワークスペースルール"
 		}
 	},
 	"liteLlmProvider": {
 		"baseUrlPlaceholder": "デフォルト: http://localhost:4000",
-		"baseUrlLabel": "ベースURL（オプション）",
 		"apiKeyPlaceholder": "デフォルト: noop",
-		"apiKeyLabel": "APIキー",
 		"modelIdPlaceholder": "例: anthropic/claude-sonnet-4-20250514",
-		"modelIdLabel": "モデルID",
 		"usePromptCachingLabel": "プロンプトキャッシングを使用する (GA)",
-		"promptCachingHelpText": "プロンプトキャッシングには、サポートされているプロバイダーとモデルが必要です",
-		"extendedThinkingHelpText": "Sonnet-4、o3-mini、Deepseek R1などのモデルで拡張思考が利用可能です。詳細については",
-		"thinkingModeConfigurationLinkText": "思考モード構成",
-		"modelConfigurationLabel": "モデル構成",
-		"supportsImagesLabel": "画像をサポートする",
-		"contextWindowSizeLabel": "コンテキストウィンドウサイズ",
-		"maxOutputTokensLabel": "最大出力トークン",
-		"temperatureLabel": "温度",
-		"unifiedInterfaceHelpText": "LiteLLMは、様々なLLMプロバイダーのモデルにアクセスするための統合インターフェースを提供します。詳細については、その",
-		"quickstartGuideLinkText": "クイックスタートガイド",
-		"forMoreInformationText": "を参照してください。"
+		"modelConfigurationLabel": "モデル構成"
 	},
 	"moonshotProvider": {
 		"entrypoint": "Moonshotエントリーポイント"
-	},
-	"mistralProvider": {
-		"name": "ミストラル",
-		"providerName": "Mistral"
 	},
 	"nebiusProvider": {
 		"apiKeyHelpText": "このキーはローカルに保存され、この拡張機能からのAPIリクエストのためにのみ使用されます。(注意: Clineは複雑なプロンプトを使用し、Claudeモデルと最も良く動作します。能力の低いモデルは期待通りに動作しない場合があります。)"
@@ -565,7 +333,6 @@
 		"headerValuePlaceholder": "ヘッダー値",
 		"removeHeaderButton": "削除",
 		"azureApiVersionLabel": "Azure APIバージョンを設定する",
-		"azureApiVersionPlaceholder": "デフォルト: {{defaultValue}}",
 		"modelConfigurationLabel": "モデル構成",
 		"supportsImagesCheckbox": "画像をサポートする",
 		"supportsBrowserUseCheckbox": "ブラウザ使用をサポートする",
@@ -575,16 +342,12 @@
 		"inputPriceLabel": "入力価格 / 1Mトークン",
 		"outputPriceLabel": "出力価格 / 1Mトークン",
 		"temperatureLabel": "温度",
-		"notePrefix": "注意:",
-		"noteText": "Caretは複雑なプロンプトを使用し、Claudeモデルと最も良く動作します。能力の低いモデルは期待通りに動作しない場合があります。",
 		"refreshModelsError": "Failed to refresh OpenAI models:",
 		"providerName": "OpenAI Compatible"
 	},
 	"openRouterProvider": {
 		"balanceDisplay": {
-			"loading": "読み込み中...",
-			"tooltip": "残り残高: {{remainingBalance}}\\n制限: {{limit}}\\n使用量: {{usage}}",
-			"label": "残高: {{formattedBalance}}"
+			"loading": "読み込み中..."
 		},
 		"apiKeyPlaceholder": "APIキーを入力してください...",
 		"apiKeyLabel": "OpenRouter APIキー",
@@ -614,25 +377,12 @@
 		"setupInstructionsLinkText": "設定手順"
 	},
 	"qwenProvider": {
-		"name": "Qwen",
-		"modelLabel": "モデル",
 		"apiLineLabel": "Alibaba API Line",
-		"apiLineDescription": "Please select the appropriate API interface based on your location. If you are in China, choose the China API interface. Otherwise, choose the International API interface.",
-		"providerName": "Qwen",
-		"apiLineOptions": {
-			"international": "International API",
-			"china": "China API"
-		}
+		"apiLineDescription": "Please select the appropriate API interface based on your location. If you are in China, choose the China API interface. Otherwise, choose the International API interface."
 	},
 	"requestyProvider": {
-		"name": "Requesty",
 		"useCustomBaseUrlLabel": "カスタムベースURLを使用する",
-		"customBaseUrlPlaceholder": "カスタムベースURL",
-		"providerName": "Requesty"
-	},
-	"sambanovaProvider": {
-		"name": "SambaNova",
-		"providerName": "SambaNova"
+		"customBaseUrlPlaceholder": "カスタムベースURL"
 	},
 	"sapAiCoreProvider": {
 		"clientIdLabel": "AI CoreクライアントID",
@@ -661,12 +411,10 @@
 		"selectModelPlaceholder": "Select a model..."
 	},
 	"togetherProvider": {
-		"name": "Together",
 		"modelIdPlaceholder": "モデルIDを入力してください...",
 		"modelIdLabel": "モデルID",
 		"notePrefix": "注意:",
-		"noteText": "Caretは複雑なプロンプトを使用し、Claudeモデルと最も良く動作します。能力の低いモデルは期待通りに動作しない場合があります。",
-		"providerName": "Together"
+		"noteText": "Caretは複雑なプロンプトを使用し、Claudeモデルと最も良く動作します。能力の低いモデルは期待通りに動作しない場合があります。"
 	},
 	"vercelAiGatewayProvider": {
 		"apiKeyLabel": "Vercel AI Gateway APIキー",
@@ -677,28 +425,9 @@
 		"noteText": "注意: 無料ティアユーザーは、これらのリクエストはVercel AI Gatewayによって無料で提供されるため、コストが0と表示されます。",
 		"fetchModelsErrorLog": "Failed to fetch Vercel AI Gateway models:"
 	},
-	"vertexProvider": {
-		"projectIdPlaceholder": "プロジェクトIDを入力してください...",
-		"projectIdLabel": "Google CloudプロジェクトID",
-		"regionLabel": "Google Cloudリージョン",
-		"selectRegionPlaceholder": "リージョンを選択してください...",
-		"descriptionPart1": "Google Cloud Vertex AIを使用するには、次の手順を実行する必要があります。",
-		"linkText1": "1) Google Cloudアカウントを作成 › Vertex AI APIを有効にする › 目的のClaudeモデルを有効にする、",
-		"linkText2": "2) Google Cloud CLIをインストール › アプリケーションのデフォルト認証情報を構成する。"
-	},
-	"vsCodeLmProvider": {
-		"languageModelLabel": "言語モデル",
-		"selectModelPlaceholder": "モデルを選択してください...",
-		"descriptionPart1": "VS Code言語モデルAPIを使用すると、他のVS Code拡張機能（GitHub Copilotを含むがこれに限定されない）によって提供されるモデルを実行できます。開始する最も簡単な方法は、VS Marketplaceから",
-		"copilotExtensionLinkText": "Copilot拡張機能",
-		"descriptionPart2": "をインストールし、Claude 4 Sonnetを有効にすることです。",
-		"noteText": "注意: これは非常に実験的な統合であり、期待どおりに機能しない可能性があります。"
-	},
 	"xaiProvider": {
-		"name": "X AI",
 		"notePrefix": "注意:",
 		"noteText": "Caretは複雑なプロンプトを使用し、Claudeモデルと最も良く動作します。能力の低いモデルは期待通りに動作しない場合があります。",
-		"modifyReasoningEffortLabel": "推論の努力を修正する",
 		"reasoningEffortLabel": "推論の努力",
 		"reasoningEffortDescription": "高い努力は、より徹底的な分析を生成する可能性がありますが、時間がかかり、より多くのトークンを使用します。",
 		"providerName": "xAI",
@@ -711,20 +440,7 @@
 	"zaiProvider": {
 		"entrypointLabel": "Z AIエントリーポイント",
 		"entrypointDescription": "場所に基づいて適切なAPIエントリーポイントを選択してください。中国にいる場合はopen.bigmodel.cnを選択してください。それ以外の場合はapi.z.aiを選択してください。",
-		"name": "Z AI",
 		"providerName": "Z AI"
-	},
-	"requestyModelPicker": {
-		"searchPlaceholder": "モデルを検索して選択...",
-		"clearSearch": "検索をクリア",
-		"descriptionPart1": "拡張機能は、利用可能な最新のモデルリストを自動的に取得します: ",
-		"requestyLinkText": "Requesty.",
-		"descriptionPart2": "どのモデルを選択すべきか不明な場合は、Clineは以下と最も良く動作します: ",
-		"recommendedModel": "anthropic/claude-3-7-sonnet-latest."
-	},
-	"sapAiCoreModelPicker": {
-		"deployedModelsHeader": "── デプロイ済みモデル ──",
-		"notDeployedModelsHeader": "── デプロイされていないモデル ──"
 	},
 	"providers.caret": {
 		"description": "Caretはコーディングタスクに最適化された高品質なAIモデルを提供します。",
@@ -744,7 +460,6 @@
 	"useDifferentModels": "Use different models for Plan and Act modes",
 	"useDifferentModelsDescription": "Switching between Plan and Act mode will persist the API and model used in the previous mode. This may be helpful e.g. when using a strong reasoning model to architect a plan for a cheaper coding model to act on.",
 	"basetenModelPicker": {
-		"modelNotStatic": "Model {{newModelId}} is not in the static basetenModels list",
 		"fetchModelsError": "Failed to refresh Baseten models:",
 		"searchPlaceholder": "Search and select a model...",
 		"clearSearch": "Clear search",
@@ -769,72 +484,14 @@
 		"requestTimeoutPlaceholder": "Default: 30000 (30 seconds)",
 		"requestTimeoutLabel": "Request Timeout (ms)",
 		"requestTimeoutDescription": "Maximum time in milliseconds to wait for API responses before timing out.",
-		"descriptionPart1": "Ollama allows you to run models locally on your computer. For instructions on how to get started, see their ",
-		"quickstartGuideLinkText": "quickstart guide.",
-		"notePrefix": "Note:",
-		"noteText": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
 		"fetchModelsErrorLog": "Failed to fetch Ollama models:",
 		"providerName": "Ollama",
 		"contextWindowPlaceholder": "e.g. 32768"
-	},
-	"openAiNativeProvider": {
-		"providerName": "OpenAI"
 	},
 	"lmStudioProvider": {
 		"baseUrlPlaceholder": "Default: http://localhost:1234",
 		"modelPlaceholder": "e.g. meta-llama-3.1-8b-instruct",
 		"contextWindowTooltip": "Not editable - the value is returned by the connected endpoint",
-		"parseModelsError": "Failed to parse LM Studio models:",
-		"description1": "LM Studio allows you to run models locally on your computer. For instructions on how to get started, see their ",
-		"quickstartGuideLink": "quickstart guide.",
-		"description2": "You will also need to start LM Studio's ",
-		"localServerLink": "local server",
-		"description3": " feature with lms server start to use it with this extension. ",
-		"noteBody": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected."
-	},
-	"api-configuration": {
-		"title": "API Configuration"
-	},
-	"providers": {
-		"caret": "Caret",
-		"openrouter": "OpenRouter",
-		"gemini": "Google Gemini",
-		"openai": "OpenAI Compatible",
-		"anthropic": "Anthropic",
-		"bedrock": "Amazon Bedrock",
-		"vscode-lm": "VS Code LM API",
-		"deepseek": "DeepSeek",
-		"openai-native": "OpenAI",
-		"ollama": "Ollama",
-		"vertex": "GCP Vertex AI",
-		"litellm": "LiteLLM",
-		"claude-code": "Claude Code",
-		"sapaicore": "SAP AI Core",
-		"mistral": "Mistral",
-		"zai": "Z AI",
-		"groq": "Groq",
-		"cerebras": "Cerebras",
-		"vercel-ai-gateway": "Vercel AI Gateway",
-		"baseten": "Baseten",
-		"requesty": "Requesty",
-		"fireworks": "Fireworks AI",
-		"together": "Together",
-		"qwen": "Alibaba Qwen",
-		"qwen-code": "Qwen Code",
-		"doubao": "Bytedance Doubao",
-		"lmstudio": "LM Studio",
-		"moonshot": "Moonshot",
-		"huggingface": "Hugging Face",
-		"nebius": "Nebius AI Studio",
-		"asksage": "AskSage",
-		"xai": "xAI",
-		"sambanova": "SambaNova",
-		"huawei-cloud-maas": "Huawei Cloud MaaS",
-		"dify": "Dify.ai",
-		"cline": "Caret"
-	},
-	"persona": {
-		"enablePersonaSystem": "Enable Persona System",
-		"description": "Enable the persona system to customize your AI assistant's personality and response style."
+		"parseModelsError": "Failed to parse LM Studio models:"
 	}
 }

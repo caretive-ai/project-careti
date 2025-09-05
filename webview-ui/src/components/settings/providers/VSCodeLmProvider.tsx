@@ -4,6 +4,7 @@ import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import { useCallback, useEffect, useState } from "react"
 import { useInterval } from "react-use"
 import * as vscodemodels from "vscode"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ModelsServiceClient } from "@/services/grpc-client"
 import { DROPDOWN_Z_INDEX, DropdownContainer } from "../ApiOptions"
@@ -41,7 +42,8 @@ export const VSCodeLmProvider = ({ currentMode }: VSCodeLmProviderProps) => {
 	useInterval(requestVsCodeLmModels, 2000)
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ whiteSpace: "pre-wrap" }}>{t("providers.vsCodeLm.description", "settings")}</p>
 			<DropdownContainer className="dropdown-container" zIndex={DROPDOWN_Z_INDEX - 2}>
 				<label htmlFor="vscode-lm-model">
 					<span style={{ fontWeight: 500 }}>Language Model</span>

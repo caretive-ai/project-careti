@@ -361,7 +361,18 @@
 		"supportsPromptCaching": "プロンプトキャッシングをサポート",
 		"contextWindowLabel": "コンテキストウィンドウ:",
 		"cacheWritesPriceLabel": "キャッシュ書き込み価格:",
-		"cacheReadsPriceLabel": "キャッシュ読み取り価格:"
+		"cacheReadsPriceLabel": "キャッシュ読み取り価格:",
+		"inputPrice": "Input price",
+		"outputPriceStandard": "Output price (Standard)",
+		"outputPriceThinking": "Output price (Thinking Budget > 0)",
+		"outputPrice": "Output price",
+		"doesNotSupportBrowser": "Does not support browser use",
+		"supportsBrowser": "Supports browser use",
+		"doesNotSupportCache": "Does not support prompt caching",
+		"supportsCache": "Supports prompt caching",
+		"contextWindow": "Context Window",
+		"cacheWritesPrice": "Cache writes price",
+		"cacheReadsPrice": "Cache reads price"
 	},
 	"modelSelector": {
 		"label": "モデル",
@@ -689,12 +700,19 @@
 		"noteText": "Caretは複雑なプロンプトを使用し、Claudeモデルと最も良く動作します。能力の低いモデルは期待通りに動作しない場合があります。",
 		"modifyReasoningEffortLabel": "推論の努力を修正する",
 		"reasoningEffortLabel": "推論の努力",
-		"reasoningEffortDescription": "高い努力は、より徹底的な分析を生成する可能性がありますが、時間がかかり、より多くのトークンを使用します。"
+		"reasoningEffortDescription": "高い努力は、より徹底的な分析を生成する可能性がありますが、時間がかかり、より多くのトークンを使用します。",
+		"providerName": "xAI",
+		"modifyReasoningEffort": "Modify reasoning effort",
+		"reasoningEffortOptions": {
+			"low": "low",
+			"high": "high"
+		}
 	},
 	"zaiProvider": {
 		"entrypointLabel": "Z AIエントリーポイント",
 		"entrypointDescription": "場所に基づいて適切なAPIエントリーポイントを選択してください。中国にいる場合はopen.bigmodel.cnを選択してください。それ以外の場合はapi.z.aiを選択してください。",
-		"name": "Z AI"
+		"name": "Z AI",
+		"providerName": "Z AI"
 	},
 	"requestyModelPicker": {
 		"searchPlaceholder": "モデルを検索して選択...",
@@ -814,5 +832,9 @@
 		"huawei-cloud-maas": "Huawei Cloud MaaS",
 		"dify": "Dify.ai",
 		"cline": "Caret"
+	},
+	"persona": {
+		"enablePersonaSystem": "Enable Persona System",
+		"description": "Enable the persona system to customize your AI assistant's personality and response style."
 	}
 }

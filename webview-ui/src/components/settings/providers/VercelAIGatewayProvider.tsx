@@ -82,7 +82,8 @@ export const VercelAIGatewayProvider = ({ showModelOptions, isPopup, currentMode
 	}, [hasModels, selectedModelId, vercelAiGatewayModels, selectedModelInfo])
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ whiteSpace: "pre-wrap" }}>{t("providers.vercelAiGateway.description", "settings")}</p>
 			<div>
 				<DebouncedTextField
 					initialValue={apiConfiguration?.vercelAiGatewayApiKey || ""}

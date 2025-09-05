@@ -29,7 +29,10 @@ export const AskSageProvider = ({ showModelOptions, isPopup, currentMode }: AskS
 	const { selectedModelId, selectedModelInfo } = normalizeApiConfiguration(apiConfiguration, currentMode)
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.asksage.description", "settings")}
+			</p>
 			<ApiKeyField
 				helpText={t("askSageProvider.apiKeyHelpText", "settings")}
 				initialValue={apiConfiguration?.asksageApiKey || ""}

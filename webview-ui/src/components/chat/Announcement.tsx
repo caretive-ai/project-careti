@@ -61,7 +61,7 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 					{t("announcement.features.deepPlanning.description", "common")}
 				</li>
 			</ul>
-			<Accordion className="pl-0" isCompact>
+			<Accordion className="pl-0">
 				<AccordionItem
 					aria-label={t("announcement.previousUpdates", "common")}
 					classNames={{

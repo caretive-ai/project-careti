@@ -12,6 +12,7 @@ import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useRef, useState } from "react"
 import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
+import PersonaManagement from "@/caret/components/PersonaManagement"
 import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import Tooltip from "@/components/common/Tooltip"
@@ -35,6 +36,9 @@ const ClineRulesToggleModal: React.FC = () => {
 		setLocalWindsurfRulesToggles,
 		setLocalWorkflowToggles,
 		setGlobalWorkflowToggles,
+		// CARET MODIFICATION: Add modeSystem and enablePersonaSystem for conditional rendering
+		modeSystem,
+		enablePersonaSystem,
 	} = useExtensionState()
 	const [isVisible, setIsVisible] = useState(false)
 	const buttonRef = useRef<HTMLDivElement>(null)
@@ -301,9 +305,7 @@ const ClineRulesToggleModal: React.FC = () => {
 						) : (
 							<p>
 								{t("clineRulesToggleModal.workflowsDescription", "chat")}{" "}
-								<span
-									className=" 
-								text-[var(--vscode-foreground)] font-bold">
+								<span className="text-[var(--vscode-foreground)] font-bold">
 									{t("clineRulesToggleModal.workflowName", "chat")}
 								</span>{" "}
 								in the chat.{" "}
@@ -319,6 +321,9 @@ const ClineRulesToggleModal: React.FC = () => {
 
 					{currentView === "rules" ? (
 						<>
+							{/* CARET MODIFICATION: Persona Management Section - only shown in Caret mode with persona system enabled */}
+							{modeSystem === "caret" && enablePersonaSystem && <PersonaManagement className="mb-3" />}
+
 							{/* Global Rules Section */}
 							<div className="mb-3">
 								<div className="text-sm font-normal mb-2">{t("clineRulesToggleModal.globalRules", "chat")}</div>

@@ -133,58 +133,58 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 	const dropdownListRef = useRef<HTMLDivElement>(null)
 
 	const providerOptions = useMemo(() => {
-		// CARET MODIFICATION: Hide Cline Provider by default, show only if CARET_SHOW_CLINE_PROVIDER=true
+		// CARET MODIFICATION: Restore original Cline provider list, add Caret provider, hide Cline by default
 		const showClineProvider = typeof process !== "undefined" && process.env?.CARET_SHOW_CLINE_PROVIDER === "true"
 
-		const baseProviders = [
-			// CARET MODIFICATION: Add Caret as top priority provider
-			{ value: "caret", label: t("providers.caret", "settings") },
-			{ value: "openrouter", label: t("providers.openrouter", "settings") },
-			{ value: "gemini", label: t("providers.gemini", "settings") },
-			{ value: "openai", label: t("providers.openai", "settings") },
-			{ value: "anthropic", label: t("providers.anthropic", "settings") },
-			{ value: "bedrock", label: t("providers.bedrock", "settings") },
-			{ value: "vscode-lm", label: t("providers.vscode-lm", "settings") },
-			{ value: "deepseek", label: t("providers.deepseek", "settings") },
-			{ value: "openai-native", label: t("providers.openai-native", "settings") },
-			{ value: "ollama", label: t("providers.ollama", "settings") },
-			{ value: "vertex", label: t("providers.vertex", "settings") },
-			{ value: "litellm", label: t("providers.litellm", "settings") },
-			{ value: "claude-code", label: t("providers.claude-code", "settings") },
-			{ value: "sapaicore", label: t("providers.sapaicore", "settings") },
-			{ value: "mistral", label: t("providers.mistral", "settings") },
-			{ value: "zai", label: t("providers.zai", "settings") },
-			{ value: "groq", label: t("providers.groq", "settings") },
-			{ value: "cerebras", label: t("providers.cerebras", "settings") },
-			{ value: "vercel-ai-gateway", label: t("providers.vercel-ai-gateway", "settings") },
-			{ value: "baseten", label: t("providers.baseten", "settings") },
-			{ value: "requesty", label: t("providers.requesty", "settings") },
-			{ value: "fireworks", label: t("providers.fireworks", "settings") },
-			{ value: "together", label: t("providers.together", "settings") },
-			{ value: "qwen", label: t("providers.qwen", "settings") },
-			{ value: "qwen-code", label: t("providers.qwen-code", "settings") },
-			{ value: "doubao", label: t("providers.doubao", "settings") },
-			{ value: "lmstudio", label: t("providers.lmstudio", "settings") },
-			{ value: "moonshot", label: t("providers.moonshot", "settings") },
-			{ value: "huggingface", label: t("providers.huggingface", "settings") },
-			{ value: "nebius", label: t("providers.nebius", "settings") },
-			{ value: "asksage", label: t("providers.asksage", "settings") },
-			{ value: "xai", label: t("providers.xai", "settings") },
-			{ value: "sambanova", label: t("providers.sambanova", "settings") },
-			{ value: "huawei-cloud-maas", label: t("providers.huawei-cloud-maas", "settings") },
-			{ value: "dify", label: t("providers.dify", "settings") },
+		const baseOptions = [
+			{ value: "caret", label: "Caret" }, // CARET MODIFICATION: Add Caret provider
+			{ value: "openrouter", label: "OpenRouter" },
+			{ value: "gemini", label: "Google Gemini" },
+			{ value: "openai", label: "OpenAI Compatible" },
+			{ value: "anthropic", label: "Anthropic" },
+			{ value: "bedrock", label: "Amazon Bedrock" },
+			{ value: "vscode-lm", label: "VS Code LM API" },
+			{ value: "deepseek", label: "DeepSeek" },
+			{ value: "openai-native", label: "OpenAI" },
+			{ value: "ollama", label: "Ollama" },
+			{ value: "vertex", label: "GCP Vertex AI" },
+			{ value: "litellm", label: "LiteLLM" },
+			{ value: "claude-code", label: "Claude Code" },
+			{ value: "sapaicore", label: "SAP AI Core" },
+			{ value: "mistral", label: "Mistral" },
+			{ value: "zai", label: "Z AI" },
+			{ value: "groq", label: "Groq" },
+			{ value: "cerebras", label: "Cerebras" },
+			{ value: "vercel-ai-gateway", label: "Vercel AI Gateway" },
+			{ value: "baseten", label: "Baseten" },
+			{ value: "requesty", label: "Requesty" },
+			{ value: "fireworks", label: "Fireworks AI" },
+			{ value: "together", label: "Together" },
+			{ value: "qwen", label: "Alibaba Qwen" },
+			{ value: "qwen-code", label: "Qwen Code" },
+			{ value: "doubao", label: "Bytedance Doubao" },
+			{ value: "lmstudio", label: "LM Studio" },
+			{ value: "moonshot", label: "Moonshot" },
+			{ value: "huggingface", label: "Hugging Face" },
+			{ value: "nebius", label: "Nebius AI Studio" },
+			{ value: "asksage", label: "AskSage" },
+			{ value: "xai", label: "xAI" },
+			{ value: "sambanova", label: "SambaNova" },
+			{ value: "huawei-cloud-maas", label: "Huawei Cloud MaaS" },
+			{ value: "dify", label: "Dify.ai" },
 		]
 
-		// CARET MODIFICATION: Only show Cline provider if explicitly enabled
+		// CARET MODIFICATION: Only show Cline provider if environment variable is set
 		if (showClineProvider) {
-			baseProviders.unshift({ value: "cline", label: t("providers.cline", "settings") })
+			baseOptions.unshift({ value: "cline", label: "Caret" })
 		}
 
-		return baseProviders
-	}, [language]) // CARET MODIFICATION: Add language dependency for i18n updates
+		return baseOptions
+	}, [])
 
 	const currentProviderLabel = useMemo(() => {
-		return providerOptions.find((option) => option.value === selectedProvider)?.label || selectedProvider
+		const providerInfo = providerOptions.find((option) => option.value === selectedProvider)
+		return providerInfo ? providerInfo.label : selectedProvider
 	}, [providerOptions, selectedProvider])
 
 	// Sync search term with current provider when not searching
@@ -214,9 +214,11 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 	}, [searchableItems])
 
 	const providerSearchResults = useMemo(() => {
-		return searchTerm && searchTerm !== currentProviderLabel
-			? highlight(fuse.search(searchTerm), "provider-item-highlight")
-			: searchableItems
+		if (!searchTerm || searchTerm === currentProviderLabel) {
+			return searchableItems
+		}
+		const results = fuse.search(searchTerm)
+		return highlight(results, "provider-item-highlight")
 	}, [searchableItems, searchTerm, fuse, currentProviderLabel])
 
 	const handleProviderChange = (newProvider: string) => {

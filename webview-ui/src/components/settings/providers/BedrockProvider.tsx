@@ -29,12 +29,10 @@ export const BedrockProvider = ({ showModelOptions, isPopup, currentMode }: Bedr
 	const [awsEndpointSelected, setAwsEndpointSelected] = useState(!!apiConfiguration?.awsBedrockEndpoint)
 
 	return (
-		<div
-			style={{
-				display: "flex",
-				flexDirection: "column",
-				gap: 5,
-			}}>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.bedrock.description", "settings")}
+			</p>
 			<VSCodeRadioGroup
 				onChange={(e) => {
 					const value = (e.target as HTMLInputElement)?.value

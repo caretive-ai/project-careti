@@ -324,7 +324,8 @@
       "Read(/D:\\dev\\caret-merging\\webview-ui\\src\\caret\\locale\\ko/**)",
       "Read(/D:\\dev\\caret-merging\\caret-b2b\\brands\\codecenter\\locale/**)",
       "Read(/D:\\dev\\caret-merging\\caret-b2b\\brands\\codecenter\\locale\\ko/**)",
-      "Read(/D:\\dev\\caret-merging\\caret-b2b\\brands\\codecenter/**)"
+      "Read(/D:\\dev\\caret-merging\\caret-b2b\\brands\\codecenter/**)",
+      "Bash(del \"D:\\dev\\caret-merging\\webview-ui\\src\\caret\\components\\PersonaManagement.tsx\")"
     ],
     "deny": [],
     "ask": []

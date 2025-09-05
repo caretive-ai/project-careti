@@ -333,7 +333,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 	const scrollBehavior = useScrollBehavior(messages, visibleMessages, groupedMessages, expandedRows, setExpandedRows)
 
 	const placeholderText = useMemo(() => {
-		const text = task ? t("typeMessage", "chat") : t("typeTaskHere", "chat")
+		const text = task ? t("typeMessage", "chat") : t(" ", "chat")
 		return text
 	}, [task])
 

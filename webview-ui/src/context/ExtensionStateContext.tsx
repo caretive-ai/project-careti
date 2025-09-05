@@ -6,6 +6,8 @@ import { type CaretModeSystem } from "@caret/shared/ModeSystem"
 import { DEFAULT_AUTO_APPROVAL_SETTINGS } from "@shared/AutoApprovalSettings"
 import { findLastIndex } from "@shared/array"
 import { DEFAULT_BROWSER_SETTINGS } from "@shared/BrowserSettings"
+import type { CaretSettings } from "@shared/CaretSettings"
+import { DEFAULT_CARET_SETTINGS } from "@shared/CaretSettings"
 import { DEFAULT_PLATFORM, type ExtensionState } from "@shared/ExtensionMessage"
 import { DEFAULT_FOCUS_CHAIN_SETTINGS } from "@shared/FocusChainSettings"
 import { DEFAULT_MCP_DISPLAY_MODE } from "@shared/McpDisplayMode"
@@ -30,9 +32,11 @@ import {
 	vercelAiGatewayDefaultModelInfo,
 } from "../../../src/shared/api"
 import type { McpMarketplaceCatalog, McpServer, McpViewTab } from "../../../src/shared/mcp"
+import { convertPreferredLanguageToSupported } from "../caret/utils/i18n"
 import { McpServiceClient, ModelsServiceClient, StateServiceClient, UiServiceClient } from "../services/grpc-client"
 
 interface ExtensionStateContextType extends ExtensionState {
+	caretSettings?: CaretSettings
 	didHydrateState: boolean
 	showWelcome: boolean
 	openRouterModels: Record<string, ModelInfo>
@@ -49,6 +53,17 @@ interface ExtensionStateContextType extends ExtensionState {
 	// CARET MODIFICATION: Add caretBanner for Caret welcome page logo
 	caretBanner: string
 
+	// CARET MODIFICATION: Persona system settings (independent from modeSystem)
+	enablePersonaSystem: boolean
+	currentPersona: string | null
+	personaProfile: {
+		name?: string
+		description?: string
+		custom_instruction?: string
+		avatar_uri?: string
+		thinking_avatar_uri?: string
+	} | null
+
 	// View state
 	showMcp: boolean
 	mcpTab?: McpViewTab
@@ -62,6 +77,18 @@ interface ExtensionStateContextType extends ExtensionState {
 	setShouldShowAnnouncement: (value: boolean) => void
 	// CARET MODIFICATION: 전역 브랜드 모드 플래그 설정 함수
 	setModeSystem: (modeSystem: CaretModeSystem) => void
+	// CARET MODIFICATION: Persona system setters
+	setEnablePersonaSystem: (enabled: boolean) => void
+	setCurrentPersona: (personaId: string | null) => void
+	setPersonaProfile: (
+		profile: {
+			name?: string
+			description?: string
+			custom_instruction?: string
+			avatar_uri?: string
+			thinking_avatar_uri?: string
+		} | null,
+	) => void
 	setMcpServers: (value: McpServer[]) => void
 	setRequestyModels: (value: Record<string, ModelInfo>) => void
 	setGroqModels: (value: Record<string, ModelInfo>) => void
@@ -550,6 +577,20 @@ export const ExtensionStateContextProvider: React.FC<{
 			console.error("Client ID not found in window object")
 		}
 
+		// CARET MODIFICATION: localStorage에서 페르소나 설정 로드
+		try {
+			const savedPersonaSetting = localStorage.getItem("caret-enablePersonaSystem")
+			if (savedPersonaSetting !== null) {
+				const enablePersona = JSON.parse(savedPersonaSetting)
+				setState((prevState) => ({
+					...prevState,
+					enablePersonaSystem: enablePersona,
+				}))
+			}
+		} catch (error) {
+			console.error("Failed to load persona system setting from localStorage:", error)
+		}
+
 		// Clean up subscriptions when component unmounts
 		return () => {
 			if (stateSubscriptionRef.current) {
@@ -623,8 +664,19 @@ export const ExtensionStateContextProvider: React.FC<{
 			.catch((error: Error) => console.error("Failed to refresh OpenRouter models:", error))
 	}, [])
 
+	// Create CaretSettings from ExtensionState fields
+	const caretSettings: CaretSettings = {
+		...DEFAULT_CARET_SETTINGS,
+		mode: state.mode as "chatbot" | "agent" | "plan" | "act",
+		modeSystem: state.modeSystem,
+		preferredLanguage: state.preferredLanguage,
+		uiLanguage: convertPreferredLanguageToSupported(state.preferredLanguage),
+		openAIReasoningEffort: state.openaiReasoningEffort,
+	}
+
 	const contextValue: ExtensionStateContextType = {
 		...state,
+		caretSettings,
 		didHydrateState,
 		showWelcome,
 		openRouterModels,
@@ -640,6 +692,18 @@ export const ExtensionStateContextProvider: React.FC<{
 		availableTerminalProfiles,
 		// CARET MODIFICATION: Add caretBanner to context value
 		caretBanner: state.caretBanner || "🐰 Caret",
+
+		// CARET MODIFICATION: Persona system values (Caret 모드에서는 기본값 true)
+		enablePersonaSystem: state.enablePersonaSystem !== undefined ? state.enablePersonaSystem : state.modeSystem === "caret",
+		currentPersona: state.currentPersona || null,
+		personaProfile: state.personaProfile || {
+			name: "Caret",
+			description: "친근하고 도움되는 코딩 로봇 조수",
+			custom_instruction: "",
+			avatar_uri: "asset://template_characters/caret.png",
+			thinking_avatar_uri: "asset://template_characters/caret_thinking.png",
+		},
+
 		showMcp,
 		mcpTab,
 		showSettings,
@@ -761,6 +825,37 @@ export const ExtensionStateContextProvider: React.FC<{
 		setTotalTasksSize,
 		refreshOpenRouterModels,
 		onRelinquishControl,
+		// CARET MODIFICATION: Persona system setters - also save to localStorage
+		setEnablePersonaSystem: (enabled: boolean) => {
+			setState((prevState) => ({
+				...prevState,
+				enablePersonaSystem: enabled,
+			}))
+			// Save to localStorage as well since proto doesn't support this field yet
+			try {
+				localStorage.setItem("caret-enablePersonaSystem", JSON.stringify(enabled))
+			} catch (error) {
+				console.error("Failed to save persona system setting to localStorage:", error)
+			}
+		},
+		setCurrentPersona: (personaId: string | null) =>
+			setState((prevState) => ({
+				...prevState,
+				currentPersona: personaId,
+			})),
+		setPersonaProfile: (
+			profile: {
+				name?: string
+				description?: string
+				custom_instruction?: string
+				avatar_uri?: string
+				thinking_avatar_uri?: string
+			} | null,
+		) =>
+			setState((prevState) => ({
+				...prevState,
+				personaProfile: profile,
+			})),
 		setUserInfo: (userInfo?: UserInfo) => setState((prevState) => ({ ...prevState, userInfo })),
 	}
 

@@ -134,12 +134,10 @@ export class CaretApiProvider implements ApiHandler {
 				// Usage 정보 처리
 				if (!didOutputUsage && chunk.usage) {
 					// @ts-expect-error-next-line
-					let totalCost = (chunk.usage.cost || 0) + (chunk.usage.cost_details?.upstream_inference_cost || 0)
+					const totalCost = (chunk.usage.cost || 0) + (chunk.usage.cost_details?.upstream_inference_cost || 0)
 
-					// Caret 무료 모델들
-					if (this.getModel().id === "caret/sonic" || this.getModel().id === "caret/free") {
-						totalCost = 0
-					}
+					// Caret API 서버를 통한 호출만 처리
+					// 비용은 Caret 서버에서 계산된 값을 그대로 사용
 
 					yield {
 						type: "usage",

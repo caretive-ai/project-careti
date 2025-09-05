@@ -69,7 +69,10 @@ export const OpenAICompatibleProvider = ({ showModelOptions, isPopup, currentMod
 	}, [])
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.openAICompatible.description", "settings")}
+			</p>
 			<DebouncedTextField
 				initialValue={apiConfiguration?.openAiBaseUrl || ""}
 				onChange={(value) => {
@@ -359,18 +362,6 @@ export const OpenAICompatibleProvider = ({ showModelOptions, isPopup, currentMod
 					</div>
 				</>
 			)}
-
-			<p
-				style={{
-					fontSize: "12px",
-					marginTop: 3,
-					color: "var(--vscode-descriptionForeground)",
-				}}>
-				<span style={{ color: "var(--vscode-errorForeground)" }}>
-					(<span style={{ fontWeight: 500 }}>{t("openAiCompatibleProvider.notePrefix", "settings")}</span>{" "}
-					{t("openAiCompatibleProvider.noteText", "settings")})
-				</span>
-			</p>
 
 			{showModelOptions && (
 				<ModelInfoView isPopup={isPopup} modelInfo={selectedModelInfo} selectedModelId={selectedModelId} />

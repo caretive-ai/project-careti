@@ -28,7 +28,8 @@ export const QwenCodeProvider = ({ showModelOptions, isPopup, currentMode }: Qwe
 	const { selectedModelId, selectedModelInfo } = normalizeApiConfiguration(apiConfiguration, currentMode)
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ whiteSpace: "pre-wrap" }}>{t("providers.qwenCode.description", "settings")}</p>
 			<h3 style={{ color: "var(--vscode-foreground)", margin: "8px 0" }}>
 				{t("qwenCodeProvider.apiConfigurationTitle", "settings")}
 			</h3>

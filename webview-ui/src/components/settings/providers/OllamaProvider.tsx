@@ -58,7 +58,10 @@ export const OllamaProvider = ({ showModelOptions, isPopup, currentMode }: Ollam
 	useInterval(requestOllamaModels, 2000)
 
 	return (
-		<div className="flex flex-col gap-2">
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.ollama.description", "settings")}
+			</p>
 			<BaseUrlField
 				initialValue={apiConfiguration?.ollamaBaseUrl}
 				label={t("ollamaProvider.baseUrlLabel", "settings")}
@@ -126,24 +129,6 @@ export const OllamaProvider = ({ showModelOptions, isPopup, currentMode }: Ollam
 			)}
 
 			<UseCustomPromptCheckbox providerId="ollama" />
-
-			<p
-				style={{
-					fontSize: "12px",
-					marginTop: "5px",
-					color: "var(--vscode-descriptionForeground)",
-				}}>
-				{t("ollamaProvider.descriptionPart1", "settings")}
-				<VSCodeLink
-					href="https://github.com/ollama/ollama/blob/main/README.md"
-					style={{ display: "inline", fontSize: "inherit" }}>
-					{t("ollamaProvider.quickstartGuideLinkText", "settings")}
-				</VSCodeLink>{" "}
-				<span style={{ color: "var(--vscode-errorForeground)" }}>
-					<span style={{ fontWeight: 500 }}>{t("ollamaProvider.notePrefix", "settings")}:</span>{" "}
-					{t("ollamaProvider.noteText", "settings")}
-				</span>
-			</p>
 		</div>
 	)
 }

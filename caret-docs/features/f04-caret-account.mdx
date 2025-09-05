@@ -1,328 +1,138 @@
-# Account & Organization System
+# f04 - Caret Account System (ClineAccount 완전 대체)
 
-Caret의 **계정 및 조직 관리 시스템**은 Auth0 기반의 보안 강화된 인증과 팀 단위 계정 관리를 제공하는 완전히 독립적인 기능입니다.
+## 🎯 **목표**
+**ClineAccount 완전 대체** - 진입점만 변경하여 Cline 코드 보존하면서 Caret 독립 계정 시스템 구축
 
-## 📋 **기능 개요**
+## 📋 **구현 전략**
 
-### **Caret만의 고유 기능**
+### **핵심 아이디어: 진입점 변경**
+```typescript
+// 현재 (AccountView.tsx:46-54)
+{clineUser?.uid ? (
+    <ClineAccountView />  // Cline 계정
+) : (
+    <AccountWelcomeView />  // 비로그인
+)}
 
-- **Auth0 기반 계정 시스템**: 보안 강화된 로그인 및 인증
-- **Organization 관리**: 팀/조직 단위 계정 관리
-- **요금제 시스템**: 사용량 기반 과금 및 제한 관리
-- **사용량 대시보드**: 실시간 API 사용량 모니터링
-- **팀 협업**: 조직 내 멤버 관리 및 권한 설정
-
-### **차별화 포인트**
-
-- **Cline과 완전 분리**: 독립적인 API 시스템으로 충돌 없음
-- **엔터프라이즈 지원**: 대규모 팀 및 조직 지원
-- **투명한 과금**: 명확한 사용량 추적 및 요금 체계
-
-## 🏗️ **구현 아키텍처**
-
-### **백엔드 서비스 구조**
-
-```
-src/services/account/
-├── CaretAccountService.ts         # 🎯 핵심 계정 서비스 로직
-└── accountLoginClicked.ts         # 🔐 로그인 이벤트 처리
-
-src/core/controller/
-├── index.ts                       # 🔗 Controller에 CaretAccountService 통합
-├── index.ts.cline                 # 📄 원본 ClineAccountService 백업
-└── account/
-    └── accountLoginClicked.ts.cline # 📄 원본 백업
-
-src/api/providers/
-└── caret.ts                       # 🌐 Caret API 핸들러 (200+ 라인)
+// 목표: 진입점만 수정하여 Caret 우선 처리
+{caretUser?.uid ? (
+    <CaretAccountView />     // 🎯 Caret 계정 (새로 구현)
+) : clineUser?.uid ? (
+    <ClineAccountView />     // ✅ 기존 Cline (유지)
+) : (
+    <AccountWelcomeView />   // ✅ 비로그인 (유지)
+)}
 ```
 
-### **프론트엔드 UI 구조**
+### **장점**
+- **Cline 코드 보존**: `ClineAccountView`, `ClineAccountService` 등 그대로 유지
+- **최소 침습**: 조건 분기만 추가, 기존 로직 변경 없음
+- **독립 운영**: Caret 전용 컴포넌트와 서비스 별도 구현
 
+## 🏗️ **필수 구현 컴포넌트**
+
+### **미구현 상태 (필수 구현 필요)**
 ```
 webview-ui/src/caret/components/
-├── CaretAccountView.tsx           # 📊 계정 관리 메인 UI
-├── CaretAccountInfoCard.tsx       # 💳 계정 정보 카드
-├── CaretApiSetup.tsx              # ⚙️ API 설정 UI
-├── CaretWelcomeSection.tsx        # 👋 웰컴 섹션
-└── __tests__/                     # 🧪 컴포넌트 테스트들
-    ├── CaretAccountView.test.tsx
-    ├── CaretAccountInfoCard.test.tsx
-    └── CaretApiSetup.test.tsx
+├── CaretApiSetup.tsx                 # ✅ 구현완료
+├── CaretWelcomeSection.tsx           # ✅ 구현완료
+├── CaretGeneralSettingsSection.tsx  # ✅ 구현완료
+│
+├── CaretAccountView.tsx              # ❌ 미구현 - ClineAccountView 대체용
+└── CaretAccountInfoCard.tsx          # ❌ 미구현 - Settings 통합용
 ```
 
-### **핵심 로직 흐름**
+### **백엔드 서비스**
+```
+src/api/providers/
+└── CaretApiProvider.ts               # ✅ 구현완료 - Caret API 서버 연동
 
+src/services/account/
+├── ClineAccountService.ts            # ✅ 존재 - Cline 전용 (보존)
+└── CaretAccountService.ts            # ❌ 미구현 - Caret 전용 필요
+```
+
+## 🔧 **구현 단계**
+
+### **Phase 1: caretUser 상태 관리**
+1. `ExtensionStateContext`에 `caretUser` 추가
+2. `CaretGlobalManager`에서 Auth0 토큰 → caretUser 변환
+3. `AccountView.tsx`에서 진입점 분기 추가
+
+### **Phase 2: CaretAccountView 핵심 구현**
+1. `CaretAccountView.tsx` - ClineAccountView와 동일한 인터페이스
+2. Caret API 서버 연동 (사용량, 결제, 조직 관리)
+
+### **Phase 3: Settings 통합**
+1. `CaretAccountInfoCard.tsx` - Settings에서 계정 상태 표시
+2. "View Account" 버튼으로 CaretAccountView 연결
+
+## 🌐 **API 요구사항 (서버팀 구현 필요)**
+
+### **핵심 엔드포인트**
 ```typescript
-// 1. 로그인 프로세스
-CaretAccountInfoCard → accountLoginClicked → Auth0 → JWT Token
+const CARET_API_BASE = "https://api.caret.team"
 
-// 2. 토큰 처리 및 저장
-handleAuthCallback → caretApiKey 저장 → UserInfo 추출
+// 1. 채팅 완성 API (OpenAI 호환) - 최우선
+POST /api/v1/chat/completions
+// 사용처: CaretApiProvider.ts:79 - createOpenRouterStream() 호출
 
-// 3. API 요청 시 인증
-CaretHandler → caretApiKey 검증 → API 호출
+// 2. 사용량 조회 API  
+GET /generation?id={generationId}
+// 사용처: CaretApiProvider.ts:176 - getApiStreamUsage() 메소드
+
+// 3. 인증 관련 API
+POST /auth/login        // Auth0 로그인 리디렉션
+POST /auth/callback     // Auth0 콜백 처리
+
+// 4. 계정 관리 API
+GET /account/usage      // 사용량 대시보드
+GET /account/billing    // 요금제 관리
+GET /org               // 조직 관리
 ```
 
-## 🔐 **인증 시스템**
-
-### **Auth0 통합**
-
-- **JWT 토큰 기반**: 보안 강화된 인증 방식
-- **커스텀 토큰**: Caret 전용 API 키 별도 관리
-- **사용자 정보 추출**: 이름, 이메일, 프로필 이미지
-
-### **API 키 관리**
-
+### **토큰 사용량 설명 (AI 비전공 개발팀용)**
 ```typescript
-// caretApiKey vs apiKey 분리 관리
-const apiConfiguration = {
-	apiProvider: "gemini", // 사용자가 선택한 AI 모델
-	caretApiKey: "caret_xxx", // Caret 계정 API 키 (별도)
-	// ... 기타 AI 모델 설정들
-}
-
-// Caret API 호출 시
-const response = await fetch(API_ENDPOINT, {
-	headers: {
-		Authorization: `Bearer ${caretApiKey}`,
-		"Content-Type": "application/json",
-	},
-})
-```
-
-## 💳 **요금제 및 사용량 관리**
-
-### **요금제 시스템**
-
-- **Free Tier**: 기본 사용량 제공
-- **Pro Tier**: 개인 사용자용 확장 요금제
-- **Team Tier**: 팀/조직용 요금제
-- **Enterprise**: 대규모 조직용 맞춤 요금제
-
-### **사용량 모니터링**
-
-- **실시간 추적**: API 호출 수, 토큰 사용량
-- **대시보드**: 일별/월별 사용량 시각화
-- **알림 시스템**: 사용량 한계 근접 시 알림
-- **과금 투명성**: 명확한 사용량 기반 과금
-
-## 🧪 **TDD 및 테스트**
-
-### **테스트 커버리지**: ✅ **100%**
-
-**테스트 파일들**:
-
-```
-webview-ui/src/caret/components/__tests__/
-├── CaretAccountView.test.tsx         # 메인 계정 뷰 테스트
-├── CaretAccountInfoCard.test.tsx     # 계정 정보 카드 테스트
-├── CaretApiSetup.test.tsx            # API 설정 테스트
-├── CaretAccountView-026-1.test.tsx   # 026번 버전 호환성 테스트
-└── CaretWelcome.test.tsx             # 웰컴 페이지 테스트
-```
-
-**테스트 케이스 (10+ 개)**:
-
-1. **로그인 버튼 클릭**: Auth0 로그인 플로우 시작
-2. **로그인 상태 표시**: 로그인 후 사용자 정보 표시
-3. **API 키 설정**: caretApiKey 저장 및 검증
-4. **사용량 표시**: 실시간 사용량 대시보드
-5. **요금제 관리**: 요금제 변경 및 결제
-6. **조직 관리**: 팀 멤버 추가/제거
-7. **권한 관리**: 역할별 권한 설정
-8. **로그아웃**: 안전한 세션 종료
-9. **오류 처리**: 네트워크 오류 시 사용자 안내
-10. **다국어 UI**: 언어 변경 시 텍스트 업데이트
-
-**실행 방법**:
-
-```bash
-npm run test:frontend -- account
-```
-
-## 🔧 **머징 구현 가이드**
-
-### **이식 우선순위**: 🚨 **HIGH**
-
-- **이유**: 026번에서 핵심 구현됨, 비즈니스 로직 포함
-- **Phase**: Phase 4 (고급 기능)
-
-### **충돌 위험도**: 🟢 **LOW**
-
-- **원인**: Cline에 없는 완전 독립적인 시스템
-- **장점**: 기존 Cline 코드와 전혀 충돌하지 않음
-
-### **Phase별 이식 단계**
-
-#### **🧪 TDD 1단계: 테스트 환경 구축**
-
-```bash
-# 1. 테스트 디렉토리 이식
-cp -r caret-main/webview-ui/src/caret/components/__tests__/ \
-      webview-ui/src/caret/components/__tests__/
-
-# 2. 테스트 실행 환경 확인
-npm run test:frontend
-
-# 3. 의존성 확인 (Auth0, API 모킹 등)
-npm list @auth0/nextjs-auth0
-```
-
-#### **🔧 백엔드 서비스 이식**
-
-```bash
-# 1. 계정 서비스 디렉토리 생성
-mkdir -p src/services/account/
-
-# 2. CaretAccountService 이식
-cp caret-main/src/services/account/CaretAccountService.ts \
-   src/services/account/
-
-# 3. Controller 통합
-# src/core/controller/index.ts에서 ClineAccountService → CaretAccountService 교체
-
-# 4. API Provider 이식
-cp caret-main/src/api/providers/caret.ts \
-   src/api/providers/
-```
-
-#### **🎨 프론트엔드 UI 이식**
-
-```bash
-# 1. Caret 컴포넌트 디렉토리 이식
-cp -r caret-main/webview-ui/src/caret/components/ \
-      webview-ui/src/caret/components/
-
-# 2. 스타일 이식 (필요한 경우)
-cp caret-main/webview-ui/src/caret/styles/* \
-   webview-ui/src/caret/styles/
-
-# 3. 타입 정의 이식
-cp caret-main/src/shared/CaretAccount.ts \
-   src/shared/
-```
-
-#### **🧪 TDD 2단계: 통합 테스트**
-
-```bash
-# 1. 백엔드 단위 테스트
-npm run test:backend -- account
-
-# 2. 프론트엔드 컴포넌트 테스트
-npm run test:frontend -- account
-
-# 3. 통합 빌드 테스트
-npm run compile
-npm run build:webview
-
-# 4. E2E 테스트 (Extension Host)
-# F5로 확장 실행 후 계정 기능 수동 테스트
-```
-
-### **환경 설정 및 구성**
-
-#### **Auth0 설정**
-
-```typescript
-// .env 또는 설정 파일
-AUTH0_DOMAIN = "caret.auth0.com"
-AUTH0_CLIENT_ID = "your_client_id"
-AUTH0_CLIENT_SECRET = "your_client_secret"
-CARET_API_ENDPOINT = "https://api.caret.dev"
-```
-
-#### **API 엔드포인트 구성**
-
-```typescript
-// src/api/providers/caret.ts
-const CARET_API_BASE = process.env.CARET_API_ENDPOINT || "https://api.caret.dev"
-
-const endpoints = {
-	login: `${CARET_API_BASE}/auth/login`,
-	usage: `${CARET_API_BASE}/account/usage`,
-	billing: `${CARET_API_BASE}/account/billing`,
-	organization: `${CARET_API_BASE}/org`,
-}
-```
-
-### **주의사항 및 체크리스트**
-
-#### **⚠️ 머징 시 주의사항**
-
-- [ ] **API 키 분리**: `caretApiKey` ≠ `apiKey` 혼동 주의
-- [ ] **환경 변수**: Auth0 및 API 엔드포인트 설정 확인
-- [ ] **의존성**: Auth0 관련 패키지 설치 확인
-- [ ] **권한 설정**: VSCode 확장에서 외부 API 호출 권한
-- [ ] **오류 처리**: 네트워크 오류 시 graceful fallback
-
-#### **✅ 완료 기준**
-
-- [ ] 모든 계정 관련 컴포넌트 테스트 통과
-- [ ] Auth0 로그인 플로우 정상 동작
-- [ ] caretApiKey 저장 및 검증 정상
-- [ ] 사용량 대시보드 데이터 로딩 확인
-- [ ] 다국어 UI 정상 표시
-- [ ] 조직 관리 기능 동작 확인
-
-## 🔄 **Cline 호환성**
-
-### **독립적 운영**
-
-- **Cline 계정 시스템**: 기존 그대로 유지
-- **Caret 계정 시스템**: 완전 별도 운영
-- **선택적 사용**: 사용자가 Caret 계정 사용 여부 선택
-
-### **API Provider 선택권**
-
-```typescript
-// 사용자는 AI 모델과 계정 시스템을 독립적으로 선택 가능
 {
-    apiProvider: "anthropic",     // AI 모델은 Anthropic 사용
-    caretApiKey: "caret_xxx",     // 계정은 Caret 사용
+  "prompt_tokens": 150,      // 입력 토큰: 사용자 질문의 토큰 수
+  "completion_tokens": 75,   // 출력 토큰: AI 답변의 토큰 수  
+  "cached_tokens": 50,       // 캐시된 토큰: 재사용된 토큰 (비용 절약)
+  "total_cost": 0.00123,     // 총 비용 (USD)
+  // 참고: 1 토큰 ≈ 0.75 영단어 또는 1-2 한글 글자
 }
 ```
 
-## 📊 **성능 및 효과**
+## 🔍 **Cline vs Caret 아키텍처 차이**
 
-### **비즈니스 가치**
+| 구분 | Cline | Caret |
+|------|-------|-------|
+| **서버 URL** | `clineEnvConfig.apiBaseUrl` | `https://api.caret.team` |
+| **인증 서비스** | `ClineAccountService` + `AuthService` | `CaretGlobalManager` |
+| **토큰 타입** | `clineAccountAuthToken` | `caretApiKey` |
+| **지원 모델** | `cline/sonic` 등 | `google/gemini-2.5-*` 등 |
 
-- **수익 모델**: 구독 기반 SaaS 수익 창출
-- **사용자 락인**: 계정 기반 서비스 연결성
-- **데이터 수집**: 사용 패턴 분석 및 서비스 개선
+## ⚠️ **주의사항**
 
-### **사용자 경험 개선**
+### **개발 원칙**
+- **Cline 코드 보존**: 기존 Cline 기능에 절대 영향 없음
+- **진입점만 변경**: 조건 분기 추가로 최소 침습
+- **독립적 구현**: Caret 전용 인프라 완전 분리
 
-- **투명성**: 명확한 사용량 및 과금 정보
-- **팀 협업**: 조직 단위 계정 관리
-- **안정성**: Auth0 기반 보안 강화
+### **API 키 분리 관리**
+```typescript
+// Google API 키 직접 호출 (GeminiProvider)
+apiProvider: "gemini"
+geminiApiKey: "AIzaSyA..." // 사용자 Google 계정에서 비용 차감
 
-## 🔮 **향후 개선 계획**
-
-### **단기 계획**
-
-- **SSO 통합**: Google, Microsoft, GitHub 로그인 지원
-- **사용량 알림**: 한계 근접 시 실시간 알림
-- **조직 관리 강화**: 더 세분화된 권한 관리
-
-### **중기 계획**
-
-- **API 크레딧 시스템**: 유연한 사용량 관리
-- **통합 빌링**: 여러 서비스 통합 결제
-- **고급 분석**: 사용 패턴 분석 및 최적화 제안
-
-### **장기 계획**
-
-- **마켓플레이스**: 서드파티 플러그인 결제 시스템
-- **화이트라벨**: 기업 전용 브랜딩 계정 시스템
-- **글로벌 확장**: 지역별 요금제 및 결제 방식
+// Caret API 서버 호출 (CaretApiProvider)  
+apiProvider: "caret"
+caretApiKey: "caret_live_ak_..." // 사용자 Caret 계정에서 비용 차감
+```
 
 ---
 
 **작성자**: Alpha (AI Assistant)  
 **검토자**: Luke (Project Owner)  
-**작성일**: 2025-08-16  
-**마지막 업데이트**: 2025-08-16 17:15 KST  
 **Phase**: Phase 4 (고급 기능)  
-**TDD 상태**: ✅ 100% 커버리지 달성  
-**구현 상태**: ✅ 완전 구현 (026번에서 핵심 완성)
+**구현 상태**: ⚠️ 부분 구현 (핵심 계정 UI 누락, 기능상 필수 구현 필요)
+**우선순위**: HIGH - ClineAccount 대체 핵심 기능

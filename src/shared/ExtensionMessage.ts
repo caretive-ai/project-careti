@@ -79,6 +79,16 @@ export interface ExtensionState {
 	customPrompt?: string
 	// CARET MODIFICATION: Add caretBanner for Caret welcome page logo
 	caretBanner?: string
+	// CARET MODIFICATION: Persona system settings (independent from modeSystem)
+	enablePersonaSystem?: boolean
+	currentPersona?: string | null
+	personaProfile?: {
+		name?: string
+		description?: string
+		custom_instruction?: string
+		avatar_uri?: string
+		thinking_avatar_uri?: string
+	} | null
 }
 
 export interface ClineMessage {

@@ -43,7 +43,7 @@ const CaretProvider = ({ currentMode, isPopup, showModelOptions }: CaretProvider
 				<ApiKeyField
 					initialValue={apiConfiguration?.caretApiKey || ""}
 					onChange={(value) => handleFieldChange("caretApiKey", value)}
-					providerName="Caret"
+					providerName={t("providers.caret.name", "settings")}
 					signupUrl="https://caret.team"
 				/>
 			</div>

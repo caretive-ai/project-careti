@@ -28,7 +28,10 @@ export const OpenAINativeProvider = ({ showModelOptions, isPopup, currentMode }:
 	const { selectedModelId, selectedModelInfo } = normalizeApiConfiguration(apiConfiguration, currentMode)
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.openai-native.description", "settings")}
+			</p>
 			<ApiKeyField
 				initialValue={apiConfiguration?.openAiNativeApiKey || ""}
 				onChange={(value) => handleFieldChange("openAiNativeApiKey", value)}

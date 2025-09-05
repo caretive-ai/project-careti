@@ -33,7 +33,10 @@ export const GeminiProvider = ({ showModelOptions, isPopup, currentMode }: Gemin
 	const { selectedModelId, selectedModelInfo } = normalizeApiConfiguration(apiConfiguration, currentMode)
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.gemini.description", "settings")}
+			</p>
 			<ApiKeyField
 				initialValue={apiConfiguration?.geminiApiKey || ""}
 				onChange={(value) => handleFieldChange("geminiApiKey", value)}

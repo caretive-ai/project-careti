@@ -31,7 +31,10 @@ export const DifyProvider = ({ showModelOptions, isPopup, currentMode }: DifyPro
 	const { selectedModelId, selectedModelInfo } = normalizeApiConfiguration(apiConfiguration, currentMode)
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.dify.description", "settings")}
+			</p>
 			<div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
 				<DebouncedTextField
 					initialValue={apiConfiguration?.difyBaseUrl || ""}
@@ -51,13 +54,6 @@ export const DifyProvider = ({ showModelOptions, isPopup, currentMode }: DifyPro
 					}}
 					providerName="Dify"
 				/>
-
-				<div style={{ fontSize: "12px", color: "var(--vscode-descriptionForeground)", marginTop: "5px" }}>
-					<p>{t("providers.dify.description", "settings")}</p>
-					<p style={{ marginTop: "8px" }}>
-						<strong>{t("providers.dify.noteLabel", "settings")}</strong> {t("providers.dify.noteText", "settings")}
-					</p>
-				</div>
 			</div>
 
 			{showModelOptions && (

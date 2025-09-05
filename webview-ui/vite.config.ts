@@ -92,6 +92,8 @@ export default defineConfig({
 			"@context": resolve(__dirname, "./src/context"),
 			"@shared": resolve(__dirname, "../src/shared"),
 			"@utils": resolve(__dirname, "./src/utils"),
+			// CARET MODIFICATION: assets 디렉토리 별칭 추가
+			"@assets": resolve(__dirname, "../assets"),
 		},
 	},
 })

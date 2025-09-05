@@ -55,5 +55,17 @@ export async function loadServicesFromProtoDescriptor() {
 			addTypeNameToFqn(name, `proto.cline.${name}`)
 		}
 	}
+
+	// CARET MODIFICATION: Also include caret services
+	if (proto.caret) {
+		for (const [name, def] of Object.entries(proto.caret)) {
+			if (def && "service" in def) {
+				protobusServices[name] = def
+			} else {
+				addTypeNameToFqn(name, `proto.caret.${name}`)
+			}
+		}
+	}
+
 	return { protobusServices, hostServices }
 }

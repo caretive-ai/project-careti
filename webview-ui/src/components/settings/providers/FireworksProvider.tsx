@@ -27,7 +27,10 @@ export const FireworksProvider = ({ currentMode, isPopup, showModelOptions }: Fi
 	const { selectedModelId, selectedModelInfo } = normalizeApiConfiguration(apiConfiguration, currentMode)
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.fireworks.description", "settings")}
+			</p>
 			<ApiKeyField
 				initialValue={apiConfiguration?.fireworksApiKey || ""}
 				onChange={(value) => handleFieldChange("fireworksApiKey", value)}

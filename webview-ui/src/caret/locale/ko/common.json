@@ -10,7 +10,8 @@
 		"reject": "거절",
 		"setupApiOrLocal": "내 API 키 사용 또는 로컬 LLM 설정",
 		"notifyCaretAccount": "Caret 구독 서비스 알림받기",
-		"saveAndStart": "저장하고 시작하기"
+		"saveAndStart": "저장하고 시작하기",
+		"resume.Task": "작업 재개"
 	},
 	"error": {
 		"generic": "오류가 발생했습니다."
@@ -60,6 +61,22 @@
 		"title": "Caret 규칙 및 워크플로우 관리",
 		"toggleError": "규칙 토글 오류",
 		"docsLink": "Docs"
+	},
+	"persona": {
+		"management": "페르소나 관리",
+		"description": "코딩 스타일과 선호사항에 맞는 AI 페르소나를 선택하세요.",
+		"docs": "문서",
+		"availablePersonas": "사용 가능한 페르소나",
+		"selectDescription": "원하는 페르소나를 선택하거나 새로운 페르소나를 생성하세요.",
+		"select": "선택",
+		"createNew": "새 페르소나 생성",
+		"creating": "생성 중...",
+		"uploadNormal": "아바타 업로드",
+		"uploadThinking": "추론 아바타 업로드",
+		"default": {
+			"name": "기본 Caret",
+			"description": "기본 AI 코딩 어시스턴트 페르소나입니다."
+		}
 	},
 	"mode": {
 		"chatbot": {

@@ -1,12 +1,83 @@
-# f09 - 페르소나 시스템 머징 작업
-  * caret-compare 프로젝트에 이미 구현 되어있으므로 해당 프로젝트 참고
-    => 우리 프로젝트의 구현방식으로 구현되어있는지는 대신 꼭 검증 필요
-    => caret-b2b 프로젝트에서 optin 방식으로 구현 필요 (원하지 않는 경우 있음 codecenter는 원하지 않음)
-    => i18n처럼 브랜드별 교체 지원도 필요
+# T08 - 페르소나 시스템 적용 작업 (Optional Feature)
+
+##  현 문제 상황
+ 페르소나 시스템은 caret-main 프로젝트에서 잘못 가져왔다가 caret-compare 프로젝트에서 다시 가져왔다가 문제가 생겨있음. 
+ caret-compare 프로젝트는 완전한 기능이 구현되어 있으나, caret-assets 폴더에 이미지와 리소스 파일이 있는구조고, 우리 프로젝트는 assets 폴더에 이미지와 리소스 파일이 있는구조로 차이가 있고, 옵션으로 페르소나를 끌수 있는 기능을 요구함
+ 따라서 아래의 문제들은 현재 프로젝트의 문제로서 신규 옵션기능의 오류와 머징의 미구현과 잘못 구현된 기능이 있는것으로 판단됨. 아래의 현 문제 상황을 파악후, 대책을 세워 본 문서에 기입하고 문제별로 원인을 파악하고 작업을 시작해야함
+
+1. 페르소나 시스템 오류
+  1.1. (신규 요구 스팩 및 오류) 이번엔 설정에 페르소나 시스테 활성화 버튼 저장 불가
+    -  이 버튼의 flag에 따라 페르소나의 모든 UI시스템이 선택적 랜더링 되어야함, 현재는 토글을 끄고 저장해도 다시 들어가면 켜져 있음. 캐럿전역변수에 제대로 저장이 되는지 확인 필요
+
+ 1.2. 기존 기능 머징후 오류
+  caret-main 방식을 머징하다가, 실수함. caret-compare 방식으로 다시 머징하였는데 이에대한 사이드이펙트로도 추정됨, caret-protos의 enum 제대로 설정되었는지도 확인할것
+    1) 1.1. 플래그에 따라 선택적 랜더링할것 : 미구현
+    2) 페르소나 관리의 설정된 기본 이미지 엑스박스로 보임 에러
+         * 참고 : 업로드 이미지 넣으면 정상으로 보임
+    3) 페르소나 템플릿 창 오류들 에러
+      - 모달 창의 모든 이미지 안나옴
+       * assets에 이미지 접근을 제대로 못하고 있는 것으로 추정됨      
+     * caret-compare와 코드 비교하고, 개발가이드에 base64방식의 이미지 파일 접근 방법 확인 
+         (caret-merge는 경로가 caret-assets 에서 assets로 바꾸었음 * 경로 문제인지 받아오는 방법의 문제인지 확인)
+      * 기본 이미지를 업로드로 변경시 첫번째 이미지가 변경되어버림 - 이건 모달창의 이미지패스가 template_characters 누락이 아닌가 의심됨
+      * '선택' 버튼 눌러도 모달 창이 안닫힘. x로 닫으면 담힘 : 제대로 저장 프로세스가 되어있는지 확인 필요
+
+    4) 아래의 에러 로그 발견 :확인할 것 에러
+
+ --- 아래의 로그 있음 확인 필요 
+Protobus error: Error: Unknown service: caret.PersonaService
+    at getHandler (d:\dev\caret-merging\src\core\controller\grpc-handler.ts:159:9)
+    at handleUnaryRequest (d:\dev\caret-merging\src\core\controller\grpc-handler.ts:45:19)
+    at handleGrpcRequest (d:\dev\caret-merging\src\core\controller\grpc-handler.ts:29:9)
+    at _VscodeWebviewProvider.handleWebviewMessage (d:\dev\caret-merging\src\hosts\vscode\VscodeWebviewProvider.ts:194:12)
+    at Jh.value (d:\dev\caret-merging\src\hosts\vscode\VscodeWebviewProvider.ts:175:10)
+    at $.C (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:27:2373)
+    at $.fire (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:27:2591)
+    at tV.$onMessage (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:140:92319)
+    at C4.S (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:119615)
+    at C4.Q (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:119395)
+    at C4.M (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:118484)
+    at C4.L (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:117722)
+    at Jh.value (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:116386)
+    at $.C (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:27:2373)
+    at $.fire (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:27:2591)
+    at fo.fire (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:9458)
+    at Jh.value (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:388:8361)
+    at $.C (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:27:2373)
+    at $.fire (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:27:2591)
+    at fo.fire (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:9458)
+    at MessagePortMain.<anonymous> (file:///c:/Users/luke/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:388:6653)
+    at MessagePortMain.emit (node:events:518:28)
+    at Object.MessagePortMain._internalPort.emit (node:electron/js2c/utility_init:2:2949)
+    at Object.callbackTrampoline (node:internal/async_hooks:130:17)
+
+
+ 5) ChatRow에 설정한 페르소나 이미지 나오지 않음 : caret-compare 소스 비교하여 최소침습으로 삽입 할것, 위의 1.1. 플래그에 따라 선택적 랜더링할것
+   
+
+
+## 🎯 **핵심 요구사항**
+
+### **1. 옵션 기능으로 설계 (Cline 최소 침습 준수)**
+- ✅ **Caret 기본값**: `enablePersonaSystem: true` (Caret 모드에서 활성화)
+- ✅ **Cline 기본값**: `enablePersonaSystem: false` (Cline 모드에서 비활성화)
+- ✅ **B2B 브랜드 제외**: CodeCenter 등 B2B 브랜드는 완전히 제외 가능
+- ✅ **설정 위치**: Caret/Cline 모드 설정 섹션 바로 아래
+
+### **2. Cline 최소 침습 원칙**
+- ✅ **하드코딩 금지**: 모든 설정은 동적 구성
+- ✅ **CARET MODIFICATION 주석**: 모든 수정 부분에 명시
+- ✅ **다국어 지원**: 모든 UI 텍스트 i18n 적용
+- ✅ **점진적 기능 추가**: 기존 기능에 영향 없이 추가
+
+### **3. caret-compare 기준 구현**
+- ✅ **참조 소스**: `caret-compare` 프로젝트의 완전 구현된 페르소나 시스템
+- ✅ **아키텍처**: 하이브리드 패턴 v3.1 (CaretProviderWrapper 기반)
+- ✅ **검증된 기능**: CSP 호환, gRPC 통신, 실시간 이미지 동기화
 
 ## 기능 개요
 - **목적**: 사전 정의된 AI 캐릭터 페르소나를 선택하여 AI와의 상호작용을 개인화
-- **현재 상태**: ✅ 완전 구현 완료 (하이브리드 패턴 v3.1)
+- **현재 상태**: 🔄 **설계 단계** (caret-compare에서 완전 구현 완료)
 - **우선순위**: MEDIUM - 사용자 경험 개선, 차별화 요소
 
 ## 주요 구성 요소
@@ -35,7 +106,366 @@
 - **반응형 UI**: 실시간 이미지 동기화로 일관된 사용자 경험
 - **하이브리드 패턴**: 원본 보존과 기능 확장의 완벽한 균형
 
+## 🔧 **구현 요구사항 상세**
+
+### **페르소나 시스템 설정 구조**
+
+#### **1. 프로토콜 확장**
+```protobuf
+// proto/caret/persona.proto - caret-compare에서 가져올 파일
+syntax = "proto3";
+package caret;
+
+service PersonaService {
+  rpc GetPersonaProfile(cline.EmptyRequest) returns (PersonaProfile);
+  rpc UpdatePersona(UpdatePersonaRequest) returns (cline.Empty);
+  rpc SubscribeToPersonaChanges(cline.EmptyRequest) returns (stream PersonaImages);
+  rpc UploadCustomImage(UploadCustomImageRequest) returns (cline.Empty);
+}
+
+message PersonaProfile {
+  string name = 1;
+  string description = 2;
+  string custom_instruction = 3;
+  string avatar_uri = 4;
+  string thinking_avatar_uri = 5;
+}
+```
+
+#### **2. 독립적인 페르소나 설정 (별도 상태 관리)**
+```typescript
+// CARET MODIFICATION: 페르소나 시스템을 독립적인 설정으로 관리
+// ChatSettings와 분리하여 CaretProvider 전역 상태에서 관리
+
+// ExtensionStateContext에 추가될 페르소나 관련 상태
+interface ExtensionState {
+  // 기존 상태들...
+  modeSystem: "caret" | "cline"
+  
+  // 페르소나 시스템 독립적 설정 (별도 상태)
+  enablePersonaSystem: boolean   // 독립적으로 관리, modeSystem과 분리
+  currentPersona?: string        // 현재 선택된 페르소나 ID
+  personaProfile?: PersonaProfile // 현재 페르소나 프로필 데이터
+}
+
+// 기본값 계산 로직
+const getDefaultPersonaSystemEnabled = (modeSystem: CaretModeSystem) => {
+  // Caret 모드: true, Cline 모드: false (단, 사용자가 직접 변경 가능)
+  return modeSystem === "caret"
+}
+```
+
+#### **3. 설정 UI - 독립적 페르소나 토글**
+```typescript
+// webview-ui/src/components/settings/sections/GeneralSettingsSection.tsx
+// CARET MODIFICATION: 페르소나 시스템을 독립적인 토글로 표시 (modeSystem과 별도)
+
+{/* 기존 modeSystem 설정 */}
+<ModeSystemToggle 
+  modeSystem={modeSystem} 
+  onModeSystemChange={setModeSystem} 
+/>
+
+{/* CARET MODIFICATION: 페르소나 시스템 독립 설정 - 항상 표시되지만 브랜드에 따라 제어 */}
+{!brandConfig?.excludePersonaSystem && (
+  <div className="mb-[15px]">
+    <VSCodeCheckbox
+      checked={enablePersonaSystem}
+      onChange={(e) => {
+        const newValue = e.target.checked
+        setEnablePersonaSystem(newValue)
+        
+        // CARET MODIFICATION: modeSystem 변경 시 기본값 제안 (사용자 선택 유지)
+        // Cline 모드로 변경 시 페르소나 시스템 비활성화 권장하지만 강제하지 않음
+      }}
+    >
+      {t("personaSystem.enable.label", "settings")}
+    </VSCodeCheckbox>
+    <p className="text-xs text-[var(--vscode-descriptionForeground)]">
+      {t("personaSystem.enable.description", "settings")}
+    </p>
+    
+    {/* CARET MODIFICATION: Cline 모드에서 페르소나 활성화 시 안내 메시지 */}
+    {modeSystem === "cline" && enablePersonaSystem && (
+      <p className="text-xs text-[var(--vscode-editorWarning-foreground)] mt-1">
+        {t("personaSystem.clineMode.warning", "settings")}
+      </p>
+    )}
+  </div>
+)}
+```
+
+### **브랜드별 설정 동작**
+
+#### **브랜드별 독립적인 설정 동작 매트릭스**
+| 브랜드 | modeSystem | enablePersonaSystem | 페르소나 아바타 표시 | 설정 UI 표시 | 페르소나 에셋 |
+|---------|------------|--------------------|--------------------|-------------|-------------|
+| **Caret** | `caret` | `true` (기본) | ✅ 표시 | ✅ 표시 | Caret 기본 |
+| **Caret** | `cline` | `false` (기본) | ❌ 숨김 | ✅ 표시 (경고) | Caret 기본 |
+| **CodeCenter** | `caret` | `true` (기본) | ✅ 표시 | ✅ 표시 | CodeCenter 전용 |
+| **CodeCenter** | `cline` | `false` (기본) | ❌ 숨김 | ✅ 표시 (경고) | CodeCenter 전용 |
+
+#### **브랜드별 페르소나 시스템 관리 로직**
+```typescript
+// CARET MODIFICATION: 브랜드별 페르소나 시스템 독립적 설정 관리
+const BrandPersonaSystemManager = {
+  // 브랜드별 초기 기본값 계산
+  getInitialValue: (modeSystem: CaretModeSystem, brandId: string): boolean => {
+    // 브랜드별 페르소나 지원 여부 확인
+    const brandSupportsPersona = this.getBrandPersonaSupport(brandId)
+    
+    if (!brandSupportsPersona) {
+      return false  // 지원하지 않는 브랜드는 비활성화
+    }
+    
+    // 지원하는 브랜드: Caret 모드 true, Cline 모드 false (초기값)
+    return modeSystem === "caret"
+  },
+  
+  // 브랜드별 페르소나 지원 여부
+  getBrandPersonaSupport: (brandId: string): boolean => {
+    const supportedBrands = ["caret", "codecenter"]  // 페르소나 지원 브랜드 목록
+    return supportedBrands.includes(brandId.toLowerCase())
+  },
+  
+  // 브랜드별 페르소나 에셋 경로 계산
+  getPersonaAssetsPath: (brandId: string): string => {
+    switch (brandId.toLowerCase()) {
+      case "caret":
+        return "caret-assets/template_characters/"
+      case "codecenter":
+        return "caret-b2b/brands/codecenter/assets/template_characters/"
+      default:
+        return "caret-assets/template_characters/"  // fallback
+    }
+  },
+  
+  // 브랜드별 페르소나 번역 경로 계산
+  getPersonaLocalesPath: (brandId: string): string => {
+    switch (brandId.toLowerCase()) {
+      case "caret":
+        return "webview-ui/src/caret/locale/"
+      case "codecenter":
+        return "caret-b2b/brands/codecenter/locale/"
+      default:
+        return "webview-ui/src/caret/locale/"  // fallback
+    }
+  },
+  
+  // modeSystem 변경 시 기본값 제안 (사용자 선택 유지)
+  suggestValueOnModeChange: (newModeSystem: CaretModeSystem, currentValue: boolean, brandId: string) => {
+    const brandSupportsPersona = this.getBrandPersonaSupport(brandId)
+    
+    if (!brandSupportsPersona) {
+      return {
+        current: false,
+        suggested: false,
+        showWarning: false,
+        disabled: true  // 브랜드에서 지원하지 않음
+      }
+    }
+    
+    const suggestedValue = newModeSystem === "caret"
+    
+    return {
+      current: currentValue,        // 현재 사용자 설정 유지
+      suggested: suggestedValue,    // 권장값
+      showWarning: newModeSystem === "cline" && currentValue === true,
+      disabled: false
+    }
+  }
+}
+```
+
+### **컴포넌트 조건부 렌더링**
+
+#### **페르소나 아바타 조건부 렌더링**
+```typescript
+// webview-ui/src/components/chat/ChatRow.tsx
+// CARET MODIFICATION: 페르소나 아바타 조건부 렌더링 - Caret 모드일 때만 표시
+
+const { modeSystem } = useExtensionState()
+
+case "text":
+  return (
+    <WithCopyButton>
+      {/* CARET MODIFICATION: 페르소나 아바타 조건부 렌더링 - Caret 모드일 때만 표시 */}
+      {modeSystem === "caret" && (
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", marginBottom: "8px" }}>
+          <div style={{ 
+            width: "32px", 
+            height: "32px", 
+            borderRadius: "16px", 
+            backgroundColor: "var(--vscode-button-background)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "16px",
+            flexShrink: 0
+          }}>
+            🐰
+          </div>
+          <div style={{ color: "var(--vscode-foreground)", fontWeight: "bold", fontSize: "14px", lineHeight: "32px" }}>
+            Caret
+          </div>
+        </div>
+      )}
+      <Markdown markdown={message.text} />
+    </div>
+  )
+
+// CARET MODIFICATION: 추론(thinking) 상태에서의 아바타 표시
+case "thinking":
+  return (
+    <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+      {/* 페르소나 시스템 활성화 + 추론 상태 아바타 */}
+      {enablePersonaSystem && personaProfile && (
+        <PersonaAvatar 
+          personaProfile={personaProfile} 
+          isThinking={true}  // thinking 상태 이미지 표시
+          size={64} 
+        />
+      )}
+      <div style={{ flex: 1 }}>
+        {/* 추론 중 텍스트 */}
+      </div>
+    </div>
+  )
+```
+
 ## 머징 계획
+
+## 🌐 **다국어 지원 요구사항**
+
+### **페르소나 관련 번역 키 (i18n)**
+
+#### **설정 섹션 번역**
+```json
+// webview-ui/src/caret/locale/ko/settings.json
+{
+  "personaSystem": {
+    "enable": {
+      "label": "페르소나 시스템 활성화",
+      "description": "AI 응답에 캐릭터 아바타를 표시하고 개인화된 상호작용을 제공합니다."
+    },
+    "clineMode": {
+      "warning": "Cline 모드에서는 페르소나 기능이 권장되지 않습니다. 필요시 Caret 모드로 전환해보세요."
+    },
+    "management": {
+      "title": "페르소나 관리",
+      "description": "AI 캐릭터를 선택하거나 커스텀 이미지를 업로드하세요."
+    },
+    "templates": {
+      "title": "페르소나 템플릿",
+      "selectPrompt": "원하는 페르소나를 선택해주세요"
+    }
+  }
+}
+
+// webview-ui/src/caret/locale/ko/persona.json (새 파일)
+{
+  "personas": {
+    "caret": {
+      "name": "캐럿",
+      "description": "친근하고 도움되는 코딩 로봇 조수"
+    },
+    "oh_sarang": {
+      "name": "오사랑",
+      "description": "수학적 감정 분석이 가능한 K-pop 아이돌 AI"
+    }
+    // ... 기타 페르소나들
+  },
+  "upload": {
+    "normal": "일반 이미지 업로드",
+    "thinking": "생각중 이미지 업로드",
+    "success": "이미지가 성공적으로 업로드되었습니다",
+    "error": "이미지 업로드에 실패했습니다"
+  }
+}
+```
+
+#### **영어 번역**
+```json
+// webview-ui/src/caret/locale/en/settings.json
+{
+  "personaSystem": {
+    "enable": {
+      "label": "Enable Persona System",
+      "description": "Display character avatars in AI responses and provide personalized interactions."
+    }
+    // ... 
+  }
+}
+```
+
+## 📋 **구현 단계별 계획**
+
+### **Phase 0: 설정 시스템 준비 (필수 선행 작업)**
+- [x] **조건부 렌더링 기본 구현 (modeSystem 기반)**
+  ```typescript
+  // CARET MODIFICATION: 페르소나 기능을 Caret 모드에서만 표시
+  // webview-ui/src/caret/components/CaretGeneralSettingsSection.tsx
+  {modeSystem === "caret" && (
+    <div className="mb-6">
+      <VSCodeCheckbox checked={false} onChange={...}>
+        {t("persona.enablePersonaSystem", "settings")}
+      </VSCodeCheckbox>
+    </div>
+  )}
+  ```
+- [x] **ChatRow 페르소나 아바타 조건부 렌더링**
+  ```typescript
+  // webview-ui/src/components/chat/ChatRow.tsx
+  case "text":
+    return (
+      <>
+        {modeSystem === "caret" && (
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+            <div style={{ /* 아바타 스타일 */ }}>🐰</div>
+            <div>Caret</div>
+          </div>
+        )}
+        <Markdown markdown={message.text} />
+      </>
+    )
+  ```
+- [x] **i18n 번역 키 추가**
+  ```json
+  // webview-ui/src/caret/locale/ko/settings.json + en/settings.json
+  "persona": {
+    "enablePersonaSystem": "페르소나 시스템 활성화",
+    "description": "AI 어시스턴트의 개성과 응답 스타일을 커스터마이즈할 수 있는 페르소나 시스템을 활성화합니다."
+  }
+  ```
+- [ ] **ExtensionStateContext 확장 (ChatSettings와 분리)**
+  ```typescript
+  // CARET MODIFICATION: 페르소나 시스템 설정을 ExtensionState에 독립적으로 추가
+  interface ExtensionState {
+    enablePersonaSystem: boolean   // 독립적 페르소나 설정
+    currentPersona?: string        // 현재 선택된 페르소나 ID
+    personaProfile?: PersonaProfile // 페르소나 프로필 데이터
+  }
+  ```
+- [ ] **브랜드별 페르소나 지원 확인**
+  ```typescript
+  // CARET MODIFICATION: 브랜드별 페르소나 에셋 경로 및 지원 여부 확인
+  const SUPPORTED_PERSONA_BRANDS = ["caret", "codecenter"]
+  ```
+  ```bash
+  # Caret 기본 번역
+  webview-ui/src/caret/locale/{ko,en,ja,zh}/persona.json
+  
+  # CodeCenter 전용 번역 (이미 존재)
+  caret-b2b/brands/codecenter/locale/{ko,en,ja,zh}/persona.json
+  ```
+- [ ] **브랜드별 페르소나 에셋 확인**
+  ```bash
+  # Caret 기본 에셋
+  caret-assets/template_characters/
+  
+  # CodeCenter 전용 에셋 (이미 존재)
+  caret-b2b/brands/codecenter/assets/template_characters/
+  ```
 
 ### Phase 1: TDD 테스트 환경 구축
 - [ ] 페르소나 테스트 이식
@@ -426,15 +856,54 @@ function PersonaManagement() {
 - [ ] React Hooks: React Hooks 규칙 준수 확인
 - [ ] 하이브리드 패턴: CaretProviderWrapper 정상 동작 확인
 
-### 완료 기준
-- [ ] 모든 페르소나 컴포넌트 정상 렌더링
-- [ ] 페르소나 아바타 실시간 표시
-- [ ] 이미지 업로드 기능 정상 동작
-- [ ] 템플릿 선택 기능 정상 동작
-- [ ] gRPC 통신 정상 동작
-- [ ] CSP 준수 확인 (보안 정책 위반 없음)
-- [ ] AI 응답에 페르소나 아바타 표시
-- [ ] 다국어 페르소나 설명 표시
+## ✅ **완료 기준 및 검증 항목**
+
+### **기능 검증**
+- [ ] **옵션 기능 동작 확인**
+  - Caret 모드에서 페르소나 시스템 기본 활성화
+  - Cline 모드에서 페르소나 시스템 기본 비활성화  
+  - B2B 브랜드(CodeCenter)에서 설정 완전 숨김
+- [ ] **페르소나 아바타 표시**
+  - AI 응답에 페르소나 아바타 실시간 표시
+  - 추론(thinking) 상태에서 thinking 아바타 표시
+  - 페르소나 시스템 비활성화 시 아바타 숨김
+- [ ] **설정 UI 통합**
+  - 설정 페이지에서 페르소나 시스템 토글 정상 동작
+  - modeSystem 변경 시 페르소나 설정 표시/숨김 정상 동작
+  - 다국어 번역 정상 표시
+
+### **Cline 최소 침습 검증**
+- [ ] **하드코딩 제거 확인**
+  - 모든 문자열이 i18n 번역 키로 처리
+  - 브랜드별 설정이 동적으로 적용
+  - 설정값이 하드코딩되지 않고 계산됨
+- [ ] **CARET MODIFICATION 주석**
+  - 모든 Cline 원본 파일 수정에 주석 추가
+  - 수정 내용과 이유 명시
+- [ ] **기존 기능 영향 없음**
+  - Cline 모드에서 기존 기능 정상 동작
+  - 페르소나 시스템 비활성화 시 성능 영향 없음
+
+### **기술적 검증**
+- [ ] **gRPC 통신 정상 동작**
+  - PersonaService 모든 RPC 메서드 동작 확인
+  - 프로토콜 버퍼 코드 생성 정상
+- [ ] **CSP 준수 확인**
+  - 모든 이미지가 Base64로 변환되어 로딩
+  - 보안 정책 위반 없음
+- [ ] **이미지 업로드 기능**
+  - 커스텀 이미지 업로드 정상 동작
+  - 템플릿 선택 기능 정상 동작
+  - 실시간 이미지 동기화 확인
+
+### **다국어 지원 검증**
+- [ ] **번역 키 완성도**
+  - 모든 페르소나 관련 UI 텍스트 번역
+  - 4개 언어(ko, en, ja, zh) 모두 지원
+  - 페르소나 설명 현지화 완료
+- [ ] **언어 전환 동작**
+  - 언어 변경 시 페르소나 설명 즉시 업데이트
+  - 설정 UI 언어 전환 정상 동작
 
 ## 향후 확장 계획
 
@@ -448,7 +917,26 @@ function PersonaManagement() {
 - **학습 시스템**: 사용자와의 상호작용을 통한 페르소나 개선
 - **팀 페르소나**: 조직별 커스텀 페르소나 생성
 
-## 예상 소요 시간
-- **총 시간**: 8-10시간
-- **복잡도**: HIGH
-- **위험도**: LOW (완전 구현 완료로 안정성 검증됨)
+## ⏱️ **예상 소요 시간**
+- **총 시간**: 12-16시간 (옵션 기능 설계로 인한 복잡도 증가)
+- **복잡도**: **HIGH** (브랜드별 조건부 로직, 설정 통합)
+- **위험도**: **MEDIUM** (Cline 원본 파일 수정 필요, 설정 시스템 변경)
+
+### **작업 시간 분배**
+- **Phase 0 (설정 시스템)**: 3-4시간
+- **Phase 1-2 (기반 구조)**: 2-3시간  
+- **Phase 3-5 (백엔드/프론트엔드)**: 4-5시간
+- **Phase 6-7 (UI 통합)**: 2-3시간
+- **Phase 8 (테스트/검증)**: 1-2시간
+
+### **주요 위험 요소**
+1. **ChatSettings 확장**: 기존 설정 시스템과의 호환성
+2. **브랜드별 조건부 로직**: B2B 브랜드 설정 복잡도
+3. **Cline 원본 수정**: 최소 침습 원칙 준수 어려움
+4. **다국어 번역**: 페르소나 설명 현지화 품질
+
+### **성공 요인**
+1. **caret-compare 검증된 코드**: 안정성 확보
+2. **TDD 접근**: 품질 보장  
+3. **점진적 구현**: 단계별 검증 가능
+4. **옵션 기능**: 기존 사용자 영향 최소화

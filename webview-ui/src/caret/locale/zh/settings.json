@@ -401,7 +401,18 @@
 		"supportsPromptCaching": "Supports prompt caching",
 		"contextWindowLabel": "Context Window:",
 		"cacheWritesPriceLabel": "Cache writes price:",
-		"cacheReadsPriceLabel": "Cache reads price:"
+		"cacheReadsPriceLabel": "Cache reads price:",
+		"inputPrice": "Input price",
+		"outputPriceStandard": "Output price (Standard)",
+		"outputPriceThinking": "Output price (Thinking Budget > 0)",
+		"outputPrice": "Output price",
+		"doesNotSupportBrowser": "Does not support browser use",
+		"supportsBrowser": "Supports browser use",
+		"doesNotSupportCache": "Does not support prompt caching",
+		"supportsCache": "Supports prompt caching",
+		"contextWindow": "Context Window",
+		"cacheWritesPrice": "Cache writes price",
+		"cacheReadsPrice": "Cache reads price"
 	},
 	"modelSelector": {
 		"label": "Model",
@@ -734,12 +745,19 @@
 		"noteText": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
 		"modifyReasoningEffortLabel": "Modify reasoning effort",
 		"reasoningEffortLabel": "Reasoning Effort",
-		"reasoningEffortDescription": "High effort may produce more thorough analysis but takes longer and uses more tokens."
+		"reasoningEffortDescription": "High effort may produce more thorough analysis but takes longer and uses more tokens.",
+		"providerName": "xAI",
+		"modifyReasoningEffort": "Modify reasoning effort",
+		"reasoningEffortOptions": {
+			"low": "low",
+			"high": "high"
+		}
 	},
 	"zaiProvider": {
 		"entrypointLabel": "Z AI Entrypoint",
 		"entrypointDescription": "Please select the appropriate API entrypoint based on your location. If you are in China, choose open.bigmodel.cn. Otherwise, choose api.z.ai.",
-		"name": "Z AI"
+		"name": "Z AI",
+		"providerName": "Z AI"
 	},
 	"lmStudioProvider": {
 		"baseUrlPlaceholder": "Default: http://localhost:1234",
@@ -805,5 +823,9 @@
 		"huawei-cloud-maas": "Huawei Cloud MaaS",
 		"dify": "Dify.ai",
 		"cline": "Caret"
+	},
+	"persona": {
+		"enablePersonaSystem": "Enable Persona System",
+		"description": "Enable the persona system to customize your AI assistant's personality and response style."
 	}
 }

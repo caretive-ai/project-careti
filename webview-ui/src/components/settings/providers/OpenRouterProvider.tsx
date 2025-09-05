@@ -75,8 +75,11 @@ export const OpenRouterProvider = ({ showModelOptions, isPopup, currentMode }: O
 	const [providerSortingSelected, setProviderSortingSelected] = useState(!!apiConfiguration?.openRouterProviderSorting)
 
 	return (
-		<div>
-			<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.openrouter.description", "settings")}
+			</p>
+			<div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
 				<DebouncedTextField
 					initialValue={apiConfiguration?.openRouterApiKey || ""}
 					onChange={(value) => handleFieldChange("openRouterApiKey", value)}

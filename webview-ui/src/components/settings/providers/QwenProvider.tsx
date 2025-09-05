@@ -54,7 +54,8 @@ export const QwenProvider = ({ showModelOptions, isPopup, currentMode }: QwenPro
 	)
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ whiteSpace: "pre-wrap" }}>{t("providers.qwen.description", "settings")}</p>
 			<DropdownContainer className="dropdown-container" style={{ position: "inherit" }}>
 				<label htmlFor="qwen-line-provider">
 					<span style={{ fontWeight: 500, marginTop: 5 }}>{t("qwenProvider.apiLineLabel", "settings")}</span>

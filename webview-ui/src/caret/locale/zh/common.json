@@ -7,7 +7,10 @@
 		"cancel": "取消",
 		"setupApiOrLocal": "设置我的API密钥或本地LLM",
 		"notifyCaretAccount": "通知我Caret订阅服务",
-		"saveAndStart": "保存并开始"
+		"saveAndStart": "保存并开始",
+		"done": "Done",
+		"runCommand": "Run Command",
+		"reject": "Reject"
 	},
 	"error": {
 		"generic": "发生了错误。"
@@ -370,5 +373,21 @@
 	},
 	"validation": {
 		"invalidApiKey": "You must provide a valid API key or choose a different provider."
+	},
+	"persona": {
+		"management": "Persona Management",
+		"description": "Choose an AI persona that matches your coding style and preferences.",
+		"docs": "Docs",
+		"availablePersonas": "Available Personas",
+		"selectDescription": "Select your desired persona or create a new one to customize your AI assistant.",
+		"select": "Select",
+		"createNew": "Create New Persona",
+		"creating": "Creating...",
+		"uploadNormal": "Upload Avatar",
+		"uploadThinking": "Upload Thinking Avatar",
+		"default": {
+			"name": "Default Caret",
+			"description": "The default AI coding assistant persona."
+		}
 	}
 }

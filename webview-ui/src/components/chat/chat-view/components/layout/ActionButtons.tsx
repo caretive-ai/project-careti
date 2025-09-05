@@ -3,8 +3,8 @@ import type { Mode } from "@shared/storage/types"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import type React from "react"
 import { useEffect, useMemo, useState } from "react"
-import { t } from "@/caret/utils/i18n"
-import { BUTTON_CONFIGS, getButtonConfig } from "../../shared/buttonConfig"
+import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
+import { getButtonConfig } from "../../shared/buttonConfig"
 import type { ChatState, MessageHandlers } from "../../types/chatTypes"
 
 interface ActionButtonsProps {
@@ -31,6 +31,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 	messageHandlers,
 	scrollBehavior,
 }) => {
+	const { t } = useCaretI18n()
 	const { inputValue, selectedImages, selectedFiles, setSendingDisabled } = chatState
 
 	const isStreaming = useMemo(() => task?.partial === true, [task])
@@ -56,22 +57,22 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
 	// Apply button configuration with a single batched update
 	useEffect(() => {
-		const buttonConfig = getButtonConfig(lastMessage, mode)
+		const buttonConfig = getButtonConfig(lastMessage, mode, t)
 		setEnableButtons(buttonConfig.enableButtons)
 		setSendingDisabled(buttonConfig.sendingDisabled)
 		setPrimaryButtonText(buttonConfig.primaryText)
 		setSecondaryButtonText(buttonConfig.secondaryText)
-	}, [lastMessage, mode, setSendingDisabled])
+	}, [lastMessage, mode, setSendingDisabled, t])
 
 	useEffect(() => {
 		if (!messages?.length) {
-			const buttonConfig = BUTTON_CONFIGS.default
+			const buttonConfig = getButtonConfig(undefined, mode, t)
 			setEnableButtons(buttonConfig.enableButtons)
 			setSendingDisabled(buttonConfig.sendingDisabled)
 			setPrimaryButtonText(buttonConfig.primaryText)
 			setSecondaryButtonText(buttonConfig.secondaryText)
 		}
-	}, [messages, setSendingDisabled])
+	}, [messages, setSendingDisabled, mode, t])
 
 	if (!task) {
 		return null

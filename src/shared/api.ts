@@ -575,16 +575,16 @@ export const openRouterDefaultModelInfo: ModelInfo = {
 		"Claude Sonnet 4 delivers superior intelligence across coding, agentic search, and AI agent capabilities. It's a powerful choice for agentic coding, and can complete tasks across the entire software development lifecycle—from initial planning to bug fixes, maintenance to large refactors. It offers strong performance in both planning and solving for complex coding tasks, making it an ideal choice to power end-to-end software development processes.\n\nRead more in the [blog post here](https://www.anthropic.com/claude/sonnet)",
 }
 
-// Cline custom model - sonic (same config as grok-4)
-export const clineMicrowaveAlphaModelInfo: ModelInfo = {
-	contextWindow: 262144,
-	supportsImages: false,
-	supportsPromptCache: true,
-	inputPrice: 0,
+// CARET MODIFICATION: Caret Google API key mapping models
+export const caretGoogleApiKeyModelInfo: ModelInfo = {
+	contextWindow: 1_048_576, // 1M context for Gemini 2.5
+	supportsImages: true,
+	supportsPromptCache: false,
+	inputPrice: 0, // Free for users with their own Google API keys
 	outputPrice: 0,
 	cacheReadsPrice: 0,
-	cacheWritesPrice: 0, // Not specified in grok-4, setting to 0
-	description: "Cline Microwave Alpha - Advanced model for complex coding tasks with large context window",
+	cacheWritesPrice: 0,
+	description: "Caret Google API key mapping - Use your own Google API key for Gemini 2.5 models",
 }
 // Vertex AI
 // https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude

@@ -1,7 +1,7 @@
 import { t } from "@/caret/utils/i18n"
 import { ActionMetadata } from "./types"
 
-export const ACTION_METADATA: ActionMetadata[] = [
+export const getActionMetadata = (): ActionMetadata[] => [
 	{
 		id: "enableAutoApprove",
 		label: t("autoApprove.enableAutoApprove.label", "settings"),
@@ -77,10 +77,10 @@ export const ACTION_METADATA: ActionMetadata[] = [
 	},
 ]
 
-export const NOTIFICATIONS_SETTING: ActionMetadata = {
+export const getNotificationsSetting = (): ActionMetadata => ({
 	id: "enableNotifications",
 	label: t("autoApprove.enableNotifications.label", "settings"),
 	shortName: t("autoApprove.enableNotifications.shortName", "settings"),
 	description: t("autoApprove.enableNotifications.description", "settings"),
 	icon: "codicon-bell",
-}
+})

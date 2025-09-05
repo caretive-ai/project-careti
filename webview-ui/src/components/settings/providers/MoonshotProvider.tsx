@@ -29,7 +29,10 @@ export const MoonshotProvider = ({ showModelOptions, isPopup, currentMode }: Moo
 	const { selectedModelId, selectedModelInfo } = normalizeApiConfiguration(apiConfiguration, currentMode)
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.moonshot.description", "settings")}
+			</p>
 			<DropdownContainer className="dropdown-container" style={{ position: "inherit" }}>
 				<label htmlFor="moonshot-entrypoint">
 					<span style={{ fontWeight: 500, marginTop: 5 }}>{t("moonshotProvider.entrypoint", "settings")}</span>

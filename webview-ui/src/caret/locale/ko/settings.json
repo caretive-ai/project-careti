@@ -299,6 +299,10 @@
 			"description": "Caret이 진행을 위해 승인이 필요하거나 작업이 완료되었을 때 시스템 알림을 받습니다."
 		}
 	},
+	"persona": {
+		"enablePersonaSystem": "페르소나 시스템 활성화",
+		"description": "AI 어시스턴트의 개성과 응답 스타일을 커스터마이즈할 수 있는 페르소나 시스템을 활성화합니다."
+	},
 	"telemetry": {
 		"label": "익명 오류 및 사용 보고 허용",
 		"description": "익명 사용 데이터 및 오류 보고서를 전송하여 Caret 개선에 기여할 수 있습니다. Caret 제품 개선을 위해 사용 현황 및 오류 데이터를 익명으로 전송합니다. 코드, 프롬프트 또는 개인 정보는 절대 전송되지 않으며, 개인 정보는 포함되지 않습니다.",
@@ -666,15 +670,21 @@
 	},
 	"xaiProvider": {
 		"name": "X AI",
+		"providerName": "xAI",
 		"notePrefix": "참고:",
 		"noteText": "Caret은 복잡한 프롬프트를 사용하며 Claude 모델과 가장 잘 작동합니다. 성능이 낮은 모델은 예상대로 작동하지 않을 수 있습니다.",
-		"modifyReasoningEffortLabel": "추론 노력 수정",
+		"modifyReasoningEffort": "추론 노력 수정",
 		"reasoningEffortLabel": "추론 노력",
+		"reasoningEffortOptions": {
+			"low": "낮음",
+			"high": "높음"
+		},
 		"reasoningEffortDescription": "높은 노력은 더 철저한 분석을 생성할 수 있지만 시간이 더 오래 걸리고 더 많은 토큰을 사용합니다."
 	},
 	"zaiProvider": {
 		"entrypointLabel": "Z AI 엔트리포인트",
 		"entrypointDescription": "위치에 따라 적절한 API 엔트리포인트를 선택하세요. 중국에 있다면 open.bigmodel.cn을 선택하세요. 그렇지 않으면 api.z.ai를 선택하세요.",
+		"providerName": "Z AI",
 		"name": "Z AI"
 	},
 	"requestyModelPicker": {
@@ -690,48 +700,156 @@
 		"notDeployedModelsHeader": "── 배포되지 않은 모델 ──"
 	},
 	"providers": {
-		"caret": "Caret",
-		"openrouter": "OpenRouter",
-		"gemini": "Google Gemini",
-		"openai": "OpenAI 호환",
-		"anthropic": "Anthropic",
-		"bedrock": "Amazon Bedrock",
-		"vscode-lm": "VS Code LM API",
-		"deepseek": "DeepSeek",
-		"openai-native": "OpenAI",
-		"ollama": "Ollama",
-		"vertex": "GCP Vertex AI",
-		"litellm": "LiteLLM",
-		"claude-code": "Claude Code",
-		"sapaicore": "SAP AI Core",
-		"mistral": "Mistral",
-		"zai": "Z AI",
-		"groq": "Groq",
-		"cerebras": "Cerebras",
-		"vercel-ai-gateway": "Vercel AI Gateway",
-		"baseten": "Baseten",
-		"requesty": "Requesty",
-		"fireworks": "Fireworks AI",
-		"together": "Together",
-		"qwen": "Alibaba Qwen",
-		"qwen-code": "Qwen Code",
-		"doubao": "Bytedance Doubao",
-		"lmstudio": "LM Studio",
-		"moonshot": "Moonshot",
-		"huggingface": "Hugging Face",
-		"nebius": "Nebius AI Studio",
-		"asksage": "AskSage",
-		"xai": "xAI",
-		"sambanova": "SambaNova",
-		"huawei-cloud-maas": "Huawei Cloud MaaS",
-		"dify": "Dify.ai",
-		"cline": "Caret"
+		"caret": {
+			"name": "Caret",
+			"description": "Caret은 코딩 작업에 최적화된 고품질 AI 모델을 제공합니다."
+		},
+		"openrouter": {
+			"name": "OpenRouter",
+			"description": "단일 API 키로 다양한 오픈 소스 및 독점 모델에 액세스하세요."
+		},
+		"gemini": {
+			"name": "Google Gemini",
+			"description": "Google의 Gemini 모델 제품군에 액세스하려면 Google AI API를 사용하세요. API 키가 필요합니다."
+		},
+		"openai": {
+			"name": "OpenAI 호환",
+			"description": "OpenAI API와 호환되는 모든 모델 엔드포인트에 연결합니다."
+		},
+		"anthropic": {
+			"name": "Anthropic",
+			"description": "Claude 모델 제품군에 직접 액세스하려면 Anthropic API를 사용하세요. API 키가 필요합니다."
+		},
+		"bedrock": {
+			"name": "Amazon Bedrock",
+			"description": "Amazon Bedrock은 Amazon 및 선도적인 AI 스타트업의 다양한 기반 모델에 대한 액세스를 제공합니다."
+		},
+		"vscode-lm": {
+			"name": "VS Code LM API",
+			"description": "VS Code 언어 모델 API를 통해 다른 확장 프로그램(예: GitHub Copilot)에서 제공하는 모델을 사용합니다."
+		},
+		"deepseek": {
+			"name": "DeepSeek",
+			"description": "DeepSeek은 특히 코드와 수학에 능숙한 오픈 소스 모델을 개발합니다."
+		},
+		"openai-native": {
+			"name": "OpenAI",
+			"description": "OpenAI의 공식 API를 사용하여 GPT 모델에 직접 액세스합니다. API 키가 필요합니다."
+		},
+		"ollama": {
+			"name": "Ollama",
+			"description": "Ollama를 사용하여 컴퓨터에서 로컬로 모델을 실행합니다. 시작하려면 빠른 시작 가이드를 참조하세요."
+		},
+		"vertex": {
+			"name": "GCP Vertex AI",
+			"description": "Google Cloud Vertex AI는 Google의 최첨단 모델을 포함한 다양한 AI 모델을 제공합니다."
+		},
+		"litellm": {
+			"name": "LiteLLM",
+			"description": "LiteLLM은 100개 이상의 LLM API에 대한 통합 인터페이스를 제공합니다."
+		},
+		"claude-code": {
+			"name": "Claude Code",
+			"description": "Claude Code는 코드 관련 작업에 최적화된 Anthropic의 전문 모델입니다."
+		},
+		"sapaicore": {
+			"name": "SAP AI Core",
+			"description": "SAP AI Core는 SAP 생태계 내에서 AI 모델을 배포하고 관리하기 위한 서비스입니다."
+		},
+		"mistral": {
+			"name": "Mistral",
+			"description": "Mistral AI는 고성능 오픈 소스 및 상용 모델을 개발합니다."
+		},
+		"zai": {
+			"name": "Z AI",
+			"description": "Zhipu AI는 중국어 및 영어에 능통한 양방향 대화 모델을 제공합니다."
+		},
+		"groq": {
+			"name": "Groq",
+			"description": "Groq는 LPU(언어 처리 장치)를 통해 매우 빠른 추론 속도를 제공합니다."
+		},
+		"cerebras": {
+			"name": "Cerebras",
+			"description": "Cerebras는 대규모 AI 모델을 훈련하고 실행하기 위한 하드웨어를 구축합니다."
+		},
+		"vercel-ai-gateway": {
+			"name": "Vercel AI Gateway",
+			"description": "Vercel AI Gateway는 다양한 모델 제공업체에 대한 안정적인 연결을 제공하는 게이트웨이입니다."
+		},
+		"baseten": {
+			"name": "Baseten",
+			"description": "Baseten은 맞춤형 AI 모델을 배포하고 제공하기 위한 플랫폼입니다."
+		},
+		"requesty": {
+			"name": "Requesty",
+			"description": "Requesty는 AI 기반 요청 라우팅 및 관리를 위한 플랫폼입니다."
+		},
+		"fireworks": {
+			"name": "Fireworks AI",
+			"description": "Fireworks AI는 개발자가 생성 AI 모델을 실험하고 배포할 수 있는 플랫폼입니다."
+		},
+		"together": {
+			"name": "Together",
+			"description": "Together AI는 선도적인 오픈 소스 모델을 실행하기 위한 클라우드 플랫폼을 제공합니다."
+		},
+		"qwen": {
+			"name": "Alibaba Qwen",
+			"description": "Alibaba Qwen은 다양한 자연어 처리 작업을 위한 강력한 대규모 언어 모델입니다."
+		},
+		"qwen-code": {
+			"name": "Qwen Code",
+			"description": "Qwen Code는 코드 생성 및 완성에 특화된 Alibaba의 AI 모델입니다."
+		},
+		"doubao": {
+			"name": "Bytedance Doubao",
+			"description": "Doubao는 Bytedance에서 개발한 대화형 AI 모델 제품군입니다."
+		},
+		"lmstudio": {
+			"name": "LM Studio",
+			"description": "LM Studio를 사용하면 로컬 컴퓨터에서 LLM을 검색, 다운로드 및 실행할 수 있습니다."
+		},
+		"moonshot": {
+			"name": "Moonshot",
+			"description": "Moonshot AI는 긴 컨텍스트 창을 가진 모델을 전문으로 합니다."
+		},
+		"huggingface": {
+			"name": "Hugging Face",
+			"description": "Hugging Face는 다양한 오픈 소스 모델에 대한 추론 API를 제공합니다."
+		},
+		"nebius": {
+			"name": "Nebius AI Studio",
+			"description": "Nebius AI는 Yandex의 기술을 기반으로 한 AI 서비스를 제공합니다."
+		},
+		"asksage": {
+			"name": "AskSage",
+			"description": "AskSage는 연구 및 학술용으로 설계된 AI 모델을 제공합니다."
+		},
+		"xai": {
+			"name": "xAI",
+			"description": "xAI는 진실을 추구하는 대규모 언어 모델인 Grok을 개발합니다."
+		},
+		"sambanova": {
+			"name": "SambaNova",
+			"description": "SambaNova는 엔터프라이즈급 AI 애플리케이션을 위한 고성능 모델을 제공합니다."
+		},
+		"huawei-cloud-maas": {
+			"name": "Huawei Cloud MaaS",
+			"description": "Huawei Cloud MaaS(Model-as-a-Service)는 다양한 AI 모델을 제공합니다."
+		},
+		"dify": {
+			"name": "Dify.ai",
+			"description": "Dify.ai는 LLM 기반 애플리케이션을 구축하고 운영하기 위한 플랫폼입니다."
+		},
+		"cline": {
+			"name": "Caret",
+			"description": "Caret은 코딩 작업에 최적화된 고품질 AI 모델을 제공합니다."
+		}
 	},
 	"providers.caret": {
 		"description": "Caret은 코딩 작업에 최적화된 고품질 AI 모델을 제공합니다.",
-		"login": "Caret 로그인",
+		"login": "Caret에 로그인",
 		"or": "또는",
-		"apiKeyConfigured": "✓ API 키가 구성됨",
+		"apiKeyConfigured": "✓ API 키 구성됨",
 		"features": "기능:",
 		"feature1": "무료 티어 사용 가능",
 		"feature2": "코딩에 최적화된 모델",
@@ -838,5 +956,21 @@
 	},
 	"api-configuration": {
 		"title": "API Configuration"
+	},
+	"modelInfoView": {
+		"inputPrice": "입력 가격",
+		"outputPriceStandard": "출력 가격 (표준)",
+		"outputPriceThinking": "출력 가격 (사고 예산 > 0)",
+		"outputPrice": "출력 가격",
+		"basedOnInputTokens": "(입력 토큰 기준)",
+		"doesNotSupportImages": "이미지 미지원",
+		"supportsImages": "이미지 지원",
+		"doesNotSupportBrowser": "브라우저 사용 미지원",
+		"supportsBrowser": "브라우저 사용 지원",
+		"doesNotSupportCache": "프롬프트 캐싱 미지원",
+		"supportsCache": "프롬프트 캐싱 지원",
+		"contextWindow": "컨텍스트 창",
+		"cacheWritesPrice": "캐시 쓰기 가격",
+		"cacheReadsPrice": "캐시 읽기 가격"
 	}
 }

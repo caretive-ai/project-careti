@@ -94,7 +94,10 @@ export const LMStudioProvider = ({ currentMode }: LMStudioProviderProps) => {
 	useInterval(requestLmStudioModels, 6000)
 
 	return (
-		<div className="flex flex-col gap-2">
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.lmstudio.description", "settings")}
+			</p>
 			<BaseUrlField
 				initialValue={apiConfiguration?.lmStudioBaseUrl}
 				label={t("settings.baseUrlField.label", "settings")}
@@ -153,22 +156,6 @@ export const LMStudioProvider = ({ currentMode }: LMStudioProviderProps) => {
 			/>
 
 			<UseCustomPromptCheckbox providerId="lmstudio" />
-
-			<div className="text-xs text-description">
-				{t("lmStudioProvider.description1", "settings")}
-				<VSCodeLink href="https://lmstudio.ai/docs" style={{ display: "inline", fontSize: "inherit" }}>
-					{t("lmStudioProvider.quickstartGuideLink", "settings")}
-				</VSCodeLink>
-				{t("lmStudioProvider.description2", "settings")}{" "}
-				<VSCodeLink className="inline" href="https://lmstudio.ai/docs/basics/server">
-					{t("lmStudioProvider.localServerLink", "settings")}
-				</VSCodeLink>{" "}
-				{t("lmStudioProvider.description3", "settings")}{" "}
-				<div className="text-error">
-					<span className="font-semibold">{t("common.apiOptions.note", "common")}</span>{" "}
-					{t("lmStudioProvider.noteBody", "settings")}
-				</div>
-			</div>
 		</div>
 	)
 }

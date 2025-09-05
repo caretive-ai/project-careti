@@ -90,7 +90,7 @@
 			"ellipsis": ")...",
 			"apiRequestLoading": "API 요청 중...",
 			"apiRequestCancelled": "API 요청 취소됨",
-			"apiStreamingFailed": "API 스트리밍 실패",
+			"apiStreamingFailed": "API 요청 실패",
 			"apiRequest": "API 요청",
 			"creditLimitReached": "크레딧 한도 도달",
 			"apiRequestFailed": "API 요청 실패"
@@ -131,20 +131,17 @@
 		"taskHeader.task": "작업",
 		"taskHeader.tokens": "토큰",
 		"taskHeader.cache": "캐시",
-		"taskHeader.disablingCheckpoints": "체크포인트 비활성화 중",
+		"taskHeader.disablingCheckpoints": "체크포인트 비활성화.",
 		"taskHeader.closeTask": "작업 닫기",
 		"taskHeader.seeMore": "더 보기",
 		"taskHeader.seeLess": "간략히 보기",
-		"taskHeader.tokens": "토큰",
 		"taskHeader.promptTokens": "프롬프트 토큰",
 		"taskHeader.completionTokens": "완료 토큰",
-		"taskHeader.cache": "캐시",
 		"taskHeader.tokensWrittenToCache": "캐시에 기록된 토큰",
 		"taskHeader.tokensReadFromCache": "캐시에서 읽은 토큰",
 		"taskHeader.allStepsCompleted": "모든 {{totalCount}} 단계 완료!",
 		"taskHeader.newStepsGenerated": "작업을 계속하면 새로운 단계가 생성됩니다",
 		"taskHeader.editFocusChainList": "마크다운 파일에서 포커스 체인 목록 편집",
-		"taskHeader.disablingCheckpoints": "체크포인트 비활성화.",
 		"taskHeader.seeHereForInstructions": "지침은 여기를 참조하세요.",
 		"taskTimelineTooltip.taskMessage": "작업 메시지",
 		"taskTimelineTooltip.userMessage": "사용자 메시지",
@@ -430,6 +427,7 @@
 		"userEdits": "사용자 편집",
 		"consoleLogs": "콘솔 로그"
 	},
+
 	"copyButton": {
 		"copied": "복사됨",
 		"copy": "복사"

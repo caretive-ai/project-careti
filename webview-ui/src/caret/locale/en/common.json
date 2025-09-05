@@ -153,6 +153,53 @@
 		"separateModels": {
 			"label": "Use different models for Chatbot and Agent modes",
 			"description": "Switching between Chatbot and Agent mode will persist the API and model used in the previous mode. This may be helpful e.g. when using a strong reasoning model for expert consultation (Chatbot) and a cheaper coding model for collaborative development (Agent)."
+		},
+		"apiKey": {
+			"placeholder": "Enter API Key...",
+			"getYourKeyAn": "You can get an {{providerName}} API key by signing up here.",
+			"getYourKeyA": "You can get a {{providerName}} API key by signing up here.",
+			"label": "{{providerName}} API Key",
+			"helpText": "This key is stored locally and only used to make API requests from this extension."
+		},
+		"baseUrl": {
+			"label": "Use custom base URL",
+			"placeholder": "Default: https://api.example.com"
+		},
+		"modelSelector": {
+			"label": "Model",
+			"placeholder": "Select a model..."
+		},
+		"openRouter": {
+			"featured": {
+				"claudeSonnet4": {
+					"description": "Recommended for agentic coding in Cline",
+					"label": "Best"
+				},
+				"gpt5": {
+					"description": "State of the art model for complex, long-horizon tasks",
+					"label": "New"
+				},
+				"grok": {
+					"description": "Advanced model with 262K context for complex coding",
+					"label": "Free"
+				}
+			},
+			"switchTo1M": "Switch to 1M context window model",
+			"switchTo200K": "Switch to 200K context window model",
+			"modelLabel": "Model",
+			"searchPlaceholder": "Search and select a model...",
+			"clearSearch": "Clear search",
+			"info": {
+				"fullText": "The extension automatically fetches the latest list of models available on <0>OpenRouter.</0> If you're unsure which model to choose, Cline works best with <1>anthropic/claude-sonnet-4.</1> You can also try searching \"free\" for no-cost options currently available."
+			}
+		},
+		"requesty": {
+			"modelLabel": "Model",
+			"searchPlaceholder": "Search and select a model...",
+			"clearSearch": "Clear search",
+			"info": {
+				"fullText": "The extension automatically fetches the latest list of models available on <0>Requesty.</0> If you're unsure which model to choose, Cline works best with <1>anthropic/claude-3-7-sonnet-latest.</1>"
+			}
 		}
 	},
 	"account": {
@@ -178,7 +225,8 @@
 	"common": {
 		"and": "and",
 		"scrollToBottom": "Scroll to bottom",
-		"defaultValue": "0"
+		"defaultValue": "0",
+		"seeMore": "See more"
 	},
 	"chat": {
 		"caretHasQuestion": "Caret has a question",

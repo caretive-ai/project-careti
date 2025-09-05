@@ -4,6 +4,7 @@ import { Mode } from "@shared/storage/types"
 import { VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from "react"
+import { Trans, useTranslation } from "react-i18next"
 import { useRemark } from "react-remark"
 import { useMount } from "react-use"
 import styled from "styled-components"
@@ -43,28 +44,35 @@ export interface OpenRouterModelPickerProps {
 	currentMode: Mode
 }
 
-// Featured models for Cline provider
-const featuredModels = [
-	{
-		id: "anthropic/claude-sonnet-4",
-		description: "Recommended for agentic coding in Cline",
-		label: "Best",
-	},
-	{
-		id: "openai/gpt-5",
-		description: "State of the art model for complex, long-horizon tasks",
-		label: "New",
-	},
-	{
-		id: "x-ai/grok-code-fast-1",
-		description: "Advanced model with 262K context for complex coding",
-		label: "Free",
-	},
-]
-
 const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup, currentMode }) => {
+	const { t } = useTranslation()
 	const { handleModeFieldsChange } = useApiConfigurationHandlers()
 	const { apiConfiguration, openRouterModels, refreshOpenRouterModels } = useExtensionState()
+
+	// Featured models for Cline provider
+	const featuredModels = [
+		{
+			id: "anthropic/claude-sonnet-4",
+			description: t("settings.openRouter.featured.claudeSonnet4.description", "Recommended for agentic coding in Cline"),
+			label: t("settings.openRouter.featured.claudeSonnet4.label", "Best"),
+		},
+		{
+			id: "openai/gpt-5",
+			description: t(
+				"settings.openRouter.featured.gpt5.description",
+				"State of the art model for complex, long-horizon tasks",
+			),
+			label: t("settings.openRouter.featured.gpt5.label", "New"),
+		},
+		{
+			id: "x-ai/grok-code-fast-1",
+			description: t(
+				"settings.openRouter.featured.grok.description",
+				"Advanced model with 262K context for complex coding",
+			),
+			label: t("settings.openRouter.featured.grok.label", "Free"),
+		},
+	]
 	const modeFields = getModeSpecificFields(apiConfiguration, currentMode)
 	const [searchTerm, setSearchTerm] = useState(modeFields.openRouterModelId || openRouterDefaultModelId)
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false)
@@ -234,17 +242,17 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup, 
 			return {
 				current: "anthropic/claude-sonnet-4",
 				alternate: "anthropic/claude-sonnet-4:1m",
-				linkText: "Switch to 1M context window model",
+				linkText: t("settings.openRouter.switchTo1M", "Switch to 1M context window model"),
 			}
 		} else if (selectedModelId === "anthropic/claude-sonnet-4:1m") {
 			return {
 				current: "anthropic/claude-sonnet-4:1m",
 				alternate: "anthropic/claude-sonnet-4",
-				linkText: "Switch to 200K context window model",
+				linkText: t("settings.openRouter.switchTo200K", "Switch to 200K context window model"),
 			}
 		}
 		return null
-	}, [selectedModelId])
+	}, [selectedModelId, t])
 
 	return (
 		<div style={{ width: "100%" }}>
@@ -258,7 +266,7 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup, 
 			</style>
 			<div style={{ display: "flex", flexDirection: "column" }}>
 				<label htmlFor="model-search">
-					<span style={{ fontWeight: 500 }}>Model</span>
+					<span style={{ fontWeight: 500 }}>{t("settings.openRouter.modelLabel", "Model")}</span>
 				</label>
 
 				{modeFields.apiProvider === "cline" && (
@@ -288,7 +296,7 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup, 
 							setIsDropdownVisible(true)
 						}}
 						onKeyDown={handleKeyDown}
-						placeholder="Search and select a model..."
+						placeholder={t("settings.openRouter.searchPlaceholder", "Search and select a model...")}
 						style={{
 							width: "100%",
 							zIndex: OPENROUTER_MODEL_PICKER_Z_INDEX,
@@ -297,7 +305,7 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup, 
 						value={searchTerm}>
 						{searchTerm && (
 							<div
-								aria-label="Clear search"
+								aria-label={t("settings.openRouter.clearSearch", "Clear search")}
 								className="input-icon-button codicon codicon-close"
 								onClick={() => {
 									setSearchTerm("")
@@ -374,17 +382,19 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup, 
 						marginTop: 0,
 						color: "var(--vscode-descriptionForeground)",
 					}}>
-					The extension automatically fetches the latest list of models available on{" "}
-					<VSCodeLink href="https://openrouter.ai/models" style={{ display: "inline", fontSize: "inherit" }}>
-						OpenRouter.
-					</VSCodeLink>
-					If you're unsure which model to choose, Cline works best with{" "}
-					<VSCodeLink
-						onClick={() => handleModelChange("anthropic/claude-sonnet-4")}
-						style={{ display: "inline", fontSize: "inherit" }}>
-						anthropic/claude-sonnet-4.
-					</VSCodeLink>
-					You can also try searching "free" for no-cost options currently available.
+					<Trans i18nKey="settings.openRouter.info.fullText">
+						The extension automatically fetches the latest list of models available on{" "}
+						<VSCodeLink href="https://openrouter.ai/models" style={{ display: "inline", fontSize: "inherit" }}>
+							OpenRouter.
+						</VSCodeLink>{" "}
+						If you're unsure which model to choose, Cline works best with{" "}
+						<VSCodeLink
+							onClick={() => handleModelChange("anthropic/claude-sonnet-4")}
+							style={{ display: "inline", fontSize: "inherit" }}>
+							anthropic/claude-sonnet-4.
+						</VSCodeLink>{" "}
+						You can also try searching "free" for no-cost options currently available.
+					</Trans>
 				</p>
 			)}
 		</div>
@@ -490,6 +500,7 @@ export const ModelDescriptionMarkdown = memo(
 		setIsExpanded: (isExpanded: boolean) => void
 		isPopup?: boolean
 	}) => {
+		const { t } = useTranslation()
 		const [reactContent, setMarkdown] = useRemark()
 		// const [isExpanded, setIsExpanded] = useState(false)
 		const [showSeeMore, setShowSeeMore] = useState(false)
@@ -561,7 +572,7 @@ export const ModelDescriptionMarkdown = memo(
 									paddingLeft: 3,
 									backgroundColor: isPopup ? CODE_BLOCK_BG_COLOR : "var(--vscode-sideBar-background)",
 								}}>
-								See more
+								{t("common.seeMore", "See more")}
 							</VSCodeLink>
 						</div>
 					)}

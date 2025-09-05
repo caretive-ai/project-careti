@@ -53,16 +53,7 @@ interface ExtensionStateContextType extends ExtensionState {
 	// CARET MODIFICATION: Add caretBanner for Caret welcome page logo
 	caretBanner: string
 
-	// CARET MODIFICATION: Persona system settings (independent from modeSystem)
-	enablePersonaSystem: boolean
-	currentPersona: string | null
-	personaProfile: {
-		name?: string
-		description?: string
-		custom_instruction?: string
-		avatar_uri?: string
-		thinking_avatar_uri?: string
-	} | null
+	// CARET MODIFICATION: Persona system settings (temporarily removed for clean rebuild)
 
 	// View state
 	showMcp: boolean
@@ -77,18 +68,7 @@ interface ExtensionStateContextType extends ExtensionState {
 	setShouldShowAnnouncement: (value: boolean) => void
 	// CARET MODIFICATION: 전역 브랜드 모드 플래그 설정 함수
 	setModeSystem: (modeSystem: CaretModeSystem) => void
-	// CARET MODIFICATION: Persona system setters
-	setEnablePersonaSystem: (enabled: boolean) => void
-	setCurrentPersona: (personaId: string | null) => void
-	setPersonaProfile: (
-		profile: {
-			name?: string
-			description?: string
-			custom_instruction?: string
-			avatar_uri?: string
-			thinking_avatar_uri?: string
-		} | null,
-	) => void
+	// CARET MODIFICATION: Persona system setters (temporarily removed for clean rebuild)
 	setMcpServers: (value: McpServer[]) => void
 	setRequestyModels: (value: Record<string, ModelInfo>) => void
 	setGroqModels: (value: Record<string, ModelInfo>) => void
@@ -577,19 +557,7 @@ export const ExtensionStateContextProvider: React.FC<{
 			console.error("Client ID not found in window object")
 		}
 
-		// CARET MODIFICATION: localStorage에서 페르소나 설정 로드
-		try {
-			const savedPersonaSetting = localStorage.getItem("caret-enablePersonaSystem")
-			if (savedPersonaSetting !== null) {
-				const enablePersona = JSON.parse(savedPersonaSetting)
-				setState((prevState) => ({
-					...prevState,
-					enablePersonaSystem: enablePersona,
-				}))
-			}
-		} catch (error) {
-			console.error("Failed to load persona system setting from localStorage:", error)
-		}
+		// CARET MODIFICATION: Persona system localStorage loading temporarily removed
 
 		// Clean up subscriptions when component unmounts
 		return () => {
@@ -693,16 +661,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		// CARET MODIFICATION: Add caretBanner to context value
 		caretBanner: state.caretBanner || "🐰 Caret",
 
-		// CARET MODIFICATION: Persona system values (Caret 모드에서는 기본값 true)
-		enablePersonaSystem: state.enablePersonaSystem !== undefined ? state.enablePersonaSystem : state.modeSystem === "caret",
-		currentPersona: state.currentPersona || null,
-		personaProfile: state.personaProfile || {
-			name: "Caret",
-			description: "친근하고 도움되는 코딩 로봇 조수",
-			custom_instruction: "",
-			avatar_uri: "asset://template_characters/caret.png",
-			thinking_avatar_uri: "asset://template_characters/caret_thinking.png",
-		},
+		// CARET MODIFICATION: Persona system values temporarily removed
 
 		showMcp,
 		mcpTab,
@@ -825,37 +784,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		setTotalTasksSize,
 		refreshOpenRouterModels,
 		onRelinquishControl,
-		// CARET MODIFICATION: Persona system setters - also save to localStorage
-		setEnablePersonaSystem: (enabled: boolean) => {
-			setState((prevState) => ({
-				...prevState,
-				enablePersonaSystem: enabled,
-			}))
-			// Save to localStorage as well since proto doesn't support this field yet
-			try {
-				localStorage.setItem("caret-enablePersonaSystem", JSON.stringify(enabled))
-			} catch (error) {
-				console.error("Failed to save persona system setting to localStorage:", error)
-			}
-		},
-		setCurrentPersona: (personaId: string | null) =>
-			setState((prevState) => ({
-				...prevState,
-				currentPersona: personaId,
-			})),
-		setPersonaProfile: (
-			profile: {
-				name?: string
-				description?: string
-				custom_instruction?: string
-				avatar_uri?: string
-				thinking_avatar_uri?: string
-			} | null,
-		) =>
-			setState((prevState) => ({
-				...prevState,
-				personaProfile: profile,
-			})),
+		// CARET MODIFICATION: Persona system setters temporarily removed
 		setUserInfo: (userInfo?: UserInfo) => setState((prevState) => ({ ...prevState, userInfo })),
 	}
 

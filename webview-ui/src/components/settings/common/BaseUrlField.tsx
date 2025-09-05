@@ -1,5 +1,6 @@
 import { VSCodeCheckbox, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useDebouncedInput } from "../utils/useDebouncedInput"
 
 /**
@@ -16,12 +17,8 @@ interface BaseUrlFieldProps {
 /**
  * A reusable component for toggling and entering custom base URLs
  */
-export const BaseUrlField = ({
-	initialValue,
-	onChange,
-	label = "Use custom base URL",
-	placeholder = "Default: https://api.example.com",
-}: BaseUrlFieldProps) => {
+export const BaseUrlField = ({ initialValue, onChange, label, placeholder }: BaseUrlFieldProps) => {
+	const { t } = useTranslation()
 	const [isEnabled, setIsEnabled] = useState(!!initialValue)
 	const [localValue, setLocalValue] = useDebouncedInput(initialValue || "", onChange)
 
@@ -33,16 +30,19 @@ export const BaseUrlField = ({
 		}
 	}
 
+	const finalLabel = label ?? t("settings.baseUrl.label", "Use custom base URL")
+	const finalPlaceholder = placeholder ?? t("settings.baseUrl.placeholder", "Default: https://api.example.com")
+
 	return (
 		<div>
 			<VSCodeCheckbox checked={isEnabled} onChange={handleToggle}>
-				{label}
+				{finalLabel}
 			</VSCodeCheckbox>
 
 			{isEnabled && (
 				<VSCodeTextField
 					onInput={(e: any) => setLocalValue(e.target.value.trim())}
-					placeholder={placeholder}
+					placeholder={finalPlaceholder}
 					style={{ width: "100%", marginTop: 3 }}
 					type="url"
 					value={localValue}

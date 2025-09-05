@@ -12,7 +12,8 @@ import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useRef, useState } from "react"
 import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
-import PersonaManagement from "@/caret/components/PersonaManagement"
+// CARET MODIFICATION: PersonaManagement import temporarily removed for clean rebuild
+// import PersonaManagement from "@/caret/components/PersonaManagement"
 import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import Tooltip from "@/components/common/Tooltip"
@@ -321,8 +322,7 @@ const ClineRulesToggleModal: React.FC = () => {
 
 					{currentView === "rules" ? (
 						<>
-							{/* CARET MODIFICATION: Persona Management Section - only shown in Caret mode with persona system enabled */}
-							{modeSystem === "caret" && enablePersonaSystem && <PersonaManagement className="mb-3" />}
+							{/* CARET MODIFICATION: Persona Management Section temporarily removed for clean rebuild */}
 
 							{/* Global Rules Section */}
 							<div className="mb-3">

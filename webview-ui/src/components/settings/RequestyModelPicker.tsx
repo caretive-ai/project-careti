@@ -4,6 +4,7 @@ import { Mode } from "@shared/storage/types"
 import { VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from "react"
+import { Trans, useTranslation } from "react-i18next"
 import { useRemark } from "react-remark"
 import { useMount } from "react-use"
 import styled from "styled-components"
@@ -22,6 +23,7 @@ export interface RequestyModelPickerProps {
 }
 
 const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, currentMode }) => {
+	const { t } = useTranslation()
 	const { apiConfiguration, requestyModels, setRequestyModels } = useExtensionState()
 	const { handleModeFieldsChange } = useApiConfigurationHandlers()
 	const modeFields = getModeSpecificFields(apiConfiguration, currentMode)
@@ -178,7 +180,7 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, curr
 			</style>
 			<div style={{ display: "flex", flexDirection: "column" }}>
 				<label htmlFor="model-search">
-					<span style={{ fontWeight: 500 }}>Model</span>
+					<span style={{ fontWeight: 500 }}>{t("settings.requesty.modelLabel", "Model")}</span>
 				</label>
 				<DropdownWrapper ref={dropdownRef}>
 					<VSCodeTextField
@@ -189,7 +191,7 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, curr
 							setIsDropdownVisible(true)
 						}}
 						onKeyDown={handleKeyDown}
-						placeholder="Search and select a model..."
+						placeholder={t("settings.requesty.searchPlaceholder", "Search and select a model...")}
 						style={{
 							width: "100%",
 							zIndex: REQUESTY_MODEL_PICKER_Z_INDEX,
@@ -198,7 +200,7 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, curr
 						value={searchTerm}>
 						{searchTerm && (
 							<div
-								aria-label="Clear search"
+								aria-label={t("settings.requesty.clearSearch", "Clear search")}
 								className="input-icon-button codicon codicon-close"
 								onClick={() => {
 									handleModelChange("")
@@ -248,16 +250,22 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, curr
 						marginTop: 0,
 						color: "var(--vscode-descriptionForeground)",
 					}}>
-					The extension automatically fetches the latest list of models available on{" "}
-					<VSCodeLink href="https://app.requesty.ai/router/list" style={{ display: "inline", fontSize: "inherit" }}>
-						Requesty.
-					</VSCodeLink>
-					If you're unsure which model to choose, Cline works best with{" "}
-					<VSCodeLink
-						onClick={() => handleModelChange("anthropic/claude-3-7-sonnet-latest")}
-						style={{ display: "inline", fontSize: "inherit" }}>
-						anthropic/claude-3-7-sonnet-latest.
-					</VSCodeLink>
+					<Trans
+						components={[
+							<VSCodeLink
+								href="https://app.requesty.ai/router/list"
+								key="requesty"
+								style={{ display: "inline", fontSize: "inherit" }}
+							/>,
+							<VSCodeLink
+								key="claude"
+								onClick={() => handleModelChange("anthropic/claude-3-7-sonnet-latest")}
+								style={{ display: "inline", fontSize: "inherit" }}
+							/>,
+						]}
+						defaults="The extension automatically fetches the latest list of models available on <0>Requesty.</0> If you're unsure which model to choose, Cline works best with <1>anthropic/claude-3-7-sonnet-latest.</1>"
+						i18nKey="settings.requesty.info.fullText"
+					/>
 				</p>
 			)}
 		</div>
@@ -363,6 +371,7 @@ export const ModelDescriptionMarkdown = memo(
 		setIsExpanded: (isExpanded: boolean) => void
 		isPopup?: boolean
 	}) => {
+		const { t } = useTranslation()
 		const [reactContent, setMarkdown] = useRemark()
 		// const [isExpanded, setIsExpanded] = useState(false)
 		const [showSeeMore, setShowSeeMore] = useState(false)
@@ -434,7 +443,7 @@ export const ModelDescriptionMarkdown = memo(
 									paddingLeft: 3,
 									backgroundColor: isPopup ? CODE_BLOCK_BG_COLOR : "var(--vscode-sideBar-background)",
 								}}>
-								See more
+								{t("common.seeMore", "See more")}
 							</VSCodeLink>
 						</div>
 					)}

@@ -14,8 +14,8 @@ interface CaretGeneralSettingsSectionProps {
 }
 
 const CaretGeneralSettingsSection: React.FC<CaretGeneralSettingsSectionProps> = ({ renderSectionHeader }) => {
-	// CARET MODIFICATION: Add telemetry setting with i18n, modeSystem for persona conditional rendering, and persona system state
-	const { telemetrySetting, modeSystem, enablePersonaSystem, setEnablePersonaSystem } = useExtensionState()
+	// CARET MODIFICATION: Add telemetry setting with i18n, modeSystem (persona system temporarily removed)
+	const { telemetrySetting, modeSystem } = useExtensionState()
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -32,27 +32,7 @@ const CaretGeneralSettingsSection: React.FC<CaretGeneralSettingsSectionProps> = 
 					<UnifiedLanguageSetting />
 				</div>
 
-				{/* CARET MODIFICATION: 페르소나 설정 - Caret 모드일 때만 표시 */}
-				{modeSystem === "caret" && (
-					<div className="mb-6">
-						<div className="mb-[5px]">
-							<VSCodeCheckbox
-								checked={enablePersonaSystem}
-								className="mb-[5px]"
-								onChange={(e: any) => {
-									const checked = e.target.checked === true
-									setEnablePersonaSystem(checked) // CARET MODIFICATION: localStorage는 setter 내부에서 처리
-									console.log("Persona system toggle:", checked)
-								}}>
-								{t("persona.enablePersonaSystem", "common")}
-							</VSCodeCheckbox>
-							<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
-								{t("persona.description", "common")}
-							</p>
-						</div>
-						{/* TODO: 페르소나 선택 UI 추가 */}
-					</div>
-				)}
+				{/* CARET MODIFICATION: Persona settings temporarily removed for clean rebuild */}
 
 				{/* CARET MODIFICATION: Telemetry setting with i18n */}
 				<div className="mb-[5px]">

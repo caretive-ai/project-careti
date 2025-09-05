@@ -140,6 +140,45 @@
 			"high": "High (More detailed, slower, higher cost)",
 			"label": "OpenAI Reasoning Effort",
 			"description": "Adjust the reasoning effort for OpenAI models. Higher effort may lead to more detailed responses but can be slower and more costly."
+		},
+		"apiKey": {
+			"placeholder": "API 키 입력...",
+			"getYourKeyAn": "여기서 가입하여 {{providerName}} API 키를 얻을 수 있습니다.",
+			"getYourKeyA": "여기서 가입하여 {{providerName}} API 키를 얻을 수 있습니다.",
+			"label": "{{providerName}} API 키",
+			"helpText": "이 키는 로컬에 저장되며 이 확장 프로그램에서 API 요청을 하는 데만 사용됩니다."
+		},
+		"baseUrl": {
+			"label": "사용자 정의 기본 URL 사용",
+			"placeholder": "기본값: https://api.example.com"
+		},
+		"modelSelector": {
+			"label": "모델",
+			"placeholder": "모델을 선택하세요..."
+		},
+		"openRouter": {
+			"featured": {
+				"claudeSonnet4": {
+					"description": "Caret의 에이전트 코딩에 권장됩니다",
+					"label": "추천"
+				},
+				"gpt5": {
+					"description": "복잡하고 장기적인 작업을 위한 최첨단 모델",
+					"label": "신규"
+				},
+				"grok": {
+					"description": "복잡한 코딩을 위한 262K 컨텍스트를 갖춘 고급 모델",
+					"label": "무료"
+				}
+			},
+			"switchTo1M": "1M 컨텍스트 창 모델로 전환",
+			"switchTo200K": "200K 컨텍스트 창 모델로 전환",
+			"modelLabel": "모델",
+			"searchPlaceholder": "모델 검색 및 선택...",
+			"clearSearch": "검색 지우기",
+			"info": {
+				"fullText": "이 확장 프로그램은 <0>OpenRouter</0>에서 사용 가능한 최신 모델 목록을 자동으로 가져옵니다. 어떤 모델을 선택해야 할지 잘 모르겠다면, Caret은 <1>anthropic/claude-sonnet-4</1>와 가장 잘 작동합니다. 또한 \"free\"를 검색하여 현재 사용 가능한 무료 옵션을 시도해 볼 수도 있습니다."
+			}
 		}
 	},
 	"account": {
@@ -165,7 +204,8 @@
 	"common": {
 		"and": "및",
 		"scrollToBottom": "맨 아래로 스크롤",
-		"defaultValue": "0"
+		"defaultValue": "0",
+		"seeMore": "더 보기"
 	},
 	"chat": {
 		"caretHasQuestion": "캐럿이 질문이 있습니다",

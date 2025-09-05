@@ -14,8 +14,7 @@ import deepEqual from "fast-deep-equal"
 import React, { MouseEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useSize } from "react-use"
 import styled from "styled-components"
-// CARET MODIFICATION: Import PersonaAvatar component for persona system
-import PersonaAvatar from "@/caret/components/PersonaAvatar"
+// CARET MODIFICATION: PersonaAvatar import temporarily removed for clean rebuild
 import { t } from "@/caret/utils/i18n"
 import { OptionsButtons } from "@/components/chat/OptionsButtons"
 import TaskFeedbackButtons from "@/components/chat/TaskFeedbackButtons"
@@ -156,8 +155,9 @@ export const ChatRowContent = memo(
 			onRelinquishControl,
 			apiConfiguration,
 			modeSystem,
-			enablePersonaSystem,
-			personaProfile,
+			// CARET MODIFICATION: Persona system temporarily removed
+			// enablePersonaSystem,
+			// personaProfile,
 		} = useExtensionState()
 		const [seeNewChangesDisabled, setSeeNewChangesDisabled] = useState(false)
 		const [quoteButtonState, setQuoteButtonState] = useState<QuoteButtonState>({
@@ -1009,36 +1009,7 @@ export const ChatRowContent = memo(
 								position="bottom-right"
 								ref={contentRef}
 								textToCopy={message.text}>
-								{/* CARET MODIFICATION: 페르소나 아바타 조건부 렌더링 - Caret 모드이고 페르소나 시스템이 활성화되었을 때만 표시 */}
-								{modeSystem === "caret" && enablePersonaSystem && (
-									<div style={{ display: "flex", alignItems: "flex-start", gap: "10px", marginBottom: "8px" }}>
-										<PersonaAvatar
-											isThinking={false}
-											personaProfile={
-												personaProfile
-													? {
-															name: personaProfile.name || "Caret",
-															description:
-																personaProfile.description || "친근하고 도움되는 코딩 로봇 조수",
-															customInstruction: personaProfile.custom_instruction || "",
-															avatarUri: personaProfile.avatar_uri,
-															thinkingAvatarUri: personaProfile.thinking_avatar_uri,
-														}
-													: null
-											}
-											size={32}
-										/>
-										<div
-											style={{
-												color: "var(--vscode-foreground)",
-												fontWeight: "bold",
-												fontSize: "14px",
-												lineHeight: "32px",
-											}}>
-											{personaProfile?.name || "Caret"}
-										</div>
-									</div>
-								)}
+								{/* CARET MODIFICATION: Persona avatar rendering temporarily removed for clean rebuild */}
 								<Markdown markdown={message.text} />
 								{quoteButtonState.visible && (
 									<QuoteButton

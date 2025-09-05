@@ -1,6 +1,7 @@
 import { sapAiCoreModels } from "@shared/api"
 import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import React, { memo, useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import { DropdownContainer } from "./common/ModelSelector"
 
 export const SAP_AI_CORE_MODEL_PICKER_Z_INDEX = 1_000
@@ -23,9 +24,12 @@ const SapAiCoreModelPicker: React.FC<SapAiCoreModelPickerProps> = ({
 	sapAiCoreDeployedModels,
 	selectedModelId,
 	onModelChange,
-	placeholder = "Select a model...",
+	placeholder,
 	useOrchestrationMode = false,
 }) => {
+	const { t } = useTranslation()
+	const finalPlaceholder = placeholder ?? t("settings.sapAiCore.placeholder", "Select a model...")
+
 	const handleModelChange = (event: any) => {
 		const newModelId = event.target.value
 		onModelChange(newModelId)
@@ -65,7 +69,7 @@ const SapAiCoreModelPicker: React.FC<SapAiCoreModelPickerProps> = ({
 		// Add placeholder option
 		options.push(
 			<VSCodeOption key="placeholder" value="">
-				{placeholder}
+				{finalPlaceholder}
 			</VSCodeOption>,
 		)
 
@@ -86,7 +90,7 @@ const SapAiCoreModelPicker: React.FC<SapAiCoreModelPickerProps> = ({
 				// Add section separator (disabled option)
 				options.push(
 					<VSCodeOption disabled key="deployed-header" value="">
-						── Deployed Models ──
+						{t("settings.sapAiCore.deployedModels", "── Deployed Models ──")}
 					</VSCodeOption>,
 				)
 
@@ -104,7 +108,7 @@ const SapAiCoreModelPicker: React.FC<SapAiCoreModelPickerProps> = ({
 				// Add section separator (disabled option)
 				options.push(
 					<VSCodeOption disabled key="supported-header" value="">
-						── Not Deployed Models ──
+						{t("settings.sapAiCore.notDeployedModels", "── Not Deployed Models ──")}
 					</VSCodeOption>,
 				)
 
@@ -124,7 +128,7 @@ const SapAiCoreModelPicker: React.FC<SapAiCoreModelPickerProps> = ({
 	return (
 		<DropdownContainer className="dropdown-container" zIndex={SAP_AI_CORE_MODEL_PICKER_Z_INDEX}>
 			<label htmlFor="sap-ai-core-model-dropdown">
-				<span className="font-medium">Model</span>
+				<span className="font-medium">{t("settings.sapAiCore.modelLabel", "Model")}</span>
 			</label>
 			<VSCodeDropdown
 				id="sap-ai-core-model-dropdown"

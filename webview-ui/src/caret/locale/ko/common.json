@@ -179,15 +179,32 @@
 			"info": {
 				"fullText": "이 확장 프로그램은 <0>OpenRouter</0>에서 사용 가능한 최신 모델 목록을 자동으로 가져옵니다. 어떤 모델을 선택해야 할지 잘 모르겠다면, Caret은 <1>anthropic/claude-sonnet-4</1>와 가장 잘 작동합니다. 또한 \"free\"를 검색하여 현재 사용 가능한 무료 옵션을 시도해 볼 수도 있습니다."
 			}
-		}
-	},
-	"account": {
-		"signUpWithCaret": "로그인 및 회원가입",
-		"viewBillingUsage": "요금 및 사용량 보기",
-		"dashboard": "대시보드",
-		"addCredits": "크레딧 추가",
-		"currentBalance": "현재 잔액",
-		"logOut": "로그아웃",
+		},
+		"requesty": {
+			"modelLabel": "모델",
+			"searchPlaceholder": "모델 검색 및 선택...",
+			"clearSearch": "검색 지우기",
+			"info": {
+				"fullText": "이 확장 프로그램은 <0>Requesty</0>에서 사용 가능한 최신 모델 목록을 자동으로 가져옵니다. 어떤 모델을 선택해야 할지 잘 모르겠다면, Caret은 <1>anthropic/claude-3-7-sonnet-latest</1>와 가장 잘 작동합니다."
+			}
+		},
+		"sapAiCore": {
+			"modelLabel": "모델",
+			"searchPlaceholder": "모델 검색 및 선택...",
+			"clearSearch": "검색 지우기",
+			"info": {
+				"fullText": "이 확장 프로그램은 <0>SAP AI Core</0>에서 사용 가능한 최신 모델 목록을 자동으로 가져옵니다. 어떤 모델을 선택해야 할지 잘 모르겠다면, Caret은 <1>sap/gpt-4</1>와 가장 잘 작동합니다."
+			}
+		},
+		"vertex": {
+			"projectIdPlaceholder": "프로젝트 ID 입력...",
+			"projectIdLabel": "Google Cloud 프로젝트 ID",
+			"regionLabel": "Google Cloud 지역",
+			"selectRegionPlaceholder": "지역을 선택하세요...",
+			"setupDescription": "Google Cloud Vertex AI를 사용하려면 다음이 필요합니다: ",
+			"setupLink1": "1) Google Cloud 계정 생성 › Vertex AI API 활성화 › 원하는 Claude 모델 활성화,",
+			"setupLink2": " 2) Google Cloud CLI 설치 › 애플리케이션 기본 자격 증명 구성."
+		},
 		"loading": "로딩 중...",
 		"signUpDescription": "계정을 만들어 최신 모델에 액세스하고, 사용량과 크레딧을 확인할 수 있는 요금 대시보드, 그리고 더 많은 upcoming 기능을 이용하세요.",
 		"termsOfService": "서비스 약관",

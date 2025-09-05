@@ -200,6 +200,21 @@
 			"info": {
 				"fullText": "The extension automatically fetches the latest list of models available on <0>Requesty.</0> If you're unsure which model to choose, Cline works best with <1>anthropic/claude-3-7-sonnet-latest.</1>"
 			}
+		},
+		"sapAiCore": {
+			"placeholder": "Select a model...",
+			"deployedModels": "── Deployed Models ──",
+			"notDeployedModels": "── Not Deployed Models ──",
+			"modelLabel": "Model"
+		},
+		"vertex": {
+			"projectIdPlaceholder": "Enter Project ID...",
+			"projectIdLabel": "Google Cloud Project ID",
+			"regionLabel": "Google Cloud Region",
+			"selectRegionPlaceholder": "Select a region...",
+			"setupDescription": "To use Google Cloud Vertex AI, you need to ",
+			"setupLink1": "1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,",
+			"setupLink2": " 2) install the Google Cloud CLI › configure Application Default Credentials."
 		}
 	},
 	"account": {

@@ -46,7 +46,7 @@ export const VSCodeLmProvider = ({ currentMode }: VSCodeLmProviderProps) => {
 			<p style={{ whiteSpace: "pre-wrap" }}>{t("providers.vsCodeLm.description", "settings")}</p>
 			<DropdownContainer className="dropdown-container" zIndex={DROPDOWN_Z_INDEX - 2}>
 				<label htmlFor="vscode-lm-model">
-					<span style={{ fontWeight: 500 }}>Language Model</span>
+					<span style={{ fontWeight: 500 }}>{t("settings.vsCodeLm.modelLabel")}</span>
 				</label>
 				{vsCodeLmModels.length > 0 ? (
 					<VSCodeDropdown
@@ -70,7 +70,7 @@ export const VSCodeLmProvider = ({ currentMode }: VSCodeLmProviderProps) => {
 								? `${vsCodeLmModelSelector.vendor ?? ""}/${vsCodeLmModelSelector.family ?? ""}`
 								: ""
 						}>
-						<VSCodeOption value="">Select a model...</VSCodeOption>
+						<VSCodeOption value="">{t("settings.vsCodeLm.selectModelPlaceholder")}</VSCodeOption>
 						{vsCodeLmModels.map((model) => (
 							<VSCodeOption key={`${model.vendor}/${model.family}`} value={`${model.vendor}/${model.family}`}>
 								{model.vendor} - {model.family}
@@ -84,9 +84,7 @@ export const VSCodeLmProvider = ({ currentMode }: VSCodeLmProviderProps) => {
 							marginTop: "5px",
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						The VS Code Language Model API allows you to run models provided by other VS Code extensions (including
-						but not limited to GitHub Copilot). The easiest way to get started is to install the Copilot extension
-						from the VS Marketplace and enabling Claude 4 Sonnet.
+						{t("settings.vsCodeLm.getStartedDescription")}
 					</p>
 				)}
 
@@ -97,7 +95,7 @@ export const VSCodeLmProvider = ({ currentMode }: VSCodeLmProviderProps) => {
 						color: "var(--vscode-errorForeground)",
 						fontWeight: 500,
 					}}>
-					Note: This is a very experimental integration and may not work as expected.
+					{t("settings.vsCodeLm.experimentalNote")}
 				</p>
 			</DropdownContainer>
 		</div>

@@ -50,21 +50,21 @@ export const VertexProvider = ({ showModelOptions, isPopup, currentMode }: Verte
 			<DebouncedTextField
 				initialValue={apiConfiguration?.vertexProjectId || ""}
 				onChange={(value) => handleFieldChange("vertexProjectId", value)}
-				placeholder="Enter Project ID..."
+				placeholder={t("settings.vertex.projectIdPlaceholder")}
 				style={{ width: "100%" }}>
-				<span style={{ fontWeight: 500 }}>Google Cloud Project ID</span>
+				<span style={{ fontWeight: 500 }}>{t("settings.vertex.projectIdLabel")}</span>
 			</DebouncedTextField>
 
 			<DropdownContainer className="dropdown-container" zIndex={DROPDOWN_Z_INDEX - 1}>
 				<label htmlFor="vertex-region-dropdown">
-					<span style={{ fontWeight: 500 }}>Google Cloud Region</span>
+					<span style={{ fontWeight: 500 }}>{t("settings.vertex.regionLabel")}</span>
 				</label>
 				<VSCodeDropdown
 					id="vertex-region-dropdown"
 					onChange={(e: any) => handleFieldChange("vertexRegion", e.target.value)}
 					style={{ width: "100%" }}
 					value={apiConfiguration?.vertexRegion || ""}>
-					<VSCodeOption value="">Select a region...</VSCodeOption>
+					<VSCodeOption value="">{t("settings.vertex.selectRegionPlaceholder")}</VSCodeOption>
 					<VSCodeOption value="us-east5">us-east5</VSCodeOption>
 					<VSCodeOption value="us-central1">us-central1</VSCodeOption>
 					<VSCodeOption value="europe-west1">europe-west1</VSCodeOption>
@@ -80,23 +80,23 @@ export const VertexProvider = ({ showModelOptions, isPopup, currentMode }: Verte
 					marginTop: "5px",
 					color: "var(--vscode-descriptionForeground)",
 				}}>
-				To use Google Cloud Vertex AI, you need to
+				{t("settings.vertex.setupDescription")}
 				<VSCodeLink
 					href="https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude#before_you_begin"
 					style={{ display: "inline", fontSize: "inherit" }}>
-					{"1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,"}
+					{t("settings.vertex.setupLink1")}
 				</VSCodeLink>{" "}
 				<VSCodeLink
 					href="https://cloud.google.com/docs/authentication/provide-credentials-adc#google-idp"
 					style={{ display: "inline", fontSize: "inherit" }}>
-					{"2) install the Google Cloud CLI › configure Application Default Credentials."}
+					{t("settings.vertex.setupLink2")}
 				</VSCodeLink>
 			</p>
 
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("settings.modelSelector.label")}
 						models={modelsToUse}
 						onChange={(e: any) =>
 							handleModeFieldChange(

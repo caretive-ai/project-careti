@@ -41,8 +41,33 @@ const CaretGeneralSettingsSection: React.FC<CaretGeneralSettingsSectionProps> = 
 								className="mb-[5px]"
 								onChange={(e: any) => {
 									const checked = e.target.checked === true
-									setEnablePersonaSystem(checked) // CARET MODIFICATION: localStorage는 setter 내부에서 처리
-									console.log("Persona system toggle:", checked)
+									console.log("[PERSONA-DEBUG] Toggle clicked:", {
+										checked,
+										currentState: enablePersonaSystem,
+										timestamp: new Date().toISOString(),
+									})
+
+									// 현재 localStorage 상태 확인
+									try {
+										const currentStoredValue = localStorage.getItem("caret-enablePersonaSystem")
+										console.log("[PERSONA-DEBUG] Before update - localStorage:", currentStoredValue)
+									} catch (error) {
+										console.error("[PERSONA-DEBUG] Error reading localStorage:", error)
+									}
+
+									setEnablePersonaSystem(checked)
+
+									// setter 호출 후 바로 localStorage 확인
+									setTimeout(() => {
+										try {
+											const newStoredValue = localStorage.getItem("caret-enablePersonaSystem")
+											console.log("[PERSONA-DEBUG] After update - localStorage:", newStoredValue)
+										} catch (error) {
+											console.error("[PERSONA-DEBUG] Error reading localStorage after update:", error)
+										}
+									}, 100)
+
+									console.log("[PERSONA-DEBUG] setEnablePersonaSystem called with:", checked)
 								}}>
 								{t("persona.enablePersonaSystem", "common")}
 							</VSCodeCheckbox>

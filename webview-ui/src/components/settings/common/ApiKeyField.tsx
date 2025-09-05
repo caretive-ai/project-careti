@@ -1,5 +1,6 @@
 import { VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
-import { useTranslation } from "react-i18next"
+// CARET MODIFICATION: Use Caret's i18n system instead of react-i18next
+import { t } from "@/caret/utils/i18n"
 import { useDebouncedInput } from "../utils/useDebouncedInput"
 
 /**
@@ -18,18 +19,12 @@ interface ApiKeyFieldProps {
  * A reusable component for API key input fields with standard styling and help text for signing up for key
  */
 export const ApiKeyField = ({ initialValue, onChange, providerName, signupUrl, placeholder, helpText }: ApiKeyFieldProps) => {
-	const { t } = useTranslation()
+	// CARET MODIFICATION: Remove react-i18next usage
 	const [localValue, setLocalValue] = useDebouncedInput(initialValue, onChange)
 
-	const defaultPlaceholder = t("settings.apiKey.placeholder", "Enter API Key...")
+	const defaultPlaceholder = t("apiKey.placeholder", "common")
 	const an = /^[aeiou]/i.test(providerName)
-	const getYourKeyText = an
-		? t("settings.apiKey.getYourKeyAn", "You can get an {{providerName}} API key by signing up here.", {
-				providerName,
-			})
-		: t("settings.apiKey.getYourKeyA", "You can get a {{providerName}} API key by signing up here.", {
-				providerName,
-			})
+	const getYourKeyText = `You can get ${an ? "an" : "a"} ${providerName} API key by signing up here.`
 
 	return (
 		<div>
@@ -40,9 +35,7 @@ export const ApiKeyField = ({ initialValue, onChange, providerName, signupUrl, p
 				style={{ width: "100%" }}
 				type="password"
 				value={localValue}>
-				<span style={{ fontWeight: 500 }}>
-					{t("settings.apiKey.label", "{{providerName}} API Key", { providerName })}
-				</span>
+				<span style={{ fontWeight: 500 }}>{`${providerName} API Key`}</span>
 			</VSCodeTextField>
 			<p
 				style={{
@@ -50,11 +43,7 @@ export const ApiKeyField = ({ initialValue, onChange, providerName, signupUrl, p
 					marginTop: 3,
 					color: "var(--vscode-descriptionForeground)",
 				}}>
-				{helpText ||
-					t(
-						"settings.apiKey.helpText",
-						"This key is stored locally and only used to make API requests from this extension.",
-					)}
+				{helpText || t("apiKey.helpText", "common")}
 				{!localValue && signupUrl && (
 					<VSCodeLink
 						href={signupUrl}

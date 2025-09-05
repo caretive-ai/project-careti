@@ -375,9 +375,9 @@
 		"ariaLabel": {}
 	},
 	"persona": {
-		"management": "Persona Management",
-		"description": "Choose an AI persona that matches your coding style and preferences.",
-		"docs": "Docs",
+		"management": "ペルソナ管理",
+		"description": "AIエージェントに個性的なペルソナを与えてみましょう。",
+		"docs": "ドキュメント",
 		"availablePersonas": "Available Personas",
 		"selectDescription": "Select your desired persona or create a new one to customize your AI assistant.",
 		"select": "Select",

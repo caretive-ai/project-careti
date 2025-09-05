@@ -79,7 +79,7 @@
 	},
 	"persona": {
 		"management": "페르소나 관리",
-		"description": "코딩 스타일과 선호사항에 맞는 AI 페르소나를 선택하세요.",
+		"description": "AI에이전트에게 개성있는 페르소나를 부여해보세요.",
 		"docs": "문서",
 		"availablePersonas": "사용 가능한 페르소나",
 		"selectDescription": "원하는 페르소나를 선택하거나 새로운 페르소나를 생성하세요.",

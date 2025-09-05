@@ -62,10 +62,10 @@
 				}
 			},
 			"act": {
-				"label": "Act"
+				"label": "执行"
 			},
 			"plan": {
-				"label": "Plan"
+				"label": "计划"
 			}
 		},
 		"contextMenu": {

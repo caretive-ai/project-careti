@@ -27,9 +27,10 @@ export const BasetenProvider = ({ showModelOptions, isPopup, currentMode }: Base
 				{t("providers.baseten.description", "settings")}
 			</p>
 			<ApiKeyField
+				helpText={t("providers.baseten.apiKeyHelp", "settings", { providerName: "Baseten" })}
 				initialValue={apiConfiguration?.basetenApiKey || ""}
 				onChange={(value) => handleFieldChange("basetenApiKey", value)}
-				providerName="Baseten"
+				providerName={t("providers.baseten.name", "settings")}
 				signupUrl="https://app.baseten.co/settings/api_keys"
 			/>
 

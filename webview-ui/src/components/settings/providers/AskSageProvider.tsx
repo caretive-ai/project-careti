@@ -37,7 +37,7 @@ export const AskSageProvider = ({ showModelOptions, isPopup, currentMode }: AskS
 				helpText={t("askSageProvider.apiKeyHelpText", "settings")}
 				initialValue={apiConfiguration?.asksageApiKey || ""}
 				onChange={(value) => handleFieldChange("asksageApiKey", value)}
-				providerName="AskSage"
+				providerName={t("providers.asksage.name", "settings")}
 			/>
 
 			<DebouncedTextField

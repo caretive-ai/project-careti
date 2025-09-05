@@ -30,7 +30,15 @@ export const CerebrasProvider = ({ showModelOptions, isPopup, currentMode }: Cer
 	return (
 		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
 			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
-				{t("providers.cerebras.description", "settings")}
+				{t("providers.cerebras.sotaDescription", "settings")}
+			</p>
+			<ul style={{ fontSize: 11, color: "var(--vscode-descriptionForeground)", margin: 0, paddingLeft: 16 }}>
+				<li>{t("providers.cerebras.noSubscription", "settings")}</li>
+				<li>{t("providers.cerebras.contextWindow", "settings")}</li>
+				<li>{t("providers.cerebras.rateLimits", "settings")}</li>
+			</ul>
+			<p style={{ fontSize: 11, color: "var(--vscode-descriptionForeground)", margin: 0 }}>
+				{t("providers.cerebras.upgrade", "settings")}
 			</p>
 			<ApiKeyField
 				initialValue={apiConfiguration?.cerebrasApiKey || ""}

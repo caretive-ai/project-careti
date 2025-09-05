@@ -25,6 +25,7 @@ export const GlobalFileNames = {
 	cursorRulesFile: ".cursorrules",
 	windsurfRules: ".windsurfrules",
 	taskMetadata: "task_metadata.json",
+	persona: "persona.md", // CARET MODIFICATION: Added for persona feature
 }
 
 export async function getDocumentsPath(): Promise<string> {

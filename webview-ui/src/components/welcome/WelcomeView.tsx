@@ -138,13 +138,14 @@ const WelcomeView = () => {
 					overflowY: "auto",
 				}}>
 				<center style={{ marginBottom: "20px" }}>
-					{/* CARET MODIFICATION: Use agent_profile.png as the primary icon */}
+					{/* CARET MODIFICATION: Use persona profile image from CaretProviderWrapper */}
 					<img
 						alt={t("imageAlt.caretBanner", "common")}
-						src={(window as any).agentProfileImage || "D:/dev/caret-merging/assets/agent_profile.png"}
+						src={caretBanner}
 						style={{
-							width: "80px",
-							height: "80px",
+							width: "100%",
+							maxWidth: "300px",
+							height: "auto",
 							margin: "5px 0 15px",
 						}}
 					/>

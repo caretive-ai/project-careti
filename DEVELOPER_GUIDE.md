@@ -25,7 +25,7 @@ Caret은 [Cline](https://github.com/cline/cline) 프로젝트의 **Fork 기반 �
     ├── caret-src/             # Caret 확장 기능
     │   ├── extension.ts       # Caret 진입점 (src/ 모듈 활용)
     │   └── core/webview/      # Caret 전용 WebView Provider
-    ├── caret-assets/          # Caret 에셋 관리
+    ├── assets/          # Caret 에셋 관리
     │   ├── template_characters/ # AI 캐릭터 템플릿
     │   ├── rules/             # 기본 모드 및 룰 정의
     │   └── icons/             # 프로젝트 아이콘

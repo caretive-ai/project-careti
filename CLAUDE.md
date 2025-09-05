@@ -28,7 +28,7 @@ Before modifying ANY Cline original file:
 ### Caret Extensions
 - **caret-src/**: Caret-specific code (complete freedom)
 - **caret-docs/**: Caret documentation system
-- **caret-assets/**: Caret resources
+- **assets/**: Caret resources
 - **caret-scripts/**: Caret automation scripts
 
 ## TDD Development Guidelines
@@ -152,7 +152,7 @@ caret-src/            # Caret extensions (full freedom)
 └── utils/          # Caret-specific utilities
 
 caret-docs/          # Caret documentation (full freedom)
-caret-assets/        # Caret resources (full freedom)
+assets/        # Caret resources (full freedom)
 caret-scripts/       # Caret automation (full freedom)
 webview-ui/          # React frontend (Cline original, backup before changes)
 ```

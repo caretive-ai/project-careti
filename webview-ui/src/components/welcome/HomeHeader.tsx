@@ -1,5 +1,8 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
 import ClineLogoVariable from "@/assets/ClineLogoVariable"
+// CARET MODIFICATION: Import persona avatar for Home header
+import PersonaAvatar from "@/caret/components/PersonaAvatar"
+import { useCaretState } from "@/caret/context/CaretStateContext"
 import { t } from "@/caret/utils/i18n"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { UiServiceClient } from "@/services/grpc-client"
@@ -9,6 +12,9 @@ interface HomeHeaderProps {
 }
 
 const HomeHeader = ({ shouldShowQuickWins = false }: HomeHeaderProps) => {
+	// CARET MODIFICATION: Use persona avatar instead of Cline logo
+	const { personaProfile } = useCaretState()
+
 	const handleTakeATour = async () => {
 		try {
 			await UiServiceClient.openWalkthrough(EmptyRequest.create())
@@ -20,7 +26,12 @@ const HomeHeader = ({ shouldShowQuickWins = false }: HomeHeaderProps) => {
 	return (
 		<div className="flex flex-col items-center mb-5">
 			<div className="my-5">
-				<ClineLogoVariable className="size-16" />
+				{/* CARET MODIFICATION: Show persona avatar instead of Cline logo */}
+				{personaProfile ? (
+					<PersonaAvatar isThinking={false} personaProfile={personaProfile} size={64} />
+				) : (
+					<ClineLogoVariable className="size-16" />
+				)}
 			</div>
 			<div className="text-center flex items-center justify-center">
 				<h2 className="m-0 text-lg">{t("welcome.whatCanIDo", "common")}</h2>

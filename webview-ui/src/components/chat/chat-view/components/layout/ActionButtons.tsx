@@ -4,7 +4,7 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import type React from "react"
 import { useEffect, useMemo, useState } from "react"
 import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
-import { getButtonConfig } from "../../shared/buttonConfig"
+import { type ButtonActionType, getButtonConfig } from "../../shared/buttonConfig"
 import type { ChatState, MessageHandlers } from "../../types/chatTypes"
 
 interface ActionButtonsProps {
@@ -38,6 +38,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
 	const [primaryButtonText, setPrimaryButtonText] = useState<string | undefined>(undefined)
 	const [secondaryButtonText, setSecondaryButtonText] = useState<string | undefined>(undefined)
+	const [primaryAction, setPrimaryAction] = useState<ButtonActionType | undefined>(undefined)
+	const [secondaryAction, setSecondaryAction] = useState<ButtonActionType | undefined>(undefined)
 
 	const [enableButtons, setEnableButtons] = useState<boolean>(false)
 
@@ -62,6 +64,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 		setSendingDisabled(buttonConfig.sendingDisabled)
 		setPrimaryButtonText(buttonConfig.primaryText)
 		setSecondaryButtonText(buttonConfig.secondaryText)
+		setPrimaryAction(buttonConfig.primaryAction)
+		setSecondaryAction(buttonConfig.secondaryAction)
 	}, [lastMessage, mode, setSendingDisabled, t])
 
 	useEffect(() => {
@@ -71,6 +75,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 			setSendingDisabled(buttonConfig.sendingDisabled)
 			setPrimaryButtonText(buttonConfig.primaryText)
 			setSecondaryButtonText(buttonConfig.secondaryText)
+			setPrimaryAction(buttonConfig.primaryAction)
+			setSecondaryAction(buttonConfig.secondaryAction)
 		}
 	}, [messages, setSendingDisabled, mode, t])
 
@@ -116,10 +122,10 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 					className={`${secondaryButtonText ? "flex-1 mr-[6px]" : "flex-[2]"}`}
 					disabled={!enableButtons}
 					onClick={() => {
-						if (primaryButtonText === t("chat.startNewTask", "chat")) {
+						if (primaryAction === "new_task") {
 							messageHandlers.startNewTask()
-						} else {
-							messageHandlers.handleButtonClick(primaryButtonText, inputValue, selectedImages, selectedFiles)
+						} else if (primaryAction) {
+							messageHandlers.executeButtonAction(primaryAction, inputValue, selectedImages, selectedFiles)
 						}
 					}}>
 					{primaryButtonText}
@@ -131,7 +137,9 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 					className={`${primaryButtonText ? "flex-1 mr-[6px]" : "flex-[2]"}`}
 					disabled={!enableButtons}
 					onClick={() => {
-						messageHandlers.handleButtonClick(secondaryButtonText, inputValue, selectedImages, selectedFiles)
+						if (secondaryAction) {
+							messageHandlers.executeButtonAction(secondaryAction, inputValue, selectedImages, selectedFiles)
+						}
 					}}>
 					{secondaryButtonText}
 				</VSCodeButton>

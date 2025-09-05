@@ -28,7 +28,7 @@ Caret의 **페르소나 시스템**은 사전 정의된 AI 캐릭터 페르소�
 ### **파일 구조**
 
 ```
-caret-assets/
+assets/
 └── template_characters/
     ├── template_characters.json      # 🎯 페르소나 정의 데이터
     └── ... (페르소나 이미지)
@@ -70,7 +70,7 @@ webview-ui/
 
 ### **데이터 및 로직 흐름 (gRPC)**
 
-1.  **초기화 (`PersonaInitializer`)**: 확장 기능이 시작될 때, `persona-initializer.ts`가 실행되어 사용자의 설정 파일(`persona.md`)과 이미지가 없으면 `caret-assets`에서 기본값을 복사하여 생성합니다.
+1.  **초기화 (`PersonaInitializer`)**: 확장 기능이 시작될 때, `persona-initializer.ts`가 실행되어 사용자의 설정 파일(`persona.md`)과 이미지가 없으면 `assets`에서 기본값을 복사하여 생성합니다.
 
 2.  **초기 상태 조회 (`GetPersonaProfile`)**: 웹뷰가 로드되면, `CaretStateContext`가 gRPC를 통해 `GetPersonaProfile`을 호출합니다. 백엔드는 `persona.md` 파일과 `globalStorage`의 이미지 정보를 조합하여 현재 페르소나 프로필을 반환하고, UI에 초기 상태가 표시됩니다.
 
@@ -278,7 +278,36 @@ function PersonaManagement() {
 - **전문 분야 강화**: 페르소나별 특화 분야에서 더 나은 조언
 - **문제 해결 접근**: 페르소나 성격에 맞는 해결 방식 제안
 
-## 🏆 **구현 완료 현황 (2025-08-23)**
+## 🔧 **페르소나 시스템 활성화 조건**
+
+### **자동 활성화 조건**
+
+페르소나 시스템은 다음 조건에서 자동으로 활성화됩니다:
+
+1. **Caret 모드 시**: `modeSystem === "caret"`일 때 기본적으로 활성화
+2. **사용자 설정**: General Settings에서 "Enable Persona System" 토글 활성화
+3. **localStorage 지속성**: 사용자 설정이 브라우저 재시작 후에도 유지됨
+
+```typescript
+// ExtensionStateContext.tsx - 초기화 로직
+enablePersonaSystem: (() => {
+    try {
+        const stored = localStorage.getItem("caret-enablePersonaSystem")
+        return stored !== null ? JSON.parse(stored) : true // Caret 모드 기본값: true
+    } catch (error) {
+        console.warn("Failed to load persona system setting from localStorage:", error)
+        return true // 기본값: true
+    }
+})(),
+```
+
+### **페르소나 시스템 활성화 UI 위치**
+
+- **경로**: Settings → General → Enable Persona System (Caret 모드에서만 표시)
+- **동기화**: 설정 변경 시 즉시 localStorage에 저장되어 세션 간 지속성 확보
+- **조건부 표시**: Cline 모드에서는 숨김 처리
+
+## 🏆 **구현 완료 현황 (2025-09-05)**
 
 ### **✅ 완전히 구현된 핵심 기능들**
 
@@ -308,6 +337,53 @@ function PersonaManagement() {
 - **AI 응답 아바타**: 모든 AI 텍스트 응답에 페르소나 아바타 표시
 - **추론 상태 표시**: AI가 생각 중일 때 thinking 아바타 자동 표시
 - **레이아웃 최적화**: 아바타와 메시지 내용의 균형잡힌 배치
+- **질문 타입 처리**: `caretHasQuestion` (followup) 케이스에서 적절한 아이콘 표시
+
+#### **5. 최근 버그 수정 및 개선사항 (2025-09-05)**
+
+##### **🔧 해결된 핵심 버그들**
+
+**1. 페르소나 시스템 토글 상태 지속성 문제**
+- **문제**: 페르소나 시스템을 끄고 다시 열면 계속 켜져 있음
+- **원인**: localStorage에 저장하지만 초기화 시 localStorage에서 불러오지 않음
+- **해결**: ExtensionStateContext 초기화 시 localStorage 동기화 로직 추가
+
+```typescript
+// 수정된 초기화 로직
+enablePersonaSystem: (() => {
+    try {
+        const stored = localStorage.getItem("caret-enablePersonaSystem")
+        return stored !== null ? JSON.parse(stored) : true
+    } catch (error) {
+        return true // 안전한 기본값
+    }
+})(),
+```
+
+**2. 웰컴뷰 배너 이미지 엑박 문제**
+- **문제**: 웰컴뷰 상단 배너가 X 표시로 나타남
+- **원인**: CaretProviderWrapper에서 `window.caretBanner`로 주입했지만 ExtensionStateContext에서 `window.caretBannerImage`를 찾음
+- **해결**: 변수명 일치시켜 이미지 주입 시스템 안정화
+
+**3. 브라우저 승인 버튼 다국어 지원 문제** 
+- **문제**: 승인 버튼에 "button.approve"로 표시되고 클릭 시 "Unknown action" 에러
+- **원인**: ActionButtons에서 번역된 텍스트를 액션 핸들러에 전달했지만, 핸들러는 영어 텍스트만 인식
+- **해결**: cline-latest 패턴 참고하여 `ButtonActionType`을 직접 전달하는 방식으로 수정
+
+```typescript
+// 수정된 액션 처리
+onClick={() => {
+    if (primaryAction === "new_task") {
+        messageHandlers.startNewTask()
+    } else if (primaryAction) {
+        messageHandlers.executeButtonAction(primaryAction, inputValue, selectedImages, selectedFiles)
+    }
+}}
+```
+
+**4. ChatRow 페르소나 아바타 통합 문제**
+- **문제**: 복잡한 조건부 렌더링으로 인해 페르소나 아바타가 표시되지 않음
+- **해결**: git history에서 깨끗한 버전 복원 후 caret-compare 참고하여 PersonaAvatar 통합 (size=64, flex 레이아웃)
 
 ### **🔧 핵심 기술 구현**
 
@@ -461,13 +537,59 @@ AI 응답에 페르소나 아바타를 자연스럽게 통합한 flex 레이아�
 - **안정성**: 이미지 로딩 실패 시에도 기본 아바타로 안전한 fallback
 - **다국어 지원**: 사용자 언어 설정에 맞는 페르소나 설명
 
+## 🚀 **향후 개선 계획**
+
+### **🔮 고려 중인 개선사항**
+
+#### **1. 질문 타입 페르소나 아이콘 지원**
+
+현재 `caretHasQuestion` (followup) 케이스에서는 일반적인 `codicon-question` 아이콘을 사용하지만, 향후 페르소나별 질문 아이콘으로 개선 고려:
+
+```typescript
+// 현재 구현 (ChatRow.tsx:370)
+case "followup":
+    return [
+        <span className="codicon codicon-question" />,  // 일반 아이콘
+        <span>{t("caretHasQuestion", "chat")}:</span>,
+    ]
+
+// 개선 계획: 페르소나별 질문 아이콘
+case "followup":
+    return [
+        <PersonaAvatar 
+            personaProfile={personaProfile} 
+            isThinking={false} 
+            size={32} 
+            variant="question"  // 새로운 variant 타입
+        />,
+        <span>{t("caretHasQuestion", "chat")}:</span>,
+    ]
+```
+
+**구현 시 고려사항**:
+- 페르소나별 질문 표정 이미지 추가 필요
+- 기존 thinking/normal 상태 외 question 상태 지원
+- UI 일관성 유지 (크기, 배치)
+
+#### **2. 애니메이션 효과**
+
+- 페르소나 아바타 전환 시 부드러운 fade 효과
+- thinking 상태에서 맥박 애니메이션
+- 질문 상태에서 물음표 아이콘 깜빡임 효과
+
+#### **3. 접근성 개선**
+
+- 페르소나 아바타에 적절한 alt 텍스트
+- 키보드 네비게이션 지원
+- 스크린 리더 호환성
+
 ---
 
 **작성자**: Alpha (AI Assistant)  
 **검토자**: Luke (Project Owner)  
 **작성일**: 2025-08-16  
-**최종 완료**: 2025-08-23 18:00 KST  
-**상태**: 🟢 **완료** (페르소나 시스템 모든 핵심 기능 구현 완성)
+**최종 업데이트**: 2025-09-05 22:30 KST  
+**상태**: 🟢 **완료** (페르소나 시스템 모든 핵심 기능 구현 + 버그 수정 완성)
 
 **구현 완료 항목**:
 

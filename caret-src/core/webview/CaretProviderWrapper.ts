@@ -78,8 +78,9 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 				],
 			}
 
-			// Inject template character images as Base64 data URIs following caret-main pattern
+			// Inject template character images and banner as Base64 data URIs following caret-main pattern
 			await this.injectTemplateImagesAsBase64(webviewView)
+			await this.injectBannerImageAsBase64(webviewView)
 
 			Logger.info("[CaretProviderWrapper] Webview enhanced with Caret features - template images injected as Base64")
 		} catch (error) {
@@ -231,6 +232,42 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 	}
 
 	/**
+	 * Inject banner image as Base64 data URI
+	 */
+	private async injectBannerImageAsBase64(webviewView: vscode.WebviewView): Promise<void> {
+		try {
+			const bannerPath = path.join(this.context.extensionUri.fsPath, "assets", "welcome-banner.webp")
+			if (existsSync(bannerPath)) {
+				const imageBuffer = await fs.readFile(bannerPath)
+				const base64 = imageBuffer.toString("base64")
+				const dataUri = `data:image/webp;base64,${base64}`
+
+				let html = webviewView.webview.html
+
+				// Inject banner image as window variable
+				let imageInjectionScript = `\n                    window.caretBannerImage = "${dataUri}";\n`
+
+				// Find where to inject the script - look for existing window assignments
+				if (html.includes("window.clineClientId")) {
+					// Inject right after existing window assignments
+					html = html.replace(/(window\.clineClientId = "[^"]*";)/, `$1${imageInjectionScript}`)
+					console.log(`[CaretProviderWrapper] Injected banner image after window.clineClientId`)
+				} else if (html.includes("</head>")) {
+					// Fallback: inject in head
+					const scriptTag = `<script>${imageInjectionScript}</script>`
+					html = html.replace("</head>", `${scriptTag}</head>`)
+					console.log(`[CaretProviderWrapper] Injected banner image in head`)
+				}
+
+				webviewView.webview.html = html
+				Logger.info(`[CaretProviderWrapper] Banner image injected successfully (${imageBuffer.length} bytes)`)
+			}
+		} catch (error) {
+			Logger.error(`[CaretProviderWrapper] Failed to inject banner image: ${error}`)
+		}
+	}
+
+	/**
 	 * Convert asset:// URI to Base64 data URI (following file-storage-and-image-loading-guide.mdx)
 	 */
 	private async convertImageToBase64(assetUri: string): Promise<string> {
@@ -239,7 +276,7 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 		}
 
 		try {
-			// Parse asset path - now JSON uses "asset:/caret-assets/template_characters/..."
+			// Parse asset path - now JSON uses "asset:/assets/template_characters/..."
 			let cleanPath = assetUri.replace("asset://", "").replace("asset:/", "")
 
 			const imagePath = path.join(this.context.extensionUri.fsPath, cleanPath)

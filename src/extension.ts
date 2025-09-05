@@ -18,6 +18,9 @@ import { cleanupTestMode, initializeTestMode } from "./services/test/TestMode"
 import { WebviewProviderType } from "./shared/webview/types"
 import "./utils/path" // necessary to have access to String.prototype.toPosix
 
+// CARET MODIFICATION: Import CaretProviderWrapper for image injection and PersonaInitializer
+import { CaretProviderWrapper } from "@caret/core/webview/CaretProviderWrapper"
+import { PersonaInitializer } from "@caret/services/persona/persona-initializer"
 import type { ExtensionContext } from "vscode"
 import { HostProvider } from "@/hosts/host-provider"
 import { vscodeHostBridgeClient } from "@/hosts/vscode/hostbridge/client/host-grpc-client"
@@ -51,9 +54,20 @@ https://github.com/microsoft/vscode-webview-ui-toolkit-samples/tree/main/framewo
 export async function activate(context: vscode.ExtensionContext) {
 	setupHostProvider(context)
 
-	const sidebarWebview = (await initialize(context)) as VscodeWebviewProvider
+	// CARET MODIFICATION: Wrap with CaretProviderWrapper for image injection
+	const clineWebview = (await initialize(context)) as VscodeWebviewProvider
+	const sidebarWebview = new CaretProviderWrapper(context, clineWebview)
 
 	Logger.log("Caret extension activated")
+
+	// CARET MODIFICATION: Initialize persona system on extension activation
+	try {
+		const personaInitializer = new PersonaInitializer(context)
+		await personaInitializer.initialize()
+		Logger.log("Persona system initialized successfully")
+	} catch (error) {
+		Logger.error(`Failed to initialize persona system: ${error}`)
+	}
 
 	const testModeWatchers = await initializeTestMode(sidebarWebview)
 	// Initialize test mode and add disposables to context

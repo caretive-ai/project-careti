@@ -2,7 +2,9 @@ import { anthropicModels, geminiDefaultModelId, geminiModels } from "@shared/api
 import { Mode } from "@shared/storage/types"
 import { VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react"
 import { memo, useCallback, useMemo, useState } from "react"
+import { Trans } from "react-i18next"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { getModeSpecificFields } from "./utils/providerUtils"
 import { useApiConfigurationHandlers } from "./utils/useApiConfigurationHandlers"
@@ -140,14 +142,18 @@ const ThinkingBudgetSlider = ({ maxBudget, currentMode }: ThinkingBudgetSliderPr
 	return (
 		<Container>
 			<VSCodeCheckbox checked={isEnabled} onChange={handleToggleChange}>
-				Enable extended thinking
+				{t("settings.thinkingBudget.enable")}
 			</VSCodeCheckbox>
 
 			{isEnabled && (
 				<>
 					<LabelContainer>
 						<Label htmlFor="thinking-budget-slider">
-							<strong>Budget:</strong> {localValue.toLocaleString()} tokens
+							<Trans
+								components={{ strong: <strong /> }}
+								i18nKey="settings.thinkingBudget.budgetText"
+								values={{ value: localValue.toLocaleString() }}
+							/>
 						</Label>
 					</LabelContainer>
 					<RangeInput
@@ -155,7 +161,7 @@ const ThinkingBudgetSlider = ({ maxBudget, currentMode }: ThinkingBudgetSliderPr
 						$min={DEFAULT_MIN_VALID_TOKENS}
 						$value={localValue}
 						aria-describedby="thinking-budget-description"
-						aria-label={`Thinking budget: ${localValue.toLocaleString()} tokens`}
+						aria-label={t("settings.thinkingBudget.ariaLabel", { value: localValue.toLocaleString() } as any)}
 						aria-valuemax={maxSliderValue}
 						aria-valuemin={DEFAULT_MIN_VALID_TOKENS}
 						aria-valuenow={localValue}
@@ -170,9 +176,7 @@ const ThinkingBudgetSlider = ({ maxBudget, currentMode }: ThinkingBudgetSliderPr
 						value={localValue}
 					/>
 
-					<Description id="thinking-budget-description">
-						Higher budgets may allow you to achieve more comprehensive and nuanced reasoning
-					</Description>
+					<Description id="thinking-budget-description">{t("settings.thinkingBudget.description")}</Description>
 				</>
 			)}
 		</Container>

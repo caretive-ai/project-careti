@@ -25,7 +25,7 @@ Caret adopts a **Fork-based architecture** from the [Cline](https://github.com/c
     ├── caret-src/             # Caret extension features
     │   ├── extension.ts       # Caret entry point (utilizes src/ modules)
     │   └── core/webview/      # Caret-specific WebView Provider
-    ├── caret-assets/          # Caret asset management
+    ├── assets/                # Caret asset management
     │   ├── template_characters/ # AI character templates
     │   ├── rules/             # Default mode and rule definitions
     │   └── icons/             # Project icons

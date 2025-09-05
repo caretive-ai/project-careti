@@ -1,7 +1,7 @@
 import { Tooltip } from "@heroui/react"
 import { ClineMessage } from "@shared/ExtensionMessage"
 import React from "react"
-import { t } from "@/caret/utils/i18n"
+import { useTranslation } from "react-i18next"
 import { getColor } from "./util"
 
 interface TaskTimelineTooltipProps {
@@ -10,6 +10,7 @@ interface TaskTimelineTooltipProps {
 }
 
 const TaskTimelineTooltip = ({ message, children }: TaskTimelineTooltipProps) => {
+	const { t } = useTranslation()
 	const getMessageDescription = (message: ClineMessage): string => {
 		if (message.type === "say") {
 			switch (message.say) {

@@ -1,6 +1,7 @@
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useEffect, useRef, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { BrowserServiceClient, UiServiceClient } from "../../services/grpc-client"
 
@@ -150,7 +151,7 @@ export const BrowserSettingsMenu = () => {
 				className="browser-info-icon"
 				onClick={toggleInfoPopover}
 				style={{ marginRight: "4px" }}
-				title="Browser connection info">
+				title={t("browser.connectionInfo")}>
 				<i
 					className={`codicon ${getIconClass()}`}
 					style={{
@@ -170,11 +171,11 @@ export const BrowserSettingsMenu = () => {
 						border: "1px solid var(--vscode-widget-border)",
 						boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
 					}}>
-					<h4 style={{ margin: "0 0 8px 0" }}>Browser Connection</h4>
+					<h4 style={{ margin: "0 0 8px 0" }}>{t("browser.popover.title")}</h4>
 					{/* InfoRow - Status row container */}
 					<div className="flex flex-wrap whitespace-nowrap mb-1">
 						{/* InfoLabel - Fixed-width label */}
-						<div className="flex-none w-[90px] font-medium">Status:</div>
+						<div className="flex-none w-[90px] font-medium">{t("browser.popover.statusLabel")}</div>
 						{/* InfoValue - Flexible value container */}
 						<div
 							className="flex-1 break-words"
@@ -183,23 +184,25 @@ export const BrowserSettingsMenu = () => {
 									? "var(--vscode-charts-green)"
 									: "var(--vscode-errorForeground)",
 							}}>
-							{connectionInfo.isConnected ? "Connected" : "Disconnected"}
+							{connectionInfo.isConnected ? t("browser.popover.connected") : t("browser.popover.disconnected")}
 						</div>
 					</div>
 					{connectionInfo.isConnected && (
 						// InfoRow - Type row container
 						<div className="flex flex-wrap whitespace-nowrap mb-1">
 							{/* InfoLabel - Fixed-width label */}
-							<div className="flex-none w-[90px] font-medium">Type:</div>
+							<div className="flex-none w-[90px] font-medium">{t("browser.popover.typeLabel")}</div>
 							{/* InfoValue - Flexible value container */}
-							<div className="flex-1 break-words">{connectionInfo.isRemote ? "Remote" : "Local"}</div>
+							<div className="flex-1 break-words">
+								{connectionInfo.isRemote ? t("browser.popover.remote") : t("browser.popover.local")}
+							</div>
 						</div>
 					)}
 					{connectionInfo.isConnected && connectionInfo.isRemote && connectionInfo.host && (
 						// InfoRow - Remote host row container
 						<div className="flex flex-wrap whitespace-nowrap mb-1">
 							{/* InfoLabel - Fixed-width label */}
-							<div className="flex-none w-[90px] font-medium">Remote Host:</div>
+							<div className="flex-none w-[90px] font-medium">{t("browser.popover.remoteHostLabel")}</div>
 							{/* InfoValue - Flexible value container */}
 							<div className="flex-1 break-words">{connectionInfo.host}</div>
 						</div>

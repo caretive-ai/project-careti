@@ -11,7 +11,7 @@ import { PersonaTemplateSelector } from "./PersonaTemplateSelector"
 // - It consumes `personaProfile` and `updatePersona` from the `useCaretState` hook.
 // - This decouples the component from the core `ExtensionStateContext` and centralizes
 //   persona logic within its own context, improving modularity and maintainability.
-// Ported from caret-compare with path changes: /caret-assets/ → /assets/ (already applied in JSON)
+// Ported from caret-compare with path changes: /assets/ → /assets/ (already applied in JSON)
 
 interface PersonaManagementProps {
 	className?: string

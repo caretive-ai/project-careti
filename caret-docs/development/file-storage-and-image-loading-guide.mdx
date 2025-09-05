@@ -36,7 +36,7 @@ const convertImageUri = async (assetUri: string): Promise<string> => {
 
 	try {
 		// 파일 경로 구성
-		const imagePath = path.join(context.extensionPath, "caret-assets", assetUri.replace("asset:/assets/", ""))
+		const imagePath = path.join(context.extensionPath, "assets", assetUri.replace("asset:/assets/", ""))
 
 		// Base64 변환
 		const imageBuffer = await fs.readFile(imagePath)
@@ -81,7 +81,7 @@ const globalStoragePath = path.join(context.globalStorageUri.fsPath, "personas",
 
 | 이미지 타입              | 저장 위치                           | 용도                            | 접근 방법                  |
 | ------------------------ | ----------------------------------- | ------------------------------- | -------------------------- |
-| **템플릿 캐릭터 이미지** | `caret-assets/template_characters/` | 고정된 템플릿 캐릭터 이미지     | Extension path + 파일명    |
+| **템플릿 캐릭터 이미지** | `assets/template_characters/` | 고정된 템플릿 캐릭터 이미지     | Extension path + 파일명    |
 | **현재 페르소나 이미지** | `globalStorage/personas/`           | 사용자가 업로드한 현재 페르소나 | GlobalStorage URI + 파일명 |
 | **사용자 업로드 이미지** | `globalStorage/personas/`           | 사용자 커스텀 이미지            | GlobalStorage URI + 파일명 |
 
@@ -90,8 +90,8 @@ const globalStoragePath = path.join(context.globalStorageUri.fsPath, "personas",
 ```typescript
 const loadTemplateImage = async (templateImageUri: string): Promise<string> => {
 	if (templateImageUri.startsWith("asset:/assets/template_characters/")) {
-		// 템플릿 이미지는 caret-assets에서 로드
-		const imagePath = path.join(context.extensionPath, "caret-assets", templateImageUri.replace("asset:/assets/", ""))
+		// 템플릿 이미지는 assets에서 로드
+		const imagePath = path.join(context.extensionPath, "assets", templateImageUri.replace("asset:/assets/", ""))
 		return await convertToBase64(imagePath)
 	}
 	return templateImageUri

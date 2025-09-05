@@ -3,8 +3,8 @@ import { GetTaskHistoryRequest, TaskFavoriteRequest } from "@shared/proto/cline/
 import { VSCodeButton, VSCodeCheckbox, VSCodeRadio, VSCodeRadioGroup, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse, { FuseResult } from "fuse.js"
 import { memo, useCallback, useEffect, useMemo, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Virtuoso } from "react-virtuoso"
-import { t } from "@/caret/utils/i18n"
 import DangerButton from "@/components/common/DangerButton"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { TaskServiceClient } from "@/services/grpc-client"
@@ -46,6 +46,7 @@ const CustomFilterRadio = ({ checked, onChange, icon, label }: CustomFilterRadio
 }
 
 const HistoryView = ({ onDone }: HistoryViewProps) => {
+	const { t } = useTranslation()
 	const extensionStateContext = useExtensionState()
 	const { taskHistory, onRelinquishControl } = extensionStateContext
 	const [searchQuery, setSearchQuery] = useState("")
@@ -719,7 +720,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 							}}
 							style={{ width: "100%" }}>
 							{t("history.deleteSelected", "history", {
-								count: selectedItems.length > 1 ? selectedItems.length : "",
+								count: selectedItems.length > 1 ? selectedItems.length : undefined,
 								size: selectedItemsSize > 0 ? ` (${formatSize(selectedItemsSize)})` : "",
 							})}
 						</DangerButton>
@@ -744,19 +745,22 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 	)
 }
 
-const ExportButton = ({ itemId }: { itemId: string }) => (
-	<VSCodeButton
-		appearance="icon"
-		className="export-button"
-		onClick={(e) => {
-			e.stopPropagation()
-			TaskServiceClient.exportTaskWithId(StringRequest.create({ value: itemId })).catch((err) =>
-				console.error("Failed to export task:", err),
-			)
-		}}>
-		<div style={{ fontSize: "11px", fontWeight: 500, opacity: 1 }}>{t("history.export", "history")}</div>
-	</VSCodeButton>
-)
+const ExportButton = ({ itemId }: { itemId: string }) => {
+	const { t } = useTranslation()
+	return (
+		<VSCodeButton
+			appearance="icon"
+			className="export-button"
+			onClick={(e) => {
+				e.stopPropagation()
+				TaskServiceClient.exportTaskWithId(StringRequest.create({ value: itemId })).catch((err) =>
+					console.error("Failed to export task:", err),
+				)
+			}}>
+			<div style={{ fontSize: "11px", fontWeight: 500, opacity: 1 }}>{t("history.export", "history")}</div>
+		</VSCodeButton>
+	)
+}
 
 // https://gist.github.com/evenfrost/1ba123656ded32fb7a0cd4651efd4db0
 export const highlight = (fuseSearchResult: FuseResult<any>[], highlightClassName: string = "history-item-highlight") => {

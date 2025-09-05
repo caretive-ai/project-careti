@@ -2,7 +2,7 @@
 [Read this document in English](./README.md) | [한국어로 읽기](./README.ko.md) | [日本語で読む](./README.ja.md) | [阅读中文版](./README.zh-cn.md)
 
 <div align="center">
-  <img src="caret-assets/icons/icon.png" alt="Caret icon" width="128">
+  <img src="assets/icons/icon.png" alt="Caret icon" width="128">
   <h1>Caret: Your New AI Companion</h1>
   <p><strong>Adding Cursor's Flexibility to Cline's Transparency</strong></p>
   <p>
@@ -42,16 +42,16 @@ Caret is more than just an AI coding tool; it's a VS Code extension that aims to
 Beyond Cline's somewhat rigid Plan/Act mode, Caret offers **Chatbot/Agent Mode**—flexible like Cursor's Ask/Agent, but more intuitive than 'Ask'. We haven't just changed the interaction style; we've **improved the system prompts** to enhance both AI response performance and demeanor. Through [verified experiments](./caret-docs/reports/experiment/json_caret_performance_test_20250713/comprehensive-performance-report-20250717.md), we've achieved **50% token savings** and **20% API cost reduction**, enabling smarter and more cost-predictable AI collaboration.
 
 ### 2. Create Your Own AI Companion: Custom Personas
-<img src="caret-assets/template_characters/caret_illust.png" alt="Caret Persona Illustration" width="300"/>
+<img src="assets/template_characters/caret_illust.png" alt="Caret Persona Illustration" width="300"/>
 
 Add joy to your coding with Caret's pre-prepared **template personas** like K-POP idols, OS-tans, and more. You can **register your own AI agent name and profile image** to create a visually vibrant development environment.
 
 **Default Personas:**
-*   <img src="caret-assets/template_characters/caret.png" width="24" align="center"/> **Caret**: A friendly robot friend who loves coding and helps developers.
-*   <img src="caret-assets/template_characters/sarang.png" width="24" align="center"/> **Oh Sarang**: A K-pop idol and a tsundere engineering girl who helps you navigate between logic and emotion.
-*   <img src="caret-assets/template_characters/ichika.png" width="24" align="center"/> **Madobe Ichika**: A neat and reliable assistant inspired by Windows 11.
-*   <img src="caret-assets/template_characters/cyan.png" width="24" align="center"/> **Cyan Macin**: A concise and efficient helper modeled after macOS.
-*   <img src="caret-assets/template_characters/ubuntu.png" width="24" align="center"/> **Tando Ubuntu**: A warm collaborator who solves problems with an open-source spirit.
+*   <img src="assets/template_characters/caret.png" width="24" align="center"/> **Caret**: A friendly robot friend who loves coding and helps developers.
+*   <img src="assets/template_characters/sarang.png" width="24" align="center"/> **Oh Sarang**: A K-pop idol and a tsundere engineering girl who helps you navigate between logic and emotion.
+*   <img src="assets/template_characters/ichika.png" width="24" align="center"/> **Madobe Ichika**: A neat and reliable assistant inspired by Windows 11.
+*   <img src="assets/template_characters/cyan.png" width="24" align="center"/> **Cyan Macin**: A concise and efficient helper modeled after macOS.
+*   <img src="assets/template_characters/ubuntu.png" width="24" align="center"/> **Tando Ubuntu**: A warm collaborator who solves problems with an open-source spirit.
 
 ### 3. Coding Without Language Barriers: Full Multilingual Support
 Other AI tools often overlook multilingual support, but Caret solves this. With an **i18n-based overlay architecture**, developers unfamiliar with English can fully utilize all features in their native languages, including **Korean, Japanese, and Chinese**.

@@ -1,7 +1,7 @@
 [Read this document in English](./README.md) | [한국어로 읽기](./README.ko.md) | [日本語で読む](./README.ja.md) | [阅读中文版](./README.zh-cn.md)
 
 <div align="center">
-  <img src="caret-assets/icons/icon.png" alt="Caret icon" width="128">
+  <img src="assets/icons/icon.png" alt="Caret icon" width="128">
   <h1>Caret: あなたの新しいAIパートナー</h1>
   <p><strong>Clineの透明性にCursorの柔軟性を加える</strong></p>
   <p>
@@ -42,16 +42,16 @@ Caretは単なるAIコーディングツールを超え、**開発者と共に�
 Clineのやや硬直したPlan/Actモードを超え、Cursorの Ask/Agent方式のように柔軟で、かつ'Ask'という用語よりも直感的な**Chatbot/Agentモード**を提供します。また、行動様式を変えただけでなく、**独自に改善したシステムプロンプト**によってAIの応答性能と態度を向上させました。[実験検証](./caret-docs/reports/experiment/json_caret_performance_test_20250713/comprehensive-performance-report-20250717.md)により、**50%のトークン削減**と**20%のAPIコスト削減**を達成し、より経済的で予測可能なAI協業を提供します。
 
 ### 2. 自分だけのAIパートナーを作る: カスタムペルソナ
-<img src="caret-assets/template_characters/caret_illust.png" alt="Caret Persona Illustration" width="300"/>
+<img src="assets/template_characters/caret_illust.png" alt="Caret Persona Illustration" width="300"/>
 
 Caretの基本キャラクター、K-POPアイドル、OS-tanなど、あらかじめ用意された**テンプレートペルソナ**でコーディングに楽しさを加えましょう。自分だけのAIエージェント名と**プロフィール画像を登録**して、視覚的に生き生きとした開発環境を作ることができます。
 
 **基本提供ペルソナ:**
-*   <img src="caret-assets/template_characters/caret.png" width="24" align="center"/> **キャレット**: コーディングが大好きで開発者を支援するフレンドリーなロボット。
-*   <img src="caret-assets/template_characters/sarang.png" width="24" align="center"/> **オサラン**: K-popアイドルであり、論理と感情の間であなたを助けるツンデレ工学女子。
-*   <img src="caret-assets/template_characters/ichika.png" width="24" align="center"/> **窓辺イチカ**: Windows 11をモチーフにした、きちんとして頼りになるアシスタント。
-*   <img src="caret-assets/template_characters/cyan.png" width="24" align="center"/> **シアン・マッキン**: macOSをモチーフにした、簡潔で効率的なヘルパー。
-*   <img src="caret-assets/template_characters/ubuntu.png" width="24" align="center"/> **丹土ウブントゥ**: オープンソースの精神で共に問題を解決する温かい協力者。
+*   <img src="assets/template_characters/caret.png" width="24" align="center"/> **キャレット**: コーディングが大好きで開発者を支援するフレンドリーなロボット。
+*   <img src="assets/template_characters/sarang.png" width="24" align="center"/> **オサラン**: K-popアイドルであり、論理と感情の間であなたを助けるツンデレ工学女子。
+*   <img src="assets/template_characters/ichika.png" width="24" align="center"/> **窓辺イチカ**: Windows 11をモチーフにした、きちんとして頼りになるアシスタント。
+*   <img src="assets/template_characters/cyan.png" width="24" align="center"/> **シアン・マッキン**: macOSをモチーフにした、簡潔で効率的なヘルパー。
+*   <img src="assets/template_characters/ubuntu.png" width="24" align="center"/> **丹土ウブントゥ**: オープンソースの精神で共に問題を解決する温かい協力者。
 
 ### 3. 言語の壁のないコーディング: 完全な多言語対応
 他のAIツールが見落としていた多言語対応、Caretが解決します。**i18nベースのオーバーレイ構造**により、英語に不慣れな開発者も**日本語、韓国語、中国語など自分の母国語**ですべての機能を完全に使用できます。

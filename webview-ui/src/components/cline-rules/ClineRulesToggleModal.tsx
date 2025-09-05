@@ -10,11 +10,11 @@ import {
 } from "@shared/proto/cline/file"
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
 // CARET MODIFICATION: Import PersonaManagement for persona system integration
 import PersonaManagement from "@/caret/components/PersonaManagement"
-import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import Tooltip from "@/components/common/Tooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -41,6 +41,7 @@ const ClineRulesToggleModal: React.FC = () => {
 		modeSystem,
 		enablePersonaSystem,
 	} = useExtensionState()
+	const { t } = useTranslation()
 	const [isVisible, setIsVisible] = useState(false)
 	const buttonRef = useRef<HTMLDivElement>(null)
 	const modalRef = useRef<HTMLDivElement>(null)

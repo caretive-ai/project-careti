@@ -587,7 +587,7 @@ export const ModelDescriptionMarkdown = memo(
 						paddingRight: 2,
 					}}
 					onClick={() => setIsExpanded(false)}>
-					See less
+					{t("common.seeLess", "See less")}
 				</div>
 			)} */}
 			</StyledMarkdown>

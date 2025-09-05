@@ -1,6 +1,7 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { HistoryIcon, PlusIcon, SettingsIcon, UserCircleIcon } from "lucide-react"
 import { useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import { TaskServiceClient } from "@/services/grpc-client"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import HeroTooltip from "../common/HeroTooltip"
@@ -14,14 +15,15 @@ const McpServerIcon = ({ className, size }: { className?: string; size?: number 
 )
 
 export const Navbar = () => {
+	const { t } = useTranslation()
 	const { navigateToHistory, navigateToSettings, navigateToAccount, navigateToMcp, navigateToChat } = useExtensionState()
 
 	const SETTINGS_TABS = useMemo(
 		() => [
 			{
 				id: "chat",
-				name: "Chat",
-				tooltip: "New Task",
+				name: t("navbar.chat", "Chat"),
+				tooltip: t("navbar.newTaskTooltip", "New Task"),
 				icon: PlusIcon,
 				navigate: () => {
 					// Close the current task, then navigate to the chat view
@@ -34,34 +36,34 @@ export const Navbar = () => {
 			},
 			{
 				id: "mcp",
-				name: "MCP",
-				tooltip: "MCP Servers",
+				name: t("navbar.mcp", "MCP"),
+				tooltip: t("navbar.mcpServersTooltip", "MCP Servers"),
 				icon: McpServerIcon,
 				navigate: navigateToMcp,
 			},
 			{
 				id: "history",
-				name: "History",
-				tooltip: "History",
+				name: t("navbar.history", "History"),
+				tooltip: t("navbar.historyTooltip", "History"),
 				icon: HistoryIcon,
 				navigate: navigateToHistory,
 			},
 			{
 				id: "account",
-				name: "Account",
-				tooltip: "Account",
+				name: t("navbar.account", "Account"),
+				tooltip: t("navbar.accountTooltip", "Account"),
 				icon: UserCircleIcon,
 				navigate: navigateToAccount,
 			},
 			{
 				id: "settings",
-				name: "Settings",
-				tooltip: "Settings",
+				name: t("navbar.settings", "Settings"),
+				tooltip: t("navbar.settingsTooltip", "Settings"),
 				icon: SettingsIcon,
 				navigate: navigateToSettings,
 			},
 		],
-		[navigateToAccount, navigateToChat, navigateToHistory, navigateToMcp, navigateToSettings],
+		[t, navigateToAccount, navigateToChat, navigateToHistory, navigateToMcp, navigateToSettings],
 	)
 
 	return (

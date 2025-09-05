@@ -8,7 +8,7 @@
 **Cline 소스코드와 최소한의 겹침으로 독립적인 Caret 구조 달성**
 
 - **Cline 코드 보존**: 원본 최소 수정으로 호환성 유지
-- **독립적 Caret 모듈**: `caret-src/`, `caret-assets/` 중심의 분리된 구조
+- **독립적 Caret 모듈**: `caret-src/`, `assets/` 중심의 분리된 구조
 - **간편한 향후 업데이트**: Cline 새 버전을 쉽게 머징할 수 있는 구조
 - **충돌 최소화**: 머징 시 충돌 포인트 최소화
 
@@ -76,7 +76,7 @@
 #### **🎯 Level 1: 완전 독립 모듈 (권장)**
 ```
 caret-src/           # Caret 전용 로직
-caret-assets/        # Caret 전용 리소스
+assets/        # Caret 전용 리소스
 webview-ui/src/caret/ # Caret 전용 UI
 ```
 - **장점**: Cline 코드와 완전 분리, 충돌 없음

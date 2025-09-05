@@ -452,6 +452,9 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		enablePersonaSystem: enablePersonaSystem ?? modeSystem === "caret",
 		currentPersona: currentPersona,
 		personaProfile: personaProfile,
+		// CARET MODIFICATION: Persona image storage for persona system
+		caret_persona_avatar: undefined,
+		caret_persona_thinking_avatar: undefined,
 	}
 }
 

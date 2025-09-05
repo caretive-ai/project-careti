@@ -240,6 +240,16 @@ export const ExtensionStateContextProvider: React.FC<{
 		useAutoCondense: false,
 		// CARET MODIFICATION: Initialize caretBanner with actual banner image
 		caretBanner: "/assets/welcome-banner.webp",
+		// CARET MODIFICATION: Initialize persona system setting from localStorage
+		enablePersonaSystem: (() => {
+			try {
+				const stored = localStorage.getItem("caret-enablePersonaSystem")
+				return stored !== null ? JSON.parse(stored) : true // Default to true for Caret mode
+			} catch (error) {
+				console.warn("Failed to load persona system setting from localStorage:", error)
+				return true // Default to true
+			}
+		})(),
 	})
 	const [didHydrateState, setDidHydrateState] = useState(false)
 	const [showWelcome, setShowWelcome] = useState(false)
@@ -690,8 +700,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		mcpMarketplaceCatalog,
 		totalTasksSize,
 		availableTerminalProfiles,
-		// CARET MODIFICATION: Add caretBanner to context value
-		caretBanner: state.caretBanner || "🐰 Caret",
+		// CARET MODIFICATION: Add caretBanner to context value with window injection fallback
+		caretBanner: (window as any).caretBannerImage || state.caretBanner || "/assets/welcome-banner.webp",
 
 		// CARET MODIFICATION: Persona system values (Caret 모드에서는 기본값 true)
 		enablePersonaSystem: state.enablePersonaSystem !== undefined ? state.enablePersonaSystem : state.modeSystem === "caret",

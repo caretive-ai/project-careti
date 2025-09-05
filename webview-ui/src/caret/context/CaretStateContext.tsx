@@ -14,7 +14,7 @@ declare global {
 // CARET MODIFICATION: This entire file is a Caret addition ported from caret-compare.
 // It creates a dedicated React Context for managing Caret-specific state,
 // ensuring separation from Cline's core ExtensionStateContext.
-// Path changes: /caret-assets/ → /assets/ handled in asset conversion functions.
+// Path changes: /assets/ → /assets/ handled in asset conversion functions.
 
 export interface FullPersonaProfile {
 	name: string

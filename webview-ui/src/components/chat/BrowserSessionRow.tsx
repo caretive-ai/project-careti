@@ -4,6 +4,7 @@ import { StringRequest } from "@shared/proto/cline/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import deepEqual from "fast-deep-equal"
 import React, { CSSProperties, memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useSize } from "react-use"
 import styled from "styled-components"
 import { BrowserSettingsMenu } from "@/components/browser/BrowserSettingsMenu"
@@ -111,6 +112,7 @@ const headerStyle: CSSProperties = {
 }
 
 const BrowserSessionRow = memo((props: BrowserSessionRowProps) => {
+	const { t } = useTranslation()
 	const { messages, isLast, onHeightChange, lastModifiedMessage, onSetQuote } = props
 	const { browserSettings } = useExtensionState()
 	const prevHeightRef = useRef(0)
@@ -365,7 +367,9 @@ const BrowserSessionRow = memo((props: BrowserSessionRowProps) => {
 					<span className="codicon codicon-inspect" style={browserIconStyle}></span>
 				)}
 				<span style={approveTextStyle}>
-					{isAutoApproved ? "Cline is using the browser:" : "Cline wants to use the browser:"}
+					{isAutoApproved
+						? t("chat.caretIsUsingBrowser", "Caret is using the browser:")
+						: t("chat.caretWantsToUseBrowser", "Caret wants to use the browser:")}
 				</span>
 			</div>
 			<div
@@ -406,7 +410,7 @@ const BrowserSessionRow = memo((props: BrowserSessionRowProps) => {
 					}}>
 					{displayState.screenshot ? (
 						<img
-							alt="Browser screenshot"
+							alt={t("browser.screenshotAlt", "Browser screenshot")}
 							onClick={() =>
 								FileServiceClient.openImage(StringRequest.create({ value: displayState.screenshot })).catch(
 									(err) => console.error("Failed to open image:", err),
@@ -447,10 +451,12 @@ const BrowserSessionRow = memo((props: BrowserSessionRowProps) => {
 							padding: `9px 8px ${consoleLogsExpanded ? 0 : 8}px 8px`,
 						}}>
 						<span className={`codicon codicon-chevron-${consoleLogsExpanded ? "down" : "right"}`}></span>
-						<span style={consoleLogsTextStyle}>Console Logs</span>
+						<span style={consoleLogsTextStyle}>{t("browser.consoleLogs", "Console Logs")}</span>
 					</div>
 					{consoleLogsExpanded && (
-						<CodeBlock source={`${"```"}shell\n${displayState.consoleLogs || "(No new logs)"}\n${"```"}`} />
+						<CodeBlock
+							source={`${"```"}shell\n${displayState.consoleLogs || t("browser.noNewLogs", "(No new logs)")}\n${"```"}`}
+						/>
 					)}
 				</div>
 			</div>
@@ -462,18 +468,21 @@ const BrowserSessionRow = memo((props: BrowserSessionRowProps) => {
 			{pages.length > 1 && (
 				<div style={paginationContainerStyle}>
 					<div>
-						Step {currentPageIndex + 1} of {pages.length}
+						{t("browser.paginationStep", "Step {{currentPage}} of {{totalPages}}", {
+							currentPage: currentPageIndex + 1,
+							totalPages: pages.length,
+						})}
 					</div>
 					<div style={paginationButtonGroupStyle}>
 						<VSCodeButton
 							disabled={currentPageIndex === 0 || isBrowsing}
 							onClick={() => setCurrentPageIndex((i) => i - 1)}>
-							Previous
+							{t("browser.paginationPrevious", "Previous")}
 						</VSCodeButton>
 						<VSCodeButton
 							disabled={currentPageIndex === pages.length - 1 || isBrowsing}
 							onClick={() => setCurrentPageIndex((i) => i + 1)}>
-							Next
+							{t("browser.paginationNext", "Next")}
 						</VSCodeButton>
 					</div>
 				</div>
@@ -513,6 +522,7 @@ const BrowserSessionRowContent = memo(
 		setMaxActionHeight,
 		onSetQuote,
 	}: BrowserSessionRowContentProps) => {
+		const { t } = useTranslation()
 		const handleToggle = useCallback(() => {
 			if (message.say === "api_req_started") {
 				setMaxActionHeight(0)
@@ -524,7 +534,9 @@ const BrowserSessionRowContent = memo(
 			return (
 				<>
 					<div style={headerStyle}>
-						<span style={browserSessionStartedTextStyle}>Browser Session Started</span>
+						<span style={browserSessionStartedTextStyle}>
+							{t("browser.sessionStarted", "Browser Session Started")}
+						</span>
 					</div>
 					<div style={codeBlockContainerStyle}>
 						<CodeBlock forceWrap={true} source={`${"```"}shell\n${message.text}\n${"```"}`} />
@@ -577,20 +589,21 @@ const BrowserSessionRowContent = memo(
 )
 
 const BrowserActionBox = ({ action, coordinate, text }: { action: BrowserAction; coordinate?: string; text?: string }) => {
+	const { t } = useTranslation()
 	const getBrowserActionText = (action: BrowserAction, coordinate?: string, text?: string) => {
 		switch (action) {
 			case "launch":
-				return `Launch browser at ${text}`
+				return t("browser.actionLaunch", "Launch browser at {{text}}", { text })
 			case "click":
-				return `Click (${coordinate?.replace(",", ", ")})`
+				return t("browser.actionClick", "Click ({{coordinate}})", { coordinate: coordinate?.replace(",", ", ") })
 			case "type":
-				return `Type "${text}"`
+				return t("browser.actionType", 'Type "{{text}}"', { text })
 			case "scroll_down":
-				return "Scroll down"
+				return t("browser.actionScrollDown", "Scroll down")
 			case "scroll_up":
-				return "Scroll up"
+				return t("browser.actionScrollUp", "Scroll up")
 			case "close":
-				return "Close browser"
+				return t("browser.actionClose", "Close browser")
 			default:
 				return action
 		}
@@ -600,7 +613,7 @@ const BrowserActionBox = ({ action, coordinate, text }: { action: BrowserAction;
 			<div style={browserActionBoxContainerInnerStyle}>
 				<div style={browseActionRowContainerStyle}>
 					<span style={browseActionRowStyle}>
-						<span style={browseActionTextStyle}>Browse Action: </span>
+						<span style={browseActionTextStyle}>{t("browser.browseAction", "Browse Action: ")}</span>
 						{getBrowserActionText(action, coordinate, text)}
 					</span>
 				</div>

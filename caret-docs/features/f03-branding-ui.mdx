@@ -23,7 +23,7 @@ Caret의 **브랜딩 및 UI 시스템**은 고유한 시각적 정체성과 사�
 ### **에셋 리소스 구조**
 
 ```
-caret-assets/
+assets/
 ├── icons/                         # 🎨 아이콘 모음
 │   ├── icon.png                  # 기본 앱 아이콘 (PNG)
 │   ├── icon.svg                  # 벡터 앱 아이콘 (SVG)
@@ -339,11 +339,11 @@ npm install --save-dev @storybook/react
 
 ```bash
 # 1. 이미지 및 아이콘 에셋 이식
-cp -r caret-main/caret-assets/ caret-assets/
+cp -r caret-main/assets/ assets/
 cp -r caret-main/webview-ui/src/assets/ webview-ui/src/assets/
 
 # 2. 에셋 파일 검증
-ls -la caret-assets/icons/
+ls -la assets/icons/
 ls -la webview-ui/src/assets/
 
 # 3. 이미지 최적화 (선택사항)

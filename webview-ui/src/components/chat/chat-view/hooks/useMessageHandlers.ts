@@ -270,6 +270,7 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 	return {
 		handleSendMessage,
 		handleButtonClick,
+		executeButtonAction,
 		handleTaskCloseButtonClick,
 		startNewTask,
 	}

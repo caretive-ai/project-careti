@@ -1,5 +1,7 @@
 // CARET MODIFICATION: Handler for updating the current persona
 
+import { PersonaService } from "@caret/services/persona/persona-service"
+import { PersonaStorage } from "@caret/services/persona/persona-storage"
 import { UpdatePersonaRequest } from "@shared/proto/caret/persona"
 import { Empty } from "@shared/proto/cline/common"
 import type { Controller } from "../index"
@@ -16,16 +18,60 @@ export async function UpdatePersona(controller: Controller, request: UpdatePerso
 			throw new Error("Profile is required")
 		}
 
-		// Save persona profile to global storage
-		await controller.context.globalState.update("personaProfile", {
-			name: request.profile.name,
-			description: request.profile.description,
-			custom_instruction: request.profile.customInstruction,
-			avatar_uri: request.profile.avatarUri,
-			thinking_avatar_uri: request.profile.thinkingAvatarUri,
-		})
+		const profile = request.profile
+		const personaStorage = new PersonaStorage()
+		const personaService = new PersonaService()
 
-		console.log("[PersonaService] Updated persona profile:", request.profile.name)
+		// Handle base64 image data if present
+		let avatarBuffer: Buffer | undefined
+		let thinkingAvatarBuffer: Buffer | undefined
+
+		try {
+			if (profile.avatarUri.startsWith("data:image/png;base64,")) {
+				avatarBuffer = Buffer.from(profile.avatarUri.replace(/^data:image\/png;base64,/, ""), "base64")
+			}
+		} catch (error) {
+			console.warn(`Failed to parse avatar image: ${error}`)
+		}
+
+		try {
+			if (profile.thinkingAvatarUri.startsWith("data:image/png;base64,")) {
+				thinkingAvatarBuffer = Buffer.from(profile.thinkingAvatarUri.replace(/^data:image\/png;base64,/, ""), "base64")
+			}
+		} catch (error) {
+			console.warn(`Failed to parse thinking avatar image: ${error}`)
+		}
+
+		// Save both to persona.md file AND global storage for backward compatibility
+		const savePromises = [
+			// Save to persona.md file (new persistent storage)
+			personaStorage.savePersonaProfile(controller, profile),
+			// Save to legacy global storage for backward compatibility
+			controller.context.globalState.update("personaProfile", {
+				name: profile.name,
+				description: profile.description,
+				custom_instruction: profile.customInstruction,
+				avatar_uri: profile.avatarUri,
+				thinking_avatar_uri: profile.thinkingAvatarUri,
+			}),
+		]
+
+		// Save images to global storage only if we have valid buffers
+		if (avatarBuffer && thinkingAvatarBuffer) {
+			savePromises.push(
+				personaStorage.savePersonaImages(controller, {
+					avatar: avatarBuffer,
+					thinkingAvatar: thinkingAvatarBuffer,
+				}),
+			)
+		}
+
+		await Promise.all(savePromises)
+
+		// Notify subscribers of persona change
+		personaService.notifyPersonaChange(profile)
+
+		console.log("[PersonaService] Updated persona profile and saved to persona.md:", profile.name)
 
 		return Empty.create({})
 	} catch (error) {

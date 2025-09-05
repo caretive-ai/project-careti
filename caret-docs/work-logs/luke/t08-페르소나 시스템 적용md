@@ -2,7 +2,7 @@
 
 ##  현 문제 상황
  페르소나 시스템은 caret-main 프로젝트에서 잘못 가져왔다가 caret-compare 프로젝트에서 다시 가져왔다가 문제가 생겨있음. 
- caret-compare 프로젝트는 완전한 기능이 구현되어 있으나, caret-assets 폴더에 이미지와 리소스 파일이 있는구조고, 우리 프로젝트는 assets 폴더에 이미지와 리소스 파일이 있는구조로 차이가 있고, 옵션으로 페르소나를 끌수 있는 기능을 요구함
+ caret-compare 프로젝트는 완전한 기능이 구현되어 있으나, assets 폴더에 이미지와 리소스 파일이 있는구조고, 우리 프로젝트는 assets 폴더에 이미지와 리소스 파일이 있는구조로 차이가 있고, 옵션으로 페르소나를 끌수 있는 기능을 요구함
  따라서 아래의 문제들은 현재 프로젝트의 문제로서 신규 옵션기능의 오류와 머징의 미구현과 잘못 구현된 기능이 있는것으로 판단됨. 아래의 현 문제 상황을 파악후, 대책을 세워 본 문서에 기입하고 문제별로 원인을 파악하고 작업을 시작해야함
 
 1. 페르소나 시스템 오류
@@ -18,7 +18,7 @@
       - 모달 창의 모든 이미지 안나옴
        * assets에 이미지 접근을 제대로 못하고 있는 것으로 추정됨      
      * caret-compare와 코드 비교하고, 개발가이드에 base64방식의 이미지 파일 접근 방법 확인 
-         (caret-merge는 경로가 caret-assets 에서 assets로 바꾸었음 * 경로 문제인지 받아오는 방법의 문제인지 확인)
+         (caret-merge는 경로가 assets 에서 assets로 바꾸었음 * 경로 문제인지 받아오는 방법의 문제인지 확인)
       * 기본 이미지를 업로드로 변경시 첫번째 이미지가 변경되어버림 - 이건 모달창의 이미지패스가 template_characters 누락이 아닌가 의심됨
       * '선택' 버튼 눌러도 모달 창이 안닫힘. x로 닫으면 담힘 : 제대로 저장 프로세스가 되어있는지 확인 필요
 
@@ -232,11 +232,11 @@ const BrandPersonaSystemManager = {
   getPersonaAssetsPath: (brandId: string): string => {
     switch (brandId.toLowerCase()) {
       case "caret":
-        return "caret-assets/template_characters/"
+        return "assets/template_characters/"
       case "codecenter":
         return "caret-b2b/brands/codecenter/assets/template_characters/"
       default:
-        return "caret-assets/template_characters/"  // fallback
+        return "assets/template_characters/"  // fallback
     }
   },
   
@@ -461,7 +461,7 @@ case "thinking":
 - [ ] **브랜드별 페르소나 에셋 확인**
   ```bash
   # Caret 기본 에셋
-  caret-assets/template_characters/
+  assets/template_characters/
   
   # CodeCenter 전용 에셋 (이미 존재)
   caret-b2b/brands/codecenter/assets/template_characters/
@@ -485,13 +485,13 @@ case "thinking":
 ### Phase 2: 브랜딩 에셋 이식
 - [ ] 페르소나 에셋 이식
   ```bash
-  cp -r caret-main/caret-assets/template_characters/ \
-        caret-assets/template_characters/
+  cp -r caret-main/assets/template_characters/ \
+        assets/template_characters/
   ```
 - [ ] 페르소나 정의 데이터 이식
   ```bash
-  cp caret-main/caret-assets/template_characters/template_characters.json \
-     caret-assets/template_characters/
+  cp caret-main/assets/template_characters/template_characters.json \
+     assets/template_characters/
   ```
 - [ ] 이미지 파일 검증 및 최적화
 

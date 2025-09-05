@@ -4,8 +4,8 @@ import { FOCUS_CHAIN_ITEM_REGEX, isCompletedFocusChainItem, isFocusChainItem } f
 import { StringRequest } from "@shared/proto/cline/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React, { memo, useEffect, useMemo, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useWindowSize } from "react-use"
-import { t } from "@/caret/utils/i18n"
 import ChecklistRenderer from "@/components/common/ChecklistRenderer"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import Thumbnails from "@/components/common/Thumbnails"
@@ -84,6 +84,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 	onClose,
 	onScrollToMessage,
 }) => {
+	const { t } = useTranslation()
 	const { apiConfiguration, currentTaskItem, checkpointTrackerErrorMessage, clineMessages, navigateToSettings, mode } =
 		useExtensionState()
 	const [isTaskExpanded, setIsTaskExpanded] = useState(true)
@@ -209,7 +210,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 							flex: 1,
 							whiteSpace: "nowrap",
 						}}>
-						<HeroTooltip content="Current tokens used in this request">
+						<HeroTooltip content={t("taskHeader.currentTokens", "Current tokens used in this request")}>
 							<span className="cursor-pointer">{formatLargeNumber(lastApiReqTotalTokens || 0)}</span>
 						</HeroTooltip>
 						<div
@@ -219,7 +220,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 								gap: "3px",
 								flex: 1,
 							}}>
-							<HeroTooltip content="Context window usage">
+							<HeroTooltip content={t("taskHeader.contextWindowUsage", "Context window usage")}>
 								<div
 									className="cursor-pointer"
 									style={{
@@ -239,7 +240,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 									/>
 								</div>
 							</HeroTooltip>
-							<HeroTooltip content="Maximum context window size for this model">
+							<HeroTooltip content={t("taskHeader.maxContextWindow", "Maximum context window size for this model")}>
 								<span className="cursor-pointer">{formatLargeNumber(contextWindow)}</span>
 							</HeroTooltip>
 						</div>
@@ -301,7 +302,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 								minWidth: 0, // This allows the div to shrink below its content size
 							}}>
 							<span style={{ fontWeight: "bold" }}>
-								{t("taskHeader.task", "chat")}
+								{t("taskHeader.task", "Task")}
 								{!isTaskExpanded && ":"}
 							</span>
 							{!isTaskExpanded && (
@@ -329,7 +330,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 					)}
 					<VSCodeButton
 						appearance="icon"
-						aria-label={t("taskHeader.closeTask", "chat")}
+						aria-label={t("taskHeader.closeTask", "Close Task")}
 						onClick={onClose}
 						style={{ marginLeft: 6, flexShrink: 0 }}>
 						<span className="codicon codicon-close"></span>
@@ -385,7 +386,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 											paddingLeft: 3,
 											backgroundColor: "var(--vscode-badge-background)",
 										}}>
-										{t("taskHeader.seeMore", "chat")}
+										{t("taskHeader.seeMore", "See more")}
 									</div>
 								</div>
 							)}
@@ -400,7 +401,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 									textAlign: "right",
 									paddingRight: 2,
 								}}>
-								{t("taskHeader.seeLess", "chat")}
+								{t("taskHeader.seeLess", "See less")}
 							</div>
 						)}
 						{((task.images && task.images.length > 0) || (task.files && task.files.length > 0)) && (
@@ -428,9 +429,9 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 										flexWrap: "wrap",
 									}}>
 									<div style={{ display: "flex", alignItems: "center" }}>
-										<span style={{ fontWeight: "bold" }}>{t("taskHeader.tokens", "chat")}:</span>
+										<span style={{ fontWeight: "bold" }}>{t("taskHeader.tokens", "Tokens")}:</span>
 									</div>
-									<HeroTooltip content={t("taskHeader.promptTokens", "chat")}>
+									<HeroTooltip content={t("taskHeader.promptTokens", "Prompt Tokens")}>
 										<span className="flex items-center gap-[3px] cursor-pointer">
 											<i
 												className="codicon codicon-arrow-up"
@@ -443,7 +444,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 											{formatLargeNumber(tokensIn || 0)}
 										</span>
 									</HeroTooltip>
-									<HeroTooltip content={t("taskHeader.completionTokens", "chat")}>
+									<HeroTooltip content={t("taskHeader.completionTokens", "Completion Tokens")}>
 										<span className="flex items-center gap-[3px] cursor-pointer">
 											<i
 												className="codicon codicon-arrow-down"
@@ -484,10 +485,11 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 											flexWrap: "wrap",
 										}}>
 										<div style={{ display: "flex", alignItems: "center" }}>
-											<span style={{ fontWeight: "bold" }}>{t("taskHeader.cache", "chat")}:</span>
+											<span style={{ fontWeight: "bold" }}>{t("taskHeader.cache", "Cache")}:</span>
 										</div>
 										{cacheWrites !== undefined && cacheWrites > 0 && (
-											<HeroTooltip content={t("taskHeader.tokensWrittenToCache", "chat")}>
+											<HeroTooltip
+												content={t("taskHeader.tokensWrittenToCache", "Tokens written to cache")}>
 												<span className="flex items-center gap-[3px] cursor-pointer">
 													<i
 														className="codicon codicon-database"
@@ -502,7 +504,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 											</HeroTooltip>
 										)}
 										{cacheReads !== undefined && cacheReads > 0 && (
-											<HeroTooltip content={t("taskHeader.tokensReadFromCache", "chat")}>
+											<HeroTooltip content={t("taskHeader.tokensReadFromCache", "Tokens read from cache")}>
 												<span className="flex items-center gap-[3px] cursor-pointer">
 													<i
 														className={"codicon codicon-arrow-right"}
@@ -572,9 +574,13 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 												}}>
 												<div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
 													<span style={{ fontWeight: "bold", color: "var(--vscode-charts-green)" }}>
-														{t("taskHeader.allStepsCompleted", "chat", {
-															totalCount: todoInfo.totalCount,
-														})}
+														{t(
+															"taskHeader.allStepsCompleted",
+															"All {{totalCount}} steps completed!",
+															{
+																totalCount: todoInfo.totalCount,
+															},
+														)}
 													</span>
 												</div>
 												<span
@@ -590,7 +596,10 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 														lineHeight: "1.4",
 													}}>
 													<div style={{ marginBottom: "2px" }}>
-														{t("taskHeader.newStepsGenerated", "chat")}
+														{t(
+															"taskHeader.newStepsGenerated",
+															"New steps may be generated based on the conversation.",
+														)}
 													</div>
 												</div>
 											)}
@@ -737,7 +746,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 															"color-mix(in srgb, var(--vscode-badge-foreground) 10%, transparent)",
 														border: "1px solid color-mix(in srgb, var(--vscode-badge-foreground) 20%, transparent)",
 													}}
-													title={t("taskHeader.editFocusChainList", "chat")}>
+													title={t("taskHeader.editFocusChainList", "Edit focus chain list")}>
 													<span
 														className="codicon codicon-edit"
 														style={{
@@ -784,7 +793,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 													}, 300)
 												}}
 												style={{ fontSize: "inherit" }}>
-												{t("taskHeader.disablingCheckpoints", "chat")}
+												{t("taskHeader.disablingCheckpoints", "disabling checkpoints.")}
 											</button>
 										)}
 										{checkpointTrackerErrorMessage.includes("Git must be installed to use checkpoints.") && (
@@ -796,7 +805,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 														color: "inherit",
 														textDecoration: "underline",
 													}}>
-													{t("taskHeader.seeHereForInstructions", "chat")}
+													{t("taskHeader.seeHereForInstructions", "See here for instructions.")}
 												</a>
 											</>
 										)}

@@ -4,7 +4,7 @@ import { Callbacks, ProtoBusClient } from "../../services/grpc-client-base"
 
 // CARET MODIFICATION: A dedicated gRPC client for Caret-specific services.
 // This ensures separation from Cline's auto-generated client and prevents future conflicts.
-// Ported from caret-compare with path adjustments: /caret-assets/ → /assets/
+// Ported from caret-compare with path adjustments: /assets/ → /assets/
 export class PersonaServiceClient extends ProtoBusClient {
 	static override serviceName: string = "caret.PersonaService"
 

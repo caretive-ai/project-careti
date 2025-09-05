@@ -12,12 +12,11 @@ import { Int64Request, StringRequest } from "@shared/proto/cline/common"
 import { VSCodeBadge, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
 import deepEqual from "fast-deep-equal"
 import React, { MouseEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useSize } from "react-use"
 import styled from "styled-components"
-// CARET MODIFICATION: PersonaAvatar import for persona system
+// CARET MODIFICATION: Import PersonaAvatar component for persona system
 import PersonaAvatar from "@/caret/components/PersonaAvatar"
-import { useCaretState } from "@/caret/context/CaretStateContext"
-import { t } from "@/caret/utils/i18n"
 import { OptionsButtons } from "@/components/chat/OptionsButtons"
 import TaskFeedbackButtons from "@/components/chat/TaskFeedbackButtons"
 import { CheckmarkControl } from "@/components/common/CheckmarkControl"
@@ -151,10 +150,17 @@ export const ChatRowContent = memo(
 		sendMessageFromChatRow,
 		onSetQuote,
 	}: ChatRowContentProps) => {
-		const { mcpServers, mcpMarketplaceCatalog, onRelinquishControl, apiConfiguration, modeSystem } = useExtensionState()
-
-		// CARET MODIFICATION: Get persona profile from Caret context
-		const { personaProfile } = useCaretState()
+		const { t } = useTranslation()
+		const {
+			mcpServers,
+			mcpMarketplaceCatalog,
+			onRelinquishControl,
+			apiConfiguration,
+			modeSystem,
+			// CARET MODIFICATION: Persona system restored for conditional rendering
+			enablePersonaSystem,
+			personaProfile,
+		} = useExtensionState()
 		const [seeNewChangesDisabled, setSeeNewChangesDisabled] = useState(false)
 		const [quoteButtonState, setQuoteButtonState] = useState<QuoteButtonState>({
 			visible: false,
@@ -278,7 +284,7 @@ export const ChatRowContent = memo(
 								color: errorColor,
 								marginBottom: "-1.5px",
 							}}></span>,
-						<span style={{ color: errorColor, fontWeight: "bold" }}>{t("error.label", "chat")}</span>,
+						<span style={{ color: errorColor, fontWeight: "bold" }}>{t("chat.errorLabel", "Error")}</span>,
 					]
 				case "mistake_limit_reached":
 					return [
@@ -288,7 +294,9 @@ export const ChatRowContent = memo(
 								color: errorColor,
 								marginBottom: "-1.5px",
 							}}></span>,
-						<span style={{ color: errorColor, fontWeight: "bold" }}>{t("error.mistakeLimitReached", "chat")}</span>,
+						<span style={{ color: errorColor, fontWeight: "bold" }}>
+							{t("chat.mistakeLimitReached", "Mistake limit reached")}
+						</span>,
 					]
 				case "auto_approval_max_req_reached":
 					return [
@@ -298,7 +306,9 @@ export const ChatRowContent = memo(
 								color: errorColor,
 								marginBottom: "-1.5px",
 							}}></span>,
-						<span style={{ color: errorColor, fontWeight: "bold" }}>{t("error.maxRequestsReached", "chat")}</span>,
+						<span style={{ color: errorColor, fontWeight: "bold" }}>
+							{t("chat.maxRequestsReached", "Auto-approval max requests reached")}
+						</span>,
 					]
 				case "command":
 					return [
@@ -312,7 +322,7 @@ export const ChatRowContent = memo(
 									marginBottom: "-1.5px",
 								}}></span>
 						),
-						<span style={{ color: normalColor, fontWeight: "bold" }}>{t("executeCommand", "chat")}:</span>,
+						<span style={{ color: normalColor, fontWeight: "bold" }}>{t("chat.executeCommand", "Execute Command")}:</span>,
 					]
 				case "use_mcp_server":
 					const mcpServerUse = JSON.parse(message.text || "{}") as ClineAskUseMcpServer
@@ -330,8 +340,11 @@ export const ChatRowContent = memo(
 						<span
 							className="ph-no-capture"
 							style={{ color: normalColor, fontWeight: "bold", wordBreak: "break-word" }}>
-							{t("mcp.useServer", "chat", {
-								type: mcpServerUse.type === "use_mcp_tool" ? t("mcp.tool", "chat") : t("mcp.resource", "chat"),
+							{t("chat.useMcpServer", "Use {{type}} from {{serverName}}", {
+								type:
+									mcpServerUse.type === "use_mcp_tool"
+										? t("chat.mcpTool", "tool")
+										: t("chat.mcpResource", "resource"),
 								serverName: getMcpServerDisplayName(mcpServerUse.serverName, mcpMarketplaceCatalog),
 							})}
 						</span>,
@@ -344,7 +357,7 @@ export const ChatRowContent = memo(
 								color: successColor,
 								marginBottom: "-1.5px",
 							}}></span>,
-						<span style={{ color: successColor, fontWeight: "bold" }}>{t("taskCompleted", "chat")}</span>,
+						<span style={{ color: successColor, fontWeight: "bold" }}>{t("chat.taskCompleted", "Task Completed")}</span>,
 					]
 				case "api_req_started":
 					return ErrorBlockTitle({
@@ -361,7 +374,7 @@ export const ChatRowContent = memo(
 								color: normalColor,
 								marginBottom: "-1.5px",
 							}}></span>,
-						<span style={{ color: normalColor, fontWeight: "bold" }}>{t("caretHasQuestion", "chat")}:</span>,
+						<span style={{ color: normalColor, fontWeight: "bold" }}>{t("chat.caretHasQuestion", "Caret has a question")}:</span>,
 					]
 				default:
 					return [null, null]
@@ -429,8 +442,8 @@ export const ChatRowContent = memo(
 							<div style={headerStyle}>
 								{toolIcon("edit")}
 								{tool.operationIsLocatedInWorkspace === false &&
-									toolIcon("sign-out", "yellow", -90, t("tool.outsideWorkspace", "chat"))}
-								<span style={{ fontWeight: "bold" }}>{t("tool.editFile", "chat")}:</span>
+									toolIcon("sign-out", "yellow", -90, t("chat.tool.outsideWorkspace", "Outside workspace"))}
+								<span style={{ fontWeight: "bold" }}>{t("chat.tool.editFile", "Edited existing file")}:</span>
 							</div>
 							<CodeAccordian
 								// isLoading={message.partial}
@@ -447,8 +460,8 @@ export const ChatRowContent = memo(
 							<div style={headerStyle}>
 								{toolIcon("new-file")}
 								{tool.operationIsLocatedInWorkspace === false &&
-									toolIcon("sign-out", "yellow", -90, t("tool.outsideWorkspace", "chat"))}
-								<span style={{ fontWeight: "bold" }}>{t("tool.createFile", "chat")}:</span>
+									toolIcon("sign-out", "yellow", -90, t("chat.tool.outsideWorkspace", "Outside workspace"))}
+								<span style={{ fontWeight: "bold" }}>{t("chat.tool.createFile", "Created new file")}:</span>
 							</div>
 							<CodeAccordian
 								code={tool.content!}
@@ -466,8 +479,8 @@ export const ChatRowContent = memo(
 							<div style={headerStyle}>
 								{toolIcon(isImage ? "file-media" : "file-code")}
 								{tool.operationIsLocatedInWorkspace === false &&
-									toolIcon("sign-out", "yellow", -90, t("tool.outsideWorkspace", "chat"))}
-								<span style={{ fontWeight: "bold" }}>{t("tool.readFile", "chat")}:</span>
+									toolIcon("sign-out", "yellow", -90, t("chat.tool.outsideWorkspace", "Outside workspace"))}
+								<span style={{ fontWeight: "bold" }}>{t("chat.tool.readFile", "Read file")}:</span>
 							</div>
 							<div
 								style={{
@@ -529,11 +542,11 @@ export const ChatRowContent = memo(
 							<div style={headerStyle}>
 								{toolIcon("folder-opened")}
 								{tool.operationIsLocatedInWorkspace === false &&
-									toolIcon("sign-out", "yellow", -90, t("tool.outsideWorkspace", "chat"))}
+									toolIcon("sign-out", "yellow", -90, t("chat.tool.outsideWorkspace", "Outside workspace"))}
 								<span style={{ fontWeight: "bold" }}>
 									{message.type === "ask"
-										? t("tool.listFilesTopLevel", "chat")
-										: t("tool.listFilesTopLevel", "chat")}
+										? t("chat.tool.wantsToListFilesTopLevel", "Wants to list files in this directory")
+										: t("chat.tool.listedFilesTopLevel", "Listed files in this directory")}
 								</span>
 							</div>
 							<CodeAccordian
@@ -551,11 +564,11 @@ export const ChatRowContent = memo(
 							<div style={headerStyle}>
 								{toolIcon("folder-opened")}
 								{tool.operationIsLocatedInWorkspace === false &&
-									toolIcon("sign-out", "yellow", -90, t("tool.outsideWorkspace", "chat"))}
+									toolIcon("sign-out", "yellow", -90, t("chat.tool.outsideWorkspace", "Outside workspace"))}
 								<span style={{ fontWeight: "bold" }}>
 									{message.type === "ask"
-										? t("tool.listFilesRecursive", "chat")
-										: t("tool.listFilesRecursive", "chat")}
+										? t("chat.tool.wantsToListFilesRecursive", "Wants to list all files in this directory")
+										: t("chat.tool.listedFilesRecursive", "Listed all files in this directory")}
 								</span>
 							</div>
 							<CodeAccordian
@@ -573,11 +586,17 @@ export const ChatRowContent = memo(
 							<div style={headerStyle}>
 								{toolIcon("file-code")}
 								{tool.operationIsLocatedInWorkspace === false &&
-									toolIcon("sign-out", "yellow", -90, t("tool.outsideWorkspace", "chat"))}
+									toolIcon("sign-out", "yellow", -90, t("chat.tool.outsideWorkspace", "Outside workspace"))}
 								<span style={{ fontWeight: "bold" }}>
 									{message.type === "ask"
-										? t("tool.listCodeDefinitionNames", "chat")
-										: t("tool.listCodeDefinitionNames", "chat")}
+										? t(
+												"chat.tool.wantsToListCodeDefinitionNames",
+												"Wants to list source code definition names in this directory",
+											)
+										: t(
+												"chat.tool.listedCodeDefinitionNames",
+												"Listed source code definition names in this directory",
+											)}
 								</span>
 							</div>
 							<CodeAccordian
@@ -594,9 +613,9 @@ export const ChatRowContent = memo(
 							<div style={headerStyle}>
 								{toolIcon("search")}
 								{tool.operationIsLocatedInWorkspace === false &&
-									toolIcon("sign-out", "yellow", -90, t("tool.outsideWorkspace", "chat"))}
+									toolIcon("sign-out", "yellow", -90, t("chat.tool.outsideWorkspace", "Outside workspace"))}
 								<span style={{ fontWeight: "bold" }}>
-									{t("tool.searchFiles", "chat")} <code>{tool.regex}</code>:
+									{t("chat.tool.searchFiles", "Searched for files with regex {{regex}}", { regex: tool.regex })}:
 								</span>
 							</div>
 							<CodeAccordian
@@ -613,7 +632,7 @@ export const ChatRowContent = memo(
 						<>
 							<div style={headerStyle}>
 								{toolIcon("book")}
-								<span style={{ fontWeight: "bold" }}>{t("tool.summarizeTask", "chat")}:</span>
+								<span style={{ fontWeight: "bold" }}>{t("chat.tool.summarizeTask", "Summarized task")}:</span>
 							</div>
 							<div
 								style={{
@@ -637,7 +656,7 @@ export const ChatRowContent = memo(
 										<div>
 											<div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
 												<span style={{ fontWeight: "bold", marginRight: "4px" }}>
-													{t("tool.summary", "chat")}:
+													{t("chat.tool.summary", "Summary")}:
 												</span>
 												<div style={{ flexGrow: 1 }}></div>
 												<span
@@ -693,9 +712,11 @@ export const ChatRowContent = memo(
 									className="codicon codicon-link"
 									style={{ color: normalColor, marginBottom: "-1.5px" }}></span>
 								{tool.operationIsLocatedInWorkspace === false &&
-									toolIcon("sign-out", "yellow", -90, t("tool.externalUrl", "chat"))}
+									toolIcon("sign-out", "yellow", -90, t("chat.tool.externalUrl", "External URL"))}
 								<span style={{ fontWeight: "bold" }}>
-									{message.type === "ask" ? t("tool.webFetch", "chat") : t("tool.webFetch", "chat")}
+									{message.type === "ask"
+										? t("chat.tool.wantsToWebFetch", "Wants to fetch content from this URL")
+										: t("chat.tool.webFetched", "Fetched content from this URL")}
 								</span>
 							</div>
 							<div
@@ -806,7 +827,7 @@ export const ChatRowContent = memo(
 										padding: `2px 8px ${isExpanded ? 0 : 8}px 8px`,
 									}}>
 									<span className={`codicon codicon-chevron-${isExpanded ? "down" : "right"}`}></span>
-									<span style={{ fontSize: "0.8em" }}>{t("commandOutput", "chat")}</span>
+									<span style={{ fontSize: "0.8em" }}>{t("chat.commandOutput", "Command Output")}</span>
 								</div>
 								{isExpanded && <CodeBlock source={`${"```"}shell\n${output}\n${"```"}`} />}
 							</div>
@@ -823,7 +844,7 @@ export const ChatRowContent = memo(
 								color: "var(--vscode-editorWarning-foreground)",
 							}}>
 							<i className="codicon codicon-warning"></i>
-							<span>{t("commandApprovalRequired", "chat")}</span>
+							<span>{t("chat.commandApprovalRequired", "This command requires your approval to run.")}</span>
 						</div>
 					)}
 				</>
@@ -889,7 +910,7 @@ export const ChatRowContent = memo(
 												fontSize: "12px",
 												textTransform: "uppercase",
 											}}>
-											Arguments
+											{t("chat.mcpArguments", "Arguments")}
 										</div>
 										<CodeAccordian
 											code={useMcpServer.arguments}
@@ -993,108 +1014,119 @@ export const ChatRowContent = memo(
 									}}
 								/>
 								<div style={{ flex: 1, wordBreak: "break-word" }}>
-									<span style={{ fontWeight: 500 }}>MCP Notification: </span>
+									<span style={{ fontWeight: 500 }}>{t("chat.mcpNotification", "MCP Notification: ")}</span>
 									<span className="ph-no-capture">{message.text}</span>
 								</div>
 							</div>
 						)
 					case "text":
 						return (
-							<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-								<PersonaAvatar
-									isThinking={false}
-									personaProfile={personaProfile}
-									size={64}
-									style={{
-										marginTop: "2px",
-										flexShrink: 0,
-									}}
-								/>
-								<div style={{ flex: 1, minWidth: 0 }}>
-									<WithCopyButton
-										onMouseUp={handleMouseUp}
-										position="bottom-right"
-										ref={contentRef}
-										textToCopy={message.text}>
-										<Markdown markdown={message.text} />
-										{quoteButtonState.visible && (
-											<QuoteButton
-												left={quoteButtonState.left}
-												onClick={() => {
-													handleQuoteClick()
-												}}
-												top={quoteButtonState.top}
-											/>
-										)}
-									</WithCopyButton>
-								</div>
-							</div>
+							<WithCopyButton
+								onMouseUp={handleMouseUp}
+								position="bottom-right"
+								ref={contentRef}
+								textToCopy={message.text}>
+								{/* CARET MODIFICATION: 페르소나 아바타 조건부 렌더링 - Caret 모드이고 페르소나 시스템이 활성화되었을 때만 표시 */}
+								{modeSystem === "caret" && enablePersonaSystem && (
+									<div style={{ display: "flex", alignItems: "flex-start", gap: "10px", marginBottom: "8px" }}>
+										<PersonaAvatar
+											isThinking={false}
+											personaProfile={
+												personaProfile
+													? {
+															name: personaProfile.name || t("persona.default.name", "Default Caret"),
+															description:
+																personaProfile.description ||
+																t("persona.default.description", "The default AI coding assistant persona."),
+															customInstruction: personaProfile.custom_instruction || "",
+															avatarUri: personaProfile.avatar_uri,
+															thinkingAvatarUri: personaProfile.thinking_avatar_uri,
+														}
+													: null
+											}
+											size={32}
+										/>
+										<div
+											style={{
+												color: "var(--vscode-foreground)",
+												fontWeight: "bold",
+												fontSize: "14px",
+												lineHeight: "32px",
+											}}>
+											{personaProfile?.name || t("persona.default.name", "Default Caret")}
+										</div>
+									</div>
+								)}
+								<Markdown markdown={message.text} />
+								{quoteButtonState.visible && (
+									<QuoteButton
+										left={quoteButtonState.left}
+										onClick={() => {
+											handleQuoteClick()
+										}}
+										top={quoteButtonState.top}
+									/>
+								)}
+							</WithCopyButton>
 						)
 					case "reasoning":
 						return (
-							<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-								<PersonaAvatar
-									isThinking={true}
-									personaProfile={personaProfile}
-									size={64}
-									style={{
-										marginTop: "2px",
-										flexShrink: 0,
-									}}
-								/>
-								<div style={{ flex: 1, minWidth: 0 }}>
-									{message.text && (
-										<div
-											onClick={handleToggle}
-											style={{
-												cursor: "pointer",
-												color: "var(--vscode-descriptionForeground)",
-												fontStyle: "italic",
-												overflow: "hidden",
-											}}>
-											{isExpanded ? (
-												<div style={{ marginTop: -3 }}>
-													<span style={{ fontWeight: "bold", display: "block", marginBottom: "4px" }}>
-														Thinking
-														<span
-															className="codicon codicon-chevron-down"
-															style={{
-																display: "inline-block",
-																transform: "translateY(3px)",
-																marginLeft: "1.5px",
-															}}
-														/>
-													</span>
-													<span className="ph-no-capture">{message.text}</span>
-												</div>
-											) : (
-												<div style={{ display: "flex", alignItems: "center" }}>
-													<span style={{ fontWeight: "bold", marginRight: "4px" }}>Thinking:</span>
+							<>
+								{message.text && (
+									<div
+										onClick={handleToggle}
+										style={{
+											// marginBottom: 15,
+											cursor: "pointer",
+											color: "var(--vscode-descriptionForeground)",
+
+											fontStyle: "italic",
+											overflow: "hidden",
+										}}>
+										{isExpanded ? (
+											<div style={{ marginTop: -3 }}>
+												<span style={{ fontWeight: "bold", display: "block", marginBottom: "4px" }}>
+													{t("chat.thinking", "Thinking")}
 													<span
-														className="ph-no-capture"
+														className="codicon codicon-chevron-down"
 														style={{
-															whiteSpace: "nowrap",
-															overflow: "hidden",
-															textOverflow: "ellipsis",
-															direction: "rtl",
-															textAlign: "left",
-															flex: 1,
-														}}>
-														{message.text + "\u200E"}
-													</span>
-													<span
-														className="codicon codicon-chevron-right"
-														style={{
-															marginLeft: "4px",
-															flexShrink: 0,
+															display: "inline-block",
+															transform: "translateY(3px)",
+															marginLeft: "1.5px",
 														}}
 													/>
-												</div>
-											)}
-										</div>
-									)}
-								</div>
-							</div>
+												</span>
+												<span className="ph-no-capture">{message.text}</span>
+											</div>
+										) : (
+											<div style={{ display: "flex", alignItems: "center" }}>
+												<span style={{ fontWeight: "bold", marginRight: "4px" }}>
+													{t("chat.thinking", "Thinking")}:
+												</span>
+												<span
+													className="ph-no-capture"
+													style={{
+														whiteSpace: "nowrap",
+														overflow: "hidden",
+														textOverflow: "ellipsis",
+														direction: "rtl",
+														textAlign: "left",
+														flex: 1,
+													}}>
+													{message.text + "\u200E"}
+												</span>
+												<span
+													className="codicon codicon-chevron-right"
+													style={{
+														marginLeft: "4px",
+														flexShrink: 0,
+													}}
+												/>
+											</div>
+										)}
+									</div>
+								)}
+							</>
 						)
 					case "user_feedback":
 						return (
@@ -1142,7 +1174,7 @@ export const ChatRowContent = memo(
 									padding: "4px 0",
 								}}>
 								<i className="codicon codicon-book" style={{ marginRight: 6 }} />
-								Loading MCP documentation
+								{t("chat.loadingMcpDocumentation", "Loading MCP documentation")}
 							</div>
 						)
 					case "completion_result":
@@ -1206,7 +1238,7 @@ export const ChatRowContent = memo(
 												width: "100%",
 											}}>
 											<i className="codicon codicon-new-file" style={{ marginRight: 6 }} />
-											See new changes
+											{t("chat.seeNewChanges", "See new changes")}
 										</SuccessButton>
 									</div>
 								)}
@@ -1241,21 +1273,21 @@ export const ChatRowContent = memo(
 											fontWeight: 500,
 											color: "var(--vscode-foreground)",
 										}}>
-										Shell Integration Unavailable
+										{t("chat.shellIntegrationUnavailable", "Shell Integration Unavailable")}
 									</span>
 								</div>
 								<div style={{ color: "var(--vscode-foreground)", opacity: 0.8 }}>
-									Cline may have trouble viewing the command's output. Please update VSCode (
-									<code>CMD/CTRL + Shift + P</code> → "Update") and make sure you're using a supported shell:
-									zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → "Terminal: Select Default
-									Profile").{" "}
+									{t(
+										"chat.shellIntegrationWarning",
+										"Caret may have trouble viewing the command's output. Please update VSCode (<code>CMD/CTRL + Shift + P</code> → \"Update\") and make sure you're using a supported shell: zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\").",
+									)}{" "}
 									<a
 										href="https://github.com/cline/cline/wiki/Troubleshooting-%E2%80%90-Shell-Integration-Unavailable"
 										style={{
 											color: "inherit",
 											textDecoration: "underline",
 										}}>
-										Still having trouble?
+										{t("chat.stillHavingTrouble", "Still having trouble?")}
 									</a>
 								</div>
 							</div>
@@ -1348,7 +1380,7 @@ export const ChatRowContent = memo(
 														cursor: seeNewChangesDisabled ? "wait" : "pointer",
 													}}
 												/>
-												See new changes
+												{t("chat.seeNewChanges", "See new changes")}
 											</SuccessButton>
 										</div>
 									)}
@@ -1418,7 +1450,7 @@ export const ChatRowContent = memo(
 											marginBottom: "-1.5px",
 										}}></span>
 									<span style={{ color: normalColor, fontWeight: "bold" }}>
-										Cline wants to start a new task:
+										{t("chat.wantsToStartNewTask", "Caret wants to start a new task:")}
 									</span>
 								</div>
 								<NewTaskPreview context={message.text || ""} />
@@ -1435,7 +1467,7 @@ export const ChatRowContent = memo(
 											marginBottom: "-1.5px",
 										}}></span>
 									<span style={{ color: normalColor, fontWeight: "bold" }}>
-										Cline wants to condense your conversation:
+										{t("chat.wantsToCondense", "Caret wants to condense your conversation:")}
 									</span>
 								</div>
 								<NewTaskPreview context={message.text || ""} />
@@ -1452,7 +1484,7 @@ export const ChatRowContent = memo(
 											marginBottom: "-1.5px",
 										}}></span>
 									<span style={{ color: normalColor, fontWeight: "bold" }}>
-										Cline wants to create a Github issue:
+										{t("chat.wantsToCreateGithubIssue", "Caret wants to create a Github issue:")}
 									</span>
 								</div>
 								<ReportBugPreview data={message.text || ""} />

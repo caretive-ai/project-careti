@@ -73,7 +73,7 @@
 **필수**:
 1. `frontend-backend-interaction-patterns.mdx` (setPersona 패턴)
 2. `component-architecture-principles.mdx`
-3. `caret-assets/template_characters/` 구조 분석
+3. `assets/template_characters/` 구조 분석
 
 ## 🔄 문서 동기화 관계
 

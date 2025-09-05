@@ -1,7 +1,7 @@
 [Read this document in English](./README.md) | [한국어로 읽기](./README.ko.md) | [日本語で読む](./README.ja.md) | [阅读中文版](./README.zh-cn.md)
 
 <div align="center">
-  <img src="caret-assets/icons/icon.png" alt="Caret icon" width="128">
+  <img src="assets/icons/icon.png" alt="Caret icon" width="128">
   <h1>Caret: 您的新AI伙伴</h1>
   <p><strong>为Cline的透明性增添Cursor的灵活性</strong></p>
   <p>
@@ -42,16 +42,16 @@ Caret不仅仅是一个AI编码工具，它是一个旨在**与开发者共同�
 超越Cline略显僵硬的Plan/Act模式，Caret提供像Cursor的Ask/Agent方式一样灵活，且比'Ask'更直观的**Chatbot/Agent模式**。不仅改变了行为方式，还通过**自主改进的系统提示**提升了AI的响应性能和态度。通过[实验验证](./caret-docs/reports/experiment/json_caret_performance_test_20250713/comprehensive-performance-report-20250717.md)，实现了**50%的令牌节省**和**20%的API成本降低**，提供更经济且可预测的AI协作。
 
 ### 2. 创建您的专属AI伙伴：自定义角色
-<img src="caret-assets/template_characters/caret_illust.png" alt="Caret Persona Illustration" width="300"/>
+<img src="assets/template_characters/caret_illust.png" alt="Caret Persona Illustration" width="300"/>
 
 使用Caret的基础角色、K-POP偶像、OS-tan等预设的**模板角色**为编码增添乐趣。您可以注册自己的AI代理名称和**个人资料图片**，创建一个视觉上生动的开发环境。
 
 **基础提供角色：**
-*   <img src="caret-assets/template_characters/caret.png" width="24" align="center"/> **凯瑞特**: 热爱编码并帮助开发者的友好机器人。
-*   <img src="caret-assets/template_characters/sarang.png" width="24" align="center"/> **吴莎朗**: K-pop偶像，在逻辑与情感之间帮助你的傲娇工科女生。
-*   <img src="caret-assets/template_characters/ichika.png" width="24" align="center"/> **窗边一花**: 以Windows 11为主题的整洁可靠的助手。
-*   <img src="caret-assets/template_characters/cyan.png" width="24" align="center"/> **青苹果**: 以macOS为主题的简洁高效的助手。
-*   <img src="caret-assets/template_characters/ubuntu.png" width="24" align="center"/> **乌班图**: 以开源精神共同解决问题的温暖协作者。
+*   <img src="assets/template_characters/caret.png" width="24" align="center"/> **凯瑞特**: 热爱编码并帮助开发者的友好机器人。
+*   <img src="assets/template_characters/sarang.png" width="24" align="center"/> **吴莎朗**: K-pop偶像，在逻辑与情感之间帮助你的傲娇工科女生。
+*   <img src="assets/template_characters/ichika.png" width="24" align="center"/> **窗边一花**: 以Windows 11为主题的整洁可靠的助手。
+*   <img src="assets/template_characters/cyan.png" width="24" align="center"/> **青苹果**: 以macOS为主题的简洁高效的助手。
+*   <img src="assets/template_characters/ubuntu.png" width="24" align="center"/> **乌班图**: 以开源精神共同解决问题的温暖协作者。
 
 ### 3. 无语言障碍的编码：完整的多语言支持
 其他AI工具忽视的多语言支持，Caret来解决。通过**基于i18n的叠加结构**，不熟悉英语的开发者也能用**中文、韩语、日语等母语**完全使用所有功能。

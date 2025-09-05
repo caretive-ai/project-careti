@@ -25,7 +25,7 @@
 | **Account & Organization** | `src/services/account/`, `webview-ui/src/caret/components/` | **HIGH**      | 🟢 LOW    | ✅ 100%      |
 | **다국어 i18n 시스템**     | `webview-ui/src/caret/locale/` (30+ JSON)                   | **HIGH**      | 🟢 LOW    | ✅ 100%      |
 | **로깅 시스템**            | `caret-src/utils/`, `webview-ui/src/caret/utils/`           | **HIGH**      | 🟢 LOW    | ✅ 100%      |
-| **브랜딩 & UI**            | `caret-assets/`, `webview-ui/src/caret/components/`         | **MEDIUM**    | 🟢 LOW    | ✅ 100%      |
+| **브랜딩 & UI**            | `assets/`, `webview-ui/src/caret/components/`         | **MEDIUM**    | 🟢 LOW    | ✅ 100%      |
 
 ### **🔄 부분 구현 / 복잡한 구조**
 
@@ -331,7 +331,7 @@ if (this.chatSettings.modeSystem === "caret") {
 **페르소나 데이터:**
 
 ```
-caret-assets/template_characters/
+assets/template_characters/
 ├── template_characters.json      # 페르소나 정의 및 설명
 ├── caret_illust.png              # 기본 Caret 이미지
 ├── caret_thinking.png            # 사고 중 이미지
@@ -431,7 +431,7 @@ logger.error("API call failed:", error)
 **에셋 리소스:**
 
 ```
-caret-assets/
+assets/
 ├── icons/                         # 아이콘 모음
 │   ├── icon.png                  # 기본 아이콘
 │   ├── icon.svg                  # 벡터 아이콘
@@ -572,7 +572,7 @@ caret/
 │       ├── rule-priority.test.ts  # 우선순위 테스트
 │       └── [기능별 테스트들...]
 │
-├── caret-assets/                  # Caret 전용 리소스
+├── assets/                  # Caret 전용 리소스
 │   ├── icons/                     # 아이콘 모음
 │   ├── template_characters/       # 페르소나 데이터
 │   └── caret-main-banner.webp     # 브랜딩 에셋

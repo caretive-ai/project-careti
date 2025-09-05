@@ -305,8 +305,8 @@ cp caret-main/caret-src/utils/__tests__/persona-initializer.test.ts \
 ##### **🔧 페르소나 시스템 이식**
 ```bash
 # 1. 페르소나 에셋 이식
-cp -r caret-main/caret-assets/template_characters/ \
-      caret-assets/template_characters/
+cp -r caret-main/assets/template_characters/ \
+      assets/template_characters/
 
 # 2. 페르소나 초기화 로직 이식
 cp caret-main/caret-src/utils/persona-initializer.ts \
@@ -421,7 +421,7 @@ cp caret-main/webview-ui/src/caret/components/CaretUILanguageSetting.tsx \
 ##### **🔧 브랜딩 시스템 이식**
 ```bash
 # 1. 브랜딩 에셋 이식
-cp -r caret-main/caret-assets/ caret-assets/
+cp -r caret-main/assets/ assets/
 cp -r caret-main/webview-ui/src/assets/ webview-ui/src/assets/
 
 # 2. 스타일 시스템 이식

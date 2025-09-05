@@ -160,6 +160,9 @@ export interface GlobalState {
 				thinking_avatar_uri?: string
 		  }
 		| undefined
+	// CARET MODIFICATION: Persona image storage for persona system
+	caret_persona_avatar: Buffer | undefined
+	caret_persona_thinking_avatar: Buffer | undefined
 }
 
 export interface Secrets {

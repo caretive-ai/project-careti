@@ -3,7 +3,7 @@ import { FullPersonaProfile } from "../context/CaretStateContext"
 import { caretWebviewLogger } from "../utils/webview-logger"
 
 // CARET MODIFICATION: Convert asset:// URIs to Base64 data URIs to fix CSP violations
-// This implementation is ported from caret-compare with path changes: /caret-assets/ → /assets/
+// This implementation is ported from caret-compare with path changes: /assets/ → /assets/
 const convertAssetToBase64 = async (assetUri: string): Promise<string> => {
 	if (!assetUri.startsWith("asset:")) {
 		return assetUri

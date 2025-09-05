@@ -1,7 +1,7 @@
 [Read this document in English](./README.md) | [한국어로 읽기](./README.ko.md) | [日本語で読む](./README.ja.md) | [阅读中文版](./README.zh-cn.md)
 
 <div align="center">
-  <img src="caret-assets/icons/icon.png" alt="Caret icon" width="128">
+  <img src="assets/icons/icon.png" alt="Caret icon" width="128">
   <h1>Caret: 당신의 새로운 AI 동료</h1>
   <p><strong>클라인(Cline)의 투명성에 커서(Cursor)의 유연함을 더하다</strong></p>
   <p>
@@ -42,16 +42,16 @@ Caret은 단순한 AI 코딩 도구를 넘어, **개발자와 함께 성장하�
 클라인의 다소 경직된 Plan/Act 모드를 넘어, 커서(Cursor)의 Ask/Agent 방식처럼 유연하면서도, 'Ask'라는 용어보다 더 직관적인 **Chatbot/Agent 모드**를 제공합니다. 또한, 행동 방식만 바꾼 것이 아니라 **자체적으로 개선한 시스템 프롬프트**를 통해 AI의 응답 성능과 태도를 모두 향상시켰습니다. [실험 검증](./caret-docs/reports/experiment/json_caret_performance_test_20250713/comprehensive-performance-report-20250717.md)을 통해 **50% 토큰 절약**과 **20% API 비용 절감**을 달성하여, 더 경제적이고 예측 가능한 AI 협업을 제공합니다.
 
 ### 2. 나만의 AI 동료 만들기: 커스텀 페르소나
-<img src="caret-assets/template_characters/caret_illust.png" alt="Caret Persona Illustration" width="300"/>
+<img src="assets/template_characters/caret_illust.png" alt="Caret Persona Illustration" width="300"/>
 
 캐럿의 기본 캐릭터, K-POP 아이돌, OS-tan 등 미리 준비된 **템플릿 페르소나**로 코딩에 즐거움을 더하세요. 나만의 AI 에이전트 이름과 **프로필 이미지를 직접 등록**하여, 시각적으로 생동감 넘치는 개발 환경을 만들 수 있습니다.
 
 **기본 제공 페르소나:**
-*   <img src="caret-assets/template_characters/caret.png" width="24" align="center"/> **캐럿**: 코딩을 좋아하고 개발자를 돕는 친근한 로봇 친구.
-*   <img src="caret-assets/template_characters/sarang.png" width="24" align="center"/> **오사랑**: K-pop 아이돌이자, 논리와 감정 사이에서 당신을 돕는 츤데레 공대 소녀.
-*   <img src="caret-assets/template_characters/ichika.png" width="24" align="center"/> **마도베 이치카**: Windows 11을 모티브로 한 깔끔하고 믿음직한 조수.
-*   <img src="caret-assets/template_characters/cyan.png" width="24" align="center"/> **사이안 매킨**: macOS를 모티브로 한, 간결하고 효율적인 조력자.
-*   <img src="caret-assets/template_characters/ubuntu.png" width="24" align="center"/> **탄도 우분투**: 오픈소스 정신으로 함께 문제를 해결하는 따뜻한 협력자.
+*   <img src="assets/template_characters/caret.png" width="24" align="center"/> **캐럿**: 코딩을 좋아하고 개발자를 돕는 친근한 로봇 친구.
+*   <img src="assets/template_characters/sarang.png" width="24" align="center"/> **오사랑**: K-pop 아이돌이자, 논리와 감정 사이에서 당신을 돕는 츤데레 공대 소녀.
+*   <img src="assets/template_characters/ichika.png" width="24" align="center"/> **마도베 이치카**: Windows 11을 모티브로 한 깔끔하고 믿음직한 조수.
+*   <img src="assets/template_characters/cyan.png" width="24" align="center"/> **사이안 매킨**: macOS를 모티브로 한, 간결하고 효율적인 조력자.
+*   <img src="assets/template_characters/ubuntu.png" width="24" align="center"/> **탄도 우분투**: 오픈소스 정신으로 함께 문제를 해결하는 따뜻한 협력자.
 
 ### 3. 언어의 장벽 없는 코딩: 완벽한 다국어 지원
 다른 AI 도구들이 놓치고 있던 다국어 지원, 캐럿이 해결합니다. **i18n 기반의 오버레이 구조**를 통해, 영어가 익숙하지 않은 개발자도 **한국어, 일본어, 중국어 등 자신의 모국어**로 모든 기능을 완벽하게 사용할 수 있습니다.

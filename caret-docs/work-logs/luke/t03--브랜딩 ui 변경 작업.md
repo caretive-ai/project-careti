@@ -46,7 +46,7 @@
 - **변환 범위**: 
   - workspace 경로 변경 후 자동 proto 재생성 및 컴파일
   - package.json 메타데이터 (displayName, author, icons 등)
-  - 아이콘 경로 (assets/icons ↔ caret-assets/icons)  
+  - 아이콘 경로 (assets/icons ↔ assets/icons)  
   - 터미널 이름 및 이밎 (TerminalRegistry)
   - 규칙 파일 (.clinerules ↔ .caretrules)
 

@@ -1,5 +1,6 @@
 // CARET MODIFICATION: Handler for getting the current persona profile
 
+import { PersonaStorage } from "@caret/services/persona/persona-storage"
 import { PersonaProfile } from "@shared/proto/caret/persona"
 import type { EmptyRequest } from "@shared/proto/cline/common"
 import type { Controller } from "../index"
@@ -12,25 +13,46 @@ import type { Controller } from "../index"
  */
 export async function GetPersonaProfile(controller: Controller, _request: EmptyRequest): Promise<PersonaProfile> {
 	try {
-		// Get current persona from global storage
-		const _currentPersona = controller.context.globalState.get<string>("currentPersona")
-		const personaData = controller.context.globalState.get<any>("personaProfile") || {}
+		const personaStorage = new PersonaStorage()
 
-		// Default to "caret" persona if none set
+		// Try to load from persona.md file first, then fallback to global storage
+		const [profileDetails, images] = await Promise.all([
+			personaStorage.getPersona(controller),
+			personaStorage.loadSimplePersonaImages(controller),
+		])
+
+		// Fallback to global storage if persona.md doesn't exist
+		const legacyPersonaData = controller.context.globalState.get<any>("personaProfile") || {}
+
+		// Default values
 		const defaultPersona = {
 			name: "Caret",
 			description: "친근하고 도움되는 코딩 로봇 조수",
-			custom_instruction: "",
-			avatar_uri: "asset://template_characters/caret_profile.png",
-			thinking_avatar_uri: "asset://template_characters/caret_thinking.png",
+			customInstruction: "",
+			avatarUri: "asset://template_characters/caret_profile.png",
+			thinkingAvatarUri: "asset://template_characters/caret_thinking.png",
 		}
 
+		// Convert image buffers to base64 data URLs if available
+		const avatarUri = images?.avatar
+			? `data:image/png;base64,${images.avatar.toString("base64")}`
+			: legacyPersonaData.avatar_uri || defaultPersona.avatarUri
+		const thinkingAvatarUri = images?.thinkingAvatar
+			? `data:image/png;base64,${images.thinkingAvatar.toString("base64")}`
+			: legacyPersonaData.thinking_avatar_uri || defaultPersona.thinkingAvatarUri
+
 		return PersonaProfile.create({
-			name: personaData.name || defaultPersona.name,
-			description: personaData.description || defaultPersona.description,
-			customInstruction: personaData.custom_instruction || defaultPersona.custom_instruction,
-			avatarUri: personaData.avatar_uri || defaultPersona.avatar_uri,
-			thinkingAvatarUri: personaData.thinking_avatar_uri || defaultPersona.thinking_avatar_uri,
+			name: profileDetails.name !== "Default" ? profileDetails.name : legacyPersonaData.name || defaultPersona.name,
+			description:
+				profileDetails.description !== "Default Persona"
+					? profileDetails.description
+					: legacyPersonaData.description || defaultPersona.description,
+			customInstruction:
+				profileDetails.customInstruction !== "{}"
+					? profileDetails.customInstruction
+					: legacyPersonaData.custom_instruction || defaultPersona.customInstruction,
+			avatarUri,
+			thinkingAvatarUri,
 		})
 	} catch (error) {
 		console.error(`Failed to get persona profile: ${error}`)

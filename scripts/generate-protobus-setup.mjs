@@ -125,7 +125,9 @@ async function generateVscodeProtobusServers(protobusServices) {
 			servers.push(`    ${rpcName}: ${rpcName},`)
 		}
 		servers.push(`} \n`)
-		serviceMap.push(`    "cline.${serviceName}": ${serviceName}Handlers,`)
+		// CARET MODIFICATION: Use correct namespace for caret services
+		const serviceNamespace = serviceName === "PersonaService" ? "caret" : "cline"
+		serviceMap.push(`    "${serviceNamespace}.${serviceName}": ${serviceName}Handlers,`)
 		imports.push("")
 	}
 

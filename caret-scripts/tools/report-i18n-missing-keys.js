@@ -41,14 +41,16 @@ function main() {
 	let totalMissing = 0
 
 	enNamespaces.forEach((nsFile) => {
-		const namespace = path.basename(nsFile, ".json")
+		const _namespace = path.basename(nsFile, ".json")
 		const enFilePath = path.join(LOCALE_DIR_PATH, "en", nsFile)
 		const enContent = JSON.parse(fs.readFileSync(enFilePath, "utf8"))
 		const enKeys = new Set(getKeys(enContent))
 
 		otherLanguages.forEach((lang) => {
 			const langFilePath = path.join(LOCALE_DIR_PATH, lang, nsFile)
-			if (!fs.existsSync(langFilePath)) return
+			if (!fs.existsSync(langFilePath)) {
+				return
+			}
 
 			const langContent = JSON.parse(fs.readFileSync(langFilePath, "utf8"))
 			const langKeys = new Set(getKeys(langContent))

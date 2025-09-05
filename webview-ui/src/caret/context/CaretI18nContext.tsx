@@ -1,10 +1,8 @@
 // CARET MODIFICATION: Context provider for Caret i18n system
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react"
 import { useExtensionState } from "../../context/ExtensionStateContext"
-import { caretWebviewLogger } from "../utils/CaretWebviewLogger"
 import {
 	convertPreferredLanguageToSupported,
-	getCurrentLanguage,
 	type SupportedLanguage,
 	setExtensionLanguageProvider,
 	setGlobalUILanguage,

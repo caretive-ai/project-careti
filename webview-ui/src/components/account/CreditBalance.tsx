@@ -1,7 +1,7 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import { t } from "@/caret/utils/i18n"
 import VSCodeButtonLink from "../common/VSCodeButtonLink"
 import { StyledCreditDisplay } from "./StyledCreditDisplay"
-import { t } from "@/caret/utils/i18n"
 
 type CreditBalanceProps = {
 	balance: number | null

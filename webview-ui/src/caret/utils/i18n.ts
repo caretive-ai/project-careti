@@ -4,7 +4,7 @@
 // CARET MODIFICATION: 언어 변환 로직 import
 import { getLanguageKey, type LanguageDisplay, LLM_TO_UI_LANGUAGE_MAP } from "@shared/Languages"
 // CARET MODIFICATION: URL constants for template variable processing
-import { CARET_LOCALIZED_URLS, CARET_URLS, getLocalizedUrl } from "../constants/urls"
+import { CARET_URLS, getLocalizedUrl } from "../constants/urls"
 import enAnnouncement from "../locale/en/announcement.json"
 import enBrowser from "../locale/en/browser.json"
 import enChat from "../locale/en/chat.json"
@@ -50,8 +50,6 @@ import zhPersona from "../locale/zh/persona.json"
 import zhSettings from "../locale/zh/settings.json"
 import zhValidateApiConf from "../locale/zh/validate-api-conf.json"
 import zhWelcome from "../locale/zh/welcome.json"
-// CARET MODIFICATION: 로깅 유틸리티 import
-import { caretWebviewLogger } from "./CaretWebviewLogger"
 import { performanceMonitor } from "./i18n-performance"
 
 // CARET MODIFICATION: Removed urls dependency for cline-latest compatibility

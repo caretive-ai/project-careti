@@ -277,7 +277,7 @@ class FrontendBrandConverter {
 			const hideClass = `caret-codecenter-hide-cost`
 			const classRegex = new RegExp(`className=["']([^"']*)${target.selector.replace(".", "")}([^"']*)["']`, "g")
 
-			content = content.replace(classRegex, (match, before, after) => {
+			content = content.replace(classRegex, (match, _before, _after) => {
 				if (!match.includes(hideClass)) {
 					modifications++
 					return match.replace(/className=["']([^"']*)["']/, `className="$1 ${hideClass}"`)

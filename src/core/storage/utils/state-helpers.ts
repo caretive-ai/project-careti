@@ -7,7 +7,6 @@ import { ClineRulesToggles } from "@/shared/cline-rules"
 import { DEFAULT_FOCUS_CHAIN_SETTINGS, FocusChainSettings } from "@/shared/FocusChainSettings"
 import { HistoryItem } from "@/shared/HistoryItem"
 import { DEFAULT_MCP_DISPLAY_MODE, McpDisplayMode } from "@/shared/McpDisplayMode"
-import { McpMarketplaceCatalog } from "@/shared/mcp"
 import { Mode, OpenaiReasoningEffort } from "@/shared/storage/types"
 import { TelemetrySetting } from "@/shared/TelemetrySetting"
 import { UserInfo } from "@/shared/UserInfo"
@@ -207,6 +206,10 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 	const focusChainFeatureFlagEnabled = context.globalState.get("focusChainFeatureFlagEnabled") as boolean | undefined
 	// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 (Caret/Cline 구분)
 	const modeSystem = context.globalState.get("caretModeSystem") as "caret" | "cline" | undefined
+	// CARET MODIFICATION: Persona system settings
+	const enablePersonaSystem = context.globalState.get("enablePersonaSystem") as boolean | undefined
+	const currentPersona = context.globalState.get("currentPersona") as string | undefined
+	const personaProfile = context.globalState.get("personaProfile") as GlobalState["personaProfile"]
 
 	const mcpMarketplaceCatalog = context.globalState.get("mcpMarketplaceCatalog") as GlobalState["mcpMarketplaceCatalog"]
 	const qwenCodeOauthPath = context.globalState.get("qwenCodeOauthPath") as GlobalState["qwenCodeOauthPath"]
@@ -445,6 +448,10 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		customPrompt,
 		// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 (Caret/Cline 구분)
 		caretModeSystem: modeSystem || "caret",
+		// CARET MODIFICATION: Persona system settings
+		enablePersonaSystem: enablePersonaSystem ?? modeSystem === "caret",
+		currentPersona: currentPersona,
+		personaProfile: personaProfile,
 	}
 }
 

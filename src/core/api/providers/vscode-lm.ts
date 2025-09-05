@@ -7,7 +7,6 @@ import { ApiHandler, CommonApiHandlerOptions, SingleCompletionHandler } from "..
 import { withRetry } from "../retry"
 import { ApiStream } from "../transform/stream"
 import { convertToVsCodeLmMessages } from "../transform/vscode-lm-format"
-import type { LanguageModelChatSelector as LanguageModelChatSelectorFromTypes } from "./types"
 
 // Reference centralized VSCode type extensions
 /// <reference path="../../../types/vscode-extensions.d.ts" />

@@ -35,7 +35,7 @@ class CaretWebviewLogger {
 					console.error(logMessage, finalData)
 					break
 			}
-		} catch (e) {
+		} catch (_e) {
 			// Silently ignore console errors.
 		}
 	}

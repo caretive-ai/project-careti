@@ -148,6 +148,18 @@ export interface GlobalState {
 	actModeVercelAiGatewayModelInfo: ModelInfo | undefined
 	// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 (Caret/Cline 구분)
 	caretModeSystem: "caret" | "cline" | undefined
+	// CARET MODIFICATION: Persona system settings
+	enablePersonaSystem: boolean | undefined
+	currentPersona: string | undefined
+	personaProfile:
+		| {
+				name?: string
+				description?: string
+				custom_instruction?: string
+				avatar_uri?: string
+				thinking_avatar_uri?: string
+		  }
+		| undefined
 }
 
 export interface Secrets {

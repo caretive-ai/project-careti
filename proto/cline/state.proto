@@ -1,6 +1,7 @@
 syntax = "proto3";
 package cline;
 import "cline/common.proto";
+import "caret/persona.proto";
 option java_package = "bot.cline.proto";
 option java_multiple_files = true;
 
@@ -128,6 +129,10 @@ message UpdateSettingsRequest {
   optional string custom_prompt = 19;
   // CARET MODIFICATION: 전역 브랜드 모드 시스템
   optional string mode_system = 901;
+  // CARET MODIFICATION: Persona system settings
+  optional bool enable_persona_system = 902;
+  optional string current_persona = 903;
+  optional caret.PersonaProfile persona_profile = 904;
 }
 
 // Complete API Configuration message

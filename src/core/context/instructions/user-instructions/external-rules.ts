@@ -17,7 +17,7 @@ import { Logger } from "@/services/logging/Logger" // CARET MODIFICATION: Use Lo
  * CARET MODIFICATION: Helper function to disable all toggles while preserving file paths
  * Used for rule priority system implementation
  */
-function disableAllToggles(toggles: ClineRulesToggles): ClineRulesToggles {
+function _disableAllToggles(toggles: ClineRulesToggles): ClineRulesToggles {
 	const disabledToggles: ClineRulesToggles = {}
 	for (const filePath in toggles) {
 		disabledToggles[filePath] = false
@@ -76,7 +76,7 @@ export async function refreshExternalRulesToggles(
 	// Step 3: Apply priority logic ONLY for newly discovered files, preserve user toggle states
 	const caretHasFiles = Object.keys(updatedLocalCaretToggles).length > 0
 	const windsurfHasFiles = Object.keys(updatedLocalWindsurfToggles).length > 0
-	const cursorHasFiles = Object.keys(updatedLocalCursorToggles).length > 0
+	const _cursorHasFiles = Object.keys(updatedLocalCursorToggles).length > 0
 
 	// CARET MODIFICATION: Only apply priority for new files, not existing user toggles
 	// Check if we have NEW files (not just existing toggles)

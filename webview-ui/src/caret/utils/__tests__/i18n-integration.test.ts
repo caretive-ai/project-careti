@@ -1,6 +1,6 @@
 // Integration Test for Caret i18n System
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { changeLanguage, ensureLanguageLoaded, setGlobalUILanguage, setTranslationsForTesting, t } from "../i18n"
+import { setGlobalUILanguage, setTranslationsForTesting, t } from "../i18n"
 
 // Mock localStorage
 const localStorageMock = {

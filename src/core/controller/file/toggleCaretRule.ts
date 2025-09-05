@@ -1,5 +1,4 @@
 import type { Controller } from "@core/controller/index"
-import { ClineRulesToggles as AppClineRulesToggles } from "@shared/cline-rules"
 import type { ToggleCaretRuleRequest } from "@shared/proto/cline/file"
 import { ClineRulesToggles } from "@shared/proto/cline/file"
 import { Logger } from "@/services/logging/Logger" // CARET MODIFICATION: Add Logger for debugging

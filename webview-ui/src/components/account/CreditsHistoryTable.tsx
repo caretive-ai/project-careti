@@ -1,9 +1,9 @@
 import type { PaymentTransaction, UsageTransaction } from "@shared/ClineAccount"
 import { VSCodeDataGrid, VSCodeDataGridCell, VSCodeDataGridRow } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { formatDollars, formatTimestamp } from "@/utils/format"
 import { TabButton } from "../mcp/configuration/McpConfigurationView"
-import { t } from "@/caret/utils/i18n"
 
 interface CreditsHistoryTableProps {
 	isLoading: boolean
@@ -68,7 +68,9 @@ const CreditsHistoryTable = ({ isLoading, usageData, paymentsData, showPayments 
 								</VSCodeDataGrid>
 							) : (
 								<div className="flex justify-center items-center p-4">
-									<div className="text-[var(--vscode-descriptionForeground)]">{t("account.noUsageHistory", "common")}</div>
+									<div className="text-[var(--vscode-descriptionForeground)]">
+										{t("account.noUsageHistory", "common")}
+									</div>
 								</div>
 							))}
 
@@ -98,7 +100,9 @@ const CreditsHistoryTable = ({ isLoading, usageData, paymentsData, showPayments 
 								</VSCodeDataGrid>
 							) : (
 								<div className="flex justify-center items-center p-4">
-									<div className="text-[var(--vscode-descriptionForeground)]">{t("account.noPaymentHistory", "common")}</div>
+									<div className="text-[var(--vscode-descriptionForeground)]">
+										{t("account.noPaymentHistory", "common")}
+									</div>
 								</div>
 							))}
 					</>

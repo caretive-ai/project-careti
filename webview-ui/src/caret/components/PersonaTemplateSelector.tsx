@@ -5,7 +5,6 @@ import styled from "styled-components"
 import templateCharacters from "@/caret/assets/persona/template_characters.json"
 import { useCaretState } from "@/caret/context/CaretStateContext"
 import { getCurrentLanguage, t } from "@/caret/utils/i18n"
-import { useExtensionState } from "@/context/ExtensionStateContext"
 
 // CARET MODIFICATION: Convert asset:// URIs to proper image paths (same logic as PersonaAvatar)
 const convertAssetToImagePath = async (assetUri: string): Promise<string> => {
@@ -209,16 +208,20 @@ export const PersonaTemplateSelector: React.FC<PersonaTemplateSelectorProps> = (
 
 	// Get selected character
 	const getSelectedCharacter = () => {
-		if (!activeTab || templateCharacters.length === 0) return null
+		if (!activeTab || templateCharacters.length === 0) {
+			return null
+		}
 		return templateCharacters.find((char) => char.character === activeTab) || templateCharacters[0]
 	}
 
-	if (!isOpen) return null
+	if (!isOpen) {
+		return null
+	}
 
 	const activeCharacter = getSelectedCharacter()
 	const personaDetails = activeCharacter ? (activeCharacter as any)[currentLocale] || (activeCharacter as any).en : null
 
-	const logImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+	const _logImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
 		console.error("이미지 로드 오류:", e)
 		console.log("src URL:", (e.target as HTMLImageElement).src)
 	}

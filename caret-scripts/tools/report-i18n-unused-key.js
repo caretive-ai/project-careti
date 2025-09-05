@@ -86,7 +86,15 @@ class I18nUnusedKeyAnalyzer {
 	extractKeysFromObject(obj, namespace, locale, prefix = "") {
 		for (const [key, value] of Object.entries(obj)) {
 			const fullKey = prefix ? `${prefix}.${key}` : key
-			const namespacedKey = `${namespace}.${fullKey}`
+
+			// Handle nested namespace structure (e.g., chat.json has "chat" key at root)
+			let namespacedKey
+			if (fullKey.startsWith(namespace + ".")) {
+				// Remove duplicate namespace prefix
+				namespacedKey = fullKey
+			} else {
+				namespacedKey = `${namespace}.${fullKey}`
+			}
 
 			if (typeof value === "object" && value !== null) {
 				// Nested object - recurse
@@ -97,7 +105,7 @@ class I18nUnusedKeyAnalyzer {
 					this.allKeys.set(namespacedKey, {
 						locales: new Set(),
 						usageCount: 0,
-						namespaceKey: fullKey,
+						namespaceKey: fullKey.startsWith(namespace + ".") ? fullKey.substring(namespace.length + 1) : fullKey,
 						namespace: namespace,
 					})
 				}
@@ -155,7 +163,9 @@ class I18nUnusedKeyAnalyzer {
 		const files = []
 
 		const scanDir = (currentDir) => {
-			if (!fs.existsSync(currentDir)) return
+			if (!fs.existsSync(currentDir)) {
+				return
+			}
 
 			const entries = fs.readdirSync(currentDir)
 
@@ -181,21 +191,50 @@ class I18nUnusedKeyAnalyzer {
 	extractI18nKeysFromContent(content) {
 		const keys = new Set()
 
-		// Pattern 1: t('namespace.key') or t("namespace.key")
-		const tFunctionPattern = /t\(\s*['"`]([^'"`]+)['"`]\s*(?:,\s*['"`][^'"`]*['"`])?\s*\)/g
+		// Pattern 1: t('key', 'namespace', options) format - with optional third parameter
+		const tWithNamespaceAndOptionsPattern = /t\(\s*['"`]([^'"`]+)['"`]\s*,\s*['"`]([^'"`]+)['"`]\s*,\s*\{[^}]*\}\s*\)/g
 		let match
 
-		while ((match = tFunctionPattern.exec(content)) !== null) {
-			keys.add(match[1])
+		while ((match = tWithNamespaceAndOptionsPattern.exec(content)) !== null) {
+			const key = match[1]
+			const namespace = match[2]
+
+			// Check if the key already includes the namespace prefix
+			if (key.startsWith(namespace + ".")) {
+				// Key already includes namespace, use as-is
+				keys.add(key)
+			} else {
+				// Key doesn't include namespace, prepend it
+				keys.add(`${namespace}.${key}`)
+			}
 		}
 
-		// Pattern 2: t('key', 'namespace') format
+		// Pattern 2: t('key', 'namespace') format - without options
 		const tWithNamespacePattern = /t\(\s*['"`]([^'"`]+)['"`]\s*,\s*['"`]([^'"`]+)['"`]\s*\)/g
 
 		while ((match = tWithNamespacePattern.exec(content)) !== null) {
 			const key = match[1]
 			const namespace = match[2]
-			keys.add(`${namespace}.${key}`)
+
+			// Check if the key already includes the namespace prefix
+			if (key.startsWith(namespace + ".")) {
+				// Key already includes namespace, use as-is
+				keys.add(key)
+			} else {
+				// Key doesn't include namespace, prepend it
+				keys.add(`${namespace}.${key}`)
+			}
+		}
+
+		// Pattern 3: t('namespace.key') - only for keys that already include namespace
+		const tNamespacedKeyPattern = /t\(\s*['"`]([^'"`]*\.[^'"`]+)['"`]\s*\)/g
+
+		while ((match = tNamespacedKeyPattern.exec(content)) !== null) {
+			const namespacedKey = match[1]
+			// Only add if it's not already covered by previous patterns
+			if (namespacedKey.includes(".")) {
+				keys.add(namespacedKey)
+			}
 		}
 
 		return keys
@@ -420,7 +459,7 @@ node caret-scripts/tools/report-i18n-unused-key.js
 
 		for (const [key, components] of sortedKeys) {
 			const componentNames = components.map((c) => path.basename(c.relativePath)).join(", ")
-			const [estimatedNamespace, keyName] = key.includes(".") ? key.split(".") : ["common", key]
+			const [estimatedNamespace, _keyName] = key.includes(".") ? key.split(".") : ["common", key]
 			const priority = components.length > 1 ? "🔥" : "⚪"
 
 			table += `| \`${key}\` | ${componentNames} | ${estimatedNamespace} | ${priority} |\n`

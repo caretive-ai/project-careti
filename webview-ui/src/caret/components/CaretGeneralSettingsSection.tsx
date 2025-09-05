@@ -44,10 +44,10 @@ const CaretGeneralSettingsSection: React.FC<CaretGeneralSettingsSectionProps> = 
 									setEnablePersonaSystem(checked) // CARET MODIFICATION: localStorage는 setter 내부에서 처리
 									console.log("Persona system toggle:", checked)
 								}}>
-								{t("persona.enablePersonaSystem", "settings")}
+								{t("persona.enablePersonaSystem", "common")}
 							</VSCodeCheckbox>
 							<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
-								{t("persona.description", "settings")}
+								{t("persona.description", "common")}
 							</p>
 						</div>
 						{/* TODO: 페르소나 선택 UI 추가 */}
@@ -63,18 +63,18 @@ const CaretGeneralSettingsSection: React.FC<CaretGeneralSettingsSectionProps> = 
 							const checked = e.target.checked === true
 							updateSetting("telemetrySetting", checked ? "enabled" : "disabled")
 						}}>
-						{t("telemetry.label", "settings")}
+						{t("telemetry.label", "common")}
 					</VSCodeCheckbox>
 					<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
-						{t("telemetry.description", "settings")}{" "}
+						{t("telemetry.description", "common")}{" "}
 						<VSCodeLink className="text-inherit" href="https://docs.cline.bot/more-info/telemetry">
-							{t("telemetry.telemetryOverview", "settings")}
+							{t("telemetry.telemetryOverview", "common")}
 						</VSCodeLink>{" "}
-						{t("telemetry.and", "settings")}{" "}
+						{t("telemetry.and", "common")}{" "}
 						<VSCodeLink className="text-inherit" href="https://cline.bot/privacy">
-							{t("telemetry.privacyPolicy", "settings")}
+							{t("telemetry.privacyPolicy", "common")}
 						</VSCodeLink>{" "}
-						{t("telemetry.forMoreDetails", "settings")}
+						{t("telemetry.forMoreDetails", "common")}
 					</p>
 				</div>
 			</Section>

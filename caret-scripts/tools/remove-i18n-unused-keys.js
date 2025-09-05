@@ -33,7 +33,7 @@ function deleteNestedKey(obj, keyPath) {
 
 	// Clean up empty parent objects by traversing back up the path
 	for (let i = keys.length - 2; i >= 0; i--) {
-		const parentKey = keys.slice(0, i + 1).join(".")
+		const _parentKey = keys.slice(0, i + 1).join(".")
 		const parentObject = getNestedKey(obj, keys.slice(0, i).join("."))
 		const childKey = keys[i]
 
@@ -54,7 +54,9 @@ function deleteNestedKey(obj, keyPath) {
  * @returns {any} The value or undefined.
  */
 function getNestedKey(obj, keyPath) {
-	if (!keyPath) return obj
+	if (!keyPath) {
+		return obj
+	}
 	return keyPath.split(".").reduce((o, k) => (o && o[k] !== undefined ? o[k] : undefined), obj)
 }
 

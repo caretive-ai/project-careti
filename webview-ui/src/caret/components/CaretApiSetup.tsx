@@ -25,7 +25,7 @@ const CaretApiSetup: React.FC<CaretApiSetupProps> = ({ onSubmit, onBack, disable
 		padding: "0",
 	}
 
-	const backButtonStyle = {
+	const _backButtonStyle = {
 		marginBottom: "30px",
 		padding: "8px 16px",
 	}

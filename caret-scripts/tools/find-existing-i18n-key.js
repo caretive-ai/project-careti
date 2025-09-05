@@ -20,7 +20,9 @@ function loadAllLocaleKeys() {
 
 	LANGUAGES.forEach((lang) => {
 		const langDir = path.join(LOCALE_DIR, lang)
-		if (!fs.existsSync(langDir)) return
+		if (!fs.existsSync(langDir)) {
+			return
+		}
 
 		const jsonFiles = fs.readdirSync(langDir).filter((file) => file.endsWith(".json"))
 
@@ -138,8 +140,12 @@ function calculateSimilarity(str1, str2) {
 		.fill()
 		.map(() => Array(len1 + 1).fill(0))
 
-	for (let i = 0; i <= len1; i++) matrix[0][i] = i
-	for (let j = 0; j <= len2; j++) matrix[j][0] = j
+	for (let i = 0; i <= len1; i++) {
+		matrix[0][i] = i
+	}
+	for (let j = 0; j <= len2; j++) {
+		matrix[j][0] = j
+	}
 
 	for (let j = 1; j <= len2; j++) {
 		for (let i = 1; i <= len1; i++) {

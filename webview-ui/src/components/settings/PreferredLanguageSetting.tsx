@@ -1,9 +1,9 @@
 // CARET MODIFICATION: Import full language support
-import { type LanguageDisplay, type LanguageKey, languageOptions } from "@shared/Languages"
+import { type LanguageDisplay, languageOptions } from "@shared/Languages"
 import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import React from "react"
 import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
-import { SupportedLanguage, t } from "@/caret/utils/i18n"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { updateSetting } from "./utils/settingsHandlers"
 

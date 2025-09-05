@@ -1,6 +1,132 @@
 {
 	"chat": {
 		"startNewTask": "新しいタスクを開始",
+		"error": {
+			"displayContent": "このコンテンツの表示中に問題が発生しました",
+			"unknown": "エラー: {{message}}",
+			"unknownError": "不明なエラー",
+			"label": "エラー",
+			"mistakeLimitReached": "Caretが問題に遭遇しています...",
+			"maxRequestsReached": "最大リクエスト数に到達しました"
+		},
+		"mcp": {
+			"useServer": "Caretは{{serverName}} MCPサーバーで{{type}}を使用しようとしています:",
+			"tool": "ツール",
+			"resource": "リソース"
+		},
+		"taskCompleted": "タスク完了",
+		"tool": {
+			"outsideWorkspace": "このファイルはワークスペース外にあります",
+			"editFile": "Caretはこのファイルを編集しようとしています",
+			"createFile": "Caretは新しいファイルを作成しようとしています",
+			"readFile": "Caretはこのファイルを読み取ろうとしています",
+			"listFilesTopLevel": "Caretはこのディレクトリのトップレベルファイルを確認しようとしています",
+			"listFilesRecursive": "Caretはこのディレクトリ内のすべてのファイルを再帰的に確認しようとしています",
+			"listCodeDefinitionNames": "Caretはこのディレクトリで使用されているソースコード定義名を確認しようとしています",
+			"searchFiles": "Caretはこのディレクトリで検索しようとしています",
+			"summarizeTask": "Caretは会話を要約しています",
+			"summary": "要約",
+			"externalUrl": "このURLは外部です",
+			"webFetch": "CaretはこのURLからコンテンツを取得しようとしています",
+			"commandOutput": "コマンド出力",
+			"commandApprovalRequired": "モデルはこのコマンドに明示的な承認が必要であると判断しました。",
+			"mcpNotification": "MCP通知",
+			"thinking": {
+				"label": "考え中"
+			},
+			"mcpLoadingDocumentation": "MCPドキュメントをロード中",
+			"seeNewChanges": "新しい変更を見る",
+			"shellIntegration": {
+				"unavailable": "シェル統合が利用できません",
+				"description": "Caretはコマンドの出力を表示するのに問題がある可能性があります。VSCodeを更新し（<code>CMD/CTRL + Shift + P</code> → \"Update\"）、サポートされているシェル（zsh、bash、fish、またはPowerShell (<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\")）を使用していることを確認してください。",
+				"troubleshooting": "まだ問題がありますか？"
+			},
+			"condenseConversation": "Caretは会話を要約しようとしています",
+			"createGithubIssue": "CaretはGithub issueを作成しようとしています"
+		},
+		"image": {
+			"dimensionError": "画像の寸法が7500pxを超えています",
+			"unsupportedFileError": "画像以外のファイルは現在無効になっています"
+		},
+		"selectModelApiProvider": "モデル/APIプロバイダーを選択",
+		"addContext": "コンテキストを追加",
+		"addFilesImages": "ファイルと画像を追加",
+		"mode": {
+			"tooltip": {
+				"description": "{{mode}}モードでは、Caretは{{action}}",
+				"act": {
+					"action": "すぐにタスクを完了します"
+				},
+				"plan": {
+					"action": "計画を策定するために情報を収集します"
+				}
+			},
+			"act": {
+				"label": "Act"
+			},
+			"plan": {
+				"label": "Plan"
+			}
+		},
+		"contextMenu": {
+			"problems": "問題",
+			"terminal": "ターミナル",
+			"pasteUrlToFetchContents": "コンテンツを取得するURLを貼り付け",
+			"noResultsFound": "結果が見つかりません",
+			"gitCommits": "Gitコミット",
+			"add": "追加",
+			"file": "ファイル",
+			"folder": "フォルダ",
+			"searching": "検索中..."
+		},
+		"creditLimitError": {
+			"outOfCredits": "クレジットが不足しています。",
+			"buyCredits": "クレジットを購入",
+			"retryRequest": "リクエストを再試行"
+		},
+		"errorBlockTitle": {
+			"apiRetryAttempt": "APIリクエスト (失敗した試行 {{attempt}}/{{retryOperations}} を再試行",
+			"inSeconds": " {{remainingSeconds}}秒後",
+			"ellipsis": ")...",
+			"apiRequestLoading": "APIリクエスト中...",
+			"apiRequestCancelled": "APIリクエストがキャンセルされました",
+			"apiStreamingFailed": "APIストリーミングに失敗しました",
+			"apiRequest": "APIリクエスト",
+			"creditLimitReached": "クレジット制限に到達しました",
+			"apiRequestFailed": "APIリクエストに失敗しました"
+		},
+		"errorRow": {
+			"requestId": "リクエストID: {{requestId}}",
+			"powershellIssue": "Windows PowerShellの問題のようです。次の",
+			"troubleshootingGuide": "トラブルシューティングガイド",
+			"period": ".",
+			"clickRetryBelow": "(下の\"再試行\"をクリック)",
+			"signInToCline": "Caretにサインイン",
+			"diffError": "モデルはファイル内で一致する検索パターンを使用しませんでした。再試行中...",
+			"clineTriedToAccess": "Caretがアクセスしようとしました",
+			"isBlockedBy": "は次のファイルによってブロックされました。",
+			"file": "ファイル。"
+		},
+		"bugReport": {
+			"title": "バグレポート",
+			"whatHappened": "何が起こりましたか？",
+			"stepsToReproduce": "再現手順",
+			"relevantApiRequestOutput": "関連するAPIリクエスト出力",
+			"providerModel": "プロバイダー/モデル",
+			"operatingSystem": "オペレーティングシステム",
+			"systemInfo": "システム情報",
+			"clineVersion": "Caretバージョン",
+			"additionalContext": "追加コンテキスト"
+		},
+		"serversToggleModal": {
+			"manageMcpServers": "MCPサーバーを管理",
+			"mcpServers": "MCPサーバー"
+		},
+		"slashCommandMenu": {
+			"defaultCommands": "デフォルトコマンド",
+			"workflowCommands": "ワークフローコマンド",
+			"noMatchingCommandsFound": "一致するコマンドが見つかりません"
+		},
 		"openDiskTaskHistoryButton.openDiskTaskHistory": "ディスクタスク履歴を開く",
 		"taskHeader.task": "タスク",
 		"taskHeader.closeTask": "タスクを閉じる",
@@ -55,7 +181,8 @@
 		"clickToToggleActMode": "クリックしてActモードに切り替え",
 		"alreadyInActMode": "すでにActモードです",
 		"actModeShortcut": "Actモード (⌘⇧A)",
-		"copyCode": "コードをコピー"
+		"copyCode": "コードをコピー",
+		"openFileInEditor": "{{filePath}}をエディタで開く"
 	},
 	"mermaidBlock": {
 		"generatingDiagram": "Mermaidダイアグラムを生成中...",
@@ -69,8 +196,14 @@
 		"turnOffSetting": "この設定は",
 		"settings": "設定"
 	},
+	"thumbnails": {
+		"thumbnailImage": "サムネイル画像-{{index}}"
+	},
 	"historyPreview": {
 		"recentTasks": "最近のタスク",
+		"tokens": "トークン: ↑{{tokensIn}} ↓{{tokensOut}}",
+		"cache": "キャッシュ: +{{cacheWrites}} → {{cacheReads}}",
+		"apiCost": "APIコスト: ${{totalCost}}",
 		"viewAllHistory": "すべての履歴を表示",
 		"noRecentTasks": "最近のタスクはありません",
 		"favorited": "お気に入り"
@@ -78,6 +211,9 @@
 	"linkPreview": {
 		"failedToFetchOpenGraphData": "Open Graphデータの取得に失敗しました",
 		"unknownErrorOccurred": "不明なエラーが発生しました",
+		"loadingPreviewFor": "{{hostname}}のプレビューを読み込み中...",
+		"waitingForMinutesSeconds": "{{minutes}}分{{seconds}}秒待機中...",
+		"waitingForSeconds": "{{seconds}}秒待機中...",
 		"unableToLoadPreview": "プレビューを読み込めません",
 		"previewRequestTimedOut": "プレビューリクエストがタイムアウトしました",
 		"networkErrorLoadingPreview": "プレビューの読み込み中にネットワークエラーが発生しました",
@@ -86,15 +222,44 @@
 		"noTitle": "タイトルなし",
 		"errorDisplayingLinkPreview": "このリンクプレビューの表示中に問題が発生しました"
 	},
+	"historyView": {
+		"history": "履歴",
+		"done": "完了",
+		"fuzzySearchPlaceholder": "履歴のあいまい検索...",
+		"clearSearch": "検索をクリア",
+		"newest": "最新",
+		"oldest": "最古",
+		"mostExpensive": "最も高価",
+		"mostTokens": "最も多くのトークン",
+		"mostRelevant": "最も関連性の高い",
+		"workspace": "ワークスペース",
+		"favorites": "お気に入り",
+		"selectAll": "すべて選択",
+		"selectNone": "選択を解除",
+		"deleteSelected": "選択を削除",
+		"deleteAllHistory": "すべての履歴を削除",
+		"export": "エクスポート",
+		"deleteSelectedWithCount": "選択された{{count}}件を削除",
+		"deleteAllHistoryWithSize": "すべての履歴を削除 ({{size}})",
+		"selectedWithSize": "選択済み ({{size}})"
+	},
 	"imagePreview": {
+		"timeoutLoadingImage": "画像の読み込みがタイムアウトしました: {{url}}",
+		"failedToLoadImage": "画像の読み込みに失敗しました: {{url}}",
+		"loadingImageFrom": "{{hostname}}から画像を読み込み中...",
+		"waitingForMinutesSeconds": "{{minutes}}分{{seconds}}秒待機中...",
+		"waitingForSeconds": "{{seconds}}秒待機中...",
 		"failedToLoadImageTitle": "画像の読み込みに失敗しました",
 		"clickToOpenInBrowser": "クリックしてブラウザで開く",
+		"svgFrom": "{{hostname}}からのSVG",
+		"imageFrom": "{{hostname}}からの画像",
 		"errorDisplayingImage": "この画像の表示中に問題が発生しました"
 	},
 	"mcpResponseDisplay": {
 		"response": "応答",
 		"responseError": "応答 (エラー)",
-		"errorParsingResponse": "応答の解析エラー:"
+		"errorParsingResponse": "応答の解析エラー:",
+		"loadingRichContent": "リッチコンテンツを読み込み中..."
 	},
 	"mcpConfigurationView": {
 		"mcpServers": "MCPサーバー",
@@ -127,6 +292,8 @@
 		"editConfiguration": "構成を編集"
 	},
 	"brandMarketplace": {
+		"preparing": "{{brandName}} MCPマーケットプレイスを準備中。",
+		"preparingDescription": "{{brandName}}専用のMCPツールがまもなく利用可能になります。",
 		"codecenterPreparing": "CodeCenter MCPマーケットプレイスを準備中。",
 		"codecenterPreparingDescription": "CodeCenter専用のMCPツールがまもなく利用可能になります。"
 	},
@@ -173,6 +340,14 @@
 	"serversToggleList": {
 		"noMcpServersInstalled": "MCPサーバーがインストールされていません"
 	},
+	"mcpMarketplaceCard": {
+		"logoAlt": "{{name}}ロゴ",
+		"installed": "インストール済み",
+		"installing": "インストール中...",
+		"install": "インストール",
+		"requiresApiKey": "APIキーが必要",
+		"communityMadeWarning": "コミュニティ製（自己責任でご使用ください）"
+	},
 	"mcpMarketplaceView": {
 		"failedToLoadMarketplaceData": "マーケットプレイスデータの読み込みに失敗しました。",
 		"retry": "再試行",
@@ -188,6 +363,10 @@
 		"noMatchingMcpServersFound": "一致するMCPサーバーが見つかりません。",
 		"noMcpServersFoundInMarketplace": "マーケットプレイスでMCPサーバーが見つかりません。"
 	},
+	"mcpSubmitCard": {
+		"submitMcpServer": "MCPサーバーを提出",
+		"helpOthersDiscover": "github.com/cline/mcp-marketplaceにIssueを提出して、他の人が素晴らしいMCPサーバーを発見できるように支援してください。"
+	},
 	"clineRulesToggleModal": {
 		"manageRulesWorkflows": "Caretルールとワークフローを管理",
 		"rulesTab": "ルール",
@@ -197,6 +376,7 @@
 		"workflowsDescription": "ワークフローを使用すると、サービスのデプロイやPRの提出など、繰り返しのタスクセットをClineがガイドするための一連のステップを定義できます。ワークフローを呼び出すには、チャットに",
 		"workflowName": "/ワークフロー名",
 		"globalRules": "グローバルルール",
+		"workspaceRules": "ワークスペースルール",
 		"globalWorkflows": "グローバルワークフロー",
 		"workspaceWorkflows": "ワークスペースワークフロー"
 	},

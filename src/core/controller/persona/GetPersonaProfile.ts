@@ -13,7 +13,7 @@ import type { Controller } from "../index"
 export async function GetPersonaProfile(controller: Controller, _request: EmptyRequest): Promise<PersonaProfile> {
 	try {
 		// Get current persona from global storage
-		const currentPersona = controller.context.globalState.get<string>("currentPersona")
+		const _currentPersona = controller.context.globalState.get<string>("currentPersona")
 		const personaData = controller.context.globalState.get<any>("personaProfile") || {}
 
 		// Default to "caret" persona if none set

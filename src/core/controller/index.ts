@@ -315,7 +315,7 @@ export class Controller {
 		try {
 			await this.authService.handleAuthCallback(customToken, provider ? provider : "google")
 
-			const clineProvider: ApiProvider = "cline"
+			const _clineProvider: ApiProvider = "cline"
 
 			// Get current settings to determine how to update providers
 			const planActSeparateModelsSetting = this.stateManager.getGlobalStateKey("planActSeparateModelsSetting")
@@ -626,6 +626,10 @@ export class Controller {
 		const terminalOutputLineLimit = this.stateManager.getGlobalStateKey("terminalOutputLineLimit")
 		// CARET MODIFICATION: Add caretModeSystem to state transmission
 		const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem")
+		// CARET MODIFICATION: Add persona system settings
+		const enablePersonaSystem = this.stateManager.getGlobalStateKey("enablePersonaSystem") ?? modeSystem === "caret"
+		const currentPersona = this.stateManager.getGlobalStateKey("currentPersona")
+		const personaProfile = this.stateManager.getGlobalStateKey("personaProfile")
 		const localClineRulesToggles = this.stateManager.getWorkspaceStateKey("localClineRulesToggles")
 		const localWindsurfRulesToggles = this.stateManager.getWorkspaceStateKey("localWindsurfRulesToggles")
 		const localCursorRulesToggles = this.stateManager.getWorkspaceStateKey("localCursorRulesToggles")
@@ -691,6 +695,10 @@ export class Controller {
 			customPrompt,
 			// CARET MODIFICATION: Include modeSystem in state transmission
 			modeSystem,
+			// CARET MODIFICATION: Include persona system settings
+			enablePersonaSystem,
+			currentPersona,
+			personaProfile,
 		}
 	}
 

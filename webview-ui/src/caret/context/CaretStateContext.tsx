@@ -1,4 +1,5 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
+import * as proto from "@shared/proto/index"
 import { PersonaImages, PersonaProfile } from "@shared/proto/index.caret"
 import React, { createContext, type ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react"
 import { PersonaServiceClient } from "../services/CaretGrpcClient"
@@ -82,8 +83,9 @@ export const CaretStateContextProvider: React.FC<{ children: ReactNode }> = ({ c
 			setPersonaProfile(profile) // Optimistic update
 
 			try {
-				// Pass the entire profile object as per the corrected proto definition
-				await PersonaServiceClient.updatePersona({ profile })
+				// CARET MODIFICATION: Create proper UpdatePersonaRequest object
+				const request = proto.caret.UpdatePersonaRequest.create({ profile })
+				await PersonaServiceClient.updatePersona(request)
 			} catch (error) {
 				console.error("Failed to update persona, rolling back:", error)
 				setPersonaProfile(previousProfile) // Rollback on failure

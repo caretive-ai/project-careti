@@ -1,1 +1,17 @@
-{}
+{
+	"header": "🎉 v{{version}}의 새로운 기능",
+	"previousHeader": "이전 업데이트:",
+	"bullets": {
+		"current": {
+			"1": "GPT-5 모델 패밀리 지원",
+			"2": "15개 새 프로바이더 추가, 274개 AI 모델 통합"
+		}
+	},
+	"links": {
+		"intro": "커뮤니티는",
+		"and": "및",
+		"facebook": "페이스북 그룹",
+		"github": "GitHub",
+		"outro": "에서 만나보세요!"
+	}
+}

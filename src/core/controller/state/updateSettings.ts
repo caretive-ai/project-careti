@@ -184,6 +184,20 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			console.log(`[BACKEND] caretModeSystem changed: ${previousMode} -> ${modeSystem}`)
 		}
 
+		// CARET MODIFICATION: Update persona system settings
+		if (request.enablePersonaSystem !== undefined) {
+			controller.stateManager.setGlobalState("enablePersonaSystem", request.enablePersonaSystem)
+			console.log(`[BACKEND] enablePersonaSystem changed: ${request.enablePersonaSystem}`)
+		}
+
+		if (request.currentPersona !== undefined) {
+			controller.stateManager.setGlobalState("currentPersona", request.currentPersona)
+		}
+
+		if (request.personaProfile !== undefined) {
+			controller.stateManager.setGlobalState("personaProfile", request.personaProfile)
+		}
+
 		// Post updated state to webview
 		await controller.postStateToWebview()
 

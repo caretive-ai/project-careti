@@ -1,6 +1,7 @@
 caret-b2b
 caret-compare
 caret-main
+Roo-Code
 out
 dist
 dist-standalone
@@ -45,3 +46,7 @@ Roo-Code/.git_disabled/objects/pack/pack-2550d948dba060e02e8596fd8a88f8b93afce88
 Roo-Code/.git_disabled/objects/pack/pack-f04eeaacd9d5c177dd5b5f3273931a87ab27b4e4.idx
 Roo-Code/.git_disabled/objects/pack/pack-f04eeaacd9d5c177dd5b5f3273931a87ab27b4e4.pack
 Roo-Code/.git_disabled/objects/pack/pack-f04eeaacd9d5c177dd5b5f3273931a87ab27b4e4.rev
+
+# Ignore files with special characters causing linter issues
+caret-docs/보고서(reports)/
+"t -n 1 --before=2025-09-05 2113 merge-v326-08292807"

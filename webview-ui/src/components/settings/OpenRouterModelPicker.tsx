@@ -4,10 +4,10 @@ import { Mode } from "@shared/storage/types"
 import { VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from "react"
-import { Trans, useTranslation } from "react-i18next"
 import { useRemark } from "react-remark"
 import { useMount } from "react-use"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "@/services/grpc-client"
@@ -45,7 +45,6 @@ export interface OpenRouterModelPickerProps {
 }
 
 const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup, currentMode }) => {
-	const { t } = useTranslation()
 	const { handleModeFieldsChange } = useApiConfigurationHandlers()
 	const { apiConfiguration, openRouterModels, refreshOpenRouterModels } = useExtensionState()
 
@@ -334,8 +333,11 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup, 
 											setIsDropdownVisible(false)
 										}}
 										onMouseEnter={() => setSelectedIndex(index)}
-										ref={(el) => (itemRefs.current[index] = el)}>
+										ref={(el) => {
+											itemRefs.current[index] = el
+										}}>
 										<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+											{/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
 											<span dangerouslySetInnerHTML={{ __html: item.html }} />
 											<StarIcon
 												isFavorite={isFavorite}
@@ -382,19 +384,17 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup, 
 						marginTop: 0,
 						color: "var(--vscode-descriptionForeground)",
 					}}>
-					<Trans i18nKey="settings.openRouter.info.fullText">
-						The extension automatically fetches the latest list of models available on{" "}
-						<VSCodeLink href="https://openrouter.ai/models" style={{ display: "inline", fontSize: "inherit" }}>
-							OpenRouter.
-						</VSCodeLink>{" "}
-						If you're unsure which model to choose, Cline works best with{" "}
-						<VSCodeLink
-							onClick={() => handleModelChange("anthropic/claude-sonnet-4")}
-							style={{ display: "inline", fontSize: "inherit" }}>
-							anthropic/claude-sonnet-4.
-						</VSCodeLink>{" "}
-						You can also try searching "free" for no-cost options currently available.
-					</Trans>
+					{t("settings.openRouter.info.fullText.part1", "settings")}{" "}
+					<VSCodeLink href="https://openrouter.ai/models" style={{ display: "inline", fontSize: "inherit" }}>
+						OpenRouter.
+					</VSCodeLink>{" "}
+					{t("settings.openRouter.info.fullText.part2", "settings")}{" "}
+					<VSCodeLink
+						onClick={() => handleModelChange("anthropic/claude-sonnet-4")}
+						style={{ display: "inline", fontSize: "inherit" }}>
+						anthropic/claude-sonnet-4.
+					</VSCodeLink>{" "}
+					{t("settings.openRouter.info.fullText.part3", "settings")}
 				</p>
 			)}
 		</div>
@@ -500,7 +500,6 @@ export const ModelDescriptionMarkdown = memo(
 		setIsExpanded: (isExpanded: boolean) => void
 		isPopup?: boolean
 	}) => {
-		const { t } = useTranslation()
 		const [reactContent, setMarkdown] = useRemark()
 		// const [isExpanded, setIsExpanded] = useState(false)
 		const [showSeeMore, setShowSeeMore] = useState(false)

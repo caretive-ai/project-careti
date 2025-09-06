@@ -1,7 +1,7 @@
 import { sapAiCoreModels } from "@shared/api"
 import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import React, { memo, useMemo } from "react"
-import { useTranslation } from "react-i18next"
+import { t } from "@/caret/utils/i18n"
 import { DropdownContainer } from "./common/ModelSelector"
 
 export const SAP_AI_CORE_MODEL_PICKER_Z_INDEX = 1_000
@@ -27,7 +27,6 @@ const SapAiCoreModelPicker: React.FC<SapAiCoreModelPickerProps> = ({
 	placeholder,
 	useOrchestrationMode = false,
 }) => {
-	const { t } = useTranslation()
 	const finalPlaceholder = placeholder ?? t("settings.sapAiCore.placeholder", "Select a model...")
 
 	const handleModelChange = (event: any) => {

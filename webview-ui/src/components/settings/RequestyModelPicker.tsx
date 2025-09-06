@@ -4,10 +4,10 @@ import { Mode } from "@shared/storage/types"
 import { VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from "react"
-import { Trans, useTranslation } from "react-i18next"
 import { useRemark } from "react-remark"
 import { useMount } from "react-use"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { ModelsServiceClient } from "../../services/grpc-client"
 import { CODE_BLOCK_BG_COLOR } from "../common/CodeBlock"
@@ -23,7 +23,6 @@ export interface RequestyModelPickerProps {
 }
 
 const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, currentMode }) => {
-	const { t } = useTranslation()
 	const { apiConfiguration, requestyModels, setRequestyModels } = useExtensionState()
 	const { handleModeFieldsChange } = useApiConfigurationHandlers()
 	const modeFields = getModeSpecificFields(apiConfiguration, currentMode)
@@ -220,6 +219,7 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, curr
 						<DropdownList ref={dropdownListRef}>
 							{modelSearchResults.map((item, index) => (
 								<DropdownItem
+									// biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
 									dangerouslySetInnerHTML={{
 										__html: item.html,
 									}}
@@ -230,7 +230,9 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, curr
 										setIsDropdownVisible(false)
 									}}
 									onMouseEnter={() => setSelectedIndex(index)}
-									ref={(el) => (itemRefs.current[index] = el)}
+									ref={(el) => {
+										itemRefs.current[index] = el
+									}}
 								/>
 							))}
 						</DropdownList>
@@ -250,22 +252,20 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, curr
 						marginTop: 0,
 						color: "var(--vscode-descriptionForeground)",
 					}}>
-					<Trans
-						components={[
-							<VSCodeLink
-								href="https://app.requesty.ai/router/list"
-								key="requesty"
-								style={{ display: "inline", fontSize: "inherit" }}
-							/>,
-							<VSCodeLink
-								key="claude"
-								onClick={() => handleModelChange("anthropic/claude-3-7-sonnet-latest")}
-								style={{ display: "inline", fontSize: "inherit" }}
-							/>,
-						]}
-						defaults="The extension automatically fetches the latest list of models available on <0>Requesty.</0> If you're unsure which model to choose, Cline works best with <1>anthropic/claude-3-7-sonnet-latest.</1>"
-						i18nKey="settings.requesty.info.fullText"
-					/>
+					{t("settings.requesty.info.fullText.part1", "settings")}{" "}
+					<VSCodeLink
+						href="https://app.requesty.ai/router/list"
+						key="requesty"
+						style={{ display: "inline", fontSize: "inherit" }}>
+						Requesty.
+					</VSCodeLink>{" "}
+					{t("settings.requesty.info.fullText.part2", "settings")}{" "}
+					<VSCodeLink
+						key="claude"
+						onClick={() => handleModelChange("anthropic/claude-3-7-sonnet-latest")}
+						style={{ display: "inline", fontSize: "inherit" }}>
+						anthropic/claude-3-7-sonnet-latest.
+					</VSCodeLink>
 				</p>
 			)}
 		</div>
@@ -371,7 +371,6 @@ export const ModelDescriptionMarkdown = memo(
 		setIsExpanded: (isExpanded: boolean) => void
 		isPopup?: boolean
 	}) => {
-		const { t } = useTranslation()
 		const [reactContent, setMarkdown] = useRemark()
 		// const [isExpanded, setIsExpanded] = useState(false)
 		const [showSeeMore, setShowSeeMore] = useState(false)

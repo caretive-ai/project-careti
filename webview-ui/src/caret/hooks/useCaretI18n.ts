@@ -1,10 +1,12 @@
 // CARET MODIFICATION: Complete useCaretI18n Hook with Context integration and lazy loading
-import type { TFunction } from "i18next"
 import { useCallback, useMemo } from "react"
 import { useCaretI18nContext } from "../context/CaretI18nContext"
 import { getCurrentLanguage, type SupportedLanguage, setGlobalUILanguage, t } from "../utils/i18n"
 import { performanceMonitor } from "../utils/i18n-performance"
 import { loadLanguageBundle, preloadLanguageBundles } from "../utils/lazy-i18n"
+
+// Define a compatible TFunction type to remove i18next dependency
+export type TFunction = (key: string, namespace?: string, options?: Record<string, string | number>) => string
 
 export interface UseCaretI18nReturn {
 	t: TFunction
@@ -100,7 +102,7 @@ export const useCaretI18n = (): UseCaretI18nReturn => {
 	// Memoize the return object to prevent unnecessary re-renders
 	const returnValue = useMemo(
 		() => ({
-			t: translationFunction as unknown as TFunction,
+			t: translationFunction,
 			tWithLang,
 			currentLanguage,
 			changeLanguage,

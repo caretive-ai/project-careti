@@ -1,8 +1,8 @@
 import { McpMarketplaceItem, McpServer } from "@shared/mcp"
 import { StringRequest } from "@shared/proto/cline/common"
 import { useEffect, useMemo, useRef, useState } from "react"
-import { useTranslation } from "react-i18next"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { McpServiceClient } from "@/services/grpc-client"
 
@@ -13,7 +13,6 @@ interface McpMarketplaceCardProps {
 }
 
 const McpMarketplaceCard = ({ item, installedServers, setError }: McpMarketplaceCardProps) => {
-	const { t } = useTranslation()
 	const isInstalled = installedServers.some((server) => server.name === item.mcpId)
 	const [isDownloading, setIsDownloading] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)

@@ -1,182 +1,180 @@
 {
-	"chat": {
-		"startNewTask": "开始新任务",
-		"error": {
-			"displayContent": "显示此内容时出现问题",
-			"unknown": "错误: {{message}}",
-			"unknownError": "未知错误",
-			"label": "错误",
-			"mistakeLimitReached": "Caret遇到了一些问题...",
-			"maxRequestsReached": "达到最大请求数"
+	"startNewTask": "开始新任务",
+	"error": {
+		"displayContent": "显示此内容时出现问题",
+		"unknown": "错误: {{message}}",
+		"unknownError": "未知错误",
+		"label": "错误",
+		"mistakeLimitReached": "Caret遇到了一些问题...",
+		"maxRequestsReached": "达到最大请求数"
+	},
+	"mcp": {
+		"useServer": "Caret将尝试在 {{serverName}} MCP 服务器上 {{type}}：",
+		"tool": "工具",
+		"resource": "资源"
+	},
+	"taskCompleted": "任务完成",
+	"tool": {
+		"outsideWorkspace": "此文件位于工作区之外",
+		"editFile": "Caret想要编辑此文件",
+		"createFile": "Caret想要创建一个新文件",
+		"readFile": "Caret想要读取此文件",
+		"listFilesTopLevel": "Caret想要查看此目录中的顶级文件",
+		"listFilesRecursive": "Caret想要递归查看此目录中的所有文件",
+		"listCodeDefinitionNames": "Caret想要查看此目录中使用的源代码定义名称",
+		"searchFiles": "Caret想要在此目录中搜索",
+		"summarizeTask": "Caret正在总结对话",
+		"summary": "摘要",
+		"externalUrl": "此URL是外部的",
+		"webFetch": "Caret想要从此URL获取内容",
+		"commandOutput": "命令输出",
+		"commandApprovalRequired": "模型已确定此命令需要明确批准。",
+		"mcpNotification": "MCP通知",
+		"thinking": {
+			"label": "思考中"
 		},
-		"mcp": {
-			"useServer": "Caret将尝试在 {{serverName}} MCP 服务器上 {{type}}：",
-			"tool": "工具",
-			"resource": "资源"
+		"mcpLoadingDocumentation": "正在加载MCP文档",
+		"seeNewChanges": "查看新更改",
+		"shellIntegration": {
+			"unavailable": "Shell集成不可用",
+			"description": "Caret查看命令输出时可能遇到问题。请更新VSCode（<code>CMD/CTRL + Shift + P</code> → \"Update\"）并确保您正在使用支持的shell：zsh、bash、fish或PowerShell（<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\"）。",
+			"troubleshooting": "仍然有问题？"
 		},
-		"taskCompleted": "任务完成",
-		"tool": {
-			"outsideWorkspace": "此文件位于工作区之外",
-			"editFile": "Caret想要编辑此文件",
-			"createFile": "Caret想要创建一个新文件",
-			"readFile": "Caret想要读取此文件",
-			"listFilesTopLevel": "Caret想要查看此目录中的顶级文件",
-			"listFilesRecursive": "Caret想要递归查看此目录中的所有文件",
-			"listCodeDefinitionNames": "Caret想要查看此目录中使用的源代码定义名称",
-			"searchFiles": "Caret想要在此目录中搜索",
-			"summarizeTask": "Caret正在总结对话",
-			"summary": "摘要",
-			"externalUrl": "此URL是外部的",
-			"webFetch": "Caret想要从此URL获取内容",
-			"commandOutput": "命令输出",
-			"commandApprovalRequired": "模型已确定此命令需要明确批准。",
-			"mcpNotification": "MCP通知",
-			"thinking": {
-				"label": "思考中"
-			},
-			"mcpLoadingDocumentation": "正在加载MCP文档",
-			"seeNewChanges": "查看新更改",
-			"shellIntegration": {
-				"unavailable": "Shell集成不可用",
-				"description": "Caret查看命令输出时可能遇到问题。请更新VSCode（<code>CMD/CTRL + Shift + P</code> → \"Update\"）并确保您正在使用支持的shell：zsh、bash、fish或PowerShell（<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\"）。",
-				"troubleshooting": "仍然有问题？"
-			},
-			"condenseConversation": "Caret想要总结您的对话",
-			"createGithubIssue": "Caret想要创建一个Github问题"
-		},
-		"image": {
-			"dimensionError": "图像尺寸超过7500px",
-			"unsupportedFileError": "图像以外的文件目前已禁用"
-		},
-		"selectModelApiProvider": "选择模型/API提供商",
-		"addContext": "添加上下文",
-		"addFilesImages": "添加文件和图像",
-		"mode": {
-			"tooltip": {
-				"description": "在{{mode}}模式下，Caret将{{action}}",
-				"act": {
-					"action": "立即完成任务"
-				},
-				"plan": {
-					"action": "收集信息以规划方案"
-				}
-			},
+		"condenseConversation": "Caret想要总结您的对话",
+		"createGithubIssue": "Caret想要创建一个Github问题"
+	},
+	"image": {
+		"dimensionError": "图像尺寸超过7500px",
+		"unsupportedFileError": "图像以外的文件目前已禁用"
+	},
+	"selectModelApiProvider": "选择模型/API提供商",
+	"addContext": "添加上下文",
+	"addFilesImages": "添加文件和图像",
+	"mode": {
+		"tooltip": {
+			"description": "在{{mode}}模式下，Caret将{{action}}",
 			"act": {
-				"label": "执行"
+				"action": "立即完成任务"
 			},
 			"plan": {
-				"label": "计划"
+				"action": "收集信息以规划方案"
 			}
 		},
-		"contextMenu": {
-			"problems": "问题",
-			"terminal": "终端",
-			"pasteUrlToFetchContents": "粘贴URL以获取内容",
-			"noResultsFound": "未找到结果",
-			"gitCommits": "Git提交",
-			"add": "添加",
-			"file": "文件",
-			"folder": "文件夹",
-			"searching": "搜索中..."
+		"act": {
+			"label": "执行"
 		},
-		"creditLimitError": {
-			"outOfCredits": "您的积分已用完。",
-			"buyCredits": "购买积分",
-			"retryRequest": "重试请求"
-		},
-		"errorBlockTitle": {
-			"apiRetryAttempt": "API请求 (重试失败的第 {{attempt}}/{{retryOperations}} 次尝试",
-			"inSeconds": " 在 {{remainingSeconds}} 秒后",
-			"ellipsis": ")...",
-			"apiRequestLoading": "API请求中...",
-			"apiRequestCancelled": "API请求已取消",
-			"apiStreamingFailed": "API流式传输失败",
-			"apiRequest": "API请求",
-			"creditLimitReached": "达到积分限制",
-			"apiRequestFailed": "API请求失败"
-		},
-		"errorRow": {
-			"requestId": "请求ID: {{requestId}}",
-			"powershellIssue": "您似乎遇到了Windows PowerShell问题，请参阅此",
-			"troubleshootingGuide": "故障排除指南",
-			"period": "。",
-			"clickRetryBelow": "（点击下方的“重试”）",
-			"signInToCline": "登录到Cline",
-			"diffError": "模型使用的搜索模式与文件中任何内容都不匹配。正在重试...",
-			"clineTriedToAccess": "Caret尝试访问",
-			"isBlockedBy": "被以下文件阻止：",
-			"file": "文件。"
-		},
-		"bugReport": {
-			"title": "错误报告",
-			"whatHappened": "发生了什么？",
-			"stepsToReproduce": "重现步骤",
-			"relevantApiRequestOutput": "相关API请求输出",
-			"providerModel": "提供商/模型",
-			"operatingSystem": "操作系统",
-			"systemInfo": "系统信息",
-			"clineVersion": "Caret版本",
-			"additionalContext": "附加上下文"
-		},
-		"serversToggleModal": {
-			"manageMcpServers": "管理MCP服务器",
-			"mcpServers": "MCP服务器"
-		},
-		"slashCommandMenu": {
-			"defaultCommands": "默认命令",
-			"workflowCommands": "工作流命令",
-			"noMatchingCommandsFound": "未找到匹配的命令"
-		},
-		"openDiskTaskHistoryButton.openDiskTaskHistory": "打开磁盘任务历史记录",
-		"taskHeader.task": "任务",
-		"taskHeader.closeTask": "关闭任务",
-		"taskHeader.seeMore": "查看更多",
-		"taskHeader.seeLess": "收起",
-		"taskHeader.tokens": "令牌",
-		"taskHeader.promptTokens": "提示令牌",
-		"taskHeader.completionTokens": "完成令牌",
-		"taskHeader.cache": "缓存",
-		"taskHeader.tokensWrittenToCache": "写入缓存的令牌",
-		"taskHeader.tokensReadFromCache": "从缓存读取的令牌",
-		"taskHeader.allStepsCompleted": "所有 {{totalCount}} 步已完成！",
-		"taskHeader.newStepsGenerated": "如果您继续任务，将生成新的步骤",
-		"taskHeader.editFocusChainList": "在markdown文件中编辑焦点链列表",
-		"taskHeader.disablingCheckpoints": "正在禁用检查点。",
-		"taskHeader.seeHereForInstructions": "请参阅此处获取说明。",
-		"taskTimelineTooltip.taskMessage": "任务消息",
-		"taskTimelineTooltip.userMessage": "用户消息",
-		"taskTimelineTooltip.assistantResponse": "助手响应",
-		"taskTimelineTooltip.fileRead": "文件读取: {{tool}}",
-		"taskTimelineTooltip.fileEdit": "文件编辑: {{path}}",
-		"taskTimelineTooltip.newFile": "新文件: {{path}}",
-		"taskTimelineTooltip.webFetch": "Web抓取: {{path}}",
-		"taskTimelineTooltip.tool": "工具: {{tool}}",
-		"taskTimelineTooltip.toolUse": "工具使用",
-		"taskTimelineTooltip.terminalCommand": "终端命令",
-		"taskTimelineTooltip.terminalOutput": "终端输出",
-		"taskTimelineTooltip.browserAction": "浏览器操作",
-		"taskTimelineTooltip.browserResult": "浏览器结果",
-		"taskTimelineTooltip.taskCompleted": "任务完成",
-		"taskTimelineTooltip.checkpointCreated": "检查点已创建",
-		"taskTimelineTooltip.unknown": "未知",
-		"taskTimelineTooltip.assistantMessage": "助手消息",
-		"taskTimelineTooltip.planningResponse": "规划响应",
-		"taskTimelineTooltip.fileReadApproval": "文件读取批准: {{tool}}",
-		"taskTimelineTooltip.fileEditApproval": "文件编辑批准: {{path}}",
-		"taskTimelineTooltip.newFileApproval": "新文件批准: {{path}}",
-		"taskTimelineTooltip.toolApproval": "工具批准: {{tool}}",
-		"taskTimelineTooltip.terminalCommandApproval": "终端命令批准",
-		"taskTimelineTooltip.browserActionApproval": "浏览器操作批准",
-		"taskTimelineTooltip.unknownMessageType": "未知消息类型",
-		"taskTimelineTooltip.unknownFile": "未知文件",
-		"taskTimelineTooltip.unknownUrl": "未知URL",
-		"taskFeedbackButtons.thisWasHelpful": "这很有帮助",
-		"taskFeedbackButtons.thisWasNotHelpful": "这没有帮助",
-		"userMessage.restoreAll": "全部恢复",
-		"userMessage.restoreAllTooltip": "将您的聊天和工作区文件恢复到此时间点拍摄的快照并发送已编辑的消息",
-		"userMessage.restoreChat": "恢复聊天",
-		"userMessage.restoreChatTooltip": "删除此时间点之后的消息（不影响工作区文件）"
+		"plan": {
+			"label": "计划"
+		}
 	},
+	"contextMenu": {
+		"problems": "问题",
+		"terminal": "终端",
+		"pasteUrlToFetchContents": "粘贴URL以获取内容",
+		"noResultsFound": "未找到结果",
+		"gitCommits": "Git提交",
+		"add": "添加",
+		"file": "文件",
+		"folder": "文件夹",
+		"searching": "搜索中..."
+	},
+	"creditLimitError": {
+		"outOfCredits": "您的积分已用完。",
+		"buyCredits": "购买积分",
+		"retryRequest": "重试请求"
+	},
+	"errorBlockTitle": {
+		"apiRetryAttempt": "API请求 (重试失败的第 {{attempt}}/{{retryOperations}} 次尝试",
+		"inSeconds": " 在 {{remainingSeconds}} 秒后",
+		"ellipsis": ")...",
+		"apiRequestLoading": "API请求中...",
+		"apiRequestCancelled": "API请求已取消",
+		"apiStreamingFailed": "API流式传输失败",
+		"apiRequest": "API请求",
+		"creditLimitReached": "达到积分限制",
+		"apiRequestFailed": "API请求失败"
+	},
+	"errorRow": {
+		"requestId": "请求ID: {{requestId}}",
+		"powershellIssue": "您似乎遇到了Windows PowerShell问题，请参阅此",
+		"troubleshootingGuide": "故障排除指南",
+		"period": "。",
+		"clickRetryBelow": "（点击下方的“重试”）",
+		"signInToCline": "登录到Cline",
+		"diffError": "模型使用的搜索模式与文件中任何内容都不匹配。正在重试...",
+		"clineTriedToAccess": "Caret尝试访问",
+		"isBlockedBy": "被以下文件阻止：",
+		"file": "文件。"
+	},
+	"bugReport": {
+		"title": "错误报告",
+		"whatHappened": "发生了什么？",
+		"stepsToReproduce": "重现步骤",
+		"relevantApiRequestOutput": "相关API请求输出",
+		"providerModel": "提供商/模型",
+		"operatingSystem": "操作系统",
+		"systemInfo": "系统信息",
+		"clineVersion": "Caret版本",
+		"additionalContext": "附加上下文"
+	},
+	"serversToggleModal": {
+		"manageMcpServers": "管理MCP服务器",
+		"mcpServers": "MCP服务器"
+	},
+	"slashCommandMenu": {
+		"defaultCommands": "默认命令",
+		"workflowCommands": "工作流命令",
+		"noMatchingCommandsFound": "未找到匹配的命令"
+	},
+	"openDiskTaskHistoryButton.openDiskTaskHistory": "打开磁盘任务历史记录",
+	"taskHeader.task": "任务",
+	"taskHeader.closeTask": "关闭任务",
+	"taskHeader.seeMore": "查看更多",
+	"taskHeader.seeLess": "收起",
+	"taskHeader.tokens": "令牌",
+	"taskHeader.promptTokens": "提示令牌",
+	"taskHeader.completionTokens": "完成令牌",
+	"taskHeader.cache": "缓存",
+	"taskHeader.tokensWrittenToCache": "写入缓存的令牌",
+	"taskHeader.tokensReadFromCache": "从缓存读取的令牌",
+	"taskHeader.allStepsCompleted": "所有 {{totalCount}} 步已完成！",
+	"taskHeader.newStepsGenerated": "如果您继续任务，将生成新的步骤",
+	"taskHeader.editFocusChainList": "在markdown文件中编辑焦点链列表",
+	"taskHeader.disablingCheckpoints": "正在禁用检查点。",
+	"taskHeader.seeHereForInstructions": "请参阅此处获取说明。",
+	"taskTimelineTooltip.taskMessage": "任务消息",
+	"taskTimelineTooltip.userMessage": "用户消息",
+	"taskTimelineTooltip.assistantResponse": "助手响应",
+	"taskTimelineTooltip.fileRead": "文件读取: {{tool}}",
+	"taskTimelineTooltip.fileEdit": "文件编辑: {{path}}",
+	"taskTimelineTooltip.newFile": "新文件: {{path}}",
+	"taskTimelineTooltip.webFetch": "Web抓取: {{path}}",
+	"taskTimelineTooltip.tool": "工具: {{tool}}",
+	"taskTimelineTooltip.toolUse": "工具使用",
+	"taskTimelineTooltip.terminalCommand": "终端命令",
+	"taskTimelineTooltip.terminalOutput": "终端输出",
+	"taskTimelineTooltip.browserAction": "浏览器操作",
+	"taskTimelineTooltip.browserResult": "浏览器结果",
+	"taskTimelineTooltip.taskCompleted": "任务完成",
+	"taskTimelineTooltip.checkpointCreated": "检查点已创建",
+	"taskTimelineTooltip.unknown": "未知",
+	"taskTimelineTooltip.assistantMessage": "助手消息",
+	"taskTimelineTooltip.planningResponse": "规划响应",
+	"taskTimelineTooltip.fileReadApproval": "文件读取批准: {{tool}}",
+	"taskTimelineTooltip.fileEditApproval": "文件编辑批准: {{path}}",
+	"taskTimelineTooltip.newFileApproval": "新文件批准: {{path}}",
+	"taskTimelineTooltip.toolApproval": "工具批准: {{tool}}",
+	"taskTimelineTooltip.terminalCommandApproval": "终端命令批准",
+	"taskTimelineTooltip.browserActionApproval": "浏览器操作批准",
+	"taskTimelineTooltip.unknownMessageType": "未知消息类型",
+	"taskTimelineTooltip.unknownFile": "未知文件",
+	"taskTimelineTooltip.unknownUrl": "未知URL",
+	"taskFeedbackButtons.thisWasHelpful": "这很有帮助",
+	"taskFeedbackButtons.thisWasNotHelpful": "这没有帮助",
+	"userMessage.restoreAll": "全部恢复",
+	"userMessage.restoreAllTooltip": "将您的聊天和工作区文件恢复到此时间点拍摄的快照并发送已编辑的消息",
+	"userMessage.restoreChat": "恢复聊天",
+	"userMessage.restoreChatTooltip": "删除此时间点之后的消息（不影响工作区文件）",
 	"markdownBlock": {
 		"clickToToggleActMode": "点击切换到Act模式",
 		"alreadyInActMode": "已在Act模式",

@@ -1,6 +1,6 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { Mode } from "@shared/storage/types"
-import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
@@ -9,11 +9,9 @@ import { useApiConfigurationHandlers } from "../utils/useApiConfigurationHandler
 
 interface CaretProviderProps {
 	currentMode: Mode
-	isPopup?: boolean
-	showModelOptions: boolean
 }
 
-const CaretProvider = ({ currentMode, isPopup, showModelOptions }: CaretProviderProps) => {
+const CaretProvider = () => {
 	const { apiConfiguration } = useExtensionState()
 	const { handleFieldChange } = useApiConfigurationHandlers()
 
@@ -35,10 +33,6 @@ const CaretProvider = ({ currentMode, isPopup, showModelOptions }: CaretProvider
 				<VSCodeButton appearance="primary" className="w-full" onClick={handleLogin} style={{ minWidth: "120px" }}>
 					{t("providers.caret.login", "settings")}
 				</VSCodeButton>
-
-				<div style={{ textAlign: "center", color: "var(--vscode-descriptionForeground)", fontSize: 12 }}>
-					{t("providers.caret.or", "settings")}
-				</div>
 
 				<ApiKeyField
 					initialValue={apiConfiguration?.caretApiKey || ""}
@@ -66,10 +60,7 @@ const CaretProvider = ({ currentMode, isPopup, showModelOptions }: CaretProvider
 				</ul>
 			</div>
 
-			<p style={{ fontSize: 11, color: "var(--vscode-descriptionForeground)", margin: 0 }}>
-				{t("providers.caret.visit", "settings")} <VSCodeLink href="https://caret.team">caret.team</VSCodeLink>{" "}
-				{t("providers.caret.getApiKey", "settings")}
-			</p>
+			<p style={{ fontSize: 11, color: "var(--vscode-descriptionForeground)", margin: 0 }}></p>
 		</div>
 	)
 }

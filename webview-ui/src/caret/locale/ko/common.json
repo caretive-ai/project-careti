@@ -154,10 +154,10 @@
 		"openAIReasoningEffort": {
 			"high": "High (More detailed, slower, higher cost)",
 			"label": "OpenAI Reasoning Effort",
-			"description": "Adjust the reasoning effort for OpenAI models. Higher effort may lead to more detailed responses but can be slower and more costly."
+			"description": "Adjust the reasoning e[ffort for OpenAI models. Higher effort may lead to more detailed responses but can be slower and more costly."
 		},
 		"apiKey": {
-			"placeholder": "API 키 입력...",
+			"placeholder": "API 키를 입력 하세요.",
 			"getYourKeyAn": "여기서 가입하여 {{providerName}} API 키를 얻을 수 있습니다.",
 			"getYourKeyA": "여기서 가입하여 {{providerName}} API 키를 얻을 수 있습니다.",
 			"label": "{{providerName}} API 키",
@@ -336,7 +336,17 @@
 		"installed": "설치됨",
 		"installing": "설치 중...",
 		"install": "설치",
-		"requiresApiKey": "API 키 필요"
+		"requiresApiKey": "API 키 필요",
+		"marketplace": "마켓플레이스",
+		"remoteServers": "원격 서버",
+		"noServersInstalled": "설치된 MCP 서버가 없습니다",
+		"configureServers": "MCP 서버 구성",
+		"noMatchingServers": "일치하는 MCP 서버를 찾을 수 없습니다",
+		"noServersFound": "마켓플레이스에서 MCP 서버를 찾을 수 없습니다",
+		"autoApprove": "자동 승인",
+		"autoApproveAllTools": "모든 도구 자동 승인",
+		"title": "MCP Servers",
+		"description": "The Model Context Protocol enables communication with locally running MCP servers that provide additional tools and resources to extend Caret's capabilities."
 	},
 	"history": {
 		"clearSearch": "검색 지우기",
@@ -344,7 +354,19 @@
 		"cacheLabel": "캐시:",
 		"apiCostLabel": "API 비용:",
 		"deleteSelected": "선택된 항목 삭제",
-		"export": "내보내기"
+		"export": "내보내기",
+		"deleteAllHistory": "모든 기록 삭제",
+		"fuzzySearchPlaceholder": "기록 검색...",
+		"sortNewest": "최신순",
+		"sortOldest": "오래된순",
+		"sortMostExpensive": "비용 높은순",
+		"sortMostTokens": "토큰 많은순",
+		"sortMostRelevant": "관련성 높은순",
+		"filterWorkspace": "워크스페이스",
+		"filterFavorites": "즐겨찾기",
+		"selectAll": "모두 선택",
+		"selectNone": "선택 해제",
+		"title": "History"
 	},
 	"historyPreview": {
 		"recentTasks": "최근 작업",
@@ -638,33 +660,6 @@
 		"and": "및",
 		"privacyPolicy": "개인정보 보호정책",
 		"forMoreDetails": "에서 자세한 내용을 확인하세요."
-	},
-	"history": {
-		"deleteAllHistory": "모든 기록 삭제",
-		"fuzzySearchPlaceholder": "기록 검색...",
-		"sortNewest": "최신순",
-		"sortOldest": "오래된순",
-		"sortMostExpensive": "비용 높은순",
-		"sortMostTokens": "토큰 많은순",
-		"sortMostRelevant": "관련성 높은순",
-		"filterWorkspace": "워크스페이스",
-		"filterFavorites": "즐겨찾기",
-		"selectAll": "모두 선택",
-		"selectNone": "선택 해제",
-		"title": "History"
-	},
-	"mcp": {
-		"marketplace": "마켓플레이스",
-		"remoteServers": "원격 서버",
-		"installed": "설치됨",
-		"noServersInstalled": "설치된 MCP 서버가 없습니다",
-		"configureServers": "MCP 서버 구성",
-		"noMatchingServers": "일치하는 MCP 서버를 찾을 수 없습니다",
-		"noServersFound": "마켓플레이스에서 MCP 서버를 찾을 수 없습니다",
-		"autoApprove": "자동 승인",
-		"autoApproveAllTools": "모든 도구 자동 승인",
-		"title": "MCP Servers",
-		"description": "The Model Context Protocol enables communication with locally running MCP servers that provide additional tools and resources to extend Caret's capabilities."
 	},
 	"autoApprove": {
 		"addQuickAccess": "빠른 액세스 메뉴에 추가",

@@ -12,7 +12,7 @@ import { Int64Request, StringRequest } from "@shared/proto/cline/common"
 import { VSCodeBadge, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
 import deepEqual from "fast-deep-equal"
 import React, { MouseEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { useTranslation } from "react-i18next"
+import { t } from "@/caret/utils/i18n"
 import { useSize } from "react-use"
 import styled from "styled-components"
 // CARET MODIFICATION: Import PersonaAvatar component for persona system
@@ -150,7 +150,7 @@ export const ChatRowContent = memo(
 		sendMessageFromChatRow,
 		onSetQuote,
 	}: ChatRowContentProps) => {
-		const { t } = useTranslation()
+		
 		const {
 			mcpServers,
 			mcpMarketplaceCatalog,

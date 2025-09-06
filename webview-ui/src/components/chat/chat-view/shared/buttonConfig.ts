@@ -1,6 +1,6 @@
 import type { ClineMessage, ClineSayTool } from "@shared/ExtensionMessage"
 import type { Mode } from "@shared/storage/types"
-import type { TFunction } from "i18next"
+import type { TFunction } from "@/caret/hooks/useCaretI18n"
 
 /**
  * Button action types that determine the behavior

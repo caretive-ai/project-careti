@@ -326,7 +326,13 @@
       "Read(/D:\\dev\\caret-merging\\caret-b2b\\brands\\codecenter\\locale\\ko/**)",
       "Read(/D:\\dev\\caret-merging\\caret-b2b\\brands\\codecenter/**)",
       "Bash(del \"D:\\dev\\caret-merging\\webview-ui\\src\\caret\\components\\PersonaManagement.tsx\")",
-      "Read(//d/dev/**)"
+      "Read(//d/dev/**)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(git -C . log --oneline -10)",
+      "Bash(git clone:*)",
+      "Bash(git shortlog:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []

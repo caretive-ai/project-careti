@@ -4,8 +4,8 @@ import { FOCUS_CHAIN_ITEM_REGEX, isCompletedFocusChainItem, isFocusChainItem } f
 import { StringRequest } from "@shared/proto/cline/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React, { memo, useEffect, useMemo, useRef, useState } from "react"
-import { useTranslation } from "react-i18next"
 import { useWindowSize } from "react-use"
+import { t } from "@/caret/utils/i18n"
 import ChecklistRenderer from "@/components/common/ChecklistRenderer"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import Thumbnails from "@/components/common/Thumbnails"
@@ -75,7 +75,6 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 	task,
 	tokensIn,
 	tokensOut,
-	doesModelSupportPromptCache,
 	cacheWrites,
 	cacheReads,
 	totalCost,
@@ -84,7 +83,6 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 	onClose,
 	onScrollToMessage,
 }) => {
-	const { t } = useTranslation()
 	const { apiConfiguration, currentTaskItem, checkpointTrackerErrorMessage, clineMessages, navigateToSettings, mode } =
 		useExtensionState()
 	const [isTaskExpanded, setIsTaskExpanded] = useState(true)

@@ -543,15 +543,31 @@ export const ensureLanguageLoaded = async (language: SupportedLanguage): Promise
 const loadLanguagePack = async (lang: SupportedLanguage): Promise<void> => {
 	try {
 		// Dynamic imports for each namespace
-		const [commonModule, welcomeModule, personaModule, settingsModule, validateModule, announcementModule] =
-			await Promise.all([
-				import(`../locale/${lang}/common.json`),
-				import(`../locale/${lang}/welcome.json`),
-				import(`../locale/${lang}/persona.json`),
-				import(`../locale/${lang}/settings.json`),
-				import(`../locale/${lang}/validate-api-conf.json`),
-				import(`../locale/${lang}/announcement.json`),
-			])
+		const [
+			commonModule,
+			welcomeModule,
+			personaModule,
+			settingsModule,
+			validateModule,
+			announcementModule,
+			chatModule,
+			historyModule,
+			browserModule,
+			menuModule,
+			modelsModule,
+		] = await Promise.all([
+			import(`../locale/${lang}/common.json`),
+			import(`../locale/${lang}/welcome.json`),
+			import(`../locale/${lang}/persona.json`),
+			import(`../locale/${lang}/settings.json`),
+			import(`../locale/${lang}/validate-api-conf.json`),
+			import(`../locale/${lang}/announcement.json`),
+			import(`../locale/${lang}/chat.json`),
+			import(`../locale/${lang}/history.json`),
+			import(`../locale/${lang}/browser.json`),
+			import(`../locale/${lang}/menu.json`),
+			import(`../locale/${lang}/models.json`),
+		])
 
 		// Update translations object with loaded data
 		translations[lang] = {
@@ -562,6 +578,11 @@ const loadLanguagePack = async (lang: SupportedLanguage): Promise<void> => {
 			settings: settingsModule.default || settingsModule,
 			"validate-api-conf": validateModule.default || validateModule,
 			announcement: announcementModule.default || announcementModule,
+			chat: chatModule.default || chatModule, // 추가
+			history: historyModule.default || historyModule, // 추가
+			browser: browserModule.default || browserModule, // 추가
+			menu: menuModule.default || menuModule, // 추가
+			models: modelsModule.default || modelsModule, // 추가
 		}
 	} catch (error) {
 		console.error(`❌ Failed to load language pack for ${lang}:`, error)

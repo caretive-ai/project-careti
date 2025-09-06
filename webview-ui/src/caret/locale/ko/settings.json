@@ -701,8 +701,16 @@
 	},
 	"providers": {
 		"caret": {
-			"name": "Caret",
-			"description": "Caret은 코딩 작업에 최적화된 고품질 AI 모델을 제공합니다."
+			"name": "캐럿(Caret)",
+			"login": "로그인",
+			"apiKeyConfigured": "캐럿 로그인됨",
+			"description": "캐럿 로그인 사용자는 무료 제공 크레딧으로 Google의 최신 Gemini 모델을 사용할 수 있습니다",
+			"features": "별도의 API 키 없이 다음 기능을 즐기세요",
+			"feature1": "Gemini 2.5 Pro: 강력한 추론 능력",
+			"feature2": "Gemini 2.5 Flash: 빠르고 효율적인 응답",
+			"feature3": "별도의 API 키 없이 즉시 사용 가능",
+			"feature4": "가격: 무료 플랜 크레딧으로 사용",
+			"visit": "캐럿의 API키 얻기 :"
 		},
 		"openrouter": {
 			"name": "OpenRouter",
@@ -956,21 +964,5 @@
 	},
 	"api-configuration": {
 		"title": "API Configuration"
-	},
-	"modelInfoView": {
-		"inputPrice": "입력 가격",
-		"outputPriceStandard": "출력 가격 (표준)",
-		"outputPriceThinking": "출력 가격 (사고 예산 > 0)",
-		"outputPrice": "출력 가격",
-		"basedOnInputTokens": "(입력 토큰 기준)",
-		"doesNotSupportImages": "이미지 미지원",
-		"supportsImages": "이미지 지원",
-		"doesNotSupportBrowser": "브라우저 사용 미지원",
-		"supportsBrowser": "브라우저 사용 지원",
-		"doesNotSupportCache": "프롬프트 캐싱 미지원",
-		"supportsCache": "프롬프트 캐싱 지원",
-		"contextWindow": "컨텍스트 창",
-		"cacheWritesPrice": "캐시 쓰기 가격",
-		"cacheReadsPrice": "캐시 읽기 가격"
 	}
 }

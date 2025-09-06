@@ -1,6 +1,6 @@
 import type { ClineMessage } from "@shared/ExtensionMessage"
-import type { TFunction } from "i18next"
 import { describe, expect, it } from "vitest"
+import type { TFunction } from "@/caret/hooks/useCaretI18n"
 import { getButtonConfig, getButtonConfigs } from "./buttonConfig"
 
 // Mock t function for tests

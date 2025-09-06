@@ -1772,12 +1772,17 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						</ButtonGroup>
 					</div>
 					{/* Tooltip for Plan/Act toggle remains outside the conditional rendering */}
+
 					<Tooltip
 						hintText={t("mode.tooltip.toggle", "chat", { metaKey: metaKeyChar })}
 						style={{ zIndex: 1000 }}
 						tipText={t("mode.tooltip.description", "chat", {
-							mode: shownTooltipMode === "act" ? t("mode.act.label", "chat") : t("mode.plan.label", "chat"),
-							action: shownTooltipMode === "act" ? t("mode.act.action", "chat") : t("mode.plan.action", "chat"),
+							mode:
+								shownTooltipMode === "act" ? t("chat.mode.act.label", "chat") : t("chat.mode.plan.label", "chat"),
+							action:
+								shownTooltipMode === "act"
+									? t("chat.mode.act.action", "chat")
+									: t("chat.mode.plan.action", "chat"),
 						})}
 						visible={shownTooltipMode !== null}>
 						<SwitchContainer data-testid="mode-switch" disabled={false} onClick={onModeToggle}>
@@ -1788,7 +1793,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("plan")}
 								role="switch">
-								{t("mode.plan.label", "chat")}
+								{t("chat.mode.plan.label", "chat")}
 							</SwitchOption>
 							<SwitchOption
 								aria-checked={mode === "act"}
@@ -1796,7 +1801,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("act")}
 								role="switch">
-								{t("mode.act.label", "chat")}
+								{t("chat.mode.act.label", "chat")}
 							</SwitchOption>
 						</SwitchContainer>
 					</Tooltip>

@@ -2,7 +2,6 @@ import { anthropicModels, geminiDefaultModelId, geminiModels } from "@shared/api
 import { Mode } from "@shared/storage/types"
 import { VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react"
 import { memo, useCallback, useMemo, useState } from "react"
-import { Trans } from "react-i18next"
 import styled from "styled-components"
 import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -149,11 +148,8 @@ const ThinkingBudgetSlider = ({ maxBudget, currentMode }: ThinkingBudgetSliderPr
 				<>
 					<LabelContainer>
 						<Label htmlFor="thinking-budget-slider">
-							<Trans
-								components={{ strong: <strong /> }}
-								i18nKey="settings.thinkingBudget.budgetText"
-								values={{ value: localValue.toLocaleString() }}
-							/>
+							<strong>{t("settings.thinkingBudget.budgetText.part1", "settings")}</strong>
+							{t("settings.thinkingBudget.budgetText.part2", "settings", { value: localValue.toLocaleString() })}
 						</Label>
 					</LabelContainer>
 					<RangeInput

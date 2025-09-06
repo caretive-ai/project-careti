@@ -1,6 +1,6 @@
 import { VSCodeCheckbox, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
-import { useTranslation } from "react-i18next"
+import { t } from "@/caret/utils/i18n"
 import { useDebouncedInput } from "../utils/useDebouncedInput"
 
 /**
@@ -18,7 +18,6 @@ interface BaseUrlFieldProps {
  * A reusable component for toggling and entering custom base URLs
  */
 export const BaseUrlField = ({ initialValue, onChange, label, placeholder }: BaseUrlFieldProps) => {
-	const { t } = useTranslation()
 	const [isEnabled, setIsEnabled] = useState(!!initialValue)
 	const [localValue, setLocalValue] = useDebouncedInput(initialValue || "", onChange)
 

@@ -1,7 +1,7 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React from "react"
-import { useTranslation } from "react-i18next"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 
 interface QuoteButtonProps {
 	top: number
@@ -33,7 +33,6 @@ const ButtonContainer = styled.div<ButtonContainerProps>`
 `
 
 const QuoteButton: React.FC<QuoteButtonProps> = ({ top, left, onClick }) => {
-	const { t } = useTranslation()
 	return (
 		// Pass transient props to the styled component
 		<ButtonContainer $left={left} $top={top} className="quote-button-class">

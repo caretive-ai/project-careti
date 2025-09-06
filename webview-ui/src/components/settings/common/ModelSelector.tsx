@@ -1,7 +1,7 @@
 import { ModelInfo } from "@shared/api"
 import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
-import { useTranslation } from "react-i18next"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 
 /**
  * Container for dropdowns that ensures proper z-index handling
@@ -48,7 +48,6 @@ OG Saoud Note:
  * A reusable component for selecting models from a dropdown
  */
 export const ModelSelector = ({ models, selectedModelId, onChange, zIndex, label }: ModelSelectorProps) => {
-	const { t } = useTranslation()
 	const finalLabel = label ?? t("settings.modelSelector.label", "Model")
 	return (
 		<DropdownContainer className="dropdown-container" zIndex={zIndex}>

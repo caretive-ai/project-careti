@@ -4,9 +4,9 @@ import { StringRequest } from "@shared/proto/cline/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import deepEqual from "fast-deep-equal"
 import React, { CSSProperties, memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { useTranslation } from "react-i18next"
 import { useSize } from "react-use"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { BrowserSettingsMenu } from "@/components/browser/BrowserSettingsMenu"
 import { ChatRowContent, ProgressIndicator } from "@/components/chat/ChatRow"
 import { CheckpointControls } from "@/components/common/CheckpointControls"
@@ -112,8 +112,7 @@ const headerStyle: CSSProperties = {
 }
 
 const BrowserSessionRow = memo((props: BrowserSessionRowProps) => {
-	const { t } = useTranslation()
-	const { messages, isLast, onHeightChange, lastModifiedMessage, onSetQuote } = props
+	const { messages, isLast, onHeightChange, lastModifiedMessage } = props
 	const { browserSettings } = useExtensionState()
 	const prevHeightRef = useRef(0)
 	const [maxActionHeight, setMaxActionHeight] = useState(0)
@@ -522,7 +521,6 @@ const BrowserSessionRowContent = memo(
 		setMaxActionHeight,
 		onSetQuote,
 	}: BrowserSessionRowContentProps) => {
-		const { t } = useTranslation()
 		const handleToggle = useCallback(() => {
 			if (message.say === "api_req_started") {
 				setMaxActionHeight(0)
@@ -589,15 +587,14 @@ const BrowserSessionRowContent = memo(
 )
 
 const BrowserActionBox = ({ action, coordinate, text }: { action: BrowserAction; coordinate?: string; text?: string }) => {
-	const { t } = useTranslation()
 	const getBrowserActionText = (action: BrowserAction, coordinate?: string, text?: string) => {
 		switch (action) {
 			case "launch":
-				return t("browser.actionLaunch", "Launch browser at {{text}}", { text })
+				return t("browser.actionLaunch", "Launch browser at {{text}}", { text: text || "" })
 			case "click":
-				return t("browser.actionClick", "Click ({{coordinate}})", { coordinate: coordinate?.replace(",", ", ") })
+				return t("browser.actionClick", "Click ({{coordinate}})", { coordinate: coordinate?.replace(",", ", ") || "" })
 			case "type":
-				return t("browser.actionType", 'Type "{{text}}"', { text })
+				return t("browser.actionType", 'Type "{{text}}"', { text: text || "" })
 			case "scroll_down":
 				return t("browser.actionScrollDown", "Scroll down")
 			case "scroll_up":

@@ -125,8 +125,8 @@
 	},
 	"settings": {
 		"uiLanguage": {
-			"label": "UI Language",
-			"description": "Select the display language for the Caret UI.",
+			"label": "UI 언어",
+			"description": "Caret UI의 표시 언어를 선택하세요.",
 			"option": {
 				"ko": "Korean (한국어)",
 				"en": "English",
@@ -135,8 +135,8 @@
 			}
 		},
 		"preferredLanguage": {
-			"label": "AI Response Language",
-			"description": "The language that Caret should use for communication."
+			"label": "AI 응답 언어",
+			"description": "Caret이 소통에 사용해야 하는 언어입니다."
 		},
 		"modeSystem": {
 			"options": {
@@ -144,17 +144,17 @@
 				"Caret": "Caret",
 				"cline": "Caret"
 			},
-			"label": "Mode Settings",
-			"description": "Enable Caret mode settings to use Caret's Plan/Act modes."
+			"label": "모드 설정",
+			"description": "Caret의 계획/실행 모드를 사용하려면 Caret 모드 설정을 활성화하세요."
 		},
 		"separateModels": {
-			"label": "Use different models for Chatbot and Agent modes",
-			"description": "Switching between Chatbot and Agent mode will persist the API and model used in the previous mode. This may be helpful e.g. when using a strong reasoning model for expert consultation (Chatbot) and a cheaper coding model for collaborative development (Agent)."
+			"label": "챗봇 모드와 에이전트 모드에 다른 모델 사용",
+			"description": "챗봇 모드와 에이전트 모드 간 전환 시 이전에 사용된 API와 모델이 유지됩니다. 예를 들어 전문가 상담(챗봇)에는 강력한 추론 모델을, 협업 개발(에이전트)에는 저렴한 코딩 모델을 사용할 때 유용할 수 있습니다."
 		},
 		"openAIReasoningEffort": {
-			"high": "High (More detailed, slower, higher cost)",
-			"label": "OpenAI Reasoning Effort",
-			"description": "Adjust the reasoning e[ffort for OpenAI models. Higher effort may lead to more detailed responses but can be slower and more costly."
+			"high": "높음 (더 상세하고, 느리며, 비용이 높음)",
+			"label": "OpenAI 추론 노력",
+			"description": "OpenAI 모델의 추론 노력을 조정합니다. 노력이 높을수록 더 상세한 응답을 얻을 수 있지만, 속도가 느려지고 비용이 더 많이 들 수 있습니다."
 		},
 		"apiKey": {
 			"placeholder": "API 키를 입력 하세요.",
@@ -243,18 +243,26 @@
 			"label": "압축 프롬프트 사용",
 			"description": "더 작은 컨텍스트 창(예: 8k 이하)에 최적화된 시스템 프롬프트입니다.",
 			"warning": "Mcp 및 포커스 체인을 지원하지 않습니다."
-		},
+		}
+	},
+	"account": {
+		"signUpWithCaret": "로그인 & 가입",
+		"viewBillingUsage": "결제 및 사용량 보기",
+		"dashboard": "대시보드",
+		"addCredits": "크레딧 추가",
+		"currentBalance": "현재 잔액",
+		"logOut": "로그아웃",
 		"loading": "로딩 중...",
-		"signUpDescription": "계정을 만들어 최신 모델에 액세스하고, 사용량과 크레딧을 확인할 수 있는 요금 대시보드, 그리고 더 많은 upcoming 기능을 이용하세요.",
+		"signUpDescription": "계정에 가입하여 최신 모델, 사용량 및 크레딧을 볼 수 있는 결제 대시보드 및 더 많은 예정된 기능에 액세스하세요.",
 		"termsOfService": "서비스 약관",
 		"privacyPolicy": "개인정보 처리방침",
-		"byContining": "계속 진행하면 다음에 동의하는 것입니다:",
+		"byContining": "계속 진행하면 다음에 동의하는 것으로 간주됩니다.",
 		"subscription": "구독 플랜",
-		"subscriptionFree": "Free",
-		"subscriptionBasic": "Basic",
-		"payAsYouGo": "사용량만큼 지불",
+		"subscriptionFree": "무료",
+		"subscriptionBasic": "베이직",
+		"payAsYouGo": "사용량 기반 결제",
 		"organization": "조직",
-		"payAsYouGoDescription": "* 구독 사용량을 모두 소진 후 추가 과금 됩니다.",
+		"payAsYouGoDescription": "* 모든 구독 사용량이 소진된 후 추가 요금이 적용됩니다.",
 		"title": "계정"
 	},
 	"common": {

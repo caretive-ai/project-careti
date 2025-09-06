@@ -1,0 +1,208 @@
+{
+	"title": "Tools",
+	"description": "You have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.",
+	"tools": [
+		{
+			"name": "execute_command",
+			"description": "Request to execute a CLI command on the system. Use this when you need to perform system operations or run specific commands to accomplish any step in the user's task. You must tailor your command to the user's system and provide a clear explanation of what the command does. For command chaining, use the appropriate chaining syntax for the user's shell. Prefer to execute complex CLI commands over creating executable scripts, as they are more flexible and easier to run. Commands will be executed in the current working directory.",
+			"parameters": [
+				{
+					"name": "command",
+					"required": true,
+					"description": "The CLI command to execute. This should be valid for the current operating system. Ensure the command is properly formatted and does not contain any harmful instructions."
+				},
+				{
+					"name": "requires_approval",
+					"required": true,
+					"description": "A boolean indicating whether this command requires explicit user approval before execution in case the user has auto-approve mode enabled. Set to 'true' for potentially impactful operations like installing/uninstalling packages, deleting/overwriting files, system configuration changes, network operations, or any commands that could have unintended side effects. Set to 'false' for safe operations like reading files/directories, running development servers, building projects, and other non-destructive operations."
+				}
+			]
+		},
+		{
+			"name": "read_file",
+			"description": "Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.",
+			"parameters": [
+				{
+					"name": "path",
+					"required": true,
+					"description": "The path of the file to read (relative to the current working directory)"
+				}
+			]
+		},
+		{
+			"name": "write_to_file",
+			"description": "Request to write content to a file at the specified path. If the file exists, it will be overwritten with the provided content. If the file doesn't exist, it will be created. This tool will automatically create any directories needed to write the file.",
+			"parameters": [
+				{
+					"name": "path",
+					"required": true,
+					"description": "The path of the file to write to (relative to the current working directory)"
+				},
+				{
+					"name": "content",
+					"required": true,
+					"description": "The content to write to the file. ALWAYS provide the COMPLETE intended content of the file, without any truncation or omissions. You MUST include ALL parts of the file, even if they haven't been modified."
+				}
+			]
+		},
+		{
+			"name": "replace_in_file",
+			"description": "Request to replace sections of content in an existing file using SEARCH/REPLACE blocks that define exact changes to specific parts of the file. This tool should be used when you need to make targeted changes to specific parts of a file.",
+			"parameters": [
+				{
+					"name": "path",
+					"required": true,
+					"description": "The path of the file to modify (relative to the current working directory)"
+				},
+				{
+					"name": "diff",
+					"required": true,
+					"description": "One or more SEARCH/REPLACE blocks following a specific format."
+				}
+			]
+		},
+		{
+			"name": "search_files",
+			"description": "Request to perform a regex search across files in a specified directory, providing context-rich results. This tool searches for patterns or specific content across multiple files, displaying each match with encapsulating context.",
+			"parameters": [
+				{
+					"name": "path",
+					"required": true,
+					"description": "The path of the directory to search in (relative to the current working directory). This directory will be recursively searched."
+				},
+				{
+					"name": "regex",
+					"required": true,
+					"description": "The regular expression pattern to search for. Uses Rust regex syntax."
+				},
+				{
+					"name": "file_pattern",
+					"required": false,
+					"description": "Glob pattern to filter files (e.g., '*.ts' for TypeScript files). If not provided, it will search all files (*)."
+				}
+			]
+		},
+		{
+			"name": "list_files",
+			"description": "Request to list files and directories within the specified directory. If recursive is true, it will list all files and directories recursively. If recursive is false or not provided, it will only list the top-level contents. Do not use this tool to confirm the existence of files you may have created, as the user will let you know if the files were created successfully or not.",
+			"parameters": [
+				{
+					"name": "path",
+					"required": true,
+					"description": "The path of the directory to list contents for (relative to the current working directory)"
+				},
+				{
+					"name": "recursive",
+					"required": false,
+					"description": "Whether to list files recursively. Use true for recursive listing, false or omit for top-level only."
+				}
+			]
+		},
+		{
+			"name": "list_code_definition_names",
+			"description": "Request to list definition names (classes, functions, methods, etc.) used in source code files at the top level of the specified directory. This tool provides insights into the codebase structure and important constructs, encapsulating high-level concepts and relationships that are crucial for understanding the overall architecture.",
+			"parameters": [
+				{
+					"name": "path",
+					"required": true,
+					"description": "The path of the directory (relative to the current working directory) to list top level source code definitions for."
+				}
+			]
+		},
+		{
+			"name": "use_mcp_tool",
+			"description": "Request to use a tool provided by a connected MCP server. Each MCP server can provide multiple tools with different capabilities. Tools have defined input schemas that specify required and optional parameters.",
+			"parameters": [
+				{
+					"name": "server_name",
+					"required": true,
+					"description": "The name of the MCP server providing the tool"
+				},
+				{
+					"name": "tool_name",
+					"required": true,
+					"description": "The name of the tool to execute"
+				},
+				{
+					"name": "arguments",
+					"required": true,
+					"description": "A JSON object containing the tool's input parameters, following the tool's input schema"
+				}
+			]
+		},
+		{
+			"name": "access_mcp_resource",
+			"description": "Access a resource provided by a connected MCP server. Resources are content or data that MCP servers can provide, such as file contents, database query results, or web content.",
+			"parameters": [
+				{
+					"name": "server_name",
+					"required": true,
+					"description": "The name of the MCP server providing the resource"
+				},
+				{
+					"name": "uri",
+					"required": true,
+					"description": "The URI of the resource to access"
+				}
+			]
+		},
+		{
+			"name": "ask_followup_question",
+			"description": "Ask the user a followup question to gather additional information needed to continue with the task. This tool should be used when you need clarification or additional details to proceed effectively.",
+			"parameters": [
+				{
+					"name": "question",
+					"required": true,
+					"description": "The question to ask the user"
+				},
+				{
+					"name": "options",
+					"required": false,
+					"description": "Array of options for the user to choose from (optional)"
+				}
+			]
+		},
+		{
+			"name": "attempt_completion",
+			"description": "Attempt to complete the task. Use this when you believe you have successfully completed the user's request. This tool should be used to provide a summary of what was accomplished and any important information the user should know.",
+			"parameters": [
+				{
+					"name": "result",
+					"required": true,
+					"description": "A detailed summary of what was accomplished, including any important information, warnings, or next steps for the user."
+				},
+				{
+					"name": "command",
+					"required": false,
+					"description": "A CLI command that can be used to test or demonstrate the result (optional)"
+				}
+			]
+		},
+		{
+			"name": "new_task",
+			"description": "Request to create a new task with preloaded context covering the conversation with the user up to this point and key information for continuing with the new task.",
+			"parameters": [
+				{
+					"name": "context",
+					"required": true,
+					"description": "The context to preload the new task with. Should include: 1. Current Work, 2. Key Technical Concepts, 3. Relevant Files and Code, 4. Problem Solving, 5. Pending Tasks and Next Steps"
+				}
+			]
+		},
+		{
+			"name": "load_mcp_documentation",
+			"description": "Load documentation about creating MCP servers. This tool should be used when the user requests to create or install an MCP server (the user may ask you something along the lines of \"add a tool\" that does some function, in other words to create an MCP server that provides tools and resources that may connect to external APIs for example. You have the ability to create an MCP server and add it to a configuration file that will then expose the tools and resources for you to use with use_mcp_tool and access_mcp_resource). The documentation provides detailed information about the MCP server creation process, including setup instructions, best practices, and examples."
+		},
+		{
+			"name": "chatbot_mode_respond",
+			"description": "Respond to the user's inquiry in CHATBOT MODE. This tool should be used when you need to provide expert consultation and analysis without making changes to the codebase. This tool is only available in CHATBOT MODE.",
+			"parameters": [
+				{
+					"name": "response",
+					"required": true,
+					"description": "The consultation response to provide to the user. This should be expert analysis, guidance, or recommendations."
+				}
+			]
+		}
+	]
+}

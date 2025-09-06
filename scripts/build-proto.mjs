@@ -42,6 +42,7 @@ async function main() {
 	await checkProtos()
 	await generateProtoBusSetup()
 	await generateHostBridgeClient()
+	await postProcessGeneratedFiles() // CARET MODIFICATION: Add post-processing step AFTER all generation
 }
 async function compileProtos() {
 	console.log(chalk.bold.blue("Compiling Protocol Buffers..."))
@@ -82,6 +83,91 @@ async function compileProtos() {
 
 	log_verbose(chalk.green("Protocol Buffer code generation completed successfully."))
 	log_verbose(chalk.green(`TypeScript files generated in: ${TS_OUT_DIR}`))
+}
+
+// CARET MODIFICATION: Post-process generated files to fix common issues
+async function postProcessGeneratedFiles() {
+	console.log(chalk.bold.blue("Post-processing generated files..."))
+
+	// Find all generated TypeScript files in specific directories
+	const generatedFiles = await globby(["src/generated/**/*.ts", "src/shared/proto/**/*.ts"], {
+		realpath: true,
+		ignore: ["node_modules/**", "dist/**"],
+	})
+
+	let filesFixed = 0
+
+	for (const file of generatedFiles) {
+		try {
+			let content = await fs.readFile(file, "utf-8")
+			let modified = false
+
+			// Fix 1: Replace String(value) with globalThis.String(value) in object reduce functions
+			if (content.includes("acc[key] = String(value);")) {
+				content = content.replace(/acc\[key\] = String\(value\);/g, "acc[key] = globalThis.String(value);")
+				modified = true
+			}
+
+			// Fix 2: Fix namespace issues in all generated files with Caret references
+			const caretMatches = content.match(/(cline\.Caret|"cline\.Caret)[A-Za-z]*/g) || []
+			if (caretMatches.length > 0) {
+				console.log(chalk.cyan(`Processing ${file} for namespace fixes...`))
+				console.log(chalk.gray(`File path: ${file}`))
+				console.log(
+					chalk.yellow(
+						`Found ${caretMatches.length} cline.Caret* patterns: ${caretMatches.slice(0, 3).join(", ")}${caretMatches.length > 3 ? "..." : ""}`,
+					),
+				)
+
+				// Simple and direct approach - replace all Caret-related cline references
+				const originalContent = content
+
+				// Fix service registration
+				content = content.replace(/cline\.CaretAccountServiceService/g, "caret.CaretAccountServiceService")
+
+				// Fix string references in service definitions
+				content = content.replace(/"cline\.CaretAccountService"/g, '"caret.CaretAccountService"')
+
+				// Fix all Caret type references
+				content = content.replace(/cline\.CaretAuthState/g, "caret.CaretAuthState")
+				content = content.replace(/cline\.CaretAuthStateChangedRequest/g, "caret.CaretAuthStateChangedRequest")
+				content = content.replace(/cline\.CaretUserCreditsData/g, "caret.CaretUserCreditsData")
+				content = content.replace(
+					/cline\.GetCaretOrganizationCreditsRequest/g,
+					"caret.GetCaretOrganizationCreditsRequest",
+				)
+				content = content.replace(/cline\.CaretOrganizationCreditsData/g, "caret.CaretOrganizationCreditsData")
+				content = content.replace(/cline\.CaretUserOrganizationsResponse/g, "caret.CaretUserOrganizationsResponse")
+				content = content.replace(
+					/cline\.CaretUserOrganizationUpdateRequest/g,
+					"caret.CaretUserOrganizationUpdateRequest",
+				)
+
+				const changesCount =
+					originalContent !== content ? (originalContent.match(/cline\.(Caret|GetCaret)/g) || []).length : 0
+
+				if (content !== originalContent) {
+					console.log(chalk.green(`  - Fixed ${changesCount} Caret namespace references`))
+					modified = true
+				} else if (caretMatches.length > 0) {
+					console.log(chalk.red(`  - WARNING: Found ${caretMatches.length} patterns but no changes made!`))
+				}
+			}
+
+			if (modified) {
+				await fs.writeFile(file, content, "utf-8")
+				filesFixed++
+			}
+		} catch (error) {
+			console.warn(chalk.yellow(`Warning: Could not process file ${file}:`, error.message))
+		}
+	}
+
+	if (filesFixed > 0) {
+		console.log(chalk.green(`✅ Fixed ${filesFixed} generated files`))
+	} else {
+		console.log(chalk.cyan("No files needed fixing"))
+	}
 }
 
 async function tsProtoc(outDir, protoFiles, protoOptions) {

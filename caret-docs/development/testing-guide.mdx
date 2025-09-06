@@ -1,460 +1,230 @@
-# Caret 테스트 가이드
+# Caret Testing Guide
 
-## 1. 개요
+## 1. Overview
 
-이 문서는 Caret 프로젝트의 테스트 전략, 작성 방법, 실행 방법에 대한 종합 가이드입니다. Caret은 **테스트 커버리지 100%**를 목표로 하며, **테스트 주도 개발(TDD)** 방식을 권장합니다.
+This document is a comprehensive guide to the testing strategy, writing methods, and execution procedures for the Caret project. Caret aims for **100% test coverage** and recommends a **Test-Driven Development (TDD)** approach.
 
-## 1.1 빠른 시작 - 테스트 실행 명령어
+## 1.1 Quick Start - Test Execution Commands
 
-### 🚨 중요: 올바른 테스트 명령어 사용
+### 🚨 Important: Use the Correct Test Commands
 
-**❌ 주의: `npm test` 사용 금지**
+**❌ Caution: Do not use `npm test`**
 
-- `npm test` 명령어는 전체 빌드 + 컴파일 + 린트 + 모든 테스트를 실행하므로 매우 느림
-- 개발 중에는 아래의 **개별 테스트 명령어** 사용 권장
+- The `npm test` command runs the entire build + compile + lint + all tests, making it very slow.
+- It is recommended to use the **individual test commands** below during development.
 
-### 🎯 개별 테스트 실행 (개발 시 권장)
+### 🎯 Running Individual Tests (Recommended for Development)
 
 ```bash
-# ✅ 백엔드 개별 테스트 (특정 파일)
+# ✅ Run a specific backend test file
 npm run test:backend caret-src/__tests__/your-test-file.test.ts
 
-# ✅ 백엔드 개별 테스트 (특정 테스트 이름)
+# ✅ Run a specific backend test by name
 npm run test:backend caret-src/__tests__/your-test-file.test.ts -t "your test name"
 
-# ✅ 프론트엔드 테스트 (React 컴포넌트, UI 로직)
+# ✅ Run frontend tests (React components, UI logic)
 npm run test:webview
 
-# ✅ 백엔드 감시 모드 (개발 중 자동 실행)
+# ✅ Run backend in watch mode (auto-runs on changes)
 npm run test:backend:watch
 
-# ✅ 빠른 개발 테스트 (웹뷰 제외, 실패 시 즉시 중단)
+# ✅ Fast development test (excludes webview, stops on first failure)
 npm run dev:build-test:fast
 ```
 
-### 📊 전체 테스트 + 커버리지 실행 (CI/CD 또는 최종 검증용)
+### 📊 Running All Tests + Coverage (For CI/CD or Final Verification)
 
 ```bash
-# 🌟 가장 추천: 전체 테스트 + 커버리지 분석 한번에
+# 🌟 Highly Recommended: All tests + coverage analysis in one go
 npm run test:all; npm run caret:coverage
 
-# 또는 백엔드 상세 커버리지까지 포함
+# Or include detailed backend coverage
 npm run test:all; npm run test:backend:coverage; npm run caret:coverage
 
-# 통합 테스트 (VSCode Extension 환경)
+# Integration tests (VSCode Extension environment)
 npm run test:integration
 ```
 
-### 📈 커버리지 분석
+### 📈 Coverage Analysis
 
 ```bash
-# Caret 전용 코드 커버리지 분석 (파일별 상세)
+# Caret-specific code coverage analysis (detailed per file)
 npm run caret:coverage
 
-# 백엔드 Vitest 커버리지 (라인별 상세)
+# Backend Vitest coverage (detailed per line)
 npm run test:backend:coverage
 
-# VSCode Extension 통합 커버리지
+# VSCode Extension integrated coverage
 npm run test:coverage
 ```
 
-### 📝 실용적인 테스트 워크플로우 예시
+### 📝 Practical Test Workflow Example
 
 ```bash
-# 1. 개발 중: 특정 기능 테스트
+# 1. During development: Test a specific feature
 npm run test:backend caret-src/__tests__/json-overlay-real-files.test.ts
 
-# 2. 개발 중: 특정 테스트 케이스만
+# 2. During development: Test only a specific case
 npm run test:backend caret-src/__tests__/json-overlay-real-files.test.ts -t "should load and apply Alpha personality"
 
-# 3. 감시 모드로 개발 (코드 변경 시 자동 테스트)
+# 3. Develop in watch mode (auto-tests on code change)
 npm run test:backend:watch
 
-# 4. 빠른 전체 검증 (실패 시 즉시 중단)
+# 4. Quick overall verification (stops on first failure)
 npm run dev:build-test:fast
 
-# 5. 최종 검증 (PR 전)
+# 5. Final verification (before PR)
 npm run test:all && npm run caret:coverage
 ```
 
-## 2. 테스트 전략
+## 2. Test Strategy
 
-### 2.1 테스트 커버리지 목표
+### 2.1 Test Coverage Goals
 
-**Caret 전용 코드 100% 커버리지 원칙:**
+**Principle of 100% Coverage for Caret-Specific Code:**
 
-- **🥕 Caret 신규 로직**: `caret-src/`, `webview-ui/src/caret/` 디렉토리의 **비즈니스 로직과 기능 코드**는 **100% 테스트 커버리지 필수**
-- **🔗 Re-export 파일**: Cline 모듈의 단순 재내보내기 파일 (예: `export { ... } from "..."`)은 테스트 제외 가능
-- **📦 Type 정의**: 런타임 로직이 없는 인터페이스/타입 정의만 포함한 파일은 테스트 제외 가능
-- **🤖 Cline 원본 코드**: `src/`, `webview-ui/src/` (caret 폴더 제외)는 Cline의 기존 테스트를 활용하며, 추가 테스트 작성을 강제하지 않습니다.
-- **📊 커버리지 분석**: `caret-scripts/caret-coverage-check.js`를 사용하여 Caret vs Cline 코드의 커버리지를 분리 분석합니다.
-- **🔍 Cline 코드 수정 시 테스트 방법**: Cline 원본 코드 수정이 필요하여 추가 테스트가 필요한 경우, 가능한 `caret-src/__tests__/` 디렉토리 내에 별도 테스트 파일을 만들어 분리하여 관리합니다. 이를 통해 테스트 범위가 과도하게 확장되는 것을 방지합니다.
+- **🥕 New Caret Logic**: **100% test coverage is mandatory** for business logic and feature code in `caret-src/` and `webview-ui/src/caret/` directories.
+- **🔗 Re-export Files**: Simple re-export files from Cline modules (e.g., `export { ... } from "..."`) can be excluded from testing.
+- **📦 Type Definitions**: Files containing only TypeScript interface/type definitions with no runtime logic can be excluded.
+- **🤖 Original Cline Code**: `src/` and `webview-ui/src/` (excluding the caret folder) utilize Cline's existing tests, and writing additional tests is not enforced.
+- **📊 Coverage Analysis**: Use `caret-scripts/caret-coverage-check.js` to separately analyze the coverage of Caret vs. Cline code.
+- **🔍 Testing Cline Code Modifications**: If modifying Cline source code requires additional tests, create separate test files in the `caret-src/__tests__/` directory whenever possible to manage them separately and prevent excessive expansion of the test scope.
 
-#### 현재 테스트 제외 파일들 (정당한 이유)
+#### Currently Excluded Files (with Justification)
 
-- `caret-src/core/prompts/system.ts` - Cline 모듈 재내보내기
-- `caret-src/shared/providers/types.ts` - TypeScript 인터페이스 정의만 포함
-- `caret-src/core/task/index.ts` - 일부 래퍼 로직 (향후 테스트 추가 예정)
+- `caret-src/core/prompts/system.ts` - Re-export of a Cline module.
+- `caret-src/shared/providers/types.ts` - Contains only TypeScript interface definitions.
+- `caret-src/core/task/index.ts` - Some wrapper logic (tests to be added in the future).
 
-### 2.2 테스트 유형
+### 2.2 Test Types
 
-#### 2.2.1 단위 테스트 (Unit Tests)
+#### 2.2.1 Unit Tests
 
-- **대상**: 개별 함수, 클래스, 컴포넌트
-- **도구**: Vitest (백엔드/프론트엔드 통일)
-- **위치**: `__tests__/` 폴더 또는 `.test.ts/.test.tsx` 파일
+- **Target**: Individual functions, classes, components.
+- **Tool**: Vitest (unified for backend/frontend).
+- **Location**: `__tests__/` folder or `.test.ts/.test.tsx` files.
 
-#### 2.2.2 통합 테스트 (Integration Tests)
+#### 2.2.2 Integration Tests
 
-- **대상**: 여러 모듈 간의 상호작용, 실제 빌드 검증, 시스템 전체 동작
-- **도구**: Vitest (백엔드), VSCode Extension Test Runner, React Testing Library
-- **위치**: `caret-src/__tests__/integration.test.ts`, `src/test/`, `webview-ui/src/__tests__/`
-- **특징**: 실제 명령어 실행을 통한 빌드/컴파일 검증 (2025-01-21 업데이트)
-- **새로운 접근**: 모킹된 환경이 아닌 실제 빌드 프로세스 검증으로 변경
+- **Target**: Interaction between multiple modules, actual build verification, overall system behavior.
+- **Tools**: Vitest (backend), VSCode Extension Test Runner, React Testing Library.
+- **Location**: `caret-src/__tests__/integration.test.ts`, `src/test/`, `webview-ui/src/__tests__/`.
+- **Feature**: Verifies build/compilation through actual command execution (Updated 2025-01-21).
+- **New Approach**: Shifted from mocked environments to verifying the actual build process.
 
-#### 2.2.3 E2E 테스트 (End-to-End Tests)
+#### 2.2.3 E2E (End-to-End) Tests
 
-- **대상**: 전체 워크플로우
-- **도구**: VSCode Extension Development Host
-- **방법**: F5 디버깅을 통한 수동/자동 테스트
+- **Target**: Entire workflows.
+- **Tool**: VSCode Extension Development Host.
+- **Method**: Manual/automated testing via F5 debugging.
 
-### 2.3 TDD(Test-Driven Development) 방식 ⚡ **필수**
+### 2.3 TDD (Test-Driven Development) Approach ⚡ **Mandatory**
 
-Caret은 **TDD 방식을 필수**로 합니다:
+Caret **requires the TDD approach**:
 
-1. **Red**: 실패하는 테스트 작성
-2. **Green**: 테스트를 통과하는 최소한의 코드 작성
-3. **Refactor**: 코드 품질 개선 (테스트는 계속 통과)
+1. **Red**: Write a failing test.
+2. **Green**: Write the minimum code to make the test pass.
+3. **Refactor**: Improve code quality while keeping tests passing.
 
-**🚨 AI 개발자 필수 원칙**:
+**🚨 Mandatory Principles for AI Developers**:
 
-- ❌ **구현 먼저 금지**: 코드 작성 전 반드시 테스트부터
-- ✅ **테스트 우선**: "테스트를 먼저 작성하겠습니다" 선언 필수
-- ✅ **단계별 진행**: RED → GREEN → REFACTOR 순서 엄수
+- ❌ **No Implementation First**: Always write tests before code.
+- ✅ **Test First**: Must declare "I will write the tests first."
+- ✅ **Step-by-Step**: Strictly follow the RED → GREEN → REFACTOR cycle.
 
-**실제 적용 예시 (UI 언어 설정)**:
+**Practical Example (UI Language Setting)**:
 
 ```typescript
-// RED: 실패하는 테스트 작성
+// RED: Write a failing test
 it("should update only uiLanguage without affecting other settings", async () => {
-	await setUILanguage("ja")
+	await setUILanguage("ja");
 	expect(mockUpdateSettings).toHaveBeenCalledWith({
-		uiLanguage: "ja", // 오직 이것만
-	})
-	expect(state.chatSettings.model).toBe("claude-3") // 다른 설정 영향 없음
-})
+		uiLanguage: "ja", // Only this
+	});
+	expect(state.chatSettings.model).toBe("claude-3"); // No impact on other settings
+});
 
-// GREEN: 최소 구현
+// GREEN: Minimal implementation
 const setUILanguage = async (language: string) => {
-	await StateServiceClient.updateSettings({ uiLanguage: language })
-}
+	await StateServiceClient.updateSettings({ uiLanguage: language });
+};
 
-// REFACTOR: 에러 처리, 상태 업데이트 등 개선
+// REFACTOR: Improve error handling, state updates, etc.
 ```
 
-#### 2.3.1 TDD 핵심 규칙 (Kent Beck)
+#### 2.3.1 Core TDD Rules (Kent Beck)
 
-1. **실패하는 테스트 없이는 프로덕션 코드를 작성하지 않는다**
-2. **실패하는 테스트를 통과시키는 것 이상으로 프로덕션 코드를 작성하지 않는다**
-3. **현재 실패하는 테스트를 통과시키는 것 이상으로 테스트를 작성하지 않는다**
+1. **Do not write production code unless it is to make a failing unit test pass.**
+2. **Do not write more of a unit test than is sufficient to fail.**
+3. **Do not write more production code than is sufficient to pass the one failing unit test.**
 
-#### 2.3.2 TDD 단계별 체크리스트
+#### 2.3.2 TDD Step-by-Step Checklist
 
-**Red 단계 체크리스트:**
+**Red Stage Checklist:**
 
-- [ ] 테스트가 실제로 실패하는가?
-- [ ] 실패 이유가 예상한 것과 같은가?
-- [ ] 테스트 이름이 구체적이고 명확한가?
-- [ ] 하나의 동작만 테스트하는가?
-- [ ] 테스트가 간단하고 이해하기 쉬운가?
+- [ ] Does the test actually fail?
+- [ ] Is the reason for failure what you expected?
+- [ ] Is the test name specific and clear?
+- [ ] Does it test only one behavior?
+- [ ] Is the test simple and easy to understand?
 
-**Green 단계 체크리스트:**
+**Green Stage Checklist:**
 
-- [ ] 테스트가 통과하는가?
-- [ ] 최소한의 코드로 구현했는가?
-- [ ] 다른 테스트들도 여전히 통과하는가?
-- [ ] 하드코딩이나 임시방편 사용을 두려워하지 않았는가?
+- [ ] Does the test pass?
+- [ ] Was it implemented with the minimum amount of code?
+- [ ] Do all other tests still pass?
+- [ ] Did you not shy away from hardcoding or temporary solutions?
 
-**Refactor 단계 체크리스트:**
+**Refactor Stage Checklist:**
 
-- [ ] 모든 테스트가 여전히 통과하는가?
-- [ ] 코드 중복이 제거되었는가?
-- [ ] 코드가 더 읽기 쉬워졌는가?
-- [ ] 성능이 개선되었는가?
-- [ ] 설계가 개선되었는가?
+- [ ] Do all tests still pass?
+- [ ] Has code duplication been removed?
+- [ ] Is the code more readable?
+- [ ] Has performance improved?
+- [ ] Has the design improved?
 
-#### 2.3.3 TDD 실전 예시: CaretLogger 완전 개발
+### 2.4 Test Code Architecture Principles 🏗️ **Mandatory**
 
-**1단계: 기본 로깅 기능**
+#### 2.4.1 Principle of Separating Test-Only Code
+
+**🚨 Strictly Forbidden: Including test-only methods in service code.**
 
 ```typescript
-// Red - 실패하는 테스트 작성
-describe("CaretLogger", () => {
-	it("should log info message", () => {
-		const logger = new CaretLogger()
-		const result = logger.info("test message")
-		expect(result).toBe("[INFO] test message")
-	})
-})
-
-// Green - 최소 구현
-export class CaretLogger {
-	info(message: string): string {
-		return `[INFO] ${message}`
-	}
-}
-
-// Refactor - 필요시 개선
-```
-
-**2단계: 다양한 로그 레벨 추가**
-
-```typescript
-// Red - 에러 로깅 테스트
-it("should log error message", () => {
-	const logger = new CaretLogger()
-	const result = logger.error("error message")
-	expect(result).toBe("[ERROR] error message")
-})
-
-// Green - 에러 메서드 추가
-export class CaretLogger {
-	info(message: string): string {
-		return `[INFO] ${message}`
-	}
-
-	error(message: string): string {
-		return `[ERROR] ${message}`
-	}
-}
-
-// Refactor - 중복 제거
-export class CaretLogger {
-	private formatMessage(level: string, message: string): string {
-		return `[${level}] ${message}`
-	}
-
-	info(message: string): string {
-		return this.formatMessage("INFO", message)
-	}
-
-	error(message: string): string {
-		return this.formatMessage("ERROR", message)
-	}
-}
-```
-
-**3단계: 컨텍스트 추가**
-
-```typescript
-// Red - 컨텍스트 테스트
-it("should include context in log message", () => {
-	const logger = new CaretLogger("TestContext")
-	const result = logger.info("test message")
-	expect(result).toBe("[INFO][TestContext] test message")
-})
-
-// Green & Refactor - 컨텍스트 지원
-export class CaretLogger {
-	constructor(private context?: string) {}
-
-	private formatMessage(level: string, message: string): string {
-		const contextPart = this.context ? `[${this.context}]` : ""
-		return `[${level}]${contextPart} ${message}`
-	}
-
-	info(message: string): string {
-		return this.formatMessage("INFO", message)
-	}
-
-	error(message: string): string {
-		return this.formatMessage("ERROR", message)
-	}
-}
-```
-
-#### 2.3.4 TDD 성과 측정
-
-**정량적 지표:**
-
-- **Statement Coverage**: 100% 목표
-- **Branch Coverage**: 100% 목표
-- **Function Coverage**: 100% 목표
-- **Line Coverage**: 100% 목표
-
-**TDD 품질 지표:**
-
-```bash
-# 테스트 실행 시간 측정
-npm run test:time
-
-# 테스트 안정성 검증 (10번 실행)
-npm run test:stability
-
-# 커버리지 트렌드 분석
-npm run test:coverage:trend
-```
-
-**정성적 지표:**
-
-- 더 나은 설계 (테스트 가능한 코드)
-- 낮은 결합도, 높은 응집도
-- 명확한 인터페이스
-- 빠른 피드백 루프
-- 안전한 리팩토링
-- 적은 디버깅 시간
-
-#### 2.3.5 TDD 일반적인 문제 해결
-
-**테스트가 너무 복잡할 때:**
-
-```typescript
-// 문제: 복잡한 테스트
-it("should handle complex user workflow", () => {
-	// 50줄의 복잡한 테스트...
-})
-
-// 해결: 작은 단위로 분리
-describe("user workflow", () => {
-	it("should validate user input", () => {
-		// 간단한 테스트
-	})
-
-	it("should process valid input", () => {
-		// 간단한 테스트
-	})
-
-	it("should save processed data", () => {
-		// 간단한 테스트
-	})
-})
-```
-
-**외부 의존성이 많을 때:**
-
-```typescript
-// 문제: 외부 의존성 때문에 테스트 어려움
-export class CaretService {
-	constructor(
-		private api: ApiClient,
-		private storage: Storage,
-		private logger: Logger,
-	) {}
-}
-
-// 해결: 의존성 주입과 모킹
-describe("CaretService", () => {
-	let mockApi: jest.Mocked<ApiClient>
-	let mockStorage: jest.Mocked<Storage>
-	let mockLogger: jest.Mocked<Logger>
-
-	beforeEach(() => {
-		mockApi = createMockApiClient()
-		mockStorage = createMockStorage()
-		mockLogger = createMockLogger()
-	})
-})
-```
-
-#### 2.3.6 팀 TDD 가이드라인
-
-**코드 리뷰 체크리스트:**
-
-- [ ] 테스트가 먼저 작성되었는가?
-- [ ] Red-Green-Refactor 사이클을 따랐는가?
-- [ ] 각 커밋이 작은 단위인가?
-- [ ] 테스트 이름이 명확한가?
-- [ ] 하나의 동작만 테스트하는가?
-- [ ] AAA 패턴을 따르는가?
-- [ ] 적절한 assertion을 사용하는가?
-
-**페어 프로그래밍 권장:**
-
-- **Driver**: 코드 작성
-- **Navigator**: TDD 프로세스 가이드
-- 역할 교체하며 학습
-
-### 2.4 테스트 코드 아키텍처 원칙 🏗️ **필수**
-
-#### 2.4.1 테스트 전용 코드 분리 원칙
-
-**🚨 절대 금지: 서비스 코드에 테스트 전용 메서드 포함**
-
-```typescript
-// ❌ 절대 금지: 서비스 클래스에 테스트 전용 메서드
+// ❌ Strictly Forbidden: Test-only methods in a service class
 export class CaretSystemPrompt {
-  // ✅ 운영 메서드
+  // ✅ Production method
   generateFromJsonSections() { ... }
 
-  // ❌ 금지: 테스트 전용 메서드가 서비스 클래스에 있음
-  generateSystemPrompt() { ... }          // 테스트에서만 사용
-  generateSystemPromptWithTemplates() { ... } // 테스트에서만 사용
-  callOriginalSystemPrompt() { ... }      // 테스트에서만 사용
+  // ❌ Forbidden: Test-only methods are in the service class
+  generateSystemPrompt() { ... }          // Used only in tests
+  generateSystemPromptWithTemplates() { ... } // Used only in tests
+  callOriginalSystemPrompt() { ... }      // Used only in tests
 }
 ```
 
-**✅ 올바른 방법: TestHelper 클래스 분리**
+**✅ Correct Approach: Separate into a TestHelper class.**
 
 ```typescript
-// ✅ 서비스 클래스: 운영 코드만
+// ✅ Service Class: Production code only
 export class CaretSystemPrompt {
   generateFromJsonSections() { ... }
   getMetrics() { ... }
   clearMetrics() { ... }
 }
 
-// ✅ 테스트 헬퍼: 테스트 전용 메서드
+// ✅ Test Helper: Test-only methods
 export class CaretSystemPromptTestHelper {
-  generateSystemPrompt() { ... }          // 테스트 전용
-  generateSystemPromptWithTemplates() { ... } // 테스트 전용
-  callOriginalSystemPrompt() { ... }      // 테스트 전용
+  generateSystemPrompt() { ... }          // Test-only
+  generateSystemPromptWithTemplates() { ... } // Test-only
+  callOriginalSystemPrompt() { ... }      // Test-only
 }
 ```
 
-#### 2.4.2 TestHelper 패턴 사용법
+### 2.5 Test File Structure and Naming Standards
 
-**디렉토리 구조:**
+#### 2.5.1 Test File Location Rules
 
-```
-caret-src/
-├── core/prompts/
-│   └── CaretSystemPrompt.ts           // 운영 서비스 클래스
-└── __tests__/
-    ├── helpers/
-        └── CaretSystemPromptTestHelper.ts // 테스트 헬퍼 클래스
-    └── CaretSystemPrompt.test.ts       // 테스트 파일
-```
-
-**TestHelper 클래스 명명 규칙:**
-
-- `{ServiceName}TestHelper.ts` 형식
-- `caret-src/__tests__/helpers/` 디렉토리에 위치
-- 테스트에서만 사용되는 메서드만 포함
-
-**예외적인 경우: forTestOnly\_ 접두사**
-
-- TestHelper 패턴을 사용할 수 없는 경우에만 사용
-- 메서드명에 `forTestOnly_` 또는 `forTest_` 접두사 필수
-- 사용 이유를 주석으로 명시
-
-```typescript
-export class CaretSystemPrompt {
-  // 일반 운영 메서드
-  generateFromJsonSections() { ... }
-
-  // 예외적인 경우: 내부 상태 접근을 위해 필요
-  forTestOnly_getInternalState() {
-    // 테스트에서 내부 상태 검증을 위해 필요
-    return this.internalState;
-  }
-}
-```
-
-### 2.5 테스트 파일 구조 및 명명 표준
-
-#### 2.5.1 테스트 파일 위치 규칙
-
-**백엔드 테스트 (caret-src/)**
+**Backend Tests (`caret-src/`)**
 
 ```
 caret-src/
@@ -465,10 +235,10 @@ caret-src/
 │   │       └── CaretProvider.test.ts
 │   └── utils/
 │       ├── caret-logger.ts
-│       └── caret-logger.test.ts  # 같은 디렉토리 허용
+│       └── caret-logger.test.ts  // Same directory is allowed
 ```
 
-**프론트엔드 테스트 (webview-ui/src/caret/)**
+**Frontend Tests (`webview-ui/src/caret/`)**
 
 ```
 webview-ui/src/caret/
@@ -485,1682 +255,67 @@ webview-ui/src/caret/
         └── i18n.test.ts
 ```
 
-#### 2.5.2 테스트 파일 명명 규칙
+### 2.6 Test Code Structure Standards
 
-**기본 규칙:**
+#### 2.6.2 Test Grouping (`describe` blocks)
 
-- **단위 테스트**: `{FileName}.test.{ts|tsx}`
-- **통합 테스트**: `{FeatureName}.integration.test.{ts|tsx}`
-- **E2E 테스트**: `{WorkflowName}.e2e.test.{ts|tsx}`
-
-**특수 케이스:**
-
-- **유틸리티 함수**: `{utilityName}.test.ts`
-- **훅 테스트**: `{hookName}.test.ts`
-- **API 테스트**: `{apiName}.api.test.ts`
-
-### 2.6 테스트 코드 구조 표준
-
-#### 2.6.1 기본 테스트 템플릿
-
-**단위 테스트 템플릿:**
-
-```typescript
-// {FileName}.test.ts
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { {TargetClass} } from '../{FileName}';
-
-describe('{TargetClass}', () => {
-  let instance: {TargetClass};
-
-  beforeEach(() => {
-    // 각 테스트 전 초기화
-    instance = new {TargetClass}();
-  });
-
-  afterEach(() => {
-    // 각 테스트 후 정리
-    vi.clearAllMocks();
-  });
-
-  describe('constructor', () => {
-    it('should initialize with default values', () => {
-      // 생성자 테스트
-    });
-  });
-
-  describe('{methodName}', () => {
-    it('should {expected behavior} when {condition}', () => {
-      // 메서드별 테스트
-    });
-  });
-});
-```
-
-**React 컴포넌트 테스트 템플릿:**
-
-```typescript
-// {ComponentName}.test.tsx
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
-import { {ComponentName} } from '../{ComponentName}';
-
-describe('{ComponentName}', () => {
-  const defaultProps = {
-    // 기본 props 정의
-  };
-
-  it('should render correctly', () => {
-    render(<{ComponentName} {...defaultProps} />);
-    expect(screen.getByRole('...')).toBeInTheDocument();
-  });
-
-  it('should handle user interaction', async () => {
-    const mockHandler = vi.fn();
-    render(<{ComponentName} {...defaultProps} onAction={mockHandler} />);
-
-    fireEvent.click(screen.getByRole('button'));
-
-    await waitFor(() => {
-      expect(mockHandler).toHaveBeenCalledTimes(1);
-    });
-  });
-});
-```
-
-#### 2.6.2 테스트 그룹화 (describe 블록)
-
-**클래스 테스트 그룹화:**
+**Class Test Grouping:**
 
 ```typescript
 describe("CaretLogger", () => {
 	describe("constructor", () => {
-		// 생성자 관련 테스트들
+		// Tests related to the constructor
 	})
 
 	describe("info method", () => {
-		// info 메서드 관련 테스트들
-	})
-
-	describe("error method", () => {
-		// error 메서드 관련 테스트들
-	})
-
-	describe("private methods", () => {
-		// private 메서드 테스트 (필요시)
+		// Tests related to the info method
 	})
 })
 ```
 
-**기능별 그룹화:**
+**Feature-based Grouping:**
 
 ```typescript
 describe("i18n utility", () => {
 	describe("translation", () => {
-		// 번역 기능 테스트들
+		// Tests for translation functionality
 	})
 
 	describe("language detection", () => {
-		// 언어 감지 기능 테스트들
-	})
-
-	describe("fallback handling", () => {
-		// 폴백 처리 테스트들
+		// Tests for language detection functionality
 	})
 })
 ```
 
-### 2.7 테스트 케이스 작성 표준
+### 2.7 Test Case Writing Standards
 
-#### 2.7.1 테스트 이름 규칙
+#### 2.7.1 Test Name Rules
 
-**명명 패턴:**
+**Naming Pattern:**
 
 ```typescript
-// 패턴: should {expected result} when {condition}
+// Pattern: should {expected result} when {condition}
 it("should return user data when valid ID is provided", () => {})
 it("should throw error when invalid ID is provided", () => {})
-it("should render loading state when data is fetching", () => {})
-
-// 패턴: should {action} {object}
-it("should validate email format", () => {})
-it("should save user preferences", () => {})
-it("should clear cache on logout", () => {})
 ```
 
-**좋은 테스트 이름 vs 나쁜 테스트 이름:**
-
-```typescript
-// ✅ 좋은 예
-it("should return error message when API key is missing", () => {})
-it("should render Korean text correctly in welcome component", () => {})
-it("should log info message with timestamp and context", () => {})
-
-// ❌ 나쁜 예
-it("should work", () => {})
-it("test API", () => {})
-it("check function", () => {})
-```
-
-#### 2.7.2 AAA 패턴 (Arrange-Act-Assert) **필수**
-
-**기본 구조:**
+#### 2.7.2 AAA Pattern (Arrange-Act-Assert) **Mandatory**
 
 ```typescript
 it("should format log message with context", () => {
-	// Arrange (준비)
-	const logger = new CaretLogger("test-context")
-	const message = "test message"
-	const level = "INFO"
+	// Arrange
+	const logger = new CaretLogger("test-context");
+	const message = "test message";
 
-	// Act (실행)
-	const result = logger.formatMessage(level, message)
+	// Act
+	const result = logger.formatMessage("INFO", message);
 
-	// Assert (검증)
-	expect(result).toBe("[INFO][test-context] test message")
+	// Assert
+	expect(result).toBe("[INFO][test-context] test message");
 })
-```
-
-**복잡한 케이스:**
-
-```typescript
-it('should handle API error and show user-friendly message', async () => {
-  // Arrange
-  const mockApiClient = {
-    fetchData: vi.fn().mockRejectedValue(new Error('Network error'))
-  };
-  const component = render(<DataComponent apiClient={mockApiClient} />);
-  const showErrorSpy = vi.spyOn(window, 'alert');
-
-  // Act
-  fireEvent.click(screen.getByRole('button', { name: 'Load Data' }));
-  await waitFor(() => {
-    expect(screen.getByText('로딩 중...')).not.toBeInTheDocument();
-  });
-
-  // Assert
-  expect(showErrorSpy).toHaveBeenCalledWith('데이터를 불러올 수 없습니다.');
-  expect(screen.getByText('오류가 발생했습니다')).toBeInTheDocument();
-});
-```
-
-### 2.8 필수 테스트 케이스 유형
-
-#### 2.8.1 정상 경로 (Happy Path)
-
-```typescript
-describe("normal operations", () => {
-	it("should process valid input successfully", () => {
-		// 정상적인 입력에 대한 정상적인 처리
-	})
-
-	it("should return expected output format", () => {
-		// 예상되는 출력 형식 검증
-	})
-})
-```
-
-#### 2.8.2 경계값 테스트 (Boundary Testing)
-
-```typescript
-describe("boundary conditions", () => {
-	it("should handle empty string input", () => {
-		expect(processText("")).toBe("")
-	})
-
-	it("should handle maximum length input", () => {
-		const maxInput = "a".repeat(1000)
-		expect(() => processText(maxInput)).not.toThrow()
-	})
-
-	it("should handle null and undefined inputs", () => {
-		expect(() => processText(null)).toThrow()
-		expect(() => processText(undefined)).toThrow()
-	})
-})
-```
-
-#### 2.8.3 예외 처리 테스트
-
-```typescript
-describe("error handling", () => {
-	it("should throw specific error for invalid input", () => {
-		expect(() => {
-			validateEmail("invalid-email")
-		}).toThrow("Invalid email format")
-	})
-
-	it("should handle network errors gracefully", async () => {
-		mockApi.get.mockRejectedValue(new Error("Network error"))
-
-		const result = await fetchUserData("123")
-
-		expect(result.error).toBe("Failed to fetch user data")
-	})
-})
-```
-
-#### 2.8.4 엣지 케이스 테스트
-
-```typescript
-describe("edge cases", () => {
-	it("should handle special characters in input", () => {
-		const specialInput = "!@#$%^&*()_+{}|:\"<>?[]\\;',./<"
-		expect(() => processText(specialInput)).not.toThrow()
-	})
-
-	it("should handle concurrent operations", async () => {
-		const promises = Array(10)
-			.fill(null)
-			.map(() => processAsync("test"))
-		const results = await Promise.all(promises)
-
-		expect(results).toHaveLength(10)
-		results.forEach((result) => {
-			expect(result).toBeDefined()
-		})
-	})
-})
-```
-
-    │   └── CaretSystemPromptTestHelper.ts  // 테스트 전용 헬퍼
-    └── caret-system-prompt-simple.test.ts
-
-````
-
-**테스트에서 TestHelper 사용:**
-
-```typescript
-import { CaretSystemPromptTestHelper } from "./helpers/CaretSystemPromptTestHelper"
-
-describe("CaretSystemPrompt - Basic Wrapper Implementation", () => {
-	let testHelper: CaretSystemPromptTestHelper
-
-	beforeEach(() => {
-		testHelper = new CaretSystemPromptTestHelper("/test/extension/path")
-	})
-
-	it("should generate system prompt successfully", async () => {
-		const result = await testHelper.generateSystemPrompt(mockContext)
-		expect(result.prompt).toBeDefined()
-	})
-})
-````
-
-#### 2.4.3 예외: 정말 필요한 경우 명시적 표시
-
-**만약 서비스 코드에 테스트 전용 메서드가 정말 필요한 경우:**
-
-```typescript
-export class SomeService {
-  // ✅ 운영 메서드
-  doBusinessLogic() { ... }
-
-  // ⚠️ 예외적으로 허용: 명시적 forTest 표시
-  forTestOnly_getInternalState() { ... }
-  forTestOnly_resetState() { ... }
-}
-```
-
-**forTest 사용 조건:**
-
-- 내부 상태 접근이 불가피한 경우
-- Mock이 불가능한 private 메서드 테스트
-- **메서드명에 반드시 `forTestOnly_` 또는 `forTest_` 접두사**
-
-#### 2.4.4 아키텍처 분리의 장점
-
-**✅ 명확한 책임 분리:**
-
-- 서비스 클래스: 비즈니스 로직에만 집중
-- TestHelper: 테스트 시나리오에만 집중
-
-**✅ 코드 가독성 향상:**
-
-- 운영진이 서비스 코드를 볼 때 혼동 없음
-- 테스트 전용 코드가 API 문서에 노출되지 않음
-
-**✅ 유지보수성 개선:**
-
-- 테스트 전용 코드 변경이 운영 코드에 영향 없음
-- 리팩토링 시 범위가 명확히 분리됨
-
-## 3. 테스트 프레임워크 및 도구
-
-### 3.1 백엔드 테스트 (caret-src/)
-
-#### 3.1.1 테스트 프레임워크
-
-```json
-{
-	"devDependencies": {
-		"vitest": "^3.0.5",
-		"@vitest/coverage-v8": "^3.0.9",
-		"@types/node": "^22.13.4"
-	}
-}
-```
-
-#### 3.1.2 Vitest 설정 (vitest.config.ts)
-
-```typescript
-import { defineConfig } from "vitest/config"
-import path from "path"
-
-export default defineConfig({
-	test: {
-		environment: "node",
-		globals: true,
-		include: [
-			"caret-src/**/*.test.ts",
-			"!src/**/*", // Cline 원본 테스트 제외
-		],
-		coverage: {
-			provider: "v8",
-			include: ["caret-src/**/*.ts", "!caret-src/**/*.test.ts", "!caret-src/**/*.d.ts"],
-			reportOnFailure: true,
-			reporter: ["text", "json", "html"],
-		},
-		logHeapUsage: false,
-		silent: false,
-	},
-	resolve: {
-		alias: {
-			"@": path.resolve(__dirname, "./caret-src"),
-			"@shared": path.resolve(__dirname, "./src/shared"),
-		},
-	},
-})
-```
-
-### 3.2 프론트엔드 테스트 (webview-ui/src/caret/)
-
-#### 3.2.1 테스트 프레임워크
-
-```json
-{
-	"devDependencies": {
-		"@testing-library/react": "^14.0.0",
-		"@testing-library/jest-dom": "^6.0.0",
-		"@testing-library/user-event": "^14.0.0",
-		"vitest": "^1.0.0",
-		"@vitejs/plugin-react": "^4.0.0"
-	}
-}
-```
-
-#### 3.2.2 Vitest 설정 (vitest.config.ts)
-
-```typescript
-import { defineConfig } from "vitest/config"
-import react from "@vitejs/plugin-react"
-
-export default defineConfig({
-	plugins: [react()],
-	test: {
-		environment: "jsdom",
-		setupFiles: ["./src/test-setup.ts"],
-		include: ["src/caret/**/*.test.{ts,tsx}"],
-		coverage: {
-			include: ["src/caret/**/*.{ts,tsx}"],
-			exclude: ["src/caret/**/*.test.{ts,tsx}", "src/caret/**/*.d.ts"],
-			reporter: ["text", "lcov", "html"],
-			reportsDirectory: "coverage/caret-frontend",
-		},
-	},
-})
-```
-
-## 4. 테스트 작성 가이드
-
-### 4.1 신규 테스트 파일 작성 체크리스트 🚨 **필수**
-
-#### 4.1.1 테스트 환경 확인 및 설정
-
-**🔥 테스트 작성 전 필수 확인사항:**
-
-새로운 테스트 파일을 작성할 때 **반드시 기존 테스트 파일의 패턴을 먼저 확인**하세요!
-
-```bash
-# 1. 기존 테스트 파일 패턴 확인
-ls caret-src/__tests__/**/*.test.ts
-ls webview-ui/src/**/*.test.tsx
-
-# 2. 기존 테스트 파일의 import 구조 확인
-head -10 caret-src/__tests__/integrations/checkpoints/Checkpoint.metarepo.test.ts
-```
-
-**✅ Vitest 기본 템플릿 (이 프로젝트 표준):**
-
-```typescript
-// ✅ 올바른 Vitest import (이 프로젝트 표준)
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
-import * as fs from "fs/promises"
-import * as path from "path"
-// ... 기타 필요한 imports
-
-describe("YourComponent", () => {
-	let instance: YourComponent
-
-	beforeEach(() => {
-		// 각 테스트 전 초기화
-		instance = new YourComponent()
-		vi.clearAllMocks()
-	})
-
-	afterEach(() => {
-		// 각 테스트 후 정리
-	})
-
-	it("should do something when condition is met", () => {
-		// Arrange
-		const input = "test"
-
-		// Act
-		const result = instance.method(input)
-
-		// Assert
-		expect(result).toBe("expected")
-	})
-})
-```
-
-**❌ 절대 사용 금지 (Jest 스타일):**
-
-```typescript
-// ❌ Jest 스타일 - 이 프로젝트에서 사용 금지!
-import { describe, it, expect } from "@jest/globals" // 잘못된 import
-// expect가 import되지 않음 - 컴파일 에러!
-
-describe("YourComponent", () => {
-	test("should work", () => {
-		// ❌ test() 대신 it() 사용
-		// ...
-	}, 30000) // ❌ timeout 방식이 다름
-})
-```
-
-#### 4.1.2 환경별 테스트 설정 차이점
-
-**🔍 Vitest vs Jest 주요 차이점:**
-
-| 항목        | Vitest (현재 사용) | Jest (사용 안 함)      |
-| ----------- | ------------------ | ---------------------- |
-| Import      | `from "vitest"`    | `from "@jest/globals"` |
-| 테스트 함수 | `it()`             | `test()` 또는 `it()`   |
-| 타임아웃    | 별도 설정          | 세 번째 인자           |
-| 모킹        | `vi.mock()`        | `jest.mock()`          |
-
-**⚠️ 타임아웃 설정 차이:**
-
-```typescript
-// ✅ Vitest 방식 (기본 5초, 별도 설정 필요시 vitest.config.ts에서)
-it("should handle long operation", async () => {
-	await longOperation()
-	expect(result).toBeDefined()
-})
-
-// ❌ Jest 방식 - 이 프로젝트에서 작동 안 함!
-it("should handle long operation", async () => {
-	await longOperation()
-	expect(result).toBeDefined()
-}, 30000) // 이 방식 사용 금지!
-```
-
-#### 4.1.3 새 테스트 파일 생성 단계별 가이드
-
-**📋 1단계: 기존 패턴 확인**
-
-```bash
-# 유사한 기능의 기존 테스트 파일 찾기
-find . -name "*.test.ts" -o -name "*.test.tsx" | grep -i checkpoint
-```
-
-**📋 2단계: 올바른 템플릿 복사**
-
-```bash
-# 기존 테스트 파일을 템플릿으로 사용
-cp caret-src/__tests__/existing-good-test.test.ts your-new-test.test.ts
-```
-
-**📋 3단계: import 구문 확인**
-
-```typescript
-// 반드시 이 import를 확인하세요!
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
-```
-
-**📋 4단계: 테스트 실행으로 환경 검증**
-
-```bash
-# 새 테스트 파일이 올바르게 인식되는지 확인
-npm run test:backend your-new-test.test.ts
-```
-
-#### 4.1.4 자주 발생하는 실수 및 해결법
-
-**🚨 실수 1: expect가 정의되지 않음**
-
-```
-error TS2304: Cannot find name 'expect'.
-```
-
-**해결책:**
-
-```typescript
-// ✅ vitest에서 expect import 필수
-import { describe, it, expect } from "vitest"
-```
-
-**🚨 실수 2: timeout 설정 오류**
-
-```
-error TS2554: Expected 1-2 arguments, but got 3.
-```
-
-**해결책:**
-
-```typescript
-// ❌ 잘못된 방법
-it("test", () => {}, 30000)
-
-// ✅ 올바른 방법 - timeout이 필요하면 vitest.config.ts 설정
-it("test", () => {})
-```
-
-**🚨 실수 3: 잘못된 테스트 프레임워크 사용**
-
-```
-Cannot find module '@jest/globals'
-```
-
-**해결책:**
-
-```typescript
-// ❌ 잘못된 import
-import { describe } from "@jest/globals"
-
-// ✅ 올바른 import
-import { describe } from "vitest"
-```
-
-### 4.2 파일 명명 규칙
-
-#### 4.2.1 테스트 파일 위치
-
-```
-caret-src/
-├── core/
-│   ├── webview/
-│   │   ├── CaretProvider.ts
-│   │   └── __tests__/
-│   │       └── CaretProvider.test.ts
-│   └── utils/
-│       ├── caret-logger.ts
-│       └── caret-logger.test.ts
-
-webview-ui/src/caret/
-├── components/
-│   ├── CaretWelcome.tsx
-│   └── __tests__/
-│       └── CaretWelcome.test.tsx
-└── utils/
-    ├── i18n.ts
-    └── i18n.test.ts
-```
-
-#### 4.1.2 테스트 파일 명명 규칙
-
-- **단위 테스트**: `{ComponentName}.test.{ts|tsx}`
-- **통합 테스트**: `{FeatureName}.integration.test.{ts|tsx}`
-- **테스트 디렉토리**: `__tests__/` (선택적)
-
-### 4.2 백엔드 테스트 작성
-
-#### 4.2.1 기본 테스트 구조
-
-```typescript
-// caret-src/utils/__tests__/caret-logger.test.ts
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
-import { CaretLogger, CaretLogLevel } from "../caret-logger"
-
-describe("CaretLogger", () => {
-	let logger: CaretLogger
-	let mockOutputChannel: any
-
-	beforeEach(() => {
-		mockOutputChannel = {
-			appendLine: vi.fn(),
-		}
-		logger = new CaretLogger(mockOutputChannel)
-	})
-
-	afterEach(() => {
-		vi.clearAllMocks()
-	})
-
-	describe("constructor", () => {
-		it("should create logger with output channel", () => {
-			expect(logger).toBeDefined()
-		})
-	})
-
-	describe("log methods", () => {
-		it("should log info message", () => {
-			const consoleSpy = vi.spyOn(console, "info")
-			logger.info("test message", "TEST")
-
-			expect(mockOutputChannel.appendLine).toHaveBeenCalled()
-			expect(consoleSpy).toHaveBeenCalled()
-		})
-
-		it("should log error message", () => {
-			const consoleSpy = vi.spyOn(console, "error")
-			logger.error("error message", "ERROR")
-
-			expect(mockOutputChannel.appendLine).toHaveBeenCalled()
-			expect(consoleSpy).toHaveBeenCalled()
-		})
-	})
-})
-```
-
-#### 4.2.2 Vitest 모킹 패턴 및 모범 사례 🚨 **필수 숙지**
-
-**이 섹션은 반복적인 테스트 실패를 방지하기 위한 핵심 가이드입니다.**
-
-##### 4.2.2.1 핵심 모킹 패턴 및 주의사항
-
-**🚨 주요 원칙:**
-
-- `vi.mock()` 블록 내에서 모든 모킹 정의 (호이스팅 문제 방지)
-- `vi.clearAllMocks()` 사용 (`vi.resetAllMocks()` 금지)
-- Node.js 내장 모듈 혼합 모킹 방식 금지
-
-**✅ 기본 모킹 템플릿:**
-
-```typescript
-// VSCode API 모킹 (필수)
-vi.mock("vscode", () => ({
-	ExtensionContext: vi.fn(),
-	Uri: {
-		file: vi.fn((path) => ({ fsPath: path, toString: () => path })),
-		parse: vi.fn((uri) => ({ fsPath: uri, toString: () => uri })),
-	},
-	ExtensionMode: { Development: 1, Production: 2, Test: 3 },
-	window: {
-		createOutputChannel: vi.fn((name) => ({
-			appendLine: vi.fn(),
-			show: vi.fn(),
-			dispose: vi.fn(),
-			name,
-		})),
-		showErrorMessage: vi.fn(),
-	},
-	env: { openExternal: vi.fn() },
-	workspace: { onDidChangeConfiguration: vi.fn() },
-}))
-
-// fs 모킹 (조건부 로직)
-vi.mock("fs", () => ({
-	existsSync: vi.fn(() => true),
-	promises: {
-		readFile: vi.fn((path) => {
-			if (path.includes(".env.dev")) return Promise.resolve("ENV=dev")
-			return Promise.resolve(Buffer.from("data", "base64"))
-		}),
-	},
-}))
-
-// 테스트 격리
-beforeEach(() => vi.clearAllMocks())
-```
-
-##### 4.2.2.2 Node.js 내장 모듈 모킹 ⚠️ **특별 주의**
-
-**🚨 절대 금지: 모킹 방식 혼합 사용**
-
-```typescript
-// ❌ 금지: vi.mock + vi.spyOn 혼합
-vi.mock("fs", () => ({ existsSync: vi.fn() }))
-vi.spyOn(fs, "existsSync") // 🚨 Cannot redefine property 오류!
-
-// ✅ 올바른 방법: vi.mocked 사용
-vi.mock("fs", () => ({ existsSync: vi.fn() }))
-vi.mocked(fs.existsSync).mockReturnValue(true)
-```
-
-**🚨 필수 체크리스트:**
-
-- [ ] 모킹 방식 통일 (`vi.mock` 또는 `vi.mocked` 중 하나만)
-- [ ] 혼합 사용 금지 (`vi.mock` + `vi.spyOn` + `vi.importMock`)
-- [ ] `vi.clearAllMocks()` 사용 (`vi.resetAllMocks()` 금지)
-- [ ] Promise 모킹 시 `Promise.resolve()` 사용
-
-#### 4.2.3 VSCode API 모킹 (기존 내용 유지)
-
-```typescript
-// caret-src/__tests__/setup.ts
-import { vi } from "vitest"
-
-// VSCode API 모킹 (Vitest)
-vi.mock("vscode", () => ({
-	window: {
-		createOutputChannel: vi.fn(() => ({
-			appendLine: vi.fn(),
-			show: vi.fn(),
-			dispose: vi.fn(),
-		})),
-		showErrorMessage: vi.fn(),
-		showInformationMessage: vi.fn(),
-	},
-	ExtensionContext: vi.fn(),
-	Uri: {
-		file: vi.fn(),
-		parse: vi.fn(),
-	},
-}))
-```
-
-### 4.3 프론트엔드 테스트 작성
-
-#### 4.3.1 React 컴포넌트 테스트
-
-```typescript
-// webview-ui/src/caret/components/__tests__/CaretWelcome.test.tsx
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
-import { CaretWelcome } from '../CaretWelcome';
-
-describe('CaretWelcome', () => {
-  it('should render welcome message', () => {
-    render(<CaretWelcome />);
-    expect(screen.getByText(/Caret에 오신 것을 환영합니다/)).toBeInTheDocument();
-  });
-
-  it('should handle button click', async () => {
-    const mockOnClick = vi.fn();
-    render(<CaretWelcome onStartClick={mockOnClick} />);
-
-    const startButton = screen.getByRole('button', { name: /시작하기/ });
-    fireEvent.click(startButton);
-
-    expect(mockOnClick).toHaveBeenCalledTimes(1);
-  });
-
-  it('should display Korean text correctly', () => {
-    render(<CaretWelcome />);
-    expect(screen.getByText('바이브 코딩')).toBeInTheDocument();
-  });
-});
-```
-
-#### 4.3.2 커스텀 훅 테스트
-
-```typescript
-// webview-ui/src/caret/hooks/__tests__/useCaretState.test.ts
-import { renderHook, act } from "@testing-library/react"
-import { describe, it, expect } from "vitest"
-import { useCaretState } from "../useCaretState"
-
-describe("useCaretState", () => {
-	it("should initialize with default state", () => {
-		const { result } = renderHook(() => useCaretState())
-
-		expect(result.current.isReady).toBe(false)
-		expect(result.current.currentMode).toBe("welcome")
-	})
-
-	it("should update state correctly", () => {
-		const { result } = renderHook(() => useCaretState())
-
-		act(() => {
-			result.current.setReady(true)
-		})
-
-		expect(result.current.isReady).toBe(true)
-	})
-})
-```
-
-### 4.4 통합 테스트 작성
-
-#### 4.4.1 시스템 레벨 통합 테스트 (새로운 방식)
-
-```typescript
-// caret-src/__tests__/integration.test.ts
-import { describe, it, expect } from "vitest"
-import { spawn } from "child_process"
-import { promisify } from "util"
-
-const execAsync = promisify(require("child_process").exec)
-
-describe("Integration Tests", () => {
-	it("should compile backend successfully", async () => {
-		try {
-			const { stdout, stderr } = await execAsync("npm run check-types")
-			expect(stderr).toBe("")
-			expect(stdout).toContain("tsc --noEmit")
-		} catch (error: any) {
-			throw new Error(`Backend compilation failed: ${error.message}`)
-		}
-	}, 30000)
-
-	it("should build webview-ui successfully", async () => {
-		try {
-			const { stdout, stderr } = await execAsync("cd webview-ui && npm run build")
-			expect(stdout).toContain("vite")
-			expect(stdout).toContain("building for production")
-			expect(stderr).not.toContain("Build failed")
-			expect(stderr).not.toContain("error during build")
-		} catch (error: any) {
-			throw new Error(`Webview-UI build failed: ${error.message}`)
-		}
-	}, 60000)
-
-	it("should have grpc-client files in ES6 module format", async () => {
-		const fs = require("fs")
-		const path = require("path")
-
-		try {
-			const grpcClientPath = path.join(process.cwd(), "webview-ui/src/services/grpc-client.js")
-			const content = fs.readFileSync(grpcClientPath, "utf8")
-
-			expect(content).toContain("import {")
-			expect(content).toContain("export const")
-			expect(content).not.toContain("require(")
-			expect(content).not.toContain("exports.")
-			expect(content).toContain("StateServiceClient")
-		} catch (error: any) {
-			throw new Error(`GRPC client format check failed: ${error.message}`)
-		}
-	})
-
-	it("should have consistent rule priority logic", async () => {
-		try {
-			const { stdout } = await execAsync("npm run test:backend -- rule-priority")
-			expect(stdout).toContain("6 passed")
-		} catch (error: any) {
-			throw new Error(`Rule priority tests failed: ${error.message}`)
-		}
-	}, 30000)
-})
-```
-
-**주요 특징:**
-
-- **실제 명령어 실행**: `npm run build`, `npm run compile` 등 실제 빌드 프로세스 검증
-- **크로스 플랫폼 호환**: Windows/Linux/Mac 환경 고려
-- **빌드 에러 감지**: 테스트에서 놓칠 수 있는 실제 빌드 문제 조기 발견
-- **ES6 모듈 형식 검증**: CommonJS/ES6 모듈 호환성 문제 감지
-- **장시간 타임아웃**: 실제 빌드 시간을 고려한 타임아웃 설정
-
-#### 4.4.2 백엔드-프론트엔드 통신 테스트 (기존 방식)
-
-```typescript
-// src/test/integration/webview-communication.test.ts
-import * as vscode from "vscode"
-import { CaretProvider } from "../../caret-src/core/webview/CaretProvider"
-
-describe("Webview Communication Integration", () => {
-	let provider: CaretProvider
-	let mockContext: vscode.ExtensionContext
-
-	beforeEach(() => {
-		mockContext = {
-			subscriptions: [],
-			extensionUri: vscode.Uri.file("/test"),
-		} as any
-		provider = new CaretProvider(mockContext)
-	})
-
-	it("should handle message from webview", async () => {
-		const testMessage = { type: "test", data: "hello" }
-
-		// 메시지 전송 시뮬레이션
-		await provider.handleWebviewMessage(testMessage)
-
-		// 응답 검증
-		expect(provider.lastResponse).toEqual({
-			type: "response",
-			data: "received: hello",
-		})
-	})
-})
-```
-
-## 5. 테스트 실행
-
-### 5.1 개발 중 테스트 실행
-
-#### 5.1.1 백엔드 테스트
-
-```bash
-# 단위 테스트 실행
-npm run test:backend
-
-# 커버리지와 함께 실행
-npm run test:backend:coverage
-
-# 특정 파일 테스트
-npm run test:backend -- CaretProvider.test.ts
-
-# 통합 테스트만 실행
-npm run test:backend -- integration
-
-# Watch 모드
-npm run test:backend:watch
-```
-
-#### 5.1.2 프론트엔드 테스트
-
-```bash
-# 단위 테스트 실행
-npm run test:frontend
-
-# 커버리지와 함께 실행
-npm run test:frontend:coverage
-
-# 특정 컴포넌트 테스트
-npm run test:frontend -- CaretWelcome.test.tsx
-
-# Watch 모드
-npm run test:frontend:watch
-```
-
-### 5.2 전체 테스트 실행
-
-#### 5.2.1 모든 테스트 실행
-
-```bash
-# 전체 테스트 (백엔드 + 프론트엔드)
-npm test
-
-# 커버리지 포함 전체 테스트
-npm run test:coverage
-
-# CI/CD용 테스트 (병렬 실행)
-npm run test:ci
-```
-
-#### 5.2.2 커버리지 분석
-
-```bash
-# Caret 전용 커버리지 분석
-node caret-scripts/caret-coverage-check.js
-
-# 상세 커버리지 리포트
-npm run coverage:report
-```
-
-### 5.1 테스트 실행 명령어
-
-#### 5.1.1 `npm run test:all` ⭐ **(권장) 통합 테스트 (백엔드 + 프론트엔드)**
-
-- **설명**: 가장 안정적이고 포괄적인 전체 테스트 방법입니다. 백엔드와 프론트엔드의 모든 Vitest 기반 테스트를 실행합니다.
-- **실행**: `npm run test:all`
-- **사용 시점**:
-    - 로컬 개발 중 수시로 실행하여 코드 변경 사항 검증
-    - Git 커밋 및 푸시 전 필수 실행하여 모든 테스트 통과 확인
-- **목표 상태**: **항상 모든 테스트 통과 (All Pass)**. CI/CD 파이프라인의 핵심 검증 단계입니다.
-- **현재 상태**: 모든 테스트가 성공적으로 통과합니다.
-
-#### 5.1.2 `npm test` ⚠️ **(주의) 전체 테스트 (단위 + 통합)**
-
-- **설명**: `package.json`의 메인 테스트 스크립트로, `pretest` (빌드, `test:all` 포함 가능성) 후 추가적인 단위/통합 테스트를 실행할 수 있도록 구성될 수 있습니다. (현재는 `test:all`과 유사하게 동작하나, 과거 ESM 이슈가 있었습니다.)
-- **실행**: `npm test`
-- **사용 시점**: 프로젝트의 공식 테스트 스크립트로 사용될 수 있으나, 현재는 `npm run test:all`의 안정성을 더 권장합니다.
-- **주의사항**: 과거 `@google/genai` ESM 관련 이슈로 실패 가능성이 있었으므로, `npm run test:all` 사용을 우선적으로 권장합니다. 현재는 `npm run test:all`과 동일하게 모든 테스트가 통과합니다.
-
-#### 5.1.3 개별 테스트 실행
-
-```bash
-# 단위 테스트 실행
-npm run test:backend
-
-# 커버리지와 함께 실행
-npm run test:backend:coverage
-
-# 특정 파일 테스트
-npm run test:backend -- CaretProvider.test.ts
-
-# 통합 테스트만 실행
-npm run test:backend -- integration
-
-# Watch 모드
-npm run test:backend:watch
-```
-
-## 6. 통합 테스트 구현 변화 (2025-01-21 업데이트)
-
-### 6.1 새로운 통합 테스트 방식
-
-#### 6.1.1 변경 배경
-
-기존의 통합 테스트는 모킹된 환경에서만 동작하여 **실제 빌드 에러를 감지하지 못하는 문제**가 있었습니다.
-특히 다음과 같은 문제들이 발생했습니다:
-
-- **CommonJS vs ES6 모듈 호환성 문제**: `grpc-client.js`가 CommonJS 형식이었는데 TypeScript에서 ES6 import 사용
-- **빌드 성공 vs 테스트 통과 불일치**: 테스트는 통과하지만 실제 빌드는 실패하는 상황
-- **프로토콜 버퍼 생성 파일 검증 부족**: 자동 생성 파일의 형식 검증 누락
-
-#### 6.1.2 새로운 접근 방식
-
-**실제 명령어 실행 기반 통합 테스트**로 변경하여 다음을 검증합니다:
-
-1. **실제 백엔드 컴파일**: `npm run check-types` 실행으로 TypeScript 컴파일 검증
-2. **실제 프론트엔드 빌드**: `npm run build` 실행으로 Vite 빌드 검증
-3. **파일 형식 검증**: 자동 생성된 파일들의 실제 내용 검증
-4. **기능별 테스트 연동**: 특정 기능 테스트 실행 검증
-
-#### 6.1.3 구현된 검증 항목
-
-```typescript
-// 실제 구현된 통합 테스트 항목들
-describe("Integration Tests", () => {
-	// 1. 백엔드 TypeScript 컴파일 검증
-	it("should compile backend successfully", async () => {
-		const { stdout, stderr } = await execAsync("npm run check-types")
-		expect(stderr).toBe("")
-		expect(stdout).toContain("tsc --noEmit")
-	}, 30000)
-
-	// 2. 프론트엔드 Vite 빌드 검증
-	it("should build webview-ui successfully", async () => {
-		const { stdout, stderr } = await execAsync("cd webview-ui && npm run build")
-		expect(stdout).toContain("vite")
-		expect(stdout).toContain("building for production")
-		expect(stderr).not.toContain("Build failed")
-	}, 60000)
-
-	// 3. 자동 생성 파일 형식 검증
-	it("should have grpc-client files in ES6 module format", async () => {
-		const content = fs.readFileSync("webview-ui/src/services/grpc-client.js", "utf8")
-		expect(content).toContain("import {")
-		expect(content).toContain("export const")
-		expect(content).not.toContain("require(")
-	})
-
-	// 4. 특정 기능 테스트 검증
-	it("should have consistent rule priority logic", async () => {
-		const { stdout } = await execAsync("npm run test:backend -- rule-priority")
-		expect(stdout).toContain("6 passed")
-	}, 30000)
-})
-```
-
-#### 6.1.4 크로스 플랫폼 고려사항
-
-Windows 환경에서 `head` 명령어가 없는 문제를 해결하기 위해:
-
-- **파일 시스템 API 사용**: `fs.readFileSync()` 직접 사용
-- **PowerShell 호환**: Windows PowerShell에서 실행 가능한 명령어만 사용
-- **경로 처리**: `path.join()`으로 크로스 플랫폼 경로 처리
-
-### 6.2 통합 테스트 실행 방법 및 결과
-
-#### 6.2.1 개별 실행
-
-```bash
-# 통합 테스트만 실행
-npx vitest run caret-src/__tests__/integration.test.ts
-
-# 특정 통합 테스트 실행
-npx vitest run caret-src/__tests__/integration.test.ts -t "should build webview-ui"
-```
-
-#### 6.2.2 전체 테스트에서의 역할 및 결과
-
-```bash
-# 전체 테스트 실행 시 통합 테스트도 포함
-npm test
-# → pretest → compile → test:all
-# → 프론트엔드: 80개 테스트 통과 ✅
-# → 백엔드: 30개 테스트 통과 (통합테스트 5개 포함) ✅
-# → 총 110개 테스트 모두 통과 🎉
-```
-
-#### 6.2.3 CI/CD에서의 활용
-
-통합 테스트가 실제 빌드 문제를 조기에 감지하므로:
-
-- **빌드 파이프라인 신뢰성 향상**
-- **배포 전 실제 동작 검증**
-- **개발자 로컬 환경과 CI 환경 일치성 확인**
-
-## 7. 테스트 품질 기준
-
-### 7.1 커버리지 기준
-
-#### 7.1.1 Caret 전용 코드
-
-- **Statement Coverage**: 100%
-- **Function Coverage**: 100%
-- **Branch Coverage**: 100%
-- **Line Coverage**: 100%
-
-#### 7.1.2 Cline 원본 코드
-
-- **참고용 모니터링**: 현재 상태 유지
-- **회귀 테스트**: 기존 테스트 통과 확인
-
-### 7.2 테스트 케이스 품질
-
-#### 7.2.1 필수 테스트 케이스
-
-- **정상 경로 (Happy Path)**: 기본 기능 동작
-- **경계값 테스트**: 최소/최대값, 빈 값 등
-- **예외 처리**: 오류 상황 대응
-- **엣지 케이스**: 특수한 상황들
-- **통합 시나리오**: 실제 빌드/배포 프로세스 검증 (신규 추가)
-
-#### 7.2.2 테스트 코드 품질
-
-- **가독성**: 명확한 테스트 이름과 구조
-- **독립성**: 테스트 간 의존성 없음
-- **반복성**: 동일한 결과 보장
-- **속도**: 빠른 실행 시간
-
-## 7. CI/CD 통합
-
-### 7.1 GitHub Actions 설정
-
-```yaml
-# .github/workflows/test.yml
-name: Test Coverage
-
-on: [push, pull_request]
-
-jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: "18"
-
-            - name: Install dependencies
-              run: npm ci
-
-            - name: Run tests with coverage
-              run: npm run test:coverage
-
-            - name: Check Caret coverage
-              run: node caret-scripts/caret-coverage-check.js
-
-            - name: Upload coverage
-              uses: codecov/codecov-action@v3
-              with:
-                  file: ./coverage/lcov.info
-```
-
-### 7.2 Pre-commit 훅
-
-```bash
-# .husky/pre-commit
-#!/bin/sh
-npm run test:quick
-npm run lint
-```
-
-## 8. 모범 사례
-
-### 8.1 테스트 작성 모범 사례
-
-#### 8.1.1 AAA 패턴
-
-```typescript
-describe("CaretLogger", () => {
-	it("should format log message correctly", () => {
-		// Arrange (준비)
-		const logger = new CaretLogger("test")
-		const message = "test message"
-
-		// Act (실행)
-		const result = logger.formatMessage("INFO", message)
-
-		// Assert (검증)
-		expect(result).toBe("[INFO][test] test message")
-	})
-})
-```
-
-#### 8.1.2 명확한 테스트 이름
-
-```typescript
-// 좋은 예
-it("should return error when API key is missing", () => {})
-it("should render loading spinner while fetching data", () => {})
-
-// 나쁜 예
-it("should work", () => {})
-it("test API", () => {})
-```
-
-### 8.2 Mock 사용 가이드
-
-#### 8.2.1 외부 의존성 모킹
-
-```typescript
-// API 호출 모킹
-jest.mock("../api/client", () => ({
-	fetchData: jest.fn().mockResolvedValue({ data: "test" }),
-}))
-
-// VSCode API 모킹
-jest.mock("vscode", () => ({
-	window: {
-		showInformationMessage: jest.fn(),
-	},
-}))
-```
-
-#### 8.2.2 시간 관련 테스트
-
-```typescript
-describe("timestamp functionality", () => {
-	beforeEach(() => {
-		jest.useFakeTimers()
-		jest.setSystemTime(new Date("2024-01-01"))
-	})
-
-	afterEach(() => {
-		jest.useRealTimers()
-	})
-
-	it("should generate correct timestamp", () => {
-		const timestamp = generateTimestamp()
-		expect(timestamp).toBe("2024-01-01T00:00:00.000Z")
-	})
-})
-```
-
-## 9. 문제 해결 및 AI 개발자 가이드 🔍
-
-### 9.1 테스트 실패 시 디버깅 전략
-
-**🚨 오류 유형별 해결법:**
-
-```bash
-"Cannot read properties of undefined" → 모킹 누락
-"Cannot redefine property" → 모킹 방식 충돌 (vi.mock + vi.spyOn)
-"ReferenceError: before initialization" → 호이스팅 문제
-"AssertionError: expected X to equal Y" → 데이터 불일치
-"TypeError: X is not a function" → 함수 모킹 누락
-```
-
-**🔧 디버깅 코드:**
-
-```typescript
-// 모킹 상태 확인
-console.log("Mock calls:", vi.mocked(fn).mock.calls)
-console.log("Is mocked:", vi.isMockFunction(fn))
-
-// 테스트 격리 문제 해결
-beforeEach(() => {
-	vi.clearAllMocks()
-	vi.mocked(fn).mockImplementation(() => expectedValue)
-})
-```
-
-### 9.2 Mock 및 Stub 사용 표준
-
-#### 9.2.1 Mock 사용 원칙
-
-**외부 의존성 모킹:**
-
-```typescript
-// ✅ 좋은 모킹 - 구체적이고 명확
-vi.mock("../api/userApi", () => ({
-	fetchUser: vi.fn(),
-	updateUser: vi.fn(),
-	deleteUser: vi.fn(),
-}))
-
-// ❌ 나쁜 모킹 - 너무 광범위
-vi.mock("../api", () => ({}))
-```
-
-**VSCode API 모킹:**
-
-```typescript
-// VSCode API 표준 모킹
-vi.mock("vscode", () => ({
-	window: {
-		createOutputChannel: vi.fn(() => ({
-			appendLine: vi.fn(),
-			show: vi.fn(),
-			dispose: vi.fn(),
-		})),
-		showErrorMessage: vi.fn(),
-		showInformationMessage: vi.fn(),
-		showWarningMessage: vi.fn(),
-	},
-	workspace: {
-		getConfiguration: vi.fn(() => ({
-			get: vi.fn(),
-			update: vi.fn(),
-		})),
-	},
-	Uri: {
-		file: vi.fn(),
-		parse: vi.fn(),
-	},
-}))
-```
-
-#### 9.2.2 Mock 데이터 관리
-
-**테스트 데이터 파일:**
-
-```typescript
-// __tests__/fixtures/userData.ts
-export const mockUserData = {
-	valid: {
-		id: "123",
-		name: "Test User",
-		email: "test@example.com",
-	},
-	invalid: {
-		id: "",
-		name: "",
-		email: "invalid-email",
-	},
-}
-
-// 테스트에서 사용
-import { mockUserData } from "./fixtures/userData"
-
-it("should validate user data", () => {
-	expect(validateUser(mockUserData.valid)).toBe(true)
-	expect(validateUser(mockUserData.invalid)).toBe(false)
-})
-```
-
-**Factory 함수 사용:**
-
-```typescript
-// __tests__/factories/userFactory.ts
-export const createMockUser = (overrides = {}) => ({
-	id: "123",
-	name: "Test User",
-	email: "test@example.com",
-	createdAt: new Date("2024-01-01"),
-	...overrides,
-})
-
-// 테스트에서 사용
-it("should handle different user types", () => {
-	const adminUser = createMockUser({ role: "admin" })
-	const guestUser = createMockUser({ role: "guest" })
-
-	expect(hasPermission(adminUser, "delete")).toBe(true)
-	expect(hasPermission(guestUser, "delete")).toBe(false)
-})
-```
-
-### 9.3 테스트 성능 및 최적화
-
-#### 9.3.1 테스트 속도 최적화
-
-**빠른 테스트 작성:**
-
-```typescript
-// ✅ 좋은 예 - 빠른 테스트
-describe("utility functions", () => {
-	it("should format string quickly", () => {
-		const result = formatString("test")
-		expect(result).toBe("TEST")
-	})
-})
-
-// ❌ 나쁜 예 - 느린 테스트
-describe("heavy operations", () => {
-	it("should process large dataset", () => {
-		const largeData = Array(1000000).fill(0) // 너무 큰 데이터
-		const result = processData(largeData)
-		expect(result).toBeDefined()
-	})
-})
-```
-
-#### 9.3.2 테스트 격리
-
-**독립적인 테스트 보장:**
-
-```typescript
-describe("isolated tests", () => {
-	beforeEach(() => {
-		// 각 테스트마다 깨끗한 상태로 시작
-		localStorage.clear()
-		vi.clearAllMocks()
-	})
-
-	afterEach(() => {
-		// 테스트 후 정리
-		vi.restoreAllMocks()
-	})
-
-	it("should not affect other tests", () => {
-		localStorage.setItem("test", "value")
-		expect(localStorage.getItem("test")).toBe("value")
-	})
-})
-```
-
-### 9.4 디버깅 팁
-
-#### 9.4.1 테스트 디버깅 도구
-
-**유용한 디버깅 도구들:**
-
-```typescript
-// 1. screen.debug() - 현재 DOM 상태 출력
-it('should render correctly', () => {
-  render(<Component />);
-  screen.debug(); // DOM 구조 확인
-});
-
-// 2. console.log로 값 확인
-it('should process data', () => {
-  const result = processData(input);
-  console.log('Result:', result); // 결과 값 확인
-  expect(result).toBeDefined();
-});
-
-// 3. 테스트 격리 확인
-describe.only('focused test', () => {
-  // 이 describe 블록만 실행
-});
-
-it.only('focused test', () => {
-  // 이 테스트만 실행
-});
-```
-
-#### 9.4.2 일반적인 오류 해결
-
-**VSCode API 관련 오류:**
-
-```typescript
-// 오류: Cannot find module 'vscode'
-// 해결: 적절한 모킹 추가
-vi.mock("vscode", () => ({
-	// 필요한 API만 모킹
-}))
-```
-
-**비동기 테스트 오류:**
-
-```typescript
-// 오류: Test timeout
-// 해결: async/await 올바른 사용
-it("should handle async operation", async () => {
-	await expect(asyncFunction()).resolves.toBeDefined()
-})
-```
-
-**React 테스트 오류:**
-
-```typescript
-// 오류: Unable to find an element
-// 해결: 올바른 쿼리 사용
-// ❌ 나쁜 예
-screen.getByText("정확하지 않은 텍스트")
-
-// ✅ 좋은 예
-screen.getByRole("button", { name: /시작하기/ })
-```
-
-### 9.5 AI 개발자 필수 체크리스트 🤖
-
-**📋 테스트 작성 전:**
-
-- [ ] TDD 순서 확인 (RED → GREEN → REFACTOR)
-- [ ] 테스트 목적 명확화
-- [ ] 테스트 파일 위치 결정 (caret-src vs src)
-- [ ] **기존 테스트 패턴 검토 (필수!)** - 유사한 테스트 파일의 import 구조 확인
-- [ ] **테스트 환경 확인**: Vitest vs Jest 구분
-- [ ] **올바른 import 확인**: `from "vitest"` 사용
-
-**📋 테스트 작성 완료 체크리스트:**
-
-- [ ] 모든 public 메서드에 대한 테스트 작성
-- [ ] 모든 private 메서드에 대한 테스트 작성 (필요시)
-- [ ] 모든 if/else 브랜치 테스트
-- [ ] 모든 예외 처리 테스트
-- [ ] 경계값 테스트 (빈 값, null, undefined 등)
-- [ ] 비동기 동작 테스트
-- [ ] Mock 및 Stub 적절히 사용
-- [ ] 테스트 이름이 명확하고 구체적
-- [ ] AAA 패턴 준수
-- [ ] 테스트 간 독립성 보장
-
-**📋 커버리지 달성 체크리스트:**
-
-- [ ] Statement Coverage: 100%
-- [ ] Branch Coverage: 100%
-- [ ] Function Coverage: 100%
-- [ ] Line Coverage: 100%
-- [ ] 커버리지 리포트에서 누락 부분 없음
-- [ ] `caret-scripts/caret-coverage-check.js` 통과
-
-**📋 코드 품질 체크리스트:**
-
-- [ ] 테스트 실행 시간이 합리적 (전체 < 30초)
-- [ ] 모든 테스트가 독립적으로 실행 가능
-- [ ] Mock 사용이 적절하고 과도하지 않음
-- [ ] 테스트 코드가 읽기 쉽고 이해하기 쉬움
-- [ ] 중복 코드 최소화
-- [ ] 테스트 데이터가 명확하고 의미 있음
-- [ ] TestHelper 패턴 사용 (서비스 코드에 테스트 메서드 금지)
-
-**📋 TDD 프로세스 체크리스트:**
-
-- [ ] 실패하는 테스트 먼저 작성 (Red)
-- [ ] 테스트 통과하는 최소 코드 작성 (Green)
-- [ ] 코드 개선 및 리팩토링 (Refactor)
-- [ ] 각 단계에서 모든 테스트 통과 확인
-- [ ] 작은 단위로 단계적 진행
-- [ ] 모킹 전략 결정
-
-## 10. 참고 자료
-
-### 10.1 관련 문서
-
-- [Caret 아키텍처 및 구현 가이드](./caret-architecture-and-implementation-guide.mdx)
-- [프론트엔드-백엔드 상호작용 패턴](./frontend-backend-interaction-patterns.mdx)
-- [컴포넌트 아키텍처 원칙](./component-architecture-principles.mdx)
-- [로깅 시스템 가이드](./logging.mdx)
-- [AI 작업 방법론 가이드](../guides/ai-work-method-guide.mdx)
-
-### 10.2 도구 및 라이브러리
-
-- [Vitest 공식 문서](https://vitest.dev/)
-- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
-- [Jest 공식 문서](https://jestjs.io/) (참고용)
-- [Testing Best Practices](https://github.com/goldbergyoni/javascript-testing-best-practices)
-- [VSCode Extension Testing](https://code.visualstudio.com/api/working-with-extensions/testing-extension)
-
-### 10.3 테스트 프레임워크별 차이점
-
-**Vitest vs Jest 주요 차이점:**
-
-```typescript
-// Vitest (현재 사용)
-import { describe, it, expect, vi, beforeEach } from "vitest"
-
-// Jest (참고용)
-import { describe, it, expect, jest, beforeEach } from "@jest/globals"
-```
-
-**모킹 문법 차이:**
-
-```typescript
-// Vitest
-vi.mock("./module")
-vi.spyOn(obj, "method")
-
-// Jest
-jest.mock("./module")
-jest.spyOn(obj, "method")
 ```
 
 ---
-
-**마지막 업데이트**: 2025년 1월 27일 - 테스트 가이드 통합 완료 (test-writing-standards.mdx, tdd-guide.mdx 내용 통합)
-**작성**: Alpha (AI 어시스턴트)
-**검토**: Luke (개발자)
-**이전 업데이트**: 2025년 1월 21일 - 압축 및 구조 개선 (1860줄 → 799줄)
-
-**🔧 모킹 작성 시:**
-
-- [ ] 모킹 방식 통일 (`vi.mock` 또는 `vi.mocked` 중 하나)
-- [ ] Node.js 내장 모듈 혼합 모킹 방식 금지
-- [ ] VSCode API 필수 메서드 모킹 확인
-- [ ] Promise 모킹 시 `Promise.resolve()` 사용
-
-**✅ 테스트 실행 시:**
-
-- [ ] 개별 테스트 먼저 실행
-- [ ] 테스트 격리 확인
-- [ ] 모킹 호출 확인
-- [ ] 에러 처리 테스트 포함
-
-### 9.3 빠른 참조 템플릿 ⚡
-
-**기본 모킹 설정:**
-
-```typescript
-vi.mock("vscode", () => standardVSCodeMock)
-vi.mock("fs", () => standardFsMock)
-beforeEach(() => vi.clearAllMocks())
-```
-
-**AI 효율성 팁:**
-
-- 기존 테스트 패턴 재사용
-- 표준 모킹 템플릿 활용
-- 테스트 데이터 최소화
-- 즉시 검증 실행
-
-## 10. 참고 자료
-
-### 10.1 관련 문서
-
-- [테스트 코드 작성 표준](./testing-guide.mdx) (통합됨)
-- [문서화 가이드](./documentation-guide.mdx)
-- [AI 작업 방법론 가이드](../guides/ai-work-method-guide.mdx)
-
-### 10.2 도구 문서
-
-- [Jest 공식 문서](https://jestjs.io/)
-- [Vitest 공식 문서](https://vitest.dev/)
-- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
-
----
-
-**마지막 업데이트**: 2025년 1월 21일 - AI 개발자 가이드 추가 및 디버깅 전략 강화
-**작성**: Alpha (AI 어시스턴트)
-**검토**: Luke (개발자)
+**Last Updated**: 2025-09-06 - Translated to English and aligned with current standards.
+**Author**: Alpha (AI Assistant)
+**Reviewed By**: Luke (Developer)

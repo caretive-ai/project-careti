@@ -5,8 +5,11 @@ import { VSCodeButton, VSCodeDivider, VSCodeDropdown, VSCodeOption, VSCodeTag } 
 import deepEqual from "fast-deep-equal"
 import { memo, useCallback, useEffect, useRef, useState } from "react"
 import { useInterval } from "react-use"
+import CaretAccountView from "@/caret/components/CaretAccountView"
 import { t } from "@/caret/utils/i18n"
 import { type ClineUser, handleSignOut } from "@/context/ClineAuthContext"
+// CARET MODIFICATION: Import CaretUser and useExtensionState for Caret account system
+import { type CaretUser, useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
 import VSCodeButtonLink from "../common/VSCodeButtonLink"
 import { AccountWelcomeView } from "./AccountWelcomeView"
@@ -35,6 +38,9 @@ type CachedData = {
 }
 
 const AccountView = ({ onDone, clineUser, organizations, activeOrganization }: AccountViewProps) => {
+	// CARET MODIFICATION: Access caretUser from ExtensionStateContext for Caret account system
+	const { caretUser } = useExtensionState()
+
 	return (
 		<div className="fixed inset-0 flex flex-col overflow-hidden pt-[10px] pl-[20px]">
 			<div className="flex justify-between items-center mb-[17px] pr-[17px]">
@@ -43,7 +49,10 @@ const AccountView = ({ onDone, clineUser, organizations, activeOrganization }: A
 			</div>
 			<div className="flex-grow overflow-hidden pr-[8px] flex flex-col">
 				<div className="h-full mb-[5px]">
-					{clineUser?.uid ? (
+					{/* CARET MODIFICATION: Priority to caretUser, fallback to clineUser, then AccountWelcomeView */}
+					{caretUser?.uid ? (
+						<CaretAccountView caretUser={caretUser} />
+					) : clineUser?.uid ? (
 						<ClineAccountView
 							activeOrganization={activeOrganization}
 							clineUser={clineUser}

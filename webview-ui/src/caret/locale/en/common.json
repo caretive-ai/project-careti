@@ -157,7 +157,7 @@
 			"label": "AI Response Language",
 			"description": "The language that Caret should use for communication."
 		},
-		"modeSystem": {
+		"": {
 			"label": "Mode Settings",
 			"description": "Enable Caret mode settings to use Caret's Plan/Act modes.",
 			"options": {
@@ -255,7 +255,19 @@
 			"label": "Use compact prompt",
 			"description": "A system prompt optimized for smaller context window (e.g. 8k or less).",
 			"warning": "Does not support Mcp and Focus Chain"
-		}
+		},
+		"loading": "Loading...",
+		"signUpDescription": "Sign up for an account to get access to the latest models, billing dashboard to view usage and credits, and more upcoming features.",
+		"termsOfService": "Terms of Service",
+		"privacyPolicy": "Privacy Policy",
+		"byContining": "By continuing, you agree to the",
+		"subscription": "Subscription Plan",
+		"subscriptionFree": "Free",
+		"subscriptionBasic": "Basic",
+		"payAsYouGo": "Pay as you go",
+		"organization": "Organization",
+		"payAsYouGoDescription": "* Additional charges apply after all subscription usage is exhausted.",
+		"title": "Account"
 	},
 	"account": {
 		"signUpWithCaret": "Login & Sign Up",

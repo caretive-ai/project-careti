@@ -384,9 +384,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 			)}
 
 			{/* CARET MODIFICATION: Add Caret Provider UI */}
-			{apiConfiguration && selectedProvider === "caret" && (
-				<CaretProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
-			)}
+			{apiConfiguration && selectedProvider === "caret" && <CaretProvider />}
 
 			{apiConfiguration && selectedProvider === "claude-code" && (
 				<ClaudeCodeProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />

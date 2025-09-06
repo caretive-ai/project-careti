@@ -1,0 +1,4 @@
+{
+	"title": "Connected MCP Servers",
+	"description": "When a server is connected, you can use the server's tools via the `use_mcp_tool` tool, and access the server's resources via the `access_mcp_resource` tool."
+}

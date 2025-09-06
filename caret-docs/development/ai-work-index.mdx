@@ -1,158 +1,158 @@
-# 🤖 AI 작업 인덱스 가이드
+# 🤖 AI Work Index Guide
 
-**목적**: AI가 작업 성격을 파악하고 필요한 문서만 선택적으로 읽어 컨텍스트 효율성을 극대화
+**Purpose**: To enable the AI to understand the nature of a task and selectively read only the necessary documents to maximize context efficiency.
 
-## 📋 **단계별 작업 프로세스**
+## 📋 **Step-by-Step Work Process**
 
-### Phase 0: 필수 선행 독해 (항상 읽기)
+### Phase 0: Mandatory Prerequisite Reading (Always Read)
 
-AI는 모든 작업 시작 전에 다음 문서들을 **반드시** 읽어야 합니다:
+The AI **must** read the following documents before starting any task:
 
-1. **`.caretrules`** - 프로젝트 절대 규칙
-2. **`caret-docs/development/index.mdx`** - 개발 가이드 개요 (빠른 스캔)
-3. **이 파일 (`ai-work-index.mdx`)** - 작업 인덱스 가이드
+1. **`.caretrules`** - Absolute project rules
+2. **`caret-docs/development/index.mdx`** - Development guide overview (quick scan)
+3. **This file (`ai-work-index.mdx`)** - Work index guide
 
-### Phase 1: 작업 성격 판단 (키워드 기반)
+### Phase 1: Determine Task Nature (Keyword-based)
 
-사용자 요청에서 키워드를 추출하여 작업 성격을 분류:
+Extract keywords from the user request to classify the task nature:
 
-## 🎯 **작업 성격별 필수 문서 매핑**
+## 🎯 **Required Document Mapping by Task Nature**
 
-### 🏗️ **아키텍처 & 설계 관련**
+### 🏗️ **Architecture & Design**
 
-**키워드**: 아키텍처, 설계, 구조, 시스템, 확장, Fork, Cline 수정
-**필수 문서**:
+**Keywords**: architecture, design, structure, system, scaling, fork, Cline modification
+**Required Documents**:
 
-- `caret-architecture-and-implementation-guide.mdx` (전체 아키텍처)
-- `extension-architecture.mmd` (시각적 구조도)
-- `new-developer-guide.mdx` (신입 개발자용)
+- `caret-architecture-and-implementation-guide.mdx` (Overall Architecture)
+- `extension-architecture.mmd` (Visual Structure Diagram)
+- `new-developer-guide.mdx` (For New Developers)
 
-### 🤖 **AI 시스템 개발**
+### 🤖 **AI System Development**
 
-**키워드**: AI, 메시지, 시스템 프롬프트, chatbot, agent, 대화
-**필수 문서**:
+**Keywords**: AI, message, system prompt, chatbot, agent, conversation
+**Required Documents**:
 
-- `ai-message-flow-guide.mdx` (메시지 플로우)
-- `system-prompt-implementation.mdx` (시스템 프롬프트)
-- `message-processing-architecture.mdx` (메시지 처리)
+- `ai-message-flow-guide.mdx` (Message Flow)
+- `system-prompt-implementation.mdx` (System Prompt)
+- `message-processing-architecture.mdx` (Message Processing)
 
-### 🔄 **Frontend-Backend 통신**
+### 🔄 **Frontend-Backend Communication**
 
-**키워드**: webview, 통신, 상태 관리, 메시지 전송, UI 연동
-**필수 문서**:
+**Keywords**: webview, communication, state management, message passing, UI integration
+**Required Documents**:
 
-- `frontend-backend-interaction-patterns.mdx` (상호작용 패턴)
-- `webview-extension-communication.mdx` (통신 구조)
-- `ui-to-storage-flow.mdx` (데이터 플로우)
+- `frontend-backend-interaction-patterns.mdx` (Interaction Patterns)
+- `webview-extension-communication.mdx` (Communication Structure)
+- `ui-to-storage-flow.mdx` (Data Flow)
 
-### 🎨 **UI/UX 개발**
+### 🎨 **UI/UX Development**
 
-**키워드**: 컴포넌트, React, UI, UX, 페르소나, 다국어, i18n
-**필수 문서**:
+**Keywords**: Component, React, UI, UX, Persona, Multilingual, i18n
+**Required Documents**:
 
-- `component-architecture-principles.mdx` (컴포넌트 원칙)
-- `locale.mdx` (프론트엔드 i18n)
-- `backend-i18n-system.mdx` (백엔드 i18n)
+- `component-architecture-principles.mdx` (Component Principles)
+- `../../features/f02-multilingual-i18n.mdx` (Frontend i18n - **Source of Truth**)
+- `backend-i18n-system.mdx` (Backend i18n)
 
-### 🧪 **테스트 & 품질 관리**
+### 🧪 **Testing & Quality Assurance**
 
-**키워드**: 테스트, TDD, 품질, 커버리지, 검증, 버그
-**필수 문서**:
+**Keywords**: test, TDD, quality, coverage, verification, bug
+**Required Documents**:
 
-- `testing-guide.mdx` (테스트 가이드)
-- `logging.mdx` (로깅 시스템)
+- `testing-guide.mdx` (Testing Guide)
+- `logging.mdx` (Logging System)
 
-### 🔧 **개발 도구 & 유틸리티**
+### 🔧 **Development Tools & Utilities**
 
-**키워드**: 유틸리티, 도구, 파일 처리, 이미지, 링크, 빌드
-**필수 문서**:
+**Keywords**: utility, tool, file handling, image, link, build
+**Required Documents**:
 
-- `utilities.mdx` (유틸리티)
-- `file-storage-and-image-loading-guide.mdx` (파일 처리)
-- `link-management-guide.mdx` (링크 관리)
+- `utilities.mdx` (Utilities)
+- `file-storage-and-image-loading-guide.mdx` (File Handling)
+- `link-management-guide.mdx` (Link Management)
 
-### 📖 **문서화 & 규약**
+### 📖 **Documentation & Conventions**
 
-**키워드**: 문서, 규약, 작성, 표준, 가이드, 주석
-**필수 문서**:
+**Keywords**: documentation, convention, writing, standard, guide, comment
+**Required Documents**:
 
-- `documentation-guide.mdx` (문서화 가이드)
-- `json-comment-conventions.mdx` (JSON 주석 규약)
+- `documentation-guide.mdx` (Documentation Guide)
+- `json-comment-conventions.mdx` (JSON Comment Conventions)
 
-### 🚨 **Cline 원본 수정**
+### 🚨 **Cline Source Modification**
 
-**키워드**: Cline 수정, 원본 변경, src/ 디렉토리, 백업
-**필수 문서**:
+**Keywords**: Cline modification, source change, src/ directory, backup
+**Required Documents**:
 
-- `caret-architecture-and-implementation-guide.mdx` (수정 원칙)
-- **+** `.caretrules`의 파일 수정 체크리스트 재확인
+- `caret-architecture-and-implementation-guide.mdx` (Modification Principles)
+- **+** Re-check file modification checklist in `.caretrules`
 
-## ⚡ **효율적인 독해 전략**
+## ⚡ **Efficient Reading Strategy**
 
-### 🎯 **단계별 접근**
+### 🎯 **Step-by-Step Approach**
 
-1. **작업 성격 파악** (30초): 키워드 추출 → 카테고리 분류
-2. **필수 문서 선택** (1분): 매핑 테이블 기반 문서 선택
-3. **선택적 독해** (5-10분): 필요한 섹션만 집중 독해
-4. **실행 전 체크** (1분): .caretrules 체크리스트 재확인
+1. **Identify Task Nature** (30s): Extract keywords → Classify category
+2. **Select Required Documents** (1m): Choose documents based on the mapping table
+3. **Selective Reading** (5-10m): Focus only on the necessary sections
+4. **Pre-execution Check** (1m): Re-check `.caretrules` checklist
 
-### 📚 **독해 우선순위**
+### 📚 **Reading Priority**
 
-1. **High Priority**: 직접 관련된 핵심 문서 (1-2개)
-2. **Medium Priority**: 간접 관련 문서 (필요시만)
-3. **Low Priority**: 참고용 문서 (링크만 확인)
+1. **High Priority**: Core documents directly related (1-2 max)
+2. **Medium Priority**: Indirectly related documents (only if needed)
+3. **Low Priority**: Reference documents (check links only)
 
-### 🔍 **스마트 독해 방법**
+### 🔍 **Smart Reading Methods**
 
-- **목차 우선 스캔**: 관련 섹션만 식별
-- **키워드 검색**: 구체적인 내용 빠르게 찾기
-- **예제 코드 우선**: 실제 구현 패턴 확인
-- **체크리스트 활용**: 놓치기 쉬운 필수 사항 점검
+- **Scan Table of Contents First**: Identify relevant sections
+- **Keyword Search**: Quickly find specific content
+- **Prioritize Code Examples**: Check actual implementation patterns
+- **Utilize Checklists**: Review essential points that are easy to miss
 
-## 🚨 **절대 놓치면 안 되는 필수 체크**
+## 🚨 **Absolute Must-Checks**
 
-### 모든 작업 공통
+### Common to All Tasks
 
-- [ ] `.caretrules` 파일 수정 체크리스트 확인
-- [ ] TDD 원칙 (Red → Green → Refactor)
-- [ ] 백업 생성 (Cline 원본 수정 시)
-- [ ] CARET MODIFICATION 주석 (Cline 원본 수정 시)
+- [ ] Confirm `.caretrules` file modification checklist
+- [ ] TDD Principle (Red → Green → Refactor)
+- [ ] Create backup (for Cline source modifications)
+- [ ] Add CARET MODIFICATION comment (for Cline source modifications)
 
-### 작업 성격별 체크
+### Task-Specific Checks
 
-- [ ] **AI 시스템**: 시스템 프롬프트 구조 이해
-- [ ] **Frontend-Backend**: 순환 메시지 방지 패턴
-- [ ] **UI 개발**: 컴포넌트 설계 원칙
-- [ ] **테스트**: 테스트 커버리지 100% 목표
+- [ ] **AI System**: Understand the system prompt structure
+- [ ] **Frontend-Backend**: Patterns to prevent circular messages
+- [ ] **UI Development**: Component design principles
+- [ ] **Testing**: Aim for 100% test coverage
 
-## 🎁 **AI 작업 효율화 팁**
+## 🎁 **AI Work Efficiency Tips**
 
-### 🔄 **반복 작업 최적화**
+### 🔄 **Optimizing Repetitive Tasks**
 
-- 자주 사용하는 문서 조합 기억하기
-- 작업 패턴별 템플릿 활용
-- 체크리스트 자동화
+- Memorize frequently used document combinations
+- Utilize templates for different task patterns
+- Automate checklists
 
-### 🎯 **컨텍스트 관리**
+### 🎯 **Context Management**
 
-- 필수 정보만 메모리에 유지
-- 불필요한 세부사항 제거
-- 핵심 패턴과 원칙 우선
+- Keep only essential information in memory
+- Discard unnecessary details
+- Prioritize core patterns and principles
 
-### 📈 **학습 곡선 최적화**
+### 📈 **Optimizing the Learning Curve**
 
-- 첫 작업은 더 많은 문서 참조
-- 경험 축적 후 선택적 독해
-- 실수 패턴 기록 및 개선
+- Refer to more documents for the first few tasks
+- Read selectively as experience accumulates
+- Record and improve upon mistake patterns
 
 ---
 
-**💡 AI 작업 시작 전 체크리스트:**
+**💡 Pre-Task Checklist for AI:**
 
-- [ ] 작업 성격 파악 완료
-- [ ] 필수 문서 선택 완료
-- [ ] 선택적 독해 완료
-- [ ] .caretrules 체크리스트 확인 완료
-- [ ] 실행 계획 수립 완료
+- [ ] Task nature identified
+- [ ] Required documents selected
+- [ ] Selective reading completed
+- [ ] `.caretrules` checklist confirmed
+- [ ] Execution plan established
 
-**🎯 목표**: 최소한의 컨텍스트로 최대한의 효율성 달성!
+**🎯 Goal**: Achieve maximum efficiency with minimum context!

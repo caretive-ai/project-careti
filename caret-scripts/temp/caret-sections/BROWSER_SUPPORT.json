@@ -1,0 +1,6 @@
+{
+	"title": "BROWSER SUPPORT",
+	"description": "Browser automation is enabled with Puppeteer.",
+	"viewport": "Viewport: 900x600",
+	"tool_availability": "Available browser_action tool for web interaction."
+}

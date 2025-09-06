@@ -3,7 +3,7 @@ import { Mode } from "@shared/storage/types"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { AccountServiceClient } from "@/services/grpc-client"
+import { CaretAccountServiceClient } from "@/services/grpc-client"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { useApiConfigurationHandlers } from "../utils/useApiConfigurationHandlers"
 
@@ -16,7 +16,7 @@ const CaretProvider = () => {
 	const { handleFieldChange } = useApiConfigurationHandlers()
 
 	const handleLogin = () => {
-		AccountServiceClient.accountLoginClicked(EmptyRequest.create()).catch((err) =>
+		CaretAccountServiceClient.caretAccountLoginClicked(EmptyRequest.create()).catch((err) =>
 			console.error(t("providers.caret.loginError", "settings"), err),
 		)
 	}

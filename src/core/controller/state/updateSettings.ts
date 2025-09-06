@@ -194,9 +194,10 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			controller.stateManager.setGlobalState("currentPersona", request.currentPersona)
 		}
 
-		if (request.personaProfile !== undefined) {
-			controller.stateManager.setGlobalState("personaProfile", request.personaProfile)
-		}
+		// CARET MODIFICATION: Temporarily commented to resolve import cycle
+		// if (request.personaProfile !== undefined) {
+		//	controller.stateManager.setGlobalState("personaProfile", request.personaProfile)
+		// }
 
 		// Post updated state to webview
 		await controller.postStateToWebview()

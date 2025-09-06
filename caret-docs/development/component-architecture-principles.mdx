@@ -1,27 +1,27 @@
-# Caret 컴포넌트 아키텍처 원칙
+# Caret Component Architecture Principles
 
-## 📋 **개요**
+## 📋 **Overview**
 
-Caret 프로젝트에서 UI 컴포넌트를 개발할 때 준수해야 할 아키텍처 원칙을 정의합니다. 이 원칙들은 Cline 원본 코드와의 호환성을 유지하면서도 Caret 고유의 기능을 효과적으로 구현하기 위해 수립되었습니다.
+This document defines the architectural principles to be followed when developing UI components in the Caret project. These principles have been established to effectively implement Caret's unique features while maintaining compatibility with the original Cline source code.
 
-## 🎯 **핵심 원칙**
+## 🎯 **Core Principles**
 
-### **1. 원본 구조 유지 (Structure Preservation)**
+### **1. Structure Preservation**
 
-**원칙**: Cline 원본 컴포넌트의 구조와 패턴을 최대한 유지합니다.
+**Principle**: Maintain the structure and patterns of the original Cline components as much as possible.
 
 ```typescript
-// ❌ 잘못된 예: 하드코딩된 구조
+// ❌ Incorrect Example: Hardcoded structure
 const CaretWelcome = () => {
   return (
     <div style={{ padding: "20px", border: "1px solid red" }}>
-      <h2>하드코딩된 제목</h2>
-      <p>하드코딩된 내용</p>
+      <h2>Hardcoded Title</h2>
+      <p>Hardcoded content</p>
     </div>
   )
 }
 
-// ✅ 올바른 예: 원본 구조 유지
+// ✅ Correct Example: Preserving original structure
 const CaretWelcome = () => {
   const renderSection = (headerKey: string, bodyKey: string, buttonConfig?: ButtonConfig) => (
     <div style={{
@@ -48,12 +48,12 @@ const CaretWelcome = () => {
 }
 ```
 
-### **2. 컴포넌트 분리 (Component Separation)**
+### **2. Component Separation**
 
-**원칙**: 기능별로 명확하게 분리된 컴포넌트를 생성합니다.
+**Principle**: Create clearly separated components for each function.
 
 ```typescript
-// ✅ 컴포넌트 분리 예시
+// ✅ Component Separation Example
 // components/caret/CaretWelcomeSection.tsx
 interface CaretWelcomeSectionProps {
   headerKey: string
@@ -91,23 +91,23 @@ const CaretApiSetup: React.FC<CaretApiSetupProps> = ({ onConfigSave }) => {
 }
 ```
 
-### **3. 상태 관리 패턴 (State Management Pattern)**
+### **3. State Management Pattern**
 
-**원칙**: Cline 원본의 상태 관리 패턴을 따릅니다.
+**Principle**: Follow the state management patterns of the original Cline.
 
 ```typescript
-// ✅ 올바른 상태 관리
+// ✅ Correct State Management
 const CaretWelcome = () => {
   const { apiConfiguration, caretBanner } = useExtensionState()
   const [showApiOptions, setShowApiOptions] = useState(false)
   const [apiErrorMessage, setApiErrorMessage] = useState<string | undefined>(undefined)
 
-  // Cline 패턴과 동일한 validation 로직
+  // Validation logic identical to Cline's pattern
   useEffect(() => {
     setApiErrorMessage(validateApiConfiguration(apiConfiguration))
   }, [apiConfiguration])
 
-  // 상태 기반 조건부 렌더링
+  // State-based conditional rendering
   if (showApiOptions) {
     return <CaretApiSetup onBack={() => setShowApiOptions(false)} />
   }
@@ -116,12 +116,12 @@ const CaretWelcome = () => {
 }
 ```
 
-### **4. 스타일링 일관성 (Styling Consistency)**
+### **4. Styling Consistency**
 
-**원칙**: VSCode 테마 변수를 사용하고 일관된 스타일링 패턴을 유지합니다.
+**Principle**: Use VSCode theme variables and maintain consistent styling patterns.
 
 ```typescript
-// ✅ 올바른 스타일링
+// ✅ Correct Styling
 const sectionStyle = {
 	marginBottom: "25px",
 	padding: "20px",
@@ -130,7 +130,7 @@ const sectionStyle = {
 	backgroundColor: "var(--vscode-sideBar-background)",
 }
 
-// CSS 변수 활용
+// Utilizing CSS variables
 const CARET_THEME = {
 	section: {
 		border: "var(--vscode-settings-headerBorder)",
@@ -141,27 +141,27 @@ const CARET_THEME = {
 }
 ```
 
-### **5. i18n 통합 (Internationalization Integration)**
+### **5. i18n Integration**
 
-**원칙**: 모든 텍스트는 i18n 시스템을 통해 관리합니다.
+**Principle**: All text must be managed through the i18n system.
 
-### **6. 단일 책임 아바타 컴포넌트 (Single-Responsibility Avatar Component)**
+### **6. Single-Responsibility Avatar Component**
 
-**원칙**: 페르소나 아바타 표시에 대한 모든 로직을 `PersonaAvatar`라는 단일 컴포넌트에 캡슐화하여 재사용성과 유지보수성을 극대화합니다.
+**Principle**: Encapsulate all logic for displaying persona avatars into a single component named `PersonaAvatar` to maximize reusability and maintainability.
 
-**설명**: `PersonaAvatar` 컴포넌트는 페르소나의 일반 상태와 생각 중인 상태의 이미지를 표시하는 책임을 가집니다. 이미지 URI를 내부적으로 관리하고, `ExtensionStateContext`의 초기값과 백엔드로부터 받는 `RESPONSE_PERSONA_IMAGES` 메시지를 통해 동적으로 업데이트합니다. 또한, 이미지 로딩 중이거나 오류가 발생했을 때를 대비한 폴백(Fallback) 이미지를 내장하고 있어, 어떤 상황에서도 깨진 이미지가 노출되지 않도록 보장합니다.
+**Description**: The `PersonaAvatar` component is responsible for displaying images for a persona's normal and thinking states. It manages image URIs internally, updating them dynamically from the `ExtensionStateContext` initial values and through `RESPONSE_PERSONA_IMAGES` messages from the backend. It also includes built-in fallback images for loading or error states, ensuring a broken image is never displayed.
 
-**주요 기능**:
+**Key Features**:
 
-- **상태 분기**: `isThinking` boolean prop을 통해 생각 중인 아바타와 일반 아바타를 손쉽게 전환합니다.
-- **동적 업데이트**: 컴포넌트가 마운트될 때 `REQUEST_PERSONA_IMAGES` 메시지를 보내 항상 최신 이미지를 표시하도록 요청합니다.
-- **유연한 스타일링**: `size` prop으로 크기를 조절하고 `className`과 `style` prop으로 추가적인 스타일링이 가능합니다.
-- **견고한 에러 처리**: 이미지 로드 실패 시, 내장된 SVG 폴백 이미지를 표시하여 사용자 경험을 해치지 않습니다.
+- **State Branching**: Easily switch between thinking and normal avatars via the `isThinking` boolean prop.
+- **Dynamic Updates**: Sends a `REQUEST_PERSONA_IMAGES` message on mount to always request the latest images.
+- **Flexible Styling**: Adjust size with the `size` prop and apply additional styling with `className` and `style` props.
+- **Robust Error Handling**: Displays a built-in SVG fallback image on load failure to maintain user experience.
 
 ```typescript
-// ✅ 올바른 PersonaAvatar 사용 예시
+// ✅ Correct PersonaAvatar Usage Example
 
-// HomeHeader.tsx: 간단한 아바타 표시
+// HomeHeader.tsx: Simple avatar display
 import PersonaAvatar from "@/caret/components/PersonaAvatar"
 
 const HomeHeader = () => (
@@ -173,7 +173,7 @@ const HomeHeader = () => (
   </div>
 )
 
-// ChatRow.tsx: 생각 중인 상태와 일반 상태 분기
+// ChatRow.tsx: Branching between thinking and normal states
 const ChatRowContent = ({ message }) => {
   // ...
   if (message.say === "text") {
@@ -197,7 +197,7 @@ const ChatRowContent = ({ message }) => {
 ```
 
 ```typescript
-// ✅ 올바른 i18n 사용
+// ✅ Correct i18n Usage
 const CaretWelcomeHeader = () => {
   return (
     <div className="caret-welcome-header">
@@ -213,27 +213,27 @@ const CaretWelcomeHeader = () => {
 }
 ```
 
-## 🔧 **구현 가이드라인**
+## 🔧 **Implementation Guidelines**
 
-### **컴포넌트 파일 구조**
+### **Component File Structure**
 
 ```
 webview-ui/src/caret/
 ├── components/
-│   ├── CaretWelcome.tsx         # 메인 웰컴 컴포넌트
-│   ├── CaretWelcomeSection.tsx  # 재사용 가능한 섹션
-│   ├── CaretApiSetup.tsx        # API 설정 전용 컴포넌트
-│   ├── CaretButton.tsx          # 공통 버튼 컴포넌트
-│   └── CaretFooter.tsx          # 푸터 컴포넌트
+│   ├── CaretWelcome.tsx         # Main welcome component
+│   ├── CaretWelcomeSection.tsx  # Reusable section
+│   ├── CaretApiSetup.tsx        # Dedicated API setup component
+│   ├── CaretButton.tsx          # Common button component
+│   └── CaretFooter.tsx          # Footer component
 ├── hooks/
-│   └── useCaretWelcome.ts       # 웰컴 관련 로직 훅
+│   └── useCaretWelcome.ts       # Hook for welcome-related logic
 ├── utils/
-│   └── welcomeHelpers.ts        # 헬퍼 함수들
+│   └── welcomeHelpers.ts        # Helper functions
 └── styles/
-    └── CaretWelcome.css         # 스타일 정의
+    └── CaretWelcome.css         # Style definitions
 ```
 
-### **프로퍼티 인터페이스 설계**
+### **Property Interface Design**
 
 ```typescript
 interface CaretWelcomeProps {
@@ -256,25 +256,25 @@ interface CaretSectionProps {
 }
 ```
 
-## 🚨 **안티패턴 (Anti-patterns)**
+## 🚨 **Anti-patterns**
 
-### **❌ 하드코딩된 구조**
+### **❌ Hardcoded Structure**
 
 ```typescript
-// 피해야 할 패턴
+// Pattern to avoid
 const BadComponent = () => (
   <div style={{ padding: "20px", border: "1px solid red" }}>
-    <h2>하드코딩된 제목</h2>
-    <p>하드코딩된 설명</p>
-    <button onClick={() => alert("클릭!")}>버튼</button>
+    <h2>Hardcoded Title</h2>
+    <p>Hardcoded Description</p>
+    <button onClick={() => alert("Clicked!")}>Button</button>
   </div>
 )
 ```
 
-### **❌ 인라인 스타일 남용**
+### **❌ Excessive Inline Styles**
 
 ```typescript
-// 피해야 할 패턴
+// Pattern to avoid
 const BadStyling = () => (
   <div style={{
     backgroundColor: "#1e1e1e",
@@ -282,39 +282,39 @@ const BadStyling = () => (
     padding: "15px",
     marginBottom: "10px"
   }}>
-    내용
+    Content
   </div>
 )
 ```
 
-### **❌ 번역 없는 텍스트**
+### **❌ Text without Translation**
 
 ```typescript
-// 피해야 할 패턴
+// Pattern to avoid
 const BadI18n = () => (
   <div>
-    <h2>Caret 설정</h2>
-    <p>API 키를 입력해주세요</p>
+    <h2>Caret Settings</h2>
+    <p>Please enter your API key</p>
   </div>
 )
 ```
 
-## 📋 **체크리스트**
+## 📋 **Checklist**
 
-새로운 컴포넌트 개발 시 다음 사항들을 확인하세요:
+When developing a new component, please verify the following:
 
-- [ ] 원본 Cline 컴포넌트 구조 분석 완료
-- [ ] 기능별 컴포넌트 분리 설계 완료
-- [ ] VSCode 테마 변수 사용
-- [ ] 모든 텍스트 i18n 적용
-- [ ] 상태 관리 패턴 일관성 확보
-- [ ] 재사용 가능한 컴포넌트 설계
-- [ ] 타입스크립트 인터페이스 정의
-- [ ] 테스트 코드 작성
-- [ ] 문서화 완료
+- [ ] Analysis of the original Cline component structure is complete
+- [ ] Design for separation of components by function is complete
+- [ ] VSCode theme variables are used
+- [ ] All text is implemented with i18n
+- [ ] State management patterns are consistent
+- [ ] Reusable components are designed
+- [ ] TypeScript interfaces are defined
+- [ ] Test code is written
+- [ ] Documentation is complete
 
-## 🔗 **관련 문서**
+## 🔗 **Related Documents**
 
-- [Caret 아키텍처 가이드](./caret-architecture-and-implementation-guide.mdx)
-- [테스트 작성 가이드](./testing-guide.mdx)
-- [i18n 개발 가이드](./locale.mdx)
+- [Caret Architecture Guide](./caret-architecture-and-implementation-guide.mdx)
+- [Testing Guide](./testing-guide.mdx)
+- [i18n Development Guide](../../features/f02-multilingual-i18n.mdx)

@@ -1,8 +1,9 @@
 syntax = "proto3";
 
 package caret;
-
 import "cline/common.proto";
+option java_package = "bot.caret.proto";
+option java_multiple_files = true;
 
 // PersonaService defines the gRPC service for managing Caret's persona.
 // CARET MODIFICATION: This service is specific to Caret and is separate from Cline's services.

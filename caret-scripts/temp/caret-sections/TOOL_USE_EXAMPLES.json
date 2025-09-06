@@ -1,0 +1,21 @@
+{
+	"title": "Tool Use Examples",
+	"examples": [
+		{
+			"name": "Executing a command",
+			"tool": "execute_command",
+			"params": {
+				"command": "npm run dev",
+				"requires_approval": "false"
+			}
+		},
+		{
+			"name": "Creating a file",
+			"tool": "write_to_file",
+			"params": {
+				"path": "example.json",
+				"content": "sample content"
+			}
+		}
+	]
+}

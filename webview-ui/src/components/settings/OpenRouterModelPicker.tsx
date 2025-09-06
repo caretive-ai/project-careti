@@ -571,7 +571,7 @@ export const ModelDescriptionMarkdown = memo(
 									paddingLeft: 3,
 									backgroundColor: isPopup ? CODE_BLOCK_BG_COLOR : "var(--vscode-sideBar-background)",
 								}}>
-								{t("common.seeMore", "See more")}
+								{t("common.seeMore")}
 							</VSCodeLink>
 						</div>
 					)}

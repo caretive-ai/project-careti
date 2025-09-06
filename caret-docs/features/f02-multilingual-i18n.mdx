@@ -12,24 +12,61 @@ Caret의 **다국어 지원 시스템**은 한국어, 영어, 일본어, 중국�
 - 🇯🇵 **일본어 (ja)**: 번역 지원
 - 🇨🇳 **중국어 (zh)**: 번역 지원
 
-### **네임스페이스 구조**
-각 언어마다 **11개 이상의 네임스페이스**로 체계적으로 관리됩니다. 이를 통해 각 기능 영역별로 번역 리소스를 분리하여 유지보수성을 높입니다.
+### **네임스페이스 구조 원칙**
 
-| 네임스페이스 | 용도 | 예시 키 |
+Caret의 i18n 시스템은 **기능별 네임스페이스**를 기본 원칙으로 합니다. 각 주요 기능(View)은 자신만의 고유한 네임스페이스(JSON 파일)를 가지며, 이를 통해 번역 리소스를 체계적으로 관리하고 유지보수성을 높입니다.
+
+| 네임스페이스 | 용도 | 표준 키 구조 |
 |---|---|---|
-| **common** | 공통 UI 요소 | `button.save`, `error.generic` |
-| **chat** | 채팅 화면 관련 | `startNewTask`, `error.displayContent` |
-| **welcome** | 환영 페이지 | `greeting`, `coreFeatures.header` |
-| **settings** | 설정 페이지 | `tabs.apiConfiguration.name`, `settings.modeSystem.label` |
-| **history** | 작업 기록 페이지 | `history`, `fuzzySearchPlaceholder` |
-| **persona** | AI 페르소나 | 캐릭터 설명, 특성 |
-| **models** | AI 모델 설명 | 모델 특성, 사용법 |
-| **announcement** | 공지사항 | 업데이트, 알림 |
-| **browser** | 브라우저 기능 | `checkingConnection`, `viewportSize` |
-| **menu** | 메뉴 항목 | 메뉴 관련 텍스트 |
-| **validate-api-conf**| API 검증 | 오류 메시지, 검증 안내 |
+| **common** | 여러 기능에서 공유되는 공통 UI 요소 | `button.save`, `error.generic` |
+| **chat** | 채팅 화면 관련 | `chat.placeholder.default` |
+| **welcome** | 환영 페이지 | `welcome.greeting`, `welcome.coreFeatures.header` |
+| **settings** | 설정 페이지 | `settings.tabs.api`, `settings.browser.title` |
+| **history** | 작업 기록 페이지 | `history.title`, `history.searchPlaceholder` |
+| ... | 기타 기능별 네임스페이스 | `{namespace}.{group}.{key}` |
 
-**참고**: 네임스페이스는 지속적으로 추가될 수 있으며, 현재 `en` 기준 11개의 네임스페이스가 존재합니다.
+### **⚙️ Provider 키 통합 규칙 (Provider Key Unification Rule)**
+
+API Provider 설정과 같이 복잡한 UI는 일관된 규칙을 따릅니다. 모든 Provider 관련 번역 키는 `settings` 네임스페이스 내의 `providers` 객체 아래에 각 `providerId`로 그룹화하여 통합합니다.
+
+**❌ AS-IS (혼재된 패턴 - 사용 금지):**
+```typescript
+// 각기 다른 최상위 키와 중첩 키를 혼용하여 사용
+t('providers.openrouter.description', 'settings') 
+t('openRouterProvider.apiKeyLabel', 'settings') 
+```
+
+**✅ TO-BE (통합된 표준 패턴):**
+모든 키를 `providers.{providerId}.{key}` 형태로 통일합니다.
+
+**JSON 구조 예시 (`settings.json`):**
+```json
+{
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter",
+      "description": "Access a wide variety of models...",
+      "apiKeyLabel": "OpenRouter API Key",
+      "balanceDisplay": {
+        "loading": "Loading..."
+      }
+    },
+    "caret": {
+      "name": "Caret",
+      "description": "Caret provides high-quality AI models...",
+      "login": "Login to Caret"
+    }
+  }
+}
+```
+
+**코드 호출 예시:**
+```typescript
+t('providers.openrouter.apiKeyLabel', 'settings')
+t('providers.caret.login', 'settings')
+```
+
+이 규칙을 통해 모든 Provider 관련 번역을 일관되게 관리합니다.
 
 ## 🏗️ **시스템 아키텍처**
 
@@ -171,4 +208,4 @@ const providerOptions = useMemo(() => [
 이 패턴을 통해 언어 설정 변경 시 UI가 즉시 올바른 번역으로 업데이트됩니다.
 
 ---
-**문서 상태**: `2025-09-05` 기준 최신화 완료
+**문서 상태**: `2025-09-06` 기준 최신화 완료

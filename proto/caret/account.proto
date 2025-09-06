@@ -1,0 +1,173 @@
+syntax = "proto3";
+
+package caret;
+import "cline/common.proto";
+option java_package = "bot.caret.proto";
+option java_multiple_files = true;
+
+// CARET MODIFICATION: Service for Caret account-related operations
+// Extends Cline's AccountService with Caret-specific functionality
+service CaretAccountService {
+  // Handles the user clicking the Caret login link in the UI.
+  // Generates Auth0 authentication flow and manages JWT tokens.
+  rpc caretAccountLoginClicked(cline.EmptyRequest) returns (cline.String);
+    
+  // Handles the user clicking the Caret logout button in the UI.
+  // Clears Auth0 tokens and user state.
+  rpc caretAccountLogoutClicked(cline.EmptyRequest) returns (cline.Empty);
+
+  // Subscribe to Caret auth status update events (when Auth0 authentication state changes)
+  rpc subscribeToCaretAuthStatusUpdate(cline.EmptyRequest) 
+      returns (stream CaretAuthState);
+    
+  // Handles Auth0 authentication state changes.
+  // Updates the user info in global state and returns the updated value.
+  rpc caretAuthStateChanged(CaretAuthStateChangedRequest) 
+      returns (CaretAuthState);
+    
+  // Fetches all Caret user credits data
+  // (balance, usage transactions, payment transactions)
+  rpc getCaretUserCredits(cline.EmptyRequest) returns (CaretUserCreditsData);
+
+  // Fetches Caret organization credits data
+  rpc getCaretOrganizationCredits(GetCaretOrganizationCreditsRequest) returns (CaretOrganizationCreditsData);
+
+  // Fetches all Caret user organizations data
+  // Returns a list of CaretUserOrganization objects
+  rpc getCaretUserOrganizations(cline.EmptyRequest) returns (CaretUserOrganizationsResponse);
+
+  // Sets the active Caret organization
+  rpc setCaretUserOrganization(CaretUserOrganizationUpdateRequest) returns (cline.Empty);
+}
+
+// CARET MODIFICATION: Auth state change request for Caret (using 1000+ offset for merge compatibility)
+message CaretAuthStateChangedRequest {
+  cline.Metadata metadata = 1001;
+  CaretUserInfo user = 1002;
+}
+
+// CARET MODIFICATION: Auth state response for Caret (using 1000+ offset for merge compatibility)
+message CaretAuthState {
+  optional CaretUserInfo user = 1001;
+}
+
+// CARET MODIFICATION: Caret user information (similar to Cline but with Auth0 fields, using 1000+ offset for merge compatibility)
+message CaretUserInfo {
+  string uid = 1001;
+  optional string display_name = 1002;
+  optional string email = 1003;
+  optional string photo_url = 1004;
+  optional string app_base_url = 1005; // Caret app base URL (caret.team)
+  // CARET MODIFICATION: Additional Auth0-specific fields
+  optional string auth0_sub = 1006; // Auth0 subject ID
+  optional string auth0_nickname = 1007; // Auth0 nickname
+}
+
+// CARET MODIFICATION: Caret organization structure (using 1000+ offset for merge compatibility)
+message CaretUserOrganization {
+  bool active = 1001;
+  string member_id = 1002;
+  string name = 1003;
+  string organization_id = 1004;
+  repeated string roles = 1005; // ["admin", "member", "owner"]
+  // CARET MODIFICATION: Additional Caret organization fields
+  optional string plan_type = 1006; // "free", "pro", "enterprise"
+  optional string currency = 1007; // "USD", "KRW", etc.
+}
+
+// CARET MODIFICATION: Caret organizations response (using 1000+ offset for merge compatibility)
+message CaretUserOrganizationsResponse {
+  repeated CaretUserOrganization organizations = 1001;
+}
+
+// CARET MODIFICATION: Caret organization update request (using 1000+ offset for merge compatibility)
+message CaretUserOrganizationUpdateRequest {
+  optional string organization_id = 1001;
+}
+
+// CARET MODIFICATION: Caret user credits data structure (using 1000+ offset for merge compatibility)
+message CaretUserCreditsData {
+  CaretUserCreditsBalance balance = 1001;
+  repeated CaretUsageTransaction usage_transactions = 1002;
+  repeated CaretPaymentTransaction payment_transactions = 1003;
+}
+
+// CARET MODIFICATION: Caret organization credits request (using 1000+ offset for merge compatibility)
+message GetCaretOrganizationCreditsRequest {
+  string organization_id = 1001;
+}
+
+// CARET MODIFICATION: Caret organization credits data (using 1000+ offset for merge compatibility)
+message CaretOrganizationCreditsData {
+  CaretUserCreditsBalance balance = 1001;
+  string organization_id = 1002;
+  repeated CaretOrganizationUsageTransaction usage_transactions = 1003;
+}
+
+// CARET MODIFICATION: Caret user credits balance (compatible with Mock API, using 1000+ offset for merge compatibility)
+message CaretUserCreditsBalance {
+  double current_balance = 1001;
+  optional string currency = 1002; // "USD", "KRW", etc.
+  optional string last_updated = 1003; // ISO timestamp
+}
+
+// CARET MODIFICATION: Caret usage transaction (based on CaretUsageTransaction interface, using 1000+ offset for merge compatibility)
+message CaretUsageTransaction {
+  string ai_inference_provider_name = 1001;
+  string ai_model_name = 1002;
+  string ai_model_type_name = 1003;
+  int32 completion_tokens = 1004;
+  double cost_usd = 1005;
+  string created_at = 1006;
+  double credits_used = 1007;
+  string generation_id = 1008;
+  string id = 1009;
+  // CARET MODIFICATION: Additional metadata structure
+  map<string, string> metadata = 1010;
+  string organization_id = 1011;
+  int32 prompt_tokens = 1012;
+  int32 total_tokens = 1013;
+  string user_id = 1014;
+  // CARET MODIFICATION: Additional Caret fields
+  optional string model = 1015;
+  optional int32 cached_tokens = 1016;
+  double total_cost = 1017;
+  string timestamp = 1018;
+  optional string task_id = 1019;
+}
+
+// CARET MODIFICATION: Caret payment transaction (using 1000+ offset for merge compatibility)
+message CaretPaymentTransaction {
+  string paid_at = 1001;
+  string creator_id = 1002;
+  int32 amount_cents = 1003;
+  double credits = 1004;
+  // CARET MODIFICATION: Additional Caret payment fields
+  optional string currency = 1005;
+  optional string payment_method = 1006;
+  optional string transaction_id = 1007;
+}
+
+// CARET MODIFICATION: Caret organization usage transaction (using 1000+ offset for merge compatibility)
+message CaretOrganizationUsageTransaction {
+  string ai_inference_provider_name = 1001;
+  string ai_model_name = 1002;
+  string ai_model_type_name = 1003;
+  int32 completion_tokens = 1004;
+  double cost_usd = 1005;
+  string created_at = 1006;
+  double credits_used = 1007;
+  string generation_id = 1008;
+  string id = 1009;
+  map<string, string> metadata = 1010;
+  string organization_id = 1011;
+  string member_id = 1012;
+  int32 prompt_tokens = 1013;
+  int32 total_tokens = 1014;
+  string user_id = 1015;
+  // CARET MODIFICATION: Additional organization-specific fields
+  optional string model = 1016;
+  double total_cost = 1017;
+  string timestamp = 1018;
+  optional string task_id = 1019;
+}

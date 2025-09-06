@@ -332,7 +332,9 @@
       "Bash(git -C . log --oneline -10)",
       "Bash(git clone:*)",
       "Bash(git shortlog:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(del:*)",
+      "Bash(buf lint:*)"
     ],
     "deny": [],
     "ask": []

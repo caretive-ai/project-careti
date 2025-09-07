@@ -154,8 +154,7 @@ const extensionConfig = {
 	...baseConfig,
 	entryPoints: ["src/extension.ts"],
 	outfile: `${destDir}/extension.js`,
-	// CARET MODIFICATION: Add cheerio as external dependency to prevent bundling issues
-	external: ["vscode", "cheerio"],
+	external: ["vscode"],
 }
 
 // Standalone-specific configuration

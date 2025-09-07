@@ -1,4 +1,6 @@
-# t06 하이브리드 시스템 구현 계획 (통합 최종판)
+# t06 하이브리드 시스템 구현 작업 기록
+
+> 이 문서는 `t06-hybrid-system-implement-plan-unified.md` 계획에 따라 'JSON 시스템 프롬프트' 구현 작업의 진행 상황을 기록합니다.
 
 ## 📋 프로젝트 개요
 
@@ -135,7 +137,7 @@ export class PromptSystemManager {
 ```
 
 **검증 기준**:
-- [ ] **`tsconfig.json`에 `@cline-latest` 경로 별칭 추가 완료**
+- [ ] **`tsconfig.json`에 `@cline-latest` 경로 별칭 추가 완료** (계획 수정: `cline-latest`는 참고용이므로 직접 경로를 추가하지 않고, 필요한 로직을 `caret-src`에 재구현하는 방식으로 변경)
 - [ ] **TDD 테스트 케이스(실패) 작성 완료**
 - [ ] TypeScript 컴파일 오류 0개
 - [ ] JSON 파일 로딩 정상 동작 (개선된 경로 로직)

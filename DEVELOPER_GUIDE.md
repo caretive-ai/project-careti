@@ -203,6 +203,8 @@ VS Code에서 `F5` 키를 눌러 디버깅 세션을 시작하면, 새로운 `[E
 개발된 확장 프로그램을 `.vsix` 파일로 패키징하여 로컬 설치 또는 배포할 수 있습니다. 
 **모든 빌드 결과물은 `output/` 디렉토리에 `caret-{버전}-{날짜시간}.vsix` 형식으로 생성됩니다.**
 
+> **⚠️ 중요**: `.vsix` 파일을 생성할 때는 항상 `npm run package:release` 명령어를 사용하세요. 이 명령어는 전체 빌드 과정을 포함하여 안정적인 패키지를 생성합니다. (`npm run package` 명령어는 더 이상 사용되지 않으므로 `package:release` 사용을 권장합니다.)
+
 #### 6-1. JavaScript 스크립트 방식 (✅ 권장 - 모든 환경)
 
 ```bash
@@ -373,9 +375,6 @@ npm run compile:fast
 
 # 🌐 Webview UI 빌드 (프론트엔드)
 cd webview-ui && npm run build && cd ..
-
-# 📱 VSIX 패키지 생성
-npm run package
 
 # 🚀 VSIX 릴리즈 패키지 생성 (타임스탬프 포함)
 npm run package:release

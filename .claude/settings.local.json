@@ -334,7 +334,8 @@
       "Bash(git shortlog:*)",
       "Bash(git log:*)",
       "Bash(del:*)",
-      "Bash(buf lint:*)"
+      "Bash(buf lint:*)",
+      "Bash(git config:*)"
     ],
     "deny": [],
     "ask": []

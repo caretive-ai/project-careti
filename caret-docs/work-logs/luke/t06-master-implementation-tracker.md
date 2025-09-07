@@ -361,7 +361,7 @@ class CaretJsonComponentProvider {
 ```bash
 # 최종 효율성 검증
 - [ ] node caret-scripts/utils/token-efficiency-analyzer.js 실행
-- [ ] caret-system vs cline-latest 비교
+- [ ] caret-system vs 문est 비교
 - [ ] 14.1% 이상 효율성 확인
 - [ ] 상세 보고서 생성 (t06-final-efficiency-report.json)
 ```

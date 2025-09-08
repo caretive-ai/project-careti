@@ -60,11 +60,24 @@ Phase 2에서 구축한 어댑터 뼈대를 실제 시스템에 통합하고, `c
     - [ ] `validatePhase3()` 메서드 추가
     - [ ] `JsonTemplateLoader.ts` 파일 존재 여부 검증
     - [ ] `T06PromptSystemIntegration.test.ts`에서 `vi.mock`이 사용되지 않는지 확인 (주석 처리 또는 삭제)
-- [ ] **Git 체크포인트 설정**:
-    - [ ] Phase 3 완료 시 커밋: `git commit -m "feat: Complete Phase 3 - Full feature integration and semantic validation"`
-    - [ ] 검증 완료 시 태그: `git tag -a "t06-phase-3" -m "Phase 3 verification complete"`
-    - [ ] 사용자 확인 요청 후 푸시
-    - [ ] Phase 4 시작 전 백업 브랜치 생성
+
+### 3.7. 🚨 필수: 사용자 검증 및 커밋 절차
+**⚠️ 구현 완료 후 반드시 다음 순서로 진행:**
+
+1. **사용자/다른 AI에게 검증 요청**:
+   ```
+   "Phase 3 구현이 완료되었습니다. 다음을 검증해 주세요:
+   - CaretJsonAdapter와 ClineLatestAdapter가 완전한 프롬프트를 생성하는지
+   - JSON 캐싱과 프롬프트 조립 로직이 올바르게 동작하는지
+   - mode_restriction이 chatbot 모드에서 정상적으로 적용되는지
+   - 실제 통합 테스트가 Mock 없이 모두 통과하는지"
+   ```
+
+2. **사용자 최종 확인 후 Git 체크포인트**:
+   - [ ] Phase 3 완료 시 커밋: `git commit -m "feat: Complete Phase 3 - Full feature integration and semantic validation"`
+   - [ ] 검증 완료 시 태그: `git tag -a "t06-phase-3" -m "Phase 3 verification complete"`
+   - [ ] 사용자 확인 요청 후 푸시: `git push origin merge-v326-08292807 --follow-tags`
+   - [ ] Phase 4 시작 전 백업 브랜치: `git branch t06-phase-3-backup`
 
 ---
 

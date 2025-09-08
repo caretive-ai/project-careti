@@ -102,6 +102,25 @@
     - [ ] 기존 Caret 사용자 경험이 100% 보존되는가?
 - [ ] 모든 검증 결과를 `t06-phase5-verification.md`에 기록.
 
+### 3.5. 🚨 필수: 사용자 검증 및 커밋 절차
+**⚠️ 구현 완료 후 반드시 다음 순서로 진행:**
+
+1. **사용자/다른 AI에게 검증 요청**:
+   ```
+   "Phase 5 구현이 완료되었습니다. 다음을 검증해 주세요:
+   - JSON 캐싱 및 성능 최적화가 정상적으로 동작하는지
+   - 모든 테스트가 100% 통과하는지
+   - 기술 문서 및 사용자 가이드가 완성되었는지
+   - 최종 인수 기준을 모두 충족하는지
+   - 하이브리드 시스템이 안정적으로 동작하는지"
+   ```
+
+2. **사용자 최종 확인 후 Git 체크포인트**:
+   - [ ] Phase 5 완료 시 커밋: `git commit -m "feat: Complete Phase 5 - Stabilization and final optimization"`
+   - [ ] 검증 완료 시 태그: `git tag -a "t06-phase-5" -m "Phase 5 verification complete"`
+   - [ ] 사용자 확인 요청 후 푸시: `git push origin merge-v326-08292807 --follow-tags`
+   - [ ] 프로젝트 완료 태그: `git tag -a "t06-complete" -m "t06 hybrid prompt system project complete"`
+
 ---
 
 ## 4. 🏁 완료 기준

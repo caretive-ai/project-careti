@@ -76,6 +76,24 @@
     - [ ] 모드 전환 후 새 채팅을 시작하면 해당 모드의 프롬프트(AGENT MODE vs ACT MODE)가 적용되는가?
     - [ ] VSCode 창을 닫았다가 다시 열어도(확장 프로그램 재시작) 이전에 선택한 모드가 유지되는가?
 
+### 3.5. 🚨 필수: 사용자 검증 및 커밋 절차
+**⚠️ 구현 완료 후 반드시 다음 순서로 진행:**
+
+1. **사용자/다른 AI에게 검증 요청**:
+   ```
+   "Phase 4 구현이 완료되었습니다. 다음을 검증해 주세요:
+   - 프론트엔드 설정 UI에서 프롬프트 시스템 모드 전환이 올바르게 동작하는지
+   - 모드 설정이 workspaceState에 영속적으로 저장되는지
+   - 백엔드 연동이 정상적으로 작동하여 실제 프롬프트 시스템이 전환되는지
+   - E2E 테스트와 수동 검증이 모두 통과하는지"
+   ```
+
+2. **사용자 최종 확인 후 Git 체크포인트**:
+   - [ ] Phase 4 완료 시 커밋: `git commit -m "feat: Complete Phase 4 - Frontend integration and user interface"`
+   - [ ] 검증 완료 시 태그: `git tag -a "t06-phase-4" -m "Phase 4 verification complete"`
+   - [ ] 사용자 확인 요청 후 푸시: `git push origin merge-v326-08292807 --follow-tags`
+   - [ ] Phase 5 시작 전 백업 브랜치: `git branch t06-phase-4-backup`
+
 ---
 
 ## 4. 🏁 완료 기준

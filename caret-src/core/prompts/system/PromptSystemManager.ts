@@ -5,7 +5,7 @@ import { ClineLatestAdapter } from "./adapters/ClineLatestAdapter";
 import { CaretSystemPromptContext } from "./types";
 
 // Define a context type that includes the system selector and is compatible with Caret's context.
-type SystemManagerContext = { modeSystem: 'caret' | 'cline' } & Partial<CaretSystemPromptContext>;
+type SystemManagerContext = { modeSystem: 'caret' | 'cline' } & Partial<Omit<CaretSystemPromptContext, 'modeSystem'>>;
 
 export class PromptSystemManager {
     private adapters: Map<string, IPromptSystem>;

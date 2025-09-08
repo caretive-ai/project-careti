@@ -59,8 +59,8 @@ describe('T06 - Prompt System Integration Test', () => {
     describe('ClineLatestAdapter', () => {
         it('should generate a prompt containing core Cline concepts like ACT MODE', async () => {
             const manager = new PromptSystemManager();
-            const context: CaretSystemPromptContext & { modeSystem: 'cline' } = {
-                modeSystem: 'cline',
+            const context = {
+                modeSystem: 'cline' as const,
                 mode: CARET_MODES.AGENT, // Even if mode is agent, cline adapter should produce its own prompt
                 providerInfo: { providerId: 'anthropic', model: { id: 'claude-3-opus-20240229', info: { supportsPromptCache: true, maxTokens: 4096 } } },
                 // Add other properties required by the original SystemPromptContext

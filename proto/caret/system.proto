@@ -12,6 +12,12 @@ service CaretSystemService {
   
   // Get the current prompt system mode
   rpc GetPromptSystemMode(GetPromptSystemModeRequest) returns (GetPromptSystemModeResponse);
+  
+  // Set the Caret-specific mode (chatbot/agent) - CARET MODIFICATION
+  rpc SetCaretMode(SetCaretModeRequest) returns (SetCaretModeResponse);
+  
+  // Get the current Caret-specific mode
+  rpc GetCaretMode(GetCaretModeRequest) returns (GetCaretModeResponse);
 }
 
 // Request to set prompt system mode
@@ -34,4 +40,26 @@ message GetPromptSystemModeRequest {
 // Response with current prompt system mode
 message GetPromptSystemModeResponse {
   string current_mode = 1;
+}
+
+// Request to set Caret-specific mode (chatbot/agent) - CARET MODIFICATION
+message SetCaretModeRequest {
+  string mode = 1; // "chatbot" or "agent"
+}
+
+// Response for setting Caret-specific mode
+message SetCaretModeResponse {
+  bool success = 1;
+  string current_mode = 2; // "chatbot" or "agent"
+  string error_message = 3;
+}
+
+// Request to get current Caret-specific mode
+message GetCaretModeRequest {
+  // Empty request
+}
+
+// Response with current Caret-specific mode
+message GetCaretModeResponse {
+  string current_mode = 1; // "chatbot" or "agent"
 }

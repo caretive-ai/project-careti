@@ -111,7 +111,13 @@ async function postProcessGeneratedFiles() {
 				modified = true
 			}
 
-			// Fix 2: Fix namespace issues in all generated files with Caret references
+			// Fix 2: Fix import paths for Caret-specific controllers
+			if (content.includes('@core/controller/caretSystem/')) {
+				content = content.replace(/@core\/controller\/caretSystem\//g, '@caret/core/controller/caretSystem/')
+				modified = true
+			}
+
+			// Fix 3: Fix namespace issues in all generated files with Caret references
 			const caretMatches = content.match(/(cline\.Caret|"cline\.Caret)[A-Za-z]*/g) || []
 			if (caretMatches.length > 0) {
 				console.log(chalk.cyan(`Processing ${file} for namespace fixes...`))
@@ -153,6 +159,10 @@ async function postProcessGeneratedFiles() {
 				content = content.replace(/cline\.SetPromptSystemModeResponse/g, "caret.SetPromptSystemModeResponse")
 				content = content.replace(/cline\.GetPromptSystemModeRequest/g, "caret.GetPromptSystemModeRequest")
 				content = content.replace(/cline\.GetPromptSystemModeResponse/g, "caret.GetPromptSystemModeResponse")
+				content = content.replace(/cline\.SetCaretModeRequest/g, "caret.SetCaretModeRequest")
+				content = content.replace(/cline\.SetCaretModeResponse/g, "caret.SetCaretModeResponse")
+				content = content.replace(/cline\.GetCaretModeRequest/g, "caret.GetCaretModeRequest")
+				content = content.replace(/cline\.GetCaretModeResponse/g, "caret.GetCaretModeResponse")
 
 				const changesCount =
 					originalContent !== content ? (originalContent.match(/cline\.(Caret|GetCaret)/g) || []).length : 0

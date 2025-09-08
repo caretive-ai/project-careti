@@ -88,17 +88,39 @@ webview-ui/src/caret/
 
 ### **핵심 API 및 사용법**
 
-**1. 번역 함수 `t`**
+**1. 번역 함수 `t` - 호출 표준**
+
+```typescript
+t(key, namespace, options?)
+```
+
 가장 기본적인 번역 함수입니다. 컴포넌트 외부에서도 사용 가능합니다.
 
+**📝 표준 호출 패턴:**
 ```typescript
 import { t } from '@/caret/utils/i18n';
 
-// 기본 사용법
-t('button.save', 'common'); // -> "저장" 또는 "Save"
+// 기본 사용법 - t(key, namespace)
+t('button.save', 'common')                    // -> "저장" 또는 "Save"
+t('settings.modeSystem.label', 'settings')    // -> "모드 설정"
+t('providers.caret.name', 'settings')         // -> "Caret"
 
-// 변수 삽입
-t('message.welcome', 'common', { user: 'Luke' }); // -> "Luke님, 환영합니다."
+// 변수 삽입 - t(key, namespace, options)
+t('message.welcome', 'common', { user: 'Luke' }) // -> "Luke님, 환영합니다."
+
+// 한국어 조사 처리
+t('brand.appName|을', 'common', {}, 'ko')      // -> "Caret을" (받침 있음)
+```
+
+**⚠️ 잘못된 패턴 (사용 금지):**
+```typescript
+// ❌ 네임스페이스를 키에 포함시키는 패턴
+t('settings.modeSystem.label')     // 틀림
+t('common.button.save')            // 틀림
+
+// ✅ 올바른 패턴 - 네임스페이스는 두 번째 매개변수
+t('modeSystem.label', 'settings')  // 맞음  
+t('button.save', 'common')         // 맞음
 ```
 
 **2. React Hook `useCaretI18n`**
@@ -131,10 +153,26 @@ Caret의 i18n 시스템은 한국어의 복잡한 조사를 자동으로 처리�
 2.  **언어 전환**: 설정 페이지에서 언어를 변경했을 때 UI가 즉시 해당 언어로 변경되는지 확인합니다.
 
 ### **자동화 도구**
--   **네임스페이스 검증**: `npm run report:i18n-namespace` 명령어를 실행하여 `i18n.ts`에 등록 누락된 네임스페이스나, 언어별로 누락된 번역 파일을 검사합니다.
--   **키 누락 검증**: `npm run report:i18n-keys` 명령어를 실행하여 기준 언어(en)에 존재하는 키가 다른 언어 파일에 누락되었는지 확인합니다.
--   **키 자동 동기화**: `npm run sync:i18n-keys` 명령어를 실행하여 누락된 키를 자동으로 추가하고 영어(en)를 기본값으로 채웁니다.
--   **미사용 키 검증**: `node caret-scripts/tools/report-i18n-unused-key.js` 스크립트를 실행하여 코드에서 사용되지 않는 번역 키를 찾아냅니다.
+
+#### **🔍 검증 스크립트**
+-   **네임스페이스 검증**: `npm run report:i18n-namespace`  
+    `i18n.ts`에 등록 누락된 네임스페이스나, 언어별로 누락된 번역 파일을 검사합니다.
+-   **키 누락 검증**: `npm run report:i18n-keys`  
+    기준 언어(en)에 존재하는 키가 다른 언어 파일에 누락되었는지 확인합니다.
+-   **미사용 키 검증**: `node caret-scripts/tools/report-i18n-unused-key.js`  
+    코드에서 사용되지 않는 번역 키를 찾아냅니다.
+
+#### **🔧 자동화 도구**
+-   **키 자동 동기화**: `npm run sync:i18n-keys`  
+    누락된 키를 자동으로 추가하고 영어(en)를 기본값으로 채웁니다.
+-   **미사용 키 자동 삭제**: `node caret-scripts/tools/remove-i18n-unused-keys.js`  
+    사용되지 않는 번역 키를 모든 언어 파일에서 자동으로 삭제합니다.
+
+#### **📊 분석 도구**
+-   **i18n 전체 체크리스트**: `caret-scripts/i18n-checklist-report.md`  
+    i18n 시스템의 전반적인 상태와 권장사항을 종합 분석합니다.
+-   **키 사용 현황 분석**: `node caret-scripts/tools/find-existing-i18n-key.js`  
+    특정 키의 사용 위치와 패턴을 분석합니다.
 
 ## 🔄 **번역 추가 및 관리 프로세스**
 

@@ -45,17 +45,10 @@ export async function getSystemPrompt(context: SystemPromptContext): Promise<str
 	Logger.debug(`[getSystemPrompt] Current mode: ${currentMode}`)
 
 	if (currentMode === "caret") {
-		// Use Caret's PromptSystemManager for AGENT MODE
-		Logger.debug(`[getSystemPrompt] Using Caret PromptSystemManager for AGENT MODE`)
-		const promptManager = new PromptSystemManager()
-
-		// Convert SystemPromptContext to the format expected by PromptSystemManager
-		const managerContext = {
-			modeSystem: currentMode,
-			...context,
-		} as any
-
-		return await promptManager.getPrompt(managerContext)
+		// CARET MODIFICATION: Use Level 1 independent CaretPromptWrapper
+		Logger.debug(`[getSystemPrompt] Using independent CaretPromptWrapper`)
+		const { CaretPromptWrapper } = await import("@caret/core/prompts/CaretPromptWrapper")
+		return await CaretPromptWrapper.getCaretSystemPrompt(context)
 	} else {
 		// Use original Cline's PromptRegistry for ACT MODE (cline mode)
 		Logger.debug(`[getSystemPrompt] Using Cline PromptRegistry for ACT MODE`)

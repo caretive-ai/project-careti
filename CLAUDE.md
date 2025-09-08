@@ -297,11 +297,19 @@ The project uses protobuf for type-safe communication:
 - **globalSettings**: Use `globalState` (user-wide)
 - **Consistency Rule**: Save and load must use same storage type
 
-### Protocol Buffer Field Numbering (Caret Extensions)
+### Protocol Buffer Development Rules
 - **Caret Fields**: Use `current_cline_max + 1000` to avoid merge conflicts
 - **Example**: If Cline's last field is `72`, Caret uses `1072+`
 - **Location**: `proto/cline/models.proto` ModelsApiConfiguration message
 - **Comment Format**: `// CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)`
+
+### 🚨 CRITICAL: Generated Proto Code Modification Rules
+**NEVER directly edit generated proto files** - they are overwritten on every `npm run protos`:
+- ❌ **NEVER**: Edit `src/generated/**/*.ts` directly
+- ❌ **NEVER**: Edit `webview-ui/src/services/grpc-client.ts` directly
+- ✅ **ALWAYS**: Modify `scripts/build-proto.mjs` for fixes
+- ✅ **UPDATE**: `postProcessGeneratedFiles()` function for namespace/import fixes
+- **Example**: Add new Caret types to the replacement patterns in the script
 
 ### Testing Workflow
 ```bash

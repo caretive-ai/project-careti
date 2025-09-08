@@ -240,6 +240,192 @@
 
 ---
 
-## 5. 🔄 Phase 6으로 이관
+## 5. 🚨 긴급: Luke 통합테스트 결과 - 도구 시스템 치명적 결함 발견
 
-기존 Phase 5 (안정화, 최적화, 문서화)를 **Phase 6**으로 변경하여 다음 단계로 이어지도록 합니다.
+### 5.1 현재 상황
+- **문제**: Luke의 통합테스트에서 모든 Cline 기본 기능 실패
+- **원인**: JSON 시스템이 도구 파라미터 정보 누락으로 AI가 올바른 도구 호출 불가
+- **영향**: 브라우저, 터미널, 파일 편집 등 핵심 기능 모두 작동 안함
+
+### 5.2 📋 도구 시스템 긴급 수정 계획
+
+#### 🎯 Phase 5 최종 완료를 위한 추가 작업
+
+**5.2.1 [CRITICAL] 도구 시스템 문제 해결**
+*(기존 3.3.2의 'JSON 재설계' 방안보다 더 근본적인 해결책으로, 도구 시스템에 한해 JSON화를 포기하고 Cline 원본을 사용하는 것으로 계획을 수정함)*
+
+- [ ] **문제 분석 완료**: `t06-phase6-tool-system-analysis.md` 보고서 작성 ✅
+- [ ] **해결 방안 결정**: 선택적 JSON 적용 (도구는 Cline 원본 사용) ✅
+- [ ] **CaretJsonAdapter 수정**: 도구 시스템을 Cline 원본으로 교체
+  ```typescript
+  // Concept Code - 구현 방향 예시
+  // CARET_TOOL_SYSTEM 제거, Cline 원본 도구 시스템 통합
+  const sectionNames = [
+    'BASE_PROMPT_INTRO',
+    'CHATBOT_AGENT_MODES', 
+    'CARET_SYSTEM_INFO',
+    'CARET_CAPABILITIES',
+    'CARET_USER_INSTRUCTIONS',
+    // CARET_TOOL_SYSTEM 제거 → Cline 원본 사용
+    context.tools ? await getClineToolsSection(context) : null,
+    'CARET_FILE_EDITING',
+    'CARET_BEHAVIOR_RULES',
+    'CARET_TASK_OBJECTIVE',
+    'CARET_ACTION_STRATEGY',
+    // ... 나머지 JSON 컴포넌트들
+  ];
+  ```
+
+**5.2.2 [HIGH] 모드 전환 로직 수정 + 디버그 로깅**  
+- [ ] **모드 매핑 확인**: UI CHATBOT/AGENT ↔ 백엔드 프롬프트 시스템 연동
+- [ ] **포괄적 디버그 로깅 추가**:
+  ```typescript
+  // Concept Code - 디버그 로깅 구현 방향
+  // CaretJsonAdapter.ts에 로깅 추가
+  console.log(`[CaretJsonAdapter] 🎯 Mode: ${context.mode}, isChatbotMode: ${isChatbotMode}`);
+  console.log(`[CaretJsonAdapter] 📋 Selected sections:`, sectionNames);
+  
+  // 각 섹션별 로딩 상태
+  for (const name of sectionNames) {
+    const template = this.loader.getTemplate<any>(name);
+    console.log(`[CaretJsonAdapter] 📄 ${name}: ${template ? '✅ Loaded' : '❌ Missing'}`);
+    if (template) {
+      console.log(`[CaretJsonAdapter] 📝 ${name} content preview:`, 
+        JSON.stringify(template).substring(0, 100) + '...');
+    }
+  }
+  
+  // 최종 프롬프트 정보
+  console.log(`[CaretJsonAdapter] 🚀 Final prompt parts count: ${promptParts.length}`);
+  console.log(`[CaretJsonAdapter] 📊 Final prompt length: ${finalPrompt.length} chars`);
+  ```
+- [ ] **모드 전환 플로우 로깅**:
+  ```typescript
+  // PromptSystemManager에서 모드 선택 로깅
+  console.log(`[PromptSystemManager] 🔄 Mode selection - Input: ${mode}`);
+  console.log(`[PromptSystemManager] 🔄 Using adapter: ${adapterName}`);
+  
+  // 프론트엔드 모드 전환 이벤트 로깅
+  console.log(`[Frontend] 🎚️ Mode switched to: ${newMode}`);
+  console.log(`[Frontend] 🎚️ Sending mode change to backend...`);
+  ```
+- [ ] **프롬프트 생성 전체 과정 로깅**:
+  ```typescript
+  // 프롬프트 생성 시작부터 완료까지 전체 흐름
+  console.log(`[SystemPrompt] 🏁 Starting prompt generation`);
+  console.log(`[SystemPrompt] 📋 Context:`, {
+    mode: context.mode,
+    providerInfo: context.providerInfo?.name,
+    mcpServers: context.mcpHub?.getServers()?.length || 0,
+    focusChain: context.focusChainSettings?.enabled
+  });
+  console.log(`[SystemPrompt] ✅ Prompt generation completed`);
+  ```
+
+**5.2.3 [VERIFY] 전체 시스템 검증**
+
+**A. 도구 시스템 검증**
+- [ ] **모든 19개 도구 파라미터 검증**:
+  - [ ] `ask_followup_question` (question 필수)
+  - [ ] `browser_action` (action 필수)
+  - [ ] `execute_command` (command, requires_approval 필수)
+  - [ ] `read_file` (path 필수)
+  - [ ] `write_to_file` (path, content 필수)
+  - [ ] `replace_in_file` (path, search, replace 필수)
+  - [ ] `list_files` (path 필수)
+  - [ ] `search_files` (path, pattern 필수)
+  - [ ] `list_code_definition_names` (path 필수)
+  - [ ] `attempt_completion` (result 필수)
+  - [ ] `focus_chain` (Focus Chain 활성화 시)
+  - [ ] 기타 MCP, 모델별 도구들
+
+**B. 모드 시스템 전면 검증**
+- [ ] **UI → 백엔드 모드 전환**:
+  - [ ] UI에서 CHATBOT 선택 → 백엔드 CHATBOT 모드로 인식
+  - [ ] UI에서 AGENT 선택 → 백엔드 AGENT 모드로 인식
+  - [ ] 설정 영속성: 재시작 후에도 모드 유지
+- [ ] **AI 모드 인식**:
+  - [ ] CHATBOT 모드: AI가 "CHATBOT 모드" 또는 "대화형 모드"로 응답
+  - [ ] AGENT 모드: AI가 "AGENT 모드" 또는 "자율 실행 모드"로 응답
+  - [ ] ❌ Cline 모드로 응답하지 않음 (PLAN/ACT 언급 금지)
+
+**C. JSON 프롬프트 시스템 검증**
+- [ ] **모든 JSON 컴포넌트 로딩 확인**:
+  - [ ] `CHATBOT_AGENT_MODES.json` 로딩 및 적용
+  - [ ] `CARET_SYSTEM_INFO.json` 로딩 및 적용
+  - [ ] `CARET_CAPABILITIES.json` 로딩 및 적용
+  - [ ] `CARET_USER_INSTRUCTIONS.json` 로딩 및 적용
+  - [ ] `CARET_FILE_EDITING.json` 로딩 및 적용
+  - [ ] `CARET_BEHAVIOR_RULES.json` 로딩 및 적용
+  - [ ] `CARET_TASK_OBJECTIVE.json` 로딩 및 적용
+  - [ ] `CARET_ACTION_STRATEGY.json` 로딩 및 적용
+  - [ ] `CARET_TODO_MANAGEMENT.json` 로딩 및 적용
+  - [ ] `CARET_TASK_PROGRESS.json` 로딩 및 적용
+  - [ ] `CARET_FEEDBACK_SYSTEM.json` 로딩 및 적용
+  - [ ] `CARET_MCP_INTEGRATION.json` 로딩 및 적용 (MCP 서버 있을 시)
+
+**D. 모드별 차별화 검증**
+- [ ] **CHATBOT 모드 제한사항**:
+  - [ ] 파일 수정 도구 사용 불가 (write_to_file, replace_in_file)
+  - [ ] 명령 실행 불가 (execute_command)
+  - [ ] 브라우저 사용 불가 (browser_action)
+  - [ ] 읽기 전용 도구만 사용 (read_file, list_files, search_files)
+- [ ] **AGENT 모드 전체 기능**:
+  - [ ] 모든 도구 사용 가능
+  - [ ] 파일 수정, 명령 실행, 브라우저 사용 모두 가능
+
+**E. 통합 기능 검증**
+- [ ] **실제 사용 시나리오 테스트**:
+  - [ ] 파일 읽기 → 분석 → 수정 → 저장 전체 플로우
+  - [ ] 웹 검색 → 브라우저 사용 → 정보 수집 플로우
+  - [ ] 명령 실행 → 결과 확인 → 후속 작업 플로우
+  - [ ] 사용자 질문 → 추가 질문 → 답변 제공 플로우
+
+**F. 성능 및 안정성 검증**
+- [ ] **프롬프트 생성 성능**:
+  - [ ] 생성 시간 < 500ms
+  - [ ] 메모리 사용량 정상
+  - [ ] 에러 로그 없음
+- [ ] **토큰 효율성**:
+  - [ ] JSON 컴포넌트들이 원본 대비 토큰 절약 효과
+  - [ ] 전체 프롬프트 크기 적정 수준 유지
+
+**G. 디버그 로깅 검증**
+- [ ] **로깅 출력 확인**:
+  - [ ] CaretJsonAdapter 로깅: 모드, 섹션 선택, 로딩 상태 출력
+  - [ ] PromptSystemManager 로깅: 어댑터 선택 과정 출력  
+  - [ ] Frontend 로깅: 모드 전환 이벤트 출력
+  - [ ] SystemPrompt 로깅: 전체 생성 과정 출력
+- [ ] **로깅 정확성 확인**:
+  - [ ] 로그 출력 시점이 올바른지
+  - [ ] 로그 내용이 실제 동작과 일치하는지
+  - [ ] 문제 발생 시 원인 추적 가능한지
+- [ ] **Luke 로그 분석**:
+  - [ ] Luke가 제공한 기존 로그와 비교
+  - [ ] 새로운 로그로 문제점 명확히 식별 가능한지
+  - [ ] "AGENT MODE" vs 실제 선택 모드 불일치 원인 파악
+
+**5.2.4 [INTEGRATION] Luke 재테스트**
+- [ ] **수정사항 커밋**: 도구 시스템 긴급 수정
+- [ ] **Luke에게 재테스트 요청**: 모든 기능 정상 작동 확인
+- [ ] **추가 문제 확인**: 발견된 문제들 추가 수정
+
+### 5.3 예상 소요 시간
+- **도구 시스템 수정**: 2-3시간 (Cline 원본 통합)
+- **모드 전환 수정**: 1-2시간 (디버깅 및 로직 수정)  
+- **검증 및 테스트**: 1시간
+- **총 예상 시간**: 4-6시간
+
+### 5.4 ⚠️ Phase 5 완료 조건 (수정)
+- [x] cline-latest의 13개 컴포넌트 중 **단순한 것들만** Caret JSON으로 변환 ✅
+- [ ] **도구 시스템**: Cline 원본 사용으로 100% 호환성 확보 🚨
+- [ ] **모드 전환**: CHATBOT/AGENT 모드가 올바르게 작동 🚨
+- [ ] **Luke 통합테스트**: 모든 기본 기능 정상 작동 확인 🚨
+- [x] 교차검증 테스트 통과 (도구 부분 제외) ✅
+- [x] 토큰 효율성 확보 (JSON 적용 부분만) ✅
+
+---
+
+## 6. 🔄 Phase 6으로 이관
+
+**Phase 5 완료 후** 진행할 안정화 및 최적화 작업을 Phase 6으로 이관합니다.

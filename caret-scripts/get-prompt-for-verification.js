@@ -1,13 +1,29 @@
 // This script is for verification purposes to output the generated prompts.
+
+// This script is for verification purposes to output the generated prompts.
+
+// This script is for verification purposes to output the generated prompts.
+
+// Mock the 'vscode' module only when it's required.
+require.cache.vscode = {
+	exports: {},
+}
+
 const path = require("path")
-const { PromptSystemManager } = require("../caret-src/core/prompts/system/PromptSystemManager")
-const { JsonTemplateLoader } = require("../caret-src/core/prompts/system/JsonTemplateLoader")
-const { CARET_MODES } = require("../caret-src/shared/constants/PromptSystemConstants")
-const { ModelFamily } = require("../src/shared/prompts")
+// Since this script runs from the root, we need to adjust the path to the compiled output.
+// The PromptSystemManager and other necessary modules are bundled in dist/extension.js.
+// We will require the main extension file and extract the necessary components.
+// This is a workaround for running a script that depends on compiled TypeScript source.
+const { PromptSystemManager, JsonTemplateLoader, CARET_MODES, ModelFamily } = require("../dist/extension")
 
 async function getCaretPrompt() {
 	const sectionsDirPath = path.resolve(__dirname, "../caret-src/core/prompts/sections")
-	await JsonTemplateLoader.getInstance().initialize(sectionsDirPath)
+	// The JsonTemplateLoader might be a singleton that needs initialization.
+	// Let's ensure it's initialized before use.
+	const loader = JsonTemplateLoader.getInstance()
+	if (!loader.isInitialized) {
+		await loader.initialize(sectionsDirPath)
+	}
 
 	const manager = new PromptSystemManager()
 	const context = {

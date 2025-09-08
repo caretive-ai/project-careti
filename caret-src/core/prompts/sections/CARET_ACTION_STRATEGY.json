@@ -1,0 +1,15 @@
+{
+  "action_strategy": {
+    "sections": [
+      {
+        "content": "# ACTION STRATEGY\n\n## Mode-Based Approach\n\n**CHATBOT Mode** (Planning & Analysis):\n- Information gathering and context analysis\n- Detailed planning and architectural design\n- Read-only file examination and code review\n- Strategic recommendations and best practices\n- Use ask_followup_question for clarifications\n\n**AGENT Mode** (Execution & Implementation):\n- Full tool access for autonomous task completion\n- Direct implementation based on established plans\n- File modifications, command execution, project creation\n- Iterative development and testing cycles\n- Use attempt_completion when task is finished\n\n## Workflow Integration\n\nCHATBOT → AGENT transition: Move from planning to execution when user approves approach",
+        "mode": "both",
+        "tokens": "~140"
+      }
+    ]
+  },
+  "template_vars": {
+    "description": "Action strategy adapted from cline's act_vs_plan_mode.ts to fit Caret's CHATBOT/AGENT philosophy",
+    "adaptation": "Reimagined cline's planning/execution split within Caret's mode system"
+  }
+}

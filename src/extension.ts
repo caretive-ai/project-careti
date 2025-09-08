@@ -18,8 +18,9 @@ import { cleanupTestMode, initializeTestMode } from "./services/test/TestMode"
 import { WebviewProviderType } from "./shared/webview/types"
 import "./utils/path" // necessary to have access to String.prototype.toPosix
 
-import { CaretProviderWrapper } from "@caret/core/webview/CaretProviderWrapper"
 // CARET MODIFICATION: Import CaretProviderWrapper for image injection and PersonaInitializer
+import { JsonTemplateLoader } from "@caret/core/prompts/system/JsonTemplateLoader"
+import { CaretProviderWrapper } from "@caret/core/webview/CaretProviderWrapper"
 import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
 import { PersonaInitializer } from "@caret/services/persona/persona-initializer"
 import type { ExtensionContext, Webview } from "vscode"
@@ -62,6 +63,10 @@ export async function activate(context: vscode.ExtensionContext) {
 	// CARET MODIFICATION: Initialize CaretGlobalManager with 'caret' as default for new installations
 	const initialMode = context.workspaceState.get<"caret" | "cline">("caret.promptSystem.mode", "caret")
 	CaretGlobalManager.initialize(initialMode)
+
+	// CARET MODIFICATION: Initialize JsonTemplateLoader
+	const sectionsDirPath = vscode.Uri.joinPath(context.extensionUri, "caret-src", "core", "prompts", "sections").fsPath
+	await JsonTemplateLoader.getInstance().initialize(sectionsDirPath)
 
 	Logger.log("Caret extension activated")
 

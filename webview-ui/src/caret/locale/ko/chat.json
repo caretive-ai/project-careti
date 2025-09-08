@@ -65,6 +65,12 @@
 		},
 		"plan": {
 			"label": "계획"
+		},
+		"agent": {
+			"label": "에이전트"
+		},
+		"chatbot": {
+			"label": "챗봇"
 		}
 	},
 	"contextMenu": {

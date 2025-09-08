@@ -1,5 +1,147 @@
 # t06 - Phase 4: 프론트엔드 통합 및 E2E 검증
 
+## 루크 피드백 (2025-09-08 21:18)
+- 아래의 에러에 의해 신규 수정 추가: 
+ __`extension.ts` 수정__: `activate` 함수에 `JsonTemplateLoader.getInstance().initialize()`를 추가하여, 확장 프로그램 시작 시 JSON 템플릿 시스템이 올바르게 초기화되도록 수정했습니다.
+
+- 하지만 아래의 문제가 있었음
+
+* 또한 AI에게 무슨 모드인지 물어보면 챗봇은 PLAN모드, 에이전트모드에서는 ACT모드로 대답함. 백엔드에서 caret모드인것이 인식된것은 확실하지만 json 로더가 제대로 되었는지 챗봇과 에이전트 모드에 따라서 제대로된 json 시스템프롬프트가 로딩되었는지는 불확실함
+* json 프롬프트 로더에 각각 어떤 프롬프트가 로딩 되어서 전달되었는지 디버그로그를 추가해야 할것 같음
+
+1) 가끔 API요청에 아래의 메시지가 뜸 
+  Cline tried to use ask_followup_question without value for required parameter 'question'. Retrying...
+ 이후 다시 답변을 해서 정상으로 동작함 (사용에 문제 없지만 확인필요)
+
+ 
+2) Agent모드 상태에서 처음 창을 띄우면 Agent모드로 인식함
+ 2.1) 브라우져를 열려고 시도 했으나 아래와 같은 에러 발생 못 열음
+Cline tried to use browser_action without value for required parameter 'action'. Retrying...
+Cline tried to use browser_action without value for required parameter 'action'. Retrying...
+
+Cline uses complex prompts and iterative task execution that may be challenging for less capable models. For best results, it's recommended to use Claude 4 Sonnet for its advanced agentic coding capabilities.
+
+3) 노드 버전을 확인 요청하자, 실제 확인은 했는지 대답을 하긴 했으나, 아래와 같은 메시지가 출력되며 사용자 확인할수가 없었음
+Shell Integration Unavailable
+
+Cline may have trouble viewing the command's output. Please update VSCode (`CMD/CTRL + Shift + P` → "Update") and make sure you're using a supported shell: zsh, bash, fish, or PowerShell (`CMD/CTRL + Shift + P` → "Terminal: Select Default Profile"). [Still having trouble?](https://github.com/cline/cline/wiki/Troubleshooting-%E2%80%90-Shell-Integration-Unavailable)
+
+4) 챗봇 모드로 전환하고 무슨 모드냐고 묻자, PLAN모드라고 대답함
+
+ 백엔드에는 여전히 AGENT MODE의 로그가 찍힘
+ DEBUG [CURSOR] Rules path (file): C:\Users\Luke(양병석)\Desktop\.cursorrules
+DEBUG [CURSOR] Combined toggles: {}
+DEBUG [CARET] FINAL - returning toggles: {}
+DEBUG [WINDSURF] FINAL - returning toggles: {}
+DEBUG [CURSOR] FINAL - returning toggles: {}
+DEBUG [getSystemPrompt] Current mode: caret
+DEBUG [getSystemPrompt] Using Caret PromptSystemManager for AGENT MODE
+DEBUG [PromptSystemManager] Using adapter: caret
+
+
+
+
+-- 아래는 백엔드 로그 --
+
+
+TaskService","method":"askResponse","message":{"responseType":"messageResponse","text":"지금은 무슨 모드인데 ?","images":[],"files":[]},"request_id":"acc5835d-5dfc-424a-b478-945f25835052","is_streaming":false}}
+DEBUG [CaretProviderWrapper] Processing message type: grpc_request
+DEBUG [CaretProviderWrapper] Passing message to Cline: grpc_request
+DEBUG [CARET] Rules path: C:\Users\Luke(양병석)\Desktop\.caretrules
+DEBUG [CARET] Current toggles: {}
+DEBUG [CARET] Updated toggles: {}
+DEBUG [WINDSURF] Rules path: C:\Users\Luke(양병석)\Desktop\.windsurfrules
+DEBUG [WINDSURF] Current toggles: {}
+DEBUG [WINDSURF] Updated toggles: {}
+DEBUG [CURSOR] Rules path (dir): C:\Users\Luke(양병석)\Desktop\.cursor\rules
+DEBUG [CURSOR] Current toggles: {}
+DEBUG [CURSOR] Rules path (file): C:\Users\Luke(양병석)\Desktop\.cursorrules
+DEBUG [CURSOR] Combined toggles: {}
+DEBUG [CARET] FINAL - returning toggles: {}
+DEBUG [WINDSURF] FINAL - returning toggles: {}
+DEBUG [CURSOR] FINAL - returning toggles: {}
+DEBUG [getSystemPrompt] Current mode: caret
+DEBUG [getSystemPrompt] Using Caret PromptSystemManager for AGENT MODE
+DEBUG [PromptSystemManager] Using adapter: caret
+DEBUG [CaretProviderWrapper] Received message: {"type":"grpc_request","grpc_request":{"service":"cline.StateService","method":"togglePlanActModeProto","message":{"mode":1,"chatContent":{"images":[],"files":[]}},"request_id":"a1784915-5835-49f5-8442-cd29c98d969e","is_streaming":false}}
+DEBUG [CaretProviderWrapper] Processing message type: grpc_request
+DEBUG [CaretProviderWrapper] Passing message to Cline: grpc_request
+DEBUG [CARET] Rules path: C:\Users\Luke(양병석)\Desktop\.caretrules
+DEBUG [CARET] Current toggles: {}
+DEBUG [CARET] Updated toggles: {}
+DEBUG [WINDSURF] Rules path: C:\Users\Luke(양병석)\Desktop\.windsurfrules
+DEBUG [WINDSURF] Current toggles: {}
+DEBUG [WINDSURF] Updated toggles: {}
+DEBUG [CURSOR] Rules path (dir): C:\Users\Luke(양병석)\Desktop\.cursor\rules
+DEBUG [CURSOR] Current toggles: {}
+DEBUG [CURSOR] Rules path (file): C:\Users\Luke(양병석)\Desktop\.cursorrules
+DEBUG [CURSOR] Combined toggles: {}
+DEBUG [CARET] FINAL - returning toggles: {}
+DEBUG [WINDSURF] FINAL - returning toggles: {}
+DEBUG [CURSOR] FINAL - returning toggles: {}
+DEBUG [getSystemPrompt] Current mode: caret
+DEBUG [getSystemPrompt] Using Caret PromptSystemManager for AGENT MODE
+DEBUG [PromptSystemManager] Using adapter: caret
+
+## 루크 피드백 (2025-09-08 20:56)
+- Caret 모드에서 초기화 실패 오류 노출 (챗봇 모드, 에이전트 모드 동일, 현재 cline의 plan, act모드는 정상 동작 확인하였음)
+ * 아래는 챗봇 모드에서 메시지 보냈을때 나온 로그
+ 
+ -- 프론트 로그
+ [ChatView] handleSendMessage - Sending message: 무슨 모드야 ?
+ExtensionStateContext.tsx:422 [DEBUG] returning new state in ESC
+ExtensionStateContext.tsx:431 [DEBUG] ended "got subscribed state"
+ExtensionStateContext.tsx:422 [DEBUG] returning new state in ESC
+ExtensionStateContext.tsx:431 [DEBUG] ended "got subscribed state"
+ExtensionStateContext.tsx:422 [DEBUG] returning new state in ESC
+ExtensionStateContext.tsx:431 [DEBUG] ended "got subscribed state"
+workbench.desktop.main.js:55   ERR [Extension Host] [ErrorService] Logging Error: JsonTemplateLoader has not been initialized. Call initialize() first.
+	at _ClineError.transform (d:\dev\caret-merge\dist\extension.js:437664:18)
+	at ErrorService.toClineError (d:\dev\caret-merge\dist\extension.js:437743:40)
+	at Task.recursivelyMakeClineRequests (d:\dev\caret-merge\dist\extension.js:886946:47)
+	at async Task.initiateTaskLoop (d:\dev\caret-merge\dist\extension.js:886052:30)
+	at async Task.resumeTaskFromHistory (d:\dev\caret-merge\dist\extension.js:886046:9)
+workbench.desktop.main.js:4784 [Extension Host] [ErrorService] Logging Error: JsonTemplateLoader has not been initialized. Call initialize() first.
+	at _ClineError.transform (d:\dev\caret-merge\dist\extension.js:437664:18)
+	at ErrorService.toClineError (d:\dev\caret-merge\dist\extension.js:437743:40)
+	at Task.recursivelyMakeClineRequests (d:\dev\caret-merge\dist\extension.js:886946:47)
+	at async Task.initiateTaskLoop (d:\dev\caret-merge\dist\extension.js:886052:30)
+	at async Task.resumeTaskFromHistory (d:\dev\caret-merge\dist\extension.js:886046:9) (at console.<anonymous> (file:///c:/Users/Luke(%EC%96%91%EB%B3%91%EC%84%9D)/AppData/Local/Programs/c…/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:200:31986))
+workbench.desktop.main.js:55   ERR [Extension Host] Error setting up file subscription: Error: ENOENT: no such file or directory, watch 'c:\Users\Luke(양병석)\AppData\Roaming\Cursor\User\globalStorage\caretive.caret\tasks\1757332446552\focus_chain_taskid_1757332446552.md'
+workbench.desktop.main.js:4784 [Extension Host] Error setting up file subscription: Error: ENOENT: no such file or directory, watch 'c:\Users\Luke(양병석)\AppData\Roaming\Cursor\User\globalStorage\caretive.caret\tasks\1757332446552\focus_chain_taskid_1757332446552.md' (at console.<anonymous> (file:///c:/Users/Luke(%EC%96%91%EB%B3%91%EC%84%9D)/AppData/Local/Programs/c…/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:200:31986))
+ExtensionStateContext.tsx:422 [DEBUG] returning new state in ESC
+ExtensionStateContext.tsx:431 [DEBUG] ended "got subscribed state"
+ExtensionStateContext.tsx:422 [DEBUG] returning new state in ESC
+ExtensionStateContext.tsx:431 [DEBUG] ended "got subscribed state"
+workbench.desktop.main.js:55  WARN [mainThreadStorage] large extension state detected (extensionId: caretive.caret, global: true): 1332.716796875kb. Consider to use 'storageUri' or 'globalStorageUri' to store this data on disk instead.
+ExtensionStateContext.tsx:422 [DEBUG] returning new state in ESC
+ExtensionStateContext.tsx:431 [DEBUG] ended "got subscribed state"
+﻿
+--- 백엔드 로그
+DEBUG [CaretProviderWrapper] Received message: {"type":"grpc_request","grpc_request":{"service":"cline.TaskService","method":"askResponse","message":{"responseType":"messageResponse","text":"무슨 모드야 ?","images":[],"files":[]},"request_id":"38684bed-b6f5-4843-9fe9-cf9054d2691a","is_streaming":false}}
+DEBUG [CaretProviderWrapper] Processing message type: grpc_request
+DEBUG [CaretProviderWrapper] Passing message to Cline: grpc_request
+DEBUG [CARET] Rules path: C:\Users\Luke(양병석)\Desktop\.caretrules
+DEBUG [CARET] Current toggles: {}
+DEBUG [CARET] Updated toggles: {}
+DEBUG [WINDSURF] Rules path: C:\Users\Luke(양병석)\Desktop\.windsurfrules
+DEBUG [WINDSURF] Current toggles: {}
+DEBUG [WINDSURF] Updated toggles: {}
+DEBUG [CURSOR] Rules path (dir): C:\Users\Luke(양병석)\Desktop\.cursor\rules
+DEBUG [CURSOR] Current toggles: {}
+DEBUG [CURSOR] Rules path (file): C:\Users\Luke(양병석)\Desktop\.cursorrules
+DEBUG [CURSOR] Combined toggles: {}
+DEBUG [CARET] FINAL - returning toggles: {}
+DEBUG [WINDSURF] FINAL - returning toggles: {}
+DEBUG [CURSOR] FINAL - returning toggles: {}
+DEBUG [getSystemPrompt] Current mode: caret
+DEBUG [getSystemPrompt] Using Caret PromptSystemManager for AGENT MODE
+DEBUG [PromptSystemManager] Using adapter: caret
+
+
+-- 
+
+
 ## 🚧 추가 작업 필요 (2025-09-08 19:30)
 
 ### 1. Plan/Act 버튼 다국어 수정

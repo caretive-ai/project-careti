@@ -1,0 +1,16 @@
+{
+  "mcp_integration": {
+    "sections": [
+      {
+        "content": "# MCP INTEGRATION\n\n## Model Context Protocol Support\n\nWhen MCP servers are connected, additional tools and resources extend your capabilities.\n\n**Available Tools**: use_mcp_tool for server-provided functionality\n**Available Resources**: access_mcp_resource for extended data sources\n\n## Mode Integration\n\n**CHATBOT Mode**: Access MCP resources for analysis and information gathering\n**AGENT Mode**: Full MCP tool usage for extended autonomous capabilities\n\n**Connected Servers**: {{mcp_servers_list}}",
+        "mode": "both",
+        "tokens": "~100",
+        "conditional": "mcp_servers_available"
+      }
+    ]
+  },
+  "template_vars": {
+    "description": "MCP integration adapted from cline's mcp.ts with mode-aware restrictions",
+    "fallback": "No MCP servers currently connected"
+  }
+}

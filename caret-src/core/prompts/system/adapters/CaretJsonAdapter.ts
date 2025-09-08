@@ -23,6 +23,9 @@ export class CaretJsonAdapter implements IPromptSystem {
      */
     public async getPrompt(context: CaretSystemPromptContext): Promise<string> {
         const isChatbotMode = context.mode === CARET_MODES.CHATBOT;
+        
+        // CARET MODIFICATION: Add debug logging for mode verification
+        console.log(`[CaretJsonAdapter] Generating prompt for mode: ${context.mode} (isChatbotMode: ${isChatbotMode})`);
 
         const sectionNames = [
             'BASE_PROMPT_INTRO',

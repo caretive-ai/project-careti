@@ -1,44 +1,5 @@
 # t06 - Phase 4: 프론트엔드 통합 및 E2E 검증
 
-## 루크 피드백 (2025-09-08 21:18)
-- 아래의 에러에 의해 신규 수정 추가: 
- __`extension.ts` 수정__: `activate` 함수에 `JsonTemplateLoader.getInstance().initialize()`를 추가하여, 확장 프로그램 시작 시 JSON 템플릿 시스템이 올바르게 초기화되도록 수정했습니다.
-
-- 하지만 아래의 문제가 있었음
-
-* 또한 AI에게 무슨 모드인지 물어보면 챗봇은 PLAN모드, 에이전트모드에서는 ACT모드로 대답함. 백엔드에서 caret모드인것이 인식된것은 확실하지만 json 로더가 제대로 되었는지 챗봇과 에이전트 모드에 따라서 제대로된 json 시스템프롬프트가 로딩되었는지는 불확실함
-* json 프롬프트 로더에 각각 어떤 프롬프트가 로딩 되어서 전달되었는지 디버그로그를 추가해야 할것 같음
-
-1) 가끔 API요청에 아래의 메시지가 뜸 
-  Cline tried to use ask_followup_question without value for required parameter 'question'. Retrying...
- 이후 다시 답변을 해서 정상으로 동작함 (사용에 문제 없지만 확인필요)
-
- 
-2) Agent모드 상태에서 처음 창을 띄우면 Agent모드로 인식함
- 2.1) 브라우져를 열려고 시도 했으나 아래와 같은 에러 발생 못 열음
-Cline tried to use browser_action without value for required parameter 'action'. Retrying...
-Cline tried to use browser_action without value for required parameter 'action'. Retrying...
-
-Cline uses complex prompts and iterative task execution that may be challenging for less capable models. For best results, it's recommended to use Claude 4 Sonnet for its advanced agentic coding capabilities.
-
-3) 노드 버전을 확인 요청하자, 실제 확인은 했는지 대답을 하긴 했으나, 아래와 같은 메시지가 출력되며 사용자 확인할수가 없었음
-Shell Integration Unavailable
-
-Cline may have trouble viewing the command's output. Please update VSCode (`CMD/CTRL + Shift + P` → "Update") and make sure you're using a supported shell: zsh, bash, fish, or PowerShell (`CMD/CTRL + Shift + P` → "Terminal: Select Default Profile"). [Still having trouble?](https://github.com/cline/cline/wiki/Troubleshooting-%E2%80%90-Shell-Integration-Unavailable)
-
-4) 챗봇 모드로 전환하고 무슨 모드냐고 묻자, PLAN모드라고 대답함
-
- 백엔드에는 여전히 AGENT MODE의 로그가 찍힘
- DEBUG [CURSOR] Rules path (file): C:\Users\Luke(양병석)\Desktop\.cursorrules
-DEBUG [CURSOR] Combined toggles: {}
-DEBUG [CARET] FINAL - returning toggles: {}
-DEBUG [WINDSURF] FINAL - returning toggles: {}
-DEBUG [CURSOR] FINAL - returning toggles: {}
-DEBUG [getSystemPrompt] Current mode: caret
-DEBUG [getSystemPrompt] Using Caret PromptSystemManager for AGENT MODE
-DEBUG [PromptSystemManager] Using adapter: caret
-
-
 
 
 -- 아래는 백엔드 로그 --

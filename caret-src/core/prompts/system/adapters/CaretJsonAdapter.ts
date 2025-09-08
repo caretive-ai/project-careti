@@ -2,6 +2,7 @@ import { IPromptSystem } from "../IPromptSystem";
 import { JsonTemplateLoader } from "../JsonTemplateLoader";
 import { CARET_MODES } from "../../../../shared/constants/PromptSystemConstants";
 import { CaretSystemPromptContext } from "../types";
+import * as path from "path";
 
 /**
  * Adapter for Caret's JSON-based prompt system.
@@ -65,8 +66,7 @@ export class CaretJsonAdapter implements IPromptSystem {
             }, {} as Record<string, any>);
         }
         
-        const content = template.content_template.replace("{{tools}}", JSON.stringify(tools, null, 2));
-        return content;
+        return JSON.stringify(tools, null, 2);
     }
 
     /**

@@ -24,8 +24,8 @@ describe('T06 - Prompt System Integration Test', () => {
             };
             const prompt = await manager.getPrompt(context);
 
-            expect(prompt).toContain("You are Cline, a highly skilled software engineer"); // From BASE_PROMPT_INTRO
-            expect(prompt).toContain("CHATBOT MODE"); // From CHATBOT_AGENT_MODES
+            expect(prompt).toContain("You are Caret, a skilled software engineer."); // From BASE_PROMPT_INTRO
+            expect(prompt).toContain("CHATBOT/AGENT MODE SYSTEM"); // From CHATBOT_AGENT_MODES
             expect(prompt).not.toContain('"execute_command"'); // Tool restriction
         });
 
@@ -38,7 +38,7 @@ describe('T06 - Prompt System Integration Test', () => {
             };
             const prompt = await manager.getPrompt(context);
             
-            expect(prompt).toContain("AGENT MODE"); // From CHATBOT_AGENT_MODES
+            expect(prompt).toContain("CHATBOT/AGENT MODE SYSTEM"); // From CHATBOT_AGENT_MODES
             expect(prompt).toContain('"execute_command"'); // Tool restriction lifted
         });
 
@@ -52,7 +52,7 @@ describe('T06 - Prompt System Integration Test', () => {
             };
             const prompt = await manager.getPrompt(context);
 
-            expect(prompt).toContain("AUTOMATIC TODO LIST MANAGEMENT"); // From CARET_TODO_MANAGEMENT
+            expect(prompt).toContain("Task sequence:"); // From CARET_TODO_MANAGEMENT
         });
     });
 

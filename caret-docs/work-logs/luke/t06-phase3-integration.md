@@ -20,46 +20,46 @@ Phase 2에서 구축한 어댑터 뼈대를 실제 시스템에 통합하고, `c
 ## 3. ✅ 상세 작업 체크리스트
 
 ### 3.1. `CaretJsonAdapter` 기능 완성
-- [ ] **JSON 파일 로딩 및 캐싱 구현**:
-    - [ ] `JsonTemplateLoader.ts` (신규) 클래스를 생성하여 `caret-src/core/prompts/sections/` 내의 모든 JSON 파일을 비동기적으로 로드하고 메모리에 캐싱하는 기능 구현
-- [ ] **프롬프트 조립 로직 구현**:
-    - [ ] `context` (mode, brand 등)에 따라 필요한 JSON 섹션을 동적으로 선택하고 순서에 맞게 조합하는 로직 구현
-    - [ ] `TOOL_DEFINITIONS.json`의 `mode_restriction`을 적용하여 `chatbot` 모드일 때 `execute_command` 등의 도구가 프롬프트에서 제외되는지 확인
-- [ ] **'작업 관리 루프' 콘텐츠 통합**:
-    - [ ] `context`에 `auto_todo`, `task_progress` 관련 플래그가 있을 경우, Phase 1에서 생성한 `CARET_TODO_MANAGEMENT.json` 등의 내용을 프롬프트에 추가하는 로직 구현
+- [x] **JSON 파일 로딩 및 캐싱 구현**:
+    - [x] `JsonTemplateLoader.ts` (신규) 클래스를 생성하여 `caret-src/core/prompts/sections/` 내의 모든 JSON 파일을 비동기적으로 로드하고 메모리에 캐싱하는 기능 구현
+- [x] **프롬프트 조립 로직 구현**:
+    - [x] `context` (mode, brand 등)에 따라 필요한 JSON 섹션을 동적으로 선택하고 순서에 맞게 조합하는 로직 구현
+    - [x] `TOOL_DEFINITIONS.json`의 `mode_restriction`을 적용하여 `chatbot` 모드일 때 `execute_command` 등의 도구가 프롬프트에서 제외되는지 확인
+- [x] **'작업 관리 루프' 콘텐츠 통합**:
+    - [x] `context`에 `auto_todo`, `task_progress` 관련 플래그가 있을 경우, Phase 1에서 생성한 `CARET_TODO_MANAGEMENT.json` 등의 내용을 프롬프트에 추가하는 로직 구현
 
 ### 3.2. `ClineLatestAdapter` 기능 완성
-- [ ] **`PromptRegistry` 연동**:
-    - [ ] `cline-latest/src/core/prompts/system-prompt/registry/PromptRegistry.ts`를 import
-    - [ ] `getPrompt` 메서드 내에서 `PromptRegistry.getInstance().get(context)`를 호출하여 `cline-latest`의 프롬프트를 가져오는 로직 구현
-- [ ] **타입 호환성 처리**:
-    - [ ] Caret의 `context` 객체를 `PromptRegistry`가 요구하는 `SystemPromptContext` 타입으로 안전하게 변환하는 로직 추가
+- [x] **`PromptRegistry` 연동**:
+    - [x] `cline-latest/src/core/prompts/system-prompt/registry/PromptRegistry.ts`를 import (동적 import 사용)
+    - [x] `getPrompt` 메서드 내에서 `PromptRegistry.getInstance().get(context)`를 호출하여 `cline-latest`의 프롬프트를 가져오는 로직 구현
+- [x] **타입 호환성 처리**:
+    - [x] Caret의 `context` 객체를 `PromptRegistry`가 요구하는 `SystemPromptContext` 타입으로 안전하게 변환하는 로직 추가
 
 ### 3.3. TDD RED: 실제 통합 테스트로 전환
-- [ ] **Mock 제거 및 실제 구현 테스트**:
-    - [ ] `T06PromptSystemIntegration.test.ts`에서 `vi.mock`을 제거
-    - [ ] `CaretJsonAdapter`가 생성한 프롬프트에 `CHATBOT MODE`와 `CARET_TODO_MANAGEMENT.json`의 내용이 포함되어 있는지 검증하는 테스트로 수정
-    - [ ] `CaretJsonAdapter`가 생성한 `chatbot` 모드 프롬프트에 `execute_command`가 없는지 검증하는 테스트 강화
-    - [ ] `ClineLatestAdapter`가 생성한 프롬프트에 `PLAN MODE` 또는 `ACT MODE` 문자열이 포함되어 있는지 검증하는 테스트로 수정
+- [x] **Mock 제거 및 실제 구현 테스트**:
+    - [x] `T06PromptSystemIntegration.test.ts`에서 `vi.mock`을 제거
+    - [x] `CaretJsonAdapter`가 생성한 프롬프트에 `CHATBOT MODE`와 `CARET_TODO_MANAGEMENT.json`의 내용이 포함되어 있는지 검증하는 테스트로 수정
+    - [x] `CaretJsonAdapter`가 생성한 `chatbot` 모드 프롬프트에 `execute_command`가 없는지 검증하는 테스트 강화
+    - [x] `ClineLatestAdapter`가 생성한 프롬프트에 `PLAN MODE` 또는 `ACT MODE` 문자열이 포함되어 있는지 검증하는 테스트로 수정
 
 ### 3.4. GREEN: 통합 테스트 통과
-- [ ] **`JsonTemplateLoader.ts` 구현**
-- [ ] **`CaretJsonAdapter.ts` 및 `ClineLatestAdapter.ts`의 `getPrompt` 메서드 완성**
-- [ ] **테스트 실행 및 통과 확인**: `npm run test:unit -- --run caret-src/__tests__/tdd/T06PromptSystemIntegration.test.ts` 실행하여 모든 테스트가 통과하는지 확인
+- [x] **`JsonTemplateLoader.ts` 구현**
+- [x] **`CaretJsonAdapter.ts` 및 `ClineLatestAdapter.ts`의 `getPrompt` 메서드 완성**
+- [ ] **테스트 실행 및 통과 확인**: `npm run test:unit -- --run caret-src/__tests__/tdd/T06PromptSystemIntegration.test.ts` 실행하여 모든 테스트가 통과하는지 확인 ⚠️ **미완료**
 
 ### 3.5. 의미론적 검증
-- [ ] **검증 문서 작성**: `t06-phase3-verification.md` 문서 생성
-- [ ] **프롬프트 출력 비교**:
-    - [ ] `cline-latest`의 `auto_todo`가 활성화된 프롬프트와, `CaretJsonAdapter`가 `CARET_TODO_MANAGEMENT.json`을 포함하여 생성한 프롬프트를 나란히 비교하고, 의미와 역할이 동등함을 문서에 기록
-    - [ ] 다른 '작업 관리 루프' 기능에 대해서도 동일하게 비교 및 기록
+- [x] **검증 문서 작성**: `t06-phase3-verification.md` 문서 생성
+- [x] **프롬프트 출력 비교**:
+    - [x] `cline-latest`의 `auto_todo`가 활성화된 프롬프트와, `CaretJsonAdapter`가 `CARET_TODO_MANAGEMENT.json`을 포함하여 생성한 프롬프트를 나란히 비교하고, 의미와 역할이 동등함을 문서에 기록
+    - [x] 다른 '작업 관리 루프' 기능에 대해서도 동일하게 비교 및 기록
 - [ ] **AI 시맨틱 분석 (선택사항)**:
-    - [ ] `caret-scripts/ai-semantic-analyzer.js`를 사용하여 두 프롬프트 간의 의미론적 동등성 점수를 측정하고 85% 이상인지 확인
+    - [ ] `caret-scripts/ai-semantic-analyzer.js`를 사용하여 두 프롬프트 간의 의미론적 동등성 점수를 측정하고 85% 이상인지 확인 ⚠️ **선택사항**
 
 ### 3.6. Phase 검증 및 Git 체크포인트
-- [ ] **Phase 검증 스크립트 확장**: `caret-scripts/phase-validator.js` 수정
-    - [ ] `validatePhase3()` 메서드 추가
-    - [ ] `JsonTemplateLoader.ts` 파일 존재 여부 검증
-    - [ ] `T06PromptSystemIntegration.test.ts`에서 `vi.mock`이 사용되지 않는지 확인 (주석 처리 또는 삭제)
+- [x] **Phase 검증 스크립트 확장**: `caret-scripts/phase-validator.js` 수정
+    - [x] `validatePhase3()` 메서드 추가
+    - [x] `JsonTemplateLoader.ts` 파일 존재 여부 검증
+    - [x] `T06PromptSystemIntegration.test.ts`에서 `vi.mock`이 사용되지 않는지 확인 (주석 처리 또는 삭제)
 
 ### 3.7. 🚨 필수: 사용자 검증 및 커밋 절차
 **⚠️ 구현 완료 후 반드시 다음 순서로 진행:**

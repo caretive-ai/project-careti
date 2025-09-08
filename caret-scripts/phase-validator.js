@@ -70,3 +70,5 @@ class PhaseValidator {
 // validator.validatePhase1();
 // validator.validatePhase2();
 // validator.validatePhase3();
+
+module.exports = PhaseValidator

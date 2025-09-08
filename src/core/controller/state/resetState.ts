@@ -1,3 +1,4 @@
+import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
 import { Empty } from "@shared/proto/cline/common"
 import { ResetStateRequest } from "@shared/proto/cline/state"
 import { resetGlobalState, resetWorkspaceState } from "@/core/storage/utils/state-helpers"
@@ -32,6 +33,9 @@ export async function resetState(controller: Controller, request: ResetStateRequ
 			controller.task.abortTask()
 			controller.task = undefined
 		}
+
+		// CARET MODIFICATION: Re-initialize CaretGlobalManager with default values after state reset
+		CaretGlobalManager.initialize("caret")
 
 		HostProvider.window.showMessage({
 			type: ShowMessageType.INFORMATION,

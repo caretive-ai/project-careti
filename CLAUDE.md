@@ -175,11 +175,37 @@ webview-ui/          # React frontend (Cline original, backup before changes)
 
 ### Caret-Specific Components
 - **Brand Management**: Dynamic branding system (Caret ↔ CodeCenter switching)
-- **Backend Message Processing**: OS notification and webview message branding
+- **Prompt System**: Dual prompt system switching (Caret AGENT MODE ↔ Cline ACT MODE)
+- **Frontend-Backend Communication**: **ALL communication MUST use gRPC** - NO custom message types
 - **Storage Patterns**: globalState vs workspaceState consistency
 - **Rule System**: JSON-based rules (`.caretrules/caret-rules.json`) with Korean docs
 
 ## Development Patterns
+
+### Frontend-Backend Communication
+**CRITICAL**: ALL frontend-backend communication MUST use gRPC protocol to maintain Cline code integrity:
+
+**✅ Correct - gRPC Method**:
+```typescript
+// Frontend
+import { CaretSystemServiceClient } from "@/services/grpc-client"
+const response = await CaretSystemServiceClient.SetPromptSystemMode({ mode: "caret" })
+
+// Backend - Add to proto/caret/*.proto, then implement handler
+export async function SetPromptSystemMode(controller: Controller, request: proto.caret.SetPromptSystemModeRequest)
+```
+
+**❌ Wrong - Custom Message Types**:
+```typescript
+// DON'T DO THIS - requires modifying Cline's WebviewMessage type
+vscode.postMessage({ type: 'custom/message', payload: data })
+```
+
+**Implementation Steps**:
+1. Define service in `proto/caret/*.proto`
+2. Run `npm run protos` to generate client/server code  
+3. Implement handler in `src/core/controller/[service]/`
+4. Use generated `*ServiceClient` in frontend
 
 ### Path Aliases
 The project uses TypeScript path aliases defined in `tsconfig.json`:

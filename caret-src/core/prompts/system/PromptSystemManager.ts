@@ -1,3 +1,4 @@
+import { Logger } from "@/services/logging/Logger";
 import { IPromptSystem } from "./IPromptSystem";
 import { CaretJsonAdapter } from "./adapters/CaretJsonAdapter";
 import { ClineLatestAdapter } from "./adapters/ClineLatestAdapter";
@@ -16,10 +17,13 @@ export class PromptSystemManager {
     }
 
     public getPrompt(context: SystemManagerContext): Promise<string> {
-        const adapter = this.adapters.get(context.modeSystem);
+        const adapterKey = context.modeSystem;
+        const adapter = this.adapters.get(adapterKey);
         if (!adapter) {
-            throw new Error(`Unsupported mode system: ${context.modeSystem}`);
+            Logger.error(`[PromptSystemManager] Unsupported mode system: ${adapterKey}`);
+            throw new Error(`Unsupported mode system: ${adapterKey}`);
         }
+        Logger.debug(`[PromptSystemManager] Using adapter: ${adapterKey}`);
         // We cast the context to the specific type expected by the adapters.
         // This is safe because our SystemManagerContext is a superset.
         return adapter.getPrompt(context as CaretSystemPromptContext);

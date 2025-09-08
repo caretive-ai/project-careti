@@ -90,10 +90,13 @@ async function postProcessGeneratedFiles() {
 	console.log(chalk.bold.blue("Post-processing generated files..."))
 
 	// Find all generated TypeScript files in specific directories
-	const generatedFiles = await globby(["src/generated/**/*.ts", "src/shared/proto/**/*.ts"], {
-		realpath: true,
-		ignore: ["node_modules/**", "dist/**"],
-	})
+	const generatedFiles = await globby(
+		["src/generated/**/*.ts", "src/shared/proto/**/*.ts", "webview-ui/src/services/grpc-client.ts"],
+		{
+			realpath: true,
+			ignore: ["node_modules/**", "dist/**"],
+		},
+	)
 
 	let filesFixed = 0
 
@@ -124,9 +127,11 @@ async function postProcessGeneratedFiles() {
 
 				// Fix service registration
 				content = content.replace(/cline\.CaretAccountServiceService/g, "caret.CaretAccountServiceService")
+				content = content.replace(/cline\.CaretSystemServiceService/g, "caret.CaretSystemServiceService")
 
 				// Fix string references in service definitions
 				content = content.replace(/"cline\.CaretAccountService"/g, '"caret.CaretAccountService"')
+				content = content.replace(/"cline\.CaretSystemService"/g, '"caret.CaretSystemService"')
 
 				// Fix all Caret type references
 				content = content.replace(/cline\.CaretAuthState/g, "caret.CaretAuthState")
@@ -142,6 +147,12 @@ async function postProcessGeneratedFiles() {
 					/cline\.CaretUserOrganizationUpdateRequest/g,
 					"caret.CaretUserOrganizationUpdateRequest",
 				)
+
+				// Fix CaretSystem service types
+				content = content.replace(/cline\.SetPromptSystemModeRequest/g, "caret.SetPromptSystemModeRequest")
+				content = content.replace(/cline\.SetPromptSystemModeResponse/g, "caret.SetPromptSystemModeResponse")
+				content = content.replace(/cline\.GetPromptSystemModeRequest/g, "caret.GetPromptSystemModeRequest")
+				content = content.replace(/cline\.GetPromptSystemModeResponse/g, "caret.GetPromptSystemModeResponse")
 
 				const changesCount =
 					originalContent !== content ? (originalContent.match(/cline\.(Caret|GetCaret)/g) || []).length : 0

@@ -335,7 +335,8 @@
       "Bash(git log:*)",
       "Bash(del:*)",
       "Bash(buf lint:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(npx vite:*)"
     ],
     "deny": [],
     "ask": []

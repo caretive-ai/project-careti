@@ -1,8 +1,14 @@
 // CARET MODIFICATION: 전역 브랜드 모드 토글 컴포넌트 - caret-main에서 이식
+
+import { type CaretModeSystem } from "@caret/shared/ModeSystem"
 import React from "react"
 import styled from "styled-components"
 import { useExtensionState } from "@/context/ExtensionStateContext"
+import { CaretSystemServiceClient } from "@/services/grpc-client"
 import { t } from "../utils/i18n"
+import { CaretWebviewLogger } from "../utils/webview-logger"
+
+const logger = new CaretWebviewLogger("ModeSystemToggle")
 
 // CARET MODIFICATION: caret-main에서 가져온 토글 스위치 스타일 (원본: SettingsView.tsx)
 const ModeSwitchContainer = styled.div<{ disabled: boolean }>`
@@ -63,11 +69,26 @@ interface ModeSystemToggleProps {
 const ModeSystemToggle: React.FC<ModeSystemToggleProps> = ({ className }) => {
 	const { modeSystem, setModeSystem } = useExtensionState()
 
-	const handleToggle = () => {
-		// CARET MODIFICATION: 버튼 토글 시 백엔드/프론트 로깅 (이미 setModeSystem에서 처리됨)
+	const handleToggle = async () => {
 		const newMode = modeSystem === "caret" ? "cline" : "caret"
-		console.log(`[UI-TOGGLE] User clicked toggle: ${modeSystem} -> ${newMode}`)
-		setModeSystem(newMode)
+		logger.info(`User clicked toggle: ${modeSystem} -> ${newMode}`)
+
+		try {
+			// Use gRPC to set the new mode
+			const response = await CaretSystemServiceClient.SetPromptSystemMode({
+				mode: newMode,
+			})
+
+			if (response.success) {
+				logger.info(`Successfully changed to ${response.currentMode} mode`)
+				// Update the UI state immediately
+				setModeSystem(response.currentMode as CaretModeSystem)
+			} else {
+				logger.error(`Failed to change mode: ${response.errorMessage}`)
+			}
+		} catch (error) {
+			logger.error(`Error changing mode: ${error}`)
+		}
 	}
 
 	return (

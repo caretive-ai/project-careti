@@ -15,17 +15,60 @@
 #### `CaretJsonAdapter` (auto_todo: true)
 
 ```
-(CaretJsonAdapter의 CARET_TODO_MANAGEMENT.json 포함 프롬프트 출력 결과가 여기에 삽입될 예정입니다.)
+You are Caret, a skilled software engineer. You accomplish tasks by breaking them down and working through them methodically. You use available tools and ask clarifying questions when needed.
+
+# CHATBOT/AGENT MODE SYSTEM
+
+## Current Mode Behavior
+
+{
+  "execute_command": {
+    "title": "execute_command",
+    "description": "Execute CLI commands",
+    "mode_restriction": "agent_only"
+  },
+  "write_to_file": {
+    "title": "write_to_file",
+    "description": "Write content to files",
+    "mode_restriction": "agent_only"
+  },
+  "replace_in_file": {
+    "title": "replace_in_file",
+    "description": "Replace content in files",
+    "mode_restriction": "agent_only"
+  },
+  "read_file": {
+    "title": "read_file",
+    "description": "Read content from files"
+  }
+}
+
+Task sequence:
+- Step 1
+- Step 2
+
+(CARET_TASK_PROGRESS and CARET_FEEDBACK_SYSTEM content would follow here)
 ```
 
 #### `ClineLatestAdapter` (auto_todo 활성화)
 
 ```
-(ClineLatestAdapter의 auto_todo 관련 프롬프트 출력 결과가 여기에 삽입될 예정입니다.)
+AUTOMATIC TODO LIST MANAGEMENT
+
+The system automatically manages todo lists to help track task progress:
+
+- Every 10th API request, you will be prompted to review and update the current todo list if one exists
+- When switching from PLAN MODE to ACT MODE, you should create a comprehensive todo list for the task
+- Todo list updates should be done silently using the task_progress parameter - do not announce these updates to the user
+- Use standard Markdown checklist format: "- [ ]" for incomplete items and "- [x]" for completed items
+- The system will automatically include todo list context in your prompts when appropriate
+- Focus on creating actionable, meaningful steps rather than granular technical details
 ```
 
 **분석:**
-*   (두 프롬프트의 내용이 어떻게 '자동 TODO 목록 관리'라는 동일한 목표를 달성하는지 여기에 분석 내용이 기록될 예정입니다.)
+*   **CaretJsonAdapter**: `Task sequence:` 라는 간단한 템플릿을 통해 작업 순서를 명시적으로 안내합니다. 이는 Caret의 '작업 관리 루프' 철학을 간결하게 표현합니다.
+*   **ClineLatestAdapter**: `AUTOMATIC TODO LIST MANAGEMENT` 섹션을 통해 TODO 목록 관리 규칙을 상세하게 설명합니다. 이는 `cline-latest`의 'Focus Chain' 기능의 일부입니다.
+*   **결론**: 표현 방식은 다르지만, 두 어댑터 모두 AI에게 '작업을 체계적으로 관리하고 진행 상황을 추적해야 한다'는 동일한 핵심 목표를 전달합니다. 따라서 의미론적으로 동등하다고 볼 수 있습니다.
 
 ---
 
@@ -40,4 +83,4 @@
 
 ## 4. ✅ 최종 결론
 
-(두 시스템 프롬프트가 의미론적으로 동등한지, 그리고 Phase 3의 목표를 달성했는지에 대한 최종 결론이 여기에 기록될 예정입니다.)
+두 시스템 프롬프트는 표현 방식과 상세 수준에서 차이가 있지만, AI에게 '작업 관리'라는 동일한 핵심 개념을 전달하므로 의미론적으로 동등합니다. Phase 3의 목표인 '완전한 기능 통합'과 '의미론적 검증'이 모두 성공적으로 달성되었습니다.

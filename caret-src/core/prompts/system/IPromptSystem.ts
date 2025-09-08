@@ -1,3 +1,5 @@
+import { CaretSystemPromptContext } from "./types";
+
 export interface IPromptSystem {
-    getPrompt(context: any): Promise<string>;
+    getPrompt(context: CaretSystemPromptContext): Promise<string>;
 }

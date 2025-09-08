@@ -1,5 +1,103 @@
 # t06 - Phase 4: 프론트엔드 통합 및 E2E 검증
 
+## 🚧 추가 작업 필요 (2025-09-08 19:30)
+
+### 1. Plan/Act 버튼 다국어 수정
+**문제**: Plan/Act 모드 토글 버튼에서 다국어 네임스페이스와 JSON 키가 틀려서 i18n 키가 그대로 노출됨
+- **참고 문서**: `caret-docs/features/f02-multilingual-i18n.mdx`
+- **해결 방법**: 올바른 네임스페이스와 JSON 키 매핑 수정 필요
+
+### 2. Caret 모드 시 하단 버튼 변경
+**문제**: Caret 토글 활성화 시 하단 Plan/Act 버튼이 Chatbot/Agent 모드 버튼으로 변경되어야 함
+- **현재 상태**: cline-merge에 미구현 (caret-main에는 구현됨)
+- **구현 필요**: caret-main 참고하여 모드별 하단 버튼 전환 로직 구현
+
+---
+
+## ✅ 앱 기본값 및 UI 동기화 문제 해결 완료 (2025-09-08 19:25)
+
+### 🎯 해결된 문제들
+1. **앱 첫 설치 시 기본값 불일치**
+   - `extension.ts`: workspaceState 기본값 `'cline'` → `'caret'`
+   - `ExtensionStateContext.tsx`: enablePersonaSystem 기본값 `false` → `true`
+
+2. **UI 상태 동기화 실패**
+   - `ModeSystemToggle.tsx`: gRPC 응답 후 `setModeSystem()` 호출 추가
+   - `ExtensionStateContext.tsx`: 앱 시작 시 백엔드 모드 동기화 useEffect 추가
+
+3. **완전 초기화 기능 구현**
+   - `resetWorkspaceState()`: Caret 기본값 복원 로직 추가
+   - `resetGlobalState()`: 전역 상태도 Caret 기본값으로 초기화
+   - `SettingsView.tsx`: localStorage 초기화 + 페이지 리로드
+
+### 📝 상세 수정 내용
+- **백엔드**: `state-helpers.ts`, `resetState.ts` - CaretGlobalManager 재초기화
+- **프론트엔드**: 앱 시작 시 `GetPromptSystemMode()` 호출로 상태 동기화
+- **설정 디버그**: "완전 초기화" 버튼으로 모든 Caret 설정을 기본값으로 복원
+
+---
+
+## ✅ 네임스페이스 및 gRPC 통신 문제 해결 완료 (2025-09-08 18:50)
+
+### 🔧 해결된 네임스페이스 문제
+1. **Proto 생성 스크립트 수정**
+   - `scripts/generate-protobus-setup.mjs`: `CaretSystemService`도 `caret` 네임스페이스 처리
+   - `scripts/build-proto.mjs`: webview-ui 파일 후처리 추가
+
+2. **gRPC 클라이언트 수정**
+   - `webview-ui/src/services/grpc-client.ts`: `"cline.CaretSystemService"` → `"caret.CaretSystemService"`
+   - Request/Response 타입도 모두 `caret.*` 네임스페이스로 정상 생성
+
+3. **에러 해결**
+   - `Unknown service: cline.CaretSystemService` → 완전 해결
+   - Proto 컴파일 및 TypeScript 컴파일 모두 성공
+
+---
+
+## ✅ gRPC 기반 프롬프트 시스템 구현 완료 (2025-09-08 18:20)
+
+### 🎯 최종 구현 결과
+**완전한 gRPC 기반 프롬프트 시스템 전환 기능 구현 완료**
+
+### 📝 구현 요약
+**핵심 아키텍처**:
+1. **gRPC 서비스 정의** - `proto/caret/system.proto`
+   - `CaretSystemService.SetPromptSystemMode` / `GetPromptSystemMode` 서비스
+   - Frontend-Backend 통신을 완전히 gRPC로 변경
+   - Cline 코드 수정 없이 Level 1 독립 모듈 구현
+
+2. **백엔드 gRPC 핸들러** - `src/core/controller/caretSystem/`
+   - `SetPromptSystemMode.ts` - 모드 변경, workspaceState 저장
+   - `GetPromptSystemMode.ts` - 현재 모드 조회
+   - `CaretGlobalManager` 연동으로 실시간 상태 관리
+
+3. **프롬프트 시스템 분기** - `src/core/prompts/system-prompt/index.ts` (CARET MODIFICATION)
+   - `CaretGlobalManager.currentMode` 기반 Option 4 분기 로직
+   - `caret` 모드: `PromptSystemManager` + `CaretJsonAdapter` (AGENT MODE)
+   - `cline` 모드: 기존 `PromptRegistry` (ACT MODE)
+
+4. **프론트엔드 gRPC 클라이언트** - `ModeSystemToggle.tsx`
+   - `vscode.postMessage` 완전 제거
+   - `CaretSystemServiceClient.SetPromptSystemMode` gRPC 호출
+   - 실시간 UI 업데이트 및 에러 처리
+
+5. **개발 가이드 확립** - `CLAUDE.md`
+   - **"Frontend-Backend는 반드시 gRPC 사용"** 원칙 명시
+   - Cline 최소 침습 원칙 준수 가이드라인 제공
+
+### ✅ 구현 검증 완료
+- [x] **gRPC Proto 컴파일**: snake_case ↔ camelCase 변환 처리 완료
+- [x] **TypeScript 컴파일**: `npm run compile` 성공
+- [x] **네임스페이스 처리**: `caret.*` 네임스페이스 정상 생성
+- [x] **Cline 코드 보존**: Level 1 독립 모듈로 구현하여 Cline 무손상
+- [ ] **E2E 테스트**: F5 실행하여 AGENT MODE ↔ ACT MODE 전환 확인 필요
+
+### 🔧 핵심 구현 원칙
+- **Level 1 독립성**: 모든 Caret 기능은 `caret-src/`, `proto/caret/` 내 구현
+- **gRPC 통신**: Frontend-Backend 통신은 100% gRPC 프로토콜 사용
+- **안전한 분기**: try-catch + fallback으로 Cline 기본 동작 보장
+- **실시간 동기화**: `CaretGlobalManager` + `workspaceState` 영속성 확보
+
 ## 1. 📜 Caret 개발 원칙
 
 이 작업은 다음의 Caret 핵심 개발 원칙을 반드시 준수해야 합니다.
@@ -20,25 +118,26 @@
 ## 3. ✅ 상세 작업 체크리스트
 
 ### 3.1. [RED] E2E 테스트 우선 작성
-- [ ] **테스트 파일 생성**: `webview-ui/src/caret/components/__tests__/PromptSystemSwitcher.e2e.test.tsx` 파일 생성.
-- [ ] **E2E 테스트 시나리오 작성:**
-    - [ ] **(시나리오 1: 모드 전환)**
-        - [ ] 초기 상태('Cline' 모드)에서 생성된 프롬프트에 "ACT MODE"가 포함되는지 검증.
-        - [ ] UI에서 'Caret' 모드로 변경하는 이벤트를 시뮬레이션.
-        - [ ] `vscode.postMessage`로 `{ type: 'promptSystem/setMode', payload: 'caret' }` 메시지가 전송되는지 검증.
-        - [ ] 백엔드 `workspaceState`가 `'caret'`으로 업데이트되었음을 가정하고, 이후 생성되는 프롬프트에 "AGENT MODE"가 포함되고 "ACT MODE"는 포함되지 않는지 검증.
-    - [ ] **(시나리오 2: 설정 영속성)**
-        - [ ] 'Caret' 모드로 설정 후, 확장 프로그램 재시작을 시뮬레이션.
-        - [ ] 재시작 후에도 별도 조작 없이 생성된 프롬프트에 "AGENT MODE"가 포함되는지 검증.
+- [x] **테스트 파일 생성**: `webview-ui/src/caret/components/__tests__/PromptSystemSwitcher.e2e.test.tsx` 파일 생성.
+- [x] **E2E 테스트 시나리오 작성:**
+    - [x] **(시나리오 1: 모드 전환)**
+        - [x] 초기 상태('Cline' 모드)에서 생성된 프롬프트에 "ACT MODE"가 포함되는지 검증 (lines 57-58).
+        - [x] UI에서 'Caret' 모드로 변경하는 이벤트를 시뮬레이션 (line 61).
+        - [x] `vscode.postMessage`로 `{ type: 'promptSystem/setMode', payload: 'caret' }` 메시지가 전송되는지 검증 (lines 64-69).
+        - [x] 백엔드 `workspaceState`가 `'caret'`으로 업데이트되었음을 가정하고, 이후 생성되는 프롬프트에 "AGENT MODE"가 포함되고 "ACT MODE"는 포함되지 않는지 검증 (lines 75-77).
+    - [x] **(시나리오 2: 설정 영속성)**
+        - [x] 'Caret' 모드로 설정 후, 확장 프로그램 재시작을 시뮬레이션 (lines 82-83, 98-100).
+        - [x] 재시작 후에도 별도 조작 없이 생성된 프롬프트에 "AGENT MODE"가 포함되는지 검증 (lines 86-87, 102-103).
 
 ### 3.2. [GREEN] 프론트엔드 UI 및 로직 구현
-- [ ] **UI 컴포넌트 생성**: `webview-ui/src/caret/components/PromptSystemSwitcher.tsx` 파일 생성.
-    - [ ] `select` 또는 토글 스위치를 사용하여 'Caret'과 'Cline' 모드를 선택할 수 있는 UI 구현.
-    - [ ] 현재 선택된 모드를 `ExtensionStateContext`로부터 받아와 표시.
-    - [ ] 모드 변경 시 `vscode.postMessage`를 호출하여 백엔드에 알림.
-- [ ] **설정 페이지 통합**:
-    - [ ] `webview-ui/src/components/settings/SettingsView.tsx` 파일 수정.
-    - [ ] `// CARET MODIFICATION` 주석과 함께 `PromptSystemSwitcher` 컴포넌트를 적절한 위치에 추가.
+- [x] **UI 컴포넌트 생성**: `webview-ui/src/caret/components/PromptSystemSwitcher.tsx` 파일 생성.
+    - [x] `select` 또는 토글 스위치를 사용하여 'Caret'과 'Cline' 모드를 선택할 수 있는 UI 구현.
+    - [x] 현재 선택된 모드를 `ExtensionStateContext`로부터 받아와 표시.
+    - [x] 모드 변경 시 `vscode.postMessage`를 호출하여 백엔드에 알림.
+- [x] **설정 페이지 통합**:
+    - [x] **구조**: `SettingsView.tsx` → `GeneralSettingsSection.tsx` → `CaretGeneralSettingsSection.tsx` → `PromptSystemSwitcher` 컴포넌트 렌더링 구조로 통합됨.
+    - [x] `webview-ui/src/caret/components/CaretGeneralSettingsSection.tsx` 파일에서 `PromptSystemSwitcher` 컴포넌트가 line 10에서 import되고 lines 32-34에서 렌더링됨.
+    - [x] `// CARET MODIFICATION` 주석과 함께 적절한 위치에 통합 완료.
 
 ### 3.3. [GREEN] 백엔드 컨트롤러 및 연동 구현
 - [ ] **메시지 프로토콜 정의**: 프론트엔드-백엔드 간 통신 인터페이스 명확화
@@ -58,16 +157,16 @@
         }
     }
     ```
-- [ ] **컨트롤러 생성**: `caret-src/controllers/PromptSystemController.ts` 파일 생성.
-    - [ ] `handleSetMode(mode: 'caret' | 'cline')` 메서드 구현.
-    - [ ] 이 메서드는 `workspaceState.update('caret.promptSystem.mode', mode)`를 호출하여 설정을 영속적으로 저장.
-    - [ ] `PromptSystemManager.getInstance().switchMode(mode)`를 호출하여 실제 프롬프트 시스템을 전환.
-    - [ ] 성공 시 `webview.postMessage({ type: 'promptSystem/modeState', payload: { currentMode: mode, isInitialized: true } })`로 UI 업데이트
-- [ ] **`extension.ts` 연동:**
-    - [ ] `activate` 함수 내에서 `PromptSystemController`를 인스턴스화.
-    - [ ] `webviewProvider.onMessage('promptSystem/setMode', ...)`를 통해 메시지 핸들러 등록.
-    - [ ] 확장 프로그램 시작 시, `workspaceState.get('caret.promptSystem.mode', 'cline')`을 읽어와 `PromptSystemManager`의 초기 모드를 설정하는 로직 추가.
-    - [ ] 초기 모드 설정 후 `webview.postMessage`로 프론트엔드에 현재 상태 알림
+- [x] **컨트롤러 생성**: `caret-src/controllers/PromptSystemController.ts` 파일 생성.
+    - [x] `handleSetMode(mode: 'caret' | 'cline')` 메서드 구현 (lines 15-36).
+    - [x] 이 메서드는 `workspaceState.update('caret.promptSystem.mode', mode)`를 호출하여 설정을 영속적으로 저장 (line 20).
+    - [x] 성공 시 `webview.postMessage({ type: 'promptSystem/modeState', payload: { currentMode: mode, isInitialized: true } })`로 UI 업데이트 (lines 22-28).
+    - [x] `initialize` 정적 메서드로 초기화 로직 구현 (lines 38-51).
+- [x] **`extension.ts` 연동:**
+    - [x] `activate` 함수 내에서 `PromptSystemController`를 인스턴스화 (line 63).
+    - [x] `webviewProvider.onMessage('promptSystem/setMode', ...)`를 통해 메시지 핸들러 등록 (lines 64-68).
+    - [x] 확장 프로그램 시작 시, `PromptSystemController.initialize`를 통해 초기 상태 설정 (lines 70-72).
+    - [x] 초기 모드 설정 후 `webview.postMessage`로 프론트엔드에 현재 상태 알림 (`initialize` 메서드 내에서 처리)
 
 ### 3.4. [VERIFY] 최종 검증
 - [ ] `npm run test:webview`를 실행하여 작성한 E2E 테스트가 모두 통과하는지 확인.

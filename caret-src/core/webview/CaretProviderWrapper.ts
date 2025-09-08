@@ -22,6 +22,10 @@ import * as path from "path"
 export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 	private clineProvider: VscodeWebviewProvider
 	private disposables: vscode.Disposable[] = []
+	private _onDidReceiveMessage = new vscode.EventEmitter<any>()
+	public readonly onMessage = this._onDidReceiveMessage.event
+	private _onDidResolveWebviewView = new vscode.EventEmitter<vscode.WebviewView>()
+	public readonly onWebviewViewResolved = this._onDidResolveWebviewView.event
 
 	constructor(
 		private context: vscode.ExtensionContext,
@@ -41,6 +45,9 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 		Logger.info("[CaretProviderWrapper] Resolving webview view with Caret enhancements")
 
 		try {
+			// Emit our own resolve event
+			this._onDidResolveWebviewView.fire(webviewView)
+
 			// 1. First, let Cline handle the core webview setup
 			console.log("[CaretProviderWrapper] Calling Cline provider resolveWebviewView")
 			await this.clineProvider.resolveWebviewView(webviewView)
@@ -179,6 +186,10 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 	 */
 	private setupCaretMessageHandling(webviewView: vscode.WebviewView): void {
 		const messageDisposable = webviewView.webview.onDidReceiveMessage(async (message) => {
+			Logger.debug(`[CaretProviderWrapper] Received message: ${JSON.stringify(message)}`)
+			
+			// Fire our own event
+			this._onDidReceiveMessage.fire(message)
 			try {
 				await this.handleCaretMessage(message, webviewView)
 			} catch (error) {
@@ -193,15 +204,18 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 	 * Handle Caret-specific messages
 	 */
 	private async handleCaretMessage(message: any, webviewView: vscode.WebviewView): Promise<void> {
+		Logger.debug(`[CaretProviderWrapper] Processing message type: ${message.type}`)
 		switch (message.type) {
 			case "caret_load_persona_image":
 				await this.handleLoadPersonaImage(message, webviewView)
 				break
 			default:
+				Logger.debug(`[CaretProviderWrapper] Passing message to Cline: ${message.type}`)
 				// Let Cline handle non-Caret messages
 				break
 		}
 	}
+
 
 	/**
 	 * Handle persona image loading requests

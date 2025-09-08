@@ -27,7 +27,8 @@
 | **Phase 2** | 어댑터 뼈대 구축 및 핵심 철학 이식 | [t06-phase2-adapter.md](./t06-phase2-adapter.md) | ⏳ 대기 |
 | **Phase 3** | 전체 기능 통합 및 의미론적 검증 | [t06-phase3-integration.md](./t06-phase3-integration.md) | ⏳ 대기 |
 | **Phase 4** | 프론트엔드 통합 및 E2E 검증 | [t06-phase4-frontend.md](./t06-phase4-frontend.md) | ⏳ 대기 |
-| **Phase 5** | 최종 안정화, 최적화 및 문서화 | [t06-phase5-stabilization.md](./t06-phase5-stabilization.md) | ⏳ 대기 |
+| **Phase 5** | cline-latest 교차검증 및 시스템 프롬프트 개선 | [t06-phase5-cross-validation.md](./t06-phase5-cross-validation.md) | ⏳ 대기 |
+| **Phase 6** | 최종 안정화, 최적화 및 문서화 | [t06-phase6-stabilization.md](./t06-phase6-stabilization.md) | ⏳ 대기 |
 
 ---
 

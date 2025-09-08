@@ -49,7 +49,7 @@ async function generateWebviewProtobusClients(protobusServices) {
 			}
 		}
 		// CARET MODIFICATION: Use correct namespace for caret services
-		const serviceNamespace = serviceName === "PersonaService" ? "caret" : "cline"
+		const serviceNamespace = serviceName === "PersonaService" || serviceName === "CaretSystemService" ? "caret" : "cline"
 		clients.push(`export class ${serviceName}Client extends ProtoBusClient {
 	static override serviceName: string = "${serviceNamespace}.${serviceName}"
 ${rpcs.join("\n")}
@@ -126,7 +126,7 @@ async function generateVscodeProtobusServers(protobusServices) {
 		}
 		servers.push(`} \n`)
 		// CARET MODIFICATION: Use correct namespace for caret services
-		const serviceNamespace = serviceName === "PersonaService" ? "caret" : "cline"
+		const serviceNamespace = serviceName === "PersonaService" || serviceName === "CaretSystemService" ? "caret" : "cline"
 		serviceMap.push(`    "${serviceNamespace}.${serviceName}": ${serviceName}Handlers,`)
 		imports.push("")
 	}
@@ -163,8 +163,20 @@ async function generateStandaloneProtobusServiceSetup(protobusServices) {
 		handlerSetup.push(`    server.addService(${serviceNamespace}.${name}Service, {`)
 		for (const [rpcName, rpc] of Object.entries(def.service)) {
 			imports.push(`import { ${rpcName} } from "@core/controller/${dir}/${rpcName}"`)
-			const caretRequestTypes = ["PersonaProfile", "UpdatePersonaRequest", "PersonaImages", "UploadCustomImageRequest"]
-			const caretResponseTypes = ["PersonaProfile", "PersonaImages"]
+			const caretRequestTypes = [
+				"PersonaProfile",
+				"UpdatePersonaRequest",
+				"PersonaImages",
+				"UploadCustomImageRequest",
+				"SetPromptSystemModeRequest",
+				"GetPromptSystemModeRequest",
+			]
+			const caretResponseTypes = [
+				"PersonaProfile",
+				"PersonaImages",
+				"SetPromptSystemModeResponse",
+				"GetPromptSystemModeResponse",
+			]
 
 			const requestType = caretRequestTypes.includes(rpc.requestType.type.name)
 				? `caret.${rpc.requestType.type.name}`

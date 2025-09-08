@@ -462,6 +462,9 @@ export async function resetWorkspaceState(controller: Controller) {
 	const context = controller.context
 	await Promise.all(context.workspaceState.keys().map((key) => controller.context.workspaceState.update(key, undefined)))
 
+	// CARET MODIFICATION: Reset Caret-specific workspace settings to defaults
+	await context.workspaceState.update("caret.promptSystem.mode", "caret")
+
 	await controller.stateManager.reInitialize()
 }
 
@@ -470,6 +473,13 @@ export async function resetGlobalState(controller: Controller) {
 	const context = controller.context
 
 	await Promise.all(context.globalState.keys().map((key) => context.globalState.update(key, undefined)))
+
+	// CARET MODIFICATION: Reset Caret-specific global settings to defaults after clearing
+	await context.globalState.update("caretModeSystem", "caret")
+	await context.globalState.update("enablePersonaSystem", true)
+	// Also reset workspace promptSystem mode to ensure consistency
+	await context.workspaceState.update("caret.promptSystem.mode", "caret")
+
 	const secretKeys: SecretKey[] = [
 		"apiKey",
 		"openRouterApiKey",

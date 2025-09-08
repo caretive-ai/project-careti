@@ -18,10 +18,11 @@ import { cleanupTestMode, initializeTestMode } from "./services/test/TestMode"
 import { WebviewProviderType } from "./shared/webview/types"
 import "./utils/path" // necessary to have access to String.prototype.toPosix
 
-// CARET MODIFICATION: Import CaretProviderWrapper for image injection and PersonaInitializer
 import { CaretProviderWrapper } from "@caret/core/webview/CaretProviderWrapper"
+// CARET MODIFICATION: Import CaretProviderWrapper for image injection and PersonaInitializer
+import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
 import { PersonaInitializer } from "@caret/services/persona/persona-initializer"
-import type { ExtensionContext } from "vscode"
+import type { ExtensionContext, Webview } from "vscode"
 import { HostProvider } from "@/hosts/host-provider"
 import { vscodeHostBridgeClient } from "@/hosts/vscode/hostbridge/client/host-grpc-client"
 import { readTextFromClipboard, writeTextToClipboard } from "@/utils/env"
@@ -57,6 +58,10 @@ export async function activate(context: vscode.ExtensionContext) {
 	// CARET MODIFICATION: Wrap with CaretProviderWrapper for image injection
 	const clineWebview = (await initialize(context)) as VscodeWebviewProvider
 	const sidebarWebview = new CaretProviderWrapper(context, clineWebview)
+
+	// CARET MODIFICATION: Initialize CaretGlobalManager with 'caret' as default for new installations
+	const initialMode = context.workspaceState.get<"caret" | "cline">("caret.promptSystem.mode", "caret")
+	CaretGlobalManager.initialize(initialMode)
 
 	Logger.log("Caret extension activated")
 

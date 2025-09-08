@@ -338,7 +338,8 @@
       "Bash(git config:*)",
       "Bash(npx vite:*)",
       "Bash(git pull:*)",
-      "Bash(vitest run:*)"
+      "Bash(vitest run:*)",
+      "Read(//d/**)"
     ],
     "deny": [],
     "ask": []

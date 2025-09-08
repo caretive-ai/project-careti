@@ -2,6 +2,9 @@ import { IPromptSystem } from "../IPromptSystem";
 import { JsonTemplateLoader } from "../JsonTemplateLoader";
 import { CARET_MODES } from "../../../../shared/constants/PromptSystemConstants";
 import { CaretSystemPromptContext } from "../types";
+import { PromptBuilder } from "@/core/prompts/system-prompt/registry/PromptBuilder";
+import { getModelFamily } from "@/core/prompts/system-prompt";
+import { ModelFamily } from "@/shared/prompts";
 import * as path from "path";
 
 /**
@@ -25,7 +28,7 @@ export class CaretJsonAdapter implements IPromptSystem {
         const isChatbotMode = context.mode === CARET_MODES.CHATBOT;
         
         // CARET MODIFICATION: Add debug logging for mode verification
-        console.log(`[CaretJsonAdapter] Generating prompt for mode: ${context.mode} (isChatbotMode: ${isChatbotMode})`);
+        console.log(`[CaretJsonAdapter] 🎯 Mode: ${context.mode}, isChatbotMode: ${isChatbotMode}`);
 
         const sectionNames = [
             'BASE_PROMPT_INTRO',
@@ -33,7 +36,7 @@ export class CaretJsonAdapter implements IPromptSystem {
             'CARET_SYSTEM_INFO',
             'CARET_CAPABILITIES', 
             'CARET_USER_INSTRUCTIONS',
-            'CARET_TOOL_SYSTEM',  // Use new comprehensive tool system instead of TOOL_DEFINITIONS
+            // CARET_TOOL_SYSTEM removed - replaced with Cline original tool system (inserted after CARET_USER_INSTRUCTIONS)
             'CARET_FILE_EDITING',
             'CARET_BEHAVIOR_RULES',
             'CARET_TASK_OBJECTIVE',
@@ -44,31 +47,127 @@ export class CaretJsonAdapter implements IPromptSystem {
             context.mcpHub?.getServers()?.length ? 'CARET_MCP_INTEGRATION' : null,
         ].filter(Boolean) as string[];
 
+        console.log(`[CaretJsonAdapter] 📋 Selected sections:`, sectionNames);
+
         const promptParts: string[] = [];
 
+        // Process JSON sections first
         for (const name of sectionNames) {
             const template = this.loader.getTemplate<any>(name);
             if (!template) {
-                console.warn(`[CaretJsonAdapter] Template not found: ${name}`);
+                console.warn(`[CaretJsonAdapter] ❌ Template not found: ${name}`);
                 continue;
             }
-
-            if (name === 'CARET_TOOL_SYSTEM') {
-                // New comprehensive tool system format - already includes mode restrictions in content
-                promptParts.push(this.getDynamicSection(template, isChatbotMode));
-            } else if (name === 'TOOL_DEFINITIONS') {
-                // Legacy format support (if still present)  
-                promptParts.push(this.getToolsSection(template, isChatbotMode));
+            
+            const sectionContent = this.getDynamicSection(template, isChatbotMode);
+            if (sectionContent.trim()) {
+                promptParts.push(sectionContent);
+                console.log(`[CaretJsonAdapter] ✅ ${name}: loaded (${sectionContent.length} chars)`);
             } else {
-                promptParts.push(this.getDynamicSection(template, isChatbotMode));
+                console.warn(`[CaretJsonAdapter] ⚠️ ${name}: empty content`);
+            }
+            
+            // Insert Cline tools section after CARET_USER_INSTRUCTIONS
+            if (name === 'CARET_USER_INSTRUCTIONS') {
+                const clineToolsSection = await this.getClineToolsSection(context, isChatbotMode);
+                if (clineToolsSection) {
+                    promptParts.push(clineToolsSection);
+                    console.log(`[CaretJsonAdapter] ✅ Cline tools section inserted after ${name}`);
+                } else {
+                    console.warn(`[CaretJsonAdapter] ❌ Failed to generate Cline tools section`);
+                }
+            }
+        }
+        
+        // If tools weren't added yet (no CARET_USER_INSTRUCTIONS), add them now
+        if (!promptParts.some(p => p.includes('# TOOL USAGE SYSTEM'))) {
+            const clineToolsSection = await this.getClineToolsSection(context, isChatbotMode);
+            if (clineToolsSection) {
+                promptParts.push(clineToolsSection);
+                console.log(`[CaretJsonAdapter] ✅ Cline tools section added at end`);
             }
         }
 
-        return promptParts.filter(Boolean).join('\n\n');
+        const finalPrompt = promptParts.filter(Boolean).join('\n\n');
+        console.log(`[CaretJsonAdapter] 🎉 Final prompt generated: ${finalPrompt.length} characters, ${promptParts.length} sections`);
+        return finalPrompt;
+    }
+
+    /**
+     * Gets Cline's original tool system with Caret mode restrictions applied.
+     * This replaces the inadequate CARET_TOOL_SYSTEM.json with full Cline tool functionality.
+     */
+    private async getClineToolsSection(context: CaretSystemPromptContext, isChatbotMode: boolean): Promise<string | null> {
+        try {
+            // Create a mock PromptVariant to use Cline's tool system
+            const mockVariant = {
+                id: 'caret-tools',
+                version: 1,
+                tags: [] as readonly string[],
+                labels: {} as Readonly<Record<string, number>>,
+                family: getModelFamily(context.providerInfo) || ModelFamily.GENERIC,
+                description: 'Caret tools integration',
+                config: { tools: [] } as any,
+                baseTemplate: '',
+                componentOrder: [] as readonly any[],
+                componentOverrides: {} as any,
+                placeholders: {} as Readonly<Record<string, string>>,
+                tools: undefined, // Let it use all available tools
+                toolOverrides: undefined
+            } as const;
+
+            // Get all tools from Cline's system
+            const toolPrompts = await PromptBuilder.getToolsPrompts(mockVariant, context);
+            
+            if (!toolPrompts || toolPrompts.length === 0) {
+                console.warn(`[CaretJsonAdapter] ❌ No tools available from Cline system`);
+                return null;
+            }
+
+            let toolsContent = '# TOOL USAGE SYSTEM\n\n';
+            
+            // Add Caret-specific mode restrictions info
+            if (isChatbotMode) {
+                toolsContent += '**CURRENT MODE: CHATBOT** - Limited tool access for conversational assistance\n\n';
+                toolsContent += 'Available tools in CHATBOT mode:\n';
+                toolsContent += '- read_file: Read file contents\n';
+                toolsContent += '- list_files: List directory contents\n';
+                toolsContent += '- search_files: Search for files and content\n';
+                toolsContent += '- ask_followup_question: Ask clarifying questions\n';
+                toolsContent += '- web_fetch: Fetch web content for research\n';
+                toolsContent += '\n**RESTRICTED in CHATBOT mode:** file editing, command execution, browser automation\n\n';
+            } else {
+                toolsContent += '**CURRENT MODE: AGENT** - Full autonomous tool access\n\n';
+                toolsContent += 'All tools available in AGENT mode for autonomous task execution.\n\n';
+            }
+            
+            // Filter tools based on mode if in CHATBOT mode
+            let filteredTools = toolPrompts;
+            if (isChatbotMode) {
+                // In CHATBOT mode, restrict to read-only and research tools
+                const allowedInChatbot = [
+                    'read_file', 'list_files', 'search_files', 'list_code_definition_names',
+                    'ask_followup_question', 'web_fetch', 'attempt_completion'
+                ];
+                filteredTools = toolPrompts.filter((toolPrompt: string) => {
+                    return allowedInChatbot.some(allowed => toolPrompt.includes(`## ${allowed}`));
+                });
+            }
+            
+            toolsContent += filteredTools.join('\n\n');
+            
+            console.log(`[CaretJsonAdapter] ✅ Generated Cline tools section: ${filteredTools.length}/${toolPrompts.length} tools (${toolsContent.length} chars)`);
+            return toolsContent;
+            
+        } catch (error) {
+            console.error(`[CaretJsonAdapter] ❌ Error generating Cline tools section:`, error);
+            return null;
+        }
     }
 
     /**
      * Processes and formats the tools section, applying mode restrictions.
+     * @deprecated - This is for legacy TOOL_DEFINITIONS.json support only
      */
     private getToolsSection(template: any, isChatbotMode: boolean): string {
         let tools = { ...template.tools };
@@ -107,6 +206,8 @@ export class CaretJsonAdapter implements IPromptSystem {
         } else if (template.action_strategy?.sections) {
             content = this.processTemplateSections(template.action_strategy.sections, isChatbotMode);
         } else if (template.tool_system?.sections) {
+            // DEPRECATED: CARET_TOOL_SYSTEM.json is no longer used - Cline original tools used instead
+            console.warn(`[CaretJsonAdapter] ⚠️ DEPRECATED: tool_system template found - using Cline original instead`);
             content = this.processTemplateSections(template.tool_system.sections, isChatbotMode);
         } else if (template.mcp_integration?.sections) {
             content = this.processTemplateSections(template.mcp_integration.sections, isChatbotMode);

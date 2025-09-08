@@ -71,23 +71,58 @@ const ModeSystemToggle: React.FC<ModeSystemToggleProps> = ({ className }) => {
 
 	const handleToggle = async () => {
 		const newMode = modeSystem === "caret" ? "cline" : "caret"
+
+		// CARET MODIFICATION: Enhanced debug logging for mode switching
+		console.log(`[ModeSystemToggle] 🔄 Mode switch initiated:`, {
+			currentMode: modeSystem,
+			targetMode: newMode,
+			timestamp: new Date().toISOString(),
+			component: "ModeSystemToggle",
+			action: "handleToggle",
+		})
+
 		logger.info(`User clicked toggle: ${modeSystem} -> ${newMode}`)
 
 		try {
+			const startTime = Date.now()
+			console.log(`[ModeSystemToggle] 📤 Sending gRPC request: SetPromptSystemMode({ mode: "${newMode}" })`)
+
 			// Use gRPC to set the new mode
 			const response = await CaretSystemServiceClient.SetPromptSystemMode({
 				mode: newMode,
 			})
 
+			const endTime = Date.now()
+			const responseTime = endTime - startTime
+
+			console.log(`[ModeSystemToggle] 📥 gRPC response received:`, {
+				success: response.success,
+				currentMode: response.currentMode,
+				errorMessage: response.errorMessage,
+				responseTime: `${responseTime}ms`,
+				timestamp: new Date().toISOString(),
+			})
+
 			if (response.success) {
 				logger.info(`Successfully changed to ${response.currentMode} mode`)
+				console.log(`[ModeSystemToggle] ✅ Mode change successful: UI will update to ${response.currentMode}`)
+
 				// Update the UI state immediately
 				setModeSystem(response.currentMode as CaretModeSystem)
+
+				console.log(`[ModeSystemToggle] 🔄 UI state updated to: ${response.currentMode}`)
 			} else {
 				logger.error(`Failed to change mode: ${response.errorMessage}`)
+				console.error(`[ModeSystemToggle] ❌ Mode change failed:`, response.errorMessage)
 			}
 		} catch (error) {
 			logger.error(`Error changing mode: ${error}`)
+			console.error(`[ModeSystemToggle] ❌ Exception during mode change:`, {
+				error: error,
+				currentMode: modeSystem,
+				targetMode: newMode,
+				timestamp: new Date().toISOString(),
+			})
 		}
 	}
 

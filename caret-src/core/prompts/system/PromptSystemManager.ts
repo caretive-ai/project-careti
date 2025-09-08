@@ -16,16 +16,50 @@ export class PromptSystemManager {
         this.adapters.set("cline", new ClineLatestAdapter());
     }
 
-    public getPrompt(context: SystemManagerContext): Promise<string> {
+    public async getPrompt(context: SystemManagerContext): Promise<string> {
         const adapterKey = context.modeSystem;
+        
+        // CARET MODIFICATION: Enhanced debug logging for adapter selection
+        console.log(`[PromptSystemManager] 🔄 Adapter selection process started`);
+        console.log(`[PromptSystemManager] 📥 Input context:`, {
+            modeSystem: context.modeSystem,
+            mode: (context as any).mode,
+            providerInfo: (context as any).providerInfo?.family || 'unknown',
+            mcpServers: (context as any).mcpHub?.getServers()?.length || 0,
+            auto_todo: (context as any).auto_todo,
+            task_progress: (context as any).task_progress
+        });
+        
         const adapter = this.adapters.get(adapterKey);
         if (!adapter) {
-            Logger.error(`[PromptSystemManager] Unsupported mode system: ${adapterKey}`);
+            const availableAdapters = Array.from(this.adapters.keys());
+            Logger.error(`[PromptSystemManager] ❌ Unsupported mode system: ${adapterKey}`);
+            console.error(`[PromptSystemManager] ❌ Available adapters:`, availableAdapters);
             throw new Error(`Unsupported mode system: ${adapterKey}`);
         }
-        Logger.debug(`[PromptSystemManager] Using adapter: ${adapterKey}`);
+        
+        Logger.debug(`[PromptSystemManager] ✅ Using adapter: ${adapterKey}`);
+        console.log(`[PromptSystemManager] 🎯 Selected adapter: ${adapterKey} (${adapter.constructor.name})`);
+        
         // We cast the context to the specific type expected by the adapters.
         // This is safe because our SystemManagerContext is a superset.
-        return adapter.getPrompt(context as CaretSystemPromptContext);
+        const startTime = Date.now();
+        try {
+            const prompt = await adapter.getPrompt(context as CaretSystemPromptContext);
+            const endTime = Date.now();
+            const executionTime = endTime - startTime;
+            
+            console.log(`[PromptSystemManager] ⚡ Prompt generation completed: ${executionTime}ms, ${prompt.length} chars`);
+            Logger.debug(`[PromptSystemManager] Prompt generated successfully in ${executionTime}ms`);
+            
+            return prompt;
+        } catch (error) {
+            const endTime = Date.now();
+            const executionTime = endTime - startTime;
+            
+            Logger.error(`[PromptSystemManager] ❌ Prompt generation failed after ${executionTime}ms:`, error);
+            console.error(`[PromptSystemManager] ❌ Error in ${adapterKey} adapter:`, error);
+            throw error;
+        }
     }
 }

@@ -1,11 +1,10 @@
 {
-  "guidelines": "AUTOMATIC TODO LIST MANAGEMENT\n\nThe system automatically manages todo lists to help track task progress:\n\n- Every 10th API request, you will be prompted to review and update the current todo list if one exists\n- When switching from PLAN MODE to ACT MODE, you should create a comprehensive todo list for the task\n- Todo list updates should be done silently using the task_progress parameter - do not announce these updates to the user\n- Use standard Markdown checklist format: \"- [ ]\" for incomplete items and \"- [x]\" for completed items\n- The system will automatically include todo list context in your prompts when appropriate\n- Focus on creating actionable, meaningful steps rather than granular technical details",
-  "chatbot_specifics": {
+  "chatbot": {
     "style": "analysis",
-    "template": "Analysis steps:\n- {item1}\n- {item2}"
+    "template": "Analysis steps:\n- Step 1\n- Step 2"
   },
-  "agent_specifics": {
-    "style": "execution",
-    "template": "Task sequence:\n- {item1}\n- {item2}"
+  "agent": {
+    "style": "execution", 
+    "template": "Task sequence:\n- Step 1\n- Step 2"
   }
 }

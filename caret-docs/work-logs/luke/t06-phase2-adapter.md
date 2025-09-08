@@ -13,98 +13,74 @@
 
 ## 2. 🎯 Phase 목표
 
-`CaretJsonComponentProvider` 어댑터와 `PromptSystemManager` 전략 관리자의 핵심 뼈대를 TDD(테스트 주도 개발) 방식으로 구축한다. 특히, `cline-latest`의 기술적 상태 구분(`Act/Plan`)을 Caret의 행동 철학(`CHATBOT/AGENT`)으로 성공적으로 대체하여, 하이브리드 시스템의 기술적 가능성을 완벽하게 검증한다.
+`cline-latest`의 `PromptRegistry` 아키텍처와 Caret의 JSON 기반 시스템을 연결하는 **어댑터(Adapter)와 전략(Strategy) 패턴의 핵심 뼈대**를 `caret-src/` 내에 구축한다. 이 과정에서 Caret의 핵심 철학인 **CHATBOT/AGENT 모드 분리**와 **`mode_restriction` 기반 도구 제한** 로직을 새로운 구조에 이식하여, 시스템의 '영혼'을 불어넣는다.
 
 ---
 
 ## 3. ✅ 상세 작업 체크리스트
 
-### 3.1. 핵심 파일 생성
-- [ ] `caret-src/core/prompts/` 경로에 `CaretJsonComponentProvider.ts` 파일 생성
-- [ ] `caret-src/core/prompts/` 경로에 `PromptSystemManager.ts` 파일 생성
-- [ ] `caret-src/core/prompts/__tests__/` 경로에 `CaretJsonComponentProvider.test.ts` 파일 생성
+### 3.1. 아키텍처 설계 및 파일 구조 정의
+- [x] **`PromptSystemManager` (전략 패턴) 설계**
+    - [x] `caret-src/core/prompts/system/` 디렉토리 생성
+    - [x] `PromptSystemManager.ts` 파일 생성: `cline` 또는 `caret` 시스템을 선택하고 위임하는 역할
+    - [x] `IPromptSystem.ts` 인터페이스 정의: `getPrompt(context)` 메서드를 포함
+- [x] **`CaretJsonAdapter` (어댑터 패턴) 설계**
+    - [x] `caret-src/core/prompts/system/adapters/` 디렉토리 생성
+    - [x] `CaretJsonAdapter.ts` 파일 생성: `IPromptSystem` 인터페이스를 구현하며, Phase 1에서 생성한 JSON 파일들을 조합하는 역할
+- [x] **`ClineLatestAdapter` (어댑터 패턴) 설계**
+    - [x] `ClineLatestAdapter.ts` 파일 생성: `IPromptSystem` 인터페이스를 구현하며, `cline-latest`의 `PromptRegistry`를 호출하는 역할
 
-### 3.2. [RED] 실패하는 테스트 작성
-- [ ] `CaretJsonComponentProvider.test.ts` 파일에 다음을 검증하는 테스트 케이스 작성:
-    - [ ] `adaptChatbotAgentModes()` 메서드가 `CHATBOT_AGENT_MODES.json` 파일 (영어, 토큰 효율적 내용)을 읽어 `ComponentFunction`을 생성하는가?
-    - [ ] 생성된 함수에 `context.mode = 'agent'`를 전달했을 때, 반환된 문자열에 "AGENT MODE"가 포함되는가?
-    - [ ] 생성된 함수에 `context.mode = 'chatbot'`를 전달했을 때, 반환된 문자열에 "CHATBOT MODE"가 포함되는가?
-    - [ ] 반환된 문자열에 기존 `cline-latest`의 용어인 "ACT MODE" 또는 "PLAN MODE"가 포함되지 않는가?
+### 3.2. TDD RED: 통합 테스트 우선 작성
+- [x] **테스트 파일 생성**
+    - [x] `caret-src/__tests__/tdd/` 디렉토리에 `T06PromptSystemIntegration.test.ts` 파일 생성
+- [x] **통합 시나리오 테스트 작성 (실패 예상)**
+    - [x] `PromptSystemManager`가 'caret' 모드일 때 `CaretJsonAdapter`를 통해 CHATBOT/AGENT 모드별 프롬프트를 올바르게 생성하는지 검증하는 테스트 코드 작성
+    - [x] `PromptSystemManager`가 'cline' 모드일 때 `ClineLatestAdapter`를 통해 기존 프롬프트를 정상적으로 반환하는지 검증하는 테스트 코드 작성
+    - [x] CHATBOT 모드에서 `execute_command`가 `mode_restriction`에 의해 프롬프트에서 제외되는지 검증하는 테스트 코드 작성
 
-### 3.3. [GREEN] 최소 기능 구현
-- [ ] **`CaretJsonComponentProvider.ts` 구현:**
-    - [ ] `loadJsonSection(name: string)` 메서드를 구현하여 `caret-src/core/prompts/sections/` 경로에서 JSON 파일을 읽어옴.
-    - [ ] `adaptChatbotAgentModes()` 메서드를 **최소한으로 구현**하여 위의 테스트를 통과시킴.
-- [ ] **`PromptSystemManager.ts` 구현:**
-    - [ ] 싱글톤 패턴으로 `getInstance()` 메서드 구현.
-    - [ ] `switchMode(mode: 'caret' | 'cline')` 메서드 구현.
-    - [ ] 'caret' 모드일 때, `PromptRegistry.getInstance().registerComponent('act_vs_plan_mode', ...)`를 호출하여, `CaretJsonComponentProvider`가 생성한 어댑터로 기존 컴포넌트를 **대체(override)**하도록 구현.
+### 3.3. GREEN: 최소 기능 구현으로 테스트 통과
+- [x] **`IPromptSystem.ts` 인터페이스 구현**
+- [x] **`PromptSystemManager.ts` 기본 로직 구현**
+    - [x] 생성자에서 `CaretJsonAdapter`와 `ClineLatestAdapter`를 초기화
+    - [x] `getPrompt(context)` 메서드에서 `context.modeSystem` 값에 따라 적절한 어댑터로 위임하는 로직 구현
+- [x] **`CaretJsonAdapter.ts` 핵심 로직 구현**
+    - [x] Phase 1에서 생성한 `CARET_TODO_MANAGEMENT.json`, `CARET_TASK_PROGRESS.json`, `CARET_FEEDBACK_SYSTEM.json` 파일을 로드하는 로직 구현
+    - [x] `context.mode` (chatbot/agent)에 따라 다른 JSON 섹션을 조합하는 기본 로직 구현
+    - [x] `TOOL_DEFINITIONS.json`의 `mode_restriction`을 읽어 CHATBOT 모드일 때 특정 도구를 필터링하는 로직 구현
+- [ ] **`ClineLatestAdapter.ts` 기본 로직 구현**
+    - [ ] `cline-latest`의 `PromptRegistry` 인스턴스를 가져와 `get()` 메서드를 호출하고 결과를 그대로 반환하는 로직 구현
+- [ ] **테스트 실행 및 통과 확인**: `npm run test:unit` (또는 해당 테스트 파일 지정) 실행하여 `T06PromptSystemIntegration.test.ts`가 통과하는지 확인
 
-### 3.4. 시스템 연동
-- [ ] `src/core/prompts/system-prompt/types.ts` 파일 수정:
-    - [ ] `SystemPromptContext` 인터페이스에 `systemMode?: 'caret' | 'cline'` 필드를 **`// CARET MODIFICATION`** 주석과 함께 추가.
-    ```typescript
-    export interface SystemPromptContext {
-        readonly providerInfo: ApiProviderInfo
-        readonly cwd?: string
-        readonly supportsBrowserUse?: boolean
-        readonly mcpHub?: McpHub
-        // ... 기존 필드들
-        // CARET MODIFICATION: 하이브리드 프롬프트 시스템 모드 지원
-        readonly systemMode?: 'caret' | 'cline'
-    }
-    ```
-- [ ] `src/core/prompts/system-prompt/components/index.ts` 파일 수정:
-    - [ ] `getSystemPromptComponents()` 함수 상단에 `PromptSystemManager`를 호출하는 분기 로직을 **`// CARET MODIFICATION`** 주석과 함께 추가.
-    ```typescript
-    export function getSystemPromptComponents() {
-        // CARET MODIFICATION: 하이브리드 시스템 지원
-        // systemMode는 호출하는 곳에서 context를 통해 전달됨
-        
-        return [
-            { id: SystemPromptSection.AGENT_ROLE, fn: getAgentRoleSection },
-            // ... 나머지 컴포넌트들
-        ]
-    }
-    ```
-- [ ] `caret-src/core/prompts/PromptSystemManager.ts`에서 `context.systemMode`를 확인하여 동적으로 컴포넌트를 대체하는 로직 구현:
-    ```typescript
-    // PromptSystemManager가 PromptRegistry에 동적으로 컴포넌트를 등록
-    if (context.systemMode === 'caret') {
-        PromptSystemManager.getInstance().switchMode('caret')
-    }
-    ```
+### 3.4. REFACTOR: 코드 개선 및 철학 이식
+- [x] **상수화 및 타입 정의**
+    - [x] `caret-src/shared/constants/`에 `PromptSystemConstants.ts` 파일 생성
+    - [x] `"caret"`, `"cline"`, `"chatbot"`, `"agent"` 등 모든 문자열을 상수로 대체
+- [x] **로직 분리**
+    - [x] `CaretJsonAdapter` 내에서 JSON 파일을 로드하는 부분, 조합하는 부분, 필터링하는 부분을 명확한 private 메서드로 분리
+- [x] **주석 및 문서화**
+    - [x] 각 클래스와 주요 메서드에 JSDoc 형식으로 주석 추가 (역할, 파라미터, 반환값 명시)
 
-### 3.6. Phase 검증 및 Git 체크포인트
-- [ ] **Phase 검증 스크립트 확장**: `caret-scripts/phase-validator.js`에 Phase 2 검증 추가
-    ```javascript
-    validatePhase2() {
-        // SystemPromptContext에 systemMode 필드 추가되었는지 확인
-        // CaretJsonComponentProvider.ts, PromptSystemManager.ts 파일 존재 확인
-        // TDD 테스트 100% 통과 확인
-        // 컴파일 오류 없음 확인
-    }
-    ```
+### 3.5. Phase 검증 및 Git 체크포인트
+- [ ] **검증 문서 작성**: `t06-phase2-verification.md` 문서 생성 및 아래 내용 기록
+    - [ ] TDD 테스트 결과 (통과 스크린샷 또는 로그)
+    - [ ] `PromptSystemManager`가 두 시스템을 올바르게 전환하는 로직 흐름도
+    - [ ] CHATBOT 모드에서 도구가 성공적으로 필터링되었음을 보여주는 프롬프트 출력 예시
+- [ ] **Phase 검증 스크립트 확장**: `caret-scripts/phase-validator.js` 수정
+    - [ ] `validatePhase2()` 메서드 추가
+    - [ ] `PromptSystemManager.ts`, `CaretJsonAdapter.ts`, `ClineLatestAdapter.ts` 파일 존재 여부 검증
+    - [ ] `T06PromptSystemIntegration.test.ts` 테스트 파일 존재 여부 검증
 - [ ] **Git 체크포인트 설정**:
-    - [ ] Phase 2 완료 시 커밋: `git commit -m "feat: Complete Phase 2 - Adapter framework with core philosophy integration"`
-    - [ ] 검증 완료 시 태그: `git tag -a "t06-phase-2" -m "Phase 2 adapter complete"`
+    - [ ] Phase 2 완료 시 커밋: `git commit -m "feat: Complete Phase 2 - Build adapter skeleton and integrate core philosophy"`
+    - [ ] 검증 완료 시 태그: `git tag -a "t06-phase-2" -m "Phase 2 verification complete"`
     - [ ] 사용자 확인 요청 후 푸시: `git push origin merge-v326-08292807 --follow-tags`
     - [ ] Phase 3 시작 전 백업 브랜치: `git branch t06-phase-2-backup`
-
-### 3.7. 롤백 전략 (실패 시)
-- [ ] **부분 실패 시**: `git reset --hard t06-phase-1` 후 문제 컴포넌트만 다시 구현
-- [ ] **완전 실패 시**: `git checkout t06-phase-1-backup` 후 Phase 2 계획 재검토
-- [ ] **Degraded Mode**: 하이브리드 시스템 비활성화, 기존 Cline 시스템으로 fallback
 
 ---
 
 ## 4. 🏁 완료 기준
 
-### 필수 완료 기준
-- [ ] `act_vs_plan_mode` 컴포넌트가 `CHATBOT_AGENT_MODES.json`의 내용으로 성공적으로 대체되어 동작함.
-- [ ] `SystemPromptContext`에 `systemMode` 필드가 성공적으로 추가되어 아키텍처 문제가 해결됨.
-- [ ] `CaretJsonComponentProvider.test.ts`에 작성된 모든 단위 테스트가 100% 통과함.
-- [ ] **검증 자동화**: `phase-validator.js`를 통한 Phase 2 자동 검증이 100% 통과함.
-- [ ] **Git 체크포인트**: 안전한 롤백이 가능한 커밋 및 태그가 생성되어 사용자 확인 완료됨.
-- [ ] `npm run compile` 실행 시 컴파일 오류가 발생하지 않음.
-- [ ] Phase 3를 시작하기 위한 모든 기술적 검증이 완료됨.
+- [ ] `PromptSystemManager`와 두 개의 어댑터(`CaretJsonAdapter`, `ClineLatestAdapter`) 파일이 `caret-src/` 내에 생성되고, TDD 통합 테스트를 통과함.
+- [ ] `CaretJsonAdapter`는 CHATBOT/AGENT 모드에 따라 동적으로 JSON 프롬프트를 조합하며, `mode_restriction` 철학을 완벽하게 구현함.
+- [ ] `phase-validator.js`의 `validatePhase2()` 검증이 100% 통과함.
+- [ ] `t06-phase2-verification.md` 문서에 모든 검증 결과가 상세히 기록됨.
+- [ ] Phase 3를 시작하기 위한 모든 전제 조건(안정적인 어댑터 뼈대)이 충족됨.

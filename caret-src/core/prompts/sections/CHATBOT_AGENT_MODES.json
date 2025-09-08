@@ -1,0 +1,10 @@
+{
+  "add": {
+    "sections": [
+      {
+        "content": "# CHATBOT/AGENT MODE SYSTEM\n\n## Current Mode Behavior",
+        "mode": "both"
+      }
+    ]
+  }
+}

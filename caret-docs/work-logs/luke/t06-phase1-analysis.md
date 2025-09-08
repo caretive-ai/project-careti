@@ -20,20 +20,20 @@
 ## 3. ✅ 상세 작업 체크리스트
 
 ### 3.1. `cline-latest` 신규 컴포넌트 심층 분석
-- [ ] **`auto_todo.ts` 분석**
-    - [ ] `PLAN` -> `ACT` 모드 전환 시 TODO 생성이 트리거되는 조건 분석
-    - [ ] 10번째 API 요청마다 TODO 검토 프롬프트가 추가되는 로직 분석
-    - [ ] 생성되는 Markdown 체크리스트의 정확한 형식 파악
-- [ ] **`task_progress.ts` 분석**
-    - [ ] `task_progress` 파라미터가 모든 도구 사용에 어떻게 전달되는지 분석
-    - [ ] `attempt_completion` 전 최종 체크리스트를 검증하는 로직 확인
-- [ ] **`feedback.ts` 분석**
-    - [ ] 피드백 요청 프롬프트가 생성되는 구체적인 조건 분석
-    - [ ] 사용자 피드백을 처리하는 방식 연구
+- [x] **`auto_todo.ts` 분석**
+    - [x] `PLAN` -> `ACT` 모드 전환 시 TODO 생성이 트리거되는 조건 분석
+    - [x] 10번째 API 요청마다 TODO 검토 프롬프트가 추가되는 로직 분석
+    - [x] 생성되는 Markdown 체크리스트의 정확한 형식 파악
+- [x] **`task_progress.ts` 분석**
+    - [x] `task_progress` 파라미터가 모든 도구 사용에 어떻게 전달되는지 분석
+    - [x] `attempt_completion` 전 최종 체크리스트를 검증하는 로직 확인
+- [x] **`feedback.ts` 분석**
+    - [x] 피드백 요청 프롬프트가 생성되는 구체적인 조건 분석
+    - [x] 사용자 피드백을 처리하는 방식 연구
 
 ### 3.2. Caret JSON 확장 설계 (⚠️ 영어 + 토큰 효율성 중심)
-- [ ] **'작업 관리 루프' JSON 스키마 설계** - **중요**: 모든 시스템 프롬프트는 영어로 작성, 토큰 효율성을 최우선으로 고려
-    - [ ] `auto_todo` 기능을 위한 `CARET_TODO_MANAGEMENT.json` 스키마 정의:
+- [x] **'작업 관리 루프' JSON 스키마 설계** - **중요**: 모든 시스템 프롬프트는 영어로 작성, 토큰 효율성을 최우선으로 고려
+    - [x] `auto_todo` 기능을 위한 `CARET_TODO_MANAGEMENT.json` 스키마 정의:
       ```json
       {
         "chatbot": {
@@ -46,7 +46,7 @@
         }
       }
       ```
-    - [ ] `task_progress` 기능을 위한 `CARET_TASK_PROGRESS.json` 스키마 정의:
+    - [x] `task_progress` 기능을 위한 `CARET_TASK_PROGRESS.json` 스키마 정의:
       ```json
       {
         "chatbot": {
@@ -59,7 +59,7 @@
         }
       }
       ```
-    - [ ] `feedback` 기능을 위한 `CARET_FEEDBACK_SYSTEM.json` 스키마 정의:
+    - [x] `feedback` 기능을 위한 `CARET_FEEDBACK_SYSTEM.json` 스키마 정의:
       ```json
       {
         "chatbot": {
@@ -72,23 +72,23 @@
         }
       }
       ```
-- [ ] **토큰 효율성 원칙** (모든 JSON 작성 시 준수):
-    - [ ] 불필요한 형용사, 부사 제거
-    - [ ] 축약형 사용 (`you're`, `we'll`, `can't`)
-    - [ ] 단순 동사 선호 (`use` vs `utilize`)
-    - [ ] 중복 표현 제거
-    - [ ] 핵심 키워드 중심 구성
+- [x] **토큰 효율성 원칙** (모든 JSON 작성 시 준수):
+    - [x] 불필요한 형용사, 부사 제거
+    - [x] 축약형 사용 (`you're`, `we'll`, `can't`)
+    - [x] 단순 동사 선호 (`use` vs `utilize`)
+    - [x] 중복 표현 제거
+    - [x] 핵심 키워드 중심 구성
 
 ### 3.3. 신규 JSON 파일 생성
-- [ ] `caret-src/core/prompts/sections/` 디렉토리 존재 여부 확인 및 생성
-- [ ] 위 스키마를 바탕으로 `CARET_TODO_MANAGEMENT.json` 파일 생성 및 내용 작성
-- [ ] 위 스키마를 바탕으로 `CARET_TASK_PROGRESS.json` 파일 생성 및 내용 작성
-- [ ] 위 스키마를 바탕으로 `CARET_FEEDBACK_SYSTEM.json` 파일 생성 및 내용 작성
-- [ ] JSON 파일 문법 검증: `node -e "JSON.parse(require('fs').readFileSync('파일경로', 'utf8'))"`
+- [x] `caret-src/core/prompts/sections/` 디렉토리 존재 여부 확인 및 생성
+- [x] 위 스키마를 바탕으로 `CARET_TODO_MANAGEMENT.json` 파일 생성 및 내용 작성
+- [x] 위 스키마를 바탕으로 `CARET_TASK_PROGRESS.json` 파일 생성 및 내용 작성
+- [x] 위 스키마를 바탕으로 `CARET_FEEDBACK_SYSTEM.json` 파일 생성 및 내용 작성
+- [x] JSON 파일 문법 검증: `node -e "JSON.parse(require('fs').readFileSync('파일경로', 'utf8'))"`
 
 ### 3.4. 토큰 효율성 사전 검증
-- [ ] **기존 토큰 측정 스크립트 확장**: `caret-main/caret-scripts/system-prompt-token-measurement.js` 수정
-    - [ ] `measureSystemPrompts()` 함수에 하이브리드 모드 측정 로직 추가:
+- [x] **기존 토큰 측정 스크립트 확장**: `caret-main/caret-scripts/system-prompt-token-measurement.js` 수정
+    - [x] `measureSystemPrompts()` 함수에 하이브리드 모드 측정 로직 추가:
       ```javascript
       // 4. 하이브리드 모드 (cline-latest PromptRegistry + Caret JSON)
       console.log("📄 하이브리드 모드 측정 중...")
@@ -100,19 +100,19 @@
       })
       // 기존 토큰 측정 로직 적용하여 효율성 비교
       ```
-    - [ ] 하이브리드 vs Cline vs Caret 3-way 비교 결과 출력
-    - [ ] 토큰 절약률이 10% 이상인지 검증 (임계값 체크)
+    - [x] 하이브리드 vs Cline vs Caret 3-way 비교 결과 출력
+    - [x] 토큰 절약률이 10% 이상인지 검증 (임계값 체크)
 
 ### 3.5. 기능적 동등성 검증
-- [ ] **검증 문서 작성**: `t06-phase1-verification.md` 문서 생성
-- [ ] 컴포넌트별 기능 대응표 작성:
-    - [ ] `auto_todo.ts` → `CARET_TODO_MANAGEMENT.json` 기능 매핑
-    - [ ] `task_progress.ts` → `CARET_TASK_PROGRESS.json` 기능 매핑  
-    - [ ] `feedback.ts` → `CARET_FEEDBACK_SYSTEM.json` 기능 매핑
-- [ ] 기능적 동등성 검증 결과를 `t06-phase1-verification.md`에 기록
+- [x] **검증 문서 작성**: `t06-phase1-verification.md` 문서 생성
+- [x] 컴포넌트별 기능 대응표 작성:
+    - [x] `auto_todo.ts` → `CARET_TODO_MANAGEMENT.json` 기능 매핑
+    - [x] `task_progress.ts` → `CARET_TASK_PROGRESS.json` 기능 매핑  
+    - [x] `feedback.ts` → `CARET_FEEDBACK_SYSTEM.json` 기능 매핑
+- [x] 기능적 동등성 검증 결과를 `t06-phase1-verification.md`에 기록
 
 ### 3.6. Phase 검증 및 Git 체크포인트
-- [ ] **Phase 검증 스크립트 생성**: `caret-scripts/phase-validator.js` 신규 생성
+- [x] **Phase 검증 스크립트 생성**: `caret-scripts/phase-validator.js` 신규 생성
     ```javascript
     class PhaseValidator {
         validatePhase1() {
@@ -146,7 +146,7 @@
 ## 4. 🏁 완료 기준
 
 ### 필수 완료 기준
-- [ ] `cline-latest`의 '작업 관리 루프' 3개 컴포넌트의 모든 기능이 Caret의 CHATBOT/AGENT 철학이 반영된 3개의 신규 JSON 파일로 완벽하게 재정의됨.
+- [x] `cline-latest`의 '작업 관리 루프' 3개 컴포넌트의 모든 기능이 Caret의 CHATBOT/AGENT 철학이 반영된 3개의 신규 JSON 파일로 완벽하게 재정의됨.
 - [ ] **토큰 효율성**: 하이브리드 시스템이 기존 Cline 대비 최소 10% 이상 토큰 절약 효과 검증됨.
 - [ ] **검증 자동화**: `phase-validator.js`를 통한 자동 검증이 100% 통과함.
 - [ ] **Git 체크포인트**: 안전한 롤백이 가능한 커밋 및 태그가 생성되어 사용자 확인 완료됨.

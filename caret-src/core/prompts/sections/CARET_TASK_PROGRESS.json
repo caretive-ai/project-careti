@@ -1,10 +1,9 @@
 {
-  "guidelines": "UPDATING TASK PROGRESS\n\nEvery tool use supports an optional task_progress parameter that allows you to provide an updated checklist to keep the user informed of your overall progress on the task. This should be used regularly throughout the task to keep the user informed of completed and remaining steps. Before using the attempt_completion tool, ensure the final checklist item is checked off to indicate task completion.\n\n- You probably wouldn't use this while in PLAN mode until the user has approved your plan and switched you to ACT mode.\n- Use standard Markdown checklist format: \"- [ ]\" for incomplete items and \"- [x]\" for completed items\n- Provide the whole checklist of steps you intend to complete in the task, and keep the checkboxes updated as you make progress. It's okay to rewrite this checklist as needed if it becomes invalid due to scope changes or new information.\n- Keep items focused on meaningful progress milestones rather than minor technical details. The checklist should not be so granular that minor implementation details clutter the progress tracking.\n- If you are creating this checklist for the first time, and the tool use completes the first step in the checklist, make sure to mark it as completed in your parameter input since this checklist will be displayed after this tool use is completed.\n- For simple tasks, short checklists with even a single item are acceptable. For complex tasks, avoid making the checklist too long or verbose.\n- If a checklist is being used, be sure to update it any time a step has been completed.\n\nExample:\n<execute_command>\n<command>npm install react</command>\n<requires_approval>false</requires_approval>\n<task_progress>\n- [x] Set up project structure\n- [x] Install dependencies\n- [ ] Create components\n- [ ] Test application\n</task_progress>\n</execute_command>",
-  "chatbot_specifics": {
+  "chatbot": {
     "style": "Analysis progress",
     "completion": "Analysis complete. Review needed?"
   },
-  "agent_specifics": {
+  "agent": {
     "style": "Task progress",
     "completion": "Task complete. Continuing next steps."
   }

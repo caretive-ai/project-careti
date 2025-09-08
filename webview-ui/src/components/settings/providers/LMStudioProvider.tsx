@@ -100,7 +100,7 @@ export const LMStudioProvider = ({ currentMode }: LMStudioProviderProps) => {
 			</p>
 			<BaseUrlField
 				initialValue={apiConfiguration?.lmStudioBaseUrl}
-				label={t("settings.baseUrlField.label", "settings")}
+				label={t("baseUrlField.label", "settings")}
 				onChange={(value) => handleFieldChange("lmStudioBaseUrl", value)}
 				placeholder={t("lmStudioProvider.baseUrlPlaceholder", "settings")}
 			/>

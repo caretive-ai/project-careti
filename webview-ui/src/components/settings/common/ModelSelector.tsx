@@ -48,14 +48,14 @@ OG Saoud Note:
  * A reusable component for selecting models from a dropdown
  */
 export const ModelSelector = ({ models, selectedModelId, onChange, zIndex, label }: ModelSelectorProps) => {
-	const finalLabel = label ?? t("settings.modelSelector.label", "Model")
+	const finalLabel = label ?? t("modelSelector.label", "settings")
 	return (
 		<DropdownContainer className="dropdown-container" zIndex={zIndex}>
 			<label htmlFor="model-id">
 				<span style={{ fontWeight: 500 }}>{finalLabel}</span>
 			</label>
 			<VSCodeDropdown id="model-id" onChange={onChange} style={{ width: "100%" }} value={selectedModelId}>
-				<VSCodeOption value="">{t("settings.modelSelector.placeholder", "Select a model...")}</VSCodeOption>
+				<VSCodeOption value="">{t("modelSelector.placeholder", "settings")}</VSCodeOption>
 				{Object.keys(models).map((modelId) => (
 					<VSCodeOption
 						key={modelId}

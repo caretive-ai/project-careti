@@ -129,19 +129,19 @@ const ModeSystemToggle: React.FC<ModeSystemToggleProps> = ({ className }) => {
 	return (
 		<div className={`mb-[15px] ${className || ""}`}>
 			<div className="flex items-center justify-between mb-2">
-				<label className="text-sm font-medium">{t("settings.modeSystem.label", "settings") || "App Mode"}</label>
+				<label className="text-sm font-medium">{t("modeSystem.label", "settings") || "App Mode"}</label>
 				<ModeSwitchContainer data-testid="mode-system-toggle-container" disabled={false} onClick={handleToggle}>
 					<ModeSlider isCaret={modeSystem === "caret"} isCline={modeSystem === "cline"} />
 					<ModeSwitchOption data-testid="caret-mode-option" isActive={modeSystem === "caret"}>
-						{t("settings.modeSystem.options.caret", "settings") || "Caret"}
+						{t("modeSystem.options.caret", "settings") || "Caret"}
 					</ModeSwitchOption>
 					<ModeSwitchOption data-testid="cline-mode-option" isActive={modeSystem === "cline"}>
-						{t("settings.modeSystem.options.cline", "settings") || "Cline"}
+						{t("modeSystem.options.cline", "settings") || "Cline"}
 					</ModeSwitchOption>
 				</ModeSwitchContainer>
 			</div>
 			<p className="text-xs text-[var(--vscode-descriptionForeground)]">
-				{t("settings.modeSystem.description", "settings") ||
+				{t("modeSystem.description", "settings") ||
 					"Switch between Caret and Cline interface modes. Affects branding and i18n features."}
 			</p>
 		</div>

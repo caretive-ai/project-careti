@@ -25,7 +25,7 @@ Phase 2에서 구축한 어댑터 뼈대를 확장하여, **모든 프롬프트 
     - [ ] `[GREEN]` Phase 1에서 생성한 `CARET_TODO_MANAGEMENT.json`을 참조하여 `adaptAutoTodo()` 메서드 구현.
     - [ ] `task_progress`, `feedback` 컴포넌트에 대해서도 위 TDD 사이클 반복.
 - [ ] **`mode_restriction` 구현 및 테스트:**
-    - [ ] `[RED]` `context.mode`가 'chatbot'일 때, `TOOL_DEFINITIONS.json`의 `mode_restriction: "agent_only"` 설정이 적용되어 `execute_command`가 프롬프트에서 제외되는지 검증하는 테스트 작성.
+    - [ ] `[RED]` `context.mode`가 'chatbot'일 때, `TOOL_DEFINITIONS.json` (영어, 토큰 효율적 내용)의 `mode_restriction: "agent_only"` 설정이 적용되어 `execute_command`가 프롬프트에서 제외되는지 검증하는 테스트 작성.
     - [ ] `[GREEN]` `adaptToolDefinitions()` 메서드에 `mode_restriction` 필터링 로직을 추가하여 테스트 통과.
 - [ ] **나머지 컴포넌트 어댑터 구현:**
     - [ ] `OBJECTIVE`, `SYSTEM_INFORMATION` 등 나머지 모든 컴포넌트에 대해 TDD 사이클을 반복하여 어댑터 메서드 구현.

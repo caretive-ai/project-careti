@@ -26,7 +26,7 @@
 
 ### 3.2. [RED] 실패하는 테스트 작성
 - [ ] `CaretJsonComponentProvider.test.ts` 파일에 다음을 검증하는 테스트 케이스 작성:
-    - [ ] `adaptChatbotAgentModes()` 메서드가 `CHATBOT_AGENT_MODES.json` 파일을 읽어 `ComponentFunction`을 생성하는가?
+    - [ ] `adaptChatbotAgentModes()` 메서드가 `CHATBOT_AGENT_MODES.json` 파일 (영어, 토큰 효율적 내용)을 읽어 `ComponentFunction`을 생성하는가?
     - [ ] 생성된 함수에 `context.mode = 'agent'`를 전달했을 때, 반환된 문자열에 "AGENT MODE"가 포함되는가?
     - [ ] 생성된 함수에 `context.mode = 'chatbot'`를 전달했을 때, 반환된 문자열에 "CHATBOT MODE"가 포함되는가?
     - [ ] 반환된 문자열에 기존 `cline-latest`의 용어인 "ACT MODE" 또는 "PLAN MODE"가 포함되지 않는가?

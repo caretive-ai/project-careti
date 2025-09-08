@@ -31,52 +31,53 @@
     - [ ] 피드백 요청 프롬프트가 생성되는 구체적인 조건 분석
     - [ ] 사용자 피드백을 처리하는 방식 연구
 
-### 3.2. Caret JSON 확장 설계
-- [ ] **'작업 관리 루프' JSON 스키마 설계**
+### 3.2. Caret JSON 확장 설계 (⚠️ 영어 + 토큰 효율성 중심)
+- [ ] **'작업 관리 루프' JSON 스키마 설계** - **중요**: 모든 시스템 프롬프트는 영어로 작성, 토큰 효율성을 최우선으로 고려
     - [ ] `auto_todo` 기능을 위한 `CARET_TODO_MANAGEMENT.json` 스키마 정의:
       ```json
       {
-        "chatbot_mode": {
-          "title": "분석 작업 계획",
-          "style": "분석 제안 중심",
-          "template": "다음 분석 단계를 제안드립니다:\n- {분석항목1}\n- {분석항목2}"
+        "chatbot": {
+          "style": "analysis",
+          "template": "Analysis steps:\n- {item1}\n- {item2}"
         },
-        "agent_mode": {
-          "title": "실행 작업 계획", 
-          "style": "실행 계획 중심",
-          "template": "다음 작업을 순차적으로 실행하겠습니다:\n- {실행항목1}\n- {실행항목2}"
+        "agent": {
+          "style": "execution", 
+          "template": "Task sequence:\n- {item1}\n- {item2}"
         }
       }
       ```
     - [ ] `task_progress` 기능을 위한 `CARET_TASK_PROGRESS.json` 스키마 정의:
       ```json
       {
-        "chatbot_mode": {
-          "progress_style": "분석 진행 상황",
-          "completion_prompt": "분석이 완료되었습니다. 추가 분석이 필요한 영역이 있는지 검토해주세요."
+        "chatbot": {
+          "style": "Analysis progress",
+          "completion": "Analysis complete. Review needed?"
         },
-        "agent_mode": {
-          "progress_style": "작업 진행 상황",
-          "completion_prompt": "작업이 완료되었습니다. 결과를 확인하고 다음 단계를 진행하겠습니다."
+        "agent": {
+          "style": "Task progress",
+          "completion": "Task complete. Continuing next steps."
         }
       }
       ```
     - [ ] `feedback` 기능을 위한 `CARET_FEEDBACK_SYSTEM.json` 스키마 정의:
       ```json
       {
-        "chatbot_mode": {
-          "feedback_request": "이 분석에 대한 의견이나 추가 질문이 있으시나요?",
-          "approach": "대화형 상담"
+        "chatbot": {
+          "request": "Questions about this analysis?",
+          "approach": "consultative"
         },
-        "agent_mode": {
-          "feedback_request": "작업 결과에 수정이 필요한 부분이 있다면 알려주세요.",
-          "approach": "협업 개발"
+        "agent": {
+          "request": "Any modifications needed?",
+          "approach": "collaborative"
         }
       }
       ```
-- [ ] **CHATBOT/AGENT 모드별 내용 차별화 설계**
-    - [ ] CHATBOT 모드: '분석 제안' 스타일의 TODO, '분석 진행 상황' 보고 등
-    - [ ] AGENT 모드: '실행 계획' 스타일의 TODO, '작업 진행 상황' 보고 등
+- [ ] **토큰 효율성 원칙** (모든 JSON 작성 시 준수):
+    - [ ] 불필요한 형용사, 부사 제거
+    - [ ] 축약형 사용 (`you're`, `we'll`, `can't`)
+    - [ ] 단순 동사 선호 (`use` vs `utilize`)
+    - [ ] 중복 표현 제거
+    - [ ] 핵심 키워드 중심 구성
 
 ### 3.3. 신규 JSON 파일 생성
 - [ ] `caret-src/core/prompts/sections/` 디렉토리 존재 여부 확인 및 생성

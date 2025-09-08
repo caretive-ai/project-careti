@@ -370,9 +370,18 @@
 		"joinUs": "次でご参加ください",
 		"forMoreUpdates": "さらなるアップデートのために！"
 	},
+	"apiKey": {
+		"placeholder": "APIキーを入力してください...",
+		"getYourKeyAn": "{{providerName}} APIキーはこちらでサインアップして取得できます。",
+		"getYourKeyA": "{{providerName}} APIキーはこちらでサインアップして取得できます。"
+	},
 	"rulesModal": {
-		"tooltip": {},
-		"ariaLabel": {}
+		"tooltip": {
+			"manageRulesWorkflows": "Caretルールとワークフローを管理"
+		},
+		"ariaLabel": {
+			"CaretRulesButton": "Caretルール"
+		}
 	},
 	"persona": {
 		"management": "ペルソナ管理",

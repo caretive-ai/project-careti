@@ -192,7 +192,99 @@ t("modeSystem.label", "settings")           // 키와 네임스페이스 분리
 
 ### **🎯 현재 진행 상황**
 - ✅ Phase 3 접근 방법 재설계 완료
-- 🔄 **다음 단계**: 현재 상태에서 작업 필요한 영어 키들 선별 시작
+- 🔄 **Phase 3A-1 진행 중**: 현재 상태에서 작업 필요한 영어 키들 선별 식별
+
+#### **📋 Phase 3A-1 진행 결과 (2025-01-08)**
+
+**✅ apiSetup 키 현황 확인:**
+- **English**: `common.json`에 완전히 존재 (apiSetup.title, apiSetup.description 등 전체 구조)
+- **Korean**: `common.json`에 존재 
+- **Japanese**: `common.json`에 **누락** ⚠️
+- **Chinese**: `common.json`에 **누락** ⚠️
+
+**✅ quickWinsTitle 키 현황 확인:**
+- **스크립트 오류 확인**: `quickWinsTitle` 키는 English welcome.json에도 존재하지 않음
+- **결론**: 스크립트가 잘못 생성한 가짜 키 - 실제 작업 불필요
+
+**✅ 추가 키 검증 완료:**
+- **apiKey 구조화된 키들**: English `common.json`에 `apiKey.placeholder`, `apiKey.getYourKeyAn`, `apiKey.getYourKeyA` 존재
+  - Japanese: 단순 `"apiKey": "APIキー"` 레이블만 존재, 구조화된 키들 **누락** ⚠️
+  
+- **rulesModal 키들**: English `common.json`에 `rulesModal.tooltip.manageRulesWorkflows`, `rulesModal.ariaLabel.CaretRulesButton` 존재
+  - Japanese: `rulesModal` 구조는 있으나 하위 키들이 빈 객체 `{}` 상태로 **누락** ⚠️
+
+**📊 Phase 3A-1 완료 - 확인된 실제 누락 키들:**
+1. **apiSetup 전체** (Japanese, Chinese common.json에서 누락)
+2. **apiKey 구조화 키들** (Japanese common.json에서 누락) 
+3. **rulesModal 하위 키들** (Japanese common.json에서 구조만 있고 내용 누락)
+
+**🔍 결론**: 스크립트 오류 제외하고 실제로 번역이 필요한 누락 키들이 다수 확인됨
+
+#### **📋 Phase 3A-2 완료 - 올바른 i18n 형식 확인 (2025-01-08)**
+
+**✅ 키 구조 및 네임스페이스 검증 결과:**
+
+1. **apiSetup 키들**:
+   - **올바른 위치**: `welcome.json` (현재 English welcome.json에 존재) ✅
+   - **올바른 사용법**: `t("apiSetup.title", "welcome")` ✅
+   - **문제**: Japanese, Chinese `welcome.json`에서 누락 ❌
+
+2. **apiKey 구조화 키들**:
+   - **올바른 위치**: `common.json` (현재 English common.json에 존재) ✅  
+   - **올바른 사용법**: `t("apiKey.placeholder", "common")` ✅
+   - **문제**: Japanese `common.json`에서 구조화된 키들 누락 ❌
+
+3. **rulesModal 키들**:
+   - **키 중복 문제 발견**: 동일한 기능이 여러 위치에 분산
+     - 실제 사용: `t("clineRulesToggleModal.manageRulesWorkflows", "chat")`
+     - 미사용 키: `rulesModal.tooltip.manageRulesWorkflows` in `common.json`
+   - **결론**: 실제 사용되는 `chat.json` 기준으로 작업 필요
+
+**📊 Phase 3A-2 완료 - 확정된 작업 대상:**
+1. **apiSetup 전체**: English `welcome.json` → Japanese, Chinese `welcome.json` 추가
+2. **apiKey 구조 키들**: English `common.json` → Japanese `common.json` 추가  
+3. **rulesModal**: 키 중복 정리 필요 (실사용 `chat.json` 기준)
+
+#### **📋 Phase 3A-3 완료 - cline-latest 원본 텍스트 확인 (2025-01-08)**
+
+**✅ 브랜딩 검증 결과:**
+
+1. **apiKey 키들**: 
+   - **cline-latest 원본**: `"Enter API Key..."`, `"This key is stored locally and only used to make API requests from this extension."`
+   - **현재 Caret 버전**: `"Enter API Key..."`, `"This key is stored locally and only used to make API requests from this extension."`  
+   - **브랜딩 이슈**: **없음** ✅ (provider-agnostic 텍스트)
+
+2. **apiSetup 키들**:
+   - **cline-latest**: 해당 기능 존재하지 않음 (Caret 전용 기능)
+   - **브랜딩 검증**: 불필요 ✅ (Caret 고유 기능)
+
+**📊 Phase 3A-3 완료 - 최종 확인:**
+- 모든 키들이 현재 브랜딩 상태에서 그대로 번역 작업 가능
+- cline-latest 참조 불필요 (텍스트가 동일하거나 Caret 전용)
+- 바로 Phase 3A-4 다국어 번역 작업 진행 가능
+
+#### **📋 Phase 3A-4 완료 - 선별적 영어 locale 업데이트 (2025-01-08)**
+
+**🚨 중대한 발견 - 스크립트 오류 대규모 확인:**
+
+**✅ 실제 작업 수행 결과:**
+1. **Japanese `common.json`**: 
+   - ✅ 구조화된 `apiKey` 객체 추가: `placeholder`, `getYourKeyAn`, `getYourKeyA`
+   - ✅ `rulesModal` 구조 완성: `tooltip.manageRulesWorkflows`, `ariaLabel.CaretRulesButton`
+
+2. **Chinese `common.json`**:
+   - ✅ 구조화된 `apiKey` 객체 추가: `placeholder`, `getYourKeyAn`, `getYourKeyA`
+   - ✅ `rulesModal` 구조 완성: `tooltip.manageRulesWorkflows`, `ariaLabel.CaretRulesButton`
+
+**🚨 스크립트의 거짓양성 대량 발견:**
+- **apiSetup 키들**: Japanese, Chinese `welcome.json`에 **이미 완전히 존재함** ❌
+- **스크립트 보고**: "Japanese, Chinese common.json에서 apiSetup 누락"
+- **실제 상황**: 두 언어 모두 `welcome.json`에 완전한 구조로 존재
+
+**📊 Phase 3A-4 & Phase 3B 동시 완료:**
+- English에서는 추가 작업 불필요 (이미 완전함)
+- Japanese, Chinese에는 실제 필요한 키들만 선별 추가 완료
+- 번역 품질: 기존 파일의 번역 품질과 일관성 유지
 
 ### **📋 단계별 수정 계획**
 

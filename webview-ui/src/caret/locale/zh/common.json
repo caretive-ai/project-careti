@@ -367,9 +367,18 @@
 		"joinUs": "在以下平台加入我们",
 		"forMoreUpdates": "获取更多更新！"
 	},
+	"apiKey": {
+		"placeholder": "输入API密钥...",
+		"getYourKeyAn": "您可以在这里注册获得{{providerName}} API密钥。",
+		"getYourKeyA": "您可以在这里注册获得{{providerName}} API密钥。"
+	},
 	"rulesModal": {
-		"tooltip": {},
-		"ariaLabel": {}
+		"tooltip": {
+			"manageRulesWorkflows": "管理Caret规则和工作流"
+		},
+		"ariaLabel": {
+			"CaretRulesButton": "Caret规则"
+		}
 	},
 	"validation": {
 		"invalidApiKey": "You must provide a valid API key or choose a different provider."

@@ -43,9 +43,30 @@ class PhaseValidator {
 		console.log("🎉 Phase 2 validation successful: All required files exist.")
 		return true
 	}
+
+	validatePhase3() {
+		// 1. Verify JsonTemplateLoader.ts exists
+		const loaderPath = path.join(__dirname, "../caret-src/core/prompts/system/JsonTemplateLoader.ts")
+		if (!fs.existsSync(loaderPath)) {
+			throw new Error("Missing required file: JsonTemplateLoader.ts")
+		}
+		console.log("✅ Found required file: JsonTemplateLoader.ts")
+
+		// 2. Verify T06PromptSystemIntegration.test.ts does not use vi.mock
+		const testFilePath = path.join(__dirname, "../caret-src/__tests__/tdd/T06PromptSystemIntegration.test.ts")
+		const testFileContent = fs.readFileSync(testFilePath, "utf8")
+		if (testFileContent.includes("vi.mock")) {
+			throw new Error("T06PromptSystemIntegration.test.ts should not use vi.mock for Phase 3.")
+		}
+		console.log("✅ T06PromptSystemIntegration.test.ts is correctly using real implementations.")
+
+		console.log("🎉 Phase 3 validation completed successfully!")
+		return true
+	}
 }
 
 // To run this validator:
 // const validator = new PhaseValidator();
 // validator.validatePhase1();
 // validator.validatePhase2();
+// validator.validatePhase3();

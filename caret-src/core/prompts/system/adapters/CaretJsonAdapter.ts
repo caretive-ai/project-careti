@@ -1,58 +1,87 @@
 import { IPromptSystem } from "../IPromptSystem";
 import { JsonTemplateLoader } from "../JsonTemplateLoader";
-import { CARET_MODES } from "@caret/shared/constants/PromptSystemConstants";
+import { CARET_MODES } from "../../../../shared/constants/PromptSystemConstants";
+import { CaretSystemPromptContext } from "../types";
 
-// A simplified context type for this adapter's purpose
-type CaretContext = {
-    mode: 'chatbot' | 'agent';
-    [key: string]: any;
-};
-
+/**
+ * Adapter for Caret's JSON-based prompt system.
+ * It assembles a system prompt by dynamically selecting and combining
+ * JSON sections based on the provided context.
+ */
 export class CaretJsonAdapter implements IPromptSystem {
     private loader: JsonTemplateLoader;
 
     constructor() {
-        this.loader = new JsonTemplateLoader();
+        this.loader = JsonTemplateLoader.getInstance();
     }
 
     /**
-     * Assembles a system prompt for Caret's modes (chatbot/agent) using JSON sections.
-     * @param context The context containing the current mode.
-     * @returns A promise that resolves to the complete system prompt.
+     * Assembles a system prompt using JSON templates.
+     * @param context The context driving prompt generation.
+     * @returns A promise resolving to the complete system prompt string.
      */
-    public async getPrompt(context: CaretContext): Promise<string> {
+    public async getPrompt(context: CaretSystemPromptContext): Promise<string> {
         const isChatbotMode = context.mode === CARET_MODES.CHATBOT;
 
-        // 1. Load all relevant sections
-        const baseIntro = await this.loader.loadSection('BASE_PROMPT_INTRO.json');
-        const modes = await this.loader.loadSection('CHATBOT_AGENT_MODES.json');
-        const tools = await this.loader.loadSection('TOOL_DEFINITIONS.json');
-        const todo = await this.loader.loadSection('CARET_TODO_MANAGEMENT.json');
-        const progress = await this.loader.loadSection('CARET_TASK_PROGRESS.json');
-        const feedback = await this.loader.loadSection('CARET_FEEDBACK_SYSTEM.json');
+        const sectionNames = [
+            'BASE_PROMPT_INTRO',
+            'CHATBOT_AGENT_MODES',
+            'TOOL_DEFINITIONS',
+            context.auto_todo || context.task_progress ? 'CARET_TODO_MANAGEMENT' : null,
+            context.task_progress ? 'CARET_TASK_PROGRESS' : null,
+            'CARET_FEEDBACK_SYSTEM',
+        ].filter(Boolean) as string[];
 
-        // 2. Filter tools based on mode_restriction for chatbot mode
-        if (isChatbotMode && tools.tools) {
-            tools.tools = Object.entries(tools.tools).reduce((acc, [key, value]: [string, any]) => {
+        const promptParts: string[] = [];
+
+        for (const name of sectionNames) {
+            const template = this.loader.getTemplate<any>(name);
+            if (!template) {
+                console.warn(`[CaretJsonAdapter] Template not found: ${name}`);
+                continue;
+            }
+
+            if (name === 'TOOL_DEFINITIONS') {
+                promptParts.push(this.getToolsSection(template, isChatbotMode));
+            } else {
+                promptParts.push(this.getDynamicSection(template, isChatbotMode));
+            }
+        }
+
+        return promptParts.filter(Boolean).join('\n\n');
+    }
+
+    /**
+     * Processes and formats the tools section, applying mode restrictions.
+     */
+    private getToolsSection(template: any, isChatbotMode: boolean): string {
+        let tools = { ...template.tools };
+        if (isChatbotMode) {
+            tools = Object.entries(tools).reduce((acc, [key, value]: [string, any]) => {
                 if (value.mode_restriction !== 'agent_only') {
                     acc[key] = value;
                 }
                 return acc;
             }, {} as Record<string, any>);
         }
+        
+        const content = template.content_template.replace("{{tools}}", JSON.stringify(tools, null, 2));
+        return content;
+    }
 
-        // 3. Assemble the prompt string (simplified for now)
-        const promptParts = [
-            baseIntro.add.sections[0].content,
-            modes.add.sections[0].content,
-            `Current Mode: ${context.mode.toUpperCase()}`,
-            isChatbotMode ? todo.chatbot.template : todo.agent.template,
-            isChatbotMode ? progress.chatbot.style : progress.agent.style,
-            isChatbotMode ? feedback.chatbot.request : feedback.agent.request,
-            "# Available Tools",
-            JSON.stringify(tools.tools, null, 2)
-        ];
-
-        return promptParts.join('\n\n');
+    /**
+     * Gets content from a section based on its structure and the current mode.
+     */
+    private getDynamicSection(template: any, isChatbotMode: boolean): string {
+        if (template.add?.sections) {
+            return template.add.sections.map((s: any) => s.content).join('\n\n');
+        }
+        if (isChatbotMode && template.chatbot) {
+            return template.chatbot.template || template.chatbot.style || template.chatbot.request;
+        }
+        if (!isChatbotMode && template.agent) {
+            return template.agent.template || template.agent.style || template.agent.request;
+        }
+        return template.content || '';
     }
 }

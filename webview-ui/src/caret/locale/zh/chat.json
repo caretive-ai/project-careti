@@ -298,8 +298,8 @@
 	"brandMarketplace": {
 		"preparing": "{{brandName}} MCP市场正在准备中。",
 		"preparingDescription": "{{brandName}}专属MCP工具即将推出。",
-		"codecenterPreparing": "CodeCenter MCP市场正在准备中。",
-		"codecenterPreparingDescription": "CodeCenter专属MCP工具即将推出。"
+		"caretPreparing": "Caret MCP市场正在准备中。",
+		"caretPreparingDescription": "Caret专属MCP工具即将推出。"
 	},
 	"installedServersView": {
 		"descriptionPart1": " ",

@@ -298,8 +298,8 @@
 	"brandMarketplace": {
 		"preparing": "{{brandName}} MCP marketplace is preparing.",
 		"preparingDescription": "{{brandName}} exclusive MCP tools will be available soon.",
-		"codecenterPreparing": "CodeCenter MCP marketplace is preparing.",
-		"codecenterPreparingDescription": "CodeCenter exclusive MCP tools will be available soon."
+		"caretPreparing": "Caret MCP marketplace is preparing.",
+		"caretPreparingDescription": "Caret exclusive MCP tools will be available soon."
 	},
 	"installedServersView": {
 		"descriptionPart1": "The",

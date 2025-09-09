@@ -7,70 +7,61 @@ import { useCaretState } from "@/caret/context/CaretStateContext"
 import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 
-// CARET MODIFICATION: Convert asset:// URIs to Base64 data URIs (same logic as PersonaAvatar)
-// Ported from caret-compare with path changes already applied in JSON: /assets/ is correct
+// CARET MODIFICATION: Convert asset:// URIs to Base64 data URIs using templateCharacters data
 const convertAssetToBase64 = async (assetUri: string): Promise<string> => {
 	if (!assetUri.startsWith("asset:")) {
 		return assetUri
 	}
 
-	// Check if we have window template images injected by CaretProviderWrapper
-	if (assetUri.includes("caret.png")) {
-		if ((window as any).templateImage_caret) {
-			return (window as any).templateImage_caret
+	console.log("🔍 convertAssetToBase64 called with:", assetUri)
+
+	// Find matching character from templateCharacters JSON
+	for (const char of templateCharacters) {
+		// Check avatar URI
+		if (char.avatarUri === assetUri) {
+			const windowKey = `templateImage_${char.character}`
+			console.log(`✅ Found avatar match for ${char.character}, looking for window.${windowKey}`)
+			console.log(`Window key exists:`, !!(window as any)[windowKey])
+			if ((window as any)[windowKey]) {
+				return (window as any)[windowKey]
+			}
 		}
-		if ((window as any).personaProfile) {
-			return (window as any).personaProfile
+
+		// Check thinking avatar URI
+		if (char.thinkingAvatarUri === assetUri) {
+			const windowKey = `templateImage_${char.character}thinking`
+			console.log(`✅ Found thinking avatar match for ${char.character}, looking for window.${windowKey}`)
+			console.log(`Window key exists:`, !!(window as any)[windowKey])
+			if ((window as any)[windowKey]) {
+				return (window as any)[windowKey]
+			}
 		}
-	}
-	if (assetUri.includes("caret_thinking.png")) {
-		if ((window as any).templateImage_caretthinking) {
-			return (window as any).templateImage_caretthinking
+
+		// Check illustration URI
+		if (char.introIllustrationUri === assetUri) {
+			const windowKey = `templateImage_${char.character}illust`
+			console.log(`✅ Found illustration match for ${char.character}, looking for window.${windowKey}`)
+			console.log(`Window key exists:`, !!(window as any)[windowKey])
+			if ((window as any)[windowKey]) {
+				return (window as any)[windowKey]
+			}
 		}
-		if ((window as any).personaThinking) {
-			return (window as any).personaThinking
-		}
-	}
-	if (assetUri.includes("sarang.png") && (window as any).templateImage_sarang) {
-		return (window as any).templateImage_sarang
-	}
-	if (assetUri.includes("sarang_thinking.png") && (window as any).templateImage_sarangthinking) {
-		return (window as any).templateImage_sarangthinking
-	}
-	if (assetUri.includes("ichika.png") && (window as any).templateImage_ichika) {
-		return (window as any).templateImage_ichika
-	}
-	if (assetUri.includes("ichika_thinking.png") && (window as any).templateImage_ichikathinking) {
-		return (window as any).templateImage_ichikathinking
-	}
-	if (assetUri.includes("cyan.png") && (window as any).templateImage_cyan) {
-		return (window as any).templateImage_cyan
-	}
-	if (assetUri.includes("cyan_thinking.png") && (window as any).templateImage_cyanthinking) {
-		return (window as any).templateImage_cyanthinking
-	}
-	if (assetUri.includes("ubuntu.png") && (window as any).templateImage_ubuntu) {
-		return (window as any).templateImage_ubuntu
-	}
-	if (assetUri.includes("ubuntu_thinking.png") && (window as any).templateImage_ubuntuthinking) {
-		return (window as any).templateImage_ubuntuthinking
 	}
 
-	// Check for illustration images
-	if (assetUri.includes("caret_illust.png") && (window as any).templateImage_caretillust) {
-		return (window as any).templateImage_caretillust
+	console.log("❌ No match found for:", assetUri)
+	const templateKeys = Object.keys(window).filter((k) => k.startsWith("templateImage_"))
+	console.log("Available window keys:", templateKeys)
+
+	// Also check for persona keys
+	const personaKeys = Object.keys(window).filter((k) => k.includes("persona") || k.includes("template"))
+	console.log("Available persona/template keys:", personaKeys)
+
+	// Special handling for caret (backwards compatibility)
+	if (assetUri.includes("caret.png") && (window as any).personaProfile) {
+		return (window as any).personaProfile
 	}
-	if (assetUri.includes("sarang_illust.png") && (window as any).templateImage_sarangillust) {
-		return (window as any).templateImage_sarangillust
-	}
-	if (assetUri.includes("ichika_illust.png") && (window as any).templateImage_ichikaillust) {
-		return (window as any).templateImage_ichikaillust
-	}
-	if (assetUri.includes("cyan_illust.png") && (window as any).templateImage_cyanillust) {
-		return (window as any).templateImage_cyanillust
-	}
-	if (assetUri.includes("ubuntu_illust.png") && (window as any).templateImage_ubuntuillust) {
-		return (window as any).templateImage_ubuntuillust
+	if (assetUri.includes("caret_thinking.png") && (window as any).personaThinking) {
+		return (window as any).personaThinking
 	}
 
 	// Fallback to placeholder

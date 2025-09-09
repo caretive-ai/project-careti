@@ -40,15 +40,15 @@
 		},
 		"title": "Caret設定"
 	},
+	"modeSystem": {
+		"label": "モードシステム",
+		"description": "CaretまたはClineモードを選択してください。",
+		"options": {
+			"caret": "Caret",
+			"cline": "Cline"
+		}
+	},
 	"settings": {
-		"modeSystem": {
-			"label": "モードシステム",
-			"description": "CaretまたはClineモードを選択してください。",
-			"options": {
-				"caret": "Caret",
-				"cline": "Caret"
-			}
-		},
 		"preferredLanguage": {
 			"label": "優先言語",
 			"description": "Caretがコミュニケーションに使用する言語を選択してください。"

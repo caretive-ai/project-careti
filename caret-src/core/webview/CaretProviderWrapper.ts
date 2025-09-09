@@ -112,23 +112,21 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 			// Create window variables for each template image (caret-main pattern)
 			let imageInjectionScript = "\n"
 
-			const imageFiles = [
-				"caret.png",
-				"caret_thinking.png",
-				"caret_illust.png",
-				"sarang.png",
-				"sarang_thinking.png",
-				"sarang_illust.png",
-				"ichika.png",
-				"ichika_thinking.png",
-				"ichika_illust.png",
-				"cyan.png",
-				"cyan_thinking.png",
-				"cyan_illust.png",
-				"ubuntu.png",
-				"ubuntu_thinking.png",
-				"ubuntu_illust.png",
-			]
+			// Dynamically find all PNG files in template directory
+			let imageFiles: string[] = []
+			try {
+				const allFiles = await fs.readdir(templateDir)
+				imageFiles = allFiles.filter(file => file.endsWith('.png'))
+				console.log(`[CaretProviderWrapper] Found ${imageFiles.length} PNG files:`, imageFiles)
+			} catch (error) {
+				console.log(`[CaretProviderWrapper] Could not read template directory: ${error}`)
+				// Fallback to known files if directory read fails
+				imageFiles = [
+					"caret.png",
+					"caret_thinking.png", 
+					"caret_illust.png"
+				]
+			}
 
 			for (const file of imageFiles) {
 				const imagePath = path.join(templateDir, file)

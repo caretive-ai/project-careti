@@ -26,12 +26,8 @@ const HomeHeader = ({ shouldShowQuickWins = false }: HomeHeaderProps) => {
 	return (
 		<div className="flex flex-col items-center mb-5">
 			<div className="my-5">
-				{/* CARET MODIFICATION: Show persona avatar instead of Cline logo */}
-				{personaProfile ? (
-					<PersonaAvatar isThinking={false} personaProfile={personaProfile} size={64} />
-				) : (
-					<ClineLogoVariable className="size-16" />
-				)}
+				{/* CARET MODIFICATION: Show persona avatar only, no fallback to Cline logo */}
+				{personaProfile && <PersonaAvatar isThinking={false} personaProfile={personaProfile} size={64} />}
 			</div>
 			<div className="text-center flex items-center justify-center">
 				<h2 className="m-0 text-lg">{t("welcome.whatCanIDo", "common")}</h2>

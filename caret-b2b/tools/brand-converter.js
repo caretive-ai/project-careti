@@ -459,42 +459,84 @@ class BrandConverter {
     }
 
     /**
-     * 이미지 파일 복사
+     * 애셋 폴더 통째 복사
      */
     async copyAssets(fromBrand, toBrand) {
-        const fromAssetsPath = path.join(this.brandsDir, fromBrand, 'assets', 'icons')
-        const toAssetsPath = path.join(this.projectRoot, 'assets', 'icons')
+        const fromAssetsPath = path.join(this.brandsDir, fromBrand, 'assets')
+        const toAssetsPath = path.join(this.projectRoot, 'assets')
 
         if (!fs.existsSync(fromAssetsPath)) {
-            this.error(`❌ 소스 이미지 디렉토리가 없습니다: ${fromAssetsPath}`)
+            this.error(`❌ 소스 애셋 디렉토리가 없습니다: ${fromAssetsPath}`)
             return false
         }
 
-        if (!fs.existsSync(toAssetsPath)) {
-            this.error(`❌ 대상 이미지 디렉토리가 없습니다: ${toAssetsPath}`)
-            return false
-        }
-
-
-        // 이미지 파일들 복사
-        const files = fs.readdirSync(fromAssetsPath)
-        let copiedCount = 0
-
-        for (const file of files) {
-            const srcPath = path.join(fromAssetsPath, file)
-            const destPath = path.join(toAssetsPath, file)
-
-            if (fs.lstatSync(srcPath).isFile()) {
-                if (!this.isDryRun) {
-                    fs.copyFileSync(srcPath, destPath)
+        // 기존 assets 폴더 백업 (브랜드 폴더에)
+        if (fs.existsSync(toAssetsPath)) {
+            const backupPath = path.join(this.brandsDir, toBrand, 'assets-backup')
+            if (!this.isDryRun) {
+                try {
+                    // 기존 백업이 있으면 덮어쓰기
+                    if (fs.existsSync(backupPath)) {
+                        this.removeDirectory(backupPath)
+                    }
+                    this.copyDirectory(toAssetsPath, backupPath)
+                    this.removeDirectory(toAssetsPath)
+                    this.log(`📋 기존 assets 폴더 백업: ${backupPath}`)
+                } catch (error) {
+                    this.log(`⚠️ 백업 실패, 기존 파일 위에 덮어씁니다: ${error.message}`)
                 }
-                this.log(`  🔄 ${file} 복사`)
-                copiedCount++
             }
         }
 
-        this.log(`  ✅ ${copiedCount}개 이미지 파일 복사 완료`)
+        // 새 assets 폴더 복사
+        if (!this.isDryRun) {
+            this.copyDirectory(fromAssetsPath, toAssetsPath)
+        }
+        
+        this.log(`✅ assets 폴더 통째 복사 완료: ${fromAssetsPath} → ${toAssetsPath}`)
         return true
+    }
+
+    /**
+     * 디렉토리 재귀 복사
+     */
+    copyDirectory(src, dest) {
+        if (!fs.existsSync(dest)) {
+            fs.mkdirSync(dest, { recursive: true })
+        }
+
+        const items = fs.readdirSync(src)
+        for (const item of items) {
+            const srcPath = path.join(src, item)
+            const destPath = path.join(dest, item)
+            
+            const stat = fs.lstatSync(srcPath)
+            if (stat.isDirectory()) {
+                this.copyDirectory(srcPath, destPath)
+            } else {
+                fs.copyFileSync(srcPath, destPath)
+                this.log(`  🔄 ${path.relative(this.projectRoot, destPath)} 복사`)
+            }
+        }
+    }
+
+    /**
+     * 디렉토리 재귀 삭제
+     */
+    removeDirectory(dirPath) {
+        if (fs.existsSync(dirPath)) {
+            const items = fs.readdirSync(dirPath)
+            for (const item of items) {
+                const itemPath = path.join(dirPath, item)
+                const stat = fs.lstatSync(itemPath)
+                if (stat.isDirectory()) {
+                    this.removeDirectory(itemPath)
+                } else {
+                    fs.unlinkSync(itemPath)
+                }
+            }
+            fs.rmdirSync(dirPath)
+        }
     }
 
     /**

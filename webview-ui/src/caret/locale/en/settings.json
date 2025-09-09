@@ -44,15 +44,15 @@
 	"actMode": "Act Mode",
 	"useDifferentModels": "Use different models for Plan and Act modes",
 	"useDifferentModelsDescription": "Switching between Plan and Act mode will persist the API and model used in the previous mode. This may be helpful e.g. when using a strong reasoning model to architect a plan for a cheaper coding model to act on.",
+	"modeSystem": {
+		"label": "Mode System",
+		"description": "Select Caret or Cline mode.",
+		"options": {
+			"caret": "Caret",
+			"cline": "Cline"
+		}
+	},
 	"settings": {
-		"modeSystem": {
-			"label": "Mode System",
-			"description": "Select Caret or Caret mode.",
-			"options": {
-				"caret": "Caret",
-				"cline": "Caret"
-			}
-		},
 		"preferredLanguage": {
 			"label": "Preferred Language",
 			"description": "Select the language Caret should use for communication."

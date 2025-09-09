@@ -11,6 +11,9 @@ webview-ui-luke-parallel
 .vscode-test/
 *.vsix
 
+# Brand conversion backups
+assets_backup_*/
+
 .DS_Store
 .idea
 

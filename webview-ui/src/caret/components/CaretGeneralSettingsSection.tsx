@@ -93,13 +93,13 @@ const CaretGeneralSettingsSection: React.FC<CaretGeneralSettingsSectionProps> = 
 					<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
 						{t("telemetry.description", "common")}{" "}
 						<VSCodeLink className="text-inherit" href="https://docs.cline.bot/more-info/telemetry">
-							{t("telemetry.telemetryOverview", "common")}
+							{t("telemetry.telemetryOverview", "settings")}
 						</VSCodeLink>{" "}
-						{t("telemetry.and", "common")}{" "}
+						{t("telemetry.and", "settings")}{" "}
 						<VSCodeLink className="text-inherit" href="https://cline.bot/privacy">
-							{t("telemetry.privacyPolicy", "common")}
+							{t("telemetry.privacyPolicy", "settings")}
 						</VSCodeLink>{" "}
-						{t("telemetry.forMoreDetails", "common")}
+						{t("telemetry.forMoreDetails", "settings")}
 					</p>
 				</div>
 			</Section>

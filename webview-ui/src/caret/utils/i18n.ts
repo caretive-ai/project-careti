@@ -241,8 +241,13 @@ export const getCurrentLanguage = (): SupportedLanguage => {
 	return getInternalCurrentLanguage()
 }
 
-// Helper function to get nested value using dot notation
+// CARET MODIFICATION: Helper function to get nested value using dot notation, with flat key support
 const getNestedValue = (obj: any, path: string): any => {
+	// First try to get the value as a flat key (for keys like "taskHeader.tokens")
+	if (obj && obj[path] !== undefined) {
+		return obj[path]
+	}
+	// Fallback to nested object traversal (for keys like "settings.tabs.general")
 	return path.split(".").reduce((current, key) => current?.[key], obj)
 }
 

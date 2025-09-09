@@ -299,8 +299,8 @@
 	"brandMarketplace": {
 		"preparing": "{{brandName}} MCP 마켓플레이스가 준비 중입니다.",
 		"preparingDescription": "곧 {{brandName}} 전용 MCP 도구들을 만나보실 수 있습니다.",
-		"codecenterPreparing": "CodeCenter MCP 마켓플레이스가 준비 중입니다.",
-		"codecenterPreparingDescription": "곧 CodeCenter 전용 MCP 도구들을 만나보실 수 있습니다."
+		"caretPreparing": "Caret MCP 마켓플레이스가 준비 중입니다.",
+		"caretPreparingDescription": "곧 Caret 전용 MCP 도구들을 만나보실 수 있습니다."
 	},
 	"installedServersView": {
 		"descriptionPart1": " ",

@@ -17,7 +17,8 @@
       "Bash(npm run compile:*)",
       "Bash(npx tsc:*)",
       "Bash(git restore:*)",
-      "Bash(npm run check-types:*)"
+      "Bash(npm run check-types:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []

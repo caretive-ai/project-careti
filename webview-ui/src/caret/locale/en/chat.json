@@ -14,6 +14,7 @@
 		"resource": "access a resource"
 	},
 	"taskCompleted": "Task Completed",
+	"seeNewChanges": "See new changes",
 	"tool": {
 		"outsideWorkspace": "This file is outside of your workspace",
 		"editFile": "Caret wants to edit this file",
@@ -182,9 +183,9 @@
 	"userMessage.restoreChat": "Restore Chat",
 	"userMessage.restoreChatTooltip": "Deletes messages after this point (does not affect workspace files)",
 	"markdownBlock": {
-		"clickToToggleActMode": "Click to toggle to Act Mode",
-		"alreadyInActMode": "Already in Act Mode",
-		"actModeShortcut": "Act Mode (⌘⇧A)",
+		"clickToToggleActMode": "Click to toggle to Agent Mode",
+		"alreadyInActMode": "Already in Agent Mode",
+		"actModeShortcut": "Agent Mode (⌘⇧A)",
 		"copyCode": "Copy code",
 		"openFileInEditor": "Open {{filePath}} in editor"
 	},

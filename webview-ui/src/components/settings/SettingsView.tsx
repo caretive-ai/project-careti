@@ -169,8 +169,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 			// CARET MODIFICATION: Reset Caret-specific localStorage settings to defaults
 			if (resetGlobalState) {
 				localStorage.setItem("caret-enablePersonaSystem", "true")
-				// Force UI to refresh with new default values
-				window.location.reload()
+				// UI will update automatically through extension state context
 			}
 		} catch (error) {
 			console.error("Failed to reset state:", error)

@@ -3,6 +3,7 @@
 ## 📋 Executive Summary
 
 Luke의 실제 통합 테스트를 바탕으로 t06 JSON 시스템 프롬프트와 Chatbot/Agent 모드 구현의 핵심 문제들을 분석하고 해결책을 제안하고 수행후 2차 작업입니다.
+앞의 caret-docs\work-logs\luke\t06-phase5-cross-validation.md 와 caret-docs\features\f02-multilingual-i18n.mdx 의 미 구현 부분이 많습니다. 해당 개요와 소스를 반드시 파악하고 문제에 접근하세요.
 
 ## 2차 문제 지적 
 1. 처음 웰컴 페이지

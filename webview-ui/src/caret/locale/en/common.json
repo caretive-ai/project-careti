@@ -10,7 +10,16 @@
 		"reject": "Reject",
 		"setupApiOrLocal": "Setup My API Key or Local LLM",
 		"notifyCaretAccount": "Notify Me for Caret Subscription",
-		"saveAndStart": "Save and Start"
+		"saveAndStart": "Save and Start",
+		"retry": "Retry",
+		"approve": "Approve",
+		"proceed": "Proceed",
+		"proceedAnyways": "Proceed Anyways",
+		"proceedWhileRunning": "Proceed While Running",
+		"resumeTask": "Resume Task",
+		"startNewTaskWithContext": "Start New Task with Context",
+		"condenseConversation": "Condense Conversation",
+		"reportGitHubIssue": "Report GitHub Issue"
 	},
 	"error": {
 		"generic": "An error occurred."

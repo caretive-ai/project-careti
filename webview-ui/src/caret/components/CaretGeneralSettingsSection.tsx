@@ -4,6 +4,8 @@ import React from "react"
 import Section from "@/components/settings/Section"
 import { updateSetting } from "@/components/settings/utils/settingsHandlers"
 import { useExtensionState } from "@/context/ExtensionStateContext"
+import { CARET_LOCALIZED_URLS, getLocalizedUrl, type SupportedLanguage } from "../constants/urls"
+import { useCaretI18n } from "../hooks/useCaretI18n"
 import { t } from "../utils/i18n"
 // CARET MODIFICATION: 통합 언어 설정 컴포넌트와 전역 브랜드 모드 토글
 import ModeSystemToggle from "./ModeSystemToggle"
@@ -16,6 +18,7 @@ interface CaretGeneralSettingsSectionProps {
 const CaretGeneralSettingsSection: React.FC<CaretGeneralSettingsSectionProps> = ({ renderSectionHeader }) => {
 	// CARET MODIFICATION: Add telemetry setting with i18n, modeSystem, and persona system restored
 	const { telemetrySetting, modeSystem, enablePersonaSystem, setEnablePersonaSystem } = useExtensionState()
+	const { currentLanguage } = useCaretI18n()
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -88,18 +91,15 @@ const CaretGeneralSettingsSection: React.FC<CaretGeneralSettingsSectionProps> = 
 							const checked = e.target.checked === true
 							updateSetting("telemetrySetting", checked ? "enabled" : "disabled")
 						}}>
-						{t("telemetry.label", "common")}
+						{t("telemetry.helpImprove", "common")}
 					</VSCodeCheckbox>
 					<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
 						{t("telemetry.description", "common")}{" "}
-						<VSCodeLink className="text-inherit" href="https://docs.cline.bot/more-info/telemetry">
-							{t("telemetry.telemetryOverview", "settings")}
-						</VSCodeLink>{" "}
-						{t("telemetry.and", "settings")}{" "}
-						<VSCodeLink className="text-inherit" href="https://cline.bot/privacy">
-							{t("telemetry.privacyPolicy", "settings")}
-						</VSCodeLink>{" "}
-						{t("telemetry.forMoreDetails", "settings")}
+						<VSCodeLink
+							className="text-inherit"
+							href={getLocalizedUrl("CARETIVE_PRIVACY", currentLanguage as SupportedLanguage)}>
+							{t("telemetry.settingsLink", "common")}
+						</VSCodeLink>
 					</p>
 				</div>
 			</Section>

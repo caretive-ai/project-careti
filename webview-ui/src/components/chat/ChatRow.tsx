@@ -1206,7 +1206,7 @@ export const ChatRowContent = memo(
 												width: "100%",
 											}}>
 											<i className="codicon codicon-new-file" style={{ marginRight: 6 }} />
-											See new changes
+											{t("seeNewChanges", "chat")}
 										</SuccessButton>
 									</div>
 								)}
@@ -1348,7 +1348,7 @@ export const ChatRowContent = memo(
 														cursor: seeNewChangesDisabled ? "wait" : "pointer",
 													}}
 												/>
-												See new changes
+												{t("seeNewChanges", "chat")}
 											</SuccessButton>
 										</div>
 									)}

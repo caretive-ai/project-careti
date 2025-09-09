@@ -11,7 +11,15 @@
 		"setupApiOrLocal": "내 API 키 사용 또는 로컬 LLM 설정",
 		"notifyCaretAccount": "Caret 구독 서비스 알림받기",
 		"saveAndStart": "저장하고 시작하기",
-		"resume.Task": "작업 재개"
+		"retry": "재시도",
+		"approve": "승인",
+		"proceed": "계속",
+		"proceedAnyways": "그냥 계속",
+		"proceedWhileRunning": "실행하며 계속",
+		"resumeTask": "작업 재개",
+		"startNewTaskWithContext": "컨텍스트와 함께 새 작업 시작",
+		"condenseConversation": "대화 요약",
+		"reportGitHubIssue": "GitHub 이슈 보고"
 	},
 	"error": {
 		"generic": "오류가 발생했습니다."

@@ -92,11 +92,6 @@ export class CaretJsonAdapter implements IPromptSystem {
         const finalPrompt = promptParts.filter(Boolean).join('\n\n');
         console.log(`[CaretJsonAdapter] 🎉 Final prompt generated: ${finalPrompt.length} characters, ${promptParts.length} sections`);
         
-        // DEBUGGING: Log the actual prompt content to see what's being sent to the AI
-        console.log(`[CaretJsonAdapter] 📄 === FULL PROMPT CONTENT START ===`);
-        console.log(finalPrompt);
-        console.log(`[CaretJsonAdapter] 📄 === FULL PROMPT CONTENT END ===`);
-        
         return finalPrompt;
     }
 
@@ -107,8 +102,6 @@ export class CaretJsonAdapter implements IPromptSystem {
     private async getClineToolsSection(context: CaretSystemPromptContext, isChatbotMode: boolean): Promise<string | null> {
         try {
             // CARET MODIFICATION: Fixed cline-latest compatibility
-            console.log('[DEBUG] Creating mockVariant with family:', getModelFamily(context.providerInfo) || ModelFamily.GENERIC)
-            console.log('[DEBUG] Context keys:', Object.keys(context))
             
             // Create a mock PromptVariant to use Cline's tool system
             const mockVariant = {
@@ -129,19 +122,11 @@ export class CaretJsonAdapter implements IPromptSystem {
                 tools: [] as readonly ClineDefaultTool[],
                 toolOverrides: undefined
             } as const;
-            
-            console.log('[DEBUG] mockVariant created:', JSON.stringify(mockVariant, null, 2))
 
             // Get all tools from Cline's system
             const toolPrompts = await PromptBuilder.getToolsPrompts(mockVariant, context);
-            console.log('[DEBUG] PromptBuilder returned:', toolPrompts?.length || 0, 'tools')
             
             if (!toolPrompts || toolPrompts.length === 0) {
-                console.error('[DEBUG] PromptBuilder.getToolsPrompts failed - investigating...')
-                // Direct ClineToolSet call to narrow down the problem
-                const { ClineToolSet } = await import('@/core/prompts/system-prompt/registry/ClineToolSet')
-                const directTools = ClineToolSet.getTools(mockVariant.family)
-                console.log('[DEBUG] Direct ClineToolSet.getTools returned:', directTools.length, 'tools')
                 console.warn(`[CaretJsonAdapter] ❌ No tools available from Cline system`);
                 return null;
             }
@@ -173,12 +158,8 @@ export class CaretJsonAdapter implements IPromptSystem {
                 ];
                 filteredTools = toolPrompts.filter((toolPrompt: string) => {
                     const toolMatch = allowedInChatbot.some(allowed => toolPrompt.includes(`## ${allowed}`));
-                    if (!toolMatch) {
-                        console.log('[DEBUG] Filtered out tool in chatbot mode:', toolPrompt.substring(0, 50) + '...')
-                    }
                     return toolMatch;
                 });
-                console.log(`[DEBUG] Filtered tools: ${filteredTools.length}/${toolPrompts.length} (chatbot mode)`)
             }
             
             toolsContent += filteredTools.join('\n\n');

@@ -89,19 +89,20 @@
 		"toggleError": "Rule toggle error"
 	},
 	"persona": {
-		"management": "Persona Management",
-		"description": "Give your AI agent a unique persona.",
-		"docs": "Docs",
-		"availablePersonas": "Available Personas",
-		"selectDescription": "Select your desired persona or create a new one to customize your AI assistant.",
-		"select": "Select",
-		"createNew": "Create New Persona",
-		"creating": "Creating...",
-		"uploadNormal": "Upload Avatar",
-		"uploadThinking": "Upload Thinking Avatar",
+		"enablePersonaSystem": "ペルソナシステムを有効にする",
+		"description": "ペルソナシステムを有効にして、さまざまなAIキャラクターとカスタマイズされた体験を楽しめます。",
+		"management": "ペルソナ管理",
+		"docs": "ドキュメント",
+		"availablePersonas": "利用可能なペルソナ",
+		"selectDescription": "お好みのペルソナを選択するか、新しいペルソナを作成してAIアシスタントをカスタマイズしてください。",
+		"select": "選択",
+		"createNew": "新しいペルソナを作成",
+		"creating": "作成中...",
+		"uploadNormal": "アバターをアップロード",
+		"uploadThinking": "思考アバターをアップロード",
 		"default": {
-			"name": "Default Caret",
-			"description": "The default AI coding assistant persona."
+			"name": "デフォルトCaret",
+			"description": "デフォルトのAIコーディングアシスタントペルソナです。"
 		}
 	},
 	"rulesModal": {

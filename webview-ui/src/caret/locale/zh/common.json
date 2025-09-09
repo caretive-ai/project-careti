@@ -89,8 +89,9 @@
 		"toggleError": "规则切换错误"
 	},
 	"persona": {
+		"enablePersonaSystem": "启用人格系统",
+		"description": "启用人格系统，体验各种 AI 角色的个性化互动。",
 		"management": "人格管理",
-		"description": "为您的 AI 代理赋予独特的人格。",
 		"docs": "文档",
 		"availablePersonas": "可用人格",
 		"selectDescription": "选择您所需的人格或创建新人格来自定义您的 AI 助手。",

@@ -163,10 +163,27 @@ Caret의 i18n 시스템은 한국어의 복잡한 조사를 자동으로 처리�
     코드에서 사용되지 않는 번역 키를 찾아냅니다.
 
 #### **🔧 자동화 도구**
--   **키 자동 동기화**: `npm run sync:i18n-keys`  
+-   **키 자동 동기화**: `npm run sync:i18n-keys` 또는 `node caret-scripts/tools/i18n-key-synchronizer.js`  
     누락된 키를 자동으로 추가하고 영어(en)를 기본값으로 채웁니다.
+-   **완전 동기화 (삭제 포함)**: `node caret-scripts/tools/i18n-key-synchronizer.js --delete-unused`  
+    누락된 키를 추가하고, 영어에 없는 키를 다른 언어에서 삭제합니다.
 -   **미사용 키 자동 삭제**: `node caret-scripts/tools/remove-i18n-unused-keys.js`  
     사용되지 않는 번역 키를 모든 언어 파일에서 자동으로 삭제합니다.
+
+**i18n-key-synchronizer.js 사용법:**
+```bash
+# 기본 모드: 누락된 키만 추가
+node caret-scripts/tools/i18n-key-synchronizer.js
+
+# 완전 동기화 모드: 누락된 키 추가 + 영어에 없는 키 삭제  
+node caret-scripts/tools/i18n-key-synchronizer.js --delete-unused
+node caret-scripts/tools/i18n-key-synchronizer.js -d
+```
+
+**동작 방식:**
+- 영어(en) 파일을 마스터로 사용하여 다른 언어 파일들과 동기화
+- 누락된 키는 영어 값을 복사하여 추가 (번역 플레이스홀더)
+- `--delete-unused` 옵션: 영어에 없는 키를 다른 언어에서 삭제
 
 #### **📊 분석 도구**
 -   **i18n 전체 체크리스트**: `caret-scripts/i18n-checklist-report.md`  

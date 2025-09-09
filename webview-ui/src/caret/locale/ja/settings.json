@@ -346,8 +346,6 @@
 		"placeholder": "デフォルト: https://api.example.com"
 	},
 	"modelInfoView": {
-		"tokensSuffix": "トークン)",
-		"millionTokensLabel": "百万トークン",
 		"inputPriceLabel": "入力価格:",
 		"outputPriceStandardLabel": "出力価格 (標準):",
 		"outputPriceThinkingBudgetLabel": "出力価格 (思考予算 > 0):",
@@ -355,10 +353,6 @@
 		"basedOnInputTokens": "(入力トークンに基づく)",
 		"doesNotSupportImages": "画像をサポートしていません",
 		"supportsImages": "画像をサポート",
-		"doesNotSupportBrowserUse": "ブラウザ使用をサポートしていません",
-		"supportsBrowserUse": "ブラウザ使用をサポート",
-		"doesNotSupportPromptCaching": "プロンプトキャッシングをサポートしていません",
-		"supportsPromptCaching": "プロンプトキャッシングをサポート",
 		"contextWindowLabel": "コンテキストウィンドウ:",
 		"cacheWritesPriceLabel": "キャッシュ書き込み価格:",
 		"cacheReadsPriceLabel": "キャッシュ読み取り価格:",
@@ -372,7 +366,13 @@
 		"supportsCache": "Supports prompt caching",
 		"contextWindow": "Context Window",
 		"cacheWritesPrice": "Cache writes price",
-		"cacheReadsPrice": "Cache reads price"
+		"cacheReadsPrice": "Cache reads price",
+		"supportsImagesLabel": "Supports images:",
+		"supportsComputerUseLabel": "Supports computer use:",
+		"supportsCacheLabel": "Supports prompt caching:",
+		"doesNotSupportImagesLabel": "Does not support images:",
+		"doesNotSupportComputerUseLabel": "Does not support computer use:",
+		"doesNotSupportCacheLabel": "Does not support prompt caching:"
 	},
 	"modelSelector": {
 		"label": "モデル",
@@ -486,8 +486,7 @@
 		"providerName": "Groq"
 	},
 	"huaweiCloudMaasProvider": {
-		"providerName": "Huawei Cloud MaaS",
-		"modelLabel": "モデル"
+		"providerName": "Huawei Cloud MaaS"
 	},
 	"huggingFaceProvider": {
 		"apiKeyPlaceholder": "APIキーを入力してください...",
@@ -614,8 +613,6 @@
 		"setupInstructionsLinkText": "設定手順"
 	},
 	"qwenProvider": {
-		"name": "Qwen",
-		"modelLabel": "モデル",
 		"apiLineLabel": "Alibaba API Line",
 		"apiLineDescription": "Please select the appropriate API interface based on your location. If you are in China, choose the China API interface. Otherwise, choose the International API interface.",
 		"providerName": "Qwen",
@@ -698,7 +695,6 @@
 		"name": "X AI",
 		"notePrefix": "注意:",
 		"noteText": "Caretは複雑なプロンプトを使用し、Claudeモデルと最も良く動作します。能力の低いモデルは期待通りに動作しない場合があります。",
-		"modifyReasoningEffortLabel": "推論の努力を修正する",
 		"reasoningEffortLabel": "推論の努力",
 		"reasoningEffortDescription": "高い努力は、より徹底的な分析を生成する可能性がありますが、時間がかかり、より多くのトークンを使用します。",
 		"providerName": "xAI",
@@ -796,42 +792,149 @@
 		"title": "API Configuration"
 	},
 	"providers": {
-		"caret": "Caret",
-		"openrouter": "OpenRouter",
-		"gemini": "Google Gemini",
-		"openai": "OpenAI Compatible",
-		"anthropic": "Anthropic",
-		"bedrock": "Amazon Bedrock",
-		"vscode-lm": "VS Code LM API",
-		"deepseek": "DeepSeek",
-		"openai-native": "OpenAI",
-		"ollama": "Ollama",
-		"vertex": "GCP Vertex AI",
-		"litellm": "LiteLLM",
-		"claude-code": "Claude Code",
-		"sapaicore": "SAP AI Core",
-		"mistral": "Mistral",
-		"zai": "Z AI",
-		"groq": "Groq",
-		"cerebras": "Cerebras",
-		"vercel-ai-gateway": "Vercel AI Gateway",
-		"baseten": "Baseten",
-		"requesty": "Requesty",
-		"fireworks": "Fireworks AI",
-		"together": "Together",
-		"qwen": "Alibaba Qwen",
-		"qwen-code": "Qwen Code",
-		"doubao": "Bytedance Doubao",
-		"lmstudio": "LM Studio",
-		"moonshot": "Moonshot",
-		"huggingface": "Hugging Face",
-		"nebius": "Nebius AI Studio",
-		"asksage": "AskSage",
-		"xai": "xAI",
-		"sambanova": "SambaNova",
-		"huawei-cloud-maas": "Huawei Cloud MaaS",
-		"dify": "Dify.ai",
-		"cline": "Caret"
+		"caret": {
+			"name": "Caret"
+		},
+		"openrouter": {
+			"name": "OpenRouter",
+			"description": "Access a wide variety of open-source and proprietary models with a single API key."
+		},
+		"gemini": {
+			"name": "Google Gemini",
+			"description": "Use the Google AI API to access Google's Gemini model family. Requires an API key."
+		},
+		"openai": {
+			"name": "OpenAI Compatible",
+			"description": "Connect to any model endpoint that is compatible with the OpenAI API."
+		},
+		"anthropic": {
+			"name": "Anthropic",
+			"description": "Use the Anthropic API to access the Claude model family directly. Requires an API key."
+		},
+		"bedrock": {
+			"name": "Amazon Bedrock",
+			"description": "Amazon Bedrock provides access to a wide range of foundation models from Amazon and leading AI startups."
+		},
+		"vscode-lm": {
+			"name": "VS Code LM API",
+			"description": "Use models provided by other extensions (e.g., GitHub Copilot) through the VS Code Language Model API."
+		},
+		"deepseek": {
+			"name": "DeepSeek",
+			"description": "DeepSeek develops open-source models with strong capabilities in code and mathematics."
+		},
+		"openai-native": {
+			"name": "OpenAI",
+			"description": "Access GPT models directly using OpenAI's official API. Requires an API key."
+		},
+		"ollama": {
+			"name": "Ollama",
+			"description": "Run models locally on your computer using Ollama. See their quickstart guide to get started."
+		},
+		"vertex": {
+			"name": "GCP Vertex AI",
+			"description": "Google Cloud Vertex AI offers a variety of AI models, including Google's state-of-the-art models."
+		},
+		"litellm": {
+			"name": "LiteLLM",
+			"description": "LiteLLM provides a unified interface to over 100 LLM APIs."
+		},
+		"claude-code": {
+			"name": "Claude Code",
+			"description": "Claude Code is a specialized model from Anthropic, optimized for code-related tasks."
+		},
+		"sapaicore": {
+			"name": "SAP AI Core",
+			"description": "SAP AI Core is a service for deploying and managing AI models within the SAP ecosystem."
+		},
+		"mistral": {
+			"name": "Mistral",
+			"description": "Mistral AI develops high-performance open-source and commercial models."
+		},
+		"zai": {
+			"name": "Z AI",
+			"description": "Zhipu AI provides bilingual (Chinese and English) conversational models."
+		},
+		"groq": {
+			"name": "Groq",
+			"description": "Groq offers extremely fast inference speeds through its Language Processing Units (LPUs)."
+		},
+		"cerebras": {
+			"name": "Cerebras",
+			"description": "Cerebras builds hardware for training and running large-scale AI models."
+		},
+		"vercel-ai-gateway": {
+			"name": "Vercel AI Gateway",
+			"description": "The Vercel AI Gateway provides a reliable connection to various model providers."
+		},
+		"baseten": {
+			"name": "Baseten",
+			"description": "Baseten is a platform for deploying and serving custom AI models."
+		},
+		"requesty": {
+			"name": "Requesty",
+			"description": "Requesty is a platform for AI-powered request routing and management."
+		},
+		"fireworks": {
+			"name": "Fireworks AI",
+			"description": "Fireworks AI is a platform for developers to experiment with and deploy generative AI models."
+		},
+		"together": {
+			"name": "Together",
+			"description": "Together AI provides a cloud platform for running leading open-source models."
+		},
+		"qwen": {
+			"name": "Alibaba Qwen",
+			"description": "Alibaba Qwen is a powerful large language model for various natural language processing tasks."
+		},
+		"qwen-code": {
+			"name": "Qwen Code",
+			"description": "Qwen Code is a specialized AI model from Alibaba for code generation and completion."
+		},
+		"doubao": {
+			"name": "Bytedance Doubao",
+			"description": "Doubao is a family of conversational AI models developed by Bytedance."
+		},
+		"lmstudio": {
+			"name": "LM Studio",
+			"description": "LM Studio allows you to discover, download, and run LLMs on your local machine."
+		},
+		"moonshot": {
+			"name": "Moonshot",
+			"description": "Moonshot AI specializes in models with long context windows."
+		},
+		"huggingface": {
+			"name": "Hugging Face",
+			"description": "Hugging Face provides inference APIs for a wide range of open-source models."
+		},
+		"nebius": {
+			"name": "Nebius AI Studio",
+			"description": "Nebius AI offers AI services based on Yandex's technology."
+		},
+		"asksage": {
+			"name": "AskSage",
+			"description": "AskSage provides AI models designed for research and academic use."
+		},
+		"xai": {
+			"name": "xAI",
+			"description": "xAI develops Grok, a large language model that aims to be truthful."
+		},
+		"sambanova": {
+			"name": "SambaNova",
+			"description": "SambaNova provides high-performance models for enterprise-grade AI applications."
+		},
+		"huawei-cloud-maas": {
+			"name": "Huawei Cloud MaaS",
+			"description": "Huawei Cloud MaaS (Model-as-a-Service) offers a variety of AI models."
+		},
+		"dify": {
+			"name": "Dify.ai",
+			"description": "Dify.ai is a platform for building and operating LLM-powered applications."
+		},
+		"cline": {
+			"name": "Caret",
+			"description": "Caret provides high-quality AI models with optimized performance for coding tasks."
+		}
 	},
 	"persona": {
 		"enablePersonaSystem": "Enable Persona System",

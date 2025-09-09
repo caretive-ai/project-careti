@@ -65,6 +65,12 @@
 		},
 		"plan": {
 			"label": "計画"
+		},
+		"agent": {
+			"label": "Agent"
+		},
+		"chatbot": {
+			"label": "Chatbot"
 		}
 	},
 	"contextMenu": {

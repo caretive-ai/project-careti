@@ -1,3 +1,724 @@
 {
-	"placeholder": "This file will be synchronized with en/common.json structure"
+	"button": {
+		"freeStart": "免费开始",
+		"useOwnKey": "使用您自己的 API 密钥",
+		"letsGo": "开始吧！",
+		"save": "保存",
+		"cancel": "取消",
+		"done": "完成",
+		"runCommand": "运行命令",
+		"reject": "拒绝",
+		"setupApiOrLocal": "设置我的 API 密钥或本地 LLM",
+		"notifyCaretAccount": "通知我 Caret 订阅信息",
+		"saveAndStart": "保存并开始"
+	},
+	"error": {
+		"generic": "发生了错误。"
+	},
+	"imageAlt": {
+		"caretBanner": "Caret 标志横幅"
+	},
+	"title": {
+		"apiKeySettings": "API 密钥设置"
+	},
+	"text": {
+		"finalThoughts": "与 {{appName}} 一起开始您精彩的开发之旅！"
+	},
+	"link": {
+		"learnMoreCaretGit": "在 Caret GitHub 上了解更多"
+	},
+	"apiSetup": {
+		"backButton": "返回",
+		"title": "开始使用 Caret",
+		"description": "Caret 支持各种 LLM。您可以订阅 Caret 服务以获得免费访问，使用 ChatGPT、Claude、Gemma API，或配置本地 LLM。",
+		"instructions": "说明：",
+		"supportLinks": {
+			"llmList": "支持的 LLM 列表",
+			"geminiCredit": "获取免费 Gemini API 积分"
+		},
+		"saveButton": "保存并开始",
+		"help": {
+			"title": "需要帮助？",
+			"button": "查看文档"
+		}
+	},
+	"welcome": {
+		"title": "欢迎使用 Caret！🎉",
+		"subtitle": "您的 AI 动力编程助手",
+		"description": "Caret 是一个 AI 编程助手，帮助您编写、调试和改进代码。让我们开始吧！",
+		"getStarted": "开始使用",
+		"learnMore": "了解更多",
+		"whatCanIDo": "我能为您做什么？",
+		"recentTasks": "最近的任务",
+		"noRecentTasks": "没有最近的任务",
+		"viewAllHistory": "查看所有历史",
+		"quickWinsTitle": "Caret 快速<span>[成果]</span>"
+	},
+	"rules": {
+		"tab": {
+			"rules": "规则",
+			"workflows": "工作流"
+		},
+		"section": {
+			"personaManagement": "人格管理",
+			"globalRules": "全局规则",
+			"workspaceRules": "工作区规则",
+			"globalWorkflows": "全局工作流",
+			"localWorkflows": "本地工作流"
+		},
+		"subTitle": {
+			"caretRules": "Caret 规则 (.caretrules)",
+			"CaretRules": "Caret 规则 (.Caretrules)",
+			"cursorRules": "Cursor 规则 (.cursorrules)",
+			"windsurfRules": "Windsurf 规则 (.windsurfrules)"
+		},
+		"button": {
+			"selectPersonaTemplate": "选择模板角色",
+			"changePersonaTemplate": "更改人格模板"
+		},
+		"description": {
+			"personaManagement": "选择与您的编程风格和偏好匹配的 AI 人格。",
+			"rulesDescription": "规则允许您提供系统级指导。将它们视为为您的项目或每次对话持久包含上下文和偏好的方式。",
+			"workflowsDescription": "工作流允许您定义一系列步骤，供 Caret 执行重复性任务，如部署服务或提交 PR。要运行工作流，请在聊天中输入 /workflow-name。"
+		},
+		"action": {
+			"newRuleFile": "新建规则文件..."
+		},
+		"title": "Caret 规则和工作流管理",
+		"docsLink": "文档",
+		"toggleError": "规则切换错误"
+	},
+	"persona": {
+		"management": "人格管理",
+		"description": "为您的 AI 代理赋予独特的人格。",
+		"docs": "文档",
+		"availablePersonas": "可用人格",
+		"selectDescription": "选择您所需的人格或创建新人格来自定义您的 AI 助手。",
+		"select": "选择",
+		"createNew": "创建新人格",
+		"creating": "创建中...",
+		"uploadNormal": "上传头像",
+		"uploadThinking": "上传思考头像",
+		"default": {
+			"name": "默认 Caret",
+			"description": "默认的 AI 编程助手人格。"
+		}
+	},
+	"rulesModal": {
+		"tooltip": {},
+		"ariaLabel": {}
+	},
+	"mode": {
+		"chatbot": {
+			"label": "💬 聊天机器人",
+			"title": "聊天机器人模式",
+			"description": "专家咨询和分析"
+		},
+		"agent": {
+			"label": "🤖 代理",
+			"title": "代理模式",
+			"description": "协作开发和实现"
+		},
+		"plan": {
+			"label": "📋 计划",
+			"title": "计划模式",
+			"description": "策略制定和设计"
+		},
+		"act": {
+			"label": "⚡ 执行",
+			"title": "执行模式",
+			"description": "实施和执行"
+		},
+		"tooltip": {
+			"chatbot": "在聊天机器人模式中，Caret 提供专家咨询和分析",
+			"agent": "在代理模式中，Caret 协作实现解决方案",
+			"plan": "在计划模式中，制定策略和计划",
+			"act": "在执行模式中，执行和实施计划",
+			"toggle": "使用 {{metaKey}}+Shift+A 切换"
+		}
+	},
+	"settings": {
+		"openAIReasoningEffort": {
+			"high": "High (More detailed, slower, higher cost)",
+			"label": "OpenAI Reasoning Effort",
+			"description": "Adjust the reasoning effort for OpenAI models. Higher effort may lead to more detailed responses but can be slower and more costly."
+		},
+		"uiLanguage": {
+			"label": "UI Language",
+			"description": "Select the display language for the Caret UI.",
+			"option": {
+				"ko": "Korean (한국어)",
+				"en": "English",
+				"ja": "Japanese (日本語)",
+				"zh": "Chinese (中文)"
+			}
+		},
+		"preferredLanguage": {
+			"label": "AI Response Language",
+			"description": "The language that Caret should use for communication."
+		},
+		"modeSystem": {
+			"label": "Mode Settings",
+			"description": "Enable Caret mode settings to use Caret's Plan/Act modes.",
+			"options": {
+				"caret": "Caret",
+				"Caret": "Caret",
+				"cline": "Caret"
+			}
+		},
+		"separateModels": {
+			"label": "Use different models for Chatbot and Agent modes",
+			"description": "Switching between Chatbot and Agent mode will persist the API and model used in the previous mode. This may be helpful e.g. when using a strong reasoning model for expert consultation (Chatbot) and a cheaper coding model for collaborative development (Agent)."
+		},
+		"apiKey": {
+			"placeholder": "Enter API Key...",
+			"getYourKeyAn": "You can get an {{providerName}} API key by signing up here.",
+			"getYourKeyA": "You can get a {{providerName}} API key by signing up here.",
+			"label": "{{providerName}} API Key",
+			"helpText": "This key is stored locally and only used to make API requests from this extension."
+		},
+		"baseUrl": {
+			"label": "Use custom base URL",
+			"placeholder": "Default: https://api.example.com"
+		},
+		"modelSelector": {
+			"label": "Model",
+			"placeholder": "Select a model..."
+		},
+		"modelIdField": {
+			"label": "Model"
+		},
+		"openRouter": {
+			"featured": {
+				"claudeSonnet4": {
+					"description": "Recommended for agentic coding in Cline",
+					"label": "Best"
+				},
+				"gpt5": {
+					"description": "State of the art model for complex, long-horizon tasks",
+					"label": "New"
+				},
+				"grok": {
+					"description": "Advanced model with 262K context for complex coding",
+					"label": "Free"
+				}
+			},
+			"switchTo1M": "Switch to 1M context window model",
+			"switchTo200K": "Switch to 200K context window model",
+			"modelLabel": "Model",
+			"searchPlaceholder": "Search and select a model...",
+			"clearSearch": "Clear search",
+			"info": {
+				"fullText": "The extension automatically fetches the latest list of models available on <0>OpenRouter.</0> If you're unsure which model to choose, Cline works best with <1>anthropic/claude-sonnet-4.</1> You can also try searching \"free\" for no-cost options currently available."
+			}
+		},
+		"requesty": {
+			"modelLabel": "Model",
+			"searchPlaceholder": "Search and select a model...",
+			"clearSearch": "Clear search",
+			"info": {
+				"fullText": "The extension automatically fetches the latest list of models available on <0>Requesty.</0> If you're unsure which model to choose, Cline works best with <1>anthropic/claude-3-7-sonnet-latest.</1>"
+			}
+		},
+		"sapAiCore": {
+			"placeholder": "Select a model...",
+			"deployedModels": "── Deployed Models ──",
+			"notDeployedModels": "── Not Deployed Models ──",
+			"modelLabel": "Model"
+		},
+		"vertex": {
+			"projectIdPlaceholder": "Enter Project ID...",
+			"projectIdLabel": "Google Cloud Project ID",
+			"regionLabel": "Google Cloud Region",
+			"selectRegionPlaceholder": "Select a region...",
+			"setupDescription": "To use Google Cloud Vertex AI, you need to ",
+			"setupLink1": "1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,",
+			"setupLink2": " 2) install the Google Cloud CLI › configure Application Default Credentials."
+		},
+		"vsCodeLm": {
+			"modelLabel": "Language Model",
+			"selectModelPlaceholder": "Select a model...",
+			"getStartedDescription": "The VS Code Language Model API allows you to run models provided by other VS Code extensions (including but not limited to GitHub Copilot). The easiest way to get started is to install the Copilot extension from the VS Marketplace and enabling Claude 4 Sonnet.",
+			"experimentalNote": "Note: This is a very experimental integration and may not work as expected."
+		},
+		"terminalOutputLineLimit": {
+			"label": "Terminal output limit",
+			"description": "Maximum number of lines to include in terminal output when executing commands. When exceeded, lines will be removed from the middle, saving tokens."
+		},
+		"thinkingBudget": {
+			"enable": "Enable extended thinking",
+			"budgetText": "<strong>Budget:</strong> {{value}} tokens",
+			"ariaLabel": "Thinking budget: {{value}} tokens",
+			"description": "Higher budgets may allow you to achieve more comprehensive and nuanced reasoning"
+		},
+		"useCustomPrompt": {
+			"label": "Use compact prompt",
+			"description": "A system prompt optimized for smaller context window (e.g. 8k or less).",
+			"warning": "Does not support Mcp and Focus Chain"
+		},
+		"loading": "Loading...",
+		"signUpDescription": "Sign up for an account to get access to the latest models, billing dashboard to view usage and credits, and more upcoming features.",
+		"termsOfService": "Terms of Service",
+		"privacyPolicy": "Privacy Policy",
+		"byContining": "By continuing, you agree to the",
+		"subscription": "Subscription Plan",
+		"subscriptionFree": "Free",
+		"subscriptionBasic": "Basic",
+		"payAsYouGo": "Pay as you go",
+		"organization": "Organization",
+		"payAsYouGoDescription": "* Additional charges apply after all subscription usage is exhausted.",
+		"title": "Account"
+	},
+	"account": {
+		"signUpWithCaret": "Login & Sign Up",
+		"viewBillingUsage": "View Billing & Usage",
+		"dashboard": "Dashboard",
+		"addCredits": "Add Credits",
+		"currentBalance": "Current Balance",
+		"logOut": "Log out",
+		"loading": "Loading...",
+		"signUpDescription": "Sign up for an account to get access to the latest models, billing dashboard to view usage and credits, and more upcoming features.",
+		"termsOfService": "Terms of Service",
+		"privacyPolicy": "Privacy Policy",
+		"byContining": "By continuing, you agree to the",
+		"subscription": "Subscription Plan",
+		"subscriptionFree": "Free",
+		"subscriptionBasic": "Basic",
+		"payAsYouGo": "Pay as you go",
+		"organization": "Organization",
+		"payAsYouGoDescription": "* Additional charges apply after all subscription usage is exhausted.",
+		"title": "Account"
+	},
+	"common": {
+		"and": "and",
+		"scrollToBottom": "Scroll to bottom",
+		"defaultValue": "0",
+		"seeMore": "See more"
+	},
+	"chat": {
+		"caretHasQuestion": "Caret has a question",
+		"typeMessage": "Type a message...",
+		"typeTaskHere": "Type your task here...",
+		"cancel": "Cancel",
+		"addContext": "Add Context",
+		"addFilesImages": "Add Files/Images",
+		"selectModelApiProvider": "Select Model/API Provider",
+		"dismissQuote": "Dismiss Quote",
+		"apiRequestCancelled": "API Request Cancelled",
+		"apiStreamingFailed": "API Streaming Failed",
+		"apiRequest": "API Request",
+		"apiRequestFailed": "API Request Failed",
+		"apiRequestPending": "API Request...",
+		"errorBlockTitle": {
+			"apiRequest": "API Request",
+			"apiRequestFailed": "API Request Failed"
+		},
+		"image": {
+			"dimensionError": "Image dimensions cannot exceed 7500px.",
+			"unsupportedFileError": "Unsupported file type. Only images can be dropped."
+		},
+		"caretWantsToCreateNewFile": "Caret wants to create a new file:",
+		"placeholderHint": "Type @ for context, / for slash commands and workflows, or drag and drop a file/image while holding Shift",
+		"caretIsUsingBrowser": "Caret is using the browser:",
+		"caretWantsToUseBrowser": "Caret wants to use the browser:",
+		"executeCommand": "Caret wants to execute this command:",
+		"errorLabel": "Error",
+		"mistakeLimitReached": "Mistake limit reached",
+		"maxRequestsReached": "Auto-approval max requests reached",
+		"useMcpServer": "Use {{type}} from {{serverName}}",
+		"mcpTool": "tool",
+		"mcpResource": "resource",
+		"taskCompleted": "Task Completed",
+		"thinking": "Thinking",
+		"commandOutput": "Command Output",
+		"commandApprovalRequired": "This command requires your approval to run.",
+		"mcpArguments": "Arguments",
+		"mcpNotification": "MCP Notification: ",
+		"loadingMcpDocumentation": "Loading MCP documentation",
+		"seeNewChanges": "See new changes",
+		"shellIntegrationUnavailable": "Shell Integration Unavailable",
+		"shellIntegrationWarning": "Caret may have trouble viewing the command's output. Please update VSCode (<code>CMD/CTRL + Shift + P</code> → \"Update\") and make sure you're using a supported shell: zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\").",
+		"stillHavingTrouble": "Still having trouble?",
+		"wantsToStartNewTask": "Caret wants to start a new task:",
+		"wantsToCondense": "Caret wants to condense your conversation:",
+		"wantsToCreateGithubIssue": "Caret wants to create a Github issue:",
+		"tool": {
+			"outsideWorkspace": "Outside workspace",
+			"editFile": "Edited existing file",
+			"createFile": "Created new file",
+			"readFile": "Read file",
+			"wantsToListFilesTopLevel": "Wants to list files in this directory",
+			"listedFilesTopLevel": "Listed files in this directory",
+			"wantsToListFilesRecursive": "Wants to list all files in this directory",
+			"listedFilesRecursive": "Listed all files in this directory",
+			"wantsToListCodeDefinitionNames": "Wants to list source code definition names in this directory",
+			"listedCodeDefinitionNames": "Listed source code definition names in this directory",
+			"searchFiles": "Searched for files with regex {{regex}}",
+			"summarizeTask": "Summarized task",
+			"summary": "Summary",
+			"externalUrl": "External URL",
+			"wantsToWebFetch": "Wants to fetch content from this URL",
+			"webFetched": "Fetched content from this URL"
+		},
+		"quoteSelection": "Quote selection",
+		"quoteSelectionInReply": "Quote selection in reply"
+	},
+	"historyPreview": {
+		"recentTasks": "Recent Tasks",
+		"favorited": "Favorited",
+		"tokens": "Tokens: {{tokensIn}} In, {{tokensOut}} Out",
+		"cache": "Cache: +{{cacheWrites}}, →{{cacheReads}}",
+		"apiCost": "API Cost: ${{totalCost}}",
+		"viewAllHistory": "View all history",
+		"noRecentTasks": "No recent tasks"
+	},
+	"checkmarkControl": {
+		"checkpointRestored": "Checkpoint (restored)",
+		"checkpoint": "Checkpoint",
+		"compare": "Compare",
+		"restore": "Restore",
+		"restoreFiles": "Restore Files",
+		"restoreFilesDescription": "Restores only the file changes from this checkpoint.",
+		"restoreTaskOnly": "Restore Task Only",
+		"restoreTaskOnlyDescription": "Restores only the task from this checkpoint.",
+		"restoreFilesAndTask": "Restore Files & Task",
+		"restoreFilesAndTaskDescription": "Restores both file changes and the task from this checkpoint."
+	},
+	"taskTimelineTooltip": {
+		"taskMessage": "Task Message",
+		"userMessage": "User Message",
+		"assistantResponse": "Assistant Response",
+		"fileRead": "File Read: {{tool}}",
+		"fileEdit": "File Edit: {{path}}",
+		"newFile": "New File: {{path}}",
+		"webFetch": "Web Fetch: {{path}}",
+		"unknownFile": "Unknown File",
+		"unknownUrl": "Unknown URL",
+		"tool": "Tool: {{tool}}",
+		"toolUse": "Tool Use",
+		"terminalCommand": "Terminal Command",
+		"terminalOutput": "Terminal Output",
+		"browserAction": "Browser Action",
+		"browserResult": "Browser Result",
+		"taskCompleted": "Task Completed",
+		"checkpointCreated": "Checkpoint Created",
+		"unknown": "Unknown",
+		"assistantMessage": "Assistant Message",
+		"planningResponse": "Planning Response",
+		"fileReadApproval": "File Read Approval: {{tool}}",
+		"fileEditApproval": "File Edit Approval: {{path}}",
+		"newFileApproval": "New File Approval: {{path}}",
+		"toolApproval": "Tool Approval: {{tool}}",
+		"terminalCommandApproval": "Terminal Command Approval",
+		"browserActionApproval": "Browser Action Approval",
+		"unknownMessageType": "Unknown Message Type"
+	},
+	"taskHeader": {
+		"task": "Task",
+		"cache": "Cache",
+		"tokens": "Tokens",
+		"closeTask": "Close Task",
+		"seeMore": "See more",
+		"seeLess": "See less",
+		"promptTokens": "Prompt Tokens",
+		"completionTokens": "Completion Tokens",
+		"tokensWrittenToCache": "Tokens written to cache",
+		"tokensReadFromCache": "Tokens read from cache",
+		"disablingCheckpoints": "disabling checkpoints.",
+		"seeHereForInstructions": "See here for instructions."
+	},
+	"modelInfoView": {
+		"tokensSuffix": "/million tokens"
+	},
+	"modelInfo": {
+		"supportsImages": "Supports images",
+		"doesNotSupportImages": "Does not support images",
+		"supportsBrowserUse": "Supports browser use",
+		"doesNotSupportBrowserUse": "Does not support browser use",
+		"supportsPromptCaching": "Supports prompt caching",
+		"doesNotSupportPromptCaching": "Does not support prompt caching",
+		"maxOutput": "Max output",
+		"inputPrice": "Input price",
+		"outputPrice": "Output price",
+		"outputPriceStandard": "Output price (Standard)",
+		"outputPriceThinkingBudget": "Output price (Thinking Budget > 0)",
+		"basedOnInputTokens": "(based on input tokens)",
+		"cacheWritesPrice": "Cache writes price",
+		"cacheReadsPrice": "Cache reads price",
+		"freeRequestsPerMinute": "* Free up to {{count}} requests per minute. After that, billing depends on prompt size.",
+		"forMoreInfo": "For more info, see pricing details.",
+		"tokensSuffix": "/million tokens"
+	},
+	"providers": {
+		"caret": {
+			"name": "Caret",
+			"description": "Caret supports various LLMs. You can subscribe to Caret service for free access, use ChatGPT, Claude, Gemma APIs, or configure local LLMs.",
+			"login": "Login & Sign Up with Caret Account",
+			"or": "OR",
+			"apiKeyConfigured": "API key is configured. Login is not required.",
+			"features": "Features:",
+			"feature1": "Access to the latest models",
+			"feature2": "Billing dashboard to view usage and credits",
+			"feature3": "Prompt Playground",
+			"feature4": "More upcoming features",
+			"visit": "Visit",
+			"getApiKey": "to get your API key."
+		},
+		"openAICompatible": {
+			"description": "Use any OpenAI-compatible API endpoint."
+		},
+		"vsCodeLm": {
+			"description": "Use models provided by other VS Code extensions (e.g., GitHub Copilot)."
+		},
+		"claudeCode": {
+			"cliPath": "CLI Path",
+			"cliPathDescription": "Path to the 'claude-code' CLI executable."
+		},
+		"sapAiCore": {
+			"description": "Use models deployed on SAP AI Core.",
+			"pricingNote": "Pricing is calculated using SAP's Capacity Units rather than direct USD pricing."
+		},
+		"zAi": {
+			"glm45Description": "GLM-4.5 is Zhipu's latest featured model. Its comprehensive capabilities in reasoning, coding, and agent reach the state-of-the-art (SOTA) level among open-source models, with a context length of up to 128k."
+		},
+		"groq": {
+			"modelLabel": "Model"
+		},
+		"cerebras": {
+			"sotaDescription": "SOTA coding model with ~2000 tokens/s ($0 free tier)",
+			"noSubscription": "• Use this if you don't have a Cerebras subscription",
+			"contextWindow": "• 64K context window",
+			"rateLimits": "• Rate limits: 150K TPM, 1M TPH/TPD, 10 RPM, 100 RPH/RPD",
+			"upgrade": "Upgrade for higher limits: https://cloud.cerebras.ai/?utm=cline"
+		},
+		"vercelAiGateway": {
+			"description": "Use models through the Vercel AI Gateway."
+		},
+		"baseten": {
+			"apiKeyHelp": "This key is stored locally and only used to make API requests from this extension. You can get a {{providerName}} API key by signing up here."
+		},
+		"requesty": {
+			"claudeDescription": "Anthropic's most intelligent model. Highest level of intelligence and capability."
+		},
+		"fireworks": {
+			"kimiK2Description": "Kimi K2 is a state-of-the-art mixture-of-experts (MoE) language model with 32 billion activated parameters and 1 trillion total parameters. Trained with the Muon optimizer, Kimi K2 achieves exceptional performance across frontier knowledge, reasoning, and coding tasks while being meticulously optimized for agentic capabilities."
+		},
+		"qwenCode": {
+			"description": "Qwen3 Coder Plus - High-performance coding model with 1M context window for large codebases"
+		},
+		"lmStudio": {
+			"contextWindowLabel": "Context Window"
+		},
+		"huggingFace": {
+			"modelLabel": "Model",
+			"advancedReasoning": "Advanced reasoning model with superior performance across coding, math, and general capabilities."
+		},
+		"dify": {
+			"workflowDescription": "Dify workflow - model selection is configured in your Dify application"
+		},
+		"nebius": {
+			"apiKeyHelpText": "You can get a {{providerName}} API key by signing up here."
+		}
+	},
+	"caretProvider": {
+		"futureSupport": "Future Support",
+		"futureProviders": "ChatGPT and Claude will be supported in the future",
+		"modelLabel": "Model",
+		"geminiProModel": "Gemini 2.5 Pro",
+		"geminiFlashModel": "Gemini 2.5 Flash",
+		"bestLabel": "Best",
+		"valueLabel": "Value",
+		"geminiProDescription": "Premium performance model optimized for complex tasks and advanced reasoning",
+		"geminiFlashDescription": "Fast and efficient model suitable for general tasks with excellent cost-effectiveness",
+		"tagBest": "Best",
+		"tagCostEffective": "Cost-Effective"
+	},
+	"validation": {
+		"invalidApiKey": "You must provide a valid API key or choose a different provider."
+	},
+	"apiOptions": {
+		"apiProvider": "API Provider",
+		"selectModel": "Select a model...",
+		"selectRegion": "Select a region...",
+		"enterApiKey": "Enter API Key...",
+		"loading": "Loading...",
+		"caretComplexPrompts": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
+		"note": "Note:",
+		"model": "Model",
+		"custom": "Custom",
+		"modelId": "Model ID",
+		"enterModelId": "Enter custom model ID...",
+		"baseInferenceModel": "Base Inference Model",
+		"askSageApiKey": "AskSage API Key",
+		"askSageApiUrl": "AskSage API URL",
+		"enterAskSageUrl": "Enter AskSage API URL...",
+		"anthropicApiKey": "Anthropic API Key",
+		"anthropicBaseUrl": "Anthropic Base URL",
+		"anthropicBaseUrlPlaceholder": "Default: https://api.anthropic.com",
+		"openAiApiKey": "OpenAI API Key",
+		"deepSeekApiKey": "DeepSeek API Key",
+		"alibabaApiLine": "Alibaba API Line",
+		"chinaApi": "China API",
+		"internationalApi": "International API",
+		"qwenApiKey": "Qwen API Key",
+		"doubaoApiKey": "Doubao API Key",
+		"mistralApiKey": "Mistral API Key",
+		"openRouterApiKey": "OpenRouter API Key",
+		"openRouterRecommended": "OpenRouter is recommended for high rate limits and variety of models.",
+		"awsCredentials": "AWS Credentials",
+		"awsProfile": "AWS Profile",
+		"awsProfileName": "AWS Profile Name",
+		"awsProfilePlaceholder": "Enter profile name (default if empty)",
+		"awsAccessKey": "AWS Access Key",
+		"awsSecretKey": "AWS Secret Key",
+		"awsSessionToken": "AWS Session Token",
+		"awsRegion": "AWS Region",
+		"gcpProjectId": "Google Cloud Project ID",
+		"gcpRegion": "Google Cloud Region",
+		"languageModel": "Language Model",
+		"apiKey": "API Key",
+		"fireworksApiKey": "Fireworks API Key",
+		"maxCompletionTokens": "Max Completion Tokens",
+		"maxContextTokens": "Max Context Tokens",
+		"enterSecretKey": "Enter Secret Key...",
+		"enterAccessKey": "Enter Access Key...",
+		"enterSessionToken": "Enter Session Token...",
+		"enterVpcEndpoint": "Enter VPC Endpoint URL (optional)",
+		"enterCustomModelId": "Enter custom model ID...",
+		"enterProjectId": "Enter Project ID...",
+		"useCustomBaseUrl": "Use custom base URL",
+		"defaultAnthropicUrl": "Default: https://api.anthropic.com",
+		"thisKeyStoredLocally": "This key is stored locally and only used to make API requests from this extension.",
+		"getApiKeySignUp": "You can get an API key by signing up here.",
+		"getAnthropicApiKey": "You can get an Anthropic API key by signing up here.",
+		"getOpenAiApiKey": "You can get an OpenAI API key by signing up here.",
+		"getGeminiApiKey": "You can get a Gemini API key by signing up here.",
+		"comingSoon": "Coming Soon",
+		"providerComingSoon": "{{provider}} support will be added in future updates.",
+		"millionTokens": "million tokens",
+		"tokens": "tokens",
+		"systemMessages": {
+			"viewedTopLevelFiles": "Caret viewed the top level files in this directory:",
+			"wantsToViewTopLevelFiles": "Caret wants to view the top level files in this directory:",
+			"viewedFilesRecursively": "Caret recursively viewed all files in this directory:",
+			"wantsToViewFilesRecursively": "Caret wants to recursively view all files in this directory:",
+			"viewedCodeDefinitions": "Caret viewed source code definition names used in this directory:",
+			"wantsToViewCodeDefinitions": "Caret wants to view source code definition names used in this directory:",
+			"wantsToSearchDirectory": "Caret wants to search this directory for:",
+			"fetchedContentFromUrl": "Caret fetched content from this URL:",
+			"wantsToFetchContentFromUrl": "Caret wants to fetch content from this URL:",
+			"taskCompleted": "Task Completed"
+		},
+		"geminiApiKey": "Gemini API Key",
+		"geminiModelStrong": "Gemini 2.5 Pro Preview 06-05 (Strong)",
+		"geminiModelCostEffective": "Gemini 2.5 Flash Preview 05-20 (Cost-Effective)",
+		"reasoningEnabled": "Reasoning enabled by default"
+	},
+	"telemetry": {
+		"helpImprove": "Help Improve Caret",
+		"experimentalFeatures": "(and access experimental features)",
+		"description": "Caret collects anonymous error and usage data to help us fix bugs and improve the extension. No code, prompts, or personal information is ever sent.",
+		"settingsLink": "You can turn this setting off in settings.",
+		"closeBannerAria": "Close banner and enable telemetry"
+	},
+	"history": {
+		"title": "History",
+		"deleteAllHistory": "Delete All History",
+		"fuzzySearchPlaceholder": "Fuzzy search history...",
+		"sortNewest": "Newest",
+		"sortOldest": "Oldest",
+		"sortMostExpensive": "Most Expensive",
+		"sortMostTokens": "Most Tokens",
+		"sortMostRelevant": "Most Relevant",
+		"filterWorkspace": "Workspace",
+		"filterFavorites": "Favorites",
+		"selectAll": "Select All",
+		"selectNone": "Select None"
+	},
+	"mcp": {
+		"title": "MCP Servers",
+		"marketplace": "Marketplace",
+		"remoteServers": "Remote Servers",
+		"installed": "Installed",
+		"noServersInstalled": "No MCP servers installed",
+		"configureServers": "Configure MCP servers",
+		"noMatchingServers": "No matching MCP servers found",
+		"noServersFound": "No MCP servers found in marketplace",
+		"description": "The Model Context Protocol enables communication with locally running MCP servers that provide additional tools and resources to extend Caret's capabilities.",
+		"autoApprove": "Auto-approve",
+		"autoApproveAllTools": "Auto-approve all tools"
+	},
+	"autoApprove": {
+		"addQuickAccess": "Add to quick-access menu",
+		"removeQuickAccess": "Remove from quick-access menu",
+		"autoApproveLabel": "Auto-approve:"
+	},
+	"task": {
+		"deleteTask": "Delete Task",
+		"deleteTaskAriaLabel": "Delete task",
+		"copyTask": "Copy Task"
+	},
+	"announcement": {
+		"newVersion": "🎉  New in v{version}",
+		"features": {
+			"freeStealth": {
+				"title": "Free Stealth Model",
+				"description": "Advanced stealth model with 262K context window designed for complex coding tasks. Available in the Caret provider for free."
+			},
+			"focusChain": {
+				"title": "Focus Chain",
+				"description": "Keeps Caret focused on long-horizon tasks with automatic todo list management, breaking down complex tasks into manageable steps with real-time progress tracking and passive reminders."
+			},
+			"autoCompact": {
+				"title": "Auto Compact",
+				"description": "Auto summarizes your task and next steps when your conversation approaches the model's context window limit. This significantly helps Caret stay on track for long task sessions!"
+			},
+			"deepPlanning": {
+				"title": "Deep Planning",
+				"description": "New /deep-planning slash command transforms Caret into an architect who investigates your codebase, asks clarifying questions, and creates a comprehensive plan before writing any code."
+			}
+		},
+		"previousUpdates": "Previous Updates:",
+		"previousFeatures": {
+			"claude1M": {
+				"title": "1M Context for Claude Sonnet 4",
+				"description": "Caret/OpenRouter users get instant access, Anthropic users need Tier 4, and Bedrock users must be on a supported region."
+			},
+			"optimizedClaude4": {
+				"title": "Optimized for Claude 4",
+				"description": "Caret is now optimized to work with the Claude 4 family of models, resulting in improved performance, reliability, and new capabilities."
+			},
+			"workflows": {
+				"title": "Workflows",
+				"description": "Create and manage workflow files that can be injected into conversations via slash commands, making it easy to automate repetitive tasks."
+			}
+		},
+		"joinUs": "Join us on",
+		"forMoreUpdates": "for more updates!"
+	},
+	"browser": {
+		"connectionInfo": "Browser connection info",
+		"popover": {
+			"title": "Browser Connection",
+			"statusLabel": "Status:",
+			"connected": "Connected",
+			"disconnected": "Disconnected",
+			"typeLabel": "Type:",
+			"remote": "Remote",
+			"local": "Local",
+			"remoteHostLabel": "Remote Host:"
+		}
+	},
+	"navbar": {
+		"chat": "Chat",
+		"newTaskTooltip": "New Task",
+		"mcp": "MCP",
+		"mcpServersTooltip": "MCP Servers",
+		"history": "History",
+		"historyTooltip": "History",
+		"account": "Account",
+		"accountTooltip": "Account",
+		"settings": "Settings",
+		"settingsTooltip": "Settings"
+	}
 }

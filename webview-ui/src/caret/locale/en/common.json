@@ -52,7 +52,7 @@
 		"recentTasks": "Recent Tasks",
 		"noRecentTasks": "No recent tasks",
 		"viewAllHistory": "View all history",
-		"quickWinsTitle": "Quick <span>[Wins]</span> with Cline"
+		"quickWinsTitle": "Quick <span>[Wins]</span> with Caret"
 	},
 	"rules": {
 		"tab": {

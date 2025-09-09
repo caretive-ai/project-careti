@@ -18,6 +18,14 @@
 - **JSON 파일별 네임스페이스 경계 엄수**
 - **여러 방식 뒤섞지 않음**
 - **한 가지 방법론으로 일관성 유지**
+- **⚠️ CARET 고유기능 절대 보존** - 웰컴뷰/모드시스템/설정 등 실제 사용 중인 기능들
+
+**🔍 실제 사용 확인된 Caret 고유 기능:**
+- `mode.agent.label`, `mode.chatbot.label` (ChatTextArea.tsx:1783,1786,1799,1807)
+- `settings.uiLanguage.*` (다국어 UI 설정 시스템)
+- `persona.*` (PersonaTemplateSelector.tsx)
+- `settings.*` 구조 (여러 설정 컴포넌트에서 사용)
+- `welcome.*` 고유 구조 (Caret 웰컴뷰 시스템)
 
 ### **📋 작업 순서**
 

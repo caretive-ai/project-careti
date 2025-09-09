@@ -157,7 +157,7 @@
 			"label": "AI Response Language",
 			"description": "The language that Caret should use for communication."
 		},
-		"": {
+		"modeSystem": {
 			"label": "Mode Settings",
 			"description": "Enable Caret mode settings to use Caret's Plan/Act modes.",
 			"options": {
@@ -300,13 +300,22 @@
 		"typeMessage": "Type a message...",
 		"typeTaskHere": "Type your task here...",
 		"cancel": "Cancel",
+		"addContext": "Add Context",
+		"addFilesImages": "Add Files/Images",
+		"selectModelApiProvider": "Select Model/API Provider",
+		"dismissQuote": "Dismiss Quote",
 		"apiRequestCancelled": "API Request Cancelled",
 		"apiStreamingFailed": "API Streaming Failed",
 		"apiRequest": "API Request",
 		"apiRequestFailed": "API Request Failed",
 		"apiRequestPending": "API Request...",
 		"errorBlockTitle": {
-			"apiRequest": "API Request"
+			"apiRequest": "API Request",
+			"apiRequestFailed": "API Request Failed"
+		},
+		"image": {
+			"dimensionError": "Image dimensions cannot exceed 7500px.",
+			"unsupportedFileError": "Unsupported file type. Only images can be dropped."
 		},
 		"caretWantsToCreateNewFile": "Caret wants to create a new file:",
 		"placeholderHint": "Type @ for context, / for slash commands and workflows, or drag and drop a file/image while holding Shift",

@@ -950,6 +950,25 @@
 		"supportsCache": "Supports prompt caching",
 		"contextWindow": "Context Window",
 		"cacheWritesPrice": "Cache writes price",
-		"cacheReadsPrice": "Cache reads price"
+		"cacheReadsPrice": "Cache reads price",
+		"contextWindowLabel": "Context Window:",
+		"inputPriceLabel": "Input price:",
+		"outputPriceLabel": "Output price:",
+		"outputPriceStandardLabel": "Output price (Standard):",
+		"outputPriceThinkingBudgetLabel": "Output price (Thinking Budget > 0):",
+		"cacheWritesPriceLabel": "Cache writes price:",
+		"cacheReadsPriceLabel": "Cache reads price:",
+		"supportsImagesLabel": "Supports images:",
+		"supportsComputerUseLabel": "Supports computer use:",
+		"supportsCacheLabel": "Supports prompt caching:",
+		"doesNotSupportImagesLabel": "Does not support images:",
+		"doesNotSupportComputerUseLabel": "Does not support computer use:",
+		"doesNotSupportCacheLabel": "Does not support prompt caching:"
+	},
+	"about": {
+		"feedbackPrompt": "If you have any questions or feedback, we welcome it anytime.",
+		"version": "Version",
+		"title": "About",
+		"description": "Check the Caret version and view related information."
 	}
 }

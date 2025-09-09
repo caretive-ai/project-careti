@@ -339,7 +339,12 @@
       "Bash(npx vite:*)",
       "Bash(git pull:*)",
       "Bash(vitest run:*)",
-      "Read(//d/**)"
+      "Read(//d/**)",
+      "mcp__ide__executeCode",
+      "Bash(python:*)",
+      "Bash(where python)",
+      "Bash(C:UsersLuke*AppDataLocalMicrosoftWindowsAppspython.exe)",
+      "Bash(compare_json.py)"
     ],
     "deny": [],
     "ask": []

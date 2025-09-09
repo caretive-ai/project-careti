@@ -74,7 +74,7 @@ The system automatically manages todo lists to help track task progress:
 
 ## 3. 📊 AI 시맨틱 분석 (선택사항)
 
-`caret-scripts/ai-semantic-analyzer.js`를 사용하여 두 프롬프트 간의 의미론적 동등성 점수를 측정한다.
+`caret-scripts/utils/ai-semantic-analyzer.js`를 사용하여 두 프롬프트 간의 의미론적 동등성 점수를 측정한다.
 
 *   **동등성 점수:** (측정된 점수가 여기에 기록될 예정입니다) / 100
 *   **기준:** 85% 이상일 경우 통과

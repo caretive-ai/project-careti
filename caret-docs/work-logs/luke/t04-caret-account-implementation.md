@@ -291,7 +291,7 @@ export interface CaretUser {
 
 ### **🔧 빌드 시스템 이슈 및 부분 개선**
 - **문제**: Protocol Buffer 생성 시 네임스페이스 오류 발생
-- **시도한 해결책**: `scripts/build-proto.mjs`에 자동 후처리 시스템 구현
+- **시도한 해결책**: `caret-scripts/build/build-proto.mjs`에 자동 후처리 시스템 구현
   - `String()` → `globalThis.String()` 자동 수정 ✅
   - `cline.CaretAccountServiceService` → `caret.CaretAccountServiceService` 자동 수정 ❌ (여전히 문제)
   - Caret* 타입 네임스페이스 자동 수정 ❌ (여전히 문제)

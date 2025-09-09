@@ -18,6 +18,7 @@ assets_backup_*/
 .idea
 
 pnpm-lock.yaml
+package-lock.json
 
 .clineignore
 .venv

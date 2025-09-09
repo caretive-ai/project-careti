@@ -5,7 +5,15 @@
       "Bash(find:*)",
       "Bash(git add:*)",
       "Bash(git push:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git clean:*)",
+      "Bash(npm run package:release:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run copy:assets:*)",
+      "Bash(npm run build:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(rmdir:*)"
     ],
     "deny": [],
     "ask": []

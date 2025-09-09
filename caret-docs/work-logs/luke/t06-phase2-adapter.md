@@ -65,7 +65,7 @@
     - [x] TDD 테스트 결과 (통과 스크린샷 또는 로그)
     - [x] `PromptSystemManager`가 두 시스템을 올바르게 전환하는 로직 흐름도
     - [x] CHATBOT 모드에서 도구가 성공적으로 필터링되었음을 보여주는 프롬프트 출력 예시
-- [x] **Phase 검증 스크립트 확장**: `caret-scripts/phase-validator.js` 수정
+- [x] **Phase 검증 스크립트 확장**: `caret-scripts/tools/phase-validator.js` 수정
     - [x] `validatePhase2()` 메서드 추가
     - [x] `PromptSystemManager.ts`, `CaretJsonAdapter.ts`, `ClineLatestAdapter.ts` 파일 존재 여부 검증
     - [x] `T06PromptSystemIntegration.test.ts` 테스트 파일 존재 여부 검증
@@ -94,6 +94,6 @@
 
 - [ ] `PromptSystemManager`와 두 개의 어댑터(`CaretJsonAdapter`, `ClineLatestAdapter`) 파일이 `caret-src/` 내에 생성되고, TDD 통합 테스트를 통과함.
 - [ ] `CaretJsonAdapter`는 CHATBOT/AGENT 모드에 따라 동적으로 JSON 프롬프트를 조합하며, `mode_restriction` 철학을 완벽하게 구현함.
-- [ ] `phase-validator.js`의 `validatePhase2()` 검증이 100% 통과함.
+- [ ] `caret-scripts/tools/phase-validator.js`의 `validatePhase2()` 검증이 100% 통과함.
 - [ ] `t06-phase2-verification.md` 문서에 모든 검증 결과가 상세히 기록됨.
 - [ ] Phase 3를 시작하기 위한 모든 전제 조건(안정적인 어댑터 뼈대)이 충족됨.

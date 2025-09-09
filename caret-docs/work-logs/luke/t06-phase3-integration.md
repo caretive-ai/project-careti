@@ -53,10 +53,10 @@ Phase 2에서 구축한 어댑터 뼈대를 실제 시스템에 통합하고, `c
     - [x] `cline-latest`의 `auto_todo`가 활성화된 프롬프트와, `CaretJsonAdapter`가 `CARET_TODO_MANAGEMENT.json`을 포함하여 생성한 프롬프트를 나란히 비교하고, 의미와 역할이 동등함을 문서에 기록
     - [x] 다른 '작업 관리 루프' 기능에 대해서도 동일하게 비교 및 기록
 - [ ] **AI 시맨틱 분석 (선택사항)**:
-    - [ ] `caret-scripts/ai-semantic-analyzer.js`를 사용하여 두 프롬프트 간의 의미론적 동등성 점수를 측정하고 85% 이상인지 확인 ⚠️ **선택사항**
+    - [ ] `caret-scripts/utils/ai-semantic-analyzer.js`를 사용하여 두 프롬프트 간의 의미론적 동등성 점수를 측정하고 85% 이상인지 확인 ⚠️ **선택사항**
 
 ### 3.6. Phase 검증 및 Git 체크포인트
-- [x] **Phase 검증 스크립트 확장**: `caret-scripts/phase-validator.js` 수정
+- [x] **Phase 검증 스크립트 확장**: `caret-scripts/tools/phase-validator.js` 수정
     - [x] `validatePhase3()` 메서드 추가
     - [x] `JsonTemplateLoader.ts` 파일 존재 여부 검증
     - [x] `T06PromptSystemIntegration.test.ts`에서 `vi.mock`이 사용되지 않는지 확인 (주석 처리 또는 삭제)
@@ -86,5 +86,5 @@ Phase 2에서 구축한 어댑터 뼈대를 실제 시스템에 통합하고, `c
 - [ ] `CaretJsonAdapter`와 `ClineLatestAdapter`가 각각 완전한 프롬프트를 생성할 수 있으며, `T06PromptSystemIntegration.test.ts`의 모든 실제 통합 테스트를 통과함.
 - [ ] `CaretJsonAdapter`는 Caret의 CHATBOT/AGENT 철학과 '작업 관리 루프'를 JSON 기반으로 완벽하게 구현함.
 - [ ] `t06-phase3-verification.md` 문서에 두 시스템 간의 의미론적 동등성이 명확하게 기록되고 검증됨.
-- [ ] `phase-validator.js`의 `validatePhase3()` 검증이 100% 통과함.
+- [ ] `caret-scripts/tools/phase-validator.js`의 `validatePhase3()` 검증이 100% 통과함.
 - [ ] Phase 4를 시작하기 위한 모든 전제 조건(안정적인 하이브리드 프롬프트 생성 시스템)이 충족됨.

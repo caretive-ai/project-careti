@@ -38,7 +38,9 @@ t03 브랜딩 시스템, t06 JSON 시스템 프롬프트, t02 다국어 i18n 작
 
 #### 1.1 현재 i18n 시스템 백업 및 분석
 - ✅ **완료**: 현재 `webview-ui/src/caret/locale/` 상태 확인 (11개 파일, 4개 언어)
-- 🔄 **진행**: CodeCenter 브랜드 로케일과 차이점 분석
+- ✅ **완료**: CodeCenter 브랜드 로케일과 차이점 분석
+- ✅ **완료**: modeSystem i18n 구조 문제 해결 (nested → flat 구조 변경)
+- ✅ **완료**: TaskHeader i18n 매개변수 순서 문제 해결 (`t(key, fallback)` → `t(key, namespace)`)
 - 📋 **대상 파일들**:
   ```
   announcement.json, browser.json, chat.json, common.json, 
@@ -65,9 +67,10 @@ t03 브랜딩 시스템, t06 JSON 시스템 프롬프트, t02 다국어 i18n 작
 **목표**: `brand-converter.js`가 frontend i18n 파일도 자동 변환하도록 개선
 
 #### 2.1 Frontend 변환 로직 통합
-- 📄 **기존**: `brand-converter-frontend.js` (별도 스크립트)
-- 🔧 **개선**: `brand-converter.js`에 통합된 frontend 변환 기능
-- ✨ **기능**: `--frontend` 옵션으로 i18n 파일 자동 변환
+- ✅ **완료**: `brand-converter.js`가 frontend + backend 통합 변환 지원
+- ✅ **완료**: template_characters.json 자동 복사 시스템 구축
+- ✅ **완료**: webview 빌드 시 assets 자동 복사 (`caret-scripts/build/copy-template-characters.cjs`)
+- ✅ **완료**: .vscodeignore 수정으로 caret-src 디렉토리 VSIX 포함
 
 #### 2.2 변환 워크플로우 개선
 - 🚀 **명령어**: `node brand-converter.js codecenter --frontend`
@@ -186,6 +189,25 @@ t03 브랜딩 시스템, t06 JSON 시스템 프롬프트, t02 다국어 i18n 작
 - `caret-scripts/tools/backend-message-i18n-mapper.js` - 백엔드 메시지 i18n 매핑
 - `caret-scripts/tools/brand-locale-sync.js` - 브랜드별 로케일 동기화
 - `caret-scripts/tools/json-prompt-template-manager.js` - JSON 템플릿 관리
+
+### **Phase 5: 추가 발견 및 해결된 문제들** (2025-01-09 추가)
+
+#### 5.1 VSIX 빌드 시스템 개선
+- ✅ **완료**: `package:release` 스크립트 경로 수정 (`codecenter-scripts` → `caret-scripts`)
+- ✅ **완료**: `@types/lodash` 의존성 누락 해결
+- ✅ **완료**: `.vscodeignore` whitelist 방식에서 `caret-src` 디렉토리 누락 해결
+- ✅ **완료**: 15.44MB 크기의 정상 VSIX 패키지 생성
+
+#### 5.2 Template Characters 시스템 개선
+- ✅ **완료**: 브랜드 변환 시 불필요한 webview 복사 제거
+- ✅ **완료**: 빌드 시 자동 복사 시스템으로 변경 (개발 중 수정 가능)
+- ✅ **완료**: `caret-scripts/build/copy-template-characters.cjs` 스크립트 생성
+- ✅ **완료**: ES Module 호환성 문제 해결 (`.js` → `.cjs`)
+
+#### 5.3 Extension 활성화 오류 해결
+- 🚨 **발견**: VS Code Extension Host에서 `caret-src\core\prompts\sections` 디렉토리 누락 오류
+- ✅ **해결**: `.vscodeignore`에 `!caret-src/**` 추가하여 VSIX 포함
+- ✅ **검증**: 새 VSIX 패키지에서 `caret-src/ (43 files) [102.73 KB]` 포함 확인
 
 ## 🗂️ 관련 문서
 

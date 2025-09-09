@@ -144,8 +144,8 @@ DEBUG [PromptSystemManager] Using adapter: caret
 
 ### 🔧 해결된 네임스페이스 문제
 1. **Proto 생성 스크립트 수정**
-   - `scripts/generate-protobus-setup.mjs`: `CaretSystemService`도 `caret` 네임스페이스 처리
-   - `scripts/build-proto.mjs`: webview-ui 파일 후처리 추가
+   - `caret-scripts/build/generate-protobus-setup.mjs`: `CaretSystemService`도 `caret` 네임스페이스 처리
+   - `caret-scripts/build/build-proto.mjs`: webview-ui 파일 후처리 추가
 
 2. **gRPC 클라이언트 수정**
    - `webview-ui/src/services/grpc-client.ts`: `"cline.CaretSystemService"` → `"caret.CaretSystemService"`

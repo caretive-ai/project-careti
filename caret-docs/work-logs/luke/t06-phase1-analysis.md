@@ -87,7 +87,7 @@
 - [x] JSON 파일 문법 검증: `node -e "JSON.parse(require('fs').readFileSync('파일경로', 'utf8'))"`
 
 ### 3.4. 토큰 효율성 사전 검증
-- [x] **기존 토큰 측정 스크립트 확장**: `caret-main/caret-scripts/system-prompt-token-measurement.js` 수정
+- [x] **기존 토큰 측정 스크립트 확장**: `caret-main/caret-scripts/utils/system-prompt-token-measurement.js` 수정
     - [x] `measureSystemPrompts()` 함수에 하이브리드 모드 측정 로직 추가:
       ```javascript
       // 4. 하이브리드 모드 (cline-latest PromptRegistry + Caret JSON)
@@ -112,7 +112,7 @@
 - [x] 기능적 동등성 검증 결과를 `t06-phase1-verification.md`에 기록
 
 ### 3.6. Phase 검증 및 Git 체크포인트
-- [x] **Phase 검증 스크립트 생성**: `caret-scripts/phase-validator.js` 신규 생성
+- [x] **Phase 검증 스크립트 생성**: `caret-scripts/tools/phase-validator.js` 신규 생성
     ```javascript
     class PhaseValidator {
         validatePhase1() {
@@ -135,7 +135,7 @@
     - [ ] Phase 2 시작 전 백업 브랜치: `git branch t06-phase-1-backup`
 
 ### 3.7. 선택적 심화 검증 (여유 시 수행)
-- [ ] **AI 시맨틱 분석** (선택사항): `caret-scripts/ai-semantic-analyzer.js` 활용
+- [ ] **AI 시맨틱 분석** (선택사항): `caret-scripts/utils/ai-semantic-analyzer.js` 활용
     - [ ] `auto_todo.ts` vs `CARET_TODO_MANAGEMENT.json` 의미론적 동등성 분석
     - [ ] `task_progress.ts` vs `CARET_TASK_PROGRESS.json` 의미론적 동등성 분석  
     - [ ] `feedback.ts` vs `CARET_FEEDBACK_SYSTEM.json` 의미론적 동등성 분석
@@ -148,7 +148,7 @@
 ### 필수 완료 기준
 - [x] `cline-latest`의 '작업 관리 루프' 3개 컴포넌트의 모든 기능이 Caret의 CHATBOT/AGENT 철학이 반영된 3개의 신규 JSON 파일로 완벽하게 재정의됨.
 - [ ] **토큰 효율성**: 하이브리드 시스템이 기존 Cline 대비 최소 10% 이상 토큰 절약 효과 검증됨.
-- [ ] **검증 자동화**: `phase-validator.js`를 통한 자동 검증이 100% 통과함.
+- [ ] **검증 자동화**: `caret-scripts/tools/phase-validator.js`를 통한 자동 검증이 100% 통과함.
 - [ ] **Git 체크포인트**: 안전한 롤백이 가능한 커밋 및 태그가 생성되어 사용자 확인 완료됨.
 - [ ] `t06-phase1-verification.md` 문서에 모든 검증 결과가 상세히 기록됨.
 - [ ] Phase 2를 시작하기 위한 모든 전제 조건이 충족됨.

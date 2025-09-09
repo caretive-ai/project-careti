@@ -24,6 +24,9 @@ export class PersonaInitializer {
 	public async initialize(): Promise<void> {
 		Logger.info("[CARET-PERSONA] PersonaInitializer: 페르소나 초기화 시작")
 		try {
+			// 0. 레거시 custom_instructions.md 파일 정리
+			await this.cleanupLegacyCustomInstructions()
+
 			// 1. persona.md 파일 존재 여부 확인
 			const globalRulesDir = await ensureRulesDirectoryExists()
 			const personaMdPath = path.join(globalRulesDir, "persona.md")
@@ -121,8 +124,14 @@ export class PersonaInitializer {
 	 */
 	private async updatePersonaMd(persona: any): Promise<void> {
 		try {
-			// 'en' 언어 설정을 기본으로 사용
-			const personaData = persona.en || Object.values(persona)[0]
+			// 사용자의 선호 언어를 기반으로 페르소나 데이터 선택
+			const userLanguage = this.getUserPreferredLanguage()
+			const languageKey = this.mapLanguageToKey(userLanguage)
+			
+			Logger.info(`[CARET-PERSONA] PersonaInitializer: 사용자 선호 언어 '${userLanguage}' → 키 '${languageKey}'`)
+			
+			// 선호 언어에 해당하는 페르소나 데이터를 찾고, 없으면 영어를 기본값으로 사용
+			const personaData = persona[languageKey] || persona.en || Object.values(persona)[0]
 			const personaInstruction = personaData.customInstruction
 
 			if (!personaInstruction) {
@@ -136,7 +145,7 @@ export class PersonaInitializer {
 
 			await writeFile(personaMdPath, content)
 
-			Logger.info(`[CARET-PERSONA] PersonaInitializer: persona.md 파일 업데이트 완료`)
+			Logger.info(`[CARET-PERSONA] PersonaInitializer: persona.md 파일 업데이트 완료 (언어: ${languageKey})`)
 		} catch (error) {
 			Logger.error(`[CARET-PERSONA] PersonaInitializer: persona.md 업데이트 실패: ${error}`)
 		}
@@ -197,6 +206,39 @@ export class PersonaInitializer {
 	}
 
 	/**
+	 * 사용자의 선호 언어를 가져옵니다.
+	 */
+	private getUserPreferredLanguage(): string {
+		try {
+			const preferredLanguage = this.context.globalState.get("preferredLanguage") as string | undefined
+			return preferredLanguage || "English" // 기본값은 English
+		} catch (error) {
+			Logger.warn(`[CARET-PERSONA] PersonaInitializer: 선호 언어를 가져오는데 실패: ${error}`)
+			return "English"
+		}
+	}
+
+	/**
+	 * 언어 표시명을 페르소나 템플릿 키로 매핑합니다.
+	 */
+	private mapLanguageToKey(language: string): string {
+		const languageMap: { [key: string]: string } = {
+			"English": "en",
+			"한국어": "ko", 
+			"韓国語": "ko",
+			"Korean": "ko",
+			"日本語": "ja",
+			"Japanese": "ja", 
+			"中文": "zh",
+			"Chinese": "zh",
+			"简体中文": "zh",
+			"繁體中文": "zh"
+		}
+		
+		return languageMap[language] || "en" // 기본값은 en
+	}
+
+	/**
 	 * 언어 설정 시 기본 페르소나 자동 설정
 	 * 기존 persona-initialization.ts의 initializeDefaultPersonaOnLanguageSet 대체 함수
 	 */
@@ -215,6 +257,23 @@ export class PersonaInitializer {
 		await this.initialize()
 
 		Logger.info(`[CARET-PERSONA] PersonaInitializer: 언어 설정에 따른 페르소나 초기화 완료 (${language})`)
+	}
+
+	/**
+	 * custom_instructions.md 파일을 정리합니다 (persona.md로 통일됨)
+	 */
+	public async cleanupLegacyCustomInstructions(): Promise<void> {
+		try {
+			const globalRulesDir = await ensureRulesDirectoryExists()
+			const customInstructionsPath = path.join(globalRulesDir, "custom_instructions.md")
+			
+			if (await fileExistsAtPath(customInstructionsPath)) {
+				await fs.unlink(customInstructionsPath)
+				Logger.info("[CARET-PERSONA] PersonaInitializer: 레거시 custom_instructions.md 파일을 정리했습니다.")
+			}
+		} catch (error) {
+			Logger.debug(`[CARET-PERSONA] PersonaInitializer: custom_instructions.md 정리 중 오류 (정상): ${error}`)
+		}
 	}
 }
 

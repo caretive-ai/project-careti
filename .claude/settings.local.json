@@ -13,7 +13,11 @@
       "Bash(npm run build:*)",
       "Bash(mkdir:*)",
       "Bash(mv:*)",
-      "Bash(rmdir:*)"
+      "Bash(rmdir:*)",
+      "Bash(npm run compile:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git restore:*)",
+      "Bash(npm run check-types:*)"
     ],
     "deny": [],
     "ask": []

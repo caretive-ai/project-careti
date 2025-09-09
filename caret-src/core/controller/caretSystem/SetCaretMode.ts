@@ -16,11 +16,15 @@ export async function SetCaretMode(
 	controller: Controller,
 	request: proto.caret.SetCaretModeRequest,
 ): Promise<proto.caret.SetCaretModeResponse> {
+	console.log(`[SetCaretMode] 🔄 gRPC handler called with request:`, request)
+	
 	try {
 		const newMode = request.mode as "chatbot" | "agent"
+		console.log(`[SetCaretMode] 📥 Request mode: ${newMode}`)
 
 		// Validate mode
 		if (newMode !== "chatbot" && newMode !== "agent") {
+			console.error(`[SetCaretMode] ❌ Invalid mode: ${newMode}`)
 			Logger.error(`[SetCaretMode] Invalid mode: ${newMode}`)
 			return {
 				success: false,
@@ -31,14 +35,20 @@ export async function SetCaretMode(
 
 		// Get current mode from Caret independent manager
 		const currentCaretMode = CaretModeManager.getCurrentCaretMode()
+		console.log(`[SetCaretMode] 📍 Current mode: ${currentCaretMode}`)
 
 		Logger.debug(`[SetCaretMode] Changing Caret mode from ${currentCaretMode} to ${newMode}`)
 
 		// Update Caret mode using independent manager (no Cline interference)
+		console.log(`[SetCaretMode] 🎯 Calling CaretModeManager.setCaretMode(${newMode})`)
 		await CaretModeManager.setCaretMode(newMode)
 
+		console.log(`[SetCaretMode] ✅ Mode change successful: ${currentCaretMode} → ${newMode}`)
 		Logger.info(`[SetCaretMode] Successfully changed to ${newMode} mode via CaretModeManager`)
-		Logger.debug(`[SetCaretMode] Debug info: ${JSON.stringify(CaretModeManager.getDebugInfo())}`)
+		
+		const debugInfo = CaretModeManager.getDebugInfo()
+		console.log(`[SetCaretMode] 🔍 Debug info:`, debugInfo)
+		Logger.debug(`[SetCaretMode] Debug info: ${JSON.stringify(debugInfo)}`)
 
 		return {
 			success: true,
@@ -46,6 +56,7 @@ export async function SetCaretMode(
 			errorMessage: "",
 		}
 	} catch (error) {
+		console.error(`[SetCaretMode] ❌ Failed to set Caret mode:`, error)
 		Logger.error(`[SetCaretMode] Failed to set Caret mode: ${error}`)
 		return {
 			success: false,

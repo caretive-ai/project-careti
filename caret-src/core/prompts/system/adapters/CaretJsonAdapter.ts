@@ -5,6 +5,7 @@ import { CaretSystemPromptContext } from "../types";
 import { PromptBuilder } from "@/core/prompts/system-prompt/registry/PromptBuilder";
 import { getModelFamily } from "@/core/prompts/system-prompt";
 import { ModelFamily } from "@/shared/prompts";
+import { ClineDefaultTool } from "@/shared/tools";
 import * as path from "path";
 
 /**
@@ -59,7 +60,7 @@ export class CaretJsonAdapter implements IPromptSystem {
                 continue;
             }
             
-            const sectionContent = this.getDynamicSection(template, isChatbotMode);
+            const sectionContent = this.getDynamicSection(template, isChatbotMode, context);
             if (sectionContent.trim()) {
                 promptParts.push(sectionContent);
                 console.log(`[CaretJsonAdapter] ✅ ${name}: loaded (${sectionContent.length} chars)`);
@@ -90,6 +91,12 @@ export class CaretJsonAdapter implements IPromptSystem {
 
         const finalPrompt = promptParts.filter(Boolean).join('\n\n');
         console.log(`[CaretJsonAdapter] 🎉 Final prompt generated: ${finalPrompt.length} characters, ${promptParts.length} sections`);
+        
+        // DEBUGGING: Log the actual prompt content to see what's being sent to the AI
+        console.log(`[CaretJsonAdapter] 📄 === FULL PROMPT CONTENT START ===`);
+        console.log(finalPrompt);
+        console.log(`[CaretJsonAdapter] 📄 === FULL PROMPT CONTENT END ===`);
+        
         return finalPrompt;
     }
 
@@ -99,6 +106,10 @@ export class CaretJsonAdapter implements IPromptSystem {
      */
     private async getClineToolsSection(context: CaretSystemPromptContext, isChatbotMode: boolean): Promise<string | null> {
         try {
+            // CARET MODIFICATION: Fixed cline-latest compatibility
+            console.log('[DEBUG] Creating mockVariant with family:', getModelFamily(context.providerInfo) || ModelFamily.GENERIC)
+            console.log('[DEBUG] Context keys:', Object.keys(context))
+            
             // Create a mock PromptVariant to use Cline's tool system
             const mockVariant = {
                 id: 'caret-tools',
@@ -112,14 +123,25 @@ export class CaretJsonAdapter implements IPromptSystem {
                 componentOrder: [] as readonly any[],
                 componentOverrides: {} as any,
                 placeholders: {} as Readonly<Record<string, string>>,
-                tools: undefined, // Let it use all available tools
+                // FIXED: tools: undefined → tools: [] for cline-latest compatibility
+                // When tools is undefined, new PromptBuilder skips tool loading
+                // When tools is empty array, it loads all available tools for the family
+                tools: [] as readonly ClineDefaultTool[],
                 toolOverrides: undefined
             } as const;
+            
+            console.log('[DEBUG] mockVariant created:', JSON.stringify(mockVariant, null, 2))
 
             // Get all tools from Cline's system
             const toolPrompts = await PromptBuilder.getToolsPrompts(mockVariant, context);
+            console.log('[DEBUG] PromptBuilder returned:', toolPrompts?.length || 0, 'tools')
             
             if (!toolPrompts || toolPrompts.length === 0) {
+                console.error('[DEBUG] PromptBuilder.getToolsPrompts failed - investigating...')
+                // Direct ClineToolSet call to narrow down the problem
+                const { ClineToolSet } = await import('@/core/prompts/system-prompt/registry/ClineToolSet')
+                const directTools = ClineToolSet.getTools(mockVariant.family)
+                console.log('[DEBUG] Direct ClineToolSet.getTools returned:', directTools.length, 'tools')
                 console.warn(`[CaretJsonAdapter] ❌ No tools available from Cline system`);
                 return null;
             }
@@ -141,7 +163,7 @@ export class CaretJsonAdapter implements IPromptSystem {
                 toolsContent += 'All tools available in AGENT mode for autonomous task execution.\n\n';
             }
             
-            // Filter tools based on mode if in CHATBOT mode
+            // CARET MODIFICATION: Enhanced tool filtering with detailed logging
             let filteredTools = toolPrompts;
             if (isChatbotMode) {
                 // In CHATBOT mode, restrict to read-only and research tools
@@ -150,8 +172,13 @@ export class CaretJsonAdapter implements IPromptSystem {
                     'ask_followup_question', 'web_fetch', 'attempt_completion'
                 ];
                 filteredTools = toolPrompts.filter((toolPrompt: string) => {
-                    return allowedInChatbot.some(allowed => toolPrompt.includes(`## ${allowed}`));
+                    const toolMatch = allowedInChatbot.some(allowed => toolPrompt.includes(`## ${allowed}`));
+                    if (!toolMatch) {
+                        console.log('[DEBUG] Filtered out tool in chatbot mode:', toolPrompt.substring(0, 50) + '...')
+                    }
+                    return toolMatch;
                 });
+                console.log(`[DEBUG] Filtered tools: ${filteredTools.length}/${toolPrompts.length} (chatbot mode)`)
             }
             
             toolsContent += filteredTools.join('\n\n');
@@ -187,7 +214,7 @@ export class CaretJsonAdapter implements IPromptSystem {
      * Gets content from a section based on its structure and the current mode.
      * Supports template variable substitution for dynamic content.
      */
-    private getDynamicSection(template: any, isChatbotMode: boolean): string {
+    private getDynamicSection(template: any, isChatbotMode: boolean, context?: CaretSystemPromptContext): string {
         let content = '';
         
         // Handle new comprehensive JSON structure
@@ -226,7 +253,7 @@ export class CaretJsonAdapter implements IPromptSystem {
         }
         
         // Apply template variable substitution
-        return this.substituteTemplateVars(content, isChatbotMode);
+        return this.substituteTemplateVars(content, isChatbotMode, context);
     }
 
     /**
@@ -246,7 +273,7 @@ export class CaretJsonAdapter implements IPromptSystem {
     /**
      * Substitutes template variables with appropriate values.
      */
-    private substituteTemplateVars(content: string, isChatbotMode: boolean): string {
+    private substituteTemplateVars(content: string, isChatbotMode: boolean, context?: CaretSystemPromptContext): string {
         const currentMode = isChatbotMode ? 'CHATBOT' : 'AGENT';
         const modeSystem = isChatbotMode ? 'chatbot' : 'agent';
         const modeDescription = isChatbotMode 
@@ -256,7 +283,10 @@ export class CaretJsonAdapter implements IPromptSystem {
             ? 'Focused on analysis, guidance, and planning without file modifications'
             : 'Full autonomous capabilities with complete tool access';
         
-        return content
+        console.log(`[CaretJsonAdapter] 🔧 Template substitution: isChatbotMode=${isChatbotMode}, currentMode=${currentMode}`);
+        
+        const result = content
+            .replace(/\{\{current_mode\}\}/g, currentMode)
             .replace(/\{\{mode_system\}\}/g, modeSystem)
             .replace(/\{\{mode_description\}\}/g, modeDescription)
             .replace(/\{\{mode_capabilities\}\}/g, modeCapabilities)
@@ -264,7 +294,62 @@ export class CaretJsonAdapter implements IPromptSystem {
             .replace(/\{\{os\}\}/g, process.platform)
             .replace(/\{\{shell\}\}/g, process.env.SHELL || '/bin/bash')
             .replace(/\{\{home_dir\}\}/g, process.env.HOME || process.env.USERPROFILE || '~')
-            .replace(/\{\{custom_instructions\}\}/g, 'None provided')
+            .replace(/\{\{custom_instructions\}\}/g, this.getCustomInstructions(context))
             .replace(/\{\{mcp_servers_list\}\}/g, 'No MCP servers currently connected');
+            
+        if (content.includes('{{current_mode}}')) {
+            console.log(`[CaretJsonAdapter] ✅ Template substitution completed: {{current_mode}} → ${currentMode}`);
+        }
+        
+        return result;
+    }
+
+    /**
+     * Build custom instructions from various sources (same logic as Cline's user_instructions.ts)
+     */
+    private getCustomInstructions(context?: CaretSystemPromptContext): string {
+        if (!context) {
+            return 'None provided';
+        }
+
+        const customInstructions: string[] = [];
+        
+        // CARET MODIFICATION: Enhanced language support - prioritize preferredLanguageInstructions
+        if ((context as any).preferredLanguageInstructions) {
+            customInstructions.push((context as any).preferredLanguageInstructions);
+            console.log(`[CaretJsonAdapter] 🌐 Language instruction added: ${(context as any).preferredLanguageInstructions}`);
+        }
+
+        if ((context as any).globalClineRulesFileInstructions) {
+            customInstructions.push((context as any).globalClineRulesFileInstructions);
+        }
+
+        if ((context as any).localClineRulesFileInstructions) {
+            customInstructions.push((context as any).localClineRulesFileInstructions);
+        }
+
+        if ((context as any).localCursorRulesFileInstructions) {
+            customInstructions.push((context as any).localCursorRulesFileInstructions);
+        }
+
+        if ((context as any).localCursorRulesDirInstructions) {
+            customInstructions.push((context as any).localCursorRulesDirInstructions);
+        }
+
+        if ((context as any).localWindsurfRulesFileInstructions) {
+            customInstructions.push((context as any).localWindsurfRulesFileInstructions);
+        }
+
+        if ((context as any).clineIgnoreInstructions) {
+            customInstructions.push((context as any).clineIgnoreInstructions);
+        }
+
+        if (customInstructions.length === 0) {
+            return 'None provided';
+        }
+
+        const result = customInstructions.join('\n\n');
+        console.log(`[CaretJsonAdapter] 📋 Custom instructions built: ${customInstructions.length} sections, ${result.length} chars`);
+        return result;
     }
 }

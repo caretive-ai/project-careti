@@ -50,25 +50,7 @@ const CaretGeneralSettingsSection: React.FC<CaretGeneralSettingsSectionProps> = 
 										timestamp: new Date().toISOString(),
 									})
 
-									// 현재 localStorage 상태 확인
-									try {
-										const currentStoredValue = localStorage.getItem("caret-enablePersonaSystem")
-										console.log("[PERSONA-DEBUG] Before update - localStorage:", currentStoredValue)
-									} catch (error) {
-										console.error("[PERSONA-DEBUG] Error reading localStorage:", error)
-									}
-
 									setEnablePersonaSystem(checked)
-
-									// setter 호출 후 바로 localStorage 확인
-									setTimeout(() => {
-										try {
-											const newStoredValue = localStorage.getItem("caret-enablePersonaSystem")
-											console.log("[PERSONA-DEBUG] After update - localStorage:", newStoredValue)
-										} catch (error) {
-											console.error("[PERSONA-DEBUG] Error reading localStorage after update:", error)
-										}
-									}, 100)
 
 									console.log("[PERSONA-DEBUG] setEnablePersonaSystem called with:", checked)
 								}}>

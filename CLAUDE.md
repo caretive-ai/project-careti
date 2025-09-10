@@ -224,6 +224,13 @@ The project uses TypeScript path aliases defined in `tsconfig.json`:
 - **Semicolons**: As needed
 - **Quotes**: Double quotes for JSX, preference for consistency elsewhere
 
+### Logging Guidelines
+- **NEVER use console.log/warn/error** - Use Logger.debug/info/warn/error instead
+- **Debug logging**: `Logger.debug()` for development debugging (controlled by log level)
+- **Production logging**: `Logger.info()` for important events, `Logger.warn()` for warnings
+- **Error logging**: `Logger.error()` for actual errors that need attention
+- **Format**: Use consistent prefixes like `[ComponentName] 🎯 Message` for easy filtering
+
 ### Naming Conventions (Caret-Specific)
 - **Utilities**: kebab-case (`brand-utils.ts`)
 - **Components**: PascalCase (`CaretProvider.ts`)

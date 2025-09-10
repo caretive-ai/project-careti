@@ -18,7 +18,12 @@
       "Bash(npx tsc:*)",
       "Bash(git restore:*)",
       "Bash(npm run check-types:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(npm run protos:*)",
+      "Bash(npm run test:backend:*)",
+      "Bash(npm run:*)",
+      "Bash(git checkout:*)",
+      "Bash(code:*)"
     ],
     "deny": [],
     "ask": []

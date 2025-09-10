@@ -173,8 +173,8 @@
 		},
 		"apiKey": {
 			"placeholder": "Enter API Key...",
-			"getYourKeyAn": "You can get an {{providerName}} API key by signing up here.",
-			"getYourKeyA": "You can get a {{providerName}} API key by signing up here.",
+			"getYourKeyAn": "こちらで登録して{{providerName}} APIキーを入手できます。",
+			"getYourKeyA": "こちらで登録して{{providerName}} APIキーを入手できます。",
 			"label": "{{providerName}} API Key",
 			"helpText": "This key is stored locally and only used to make API requests from this extension."
 		},
@@ -200,7 +200,7 @@
 					"label": "New"
 				},
 				"grok": {
-					"description": "Advanced model with 262K context for complex coding",
+					"description": "複雑なコーディング用の262Kコンテキストを持つ高度なモデル",
 					"label": "Free"
 				}
 			},
@@ -229,10 +229,10 @@
 		},
 		"vertex": {
 			"projectIdPlaceholder": "Enter Project ID...",
-			"projectIdLabel": "Google Cloud Project ID",
+			"projectIdLabel": "Google CloudプロジェクトID",
 			"regionLabel": "Google Cloud Region",
-			"selectRegionPlaceholder": "Select a region...",
-			"setupDescription": "To use Google Cloud Vertex AI, you need to ",
+			"selectRegionPlaceholder": "リージョンを選択してください...",
+			"setupDescription": "Google Cloud Vertex AIを使用するには以下が必要です: ",
 			"setupLink1": "1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,",
 			"setupLink2": " 2) install the Google Cloud CLI › configure Application Default Credentials."
 		},
@@ -298,7 +298,7 @@
 	},
 	"chat": {
 		"caretHasQuestion": "Caret has a question",
-		"typeMessage": "Type a message...",
+		"typeMessage": "メッセージを入力...",
 		"typeTaskHere": "Type your task here...",
 		"cancel": "Cancel",
 		"addContext": "Add Context",
@@ -336,7 +336,7 @@
 		"mcpArguments": "Arguments",
 		"mcpNotification": "MCP Notification: ",
 		"loadingMcpDocumentation": "Loading MCP documentation",
-		"seeNewChanges": "See new changes",
+		"seeNewChanges": "新しい変更を表示",
 		"shellIntegrationUnavailable": "Shell Integration Unavailable",
 		"shellIntegrationWarning": "Caret may have trouble viewing the command's output. Please update VSCode (<code>CMD/CTRL + Shift + P</code> → \"Update\") and make sure you're using a supported shell: zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\").",
 		"stillHavingTrouble": "Still having trouble?",
@@ -433,15 +433,15 @@
 	"taskHeader.newStepsGenerated": "会話に基づいて新しいステップが生成される場合があります。",
 	"taskHeader.editFocusChainList": "フォーカスチェーンリストを編集",
 	"modelInfoView": {
-		"tokensSuffix": "/million tokens"
+		"tokensSuffix": "/百万トークン"
 	},
 	"modelInfo": {
 		"supportsImages": "Supports images",
 		"doesNotSupportImages": "Does not support images",
 		"supportsBrowserUse": "Supports browser use",
-		"doesNotSupportBrowserUse": "Does not support browser use",
+		"doesNotSupportBrowserUse": "ブラウザ使用未対応",
 		"supportsPromptCaching": "Supports prompt caching",
-		"doesNotSupportPromptCaching": "Does not support prompt caching",
+		"doesNotSupportPromptCaching": "プロンプトキャッシュ未対応",
 		"maxOutput": "Max output",
 		"inputPrice": "Input price",
 		"outputPrice": "Output price",
@@ -452,7 +452,7 @@
 		"cacheReadsPrice": "Cache reads price",
 		"freeRequestsPerMinute": "* Free up to {{count}} requests per minute. After that, billing depends on prompt size.",
 		"forMoreInfo": "For more info, see pricing details.",
-		"tokensSuffix": "/million tokens"
+		"tokensSuffix": "/百万トークン"
 	},
 	"providers": {
 		"caret": {
@@ -484,7 +484,7 @@
 			"pricingNote": "Pricing is calculated using SAP's Capacity Units rather than direct USD pricing."
 		},
 		"zAi": {
-			"glm45Description": "GLM-4.5 is Zhipu's latest featured model. Its comprehensive capabilities in reasoning, coding, and agent reach the state-of-the-art (SOTA) level among open-source models, with a context length of up to 128k."
+			"glm45Description": "GLM-4.5はZhipuの最新特徴モデルです。推論、コーディング、エージェントの総合的な性能はオープンソースモデルの中でSOTA（最高水準）レベルに達し、128kまでのコンテキスト長を持ちます。"
 		},
 		"groq": {
 			"modelLabel": "Model"
@@ -516,7 +516,7 @@
 		},
 		"huggingFace": {
 			"modelLabel": "Model",
-			"advancedReasoning": "Advanced reasoning model with superior performance across coding, math, and general capabilities."
+			"advancedReasoning": "コーディング、数学、一般的な機能全体にわたって優秀な性能を持つ高度な推論モデル。"
 		},
 		"dify": {
 			"workflowDescription": "Dify workflow - model selection is configured in your Dify application"
@@ -531,15 +531,19 @@
 		"modelLabel": "Model",
 		"geminiProModel": "Gemini 2.5 Pro",
 		"geminiFlashModel": "Gemini 2.5 Flash",
-		"bestLabel": "Best",
-		"valueLabel": "Value",
-		"geminiProDescription": "Premium performance model optimized for complex tasks and advanced reasoning",
-		"geminiFlashDescription": "Fast and efficient model suitable for general tasks with excellent cost-effectiveness",
-		"tagBest": "Best",
-		"tagCostEffective": "Cost-Effective"
+		"bestLabel": "最高",
+		"valueLabel": "コスパ",
+		"geminiProDescription": "複雑なタスクと高度な推論に最適化されたプレミアム性能モデル",
+		"geminiFlashDescription": "一般的なタスクに適した高速で効率的なモデル、優れたコストパフォーマンス",
+		"tagBest": "最高",
+		"tagCostEffective": "コスパ良好"
 	},
 	"validation": {
-		"invalidApiKey": "You must provide a valid API key or choose a different provider."
+		"invalidApiKey": "有効なAPIキーを提供するか、別のプロバイダーを選択してください。"
+	},
+	"apiKey": {
+		"placeholder": "APIキーを入力してください...",
+		"helpText": "このキーはローカルに保存され、この拡張機能からAPIリクエストを行うためだけに使用されます。"
 	},
 	"apiOptions": {
 		"apiProvider": "API Provider",
@@ -547,7 +551,7 @@
 		"selectRegion": "Select a region...",
 		"enterApiKey": "Enter API Key...",
 		"loading": "Loading...",
-		"caretComplexPrompts": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
+		"caretComplexPrompts": "Caretは複雑なプロンプトを使用し、Claudeモデルで最も良く動作します。性能の低いモデルは期待通りに動作しない場合があります。",
 		"note": "Note:",
 		"model": "Model",
 		"custom": "Custom",
@@ -600,7 +604,7 @@
 		"getGeminiApiKey": "You can get a Gemini API key by signing up here.",
 		"comingSoon": "Coming Soon",
 		"providerComingSoon": "{{provider}} support will be added in future updates.",
-		"millionTokens": "million tokens",
+		"millionTokens": "百万トークン",
 		"tokens": "tokens",
 		"systemMessages": {
 			"viewedTopLevelFiles": "Caret viewed the top level files in this directory:",

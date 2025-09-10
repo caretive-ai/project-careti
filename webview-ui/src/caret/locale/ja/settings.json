@@ -154,7 +154,6 @@
 		"screenshotAlt": "ブラウザのスクリーンショット",
 		"consoleLogs": "コンソールログ",
 		"noNewLogs": "(新しいログなし)",
-		"paginationStep": "ステップ {{current}} / {{total}}",
 		"previousButton": "前へ",
 		"nextButton": "次へ",
 		"sessionStarted": "ブラウザセッションが開始されました",

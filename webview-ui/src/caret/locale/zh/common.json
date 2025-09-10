@@ -173,8 +173,8 @@
 		},
 		"apiKey": {
 			"placeholder": "Enter API Key...",
-			"getYourKeyAn": "You can get an {{providerName}} API key by signing up here.",
-			"getYourKeyA": "You can get a {{providerName}} API key by signing up here.",
+			"getYourKeyAn": "您可以通过在此处注册来获取{{providerName}} API密钥。",
+			"getYourKeyA": "您可以通过在此处注册来获取{{providerName}} API密钥。",
 			"label": "{{providerName}} API Key",
 			"helpText": "This key is stored locally and only used to make API requests from this extension."
 		},
@@ -200,7 +200,7 @@
 					"label": "New"
 				},
 				"grok": {
-					"description": "Advanced model with 262K context for complex coding",
+					"description": "用于复杂编码的262K上下文高级模型",
 					"label": "Free"
 				}
 			},
@@ -229,10 +229,10 @@
 		},
 		"vertex": {
 			"projectIdPlaceholder": "Enter Project ID...",
-			"projectIdLabel": "Google Cloud Project ID",
+			"projectIdLabel": "Google Cloud项目id",
 			"regionLabel": "Google Cloud Region",
-			"selectRegionPlaceholder": "Select a region...",
-			"setupDescription": "To use Google Cloud Vertex AI, you need to ",
+			"selectRegionPlaceholder": "选择地区...",
+			"setupDescription": "要使用Google Cloud Vertex AI，您需要 ",
 			"setupLink1": "1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,",
 			"setupLink2": " 2) install the Google Cloud CLI › configure Application Default Credentials."
 		},
@@ -298,7 +298,7 @@
 	},
 	"chat": {
 		"caretHasQuestion": "Caret has a question",
-		"typeMessage": "Type a message...",
+		"typeMessage": "输入消息...",
 		"typeTaskHere": "Type your task here...",
 		"cancel": "Cancel",
 		"addContext": "Add Context",
@@ -336,7 +336,7 @@
 		"mcpArguments": "Arguments",
 		"mcpNotification": "MCP Notification: ",
 		"loadingMcpDocumentation": "Loading MCP documentation",
-		"seeNewChanges": "See new changes",
+		"seeNewChanges": "查看新变化",
 		"shellIntegrationUnavailable": "Shell Integration Unavailable",
 		"shellIntegrationWarning": "Caret may have trouble viewing the command's output. Please update VSCode (<code>CMD/CTRL + Shift + P</code> → \"Update\") and make sure you're using a supported shell: zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\").",
 		"stillHavingTrouble": "Still having trouble?",
@@ -433,15 +433,15 @@
 	"taskHeader.newStepsGenerated": "可能会根据对话生成新步骤。",
 	"taskHeader.editFocusChainList": "编辑焦点链列表",
 	"modelInfoView": {
-		"tokensSuffix": "/million tokens"
+		"tokensSuffix": "/百万代币"
 	},
 	"modelInfo": {
 		"supportsImages": "Supports images",
 		"doesNotSupportImages": "Does not support images",
 		"supportsBrowserUse": "Supports browser use",
-		"doesNotSupportBrowserUse": "Does not support browser use",
+		"doesNotSupportBrowserUse": "不支持浏览器使用",
 		"supportsPromptCaching": "Supports prompt caching",
-		"doesNotSupportPromptCaching": "Does not support prompt caching",
+		"doesNotSupportPromptCaching": "不支持提示缓存",
 		"maxOutput": "Max output",
 		"inputPrice": "Input price",
 		"outputPrice": "Output price",
@@ -452,7 +452,7 @@
 		"cacheReadsPrice": "Cache reads price",
 		"freeRequestsPerMinute": "* Free up to {{count}} requests per minute. After that, billing depends on prompt size.",
 		"forMoreInfo": "For more info, see pricing details.",
-		"tokensSuffix": "/million tokens"
+		"tokensSuffix": "/百万代币"
 	},
 	"providers": {
 		"caret": {
@@ -484,7 +484,7 @@
 			"pricingNote": "Pricing is calculated using SAP's Capacity Units rather than direct USD pricing."
 		},
 		"zAi": {
-			"glm45Description": "GLM-4.5 is Zhipu's latest featured model. Its comprehensive capabilities in reasoning, coding, and agent reach the state-of-the-art (SOTA) level among open-source models, with a context length of up to 128k."
+			"glm45Description": "GLM-4.5是智谱最新的特色模型。其在推理、编码和智能体方面的综合能力在开源模型中达到了最先进（SOTA）水平，上下文长度高达128k。"
 		},
 		"groq": {
 			"modelLabel": "Model"
@@ -516,7 +516,7 @@
 		},
 		"huggingFace": {
 			"modelLabel": "Model",
-			"advancedReasoning": "Advanced reasoning model with superior performance across coding, math, and general capabilities."
+			"advancedReasoning": "在编码、数学和通用能力方面具有卓越性能的高级推理模型。"
 		},
 		"dify": {
 			"workflowDescription": "Dify workflow - model selection is configured in your Dify application"
@@ -531,15 +531,19 @@
 		"modelLabel": "Model",
 		"geminiProModel": "Gemini 2.5 Pro",
 		"geminiFlashModel": "Gemini 2.5 Flash",
-		"bestLabel": "Best",
-		"valueLabel": "Value",
-		"geminiProDescription": "Premium performance model optimized for complex tasks and advanced reasoning",
-		"geminiFlashDescription": "Fast and efficient model suitable for general tasks with excellent cost-effectiveness",
-		"tagBest": "Best",
-		"tagCostEffective": "Cost-Effective"
+		"bestLabel": "最佳",
+		"valueLabel": "性价比",
+		"geminiProDescription": "针对复杂任务和高级推理优化的顶级性能模型",
+		"geminiFlashDescription": "适用于一般任务的快速高效模型，具有出色的成本效益",
+		"tagBest": "最佳",
+		"tagCostEffective": "性价比高"
 	},
 	"validation": {
-		"invalidApiKey": "You must provide a valid API key or choose a different provider."
+		"invalidApiKey": "您必须提供有效的API密钥或选择其他提供商。"
+	},
+	"apiKey": {
+		"placeholder": "请输入API密钥...",
+		"helpText": "此密钥存储在本地，仅用于从此扩展程序发出API请求。"
 	},
 	"apiOptions": {
 		"apiProvider": "API Provider",
@@ -547,7 +551,7 @@
 		"selectRegion": "Select a region...",
 		"enterApiKey": "Enter API Key...",
 		"loading": "Loading...",
-		"caretComplexPrompts": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
+		"caretComplexPrompts": "Caret使用复杂的提示并与Claude模型配合使用效果最佳。性能较低的模型可能无法按预期工作。",
 		"note": "Note:",
 		"model": "Model",
 		"custom": "Custom",
@@ -600,7 +604,7 @@
 		"getGeminiApiKey": "You can get a Gemini API key by signing up here.",
 		"comingSoon": "Coming Soon",
 		"providerComingSoon": "{{provider}} support will be added in future updates.",
-		"millionTokens": "million tokens",
+		"millionTokens": "百万代币",
 		"tokens": "tokens",
 		"systemMessages": {
 			"viewedTopLevelFiles": "Caret viewed the top level files in this directory:",

@@ -59,17 +59,17 @@
 			"builtWith": "Built with ❤️ by Caret Team"
 		},
 		"about": {
-			"description": "If you have any questions or feedback, feel free to open an issue at",
-			"link": "GitHub Issues"
+			"description": "ご質問やフィードバックがございましたら、お気軽にGitHubでイシューを投稿してください：",
+			"link": "GitHub イシュー"
 		}
 	},
 	"personaSelector": {
-		"header": "🎭 Choose Your AI Agent Persona",
-		"description": "Select the personality of your AI agent companion. Each persona has unique communication styles and expertise.",
-		"selectButton": "Select"
+		"header": "🎭 AIエージェントペルソナを選択",
+		"description": "AIエージェント仲間の個性を選択してください。各ペルソナには独自のコミュニケーションスタイルと専門知識があります。",
+		"selectButton": "選択"
 	},
 	"welcome": {
-		"tooltipContent": "I can develop software step-by-step by editing files, exploring projects, running commands, and using browsers. I can even extend my capabilities with MCP tools to assist beyond basic code completion.",
-		"takeATour": "Take a Tour"
+		"tooltipContent": "ファイル編集、プロジェクト探索、コマンド実行、ブラウザ使用などを通じて段階的にソフトウェアを開発できます。MCPツールを使用して基本的なコード補完を超えた機能で拡張することもできます。",
+		"takeATour": "ツアーを開始"
 	}
 }

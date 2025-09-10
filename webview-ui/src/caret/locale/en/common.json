@@ -549,6 +549,10 @@
 	"validation": {
 		"invalidApiKey": "You must provide a valid API key or choose a different provider."
 	},
+	"apiKey": {
+		"placeholder": "Enter API Key...",
+		"helpText": "This key is stored locally and only used to make API requests from this extension."
+	},
 	"apiOptions": {
 		"apiProvider": "API Provider",
 		"selectModel": "Select a model...",

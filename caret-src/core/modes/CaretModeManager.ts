@@ -13,8 +13,16 @@ import { Logger } from "@/services/logging/Logger"
  * - Completely isolated from Cline StateManager
  */
 export class CaretModeManager {
-	private static caretMode: "chatbot" | "agent" = "chatbot"
+	private static caretMode: "chatbot" | "agent" = "agent"
 	private static initialized = false
+	private static context: vscode.ExtensionContext | undefined = undefined
+
+	/**
+	 * Set the extension context for state management
+	 */
+	static setContext(context: vscode.ExtensionContext): void {
+		this.context = context
+	}
 
 	/**
 	 * Initialize the Caret mode from workspace configuration
@@ -27,11 +35,15 @@ export class CaretModeManager {
 
 		try {
 			console.log(`[CaretModeManager] 🚀 Initializing Caret mode system...`)
-			// Load from Caret-specific workspace key (not Cline's "mode")
-			const config = vscode.workspace.getConfiguration("caret")
-			const savedMode = config.get<"chatbot" | "agent">("mode", "chatbot")
 			
-			console.log(`[CaretModeManager] 📖 Loaded mode from config: ${savedMode}`)
+			if (!this.context) {
+				throw new Error("Extension context not set. Call setContext() first.")
+			}
+
+			// CARET MODIFICATION: Use globalState instead of VS Code configuration
+			const savedMode = this.context.globalState.get<"chatbot" | "agent">("caret.mode", "agent")
+			
+			console.log(`[CaretModeManager] 📖 Loaded mode from globalState: ${savedMode}`)
 			this.caretMode = savedMode
 			this.initialized = true
 			
@@ -40,7 +52,7 @@ export class CaretModeManager {
 		} catch (error) {
 			console.error(`[CaretModeManager] ❌ Failed to initialize:`, error)
 			Logger.error(`[CaretModeManager] Failed to initialize: ${error}`)
-			this.caretMode = "chatbot" // Safe fallback
+			this.caretMode = "agent" // Safe fallback
 			this.initialized = true
 		}
 	}
@@ -50,9 +62,9 @@ export class CaretModeManager {
 	 */
 	static getCurrentCaretMode(): "chatbot" | "agent" {
 		if (!this.initialized) {
-			console.warn(`[CaretModeManager] ⚠️ Not initialized, returning default 'chatbot' mode`)
-			Logger.warn("[CaretModeManager] Not initialized, returning default 'chatbot' mode")
-			return "chatbot"
+			console.warn(`[CaretModeManager] ⚠️ Not initialized, returning default 'agent' mode`)
+			Logger.warn("[CaretModeManager] Not initialized, returning default 'agent' mode")
+			return "agent"
 		}
 		console.log(`[CaretModeManager] 📍 Current mode: ${this.caretMode}`)
 		return this.caretMode
@@ -67,12 +79,15 @@ export class CaretModeManager {
 			console.log(`[CaretModeManager] 🔄 Mode change request: ${previousMode} → ${mode}`)
 			this.caretMode = mode
 
-			// Persist to Caret-specific workspace key (completely separate from Cline)
-			const config = vscode.workspace.getConfiguration("caret")
-			await config.update("mode", mode, vscode.ConfigurationTarget.Workspace)
+			if (!this.context) {
+				throw new Error("Extension context not set. Call setContext() first.")
+			}
+
+			// CARET MODIFICATION: Persist to globalState instead of VS Code configuration
+			await this.context.globalState.update("caret.mode", mode)
 
 			console.log(`[CaretModeManager] ✅ Mode change completed: ${previousMode} → ${mode}`)
-			console.log(`[CaretModeManager] 🔧 Workspace config updated successfully`)
+			console.log(`[CaretModeManager] 🔧 GlobalState updated successfully`)
 			Logger.info(`[CaretModeManager] Mode changed: ${previousMode} → ${mode}`)
 		} catch (error) {
 			console.error(`[CaretModeManager] ❌ Failed to set mode to ${mode}:`, error)

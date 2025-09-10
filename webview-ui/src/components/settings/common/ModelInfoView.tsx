@@ -45,7 +45,7 @@ const formatTiers = (
 							{"<="} {tier.contextWindow?.toLocaleString()}
 						</span>
 					)}
-					{t("modelInfoView.tokensSuffix", "settings")}
+					{t("modelInfoView.tokensSuffix", "common")}
 					{index < arr.length - 1 && <br />}
 				</span>
 			)
@@ -187,7 +187,7 @@ export const ModelInfoView = ({ selectedModelId, modelInfo, isPopup }: ModelInfo
 		modelInfo.contextWindow !== undefined && modelInfo.contextWindow > 0 && (
 			<span key="contextWindow">
 				<span style={{ fontWeight: 500 }}>{t("modelInfoView.contextWindow", "settings")}:</span>{" "}
-				{formatTokenLimit(modelInfo.contextWindow)} {t("modelInfoView.tokensSuffix", "settings")}
+				{formatTokenLimit(modelInfo.contextWindow)} {t("modelInfoView.tokensSuffix", "common")}
 			</span>
 		),
 		inputPriceElement, // Add the generated input price block

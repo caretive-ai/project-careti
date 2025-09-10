@@ -64,6 +64,10 @@ export async function activate(context: vscode.ExtensionContext) {
 	const initialMode = context.workspaceState.get<"caret" | "cline">("caret.promptSystem.mode", "caret")
 	CaretGlobalManager.initialize(initialMode)
 
+	// CARET MODIFICATION: Initialize CaretModeManager with extension context
+	const { CaretModeManager } = await import("@caret/core/modes/CaretModeManager")
+	CaretModeManager.setContext(context)
+
 	// CARET MODIFICATION: Initialize JsonTemplateLoader
 	const sectionsDirPath = vscode.Uri.joinPath(context.extensionUri, "caret-src", "core", "prompts", "sections").fsPath
 	await JsonTemplateLoader.getInstance().initialize(sectionsDirPath)

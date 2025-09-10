@@ -25,6 +25,31 @@ Caret의 i18n 시스템은 **기능별 네임스페이스**를 기본 원칙으�
 | **history** | 작업 기록 페이지 | `history.title`, `history.searchPlaceholder` |
 | ... | 기타 기능별 네임스페이스 | `{namespace}.{group}.{key}` |
 
+### **⚙️ 공통 컴포넌트 네임스페이스 규칙 (Shared Component Namespace Rule)**
+
+**❗ 중요한 발견**: 설정과 웰컴뷰에서 동시에 사용하는 모델 정보 컴포넌트(`ModelInfoView`)와 같은 공통 컴포넌트는 네임스페이스 위치가 중요합니다.
+
+**⚠️ 현재 문제 사례**: 
+- 코드: `t("modelInfoView.tokensSuffix", "settings")` 
+- 실제 JSON: `common.json`에 `modelInfoView.tokensSuffix` 존재
+- 결과: 네임스페이스 불일치로 인한 번역 실패
+
+**✅ 해결 방안**:
+1. **코드 수정 방식**: 네임스페이스를 `common`으로 변경 (권장)
+2. **JSON 이동 방식**: `common.json`에서 `settings.json`으로 키 이동
+
+### **⚠️ common.json 축소화 필요성**
+
+현재 `common.json` 파일이 과도하게 커지고 있어 다음 문제들이 발생하고 있습니다:
+- 파일 크기가 740+ 라인으로 관리가 어려움
+- 여러 기능의 번역이 혼재되어 있어 유지보수성 저하
+- 네임스페이스 원칙에 위배되는 구조
+
+**권장 해결책**:
+1. **기능별 분리**: `apiOptions`, `providers`, `modelInfo` 등을 각각 독립 네임스페이스로 분리
+2. **진정한 공통 요소만 유지**: `button`, `error`, `validation` 등 진짜 공통 UI 요소만 `common.json`에 보관
+3. **점진적 마이그레이션**: 대규모 리팩토링 대신 새 키는 적절한 네임스페이스에 추가
+
 ### **⚙️ Provider 키 통합 규칙 (Provider Key Unification Rule)**
 
 API Provider 설정과 같이 복잡한 UI는 일관된 규칙을 따릅니다. 모든 Provider 관련 번역 키는 `settings` 네임스페이스 내의 `providers` 객체 아래에 각 `providerId`로 그룹화하여 통합합니다.
@@ -262,5 +287,28 @@ const providerOptions = useMemo(() => [
 
 이 패턴을 통해 언어 설정 변경 시 UI가 즉시 올바른 번역으로 업데이트됩니다.
 
+## 🔧 **최근 수정 사항 (2025-09-10)**
+
+### **해결된 번역 누락 문제들**
+
+1. **welcome.json 영어 하드코딩 수정**
+   - 한국어: `apiSetup.description` 영어 → 한국어 번역 완료
+   - 일본어: `personaSelector`, `footer.about`, `welcome` 섹션 영어 → 일본어 번역 완료  
+   - 중국어: `personaSelector`, `footer.about`, `welcome` 섹션 영어 → 중국어 번역 완료
+
+2. **modelInfoView.tokensSuffix 네임스페이스 불일치 해결**
+   - 문제: 코드에서 `t("modelInfoView.tokensSuffix", "settings")` 호출하지만 실제로는 `common.json`에만 존재
+   - 해결: `ModelInfoView.tsx`에서 네임스페이스를 `"common"`으로 변경
+   - 영향: 모든 언어에서 "/백만 토큰", "/million tokens" 등이 정상 표시됨
+
+3. **중복 키 분석 완료**
+   - `apiSetup` 키가 `welcome.json`과 `common.json`에 중복 존재 확인
+   - `tokensSuffix` 키가 `common.json`과 `settings.json`에 분산 존재했던 문제 해결
+
+### **향후 개선 과제**
+- [ ] `common.json` 축소화: 740+ 라인 → 진짜 공통 요소만으로 축소  
+- [ ] `apiOptions`, `providers` 등을 독립 네임스페이스로 분리
+- [ ] 전체 다국어 파일 일관성 검증 및 누락 번역 보완
+
 ---
-**문서 상태**: `2025-09-06` 기준 최신화 완료
+**문서 상태**: `2025-09-10` 기준 최신화 완료

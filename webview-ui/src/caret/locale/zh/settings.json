@@ -216,7 +216,6 @@
 		"screenshotAlt": "Browser screenshot",
 		"consoleLogs": "Console Logs",
 		"noNewLogs": "(No new logs)",
-		"paginationStep": "Step {{current}} / {{total}}",
 		"previousButton": "Previous",
 		"nextButton": "Next",
 		"sessionStarted": "Browser Session Started",

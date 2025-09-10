@@ -9,5 +9,8 @@
 		"remote": "원격",
 		"local": "로컬",
 		"remoteHost": "원격 호스트"
-	}
+	},
+	"caretWantsToUseBrowser": "캐럿이 브라우저를 사용하려고 합니다:",
+	"paginationStep": "{{currentPage}} / {{totalPages}} 단계",
+	"paginationPrevious": "이전"
 }

@@ -21,7 +21,7 @@ import Tooltip from "@/components/common/Tooltip"
 import ApiOptions from "@/components/settings/ApiOptions"
 import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
+import { CaretSystemServiceClient, FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
 import {
 	ContextMenuOptionType,
 	getContextMenuOptionIndex,
@@ -1044,6 +1044,27 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						},
 					}),
 				)
+
+				// CARET MODIFICATION: Synchronize Caret mode when using Caret system
+				if (modeSystem === "caret") {
+					try {
+						const newCaretMode = mode === "plan" ? "agent" : "chatbot"
+						console.log(`[ChatTextArea] Synchronizing Caret mode: plan/act ${mode} → Caret ${newCaretMode}`)
+
+						const caretResponse = await CaretSystemServiceClient.SetCaretMode({
+							mode: newCaretMode,
+						})
+
+						if (caretResponse.success) {
+							console.log(`[ChatTextArea] ✅ Caret mode synchronized: ${caretResponse.currentMode}`)
+						} else {
+							console.error(`[ChatTextArea] ❌ Failed to synchronize Caret mode: ${caretResponse.errorMessage}`)
+						}
+					} catch (error) {
+						console.error(`[ChatTextArea] ❌ Error synchronizing Caret mode:`, error)
+					}
+				}
+
 				// Focus the textarea after mode toggle with slight delay
 				setTimeout(() => {
 					if (response.value) {

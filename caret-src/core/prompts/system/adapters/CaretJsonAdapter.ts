@@ -2,10 +2,13 @@ import { IPromptSystem } from "../IPromptSystem";
 import { JsonTemplateLoader } from "../JsonTemplateLoader";
 import { CARET_MODES } from "../../../../shared/constants/PromptSystemConstants";
 import { CaretSystemPromptContext } from "../types";
-import { PromptBuilder } from "@/core/prompts/system-prompt/registry/PromptBuilder";
-import { getModelFamily } from "@/core/prompts/system-prompt";
-import { ModelFamily } from "@/shared/prompts";
-import { ClineDefaultTool } from "@/shared/tools";
+import { PromptBuilder } from "../../../../../src/core/prompts/system-prompt/registry/PromptBuilder";
+import { PromptRegistry } from "../../../../../src/core/prompts/system-prompt/registry/PromptRegistry";
+import { getModelFamily } from "../../../../../src/core/prompts/system-prompt";
+import { ModelFamily } from "../../../../../src/shared/prompts";
+import { ClineDefaultTool } from "../../../../../src/shared/tools";
+import { ClineToolSet } from "../../../../../src/core/prompts/system-prompt/registry/ClineToolSet";
+import { Logger } from "../../../../../src/services/logging/Logger";
 import * as path from "path";
 
 /**
@@ -29,7 +32,7 @@ export class CaretJsonAdapter implements IPromptSystem {
         const isChatbotMode = context.mode === CARET_MODES.CHATBOT;
         
         // CARET MODIFICATION: Add debug logging for mode verification
-        console.log(`[CaretJsonAdapter] 🎯 Mode: ${context.mode}, isChatbotMode: ${isChatbotMode}`);
+        Logger.debug(`[CaretJsonAdapter] 🎯 Mode: ${context.mode}, isChatbotMode: ${isChatbotMode}`);
 
         const sectionNames = [
             'BASE_PROMPT_INTRO',
@@ -48,49 +51,59 @@ export class CaretJsonAdapter implements IPromptSystem {
             context.mcpHub?.getServers()?.length ? 'CARET_MCP_INTEGRATION' : null,
         ].filter(Boolean) as string[];
 
-        console.log(`[CaretJsonAdapter] 📋 Selected sections:`, sectionNames);
+        Logger.debug(`[CaretJsonAdapter] 📋 Selected sections: ${JSON.stringify(sectionNames)}`);
 
         const promptParts: string[] = [];
+
+        Logger.debug(`[CaretJsonAdapter] 🔧 Starting prompt generation...`);
 
         // Process JSON sections first
         for (const name of sectionNames) {
             const template = this.loader.getTemplate<any>(name);
             if (!template) {
-                console.warn(`[CaretJsonAdapter] ❌ Template not found: ${name}`);
+                Logger.debug(`[CaretJsonAdapter] ❌ Template not found: ${name}`);
                 continue;
             }
             
             const sectionContent = this.getDynamicSection(template, isChatbotMode, context);
             if (sectionContent.trim()) {
                 promptParts.push(sectionContent);
-                console.log(`[CaretJsonAdapter] ✅ ${name}: loaded (${sectionContent.length} chars)`);
+                Logger.debug(`[CaretJsonAdapter] ✅ ${name}: loaded (${sectionContent.length} chars)`);
             } else {
-                console.warn(`[CaretJsonAdapter] ⚠️ ${name}: empty content`);
+                Logger.debug(`[CaretJsonAdapter] ⚠️ ${name}: empty content`);
             }
             
             // Insert Cline tools section after CARET_USER_INSTRUCTIONS
             if (name === 'CARET_USER_INSTRUCTIONS') {
+                Logger.debug(`[CaretJsonAdapter] 🎯 About to insert Cline tools after ${name}`);
                 const clineToolsSection = await this.getClineToolsSection(context, isChatbotMode);
                 if (clineToolsSection) {
                     promptParts.push(clineToolsSection);
-                    console.log(`[CaretJsonAdapter] ✅ Cline tools section inserted after ${name}`);
+                    Logger.debug(`[CaretJsonAdapter] ✅ Cline tools section inserted after ${name} (${clineToolsSection.length} chars)`);
                 } else {
-                    console.warn(`[CaretJsonAdapter] ❌ Failed to generate Cline tools section`);
+                    Logger.debug(`[CaretJsonAdapter] ❌ Failed to generate Cline tools section`);
                 }
             }
         }
         
         // If tools weren't added yet (no CARET_USER_INSTRUCTIONS), add them now
-        if (!promptParts.some(p => p.includes('# TOOL USAGE SYSTEM'))) {
+        Logger.debug(`[CaretJsonAdapter] 🔍 Checking if tools were added...`);
+        const hasToolsSection = promptParts.some(p => p.includes('# TOOL USAGE SYSTEM'));
+        Logger.debug(`[CaretJsonAdapter] Tools section exists: ${hasToolsSection}`);
+        
+        if (!hasToolsSection) {
+            Logger.debug(`[CaretJsonAdapter] 🎯 Adding Cline tools at end as backup`);
             const clineToolsSection = await this.getClineToolsSection(context, isChatbotMode);
             if (clineToolsSection) {
                 promptParts.push(clineToolsSection);
-                console.log(`[CaretJsonAdapter] ✅ Cline tools section added at end`);
+                Logger.debug(`[CaretJsonAdapter] ✅ Cline tools section added at end (${clineToolsSection.length} chars)`);
+            } else {
+                Logger.debug(`[CaretJsonAdapter] ❌ Backup tools section also failed!`);
             }
         }
 
         const finalPrompt = promptParts.filter(Boolean).join('\n\n');
-        console.log(`[CaretJsonAdapter] 🎉 Final prompt generated: ${finalPrompt.length} characters, ${promptParts.length} sections`);
+        Logger.debug(`[CaretJsonAdapter] 🎉 Final prompt generated: ${finalPrompt.length} characters, ${promptParts.length} sections`);
         
         return finalPrompt;
     }
@@ -103,32 +116,55 @@ export class CaretJsonAdapter implements IPromptSystem {
         try {
             // CARET MODIFICATION: Fixed cline-latest compatibility
             
-            // Create a mock PromptVariant to use Cline's tool system
+            // CRITICAL: Ensure PromptRegistry is loaded first to register all tools
+            const registry = PromptRegistry.getInstance();
+            await registry.load();
+            
+            // FIXED: Use minimal mockVariant with tools: undefined 
+            // This triggers Cline's automatic tool loading (ClineToolSet.getTools())
             const mockVariant = {
                 id: 'caret-tools',
                 version: 1,
                 tags: [] as readonly string[],
                 labels: {} as Readonly<Record<string, number>>,
-                family: getModelFamily(context.providerInfo) || ModelFamily.GENERIC,
+                // CARET MODIFICATION: Force GENERIC family to ensure all tools are loaded
+                // next-gen and other new families don't have tools registered yet
+                family: ModelFamily.GENERIC,
                 description: 'Caret tools integration',
                 config: { tools: [] } as any,
                 baseTemplate: '',
                 componentOrder: [] as readonly any[],
                 componentOverrides: {} as any,
                 placeholders: {} as Readonly<Record<string, string>>,
-                // FIXED: tools: undefined → tools: [] for cline-latest compatibility
-                // When tools is undefined, new PromptBuilder skips tool loading
-                // When tools is empty array, it loads all available tools for the family
+                // FIXED: tools: [] for cline-latest compatibility - triggers automatic loading of all tools for family
                 tools: [] as readonly ClineDefaultTool[],
                 toolOverrides: undefined
             } as const;
 
-            // Get all tools from Cline's system
+            Logger.debug(`[DEBUG CaretJsonAdapter] Using mockVariant with automatic tool loading: family=${mockVariant.family}, tools=${JSON.stringify(mockVariant.tools)}`);
+            
             const toolPrompts = await PromptBuilder.getToolsPrompts(mockVariant, context);
             
+            Logger.debug(`[DEBUG CaretJsonAdapter] PromptBuilder returned: toolPrompts=${toolPrompts ? toolPrompts.length : 'null/undefined'}, firstTool=${toolPrompts?.[0]?.substring(0, 100) + '...'}`);
+            
             if (!toolPrompts || toolPrompts.length === 0) {
-                console.warn(`[CaretJsonAdapter] ❌ No tools available from Cline system`);
-                return null;
+                Logger.debug(`[CaretJsonAdapter] ❌ No tools available from Cline system - investigating...`);
+                Logger.debug(`[DEBUG CaretJsonAdapter] Context details: contextKeys=${JSON.stringify(Object.keys(context))}, providerInfo=${context.providerInfo?.providerId}, model=${context.providerInfo?.model}`);
+                
+                // Additional debugging: Check ClineToolSet directly
+                try {
+                    const directTools = ClineToolSet.getTools(mockVariant.family);
+                    Logger.debug(`[DEBUG CaretJsonAdapter] Direct ClineToolSet.getTools returned: toolsCount=${directTools.length}, toolIds=${JSON.stringify(directTools.map(t => t.config.id))}, family=${mockVariant.family}`);
+                    
+                    // Check if browser_action specifically is available
+                    const browserTool = ClineToolSet.getToolByName('browser_action', mockVariant.family);
+                    Logger.debug(`[DEBUG CaretJsonAdapter] Browser tool lookup: found=${!!browserTool}, toolId=${browserTool?.config.id}, toolName=${browserTool?.config.name}`);
+                } catch (error) {
+                    Logger.debug(`[DEBUG CaretJsonAdapter] ClineToolSet direct access error: ${error}`);
+                }
+                
+                // CARET MODIFICATION: Provide fallback tool information when Cline tools are unavailable
+                return this.getFallbackToolsSection(isChatbotMode);
             }
 
             let toolsContent = '# TOOL USAGE SYSTEM\n\n';
@@ -332,5 +368,43 @@ export class CaretJsonAdapter implements IPromptSystem {
         const result = customInstructions.join('\n\n');
         console.log(`[CaretJsonAdapter] 📋 Custom instructions built: ${customInstructions.length} sections, ${result.length} chars`);
         return result;
+    }
+
+    /**
+     * Fallback tool section when Cline tools system is unavailable.
+     * Provides basic tool information to ensure prompt generation continues.
+     */
+    private getFallbackToolsSection(isChatbotMode: boolean): string {
+        console.log(`[CaretJsonAdapter] 🔧 Using fallback tool section for mode: ${isChatbotMode ? 'CHATBOT' : 'AGENT'}`);
+        
+        let toolsContent = '# TOOL USAGE SYSTEM\n\n';
+        
+        if (isChatbotMode) {
+            toolsContent += '**CURRENT MODE: CHATBOT** - Limited tool access for conversational assistance\n\n';
+            toolsContent += 'Available tools in CHATBOT mode:\n';
+            toolsContent += '- read_file: Read and analyze file contents\n';
+            toolsContent += '- list_files: List directory contents and explore file structures\n';
+            toolsContent += '- search_files: Search for files and content across the workspace\n';
+            toolsContent += '- ask_followup_question: Ask clarifying questions to better understand requirements\n';
+            toolsContent += '- web_fetch: Fetch web content for research and information gathering\n';
+            toolsContent += '- attempt_completion: Complete tasks when objectives are met\n\n';
+            toolsContent += '**RESTRICTED in CHATBOT mode:** File editing, command execution, browser automation are disabled for safety.\n\n';
+            toolsContent += 'Focus on understanding, analysis, and providing helpful guidance without making changes.\n';
+        } else {
+            toolsContent += '**CURRENT MODE: AGENT** - Full autonomous tool access\n\n';
+            toolsContent += 'Available tools in AGENT mode:\n';
+            toolsContent += '- File Operations: read_file, write_to_file, replace_in_file\n';
+            toolsContent += '- Directory Navigation: list_files, search_files, list_code_definition_names\n';
+            toolsContent += '- Command Execution: execute_command (for terminal commands)\n';
+            toolsContent += '- Web Research: web_fetch\n';
+            toolsContent += '- Browser Automation: browser_action (for web interactions)\n';
+            toolsContent += '- Communication: ask_followup_question, attempt_completion\n';
+            toolsContent += '- MCP Tools: use_mcp_tool, access_mcp_resource\n\n';
+            toolsContent += 'Use tools autonomously to complete tasks efficiently and effectively.\n';
+        }
+        
+        toolsContent += '\n**IMPORTANT:** Always verify tool availability before use and handle errors gracefully.\n';
+        
+        return toolsContent;
     }
 }

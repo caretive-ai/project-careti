@@ -26,7 +26,13 @@
       "Bash(code:*)",
       "Bash(grep:*)",
       "Bash(git pull:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(dir:*)",
+      "WebFetch(domain:cline.bot)",
+      "Bash(taskkill:*)",
+      "Bash(tree:*)",
+      "Bash(npm start)",
+      "Bash(npx docusaurus start:*)"
     ],
     "deny": [],
     "ask": []

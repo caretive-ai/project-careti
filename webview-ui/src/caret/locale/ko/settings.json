@@ -44,6 +44,32 @@
 	"actMode": "실행",
 	"useDifferentModels": "계획 및 실행 모드에 다른 모델 사용",
 	"useDifferentModelsDescription": "계획과 실행 모드 사이를 전환하면 이전 모드에서 사용된 API와 모델이 유지됩니다. 예를 들어, 저렴한 코딩 모델이 실행할 계획을 설계하기 위해 강력한 추론 모델을 사용할 때 유용할 수 있습니다.",
+	"theme": {
+		"dark": "다크 테마",
+		"light": "라이트 테마", 
+		"auto": "자동 테마"
+	},
+	"appearance": {
+		"fontSize": "폰트 크기",
+		"lineHeight": "줄 간격",
+		"fontFamily": "폰트 패밀리"
+	},
+	"modelSelector": {
+		"label": "모델"
+	},
+	"pricing": {
+		"inputPrice": "입력 가격: {{price}}/백만 토큰",
+		"cacheReadPrice": "캐시 읽기 가격: {{price}}/백만 토큰", 
+		"outputPriceStandard": "출력 가격 (표준): {{price}}/백만 토큰",
+		"outputPriceReasoning": "출력 가격 (추론 예산 > 0): {{price}}/백만 토큰",
+		"contextWindow": "컨텍스트 윈도우: {{size}}/백만 토큰",
+		"perMillionTokens": "/백만 토큰"
+	},
+	"modelInfo": {
+		"supportsImages": "이미지 지원",
+		"supportsBrowserUse": "브라우저 사용 지원",
+		"contextWindow": "컨텍스트 윈도우: {{size}}"
+	},
 	"modeSystem": {
 		"label": "모드 시스템",
 		"description": "캐럿 또는 클라인 모드를 선택하세요.",
@@ -663,6 +689,19 @@
 		"descriptionPart1": "Google Cloud Vertex AI를 사용하려면 다음을 수행해야 합니다.",
 		"linkText1": "1) Google Cloud 계정 생성 › Vertex AI API 활성화 › 원하는 Claude 모델 활성화,",
 		"linkText2": "2) Google Cloud CLI 설치 › 애플리케이션 기본 사용자 인증 정보 구성."
+	},
+	"vertex": {
+		"modelName": "모델 이름",
+		"instructions": "지시사항",
+		"contextWindow": "컨텍스트 윈도우",
+		"maxTokens": "최대 토큰",
+		"safetySettings": "안전 설정",
+		"temperature": "온도"
+	},
+	"claude": {
+		"systemPrompt": "시스템 프롬프트",
+		"maxTokens": "최대 토큰", 
+		"apiVersion": "API 버전"
 	},
 	"vsCodeLmProvider": {
 		"languageModelLabel": "언어 모델",

@@ -22,6 +22,12 @@ export const CARET_LOCALIZED_URLS = {
 		ja: "https://caret.kr/privacy",
 		zh: "https://caret.kr/privacy",
 	},
+	YOUTH_PROTECTION: {
+		ko: "https://caret.kr/youth-protection",
+		en: "https://caret.kr/youth-protection",
+		ja: "https://caret.kr/youth-protection",
+		zh: "https://caret.kr/youth-protection",
+	},
 	EDUCATION_PROGRAM: {
 		ko: "https://github.com/aicoding-caret/caret/blob/main/caret-docs/development/education-program.ko.md",
 		en: "https://github.com/aicoding-caret/caret/blob/main/caret-docs/development/education-program.en.md",

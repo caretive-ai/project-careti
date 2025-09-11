@@ -105,7 +105,7 @@ export const LMStudioProvider = ({ currentMode }: LMStudioProviderProps) => {
 				placeholder={t("lmStudioProvider.baseUrlPlaceholder", "settings")}
 			/>
 
-			<div className="font-semibold">{t("settings.modelSelector.label", "settings")}</div>
+			<div className="font-semibold">{t("modelSelector.label", "settings")}</div>
 			{lmStudioModels.length > 0 ? (
 				<DropdownContainer className="dropdown-container" zIndex={10}>
 					<VSCodeDropdown

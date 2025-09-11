@@ -96,7 +96,7 @@ export const VertexProvider = ({ showModelOptions, isPopup, currentMode }: Verte
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label={t("settings.modelSelector.label")}
+						label={t("modelSelector.label", "settings")}
 						models={modelsToUse}
 						onChange={(e: any) =>
 							handleModeFieldChange(

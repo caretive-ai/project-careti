@@ -305,6 +305,12 @@ const providerOptions = useMemo(() => [
    - `apiSetup` 키가 `welcome.json`과 `common.json`에 중복 존재 확인
    - `tokensSuffix` 키가 `common.json`과 `settings.json`에 분산 존재했던 문제 해결
 
+### **한계 및 미적용 영역**
+
+**백엔드 하드코딩 미번역:**
+- `src/shared/api.ts`의 모델 설명(description) 등 백엔드 하드코딩은 번역하지 않음
+- 프론트엔드-백엔드 i18n 통합은 아키텍처 변경이 필요하여 현재 범위에서 제외
+
 ### **향후 개선 과제**
 - [ ] `common.json` 축소화: 740+ 라인 → 진짜 공통 요소만으로 축소  
 - [ ] `apiOptions`, `providers` 등을 독립 네임스페이스로 분리

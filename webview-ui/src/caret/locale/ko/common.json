@@ -22,7 +22,11 @@
 		"reportGitHubIssue": "GitHub 이슈 보고"
 	},
 	"error": {
-		"generic": "오류가 발생했습니다."
+		"generic": "오류가 발생했습니다.",
+		"apiKeyRequired": "API 키가 필요합니다",
+		"openaiApiKeyRequired": "OpenAI API 키가 필요합니다",
+		"anthropicApiKeyRequired": "Anthropic API 키가 필요합니다", 
+		"geminiApiKeyRequired": "Gemini API 키가 필요합니다"
 	},
 	"imageAlt": {
 		"caretBanner": "Caret 로고 배너"
@@ -275,6 +279,7 @@
 		"signUpDescription": "계정에 가입하여 최신 모델, 사용량 및 크레딧을 볼 수 있는 결제 대시보드 및 더 많은 예정된 기능에 액세스하세요.",
 		"termsOfService": "서비스 약관",
 		"privacyPolicy": "개인정보 처리방침",
+		"youthProtection": "청소년 보호정책",
 		"byContining": "계속 진행하면 다음에 동의하는 것으로 간주됩니다.",
 		"subscription": "구독 플랜",
 		"subscriptionFree": "무료",
@@ -711,6 +716,12 @@
 		},
 		"joinUs": "다음에서 함께하세요",
 		"forMoreUpdates": "더 많은 업데이트를 확인하세요!"
+	},
+	"browserTool": {
+		"title": "브라우저 도구",
+		"description": "웹 브라우저 실행 및 상호작용",
+		"placeholder": "URL 입력...",
+		"launchButton": "브라우저 실행"
 	},
 	"browser": {
 		"connectionInfo": "브라우저 연결 정보",

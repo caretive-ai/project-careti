@@ -54,3 +54,6 @@ Roo-Code/.git_disabled/objects/pack/pack-f04eeaacd9d5c177dd5b5f3273931a87ab27b4e
 # Ignore files with special characters causing linter issues
 caret-docs/보고서(reports)/
 "t -n 1 --before=2025-09-05 2113 merge-v326-08292807"
+
+# Documentation site
+docusaurus-site/

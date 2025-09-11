@@ -2,7 +2,7 @@ const fs = require("fs")
 const path = require("path")
 const { execSync } = require("child_process")
 
-const projectRoot = path.resolve(__dirname, "..")
+const projectRoot = path.resolve(__dirname, "..", "..")
 
 function getTimestamp() {
 	const now = new Date()
@@ -16,6 +16,7 @@ function getTimestamp() {
 
 function runCommand(command, description) {
 	console.log(`\n📦 [${description}] Running command: ${command}`)
+	console.log(`📁 Working directory: ${projectRoot}`)
 	try {
 		execSync(command, { stdio: "inherit", cwd: projectRoot })
 		console.log(`✅ [${description}] Command completed successfully.`)
@@ -79,6 +80,9 @@ if (!fs.existsSync(outputDir)) {
 // 4. Clean build artifacts
 const webviewUiBuildPath = path.join(projectRoot, "webview-ui", "build")
 const rootDistPath = path.join(projectRoot, "dist") // vsce might create this
+console.log(`📁 Project root path: ${projectRoot}`)
+console.log(`📁 Webview UI build path: ${webviewUiBuildPath}`)
+console.log(`📁 Root dist path: ${rootDistPath}`)
 cleanDirectory(webviewUiBuildPath, "Webview UI Build Directory")
 cleanDirectory(rootDistPath, "Root Dist Directory")
 

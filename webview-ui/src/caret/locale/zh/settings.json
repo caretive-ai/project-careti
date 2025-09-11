@@ -86,6 +86,32 @@
 	"actMode": "Act Mode",
 	"useDifferentModels": "Use different models for Plan and Act modes",
 	"useDifferentModelsDescription": "Switching between Plan and Act mode will persist the API and model used in the previous mode. This may be helpful e.g. when using a strong reasoning model to architect a plan for a cheaper coding model to act on.",
+	"theme": {
+		"dark": "深色主题",
+		"light": "浅色主题", 
+		"auto": "自动主题"
+	},
+	"appearance": {
+		"fontSize": "字体大小",
+		"lineHeight": "行高",
+		"fontFamily": "字体系列"
+	},
+	"modelSelector": {
+		"label": "模型"
+	},
+	"pricing": {
+		"inputPrice": "输入价格: {{price}}/百万令牌",
+		"cacheReadPrice": "缓存读取价格: {{price}}/百万令牌", 
+		"outputPriceStandard": "输出价格 (标准): {{price}}/百万令牌",
+		"outputPriceReasoning": "输出价格 (推理预算 > 0): {{price}}/百万令牌",
+		"contextWindow": "上下文窗口: {{size}}/百万令牌",
+		"perMillionTokens": "/百万令牌"
+	},
+	"modelInfo": {
+		"supportsImages": "支持图像",
+		"supportsBrowserUse": "支持浏览器使用",
+		"contextWindow": "上下文窗口: {{size}}"
+	},
 	"modeSystem": {
 		"label": "模式系统",
 		"description": "选择 Caret 或 Cline 模式。",
@@ -729,6 +755,19 @@
 		"descriptionPart1": "To use Google Cloud Vertex AI, you need to",
 		"linkText1": "1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,",
 		"linkText2": "2) install the Google Cloud CLI › configure Application Default Credentials."
+	},
+	"vertex": {
+		"modelName": "模型名称",
+		"instructions": "说明",
+		"contextWindow": "上下文窗口",
+		"maxTokens": "最大标记",
+		"safetySettings": "安全设置",
+		"temperature": "温度"
+	},
+	"claude": {
+		"systemPrompt": "系统提示",
+		"maxTokens": "最大标记", 
+		"apiVersion": "API版本"
 	},
 	"vsCodeLmProvider": {
 		"languageModelLabel": "Language Model",

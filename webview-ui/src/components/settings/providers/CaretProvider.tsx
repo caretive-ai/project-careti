@@ -1,6 +1,8 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { Mode } from "@shared/storage/types"
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
+import { CARET_LOCALIZED_URLS, getLocalizedUrl, type SupportedLanguage } from "@/caret/constants/urls"
+import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
 import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CaretAccountServiceClient } from "@/services/grpc-client"
@@ -14,6 +16,7 @@ interface CaretProviderProps {
 const CaretProvider = () => {
 	const { apiConfiguration } = useExtensionState()
 	const { handleFieldChange } = useApiConfigurationHandlers()
+	const { currentLanguage } = useCaretI18n()
 
 	const handleLogin = () => {
 		CaretAccountServiceClient.caretAccountLoginClicked(EmptyRequest.create()).catch((err) =>
@@ -60,7 +63,22 @@ const CaretProvider = () => {
 				</ul>
 			</div>
 
-			<p style={{ fontSize: 11, color: "var(--vscode-descriptionForeground)", margin: 0 }}></p>
+			<div style={{ fontSize: 11, color: "var(--vscode-descriptionForeground)", margin: "8px 0 0 0" }}>
+				<p style={{ margin: 0 }}>
+					{t("account.byContining", "common")}{" "}
+					<VSCodeLink
+						className="text-inherit"
+						href={getLocalizedUrl("CARETIVE_PRIVACY", currentLanguage as SupportedLanguage)}>
+						{t("account.privacyPolicy", "common")}
+					</VSCodeLink>{" "}
+					{t("common.and", "common")}{" "}
+					<VSCodeLink
+						className="text-inherit"
+						href={getLocalizedUrl("YOUTH_PROTECTION", currentLanguage as SupportedLanguage)}>
+						{t("account.youthProtection", "common")}
+					</VSCodeLink>
+				</p>
+			</div>
 		</div>
 	)
 }

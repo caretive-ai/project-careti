@@ -44,6 +44,32 @@
 	"actMode": "Act Mode",
 	"useDifferentModels": "Use different models for Plan and Act modes",
 	"useDifferentModelsDescription": "Switching between Plan and Act mode will persist the API and model used in the previous mode. This may be helpful e.g. when using a strong reasoning model to architect a plan for a cheaper coding model to act on.",
+	"theme": {
+		"dark": "Dark Theme",
+		"light": "Light Theme", 
+		"auto": "Auto Theme"
+	},
+	"appearance": {
+		"fontSize": "Font Size",
+		"lineHeight": "Line Height",
+		"fontFamily": "Font Family"
+	},
+	"modelSelector": {
+		"label": "Model"
+	},
+	"pricing": {
+		"inputPrice": "Input price: {{price}}/million tokens",
+		"cacheReadPrice": "Cache read price: {{price}}/million tokens", 
+		"outputPriceStandard": "Output price (standard): {{price}}/million tokens",
+		"outputPriceReasoning": "Output price (reasoning budget > 0): {{price}}/million tokens",
+		"contextWindow": "Context window: {{size}}/million tokens",
+		"perMillionTokens": "/million tokens"
+	},
+	"modelInfo": {
+		"supportsImages": "Image support",
+		"supportsBrowserUse": "Supports browser use",
+		"contextWindow": "Context window: {{size}}"
+	},
 	"modeSystem": {
 		"label": "Mode System",
 		"description": "Select Caret or Cline mode.",
@@ -706,6 +732,19 @@
 		"descriptionPart1": "To use Google Cloud Vertex AI, you need to",
 		"linkText1": "1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,",
 		"linkText2": "2) install the Google Cloud CLI › configure Application Default Credentials."
+	},
+	"vertex": {
+		"modelName": "Model Name",
+		"instructions": "Instructions",
+		"contextWindow": "Context Window",
+		"maxTokens": "Max Tokens",
+		"safetySettings": "Safety Settings",
+		"temperature": "Temperature"
+	},
+	"claude": {
+		"systemPrompt": "System Prompt",
+		"maxTokens": "Max Tokens", 
+		"apiVersion": "API Version"
 	},
 	"vsCodeLmProvider": {
 		"languageModelLabel": "Language Model",

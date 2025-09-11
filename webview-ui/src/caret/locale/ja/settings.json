@@ -682,6 +682,19 @@
 		"linkText1": "1) Google Cloudアカウントを作成 › Vertex AI APIを有効にする › 目的のClaudeモデルを有効にする、",
 		"linkText2": "2) Google Cloud CLIをインストール › アプリケーションのデフォルト認証情報を構成する。"
 	},
+	"vertex": {
+		"modelName": "モデル名",
+		"instructions": "指示",
+		"contextWindow": "コンテキストウィンドウ",
+		"maxTokens": "最大トークン",
+		"safetySettings": "安全設定",
+		"temperature": "温度"
+	},
+	"claude": {
+		"systemPrompt": "システムプロンプト",
+		"maxTokens": "最大トークン", 
+		"apiVersion": "APIバージョン"
+	},
 	"vsCodeLmProvider": {
 		"languageModelLabel": "言語モデル",
 		"selectModelPlaceholder": "モデルを選択してください...",
@@ -738,6 +751,32 @@
 	"actMode": "Act Mode",
 	"useDifferentModels": "Use different models for Plan and Act modes",
 	"useDifferentModelsDescription": "Switching between Plan and Act mode will persist the API and model used in the previous mode. This may be helpful e.g. when using a strong reasoning model to architect a plan for a cheaper coding model to act on.",
+	"theme": {
+		"dark": "ダークテーマ",
+		"light": "ライトテーマ", 
+		"auto": "自動テーマ"
+	},
+	"appearance": {
+		"fontSize": "フォントサイズ",
+		"lineHeight": "行の高さ",
+		"fontFamily": "フォントファミリー"
+	},
+	"modelSelector": {
+		"label": "モデル"
+	},
+	"pricing": {
+		"inputPrice": "入力価格: {{price}}/百万トークン",
+		"cacheReadPrice": "キャッシュ読み取り価格: {{price}}/百万トークン", 
+		"outputPriceStandard": "出力価格 (標準): {{price}}/百万トークン",
+		"outputPriceReasoning": "出力価格 (推論予算 > 0): {{price}}/百万トークン",
+		"contextWindow": "コンテキストウィンドウ: {{size}}/百万トークン",
+		"perMillionTokens": "/百万トークン"
+	},
+	"modelInfo": {
+		"supportsImages": "画像対応",
+		"supportsBrowserUse": "ブラウザ使用対応",
+		"contextWindow": "コンテキストウィンドウ: {{size}}"
+	},
 	"basetenModelPicker": {
 		"modelNotStatic": "Model {{newModelId}} is not in the static basetenModels list",
 		"fetchModelsError": "Failed to refresh Baseten models:",

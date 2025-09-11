@@ -10,10 +10,15 @@
 		"reject": "拒否",
 		"setupApiOrLocal": "APIキーまたはローカルLLMをセットアップする",
 		"notifyCaretAccount": "Caretサブスクリプションの通知を受け取る",
-		"saveAndStart": "保存して開始"
+		"saveAndStart": "保存して開始",
+		"startNewTaskWithContext": "コンテキストと共に新しいタスクを開始"
 	},
 	"error": {
-		"generic": "エラーが発生しました。"
+		"generic": "エラーが発生しました。",
+		"apiKeyRequired": "APIキーが必要です",
+		"openaiApiKeyRequired": "OpenAI APIキーが必要です",
+		"anthropicApiKeyRequired": "Anthropic APIキーが必要です",
+		"geminiApiKeyRequired": "Gemini APIキーが必要です"
 	},
 	"imageAlt": {
 		"caretBanner": "Caretロゴバナー"
@@ -704,6 +709,12 @@
 		},
 		"joinUs": "Join us on",
 		"forMoreUpdates": "for more updates!"
+	},
+	"browserTool": {
+		"title": "ブラウザツール",
+		"description": "ウェブブラウザの起動と操作",
+		"placeholder": "URLを入力...",
+		"launchButton": "ブラウザ起動"
 	},
 	"browser": {
 		"connectionInfo": "Browser connection info",

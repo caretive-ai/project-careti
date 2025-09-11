@@ -87,7 +87,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	// Initialize test mode and add disposables to context
 	context.subscriptions.push(...testModeWatchers)
 
-	vscode.commands.executeCommand("setContext", "cline.isDevMode", IS_DEV && IS_DEV === "true")
+	// CARET MODIFICATION: Changed context key from cline.isDevMode to caret.isDevMode to avoid conflicts with Cline extension
+	vscode.commands.executeCommand("setContext", "caret.isDevMode", IS_DEV && IS_DEV === "true")
 
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(VscodeWebviewProvider.SIDEBAR_ID, sidebarWebview, {

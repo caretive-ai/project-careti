@@ -1,7 +1,7 @@
 {
 	"name": "caret",
 	"displayName": "Caret",
-	"description": "An autonomous coding AI agent, forked from Caret. For context-aware pair programming, refactoring, and 'vibe coding' with customizable AI personas. Supports: 한국어, 日본語, 중문.",
+	"description": "🎯 Transform your coding workflow with the most intelligent AI assistant for Visual Studio Code. Autonomous code generation, multi-file refactoring, and 20+ AI models. Supports: 한국어, 日本語, 中文.",
 	"version": "0.1.3",
 	"icon": "assets/icons/icon.png",
 	"engines": {
@@ -22,22 +22,25 @@
 		"Chat",
 		"Programming Languages",
 		"Education",
-		"Snippets",
-		"Testing"
+		"Machine Learning",
+		"Other"
 	],
 	"keywords": [
-		"cline",
-		"claude",
-		"dev",
-		"mcp",
-		"openrouter",
-		"coding",
-		"agent",
+		"ai",
+		"coding assistant",
 		"autonomous",
+		"code generation",
+		"refactoring",
+		"claude",
+		"gpt",
+		"gemini",
 		"chatgpt",
 		"sonnet",
-		"ai",
-		"llama"
+		"mcp",
+		"pair programming",
+		"한국어",
+		"日本語",
+		"中文"
 	],
 	"activationEvents": [
 		"onLanguage",
@@ -126,92 +129,92 @@
 		},
 		"commands": [
 			{
-				"command": "cline.plusButtonClicked",
+				"command": "caret.plusButtonClicked",
 				"title": "New Task",
 				"icon": "$(add)"
 			},
 			{
-				"command": "cline.mcpButtonClicked",
+				"command": "caret.mcpButtonClicked",
 				"title": "MCP Servers",
 				"icon": "$(server)"
 			},
 			{
-				"command": "cline.historyButtonClicked",
+				"command": "caret.historyButtonClicked",
 				"title": "History",
 				"icon": "$(history)"
 			},
 			{
-				"command": "cline.popoutButtonClicked",
+				"command": "caret.popoutButtonClicked",
 				"title": "Open in Editor",
 				"icon": "$(link-external)"
 			},
 			{
-				"command": "cline.accountButtonClicked",
+				"command": "caret.accountButtonClicked",
 				"title": "Account",
 				"icon": "$(account)"
 			},
 			{
-				"command": "cline.settingsButtonClicked",
+				"command": "caret.settingsButtonClicked",
 				"title": "Settings",
 				"icon": "$(settings-gear)"
 			},
 			{
-				"command": "cline.openInNewTab",
+				"command": "caret.openInNewTab",
 				"title": "Open In New Tab",
 				"category": "Caret"
 			},
 			{
-				"command": "cline.dev.createTestTasks",
+				"command": "caret.dev.createTestTasks",
 				"title": "Create Test Tasks",
 				"category": "Caret",
-				"when": "cline.isDevMode"
+				"when": "caret.isDevMode"
 			},
 			{
-				"command": "cline.addToChat",
+				"command": "caret.addToChat",
 				"title": "Add to Caret",
 				"category": "Caret"
 			},
 			{
-				"command": "cline.addTerminalOutputToChat",
+				"command": "caret.addTerminalOutputToChat",
 				"title": "Add to Caret",
 				"category": "Caret"
 			},
 			{
-				"command": "cline.focusChatInput",
+				"command": "caret.focusChatInput",
 				"title": "Jump to Chat Input",
 				"category": "Caret"
 			},
 			{
-				"command": "cline.generateGitCommitMessage",
+				"command": "caret.generateGitCommitMessage",
 				"title": "Generate Commit Message with Caret",
 				"category": "Caret",
 				"icon": "$(robot)"
 			},
 			{
-				"command": "cline.abortGitCommitMessage",
+				"command": "caret.abortGitCommitMessage",
 				"title": "Generate Commit Message with Caret - Stop",
 				"category": "Caret",
 				"icon": "$(debug-stop)"
 			},
 			{
-				"command": "cline.explainCode",
+				"command": "caret.explainCode",
 				"title": "Explain with Caret",
 				"category": "Caret"
 			},
 			{
-				"command": "cline.improveCode",
+				"command": "caret.improveCode",
 				"title": "Improve with Caret",
 				"category": "Caret"
 			},
 			{
-				"command": "cline.openWalkthrough",
+				"command": "caret.openWalkthrough",
 				"title": "Open Walkthrough",
 				"category": "Caret"
 			}
 		],
 		"keybindings": [
 			{
-				"command": "cline.addToChat",
+				"command": "caret.addToChat",
 				"key": "cmd+'",
 				"mac": "cmd+'",
 				"win": "ctrl+'",
@@ -219,11 +222,11 @@
 				"when": "editorHasSelection"
 			},
 			{
-				"command": "cline.generateGitCommitMessage",
+				"command": "caret.generateGitCommitMessage",
 				"when": "config.git.enabled && scmProvider == git"
 			},
 			{
-				"command": "cline.focusChatInput",
+				"command": "caret.focusChatInput",
 				"key": "cmd+'",
 				"mac": "cmd+'",
 				"win": "ctrl+'",
@@ -234,101 +237,101 @@
 		"menus": {
 			"view/title": [
 				{
-					"command": "cline.plusButtonClicked",
+					"command": "caret.plusButtonClicked",
 					"group": "navigation@1",
 					"when": "view == caret.SidebarProvider"
 				},
 				{
-					"command": "cline.mcpButtonClicked",
+					"command": "caret.mcpButtonClicked",
 					"group": "navigation@2",
 					"when": "view == caret.SidebarProvider"
 				},
 				{
-					"command": "cline.historyButtonClicked",
+					"command": "caret.historyButtonClicked",
 					"group": "navigation@3",
 					"when": "view == caret.SidebarProvider"
 				},
 				{
-					"command": "cline.popoutButtonClicked",
+					"command": "caret.popoutButtonClicked",
 					"group": "navigation@4",
 					"when": "view == caret.SidebarProvider"
 				},
 				{
-					"command": "cline.accountButtonClicked",
+					"command": "caret.accountButtonClicked",
 					"group": "navigation@5",
 					"when": "view == caret.SidebarProvider"
 				},
 				{
-					"command": "cline.settingsButtonClicked",
+					"command": "caret.settingsButtonClicked",
 					"group": "navigation@6",
 					"when": "view == caret.SidebarProvider"
 				}
 			],
 			"editor/title": [
 				{
-					"command": "cline.plusButtonClicked",
+					"command": "caret.plusButtonClicked",
 					"group": "navigation@1",
 					"when": "activeWebviewPanelId == caret.TabPanelProvider"
 				},
 				{
-					"command": "cline.mcpButtonClicked",
+					"command": "caret.mcpButtonClicked",
 					"group": "navigation@2",
 					"when": "activeWebviewPanelId == caret.TabPanelProvider"
 				},
 				{
-					"command": "cline.historyButtonClicked",
+					"command": "caret.historyButtonClicked",
 					"group": "navigation@3",
 					"when": "activeWebviewPanelId == caret.TabPanelProvider"
 				},
 				{
-					"command": "cline.popoutButtonClicked",
+					"command": "caret.popoutButtonClicked",
 					"group": "navigation@4",
 					"when": "activeWebviewPanelId == caret.TabPanelProvider"
 				},
 				{
-					"command": "cline.accountButtonClicked",
+					"command": "caret.accountButtonClicked",
 					"group": "navigation@5",
 					"when": "activeWebviewPanelId == caret.TabPanelProvider"
 				},
 				{
-					"command": "cline.settingsButtonClicked",
+					"command": "caret.settingsButtonClicked",
 					"group": "navigation@6",
 					"when": "activeWebviewPanelId == caret.TabPanelProvider"
 				}
 			],
 			"editor/context": [
 				{
-					"command": "cline.addToChat",
+					"command": "caret.addToChat",
 					"group": "navigation",
 					"when": "editorHasSelection"
 				}
 			],
 			"terminal/context": [
 				{
-					"command": "cline.addTerminalOutputToChat",
+					"command": "caret.addTerminalOutputToChat",
 					"group": "navigation"
 				}
 			],
 			"scm/title": [
 				{
-					"command": "cline.generateGitCommitMessage",
+					"command": "caret.generateGitCommitMessage",
 					"group": "navigation",
-					"when": "config.git.enabled && scmProvider == git && !cline.isGeneratingCommit"
+					"when": "config.git.enabled && scmProvider == git && !caret.isGeneratingCommit"
 				},
 				{
-					"command": "cline.abortGitCommitMessage",
+					"command": "caret.abortGitCommitMessage",
 					"group": "navigation",
-					"when": "config.git.enabled && scmProvider == git && cline.isGeneratingCommit"
+					"when": "config.git.enabled && scmProvider == git && caret.isGeneratingCommit"
 				}
 			],
 			"commandPalette": [
 				{
-					"command": "cline.generateGitCommitMessage",
-					"when": "config.git.enabled && scmProvider == git && !cline.isGeneratingCommit"
+					"command": "caret.generateGitCommitMessage",
+					"when": "config.git.enabled && scmProvider == git && !caret.isGeneratingCommit"
 				},
 				{
-					"command": "cline.abortGitCommitMessage",
-					"when": "config.git.enabled && scmProvider == git && cline.isGeneratingCommit"
+					"command": "caret.abortGitCommitMessage",
+					"when": "config.git.enabled && scmProvider == git && caret.isGeneratingCommit"
 				}
 			]
 		},

@@ -6,6 +6,33 @@
 
 ---
 
+## 🔍 **검증 작업 지시서 (다른 AI용)**
+
+### **Phase 1 검증 방법**:
+```bash
+# 1. 컴파일 검증
+npm run compile
+
+# 2. 명령어 네임스페이스 변경 확인
+grep -r "cline\." package.json | wc -l    # 결과: 0개 (모두 변경됨)
+grep -r "caret\." package.json | wc -l    # 결과: 42개+ (변경 완료)
+
+# 3. 백엔드 컨텍스트 키 확인
+grep "caret.isDevMode" src/extension.ts
+grep "caret.isGeneratingCommit" src/integrations/git/commit-message-generator.ts
+
+# 4. VS Code 확장 동시 설치 테스트 (수동)
+# - Caret 확장과 Cline 확장 동시 설치 후 명령 팔레트에서 충돌 없는지 확인
+```
+
+### **검증 기준**:
+- ✅ 컴파일 오류 없음
+- ✅ package.json에서 `cline.*` 명령어 0개 확인  
+- ✅ package.json에서 `caret.*` 명령어 42개+ 확인
+- ✅ 백엔드 컨텍스트 키 `caret.*` 변경 확인
+
+---
+
 ## 🎯 작업 목표
 
 1. **패키지명 충돌 해결**: Cline과 동시 설치 시 명령어 충돌 문제 해결

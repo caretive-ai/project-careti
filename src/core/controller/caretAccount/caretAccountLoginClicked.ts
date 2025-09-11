@@ -6,7 +6,7 @@ import * as proto from "@shared/proto/index"
 
 /**
  * Handles Caret account login click
- * Initiates Auth0 authentication flow
+ * Initiates external authentication flow (no OAuth)
  */
 export async function caretAccountLoginClicked(
 	controller: Controller,
@@ -15,11 +15,11 @@ export async function caretAccountLoginClicked(
 	console.log("[CARET-HANDLER] 🚪 Caret account login clicked")
 
 	try {
-		// CARET MODIFICATION: Use CaretGlobalManager for Auth0 login
-		const loginUrl = await CaretGlobalManager.login()
-		console.log("[CARET-HANDLER] ✅ Auth0 login successful")
+		// CARET MODIFICATION: Use CaretGlobalManager for external authentication
+		await CaretGlobalManager.login()
+		console.log("[CARET-HANDLER] ✅ External authentication flow initiated")
 
-		return { value: loginUrl || "https://caret.team/dashboard" }
+		return { value: "https://auth.caret.team/login" }
 	} catch (error) {
 		console.error("[CARET-HANDLER] ❌ Caret login failed:", error)
 		return { value: "https://caret.team/login" }

@@ -1,6 +1,7 @@
 // CARET MODIFICATION: Caret Account Service - based on ClineAccountService
 // Handles all Caret API server communication for account management
 
+import { CaretApolloManager } from "@caret/managers/CaretApolloManager"
 import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
 import type {
 	CaretBalanceResponse,
@@ -15,10 +16,12 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 export class CaretAccountService {
 	private static instance: CaretAccountService
 	private readonly _baseUrl = "https://api.caret.team" // CARET MODIFICATION: Use Caret API server
+	private apolloManager = CaretApolloManager.getInstance() // CARET MODIFICATION: Add Apollo Client manager
 
 	constructor() {
-		// CARET MODIFICATION: No additional dependencies needed
+		// CARET MODIFICATION: Initialize with Apollo Client manager
 		console.log("[CARET-ACCOUNT-SERVICE] 🚀 CaretAccountService initialized with baseUrl:", this._baseUrl)
+		console.log("[CARET-ACCOUNT-SERVICE] 🔗 Apollo Client manager initialized")
 	}
 
 	/**
@@ -113,25 +116,50 @@ export class CaretAccountService {
 
 	/**
 	 * RPC variant that fetches the user's current credit balance without posting to webview
-	 * CARET MODIFICATION: Uses Caret API endpoints
+	 * CARET MODIFICATION: Uses Apollo Client for GraphQL queries
 	 * @returns Balance data or undefined if failed
 	 */
 	async fetchBalanceRPC(): Promise<CaretBalanceResponse | undefined> {
 		try {
-			console.log("[CARET-ACCOUNT-SERVICE] 💰 Fetching balance...")
-			const me = await this.fetchMe()
-			if (!me || !me.id) {
-				console.error("[CARET-ACCOUNT-SERVICE] ❌ Failed to fetch user ID for balance")
+			console.log("[CARET-ACCOUNT-SERVICE] 💰 Fetching balance with GraphQL...")
+
+			// Get user info first for userId
+			const userProfile = await this.apolloManager.getUserProfile()
+			if (!userProfile) {
+				console.error("[CARET-ACCOUNT-SERVICE] ❌ No user profile for balance query")
 				return undefined
 			}
 
-			// CARET MODIFICATION: Use Caret API v1 endpoint
-			const data = await this.authenticatedRequest<CaretBalanceResponse>(`/api/v1/account/balance`)
-			console.log("[CARET-ACCOUNT-SERVICE] ✅ Balance fetched successfully:", data.balance)
-			return data
+			// CARET MODIFICATION: Use Apollo Client for GraphQL query
+			const balance = await this.apolloManager.getBalance()
+
+			if (!balance) {
+				console.error("[CARET-ACCOUNT-SERVICE] ❌ No balance returned from GraphQL")
+				return undefined
+			}
+
+			// Convert Apollo Client response to CaretBalanceResponse format
+			const caretBalance: CaretBalanceResponse = {
+				balance: balance.currentBalance,
+				userId: userProfile.id,
+				currency: balance.currency || "USD",
+			}
+
+			console.log("[CARET-ACCOUNT-SERVICE] ✅ Balance fetched via GraphQL:", caretBalance.balance)
+			return caretBalance
 		} catch (error) {
-			console.error("[CARET-ACCOUNT-SERVICE] ❌ Failed to fetch balance (RPC):", error)
-			return undefined
+			console.error("[CARET-ACCOUNT-SERVICE] ❌ Failed to fetch balance with GraphQL:", error)
+
+			// Fallback to REST API if GraphQL fails
+			try {
+				console.log("[CARET-ACCOUNT-SERVICE] 🔄 Falling back to REST API for balance...")
+				const data = await this.authenticatedRequest<CaretBalanceResponse>(`/api/v1/account/balance`)
+				console.log("[CARET-ACCOUNT-SERVICE] ✅ Balance fetched via REST fallback:", data.balance)
+				return data
+			} catch (restError) {
+				console.error("[CARET-ACCOUNT-SERVICE] ❌ REST fallback also failed:", restError)
+				return undefined
+			}
 		}
 	}
 
@@ -191,20 +219,55 @@ export class CaretAccountService {
 
 	/**
 	 * Fetches the current user data
-	 * CARET MODIFICATION: Uses Caret API endpoints and Auth0 user info
+	 * CARET MODIFICATION: Uses Apollo Client for GraphQL queries
 	 * @returns CaretUserResponse or undefined if failed
 	 */
 	async fetchMe(): Promise<CaretUserResponse | undefined> {
 		try {
-			console.log("[CARET-ACCOUNT-SERVICE] 👤 Fetching current user data...")
+			console.log("[CARET-ACCOUNT-SERVICE] 👤 Fetching current user data with GraphQL...")
 
-			// CARET MODIFICATION: Use Caret API v1 endpoint
-			const data = await this.authenticatedRequest<CaretUserResponse>(`/api/v1/account/profile`)
-			console.log("[CARET-ACCOUNT-SERVICE] ✅ User data fetched:", data.email)
-			return data
+			// CARET MODIFICATION: Use Apollo Client for GraphQL query
+			const userProfile = await this.apolloManager.getUserProfile()
+
+			if (!userProfile) {
+				console.error("[CARET-ACCOUNT-SERVICE] ❌ No user profile returned from GraphQL")
+				return undefined
+			}
+
+			// Convert Apollo Client response to CaretUserResponse format
+			const caretUser: CaretUserResponse = {
+				id: userProfile.id,
+				email: userProfile.email,
+				displayName: userProfile.displayName || userProfile.name || userProfile.email,
+				photoUrl: userProfile.avatar || "",
+				createdAt: new Date().toISOString(),
+				updatedAt: new Date().toISOString(),
+				organizations: [
+					{
+						active: true,
+						memberId: userProfile.id,
+						name: "Default Organization",
+						organizationId: "default",
+						roles: ["member" as const],
+					},
+				], // TODO: Fetch real organizations if needed
+			}
+
+			console.log("[CARET-ACCOUNT-SERVICE] ✅ User data fetched via GraphQL:", caretUser.email)
+			return caretUser
 		} catch (error) {
-			console.error("[CARET-ACCOUNT-SERVICE] ❌ Failed to fetch user data (RPC):", error)
-			return undefined
+			console.error("[CARET-ACCOUNT-SERVICE] ❌ Failed to fetch user data with GraphQL:", error)
+
+			// Fallback to REST API if GraphQL fails
+			try {
+				console.log("[CARET-ACCOUNT-SERVICE] 🔄 Falling back to REST API...")
+				const data = await this.authenticatedRequest<CaretUserResponse>(`/api/v1/account/profile`)
+				console.log("[CARET-ACCOUNT-SERVICE] ✅ User data fetched via REST fallback:", data.email)
+				return data
+			} catch (restError) {
+				console.error("[CARET-ACCOUNT-SERVICE] ❌ REST fallback also failed:", restError)
+				return undefined
+			}
 		}
 	}
 

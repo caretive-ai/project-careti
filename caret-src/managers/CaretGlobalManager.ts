@@ -2,15 +2,9 @@
 // Provides global access to Caret-specific functionality without imports
 
 import type { CaretModeSystem } from "../shared/ModeSystem"
-
-// CARET MODIFICATION: Auth0 integration for Caret API Provider
-interface Auth0Client {
-	loginWithPopup(): Promise<void>
-	logout(): Promise<void>
-	getTokenSilently(options?: { ignoreCache?: boolean }): Promise<string>
-	isAuthenticated(): Promise<boolean>
-	getUser(): Promise<any>
-}
+import { CaretApolloManager, type UserProfile } from "./CaretApolloManager"
+import * as vscode from "vscode"
+import { randomBytes } from "crypto"
 
 /**
  * Singleton class for global Caret functionality access
@@ -19,10 +13,10 @@ interface Auth0Client {
 export class CaretGlobalManager {
 	private static instance: CaretGlobalManager | null = null
 	private _currentMode: CaretModeSystem = "caret"
-	// CARET MODIFICATION: Auth0 management fields
-	private _auth0Client?: Auth0Client
-	private _jwtToken?: string
-	private _userInfo?: any
+	// CARET MODIFICATION: External auth token management
+	private _authToken?: string
+	private _userInfo?: UserProfile
+	private apolloManager = CaretApolloManager.getInstance()
 
 	private constructor() {}
 
@@ -109,89 +103,112 @@ export class CaretGlobalManager {
 		return CaretGlobalManager.get().getDefaultLanguage()
 	}
 
-	// CARET MODIFICATION: Auth0 management methods
+	// CARET MODIFICATION: External authentication methods without OAuth
 	/**
-	 * Initialize Auth0 client for Caret API authentication
+	 * Initiate external authentication flow
+	 * Opens external auth page in browser
 	 */
-	public async initializeAuth0(auth0Client: Auth0Client): Promise<void> {
-		this._auth0Client = auth0Client
+	public async login(): Promise<void> {
+		console.log("[CARET-GLOBAL-MANAGER] 🚀 Starting external authentication flow")
+		
 		try {
-			// 기존 로그인 상태 확인
-			if (await auth0Client.isAuthenticated()) {
-				this._jwtToken = await auth0Client.getTokenSilently()
-				this._userInfo = await auth0Client.getUser()
+			// Generate nonce for state validation
+			const nonce = randomBytes(32).toString("hex")
+			
+			// Store nonce for validation (using VS Code secrets API)
+			const context = vscode.workspace.workspaceFolders?.[0]?.uri
+			if (context) {
+				// TODO: Store nonce in VS Code secret storage
+				console.log("[CARET-GLOBAL-MANAGER] 🔑 Generated state nonce")
 			}
-		} catch (error) {
-			console.warn("Auth0 initialization failed:", error)
-		}
-	}
 
-	/**
-	 * Login with Auth0 and get JWT token
-	 */
-	public async login(): Promise<string> {
-		if (!this._auth0Client) {
-			throw new Error("Auth0 client not initialized")
-		}
+			// Build callback URL
+			const uriScheme = vscode.env.uriScheme
+			const vsCodeCallbackUrl = `${uriScheme}://caretive.caret/auth`
 
-		try {
-			await this._auth0Client.loginWithPopup()
-			this._jwtToken = await this._auth0Client.getTokenSilently()
-			this._userInfo = await this._auth0Client.getUser()
-			return this._jwtToken
+			// Build external auth URL
+      // `https://auth.caret.team/login?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`
+
+			const authUrl = vscode.Uri.parse(
+				`http://localhost:3000/login?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`
+			)
+
+			console.log("[CARET-GLOBAL-MANAGER] 🌐 Opening external auth URL:", authUrl.toString())
+			// @ts-ignore: VS Code API deprecation warning
+			const success = await vscode.env.openExternal(authUrl)
+			if (!success) {
+				throw new Error("Failed to open external URL")
+			}
+
 		} catch (error) {
-			console.error("Caret Auth0 login failed:", error)
+			console.error("[CARET-GLOBAL-MANAGER] ❌ External authentication failed:", error)
 			throw error
 		}
 	}
 
 	/**
-	 * Logout from Auth0
+	 * Set token from external authentication callback
 	 */
-	public async logout(): Promise<void> {
-		if (this._auth0Client) {
-			try {
-				await this._auth0Client.logout()
-			} catch (error) {
-				console.warn("Auth0 logout failed:", error)
-			}
+	public async setTokenFromCallback(token: string): Promise<void> {
+		console.log("[CARET-GLOBAL-MANAGER] 🔑 Setting token from callback")
+		
+		this._authToken = token
+		this.apolloManager.setAuthToken(token)
+
+		// Fetch user profile using Apollo Client
+		try {
+			this._userInfo = await this.apolloManager.getUserProfile()
+			console.log("[CARET-GLOBAL-MANAGER] ✅ User profile loaded:", this._userInfo?.email)
+		} catch (error) {
+			console.error("[CARET-GLOBAL-MANAGER] ❌ Failed to fetch user profile:", error)
 		}
-		this._jwtToken = undefined
-		this._userInfo = undefined
 	}
 
 	/**
-	 * Get current Auth0 JWT token
+	 * Logout and clear authentication
+	 */
+	public async logout(): Promise<void> {
+		console.log("[CARET-GLOBAL-MANAGER] 🚪 Logging out")
+		
+		this._authToken = undefined
+		this._userInfo = undefined
+		this.apolloManager.logout()
+		
+		console.log("[CARET-GLOBAL-MANAGER] ✅ Logout completed")
+	}
+
+	/**
+	 * Get current authentication token
 	 */
 	public getAuthToken(): string | undefined {
-		return this._jwtToken
+		return this._authToken
 	}
 
 	/**
 	 * Check if user is authenticated
 	 */
 	public isAuthenticated(): boolean {
-		return !!this._jwtToken && !!this._userInfo
+		return !!this._authToken && !!this._userInfo
 	}
 
 	/**
 	 * Get current user information
 	 */
-	public getUserInfo(): any {
+	public getUserInfo(): UserProfile | undefined {
 		return this._userInfo
 	}
 
-	// Static accessors for Auth0 functionality
-	public static async initAuth0(auth0Client: Auth0Client): Promise<void> {
-		return CaretGlobalManager.get().initializeAuth0(auth0Client)
-	}
-
-	public static async login(): Promise<string> {
+	// Static accessors for external authentication
+	public static async login(): Promise<void> {
 		return CaretGlobalManager.get().login()
 	}
 
 	public static async logout(): Promise<void> {
 		return CaretGlobalManager.get().logout()
+	}
+
+	public static async setTokenFromCallback(token: string): Promise<void> {
+		return CaretGlobalManager.get().setTokenFromCallback(token)
 	}
 
 	public static get authToken(): string | undefined {
@@ -202,66 +219,26 @@ export class CaretGlobalManager {
 		return CaretGlobalManager.get().isAuthenticated()
 	}
 
-	public static get userInfo(): any {
+	public static get userInfo(): UserProfile | undefined {
 		return CaretGlobalManager.get().getUserInfo()
 	}
 
-	// CARET MODIFICATION: Additional Auth0 methods for CaretAccountService integration
+	// CARET MODIFICATION: Compatible method names for existing code
 	/**
-	 * Get Auth0 token for API requests (used by CaretAccountService)
+	 * Get authentication token (compatible with existing CaretAccountService)
 	 */
 	public static async getAuth0Token(): Promise<string | undefined> {
 		const manager = CaretGlobalManager.get()
-		if (!manager._auth0Client) {
-			console.warn("[CARET-GLOBAL-MANAGER] Auth0 client not initialized")
-			return undefined
-		}
-
-		try {
-			// Try to get token silently first
-			if (manager._jwtToken) {
-				console.log("[CARET-GLOBAL-MANAGER] ✅ Using cached Auth0 token")
-				return manager._jwtToken
-			}
-
-			// Check if user is authenticated and get token
-			if (await manager._auth0Client.isAuthenticated()) {
-				manager._jwtToken = await manager._auth0Client.getTokenSilently()
-				console.log("[CARET-GLOBAL-MANAGER] ✅ Auth0 token retrieved silently")
-				return manager._jwtToken
-			}
-
-			console.warn("[CARET-GLOBAL-MANAGER] User not authenticated")
-			return undefined
-		} catch (error) {
-			console.error("[CARET-GLOBAL-MANAGER] ❌ Failed to get Auth0 token:", error)
-			return undefined
-		}
+		console.log("[CARET-GLOBAL-MANAGER] 🔑 Getting auth token for API requests")
+		return manager.getAuthToken()
 	}
 
 	/**
-	 * Refresh Auth0 token after account operations
+	 * Refresh token (placeholder for compatibility)
 	 */
 	public static async refreshAuth0Token(): Promise<void> {
-		const manager = CaretGlobalManager.get()
-		if (!manager._auth0Client) {
-			console.warn("[CARET-GLOBAL-MANAGER] Auth0 client not initialized for refresh")
-			return
-		}
-
-		try {
-			// Force refresh token
-			manager._jwtToken = await manager._auth0Client.getTokenSilently({ 
-				// Force refresh by ignoring cache (Auth0 SDK specific)
-				ignoreCache: true 
-			})
-			manager._userInfo = await manager._auth0Client.getUser()
-			console.log("[CARET-GLOBAL-MANAGER] ✅ Auth0 token refreshed successfully")
-		} catch (error) {
-			console.error("[CARET-GLOBAL-MANAGER] ❌ Failed to refresh Auth0 token:", error)
-			// Clear tokens on refresh failure
-			manager._jwtToken = undefined
-			manager._userInfo = undefined
-		}
+		console.log("[CARET-GLOBAL-MANAGER] 🔄 Token refresh requested (not needed for external auth)")
+		// For external auth, tokens are managed by the auth server
+		// No local refresh needed
 	}
 }

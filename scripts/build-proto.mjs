@@ -14,7 +14,7 @@ import { loadProtoDescriptorSet } from "./proto-utils.mjs"
 
 const require = createRequire(import.meta.url)
 // CARET MODIFICATION: Use downloaded protoc instead of grpc-tools version for Windows compatibility
-const PROTOC = path.resolve("protoc-temp/bin/protoc.exe")
+const PROTOC = path.resolve("/opt/homebrew/bin/protoc")
 
 const PROTO_DIR = path.resolve("proto")
 const TS_OUT_DIR = path.resolve("src/shared/proto")
@@ -89,7 +89,7 @@ async function compileProtos() {
 async function postProcessGeneratedFiles() {
 	console.log(chalk.bold.blue("Post-processing generated files..."))
 
-	// Find all generated TypeScript files in specific directories
+	// Find all generated TypeScript files that may need globalThis.String fix
 	const generatedFiles = await globby(["src/generated/**/*.ts", "src/shared/proto/**/*.ts"], {
 		realpath: true,
 		ignore: ["node_modules/**", "dist/**"],
@@ -108,51 +108,7 @@ async function postProcessGeneratedFiles() {
 				modified = true
 			}
 
-			// Fix 2: Fix namespace issues in all generated files with Caret references
-			const caretMatches = content.match(/(cline\.Caret|"cline\.Caret)[A-Za-z]*/g) || []
-			if (caretMatches.length > 0) {
-				console.log(chalk.cyan(`Processing ${file} for namespace fixes...`))
-				console.log(chalk.gray(`File path: ${file}`))
-				console.log(
-					chalk.yellow(
-						`Found ${caretMatches.length} cline.Caret* patterns: ${caretMatches.slice(0, 3).join(", ")}${caretMatches.length > 3 ? "..." : ""}`,
-					),
-				)
-
-				// Simple and direct approach - replace all Caret-related cline references
-				const originalContent = content
-
-				// Fix service registration
-				content = content.replace(/cline\.CaretAccountServiceService/g, "caret.CaretAccountServiceService")
-
-				// Fix string references in service definitions
-				content = content.replace(/"cline\.CaretAccountService"/g, '"caret.CaretAccountService"')
-
-				// Fix all Caret type references
-				content = content.replace(/cline\.CaretAuthState/g, "caret.CaretAuthState")
-				content = content.replace(/cline\.CaretAuthStateChangedRequest/g, "caret.CaretAuthStateChangedRequest")
-				content = content.replace(/cline\.CaretUserCreditsData/g, "caret.CaretUserCreditsData")
-				content = content.replace(
-					/cline\.GetCaretOrganizationCreditsRequest/g,
-					"caret.GetCaretOrganizationCreditsRequest",
-				)
-				content = content.replace(/cline\.CaretOrganizationCreditsData/g, "caret.CaretOrganizationCreditsData")
-				content = content.replace(/cline\.CaretUserOrganizationsResponse/g, "caret.CaretUserOrganizationsResponse")
-				content = content.replace(
-					/cline\.CaretUserOrganizationUpdateRequest/g,
-					"caret.CaretUserOrganizationUpdateRequest",
-				)
-
-				const changesCount =
-					originalContent !== content ? (originalContent.match(/cline\.(Caret|GetCaret)/g) || []).length : 0
-
-				if (content !== originalContent) {
-					console.log(chalk.green(`  - Fixed ${changesCount} Caret namespace references`))
-					modified = true
-				} else if (caretMatches.length > 0) {
-					console.log(chalk.red(`  - WARNING: Found ${caretMatches.length} patterns but no changes made!`))
-				}
-			}
+			// Note: Caret namespace fixing is no longer needed since root cause was fixed in generate-protobus-setup.mjs
 
 			if (modified) {
 				await fs.writeFile(file, content, "utf-8")

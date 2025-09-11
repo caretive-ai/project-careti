@@ -49,7 +49,7 @@ async function generateWebviewProtobusClients(protobusServices) {
 			}
 		}
 		// CARET MODIFICATION: Use correct namespace for caret services
-		const serviceNamespace = serviceName === "PersonaService" ? "caret" : "cline"
+		const serviceNamespace = serviceName === "PersonaService" || serviceName.startsWith("Caret") ? "caret" : "cline"
 		clients.push(`export class ${serviceName}Client extends ProtoBusClient {
 	static override serviceName: string = "${serviceNamespace}.${serviceName}"
 ${rpcs.join("\n")}
@@ -126,7 +126,7 @@ async function generateVscodeProtobusServers(protobusServices) {
 		}
 		servers.push(`} \n`)
 		// CARET MODIFICATION: Use correct namespace for caret services
-		const serviceNamespace = serviceName === "PersonaService" ? "caret" : "cline"
+		const serviceNamespace = serviceName === "PersonaService" || serviceName.startsWith("Caret") ? "caret" : "cline"
 		serviceMap.push(`    "${serviceNamespace}.${serviceName}": ${serviceName}Handlers,`)
 		imports.push("")
 	}
@@ -159,12 +159,27 @@ async function generateStandaloneProtobusServiceSetup(protobusServices) {
 		imports.push(`// ${domain} Service`)
 		handlerSetup.push(`    // ${domain} Service`)
 		// CARET MODIFICATION: Use correct namespace for caret services
-		const serviceNamespace = name === "PersonaService" ? "caret" : "cline"
+		const serviceNamespace = name === "PersonaService" || name.startsWith("Caret") ? "caret" : "cline"
 		handlerSetup.push(`    server.addService(${serviceNamespace}.${name}Service, {`)
 		for (const [rpcName, rpc] of Object.entries(def.service)) {
 			imports.push(`import { ${rpcName} } from "@core/controller/${dir}/${rpcName}"`)
-			const caretRequestTypes = ["PersonaProfile", "UpdatePersonaRequest", "PersonaImages", "UploadCustomImageRequest"]
-			const caretResponseTypes = ["PersonaProfile", "PersonaImages"]
+			const caretRequestTypes = [
+				"PersonaProfile",
+				"UpdatePersonaRequest",
+				"PersonaImages",
+				"UploadCustomImageRequest",
+				"CaretAuthStateChangedRequest",
+				"GetCaretOrganizationCreditsRequest",
+				"CaretUserOrganizationUpdateRequest",
+			]
+			const caretResponseTypes = [
+				"PersonaProfile",
+				"PersonaImages",
+				"CaretAuthState",
+				"CaretUserCreditsData",
+				"CaretOrganizationCreditsData",
+				"CaretUserOrganizationsResponse",
+			]
 
 			const requestType = caretRequestTypes.includes(rpc.requestType.type.name)
 				? `caret.${rpc.requestType.type.name}`

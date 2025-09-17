@@ -2,7 +2,8 @@
 // Provides global access to Caret-specific functionality without imports
 
 import type { CaretModeSystem } from "../shared/ModeSystem"
-import { CaretApolloManager, type UserProfile } from "./CaretApolloManager"
+import { CaretApolloManager } from "./CaretApolloManager"
+import type { CaretUserInfo } from "@shared/CaretAccount"
 import * as vscode from "vscode"
 import { randomBytes } from "crypto"
 
@@ -15,7 +16,7 @@ export class CaretGlobalManager {
 	private _currentMode: CaretModeSystem = "caret"
 	// CARET MODIFICATION: External auth token management
 	private _authToken?: string
-	private _userInfo?: UserProfile
+	private _userInfo?: CaretUserInfo
 	private apolloManager = CaretApolloManager.getInstance()
 
 	private constructor() {}
@@ -199,7 +200,7 @@ export class CaretGlobalManager {
 	/**
 	 * Get current user information
 	 */
-	public getUserInfo(): UserProfile | undefined {
+	public getUserInfo(): CaretUserInfo | undefined {
 		return this._userInfo
 	}
 
@@ -224,7 +225,7 @@ export class CaretGlobalManager {
 		return CaretGlobalManager.get().isAuthenticated()
 	}
 
-	public static get userInfo(): UserProfile | undefined {
+	public static get userInfo(): CaretUserInfo | undefined {
 		return CaretGlobalManager.get().getUserInfo()
 	}
 

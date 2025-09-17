@@ -84,6 +84,7 @@ export interface GlobalState {
 	focusChainFeatureFlagEnabled: boolean
 	customPrompt: "compact" | undefined
 	difyBaseUrl: string | undefined
+	caretUserProfile: CaretUserInfo | undefined // Caret User Profile from profile api
 
 	// Plan mode configurations
 	planModeApiProvider: ApiProvider
@@ -164,7 +165,6 @@ export interface GlobalState {
 	// CARET MODIFICATION: Persona image storage for persona system
 	caret_persona_avatar: Buffer | undefined
 	caret_persona_thinking_avatar: Buffer | undefined
-	caretUserProfile: CaretUserInfo | undefined // Caret User Profile from profile api
 }
 
 export interface Secrets {

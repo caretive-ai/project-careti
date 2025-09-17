@@ -7,10 +7,12 @@ export interface CaretUserInfo {
 	displayName?: string
 	avatar?: string
 	credits?: number
+	apiKey?: string
 }
 
 export interface Balance {
-	currentBalance: number
+	totalCredits: number
+	usedCredits: number
 	currency: string
 }
 

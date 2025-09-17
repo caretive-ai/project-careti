@@ -1,23 +1,24 @@
 // CARET MODIFICATION: Caret Account View component - replacement for ClineAccountView
 // Now uses actual gRPC communication with Extension instead of Mock API
 
+import { CaretUserInfo } from "@shared/CaretAccount"
 import * as proto from "@shared/proto/index"
 import { VSCodeButton, VSCodeDivider } from "@vscode/webview-ui-toolkit/react"
 import { memo, useCallback, useEffect, useState } from "react"
 import { useInterval } from "react-use"
 import { caretWebviewLogger } from "@/caret/utils/CaretWebviewLogger"
 import { t } from "@/caret/utils/i18n"
-import { type CaretUser } from "@/context/ExtensionStateContext"
 // CARET MODIFICATION: Use actual gRPC client instead of Mock API
 import { CaretAccountServiceClient } from "@/services/grpc-client"
 import VSCodeButtonLink from "../../components/common/VSCodeButtonLink"
+import { handleLogout as handleCaretLogout } from "../../components/settings/CaretAuthHandler"
 
 type CaretAccountViewProps = {
-	caretUser: CaretUser
+	caretUser: CaretUserInfo
 }
 
 const CaretAccountView = memo(({ caretUser }: CaretAccountViewProps) => {
-	const { uid, email, displayName } = caretUser
+	const { id, email, displayName } = caretUser
 
 	// State for account data using proto types
 	const [creditsData, setCreditsData] = useState<proto.caret.CaretUserCreditsData | null>(null)
@@ -26,7 +27,7 @@ const CaretAccountView = memo(({ caretUser }: CaretAccountViewProps) => {
 	const [error, setError] = useState<string | null>(null)
 
 	const fetchCaretCredit = useCallback(async () => {
-		caretWebviewLogger.info("[CARET-ACCOUNT-VIEW] 🚀 Starting gRPC fetchCaretCredit for user:" + uid)
+		caretWebviewLogger.info("[CARET-ACCOUNT-VIEW] 🚀 Starting gRPC fetchCaretCredit for user:" + id)
 		caretWebviewLogger.debug("[CARET-ACCOUNT-VIEW] 📊 Current state", { isLoading, hasCreditsData: !!creditsData })
 
 		try {
@@ -58,7 +59,7 @@ const CaretAccountView = memo(({ caretUser }: CaretAccountViewProps) => {
 			setIsLoading(false)
 			caretWebviewLogger.debug("[CARET-ACCOUNT-VIEW] 🔄 Set loading state to false")
 		}
-	}, [uid, isLoading, creditsData])
+	}, [id, isLoading, creditsData])
 
 	// Fetch balance every 60 seconds
 	useInterval(() => {
@@ -75,8 +76,7 @@ const CaretAccountView = memo(({ caretUser }: CaretAccountViewProps) => {
 		caretWebviewLogger.info("[CARET-ACCOUNT-VIEW] 🚪 User logout requested via gRPC")
 		try {
 			// CARET MODIFICATION: Call gRPC logout
-			const request: proto.cline.EmptyRequest = { metadata: undefined }
-			await CaretAccountServiceClient.caretAccountLogoutClicked(request)
+			handleCaretLogout()
 
 			setCreditsData(null)
 			caretWebviewLogger.info("[CARET-ACCOUNT-VIEW] ✅ gRPC logout successful")
@@ -87,7 +87,7 @@ const CaretAccountView = memo(({ caretUser }: CaretAccountViewProps) => {
 
 	// Log render state
 	console.log("[CARET-ACCOUNT-VIEW] 🎨 Rendering with gRPC state:", {
-		user: { uid, email, displayName },
+		user: { id, email, displayName },
 		balance: creditsData?.balance?.currentBalance,
 		usageEntries: creditsData?.usageTransactions?.length || 0,
 		paymentEntries: creditsData?.paymentTransactions?.length || 0,
@@ -109,7 +109,7 @@ const CaretAccountView = memo(({ caretUser }: CaretAccountViewProps) => {
 				<div className="space-y-1">
 					<div className="text-[var(--vscode-foreground)]">
 						<span className="text-[var(--vscode-descriptionForeground)]">{t("account.email", "common")}: </span>
-						{email || uid}
+						{email || id}
 					</div>
 					{displayName && (
 						<div className="text-[var(--vscode-foreground)]">
@@ -237,7 +237,7 @@ const CaretAccountView = memo(({ caretUser }: CaretAccountViewProps) => {
 			{/* Debug Information */}
 			<div className="text-xs text-[var(--vscode-descriptionForeground)]">
 				<div>gRPC Debug Info:</div>
-				<div>User ID: {uid}</div>
+				<div>User ID: {id}</div>
 				<div>Last Fetch: {new Date(lastFetchTime).toISOString()}</div>
 				<div>Usage Entries: {creditsData?.usageTransactions?.length || 0}</div>
 				<div>Payment Entries: {creditsData?.paymentTransactions?.length || 0}</div>

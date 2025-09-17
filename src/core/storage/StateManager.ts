@@ -632,6 +632,8 @@ export class StateManager {
 			// Secrets
 			apiKey: this.secretsCache["apiKey"],
 			openRouterApiKey: this.secretsCache["openRouterApiKey"],
+			caretApiKey: this.secretsCache["caretApiKey"],
+			caretAuthToken: this.secretsCache["caretAuthToken"],
 			clineAccountId: this.secretsCache["clineAccountId"],
 			awsAccessKey: this.secretsCache["awsAccessKey"],
 			awsSecretKey: this.secretsCache["awsSecretKey"],
@@ -703,6 +705,7 @@ export class StateManager {
 			claudeCodePath: this.globalStateCache["claudeCodePath"],
 			qwenCodeOauthPath: this.globalStateCache["qwenCodeOauthPath"],
 			difyBaseUrl: this.globalStateCache["difyBaseUrl"],
+			caretUserProfile: this.globalStateCache["caretUserProfile"],
 
 			// Plan mode configurations
 			planModeApiProvider: this.globalStateCache["planModeApiProvider"],

@@ -131,7 +131,7 @@ export class CaretAccountService {
 			}
 
 			// CARET MODIFICATION: Use Apollo Client for GraphQL query
-			const balance = await this.apolloManager.getBalance()
+			const balance = await this.apolloManager.getCreditBalance()
 
 			if (!balance) {
 				console.error("[CARET-ACCOUNT-SERVICE] ❌ No balance returned from GraphQL")
@@ -140,7 +140,7 @@ export class CaretAccountService {
 
 			// Convert Apollo Client response to CaretBalanceResponse format
 			const caretBalance: CaretBalanceResponse = {
-				balance: balance.currentBalance,
+				balance: balance.totalCredits - balance.usedCredits,
 				userId: userProfile.id,
 				currency: balance.currency || "USD",
 			}

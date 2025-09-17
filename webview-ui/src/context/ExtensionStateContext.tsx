@@ -6,6 +6,7 @@ import { type CaretModeSystem } from "@caret/shared/ModeSystem"
 import { DEFAULT_AUTO_APPROVAL_SETTINGS } from "@shared/AutoApprovalSettings"
 import { findLastIndex } from "@shared/array"
 import { DEFAULT_BROWSER_SETTINGS } from "@shared/BrowserSettings"
+import { CaretUserInfo } from "@shared/CaretAccount"
 import type { CaretSettings } from "@shared/CaretSettings"
 import { DEFAULT_CARET_SETTINGS } from "@shared/CaretSettings"
 import { DEFAULT_PLATFORM, type ExtensionState } from "@shared/ExtensionMessage"
@@ -43,21 +44,12 @@ import {
 	UiServiceClient,
 } from "../services/grpc-client"
 
-// CARET MODIFICATION: CaretUser type based on ClineUser for Caret account system
-export interface CaretUser {
-	uid: string
-	email?: string
-	displayName?: string
-	photoUrl?: string
-	appBaseUrl?: string
-}
-
 interface ExtensionStateContextType extends ExtensionState {
 	caretSettings?: CaretSettings
 	didHydrateState: boolean
 	showWelcome: boolean
 	// CARET MODIFICATION: Add caretUser state for Caret account system
-	caretUser: CaretUser | null
+	caretUser: CaretUserInfo | null
 	openRouterModels: Record<string, ModelInfo>
 	openAiModels: string[]
 	requestyModels: Record<string, ModelInfo>
@@ -128,7 +120,7 @@ interface ExtensionStateContextType extends ExtensionState {
 	refreshOpenRouterModels: () => void
 	setUserInfo: (userInfo?: UserInfo) => void
 	// CARET MODIFICATION: Caret user management
-	setCaretUser: (user: CaretUser | null) => void
+	setCaretUser: (user: CaretUserInfo | null) => void
 
 	// Navigation state setters
 	setShowMcp: (value: boolean) => void
@@ -168,7 +160,7 @@ export const ExtensionStateContextProvider: React.FC<{
 	const [showAccount, setShowAccount] = useState(false)
 	const [showAnnouncement, setShowAnnouncement] = useState(false)
 	// CARET MODIFICATION: Caret user state
-	const [caretUser, setCaretUserState] = useState<CaretUser | null>(null)
+	const [caretUser, setCaretUserState] = useState<CaretUserInfo | null>(null)
 
 	// Helper for MCP view
 	const closeMcpView = useCallback(() => {
@@ -939,7 +931,7 @@ export const ExtensionStateContextProvider: React.FC<{
 			})),
 		setUserInfo: (userInfo?: UserInfo) => setState((prevState) => ({ ...prevState, userInfo })),
 		// CARET MODIFICATION: setCaretUser implementation
-		setCaretUser: (user: CaretUser | null) => {
+		setCaretUser: (user: CaretUserInfo | null) => {
 			console.log("[CARET-AUTH] setCaretUser called with:", user)
 			setCaretUserState(user)
 		},

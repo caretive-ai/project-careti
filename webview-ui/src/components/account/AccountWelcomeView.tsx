@@ -4,6 +4,7 @@ import PersonaAvatar from "@/caret/components/PersonaAvatar"
 import { useCaretState } from "@/caret/context/CaretStateContext"
 import { t } from "@/caret/utils/i18n"
 import { handleSignIn } from "@/context/ClineAuthContext"
+import { handleLogin } from "../settings/CaretAuthHandler"
 
 export const AccountWelcomeView = () => {
 	// CARET MODIFICATION: Use persona avatar for account welcome
@@ -17,7 +18,7 @@ export const AccountWelcomeView = () => {
 
 			<p>{t("account.signUpDescription", "common")}</p>
 
-			<VSCodeButton className="w-full mb-4" onClick={() => handleSignIn()}>
+			<VSCodeButton className="w-full mb-4" onClick={() => handleLogin()}>
 				{t("account.signUpWithCaret", "common")}
 			</VSCodeButton>
 

@@ -69,12 +69,14 @@ export class CaretApolloManager {
 			uri: this.apiUrl,
 		})
 
+    const token = this.getAuthToken()
+
 		// 인증 미들웨어
 		const authMiddleware = new ApolloLink((operation, forward) => {
 			operation.setContext(({ headers = {} }) => ({
 				headers: {
 					...headers,
-					Authorization: this.authToken ? `Bearer ${this.authToken}` : "",
+					Authorization: token ? `Bearer ${token}` : "",
 				},
 			}))
 
@@ -152,7 +154,7 @@ export class CaretApolloManager {
 	/**
 	 * Fetch user balance using GraphQL
 	 */
-	public async getBalance(): Promise<Balance | undefined> {
+	public async getCreditBalance(): Promise<Balance | undefined> {
 		if (!this.apolloClient) {
 			console.error("[CARET-APOLLO-MANAGER] ❌ Apollo Client not initialized")
 			return undefined
@@ -161,11 +163,11 @@ export class CaretApolloManager {
 		try {
 			console.log("[CARET-APOLLO-MANAGER] 💰 Fetching balance...")
 			const { data } = await this.apolloClient.query({
-				query: GET_BALANCE,
+				query: GET_CREDIT_BALANCE,
 				fetchPolicy: 'network-only'
 			})
 			
-			console.log("[CARET-APOLLO-MANAGER] ✅ Balance fetched:", data.balance.currentBalance)
+			console.log("[CARET-APOLLO-MANAGER] ✅ Balance fetched:", data.balance.totalCredits)
 			return data.balance
 		} catch (error) {
 			console.error("[CARET-APOLLO-MANAGER] ❌ Failed to fetch balance:", error)
@@ -215,14 +217,16 @@ export const GET_USER_PROFILE = gql`
 			email
 			name
 			avatar
+			apiKey
 		}
 	}
 `
 
-export const GET_BALANCE = gql`
-	query GetBalance {
-		balance {
-			currentBalance
+export const GET_CREDIT_BALANCE = gql`
+	query GetCreditBalance {
+		getCreditBalance {
+      totalCredits
+			usedCredits
 			currency
 		}
 	}

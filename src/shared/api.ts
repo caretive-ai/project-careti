@@ -1,4 +1,5 @@
 import type { LanguageModelChatSelector } from "../core/api/providers/types"
+import { CaretUserInfo } from "./CaretAccount"
 
 export type ApiProvider =
 	| "anthropic"
@@ -114,6 +115,8 @@ export interface ApiHandlerOptions {
 	zaiApiLine?: string
 	// CARET MODIFICATION: Add caretApiKey support
 	caretApiKey?: string
+	caretUserProfile?: CaretUserInfo
+	caretAuthToken?: string
 	onRetryAttempt?: (attempt: number, maxRetries: number, delay: number, error: any) => void
 	// Plan mode configurations
 	planModeApiModelId?: string

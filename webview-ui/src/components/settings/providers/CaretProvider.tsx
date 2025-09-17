@@ -1,11 +1,11 @@
-import { EmptyRequest } from "@shared/proto/cline/common"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
+import { useEffect } from "react"
 import { getLocalizedUrl, type SupportedLanguage } from "@/caret/constants/urls"
 import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
 import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { CaretAccountServiceClient } from "@/services/grpc-client"
+import { handleLogin, handleLogout } from "../CaretAuthHandler"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { useApiConfigurationHandlers } from "../utils/useApiConfigurationHandlers"
 
@@ -14,24 +14,34 @@ interface CaretProviderProps {
 }
 
 const CaretProvider = () => {
-	const { apiConfiguration, caretUser } = useExtensionState()
+	const { apiConfiguration } = useExtensionState()
+	console.log("apiConfiguration=====>", apiConfiguration)
+	// const caretUser = apiConfiguration?.caretUserProfile
+	const caretUser = {
+		id: "123",
+		name: "John Doe",
+		displayName: "John Doe1",
+		email: "john.doe@example.com",
+	}
+	// const caretApiKey = apiConfiguration?.caretApiKey
+	const caretApiKey = "jikime-api-key"
+
 	const { handleFieldChange } = useApiConfigurationHandlers()
 	const { currentLanguage } = useCaretI18n()
 
-	const handleLogin = () => {
-		CaretAccountServiceClient.caretAccountLoginClicked(EmptyRequest.create()).catch((err) =>
-			console.error(t("providers.caret.loginError", "settings"), err),
+	useEffect(() => {
+		console.log("caretUser=====>", caretUser)
+		handleFieldChange("caretUserProfile", caretUser)
+		handleFieldChange("caretApiKey", caretApiKey)
+		handleFieldChange(
+			"caretAuthToken",
+			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJZTFA3eTRzQUoiLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJyb2xlIjoidXNlciIsImV4cCI6MTc4OTYzMzEzNiwiaWF0IjoxNzU4MDk3MTM2fQ.j8c0sdkw7TGcateRelvT6Y96zZFPriR_Te6GYgBnvSY",
 		)
-	}
-
-	const handleLogout = () => {
-		CaretAccountServiceClient.caretAccountLogoutClicked(EmptyRequest.create()).catch((err) =>
-			console.error("Logout error:", err),
-		)
-	}
+	}, [handleFieldChange, caretUser, caretApiKey])
 
 	// Show profile page if authenticated
 	if (caretUser) {
+		const name = caretUser.name || caretUser.displayName
 		return (
 			<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
 				<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
@@ -49,14 +59,14 @@ const CaretProvider = () => {
 						borderRadius: 4,
 						border: "1px solid var(--vscode-widget-border)",
 					}}>
-					{caretUser.displayName && (
+					{name && (
 						<div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-							<strong style={{ fontSize: 14, color: "var(--vscode-foreground)" }}>{caretUser.displayName}</strong>
+							<strong style={{ fontSize: 14, color: "var(--vscode-foreground)" }}>{name}</strong>
 						</div>
 					)}
 					<div style={{ fontSize: 12, color: "var(--vscode-descriptionForeground)" }}>{caretUser.email}</div>
-					{typeof caretUser.uid === "string" && (
-						<div style={{ fontSize: 11, color: "var(--vscode-descriptionForeground)" }}>ID: {caretUser.uid}</div>
+					{typeof caretUser.id === "string" && (
+						<div style={{ fontSize: 11, color: "var(--vscode-descriptionForeground)" }}>ID: {caretUser.id}</div>
 					)}
 				</div>
 
@@ -67,14 +77,14 @@ const CaretProvider = () => {
 					</VSCodeButton>
 
 					<ApiKeyField
-						initialValue={apiConfiguration?.caretApiKey || ""}
+						initialValue={caretApiKey || ""}
 						onChange={(value) => handleFieldChange("caretApiKey", value)}
 						providerName={t("providers.caret.name", "settings")}
 						signupUrl="https://caret.team"
 					/>
 				</div>
 
-				{apiConfiguration?.caretApiKey && (
+				{caretApiKey && (
 					<p style={{ fontSize: 12, color: "var(--vscode-foreground)", margin: 0 }}>
 						{t("providers.caret.apiKeyConfigured", "settings")}
 					</p>
@@ -108,14 +118,14 @@ const CaretProvider = () => {
 				</VSCodeButton>
 
 				<ApiKeyField
-					initialValue={apiConfiguration?.caretApiKey || ""}
+					initialValue={caretApiKey || ""}
 					onChange={(value) => handleFieldChange("caretApiKey", value)}
 					providerName={t("providers.caret.name", "settings")}
 					signupUrl="https://caret.team"
 				/>
 			</div>
 
-			{apiConfiguration?.caretApiKey && (
+			{caretApiKey && (
 				<p style={{ fontSize: 12, color: "var(--vscode-foreground)", margin: 0 }}>
 					{t("providers.caret.apiKeyConfigured", "settings")}
 				</p>

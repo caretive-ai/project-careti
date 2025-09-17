@@ -19,6 +19,7 @@ export const useApiConfigurationHandlers = () => {
 	 * @param value - The new value for the field
 	 */
 	const handleFieldChange = async <K extends keyof ApiConfiguration>(field: K, value: ApiConfiguration[K]) => {
+		console.log("handleFieldChange=====>", field, value)
 		const updatedConfig = {
 			...apiConfiguration,
 			[field]: value,

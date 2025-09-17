@@ -197,8 +197,6 @@ const WelcomeView = () => {
 					"secondary",
 				)}
 
-				{renderSection("educationOffer.header", "educationOffer.body")}
-
 				{/* Footer 컴포넌트 */}
 				<CaretFooter />
 			</div>

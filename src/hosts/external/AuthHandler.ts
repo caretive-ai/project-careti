@@ -159,10 +159,13 @@ export class AuthHandler {
 		try {
 			// Convert HTTP URL to vscode.Uri and use shared handler directly
 			const fullUrl = `http://127.0.0.1:${this.port}${req.url}`
+			console.log("AuthHandler: Full URL", fullUrl)
 			const uri = SharedUriHandler.convertHttpUrlToUri(fullUrl)
-
+			console.log("AuthHandler: URI", uri)
 			// Use SharedUriHandler directly - it handles all validation and processing
 			const success = await SharedUriHandler.handleUri(uri)
+			console.log("AuthHandler: Success", success)
+			console.log("TOKEN_REQUEST_VIEW", TOKEN_REQUEST_VIEW)
 
 			if (success) {
 				this.sendResponse(res, 200, "text/html", TOKEN_REQUEST_VIEW)

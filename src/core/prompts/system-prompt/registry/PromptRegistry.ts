@@ -1,3 +1,4 @@
+import { Logger } from "@/services/logging/Logger"
 import { ModelFamily } from "@/shared/prompts"
 import { getModelFamily } from ".."
 import { getSystemPromptComponents } from "../components"
@@ -69,11 +70,14 @@ export class PromptRegistry {
 	 * Get prompt by model ID with fallback to generic
 	 */
 	async get(context: SystemPromptContext): Promise<string> {
+		Logger.debug(`[PromptRegistry] 🚀 ACT MODE - Starting original Cline prompt generation`)
 		await this.load()
 
 		// Try model family fallback (e.g., "claude-4" -> "claude")
 		const modelFamily = getModelFamily(context.providerInfo)
+		Logger.debug(`[PromptRegistry] 🎯 Model family: ${modelFamily}`)
 		let variant = this.variants.get(modelFamily ?? ModelFamily.GENERIC)
+		Logger.debug(`[PromptRegistry] 📋 Found variant: ${variant ? variant.id : "none"}, tools: ${variant?.tools?.length || 0}`)
 
 		// If no variant found for the detected family, explicitly try generic
 		if (!variant && modelFamily !== ModelFamily.GENERIC) {

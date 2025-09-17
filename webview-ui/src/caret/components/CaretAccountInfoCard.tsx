@@ -4,7 +4,7 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useCallback, useEffect, useState } from "react"
 import { t } from "@/caret/utils/i18n"
-import { type CaretUser, useExtensionState } from "@/context/ExtensionStateContext"
+import { useExtensionState } from "@/context/ExtensionStateContext"
 
 type CaretAccountInfoCardProps = {
 	onViewAccount?: () => void
@@ -16,7 +16,9 @@ export const CaretAccountInfoCard = ({ onViewAccount }: CaretAccountInfoCardProp
 	const [balance, setBalance] = useState<number | null>(null)
 
 	const fetchBalance = useCallback(async () => {
-		if (!caretUser?.uid) return
+		if (!caretUser?.uid) {
+			return
+		}
 
 		try {
 			setIsLoading(true)

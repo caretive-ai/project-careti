@@ -1,7 +1,8 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { Mode } from "@shared/storage/types"
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
-import { useEffect, useState } from "react"
+import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
+import { getLocalizedUrl, type SupportedLanguage } from "@/caret/constants/urls"
+import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
 import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CaretAccountServiceClient } from "@/services/grpc-client"
@@ -15,12 +16,7 @@ interface CaretProviderProps {
 const CaretProvider = () => {
 	const { apiConfiguration, caretUser } = useExtensionState()
 	const { handleFieldChange } = useApiConfigurationHandlers()
-	const [isAuthenticated, setIsAuthenticated] = useState(false)
-
-	// Check authentication status
-	useEffect(() => {
-		setIsAuthenticated(!!caretUser)
-	}, [caretUser])
+	const { currentLanguage } = useCaretI18n()
 
 	const handleLogin = () => {
 		CaretAccountServiceClient.caretAccountLoginClicked(EmptyRequest.create()).catch((err) =>
@@ -35,7 +31,7 @@ const CaretProvider = () => {
 	}
 
 	// Show profile page if authenticated
-	if (isAuthenticated && caretUser) {
+	if (caretUser) {
 		return (
 			<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
 				<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
@@ -137,7 +133,22 @@ const CaretProvider = () => {
 				</ul>
 			</div>
 
-			<p style={{ fontSize: 11, color: "var(--vscode-descriptionForeground)", margin: 0 }}></p>
+			<div style={{ fontSize: 11, color: "var(--vscode-descriptionForeground)", margin: "8px 0 0 0" }}>
+				<p style={{ margin: 0 }}>
+					{t("account.byContining", "common")}{" "}
+					<VSCodeLink
+						className="text-inherit"
+						href={getLocalizedUrl("CARETIVE_PRIVACY", currentLanguage as SupportedLanguage)}>
+						{t("account.privacyPolicy", "common")}
+					</VSCodeLink>{" "}
+					{t("common.and", "common")}{" "}
+					<VSCodeLink
+						className="text-inherit"
+						href={getLocalizedUrl("YOUTH_PROTECTION", currentLanguage as SupportedLanguage)}>
+						{t("account.youthProtection", "common")}
+					</VSCodeLink>
+				</p>
+			</div>
 		</div>
 	)
 }

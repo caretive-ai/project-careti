@@ -368,7 +368,7 @@ const BrowserSessionRow = memo((props: BrowserSessionRowProps) => {
 				<span style={approveTextStyle}>
 					{isAutoApproved
 						? t("chat.caretIsUsingBrowser", "Caret is using the browser:")
-						: t("chat.caretWantsToUseBrowser", "Caret wants to use the browser:")}
+						: t("caretWantsToUseBrowser", "browser")}
 				</span>
 			</div>
 			<div
@@ -467,7 +467,7 @@ const BrowserSessionRow = memo((props: BrowserSessionRowProps) => {
 			{pages.length > 1 && (
 				<div style={paginationContainerStyle}>
 					<div>
-						{t("browser.paginationStep", "Step {{currentPage}} of {{totalPages}}", {
+						{t("paginationStep", "browser", {
 							currentPage: currentPageIndex + 1,
 							totalPages: pages.length,
 						})}
@@ -476,7 +476,7 @@ const BrowserSessionRow = memo((props: BrowserSessionRowProps) => {
 						<VSCodeButton
 							disabled={currentPageIndex === 0 || isBrowsing}
 							onClick={() => setCurrentPageIndex((i) => i - 1)}>
-							{t("browser.paginationPrevious", "Previous")}
+							{t("paginationPrevious", "browser")}
 						</VSCodeButton>
 						<VSCodeButton
 							disabled={currentPageIndex === pages.length - 1 || isBrowsing}

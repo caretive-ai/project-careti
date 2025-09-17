@@ -8,7 +8,7 @@ import * as proto from "@shared/proto/index"
  * Sets the active Caret organization for the user
  */
 export async function setCaretUserOrganization(
-	controller: Controller,
+	_controller: Controller,
 	request: proto.caret.CaretUserOrganizationUpdateRequest,
 ): Promise<proto.cline.Empty> {
 	console.log("[CARET-HANDLER] 🔄 setCaretUserOrganization called for org:", request.organizationId)

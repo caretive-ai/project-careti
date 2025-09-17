@@ -42,7 +42,7 @@ export const NebiusProvider = ({ showModelOptions, isPopup, currentMode }: Nebiu
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label={t("settings.modelSelector.label", "settings")}
+						label={t("modelSelector.label", "settings")}
 						models={nebiusModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

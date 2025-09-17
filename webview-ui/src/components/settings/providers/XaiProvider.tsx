@@ -58,7 +58,7 @@ export const XaiProvider = ({ showModelOptions, isPopup, currentMode }: XaiProvi
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label={t("settings.modelSelector.label", "settings")}
+						label={t("modelSelector.label", "settings")}
 						models={xaiModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

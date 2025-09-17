@@ -9,5 +9,8 @@
 		"remote": "リモート",
 		"local": "ローカル",
 		"remoteHost": "リモートホスト"
-	}
+	},
+	"caretWantsToUseBrowser": "Caretがブラウザを使用したいと思っています：",
+	"paginationStep": "{{currentPage}} / {{totalPages}} ステップ",
+	"paginationPrevious": "前へ"
 }

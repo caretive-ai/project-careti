@@ -44,15 +44,41 @@
 	"actMode": "Act Mode",
 	"useDifferentModels": "Use different models for Plan and Act modes",
 	"useDifferentModelsDescription": "Switching between Plan and Act mode will persist the API and model used in the previous mode. This may be helpful e.g. when using a strong reasoning model to architect a plan for a cheaper coding model to act on.",
+	"theme": {
+		"dark": "Dark Theme",
+		"light": "Light Theme",
+		"auto": "Auto Theme"
+	},
+	"appearance": {
+		"fontSize": "Font Size",
+		"lineHeight": "Line Height",
+		"fontFamily": "Font Family"
+	},
+	"modelSelector": {
+		"label": "Model"
+	},
+	"pricing": {
+		"inputPrice": "Input price: {{price}}/million tokens",
+		"cacheReadPrice": "Cache read price: {{price}}/million tokens",
+		"outputPriceStandard": "Output price (standard): {{price}}/million tokens",
+		"outputPriceReasoning": "Output price (reasoning budget > 0): {{price}}/million tokens",
+		"contextWindow": "Context window: {{size}}/million tokens",
+		"perMillionTokens": "/million tokens"
+	},
+	"modelInfo": {
+		"supportsImages": "Image support",
+		"supportsBrowserUse": "Supports browser use",
+		"contextWindow": "Context window: {{size}}"
+	},
+	"modeSystem": {
+		"label": "Mode System",
+		"description": "Select Caret or Cline mode.",
+		"options": {
+			"caret": "Caret",
+			"cline": "Cline"
+		}
+	},
 	"settings": {
-		"modeSystem": {
-			"label": "Mode System",
-			"description": "Select Caret or Caret mode.",
-			"options": {
-				"caret": "Caret",
-				"cline": "Caret"
-			}
-		},
 		"preferredLanguage": {
 			"label": "Preferred Language",
 			"description": "Select the language Caret should use for communication."
@@ -174,7 +200,6 @@
 		"screenshotAlt": "Browser screenshot",
 		"consoleLogs": "Console Logs",
 		"noNewLogs": "(No new logs)",
-		"paginationStep": "Step {{current}} / {{total}}",
 		"previousButton": "Previous",
 		"nextButton": "Next",
 		"sessionStarted": "Browser Session Started",
@@ -708,6 +733,19 @@
 		"linkText1": "1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,",
 		"linkText2": "2) install the Google Cloud CLI › configure Application Default Credentials."
 	},
+	"vertex": {
+		"modelName": "Model Name",
+		"instructions": "Instructions",
+		"contextWindow": "Context Window",
+		"maxTokens": "Max Tokens",
+		"safetySettings": "Safety Settings",
+		"temperature": "Temperature"
+	},
+	"claude": {
+		"systemPrompt": "System Prompt",
+		"maxTokens": "Max Tokens",
+		"apiVersion": "API Version"
+	},
 	"vsCodeLmProvider": {
 		"languageModelLabel": "Language Model",
 		"selectModelPlaceholder": "Select a model...",
@@ -950,6 +988,25 @@
 		"supportsCache": "Supports prompt caching",
 		"contextWindow": "Context Window",
 		"cacheWritesPrice": "Cache writes price",
-		"cacheReadsPrice": "Cache reads price"
+		"cacheReadsPrice": "Cache reads price",
+		"contextWindowLabel": "Context Window:",
+		"inputPriceLabel": "Input price:",
+		"outputPriceLabel": "Output price:",
+		"outputPriceStandardLabel": "Output price (Standard):",
+		"outputPriceThinkingBudgetLabel": "Output price (Thinking Budget > 0):",
+		"cacheWritesPriceLabel": "Cache writes price:",
+		"cacheReadsPriceLabel": "Cache reads price:",
+		"supportsImagesLabel": "Supports images:",
+		"supportsComputerUseLabel": "Supports computer use:",
+		"supportsCacheLabel": "Supports prompt caching:",
+		"doesNotSupportImagesLabel": "Does not support images:",
+		"doesNotSupportComputerUseLabel": "Does not support computer use:",
+		"doesNotSupportCacheLabel": "Does not support prompt caching:"
+	},
+	"about": {
+		"feedbackPrompt": "If you have any questions or feedback, we welcome it anytime.",
+		"version": "Version",
+		"title": "About",
+		"description": "Check the Caret version and view related information."
 	}
 }

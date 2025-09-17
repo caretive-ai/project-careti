@@ -460,6 +460,7 @@ Caret은 완전 자동화된 브랜딩 전환 시스템을 제공하여 다양�
 - Extension 제목, 설명, 키워드 모두 Caret 브랜딩 적용
 - Walkthrough 및 명령어 카테고리 Caret으로 통일
 - 42개+ 필드 포괄적 브랜딩: contributes, commands, walkthroughs, activitybar
+- **🔧 VS Code 명령어 네임스페이스 충돌 해결**: `cline.*` → `caret.*` 변환으로 Cline과 동시 설치 지원
 
 **2. 시각적 브랜딩 요소**  
 - 🎨 독창적 Caret 로고 및 아이콘 시스템
@@ -485,6 +486,63 @@ Caret은 완전 자동화된 브랜딩 전환 시스템을 제공하여 다양�
 - TerminalRegistry.ts: 터미널 이름 "Caret" 적용
 - 확장 ID: "caretive.caret" 변환
 - 커스텀 터미널 아이콘 적용
+
+### **🔧 VS Code 명령어 네임스페이스 충돌 해결**
+
+#### **⚡ 기술적 구현 상세**
+
+**문제**: Cline 확장과 Caret 확장을 VS Code에 동시 설치할 때 명령어 네임스페이스 충돌 발생
+- Cline과 Caret 모두 `cline.*` 명령어 사용으로 인한 명령 팔레트에서 중복 표시
+- 컨텍스트 키 충돌로 인한 기능 오동작 가능성
+
+**해결책**: 완전한 네임스페이스 분리를 통한 동시 설치 지원
+
+**구현된 변환 범위**:
+
+```json
+{
+  "commands": [
+    { "command": "caret.plusButtonClicked", "title": "Add to Chat" },
+    { "command": "caret.mcpButtonClicked", "title": "Open MCP" },
+    { "command": "caret.historyButtonClicked", "title": "Open History" },
+    { "command": "caret.popoutButtonClicked", "title": "Open in New Tab" },
+    { "command": "caret.accountButtonClicked", "title": "Account" },
+    { "command": "caret.settingsButtonClicked", "title": "Settings" }
+    // ... 42개+ 명령어 모두 변환 완료
+  ],
+  "keybindings": [
+    { "command": "caret.addToChat", "key": "cmd+shift+c" }
+    // 키 바인딩도 caret.* 네임스페이스로 변환
+  ],
+  "when": "caret.isDevMode || caret.isGeneratingCommit"
+  // 컨텍스트 키도 caret.* 네임스페이스로 변환
+}
+```
+
+**후처리 시스템**: Proto 생성 과정에서 발생하는 네임스페이스 혼합 문제 자동 해결
+- `build-proto.mjs`의 `postProcessGeneratedFiles()` 함수가 생성된 TypeScript 코드를 후처리
+- `cline.CaretAccountService` → `caret.CaretAccountService` 자동 변환
+- 14개 패턴에 대한 정확한 네임스페이스 수정 적용
+
+**검증 방법**:
+```bash
+# 1. 명령어 네임스페이스 확인
+grep -r "caret\." package.json | wc -l    # 결과: 42개+ (변환 완료)
+grep -r "cline\." package.json | wc -l    # 결과: 0개 (모두 변경됨)
+
+# 2. 컨텍스트 키 확인  
+grep "caret.isDevMode" src/extension.ts
+grep "caret.isGeneratingCommit" src/integrations/git/commit-message-generator.ts
+
+# 3. Proto 후처리 확인
+npm run protos  # ✅ Fixed X generated files 메시지 확인
+```
+
+**동시 설치 테스트**:
+- ✅ Caret 확장과 Cline 확장 VS Code에 동시 설치 가능
+- ✅ 명령 팔레트에서 `caret.*`와 `cline.*` 명령어 구별되어 표시  
+- ✅ 각 확장의 기능이 독립적으로 정상 작동
+- ✅ 컨텍스트 키 충돌 없이 각자 동작
 
 ### **🏢 B2B 기업용 브랜딩 솔루션**
 

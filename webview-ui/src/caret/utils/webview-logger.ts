@@ -57,4 +57,5 @@ class CaretWebviewLogger {
 	}
 }
 
+export { CaretWebviewLogger }
 export const caretWebviewLogger = new CaretWebviewLogger("CaretWebview")

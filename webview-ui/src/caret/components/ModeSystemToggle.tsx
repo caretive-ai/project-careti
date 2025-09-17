@@ -1,8 +1,14 @@
 // CARET MODIFICATION: 전역 브랜드 모드 토글 컴포넌트 - caret-main에서 이식
+
+import { type CaretModeSystem } from "@caret/shared/ModeSystem"
 import React from "react"
 import styled from "styled-components"
 import { useExtensionState } from "@/context/ExtensionStateContext"
+import { CaretSystemServiceClient } from "@/services/grpc-client"
 import { t } from "../utils/i18n"
+import { CaretWebviewLogger } from "../utils/webview-logger"
+
+const logger = new CaretWebviewLogger("ModeSystemToggle")
 
 // CARET MODIFICATION: caret-main에서 가져온 토글 스위치 스타일 (원본: SettingsView.tsx)
 const ModeSwitchContainer = styled.div<{ disabled: boolean }>`
@@ -63,31 +69,78 @@ interface ModeSystemToggleProps {
 const ModeSystemToggle: React.FC<ModeSystemToggleProps> = ({ className }) => {
 	const { modeSystem, setModeSystem } = useExtensionState()
 
-	const handleToggle = () => {
-		// CARET MODIFICATION: 버튼 토글 시 백엔드/프론트 로깅 (이미 setModeSystem에서 처리됨)
+	const handleToggle = async () => {
 		const newMode = modeSystem === "caret" ? "cline" : "caret"
-		console.log(`[UI-TOGGLE] User clicked toggle: ${modeSystem} -> ${newMode}`)
-		setModeSystem(newMode)
+
+		// CARET MODIFICATION: Enhanced debug logging for mode switching
+		console.log(`[ModeSystemToggle] 🔄 Mode switch initiated:`, {
+			currentMode: modeSystem,
+			targetMode: newMode,
+			timestamp: new Date().toISOString(),
+			component: "ModeSystemToggle",
+			action: "handleToggle",
+		})
+
+		logger.info(`User clicked toggle: ${modeSystem} -> ${newMode}`)
+
+		try {
+			const startTime = Date.now()
+			console.log(`[ModeSystemToggle] 📤 Sending gRPC request: SetPromptSystemMode({ mode: "${newMode}" })`)
+
+			// Use gRPC to set the new mode
+			const response = await CaretSystemServiceClient.SetPromptSystemMode({
+				mode: newMode,
+			})
+
+			const endTime = Date.now()
+			const responseTime = endTime - startTime
+
+			console.log(`[ModeSystemToggle] 📥 gRPC response received:`, {
+				success: response.success,
+				currentMode: response.currentMode,
+				errorMessage: response.errorMessage,
+				responseTime: `${responseTime}ms`,
+				timestamp: new Date().toISOString(),
+			})
+
+			if (response.success) {
+				logger.info(`Successfully changed to ${response.currentMode} mode`)
+				console.log(`[ModeSystemToggle] ✅ Mode change successful: UI will update to ${response.currentMode}`)
+
+				// Update the UI state immediately
+				setModeSystem(response.currentMode as CaretModeSystem)
+
+				console.log(`[ModeSystemToggle] 🔄 UI state updated to: ${response.currentMode}`)
+			} else {
+				logger.error(`Failed to change mode: ${response.errorMessage}`)
+				console.error(`[ModeSystemToggle] ❌ Mode change failed:`, response.errorMessage)
+			}
+		} catch (error) {
+			logger.error(`Error changing mode: ${error}`)
+			console.error(`[ModeSystemToggle] ❌ Exception during mode change:`, {
+				error: error,
+				currentMode: modeSystem,
+				targetMode: newMode,
+				timestamp: new Date().toISOString(),
+			})
+		}
 	}
 
 	return (
 		<div className={`mb-[15px] ${className || ""}`}>
 			<div className="flex items-center justify-between mb-2">
-				<label className="text-sm font-medium">{t("settings.modeSystem.label", "settings") || "App Mode"}</label>
+				<label className="text-sm font-medium">{t("modeSystem.label", "settings")}</label>
 				<ModeSwitchContainer data-testid="mode-system-toggle-container" disabled={false} onClick={handleToggle}>
 					<ModeSlider isCaret={modeSystem === "caret"} isCline={modeSystem === "cline"} />
 					<ModeSwitchOption data-testid="caret-mode-option" isActive={modeSystem === "caret"}>
-						{t("settings.modeSystem.options.caret", "settings") || "Caret"}
+						{t("modeSystem.options.caret", "settings")}
 					</ModeSwitchOption>
 					<ModeSwitchOption data-testid="cline-mode-option" isActive={modeSystem === "cline"}>
-						{t("settings.modeSystem.options.cline", "settings") || "Cline"}
+						{t("modeSystem.options.cline", "settings")}
 					</ModeSwitchOption>
 				</ModeSwitchContainer>
 			</div>
-			<p className="text-xs text-[var(--vscode-descriptionForeground)]">
-				{t("settings.modeSystem.description", "settings") ||
-					"Switch between Caret and Cline interface modes. Affects branding and i18n features."}
-			</p>
+			<p className="text-xs text-[var(--vscode-descriptionForeground)]">{t("modeSystem.description", "settings")}</p>
 		</div>
 	)
 }

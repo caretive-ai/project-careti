@@ -2,27 +2,7 @@
 // Provides singleton Apollo Client instance with authentication token management
 
 import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, gql } from '@apollo/client'
-
-export interface UserProfile {
-	id: string
-	email: string
-	name?: string
-	displayName?: string
-	avatar?: string
-	credits?: number
-}
-
-export interface Balance {
-	currentBalance: number
-	currency: string
-}
-
-export interface UsageTransaction {
-	id: string
-	amount: number
-	description: string
-	createdAt: string
-}
+import { Balance, CaretUserInfo, UsageTransaction } from '@shared/CaretAccount'
 
 /**
  * Singleton Apollo Client manager for Caret GraphQL API
@@ -32,7 +12,8 @@ export class CaretApolloManager {
 	private static instance: CaretApolloManager | null = null
 	private apolloClient: any = null
 	private authToken: string | null = null
-	private readonly apiUrl = "https://api.caret.team/graphql"
+	// private readonly apiUrl = "https://api.caret.team/graphql"
+	private readonly apiUrl = "http://localhost:4001/query"
 
 	private constructor() {
 		console.log("[CARET-APOLLO-MANAGER] 🚀 CaretApolloManager initialized")
@@ -147,7 +128,7 @@ export class CaretApolloManager {
 	/**
 	 * Fetch user profile using GraphQL
 	 */
-	public async getUserProfile(): Promise<UserProfile | undefined> {
+	public async getUserProfile(): Promise<CaretUserInfo | undefined> {
 		if (!this.apolloClient) {
 			console.error("[CARET-APOLLO-MANAGER] ❌ Apollo Client not initialized")
 			return undefined
@@ -160,8 +141,8 @@ export class CaretApolloManager {
 				fetchPolicy: 'network-only'
 			})
 			
-			console.log("[CARET-APOLLO-MANAGER] ✅ User profile fetched:", data.me.email)
-			return data.me
+			console.log("[CARET-APOLLO-MANAGER] ✅ User profile fetched:", data.getProfile.email)
+			return data.getProfile
 		} catch (error) {
 			console.error("[CARET-APOLLO-MANAGER] ❌ Failed to fetch user profile:", error)
 			return undefined
@@ -228,14 +209,12 @@ export class CaretApolloManager {
 
 // GraphQL Queries
 export const GET_USER_PROFILE = gql`
-	query GetUserProfile {
-		me {
+	query GetProfile {
+		getProfile {
 			id
 			email
 			name
-			displayName
 			avatar
-			credits
 		}
 	}
 `

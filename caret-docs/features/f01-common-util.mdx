@@ -18,7 +18,7 @@ Caret-main에서 검증된 유용한 빌드 스크립트들을 이식하여 개�
     "setup": "node caret-scripts/setup-dev-env.js",
     "compile:fast": "node esbuild.mjs", 
     "test:all": "node caret-scripts/test-report.js",
-    "package:release": "node caret-scripts/package-release.js",
+    "package:release": "node caret-scripts/build/package-release.js",
     "caret:coverage": "node caret-scripts/caret-coverage-check.js",
     "caretrules:sync": "node caret-scripts/sync-caretrules.js",
     "models:generate": "node caret-scripts/generate-support-model-list.js"

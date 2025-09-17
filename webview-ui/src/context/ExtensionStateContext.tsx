@@ -33,7 +33,15 @@ import {
 } from "../../../src/shared/api"
 import type { McpMarketplaceCatalog, McpServer, McpViewTab } from "../../../src/shared/mcp"
 import { convertPreferredLanguageToSupported } from "../caret/utils/i18n"
-import { McpServiceClient, ModelsServiceClient, StateServiceClient, UiServiceClient } from "../services/grpc-client"
+// CARET MODIFICATION: Import caretWebviewLogger for debug logging
+import { caretWebviewLogger } from "../caret/utils/webview-logger"
+import {
+	CaretSystemServiceClient,
+	McpServiceClient,
+	ModelsServiceClient,
+	StateServiceClient,
+	UiServiceClient,
+} from "../services/grpc-client"
 
 // CARET MODIFICATION: CaretUser type based on ClineUser for Caret account system
 export interface CaretUser {
@@ -255,19 +263,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		useAutoCondense: false,
 		// CARET MODIFICATION: Initialize caretBanner with actual banner image
 		caretBanner: "/assets/welcome-banner.webp",
-		// CARET MODIFICATION: Initialize persona system setting from localStorage
-		enablePersonaSystem: (() => {
-			try {
-				const stored = localStorage.getItem("caret-enablePersonaSystem")
-				console.log("[PERSONA-DEBUG] Initial load from localStorage:", stored)
-				const parsed = stored !== null ? JSON.parse(stored) : false
-				console.log("[PERSONA-DEBUG] Parsed initial value:", parsed)
-				return parsed // Default to false unless explicitly enabled
-			} catch (error) {
-				console.warn("[PERSONA-DEBUG] Failed to load persona system setting from localStorage:", error)
-				return false // Default to false
-			}
-		})(),
+		// CARET MODIFICATION: Initialize persona system from backend globalState only
+		enablePersonaSystem: true, // Default value, will be overridden by backend
 	})
 	const [didHydrateState, setDidHydrateState] = useState(false)
 	const [showWelcome, setShowWelcome] = useState(false)
@@ -323,6 +320,30 @@ export const ExtensionStateContextProvider: React.FC<{
 	const mcpServersSubscriptionRef = useRef<(() => void) | null>(null)
 	const didBecomeVisibleUnsubscribeRef = useRef<(() => void) | null>(null)
 
+	// CARET MODIFICATION: Initialize modeSystem from backend on app startup
+	useEffect(() => {
+		const initializeModeSystem = async () => {
+			try {
+				caretWebviewLogger.debug("[ExtensionStateContext] Initializing modeSystem from backend...")
+				const response = await CaretSystemServiceClient.GetPromptSystemMode({})
+				caretWebviewLogger.debug("[ExtensionStateContext] Backend modeSystem:", response.currentMode)
+
+				// Update frontend state to match backend
+				setState((prevState) => ({
+					...prevState,
+					modeSystem: response.currentMode as CaretModeSystem,
+				}))
+
+				caretWebviewLogger.info(`[ExtensionStateContext] Initialized modeSystem: ${response.currentMode}`)
+			} catch (error) {
+				caretWebviewLogger.error("[ExtensionStateContext] Failed to initialize modeSystem:", error)
+				// Keep default value on error
+			}
+		}
+
+		initializeModeSystem()
+	}, []) // Run only once on mount
+
 	// Subscribe to state updates and UI events using the gRPC streaming API
 	useEffect(() => {
 		// Use the already defined webview provider type
@@ -334,10 +355,12 @@ export const ExtensionStateContextProvider: React.FC<{
 				if (response.stateJson) {
 					try {
 						const stateData = JSON.parse(response.stateJson) as ExtensionState
-						console.log(
-							"[PERSONA-DEBUG] Backend state received - enablePersonaSystem:",
-							stateData.enablePersonaSystem,
-						)
+						if (stateData.enablePersonaSystem !== undefined) {
+							caretWebviewLogger.debug(
+								"Backend state received - enablePersonaSystem:",
+								stateData.enablePersonaSystem,
+							)
+						}
 						setState((prevState) => {
 							// Versioning logic for autoApprovalSettings
 							const incomingVersion = stateData.autoApprovalSettings?.version ?? 1
@@ -350,21 +373,11 @@ export const ExtensionStateContextProvider: React.FC<{
 									: prevState.clineMessages
 							}
 
-							// CARET MODIFICATION: Preserve localStorage persona setting if backend doesn't have it
-							const localPersonaSetting = (() => {
-								try {
-									const stored = localStorage.getItem("caret-enablePersonaSystem")
-									if (stored !== null) {
-										const parsed = JSON.parse(stored)
-										console.log("[PERSONA-DEBUG] Using localStorage persona setting:", parsed)
-										return parsed
-									}
-								} catch (error) {
-									console.error("[PERSONA-DEBUG] Error reading localStorage in state update:", error)
-								}
-								console.log("[PERSONA-DEBUG] Using backend persona setting:", stateData.enablePersonaSystem)
-								return stateData.enablePersonaSystem
-							})()
+							// CARET MODIFICATION: Use backend globalState only
+							const personaSetting = stateData.enablePersonaSystem
+							if (prevState.enablePersonaSystem !== personaSetting) {
+								caretWebviewLogger.debug("Using backend persona setting:", personaSetting)
+							}
 
 							const newState = {
 								...stateData,
@@ -372,7 +385,15 @@ export const ExtensionStateContextProvider: React.FC<{
 									? stateData.autoApprovalSettings
 									: prevState.autoApprovalSettings,
 								// CARET MODIFICATION: Preserve localStorage persona setting
-								enablePersonaSystem: localPersonaSetting,
+								enablePersonaSystem: personaSetting,
+							}
+
+							// CARET MODIFICATION: Sync ExtensionState to localStorage
+							if (newState.modeSystem !== undefined) {
+								localStorage.setItem("caret.modeSystem", newState.modeSystem)
+							}
+							if (newState.mode !== undefined) {
+								localStorage.setItem("caret.mode", newState.mode)
 							}
 
 							// Update welcome screen state based on API configuration
@@ -627,31 +648,7 @@ export const ExtensionStateContextProvider: React.FC<{
 			console.error("Client ID not found in window object")
 		}
 
-		// CARET MODIFICATION: localStorage에서 페르소나 설정 로드
-		try {
-			const savedPersonaSetting = localStorage.getItem("caret-enablePersonaSystem")
-			console.log("[PERSONA-DEBUG] useEffect loading from localStorage:", savedPersonaSetting)
-			if (savedPersonaSetting !== null) {
-				const enablePersona = JSON.parse(savedPersonaSetting)
-				console.log("[PERSONA-DEBUG] useEffect parsed value:", enablePersona)
-				setState((prevState) => {
-					console.log(
-						"[PERSONA-DEBUG] useEffect setState - prevState:",
-						prevState.enablePersonaSystem,
-						"newState:",
-						enablePersona,
-					)
-					return {
-						...prevState,
-						enablePersonaSystem: enablePersona,
-					}
-				})
-			} else {
-				console.log("[PERSONA-DEBUG] useEffect - no saved setting found, keeping default")
-			}
-		} catch (error) {
-			console.error("[PERSONA-DEBUG] useEffect failed to load persona system setting from localStorage:", error)
-		}
+		// CARET MODIFICATION: Persona system now managed by backend globalState only
 
 		// CARET MODIFICATION: Authentication status is now handled via gRPC messages
 		// No direct CaretGlobalManager access from webview (Node.js modules not available)
@@ -761,11 +758,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		caretBanner: (window as any).caretBannerImage || state.caretBanner || "/assets/welcome-banner.webp",
 
 		// CARET MODIFICATION: Persona system values
-		enablePersonaSystem: (() => {
-			const value = state.enablePersonaSystem ?? false
-			console.log("[PERSONA-DEBUG] contextValue enablePersonaSystem:", value, "from state:", state.enablePersonaSystem)
-			return value
-		})(),
+		enablePersonaSystem: state.enablePersonaSystem ?? false,
 		currentPersona: state.currentPersona || null,
 		personaProfile: state.personaProfile || {
 			name: "Caret",
@@ -898,38 +891,32 @@ export const ExtensionStateContextProvider: React.FC<{
 		onRelinquishControl,
 		// CARET MODIFICATION: Persona system setters - also save to localStorage and backend
 		setEnablePersonaSystem: (enabled: boolean) => {
-			console.log("[PERSONA-DEBUG] setEnablePersonaSystem called with:", enabled)
-			console.log("[PERSONA-DEBUG] Current state:", state.enablePersonaSystem)
+			const isChanging = state.enablePersonaSystem !== enabled
+
+			if (isChanging) {
+				caretWebviewLogger.debug("setEnablePersonaSystem called:", { enabled, currentState: state.enablePersonaSystem })
+			}
 
 			setState((prevState) => {
-				console.log("[PERSONA-DEBUG] setState called - prevState:", prevState.enablePersonaSystem, "newState:", enabled)
+				if (isChanging) {
+					caretWebviewLogger.debug("setState called:", { prevState: prevState.enablePersonaSystem, newState: enabled })
+				}
 				return {
 					...prevState,
 					enablePersonaSystem: enabled,
 				}
 			})
 
-			// Save to localStorage as well since proto doesn't support this field yet
-			try {
-				const serialized = JSON.stringify(enabled)
-				localStorage.setItem("caret-enablePersonaSystem", serialized)
-				console.log("[PERSONA-DEBUG] Saved to localStorage:", serialized)
-
-				// 바로 확인
-				const verification = localStorage.getItem("caret-enablePersonaSystem")
-				console.log("[PERSONA-DEBUG] Verification read:", verification)
-			} catch (error) {
-				console.error("[PERSONA-DEBUG] Failed to save persona system setting to localStorage:", error)
-			}
-
-			// CARET MODIFICATION: Also send to backend via StateServiceClient
+			// CARET MODIFICATION: Send to backend globalState only (no localStorage)
 			try {
 				StateServiceClient.updateSettings({
 					enablePersonaSystem: enabled,
 				})
-				console.log("[PERSONA-DEBUG] Sent to backend via StateServiceClient:", enabled)
+				if (isChanging) {
+					caretWebviewLogger.debug("Sent to backend via StateServiceClient:", enabled)
+				}
 			} catch (error) {
-				console.error("[PERSONA-DEBUG] Failed to update backend persona system setting:", error)
+				caretWebviewLogger.error("Failed to update backend persona system setting:", error)
 			}
 		},
 		setCurrentPersona: (personaId: string | null) =>

@@ -40,7 +40,7 @@ export const SambanovaProvider = ({ showModelOptions, isPopup, currentMode }: Sa
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label={t("settings.modelSelector.label", "settings")}
+						label={t("modelSelector.label", "settings")}
 						models={sambanovaModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

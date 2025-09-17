@@ -42,7 +42,7 @@ export const MistralProvider = ({ showModelOptions, isPopup, currentMode }: Mist
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label={t("settings.modelSelector.label", "settings")}
+						label={t("modelSelector.label", "settings")}
 						models={mistralModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

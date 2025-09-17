@@ -56,7 +56,8 @@ async function generate(context: vscode.ExtensionContext, scm?: vscode.SourceCon
 
 async function performCommitGeneration(context: vscode.ExtensionContext, gitDiff: string, inputBox: any) {
 	try {
-		vscode.commands.executeCommand("setContext", "cline.isGeneratingCommit", true)
+		// CARET MODIFICATION: Changed context key from cline.isGeneratingCommit to caret.isGeneratingCommit to avoid conflicts with Cline extension
+		vscode.commands.executeCommand("setContext", "caret.isGeneratingCommit", true)
 
 		const truncatedDiff = gitDiff.length > 5000 ? gitDiff.substring(0, 5000) + "\n\n[Diff truncated due to size]" : gitDiff
 
@@ -109,13 +110,13 @@ Commit message:`
 			message: `Failed to generate commit message: ${errorMessage}`,
 		})
 	} finally {
-		vscode.commands.executeCommand("setContext", "cline.isGeneratingCommit", false)
+		vscode.commands.executeCommand("setContext", "caret.isGeneratingCommit", false)
 	}
 }
 
 function abort() {
 	commitGenerationAbortController?.abort()
-	vscode.commands.executeCommand("setContext", "cline.isGeneratingCommit", false)
+	vscode.commands.executeCommand("setContext", "caret.isGeneratingCommit", false)
 }
 
 /**

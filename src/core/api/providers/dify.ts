@@ -66,8 +66,6 @@ interface DifyConversationResponse {
 }
 
 export class DifyHandler implements ApiHandler {
-	// CARET MODIFICATION: Fixed missing options property for TypeScript compilation
-	private options: ApiHandlerOptions
 	private baseUrl: string
 	private apiKey: string
 	private conversationId: string | null = null

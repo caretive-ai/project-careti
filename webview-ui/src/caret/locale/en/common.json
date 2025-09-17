@@ -10,10 +10,23 @@
 		"reject": "Reject",
 		"setupApiOrLocal": "Setup My API Key or Local LLM",
 		"notifyCaretAccount": "Notify Me for Caret Subscription",
-		"saveAndStart": "Save and Start"
+		"saveAndStart": "Save and Start",
+		"retry": "Retry",
+		"approve": "Approve",
+		"proceed": "Proceed",
+		"proceedAnyways": "Proceed Anyways",
+		"proceedWhileRunning": "Proceed While Running",
+		"resumeTask": "Resume Task",
+		"startNewTaskWithContext": "Start New Task with Context",
+		"condenseConversation": "Condense Conversation",
+		"reportGitHubIssue": "Report GitHub Issue"
 	},
 	"error": {
-		"generic": "An error occurred."
+		"generic": "An error occurred.",
+		"apiKeyRequired": "API key is required",
+		"openaiApiKeyRequired": "OpenAI API key is required",
+		"anthropicApiKeyRequired": "Anthropic API key is required",
+		"geminiApiKeyRequired": "Gemini API key is required"
 	},
 	"imageAlt": {
 		"caretBanner": "Caret Logo Banner"
@@ -52,7 +65,7 @@
 		"recentTasks": "Recent Tasks",
 		"noRecentTasks": "No recent tasks",
 		"viewAllHistory": "View all history",
-		"quickWinsTitle": "Quick <span>[Wins]</span> with Cline"
+		"quickWinsTitle": "Quick <span>[Wins]</span> with Caret"
 	},
 	"rules": {
 		"tab": {
@@ -157,7 +170,7 @@
 			"label": "AI Response Language",
 			"description": "The language that Caret should use for communication."
 		},
-		"": {
+		"modeSystem": {
 			"label": "Mode Settings",
 			"description": "Enable Caret mode settings to use Caret's Plan/Act modes.",
 			"options": {
@@ -300,13 +313,22 @@
 		"typeMessage": "Type a message...",
 		"typeTaskHere": "Type your task here...",
 		"cancel": "Cancel",
+		"addContext": "Add Context",
+		"addFilesImages": "Add Files/Images",
+		"selectModelApiProvider": "Select Model/API Provider",
+		"dismissQuote": "Dismiss Quote",
 		"apiRequestCancelled": "API Request Cancelled",
 		"apiStreamingFailed": "API Streaming Failed",
 		"apiRequest": "API Request",
 		"apiRequestFailed": "API Request Failed",
 		"apiRequestPending": "API Request...",
 		"errorBlockTitle": {
-			"apiRequest": "API Request"
+			"apiRequest": "API Request",
+			"apiRequestFailed": "API Request Failed"
+		},
+		"image": {
+			"dimensionError": "Image dimensions cannot exceed 7500px.",
+			"unsupportedFileError": "Unsupported file type. Only images can be dropped."
 		},
 		"caretWantsToCreateNewFile": "Caret wants to create a new file:",
 		"placeholderHint": "Type @ for context, / for slash commands and workflows, or drag and drop a file/image while holding Shift",
@@ -404,20 +426,24 @@
 		"browserActionApproval": "Browser Action Approval",
 		"unknownMessageType": "Unknown Message Type"
 	},
-	"taskHeader": {
-		"task": "Task",
-		"cache": "Cache",
-		"tokens": "Tokens",
-		"closeTask": "Close Task",
-		"seeMore": "See more",
-		"seeLess": "See less",
-		"promptTokens": "Prompt Tokens",
-		"completionTokens": "Completion Tokens",
-		"tokensWrittenToCache": "Tokens written to cache",
-		"tokensReadFromCache": "Tokens read from cache",
-		"disablingCheckpoints": "disabling checkpoints.",
-		"seeHereForInstructions": "See here for instructions."
-	},
+	"taskHeader.task": "Task",
+	"taskHeader.cache": "Cache",
+	"taskHeader.tokens": "Tokens",
+	"taskHeader.closeTask": "Close Task",
+	"taskHeader.seeMore": "See more",
+	"taskHeader.seeLess": "See less",
+	"taskHeader.promptTokens": "Prompt Tokens",
+	"taskHeader.completionTokens": "Completion Tokens",
+	"taskHeader.tokensWrittenToCache": "Tokens written to cache",
+	"taskHeader.tokensReadFromCache": "Tokens read from cache",
+	"taskHeader.disablingCheckpoints": "disabling checkpoints.",
+	"taskHeader.seeHereForInstructions": "See here for instructions.",
+	"taskHeader.currentTokens": "Current tokens used in this request",
+	"taskHeader.contextWindowUsage": "Context window usage",
+	"taskHeader.maxContextWindow": "Maximum context window size for this model",
+	"taskHeader.allStepsCompleted": "All {{totalCount}} steps completed!",
+	"taskHeader.newStepsGenerated": "New steps may be generated based on the conversation.",
+	"taskHeader.editFocusChainList": "Edit focus chain list",
 	"modelInfoView": {
 		"tokensSuffix": "/million tokens"
 	},
@@ -526,6 +552,10 @@
 	},
 	"validation": {
 		"invalidApiKey": "You must provide a valid API key or choose a different provider."
+	},
+	"apiKey": {
+		"placeholder": "Enter API Key...",
+		"helpText": "This key is stored locally and only used to make API requests from this extension."
 	},
 	"apiOptions": {
 		"apiProvider": "API Provider",
@@ -686,6 +716,12 @@
 		},
 		"joinUs": "Join us on",
 		"forMoreUpdates": "for more updates!"
+	},
+	"browserTool": {
+		"title": "Browser Tool",
+		"description": "Launch and interact with web browser",
+		"placeholder": "Enter URL...",
+		"launchButton": "Launch Browser"
 	},
 	"browser": {
 		"connectionInfo": "Browser connection info",

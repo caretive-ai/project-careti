@@ -44,7 +44,7 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 				placeholder={t("liteLlmProvider.baseUrlPlaceholder", "settings")}
 				style={{ width: "100%" }}
 				type="url">
-				<span style={{ fontWeight: 500 }}>{t("settings.baseUrlField.label", "settings")}</span>
+				<span style={{ fontWeight: 500 }}>{t("baseUrlField.label", "settings")}</span>
 			</DebouncedTextField>
 			<DebouncedTextField
 				initialValue={apiConfiguration?.liteLlmApiKey || ""}

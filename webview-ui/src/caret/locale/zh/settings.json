@@ -42,12 +42,12 @@
 		}
 	},
 	"settingsView": {
-		"title": "Caret Settings"
+		"title": "Caret 设置"
 	},
 	"tabs": {
 		"apiConfiguration": {
-			"name": "API Configuration",
-			"tooltip": "API Configuration",
+			"name": "API 配置",
+			"tooltip": "API 配置",
 			"header": "API Configuration"
 		},
 		"general": {
@@ -86,15 +86,41 @@
 	"actMode": "Act Mode",
 	"useDifferentModels": "Use different models for Plan and Act modes",
 	"useDifferentModelsDescription": "Switching between Plan and Act mode will persist the API and model used in the previous mode. This may be helpful e.g. when using a strong reasoning model to architect a plan for a cheaper coding model to act on.",
+	"theme": {
+		"dark": "深色主题",
+		"light": "浅色主题",
+		"auto": "自动主题"
+	},
+	"appearance": {
+		"fontSize": "字体大小",
+		"lineHeight": "行高",
+		"fontFamily": "字体系列"
+	},
+	"modelSelector": {
+		"label": "模型"
+	},
+	"pricing": {
+		"inputPrice": "输入价格: {{price}}/百万令牌",
+		"cacheReadPrice": "缓存读取价格: {{price}}/百万令牌",
+		"outputPriceStandard": "输出价格 (标准): {{price}}/百万令牌",
+		"outputPriceReasoning": "输出价格 (推理预算 > 0): {{price}}/百万令牌",
+		"contextWindow": "上下文窗口: {{size}}/百万令牌",
+		"perMillionTokens": "/百万令牌"
+	},
+	"modelInfo": {
+		"supportsImages": "支持图像",
+		"supportsBrowserUse": "支持浏览器使用",
+		"contextWindow": "上下文窗口: {{size}}"
+	},
+	"modeSystem": {
+		"label": "模式系统",
+		"description": "选择 Caret 或 Cline 模式。",
+		"options": {
+			"caret": "Caret",
+			"cline": "Cline"
+		}
+	},
 	"settings": {
-		"modeSystem": {
-			"label": "Mode System",
-			"description": "Select Caret or Caret mode.",
-			"options": {
-				"caret": "Caret",
-				"cline": "Caret"
-			}
-		},
 		"preferredLanguage": {
 			"label": "Preferred Language",
 			"description": "Select the language Caret should use for communication."
@@ -216,7 +242,6 @@
 		"screenshotAlt": "Browser screenshot",
 		"consoleLogs": "Console Logs",
 		"noNewLogs": "(No new logs)",
-		"paginationStep": "Step {{current}} / {{total}}",
 		"previousButton": "Previous",
 		"nextButton": "Next",
 		"sessionStarted": "Browser Session Started",
@@ -386,8 +411,6 @@
 		"placeholder": "Default: https://api.example.com"
 	},
 	"modelInfoView": {
-		"tokensSuffix": "tokens)",
-		"millionTokensLabel": "million tokens",
 		"inputPriceLabel": "Input price:",
 		"outputPriceStandardLabel": "Output price (Standard):",
 		"outputPriceThinkingBudgetLabel": "Output price (Thinking Budget > 0):",
@@ -395,10 +418,6 @@
 		"basedOnInputTokens": "(based on input tokens)",
 		"doesNotSupportImages": "Does not support images",
 		"supportsImages": "Supports images",
-		"doesNotSupportBrowserUse": "Does not support browser use",
-		"supportsBrowserUse": "Supports browser use",
-		"doesNotSupportPromptCaching": "Does not support prompt caching",
-		"supportsPromptCaching": "Supports prompt caching",
 		"contextWindowLabel": "Context Window:",
 		"cacheWritesPriceLabel": "Cache writes price:",
 		"cacheReadsPriceLabel": "Cache reads price:",
@@ -412,7 +431,13 @@
 		"supportsCache": "Supports prompt caching",
 		"contextWindow": "Context Window",
 		"cacheWritesPrice": "Cache writes price",
-		"cacheReadsPrice": "Cache reads price"
+		"cacheReadsPrice": "Cache reads price",
+		"supportsImagesLabel": "Supports images:",
+		"supportsComputerUseLabel": "Supports computer use:",
+		"supportsCacheLabel": "Supports prompt caching:",
+		"doesNotSupportImagesLabel": "Does not support images:",
+		"doesNotSupportComputerUseLabel": "Does not support computer use:",
+		"doesNotSupportCacheLabel": "Does not support prompt caching:"
 	},
 	"modelSelector": {
 		"label": "Model",
@@ -731,6 +756,19 @@
 		"linkText1": "1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,",
 		"linkText2": "2) install the Google Cloud CLI › configure Application Default Credentials."
 	},
+	"vertex": {
+		"modelName": "模型名称",
+		"instructions": "说明",
+		"contextWindow": "上下文窗口",
+		"maxTokens": "最大标记",
+		"safetySettings": "安全设置",
+		"temperature": "温度"
+	},
+	"claude": {
+		"systemPrompt": "系统提示",
+		"maxTokens": "最大标记",
+		"apiVersion": "API版本"
+	},
 	"vsCodeLmProvider": {
 		"languageModelLabel": "Language Model",
 		"selectModelPlaceholder": "Select a model...",
@@ -743,7 +781,6 @@
 		"name": "X AI",
 		"notePrefix": "Note:",
 		"noteText": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
-		"modifyReasoningEffortLabel": "Modify reasoning effort",
 		"reasoningEffortLabel": "Reasoning Effort",
 		"reasoningEffortDescription": "High effort may produce more thorough analysis but takes longer and uses more tokens.",
 		"providerName": "xAI",
@@ -787,45 +824,158 @@
 		"title": "API Configuration"
 	},
 	"providers": {
-		"caret": "Caret",
-		"openrouter": "OpenRouter",
-		"gemini": "Google Gemini",
-		"openai": "OpenAI Compatible",
-		"anthropic": "Anthropic",
-		"bedrock": "Amazon Bedrock",
-		"vscode-lm": "VS Code LM API",
-		"deepseek": "DeepSeek",
-		"openai-native": "OpenAI",
-		"ollama": "Ollama",
-		"vertex": "GCP Vertex AI",
-		"litellm": "LiteLLM",
-		"claude-code": "Claude Code",
-		"sapaicore": "SAP AI Core",
-		"mistral": "Mistral",
-		"zai": "Z AI",
-		"groq": "Groq",
-		"cerebras": "Cerebras",
-		"vercel-ai-gateway": "Vercel AI Gateway",
-		"baseten": "Baseten",
-		"requesty": "Requesty",
-		"fireworks": "Fireworks AI",
-		"together": "Together",
-		"qwen": "Alibaba Qwen",
-		"qwen-code": "Qwen Code",
-		"doubao": "Bytedance Doubao",
-		"lmstudio": "LM Studio",
-		"moonshot": "Moonshot",
-		"huggingface": "Hugging Face",
-		"nebius": "Nebius AI Studio",
-		"asksage": "AskSage",
-		"xai": "xAI",
-		"sambanova": "SambaNova",
-		"huawei-cloud-maas": "Huawei Cloud MaaS",
-		"dify": "Dify.ai",
-		"cline": "Caret"
+		"caret": {
+			"name": "Caret"
+		},
+		"openrouter": {
+			"name": "OpenRouter",
+			"description": "Access a wide variety of open-source and proprietary models with a single API key."
+		},
+		"gemini": {
+			"name": "Google Gemini",
+			"description": "Use the Google AI API to access Google's Gemini model family. Requires an API key."
+		},
+		"openai": {
+			"name": "OpenAI Compatible",
+			"description": "Connect to any model endpoint that is compatible with the OpenAI API."
+		},
+		"anthropic": {
+			"name": "Anthropic",
+			"description": "Use the Anthropic API to access the Claude model family directly. Requires an API key."
+		},
+		"bedrock": {
+			"name": "Amazon Bedrock",
+			"description": "Amazon Bedrock provides access to a wide range of foundation models from Amazon and leading AI startups."
+		},
+		"vscode-lm": {
+			"name": "VS Code LM API",
+			"description": "Use models provided by other extensions (e.g., GitHub Copilot) through the VS Code Language Model API."
+		},
+		"deepseek": {
+			"name": "DeepSeek",
+			"description": "DeepSeek develops open-source models with strong capabilities in code and mathematics."
+		},
+		"openai-native": {
+			"name": "OpenAI",
+			"description": "Access GPT models directly using OpenAI's official API. Requires an API key."
+		},
+		"ollama": {
+			"name": "Ollama",
+			"description": "Run models locally on your computer using Ollama. See their quickstart guide to get started."
+		},
+		"vertex": {
+			"name": "GCP Vertex AI",
+			"description": "Google Cloud Vertex AI offers a variety of AI models, including Google's state-of-the-art models."
+		},
+		"litellm": {
+			"name": "LiteLLM",
+			"description": "LiteLLM provides a unified interface to over 100 LLM APIs."
+		},
+		"claude-code": {
+			"name": "Claude Code",
+			"description": "Claude Code is a specialized model from Anthropic, optimized for code-related tasks."
+		},
+		"sapaicore": {
+			"name": "SAP AI Core",
+			"description": "SAP AI Core is a service for deploying and managing AI models within the SAP ecosystem."
+		},
+		"mistral": {
+			"name": "Mistral",
+			"description": "Mistral AI develops high-performance open-source and commercial models."
+		},
+		"zai": {
+			"name": "Z AI",
+			"description": "Zhipu AI provides bilingual (Chinese and English) conversational models."
+		},
+		"groq": {
+			"name": "Groq",
+			"description": "Groq offers extremely fast inference speeds through its Language Processing Units (LPUs)."
+		},
+		"cerebras": {
+			"name": "Cerebras",
+			"description": "Cerebras builds hardware for training and running large-scale AI models."
+		},
+		"vercel-ai-gateway": {
+			"name": "Vercel AI Gateway",
+			"description": "The Vercel AI Gateway provides a reliable connection to various model providers."
+		},
+		"baseten": {
+			"name": "Baseten",
+			"description": "Baseten is a platform for deploying and serving custom AI models."
+		},
+		"requesty": {
+			"name": "Requesty",
+			"description": "Requesty is a platform for AI-powered request routing and management."
+		},
+		"fireworks": {
+			"name": "Fireworks AI",
+			"description": "Fireworks AI is a platform for developers to experiment with and deploy generative AI models."
+		},
+		"together": {
+			"name": "Together",
+			"description": "Together AI provides a cloud platform for running leading open-source models."
+		},
+		"qwen": {
+			"name": "Alibaba Qwen",
+			"description": "Alibaba Qwen is a powerful large language model for various natural language processing tasks."
+		},
+		"qwen-code": {
+			"name": "Qwen Code",
+			"description": "Qwen Code is a specialized AI model from Alibaba for code generation and completion."
+		},
+		"doubao": {
+			"name": "Bytedance Doubao",
+			"description": "Doubao is a family of conversational AI models developed by Bytedance."
+		},
+		"lmstudio": {
+			"name": "LM Studio",
+			"description": "LM Studio allows you to discover, download, and run LLMs on your local machine."
+		},
+		"moonshot": {
+			"name": "Moonshot",
+			"description": "Moonshot AI specializes in models with long context windows."
+		},
+		"huggingface": {
+			"name": "Hugging Face",
+			"description": "Hugging Face provides inference APIs for a wide range of open-source models."
+		},
+		"nebius": {
+			"name": "Nebius AI Studio",
+			"description": "Nebius AI offers AI services based on Yandex's technology."
+		},
+		"asksage": {
+			"name": "AskSage",
+			"description": "AskSage provides AI models designed for research and academic use."
+		},
+		"xai": {
+			"name": "xAI",
+			"description": "xAI develops Grok, a large language model that aims to be truthful."
+		},
+		"sambanova": {
+			"name": "SambaNova",
+			"description": "SambaNova provides high-performance models for enterprise-grade AI applications."
+		},
+		"huawei-cloud-maas": {
+			"name": "Huawei Cloud MaaS",
+			"description": "Huawei Cloud MaaS (Model-as-a-Service) offers a variety of AI models."
+		},
+		"dify": {
+			"name": "Dify.ai",
+			"description": "Dify.ai is a platform for building and operating LLM-powered applications."
+		},
+		"cline": {
+			"name": "Caret",
+			"description": "Caret provides high-quality AI models with optimized performance for coding tasks."
+		}
 	},
 	"persona": {
 		"enablePersonaSystem": "Enable Persona System",
 		"description": "Enable the persona system to customize your AI assistant's personality and response style."
+	},
+	"about": {
+		"feedbackPrompt": "If you have any questions or feedback, we welcome it anytime.",
+		"version": "Version",
+		"title": "About",
+		"description": "Check the Caret version and view related information."
 	}
 }

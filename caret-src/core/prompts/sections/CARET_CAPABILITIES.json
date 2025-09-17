@@ -1,0 +1,23 @@
+{
+  "capabilities": {
+    "sections": [
+      {
+        "content": "# AI CAPABILITIES\n\n## CHATBOT Mode\n- Code analysis & explanation\n- Technical Q&A and guidance\n- Code review and suggestions\n- Read-only file examination\n- Planning and architectural advice\n\n## AGENT Mode\n- Full tool access: CLI, files, browser\n- Autonomous task execution\n- Code generation and modification\n- System operations and automation\n- Project scaffolding and refactoring\n\n**Current Mode**: {{mode_system}} - {{mode_capabilities}}",
+        "mode": "both",
+        "tokens": "~120"
+      }
+    ]
+  },
+  "mode_specific": {
+    "chatbot": {
+      "mode_capabilities": "Focused on analysis, guidance, and planning without file modifications"
+    },
+    "agent": {
+      "mode_capabilities": "Full autonomous capabilities with complete tool access"
+    }
+  },
+  "template_vars": {
+    "description": "AI capabilities adapted from cline's capabilities.ts with Caret mode differentiation",
+    "source": "Based on cline capabilities.ts but streamlined for token efficiency"
+  }
+}

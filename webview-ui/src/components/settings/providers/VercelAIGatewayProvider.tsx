@@ -120,7 +120,7 @@ export const VercelAIGatewayProvider = ({ showModelOptions, isPopup, currentMode
 				<>
 					{hasModels ? (
 						<ModelSelector
-							label={t("settings.modelSelector.label", "settings")}
+							label={t("modelSelector.label", "settings")}
 							models={vercelAiGatewayModels}
 							onChange={(e) => handleModelChange(e.target.value)}
 							selectedModelId={selectedModelId || ""}

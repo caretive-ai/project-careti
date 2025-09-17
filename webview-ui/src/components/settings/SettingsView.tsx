@@ -165,6 +165,9 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 					global: resetGlobalState,
 				}),
 			)
+
+			// CARET MODIFICATION: Caret-specific settings are handled by globalState
+			// enablePersonaSystem is managed through VS Code globalState, not localStorage
 		} catch (error) {
 			console.error("Failed to reset state:", error)
 		}

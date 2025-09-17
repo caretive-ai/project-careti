@@ -313,9 +313,14 @@ export class Controller {
 
 	async handleAuthCallback(customToken: string, provider: string | null = null) {
 		try {
-			await this.authService.handleAuthCallback(customToken, provider ? provider : "google")
+			// await this.authService.handleAuthCallback(customToken, provider ? provider : "google")
 
-			const _clineProvider: ApiProvider = "cline"
+			// const _clineProvider: ApiProvider = "cline"
+
+			// set the caret auth token in the state manager
+			if (customToken && provider === "caret") {
+				this.stateManager.setSecret("caretAuthToken", customToken)
+			}
 
 			// Get current settings to determine how to update providers
 			const planActSeparateModelsSetting = this.stateManager.getGlobalStateKey("planActSeparateModelsSetting")

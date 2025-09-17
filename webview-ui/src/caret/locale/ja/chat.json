@@ -65,6 +65,12 @@
 		},
 		"plan": {
 			"label": "計画"
+		},
+		"agent": {
+			"label": "Agent"
+		},
+		"chatbot": {
+			"label": "Chatbot"
 		}
 	},
 	"contextMenu": {
@@ -292,8 +298,8 @@
 	"brandMarketplace": {
 		"preparing": "{{brandName}} MCPマーケットプレイスを準備中。",
 		"preparingDescription": "{{brandName}}専用のMCPツールがまもなく利用可能になります。",
-		"codecenterPreparing": "CodeCenter MCPマーケットプレイスを準備中。",
-		"codecenterPreparingDescription": "CodeCenter専用のMCPツールがまもなく利用可能になります。"
+		"caretPreparing": "Caret MCPマーケットプレイスを準備中。",
+		"caretPreparingDescription": "Caret専用のMCPツールがまもなく利用可能になります。"
 	},
 	"installedServersView": {
 		"descriptionPart1": " ",

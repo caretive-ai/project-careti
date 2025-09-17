@@ -14,6 +14,7 @@
 		"resource": "리소스"
 	},
 	"taskCompleted": "작업 완료",
+	"seeNewChanges": "새 변경사항 보기",
 	"tool": {
 		"outsideWorkspace": "이 파일은 작업 공간 외부에 있습니다",
 		"editFile": "Caret이 이 파일을 편집하려고 합니다",
@@ -65,6 +66,12 @@
 		},
 		"plan": {
 			"label": "계획"
+		},
+		"agent": {
+			"label": "에이전트"
+		},
+		"chatbot": {
+			"label": "챗봇"
 		}
 	},
 	"contextMenu": {
@@ -177,9 +184,9 @@
 	"userMessage.restoreChatTooltip": "채팅만 이 체크포인트로 복원하고 편집된 메시지 보내기",
 
 	"markdownBlock": {
-		"clickToToggleActMode": "클릭하여 Act 모드로 전환",
-		"alreadyInActMode": "이미 Act 모드입니다",
-		"actModeShortcut": "Act 모드 (⌘⇧A)",
+		"clickToToggleActMode": "클릭하여 에이전트 모드로 전환",
+		"alreadyInActMode": "이미 에이전트 모드입니다",
+		"actModeShortcut": "에이전트 모드 (⌘⇧A)",
 		"copyCode": "코드 복사",
 		"openFileInEditor": "편집기에서 {{filePath}} 열기"
 	},
@@ -293,8 +300,8 @@
 	"brandMarketplace": {
 		"preparing": "{{brandName}} MCP 마켓플레이스가 준비 중입니다.",
 		"preparingDescription": "곧 {{brandName}} 전용 MCP 도구들을 만나보실 수 있습니다.",
-		"codecenterPreparing": "CodeCenter MCP 마켓플레이스가 준비 중입니다.",
-		"codecenterPreparingDescription": "곧 CodeCenter 전용 MCP 도구들을 만나보실 수 있습니다."
+		"caretPreparing": "Caret MCP 마켓플레이스가 준비 중입니다.",
+		"caretPreparingDescription": "곧 Caret 전용 MCP 도구들을 만나보실 수 있습니다."
 	},
 	"installedServersView": {
 		"descriptionPart1": " ",

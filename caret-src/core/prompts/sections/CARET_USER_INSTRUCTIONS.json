@@ -1,0 +1,19 @@
+{
+  "user_instructions": {
+    "sections": [
+      {
+        "content": "# USER INSTRUCTIONS\n\n## Custom Rules\n\nFollowing user-defined instructions from:\n- Global Caret rules (if present)\n- Local project rules (.caretrules/)\n- Language preferences\n- Ignore patterns\n\n## Processing Mode\n\n**CHATBOT Mode**: Acknowledge custom instructions, provide guidance on implementation.\n\n**AGENT Mode**: Follow custom instructions while maintaining tool use guidelines and safety protocols.\n\n**Instructions**: {{custom_instructions}}",
+        "mode": "both",
+        "tokens": "~100"
+      }
+    ]
+  },
+  "conditional": {
+    "show_when": "custom_instructions_present",
+    "fallback": "No custom user instructions provided."
+  },
+  "template_vars": {
+    "description": "User instruction processing adapted from cline's user_instructions.ts",
+    "supports": ["caret_rules", "cursor_rules", "winsurf_rules", "language_preferences"]
+  }
+}

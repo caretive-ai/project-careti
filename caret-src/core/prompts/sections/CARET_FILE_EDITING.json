@@ -1,0 +1,19 @@
+{
+  "file_editing": {
+    "sections": [
+      {
+        "content": "# FILE EDITING PROTOCOL\n\n## Tool Selection\n\n**replace_in_file**: Default for targeted edits. Safer, precise, efficient for small changes.\n\n**write_to_file**: Use for new files, major restructuring, or extensive changes.\n\n## AGENT Mode Guidelines\n- Full file operation access\n- Consider auto-formatting effects\n- Use SEARCH/REPLACE blocks carefully\n- Reference updated file state for subsequent edits\n\n## CHATBOT Mode Restrictions\n- Read-only file access\n- Can suggest edits but cannot execute\n- Analysis and planning only",
+        "mode": "both",
+        "tokens": "~130"
+      }
+    ]
+  },
+  "mode_restrictions": {
+    "chatbot": "Read-only access, suggest edits only",
+    "agent": "Full editing capabilities with both tools"
+  },
+  "template_vars": {
+    "description": "File editing guidelines adapted from cline's editing_files.ts with mode restrictions",
+    "source": "Based on cline editing_files.ts but condensed for Caret efficiency"
+  }
+}

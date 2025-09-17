@@ -64,7 +64,7 @@ export const MoonshotProvider = ({ showModelOptions, isPopup, currentMode }: Moo
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label={t("settings.modelSelector.label", "settings")}
+						label={t("modelSelector.label", "settings")}
 						models={moonshotModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

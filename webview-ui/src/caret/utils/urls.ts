@@ -27,28 +27,20 @@ export const CARET_URLS = {
  * 각 언어코드(ko, en, ja, zh)에 따라 다른 링크를 제공
  */
 export const CARET_LOCALIZED_URLS = {
-	// 교육 프로그램 링크
-	EDUCATION_PROGRAM: {
-		ko: "https://github.com/aicoding-caret/multi-post-agent/blob/main/docs/education-scenario.md#2-development-environment-setup-approximately-30-minutes",
-		en: "https://github.com/aicoding-caret/multi-post-agent/blob/main/docs/education-scenario.md#2-development-environment-setup-approximately-30-minutes",
-		ja: "https://github.com/aicoding-caret/multi-post-agent/blob/main/docs/education-scenario.md#2-development-environment-setup-approximately-30-minutes",
-		zh: "https://github.com/aicoding-caret/multi-post-agent/blob/main/docs/education-scenario.md#2-development-environment-setup-approximately-30-minutes",
-	},
-
 	// Gemini 크레딧 가이드
 	GEMINI_CREDIT_GUIDE: {
-		ko: "https://blog.naver.com/fstory97/223887376667",
-		en: "https://blog.naver.com/fstory97/223887376667",
-		ja: "https://blog.naver.com/fstory97/223887376667",
-		zh: "https://blog.naver.com/fstory97/223887376667",
+		ko: "https://github.com/aicoding-caret/caret/blob/main/caret-docs/posting/ko/gemini-credit-guide.ko.md",
+		en: "https://github.com/aicoding-caret/caret/blob/main/caret-docs/posting/en/gemini-credit-guide.en.md",
+		ja: "https://github.com/aicoding-caret/caret/blob/main/caret-docs/posting/ja/gemini-credit-guide.ja.md",
+		zh: "https://github.com/aicoding-caret/caret/blob/main/caret-docs/posting/zh/gemini-credit-guide.zh.md",
 	},
 
 	// Caret GitHub (README 언어별)
 	CARET_GITHUB_DETAILED: {
-		ko: "https://github.com/aicoding-caret/caret/blob/main/README.md",
-		en: "https://github.com/aicoding-caret/caret/blob/main/README.en.md",
-		ja: "https://github.com/aicoding-caret/caret/blob/main/README.en.md",
-		zh: "https://github.com/aicoding-caret/caret/blob/main/README.en.md",
+		ko: "https://github.com/aicoding-caret/caret/blob/main/README.ko.md",
+		en: "https://github.com/aicoding-caret/caret/blob/main/README.md",
+		ja: "https://github.com/aicoding-caret/caret/blob/main/README.ja.md",
+		zh: "https://github.com/aicoding-caret/caret/blob/main/README.zh.md",
 	},
 
 	// 이용약관 및 개인정보취급방침 (한국어 별도, 그 외 영어 기본)

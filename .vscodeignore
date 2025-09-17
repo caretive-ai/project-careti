@@ -16,6 +16,9 @@
 !assets/**
 !src/integrations/theme/default-themes/**
 
+# ✅ REQUIRED CARET SOURCE - Caret-specific extensions
+!caret-src/**
+
 # ✅ REQUIRED DEPENDENCIES - Codicons for VS Code
 !node_modules/@vscode/codicons/dist/codicon.css
 !node_modules/@vscode/codicons/dist/codicon.ttf

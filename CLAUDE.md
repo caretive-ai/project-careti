@@ -175,11 +175,37 @@ webview-ui/          # React frontend (Cline original, backup before changes)
 
 ### Caret-Specific Components
 - **Brand Management**: Dynamic branding system (Caret ↔ CodeCenter switching)
-- **Backend Message Processing**: OS notification and webview message branding
+- **Prompt System**: Dual prompt system switching (Caret AGENT MODE ↔ Cline ACT MODE)
+- **Frontend-Backend Communication**: **ALL communication MUST use gRPC** - NO custom message types
 - **Storage Patterns**: globalState vs workspaceState consistency
 - **Rule System**: JSON-based rules (`.caretrules/caret-rules.json`) with Korean docs
 
 ## Development Patterns
+
+### Frontend-Backend Communication
+**CRITICAL**: ALL frontend-backend communication MUST use gRPC protocol to maintain Cline code integrity:
+
+**✅ Correct - gRPC Method**:
+```typescript
+// Frontend
+import { CaretSystemServiceClient } from "@/services/grpc-client"
+const response = await CaretSystemServiceClient.SetPromptSystemMode({ mode: "caret" })
+
+// Backend - Add to proto/caret/*.proto, then implement handler
+export async function SetPromptSystemMode(controller: Controller, request: proto.caret.SetPromptSystemModeRequest)
+```
+
+**❌ Wrong - Custom Message Types**:
+```typescript
+// DON'T DO THIS - requires modifying Cline's WebviewMessage type
+vscode.postMessage({ type: 'custom/message', payload: data })
+```
+
+**Implementation Steps**:
+1. Define service in `proto/caret/*.proto`
+2. Run `npm run protos` to generate client/server code  
+3. Implement handler in `src/core/controller/[service]/`
+4. Use generated `*ServiceClient` in frontend
 
 ### Path Aliases
 The project uses TypeScript path aliases defined in `tsconfig.json`:
@@ -197,6 +223,13 @@ The project uses TypeScript path aliases defined in `tsconfig.json`:
 - **Line width**: 130 characters
 - **Semicolons**: As needed
 - **Quotes**: Double quotes for JSX, preference for consistency elsewhere
+
+### Logging Guidelines
+- **NEVER use console.log/warn/error** - Use Logger.debug/info/warn/error instead
+- **Debug logging**: `Logger.debug()` for development debugging (controlled by log level)
+- **Production logging**: `Logger.info()` for important events, `Logger.warn()` for warnings
+- **Error logging**: `Logger.error()` for actual errors that need attention
+- **Format**: Use consistent prefixes like `[ComponentName] 🎯 Message` for easy filtering
 
 ### Naming Conventions (Caret-Specific)
 - **Utilities**: kebab-case (`brand-utils.ts`)
@@ -271,11 +304,19 @@ The project uses protobuf for type-safe communication:
 - **globalSettings**: Use `globalState` (user-wide)
 - **Consistency Rule**: Save and load must use same storage type
 
-### Protocol Buffer Field Numbering (Caret Extensions)
+### Protocol Buffer Development Rules
 - **Caret Fields**: Use `current_cline_max + 1000` to avoid merge conflicts
 - **Example**: If Cline's last field is `72`, Caret uses `1072+`
 - **Location**: `proto/cline/models.proto` ModelsApiConfiguration message
 - **Comment Format**: `// CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)`
+
+### 🚨 CRITICAL: Generated Proto Code Modification Rules
+**NEVER directly edit generated proto files** - they are overwritten on every `npm run protos`:
+- ❌ **NEVER**: Edit `src/generated/**/*.ts` directly
+- ❌ **NEVER**: Edit `webview-ui/src/services/grpc-client.ts` directly
+- ✅ **ALWAYS**: Modify `scripts/build-proto.mjs` for fixes
+- ✅ **UPDATE**: `postProcessGeneratedFiles()` function for namespace/import fixes
+- **Example**: Add new Caret types to the replacement patterns in the script
 
 ### Testing Workflow
 ```bash

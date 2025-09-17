@@ -1,5 +1,26 @@
 // CARET MODIFICATION: Caret Account types - based on ClineAccount but for Caret API server
 
+export interface CaretUserInfo {
+	id: string
+	email: string
+	name?: string
+	displayName?: string
+	avatar?: string
+	credits?: number
+}
+
+export interface Balance {
+	currentBalance: number
+	currency: string
+}
+
+export interface UsageTransaction {
+	id: string
+	amount: number
+	description: string
+	createdAt: string
+}
+
 export interface CaretUserResponse {
 	id: string
 	email: string

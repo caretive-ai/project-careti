@@ -308,7 +308,7 @@ const paymentData = await service.fetchPaymentTransactionsRPC() // → GET /api/
 
 #### **🔧 빌드 시스템 자동화 (후처리 스크립트)**
 **문제**: Protocol Buffer 자동 생성이 기존 수정사항을 덮어씌우는 문제  
-**해결**: `scripts/build-proto.mjs`에 완전한 자동 후처리 시스템 구축
+**해결**: `caret-scripts/build/build-proto.mjs`에 완전한 자동 후처리 시스템 구축
 
 ```javascript
 // CARET MODIFICATION: 자동 후처리 시스템 구현

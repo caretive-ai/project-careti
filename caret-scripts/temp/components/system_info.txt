@@ -1,6 +1,0 @@
-SYSTEM INFORMATION
-
-Operating System: {{os}}
-Default Shell: {{shell}}
-Home Directory: {{homeDir}}
-Current Working Directory: {{workingDir}}

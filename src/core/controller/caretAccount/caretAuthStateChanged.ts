@@ -8,7 +8,7 @@ import * as proto from "@shared/proto/index"
  * Updates user info in global state
  */
 export async function caretAuthStateChanged(
-	controller: Controller,
+	_controller: Controller,
 	request: proto.caret.CaretAuthStateChangedRequest,
 ): Promise<proto.caret.CaretAuthState> {
 	console.log("[CARET-HANDLER] 🔄 Caret auth state changed:", {

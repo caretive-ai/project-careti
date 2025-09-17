@@ -1,13 +1,12 @@
 // CARET MODIFICATION: CaretAccountView integration test
 
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
-import React from "react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import type { CaretUser } from "@/context/ExtensionStateContext"
 import CaretAccountView from "../CaretAccountView"
 
 // Mock the CaretGlobalManager - create a simple mock since webview can't access @caret paths
-const mockCaretGlobalManager = {
+const _mockCaretGlobalManager = {
 	logout: vi.fn().mockResolvedValue(undefined),
 }
 

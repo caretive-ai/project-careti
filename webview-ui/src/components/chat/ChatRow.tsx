@@ -151,7 +151,8 @@ export const ChatRowContent = memo(
 		sendMessageFromChatRow,
 		onSetQuote,
 	}: ChatRowContentProps) => {
-		const { mcpServers, mcpMarketplaceCatalog, onRelinquishControl, apiConfiguration, modeSystem } = useExtensionState()
+		const { mcpServers, mcpMarketplaceCatalog, onRelinquishControl, apiConfiguration, modeSystem, enablePersonaSystem } =
+			useExtensionState()
 
 		// CARET MODIFICATION: Get persona profile from Caret context
 		const { personaProfile } = useCaretState()
@@ -1001,15 +1002,17 @@ export const ChatRowContent = memo(
 					case "text":
 						return (
 							<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-								<PersonaAvatar
-									isThinking={false}
-									personaProfile={personaProfile}
-									size={64}
-									style={{
-										marginTop: "2px",
-										flexShrink: 0,
-									}}
-								/>
+								{enablePersonaSystem && (
+									<PersonaAvatar
+										isThinking={false}
+										personaProfile={personaProfile}
+										size={64}
+										style={{
+											marginTop: "2px",
+											flexShrink: 0,
+										}}
+									/>
+								)}
 								<div style={{ flex: 1, minWidth: 0 }}>
 									<WithCopyButton
 										onMouseUp={handleMouseUp}
@@ -1033,15 +1036,17 @@ export const ChatRowContent = memo(
 					case "reasoning":
 						return (
 							<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-								<PersonaAvatar
-									isThinking={true}
-									personaProfile={personaProfile}
-									size={64}
-									style={{
-										marginTop: "2px",
-										flexShrink: 0,
-									}}
-								/>
+								{enablePersonaSystem && (
+									<PersonaAvatar
+										isThinking={true}
+										personaProfile={personaProfile}
+										size={64}
+										style={{
+											marginTop: "2px",
+											flexShrink: 0,
+										}}
+									/>
+								)}
 								<div style={{ flex: 1, minWidth: 0 }}>
 									{message.text && (
 										<div
@@ -1206,7 +1211,7 @@ export const ChatRowContent = memo(
 												width: "100%",
 											}}>
 											<i className="codicon codicon-new-file" style={{ marginRight: 6 }} />
-											See new changes
+											{t("seeNewChanges", "chat")}
 										</SuccessButton>
 									</div>
 								)}
@@ -1348,7 +1353,7 @@ export const ChatRowContent = memo(
 														cursor: seeNewChangesDisabled ? "wait" : "pointer",
 													}}
 												/>
-												See new changes
+												{t("seeNewChanges", "chat")}
 											</SuccessButton>
 										</div>
 									)}

@@ -24,14 +24,17 @@ export class CaretGlobalManager {
 	 * Initialize the singleton instance
 	 */
 	public static initialize(initialMode: CaretModeSystem = "caret"): CaretGlobalManager {
+		console.log(`[CaretGlobalManager] 🚀 Initializing with mode: ${initialMode}`)
 		if (CaretGlobalManager.instance) {
 			// Allow re-initialization to update mode
+			console.log(`[CaretGlobalManager] 📝 Re-initializing existing instance: ${CaretGlobalManager.instance._currentMode} → ${initialMode}`)
 			CaretGlobalManager.instance._currentMode = initialMode
 			return CaretGlobalManager.instance
 		}
 		
 		CaretGlobalManager.instance = new CaretGlobalManager()
 		CaretGlobalManager.instance._currentMode = initialMode
+		console.log(`[CaretGlobalManager] ✅ New instance created with mode: ${initialMode}`)
 		return CaretGlobalManager.instance
 	}
 
@@ -63,7 +66,9 @@ export class CaretGlobalManager {
 	}
 
 	public setCurrentMode(mode: CaretModeSystem): void {
+		console.log(`[CaretGlobalManager] 🔄 Mode switching: ${this._currentMode} → ${mode}`)
 		this._currentMode = mode
+		console.log(`[CaretGlobalManager] ✅ Mode switched successfully to: ${mode}`)
 	}
 
 	public getCurrentBrandName(): string {

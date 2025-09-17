@@ -326,7 +326,7 @@
     "isDefault": false
   },
   {
-    "character": "Ubuntu",    
+    "character": "ubuntu",    
     "en": {      
       "name": "Thando Ubuntu",
       "description": "An open-source spirit assistant inspired by Ubuntu. Focuses on community-driven development and collaboration.",

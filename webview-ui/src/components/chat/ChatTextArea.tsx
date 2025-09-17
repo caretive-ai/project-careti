@@ -21,7 +21,7 @@ import Tooltip from "@/components/common/Tooltip"
 import ApiOptions from "@/components/settings/ApiOptions"
 import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
+import { CaretSystemServiceClient, FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
 import {
 	ContextMenuOptionType,
 	getContextMenuOptionIndex,
@@ -281,7 +281,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		ref,
 	) => {
 		const { t } = useCaretI18n()
-		const { mode, apiConfiguration, openRouterModels, platform, localWorkflowToggles, globalWorkflowToggles } =
+		const { mode, apiConfiguration, openRouterModels, platform, localWorkflowToggles, globalWorkflowToggles, modeSystem } =
 			useExtensionState()
 		const [isTextAreaFocused, setIsTextAreaFocused] = useState(false)
 		const [isDraggingOver, setIsDraggingOver] = useState(false)
@@ -1044,6 +1044,27 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						},
 					}),
 				)
+
+				// CARET MODIFICATION: Synchronize Caret mode when using Caret system
+				if (modeSystem === "caret") {
+					try {
+						const newCaretMode = mode === "plan" ? "agent" : "chatbot"
+						console.log(`[ChatTextArea] Synchronizing Caret mode: plan/act ${mode} → Caret ${newCaretMode}`)
+
+						const caretResponse = await CaretSystemServiceClient.SetCaretMode({
+							mode: newCaretMode,
+						})
+
+						if (caretResponse.success) {
+							console.log(`[ChatTextArea] ✅ Caret mode synchronized: ${caretResponse.currentMode}`)
+						} else {
+							console.error(`[ChatTextArea] ❌ Failed to synchronize Caret mode: ${caretResponse.errorMessage}`)
+						}
+					} catch (error) {
+						console.error(`[ChatTextArea] ❌ Error synchronizing Caret mode:`, error)
+					}
+				}
+
 				// Focus the textarea after mode toggle with slight delay
 				setTimeout(() => {
 					if (response.value) {
@@ -1778,11 +1799,14 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						style={{ zIndex: 1000 }}
 						tipText={t("mode.tooltip.description", "chat", {
 							mode:
-								shownTooltipMode === "act" ? t("chat.mode.act.label", "chat") : t("chat.mode.plan.label", "chat"),
-							action:
 								shownTooltipMode === "act"
-									? t("chat.mode.act.action", "chat")
-									: t("chat.mode.plan.action", "chat"),
+									? modeSystem === "caret"
+										? t("mode.agent.label", "chat")
+										: t("mode.act.label", "chat")
+									: modeSystem === "caret"
+										? t("mode.chatbot.label", "chat")
+										: t("mode.plan.label", "chat"),
+							action: shownTooltipMode === "act" ? t("mode.act.action", "chat") : t("mode.plan.action", "chat"),
 						})}
 						visible={shownTooltipMode !== null}>
 						<SwitchContainer data-testid="mode-switch" disabled={false} onClick={onModeToggle}>
@@ -1793,7 +1817,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("plan")}
 								role="switch">
-								{t("chat.mode.plan.label", "chat")}
+								{modeSystem === "caret" ? t("mode.chatbot.label", "chat") : t("mode.plan.label", "chat")}
 							</SwitchOption>
 							<SwitchOption
 								aria-checked={mode === "act"}
@@ -1801,7 +1825,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("act")}
 								role="switch">
-								{t("chat.mode.act.label", "chat")}
+								{modeSystem === "caret" ? t("mode.agent.label", "chat") : t("mode.act.label", "chat")}
 							</SwitchOption>
 						</SwitchContainer>
 					</Tooltip>

@@ -286,28 +286,50 @@ function PersonaManagement() {
 
 1. **Caret 모드 시**: `modeSystem === "caret"`일 때 기본적으로 활성화
 2. **사용자 설정**: General Settings에서 "Enable Persona System" 토글 활성화
-3. **localStorage 지속성**: 사용자 설정이 브라우저 재시작 후에도 유지됨
+3. **globalState 지속성**: VS Code 전역 설정으로 영구 저장 및 모든 워크스페이스에서 공유
 
 ```typescript
-// ExtensionStateContext.tsx - 초기화 로직
-enablePersonaSystem: (() => {
-    try {
-        const stored = localStorage.getItem("caret-enablePersonaSystem")
-        return stored !== null ? JSON.parse(stored) : true // Caret 모드 기본값: true
-    } catch (error) {
-        console.warn("Failed to load persona system setting from localStorage:", error)
-        return true // 기본값: true
-    }
-})(),
+// 2025-09-10 업데이트: globalState로 완전 통합
+// ExtensionStateContext.tsx - 백엔드에서 가져온 값 사용
+enablePersonaSystem: true, // 기본값, 백엔드 globalState에서 override
+
+// 백엔드: VS Code globalState에서 관리
+context.globalState.get("enablePersonaSystem", true)
 ```
 
 ### **페르소나 시스템 활성화 UI 위치**
 
 - **경로**: Settings → General → Enable Persona System (Caret 모드에서만 표시)
-- **동기화**: 설정 변경 시 즉시 localStorage에 저장되어 세션 간 지속성 확보
+- **동기화**: 설정 변경 시 즉시 VS Code globalState에 저장되어 영구 지속성 확보
 - **조건부 표시**: Cline 모드에서는 숨김 처리
 
-## 🏆 **구현 완료 현황 (2025-09-05)**
+## 📦 **Storage 정책 (2025-09-10 업데이트)**
+
+### **State vs Storage 구분 원칙**
+
+페르소나 시스템은 데이터 특성에 따라 적절한 저장 방식을 사용합니다:
+
+#### **📊 State (설정값) → VS Code globalState**
+```typescript
+// 사용자 설정값들 - 작고 영구적인 데이터
+enablePersonaSystem: boolean          // 페르소나 시스템 활성화 토글
+selectedPersonaCharacter: string      // 선택된 페르소나 ID
+```
+
+#### **🖼️ Storage (파일데이터) → 적절한 저장소**  
+```typescript
+// 이미지 파일 - 큰 바이너리 데이터
+- persona.md: 파일시스템 (텍스트)
+- 아바타 이미지: window 변수 (Base64, CSP 준수)
+- 템플릿 이미지: assets/ 디렉토리 (정적 리소스)
+```
+
+#### **🔄 실시간 동기화 시스템**
+- **globalState**: 영구적 설정값 저장
+- **window 변수**: 웹뷰 내 이미지 공유 
+- **gRPC**: 백엔드-프론트엔드 상태 동기화
+
+## 🏆 **구현 완료 현황 (2025-09-10)**
 
 ### **✅ 완전히 구현된 핵심 기능들**
 

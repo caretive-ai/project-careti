@@ -22,6 +22,10 @@ import * as path from "path"
 export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 	private clineProvider: VscodeWebviewProvider
 	private disposables: vscode.Disposable[] = []
+	private _onDidReceiveMessage = new vscode.EventEmitter<any>()
+	public readonly onMessage = this._onDidReceiveMessage.event
+	private _onDidResolveWebviewView = new vscode.EventEmitter<vscode.WebviewView>()
+	public readonly onWebviewViewResolved = this._onDidResolveWebviewView.event
 
 	constructor(
 		private context: vscode.ExtensionContext,
@@ -41,6 +45,9 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 		Logger.info("[CaretProviderWrapper] Resolving webview view with Caret enhancements")
 
 		try {
+			// Emit our own resolve event
+			this._onDidResolveWebviewView.fire(webviewView)
+
 			// 1. First, let Cline handle the core webview setup
 			console.log("[CaretProviderWrapper] Calling Cline provider resolveWebviewView")
 			await this.clineProvider.resolveWebviewView(webviewView)
@@ -105,23 +112,21 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 			// Create window variables for each template image (caret-main pattern)
 			let imageInjectionScript = "\n"
 
-			const imageFiles = [
-				"caret.png",
-				"caret_thinking.png",
-				"caret_illust.png",
-				"sarang.png",
-				"sarang_thinking.png",
-				"sarang_illust.png",
-				"ichika.png",
-				"ichika_thinking.png",
-				"ichika_illust.png",
-				"cyan.png",
-				"cyan_thinking.png",
-				"cyan_illust.png",
-				"ubuntu.png",
-				"ubuntu_thinking.png",
-				"ubuntu_illust.png",
-			]
+			// Dynamically find all PNG files in template directory
+			let imageFiles: string[] = []
+			try {
+				const allFiles = await fs.readdir(templateDir)
+				imageFiles = allFiles.filter(file => file.endsWith('.png'))
+				console.log(`[CaretProviderWrapper] Found ${imageFiles.length} PNG files:`, imageFiles)
+			} catch (error) {
+				console.log(`[CaretProviderWrapper] Could not read template directory: ${error}`)
+				// Fallback to known files if directory read fails
+				imageFiles = [
+					"caret.png",
+					"caret_thinking.png", 
+					"caret_illust.png"
+				]
+			}
 
 			for (const file of imageFiles) {
 				const imagePath = path.join(templateDir, file)
@@ -179,6 +184,10 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 	 */
 	private setupCaretMessageHandling(webviewView: vscode.WebviewView): void {
 		const messageDisposable = webviewView.webview.onDidReceiveMessage(async (message) => {
+			Logger.debug(`[CaretProviderWrapper] Received message: ${JSON.stringify(message)}`)
+			
+			// Fire our own event
+			this._onDidReceiveMessage.fire(message)
 			try {
 				await this.handleCaretMessage(message, webviewView)
 			} catch (error) {
@@ -193,15 +202,18 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 	 * Handle Caret-specific messages
 	 */
 	private async handleCaretMessage(message: any, webviewView: vscode.WebviewView): Promise<void> {
+		Logger.debug(`[CaretProviderWrapper] Processing message type: ${message.type}`)
 		switch (message.type) {
 			case "caret_load_persona_image":
 				await this.handleLoadPersonaImage(message, webviewView)
 				break
 			default:
+				Logger.debug(`[CaretProviderWrapper] Passing message to Cline: ${message.type}`)
 				// Let Cline handle non-Caret messages
 				break
 		}
 	}
+
 
 	/**
 	 * Handle persona image loading requests

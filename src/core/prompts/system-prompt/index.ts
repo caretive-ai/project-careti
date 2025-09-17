@@ -1,4 +1,7 @@
+// CARET MODIFICATION: Import CaretGlobalManager and PromptSystemManager for dual mode support
+import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
 import { ApiProviderInfo } from "@/core/api"
+import { Logger } from "@/services/logging/Logger"
 import { ModelFamily } from "@/shared/prompts"
 import { PromptRegistry } from "./registry/PromptRegistry"
 import type { SystemPromptContext } from "./types"
@@ -33,8 +36,22 @@ export function getModelFamily(providerInfo: ApiProviderInfo): ModelFamily {
 
 /**
  * Get the system prompt by id
+ * CARET MODIFICATION: Support dual mode switching between Caret and Cline prompt systems
  */
 export async function getSystemPrompt(context: SystemPromptContext): Promise<string> {
-	const registry = PromptRegistry.getInstance()
-	return await registry.get(context)
+	// Check current mode to determine which prompt system to use
+	const currentMode = CaretGlobalManager.currentMode
+	Logger.debug(`[getSystemPrompt] Current mode: ${currentMode}`)
+
+	if (currentMode === "caret") {
+		// CARET MODIFICATION: Use Level 1 independent CaretPromptWrapper
+		Logger.debug(`[getSystemPrompt] Using independent CaretPromptWrapper`)
+		const { CaretPromptWrapper } = await import("@caret/core/prompts/CaretPromptWrapper")
+		return await CaretPromptWrapper.getCaretSystemPrompt(context)
+	} else {
+		// Use original Cline's PromptRegistry for ACT MODE (cline mode)
+		Logger.debug(`[getSystemPrompt] Using Cline PromptRegistry for ACT MODE`)
+		const registry = PromptRegistry.getInstance()
+		return await registry.get(context)
+	}
 }

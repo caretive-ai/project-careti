@@ -2098,7 +2098,7 @@ export class Task {
 					if (!checkpointsWarningShown) {
 						checkpointsWarningShown = true
 						this.taskState.checkpointTrackerErrorMessage =
-							"Checkpoints are taking longer than expected to initialize. Working in a large repository? Consider re-opening Cline in a project that uses git, or disabling checkpoints."
+							"Checkpoints are taking longer than expected to initialize. Working in a large repository? Consider re-opening Caret in a project that uses git, or disabling checkpoints."
 						await this.postStateToWebview()
 					}
 				}, 7_000)

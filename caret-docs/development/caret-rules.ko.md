@@ -144,6 +144,38 @@ Caret의 webview와 Extension Host 간 통신 표준 패턴:
 - **ai-feature**: [message-flow, tdd-cycle, verification-steps, storage-patterns]
 - **testing-work**: [tdd-cycle, verification-steps, naming-conventions]
 
+## 🚨 Protocol Buffer 개발 규칙
+
+### 핵심 원칙: 자동 생성 파일 직접 수정 금지
+
+**절대 직접 수정하면 안 되는 파일들** (`npm run protos`로 덮어씌워짐):
+- ❌ `src/generated/**/*.ts`
+- ❌ `webview-ui/src/services/grpc-client.ts`
+- ❌ `src/shared/proto/**/*.ts`
+
+### 올바른 수정 방법
+
+1. **네임스페이스/import 문제**: `scripts/build-proto.mjs`의 `postProcessGeneratedFiles()` 함수 수정
+2. **새로운 Caret 타입 추가**: 스크립트에 replacement 패턴 추가
+3. **필드 번호**: `current_cline_max + 1000` 규칙 사용
+
+### 예시: 새로운 Caret 서비스 타입 추가
+
+```javascript
+// scripts/build-proto.mjs의 postProcessGeneratedFiles() 함수에 추가
+content = content.replace(/cline\.SetCaretModeRequest/g, "caret.SetCaretModeRequest")
+content = content.replace(/cline\.SetCaretModeResponse/g, "caret.SetCaretModeResponse")
+content = content.replace(/cline\.GetCaretModeRequest/g, "caret.GetCaretModeRequest")
+content = content.replace(/cline\.GetCaretModeResponse/g, "caret.GetCaretModeResponse")
+```
+
+### 워크플로우
+
+1. `.proto` 파일 수정
+2. `scripts/build-proto.mjs` 업데이트 (필요한 경우)
+3. `npm run protos` 실행
+4. 컴파일 확인: `npm run check-types`
+
 ## TDD 단계
 
 - **단계 0**: 작업 성격에 대한 필수 문서 확인 (architecture/ai/frontend/ui/test/cline-mod)

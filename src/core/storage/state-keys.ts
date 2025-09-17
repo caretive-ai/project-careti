@@ -3,6 +3,7 @@ import { FocusChainSettings } from "@shared/FocusChainSettings"
 import { LanguageModelChatSelector } from "vscode"
 import { AutoApprovalSettings } from "@/shared/AutoApprovalSettings"
 import { BrowserSettings } from "@/shared/BrowserSettings"
+import { CaretUserInfo } from "@/shared/CaretAccount"
 import { ClineRulesToggles } from "@/shared/cline-rules"
 import { HistoryItem } from "@/shared/HistoryItem"
 import { McpDisplayMode } from "@/shared/McpDisplayMode"
@@ -163,11 +164,14 @@ export interface GlobalState {
 	// CARET MODIFICATION: Persona image storage for persona system
 	caret_persona_avatar: Buffer | undefined
 	caret_persona_thinking_avatar: Buffer | undefined
+	caretUserProfile: CaretUserInfo | undefined // Caret User Profile from profile api
 }
 
 export interface Secrets {
 	apiKey: string | undefined
 	clineAccountId: string | undefined
+	caretAuthToken: string | undefined // Caret Auth Token from auth api
+	caretApiKey: string | undefined // Caret API Key from profile api
 	openRouterApiKey: string | undefined
 	awsAccessKey: string | undefined
 	awsSecretKey: string | undefined

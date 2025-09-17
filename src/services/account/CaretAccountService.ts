@@ -125,6 +125,7 @@ export class CaretAccountService {
 
 			// Get user info first for userId
 			const userProfile = await this.apolloManager.getUserProfile()
+			console.error("<--CaretAccountService: fetchBalanceRPC: userProfile:", userProfile)
 			if (!userProfile) {
 				console.error("[CARET-ACCOUNT-SERVICE] ❌ No user profile for balance query")
 				return undefined
@@ -132,6 +133,7 @@ export class CaretAccountService {
 
 			// CARET MODIFICATION: Use Apollo Client for GraphQL query
 			const balance = await this.apolloManager.getCreditBalance()
+			console.error("<--CaretAccountService: fetchBalanceRPC: balance:", balance)
 
 			if (!balance) {
 				console.error("[CARET-ACCOUNT-SERVICE] ❌ No balance returned from GraphQL")

@@ -70,6 +70,7 @@ export class CaretApolloManager {
 		})
 
     const token = this.getAuthToken()
+    console.log("<--CaretApolloManager: initializeApolloClient: token:", token)
 
 		// 인증 미들웨어
 		const authMiddleware = new ApolloLink((operation, forward) => {
@@ -167,8 +168,8 @@ export class CaretApolloManager {
 				fetchPolicy: 'network-only'
 			})
 			
-			console.log("[CARET-APOLLO-MANAGER] ✅ Balance fetched:", data.balance.totalCredits)
-			return data.balance
+			console.log("[CARET-APOLLO-MANAGER] ✅ Balance fetched:", data.getCreditBalance.totalCredits)
+			return data.getCreditBalance
 		} catch (error) {
 			console.error("[CARET-APOLLO-MANAGER] ❌ Failed to fetch balance:", error)
 			return undefined
@@ -228,6 +229,7 @@ export const GET_CREDIT_BALANCE = gql`
       totalCredits
 			usedCredits
 			currency
+      updatedAt
 		}
 	}
 `

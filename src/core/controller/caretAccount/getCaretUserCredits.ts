@@ -22,58 +22,66 @@ export async function getCaretUserCredits(
 		// Fetch balance
 		console.log("[CARET-HANDLER] 💰 Fetching balance...")
 		const balanceResponse = await caretAccountService.fetchBalanceRPC()
+		console.log("<--CaretAccountService: getCaretUserCredits: balanceResponse:", balanceResponse)
 
 		// Fetch usage transactions
 		console.log("[CARET-HANDLER] 📈 Fetching usage transactions...")
-		const usageTransactions = (await caretAccountService.fetchUsageTransactionsRPC()) || []
+		// const usageTransactions = (await caretAccountService.fetchUsageTransactionsRPC()) || []
 
 		// Fetch payment transactions
 		console.log("[CARET-HANDLER] 💳 Fetching payment transactions...")
-		const paymentTransactions = (await caretAccountService.fetchPaymentTransactionsRPC()) || []
+		// const paymentTransactions = (await caretAccountService.fetchPaymentTransactionsRPC()) || []
 
-		console.log("[CARET-HANDLER] ✅ Successfully fetched all credits data:", {
-			balance: balanceResponse?.balance,
-			usageCount: usageTransactions.length,
-			paymentCount: paymentTransactions.length,
-		})
+		// console.log("[CARET-HANDLER] ✅ Successfully fetched all credits data:", {
+		// 	balance: balanceResponse?.balance,
+		// 	usageCount: usageTransactions.length,
+		// 	paymentCount: paymentTransactions.length,
+		// })
 
 		// Convert to proto format
 		const result: proto.caret.CaretUserCreditsData = {
+			// balance: {
+			// 	currentBalance: balanceResponse?.balance || 0,
+			// 	currency: balanceResponse?.currency,
+			// 	lastUpdated: balanceResponse?.lastUpdated,
+			// },
 			balance: {
 				currentBalance: balanceResponse?.balance || 0,
 				currency: balanceResponse?.currency,
-				lastUpdated: balanceResponse?.lastUpdated,
+				lastUpdated: balanceResponse?.updatedAt,
 			},
-			usageTransactions: usageTransactions.map((tx) => ({
-				aiInferenceProviderName: tx.aiInferenceProviderName,
-				aiModelName: tx.aiModelName,
-				aiModelTypeName: tx.aiModelTypeName,
-				completionTokens: tx.completionTokens,
-				costUsd: tx.costUsd,
-				createdAt: tx.createdAt,
-				creditsUsed: tx.creditsUsed,
-				generationId: tx.generationId,
-				id: tx.id,
-				metadata: tx.metadata || {},
-				organizationId: tx.organizationId,
-				promptTokens: tx.promptTokens,
-				totalTokens: tx.totalTokens,
-				userId: tx.userId,
-				model: tx.model,
-				cachedTokens: tx.cachedTokens,
-				totalCost: tx.totalCost,
-				timestamp: tx.timestamp,
-				taskId: tx.taskId,
-			})),
-			paymentTransactions: paymentTransactions.map((tx) => ({
-				paidAt: tx.paidAt,
-				creatorId: tx.creatorId,
-				amountCents: tx.amountCents,
-				credits: tx.credits,
-				currency: tx.currency,
-				paymentMethod: tx.paymentMethod,
-				transactionId: tx.transactionId,
-			})),
+			usageTransactions: [],
+			paymentTransactions: [],
+			// usageTransactions: usageTransactions.map((tx) => ({
+			// 	aiInferenceProviderName: tx.aiInferenceProviderName,
+			// 	aiModelName: tx.aiModelName,
+			// 	aiModelTypeName: tx.aiModelTypeName,
+			// 	completionTokens: tx.completionTokens,
+			// 	costUsd: tx.costUsd,
+			// 	createdAt: tx.createdAt,
+			// 	creditsUsed: tx.creditsUsed,
+			// 	generationId: tx.generationId,
+			// 	id: tx.id,
+			// 	metadata: tx.metadata || {},
+			// 	organizationId: tx.organizationId,
+			// 	promptTokens: tx.promptTokens,
+			// 	totalTokens: tx.totalTokens,
+			// 	userId: tx.userId,
+			// 	model: tx.model,
+			// 	cachedTokens: tx.cachedTokens,
+			// 	totalCost: tx.totalCost,
+			// 	timestamp: tx.timestamp,
+			// 	taskId: tx.taskId,
+			// })),
+			// paymentTransactions: paymentTransactions.map((tx) => ({
+			// 	paidAt: tx.paidAt,
+			// 	creatorId: tx.creatorId,
+			// 	amountCents: tx.amountCents,
+			// 	credits: tx.credits,
+			// 	currency: tx.currency,
+			// 	paymentMethod: tx.paymentMethod,
+			// 	transactionId: tx.transactionId,
+			// })),
 		}
 
 		return result

@@ -47,7 +47,7 @@ export interface CaretBalanceResponse {
 	userId: string
 	// CARET MODIFICATION: Additional Caret-specific fields
 	currency?: string
-	lastUpdated?: string
+	updatedAt?: string
 }
 
 export interface CaretUsageTransaction {

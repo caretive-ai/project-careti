@@ -69,8 +69,8 @@ const CaretAccountView = memo(({ caretUser }: CaretAccountViewProps) => {
 	// Fetch balance on mount
 	useEffect(() => {
 		caretWebviewLogger.info("[CARET-ACCOUNT-VIEW] 🎯 Component mounted, fetching initial data via gRPC")
-		fetchCaretCredit()
-	}, [fetchCaretCredit])
+		// fetchCaretCredit()
+	}, [])
 
 	const handleLogout = useCallback(async () => {
 		caretWebviewLogger.info("[CARET-ACCOUNT-VIEW] 🚪 User logout requested via gRPC")

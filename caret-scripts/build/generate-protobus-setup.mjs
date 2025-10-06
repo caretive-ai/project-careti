@@ -171,11 +171,13 @@ async function generateStandaloneProtobusServiceSetup(protobusServices) {
 				"SetPromptSystemModeRequest",
 				"GetPromptSystemModeRequest",
 			]
+			// CARET MODIFICATION: Add CaretUserProfile to ensure it's correctly namespaced as 'caret' instead of 'cline'.
 			const caretResponseTypes = [
 				"PersonaProfile",
 				"PersonaImages",
 				"SetPromptSystemModeResponse",
 				"GetPromptSystemModeResponse",
+				"CaretUserProfile",
 			]
 
 			const requestType = caretRequestTypes.includes(rpc.requestType.type.name)

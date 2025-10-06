@@ -109,6 +109,17 @@ git log upstream/main --oneline --grep="GPT-5" | head -3
 git cherry-pick <commit-hash-1> <commit-hash-2> <commit-hash-3>
 ```
 
+## 🚨 **대규모 병합 실패 시 긴급 복구 체크리스트 (Triage Checklist)**
+
+대규모 컴파일 에러 발생 시, 실제 원인은 예상과 다른 곳에 있을 수 있다. 다음 체크리스트를 통해 '신기루 효과'에 빠지지 않고 근본 원인을 신속하게 진단한다.
+
+- [ ] **1. 핵심 통합 파일 손상 확인**: `host-provider.ts`와 같이 Caret이 직접 수정하는 핵심 파일이 Cline 원본(`cline-latest`)과 다른지 `diff`로 즉시 비교한다.
+  - **교훈**: 단일 핵심 파일의 잘못된 수정이 마치 전역적인 API 변경처럼 보이는 '신기루 효과'를 일으킬 수 있다.
+- [ ] **2. Cline 원본 빌드 확인**: `cline-latest` 디렉토리에서 `npm run compile`을 실행하여 Upstream 자체의 안정성을 먼저 검증한다.
+- [ ] **3. 에러 패턴 분석**: 에러 로그를 통해 문제가 소수의 핵심 파일에 집중되는지, 아니면 다수의 `services` 파일에 광범위하게 분포하는지 패턴을 분석한다.
+
+---
+
 ## 🔄 **머징 전략 결정 플로우차트**
 
 ```mermaid

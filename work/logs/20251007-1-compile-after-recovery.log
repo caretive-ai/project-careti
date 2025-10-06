@@ -1,0 +1,795 @@
+# Compile Result after Emergency Recovery (Phase 0)
+
+- Date: 2025-10-07
+- Action: Restored `src/hosts/host-provider.ts` from `cline-latest`.
+- Result: Compile errors reduced from a catastrophic state to a manageable 121 type errors across 41 files.
+
+This confirms that the incorrect modification of `host-provider.ts` was the primary cause of the massive compilation failure. The remaining errors are standard merge conflicts and API signature mismatches that can be addressed systematically.
+
+## Full Error Log
+
+src/common.ts:51:66 - error TS2554: Expected 0 arguments, but got 1.
+
+51  const sidebarWebview = HostProvider.get().createWebviewProvider(WebviewProviderType.SIDEBAR)
+                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/core/commands/reconstructTaskHistory.ts:117:8 - error TS2554: Expected 2 arguments, but got 1.
+
+117  await writeTaskHistoryToState(reconstructedItems)
+           ~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/core/storage/disk.ts:241:81
+    241 export async function writeTaskHistoryToState(context: vscode.ExtensionContext, items: HistoryItem[]): Promise<void> {
+                                                                                        ~~~~~~~~~~~~~~~~~~~~
+    An argument for 'items' was not provided.
+
+src/core/commands/reconstructTaskHistory.ts:124:33 - error TS2554: Expected 1 arguments, but got 0.
+
+124   const existingHistory = await readTaskHistoryFromState()
+                                    ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/core/storage/disk.ts:228:48
+    228 export async function readTaskHistoryFromState(context: vscode.ExtensionContext): Promise<HistoryItem[]> {
+                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    An argument for 'context' was not provided.
+
+src/core/commands/reconstructTaskHistory.ts:156:31 - error TS2554: Expected 2 arguments, but got 1.
+
+156   const clineMessages = await getSavedClineMessages(taskId)
+                                  ~~~~~~~~~~~~~~~~~~~~~
+
+  src/core/storage/disk.ts:165:79
+    165 export async function getSavedClineMessages(context: vscode.ExtensionContext, taskId: string): Promise<ClineMessage[]> {
+                                                                                      ~~~~~~~~~~~~~~
+    An argument for 'taskId' was not provided.
+
+src/core/commands/reconstructTaskHistory.ts:162:26 - error TS2554: Expected 2 arguments, but got 1.
+
+162   const metadata = await getTaskMetadata(taskId)
+                             ~~~~~~~~~~~~~~~
+
+  src/core/storage/disk.ts:191:73
+    191 export async function getTaskMetadata(context: vscode.ExtensionContext, taskId: string): Promise<TaskMetadata> {
+                                                                                ~~~~~~~~~~~~~~
+    An argument for 'taskId' was not provided.
+
+src/core/controller/account/getRedirectUrl.ts:9:38 - error TS2339: Property 'getIdeRedirectUri' does not exist on type 'EnvServiceClientInterface'.
+
+9  const url = (await HostProvider.env.getIdeRedirectUri({})).value
+                                       ~~~~~~~~~~~~~~~~~
+
+src/core/controller/account/openrouterAuthClicked.ts:10:47 - error TS2551: Property 'getCallbackUri' does not exist on type 'HostProvider'. Did you mean 'getCallbackUrl'?
+
+10  const callbackUri = await HostProvider.get().getCallbackUri()
+                                                 ~~~~~~~~~~~~~~
+
+  src/hosts/host-provider.ts:28:2
+    28  getCallbackUrl: () => Promise<string>
+        ~~~~~~~~~~~~~~
+    'getCallbackUrl' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:2:10 - error TS2724: '"@shared/proto/cline/models"' has no exported member named 'OcaCompatibleModelInfo'. Did you mean 'OpenAiCompatibleModelInfo'?
+
+2 import { OcaCompatibleModelInfo, OcaModelInfo } from "@shared/proto/cline/models"
+           ~~~~~~~~~~~~~~~~~~~~~~
+
+  src/shared/proto/cline/models.ts:1870:14
+    1870 export const OpenAiCompatibleModelInfo: MessageFns<OpenAiCompatibleModelInfo> = {
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~
+    'OpenAiCompatibleModelInfo' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:2:34 - error TS2724: '"@shared/proto/cline/models"' has no exported member named 'OcaModelInfo'. Did you mean 'CaretModelInfo'?
+
+2 import { OcaCompatibleModelInfo, OcaModelInfo } from "@shared/proto/cline/models"
+                                   ~~~~~~~~~~~~
+
+  src/shared/proto/cline/models.ts:2156:14
+    2156 export const CaretModelInfo: MessageFns<CaretModelInfo> = {
+                      ~~~~~~~~~~~~~~
+    'CaretModelInfo' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:82:65 - error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalStateKey'?
+
+82    const planActSeparateModelsSetting = controller.stateManager.getGlobalSettingsKey("planActSeparateModelsSetting")
+                                                                   ~~~~~~~~~~~~~~~~~~~~
+
+  src/core/storage/StateManager.ts:500:2
+    500  getGlobalStateKey<K extends keyof GlobalState>(key: K): GlobalState[K] {
+         ~~~~~~~~~~~~~~~~~
+    'getGlobalStateKey' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:83:48 - error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalStateKey'?
+
+83    const currentMode = controller.stateManager.getGlobalSettingsKey("mode")
+                                                  ~~~~~~~~~~~~~~~~~~~~
+
+  src/core/storage/StateManager.ts:500:2
+    500  getGlobalStateKey<K extends keyof GlobalState>(key: K): GlobalState[K] {
+         ~~~~~~~~~~~~~~~~~
+    'getGlobalStateKey' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:85:23 - error TS2551: Property 'planModeOcaModelId' does not exist on type 'ApiConfiguration'. Did you mean 'planModeApiModelId'?
+
+85     apiConfiguration?.planModeOcaModelId && models[apiConfiguration.planModeOcaModelId]
+                         ~~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:124:2
+    124  planModeApiModelId?: string
+         ~~~~~~~~~~~~~~~~~~
+    'planModeApiModelId' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:85:69 - error TS2551: Property 'planModeOcaModelId' does not exist on type 'ApiConfiguration'. Did you mean 'planModeApiModelId'?
+
+85     apiConfiguration?.planModeOcaModelId && models[apiConfiguration.planModeOcaModelId]
+                                                                       ~~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:124:2
+    124  planModeApiModelId?: string
+         ~~~~~~~~~~~~~~~~~~
+    'planModeApiModelId' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:86:25 - error TS2551: Property 'planModeOcaModelId' does not exist on type 'ApiConfiguration'. Did you mean 'planModeApiModelId'?
+
+86      ? apiConfiguration.planModeOcaModelId
+                           ~~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:124:2
+    124  planModeApiModelId?: string
+         ~~~~~~~~~~~~~~~~~~
+    'planModeApiModelId' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:89:23 - error TS2551: Property 'actModeOcaModelId' does not exist on type 'ApiConfiguration'. Did you mean 'actModeApiModelId'?
+
+89     apiConfiguration?.actModeOcaModelId && models[apiConfiguration.actModeOcaModelId]
+                         ~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:157:2
+    157  actModeApiModelId?: string
+         ~~~~~~~~~~~~~~~~~
+    'actModeApiModelId' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:89:68 - error TS2551: Property 'actModeOcaModelId' does not exist on type 'ApiConfiguration'. Did you mean 'actModeApiModelId'?
+
+89     apiConfiguration?.actModeOcaModelId && models[apiConfiguration.actModeOcaModelId]
+                                                                      ~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:157:2
+    157  actModeApiModelId?: string
+         ~~~~~~~~~~~~~~~~~
+    'actModeApiModelId' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:90:25 - error TS2551: Property 'actModeOcaModelId' does not exist on type 'ApiConfiguration'. Did you mean 'actModeApiModelId'?
+
+90      ? apiConfiguration.actModeOcaModelId
+                           ~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:157:2
+    157  actModeApiModelId?: string
+         ~~~~~~~~~~~~~~~~~
+    'actModeApiModelId' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:96:20 - error TS2551: Property 'planModeOcaModelId' does not exist on type '{ apiKey?: string | undefined; clineAccountId?: string | undefined; ulid?: string | undefined; liteLlmBaseUrl?: string | undefined; liteLlmApiKey?: string | undefined; liteLlmUsePromptCache?: boolean | undefined; ... 136 more ...; favoritedModelIds?: string[] | undefined; }'. Did you mean 'planModeApiModelId'?
+
+96      updatedConfig.planModeOcaModelId = planModeSelectedModelId
+                      ~~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:124:2
+    124  planModeApiModelId?: string
+         ~~~~~~~~~~~~~~~~~~
+    'planModeApiModelId' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:97:20 - error TS2551: Property 'planModeOcaModelInfo' does not exist on type '{ apiKey?: string | undefined; clineAccountId?: string | undefined; ulid?: string | undefined; liteLlmBaseUrl?: string | undefined; liteLlmApiKey?: string | undefined; liteLlmUsePromptCache?: boolean | undefined; ... 136 more ...; favoritedModelIds?: string[] | undefined; }'. Did you mean 'planModeCaretModelInfo'?
+
+97      updatedConfig.planModeOcaModelInfo = models[planModeSelectedModelId]
+                      ~~~~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:139:2
+    139  planModeCaretModelInfo?: ModelInfo // caret
+         ~~~~~~~~~~~~~~~~~~~~~~
+    'planModeCaretModelInfo' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:99:20 - error TS2551: Property 'actModeOcaModelId' does not exist on type '{ apiKey?: string | undefined; clineAccountId?: string | undefined; ulid?: string | undefined; liteLlmBaseUrl?: string | undefined; liteLlmApiKey?: string | undefined; liteLlmUsePromptCache?: boolean | undefined; ... 136 more ...; favoritedModelIds?: string[] | undefined; }'. Did you mean 'actModeApiModelId'?
+
+99      updatedConfig.actModeOcaModelId = actModeSelectedModelId
+                      ~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:157:2
+    157  actModeApiModelId?: string
+         ~~~~~~~~~~~~~~~~~
+    'actModeApiModelId' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:100:20 - error TS2551: Property 'actModeOcaModelInfo' does not exist on type '{ apiKey?: string | undefined; clineAccountId?: string | undefined; ulid?: string | undefined; liteLlmBaseUrl?: string | undefined; liteLlmApiKey?: string | undefined; liteLlmUsePromptCache?: boolean | undefined; ... 136 more ...; favoritedModelIds?: string[] | undefined; }'. Did you mean 'actModeCaretModelInfo'?
+
+100      updatedConfig.actModeOcaModelInfo = models[actModeSelectedModelId]
+                       ~~~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:172:2
+    172  actModeCaretModelInfo?: ModelInfo // caret
+         ~~~~~~~~~~~~~~~~~~~~~
+    'actModeCaretModelInfo' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:103:19 - error TS2551: Property 'planModeOcaModelId' does not exist on type '{ apiKey?: string | undefined; clineAccountId?: string | undefined; ulid?: string | undefined; liteLlmBaseUrl?: string | undefined; liteLlmApiKey?: string | undefined; liteLlmUsePromptCache?: boolean | undefined; ... 136 more ...; favoritedModelIds?: string[] | undefined; }'. Did you mean 'planModeApiModelId'?
+
+103     updatedConfig.planModeOcaModelId = planModeSelectedModelId
+                      ~~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:124:2
+    124  planModeApiModelId?: string
+         ~~~~~~~~~~~~~~~~~~
+    'planModeApiModelId' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:104:19 - error TS2551: Property 'planModeOcaModelInfo' does not exist on type '{ apiKey?: string | undefined; clineAccountId?: string | undefined; ulid?: string | undefined; liteLlmBaseUrl?: string | undefined; liteLlmApiKey?: string | undefined; liteLlmUsePromptCache?: boolean | undefined; ... 136 more ...; favoritedModelIds?: string[] | undefined; }'. Did you mean 'planModeCaretModelInfo'?
+
+104     updatedConfig.planModeOcaModelInfo = models[planModeSelectedModelId]
+                      ~~~~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:139:2
+    139  planModeCaretModelInfo?: ModelInfo // caret
+         ~~~~~~~~~~~~~~~~~~~~~~
+    'planModeCaretModelInfo' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:105:19 - error TS2551: Property 'actModeOcaModelId' does not exist on type '{ apiKey?: string | undefined; clineAccountId?: string | undefined; ulid?: string | undefined; liteLlmBaseUrl?: string | undefined; liteLlmApiKey?: string | undefined; liteLlmUsePromptCache?: boolean | undefined; ... 136 more ...; favoritedModelIds?: string[] | undefined; }'. Did you mean 'actModeApiModelId'?
+
+105     updatedConfig.actModeOcaModelId = actModeSelectedModelId
+                      ~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:157:2
+    157  actModeApiModelId?: string
+         ~~~~~~~~~~~~~~~~~
+    'actModeApiModelId' is declared here.
+
+src/core/controller/models/refreshOcaModels.ts:106:19 - error TS2551: Property 'actModeOcaModelInfo' does not exist on type '{ apiKey?: string | undefined; clineAccountId?: string | undefined; ulid?: string | undefined; liteLlmBaseUrl?: string | undefined; liteLlmApiKey?: string | undefined; liteLlmUsePromptCache?: boolean | undefined; ... 136 more ...; favoritedModelIds?: string[] | undefined; }'. Did you mean 'actModeCaretModelInfo'?
+
+106     updatedConfig.actModeOcaModelInfo = models[actModeSelectedModelId]
+                      ~~~~~~~~~~~~~~~~~~~
+
+  src/shared/api.ts:172:2
+    172  actModeCaretModelInfo?: ModelInfo // caret
+         ~~~~~~~~~~~~~~~~~~~~~
+    'actModeCaretModelInfo' is declared here.
+
+src/core/controller/ocaAccount/ocaAccountLogoutClicked.ts:12:19 - error TS2551: Property 'handleOcaSignOut' does not exist on type 'Controller'. Did you mean 'handleSignOut'?
+
+12  await controller.handleOcaSignOut()
+                     ~~~~~~~~~~~~~~~~
+
+  src/core/controller/index.ts:131:8
+    131  async handleSignOut() {
+               ~~~~~~~~~~~~~
+    'handleSignOut' is declared here.
+
+src/core/controller/state/getProcessInfo.ts:2:10 - error TS2305: Module '"@shared/proto/cline/state"' has no exported member 'ProcessInfo'.
+
+2 import { ProcessInfo } from "@shared/proto/cline/state"
+           ~~~~~~~~~~~
+
+src/core/controller/state/updateInfoBannerVersion.ts:13:41 - error TS2345: Argument of type '"lastDismissedInfoBannerVersion"' is not assignable to parameter of type 'keyof GlobalState'.
+
+13  controller.stateManager.setGlobalState("lastDismissedInfoBannerVersion", version)
+                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/core/controller/state/updateModelBannerVersion.ts:13:41 - error TS2345: Argument of type '"lastDismissedModelBannerVersion"' is not assignable to parameter of type 'keyof GlobalState'.
+
+13  controller.stateManager.setGlobalState("lastDismissedModelBannerVersion", version)
+                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/core/locks/SqliteLockManager.ts:1:22 - error TS2307: Cannot find module 'better-sqlite3' or its corresponding type declarations.
+
+1 import Database from "better-sqlite3"
+                       ~~~~~~~~~~~~~~~~
+
+src/core/task/focus-chain/index.ts:97:52 - error TS2339: Property 'watch' does not exist on type 'typeof HostProvider'.
+
+97    this.focusChainFileWatcherCancel = HostProvider.watch.subscribeToFile(
+                                                      ~~~~~
+
+src/core/task/focus-chain/index.ts:102:25 - error TS7006: Parameter 'response' implicitly has an 'any' type.
+
+102      onResponse: async (response) => {
+                            ~~~~~~~~
+
+src/core/task/focus-chain/index.ts:116:16 - error TS7006: Parameter 'error' implicitly has an 'any' type.
+
+116      onError: (error) => {
+                   ~~~~~
+
+src/core/workspace/detection.ts:4:34 - error TS2305: Module '"@/utils/git"' has no exported member 'isGitRepository'.
+
+4 import { getLatestGitCommitHash, isGitRepository } from "@/utils/git"
+                                   ~~~~~~~~~~~~~~~
+
+src/core/workspace/multi-root-utils.ts:16:53 - error TS2345: Argument of type '"multiRootEnabled"' is not assignable to parameter of type 'keyof GlobalState'.
+
+16  const userSetting = stateManager.getGlobalStateKey("multiRootEnabled")
+                                                       ~~~~~~~~~~~~~~~~~~
+
+src/core/workspace/setup.ts:48:32 - error TS2345: Argument of type '"workspaceRoots"' is not assignable to parameter of type 'keyof GlobalState'.
+
+48    stateManager.setGlobalState("workspaceRoots", manager.getRoots())
+                                  ~~~~~~~~~~~~~~~~
+
+src/core/workspace/setup.ts:49:32 - error TS2345: Argument of type '"primaryRootIndex"' is not assignable to parameter of type 'keyof GlobalState'.
+
+49    stateManager.setGlobalState("primaryRootIndex", manager.getPrimaryIndex())
+                                  ~~~~~~~~~~~~~~~~~~
+
+src/core/workspace/setup.ts:87:31 - error TS2345: Argument of type '"workspaceRoots"' is not assignable to parameter of type 'keyof GlobalState'.
+
+87   stateManager.setGlobalState("workspaceRoots", roots)
+                                 ~~~~~~~~~~~~~~~~
+
+src/core/workspace/setup.ts:88:31 - error TS2345: Argument of type '"primaryRootIndex"' is not assignable to parameter of type 'keyof GlobalState'.
+
+88   stateManager.setGlobalState("primaryRootIndex", manager.getPrimaryIndex())
+                                 ~~~~~~~~~~~~~~~~~~
+
+src/core/workspace/setup.ts:98:31 - error TS2345: Argument of type '"workspaceRoots"' is not assignable to parameter of type 'keyof GlobalState'.
+
+98   stateManager.setGlobalState("workspaceRoots", roots)
+                                 ~~~~~~~~~~~~~~~~
+
+src/core/workspace/setup.ts:99:31 - error TS2345: Argument of type '"primaryRootIndex"' is not assignable to parameter of type 'keyof GlobalState'.
+
+99   stateManager.setGlobalState("primaryRootIndex", manager.getPrimaryIndex())
+                                 ~~~~~~~~~~~~~~~~~~
+
+src/core/workspace/utils/workspace-detection.ts:21:73 - error TS2559: Type 'EmptyRequest' has no properties in common with type 'GetWorkspacePathsRequest'.
+
+21   const workspacePaths = await HostProvider.workspace.getWorkspacePaths(EmptyRequest.create({}))
+                                                                           ~~~~~~~~~~~~~~~~~~~~~~~
+
+src/extension.ts:169:63 - error TS2554: Expected 0 arguments, but got 1.
+
+169   const tabWebview = HostProvider.get().createWebviewProvider(WebviewProviderType.TAB) as VscodeWebviewProvider
+                                                                  ~~~~~~~~~~~~~~~~~~~~~~~
+
+src/extension.ts:568:3 - error TS2345: Argument of type '(type: WebviewProviderType) => VscodeWebviewProvider' is not assignable to parameter of type 'WebviewProviderCreator'.
+  Target signature provides too few arguments. Expected 1 or more, but got 0.
+
+568   createWebview,
+      ~~~~~~~~~~~~~
+
+src/hosts/vscode/commit-message-generator.ts:6:10 - error TS2305: Module '"@/utils/git"' has no exported member 'getGitDiff'.
+
+6 import { getGitDiff } from "@/utils/git"
+           ~~~~~~~~~~
+
+src/hosts/vscode/hostbridge/env/getTelemetrySettings.ts:3:10 - error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'GetTelemetrySettingsResponse'.
+
+3 import { GetTelemetrySettingsResponse, Setting } from "@/shared/proto/index.host"
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/hosts/vscode/hostbridge/env/getTelemetrySettings.ts:3:40 - error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'Setting'.
+
+3 import { GetTelemetrySettingsResponse, Setting } from "@/shared/proto/index.host"
+                                         ~~~~~~~
+
+src/hosts/vscode/hostbridge/env/subscribeToTelemetrySettings.ts:4:10 - error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'Setting'.
+
+4 import { Setting } from "@/shared/proto/index.host"
+           ~~~~~~~
+
+src/hosts/vscode/hostbridge/workspace/openTerminalPanel.ts:2:10 - error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'OpenTerminalRequest'.
+
+2 import { OpenTerminalRequest, OpenTerminalResponse } from "@/shared/proto/index.host"
+           ~~~~~~~~~~~~~~~~~~~
+
+src/hosts/vscode/hostbridge/workspace/openTerminalPanel.ts:2:31 - error TS2724: '"@/shared/proto/index.host"' has no exported member named 'OpenTerminalResponse'. Did you mean 'OpenFileResponse'?
+
+2 import { OpenTerminalRequest, OpenTerminalResponse } from "@/shared/proto/index.host"
+                                ~~~~~~~~~~~~~~~~~~~~
+
+  src/shared/proto/host/window.ts:1510:14
+    1510 export const OpenFileResponse: MessageFns<OpenFileResponse> = {
+                      ~~~~~~~~~~~~~~~~
+    'OpenFileResponse' is declared here.
+
+src/integrations/checkpoints/factory.ts:76:41 - error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalStateKey'?
+
+76  const enableCheckpoints = stateManager.getGlobalSettingsKey("enableCheckpointsSetting")
+                                           ~~~~~~~~~~~~~~~~~~~~
+
+  src/core/storage/StateManager.ts:500:2
+    500  getGlobalStateKey<K extends keyof GlobalState>(key: K): GlobalState[K] {
+         ~~~~~~~~~~~~~~~~~
+    'getGlobalStateKey' is declared here.
+
+src/integrations/checkpoints/index.ts:278:9 - error TS2345: Argument of type 'boolean' is not assignable to parameter of type 'string'.
+
+278         this.config.enableCheckpoints,
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/integrations/checkpoints/index.ts:431:7 - error TS2345: Argument of type 'boolean' is not assignable to parameter of type 'string'.
+
+431       this.config.enableCheckpoints,
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/integrations/checkpoints/index.ts:599:7 - error TS2345: Argument of type 'boolean' is not assignable to parameter of type 'string'.
+
+599       this.config.enableCheckpoints,
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/integrations/checkpoints/index.ts:672:67 - error TS2554: Expected 2 arguments, but got 1.
+
+672     await contextManager.truncateContextHistory(message.ts, await ensureTaskDirectoryExists(this.task.taskId))
+                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/core/storage/disk.ts:92:83
+    92 export async function ensureTaskDirectoryExists(context: vscode.ExtensionContext, taskId: string): Promise<string> {
+                                                                                         ~~~~~~~~~~~~~~
+    An argument for 'taskId' was not provided.
+
+src/integrations/checkpoints/index.ts:802:48 - error TS2345: Argument of type 'boolean' is not assignable to parameter of type 'string'.
+
+802     CheckpointTracker.create(this.task.taskId, this.config.enableCheckpoints, workspacePath),
+                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/integrations/checkpoints/index.ts:847:18 - error TS2551: Property 'checkpointManagerErrorMessage' does not exist on type 'TaskState'. Did you mean 'checkpointTrackerErrorMessage'?
+
+847   this.taskState.checkpointManagerErrorMessage = errorMessage
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/core/task/TaskState.ts:46:2
+    46  checkpointTrackerErrorMessage?: string
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    'checkpointTrackerErrorMessage' is declared here.
+
+src/integrations/checkpoints/MultiRootCheckpointManager.ts:87:65 - error TS2345: Argument of type 'boolean' is not assignable to parameter of type 'string'.
+
+87     const tracker = await CheckpointTracker.create(this.taskId, this.enableCheckpoints, root.path)
+                                                                   ~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/auth/AuthService.ts:194:49 - error TS2551: Property 'getCallbackUri' does not exist on type 'HostProvider'. Did you mean 'getCallbackUrl'?
+
+194   const callbackHost = await HostProvider.get().getCallbackUri()
+                                                    ~~~~~~~~~~~~~~
+
+  src/hosts/host-provider.ts:28:2
+    28  getCallbackUrl: () => Promise<string>
+        ~~~~~~~~~~~~~~
+    'getCallbackUrl' is declared here.
+
+src/services/auth/oca/OcaAuthService.ts:142:44 - error TS2551: Property 'getCallbackUrl' does not exist on type 'AuthHandler'. Did you mean 'getCallbackUri'?
+
+142   const callbackUrl = `${await authHandler.getCallbackUrl()}/auth/oca`
+                                               ~~~~~~~~~~~~~~
+
+  src/hosts/external/AuthHandler.ts:41:15
+    41  public async getCallbackUri(): Promise<string> {
+                     ~~~~~~~~~~~~~~
+    'getCallbackUri' is declared here.
+
+src/services/auth/oca/providers/OcaAuthProvider.ts:80:60 - error TS2345: Argument of type '"ocaApiKey"' is not assignable to parameter of type 'keyof Secrets'.
+
+80   const accessToken = controller.stateManager.getSecretKey("ocaApiKey")
+                                                              ~~~~~~~~~~~
+
+src/services/auth/oca/providers/OcaAuthProvider.ts:88:65 - error TS2345: Argument of type '"ocaRefreshToken"' is not assignable to parameter of type 'keyof Secrets'.
+
+88   const userRefreshToken = controller.stateManager.getSecretKey("ocaRefreshToken")
+                                                                   ~~~~~~~~~~~~~~~~~
+
+src/services/auth/oca/providers/OcaAuthProvider.ts:190:39 - error TS2345: Argument of type '"ocaRefreshToken"' is not assignable to parameter of type 'keyof Secrets'.
+
+190     controller.stateManager.setSecret("ocaRefreshToken", refreshToken)
+                                          ~~~~~~~~~~~~~~~~~
+
+src/services/auth/oca/providers/OcaAuthProvider.ts:191:39 - error TS2345: Argument of type '"ocaApiKey"' is not assignable to parameter of type 'keyof Secrets'.
+
+191     controller.stateManager.setSecret("ocaApiKey", accessToken)
+                                          ~~~~~~~~~~~
+
+src/services/auth/oca/providers/OcaAuthProvider.ts:206:37 - error TS2345: Argument of type '"ocaApiKey"' is not assignable to parameter of type 'keyof Secrets'.
+
+206   controller.stateManager.setSecret("ocaApiKey", undefined)
+                                        ~~~~~~~~~~~
+
+src/services/auth/oca/providers/OcaAuthProvider.ts:207:37 - error TS2345: Argument of type '"ocaRefreshToken"' is not assignable to parameter of type 'keyof Secrets'.
+
+207   controller.stateManager.setSecret("ocaRefreshToken", undefined)
+                                        ~~~~~~~~~~~~~~~~~
+
+src/services/auth/providers/ClineAuthProvider.ts:1:26 - error TS2459: Module '"@/config"' declares 'EnvironmentConfig' locally, but it is not exported.
+
+1 import { clineEnvConfig, EnvironmentConfig } from "@/config"
+                           ~~~~~~~~~~~~~~~~~
+
+  src/config.ts:7:11
+    7 interface EnvironmentConfig {
+                ~~~~~~~~~~~~~~~~~
+    'EnvironmentConfig' is declared here.
+
+src/services/auth/providers/ClineAuthProvider.ts:115:24 - error TS2339: Property 'refreshToken' does not exist on type 'ClineAuthInfo'.
+
+115    if (!storedAuthData.refreshToken || !storedAuthData?.idToken) {
+                           ~~~~~~~~~~~~
+
+src/services/auth/providers/ClineAuthProvider.ts:121:55 - error TS2339: Property 'refreshToken' does not exist on type 'ClineAuthInfo'.
+
+121    if (await this.shouldRefreshIdToken(storedAuthData.refreshToken, storedAuthData.expiresAt)) {
+                                                          ~~~~~~~~~~~~
+
+src/services/auth/providers/ClineAuthProvider.ts:121:84 - error TS2339: Property 'expiresAt' does not exist on type 'ClineAuthInfo'.
+
+121    if (await this.shouldRefreshIdToken(storedAuthData.refreshToken, storedAuthData.expiresAt)) {
+                                                                                       ~~~~~~~~~
+
+src/services/auth/providers/ClineAuthProvider.ts:123:61 - error TS2339: Property 'refreshToken' does not exist on type 'ClineAuthInfo'.
+
+123     const authInfo = await this.refreshToken(storedAuthData.refreshToken)
+                                                                ~~~~~~~~~~~~
+
+src/services/auth/providers/ClineAuthProvider.ts:128:49 - error TS2339: Property 'refreshToken' does not exist on type 'ClineAuthInfo'.
+
+128    if (storedAuthData.idToken && storedAuthData.refreshToken && storedAuthData.userInfo.id) {
+                                                    ~~~~~~~~~~~~
+
+src/services/auth/providers/ClineAuthProvider.ts:199:6 - error TS2353: Object literal may only specify known properties, and 'subject' does not exist in type 'ClineAccountUserInfo'.
+
+199      subject: data.data.userInfo.subject || "",
+         ~~~~~~~
+
+  src/services/auth/AuthService.ts:27:2
+    27  userInfo: ClineAccountUserInfo
+        ~~~~~~~~
+    The expected type comes from property 'userInfo' which is declared here on type 'ClineAuthInfo'
+
+src/services/auth/providers/IAuthProvider.ts:1:10 - error TS2459: Module '"@/config"' declares 'EnvironmentConfig' locally, but it is not exported.
+
+1 import { EnvironmentConfig } from "@/config"
+           ~~~~~~~~~~~~~~~~~
+
+  src/config.ts:7:11
+    7 interface EnvironmentConfig {
+                ~~~~~~~~~~~~~~~~~
+    'EnvironmentConfig' is declared here.
+
+src/services/dictation/VoiceTranscriptionService.ts:112:50 - error TS2339: Property 'transcribeAudio' does not exist on type 'ClineAccountService'.
+
+112    const result = await this.clineAccountService.transcribeAudio(audioBase64, language)
+                                                     ~~~~~~~~~~~~~~~
+
+src/services/EnvUtils.ts:23:44 - error TS2339: Property 'clineType' does not exist on type 'GetHostVersionResponse'.
+
+23   headers[ClineHeaders.CLIENT_TYPE] = host.clineType || "unknown"
+                                              ~~~~~~~~~
+
+src/services/EnvUtils.ts:24:47 - error TS2339: Property 'clineVersion' does not exist on type 'GetHostVersionResponse'.
+
+24   headers[ClineHeaders.CLIENT_VERSION] = host.clineVersion || "unknown"
+                                                 ~~~~~~~~~~~~
+
+src/services/error/ErrorProviderFactory.ts:1:10 - error TS2305: Module '"@/shared/services/config/posthog-config"' has no exported member 'isPostHogConfigValid'.
+
+1 import { isPostHogConfigValid, PostHogClientConfig, posthogConfig } from "@/shared/services/config/posthog-config"
+           ~~~~~~~~~~~~~~~~~~~~
+
+src/services/error/ErrorProviderFactory.ts:1:32 - error TS2724: '"@/shared/services/config/posthog-config"' has no exported member named 'PostHogClientConfig'. Did you mean 'posthogConfig'?
+
+1 import { isPostHogConfigValid, PostHogClientConfig, posthogConfig } from "@/shared/services/config/posthog-config"
+                                 ~~~~~~~~~~~~~~~~~~~
+
+  src/shared/services/config/posthog-config.ts:15:14
+    15 export const posthogConfig = process.env.IS_DEV === "true" ? posthogDevEnvConfig : posthogProdConfig
+                    ~~~~~~~~~~~~~
+    'posthogConfig' is declared here.
+
+src/services/error/providers/PostHogErrorProvider.ts:6:10 - error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'Setting'.
+
+6 import { Setting } from "@/shared/proto/index.host"
+           ~~~~~~~
+
+src/services/error/providers/PostHogErrorProvider.ts:8:10 - error TS2305: Module '"../../../shared/services/config/posthog-config"' has no exported member 'PostHogClientValidConfig'.
+
+8 import { PostHogClientValidConfig } from "../../../shared/services/config/posthog-config"
+           ~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/error/providers/PostHogErrorProvider.ts:29:50 - error TS2339: Property 'eventFilter' does not exist on type 'typeof PostHogClientProvider'.
+
+29    before_send: (event) => PostHogClientProvider.eventFilter(event),
+                                                    ~~~~~~~~~~~
+
+src/services/error/providers/PostHogErrorProvider.ts:41:20 - error TS2339: Property 'subscribeToTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+
+41   HostProvider.env.subscribeToTelemetrySettings(
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/error/providers/PostHogErrorProvider.ts:44:18 - error TS7006: Parameter 'event' implicitly has an 'any' type.
+
+44     onResponse: (event) => {
+                    ~~~~~
+
+src/services/error/providers/PostHogErrorProvider.ts:51:47 - error TS2339: Property 'getTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+
+51   const hostSettings = await HostProvider.env.getTelemetrySettings({})
+                                                 ~~~~~~~~~~~~~~~~~~~~
+
+src/services/error/providers/PostHogErrorProvider.ts:138:47 - error TS2339: Property 'getTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+
+138   const hostSettings = await HostProvider.env.getTelemetrySettings({})
+                                                  ~~~~~~~~~~~~~~~~~~~~
+
+src/services/feature-flags/FeatureFlagsProviderFactory.ts:1:10 - error TS2305: Module '"@/shared/services/config/posthog-config"' has no exported member 'isPostHogConfigValid'.
+
+1 import { isPostHogConfigValid, posthogConfig } from "@/shared/services/config/posthog-config"
+           ~~~~~~~~~~~~~~~~~~~~
+
+src/services/feature-flags/FeatureFlagsProviderFactory.ts:33:48 - error TS2339: Property 'getClient' does not exist on type 'typeof PostHogClientProvider'.
+
+33     const sharedClient = PostHogClientProvider.getClient()
+                                                  ~~~~~~~~~
+
+src/services/feature-flags/FeatureFlagsService.ts:33:22 - error TS2488: Type '{ readonly CUSTOM_INSTRUCTIONS: "custom-instructions"; readonly DEV_ENV_POSTHOG: "dev-env-posthog"; }' must have a '[Symbol.iterator]()' method that returns an iterator.
+
+33   for (const flag of FEATURE_FLAGS) {
+                        ~~~~~~~~~~~~~
+
+src/services/feature-flags/FeatureFlagsService.ts:82:37 - error TS2693: 'FeatureFlag' only refers to a type, but is being used as a value here.
+
+82   return this.getBooleanFlagEnabled(FeatureFlag.MULTI_ROOT_WORKSPACE, false)
+                                       ~~~~~~~~~~~
+
+src/services/feature-flags/FeatureFlagsService.ts:86:37 - error TS2693: 'FeatureFlag' only refers to a type, but is being used as a value here.
+
+86   return this.getBooleanFlagEnabled(FeatureFlag.WORKOS_AUTH, false)
+                                       ~~~~~~~~~~~
+
+src/services/telemetry/providers/PostHogTelemetryProvider.ts:5:10 - error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'Setting'.
+
+5 import { Setting } from "@/shared/proto/index.host"
+           ~~~~~~~
+
+src/services/telemetry/providers/PostHogTelemetryProvider.ts:43:20 - error TS2339: Property 'subscribeToTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+
+43   HostProvider.env.subscribeToTelemetrySettings(
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/telemetry/providers/PostHogTelemetryProvider.ts:46:18 - error TS7006: Parameter 'event' implicitly has an 'any' type.
+
+46     onResponse: (event) => {
+                    ~~~~~
+
+src/services/telemetry/providers/PostHogTelemetryProvider.ts:54:47 - error TS2339: Property 'getTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+
+54   const hostSettings = await HostProvider.env.getTelemetrySettings({})
+                                                 ~~~~~~~~~~~~~~~~~~~~
+
+src/services/telemetry/providers/PostHogTelemetryProvider.ts:135:47 - error TS2339: Property 'getTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+
+135   const hostSettings = await HostProvider.env.getTelemetrySettings({})
+                                                  ~~~~~~~~~~~~~~~~~~~~
+
+src/services/telemetry/TelemetryProviderFactory.ts:1:10 - error TS2305: Module '"@/shared/services/config/posthog-config"' has no exported member 'isPostHogConfigValid'.
+
+1 import { isPostHogConfigValid, posthogConfig } from "@/shared/services/config/posthog-config"
+           ~~~~~~~~~~~~~~~~~~~~
+
+src/services/telemetry/TelemetryProviderFactory.ts:34:48 - error TS2339: Property 'getClient' does not exist on type 'typeof PostHogClientProvider'.
+
+34     const sharedClient = PostHogClientProvider.getClient()
+                                                  ~~~~~~~~~
+
+src/services/telemetry/TelemetryService.test.ts:204:69 - error TS2345: Argument of type '"isPostHogConfigValid"' is not assignable to parameter of type '"posthogConfig"'.
+
+204    const isPostHogConfigValidStub = sinon.stub(posthogConfigModule, "isPostHogConfigValid").returns(true)
+                                                                        ~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/telemetry/TelemetryService.ts:7:10 - error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'Setting'.
+
+7 import { Setting } from "@/shared/proto/index.host"
+           ~~~~~~~
+
+src/services/telemetry/TelemetryService.ts:247:46 - error TS2339: Property 'getTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+
+247   const hostSetting = await HostProvider.env.getTelemetrySettings({})
+                                                 ~~~~~~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:30:30 - error TS2345: Argument of type '"initialize"' is not assignable to parameter of type '"prototype"'.
+
+30   sandbox.stub(ErrorService, "initialize").resolves(mockErrorService as any)
+                                ~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:31:30 - error TS2345: Argument of type '"get"' is not assignable to parameter of type '"prototype"'.
+
+31   sandbox.stub(ErrorService, "get").returns(mockErrorService as any)
+                                ~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:33:22 - error TS2339: Property 'initialize' does not exist on type 'typeof ErrorService'.
+
+33   await ErrorService.initialize()
+                        ~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:53:53 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+53     const result = await SharedUriHandler.handleUri("vscode://cline.cline/openrouter?code=test123")
+                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:60:53 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+60     const result = await SharedUriHandler.handleUri("vscode://cline.cline/openrouter")
+                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:67:53 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+67     const result = await SharedUriHandler.handleUri("vscode://cline.cline/openrouter?code=test+123+abc")
+                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:77:53 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+77     const result = await SharedUriHandler.handleUri("vscode://cline.cline/auth?idToken=jwt123&provider=google")
+                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:84:53 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+84     const result = await SharedUriHandler.handleUri("vscode://cline.cline/auth?idToken=jwt123")
+                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:91:53 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+91     const result = await SharedUriHandler.handleUri("vscode://cline.cline/auth?provider=google")
+                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:100:53 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+100     const result = await SharedUriHandler.handleUri("vscode://cline.cline/unknown?param=value")
+                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:112:53 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+112     const result = await SharedUriHandler.handleUri("vscode://cline.cline/openrouter?code=test123")
+                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:118:53 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+118     const result = await SharedUriHandler.handleUri("invalid://uri")
+                                                        ~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:129:6 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+129      "vscode://cline.cline/auth?idToken=jwt123&provider=github&extra=param",
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:138:6 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+138      "vscode://cline.cline/auth?idToken=jwt%20with%20spaces&provider=google",
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:147:53 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+147     const result = await SharedUriHandler.handleUri("vscode://cline.cline/openrouter")
+                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:157:53 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+157     const result = await SharedUriHandler.handleUri("http://localhost:3000/openrouter?code=test123")
+                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/services/uri/SharedUriHandler.test.ts:164:53 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+
+164     const result = await SharedUriHandler.handleUri("https://example.com/auth?idToken=jwt123&provider=github")
+                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/standalone/cline-core.ts:48:15 - error TS2554: Expected 8 arguments, but got 5.
+
+48  HostProvider.initialize(createWebview, createDiffView, new ExternalHostBridgeClientManager(), log, getCallbackUri)
+                 ~~~~~~~~~~
+
+  src/hosts/host-provider.ts:70:3
+    70   getBinaryLocation: (name: string) => Promise<string>,
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    An argument for 'getBinaryLocation' was not provided.
+
+src/test/host-provider-test-utils.ts:19:15 - error TS2554: Expected 8 arguments, but got 5.
+
+19  HostProvider.initialize(
+                 ~~~~~~~~~~
+
+  src/hosts/host-provider.ts:70:3
+    70   getBinaryLocation: (name: string) => Promise<string>,
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    An argument for 'getBinaryLocation' was not provided.
+
+src/test/host-provider-test-utils.ts:20:41 - error TS7006: Parameter '_' implicitly has an 'any' type.
+
+20   options?.webviewProviderCreator ?? (((_) => {}) as WebviewProviderCreator),
+                                           ~

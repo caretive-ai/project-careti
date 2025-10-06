@@ -1,0 +1,640 @@
+{
+<<<<<<< ours
+	"name": "caret",
+	"displayName": "Caret",
+	"description": "🎯 Transform your coding workflow with the most intelligent AI assistant for Visual Studio Code. Autonomous code generation, multi-file refactoring, and 20+ AI models. Supports: 한국어, 日本語, 中文.",
+	"version": "0.2.31",
+=======
+	"name": "claude-dev",
+	"displayName": "Cline",
+	"description": "Autonomous coding agent right in your IDE, capable of creating/editing files, running commands, using the browser, and more with your permission every step of the way.",
+	"version": "3.32.6",
+>>>>>>> theirs
+	"icon": "assets/icons/icon.png",
+	"engines": {
+		"vscode": "^1.84.0"
+	},
+	"author": {
+		"name": "Caretive Inc."
+	},
+	"license": "Apache-2.0",
+	"publisher": "caretive",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/aicoding-caret/caret"
+	},
+	"homepage": "https://caret.team",
+	"categories": [
+		"AI",
+		"Chat",
+		"Programming Languages",
+		"Education",
+		"Machine Learning",
+		"Other"
+	],
+	"keywords": [
+		"ai",
+		"coding assistant",
+		"autonomous",
+		"code generation",
+		"refactoring",
+		"claude",
+		"gpt",
+		"gemini",
+		"chatgpt",
+		"sonnet",
+		"mcp",
+		"pair programming",
+		"한국어",
+		"日本語",
+		"中文"
+	],
+	"activationEvents": [
+		"onLanguage",
+		"onStartupFinished",
+		"workspaceContains:evals.env"
+	],
+	"main": "./dist/extension.js",
+	"contributes": {
+		"walkthroughs": [
+			{
+				"id": "CaretWalkthrough",
+				"title": "Meet Caret, your new coding partner",
+				"description": "Caret codes like a developer because it thinks like one. Here are 5 ways to put it to work:",
+				"steps": [
+					{
+						"id": "welcome",
+						"title": "Start with a Goal, Not Just a Prompt",
+						"description": "Tell Caret what you want to achieve. It plans, asks, and then codes, like a true partner.",
+						"media": {
+							"markdown": "walkthrough/step1.md"
+						}
+					},
+					{
+						"id": "learn",
+						"title": "Let Caret Learn Your Codebase",
+						"description": "Point Caret to your project. It builds understanding to make smart, context-aware changes.",
+						"media": {
+							"markdown": "walkthrough/step2.md"
+						}
+					},
+					{
+						"id": "advanced-features",
+						"title": "Always Use the Best AI Models",
+						"description": "Caret empowers you with State-of-the-Art AI, connecting to top models (Anthropic, Gemini, OpenAI & more).",
+						"media": {
+							"markdown": "walkthrough/step3.md"
+						}
+					},
+					{
+						"id": "mcp",
+						"title": "Extend with Powerful Tools (MCP)",
+						"description": "Connect to databases, APIs, or discover new capabilities in the MCP Marketplace.",
+						"media": {
+							"markdown": "walkthrough/step4.md"
+						}
+					},
+					{
+						"id": "getting-started",
+						"title": "You're Always in Control",
+						"description": "Review Caret's plans and diffs. Approve changes before they happen. No surprises.",
+						"media": {
+							"markdown": "walkthrough/step5.md"
+						},
+						"content": {
+							"path": "walkthrough/step5.md"
+						}
+					}
+				]
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+<<<<<<< ours
+					"id": "caret-ActivityBar",
+					"title": "Caret (⌘+')",
+					"icon": "assets/icons/icon.svg",
+					"when": "isMac"
+				},
+				{
+					"id": "caret-ActivityBar",
+					"title": "Caret (Ctrl+')",
+					"icon": "assets/icons/icon.svg",
+					"when": "!isMac"
+=======
+					"id": "claude-dev-ActivityBar",
+					"title": "Cline",
+					"icon": "assets/icons/icon.svg"
+>>>>>>> theirs
+				}
+			]
+		},
+		"views": {
+			"caret-ActivityBar": [
+				{
+					"type": "webview",
+					"id": "caret.SidebarProvider",
+					"name": "",
+					"icon": "assets/icons/icon.svg"
+				}
+			]
+		},
+		"commands": [
+			{
+				"command": "caret.plusButtonClicked",
+				"title": "New Task",
+				"icon": "$(add)"
+			},
+			{
+				"command": "caret.mcpButtonClicked",
+				"title": "MCP Servers",
+				"icon": "$(server)"
+			},
+			{
+				"command": "caret.historyButtonClicked",
+				"title": "History",
+				"icon": "$(history)"
+			},
+			{
+<<<<<<< ours
+				"command": "caret.popoutButtonClicked",
+				"title": "Open in Editor",
+				"icon": "$(link-external)"
+			},
+			{
+				"command": "caret.accountButtonClicked",
+=======
+				"command": "cline.accountButtonClicked",
+>>>>>>> theirs
+				"title": "Account",
+				"icon": "$(account)"
+			},
+			{
+				"command": "caret.settingsButtonClicked",
+				"title": "Settings",
+				"icon": "$(settings-gear)"
+			},
+			{
+<<<<<<< ours
+				"command": "caret.openInNewTab",
+				"title": "Open In New Tab",
+				"category": "Caret"
+			},
+			{
+				"command": "caret.dev.createTestTasks",
+=======
+				"command": "cline.dev.createTestTasks",
+>>>>>>> theirs
+				"title": "Create Test Tasks",
+				"category": "Caret",
+				"when": "caret.isDevMode"
+			},
+			{
+				"command": "caret.addToChat",
+				"title": "Add to Caret",
+				"category": "Caret"
+			},
+			{
+				"command": "caret.addTerminalOutputToChat",
+				"title": "Add to Caret",
+				"category": "Caret"
+			},
+			{
+				"command": "caret.focusChatInput",
+				"title": "Jump to Chat Input",
+				"category": "Caret"
+			},
+			{
+<<<<<<< ours
+				"command": "caret.generateGitCommitMessage",
+				"title": "Generate Commit Message with Caret",
+				"category": "Caret",
+				"icon": "$(robot)"
+=======
+				"command": "cline.generateGitCommitMessage",
+				"title": "Generate Commit Message with Cline",
+				"category": "Cline",
+				"icon": {
+					"light": "assets/icons/robot_panel_light.png",
+					"dark": "assets/icons/robot_panel_dark.png"
+				}
+>>>>>>> theirs
+			},
+			{
+				"command": "caret.abortGitCommitMessage",
+				"title": "Generate Commit Message with Caret - Stop",
+				"category": "Caret",
+				"icon": "$(debug-stop)"
+			},
+			{
+				"command": "caret.explainCode",
+				"title": "Explain with Caret",
+				"category": "Caret"
+			},
+			{
+				"command": "caret.improveCode",
+				"title": "Improve with Caret",
+				"category": "Caret"
+			},
+			{
+				"command": "caret.openWalkthrough",
+				"title": "Open Walkthrough",
+<<<<<<< ours
+				"category": "Caret"
+=======
+				"category": "Cline"
+			},
+			{
+				"command": "cline.reconstructTaskHistory",
+				"title": "Reconstruct Task History",
+				"category": "Cline"
+>>>>>>> theirs
+			}
+		],
+		"keybindings": [
+			{
+				"command": "caret.addToChat",
+				"key": "cmd+'",
+				"mac": "cmd+'",
+				"win": "ctrl+'",
+				"linux": "ctrl+'",
+				"when": "editorHasSelection"
+			},
+			{
+				"command": "caret.generateGitCommitMessage",
+				"when": "config.git.enabled && scmProvider == git"
+			},
+			{
+				"command": "caret.focusChatInput",
+				"key": "cmd+'",
+				"mac": "cmd+'",
+				"win": "ctrl+'",
+				"linux": "ctrl+'",
+				"when": "!editorHasSelection"
+			}
+		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "caret.plusButtonClicked",
+					"group": "navigation@1",
+					"when": "view == caret.SidebarProvider"
+				},
+				{
+					"command": "caret.mcpButtonClicked",
+					"group": "navigation@2",
+					"when": "view == caret.SidebarProvider"
+				},
+				{
+					"command": "caret.historyButtonClicked",
+					"group": "navigation@3",
+					"when": "view == caret.SidebarProvider"
+				},
+				{
+<<<<<<< ours
+					"command": "caret.popoutButtonClicked",
+					"group": "navigation@4",
+					"when": "view == caret.SidebarProvider"
+				},
+				{
+					"command": "caret.accountButtonClicked",
+=======
+					"command": "cline.accountButtonClicked",
+>>>>>>> theirs
+					"group": "navigation@5",
+					"when": "view == caret.SidebarProvider"
+				},
+				{
+					"command": "caret.settingsButtonClicked",
+					"group": "navigation@6",
+					"when": "view == caret.SidebarProvider"
+				}
+			],
+<<<<<<< ours
+			"editor/title": [
+				{
+					"command": "caret.plusButtonClicked",
+					"group": "navigation@1",
+					"when": "activeWebviewPanelId == caret.TabPanelProvider"
+				},
+				{
+					"command": "caret.mcpButtonClicked",
+					"group": "navigation@2",
+					"when": "activeWebviewPanelId == caret.TabPanelProvider"
+				},
+				{
+					"command": "caret.historyButtonClicked",
+					"group": "navigation@3",
+					"when": "activeWebviewPanelId == caret.TabPanelProvider"
+				},
+				{
+					"command": "caret.popoutButtonClicked",
+					"group": "navigation@4",
+					"when": "activeWebviewPanelId == caret.TabPanelProvider"
+				},
+				{
+					"command": "caret.accountButtonClicked",
+					"group": "navigation@5",
+					"when": "activeWebviewPanelId == caret.TabPanelProvider"
+				},
+				{
+					"command": "caret.settingsButtonClicked",
+					"group": "navigation@6",
+					"when": "activeWebviewPanelId == caret.TabPanelProvider"
+				}
+			],
+=======
+>>>>>>> theirs
+			"editor/context": [
+				{
+					"command": "caret.addToChat",
+					"group": "navigation",
+					"when": "editorHasSelection"
+				}
+			],
+			"terminal/context": [
+				{
+					"command": "caret.addTerminalOutputToChat",
+					"group": "navigation"
+				}
+			],
+			"scm/title": [
+				{
+					"command": "caret.generateGitCommitMessage",
+					"group": "navigation",
+					"when": "config.git.enabled && scmProvider == git && !caret.isGeneratingCommit"
+				},
+				{
+					"command": "caret.abortGitCommitMessage",
+					"group": "navigation",
+					"when": "config.git.enabled && scmProvider == git && caret.isGeneratingCommit"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "caret.generateGitCommitMessage",
+					"when": "config.git.enabled && scmProvider == git && !caret.isGeneratingCommit"
+				},
+				{
+					"command": "caret.abortGitCommitMessage",
+					"when": "config.git.enabled && scmProvider == git && caret.isGeneratingCommit"
+				}
+			]
+		},
+		"configuration": {
+			"title": "Caret",
+			"properties": {}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run package",
+		"compile": "npm run check-types && npm run lint && node esbuild.mjs",
+		"compile-standalone": "npm run check-types && npm run lint && node esbuild.mjs --standalone",
+<<<<<<< ours
+		"postcompile-standalone": "node caret-scripts/build/package-standalone.mjs",
+=======
+		"compile-cli": "scripts/build-cli.sh",
+		"postcompile-standalone": "node scripts/package-standalone.mjs",
+>>>>>>> theirs
+		"watch": "npm-run-all -p watch:*",
+		"watch:esbuild": "node esbuild.mjs --watch",
+		"watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+		"package": "npm run check-types && npm run build:webview && npm run lint && node esbuild.mjs --production",
+<<<<<<< ours
+		"protos": "node caret-scripts/build/build-proto.mjs",
+		"postprotos": "biome format src/shared/proto src/core/controller src/hosts/ webview-ui/src/services src/generated --write --no-errors-on-unmatched",
+		"clean": "rimraf dist dist-standalone webview-ui/build src/generated out/",
+		"compile-tests": "node caret-scripts/build/build-tests.js",
+=======
+		"protos": "node scripts/build-proto.mjs",
+		"protos-go": "node scripts/build-go-proto.mjs",
+		"postprotos": "biome format src/shared/proto src/core/controller src/hosts/ webview-ui/src/services src/generated --write --no-errors-on-unmatched",
+		"clean:build": "rimraf dist dist-standalone webview-ui/build src/generated out/",
+		"clean:deps": "rimraf node_modules webview-ui/node_modules",
+		"clean:all": "npm run clean:build && npm run clean:deps",
+		"compile-tests": "node ./scripts/build-tests.js",
+>>>>>>> theirs
+		"watch-tests": "tsc -p . -w --outDir out",
+		"check-types": "npm run protos && npx tsc --noEmit && cd webview-ui && npx tsc -b --noEmit",
+		"check-types:filtered": "npm run protos && (npx tsc --noEmit 2>&1 | findstr /v \"Unused '@ts-expect-error' directive\" || echo Build complete) && cd webview-ui && npx tsc -b --noEmit",
+		"lint": "biome lint --no-errors-on-unmatched --files-ignore-unknown=true --diagnostic-level=error && buf lint",
+		"format": "biome format --changed --no-errors-on-unmatched --files-ignore-unknown=true --diagnostic-level=error",
+		"format:fix": "biome check --changed --no-errors-on-unmatched --files-ignore-unknown=true --write",
+		"fix:all": "biome check --no-errors-on-unmatched --files-ignore-unknown=true --write --diagnostic-level=error --unsafe",
+		"ci:check-all": "npm-run-all -p check-types lint format",
+		"ci:build": "npm run protos && npm run build:webview && node esbuild.mjs && npm run compile-tests",
+		"pretest": "npm run compile && npm run compile-tests && npm run compile-standalone && npm run lint",
+		"test": "npm-run-all test:unit test:integration",
+		"test:integration": "vscode-test",
+<<<<<<< ours
+		"test:unit": "vitest run",
+=======
+		"test:unit": "cross-env TS_NODE_PROJECT=./tsconfig.unit-test.json mocha",
+>>>>>>> theirs
+		"test:coverage": "vscode-test --coverage",
+		"test:sca-server": "npx tsx watch scripts/test-standalone-core-api-server.ts",
+		"test:tp-orchestrator": "npx tsx scripts/testing-platform-orchestrator.ts",
+		"e2e": "playwright test -c playwright.config.ts",
+		"test:e2e:build": "vsce package --allow-package-secrets sendgrid --out dist/e2e.vsix",
+		"test:e2e": "playwright install && npm run test:e2e:build && node src/test/e2e/utils/build.mjs && playwright test",
+		"test:e2e:optimal": "npm run test:e2e:build && node src/test/e2e/utils/build.mjs && playwright test",
+		"test:e2e:ui": "npx tsx scripts/interactive-playwright.ts",
+		"install:all": "npm install && cd webview-ui && npm install",
+		"dev:webview": "cd webview-ui && npm run dev",
+		"build:webview": "cd webview-ui && npm run build",
+		"test:webview": "cd webview-ui && npm run test",
+		"publish:marketplace": "vsce publish --allow-package-secrets sendgrid && ovsx publish",
+		"publish:marketplace:prerelease": "vsce publish --allow-package-secrets sendgrid --pre-release && ovsx publish --pre-release",
+		"publish:marketplace:nightly": "node ./scripts/publish-nightly.mjs",
+		"prepare": "husky",
+		"changeset": "changeset",
+		"version-packages": "changeset version",
+		"docs": "cd docs && npm run dev",
+		"docs:check-links": "cd docs && npm run check",
+		"docs:rename-file": "cd docs && npm run rename",
+		"report-issue": "node scripts/report-issue.js",
+		"package:release": "node caret-scripts/build/package-release.js",
+		"report:i18n-namespace": "node caret-scripts/tools/report-i18n-missing-namespace.js",
+		"report:i18n-keys": "node caret-scripts/tools/report-i18n-missing-keys.js",
+		"sync:i18n-keys": "node caret-scripts/tools/i18n-key-synchronizer.js"
+	},
+	"lint-staged": {
+		"*": [
+			"biome check --write --staged --no-errors-on-unmatched --files-ignore-unknown=true"
+		]
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.1.4",
+		"@bufbuild/buf": "^1.54.0",
+		"@changesets/cli": "^2.27.12",
+		"@types/better-sqlite3": "^7.6.13",
+		"@types/chai": "^5.0.1",
+		"@types/cheerio": "^0.22.35",
+		"@types/clone-deep": "^4.0.4",
+		"@types/diff": "^5.2.1",
+		"@types/get-folder-size": "^3.0.4",
+		"@types/lodash": "^4.17.20",
+		"@types/mocha": "^10.0.7",
+		"@types/node": "20.x",
+		"@types/pdf-parse": "^1.1.4",
+		"@types/proxyquire": "^1.3.31",
+		"@types/should": "^11.2.0",
+		"@types/sinon": "^17.0.4",
+		"@types/turndown": "^5.0.5",
+		"@types/vscode": "^1.84.0",
+		"@vitest/ui": "^3.2.4",
+		"@vscode/test-cli": "^0.0.10",
+		"@vscode/test-electron": "^2.5.2",
+		"@vscode/vsce": "^3.6.0",
+		"c8": "^10.1.3",
+		"chai": "^4.3.10",
+		"chalk": "5.6.2",
+		"cross-env": "^10.1.0",
+		"esbuild": "^0.25.0",
+		"grpc-tools": "^1.13.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.1.0",
+		"minimatch": "^3.0.3",
+		"npm-run-all": "^4.1.5",
+		"nyc": "^17.1.0",
+		"prebuild-install": "^7.1.3",
+		"protoc-gen-ts": "^0.8.7",
+		"proxyquire": "^2.1.3",
+		"rimraf": "^6.0.1",
+		"should": "^13.2.3",
+		"sinon": "^19.0.2",
+		"tree-kill": "^1.2.2",
+		"ts-node": "^10.9.2",
+		"ts-proto": "^2.6.1",
+		"tsconfig-paths": "^4.2.0",
+		"typescript": "^5.9.2",
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^3.2.4"
+	},
+	"dependencies": {
+		"@anthropic-ai/sdk": "^0.37.0",
+		"@anthropic-ai/vertex-sdk": "^0.6.4",
+		"@aws-sdk/client-bedrock-runtime": "^3.840.0",
+		"@aws-sdk/credential-providers": "^3.840.0",
+		"@bufbuild/protobuf": "^2.2.5",
+		"@cerebras/cerebras_cloud_sdk": "^1.35.0",
+		"@google-cloud/vertexai": "^1.9.3",
+<<<<<<< ours
+		"@google/genai": "^1.16.0",
+=======
+		"@google/genai": "^1.11.0",
+>>>>>>> theirs
+		"@grpc/grpc-js": "^1.9.15",
+		"@grpc/reflection": "^1.0.4",
+		"@mistralai/mistralai": "^1.5.0",
+		"@modelcontextprotocol/sdk": "^1.11.1",
+		"@opentelemetry/api": "^1.4.1",
+		"@opentelemetry/exporter-trace-otlp-http": "^0.39.1",
+		"@opentelemetry/resources": "^1.30.1",
+		"@opentelemetry/sdk-node": "^0.39.1",
+		"@opentelemetry/sdk-trace-node": "^1.30.1",
+		"@opentelemetry/semantic-conventions": "^1.30.0",
+		"@playwright/test": "^1.53.2",
+		"@sap-ai-sdk/ai-api": "^1.17.0",
+		"@sap-ai-sdk/orchestration": "^1.17.0",
+		"@sentry/browser": "^9.12.0",
+		"@streamparser/json": "^0.0.22",
+		"@types/uuid": "^10.0.0",
+		"@vscode/codicons": "^0.0.36",
+		"archiver": "^7.0.1",
+<<<<<<< ours
+		"axios": "^1.8.2",
+		"cheerio": "^1.1.2",
+=======
+		"axios": "^1.12.0",
+		"better-sqlite3": "^12.4.1",
+		"cheerio": "^1.0.0",
+>>>>>>> theirs
+		"chokidar": "^4.0.1",
+		"chrome-launcher": "^1.1.2",
+		"clone-deep": "^4.0.1",
+		"default-shell": "^2.2.0",
+		"diff": "^5.2.0",
+		"exceljs": "^4.4.0",
+		"execa": "^9.5.2",
+		"fast-deep-equal": "^3.1.3",
+		"firebase": "^11.2.0",
+		"fzf": "^0.5.2",
+		"get-folder-size": "^5.0.0",
+		"globby": "^14.0.2",
+		"grpc-health-check": "^2.0.2",
+		"https-proxy-agent": "^7.0.6",
+		"iconv-lite": "^0.6.3",
+		"ignore": "^7.0.3",
+		"image-size": "^2.0.2",
+		"isbinaryfile": "^5.0.2",
+		"jschardet": "^3.1.4",
+		"jwt-decode": "^4.0.0",
+		"lodash": "^4.17.21",
+		"mammoth": "^1.8.0",
+		"nice-grpc": "^2.1.12",
+		"ollama": "^0.5.13",
+		"open": "^10.1.2",
+		"open-graph-scraper": "^6.9.0",
+		"openai": "^4.83.0",
+		"os-name": "^6.0.0",
+		"p-timeout": "^6.1.4",
+		"p-wait-for": "^5.0.2",
+		"pdf-parse": "^1.1.1",
+<<<<<<< ours
+		"posthog-node": "^5.8.1",
+=======
+		"posthog-node": "^5.8.0",
+>>>>>>> theirs
+		"puppeteer-chromium-resolver": "^23.0.0",
+		"puppeteer-core": "^23.4.0",
+		"reconnecting-eventsource": "^1.6.4",
+		"serialize-error": "^11.0.3",
+		"simple-git": "^3.27.0",
+		"strip-ansi": "^7.1.2",
+		"tree-sitter-wasms": "^0.1.11",
+		"ts-morph": "^25.0.1",
+		"turndown": "^7.2.0",
+		"ulid": "^2.4.0",
+		"uuid": "^11.1.0",
+		"vscode-uri": "^3.1.0",
+		"web-tree-sitter": "^0.22.6",
+		"zod": "^3.24.2"
+	},
+	"c8": {
+		"reporter": [
+			"lcov",
+			"html"
+		],
+		"exclude": [
+			"**/testing-platform/**",
+			"**/webview-ui/**",
+			"**/.vscode-test/**",
+			"**/node_modules/**",
+			"node_modules",
+			"**/dist-standalone/src/**",
+			"**/dist-standalone/vsce-extension/https:/**",
+			"**/dist-standalone/vsce-extension/**",
+			"**/dist-standalone/https:/**",
+			"**/dist-standalone/LIB/src/**",
+			"**/dist-standalone/pdfjs-dist/**",
+			"**/*.d.ts",
+			"**/*.{test,spec}.{js,jsx,ts,tsx,mjs,cjs}",
+			"**/__tests__/**",
+			"**/test/**",
+			"**/tests/**",
+			"**/.nyc_output/**",
+			"**/tests-results/**",
+			"src/test/**",
+			"**/src/xml/**",
+			"**/standalone/**",
+			"**/src/generated/**",
+			"**/evals/cli/dist/**",
+			"**/evals/cli/src/**",
+			"dist"
+		],
+		"all": true,
+		"exclude-after-remap": true
+	}
+}

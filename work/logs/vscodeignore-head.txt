@@ -1,0 +1,65 @@
+# 🚨 WHITELIST APPROACH: Exclude everything, then include only needed files
+# This prevents accidentally including merge project subdirectories
+**
+
+# ✅ REQUIRED FILES - Core extension files
+!package.json
+!README.md
+!LICENSE
+!CHANGELOG.md
+
+# ✅ REQUIRED DIRECTORIES - Built extension code
+!dist/**
+!webview-ui/build/**
+
+# ✅ REQUIRED ASSETS - All assets and themes  
+!assets/**
+!src/integrations/theme/default-themes/**
+
+# ✅ REQUIRED CARET SOURCE - Caret-specific extensions
+!caret-src/**
+
+# ✅ REQUIRED DEPENDENCIES - Codicons for VS Code
+!node_modules/@vscode/codicons/dist/codicon.css
+!node_modules/@vscode/codicons/dist/codicon.ttf
+
+# ❌ EXCLUDE merge project subdirectories
+caret-main/**
+caret-compare/**
+caret-b2b/**
+caret-docs/**
+cline-latest/**
+
+# ❌ EXCLUDE development files
+src/**
+webview-ui/src/**
+webview-ui/public/**
+webview-ui/node_modules/**
+scripts/**
+.vscode/**
+.github/**
+.husky/**
+node_modules/**
+!node_modules/@vscode/codicons/dist/codicon.css
+!node_modules/@vscode/codicons/dist/codicon.ttf
+
+# ❌ EXCLUDE config and build files
+.gitignore
+.nvmrc
+.prettierignore
+.changie.yaml
+.codespellrc
+.mocharc.json
+buf.yaml
+.changeset/**
+.clinerules/**
+tsconfig*.json
+esbuild.mjs
+vsc-extension-quickstart.md
+biome.jsonc
+**/*.map
+e2e-build.mjs
+e2e.vsix
+test-results/**
+out/**
+dist-standalone/**

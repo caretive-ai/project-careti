@@ -1,0 +1,37 @@
+out
+dist
+dist-standalone
+node_modules
+tmp
+.vscode-test/
+*.vsix
+
+.DS_Store
+.idea
+
+pnpm-lock.yaml
+
+.clineignore
+.venv
+.actrc
+
+webview-ui/src/**/*.js
+webview-ui/src/**/*.js.map
+
+# Ignore coverage directories and files
+coverage
+# But don't ignore the coverage scripts in .github/scripts/
+!.github/scripts/coverage/
+
+*evals.env
+
+## Generated files ##
+src/generated/
+src/shared/proto/
+webview-ui/src/services/grpc-client.ts
+
+# E2E Tests
+test-results
+
+## CLI pre-release  ##
+/cli 

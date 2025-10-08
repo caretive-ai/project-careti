@@ -20,11 +20,6 @@
 		"domains": {
 			"react": "recommended"
 		},
-		// Ideally we would want to turn on all the rules that are currently off,
-		// keeping them off currently to make sure only changes on the migrations
-		// are included in the initial PR before we apply the format and lint changes.
-		// TODO: turn on all rules that are currently off if applicable.
-		// TODO: Remove --diagnostic-level=error from CI commands.
 		"rules": {
 			"recommended": true,
 			"correctness": {
@@ -37,7 +32,8 @@
 				"useYield": "off",
 				"noConstructorReturn": "off",
 				"noInvalidPositionAtImportRule": "off",
-				"noSwitchDeclarations": "off"
+				"noSwitchDeclarations": "off",
+				"noUnusedImports": "error"
 			},
 			"a11y": "off",
 			"style": {
@@ -147,7 +143,12 @@
 				"**",
 				"!**/hosts/vscode/**",
 				"!**/test/**",
-				"!src/extension.ts"
+				"!**/*.test.ts",
+				"!src/dev/**",
+				"!src/extension.ts",
+				"!src/integrations/git/commit-message-generator.ts",
+				"!src/integrations/terminal/**",
+				"!src/core/controller/ui/openWalkthrough.ts"
 			],
 			"plugins": [
 				"src/dev/grit/vscode-api.grit"
@@ -160,6 +161,7 @@
 				"!src/core/storage/FileContextTracker.ts",
 				"!src/core/context/context-tracking/FileContextTracker.ts",
 				"!src/common.ts",
+				"!src/services/logging/distinctId.ts",
 				"!src/core/storage/utils/state-helpers.ts",
 				"!src/extension.ts"
 			],

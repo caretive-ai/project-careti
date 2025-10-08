@@ -1,5 +1,6 @@
-import { posthogConfig } from "@/shared/services/config/posthog-config"
+import { isPostHogConfigValid, posthogConfig } from "@/shared/services/config/posthog-config"
 import { Logger } from "../logging/Logger"
+import { PostHogClientProvider } from "../posthog/PostHogClientProvider"
 import type { IFeatureFlagsProvider } from "./providers/IFeatureFlagsProvider"
 import { PostHogFeatureFlagsProvider } from "./providers/PostHogFeatureFlagsProvider"
 
@@ -28,8 +29,13 @@ export class FeatureFlagsProviderFactory {
 	public static createProvider(config: FeatureFlagsProviderConfig): IFeatureFlagsProvider {
 		switch (config.type) {
 			case "posthog": {
-				// PostHogFeatureFlagsProvider now likely initializes its own client
-				return new PostHogFeatureFlagsProvider()
+				// Get the shared PostHog client from PostHogClientProvider
+				const sharedClient = PostHogClientProvider.getClient()
+				if (sharedClient) {
+					return new PostHogFeatureFlagsProvider(sharedClient)
+				}
+				// Fall back to NoOp provider if no client is available
+				return new NoOpFeatureFlagsProvider()
 			}
 			default:
 				return new NoOpFeatureFlagsProvider()
@@ -41,8 +47,9 @@ export class FeatureFlagsProviderFactory {
 	 * @returns Default configuration using PostHog
 	 */
 	public static getDefaultConfig(): FeatureFlagsProviderConfig {
+		const hasValidConfig = isPostHogConfigValid(posthogConfig)
 		return {
-			type: posthogConfig.apiKey ? "posthog" : "no-op",
+			type: hasValidConfig ? "posthog" : "no-op",
 		}
 	}
 }

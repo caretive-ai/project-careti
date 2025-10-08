@@ -1,0 +1,263 @@
+# `src/core/storage/state-keys.ts` 병합 실행 계획
+
+## 1. 목표
+
+`src/core/storage/state-keys.ts` 파일의 병합 충돌을 해결하고, Cline의 `Oca` 모델 지원과 Caret의 고유 기능(페르소나, 입력 기록 등)을 모두 포함하는 최종 버전을 생성합니다.
+
+## 2. 실행 계획
+
+1.  **사용자 승인**: 아래에 제시된 `src/core/storage/state-keys.ts`의 최종 내용에 대해 마스터의 승인을 받습니다.
+2.  **파일 업데이트**: 승인 시, `write_to_file` 도구를 사용하여 `src/core/storage/state-keys.ts` 파일을 아래 내용으로 덮어씁니다.
+
+## 3. 최종 병합 내용
+
+```typescript
+import { ApiProvider, ModelInfo, type OcaModelInfo } from "@shared/api"
+import { FocusChainSettings } from "@shared/FocusChainSettings"
+import { LanguageModelChatSelector } from "vscode"
+import { WorkspaceRoot } from "@/core/workspace/WorkspaceRoot"
+import { AutoApprovalSettings } from "@/shared/AutoApprovalSettings"
+import { BrowserSettings } from "@/shared/BrowserSettings"
+import { CaretUser } from "@/shared/CaretAccount"
+import { ClineRulesToggles } from "@/shared/cline-rules"
+import { DictationSettings } from "@/shared/DictationSettings"
+import { HistoryItem } from "@/shared/HistoryItem"
+import { McpDisplayMode } from "@/shared/McpDisplayMode"
+import { McpMarketplaceCatalog } from "@/shared/mcp"
+import { Mode, OpenaiReasoningEffort } from "@/shared/storage/types"
+import { TelemetrySetting } from "@/shared/TelemetrySetting"
+import { UserInfo } from "@/shared/UserInfo"
+export type SecretKey = keyof Secrets
+
+export type GlobalStateKey = keyof GlobalState
+
+export type LocalStateKey = keyof LocalState
+
+export type SettingsKey = keyof Settings
+
+export type GlobalStateAndSettingsKey = keyof (GlobalState & Settings)
+
+export type GlobalStateAndSettings = GlobalState & Settings
+
+export interface GlobalState {
+	lastShownAnnouncementId: string | undefined
+	taskHistory: HistoryItem[]
+	userInfo: UserInfo | undefined
+	mcpMarketplaceCatalog: McpMarketplaceCatalog | undefined
+	favoritedModelIds: string[]
+	mcpMarketplaceEnabled: boolean
+	mcpResponsesCollapsed: boolean
+	terminalReuseEnabled: boolean
+	isNewUser: boolean
+	welcomeViewCompleted: boolean | undefined
+	mcpDisplayMode: McpDisplayMode
+	// Multi-root workspace support
+	workspaceRoots: WorkspaceRoot[] | undefined
+	primaryRootIndex: number
+	multiRootEnabled: boolean
+	lastDismissedInfoBannerVersion: number
+	lastDismissedModelBannerVersion: number
+}
+
+export interface Settings {
+	awsRegion: string | undefined
+	awsUseCrossRegionInference: boolean | undefined
+	awsBedrockUsePromptCache: boolean | undefined
+	awsBedrockEndpoint: string | undefined
+	awsProfile: string | undefined
+	awsAuthentication: string | undefined
+	awsUseProfile: boolean | undefined
+	vertexProjectId: string | undefined
+	vertexRegion: string | undefined
+	requestyBaseUrl: string | undefined
+	openAiBaseUrl: string | undefined
+	openAiHeaders: Record<string, string>
+	ollamaBaseUrl: string | undefined
+	ollamaApiOptionsCtxNum: string | undefined
+	lmStudioBaseUrl: string | undefined
+	lmStudioMaxTokens: string | undefined
+	anthropicBaseUrl: string | undefined
+	geminiBaseUrl: string | undefined
+	azureApiVersion: string | undefined
+	openRouterProviderSorting: string | undefined
+	autoApprovalSettings: AutoApprovalSettings
+	globalClineRulesToggles: ClineRulesToggles
+	globalWorkflowToggles: ClineRulesToggles
+	browserSettings: BrowserSettings
+	liteLlmBaseUrl: string | undefined
+	liteLlmUsePromptCache: boolean | undefined
+	caretBaseUrl: string | undefined // caret
+	caretUsePromptCache: boolean | undefined // caret
+	fireworksModelMaxCompletionTokens: number | undefined
+	fireworksModelMaxTokens: number | undefined
+	qwenApiLine: string | undefined
+	moonshotApiLine: string | undefined
+	zaiApiLine: string | undefined
+	telemetrySetting: TelemetrySetting
+	asksageApiUrl: string | undefined
+	planActSeparateModelsSetting: boolean
+	enableCheckpointsSetting: boolean
+	requestTimeoutMs: number | undefined
+	shellIntegrationTimeout: number
+	defaultTerminalProfile: string
+	terminalOutputLineLimit: number
+	sapAiCoreTokenUrl: string | undefined
+	sapAiCoreBaseUrl: string | undefined
+	sapAiResourceGroup: string | undefined
+	sapAiCoreUseOrchestrationMode: boolean | undefined
+	claudeCodePath: string | undefined
+	qwenCodeOauthPath: string | undefined
+	strictPlanModeEnabled: boolean
+	yoloModeToggled: boolean
+	useAutoCondense: boolean
+	preferredLanguage: string
+	openaiReasoningEffort: OpenaiReasoningEffort
+	mode: Mode
+	dictationSettings: DictationSettings
+	focusChainSettings: FocusChainSettings
+	customPrompt: "compact" | undefined
+	difyBaseUrl: string | undefined
+	autoCondenseThreshold: number | undefined // number from 0 to 1
+	ocaBaseUrl: string | undefined
+
+	// Plan mode configurations
+	planModeApiProvider: ApiProvider
+	planModeApiModelId: string | undefined
+	planModeThinkingBudgetTokens: number | undefined
+	planModeReasoningEffort: string | undefined
+	planModeVsCodeLmModelSelector: LanguageModelChatSelector | undefined
+	planModeAwsBedrockCustomSelected: boolean | undefined
+	planModeAwsBedrockCustomModelBaseId: string | undefined
+	planModeOpenRouterModelId: string | undefined
+	planModeOpenRouterModelInfo: ModelInfo | undefined
+	planModeOpenAiModelId: string | undefined
+	planModeOpenAiModelInfo: ModelInfo | undefined
+	planModeOllamaModelId: string | undefined
+	planModeLmStudioModelId: string | undefined
+	planModeLiteLlmModelId: string | undefined
+	planModeLiteLlmModelInfo: ModelInfo | undefined
+	planModeCaretModelId: string | undefined // caret
+	planModeCaretModelInfo: ModelInfo | undefined // caret
+	planModeRequestyModelId: string | undefined
+	planModeRequestyModelInfo: ModelInfo | undefined
+	planModeTogetherModelId: string | undefined
+	planModeFireworksModelId: string | undefined
+	planModeSapAiCoreModelId: string | undefined
+	planModeSapAiCoreDeploymentId: string | undefined
+	planModeGroqModelId: string | undefined
+	planModeGroqModelInfo: ModelInfo | undefined
+	planModeBasetenModelId: string | undefined
+	planModeBasetenModelInfo: ModelInfo | undefined
+	planModeHuggingFaceModelId: string | undefined
+	planModeHuggingFaceModelInfo: ModelInfo | undefined
+	planModeHuaweiCloudMaasModelId: string | undefined
+	planModeHuaweiCloudMaasModelInfo: ModelInfo | undefined
+	planModeOcaModelId: string | undefined
+	planModeOcaModelInfo: OcaModelInfo | undefined
+	// Act mode configurations
+	actModeApiProvider: ApiProvider
+	actModeApiModelId: string | undefined
+	actModeThinkingBudgetTokens: number | undefined
+	actModeReasoningEffort: string | undefined
+	actModeVsCodeLmModelSelector: LanguageModelChatSelector | undefined
+	actModeAwsBedrockCustomSelected: boolean | undefined
+	actModeAwsBedrockCustomModelBaseId: string | undefined
+	actModeOpenRouterModelId: string | undefined
+	actModeOpenRouterModelInfo: ModelInfo | undefined
+	actModeOpenAiModelId: string | undefined
+	actModeOpenAiModelInfo: ModelInfo | undefined
+	actModeOllamaModelId: string | undefined
+	actModeLmStudioModelId: string | undefined
+	actModeLiteLlmModelId: string | undefined
+	actModeLiteLlmModelInfo: ModelInfo | undefined
+	actModeCaretModelId: string | undefined // caret
+	actModeCaretModelInfo: ModelInfo | undefined // caret
+	actModeRequestyModelId: string | undefined
+	actModeRequestyModelInfo: ModelInfo | undefined
+	actModeTogetherModelId: string | undefined
+	actModeFireworksModelId: string | undefined
+	actModeSapAiCoreModelId: string | undefined
+	actModeSapAiCoreDeploymentId: string | undefined
+	actModeGroqModelId: string | undefined
+	actModeGroqModelInfo: ModelInfo | undefined
+	actModeBasetenModelId: string | undefined
+	actModeBasetenModelInfo: ModelInfo | undefined
+	actModeHuggingFaceModelId: string | undefined
+	actModeHuggingFaceModelInfo: ModelInfo | undefined
+	actModeHuaweiCloudMaasModelId: string | undefined
+	actModeHuaweiCloudMaasModelInfo: ModelInfo | undefined
+	planModeVercelAiGatewayModelId: string | undefined
+	planModeVercelAiGatewayModelInfo: ModelInfo | undefined
+	actModeVercelAiGatewayModelId: string | undefined
+	actModeVercelAiGatewayModelInfo: ModelInfo | undefined
+	actModeOcaModelId: string | undefined
+	actModeOcaModelInfo: OcaModelInfo | undefined
+	// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 (Caret/Cline 구분)
+	caretModeSystem: "caret" | "cline" | undefined
+	// CARET MODIFICATION: Persona system settings
+	enablePersonaSystem: boolean | undefined
+	currentPersona: string | undefined
+	personaProfile:
+		| {
+				name?: string
+				description?: string
+				custom_instruction?: string
+				avatar_uri?: string
+				thinking_avatar_uri?: string
+		  }
+		| undefined
+	// CARET MODIFICATION: Persona image storage for persona system
+	caretUserProfile: CaretUser | undefined //caret
+	// CARET MODIFICATION: Input history for chat persistence
+	inputHistory: string[] | undefined
+}
+
+export interface Secrets {
+	apiKey: string | undefined
+	clineAccountId: string | undefined
+	openRouterApiKey: string | undefined
+	awsAccessKey: string | undefined
+	awsSecretKey: string | undefined
+	awsSessionToken: string | undefined
+	awsBedrockApiKey: string | undefined
+	openAiApiKey: string | undefined
+	geminiApiKey: string | undefined
+	openAiNativeApiKey: string | undefined
+	ollamaApiKey: string | undefined
+	deepSeekApiKey: string | undefined
+	requestyApiKey: string | undefined
+	togetherApiKey: string | undefined
+	fireworksApiKey: string | undefined
+	qwenApiKey: string | undefined
+	doubaoApiKey: string | undefined
+	mistralApiKey: string | undefined
+	liteLlmApiKey: string | undefined
+	authNonce: string | undefined
+	asksageApiKey: string | undefined
+	xaiApiKey: string | undefined
+	moonshotApiKey: string | undefined
+	zaiApiKey: string | undefined
+	huggingFaceApiKey: string | undefined
+	nebiusApiKey: string | undefined
+	sambanovaApiKey: string | undefined
+	cerebrasApiKey: string | undefined
+	sapAiCoreClientId: string | undefined
+	sapAiCoreClientSecret: string | undefined
+	groqApiKey: string | undefined
+	huaweiCloudMaasApiKey: string | undefined
+	basetenApiKey: string | undefined
+	vercelAiGatewayApiKey: string | undefined
+	difyApiKey: string | undefined
+	ocaApiKey: string | undefined
+	ocaRefreshToken: string | undefined
+	caretAuthToken: string | undefined //caret
+	caretApiKey: string | undefined //caret
+}
+
+export interface LocalState {
+	localClineRulesToggles: ClineRulesToggles
+	localCaretRulesToggles: ClineRulesToggles // CARET MODIFICATION: Added .caretrules support
+	localCursorRulesToggles: ClineRulesToggles
+	localWindsurfRulesToggles: ClineRulesToggles
+	workflowToggles: ClineRulesToggles
+}

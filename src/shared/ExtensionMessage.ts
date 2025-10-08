@@ -1,17 +1,19 @@
 // type that represents json data that is sent from extension to webview, called ExtensionMessage and has 'type' enum which can be 'plusButtonClicked' or 'settingsButtonClicked' or 'hello'
 
 import { FeatureConfig } from "@caret/shared/FeatureConfig"
+import { WorkspaceRoot } from "../core/workspace"
 import { AutoApprovalSettings } from "./AutoApprovalSettings"
 import { ApiConfiguration } from "./api"
 import { BrowserSettings } from "./BrowserSettings"
+import { ClineFeatureSetting } from "./ClineFeatureSetting"
 import { ClineRulesToggles } from "./cline-rules"
+import { DictationSettings } from "./DictationSettings"
 import { FocusChainSettings } from "./FocusChainSettings"
 import { HistoryItem } from "./HistoryItem"
 import { McpDisplayMode } from "./McpDisplayMode"
 import { Mode, OpenaiReasoningEffort } from "./storage/types"
 import { TelemetrySetting } from "./TelemetrySetting"
 import { UserInfo } from "./UserInfo"
-
 // webview will hold state
 export interface ExtensionMessage {
 	type: "grpc_response" // New type for gRPC responses
@@ -45,7 +47,7 @@ export interface ExtensionState {
 	mode: Mode
 	// CARET MODIFICATION: Caret 전역 브랜드 모드 플래그 - Caret/Cline 구분을 위한 전역 설정
 	modeSystem?: CaretModeSystem
-	checkpointTrackerErrorMessage?: string
+	checkpointManagerErrorMessage?: string
 	clineMessages: ClineMessage[]
 	currentTaskItem?: HistoryItem
 	currentFocusChainChecklist?: string | null
@@ -61,23 +63,23 @@ export interface ExtensionState {
 	terminalReuseEnabled?: boolean
 	terminalOutputLineLimit: number
 	defaultTerminalProfile?: string
-	uriScheme?: string
 	userInfo?: UserInfo
 	version: string
 	distinctId: string
 	globalClineRulesToggles: ClineRulesToggles
 	localClineRulesToggles: ClineRulesToggles
 	localCaretRulesToggles: ClineRulesToggles // CARET MODIFICATION: Add caret rules
-	inputHistory?: string[] // CARET MODIFICATION: Persistent input history
+	inputHistory?: HistoryItem[] // CARET MODIFICATION: Persistent input history (Type corrected from string[] to HistoryItem[])
 	localWorkflowToggles: ClineRulesToggles
 	globalWorkflowToggles: ClineRulesToggles
 	localCursorRulesToggles: ClineRulesToggles
 	localWindsurfRulesToggles: ClineRulesToggles
 	mcpResponsesCollapsed?: boolean
 	strictPlanModeEnabled?: boolean
+	yoloModeToggled?: boolean
 	useAutoCondense?: boolean
 	focusChainSettings: FocusChainSettings
-	focusChainFeatureFlagEnabled?: boolean
+	dictationSettings: DictationSettings
 	customPrompt?: string
 	featureConfig?: FeatureConfig // CARET MODIFICATION: Add feature config
 	// CARET MODIFICATION: Add caretBanner for Caret welcome page logo
@@ -92,6 +94,15 @@ export interface ExtensionState {
 		avatar_uri?: string
 		thinking_avatar_uri?: string
 	} | null
+	autoCondenseThreshold?: number
+	favoritedModelIds: string[]
+	// NEW: Add workspace information
+	workspaceRoots: WorkspaceRoot[]
+	primaryRootIndex: number
+	isMultiRootWorkspace: boolean
+	multiRootSetting: ClineFeatureSetting
+	lastDismissedInfoBannerVersion: number
+	lastDismissedModelBannerVersion: number
 }
 
 export interface ClineMessage {

@@ -1,15 +1,27 @@
-# `src/core/storage/utils/state-helpers.ts` 병합 실행 계획
+# `state-helpers.ts` 병합 계획
 
-## 1. 목표
+## 1. 분석
 
-`src/core/storage/utils/state-helpers.ts` 파일의 복잡한 병합 충돌을 해결합니다. Cline의 리팩토링된 아키텍처(타입 안전성, `HostProvider` 의존성)를 채택하면서 Caret의 고유 기능(페르소나, 브랜드 설정, `FeatureConfig` 등)을 완벽하게 통합하고, 병합 후 발생한 타입스크립트 오류를 수정합니다.
+`src/core/storage/utils/state-helpers.ts` 파일은 Caret의 고유 상태(페르소나, 사용자 계정, 입력 기록 등)와 `upstream/main`의 새로운 상태(Dictation, OCA 모델, 멀티루트 작업공간 등)가 여러 함수에 걸쳐 충돌하고 있다.
 
-## 2. 실행 계획
+## 2. 병합 원칙
 
-1.  **사용자 승인**: 아래에 제시된 `src/core/storage/utils/state-helpers.ts`의 최종 내용에 대해 마스터의 승인을 받습니다.
-2.  **파일 업데이트**: 승인 시, `write_to_file` 도구를 사용하여 `src/core/storage/utils/state-helpers.ts` 파일을 아래 내용으로 덮어씁니다.
+- **Caret 기능 보존**: Caret의 페르소나, 사용자 계정, 입력 기록, 브랜드 모드 등과 관련된 모든 상태 관리 로직을 보존한다.
+- **Cline 최신 구조 채택**: `GlobalStateAndSettings` 타입, `readTaskHistoryFromState` 함수 호출 등 `upstream/main`의 최신 코드 구조와 리팩토링 내용을 따른다.
+- **통합 및 기본값 처리**: 양쪽 브랜치의 새로운 상태 변수를 모두 포함하고, `upstream/main`의 방식대로 신규 변수에 대한 안전한 기본값을 설정한다.
 
-## 3. 최종 병합 내용
+## 3. 주요 변경 사항
+
+- **Imports**: Caret과 Cline의 import 구문을 모두 통합한다.
+- **`readSecretsFromDisk`**: Caret의 `caretApiKey`, `caretAuthToken`을 추가하고, Cline의 타입 지정 방식을 적용한다.
+- **`readGlobalStateFromDisk`**:
+    - 반환 타입을 `Promise<GlobalStateAndSettings>`로 변경한다.
+    - Caret과 Cline의 모든 전역 상태 변수를 읽어오도록 통합한다.
+    - `taskHistory`를 `readTaskHistoryFromState()` 함수로 읽어오도록 변경한다.
+    - 최종 반환 객체에 양쪽의 모든 상태와 기본값을 포함시킨다. Caret의 고유 로직(예: `enablePersonaSystem`의 동적 기본값 설정)은 그대로 유지한다.
+- **`reset...State` 함수**: Caret의 상태 초기화 로직을 `upstream/main`의 최신 함수 구조에 맞게 유지한다.
+
+## 4. 제안 코드 (전체 파일)
 
 ```typescript
 // CARET MODIFICATION: Import feature configuration for persona defaults
@@ -29,7 +41,7 @@ import { Mode, OpenaiReasoningEffort } from "@/shared/storage/types"
 import { TelemetrySetting } from "@/shared/TelemetrySetting"
 import { UserInfo } from "@/shared/UserInfo"
 import { readTaskHistoryFromState } from "../disk"
-import { GlobalState, GlobalStateAndSettings, LocalState, SecretKey, Secrets } from "../state-keys"
+import { GlobalStateAndSettings, LocalState, SecretKey, Secrets } from "../state-keys"
 
 export async function readSecretsFromDisk(context: ExtensionContext): Promise<Secrets> {
 	const [
@@ -262,9 +274,16 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			context.globalState.get<GlobalStateAndSettings["openaiReasoningEffort"]>("openaiReasoningEffort")
 		const preferredLanguage = context.globalState.get<GlobalStateAndSettings["preferredLanguage"]>("preferredLanguage")
 		const focusChainSettings = context.globalState.get<GlobalStateAndSettings["focusChainSettings"]>("focusChainSettings")
+		const focusChainFeatureFlagEnabled = context.globalState.get("focusChainFeatureFlagEnabled") as boolean | undefined
 		const dictationSettings = context.globalState.get<GlobalStateAndSettings["dictationSettings"]>("dictationSettings") as
 			| DictationSettings
 			| undefined
+		const modeSystem = context.globalState.get("caretModeSystem") as "caret" | "cline" | undefined
+		const enablePersonaSystem = context.globalState.get("enablePersonaSystem") as boolean | undefined
+		const currentPersona = context.globalState.get("currentPersona") as string | undefined
+		const personaProfile = context.globalState.get("personaProfile") as any
+		const inputHistory = context.globalState.get("inputHistory") as HistoryItem[] | undefined
+
 		const mcpMarketplaceCatalog =
 			context.globalState.get<GlobalStateAndSettings["mcpMarketplaceCatalog"]>("mcpMarketplaceCatalog")
 		const lastDismissedInfoBannerVersion =
@@ -280,97 +299,143 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const mode = context.globalState.get<GlobalStateAndSettings["mode"]>("mode")
 
 		// Plan mode configurations
-		const planModeApiProvider = context.globalState.get("planModeApiProvider") as ApiProvider | undefined
-		const planModeApiModelId = context.globalState.get("planModeApiModelId") as string | undefined
-		const planModeThinkingBudgetTokens = context.globalState.get("planModeThinkingBudgetTokens") as number | undefined
-		const planModeReasoningEffort = context.globalState.get("planModeReasoningEffort") as string | undefined
-		const planModeVsCodeLmModelSelector = context.globalState.get("planModeVsCodeLmModelSelector") as
-			| LanguageModelChatSelector
-			| undefined
-		const planModeAwsBedrockCustomSelected = context.globalState.get("planModeAwsBedrockCustomSelected") as boolean | undefined
-		const planModeAwsBedrockCustomModelBaseId = context.globalState.get("planModeAwsBedrockCustomModelBaseId") as
-			| BedrockModelId
-			| undefined
-		const planModeOpenRouterModelId = context.globalState.get("planModeOpenRouterModelId") as string | undefined
-		const planModeOpenRouterModelInfo = context.globalState.get("planModeOpenRouterModelInfo") as ModelInfo | undefined
-		const planModeOpenAiModelId = context.globalState.get("planModeOpenAiModelId") as string | undefined
-		const planModeOpenAiModelInfo = context.globalState.get("planModeOpenAiModelInfo") as ModelInfo | undefined
-		const planModeOllamaModelId = context.globalState.get("planModeOllamaModelId") as string | undefined
-		const planModeLmStudioModelId = context.globalState.get("planModeLmStudioModelId") as string | undefined
-		const planModeLiteLlmModelId = context.globalState.get("planModeLiteLlmModelId") as string | undefined
-		const planModeLiteLlmModelInfo = context.globalState.get("planModeLiteLlmModelInfo") as ModelInfo | undefined
+		const planModeApiProvider = context.globalState.get<GlobalStateAndSettings["planModeApiProvider"]>("planModeApiProvider")
+		const planModeApiModelId = context.globalState.get<GlobalStateAndSettings["planModeApiModelId"]>("planModeApiModelId")
+		const planModeThinkingBudgetTokens =
+			context.globalState.get<GlobalStateAndSettings["planModeThinkingBudgetTokens"]>("planModeThinkingBudgetTokens")
+		const planModeReasoningEffort =
+			context.globalState.get<GlobalStateAndSettings["planModeReasoningEffort"]>("planModeReasoningEffort")
+		const planModeVsCodeLmModelSelector =
+			context.globalState.get<GlobalStateAndSettings["planModeVsCodeLmModelSelector"]>("planModeVsCodeLmModelSelector")
+		const planModeAwsBedrockCustomSelected = context.globalState.get<
+			GlobalStateAndSettings["planModeAwsBedrockCustomSelected"]
+		>("planModeAwsBedrockCustomSelected")
+		const planModeAwsBedrockCustomModelBaseId = context.globalState.get<
+			GlobalStateAndSettings["planModeAwsBedrockCustomModelBaseId"]
+		>("planModeAwsBedrockCustomModelBaseId")
+		const planModeOpenRouterModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeOpenRouterModelId"]>("planModeOpenRouterModelId")
+		const planModeOpenRouterModelInfo =
+			context.globalState.get<GlobalStateAndSettings["planModeOpenRouterModelInfo"]>("planModeOpenRouterModelInfo")
+		const planModeOpenAiModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeOpenAiModelId"]>("planModeOpenAiModelId")
+		const planModeOpenAiModelInfo =
+			context.globalState.get<GlobalStateAndSettings["planModeOpenAiModelInfo"]>("planModeOpenAiModelInfo")
+		const planModeOllamaModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeOllamaModelId"]>("planModeOllamaModelId")
+		const planModeLmStudioModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeLmStudioModelId"]>("planModeLmStudioModelId")
+		const planModeLiteLlmModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeLiteLlmModelId"]>("planModeLiteLlmModelId")
+		const planModeLiteLlmModelInfo =
+			context.globalState.get<GlobalStateAndSettings["planModeLiteLlmModelInfo"]>("planModeLiteLlmModelInfo")
 		const planModeCaretModelId = context.globalState.get("planModeCaretModelId") as string | undefined
 		const planModeCaretModelInfo = context.globalState.get("planModeCaretModelInfo") as ModelInfo | undefined
-		const planModeRequestyModelId = context.globalState.get("planModeRequestyModelId") as string | undefined
-		const planModeRequestyModelInfo = context.globalState.get("planModeRequestyModelInfo") as ModelInfo | undefined
-		const planModeTogetherModelId = context.globalState.get("planModeTogetherModelId") as string | undefined
-		const planModeFireworksModelId = context.globalState.get("planModeFireworksModelId") as string | undefined
-		const planModeSapAiCoreModelId = context.globalState.get("planModeSapAiCoreModelId") as string | undefined
+		const planModeRequestyModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeRequestyModelId"]>("planModeRequestyModelId")
+		const planModeRequestyModelInfo =
+			context.globalState.get<GlobalStateAndSettings["planModeRequestyModelInfo"]>("planModeRequestyModelInfo")
+		const planModeTogetherModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeTogetherModelId"]>("planModeTogetherModelId")
+		const planModeFireworksModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeFireworksModelId"]>("planModeFireworksModelId")
+		const planModeSapAiCoreModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeSapAiCoreModelId"]>("planModeSapAiCoreModelId")
 		const planModeSapAiCoreDeploymentId =
 			context.globalState.get<GlobalStateAndSettings["planModeSapAiCoreDeploymentId"]>("planModeSapAiCoreDeploymentId")
-		const planModeGroqModelId = context.globalState.get("planModeGroqModelId") as string | undefined
-		const planModeGroqModelInfo = context.globalState.get("planModeGroqModelInfo") as ModelInfo | undefined
-		const planModeHuggingFaceModelId = context.globalState.get("planModeHuggingFaceModelId") as string | undefined
-		const planModeHuggingFaceModelInfo = context.globalState.get("planModeHuggingFaceModelInfo") as ModelInfo | undefined
-		const planModeHuaweiCloudMaasModelId = context.globalState.get("planModeHuaweiCloudMaasModelId") as string | undefined
-		const planModeHuaweiCloudMaasModelInfo = context.globalState.get("planModeHuaweiCloudMaasModelInfo") as ModelInfo | undefined
-		const planModeBasetenModelId = context.globalState.get("planModeBasetenModelId") as string | undefined
-		const planModeBasetenModelInfo = context.globalState.get("planModeBasetenModelInfo") as ModelInfo | undefined
-		const planModeVercelAiGatewayModelId = context.globalState.get("planModeVercelAiGatewayModelId") as string | undefined
-		const planModeVercelAiGatewayModelInfo = context.globalState.get("planModeVercelAiGatewayModelInfo") as ModelInfo | undefined
+		const planModeGroqModelId = context.globalState.get<GlobalStateAndSettings["planModeGroqModelId"]>("planModeGroqModelId")
+		const planModeGroqModelInfo =
+			context.globalState.get<GlobalStateAndSettings["planModeGroqModelInfo"]>("planModeGroqModelInfo")
+		const planModeHuggingFaceModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeHuggingFaceModelId"]>("planModeHuggingFaceModelId")
+		const planModeHuggingFaceModelInfo =
+			context.globalState.get<GlobalStateAndSettings["planModeHuggingFaceModelInfo"]>("planModeHuggingFaceModelInfo")
+		const planModeHuaweiCloudMaasModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeHuaweiCloudMaasModelId"]>("planModeHuaweiCloudMaasModelId")
+		const planModeHuaweiCloudMaasModelInfo = context.globalState.get<
+			GlobalStateAndSettings["planModeHuaweiCloudMaasModelInfo"]
+		>("planModeHuaweiCloudMaasModelInfo")
+		const planModeBasetenModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeBasetenModelId"]>("planModeBasetenModelId")
+		const planModeBasetenModelInfo =
+			context.globalState.get<GlobalStateAndSettings["planModeBasetenModelInfo"]>("planModeBasetenModelInfo")
+		const planModeVercelAiGatewayModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeVercelAiGatewayModelId"]>("planModeVercelAiGatewayModelId")
+		const planModeVercelAiGatewayModelInfo = context.globalState.get<
+			GlobalStateAndSettings["planModeVercelAiGatewayModelInfo"]
+		>("planModeVercelAiGatewayModelInfo")
 		const planModeOcaModelId = context.globalState.get("planModeOcaModelId") as string | undefined
 		const planModeOcaModelInfo = context.globalState.get("planModeOcaModelInfo") as OcaModelInfo | undefined
 		// Act mode configurations
-		const actModeApiProvider = context.globalState.get("actModeApiProvider") as ApiProvider | undefined
-		const actModeApiModelId = context.globalState.get("actModeApiModelId") as string | undefined
-		const actModeThinkingBudgetTokens = context.globalState.get("actModeThinkingBudgetTokens") as number | undefined
-		const actModeReasoningEffort = context.globalState.get("actModeReasoningEffort") as string | undefined
-		const actModeVsCodeLmModelSelector = context.globalState.get("actModeVsCodeLmModelSelector") as
-			| LanguageModelChatSelector
-			| undefined
-		const actModeAwsBedrockCustomSelected = context.globalState.get("actModeAwsBedrockCustomSelected") as boolean | undefined
-		const actModeAwsBedrockCustomModelBaseId = context.globalState.get("actModeAwsBedrockCustomModelBaseId") as
-			| BedrockModelId
-			| undefined
-		const actModeOpenRouterModelId = context.globalState.get("actModeOpenRouterModelId") as string | undefined
-		const actModeOpenRouterModelInfo = context.globalState.get("actModeOpenRouterModelInfo") as ModelInfo | undefined
-		const actModeOpenAiModelId = context.globalState.get("actModeOpenAiModelId") as string | undefined
-		const actModeOpenAiModelInfo = context.globalState.get("actModeOpenAiModelInfo") as ModelInfo | undefined
-		const actModeOllamaModelId = context.globalState.get("actModeOllamaModelId") as string | undefined
-		const actModeLmStudioModelId = context.globalState.get("actModeLmStudioModelId") as string | undefined
-		const actModeLiteLlmModelId = context.globalState.get("actModeLiteLlmModelId") as string | undefined
-		const actModeLiteLlmModelInfo = context.globalState.get("actModeLiteLlmModelInfo") as ModelInfo | undefined
+		const actModeApiProvider = context.globalState.get<GlobalStateAndSettings["actModeApiProvider"]>("actModeApiProvider")
+		const actModeApiModelId = context.globalState.get<GlobalStateAndSettings["actModeApiModelId"]>("actModeApiModelId")
+		const actModeThinkingBudgetTokens =
+			context.globalState.get<GlobalStateAndSettings["actModeThinkingBudgetTokens"]>("actModeThinkingBudgetTokens")
+		const actModeReasoningEffort =
+			context.globalState.get<GlobalStateAndSettings["actModeReasoningEffort"]>("actModeReasoningEffort")
+		const actModeVsCodeLmModelSelector =
+			context.globalState.get<GlobalStateAndSettings["actModeVsCodeLmModelSelector"]>("actModeVsCodeLmModelSelector")
+		const actModeAwsBedrockCustomSelected = context.globalState.get<
+			GlobalStateAndSettings["actModeAwsBedrockCustomSelected"]
+		>("actModeAwsBedrockCustomSelected")
+		const actModeAwsBedrockCustomModelBaseId = context.globalState.get<
+			GlobalStateAndSettings["actModeAwsBedrockCustomModelBaseId"]
+		>("actModeAwsBedrockCustomModelBaseId")
+		const actModeOpenRouterModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeOpenRouterModelId"]>("actModeOpenRouterModelId")
+		const actModeOpenRouterModelInfo =
+			context.globalState.get<GlobalStateAndSettings["actModeOpenRouterModelInfo"]>("actModeOpenRouterModelInfo")
+		const actModeOpenAiModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeOpenAiModelId"]>("actModeOpenAiModelId")
+		const actModeOpenAiModelInfo =
+			context.globalState.get<GlobalStateAndSettings["actModeOpenAiModelInfo"]>("actModeOpenAiModelInfo")
+		const actModeOllamaModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeOllamaModelId"]>("actModeOllamaModelId")
+		const actModeLmStudioModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeLmStudioModelId"]>("actModeLmStudioModelId")
+		const actModeLiteLlmModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeLiteLlmModelId"]>("actModeLiteLlmModelId")
+		const actModeLiteLlmModelInfo =
+			context.globalState.get<GlobalStateAndSettings["actModeLiteLlmModelInfo"]>("actModeLiteLlmModelInfo")
 		const actModeCaretModelId = context.globalState.get("actModeCaretModelId") as string | undefined // caret
 		const actModeCaretModelInfo = context.globalState.get("actModeCaretModelInfo") as ModelInfo | undefined // caret
-		const actModeRequestyModelId = context.globalState.get("actModeRequestyModelId") as string | undefined
-		const actModeRequestyModelInfo = context.globalState.get("actModeRequestyModelInfo") as ModelInfo | undefined
-		const actModeTogetherModelId = context.globalState.get("actModeTogetherModelId") as string | undefined
-		const actModeFireworksModelId = context.globalState.get("actModeFireworksModelId") as string | undefined
-		const actModeSapAiCoreModelId = context.globalState.get("actModeSapAiCoreModelId") as string | undefined
+		const actModeRequestyModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeRequestyModelId"]>("actModeRequestyModelId")
+		const actModeRequestyModelInfo =
+			context.globalState.get<GlobalStateAndSettings["actModeRequestyModelInfo"]>("actModeRequestyModelInfo")
+		const actModeTogetherModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeTogetherModelId"]>("actModeTogetherModelId")
+		const actModeFireworksModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeFireworksModelId"]>("actModeFireworksModelId")
+		const actModeSapAiCoreModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeSapAiCoreModelId"]>("actModeSapAiCoreModelId")
 		const actModeSapAiCoreDeploymentId =
 			context.globalState.get<GlobalStateAndSettings["actModeSapAiCoreDeploymentId"]>("actModeSapAiCoreDeploymentId")
-		const actModeGroqModelId = context.globalState.get("actModeGroqModelId") as string | undefined
-		const actModeGroqModelInfo = context.globalState.get("actModeGroqModelInfo") as ModelInfo | undefined
-		const actModeHuggingFaceModelId = context.globalState.get("actModeHuggingFaceModelId") as string | undefined
-		const actModeHuggingFaceModelInfo = context.globalState.get("actModeHuggingFaceModelInfo") as ModelInfo | undefined
-		const actModeHuaweiCloudMaasModelId = context.globalState.get("actModeHuaweiCloudMaasModelId") as string | undefined
-		const actModeHuaweiCloudMaasModelInfo = context.globalState.get("actModeHuaweiCloudMaasModelInfo") as ModelInfo | undefined
-		const actModeBasetenModelId = context.globalState.get("actModeBasetenModelId") as string | undefined
-		const actModeBasetenModelInfo = context.globalState.get("actModeBasetenModelInfo") as ModelInfo | undefined
-		const actModeVercelAiGatewayModelId = context.globalState.get("actModeVercelAiGatewayModelId") as string | undefined
-		const actModeVercelAiGatewayModelInfo = context.globalState.get("actModeVercelAiGatewayModelInfo") as ModelInfo | undefined
+		const actModeGroqModelId = context.globalState.get<GlobalStateAndSettings["actModeGroqModelId"]>("actModeGroqModelId")
+		const actModeGroqModelInfo =
+			context.globalState.get<GlobalStateAndSettings["actModeGroqModelInfo"]>("actModeGroqModelInfo")
+		const actModeHuggingFaceModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeHuggingFaceModelId"]>("actModeHuggingFaceModelId")
+		const actModeHuggingFaceModelInfo =
+			context.globalState.get<GlobalStateAndSettings["actModeHuggingFaceModelInfo"]>("actModeHuggingFaceModelInfo")
+		const actModeHuaweiCloudMaasModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeHuaweiCloudMaasModelId"]>("actModeHuaweiCloudMaasModelId")
+		const actModeHuaweiCloudMaasModelInfo = context.globalState.get<
+			GlobalStateAndSettings["actModeHuaweiCloudMaasModelInfo"]
+		>("actModeHuaweiCloudMaasModelInfo")
+		const actModeBasetenModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeBasetenModelId"]>("actModeBasetenModelId")
+		const actModeBasetenModelInfo =
+			context.globalState.get<GlobalStateAndSettings["actModeBasetenModelInfo"]>("actModeBasetenModelInfo")
+		const actModeVercelAiGatewayModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeVercelAiGatewayModelId"]>("actModeVercelAiGatewayModelId")
+		const actModeVercelAiGatewayModelInfo = context.globalState.get<
+			GlobalStateAndSettings["actModeVercelAiGatewayModelInfo"]
+		>("actModeVercelAiGatewayModelInfo")
 		const actModeOcaModelId = context.globalState.get("actModeOcaModelId") as string | undefined
 		const actModeOcaModelInfo = context.globalState.get("actModeOcaModelInfo") as OcaModelInfo | undefined
 		const sapAiCoreUseOrchestrationMode =
 			context.globalState.get<GlobalStateAndSettings["sapAiCoreUseOrchestrationMode"]>("sapAiCoreUseOrchestrationMode")
-		// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 (Caret/Cline 구분)
-		const modeSystem = context.globalState.get("caretModeSystem") as "caret" | "cline" | undefined
-		// CARET MODIFICATION: Persona system settings
-		const enablePersonaSystem = context.globalState.get("enablePersonaSystem") as boolean | undefined
-		const currentPersona = context.globalState.get("currentPersona") as string | undefined
-		const personaProfile = context.globalState.get("personaProfile") as GlobalState["personaProfile"]
-		// CARET MODIFICATION: Input history for chat persistence
-		const inputHistory = context.globalState.get("inputHistory") as GlobalState["inputHistory"]
 
 		let apiProvider: ApiProvider
 		if (planModeApiProvider) {
@@ -388,8 +453,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		if (planActSeparateModelsSettingRaw === true || planActSeparateModelsSettingRaw === false) {
 			planActSeparateModelsSetting = planActSeparateModelsSettingRaw
 		} else {
-			// default to true for existing users
-			planActSeparateModelsSetting = true
+			// default to false
+			planActSeparateModelsSetting = false
 		}
 
 		const taskHistory = await readTaskHistoryFromState()
@@ -525,6 +590,7 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 
 			// Other global fields
 			focusChainSettings: focusChainSettings || DEFAULT_FOCUS_CHAIN_SETTINGS,
+			focusChainFeatureFlagEnabled: focusChainFeatureFlagEnabled ?? false,
 			dictationSettings: { ...DEFAULT_DICTATION_SETTINGS, ...dictationSettings },
 			strictPlanModeEnabled: strictPlanModeEnabled ?? true,
 			yoloModeToggled: yoloModeToggled ?? false,
@@ -557,12 +623,6 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			autoCondenseThreshold: autoCondenseThreshold || 0.75, // default to 0.75 if not set
 			lastDismissedInfoBannerVersion: lastDismissedInfoBannerVersion ?? 0,
 			lastDismissedModelBannerVersion: lastDismissedModelBannerVersion ?? 0,
-			// Multi-root workspace support
-			workspaceRoots,
-			primaryRootIndex: primaryRootIndex ?? 0,
-			// Feature flag - defaults to false
-			// For now, always return false to disable multi-root support by default
-			multiRootEnabled: !!multiRootEnabled,
 			// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 (Caret/Cline 구분)
 			caretModeSystem: modeSystem || "caret",
 			// CARET MODIFICATION: Persona system settings with brand configuration
@@ -576,6 +636,12 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			personaProfile: personaProfile,
 			// CARET MODIFICATION: Input history for chat persistence
 			inputHistory: inputHistory,
+			// Multi-root workspace support
+			workspaceRoots,
+			primaryRootIndex: primaryRootIndex ?? 0,
+			// Feature flag - defaults to false
+			// For now, always return false to disable multi-root support by default
+			multiRootEnabled: !!multiRootEnabled,
 		}
 	} catch (error) {
 		console.error("[StateHelpers] Failed to read global state:", error)
@@ -590,7 +656,7 @@ export async function resetWorkspaceState(controller: Controller) {
 	// CARET MODIFICATION: Reset Caret-specific workspace settings to defaults
 	await context.workspaceState.update("caret.promptSystem.mode", "caret")
 
-	await controller.reInitialize()
+	await controller.stateManager.reInitialize()
 }
 
 export async function resetGlobalState(controller: Controller) {
@@ -642,9 +708,14 @@ export async function resetGlobalState(controller: Controller) {
 		"difyApiKey",
 		"ocaApiKey",
 		"ocaRefreshToken",
-		"caretApiKey", // caret
-		"caretAuthToken", // caret
 	]
 	await Promise.all(secretKeys.map((key) => context.secrets.delete(key)))
-	await controller.reInitialize()
+	await controller.stateManager.reInitialize()
 }
+```
+
+## 5. 다음 단계
+
+1.  마스터께서 위 제안 코드를 검토하고 승인합니다.
+2.  승인 시, `write_to_file` 명령을 사용하여 `src/core/storage/utils/state-helpers.ts` 파일을 위 내용으로 덮어씁니다.
+3.  `npm run compile`을 실행하여 해당 파일의 충돌이 해결되고, 새로운 컴파일 오류가 발생하지 않는지 확인합니다.

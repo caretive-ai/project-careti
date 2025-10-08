@@ -1,12 +1,10 @@
-import { PromptSystemManager } from "@caret/core/prompts/system/PromptSystemManager"
-// CARET MODIFICATION: Import CaretGlobalManager and PromptSystemManager for dual mode support
 import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
+import { isGPT5ModelFamily, isLocalModel, isNextGenModelFamily } from "@utils/model-utils"
 import { ApiProviderInfo } from "@/core/api"
 import { Logger } from "@/services/logging/Logger"
 import { ModelFamily } from "@/shared/prompts"
 import { PromptRegistry } from "./registry/PromptRegistry"
 import type { SystemPromptContext } from "./types"
-import { isGPT5ModelFamily, isLocalModel, isNextGenModelFamily } from "./utils"
 
 export { ClineToolSet } from "./registry/ClineToolSet"
 export { PromptBuilder } from "./registry/PromptBuilder"

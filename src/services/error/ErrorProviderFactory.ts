@@ -1,4 +1,4 @@
-import { posthogConfig } from "@/shared/services/config/posthog-config"
+import { isPostHogConfigValid, PostHogClientConfig, posthogConfig } from "@/shared/services/config/posthog-config"
 import { ClineError } from "./ClineError"
 import { IErrorProvider } from "./providers/IErrorProvider"
 import { PostHogErrorProvider } from "./providers/PostHogErrorProvider"
@@ -13,7 +13,7 @@ export type ErrorProviderType = "posthog" | "no-op"
  */
 export interface ErrorProviderConfig {
 	type: ErrorProviderType
-	config: typeof posthogConfig
+	config: PostHogClientConfig
 }
 
 /**
@@ -29,10 +29,12 @@ export class ErrorProviderFactory {
 	public static async createProvider(config: ErrorProviderConfig): Promise<IErrorProvider> {
 		switch (config.type) {
 			case "posthog": {
-				const apiKey = config.config.apiKey
-				return apiKey
+				const hasValidPostHogConfig = isPostHogConfigValid(config.config)
+				const errorTrackingApiKey = config.config.errorTrackingApiKey
+				return hasValidPostHogConfig && errorTrackingApiKey
 					? await new PostHogErrorProvider({
-							apiKey: apiKey,
+							apiKey: errorTrackingApiKey,
+							errorTrackingApiKey: errorTrackingApiKey,
 							host: config.config.host,
 							uiHost: config.config.uiHost,
 						}).initialize()

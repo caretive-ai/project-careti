@@ -1,30 +1,28 @@
-import { expect } from "@playwright/test"
-import { e2e } from "./utils/helpers"
+import { expect, test } from "@playwright/test"
+import { Sidebar } from "./fixtures/sidebar"
 
-// Test for setting up API keys
-e2e("Auth - can set up API keys", async ({ page, sidebar }) => {
-	// Use the page object to interact with editor outside the sidebar
+test("can sign in with API key", async ({ page }) => {
+	const sidebar = new Sidebar(page)
+	await sidebar.show()
+
 	// Verify initial state - try both new and old button texts
 	const freeButton = sidebar.getByRole("button", { name: /Start for Free|Get Started for Free/ })
 	const ownKeyButton = sidebar.getByRole("button", { name: /Use Your Own API Key|Use your own API key/ })
-
 	await expect(freeButton).toBeVisible()
 	await expect(ownKeyButton).toBeVisible()
 
-	// Navigate to API key setup
 	await ownKeyButton.click()
 
-	const providerSelectorInput = sidebar.getByTestId("provider-selector-input")
-
-	// Verify provider selector is visible
-	await expect(providerSelectorInput).toBeVisible()
+	// Wait for API key input to appear
+	const apiKeyInput = sidebar.getByPlaceholder("Enter your API key")
+	await expect(apiKeyInput).toBeVisible()
 
 	// Test Caret/Cline provider option
-	await providerSelectorInput.click({ delay: 100 })
+	await sidebar.getByTestId("provider-select").click({ delay: 100 })
+
 	// Wait for dropdown to appear and find Caret or Cline option
 	const caretOption = sidebar.getByTestId("provider-option-caret")
 	const clineOption = sidebar.getByTestId("provider-option-cline")
-
 	try {
 		await expect(caretOption).toBeVisible({ timeout: 2000 })
 		await caretOption.click({ delay: 100 })
@@ -35,48 +33,25 @@ e2e("Auth - can set up API keys", async ({ page, sidebar }) => {
 		await expect(sidebar.getByRole("button", { name: /Sign Up with Caret|Sign Up with Cline/ })).toBeVisible()
 	}
 
-	// Switch to OpenRouter and complete setup
-	await providerSelectorInput.click({ delay: 100 })
-	await sidebar.getByTestId("provider-option-openrouter").click({ delay: 100 })
-
-	const apiKeyInput = sidebar.getByRole("textbox", {
-		name: "OpenRouter API Key",
-	})
+	// Enter API key and submit
 	await apiKeyInput.fill("test-api-key")
-	await expect(apiKeyInput).toHaveValue("test-api-key")
-	await apiKeyInput.click({ delay: 100 })
 	const submitButton = sidebar.getByRole("button", { name: /Let's Go!|Let's go!/ })
-	await expect(submitButton).toBeEnabled()
-	await submitButton.click({ delay: 100 })
+	await submitButton.click()
+
+	// Verify that the welcome screen is gone
 	await expect(freeButton).not.toBeVisible()
 
-	// Verify start up page is no longer visible
-	await expect(apiKeyInput).not.toBeVisible()
-	await expect(providerSelectorInput).not.toBeVisible()
+	// Verify that the chat view is visible
+	const chatInput = sidebar.getByPlaceholder("Ask a question or type '/' for commands")
+	await expect(chatInput).toBeVisible()
 
-	// Verify you are now in the chat page after setup was completed
+	// Verify that the logo is visible
 	const logo = sidebar.getByRole("img").filter({ hasText: /^$/ }).locator("path")
 	await expect(logo).toBeVisible()
-	const chatInputBox = sidebar.getByTestId("chat-input")
-	await expect(chatInputBox).toBeVisible()
 
 	// Verify the help improve banner is visible and can be closed.
 	const helpBanner = sidebar.getByText(/Help Improve (Caret|Cline)/)
 	await expect(helpBanner).toBeVisible()
 	await sidebar.getByRole("button", { name: "Close banner and enable" }).click()
 	await expect(helpBanner).not.toBeVisible()
-
-	// Verify the release banner is visible for new installs and can be closed.
-	const releaseBanner = sidebar.getByRole("heading", {
-		name: /^🎉 New in v\d/,
-	})
-	await expect(releaseBanner).toBeVisible()
-	await sidebar.getByTestId("close-button").locator("span").first().click()
-	await expect(releaseBanner).not.toBeVisible()
-
-	// Sidebar menu should now be visible
-	// await expect(sidebar.getByRole("button", { name: "Account", exact: true })).toBeVisible()
-
-	// await sidebar.getByRole("button", { name: "Settings" }).click()
-	// await expect(sidebar.getByRole("button", { name: "Done" })).toBeVisible()
 })

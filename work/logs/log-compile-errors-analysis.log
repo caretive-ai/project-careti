@@ -1,0 +1,602 @@
+
+> caret@0.2.4 compile
+> npm run check-types && npm run lint && node esbuild.mjs
+
+
+> caret@0.2.4 check-types
+> npm run protos && npx tsc --noEmit && cd webview-ui && npx tsc -b --noEmit
+
+
+> caret@0.2.4 protos
+> node scripts/build-proto.mjs
+
+Compiling Protocol Buffers...
+Processing 23 proto files from /Users/luke/dev/caret/proto
+Generated ProtoBus files at:
+- /Users/luke/dev/caret/webview-ui/src/services/grpc-client.ts
+- /Users/luke/dev/caret/src/generated/hosts/vscode/protobus-service-types.ts
+- /Users/luke/dev/caret/src/generated/hosts/vscode/protobus-services.ts
+- /Users/luke/dev/caret/src/generated/hosts/standalone/protobus-server-setup.ts
+Generated Host Bridge client files at:
+- /Users/luke/dev/caret/src/generated/hosts/host-bridge-client-types.ts
+- /Users/luke/dev/caret/src/generated/hosts/standalone/host-bridge-clients.ts
+- /Users/luke/dev/caret/src/generated/hosts/vscode/hostbridge-grpc-service-config.ts
+
+> caret@0.2.4 postprotos
+> biome format src/shared/proto src/core/controller src/hosts/ webview-ui/src/services src/generated --write --no-errors-on-unmatched
+
+Formatted 205 files in 32ms. No fixes applied.
+caret-src/__tests__/rule-priority.test.ts(85,42): error TS2554: Expected 1 arguments, but got 2.
+caret-src/__tests__/tdd/T06PromptSystemIntegration.test.ts(20,19): error TS2322: Type '{ modeSystem: "caret"; mode: "chatbot"; providerInfo: { providerId: string; model: { id: string; info: { supportsPromptCache: false; }; }; }; }' is not assignable to type 'CaretSystemPromptContext & { modeSystem: "caret"; }'.
+  Property 'ide' is missing in type '{ modeSystem: "caret"; mode: "chatbot"; providerInfo: { providerId: string; model: { id: string; info: { supportsPromptCache: false; }; }; }; }' but required in type 'CaretSystemPromptContext'.
+caret-src/__tests__/tdd/T06PromptSystemIntegration.test.ts(34,19): error TS2322: Type '{ modeSystem: "caret"; mode: "agent"; providerInfo: { providerId: string; model: { id: string; info: { supportsPromptCache: false; }; }; }; }' is not assignable to type 'CaretSystemPromptContext & { modeSystem: "caret"; }'.
+  Property 'ide' is missing in type '{ modeSystem: "caret"; mode: "agent"; providerInfo: { providerId: string; model: { id: string; info: { supportsPromptCache: false; }; }; }; }' but required in type 'CaretSystemPromptContext'.
+caret-src/__tests__/tdd/T06PromptSystemIntegration.test.ts(47,19): error TS2322: Type '{ modeSystem: "caret"; mode: "agent"; auto_todo: true; providerInfo: { providerId: string; model: { id: string; info: { supportsPromptCache: false; }; }; }; }' is not assignable to type 'CaretSystemPromptContext & { modeSystem: "caret"; }'.
+  Property 'ide' is missing in type '{ modeSystem: "caret"; mode: "agent"; auto_todo: true; providerInfo: { providerId: string; model: { id: string; info: { supportsPromptCache: false; }; }; }; }' but required in type 'CaretSystemPromptContext'.
+caret-src/core/controller/file/toggleCaretRule.ts(29,42): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+caret-src/core/controller/file/toggleCaretRule.ts(32,26): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+caret-src/core/controller/file/toggleCaretRule.ts(36,47): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+caret-src/core/webview/CaretProviderWrapper.ts(348,29): error TS2339: Property 'getClientId' does not exist on type 'VscodeWebviewProvider'.
+src/api/providers/dify.ts(1,28): error TS2307: Cannot find module '../../../../shared/proto/gen/provider_config' or its corresponding type declarations.
+src/api/providers/dify.ts(5,8): error TS2307: Cannot find module '../transform/openai-format' or its corresponding type declarations.
+src/api/providers/dify.ts(6,25): error TS2307: Cannot find module './base' or its corresponding type declarations.
+src/api/providers/dify.ts(10,31): error TS2339: Property 'getConfig' does not exist on type 'DifyApi'.
+src/api/providers/dify.ts(27,28): error TS2339: Property 'fetch' does not exist on type 'DifyApi'.
+src/api/providers/dify.ts(48,17): error TS2339: Property 'config' does not exist on type 'DifyApi'.
+src/common.ts(32,22): error TS2339: Property 'initialize' does not exist on type 'typeof StateManager'.
+src/core/api/index.ts(273,26): error TS2339: Property 'caretApiKey' does not exist on type 'Omit<ApiConfiguration, "apiProvider">'.
+src/core/api/index.ts(274,27): error TS2551: Property 'caretBaseUrl' does not exist on type 'Omit<ApiConfiguration, "apiProvider">'. Did you mean 'ocaBaseUrl'?
+src/core/api/index.ts(275,45): error TS2551: Property 'planModeCaretModelId' does not exist on type 'Omit<ApiConfiguration, "apiProvider">'. Did you mean 'planModeOcaModelId'?
+src/core/api/index.ts(275,76): error TS2551: Property 'actModeCaretModelId' does not exist on type 'Omit<ApiConfiguration, "apiProvider">'. Did you mean 'actModeOcaModelId'?
+src/core/api/index.ts(276,47): error TS2551: Property 'planModeCaretModelInfo' does not exist on type 'Omit<ApiConfiguration, "apiProvider">'. Did you mean 'planModeOcaModelInfo'?
+src/core/api/index.ts(276,80): error TS2551: Property 'actModeCaretModelInfo' does not exist on type 'Omit<ApiConfiguration, "apiProvider">'. Did you mean 'actModeOcaModelInfo'?
+src/core/api/index.ts(279,34): error TS2339: Property 'caretUsePromptCache' does not exist on type 'Omit<ApiConfiguration, "apiProvider">'.
+src/core/api/providers/caret.ts(2,10): error TS2724: '"@shared/api"' has no exported member named 'CaretModelInfo'. Did you mean 'OcaModelInfo'?
+src/core/api/providers/caret.ts(2,26): error TS2724: '"@shared/api"' has no exported member named 'caretDefaultModelId'. Did you mean 'xaiDefaultModelId'?
+src/core/api/providers/caret.ts(2,47): error TS2305: Module '"@shared/api"' has no exported member 'caretModels'.
+src/core/api/providers/oca.ts(7,2): error TS2724: '"@/services/auth/oca/utils/constants"' has no exported member named 'DEFAULT_EXTERNAL_OCA_BASE_URL'. Did you mean 'DEFAULT_OCA_BASE_URL'?
+src/core/api/providers/oca.ts(8,2): error TS2724: '"@/services/auth/oca/utils/constants"' has no exported member named 'DEFAULT_INTERNAL_OCA_BASE_URL'. Did you mean 'DEFAULT_OCA_BASE_URL'?
+src/core/api/providers/vscode-lm.ts(1,1): error TS6200: Definitions of the following identifiers conflict with those in another file: User, Assistant, Auto, Required, LanguageModelTextPart, LanguageModelToolCallPart, LanguageModelPromptTsxPart, LanguageModelToolResultPart, LanguageModelChatMessage
+src/core/context/context-tracking/FileContextTracker.ts(240,33): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/context/context-tracking/FileContextTracker.ts(252,47): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/context/context-tracking/FileContextTracker.ts(267,34): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/cline-rules.ts(77,58): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/context/instructions/user-instructions/cline-rules.ts(80,26): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/cline-rules.ts(83,57): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/cline-rules.ts(88,26): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/external-rules.ts(42,70): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/external-rules.ts(43,73): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/external-rules.ts(44,71): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/external-rules.ts(117,26): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/external-rules.ts(118,26): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/external-rules.ts(119,26): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/external-rules.ts(120,26): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/rule-helpers.ts(250,45): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/context/instructions/user-instructions/rule-helpers.ts(252,29): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/rule-helpers.ts(254,45): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/context/instructions/user-instructions/rule-helpers.ts(256,29): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/rule-helpers.ts(260,45): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/rule-helpers.ts(262,29): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/rule-helpers.ts(264,45): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/rule-helpers.ts(266,29): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/rule-helpers.ts(268,45): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/rule-helpers.ts(270,29): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/rule-helpers.ts(272,45): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/rule-helpers.ts(274,29): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/workflows.ts(18,56): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/context/instructions/user-instructions/workflows.ts(21,26): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/workflows.ts(23,55): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/context/instructions/user-instructions/workflows.ts(26,26): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/controller/account/authStateChanged.ts(14,27): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/browser/getBrowserConnectionInfo.ts(14,51): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/file/toggleCaretRule.ts(28,42): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/controller/file/toggleCaretRule.ts(31,26): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/controller/file/toggleCaretRule.ts(35,47): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/controller/file/toggleClineRule.ts(27,43): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/file/toggleClineRule.ts(29,27): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/file/toggleClineRule.ts(31,43): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/controller/file/toggleClineRule.ts(33,27): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/controller/file/toggleClineRule.ts(44,48): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/file/toggleClineRule.ts(45,47): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/controller/file/toggleCursorRule.ts(23,42): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/controller/file/toggleCursorRule.ts(25,26): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/controller/file/toggleCursorRule.ts(28,48): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/controller/file/toggleWindsurfRule.ts(23,42): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/controller/file/toggleWindsurfRule.ts(25,26): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/controller/file/toggleWorkflow.ts(24,43): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/file/toggleWorkflow.ts(26,27): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/file/toggleWorkflow.ts(33,43): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/controller/file/toggleWorkflow.ts(35,27): error TS2339: Property 'setWorkspaceState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(36,10): error TS2305: Module '"@/services/posthog/PostHogClientProvider"' has no exported member 'telemetryService'.
+src/core/controller/index.ts(47,10): error TS2305: Module '"../storage/StateManager"' has no exported member 'PersistenceErrorEvent'.
+src/core/controller/index.ts(76,36): error TS2339: Property 'get' does not exist on type 'typeof StateManager'.
+src/core/controller/index.ts(82,16): error TS2339: Property 'get' does not exist on type 'typeof StateManager'.
+src/core/controller/index.ts(86,25): error TS2339: Property 'get' does not exist on type 'typeof StateManager'.
+src/core/controller/index.ts(134,22): error TS2339: Property 'setSecret' does not exist on type 'StateManager'.
+src/core/controller/index.ts(135,22): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(178,21): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(188,23): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(189,23): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(190,23): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(191,23): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(192,23): error TS2339: Property 'setSecret' does not exist on type 'StateManager'.
+src/core/controller/index.ts(193,23): error TS2339: Property 'setSecret' does not exist on type 'StateManager'.
+src/core/controller/index.ts(206,39): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(229,50): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(230,53): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(231,50): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(232,53): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(233,52): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(234,39): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(235,41): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(241,22): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(250,22): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(263,27): error TS2339: Property 'loadTaskSettings' does not exist on type 'StateManager'.
+src/core/controller/index.ts(265,22): error TS2339: Property 'setTaskSettingsBatch' does not exist on type 'StateManager'.
+src/core/controller/index.ts(300,21): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(310,21): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(331,21): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(406,59): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(408,42): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(423,20): error TS2339: Property 'planModeApiProvider' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/index.ts(425,20): error TS2339: Property 'actModeApiProvider' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/index.ts(429,19): error TS2339: Property 'planModeApiProvider' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/index.ts(430,19): error TS2339: Property 'actModeApiProvider' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/index.ts(437,22): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(463,59): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(465,42): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(475,20): error TS2339: Property 'planModeApiProvider' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/index.ts(477,20): error TS2339: Property 'actModeApiProvider' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/index.ts(481,19): error TS2339: Property 'planModeApiProvider' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/index.ts(482,19): error TS2339: Property 'actModeApiProvider' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/index.ts(489,22): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(535,22): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(573,22): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(627,41): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(684,37): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(685,37): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/core/controller/index.ts(719,41): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(720,50): error TS7006: Parameter 'task' implicitly has an 'any' type.
+src/core/controller/index.ts(721,21): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/index.ts(737,53): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(738,41): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(739,50): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(740,45): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(741,48): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(742,47): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(743,47): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(744,51): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(745,34): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(746,51): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(747,45): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(748,45): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(749,38): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(750,51): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(751,44): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(752,46): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(753,58): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(754,54): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(755,53): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(756,51): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(757,53): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(758,50): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(759,52): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(760,39): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(762,22): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(764,42): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(765,51): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(766,53): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(767,47): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(768,60): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(769,61): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(773,40): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(775,49): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(776,44): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(777,44): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(779,42): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(780,52): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(781,55): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(782,53): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(783,45): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(784,51): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/index.ts(786,73): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/core/controller/index.ts(791,13): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/core/controller/index.ts(792,11): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/core/controller/index.ts(792,14): error TS7006: Parameter 'b' implicitly has an 'any' type.
+src/core/controller/index.ts(809,4): error TS2559: Type 'Promise<ApiConfiguration>' has no properties in common with type 'ApiConfiguration'.
+src/core/controller/index.ts(833,46): error TS2339: Property 'getWorkspaceStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(865,29): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(876,28): error TS2339: Property 'clearTaskSettings' does not exist on type 'StateManager'.
+src/core/controller/index.ts(901,37): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/index.ts(902,48): error TS7006: Parameter 'h' implicitly has an 'any' type.
+src/core/controller/index.ts(908,21): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/models/refreshBasetenModels.ts(26,48): error TS2339: Property 'getSecretKey' does not exist on type 'StateManager'.
+src/core/controller/models/refreshGroqModels.ts(21,45): error TS2339: Property 'getSecretKey' does not exist on type 'StateManager'.
+src/core/controller/models/refreshOcaModels.ts(82,65): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/models/refreshOcaModels.ts(83,48): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/models/refreshOcaModels.ts(85,23): error TS2339: Property 'planModeOcaModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/models/refreshOcaModels.ts(85,69): error TS2339: Property 'planModeOcaModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/models/refreshOcaModels.ts(86,25): error TS2339: Property 'planModeOcaModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/models/refreshOcaModels.ts(89,23): error TS2339: Property 'actModeOcaModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/models/refreshOcaModels.ts(89,68): error TS2339: Property 'actModeOcaModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/models/refreshOcaModels.ts(90,25): error TS2339: Property 'actModeOcaModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/models/refreshOcaModels.ts(96,20): error TS2339: Property 'planModeOcaModelId' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/models/refreshOcaModels.ts(97,20): error TS2339: Property 'planModeOcaModelInfo' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/models/refreshOcaModels.ts(99,20): error TS2339: Property 'actModeOcaModelId' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/models/refreshOcaModels.ts(100,20): error TS2339: Property 'actModeOcaModelInfo' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/models/refreshOcaModels.ts(103,19): error TS2339: Property 'planModeOcaModelId' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/models/refreshOcaModels.ts(104,19): error TS2339: Property 'planModeOcaModelInfo' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/models/refreshOcaModels.ts(105,19): error TS2339: Property 'actModeOcaModelId' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/models/refreshOcaModels.ts(106,19): error TS2339: Property 'actModeOcaModelInfo' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/models/refreshRequestyModels.ts(23,42): error TS2339: Property 'getSecretKey' does not exist on type 'StateManager'.
+src/core/controller/models/refreshRequestyModels.ts(24,43): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/models/updateApiConfigurationProto.ts(29,37): error TS2339: Property 'caretApiKey' does not exist on type 'ApiConfiguration'.
+src/core/controller/models/updateApiConfigurationProto.ts(38,48): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/models/updateApiConfigurationProto.ts(48,26): error TS2339: Property 'planModeApiProvider' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/models/updateApiConfigurationProto.ts(48,61): error TS2339: Property 'actModeApiProvider' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/models/updateApiConfigurationProto.ts(49,29): error TS2339: Property 'caretApiKey' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/state/resetState.ts(107,53): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/state/resetState.ts(109,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/setWelcomeViewCompleted.ts(14,27): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/toggleFavoriteModel.ts(19,53): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/state/toggleFavoriteModel.ts(23,32): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/core/controller/state/toggleFavoriteModel.ts(26,27): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateAutoApprovalSettings.ts(23,29): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/state/updateAutoApprovalSettings.ts(31,27): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateInfoBannerVersion.ts(13,26): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateModelBannerVersion.ts(13,26): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(46,49): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/state/updateSettings.ts(62,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(67,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(72,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(77,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(97,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(102,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(125,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(129,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(134,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(139,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(144,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(149,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(156,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(166,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(177,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(183,53): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/state/updateSettings.ts(191,29): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(203,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(208,49): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(210,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(216,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(221,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(231,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(238,52): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/state/updateSettings.ts(272,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(280,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(316,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateSettings.ts(320,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateTerminalConnectionTimeout.ts(11,26): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/state/updateTerminalReuseEnabled.ts(11,26): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/task/deleteAllTaskHistory.ts(21,47): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/task/deleteAllTaskHistory.ts(46,47): error TS7006: Parameter 'task' implicitly has an 'any' type.
+src/core/controller/task/deleteAllTaskHistory.ts(50,29): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/task/deleteAllTaskHistory.ts(53,49): error TS7006: Parameter 'task' implicitly has an 'any' type.
+src/core/controller/task/deleteAllTaskHistory.ts(90,27): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/task/getTaskHistory.ts(16,47): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/task/getTaskHistory.ts(20,43): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/core/controller/task/getTaskHistory.ts(62,42): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/core/controller/task/getTaskHistory.ts(70,24): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/core/controller/task/getTaskHistory.ts(70,27): error TS7006: Parameter 'b' implicitly has an 'any' type.
+src/core/controller/task/getTaskHistory.ts(91,24): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/core/controller/task/getTaskHistory.ts(91,27): error TS7006: Parameter 'b' implicitly has an 'any' type.
+src/core/controller/task/getTaskHistory.ts(95,36): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/core/controller/task/showTaskWithId.ts(17,47): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/task/showTaskWithId.ts(18,41): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/core/controller/task/toggleTaskFavorite.ts(15,44): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/task/toggleTaskFavorite.ts(17,41): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/core/controller/task/toggleTaskFavorite.ts(31,30): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/ui/initializeWebview.ts(32,66): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/ui/initializeWebview.ts(33,49): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/ui/initializeWebview.ts(39,22): error TS7053: Element implicitly has an 'any' type because expression of type '"planModeOpenRouterModelId" | "actModeOpenRouterModelId"' can't be used to index type 'Promise<ApiConfiguration>'.
+  Property 'planModeOpenRouterModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/ui/initializeWebview.ts(51,43): error TS2339: Property 'planModeOpenRouterModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/ui/initializeWebview.ts(52,42): error TS2339: Property 'actModeOpenRouterModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/ui/initializeWebview.ts(57,21): error TS2339: Property 'planModeOpenRouterModelInfo' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/ui/initializeWebview.ts(62,21): error TS2339: Property 'actModeOpenRouterModelInfo' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/ui/initializeWebview.ts(78,66): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/ui/initializeWebview.ts(79,49): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/ui/initializeWebview.ts(85,22): error TS7053: Element implicitly has an 'any' type because expression of type '"planModeGroqModelId" | "actModeGroqModelId"' can't be used to index type 'Promise<ApiConfiguration>'.
+  Property 'planModeGroqModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/ui/initializeWebview.ts(97,43): error TS2339: Property 'planModeGroqModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/ui/initializeWebview.ts(98,42): error TS2339: Property 'actModeGroqModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/ui/initializeWebview.ts(103,21): error TS2339: Property 'planModeGroqModelInfo' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/ui/initializeWebview.ts(108,21): error TS2339: Property 'actModeGroqModelInfo' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/ui/initializeWebview.ts(124,66): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/ui/initializeWebview.ts(126,49): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/ui/initializeWebview.ts(132,22): error TS7053: Element implicitly has an 'any' type because expression of type '"planModeBasetenModelId" | "actModeBasetenModelId"' can't be used to index type 'Promise<ApiConfiguration>'.
+  Property 'planModeBasetenModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/ui/initializeWebview.ts(135,31): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/ui/initializeWebview.ts(140,43): error TS2339: Property 'planModeBasetenModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/ui/initializeWebview.ts(141,42): error TS2339: Property 'actModeBasetenModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/ui/initializeWebview.ts(145,31): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/ui/initializeWebview.ts(150,31): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/controller/ui/initializeWebview.ts(166,66): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/ui/initializeWebview.ts(167,49): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/controller/ui/initializeWebview.ts(175,22): error TS7053: Element implicitly has an 'any' type because expression of type '"planModeVercelAiGatewayModelId" | "actModeVercelAiGatewayModelId"' can't be used to index type 'Promise<ApiConfiguration>'.
+  Property 'planModeVercelAiGatewayModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/ui/initializeWebview.ts(187,43): error TS2339: Property 'planModeVercelAiGatewayModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/ui/initializeWebview.ts(188,42): error TS2339: Property 'actModeVercelAiGatewayModelId' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/controller/ui/initializeWebview.ts(193,21): error TS2339: Property 'planModeVercelAiGatewayModelInfo' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/ui/initializeWebview.ts(198,21): error TS2339: Property 'actModeVercelAiGatewayModelInfo' does not exist on type '{ then<TResult1 = ApiConfiguration, TResult2 = never>(onfulfilled?: ((value: ApiConfiguration) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | null | undefined): Promise<...>; catch<TResult = never>(onrejected?: ((reason: any) => TResult | Promis...'.
+src/core/controller/ui/initializeWebview.ts(216,57): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/controller/ui/onDidShowAnnouncement.ts(17,27): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/prompts/system-prompt-legacy/families/next-gen-models/next-gen-system-prompt.ts(17,40): error TS2345: Argument of type 'string' is not assignable to parameter of type 'SystemPromptContext'.
+src/core/prompts/system-prompt-legacy/generic-system-prompt.ts(17,40): error TS2345: Argument of type 'string' is not assignable to parameter of type 'SystemPromptContext'.
+src/core/storage/StateManager.ts(1,10): error TS2305: Module '"@core/storage/disk"' has no exported member 'readTaskHistory'.
+src/core/storage/StateManager.ts(1,27): error TS2305: Module '"@core/storage/disk"' has no exported member 'writeTaskHistory'.
+src/core/storage/StateManager.ts(2,10): error TS2305: Module '"@core/storage/state-keys"' has no exported member 'CHAT_SETTINGS_KEY'.
+src/core/storage/StateManager.ts(2,29): error TS2305: Module '"@core/storage/state-keys"' has no exported member 'GLOBAL_SETTINGS_KEY'.
+src/core/storage/StateManager.ts(3,10): error TS2305: Module '"@core/storage/state-migrations"' has no exported member 'stateMigrations'.
+src/core/storage/StateManager.ts(4,58): error TS2307: Cannot find module '@core/storage/state-types' or its corresponding type declarations.
+src/core/storage/StateManager.ts(5,10): error TS2305: Module '"@core/storage/utils/state-helpers"' has no exported member 'getTaskState'.
+src/core/storage/StateManager.ts(5,24): error TS2305: Module '"@core/storage/utils/state-helpers"' has no exported member 'getTaskStateOrThrow'.
+src/core/storage/StateManager.ts(5,45): error TS2305: Module '"@core/storage/utils/state-helpers"' has no exported member 'isAgentModel'.
+src/core/storage/StateManager.ts(5,59): error TS2305: Module '"@core/storage/utils/state-helpers"' has no exported member 'isChatModel'.
+src/core/storage/StateManager.ts(5,72): error TS2305: Module '"@core/storage/utils/state-helpers"' has no exported member 'isPlanModeModel'.
+src/core/storage/StateManager.ts(6,10): error TS2724: '"@hosts/host-provider"' has no exported member named 'IHostProvider'. Did you mean 'HostProvider'?
+src/core/storage/StateManager.ts(7,68): error TS2307: Cannot find module '@services/completion' or its corresponding type declarations.
+src/core/storage/StateManager.ts(8,29): error TS2307: Cannot find module '@services/log/log-service' or its corresponding type declarations.
+src/core/storage/StateManager.ts(10,47): error TS2307: Cannot find module '@services/task' or its corresponding type declarations.
+src/core/storage/StateManager.ts(13,20): error TS2307: Cannot find module 'fp-ts/lib/Either' or its corresponding type declarations.
+src/core/storage/utils/state-helpers.ts(565,4): error TS2353: Object literal may only specify known properties, and 'focusChainFeatureFlagEnabled' does not exist in type 'GlobalStateAndSettings'.
+src/core/storage/utils/state-helpers.ts(631,32): error TS2551: Property 'reInitialize' does not exist on type 'StateManager'. Did you mean 'initialize'?
+src/core/storage/utils/state-helpers.ts(685,32): error TS2551: Property 'reInitialize' does not exist on type 'StateManager'. Did you mean 'initialize'?
+src/core/task/focus-chain/index.ts(276,30): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/focus-chain/index.ts(423,40): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(249,48): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(254,29): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(264,48): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(295,44): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(306,27): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(354,34): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(355,62): error TS2339: Property 'planModeApiProvider' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/task/index.ts(355,101): error TS2339: Property 'actModeApiProvider' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/task/index.ts(357,51): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(855,34): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1275,46): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1285,34): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1286,51): error TS2339: Property 'planModeApiProvider' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/task/index.ts(1286,83): error TS2339: Property 'actModeApiProvider' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/task/index.ts(1287,42): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1328,45): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1334,50): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1392,42): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1400,39): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1401,39): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1415,22): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1655,24): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1661,51): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1705,50): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1773,22): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1792,43): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1820,22): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1830,45): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1851,53): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1916,44): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(1953,23): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(2348,9): error TS2554: Expected 3-4 arguments, but got 5.
+src/core/task/index.ts(2357,27): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/index.ts(2650,34): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/ToolExecutor.ts(128,28): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/ToolExecutor.ts(129,45): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/ToolExecutor.ts(130,39): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/ToolExecutor.ts(137,44): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/ToolExecutor.ts(139,39): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/ToolExecutor.ts(140,42): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/ToolExecutor.ts(296,23): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/ToolExecutor.ts(297,23): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/ToolExecutor.ts(373,43): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/tools/autoApprove.ts(43,25): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/tools/autoApprove.ts(63,50): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/tools/autoApprove.ts(100,25): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/core/task/tools/handlers/ReportBugHandler.ts(82,58): error TS2339: Property 'planModeApiProvider' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/task/tools/handlers/ReportBugHandler.ts(82,90): error TS2339: Property 'actModeApiProvider' does not exist on type 'Promise<ApiConfiguration>'.
+src/core/workspace/multi-root-utils.ts(16,35): error TS2339: Property 'getGlobalStateKey' does not exist on type 'StateManager'.
+src/core/workspace/setup.ts(48,17): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/workspace/setup.ts(49,17): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/workspace/setup.ts(87,16): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/workspace/setup.ts(88,16): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/workspace/setup.ts(98,16): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/core/workspace/setup.ts(99,16): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/extension.ts(37,36): error TS2307: Cannot find module '@caret/core/managers/CaretGlobalManager' or its corresponding type declarations.
+src/extension.ts(38,34): error TS2307: Cannot find module '@caret/core/managers/CaretModeManager' or its corresponding type declarations.
+src/extension.ts(39,36): error TS2307: Cannot find module '@caret/core/persona/JsonTemplateLoader' or its corresponding type declarations.
+src/extension.ts(40,36): error TS2307: Cannot find module '@caret/core/persona/PersonaInitializer' or its corresponding type declarations.
+src/extension.ts(43,30): error TS2307: Cannot find module './services/auth/types' or its corresponding type declarations.
+src/extension.ts(147,42): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/extension.ts(404,32): error TS2554: Expected 0 arguments, but got 1.
+src/generated/grpc-js/caret/account.ts(1802,22): error TS2349: This expression is not callable.
+  Type 'MessageFns<String>' has no call signatures.
+src/generated/grpc-js/caret/account.ts(2436,22): error TS2349: This expression is not callable.
+  Type 'MessageFns<String>' has no call signatures.
+src/generated/hosts/standalone/protobus-server-setup.ts(179,37): error TS2307: Cannot find module '@core/controller/persona/SetPromptSystemMode' or its corresponding type declarations.
+src/generated/hosts/standalone/protobus-server-setup.ts(180,37): error TS2307: Cannot find module '@core/controller/persona/GetPromptSystemMode' or its corresponding type declarations.
+src/generated/hosts/standalone/protobus-server-setup.ts(181,30): error TS2307: Cannot find module '@core/controller/persona/SetCaretMode' or its corresponding type declarations.
+src/generated/hosts/standalone/protobus-server-setup.ts(182,30): error TS2307: Cannot find module '@core/controller/persona/GetCaretMode' or its corresponding type declarations.
+src/generated/hosts/standalone/protobus-server-setup.ts(183,36): error TS2307: Cannot find module '@core/controller/persona/FetchLiteLlmModels' or its corresponding type declarations.
+src/generated/hosts/standalone/protobus-server-setup.ts(373,29): error TS2551: Property 'CaretAccountServiceService' does not exist on type 'typeof import("/Users/luke/dev/caret/src/generated/grpc-js/index.cline")'. Did you mean 'OcaAccountServiceService'?
+src/generated/hosts/standalone/protobus-server-setup.ts(376,90): error TS2724: '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member named 'CaretAuthState'. Did you mean 'OcaAuthState'?
+src/generated/hosts/standalone/protobus-server-setup.ts(377,47): error TS2724: '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member named 'CaretAuthStateChangedRequest'. Did you mean 'AuthStateChangedRequest'?
+src/generated/hosts/standalone/protobus-server-setup.ts(377,82): error TS2724: '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member named 'CaretAuthState'. Did you mean 'OcaAuthState'?
+src/generated/hosts/standalone/protobus-server-setup.ts(378,64): error TS2724: '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member named 'CaretUserCreditsData'. Did you mean 'UserCreditsData'?
+src/generated/hosts/standalone/protobus-server-setup.ts(379,64): error TS2694: Namespace '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member 'CaretUserProfile'.
+src/generated/hosts/standalone/protobus-server-setup.ts(380,53): error TS2724: '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member named 'GetCaretOrganizationCreditsRequest'. Did you mean 'GetOrganizationCreditsRequest'?
+src/generated/hosts/standalone/protobus-server-setup.ts(380,94): error TS2724: '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member named 'CaretOrganizationCreditsData'. Did you mean 'OrganizationCreditsData'?
+src/generated/hosts/standalone/protobus-server-setup.ts(381,70): error TS2724: '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member named 'CaretUserOrganizationsResponse'. Did you mean 'UserOrganizationsResponse'?
+src/generated/hosts/standalone/protobus-server-setup.ts(382,50): error TS2724: '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member named 'CaretUserOrganizationUpdateRequest'. Did you mean 'UserOrganizationUpdateRequest'?
+src/generated/hosts/standalone/protobus-server-setup.ts(394,29): error TS2551: Property 'CaretSystemServiceService' does not exist on type 'typeof import("/Users/luke/dev/caret/src/generated/grpc-js/index.cline")'. Did you mean 'StateServiceService'?
+src/generated/hosts/standalone/protobus-server-setup.ts(397,38): error TS2694: Namespace '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member 'SetCaretModeRequest'.
+src/generated/hosts/standalone/protobus-server-setup.ts(397,64): error TS2694: Namespace '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member 'SetCaretModeResponse'.
+src/generated/hosts/standalone/protobus-server-setup.ts(398,38): error TS2694: Namespace '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member 'GetCaretModeRequest'.
+src/generated/hosts/standalone/protobus-server-setup.ts(398,64): error TS2694: Namespace '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member 'GetCaretModeResponse'.
+src/generated/hosts/standalone/protobus-server-setup.ts(399,44): error TS2694: Namespace '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member 'FetchLiteLlmModelsRequest'.
+src/generated/hosts/standalone/protobus-server-setup.ts(399,76): error TS2694: Namespace '"/Users/luke/dev/caret/src/generated/grpc-js/index.cline"' has no exported member 'FetchLiteLlmModelsResponse'.
+src/generated/hosts/vscode/protobus-services.ts(176,37): error TS2307: Cannot find module '@core/controller/persona/SetPromptSystemMode' or its corresponding type declarations.
+src/generated/hosts/vscode/protobus-services.ts(177,37): error TS2307: Cannot find module '@core/controller/persona/GetPromptSystemMode' or its corresponding type declarations.
+src/generated/hosts/vscode/protobus-services.ts(178,30): error TS2307: Cannot find module '@core/controller/persona/SetCaretMode' or its corresponding type declarations.
+src/generated/hosts/vscode/protobus-services.ts(179,30): error TS2307: Cannot find module '@core/controller/persona/GetCaretMode' or its corresponding type declarations.
+src/generated/hosts/vscode/protobus-services.ts(180,36): error TS2307: Cannot find module '@core/controller/persona/FetchLiteLlmModels' or its corresponding type declarations.
+src/generated/nice-grpc/caret/account.ts(1779,22): error TS2349: This expression is not callable.
+  Type 'MessageFns<String>' has no call signatures.
+src/generated/nice-grpc/caret/account.ts(2409,22): error TS2349: This expression is not callable.
+  Type 'MessageFns<String>' has no call signatures.
+src/hosts/external/AuthHandler.ts(165,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/hosts/vscode/commit-message-generator.ts(87,38): error TS2559: Type 'Promise<ApiConfiguration>' has no properties in common with type 'ApiConfiguration'.
+src/integrations/checkpoints/factory.ts(76,41): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/services/account/CaretAccountService.ts(126,38): error TS2551: Property 'getAllInstances' does not exist on type 'typeof WebviewProvider'. Did you mean 'getInstance'?
+src/services/auth/AuthService.ts(248,33): error TS2339: Property 'setSecret' does not exist on type 'StateManager'.
+src/services/auth/oca/providers/OcaAuthProvider.ts(80,47): error TS2339: Property 'getSecretKey' does not exist on type 'StateManager'.
+src/services/auth/oca/providers/OcaAuthProvider.ts(88,52): error TS2339: Property 'getSecretKey' does not exist on type 'StateManager'.
+src/services/auth/oca/providers/OcaAuthProvider.ts(190,29): error TS2339: Property 'setSecret' does not exist on type 'StateManager'.
+src/services/auth/oca/providers/OcaAuthProvider.ts(191,29): error TS2339: Property 'setSecret' does not exist on type 'StateManager'.
+src/services/auth/oca/providers/OcaAuthProvider.ts(206,27): error TS2339: Property 'setSecret' does not exist on type 'StateManager'.
+src/services/auth/oca/providers/OcaAuthProvider.ts(207,27): error TS2339: Property 'setSecret' does not exist on type 'StateManager'.
+src/services/auth/providers/ClineAuthProvider.ts(98,57): error TS2339: Property 'getSecretKey' does not exist on type 'StateManager'.
+src/services/auth/providers/ClineAuthProvider.ts(111,29): error TS2339: Property 'setSecret' does not exist on type 'StateManager'.
+src/services/auth/providers/ClineAuthProvider.ts(117,29): error TS2339: Property 'setSecret' does not exist on type 'StateManager'.
+src/services/auth/providers/ClineAuthProvider.ts(305,28): error TS2339: Property 'setSecret' does not exist on type 'StateManager'.
+src/services/auth/providers/FirebaseAuthProvider.ts(48,52): error TS2339: Property 'getSecretKey' does not exist on type 'StateManager'.
+src/services/auth/providers/FirebaseAuthProvider.ts(130,29): error TS2339: Property 'setSecret' does not exist on type 'StateManager'.
+src/services/browser/BrowserSession.ts(71,25): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/services/browser/BrowserSession.ts(84,22): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/services/browser/BrowserSession.ts(92,45): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/services/browser/BrowserSession.ts(126,49): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/services/browser/BrowserSession.ts(182,45): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/services/browser/BrowserSession.ts(228,45): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/services/browser/BrowserSession.ts(244,45): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/services/test/TestServer.ts(52,57): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalSettings'?
+src/services/test/TestServer.ts(71,28): error TS2339: Property 'setGlobalState' does not exist on type 'StateManager'.
+src/services/test/TestServer.ts(222,46): error TS2339: Property 'setSecret' does not exist on type 'StateManager'.
+src/services/uri/SharedUriHandler.test.ts(53,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.test.ts(60,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.test.ts(67,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.test.ts(77,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.test.ts(84,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.test.ts(91,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.test.ts(100,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.test.ts(112,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.test.ts(118,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.test.ts(128,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.test.ts(137,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.test.ts(147,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.test.ts(157,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.test.ts(164,43): error TS2339: Property 'handleUri' does not exist on type 'typeof SharedUriHandler'.
+src/services/uri/SharedUriHandler.ts(7,49): error TS2554: Expected 1 arguments, but got 2.
+src/services/uri/SharedUriHandler.ts(41,50): error TS2554: Expected 1 arguments, but got 2.
+src/shared/proto-conversions/models/api-configuration-conversion.ts(397,2): error TS2741: Property 'favoritedModelIds' is missing in type '{ apiKey: string | undefined; clineAccountId: string | undefined; ulid: string | undefined; liteLlmBaseUrl: string | undefined; liteLlmApiKey: string | undefined; liteLlmUsePromptCache: boolean | undefined; ... 131 more ...; actModeOcaModelInfo: ProtoOcaModelInfo | undefined; }' but required in type 'ModelsApiConfiguration'.
+src/shared/proto-conversions/state/settings-conversion.ts(16,3): error TS2322: Type 'any' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(16,24): error TS2551: Property 'caretBaseUrl' does not exist on type 'ApiConfiguration'. Did you mean 'ocaBaseUrl'?
+src/shared/proto-conversions/state/settings-conversion.ts(17,3): error TS2322: Type 'any' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(17,23): error TS2339: Property 'caretApiKey' does not exist on type 'ApiConfiguration'.
+src/shared/proto-conversions/state/settings-conversion.ts(18,3): error TS2322: Type 'any' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(18,31): error TS2339: Property 'caretUsePromptCache' does not exist on type 'ApiConfiguration'.
+src/shared/proto-conversions/state/settings-conversion.ts(19,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(21,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(22,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(37,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(38,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(46,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(80,3): error TS2322: Type 'import("/Users/luke/dev/caret/src/shared/api").ApiProvider | undefined' is not assignable to type 'import("/Users/luke/dev/caret/src/shared/proto/cline/models").ApiProvider | undefined'.
+  Type '"openrouter"' is not assignable to type 'ApiProvider | undefined'.
+src/shared/proto-conversions/state/settings-conversion.ts(86,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(91,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(92,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(95,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(96,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(101,3): error TS2322: Type 'any' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(101,32): error TS2551: Property 'planModeCaretModelId' does not exist on type 'ApiConfiguration'. Did you mean 'planModeOcaModelId'?
+src/shared/proto-conversions/state/settings-conversion.ts(102,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(102,34): error TS2551: Property 'planModeCaretModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'planModeOcaModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(102,81): error TS2551: Property 'planModeCaretModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'planModeOcaModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(116,3): error TS2322: Type 'import("/Users/luke/dev/caret/src/shared/api").ApiProvider | undefined' is not assignable to type 'import("/Users/luke/dev/caret/src/shared/proto/cline/models").ApiProvider | undefined'.
+  Type '"openrouter"' is not assignable to type 'ApiProvider | undefined'.
+src/shared/proto-conversions/state/settings-conversion.ts(120,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(125,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(126,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(129,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(130,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(135,3): error TS2322: Type 'any' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(135,31): error TS2551: Property 'actModeCaretModelId' does not exist on type 'ApiConfiguration'. Did you mean 'actModeOcaModelId'?
+src/shared/proto-conversions/state/settings-conversion.ts(136,3): error TS2322: Type 'string | undefined' is not assignable to type 'never'.
+  Type 'undefined' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(136,33): error TS2551: Property 'actModeCaretModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'actModeOcaModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(136,79): error TS2551: Property 'actModeCaretModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'actModeOcaModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(148,3): error TS2322: Type 'any' is not assignable to type 'never'.
+src/shared/proto-conversions/state/settings-conversion.ts(148,29): error TS2339: Property 'favoritedModelIds' does not exist on type 'ApiConfiguration'.
+src/shared/proto-conversions/state/settings-conversion.ts(164,3): error TS2561: Object literal may only specify known properties, but 'caretBaseUrl' does not exist in type 'ApiConfiguration'. Did you mean to write 'ocaBaseUrl'?
+src/shared/proto-conversions/state/settings-conversion.ts(164,29): error TS2551: Property 'caretBaseUrl' does not exist on type 'ApiConfiguration'. Did you mean 'ocaBaseUrl'?
+src/shared/proto-conversions/state/settings-conversion.ts(165,28): error TS2551: Property 'caretApiKey' does not exist on type 'ApiConfiguration'. Did you mean 'ocaApiKey'?
+src/shared/proto-conversions/state/settings-conversion.ts(166,36): error TS2339: Property 'caretUsePromptCache' does not exist on type 'ApiConfiguration'.
+src/shared/proto-conversions/state/settings-conversion.ts(168,33): error TS2551: Property 'openrouterApiKey' does not exist on type 'ApiConfiguration'. Did you mean 'openRouterApiKey'?
+src/shared/proto-conversions/state/settings-conversion.ts(169,42): error TS2551: Property 'openrouterProviderSorting' does not exist on type 'ApiConfiguration'. Did you mean 'openRouterProviderSorting'?
+src/shared/proto-conversions/state/settings-conversion.ts(184,30): error TS2551: Property 'openaiBaseUrl' does not exist on type 'ApiConfiguration'. Did you mean 'openAiBaseUrl'?
+src/shared/proto-conversions/state/settings-conversion.ts(185,29): error TS2551: Property 'openaiApiKey' does not exist on type 'ApiConfiguration'. Did you mean 'openAiApiKey'?
+src/shared/proto-conversions/state/settings-conversion.ts(193,35): error TS2551: Property 'openaiNativeApiKey' does not exist on type 'ApiConfiguration'. Did you mean 'openAiNativeApiKey'?
+src/shared/proto-conversions/state/settings-conversion.ts(227,24): error TS2352: Conversion of type 'ApiProvider | undefined' to type 'ApiProvider' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'ApiProvider.UNRECOGNIZED' is not comparable to type 'ApiProvider'.
+src/shared/proto-conversions/state/settings-conversion.ts(235,42): error TS2551: Property 'planModeOpenrouterModelId' does not exist on type 'ApiConfiguration'. Did you mean 'planModeOpenRouterModelId'?
+src/shared/proto-conversions/state/settings-conversion.ts(236,38): error TS2551: Property 'planModeOpenaiModelId' does not exist on type 'ApiConfiguration'. Did you mean 'planModeOpenAiModelId'?
+src/shared/proto-conversions/state/settings-conversion.ts(240,37): error TS2551: Property 'planModeCaretModelId' does not exist on type 'ApiConfiguration'. Did you mean 'planModeOcaModelId'?
+src/shared/proto-conversions/state/settings-conversion.ts(248,23): error TS2352: Conversion of type 'ApiProvider | undefined' to type 'ApiProvider' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'ApiProvider.UNRECOGNIZED' is not comparable to type 'ApiProvider'.
+src/shared/proto-conversions/state/settings-conversion.ts(256,41): error TS2551: Property 'actModeOpenrouterModelId' does not exist on type 'ApiConfiguration'. Did you mean 'actModeOpenRouterModelId'?
+src/shared/proto-conversions/state/settings-conversion.ts(257,37): error TS2551: Property 'actModeOpenaiModelId' does not exist on type 'ApiConfiguration'. Did you mean 'actModeOpenAiModelId'?
+src/shared/proto-conversions/state/settings-conversion.ts(261,36): error TS2551: Property 'actModeCaretModelId' does not exist on type 'ApiConfiguration'. Did you mean 'actModeOcaModelId'?
+src/shared/proto-conversions/state/settings-conversion.ts(269,34): error TS2339: Property 'favoritedModelIds' does not exist on type 'ApiConfiguration'.
+src/shared/proto-conversions/state/settings-conversion.ts(274,19): error TS2551: Property 'openaiHeaders' does not exist on type 'ApiConfiguration'. Did you mean 'openAiHeaders'?
+src/shared/proto-conversions/state/settings-conversion.ts(275,50): error TS2551: Property 'openaiHeaders' does not exist on type 'ApiConfiguration'. Did you mean 'openAiHeaders'?
+src/shared/proto-conversions/state/settings-conversion.ts(277,19): error TS2551: Property 'planModeVscodeLmModelSelector' does not exist on type 'ApiConfiguration'. Did you mean 'planModeVsCodeLmModelSelector'?
+src/shared/proto-conversions/state/settings-conversion.ts(278,66): error TS2551: Property 'planModeVscodeLmModelSelector' does not exist on type 'ApiConfiguration'. Did you mean 'planModeVsCodeLmModelSelector'?
+src/shared/proto-conversions/state/settings-conversion.ts(280,19): error TS2551: Property 'planModeOpenrouterModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'planModeOpenRouterModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(281,64): error TS2551: Property 'planModeOpenrouterModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'planModeOpenRouterModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(283,19): error TS2551: Property 'planModeOpenaiModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'planModeOpenAiModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(284,60): error TS2551: Property 'planModeOpenaiModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'planModeOpenAiModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(287,49): error TS2345: Argument of type 'LiteLLMModelInfo' is not assignable to parameter of type 'string'.
+src/shared/proto-conversions/state/settings-conversion.ts(289,19): error TS2551: Property 'planModeCaretModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'planModeOcaModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(290,11): error TS2551: Property 'planModeCaretModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'planModeOcaModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(290,59): error TS2551: Property 'planModeCaretModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'planModeOcaModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(293,50): error TS2345: Argument of type 'OpenRouterModelInfo' is not assignable to parameter of type 'string'.
+src/shared/proto-conversions/state/settings-conversion.ts(295,19): error TS2551: Property 'actModeVscodeLmModelSelector' does not exist on type 'ApiConfiguration'. Did you mean 'actModeVsCodeLmModelSelector'?
+src/shared/proto-conversions/state/settings-conversion.ts(296,65): error TS2551: Property 'actModeVscodeLmModelSelector' does not exist on type 'ApiConfiguration'. Did you mean 'actModeVsCodeLmModelSelector'?
+src/shared/proto-conversions/state/settings-conversion.ts(298,19): error TS2551: Property 'actModeOpenrouterModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'actModeOpenRouterModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(299,63): error TS2551: Property 'actModeOpenrouterModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'actModeOpenRouterModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(301,19): error TS2551: Property 'actModeOpenaiModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'actModeOpenAiModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(302,59): error TS2551: Property 'actModeOpenaiModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'actModeOpenAiModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(305,48): error TS2345: Argument of type 'LiteLLMModelInfo' is not assignable to parameter of type 'string'.
+src/shared/proto-conversions/state/settings-conversion.ts(307,19): error TS2551: Property 'actModeCaretModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'actModeOcaModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(308,11): error TS2551: Property 'actModeCaretModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'actModeOcaModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(308,58): error TS2551: Property 'actModeCaretModelInfo' does not exist on type 'ApiConfiguration'. Did you mean 'actModeOcaModelInfo'?
+src/shared/proto-conversions/state/settings-conversion.ts(311,49): error TS2345: Argument of type 'OpenRouterModelInfo' is not assignable to parameter of type 'string'.
+src/shared/proto-conversions/state/settings-conversion.ts(314,57): error TS2345: Argument of type 'OpenRouterModelInfo' is not assignable to parameter of type 'string'.
+src/shared/proto-conversions/state/settings-conversion.ts(317,56): error TS2345: Argument of type 'OpenRouterModelInfo' is not assignable to parameter of type 'string'.
+src/shared/proto/caret/account.ts(1788,22): error TS2349: This expression is not callable.
+  Type 'MessageFns<String>' has no call signatures.
+src/shared/proto/caret/account.ts(2422,22): error TS2349: This expression is not callable.
+  Type 'MessageFns<String>' has no call signatures.
+src/standalone/vscode-context.ts(41,8): error TS2741: Property 'languageModelAccessInformation' is missing in type '{ extension: Extension<void>; extensionMode: ExtensionMode.Production | ExtensionMode.Development; globalState: MementoStore; secrets: SecretStore; ... 11 more ...; workspaceState: MementoStore; }' but required in type 'ExtensionContext'.

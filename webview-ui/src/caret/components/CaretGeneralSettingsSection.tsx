@@ -7,7 +7,7 @@ import React from "react"
 import Section from "@/components/settings/Section"
 import { updateSetting } from "@/components/settings/utils/settingsHandlers"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { CARET_LOCALIZED_URLS, getLocalizedUrl, type SupportedLanguage } from "../constants/urls"
+import { getLocalizedUrl, type SupportedLanguage } from "../constants/urls"
 import { useCaretI18n } from "../hooks/useCaretI18n"
 import { t } from "../utils/i18n"
 // CARET MODIFICATION: 통합 언어 설정 컴포넌트와 전역 브랜드 모드 토글

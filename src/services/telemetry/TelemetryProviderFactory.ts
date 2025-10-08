@@ -1,5 +1,6 @@
-import { posthogConfig } from "@/shared/services/config/posthog-config"
+import { isPostHogConfigValid, posthogConfig } from "@/shared/services/config/posthog-config"
 import { Logger } from "../logging/Logger"
+import { PostHogClientProvider } from "../posthog/PostHogClientProvider"
 import type { ITelemetryProvider } from "./providers/ITelemetryProvider"
 import { PostHogTelemetryProvider } from "./providers/PostHogTelemetryProvider"
 
@@ -29,8 +30,12 @@ export class TelemetryProviderFactory {
 		// Get the shared PostHog client from PostHogClientProvider
 		switch (config.type) {
 			case "posthog": {
-				// PostHogTelemetryProvider now likely initializes its own client
-				return await new PostHogTelemetryProvider().initialize()
+				// Get the shared PostHog client from PostHogClientProvider
+				const sharedClient = PostHogClientProvider.getClient()
+				if (sharedClient) {
+					return await new PostHogTelemetryProvider(sharedClient).initialize()
+				}
+				return new NoOpTelemetryProvider()
 			}
 			default:
 				console.error(`Unsupported telemetry provider type: ${config.type}`)
@@ -43,8 +48,9 @@ export class TelemetryProviderFactory {
 	 * @returns Default configuration using PostHog
 	 */
 	public static getDefaultConfig(): TelemetryProviderConfig {
+		const hasValidConfig = isPostHogConfigValid(posthogConfig)
 		return {
-			type: posthogConfig.apiKey ? "posthog" : "no-op",
+			type: hasValidConfig ? "posthog" : "no-op",
 		}
 	}
 }

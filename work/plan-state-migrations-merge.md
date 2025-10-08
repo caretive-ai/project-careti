@@ -1,15 +1,20 @@
-# `src/core/storage/state-migrations.ts` 병합 실행 계획
+# `state-migrations.ts` 병합 계획
 
-## 1. 목표
+## 1. 분석
 
-`src/core/storage/state-migrations.ts` 파일의 병합 충돌을 해결하고, Cline의 리팩토링된 로직과 Caret의 고유 키 확인 로직을 통합하여 안정적인 최종 버전을 생성합니다.
+`src/core/storage/state-migrations.ts` 파일은 import 구문과 함수 목록에서 충돌이 발생했다.
 
-## 2. 실행 계획
+- **Caret (`HEAD`)**: `migrateWorkspaceToGlobalStorage` 함수를 추가하여 작업 공간(workspace)에 잘못 저장된 일부 전역 설정을 올바른 전역 저장소로 옮기는 로직을 구현했다.
+- **Cline (`upstream/main`)**: `migrateTaskHistoryToFile`을 포함한 다수의 마이그레이션 함수를 추가하여, 기존의 `globalState`에 저장되던 `taskHistory`를 별도의 파일로 분리하고, `customInstructions`를 `.clinerules` 파일로 옮기는 등 다양한 구조 개선을 진행했다.
 
-1.  **사용자 승인**: 아래에 제시된 `src/core/storage/state-migrations.ts`의 최종 내용에 대해 마스터의 승인을 받습니다.
-2.  **파일 업데이트**: 승인 시, `write_to_file` 도구를 사용하여 `src/core/storage/state-migrations.ts` 파일을 아래 내용으로 덮어씁니다.
+충돌의 원인은 양쪽 브랜치에서 서로 다른 마이그레이션 함수를 파일의 같은 위치에 추가했기 때문이다. 함수의 내용 자체는 겹치지 않는다.
 
-## 3. 최종 병합 내용
+## 2. 병합 원칙
+
+- **전체 기능 보존**: Caret과 Cline에서 추가된 모든 마이그레이션 함수는 각자의 목적이 뚜렷하므로 모두 보존한다.
+- **의존성 통합**: 양쪽 함수가 사용하는 `disk` 유틸리티와 `HistoryItem` 타입을 모두 import 하도록 구문을 통합한다.
+
+## 3. 제안 코드 (전체 파일)
 
 ```typescript
 import fs from "fs/promises"
@@ -17,7 +22,6 @@ import path from "path"
 import * as vscode from "vscode"
 import { HistoryItem } from "@/shared/HistoryItem"
 import { ensureRulesDirectoryExists, GlobalFileNames, readTaskHistoryFromState, writeTaskHistoryToState } from "./disk"
-import { StateManager } from "./StateManager"
 
 export async function migrateWorkspaceToGlobalStorage(context: vscode.ExtensionContext) {
 	// Keys to migrate from workspace storage back to global storage
@@ -612,7 +616,6 @@ export async function migrateWelcomeViewCompleted(context: vscode.ExtensionConte
 			const openAiApiKey = await context.secrets.get("openAiApiKey")
 			const ollamaApiKey = await context.secrets.get("ollamaApiKey")
 			const liteLlmApiKey = await context.secrets.get("liteLlmApiKey")
-			const caretApiKey = await context.secrets.get("caretApiKey") // caret
 			const geminiApiKey = await context.secrets.get("geminiApiKey")
 			const openAiNativeApiKey = await context.secrets.get("openAiNativeApiKey")
 			const deepSeekApiKey = await context.secrets.get("deepSeekApiKey")
@@ -651,7 +654,6 @@ export async function migrateWelcomeViewCompleted(context: vscode.ExtensionConte
 				actModeOllamaModelId,
 				actModeLmStudioModelId,
 				liteLlmApiKey,
-				caretApiKey, // caret
 				geminiApiKey,
 				openAiNativeApiKey,
 				deepSeekApiKey,
@@ -680,3 +682,386 @@ export async function migrateWelcomeViewCompleted(context: vscode.ExtensionConte
 		// Continue execution - migration failure shouldn't break extension startup
 	}
 }
+<environment_details>
+# VSCode Visible Files
+src/core/storage/state-keys.ts
+
+# VSCode Open Tabs
+webview-ui/src/caret/hooks/useInputHistory.ts
+src/core/prompts/commands.ts
+.caretrules/testing-work.md
+work/plan-20251002-01.md
+src/core/task/tools/handlers/ExecuteCommandToolHandler.ts
+caret-docs/features/f06-json-system-prompt.mdx
+caret-src/core/prompts/sections/CHATBOT_AGENT_MODES.json
+caret-docs/system-prompts-ko/chatbot-agent-modes.md
+webview-ui/src/components/history/HistoryPreview.tsx
+caret-b2b/worklog/_archive/t11-brand-conversion-work-checklist.md
+caret-docs/work-logs/luke/undated-backend-task-intercept-rule-creation.md
+src/core/controller/file/createRuleFile.ts
+webview-ui/src/components/cline-rules/NewRuleRow.tsx
+webview-ui/src/caret/hooks/usePersistentInputHistory.ts
+work/b2b-codecenter-conversion-plan.md
+caret-docs/work-logs/luke/complete/20251001-3-input-history-feature.md
+caret-b2b/worklog/20250930-featureconfig-deployment-checklist.md
+webview-ui/src/caret/locale/en/announcement.json
+webview-ui/src/caret/locale/zh/announcement.json
+caret-docs/ko/CHANGELOG.md
+caret-b2b/brands/codecenter/announcement.json
+.caretrules/ai-work-protocol.md
+caret-b2b/docs/frontend-conversion-process.md
+.caretrules/b2b-branding-workflow.md
+caret-b2b/tools/converter-utils.js
+caret-b2b/tools/convert-frontend.js
+caret-b2b/brands/codecenter/CHANGELOG-CODECENTER.md
+README.md
+caret-b2b/brands/cline/brand-config.json
+caret-b2b/brands/codecenter/brand-config.json
+.caretrules/workflows/branding-and-logging.md
+caret-src/core/controller/fetchLiteLlmModels.ts
+caret-src/shared/feature-config.json
+work/release-filename-update-plan.md
+caret-scripts/build/package-release.js
+work/rollback-and-stash-plan.md
+caret-b2b/brands/codecenter/files/icon.psd
+caret-b2b/brands/codecenter/feature-config.json
+work/compile-error-fix-plan.md
+src/core/api/providers/caret.ts
+src/shared/CaretAccount.ts
+src/core/controller/caretAccount/getCaretOrganizationCredits.ts
+src/core/controller/caretAccount/getCaretUserCredits.ts
+src/core/controller/caretAccount/getCaretUserOrganizations.ts
+caret-src/managers/CaretGlobalManager.ts
+src/services/account/CaretAccountService.ts
+src/core/webview/WebviewProvider.ts
+work/20251002-compile-error-investigation-log.md
+work/plan-integrate-speckit-with-caretrules.md
+work/spec-kit-pr-plan.md
+work/spec-kit-phase1-step1-plan.md
+work/spec-kit-phase1-step1-plan-revised.md
+work/spec-kit-phase1-step1-plan-revised-2.md
+spec-kit/templates/caretrules/.caretrules/commands/specify.md
+spec-kit/templates/caretrules/.caretrules/commands/plan.md
+spec-kit/templates/clinerules/.clinerules/commands/specify.md
+spec-kit/templates/clinerules/.clinerules/commands/plan.md
+work/spec-kit-final-plan.md
+work/spec-kit-final-plan-v3.md
+work/readme-update-plan.md
+spec-kit/README.ko.md
+work/spec-kit-commit-plan.md
+spec-kit/README.md
+spec-kit/src/specify_cli/__init__.py
+cline/CHANGELOG.md
+caret-docs/work-logs/luke/20251005-3-cline-merge-verification-plan.md
+work/update-submodule-and-replan.md
+work/cline-merge-analysis-plan.md
+work/history-integration-plan.md
+caret-docs/work-logs/luke/20251005-1-cline-merge-plan.md
+caret-docs/work-logs/luke/20251005-5-master-progress-checklist.md
+work/20251006-git-pull-issue-resolution-plan.md
+work/20251006-git-branch-rebase-plan.md
+work/20251006-decouple-b2b-submodule-plan.md
+src/generated/hosts/standalone/protobus-server-setup.ts
+caret-scripts/build/generate-protobus-setup.mjs
+work/20251006-2-cline-merge-strategy-plan.md
+work/20251006-3-cline-merge-diff-plan.md
+work/20251006-4-cline-merge-impact-analysis-plan.md
+work/20251006-13-상세-영향도-분석-계획.md
+work/20251006-14-상세-영향도-분석-보고서.md
+work/20251006-5-package-json-analysis.md
+work/20251006-12-final-merge-strategy.md
+work/20251006-15-최종-병합-실행-계획.md
+work/20251006-proto-merge-plan.md
+work/master-merge-checklist.md
+work/plan-20251008-01-merge-restart.md
+work/plan-20251008-02-fix-checkout-ours-failure.md
+work/plan-20251008-03-resolve-package-json.md
+work/logs/log-package-json-merge.md
+work/plan-20251008-04-resolve-gitignore.md
+work/logs/log-gitignore-merge.md
+.gitignore
+work/plan-20251008-05-resolve-vscodeignore.md
+work/logs/log-vscodeignore-merge.md
+.vscodeignore
+work/plan-20251008-06-resolve-changelog.md
+work/master-merge-plan.md
+package.json
+CHANGELOG.md
+work/logs/log-biome-jsonc-merge.md
+work/plan-biome-jsonc-merge.md
+biome.jsonc
+work/logs/log-proto-models-merge.md
+work/plan-proto-models-merge.md
+proto/cline/models.proto
+work/plan-proto-state-merge.md
+work/plan-20251008-07-resume-merge.md
+work/logs/log-proto-state-merge.md
+work/plan-dify-ts-merge.md
+work/logs/log-dify-ts-merge.md
+src/api/providers/dify.ts
+work/interim-report-20251008-full.md
+work/session-wrap-up-20251008.md
+work/conflict-analysis-report-20251008.md
+work/plan-merge-reanalysis-20251008.md
+work/caret-changed-files.txt
+work/merge-reanalysis-report-20251008.md
+work/plan-final-analysis-breakdown-20251008.md
+work/session-wrap-up-and-next-steps-20251008.md
+work/plan-analyze-102-modifications-v2.md
+work/plan-fix-analysis-script.md
+work/scripts/analyze_modifications.js
+work/scripts/list_mapped_files.js
+work/plan-20251008-08-continue-analysis.md
+work/plan-format-analysis-report.md
+work/plan-merge-reanalysis-20251008-v2.md
+work/conflicted-files-list.txt
+work/caret-modified-backend-files.txt
+work/plan-20251008-09-compare-and-analyze.md
+work/scripts/compare_lists.js
+work/merge-reanalysis-report-20251008-v2.md
+work/plan-20251008-10-filter-group-b.md
+work/scripts/filter_group_b.js
+work/plan-20251008-11-deep-dive-conflict-analysis.md
+work/plan-restructure-report.md
+work/logs/log-state-migrations-merge.md
+work/plan-state-migrations-merge.md
+src/core/storage/state-migrations.ts
+work/logs/log-disk-ts-merge.md
+work/plan-disk-ts-merge.md
+work/logs/log-state-helpers-merge.md
+work/logs/log-proto-models-fix.md
+proto/cline/common.proto
+work/plan-proto-models-final-merge.md
+work/logs/log-proto-circular-dependency-fix.md
+work/proto-issue-handoff-prompt.md
+work/merge-failure-analysis-report.md
+work/20251006-re-merge-plan.md
+work/plan-A1-extension-ts-merge.md
+work/logs/20251006-16-merge-reassessment-and-recovery-plan.md
+work/plan-merge-reintegration.md
+work/plan-cline-api-migration.md
+work/plan-post-analysis-cleanup.md
+work/20251006-session-wrap-up-plan.md
+caret-docs/guides/merging-strategy-guide.md
+work/20251007-1-emergency-recovery-plan.md
+work/logs/20251007-1-compile-after-recovery.log
+work/20251007-2-phase1-core-api-fix-plan.md
+src/services/feature-flags/FeatureFlagsProviderFactory.ts
+src/services/telemetry/TelemetryProviderFactory.ts
+src/services/telemetry/TelemetryService.test.ts
+src/services/feature-flags/FeatureFlagsService.ts
+src/shared/services/feature-flags/feature-flags.ts
+src/shared/proto/cline/models.ts
+work/20251007-final-wrap-up-plan.md
+work/20251007-phase0-execution-plan.md
+work/20251007-phase1-analysis-and-plan.md
+proto/host/env.proto
+src/services/error/providers/PostHogErrorProvider.ts
+src/shared/services/config/posthog-config.ts
+src/services/error/ErrorProviderFactory.ts
+work/deep-dive-report-state-migrations.md
+work/plan-20251008-17-re-extract-via-caret-main.md
+work/plan-20251008-18-re-extract-via-git-dir.md
+work/scripts/filter_backend_mods.js
+work/plan-20251008-19-filter-only-modified.md
+work/scripts/filter_only_modified_files.js
+work/analysis/caret_modified_cline_backend_files.txt
+work/analysis/analyzed_files_from_md_final_correct.txt
+work/analysis/unalyzed_backend_files.txt
+work/plan-20251008-20-cleanup.md
+work/plan-20251008-22-merge-file-lists.md
+work/scripts/merge_modification_lists.js
+work/analysis/master_backend_modification_list.txt
+work/plan-20251008-23-extract-unlisted-files.md
+work/scripts/extract_unlisted_files.js
+work/plan-20251008-24-update-analysis-doc.md
+work/plan-20251008-25-extract-unlisted-files-revised.md
+work/scripts/extract_unlisted_files_final.js
+work/plan-20251008-26-manual-verification.md
+work/plan-integrate-backend-analysis.md
+work/plan-add-numbering-to-analysis.md
+work/plan-update-analysis-instructions.md
+work/plan-update-analysis-principle.md
+work/plan-revert-doubao-modification.md
+work/backend-analysis-results.md
+work/plan-backend-re-analysis-conflict-focus.md
+work/plan-backend-analysis.md
+cline-latest/src/core/api/providers/doubao.ts
+work/plan-verify-doubao-modification.md
+work/analysis-report-doubao-ts.md
+work/plan-backend-analysis-final-phase.md
+work/plan-resolve-mass-conflicts.md
+work/plan-state-helpers-merge.md
+work/backend-analysis-batch-1.md
+work/analysis-of-102-modifications.md
+work/backend-merge-plan.md
+proto/cline/state.proto
+src/core/controller/models/refreshOcaModels.ts
+src/core/controller/models/refreshOpenRouterModels.ts
+src/core/controller/index.ts
+src/core/controller/state/resetState.ts
+work/plan-backend-analysis-session-21.md
+src/test/e2e/auth.test.ts
+work/plan-backend-analysis-session-23.md
+work/plan-backend-analysis-session-24.md
+src/test/e2e/diff.test.ts
+work/plan-backend-analysis-session-25.md
+work/plan-backend-analysis-session-2.md
+work/plan-backend-analysis-session-3.md
+work/plan-backend-analysis-session-4.md
+work/plan-backend-analysis-session-5.md
+work/plan-backend-analysis-session-6.md
+work/plan-backend-analysis-session-7.md
+work/plan-backend-analysis-session-8.md
+work/plan-backend-analysis-session-9.md
+work/plan-backend-analysis-session-10.md
+work/plan-backend-analysis-session-11.md
+work/plan-backend-analysis-session-12.md
+work/plan-backend-analysis-session-13.md
+work/plan-backend-analysis-session-14.md
+work/plan-backend-analysis-session-15.md
+work/plan-backend-analysis-session-16.md
+work/plan-backend-analysis-session-17.md
+work/plan-backend-analysis-session-18.md
+work/plan-backend-analysis-session-19.md
+work/plan-backend-analysis-session-1.md
+work/plan-20251008-29-final-final-verification.md
+work/plan-20251008-27-final-verification.md
+work/plan-20251008-28-final-final-verification.md
+src/config.ts
+src/services/auth/providers/ClineAuthProvider.ts
+src/services/auth/providers/IAuthProvider.ts
+src/services/auth/oca/providers/OcaAuthProvider.ts
+src/services/posthog/PostHogClientProvider.ts
+proto/host/workspace.proto
+work/20251007-git-util-fix-plan.md
+work/20251007-fix-host-provider-init-plan.md
+src/standalone/cline-core.ts
+work/20251007-fix-context-argument-plan.md
+work/plan-state-keys-merge.md
+src/core/storage/state-keys.ts
+src/core/storage/utils/state-helpers.ts
+work/20251007-fix-refresh-oca-models-plan.md
+src/core/controller/ocaAccount/ocaAccountLogoutClicked.ts
+work/20251007-phase2-error-fix-plan.md
+src/core/workspace/utils/workspace-detection.ts
+src/integrations/checkpoints/index.ts
+src/integrations/checkpoints/MultiRootCheckpointManager.ts
+src/integrations/checkpoints/factory.ts
+src/services/uri/SharedUriHandler.test.ts
+src/hosts/host-provider-types.ts
+src/test/host-provider-test-utils.ts
+src/hosts/external/host-bridge-client-manager.ts
+src/services/dictation/VoiceTranscriptionService.ts
+work/20251007-violation-report-minimal-invasion.md
+work/plan-phase1-host-provider-wrapper.md
+work/20251007-plan-compile-error-resolution-phase0.md
+work/logs/20251006-19-backend-error-dependency-analysis.md
+work/logs/20251006-20-deep-dive-error-analysis.md
+work/20251007-compile-error-analysis-report.md
+work/20251007-phase1A-wrapper-skeleton-plan.md
+caret-src/hosts/CaretHostProviderWrapper.ts
+caret-src/services/dictation/CaretDictationService.ts
+work/20251007-phase1B-state-management-investigation-plan.md
+work/20251007-workspace-service-implementation-plan.md
+caret-src/services/workspace/CaretWorkspaceService.ts
+src/core/workspace/setup.ts
+work/20251007-plan-recompile-after-setup-fix.md
+work/20251007-plan-fix-multi-root-utils.md
+src/core/workspace/multi-root-utils.ts
+work/20251007-plan-recompile-after-multi-root-fix.md
+work/20251007-plan-fix-git-utils.md
+src/utils/git.ts
+caret-src/utils/git-compat.ts
+src/hosts/vscode/commit-message-generator.ts
+work/20251007-plan-recompile-after-git-fix.md
+work/20251007-plan-fix-host-provider-watch.md
+work/20251007-plan-recompile-after-watch-fix.md
+work/20251007-plan-fix-callback-url.md
+src/core/controller/account/openrouterAuthClicked.ts
+src/services/auth/AuthService.ts
+work/20251007-plan-recompile-after-callback-fix.md
+work/20251007-plan-investigate-oca-auth-callback.md
+src/services/auth/oca/OcaAuthService.ts
+work/20251007-compliance-report.md
+work/20251007-plan-recompile-after-oca-auth-fix.md
+work/20251007-plan-fix-ts2554-errors.md
+work/20251007-plan-fix-reconstructTaskHistory-command.md
+work/20251007-plan-refactor-disk-ts-dependencies.md
+src/core/storage/disk.ts
+src/core/task/focus-chain/index.ts
+src/core/context/context-tracking/FileContextTracker.ts
+src/core/context/context-tracking/ModelContextTracker.ts
+work/20251007-plan-fix-controller-corruption.md
+.gitmodules
+work/20251007-plan-fix-task-index-errors.md
+work/20251007-session-wrap-up-and-next-steps.md
+work/20251007-plan-3-way-analysis-reconstructTaskHistory.md
+work/plan-fix-reconstructTaskHistory-command-v2.md
+src/core/commands/reconstructTaskHistory.ts
+work/plan-fix-task-index-errors.md
+work/plan-recovery-and-migration-v2.md
+work/plan-fix-controller-constructor.md
+src/core/task/index.ts
+work/plan-fix-controller-constructor-execution.md
+work/plan-fix-controller-constructor-v2.md
+work/plan-fix-extension-ts.md
+work/plan-fix-workspace-manager.md
+work/plan-fix-extension-ts-v2.md
+work/plan-verify-extension-ts-modification.md
+work/analysis-report-extension-ts.md
+work/plan-fix-common-ts.md
+work/plan-fix-host-provider.md
+../../Documents/Caret/Rules/persona.md
+work/plan-fix-host-provider-v2.md
+src/hosts/host-provider.ts
+work/plan-fix-extension-ts-v3.md
+src/common.ts
+work/plan-fix-extension-ts-v4.md
+src/extension.ts
+work/plan-fix-vscode-webview-provider.md
+work/plan-fix-webview-provider.md
+work/plan-fix-webview-provider-v2.md
+work/self-analysis-report-20251007.md
+work/logs/log-state-keys-merge.md
+work/log-proto-models-merge.md
+work/log-task-index-merge.md
+work/log-gitignore-merge.md
+work/log-controller-index-merge.md
+work/20251006-6-proto-models-analysis.md
+work/20251006-7-gitmodules-analysis.md
+work/20251006-8-github-workflows-analysis.md
+work/20251006-9-caret-modification-analysis.md
+work/20251006-10-webview-components-analysis.md
+work/20251006-11-extension-ts-analysis.md
+work/20251006-compile-error-analysis-plan.md
+work/20251006-1-compile-error-analysis-plan.md
+caret-docs/work-logs/luke/20251005-2-codecenter.md
+spec-kit/README.en.md
+src/shared/focus-chain-utils.ts
+webview-ui/src/caret/locale/ko/announcement.json
+caret-b2b/worklog/20251001-9-setup-independent-dev-env-plan.md
+caret-b2b/package.json
+caret-b2b/vitest.config.ts
+caret-b2b/worklog/20251001-10-fix-b2b-tests-plan.md
+caret-b2b/tools/brand-converter.test.js
+caret-b2b/worklog/20251001-11-refactor-test-structure-plan.md
+caret-b2b/tools/convert-frontend.test.js
+caret-b2b/tools/brand-converter-cli.test.js
+caret-b2b/tools/brand-converter-simple.test.js
+src/shared/CaretBrandConfig.ts
+caret-docs/features/f09-feature-config-system.mdx
+caret-b2b/README.md
+webview-ui/src/components/chat/ChatView.tsx
+webview-ui/src/components/chat/chat-view/components/layout/InputSection.tsx
+webview-ui/src/components/chat/ChatTextArea.tsx
+
+# Current Time
+2025. 10. 8. 오후 8:39:29 (Asia/Seoul, UTC+9:00)
+
+# Context Window Usage
+284,435 / 1,048.576K tokens used (27%)
+
+# Current Mode
+ACT MODE
+</environment_details>

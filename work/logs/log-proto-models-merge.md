@@ -1,251 +1,42 @@
-# Merge Log for `proto/cline/models.proto`
+# 로그: proto/cline/models.proto 병합 해결
 
-## 1. Overview
-This document records the 3-way merge analysis for `proto/cline/models.proto`.
+## 1. 분석 대상
+- **HEAD**: `HEAD:proto/cline/models.proto` (Caret 버전)
+- **UPSTREAM**: `upstream/main:proto/cline/models.proto` (Cline 버전)
+- **MERGE-BASE**: `c6aa47095ee47036946c6a51339a4fa22aaa073c:proto/cline/models.proto` (공통 조상)
 
-- **MERGE-BASE**: Common ancestor version.
-- **HEAD (Caret)**: Our version with Caret-specific changes.
-- **UPSTREAM (Cline)**: The latest version from the Cline repository.
+## 2. 원칙 재확인
+`work/master-merge-plan.md`의 0.4 원칙에 따라 3-way 비교를 수행하여 'Caret 고유 항목'을 식별하고 병합 방향을 결정한다.
 
-## 2. File Contents
+## 3. 항목별 상세 분석
 
-### MERGE-BASE (`:1:proto/cline/models.proto`)
-```proto
-syntax = "proto3";
+### 3.1. `ApiProvider` enum
+- **HEAD**: `CARET = 35;` 추가됨.
+- **UPSTREAM**: `OCA = 35;` 추가됨.
+- **MERGE-BASE**: `DIFY = 34;` 가 마지막.
+- **결정**: `CARET`과 `OCA`를 모두 포함하되, 번호 충돌을 해결한다. `CARET = 35`, `OCA = 36`으로 지정한다.
+- **근거**: `CARET`은 Caret 고유 항목이며, `OCA`는 Upstream의 새로운 기능이다. 둘 다 유지해야 한다.
 
-package cline;
-import "cline/common.proto";
-option java_package = "bot.cline.proto";
-option java_multiple_files = true;
+### 3.2. `CaretModelInfo` message
+- **HEAD**: `CaretModelInfo` 메시지 존재.
+- **UPSTREAM**: 해당 메시지 없음.
+- **MERGE-BASE**: 해당 메시지 없음.
+- **결정**: HEAD의 `CaretModelInfo` 메시지 정의를 유지한다.
+- **근거**: 명백한 Caret 고유 항목이다.
 
-// Service for model-related operations
-service ModelsService {
-  // Fetches available models from Ollama
-  rpc getOllamaModels(StringRequest) returns (StringArray);
-  // Fetches available models from LM Studio
-  rpc getLmStudioModels(StringRequest) returns (StringArray);
-  // Fetches available models from VS Code LM API
-  rpc getVsCodeLmModels(EmptyRequest) returns (VsCodeLmModelsArray);
-  // Refreshes and returns OpenRouter models
-  rpc refreshOpenRouterModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Hugging Face models
-  rpc refreshHuggingFaceModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Groq models
-  rpc refreshGroqModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Vercel AI Gateway models
-  rpc refreshVercelAiGatewayModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Baseten models
-  rpc refreshBasetenModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Requesty models
-  rpc refreshRequestyModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Fetches available models from SAP AI Core
-  rpc getSapAiCoreModels(EmptyRequest) returns (SapAiCoreModelArray);
-  // Updates the API configuration
-  rpc updateApiConfigurationProto(ApiConfiguration) returns (EmptyRequest);
-}
+### 3.3. `ModelsApiConfiguration` message
+- **HEAD**: `caret_*` 관련 필드들이 1073번부터 추가됨. `plan_mode_caret_*`, `act_mode_caret_*` 필드 존재.
+- **UPSTREAM**: `oca_*` 관련 필드들이 73번부터 추가됨. `plan_mode_oca_*`, `act_mode_oca_*` 필드 존재.
+- **MERGE-BASE**: `dify_base_url = 72;` 가 마지막.
+- **결정**: UPSTREAM 버전을 기반으로 Caret 고유 필드들을 재적용한다.
+- **근거**: `oca_*` 필드는 Upstream의 신규 기능이므로 수용해야 한다. `caret_*` 필드는 Caret 고유 항목이므로 유지해야 한다. 필드 번호가 충돌하지 않으므로 각자의 번호를 유지하며 병합한다. Plan/Act mode 필드도 동일한 원칙으로 병합한다.
 
-// Represents a model from VS Code's LM API
-message VsCodeLmModel {
-  string id = 1;
-  string name = 2;
-}
+### 3.4. `SapAiCoreModelsResponse` message
+- **HEAD**: `repeated string model_names = 1;`
+- **UPSTREAM**: `repeated SapAiCoreModelDeployment deployments = 1;` 로 변경됨.
+- **MERGE-BASE**: `repeated string model_names = 1;`
+- **결정**: UPSTREAM의 변경사항을 따른다.
+- **근거**: 기능 개선을 위한 구조 변경이므로 최신 버전을 따르는 것이 합리적이다.
 
-// Array of VsCodeLmModel messages
-message VsCodeLmModelsArray {
-  repeated VsCodeLmModel models = 1;
-}
-
-// Represents a model compatible with OpenRouter
-message OpenRouterCompatibleModel {
-  string id = 1;
-  string name = 2;
-  string description = 3;
-  string context_length = 4;
-}
-
-// Information about OpenRouter compatible models
-message OpenRouterCompatibleModelInfo {
-  repeated OpenRouterCompatibleModel models = 1;
-}
-
-// Represents a model from SAP AI Core
-message SapAiCoreModel {
-  string id = 1;
-  string name = 2;
-}
-
-// Array of SapAiCoreModel messages
-message SapAiCoreModelArray {
-  repeated SapAiCoreModel models = 1;
-}
-```
-
-### HEAD (`:2:proto/cline/models.proto`)
-```proto
-syntax = "proto3";
-
-package cline;
-import "cline/common.proto";
-option java_package = "bot.cline.proto";
-option java_multiple_files = true;
-
-// Service for model-related operations
-service ModelsService {
-  // Fetches available models from Ollama
-  rpc getOllamaModels(StringRequest) returns (StringArray);
-  // Fetches available models from LM Studio
-  rpc getLmStudioModels(StringRequest) returns (StringArray);
-  // Fetches available models from VS Code LM API
-  rpc getVsCodeLmModels(EmptyRequest) returns (VsCodeLmModelsArray);
-  // Refreshes and returns OpenRouter models
-  rpc refreshOpenRouterModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Hugging Face models
-  rpc refreshHuggingFaceModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Groq models
-  rpc refreshGroqModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Vercel AI Gateway models
-  rpc refreshVercelAiGatewayModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Baseten models
-  rpc refreshBasetenModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Requesty models
-  rpc refreshRequestyModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Fetches available models from SAP AI Core
-  rpc getSapAiCoreModels(EmptyRequest) returns (SapAiCoreModelArray);
-  // Updates the API configuration
-  rpc updateApiConfigurationProto(ApiConfiguration) returns (EmptyRequest);
-  // CARET MODIFICATION: Add rpc for Dify
-  // Refreshes and returns Dify models
-  rpc refreshDifyModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-}
-
-// Represents a model from VS Code's LM API
-message VsCodeLmModel {
-  string id = 1;
-  string name = 2;
-}
-
-// Array of VsCodeLmModel messages
-message VsCodeLmModelsArray {
-  repeated VsCodeLmModel models = 1;
-}
-
-// Represents a model compatible with OpenRouter
-message OpenRouterCompatibleModel {
-  string id = 1;
-  string name = 2;
-  string description = 3;
-  string context_length = 4;
-}
-
-// Information about OpenRouter compatible models
-message OpenRouterCompatibleModelInfo {
-  repeated OpenRouterCompatibleModel models = 1;
-}
-
-// Represents a model from SAP AI Core
-message SapAiCoreModel {
-  string id = 1;
-  string name = 2;
-}
-
-// Array of SapAiCoreModel messages
-message SapAiCoreModelArray {
-  repeated SapAiCoreModel models = 1;
-}
-```
-
-### UPSTREAM (`:3:proto/cline/models.proto`)
-```proto
-syntax = "proto3";
-
-package cline;
-import "cline/common.proto";
-option go_package = "github.com/cline/grpc-go/cline";
-option java_package = "bot.cline.proto";
-option java_multiple_files = true;
-
-// Service for model-related operations
-service ModelsService {
-  // Fetches available models from Ollama
-  rpc getOllamaModels(StringRequest) returns (StringArray);
-  // Fetches available models from LM Studio
-  rpc getLmStudioModels(StringRequest) returns (StringArray);
-  // Fetches available models from VS Code LM API
-  rpc getVsCodeLmModels(EmptyRequest) returns (VsCodeLmModelsArray);
-  // Refreshes and returns OpenRouter models
-  rpc refreshOpenRouterModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Hugging Face models
-  rpc refreshHuggingFaceModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Groq models
-  rpc refreshGroqModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Vercel AI Gateway models
-  rpc refreshVercelAiGatewayModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Baseten models
-  rpc refreshBasetenModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Refreshes and returns Requesty models
-  rpc refreshRequestyModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-  // Fetches available models from SAP AI Core
-  rpc getSapAiCoreModels(EmptyRequest) returns (SapAiCoreModelArray);
-  // Updates the API configuration
-  rpc updateApiConfigurationProto(ApiConfiguration) returns (EmptyRequest);
-  // Refreshes and returns OCA models
-  rpc refreshOcaModels(EmptyRequest) returns (OpenRouterCompatibleModelInfo);
-}
-
-// Represents a model from VS Code's LM API
-message VsCodeLmModel {
-  string id = 1;
-  string name = 2;
-}
-
-// Array of VsCodeLmModel messages
-message VsCodeLmModelsArray {
-  repeated VsCodeLmModel models = 1;
-}
-
-// Represents a model compatible with OpenRouter
-message OpenRouterCompatibleModel {
-  string id = 1;
-  string name = 2;
-  string description = 3;
-  string context_length = 4;
-}
-
-// Information about OpenRouter compatible models
-message OpenRouterCompatibleModelInfo {
-  repeated OpenRouterCompatibleModel models = 1;
-}
-
-// Represents a model from SAP AI Core
-message SapAiCoreModel {
-  string id = 1;
-  string name = 2;
-}
-
-// Array of SapAiCoreModel messages
-message SapAiCoreModelArray {
-  repeated SapAiCoreModel models = 1;
-}
-```
-
-## 3. Analysis
-
-- **MERGE-BASE vs. HEAD (Caret)**:
-  - Caret 버전(`HEAD`)에는 `rpc refreshDifyModels`가 추가되었습니다. 이는 Caret 고유의 기능 추가 사항입니다.
-  - `// CARET MODIFICATION: Add rpc for Dify` 주석이 함께 추가되었습니다.
-
-- **MERGE-BASE vs. UPSTREAM (Cline)**:
-  - Cline 최신 버전(`UPSTREAM`)에는 `option go_package`가 추가되었습니다. 이는 Go 언어와의 호환성을 위한 변경입니다.
-  - `rpc refreshOcaModels`가 새로 추가되었습니다.
-
-- **결론**:
-  - 양쪽 모두 `ModelsService`에 새로운 rpc를 추가하는 변경이 있었습니다.
-  - Caret은 `Dify` 지원을 추가했고, Cline은 `OCA` 지원을 추가했습니다.
-  - Cline은 `go_package` 옵션을 추가했습니다.
-
-## 4. Merge Decision
-
-- `option go_package` (UPSTREAM)를 채택하여 최신 Cline과의 호환성을 유지합니다.
-- `rpc refreshDifyModels` (HEAD)를 유지하여 Caret의 고유 기능을 보존합니다.
-- `rpc refreshOcaModels` (UPSTREAM)를 추가하여 최신 Cline의 기능을 반영합니다.
-- 즉, 세 버전의 변경 사항을 모두 병합합니다.
+## 4. 최종 결론
+UPSTREAM 버전을 기반으로, 위 분석에 따라 식별된 Caret 고유 항목(`ApiProvider`의 `CARET`, `CaretModelInfo` 메시지, `ModelsApiConfiguration`의 `caret_*` 필드)을 재적용하여 최종 `proto/cline/models.proto` 파일을 생성한다.

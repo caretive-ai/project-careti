@@ -45,22 +45,23 @@ export async function resetState(controller: Controller, request: ResetStateRequ
 			type: ShowMessageType.INFORMATION,
 			message: "State reset completed",
 		})
+		await sendChatButtonClickedEvent()
+
+		return Empty.create()
+	} catch (error) {
 		await controller.postStateToWebview()
 
 		// CARET MODIFICATION: Reload extension host to clear any cached persona images
 		if (request.global) {
 			try {
 				const vscode = await import("vscode")
+				// biome-ignore lint: Required to restart the extension host, not available in HostProvider
 				await vscode.commands.executeCommand("workbench.action.restartExtensionHost")
-			} catch (error) {
-				Logger.warn(`[CARET-RESET] Failed to restart extension host: ${error}`)
+			} catch (reloadError) {
+				Logger.warn(`[CARET-RESET] Failed to restart extension host: ${reloadError}`)
 			}
 		}
 
-		await sendChatButtonClickedEvent(controller.id)
-
-		return Empty.create()
-	} catch (error) {
 		Logger.error("Error resetting state:", error)
 		HostProvider.window.showMessage({
 			type: ShowMessageType.ERROR,
@@ -102,16 +103,6 @@ async function applyCaretDefaultsAfterReset(controller: Controller, isGlobalRese
  */
 async function applyCaretDefaultSettings(controller: Controller): Promise<void> {
 	try {
-		// Import here to avoid circular dependencies
-		const { DEFAULT_CARET_SETTINGS } = await import("@/shared/CaretSettings")
-
-		// Set Caret default mode (agent instead of act) - only if in Caret mode
-		const currentCaretMode = controller.stateManager.getGlobalStateKey("caretModeSystem")
-		if (currentCaretMode === "caret") {
-			// For Caret mode, we use "act" as the base but switch to agent mode via caretModeSystem
-			controller.stateManager.setGlobalState("mode", "act" as const)
-		}
-
 		// Set Caret mode system if not already set
 		const currentModeSystem = controller.stateManager.getGlobalStateKey("caretModeSystem")
 		if (!currentModeSystem) {

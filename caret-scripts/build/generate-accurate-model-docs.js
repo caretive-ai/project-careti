@@ -64,8 +64,8 @@ function extractModelsFromContent(content) {
 const caretModels = extractModelsFromContent(caretContent)
 
 // 3. 동적 프로바이더 이름 매핑 생성
-function generateProviderMapping(content) {
-	const mapping = {}
+function generateProviderMapping(_content) {
+	const _mapping = {}
 
 	// 주석에서 프로바이더명 추출 (예: // AskSage Models)
 	const commentMappings = {

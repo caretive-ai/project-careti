@@ -30,7 +30,7 @@ export class FeatureFlagsService {
 			return
 		}
 		this.lastCacheUpdateTime = timesNow
-		for (const flag of Object.values(FEATURE_FLAGS)) {
+		for (const flag of FEATURE_FLAGS) {
 			const flagEnabled = await this.getFeatureFlag(flag).catch(() => false)
 			this.cache.set(flag, flagEnabled === true)
 		}
@@ -79,11 +79,11 @@ export class FeatureFlagsService {
 	 * Convenience: multi-root workspace remote gate
 	 */
 	public getMultiRootEnabled(): boolean {
-		return this.getBooleanFlagEnabled(FEATURE_FLAGS.MULTI_ROOT_WORKSPACE, false)
+		return this.getBooleanFlagEnabled(FeatureFlag.MULTI_ROOT_WORKSPACE, false)
 	}
 
 	public getWorkOsAuthEnabled(): boolean {
-		return this.getBooleanFlagEnabled(FEATURE_FLAGS.WORKOS_AUTH, false)
+		return this.getBooleanFlagEnabled(FeatureFlag.WORKOS_AUTH, false)
 	}
 
 	/**

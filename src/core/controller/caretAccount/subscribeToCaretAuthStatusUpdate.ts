@@ -9,10 +9,10 @@ import { StreamingResponseHandler } from "@/core/controller/grpc-handler"
  * Streams auth state changes to WebView
  */
 export async function subscribeToCaretAuthStatusUpdate(
-	controller: Controller,
-	request: proto.cline.EmptyRequest,
+	_controller: Controller,
+	_request: proto.cline.EmptyRequest,
 	responseStream: StreamingResponseHandler<proto.caret.CaretAuthState>,
-	requestId?: string,
+	_requestId?: string,
 ): Promise<void> {
 	console.log("[CARET-HANDLER] 🔔 Subscribing to Caret auth status updates")
 

@@ -1,16 +1,13 @@
-import { caretModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
 import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { getAsVar, VSC_DESCRIPTION_FOREGROUND } from "@/utils/vscStyles"
-import { handleLogin, handleLogout } from "../CaretAuthHandler"
+import { handleLogin } from "../CaretAuthHandler"
 import CaretModelPicker from "../CaretModelPicker"
 import { ModelInfoView } from "../common/ModelInfoView"
-import { ModelSelector } from "../common/ModelSelector"
 import { normalizeApiConfiguration } from "../utils/providerUtils"
-import { useApiConfigurationHandlers } from "../utils/useApiConfigurationHandlers"
 
 /**
  * Props for the CaretProvider component
@@ -36,7 +33,7 @@ export const CaretProvider = ({ showModelOptions, isPopup, currentMode }: CaretP
 
 	// Show profile page if authenticated
 	if (caretUser) {
-		const name = caretUser.displayName
+		const _name = caretUser.displayName
 		return (
 			<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
 				<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>

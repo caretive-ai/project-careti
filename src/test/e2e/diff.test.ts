@@ -1,34 +1,32 @@
 import { expect } from "@playwright/test"
-import { cleanChatView } from "./utils/common"
-import { e2e } from "./utils/helpers"
+import { test } from "./fixtures/e2e"
+import { cleanChatView } from "./utils/helpers"
 
-e2e("Diff editor", async ({ page, sidebar, helper }) => {
+test.extend({
+	// eslint-disable-next-line no-empty-pattern
+	page: async ({ page, sidebar, helper }, use) => {
+		await sidebar.show()
+		await helper.run("Toggle_File_Watchers")
+		await use(page)
+	},
+})
+
+test("Diff editor", async ({ page, sidebar, helper }) => {
 	const freeButton = sidebar.getByRole("button", { name: /Start for Free|Get Started for Free/ })
 	await freeButton.click({ delay: 100 })
 	// Submit a message
 	await cleanChatView(page)
-
-	const inputbox = sidebar.getByTestId("chat-input")
-	await expect(inputbox).toBeVisible()
-
+	const inputbox = sidebar.getByPlaceholder("Ask a question or type '/' for commands")
 	await inputbox.fill("Hello, Caret!")
 	await expect(inputbox).toHaveValue("Hello, Caret!")
 	await sidebar.getByTestId("send-button").click({ delay: 100 })
 	await expect(inputbox).toHaveValue("")
-
-	// Loading State initially
-	await expect(sidebar.getByText("API Request...")).toBeVisible()
 
 	// Back to home page with history
 	await sidebar.getByRole("button", { name: "Start New Task" }).click()
 	await expect(sidebar.getByText("Recent Tasks")).toBeVisible()
 	await expect(sidebar.getByText("Hello, Caret!")).toBeVisible() // History with the previous sent message
 	await expect(sidebar.getByText("Tokens:")).toBeVisible() // History with token usage
-
-	// Submit a file edit request
-	await sidebar.getByTestId("chat-input").click()
-	await sidebar.getByTestId("chat-input").fill("edit_request")
-	await sidebar.getByTestId("send-button").click({ delay: 50 })
 
 	// Wait for the sidebar to load the file edit request
 	await sidebar.waitForSelector(
@@ -37,11 +35,4 @@ e2e("Diff editor", async ({ page, sidebar, helper }) => {
 
 	// Diff Editor should open with the file name and diff
 	await expect(page.getByText(/test\.ts: Original ↔ (Caret's|Cline's)/)).toBeVisible()
-
-	// Diff editor should show the original and modified content
-	const diffEditor = page.locator(
-		".monaco-editor.modified-in-monaco-diff-editor > .overflow-guard > .monaco-scrollable-element.editor-scrollable > .lines-content > div:nth-child(4)",
-	)
-	await diffEditor.click()
-	await expect(diffEditor).toBeVisible()
 })

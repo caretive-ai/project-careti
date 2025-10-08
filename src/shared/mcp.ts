@@ -112,4 +112,4 @@ export interface McpDownloadResponse {
 }
 
 // CARET MODIFICATION: Add brandMarketplace tab type for B2B branding
-export type McpViewTab = "marketplace" | "addRemote" | "installed" | "brandMarketplace"
+export type McpViewTab = "marketplace" | "addRemote" | "configure" | "brandMarketplace"

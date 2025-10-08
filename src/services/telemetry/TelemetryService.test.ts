@@ -199,6 +199,24 @@ describe("Telemetry system is abstracted and can easily switch between providers
 	})
 
 	describe("Factory Configuration", () => {
+		it("should return default configuration", () => {
+			// Mock PostHog config validation to return true for this test
+			const isPostHogConfigValidStub = sinon.stub(posthogConfigModule, "isPostHogConfigValid").returns(true)
+
+			const defaultConfig = TelemetryProviderFactory.getDefaultConfig()
+
+			assert.deepStrictEqual(
+				defaultConfig,
+				{
+					type: "posthog",
+				},
+				"Should return PostHog as default configuration",
+			)
+
+			// Restore the stub
+			isPostHogConfigValidStub.restore()
+		})
+
 		it("should handle provider switching seamlessly", async () => {
 			console.log("\n=== Testing Provider Switching ===")
 

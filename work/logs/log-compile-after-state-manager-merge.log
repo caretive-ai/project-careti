@@ -1,0 +1,203 @@
+
+> caret@0.2.4 compile
+> npm run check-types && npm run lint && node esbuild.mjs
+
+
+> caret@0.2.4 check-types
+> npm run protos && npx tsc --noEmit && cd webview-ui && npx tsc -b --noEmit
+
+
+> caret@0.2.4 protos
+> node scripts/build-proto.mjs
+
+Compiling Protocol Buffers...
+Processing 23 proto files from /Users/luke/dev/caret/proto
+Generated ProtoBus files at:
+- /Users/luke/dev/caret/webview-ui/src/services/grpc-client.ts
+- /Users/luke/dev/caret/src/generated/hosts/vscode/protobus-service-types.ts
+- /Users/luke/dev/caret/src/generated/hosts/vscode/protobus-services.ts
+- /Users/luke/dev/caret/src/generated/hosts/standalone/protobus-server-setup.ts
+Generated Host Bridge client files at:
+- /Users/luke/dev/caret/src/generated/hosts/host-bridge-client-types.ts
+- /Users/luke/dev/caret/src/generated/hosts/standalone/host-bridge-clients.ts
+- /Users/luke/dev/caret/src/generated/hosts/vscode/hostbridge-grpc-service-config.ts
+
+> caret@0.2.4 postprotos
+> biome format src/shared/proto src/core/controller src/hosts/ webview-ui/src/services src/generated --write --no-errors-on-unmatched
+
+Formatted 205 files in 28ms. No fixes applied.
+src/core/task/index.ts(1720,1): error TS1185: Merge conflict marker encountered.
+src/core/task/index.ts(1722,1): error TS1185: Merge conflict marker encountered.
+src/core/task/index.ts(1724,1): error TS1185: Merge conflict marker encountered.
+src/core/task/index.ts(1729,1): error TS1185: Merge conflict marker encountered.
+src/core/task/index.ts(1731,1): error TS1185: Merge conflict marker encountered.
+src/core/task/index.ts(1733,1): error TS1185: Merge conflict marker encountered.
+src/core/task/index.ts(1792,1): error TS1185: Merge conflict marker encountered.
+src/core/task/index.ts(1823,1): error TS1185: Merge conflict marker encountered.
+src/core/task/index.ts(1825,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ExecuteCommandToolHandler.ts(71,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ExecuteCommandToolHandler.ts(90,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ExecuteCommandToolHandler.ts(93,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ListCodeDefinitionNamesToolHandler.ts(90,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ListCodeDefinitionNamesToolHandler.ts(92,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ListCodeDefinitionNamesToolHandler.ts(94,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ListFilesToolHandler.ts(107,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ListFilesToolHandler.ts(109,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ListFilesToolHandler.ts(111,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ReadFileToolHandler.ts(105,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ReadFileToolHandler.ts(107,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ReadFileToolHandler.ts(109,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ReportBugHandler.ts(77,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ReportBugHandler.ts(80,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/ReportBugHandler.ts(81,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/WriteToFileToolHandler.ts(119,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/WriteToFileToolHandler.ts(221,1): error TS1185: Merge conflict marker encountered.
+src/core/task/tools/handlers/WriteToFileToolHandler.ts(222,1): error TS1185: Merge conflict marker encountered.
+src/dev/commands/tasks.ts(29,1): error TS1185: Merge conflict marker encountered.
+src/dev/commands/tasks.ts(32,1): error TS1185: Merge conflict marker encountered.
+src/dev/commands/tasks.ts(35,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(18,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(35,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(38,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(74,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(78,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(80,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(118,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(125,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(131,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(141,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(209,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(212,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(217,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(223,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(228,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(238,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(256,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(260,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(308,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(310,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(312,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(403,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(406,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(409,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(417,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(420,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(423,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(431,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(434,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(437,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(447,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(450,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(453,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(473,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(475,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(477,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(486,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(488,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(490,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(499,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(501,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(503,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(512,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(514,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(516,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(527,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(531,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(534,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(543,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(556,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(559,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(565,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(568,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(571,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(587,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(593,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(599,1): error TS1185: Merge conflict marker encountered.
+src/extension.ts(626,1): error TS1005: ',' expected.
+src/extension.ts(647,1): error TS1005: ',' expected.
+src/extension.ts(675,1): error TS1005: ',' expected.
+src/extension.ts(695,1): error TS1005: '}' expected.
+src/integrations/checkpoints/index.ts(108,1): error TS1185: Merge conflict marker encountered.
+src/integrations/checkpoints/index.ts(112,1): error TS1185: Merge conflict marker encountered.
+src/integrations/checkpoints/index.ts(116,1): error TS1185: Merge conflict marker encountered.
+src/integrations/checkpoints/index.ts(756,1): error TS1185: Merge conflict marker encountered.
+src/integrations/checkpoints/index.ts(760,1): error TS1185: Merge conflict marker encountered.
+src/integrations/checkpoints/index.ts(764,1): error TS1185: Merge conflict marker encountered.
+src/integrations/checkpoints/index.ts(877,1): error TS1185: Merge conflict marker encountered.
+src/integrations/checkpoints/index.ts(881,1): error TS1185: Merge conflict marker encountered.
+src/integrations/checkpoints/index.ts(885,1): error TS1185: Merge conflict marker encountered.
+src/integrations/checkpoints/index.ts(935,1): error TS1185: Merge conflict marker encountered.
+src/integrations/checkpoints/index.ts(939,1): error TS1185: Merge conflict marker encountered.
+src/integrations/checkpoints/index.ts(943,1): error TS1185: Merge conflict marker encountered.
+src/services/browser/BrowserSession.ts(11,1): error TS1185: Merge conflict marker encountered.
+src/services/browser/BrowserSession.ts(14,1): error TS1185: Merge conflict marker encountered.
+src/services/browser/BrowserSession.ts(16,1): error TS1185: Merge conflict marker encountered.
+src/services/browser/UrlContentFetcher.ts(3,1): error TS1185: Merge conflict marker encountered.
+src/services/browser/UrlContentFetcher.ts(9,1): error TS1185: Merge conflict marker encountered.
+src/services/browser/UrlContentFetcher.ts(12,1): error TS1185: Merge conflict marker encountered.
+src/services/browser/utils.ts(4,1): error TS1185: Merge conflict marker encountered.
+src/services/browser/utils.ts(6,1): error TS1185: Merge conflict marker encountered.
+src/services/browser/utils.ts(8,1): error TS1185: Merge conflict marker encountered.
+src/services/error/ErrorProviderFactory.ts(1,1): error TS1185: Merge conflict marker encountered.
+src/services/error/ErrorProviderFactory.ts(3,1): error TS1185: Merge conflict marker encountered.
+src/services/error/ErrorProviderFactory.ts(5,1): error TS1185: Merge conflict marker encountered.
+src/services/error/ErrorProviderFactory.ts(20,1): error TS1185: Merge conflict marker encountered.
+src/services/error/ErrorProviderFactory.ts(22,1): error TS1185: Merge conflict marker encountered.
+src/services/error/ErrorProviderFactory.ts(24,1): error TS1185: Merge conflict marker encountered.
+src/services/error/ErrorProviderFactory.ts(40,1): error TS1185: Merge conflict marker encountered.
+src/services/error/ErrorProviderFactory.ts(45,1): error TS1185: Merge conflict marker encountered.
+src/services/error/ErrorProviderFactory.ts(52,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsProviderFactory.ts(1,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsProviderFactory.ts(4,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsProviderFactory.ts(8,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsProviderFactory.ts(37,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsProviderFactory.ts(40,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsProviderFactory.ts(48,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsProviderFactory.ts(60,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsProviderFactory.ts(63,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsProviderFactory.ts(67,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsService.ts(33,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsService.ts(35,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsService.ts(37,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsService.ts(86,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsService.ts(92,1): error TS1185: Merge conflict marker encountered.
+src/services/feature-flags/FeatureFlagsService.ts(98,1): error TS1185: Merge conflict marker encountered.
+src/services/posthog/PostHogClientProvider.ts(22,1): error TS1185: Merge conflict marker encountered.
+src/services/posthog/PostHogClientProvider.ts(72,1): error TS1185: Merge conflict marker encountered.
+src/services/posthog/PostHogClientProvider.ts(80,1): error TS1185: Merge conflict marker encountered.
+src/services/telemetry/TelemetryProviderFactory.ts(1,1): error TS1185: Merge conflict marker encountered.
+src/services/telemetry/TelemetryProviderFactory.ts(4,1): error TS1185: Merge conflict marker encountered.
+src/services/telemetry/TelemetryProviderFactory.ts(8,1): error TS1185: Merge conflict marker encountered.
+src/services/telemetry/TelemetryProviderFactory.ts(38,1): error TS1185: Merge conflict marker encountered.
+src/services/telemetry/TelemetryProviderFactory.ts(41,1): error TS1185: Merge conflict marker encountered.
+src/services/telemetry/TelemetryProviderFactory.ts(48,1): error TS1185: Merge conflict marker encountered.
+src/services/telemetry/TelemetryProviderFactory.ts(61,1): error TS1185: Merge conflict marker encountered.
+src/services/telemetry/TelemetryProviderFactory.ts(64,1): error TS1185: Merge conflict marker encountered.
+src/services/telemetry/TelemetryProviderFactory.ts(68,1): error TS1185: Merge conflict marker encountered.
+src/services/telemetry/TelemetryService.test.ts(202,1): error TS1185: Merge conflict marker encountered.
+src/services/telemetry/TelemetryService.test.ts(203,1): error TS1185: Merge conflict marker encountered.
+src/services/telemetry/TelemetryService.test.ts(222,1): error TS1185: Merge conflict marker encountered.
+src/shared/api.ts(41,1): error TS1185: Merge conflict marker encountered.
+src/shared/api.ts(43,1): error TS1185: Merge conflict marker encountered.
+src/shared/api.ts(84,1): error TS1185: Merge conflict marker encountered.
+src/shared/api.ts(666,1): error TS1185: Merge conflict marker encountered.
+src/shared/api.ts(677,1): error TS1185: Merge conflict marker encountered.
+src/shared/api.ts(688,1): error TS1185: Merge conflict marker encountered.
+src/shared/mcp.ts(114,1): error TS1185: Merge conflict marker encountered.
+src/shared/mcp.ts(117,1): error TS1185: Merge conflict marker encountered.
+src/shared/mcp.ts(119,1): error TS1185: Merge conflict marker encountered.
+src/shared/proto-conversions/models/api-configuration-conversion.ts(92,1): error TS1185: Merge conflict marker encountered.
+src/shared/proto-conversions/models/api-configuration-conversion.ts(95,1): error TS1185: Merge conflict marker encountered.
+src/shared/proto-conversions/models/api-configuration-conversion.ts(98,1): error TS1185: Merge conflict marker encountered.
+src/shared/proto-conversions/models/api-configuration-conversion.ts(110,1): error TS1185: Merge conflict marker encountered.
+src/shared/proto-conversions/models/api-configuration-conversion.ts(123,1): error TS1185: Merge conflict marker encountered.
+src/shared/proto-conversions/models/api-configuration-conversion.ts(137,1): error TS1185: Merge conflict marker encountered.
+src/shared/proto-conversions/models/api-configuration-conversion.ts(149,1): error TS1185: Merge conflict marker encountered.
+src/shared/proto-conversions/models/api-configuration-conversion.ts(157,1): error TS1185: Merge conflict marker encountered.
+src/shared/proto-conversions/models/api-configuration-conversion.ts(165,1): error TS1185: Merge conflict marker encountered.
+src/shared/services/feature-flags/feature-flags.ts(1,1): error TS1185: Merge conflict marker encountered.
+src/shared/services/feature-flags/feature-flags.ts(9,1): error TS1185: Merge conflict marker encountered.
+src/shared/services/feature-flags/feature-flags.ts(18,1): error TS1185: Merge conflict marker encountered.
+src/standalone/vscode-context.ts(79,1): error TS1185: Merge conflict marker encountered.
+src/standalone/vscode-context.ts(124,1): error TS1185: Merge conflict marker encountered.
+src/standalone/vscode-context.ts(125,1): error TS1185: Merge conflict marker encountered.

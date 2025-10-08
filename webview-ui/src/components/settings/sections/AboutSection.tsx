@@ -1,5 +1,5 @@
 import { StringRequest } from "@shared/proto/cline/common"
-import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { t } from "@/caret/utils/i18n"
 import CaretFooter from "../../../caret/components/CaretFooter"
 import { useCaretI18nContext } from "../../../caret/context/CaretI18nContext"

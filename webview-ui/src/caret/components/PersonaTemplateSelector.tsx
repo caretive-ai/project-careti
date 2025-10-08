@@ -15,15 +15,21 @@ const convertAssetToBase64 = async (assetUri: string): Promise<string> => {
 	for (const char of templateCharacters) {
 		if (char.avatarUri === assetUri) {
 			const windowKey = `templateImage_${char.character}`
-			if ((window as any)[windowKey]) return (window as any)[windowKey]
+			if ((window as any)[windowKey]) {
+				return (window as any)[windowKey]
+			}
 		}
 		if (char.thinkingAvatarUri === assetUri) {
 			const windowKey = `templateImage_${char.character}thinking`
-			if ((window as any)[windowKey]) return (window as any)[windowKey]
+			if ((window as any)[windowKey]) {
+				return (window as any)[windowKey]
+			}
 		}
 		if (char.introIllustrationUri === assetUri) {
 			const windowKey = `templateImage_${char.character}illust`
-			if ((window as any)[windowKey]) return (window as any)[windowKey]
+			if ((window as any)[windowKey]) {
+				return (window as any)[windowKey]
+			}
 		}
 	}
 	if (assetUri.includes("caret.png") && (window as any).personaProfile) {
@@ -139,11 +145,15 @@ export const PersonaTemplateSelector: React.FC<PersonaTemplateSelectorProps> = (
 	}
 
 	const getSelectedCharacter = () => {
-		if (!activeTab || templateCharacters.length === 0) return null
+		if (!activeTab || templateCharacters.length === 0) {
+			return null
+		}
 		return templateCharacters.find((char: any) => char.character === activeTab) || templateCharacters[0]
 	}
 
-	if (isOpen === false) return null
+	if (isOpen === false) {
+		return null
+	}
 
 	const activeCharacter = getSelectedCharacter()
 	const personaDetails = activeCharacter ? (activeCharacter as any)[currentLocale] || (activeCharacter as any).en : null

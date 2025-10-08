@@ -1,5 +1,5 @@
 const fs = require("fs")
-const path = require("path")
+const _path = require("path")
 
 // Define the proper translations for Korean settings.json
 const koreanTranslations = {

@@ -238,7 +238,7 @@ const ClineRulesToggleModal: React.FC = () => {
 					visible={isVisible ? false : undefined}>
 					<VSCodeButton
 						appearance="icon"
-						aria-label="Cline Rules"
+						aria-label={isVisible ? "Hide Cline Rules & Workflows" : "Show Cline Rules & Workflows"}
 						onClick={() => setIsVisible(!isVisible)}
 						style={{ padding: "0px 0px", height: "20px" }}>
 						<div className="flex items-center gap-1 text-xs whitespace-nowrap min-w-0 w-full">
@@ -447,7 +447,7 @@ export const TabButton = ({
 	isActive: boolean
 	onClick: () => void
 }) => (
-	<StyledTabButton isActive={isActive} onClick={onClick}>
+	<StyledTabButton aria-pressed={isActive} isActive={isActive} onClick={onClick}>
 		{children}
 	</StyledTabButton>
 )

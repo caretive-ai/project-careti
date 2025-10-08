@@ -105,9 +105,9 @@ export class TaskCheckpointManager implements ICheckpointManager {
 		this.state = { ...initialState }
 	}
 
-	// ======
+	// ============================================================================
 	// Public API - Core checkpoints operations
-	// ======
+	// ============================================================================
 
 	/**
 	 * Creates a checkpoint of the current workspace state
@@ -747,9 +747,9 @@ export class TaskCheckpointManager implements ICheckpointManager {
 		await this.callbacks.cancelTask()
 	}
 
-	// ======
+	// ============================================================================
 	// State management - interfaces for updating internal state
-	// ======
+	// ============================================================================
 
 	/**
 	 * Checks for an active checkpoint tracker instance, creates if needed
@@ -862,9 +862,9 @@ export class TaskCheckpointManager implements ICheckpointManager {
 		// TODO - Future telemetry event capture here
 	}
 
-	// ======
+	// ============================================================================
 	// Internal utilities - Private helpers for checkpoint operations
-	// ======
+	// ============================================================================
 
 	/**
 	 * Gets the workspace path from WorkspaceRootManager when available, otherwise falls back to CheckpointUtils
@@ -914,9 +914,9 @@ export class TaskCheckpointManager implements ICheckpointManager {
 	//}
 }
 
-// ======
+// ============================================================================
 // Factory function for clean instantiation
-// ======
+// ============================================================================
 
 /**
  * Creates a new TaskCheckpointManager instance

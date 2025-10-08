@@ -46,6 +46,7 @@ const ActModeHighlight: React.FC = () => {
 
 interface MarkdownBlockProps {
 	markdown?: string
+	compact?: boolean
 }
 
 /**
@@ -208,7 +209,7 @@ const remarkPreventBoldFilenames = () => {
 	}
 }
 
-const StyledMarkdown = styled.div`
+const StyledMarkdown = styled.div<{ compact?: boolean }>`
 	pre {
 		background-color: ${CODE_BLOCK_BG_COLOR};
 		border-radius: 3px;
@@ -286,6 +287,7 @@ const StyledMarkdown = styled.div`
 
 	p {
 		white-space: pre-wrap;
+		${(props) => props.compact && "margin: 0;"}
 	}
 
 	a {
@@ -356,7 +358,7 @@ const remarkFilePathDetection = () => {
 	}
 }
 
-const MarkdownBlock = memo(({ markdown }: MarkdownBlockProps) => {
+const MarkdownBlock = memo(({ markdown, compact }: MarkdownBlockProps) => {
 	const [reactContent, setMarkdown] = useRemark({
 		remarkPlugins: [
 			remarkPreventBoldFilenames,
@@ -453,7 +455,9 @@ const MarkdownBlock = memo(({ markdown }: MarkdownBlockProps) => {
 
 	return (
 		<div>
-			<StyledMarkdown className="ph-no-capture">{reactContent}</StyledMarkdown>
+			<StyledMarkdown className="ph-no-capture" compact={compact}>
+				{reactContent}
+			</StyledMarkdown>
 		</div>
 	)
 })

@@ -6,7 +6,7 @@ import { t } from "@/caret/utils/i18n"
 import Thumbnails from "@/components/common/Thumbnails"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CheckpointsServiceClient } from "@/services/grpc-client"
-import { highlightText } from "./task-header/TaskHeader"
+import { highlightText } from "./task-header/Highlights"
 
 interface UserMessageProps {
 	text?: string
@@ -20,7 +20,7 @@ const UserMessage: React.FC<UserMessageProps> = ({ text, images, files, messageT
 	const [isEditing, setIsEditing] = useState(false)
 	const [editedText, setEditedText] = useState(text || "")
 	const textAreaRef = useRef<HTMLTextAreaElement>(null)
-	const { checkpointTrackerErrorMessage } = useExtensionState()
+	const { checkpointManagerErrorMessage } = useExtensionState()
 
 	// Create refs for the buttons to check in the blur handler
 	const restoreAllButtonRef = useRef<HTMLButtonElement>(null)
@@ -78,7 +78,7 @@ const UserMessage: React.FC<UserMessageProps> = ({ text, images, files, messageT
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (e.key === "Escape") {
 			setIsEditing(false)
-		} else if (e.key === "Enter" && e.metaKey && !checkpointTrackerErrorMessage) {
+		} else if (e.key === "Enter" && e.metaKey && !checkpointManagerErrorMessage) {
 			handleRestoreWorkspace("taskAndWorkspace")
 		} else if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing && e.keyCode !== 229) {
 			e.preventDefault()
@@ -125,7 +125,7 @@ const UserMessage: React.FC<UserMessageProps> = ({ text, images, files, messageT
 						value={editedText}
 					/>
 					<div style={{ display: "flex", gap: "8px", marginTop: "8px", justifyContent: "flex-end" }}>
-						{!checkpointTrackerErrorMessage && (
+						{!checkpointManagerErrorMessage && (
 							<RestoreButton
 								isPrimary={false}
 								label={t("userMessage.restoreAll", "chat")}

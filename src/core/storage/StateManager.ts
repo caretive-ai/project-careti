@@ -1,811 +1,221 @@
-import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
-import { ApiConfiguration, fireworksDefaultModelId } from "@shared/api"
-import type { ExtensionContext } from "vscode"
-import { STATE_MANAGER_NOT_INITIALIZED } from "./error-messages"
-import { GlobalState, GlobalStateKey, LocalState, LocalStateKey, SecretKey, Secrets } from "./state-keys"
-import { readGlobalStateFromDisk, readSecretsFromDisk, readWorkspaceStateFromDisk } from "./utils/state-helpers"
+import { readTaskHistory, writeTaskHistory } from "@core/storage/disk"
+import { CHAT_SETTINGS_KEY, GLOBAL_SETTINGS_KEY } from "@core/storage/state-keys"
+import { stateMigrations } from "@core/storage/state-migrations"
+import { ActiveTaskState, ChatSettings } from "@core/storage/state-types"
+import { getTaskState, getTaskStateOrThrow, isAgentModel, isChatModel, isPlanModeModel } from "@core/storage/utils/state-helpers"
+import { IHostProvider } from "@hosts/host-provider"
+import { DEFAULT_AGENT_MODEL_ID, DEFAULT_PLAN_MODE_MODEL_ID } from "@services/completion"
+import { ILogService } from "@services/log/log-service"
+import { Logger } from "@services/logging/Logger"
+import { ApiConfiguration, TaskHistory } from "@services/task"
+import * as chokidar from "chokidar"
+import { randomUUID } from "crypto"
+import * as E from "fp-ts/lib/Either"
 
-/**
- * Interface for persistence error event data
- */
-export interface PersistenceErrorEvent {
-	error: Error
-}
-
-/**
- * In-memory state manager for fast state access
- * Provides immediate reads/writes with async disk persistence
- */
 export class StateManager {
-	private globalStateCache: GlobalState = {} as GlobalState
-	private secretsCache: Secrets = {} as Secrets
-	private workspaceStateCache: LocalState = {} as LocalState
-	private context: ExtensionContext
-	private isInitialized = false
-
-	// Debounced persistence state
-	private pendingGlobalState = new Set<GlobalStateKey>()
-	private pendingSecrets = new Set<SecretKey>()
-	private pendingWorkspaceState = new Set<LocalStateKey>()
-	private persistenceTimeout: NodeJS.Timeout | null = null
-	private readonly PERSISTENCE_DELAY_MS = 500
-
-	// Callback for persistence errors
-	onPersistenceError?: (event: PersistenceErrorEvent) => void
-
-	constructor(context: ExtensionContext) {
-		this.context = context
+	private taskHistory: TaskHistory = {
+		version: 2,
+		tasks: {},
 	}
+	private taskHistoryWatcher: chokidar.FSWatcher | undefined
 
-	/**
-	 * Initialize the cache by loading data from disk
-	 */
-	async initialize(): Promise<void> {
-		try {
-			// Load all extension state from disk
-			const globalState = await readGlobalStateFromDisk(this.context)
-			const secrets = await readSecretsFromDisk(this.context)
-			const workspaceState = await readWorkspaceStateFromDisk(this.context)
+	constructor(
+		private readonly hostProvider: IHostProvider,
+		private readonly logService: ILogService,
+	) {}
 
-			// Populate the caches with all extension state fields
-			// Use populate method to avoid triggering persistence during initialization
-			this.populateCache(globalState, secrets, workspaceState)
+	public async initialize() {
+		await this.loadTaskHistory()
+		this.setupTaskHistoryWatcher()
 
-			// CARET MODIFICATION: Set default provider on first launch
-			if (!this.globalStateCache.planModeApiProvider && !this.globalStateCache.actModeApiProvider) {
-				const featureConfig = getCurrentFeatureConfig()
-				this.globalStateCache.planModeApiProvider = featureConfig.defaultProvider as any
-				this.globalStateCache.actModeApiProvider = featureConfig.defaultProvider as any
-				this.pendingGlobalState.add("planModeApiProvider")
-				this.pendingGlobalState.add("actModeApiProvider")
-				this.scheduleDebouncedPersistence()
-			}
-
-			this.isInitialized = true
-		} catch (error) {
-			console.error("Failed to initialize StateManager:", error)
-			throw error
+		// CARET MODIFICATION: Ensure default provider is set on first run
+		const chatSettings = await this.getChatSettings()
+		if (!chatSettings.selectedProvider) {
+			chatSettings.selectedProvider = "caret"
+			await this.hostProvider.setWorkspaceState(CHAT_SETTINGS_KEY, chatSettings)
+			Logger.info("[StateManager]  inaugural run, set selectedProvider to caret")
 		}
 	}
 
-	/**
-	 * Set method for global state keys - updates cache immediately and schedules debounced persistence
-	 */
-	setGlobalState<K extends keyof GlobalState>(key: K, value: GlobalState[K]): void {
-		if (!this.isInitialized) {
-			throw new Error(STATE_MANAGER_NOT_INITIALIZED)
-		}
-
-		// Update cache immediately for instant access
-		this.globalStateCache[key] = value
-
-		// Add to pending persistence set and schedule debounced write
-		this.pendingGlobalState.add(key)
-		this.scheduleDebouncedPersistence()
+	public dispose() {
+		this.taskHistoryWatcher?.close()
 	}
 
-	/**
-	 * Batch set method for global state keys - updates cache immediately and schedules debounced persistence
-	 */
-	setGlobalStateBatch(updates: Partial<GlobalState>): void {
-		if (!this.isInitialized) {
-			throw new Error(STATE_MANAGER_NOT_INITIALIZED)
+	private async loadTaskHistory() {
+		const result = await readTaskHistory(this.hostProvider)
+		if (E.isLeft(result)) {
+			this.logService.error(`Failed to read task history: ${result.left.message}`)
+			return
 		}
 
-		// Update cache in one go
-		// Using object.assign to because typescript is not able to infer the type of the updates object when using Object.entries
-		Object.assign(this.globalStateCache, updates)
-
-		// Then track the keys for persistence
-		Object.keys(updates).forEach((key) => {
-			this.pendingGlobalState.add(key as GlobalStateKey)
-		})
-
-		// Schedule debounced persistence
-		this.scheduleDebouncedPersistence()
+		if (result.right) {
+			this.taskHistory = await stateMigrations(result.right, this.hostProvider)
+		}
 	}
 
-	/**
-	 * Set method for secret keys - updates cache immediately and schedules debounced persistence
-	 */
-	setSecret<K extends keyof Secrets>(key: K, value: Secrets[K]): void {
-		if (!this.isInitialized) {
-			throw new Error(STATE_MANAGER_NOT_INITIALIZED)
+	private setupTaskHistoryWatcher() {
+		const storagePath = this.hostProvider.getStoragePath()
+		if (!storagePath) {
+			return
 		}
 
-		// Update cache immediately for instant access
-		this.secretsCache[key] = value
-
-		// Add to pending persistence set and schedule debounced write
-		this.pendingSecrets.add(key)
-		this.scheduleDebouncedPersistence()
+		const taskHistoryPath = `${storagePath}/taskHistory.json`
+		this.taskHistoryWatcher = chokidar
+			.watch(taskHistoryPath, {
+				ignoreInitial: true,
+			})
+			.on("change", async () => {
+				this.logService.info("Task history file changed, reloading.")
+				await this.loadTaskHistory()
+			})
 	}
 
-	/**
-	 * Batch set method for secret keys - updates cache immediately and schedules debounced persistence
-	 */
-	setSecretsBatch(updates: Partial<Secrets>): void {
-		if (!this.isInitialized) {
-			throw new Error(STATE_MANAGER_NOT_INITIALIZED)
-		}
-
-		// Update cache immediately for all keys
-		Object.entries(updates).forEach(([key, value]) => {
-			this.secretsCache[key as keyof Secrets] = value
-			this.pendingSecrets.add(key as SecretKey)
-		})
-
-		// Schedule debounced persistence
-		this.scheduleDebouncedPersistence()
+	private async writeTaskHistory() {
+		await writeTaskHistory(this.hostProvider, this.taskHistory)
 	}
 
-	/**
-	 * Set method for workspace state keys - updates cache immediately and schedules debounced persistence
-	 */
-	setWorkspaceState<K extends keyof LocalState>(key: K, value: LocalState[K]): void {
-		if (!this.isInitialized) {
-			throw new Error(STATE_MANAGER_NOT_INITIALIZED)
-		}
-
-		// Update cache immediately for instant access
-		this.workspaceStateCache[key] = value
-
-		// Add to pending persistence set and schedule debounced write
-		this.pendingWorkspaceState.add(key)
-		this.scheduleDebouncedPersistence()
+	public getTask(taskId: string) {
+		return this.taskHistory.tasks[taskId]
 	}
 
-	/**
-	 * Batch set method for workspace state keys - updates cache immediately and schedules debounced persistence
-	 */
-	setWorkspaceStateBatch(updates: Partial<LocalState>): void {
-		if (!this.isInitialized) {
-			throw new Error(STATE_MANAGER_NOT_INITIALIZED)
-		}
-
-		// Update cache immediately for all keys
-		Object.entries(updates).forEach(([key, value]) => {
-			this.workspaceStateCache[key as keyof LocalState] = value
-			this.pendingWorkspaceState.add(key as LocalStateKey)
-		})
-
-		// Schedule debounced persistence
-		this.scheduleDebouncedPersistence()
+	public getTasks() {
+		return this.taskHistory.tasks
 	}
 
-	/**
-	 * Convenience method for getting API configuration
-	 * Ensures cache is initialized if not already done
-	 */
-	getApiConfiguration(): ApiConfiguration {
-		if (!this.isInitialized) {
-			throw new Error(STATE_MANAGER_NOT_INITIALIZED)
-		}
-
-		// Construct API configuration from cached component keys
-		return this.constructApiConfigurationFromCache()
+	public async upsertTask(task: ActiveTaskState) {
+		this.taskHistory.tasks[task.id] = task
+		await this.writeTaskHistory()
 	}
 
-	/**
-	 * Convenience method for setting API configuration
-	 */
-	setApiConfiguration(apiConfiguration: ApiConfiguration): void {
-		if (!this.isInitialized) {
-			throw new Error(STATE_MANAGER_NOT_INITIALIZED)
+	public async deleteTask(taskId: string) {
+		delete this.taskHistory.tasks[taskId]
+		await this.writeTaskHistory()
+	}
+
+	public async getChatSettings(): Promise<ChatSettings> {
+		const chatSettings = (await this.hostProvider.getWorkspaceState(CHAT_SETTINGS_KEY)) ?? {}
+		return chatSettings
+	}
+
+	public async getApiConfiguration(taskId?: string): Promise<ApiConfiguration> {
+		const taskState = taskId ? getTaskState(this, taskId) : undefined
+		const chatSettings = await this.getChatSettings()
+
+		const agentModelId = taskState?.agentModelId ?? chatSettings.agentModelId ?? DEFAULT_AGENT_MODEL_ID
+		const chatModelId = taskState?.chatModelId ?? chatSettings.chatModelId ?? DEFAULT_AGENT_MODEL_ID
+		const planModeModelId = taskState?.planModeModelId ?? chatSettings.planModeModelId ?? DEFAULT_PLAN_MODE_MODEL_ID
+
+		// CARET MODIFICATION: Add caretApiKey and planModeCaretModelId
+		return {
+			provider: chatSettings.selectedProvider,
+			chatModelId,
+			agentModelId,
+			planModeModelId,
+			planModeCaretModelId: chatSettings.planModeCaretModelId,
+			apiKey: chatSettings.apiKey,
+			apiHost: chatSettings.apiHost,
+			caretApiKey: chatSettings.caretApiKey,
+			maxTokens: chatSettings.maxTokens,
+			temperature: chatSettings.temperature,
+			topP: chatSettings.topP,
+			topK: chatSettings.topK,
+			stopSequences: chatSettings.stopSequences,
 		}
+	}
+
+	public async setApiConfiguration(apiConfiguration: Partial<ApiConfiguration>, taskId?: string): Promise<void> {
+		const chatSettings = await this.getChatSettings()
+		const taskState = taskId ? getTaskStateOrThrow(this, taskId) : undefined
 
 		const {
+			provider,
 			apiKey,
-			openRouterApiKey,
-			awsAccessKey,
-			awsSecretKey,
-			awsSessionToken,
-			awsRegion,
-			awsUseCrossRegionInference,
-			awsBedrockUsePromptCache,
-			awsBedrockEndpoint,
-			awsBedrockApiKey,
-			awsProfile,
-			awsUseProfile,
-			awsAuthentication,
-			vertexProjectId,
-			vertexRegion,
-			openAiBaseUrl,
-			openAiApiKey,
-			openAiHeaders,
-			ollamaBaseUrl,
-			ollamaApiKey,
-			ollamaApiOptionsCtxNum,
-			lmStudioBaseUrl,
-			lmStudioMaxTokens,
-			anthropicBaseUrl,
-			geminiApiKey,
-			geminiBaseUrl,
-			openAiNativeApiKey,
-			deepSeekApiKey,
-			requestyApiKey,
-			requestyBaseUrl,
-			togetherApiKey,
-			qwenApiKey,
-			doubaoApiKey,
-			mistralApiKey,
-			azureApiVersion,
-			openRouterProviderSorting,
-			liteLlmBaseUrl,
-			liteLlmApiKey,
-			liteLlmUsePromptCache,
-			caretBaseUrl, // caret
-			caretApiKey, // caret
-			caretUsePromptCache, // caret
-			caretUserProfile, // caret
-			qwenApiLine,
-			moonshotApiLine,
-			zaiApiLine,
-			asksageApiKey,
-			asksageApiUrl,
-			xaiApiKey,
-			clineAccountId,
-			sambanovaApiKey,
-			cerebrasApiKey,
-			groqApiKey,
-			moonshotApiKey,
-			nebiusApiKey,
-			favoritedModelIds,
-			fireworksApiKey,
-			fireworksModelMaxCompletionTokens,
-			fireworksModelMaxTokens,
-			sapAiCoreClientId,
-			sapAiCoreClientSecret,
-			sapAiCoreBaseUrl,
-			sapAiCoreTokenUrl,
-			sapAiResourceGroup,
-			sapAiCoreUseOrchestrationMode,
-			claudeCodePath,
-			qwenCodeOauthPath,
-			basetenApiKey,
-			huggingFaceApiKey,
-			huaweiCloudMaasApiKey,
-			difyApiKey,
-			difyBaseUrl,
-			vercelAiGatewayApiKey,
-			zaiApiKey,
-			requestTimeoutMs,
-			// Plan mode configurations
-			planModeApiProvider,
-			planModeApiModelId,
-			planModeThinkingBudgetTokens,
-			planModeReasoningEffort,
-			planModeVsCodeLmModelSelector,
-			planModeAwsBedrockCustomSelected,
-			planModeAwsBedrockCustomModelBaseId,
-			planModeOpenRouterModelId,
-			planModeOpenRouterModelInfo,
-			planModeOpenAiModelId,
-			planModeOpenAiModelInfo,
-			planModeOllamaModelId,
-			planModeLmStudioModelId,
-			planModeLiteLlmModelId,
-			planModeLiteLlmModelInfo,
-			planModeCaretModelId, // caret
-			planModeCaretModelInfo, // caret
-			planModeRequestyModelId,
-			planModeRequestyModelInfo,
-			planModeTogetherModelId,
-			planModeFireworksModelId,
-			planModeSapAiCoreModelId,
-			planModeGroqModelId,
-			planModeGroqModelInfo,
-			planModeBasetenModelId,
-			planModeBasetenModelInfo,
-			planModeHuggingFaceModelId,
-			planModeHuggingFaceModelInfo,
-			planModeHuaweiCloudMaasModelId,
-			planModeHuaweiCloudMaasModelInfo,
-			planModeVercelAiGatewayModelId,
-			planModeVercelAiGatewayModelInfo,
-			// Act mode configurations
-			actModeApiProvider,
-			actModeApiModelId,
-			actModeThinkingBudgetTokens,
-			actModeReasoningEffort,
-			actModeVsCodeLmModelSelector,
-			actModeAwsBedrockCustomSelected,
-			actModeAwsBedrockCustomModelBaseId,
-			actModeOpenRouterModelId,
-			actModeOpenRouterModelInfo,
-			actModeOpenAiModelId,
-			actModeOpenAiModelInfo,
-			actModeOllamaModelId,
-			actModeLmStudioModelId,
-			actModeLiteLlmModelId,
-			actModeLiteLlmModelInfo,
-			actModeCaretModelId, // caret
-			actModeCaretModelInfo, // caret
-			actModeRequestyModelId,
-			actModeRequestyModelInfo,
-			actModeTogetherModelId,
-			actModeFireworksModelId,
-			actModeSapAiCoreModelId,
-			actModeGroqModelId,
-			actModeGroqModelInfo,
-			actModeBasetenModelId,
-			actModeBasetenModelInfo,
-			actModeHuggingFaceModelId,
-			actModeHuggingFaceModelInfo,
-			actModeHuaweiCloudMaasModelId,
-			actModeHuaweiCloudMaasModelInfo,
-			actModeVercelAiGatewayModelId,
-			actModeVercelAiGatewayModelInfo,
+			apiHost,
+			caretApiKey, // CARET MODIFICATION: Add caretApiKey
+			maxTokens,
+			temperature,
+			topP,
+			topK,
+			stopSequences,
+			...modelConfiguration
 		} = apiConfiguration
 
-		const hasCaretUserProfile = Object.hasOwn(apiConfiguration, "caretUserProfile")
-		const caretUserProfileToStore = hasCaretUserProfile ? caretUserProfile : this.globalStateCache["caretUserProfile"]
-
-		// Batch update global state keys
-		this.setGlobalStateBatch({
-			// Plan mode configuration updates
-			planModeApiProvider,
-			planModeApiModelId,
-			planModeThinkingBudgetTokens,
-			planModeReasoningEffort,
-			planModeVsCodeLmModelSelector,
-			planModeAwsBedrockCustomSelected,
-			planModeAwsBedrockCustomModelBaseId,
-			planModeOpenRouterModelId,
-			planModeOpenRouterModelInfo,
-			planModeOpenAiModelId,
-			planModeOpenAiModelInfo,
-			planModeOllamaModelId,
-			planModeLmStudioModelId,
-			planModeLiteLlmModelId,
-			planModeLiteLlmModelInfo,
-			planModeCaretModelId, // caret
-			planModeCaretModelInfo, // caret
-			planModeRequestyModelId,
-			planModeRequestyModelInfo,
-			planModeTogetherModelId,
-			planModeFireworksModelId,
-			planModeSapAiCoreModelId,
-			planModeGroqModelId,
-			planModeGroqModelInfo,
-			planModeBasetenModelId,
-			planModeBasetenModelInfo,
-			planModeHuggingFaceModelId,
-			planModeHuggingFaceModelInfo,
-			planModeHuaweiCloudMaasModelId,
-			planModeHuaweiCloudMaasModelInfo,
-			planModeVercelAiGatewayModelId,
-			planModeVercelAiGatewayModelInfo,
-
-			// Act mode configuration updates
-			actModeApiProvider,
-			actModeApiModelId,
-			actModeThinkingBudgetTokens,
-			actModeReasoningEffort,
-			actModeVsCodeLmModelSelector,
-			actModeAwsBedrockCustomSelected,
-			actModeAwsBedrockCustomModelBaseId,
-			actModeOpenRouterModelId,
-			actModeOpenRouterModelInfo,
-			actModeOpenAiModelId,
-			actModeOpenAiModelInfo,
-			actModeOllamaModelId,
-			actModeLmStudioModelId,
-			actModeLiteLlmModelId,
-			actModeLiteLlmModelInfo,
-			actModeCaretModelId, // caret
-			actModeCaretModelInfo, // caret
-			actModeRequestyModelId,
-			actModeRequestyModelInfo,
-			actModeTogetherModelId,
-			actModeFireworksModelId,
-			actModeSapAiCoreModelId,
-			actModeGroqModelId,
-			actModeGroqModelInfo,
-			actModeBasetenModelId,
-			actModeBasetenModelInfo,
-			actModeHuggingFaceModelId,
-			actModeHuggingFaceModelInfo,
-			actModeHuaweiCloudMaasModelId,
-			actModeHuaweiCloudMaasModelInfo,
-			actModeVercelAiGatewayModelId,
-			actModeVercelAiGatewayModelInfo,
-
-			// Global state updates
-			awsRegion,
-			awsUseCrossRegionInference,
-			awsBedrockUsePromptCache,
-			awsBedrockEndpoint,
-			awsProfile,
-			awsUseProfile,
-			awsAuthentication,
-			vertexProjectId,
-			vertexRegion,
-			requestyBaseUrl,
-			openAiBaseUrl,
-			openAiHeaders,
-			ollamaBaseUrl,
-			ollamaApiOptionsCtxNum,
-			lmStudioBaseUrl,
-			lmStudioMaxTokens,
-			anthropicBaseUrl,
-			geminiBaseUrl,
-			azureApiVersion,
-			openRouterProviderSorting,
-			liteLlmBaseUrl,
-			liteLlmUsePromptCache,
-			caretBaseUrl, // caret
-			caretUsePromptCache, // caret
-			caretUserProfile: caretUserProfileToStore, // caret
-			qwenApiLine,
-			moonshotApiLine,
-			zaiApiLine,
-			asksageApiUrl,
-			favoritedModelIds,
-			requestTimeoutMs,
-			fireworksModelMaxCompletionTokens,
-			fireworksModelMaxTokens,
-			sapAiCoreBaseUrl,
-			sapAiCoreTokenUrl,
-			sapAiResourceGroup,
-			sapAiCoreUseOrchestrationMode,
-			claudeCodePath,
-			difyBaseUrl,
-			qwenCodeOauthPath,
-		})
-
-		// Batch update secrets
-		this.setSecretsBatch({
-			apiKey,
-			openRouterApiKey,
-			clineAccountId,
-			awsAccessKey,
-			awsSecretKey,
-			awsSessionToken,
-			awsBedrockApiKey,
-			openAiApiKey,
-			ollamaApiKey,
-			geminiApiKey,
-			openAiNativeApiKey,
-			deepSeekApiKey,
-			requestyApiKey,
-			togetherApiKey,
-			qwenApiKey,
-			doubaoApiKey,
-			mistralApiKey,
-			liteLlmApiKey,
-			caretApiKey, // caret
-			fireworksApiKey,
-			asksageApiKey,
-			xaiApiKey,
-			sambanovaApiKey,
-			cerebrasApiKey,
-			groqApiKey,
-			moonshotApiKey,
-			nebiusApiKey,
-			sapAiCoreClientId,
-			sapAiCoreClientSecret,
-			basetenApiKey,
-			huggingFaceApiKey,
-			huaweiCloudMaasApiKey,
-			difyApiKey,
-			vercelAiGatewayApiKey,
-			zaiApiKey,
-		})
-	}
-
-	/**
-	 * Get method for global state keys - reads from in-memory cache
-	 */
-	getGlobalStateKey<K extends keyof GlobalState>(key: K): GlobalState[K] {
-		if (!this.isInitialized) {
-			throw new Error(STATE_MANAGER_NOT_INITIALIZED)
-		}
-		return this.globalStateCache[key]
-	}
-
-	/**
-	 * Get method for secret keys - reads from in-memory cache
-	 */
-	getSecretKey<K extends keyof Secrets>(key: K): Secrets[K] {
-		if (!this.isInitialized) {
-			throw new Error(STATE_MANAGER_NOT_INITIALIZED)
-		}
-		return this.secretsCache[key]
-	}
-
-	/**
-	 * Get method for workspace state keys - reads from in-memory cache
-	 */
-	getWorkspaceStateKey<K extends keyof LocalState>(key: K): LocalState[K] {
-		if (!this.isInitialized) {
-			throw new Error(STATE_MANAGER_NOT_INITIALIZED)
-		}
-		return this.workspaceStateCache[key]
-	}
-
-	/**
-	 * Reinitialize the state manager by clearing all state and reloading from disk
-	 * Used for error recovery when write operations fail
-	 */
-	async reInitialize(): Promise<void> {
-		// Clear all cached data and pending state
-		this.dispose()
-
-		// Reinitialize from disk
-		await this.initialize()
-	}
-
-	/**
-	 * Dispose of the state manager
-	 */
-	private dispose(): void {
-		if (this.persistenceTimeout) {
-			clearTimeout(this.persistenceTimeout)
-			this.persistenceTimeout = null
+		const newChatSettings: ChatSettings = {
+			...chatSettings,
+			selectedProvider: provider ?? chatSettings.selectedProvider,
+			apiKey: apiKey ?? chatSettings.apiKey,
+			apiHost: apiHost ?? chatSettings.apiHost,
+			caretApiKey: caretApiKey ?? chatSettings.caretApiKey, // CARET MODIFICATION: Add caretApiKey
+			maxTokens: maxTokens ?? chatSettings.maxTokens,
+			temperature: temperature ?? chatSettings.temperature,
+			topP: topP ?? chatSettings.topP,
+			topK: topK ?? chatSettings.topK,
+			stopSequences: stopSequences ?? chatSettings.stopSequences,
 		}
 
-		this.pendingGlobalState.clear()
-		this.pendingSecrets.clear()
-		this.pendingWorkspaceState.clear()
-
-		this.globalStateCache = {} as GlobalState
-		this.secretsCache = {} as Secrets
-		this.workspaceStateCache = {} as LocalState
-
-		this.isInitialized = false
-	}
-
-	/**
-	 * Schedule debounced persistence - simple timeout-based persistence
-	 */
-	private scheduleDebouncedPersistence(): void {
-		// Clear existing timeout if one is pending
-		if (this.persistenceTimeout) {
-			clearTimeout(this.persistenceTimeout)
-		}
-
-		// Schedule a new timeout to persist pending changes
-		this.persistenceTimeout = setTimeout(async () => {
-			try {
-				await Promise.all([
-					this.persistGlobalStateBatch(this.pendingGlobalState),
-					this.persistSecretsBatch(this.pendingSecrets),
-					this.persistWorkspaceStateBatch(this.pendingWorkspaceState),
-				])
-
-				// Clear pending sets on successful persistence
-				this.pendingGlobalState.clear()
-				this.pendingSecrets.clear()
-				this.pendingWorkspaceState.clear()
-				this.persistenceTimeout = null
-			} catch (error) {
-				console.error("Failed to persist pending changes:", error)
-				this.persistenceTimeout = null
-
-				// Call persistence error callback for error recovery
-				this.onPersistenceError?.({ error: error as Error })
+		if (taskState) {
+			if (isAgentModel(modelConfiguration)) {
+				taskState.agentModelId = modelConfiguration.agentModelId
 			}
-		}, this.PERSISTENCE_DELAY_MS)
-	}
-
-	/**
-	 * Private method to batch persist global state keys with Promise.all
-	 */
-	private async persistGlobalStateBatch(keys: Set<GlobalStateKey>): Promise<void> {
-		try {
-			await Promise.all(
-				Array.from(keys).map((key) => {
-					const value = this.globalStateCache[key]
-					return this.context.globalState.update(key, value)
-				}),
-			)
-		} catch (error) {
-			console.error("Failed to persist global state batch:", error)
-			throw error
+			if (isChatModel(modelConfiguration)) {
+				taskState.chatModelId = modelConfiguration.chatModelId
+			}
+			if (isPlanModeModel(modelConfiguration)) {
+				taskState.planModeModelId = modelConfiguration.planModeModelId
+			}
+			// CARET MODIFICATION: Add planModeCaretModelId
+			if (modelConfiguration.planModeCaretModelId) {
+				newChatSettings.planModeCaretModelId = modelConfiguration.planModeCaretModelId
+			}
+		} else {
+			if (isAgentModel(modelConfiguration)) {
+				newChatSettings.agentModelId = modelConfiguration.agentModelId
+			}
+			if (isChatModel(modelConfiguration)) {
+				newChatSettings.chatModelId = modelConfiguration.chatModelId
+			}
+			if (isPlanModeModel(modelConfiguration)) {
+				newChatSettings.planModeModelId = modelConfiguration.planModeModelId
+			}
+			// CARET MODIFICATION: Add planModeCaretModelId
+			if (modelConfiguration.planModeCaretModelId) {
+				newChatSettings.planModeCaretModelId = modelConfiguration.planModeCaretModelId
+			}
 		}
+
+		await this.hostProvider.setWorkspaceState(CHAT_SETTINGS_KEY, newChatSettings)
 	}
 
-	/**
-	 * Private method to batch persist secrets with Promise.all
-	 */
-	private async persistSecretsBatch(keys: Set<SecretKey>): Promise<void> {
-		try {
-			await Promise.all(
-				Array.from(keys).map((key) => {
-					const value = this.secretsCache[key]
-					if (value) {
-						return this.context.secrets.store(key, value)
-					} else {
-						return this.context.secrets.delete(key)
-					}
-				}),
-			)
-		} catch (error) {
-			console.error("Failed to persist secrets batch:", error)
-			throw error
-		}
+	public async getGlobalSettings() {
+		const globalSettings = (await this.hostProvider.getGlobalState(GLOBAL_SETTINGS_KEY)) ?? {}
+		return globalSettings
 	}
 
-	/**
-	 * Private method to batch persist workspace state keys with Promise.all
-	 */
-	private async persistWorkspaceStateBatch(keys: Set<LocalStateKey>): Promise<void> {
-		try {
-			await Promise.all(
-				Array.from(keys).map((key) => {
-					const value = this.workspaceStateCache[key]
-					return this.context.workspaceState.update(key, value)
-				}),
-			)
-		} catch (error) {
-			console.error("Failed to persist workspace state batch:", error)
-			throw error
-		}
+	public async setGlobalSettings(settings: Record<string, unknown>): Promise<void> {
+		const globalSettings = await this.getGlobalSettings()
+		await this.hostProvider.setGlobalState(GLOBAL_SETTINGS_KEY, {
+			...globalSettings,
+			...settings,
+		})
 	}
 
-	/**
-	 * Private method to populate cache with all extension state without triggering persistence
-	 * Used during initialization
-	 */
-	private populateCache(globalState: GlobalState, secrets: Secrets, workspaceState: LocalState): void {
-		Object.assign(this.globalStateCache, globalState)
-		Object.assign(this.secretsCache, secrets)
-		Object.assign(this.workspaceStateCache, workspaceState)
-	}
-
-	/**
-	 * Construct API configuration from cached component keys
-	 */
-	private constructApiConfigurationFromCache(): ApiConfiguration {
+	public createNewTask(): ActiveTaskState {
+		const taskId = randomUUID()
 		return {
-			// Secrets
-			apiKey: this.secretsCache["apiKey"],
-			openRouterApiKey: this.secretsCache["openRouterApiKey"],
-			clineAccountId: this.secretsCache["clineAccountId"],
-			awsAccessKey: this.secretsCache["awsAccessKey"],
-			awsSecretKey: this.secretsCache["awsSecretKey"],
-			awsSessionToken: this.secretsCache["awsSessionToken"],
-			awsBedrockApiKey: this.secretsCache["awsBedrockApiKey"],
-			openAiApiKey: this.secretsCache["openAiApiKey"],
-			ollamaApiKey: this.secretsCache["ollamaApiKey"],
-			geminiApiKey: this.secretsCache["geminiApiKey"],
-			openAiNativeApiKey: this.secretsCache["openAiNativeApiKey"],
-			deepSeekApiKey: this.secretsCache["deepSeekApiKey"],
-			requestyApiKey: this.secretsCache["requestyApiKey"],
-			togetherApiKey: this.secretsCache["togetherApiKey"],
-			qwenApiKey: this.secretsCache["qwenApiKey"],
-			doubaoApiKey: this.secretsCache["doubaoApiKey"],
-			mistralApiKey: this.secretsCache["mistralApiKey"],
-			liteLlmApiKey: this.secretsCache["liteLlmApiKey"],
-			caretApiKey: this.secretsCache["caretApiKey"], // caret
-			caretAuthToken: this.secretsCache["caretAuthToken"], // caret
-			fireworksApiKey: this.secretsCache["fireworksApiKey"],
-			asksageApiKey: this.secretsCache["asksageApiKey"],
-			xaiApiKey: this.secretsCache["xaiApiKey"],
-			sambanovaApiKey: this.secretsCache["sambanovaApiKey"],
-			cerebrasApiKey: this.secretsCache["cerebrasApiKey"],
-			groqApiKey: this.secretsCache["groqApiKey"],
-			basetenApiKey: this.secretsCache["basetenApiKey"],
-			moonshotApiKey: this.secretsCache["moonshotApiKey"],
-			nebiusApiKey: this.secretsCache["nebiusApiKey"],
-			sapAiCoreClientId: this.secretsCache["sapAiCoreClientId"],
-			sapAiCoreClientSecret: this.secretsCache["sapAiCoreClientSecret"],
-			huggingFaceApiKey: this.secretsCache["huggingFaceApiKey"],
-			huaweiCloudMaasApiKey: this.secretsCache["huaweiCloudMaasApiKey"],
-			difyApiKey: this.secretsCache["difyApiKey"],
-			vercelAiGatewayApiKey: this.secretsCache["vercelAiGatewayApiKey"],
-			zaiApiKey: this.secretsCache["zaiApiKey"],
-
-			// Global state
-			awsRegion: this.globalStateCache["awsRegion"],
-			awsUseCrossRegionInference: this.globalStateCache["awsUseCrossRegionInference"],
-			awsBedrockUsePromptCache: this.globalStateCache["awsBedrockUsePromptCache"],
-			awsBedrockEndpoint: this.globalStateCache["awsBedrockEndpoint"],
-			awsProfile: this.globalStateCache["awsProfile"],
-			awsUseProfile: this.globalStateCache["awsUseProfile"],
-			awsAuthentication: this.globalStateCache["awsAuthentication"],
-			vertexProjectId: this.globalStateCache["vertexProjectId"],
-			vertexRegion: this.globalStateCache["vertexRegion"],
-			requestyBaseUrl: this.globalStateCache["requestyBaseUrl"],
-			openAiBaseUrl: this.globalStateCache["openAiBaseUrl"],
-			openAiHeaders: this.globalStateCache["openAiHeaders"] || {},
-			ollamaBaseUrl: this.globalStateCache["ollamaBaseUrl"],
-			ollamaApiOptionsCtxNum: this.globalStateCache["ollamaApiOptionsCtxNum"],
-			lmStudioBaseUrl: this.globalStateCache["lmStudioBaseUrl"],
-			lmStudioMaxTokens: this.globalStateCache["lmStudioMaxTokens"],
-			anthropicBaseUrl: this.globalStateCache["anthropicBaseUrl"],
-			geminiBaseUrl: this.globalStateCache["geminiBaseUrl"],
-			azureApiVersion: this.globalStateCache["azureApiVersion"],
-			openRouterProviderSorting: this.globalStateCache["openRouterProviderSorting"],
-			liteLlmBaseUrl: this.globalStateCache["liteLlmBaseUrl"],
-			liteLlmUsePromptCache: this.globalStateCache["liteLlmUsePromptCache"],
-			caretBaseUrl: this.globalStateCache["caretBaseUrl"], // caret
-			caretUsePromptCache: this.globalStateCache["caretUsePromptCache"], // caret
-			caretUserProfile: this.globalStateCache["caretUserProfile"], // caret
-			qwenApiLine: this.globalStateCache["qwenApiLine"],
-			moonshotApiLine: this.globalStateCache["moonshotApiLine"],
-			zaiApiLine: this.globalStateCache["zaiApiLine"],
-			asksageApiUrl: this.globalStateCache["asksageApiUrl"],
-			favoritedModelIds: this.globalStateCache["favoritedModelIds"],
-			requestTimeoutMs: this.globalStateCache["requestTimeoutMs"],
-			fireworksModelMaxCompletionTokens: this.globalStateCache["fireworksModelMaxCompletionTokens"],
-			fireworksModelMaxTokens: this.globalStateCache["fireworksModelMaxTokens"],
-			sapAiCoreBaseUrl: this.globalStateCache["sapAiCoreBaseUrl"],
-			sapAiCoreTokenUrl: this.globalStateCache["sapAiCoreTokenUrl"],
-			sapAiResourceGroup: this.globalStateCache["sapAiResourceGroup"],
-			sapAiCoreUseOrchestrationMode: this.globalStateCache["sapAiCoreUseOrchestrationMode"],
-			claudeCodePath: this.globalStateCache["claudeCodePath"],
-			qwenCodeOauthPath: this.globalStateCache["qwenCodeOauthPath"],
-			difyBaseUrl: this.globalStateCache["difyBaseUrl"],
-
-			// Plan mode configurations
-			planModeApiProvider: this.globalStateCache["planModeApiProvider"],
-			planModeApiModelId: this.globalStateCache["planModeApiModelId"],
-			planModeThinkingBudgetTokens: this.globalStateCache["planModeThinkingBudgetTokens"],
-			planModeReasoningEffort: this.globalStateCache["planModeReasoningEffort"],
-			planModeVsCodeLmModelSelector: this.globalStateCache["planModeVsCodeLmModelSelector"],
-			planModeAwsBedrockCustomSelected: this.globalStateCache["planModeAwsBedrockCustomSelected"],
-			planModeAwsBedrockCustomModelBaseId: this.globalStateCache["planModeAwsBedrockCustomModelBaseId"],
-			planModeOpenRouterModelId: this.globalStateCache["planModeOpenRouterModelId"],
-			planModeOpenRouterModelInfo: this.globalStateCache["planModeOpenRouterModelInfo"],
-			planModeOpenAiModelId: this.globalStateCache["planModeOpenAiModelId"],
-			planModeOpenAiModelInfo: this.globalStateCache["planModeOpenAiModelInfo"],
-			planModeOllamaModelId: this.globalStateCache["planModeOllamaModelId"],
-			planModeLmStudioModelId: this.globalStateCache["planModeLmStudioModelId"],
-			planModeLiteLlmModelId: this.globalStateCache["planModeLiteLlmModelId"],
-			planModeLiteLlmModelInfo: this.globalStateCache["planModeLiteLlmModelInfo"],
-			planModeCaretModelId: this.globalStateCache["planModeCaretModelId"], // caret
-			planModeCaretModelInfo: this.globalStateCache["planModeCaretModelInfo"], // caret
-			planModeRequestyModelId: this.globalStateCache["planModeRequestyModelId"],
-			planModeRequestyModelInfo: this.globalStateCache["planModeRequestyModelInfo"],
-			planModeTogetherModelId: this.globalStateCache["planModeTogetherModelId"],
-			planModeFireworksModelId: this.globalStateCache["planModeFireworksModelId"] || fireworksDefaultModelId,
-			planModeSapAiCoreModelId: this.globalStateCache["planModeSapAiCoreModelId"],
-			planModeGroqModelId: this.globalStateCache["planModeGroqModelId"],
-			planModeGroqModelInfo: this.globalStateCache["planModeGroqModelInfo"],
-			planModeBasetenModelId: this.globalStateCache["planModeBasetenModelId"],
-			planModeBasetenModelInfo: this.globalStateCache["planModeBasetenModelInfo"],
-			planModeHuggingFaceModelId: this.globalStateCache["planModeHuggingFaceModelId"],
-			planModeHuggingFaceModelInfo: this.globalStateCache["planModeHuggingFaceModelInfo"],
-			planModeHuaweiCloudMaasModelId: this.globalStateCache["planModeHuaweiCloudMaasModelId"],
-			planModeHuaweiCloudMaasModelInfo: this.globalStateCache["planModeHuaweiCloudMaasModelInfo"],
-			planModeVercelAiGatewayModelId: this.globalStateCache["planModeVercelAiGatewayModelId"],
-			planModeVercelAiGatewayModelInfo: this.globalStateCache["planModeVercelAiGatewayModelInfo"],
-
-			// Act mode configurations
-			actModeApiProvider: this.globalStateCache["actModeApiProvider"],
-			actModeApiModelId: this.globalStateCache["actModeApiModelId"],
-			actModeThinkingBudgetTokens: this.globalStateCache["actModeThinkingBudgetTokens"],
-			actModeReasoningEffort: this.globalStateCache["actModeReasoningEffort"],
-			actModeVsCodeLmModelSelector: this.globalStateCache["actModeVsCodeLmModelSelector"],
-			actModeAwsBedrockCustomSelected: this.globalStateCache["actModeAwsBedrockCustomSelected"],
-			actModeAwsBedrockCustomModelBaseId: this.globalStateCache["actModeAwsBedrockCustomModelBaseId"],
-			actModeOpenRouterModelId: this.globalStateCache["actModeOpenRouterModelId"],
-			actModeOpenRouterModelInfo: this.globalStateCache["actModeOpenRouterModelInfo"],
-			actModeOpenAiModelId: this.globalStateCache["actModeOpenAiModelId"],
-			actModeOpenAiModelInfo: this.globalStateCache["actModeOpenAiModelInfo"],
-			actModeOllamaModelId: this.globalStateCache["actModeOllamaModelId"],
-			actModeLmStudioModelId: this.globalStateCache["actModeLmStudioModelId"],
-			actModeLiteLlmModelId: this.globalStateCache["actModeLiteLlmModelId"],
-			actModeLiteLlmModelInfo: this.globalStateCache["actModeLiteLlmModelInfo"],
-			actModeCaretModelId: this.globalStateCache["actModeCaretModelId"], // caret
-			actModeCaretModelInfo: this.globalStateCache["actModeCaretModelInfo"], // caret
-			actModeRequestyModelId: this.globalStateCache["actModeRequestyModelId"],
-			actModeRequestyModelInfo: this.globalStateCache["actModeRequestyModelInfo"],
-			actModeTogetherModelId: this.globalStateCache["actModeTogetherModelId"],
-			actModeFireworksModelId: this.globalStateCache["actModeFireworksModelId"] || fireworksDefaultModelId,
-			actModeSapAiCoreModelId: this.globalStateCache["actModeSapAiCoreModelId"],
-			actModeGroqModelId: this.globalStateCache["actModeGroqModelId"],
-			actModeGroqModelInfo: this.globalStateCache["actModeGroqModelInfo"],
-			actModeBasetenModelId: this.globalStateCache["actModeBasetenModelId"],
-			actModeBasetenModelInfo: this.globalStateCache["actModeBasetenModelInfo"],
-			actModeHuggingFaceModelId: this.globalStateCache["actModeHuggingFaceModelId"],
-			actModeHuggingFaceModelInfo: this.globalStateCache["actModeHuggingFaceModelInfo"],
-			actModeHuaweiCloudMaasModelId: this.globalStateCache["actModeHuaweiCloudMaasModelId"],
-			actModeHuaweiCloudMaasModelInfo: this.globalStateCache["actModeHuaweiCloudMaasModelInfo"],
-			actModeVercelAiGatewayModelId: this.globalStateCache["actModeVercelAiGatewayModelId"],
-			actModeVercelAiGatewayModelInfo: this.globalStateCache["actModeVercelAiGatewayModelInfo"],
+			id: taskId,
+			status: "active",
+			history: [],
+			context: {
+				selection: [],
+				diagnostics: [],
+				tabs: [],
+				relativeFilePaths: [],
+				depGraph: {
+					root: "",
+					files: {},
+				},
+			},
+			input: "",
 		}
 	}
 }

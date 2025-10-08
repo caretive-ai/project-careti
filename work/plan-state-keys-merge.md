@@ -1,15 +1,18 @@
-# `src/core/storage/state-keys.ts` 병합 실행 계획
+# `state-keys.ts` 병합 계획
 
-## 1. 목표
+## 1. 분석
 
-`src/core/storage/state-keys.ts` 파일의 병합 충돌을 해결하고, Cline의 `Oca` 모델 지원과 Caret의 고유 기능(페르소나, 입력 기록 등)을 모두 포함하는 최종 버전을 생성합니다.
+`src/core/storage/state-keys.ts` 파일은 `Settings`와 `Secrets` 인터페이스에서 충돌이 발생했다. `state-helpers.ts`에서 발생한 타입 오류의 근본 원인으로, 이 파일이 먼저 해결되어야 한다.
 
-## 2. 실행 계획
+- **Caret (`HEAD`)**: `caretModeSystem`, `enablePersonaSystem`, `caretAuthToken` 등 Caret 고유의 상태 및 비밀 키를 추가했다.
+- **Cline (`upstream/main`)**: `actModeOcaModelId`, `ocaApiKey`, `ocaRefreshToken` 등 OCA(Oracle Cloud AI) 및 기타 신규 기능과 관련된 키를 추가했다.
 
-1.  **사용자 승인**: 아래에 제시된 `src/core/storage/state-keys.ts`의 최종 내용에 대해 마스터의 승인을 받습니다.
-2.  **파일 업데이트**: 승인 시, `write_to_file` 도구를 사용하여 `src/core/storage/state-keys.ts` 파일을 아래 내용으로 덮어씁니다.
+## 2. 병합 원칙
 
-## 3. 최종 병합 내용
+- **전체 통합**: 두 브랜치의 모든 새로운 키를 각 인터페이스에 포함시켜, `state-helpers.ts` 및 다른 파일에서 참조할 때 타입 오류가 발생하지 않도록 한다.
+- **구조 유지**: 기존 인터페이스의 구조를 유지하면서 양쪽의 추가된 속성들을 논리적으로 통합한다.
+
+## 3. 제안 코드 (전체 파일)
 
 ```typescript
 import { ApiProvider, ModelInfo, type OcaModelInfo } from "@shared/api"
@@ -209,7 +212,7 @@ export interface Settings {
 	// CARET MODIFICATION: Persona image storage for persona system
 	caretUserProfile: CaretUser | undefined //caret
 	// CARET MODIFICATION: Input history for chat persistence
-	inputHistory: string[] | undefined
+	inputHistory: HistoryItem[] | undefined
 }
 
 export interface Secrets {
@@ -261,3 +264,10 @@ export interface LocalState {
 	localWindsurfRulesToggles: ClineRulesToggles
 	workflowToggles: ClineRulesToggles
 }
+```
+
+## 4. 다음 단계
+
+1.  마스터께서 위 제안 코드를 검토하고 승인합니다.
+2.  승인 시, `write_to_file` 명령을 사용하여 `src/core/storage/state-keys.ts` 파일을 위 내용으로 덮어씁니다.
+3.  `npm run compile`을 실행하여 타입 오류가 해결되었는지 확인합니다.

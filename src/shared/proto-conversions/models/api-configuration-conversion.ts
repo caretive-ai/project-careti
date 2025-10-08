@@ -1,20 +1,20 @@
 import {
-	CaretModelInfo,
 	LiteLLMModelInfo,
 	OpenAiCompatibleModelInfo,
 	OpenRouterModelInfo,
 	ModelsApiConfiguration as ProtoApiConfiguration,
 	ApiProvider as ProtoApiProvider,
+	OcaModelInfo as ProtoOcaModelInfo,
 	ThinkingConfig,
 } from "@shared/proto/cline/models"
 import {
 	ApiConfiguration,
 	ApiProvider,
-	CaretModelInfo as AppCaretModelInfo,
 	LiteLLMModelInfo as AppLiteLLMModelInfo,
 	OpenAiCompatibleModelInfo as AppOpenAiCompatibleModelInfo,
 	BedrockModelId,
 	ModelInfo,
+	OcaModelInfo,
 } from "../../api"
 
 // Convert application ThinkingConfig to proto ThinkingConfig
@@ -87,8 +87,8 @@ function convertProtoToModelInfo(info: OpenRouterModelInfo | undefined): ModelIn
 	}
 }
 
-// Convert application CaretModelInfo to proto CaretModelInfo
-function convertCaretModelInfoToProto(info: AppCaretModelInfo | undefined): CaretModelInfo | undefined {
+// Convert application ModelInfo to proto OcaModelInfo
+function convertOcaModelInfoToProtoOcaModelInfo(info: OcaModelInfo | undefined): ProtoOcaModelInfo | undefined {
 	if (!info) {
 		return undefined
 	}
@@ -100,18 +100,19 @@ function convertCaretModelInfoToProto(info: AppCaretModelInfo | undefined): Care
 		supportsPromptCache: info.supportsPromptCache ?? false,
 		inputPrice: info.inputPrice,
 		outputPrice: info.outputPrice,
-		thinkingConfig: convertThinkingConfigToProto(info.thinkingConfig),
-		supportsGlobalEndpoint: info.supportsGlobalEndpoint,
 		cacheWritesPrice: info.cacheWritesPrice,
 		cacheReadsPrice: info.cacheReadsPrice,
 		description: info.description,
-		tiers: info.tiers || [],
-		temperature: info.temperature,
+		thinkingConfig: convertThinkingConfigToProto(info.thinkingConfig),
+		surveyContent: info.surveyContent,
+		surveyId: info.surveyId,
+		banner: info.banner,
+		modelName: info.modelName,
 	}
 }
 
-// Convert proto CaretModelInfo to application CaretModelInfo
-function convertProtoToCaretModelInfo(info: CaretModelInfo | undefined): AppCaretModelInfo | undefined {
+// Convert proto OpenRouterModelInfo to application ModelInfo
+function convertProtoOcaModelInfoToOcaModelInfo(info: ProtoOcaModelInfo | undefined): OcaModelInfo | undefined {
 	if (!info) {
 		return undefined
 	}
@@ -123,13 +124,13 @@ function convertProtoToCaretModelInfo(info: CaretModelInfo | undefined): AppCare
 		supportsPromptCache: info.supportsPromptCache,
 		inputPrice: info.inputPrice,
 		outputPrice: info.outputPrice,
-		thinkingConfig: convertProtoToThinkingConfig(info.thinkingConfig),
-		supportsGlobalEndpoint: info.supportsGlobalEndpoint,
 		cacheWritesPrice: info.cacheWritesPrice,
 		cacheReadsPrice: info.cacheReadsPrice,
 		description: info.description,
-		tiers: info.tiers.length > 0 ? info.tiers : undefined,
-		temperature: info.temperature,
+		surveyContent: info.surveyContent,
+		surveyId: info.surveyId,
+		banner: info.banner,
+		modelName: info.modelName,
 	}
 }
 
@@ -272,8 +273,6 @@ function convertApiProviderToProto(provider: string | undefined): ProtoApiProvid
 			return ProtoApiProvider.CLINE
 		case "litellm":
 			return ProtoApiProvider.LITELLM
-		case "caret": // caret
-			return ProtoApiProvider.CARET
 		case "moonshot":
 			return ProtoApiProvider.MOONSHOT
 		case "huggingface":
@@ -306,13 +305,15 @@ function convertApiProviderToProto(provider: string | undefined): ProtoApiProvid
 			return ProtoApiProvider.ZAI
 		case "dify":
 			return ProtoApiProvider.DIFY
+		case "oca":
+			return ProtoApiProvider.OCA
 		default:
 			return ProtoApiProvider.ANTHROPIC
 	}
 }
 
 // Convert proto ApiProvider to application ApiProvider
-function convertProtoToApiProvider(provider: ProtoApiProvider): ApiProvider {
+export function convertProtoToApiProvider(provider: ProtoApiProvider): ApiProvider {
 	switch (provider) {
 		case ProtoApiProvider.ANTHROPIC:
 			return "anthropic"
@@ -352,8 +353,6 @@ function convertProtoToApiProvider(provider: ProtoApiProvider): ApiProvider {
 			return "cline"
 		case ProtoApiProvider.LITELLM:
 			return "litellm"
-		case ProtoApiProvider.CARET: // caret
-			return "caret"
 		case ProtoApiProvider.MOONSHOT:
 			return "moonshot"
 		case ProtoApiProvider.HUGGINGFACE:
@@ -386,6 +385,8 @@ function convertProtoToApiProvider(provider: ProtoApiProvider): ApiProvider {
 			return "zai"
 		case ProtoApiProvider.DIFY:
 			return "dify"
+		case ProtoApiProvider.OCA:
+			return "oca"
 		default:
 			return "anthropic"
 	}
@@ -401,9 +402,6 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		liteLlmBaseUrl: config.liteLlmBaseUrl,
 		liteLlmApiKey: config.liteLlmApiKey,
 		liteLlmUsePromptCache: config.liteLlmUsePromptCache,
-		caretBaseUrl: config.caretBaseUrl, // caret
-		caretApiKey: config.caretApiKey, // caret
-		caretUsePromptCache: config.caretUsePromptCache, // caret
 		openAiHeaders: config.openAiHeaders || {},
 		anthropicBaseUrl: config.anthropicBaseUrl,
 		openRouterApiKey: config.openRouterApiKey,
@@ -469,6 +467,7 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		zaiApiKey: config.zaiApiKey,
 		difyApiKey: config.difyApiKey,
 		difyBaseUrl: config.difyBaseUrl,
+		ocaBaseUrl: config.ocaBaseUrl,
 
 		// Plan mode configurations
 		planModeApiProvider: config.planModeApiProvider ? convertApiProviderToProto(config.planModeApiProvider) : undefined,
@@ -486,8 +485,6 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		planModeLmStudioModelId: config.planModeLmStudioModelId,
 		planModeLiteLlmModelId: config.planModeLiteLlmModelId,
 		planModeLiteLlmModelInfo: convertLiteLLMModelInfoToProto(config.planModeLiteLlmModelInfo),
-		planModeCaretModelId: config.planModeCaretModelId, // caret
-		planModeCaretModelInfo: convertCaretModelInfoToProto(config.planModeCaretModelInfo), // caret
 		planModeRequestyModelId: config.planModeRequestyModelId,
 		planModeRequestyModelInfo: convertModelInfoToProtoOpenRouter(config.planModeRequestyModelInfo),
 		planModeTogetherModelId: config.planModeTogetherModelId,
@@ -501,8 +498,11 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		planModeSapAiCoreModelId: config.planModeSapAiCoreModelId,
 		planModeHuaweiCloudMaasModelId: config.planModeHuaweiCloudMaasModelId,
 		planModeHuaweiCloudMaasModelInfo: convertModelInfoToProtoOpenRouter(config.planModeHuaweiCloudMaasModelInfo),
+		planModeSapAiCoreDeploymentId: config.planModeSapAiCoreDeploymentId,
 		planModeVercelAiGatewayModelId: config.planModeVercelAiGatewayModelId,
 		planModeVercelAiGatewayModelInfo: convertModelInfoToProtoOpenRouter(config.planModeVercelAiGatewayModelInfo),
+		planModeOcaModelId: config.planModeOcaModelId,
+		planModeOcaModelInfo: convertOcaModelInfoToProtoOcaModelInfo(config.planModeOcaModelInfo),
 
 		// Act mode configurations
 		actModeApiProvider: config.actModeApiProvider ? convertApiProviderToProto(config.actModeApiProvider) : undefined,
@@ -520,8 +520,6 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		actModeLmStudioModelId: config.actModeLmStudioModelId,
 		actModeLiteLlmModelId: config.actModeLiteLlmModelId,
 		actModeLiteLlmModelInfo: convertLiteLLMModelInfoToProto(config.actModeLiteLlmModelInfo),
-		actModeCaretModelId: config.actModeCaretModelId, // caret
-		actModeCaretModelInfo: convertCaretModelInfoToProto(config.actModeCaretModelInfo), // caret
 		actModeRequestyModelId: config.actModeRequestyModelId,
 		actModeRequestyModelInfo: convertModelInfoToProtoOpenRouter(config.actModeRequestyModelInfo),
 		actModeTogetherModelId: config.actModeTogetherModelId,
@@ -535,11 +533,11 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		actModeSapAiCoreModelId: config.actModeSapAiCoreModelId,
 		actModeHuaweiCloudMaasModelId: config.actModeHuaweiCloudMaasModelId,
 		actModeHuaweiCloudMaasModelInfo: convertModelInfoToProtoOpenRouter(config.actModeHuaweiCloudMaasModelInfo),
+		actModeSapAiCoreDeploymentId: config.actModeSapAiCoreDeploymentId,
 		actModeVercelAiGatewayModelId: config.actModeVercelAiGatewayModelId,
 		actModeVercelAiGatewayModelInfo: convertModelInfoToProtoOpenRouter(config.actModeVercelAiGatewayModelInfo),
-
-		// Favorited model IDs
-		favoritedModelIds: config.favoritedModelIds || [],
+		actModeOcaModelId: config.actModeOcaModelId,
+		actModeOcaModelInfo: convertOcaModelInfoToProtoOcaModelInfo(config.actModeOcaModelInfo),
 	}
 }
 
@@ -553,9 +551,6 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		liteLlmBaseUrl: protoConfig.liteLlmBaseUrl,
 		liteLlmApiKey: protoConfig.liteLlmApiKey,
 		liteLlmUsePromptCache: protoConfig.liteLlmUsePromptCache,
-		caretBaseUrl: protoConfig.caretBaseUrl, // caret
-		caretApiKey: protoConfig.caretApiKey, // caret
-		caretUsePromptCache: protoConfig.caretUsePromptCache, // caret
 		openAiHeaders: Object.keys(protoConfig.openAiHeaders || {}).length > 0 ? protoConfig.openAiHeaders : undefined,
 		anthropicBaseUrl: protoConfig.anthropicBaseUrl,
 		openRouterApiKey: protoConfig.openRouterApiKey,
@@ -621,6 +616,7 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		zaiApiKey: protoConfig.zaiApiKey,
 		difyApiKey: protoConfig.difyApiKey,
 		difyBaseUrl: protoConfig.difyBaseUrl,
+		ocaBaseUrl: protoConfig.ocaBaseUrl,
 
 		// Plan mode configurations
 		planModeApiProvider:
@@ -641,8 +637,6 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		planModeLmStudioModelId: protoConfig.planModeLmStudioModelId,
 		planModeLiteLlmModelId: protoConfig.planModeLiteLlmModelId,
 		planModeLiteLlmModelInfo: convertProtoToLiteLLMModelInfo(protoConfig.planModeLiteLlmModelInfo),
-		planModeCaretModelId: protoConfig.planModeCaretModelId, // caret
-		planModeCaretModelInfo: convertProtoToCaretModelInfo(protoConfig.planModeCaretModelInfo), // caret
 		planModeRequestyModelId: protoConfig.planModeRequestyModelId,
 		planModeRequestyModelInfo: convertProtoToModelInfo(protoConfig.planModeRequestyModelInfo),
 		planModeTogetherModelId: protoConfig.planModeTogetherModelId,
@@ -656,8 +650,11 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		planModeSapAiCoreModelId: protoConfig.planModeSapAiCoreModelId,
 		planModeHuaweiCloudMaasModelId: protoConfig.planModeHuaweiCloudMaasModelId,
 		planModeHuaweiCloudMaasModelInfo: convertProtoToModelInfo(protoConfig.planModeHuaweiCloudMaasModelInfo),
+		planModeSapAiCoreDeploymentId: protoConfig.planModeSapAiCoreDeploymentId,
 		planModeVercelAiGatewayModelId: protoConfig.planModeVercelAiGatewayModelId,
 		planModeVercelAiGatewayModelInfo: convertProtoToModelInfo(protoConfig.planModeVercelAiGatewayModelInfo),
+		planModeOcaModelId: protoConfig.planModeOcaModelId,
+		planModeOcaModelInfo: convertProtoOcaModelInfoToOcaModelInfo(protoConfig.planModeOcaModelInfo),
 
 		// Act mode configurations
 		actModeApiProvider:
@@ -676,8 +673,6 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		actModeLmStudioModelId: protoConfig.actModeLmStudioModelId,
 		actModeLiteLlmModelId: protoConfig.actModeLiteLlmModelId,
 		actModeLiteLlmModelInfo: convertProtoToLiteLLMModelInfo(protoConfig.actModeLiteLlmModelInfo),
-		actModeCaretModelId: protoConfig.actModeCaretModelId, // caret
-		actModeCaretModelInfo: convertProtoToCaretModelInfo(protoConfig.actModeCaretModelInfo), // caret
 		actModeRequestyModelId: protoConfig.actModeRequestyModelId,
 		actModeRequestyModelInfo: convertProtoToModelInfo(protoConfig.actModeRequestyModelInfo),
 		actModeTogetherModelId: protoConfig.actModeTogetherModelId,
@@ -691,11 +686,10 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		actModeSapAiCoreModelId: protoConfig.actModeSapAiCoreModelId,
 		actModeHuaweiCloudMaasModelId: protoConfig.actModeHuaweiCloudMaasModelId,
 		actModeHuaweiCloudMaasModelInfo: convertProtoToModelInfo(protoConfig.actModeHuaweiCloudMaasModelInfo),
+		actModeSapAiCoreDeploymentId: protoConfig.actModeSapAiCoreDeploymentId,
 		actModeVercelAiGatewayModelId: protoConfig.actModeVercelAiGatewayModelId,
 		actModeVercelAiGatewayModelInfo: convertProtoToModelInfo(protoConfig.actModeVercelAiGatewayModelInfo),
-
-		// Favorited model IDs
-		favoritedModelIds:
-			protoConfig.favoritedModelIds && protoConfig.favoritedModelIds.length > 0 ? protoConfig.favoritedModelIds : undefined,
+		actModeOcaModelId: protoConfig.actModeOcaModelId,
+		actModeOcaModelInfo: convertProtoOcaModelInfoToOcaModelInfo(protoConfig.actModeOcaModelInfo),
 	}
 }

@@ -10,8 +10,8 @@ import * as proto from "@shared/proto/index"
  * Uses CaretAccountService to communicate with caret.team API
  */
 export async function getCaretUserCredits(
-	controller: Controller,
-	request: proto.cline.EmptyRequest,
+	_controller: Controller,
+	_request: proto.cline.EmptyRequest,
 ): Promise<proto.caret.CaretUserCreditsData> {
 	console.log("[CARET-HANDLER] 🚀 getCaretUserCredits called")
 

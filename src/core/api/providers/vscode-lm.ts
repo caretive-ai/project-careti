@@ -7,19 +7,50 @@ import { ApiHandler, CommonApiHandlerOptions, SingleCompletionHandler } from "..
 import { withRetry } from "../retry"
 import { ApiStream } from "../transform/stream"
 import { convertToVsCodeLmMessages } from "../transform/vscode-lm-format"
-
-// Reference centralized VSCode type extensions
-/// <reference path="../../../types/vscode-extensions.d.ts" />
+import type { LanguageModelChatSelector as LanguageModelChatSelectorFromTypes } from "./types"
 
 interface VsCodeLmHandlerOptions extends CommonApiHandlerOptions {
 	vsCodeLmModelSelector?: any
 }
 
-// VSCode Language Model API types are now centralized in src/types/vscode-extensions.d.ts
-// to prevent type conflicts between multiple files
-
+// Cline does not update VSCode type definitions or engine requirements to maintain compatibility.
+// This declaration (as seen in src/integrations/TerminalManager.ts) provides types for the Language Model API in newer versions of VSCode.
+// Extracted from https://github.com/microsoft/vscode/blob/131ee0ef660d600cd0a7e6058375b281553abe20/src/vscode-dts/vscode.d.ts
 declare module "vscode" {
-	// Additional types specific to this file that weren't in the base extension
+	enum LanguageModelChatMessageRole {
+		User = 1,
+		Assistant = 2,
+	}
+	enum LanguageModelChatToolMode {
+		Auto = 1,
+		Required = 2,
+	}
+	interface LanguageModelChatSelector extends LanguageModelChatSelectorFromTypes {}
+	interface LanguageModelChatTool {
+		name: string
+		description: string
+		inputSchema?: object
+	}
+	interface LanguageModelChatRequestOptions {
+		justification?: string
+		modelOptions?: { [name: string]: any }
+		tools?: LanguageModelChatTool[]
+		toolMode?: LanguageModelChatToolMode
+	}
+	class LanguageModelTextPart {
+		value: string
+		constructor(value: string)
+	}
+	class LanguageModelToolCallPart {
+		callId: string
+		name: string
+		input: object
+		constructor(callId: string, name: string, input: object)
+	}
+	interface LanguageModelChatResponse {
+		stream: AsyncIterable<LanguageModelTextPart | LanguageModelToolCallPart | unknown>
+		text: AsyncIterable<string>
+	}
 	interface LanguageModelChat {
 		readonly name: string
 		readonly id: string
@@ -35,7 +66,35 @@ declare module "vscode" {
 		): Thenable<LanguageModelChatResponse>
 		countTokens(text: string | LanguageModelChatMessage, token?: CancellationToken): Thenable<number>
 	}
+	class LanguageModelPromptTsxPart {
+		value: unknown
+		constructor(value: unknown)
+	}
+	class LanguageModelToolResultPart {
+		callId: string
+		content: Array<LanguageModelTextPart | LanguageModelPromptTsxPart | unknown>
+		constructor(callId: string, content: Array<LanguageModelTextPart | LanguageModelPromptTsxPart | unknown>)
+	}
+	class LanguageModelChatMessage {
+		static User(
+			content: string | Array<LanguageModelTextPart | LanguageModelToolResultPart>,
+			name?: string,
+		): LanguageModelChatMessage
+		static Assistant(
+			content: string | Array<LanguageModelTextPart | LanguageModelToolCallPart>,
+			name?: string,
+		): LanguageModelChatMessage
 
+		role: LanguageModelChatMessageRole
+		content: Array<LanguageModelTextPart | LanguageModelToolResultPart | LanguageModelToolCallPart>
+		name: string | undefined
+
+		constructor(
+			role: LanguageModelChatMessageRole,
+			content: string | Array<LanguageModelTextPart | LanguageModelToolResultPart | LanguageModelToolCallPart>,
+			name?: string,
+		)
+	}
 	namespace lm {
 		function selectChatModels(selector?: LanguageModelChatSelector): Thenable<LanguageModelChat[]>
 	}
@@ -97,7 +156,7 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 			this.dispose()
 
 			throw new Error(
-				`Caret <Language Model API>: Failed to initialize handler: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Cline <Language Model API>: Failed to initialize handler: ${error instanceof Error ? error.message : "Unknown error"}`,
 			)
 		}
 	}
@@ -147,7 +206,7 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 			}
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : "Unknown error"
-			throw new Error(`Caret <Language Model API>: Failed to select model: ${errorMessage}`)
+			throw new Error(`Cline <Language Model API>: Failed to select model: ${errorMessage}`)
 		}
 	}
 
@@ -220,7 +279,7 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 
 	private async getClient(): Promise<vscode.LanguageModelChat> {
 		if (!this.client) {
-			console.debug("Caret <Language Model API>: Getting client with options:", {
+			console.debug("Cline <Language Model API>: Getting client with options:", {
 				vsCodeLmModelSelector: this.options.vsCodeLmModelSelector,
 				hasOptions: !!this.options,
 				selectorKeys: this.options.vsCodeLmModelSelector ? Object.keys(this.options.vsCodeLmModelSelector) : [],
@@ -229,12 +288,12 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 			try {
 				// Use default empty selector if none provided to get all available models
 				const selector = this.options?.vsCodeLmModelSelector || {}
-				console.debug("Caret <Language Model API>: Creating client with selector:", selector)
+				console.debug("Cline <Language Model API>: Creating client with selector:", selector)
 				this.client = await this.createClient(selector)
 			} catch (error) {
 				const message = error instanceof Error ? error.message : "Unknown error"
-				console.error("Caret <Language Model API>: Client creation failed:", message)
-				throw new Error(`Caret <Language Model API>: Failed to create client: ${message}`)
+				console.error("Cline <Language Model API>: Client creation failed:", message)
+				throw new Error(`Cline <Language Model API>: Failed to create client: ${message}`)
 			}
 		}
 
@@ -337,7 +396,7 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 		try {
 			// Create the response stream with minimal required options
 			const requestOptions: vscode.LanguageModelChatRequestOptions = {
-				justification: `Caret would like to use '${client.name}' from '${client.vendor}', Click 'Allow' to proceed.`,
+				justification: `Cline would like to use '${client.name}' from '${client.vendor}', Click 'Allow' to proceed.`,
 			}
 
 			// Note: Tool support is currently provided by the VSCode Language Model API directly
@@ -354,7 +413,7 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 				if (chunk instanceof vscode.LanguageModelTextPart) {
 					// Validate text part value
 					if (typeof chunk.value !== "string") {
-						console.warn("Caret <Language Model API>: Invalid text part value received:", chunk.value)
+						console.warn("Cline <Language Model API>: Invalid text part value received:", chunk.value)
 						continue
 					}
 
@@ -367,18 +426,18 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 					try {
 						// Validate tool call parameters
 						if (!chunk.name || typeof chunk.name !== "string") {
-							console.warn("Caret <Language Model API>: Invalid tool name received:", chunk.name)
+							console.warn("Cline <Language Model API>: Invalid tool name received:", chunk.name)
 							continue
 						}
 
 						if (!chunk.callId || typeof chunk.callId !== "string") {
-							console.warn("Caret <Language Model API>: Invalid tool callId received:", chunk.callId)
+							console.warn("Cline <Language Model API>: Invalid tool callId received:", chunk.callId)
 							continue
 						}
 
 						// Ensure input is a valid object
 						if (!chunk.input || typeof chunk.input !== "object") {
-							console.warn("Caret <Language Model API>: Invalid tool input received:", chunk.input)
+							console.warn("Cline <Language Model API>: Invalid tool input received:", chunk.input)
 							continue
 						}
 
@@ -394,7 +453,7 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 						accumulatedText += toolCallText
 
 						// Log tool call for debugging
-						console.debug("Caret <Language Model API>: Processing tool call:", {
+						console.debug("Cline <Language Model API>: Processing tool call:", {
 							name: chunk.name,
 							callId: chunk.callId,
 							inputSize: JSON.stringify(chunk.input).length,
@@ -405,10 +464,10 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 							text: toolCallText,
 						}
 					} catch (error) {
-						console.error("Caret <Language Model API>: Failed to process tool call:", error)
+						console.error("Cline <Language Model API>: Failed to process tool call:", error)
 					}
 				} else {
-					console.warn("Caret <Language Model API>: Unknown chunk type received:", chunk)
+					console.warn("Cline <Language Model API>: Unknown chunk type received:", chunk)
 				}
 			}
 
@@ -426,11 +485,11 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 			this.ensureCleanState()
 
 			if (error instanceof vscode.CancellationError) {
-				throw new Error("Caret <Language Model API>: Request cancelled by user")
+				throw new Error("Cline <Language Model API>: Request cancelled by user")
 			}
 
 			if (error instanceof Error) {
-				console.error("Caret <Language Model API>: Stream error details:", {
+				console.error("Cline <Language Model API>: Stream error details:", {
 					message: error.message,
 					stack: error.stack,
 					name: error.name,
@@ -441,13 +500,13 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 			} else if (typeof error === "object" && error !== null) {
 				// Handle error-like objects
 				const errorDetails = JSON.stringify(error, null, 2)
-				console.error("Caret <Language Model API>: Stream error object:", errorDetails)
-				throw new Error(`Caret <Language Model API>: Response stream error: ${errorDetails}`)
+				console.error("Cline <Language Model API>: Stream error object:", errorDetails)
+				throw new Error(`Cline <Language Model API>: Response stream error: ${errorDetails}`)
 			} else {
 				// Fallback for unknown error types
 				const errorMessage = String(error)
-				console.error("Caret <Language Model API>: Unknown stream error:", errorMessage)
-				throw new Error(`Caret <Language Model API>: Response stream error: ${errorMessage}`)
+				console.error("Cline <Language Model API>: Unknown stream error:", errorMessage)
+				throw new Error(`Cline <Language Model API>: Response stream error: ${errorMessage}`)
 			}
 		}
 	}
@@ -467,7 +526,7 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 			// Log any missing properties for debugging
 			for (const [prop, value] of Object.entries(requiredProps)) {
 				if (!value && value !== 0) {
-					console.warn(`Caret <Language Model API>: Client missing ${prop} property`)
+					console.warn(`Cline <Language Model API>: Client missing ${prop} property`)
 				}
 			}
 
@@ -498,7 +557,7 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 			? stringifyVsCodeLmModelSelector(this.options.vsCodeLmModelSelector)
 			: "vscode-lm"
 
-		console.debug("Caret <Language Model API>: No client available, using fallback model info")
+		console.debug("Cline <Language Model API>: No client available, using fallback model info")
 
 		return {
 			id: fallbackId,

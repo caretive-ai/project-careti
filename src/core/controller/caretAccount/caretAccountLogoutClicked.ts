@@ -9,8 +9,8 @@ import * as proto from "@shared/proto/index"
  * Clears Auth0 tokens and user state
  */
 export async function caretAccountLogoutClicked(
-	controller: Controller,
-	request: proto.cline.EmptyRequest,
+	_controller: Controller,
+	_request: proto.cline.EmptyRequest,
 ): Promise<proto.cline.Empty> {
 	console.log("[CARET-HANDLER] 🚪 Caret account logout clicked")
 

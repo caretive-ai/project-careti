@@ -22,7 +22,7 @@ import FeatureSettingsSection from "./sections/FeatureSettingsSection"
 import GeneralSettingsSection from "./sections/GeneralSettingsSection"
 import TerminalSettingsSection from "./sections/TerminalSettingsSection"
 
-const IS_DEV = process.env.IS_DEV
+const _IS_DEV = process.env.IS_DEV
 
 // Styles for the tab system
 const settingsTabsContainer = "flex flex-1 overflow-hidden [&.narrow_.tab-label]:hidden"

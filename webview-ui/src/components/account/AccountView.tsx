@@ -9,7 +9,7 @@ import CaretAccountView from "@/caret/components/CaretAccountView"
 import { t } from "@/caret/utils/i18n"
 import { type ClineUser, handleSignOut } from "@/context/ClineAuthContext"
 // CARET MODIFICATION: Import CaretUser and useExtensionState for Caret account system
-import { type CaretUser, useExtensionState } from "@/context/ExtensionStateContext"
+import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
 import VSCodeButtonLink from "../common/VSCodeButtonLink"
 import { AccountWelcomeView } from "./AccountWelcomeView"

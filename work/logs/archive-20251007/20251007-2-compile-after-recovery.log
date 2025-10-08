@@ -1,0 +1,145 @@
+
+> caret@0.2.31 compile
+> npm run check-types && npm run lint && node esbuild.mjs
+
+
+> caret@0.2.31 check-types
+> npm run protos && npx tsc --noEmit && cd webview-ui && npx tsc -b --noEmit
+
+
+> caret@0.2.31 protos
+> node caret-scripts/build/build-proto.mjs
+
+Compiling Protocol Buffers...
+Processing 24 proto files from /Users/luke/dev/caret/proto
+
+Warning: Found 25 fields using 64-bit integer types
+Generated ProtoBus files at:
+- /Users/luke/dev/caret/webview-ui/src/services/grpc-client.ts
+- /Users/luke/dev/caret/src/generated/hosts/vscode/protobus-service-types.ts
+- /Users/luke/dev/caret/src/generated/hosts/vscode/protobus-services.ts
+- /Users/luke/dev/caret/src/generated/hosts/standalone/protobus-server-setup.ts
+Generated Host Bridge client files at:
+- /Users/luke/dev/caret/src/generated/hosts/host-bridge-client-types.ts
+- /Users/luke/dev/caret/src/generated/hosts/standalone/host-bridge-clients.ts
+- /Users/luke/dev/caret/src/generated/hosts/vscode/hostbridge-grpc-service-config.ts
+Post-processing generated files...
+Processing webview-ui/src/services/grpc-client.ts for namespace fixes...
+File path: webview-ui/src/services/grpc-client.ts
+Found 1 cline.Caret* patterns: "cline.CaretAccountService
+  - Fixed 1 Caret namespace references
+Processing src/generated/hosts/standalone/protobus-server-setup.ts for namespace fixes...
+File path: src/generated/hosts/standalone/protobus-server-setup.ts
+Found 9 cline.Caret* patterns: cline.CaretAccountServiceService, cline.CaretAuthState, cline.CaretAuthStateChangedRequest...
+  - Fixed 12 Caret namespace references
+Processing src/generated/hosts/vscode/protobus-services.ts for namespace fixes...
+File path: src/generated/hosts/vscode/protobus-services.ts
+Found 1 cline.Caret* patterns: "cline.CaretAccountService
+  - Fixed 1 Caret namespace references
+✅ Fixed 9 generated files
+
+> caret@0.2.31 postprotos
+> biome format src/shared/proto src/core/controller src/hosts/ webview-ui/src/services src/generated --write --no-errors-on-unmatched
+
+Formatted 211 files in 29ms. No fixes applied.
+src/common.ts(51,66): error TS2554: Expected 0 arguments, but got 1.
+src/core/commands/reconstructTaskHistory.ts(117,8): error TS2554: Expected 2 arguments, but got 1.
+src/core/commands/reconstructTaskHistory.ts(124,33): error TS2554: Expected 1 arguments, but got 0.
+src/core/commands/reconstructTaskHistory.ts(156,31): error TS2554: Expected 2 arguments, but got 1.
+src/core/commands/reconstructTaskHistory.ts(162,26): error TS2554: Expected 2 arguments, but got 1.
+src/core/controller/account/getRedirectUrl.ts(9,38): error TS2339: Property 'getIdeRedirectUri' does not exist on type 'EnvServiceClientInterface'.
+src/core/controller/account/openrouterAuthClicked.ts(10,47): error TS2551: Property 'getCallbackUri' does not exist on type 'HostProvider'. Did you mean 'getCallbackUrl'?
+src/core/controller/models/refreshOcaModels.ts(33,45): error TS2322: Type 'string' is not assignable to type 'never'.
+src/core/controller/models/refreshOcaModels.ts(68,6): error TS2322: Type 'any' is not assignable to type 'never'.
+src/core/controller/models/refreshOcaModels.ts(69,6): error TS2322: Type 'any' is not assignable to type 'never'.
+src/core/controller/models/refreshOcaModels.ts(71,6): error TS2322: Type 'any' is not assignable to type 'never'.
+src/core/controller/models/refreshOcaModels.ts(72,6): error TS2322: Type 'string' is not assignable to type 'never'.
+src/core/controller/models/refreshOcaModels.ts(139,45): error TS2322: Type 'any' is not assignable to type 'never'.
+src/core/controller/models/refreshOcaModels.ts(141,44): error TS2322: Type 'Record<string, CaretModelInfo>' is not assignable to type 'never'.
+src/core/controller/ocaAccount/ocaAccountLogoutClicked.ts(12,19): error TS2551: Property 'handleOcaSignOut' does not exist on type 'Controller'. Did you mean 'handleSignOut'?
+src/core/controller/state/getProcessInfo.ts(2,10): error TS2305: Module '"@shared/proto/cline/state"' has no exported member 'ProcessInfo'.
+src/core/controller/state/updateInfoBannerVersion.ts(13,41): error TS2345: Argument of type '"lastDismissedInfoBannerVersion"' is not assignable to parameter of type 'keyof GlobalState'.
+src/core/controller/state/updateModelBannerVersion.ts(13,41): error TS2345: Argument of type '"lastDismissedModelBannerVersion"' is not assignable to parameter of type 'keyof GlobalState'.
+src/core/locks/SqliteLockManager.ts(1,22): error TS2307: Cannot find module 'better-sqlite3' or its corresponding type declarations.
+src/core/task/focus-chain/index.ts(97,52): error TS2339: Property 'watch' does not exist on type 'typeof HostProvider'.
+src/core/task/focus-chain/index.ts(102,25): error TS7006: Parameter 'response' implicitly has an 'any' type.
+src/core/task/focus-chain/index.ts(116,16): error TS7006: Parameter 'error' implicitly has an 'any' type.
+src/core/workspace/detection.ts(4,34): error TS2305: Module '"@/utils/git"' has no exported member 'isGitRepository'.
+src/core/workspace/multi-root-utils.ts(16,53): error TS2345: Argument of type '"multiRootEnabled"' is not assignable to parameter of type 'keyof GlobalState'.
+src/core/workspace/setup.ts(48,32): error TS2345: Argument of type '"workspaceRoots"' is not assignable to parameter of type 'keyof GlobalState'.
+src/core/workspace/setup.ts(49,32): error TS2345: Argument of type '"primaryRootIndex"' is not assignable to parameter of type 'keyof GlobalState'.
+src/core/workspace/setup.ts(87,31): error TS2345: Argument of type '"workspaceRoots"' is not assignable to parameter of type 'keyof GlobalState'.
+src/core/workspace/setup.ts(88,31): error TS2345: Argument of type '"primaryRootIndex"' is not assignable to parameter of type 'keyof GlobalState'.
+src/core/workspace/setup.ts(98,31): error TS2345: Argument of type '"workspaceRoots"' is not assignable to parameter of type 'keyof GlobalState'.
+src/core/workspace/setup.ts(99,31): error TS2345: Argument of type '"primaryRootIndex"' is not assignable to parameter of type 'keyof GlobalState'.
+src/core/workspace/utils/workspace-detection.ts(21,73): error TS2559: Type 'EmptyRequest' has no properties in common with type 'GetWorkspacePathsRequest'.
+src/extension.ts(169,63): error TS2554: Expected 0 arguments, but got 1.
+src/extension.ts(568,3): error TS2345: Argument of type '(type: WebviewProviderType) => VscodeWebviewProvider' is not assignable to parameter of type 'WebviewProviderCreator'.
+  Target signature provides too few arguments. Expected 1 or more, but got 0.
+src/hosts/vscode/commit-message-generator.ts(6,10): error TS2305: Module '"@/utils/git"' has no exported member 'getGitDiff'.
+src/hosts/vscode/hostbridge/env/getTelemetrySettings.ts(3,10): error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'GetTelemetrySettingsResponse'.
+src/hosts/vscode/hostbridge/env/getTelemetrySettings.ts(3,40): error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'Setting'.
+src/hosts/vscode/hostbridge/env/subscribeToTelemetrySettings.ts(4,10): error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'Setting'.
+src/hosts/vscode/hostbridge/workspace/openTerminalPanel.ts(2,10): error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'OpenTerminalRequest'.
+src/hosts/vscode/hostbridge/workspace/openTerminalPanel.ts(2,31): error TS2724: '"@/shared/proto/index.host"' has no exported member named 'OpenTerminalResponse'. Did you mean 'OpenFileResponse'?
+src/integrations/checkpoints/factory.ts(76,41): error TS2551: Property 'getGlobalSettingsKey' does not exist on type 'StateManager'. Did you mean 'getGlobalStateKey'?
+src/integrations/checkpoints/index.ts(278,9): error TS2345: Argument of type 'boolean' is not assignable to parameter of type 'string'.
+src/integrations/checkpoints/index.ts(431,7): error TS2345: Argument of type 'boolean' is not assignable to parameter of type 'string'.
+src/integrations/checkpoints/index.ts(599,7): error TS2345: Argument of type 'boolean' is not assignable to parameter of type 'string'.
+src/integrations/checkpoints/index.ts(672,67): error TS2554: Expected 2 arguments, but got 1.
+src/integrations/checkpoints/index.ts(802,48): error TS2345: Argument of type 'boolean' is not assignable to parameter of type 'string'.
+src/integrations/checkpoints/index.ts(847,18): error TS2551: Property 'checkpointManagerErrorMessage' does not exist on type 'TaskState'. Did you mean 'checkpointTrackerErrorMessage'?
+src/integrations/checkpoints/MultiRootCheckpointManager.ts(87,65): error TS2345: Argument of type 'boolean' is not assignable to parameter of type 'string'.
+src/services/auth/AuthService.ts(194,49): error TS2551: Property 'getCallbackUri' does not exist on type 'HostProvider'. Did you mean 'getCallbackUrl'?
+src/services/auth/oca/OcaAuthService.ts(142,44): error TS2551: Property 'getCallbackUrl' does not exist on type 'AuthHandler'. Did you mean 'getCallbackUri'?
+src/services/auth/oca/providers/OcaAuthProvider.ts(80,60): error TS2345: Argument of type '"ocaApiKey"' is not assignable to parameter of type 'keyof Secrets'.
+src/services/auth/oca/providers/OcaAuthProvider.ts(88,65): error TS2345: Argument of type '"ocaRefreshToken"' is not assignable to parameter of type 'keyof Secrets'.
+src/services/auth/oca/providers/OcaAuthProvider.ts(190,39): error TS2345: Argument of type '"ocaRefreshToken"' is not assignable to parameter of type 'keyof Secrets'.
+src/services/auth/oca/providers/OcaAuthProvider.ts(191,39): error TS2345: Argument of type '"ocaApiKey"' is not assignable to parameter of type 'keyof Secrets'.
+src/services/auth/oca/providers/OcaAuthProvider.ts(206,37): error TS2345: Argument of type '"ocaApiKey"' is not assignable to parameter of type 'keyof Secrets'.
+src/services/auth/oca/providers/OcaAuthProvider.ts(207,37): error TS2345: Argument of type '"ocaRefreshToken"' is not assignable to parameter of type 'keyof Secrets'.
+src/services/auth/providers/ClineAuthProvider.ts(1,26): error TS2459: Module '"@/config"' declares 'EnvironmentConfig' locally, but it is not exported.
+src/services/auth/providers/ClineAuthProvider.ts(115,24): error TS2339: Property 'refreshToken' does not exist on type 'ClineAuthInfo'.
+src/services/auth/providers/ClineAuthProvider.ts(121,55): error TS2339: Property 'refreshToken' does not exist on type 'ClineAuthInfo'.
+src/services/auth/providers/ClineAuthProvider.ts(121,84): error TS2339: Property 'expiresAt' does not exist on type 'ClineAuthInfo'.
+src/services/auth/providers/ClineAuthProvider.ts(123,61): error TS2339: Property 'refreshToken' does not exist on type 'ClineAuthInfo'.
+src/services/auth/providers/ClineAuthProvider.ts(128,49): error TS2339: Property 'refreshToken' does not exist on type 'ClineAuthInfo'.
+src/services/auth/providers/ClineAuthProvider.ts(199,6): error TS2353: Object literal may only specify known properties, and 'subject' does not exist in type 'ClineAccountUserInfo'.
+src/services/auth/providers/IAuthProvider.ts(1,10): error TS2459: Module '"@/config"' declares 'EnvironmentConfig' locally, but it is not exported.
+src/services/dictation/VoiceTranscriptionService.ts(112,50): error TS2339: Property 'transcribeAudio' does not exist on type 'ClineAccountService'.
+src/services/EnvUtils.ts(23,44): error TS2339: Property 'clineType' does not exist on type 'GetHostVersionResponse'.
+src/services/EnvUtils.ts(24,47): error TS2339: Property 'clineVersion' does not exist on type 'GetHostVersionResponse'.
+src/services/error/providers/PostHogErrorProvider.ts(6,10): error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'Setting'.
+src/services/error/providers/PostHogErrorProvider.ts(8,10): error TS2305: Module '"../../../shared/services/config/posthog-config"' has no exported member 'PostHogClientValidConfig'.
+src/services/error/providers/PostHogErrorProvider.ts(29,50): error TS2339: Property 'eventFilter' does not exist on type 'typeof PostHogClientProvider'.
+src/services/error/providers/PostHogErrorProvider.ts(41,20): error TS2339: Property 'subscribeToTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+src/services/error/providers/PostHogErrorProvider.ts(44,18): error TS7006: Parameter 'event' implicitly has an 'any' type.
+src/services/error/providers/PostHogErrorProvider.ts(51,47): error TS2339: Property 'getTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+src/services/error/providers/PostHogErrorProvider.ts(138,47): error TS2339: Property 'getTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+src/services/telemetry/providers/PostHogTelemetryProvider.ts(5,10): error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'Setting'.
+src/services/telemetry/providers/PostHogTelemetryProvider.ts(43,20): error TS2339: Property 'subscribeToTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+src/services/telemetry/providers/PostHogTelemetryProvider.ts(46,18): error TS7006: Parameter 'event' implicitly has an 'any' type.
+src/services/telemetry/providers/PostHogTelemetryProvider.ts(54,47): error TS2339: Property 'getTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+src/services/telemetry/providers/PostHogTelemetryProvider.ts(135,47): error TS2339: Property 'getTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+src/services/telemetry/TelemetryService.ts(7,10): error TS2305: Module '"@/shared/proto/index.host"' has no exported member 'Setting'.
+src/services/telemetry/TelemetryService.ts(247,46): error TS2339: Property 'getTelemetrySettings' does not exist on type 'EnvServiceClientInterface'.
+src/services/uri/SharedUriHandler.test.ts(30,30): error TS2345: Argument of type '"initialize"' is not assignable to parameter of type '"prototype"'.
+src/services/uri/SharedUriHandler.test.ts(31,30): error TS2345: Argument of type '"get"' is not assignable to parameter of type '"prototype"'.
+src/services/uri/SharedUriHandler.test.ts(33,22): error TS2339: Property 'initialize' does not exist on type 'typeof ErrorService'.
+src/services/uri/SharedUriHandler.test.ts(53,53): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/services/uri/SharedUriHandler.test.ts(60,53): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/services/uri/SharedUriHandler.test.ts(67,53): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/services/uri/SharedUriHandler.test.ts(77,53): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/services/uri/SharedUriHandler.test.ts(84,53): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/services/uri/SharedUriHandler.test.ts(91,53): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/services/uri/SharedUriHandler.test.ts(100,53): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/services/uri/SharedUriHandler.test.ts(112,53): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/services/uri/SharedUriHandler.test.ts(118,53): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/services/uri/SharedUriHandler.test.ts(129,6): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/services/uri/SharedUriHandler.test.ts(138,6): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/services/uri/SharedUriHandler.test.ts(147,53): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/services/uri/SharedUriHandler.test.ts(157,53): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/services/uri/SharedUriHandler.test.ts(164,53): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Uri'.
+src/standalone/cline-core.ts(48,15): error TS2554: Expected 8 arguments, but got 5.
+src/test/host-provider-test-utils.ts(19,15): error TS2554: Expected 8 arguments, but got 5.
+src/test/host-provider-test-utils.ts(20,41): error TS7006: Parameter '_' implicitly has an 'any' type.

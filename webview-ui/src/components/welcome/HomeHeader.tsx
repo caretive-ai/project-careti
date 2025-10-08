@@ -1,5 +1,4 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
-import ClineLogoVariable from "@/assets/ClineLogoVariable"
 // CARET MODIFICATION: Import persona avatar for Home header
 import PersonaAvatar from "@/caret/components/PersonaAvatar"
 import { useCaretState } from "@/caret/context/CaretStateContext"

@@ -57,7 +57,7 @@ export const CaretStateContextProvider: React.FC<{ children: ReactNode }> = ({ c
 			onResponse: (images: PersonaImages) => {
 				setPersonaImages(images)
 			},
-			onError: (error: Error) => {},
+			onError: (_error: Error) => {},
 			onComplete: () => {},
 		})
 

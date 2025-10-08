@@ -2,6 +2,19 @@
 
 Caret의 **기능 선택 빌드 옵션 시스템**은 다양한 배포 환경(일반 사용자용, 엔터프라이즈용)에 맞춰 기능을 동적으로 켜고 끌 수 있는 설정 시스템입니다.
 
+<Callout type="warning" title="⚠️ 헷갈리지 마세요!">
+**Caret FeatureConfig vs Cline FeatureFlags**
+
+Caret과 Cline에는 이름이 비슷하지만 **완전히 다른** 두 가지 시스템이 있습니다:
+
+| 시스템 | 위치 | 목적 | 제어 시점 |
+|--------|------|------|-----------|
+| **Caret FeatureConfig** | `caret-src/shared/` | 배포 환경별 커스터마이징 | 🟢 빌드타임 (정적) |
+| **Cline FeatureFlags** | `src/services/feature-flags/` | A/B 테스트, 점진적 롤아웃 | 🔴 런타임 (동적, PostHog) |
+
+이 문서는 **Caret FeatureConfig**에 대한 설명입니다. Cline의 FeatureFlags와는 다릅니다!
+</Callout>
+
 ## 📋 **기능 개요**
 
 ### **핵심 개념**
@@ -304,6 +317,48 @@ npm run package
 ```
 
 **⚠️ 중요**: `caret-src/shared/feature-config.json` 파일 변경 후 반드시 `npm run compile` 실행 필요 (정적 import 반영)
+
+## 🆚 **Cline FeatureFlags와의 차이점**
+
+### 비교표
+
+| 항목 | Caret FeatureConfig (이 문서) | Cline FeatureFlags |
+|-----|------------------------------|-------------------|
+| **파일 위치** | `caret-src/shared/FeatureConfig.ts` | `src/services/feature-flags/` |
+| **제어 시점** | 🟢 빌드타임 (컴파일 시 결정) | 🔴 런타임 (실행 중 변경 가능) |
+| **데이터 소스** | JSON 파일 (정적 import) | PostHog 서버 (원격 조회) |
+| **변경 방법** | JSON 수정 → 재빌드 | PostHog 대시보드에서 변경 |
+| **적용 시점** | 배포 시 한 번 | 앱 실행 중 동적 변경 가능 |
+| **주 용도** | 배포 환경별 기능 선택 | A/B 테스트, 점진적 롤아웃 |
+| **예시** | `showPersonaSettings: false` | `multi-root-workspace: 50%` |
+
+### 사용 시나리오 비교
+
+**Caret FeatureConfig 시나리오** (이 문서):
+```
+엔터프라이즈 고객사 A에게 간소화 버전 제공
+1. feature-config.json 수정 (LiteLLM만 표시)
+2. npm run compile (재빌드)
+3. 별도 VSIX 파일로 패키징
+4. 고객사 A에게 배포
+```
+
+**Cline FeatureFlags 시나리오**:
+```
+신규 기능 점진적 출시
+1주차: PostHog에서 10% 사용자에게만 활성화
+2주차: 버그 없으면 50%로 확대
+3주차: 문제 발견 시 즉시 0%로 변경 (재배포 불필요)
+```
+
+### 공존 가능 여부
+
+✅ **두 시스템은 공존 가능합니다**
+- 서로 다른 디렉토리 (`caret-src/` vs `src/`)
+- 서로 다른 목적 (정적 커스터마이징 vs 동적 실험)
+- 충돌 없음
+
+---
 
 ## ⚙️ **확장 가능성**
 

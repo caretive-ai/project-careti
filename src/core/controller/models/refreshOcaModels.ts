@@ -1,5 +1,5 @@
 import { StringRequest } from "@shared/proto/cline/common"
-import { CaretModelInfo, OpenAiCompatibleModelInfo } from "@shared/proto/cline/models"
+import { OcaCompatibleModelInfo, OcaModelInfo } from "@shared/proto/cline/models"
 import axios from "axios"
 import { HostProvider } from "@/hosts/host-provider"
 import { OcaAuthService } from "@/services/auth/oca/OcaAuthService"
@@ -15,14 +15,14 @@ import { Controller } from ".."
  * @param request Empty request object
  * @returns Response containing the Oca models
  */
-export async function refreshOcaModels(controller: Controller, request: StringRequest): Promise<OpenAiCompatibleModelInfo> {
+export async function refreshOcaModels(controller: Controller, request: StringRequest): Promise<OcaCompatibleModelInfo> {
 	const parsePrice = (price: any) => {
 		if (price) {
 			return parseFloat(price) * 1_000_000
 		}
 		return undefined
 	}
-	const models: Record<string, CaretModelInfo> = {}
+	const models: Record<string, OcaModelInfo> = {}
 	let defaultModelId: string | undefined
 	const ocaAccessToken = await OcaAuthService.getInstance().getAuthToken()
 	if (!ocaAccessToken) {
@@ -30,7 +30,7 @@ export async function refreshOcaModels(controller: Controller, request: StringRe
 			type: ShowMessageType.ERROR,
 			message: "Not authenticated with OCA. Please sign in first.",
 		})
-		return OpenAiCompatibleModelInfo.create({ error: "Not authenticated with OCA" })
+		return OcaCompatibleModelInfo.create({ error: "Not authenticated with OCA" })
 	}
 	const baseUrl = request.value || DEFAULT_OCA_BASE_URL
 	const modelsUrl = `${baseUrl}/v1/model/info`
@@ -54,7 +54,7 @@ export async function refreshOcaModels(controller: Controller, request: StringRe
 					defaultModelId = modelId
 				}
 				const modelInfo = model.model_info
-				models[modelId] = CaretModelInfo.create({
+				models[modelId] = OcaModelInfo.create({
 					maxTokens: model.litellm_params?.max_tokens || -1,
 					contextWindow: modelInfo.context_window,
 					supportsImages: modelInfo.supports_vision || false,
@@ -79,31 +79,31 @@ export async function refreshOcaModels(controller: Controller, request: StringRe
 			const updatedConfig = { ...apiConfiguration }
 
 			// Which mode(s) to update?
-			const planActSeparateModelsSetting = controller.stateManager.getGlobalStateKey("planActSeparateModelsSetting")
-			const currentMode = controller.stateManager.getGlobalStateKey("mode")
+			const planActSeparateModelsSetting = controller.stateManager.getGlobalSettingsKey("planActSeparateModelsSetting")
+			const currentMode = controller.stateManager.getGlobalSettingsKey("mode")
 			const planModeSelectedModelId =
-				apiConfiguration?.planModeApiModelId && models[apiConfiguration.planModeApiModelId]
-					? apiConfiguration.planModeApiModelId
+				apiConfiguration?.planModeOcaModelId && models[apiConfiguration.planModeOcaModelId]
+					? apiConfiguration.planModeOcaModelId
 					: defaultModelId!
 			const actModeSelectedModelId =
-				apiConfiguration?.actModeApiModelId && models[apiConfiguration.actModeApiModelId]
-					? apiConfiguration.actModeApiModelId
+				apiConfiguration?.actModeOcaModelId && models[apiConfiguration.actModeOcaModelId]
+					? apiConfiguration.actModeOcaModelId
 					: defaultModelId!
 
 			// Save new model selection(s) to configuration object, per plan/act mode setting
 			if (planActSeparateModelsSetting) {
 				if (currentMode === "plan") {
-					updatedConfig.planModeApiModelId = planModeSelectedModelId
-					updatedConfig.planModeCaretModelInfo = models[planModeSelectedModelId]
+					updatedConfig.planModeOcaModelId = planModeSelectedModelId
+					updatedConfig.planModeOcaModelInfo = models[planModeSelectedModelId]
 				} else {
-					updatedConfig.actModeApiModelId = actModeSelectedModelId
-					updatedConfig.actModeCaretModelInfo = models[actModeSelectedModelId]
+					updatedConfig.actModeOcaModelId = actModeSelectedModelId
+					updatedConfig.actModeOcaModelInfo = models[actModeSelectedModelId]
 				}
 			} else {
-				updatedConfig.planModeApiModelId = planModeSelectedModelId
-				updatedConfig.planModeCaretModelInfo = models[planModeSelectedModelId]
-				updatedConfig.actModeApiModelId = actModeSelectedModelId
-				updatedConfig.actModeCaretModelInfo = models[actModeSelectedModelId]
+				updatedConfig.planModeOcaModelId = planModeSelectedModelId
+				updatedConfig.planModeOcaModelInfo = models[planModeSelectedModelId]
+				updatedConfig.actModeOcaModelId = actModeSelectedModelId
+				updatedConfig.actModeOcaModelInfo = models[actModeSelectedModelId]
 			}
 
 			controller.stateManager.setApiConfiguration(updatedConfig)
@@ -136,7 +136,7 @@ export async function refreshOcaModels(controller: Controller, request: StringRe
 			type: ShowMessageType.ERROR,
 			message: `Error refreshing OCA models. ` + userMsg + ` opc-request-id: ${headers["opc-request-id"]}`,
 		})
-		return OpenAiCompatibleModelInfo.create({ error: userMsg })
+		return OcaCompatibleModelInfo.create({ error: userMsg })
 	}
-	return OpenAiCompatibleModelInfo.create({ models })
+	return OcaCompatibleModelInfo.create({ models })
 }

@@ -1,0 +1,575 @@
+On branch feature/cline-merge-20251006
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Changes to be committed:
+	deleted:    .changeset/breezy-shrimps-begin.md
+	deleted:    .changeset/cyan-bottles-battle.md
+	deleted:    .changeset/fluffy-toys-beam.md
+	deleted:    .changeset/funny-ants-travel.md
+	deleted:    .changeset/healthy-waves-eat.md
+	deleted:    .changeset/heavy-dolls-cry.md
+	deleted:    .changeset/hot-turtles-flash.md
+	deleted:    .changeset/rare-oranges-flash.md
+	deleted:    .changeset/slimy-kids-sip.md
+	deleted:    .changeset/smart-flowers-deny.md
+	deleted:    .changeset/stale-balloons-scream.md
+	deleted:    .changeset/weak-years-sin.md
+	deleted:    .changeset/yellow-cycles-join.md
+	modified:   .github/CODEOWNERS
+	modified:   .github/ISSUE_TEMPLATE/bug_report.yml
+	modified:   .github/workflows/publish.yml
+	modified:   .github/workflows/test.yml
+	modified:   .gitignore
+	modified:   .husky/pre-commit
+	modified:   .mocharc.json
+	modified:   .vscode/launch.json
+	modified:   .vscode/settings.json
+	modified:   CHANGELOG.md
+	modified:   CONTRIBUTING.md
+	modified:   biome.jsonc
+	new file:   cli/.gitignore
+	new file:   cli/cline-text-logo.txt
+	new file:   cli/cmd/cline-host/main.go
+	new file:   cli/cmd/cline/main.go
+	new file:   cli/e2e/default_update_test.go
+	new file:   cli/e2e/helpers_test.go
+	new file:   cli/e2e/main_test.go
+	new file:   cli/e2e/mixed_stress_test.go
+	new file:   cli/e2e/sqlite_helper.go
+	new file:   cli/e2e/start_list_test.go
+	new file:   cli/go.mod
+	new file:   cli/go.sum
+	new file:   cli/pkg/cli/auth.go
+	new file:   cli/pkg/cli/display/deduplicator.go
+	new file:   cli/pkg/cli/display/renderer.go
+	new file:   cli/pkg/cli/display/streaming.go
+	new file:   cli/pkg/cli/display/typewriter.go
+	new file:   cli/pkg/cli/global/cline-clients.go
+	new file:   cli/pkg/cli/global/global.go
+	new file:   cli/pkg/cli/global/registry.go
+	new file:   cli/pkg/cli/handlers/ask_handlers.go
+	new file:   cli/pkg/cli/handlers/handler.go
+	new file:   cli/pkg/cli/handlers/say_handlers.go
+	new file:   cli/pkg/cli/instances.go
+	new file:   cli/pkg/cli/sqlite/locks.go
+	new file:   cli/pkg/cli/task.go
+	new file:   cli/pkg/cli/task/manager.go
+	new file:   cli/pkg/cli/task/stream_coordinator.go
+	new file:   cli/pkg/cli/types/messages.go
+	new file:   cli/pkg/cli/types/state.go
+	new file:   cli/pkg/cli/version.go
+	new file:   cli/pkg/common/constants.go
+	new file:   cli/pkg/common/schema.go
+	new file:   cli/pkg/common/types.go
+	new file:   cli/pkg/common/utils.go
+	new file:   cli/pkg/hostbridge/diff.go
+	new file:   cli/pkg/hostbridge/disabled/watch.go
+	new file:   cli/pkg/hostbridge/disabled/window.go
+	new file:   cli/pkg/hostbridge/disabled/workspace.go
+	new file:   cli/pkg/hostbridge/env.go
+	new file:   cli/pkg/hostbridge/grpc_server.go
+	new file:   cli/pkg/hostbridge/simple.go
+	new file:   cli/pkg/hostbridge/simple_workspace.go
+	new file:   cli/pkg/hostbridge/window.go
+	modified:   docs/docs.json
+	modified:   docs/exploring-clines-tools/cline-tools-guide.mdx
+	modified:   docs/exploring-clines-tools/new-task-tool.mdx
+	modified:   docs/features/commands-and-shortcuts/keyboard-shortcuts.mdx
+	modified:   docs/features/plan-and-act.mdx
+	modified:   docs/getting-started/installing-cline.mdx
+	modified:   docs/getting-started/model-selection-guide.mdx
+	modified:   docs/getting-started/understanding-context-management.mdx
+	modified:   docs/getting-started/what-is-cline.mdx
+	modified:   docs/mcp/configuring-mcp-servers.mdx
+	modified:   docs/mcp/connecting-to-a-remote-server.mdx
+	modified:   docs/mcp/mcp-server-development-protocol.mdx
+	modified:   docs/package-lock.json
+	modified:   docs/prompting/prompt-engineering-guide.mdx
+	modified:   docs/provider-config/anthropic.mdx
+	modified:   docs/provider-config/sap-aicore.mdx
+	modified:   docs/provider-config/zai.mdx
+	modified:   docs/running-models-locally/lm-studio.mdx
+	modified:   docs/running-models-locally/ollama.mdx
+	modified:   docs/running-models-locally/read-me-first.mdx
+	modified:   esbuild.mjs
+	modified:   evals/cli/src/utils/vscode.ts
+	modified:   evals/diff-edits/types.ts
+	modified:   evals/package-lock.json
+	modified:   evals/package.json
+	modified:   package.json
+	modified:   proto/cline/account.proto
+	modified:   proto/cline/browser.proto
+	modified:   proto/cline/checkpoints.proto
+	modified:   proto/cline/commands.proto
+	modified:   proto/cline/common.proto
+	modified:   proto/cline/file.proto
+	modified:   proto/cline/mcp.proto
+	modified:   proto/cline/models.proto
+	modified:   proto/cline/slash.proto
+	modified:   proto/cline/state.proto
+	modified:   proto/cline/task.proto
+	modified:   proto/cline/ui.proto
+	modified:   proto/cline/web.proto
+	modified:   proto/host/diff.proto
+	modified:   proto/host/env.proto
+	modified:   proto/host/testing.proto
+	deleted:    proto/host/watch.proto
+	modified:   proto/host/window.proto
+	modified:   proto/host/workspace.proto
+	modified:   scripts/build-proto.mjs
+	modified:   scripts/package-standalone.mjs
+	modified:   scripts/runclinecore.sh
+	deleted:    scripts/test-ci.js
+	modified:   scripts/test-hostbridge-server.ts
+	modified:   src/api/providers/dify.ts
+	modified:   src/common.ts
+	modified:   src/config.ts
+	modified:   src/core/api/index.ts
+	modified:   src/core/api/providers/__tests__/bedrock.test.ts
+	modified:   src/core/api/providers/__tests__/claude-code.test.ts
+	modified:   src/core/api/providers/anthropic.ts
+	modified:   src/core/api/providers/baseten.ts
+	modified:   src/core/api/providers/bedrock.ts
+	modified:   src/core/api/providers/cline.ts
+	modified:   src/core/api/providers/gemini.ts
+	modified:   src/core/api/providers/huawei-cloud-maas.ts
+	modified:   src/core/api/providers/litellm.ts
+	modified:   src/core/api/providers/moonshot.ts
+	modified:   src/core/api/providers/openrouter.ts
+	modified:   src/core/api/providers/qwen-code.ts
+	modified:   src/core/api/providers/requesty.ts
+	modified:   src/core/api/providers/sapaicore.ts
+	modified:   src/core/api/providers/vercel-ai-gateway.ts
+	modified:   src/core/api/providers/zai.ts
+	modified:   src/core/api/retry.test.ts
+	modified:   src/core/api/retry.ts
+	modified:   src/core/api/transform/openai-format.ts
+	modified:   src/core/api/transform/openrouter-stream.ts
+	modified:   src/core/api/transform/stream.ts
+	modified:   src/core/assistant-message/index.ts
+	modified:   src/core/assistant-message/parse-assistant-message.ts
+	modified:   src/core/context/context-management/ContextManager.ts
+	modified:   src/core/context/context-tracking/FileContextTracker.test.ts
+	modified:   src/core/context/context-tracking/FileContextTracker.ts
+	modified:   src/core/context/context-tracking/ModelContextTracker.test.ts
+	modified:   src/core/context/context-tracking/ModelContextTracker.ts
+	modified:   src/core/context/instructions/user-instructions/cline-rules.ts
+	modified:   src/core/context/instructions/user-instructions/rule-helpers.ts
+	modified:   src/core/context/instructions/user-instructions/workflows.ts
+	modified:   src/core/controller/account/openrouterAuthClicked.ts
+	modified:   src/core/controller/browser/discoverBrowser.ts
+	modified:   src/core/controller/browser/getBrowserConnectionInfo.ts
+	modified:   src/core/controller/browser/getDetectedChromePath.ts
+	modified:   src/core/controller/browser/relaunchChromeDebugMode.ts
+	modified:   src/core/controller/browser/testBrowserConnection.ts
+	deleted:    src/core/controller/browser/updateBrowserSettings.ts
+	modified:   src/core/controller/checkpoints/checkpointDiff.ts
+	modified:   src/core/controller/checkpoints/checkpointRestore.ts
+	modified:   src/core/controller/commands/addToCline.ts
+	modified:   src/core/controller/commands/explainWithCline.ts
+	modified:   src/core/controller/commands/fixWithCline.ts
+	modified:   src/core/controller/commands/improveWithCline.ts
+	modified:   src/core/controller/file/createRuleFile.ts
+	modified:   src/core/controller/file/deleteRuleFile.ts
+	modified:   src/core/controller/file/ifFileExistsRelativePath.ts
+	modified:   src/core/controller/file/openFileRelativePath.ts
+	modified:   src/core/controller/file/openFocusChainFile.ts
+	deleted:    src/core/controller/file/openTaskHistory.ts
+	modified:   src/core/controller/file/searchCommits.ts
+	modified:   src/core/controller/file/searchFiles.ts
+	modified:   src/core/controller/file/toggleClineRule.ts
+	modified:   src/core/controller/file/toggleWorkflow.ts
+	modified:   src/core/controller/grpc-handler.ts
+	modified:   src/core/controller/mcp/downloadMcp.ts
+	modified:   src/core/controller/models/getSapAiCoreModels.ts
+	modified:   src/core/controller/models/refreshBasetenModels.ts
+	modified:   src/core/controller/models/refreshGroqModels.ts
+	modified:   src/core/controller/models/refreshHuggingFaceModels.ts
+	modified:   src/core/controller/models/refreshRequestyModels.ts
+	modified:   src/core/controller/models/refreshVercelAiGatewayModels.ts
+	modified:   src/core/controller/models/updateApiConfigurationProto.ts
+	modified:   src/core/controller/state/subscribeToState.ts
+	modified:   src/core/controller/state/toggleFavoriteModel.ts
+	modified:   src/core/controller/state/updateAutoApprovalSettings.ts
+	deleted:    src/core/controller/state/updateDefaultTerminalProfile.ts
+	modified:   src/core/controller/task/deleteAllTaskHistory.ts
+	modified:   src/core/controller/task/deleteTasksWithIds.ts
+	modified:   src/core/controller/task/getTotalTasksSize.ts
+	modified:   src/core/controller/task/newTask.ts
+	modified:   src/core/controller/task/showTaskWithId.ts
+	modified:   src/core/controller/task/taskCompletionViewChanges.ts
+	modified:   src/core/controller/task/taskFeedback.ts
+	modified:   src/core/controller/ui/getWebviewHtml.ts
+	modified:   src/core/controller/ui/initializeWebview.ts
+	modified:   src/core/controller/ui/onDidShowAnnouncement.ts
+	modified:   src/core/controller/ui/openWalkthrough.ts
+	modified:   src/core/controller/ui/subscribeToAccountButtonClicked.ts
+	modified:   src/core/controller/ui/subscribeToAddToInput.ts
+	modified:   src/core/controller/ui/subscribeToChatButtonClicked.ts
+	modified:   src/core/controller/ui/subscribeToDidBecomeVisible.ts
+	modified:   src/core/controller/ui/subscribeToFocusChatInput.ts
+	modified:   src/core/controller/ui/subscribeToHistoryButtonClicked.ts
+	modified:   src/core/controller/ui/subscribeToMcpButtonClicked.ts
+	modified:   src/core/controller/ui/subscribeToSettingsButtonClicked.ts
+	modified:   src/core/mentions/index.ts
+	modified:   src/core/prompts/commands.ts
+	modified:   src/core/prompts/contextManagement.ts
+	modified:   src/core/prompts/responses.ts
+	modified:   src/core/prompts/system-prompt-legacy/families/next-gen-models/gpt-5.ts
+	modified:   src/core/prompts/system-prompt/__tests__/PromptBuilder.test.ts
+	modified:   src/core/prompts/system-prompt/__tests__/PromptRegistry.test.ts
+	modified:   src/core/prompts/system-prompt/__tests__/TemplateEngine.test.ts
+	modified:   src/core/prompts/system-prompt/__tests__/__snapshots__/anthropic_claude_sonnet_4-basic.snap
+	modified:   src/core/prompts/system-prompt/__tests__/__snapshots__/anthropic_claude_sonnet_4-no-browser.snap
+	modified:   src/core/prompts/system-prompt/__tests__/__snapshots__/anthropic_claude_sonnet_4-no-focus-chain.snap
+	modified:   src/core/prompts/system-prompt/__tests__/__snapshots__/anthropic_claude_sonnet_4-no-mcp.snap
+	modified:   src/core/prompts/system-prompt/__tests__/__snapshots__/lmstudio_qwen3_coder-basic.snap
+	modified:   src/core/prompts/system-prompt/__tests__/__snapshots__/lmstudio_qwen3_coder-no-browser.snap
+	modified:   src/core/prompts/system-prompt/__tests__/__snapshots__/lmstudio_qwen3_coder-no-focus-chain.snap
+	modified:   src/core/prompts/system-prompt/__tests__/__snapshots__/lmstudio_qwen3_coder-no-mcp.snap
+	modified:   src/core/prompts/system-prompt/__tests__/__snapshots__/openai_gpt_3-basic.snap
+	modified:   src/core/prompts/system-prompt/__tests__/__snapshots__/openai_gpt_3-no-browser.snap
+	modified:   src/core/prompts/system-prompt/__tests__/__snapshots__/openai_gpt_3-no-focus-chain.snap
+	modified:   src/core/prompts/system-prompt/__tests__/__snapshots__/openai_gpt_3-no-mcp.snap
+	modified:   src/core/prompts/system-prompt/__tests__/integration.test.ts
+	modified:   src/core/prompts/system-prompt/components/act_vs_plan_mode.ts
+	modified:   src/core/prompts/system-prompt/components/agent_role.ts
+	modified:   src/core/prompts/system-prompt/components/auto_todo.ts
+	modified:   src/core/prompts/system-prompt/components/capabilities.ts
+	modified:   src/core/prompts/system-prompt/components/editing_files.ts
+	modified:   src/core/prompts/system-prompt/components/feedback.ts
+	modified:   src/core/prompts/system-prompt/components/mcp.ts
+	modified:   src/core/prompts/system-prompt/components/objective.ts
+	modified:   src/core/prompts/system-prompt/components/rules.ts
+	modified:   src/core/prompts/system-prompt/components/system_info.ts
+	modified:   src/core/prompts/system-prompt/components/task_progress.ts
+	modified:   src/core/prompts/system-prompt/components/tool_use/examples.ts
+	modified:   src/core/prompts/system-prompt/components/tool_use/formatting.ts
+	modified:   src/core/prompts/system-prompt/components/tool_use/guidelines.ts
+	modified:   src/core/prompts/system-prompt/components/tool_use/index.ts
+	modified:   src/core/prompts/system-prompt/components/tool_use/tools.ts
+	modified:   src/core/prompts/system-prompt/components/user_instructions.ts
+	modified:   src/core/prompts/system-prompt/registry/PromptBuilder.ts
+	modified:   src/core/prompts/system-prompt/spec.ts
+	modified:   src/core/prompts/system-prompt/templates/TemplateEngine.ts
+	modified:   src/core/prompts/system-prompt/tools/access_mcp_resource.ts
+	modified:   src/core/prompts/system-prompt/tools/ask_followup_question.ts
+	modified:   src/core/prompts/system-prompt/tools/attempt_completion.ts
+	modified:   src/core/prompts/system-prompt/tools/browser_action.ts
+	modified:   src/core/prompts/system-prompt/tools/execute_command.ts
+	modified:   src/core/prompts/system-prompt/tools/list_code_definition_names.ts
+	modified:   src/core/prompts/system-prompt/tools/list_files.ts
+	modified:   src/core/prompts/system-prompt/tools/new_task.ts
+	modified:   src/core/prompts/system-prompt/tools/plan_mode_respond.ts
+	modified:   src/core/prompts/system-prompt/tools/read_file.ts
+	modified:   src/core/prompts/system-prompt/tools/replace_in_file.ts
+	modified:   src/core/prompts/system-prompt/tools/search_files.ts
+	modified:   src/core/prompts/system-prompt/tools/use_mcp_tool.ts
+	modified:   src/core/prompts/system-prompt/tools/web_fetch.ts
+	modified:   src/core/prompts/system-prompt/tools/write_to_file.ts
+	modified:   src/core/prompts/system-prompt/types.ts
+	deleted:    src/core/prompts/system-prompt/utils.ts
+	modified:   src/core/prompts/system-prompt/variants/gpt-5/template.ts
+	modified:   src/core/prompts/system-prompt/variants/index.ts
+	modified:   src/core/prompts/system-prompt/variants/next-gen/template.ts
+	modified:   src/core/slash-commands/index.ts
+	modified:   src/core/task/TaskState.ts
+	modified:   src/core/task/ToolExecutor.ts
+	modified:   src/core/task/focus-chain/file-utils.ts
+	modified:   src/core/task/focus-chain/index.ts
+	modified:   src/core/task/message-state.ts
+	modified:   src/core/task/tools/ToolExecutorCoordinator.ts
+	modified:   src/core/task/tools/autoApprove.ts
+	modified:   src/core/task/tools/handlers/AccessMcpResourceHandler.ts
+	modified:   src/core/task/tools/handlers/AskFollowupQuestionToolHandler.ts
+	modified:   src/core/task/tools/handlers/AttemptCompletionHandler.ts
+	modified:   src/core/task/tools/handlers/CondenseHandler.ts
+	modified:   src/core/task/tools/handlers/LoadMcpDocumentationHandler.ts
+	modified:   src/core/task/tools/handlers/NewTaskHandler.ts
+	modified:   src/core/task/tools/handlers/PlanModeRespondHandler.ts
+	modified:   src/core/task/tools/handlers/SearchFilesToolHandler.ts
+	modified:   src/core/task/tools/handlers/SummarizeTaskHandler.ts
+	modified:   src/core/task/tools/handlers/UseMcpToolHandler.ts
+	modified:   src/core/task/tools/handlers/WebFetchToolHandler.ts
+	modified:   src/core/task/tools/types/TaskConfig.ts
+	modified:   src/core/task/tools/types/UIHelpers.ts
+	modified:   src/core/task/tools/utils/ToolConstants.ts
+	modified:   src/core/task/tools/utils/ToolResultUtils.ts
+	modified:   src/core/task/utils.ts
+	modified:   src/core/webview/WebviewProvider.ts
+	modified:   src/dev/grit/vscode-api.grit
+	modified:   src/exports/index.ts
+	modified:   src/hosts/external/AuthHandler.ts
+	modified:   src/hosts/external/ExternalWebviewProvider.ts
+	modified:   src/hosts/external/grpc-types.ts
+	modified:   src/hosts/external/host-bridge-client-manager.ts
+	modified:   src/hosts/host-provider-types.ts
+	deleted:    src/hosts/vscode.d.ts
+	modified:   src/hosts/vscode/hostbridge-grpc-service.ts
+	modified:   src/hosts/vscode/hostbridge/client/host-grpc-client.ts
+	modified:   src/hosts/vscode/hostbridge/env/getHostVersion.ts
+	deleted:    src/hosts/vscode/hostbridge/watch/subscribeToFile.ts
+	modified:   src/hosts/vscode/hostbridge/window/getOpenTabs.test.ts
+	modified:   src/hosts/vscode/hostbridge/window/getVisibleTabs.test.ts
+	deleted:    src/hosts/vscode/hostbridge/workspace/searchWorkspaceItems.ts
+	modified:   src/integrations/checkpoints/CheckpointGitOperations.ts
+	modified:   src/integrations/checkpoints/CheckpointMigration.ts
+	modified:   src/integrations/checkpoints/CheckpointTracker.ts
+	modified:   src/integrations/checkpoints/CheckpointUtils.ts
+	modified:   src/integrations/diagnostics/__tests__/index.test.ts
+	modified:   src/integrations/dify/dify-integration.ts
+	modified:   src/integrations/editor/DiffViewProvider.ts
+	deleted:    src/integrations/git/commit-message-generator.ts
+	modified:   src/integrations/terminal/TerminalProcess.ts
+	modified:   src/services/account/ClineAccountService.ts
+	modified:   src/services/auth/AuthService.ts
+	modified:   src/services/auth/AuthServiceMock.ts
+	modified:   src/services/auth/providers/FirebaseAuthProvider.ts
+	modified:   src/services/error/ClineError.ts
+	modified:   src/services/error/ErrorService.ts
+	modified:   src/services/glob/list-files.ts
+	modified:   src/services/logging/Logger.ts
+	modified:   src/services/mcp/McpHub.ts
+	deleted:    src/services/posthog/feature-flags/FeatureFlagsService.ts
+	deleted:    src/services/posthog/telemetry/TelemetryService.ts
+	modified:   src/services/ripgrep/index.ts
+	modified:   src/services/search/file-search.ts
+	modified:   src/shared/HistoryItem.ts
+	modified:   src/shared/proto-conversions/cline-message.ts
+	deleted:    src/shared/proto-conversions/file/git-commit-conversion.ts
+	deleted:    src/shared/proto-conversions/file/rule-files-conversion.ts
+	modified:   src/shared/services/config/posthog-config.ts
+	modified:   src/shared/storage/types.ts
+	modified:   src/shared/tools.ts
+	deleted:    src/shared/webview/types.ts
+	modified:   src/standalone/cline-core.ts
+	modified:   src/standalone/protobus-service.ts
+	modified:   src/test/e2e/README.md
+	modified:   src/test/e2e/chat.test.ts
+	modified:   src/test/e2e/fixtures/server/api.ts
+	modified:   src/test/e2e/fixtures/server/data.ts
+	modified:   src/test/e2e/fixtures/server/index.ts
+	modified:   src/test/e2e/fixtures/workspace/.gitignore
+	new file:   src/test/e2e/fixtures/workspace/.vscode/settings.json
+	modified:   src/test/e2e/utils/helpers.ts
+	modified:   src/test/host-provider-test-utils.ts
+	modified:   src/test/requires.ts
+	modified:   src/test/services/search/file-search.test.ts
+	modified:   src/test/vscode-mock.ts
+	modified:   src/utils/announcements.ts
+	modified:   src/utils/fs.ts
+	modified:   src/utils/git.ts
+	modified:   src/utils/model-utils.ts
+	modified:   src/utils/path.ts
+	modified:   src/utils/storage.ts
+	modified:   standalone/runtime-files/package-lock.json
+	modified:   standalone/runtime-files/package.json
+	new file:   testing-platform/package-lock.json
+	modified:   tsconfig.json
+	modified:   webview-ui/.gitignore
+	modified:   webview-ui/src/CustomPostHogProvider.tsx
+	modified:   webview-ui/src/Providers.tsx
+	modified:   webview-ui/src/components/chat/ErrorRow.tsx
+	modified:   webview-ui/src/components/chat/UserMessage.tsx
+	modified:   webview-ui/src/components/chat/chat-view/components/layout/TaskSection.tsx
+	modified:   webview-ui/src/components/chat/colors.ts
+	modified:   webview-ui/src/components/chat/task-header/TaskTimeline.tsx
+	modified:   webview-ui/src/components/chat/task-header/TaskTimelineTooltip.tsx
+	modified:   webview-ui/src/components/cline-rules/ClineRulesToggleModal.tsx
+	modified:   webview-ui/src/components/cline-rules/RuleRow.tsx
+	modified:   webview-ui/src/components/common/ChecklistRenderer.tsx
+	modified:   webview-ui/src/components/common/CodeAccordian.tsx
+	modified:   webview-ui/src/components/common/CopyButton.tsx
+	modified:   webview-ui/src/components/common/HeroTooltip.tsx
+	modified:   webview-ui/src/components/common/MarkdownBlock.tsx
+	modified:   webview-ui/src/components/common/Thumbnails.tsx
+	modified:   webview-ui/src/components/history/HistoryPreview.tsx
+	modified:   webview-ui/src/components/mcp/chat-display/McpResponseDisplay.tsx
+	deleted:    webview-ui/src/components/mcp/configuration/tabs/installed/InstalledServersView.tsx
+	modified:   webview-ui/src/components/settings/SectionHeader.tsx
+	modified:   webview-ui/src/components/settings/providers/BedrockProvider.tsx
+	modified:   webview-ui/src/components/settings/providers/ClaudeCodeProvider.tsx
+	modified:   webview-ui/src/components/settings/sections/TerminalSettingsSection.tsx
+	modified:   webview-ui/src/components/settings/utils/providerUtils.ts
+	modified:   webview-ui/src/components/settings/utils/settingsHandlers.ts
+	modified:   webview-ui/src/context/ClineAuthContext.tsx
+	modified:   webview-ui/src/index.css
+	modified:   webview-ui/src/main.tsx
+	modified:   webview-ui/src/services/grpc-client-base.ts
+	modified:   webview-ui/src/utils/__tests__/context-mentions.test.ts
+	modified:   webview-ui/src/utils/format.ts
+	modified:   webview-ui/src/utils/slash-commands.ts
+	deleted:    webview-ui/src/utils/vscode.ts
+	modified:   webview-ui/tailwind.config.mjs
+	modified:   webview-ui/tsconfig.app.json
+	modified:   webview-ui/vite.config.ts
+
+Unmerged paths:
+  (use "git add/rm <file>..." as appropriate to mark resolution)
+	deleted by us:   package-lock.json
+	both modified:   src/core/api/providers/dify.ts
+	both modified:   src/core/controller/index.ts
+	both added:      src/core/controller/models/refreshOcaModels.ts
+	both modified:   src/core/controller/models/refreshOpenRouterModels.ts
+	both modified:   src/core/controller/state/resetState.ts
+	both modified:   src/core/controller/state/updateSettings.ts
+	deleted by them: src/core/prompts/system-prompt-legacy/families/next-gen-models/next-gen-system-prompt.ts
+	deleted by them: src/core/prompts/system-prompt-legacy/generic-system-prompt.ts
+	both modified:   src/core/prompts/system-prompt/index.ts
+	both modified:   src/core/storage/StateManager.ts
+	both modified:   src/core/storage/disk.ts
+	both modified:   src/core/storage/state-keys.ts
+	both modified:   src/core/storage/state-migrations.ts
+	both modified:   src/core/storage/utils/state-helpers.ts
+	both modified:   src/core/task/index.ts
+	both modified:   src/core/task/tools/handlers/BrowserToolHandler.ts
+	both modified:   src/core/task/tools/handlers/ExecuteCommandToolHandler.ts
+	both modified:   src/core/task/tools/handlers/ListCodeDefinitionNamesToolHandler.ts
+	both modified:   src/core/task/tools/handlers/ListFilesToolHandler.ts
+	both modified:   src/core/task/tools/handlers/ReadFileToolHandler.ts
+	both modified:   src/core/task/tools/handlers/ReportBugHandler.ts
+	both modified:   src/core/task/tools/handlers/WriteToFileToolHandler.ts
+	both modified:   src/dev/commands/tasks.ts
+	both modified:   src/extension.ts
+	both modified:   src/hosts/vscode/VscodeWebviewProvider.ts
+	both modified:   src/hosts/vscode/commandUtils.ts
+	both modified:   src/hosts/vscode/hostbridge/workspace/openClineSidebarPanel.ts
+	both added:      src/integrations/checkpoints/index.ts
+	both modified:   src/services/browser/BrowserSession.ts
+	both modified:   src/services/browser/UrlContentFetcher.ts
+	both added:      src/services/browser/utils.ts
+	both added:      src/services/error/ErrorProviderFactory.ts
+	both added:      src/services/feature-flags/FeatureFlagsProviderFactory.ts
+	both added:      src/services/feature-flags/FeatureFlagsService.ts
+	both modified:   src/services/posthog/PostHogClientProvider.ts
+	both added:      src/services/telemetry/TelemetryProviderFactory.ts
+	both added:      src/services/telemetry/TelemetryService.test.ts
+	both modified:   src/services/test/TestServer.ts
+	both modified:   src/services/uri/SharedUriHandler.ts
+	both modified:   src/shared/ExtensionMessage.ts
+	both modified:   src/shared/api.ts
+	both modified:   src/shared/mcp.ts
+	both modified:   src/shared/proto-conversions/models/api-configuration-conversion.ts
+	deleted by them: src/shared/proto-conversions/state/settings-conversion.ts
+	both modified:   src/shared/services/feature-flags/feature-flags.ts
+	both modified:   src/standalone/vscode-context.ts
+	both modified:   src/test/e2e/auth.test.ts
+	both modified:   src/test/e2e/diff.test.ts
+	both modified:   src/test/e2e/editor.test.ts
+	both modified:   src/test/e2e/utils/common.ts
+	both modified:   webview-ui/package.json
+	both modified:   webview-ui/src/components/account/AccountView.tsx
+	both modified:   webview-ui/src/components/chat/Announcement.tsx
+	both modified:   webview-ui/src/components/chat/ChatRow.tsx
+	both modified:   webview-ui/src/components/chat/ChatTextArea.tsx
+	both modified:   webview-ui/src/components/chat/ChatView.tsx
+	both modified:   webview-ui/src/components/chat/CreditLimitError.tsx
+	both modified:   webview-ui/src/components/chat/ServersToggleModal.tsx
+	both modified:   webview-ui/src/components/chat/chat-view/components/layout/ActionButtons.tsx
+	both modified:   webview-ui/src/components/chat/chat-view/components/layout/WelcomeSection.tsx
+	both modified:   webview-ui/src/components/chat/chat-view/hooks/useMessageHandlers.ts
+	both modified:   webview-ui/src/components/chat/chat-view/shared/buttonConfig.ts
+	both modified:   webview-ui/src/components/chat/chat-view/types/chatTypes.ts
+	both modified:   webview-ui/src/components/chat/task-header/TaskHeader.tsx
+	both modified:   webview-ui/src/components/chat/task-header/buttons/CopyTaskButton.tsx
+	both modified:   webview-ui/src/components/chat/task-header/buttons/DeleteTaskButton.tsx
+	deleted by them: webview-ui/src/components/chat/task-header/buttons/OpenDiskTaskHistoryButton.tsx
+	both modified:   webview-ui/src/components/cline-rules/NewRuleRow.tsx
+	both modified:   webview-ui/src/components/common/CheckmarkControl.tsx
+	both modified:   webview-ui/src/components/common/TelemetryBanner.tsx
+	both modified:   webview-ui/src/components/history/HistoryView.tsx
+	both modified:   webview-ui/src/components/mcp/configuration/McpConfigurationView.tsx
+	both modified:   webview-ui/src/components/settings/ApiOptions.tsx
+	both modified:   webview-ui/src/components/settings/BasetenModelPicker.tsx
+	both modified:   webview-ui/src/components/settings/OpenRouterModelPicker.tsx
+	both modified:   webview-ui/src/components/settings/RequestyModelPicker.tsx
+	both modified:   webview-ui/src/components/settings/SapAiCoreModelPicker.tsx
+	both modified:   webview-ui/src/components/settings/SettingsView.tsx
+	both modified:   webview-ui/src/components/settings/ThinkingBudgetSlider.tsx
+	both modified:   webview-ui/src/components/settings/providers/AnthropicProvider.tsx
+	both modified:   webview-ui/src/components/settings/providers/DifyProvider.tsx
+	both modified:   webview-ui/src/components/settings/providers/RequestyProvider.tsx
+	both modified:   webview-ui/src/components/settings/providers/SapAiCoreProvider.tsx
+	both modified:   webview-ui/src/components/settings/providers/VercelAIGatewayProvider.tsx
+	both modified:   webview-ui/src/components/settings/sections/AboutSection.tsx
+	both modified:   webview-ui/src/components/settings/sections/ApiConfigurationSection.tsx
+	both modified:   webview-ui/src/components/settings/sections/BrowserSettingsSection.tsx
+	both modified:   webview-ui/src/components/settings/sections/FeatureSettingsSection.tsx
+	both modified:   webview-ui/src/components/settings/sections/GeneralSettingsSection.tsx
+	both modified:   webview-ui/src/components/welcome/WelcomeView.tsx
+	both modified:   webview-ui/src/context/ExtensionStateContext.tsx
+	both modified:   webview-ui/src/utils/context-mentions.ts
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   cline-latest (new commits)
+	modified:   package.json
+	deleted:    work/20251007-1-emergency-recovery-plan.md
+	deleted:    work/20251007-2-phase1-core-api-fix-plan.md
+	deleted:    work/20251007-final-wrap-up-plan.md
+	deleted:    work/logs/20251007-1-compile-after-recovery.log
+	modified:   work/logs/log-biome-jsonc-merge.md
+	modified:   work/logs/log-gitignore-merge.md
+	modified:   work/logs/log-package-json-merge.md
+	modified:   work/logs/log-proto-models-merge.md
+	modified:   work/logs/log-proto-state-merge.md
+	modified:   work/logs/log-vscodeignore-merge.md
+	modified:   work/logs/package-json-base.json
+	modified:   work/logs/package-json-head.json
+	modified:   work/logs/package-json-upstream.json
+	deleted:    work/master-merge-checklist.md
+	modified:   work/master-merge-plan.md
+	deleted:    work/plan-A1-extension-ts-merge.md
+	modified:   work/plan-biome-jsonc-merge.md
+	deleted:    work/plan-post-analysis-cleanup.md
+	deleted:    work/plan-proto-models-final-merge.md
+	deleted:    work/plan-recovery-and-migration-v2.md
+	deleted:    work/plan-state-helpers-merge.md
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	caret-src/hosts/
+	caret-src/services/dictation/
+	caret-src/services/workspace/
+	caret-src/utils/git-compat.ts
+	src/core/task/index.ts.bak
+	work/analysis-report-extension-ts.md
+	work/backup/
+	work/caret-changed-files.txt
+	work/cline-changed-files.txt
+	work/conflict-analysis-report-20251008.md
+	work/extension.ts.before-merge
+	work/interim-report-20251008-full.md
+	work/logs/archive-20251007/
+	work/logs/biome-jsonc-base.jsonc
+	work/logs/biome-jsonc-head.jsonc
+	work/logs/biome-jsonc-upstream.jsonc
+	work/logs/diff-task-index.log
+	work/logs/dify-ts-base.ts
+	work/logs/dify-ts-head.ts
+	work/logs/dify-ts-upstream.ts
+	work/logs/git-status-20251008.log
+	work/logs/log-dify-ts-merge.md
+	work/logs/proto-models-base.proto
+	work/logs/proto-models-head.proto
+	work/logs/proto-models-upstream.proto
+	work/logs/proto-state-base.proto
+	work/logs/proto-state-head.proto
+	work/logs/proto-state-upstream.proto
+	work/plan-20251008-01-merge-restart.md
+	work/plan-20251008-02-fix-checkout-ours-failure.md
+	work/plan-20251008-03-resolve-package-json.md
+	work/plan-20251008-04-resolve-gitignore.md
+	work/plan-20251008-05-resolve-vscodeignore.md
+	work/plan-20251008-06-resolve-changelog.md
+	work/plan-20251008-07-resume-merge.md
+	work/plan-dify-ts-merge.md
+	work/plan-merge-reanalysis-20251008.md
+	work/plan-proto-models-merge.md
+	work/plan-proto-state-merge.md
+	work/self-analysis-report-20251007.md
+	work/session-wrap-up-20251008.md
+

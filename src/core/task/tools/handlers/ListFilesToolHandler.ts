@@ -1,18 +1,21 @@
+import path from "node:path"
 import type { ToolUse } from "@core/assistant-message"
 import { formatResponse } from "@core/prompts/responses"
+import { getWorkspaceBasename, resolveWorkspacePath } from "@core/workspace"
 import { listFiles } from "@services/glob/list-files"
-import { telemetryService } from "@services/posthog/PostHogClientProvider"
-import { getReadablePath, isLocatedInWorkspace } from "@utils/path"
-import * as path from "path"
+import { arePathsEqual, getReadablePath, isLocatedInWorkspace } from "@utils/path"
+import { telemetryService } from "@/services/telemetry"
+import { ClineDefaultTool } from "@/shared/tools"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApprovalIfAutoApprovalEnabled } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
 import type { ToolValidator } from "../ToolValidator"
 import type { TaskConfig } from "../types/TaskConfig"
 import type { StronglyTypedUIHelpers } from "../types/UIHelpers"
+import { ToolResultUtils } from "../utils/ToolResultUtils"
 
 export class ListFilesToolHandler implements IFullyManagedTool {
-	readonly name = "list_files"
+	readonly name = ClineDefaultTool.LIST_FILES
 
 	constructor(private validator: ToolValidator) {}
 
@@ -23,22 +26,16 @@ export class ListFilesToolHandler implements IFullyManagedTool {
 	async handlePartialBlock(block: ToolUse, uiHelpers: StronglyTypedUIHelpers): Promise<void> {
 		const relPath = block.params.path
 
-		// Early return if we don't have enough data yet
-		if (!relPath) {
-			return
-		}
-
 		// Get config access for services
 		const config = uiHelpers.getConfig()
 
 		// Create and show partial UI message
-		const absolutePath = path.resolve(config.cwd, relPath)
 		const recursiveRaw = block.params.recursive
 		const recursive = recursiveRaw?.toLowerCase() === "true"
 		const sharedMessageProps = {
 			tool: recursive ? "listFilesRecursive" : "listFilesTopLevel",
 			path: getReadablePath(config.cwd, uiHelpers.removeClosingTag(block, "path", relPath)),
-			content: absolutePath,
+			content: "",
 			operationIsLocatedInWorkspace: await isLocatedInWorkspace(relPath),
 		}
 
@@ -55,11 +52,6 @@ export class ListFilesToolHandler implements IFullyManagedTool {
 	}
 
 	async execute(config: TaskConfig, block: ToolUse): Promise<ToolResponse> {
-		// For partial blocks, return empty string to let coordinator handle UI
-		if (block.partial) {
-			return ""
-		}
-
 		const relDirPath: string | undefined = block.params.path
 		const recursiveRaw: string | undefined = block.params.recursive
 		const recursive = recursiveRaw?.toLowerCase() === "true"
@@ -68,17 +60,35 @@ export class ListFilesToolHandler implements IFullyManagedTool {
 		const pathValidation = this.validator.assertRequiredParams(block, "path")
 		if (!pathValidation.ok) {
 			config.taskState.consecutiveMistakeCount++
-			return await config.callbacks.sayAndCreateMissingParamError("list_files", "path")
+			return await config.callbacks.sayAndCreateMissingParamError(this.name, "path")
 		}
 
 		config.taskState.consecutiveMistakeCount = 0
-		const absolutePath = path.resolve(config.cwd, relDirPath!)
+
+		// Resolve the absolute path based on multi-workspace configuration
+		const pathResult = resolveWorkspacePath(config, relDirPath!, "ListFilesToolHandler.execute")
+		const { absolutePath, displayPath } =
+			typeof pathResult === "string" ? { absolutePath: pathResult, displayPath: relDirPath! } : pathResult
+
+		// Determine workspace context for telemetry
+		const fallbackAbsolutePath = path.resolve(config.cwd, relDirPath ?? "")
+		const workspaceContext = {
+			isMultiRootEnabled: config.isMultiRootEnabled || false,
+			usedWorkspaceHint: typeof pathResult !== "string", // multi-root path result indicates hint usage
+			resolvedToNonPrimary: !arePathsEqual(absolutePath, fallbackAbsolutePath),
+			resolutionMethod: (typeof pathResult !== "string" ? "hint" : "primary_fallback") as "hint" | "primary_fallback",
+		}
+
+		// Execute the actual list files operation
+		const [files, didHitLimit] = await listFiles(absolutePath, recursive, 200)
+
+		const result = formatResponse.formatFilesList(absolutePath, files, didHitLimit, config.services.clineIgnoreController)
 
 		// Handle approval flow
 		const sharedMessageProps = {
 			tool: recursive ? "listFilesRecursive" : "listFilesTopLevel",
-			path: getReadablePath(config.cwd, relDirPath!),
-			content: absolutePath,
+			path: getReadablePath(config.cwd, displayPath),
+			content: result,
 			operationIsLocatedInWorkspace: await isLocatedInWorkspace(relDirPath!),
 		}
 
@@ -91,10 +101,10 @@ export class ListFilesToolHandler implements IFullyManagedTool {
 			config.taskState.consecutiveAutoApprovedRequestsCount++
 
 			// Capture telemetry
-			telemetryService.captureToolUsage(config.ulid, block.name, config.api.getModel().id, true, true)
+			telemetryService.captureToolUsage(config.ulid, block.name, config.api.getModel().id, true, true, workspaceContext)
 		} else {
 			// Manual approval flow
-			const notificationMessage = `Caret wants to view directory ${path.basename(absolutePath)}/`
+			const notificationMessage = `Cline wants to view directory ${getWorkspaceBasename(absolutePath, "ListFilesToolHandler.notification")}/`
 
 			// Show notification
 			showNotificationForApprovalIfAutoApprovalEnabled(
@@ -105,23 +115,28 @@ export class ListFilesToolHandler implements IFullyManagedTool {
 
 			await config.callbacks.removeLastPartialMessageIfExistsWithType("say", "tool")
 
-			// Ask for approval
-			const { response } = await config.callbacks.ask("tool", completeMessage, false)
-
-			if (response !== "yesButtonClicked") {
-				// Handle rejection
-				config.taskState.didRejectTool = true
-				telemetryService.captureToolUsage(config.ulid, block.name, config.api.getModel().id, false, false)
-				return "The user denied this operation."
+			const didApprove = await ToolResultUtils.askApprovalAndPushFeedback("tool", completeMessage, config)
+			if (!didApprove) {
+				telemetryService.captureToolUsage(
+					config.ulid,
+					block.name,
+					config.api.getModel().id,
+					false,
+					false,
+					workspaceContext,
+				)
+				return formatResponse.toolDenied()
 			} else {
-				telemetryService.captureToolUsage(config.ulid, block.name, config.api.getModel().id, false, true)
+				telemetryService.captureToolUsage(
+					config.ulid,
+					block.name,
+					config.api.getModel().id,
+					false,
+					true,
+					workspaceContext,
+				)
 			}
 		}
-
-		// Execute the actual list files operation
-		const [files, didHitLimit] = await listFiles(absolutePath, recursive, 200)
-
-		const result = formatResponse.formatFilesList(absolutePath, files, didHitLimit, config.services.clineIgnoreController)
 
 		return result
 	}

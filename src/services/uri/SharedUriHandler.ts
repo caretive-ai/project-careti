@@ -1,51 +1,29 @@
+import { WebviewProvider } from "@core/webview"
+import { Logger } from "@services/logging/Logger"
 import * as vscode from "vscode"
-import { WebviewProvider } from "@/core/webview"
 
-/**
- * Shared URI handler that processes both VSCode URI events and HTTP server callbacks
- */
-export class SharedUriHandler {
-	/**
-	 * Processes a URI and routes it to the appropriate handler
-	 * @param uri The URI to process (can be from VSCode or converted from HTTP)
-	 * @returns Promise<boolean> indicating success (true) or failure (false)
-	 */
-	public static async handleUri(uri: vscode.Uri): Promise<boolean> {
-		console.log("SharedUriHandler: Processing URI:", {
-			path: uri.path,
-			query: uri.query,
-			scheme: uri.scheme,
-		})
+export class SharedUriHandler implements vscode.UriHandler {
+	public async handleUri(uri: vscode.Uri) {
+		Logger.log("SharedUriHandler: Received URI:", uri.toString())
 
-		const path = uri.path
-		const query = new URLSearchParams(uri.query.replace(/\+/g, "%2B"))
+		// Get a visible webview instance
 		const visibleWebview = WebviewProvider.getVisibleInstance()
-
-		if (!visibleWebview) {
-			console.warn("SharedUriHandler: No visible webview found")
-			return false
+		if (!visibleWebview || !visibleWebview.controller) {
+			Logger.log("SharedUriHandler: No active Cline instance found")
+			return
 		}
 
-		try {
-			switch (path) {
-				case "/openrouter": {
-					const code = query.get("code")
-					if (code) {
-						await visibleWebview.controller.handleOpenRouterCallback(code)
-						return true
-					}
-					console.warn("SharedUriHandler: Missing code parameter for OpenRouter callback")
-					return false
-				}
-				case "/auth": {
+		// Parse the query parameters from the URI
+		const query = new URLSearchParams(uri.query)
+
+		switch (uri.path) {
+			case "/auth/callback": {
+				try {
 					console.log("SharedUriHandler: Auth callback received:", { path: uri.path, provider: query.get("provider") })
 
 					const token = query.get("token")
 					const state = query.get("state")
-					const apiKey = query.get("apiKey")
 					const provider = query.get("provider")
-
-					console.log("Params", token, state, apiKey)
 
 					if (token) {
 						const { CaretGlobalManager } = await import("@caret/managers/CaretGlobalManager")
@@ -58,27 +36,15 @@ export class SharedUriHandler {
 
 						// Notify webview of successful authentication
 						await visibleWebview.controller.handleAuthCallback(token, provider || "caret")
-						return true
 					}
-					console.warn("SharedUriHandler: Missing idToken parameter for auth callback")
-					return false
+				} catch (error) {
+					Logger.log("Error handling auth callback:", error)
+					vscode.window.showErrorMessage(`Error handling auth callback: ${error}`)
 				}
-				default:
-					console.warn(`SharedUriHandler: Unknown path: ${path}`)
-					return false
+				break
 			}
-		} catch (error) {
-			console.error("SharedUriHandler: Error processing URI:", error)
-			return false
+			default:
+				Logger.log(`SharedUriHandler: Unknown URI path: ${uri.path}`)
 		}
-	}
-
-	/**
-	 * Converts an HTTP URL to a vscode.Uri for unified processing
-	 * @param httpUrl The HTTP URL to convert
-	 * @returns vscode.Uri representation of the URL
-	 */
-	public static convertHttpUrlToUri(httpUrl: string): vscode.Uri {
-		return vscode.Uri.parse(httpUrl)
 	}
 }

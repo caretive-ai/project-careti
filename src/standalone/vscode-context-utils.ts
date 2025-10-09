@@ -68,7 +68,9 @@ export class EventEmitter<T> {
 	}
 
 	fire(data: T): void {
-		this.listeners.forEach((listener) => listener(data))
+		for (const listener of this.listeners) {
+			listener(data)
+		}
 	}
 }
 

@@ -198,7 +198,9 @@ async function parseApiDefinitions() {
 	const validation = validateApiKeyMappings(providerIds, providerApiKeyMap)
 	console.log(chalk.green(`   Mapped API keys for ${validation.mappedProviders}/${validation.totalProviders} providers`))
 	if (validation.warnings.length > 0) {
-		validation.warnings.forEach((warning) => console.log(chalk.yellow(`   ${warning}`)))
+		for (const warning of validation.warnings) {
+			console.log(chalk.yellow(`   ${warning}`))
+		}
 	}
 
 	// Extract ApiHandlerOptions interface to understand configuration fields

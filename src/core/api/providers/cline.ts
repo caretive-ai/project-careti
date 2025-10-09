@@ -160,7 +160,8 @@ export class ClineHandler implements ApiHandler {
 				}
 
 				if (!didOutputUsage && chunk.usage) {
-					let totalCost = ((chunk.usage as any).cost || 0) + ((chunk.usage as any).cost_details?.upstream_inference_cost || 0)
+					let totalCost =
+						((chunk.usage as any).cost || 0) + ((chunk.usage as any).cost_details?.upstream_inference_cost || 0)
 
 					if (this.getModel().id === "cline/code-supernova-1-million") {
 						totalCost = 0

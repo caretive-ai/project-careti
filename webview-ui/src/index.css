@@ -28,6 +28,7 @@ The correct order is:
 @import "tailwindcss/utilities.css" layer(utilities);
 
 /* Configuration directives come after all imports */
+/* biome-ignore lint/suspicious/noUnknownAtRules: Tailwind CSS v4 directive */
 @config "../tailwind.config.mjs";
 
 textarea:focus {

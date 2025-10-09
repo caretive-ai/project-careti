@@ -43,8 +43,9 @@ async function getMachineId(): Promise<string | undefined> {
 	try {
 		// CARET MODIFICATION: Use VS Code's built-in machineId instead of node-machine-id package
 		// This provides a deterministic ID that is unique to the machine
-		// biome-ignore plugin: Direct vscode.env access is intentional for standalone compatibility
-		const id = vscode.env.machineId
+		// Direct vscode.env access is intentional for standalone compatibility
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const id = (vscode as any).env.machineId as string
 		return id
 	} catch (error) {
 		console.log("Failed to get machine ID from VS Code API", error)

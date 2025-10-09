@@ -7,7 +7,8 @@ option java_multiple_files = true;
 
 // CARET MODIFICATION: Service for Caret account-related operations
 // Extends Cline's AccountService with Caret-specific functionality
-service CaretAccountService {
+// TODO: Uncomment when handlers are implemented (Phase 5 or later)
+/* service CaretAccountService {
   // Handles the user clicking the Caret login link in the UI.
   // Generates Auth0 authentication flow and manages JWT tokens.
   rpc caretAccountLoginClicked(cline.EmptyRequest) returns (cline.String);
@@ -42,6 +43,7 @@ service CaretAccountService {
   // Sets the active Caret organization
   rpc setCaretUserOrganization(CaretUserOrganizationUpdateRequest) returns (cline.Empty);
 }
+*/
 
 // CARET MODIFICATION: Auth state change request for Caret (using 1000+ offset for merge compatibility)
 message CaretAuthStateChangedRequest {

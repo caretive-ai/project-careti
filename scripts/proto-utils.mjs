@@ -50,9 +50,21 @@ export async function loadServicesFromProtoDescriptor() {
 	const protobusServices = {}
 	for (const [name, def] of Object.entries(proto.cline)) {
 		if (def && "service" in def) {
+			// CARET MODIFICATION: Mark service as belonging to 'cline' package
+			def.packageName = "cline"
 			protobusServices[name] = def
 		} else {
 			addTypeNameToFqn(name, `proto.cline.${name}`)
+		}
+	}
+	// CARET MODIFICATION: Include Caret services in protobusServices
+	for (const [name, def] of Object.entries(proto.caret || {})) {
+		if (def && "service" in def) {
+			// CARET MODIFICATION: Mark service as belonging to 'caret' package
+			def.packageName = "caret"
+			protobusServices[name] = def
+		} else {
+			addTypeNameToFqn(name, `proto.caret.${name}`)
 		}
 	}
 	return { protobusServices, hostServices }

@@ -21,14 +21,14 @@
 ### 진행 상황 (Overall Progress)
 
 **Phase 0: 준비 작업** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
-**Phase 1: 브랜치 설정 및 백업** ░░░░░░░░░░ 0%
-**Phase 2: Upstream 완전 채택** ░░░░░░░░░░ 0%
-**Phase 3: Proto 재구현** ░░░░░░░░░░ 0%
-**Phase 4: Backend 재구현** ░░░░░░░░░░ 0%
+**Phase 1: 브랜치 설정 및 백업** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
+**Phase 2: Upstream 완전 채택** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
+**Phase 3: Proto 재구현** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
+**Phase 4: Backend 재구현** ▓▓▓░░░░░░░ 30% 🔄 (F09 ✅, F03+F08 90%)
 **Phase 5: Frontend 재구현** ░░░░░░░░░░ 0%
 **Phase 6: 최종 검증 및 배포** ░░░░░░░░░░ 0%
 
-**총 진행률**: ▓░░░░░░░░░ 10% (Phase 0 완료)
+**총 진행률**: ▓▓▓▓░░░░░░ 42% (Phase 0-3 완료, Phase 4 진행중)
 
 ---
 
@@ -37,6 +37,7 @@
 ### Phase 0: 준비 작업 ✅ **완료**
 
 **목표**: 머징 전 문서 및 환경 준비
+**현재 상태**: ✅ 완료 (2025-10-09)
 
 #### 완료된 작업
 - ✅ Phase 3 실패 분석 완료
@@ -77,12 +78,12 @@
 
 ---
 
-### Phase 1: 브랜치 설정 및 백업
+### Phase 1: 브랜치 설정 및 백업 ✅ **완료**
 
 **목표**: 안전한 머징을 위한 백업 및 브랜치 생성
 
 **예상 시간**: 30분
-**현재 상태**: ⏸️ 대기 중
+**현재 상태**: ✅ 완료 (2025-10-09)
 
 #### 작업 단계
 
@@ -157,12 +158,13 @@ npm run test:backend -- --run
 
 ---
 
-### Phase 2: Upstream 완전 채택
+### Phase 2: Upstream 완전 채택 ✅ **완료**
 
 **목표**: Cline 최신 버전 완전 채택 (Caret 수정 모두 제거)
 
 **예상 시간**: 1-2시간
-**현재 상태**: ⏸️ 대기 중 (Phase 1 완료 후)
+**현재 상태**: ✅ 완료 (2025-10-09)
+**커밋**: `03177da87`
 
 #### 작업 전략
 
@@ -242,12 +244,13 @@ grep -c "error TS" logs/phase2-compile-errors.log
 
 ---
 
-### Phase 3: Proto 재구현
+### Phase 3: Proto 재구현 ✅ **완료**
 
 **목표**: Caret gRPC Proto 파일 재구현 및 코드 생성
 
 **예상 시간**: 2-3시간
-**현재 상태**: ⏸️ 대기 중 (Phase 2 완료 후)
+**현재 상태**: ✅ 완료 (2025-10-09)
+**커밋**: `8716ff2b4`, `ba3afbc2f`, `edad3ac87`
 
 #### 작업 단계
 
@@ -288,17 +291,27 @@ ls -la src/generated/caret/
 
 ---
 
-### Phase 4: Backend 재구현 (Feature별 순차)
+### Phase 4: Backend 재구현 (Feature별 순차) 🔄 **30% 진행중**
 
 **목표**: F01-F11 Backend 부분 순차 재구현 + Cline v3.32.7 타입 오류 해결
 
 **예상 시간**: 11-15시간 (타입 충돌 해결 3시간 포함)
-**현재 상태**: ⏸️ 대기 중 (Phase 3 완료 후)
+**현재 상태**: 🔄 진행중 (F09 ✅, F03+F08 90%)
 
 **⚠️ 중요**: Cline v3.32.7은 9개의 TypeScript 타입 오류로 빌드 실패합니다.
 Caret은 이미 모든 오류를 해결했으므로, 머징 시 Caret의 솔루션을 보호해야 합니다.
 
 **📚 참고 문서**: `cline-v3.32.7-root-cause-analysis.md` - 9개 오류 상세 분석 및 Caret 솔루션
+
+#### ⭐ 모든 Phase 4.x 작업에 공통으로 포함되는 단계
+
+**Feature 문서 복원 및 업데이트** (필수):
+1. `caret-docs/features/fXX-*.mdx` 파일을 backup 브랜치에서 복원
+2. Modified Files 섹션을 현재 구현 상황에 맞게 업데이트
+3. Implementation Status 업데이트 (Backend ✅/🔄, Frontend ⏸️)
+4. Merge Notes 추가 (특이사항, lint 오류, 보류 사항 등 기록)
+
+**⚠️ 중요**: Feature 구현만 하고 문서를 잊으면 안됩니다! 각 Phase마다 반드시 문서 작업 포함!
 
 #### 재구현 순서 (의존성 기반)
 
@@ -313,18 +326,20 @@ Phase 4.6: F01 (Common Util) - 최소 침습
 Phase 4.7: F04 (Caret Account) - 독립, 낮은 위험
 Phase 4.8: F05 (Rule Priority) - (검증 필요)
 Phase 4.9: F10 (Provider Setup) - API transform (마지막)
-Phase 4.10: F02 (Doubao Provider) - (검증 필요)
+Phase 4.10: F02 (Multilingual) - (검증 필요)
 Phase 4.11: (미사용 - 예약)
 Phase 4.12: 타입 충돌 최종 해결 (신규 추가) ⭐ 필수 검증
 ```
 
 ---
 
-#### Phase 4.0: 타입 확장 파일 보호 ⭐ **최우선 작업**
+#### Phase 4.0: 타입 확장 파일 보호 ✅ **완료**
 
 **목표**: Caret의 핵심 타입 솔루션 파일을 Cline upstream 머징 전에 보호
 
 **예상 시간**: 30분
+**완료 날짜**: 2025-10-09
+**커밋**: `ee6af3cf3`
 **위험도**: 🔴 **매우 높음** - 이 파일이 손상되면 9개 타입 오류 재발생
 
 **배경**:
@@ -403,82 +418,108 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
 
 ---
 
-#### Phase 4.1: F09 - Feature Config System
+#### Phase 4.1: F09 - Feature Config System ✅ **완료**
 
 **예상 시간**: 1시간
+**완료 날짜**: 2025-10-09
+**커밋**: `01b96bd2e`
 
 ##### 작업 단계
 1. **Caret 전용 파일 검증** (이미 복원됨)
-   - [ ] `caret-src/shared/FeatureConfig.ts` 존재 확인
-   - [ ] `caret-src/shared/feature-config.json` 존재 확인
+   - [x] `caret-src/shared/FeatureConfig.ts` 존재 확인
+   - [x] `caret-src/shared/feature-config.json` 존재 확인
 
 2. **Cline 파일 최소 침습 수정**
-   - [ ] `src/core/storage/StateManager.ts` 수정
-     - [ ] FeatureConfig import 추가
-     - [ ] 기본 provider 설정 시 FeatureConfig 사용
-     - [ ] `// CARET MODIFICATION:` 주석 추가
-   - [ ] 컴파일 테스트
+   - [x] `src/core/storage/StateManager.ts` 수정
+     - [x] FeatureConfig import 추가
+     - [x] 기본 provider 설정 시 FeatureConfig 사용
+     - [x] `// CARET MODIFICATION:` 주석 추가
+   - [x] 컴파일 테스트
 
 3. **검증**
-   - [ ] FeatureConfig 로딩 확인
-   - [ ] 기본 provider 설정 동작 확인
-   - [ ] 컴파일 성공
+   - [x] FeatureConfig 로딩 확인
+   - [x] 기본 provider 설정 동작 확인
+   - [x] 컴파일 성공
 
-**완료 기준**: F09 Backend 재구현 완료, StateManager 정상 동작
+4. **Feature 문서 복원 및 업데이트** ⭐ **중요**
+   - [x] `caret-docs/features/f09-feature-config-system.mdx` 복원
+   - [ ] Modified Files 섹션 업데이트 (현재 구현 상황 반영)
+   - [ ] Implementation Status 업데이트 (Backend ✅, Frontend ⏸️)
+   - [ ] Merge Notes 추가 (특이사항 기록)
+
+**완료 기준**: F09 Backend 재구현 완료, StateManager 정상 동작, Feature 문서 업데이트
 
 ---
 
-#### Phase 4.2: F03 - Branding UI (Backend)
+#### Phase 4.2: F03 - Branding UI (Backend) 🔄 **90% 진행중**
 
 **예상 시간**: 2-3시간
+**현재 상태**: 🔄 disk.ts 수정 완료, 커밋 대기중 (lint 오류 1개)
 
 ##### 작업 단계
 1. **disk.ts 수정 (1차: 브랜딩)**
-   - [ ] `src/core/storage/disk.ts` 파일 열기
-   - [ ] 브랜딩 파일 경로 관련 수정 추가
-   - [ ] `// CARET MODIFICATION:` 주석 추가
-   - [ ] F08에서 추가 수정할 것 염두
+   - [x] `src/core/storage/disk.ts` 파일 열기
+   - [x] 브랜딩 파일 경로 관련 수정 추가 (brand resolution system)
+   - [x] `// CARET MODIFICATION:` 주석 추가
+   - [x] F08 Persona 파일명 함께 추가
 
-2. **package.json 브랜딩 (자동화)**
+2. **package.json 브랜딩 (자동화)** - ⏸️ **보류** (Frontend에서 처리)
    - [ ] `caret-scripts/brand-*.sh` 스크립트 실행
    - [ ] package.json 42개+ 필드 브랜딩 확인
    - [ ] 명령어 네임스페이스 변경 (`cline.*` → `caret.*`)
 
-3. **기타 브랜딩 파일 수정**
-   - [ ] (F03 문서 재확인 필요)
+3. **기타 브랜딩 파일 수정** - ⏸️ **보류** (F03 문서 재확인 필요)
+   - [ ] (F03 문서 재검토 후 결정)
 
 4. **검증**
-   - [ ] 브랜딩 파일 경로 정상 동작
-   - [ ] package.json 브랜딩 완료
-   - [ ] 컴파일 성공
+   - [x] 브랜딩 파일 경로 정상 동작
+   - [ ] package.json 브랜딩 완료 (Frontend Phase)
+   - [x] 컴파일 성공 (TypeScript 0 errors)
+
+5. **Feature 문서 복원 및 업데이트** ⭐ **중요**
+   - [x] `caret-docs/features/f03-branding-ui.mdx` 복원
+   - [ ] Modified Files 섹션 업데이트 (disk.ts만 Backend에서 수정)
+   - [ ] Implementation Status 업데이트 (Backend 부분 완료)
+   - [ ] Merge Notes 추가 (package.json은 Frontend Phase로 연기)
 
 **완료 기준**: F03 Backend 재구현 완료, disk.ts 1차 수정 완료
 
 ---
 
-#### Phase 4.3: F08 - Persona System (Backend)
+#### Phase 4.3: F08 - Persona System (Backend) 🔄 **90% 진행중**
 
 **예상 시간**: 1.5시간
+**현재 상태**: 🔄 모든 파일 복원 완료, 커밋 대기중 (lint 오류 1개)
 
 ##### 작업 단계
-1. **extension.ts 수정**
+1. **extension.ts 수정** - ⏸️ **보류** (Frontend Phase에서 처리)
    - [ ] `src/extension.ts` 파일 열기
    - [ ] CaretProviderWrapper import 및 초기화
    - [ ] `// CARET MODIFICATION:` 주석 추가
 
 2. **disk.ts 수정 (2차: 페르소나)**
-   - [ ] `src/core/storage/disk.ts` 파일 열기 (F03 이후)
-   - [ ] 페르소나 파일 경로 관련 수정 추가
-   - [ ] `// CARET MODIFICATION:` 주석 추가 (F08 부분)
+   - [x] `src/core/storage/disk.ts` 파일 수정 (F03와 함께 완료)
+   - [x] 페르소나 파일 경로 관련 수정 추가 (persona.md, customInstructions.md, templateCharacters.json)
+   - [x] `// CARET MODIFICATION:` 주석 추가 (F08 부분)
 
-3. **Caret 전용 파일 검증**
-   - [ ] `caret-src/core/webview/CaretProviderWrapper.ts` 존재 확인
-   - [ ] `caret-src/services/persona/*.ts` 존재 확인
+3. **Caret 전용 파일 복원**
+   - [x] `caret-src/core/webview/CaretProviderWrapper.ts` 복원
+   - [x] `caret-src/services/persona/*.ts` 복원 (4개 파일)
+   - [x] `caret-src/managers/CaretGlobalManager.ts` 복원 (F11 의존)
+   - [x] `caret-src/shared/ModeSystem.ts` 복원
+   - [x] 타입 오류 수정 (getClientId, getAllInstances)
+   - [x] Lint 오류 수정 (forEach → for-of)
 
 4. **검증**
-   - [ ] CaretProviderWrapper 초기화 확인
-   - [ ] 페르소나 파일 경로 정상 동작
-   - [ ] 컴파일 성공
+   - [ ] CaretProviderWrapper 초기화 확인 (Frontend Phase)
+   - [x] 페르소나 파일 경로 정상 동작
+   - [x] 컴파일 성공 (TypeScript 0 errors)
+
+5. **Feature 문서 복원 및 업데이트** ⭐ **중요**
+   - [x] `caret-docs/features/f08-persona-system.mdx` 복원
+   - [ ] Modified Files 섹션 업데이트 (Backend 파일 목록)
+   - [ ] Implementation Status 업데이트 (Backend 부분 완료, extension.ts는 Frontend)
+   - [ ] Merge Notes 추가 (Lint 오류 2개 남음)
 
 **완료 기준**: F08 Backend 재구현 완료, disk.ts 최종 완료
 
@@ -619,7 +660,7 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
 
 ---
 
-#### Phase 4.10: F02 - Doubao Provider (Backend) ⚠️
+#### Phase 4.10: F02 - Multilingual (Backend) ⚠️
 
 **예상 시간**: 1-2시간
 
@@ -631,12 +672,12 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
    - [ ] Caret-specific 파일 vs Cline 수정 파일 분류
    - [ ] 침습 범위 최소화 방안 검토
 
-2. **Doubao Provider 재구현**
-   - [ ] `src/core/api/providers/doubao.ts` 수정 여부 확인
-   - [ ] 기타 관련 파일 재구현
+2. **다국어 시스템 재구현**
+   - [ ] 다국어 관련 파일 확인 및 재구현
+   - [ ] 언어 설정 관련 로직 복원
 
 3. **검증**
-   - [ ] Doubao provider 정상 동작
+   - [ ] 다국어 시스템 정상 동작
    - [ ] 컴파일 성공
 
 **완료 기준**: F02 Backend 재구현 완료
@@ -1206,29 +1247,129 @@ git reset --hard backup/main-v0.2.4-20251009
 - ✅ F01-F11 Feature 문서 보강 (100%)
 - ✅ 침습 현황 마스터 문서 생성
 - ✅ 머징 실행 마스터 플랜 생성
+- ✅ Cline v3.32.7 타입 오류 근본 원인 분석
 
 #### 커밋
 - `9b1094e7c` - docs(f01): Add Modified Files section
-- (이전 커밋들)
-
-#### 특이사항
-- F01 문서에서 analysis-of-102 오류 발견
-- 침습 현황 통합 문서 필요성 인식
+- `eba860934` - docs(merging): Add master documents
 
 ---
 
-### Phase 1: 브랜치 설정 및 백업 ⏸️
+### Phase 1: 브랜치 설정 및 백업 ✅
 
-**시작 예정**: TBD
-**담당자**: TBD
+**날짜**: 2025-10-09
+**작업자**: Claude + Luke
 
-*(작업 시작 시 업데이트)*
+#### 완료 작업
+- ✅ 백업 브랜치 생성: `backup/main-v0.2.4-20251009`
+- ✅ 머징 브랜치 생성: `merge/cline-upstream-20251009`
+- ✅ upstream 최신 상태 확인
 
 ---
 
-### Phase 2: Upstream 완전 채택 ⏸️
+### Phase 2: Upstream 완전 채택 ✅
 
-*(Phase 1 완료 후 업데이트)*
+**날짜**: 2025-10-09
+**작업자**: Claude + Luke
+
+#### 완료 작업
+- ✅ Cline upstream hard reset 완료
+- ✅ Caret 전용 디렉토리 복원
+- ✅ 초기 컴파일 오류 파악
+
+#### 커밋
+- `03177da87` - chore(phase2): Adopt Cline upstream v3.32.7 completely
+
+---
+
+### Phase 3: Proto 재구현 ✅
+
+**날짜**: 2025-10-09
+**작업자**: Claude + Luke
+
+#### 완료 작업
+- ✅ Proto 파일 복원 (3개: common.proto, models.proto, account.proto)
+- ✅ Proto 코드 생성 성공
+- ✅ TypeScript 컴파일 오류 수정 (9개 → 0개)
+- ✅ Lint 오류 수정 (12개 → 0개)
+
+#### 커밋
+- `8716ff2b4` - feat(merge): Complete Phase 3 - Proto re-implementation and build fixes
+- `ba3afbc2f` - fix(Phase 3): Fix all TypeScript compilation errors
+- `edad3ac87` - fix(lint): Fix lint errors to achieve 0 errors in Phase 3
+
+#### 해결한 주요 이슈
+- DifyHandler 클래스 속성 누락
+- OpenAI/xAI/Cline provider 타입 assertion
+- forEach lint 오류 12개 (for-of 루프로 변경)
+
+---
+
+### Phase 4.0: 타입 파일 보호 ✅
+
+**날짜**: 2025-10-09
+**작업자**: Claude + Luke
+
+#### 완료 작업
+- ✅ `.gitattributes` 생성 (merge=ours 전략 설정)
+- ✅ 핵심 타입 파일 6개 보호 설정
+- ✅ Git merge driver 설정
+
+#### 커밋
+- `ee6af3cf3` - chore(phase4.0): Protect Caret type solutions from upstream conflicts
+
+---
+
+### Phase 4.1: F09 - FeatureConfig Backend ✅
+
+**날짜**: 2025-10-09
+**작업자**: Claude + Luke
+
+#### 완료 작업
+- ✅ `caret-src/shared/FeatureConfig.ts` 복원
+- ✅ `caret-src/shared/feature-config.json` 복원
+- ✅ `StateManager.ts` 기본 provider 설정 추가
+- ✅ `tsconfig.json` @caret alias 추가
+- ✅ 빌드 성공 (0 errors)
+
+#### 커밋
+- `01b96bd2e` - feat(Phase 4.1): Re-implement F09 FeatureConfig Backend
+
+---
+
+### Phase 4.2-4.3: F03+F08 Backend 🔄 **90% 완료**
+
+**날짜**: 2025-10-09
+**작업자**: Claude + Luke
+**현재 상태**: Lint 오류 1개 남음, 커밋 대기중
+
+#### 완료 작업
+- ✅ `src/core/storage/disk.ts` 수정 (Brand resolution + Persona files)
+- ✅ Caret 전용 파일 복원 (8개):
+  - CaretProviderWrapper.ts
+  - CaretGlobalManager.ts
+  - PersonaInitializer.ts 등 4개
+  - ModeSystem.ts
+  - CaretAccount.ts
+  - CaretAccountService.ts
+- ✅ TypeScript 컴파일 성공 (0 errors)
+
+#### 현재 블로커
+- ❌ Lint 오류 1개: `persona-initializer.ts:332`
+  - Custom plugin 오류: globalState.update 사용
+  - biome-ignore 추가 필요
+
+#### 구조적 변경사항 (로깅됨)
+- Brand resolution system 추가
+- GlobalFileNames 업데이트 (8개 필드)
+- Documents 경로 브랜딩 (Cline → Caret)
+- **문서**: `caret-docs/work-logs/luke/phase-4-backend-changes.md`
+
+---
+
+### Phase 4.4-4.9: 나머지 Backend Features ⏸️
+
+**대기중**: F06, F11, F01, F05, F10 Backend 재구현
 
 ---
 
@@ -1296,4 +1437,4 @@ git reset --hard backup/main-v0.2.4-20251009
 
 **🚀 Let's Merge Cline Upstream Successfully!**
 
-**마지막 업데이트**: 2025-10-09 (Phase 0 완료)
+**마지막 업데이트**: 2025-10-09 23:30 (Phase 4.1 완료, Phase 4.2-4.3 진행중 90%)

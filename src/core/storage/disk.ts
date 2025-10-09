@@ -4,9 +4,34 @@ import { execa } from "@packages/execa"
 import { ClineMessage } from "@shared/ExtensionMessage"
 import { HistoryItem } from "@shared/HistoryItem"
 import { fileExistsAtPath } from "@utils/fs"
+import fsSync from "fs"
 import fs from "fs/promises"
 import os from "os"
 import * as path from "path"
+
+// CARET MODIFICATION: Brand-aware configuration system
+const resolveBrandSlug = () => {
+	try {
+		const packageJsonPath = path.join(process.cwd(), "package.json")
+		if (!fsSync.existsSync(packageJsonPath)) {
+			return "caret"
+		}
+		const packageJson = JSON.parse(fsSync.readFileSync(packageJsonPath, "utf8")) as { name?: string }
+		const rawName = packageJson?.name ?? "caret"
+		const normalized = String(rawName)
+			.toLowerCase()
+			.replace(/[^a-z0-9]/g, "")
+		return normalized || "caret"
+	} catch {
+		return "caret"
+	}
+}
+
+const BRAND_SLUG = resolveBrandSlug()
+const BRAND_RULES_DIR = `.${BRAND_SLUG}rules`
+const BRAND_WORKFLOWS_DIR = `${BRAND_RULES_DIR}/workflows`
+const BRAND_MCP_SETTINGS_FILE = `${BRAND_SLUG}_mcp_settings.json`
+
 import { HostProvider } from "@/hosts/host-provider"
 import { McpMarketplaceCatalog } from "@/shared/mcp"
 import { GlobalState, Settings } from "./state-keys"
@@ -19,13 +44,17 @@ export const GlobalFileNames = {
 	vercelAiGatewayModels: "vercel_ai_gateway_models.json",
 	groqModels: "groq_models.json",
 	basetenModels: "baseten_models.json",
-	mcpSettings: "cline_mcp_settings.json",
+	mcpSettings: BRAND_MCP_SETTINGS_FILE, // CARET MODIFICATION: Brand-aware MCP settings
+	caretRules: BRAND_RULES_DIR, // CARET MODIFICATION: Added .caretrules support for F05 rule priority system
 	clineRules: ".clinerules",
-	workflows: ".clinerules/workflows",
+	workflows: BRAND_WORKFLOWS_DIR, // CARET MODIFICATION: Brand-aware workflows directory
 	cursorRulesDir: ".cursor/rules",
 	cursorRulesFile: ".cursorrules",
 	windsurfRules: ".windsurfrules",
 	taskMetadata: "task_metadata.json",
+	persona: "persona.md", // CARET MODIFICATION: F08 Persona system
+	customInstructions: "custom_instructions.md", // CARET MODIFICATION: F08 Legacy persona migration
+	templateCharacters: "template_characters.json", // CARET MODIFICATION: F08 Persona template data
 	mcpMarketplaceCatalog: "mcp_marketplace_catalog.json",
 }
 
@@ -71,22 +100,22 @@ export async function ensureTaskDirectoryExists(taskId: string): Promise<string>
 
 export async function ensureRulesDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
-	const clineRulesDir = path.join(userDocumentsPath, "Cline", "Rules")
+	const clineRulesDir = path.join(userDocumentsPath, "Caret", "Rules") // CARET MODIFICATION: F03 Branding
 	try {
 		await fs.mkdir(clineRulesDir, { recursive: true })
 	} catch (_error) {
-		return path.join(os.homedir(), "Documents", "Cline", "Rules") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
+		return path.join(os.homedir(), "Documents", "Caret", "Rules") // CARET MODIFICATION: F03 Branding // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
 	}
 	return clineRulesDir
 }
 
 export async function ensureWorkflowsDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
-	const clineWorkflowsDir = path.join(userDocumentsPath, "Cline", "Workflows")
+	const clineWorkflowsDir = path.join(userDocumentsPath, "Caret", "Workflows") // CARET MODIFICATION: F03 Branding
 	try {
 		await fs.mkdir(clineWorkflowsDir, { recursive: true })
 	} catch (_error) {
-		return path.join(os.homedir(), "Documents", "Cline", "Workflows") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
+		return path.join(os.homedir(), "Documents", "Caret", "Workflows") // CARET MODIFICATION: F03 Branding // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
 	}
 	return clineWorkflowsDir
 }

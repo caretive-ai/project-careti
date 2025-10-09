@@ -870,10 +870,11 @@ export class McpHub {
 				toolArguments ? Object.keys(toolArguments) : undefined,
 			)
 
+			// CARET MODIFICATION: Explicit any type to handle Zod-parsed MCP result types
 			return {
 				...result,
 				content: result.content ?? [],
-			}
+			} as any
 		} catch (error) {
 			this.telemetryService.captureMcpToolCall(
 				ulid,

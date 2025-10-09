@@ -166,7 +166,7 @@ const baseContext: SystemPromptContext = {
 	providerInfo: mockProviderInfo,
 }
 
-const makeMockContext = (modelId: string, providerId: string = "test"): SystemPromptContext => ({
+const _makeMockContext = (modelId: string, providerId: string = "test"): SystemPromptContext => ({
 	...baseContext,
 	providerInfo: makeMockProviderInfo(modelId, providerId),
 })

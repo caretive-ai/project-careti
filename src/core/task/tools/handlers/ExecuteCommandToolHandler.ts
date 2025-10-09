@@ -69,7 +69,7 @@ export class ExecuteCommandToolHandler implements IFullyManagedTool {
 				timeoutSeconds = 30
 			} else {
 				const parsedTimeoutParam = parseInt(timeoutParam, 10)
-				timeoutSeconds = isNaN(parsedTimeoutParam) || parsedTimeoutParam <= 0 ? 30 : parsedTimeoutParam
+				timeoutSeconds = Number.isNaN(parsedTimeoutParam) || parsedTimeoutParam <= 0 ? 30 : parsedTimeoutParam
 			}
 		}
 

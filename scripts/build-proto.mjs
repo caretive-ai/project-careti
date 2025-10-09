@@ -37,6 +37,7 @@ const TS_PROTO_OPTIONS = [
 async function main() {
 	await cleanup()
 	await compileProtos()
+	await postProcessGeneratedFiles()
 	await generateProtoBusSetup()
 	await generateHostBridgeClient()
 }
@@ -98,6 +99,46 @@ async function tsProtoc(outDir, protoFiles, protoOptions) {
 	} catch (error) {
 		console.error(chalk.red("Error generating TypeScript for proto files:"), error)
 		process.exit(1)
+	}
+}
+
+// CARET MODIFICATION: Post-process generated files to fix TypeScript issues
+async function postProcessGeneratedFiles() {
+	log_verbose(chalk.cyan("Post-processing generated TypeScript files..."))
+
+	// Find all generated .ts files in the output directories
+	const generatedFiles = await globby("**/*.ts", {
+		cwd: "src",
+		absolute: true,
+		ignore: ["**/node_modules/**"],
+	})
+
+	let fixedCount = 0
+	for (const filePath of generatedFiles) {
+		if (!filePath.includes("/generated/") && !filePath.includes("/shared/proto/")) {
+			continue
+		}
+
+		try {
+			let content = await fs.readFile(filePath, "utf-8")
+			const originalContent = content
+
+			// Fix: String(value) -> globalThis.String(value) in map conversions
+			// This fixes TypeScript errors when String type is imported from proto
+			content = content.replace(/(\s+)acc\[key\] = String\(value\);/g, "$1acc[key] = globalThis.String(value);")
+
+			if (content !== originalContent) {
+				await fs.writeFile(filePath, content, "utf-8")
+				fixedCount++
+				log_verbose(chalk.green(`Fixed String() calls in: ${path.relative(".", filePath)}`))
+			}
+		} catch (error) {
+			console.warn(chalk.yellow(`Warning: Could not process ${filePath}:`), error.message)
+		}
+	}
+
+	if (fixedCount > 0) {
+		console.log(chalk.green(`Post-processing completed: Fixed ${fixedCount} file(s)`))
 	}
 }
 

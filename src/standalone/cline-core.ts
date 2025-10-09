@@ -2,6 +2,7 @@ import { ExternalDiffViewProvider } from "@hosts/external/ExternalDiffviewProvid
 import { ExternalWebviewProvider } from "@hosts/external/ExternalWebviewProvider"
 import { ExternalHostBridgeClientManager } from "@hosts/external/host-bridge-client-manager"
 import { retryOperation } from "@utils/retry"
+import * as os from "os"
 import * as path from "path"
 import { initialize, tearDown } from "@/common"
 import { SqliteLockManager } from "@/core/locks/SqliteLockManager"
@@ -12,7 +13,8 @@ import { DiffViewProvider } from "@/integrations/editor/DiffViewProvider"
 import { HOSTBRIDGE_PORT, waitForHostBridgeReady } from "./hostbridge-client"
 import { PROTOBUS_PORT, startProtobusService } from "./protobus-service"
 import { log } from "./utils"
-import { initializeContext } from "./vscode-context"
+// CARET MODIFICATION: initializeContext removed - extensionContext is pre-initialized in vscode-context.ts
+import { extensionContext } from "./vscode-context"
 
 let globalLockManager: SqliteLockManager | undefined
 
@@ -29,8 +31,10 @@ async function main() {
 		process.exit(0)
 	}
 
-	// Initialize context with optional custom directory from CLI
-	const { extensionContext, DATA_DIR, EXTENSION_DIR } = initializeContext(args.config)
+	// CARET MODIFICATION: Constants are now pre-initialized in vscode-context.ts
+	// extensionContext is already imported at the top
+	const DATA_DIR = process.env.CLINE_DIR ? path.join(process.env.CLINE_DIR, "data") : path.join(os.homedir(), ".cline", "data")
+	const EXTENSION_DIR = extensionContext.extensionPath
 
 	// Configure ports - CLI args override everything
 	if (args.port) {

@@ -2,7 +2,7 @@
 
 /* Make h1 titles lighter in font weight */
 h1 {
-	font-weight: 500 !important;
+	font-weight: 500;
 }
 
 /* Also apply to any h1 elements within content areas */
@@ -10,7 +10,7 @@ h1 {
 .markdown h1,
 article h1,
 main h1 {
-	font-weight: 500 !important;
+	font-weight: 500;
 }
 
 /* JetBrains logo visibility fix for dark mode */

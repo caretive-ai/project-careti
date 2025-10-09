@@ -164,7 +164,7 @@ export async function refreshGroqModels(controller: Controller, _request: EmptyR
 /**
  * Reads cached Groq models from disk
  */
-async function readGroqModels(controller: Controller): Promise<Record<string, Partial<OpenRouterModelInfo>> | undefined> {
+async function readGroqModels(_controller: Controller): Promise<Record<string, Partial<OpenRouterModelInfo>> | undefined> {
 	const groqModelsFilePath = path.join(await ensureCacheDirectoryExists(), GlobalFileNames.groqModels)
 	const fileExists = await fileExistsAtPath(groqModelsFilePath)
 	if (fileExists) {

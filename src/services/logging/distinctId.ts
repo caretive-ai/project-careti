@@ -1,5 +1,6 @@
-import { machineId } from "node-machine-id"
+// CARET MODIFICATION: Removed node-machine-id dependency - use VS Code built-in API instead
 import { v4 as uuidv4 } from "uuid"
+import * as vscode from "vscode"
 import { ExtensionContext } from "vscode"
 
 /*
@@ -35,17 +36,18 @@ export async function initializeDistinctId(context: ExtensionContext, uuid: () =
 }
 
 /*
- * Get machine ID using node-machine-id package
- * This works across all platforms (VS Code, JetBrains, CLI)
+ * CARET MODIFICATION: Get machine ID using VS Code built-in API instead of node-machine-id
+ * This works in VS Code environment and uses the official API
  */
 async function getMachineId(): Promise<string | undefined> {
 	try {
-		// Get the machine ID using node-machine-id package
-		// This provides a deterministic ID across different operating systems
-		const id = await machineId()
+		// CARET MODIFICATION: Use VS Code's built-in machineId instead of node-machine-id package
+		// This provides a deterministic ID that is unique to the machine
+		// biome-ignore plugin: Direct vscode.env access is intentional for standalone compatibility
+		const id = vscode.env.machineId
 		return id
 	} catch (error) {
-		console.log("Failed to get machine ID from node-machine-id", error)
+		console.log("Failed to get machine ID from VS Code API", error)
 		return undefined
 	}
 }

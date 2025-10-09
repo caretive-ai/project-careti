@@ -147,7 +147,7 @@ export class OcaHandler implements ApiHandler {
 
 		// Configuration for extended thinking
 		const budgetTokens = this.options.thinkingBudgetTokens || 0
-		const reasoningOn = budgetTokens !== 0 ? true : false
+		const reasoningOn = budgetTokens !== 0
 		const thinkingConfig = reasoningOn ? { type: "enabled", budget_tokens: budgetTokens } : undefined
 
 		let temperature: number | undefined = this.options.ocaModelInfo?.temperature ?? 0

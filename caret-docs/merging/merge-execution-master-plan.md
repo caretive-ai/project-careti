@@ -24,11 +24,11 @@
 **Phase 1: 브랜치 설정 및 백업** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
 **Phase 2: Upstream 완전 채택** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
 **Phase 3: Proto 재구현** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
-**Phase 4: Backend 재구현** ▓▓▓▓▓░░░░░ 50% 🔄 (F09 ✅, F03 ✅, F08 ✅, F02 ✅)
+**Phase 4: Backend 재구현** ▓▓▓▓▓▓░░░░ 60% 🔄 (F09 ✅, F03 ✅, F08 ✅, F02 ✅, F06 ✅)
 **Phase 5: Frontend 재구현** ░░░░░░░░░░ 0%
 **Phase 6: 최종 검증 및 배포** ░░░░░░░░░░ 0%
 
-**총 진행률**: ▓▓▓▓▓░░░░░ 47% (Phase 0-3 완료, Phase 4 50%)
+**총 진행률**: ▓▓▓▓▓░░░░░ 50% (Phase 0-3 완료, Phase 4 60%)
 
 ---
 
@@ -564,9 +564,10 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
 
 ---
 
-#### Phase 4.5: F06 - JSON System Prompt (Backend)
+#### Phase 4.5: F06 - JSON System Prompt (Backend) ✅ **완료**
 
-**예상 시간**: 1.5-2시간
+**예상 시간**: 1.5-2시간 → **실제**: 1.5시간
+**완료일**: 2025-10-10
 
 ##### 작업 단계
 1. **system-prompt/index.ts 수정**
@@ -577,22 +578,28 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
 2. **Caret 전용 파일 복원**
    - [x] `caret-src/core/prompts/CaretPromptWrapper.ts` 복원
    - [x] `caret-src/core/modes/CaretModeManager.ts` 복원
-   - [x] `caret-src/core/prompts/system/*.ts` 복원
-   - [x] `caret-src/core/prompts/sections/*.json` 복원
+   - [x] `caret-src/core/prompts/system/*.ts` 복원 (5 files)
+   - [x] `caret-src/core/prompts/sections/*.json` 복원 (15 files)
+   - [x] `caret-src/core/prompts/system/adapters/*.ts` 복원 (2 files)
+   - [x] `caret-src/shared/constants/PromptSystemConstants.ts` 복원
 
 3. **검증**
-   - [ ] Caret 모드 분기 정상 동작
-   - [ ] Cline 모드 영향 없음 확인
-   - [ ] 컴파일 성공
+   - [x] Caret 모드 분기 정상 동작 (최소 침습)
+   - [x] Cline 모드 영향 없음 확인 (Cline 완전 보존)
+   - [x] 컴파일 성공 (TypeScript: 0 errors, Lint: 0 errors)
 
 4. **Feature 문서 복원 및 업데이트**
    - [x] `caret-docs/features/f06-json-system-prompt.mdx` 복원
-   - [ ] Modified Files 확인
-   - [ ] Implementation Status 업데이트
+   - [x] Modified Files 확인 (24 files total)
+   - [x] Implementation Status 업데이트
 
-**완료 기준**: F06 Backend 재구현 완료, system-prompt 분기 정상
+**완료 기준**: ✅ F06 Backend 재구현 완료, system-prompt 분기 정상
 
 **🔗 F07 참고**: F07(Chatbot/Agent)은 F06과 구현 공유, 별도 작업 없음
+
+**변경 파일**:
+- `src/core/prompts/system-prompt/index.ts` (Caret mode branching)
+- `caret-src/` 디렉토리 (24 files: CaretPromptWrapper, CaretModeManager, JSON sections, adapters, constants)
 
 ---
 
@@ -1480,4 +1487,4 @@ git reset --hard backup/main-v0.2.4-20251009
 
 **🚀 Let's Merge Cline Upstream Successfully!**
 
-**마지막 업데이트**: 2025-10-10 (Phase 4.0-4.4 완료: F09, F03, F08, F02 Backend ✅)
+**마지막 업데이트**: 2025-10-10 (Phase 4.0-4.5 완료: F09, F03, F08, F02, F06 Backend ✅)

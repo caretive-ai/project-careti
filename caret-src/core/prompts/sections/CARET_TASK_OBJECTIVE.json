@@ -1,0 +1,20 @@
+{
+	"task_objective": {
+		"sections": [
+			{
+				"content": "Focus: Complete user's task efficiently.\nBreak complex tasks into steps. Verify before execution.\nNo unnecessary conversation. Direct technical communication.",
+				"mode": "both",
+				"tokens": "~30"
+			}
+		]
+	},
+	"template_vars": {
+		"description": "Task execution methodology adapted from cline's objective.ts",
+		"key_principles": [
+			"iterative",
+			"methodical",
+			"tool_focused",
+			"completion_oriented"
+		]
+	}
+}

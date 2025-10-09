@@ -35,6 +35,23 @@ export function getModelFamily(providerInfo: ApiProviderInfo): ModelFamily {
  * Get the system prompt by id
  */
 export async function getSystemPrompt(context: SystemPromptContext): Promise<string> {
+	// CARET MODIFICATION: F06 - JSON System Prompt (Hybrid Mode)
+	// Check if Caret mode is active and use CaretPromptWrapper
+	try {
+		const { CaretGlobalManager } = await import("@caret/managers/CaretGlobalManager")
+		const currentMode = CaretGlobalManager.currentMode
+
+		if (currentMode === "caret") {
+			// Use Caret's JSON-based hybrid prompt system
+			const { CaretPromptWrapper } = await import("@caret/core/prompts/CaretPromptWrapper")
+			return await CaretPromptWrapper.getCaretSystemPrompt(context)
+		}
+	} catch (error) {
+		// Fallback to Cline if Caret modules are not available
+		console.debug("[System Prompt] Caret mode check failed, using Cline default:", error)
+	}
+
+	// Default: Use Cline's original prompt system
 	const registry = PromptRegistry.getInstance()
 	return await registry.get(context)
 }

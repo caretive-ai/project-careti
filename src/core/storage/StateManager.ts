@@ -1,3 +1,4 @@
+import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
 import { ApiConfiguration } from "@shared/api"
 import chokidar, { FSWatcher } from "chokidar"
 import type { ExtensionContext } from "vscode"
@@ -82,6 +83,19 @@ export class StateManager {
 			// Populate the cache with all extension state and secrets fields
 			// Use populate method to avoid triggering persistence during initialization
 			StateManager.instance.populateCache(globalState, secrets, workspaceState)
+
+			// CARET MODIFICATION: Set default provider on first launch
+			if (
+				!StateManager.instance.globalStateCache.planModeApiProvider &&
+				!StateManager.instance.globalStateCache.actModeApiProvider
+			) {
+				const featureConfig = getCurrentFeatureConfig()
+				StateManager.instance.globalStateCache.planModeApiProvider = featureConfig.defaultProvider as any
+				StateManager.instance.globalStateCache.actModeApiProvider = featureConfig.defaultProvider as any
+				StateManager.instance.pendingGlobalState.add("planModeApiProvider")
+				StateManager.instance.pendingGlobalState.add("actModeApiProvider")
+				StateManager.instance.scheduleDebouncedPersistence()
+			}
 
 			// Start watcher for taskHistory.json so external edits update cache (no persist loop)
 			await StateManager.instance.setupTaskHistoryWatcher()

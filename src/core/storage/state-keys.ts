@@ -218,5 +218,7 @@ export interface LocalState {
 	localClineRulesToggles: ClineRulesToggles
 	localCursorRulesToggles: ClineRulesToggles
 	localWindsurfRulesToggles: ClineRulesToggles
+	// CARET MODIFICATION: F05 - Rule Priority System
+	localCaretRulesToggles: ClineRulesToggles
 	workflowToggles: ClineRulesToggles
 }

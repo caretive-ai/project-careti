@@ -139,11 +139,15 @@ export async function readWorkspaceStateFromDisk(context: ExtensionContext): Pro
 	const localWindsurfRulesToggles = context.workspaceState.get("localWindsurfRulesToggles") as ClineRulesToggles | undefined
 	const localCursorRulesToggles = context.workspaceState.get("localCursorRulesToggles") as ClineRulesToggles | undefined
 	const localWorkflowToggles = context.workspaceState.get("workflowToggles") as ClineRulesToggles | undefined
+	// CARET MODIFICATION: F05 - Rule Priority System
+	const localCaretRulesToggles = context.workspaceState.get("localCaretRulesToggles") as ClineRulesToggles | undefined
 
 	return {
 		localClineRulesToggles: localClineRulesToggles || {},
 		localWindsurfRulesToggles: localWindsurfRulesToggles || {},
 		localCursorRulesToggles: localCursorRulesToggles || {},
+		// CARET MODIFICATION: F05 - Rule Priority System
+		localCaretRulesToggles: localCaretRulesToggles || {},
 		workflowToggles: localWorkflowToggles || {},
 	}
 }

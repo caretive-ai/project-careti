@@ -24,11 +24,11 @@
 **Phase 1: 브랜치 설정 및 백업** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
 **Phase 2: Upstream 완전 채택** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
 **Phase 3: Proto 재구현** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
-**Phase 4: Backend 재구현** ▓▓▓▓▓▓▓▓░░ 80% 🔄 (F09 ✅, F03 ✅, F08 ✅, F02 ✅, F06 ✅, F11 ✅, F01 ✅)
+**Phase 4: Backend 재구현** ▓▓▓▓▓▓▓▓▓░ 90% 🔄 (F09 ✅, F03 ✅, F08 ✅, F02 ✅, F06 ✅, F11 ✅, F01 ✅, F05 ✅)
 **Phase 5: Frontend 재구현** ░░░░░░░░░░ 0%
 **Phase 6: 최종 검증 및 배포** ░░░░░░░░░░ 0%
 
-**총 진행률**: ▓▓▓▓▓▓░░░░ 56% (Phase 0-3 완료, Phase 4 80%)
+**총 진행률**: ▓▓▓▓▓▓░░░░ 59% (Phase 0-3 완료, Phase 4 90%)
 
 ---
 
@@ -682,20 +682,38 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
 
 ---
 
-#### Phase 4.8: F05 - Rule Priority System (Backend)
+#### Phase 4.8: F05 - Rule Priority System (Backend) ✅ **완료**
 
-**예상 시간**: 2-3시간
-
-**⚠️ 검증 필요**: F05 문서에서 정확한 침습 파일 목록 재확인 필요
+**예상 시간**: 2-3시간 → **실제**: 1시간
+**완료일**: 2025-10-10
 
 ##### 작업 단계
-1. **F05 문서 재검토**
-   - [ ] Modified Files 섹션 확인
-   - [ ] 실제 수정 파일 목록 파악
+1. **external-rules.ts 복원**
+   - [x] caret-main에서 external-rules.ts 복원
+   - [x] Rule priority 로직 재구현 (.caretrules > .clinerules > .cursorrules > .windsurfrules)
+   - [x] refreshExternalRulesToggles 함수 업데이트
+   - [x] getLocalCaretRules 함수 추가
 
-2. **(작업 내용 미정 - F05 검증 후 업데이트)**
+2. **State 타입 업데이트**
+   - [x] LocalState에 localCaretRulesToggles 추가 (state-keys.ts)
+   - [x] readWorkspaceStateFromDisk에 localCaretRulesToggles 추가 (state-helpers.ts)
 
-**완료 기준**: F05 Backend 재구현 완료
+3. **Response 포맷 추가**
+   - [x] caretRulesLocalDirectoryInstructions 메서드 추가 (responses.ts)
+   - [x] caretRulesLocalFileInstructions 메서드 추가
+
+4. **검증**
+   - [x] 컴파일 성공 (TypeScript: 0 errors, Lint: 0 errors)
+
+**완료 기준**: ✅ F05 Backend 재구현 완료
+
+**변경 파일**:
+- `src/core/context/instructions/user-instructions/external-rules.ts` (복원, 161 lines)
+- `src/core/storage/state-keys.ts` (+1 line: localCaretRulesToggles)
+- `src/core/prompts/responses.ts` (+6 lines: caretRules formatting)
+- `src/core/storage/utils/state-helpers.ts` (+3 lines: localCaretRulesToggles handling)
+
+**Note**: disk.ts의 caretRules는 Phase 4.2 (F03)에서 이미 추가됨
 
 ---
 
@@ -1505,4 +1523,4 @@ git reset --hard backup/main-v0.2.4-20251009
 
 **🚀 Let's Merge Cline Upstream Successfully!**
 
-**마지막 업데이트**: 2025-10-10 (Phase 4.0-4.7 완료: F09, F03, F08, F02, F06, F11, F01 Backend ✅)
+**마지막 업데이트**: 2025-10-10 (Phase 4.0-4.8 완료: F09, F03, F08, F02, F06, F11, F01, F05 Backend ✅)

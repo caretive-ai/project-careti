@@ -155,14 +155,12 @@ export class ClineHandler implements ApiHandler {
 				if ("reasoning" in delta && delta.reasoning && !shouldSkipReasoningForModel(this.options.openRouterModelId)) {
 					yield {
 						type: "reasoning",
-						// @ts-expect-error-next-line
-						reasoning: delta.reasoning,
+						reasoning: delta.reasoning as string,
 					}
 				}
 
 				if (!didOutputUsage && chunk.usage) {
-					// @ts-expect-error-next-line
-					let totalCost = (chunk.usage.cost || 0) + (chunk.usage.cost_details?.upstream_inference_cost || 0)
+					let totalCost = ((chunk.usage as any).cost || 0) + ((chunk.usage as any).cost_details?.upstream_inference_cost || 0)
 
 					if (this.getModel().id === "cline/code-supernova-1-million") {
 						totalCost = 0
@@ -178,7 +176,6 @@ export class ClineHandler implements ApiHandler {
 						cacheReadTokens: chunk.usage.prompt_tokens_details?.cached_tokens || 0,
 						inputTokens: (chunk.usage.prompt_tokens || 0) - (chunk.usage.prompt_tokens_details?.cached_tokens || 0),
 						outputTokens: chunk.usage.completion_tokens || 0,
-						// @ts-expect-error-next-line
 						totalCost: totalCost,
 					}
 					didOutputUsage = true

@@ -1,4 +1,7 @@
-demo.gif filter=lfs diff=lfs merge=lfs -text
-assets/docs/demo.gif filter=lfs diff=lfs merge=lfs -text
-
-* text=auto eol=lf
+# Caret 타입 솔루션 파일 - 충돌 시 Caret 버전 우선
+src/types/vscode-extensions.d.ts merge=ours
+src/core/api/providers/vscode-lm.ts merge=ours
+src/integrations/terminal/TerminalManager.ts merge=ours
+src/services/posthog/PostHogClientProvider.ts merge=ours
+src/standalone/vscode-context.ts merge=ours
+src/services/mcp/McpHub.ts merge=ours

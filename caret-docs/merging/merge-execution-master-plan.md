@@ -24,11 +24,11 @@
 **Phase 1: 브랜치 설정 및 백업** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
 **Phase 2: Upstream 완전 채택** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
 **Phase 3: Proto 재구현** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
-**Phase 4: Backend 재구현** ▓▓▓░░░░░░░ 30% 🔄 (F09 ✅, F03+F08 90%)
+**Phase 4: Backend 재구현** ▓▓▓▓▓░░░░░ 50% 🔄 (F09 ✅, F03 ✅, F08 ✅, F02 ✅)
 **Phase 5: Frontend 재구현** ░░░░░░░░░░ 0%
 **Phase 6: 최종 검증 및 배포** ░░░░░░░░░░ 0%
 
-**총 진행률**: ▓▓▓▓░░░░░░ 42% (Phase 0-3 완료, Phase 4 진행중)
+**총 진행률**: ▓▓▓▓▓░░░░░ 47% (Phase 0-3 완료, Phase 4 50%)
 
 ---
 
@@ -291,12 +291,12 @@ ls -la src/generated/caret/
 
 ---
 
-### Phase 4: Backend 재구현 (Feature별 순차) 🔄 **30% 진행중**
+### Phase 4: Backend 재구현 (Feature별 순차) 🔄 **40% 진행중**
 
 **목표**: F01-F11 Backend 부분 순차 재구현 + Cline v3.32.7 타입 오류 해결
 
 **예상 시간**: 11-15시간 (타입 충돌 해결 3시간 포함)
-**현재 상태**: 🔄 진행중 (F09 ✅, F03+F08 90%)
+**현재 상태**: 🔄 진행중 (F09 ✅, F03 ✅, F08 ✅)
 
 **⚠️ 중요**: Cline v3.32.7은 9개의 TypeScript 타입 오류로 빌드 실패합니다.
 Caret은 이미 모든 오류를 해결했으므로, 머징 시 Caret의 솔루션을 보호해야 합니다.
@@ -320,13 +320,13 @@ Phase 4.0: 타입 확장 파일 보호 (신규 추가) ⭐ 최우선
 Phase 4.1: F09 (FeatureConfig) - 다른 Feature 의존
 Phase 4.2: F03 (Branding) - disk.ts 포함
 Phase 4.3: F08 (Persona) - disk.ts 공유, F03 이후
-Phase 4.4: F06 (JSON Prompt) - system-prompt 분기
-Phase 4.5: F11 (Input History) - controller/index.ts
-Phase 4.6: F01 (Common Util) - 최소 침습
-Phase 4.7: F04 (Caret Account) - 독립, 낮은 위험
-Phase 4.8: F05 (Rule Priority) - (검증 필요)
-Phase 4.9: F10 (Provider Setup) - API transform (마지막)
-Phase 4.10: F02 (Multilingual) - (검증 필요)
+Phase 4.4: F02 (Multilingual) - **순서 변경** ⭐ UI 기능들의 기반 (F08 Persona 의존)
+Phase 4.5: F06 (JSON Prompt) - system-prompt 분기
+Phase 4.6: F11 (Input History) - controller/index.ts
+Phase 4.7: F01 (Common Util) - 최소 침습
+Phase 4.8: F04 (Caret Account) - 독립, 낮은 위험
+Phase 4.9: F05 (Rule Priority) - (검증 필요)
+Phase 4.10: F10 (Provider Setup) - API transform (마지막)
 Phase 4.11: (미사용 - 예약)
 Phase 4.12: 타입 충돌 최종 해결 (신규 추가) ⭐ 필수 검증
 ```
@@ -451,10 +451,11 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
 
 ---
 
-#### Phase 4.2: F03 - Branding UI (Backend) 🔄 **90% 진행중**
+#### Phase 4.2: F03 - Branding UI (Backend) ✅ **완료**
 
 **예상 시간**: 2-3시간
-**현재 상태**: 🔄 disk.ts 수정 완료, 커밋 대기중 (lint 오류 1개)
+**완료 날짜**: 2025-10-10
+**커밋**: `d90c6af31`
 
 ##### 작업 단계
 1. **disk.ts 수정 (1차: 브랜딩)**
@@ -486,10 +487,11 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
 
 ---
 
-#### Phase 4.3: F08 - Persona System (Backend) 🔄 **90% 진행중**
+#### Phase 4.3: F08 - Persona System (Backend) ✅ **완료**
 
 **예상 시간**: 1.5시간
-**현재 상태**: 🔄 모든 파일 복원 완료, 커밋 대기중 (lint 오류 1개)
+**완료 날짜**: 2025-10-10
+**커밋**: `d90c6af31` (F03와 함께)
 
 ##### 작업 단계
 1. **extension.ts 수정** - ⏸️ **보류** (Frontend Phase에서 처리)
@@ -527,25 +529,66 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
 
 ---
 
-#### Phase 4.4: F06 - JSON System Prompt (Backend)
+#### Phase 4.4: F02 - Multilingual i18n (Backend) ⭐ **순서 변경** ✅ **완료**
+
+**예상 시간**: 30분 → **실제**: 25분
+**중요도**: 🔴 **높음** - F08 Persona 등 UI 기능들의 기반
+**완료일**: 2025-10-10
+
+##### 작업 단계
+1. **Languages.ts 수정**
+   - [x] `src/shared/Languages.ts` 파일 열기
+   - [x] UILanguageKey 타입 추가 (ko, en, ja, zh-CN)
+   - [x] LLM_TO_UI_LANGUAGE_MAP 매핑 객체 추가
+   - [x] DIRECT_UI_SUPPORTED_LANGUAGES 배열 추가
+   - [x] isUILanguageSupported() 유틸리티 함수 추가
+   - [x] getUILanguageKey() 유틸리티 함수 추가 (보너스)
+   - [x] `// CARET MODIFICATION:` 주석 추가
+
+2. **검증**
+   - [x] 언어 매핑 함수 정상 동작
+   - [x] 컴파일 성공 (TypeScript: 0 errors, Lint: 0 errors)
+
+3. **Feature 문서 복원 및 업데이트**
+   - [x] `caret-docs/features/f02-multilingual-i18n.mdx` 복원
+   - [x] Modified Files 확인 (Languages.ts만 Backend)
+   - [x] Implementation Status 업데이트
+
+**완료 기준**: ✅ F02 Backend 재구현 완료, 언어 유틸리티 정상 동작
+
+**⚠️ 주의**: Frontend 파일 3개 (i18n.ts, Context, Hook)는 Phase 5에서 처리
+
+**변경 파일**:
+- `src/shared/Languages.ts` (+59 lines)
+- `caret-src/core/prompts/system/adapters/CaretJsonAdapter.ts` (lint fix: -2 unused imports)
+
+---
+
+#### Phase 4.5: F06 - JSON System Prompt (Backend)
 
 **예상 시간**: 1.5-2시간
 
 ##### 작업 단계
 1. **system-prompt/index.ts 수정**
-   - [ ] `src/core/prompts/system-prompt/index.ts` 파일 열기
-   - [ ] Caret 모드 분기 로직 추가 (진입점만)
-   - [ ] `// CARET MODIFICATION:` 주석 추가
-   - [ ] 최소 침습: 41 lines 이내 수정
+   - [x] `src/core/prompts/system-prompt/index.ts` 파일 열기 (F06 파일 복원 완료)
+   - [x] Caret 모드 분기 로직 추가 (진입점만)
+   - [x] `// CARET MODIFICATION:` 주석 추가
 
-2. **Caret 전용 파일 검증**
-   - [ ] `caret-src/core/prompts/CaretPromptWrapper.ts` 존재 확인
-   - [ ] `caret-src/services/prompt/CaretModeManager.ts` 존재 확인
+2. **Caret 전용 파일 복원**
+   - [x] `caret-src/core/prompts/CaretPromptWrapper.ts` 복원
+   - [x] `caret-src/core/modes/CaretModeManager.ts` 복원
+   - [x] `caret-src/core/prompts/system/*.ts` 복원
+   - [x] `caret-src/core/prompts/sections/*.json` 복원
 
 3. **검증**
    - [ ] Caret 모드 분기 정상 동작
    - [ ] Cline 모드 영향 없음 확인
    - [ ] 컴파일 성공
+
+4. **Feature 문서 복원 및 업데이트**
+   - [x] `caret-docs/features/f06-json-system-prompt.mdx` 복원
+   - [ ] Modified Files 확인
+   - [ ] Implementation Status 업데이트
 
 **완료 기준**: F06 Backend 재구현 완료, system-prompt 분기 정상
 
@@ -553,7 +596,7 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
 
 ---
 
-#### Phase 4.5: F11 - Input History System (Backend)
+#### Phase 4.6: F11 - Input History System (Backend)
 
 **예상 시간**: 1시간
 
@@ -1437,4 +1480,4 @@ git reset --hard backup/main-v0.2.4-20251009
 
 **🚀 Let's Merge Cline Upstream Successfully!**
 
-**마지막 업데이트**: 2025-10-09 23:30 (Phase 4.1 완료, Phase 4.2-4.3 진행중 90%)
+**마지막 업데이트**: 2025-10-10 (Phase 4.0-4.4 완료: F09, F03, F08, F02 Backend ✅)

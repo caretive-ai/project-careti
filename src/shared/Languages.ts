@@ -71,3 +71,62 @@ export function getLanguageKey(display: LanguageDisplay | undefined): LanguageKe
 	}
 	return DEFAULT_LANGUAGE_SETTINGS
 }
+
+// ============================================================================
+// CARET MODIFICATION: F02 - Multilingual i18n System
+// ============================================================================
+
+/**
+ * UI Language Key - Directly supported UI languages in Caret
+ * These are the languages that have full UI translation support
+ */
+export type UILanguageKey = "ko" | "en" | "ja" | "zh-CN"
+
+/**
+ * Mapping from LLM LanguageKey to UI Language Key
+ * Maps the broader LLM language set to the supported UI languages
+ */
+export const LLM_TO_UI_LANGUAGE_MAP: Record<LanguageKey, UILanguageKey> = {
+	en: "en",
+	ar: "en", // Arabic -> English fallback
+	"pt-BR": "en", // Portuguese (Brazil) -> English fallback
+	cs: "en", // Czech -> English fallback
+	fr: "en", // French -> English fallback
+	de: "en", // German -> English fallback
+	hi: "en", // Hindi -> English fallback
+	hu: "en", // Hungarian -> English fallback
+	it: "en", // Italian -> English fallback
+	ja: "ja", // Japanese -> Japanese (direct support)
+	ko: "ko", // Korean -> Korean (direct support)
+	pl: "en", // Polish -> English fallback
+	"pt-PT": "en", // Portuguese (Portugal) -> English fallback
+	ru: "en", // Russian -> English fallback
+	"zh-CN": "zh-CN", // Simplified Chinese -> Simplified Chinese (direct support)
+	es: "en", // Spanish -> English fallback
+	"zh-TW": "zh-CN", // Traditional Chinese -> Simplified Chinese fallback
+	tr: "en", // Turkish -> English fallback
+}
+
+/**
+ * Array of directly supported UI languages
+ * These languages have complete UI translation files
+ */
+export const DIRECT_UI_SUPPORTED_LANGUAGES: UILanguageKey[] = ["ko", "en", "ja", "zh-CN"]
+
+/**
+ * Check if a language key is directly supported by the UI
+ * @param languageKey - The language key to check
+ * @returns true if the language is directly supported, false otherwise
+ */
+export function isUILanguageSupported(languageKey: LanguageKey): boolean {
+	return DIRECT_UI_SUPPORTED_LANGUAGES.includes(LLM_TO_UI_LANGUAGE_MAP[languageKey])
+}
+
+/**
+ * Get the UI language key from an LLM language key
+ * @param languageKey - The LLM language key
+ * @returns The corresponding UI language key (with fallback)
+ */
+export function getUILanguageKey(languageKey: LanguageKey): UILanguageKey {
+	return LLM_TO_UI_LANGUAGE_MAP[languageKey]
+}

@@ -24,11 +24,11 @@
 **Phase 1: 브랜치 설정 및 백업** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
 **Phase 2: Upstream 완전 채택** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
 **Phase 3: Proto 재구현** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
-**Phase 4: Backend 재구현** ▓▓▓▓▓▓▓░░░ 70% 🔄 (F09 ✅, F03 ✅, F08 ✅, F02 ✅, F06 ✅, F11 ✅)
+**Phase 4: Backend 재구현** ▓▓▓▓▓▓▓▓░░ 80% 🔄 (F09 ✅, F03 ✅, F08 ✅, F02 ✅, F06 ✅, F11 ✅, F01 ✅)
 **Phase 5: Frontend 재구현** ░░░░░░░░░░ 0%
 **Phase 6: 최종 검증 및 배포** ░░░░░░░░░░ 0%
 
-**총 진행률**: ▓▓▓▓▓░░░░░ 53% (Phase 0-3 완료, Phase 4 70%)
+**총 진행률**: ▓▓▓▓▓▓░░░░ 56% (Phase 0-3 완료, Phase 4 80%)
 
 ---
 
@@ -636,25 +636,32 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
 
 ---
 
-#### Phase 4.6: F01 - Common Util (Backend)
+#### Phase 4.7: F01 - Common Util (Backend) ✅ **완료**
 
-**예상 시간**: 30분
+**예상 시간**: 30분 → **실제**: 10분
+**완료일**: 2025-10-10
 
 ##### 작업 단계
 1. **extract-text.ts 원본 복원**
    ```bash
    git checkout upstream/main -- src/integrations/misc/extract-text.ts
    ```
-   - [ ] lint 수정 제거 (최소 침습 원칙)
+   - [x] lint 수정 제거 (최소 침습 원칙)
+   - [x] `@ts-expect-error-next-line` → `@ts-ignore-next-line` 복원
 
 2. **detect-omission.ts 확인**
-   - [ ] GitHub URL 변경은 F03 브랜딩 포함됨
-   - [ ] 별도 작업 불필요
+   - [x] GitHub URL 변경은 F03 브랜딩 포함됨
+   - [x] 별도 작업 불필요 (Cline troubleshooting URL 유지)
 
 3. **검증**
-   - [ ] 컴파일 성공
+   - [x] 컴파일 성공 (TypeScript: 0 errors, Lint: 0 errors)
 
-**완료 기준**: F01 Backend 재구현 완료 (최소 작업)
+**완료 기준**: ✅ F01 Backend 재구현 완료 (최소 작업)
+
+**변경 파일**:
+- `src/integrations/misc/extract-text.ts` (restored from upstream/main)
+
+**Note**: F01 Common Util의 핵심인 CaretGlobalManager는 Phase 4.3에서 이미 구현 완료
 
 ---
 
@@ -1498,4 +1505,4 @@ git reset --hard backup/main-v0.2.4-20251009
 
 **🚀 Let's Merge Cline Upstream Successfully!**
 
-**마지막 업데이트**: 2025-10-10 (Phase 4.0-4.6 완료: F09, F03, F08, F02, F06, F11 Backend ✅)
+**마지막 업데이트**: 2025-10-10 (Phase 4.0-4.7 완료: F09, F03, F08, F02, F06, F11, F01 Backend ✅)

@@ -1,4 +1,6 @@
 import { Anthropic } from "@anthropic-ai/sdk"
+// CARET MODIFICATION: F11 - Input History System
+import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
 import { buildApiHandler } from "@core/api"
 import { detectWorkspaceRoots } from "@core/workspace/detection"
 import { setupWorkspaceManager } from "@core/workspace/setup"
@@ -740,6 +742,10 @@ export class Controller {
 		const workflowToggles = this.stateManager.getWorkspaceStateKey("workflowToggles")
 		const autoCondenseThreshold = this.stateManager.getGlobalSettingsKey("autoCondenseThreshold")
 
+		// CARET MODIFICATION: F11 - Input History System
+		// Retrieve input history from CaretGlobalManager
+		const inputHistory = await CaretGlobalManager.getInputHistory()
+
 		const currentTaskItem = this.task?.taskId ? (taskHistory || []).find((item) => item.id === this.task?.taskId) : undefined
 		const clineMessages = this.task?.messageStateHandler.getClineMessages() || []
 		const checkpointManagerErrorMessage = this.task?.taskState.checkpointManagerErrorMessage
@@ -814,6 +820,8 @@ export class Controller {
 			},
 			lastDismissedInfoBannerVersion,
 			lastDismissedModelBannerVersion,
+			// CARET MODIFICATION: F11 - Input History System
+			inputHistory,
 		}
 	}
 

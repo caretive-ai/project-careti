@@ -24,11 +24,11 @@
 **Phase 1: 브랜치 설정 및 백업** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
 **Phase 2: Upstream 완전 채택** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
 **Phase 3: Proto 재구현** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
-**Phase 4: Backend 재구현** ▓▓▓▓▓▓░░░░ 60% 🔄 (F09 ✅, F03 ✅, F08 ✅, F02 ✅, F06 ✅)
+**Phase 4: Backend 재구현** ▓▓▓▓▓▓▓░░░ 70% 🔄 (F09 ✅, F03 ✅, F08 ✅, F02 ✅, F06 ✅, F11 ✅)
 **Phase 5: Frontend 재구현** ░░░░░░░░░░ 0%
 **Phase 6: 최종 검증 및 배포** ░░░░░░░░░░ 0%
 
-**총 진행률**: ▓▓▓▓▓░░░░░ 50% (Phase 0-3 완료, Phase 4 60%)
+**총 진행률**: ▓▓▓▓▓░░░░░ 53% (Phase 0-3 완료, Phase 4 70%)
 
 ---
 
@@ -603,25 +603,36 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
 
 ---
 
-#### Phase 4.6: F11 - Input History System (Backend)
+#### Phase 4.6: F11 - Input History System (Backend) ✅ **완료**
 
-**예상 시간**: 1시간
+**예상 시간**: 1시간 → **실제**: 30분
+**완료일**: 2025-10-10
 
 ##### 작업 단계
 1. **controller/index.ts 수정**
-   - [ ] `src/core/controller/index.ts` 파일 열기
-   - [ ] `getStateToPostToWebview` 함수에 inputHistory 추가
-   - [ ] `// CARET MODIFICATION:` 주석 추가
+   - [x] `src/core/controller/index.ts` 파일 열기
+   - [x] `getStateToPostToWebview` 함수에 inputHistory 추가
+   - [x] CaretGlobalManager import 추가
+   - [x] `// CARET MODIFICATION:` 주석 추가
 
-2. **CaretGlobalManager 검증**
-   - [ ] `caret-src/managers/CaretGlobalManager.ts` 존재 확인
-   - [ ] inputHistory 관리 메서드 확인
+2. **ExtensionMessage.ts 수정**
+   - [x] `src/shared/ExtensionMessage.ts`에 inputHistory 타입 추가
+   - [x] ExtensionState interface에 `inputHistory?: string[]` 추가
 
-3. **검증**
-   - [ ] inputHistory 상태 전달 확인
-   - [ ] 컴파일 성공
+3. **CaretGlobalManager 검증**
+   - [x] `caret-src/managers/CaretGlobalManager.ts` 존재 확인 (Phase 4.3에서 완료)
+   - [x] inputHistory 관리 메서드 확인 (getInputHistory, setInputHistory, setInputHistoryCache)
 
-**완료 기준**: F11 Backend 재구현 완료, controller 정상
+4. **검증**
+   - [x] inputHistory 상태 전달 확인
+   - [x] 컴파일 성공 (TypeScript: 0 errors, Lint: 0 errors)
+
+**완료 기준**: ✅ F11 Backend 재구현 완료, controller 정상
+
+**변경 파일**:
+- `src/core/controller/index.ts` (+5 lines: import, retrieve, return)
+- `src/shared/ExtensionMessage.ts` (+2 lines: inputHistory type)
+- `caret-src/managers/CaretGlobalManager.ts` (already completed in Phase 4.3)
 
 ---
 
@@ -1487,4 +1498,4 @@ git reset --hard backup/main-v0.2.4-20251009
 
 **🚀 Let's Merge Cline Upstream Successfully!**
 
-**마지막 업데이트**: 2025-10-10 (Phase 4.0-4.5 완료: F09, F03, F08, F02, F06 Backend ✅)
+**마지막 업데이트**: 2025-10-10 (Phase 4.0-4.6 완료: F09, F03, F08, F02, F06, F11 Backend ✅)

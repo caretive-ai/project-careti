@@ -82,6 +82,8 @@ export interface ExtensionState {
 	multiRootSetting: ClineFeatureSetting
 	lastDismissedInfoBannerVersion: number
 	lastDismissedModelBannerVersion: number
+	// CARET MODIFICATION: F11 - Input History System
+	inputHistory?: string[]
 }
 
 export interface ClineMessage {

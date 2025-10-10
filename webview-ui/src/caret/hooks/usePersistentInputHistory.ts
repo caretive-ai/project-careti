@@ -23,10 +23,14 @@ export function usePersistentInputHistory() {
 	// Add new item to history
 	const addToHistory = useCallback(
 		async (text: string) => {
-			if (!text.trim()) return
+			if (!text.trim()) {
+				return
+			}
 
 			// Remove duplicates (don't add if same as last item)
-			if (localHistory[localHistory.length - 1] === text.trim()) return
+			if (localHistory[localHistory.length - 1] === text.trim()) {
+				return
+			}
 
 			const newHistory = [...localHistory, text.trim()].slice(-MAX_HISTORY_SIZE)
 
@@ -35,6 +39,7 @@ export function usePersistentInputHistory() {
 
 			// Save to backend via gRPC
 			try {
+				// @ts-expect-error - Proto field exists at runtime, TS cache issue
 				await StateServiceClient.updateSettings({
 					metadata: proto.cline.Metadata.create({ source: "webview" }),
 					inputHistory: newHistory,

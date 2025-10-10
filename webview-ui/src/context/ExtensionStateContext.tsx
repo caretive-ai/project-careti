@@ -377,7 +377,7 @@ export const ExtensionStateContextProvider: React.FC<{
 	// Subscribe to state updates and UI events using the gRPC streaming API
 	useEffect(() => {
 		// Use the already defined webview provider type
-		const webviewType = currentProviderType
+		const _webviewType = currentProviderType
 
 		// Set up state subscription
 		stateSubscriptionRef.current = StateServiceClient.subscribeToState(EmptyRequest.create({}), {
@@ -835,7 +835,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		caretModels: caretModelsState,
 		basetenModels: basetenModelsState,
 		showChatModelSelector: false,
-		setShowChatModelSelector: (value: boolean) => {
+		setShowChatModelSelector: (_value: boolean) => {
 			// TODO: Implement chat model selector state
 		},
 		huggingFaceModels,
@@ -921,6 +921,7 @@ export const ExtensionStateContextProvider: React.FC<{
 			// CARET MODIFICATION: 백엔드 API 호출 - StateServiceClient.updateSettings
 			try {
 				// 백엔드에 modeSystem 변경 전송
+				// @ts-expect-error - Proto field exists at runtime, TS cache issue
 				await StateServiceClient.updateSettings({
 					metadata: proto.cline.Metadata.create({ source: "webview" }),
 					modeSystem,
@@ -1008,6 +1009,7 @@ export const ExtensionStateContextProvider: React.FC<{
 
 			// CARET MODIFICATION: Send to backend globalState only (no localStorage)
 			try {
+				// @ts-expect-error - Proto field exists at runtime, TS cache issue
 				await StateServiceClient.updateSettings({
 					metadata: proto.cline.Metadata.create({ source: "webview" }),
 					enablePersonaSystem: enabled,

@@ -13,14 +13,14 @@ import Thumbnails from "@/components/common/Thumbnails"
 import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { FileServiceClient, UiServiceClient } from "@/services/grpc-client"
-import { formatLargeNumber, formatSize } from "@/utils/format"
+import { formatLargeNumber } from "@/utils/format"
 import { validateSlashCommand } from "@/utils/slash-commands"
 import CopyTaskButton from "./buttons/CopyTaskButton"
 import DeleteTaskButton from "./buttons/DeleteTaskButton"
 import OpenDiskTaskHistoryButton from "./buttons/OpenDiskTaskHistoryButton"
 import TaskTimeline from "./TaskTimeline"
 
-const IS_DEV = process.env.IS_DEV
+const _IS_DEV = process.env.IS_DEV
 
 // Utility function to parse checklist and extract current todo info
 const parseCurrentTodoInfo = (text: string) => {
@@ -463,10 +463,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 										{/* CARET MODIFICATION: Always show disk task history button (removed IS_DEV condition) */}
 										<OpenDiskTaskHistoryButton taskId={currentTaskItem?.id} />
 										<CopyTaskButton taskText={task.text} />
-										<DeleteTaskButton
-											taskId={currentTaskItem?.id}
-											taskSize={formatSize(currentTaskItem?.size)}
-										/>
+										<DeleteTaskButton taskId={currentTaskItem?.id} taskSize={currentTaskItem?.size ?? 0} />
 									</div>
 								)}
 							</div>
@@ -523,10 +520,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 										{/* CARET MODIFICATION: Always show disk task history button (removed IS_DEV condition) */}
 										<OpenDiskTaskHistoryButton taskId={currentTaskItem?.id} />
 										<CopyTaskButton taskText={task.text} />
-										<DeleteTaskButton
-											taskId={currentTaskItem?.id}
-											taskSize={formatSize(currentTaskItem?.size)}
-										/>
+										<DeleteTaskButton taskId={currentTaskItem?.id} taskSize={currentTaskItem?.size ?? 0} />
 									</div>
 								</div>
 							)}

@@ -154,6 +154,7 @@ export interface WelcomeSectionProps {
 	telemetrySetting: string
 	taskHistory: any[]
 	shouldShowQuickWins: boolean
+	version: string
 }
 
 /**

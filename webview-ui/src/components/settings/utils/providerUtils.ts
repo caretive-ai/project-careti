@@ -122,7 +122,9 @@ export function normalizeApiConfiguration(
 				return {
 					selectedProvider: provider,
 					selectedModelId: modelId || bedrockDefaultModelId,
-					selectedModelInfo: (baseModelId && bedrockModels[baseModelId]) || bedrockModels[bedrockDefaultModelId],
+					selectedModelInfo:
+						(baseModelId && bedrockModels[baseModelId as keyof typeof bedrockModels]) ||
+						bedrockModels[bedrockDefaultModelId],
 				}
 			}
 			return getProviderData(bedrockModels, bedrockDefaultModelId)

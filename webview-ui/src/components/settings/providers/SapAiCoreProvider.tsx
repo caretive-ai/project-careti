@@ -72,7 +72,8 @@ export const SapAiCoreProvider = ({ showModelOptions, isPopup, currentMode }: Sa
 			)
 
 			if (response) {
-				setDeployedModelsArray(response.modelNames || [])
+				const modelNames = response.deployments?.map((d) => d.modelName) || []
+				setDeployedModelsArray(modelNames)
 				setOrchestrationAvailable(response.orchestrationAvailable || false)
 				setHasCheckedOrchestration(true)
 			} else {
@@ -229,7 +230,10 @@ export const SapAiCoreProvider = ({ showModelOptions, isPopup, currentMode }: Sa
 								<SapAiCoreModelPicker
 									onModelChange={handleModelChange}
 									placeholder={t("providers.sap-ai-core.selectModelPlaceholder", "settings")}
-									sapAiCoreDeployedModels={deployedModelsArray}
+									sapAiCoreModelDeployments={deployedModelsArray.map((name) => ({
+										modelName: name,
+										deploymentId: "",
+									}))}
 									selectedModelId={selectedModelId || ""}
 									useOrchestrationMode={apiConfiguration?.sapAiCoreUseOrchestrationMode ?? true}
 								/>

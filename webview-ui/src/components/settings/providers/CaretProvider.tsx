@@ -22,8 +22,8 @@ interface CaretProviderProps {
  * The Caret provider configuration component
  */
 export const CaretProvider = ({ showModelOptions, isPopup, currentMode }: CaretProviderProps) => {
-	const { apiConfiguration } = useExtensionState()
-	const caretUser = apiConfiguration?.caretUserProfile
+	const { apiConfiguration, caretUser } = useExtensionState()
+	const caretUserProfile = apiConfiguration?.caretUserProfile
 
 	// Get the normalized configuration
 	const { selectedModelId, selectedModelInfo } = normalizeApiConfiguration(apiConfiguration, currentMode)

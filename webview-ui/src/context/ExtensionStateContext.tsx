@@ -921,11 +921,11 @@ export const ExtensionStateContextProvider: React.FC<{
 			// CARET MODIFICATION: 백엔드 API 호출 - StateServiceClient.updateSettings
 			try {
 				// 백엔드에 modeSystem 변경 전송
-				// @ts-expect-error - Proto field exists at runtime, TS cache issue
-				await StateServiceClient.updateSettings({
-					metadata: proto.cline.Metadata.create({ source: "webview" }),
-					modeSystem,
-				} as proto.cline.UpdateSettingsRequest)
+				const request = {
+					metadata: proto.cline.Metadata.create({}),
+				} as any
+				request.modeSystem = modeSystem
+				await StateServiceClient.updateSettings(request)
 				console.log(`[API] StateServiceClient.updateSettings called with modeSystem: ${modeSystem}`)
 			} catch (error) {
 				console.error("[API] Failed to update modeSystem via StateServiceClient:", error)
@@ -1009,11 +1009,11 @@ export const ExtensionStateContextProvider: React.FC<{
 
 			// CARET MODIFICATION: Send to backend globalState only (no localStorage)
 			try {
-				// @ts-expect-error - Proto field exists at runtime, TS cache issue
-				await StateServiceClient.updateSettings({
-					metadata: proto.cline.Metadata.create({ source: "webview" }),
-					enablePersonaSystem: enabled,
-				} as proto.cline.UpdateSettingsRequest)
+				const request = {
+					metadata: proto.cline.Metadata.create({}),
+				} as any
+				request.enablePersonaSystem = enabled
+				await StateServiceClient.updateSettings(request)
 				if (isChanging) {
 					caretWebviewLogger.debug("Sent to backend via StateServiceClient:", enabled)
 				}

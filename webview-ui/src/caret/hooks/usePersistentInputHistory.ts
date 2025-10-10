@@ -39,11 +39,11 @@ export function usePersistentInputHistory() {
 
 			// Save to backend via gRPC
 			try {
-				// @ts-expect-error - Proto field exists at runtime, TS cache issue
-				await StateServiceClient.updateSettings({
-					metadata: proto.cline.Metadata.create({ source: "webview" }),
-					inputHistory: newHistory,
-				} as proto.cline.UpdateSettingsRequest)
+				const request = {
+					metadata: proto.cline.Metadata.create({}),
+				} as any
+				request.inputHistory = newHistory
+				await StateServiceClient.updateSettings(request)
 				caretWebviewLogger.info(`[INPUT-HISTORY] Saved history item: "${text.trim().substring(0, 50)}..."`)
 			} catch (error) {
 				caretWebviewLogger.error("[INPUT-HISTORY] Failed to save input history:", error)

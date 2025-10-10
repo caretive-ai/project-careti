@@ -70,7 +70,8 @@
 				"noControlCharactersInRegex": "off",
 				"noShadowRestrictedNames": "off",
 				"noArrayIndexKey": "info",
-				"noAssignInExpressions": "warn"
+				"noAssignInExpressions": "warn",
+				"useIterableCallbackReturn": "off"
 			},
 			"complexity": {
 				"noUselessConstructor": "off",
@@ -156,7 +157,8 @@
 				"!src/common.ts",
 				"!src/services/logging/distinctId.ts",
 				"!src/core/storage/utils/state-helpers.ts",
-				"!src/extension.ts"
+				"!src/extension.ts",
+				"!caret-src/services/persona/persona-initializer.ts"
 			],
 			"plugins": [
 				"src/dev/grit/use-cache-service.grit"

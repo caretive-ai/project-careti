@@ -12,6 +12,8 @@ service BrowserService {
   rpc discoverBrowser(EmptyRequest) returns (BrowserConnection);
   rpc getDetectedChromePath(EmptyRequest) returns (ChromePath);
   rpc relaunchChromeDebugMode(EmptyRequest) returns (String);
+  // CARET MODIFICATION: Add updateBrowserSettings method
+  rpc updateBrowserSettings(UpdateBrowserSettingsRequest) returns (Empty);
 }
 
 message BrowserConnectionInfo {

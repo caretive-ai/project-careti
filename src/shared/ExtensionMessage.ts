@@ -102,6 +102,10 @@ export interface ExtensionState {
 	localCaretRulesToggles?: ClineRulesToggles
 	// CARET MODIFICATION: F04 - Feature Flag (future use)
 	focusChainFeatureFlagEnabled?: boolean
+	// CARET MODIFICATION: UI State
+	showChatModelSelector?: boolean
+	checkpointTrackerErrorMessage?: string
+	featureConfig?: any
 }
 
 export interface ClineMessage {

@@ -277,6 +277,21 @@ export const ExtensionStateContextProvider: React.FC<{
 		caretBanner: "/assets/welcome-banner.webp",
 		// CARET MODIFICATION: Initialize persona system from backend globalState only
 		enablePersonaSystem: true, // Default value, will be overridden by backend
+		dictationSettings: {
+			featureEnabled: false,
+			dictationEnabled: false,
+			dictationLanguage: "en-US",
+		},
+		favoritedModelIds: [],
+		workspaceRoots: [],
+		primaryRootIndex: 0,
+		isMultiRootWorkspace: false,
+		multiRootSetting: {
+			user: false,
+			featureFlag: false,
+		},
+		lastDismissedInfoBannerVersion: 0,
+		lastDismissedModelBannerVersion: 0,
 	})
 	const [didHydrateState, setDidHydrateState] = useState(false)
 	const [showWelcome, setShowWelcome] = useState(false)

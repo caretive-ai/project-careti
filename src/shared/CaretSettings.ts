@@ -1,4 +1,6 @@
-export type OpenAIReasoningEffort = "low" | "medium" | "high"
+// CARET MODIFICATION: Import from storage/types for consistency
+import { OpenaiReasoningEffort } from "./storage/types"
+export type OpenAIReasoningEffort = OpenaiReasoningEffort
 
 export interface CaretSettings {
 	mode: "chatbot" | "agent" | "plan" | "act" // Caret: chatbot/agent, Cline: plan/act

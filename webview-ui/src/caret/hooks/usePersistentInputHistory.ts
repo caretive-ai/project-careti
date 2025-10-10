@@ -1,4 +1,6 @@
 // CARET MODIFICATION: Persistent input history hook using gRPC
+
+import * as proto from "@shared/proto/index"
 import { useCallback, useEffect, useState } from "react"
 import { caretWebviewLogger } from "@/caret/utils/webview-logger"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -33,9 +35,12 @@ export function usePersistentInputHistory() {
 
 			// Save to backend via gRPC
 			try {
-				await StateServiceClient.updateSettings({
-					inputHistory: newHistory,
-				})
+				await StateServiceClient.updateSettings(
+					proto.cline.UpdateSettingsRequest.create({
+						metadata: proto.cline.Metadata.create({ source: "webview" }),
+						inputHistory: newHistory,
+					}),
+				)
 				caretWebviewLogger.info(`[INPUT-HISTORY] Saved history item: "${text.trim().substring(0, 50)}..."`)
 			} catch (error) {
 				caretWebviewLogger.error("[INPUT-HISTORY] Failed to save input history:", error)

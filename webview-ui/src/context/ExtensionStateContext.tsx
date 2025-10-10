@@ -103,9 +103,9 @@ export interface ExtensionStateContextType extends ExtensionState {
 	setShouldShowAnnouncement: (value: boolean) => void
 	setShowChatModelSelector: (value: boolean) => void
 	// CARET MODIFICATION: 전역 브랜드 모드 플래그 설정 함수
-	setModeSystem: (modeSystem: CaretModeSystem) => void
+	setModeSystem: (modeSystem: CaretModeSystem) => Promise<void>
 	// CARET MODIFICATION: Persona system setters (restored from caret-compare)
-	setEnablePersonaSystem: (enabled: boolean) => void
+	setEnablePersonaSystem: (enabled: boolean) => Promise<void>
 	setCurrentPersona: (personaId: string | null) => void
 	setPersonaProfile: (
 		profile: {
@@ -247,6 +247,9 @@ export const ExtensionStateContextProvider: React.FC<{
 		mode: "act",
 		// CARET MODIFICATION: Caret 전역 브랜드 모드 플래그 기본값 - Caret 모드로 시작
 		modeSystem: "caret" as CaretModeSystem,
+		showChatModelSelector: false,
+		featureConfig: undefined,
+		checkpointTrackerErrorMessage: undefined,
 		platform: DEFAULT_PLATFORM,
 		telemetrySetting: "unset",
 		distinctId: "",
@@ -874,7 +877,7 @@ export const ExtensionStateContextProvider: React.FC<{
 				shouldShowAnnouncement: value,
 			})),
 		// CARET MODIFICATION: 전역 브랜드 모드 플래그 설정 함수 - 백엔드/프론트엔드 로깅 포함
-		setModeSystem: (modeSystem: CaretModeSystem) => {
+		setModeSystem: async (modeSystem: CaretModeSystem) => {
 			const previousMode = state.modeSystem
 			const timestamp = new Date().toISOString()
 
@@ -973,7 +976,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		refreshOpenRouterModels,
 		onRelinquishControl,
 		// CARET MODIFICATION: Persona system setters - also save to localStorage and backend
-		setEnablePersonaSystem: (enabled: boolean) => {
+		setEnablePersonaSystem: async (enabled: boolean) => {
 			const isChanging = state.enablePersonaSystem !== enabled
 
 			if (isChanging) {

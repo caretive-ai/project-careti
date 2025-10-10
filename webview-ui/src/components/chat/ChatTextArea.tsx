@@ -1,5 +1,4 @@
-import { cn } from "@heroui/react"
-import { PulsingBorder } from "@paper-design/shaders-react"
+import { caretDefaultModelId } from "@shared/api"
 import { mentionRegex, mentionRegexGlobal } from "@shared/context-mentions"
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import { FileSearchRequest, FileSearchType, RelativePathsRequest } from "@shared/proto/cline/file"
@@ -8,12 +7,13 @@ import { PlanActMode, TogglePlanActModeRequest } from "@shared/proto/cline/state
 import { convertApiConfigurationToProto } from "@shared/proto-conversions/models/api-configuration-conversion"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
-import { AtSignIcon, PlusIcon } from "lucide-react"
 import type React from "react"
 import { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import DynamicTextArea from "react-textarea-autosize"
 import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
+import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
+import { useInputHistory } from "@/caret/hooks/useInputHistory" // CARET MODIFICATION: Persistent input history functionality
 import ContextMenu from "@/components/chat/ContextMenu"
 import { CHAT_CONSTANTS } from "@/components/chat/chat-view/constants"
 import SlashCommandMenu from "@/components/chat/SlashCommandMenu"
@@ -22,10 +22,8 @@ import Thumbnails from "@/components/common/Thumbnails"
 import Tooltip from "@/components/common/Tooltip"
 import ApiOptions from "@/components/settings/ApiOptions"
 import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
-import { useClineAuth } from "@/context/ClineAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { usePlatform } from "@/context/PlatformContext"
-import { FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
+import { CaretSystemServiceClient, FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
 import {
 	ContextMenuOptionType,
 	getContextMenuOptionIndex,
@@ -50,7 +48,6 @@ import {
 import { validateApiConfiguration, validateModelId } from "@/utils/validate"
 import ClineRulesToggleModal from "../cline-rules/ClineRulesToggleModal"
 import ServersToggleModal from "./ServersToggleModal"
-import VoiceRecorder from "./VoiceRecorder"
 
 const { MAX_IMAGES_AND_FILES_PER_MESSAGE } = CHAT_CONSTANTS
 
@@ -90,6 +87,7 @@ interface ChatTextAreaProps {
 	shouldDisableFilesAndImages: boolean
 	onHeightChange?: (height: number) => void
 	onFocusChange?: (isFocused: boolean) => void
+	inputHistory?: string[] // CARET MODIFICATION: Persistent input history functionality
 }
 
 interface GitCommit {
@@ -110,7 +108,8 @@ const SwitchOption = styled.div.withConfig({
 	z-index: 1;
 	transition: color 0.2s ease;
 	font-size: 12px;
-	width: 50%;
+	flex: 1;
+	min-width: 60px;
 	text-align: center;
 
 	&:hover {
@@ -160,6 +159,14 @@ const ButtonContainer = styled.div`
 	white-space: nowrap;
 	min-width: 0;
 	width: 100%;
+`
+
+const ControlsContainer = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: -5px;
+	padding: 0px 15px 5px 15px;
 `
 
 const ModelSelectorTooltip = styled.div<ModelSelectorTooltipProps>`
@@ -261,6 +268,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 	(
 		{
 			inputValue,
+			activeQuote,
 			setInputValue,
 			sendingDisabled,
 			placeholderText,
@@ -273,25 +281,17 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			shouldDisableFilesAndImages,
 			onHeightChange,
 			onFocusChange,
+			inputHistory = [], // CARET MODIFICATION: Persistent input history functionality
 		},
 		ref,
 	) => {
-		const {
-			mode,
-			apiConfiguration,
-			openRouterModels,
-			platform,
-			localWorkflowToggles,
-			globalWorkflowToggles,
-			showChatModelSelector: showModelSelector,
-			setShowChatModelSelector: setShowModelSelector,
-			dictationSettings,
-		} = useExtensionState()
-		const { clineUser } = useClineAuth()
+		const { t } = useCaretI18n()
+		const { mode, apiConfiguration, openRouterModels, platform, localWorkflowToggles, globalWorkflowToggles, modeSystem } =
+			useExtensionState()
 		const [isTextAreaFocused, setIsTextAreaFocused] = useState(false)
 		const [isDraggingOver, setIsDraggingOver] = useState(false)
 		const [gitCommits, setGitCommits] = useState<GitCommit[]>([])
-		const [isVoiceRecording, setIsVoiceRecording] = useState(false)
+
 		const [showSlashCommandsMenu, setShowSlashCommandsMenu] = useState(false)
 		const [selectedSlashCommandsIndex, setSelectedSlashCommandsIndex] = useState(0)
 		const [slashCommandsQuery, setSlashCommandsQuery] = useState("")
@@ -311,7 +311,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		const [justDeletedSpaceAfterSlashCommand, setJustDeletedSpaceAfterSlashCommand] = useState(false)
 		const [intendedCursorPosition, setIntendedCursorPosition] = useState<number | null>(null)
 		const contextMenuContainerRef = useRef<HTMLDivElement>(null)
-
+		const [showModelSelector, setShowModelSelector] = useState(false)
 		const modelSelectorRef = useRef<HTMLDivElement>(null)
 		const { width: viewportWidth, height: viewportHeight } = useWindowSize()
 		const buttonRef = useRef<HTMLDivElement>(null)
@@ -331,6 +331,13 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 		// Add a ref to track previous menu state
 		const prevShowModelSelector = useRef(showModelSelector)
+
+		// CARET MODIFICATION: Persistent input history functionality - hook for handling arrow key navigation
+		const { handleKeyDown: handleHistoryKeyDown } = useInputHistory({
+			history: inputHistory,
+			inputValue,
+			setInputValue,
+		})
 
 		// Fetch git commits when Git is selected or when typing a hash
 		useEffect(() => {
@@ -419,7 +426,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 							setSearchLoading(true)
 
 							// Map ContextMenuOptionType to FileSearchType enum
-							let searchType: FileSearchType | undefined
+							let searchType
 							if (type === ContextMenuOptionType.File) {
 								searchType = FileSearchType.FILE
 							} else if (type === ContextMenuOptionType.Folder) {
@@ -449,9 +456,6 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 				setShowContextMenu(false)
 				setSelectedType(null)
-				const queryLength = searchQuery.length
-				setSearchQuery("")
-
 				if (textAreaRef.current) {
 					let insertValue = value || ""
 					if (type === ContextMenuOptionType.URL) {
@@ -466,12 +470,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						insertValue = value || ""
 					}
 
-					const { newValue, mentionIndex } = insertMention(
-						textAreaRef.current.value,
-						cursorPosition,
-						insertValue,
-						queryLength,
-					)
+					const { newValue, mentionIndex } = insertMention(textAreaRef.current.value, cursorPosition, insertValue)
 
 					setInputValue(newValue)
 					const newCursorPosition = newValue.indexOf(" ", mentionIndex + insertValue.length) + 1
@@ -488,17 +487,15 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					}, 0)
 				}
 			},
-			[setInputValue, cursorPosition, searchQuery],
+			[setInputValue, cursorPosition],
 		)
 
 		const handleSlashCommandsSelect = useCallback(
 			(command: SlashCommand) => {
 				setShowSlashCommandsMenu(false)
-				const queryLength = slashCommandsQuery.length
-				setSlashCommandsQuery("")
 
 				if (textAreaRef.current) {
-					const { newValue, commandIndex } = insertSlashCommand(textAreaRef.current.value, command.name, queryLength)
+					const { newValue, commandIndex } = insertSlashCommand(textAreaRef.current.value, command.name)
 					const newCursorPosition = newValue.indexOf(" ", commandIndex + 1 + command.name.length) + 1
 
 					setInputValue(newValue)
@@ -513,14 +510,19 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					}, 0)
 				}
 			},
-			[setInputValue, slashCommandsQuery],
+			[setInputValue],
 		)
+
 		const handleKeyDown = useCallback(
 			(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+				// CARET MODIFICATION: Handle persistent input history before other key events
+				if (handleHistoryKeyDown(event)) {
+					return
+				}
+
 				if (showSlashCommandsMenu) {
 					if (event.key === "Escape") {
 						setShowSlashCommandsMenu(false)
-						setSlashCommandsQuery("")
 						return
 					}
 
@@ -563,7 +565,6 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						// event.preventDefault()
 						setSelectedType(null)
 						setSelectedMenuIndex(DEFAULT_CONTEXT_MENU_OPTION)
-						setSearchQuery("")
 						return
 					}
 
@@ -609,9 +610,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 							selectedOption.type !== ContextMenuOptionType.URL &&
 							selectedOption.type !== ContextMenuOptionType.NoResults
 						) {
-							// Use label if it contains workspace prefix, otherwise use value
-							const mentionValue = selectedOption.label?.includes(":") ? selectedOption.label : selectedOption.value
-							handleMentionSelect(selectedOption.type, mentionValue)
+							handleMentionSelect(selectedOption.type, selectedOption.value)
 						}
 						return
 					}
@@ -710,6 +709,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				slashCommandsQuery,
 				handleSlashCommandsSelect,
 				sendingDisabled,
+				handleHistoryKeyDown,
 			],
 		)
 
@@ -781,7 +781,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					setSearchQuery(query)
 					currentSearchQueryRef.current = query
 
-					if (query.length > 0) {
+					if (query.length > 0 && !selectedType) {
 						setSelectedMenuIndex(0)
 
 						// Clear any existing timeout
@@ -791,30 +791,13 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 						setSearchLoading(true)
 
-						const searchType =
-							selectedType === ContextMenuOptionType.File
-								? FileSearchType.FILE
-								: selectedType === ContextMenuOptionType.Folder
-									? FileSearchType.FOLDER
-									: undefined
-
-						// Parse workspace hint from query (e.g., "@frontend:/filename")
-						let workspaceHint: string | undefined
-						let searchQuery = query
-						const workspaceHintMatch = query.match(/^([\w-]+):\/(.*)$/)
-						if (workspaceHintMatch) {
-							workspaceHint = workspaceHintMatch[1]
-							searchQuery = workspaceHintMatch[2]
-						}
-
 						// Set a timeout to debounce the search requests
 						searchTimeoutRef.current = setTimeout(() => {
 							FileServiceClient.searchFiles(
 								FileSearchRequest.create({
-									query: searchQuery,
+									query: query,
 									mentionsRequestId: query,
-									selectedType: searchType,
-									workspaceHint: workspaceHint,
+									selectedType: undefined, // No type filter for general search
 								}),
 							)
 								.then((results) => {
@@ -985,7 +968,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 			processedText = processedText
 				.replace(/\n$/, "\n\n")
-				.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" })[c] || c)
+				.replace(/[<>&]/g, (c) => ({ "<": "<", ">": ">", "&": "&" })[c] || c)
 				// highlight @mentions
 				.replace(mentionRegexGlobal, '<mark class="mention-context-textarea-highlight">$&</mark>')
 
@@ -1079,6 +1062,27 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						},
 					}),
 				)
+
+				// CARET MODIFICATION: Synchronize Caret mode when using Caret system
+				if (modeSystem === "caret") {
+					try {
+						const newCaretMode = mode === "plan" ? "agent" : "chatbot"
+						console.log(`[ChatTextArea] Synchronizing Caret mode: plan/act ${mode} → Caret ${newCaretMode}`)
+
+						const caretResponse = await CaretSystemServiceClient.SetCaretMode({
+							mode: newCaretMode,
+						})
+
+						if (caretResponse.success) {
+							console.log(`[ChatTextArea] ✅ Caret mode synchronized: ${caretResponse.currentMode}`)
+						} else {
+							console.error(`[ChatTextArea] ❌ Failed to synchronize Caret mode: ${caretResponse.errorMessage}`)
+						}
+					} catch (error) {
+						console.error(`[ChatTextArea] ❌ Error synchronizing Caret mode:`, error)
+					}
+				}
+
 				// Focus the textarea after mode toggle with slight delay
 				setTimeout(() => {
 					if (response.value) {
@@ -1089,7 +1093,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			}, changeModeDelay)
 		}, [mode, showModelSelector, submitApiConfig, inputValue, selectedImages, selectedFiles])
 
-		useShortcut(usePlatform().togglePlanActKeys, onModeToggle, { disableTextInputs: false }) // important that we don't disable the text input here
+		useShortcut("Meta+Shift+a", onModeToggle, { disableTextInputs: false }) // important that we don't disable the text input here
 
 		const handleContextButtonClick = useCallback(() => {
 			// Focus the textarea first
@@ -1155,8 +1159,16 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		// Get model display name
 		const modelDisplayName = useMemo(() => {
 			const { selectedProvider, selectedModelId } = normalizeApiConfiguration(apiConfiguration, mode)
-			const { vsCodeLmModelSelector, togetherModelId, lmStudioModelId, ollamaModelId, liteLlmModelId, requestyModelId } =
-				getModeSpecificFields(apiConfiguration, mode)
+			const {
+				vsCodeLmModelSelector,
+				togetherModelId,
+				fireworksModelId,
+				lmStudioModelId,
+				ollamaModelId,
+				liteLlmModelId,
+				caretModelId,
+				requestyModelId,
+			} = getModeSpecificFields(apiConfiguration, mode)
 			const unknownModel = "unknown"
 			if (!apiConfiguration) {
 				return unknownModel
@@ -1176,6 +1188,10 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					return `${selectedProvider}:${ollamaModelId}`
 				case "litellm":
 					return `${selectedProvider}:${liteLlmModelId}`
+				case "caret": {
+					const fallbackCaretModelId = caretModelId || selectedModelId || caretDefaultModelId
+					return `${selectedProvider}:${fallbackCaretModelId}`
+				}
 				case "requesty":
 					return `${selectedProvider}:${requestyModelId}`
 				case "anthropic":
@@ -1439,57 +1455,69 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				),
 			)
 		}
-		// Replace Meta with the platform specific key and uppercase the command letter.
-		const togglePlanActKeys = usePlatform()
-			.togglePlanActKeys.replace("Meta", metaKeyChar)
-			.replace(/.$/, (match) => match.toUpperCase())
 
 		return (
 			<div>
 				<div
-					className="relative flex transition-colors ease-in-out duration-100 px-3.5 py-2.5"
 					onDragEnter={handleDragEnter}
 					onDragLeave={handleDragLeave}
 					onDragOver={onDragOver}
-					onDrop={onDrop}>
-					{isVoiceRecording && (
-						<div
-							className={cn(
-								"absolute pointer-events-none z-10 overflow-hidden rounded-xs transition-all ease-in-out duration-300 left-3.5 right-3.5 top-2.5 bottom-2.5",
-							)}>
-							<PulsingBorder
-								bloom={1}
-								className="w-full h-full"
-								colorBack={"rgba(0,0,0,0)"}
-								colors={[
-									"#9d57fa", // purple
-									"#57c7fa", // cyan
-									"#fa57a8", // pink
-									"#9d57fa", // purple again for smooth loop
-								]}
-								intensity={0.4}
-								pulse={0.3}
-								roundness={0} // Match textarea border radius
-								scale={1.0}
-								smoke={0.25}
-								smokeSize={0.8}
-								softness={0.8}
-								speed={1.5}
-								spotSize={0.5}
-								spots={4}
-								thickness={0.1}
-							/>
-						</div>
-					)}
-
+					onDrop={onDrop}
+					style={{
+						padding: "10px 15px",
+						opacity: 1,
+						position: "relative",
+						display: "flex",
+						// Drag-over styles moved to DynamicTextArea
+						transition: "background-color 0.1s ease-in-out, border 0.1s ease-in-out",
+					}}>
 					{showDimensionError && (
-						<div className="absolute inset-2.5 bg-[rgba(var(--vscode-errorForeground-rgb),0.1)] border-2 border-error rounded-xs flex items-center justify-center z-10 pointer-events-none">
-							<span className="text-error font-bold text-xs text-center">Image dimensions exceed 7500px</span>
+						<div
+							style={{
+								position: "absolute",
+								inset: "10px 15px",
+								backgroundColor: "rgba(var(--vscode-errorForeground-rgb), 0.1)",
+								border: "2px solid var(--vscode-errorForeground)",
+								borderRadius: 2,
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								zIndex: 10, // Ensure it's above other elements
+								pointerEvents: "none",
+							}}>
+							<span
+								style={{
+									color: "var(--vscode-errorForeground)",
+									fontWeight: "bold",
+									fontSize: "12px",
+									textAlign: "center",
+								}}>
+								{t("image.dimensionError", "chat")}
+							</span>
 						</div>
 					)}
 					{showUnsupportedFileError && (
-						<div className="absolute inset-2.5 bg-[rgba(var(--vscode-errorForeground-rgb),0.1)] border-2 border-error rounded-xs flex items-center justify-center z-10 pointer-events-none">
-							<span className="text-error font-bold text-xs">Files other than images are currently disabled</span>
+						<div
+							style={{
+								position: "absolute",
+								inset: "10px 15px",
+								backgroundColor: "rgba(var(--vscode-errorForeground-rgb), 0.1)",
+								border: "2px solid var(--vscode-errorForeground)",
+								borderRadius: 2,
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								zIndex: 10,
+								pointerEvents: "none",
+							}}>
+							<span
+								style={{
+									color: "var(--vscode-errorForeground)",
+									fontWeight: "bold",
+									fontSize: "12px",
+								}}>
+								{t("image.unsupportedFileError", "chat")}
+							</span>
 						</div>
 					)}
 					{showSlashCommandsMenu && (
@@ -1521,30 +1549,42 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 							/>
 						</div>
 					)}
+					{!isTextAreaFocused && !activeQuote && (
+						<div
+							style={{
+								position: "absolute",
+								inset: "10px 15px",
+								border: "1px solid var(--vscode-input-border)",
+								borderRadius: 2,
+								pointerEvents: "none",
+								zIndex: 5,
+							}}
+						/>
+					)}
 					<div
-						className={cn(
-							"absolute bottom-2.5 top-2.5 whitespace-pre-wrap break-words rounded-xs overflow-hidden bg-input-background",
-							isTextAreaFocused || isVoiceRecording
-								? "left-3.5 right-3.5"
-								: "left-3.5 right-3.5 border border-input-border",
-						)}
 						ref={highlightLayerRef}
 						style={{
 							position: "absolute",
+							top: 10,
+							left: 15,
+							right: 15,
+							bottom: 10,
 							pointerEvents: "none",
 							whiteSpace: "pre-wrap",
 							wordWrap: "break-word",
 							color: "transparent",
 							overflow: "hidden",
+							backgroundColor: "var(--vscode-input-background)",
 							fontFamily: "var(--vscode-font-family)",
 							fontSize: "var(--vscode-editor-font-size)",
 							lineHeight: "var(--vscode-editor-line-height)",
 							borderRadius: 2,
-							borderLeft: isTextAreaFocused || isVoiceRecording ? 0 : undefined,
-							borderRight: isTextAreaFocused || isVoiceRecording ? 0 : undefined,
-							borderTop: isTextAreaFocused || isVoiceRecording ? 0 : undefined,
-							borderBottom: isTextAreaFocused || isVoiceRecording ? 0 : undefined,
-							padding: `9px 28px ${9 + thumbnailsHeight}px 9px`,
+							borderLeft: 0,
+							borderRight: 0,
+							borderTop: 0,
+							borderColor: "transparent",
+							borderBottom: `${thumbnailsHeight}px solid transparent`,
+							padding: "9px 28px 9px 9px",
 						}}
 					/>
 					<DynamicTextArea
@@ -1607,7 +1647,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 							// borderLeft: "9px solid transparent", // NOTE: react-textarea-autosize doesn't calculate correct height when using borderLeft/borderRight so we need to use horizontal padding instead
 							// Instead of using boxShadow, we use a div with a border to better replicate the behavior when the textarea is focused
 							// boxShadow: "0px 0px 0px 1px var(--vscode-input-border)",
-							padding: `9px ${dictationSettings?.dictationEnabled ? "48" : "28"}px 9px 9px`,
+							padding: "9px 28px 9px 9px",
 							cursor: "text",
 							flex: 1,
 							zIndex: 1,
@@ -1622,8 +1662,8 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						value={inputValue}
 					/>
 					{!inputValue && selectedImages.length === 0 && selectedFiles.length === 0 && (
-						<div className="text-[10px] absolute bottom-5 left-5 right-16 text-[var(--vscode-input-placeholderForeground)]/50 whitespace-nowrap overflow-hidden text-ellipsis pointer-events-none z-1">
-							Type @ for context, / for slash commands & workflows, hold shift to drag in files/images
+						<div className="absolute bottom-4 left-[25px] right-[60px] text-[10px] text-[var(--vscode-input-placeholderForeground)] opacity-70 whitespace-nowrap overflow-hidden text-ellipsis pointer-events-none z-[1]">
+							{t("placeholderHint", "chat")}
 						</div>
 					)}
 					{(selectedImages.length > 0 || selectedFiles.length > 0) && (
@@ -1644,97 +1684,101 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						/>
 					)}
 					<div
-						className="absolute flex items-end bottom-4.5 right-5 z-10 h-8 text-xs"
-						style={{ height: textAreaBaseHeight }}>
-						<div className="flex flex-row items-center">
-							{dictationSettings?.dictationEnabled === true && dictationSettings?.featureEnabled && (
-								<VoiceRecorder
-									disabled={sendingDisabled}
-									isAuthenticated={!!clineUser?.uid}
-									language={dictationSettings?.dictationLanguage || "en"}
-									onProcessingStateChange={(isProcessing, message) => {
-										if (isProcessing && message) {
-											// Show processing message in input
-											setInputValue(`${inputValue} [${message}]`.trim())
-										}
-										// When processing is done, the onTranscription callback will handle the final text
-									}}
-									onRecordingStateChange={setIsVoiceRecording}
-									onTranscription={(text) => {
-										// Remove any processing text first
-										const processingPattern = /\s*\[Transcribing\.\.\.\]$/
-										const cleanedValue = inputValue.replace(processingPattern, "")
-
-										if (!text) {
-											setInputValue(cleanedValue)
-											return
-										}
-
-										// Append the transcribed text to the cleaned input
-										const newValue = cleanedValue + (cleanedValue ? " " : "") + text
-										setInputValue(newValue)
-										// Focus the textarea and move cursor to end
-										setTimeout(() => {
-											if (textAreaRef.current) {
-												textAreaRef.current.focus()
-												const length = newValue.length
-												textAreaRef.current.setSelectionRange(length, length)
-											}
-										}, 0)
-									}}
-								/>
-							)}
-							{!isVoiceRecording && (
-								<div
-									className={cn(
-										"input-icon-button",
-										{ disabled: sendingDisabled },
-										"codicon codicon-send text-sm",
-									)}
-									data-testid="send-button"
-									onClick={() => {
-										if (!sendingDisabled) {
-											setIsTextAreaFocused(false)
-											onSend()
-										}
-									}}
-								/>
-							)}
+						style={{
+							position: "absolute",
+							right: 23,
+							display: "flex",
+							alignItems: "flex-end",
+							height: textAreaBaseHeight || 31,
+							bottom: 9.5, // should be 10 but doesn't look good on mac
+							paddingBottom: "8px",
+							zIndex: 2,
+						}}>
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "row",
+								alignItems: "center",
+							}}>
+							{/* <div
+								className={`input-icon-button ${shouldDisableImages ? "disabled" : ""} codicon codicon-device-camera`}
+								onClick={() => {
+									if (!shouldDisableImages) {
+										onSelectImages()
+									}
+								}}
+								style={{
+									marginRight: 5.5,
+									fontSize: 16.5,
+								}}
+							/> */}
+							<div
+								className={`input-icon-button ${sendingDisabled ? "disabled" : ""} codicon codicon-send`}
+								data-testid="send-button"
+								onClick={() => {
+									if (!sendingDisabled) {
+										setIsTextAreaFocused(false)
+										onSend()
+									}
+								}}
+								style={{ fontSize: 15 }}></div>
 						</div>
 					</div>
 				</div>
-				<div className="flex justify-between items-center -mt-1 px-3 pb-2">
+
+				<ControlsContainer>
 					{/* Always render both components, but control visibility with CSS */}
-					<div className="relative flex-1 min-w-0 h-5">
+					<div
+						style={{
+							position: "relative",
+							flex: 1,
+							minWidth: 0,
+							height: "28px", // Fixed height to prevent container shrinking
+						}}>
 						{/* ButtonGroup - always in DOM but visibility controlled */}
-						<ButtonGroup className="absolute top-0 left-0 right-0 ease-in-out w-full h-5 z-10 flex items-center">
-							<Tooltip style={{ left: 0 }} tipText="Add Context">
+						<ButtonGroup
+							style={{
+								position: "absolute",
+								top: 0,
+								left: 0,
+								right: 0,
+								transition: "opacity 0.3s ease-in-out",
+								width: "100%",
+								height: "100%",
+								zIndex: 6,
+							}}>
+							<Tooltip style={{ left: 0 }} tipText={t("addContext", "chat")}>
 								<VSCodeButton
 									appearance="icon"
-									aria-label="Add Context"
-									className="p-0 m-0 flex items-center"
+									aria-label={t("addContext", "chat")}
 									data-testid="context-button"
-									onClick={handleContextButtonClick}>
+									onClick={handleContextButtonClick}
+									style={{ padding: "0px 0px", height: "20px" }}>
 									<ButtonContainer>
-										<AtSignIcon size={12} />
+										<span className="flex items-center" style={{ fontSize: "13px", marginBottom: 1 }}>
+											@
+										</span>
 									</ButtonContainer>
 								</VSCodeButton>
 							</Tooltip>
 
-							<Tooltip tipText="Add Files & Images">
+							<Tooltip tipText={t("addFilesImages", "chat")}>
 								<VSCodeButton
 									appearance="icon"
-									aria-label="Add Files & Images"
-									className="p-0 m-0 flex items-center"
+									aria-label={t("addFilesImages", "chat")}
 									data-testid="files-button"
 									disabled={shouldDisableFilesAndImages}
 									onClick={() => {
 										if (!shouldDisableFilesAndImages) {
 											onSelectFilesAndImages()
 										}
-									}}>
+									}}
+									style={{ padding: "0px 0px", height: "20px" }}>
 									<ButtonContainer>
-										<PlusIcon size={13} />
+										<span
+											className="codicon codicon-add flex items-center"
+											style={{ fontSize: "14px", marginBottom: -3 }}
+										/>
 									</ButtonContainer>
 								</VSCodeButton>
 							</Tooltip>
@@ -1748,7 +1792,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 										onClick={handleModelButtonClick}
 										role="button"
 										tabIndex={0}
-										title="Select Model / API Provider">
+										title={t("selectModelApiProvider", "chat")}>
 										<ModelButtonContent>{modelDisplayName}</ModelButtonContent>
 									</ModelDisplayButton>
 								</ModelButtonWrapper>
@@ -1772,10 +1816,21 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						</ButtonGroup>
 					</div>
 					{/* Tooltip for Plan/Act toggle remains outside the conditional rendering */}
+
 					<Tooltip
-						hintText={`Toggle w/ ${togglePlanActKeys}`}
+						hintText={t("mode.tooltip.toggle", "chat", { metaKey: metaKeyChar })}
 						style={{ zIndex: 1000 }}
-						tipText={`In ${shownTooltipMode === "act" ? "Act" : "Plan"}  mode, Cline will ${shownTooltipMode === "act" ? "complete the task immediately" : "gather information to architect a plan"}`}
+						tipText={t("mode.tooltip.description", "chat", {
+							mode_type:
+								shownTooltipMode === "act"
+									? modeSystem === "caret"
+										? t("mode.agent.label", "chat")
+										: t("mode.act.label", "chat")
+									: modeSystem === "caret"
+										? t("mode.chatbot.label", "chat")
+										: t("mode.plan.label", "chat"),
+							action: shownTooltipMode === "act" ? t("mode.act.label", "chat") : t("mode.plan.label", "chat"),
+						})}
 						visible={shownTooltipMode !== null}>
 						<SwitchContainer data-testid="mode-switch" disabled={false} onClick={onModeToggle}>
 							<Slider isAct={mode === "act"} isPlan={mode === "plan"} />
@@ -1785,7 +1840,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("plan")}
 								role="switch">
-								Plan
+								{modeSystem === "caret" ? t("mode.chatbot.label", "chat") : t("mode.plan.label", "chat")}
 							</SwitchOption>
 							<SwitchOption
 								aria-checked={mode === "act"}
@@ -1793,11 +1848,11 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("act")}
 								role="switch">
-								Act
+								{modeSystem === "caret" ? t("mode.agent.label", "chat") : t("mode.act.label", "chat")}
 							</SwitchOption>
 						</SwitchContainer>
 					</Tooltip>
-				</div>
+				</ControlsContainer>
 			</div>
 		)
 	},

@@ -1,5 +1,6 @@
 import { geminiModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { BaseUrlField } from "../common/BaseUrlField"
@@ -32,25 +33,28 @@ export const GeminiProvider = ({ showModelOptions, isPopup, currentMode }: Gemin
 	const { selectedModelId, selectedModelInfo } = normalizeApiConfiguration(apiConfiguration, currentMode)
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.gemini.description", "settings")}
+			</p>
 			<ApiKeyField
 				initialValue={apiConfiguration?.geminiApiKey || ""}
 				onChange={(value) => handleFieldChange("geminiApiKey", value)}
-				providerName="Gemini"
+				providerName={t("providers.gemini.name", "settings")}
 				signupUrl="https://aistudio.google.com/apikey"
 			/>
 
 			<BaseUrlField
 				initialValue={apiConfiguration?.geminiBaseUrl}
-				label="Use custom base URL"
+				label={t("baseUrlField.label", "settings")}
 				onChange={(value) => handleFieldChange("geminiBaseUrl", value)}
-				placeholder="Default: https://generativelanguage.googleapis.com"
+				placeholder={t("providers.gemini.baseUrlPlaceholder", "settings")}
 			/>
 
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("modelSelector.label", "settings")}
 						models={geminiModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

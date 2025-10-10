@@ -139,7 +139,6 @@ export class CaretGlobalManager {
 			)
 
 			console.log("[CARET-GLOBAL-MANAGER] 🌐 Opening external auth URL:", authUrl.toString())
-			// @ts-expect-error: VS Code API deprecation warning
 			const success = await vscode.env.openExternal(authUrl)
 			if (!success) {
 				throw new Error("Failed to open external URL")

@@ -1,4 +1,5 @@
 import { ModelInfo } from "@shared/api"
+import { t } from "@/caret/utils/i18n"
 
 /**
  * Formats a price as a currency string
@@ -17,7 +18,7 @@ export const formatPrice = (price: number) => {
  * @param price The price per million tokens
  */
 export const formatTokenPrice = (price: number) => {
-	return `${formatPrice(price)}/million tokens`
+	return `${formatPrice(price)}${t("pricing.perMillionTokens", "settings")}`
 }
 
 /**

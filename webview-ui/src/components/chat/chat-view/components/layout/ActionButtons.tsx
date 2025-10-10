@@ -2,9 +2,9 @@ import type { ClineMessage } from "@shared/ExtensionMessage"
 import type { Mode } from "@shared/storage/types"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import type React from "react"
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { VirtuosoHandle } from "react-virtuoso"
-import { ButtonActionType, getButtonConfig } from "../../shared/buttonConfig"
+import { useEffect, useMemo, useState } from "react"
+import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
+import { type ButtonActionType, getButtonConfig } from "../../shared/buttonConfig"
 import type { ChatState, MessageHandlers } from "../../types/chatTypes"
 
 interface ActionButtonsProps {
@@ -17,7 +17,6 @@ interface ActionButtonsProps {
 		scrollToBottomSmooth: () => void
 		disableAutoScrollRef: React.MutableRefObject<boolean>
 		showScrollToBottom: boolean
-		virtuosoRef: React.RefObject<VirtuosoHandle>
 	}
 }
 
@@ -32,25 +31,21 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 	messageHandlers,
 	scrollBehavior,
 }) => {
+	const { t } = useCaretI18n()
 	const { inputValue, selectedImages, selectedFiles, setSendingDisabled } = chatState
-	const [isProcessing, setIsProcessing] = useState(false)
 
-	// Memoize last messages to avoid unnecessary recalculations
+	const isStreaming = useMemo(() => task?.partial === true, [task])
+
+	const [primaryButtonText, setPrimaryButtonText] = useState<string | undefined>(undefined)
+	const [secondaryButtonText, setSecondaryButtonText] = useState<string | undefined>(undefined)
+	const [primaryAction, setPrimaryAction] = useState<ButtonActionType | undefined>(undefined)
+	const [secondaryAction, setSecondaryAction] = useState<ButtonActionType | undefined>(undefined)
+
+	const [enableButtons, setEnableButtons] = useState<boolean>(false)
+
 	const [lastMessage, secondLastMessage] = useMemo(() => {
-		const len = messages.length
-		return len > 0 ? [messages[len - 1], messages[len - 2]] : [undefined, undefined]
+		return [messages.at(-1), messages.at(-2)]
 	}, [messages])
-
-	// Memoize button configuration to avoid recalculation on every render
-	const buttonConfig = useMemo(() => {
-		return lastMessage ? getButtonConfig(lastMessage, mode) : { sendingDisabled: false, enableButtons: false }
-	}, [lastMessage, mode])
-
-	// Single effect to handle all configuration updates
-	useEffect(() => {
-		setSendingDisabled(buttonConfig.sendingDisabled)
-		setIsProcessing(false)
-	}, [buttonConfig, setSendingDisabled])
 
 	// Clear input when transitioning from command_output to api_req
 	// This happens when user provides feedback during command execution
@@ -60,35 +55,30 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 			chatState.setSelectedImages([])
 			chatState.setSelectedFiles([])
 		}
-	}, [lastMessage?.type, lastMessage?.say, secondLastMessage?.ask, chatState])
+	}, [chatState, lastMessage, secondLastMessage])
 
-	const handleActionClick = useCallback(
-		(action: ButtonActionType, text?: string, images?: string[], files?: string[]) => {
-			if (isProcessing) {
-				return
-			}
-			setIsProcessing(true)
-			messageHandlers.executeButtonAction(action, text, images, files)
-		},
-		[messageHandlers, isProcessing],
-	)
-
-	// Keyboard event handler
-	const handleKeyDown = useCallback(
-		(event: KeyboardEvent) => {
-			if (event.key === "Escape") {
-				event.preventDefault()
-				event.stopPropagation()
-				messageHandlers.executeButtonAction("cancel")
-			}
-		},
-		[messageHandlers],
-	)
+	// Apply button configuration with a single batched update
+	useEffect(() => {
+		const buttonConfig = getButtonConfig(lastMessage, mode, t)
+		setEnableButtons(buttonConfig.enableButtons)
+		setSendingDisabled(buttonConfig.sendingDisabled)
+		setPrimaryButtonText(buttonConfig.primaryText)
+		setSecondaryButtonText(buttonConfig.secondaryText)
+		setPrimaryAction(buttonConfig.primaryAction)
+		setSecondaryAction(buttonConfig.secondaryAction)
+	}, [lastMessage, mode, setSendingDisabled, t])
 
 	useEffect(() => {
-		window.addEventListener("keydown", handleKeyDown)
-		return () => window.removeEventListener("keydown", handleKeyDown)
-	}, [handleKeyDown])
+		if (!messages?.length) {
+			const buttonConfig = getButtonConfig(undefined, mode, t)
+			setEnableButtons(buttonConfig.enableButtons)
+			setSendingDisabled(buttonConfig.sendingDisabled)
+			setPrimaryButtonText(buttonConfig.primaryText)
+			setSecondaryButtonText(buttonConfig.secondaryText)
+			setPrimaryAction(buttonConfig.primaryAction)
+			setSecondaryAction(buttonConfig.secondaryAction)
+		}
+	}, [messages, setSendingDisabled, mode, t])
 
 	if (!task) {
 		return null
@@ -96,73 +86,61 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
 	const { showScrollToBottom, scrollToBottomSmooth, disableAutoScrollRef } = scrollBehavior
 
-	const { primaryText, secondaryText, primaryAction, secondaryAction, enableButtons } = buttonConfig
-	const hasButtons = primaryText || secondaryText
-	const isStreaming = task.partial === true
-	const canInteract = enableButtons && !isProcessing
-
-	// Early return for scroll button to avoid unnecessary computation
-	if (showScrollToBottom || !hasButtons) {
+	if (showScrollToBottom) {
 		const handleScrollToBottom = () => {
 			scrollToBottomSmooth()
 			disableAutoScrollRef.current = false
-		}
-		// Show scroll to top button when there are no action buttons
-		const handleScrollToTop = () => {
-			scrollBehavior.virtuosoRef.current?.scrollTo({
-				top: 0,
-				behavior: "smooth",
-			})
-			disableAutoScrollRef.current = true
 		}
 
 		return (
 			<div className="flex px-[15px]">
 				<VSCodeButton
 					appearance="icon"
-					aria-label={showScrollToBottom ? "Scroll to bottom" : "Scroll to top"}
+					aria-label={t("scrollToBottom", "common")}
 					className="text-lg text-[var(--vscode-primaryButton-foreground)] bg-[color-mix(in_srgb,var(--vscode-toolbar-hoverBackground)_55%,transparent)] rounded-[3px] overflow-hidden cursor-pointer flex justify-center items-center flex-1 h-[25px] hover:bg-[color-mix(in_srgb,var(--vscode-toolbar-hoverBackground)_90%,transparent)] active:bg-[color-mix(in_srgb,var(--vscode-toolbar-hoverBackground)_70%,transparent)] border-0"
-					onClick={showScrollToBottom ? handleScrollToBottom : handleScrollToTop}
+					onClick={handleScrollToBottom}
 					onKeyDown={(e) => {
 						if (e.key === "Enter" || e.key === " ") {
 							e.preventDefault()
-							if (showScrollToBottom) {
-								handleScrollToBottom()
-							} else {
-								handleScrollToTop()
-							}
+							handleScrollToBottom()
 						}
 					}}>
-					{showScrollToBottom ? (
-						<span className="codicon codicon-chevron-down" />
-					) : (
-						<span className="codicon codicon-chevron-up" />
-					)}
+					<span className="codicon codicon-chevron-down" />
 				</VSCodeButton>
 			</div>
 		)
 	}
 
-	const opacity = canInteract || isStreaming ? 1 : 0.5
+	const shouldShowButtons = primaryButtonText || secondaryButtonText
+	const opacity = shouldShowButtons ? (enableButtons || isStreaming ? 1 : 0.5) : 0
 
 	return (
 		<div className="flex px-[15px]" style={{ opacity }}>
-			{primaryText && primaryAction && (
+			{primaryButtonText && (
 				<VSCodeButton
 					appearance="primary"
-					className={secondaryText ? "flex-1 mr-[6px]" : "flex-[2]"}
-					disabled={!canInteract}
-					onClick={() => handleActionClick(primaryAction, inputValue, selectedImages, selectedFiles)}>
-					{primaryText}
+					className={`${secondaryButtonText ? "flex-1 mr-[6px]" : "flex-[2]"}`}
+					disabled={!enableButtons}
+					onClick={() => {
+						// CARET MODIFICATION: Always use executeButtonAction for consistent handling including new_task
+						if (primaryAction) {
+							messageHandlers.executeButtonAction(primaryAction, inputValue, selectedImages, selectedFiles)
+						}
+					}}>
+					{primaryButtonText}
 				</VSCodeButton>
 			)}
-			{secondaryText && secondaryAction && (
+			{secondaryButtonText && (
 				<VSCodeButton
 					appearance="secondary"
-					className={primaryText ? "flex-1" : "flex-[2]"}
-					disabled={!canInteract}
-					onClick={() => handleActionClick(secondaryAction, inputValue, selectedImages, selectedFiles)}>
-					{secondaryText}
+					className={`${primaryButtonText ? "flex-1" : "flex-[2]"}`}
+					disabled={!enableButtons}
+					onClick={() => {
+						if (secondaryAction) {
+							messageHandlers.executeButtonAction(secondaryAction, inputValue, selectedImages, selectedFiles)
+						}
+					}}>
+					{secondaryButtonText}
 				</VSCodeButton>
 			)}
 		</div>

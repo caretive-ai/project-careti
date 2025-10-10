@@ -337,6 +337,12 @@ message UpdateSettingsRequest {
   optional DictationSettings dictation_settings = 23;
   optional int32 auto_condense_threshold = 24;
   optional bool multi_root_enabled = 25;
+  // CARET MODIFICATION: F11 - Input History System
+  repeated string input_history = 26;
+  // CARET MODIFICATION: F01 - Mode System
+  optional string mode_system = 27;
+  // CARET MODIFICATION: F08 - Persona System
+  optional bool enable_persona_system = 28;
 }
 
 // Complete API Configuration message
@@ -468,6 +474,12 @@ message ApiConfiguration {
   optional OpenRouterModelInfo act_mode_vercel_ai_gateway_model_info = 223;
   optional string act_mode_oca_model_id = 224;
   optional OcaModelInfo act_mode_oca_model_info = 225;
+  // CARET MODIFICATION: Caret model configuration
+  optional string plan_mode_caret_model_id = 226;
+  optional OpenRouterModelInfo plan_mode_caret_model_info = 227;
+  optional string act_mode_caret_model_id = 228;
+  optional OpenRouterModelInfo act_mode_caret_model_info = 229;
+  optional string caret_user_profile = 230;
 
   // Extension fields for Bedrock Api Keys
   optional string aws_authentication = 301;

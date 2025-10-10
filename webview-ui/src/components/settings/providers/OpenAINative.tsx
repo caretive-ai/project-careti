@@ -1,5 +1,6 @@
 import { openAiNativeModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { ModelInfoView } from "../common/ModelInfoView"
@@ -27,18 +28,21 @@ export const OpenAINativeProvider = ({ showModelOptions, isPopup, currentMode }:
 	const { selectedModelId, selectedModelInfo } = normalizeApiConfiguration(apiConfiguration, currentMode)
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.openai-native.description", "settings")}
+			</p>
 			<ApiKeyField
 				initialValue={apiConfiguration?.openAiNativeApiKey || ""}
 				onChange={(value) => handleFieldChange("openAiNativeApiKey", value)}
-				providerName="OpenAI"
+				providerName={t("providers.openai-native.name", "settings")}
 				signupUrl="https://platform.openai.com/api-keys"
 			/>
 
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("modelSelector.label", "settings")}
 						models={openAiNativeModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

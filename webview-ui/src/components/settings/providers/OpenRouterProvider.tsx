@@ -2,6 +2,7 @@ import { EmptyRequest } from "@shared/proto/cline/common"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton, VSCodeCheckbox, VSCodeDropdown, VSCodeLink, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
 import { useOpenRouterKeyInfo } from "../../ui/hooks/useOpenRouterKeyInfo"
@@ -18,7 +19,11 @@ const OpenRouterBalanceDisplay = ({ apiKey }: { apiKey: string }) => {
 	const { data: keyInfo, isLoading, error } = useOpenRouterKeyInfo(apiKey)
 
 	if (isLoading) {
-		return <span style={{ fontSize: "12px", color: "var(--vscode-descriptionForeground)" }}>Loading...</span>
+		return (
+			<span style={{ fontSize: "12px", color: "var(--vscode-descriptionForeground)" }}>
+				{t("providers.openrouter.balanceDisplay.loading", "settings")}
+			</span>
+		)
 	}
 
 	if (error || !keyInfo || keyInfo.limit === null) {
@@ -41,8 +46,12 @@ const OpenRouterBalanceDisplay = ({ apiKey }: { apiKey: string }) => {
 				paddingLeft: 4,
 				cursor: "pointer",
 			}}
-			title={`Remaining balance: ${formattedBalance}\nLimit: ${formatPrice(keyInfo.limit)}\nUsage: ${formatPrice(keyInfo.usage)}`}>
-			Balance: {formattedBalance}
+			title={t("providers.openrouter.balanceDisplay.tooltip", "settings", {
+				remainingBalance: formattedBalance,
+				limit: formatPrice(keyInfo.limit),
+				usage: formatPrice(keyInfo.usage),
+			})}>
+			{t("providers.openrouter.balanceDisplay.label", "settings", { formattedBalance })}
 		</VSCodeLink>
 	)
 }
@@ -66,16 +75,19 @@ export const OpenRouterProvider = ({ showModelOptions, isPopup, currentMode }: O
 	const [providerSortingSelected, setProviderSortingSelected] = useState(!!apiConfiguration?.openRouterProviderSorting)
 
 	return (
-		<div>
-			<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.openrouter.description", "settings")}
+			</p>
+			<div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
 				<DebouncedTextField
 					initialValue={apiConfiguration?.openRouterApiKey || ""}
 					onChange={(value) => handleFieldChange("openRouterApiKey", value)}
-					placeholder="Enter API Key..."
+					placeholder={t("providers.openrouter.apiKeyPlaceholder", "settings")}
 					style={{ width: "100%" }}
 					type="password">
 					<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-						<span style={{ fontWeight: 500 }}>OpenRouter API Key</span>
+						<span style={{ fontWeight: 500 }}>{t("providers.openrouter.apiKeyLabel", "settings")}</span>
 						{apiConfiguration?.openRouterApiKey && (
 							<OpenRouterBalanceDisplay apiKey={apiConfiguration.openRouterApiKey} />
 						)}
@@ -88,11 +100,11 @@ export const OpenRouterProvider = ({ showModelOptions, isPopup, currentMode }: O
 							try {
 								await AccountServiceClient.openrouterAuthClicked(EmptyRequest.create())
 							} catch (error) {
-								console.error("Failed to open OpenRouter auth:", error)
+								console.error(t("providers.openrouter.authError", "settings"), error)
 							}
 						}}
 						style={{ margin: "5px 0 0 0" }}>
-						Get OpenRouter API Key
+						{t("providers.openrouter.getApiKeyButton", "settings")}
 					</VSCodeButton>
 				)}
 				<p
@@ -101,7 +113,7 @@ export const OpenRouterProvider = ({ showModelOptions, isPopup, currentMode }: O
 						marginTop: "5px",
 						color: "var(--vscode-descriptionForeground)",
 					}}>
-					This key is stored locally and only used to make API requests from this extension.
+					{t("providers.openrouter.apiKeyHelpText", "settings")}
 				</p>
 			</div>
 
@@ -117,7 +129,7 @@ export const OpenRouterProvider = ({ showModelOptions, isPopup, currentMode }: O
 							}
 						}}
 						style={{ marginTop: -10 }}>
-						Sort underlying provider routing
+						{t("providers.openrouter.sortUnderlyingProviderRoutingCheckbox", "settings")}
 					</VSCodeCheckbox>
 
 					{providerSortingSelected && (
@@ -129,21 +141,25 @@ export const OpenRouterProvider = ({ showModelOptions, isPopup, currentMode }: O
 									}}
 									style={{ width: "100%", marginTop: 3 }}
 									value={apiConfiguration?.openRouterProviderSorting}>
-									<VSCodeOption value="">Default</VSCodeOption>
-									<VSCodeOption value="price">Price</VSCodeOption>
-									<VSCodeOption value="throughput">Throughput</VSCodeOption>
-									<VSCodeOption value="latency">Latency</VSCodeOption>
+									<VSCodeOption value="">{t("providers.openrouter.defaultOption", "settings")}</VSCodeOption>
+									<VSCodeOption value="price">{t("providers.openrouter.priceOption", "settings")}</VSCodeOption>
+									<VSCodeOption value="throughput">
+										{t("providers.openrouter.throughputOption", "settings")}
+									</VSCodeOption>
+									<VSCodeOption value="latency">
+										{t("providers.openrouter.latencyOption", "settings")}
+									</VSCodeOption>
 								</VSCodeDropdown>
 							</DropdownContainer>
 							<p style={{ fontSize: "12px", marginTop: 3, color: "var(--vscode-descriptionForeground)" }}>
 								{!apiConfiguration?.openRouterProviderSorting &&
-									"Default behavior is to load balance requests across providers (like AWS, Google Vertex, Anthropic), prioritizing price while considering provider uptime"}
+									t("providers.openrouter.defaultSortingDescription", "settings")}
 								{apiConfiguration?.openRouterProviderSorting === "price" &&
-									"Sort providers by price, prioritizing the lowest cost provider"}
+									t("providers.openrouter.priceSortingDescription", "settings")}
 								{apiConfiguration?.openRouterProviderSorting === "throughput" &&
-									"Sort providers by throughput, prioritizing the provider with the highest throughput (may increase cost)"}
+									t("providers.openrouter.throughputSortingDescription", "settings")}
 								{apiConfiguration?.openRouterProviderSorting === "latency" &&
-									"Sort providers by response time, prioritizing the provider with the lowest latency"}
+									t("providers.openrouter.latencySortingDescription", "settings")}
 							</p>
 						</div>
 					)}

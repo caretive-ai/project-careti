@@ -2,11 +2,17 @@ import { ApiConfiguration } from "@shared/api"
 import { UpdateApiConfigurationRequest } from "@shared/proto/cline/models"
 import { convertApiConfigurationToProto } from "@shared/proto-conversions/models/api-configuration-conversion"
 import { Mode } from "@shared/storage/types"
+import { createContext, useContext } from "react"
 import { useExtensionState } from "@/context/ExtensionStateContext"
+
 import { ModelsServiceClient } from "@/services/grpc-client"
 
-export const useApiConfigurationHandlers = () => {
+export const PlanActSeparateOverrideContext = createContext<boolean | undefined>(undefined)
+
+export const useApiConfigurationHandlers = (options?: { forceSeparate?: boolean }) => {
 	const { apiConfiguration, planActSeparateModelsSetting } = useExtensionState()
+	const overrideSeparate = options?.forceSeparate ?? useContext(PlanActSeparateOverrideContext)
+	const isSeparate = overrideSeparate ?? planActSeparateModelsSetting
 
 	/**
 	 * Updates a single field in the API configuration.
@@ -60,7 +66,10 @@ export const useApiConfigurationHandlers = () => {
 		value: ApiConfiguration[PlanK] & ApiConfiguration[ActK], // Intersection ensures value is compatible with both field types
 		currentMode: Mode,
 	) => {
-		if (planActSeparateModelsSetting) {
+		// CARET MODIFICATION: Add logging for mode field changes
+		console.log(`📝 [ApiConfigHandler] Mode field change: ${fieldPair[currentMode]} = "${value}" (mode: ${currentMode})`)
+
+		if (isSeparate) {
 			const targetField = fieldPair[currentMode]
 			await handleFieldChange(targetField, value)
 		} else {
@@ -86,7 +95,7 @@ export const useApiConfigurationHandlers = () => {
 		values: T,
 		currentMode: Mode,
 	) => {
-		if (planActSeparateModelsSetting) {
+		if (isSeparate) {
 			// Update only the current mode's fields
 			const updates: Partial<ApiConfiguration> = {}
 			Object.entries(fieldPairs).forEach(([key, { plan, act }]) => {

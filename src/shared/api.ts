@@ -191,6 +191,12 @@ export interface ApiHandlerOptions {
 	actModeVercelAiGatewayModelInfo?: ModelInfo
 	actModeOcaModelId?: string
 	actModeOcaModelInfo?: OcaModelInfo
+	// CARET MODIFICATION: Caret model fields
+	planModeCaretModelId?: string
+	planModeCaretModelInfo?: ModelInfo
+	actModeCaretModelId?: string
+	actModeCaretModelInfo?: ModelInfo
+	caretUserProfile?: string
 }
 
 export type ApiConfiguration = ApiHandlerOptions &
@@ -244,6 +250,8 @@ export interface OcaModelInfo extends OpenAiCompatibleModelInfo {
 }
 
 export const CLAUDE_SONNET_1M_SUFFIX = ":1m"
+// CARET MODIFICATION: Add 4.1m suffix for compatibility
+export const CLAUDE_SONNET_4_1M_SUFFIX = ":4-1m"
 export const CLAUDE_SONNET_1M_TIERS = [
 	{
 		contextWindow: 200000,
@@ -3707,3 +3715,20 @@ export const qwenCodeModels = {
 } as const satisfies Record<string, ModelInfo>
 export type QwenCodeModelId = keyof typeof qwenCodeModels
 export const qwenCodeDefaultModelId: QwenCodeModelId = "qwen3-coder-plus"
+
+// CARET MODIFICATION: Caret Models
+export const caretModels = {
+	"claude-sonnet-4-5": {
+		maxTokens: 8192,
+		contextWindow: 200000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 3,
+		outputPrice: 15,
+		cacheWritesPrice: 3.75,
+		cacheReadsPrice: 0.3,
+		description: "Claude 4.5 Sonnet via Caret API",
+	},
+} as const satisfies Record<string, ModelInfo>
+export type CaretModelId = keyof typeof caretModels
+export const caretDefaultModelId: CaretModelId = "claude-sonnet-4-5"

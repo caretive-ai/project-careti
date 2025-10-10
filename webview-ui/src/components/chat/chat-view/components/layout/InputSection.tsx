@@ -10,6 +10,7 @@ interface InputSectionProps {
 	placeholderText: string
 	shouldDisableFilesAndImages: boolean
 	selectFilesAndImages: () => Promise<void>
+	inputHistory?: string[] // CARET MODIFICATION: Persistent input history functionality
 }
 
 /**
@@ -22,6 +23,7 @@ export const InputSection: React.FC<InputSectionProps> = ({
 	placeholderText,
 	shouldDisableFilesAndImages,
 	selectFilesAndImages,
+	inputHistory,
 }) => {
 	const {
 		activeQuote,
@@ -54,6 +56,7 @@ export const InputSection: React.FC<InputSectionProps> = ({
 
 			<ChatTextArea
 				activeQuote={activeQuote}
+				inputHistory={inputHistory}
 				inputValue={inputValue}
 				onFocusChange={handleFocusChange}
 				onHeightChange={() => {
@@ -71,7 +74,7 @@ export const InputSection: React.FC<InputSectionProps> = ({
 				setInputValue={setInputValue}
 				setSelectedFiles={setSelectedFiles}
 				setSelectedImages={setSelectedImages}
-				shouldDisableFilesAndImages={shouldDisableFilesAndImages}
+				shouldDisableFilesAndImages={shouldDisableFilesAndImages} // CARET MODIFICATION: Pass persistent input history
 			/>
 		</>
 	)

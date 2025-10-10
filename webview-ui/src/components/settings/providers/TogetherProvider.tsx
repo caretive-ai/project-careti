@@ -1,4 +1,5 @@
 import { Mode } from "@shared/storage/types"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { DebouncedTextField } from "../common/DebouncedTextField"
@@ -24,20 +25,21 @@ export const TogetherProvider = ({ showModelOptions, isPopup, currentMode }: Tog
 	const { togetherModelId } = getModeSpecificFields(apiConfiguration, currentMode)
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ whiteSpace: "pre-wrap" }}>{t("providers.together.description", "settings")}</p>
 			<ApiKeyField
 				initialValue={apiConfiguration?.togetherApiKey || ""}
 				onChange={(value) => handleFieldChange("togetherApiKey", value)}
-				providerName="Together"
+				providerName={t("providers.together.name", "settings")}
 			/>
 			<DebouncedTextField
 				initialValue={togetherModelId || ""}
 				onChange={(value) =>
 					handleModeFieldChange({ plan: "planModeTogetherModelId", act: "actModeTogetherModelId" }, value, currentMode)
 				}
-				placeholder={"Enter Model ID..."}
+				placeholder={t("providers.together.modelIdPlaceholder", "settings")}
 				style={{ width: "100%" }}>
-				<span style={{ fontWeight: 500 }}>Model ID</span>
+				<span style={{ fontWeight: 500 }}>{t("providers.together.modelIdLabel", "settings")}</span>
 			</DebouncedTextField>
 			<p
 				style={{
@@ -46,8 +48,8 @@ export const TogetherProvider = ({ showModelOptions, isPopup, currentMode }: Tog
 					color: "var(--vscode-descriptionForeground)",
 				}}>
 				<span style={{ color: "var(--vscode-errorForeground)" }}>
-					(<span style={{ fontWeight: 500 }}>Note:</span> Cline uses complex prompts and works best with Claude models.
-					Less capable models may not work as expected.)
+					(<span style={{ fontWeight: 500 }}>{t("providers.together.notePrefix", "settings")}</span>{" "}
+					{t("providers.together.noteText", "settings")})
 				</span>
 			</p>
 		</div>

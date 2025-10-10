@@ -1,12 +1,18 @@
 import type { ClineMessage } from "@shared/ExtensionMessage"
 import { describe, expect, it } from "vitest"
-import { BUTTON_CONFIGS, getButtonConfig } from "./buttonConfig"
+import type { TFunction } from "@/caret/hooks/useCaretI18n"
+import { getButtonConfig, getButtonConfigs } from "./buttonConfig"
+
+// Mock t function for tests
+const mockT = ((key: string) => key) as unknown as TFunction
 
 describe("getButtonConfig", () => {
+	const BUTTON_CONFIGS = getButtonConfigs(mockT)
+
 	// Test default behavior
 	it("returns default config when no task is provided", () => {
 		const task = undefined
-		const config = getButtonConfig(task)
+		const config = getButtonConfig(task, "act", mockT)
 		expect(config).toEqual(BUTTON_CONFIGS.default)
 	})
 
@@ -18,7 +24,7 @@ describe("getButtonConfig", () => {
 			partial: true,
 			ts: Date.now(),
 		}
-		const config = getButtonConfig(streamingMessage)
+		const config = getButtonConfig(streamingMessage, "act", mockT)
 		expect(config).toEqual(BUTTON_CONFIGS.partial)
 	})
 
@@ -35,7 +41,7 @@ describe("getButtonConfig", () => {
 					text: "",
 					ts: Date.now(),
 				}
-				const config = getButtonConfig(errorMessage)
+				const config = getButtonConfig(errorMessage, "act", mockT)
 				expect(config).toEqual(BUTTON_CONFIGS[errorState])
 			})
 		})
@@ -50,7 +56,7 @@ describe("getButtonConfig", () => {
 				text: JSON.stringify({ tool: "generic_tool" }),
 				ts: Date.now(),
 			}
-			const config = getButtonConfig(toolMessage)
+			const config = getButtonConfig(toolMessage, "act", mockT)
 			expect(config).toEqual(BUTTON_CONFIGS.tool_approve)
 		})
 
@@ -64,7 +70,7 @@ describe("getButtonConfig", () => {
 					text: JSON.stringify(toolData),
 					ts: Date.now(),
 				}
-				const config = getButtonConfig(toolMessage)
+				const config = getButtonConfig(toolMessage, "act", mockT)
 				expect(config).toEqual(BUTTON_CONFIGS.tool_save)
 			})
 		})
@@ -78,7 +84,7 @@ describe("getButtonConfig", () => {
 				ask: "command",
 				ts: Date.now(),
 			}
-			const config = getButtonConfig(commandMessage)
+			const config = getButtonConfig(commandMessage, "act", mockT)
 			expect(config).toEqual(BUTTON_CONFIGS.command)
 		})
 
@@ -88,7 +94,7 @@ describe("getButtonConfig", () => {
 				ask: "command_output",
 				ts: Date.now(),
 			}
-			const config = getButtonConfig(commandOutputMessage)
+			const config = getButtonConfig(commandOutputMessage, "act", mockT)
 			expect(config).toEqual(BUTTON_CONFIGS.command_output)
 		})
 	})
@@ -115,7 +121,7 @@ describe("getButtonConfig", () => {
 					ask: ask as any,
 					ts: Date.now(),
 				}
-				const config = getButtonConfig(message)
+				const config = getButtonConfig(message, "act", mockT)
 				expect(config).toEqual(BUTTON_CONFIGS[expectedConfig])
 			})
 		})
@@ -128,7 +134,7 @@ describe("getButtonConfig", () => {
 			say: "api_req_started",
 			ts: Date.now(),
 		}
-		const config = getButtonConfig(apiReqMessage)
+		const config = getButtonConfig(apiReqMessage, "act", mockT)
 		expect(config).toEqual(BUTTON_CONFIGS.api_req_active)
 	})
 
@@ -140,8 +146,8 @@ describe("getButtonConfig", () => {
 			text: JSON.stringify({ tool: "generic_tool" }),
 			ts: Date.now(),
 		}
-		const configAct = getButtonConfig(message, "act")
-		const configPlan = getButtonConfig(message, "plan")
+		const configAct = getButtonConfig(message, "act", mockT)
+		const configPlan = getButtonConfig(message, "plan", mockT)
 		expect(configAct).toEqual(configPlan)
 	})
 })

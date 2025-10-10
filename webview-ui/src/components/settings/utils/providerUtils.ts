@@ -9,6 +9,8 @@ import {
 	basetenModels,
 	bedrockDefaultModelId,
 	bedrockModels,
+	caretDefaultModelId,
+	caretModels,
 	cerebrasDefaultModelId,
 	cerebrasModels,
 	claudeCodeDefaultModelId,
@@ -117,13 +119,10 @@ export function normalizeApiConfiguration(
 					currentMode === "plan"
 						? apiConfiguration?.planModeAwsBedrockCustomModelBaseId
 						: apiConfiguration?.actModeAwsBedrockCustomModelBaseId
-
 				return {
 					selectedProvider: provider,
 					selectedModelId: modelId || bedrockDefaultModelId,
-					selectedModelInfo:
-						(baseModelId && bedrockModels[baseModelId as keyof typeof bedrockModels]) ||
-						bedrockModels[bedrockDefaultModelId],
+					selectedModelInfo: (baseModelId && bedrockModels[baseModelId]) || bedrockModels[bedrockDefaultModelId],
 				}
 			}
 			return getProviderData(bedrockModels, bedrockDefaultModelId)
@@ -239,6 +238,16 @@ export function normalizeApiConfiguration(
 				selectedModelId: liteLlmModelId || "",
 				selectedModelInfo: liteLlmModelInfo || liteLlmModelInfoSaneDefaults,
 			}
+		case "caret":
+			const caretModelId =
+				currentMode === "plan" ? apiConfiguration?.planModeCaretModelId : apiConfiguration?.actModeCaretModelId
+			const caretModelInfo =
+				currentMode === "plan" ? apiConfiguration?.planModeCaretModelInfo : apiConfiguration?.actModeCaretModelInfo
+			return {
+				selectedProvider: provider,
+				selectedModelId: caretModelId || "",
+				selectedModelInfo: caretModelInfo || caretModels[caretDefaultModelId],
+			}
 		case "xai":
 			return getProviderData(xaiModels, xaiDefaultModelId)
 		case "moonshot":
@@ -348,15 +357,6 @@ export function normalizeApiConfiguration(
 						? fireworksModels[fireworksModelId as keyof typeof fireworksModels]
 						: fireworksModels[fireworksDefaultModelId],
 			}
-		case "oca":
-			const ocaModelId = currentMode === "plan" ? apiConfiguration?.planModeOcaModelId : apiConfiguration?.actModeOcaModelId
-			const ocaModelInfo =
-				currentMode === "plan" ? apiConfiguration?.planModeOcaModelInfo : apiConfiguration?.actModeOcaModelInfo
-			return {
-				selectedProvider: provider,
-				selectedModelId: ocaModelId || "",
-				selectedModelInfo: ocaModelInfo || liteLlmModelInfoSaneDefaults,
-			}
 		default:
 			return getProviderData(anthropicModels, anthropicDefaultModelId)
 	}
@@ -380,6 +380,7 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 			fireworksModelId: undefined,
 			lmStudioModelId: undefined,
 			ollamaModelId: undefined,
+			caretModelId: undefined, // caret
 			liteLlmModelId: undefined,
 			requestyModelId: undefined,
 			openAiModelId: undefined,
@@ -392,6 +393,7 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 
 			// Model info objects
 			openAiModelInfo: undefined,
+			caretModelInfo: undefined, // caret
 			liteLlmModelInfo: undefined,
 			openRouterModelInfo: undefined,
 			requestyModelInfo: undefined,
@@ -429,6 +431,7 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 		openAiModelId: mode === "plan" ? apiConfiguration.planModeOpenAiModelId : apiConfiguration.actModeOpenAiModelId,
 		openRouterModelId:
 			mode === "plan" ? apiConfiguration.planModeOpenRouterModelId : apiConfiguration.actModeOpenRouterModelId,
+		caretModelId: mode === "plan" ? apiConfiguration.planModeCaretModelId : apiConfiguration.actModeCaretModelId,
 		groqModelId: mode === "plan" ? apiConfiguration.planModeGroqModelId : apiConfiguration.actModeGroqModelId,
 		basetenModelId: mode === "plan" ? apiConfiguration.planModeBasetenModelId : apiConfiguration.actModeBasetenModelId,
 		huggingFaceModelId:
@@ -437,11 +440,11 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 			mode === "plan" ? apiConfiguration.planModeHuaweiCloudMaasModelId : apiConfiguration.actModeHuaweiCloudMaasModelId,
 		vercelAiGatewayModelId:
 			mode === "plan" ? apiConfiguration.planModeVercelAiGatewayModelId : apiConfiguration.actModeVercelAiGatewayModelId,
-		ocaModelId: mode === "plan" ? apiConfiguration.planModeOcaModelId : apiConfiguration.actModeOcaModelId,
 
 		// Model info objects
 		openAiModelInfo: mode === "plan" ? apiConfiguration.planModeOpenAiModelInfo : apiConfiguration.actModeOpenAiModelInfo,
 		liteLlmModelInfo: mode === "plan" ? apiConfiguration.planModeLiteLlmModelInfo : apiConfiguration.actModeLiteLlmModelInfo,
+		caretModelInfo: mode === "plan" ? apiConfiguration.planModeCaretModelInfo : apiConfiguration.actModeCaretModelInfo,
 		openRouterModelInfo:
 			mode === "plan" ? apiConfiguration.planModeOpenRouterModelInfo : apiConfiguration.actModeOpenRouterModelInfo,
 		requestyModelInfo:
@@ -477,8 +480,6 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 		thinkingBudgetTokens:
 			mode === "plan" ? apiConfiguration.planModeThinkingBudgetTokens : apiConfiguration.actModeThinkingBudgetTokens,
 		reasoningEffort: mode === "plan" ? apiConfiguration.planModeReasoningEffort : apiConfiguration.actModeReasoningEffort,
-		// Oracle Code Assist
-		ocaModelInfo: mode === "plan" ? apiConfiguration.planModeOcaModelInfo : apiConfiguration.actModeOcaModelInfo,
 	}
 }
 
@@ -552,6 +553,13 @@ export async function syncModeConfigurations(
 			updates.actModeVsCodeLmModelSelector = sourceFields.vsCodeLmModelSelector
 			break
 
+		case "caret":
+			updates.planModeCaretModelId = sourceFields.caretModelId
+			updates.actModeCaretModelId = sourceFields.caretModelId
+			updates.planModeCaretModelInfo = sourceFields.caretModelInfo
+			updates.actModeCaretModelInfo = sourceFields.caretModelInfo
+			break
+
 		case "litellm":
 			updates.planModeLiteLlmModelId = sourceFields.liteLlmModelId
 			updates.actModeLiteLlmModelId = sourceFields.liteLlmModelId
@@ -615,12 +623,6 @@ export async function syncModeConfigurations(
 			updates.actModeVercelAiGatewayModelId = sourceFields.vercelAiGatewayModelId
 			updates.planModeVercelAiGatewayModelInfo = sourceFields.vercelAiGatewayModelInfo
 			updates.actModeVercelAiGatewayModelInfo = sourceFields.vercelAiGatewayModelInfo
-			break
-		case "oca":
-			updates.planModeOcaModelId = sourceFields.ocaModelId
-			updates.actModeOcaModelId = sourceFields.ocaModelId
-			updates.planModeOcaModelInfo = sourceFields.ocaModelInfo
-			updates.actModeOcaModelInfo = sourceFields.ocaModelInfo
 			break
 
 		// Providers that use apiProvider + apiModelId fields

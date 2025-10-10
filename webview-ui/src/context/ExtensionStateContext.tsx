@@ -16,6 +16,7 @@ import type { UserInfo } from "@shared/proto/cline/account"
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import type { OpenRouterCompatibleModelInfo } from "@shared/proto/cline/models"
 import { type TerminalProfile } from "@shared/proto/cline/state"
+import * as proto from "@shared/proto/index"
 import { convertProtoToClineMessage } from "@shared/proto-conversions/cline-message"
 import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mcp/mcp-server-conversion"
 import {
@@ -93,10 +94,14 @@ export interface ExtensionStateContextType extends ExtensionState {
 	showHistory: boolean
 	showAccount: boolean
 	showAnnouncement: boolean
+	showChatModelSelector: boolean
+	checkpointTrackerErrorMessage?: string
+	featureConfig?: any
 
 	// Setters
 	setShowAnnouncement: (value: boolean) => void
 	setShouldShowAnnouncement: (value: boolean) => void
+	setShowChatModelSelector: (value: boolean) => void
 	// CARET MODIFICATION: 전역 브랜드 모드 플래그 설정 함수
 	setModeSystem: (modeSystem: CaretModeSystem) => void
 	// CARET MODIFICATION: Persona system setters (restored from caret-compare)
@@ -449,27 +454,22 @@ export const ExtensionStateContextProvider: React.FC<{
 		})
 
 		// Subscribe to MCP button clicked events with webview type
-		mcpButtonUnsubscribeRef.current = UiServiceClient.subscribeToMcpButtonClicked(
-			EmptyRequest.create(),
-			{
-				onResponse: () => {
-					console.log("[DEBUG] Received mcpButtonClicked event from gRPC stream")
-					navigateToMcp()
-				},
-				onError: (error) => {
-					console.error("Error in mcpButtonClicked subscription:", error)
-				},
-				onComplete: () => {
-					console.log("mcpButtonClicked subscription completed")
-				},
+		mcpButtonUnsubscribeRef.current = UiServiceClient.subscribeToMcpButtonClicked(EmptyRequest.create(), {
+			onResponse: () => {
+				console.log("[DEBUG] Received mcpButtonClicked event from gRPC stream")
+				navigateToMcp()
 			},
-		)
+			onError: (error) => {
+				console.error("Error in mcpButtonClicked subscription:", error)
+			},
+			onComplete: () => {
+				console.log("mcpButtonClicked subscription completed")
+			},
+		})
 
 		// Set up history button clicked subscription with webview type
 		historyButtonClickedSubscriptionRef.current = UiServiceClient.subscribeToHistoryButtonClicked(
-			WebviewProviderTypeRequest.create({
-				providerType: webviewType,
-			}),
+			proto.cline.EmptyRequest.create(),
 			{
 				onResponse: () => {
 					// When history button is clicked, navigate to history view
@@ -528,9 +528,7 @@ export const ExtensionStateContextProvider: React.FC<{
 
 		// Set up settings button clicked subscription
 		settingsButtonClickedSubscriptionRef.current = UiServiceClient.subscribeToSettingsButtonClicked(
-			WebviewProviderTypeRequest.create({
-				providerType: currentProviderType,
-			}),
+			proto.cline.EmptyRequest.create(),
 			{
 				onResponse: () => {
 					// When settings button is clicked, navigate to settings
@@ -818,6 +816,10 @@ export const ExtensionStateContextProvider: React.FC<{
 		groqModels: groqModelsState,
 		caretModels: caretModelsState,
 		basetenModels: basetenModelsState,
+		showChatModelSelector: false,
+		setShowChatModelSelector: (value: boolean) => {
+			// TODO: Implement chat model selector state
+		},
 		huggingFaceModels,
 		vercelAiGatewayModels,
 		mcpServers,
@@ -901,10 +903,12 @@ export const ExtensionStateContextProvider: React.FC<{
 			// CARET MODIFICATION: 백엔드 API 호출 - StateServiceClient.updateSettings
 			try {
 				// 백엔드에 modeSystem 변경 전송
-				StateServiceClient.updateSettings({
-					modeSystem: modeSystem,
-					inputHistory: [], // CARET MODIFICATION: Required field for proto compatibility
-				})
+				await StateServiceClient.updateSettings(
+					proto.cline.UpdateSettingsRequest.create({
+						metadata: proto.cline.Metadata.create({ source: "webview" }),
+						modeSystem: modeSystem,
+					}),
+				)
 				console.log(`[API] StateServiceClient.updateSettings called with modeSystem: ${modeSystem}`)
 			} catch (error) {
 				console.error("[API] Failed to update modeSystem via StateServiceClient:", error)
@@ -988,10 +992,12 @@ export const ExtensionStateContextProvider: React.FC<{
 
 			// CARET MODIFICATION: Send to backend globalState only (no localStorage)
 			try {
-				StateServiceClient.updateSettings({
-					enablePersonaSystem: enabled,
-					inputHistory: [], // CARET MODIFICATION: Required field for proto compatibility
-				})
+				await StateServiceClient.updateSettings(
+					proto.cline.UpdateSettingsRequest.create({
+						metadata: proto.cline.Metadata.create({ source: "webview" }),
+						enablePersonaSystem: enabled,
+					}),
+				)
 				if (isChanging) {
 					caretWebviewLogger.debug("Sent to backend via StateServiceClient:", enabled)
 				}

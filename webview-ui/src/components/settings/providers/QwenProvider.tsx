@@ -2,6 +2,7 @@ import { internationalQwenModels, mainlandQwenModels, QwenApiRegions } from "@sh
 import { Mode } from "@shared/storage/types"
 import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import { useMemo } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { DROPDOWN_Z_INDEX } from "../ApiOptions"
 import { ApiKeyField } from "../common/ApiKeyField"
@@ -53,10 +54,11 @@ export const QwenProvider = ({ showModelOptions, isPopup, currentMode }: QwenPro
 	)
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ whiteSpace: "pre-wrap" }}>{t("providers.qwen.description", "settings")}</p>
 			<DropdownContainer className="dropdown-container" style={{ position: "inherit" }}>
 				<label htmlFor="qwen-line-provider">
-					<span style={{ fontWeight: 500, marginTop: 5 }}>Alibaba API Line</span>
+					<span style={{ fontWeight: 500, marginTop: 5 }}>{t("providers.qwen.apiLineLabel", "settings")}</span>
 				</label>
 				<VSCodeDropdown
 					id="qwen-line-provider"
@@ -68,7 +70,7 @@ export const QwenProvider = ({ showModelOptions, isPopup, currentMode }: QwenPro
 					value={apiConfiguration?.qwenApiLine || qwenApiOptions[0]}>
 					{qwenApiOptions.map((line) => (
 						<VSCodeOption key={line} value={line}>
-							{line.charAt(0).toUpperCase() + line.slice(1)} API
+							{t(`providers.qwen.apiLineOptions.${line}`, "settings")}
 						</VSCodeOption>
 					))}
 				</VSCodeDropdown>
@@ -79,21 +81,20 @@ export const QwenProvider = ({ showModelOptions, isPopup, currentMode }: QwenPro
 					marginTop: 3,
 					color: "var(--vscode-descriptionForeground)",
 				}}>
-				Please select the appropriate API interface based on your location. If you are in China, choose the China API
-				interface. Otherwise, choose the International API interface.
+				{t("providers.qwen.apiLineDescription", "settings")}
 			</p>
 
 			<ApiKeyField
 				initialValue={apiConfiguration?.qwenApiKey || ""}
 				onChange={(value) => handleFieldChange("qwenApiKey", value)}
-				providerName="Qwen"
+				providerName={t("providers.qwen.name", "settings")}
 				signupUrl="https://bailian.console.aliyun.com/"
 			/>
 
 			{showModelOptions && (
 				<>
 					<ModelSelector
-						label="Model"
+						label={t("modelSelector.label", "settings")}
 						models={qwenModels}
 						onChange={(e: any) =>
 							handleModeFieldChange(

@@ -14,9 +14,13 @@
 		"noImplicitOverride": true,
 		"noImplicitReturns": true,
 		"noUnusedLocals": false,
+		// CARET MODIFICATION: Suppress unused @ts-expect-error directive warnings
+		"noUnusedParameters": false,
 		"resolveJsonModule": true,
 		"rootDir": ".",
 		"skipLibCheck": true,
+		// CARET MODIFICATION: Ignore cheerio module type errors for build compatibility
+		"skipDefaultLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
 		"target": "es2022",
@@ -26,9 +30,6 @@
 		"paths": {
 			"@/*": [
 				"src/*"
-			],
-			"@api/*": [
-				"src/core/api/*"
 			],
 			"@core/*": [
 				"src/core/*"

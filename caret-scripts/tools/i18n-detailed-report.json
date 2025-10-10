@@ -1,0 +1,2391 @@
+{
+	"timestamp": "2025-09-03T14:01:22.166Z",
+	"scannedDirectory": "D:\\dev\\caret-merging\\webview-ui\\src\\components",
+	"summary": {
+		"totalFiles": 154,
+		"missingI18nCount": 146,
+		"i18nReadyCount": 8
+	},
+	"categorized": {
+		"chat": [],
+		"welcome": [],
+		"settings": [],
+		"common": [],
+		"account": [],
+		"mcp": [],
+		"rules": [],
+		"history": [],
+		"other": [
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\account\\AccountOptions.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\account\\AccountView.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\account\\AccountWelcomeView.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\account\\CreditBalance.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\account\\CreditsHistoryTable.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\account\\StyledCreditDisplay.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\browser\\BrowserSettingsMenu.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\Announcement.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\auto-approve-menu\\AutoApproveBar.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\auto-approve-menu\\AutoApproveMenuItem.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\auto-approve-menu\\AutoApproveModal.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\BrowserSessionRow.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\chat-view\\components\\layout\\ActionButtons.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\chat-view\\components\\layout\\ChatLayout.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\chat-view\\components\\layout\\InputSection.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\chat-view\\components\\layout\\MessagesArea.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\chat-view\\components\\layout\\WelcomeSection.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\ChatErrorBoundary.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\ChatRow.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\ChatTextArea.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\ChatView.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\ContextMenu.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\CreditLimitError.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\ErrorBlockTitle.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\ErrorRow.test.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\ErrorRow.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\OptionsButtons.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\QuoteButton.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\QuotedMessagePreview.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\ReportBugPreview.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\ServersToggleModal.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\SlashCommandMenu.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\task-header\\buttons\\CopyTaskButton.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\task-header\\buttons\\DeleteTaskButton.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\task-header\\buttons\\OpenDiskTaskHistoryButton.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\task-header\\TaskHeader.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\task-header\\TaskTimeline.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\task-header\\TaskTimelineTooltip.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\TaskFeedbackButtons.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\chat\\UserMessage.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\cline-rules\\ClineRulesToggleModal.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\cline-rules\\NewRuleRow.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\cline-rules\\RuleRow.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\cline-rules\\RulesToggleList.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\AlertDialog.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\ChecklistRenderer.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\CheckmarkControl.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\CheckpointControls.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\CodeAccordian.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\CodeBlock.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\CopyButton.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\DangerButton.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\Demo.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\HeroTooltip.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\MarkdownBlock.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\MermaidBlock.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\SuccessButton.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\Tab.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\TelemetryBanner.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\Thumbnails.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\common\\Tooltip.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\history\\HistoryPreview.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\history\\HistoryView.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\chat-display\\ImagePreview.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\chat-display\\LinkPreview.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\chat-display\\McpResponseDisplay.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\configuration\\McpConfigurationView.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\configuration\\tabs\\add-server\\AddLocalServerForm.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\configuration\\tabs\\add-server\\AddRemoteServerForm.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\configuration\\tabs\\installed\\InstalledServersView.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\configuration\\tabs\\installed\\server-row\\McpResourceRow.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\configuration\\tabs\\installed\\server-row\\McpToolRow.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\configuration\\tabs\\installed\\server-row\\ServerRow.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\configuration\\tabs\\installed\\ServersToggleList.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\configuration\\tabs\\marketplace\\McpMarketplaceCard.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\configuration\\tabs\\marketplace\\McpMarketplaceView.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\mcp\\configuration\\tabs\\marketplace\\McpSubmitCard.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\menu\\Navbar.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\ApiOptions.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\BasetenModelPicker.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\ClineAccountInfoCard.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\common\\ApiKeyField.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\common\\BaseUrlField.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\common\\ErrorMessage.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\common\\ModelInfoView.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\common\\ModelSelector.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\FeaturedModelCard.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\GroqModelPicker.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\HuggingFaceModelPicker.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\ModelDescriptionMarkdown.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\OllamaModelPicker.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\OpenRouterModelPicker.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\PreferredLanguageSetting.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\AnthropicProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\AskSageProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\BasetenProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\BedrockProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\CerebrasProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\ClaudeCodeProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\ClineProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\DeepSeekProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\DifyProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\DoubaoProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\FireworksProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\GeminiProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\GroqProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\HuaweiCloudMaasProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\HuggingFaceProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\LiteLlmProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\LMStudioProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\MistralProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\MoonshotProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\NebiusProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\OllamaProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\OpenAICompatible.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\OpenAINative.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\OpenRouterProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\QwenCodeProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\QwenProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\RequestyProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\SambanovaProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\SapAiCoreProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\TogetherProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\VercelAIGatewayProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\VertexProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\VSCodeLmProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\XaiProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\providers\\ZAiProvider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\RequestyModelPicker.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\SapAiCoreModelPicker.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\Section.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\SectionHeader.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\sections\\AboutSection.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\sections\\ApiConfigurationSection.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\sections\\BrowserSettingsSection.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\sections\\DebugSection.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\sections\\FeatureSettingsSection.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\sections\\TerminalSettingsSection.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\SettingsView.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\TerminalOutputLineLimitSlider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\ThinkingBudgetSlider.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\settings\\UseCustomPromptCheckbox.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\welcome\\HomeHeader.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\welcome\\QuickWinCard.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\welcome\\SuggestedTasks.tsx",
+			"D:\\dev\\caret-merging\\webview-ui\\src\\components\\welcome\\WelcomeView.tsx"
+		]
+	},
+	"detailedAnalysis": [
+		{
+			"file": "account\\AccountOptions.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 1,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Failed to get login URL:"
+			]
+		},
+		{
+			"file": "account\\AccountView.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 31,
+			"brandReferences": [
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/context/ClineAuthContext",
+				"../common/VSCodeButtonLink",
+				"./AccountWelcomeView",
+				"./CreditBalance",
+				"./CreditsHistoryTable"
+			]
+		},
+		{
+			"file": "account\\AccountWelcomeView.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 6,
+			"brandReferences": [
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/context/ClineAuthContext",
+				"../../assets/ClineLogoWhite",
+				"flex flex-col items-center pr-3",
+				"size-16 mb-4",
+				"w-full mb-4"
+			]
+		},
+		{
+			"file": "account\\CreditBalance.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 8,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/VSCodeButtonLink",
+				"./StyledCreditDisplay",
+				"w-full flex flex-col items-center",
+				"}`}\n\t\t\t\t\tdisabled={isLoading}\n\t\t\t\t\tonClick={fetchCreditBalance}>\n\t\t\t\t\t<span className=",
+				"></span>\n\t\t\t\t</VSCodeButton>\n\t\t\t</div>\n\n\t\t\t<div className="
+			]
+		},
+		{
+			"file": "account\\CreditsHistoryTable.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 23,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../mcp/configuration/McpConfigurationView",
+				"flex flex-col flex-grow h-full",
+				"mt-[15px] mb-[0px] rounded-md overflow-auto flex-grow",
+				"flex justify-center items-center p-4",
+				">\n\t\t\t\t\t\t\t\t\t\t\tDate\n\t\t\t\t\t\t\t\t\t\t</VSCodeDataGridCell>\n\t\t\t\t\t\t\t\t\t\t<VSCodeDataGridCell cell-type="
+			]
+		},
+		{
+			"file": "account\\StyledCreditDisplay.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 1,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				">\n\t\t\t{wholePart}.{firstTwoDecimals}\n\t\t\t<span className="
+			]
+		},
+		{
+			"file": "browser\\BrowserSettingsMenu.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 21,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"[DEBUG] SENDING BROWSER CONNECTION INFO REQUEST",
+				"[DEBUG] GOT BROWSER REPLY:",
+				"Error fetching browser connection info:",
+				"Error scrolling to browser settings:",
+				"Error fetching browser connection info:"
+			]
+		},
+		{
+			"file": "chat\\Announcement.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 13,
+			"brandReferences": [
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				", top:",
+				", right:",
+				", paddingLeft:",
+				",\n\tbackground: getAsVar(VSC_DESCRIPTION_FOREGROUND),\n\topacity: 0.1,\n\tmargin:",
+				").slice(0, 2).join("
+			]
+		},
+		{
+			"file": "chat\\auto-approve-menu\\AutoApproveBar.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 8,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				") && action?.shortName)\n\n\t\tif (notificationsEnabled) {\n\t\t\tminusFavorites.push(NOTIFICATIONS_SETTING)\n\t\t}\n\n\t\treturn [\n\t\t\t...favorites.map((favId) => renderFavoritedItem(favId)),\n\t\t\tminusFavorites.length > 0 ? (\n\t\t\t\t<span className=",
+				">\n\t\t\t\t\t✓\n\t\t\t\t</span>\n\t\t\t) : null,\n\t\t\t...minusFavorites.map((action, index) => (\n\t\t\t\t<span className=",
+				"key={action?.id}>\n\t\t\t\t\t{action?.shortName}\n\t\t\t\t\t{index < minusFavorites.length - 1 &&",
+				"}\n\t\t\t\t</span>\n\t\t\t)),\n\t\t]\n\t}\n\n\treturn (\n\t\t<div\n\t\t\tclassName=",
+				"style={{\n\t\t\t\tborderTop: `0.5px solid color-mix(in srgb, ${getAsVar(VSC_TITLEBAR_INACTIVE_FOREGROUND)} 20%, transparent)`,\n\t\t\t\toverflowY:"
+			]
+		},
+		{
+			"file": "chat\\auto-approve-menu\\AutoApproveMenuItem.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 7,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				")};\n\theight: ${(props) => (props.show ?",
+				">\n\t\t\t\t\t\t\t{onToggleFavorite && !condensed && (\n\t\t\t\t\t\t\t\t<HeroTooltip\n\t\t\t\t\t\t\t\t\tcontent={favorited ?",
+				"Add to quick-access menu",
+				"position: relative;\n\ttransform: ${(props) => (props.show ? \"scaleY(1)\" : \"scaleY(0)\")};\n\ttransform-origin: top;\n\tpadding-left: 24px;\n\topacity: ${(props) => (props.show ? \"1\" : \"0\")};\n\theight: ${(props) => (props.show ? \"auto\" : \"0\")}; /* Manage height for layout */\n\toverflow: visible; /* Allow tooltips to escape */\n\ttransition: transform 0.2s ease-in-out;",
+				"padding: 2px;"
+			]
+		},
+		{
+			"file": "chat\\auto-approve-menu\\AutoApproveModal.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 19,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"overflow-y-auto p-3 flex-1 min-h-0 overscroll-contain",
+				"flex justify-between items-center mb-3",
+				"Auto-approve allows Cline to perform the following actions without asking for permission. Please use with caution and only enable if you understand the risks.",
+				">\n\t\t\t\t\t\t\t<div className=",
+				">Auto-approve Settings</div>\n\t\t\t\t\t\t</HeroTooltip>\n\t\t\t\t\t\t<VSCodeButton appearance="
+			]
+		},
+		{
+			"file": "chat\\BrowserSessionRow.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 54,
+			"brandReferences": [
+				"Cline",
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"calc(100% - 10px)",
+				",\n\twhiteSpace:",
+				",\n\ttop: 0,\n\tleft: 0,\n\twidth:",
+				", gap:",
+				"|| lastModifiedMessage?.ask ==="
+			]
+		},
+		{
+			"file": "chat\\chat-view\\components\\layout\\ActionButtons.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 12,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../../shared/buttonConfig",
+				"&& lastMessage.say ===",
+				"&& secondLastMessage?.ask ===",
+				") {\n\t\t\tchatState.setInputValue(",
+				">\n\t\t\t\t<VSCodeButton\n\t\t\t\t\tappearance="
+			]
+		},
+		{
+			"file": "chat\\chat-view\\components\\layout\\ChatLayout.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 2,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"display: ${(props) => (props.isHidden ? \"none\" : \"grid\")};\n\tgrid-template-rows: 1fr auto;\n\toverflow: hidden;\n\tpadding: 0;\n\tmargin: 0;\n\twidth: 100%;\n\theight: 100%;\n\tmin-height: 100vh;\n\tposition: relative;",
+				"display: flex;\n\tflex-direction: column;\n\toverflow: hidden;\n\tgrid-row: 1;"
+			]
+		},
+		{
+			"file": "chat\\chat-view\\components\\layout\\InputSection.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 1,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/components/chat/QuotedMessagePreview"
+			]
+		},
+		{
+			"file": "chat\\chat-view\\components\\layout\\MessagesArea.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 2,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"overflow-hidden flex flex-col h-full",
+				"flex-grow flex"
+			]
+		},
+		{
+			"file": "chat\\chat-view\\components\\layout\\WelcomeSection.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 5,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/components/history/HistoryPreview",
+				"@/components/welcome/HomeHeader",
+				"@/components/welcome/SuggestedTasks",
+				"flex flex-col flex-1 w-full h-full p-0 m-0",
+				"overflow-y-auto flex flex-col pb-2.5"
+			]
+		},
+		{
+			"file": "chat\\ChatErrorBoundary.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 9,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Error in ChatErrorBoundary:",
+				"Component stack:",
+				",\n\t\t\t\t\t}}>\n\t\t\t\t\t<h3 style={{ margin:",
+				"}}>{errorTitle ||",
+				"}</h3>\n\t\t\t\t\t<p style={{ margin:"
+			]
+		},
+		{
+			"file": "chat\\ChatRow.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 216,
+			"brandReferences": [
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/components/chat/OptionsButtons",
+				"@/components/chat/TaskFeedbackButtons",
+				"@/components/common/CopyButton",
+				"@/components/common/SuccessButton",
+				"./ErrorBlockTitle"
+			]
+		},
+		{
+			"file": "chat\\ChatTextArea.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 131,
+			"brandReferences": [
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../cline-rules/ClineRulesToggleModal",
+				"Image dimensions exceed maximum allowed size of 7500px.",
+				"Failed to load image for dimension check:",
+				"Failed to load image to check dimensions.",
+				";\n\t\tposition: fixed;\n\t\tbottom: ${(props) => `calc(100vh - ${props.menuPosition}px - 2px)`};\n\t\tleft: 0;\n\t\tright: 0;\n\t\theight: 8px;\n\t}\n\n\t// Arrow pointing down\n\t&::after {\n\t\tcontent:"
+			]
+		},
+		{
+			"file": "chat\\ChatView.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 15,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"./chat-view",
+				"api_req_started",
+				"&& currentElement.querySelector(",
+				"||\n\t\t\t\t\t\t\tcomputedStyle.whiteSpace ===",
+				"||\n\t\t\t\t\t\t\tcomputedStyle.whiteSpace ==="
+			]
+		},
+		{
+			"file": "chat\\ContextMenu.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 21,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Searching...",
+				"Searching...",
+				",\n\t\t\t\t\t\t\t\t\topacity: 0.7,\n\t\t\t\t\t\t\t\t\twhiteSpace:",
+				",\n\t\t\t\t\t\t\t\t}}>\n\t\t\t\t\t\t\t\t{option.description}\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t)\n\t\t\t\t} else {\n\t\t\t\t\treturn <span>Git Commits</span>\n\t\t\t\t}\n\t\t\tcase ContextMenuOptionType.File:\n\t\t\tcase ContextMenuOptionType.Folder:\n\t\t\t\tif (option.value) {\n\t\t\t\t\treturn (\n\t\t\t\t\t\t<>\n\t\t\t\t\t\t\t<span>/</span>\n\t\t\t\t\t\t\t{option.value?.startsWith(",
+				") && <span>.</span>}\n\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclassName="
+			]
+		},
+		{
+			"file": "chat\\CreditLimitError.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 18,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/components/common/VSCodeButtonLink",
+				"@/context/ClineAuthContext",
+				"You have run out of credits.",
+				"mb-3 font-azeret-mono",
+				"}}>{message}</div>\n\t\t\t\t{/* <div style={{ marginBottom:"
+			]
+		},
+		{
+			"file": "chat\\ErrorBlockTitle.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 13,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../../../../src/services/error/ClineError",
+				"w-4 h-4 flex items-center justify-center",
+				"user_cancelled",
+				"API Request...",
+				"user_cancelled"
+			]
+		},
+		{
+			"file": "chat\\ErrorRow.test.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 45,
+			"brandReferences": [
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"./ErrorRow",
+				"@/context/ClineAuthContext",
+				"@/components/chat/CreditLimitError",
+				"../../../../src/services/error/ClineError",
+				",\n\t}\n\n\tbeforeEach(() => {\n\t\tvi.clearAllMocks()\n\t})\n\n\tit("
+			]
+		},
+		{
+			"file": "chat\\ErrorRow.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 14,
+			"brandReferences": [
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/components/chat/CreditLimitError",
+				"@/context/ClineAuthContext",
+				"../../../../src/services/error/ClineError",
+				"diff_error",
+				"clineignore_error"
+			]
+		},
+		{
+			"file": "chat\\OptionsButtons.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 10,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				",\n\t\t\t\tpaddingTop: 15,\n\t\t\t\t// marginTop:",
+				",\n\t\t\t}}>\n\t\t\t{/* <div style={{ color:",
+				", fontSize:",
+				", textTransform:",
+				"}}>\n\t\t\t\tSELECT ONE:\n\t\t\t</div> */}\n\t\t\t{options.map((option, index) => (\n\t\t\t\t<OptionButton\n\t\t\t\t\tclassName="
+			]
+		},
+		{
+			"file": "chat\\QuoteButton.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 5,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Quote selection",
+				"Quote selection in reply",
+				"}\n\t\t\t\t{/* Adjust padding */}\n\t\t\t\t<span\n\t\t\t\t\tclassName=",
+				"style={{ fontSize:",
+				", color:"
+			]
+		},
+		{
+			"file": "chat\\QuotedMessagePreview.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 4,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"}`\n\n\treturn (\n\t\t<PreviewContainer>\n\t\t\t{/* Removed Label */}\n\t\t\t<ContentRow>\n\t\t\t\t<ReplyIcon className=",
+				"></ReplyIcon>\n\t\t\t\t<TextContainer title={text}>{text}</TextContainer>\n\t\t\t\t<DismissButton appearance=",
+				"onClick={onDismiss}>\n\t\t\t\t\t<span className=",
+				"reply-card ${isFocused ? \"reply-card--focused\" : \"\"}"
+			]
+		},
+		{
+			"file": "chat\\ReportBugPreview.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 13,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				")\n\t\t} catch (e) {\n\t\t\tconsole.error(",
+				", e)\n\t\t\treturn {}\n\t\t}\n\t}, [data])\n\n\treturn (\n\t\t<div className=",
+				">\n\t\t\t<h3 className=",
+				">{bugData.title ||",
+				"}</h3>\n\n\t\t\t<div className="
+			]
+		},
+		{
+			"file": "chat\\ServersToggleModal.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 12,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Failed to fetch MCP servers:",
+				"inline-flex min-w-0 max-w-full",
+				"Manage MCP Servers",
+				"MCP Servers",
+				"flex items-center gap-1 text-xs whitespace-nowrap min-w-0 w-full"
+			]
+		},
+		{
+			"file": "chat\\SlashCommandMenu.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 10,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				">\n\t\t\t\t\t\t\t\t<span className=",
+				">/{command.name}</span>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t{showDescriptions && command.description && (\n\t\t\t\t\t\t\t\t<div className=",
+				">\n\t\t\t\t\t\t\t\t\t<span className=",
+				">{command.description}</span>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t)}\n\t\t\t\t\t\t</div>\n\t\t\t\t\t)\n\t\t\t\t})}\n\t\t\t</>\n\t\t)\n\t}\n\n\treturn (\n\t\t<div\n\t\t\tclassName=",
+				"ref={menuRef}\n\t\t\t\tstyle={{ maxHeight:"
+			]
+		},
+		{
+			"file": "chat\\task-header\\buttons\\CopyTaskButton.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 6,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Copy Task",
+				"Copy Task",
+				"onClick={handleCopy}\n\t\t\t\tstyle={{ padding:",
+				"}}>\n\t\t\t\t<div className=",
+				">\n\t\t\t\t\t<i className={`codicon codicon-${copied ?"
+			]
+		},
+		{
+			"file": "chat\\task-header\\buttons\\DeleteTaskButton.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 1,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"codicon codicon-trash"
+			]
+		},
+		{
+			"file": "chat\\task-header\\buttons\\OpenDiskTaskHistoryButton.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 5,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Open Disk Task History",
+				"Open Disk Task History",
+				"onClick={handleOpenDiskTaskHistory}\n\t\t\t\tstyle={{ padding:",
+				"}}>\n\t\t\t\t<div className=",
+				"codicon codicon-folder"
+			]
+		},
+		{
+			"file": "chat\\task-header\\TaskHeader.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 77,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"./buttons/CopyTaskButton",
+				"./buttons/OpenDiskTaskHistoryButton",
+				"- [x]",
+				",\n\t\t\t\t\t\t\tflex: 1,\n\t\t\t\t\t\t\twhiteSpace:",
+				",\n\t\t\t\t\t\t}}>\n\t\t\t\t\t\t<HeroTooltip content="
+			]
+		},
+		{
+			"file": "chat\\task-header\\TaskTimeline.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 23,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"events we don't want to show\n\t\t\tif (\n\t\t\t\tmsg.type ===",
+				"&&\n\t\t\t\t(msg.say ===",
+				"||\n\t\t\t\t\tmsg.say ===",
+				"||\n\t\t\t\t\tmsg.say ===",
+				"||\n\t\t\t\t\tmsg.say ==="
+			]
+		},
+		{
+			"file": "chat\\task-header\\TaskTimelineTooltip.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 52,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				") {\n\t\t\tswitch (message.say) {\n\t\t\t\t// TODO: Need to confirm these classifcations with design\n\t\t\t\tcase",
+				"||\n\t\t\t\t\t\t\t\ttoolData.tool ===",
+				"||\n\t\t\t\t\t\t\t\ttoolData.tool ===",
+				"||\n\t\t\t\t\t\t\t\ttoolData.tool ===",
+				"||\n\t\t\t\t\t\t\t\ttoolData.tool ==="
+			]
+		},
+		{
+			"file": "chat\\TaskFeedbackButtons.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 16,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"taskFeedbackHistory",
+				", JSON.stringify(history))\n\t\t\t} catch (e) {\n\t\t\t\tconsole.error(",
+				", e)\n\t\t\t}\n\t\t} catch (error) {\n\t\t\tconsole.error(",
+				", error)\n\t\t}\n\t}\n\n\treturn (\n\t\t<Container style={style}>\n\t\t\t<ButtonsContainer>\n\t\t\t\t<ButtonWrapper>\n\t\t\t\t\t<VSCodeButton\n\t\t\t\t\t\tappearance=",
+				"disabled={feedback !== null}\n\t\t\t\t\t\tonClick={() => handleFeedback("
+			]
+		},
+		{
+			"file": "chat\\UserMessage.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 17,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"? 500 : 1000 // Delay for task and workspace restore\n\t\tsetIsEditing(false)\n\n\t\tif (text === editedText) {\n\t\t\treturn\n\t\t}\n\n\t\ttry {\n\t\t\tawait CheckpointsServiceClient.checkpointRestore(\n\t\t\t\tCheckpointRestoreRequest.create({\n\t\t\t\t\tnumber: messageTs,\n\t\t\t\t\trestoreType: type,\n\t\t\t\t\toffset: 1,\n\t\t\t\t}),\n\t\t\t)\n\n\t\t\tsetTimeout(() => {\n\t\t\t\tsendMessageFromChatRow?.(editedText, images || [], files || [])\n\t\t\t}, delay)\n\t\t} catch (err) {\n\t\t\tconsole.error(",
+				") {\n\t\t\tsetIsEditing(false)\n\t\t} else if (e.key ===",
+				"&& e.metaKey && !checkpointTrackerErrorMessage) {\n\t\t\thandleRestoreWorkspace(",
+				")\n\t\t} else if (e.key ===",
+				"&& !e.shiftKey && !e.nativeEvent.isComposing && e.keyCode !== 229) {\n\t\t\te.preventDefault()\n\t\t\thandleRestoreWorkspace("
+			]
+		},
+		{
+			"file": "cline-rules\\ClineRulesToggleModal.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 37,
+			"brandReferences": [
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Failed to refresh rules:",
+				"Error toggling Cline rule:",
+				"Error toggling Cursor rule:",
+				"Error toggling Windsurf rule:",
+				"Failed to toggle workflow:"
+			]
+		},
+		{
+			"file": "cline-rules\\NewRuleRow.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 24,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				") && !filename.includes(",
+				", 1)) {\n\t\t\treturn",
+				"|| ext ===",
+				"|| ext ===",
+				") {\n\t\t\t\tfinalFilename = `${trimmedFilename}.md`\n\t\t\t}\n\n\t\t\ttry {\n\t\t\t\tawait FileServiceClient.createRuleFile(\n\t\t\t\t\tCreateRuleFileRequest.create({\n\t\t\t\t\t\tisGlobal,\n\t\t\t\t\t\tfilename: finalFilename,\n\t\t\t\t\t\ttype: ruleType ||"
+			]
+		},
+		{
+			"file": "cline-rules\\RuleRow.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 23,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				":\n\t\t\t\treturn (\n\t\t\t\t\t<svg\n\t\t\t\t\t\theight=",
+				"style={{ verticalAlign:",
+				"}}\n\t\t\t\t\t\tviewBox=",
+				">\n\t\t\t\t\t\t<g fill=",
+				">\n\t\t\t\t\t\t\t<path d="
+			]
+		},
+		{
+			"file": "cline-rules\\RulesToggleList.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 4,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				">\n\t\t\t\t\t\t\t{ruleType ===",
+				"No workflows found",
+				"No rules found",
+				"flex flex-col ${gapClass}"
+			]
+		},
+		{
+			"file": "common\\AlertDialog.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 8,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Unsaved Changes",
+				"You have unsaved changes. Are you sure you want to discard them?",
+				"Discard Changes",
+				"Save & Continue",
+				"fixed inset-0 bg-black/50 flex items-center justify-center"
+			]
+		},
+		{
+			"file": "common\\ChecklistRenderer.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 5,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"}}>{text}</div>\n\t}\n\n\treturn (\n\t\t<div\n\t\t\tonScroll={handleScroll}\n\t\t\tref={containerRef}\n\t\t\tstyle={{\n\t\t\t\tdisplay:",
+				",\n\t\t\t\tmaxHeight: items.length >= 10 ?",
+				",\n\t\t\t\t\t\t\tcolor: item.checked ?",
+				",\n\t\t\t\t\t\t}}>\n\t\t\t\t\t\t{item.checked ?",
+				"}\n\t\t\t\t\t</span>\n\t\t\t\t\t<span\n\t\t\t\t\t\tstyle={{\n\t\t\t\t\t\t\tcolor: item.checked ?"
+			]
+		},
+		{
+			"file": "common\\CheckmarkControl.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 17,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Restore Files",
+				"Checkpoint restore task error:",
+				"Checkpoint restore workspace error:",
+				"Checkpoint restore both error:",
+				"codicon codicon-bookmark"
+			]
+		},
+		{
+			"file": "common\\CheckpointControls.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 8,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Checkpoint restore task error:",
+				"Checkpoint restore workspace error:",
+				"Checkpoint restore both error:",
+				"CheckpointDiff error:",
+				"codicon codicon-diff-multiple"
+			]
+		},
+		{
+			"file": "common\\CodeAccordian.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 17,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				", // This ensures the inner scrollable area doesn't overflow the rounded corners\n\t\t\t\tborder:",
+				",\n\t\t\t}}>\n\t\t\t{(path || isFeedback || isConsoleLogs) && (\n\t\t\t\t<div\n\t\t\t\t\tonClick={isLoading ? undefined : onToggleExpand}\n\t\t\t\t\tstyle={{\n\t\t\t\t\t\tcolor:",
+				",\n\t\t\t\t\t\tcursor: isLoading ?",
+				"}}></span>\n\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tstyle={{\n\t\t\t\t\t\t\t\t\twhiteSpace:",
+				",\n\t\t\t\t\t\t\t\t}}>\n\t\t\t\t\t\t\t\t{isFeedback ?"
+			]
+		},
+		{
+			"file": "common\\CodeBlock.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 10,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Segoe UI",
+				"Open Sans",
+				"Helvetica Neue",
+				", (node: any) => {\n\t\t\t\t\t\tif (!node.lang) {\n\t\t\t\t\t\t\tnode.lang =",
+				"} else if (node.lang.includes("
+			]
+		},
+		{
+			"file": "common\\CopyButton.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 11,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"bottom: 2px; right: 2px;",
+				"top: 5px; right: 5px;",
+				") {\n\t\t\t\ttextToCopyFinal = result\n\t\t\t}\n\t\t}\n\n\t\tif (textToCopyFinal) {\n\t\t\tnavigator.clipboard\n\t\t\t\t.writeText(textToCopyFinal)\n\t\t\t\t.then(() => {\n\t\t\t\t\tsetCopied(true)\n\t\t\t\t\tsetTimeout(() => setCopied(false), 1500)\n\t\t\t\t})\n\t\t\t\t.catch((err) => console.error(",
+				", err))\n\t\t}\n\t}\n\n\treturn (\n\t\t<StyledButton\n\t\t\tappearance=",
+				"aria-label={copied ?"
+			]
+		},
+		{
+			"file": "common\\DangerButton.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 1,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"!bg-[#c42b2b] \n\t\t\t\t!border-[#c42b2b] \n\t\t\t\t!text-white\n\t\t\t\thover:!bg-[#a82424] \n\t\t\t\thover:!border-[#a82424]\n\t\t\t\tactive:!bg-[#8f1f1f] \n\t\t\t\tactive:!border-[#8f1f1f]\n\t\t\t\t${props.className || \"\"}"
+			]
+		},
+		{
+			"file": "common\\Demo.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 38,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Cell Data",
+				"Cell Data",
+				"Cell Data",
+				"Cell Data",
+				"Cell Data"
+			]
+		},
+		{
+			"file": "common\\HeroTooltip.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 1,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				">\n\t\t\t\t\t{content}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t) : (\n\t\t\t// If content is already a React node, assume it's pre-formatted\n\t\t\tcontent\n\t\t)\n\n\treturn (\n\t\t<Tooltip\n\t\t\tclassNames={{\n\t\t\t\tcontent:"
+			]
+		},
+		{
+			"file": "common\\MarkdownBlock.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 40,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"./CopyButton",
+				"cursor-default opacity-60",
+				"Click to toggle to Act Mode",
+				"Already in Act Mode",
+				", value: part })\n\t\t\t\tif (matches[i]) {\n\t\t\t\t\tchildren.push({\n\t\t\t\t\t\ttype:"
+			]
+		},
+		{
+			"file": "common\\MermaidBlock.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 31,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				", // Border color for nodes\n\tlineColor:",
+				", // Lines connecting nodes\n\tprimaryColor:",
+				", // Primary color for highlights\n\tprimaryTextColor:",
+				", // Text in primary colored elements\n\tprimaryBorderColor:",
+				", // Secondary color for alternate elements\n\ttertiaryColor:"
+			]
+		},
+		{
+			"file": "common\\SuccessButton.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 1,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"!bg-[#176f2c] \n\t\t\t\t!border-[#176f2c] \n\t\t\t\t!text-white\n\t\t\t\thover:!bg-[#197f31] \n\t\t\t\thover:!border-[#197f31]\n\t\t\t\tactive:!bg-[#156528] \n\t\t\t\tactive:!border-[#156528]\n\t\t\t\t${props.className || \"\"}"
+			]
+		},
+		{
+			"file": "common\\Tab.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 4,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Tab selected:",
+				"fixed inset-0 flex flex-col ${className}",
+				"flex-1 overflow-auto ${className}",
+				"flex ${className}"
+			]
+		},
+		{
+			"file": "common\\TelemetryBanner.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 4,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Error updating telemetry setting:",
+				"Close banner and enable telemetry",
+				"}\n\t\t\t\t\t\t<VSCodeLink href=",
+				"display: flex;\n\tgap: 8px;\n\twidth: 100%;\n\n\t& > vscode-button {\n\t\tflex: 1;\n\t}"
+			]
+		},
+		{
+			"file": "common\\Thumbnails.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 10,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Failed to open image:",
+				"Failed to open file:",
+				",\n\t\t\t\t\t\t\t\t\tfontSize: 10,\n\t\t\t\t\t\t\t\t\tfontWeight:",
+				"}}>\n\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tonClick={() => handleFileClick(filePath)}\n\t\t\t\t\t\t\tstyle={{\n\t\t\t\t\t\t\t\twidth: 34,\n\t\t\t\t\t\t\t\theight: 34,\n\t\t\t\t\t\t\t\tborderRadius: 4,\n\t\t\t\t\t\t\t\tcursor:",
+				"style={{\n\t\t\t\t\t\t\t\t\tfontSize: 16,\n\t\t\t\t\t\t\t\t\tcolor:"
+			]
+		},
+		{
+			"file": "common\\Tooltip.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 2,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"position: absolute;\n\tbackground-color: ${getAsVar(VSC_SIDEBAR_BACKGROUND)};\n\tcolor: ${getAsVar(VSC_DESCRIPTION_FOREGROUND)};\n\tpadding: 5px;\n\tborder-radius: 5px;\n\tbottom: 100%;\n\tleft: ${(props) => props.style?.left ?? -180}%;\n\tz-index: ${(props) => props.style?.zIndex ?? 1000};\n\twhite-space: wrap;\n\tmax-width: 200px;\n\tborder: 1px solid ${getAsVar(VSC_INPUT_BORDER)};\n\tpointer-events: none;\n\tfont-size: 0.9em;",
+				"font-size: 0.8em;\n\tcolor: ${getAsVar(VSC_INPUT_PLACEHOLDER_FOREGROUND)};\n\topacity: 0.8;\n\tmargin-top: 2px;"
+			]
+		},
+		{
+			"file": "history\\HistoryPreview.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 24,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Error showing task:",
+				"onClick={toggleExpanded}\n\t\t\t\tstyle={{\n\t\t\t\t\tcolor:",
+				",\n\t\t\t\t}}>\n\t\t\t\t<span\n\t\t\t\t\tclassName={`codicon codicon-chevron-${isExpanded ?",
+				",\n\t\t\t\t\t}}></span>\n\t\t\t\t<span\n\t\t\t\t\tstyle={{\n\t\t\t\t\t\tfontWeight: 500,\n\t\t\t\t\t\tfontSize:",
+				",\n\t\t\t\t\t}}>\n\t\t\t\t\tRecent Tasks\n\t\t\t\t</span>\n\t\t\t</div>\n\n\t\t\t{isExpanded && (\n\t\t\t\t<div style={{ padding:"
+			]
+		},
+		{
+			"file": "history\\HistoryView.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 66,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/components/common/DangerButton",
+				"flex items-center gap-[3px]",
+				") {\n\t\t\t\tsetTotalTasksSize?.(response.value || 0)\n\t\t\t}\n\t\t} catch (error) {\n\t\t\tconsole.error(",
+				", error)\n\t\t}\n\t}, [setTotalTasksSize])\n\n\t// Request total tasks size when component mounts\n\tuseEffect(() => {\n\t\tfetchTotalTasksSize()\n\t}, [fetchTotalTasksSize])\n\n\tuseEffect(() => {\n\t\tif (searchQuery && sortOption !==",
+				"&& !lastNonRelevantSort) {\n\t\t\tsetLastNonRelevantSort(sortOption)\n\t\t\tsetSortOption("
+			]
+		},
+		{
+			"file": "mcp\\chat-display\\ImagePreview.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 44,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/components/chat/ChatErrorBoundary",
+				",\n\t\t\t\t\t}}>\n\t\t\t\t\t<div style={{ display:",
+				", alignItems:",
+				", marginBottom:",
+				",\n\t\t\t\t\t\t\t}}\n\t\t\t\t\t\t/>\n\t\t\t\t\t\t<style>\n\t\t\t\t\t\t\t{`\n\t\t\t\t\t\t\t\t@keyframes spin {\n\t\t\t\t\t\t\t\t\tto { transform: rotate(360deg); }\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t`}\n\t\t\t\t\t\t</style>\n\t\t\t\t\t\tLoading image from {getSafeHostname(url)}...\n\t\t\t\t\t</div>\n\t\t\t\t\t{elapsedSeconds > 3 && (\n\t\t\t\t\t\t<div style={{ fontSize:"
+			]
+		},
+		{
+			"file": "mcp\\chat-display\\LinkPreview.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 48,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/components/chat/ChatErrorBoundary",
+				"Failed to fetch Open Graph data",
+				"Unknown error occurred",
+				",\n\t\t\t\t\t}}>\n\t\t\t\t\t<div style={{ display:",
+				", alignItems:"
+			]
+		},
+		{
+			"file": "mcp\\chat-display\\McpResponseDisplay.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 24,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/components/chat/ChatErrorBoundary",
+				"./ImagePreview",
+				"./LinkPreview",
+				"Processing MCP response for URL extraction",
+				":\n\t\t\t\treturn <UrlText key={segment.key}>{segment.content}</UrlText>\n\n\t\t\tcase"
+			]
+		},
+		{
+			"file": "mcp\\configuration\\McpConfigurationView.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 16,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"./tabs/installed/InstalledServersView",
+				"./tabs/marketplace/McpMarketplaceView",
+				"Error refreshing MCP marketplace:",
+				"Failed to fetch MCP servers:",
+				",\n\t\t\t\t\t}}>\n\t\t\t\t\t{mcpMarketplaceEnabled && (\n\t\t\t\t\t\t<TabButton isActive={activeTab ==="
+			]
+		},
+		{
+			"file": "mcp\\configuration\\tabs\\add-server\\AddLocalServerForm.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 3,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Error opening MCP settings:",
+				", marginBottom:",
+				"padding: 16px 20px;\n\tdisplay: flex;\n\tflex-direction: column;\n\tgap: 8px;"
+			]
+		},
+		{
+			"file": "mcp\\configuration\\tabs\\add-server\\AddRemoteServerForm.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 20,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				")\n\t\t\treturn\n\t\t}\n\n\t\tif (!serverUrl.trim()) {\n\t\t\tsetError(",
+				")\n\t\t\treturn\n\t\t}\n\n\t\ttry {\n\t\t\tnew URL(serverUrl)\n\t\t} catch (_err) {\n\t\t\tsetError(",
+				")\n\t\t\treturn\n\t\t}\n\n\t\tsetError(",
+				")\n\t\t\tonServerAdded()\n\t\t\tsetShowConnectingMessage(false)\n\t\t} catch (error) {\n\t\t\tsetIsSubmitting(false)\n\t\t\tsetError(error instanceof Error ? error.message :",
+				")\n\t\t\tsetShowConnectingMessage(false)\n\t\t}\n\t}\n\n\treturn (\n\t\t<div className="
+			]
+		},
+		{
+			"file": "mcp\\configuration\\tabs\\installed\\InstalledServersView.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 21,
+			"brandReferences": [
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"}\n\t\t\t\t<VSCodeLink href=",
+				"style={{ display:",
+				"}}>\n\t\t\t\t\tModel Context Protocol\n\t\t\t\t</VSCodeLink>{",
+				"}\n\t\t\t\tenables communication with locally running MCP servers that provide additional tools and resources to extend\n\t\t\t\tCline's capabilities. You can use{",
+				"}\n\t\t\t\t<VSCodeLink href="
+			]
+		},
+		{
+			"file": "mcp\\configuration\\tabs\\installed\\server-row\\McpResourceRow.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 7,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				",\n\t\t\t\t}}>\n\t\t\t\t<span className={`codicon codicon-symbol-file`} style={{ marginRight:",
+				"}} />\n\t\t\t\t<span style={{ fontWeight: 500, wordBreak:",
+				",\n\t\t\t\t\topacity: 0.8,\n\t\t\t\t\tmargin:",
+				",\n\t\t\t\t}}>\n\t\t\t\t{item.name && item.description\n\t\t\t\t\t? `${item.name}: ${item.description}`\n\t\t\t\t\t: !item.name && item.description\n\t\t\t\t\t\t? item.description\n\t\t\t\t\t\t: !item.description && item.name\n\t\t\t\t\t\t\t? item.name\n\t\t\t\t\t\t\t:",
+				",\n\t\t\t\t}}>\n\t\t\t\t<span style={{ opacity: 0.8 }}>Returns </span>\n\t\t\t\t<code\n\t\t\t\t\tstyle={{\n\t\t\t\t\t\tcolor:"
+			]
+		},
+		{
+			"file": "mcp\\configuration\\tabs\\installed\\server-row\\McpToolRow.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 17,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Error toggling tool auto-approve",
+				"onClick={(e) => e.stopPropagation()}\n\t\t\t\tstyle={{ display:",
+				", alignItems:",
+				", justifyContent:",
+				"}}>\n\t\t\t\t<div style={{ display:"
+			]
+		},
+		{
+			"file": "mcp\\configuration\\tabs\\installed\\server-row\\ServerRow.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 68,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/components/common/DangerButton",
+				", label:",
+				"},\n\t{ value:",
+				", label:",
+				"},\n\t{ value:"
+			]
+		},
+		{
+			"file": "mcp\\configuration\\tabs\\installed\\ServersToggleList.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 1,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"flex flex-col ${gapClass}"
+			]
+		},
+		{
+			"file": "mcp\\configuration\\tabs\\marketplace\\McpMarketplaceCard.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 33,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				",\n\t\t\t\t\tgap: 12,\n\t\t\t\t\tcursor: isLoading ?",
+				"MCP download failed:",
+				"MCP download successful:",
+				"Failed to download MCP:",
+				"Installing..."
+			]
+		},
+		{
+			"file": "mcp\\configuration\\tabs\\marketplace\\McpMarketplaceView.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 35,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				":\n\t\t\t\t\t\treturn b.downloadCount - a.downloadCount\n\t\t\t\t\tcase",
+				":\n\t\t\t\t\t\treturn b.githubStars - a.githubStars\n\t\t\t\t\tcase",
+				":\n\t\t\t\t\t\treturn a.name.localeCompare(b.name)\n\t\t\t\t\tcase",
+				", error)\n\t\t\t\t\tsetError(",
+				")\n\t\t\t\t\tsetIsLoading(false)\n\t\t\t\t\tsetIsRefreshing(false)\n\t\t\t\t})\n\t\t}\n\t}\n\n\tif (isLoading || isRefreshing) {\n\t\treturn (\n\t\t\t<div\n\t\t\t\tstyle={{\n\t\t\t\t\tdisplay:"
+			]
+		},
+		{
+			"file": "mcp\\configuration\\tabs\\marketplace\\McpSubmitCard.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 9,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				",\n\t\t\t}}>\n\t\t\t{/* Icon */}\n\t\t\t<i className=",
+				"style={{ fontSize:",
+				"}} />\n\n\t\t\t{/* Content */}\n\t\t\t<div\n\t\t\t\tstyle={{\n\t\t\t\t\tdisplay:",
+				",\n\t\t\t\t}}>\n\t\t\t\t<h3\n\t\t\t\t\tstyle={{\n\t\t\t\t\t\tmargin: 0,\n\t\t\t\t\t\tfontSize:",
+				",\n\t\t\t\t\t\tfontWeight: 600,\n\t\t\t\t\t\tcolor:"
+			]
+		},
+		{
+			"file": "menu\\Navbar.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 17,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"}`}\n\t\tstyle={{ fontSize: size ? `${size}px` :",
+				", marginBottom:",
+				",\n\t\t\t\ticon: PlusIcon,\n\t\t\t\tnavigate: () => {\n\t\t\t\t\t// Close the current task, then navigate to the chat view\n\t\t\t\t\tTaskServiceClient.clearTask({})\n\t\t\t\t\t\t.catch((error) => {\n\t\t\t\t\t\t\tconsole.error(",
+				", error)\n\t\t\t\t\t\t})\n\t\t\t\t\t\t.finally(() => navigateToChat())\n\t\t\t\t},\n\t\t\t},\n\t\t\t{\n\t\t\t\tid:",
+				",\n\t\t\t\ticon: McpServerIcon,\n\t\t\t\tnavigate: navigateToMcp,\n\t\t\t},\n\t\t\t{\n\t\t\t\tid:"
+			]
+		},
+		{
+			"file": "settings\\ApiOptions.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 133,
+			"brandReferences": [
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../history/HistoryView",
+				"./providers/ClineProvider",
+				",\n\t\t\t\t\t}),\n\t\t\t\t)\n\t\t\t\tif (response && response.values) {\n\t\t\t\t\tsetOllamaModels(response.values)\n\t\t\t\t}\n\t\t\t} catch (error) {\n\t\t\t\tconsole.error(",
+				", error)\n\t\t\t\tsetOllamaModels([])\n\t\t\t}\n\t\t}\n\t}, [selectedProvider, apiConfiguration?.ollamaBaseUrl])\n\tuseEffect(() => {\n\t\tif (selectedProvider ===",
+				") {\n\t\t\trequestLocalModels()\n\t\t}\n\t}, [selectedProvider, requestLocalModels])\n\tuseInterval(requestLocalModels, selectedProvider ==="
+			]
+		},
+		{
+			"file": "settings\\BasetenModelPicker.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 15,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../history/HistoryView",
+				"./common/ModelInfoView",
+				"Failed to refresh Baseten models:",
+				"flex flex-col",
+				"relative w-full"
+			]
+		},
+		{
+			"file": "settings\\ClineAccountInfoCard.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 2,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/context/ClineAuthContext",
+				"Failed to get login URL:"
+			]
+		},
+		{
+			"file": "settings\\common\\ApiKeyField.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 6,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Enter API Key...",
+				"value={localValue}>\n\t\t\t\t<span style={{ fontWeight: 500 }}>{providerName} API Key</span>\n\t\t\t</VSCodeTextField>\n\t\t\t<p\n\t\t\t\tstyle={{\n\t\t\t\t\tfontSize:",
+				",\n\t\t\t\t\tmarginTop: 3,\n\t\t\t\t\tcolor:",
+				",\n\t\t\t\t}}>\n\t\t\t\t{helpText ||",
+				"}\n\t\t\t\t{!localValue && signupUrl && (\n\t\t\t\t\t<VSCodeLink\n\t\t\t\t\t\thref={signupUrl}\n\t\t\t\t\t\tstyle={{\n\t\t\t\t\t\t\tdisplay:"
+			]
+		},
+		{
+			"file": "settings\\common\\BaseUrlField.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 4,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Use custom base URL",
+				"Default: https://api.example.com",
+				")\n\t\t}\n\t}\n\n\treturn (\n\t\t<div>\n\t\t\t<VSCodeCheckbox checked={isEnabled} onChange={handleToggle}>\n\t\t\t\t{label}\n\t\t\t</VSCodeCheckbox>\n\n\t\t\t{isEnabled && (\n\t\t\t\t<VSCodeTextField\n\t\t\t\t\tonInput={(e: any) => setLocalValue(e.target.value.trim())}\n\t\t\t\t\tplaceholder={placeholder}\n\t\t\t\t\tstyle={{ width:",
+				", marginTop: 3 }}\n\t\t\t\t\ttype="
+			]
+		},
+		{
+			"file": "settings\\common\\ErrorMessage.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 1,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"-10px 0 4px 0"
+			]
+		},
+		{
+			"file": "settings\\common\\ModelInfoView.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 14,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"} {prevLimit.toLocaleString()}\n\t\t\t\t\t\t</span>\n\t\t\t\t\t) : (\n\t\t\t\t\t\t<span>\n\t\t\t\t\t\t\t{",
+				"} {tier.contextWindow?.toLocaleString()}\n\t\t\t\t\t\t</span>\n\t\t\t\t\t)}\n\t\t\t\t\t{",
+				"}`}\n\t\t\tstyle={{\n\t\t\t\tmarginRight: 4,\n\t\t\t\tmarginBottom: isSupported ? 1 : -1,\n\t\t\t\tfontSize: isSupported ? 11 : 13,\n\t\t\t\tfontWeight: 700,\n\t\t\t\tdisplay:",
+				">\n\t\t\t<span style={{ fontWeight: 500 }}>Input price:</span>\n\t\t\t<br />\n\t\t\t{formatTiers(modelInfo.tiers,",
+				")}\n\t\t</Fragment>\n\t) : modelInfo.inputPrice !== undefined && modelInfo.inputPrice > 0 ? (\n\t\t<span key="
+			]
+		},
+		{
+			"file": "settings\\common\\ModelSelector.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 5,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Select a model...",
+				"}} value={selectedModelId}>\n\t\t\t\t<VSCodeOption value=",
+				">Select a model...</VSCodeOption>\n\t\t\t\t{Object.keys(models).map((modelId) => (\n\t\t\t\t\t<VSCodeOption\n\t\t\t\t\t\tkey={modelId}\n\t\t\t\t\t\tstyle={{\n\t\t\t\t\t\t\twhiteSpace:",
+				"t auto select the provided value prop. You can see this for yourself by comparing  it with normal select/option elements, which work as expected.\n\thttps://github.com/microsoft/vscode-webview-ui-toolkit/issues/433\n\n\tIn our case, when the user switches between providers, we recalculate the selectedModelId depending on the provider, the default model for that provider, and a modelId that the user may have selected. Unfortunately, the VSCodeDropdown component wouldn",
+				"position: relative;\n\n\t// Force dropdowns to open downward\n\t& vscode-dropdown::part(listbox) {\n\t\tposition: absolute !important;\n\t\ttop: 100% !important;\n\t\tbottom: auto !important;\n\t}"
+			]
+		},
+		{
+			"file": "settings\\FeaturedModelCard.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 2,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"display: flex;\n\talign-items: center;\n\tjustify-content: space-between;",
+				"font-weight: 500;\n\tfont-size: 12px;\n\tline-height: 1.2;"
+			]
+		},
+		{
+			"file": "settings\\GroqModelPicker.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 14,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../history/HistoryView",
+				"./common/ModelInfoView",
+				"Failed to refresh Groq models:",
+				"flex flex-col",
+				"relative w-full"
+			]
+		},
+		{
+			"file": "settings\\HuggingFaceModelPicker.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 10,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../history/HistoryView",
+				"./common/ModelInfoView",
+				"Failed to refresh Hugging Face models:",
+				"flex flex-col",
+				"relative w-full"
+			]
+		},
+		{
+			"file": "settings\\ModelDescriptionMarkdown.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 4,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Segoe UI",
+				"Open Sans",
+				"Helvetica Neue",
+				", marginBottom: 0 }}>\n\t\t\t\t<div\n\t\t\t\t\tref={textContainerRef}\n\t\t\t\t\tstyle={{\n\t\t\t\t\t\toverflowY: isExpanded ?"
+			]
+		},
+		{
+			"file": "settings\\OllamaModelPicker.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 13,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../history/HistoryView",
+				"Search and select a model...",
+				", handleClickOutside)\n\t\treturn () => {\n\t\t\tdocument.removeEventListener(",
+				":\n\t\t\t\tevent.preventDefault()\n\t\t\t\tsetSelectedIndex((prev) => (prev < modelSearchResults.length - 1 ? prev + 1 : prev))\n\t\t\t\tbreak\n\t\t\tcase",
+				":\n\t\t\t\tevent.preventDefault()\n\t\t\t\tsetSelectedIndex((prev) => (prev > 0 ? prev - 1 : prev))\n\t\t\t\tbreak\n\t\t\tcase"
+			]
+		},
+		{
+			"file": "settings\\OpenRouterModelPicker.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 51,
+			"brandReferences": [
+				"Cline",
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../history/HistoryView",
+				"./common/ModelInfoView",
+				"./ThinkingBudgetSlider",
+				",\n\t\t\t}}>\n\t\t\t{isFavorite ?",
+				", act:"
+			]
+		},
+		{
+			"file": "settings\\PreferredLanguageSetting.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 20,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"block mb-1 text-sm font-medium",
+				"}}>\n\t\t\t\t<VSCodeOption value=",
+				">English</VSCodeOption>\n\t\t\t\t<VSCodeOption value=",
+				">Arabic - العربية</VSCodeOption>\n\t\t\t\t<VSCodeOption value=",
+				">Portuguese - Português (Brasil)</VSCodeOption>\n\t\t\t\t<VSCodeOption value="
+			]
+		},
+		{
+			"file": "settings\\providers\\AnthropicProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 12,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"../ThinkingBudgetSlider",
+				"Switch to 1M context window model",
+				"Switch to 200K context window model",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange("
+			]
+		},
+		{
+			"file": "settings\\providers\\AskSageProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 9,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"This key is stored locally and only used to make API requests from this extension.",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				", value)}\n\t\t\t\tplaceholder="
+			]
+		},
+		{
+			"file": "settings\\providers\\BasetenProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 2,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName="
+			]
+		},
+		{
+			"file": "settings\\providers\\BedrockProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 90,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"../ThinkingBudgetSlider",
+				"onChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\t\tplaceholder=",
+				"style={{ width:"
+			]
+		},
+		{
+			"file": "settings\\providers\\CerebrasProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 5,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				"models={cerebrasModels}\n\t\t\t\t\t\tonChange={(e: any) =>\n\t\t\t\t\t\t\thandleModeFieldChange(\n\t\t\t\t\t\t\t\t{ plan:",
+				", act:"
+			]
+		},
+		{
+			"file": "settings\\providers\\ClaudeCodeProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 11,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"../ThinkingBudgetSlider",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tplaceholder=",
+				"style={{ width:"
+			]
+		},
+		{
+			"file": "settings\\providers\\ClineProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 15,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../ClineAccountInfoCard",
+				")\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}}\n\t\t\t\t\t\tstyle={{ marginTop: -10 }}>\n\t\t\t\t\t\tSort underlying provider routing\n\t\t\t\t\t</VSCodeCheckbox>\n\n\t\t\t\t\t{providerSortingSelected && (\n\t\t\t\t\t\t<div style={{ marginBottom: -6 }}>\n\t\t\t\t\t\t\t<DropdownContainer className=",
+				"zIndex={OPENROUTER_MODEL_PICKER_Z_INDEX + 1}>\n\t\t\t\t\t\t\t\t<VSCodeDropdown\n\t\t\t\t\t\t\t\t\tonChange={(e: any) => {\n\t\t\t\t\t\t\t\t\t\thandleFieldChange(",
+				", e.target.value)\n\t\t\t\t\t\t\t\t\t}}\n\t\t\t\t\t\t\t\t\tstyle={{ width:",
+				", marginTop: 3 }}\n\t\t\t\t\t\t\t\t\tvalue={apiConfiguration?.openRouterProviderSorting}>\n\t\t\t\t\t\t\t\t\t<VSCodeOption value="
+			]
+		},
+		{
+			"file": "settings\\providers\\DeepSeekProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 5,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				"models={deepSeekModels}\n\t\t\t\t\t\tonChange={(e: any) =>\n\t\t\t\t\t\t\thandleModeFieldChange(\n\t\t\t\t\t\t\t\t{ plan:",
+				", act:"
+			]
+		},
+		{
+			"file": "settings\\providers\\DifyProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 14,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				", (value) =>\n\t\thandleFieldChange(",
+				", (value) =>\n\t\thandleFieldChange(",
+				", flexDirection:",
+				", gap: 10 }}>\n\t\t\t\t<DebouncedTextField\n\t\t\t\t\tinitialValue={apiConfiguration?.difyBaseUrl ||"
+			]
+		},
+		{
+			"file": "settings\\providers\\DoubaoProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 5,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				"models={doubaoModels}\n\t\t\t\t\t\tonChange={(e: any) =>\n\t\t\t\t\t\t\thandleModeFieldChange(\n\t\t\t\t\t\t\t\t{ plan:",
+				", act:"
+			]
+		},
+		{
+			"file": "settings\\providers\\FireworksProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 4,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				"models={fireworksModels}\n\t\t\t\tonChange={(e: any) => {\n\t\t\t\t\thandleModeFieldChange(\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tplan:"
+			]
+		},
+		{
+			"file": "settings\\providers\\GeminiProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 9,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"../ThinkingBudgetSlider",
+				"gemini-2.5-flash-lite-preview-06-17",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName="
+			]
+		},
+		{
+			"file": "settings\\providers\\GroqProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 2,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName="
+			]
+		},
+		{
+			"file": "settings\\providers\\HuaweiCloudMaasProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 6,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				", act:",
+				"},\n\t\t\t\t\t\t\t\t\thuaweiCloudMaaSModelId: {\n\t\t\t\t\t\t\t\t\t\tplan:"
+			]
+		},
+		{
+			"file": "settings\\providers\\HuggingFaceProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 6,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tplaceholder=",
+				"style={{ width:",
+				">\n\t\t\t\t<span style={{ fontWeight: 500 }}>Hugging Face API Key</span>\n\t\t\t</DebouncedTextField>\n\t\t\t<p\n\t\t\t\tstyle={{\n\t\t\t\t\tfontSize:",
+				",\n\t\t\t\t}}>\n\t\t\t\tThis key is stored locally and only used to make API requests from this extension. We don’t show pricing here\n\t\t\t\tbecause it depends on your Hugging Face provider settings and isn’t consistently available via their API{"
+			]
+		},
+		{
+			"file": "settings\\providers\\LiteLlmProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 47,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"../ThinkingBudgetSlider",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tplaceholder={",
+				"}\n\t\t\t\tstyle={{ width:"
+			]
+		},
+		{
+			"file": "settings\\providers\\LMStudioProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 20,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Failed to parse LM Studio models:",
+				"flex flex-col gap-2",
+				"Use custom base URL",
+				"Default: http://localhost:1234",
+				"w-full mb-3"
+			]
+		},
+		{
+			"file": "settings\\providers\\MistralProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 5,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				"models={mistralModels}\n\t\t\t\t\t\tonChange={(e: any) =>\n\t\t\t\t\t\t\thandleModeFieldChange(\n\t\t\t\t\t\t\t\t{ plan:",
+				", act:"
+			]
+		},
+		{
+			"file": "settings\\providers\\MoonshotProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 5,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"This key is stored locally and only used to make API requests from this extension.",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				"signupUrl={\n\t\t\t\t\tapiConfiguration?.moonshotApiLine ==="
+			]
+		},
+		{
+			"file": "settings\\providers\\NebiusProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 6,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"This key is stored locally and only used to make API requests from this extension. (Note: Cline uses complex prompts and works best with Claude models. Less capable models may not work as expected.)",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				"models={nebiusModels}\n\t\t\t\t\t\tonChange={(e: any) =>\n\t\t\t\t\t\t\thandleModeFieldChange(\n\t\t\t\t\t\t\t\t{ plan:"
+			]
+		},
+		{
+			"file": "settings\\providers\\OllamaProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 28,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				",\n\t\t\t\t}),\n\t\t\t)\n\t\t\tif (response && response.values) {\n\t\t\t\tsetOllamaModels(response.values)\n\t\t\t}\n\t\t} catch (error) {\n\t\t\tconsole.error(",
+				", error)\n\t\t\tsetOllamaModels([])\n\t\t}\n\t}, [apiConfiguration?.ollamaBaseUrl])\n\n\tuseEffect(() => {\n\t\trequestOllamaModels()\n\t}, [requestOllamaModels])\n\n\tuseInterval(requestOllamaModels, 2000)\n\n\treturn (\n\t\t<div className=",
+				"onChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tplaceholder=",
+				"initialValue={apiConfiguration?.ollamaApiKey ||"
+			]
+		},
+		{
+			"file": "settings\\providers\\OpenAICompatible.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 56,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"Failed to refresh OpenAI models:",
+				"}\n\t\t\t\tonChange={(value) => {\n\t\t\t\t\thandleFieldChange(",
+				", value)\n\t\t\t\t\tdebouncedRefreshOpenAiModels(value, apiConfiguration?.openAiApiKey)\n\t\t\t\t}}\n\t\t\t\tplaceholder={",
+				"}\n\t\t\t\tstyle={{ width:"
+			]
+		},
+		{
+			"file": "settings\\providers\\OpenAINative.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 5,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				"models={openAiNativeModels}\n\t\t\t\t\t\tonChange={(e: any) =>\n\t\t\t\t\t\t\thandleModeFieldChange(\n\t\t\t\t\t\t\t\t{ plan:",
+				", act:"
+			]
+		},
+		{
+			"file": "settings\\providers\\OpenRouterProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 27,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"}\n\t\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\t\tplaceholder=",
+				"style={{ width:",
+				">\n\t\t\t\t\t<div style={{ display:",
+				", justifyContent:"
+			]
+		},
+		{
+			"file": "settings\\providers\\QwenCodeProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 16,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"}}>Qwen Code API Configuration</h3>\n\t\t\t<VSCodeTextField\n\t\t\t\tonInput={(e: any) => handleFieldChange(",
+				", e.target.value)}\n\t\t\t\tplaceholder=",
+				"style={{ width:",
+				"}}\n\t\t\t\tvalue={apiConfiguration?.qwenCodeOauthPath ||"
+			]
+		},
+		{
+			"file": "settings\\providers\\QwenProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 6,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"../ThinkingBudgetSlider",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				"models={qwenModels}\n\t\t\t\t\t\tonChange={(e: any) =>\n\t\t\t\t\t\t\thandleModeFieldChange(\n\t\t\t\t\t\t\t\t{ plan:"
+			]
+		},
+		{
+			"file": "settings\\providers\\RequestyProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 7,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				")\n\t\t\t\t\t}\n\t\t\t\t}}>\n\t\t\t\tUse custom base URL\n\t\t\t</VSCodeCheckbox>\n\t\t\t{requestyEndpointSelected && (\n\t\t\t\t<DebouncedTextField\n\t\t\t\t\tinitialValue={apiConfiguration?.requestyBaseUrl ??",
+				"}\n\t\t\t\t\tonChange={(value) => {\n\t\t\t\t\t\thandleFieldChange(",
+				", value)\n\t\t\t\t\t}}\n\t\t\t\t\tplaceholder="
+			]
+		},
+		{
+			"file": "settings\\providers\\SambanovaProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 5,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				"models={sambanovaModels}\n\t\t\t\t\t\tonChange={(e: any) =>\n\t\t\t\t\t\t\thandleModeFieldChange(\n\t\t\t\t\t\t\t\t{ plan:",
+				", act:"
+			]
+		},
+		{
+			"file": "settings\\providers\\SapAiCoreProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 44,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"Error fetching SAP AI Core models:",
+				"Failed to fetch models. Please check your configuration.",
+				"flex flex-col gap-1.5",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange("
+			]
+		},
+		{
+			"file": "settings\\providers\\TogetherProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 9,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				"}\n\t\t\t\tonChange={(value) =>\n\t\t\t\t\thandleModeFieldChange({ plan:",
+				", act:",
+				"}, value, currentMode)\n\t\t\t\t}\n\t\t\t\tplaceholder={"
+			]
+		},
+		{
+			"file": "settings\\providers\\VercelAIGatewayProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 17,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"Failed to fetch Vercel AI Gateway models:",
+				"}\n\t\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\t\tplaceholder=",
+				"style={{ width:"
+			]
+		},
+		{
+			"file": "settings\\providers\\VertexProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 24,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"../ThinkingBudgetSlider",
+				"gemini-2.5-flash-lite-preview-06-17",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tplaceholder="
+			]
+		},
+		{
+			"file": "settings\\providers\\VSCodeLmProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 9,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Failed to fetch VS Code LM models:",
+				")\n\n\t\t\t\t\t\t\thandleModeFieldChange(\n\t\t\t\t\t\t\t\t{ plan:",
+				", act:",
+				"},\n\t\t\t\t\t\t\t\t{ vendor, family },\n\t\t\t\t\t\t\t\tcurrentMode,\n\t\t\t\t\t\t\t)\n\t\t\t\t\t\t}}\n\t\t\t\t\t\tstyle={{ width:",
+				"}}\n\t\t\t\t\t\tvalue={\n\t\t\t\t\t\t\tvsCodeLmModelSelector\n\t\t\t\t\t\t\t\t? `${vsCodeLmModelSelector.vendor ??"
+			]
+		},
+		{
+			"file": "settings\\providers\\XaiProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 21,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"}\n\t\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\t\tproviderName=",
+				",\n\t\t\t\t\t\tmarginTop: -10,\n\t\t\t\t\t\tcolor:",
+				",\n\t\t\t\t\t}}>\n\t\t\t\t\t<span style={{ color:"
+			]
+		},
+		{
+			"file": "settings\\providers\\ZAiProvider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 4,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../common/ModelInfoView",
+				"}\n\t\t\t\tonChange={(value) => handleFieldChange(",
+				", value)}\n\t\t\t\tproviderName=",
+				"signupUrl={\n\t\t\t\t\tapiConfiguration?.zaiApiLine ==="
+			]
+		},
+		{
+			"file": "settings\\RequestyModelPicker.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 26,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../history/HistoryView",
+				"./common/ModelInfoView",
+				"./ThinkingBudgetSlider",
+				"Failed to refresh Requesty models:",
+				", flexDirection:"
+			]
+		},
+		{
+			"file": "settings\\SapAiCoreModelPicker.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 6,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Select a model...",
+				">\n\t\t\t\t\t\t── Deployed Models ──\n\t\t\t\t\t</VSCodeOption>,\n\t\t\t\t)\n\n\t\t\t\tcategorizedModels.deployed.forEach((model) => {\n\t\t\t\t\toptions.push(\n\t\t\t\t\t\t<VSCodeOption key={model.id} value={model.id}>\n\t\t\t\t\t\t\t{model.id}\n\t\t\t\t\t\t</VSCodeOption>,\n\t\t\t\t\t)\n\t\t\t\t})\n\t\t\t}\n\n\t\t\t// Add supported but not deployed models section\n\t\t\tif (categorizedModels.supported.length > 0) {\n\t\t\t\t// Add section separator (disabled option)\n\t\t\t\toptions.push(\n\t\t\t\t\t<VSCodeOption disabled key=",
+				">\n\t\t\t\t\t\t── Not Deployed Models ──\n\t\t\t\t\t</VSCodeOption>,\n\t\t\t\t)\n\n\t\t\t\tcategorizedModels.supported.forEach((model) => {\n\t\t\t\t\toptions.push(\n\t\t\t\t\t\t<VSCodeOption key={model.id} style={{ opacity: 0.6 }} value={model.id}>\n\t\t\t\t\t\t\t{model.id}\n\t\t\t\t\t\t</VSCodeOption>,\n\t\t\t\t\t)\n\t\t\t\t})\n\t\t\t}\n\t\t}\n\n\t\treturn options\n\t}\n\n\treturn (\n\t\t<DropdownContainer className=",
+				"zIndex={SAP_AI_CORE_MODEL_PICKER_Z_INDEX}>\n\t\t\t<label htmlFor=",
+				">\n\t\t\t\t<span className="
+			]
+		},
+		{
+			"file": "settings\\Section.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 1,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"flex flex-col gap-3 p-5 py-2 ${className || \"\"}"
+			]
+		},
+		{
+			"file": "settings\\SectionHeader.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 2,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"}`}\n\t\t\t{...props}\n\t\t\tstyle={{ zIndex: OPENROUTER_MODEL_PICKER_Z_INDEX + 20 }}>\n\t\t\t<h4 className=",
+				">{children}</h4>\n\t\t\t{description && <p className="
+			]
+		},
+		{
+			"file": "settings\\sections\\AboutSection.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 3,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"break-words m-0 p-0",
+				"}\n\t\t\t\t\t\t<VSCodeLink className=",
+				">\n\t\t\t\t\t\t\thttps://github.com/cline/cline\n\t\t\t\t\t\t</VSCodeLink>\n\t\t\t\t\t</p>\n\t\t\t\t\t<p className="
+			]
+		},
+		{
+			"file": "settings\\sections\\ApiConfigurationSection.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 7,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"../../mcp/configuration/McpConfigurationView",
+				"}\n\t\t\t\t\t\t\t\tisActive={currentTab ===",
+				"}\n\t\t\t\t\t\t\t\tonClick={() => setCurrentTab(",
+				")}\n\t\t\t\t\t\t\t\tstyle={{\n\t\t\t\t\t\t\t\t\topacity: 1,\n\t\t\t\t\t\t\t\t\tcursor:",
+				",\n\t\t\t\t\t\t\t\t}}>\n\t\t\t\t\t\t\t\tAct Mode\n\t\t\t\t\t\t\t</TabButton>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t{/* Content container */}\n\t\t\t\t\t\t<div className="
+			]
+		},
+		{
+			"file": "settings\\sections\\BrowserSettingsSection.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 49,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"codicon codicon-check",
+				")}; // Sufficiently large height\n\topacity: ${({ isOpen }) => (isOpen ? 1 : 0)};\n\tmargin-top: ${({ isOpen }) => (isOpen ?",
+				")};\n\tvisibility: ${({ isOpen }) => (isOpen ?",
+				"Error getting detected Chrome path:",
+				"Error testing browser connection:"
+			]
+		},
+		{
+			"file": "settings\\sections\\DebugSection.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 2,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"mt-[5px] w-auto",
+				"mt-[5px] w-auto"
+			]
+		},
+		{
+			"file": "settings\\sections\\FeatureSettingsSection.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 10,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				">Low</VSCodeOption>\n\t\t\t\t\t\t\t<VSCodeOption value=",
+				">Medium</VSCodeOption>\n\t\t\t\t\t\t\t<VSCodeOption value=",
+				">High</VSCodeOption>\n\t\t\t\t\t\t</VSCodeDropdown>\n\t\t\t\t\t\t<p className=",
+				", checked)\n\t\t\t\t\t\t\t}}>\n\t\t\t\t\t\t\tEnable strict plan mode\n\t\t\t\t\t\t</VSCodeCheckbox>\n\t\t\t\t\t\t<p className=",
+				", { ...focusChainSettings, enabled: checked })\n\t\t\t\t\t\t\t\t}}>\n\t\t\t\t\t\t\t\tEnable Focus Chain\n\t\t\t\t\t\t\t</VSCodeCheckbox>\n\t\t\t\t\t\t\t<p className="
+			]
+		},
+		{
+			"file": "settings\\sections\\TerminalSettingsSection.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 22,
+			"brandReferences": [
+				"Cline",
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"Please enter a positive number",
+				"Failed to update terminal connection timeout:",
+				"Failed to update default terminal profile:",
+				">\n\t\t\t\t\t\t<label className=",
+				">\n\t\t\t\t\t\t\tDefault Terminal Profile\n\t\t\t\t\t\t</label>\n\t\t\t\t\t\t<VSCodeDropdown\n\t\t\t\t\t\t\tclassName="
+			]
+		},
+		{
+			"file": "settings\\SettingsView.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 41,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"flex flex-1 overflow-hidden [&.narrow_.tab-label]:hidden",
+				"API Configuration",
+				"API Configuration",
+				"API Configuration",
+				"General Settings"
+			]
+		},
+		{
+			"file": "settings\\TerminalOutputLineLimitSlider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 7,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				", display:",
+				", marginBottom: 5 }}>\n\t\t\t\tTerminal output limit\n\t\t\t</label>\n\t\t\t<div style={{ display:",
+				", alignItems:",
+				"style={{ flexGrow: 1, marginRight:",
+				"value={terminalOutputLineLimit ?? 500}\n\t\t\t\t/>\n\t\t\t\t<span>{terminalOutputLineLimit ?? 500}</span>\n\t\t\t</div>\n\t\t\t<p style={{ fontSize:"
+			]
+		},
+		{
+			"file": "settings\\ThinkingBudgetSlider.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 8,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"planModeThinkingBudgetTokens",
+				"actModeThinkingBudgetTokens",
+				"planModeThinkingBudgetTokens",
+				"actModeThinkingBudgetTokens",
+				"display: flex;\n\tflex-direction: column;\n\tgap: 10px;"
+			]
+		},
+		{
+			"file": "settings\\UseCustomPromptCheckbox.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 3,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				")\n\t}, [])\n\n\treturn (\n\t\t<div id={providerId}>\n\t\t\t<VSCodeCheckbox checked={isCompactPromptEnabled} onChange={() => toggleCompactPrompt(!isCompactPromptEnabled)}>\n\t\t\t\tUse compact prompt\n\t\t\t</VSCodeCheckbox>\n\t\t\t<div className=",
+				">\n\t\t\t\tA system prompt optimized for smaller context window (e.g. 8k or less).\n\t\t\t\t<div className=",
+				">\n\t\t\t\t\t<i className="
+			]
+		},
+		{
+			"file": "welcome\\HomeHeader.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 10,
+			"brandReferences": [
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/assets/ClineLogoVariable",
+				"Error opening walkthrough:",
+				"flex flex-col items-center mb-5",
+				">\n\t\t\t\t<ClineLogoVariable className=",
+				">\n\t\t\t\t<h2 className="
+			]
+		},
+		{
+			"file": "welcome\\QuickWinCard.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 3,
+			"brandReferences": [],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"codicon codicon-rocket !text-[28px] !leading-[1]",
+				"flex-grow min-w-0",
+				"codicon ${iconClass} !text-[28px] !leading-[1]"
+			]
+		},
+		{
+			"file": "welcome\\SuggestedTasks.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 4,
+			"brandReferences": [
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"px-4 pt-1 pb-3 select-none",
+				"}\n\t\t\t\t<h2 className=",
+				">\n\t\t\t\t\tQuick <span className=",
+				">[Wins]</span> with Cline\n\t\t\t\t</h2>\n\t\t\t\t<div className="
+			]
+		},
+		{
+			"file": "welcome\\WelcomeView.tsx",
+			"needsI18n": true,
+			"hardcodedTextCount": 11,
+			"brandReferences": [
+				"Cline",
+				"Cline"
+			],
+			"hasI18nImport": false,
+			"sampleHardcodedTexts": [
+				"@/assets/ClineLogoWhite",
+				"Failed to get login URL:",
+				"fixed inset-0 p-0 flex flex-col",
+				"h-full px-5 overflow-auto",
+				"flex justify-center my-5"
+			]
+		}
+	],
+	"filesList": {
+		"missingI18n": [
+			"account\\AccountOptions.tsx",
+			"account\\AccountView.tsx",
+			"account\\AccountWelcomeView.tsx",
+			"account\\CreditBalance.tsx",
+			"account\\CreditsHistoryTable.tsx",
+			"account\\StyledCreditDisplay.tsx",
+			"browser\\BrowserSettingsMenu.tsx",
+			"chat\\Announcement.tsx",
+			"chat\\auto-approve-menu\\AutoApproveBar.tsx",
+			"chat\\auto-approve-menu\\AutoApproveMenuItem.tsx",
+			"chat\\auto-approve-menu\\AutoApproveModal.tsx",
+			"chat\\BrowserSessionRow.tsx",
+			"chat\\chat-view\\components\\layout\\ActionButtons.tsx",
+			"chat\\chat-view\\components\\layout\\ChatLayout.tsx",
+			"chat\\chat-view\\components\\layout\\InputSection.tsx",
+			"chat\\chat-view\\components\\layout\\MessagesArea.tsx",
+			"chat\\chat-view\\components\\layout\\WelcomeSection.tsx",
+			"chat\\ChatErrorBoundary.tsx",
+			"chat\\ChatRow.tsx",
+			"chat\\ChatTextArea.tsx",
+			"chat\\ChatView.tsx",
+			"chat\\ContextMenu.tsx",
+			"chat\\CreditLimitError.tsx",
+			"chat\\ErrorBlockTitle.tsx",
+			"chat\\ErrorRow.test.tsx",
+			"chat\\ErrorRow.tsx",
+			"chat\\OptionsButtons.tsx",
+			"chat\\QuoteButton.tsx",
+			"chat\\QuotedMessagePreview.tsx",
+			"chat\\ReportBugPreview.tsx",
+			"chat\\ServersToggleModal.tsx",
+			"chat\\SlashCommandMenu.tsx",
+			"chat\\task-header\\buttons\\CopyTaskButton.tsx",
+			"chat\\task-header\\buttons\\DeleteTaskButton.tsx",
+			"chat\\task-header\\buttons\\OpenDiskTaskHistoryButton.tsx",
+			"chat\\task-header\\TaskHeader.tsx",
+			"chat\\task-header\\TaskTimeline.tsx",
+			"chat\\task-header\\TaskTimelineTooltip.tsx",
+			"chat\\TaskFeedbackButtons.tsx",
+			"chat\\UserMessage.tsx",
+			"cline-rules\\ClineRulesToggleModal.tsx",
+			"cline-rules\\NewRuleRow.tsx",
+			"cline-rules\\RuleRow.tsx",
+			"cline-rules\\RulesToggleList.tsx",
+			"common\\AlertDialog.tsx",
+			"common\\ChecklistRenderer.tsx",
+			"common\\CheckmarkControl.tsx",
+			"common\\CheckpointControls.tsx",
+			"common\\CodeAccordian.tsx",
+			"common\\CodeBlock.tsx",
+			"common\\CopyButton.tsx",
+			"common\\DangerButton.tsx",
+			"common\\Demo.tsx",
+			"common\\HeroTooltip.tsx",
+			"common\\MarkdownBlock.tsx",
+			"common\\MermaidBlock.tsx",
+			"common\\SuccessButton.tsx",
+			"common\\Tab.tsx",
+			"common\\TelemetryBanner.tsx",
+			"common\\Thumbnails.tsx",
+			"common\\Tooltip.tsx",
+			"history\\HistoryPreview.tsx",
+			"history\\HistoryView.tsx",
+			"mcp\\chat-display\\ImagePreview.tsx",
+			"mcp\\chat-display\\LinkPreview.tsx",
+			"mcp\\chat-display\\McpResponseDisplay.tsx",
+			"mcp\\configuration\\McpConfigurationView.tsx",
+			"mcp\\configuration\\tabs\\add-server\\AddLocalServerForm.tsx",
+			"mcp\\configuration\\tabs\\add-server\\AddRemoteServerForm.tsx",
+			"mcp\\configuration\\tabs\\installed\\InstalledServersView.tsx",
+			"mcp\\configuration\\tabs\\installed\\server-row\\McpResourceRow.tsx",
+			"mcp\\configuration\\tabs\\installed\\server-row\\McpToolRow.tsx",
+			"mcp\\configuration\\tabs\\installed\\server-row\\ServerRow.tsx",
+			"mcp\\configuration\\tabs\\installed\\ServersToggleList.tsx",
+			"mcp\\configuration\\tabs\\marketplace\\McpMarketplaceCard.tsx",
+			"mcp\\configuration\\tabs\\marketplace\\McpMarketplaceView.tsx",
+			"mcp\\configuration\\tabs\\marketplace\\McpSubmitCard.tsx",
+			"menu\\Navbar.tsx",
+			"settings\\ApiOptions.tsx",
+			"settings\\BasetenModelPicker.tsx",
+			"settings\\ClineAccountInfoCard.tsx",
+			"settings\\common\\ApiKeyField.tsx",
+			"settings\\common\\BaseUrlField.tsx",
+			"settings\\common\\ErrorMessage.tsx",
+			"settings\\common\\ModelInfoView.tsx",
+			"settings\\common\\ModelSelector.tsx",
+			"settings\\FeaturedModelCard.tsx",
+			"settings\\GroqModelPicker.tsx",
+			"settings\\HuggingFaceModelPicker.tsx",
+			"settings\\ModelDescriptionMarkdown.tsx",
+			"settings\\OllamaModelPicker.tsx",
+			"settings\\OpenRouterModelPicker.tsx",
+			"settings\\PreferredLanguageSetting.tsx",
+			"settings\\providers\\AnthropicProvider.tsx",
+			"settings\\providers\\AskSageProvider.tsx",
+			"settings\\providers\\BasetenProvider.tsx",
+			"settings\\providers\\BedrockProvider.tsx",
+			"settings\\providers\\CerebrasProvider.tsx",
+			"settings\\providers\\ClaudeCodeProvider.tsx",
+			"settings\\providers\\ClineProvider.tsx",
+			"settings\\providers\\DeepSeekProvider.tsx",
+			"settings\\providers\\DifyProvider.tsx",
+			"settings\\providers\\DoubaoProvider.tsx",
+			"settings\\providers\\FireworksProvider.tsx",
+			"settings\\providers\\GeminiProvider.tsx",
+			"settings\\providers\\GroqProvider.tsx",
+			"settings\\providers\\HuaweiCloudMaasProvider.tsx",
+			"settings\\providers\\HuggingFaceProvider.tsx",
+			"settings\\providers\\LiteLlmProvider.tsx",
+			"settings\\providers\\LMStudioProvider.tsx",
+			"settings\\providers\\MistralProvider.tsx",
+			"settings\\providers\\MoonshotProvider.tsx",
+			"settings\\providers\\NebiusProvider.tsx",
+			"settings\\providers\\OllamaProvider.tsx",
+			"settings\\providers\\OpenAICompatible.tsx",
+			"settings\\providers\\OpenAINative.tsx",
+			"settings\\providers\\OpenRouterProvider.tsx",
+			"settings\\providers\\QwenCodeProvider.tsx",
+			"settings\\providers\\QwenProvider.tsx",
+			"settings\\providers\\RequestyProvider.tsx",
+			"settings\\providers\\SambanovaProvider.tsx",
+			"settings\\providers\\SapAiCoreProvider.tsx",
+			"settings\\providers\\TogetherProvider.tsx",
+			"settings\\providers\\VercelAIGatewayProvider.tsx",
+			"settings\\providers\\VertexProvider.tsx",
+			"settings\\providers\\VSCodeLmProvider.tsx",
+			"settings\\providers\\XaiProvider.tsx",
+			"settings\\providers\\ZAiProvider.tsx",
+			"settings\\RequestyModelPicker.tsx",
+			"settings\\SapAiCoreModelPicker.tsx",
+			"settings\\Section.tsx",
+			"settings\\SectionHeader.tsx",
+			"settings\\sections\\AboutSection.tsx",
+			"settings\\sections\\ApiConfigurationSection.tsx",
+			"settings\\sections\\BrowserSettingsSection.tsx",
+			"settings\\sections\\DebugSection.tsx",
+			"settings\\sections\\FeatureSettingsSection.tsx",
+			"settings\\sections\\TerminalSettingsSection.tsx",
+			"settings\\SettingsView.tsx",
+			"settings\\TerminalOutputLineLimitSlider.tsx",
+			"settings\\ThinkingBudgetSlider.tsx",
+			"settings\\UseCustomPromptCheckbox.tsx",
+			"welcome\\HomeHeader.tsx",
+			"welcome\\QuickWinCard.tsx",
+			"welcome\\SuggestedTasks.tsx",
+			"welcome\\WelcomeView.tsx"
+		],
+		"readyFiles": []
+	}
+}

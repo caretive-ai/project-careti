@@ -74,3 +74,18 @@ export function formatSeconds(seconds?: number): string {
 
 	return `${mins}:${secs}`
 }
+
+export function formatCurrencyAmount(value: number | string | null | undefined, fractionDigits = 2, fallback = "0.00"): string {
+	if (value === null || value === undefined) {
+		return fallback
+	}
+
+	const numericValue = typeof value === "number" ? value : Number(value)
+	const digits = Math.min(20, Math.max(0, fractionDigits))
+
+	if (Number.isFinite(numericValue)) {
+		return numericValue.toFixed(digits)
+	}
+
+	return fallback
+}

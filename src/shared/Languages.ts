@@ -40,25 +40,56 @@ export type LanguageDisplay =
 
 export const DEFAULT_LANGUAGE_SETTINGS: LanguageKey = "en"
 
+// CARET MODIFICATION: UI에서 지원하는 언어 목록 (Caret i18n 시스템 기준)
+export type UILanguageKey = "ko" | "en" | "ja" | "zh-CN"
+
+// CARET MODIFICATION: LLM 언어 코드를 UI 언어 코드로 매핑
+export const LLM_TO_UI_LANGUAGE_MAP: Record<LanguageKey, UILanguageKey | null> = {
+	en: "en", // 영어 → 영어 UI
+	ko: "ko", // 한국어 → 한국어 UI
+	ja: "ja", // 일본어 → 일본어 UI
+	"zh-CN": "zh-CN", // 중국어 간체 → 중국어 UI
+	"zh-TW": "zh-CN", // 중국어 번체 → 중국어 UI (간체로 매핑, 하지만 직접 지원은 아님)
+	// UI 지원하지 않는 언어들은 null (영어 UI 유지)
+	ar: null, // 아랍어 → 영어 UI 유지
+	"pt-BR": null, // 포르투갈어(브라질) → 영어 UI 유지
+	cs: null, // 체코어 → 영어 UI 유지
+	fr: null, // 프랑스어 → 영어 UI 유지
+	de: null, // 독일어 → 영어 UI 유지
+	hi: null, // 힌디어 → 영어 UI 유지
+	hu: null, // 헝가리어 → 영어 UI 유지
+	it: null, // 이탈리아어 → 영어 UI 유지
+	pl: null, // 폴란드어 → 영어 UI 유지
+	"pt-PT": null, // 포르투갈어(포르투갈) → 영어 UI 유지
+	ru: null, // 러시아어 → 영어 UI 유지
+	es: null, // 스페인어 → 영어 UI 유지
+	tr: null, // 터키어 → 영어 UI 유지
+}
+
+// CARET MODIFICATION: 직접적인 UI 지원 언어 목록 (🎨 아이콘 표시용)
+export const DIRECT_UI_SUPPORTED_LANGUAGES: LanguageKey[] = ["en", "ko", "ja", "zh-CN"]
+
 export const languageOptions: { key: LanguageKey; display: LanguageDisplay }[] = [
+	// UI 지원 언어 우선 (영어 > 한국어 > 중국어 > 일본어)
 	{ key: "en", display: "English" },
+	{ key: "ko", display: "Korean - 한국어" },
+	{ key: "zh-CN", display: "Simplified Chinese - 简体中文" },
+	{ key: "ja", display: "Japanese - 日本語" },
+	// UI 미지원 언어들 (알파벳 순)
 	{ key: "ar", display: "Arabic - العربية" },
-	{ key: "pt-BR", display: "Portuguese - Português (Brasil)" },
 	{ key: "cs", display: "Czech - Čeština" },
-	{ key: "fr", display: "French - Français" },
 	{ key: "de", display: "German - Deutsch" },
+	{ key: "es", display: "Spanish - Español" },
+	{ key: "fr", display: "French - Français" },
 	{ key: "hi", display: "Hindi - हिन्दी" },
 	{ key: "hu", display: "Hungarian - Magyar" },
 	{ key: "it", display: "Italian - Italiano" },
-	{ key: "ja", display: "Japanese - 日本語" },
-	{ key: "ko", display: "Korean - 한국어" },
 	{ key: "pl", display: "Polish - Polski" },
+	{ key: "pt-BR", display: "Portuguese - Português (Brasil)" },
 	{ key: "pt-PT", display: "Portuguese - Português (Portugal)" },
 	{ key: "ru", display: "Russian - Русский" },
-	{ key: "zh-CN", display: "Simplified Chinese - 简体中文" },
-	{ key: "es", display: "Spanish - Español" },
-	{ key: "zh-TW", display: "Traditional Chinese - 繁體中文" },
 	{ key: "tr", display: "Turkish - Türkçe" },
+	{ key: "zh-TW", display: "Traditional Chinese - 繁體中文" },
 ]
 
 export function getLanguageKey(display: LanguageDisplay | undefined): LanguageKey {
@@ -72,61 +103,42 @@ export function getLanguageKey(display: LanguageDisplay | undefined): LanguageKe
 	return DEFAULT_LANGUAGE_SETTINGS
 }
 
-// ============================================================================
-// CARET MODIFICATION: F02 - Multilingual i18n System
-// ============================================================================
-
+// CARET MODIFICATION: 언어 통합 유틸리티 함수들
 /**
- * UI Language Key - Directly supported UI languages in Caret
- * These are the languages that have full UI translation support
- */
-export type UILanguageKey = "ko" | "en" | "ja" | "zh-CN"
-
-/**
- * Mapping from LLM LanguageKey to UI Language Key
- * Maps the broader LLM language set to the supported UI languages
- */
-export const LLM_TO_UI_LANGUAGE_MAP: Record<LanguageKey, UILanguageKey> = {
-	en: "en",
-	ar: "en", // Arabic -> English fallback
-	"pt-BR": "en", // Portuguese (Brazil) -> English fallback
-	cs: "en", // Czech -> English fallback
-	fr: "en", // French -> English fallback
-	de: "en", // German -> English fallback
-	hi: "en", // Hindi -> English fallback
-	hu: "en", // Hungarian -> English fallback
-	it: "en", // Italian -> English fallback
-	ja: "ja", // Japanese -> Japanese (direct support)
-	ko: "ko", // Korean -> Korean (direct support)
-	pl: "en", // Polish -> English fallback
-	"pt-PT": "en", // Portuguese (Portugal) -> English fallback
-	ru: "en", // Russian -> English fallback
-	"zh-CN": "zh-CN", // Simplified Chinese -> Simplified Chinese (direct support)
-	es: "en", // Spanish -> English fallback
-	"zh-TW": "zh-CN", // Traditional Chinese -> Simplified Chinese fallback
-	tr: "en", // Turkish -> English fallback
-}
-
-/**
- * Array of directly supported UI languages
- * These languages have complete UI translation files
- */
-export const DIRECT_UI_SUPPORTED_LANGUAGES: UILanguageKey[] = ["ko", "en", "ja", "zh-CN"]
-
-/**
- * Check if a language key is directly supported by the UI
- * @param languageKey - The language key to check
- * @returns true if the language is directly supported, false otherwise
+ * LLM 언어가 UI에서 직접 지원되는지 확인 (🎨 아이콘 표시용)
  */
 export function isUILanguageSupported(languageKey: LanguageKey): boolean {
-	return DIRECT_UI_SUPPORTED_LANGUAGES.includes(LLM_TO_UI_LANGUAGE_MAP[languageKey])
+	return DIRECT_UI_SUPPORTED_LANGUAGES.includes(languageKey)
 }
 
 /**
- * Get the UI language key from an LLM language key
- * @param languageKey - The LLM language key
- * @returns The corresponding UI language key (with fallback)
+ * LLM 언어 코드를 대응하는 UI 언어 코드로 변환
+ * UI 지원하지 않는 언어는 기본 영어("en") 반환
  */
-export function getUILanguageKey(languageKey: LanguageKey): UILanguageKey {
-	return LLM_TO_UI_LANGUAGE_MAP[languageKey]
+export function getUILanguageFromLLM(languageKey: LanguageKey): UILanguageKey {
+	return LLM_TO_UI_LANGUAGE_MAP[languageKey] || "en"
+}
+
+/**
+ * UI 언어 코드를 Caret i18n 시스템의 SupportedLanguage로 변환
+ */
+export function getCaretSupportedLanguage(uiLanguageKey: UILanguageKey): "ko" | "en" | "ja" | "zh" {
+	// zh-CN을 zh로 매핑 (Caret i18n 시스템 호환성)
+	if (uiLanguageKey === "zh-CN") {
+		return "zh"
+	}
+	return uiLanguageKey as "ko" | "en" | "ja"
+}
+
+/**
+ * 통합 언어 설정 유틸리티
+ * LLM 언어 설정 시 UI 언어도 자동 결정
+ */
+export function getLanguageSettings(languageKey: LanguageKey) {
+	return {
+		llmLanguage: languageKey,
+		uiLanguage: getUILanguageFromLLM(languageKey),
+		caretLanguage: getCaretSupportedLanguage(getUILanguageFromLLM(languageKey)),
+		isUISupported: isUILanguageSupported(languageKey),
+	}
 }

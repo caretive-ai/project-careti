@@ -51,10 +51,10 @@
 **Phase 2: Upstream 완전 채택** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
 **Phase 3: Proto 재구현** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
 **Phase 4: Backend 재구현** ▓▓▓▓▓▓▓▓▓▓ 100% ✅ (F09 ✅, F03 ✅, F08 ✅, F02 ✅, F06 ✅, F11 ✅, F01 ✅, F05 ✅, F10 ✅, 파일복원 ✅)
-**Phase 5: Frontend 재구현** ░░░░░░░░░░ 0%
+**Phase 5: Frontend 재구현** ▓▓▓▓▓▓▓░░░ 70% (5.0-5.5.4 완료 ✅, Backend 0 에러, Frontend 24 에러)
 **Phase 6: 최종 검증 및 배포** ░░░░░░░░░░ 0%
 
-**총 진행률**: ▓▓▓▓▓▓▓░░░ 67% (Phase 0-4 완료)
+**총 진행률**: ▓▓▓▓▓▓▓▓░░ 78% (Phase 0-5 진행 중)
 
 ---
 
@@ -1235,10 +1235,43 @@ Phase 5.8: F10 (ProviderSetup) - RequestyModelPicker 통합 ⚠️
 **충돌 위험**: ❌ 없음 (Cline 변경사항과 무관)
 **⚠️ 광범위**: 다수 UI 컴포넌트 i18n 적용
 
+##### ⚠️ i18n 적용 필수 규칙 ⭐ 신규
+
+**문서 참조**: `caret-docs/features/f02-multilingual-i18n.md`
+
+**규칙 1: Namespace 분리 (중복 방지)**
+- `common.json`: 공통 UI 요소 (`button.save`, `error.generic`)
+- `settings.json`: 설정 페이지 (`settings.tabs.api`, `providers.*.name`)
+- `chat.json`: 채팅 인터페이스
+- Feature별 namespace
+
+**규칙 2: Translation 함수 사용**
+```typescript
+import { t } from '@/caret/utils/i18n'
+
+// ✅ 올바른 사용
+t('button.save', 'common')
+t('providers.openrouter.name', 'settings')
+
+// ❌ 잘못된 사용 - namespace를 key에 포함하지 말 것
+t('common.button.save')  // Wrong
+```
+
+**규칙 3: Provider Keys 패턴**
+```typescript
+providers.{providerId}.name
+providers.{providerId}.modelPicker.{key}
+```
+
+**적용 대상**:
+- ✅ Caret 추가/변경 UI 텍스트
+- ❌ Code comments, Log messages (영어 유지)
+
 ##### 작업 단계
 1. **i18n 시스템 검증**
    - [ ] `webview-ui/src/caret/utils/i18n.ts` 존재 확인
    - [ ] 번역 파일들 존재 확인 (en, ko, ja, zh)
+   - [ ] **i18n 규칙 준수 확인** ⭐
 
 2. **컴포넌트별 i18n 적용**
    - [ ] F02 문서 참조하여 대상 컴포넌트 확인

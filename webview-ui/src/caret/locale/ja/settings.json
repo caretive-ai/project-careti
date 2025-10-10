@@ -472,8 +472,8 @@
 		"caret": {
 			"name": "Caret",
 			"login": "ログイン",
-      "profile": "Profile",
-      "logout": "Logout",
+			"profile": "Profile",
+			"logout": "Logout",
 			"apiKeyConfigured": "Caretログイン済み",
 			"description": "Caretログインユーザーは無料提供クレジットでGoogleの最新Geminiモデルを利用できます",
 			"features": "個別のAPIキーなしで以下の機能をお楽しみください",
@@ -506,7 +506,7 @@
 			"unifiedInterfaceHelpText": "LiteLLMは、様々なLLMプロバイダーのモデルにアクセスするための統合インターフェースを提供します。詳細については、その",
 			"quickstartGuideLinkText": "クイックスタートガイド",
 			"forMoreInformationText": "を参照してください。",
-      "modelPicker": {
+			"modelPicker": {
 				"starIconFilled": "★",
 				"starIconEmpty": "☆",
 				"featuredModelDescriptionBest": "Recommended for Caret's agent coding",

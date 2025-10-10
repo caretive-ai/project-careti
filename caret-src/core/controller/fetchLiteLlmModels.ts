@@ -1,7 +1,7 @@
 import { Logger } from "@services/logging/Logger"
+import * as proto from "@shared/proto"
 import axios from "axios"
 import { Controller } from "@/core/controller"
-import * as proto from "@shared/proto"
 
 /**
  * CARET MODIFICATION: Fetches available models from LiteLLM health endpoint

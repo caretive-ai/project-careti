@@ -8,7 +8,7 @@ import type * as proto from "@/shared/proto"
  * Handles switching between chatbot and agent modes within Caret system
  */
 export async function SetCaretMode(
-	controller: Controller,
+	_controller: Controller,
 	request: proto.caret.SetCaretModeRequest,
 ): Promise<proto.caret.SetCaretModeResponse> {
 	try {

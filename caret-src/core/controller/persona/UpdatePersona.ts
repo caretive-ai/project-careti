@@ -2,12 +2,12 @@
 
 import { PersonaService } from "@caret/services/persona/persona-service"
 import { PersonaStorage } from "@caret/services/persona/persona-storage"
+import type { Controller } from "@core/controller"
 import { UpdatePersonaRequest } from "@shared/proto/caret/persona"
 import { Empty } from "@shared/proto/cline/common"
 import * as fs from "fs/promises"
 import * as path from "path"
 import { Logger } from "@/services/logging/Logger"
-import type { Controller } from "@core/controller"
 
 /**
  * Handles updating the current persona

@@ -132,6 +132,7 @@ export default defineConfig({
 			"@context": resolve(__dirname, "./src/context"),
 			"@shared": resolve(__dirname, "../src/shared"),
 			"@utils": resolve(__dirname, "./src/utils"),
+			"@caret": resolve(__dirname, "./src/caret"),
 		},
 		extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
 	},

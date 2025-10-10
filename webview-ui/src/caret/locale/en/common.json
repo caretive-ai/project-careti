@@ -421,7 +421,7 @@
 	"taskHeader.maxContextWindow": "Maximum context window size for this model",
 	"taskHeader.allStepsCompleted": "All {{totalCount}} steps completed!",
 	"taskHeader.newStepsGenerated": "New steps may be generated based on the conversation.",
-	"taskHeader.editFocusChainList": "Edit focus chain list",	
+	"taskHeader.editFocusChainList": "Edit focus chain list",
 	"modelInfo": {
 		"supportsImages": "Supports images",
 		"doesNotSupportImages": "Does not support images",

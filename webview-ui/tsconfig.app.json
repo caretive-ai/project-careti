@@ -45,6 +45,9 @@
 			],
 			"@utils/*": [
 				"src/utils/*"
+			],
+			"@caret/*": [
+				"src/caret/*"
 			]
 		}
 	},

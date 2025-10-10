@@ -20,7 +20,7 @@ import DeleteTaskButton from "./buttons/DeleteTaskButton"
 import OpenDiskTaskHistoryButton from "./buttons/OpenDiskTaskHistoryButton"
 import TaskTimeline from "./TaskTimeline"
 
-const IS_DEV = process.env.IS_DEV
+const _IS_DEV = process.env.IS_DEV
 
 // Utility function to parse checklist and extract current todo info
 const parseCurrentTodoInfo = (text: string) => {

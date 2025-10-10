@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
-import axios from "axios"
-import { fetchLiteLlmModels } from "./fetchLiteLlmModels"
-import { Controller } from "@/core/controller"
 import * as proto from "@shared/proto"
+import axios from "axios"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import { Controller } from "@/core/controller"
+import { fetchLiteLlmModels } from "./fetchLiteLlmModels"
 
 // Mock axios
 vi.mock("axios")

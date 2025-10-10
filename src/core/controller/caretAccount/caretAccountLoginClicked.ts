@@ -9,8 +9,8 @@ import * as proto from "@shared/proto/index"
  * Initiates Auth0 authentication flow
  */
 export async function caretAccountLoginClicked(
-	controller: Controller,
-	request: proto.cline.EmptyRequest,
+	_controller: Controller,
+	_request: proto.cline.EmptyRequest,
 ): Promise<proto.cline.String> {
 	console.log("[CARET-HANDLER] 🚪 Caret account login clicked")
 

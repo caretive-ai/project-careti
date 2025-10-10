@@ -8,8 +8,8 @@ import type * as proto from "@/shared/proto"
  * Returns the current prompt system mode (caret or cline)
  */
 export async function GetPromptSystemMode(
-	controller: Controller,
-	request: proto.caret.GetPromptSystemModeRequest,
+	_controller: Controller,
+	_request: proto.caret.GetPromptSystemModeRequest,
 ): Promise<proto.caret.GetPromptSystemModeResponse> {
 	try {
 		const currentMode = CaretGlobalManager.currentMode

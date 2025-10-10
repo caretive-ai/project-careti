@@ -1,12 +1,11 @@
-import * as vscode from "vscode"
-import * as path from "path"
-import * as fs from "fs/promises"
-import { writeFile } from "@utils/fs"
-import { GlobalFileNames, ensureRulesDirectoryExists } from "@/core/storage/disk"
+import { Controller } from "@core/controller"
 import { PersonaProfile } from "@shared/proto/caret/persona"
+import { writeFile } from "@utils/fs"
+import * as fs from "fs/promises"
+import * as path from "path"
+import { ensureRulesDirectoryExists, GlobalFileNames } from "@/core/storage/disk"
 import { Logger } from "@/services/logging/Logger"
 import { SimplePersona, SimplePersonaImages } from "./simple-persona"
-import { Controller } from "@core/controller"
 
 // CARET MODIFICATION: Constants for persona image filenames and directory
 const PERSONA_CONSTANTS = {
@@ -16,7 +15,7 @@ const PERSONA_CONSTANTS = {
 } as const
 
 export class PersonaStorage {
-	public async getPersona(controller: Controller): Promise<SimplePersona> {
+	public async getPersona(_controller: Controller): Promise<SimplePersona> {
 		const rulesDir = await ensureRulesDirectoryExists()
 		const personaMdPath = path.join(rulesDir, GlobalFileNames.persona)
 		let name = "Default"
@@ -59,7 +58,7 @@ export class PersonaStorage {
 		}
 	}
 
-	public async savePersonaProfile(controller: Controller, profile: PersonaProfile): Promise<void> {
+	public async savePersonaProfile(_controller: Controller, profile: PersonaProfile): Promise<void> {
 		Logger.info(`Saving persona profile for: ${profile.name}`)
 		try {
 			const rulesDir = await ensureRulesDirectoryExists()

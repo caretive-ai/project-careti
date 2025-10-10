@@ -654,11 +654,11 @@
 			"setupLink1": "1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,",
 			"setupLink2": "2) install the Google Cloud CLI › configure Application Default Credentials."
 		},
-    "caret": {
-      "name": "Caret",
+		"caret": {
+			"name": "Caret",
 			"login": "Login",
-      "profile": "Profile",
-      "logout": "Logout",
+			"profile": "Profile",
+			"logout": "Logout",
 			"apiKeyConfigured": "Caret logged in",
 			"description": "Caret login users can access Google's latest Gemini models with free provided credits",
 			"features": "Enjoy the following features without separate API keys",
@@ -691,7 +691,7 @@
 			"unifiedInterfaceHelpText": "LiteLLM provides a unified interface to access various LLM providers' models. See their",
 			"quickstartGuideLinkText": "quickstart guide",
 			"forMoreInformationText": "for more information.",
-      "modelPicker": {
+			"modelPicker": {
 				"starIconFilled": "★",
 				"starIconEmpty": "☆",
 				"featuredModelDescriptionBest": "Recommended for Caret's agent coding",

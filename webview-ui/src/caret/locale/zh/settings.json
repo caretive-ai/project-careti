@@ -499,7 +499,7 @@
 			"unifiedInterfaceHelpText": "LiteLLM 提供统一接口以访问各种 LLM 提供商的模型。请参阅其",
 			"quickstartGuideLinkText": "快速入门指南",
 			"forMoreInformationText": "了解更多信息。",
-      "modelPicker": {
+			"modelPicker": {
 				"starIconFilled": "★",
 				"starIconEmpty": "☆",
 				"featuredModelDescriptionBest": "Recommended for Caret's agent coding",

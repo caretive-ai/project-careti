@@ -1,9 +1,9 @@
 // CARET MODIFICATION: Handler for uploading custom persona images
 
 import { PersonaStorage } from "@caret/services/persona/persona-storage"
+import type { Controller } from "@core/controller"
 import { UploadCustomImageRequest } from "@shared/proto/caret/persona"
 import { Empty } from "@shared/proto/cline/common"
-import type { Controller } from "@core/controller"
 
 /**
  * Handles uploading custom persona images

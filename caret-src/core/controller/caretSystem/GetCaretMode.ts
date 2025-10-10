@@ -8,8 +8,8 @@ import type * as proto from "@/shared/proto"
  * Returns the current Caret mode (chatbot or agent)
  */
 export async function GetCaretMode(
-	controller: Controller,
-	request: proto.caret.GetCaretModeRequest,
+	_controller: Controller,
+	_request: proto.caret.GetCaretModeRequest,
 ): Promise<proto.caret.GetCaretModeResponse> {
 	try {
 		const currentMode = CaretModeManager.getCurrentCaretMode()

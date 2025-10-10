@@ -8,7 +8,7 @@ import * as proto from "@shared/proto/index"
  * Fetches Caret organization credits
  */
 export async function getCaretOrganizationCredits(
-	controller: Controller,
+	_controller: Controller,
 	request: proto.caret.GetCaretOrganizationCreditsRequest,
 ): Promise<proto.caret.CaretOrganizationCreditsData> {
 	console.log("[CARET-HANDLER] 🏢 getCaretOrganizationCredits called for org:", request.organizationId)

@@ -158,7 +158,7 @@ interface ExtensionStateContextType extends ExtensionState {
 	onRelinquishControl: (callback: () => void) => () => void
 }
 
-const ExtensionStateContext = createContext<ExtensionStateContextType | undefined>(undefined)
+export const ExtensionStateContext = createContext<ExtensionStateContextType | undefined>(undefined)
 
 export const ExtensionStateContextProvider: React.FC<{
 	children: React.ReactNode

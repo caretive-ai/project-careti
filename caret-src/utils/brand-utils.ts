@@ -1,9 +1,9 @@
 // CARET MODIFICATION: Caret brand utilities - centralized brand detection and configuration
 // Provides brand-specific functionality without cluttering Cline's env.ts
 
+import { CARET_MODE_SYSTEM_CONFIG, type CaretModeSystem } from "@caret/shared/ModeSystem"
 import fs from "fs"
 import path from "path"
-import { CARET_MODE_SYSTEM_CONFIG, type CaretModeSystem } from "@caret/shared/ModeSystem"
 
 // Cached brand name for performance
 let _cachedBrandName: string | null = null
@@ -18,17 +18,17 @@ export function detectCurrentBrandName(): string {
 	}
 
 	try {
-		const packageJsonPath = path.join(__dirname, '..', '..', 'package.json')
-		const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
-		const displayName = packageJson.displayName || 'Cline'
-		
+		const packageJsonPath = path.join(__dirname, "..", "..", "package.json")
+		const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"))
+		const displayName = packageJson.displayName || "Cline"
+
 		// displayName을 그대로 브랜드명으로 사용
 		_cachedBrandName = displayName
 
 		return _cachedBrandName!
 	} catch (error) {
-		console.error('Failed to detect brand from package.json:', error)
-		_cachedBrandName = 'Cline' // Safe default
+		console.error("Failed to detect brand from package.json:", error)
+		_cachedBrandName = "Cline" // Safe default
 		return _cachedBrandName!
 	}
 }
@@ -41,7 +41,7 @@ export function getCurrentUserMode(): CaretModeSystem {
 	// TODO: Get from user settings/preferences
 	// For now, return default based on brand
 	const brandName = detectCurrentBrandName().toLowerCase()
-	return brandName === 'cline' ? 'cline' : 'caret'
+	return brandName === "cline" ? "cline" : "caret"
 }
 
 /**
@@ -59,7 +59,6 @@ export function getCurrentBrandDisplayName(): string {
 export function getCurrentBrandName(): string {
 	return detectCurrentBrandName()
 }
-
 
 /**
  * Check if current mode supports i18n features
@@ -117,7 +116,7 @@ export function getBrandDisplayName(mode: CaretModeSystem): string {
 
 /**
  * Get brand description for specific mode
- * @param mode - The mode to get description for  
+ * @param mode - The mode to get description for
  * @returns Brand description
  */
 export function getBrandDescription(mode: CaretModeSystem): string {

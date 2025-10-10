@@ -1,8 +1,8 @@
-import * as vscode from "vscode"
 import type { CaretModeSystem } from "@caret/shared/ModeSystem"
-import { randomBytes } from "crypto"
-import { CaretUser } from "@/shared/CaretAccount"
 import { CaretAccountService } from "@services/account/CaretAccountService"
+import { randomBytes } from "crypto"
+import * as vscode from "vscode"
+import { CaretUser } from "@/shared/CaretAccount"
 
 /**
  * Singleton class for global Caret functionality access
@@ -17,7 +17,6 @@ export class CaretGlobalManager {
 	// CARET MODIFICATION: Input history management fields
 	private _inputHistory: string[] = []
 	private _inputHistoryResolver?: (history: string[]) => Promise<void>
-  private _auth0Client?: any
 
 	private constructor() {}
 
@@ -28,11 +27,13 @@ export class CaretGlobalManager {
 		console.log(`[CaretGlobalManager] 🚀 Initializing with mode: ${initialMode}`)
 		if (CaretGlobalManager.instance) {
 			// Allow re-initialization to update mode
-			console.log(`[CaretGlobalManager] 📝 Re-initializing existing instance: ${CaretGlobalManager.instance._currentMode} → ${initialMode}`)
+			console.log(
+				`[CaretGlobalManager] 📝 Re-initializing existing instance: ${CaretGlobalManager.instance._currentMode} → ${initialMode}`,
+			)
 			CaretGlobalManager.instance._currentMode = initialMode
 			return CaretGlobalManager.instance
 		}
-		
+
 		CaretGlobalManager.instance = new CaretGlobalManager()
 		CaretGlobalManager.instance._currentMode = initialMode
 		console.log(`[CaretGlobalManager] ✅ New instance created with mode: ${initialMode}`)
@@ -113,12 +114,12 @@ export class CaretGlobalManager {
 	 * Login with Auth0 and get JWT token
 	 */
 	public async login(): Promise<void> {
-    console.log("[CARET-GLOBAL-MANAGER] 🚀 Starting external authentication flow")
-		
+		console.log("[CARET-GLOBAL-MANAGER] 🚀 Starting external authentication flow")
+
 		try {
 			// Generate nonce for state validation
 			const nonce = randomBytes(32).toString("hex")
-			
+
 			// Store nonce for validation (using VS Code secrets API)
 			const context = vscode.workspace.workspaceFolders?.[0]?.uri
 			if (context) {
@@ -131,28 +132,27 @@ export class CaretGlobalManager {
 			const vsCodeCallbackUrl = `${uriScheme}://caretive.caret/auth`
 
 			// Build external auth URL
-      // `https://auth.caret.team/login?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`
+			// `https://auth.caret.team/login?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`
 
 			const authUrl = vscode.Uri.parse(
-				`http://localhost:3000/login?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`
+				`http://localhost:3000/login?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`,
 			)
 
 			console.log("[CARET-GLOBAL-MANAGER] 🌐 Opening external auth URL:", authUrl.toString())
-			// @ts-ignore: VS Code API deprecation warning
+			// @ts-expect-error: VS Code API deprecation warning
 			const success = await vscode.env.openExternal(authUrl)
 			if (!success) {
 				throw new Error("Failed to open external URL")
 			}
-
 		} catch (error) {
 			console.error("[CARET-GLOBAL-MANAGER] ❌ External authentication failed:", error)
 			throw error
 		}
 	}
 
-  public async setTokenFromCallback(token: string): Promise<void> {
+	public async setTokenFromCallback(token: string): Promise<void> {
 		console.log("[CARET-GLOBAL-MANAGER] 🔑 Setting token from callback")
-		
+
 		this._jwtToken = token
 
 		// Fetch user profile using Apollo Client
@@ -172,7 +172,7 @@ export class CaretGlobalManager {
 	 * Logout from Auth0
 	 */
 	public async logout(): Promise<void> {
-    // TODO: implement logout - logout api call
+		// TODO: implement logout - logout api call
 		this._jwtToken = undefined
 		this._userInfo = undefined
 	}
@@ -206,7 +206,7 @@ export class CaretGlobalManager {
 		return CaretGlobalManager.get().logout()
 	}
 
-  public static async setTokenFromCallback(token: string): Promise<void> {
+	public static async setTokenFromCallback(token: string): Promise<void> {
 		return CaretGlobalManager.get().setTokenFromCallback(token)
 	}
 

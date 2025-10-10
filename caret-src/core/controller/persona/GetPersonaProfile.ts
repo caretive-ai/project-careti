@@ -1,9 +1,9 @@
 // CARET MODIFICATION: Handler for getting the current persona profile
 
 import { PersonaStorage } from "@caret/services/persona/persona-storage"
+import type { Controller } from "@core/controller"
 import { PersonaProfile } from "@shared/proto/caret/persona"
 import type { EmptyRequest } from "@shared/proto/cline/common"
-import type { Controller } from "@core/controller"
 
 /**
  * Handles getting the current persona profile

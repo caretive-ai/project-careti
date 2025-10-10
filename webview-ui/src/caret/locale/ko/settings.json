@@ -56,7 +56,7 @@
 	},
 	"modelSelector": {
 		"label": "모델",
-    "placeholder": "모델을 선택하세요...",
+		"placeholder": "모델을 선택하세요...",
 		"selectModelPlaceholder": "모델을 선택하세요..."
 	},
 	"pricing": {
@@ -445,8 +445,8 @@
 		"caret": {
 			"name": "캐럿(Caret)",
 			"login": "로그인",
-      "profile": "프로필",
-      "logout": "로그아웃",
+			"profile": "프로필",
+			"logout": "로그아웃",
 			"apiKeyConfigured": "캐럿 로그인됨",
 			"description": "캐럿 로그인 사용자는 무료 제공 크레딧으로 Google의 최신 Gemini 모델을 사용할 수 있습니다",
 			"features": "별도의 API 키 없이 다음 기능을 즐기세요",
@@ -479,7 +479,7 @@
 			"unifiedInterfaceHelpText": "LiteLLM은 다양한 LLM 제공업체의 모델에 액세스할 수 있는 통합 인터페이스를 제공합니다. 다음을 참조하세요.",
 			"quickstartGuideLinkText": "빠른 시작 가이드",
 			"forMoreInformationText": "자세한 내용은.",
-      "modelPicker": {
+			"modelPicker": {
 				"starIconFilled": "★",
 				"starIconEmpty": "☆",
 				"featuredModelDescriptionBest": "Recommended for Caret's agent coding",

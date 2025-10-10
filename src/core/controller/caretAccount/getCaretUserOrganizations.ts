@@ -8,8 +8,8 @@ import * as proto from "@shared/proto/index"
  * Fetches all Caret user organizations
  */
 export async function getCaretUserOrganizations(
-	controller: Controller,
-	request: proto.cline.EmptyRequest,
+	_controller: Controller,
+	_request: proto.cline.EmptyRequest,
 ): Promise<proto.caret.CaretUserOrganizationsResponse> {
 	console.log("[CARET-HANDLER] 🏢 getCaretUserOrganizations called")
 

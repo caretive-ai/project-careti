@@ -1,0 +1,20 @@
+{
+	"normalState": "Normal image",
+	"thinkingState": "Thinking image",
+	"selector": {
+		"title": "AI Agent Template Character Settings",
+		"description": "Select the character you want. You can edit the selected persona in the 'Rules' menu and toggle it on/off in 'General Settings'.",
+		"selectButtonText": "Select",
+		"selectedButtonText": "Selected",
+		"infoTextCustomInstructions": "Instructions for the selected persona will be saved in custom_instructions.md (Global Rules)."
+	},
+	"selectorTitle": "AI Agent Template Character Settings",
+	"selectorDescription": "Select the character you want. You can edit the selected persona in the 'Rules' menu and toggle it on/off in 'General Settings'.",
+	"infoTextCustomInstructions": "Instructions for the selected persona will be saved in custom_instructions.md (Global Rules).",
+	"upload": {
+		"normal": "Upload normal image",
+		"thinking": "Upload thinking image",
+		"success": "Image uploaded successfully",
+		"error": "Image upload failed"
+	}
+}

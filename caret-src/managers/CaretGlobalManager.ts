@@ -1,8 +1,8 @@
-import type { CaretModeSystem } from "@caret/shared/ModeSystem"
-import { CaretAccountService } from "@services/account/CaretAccountService"
-import { randomBytes } from "crypto"
 import * as vscode from "vscode"
+import type { CaretModeSystem } from "@caret/shared/ModeSystem"
+import { randomBytes } from "crypto"
 import { CaretUser } from "@/shared/CaretAccount"
+import { CaretAccountService } from "@services/account/CaretAccountService"
 
 /**
  * Singleton class for global Caret functionality access
@@ -17,6 +17,7 @@ export class CaretGlobalManager {
 	// CARET MODIFICATION: Input history management fields
 	private _inputHistory: string[] = []
 	private _inputHistoryResolver?: (history: string[]) => Promise<void>
+  private _auth0Client?: any
 
 	private constructor() {}
 
@@ -27,13 +28,11 @@ export class CaretGlobalManager {
 		console.log(`[CaretGlobalManager] 🚀 Initializing with mode: ${initialMode}`)
 		if (CaretGlobalManager.instance) {
 			// Allow re-initialization to update mode
-			console.log(
-				`[CaretGlobalManager] 📝 Re-initializing existing instance: ${CaretGlobalManager.instance._currentMode} → ${initialMode}`,
-			)
+			console.log(`[CaretGlobalManager] 📝 Re-initializing existing instance: ${CaretGlobalManager.instance._currentMode} → ${initialMode}`)
 			CaretGlobalManager.instance._currentMode = initialMode
 			return CaretGlobalManager.instance
 		}
-
+		
 		CaretGlobalManager.instance = new CaretGlobalManager()
 		CaretGlobalManager.instance._currentMode = initialMode
 		console.log(`[CaretGlobalManager] ✅ New instance created with mode: ${initialMode}`)
@@ -114,12 +113,12 @@ export class CaretGlobalManager {
 	 * Login with Auth0 and get JWT token
 	 */
 	public async login(): Promise<void> {
-		console.log("[CARET-GLOBAL-MANAGER] 🚀 Starting external authentication flow")
-
+    console.log("[CARET-GLOBAL-MANAGER] 🚀 Starting external authentication flow")
+		
 		try {
 			// Generate nonce for state validation
 			const nonce = randomBytes(32).toString("hex")
-
+			
 			// Store nonce for validation (using VS Code secrets API)
 			const context = vscode.workspace.workspaceFolders?.[0]?.uri
 			if (context) {
@@ -132,30 +131,28 @@ export class CaretGlobalManager {
 			const vsCodeCallbackUrl = `${uriScheme}://caretive.caret/auth`
 
 			// Build external auth URL
-			// `https://auth.caret.team/login?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`
+      // `https://auth.caret.team/login?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`
 
 			const authUrl = vscode.Uri.parse(
-				`http://localhost:3000/login?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`,
+				`http://localhost:3000/login?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`
 			)
 
 			console.log("[CARET-GLOBAL-MANAGER] 🌐 Opening external auth URL:", authUrl.toString())
+			// @ts-ignore: VS Code API deprecation warning
 			const success = await vscode.env.openExternal(authUrl)
 			if (!success) {
 				throw new Error("Failed to open external URL")
 			}
+
 		} catch (error) {
 			console.error("[CARET-GLOBAL-MANAGER] ❌ External authentication failed:", error)
 			throw error
 		}
 	}
 
-	public static async login(): Promise<void> {
-		return CaretGlobalManager.get().login()
-	}
-
-	public async setTokenFromCallback(token: string): Promise<void> {
+  public async setTokenFromCallback(token: string): Promise<void> {
 		console.log("[CARET-GLOBAL-MANAGER] 🔑 Setting token from callback")
-
+		
 		this._jwtToken = token
 
 		// Fetch user profile using Apollo Client
@@ -171,21 +168,13 @@ export class CaretGlobalManager {
 		}
 	}
 
-	public static async setTokenFromCallback(token: string): Promise<void> {
-		return CaretGlobalManager.get().setTokenFromCallback(token)
-	}
-
 	/**
 	 * Logout from Auth0
 	 */
 	public async logout(): Promise<void> {
-		// TODO: implement logout - logout api call
+    // TODO: implement logout - logout api call
 		this._jwtToken = undefined
 		this._userInfo = undefined
-	}
-
-	public static async logout(): Promise<void> {
-		return CaretGlobalManager.get().logout()
 	}
 
 	/**
@@ -195,10 +184,6 @@ export class CaretGlobalManager {
 		return this._jwtToken
 	}
 
-	public static get authToken(): string | undefined {
-		return CaretGlobalManager.get().getAuthToken()
-	}
-
 	/**
 	 * Check if user is authenticated
 	 */
@@ -206,15 +191,31 @@ export class CaretGlobalManager {
 		return !!this._jwtToken && !!this._userInfo
 	}
 
-	public static get isAuthenticated(): boolean {
-		return CaretGlobalManager.get().isAuthenticated()
-	}
-
 	/**
 	 * Get current user information
 	 */
 	public getUserInfo(): any {
 		return this._userInfo
+	}
+
+	public static async login(): Promise<void> {
+		return CaretGlobalManager.get().login()
+	}
+
+	public static async logout(): Promise<void> {
+		return CaretGlobalManager.get().logout()
+	}
+
+  public static async setTokenFromCallback(token: string): Promise<void> {
+		return CaretGlobalManager.get().setTokenFromCallback(token)
+	}
+
+	public static get authToken(): string | undefined {
+		return CaretGlobalManager.get().getAuthToken()
+	}
+
+	public static get isAuthenticated(): boolean {
+		return CaretGlobalManager.get().isAuthenticated()
 	}
 
 	public static get userInfo(): any {
@@ -229,20 +230,12 @@ export class CaretGlobalManager {
 		this._inputHistoryResolver = resolver
 	}
 
-	public static initInputHistoryResolver(resolver: (history: string[]) => Promise<void>): void {
-		CaretGlobalManager.get().initializeInputHistoryResolver(resolver)
-	}
-
 	/**
 	 * Get input history
 	 */
 	public async getInputHistory(): Promise<string[]> {
 		// Return cached history if available
 		return this._inputHistory
-	}
-
-	public static async getInputHistory(): Promise<string[]> {
-		return CaretGlobalManager.get().getInputHistory()
 	}
 
 	/**
@@ -265,16 +258,25 @@ export class CaretGlobalManager {
 		}
 	}
 
-	public static async setInputHistory(history: string[]): Promise<void> {
-		return CaretGlobalManager.get().setInputHistory(history)
-	}
-
 	/**
 	 * Load input history from backend (called during initialization)
 	 */
 	public setInputHistoryCache(history: string[]): void {
 		this._inputHistory = history
 		console.log(`[CARET-GLOBAL-MANAGER] ✅ Input history cache updated with ${history.length} items`)
+	}
+
+	// Static accessors for input history
+	public static async getInputHistory(): Promise<string[]> {
+		return CaretGlobalManager.get().getInputHistory()
+	}
+
+	public static async setInputHistory(history: string[]): Promise<void> {
+		return CaretGlobalManager.get().setInputHistory(history)
+	}
+
+	public static initInputHistoryResolver(resolver: (history: string[]) => Promise<void>): void {
+		CaretGlobalManager.get().initializeInputHistoryResolver(resolver)
 	}
 
 	public static setInputHistoryCache(history: string[]): void {

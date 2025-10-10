@@ -1,0 +1,22 @@
+{
+	"history": {
+		"title": "历史记录",
+		"fuzzySearchPlaceholder": "搜索历史记录...",
+		"clearSearch": "清除搜索",
+		"sortNewest": "最新",
+		"sortOldest": "最旧",
+		"sortMostExpensive": "费用最高",
+		"sortMostTokens": "令牌最多",
+		"sortMostRelevant": "相关性最高",
+		"filterWorkspace": "工作区",
+		"filterFavorites": "收藏夹",
+		"selectAll": "全选",
+		"selectNone": "全不选",
+		"tokensLabel": "令牌:",
+		"cacheLabel": "缓存:",
+		"apiCostLabel": "API 成本:",
+		"deleteSelected": "删除所选的 {{count}} 个项目{{size}}",
+		"deleteAllHistory": "删除所有历史记录{{size}}",
+		"export": "导出"
+	}
+}

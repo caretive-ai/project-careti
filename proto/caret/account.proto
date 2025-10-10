@@ -7,25 +7,24 @@ option java_multiple_files = true;
 
 // CARET MODIFICATION: Service for Caret account-related operations
 // Extends Cline's AccountService with Caret-specific functionality
-// TODO: Uncomment when handlers are implemented (Phase 5 or later)
-/* service CaretAccountService {
+service CaretAccountService {
   // Handles the user clicking the Caret login link in the UI.
   // Generates Auth0 authentication flow and manages JWT tokens.
   rpc caretAccountLoginClicked(cline.EmptyRequest) returns (cline.String);
-
+    
   // Handles the user clicking the Caret logout button in the UI.
   // Clears Auth0 tokens and user state.
   rpc caretAccountLogoutClicked(cline.EmptyRequest) returns (cline.Empty);
 
   // Subscribe to Caret auth status update events (when Auth0 authentication state changes)
-  rpc subscribeToCaretAuthStatusUpdate(cline.EmptyRequest)
+  rpc subscribeToCaretAuthStatusUpdate(cline.EmptyRequest) 
       returns (stream CaretAuthState);
-
+    
   // Handles Auth0 authentication state changes.
   // Updates the user info in global state and returns the updated value.
-  rpc caretAuthStateChanged(CaretAuthStateChangedRequest)
+  rpc caretAuthStateChanged(CaretAuthStateChangedRequest) 
       returns (CaretAuthState);
-
+    
   // Fetches all Caret user credits data
   // (balance, usage transactions, payment transactions)
   rpc getCaretUserCredits(cline.EmptyRequest) returns (CaretUserCreditsData);
@@ -43,7 +42,6 @@ option java_multiple_files = true;
   // Sets the active Caret organization
   rpc setCaretUserOrganization(CaretUserOrganizationUpdateRequest) returns (cline.Empty);
 }
-*/
 
 // CARET MODIFICATION: Auth state change request for Caret (using 1000+ offset for merge compatibility)
 message CaretAuthStateChangedRequest {

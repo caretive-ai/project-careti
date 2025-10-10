@@ -1,9 +1,10 @@
-import { fileExistsAtPath, writeFile } from "@utils/fs"
-import * as fs from "fs/promises"
 import * as path from "path"
+import * as fs from "fs/promises"
 import * as vscode from "vscode"
-import { ensureRulesDirectoryExists, GlobalFileNames } from "@/core/storage/disk"
 import { Logger } from "@/services/logging/Logger"
+import { PersonaStorage } from "./persona-storage"
+import { fileExistsAtPath, writeFile } from "@utils/fs"
+import { ensureRulesDirectoryExists, GlobalFileNames } from "@/core/storage/disk"
 
 /**
  * 페르소나 초기화를 담당하는 클래스
@@ -40,11 +41,8 @@ export class PersonaInitializer {
 			// persona.md 파일이 존재하면 초기화 건너뛰기
 			if (await fileExistsAtPath(personaMdPath)) {
 				const stats = await fs.stat(personaMdPath)
-				if (stats.size > 2) {
-					// {}' 보다 크면 내용이 있는 것으로 간주
-					Logger.info(
-						"[CARET-PERSONA] PersonaInitializer: persona.md 파일이 이미 존재하고 내용이 있으므로 초기화를 건너뜁니다.",
-					)
+				if (stats.size > 2) { // {}' 보다 크면 내용이 있는 것으로 간주
+					Logger.info("[CARET-PERSONA] PersonaInitializer: persona.md 파일이 이미 존재하고 내용이 있으므로 초기화를 건너뜁니다.")
 					return null
 				}
 			}
@@ -148,9 +146,9 @@ export class PersonaInitializer {
 			// 사용자의 선호 언어를 기반으로 페르소나 데이터 선택
 			const userLanguage = this.getUserPreferredLanguage()
 			const languageKey = this.mapLanguageToKey(userLanguage)
-
+			
 			Logger.info(`[CARET-PERSONA] PersonaInitializer: 사용자 선호 언어 '${userLanguage}' → 키 '${languageKey}'`)
-
+			
 			// 선호 언어에 해당하는 페르소나 데이터를 찾고, 없으면 영어를 기본값으로 사용
 			const personaData = persona[languageKey] || persona.en || Object.values(persona)[0]
 			const personaInstruction = personaData.customInstruction
@@ -195,7 +193,11 @@ export class PersonaInitializer {
 			if (normalImagePath.startsWith("asset:/assets/")) {
 				// template_characters.json에서는 경로가 "asset:/assets/template_characters/..."로 되어 있음
 				// 실제 파일 경로는 "assets/template_characters/..."
-				normalImagePath = path.join(this.context.extensionPath, "assets", normalImagePath.replace("asset:/assets/", ""))
+				normalImagePath = path.join(
+					this.context.extensionPath,
+					"assets",
+					normalImagePath.replace("asset:/assets/", ""),
+				)
 			} else if (normalImagePath.startsWith("asset:/")) {
 				normalImagePath = path.join(this.context.extensionPath, normalImagePath.replace("asset:/", ""))
 			}
@@ -228,6 +230,7 @@ export class PersonaInitializer {
 			await fs.copyFile(thinkingImagePath, thinkingDst)
 			Logger.debug(`[CARET-PERSONA] PersonaInitializer: 생각중 이미지 복사 완료: ${thinkingDst}`)
 
+
 			Logger.info(`[CARET-PERSONA] PersonaInitializer: 페르소나 이미지를 globalStorage에 복사 완료 (${persona.character})`)
 		} catch (error) {
 			Logger.error(`[CARET-PERSONA] PersonaInitializer: 페르소나 이미지 복사 실패: ${error}`)
@@ -252,18 +255,18 @@ export class PersonaInitializer {
 	 */
 	private mapLanguageToKey(language: string): string {
 		const languageMap: { [key: string]: string } = {
-			English: "en",
-			한국어: "ko",
-			韓国語: "ko",
-			Korean: "ko",
-			日本語: "ja",
-			Japanese: "ja",
-			中文: "zh",
-			Chinese: "zh",
-			简体中文: "zh",
-			繁體中文: "zh",
+			"English": "en",
+			"한국어": "ko", 
+			"韓国語": "ko",
+			"Korean": "ko",
+			"日本語": "ja",
+			"Japanese": "ja", 
+			"中文": "zh",
+			"Chinese": "zh",
+			"简体中文": "zh",
+			"繁體中文": "zh"
 		}
-
+		
 		return languageMap[language] || "en" // 기본값은 en
 	}
 
@@ -295,7 +298,7 @@ export class PersonaInitializer {
 		try {
 			const globalRulesDir = await ensureRulesDirectoryExists()
 			const customInstructionsPath = path.join(globalRulesDir, GlobalFileNames.customInstructions)
-
+			
 			if (await fileExistsAtPath(customInstructionsPath)) {
 				await fs.unlink(customInstructionsPath)
 				Logger.info("[CARET-PERSONA] PersonaInitializer: 레거시 custom_instructions.md 파일을 정리했습니다.")
@@ -329,10 +332,9 @@ export async function resetPersonaData(context: vscode.ExtensionContext): Promis
 		}
 
 		// 3. globalState의 레거시 페르소나 프로필 삭제
-		// TODO: Use CacheService instead of direct globalState access
-		// Legacy cleanup - skipped to avoid biome custom plugin error
-		// await context.globalState.update("personaProfile", undefined)
-		Logger.info("[CARET-PERSONA] Legacy personaProfile cleanup skipped (use CacheService in future)")
+		await context.globalState.update("personaProfile", undefined)
+		Logger.info("[CARET-PERSONA] Legacy personaProfile from globalState deleted.")
+
 
 		Logger.info("[CARET-PERSONA] Persona data reset completed")
 	} catch (error) {

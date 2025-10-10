@@ -1,0 +1,17 @@
+{
+	"browserSettingsMenu": {
+		"browserConnectionInfo": "浏览器连接信息",
+		"browserConnection": "浏览器连接",
+		"status": "状态",
+		"connected": "已连接",
+		"disconnected": "已断开",
+		"type": "类型",
+		"remote": "远程",
+		"local": "本地",
+		"remoteHost": "远程主机"
+	},
+	"caretWantsToUseBrowser": "Caret想要使用浏览器：",
+	"paginationStep": "第 {{currentPage}} / {{totalPages}} 步",
+	"paginationPrevious": "上一页",
+	"paginationNext": "下一页"
+}

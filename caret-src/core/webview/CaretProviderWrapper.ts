@@ -1,11 +1,11 @@
-import { getUri } from "@caret/utils/getUri"
-import { existsSync } from "fs"
-import * as fs from "fs/promises"
-import * as path from "path"
 import * as vscode from "vscode"
-import { Controller } from "@/core/controller/index"
 import { VscodeWebviewProvider } from "@/hosts/vscode/VscodeWebviewProvider"
 import { Logger } from "@/services/logging/Logger"
+import { Controller } from "@/core/controller/index"
+import { getUri } from "@caret/utils/getUri"
+import * as fs from "fs/promises"
+import { existsSync } from "fs"
+import * as path from "path"
 
 /**
  * CaretProviderWrapper - Wrapper Pattern Implementation
@@ -101,7 +101,7 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 			const templateDir = path.join(this.context.extensionUri.fsPath, "assets", "template_characters")
 			const allFiles = await fs.readdir(templateDir)
 			const imageFiles = allFiles.filter((file) => file.endsWith(".png"))
-
+			
 			let templateInjectionScript = "\n"
 			for (const file of imageFiles) {
 				try {
@@ -131,9 +131,7 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 					profileBase64 = profileBuffer.toString("base64")
 					Logger.info("[CaretProviderWrapper] Successfully loaded persona images from globalStorage.")
 				} catch (error) {
-					Logger.error(
-						`[CaretProviderWrapper] Failed to read persona images from globalStorage, falling back to default: ${error}`,
-					)
+					Logger.error(`[CaretProviderWrapper] Failed to read persona images from globalStorage, falling back to default: ${error}`)
 				}
 			}
 
@@ -216,6 +214,7 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 		}
 	}
 
+
 	/**
 	 * Handle persona image loading requests
 	 */
@@ -258,7 +257,7 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 				let html = webviewView.webview.html
 
 				// Inject banner image as window variable
-				const imageInjectionScript = `\n                    window.caretBannerImage = "${dataUri}";\n`
+				let imageInjectionScript = `\n                    window.caretBannerImage = "${dataUri}";\n`
 
 				// Find where to inject the script - look for existing window assignments
 				if (html.includes("window.clineClientId")) {
@@ -275,6 +274,44 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 			}
 		} catch (error) {
 			Logger.error(`[CaretProviderWrapper] Failed to inject banner image: ${error}`)
+		}
+	}
+
+	/**
+	 * Convert asset:// URI to Base64 data URI (following file-storage-and-image-loading-guide.mdx)
+	 */
+	private async convertImageToBase64(assetUri: string): Promise<string> {
+		if (!assetUri.startsWith("asset://") && !assetUri.startsWith("asset:/")) {
+			return assetUri
+		}
+
+		try {
+			// Parse asset path - now JSON uses "asset:/assets/template_characters/..."
+			let cleanPath = assetUri.replace("asset://", "").replace("asset:/", "")
+
+			const imagePath = path.join(this.context.extensionUri.fsPath, cleanPath)
+
+			// Read and convert to Base64
+			const imageBuffer = await fs.readFile(imagePath)
+			const ext = path.extname(imagePath).toLowerCase()
+			const mimeType =
+				ext === ".png"
+					? "image/png"
+					: ext === ".jpg" || ext === ".jpeg"
+						? "image/jpeg"
+						: ext === ".webp"
+							? "image/webp"
+							: "image/png"
+
+			const base64Uri = `data:${mimeType};base64,${imageBuffer.toString("base64")}`
+			Logger.info(
+				`[CaretProviderWrapper] Converted image: ${assetUri} -> data:${mimeType};base64,<${imageBuffer.length} bytes>`,
+			)
+
+			return base64Uri
+		} catch (error) {
+			Logger.error(`[CaretProviderWrapper] Failed to convert image URI: ${assetUri}`, error)
+			return assetUri // Return original URI as fallback
 		}
 	}
 
@@ -305,20 +342,11 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 	}
 
 	/**
-	 * Get the client ID
-	 */
-	public getClientId(): string {
-		return (this.clineProvider as any).getClientId?.() || "unknown"
-	}
-
-	/**
 	 * Dispose of resources
 	 */
 	async dispose(): Promise<void> {
 		// Dispose Caret-specific resources
-		for (const disposable of this.disposables) {
-			disposable.dispose()
-		}
+		this.disposables.forEach((disposable) => disposable.dispose())
 		this.disposables = []
 
 		// Delegate to Cline provider

@@ -7,10 +7,10 @@ import { Logger } from "@/services/logging/Logger"
 
 /**
  * CARET MODIFICATION: Level 1 Independent Prompt Wrapper
- *
+ * 
  * This wrapper handles Caret-specific prompt generation completely independently
  * from Cline's prompt system, ensuring zero interference with Cline functionality.
- *
+ * 
  * Architecture Level: L1 (Independent)
  * - No modifications to Cline getSystemPrompt function
  * - Uses CaretModeManager for independent mode management
@@ -25,11 +25,11 @@ export class CaretPromptWrapper {
 	 * Initialize the Caret prompt wrapper
 	 */
 	static async initialize(): Promise<void> {
-		if (CaretPromptWrapper.initialized) return
+		if (this.initialized) return
 
 		try {
 			await CaretModeManager.initialize()
-			CaretPromptWrapper.initialized = true
+			this.initialized = true
 			Logger.debug("[CaretPromptWrapper] Initialized successfully")
 		} catch (error) {
 			Logger.error(`[CaretPromptWrapper] Failed to initialize: ${error}`)
@@ -44,11 +44,11 @@ export class CaretPromptWrapper {
 	static async getCaretSystemPrompt(context: SystemPromptContext): Promise<string> {
 		try {
 			// Ensure initialization
-			await CaretPromptWrapper.initialize()
+			await this.initialize()
 
 			// Get current Caret mode from independent manager
 			const caretMode = CaretModeManager.getCurrentCaretMode()
-
+			
 			Logger.debug(`[CaretPromptWrapper] Generating prompt for mode: ${caretMode}`)
 			Logger.debug(`[CaretPromptWrapper] Mode debug info: ${JSON.stringify(CaretModeManager.getDebugInfo())}`)
 
@@ -64,21 +64,21 @@ export class CaretPromptWrapper {
 				task_progress: undefined, // Can be extended later
 			}
 
-			Logger.debug(
-				`[CaretPromptWrapper] Caret context created: ${JSON.stringify({
-					modeSystem: caretContext.modeSystem,
-					mode: caretContext.mode,
-					providerInfo: caretContext.providerInfo?.providerId || "unknown",
-					mcpServers: caretContext.mcpHub?.getServers()?.length || 0,
-				})}`,
-			)
+			Logger.debug(`[CaretPromptWrapper] Caret context created: ${JSON.stringify({
+				modeSystem: caretContext.modeSystem,
+				mode: caretContext.mode,
+				providerInfo: caretContext.providerInfo?.providerId || "unknown",
+				mcpServers: caretContext.mcpHub?.getServers()?.length || 0,
+			})}`)
 
 			// Generate prompt using Caret's independent system
 			const startTime = Date.now()
-			const prompt = await CaretPromptWrapper.promptManager.getPrompt(caretContext)
+			const prompt = await this.promptManager.getPrompt(caretContext)
 			const endTime = Date.now()
 
-			Logger.info(`[CaretPromptWrapper] ✅ Prompt generated: ${prompt.length} chars in ${endTime - startTime}ms`)
+			Logger.info(
+				`[CaretPromptWrapper] ✅ Prompt generated: ${prompt.length} chars in ${endTime - startTime}ms`
+			)
 
 			return prompt
 		} catch (error) {
@@ -107,8 +107,8 @@ export class CaretPromptWrapper {
 	 */
 	static getDebugInfo(): Record<string, unknown> {
 		return {
-			initialized: CaretPromptWrapper.initialized,
-			currentMode: CaretPromptWrapper.getCurrentMode(),
+			initialized: this.initialized,
+			currentMode: this.getCurrentMode(),
 			modeManagerInfo: CaretModeManager.getDebugInfo(),
 		}
 	}

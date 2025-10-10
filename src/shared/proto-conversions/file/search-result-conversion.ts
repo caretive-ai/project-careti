@@ -24,6 +24,5 @@ export function convertProtoFileInfosToSearchResults(
 		path: protoResult.path,
 		type: protoResult.type as "file" | "folder",
 		label: protoResult.label,
-		workspaceName: protoResult.workspaceName,
 	}))
 }

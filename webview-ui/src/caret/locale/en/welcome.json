@@ -1,0 +1,75 @@
+{
+	"greeting": "Hello! AI Development Partner, ^Caret.",
+	"catchPhrase": "",
+	"bannerAlt": "Caret Main Banner",
+	"coreFeatures": {
+		"header": "Start 'Vibe Coding' with Caret, the AI coding agent that grows with you.",
+		"description": "Multi-language support, developer-led AI orchestration, customizable workflows, transparent AI control, and powerful local LLM integration. Beyond simple conversations, Caret proposes a 'Vibe Coding' development culture where you systematically create documents with AI and grow together based on those records."
+	},
+	"getStarted": {
+		"header": "",
+		"body": "",
+		"button": "Get Started",
+		"preferredLanguage": "AI Response Language",
+		"uiLanguage": "Interface Language"
+	},
+	"personaSelector": {
+		"header": "🎭 Choose Your AI Agent Persona",
+		"description": "Select the personality of your AI agent companion. Each persona has unique communication styles and expertise.",
+		"selectButton": "Select"
+	},
+	"community": {
+		"header": "🌱 Join Our Community",
+		"body": "Connect with other developers using Caret! As an open-source project, Caret grows through your participation in our GitHub repository - report issues, suggest features, and help us evolve together.<br/><br/>💻 <strong>Code Contribution</strong>, 🐛 <strong>Bug Reports</strong>, 💡 <strong>Ideas & Suggestions</strong>, 💰 <strong>Financial Support</strong>, 📖 <strong>Documentation</strong> - there are many ways to participate!<br/><br/>🎁 <strong>Contributor Benefits</strong>: Service credits, GitHub recognition, website listing, priority access to new features",
+		"githubLink": "GitHub Repository"
+	},
+	"educationOffer": {
+		"header": "✨ Start Now! Free 'Vibe Coding' Education & Google Gemini $300 Credit Tips!",
+		"body": "Join our <strong>open-source education program</strong> to learn real 'Vibe Coding' with Caret and experience the full AI blogger agent development process! This program is provided for free and offers warm guidance and a rich practice environment needed to take your first real steps in AI development. We also provide <strong>$300 GCP credit utilization tips for 3 months</strong> for those using Google Gemini API for the first time. Experience the joy of AI development without cost burden!<br/><br/>📚 <a href=\"{{educationLink}}\" target=\"_blank\">Learn more about the education program</a><br/>💰 <a href=\"{{geminiCreditLink}}\" target=\"_blank\">How to get free credits</a>"
+	},
+	"apiSetup": {
+		"backButton": "← Back",
+		"title": "🔧 API Setup",
+		"description": "Caret supports various LLMs. You can subscribe to Caret service for free access, use ChatGPT, Claude, Gemma APIs, or configure local LLMs.",
+		"supportLinks": {
+			"llmList": "Caret's supported LLM AI list",
+			"geminiCredit": "Google Gemini API $300 credit offer information"
+		},
+		"instructions": "Please refer to the links below for supported LLM list information.",
+		"saveButton": "Save and Get Started",
+		"help": {
+			"title": "Need Help?",
+			"button": "View Documentation"
+		}
+	},
+	"footer": {
+		"links": {
+			"caretGithub": "Caret GitHub",
+			"basedOnCline": "Based on Caret",
+			"caretService": "Caret Service",
+			"caretiveInc": "Caretive Inc",
+			"about": "About",
+			"terms": "Terms of Service",
+			"privacy": "Privacy Policy",
+			"youthProtection": "Youth Protection Policy",
+			"support": "Support"
+		},
+		"company": {
+			"name": "Caretive INC",
+			"businessNumber": "Business Registration: 459-81-03703",
+			"address": "4F 409-681, 823 Dongtan Sunhwan-daero, Hwaseong-si, Gyeonggi-do, South Korea (Yeongcheon-dong, A-PLEX City)"
+		},
+		"copyright": {
+			"text": "© 2025 Caretive INC. All rights reserved.",
+			"builtWith": "Built with ❤️ by Caret Team"
+		},
+		"about": {
+			"description": "If you have any questions or feedback, feel free to open an issue at",
+			"link": "GitHub Issues"
+		}
+	},
+	"welcome": {
+		"tooltipContent": "I can develop software step-by-step by editing files, exploring projects, running commands, and using browsers. I can even extend my capabilities with MCP tools to assist beyond basic code completion.",
+		"takeATour": "Take a Tour"
+	}
+}

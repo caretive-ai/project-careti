@@ -20,6 +20,7 @@ export type ApiProvider =
 	| "mistral"
 	| "vscode-lm"
 	| "cline"
+	| "caret"
 	| "litellm"
 	| "moonshot"
 	| "nebius"

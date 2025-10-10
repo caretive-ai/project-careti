@@ -1,0 +1,22 @@
+{
+	"history": {
+		"title": "履歴",
+		"fuzzySearchPlaceholder": "履歴を検索...",
+		"clearSearch": "検索をクリア",
+		"sortNewest": "新しい順",
+		"sortOldest": "古い順",
+		"sortMostExpensive": "コストが高い順",
+		"sortMostTokens": "トークンが多い順",
+		"sortMostRelevant": "関連性が高い順",
+		"filterWorkspace": "ワークスペース",
+		"filterFavorites": "お気に入り",
+		"selectAll": "すべて選択",
+		"selectNone": "選択しない",
+		"tokensLabel": "トークン:",
+		"cacheLabel": "キャッシュ:",
+		"apiCostLabel": "APIコスト:",
+		"deleteSelected": "選択した{{count}}項目を削除{{size}}",
+		"deleteAllHistory": "すべての履歴を削除{{size}}",
+		"export": "エクスポート"
+	}
+}

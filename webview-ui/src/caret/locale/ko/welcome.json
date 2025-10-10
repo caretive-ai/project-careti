@@ -1,0 +1,75 @@
+{
+	"greeting": "👋 안녕하세요! AI 개발 파트너, ^Caret입니다.",
+	"catchPhrase": "",
+	"bannerAlt": "Caret 대표 이미지",
+	"coreFeatures": {
+		"header": "함께 성장하는 AI 코딩 에이전트 '캐럿'과 '바이브 코딩'을 시작하세요.",
+		"description": "다국어 지원, AI 오케스트레이션, 맞춤형 워크플로우, 투명한 AI 제어, 강력한 로컬 LLM 통합. 단순한 대화를 넘어서, Caret은 AI와 함께 문서를 체계적으로 작성하고 그 기록을 바탕으로 함께 성장하는 'Vibe Coding' 개발 문화를 제안합니다."
+	},
+	"getStarted": {
+		"body": "",
+		"button": "시작하기",
+		"preferredLanguage": "AI 응답 언어",
+		"uiLanguage": "인터페이스 언어",
+		"header": ""
+	},
+	"personaSelector": {
+		"selectButton": "선택하기",
+		"header": "🎭 Choose Your AI Agent Persona",
+		"description": "Select the personality of your AI agent companion. Each persona has unique communication styles and expertise."
+	},
+	"community": {
+		"header": "🌱 커뮤니티에 참여하세요",
+		"body": "Caret을 사용하는 다른 개발자들과 함께 소통해보세요! 오픈소스인 Caret은 GitHub 저장소에서 이슈를 보고하고 기능을 제안하며 함께 성장해가는 프로젝트입니다.<br/><br/>💻 <strong>코드 기여</strong>, 🐛 <strong>버그 신고</strong>, 💡 <strong>아이디어 제안</strong>, 💰 <strong>금전적 기여</strong>, 📖 <strong>문서화</strong> 등 다양한 방식으로 참여하실 수 있습니다.<br/><br/>🎁 <strong>기여자 혜택</strong>: 서비스 이용 크레딧, GitHub 기여자 등재, 공식 웹사이트 등재, 새로운 기능 우선 접근",
+		"githubLink": "GitHub 저장소"
+	},
+	"educationOffer": {
+		"header": "✨ 지금 시작! 무료 교육 + Google Gemini $300 크레딧 팁",
+		"body": "Caret와 함께 '진짜 바이브 코딩'을 배우고, AI 도구와 에이전트 개발 전 과정을 경험할 수 있는 무료 교육 프로그램에 참여해보세요!<br/><br/>실전 예제를 통해 AI 개발 환경을 익히고, Gemini API와 연동해보는 실습까지 한 번에!<br/><br/>또한 Google Gemini API를 처음 사용하는 분들께는 최대 $300의 GCP 크레딧 제공 팁도 안내해드립니다. 비용 부담 없이 AI 개발의 즐거움을 시작해보세요!<br/><br/>📚 <a href=\"{{educationLink}}\" target=\"_blank\">교육 프로그램 자세히 보기</a><br/>💰 <a href=\"{{geminiCreditLink}}\" target=\"_blank\">무료 크레딧 받는 방법</a>"
+	},
+	"apiSetup": {
+		"backButton": "← 뒤로 가기",
+		"title": "캐럿 시작하기",
+		"supportLinks": {
+			"llmList": "캐럿의 지원 LLM AI리스트",
+			"geminiCredit": "구글 제미나이 API 300$ 크래딧 제공 이벤트 정보"
+		},
+		"instructions": "지원하는 LLM리스트 정보는 아래의 링크를 참고하세요.",
+		"saveButton": "저장하고 시작하기",
+		"help": {
+			"title": "도움이 필요하신가요?",
+			"button": "도움말 보기"
+		},
+		"description": "Caret은 다양한 LLM을 지원합니다. Caret 서비스에 가입하여 무료로 이용하거나, ChatGPT, Claude, Gemma API를 사용하거나, 로컬 LLM을 구성할 수 있습니다."
+	},
+	"footer": {
+		"company": {
+			"name": "ⓒ Caretive INC",
+			"businessNumber": "사업자등록번호: 459-81-03703",
+			"address": "경기도 화성시 동탄순환대로 823, 4층 409-681호 (삼성 메타폴리스, 에이팩타워)"
+		},
+		"links": {
+			"caretGithub": "GitHub",
+			"caretService": "서비스 소개",
+			"caretiveInc": "회사소개",
+			"terms": "이용약관",
+			"privacy": "개인정보처리방침",
+			"support": "고객센터",
+			"youthProtection": "청소년보호정책",
+			"basedOnCline": "Based on Caret",
+			"about": "About"
+		},
+		"copyright": {
+			"builtWith": "Built with ❤️ by Caret Team",
+			"text": "© 2025 Caretive INC. All rights reserved."
+		},
+		"about": {
+			"description": "질문이나 피드백이 있으시면 언제든지 GitHub에 이슈를 남겨주세요:",
+			"link": "GitHub 이슈"
+		}
+	},
+	"welcome": {
+		"tooltipContent": "파일 편집, 프로젝트 탐색, 명령어 실행, 브라우저 사용 등을 통해 단계별로 소프트웨어를 개발할 수 있습니다. MCP 도구를 사용하여 기본 코드 완성을 넘어선 기능으로 확장할 수도 있습니다.",
+		"takeATour": "투어 시작하기"
+	}
+}

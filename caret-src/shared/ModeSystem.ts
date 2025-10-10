@@ -30,7 +30,7 @@ export const CARET_MODE_SYSTEM_CONFIG = {
 		},
 	},
 	cline: {
-		name: "Cline",
+		name: "Cline", 
 		displayName: "Cline Mode",
 		description: "Original English interface",
 		features: {

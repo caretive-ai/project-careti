@@ -1,0 +1,17 @@
+{
+	"browserSettingsMenu": {
+		"browserConnectionInfo": "ブラウザ接続情報",
+		"browserConnection": "ブラウザ接続",
+		"status": "ステータス",
+		"connected": "接続済み",
+		"disconnected": "切断",
+		"type": "タイプ",
+		"remote": "リモート",
+		"local": "ローカル",
+		"remoteHost": "リモートホスト"
+	},
+	"caretWantsToUseBrowser": "Caretがブラウザを使用したいと思っています：",
+	"paginationStep": "{{currentPage}} / {{totalPages}} ステップ",
+	"paginationPrevious": "前へ",
+	"paginationNext": "次へ"
+}

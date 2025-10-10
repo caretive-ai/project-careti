@@ -1,0 +1,22 @@
+{
+	"history": {
+		"title": "히스토리",
+		"fuzzySearchPlaceholder": "히스토리 검색...",
+		"clearSearch": "검색 지우기",
+		"sortNewest": "최신순",
+		"sortOldest": "오래된순",
+		"sortMostExpensive": "비용 높은순",
+		"sortMostTokens": "토큰 많은순",
+		"sortMostRelevant": "관련성 높은순",
+		"filterWorkspace": "작업공간",
+		"filterFavorites": "즐겨찾기",
+		"selectAll": "모두 선택",
+		"selectNone": "선택 안함",
+		"tokensLabel": "토큰:",
+		"cacheLabel": "캐시:",
+		"apiCostLabel": "API 비용:",
+		"deleteSelected": "선택된 항목 {{count}}개 삭제{{size}}",
+		"deleteAllHistory": "모든 히스토리 삭제{{size}}",
+		"export": "내보내기"
+	}
+}

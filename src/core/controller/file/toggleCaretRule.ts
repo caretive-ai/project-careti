@@ -1,7 +1,5 @@
-// CARET MODIFICATION: Use ToggleClineRuleRequest as template for Caret rules
-
 import type { Controller } from "@core/controller/index"
-import type { ToggleClineRuleRequest as ToggleCaretRuleRequest } from "@shared/proto/cline/file"
+import type { ToggleCaretRuleRequest } from "@shared/proto/cline/file"
 import { ClineRulesToggles } from "@shared/proto/cline/file"
 import { Logger } from "@/services/logging/Logger" // CARET MODIFICATION: Add Logger for debugging
 

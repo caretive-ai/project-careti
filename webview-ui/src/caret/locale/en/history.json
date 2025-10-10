@@ -1,0 +1,22 @@
+{
+	"history": {
+		"title": "History",
+		"fuzzySearchPlaceholder": "Fuzzy search history...",
+		"clearSearch": "Clear search",
+		"sortNewest": "Newest",
+		"sortOldest": "Oldest",
+		"sortMostExpensive": "Most Expensive",
+		"sortMostTokens": "Most Tokens",
+		"sortMostRelevant": "Most Relevant",
+		"filterWorkspace": "Workspace",
+		"filterFavorites": "Favorites",
+		"selectAll": "Select All",
+		"selectNone": "Select None",
+		"tokensLabel": "Tokens:",
+		"cacheLabel": "Cache:",
+		"apiCostLabel": "API Cost:",
+		"deleteSelected": "Delete {{count}} Selected{{size}}",
+		"deleteAllHistory": "Delete All History{{size}}",
+		"export": "EXPORT"
+	}
+}

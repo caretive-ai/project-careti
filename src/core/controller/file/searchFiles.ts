@@ -21,8 +21,7 @@ export async function searchFiles(controller: Controller, request: FileSearchReq
 			selectedTypeString = "folder"
 		}
 
-		// Extract hint, ensure workspaceManager is ready, check for multiroot
-		const workspaceHint = request.workspaceHint
+		// Ensure workspaceManager is ready, check for multiroot
 		const workspaceManager = await controller.ensureWorkspaceManager()
 		const hasMultirootSupport = workspaceManager && workspaceManager.getRoots()?.length > 0
 
@@ -34,7 +33,6 @@ export async function searchFiles(controller: Controller, request: FileSearchReq
 				workspaceManager,
 				request.limit || 20,
 				selectedTypeString,
-				workspaceHint,
 			)
 		} else {
 			// Legacy single workspace search

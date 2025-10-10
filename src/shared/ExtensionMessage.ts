@@ -84,6 +84,24 @@ export interface ExtensionState {
 	lastDismissedModelBannerVersion: number
 	// CARET MODIFICATION: F11 - Input History System
 	inputHistory?: string[]
+	// CARET MODIFICATION: F01 - Mode System
+	modeSystem?: "cline" | "caret"
+	// CARET MODIFICATION: F08 - Persona System
+	enablePersonaSystem?: boolean
+	currentPersona?: string | null
+	personaProfile?: {
+		name?: string
+		description?: string
+		custom_instruction?: string
+		avatar_uri?: string
+		thinking_avatar_uri?: string
+	} | null
+	// CARET MODIFICATION: F03 - Branding
+	caretBanner?: string
+	// CARET MODIFICATION: F05 - Rule Priority
+	localCaretRulesToggles?: ClineRulesToggles
+	// CARET MODIFICATION: F04 - Feature Flag (future use)
+	focusChainFeatureFlagEnabled?: boolean
 }
 
 export interface ClineMessage {

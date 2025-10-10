@@ -29,3 +29,4 @@ export function getCurrentFeatureConfig(): FeatureConfig {
 	// 정적 설정을 직접 반환 (JSON 파일 자체가 완전한 설정)
 	return featureConfigData as FeatureConfig
 }
+

@@ -6,9 +6,10 @@ import { getApiMetrics } from "@shared/getApiMetrics"
 import { BooleanRequest, StringRequest } from "@shared/proto/cline/common"
 import { useCallback, useEffect, useMemo } from "react"
 import { useMount } from "react-use"
+import { usePersistentInputHistory } from "@/caret/hooks/usePersistentInputHistory" // CARET MODIFICATION: Persistent input history
+import { t } from "@/caret/utils/i18n"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { useShowNavbar } from "@/context/PlatformContext"
 import { FileServiceClient, UiServiceClient } from "@/services/grpc-client"
 import { Navbar } from "../menu/Navbar"
 import AutoApproveBar from "./auto-approve-menu/AutoApproveBar"
@@ -40,14 +41,16 @@ interface ChatViewProps {
 const MAX_IMAGES_AND_FILES_PER_MESSAGE = CHAT_CONSTANTS.MAX_IMAGES_AND_FILES_PER_MESSAGE
 const QUICK_WINS_HISTORY_THRESHOLD = 3
 
+const IS_STANDALONE = window?.__is_standalone__ ?? false
+
 const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryView }: ChatViewProps) => {
-	const showNavbar = useShowNavbar()
 	const {
 		version,
 		clineMessages: messages,
 		taskHistory,
 		apiConfiguration,
 		telemetrySetting,
+		navigateToChat,
 		mode,
 		userInfo,
 		currentFocusChainChecklist,
@@ -94,6 +97,9 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 		expandedRows,
 		setExpandedRows,
 		textAreaRef,
+		handleFocusChange,
+		activeQuote,
+		setActiveQuote,
 	} = chatState
 
 	useEffect(() => {
@@ -228,19 +234,19 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				}
 			}
 		} catch (error) {
-			console.error("Error selecting images & files:", error)
+			console.error(t("errorSelectingFilesImages", "chat"), error)
 		}
-	}, [selectedModelInfo.supportsImages])
+	}, [selectedModelInfo.supportsImages, selectedImages, selectedFiles])
 
 	const shouldDisableFilesAndImages = selectedImages.length + selectedFiles.length >= MAX_IMAGES_AND_FILES_PER_MESSAGE
 
 	// Listen for local focusChatInput event
 	useEffect(() => {
 		const handleFocusChatInput = () => {
-			// Only focus chat input box if user is currently viewing the chat (not hidden).
-			if (!isHidden) {
-				textAreaRef.current?.focus()
+			if (isHidden) {
+				navigateToChat()
 			}
+			textAreaRef.current?.focus()
 		}
 
 		window.addEventListener("focusChatInput", handleFocusChatInput)
@@ -248,41 +254,45 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 		return () => {
 			window.removeEventListener("focusChatInput", handleFocusChatInput)
 		}
-	}, [isHidden])
+	}, [isHidden, navigateToChat, textAreaRef])
 
 	// Set up addToInput subscription
 	useEffect(() => {
-		const cleanup = UiServiceClient.subscribeToAddToInput(
-			{},
-			{
-				onResponse: (event) => {
-					if (event.value) {
-						setInputValue((prevValue) => {
-							const newText = event.value
-							const newTextWithNewline = newText + "\n"
-							return prevValue ? `${prevValue}\n${newTextWithNewline}` : newTextWithNewline
-						})
-						// Add scroll to bottom after state update
-						// Auto focus the input and start the cursor on a new line for easy typing
-						setTimeout(() => {
-							if (textAreaRef.current) {
-								textAreaRef.current.scrollTop = textAreaRef.current.scrollHeight
-								textAreaRef.current.focus()
-							}
-						}, 0)
-					}
-				},
-				onError: (error) => {
-					console.error("Error in addToInput subscription:", error)
-				},
-				onComplete: () => {
-					console.log("addToInput subscription completed")
-				},
+		const clientId = (window as { clineClientId?: string }).clineClientId
+		if (!clientId) {
+			console.error(t("clientIdNotFound", "chat"))
+			return
+		}
+
+		const request = StringRequest.create({ value: clientId })
+		const cleanup = UiServiceClient.subscribeToAddToInput(request, {
+			onResponse: (event) => {
+				if (event.value) {
+					setInputValue((prevValue) => {
+						const newText = event.value
+						const newTextWithNewline = newText + "\n"
+						return prevValue ? `${prevValue}\n${newTextWithNewline}` : newTextWithNewline
+					})
+					// Add scroll to bottom after state update
+					// Auto focus the input and start the cursor on a new line for easy typing
+					setTimeout(() => {
+						if (textAreaRef.current) {
+							textAreaRef.current.scrollTop = textAreaRef.current.scrollHeight
+							textAreaRef.current.focus()
+						}
+					}, 0)
+				}
 			},
-		)
+			onError: (error) => {
+				console.error(t("errorInAddToInputSubscription", "chat"), error)
+			},
+			onComplete: () => {
+				console.log(t("addToInputSubscriptionCompleted", "chat"))
+			},
+		})
 
 		return cleanup
-	}, [])
+	}, [setInputValue, textAreaRef])
 
 	useMount(() => {
 		// NOTE: the vscode window needs to be focused for this to work
@@ -291,14 +301,15 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
-			if (!isHidden && !sendingDisabled && !enableButtons) {
+			if (!isHidden && !sendingDisabled && enableButtons) {
+				// Corrected enableButtons condition
 				textAreaRef.current?.focus()
 			}
 		}, 50)
 		return () => {
 			clearTimeout(timer)
 		}
-	}, [isHidden, sendingDisabled, enableButtons])
+	}, [isHidden, sendingDisabled, enableButtons, textAreaRef])
 
 	const visibleMessages = useMemo(() => {
 		return filterVisibleMessages(modifiedMessages)
@@ -319,18 +330,33 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 		return groupMessages(visibleMessages)
 	}, [visibleMessages])
 
+	// CARET MODIFICATION: Persistent input history functionality
+	const { inputHistory, addToHistory } = usePersistentInputHistory()
+
+	// CARET MODIFICATION: Enhanced message handler with history tracking
+	const enhancedMessageHandlers = useMemo(
+		() => ({
+			...messageHandlers,
+			handleSendMessage: async (text: string, images: string[], files: string[]) => {
+				addToHistory(text) // 히스토리에 추가
+				return await messageHandlers.handleSendMessage(text, images, files)
+			},
+		}),
+		[messageHandlers, addToHistory],
+	)
+
 	// Use scroll behavior hook
 	const scrollBehavior = useScrollBehavior(messages, visibleMessages, groupedMessages, expandedRows, setExpandedRows)
 
 	const placeholderText = useMemo(() => {
-		const text = task ? "Type a message..." : "Type your task here..."
+		const text = task ? t("typeMessage", "chat") : t(" ", "chat")
 		return text
 	}, [task])
 
 	return (
 		<ChatLayout isHidden={isHidden}>
 			<div className="flex flex-col flex-1 overflow-hidden">
-				{showNavbar && <Navbar />}
+				{IS_STANDALONE && <Navbar />}
 				{task ? (
 					<TaskSection
 						apiMetrics={apiMetrics}
@@ -352,7 +378,6 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 						showHistoryView={showHistoryView}
 						taskHistory={taskHistory}
 						telemetrySetting={telemetrySetting}
-						version={version}
 					/>
 				)}
 				{task && (
@@ -377,17 +402,17 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 						scrollToBottomSmooth: scrollBehavior.scrollToBottomSmooth,
 						disableAutoScrollRef: scrollBehavior.disableAutoScrollRef,
 						showScrollToBottom: scrollBehavior.showScrollToBottom,
-						virtuosoRef: scrollBehavior.virtuosoRef,
 					}}
 					task={task}
 				/>
 				<InputSection
 					chatState={chatState}
-					messageHandlers={messageHandlers}
+					inputHistory={inputHistory} // CARET MODIFICATION: Use enhanced handlers with history tracking
+					messageHandlers={enhancedMessageHandlers}
 					placeholderText={placeholderText}
 					scrollBehavior={scrollBehavior}
 					selectFilesAndImages={selectFilesAndImages}
-					shouldDisableFilesAndImages={shouldDisableFilesAndImages}
+					shouldDisableFilesAndImages={shouldDisableFilesAndImages} // CARET MODIFICATION: Pass persistent input history
 				/>
 			</footer>
 		</ChatLayout>

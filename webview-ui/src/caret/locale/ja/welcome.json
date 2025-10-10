@@ -1,0 +1,75 @@
+{
+	"greeting": "こんにちは！AI開発パートナー、^Caretです。",
+	"catchPhrase": "",
+	"bannerAlt": "Caret メイン画像",
+	"coreFeatures": {
+		"header": "共に成長するAIコーディングエージェントCaretと「バイブコーディング」を始めましょう。",
+		"description": "多言語サポート、開発者主導のAIオーケストレーション、ワークフローのカスタマイズ、透明なAI制御、そして強力なローカルLLM連携。単純な対話を超えて、Caretは AIと一緒に体系的にドキュメントを作成し、その記録に基づいて一緒に成長する「バイブコーディング」開発文化を提案します。"
+	},
+	"getStarted": {
+		"header": "",
+		"body": "",
+		"button": "始める",
+		"preferredLanguage": "AI応答言語",
+		"uiLanguage": "インターフェース言語"
+	},
+	"community": {
+		"header": "🌱 コミュニティに参加してください",
+		"body": "Caretを使用している他の開発者たちと一緒にコミュニケーションしてみてください！オープンソースであるCaretは、GitHubリポジトリで課題を報告し、機能を提案し、一緒に成長していくプロジェクトです。<br/><br/>💻 <strong>コード寄与</strong>、🐛 <strong>バグ報告</strong>、💡 <strong>アイデア提案</strong>、💰 <strong>金銭的寄与</strong>、📖 <strong>文書化</strong>など、様々な方法で参加することができます。<br/><br/>🎁 <strong>貢献者特典</strong>：サービス利用クレジット、GitHub貢献者登録、公式ウェブサイト登録、新機能優先アクセス",
+		"githubLink": "GitHubリポジトリ"
+	},
+	"educationOffer": {
+		"header": "✨ 今すぐ始めよう！無料「バイブコーディング」教育＆Google Gemini $300クレジットのコツ！",
+		"body": "Caretと一緒に本格的な「バイブコーディング」を学び、AIブロガーエージェント開発の全プロセスを体験できる<strong>オープンソース教育プログラム</strong>に参加してみませんか！このプログラムは無料で提供され、AI開発の実質的な第一歩を踏み出すために必要な温かなガイダンスと豊富な実習環境を提供します。また、Google Gemini APIを初めて使用される方のために<strong>3か月間使用可能な$300のGCPクレジット活用のコツ</strong>もご案内いたします。コスト負担なしでAI開発の楽しさを体験してください！<br/><br/>📚 <a href=\"{{educationLink}}\" target=\"_blank\">教育プログラム詳細</a><br/>💰 <a href=\"{{geminiCreditLink}}\" target=\"_blank\">無料クレジット受け取り方法</a>"
+	},
+	"apiSetup": {
+		"backButton": "← 戻る",
+		"title": "🔧 API設定",
+		"description": "Caretは様々なLLMをサポートします。Caretサービスに登録して無料アクセス、ChatGPT、Claude、Gemma APIを利用、またはローカルLLMを設定することができます。",
+		"supportLinks": {
+			"llmList": "Caretのサポート対象LLM AIリスト",
+			"geminiCredit": "Google Gemini API $300クレジット提供イベント情報"
+		},
+		"instructions": "サポート対象LLMリスト情報は以下のリンクを参考してください。",
+		"saveButton": "保存して開始",
+		"help": {
+			"title": "ヘルプが必要ですか？",
+			"button": "ドキュメントを見る"
+		}
+	},
+	"footer": {
+		"links": {
+			"caretGithub": "Caret GitHub",
+			"basedOnCline": "Caretベース",
+			"caretService": "Caretサービス",
+			"caretiveInc": "Caretive Inc",
+			"about": "会社紹介",
+			"terms": "利用規約",
+			"privacy": "個人情報保護方針",
+			"youthProtection": "青少年保護方針",
+			"support": "カスタマーサポート"
+		},
+		"company": {
+			"name": "Caretive INC",
+			"businessNumber": "事業者登録番号：459-81-03703",
+			"address": "京畿道華城市東潭循環大路823、4階409-681号（霊泉洞、エイプレックスシティ）"
+		},
+		"copyright": {
+			"text": "© 2025 Caretive INC. All rights reserved.",
+			"builtWith": "Built with ❤️ by Caret Team"
+		},
+		"about": {
+			"description": "ご質問やフィードバックがございましたら、お気軽にGitHubでイシューを投稿してください：",
+			"link": "GitHub イシュー"
+		}
+	},
+	"personaSelector": {
+		"header": "🎭 AIエージェントペルソナを選択",
+		"description": "AIエージェント仲間の個性を選択してください。各ペルソナには独自のコミュニケーションスタイルと専門知識があります。",
+		"selectButton": "選択"
+	},
+	"welcome": {
+		"tooltipContent": "ファイル編集、プロジェクト探索、コマンド実行、ブラウザ使用などを通じて段階的にソフトウェアを開発できます。MCPツールを使用して基本的なコード補完を超えた機能で拡張することもできます。",
+		"takeATour": "ツアーを開始"
+	}
+}

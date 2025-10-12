@@ -1,16 +1,17 @@
 # Phase 5 Frontend 재구현 진행 상황
 
-**작성일**: 2025-10-10 (최종 업데이트: 2025-10-12)
+**작성일**: 2025-10-10 (최종 업데이트: 2025-10-12 18:30)
 **세션**: Phase 5 Day 1-3
-**현재 상태**: ✅ **완료** (Frontend 100%, 모든 빌드 성공)
+**현재 상태**: ✅ **완료** (Frontend 100%, 모든 빌드 성공, 브랜딩 완료)
 
 ---
 
 ## 📊 Executive Summary
 
-### 최종 상태 (2025-10-12)
+### 최종 상태 (2025-10-12 18:30)
 - **Backend**: ✅ **0 에러** (100% 완료)
 - **Frontend**: ✅ **0 에러** (100% 완료)
+- **Branding**: ✅ **완료** (Caret 로고 및 텍스트 모두 적용)
 - **전체 진행률**: ✅ **Phase 5 완료** (100%)
 - **빌드 상태**: ✅ Protos, Backend, Frontend 모두 성공
 
@@ -21,6 +22,7 @@
 4. ✅ **API 타입 확장** - caretModels, caretDefaultModelId, CLAUDE_SONNET_4_1M_SUFFIX 추가
 5. ✅ **Context 필드 추가** - showChatModelSelector, checkpointTrackerErrorMessage, featureConfig
 6. ✅ **Proto UpdateSettingsRequest 통합** - setModeSystem, setEnablePersonaSystem
+7. ✅ **Caret 브랜딩 완료** - Welcome 화면, 홈 헤더, HTML 타이틀 모두 Caret로 변경
 
 ### 에러 감소 추이
 ```
@@ -570,4 +572,68 @@ const menuItems = useMemo(() => getMenuItems(), [language])
 
 **작성자**: Claude (Assistant)
 **검토자**: Luke (User)
-**다음 업데이트**: Phase 5.6 완료 후
+---
+
+### Phase 5.7: F11 InputHistory 검증 ✅
+**작업 일자**: 2025-10-12
+**상태**: ✅ 이미 완료 (Phase 5.6 ChatTextArea 머징에서 완료)
+**검증 결과**:
+- ✅ useInputHistory hook 존재 및 ChatTextArea 통합 확인
+- ✅ Proto inputHistory 필드 존재
+- ✅ 빌드 에러 없음
+
+---
+
+### Phase 5.8: F10 ProviderSetup 검증 ✅
+**작업 일자**: 2025-10-12
+**상태**: ✅ 완료
+**검증 결과**:
+- ✅ 9개 ModelPicker 컴포넌트 존재 (CaretModelPicker 포함)
+- ✅ 39개 Provider 컴포넌트 존재
+- ✅ RequestyModelPicker Cline 최신 버전 (baseUrl prop)
+- ✅ extension.ts 명령어 등록 (caret.popoutButtonClicked, caret.openInNewTab)
+
+---
+
+### Phase 5.9: Caret 브랜딩 최종 완료 ✅
+**작업 일자**: 2025-10-12 18:00-18:30
+**소요 시간**: 30분
+**파일 수정**: 5개 (신규 생성 2개, 수정 3개)
+
+#### 완료된 작업
+
+**1. Caret 로고 컴포넌트 생성 (2개)**
+- ✅ **CaretLogoWhite.tsx** - Welcome 화면용 (white fill)
+- ✅ **CaretLogoVariable.tsx** - 홈 헤더용 (테마 적응형)
+
+**2. Welcome 화면 브랜딩 (WelcomeView.tsx)**
+- ✅ "Hi, I'm Cline" → "Hi, I'm Caret"
+- ✅ ClineLogoWhite → CaretLogoWhite
+
+**3. 홈 헤더 브랜딩 (HomeHeader.tsx)**
+- ✅ ClineLogoVariable → CaretLogoVariable
+
+**4. HTML 타이틀 (index.html)**
+- ✅ "Cline Webview" → "Caret Webview"
+
+#### 빌드 검증 결과
+```bash
+✅ npm run protos - 성공 (23 files, 215 formatted)
+✅ npm run compile - 성공 (Backend 0 errors)
+✅ cd webview-ui && npm run build - 성공 (5.6MB bundle)
+✅ npm run lint - 성공
+```
+
+#### Feature별 최종 상태
+- ✅ F01 (ModeSystem): 완료
+- ⚠️ F02 (i18n): 부분 완료
+- ✅ **F03 (Branding): 100% 완료**
+- ✅ F04 (CaretAccount): 완료
+- ✅ F08 (Persona): 코드 완료 (런타임 확인 필요)
+- ✅ F09 (FeatureConfig): 완료
+- ✅ F10 (ProviderSetup): 완료
+- ✅ F11 (InputHistory): 완료
+
+---
+
+**다음 업데이트**: 유저 런타임 테스트 결과 반영

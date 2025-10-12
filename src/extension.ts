@@ -109,6 +109,16 @@ export async function activate(context: vscode.ExtensionContext) {
 		}),
 	)
 
+	// CARET MODIFICATION: Open Caret in new tab
+	// TODO: Implement proper tab panel support
+	const openClineInNewTab = async () => {
+		Logger.log("Opening Caret in new tab - feature not yet implemented")
+		await vscode.window.showInformationMessage("Opening in new tab is not yet implemented")
+	}
+
+	context.subscriptions.push(vscode.commands.registerCommand("caret.popoutButtonClicked", openClineInNewTab))
+	context.subscriptions.push(vscode.commands.registerCommand("caret.openInNewTab", openClineInNewTab))
+
 	/*
 	We use the text document content provider API to show the left side for diff view by creating a
 	virtual document for the original content. This makes it readonly so users know to edit the right

@@ -16,7 +16,8 @@ import {
 	VSCodePanelTab,
 	VSCodePanelView,
 } from "@vscode/webview-ui-toolkit/react"
-import { useCallback, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import DangerButton from "@/components/common/DangerButton"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { McpServiceClient } from "@/services/grpc-client"
@@ -24,19 +25,20 @@ import { getMcpServerDisplayName } from "@/utils/mcp"
 import McpResourceRow from "./McpResourceRow"
 import McpToolRow from "./McpToolRow"
 
-// constant JSX.Elements
-const TimeoutOptions = [
-	{ value: "30", label: "30 seconds" },
-	{ value: "60", label: "1 minute" },
-	{ value: "300", label: "5 minutes" },
-	{ value: "600", label: "10 minutes" },
-	{ value: "1800", label: "30 minutes" },
-	{ value: "3600", label: "1 hour" },
-].map((option) => (
-	<VSCodeOption key={option.value} value={option.value}>
-		{option.label}
-	</VSCodeOption>
-))
+// Dynamic JSX.Elements for i18n - convert to function for language reactivity
+const getTimeoutOptions = () =>
+	[
+		{ value: "30", label: t("serverRow.timeout30Seconds", "chat") },
+		{ value: "60", label: t("serverRow.timeout1Minute", "chat") },
+		{ value: "300", label: t("serverRow.timeout5Minutes", "chat") },
+		{ value: "600", label: t("serverRow.timeout10Minutes", "chat") },
+		{ value: "1800", label: t("serverRow.timeout30Minutes", "chat") },
+		{ value: "3600", label: t("serverRow.timeout1Hour", "chat") },
+	].map((option) => (
+		<VSCodeOption key={option.value} value={option.value}>
+			{option.label}
+		</VSCodeOption>
+	))
 
 const ServerRow = ({
 	server,
@@ -52,6 +54,9 @@ const ServerRow = ({
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isDeleting, setIsDeleting] = useState(false)
 	const [isRestarting, setIsRestarting] = useState(false)
+
+	// Memoize timeout options for i18n reactivity
+	const TimeoutOptions = useMemo(() => getTimeoutOptions(), [])
 
 	const getStatusColor = useCallback((status: McpServer["status"]) => {
 		switch (status) {
@@ -82,7 +87,7 @@ const ServerRow = ({
 	const handleTimeoutChange = (e: any) => {
 		const select = e.target as HTMLSelectElement
 		const value = select.value
-		const num = parseInt(value, 10)
+		const num = parseInt(value)
 		setTimeoutValue(value)
 
 		McpServiceClient.updateMcpTimeout({
@@ -211,7 +216,7 @@ const ServerRow = ({
 								e.stopPropagation()
 								handleRestart()
 							}}
-							title="Restart Server">
+							title={t("serverRow.restartServer", "chat")}>
 							<span className="codicon codicon-sync"></span>
 						</VSCodeButton>
 						{hasTrashIcon && (
@@ -222,7 +227,7 @@ const ServerRow = ({
 									e.stopPropagation()
 									handleDelete()
 								}}
-								title="Delete Server">
+								title={t("serverRow.deleteServer", "chat")}>
 								<span className="codicon codicon-trash"></span>
 							</VSCodeButton>
 						)}
@@ -307,14 +312,16 @@ const ServerRow = ({
 							width: "calc(100% - 20px)",
 							margin: "0 10px 10px 10px",
 						}}>
-						{server.status === "connecting" || isRestarting ? "Retrying..." : "Retry Connection"}
+						{server.status === "connecting" || isRestarting
+							? t("serverRow.retrying", "chat")
+							: t("serverRow.retryConnection", "chat")}
 					</VSCodeButton>
 
 					<DangerButton
 						disabled={isDeleting}
 						onClick={handleDelete}
 						style={{ width: "calc(100% - 20px)", margin: "0 10px 10px 10px" }}>
-						{isDeleting ? "Deleting..." : "Delete Server"}
+						{isDeleting ? t("serverRow.deleting", "chat") : t("serverRow.deleteServer", "chat")}
 					</DangerButton>
 				</div>
 			) : (
@@ -327,9 +334,12 @@ const ServerRow = ({
 							borderRadius: "0 0 4px 4px",
 						}}>
 						<VSCodePanels>
-							<VSCodePanelTab id="tools">Tools ({server.tools?.length || 0})</VSCodePanelTab>
+							<VSCodePanelTab id="tools">
+								{t("serverRow.tools", "chat")} ({server.tools?.length || 0})
+							</VSCodePanelTab>
 							<VSCodePanelTab id="resources">
-								Resources ({[...(server.resourceTemplates || []), ...(server.resources || [])].length || 0})
+								{t("serverRow.resources", "chat")} (
+								{[...(server.resourceTemplates || []), ...(server.resources || [])].length || 0})
 							</VSCodePanelTab>
 
 							<VSCodePanelView id="tools-view">
@@ -415,7 +425,7 @@ const ServerRow = ({
 							disabled={isDeleting}
 							onClick={handleDelete}
 							style={{ width: "calc(100% - 14px)", margin: "5px 7px 3px 7px" }}>
-							{isDeleting ? "Deleting..." : "Delete Server"}
+							{isDeleting ? t("serverRow.deleting", "chat") : t("serverRow.deleteServer", "chat")}
 						</DangerButton>
 					</div>
 				)

@@ -7,6 +7,7 @@ import rehypeHighlight, { Options } from "rehype-highlight"
 import styled from "styled-components"
 import type { Node } from "unist"
 import { visit } from "unist-util-visit"
+import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import MermaidBlock from "@/components/common/MermaidBlock"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -32,11 +33,13 @@ const ActModeHighlight: React.FC = () => {
 					)
 				}
 			}}
-			title={mode === "plan" ? "Click to toggle to Act Mode" : "Already in Act Mode"}>
+			title={
+				mode === "plan" ? t("markdownBlock.clickToToggleActMode", "chat") : t("markdownBlock.alreadyInActMode", "chat")
+			}>
 			<div className="p-1 rounded-[12px] bg-[var(--vscode-editor-background)] flex items-center justify-end w-4 border-[1px] border-[var(--vscode-input-border)]">
 				<div className="rounded-full bg-[var(--vscode-textLink-foreground)] w-2 h-2" />
 			</div>
-			Act Mode (⌘⇧A)
+			{t("markdownBlock.actModeShortcut", "chat")}
 		</span>
 	)
 }
@@ -60,17 +63,13 @@ const remarkUrlToLink = () => {
 		visit(tree, "text", (node: any, index, parent) => {
 			const urlRegex = /https?:\/\/[^\s<>)"]+/g
 			const matches = node.value.match(urlRegex)
-			if (!matches) {
-				return
-			}
+			if (!matches) return
 
 			const parts = node.value.split(urlRegex)
 			const children: any[] = []
 
 			parts.forEach((part: string, i: number) => {
-				if (part) {
-					children.push({ type: "text", value: part })
-				}
+				if (part) children.push({ type: "text", value: part })
 				if (matches[i]) {
 					children.push({
 						type: "link",
@@ -101,25 +100,19 @@ const remarkHighlightActMode = () => {
 			// Added negative lookahead to avoid matching if already followed by the shortcut
 			const actModeRegex = /\bto\s+Act\s+Mode\b(?!\s*\(⌘⇧A\))/i
 
-			if (!node.value.match(actModeRegex)) {
-				return
-			}
+			if (!node.value.match(actModeRegex)) return
 
 			// Split the text by the matches
 			const parts = node.value.split(actModeRegex)
 			const matches = node.value.match(actModeRegex)
 
-			if (!matches || parts.length <= 1) {
-				return
-			}
+			if (!matches || parts.length <= 1) return
 
 			const children: any[] = []
 
 			parts.forEach((part: string, i: number) => {
 				// Add the text before the match
-				if (part) {
-					children.push({ type: "text", value: part })
-				}
+				if (part) children.push({ type: "text", value: part })
 
 				// Add the match, but only make "Act Mode" bold (not the "to" part)
 				if (matches[i]) {
@@ -167,32 +160,22 @@ const remarkPreventBoldFilenames = () => {
 	return (tree: any) => {
 		visit(tree, "strong", (node: any, index: number | undefined, parent: any) => {
 			// Only process if there's a next node (potential file extension)
-			if (!parent || typeof index === "undefined" || index === parent.children.length - 1) {
-				return
-			}
+			if (!parent || typeof index === "undefined" || index === parent.children.length - 1) return
 
 			const nextNode = parent.children[index + 1]
 
 			// Check if next node is text and starts with . followed by extension
-			if (nextNode.type !== "text" || !nextNode.value.match(/^\.[a-zA-Z0-9]+/)) {
-				return
-			}
+			if (nextNode.type !== "text" || !nextNode.value.match(/^\.[a-zA-Z0-9]+/)) return
 
 			// If the strong node has multiple children, something weird is happening
-			if (node.children?.length !== 1) {
-				return
-			}
+			if (node.children?.length !== 1) return
 
 			// Get the text content from inside the strong node
 			const strongContent = node.children?.[0]?.value
-			if (!strongContent || typeof strongContent !== "string") {
-				return
-			}
+			if (!strongContent || typeof strongContent !== "string") return
 
 			// Validate that the strong content is a valid filename
-			if (!strongContent.match(/^[a-zA-Z0-9_-]+$/)) {
-				return
-			}
+			if (!strongContent.match(/^[a-zA-Z0-9_-]+$/)) return
 
 			// Combine into a single text node
 			const newNode = {
@@ -305,9 +288,7 @@ const PreWithCopyButton = ({ children, ...preProps }: React.HTMLAttributes<HTMLP
 			const codeElement = preRef.current.querySelector("code")
 			const textToCopy = codeElement ? codeElement.textContent : preRef.current.textContent
 
-			if (!textToCopy) {
-				return
-			}
+			if (!textToCopy) return
 			return textToCopy
 		}
 		return null
@@ -329,7 +310,7 @@ const PreWithCopyButton = ({ children, ...preProps }: React.HTMLAttributes<HTMLP
 const remarkFilePathDetection = () => {
 	return async (tree: Node) => {
 		const fileNameRegex = /^(?!\/)[\w\-./]+(?<!\/)$/
-		const _inlineCodeNodes: any[] = []
+		const inlineCodeNodes: any[] = []
 		const filePathPromises: Promise<void>[] = []
 
 		// Collect all inline code nodes that might be file paths
@@ -423,12 +404,9 @@ const MarkdownBlock = memo(({ markdown, compact }: MarkdownBlockProps) => {
 					// Handle both string children and array of children cases
 					const childrenText = React.Children.toArray(props.children)
 						.map((child) => {
-							if (typeof child === "string") {
-								return child
-							}
-							if (typeof child === "object" && "props" in child && child.props.children) {
+							if (typeof child === "string") return child
+							if (typeof child === "object" && "props" in child && child.props.children)
 								return String(child.props.children)
-							}
 							return ""
 						})
 						.join("")

@@ -28,7 +28,7 @@ The correct order is:
 @import "tailwindcss/utilities.css" layer(utilities);
 
 /* Configuration directives come after all imports */
-/* biome-ignore lint/suspicious/noUnknownAtRules: Tailwind CSS v4 directive */
+/* biome-ignore lint/suspicious/noUnknownAtRules: Tailwind config directive */
 @config "../tailwind.config.mjs";
 
 textarea:focus {
@@ -83,7 +83,7 @@ body:focus-within .code-block-scrollable {
 }
 
 .scrollable::-webkit-scrollbar-corner {
-	background-color: transparent;
+	background-color: transparent !important;
 }
 
 .scrollable::-webkit-scrollbar-thumb {
@@ -91,7 +91,7 @@ body:focus-within .code-block-scrollable {
 	border-color: inherit;
 	border-right-style: inset;
 	border-right-width: calc(100vw + 100vh);
-	border-radius: unset;
+	border-radius: unset !important;
 }
 
 .scrollable::-webkit-scrollbar-thumb:hover {

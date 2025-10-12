@@ -1,11 +1,15 @@
 import { useMemo, useRef, useState } from "react"
+// CARET MODIFICATION: Import i18n context for language reactivity
+import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
+import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { useAutoApproveActions } from "@/hooks/useAutoApproveActions"
 import { getAsVar, VSC_TITLEBAR_INACTIVE_FOREGROUND } from "@/utils/vscStyles"
 import AutoApproveMenuItem from "./AutoApproveMenuItem"
 import AutoApproveModal from "./AutoApproveModal"
-import { ACTION_METADATA, NOTIFICATIONS_SETTING } from "./constants"
+// CARET MODIFICATION: Changed from static constants to dynamic functions for i18n support
+import { getActionMetadata, getNotificationsSetting } from "./constants"
 
 interface AutoApproveBarProps {
 	style?: React.CSSProperties
@@ -14,15 +18,21 @@ interface AutoApproveBarProps {
 const AutoApproveBar = ({ style }: AutoApproveBarProps) => {
 	const { autoApprovalSettings } = useExtensionState()
 	const { isChecked, isFavorited, updateAction } = useAutoApproveActions()
+	// CARET MODIFICATION: Use i18n context to detect language changes
+	const { language } = useCaretI18nContext()
 
 	const [isModalVisible, setIsModalVisible] = useState(false)
 	const buttonRef = useRef<HTMLDivElement>(null)
 
 	const favorites = useMemo(() => autoApprovalSettings.favorites || [], [autoApprovalSettings.favorites])
 
+	// CARET MODIFICATION: Use dynamic functions with language dependency for i18n updates
+	const actionMetadata = useMemo(() => getActionMetadata(), [language])
+	const notificationsSetting = useMemo(() => getNotificationsSetting(), [language])
+
 	// Render a favorited item with a checkbox
 	const renderFavoritedItem = (favId: string) => {
-		const actions = [...ACTION_METADATA.flatMap((a) => [a, a.subAction]), NOTIFICATIONS_SETTING]
+		const actions = [...actionMetadata.flatMap((a) => [a, a.subAction]), notificationsSetting]
 		const action = actions.find((a) => a?.id === favId)
 		if (!action) {
 			return null
@@ -46,13 +56,13 @@ const AutoApproveBar = ({ style }: AutoApproveBarProps) => {
 			(key) => autoApprovalSettings.actions[key as keyof typeof autoApprovalSettings.actions],
 		)
 		const enabledActions = enabledActionsNames.map((action) => {
-			return ACTION_METADATA.flatMap((a) => [a, a.subAction]).find((a) => a?.id === action)
+			return actionMetadata.flatMap((a) => [a, a.subAction]).find((a) => a?.id === action)
 		})
 
 		const minusFavorites = enabledActions.filter((action) => !favorites.includes(action?.id ?? "") && action?.shortName)
 
 		if (notificationsEnabled) {
-			minusFavorites.push(NOTIFICATIONS_SETTING)
+			minusFavorites.push(notificationsSetting)
 		}
 
 		return [
@@ -93,7 +103,7 @@ const AutoApproveBar = ({ style }: AutoApproveBarProps) => {
 						scrollbarWidth: "none",
 						WebkitOverflowScrolling: "touch",
 					}}>
-					<span>Auto-approve:</span>
+					<span>{t("autoApprove.autoApproveLabel", "common")}</span>
 					{getQuickAccessItems()}
 				</div>
 				{isModalVisible ? (
@@ -104,10 +114,10 @@ const AutoApproveBar = ({ style }: AutoApproveBarProps) => {
 			</div>
 
 			<AutoApproveModal
-				ACTION_METADATA={ACTION_METADATA}
+				ACTION_METADATA={actionMetadata}
 				buttonRef={buttonRef}
 				isVisible={isModalVisible}
-				NOTIFICATIONS_SETTING={NOTIFICATIONS_SETTING}
+				NOTIFICATIONS_SETTING={notificationsSetting}
 				setIsVisible={setIsModalVisible}
 			/>
 		</div>

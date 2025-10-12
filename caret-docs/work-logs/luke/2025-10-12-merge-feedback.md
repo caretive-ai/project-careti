@@ -791,7 +791,11 @@ npm run watch
    - **조치**: announcement.json 4개 언어 모두 v0.3.0 Cline v3.27.x 머징 내용으로 업데이트
    - **파일**: webview-ui/src/components/chat/Announcement.tsx
    - **파일**: webview-ui/src/caret/locale/{en,ko,ja,zh}/announcement.json
- - 2.3. 하단 버튼 모두 번역 누락 : auto-apporove, enabled, 등
+ - 2.3. ✅ **수정완료** 하단 버튼 모두 번역 누락 : auto-apporove, enabled, 등
+   - **조치**: auto-approve-menu/constants.ts를 caret-main 버전으로 교체 (getActionMetadata, getNotificationsSetting 함수 사용)
+   - **조치**: AutoApproveBar.tsx를 caret-main 버전으로 교체 (i18n 및 useMemo 적용)
+   - **파일**: webview-ui/src/components/chat/auto-approve-menu/constants.ts
+   - **파일**: webview-ui/src/components/chat/auto-approve-menu/AutoApproveBar.tsx
  - 2.4. ✅ **수정완료** 룰 늘렀을때 페르소나 이미지 및 설정 누락되있음 : 페르소나 컴포넌트 삽입과 페르소나 feature 설정 확인 필요
    - **조치**: ClineRulesToggleModal.tsx caret-main 버전으로 완전 동기화
    - **파일**: webview-ui/src/components/cline-rules/ClineRulesToggleModal.tsx

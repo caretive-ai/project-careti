@@ -74,6 +74,8 @@ export class DifyHandler implements ApiHandler {
 	private baseUrl: string
 	private apiKey: string
 	private conversationId: string | null = null
+	private options: DifyHandlerOptions
+	private currentTaskId: string | undefined
 
 	constructor(options: DifyHandlerOptions) {
 		this.options = options

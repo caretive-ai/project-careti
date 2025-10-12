@@ -774,14 +774,23 @@ npm run watch
    - **조치**: PreferredLanguageSetting → UnifiedLanguageSetting으로 변경
    - **파일**: webview-ui/src/components/welcome/WelcomeView.tsx (line 191)
 * API제공자 설정 페이지
- - 1.3. 제공자 설정 클릭해도 다른 제공자가 보이지 않음
- - 1.4. 오픈라우터의 모델의 상세 내역 모델 설명, 단위 등의 번역이 모두 누락되어있음
+ - 1.3. ✅ **확인완료** 제공자 설정 클릭해도 다른 제공자가 보이지 않음
+   - **조치**: ApiOptions.tsx, ApiConfigurationSection.tsx 모두 caret-main과 동기화 확인
+   - **상태**: 프론트엔드 코드는 정상, 런타임 테스트 필요
+ - 1.4. ✅ **수정완료** 오픈라우터의 모델의 상세 내역 모델 설명, 단위 등의 번역이 모두 누락되어있음
+   - **조치**: ModelInfoView.tsx를 caret-main에서 복사하여 완전한 i18n 적용
+   - **조치**: proto/cline/file.proto에 RefreshedRules.local_caret_rules_toggles 필드 추가
+   - **파일**: webview-ui/src/components/settings/common/ModelInfoView.tsx
 
 ### 2. 홈
  - 2.1. ✅ **수정완료** 첫 페이지의 로고는 계속 페르소나 이미지 아니고 앱로고 임. 페르소나 이미지여야함
    - **조치**: HomeHeader.tsx에 PersonaAvatar + useCaretState 통합 완료
    - **파일**: webview-ui/src/components/welcome/HomeHeader.tsx
- - 2.2. 공지사항 : Cline의 내용임. Caret으로 개선되어야함 (젯브레인, cline로그인 모두 필요 없음. cline머징이 유저에게 영향을 미치는 내용으로 변경 필요. 이전 버전은 caret의 이전 공지사항 참고)
+ - 2.2. ✅ **수정완료** 공지사항 : Cline의 내용임. Caret으로 개선되어야함 (젯브레인, cline로그인 모두 필요 없음. cline머징이 유저에게 영향을 미치는 내용으로 변경 필요. 이전 버전은 caret의 이전 공지사항 참고)
+   - **조치**: Announcement.tsx를 caret-main 버전(i18n 기반)으로 교체
+   - **조치**: announcement.json 4개 언어 모두 v0.3.0 Cline v3.27.x 머징 내용으로 업데이트
+   - **파일**: webview-ui/src/components/chat/Announcement.tsx
+   - **파일**: webview-ui/src/caret/locale/{en,ko,ja,zh}/announcement.json
  - 2.3. 하단 버튼 모두 번역 누락 : auto-apporove, enabled, 등
  - 2.4. ✅ **수정완료** 룰 늘렀을때 페르소나 이미지 및 설정 누락되있음 : 페르소나 컴포넌트 삽입과 페르소나 feature 설정 확인 필요
    - **조치**: ClineRulesToggleModal.tsx caret-main 버전으로 완전 동기화
@@ -796,7 +805,7 @@ npm run watch
    - **파일**: webview-ui/src/components/settings/SettingsView.tsx
  #### api 설정 탭
  - 3.1. API제공자 클릭 반응 없음 : 1.3과 동일
- - 3.2. 모델 정보 번역 누락 : 1.4 동일
+ - 3.2. ✅ **수정완료** 모델 정보 번역 누락 : 1.4와 동일하게 수정 완료
  #### 기능 탭
  - 3.3. ✅ **수정완료** Cline에 있는 포커스 체인 영역 누락. 모두 포함하고 다국어도 번역 추가 (캐럿의 f02 다국어 설정 규칙에 따라서 꼭 작성할 것)
    - **조치**: FeatureSettingsSection.tsx에 포커스 체인 섹션 이미 포함되어 있음 확인 (lines 127-167)
@@ -816,4 +825,5 @@ npm run watch
    - **조건**: featureConfig?.showPersonaSettings && modeSystem === "caret"
    - **파일**: webview-ui/src/caret/components/CaretGeneralSettingsSection.tsx
  #### 정보 탭
- - 3.7. 영문으로 나옴. 공지사항은 4개국어 번역 적용 필요
+ - 3.7. ✅ **수정완료** 영문으로 나옴. 공지사항은 4개국어 번역 적용 필요
+   - **조치**: 2.2와 동일하게 Announcement i18n 업데이트로 해결

@@ -80,6 +80,8 @@ message RefreshedRules {
   ClineRulesToggles local_windsurf_rules_toggles = 4;
   ClineRulesToggles local_workflow_toggles = 5;
   ClineRulesToggles global_workflow_toggles = 6;
+  // CARET MODIFICATION: Add Caret rules toggles
+  ClineRulesToggles local_caret_rules_toggles = 7;
 }
 
 // Request to toggle a Windsurf rule

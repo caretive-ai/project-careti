@@ -3,22 +3,20 @@
 	"previousHeader": "Previous Updates:",
 	"bullets": {
 		"current": {
-			"1": "Persona System Fixes & Improvements",
-			"1-desc": "Fixed a critical bug where persona images would reset on restart. Enhanced initial setup flow and improved UI clarity.",
-			"2": "UI Improvements & Bug Fixes",
-			"2-desc": "Added missing translations for Chinese and Japanese, resolved shortcut key bugs and minor UI issues.",
-			"3": "Documentation Link Updates",
-			"3-desc": "Updated user manual links for easier access to help and guidance."
+			"1": "Cline v3.27.x Merge Complete",
+			"1-desc": "Merged latest Cline upstream with improved model support, provider system enhancements, and numerous bug fixes",
+			"2": "Settings UI Improvements",
+			"2-desc": "Enhanced provider selection, improved settings organization with better tab layout, and complete i18n coverage",
+			"3": "Feature Additions",
+			"3-desc": "Added dictation support, YOLO mode, Focus Chain, and other Cline features with full multilingual support"
 		},
 		"previous": {
-			"1": "Cline v3.26.6 Merge",
-			"1-desc": "Latest GPT-5, Claude 4, Grok model support and architecture improvements",
-			"2": "15+ New API Providers",
-			"2-desc": "Integration with Hugging Face, Groq, and 15+ other new services",
-			"3": "Task Management (Focus Chain)",
-			"3-desc": "Automatic to-do list generation and tracking for complex tasks",
-			"4": "4-Language User Manual",
-			"4-desc": "New manual release"
+			"1": "Persona System Fixes",
+			"1-desc": "Fixed critical persona image reset bug and improved initial setup flow",
+			"2": "Cline v3.26.6 Merge",
+			"2-desc": "Latest GPT-5, Claude 4, Grok model support and 15+ new API providers",
+			"3": "Task Management",
+			"3-desc": "Focus Chain automatic to-do list generation for complex tasks"
 		}
 	},
 	"links": {

@@ -1,5 +1,6 @@
 import { geminiModels, ModelInfo } from "@shared/api"
 import { Fragment, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { ModelDescriptionMarkdown } from "../OpenRouterModelPicker"
 import {
 	formatPrice,
@@ -33,7 +34,8 @@ const formatTiers = (
 
 			return (
 				<span key={index} style={{ paddingLeft: "15px" }}>
-					{formatPrice(price)}/million tokens (
+					{formatPrice(price)}
+					{t("modelInfo.tokensSuffix", "common")} (
 					{tier.contextWindow === Number.POSITIVE_INFINITY || tier.contextWindow >= Number.MAX_SAFE_INTEGER ? (
 						<span>
 							{">"} {prevLimit.toLocaleString()}
@@ -43,7 +45,7 @@ const formatTiers = (
 							{"<="} {tier.contextWindow?.toLocaleString()}
 						</span>
 					)}
-					{" tokens)"}
+					{t("modelInfo.tokensSuffix", "common")}
 					{index < arr.length - 1 && <br />}
 				</span>
 			)
@@ -107,13 +109,14 @@ export const ModelInfoView = ({ selectedModelId, modelInfo, isPopup }: ModelInfo
 	// Create elements for input pricing
 	const inputPriceElement = hasTiers ? (
 		<Fragment key="inputPriceTiers">
-			<span style={{ fontWeight: 500 }}>Input price:</span>
+			<span style={{ fontWeight: 500 }}>{t("modelInfoView.inputPrice", "settings")}:</span>
 			<br />
 			{formatTiers(modelInfo.tiers, "inputPrice")}
 		</Fragment>
 	) : modelInfo.inputPrice !== undefined && modelInfo.inputPrice > 0 ? (
 		<span key="inputPrice">
-			<span style={{ fontWeight: 500 }}>Input price:</span> {formatTokenPrice(modelInfo.inputPrice)}
+			<span style={{ fontWeight: 500 }}>{t("modelInfoView.inputPrice", "settings")}:</span>{" "}
+			{formatTokenPrice(modelInfo.inputPrice)}
 		</span>
 	) : null
 
@@ -123,9 +126,10 @@ export const ModelInfoView = ({ selectedModelId, modelInfo, isPopup }: ModelInfo
 		// Display both standard and thinking budget prices
 		outputPriceElement = (
 			<Fragment key="outputPriceConditional">
-				<span style={{ fontWeight: 500 }}>Output price (Standard):</span> {formatTokenPrice(modelInfo.outputPrice)}
+				<span style={{ fontWeight: 500 }}>{t("modelInfoView.outputPriceStandard", "settings")}:</span>{" "}
+				{formatTokenPrice(modelInfo.outputPrice)}
 				<br />
-				<span style={{ fontWeight: 500 }}>Output price (Thinking Budget &gt; 0):</span>{" "}
+				<span style={{ fontWeight: 500 }}>{t("modelInfoView.outputPriceThinking", "settings")}:</span>{" "}
 				{formatTokenPrice(modelInfo.thinkingConfig.outputPrice)}
 			</Fragment>
 		)
@@ -133,8 +137,8 @@ export const ModelInfoView = ({ selectedModelId, modelInfo, isPopup }: ModelInfo
 		// Display tiered output pricing
 		outputPriceElement = (
 			<Fragment key="outputPriceTiers">
-				<span style={{ fontWeight: 500 }}>Output price:</span>
-				<span style={{ fontStyle: "italic" }}> (based on input tokens)</span>
+				<span style={{ fontWeight: 500 }}>{t("modelInfoView.outputPrice", "settings")}:</span>
+				<span style={{ fontStyle: "italic" }}> {t("modelInfoView.basedOnInputTokens", "settings")}</span>
 				<br />
 				{formatTiers(modelInfo.tiers, "outputPrice")}
 			</Fragment>
@@ -143,7 +147,8 @@ export const ModelInfoView = ({ selectedModelId, modelInfo, isPopup }: ModelInfo
 		// Display single standard output price
 		outputPriceElement = (
 			<span key="outputPrice">
-				<span style={{ fontWeight: 500 }}>Output price:</span> {formatTokenPrice(modelInfo.outputPrice)}
+				<span style={{ fontWeight: 500 }}>{t("modelInfoView.outputPrice", "settings")}:</span>{" "}
+				{formatTokenPrice(modelInfo.outputPrice)}
 			</span>
 		)
 	}
@@ -160,39 +165,42 @@ export const ModelInfoView = ({ selectedModelId, modelInfo, isPopup }: ModelInfo
 			/>
 		),
 		<ModelInfoSupportsItem
-			doesNotSupportLabel="Does not support images"
+			doesNotSupportLabel={t("modelInfoView.doesNotSupportImages", "settings")}
 			isSupported={supportsImages(modelInfo)}
 			key="supportsImages"
-			supportsLabel="Supports images"
+			supportsLabel={t("modelInfoView.supportsImages", "settings")}
 		/>,
 		<ModelInfoSupportsItem
-			doesNotSupportLabel="Does not support browser use"
+			doesNotSupportLabel={t("modelInfoView.doesNotSupportBrowser", "settings")}
 			isSupported={supportsBrowserUse(modelInfo)}
 			key="supportsBrowserUse"
-			supportsLabel="Supports browser use"
+			supportsLabel={t("modelInfoView.supportsBrowser", "settings")}
 		/>,
 		!isGemini && (
 			<ModelInfoSupportsItem
-				doesNotSupportLabel="Does not support prompt caching"
+				doesNotSupportLabel={t("modelInfoView.doesNotSupportCache", "settings")}
 				isSupported={supportsPromptCache(modelInfo)}
 				key="supportsPromptCache"
-				supportsLabel="Supports prompt caching"
+				supportsLabel={t("modelInfoView.supportsCache", "settings")}
 			/>
 		),
 		modelInfo.contextWindow !== undefined && modelInfo.contextWindow > 0 && (
 			<span key="contextWindow">
-				<span style={{ fontWeight: 500 }}>Context Window:</span> {formatTokenLimit(modelInfo.contextWindow)} tokens
+				<span style={{ fontWeight: 500 }}>{t("modelInfoView.contextWindow", "settings")}:</span>{" "}
+				{formatTokenLimit(modelInfo.contextWindow)} {t("modelInfoView.tokensSuffix", "common")}
 			</span>
 		),
 		inputPriceElement, // Add the generated input price block
 		modelInfo.supportsPromptCache && modelInfo.cacheWritesPrice && (
 			<span key="cacheWritesPrice">
-				<span style={{ fontWeight: 500 }}>Cache writes price:</span> {formatTokenPrice(modelInfo.cacheWritesPrice || 0)}
+				<span style={{ fontWeight: 500 }}>{t("modelInfoView.cacheWritesPrice", "settings")}:</span>{" "}
+				{formatTokenPrice(modelInfo.cacheWritesPrice || 0)}
 			</span>
 		),
 		modelInfo.supportsPromptCache && modelInfo.cacheReadsPrice && (
 			<span key="cacheReadsPrice">
-				<span style={{ fontWeight: 500 }}>Cache reads price:</span> {formatTokenPrice(modelInfo.cacheReadsPrice || 0)}
+				<span style={{ fontWeight: 500 }}>{t("modelInfoView.cacheReadsPrice", "settings")}:</span>{" "}
+				{formatTokenPrice(modelInfo.cacheReadsPrice || 0)}
 			</span>
 		),
 		outputPriceElement, // Add the generated output price block

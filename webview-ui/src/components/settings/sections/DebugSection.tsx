@@ -1,4 +1,5 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import { t } from "@/caret/utils/i18n"
 import Section from "../Section"
 
 interface DebugSectionProps {
@@ -15,16 +16,16 @@ const DebugSection = ({ onResetState, renderSectionHeader }: DebugSectionProps) 
 					className="mt-[5px] w-auto"
 					onClick={() => onResetState()}
 					style={{ backgroundColor: "var(--vscode-errorForeground)", color: "black" }}>
-					Reset Workspace State
+					{t("debug.resetWorkspaceState", "settings")}
 				</VSCodeButton>
 				<VSCodeButton
 					className="mt-[5px] w-auto"
 					onClick={() => onResetState(true)}
 					style={{ backgroundColor: "var(--vscode-errorForeground)", color: "black" }}>
-					Reset Global State
+					{t("debug.resetGlobalState", "settings")}
 				</VSCodeButton>
 				<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
-					This will reset all global state and secret storage in the extension.
+					{t("debug.resetGlobalStateDescription", "settings")}
 				</p>
 			</Section>
 		</div>

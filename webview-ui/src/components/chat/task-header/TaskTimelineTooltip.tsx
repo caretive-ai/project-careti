@@ -1,6 +1,7 @@
 import { Tooltip } from "@heroui/react"
 import { ClineMessage } from "@shared/ExtensionMessage"
 import React from "react"
+import { t } from "@/caret/utils/i18n"
 import { getColor } from "./util"
 
 interface TaskTimelineTooltipProps {
@@ -14,11 +15,11 @@ const TaskTimelineTooltip = ({ message, children }: TaskTimelineTooltipProps) =>
 			switch (message.say) {
 				// TODO: Need to confirm these classifcations with design
 				case "task":
-					return "Task Message"
+					return t("taskTimelineTooltip.taskMessage", "chat")
 				case "user_feedback":
-					return "User Message"
+					return t("taskTimelineTooltip.userMessage", "chat")
 				case "text":
-					return "Assistant Response"
+					return t("taskTimelineTooltip.assistantResponse", "chat")
 				case "tool":
 					if (message.text) {
 						try {
@@ -30,41 +31,47 @@ const TaskTimelineTooltip = ({ message, children }: TaskTimelineTooltipProps) =>
 								toolData.tool === "listCodeDefinitionNames" ||
 								toolData.tool === "searchFiles"
 							) {
-								return `File Read: ${toolData.tool}`
+								return t("taskTimelineTooltip.fileRead", "chat", { tool: toolData.tool })
 							} else if (toolData.tool === "editedExistingFile") {
-								return `File Edit: ${toolData.path || "Unknown file"}`
+								return t("taskTimelineTooltip.fileEdit", "chat", {
+									path: toolData.path || t("taskTimelineTooltip.unknownFile", "chat"),
+								})
 							} else if (toolData.tool === "newFileCreated") {
-								return `New File: ${toolData.path || "Unknown file"}`
+								return t("taskTimelineTooltip.newFile", "chat", {
+									path: toolData.path || t("taskTimelineTooltip.unknownFile", "chat"),
+								})
 							} else if (toolData.tool === "webFetch") {
-								return `Web Fetch: ${toolData.path || "Unknown URL"}`
+								return t("taskTimelineTooltip.webFetch", "chat", {
+									path: toolData.path || t("taskTimelineTooltip.unknownUrl", "chat"),
+								})
 							}
-							return `Tool: ${toolData.tool}`
+							return t("taskTimelineTooltip.tool", "chat", { tool: toolData.tool })
 						} catch (_e) {
-							return "Tool Use"
+							return t("taskTimelineTooltip.toolUse", "chat")
 						}
 					}
-					return "Tool Use"
+					return t("taskTimelineTooltip.toolUse", "chat")
 				case "command":
-					return "Terminal Command"
+					return t("taskTimelineTooltip.terminalCommand", "chat")
 				case "command_output":
-					return "Terminal Output"
+					return t("taskTimelineTooltip.terminalOutput", "chat")
 				case "browser_action":
-					return "Browser Action"
+					return t("taskTimelineTooltip.browserAction", "chat")
 				case "browser_action_result":
-					return "Browser Result"
+					return t("taskTimelineTooltip.browserResult", "chat")
 				case "completion_result":
-					return "Task Completed"
+					return t("taskTimelineTooltip.taskCompleted", "chat")
 				case "checkpoint_created":
-					return "Checkpoint Created"
+					return t("taskTimelineTooltip.checkpointCreated", "chat")
 				default:
-					return message.say || "Unknown"
+					return message.say || t("taskTimelineTooltip.unknown", "chat")
 			}
 		} else if (message.type === "ask") {
 			switch (message.ask) {
 				case "followup":
-					return "Assistant Message"
+					return t("taskTimelineTooltip.assistantMessage", "chat")
 				case "plan_mode_respond":
-					return "Planning Response"
+					return t("taskTimelineTooltip.planningResponse", "chat")
 				case "tool":
 					if (message.text) {
 						try {
@@ -76,29 +83,37 @@ const TaskTimelineTooltip = ({ message, children }: TaskTimelineTooltipProps) =>
 								toolData.tool === "listCodeDefinitionNames" ||
 								toolData.tool === "searchFiles"
 							) {
-								return `File Read Approval: ${toolData.tool}`
+								return t("taskTimelineTooltip.fileReadApproval", "chat", { tool: toolData.tool })
 							} else if (toolData.tool === "editedExistingFile") {
-								return `File Edit Approval: ${toolData.path || "Unknown file"}`
+								return t("taskTimelineTooltip.fileEditApproval", "chat", {
+									path: toolData.path || t("taskTimelineTooltip.unknownFile", "chat"),
+								})
 							} else if (toolData.tool === "newFileCreated") {
-								return `New File Approval: ${toolData.path || "Unknown file"}`
+								return t("taskTimelineTooltip.newFileApproval", "chat", {
+									path: toolData.path || t("taskTimelineTooltip.unknownFile", "chat"),
+								})
 							} else if (toolData.tool === "webFetch") {
-								return `Web Fetch: ${toolData.path || "Unknown URL"}`
+								return t("taskTimelineTooltip.webFetch", "chat", {
+									path: toolData.path || t("taskTimelineTooltip.unknownUrl", "chat"),
+								})
 							}
-							return `Tool Approval: ${toolData.tool}`
+							return t("taskTimelineTooltip.toolApproval", "chat", { tool: toolData.tool })
 						} catch (_e) {
-							return "Tool Approval"
+							return t("taskTimelineTooltip.toolApproval", "chat", {
+								tool: t("taskTimelineTooltip.unknown", "chat"),
+							})
 						}
 					}
-					return "Tool Approval"
+					return t("taskTimelineTooltip.toolApproval", "chat", { tool: t("taskTimelineTooltip.unknown", "chat") })
 				case "command":
-					return "Terminal Command Approval"
+					return t("taskTimelineTooltip.terminalCommandApproval", "chat")
 				case "browser_action_launch":
-					return "Browser Action Approval"
+					return t("taskTimelineTooltip.browserActionApproval", "chat")
 				default:
-					return message.ask || "Unknown"
+					return message.ask || t("taskTimelineTooltip.unknown", "chat")
 			}
 		}
-		return "Unknown Message Type"
+		return t("taskTimelineTooltip.unknownMessageType", "chat")
 	}
 
 	const getMessageContent = (message: ClineMessage): string => {
@@ -167,7 +182,7 @@ const TaskTimelineTooltip = ({ message, children }: TaskTimelineTooltipProps) =>
 									height: "10px",
 									minWidth: "10px", // Ensure fixed width
 									minHeight: "10px", // Ensure fixed height
-									borderRadius: 1.5,
+									borderRadius: "50%",
 									backgroundColor: getColor(message),
 									marginRight: "8px",
 									display: "inline-block",

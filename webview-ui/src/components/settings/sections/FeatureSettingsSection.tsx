@@ -3,6 +3,7 @@ import { McpDisplayMode } from "@shared/McpDisplayMode"
 import { OpenaiReasoningEffort } from "@shared/storage/types"
 import { VSCodeCheckbox, VSCodeDropdown, VSCodeOption, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import { memo } from "react"
+import { t } from "@/caret/utils/i18n"
 import McpDisplayModeDropdown from "@/components/mcp/chat-display/McpDisplayModeDropdown"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import Section from "../Section"
@@ -24,7 +25,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 		dictationSettings,
 		useAutoCondense,
 		focusChainSettings,
-		multiRootSetting,
+		focusChainFeatureFlagEnabled,
 	} = useExtensionState()
 
 	const handleReasoningEffortChange = (newValue: OpenaiReasoningEffort) => {
@@ -43,11 +44,10 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 								const checked = e.target.checked === true
 								updateSetting("enableCheckpointsSetting", checked)
 							}}>
-							Enable Checkpoints
+							{t("features.enableCheckpoints", "settings")}
 						</VSCodeCheckbox>
 						<p className="text-xs text-[var(--vscode-descriptionForeground)]">
-							Enables extension to save checkpoints of workspace throughout the task. Uses git under the hood which
-							may not work well with large workspaces.
+							{t("features.enableCheckpointsDescription", "settings")}
 						</p>
 					</div>
 					<div style={{ marginTop: 10 }}>
@@ -57,17 +57,17 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 								const checked = e.target.checked === true
 								updateSetting("mcpMarketplaceEnabled", checked)
 							}}>
-							Enable MCP Marketplace
+							{t("features.enableMcpMarketplace", "settings")}
 						</VSCodeCheckbox>
 						<p className="text-xs text-[var(--vscode-descriptionForeground)]">
-							Enables the MCP Marketplace tab for discovering and installing MCP servers.
+							{t("features.enableMcpMarketplaceDescription", "settings")}
 						</p>
 					</div>
 					<div style={{ marginTop: 10 }}>
 						<label
 							className="block text-sm font-medium text-[var(--vscode-foreground)] mb-1"
 							htmlFor="mcp-display-mode-dropdown">
-							MCP Display Mode
+							{t("features.mcpDisplayMode", "settings")}
 						</label>
 						<McpDisplayModeDropdown
 							className="w-full"
@@ -76,8 +76,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 							value={mcpDisplayMode}
 						/>
 						<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
-							Controls how MCP responses are displayed: plain text, rich formatting with links/images, or markdown
-							rendering.
+							{t("features.mcpDisplayModeDescription", "settings")}
 						</p>
 					</div>
 					<div style={{ marginTop: 10 }}>
@@ -87,17 +86,17 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 								const checked = e.target.checked === true
 								updateSetting("mcpResponsesCollapsed", checked)
 							}}>
-							Collapse MCP Responses
+							{t("features.collapseMcpResponses", "settings")}
 						</VSCodeCheckbox>
 						<p className="text-xs text-[var(--vscode-descriptionForeground)]">
-							Sets the default display mode for MCP response panels
+							{t("features.collapseMcpResponsesDescription", "settings")}
 						</p>
 					</div>
 					<div style={{ marginTop: 10 }}>
 						<label
 							className="block text-sm font-medium text-[var(--vscode-foreground)] mb-1"
 							htmlFor="openai-reasoning-effort-dropdown">
-							OpenAI Reasoning Effort
+							{t("features.openaiReasoningEffort", "settings")}
 						</label>
 						<VSCodeDropdown
 							className="w-full"
@@ -107,13 +106,12 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 								const newValue = e.target.currentValue as OpenaiReasoningEffort
 								handleReasoningEffortChange(newValue)
 							}}>
-							<VSCodeOption value="minimal">Minimal</VSCodeOption>
-							<VSCodeOption value="low">Low</VSCodeOption>
-							<VSCodeOption value="medium">Medium</VSCodeOption>
-							<VSCodeOption value="high">High</VSCodeOption>
+							<VSCodeOption value="low">{t("features.reasoningEffort.low", "settings")}</VSCodeOption>
+							<VSCodeOption value="medium">{t("features.reasoningEffort.medium", "settings")}</VSCodeOption>
+							<VSCodeOption value="high">{t("features.reasoningEffort.high", "settings")}</VSCodeOption>
 						</VSCodeDropdown>
 						<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
-							Reasoning effort for the OpenAI family of models(applies to all OpenAI model providers)
+							{t("features.openaiReasoningEffortDescription", "settings")}
 						</p>
 					</div>
 					<div style={{ marginTop: 10 }}>
@@ -123,13 +121,13 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 								const checked = e.target.checked === true
 								updateSetting("strictPlanModeEnabled", checked)
 							}}>
-							Enable strict plan mode
+							{t("features.strictPlanMode", "settings")}
 						</VSCodeCheckbox>
 						<p className="text-xs text-[var(--vscode-descriptionForeground)]">
-							Enforces strict tool use while in plan mode, preventing file edits.
+							{t("features.strictPlanModeDescription", "settings")}
 						</p>
 					</div>
-					{
+					{focusChainFeatureFlagEnabled && (
 						<div style={{ marginTop: 10 }}>
 							<VSCodeCheckbox
 								checked={focusChainSettings?.enabled || false}
@@ -137,20 +135,19 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 									const checked = e.target.checked === true
 									updateSetting("focusChainSettings", { ...focusChainSettings, enabled: checked })
 								}}>
-								Enable Focus Chain
+								{t("features.focusChain", "settings")}
 							</VSCodeCheckbox>
 							<p className="text-xs text-[var(--vscode-descriptionForeground)]">
-								Enables enhanced task progress tracking and automatic focus chain list management throughout
-								tasks.
+								{t("features.focusChainDescription", "settings")}
 							</p>
 						</div>
-					}
-					{focusChainSettings?.enabled && (
+					)}
+					{focusChainFeatureFlagEnabled && focusChainSettings?.enabled && (
 						<div style={{ marginTop: 10, marginLeft: 20 }}>
 							<label
 								className="block text-sm font-medium text-[var(--vscode-foreground)] mb-1"
 								htmlFor="focus-chain-remind-interval">
-								Focus Chain Reminder Interval
+								{t("features.focusChainReminderInterval", "settings")}
 							</label>
 							<VSCodeTextField
 								className="w-20"
@@ -167,8 +164,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 								value={String(focusChainSettings?.remindClineInterval || 6)}
 							/>
 							<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
-								Interval (in messages) to remind Cline about its focus chain checklist (1-100). Lower values
-								provide more frequent reminders.
+								{t("features.focusChainReminderIntervalDescription", "settings")}
 							</p>
 						</div>
 					)}
@@ -185,22 +181,19 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 										}
 										updateSetting("dictationSettings", updatedDictationSettings)
 									}}>
-									Enable Dictation
+									{t("features.enableDictation", "settings")}
 								</VSCodeCheckbox>
 								<p className="text-xs text-description mt-1">
-									Enables speech-to-text transcription using your Cline account. Uses the Whisper model, at
-									$0.006 credits per minute of audio processed. 5 minutes max per message.
+									{t("features.enableDictationDescription", "settings")}
 								</p>
 							</div>
 
-							{/* TODO: Fix and use CollapsibleContent, the animation is good but it breaks the dropdown
-							<CollapsibleContent isOpen={dictationSettings?.dictationEnabled}> */}
 							{dictationSettings?.dictationEnabled && (
 								<div className="mt-2.5 ml-5">
 									<label
 										className="block text-sm font-medium text-foreground mb-1"
 										htmlFor="dictation-language-dropdown">
-										Dictation Language
+										{t("features.dictationLanguage", "settings")}
 									</label>
 									<VSCodeDropdown
 										className="w-full"
@@ -221,8 +214,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 										))}
 									</VSCodeDropdown>
 									<p className="text-xs mt-1 text-description">
-										The language you want to speak to the Dictation service in. This is separate from your
-										preferred UI language.
+										{t("features.dictationLanguageDescription", "settings")}
 									</p>
 								</div>
 							)}
@@ -235,35 +227,19 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 								const checked = e.target.checked === true
 								updateSetting("useAutoCondense", checked)
 							}}>
-							Enable Auto Compact
+							{t("features.autoCompact", "settings")}
 						</VSCodeCheckbox>
 						<p className="text-xs text-[var(--vscode-descriptionForeground)]">
-							Enables advanced context management system which uses LLM based condensing for next-gen models.{" "}
+							{t("features.autoCompactDescription", "settings")}{" "}
 							<a
 								className="text-[var(--vscode-textLink-foreground)] hover:text-[var(--vscode-textLink-activeForeground)]"
 								href="https://docs.cline.bot/features/auto-compact"
 								rel="noopener noreferrer"
 								target="_blank">
-								Learn more
+								{t("features.learnMore", "settings")}
 							</a>
 						</p>
 					</div>
-					{multiRootSetting.featureFlag && (
-						<div className="mt-2.5">
-							<VSCodeCheckbox
-								checked={multiRootSetting.user}
-								onChange={(e: any) => {
-									const checked = e.target.checked === true
-									updateSetting("multiRootEnabled", checked)
-								}}>
-								Enable Multi-Root Workspace
-							</VSCodeCheckbox>
-							<p className="text-xs">
-								<span className="text-[var(--vscode-errorForeground)]">Experimental: </span>{" "}
-								<span className="text-description">Allows cline to work across multiple workspaces.</span>
-							</p>
-						</div>
-					)}
 					<div style={{ marginTop: 10 }}>
 						<VSCodeCheckbox
 							checked={yoloModeToggled}
@@ -271,11 +247,10 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 								const checked = e.target.checked === true
 								updateSetting("yoloModeToggled", checked)
 							}}>
-							Enable YOLO Mode
+							{t("features.enableYoloMode", "settings")}
 						</VSCodeCheckbox>
 						<p className="text-xs text-[var(--vscode-errorForeground)]">
-							EXPERIMENTAL & DANGEROUS: This mode disables safety checks and user confirmations. Cline will
-							automatically approve all actions without asking. Use with extreme caution.
+							{t("features.enableYoloModeDescription", "settings")}
 						</p>
 					</div>
 				</div>

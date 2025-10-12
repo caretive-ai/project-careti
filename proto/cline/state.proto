@@ -12,6 +12,7 @@ service StateService {
   rpc updateTerminalConnectionTimeout(UpdateTerminalConnectionTimeoutRequest) returns (UpdateTerminalConnectionTimeoutResponse);
   rpc updateTerminalReuseEnabled(BooleanRequest) returns (Empty);
   rpc getAvailableTerminalProfiles(EmptyRequest) returns (TerminalProfiles);
+  rpc updateDefaultTerminalProfile(StringRequest) returns (TerminalProfileUpdateResponse);
   rpc subscribeToState(EmptyRequest) returns (stream State);
   rpc toggleFavoriteModel(StringRequest) returns (Empty);
   rpc resetState(ResetStateRequest) returns (Empty);

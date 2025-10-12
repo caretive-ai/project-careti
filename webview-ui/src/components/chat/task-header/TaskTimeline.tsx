@@ -8,9 +8,9 @@ import TaskTimelineTooltip from "./TaskTimelineTooltip"
 import { getColor } from "./util"
 
 // Timeline dimensions and spacing
-const TIMELINE_HEIGHT = "12px"
-const BLOCK_WIDTH = "11px"
-const BLOCK_GAP = "4px"
+const TIMELINE_HEIGHT = "13px"
+const BLOCK_WIDTH = "13px"
+const BLOCK_GAP = "3px"
 const _TOOLTIP_MARGIN = 32 // 32px margin on each side
 
 interface TaskTimelineProps {
@@ -42,8 +42,7 @@ const TaskTimeline: React.FC<TaskTimelineProps> = ({ messages, onBlockClick }) =
 					msg.say === "deleted_api_reqs" ||
 					msg.say === "checkpoint_created" ||
 					msg.say === "task_progress" ||
-					msg.say === "text" ||
-					msg.say === "reasoning")
+					(msg.say === "text" && (!msg.text || msg.text.trim() === "")))
 			) {
 				return false
 			}
@@ -71,7 +70,7 @@ const TaskTimeline: React.FC<TaskTimelineProps> = ({ messages, onBlockClick }) =
 	}, [taskTimelinePropsMessages])
 
 	// Calculate the item size (width of block + gap)
-	const itemWidth = parseInt(BLOCK_WIDTH.replace("px", "")) + parseInt(BLOCK_GAP.replace("px", ""))
+	const itemWidth = parseInt(BLOCK_WIDTH.replace("px", ""), 10) + parseInt(BLOCK_GAP.replace("px", ""), 10)
 
 	// Virtuoso requires a reference to scroll to the end
 	const virtuosoRef = useRef<any>(null)
@@ -85,12 +84,11 @@ const TaskTimeline: React.FC<TaskTimelineProps> = ({ messages, onBlockClick }) =
 					<div
 						style={{
 							width: BLOCK_WIDTH,
-							height: BLOCK_WIDTH,
+							height: "100%",
 							backgroundColor: "#e5e5e5", // Light gray placeholder
 							flexShrink: 0,
 							marginRight: BLOCK_GAP,
 							opacity: 0.5,
-							borderRadius: "50%",
 						}}
 					/>
 				)
@@ -108,16 +106,14 @@ const TaskTimeline: React.FC<TaskTimelineProps> = ({ messages, onBlockClick }) =
 			return (
 				<TaskTimelineTooltip message={message}>
 					<div
-						className="hover:brightness-120"
 						onClick={handleClick}
 						style={{
 							width: BLOCK_WIDTH,
-							height: BLOCK_WIDTH,
+							height: "100%",
 							backgroundColor: getColor(message),
 							flexShrink: 0,
 							cursor: "pointer",
 							marginRight: BLOCK_GAP,
-							borderRadius: 1.5,
 						}}
 					/>
 				</TaskTimelineTooltip>

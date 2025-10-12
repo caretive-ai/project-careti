@@ -256,8 +256,14 @@
 		"focusChainDescription": "Enables enhanced task progress tracking and automatic focus chain list management throughout tasks.",
 		"focusChainReminderInterval": "Focus Chain Reminder Interval",
 		"focusChainReminderIntervalDescription": "Interval (in messages) to remind Caret about its focus chain checklist (1-100). Lower values provide more frequent reminders.",
+		"enableDictation": "Enable Dictation",
+		"enableDictationDescription": "Enables speech-to-text transcription using your Cline account. Uses the Whisper model, at $0.006 credits per minute of audio processed. 5 minutes max per message.",
+		"dictationLanguage": "Dictation Language",
+		"dictationLanguageDescription": "The language you want to speak to the Dictation service in. This is separate from your preferred UI language.",
 		"autoCompact": "Enable Auto Compact",
 		"autoCompactDescription": "Enables advanced context management system which uses LLM based condensing for next-gen models.",
+		"enableYoloMode": "Enable YOLO Mode",
+		"enableYoloModeDescription": "EXPERIMENTAL & DANGEROUS: This mode disables safety checks and user confirmations. Caret will automatically approve all actions without asking. Use with extreme caution.",
 		"learnMore": "Learn more"
 	},
 	"autoApprove": {

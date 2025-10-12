@@ -83,7 +83,7 @@ body:focus-within .code-block-scrollable {
 }
 
 .scrollable::-webkit-scrollbar-corner {
-	background-color: transparent !important;
+	background-color: transparent;
 }
 
 .scrollable::-webkit-scrollbar-thumb {
@@ -91,7 +91,7 @@ body:focus-within .code-block-scrollable {
 	border-color: inherit;
 	border-right-style: inset;
 	border-right-width: calc(100vw + 100vh);
-	border-radius: unset !important;
+	border-radius: unset;
 }
 
 .scrollable::-webkit-scrollbar-thumb:hover {

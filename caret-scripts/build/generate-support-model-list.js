@@ -88,8 +88,8 @@ function extractModelData() {
 
 			models.push({
 				id: modelId,
-				maxTokens: maxTokensMatch ? parseInt(maxTokensMatch[1]) : "N/A",
-				contextWindow: contextWindowMatch ? parseInt(contextWindowMatch[1]) : "N/A",
+				maxTokens: maxTokensMatch ? parseInt(maxTokensMatch[1], 10) : "N/A",
+				contextWindow: contextWindowMatch ? parseInt(contextWindowMatch[1], 10) : "N/A",
 				supportsImages: supportsImagesMatch ? supportsImagesMatch[1] === "true" : false,
 				inputPrice: inputPriceMatch ? parseFloat(inputPriceMatch[1]) : "N/A",
 				outputPrice: outputPriceMatch ? parseFloat(outputPriceMatch[1]) : "N/A",

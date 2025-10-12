@@ -264,8 +264,14 @@
 		"focusChainDescription": "작업 전반에 걸쳐 향상된 작업 진행 상황 추적 및 자동 포커스 체인 목록 관리를 활성화합니다.",
 		"focusChainReminderInterval": "포커스 체인 알림 간격",
 		"focusChainReminderIntervalDescription": "Caret에게 포커스 체인 체크리스트에 대해 알리는 간격 (메시지 단위) (1-100). 값이 낮을수록 더 자주 알림을 제공합니다.",
+		"enableDictation": "음성 입력 활성화",
+		"enableDictationDescription": "Cline 계정을 사용한 음성-텍스트 변환을 활성화합니다. Whisper 모델을 사용하며, 처리된 오디오 1분당 $0.006 크레딧이 소요됩니다. 메시지당 최대 5분.",
+		"dictationLanguage": "음성 입력 언어",
+		"dictationLanguageDescription": "음성 입력 서비스에서 사용할 언어입니다. 이는 선호하는 UI 언어와 별개입니다.",
 		"autoCompact": "자동 압축 활성화",
 		"autoCompactDescription": "차세대 모델을 위해 LLM 기반 압축을 사용하는 고급 컨텍스트 관리 시스템을 활성화합니다.",
+		"enableYoloMode": "YOLO 모드 활성화",
+		"enableYoloModeDescription": "실험적이고 위험함: 이 모드는 안전 검사 및 사용자 확인을 비활성화합니다. Caret이 묻지 않고 모든 작업을 자동으로 승인합니다. 극도로 주의하여 사용하세요.",
 		"learnMore": "더 알아보기"
 	},
 	"autoApprove": {

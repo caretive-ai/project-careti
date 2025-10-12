@@ -13,7 +13,7 @@ import Thumbnails from "@/components/common/Thumbnails"
 import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { FileServiceClient, UiServiceClient } from "@/services/grpc-client"
-import { formatLargeNumber } from "@/utils/format"
+import { formatLargeNumber, formatSize } from "@/utils/format"
 import { validateSlashCommand } from "@/utils/slash-commands"
 import CopyTaskButton from "./buttons/CopyTaskButton"
 import DeleteTaskButton from "./buttons/DeleteTaskButton"
@@ -463,7 +463,10 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 										{/* CARET MODIFICATION: Always show disk task history button (removed IS_DEV condition) */}
 										<OpenDiskTaskHistoryButton taskId={currentTaskItem?.id} />
 										<CopyTaskButton taskText={task.text} />
-										<DeleteTaskButton taskId={currentTaskItem?.id} taskSize={currentTaskItem?.size ?? 0} />
+										<DeleteTaskButton
+											taskId={currentTaskItem?.id}
+											taskSize={formatSize(currentTaskItem?.size)}
+										/>
 									</div>
 								)}
 							</div>
@@ -520,7 +523,10 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 										{/* CARET MODIFICATION: Always show disk task history button (removed IS_DEV condition) */}
 										<OpenDiskTaskHistoryButton taskId={currentTaskItem?.id} />
 										<CopyTaskButton taskText={task.text} />
-										<DeleteTaskButton taskId={currentTaskItem?.id} taskSize={currentTaskItem?.size ?? 0} />
+										<DeleteTaskButton
+											taskId={currentTaskItem?.id}
+											taskSize={formatSize(currentTaskItem?.size)}
+										/>
 									</div>
 								</div>
 							)}
@@ -852,7 +858,7 @@ export const highlightMentions = (text: string, withShadow = true) => {
 			return (
 				<span
 					className={withShadow ? "mention-context-highlight-with-shadow" : "mention-context-highlight"}
-					key={index}
+					key={`mention-${part}-${index}`}
 					onClick={() => FileServiceClient.openMention(StringRequest.create({ value: part }))}
 					style={{ cursor: "pointer" }}>
 					@{part}

@@ -39,7 +39,7 @@ type CachedData = {
 const AccountView = ({ onDone, clineUser, organizations, activeOrganization }: AccountViewProps) => {
 	const { apiConfiguration, caretUser } = useExtensionState()
 	console.log("<===== account view apiConfiguration=====>", apiConfiguration)
-	const caretUserProfile = apiConfiguration?.caretUserProfile
+	const _caretUserProfile = apiConfiguration?.caretUserProfile
 
 	return (
 		<div className="fixed inset-0 flex flex-col overflow-hidden pt-[10px] pl-[20px]">

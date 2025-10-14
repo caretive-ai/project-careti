@@ -116,6 +116,9 @@ const SwitchOption = styled.div.withConfig({
 	font-size: 12px;
 	width: 50%;
 	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 
 	&:hover {
 		background-color: ${(props) => (!props.isActive ? "var(--vscode-toolbar-hoverBackground)" : "transparent")};
@@ -123,6 +126,7 @@ const SwitchOption = styled.div.withConfig({
 `
 
 const SwitchContainer = styled.div<{ disabled: boolean }>`
+	position: relative;
 	display: flex;
 	align-items: center;
 	background-color: var(--vscode-editor-background);
@@ -133,8 +137,10 @@ const SwitchContainer = styled.div<{ disabled: boolean }>`
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	transform: scale(0.85);
 	transform-origin: right center;
-	margin-left: -10px; // compensate for the transform so flex spacing works
-	user-select: none; // Prevent text selection
+	margin-left: -10px;
+	user-select: none;
+	width: 180px;
+	height: 28px;
 `
 
 const Slider = styled.div.withConfig({

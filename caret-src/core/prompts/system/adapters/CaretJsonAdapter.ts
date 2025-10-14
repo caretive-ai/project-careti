@@ -34,7 +34,8 @@ export class CaretJsonAdapter implements IPromptSystem {
 
 		const sectionNames = [
 			"BASE_PROMPT_INTRO",
-			"AGENT_BEHAVIOR_DIRECTIVES", // Replaces CHATBOT_AGENT_MODES
+			"CHATBOT_AGENT_MODES", // CARET MODIFICATION: Explicit mode system with PLAN/ACT rejection
+			"AGENT_BEHAVIOR_DIRECTIVES",
 			"COLLABORATIVE_PRINCIPLES", // CARET MODIFICATION: Restore collaborative principles
 			"CARET_SYSTEM_INFO",
 			"CARET_CAPABILITIES",

@@ -1,10 +1,13 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useCallback } from "react"
+import { getLocalizedUrl } from "@/caret/constants/urls"
+import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
 import { PlatformType } from "@/config/platform.config"
 import { usePlatform } from "@/context/PlatformContext"
 import { StateServiceClient } from "@/services/grpc-client"
 export const CURRENT_INFO_BANNER_VERSION = 1
 export const InfoBanner: React.FC = () => {
+	const { language } = useCaretI18nContext()
 	const handleClose = useCallback((e: React.MouseEvent) => {
 		e.preventDefault()
 		e.stopPropagation()
@@ -14,7 +17,7 @@ export const InfoBanner: React.FC = () => {
 		return (
 			<a
 				className="bg-banner-background px-3 py-2 flex flex-col gap-1 shrink-0 mb-1 relative text-sm m-4 no-underline transition-colors hover:brightness-120"
-				href="https://docs.cline.bot/features/customization/opening-cline-in-sidebar"
+				href={getLocalizedUrl("GETTING_STARTED", language)}
 				rel="noopener noreferrer"
 				style={{ color: "var(--vscode-foreground)", outline: "none" }}
 				target="_blank">

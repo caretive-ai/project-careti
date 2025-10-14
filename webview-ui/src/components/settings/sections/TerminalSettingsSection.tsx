@@ -2,6 +2,8 @@ import { StringRequest } from "@shared/proto/cline/common"
 import { UpdateTerminalConnectionTimeoutResponse } from "@shared/proto/index.cline"
 import { VSCodeCheckbox, VSCodeDropdown, VSCodeOption, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import React, { useState } from "react"
+import { getLocalizedUrl } from "@/caret/constants/urls"
+import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
 import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "../../../services/grpc-client"
@@ -17,6 +19,7 @@ export const TerminalSettingsSection: React.FC<TerminalSettingsSectionProps> = (
 	const { shellIntegrationTimeout, terminalReuseEnabled, defaultTerminalProfile, availableTerminalProfiles } =
 		useExtensionState()
 
+	const { language } = useCaretI18nContext()
 	const [inputValue, setInputValue] = useState((shellIntegrationTimeout / 1000).toString())
 	const [inputError, setInputError] = useState<string | null>(null)
 
@@ -139,7 +142,7 @@ export const TerminalSettingsSection: React.FC<TerminalSettingsSectionProps> = (
 							<strong>{t("terminal.issuesTitle", "settings")}</strong> {t("terminal.checkOur", "settings")}{" "}
 							<a
 								className="text-[var(--vscode-textLink-foreground)] underline hover:no-underline"
-								href="https://docs.cline.bot/troubleshooting/terminal-quick-fixes"
+								href={getLocalizedUrl("TERMINAL_QUICK_FIXES", language)}
 								rel="noopener noreferrer"
 								target="_blank">
 								{t("terminal.quickFixesLink", "settings")}
@@ -147,7 +150,7 @@ export const TerminalSettingsSection: React.FC<TerminalSettingsSectionProps> = (
 							{t("terminal.orThe", "settings")}{" "}
 							<a
 								className="text-[var(--vscode-textLink-foreground)] underline hover:no-underline"
-								href="https://docs.cline.bot/troubleshooting/terminal-integration-guide"
+								href={getLocalizedUrl("TERMINAL_INTEGRATION_GUIDE", language)}
 								rel="noopener noreferrer"
 								target="_blank">
 								{t("terminal.troubleshootingGuideLink", "settings")}

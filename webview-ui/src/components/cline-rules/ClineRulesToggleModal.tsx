@@ -14,6 +14,8 @@ import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
 // CARET MODIFICATION: Import PersonaManagement for persona system integration
 import PersonaManagement from "@/caret/components/PersonaManagement"
+import { getLocalizedUrl } from "@/caret/constants/urls"
+import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
 import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import Tooltip from "@/components/common/Tooltip"
@@ -41,6 +43,7 @@ const ClineRulesToggleModal: React.FC = () => {
 		modeSystem,
 		enablePersonaSystem,
 	} = useExtensionState()
+	const { language } = useCaretI18nContext()
 	const [isVisible, setIsVisible] = useState(false)
 	const buttonRef = useRef<HTMLDivElement>(null)
 	const modalRef = useRef<HTMLDivElement>(null)
@@ -298,7 +301,7 @@ const ClineRulesToggleModal: React.FC = () => {
 								{t("clineRulesToggleModal.rulesDescription", "chat")}{" "}
 								<VSCodeLink
 									className="text-xs"
-									href="https://docs.cline.bot/features/cline-rules"
+									href={getLocalizedUrl("CARET_RULES", language)}
 									style={{ display: "inline" }}>
 									{t("clineRulesToggleModal.docs", "chat")}
 								</VSCodeLink>
@@ -312,7 +315,7 @@ const ClineRulesToggleModal: React.FC = () => {
 								in the chat.{" "}
 								<VSCodeLink
 									className="text-xs"
-									href="https://docs.cline.bot/features/slash-commands/workflows"
+									href={getLocalizedUrl("SLASH_COMMANDS_WORKFLOWS", language)}
 									style={{ display: "inline" }}>
 									{t("clineRulesToggleModal.docs", "chat")}
 								</VSCodeLink>

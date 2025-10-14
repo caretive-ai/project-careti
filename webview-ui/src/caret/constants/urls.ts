@@ -58,6 +58,42 @@ export const CARET_LOCALIZED_URLS = {
 		ja: "https://docs.caret.team/ja/mcp/configuring-mcp-servers#editing-mcp-settings-files",
 		zh: "https://docs.caret.team/zh/mcp/configuring-mcp-servers#editing-mcp-settings-files",
 	},
+	AUTO_COMPACT: {
+		ko: "https://docs.caret.team/ko/features/auto-compact",
+		en: "https://docs.caret.team/en/features/auto-compact",
+		ja: "https://docs.caret.team/ja/features/auto-compact",
+		zh: "https://docs.caret.team/zh/features/auto-compact",
+	},
+	TERMINAL_QUICK_FIXES: {
+		ko: "https://docs.caret.team/ko/troubleshooting/terminal-quick-fixes",
+		en: "https://docs.caret.team/en/troubleshooting/terminal-quick-fixes",
+		ja: "https://docs.caret.team/ja/troubleshooting/terminal-quick-fixes",
+		zh: "https://docs.caret.team/zh/troubleshooting/terminal-quick-fixes",
+	},
+	TERMINAL_INTEGRATION_GUIDE: {
+		ko: "https://docs.caret.team/ko/troubleshooting/terminal-integration-guide",
+		en: "https://docs.caret.team/en/troubleshooting/terminal-integration-guide",
+		ja: "https://docs.caret.team/ja/troubleshooting/terminal-integration-guide",
+		zh: "https://docs.caret.team/zh/troubleshooting/terminal-integration-guide",
+	},
+	CARET_RULES: {
+		ko: "https://docs.caret.team/ko/features/caret-rules",
+		en: "https://docs.caret.team/en/features/caret-rules",
+		ja: "https://docs.caret.team/ja/features/caret-rules",
+		zh: "https://docs.caret.team/zh/features/caret-rules",
+	},
+	SLASH_COMMANDS_WORKFLOWS: {
+		ko: "https://docs.caret.team/ko/features/slash-commands/workflows",
+		en: "https://docs.caret.team/en/features/slash-commands/workflows",
+		ja: "https://docs.caret.team/ja/features/slash-commands/workflows",
+		zh: "https://docs.caret.team/zh/features/slash-commands/workflows",
+	},
+	GETTING_STARTED: {
+		ko: "https://docs.caret.team/ko/getting-started/what-is-caret",
+		en: "https://docs.caret.team/en/getting-started/what-is-caret",
+		ja: "https://docs.caret.team/ja/getting-started/what-is-caret",
+		zh: "https://docs.caret.team/zh/getting-started/what-is-caret",
+	},
 }
 
 export type SupportedLanguage = "ko" | "en" | "ja" | "zh"

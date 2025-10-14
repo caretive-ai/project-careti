@@ -149,6 +149,98 @@ return this.filterToolsByMode(toolPrompts, isChatbotMode)
 
 ---
 
+## 🔄 용어 교체 시스템 (Terminology Replacement)
+
+### 핵심 원칙
+
+**사용자는 자신의 모드 용어만 봐야 합니다**:
+- **Cline 모드**: Plan/Act 용어만 표시
+- **Caret 모드**: Chatbot/Agent 용어만 표시
+
+### 구현 방법: 시스템 프롬프트 레벨 교체
+
+**위치**: `CaretJsonAdapter.ts:207-224`
+
+```typescript
+// CARET MODIFICATION: Replace PLAN/ACT terminology with CHATBOT/AGENT in tool descriptions
+// This ensures users only see Caret terminology (CHATBOT/AGENT) and never Cline terminology (PLAN/ACT)
+filteredTools = filteredTools.map((toolPrompt: string) => {
+    return toolPrompt
+        .replace(/\bPLAN MODE\b/g, "CHATBOT MODE")
+        .replace(/\bACT MODE\b/g, "AGENT MODE")
+        .replace(/\bPlan MODE\b/g, "Chatbot MODE")
+        .replace(/\bAct MODE\b/g, "Agent MODE")
+        .replace(/\bplan mode\b/g, "chatbot mode")
+        .replace(/\bact mode\b/g, "agent mode")
+        .replace(/\bPlan mode\b/g, "Chatbot mode")
+        .replace(/\bAct mode\b/g, "Agent mode")
+        // Handle phrases like "toggle to Act mode", "switch to PLAN MODE"
+        .replace(/toggle to (Act|ACT) mode/gi, "toggle to AGENT mode")
+        .replace(/switch to (Act|ACT) mode/gi, "switch to AGENT mode")
+        .replace(/toggle to (Plan|PLAN) mode/gi, "toggle to CHATBOT mode")
+        .replace(/switch to (Plan|PLAN) mode/gi, "switch to CHATBOT mode")
+})
+```
+
+### 교체 대상
+
+**1. Cline 도구 설명에서 교체되는 내용**:
+```typescript
+// Before (Cline 원본)
+"This tool is only available in PLAN MODE"
+"Remember, you can explore the project with tools like read_file in PLAN MODE without the user having to toggle to ACT MODE"
+"NEVER include an option to toggle to Act mode"
+
+// After (Caret 사용자에게 보이는 것)
+"This tool is only available in CHATBOT MODE"
+"Remember, you can explore the project with tools like read_file in CHATBOT MODE without the user having to toggle to AGENT MODE"
+"NEVER include an option to toggle to Agent mode"
+```
+
+**2. 교체 범위**:
+- ✅ 모든 대소문자 조합 (PLAN MODE, Plan mode, plan mode)
+- ✅ 문맥 기반 구문 (toggle to, switch to)
+- ✅ 도구 설명 및 파라미터 설명
+- ❌ Cline 원본 코드는 수정하지 않음 (최소 침습)
+
+### 왜 시스템 프롬프트에서 교체하는가?
+
+**장점**:
+1. **Cline 원본 보존**: Cline 도구 파일 (`src/core/prompts/system-prompt/tools/*.ts`)을 전혀 수정하지 않음
+2. **최소 침습**: Caret 코드에서만 교체 로직 실행
+3. **자동 업데이트**: Cline이 도구를 업데이트해도 자동으로 교체 적용
+4. **런타임 변환**: 각 모드 사용자에게 맞는 용어를 동적으로 제공
+
+**대안의 문제점**:
+- ❌ Cline 파일 직접 수정: 업스트림 머지 시 충돌
+- ❌ UI 레벨 교체: AI가 이미 잘못된 용어로 학습됨
+- ❌ 포크 유지: Cline 업데이트 추적 불가능
+
+### 실제 동작 예시
+
+**Caret 모드 사용자가 받는 시스템 프롬프트**:
+```
+## ask_followup_question
+Description: Ask the user a question to gather additional information needed to complete the task. This tool should be used when you encounter ambiguities, need clarification, or require more details to proceed effectively. It allows for interactive problem-solving by enabling direct communication with the user. The user may respond, take the requested action, or choose to ignore the question entirely. The tool will not be executed if the user ignores it.
+
+Usage:
+<ask_followup_question>
+<question>Your question here</question>
+<options>
+<option>Option 1</option>
+<option>Option 2</option>
+</options>
+</ask_followup_question>
+
+Parameters:
+- question: (required) The question to ask the user. This should be a clear, specific question...
+- options: (optional) An array of 2-5 options for the user to choose from... IMPORTANT: NEVER include an option to toggle to AGENT mode, as this would be something you need to direct the user to do manually themselves if needed.
+```
+
+**주목**: 마지막 문장이 원래 "toggle to Act mode"에서 "toggle to AGENT mode"로 자동 교체되었습니다!
+
+---
+
 ## 🛡️ Cline 독립성 보장
 
 ### 완전한 분기 로직
@@ -156,7 +248,7 @@ return this.filterToolsByMode(toolPrompts, isChatbotMode)
 ```typescript
 // system-prompt/index.ts
 if (currentMode === "caret") {
-    // Caret 사용자: 새로운 Chatbot/Agent 시스템
+    // Caret 사용자: 새로운 Chatbot/Agent 시스템 (용어 자동 교체 포함)
     return await CaretPromptWrapper.getCaretSystemPrompt(context)
 } else {
     // Cline 사용자: 기존 Plan/Act 시스템 100% 그대로

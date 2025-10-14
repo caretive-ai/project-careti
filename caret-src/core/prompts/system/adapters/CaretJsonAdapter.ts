@@ -205,12 +205,24 @@ export class CaretJsonAdapter implements IPromptSystem {
 			)
 
 			// CARET MODIFICATION: Replace PLAN/ACT terminology with CHATBOT/AGENT in tool descriptions
+			// This ensures users only see Caret terminology (CHATBOT/AGENT) and never Cline terminology (PLAN/ACT)
 			filteredTools = filteredTools.map((toolPrompt: string) => {
-				return toolPrompt
-					.replace(/\bPLAN MODE\b/g, "CHATBOT MODE")
-					.replace(/\bACT MODE\b/g, "AGENT MODE")
-					.replace(/\bplan mode\b/g, "chatbot mode")
-					.replace(/\bact mode\b/g, "agent mode")
+				return (
+					toolPrompt
+						.replace(/\bPLAN MODE\b/g, "CHATBOT MODE")
+						.replace(/\bACT MODE\b/g, "AGENT MODE")
+						.replace(/\bPlan MODE\b/g, "Chatbot MODE")
+						.replace(/\bAct MODE\b/g, "Agent MODE")
+						.replace(/\bplan mode\b/g, "chatbot mode")
+						.replace(/\bact mode\b/g, "agent mode")
+						.replace(/\bPlan mode\b/g, "Chatbot mode")
+						.replace(/\bAct mode\b/g, "Agent mode")
+						// Handle phrases like "toggle to Act mode", "switch to PLAN MODE"
+						.replace(/toggle to (Act|ACT) mode/gi, "toggle to AGENT mode")
+						.replace(/switch to (Act|ACT) mode/gi, "switch to AGENT mode")
+						.replace(/toggle to (Plan|PLAN) mode/gi, "toggle to CHATBOT mode")
+						.replace(/switch to (Plan|PLAN) mode/gi, "switch to CHATBOT mode")
+				)
 			})
 
 			if (isChatbotMode) {

@@ -2,6 +2,7 @@ import type { ApiConfiguration, OcaModelInfo } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton, VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import React, { useMemo } from "react"
+import { t } from "@/caret/utils/i18n"
 import { VSC_BUTTON_BACKGROUND, VSC_BUTTON_FOREGROUND, VSC_DESCRIPTION_FOREGROUND, VSC_FOREGROUND } from "@/utils/vscStyles"
 import { ModelInfoView } from "../common/ModelInfoView"
 import ThinkingBudgetSlider from "../ThinkingBudgetSlider"
@@ -109,7 +110,7 @@ const OcaModelPicker: React.FC<OcaModelPickerProps> = ({
 					overflow: auto;
 				}
 			`}</style>
-			<label className="font-medium text-[12px] mt-[10px] mb-[2px]">Model</label>
+			<label className="font-medium text-[12px] mt-[10px] mb-[2px]">{t("modelPicker.label", "settings")}</label>
 			<div className="relative z-[100] flex items-center gap-2 mb-1">
 				<VSCodeDropdown
 					className="flex-1 text-[12px] min-h-[24px]"

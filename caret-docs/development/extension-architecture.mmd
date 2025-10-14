@@ -1,0 +1,100 @@
+flowchart TB
+    subgraph "VSCode Extension Host"
+        subgraph "Caret Fork Architecture"
+            subgraph "Caret Extension Layer"
+                CaretExtension["Caret Extension<br/>caret-src/extension.ts"]
+                CaretProvider["CaretProvider<br/>caret-src/core/webview/CaretProvider.ts"]
+            end
+
+            subgraph "Cline Core (Fork Integrated)"
+                direction TB
+                ClineExtension["Cline Extension<br/>src/extension.ts"]
+                ClineProvider["WebviewProvider<br/>src/core/webview/WebviewProvider.ts"]
+                ClineController["Controller<br/>src/core/controller/"]
+                ClineTask["Task<br/>src/core/task/"]
+                ClineMcpHub["McpHub<br/>src/services/mcp/"]
+                ClinePrompts["Prompts<br/>src/core/prompts/"]
+                ClineAPI["API Providers<br/>src/api/providers/"]
+                ClineShared["Shared Types<br/>src/shared/"]
+            end
+        end
+
+        subgraph "Webview UI (React + Vite)"
+            subgraph "Caret UI Components"
+                CaretWelcome["Caret Welcome<br/>webview-ui/src/caret/"]
+                CaretUtils["Caret Utils<br/>webview-ui/src/utils/caret-*"]
+                CaretI18n["Caret I18n<br/>webview-ui/src/locale/"]
+            end
+            
+            subgraph "Cline UI (Base)"
+            WebviewApp["React App<br/>webview-ui/src/App.tsx"]
+                ExtStateContext["ExtensionStateContext<br/>webview-ui/src/context/"]
+                ClineComponents["Cline Components<br/>webview-ui/src/components/"]
+            end
+        end
+
+        subgraph "External Systems & Storage"
+            direction LR
+            subgraph "Storage Systems"
+                TaskStorage["Task Storage<br/>(VSCode Extension Storage)"]
+                CheckpointSystem["Git Checkpoints<br/>(Cline Integrated)"]
+                GlobalState["VSCode Global State"]
+            end
+            subgraph "AI Providers"
+                APIs["Anthropic, OpenAI, Gemini<br/>Mistral, AWS Bedrock, etc."]
+            end
+            subgraph "Caret Assets"
+                CaretAssets["Caret Assets<br/>assets/"]
+                CaretRules["Rules & Modes<br/>assets/rules/"]
+                CaretChars["AI Characters<br/>assets/template_characters/"]
+            end
+        end
+    end
+
+    %% Fork Integration
+    CaretExtension --> |"Extends & Utilizes"| ClineExtension
+    CaretProvider --> |"Inherits from"| ClineProvider
+    
+    %% Core Logic Flow (Fork-based)
+    CaretExtension --> CaretProvider
+    CaretProvider --> ClineController
+    ClineController --> ClineTask
+    ClineController --> ClineMcpHub
+    ClineTask --> ClinePrompts
+    ClineTask --> ClineAPI
+    
+    %% UI Integration
+    CaretWelcome --> |"Uses"| ExtStateContext
+    CaretUtils --> |"Extends"| ClineComponents
+    WebviewApp --> |"Routes to"| CaretWelcome
+    WebviewApp --> ExtStateContext
+    
+    %% Data Flow
+    ClineTask --> |"Manages"| TaskStorage
+    ClineTask --> |"Manages"| CheckpointSystem
+    ClineTask --> |"Manages"| GlobalState
+    ClineAPI --> |"Calls"| APIs
+    
+    %% Caret Specific
+    CaretProvider --> |"Loads"| CaretAssets
+    CaretProvider --> |"Uses"| CaretRules
+    CaretWelcome --> |"Displays"| CaretChars
+
+    %% Webview Communication
+    CaretProvider <--> |"postMessage/gRPC"| ExtStateContext
+    
+    %% Style Definitions
+    classDef caretExtension fill:#d5f0d5,stroke:#267326,stroke-width:3px
+    classDef clineCore fill:#e6f2ff,stroke:#0055cc,stroke-width:2px
+    classDef caretUI fill:#fff2d5,stroke:#ff8c1a,stroke-width:2px
+    classDef clineUI fill:#fff0e6,stroke:#cc7a00,stroke-width:1px
+    classDef externalSys fill:#f2f2f2,stroke:#666,stroke-width:2px
+    classDef caretAssets fill:#e6f7ff,stroke:#0088cc,stroke-width:2px
+
+    class CaretExtension,CaretProvider caretExtension
+    class ClineExtension,ClineProvider,ClineController,ClineTask,ClineMcpHub,ClinePrompts,ClineAPI,ClineShared clineCore
+    class CaretWelcome,CaretUtils,CaretI18n caretUI
+    class WebviewApp,ExtStateContext,ClineComponents clineUI
+    class TaskStorage,CheckpointSystem,GlobalState,APIs externalSys
+    class CaretAssets,CaretRules,CaretChars caretAssets
+

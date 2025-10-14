@@ -3,7 +3,8 @@ import { AddRemoteMcpServerRequest, McpServers } from "@shared/proto/cline/mcp"
 import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mcp/mcp-server-conversion"
 import { VSCodeButton, VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
-import { LINKS } from "@/constants"
+import { getLocalizedUrl } from "@/caret/constants/urls"
+import { getCurrentLanguage, t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { McpServiceClient } from "@/services/grpc-client"
 
@@ -19,19 +20,19 @@ const AddRemoteServerForm = ({ onServerAdded }: { onServerAdded: () => void }) =
 		e.preventDefault()
 
 		if (!serverName.trim()) {
-			setError("Server name is required")
+			setError(t("addRemoteServerForm.serverNameRequired", "chat"))
 			return
 		}
 
 		if (!serverUrl.trim()) {
-			setError("Server URL is required")
+			setError(t("addRemoteServerForm.serverUrlRequired", "chat"))
 			return
 		}
 
 		try {
 			new URL(serverUrl)
 		} catch (_err) {
-			setError("Invalid URL format")
+			setError(t("addRemoteServerForm.invalidUrlFormat", "chat"))
 			return
 		}
 
@@ -58,7 +59,7 @@ const AddRemoteServerForm = ({ onServerAdded }: { onServerAdded: () => void }) =
 			setShowConnectingMessage(false)
 		} catch (error) {
 			setIsSubmitting(false)
-			setError(error instanceof Error ? error.message : "Failed to add server")
+			setError(error instanceof Error ? error.message : t("addRemoteServerForm.failedToAddServer", "chat"))
 			setShowConnectingMessage(false)
 		}
 	}
@@ -66,9 +67,9 @@ const AddRemoteServerForm = ({ onServerAdded }: { onServerAdded: () => void }) =
 	return (
 		<div className="p-4 px-5">
 			<div className="text-[var(--vscode-foreground)] mb-2">
-				Add a remote MCP server by providing a name and its URL endpoint. Learn more{" "}
-				<VSCodeLink href={LINKS.DOCUMENTATION.REMOTE_MCP_SERVER_DOCS} style={{ display: "inline" }}>
-					here.
+				{t("addRemoteServerForm.addRemoteServerDescription", "chat")}{" "}
+				<VSCodeLink href={getLocalizedUrl("REMOTE_MCP_SERVER_DOCS", getCurrentLanguage())} style={{ display: "inline" }}>
+					{t("addRemoteServerForm.here", "chat")}
 				</VSCodeLink>
 			</div>
 
@@ -81,9 +82,9 @@ const AddRemoteServerForm = ({ onServerAdded }: { onServerAdded: () => void }) =
 							setServerName((e.target as HTMLInputElement).value)
 							setError("")
 						}}
-						placeholder="mcp-server"
+						placeholder={t("addRemoteServerForm.serverNamePlaceholder", "chat")}
 						value={serverName}>
-						Server Name
+						{t("addRemoteServerForm.serverNameLabel", "chat")}
 					</VSCodeTextField>
 				</div>
 
@@ -95,9 +96,9 @@ const AddRemoteServerForm = ({ onServerAdded }: { onServerAdded: () => void }) =
 							setServerUrl((e.target as HTMLInputElement).value)
 							setError("")
 						}}
-						placeholder="https://example.com/mcp-server"
+						placeholder={t("addRemoteServerForm.serverUrlPlaceholder", "chat")}
 						value={serverUrl}>
-						Server URL
+						{t("addRemoteServerForm.serverUrlLabel", "chat")}
 					</VSCodeTextField>
 				</div>
 
@@ -105,12 +106,12 @@ const AddRemoteServerForm = ({ onServerAdded }: { onServerAdded: () => void }) =
 
 				<div className="flex items-center mt-3 w-full">
 					<VSCodeButton className="w-full" disabled={isSubmitting} type="submit">
-						{isSubmitting ? "Adding..." : "Add Server"}
+						{isSubmitting ? t("addRemoteServerForm.adding", "chat") : t("addRemoteServerForm.addServer", "chat")}
 					</VSCodeButton>
 
 					{showConnectingMessage && (
 						<div className="ml-3 text-[var(--vscode-notificationsInfoIcon-foreground)] text-sm">
-							Connecting to server... This may take a few seconds.
+							{t("addRemoteServerForm.connectingToServer", "chat")}
 						</div>
 					)}
 				</div>
@@ -123,7 +124,7 @@ const AddRemoteServerForm = ({ onServerAdded }: { onServerAdded: () => void }) =
 						})
 					}}
 					style={{ width: "100%", marginBottom: "5px", marginTop: 15 }}>
-					Edit Configuration
+					{t("addRemoteServerForm.editConfiguration", "chat")}
 				</VSCodeButton>
 			</form>
 		</div>

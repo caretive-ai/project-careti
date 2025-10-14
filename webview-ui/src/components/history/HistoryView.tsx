@@ -4,6 +4,7 @@ import { VSCodeButton, VSCodeCheckbox, VSCodeRadio, VSCodeRadioGroup, VSCodeText
 import Fuse, { FuseResult } from "fuse.js"
 import { memo, useCallback, useEffect, useMemo, useState } from "react"
 import { Virtuoso } from "react-virtuoso"
+import { t } from "@/caret/utils/i18n"
 import DangerButton from "@/components/common/DangerButton"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { TaskServiceClient } from "@/services/grpc-client"
@@ -320,9 +321,9 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 							color: "var(--vscode-foreground)",
 							margin: 0,
 						}}>
-						History
+						{t("history.title", "history")}
 					</h3>
-					<VSCodeButton onClick={() => onDone()}>Done</VSCodeButton>
+					<VSCodeButton onClick={() => onDone()}>{t("buttons.done", "settings")}</VSCodeButton>
 				</div>
 				<div style={{ padding: "5px 17px 6px 17px" }}>
 					<div
@@ -340,7 +341,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 									setSortOption("mostRelevant")
 								}
 							}}
-							placeholder="Fuzzy search history..."
+							placeholder={t("history.fuzzySearchPlaceholder", "history")}
 							style={{ width: "100%" }}
 							value={searchQuery}>
 							<div
@@ -353,7 +354,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 								}}></div>
 							{searchQuery && (
 								<div
-									aria-label="Clear search"
+									aria-label={t("history.clearSearch", "history")}
 									className="input-icon-button codicon codicon-close"
 									onClick={() => setSearchQuery("")}
 									slot="end"
@@ -370,30 +371,34 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 							onChange={(e) => setSortOption((e.target as HTMLInputElement).value as SortOption)}
 							style={{ display: "flex", flexWrap: "wrap" }}
 							value={sortOption}>
-							<VSCodeRadio value="newest">Newest</VSCodeRadio>
-							<VSCodeRadio value="oldest">Oldest</VSCodeRadio>
-							<VSCodeRadio value="mostExpensive">Most Expensive</VSCodeRadio>
-							<VSCodeRadio value="mostTokens">Most Tokens</VSCodeRadio>
+							<VSCodeRadio value="newest">{t("history.sortNewest", "history")}</VSCodeRadio>
+							<VSCodeRadio value="oldest">{t("history.sortOldest", "history")}</VSCodeRadio>
+							<VSCodeRadio value="mostExpensive">{t("history.sortMostExpensive", "history")}</VSCodeRadio>
+							<VSCodeRadio value="mostTokens">{t("history.sortMostTokens", "history")}</VSCodeRadio>
 							<VSCodeRadio disabled={!searchQuery} style={{ opacity: searchQuery ? 1 : 0.5 }} value="mostRelevant">
-								Most Relevant
+								{t("history.sortMostRelevant", "history")}
 							</VSCodeRadio>
 							<CustomFilterRadio
 								checked={showCurrentWorkspaceOnly}
 								icon="workspace"
-								label="Workspace"
+								label={t("history.filterWorkspace", "history")}
 								onChange={() => setShowCurrentWorkspaceOnly(!showCurrentWorkspaceOnly)}
 							/>
 							<CustomFilterRadio
 								checked={showFavoritesOnly}
 								icon="star-full"
-								label="Favorites"
+								label={t("history.filterFavorites", "history")}
 								onChange={() => setShowFavoritesOnly(!showFavoritesOnly)}
 							/>
 						</VSCodeRadioGroup>
 
 						<div className="flex justify-end gap-2.5">
-							<VSCodeButton onClick={() => handleBatchHistorySelect(true)}>Select All</VSCodeButton>
-							<VSCodeButton onClick={() => handleBatchHistorySelect(false)}>Select None</VSCodeButton>
+							<VSCodeButton onClick={() => handleBatchHistorySelect(true)}>
+								{t("history.selectAll", "history")}
+							</VSCodeButton>
+							<VSCodeButton onClick={() => handleBatchHistorySelect(false)}>
+								{t("history.selectNone", "history")}
+							</VSCodeButton>
 						</div>
 					</div>
 				</div>
@@ -548,7 +553,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 														fontWeight: 500,
 														color: "var(--vscode-descriptionForeground)",
 													}}>
-													Tokens:
+													{t("history.tokensLabel", "history")}
 												</span>
 												<span
 													style={{
@@ -601,7 +606,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 														fontWeight: 500,
 														color: "var(--vscode-descriptionForeground)",
 													}}>
-													Cache:
+													{t("history.cacheLabel", "history")}
 												</span>
 												{item.cacheWrites > 0 && (
 													<span
@@ -662,7 +667,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 															fontWeight: 500,
 															color: "var(--vscode-descriptionForeground)",
 														}}>
-														API Cost:
+														{t("history.apiCostLabel", "history")}
 													</span>
 													<span
 														style={{
@@ -696,8 +701,10 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 								handleDeleteSelectedHistoryItems(selectedItems)
 							}}
 							style={{ width: "100%" }}>
-							Delete {selectedItems.length > 1 ? selectedItems.length : ""} Selected
-							{selectedItemsSize > 0 ? ` (${formatSize(selectedItemsSize)})` : ""}
+							{t("historyView.deleteSelectedWithCount", "history", {
+								count: selectedItems.length,
+								size: selectedItemsSize > 0 ? ` (${formatSize(selectedItemsSize)})` : "",
+							})}
 						</DangerButton>
 					) : (
 						<DangerButton
@@ -711,7 +718,9 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 									.finally(() => setDeleteAllDisabled(false))
 							}}
 							style={{ width: "100%" }}>
-							Delete All History{totalTasksSize !== null ? ` (${formatSize(totalTasksSize)})` : ""}
+							{t("history.deleteAllHistory", "history", {
+								size: totalTasksSize !== null ? ` (${formatSize(totalTasksSize)})` : "",
+							})}
 						</DangerButton>
 					)}
 				</div>

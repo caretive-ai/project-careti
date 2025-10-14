@@ -258,7 +258,9 @@
 		"promptTokens": "提示词 Token",
 		"completionTokens": "完成 Token",
 		"totalTokens": "总 Token 数",
-		"totalCost": "总费用"
+		"totalCost": "总费用",
+		"termsOfServiceUrl": "https://github.com/aicoding-caret/caret",
+		"privacyPolicyUrl": "https://github.com/aicoding-caret/caret"
 	},
 	"account": {
 		"signUpWithCaret": "登录和注册",
@@ -604,11 +606,11 @@
 		"reasoningEnabled": "默认启用推理"
 	},
 	"telemetry": {
-		"helpImprove": "Help Improve Caret",
-		"experimentalFeatures": "(and access experimental features)",
-		"description": "Caret collects anonymous error and usage data to help us fix bugs and improve the extension. No code, prompts, or personal information is ever sent.",
-		"settingsLink": "You can turn this setting off in settings.",
-		"closeBannerAria": "Close banner and enable telemetry"
+		"helpImprove": "支持 Caret 开发",
+		"description": "Caret 是一个开源项目。访问我们的 GitHub 贡献代码、报告问题或分享反馈。",
+		"githubLinkPrefix": "了解更多",
+		"githubLink": "github.com/aicoding-caret/caret",
+		"closeBannerAria": "关闭横幅"
 	},
 	"history": {
 		"title": "History",

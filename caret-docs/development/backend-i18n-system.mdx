@@ -1,0 +1,138 @@
+# Caret Backend Internationalization System
+
+## Overview
+
+This document describes the simple, template-based multilingual system used in the Caret backend. It provides system messages originating from the backend in the appropriate language based on the user's language settings.
+
+## Structure
+
+### 1. Backend i18n Utility
+
+- **Location**: `caret-src/utils/backend-i18n.ts`
+- **Functionality**: Template-based message translation and parameter substitution.
+
+### 2. Main Function
+
+#### `backendT(key: string, chatSettings: ChatSettings, params?: Record<string, string>): string`
+
+```typescript
+import { backendT } from "../../../caret-src/utils/backend-i18n"
+
+const errorMessage = backendT("task.retryWithoutParam", this.chatSettings, {
+	toolName: "readFile",
+	pathInfo: " for '/path/to/file'",
+	paramName: "content",
+})
+```
+
+**Parameters:**
+
+- `key`: The translation key (e.g., "task.retryWithoutParam").
+- `chatSettings`: The current chat settings, which include language information.
+- `params`: An optional object for template substitution.
+
+## Supported Languages
+
+- **English (en)**: Default language
+- **Korean (ko)**: Korean
+- **Japanese (ja)**: Japanese
+- **Chinese (zh)**: Chinese
+
+## Message Definitions
+
+### Currently Supported Messages
+
+#### `task.retryWithoutParam`
+
+Error message displayed when a required parameter is missing during tool use.
+
+**Template Variables:**
+
+- `{toolName}`: The name of the tool that was attempted.
+- `{pathInfo}`: Path information, if available.
+- `{paramName}`: The name of the missing parameter.
+
+**Translation Example:**
+
+```typescript
+{
+    "task.retryWithoutParam": {
+        en: "Caret tried to use {toolName}{pathInfo} without value for required parameter '{paramName}'. Retrying...",
+        ko: "Caret이 {toolName}{pathInfo}을(를) 필수 매개변수 '{paramName}' 값 없이 사용하려고 했습니다. 재시도 중...",
+        ja: "Caretが{toolName}{pathInfo}を必須パラメータ'{paramName}'の値なしで使用しようとしました。再試行中...",
+        zh: "Caret试图在没有必需参数'{paramName}'值的情况下使用{toolName}{pathInfo}。重试中..."
+    }
+}
+```
+
+## How to Use
+
+### 1. Add a New Message
+
+Add a new key and its translations to the `messages` object in `caret-src/utils/backend-i18n.ts`:
+
+```typescript
+const messages: BackendMessages = {
+	// ... existing messages
+	"new.key": {
+		en: "English message with {param}",
+		ko: "한국어 메시지 {param}와 함께",
+		ja: "日本語メッセージ{param}付き",
+		zh: "中文消息与{param}",
+	},
+}
+```
+
+### 2. Use in the Backend
+
+```typescript
+// 1. Add the import
+const { backendT } = await import("../../../caret-src/utils/backend-i18n")
+
+// 2. Translate the message
+const translatedMessage = backendT("new.key", this.chatSettings, {
+	param: "actualValue",
+})
+
+// 3. Use it
+await this.say("error", translatedMessage)
+```
+
+## Template System
+
+### Substitution Rules
+
+- Template variables are defined in the format `{variableName}`.
+- They are substituted with key-value pairs from the `params` object.
+- Case-sensitive.
+- Global substitution is performed using regular expressions.
+
+### Example
+
+```typescript
+// Template: "Hello {name}, you have {count} messages"
+// Params: { name: "John", count: "5" }
+// Result: "Hello John, you have 5 messages"
+```
+
+## Extensibility
+
+### Adding a New Language
+
+1. Add the new language code to each key in the `messages` object.
+2. Provide the translation for that language.
+3. Ensure the language is supported in the frontend language settings.
+
+### Adding New Features
+
+- Pluralization
+- Number formatting
+- Date/time formatting
+- Context-specific translations
+
+## Important Notes
+
+1. **Language Fallback**: If the requested language is not available, it falls back to English.
+2. **Missing Key**: If a key is not found, a warning is logged, and the key itself is returned.
+3. **Missing Parameter**: If a parameter for a template variable is not provided, the variable remains as is.
+4. **Async Import**: Dynamic `import()` is used in the backend to prevent circular dependencies.

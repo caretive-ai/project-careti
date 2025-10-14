@@ -5,6 +5,7 @@ import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mc
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { McpServiceClient } from "@/services/grpc-client"
 import AddRemoteServerForm from "./tabs/add-server/AddRemoteServerForm"
@@ -75,8 +76,8 @@ const McpConfigurationView = ({ onDone, initialTab }: McpViewProps) => {
 					alignItems: "center",
 					padding: "10px 17px 5px 20px",
 				}}>
-				<h3 style={{ color: "var(--vscode-foreground)", margin: 0 }}>MCP Servers</h3>
-				<VSCodeButton onClick={onDone}>Done</VSCodeButton>
+				<h3 style={{ color: "var(--vscode-foreground)", margin: 0 }}>{t("mcpConfigurationView.mcpServers", "chat")}</h3>
+				<VSCodeButton onClick={onDone}>{t("mcpConfigurationView.done", "chat")}</VSCodeButton>
 			</div>
 
 			<div style={{ flex: 1, overflow: "auto" }}>
@@ -90,14 +91,14 @@ const McpConfigurationView = ({ onDone, initialTab }: McpViewProps) => {
 					}}>
 					{mcpMarketplaceEnabled && (
 						<TabButton isActive={activeTab === "marketplace"} onClick={() => handleTabChange("marketplace")}>
-							Marketplace
+							{t("mcpConfigurationView.marketplace", "chat")}
 						</TabButton>
 					)}
 					<TabButton isActive={activeTab === "addRemote"} onClick={() => handleTabChange("addRemote")}>
-						Remote Servers
+						{t("mcpConfigurationView.remoteServers", "chat")}
 					</TabButton>
 					<TabButton isActive={activeTab === "configure"} onClick={() => handleTabChange("configure")}>
-						Configure
+						{t("mcpConfigurationView.installed", "chat")}
 					</TabButton>
 				</div>
 

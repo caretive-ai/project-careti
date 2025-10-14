@@ -1,4 +1,4 @@
-# F09 - Feature Config System
+# F08 - Feature Config System
 
 **상태**: ✅ Phase 4 완료 (Backend)
 **구현도**: 100% 완료

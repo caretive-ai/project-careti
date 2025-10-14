@@ -67,6 +67,7 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 	 * Following caret-main pattern: inject Base64 images as window variables
 	 */
 	public async enhanceWebviewWithCaretFeatures(webviewView: vscode.WebviewView): Promise<void> {
+		Logger.info("[CaretProviderWrapper] 🔵 START enhanceWebviewWithCaretFeatures")
 		try {
 			// Enhance webview options for Caret-specific resources
 			const originalOptions = webviewView.webview.options
@@ -78,14 +79,41 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 				],
 			}
 
+			// Wait for HTML to be actually set by Cline
+			Logger.info("[CaretProviderWrapper] 🔵 Waiting for HTML to be generated...")
+			await this.waitForHtmlReady(webviewView)
+
+			Logger.info("[CaretProviderWrapper] 🔵 About to inject template images")
 			// Inject template character images and banner as Base64 data URIs following caret-main pattern
 			await this.injectTemplateImagesAsBase64(webviewView)
+
+			Logger.info("[CaretProviderWrapper] 🔵 About to inject banner image")
 			await this.injectBannerImageAsBase64(webviewView)
 
-			Logger.info("[CaretProviderWrapper] Webview enhanced with Caret features - template images injected as Base64")
+			Logger.info("[CaretProviderWrapper] Webview enhanced with Caret features - all images injected as Base64")
 		} catch (error) {
 			Logger.warn(`[CaretProviderWrapper] Failed to enhance webview: ${error}`)
 		}
+	}
+
+	/**
+	 * Wait for HTML to be ready (non-empty and contains expected markers)
+	 */
+	private async waitForHtmlReady(webviewView: vscode.WebviewView, maxAttempts = 10): Promise<void> {
+		for (let i = 0; i < maxAttempts; i++) {
+			const html = webviewView.webview.html
+			Logger.info(`[CaretProviderWrapper] 🔵 Attempt ${i + 1}: HTML length = ${html.length}`)
+
+			if (html.length > 1000 && (html.includes("window.clineClientId") || html.includes("</head>"))) {
+				Logger.info(`[CaretProviderWrapper] 🔵 HTML is ready! Length: ${html.length}`)
+				return
+			}
+
+			Logger.info(`[CaretProviderWrapper] 🔵 HTML not ready yet, waiting 100ms...`)
+			await new Promise((resolve) => setTimeout(resolve, 100))
+		}
+
+		Logger.warn(`[CaretProviderWrapper] 🔴 HTML still not ready after ${maxAttempts} attempts!`)
 	}
 
 	/**
@@ -95,7 +123,21 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 	private async injectTemplateImagesAsBase64(webviewView: vscode.WebviewView): Promise<void> {
 		try {
 			let html = webviewView.webview.html
-			Logger.debug(`[CaretProviderWrapper] Starting HTML injection. Original length: ${html.length}`)
+			Logger.info(`[CaretProviderWrapper] 🔵 Starting template images injection. Original HTML length: ${html.length}`)
+			Logger.info(`[CaretProviderWrapper] 🔵 HTML preview (first 1000 chars): ${html.substring(0, 1000)}`)
+
+			// Find the exact location and format of window.clineClientId
+			const clientIdIndex = html.indexOf("window.clineClientId")
+			if (clientIdIndex !== -1) {
+				const snippet = html.substring(Math.max(0, clientIdIndex - 50), Math.min(html.length, clientIdIndex + 200))
+				Logger.info(`[CaretProviderWrapper] 🔵 Found window.clineClientId at index ${clientIdIndex}`)
+				Logger.info(`[CaretProviderWrapper] 🔵 Snippet around it: ${snippet}`)
+			}
+
+			Logger.info(
+				`[CaretProviderWrapper] 🔵 HTML contains "window.clineClientId": ${html.includes("window.clineClientId")}`,
+			)
+			Logger.info(`[CaretProviderWrapper] 🔵 HTML contains "</head>": ${html.includes("</head>")}`)
 
 			// Part 1: Inject all template character images (e.g., for the selector UI)
 			const templateDir = path.join(this.context.extensionUri.fsPath, "assets", "template_characters")
@@ -159,16 +201,46 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 
 			// Part 3: Inject all scripts into the HTML
 			const finalInjectionScript = templateInjectionScript + personaInjectionScript
+			Logger.info(`[CaretProviderWrapper] 🔵 Final injection script length: ${finalInjectionScript.length}`)
+
+			const beforeReplace = html.length
 			if (html.includes("window.clineClientId")) {
-				html = html.replace(/(window\.clineClientId = "[^"]*";)/, `$1${finalInjectionScript}`)
+				Logger.info(`[CaretProviderWrapper] 🔵 Using window.clineClientId injection point`)
+
+				// 정규식 매칭 테스트 - 세미콜론 선택적으로 변경
+				const regex = /(window\.clineClientId = "[^"]*";?)/
+				const match = html.match(regex)
+				Logger.info(`[CaretProviderWrapper] 🔵 Regex match found: ${match !== null}`)
+				if (match) {
+					Logger.info(`[CaretProviderWrapper] 🔵 Matched string: ${match[0]}`)
+					Logger.info(`[CaretProviderWrapper] 🔵 Match index: ${match.index}`)
+				}
+
+				// Replace 시도
+				const newHtml = html.replace(regex, `$1${finalInjectionScript}`)
+				Logger.info(
+					`[CaretProviderWrapper] 🔵 New HTML length after replace: ${newHtml.length} (delta: ${newHtml.length - beforeReplace})`,
+				)
+				Logger.info(`[CaretProviderWrapper] 🔵 HTML actually changed: ${html !== newHtml}`)
+
+				html = newHtml
+				Logger.info(
+					`[CaretProviderWrapper] 🔵 HTML length AFTER replace: ${html.length} (delta: ${html.length - beforeReplace})`,
+				)
 			} else if (html.includes("</head>")) {
+				Logger.info(`[CaretProviderWrapper] 🔵 Using </head> injection point`)
 				html = html.replace("</head>", `<script>${finalInjectionScript}</script></head>`)
+				Logger.info(
+					`[CaretProviderWrapper] 🔵 HTML length AFTER replace: ${html.length} (delta: ${html.length - beforeReplace})`,
+				)
+			} else {
+				Logger.warn(`[CaretProviderWrapper] 🔴 No injection point found in template injection!`)
 			}
 
 			webviewView.webview.html = html
-			Logger.info(`[CaretProviderWrapper] Image injection complete. New HTML length: ${html.length}`)
+			Logger.info(`[CaretProviderWrapper] 🔵 Template images injection complete. New HTML length: ${html.length}`)
 		} catch (error) {
-			Logger.error(`[CaretProviderWrapper] Failed to inject template images: ${error}`)
+			Logger.error(`[CaretProviderWrapper] Failed to inject images: ${error}`)
 		}
 	}
 
@@ -217,6 +289,84 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 	}
 
 	/**
+	 * Inject banner image as Base64 data URI
+	 */
+	private async injectBannerImageAsBase64(webviewView: vscode.WebviewView): Promise<void> {
+		try {
+			const bannerPath = path.join(this.context.extensionUri.fsPath, "assets", "welcome-banner.webp")
+			Logger.info(`[CaretProviderWrapper] 🟢 Banner path: ${bannerPath}`)
+			Logger.info(`[CaretProviderWrapper] 🟢 Banner exists: ${existsSync(bannerPath)}`)
+
+			if (existsSync(bannerPath)) {
+				const imageBuffer = await fs.readFile(bannerPath)
+				Logger.info(`[CaretProviderWrapper] 🟢 Banner buffer loaded: ${imageBuffer.length} bytes`)
+
+				const base64 = imageBuffer.toString("base64")
+				Logger.info(`[CaretProviderWrapper] 🟢 Banner Base64 length: ${base64.length}`)
+
+				const dataUri = `data:image/webp;base64,${base64}`
+				Logger.info(`[CaretProviderWrapper] 🟢 Banner data URI created: ${dataUri.substring(0, 50)}...`)
+
+				let html = webviewView.webview.html
+				Logger.info(`[CaretProviderWrapper] 🟢 HTML length BEFORE banner injection: ${html.length}`)
+				Logger.info(
+					`[CaretProviderWrapper] 🟢 HTML contains "window.clineClientId": ${html.includes("window.clineClientId")}`,
+				)
+				Logger.info(`[CaretProviderWrapper] 🟢 HTML contains "</head>": ${html.includes("</head>")}`)
+
+				// Inject banner image as window variable
+				const imageInjectionScript = `\n                    window.caretBannerImage = "${dataUri}";\n`
+				Logger.info(`[CaretProviderWrapper] 🟢 Injection script created, length: ${imageInjectionScript.length}`)
+
+				// Find where to inject the script - look for existing window assignments
+				if (html.includes("window.clineClientId")) {
+					Logger.info(`[CaretProviderWrapper] 🟢 Using window.clineClientId injection point`)
+					const beforeReplace = html.length
+
+					// 정규식 매칭 테스트 - 세미콜론 선택적으로 변경
+					const regex = /(window\.clineClientId = "[^"]*";?)/
+					const match = html.match(regex)
+					Logger.info(`[CaretProviderWrapper] 🟢 Regex match found: ${match !== null}`)
+					if (match) {
+						Logger.info(`[CaretProviderWrapper] 🟢 Matched string: ${match[0]}`)
+						Logger.info(`[CaretProviderWrapper] 🟢 Match index: ${match.index}`)
+					}
+
+					// Replace 시도
+					const newHtml = html.replace(regex, `$1${imageInjectionScript}`)
+					Logger.info(
+						`[CaretProviderWrapper] 🟢 New HTML length after replace: ${newHtml.length} (delta: ${newHtml.length - beforeReplace})`,
+					)
+					Logger.info(`[CaretProviderWrapper] 🟢 HTML actually changed: ${html !== newHtml}`)
+
+					html = newHtml
+					Logger.info(
+						`[CaretProviderWrapper] 🟢 HTML length AFTER replace: ${html.length} (delta: ${html.length - beforeReplace})`,
+					)
+				} else if (html.includes("</head>")) {
+					Logger.info(`[CaretProviderWrapper] 🟢 Using </head> injection point`)
+					const scriptTag = `<script>${imageInjectionScript}</script>`
+					const beforeReplace = html.length
+					html = html.replace("</head>", `${scriptTag}</head>`)
+					Logger.info(
+						`[CaretProviderWrapper] 🟢 HTML length AFTER replace: ${html.length} (delta: ${html.length - beforeReplace})`,
+					)
+				} else {
+					Logger.warn(`[CaretProviderWrapper] 🔴 No injection point found!`)
+				}
+
+				webviewView.webview.html = html
+				Logger.info(`[CaretProviderWrapper] 🟢 Banner injection complete. Final HTML length: ${html.length}`)
+				Logger.info(`[CaretProviderWrapper] 🟢 Banner image injected successfully (${imageBuffer.length} bytes)`)
+			} else {
+				Logger.warn(`[CaretProviderWrapper] 🔴 Banner file not found at: ${bannerPath}`)
+			}
+		} catch (error) {
+			Logger.error(`[CaretProviderWrapper] 🔴 Failed to inject banner image: ${error}`)
+		}
+	}
+
+	/**
 	 * Handle persona image loading requests
 	 */
 	private async handleLoadPersonaImage(message: any, webviewView: vscode.WebviewView): Promise<void> {
@@ -245,40 +395,6 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 	}
 
 	/**
-	 * Inject banner image as Base64 data URI
-	 */
-	private async injectBannerImageAsBase64(webviewView: vscode.WebviewView): Promise<void> {
-		try {
-			const bannerPath = path.join(this.context.extensionUri.fsPath, "assets", "welcome-banner.webp")
-			if (existsSync(bannerPath)) {
-				const imageBuffer = await fs.readFile(bannerPath)
-				const base64 = imageBuffer.toString("base64")
-				const dataUri = `data:image/webp;base64,${base64}`
-
-				let html = webviewView.webview.html
-
-				// Inject banner image as window variable
-				const imageInjectionScript = `\n                    window.caretBannerImage = "${dataUri}";\n`
-
-				// Find where to inject the script - look for existing window assignments
-				if (html.includes("window.clineClientId")) {
-					// Inject right after existing window assignments
-					html = html.replace(/(window\.clineClientId = "[^"]*";)/, `$1${imageInjectionScript}`)
-				} else if (html.includes("</head>")) {
-					// Fallback: inject in head
-					const scriptTag = `<script>${imageInjectionScript}</script>`
-					html = html.replace("</head>", `${scriptTag}</head>`)
-				}
-
-				webviewView.webview.html = html
-				Logger.info(`[CaretProviderWrapper] Banner image injected successfully (${imageBuffer.length} bytes)`)
-			}
-		} catch (error) {
-			Logger.error(`[CaretProviderWrapper] Failed to inject banner image: ${error}`)
-		}
-	}
-
-	/**
 	 * Get the underlying Cline controller
 	 */
 	public get controller(): Controller {
@@ -302,6 +418,13 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 
 		// If it's already a Webview, return it directly
 		return webviewInstance as vscode.Webview
+	}
+
+	/**
+	 * Get the client ID
+	 */
+	public getClientId(): string {
+		return this.clineProvider.getClientId()
 	}
 
 	/**

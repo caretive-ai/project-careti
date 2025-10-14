@@ -70,3 +70,14 @@ test-results/
 *storybook.log
 storybook-static
 **/StorybookDecorator.tsx
+
+# Ignore reference sources and development directories
+caret-main/**
+cline-latest/**
+caret-docs/**
+caret-b2b/**
+output/**
+.caretrules/**
+scripts/**
+spec-kit/**
+testing-platform/**

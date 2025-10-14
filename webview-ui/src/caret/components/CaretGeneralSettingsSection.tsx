@@ -39,7 +39,8 @@ const CaretGeneralSettingsSection: React.FC<CaretGeneralSettingsSectionProps> = 
 				</div>
 
 				{/* CARET MODIFICATION: 페르소나 설정 - Caret 모드이고 브랜드 설정에서 허용할 때만 표시 */}
-				{featureConfig?.showPersonaSettings && modeSystem === "caret" && (
+				{/* CARET MODIFICATION: Default to show if featureConfig undefined (no feature-config.json in current merge) */}
+				{featureConfig?.showPersonaSettings !== false && modeSystem === "caret" && (
 					<div className="mb-6">
 						<div className="mb-[5px]">
 							<VSCodeCheckbox

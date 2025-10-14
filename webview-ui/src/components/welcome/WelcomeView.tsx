@@ -30,6 +30,31 @@ const WelcomeView = () => {
 	const [apiErrorMessage, setApiErrorMessage] = useState<string | undefined>(undefined)
 	const [showApiOptions, setShowApiOptions] = useState(false)
 
+	// CARET MODIFICATION: Dynamically check for window.caretBannerImage (similar to PersonaAvatar pattern)
+	const [bannerSrc, setBannerSrc] = useState<string>(caretBanner)
+
+	useEffect(() => {
+		const checkBannerImage = () => {
+			const windowBanner = (window as any).caretBannerImage
+			if (windowBanner && windowBanner.startsWith("data:")) {
+				setBannerSrc(windowBanner)
+			}
+		}
+
+		// Check immediately and then periodically
+		checkBannerImage()
+		const interval = setInterval(checkBannerImage, 500)
+
+		return () => clearInterval(interval)
+	}, [])
+
+	// Update when caretBanner from context changes
+	useEffect(() => {
+		if (caretBanner && caretBanner.startsWith("data:")) {
+			setBannerSrc(caretBanner)
+		}
+	}, [caretBanner])
+
 	const disableLetsGoButton = !!apiErrorMessage
 
 	const handleSubmitApiKey = async () => {
@@ -156,10 +181,10 @@ const WelcomeView = () => {
 					overflowY: "auto",
 				}}>
 				<center style={{ marginBottom: "20px" }}>
-					{/* CARET MODIFICATION: Use persona profile image from CaretProviderWrapper */}
+					{/* CARET MODIFICATION: Use banner from window.caretBannerImage with dynamic check */}
 					<img
 						alt={t("imageAlt.caretBanner", "common")}
-						src={caretBanner}
+						src={bannerSrc}
 						style={{
 							width: "100%",
 							maxWidth: "300px",

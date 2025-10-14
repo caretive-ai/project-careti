@@ -48,9 +48,6 @@
 		"dimensionError": "Image dimensions exceed 7500px",
 		"unsupportedFileError": "Files other than images are currently disabled"
 	},
-	"selectModelApiProvider": "Select Model / API Provider",
-	"addContext": "Add Context",
-	"addFilesImages": "Add Files & Images",
 	"mode": {
 		"tooltip": {
 			"description": "In {{mode_type}} mode, Caret will {{action}}",
@@ -74,6 +71,9 @@
 			"label": "Chatbot"
 		}
 	},
+	"selectModelApiProvider": "Select Model / API Provider",
+	"addContext": "Add Context",
+	"addFilesImages": "Add Files & Images",
 	"contextMenu": {
 		"problems": "Problems",
 		"terminal": "Terminal",

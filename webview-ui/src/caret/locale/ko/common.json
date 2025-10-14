@@ -269,7 +269,9 @@
 		"completionTokens": "완료 토큰",
 		"totalTokens": "총 토큰 수",
 		"totalCost": "총 비용",
-		"logout": "로그아웃"
+		"logout": "로그아웃",
+		"termsOfServiceUrl": "https://github.com/aicoding-caret/caret",
+		"privacyPolicyUrl": "https://github.com/aicoding-caret/caret"
 	},
 	"common": {
 		"and": "및",
@@ -635,11 +637,11 @@
 		"learnMore": "Learn More"
 	},
 	"telemetry": {
-		"helpImprove": "Caret 개선에 도움주기",
-		"experimentalFeatures": "(실험적 기능에 액세스)",
-		"settingsLink": "설정에서 이 기능을 끌 수 있습니다.",
-		"closeBannerAria": "배너 닫기 및 텔레메트리 활성화",
-		"description": "사용량 통계 및 오류 보고서를 공유하여 Caret을 개선할 수 있도록 도와주세요."
+		"helpImprove": "Caret 개발 지원하기",
+		"description": "Caret은 오픈소스 프로젝트입니다. GitHub에서 기여, 이슈 보고, 피드백을 공유해주세요.",
+		"githubLinkPrefix": "자세히 보기",
+		"githubLink": "github.com/aicoding-caret/caret",
+		"closeBannerAria": "배너 닫기"
 	},
 	"autoApprove": {
 		"addQuickAccess": "빠른 액세스 메뉴에 추가",

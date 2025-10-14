@@ -3,9 +3,9 @@ import { WebviewProvider } from "@core/webview"
 import * as vscode from "vscode"
 import { handleGrpcRequest, handleGrpcRequestCancel } from "@/core/controller/grpc-handler"
 import { HostProvider } from "@/hosts/host-provider"
-import { ExtensionRegistryInfo } from "@/registry"
 import type { ExtensionMessage } from "@/shared/ExtensionMessage"
 import { WebviewMessage } from "@/shared/WebviewMessage"
+import type { WebviewProviderType } from "@/shared/webview/types"
 
 /*
 https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -15,10 +15,19 @@ https://github.com/KumarVariable/vscode-extension-sidebar-html/blob/master/src/c
 export class VscodeWebviewProvider extends WebviewProvider implements vscode.WebviewViewProvider {
 	// Used in package.json as the view's id. This value cannot be changed due to how vscode caches
 	// views based on their id, and updating the id would break existing instances of the extension.
-	public static readonly SIDEBAR_ID = ExtensionRegistryInfo.views.Sidebar
+	// CARET MODIFICATION: Added TAB_PANEL_ID for tab provider support
+	public static readonly SIDEBAR_ID = "caret.SidebarProvider"
+	public static readonly TAB_PANEL_ID = "caret.TabPanelProvider"
 
-	private webview?: vscode.WebviewView
+	private webview?: vscode.WebviewView | vscode.WebviewPanel
 	private disposables: vscode.Disposable[] = []
+	private providerType: WebviewProviderType
+
+	// CARET MODIFICATION: Added constructor to accept providerType
+	constructor(context: vscode.ExtensionContext, providerType: WebviewProviderType) {
+		super(context)
+		this.providerType = providerType
+	}
 
 	override getWebviewUrl(path: string) {
 		if (!this.webview) {
@@ -39,17 +48,19 @@ export class VscodeWebviewProvider extends WebviewProvider implements vscode.Web
 		return this.webview?.visible || false
 	}
 
-	public getWebview(): vscode.WebviewView | undefined {
+	// CARET MODIFICATION: Changed return type to include WebviewPanel
+	public getWebview(): vscode.WebviewView | vscode.WebviewPanel | undefined {
 		return this.webview
 	}
 
 	/**
 	 * Initializes and sets up the webview when it's first created.
 	 *
-	 * @param webviewView - The sidebar webview view instance to be resolved
+	 * @param webviewView - The webview view or panel instance to be resolved
 	 * @returns A promise that resolves when the webview has been fully initialized
+	 * CARET MODIFICATION: Changed parameter type to accept both WebviewView and WebviewPanel
 	 */
-	public async resolveWebviewView(webviewView: vscode.WebviewView): Promise<void> {
+	public async resolveWebviewView(webviewView: vscode.WebviewView | vscode.WebviewPanel): Promise<void> {
 		this.webview = webviewView
 
 		webviewView.webview.options = {
@@ -70,21 +81,32 @@ export class VscodeWebviewProvider extends WebviewProvider implements vscode.Web
 		// Logs show up in bottom panel > Debug Console
 		//console.log("registering listener")
 
-		// Listen for when the sidebar becomes visible
+		// Listen for when the panel becomes visible
 		// https://github.com/microsoft/vscode-discussions/discussions/840
-
-		// onDidChangeVisibility is only available on the sidebar webview
-		// Otherwise WebviewView and WebviewPanel have all the same properties except for this visibility listener
-		// WebviewPanel is not currently used in the extension
-		webviewView.onDidChangeVisibility(
-			async () => {
-				if (this.webview?.visible) {
-					await sendDidBecomeVisibleEvent()
-				}
-			},
-			null,
-			this.disposables,
-		)
+		// CARET MODIFICATION: Handle both WebviewView and WebviewPanel visibility events
+		if ("onDidChangeViewState" in webviewView) {
+			// WebviewPanel
+			webviewView.onDidChangeViewState(
+				async (e) => {
+					if (e?.webviewPanel?.visible && e.webviewPanel?.active) {
+						await sendDidBecomeVisibleEvent()
+					}
+				},
+				null,
+				this.disposables,
+			)
+		} else {
+			// WebviewView
+			webviewView.onDidChangeVisibility(
+				async () => {
+					if (this.webview?.visible) {
+						await sendDidBecomeVisibleEvent()
+					}
+				},
+				null,
+				this.disposables,
+			)
+		}
 
 		// Listen for when the view is disposed
 		// This happens when the user closes the view or when the view is closed programmatically

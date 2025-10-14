@@ -1,0 +1,67 @@
+workflow: testing-guide
+description: Comprehensive testing guide for TDD integration-first approach
+
+context: You are accessing the comprehensive testing guide for TDD development approach.
+
+tddOrder:
+  wrong:
+    - Write unit tests for helper functions
+    - Implement helpers
+    - Later integrate into actual usage
+  correct:
+    - "RED: Write integration/E2E test for actual usage scenario"
+    - "GREEN: Implement all necessary code to make integration test pass"
+    - "REFACTOR: Improve code quality while keeping integration test passing"
+
+testEnvironment:
+  framework: Vitest (NOT Jest)
+  fastCommands:
+    backend: npm run test:backend
+    webview: npm run test:webview
+  neverUse: npm test (too slow)
+  typeChecking: npm run check-types
+  compilation: npm run compile
+
+testFileLocations:
+  backendTests: caret-src/__tests__/ (Caret features)
+  webviewTests: src/caret/**/*.test.tsx (Caret UI components)
+  clineTests: Follow existing patterns in src/
+
+tddExamples:
+  webview:
+    wrong: Start with isValidInput() unit test
+    correct: Start with "User clicks button → Expected result shown" component test
+  backend:
+    wrong: Start with parseConfig() unit test
+    correct: Start with "Config change → System behavior change" integration test
+
+testingStrategy:
+  1: Integration Tests - Primary focus, real usage scenarios
+  2: Component Tests - React component behavior with user interactions
+  3: Unit Tests - Byproducts of integration tests, not starting points
+  4: E2E Tests - Full workflow validation with Playwright
+
+verificationWorkflow:
+  - Write failing integration test (RED)
+  - Run test to confirm failure
+  - Implement minimal code to pass (GREEN)
+  - Run test to confirm success
+  - Run full test suite to prevent regression
+  - Refactor while keeping all tests passing
+
+coverageGoals:
+  - 100% coverage for new Caret features
+  - Integration test coverage for all user-facing functionality
+  - Component test coverage for all UI interactions
+
+commonPatterns:
+  - "Mocking: Vitest mocking patterns for external dependencies"
+  - "Async Testing: Proper async/await handling in tests"
+  - "Component Testing: React Testing Library patterns"
+  - "State Testing: Extension state and storage testing"
+
+guidelines:
+  - Provides AI access to same testing knowledge as developers (testing-guide.mdx)
+  - Always start with integration tests representing real user scenarios
+  - Never start with isolated unit tests
+  - Goal is to ensure code works in actual usage contexts, not just in isolation

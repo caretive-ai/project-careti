@@ -275,6 +275,7 @@
 		"openaiReasoningEffort": "OpenAI 推理努力程度",
 		"openaiReasoningEffortDescription": "OpenAI 模型系列的推理努力程度（适用于所有 OpenAI 模型提供商）",
 		"reasoningEffort": {
+			"minimal": "最小",
 			"low": "低",
 			"medium": "中",
 			"high": "高"

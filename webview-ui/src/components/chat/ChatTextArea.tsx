@@ -15,6 +15,8 @@ import DynamicTextArea from "react-textarea-autosize"
 import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
 import { useInputHistory } from "@/caret/hooks/useInputHistory"
+// CARET MODIFICATION: Import i18n for Chatbot/Agent mode labels
+import { t } from "@/caret/utils/i18n"
 import ContextMenu from "@/components/chat/ContextMenu"
 import { CHAT_CONSTANTS } from "@/components/chat/chat-view/constants"
 import SlashCommandMenu from "@/components/chat/SlashCommandMenu"
@@ -289,6 +291,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			showChatModelSelector: showModelSelector,
 			setShowChatModelSelector: setShowModelSelector,
 			dictationSettings,
+			modeSystem, // CARET MODIFICATION: Get modeSystem for Chatbot/Agent vs Plan/Act labels
 		} = useExtensionState()
 		const { clineUser } = useClineAuth()
 		const [isTextAreaFocused, setIsTextAreaFocused] = useState(false)
@@ -1791,10 +1794,15 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						</ButtonGroup>
 					</div>
 					{/* Tooltip for Plan/Act toggle remains outside the conditional rendering */}
+					{/* CARET MODIFICATION: Tooltip for Plan/Act or Chatbot/Agent toggle based on modeSystem */}
 					<Tooltip
 						hintText={`Toggle w/ ${togglePlanActKeys}`}
 						style={{ zIndex: 1000 }}
-						tipText={`In ${shownTooltipMode === "act" ? "Act" : "Plan"}  mode, Cline will ${shownTooltipMode === "act" ? "complete the task immediately" : "gather information to architect a plan"}`}
+						tipText={
+							modeSystem === "caret"
+								? `In ${shownTooltipMode === "act" ? t("mode.agent.label", "chat") : t("mode.chatbot.label", "chat")} mode, Caret will ${shownTooltipMode === "act" ? "assist with coding tasks with full tool access" : "provide analysis and suggestions without modifying files"}`
+								: `In ${shownTooltipMode === "act" ? "Act" : "Plan"}  mode, Cline will ${shownTooltipMode === "act" ? "complete the task immediately" : "gather information to architect a plan"}`
+						}
 						visible={shownTooltipMode !== null}>
 						<SwitchContainer data-testid="mode-switch" disabled={false} onClick={onModeToggle}>
 							<Slider isAct={mode === "act"} isPlan={mode === "plan"} />
@@ -1804,7 +1812,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("plan")}
 								role="switch">
-								Plan
+								{modeSystem === "caret" ? t("mode.chatbot.label", "chat") : t("mode.plan.label", "chat")}
 							</SwitchOption>
 							<SwitchOption
 								aria-checked={mode === "act"}
@@ -1812,7 +1820,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("act")}
 								role="switch">
-								Act
+								{modeSystem === "caret" ? t("mode.agent.label", "chat") : t("mode.act.label", "chat")}
 							</SwitchOption>
 						</SwitchContainer>
 					</Tooltip>

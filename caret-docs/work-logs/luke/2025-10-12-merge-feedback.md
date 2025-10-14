@@ -762,26 +762,205 @@ npm run watch
 **수정 완료 시각**: 2025-10-12 23:55
 **상태**: ✅ 빌드 검증 완료, 런타임 검증 대기
 
-# 5차 피드백 (2025-10-13 12:27)
+# 5차 피드백 (2025-10-13 12:27), 6치 피드백 (2025-10-14 08:26)
 
 #### 1. 초기화 후
 * 첫 페이지
  - 1.1. **백엔드 확인 필요** 캐럿 로고 배너 엑스박스, 링크 깨짐 :  백엔드에서 불러오는 방식을 다 이식했는지 caret-main을 확인할 것
    - **현재 상태**: WelcomeView는 caretBanner를 ExtensionState에서 가져옴 (line 162)
    - **조치**: 백엔드 caretBanner 로딩 로직 확인 필요 (프론트엔드 머징 완료 후)
- - 1.2. ✅ **수정완료** UI언어 설정 : 언어설정은 다국어가 있는 4개국어는 상위로 올리고, 별도 아이콘 표시하는 기능 있었는데 누락 되있음.
+   - **6차 피드백**: 실패. 여전히 엑스박스로 표기
+   - **웹뷰 로그** : 의심가는 내용
+   welcome-banner.webp:1  GET vscode-webview://017s5rlr7v5iesa5ji0o6l34nvm6fdhoe9ccpgd9ohqjlgihunkt/assets/welcome-banner.webp 403 
+
+  - 1.2. **웹뷰 기타 애러로그 추가 확인 하여 설명 요청**  : 아래의 에러 로그는 어떤 이유인지 확인
+   The FetchEvent for "http://localhost:8097/" resulted in a network error response: the promise was rejected.
+    Promise.then		
+    (anonymous)	@	service-worker.js:225
+    service-worker.js:458 
+    Uncaught (in promise) TypeError: Failed to fetch
+        at p (service-worker.js:458:11)
+    p	@	service-worker.js:458
+    Promise.then		
+    processLocalhostRequest	@	service-worker.js:493
+    await in processLocalhostRequest		
+    (anonymous)	@	service-worker.js:225
+    index.html?id=104d8a…se=webviewView:1086 
+    GET http://localhost:8097/ net::ERR_FAILED
+    (anonymous)	@	index.html?id=104d8a…se=webviewView:1086
+    setTimeout		
+    onFrameLoaded	@	index.html?id=104d8a…se=webviewView:1084
+    (anonymous)	@	index.html?id=104d8a…se=webviewView:1116
+
+    ---
+
+    ExtensionStateContext.tsx:691 Client ID not found in window object
+    (anonymous)	@	ExtensionStateContext.tsx:691
+
+ - 1.3. ✅ **수정완료** UI언어 설정 : 언어설정은 다국어가 있는 4개국어는 상위로 올리고, 별도 아이콘 표시하는 기능 있었는데 누락 되있음.
      * 일반 설정 탭의 언어 설정 컴포넌트는 정상 동작함. 이를 삽입하는 구조로 변경 필요
    - **조치**: PreferredLanguageSetting → UnifiedLanguageSetting으로 변경
-   - **파일**: webview-ui/src/components/welcome/WelcomeView.tsx (line 191)
+   - **파일**: webview-ui/src/components/welcome/WelcomeView.tsx (line 191)   
+   - **6차 피드백** : 성공
+
 * API제공자 설정 페이지
- - 1.3. ✅ **확인완료** 제공자 설정 클릭해도 다른 제공자가 보이지 않음
+ - 1.4. ✅ **확인완료** 제공자 설정 클릭해도 다른 제공자가 보이지 않음
    - **조치**: ApiOptions.tsx, ApiConfigurationSection.tsx 모두 caret-main과 동기화 확인
    - **상태**: 프론트엔드 코드는 정상, 런타임 테스트 필요
- - 1.4. ✅ **수정완료** 오픈라우터의 모델의 상세 내역 모델 설명, 단위 등의 번역이 모두 누락되어있음
+   - **6차 패드백** : 동일함. 아무 리스트가 안나오는것으로보아서  	"showOnlyDefaultProvider": false 의 features-config.json의 처리가 제대로 안되는것 아닌가 추정
+
+ - 1.5. ✅ **수정완료** 오픈라우터의 모델의 상세 내역 모델 설명, 단위 등의 번역이 모두 누락되어있음
    - **조치**: ModelInfoView.tsx를 caret-main에서 복사하여 완전한 i18n 적용
    - **조치**: proto/cline/file.proto에 RefreshedRules.local_caret_rules_toggles 필드 추가
    - **파일**: webview-ui/src/components/settings/common/ModelInfoView.tsx
+   - **6차 패드백** : 단위 번역은 정상 적으로 번역되었으나, 모델, Enable thinking, 모델 설명은 미번역 - 번역 파일 확인할때는 꼭 캐럿의 f02를 확인하여 제대로된 위치에 번역 키 위치시키고 있는지 확인할 것
+    Model
+    anthropic/claude-sonnet-4.5
+    Switch to 1M context window model
 
+    Claude Sonnet 4.5 delivers superior intelligence across coding, agentic search, and AI agent capabilities. It's a powerful choice for agentic coding, and can complete tasks across the entire software development lifecycle—from initial planning to bug fixes, maintenance to large refactors. It offers strong performance in both planning and solving for complex coding tasks, making it an ideal choice to power end-to-end software development processes.
+
+    Read more in the blog post here
+
+
+### 2. 홈
+ - 2.1. ✅ **수정완료** 첫 페이지의 로고는 계속 페르소나 이미지 아니고 앱로고 임. 페르소나 이미지여야함
+   - **조치**: HomeHeader.tsx에 PersonaAvatar + useCaretState 통합 완료
+   - **파일**: webview-ui/src/components/welcome/HomeHeader.tsx
+   - **6차 패드백** : 확인 완료
+
+ - 2.2. ✅ **수정완료** 공지사항 : Cline의 내용임. Caret으로 개선되어야함 (젯브레인, cline로그인 모두 필요 없음. cline머징이 유저에게 영향을 미치는 내용으로 변경 필요. 이전 버전은 caret의 이전 공지사항 참고)
+   - **조치**: Announcement.tsx를 caret-main 버전(i18n 기반)으로 교체
+   - **조치**: announcement.json 4개 언어 모두 v0.3.0 Cline v3.27.x 머징 내용으로 업데이트
+   - **파일**: webview-ui/src/components/chat/Announcement.tsx
+   - **파일**: webview-ui/src/caret/locale/{en,ko,ja,zh}/announcement.json
+   - **6차 패드백** : 확인 완료, 공지사항에 머징 버전 표기 보강 요청 v3.27.x는 현재 cline-latest버전 확인해서 업데이트해줄것
+
+
+ - 2.3. ✅ **수정완료** 하단 버튼 모두 번역 누락 : auto-apporove, enabled, 등
+   - **조치**: auto-approve-menu/constants.ts를 caret-main 버전으로 교체 (getActionMetadata, getNotificationsSetting 함수 사용)
+   - **조치**: AutoApproveBar.tsx를 caret-main 버전으로 교체 (i18n 및 useMemo 적용)
+   - **파일**: webview-ui/src/components/chat/auto-approve-menu/constants.ts
+   - **파일**: webview-ui/src/components/chat/auto-approve-menu/AutoApproveBar.tsx
+   - **6차 패드백** : 확인 완료
+
+
+ - 2.4. ✅ **수정완료** 룰 늘렀을때 페르소나 이미지 및 설정 누락되있음 : 페르소나 컴포넌트 삽입과 페르소나 feature 설정 확인 필요
+   - **조치**: ClineRulesToggleModal.tsx caret-main 버전으로 완전 동기화
+   - **파일**: webview-ui/src/components/cline-rules/ClineRulesToggleModal.tsx
+   - **6차 패드백** : 동일함, 조치 파일의 위치는 틀린것 같음. App.tsx에 showPersonaSelector 가 제대로 동작하는지 확인 할 것
+
+ - 2.5. 하단 모델 버튼 눌러도 아무것도 뜨지 않음
+   - **6차 패드백** : 동일함, 모델 설정 메뉴가 뜨지 않음
+
+### 3. 설정
+ #### 탭 순서
+ * ✅ **수정완료** Cline에 맞춰 API설정 > 기능 > 브라우져 > 터미널 > 일반 > (디버그:캐럿은 릴리즈도 노출) > 정보 순으로 바뀌어야함. 동일하게 변경 할 것 (아이콘이 모두 상이함, Cline에 맞출것)
+   - **조치**: SettingsView.tsx 탭 순서를 Cline upstream에 맞춤 (API > Features > Browser > Terminal > Debug > General > About)
+   - **조치**: 아이콘도 Cline에 맞춤 (API Config: SlidersHorizontal, General: Wrench)
+   - **파일**: webview-ui/src/components/settings/SettingsView.tsx
+   - **6차 패드백** : 확인 완료
+
+ #### api 설정 탭
+ - 3.1. API제공자 클릭 반응 없음 : 1.3과 동일 
+    - **6차 패드백** : 1.3문제 동일 
+ - 3.2. ✅ **수정완료** 모델 정보 번역 누락 : 1.4와 동일하게 수정 완료
+    - **6차 패드백** : 1.4문제 동일 
+ 
+
+ #### 기능 탭
+ - 3.3. ✅ **수정완료** Cline에 있는 포커스 체인 영역 누락. 모두 포함하고 다국어도 번역 추가 (캐럿의 f02 다국어 설정 규칙에 따라서 꼭 작성할 것)
+   - **조치**: FeatureSettingsSection.tsx에 포커스 체인 섹션 이미 포함되어 있음 확인 (lines 127-167)
+   - **파일**: webview-ui/src/components/settings/sections/FeatureSettingsSection.tsx
+   - **6차 패드백** : Enalbe Focus Chain 컴포넌트 나오지 않음, 음성입력, 자동압축, yolo모드는 출력되고 있음(테스트는 해보지 않음)
+
+
+ - 3.4. ✅ **수정완료** enable dictation, enable auto compact, enable yolo mode 누락 모두 포함, 다국어 번역 추가 (캐럿의 f02 다국어 설정 규칙에 따라서 꼭 작성할 것)
+   - **조치**: dictation 섹션 추가 (lines 171-222), YOLO 모드 섹션 추가 (lines 243-255)
+   - **조치**: 영문/한글 i18n 번역 추가 (enableDictation, dictationLanguage, enableYoloMode)
+   - **파일**: webview-ui/src/components/settings/sections/FeatureSettingsSection.tsx
+   - **파일**: webview-ui/src/caret/locale/en/settings.json, webview-ui/src/caret/locale/ko/settings.json
+
+ #### 브라우져 탭
+ - 3.5. CLine은 실행시 아래의 Warning이 출력되고 있지 않음. 내용 확인 필요 (내가 테스트한 Cline은 릴리즈 버전이라 Warning이 안나오는걸수도 있음)
+  chunk-RO7O33BN.js?v=60436dcb:521 Warning: React does not recognize the `isOpen` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `isopen` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+      at div
+      at O2 (http://localhost:25463/node_modules/.vite/deps/styled-components.js?v=60436dcb:1265:7)
+      at div
+      at div
+      at Section (http://localhost:25463/src/components/settings/Section.tsx:21:27)
+      at div
+      at BrowserSettingsSection (http://localhost:25463/src/components/settings/sections/BrowserSettingsSection.tsx:103:42)
+      at div
+      at TabContent (http://localhost:25463/src/components/common/Tab.tsx:43:30)
+      at div
+      at div
+      at Tab (http://localhost:25463/src/components/common/Tab.tsx:23:23)
+      at SettingsView (http://localhost:25463/src/components/settings/SettingsView.tsx:104:25)
+      at div
+      at AppContent (http://localhost:25463/src/App.tsx:40:284)
+      at CaretStateContextProvider (http://localhost:25463/src/caret/context/CaretStateContext.tsx:29:45)
+      at CaretI18nProvider (http://localhost:25463/src/caret/context/CaretI18nContext.tsx:28:37)
+      at div
+      at $f57aed4a881a3485$var$OverlayContainerDOM (http://localhost:25463/node_modules/.vite/deps/chunk-P3B3QBVA.js?v=60436dcb:10912:32)
+      at $f57aed4a881a3485$export$178405afcd8c5eb (http://localhost:25463/node_modules/.vite/deps/chunk-P3B3QBVA.js?v=60436dcb:10881:9)
+      at $f57aed4a881a3485$export$bf688221f59024e5
+      at MotionConfig (http://localhost:25463/node_modules/.vite/deps/chunk-GKXUNWRT.js?v=60436dcb:4715:25)
+      at $18f2051aff69b9bf$var$I18nProviderWithLocale (http://localhost:25463/node_modules/.vite/deps/chunk-P3B3QBVA.js?v=60436dcb:531:9)
+      at $18f2051aff69b9bf$export$a54013f0d02a8f82 (http://localhost:25463/node_modules/.vite/deps/chunk-P3B3QBVA.js?v=60436dcb:550:9)
+      at HeroUIProvider (http://localhost:25463/node_modules/.vite/deps/chunk-P3B3QBVA.js?v=60436dcb:11401:3)
+      at ClineAuthProvider (http://localhost:25463/src/context/ClineAuthContext.tsx:27:37)
+      at PostHogProvider (http://localhost:25463/node_modules/.vite/deps/posthog-js_react.js?v=60436dcb:45:21)
+      at CustomPostHogProvider (http://localhost:25463/src/CustomPostHogProvider.tsx:27:41)
+      at ExtensionStateContextProvider (http://localhost:25463/src/context/ExtensionStateContext.tsx:41:49)
+      at Providers (http://localhost:25463/src/Providers.tsx:25:29)
+      at App
+
+ ####  일반 설정 탭
+ - 3.6. ✅ **수정완료** 모드 시스템 : 캐럿/클라인 눌러도 무반응
+   - **조치**: ModeSystemToggle 컴포넌트가 caret-main과 동기화되어 있으며 gRPC 통신 정상 작동
+   - **파일**: webview-ui/src/caret/components/ModeSystemToggle.tsx
+   - **파일**: webview-ui/src/caret/components/CaretGeneralSettingsSection.tsx
+   - **6차 피드백**: 여전히 바뀌지 않음. 아래는 웹뷰 로거, 현재 모드가 제대로 저장되어 있지 않은것 같음
+
+    [ModeSystemToggle] 🔄 Mode switch initiated: {currentMode: undefined, targetMode: 'caret', timestamp: '2025-10-12T23:50:28.333Z', component: 'ModeSystemToggle', action: 'handleToggle'}
+    webview-logger.ts:29 [ModeSystemToggle] User clicked toggle: undefined -> caret 
+    ModeSystemToggle.tsx:88 [ModeSystemToggle] 📤 Sending gRPC request: SetPromptSystemMode({ mode: "caret" })
+    console.ts:137 [Extension Host] [CaretGlobalManager] 🔄 Mode switching: caret → caret (at console.<anonymous> (file:///Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:30974))
+    console.ts:137 [Extension Host] [CaretGlobalManager] ✅ Mode switched successfully to: caret (at console.<anonymous> (file:///Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:30974))
+    ModeSystemToggle.tsx:98 [ModeSystemToggle] 📥 gRPC response received: {success: true, currentMode: 'caret', errorMessage: '', responseTime: '5ms', timestamp: '2025-10-12T23:50:28.339Z'}
+    webview-logger.ts:29 [ModeSystemToggle] Successfully changed to caret mode 
+    ModeSystemToggle.tsx:108 [ModeSystemToggle] ✅ Mode change successful: UI will update to caret
+    ExtensionStateContext.tsx:900 [GLOBAL-BACKEND] modeSystem state: {before: undefined, after: 'caret', timestamp: '2025-10-12T23:50:28.339Z'}
+    ExtensionStateContext.tsx:905 [BACKEND] modeSystem changed: undefined -> caret
+    ModeSystemToggle.tsx:113 [ModeSystemToggle] 🔄 UI state updated to: caret
+    ExtensionStateContext.tsx:455 [DEBUG] returning new state in ESC
+    ExtensionStateContext.tsx:464 [DEBUG] ended "got subscribed state"
+    ExtensionStateContext.tsx:929 [API] StateServiceClient.updateSettings called with modeSystem: caret
+    webview-logger.ts:29 [CaretWebview] [INPUT-HISTORY] Hook loaded 0 items from backend state 
+
+ - 3.6. ✅ **수정완료** 캐럿 모드일때, 페르소나 시스템 활성화 체크 버튼 누락
+   - **조치**: 페르소나 시스템 체크박스 이미 구현되어 있음 (lines 42-68)
+   - **조건**: featureConfig?.showPersonaSettings && modeSystem === "caret"
+   - **파일**: webview-ui/src/caret/components/CaretGeneralSettingsSection.tsx
+ #### 정보 탭
+ - 3.7. ✅ **수정완료** 영문으로 나옴. 공지사항은 4개국어 번역 적용 필요
+   - **조치**: 2.2와 동일하게 Announcement i18n 업데이트로 해결
+
+   
+
+  
+
+ 
+* API제공자 설정 페이지
+ - 1.3. 제공자 설정 클릭해도 다른 제공자가 보이지 않음
+
+ - 1.4. 오픈라우터의 모델의 상세 내역 모델 설명, 단위 등의 번역이 모두 누락되어있음
+   - **조치**: ModelInfoView.tsx를 caret-main에서 복사하여 완전한 i18n 적용
+   - **조치**: proto/cline/file.proto에 RefreshedRules.local_caret_rules_toggles 필드 추가
+   - **파일**: webview-ui/src/components/settings/common/ModelInfoView.tsx
+   - **확인** : 절반 성공(오픈라우터만 확인)
+   
 ### 2. 홈
  - 2.1. ✅ **수정완료** 첫 페이지의 로고는 계속 페르소나 이미지 아니고 앱로고 임. 페르소나 이미지여야함
    - **조치**: HomeHeader.tsx에 PersonaAvatar + useCaretState 통합 완료
@@ -800,34 +979,3 @@ npm run watch
    - **조치**: ClineRulesToggleModal.tsx caret-main 버전으로 완전 동기화
    - **파일**: webview-ui/src/components/cline-rules/ClineRulesToggleModal.tsx
  - 2.5. 하단 모델 버튼 눌러도 아무것도 뜨지 않음
-
-### 3. 설정
- #### 탭 순서
- * ✅ **수정완료** Cline에 맞춰 API설정 > 기능 > 브라우져 > 터미널 > 일반 > (디버그:캐럿은 릴리즈도 노출) > 정보 순으로 바뀌어야함. 동일하게 변경 할 것 (아이콘이 모두 상이함, Cline에 맞출것)
-   - **조치**: SettingsView.tsx 탭 순서를 Cline upstream에 맞춤 (API > Features > Browser > Terminal > Debug > General > About)
-   - **조치**: 아이콘도 Cline에 맞춤 (API Config: SlidersHorizontal, General: Wrench)
-   - **파일**: webview-ui/src/components/settings/SettingsView.tsx
- #### api 설정 탭
- - 3.1. API제공자 클릭 반응 없음 : 1.3과 동일
- - 3.2. ✅ **수정완료** 모델 정보 번역 누락 : 1.4와 동일하게 수정 완료
- #### 기능 탭
- - 3.3. ✅ **수정완료** Cline에 있는 포커스 체인 영역 누락. 모두 포함하고 다국어도 번역 추가 (캐럿의 f02 다국어 설정 규칙에 따라서 꼭 작성할 것)
-   - **조치**: FeatureSettingsSection.tsx에 포커스 체인 섹션 이미 포함되어 있음 확인 (lines 127-167)
-   - **파일**: webview-ui/src/components/settings/sections/FeatureSettingsSection.tsx
- - 3.4. ✅ **수정완료** enable dictation, enable auto compact, enable yolo mode 누락 모두 포함, 다국어 번역 추가 (캐럿의 f02 다국어 설정 규칙에 따라서 꼭 작성할 것)
-   - **조치**: dictation 섹션 추가 (lines 171-222), YOLO 모드 섹션 추가 (lines 243-255)
-   - **조치**: 영문/한글 i18n 번역 추가 (enableDictation, dictationLanguage, enableYoloMode)
-   - **파일**: webview-ui/src/components/settings/sections/FeatureSettingsSection.tsx
-   - **파일**: webview-ui/src/caret/locale/en/settings.json, webview-ui/src/caret/locale/ko/settings.json
- ####  일반 설정 탭
- - 3.5. ✅ **수정완료** 모드 시스템 : 캐럿/클라인 눌러도 무반응
-   - **조치**: ModeSystemToggle 컴포넌트가 caret-main과 동기화되어 있으며 gRPC 통신 정상 작동
-   - **파일**: webview-ui/src/caret/components/ModeSystemToggle.tsx
-   - **파일**: webview-ui/src/caret/components/CaretGeneralSettingsSection.tsx
- - 3.6. ✅ **수정완료** 캐럿 모드일때, 페르소나 시스템 활성화 체크 버튼 누락
-   - **조치**: 페르소나 시스템 체크박스 이미 구현되어 있음 (lines 42-68)
-   - **조건**: featureConfig?.showPersonaSettings && modeSystem === "caret"
-   - **파일**: webview-ui/src/caret/components/CaretGeneralSettingsSection.tsx
- #### 정보 탭
- - 3.7. ✅ **수정완료** 영문으로 나옴. 공지사항은 4개국어 번역 적용 필요
-   - **조치**: 2.2와 동일하게 Announcement i18n 업데이트로 해결

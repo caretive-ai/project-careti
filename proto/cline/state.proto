@@ -208,6 +208,13 @@ message Settings {
    optional OpenRouterModelInfo act_mode_vercel_ai_gateway_model_info = 121;
    optional string act_mode_oca_model_id = 122;
    optional OcaModelInfo act_mode_oca_model_info = 123;
+   // CARET MODIFICATION: F01 - Mode System (field 1000+ to avoid Cline conflicts)
+   optional string mode_system = 1001;
+   // CARET MODIFICATION: F08 - Persona System
+   optional bool enable_persona_system = 1002;
+   optional string current_persona = 1003;
+   // CARET MODIFICATION: F11 - Input History System
+   repeated string input_history = 1004;
 }
 
 message DictationSettings {
@@ -340,10 +347,11 @@ message UpdateSettingsRequest {
   optional bool multi_root_enabled = 25;
   // CARET MODIFICATION: F11 - Input History System
   repeated string input_history = 26;
-  // CARET MODIFICATION: F01 - Mode System
-  optional string mode_system = 27;
+  // CARET MODIFICATION: F01 - Mode System (field 1000+ to avoid all Cline conflicts)
+  optional string mode_system = 1001;
   // CARET MODIFICATION: F08 - Persona System
-  optional bool enable_persona_system = 28;
+  optional bool enable_persona_system = 1002;
+  optional string current_persona = 1003;
 }
 
 // Complete API Configuration message
@@ -480,7 +488,7 @@ message ApiConfiguration {
   optional OpenRouterModelInfo plan_mode_caret_model_info = 227;
   optional string act_mode_caret_model_id = 228;
   optional OpenRouterModelInfo act_mode_caret_model_info = 229;
-  optional string caret_user_profile = 230;
+  // CARET NOTE: caretUserProfile removed - managed directly in ExtensionStateContext, not via proto
 
   // Extension fields for Bedrock Api Keys
   optional string aws_authentication = 301;

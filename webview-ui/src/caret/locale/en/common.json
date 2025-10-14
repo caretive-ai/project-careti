@@ -278,7 +278,9 @@
 		"promptTokens": "Prompt tokens",
 		"completionTokens": "Completion tokens",
 		"totalTokens": "Tokens",
-		"totalCost": "Cost"
+		"totalCost": "Cost",
+		"termsOfServiceUrl": "https://github.com/aicoding-caret/caret",
+		"privacyPolicyUrl": "https://github.com/aicoding-caret/caret"
 	},
 	"common": {
 		"and": "and",
@@ -601,11 +603,11 @@
 		"reasoningEnabled": "Reasoning enabled by default"
 	},
 	"telemetry": {
-		"helpImprove": "Help Improve Caret",
-		"experimentalFeatures": "(and access experimental features)",
-		"description": "Caret collects anonymous error and usage data to help us fix bugs and improve the extension. No code, prompts, or personal information is ever sent.",
-		"settingsLink": "You can turn this setting off in settings.",
-		"closeBannerAria": "Close banner and enable telemetry"
+		"helpImprove": "Support Caret Development",
+		"description": "Caret is an open-source project. Visit our GitHub to contribute, report issues, or share feedback.",
+		"githubLinkPrefix": "Learn more at",
+		"githubLink": "github.com/aicoding-caret/caret",
+		"closeBannerAria": "Close banner"
 	},
 	"history": {
 		"title": "History",

@@ -1,6 +1,5 @@
 // CARET MODIFICATION: 전역 브랜드 모드 토글 컴포넌트 - caret-main에서 이식
 
-import { type CaretModeSystem } from "@caret/shared/ModeSystem"
 import React from "react"
 import styled from "styled-components"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -105,12 +104,11 @@ const ModeSystemToggle: React.FC<ModeSystemToggleProps> = ({ className }) => {
 
 			if (response.success) {
 				logger.info(`Successfully changed to ${response.currentMode} mode`)
-				console.log(`[ModeSystemToggle] ✅ Mode change successful: UI will update to ${response.currentMode}`)
-
-				// Update the UI state immediately
-				setModeSystem(response.currentMode as CaretModeSystem)
-
-				console.log(`[ModeSystemToggle] 🔄 UI state updated to: ${response.currentMode}`)
+				console.log(
+					`[ModeSystemToggle] ✅ Mode change successful: UI will auto-update via postStateToWebview() to ${response.currentMode}`,
+				)
+				// CARET MODIFICATION: No manual setModeSystem() call needed
+				// Backend's postStateToWebview() automatically updates ExtensionStateContext
 			} else {
 				logger.error(`Failed to change mode: ${response.errorMessage}`)
 				console.error(`[ModeSystemToggle] ❌ Mode change failed:`, response.errorMessage)

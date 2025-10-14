@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 
 import assert from "node:assert"
+import { setTimeout as setTimeoutPromise } from "node:timers/promises"
 import { DIFF_VIEW_URI_SCHEME } from "@hosts/vscode/VscodeDiffViewProvider"
 import * as vscode from "vscode"
 import { sendAccountButtonClickedEvent } from "./core/controller/ui/subscribeToAccountButtonClicked"
@@ -13,6 +14,7 @@ import { WebviewProvider } from "./core/webview"
 import { createClineAPI } from "./exports"
 import { Logger } from "./services/logging/Logger"
 import { cleanupTestMode, initializeTestMode } from "./services/test/TestMode"
+import { WebviewProviderType } from "./shared/webview/types"
 import "./utils/path" // necessary to have access to String.prototype.toPosix
 
 import path from "node:path"
@@ -20,6 +22,8 @@ import type { ExtensionContext } from "vscode"
 import { HostProvider } from "@/hosts/host-provider"
 import { vscodeHostBridgeClient } from "@/hosts/vscode/hostbridge/client/host-grpc-client"
 import { readTextFromClipboard, writeTextToClipboard } from "@/utils/env"
+// CARET MODIFICATION: Import CaretProviderWrapper for Caret-specific webview enhancements
+import { CaretProviderWrapper } from "../caret-src/core/webview/CaretProviderWrapper"
 import { initialize, tearDown } from "./common"
 import { addToCline } from "./core/controller/commands/addToCline"
 import { explainWithCline } from "./core/controller/commands/explainWithCline"
@@ -109,11 +113,37 @@ export async function activate(context: vscode.ExtensionContext) {
 		}),
 	)
 
-	// CARET MODIFICATION: Open Caret in new tab
-	// TODO: Implement proper tab panel support
 	const openClineInNewTab = async () => {
-		Logger.log("Opening Caret in new tab - feature not yet implemented")
-		await vscode.window.showInformationMessage("Opening in new tab is not yet implemented")
+		Logger.log("Opening Caret in new tab")
+		// (this example uses webviewProvider activation event which is necessary to deserialize cached webview, but since we use retainContextWhenHidden, we don't need to use that event)
+		// https://github.com/microsoft/vscode-extension-samples/blob/main/webview-sample/src/extension.ts
+		const tabWebview = HostProvider.get().createWebviewProvider(WebviewProviderType.TAB) as VscodeWebviewProvider
+		const lastCol = Math.max(...vscode.window.visibleTextEditors.map((editor) => editor.viewColumn || 0))
+
+		// Check if there are any visible text editors, otherwise open a new group to the right
+		const hasVisibleEditors = vscode.window.visibleTextEditors.length > 0
+		if (!hasVisibleEditors) {
+			await vscode.commands.executeCommand("workbench.action.newGroupRight")
+		}
+		const targetCol = hasVisibleEditors ? Math.max(lastCol + 1, 1) : vscode.ViewColumn.Two
+
+		const panel = vscode.window.createWebviewPanel(VscodeWebviewProvider.TAB_PANEL_ID, "Caret", targetCol, {
+			enableScripts: true,
+			retainContextWhenHidden: true,
+			localResourceRoots: [context.extensionUri],
+		})
+		// TODO: use better svg icon with light and dark variants (see https://stackoverflow.com/questions/58365687/vscode-extension-iconpath)
+
+		panel.iconPath = {
+			light: vscode.Uri.joinPath(context.extensionUri, "assets", "icons", "robot_panel_light.png"),
+			dark: vscode.Uri.joinPath(context.extensionUri, "assets", "icons", "robot_panel_dark.png"),
+		}
+		tabWebview.resolveWebviewView(panel)
+
+		// Lock the editor group so clicking on files doesn't open them over the panel
+		await setTimeoutPromise(100)
+		await vscode.commands.executeCommand("workbench.action.lockEditorGroup")
+		return tabWebview
 	}
 
 	context.subscriptions.push(vscode.commands.registerCommand("caret.popoutButtonClicked", openClineInNewTab))
@@ -346,9 +376,16 @@ export async function activate(context: vscode.ExtensionContext) {
 			const webview = WebviewProvider.getInstance() as VscodeWebviewProvider
 
 			// Show the webview
+			// CARET MODIFICATION: Handle both WebviewPanel and WebviewView types
 			const webviewView = webview.getWebview()
 			if (webviewView) {
-				webviewView.show()
+				if ("show" in webviewView) {
+					// WebviewPanel has show() method
+					webviewView.show()
+				} else {
+					// WebviewView requires using VS Code command to show sidebar
+					await vscode.commands.executeCommand("workbench.view.extension.cline-sidebar")
+				}
 			}
 
 			// Send focus event
@@ -410,7 +447,12 @@ export async function activate(context: vscode.ExtensionContext) {
 function setupHostProvider(context: ExtensionContext) {
 	console.log("Setting up vscode host providers...")
 
-	const createWebview = () => new VscodeWebviewProvider(context)
+	// CARET MODIFICATION: Wrap VscodeWebviewProvider with CaretProviderWrapper for Caret-specific enhancements
+	// CARET MODIFICATION: Updated to accept providerType parameter
+	const createWebview = (providerType: WebviewProviderType) => {
+		const clineProvider = new VscodeWebviewProvider(context, providerType)
+		return new CaretProviderWrapper(context, clineProvider) as any
+	}
 	const createDiffView = () => new VscodeDiffViewProvider()
 	// CARET MODIFICATION: Changed output channel name from Cline to Caret
 	const outputChannel = vscode.window.createOutputChannel("Caret")

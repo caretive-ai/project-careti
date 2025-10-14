@@ -1,4 +1,6 @@
 import { VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
+// CARET MODIFICATION: Use Caret's i18n system instead of react-i18next
+import { t } from "@/caret/utils/i18n"
 import { useDebouncedInput } from "../utils/useDebouncedInput"
 
 /**
@@ -16,26 +18,23 @@ interface ApiKeyFieldProps {
 /**
  * A reusable component for API key input fields with standard styling and help text for signing up for key
  */
-export const ApiKeyField = ({
-	initialValue,
-	onChange,
-	providerName,
-	signupUrl,
-	placeholder = "Enter API Key...",
-	helpText,
-}: ApiKeyFieldProps) => {
+export const ApiKeyField = ({ initialValue, onChange, providerName, signupUrl, placeholder, helpText }: ApiKeyFieldProps) => {
+	// CARET MODIFICATION: Remove react-i18next usage
 	const [localValue, setLocalValue] = useDebouncedInput(initialValue, onChange)
+
+	const defaultPlaceholder = t("apiKeyField.placeholder", "settings")
+	const getYourKeyText = t("apiKeyField.signupText", "settings", { providerName })
 
 	return (
 		<div>
 			<VSCodeTextField
 				onInput={(e: any) => setLocalValue(e.target.value)}
-				placeholder={placeholder}
+				placeholder={placeholder ?? defaultPlaceholder}
 				required={true}
 				style={{ width: "100%" }}
 				type="password"
 				value={localValue}>
-				<span style={{ fontWeight: 500 }}>{providerName} API Key</span>
+				<span style={{ fontWeight: 500 }}>{`${providerName} API Key`}</span>
 			</VSCodeTextField>
 			<p
 				style={{
@@ -43,7 +42,7 @@ export const ApiKeyField = ({
 					marginTop: 3,
 					color: "var(--vscode-descriptionForeground)",
 				}}>
-				{helpText || "This key is stored locally and only used to make API requests from this extension."}
+				{helpText || t("apiKeyField.defaultHelpText", "settings")}
 				{!localValue && signupUrl && (
 					<VSCodeLink
 						href={signupUrl}
@@ -51,7 +50,7 @@ export const ApiKeyField = ({
 							display: "inline",
 							fontSize: "inherit",
 						}}>
-						You can get a{/^[aeiou]/i.test(providerName) ? "n" : ""} {providerName} API key by signing up here.
+						{getYourKeyText}
 					</VSCodeLink>
 				)}
 			</p>

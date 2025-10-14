@@ -1,4 +1,5 @@
 import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
+import type { CaretModeSystem } from "@caret/shared/ModeSystem"
 import { ApiConfiguration } from "@shared/api"
 import chokidar, { FSWatcher } from "chokidar"
 import type { ExtensionContext } from "vscode"
@@ -96,6 +97,25 @@ export class StateManager {
 				StateManager.instance.pendingGlobalState.add("actModeApiProvider")
 				StateManager.instance.scheduleDebouncedPersistence()
 			}
+
+			// CARET MODIFICATION: Initialize CaretGlobalManager with stored modeSystem
+			const { CaretGlobalManager } = await import("@caret/managers/CaretGlobalManager")
+			const featureConfig = getCurrentFeatureConfig()
+			const storedModeSystemFromCache = StateManager.instance.globalStateCache.caretModeSystem
+			const defaultFromFeatureConfig = featureConfig.defaultModeSystem
+			const storedModeSystem: CaretModeSystem = (storedModeSystemFromCache ||
+				defaultFromFeatureConfig ||
+				"caret") as CaretModeSystem
+
+			console.log(`[StateManager] 🔍 CaretGlobalManager initialization:`, {
+				storedFromCache: storedModeSystemFromCache,
+				defaultFromConfig: defaultFromFeatureConfig,
+				finalValue: storedModeSystem,
+				featureConfigFull: featureConfig,
+			})
+
+			CaretGlobalManager.initialize(storedModeSystem)
+			console.log(`[StateManager] ✅ CaretGlobalManager initialized with mode: ${storedModeSystem}`)
 
 			// Start watcher for taskHistory.json so external edits update cache (no persist loop)
 			await StateManager.instance.setupTaskHistoryWatcher()

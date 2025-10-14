@@ -1,4 +1,4 @@
-# F11 - Input History System
+# F10 - Input History System
 
 **상태**: ✅ Phase 4 완료 (Backend)
 **구현도**: Backend 100%, Frontend Phase 5

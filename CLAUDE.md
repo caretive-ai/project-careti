@@ -413,12 +413,46 @@ npm run test:backend  # Verify backend tests
 npm run test:all      # Full verification
 ```
 
-### Rule Management System
-- **AI Reference**: `.caretrules/` directory (workflows and rules)
-- **Workflows**: `.caretrules/workflows/*.md` (English, AI procedures)
-- **Korean Dev Docs**: `caret-docs/development/*.mdx` (Korean architecture guides)
-- **English Workflows**: `caret-docs/development-en/*.md` (English workflows)
-- **Note**: Korean folder has MDX architecture docs, English folder has MD workflows
+### Rule Management System & AI Workflow Documentation
+
+**AI maintains dual workflow system with semantic equivalence:**
+
+#### `.caretrules/workflows/` (Machine-Optimized)
+- **Format**: Hybrid strategy
+  - YAML (0-2 code examples): Token-optimized, ~33% reduction
+  - Markdown (3+ examples): Better for one-shot prompts
+- **Purpose**: Caret app `/command` usage + AI consumption
+- **Language**: English
+- **Optimization**: Token efficiency priority
+
+#### `caret-docs/development/workflows/` (Human-Friendly)
+- **Format**: Always Markdown
+- **Purpose**: Korean developer reference
+- **Language**: Korean (한글)
+- **Optimization**: Readability priority
+
+#### `caret-docs/development/*.mdx` (Architecture Documentation)
+- **Format**: MDX (Markdown + JSX)
+- **Purpose**: Korean developer architecture guides
+- **Language**: Korean (한글)
+- **Content**: 23 architecture documents
+
+#### Synchronization Rules (AI Responsibility)
+1. **Semantic Equivalence**: Both .caretrules and caret-docs workflows must be semantically identical
+2. **Format Independence**: .caretrules can be YAML or MD, caret-docs always MD
+3. **Update Propagation**: Any change to one must sync to the other
+4. **Verification**: Use `caret-scripts/ai-semantic-analyzer.js` to verify
+
+#### Format Decision Criteria
+```bash
+# Count code examples in workflow
+grep -c '```' workflow.md
+
+# Decision:
+# 0-2 examples → .caretrules/*.yaml (token-optimized)
+# 3+ examples  → .caretrules/*.md (learning-optimized)
+# Always       → caret-docs/*.md (Korean, human-friendly)
+```
 
 ### Available Workflows and Documentation
 

@@ -90,6 +90,53 @@ Combine atoms for specific work scenarios:
 - Developers can see which workflows correspond to their documents
 - No knowledge silos or gaps between systems
 - Efficient token usage through atomic composition
+
+## Workflow Format Strategy (Hybrid Approach)
+
+### Core Principle: Token Efficiency vs Learning Efficiency
+**Balance machine efficiency with one-shot learning effectiveness**
+
+### Format Decision Rules
+
+**Use YAML** (Token-optimized, ~33% reduction):
+- **Criteria**: 0-2 code examples
+- **Purpose**: Structural workflows, procedural checklists
+- **Examples**:
+  - `ai-work-index.yaml` (0 examples)
+  - `architecture-guide.yaml` (0 examples)
+  - `backup-protocol.yaml` (2 examples)
+
+**Use Markdown** (Learning-optimized, better for one-shot prompts):
+- **Criteria**: 3+ code examples
+- **Purpose**: Tutorial workflows, pattern demonstrations
+- **Examples**:
+  - `cline-modification.md` (12 examples)
+  - `new-component.md` (16 examples)
+  - `naming-conventions.md` (18 examples)
+
+### Dual Workflow System
+
+**`.caretrules/workflows/`** (Machine-optimized):
+- Format: YAML (0-2 examples) or Markdown (3+ examples)
+- Purpose: Caret app `/command` + AI consumption
+- Language: English
+- Optimization: Token efficiency priority
+- Management: AI maintains
+
+**`caret-docs/development/workflows/`** (Human-friendly):
+- Format: Markdown (always)
+- Purpose: Korean developer reference
+- Language: Korean
+- Optimization: Readability priority
+- Management: AI maintains
+
+### Synchronization Rules
+1. **Semantic Equivalence**: Both versions must convey identical meaning
+2. **Format Independence**: .caretrules can be YAML, caret-docs is always Markdown
+3. **AI Responsibility**: AI maintains both pairs synchronized
+4. **Update Trigger**: Any change to one must propagate to the other
+5. **Verification**: Use `caret-scripts/ai-semantic-analyzer.js` to verify equivalence
+
 </detailed_sequence_of_steps>
 
 <general_guidelines>

@@ -28,8 +28,8 @@ const hrStyle: CSSProperties = {
 	opacity: 0.1,
 	margin: "8px 0",
 }
-const linkContainerStyle: CSSProperties = { margin: "0" }
-const linkStyle: CSSProperties = { display: "inline" }
+const _linkContainerStyle: CSSProperties = { margin: "0" }
+const _linkStyle: CSSProperties = { display: "inline" }
 
 /*
 Announcements are automatically shown when the major.minor version changes (for ex 3.19.x → 3.20.x or 4.0.x).
@@ -45,7 +45,9 @@ const Announcement = ({ version, hideAnnouncement, showCloseButton = true }: Ann
 			const title = t(`bullets.current.${i}`, "announcement", { fallback: "" })
 			const desc = t(`bullets.current.${i}-desc`, "announcement", { fallback: "" })
 
-			if (!title || title === `bullets.current.${i}`) break
+			if (!title || title === `bullets.current.${i}`) {
+				break
+			}
 
 			bullets.push({ title, desc })
 			i++
@@ -89,7 +91,9 @@ const Announcement = ({ version, hideAnnouncement, showCloseButton = true }: Ann
 								const title = t(`bullets.previous.${i}`, "announcement", { fallback: "" })
 								const desc = t(`bullets.previous.${i}-desc`, "announcement", { fallback: "" })
 
-								if (!title || title === `bullets.previous.${i}`) break
+								if (!title || title === `bullets.previous.${i}`) {
+									break
+								}
 
 								bullets.push(
 									<li key={i}>

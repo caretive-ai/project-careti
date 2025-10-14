@@ -1,0 +1,70 @@
+workflow: architecture-guide
+description: Comprehensive architecture guide for Caret project development
+
+context: You are accessing the comprehensive architecture guide for Caret project development.
+
+principles:
+  - Minimal Cline Extension: Fork strategy with maximum preservation
+  - Level-based Modification: L1 Independent → L2 Conditional → L3 Direct
+  - Clean Separation: caret-src/ vs src/ distinction
+
+architectureLevels:
+  level1:
+    name: Independent Modules
+    priority: Preferred
+    location: [caret-src/, caret-docs/]
+    freedom: Complete implementation freedom
+    requirements: []
+    note: No backup or comment requirements
+
+  level2:
+    name: Conditional Integration
+    priority: Careful
+    modifications: Minimal Cline file modifications (1-3 lines max)
+    mandatory: [backup, CARET MODIFICATION comment]
+    protected: [src/, webview-ui/, proto/, scripts/]
+
+  level3:
+    name: Direct Modification
+    priority: Last Resort
+    requirements: [Full documentation, Complete impact analysis]
+    useCases: [Emergency situations only]
+
+storagePatterns:
+  chatSettings:
+    type: workspaceState
+    scope: project-specific
+  globalSettings:
+    type: globalState
+    scope: user-wide
+  rule: Same storage type for related settings
+
+extensionArchitecture:
+  entryPoint: extension.ts
+  communication: WebviewProvider ↔ Controller ↔ Task
+  messageFlow: Protocol Buffers for type safety
+  contextManagement: Smart window management with AST parsing
+
+implementationPatterns:
+  - TDD Integration First: Real usage scenarios, not unit tests
+  - Backup Protocol: {filename-extension}.cline format
+  - Comment Protocol: "// CARET MODIFICATION: [clear description]"
+  - Verification Protocol: Test → Compile → Execute
+
+keyFileLocations:
+  coreLogic: src/core/
+  caretExtensions: caret-src/
+  communication: src/shared/ExtensionMessage.ts
+  webview: webview-ui/src/App.tsx
+
+integrationPoints:
+  - VS Code API integration points
+  - AI provider abstraction layers
+  - Tool system extensibility points
+  - MCP (Model Context Protocol) integration
+
+guidelines:
+  - Provides AI access to same architectural knowledge as developers (caret-architecture-and-implementation-guide.mdx)
+  - Focus on understanding three-level modification strategy
+  - Always prefer Level 1 independent modules over Cline modifications
+  - Architecture designed for minimal disruption to Cline core while enabling Caret extensions

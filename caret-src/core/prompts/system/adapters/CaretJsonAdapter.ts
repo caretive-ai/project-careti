@@ -198,7 +198,21 @@ export class CaretJsonAdapter implements IPromptSystem {
 			}
 
 			// CARET MODIFICATION: Enhanced tool filtering with detailed logging
-			let filteredTools = toolPrompts
+			// Remove plan_mode_respond from all Caret modes (it's Cline-specific for PLAN MODE)
+			const excludedTools = ["plan_mode_respond"]
+			let filteredTools = toolPrompts.filter(
+				(toolPrompt: string) => !excludedTools.some((excluded) => toolPrompt.includes(`## ${excluded}`)),
+			)
+
+			// CARET MODIFICATION: Replace PLAN/ACT terminology with CHATBOT/AGENT in tool descriptions
+			filteredTools = filteredTools.map((toolPrompt: string) => {
+				return toolPrompt
+					.replace(/\bPLAN MODE\b/g, "CHATBOT MODE")
+					.replace(/\bACT MODE\b/g, "AGENT MODE")
+					.replace(/\bplan mode\b/g, "chatbot mode")
+					.replace(/\bact mode\b/g, "agent mode")
+			})
+
 			if (isChatbotMode) {
 				// In CHATBOT mode, restrict to read-only and research tools
 				const allowedInChatbot = [
@@ -210,7 +224,7 @@ export class CaretJsonAdapter implements IPromptSystem {
 					"web_fetch",
 					"attempt_completion",
 				]
-				filteredTools = toolPrompts.filter((toolPrompt: string) => {
+				filteredTools = filteredTools.filter((toolPrompt: string) => {
 					const toolMatch = allowedInChatbot.some((allowed) => toolPrompt.includes(`## ${allowed}`))
 					return toolMatch
 				})
@@ -302,8 +316,12 @@ export class CaretJsonAdapter implements IPromptSystem {
 	/**
 	 * Substitutes template variables with appropriate values.
 	 */
-	private substituteTemplateVars(content: string, _isChatbotMode: boolean, context?: CaretSystemPromptContext): string {
+	private substituteTemplateVars(content: string, isChatbotMode: boolean, context?: CaretSystemPromptContext): string {
+		// CARET MODIFICATION: Add current_mode variable substitution
+		const currentMode = isChatbotMode ? "CHATBOT" : "AGENT"
+
 		const result = content
+			.replace(/\{\{current_mode\}\}/g, currentMode)
 			.replace(/\{\{working_dir\}\}/g, process.cwd())
 			.replace(/\{\{os\}\}/g, process.platform)
 			.replace(/\{\{shell\}\}/g, process.env.SHELL || "/bin/bash")

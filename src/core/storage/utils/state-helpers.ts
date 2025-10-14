@@ -1,7 +1,10 @@
+// CARET MODIFICATION: Import getDefaultModeForModeSystem for mode initialization
+import { getDefaultModeForModeSystem } from "@caret/shared/ModeSystem"
 import { ANTHROPIC_MIN_THINKING_BUDGET, ApiProvider, fireworksDefaultModelId, type OcaModelInfo } from "@shared/api"
 import { ExtensionContext } from "vscode"
 import { Controller } from "@/core/controller"
 import { ClineAuthProvider } from "@/services/auth/providers/ClineAuthProvider"
+import { Logger } from "@/services/logging/Logger"
 import { DEFAULT_AUTO_APPROVAL_SETTINGS } from "@/shared/AutoApprovalSettings"
 import { DEFAULT_BROWSER_SETTINGS } from "@/shared/BrowserSettings"
 import { ClineRulesToggles } from "@/shared/cline-rules"
@@ -196,6 +199,10 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const liteLlmBaseUrl = context.globalState.get<GlobalStateAndSettings["liteLlmBaseUrl"]>("liteLlmBaseUrl")
 		const liteLlmUsePromptCache =
 			context.globalState.get<GlobalStateAndSettings["liteLlmUsePromptCache"]>("liteLlmUsePromptCache")
+		// CARET MODIFICATION: Load Caret account profile for account system
+		const caretUserProfile = context.globalState.get<GlobalStateAndSettings["caretUserProfile"]>("caretUserProfile")
+		// CARET MODIFICATION: Load input history for chat persistence
+		const inputHistory = context.globalState.get<GlobalStateAndSettings["inputHistory"]>("inputHistory")
 		const fireworksModelMaxCompletionTokens = context.globalState.get<
 			GlobalStateAndSettings["fireworksModelMaxCompletionTokens"]
 		>("fireworksModelMaxCompletionTokens")
@@ -241,6 +248,9 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			context.globalState.get<GlobalStateAndSettings["openaiReasoningEffort"]>("openaiReasoningEffort")
 		const preferredLanguage = context.globalState.get<GlobalStateAndSettings["preferredLanguage"]>("preferredLanguage")
 		const focusChainSettings = context.globalState.get<GlobalStateAndSettings["focusChainSettings"]>("focusChainSettings")
+		const focusChainFeatureFlagEnabled = context.globalState.get<GlobalStateAndSettings["focusChainFeatureFlagEnabled"]>(
+			"focusChainFeatureFlagEnabled",
+		) as boolean | undefined
 		const dictationSettings = context.globalState.get<GlobalStateAndSettings["dictationSettings"]>("dictationSettings") as
 			| DictationSettings
 			| undefined
@@ -253,6 +263,13 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const customPrompt = context.globalState.get<GlobalStateAndSettings["customPrompt"]>("customPrompt")
 		const autoCondenseThreshold =
 			context.globalState.get<GlobalStateAndSettings["autoCondenseThreshold"]>("autoCondenseThreshold") // number from 0 to 1
+		// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 (Caret/Cline 구분)
+		const modeSystem = context.globalState.get<GlobalStateAndSettings["caretModeSystem"]>("caretModeSystem")
+		Logger.debug(`[state-helpers] 🔍 Loaded modeSystem from globalState: ${modeSystem}`)
+		// CARET MODIFICATION: Persona system settings
+		const enablePersonaSystem = context.globalState.get<GlobalStateAndSettings["enablePersonaSystem"]>("enablePersonaSystem")
+		const currentPersona = context.globalState.get<GlobalStateAndSettings["currentPersona"]>("currentPersona")
+		const personaProfile = context.globalState.get<GlobalStateAndSettings["personaProfile"]>("personaProfile")
 		// Get mode-related configurations
 		const mode = context.globalState.get<GlobalStateAndSettings["mode"]>("mode")
 
@@ -454,6 +471,10 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			openRouterProviderSorting,
 			liteLlmBaseUrl,
 			liteLlmUsePromptCache,
+			// CARET MODIFICATION: Include Caret account profile in state
+			caretUserProfile,
+			// CARET MODIFICATION: Include input history in state
+			inputHistory,
 			fireworksModelMaxCompletionTokens,
 			fireworksModelMaxTokens,
 			asksageApiUrl,
@@ -539,6 +560,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 
 			// Other global fields
 			focusChainSettings: focusChainSettings || DEFAULT_FOCUS_CHAIN_SETTINGS,
+			// CARET MODIFICATION: Default to true to show Focus Chain UI (Cline feature visible by default)
+			focusChainFeatureFlagEnabled: focusChainFeatureFlagEnabled ?? true,
 			dictationSettings: { ...DEFAULT_DICTATION_SETTINGS, ...dictationSettings },
 			strictPlanModeEnabled: strictPlanModeEnabled ?? true,
 			yoloModeToggled: yoloModeToggled ?? false,
@@ -552,7 +575,9 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			browserSettings: { ...DEFAULT_BROWSER_SETTINGS, ...browserSettings }, // this will ensure that older versions of browserSettings (e.g. before remoteBrowserEnabled was added) are merged with the default values (false for remoteBrowserEnabled)
 			preferredLanguage: preferredLanguage || "English",
 			openaiReasoningEffort: (openaiReasoningEffort as OpenaiReasoningEffort) || "medium",
-			mode: mode || "act",
+			// CARET MODIFICATION: Use getDefaultModeForModeSystem instead of hardcoded "act"
+			// Caret mode defaults to "agent", Cline mode defaults to "act"
+			mode: mode || getDefaultModeForModeSystem(modeSystem || "caret"),
 			userInfo,
 			mcpMarketplaceEnabled: mcpMarketplaceEnabledRaw ?? true,
 			mcpDisplayMode: mcpDisplayMode ?? DEFAULT_MCP_DISPLAY_MODE,
@@ -576,6 +601,15 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			// Feature flag - defaults to false
 			// For now, always return false to disable multi-root support by default
 			multiRootEnabled: !!multiRootEnabled,
+			// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 (Caret/Cline 구분)
+			caretModeSystem: modeSystem || "caret",
+			modeSystem:
+				(Logger.debug(`[state-helpers] 📤 Returning modeSystem in state: ${modeSystem || "caret"}`),
+				modeSystem || "caret"),
+			// CARET MODIFICATION: Persona system settings
+			enablePersonaSystem: enablePersonaSystem ?? true,
+			currentPersona: currentPersona,
+			personaProfile: personaProfile,
 		}
 	} catch (error) {
 		console.error("[StateHelpers] Failed to read global state:", error)

@@ -30,6 +30,8 @@ export class CaretPromptWrapper {
 		}
 
 		try {
+			// CARET MODIFICATION: JsonTemplateLoader is initialized in common.ts
+			// No need to initialize again here
 			await CaretModeManager.initialize()
 			CaretPromptWrapper.initialized = true
 			Logger.debug("[CaretPromptWrapper] Initialized successfully")

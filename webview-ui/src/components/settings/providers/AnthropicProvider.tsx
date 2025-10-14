@@ -67,7 +67,7 @@ export const AnthropicProvider = ({ showModelOptions, isPopup, currentMode }: An
 			<ApiKeyField
 				initialValue={apiConfiguration?.apiKey || ""}
 				onChange={(value) => handleFieldChange("apiKey", value)}
-				providerName="Anthropic"
+				providerName={t("providers.anthropic.name", "settings")}
 				signupUrl="https://console.anthropic.com/settings/keys"
 			/>
 

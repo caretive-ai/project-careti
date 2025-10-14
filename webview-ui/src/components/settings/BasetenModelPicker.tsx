@@ -5,6 +5,7 @@ import { VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react"
 import { useMount } from "react-use"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { ModelsServiceClient } from "../../services/grpc-client"
 import { highlight } from "../history/HistoryView"
@@ -209,7 +210,7 @@ const BasetenModelPicker: React.FC<BasetenModelPickerProps> = ({ isPopup, curren
 			</style>
 			<div className="flex flex-col">
 				<label htmlFor="model-search">
-					<span className="font-medium">Model</span>
+					<span className="font-medium">{t("modelPicker.label", "settings")}</span>
 				</label>
 				<div className="relative w-full" ref={dropdownRef}>
 					<VSCodeTextField

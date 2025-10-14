@@ -7,6 +7,8 @@ import { useInterval } from "react-use"
 import styled from "styled-components"
 // CARET MODIFICATION: Import i18n context for language reactivity
 import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
+// CARET MODIFICATION: Import getCurrentFeatureConfig for provider filtering
+import { getCurrentFeatureConfig } from "@/caret/shared/FeatureConfig"
 // CARET MODIFICATION: Import i18n
 import { t } from "@/caret/utils/i18n"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
@@ -95,7 +97,10 @@ const ApiOptions = ({
 	forcePlanActSeparate,
 }: ApiOptionsProps) => {
 	// Use full context state for immediate save payload
-	const { apiConfiguration, featureConfig } = useExtensionState()
+	const { apiConfiguration } = useExtensionState()
+
+	// CARET MODIFICATION: Get feature config directly (consistent with ChatRow and TaskHeader pattern)
+	const featureConfig = getCurrentFeatureConfig()
 
 	// CARET MODIFICATION: Use i18n context to detect language changes
 	const { language } = useCaretI18nContext()

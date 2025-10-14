@@ -1,6 +1,9 @@
+// CARET MODIFICATION: Import types needed for merge fix
+import { WebviewProvider } from "@/core/webview"
 import { DiffViewProviderCreator, HostProvider, WebviewProviderCreator } from "@/hosts/host-provider"
 import { HostBridgeClientProvider } from "@/hosts/host-provider-types"
 import { vscodeHostBridgeClient } from "@/hosts/vscode/hostbridge/client/host-grpc-client"
+import { WebviewProviderType } from "@/shared/webview/types"
 
 /**
  * Initializes the HostProvider with test defaults.
@@ -20,7 +23,8 @@ export function setVscodeHostProviderMock(options?: {
 }) {
 	HostProvider.reset()
 	HostProvider.initialize(
-		options?.webviewProviderCreator ?? ((() => {}) as WebviewProviderCreator),
+		// CARET MODIFICATION: WebviewProviderCreator now requires providerType parameter (merge fix)
+		options?.webviewProviderCreator ?? ((_providerType: WebviewProviderType) => ({}) as WebviewProvider),
 		options?.diffViewProviderCreator ?? ((() => {}) as DiffViewProviderCreator),
 		options?.hostBridgeClient ?? vscodeHostBridgeClient,
 		options?.logToChannel ?? ((_) => {}),

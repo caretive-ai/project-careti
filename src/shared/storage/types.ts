@@ -1,3 +1,4 @@
 export type OpenaiReasoningEffort = "minimal" | "low" | "medium" | "high"
 
-export type Mode = "plan" | "act"
+// CARET MODIFICATION: Extended to include Caret modes (chatbot/agent)
+export type Mode = "chatbot" | "agent" | "plan" | "act"

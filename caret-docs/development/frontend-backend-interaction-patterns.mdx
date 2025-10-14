@@ -1,0 +1,345 @@
+# Frontend-Backend 상호작용 표준 패턴 가이드
+
+## 1. Caret 전용 gRPC 서비스 원칙 (Backend ↔ Webview 통신)
+
+> **CRITICAL**: `cline`의 원본 `proto` 파일은 절대 수정하지 않습니다. Caret 고유의 통신은 반드시 별도의 `proto` 파일을 생성하여 독립적인 gRPC 서비스를 구현합니다.
+
+**필수 구현 절차:**
+
+1.  **`proto/caret/` 디렉토리 생성**: Caret 전용 `.proto` 파일을 위한 네임스페이스를 확보합니다.
+2.  **신규 `.proto` 파일 정의**: `proto/caret/persona.proto`와 같이 기능별로 파일을 분리하여 `service`와 `message`를 정의합니다.
+3.  **독립 서비스 구현**: `caret-src` 내에 해당 서비스의 gRPC 핸들러(`controller`)를 구현합니다.
+4.  **`extension.ts`에 등록**: `activate` 함수에서 `cline`의 `UiService`와는 별개로, 새로 만든 Caret 전용 서비스를 gRPC 서버에 등록합니다.
+5.  **웹뷰 클라이언트 사용**: 웹뷰에서는 해당 서비스의 gRPC 클라이언트를 사용하여 백엔드와 통신합니다.
+
+**기대 효과**:
+
+- **독립성**: `cline`의 통신 규약을 전혀 건드리지 않으므로 향후 `cline` 업데이트 시 발생할 수 있는 충돌을 원천적으로 방지합니다.
+- **명확성**: Caret 고유의 API가 명확하게 분리되어 코드 이해도와 유지보수성이 향상됩니다.
+
+---
+
+## 2. 개요
+
+이 문서는 Caret 프로젝트에서 **webview(React) ↔ Extension Host(Node.js)** 간의 상호작용을 위한 표준화된 패턴을 제시합니다. UI 언어 설정 구현 과정에서 발견된 **순환 메시지 문제**와 **상태 불일치 문제**를 해결하기 위한 검증된 패턴들을 담고 있습니다.
+
+## 2. 핵심 원칙
+
+### 2.1 단일 필드 업데이트 원칙
+
+**❌ 잘못된 패턴:**
+
+```typescript
+// 하나의 필드만 변경해도 모든 설정을 전송
+setChatSettings({
+	...currentSettings,
+	uiLanguage: "ja", // 이것만 바뀜
+	// 하지만 apiConfiguration, telemetrySetting 등 모든 필드가 함께 전송됨
+})
+```
+
+**✅ 올바른 패턴:**
+
+```typescript
+// 변경된 필드만 전송
+setUILanguage: async (language: string) => {
+	setState((prev) => ({ ...prev, uiLanguage: language }))
+
+	await StateServiceClient.updateSettings({
+		uiLanguage: language, // 오직 이 필드만
+	})
+}
+```
+
+### 2.2 Optimistic Update 패턴
+
+```typescript
+const updateSingleField = async <T>(fieldName: keyof ExtensionState, newValue: T, updateFn: (value: T) => Promise<void>) => {
+	// 1. 이전 값 백업
+	const previousValue = state[fieldName]
+
+	// 2. 즉시 UI 업데이트 (사용자 경험 개선)
+	setState((prev) => ({ ...prev, [fieldName]: newValue }))
+
+	try {
+		// 3. 백엔드 업데이트
+		await updateFn(newValue)
+	} catch (error) {
+		// 4. 실패시 롤백
+		setState((prev) => ({ ...prev, [fieldName]: previousValue }))
+		throw error
+	}
+}
+
+// 사용 예시
+const setPersona = (persona: PersonaConfig) =>
+	updateSingleField("currentPersona", persona, async (value) => {
+		await StateServiceClient.updateSettings({
+			currentPersona: convertPersonaToProto(value),
+		})
+	})
+```
+
+### 2.3 순환 메시지 방지 패턴
+
+**문제 시나리오:**
+
+```
+1. webview: 설정 변경 → updateSettings 요청
+2. 백엔드: 모든 설정 저장 → postStateToWebview() 호출
+3. webview: subscription으로 새 state 받음 → 사용자 변경사항 덮어씌워짐 ❌
+```
+
+**해결 패턴:**
+
+```typescript
+// Backend: src/core/controller/state/updateSettings.ts
+export async function updateSettings(request: UpdateSettingsRequest): Promise<Empty> {
+	// 변경된 필드 개수 계산
+	const changedFields = Object.keys(request).filter((key) => request[key] !== undefined && request[key] !== null)
+
+	// 개별 필드 저장
+	if (request.uiLanguage) {
+		await saveUILanguage(request.uiLanguage)
+	}
+
+	if (request.currentPersona) {
+		await savePersona(request.currentPersona)
+	}
+
+	// 단일 필드 변경시에는 브로드캐스트 스킵 (순환 메시지 방지)
+	if (changedFields.length > 1) {
+		await controller.postStateToWebview()
+	}
+
+	return Empty.create()
+}
+```
+
+## 3. 표준 구현 템플릿
+
+### 3.1 Frontend 설정 업데이트 함수
+
+```typescript
+// webview-ui/src/context/ExtensionStateContext.tsx
+interface SettingUpdateFunctions {
+	setUILanguage: (language: string) => Promise<void>
+	setPersona: (persona: PersonaConfig) => Promise<void>
+	setTheme: (theme: ThemeConfig) => Promise<void>
+	// ... 다른 단일 필드 업데이트 함수들
+}
+
+const createSettingUpdater =
+	<T>(fieldName: keyof ExtensionState, protoConverter: (value: T) => any) =>
+	async (value: T) => {
+		const previousValue = state[fieldName]
+
+		// Optimistic update
+		setState((prev) => ({ ...prev, [fieldName]: value }))
+
+		try {
+			await StateServiceClient.updateSettings({
+				[fieldName]: protoConverter(value),
+			})
+		} catch (error) {
+			// Rollback on failure
+			setState((prev) => ({ ...prev, [fieldName]: previousValue }))
+			console.error(`Failed to update ${fieldName}:`, error)
+			throw error
+		}
+	}
+
+// 구체적 함수들
+const setUILanguage = createSettingUpdater("uiLanguage", (lang: string) => lang)
+const setPersona = createSettingUpdater("currentPersona", convertPersonaToProto)
+```
+
+### 3.2 Backend 처리 템플릿
+
+```typescript
+// 새로운 설정 필드 추가시 따라야 할 패턴
+export async function updateSettings(request: UpdateSettingsRequest): Promise<Empty> {
+	const updates: Array<() => Promise<void>> = []
+
+	// 각 필드별 개별 처리
+	if (request.uiLanguage) {
+		updates.push(() => saveToGlobalState("uiLanguage", request.uiLanguage))
+	}
+
+	if (request.currentPersona) {
+		updates.push(() => saveToWorkspaceState("currentPersona", request.currentPersona))
+	}
+
+	if (request.chatSettings) {
+		updates.push(() => saveToWorkspaceState("chatSettings", request.chatSettings))
+	}
+
+	// 모든 업데이트 실행
+	await Promise.all(updates.map((update) => update()))
+
+	// 브로드캐스트 조건 판단
+	const shouldBroadcast = updates.length > 1 || isComplexUpdate(request)
+	if (shouldBroadcast) {
+		await controller.postStateToWebview()
+	}
+
+	return Empty.create()
+}
+
+function isComplexUpdate(request: UpdateSettingsRequest): boolean {
+	// 복잡한 업데이트 (예: API 설정 변경)는 브로드캐스트 필요
+	return !!(request.apiConfiguration || request.telemetrySetting)
+}
+```
+
+## 4. TDD 기반 개발 플로우
+
+### 4.1 테스트 우선 개발
+
+```typescript
+// RED: 실패하는 테스트 작성
+describe("Persona Setting Update", () => {
+	it("should update persona without affecting other settings", async () => {
+		// Given
+		const initialState = {
+			uiLanguage: "en",
+			currentPersona: null,
+			chatSettings: { model: "claude-3" },
+		}
+		const newPersona = { name: "Alpha", mode: "helper" }
+
+		// When
+		await setPersona(newPersona)
+
+		// Then
+		expect(mockUpdateSettings).toHaveBeenCalledWith({
+			currentPersona: convertPersonaToProto(newPersona),
+		})
+		expect(state.uiLanguage).toBe("en") // 다른 설정 영향 없음
+		expect(state.chatSettings.model).toBe("claude-3") // 다른 설정 영향 없음
+	})
+
+	it("should rollback on backend failure", async () => {
+		// Given
+		const initialPersona = { name: "Default", mode: "standard" }
+		const newPersona = { name: "Alpha", mode: "helper" }
+		mockUpdateSettings.mockRejectedValue(new Error("Network error"))
+
+		// When & Then
+		await expect(setPersona(newPersona)).rejects.toThrow("Network error")
+		expect(state.currentPersona).toEqual(initialPersona) // 롤백됨
+	})
+})
+```
+
+### 4.2 통합 테스트 패턴
+
+```typescript
+// 실제 Extension Host 환경에서의 E2E 테스트
+describe("Settings Integration", () => {
+	it("should persist persona setting across webview reloads", async () => {
+		// Given
+		const persona = { name: "Alpha", mode: "helper" }
+
+		// When
+		await setPersona(persona)
+		await simulateWebviewReload()
+
+		// Then
+		const newState = await getExtensionState()
+		expect(newState.currentPersona).toEqual(persona)
+	})
+})
+```
+
+## 5. 디버깅 가이드
+
+### 5.1 순환 메시지 디버깅
+
+```typescript
+// Frontend에서 메시지 플로우 추적
+const debugMessageFlow = (actionName: string, data: any) => {
+	console.log(`[${actionName}] Frontend → Backend:`, data)
+}
+
+// Backend에서 브로드캐스트 추적
+const debugBroadcast = (reason: string, stateSnapshot: any) => {
+	console.log(`[Broadcast] ${reason}:`, Object.keys(stateSnapshot))
+}
+```
+
+### 5.2 상태 불일치 감지
+
+```typescript
+// Frontend에서 상태 불일치 감지
+useEffect(() => {
+	const checkStateConsistency = () => {
+		if (state.uiLanguage !== expectedLanguage) {
+			console.warn("State inconsistency detected:", {
+				expected: expectedLanguage,
+				actual: state.uiLanguage,
+				timestamp: Date.now(),
+			})
+		}
+	}
+
+	checkStateConsistency()
+}, [state.uiLanguage])
+```
+
+## 6. 체크리스트
+
+### 6.1 새로운 설정 필드 추가시
+
+- [ ] Proto 파일에 필드 정의 추가
+- [ ] Frontend: 단일 필드 업데이트 함수 작성
+- [ ] Backend: updateSettings.ts에 개별 처리 로직 추가
+- [ ] 순환 메시지 방지 로직 확인
+- [ ] TDD 테스트 작성 (RED → GREEN → REFACTOR)
+- [ ] 통합 테스트로 E2E 플로우 검증
+- [ ] Extension Host 환경에서 수동 테스트
+
+### 6.2 기존 설정 수정시
+
+- [ ] 기존 동작에 영향 없는지 확인
+- [ ] 순환 메시지 발생 가능성 검토
+- [ ] 관련 테스트 업데이트
+- [ ] 회귀 테스트 실행
+
+## 7. 페르소나 개발 적용 예시
+
+```typescript
+// 페르소나 설정을 위한 표준 패턴 적용
+interface PersonaConfig {
+	name: string
+	mode: "helper" | "expert" | "creative"
+	personality: PersonalityTraits
+	avatar: string
+}
+
+// Frontend
+const setPersona = async (persona: PersonaConfig) => {
+	const previous = state.currentPersona
+
+	setState((prev) => ({ ...prev, currentPersona: persona }))
+
+	try {
+		await StateServiceClient.updateSettings({
+			currentPersona: convertPersonaToProto(persona),
+		})
+	} catch (error) {
+		setState((prev) => ({ ...prev, currentPersona: previous }))
+		throw error
+	}
+}
+
+// Backend
+if (request.currentPersona) {
+	await saveToWorkspaceState("currentPersona", request.currentPersona)
+	// 페르소나 변경은 단일 필드이므로 브로드캐스트 스킵
+}
+```
+
+---
+
+**이 패턴들을 따르면 페르소나 개발 시에도 동일한 문제를 겪지 않고 안정적으로 구현할 수 있습니다.** ✨

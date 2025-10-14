@@ -7,6 +7,7 @@ import React, { KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from
 import { useRemark } from "react-remark"
 import { useMount } from "react-use"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "@/services/grpc-client"
@@ -44,22 +45,22 @@ export interface OpenRouterModelPickerProps {
 	currentMode: Mode
 }
 
-// Featured models for Cline provider
+// CARET MODIFICATION: i18n applied to featured models
 const featuredModels = [
 	{
 		id: "anthropic/claude-sonnet-4.5",
-		description: "Recommended for agentic coding in Cline",
-		label: "New",
+		description: t("providers.openrouter.modelPicker.featuredModelDescriptionBest", "settings"),
+		label: t("providers.openrouter.modelPicker.featuredModelLabelBest", "settings"),
 	},
 	{
 		id: "x-ai/grok-code-fast-1",
-		description: "Advanced model with 262K context for complex coding",
-		label: "Free",
+		description: t("providers.openrouter.modelPicker.featuredModelDescriptionFree", "settings"),
+		label: t("providers.openrouter.modelPicker.featuredModelLabelFree", "settings"),
 	},
 	{
 		id: "cline/code-supernova-1-million",
-		description: "Stealth coding model with image support",
-		label: "Free",
+		description: t("providers.openrouter.modelPicker.featuredModelDescriptionSupernova", "settings"),
+		label: t("providers.openrouter.modelPicker.featuredModelLabelFree", "settings"),
 	},
 ]
 
@@ -240,7 +241,7 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup, 
 			</style>
 			<div style={{ display: "flex", flexDirection: "column" }}>
 				<label htmlFor="model-search">
-					<span style={{ fontWeight: 500 }}>Model</span>
+					<span style={{ fontWeight: 500 }}>{t("modelPicker.label", "settings")}</span>
 				</label>
 
 				{modeFields.apiProvider === "cline" && (

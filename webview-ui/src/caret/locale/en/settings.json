@@ -246,6 +246,7 @@
 		"openaiReasoningEffort": "OpenAI reasoning effort",
 		"openaiReasoningEffortDescription": "Reasoning effort for the OpenAI family of models(applies to all OpenAI model providers)",
 		"reasoningEffort": {
+			"minimal": "Minimal",
 			"low": "Low",
 			"medium": "Medium",
 			"high": "High"

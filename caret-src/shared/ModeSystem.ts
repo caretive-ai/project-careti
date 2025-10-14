@@ -94,3 +94,12 @@ export const caretModeSystemUtils = {
  * 지원되는 Caret 모드 목록
  */
 export const SUPPORTED_CARET_MODE_SYSTEMS: readonly CaretModeSystem[] = ["caret", "cline"] as const
+
+/**
+ * ModeSystem에 따른 기본 Mode 반환
+ * - Caret 모드: "agent" (기본 - 전체 도구 접근 권한)
+ * - Cline 모드: "act" (기본 - 즉시 실행)
+ */
+export function getDefaultModeForModeSystem(modeSystem: CaretModeSystem): "chatbot" | "agent" | "plan" | "act" {
+	return modeSystem === "caret" ? "agent" : "act"
+}

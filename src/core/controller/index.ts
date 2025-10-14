@@ -1,6 +1,8 @@
 import { Anthropic } from "@anthropic-ai/sdk"
 // CARET MODIFICATION: F11 - Input History System
 import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
+// CARET MODIFICATION: Import feature config for webview state
+import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
 import { buildApiHandler } from "@core/api"
 import { detectWorkspaceRoots } from "@core/workspace/detection"
 import { setupWorkspaceManager } from "@core/workspace/setup"
@@ -31,6 +33,8 @@ import { OcaAuthService } from "@/services/auth/oca/OcaAuthService"
 import { LogoutReason } from "@/services/auth/types"
 import { featureFlagsService } from "@/services/feature-flags"
 import { getDistinctId } from "@/services/logging/distinctId"
+// CARET MODIFICATION: Import Logger for feature config debug logging
+import { Logger } from "@/services/logging/Logger"
 import { telemetryService } from "@/services/telemetry"
 import { ShowMessageType } from "@/shared/proto/host/window"
 import { getLatestAnnouncementId } from "@/utils/announcements"
@@ -89,7 +93,11 @@ export class Controller {
 		return this.workspaceManager
 	}
 
-	constructor(readonly context: vscode.ExtensionContext) {
+	// CARET MODIFICATION: Add clientId parameter for webview instance identification
+	constructor(
+		readonly context: vscode.ExtensionContext,
+		readonly _clientId: string,
+	) {
 		PromptRegistry.getInstance() // Ensure prompts and tools are registered
 		HostProvider.get().logToChannel("ClineProvider instantiated")
 		this.stateManager = StateManager.get()
@@ -735,6 +743,9 @@ export class Controller {
 		const favoritedModelIds = this.stateManager.getGlobalStateKey("favoritedModelIds")
 		const lastDismissedInfoBannerVersion = this.stateManager.getGlobalStateKey("lastDismissedInfoBannerVersion") || 0
 		const lastDismissedModelBannerVersion = this.stateManager.getGlobalStateKey("lastDismissedModelBannerVersion") || 0
+		// CARET MODIFICATION: Load feature config to send to webview
+		const featureConfig = getCurrentFeatureConfig()
+		Logger.debug(`[Controller] 📋 Loaded featureConfig to send to webview: ${JSON.stringify(featureConfig)}`)
 
 		const localClineRulesToggles = this.stateManager.getWorkspaceStateKey("localClineRulesToggles")
 		const localWindsurfRulesToggles = this.stateManager.getWorkspaceStateKey("localWindsurfRulesToggles")
@@ -745,6 +756,13 @@ export class Controller {
 		// CARET MODIFICATION: F11 - Input History System
 		// Retrieve input history from CaretGlobalManager
 		const inputHistory = await CaretGlobalManager.getInputHistory()
+		// CARET MODIFICATION: F01 - Mode System (직접 CaretGlobalManager에서 읽기)
+		const modeSystem = CaretGlobalManager.currentMode
+		Logger.debug(`[postStateToWebview] modeSystem=${modeSystem}, isInitialized=${CaretGlobalManager.isInitialized()}`)
+		// CARET MODIFICATION: F08 - Persona System
+		const enablePersonaSystem = this.stateManager.getGlobalSettingsKey("enablePersonaSystem")
+		const currentPersona = this.stateManager.getGlobalSettingsKey("currentPersona")
+		const personaProfile = this.stateManager.getGlobalSettingsKey("personaProfile")
 
 		const currentTaskItem = this.task?.taskId ? (taskHistory || []).find((item) => item.id === this.task?.taskId) : undefined
 		const clineMessages = this.task?.messageStateHandler.getClineMessages() || []
@@ -822,6 +840,14 @@ export class Controller {
 			lastDismissedModelBannerVersion,
 			// CARET MODIFICATION: F11 - Input History System
 			inputHistory,
+			// CARET MODIFICATION: F01 - Mode System
+			modeSystem,
+			// CARET MODIFICATION: F08 - Persona System
+			enablePersonaSystem,
+			currentPersona,
+			personaProfile,
+			// CARET MODIFICATION: Include feature config in state
+			featureConfig: featureConfig,
 		}
 	}
 

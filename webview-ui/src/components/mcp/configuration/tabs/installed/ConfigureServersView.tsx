@@ -1,5 +1,6 @@
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { McpServiceClient, UiServiceClient } from "@/services/grpc-client"
 import ServersToggleList from "./ServersToggleList"
@@ -16,18 +17,17 @@ const ConfigureServersView = () => {
 					marginBottom: "16px",
 					marginTop: "5px",
 				}}>
-				The{" "}
+				{t("configureServersView.mcpDescription", "chat")}{" "}
 				<VSCodeLink href="https://github.com/modelcontextprotocol" style={{ display: "inline" }}>
-					Model Context Protocol
+					{t("configureServersView.modelContextProtocol", "chat")}
 				</VSCodeLink>{" "}
-				enables communication with locally running MCP servers that provide additional tools and resources to extend
-				Cline's capabilities. You can use{" "}
+				{t("configureServersView.mcpDescriptionMiddle2", "chat")}
 				<VSCodeLink href="https://github.com/modelcontextprotocol/servers" style={{ display: "inline" }}>
-					community-made servers
+					{t("configureServersView.communityMadeServers", "chat")}
 				</VSCodeLink>{" "}
-				or ask Cline to create new tools specific to your workflow (e.g., "add a tool that gets the latest npm docs").{" "}
+				{t("configureServersView.mcpDescriptionEnd", "chat")}{" "}
 				<VSCodeLink href="https://x.com/sdrzn/status/1867271665086074969" style={{ display: "inline" }}>
-					See a demo here.
+					{t("configureServersView.seeDemoHere", "chat")}
 				</VSCodeLink>
 			</div>
 
@@ -44,7 +44,7 @@ const ConfigureServersView = () => {
 					}}
 					style={{ width: "100%", marginBottom: "5px" }}>
 					<span className="codicon codicon-server" style={{ marginRight: "6px" }}></span>
-					Configure MCP Servers
+					{t("configureServersView.configureMcpServers", "chat")}
 				</VSCodeButton>
 
 				<div style={{ textAlign: "center" }}>
@@ -63,7 +63,7 @@ const ConfigureServersView = () => {
 							}, 300)
 						}}
 						style={{ fontSize: "12px" }}>
-						Advanced MCP Settings
+						{t("configureServersView.advancedMcpSettings", "chat")}
 					</VSCodeLink>
 				</div>
 			</div>

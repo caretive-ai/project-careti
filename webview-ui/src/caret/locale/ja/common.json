@@ -258,7 +258,9 @@
 		"promptTokens": "プロンプトトークン",
 		"completionTokens": "完了トークン",
 		"totalTokens": "合計トークン数",
-		"totalCost": "合計コスト"
+		"totalCost": "合計コスト",
+		"termsOfServiceUrl": "https://github.com/aicoding-caret/caret",
+		"privacyPolicyUrl": "https://github.com/aicoding-caret/caret"
 	},
 	"account": {
 		"signUpWithCaret": "Caretアカウントでログイン＆サインアップ",
@@ -604,11 +606,11 @@
 		"reasoningEnabled": "推論はデフォルトで有効"
 	},
 	"telemetry": {
-		"helpImprove": "Caretの改善にご協力ください",
-		"experimentalFeatures": "(および実験的機能へのアクセス)",
-		"description": "Caretは、バグの修正と拡張機能の改善のために、匿名のエラーおよび使用状況データを収集します。コード、プロンプト、個人情報は一切送信されません。",
-		"settingsLink": "この設定は設定でオフにできます。",
-		"closeBannerAria": "バナーを閉じてテレメトリーを有効にする"
+		"helpImprove": "Caretの開発を応援",
+		"description": "Caretはオープンソースプロジェクトです。GitHubで貢献、問題報告、フィードバックをお願いします。",
+		"githubLinkPrefix": "詳細はこちら",
+		"githubLink": "github.com/aicoding-caret/caret",
+		"closeBannerAria": "バナーを閉じる"
 	},
 	"history": {
 		"title": "履歴",

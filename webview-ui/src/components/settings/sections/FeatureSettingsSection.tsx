@@ -25,7 +25,6 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 		dictationSettings,
 		useAutoCondense,
 		focusChainSettings,
-		focusChainFeatureFlagEnabled,
 	} = useExtensionState()
 
 	const handleReasoningEffortChange = (newValue: OpenaiReasoningEffort) => {
@@ -106,6 +105,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 								const newValue = e.target.currentValue as OpenaiReasoningEffort
 								handleReasoningEffortChange(newValue)
 							}}>
+							<VSCodeOption value="minimal">{t("features.reasoningEffort.minimal", "settings")}</VSCodeOption>
 							<VSCodeOption value="low">{t("features.reasoningEffort.low", "settings")}</VSCodeOption>
 							<VSCodeOption value="medium">{t("features.reasoningEffort.medium", "settings")}</VSCodeOption>
 							<VSCodeOption value="high">{t("features.reasoningEffort.high", "settings")}</VSCodeOption>
@@ -127,7 +127,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 							{t("features.strictPlanModeDescription", "settings")}
 						</p>
 					</div>
-					{focusChainFeatureFlagEnabled && (
+					{
 						<div style={{ marginTop: 10 }}>
 							<VSCodeCheckbox
 								checked={focusChainSettings?.enabled || false}
@@ -141,8 +141,8 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 								{t("features.focusChainDescription", "settings")}
 							</p>
 						</div>
-					)}
-					{focusChainFeatureFlagEnabled && focusChainSettings?.enabled && (
+					}
+					{focusChainSettings?.enabled && (
 						<div style={{ marginTop: 10, marginLeft: 20 }}>
 							<label
 								className="block text-sm font-medium text-[var(--vscode-foreground)] mb-1"

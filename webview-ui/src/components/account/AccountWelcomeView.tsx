@@ -1,23 +1,32 @@
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
-import { handleSignIn } from "@/context/ClineAuthContext"
-import ClineLogoWhite from "../../assets/ClineLogoWhite"
+// CARET MODIFICATION: Import persona avatar and context for account welcome
+import PersonaAvatar from "@/caret/components/PersonaAvatar"
+import { useCaretState } from "@/caret/context/CaretStateContext"
+import { t } from "@/caret/utils/i18n"
+import { handleLogin } from "../settings/CaretAuthHandler"
 
-export const AccountWelcomeView = () => (
-	<div className="flex flex-col items-center pr-3">
-		<ClineLogoWhite className="size-16 mb-4" />
+export const AccountWelcomeView = () => {
+	// CARET MODIFICATION: Use persona avatar for account welcome
+	const { personaProfile } = useCaretState()
 
-		<p>
-			Sign up for an account to get access to the latest models, billing dashboard to view usage and credits, and more
-			upcoming features.
-		</p>
+	return (
+		<div className="flex flex-col items-center pr-3">
+			{/* CARET MODIFICATION: Show persona avatar instead of Cline logo */}
+			{personaProfile && <PersonaAvatar isThinking={false} personaProfile={personaProfile} size={64} />}
+			<div className="mb-4" />
 
-		<VSCodeButton className="w-full mb-4" onClick={() => handleSignIn()}>
-			Sign up with Cline
-		</VSCodeButton>
+			<p>{t("account.signUpDescription", "common")}</p>
 
-		<p className="text-[var(--vscode-descriptionForeground)] text-xs text-center m-0">
-			By continuing, you agree to the <VSCodeLink href="https://cline.bot/tos">Terms of Service</VSCodeLink> and{" "}
-			<VSCodeLink href="https://cline.bot/privacy">Privacy Policy.</VSCodeLink>
-		</p>
-	</div>
-)
+			<VSCodeButton className="w-full mb-4" onClick={() => handleLogin()}>
+				{t("account.signUpWithCaret", "common")}
+			</VSCodeButton>
+
+			<p className="text-[var(--vscode-descriptionForeground)] text-xs text-center m-0">
+				{t("account.byContining", "common")}{" "}
+				<VSCodeLink href={t("account.termsOfServiceUrl", "common")}>{t("account.termsOfService", "common")}</VSCodeLink>{" "}
+				{t("common.and", "common")}{" "}
+				<VSCodeLink href={t("account.privacyPolicyUrl", "common")}>{t("account.privacyPolicy", "common")}</VSCodeLink>
+			</p>
+		</div>
+	)
+}

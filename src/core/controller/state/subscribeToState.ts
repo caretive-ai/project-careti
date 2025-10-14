@@ -1,5 +1,6 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { State } from "@shared/proto/cline/state"
+import { Logger } from "@/services/logging/Logger"
 import { ExtensionState } from "@/shared/ExtensionMessage"
 import { getRequestRegistry, StreamingResponseHandler } from "../grpc-handler"
 import { Controller } from "../index"
@@ -58,6 +59,8 @@ export async function subscribeToState(
  * @param state The state to send
  */
 export async function sendStateUpdate(state: ExtensionState): Promise<void> {
+	Logger.debug(`[sendStateUpdate] Sending state.modeSystem=${state.modeSystem} to ${activeStateSubscriptions.size} subscribers`)
+
 	// Send the state to all active subscribers
 	const promises = Array.from(activeStateSubscriptions).map(async (responseStream) => {
 		try {
@@ -68,13 +71,13 @@ export async function sendStateUpdate(state: ExtensionState): Promise<void> {
 				},
 				false, // Not the last message
 			)
-			//console.log(`[DEBUG] sending followup state`, stateJson.length, "chars")
 		} catch (error) {
-			console.error("Error sending state update:", error)
+			Logger.error("Error sending state update:", error)
 			// Remove the subscription if there was an error
 			activeStateSubscriptions.delete(responseStream)
 		}
 	})
 
 	await Promise.all(promises)
+	Logger.debug(`[sendStateUpdate] Completed sending to all subscribers`)
 }

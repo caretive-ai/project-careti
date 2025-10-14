@@ -49,9 +49,16 @@ const McpMarketplaceCard = ({ item, installedServers, setError }: McpMarketplace
 					}
 				`}
 			</style>
-			<a
+			<div
 				className="mcp-card"
-				href={item.githubUrl}
+				onClick={() => window.open(item.githubUrl, "_blank")}
+				onKeyDown={(e) => {
+					if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault()
+						window.open(item.githubUrl, "_blank")
+					}
+				}}
+				role="button"
 				style={{
 					padding: "14px 16px",
 					display: "flex",
@@ -60,7 +67,8 @@ const McpMarketplaceCard = ({ item, installedServers, setError }: McpMarketplace
 					cursor: isLoading ? "wait" : "pointer",
 					textDecoration: "none",
 					color: "inherit",
-				}}>
+				}}
+				tabIndex={0}>
 				{/* Main container with logo and content */}
 				<div style={{ display: "flex", gap: "12px" }}>
 					{/* Logo */}
@@ -148,6 +156,9 @@ const McpMarketplaceCard = ({ item, installedServers, setError }: McpMarketplace
 							<a
 								className="github-link"
 								href={githubAuthorUrl}
+								onClick={(e) => {
+									e.stopPropagation()
+								}}
 								onMouseEnter={(e) => {
 									e.currentTarget.style.opacity = "1"
 									e.currentTarget.style.color = "var(--link-active-foreground)"
@@ -283,7 +294,7 @@ const McpMarketplaceCard = ({ item, installedServers, setError }: McpMarketplace
 						/>
 					</div>
 				</div>
-			</a>
+			</div>
 		</>
 	)
 }

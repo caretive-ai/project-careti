@@ -1,5 +1,6 @@
 import { VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { useMemo } from "react"
+import { t } from "@/caret/utils/i18n"
 
 interface ContextWindowSwitcherProps {
 	selectedModelId: string
@@ -17,18 +18,19 @@ export const ContextWindowSwitcher = ({
 	base1mModelId,
 	onModelChange,
 }: ContextWindowSwitcherProps) => {
+	// CARET MODIFICATION: i18n applied to context window switcher
 	const switcherInfo = useMemo(() => {
 		if (selectedModelId === base200kModelId) {
 			return {
 				current: base200kModelId,
 				alternate: base1mModelId,
-				linkText: "Switch to 1M context window model",
+				linkText: t("contextWindowSwitcher.switchTo1M", "settings"),
 			}
 		} else if (selectedModelId === base1mModelId) {
 			return {
 				current: base1mModelId,
 				alternate: base200kModelId,
-				linkText: "Switch to 200K context window model",
+				linkText: t("contextWindowSwitcher.switchTo200K", "settings"),
 			}
 		}
 		return null

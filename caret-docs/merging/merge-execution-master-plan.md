@@ -1,11 +1,11 @@
 # Cline Upstream 머징 실행 마스터 플랜
 
 **작성일**: 2025-10-09
-**최종 업데이트**: 2025-10-12 (Phase 5 Frontend 100% 완료 확인)
+**최종 업데이트**: 2025-10-14 (10차 피드백 완료 - Mode 초기화, JSON 로더, 프롬프트 분석 준비)
 **프로젝트**: Caret v0.3.0 - Cline Upstream Complete Adoption
 **전략**: Cline 완전 채택 + Caret Features 순차 재구현 (Adapter Pattern)
 **현재 브랜치**: merge/cline-upstream-20251009
-**상태**: Phase 4 Backend 100% ✅, Phase 5 Frontend 100% ✅ (Phase 5.0에서 전체 통합 완료)
+**상태**: Phase 4 Backend 100% ✅, Phase 5 Frontend 100% ✅, 10차 피드백 완료 ✅, Phase 6 진행 중 🔄
 
 ---
 
@@ -52,9 +52,9 @@
 **Phase 3: Proto 재구현** ▓▓▓▓▓▓▓▓▓▓ 100% ✅
 **Phase 4: Backend 재구현** ▓▓▓▓▓▓▓▓▓▓ 100% ✅ (F09 ✅, F03 ✅, F08 ✅, F02 ✅, F06 ✅, F11 ✅, F01 ✅, F05 ✅, F10 ✅, 파일복원 ✅)
 **Phase 5: Frontend 재구현** ▓▓▓▓▓▓▓▓▓▓ 100% ✅ (Phase 5.0에서 전체 통합 완료)
-**Phase 6: 최종 검증 및 배포** ░░░░░░░░░░ 0%
+**Phase 6: 최종 검증 및 배포** ▓▓░░░░░░░░ 20% 🔄 (10차 피드백 완료, Cline 프롬프트 개선사항 반영 완료 ✅)
 
-**총 진행률**: ▓▓▓▓▓▓▓▓▓░ 90% (Phase 0-5 완료)
+**총 진행률**: ▓▓▓▓▓▓▓▓▓░ 92% (Phase 0-5 완료, Phase 6 진행 중)
 
 ---
 
@@ -171,10 +171,56 @@ npm run test:backend -- --run
 - [ ] 타입 체크 통과
 - [ ] 테스트 환경 정상
 
+##### Step 1.4: Caret 고유 기능 인벤토리 확인 ⭐ **신규**
+```bash
+# Caret 고유 기능 상태 확인
+grep -r "caretUserProfile" src/
+grep -r "CaretUser" src/shared/
+grep -r "inputHistory" src/
+grep -r "personaProfile" src/
+```
+
+**⚠️ 필수 체크리스트 - Caret 고유 기능 보존 확인**:
+
+**Account System (F04)**:
+- [ ] `src/shared/api.ts`: `caretUserProfile?: CaretUser` 타입 정의 존재
+- [ ] `src/shared/CaretAccount.ts`: CaretUser 타입 정의 존재
+- [ ] `src/core/storage/state-keys.ts`: `caretUserProfile: CaretUser | undefined` 존재
+- [ ] `src/core/storage/utils/state-helpers.ts`: caretUserProfile globalState 로딩 존재
+- [ ] `webview-ui/src/components/account/AccountView.tsx`: 3-way 브랜칭 (caretUser → clineUser → welcome)
+- [ ] `webview-ui/src/caret/components/CaretAccountView.tsx`: Caret 계정 UI 컴포넌트 존재
+
+**Persona System (F08)**:
+- [ ] `src/core/storage/state-keys.ts`: personaProfile 필드 존재
+- [ ] `caret-src/services/persona/`: Persona 서비스 파일들 존재
+- [ ] `caret-src/core/webview/CaretProviderWrapper.ts`: Persona wrapper 존재
+
+**Input History (F11)**:
+- [ ] `src/shared/ExtensionMessage.ts`: `inputHistory?: string[]` 타입 존재
+- [ ] `src/core/storage/state-keys.ts`: `inputHistory: string[] | undefined` 존재
+- [ ] `src/core/storage/utils/state-helpers.ts`: inputHistory globalState 로딩 존재
+- [ ] `caret-src/managers/CaretGlobalManager.ts`: inputHistory 관리 메서드 존재
+
+**Mode System (F06)**:
+- [ ] `caret-src/shared/ModeSystem.ts`: Mode 시스템 정의 존재
+- [ ] `caret-src/core/modes/CaretModeManager.ts`: Mode 관리자 존재
+
+**i18n System (F02)**:
+- [ ] `src/shared/Languages.ts`: UILanguageKey 타입 추가 (ko, en, ja, zh-CN)
+- [ ] `webview-ui/src/caret/utils/i18n.ts`: i18n 유틸리티 존재
+- [ ] `webview-ui/src/caret/locale/`: 번역 파일들 존재
+
+**📝 이 체크리스트를 사용하여**:
+1. Phase 2 (Upstream 완전 채택) 전에 현재 상태 기록
+2. Phase 4 (Backend 재구현) 시 복원 대상 확인
+3. Phase 5 (Frontend 재구현) 시 UI 통합 확인
+4. 최종 검증 시 모든 항목 재확인
+
 #### 완료 기준
 - ✅ 백업 브랜치 및 태그 생성
 - ✅ 머징 브랜치 생성 및 upstream 최신화
 - ✅ 작업 환경 검증 완료
+- ✅ Caret 고유 기능 인벤토리 확인 ⭐
 
 #### 예상 위험 및 대응
 - ⚠️ **위험**: upstream remote 미설정
@@ -338,6 +384,104 @@ Caret은 이미 모든 오류를 해결했으므로, 머징 시 Caret의 솔루�
 4. Merge Notes 추가 (특이사항, lint 오류, 보류 사항 등 기록)
 
 **⚠️ 중요**: Feature 구현만 하고 문서를 잊으면 안됩니다! 각 Phase마다 반드시 문서 작업 포함!
+
+---
+
+#### 🔍 State Management 3-Point 검증 체크리스트 ⭐ **신규**
+
+**배경**: 2025-10-13 Account System 복원 과정에서 발견된 문제
+- 증상: AccountView에서 caretUser가 항상 null
+- 근본 원인: Backend state 관리 3단계 중 2단계 누락 (state-keys.ts, state-helpers.ts)
+- 결과: Frontend 타입은 정상이지만 실제 데이터가 전달되지 않음
+
+**모든 Caret 고유 State를 추가할 때 3단계 모두 확인 필수**:
+
+##### ✅ Point 1: 타입 정의 (state-keys.ts)
+```typescript
+// src/core/storage/state-keys.ts
+import { CaretUser } from "@/shared/CaretAccount"
+
+export interface Settings {
+  // ... 기존 필드들 ...
+  caretUserProfile: CaretUser | undefined    // ⭐ 필수
+  inputHistory: string[] | undefined         // ⭐ 필수
+}
+```
+
+**체크리스트**:
+- [ ] state-keys.ts에 타입 정의 추가
+- [ ] 필요한 import 추가 (예: CaretUser)
+- [ ] undefined 허용 타입으로 정의 (`| undefined`)
+
+##### ✅ Point 2: 데이터 로딩 (state-helpers.ts - Loading)
+```typescript
+// src/core/storage/utils/state-helpers.ts (readWorkspaceStateFromDisk 함수 내)
+
+// ⭐ globalState에서 로딩 (line ~201)
+const caretUserProfile = context.globalState.get<GlobalStateAndSettings["caretUserProfile"]>("caretUserProfile")
+const inputHistory = context.globalState.get<GlobalStateAndSettings["inputHistory"]>("inputHistory")
+```
+
+**체크리스트**:
+- [ ] context.globalState.get() 호출 추가
+- [ ] 타입 추론 정확성 확인 (`GlobalStateAndSettings["필드명"]`)
+- [ ] 변수명과 키 이름 일치 확인
+
+##### ✅ Point 3: State 포함 (state-helpers.ts - Inclusion)
+```typescript
+// src/core/storage/utils/state-helpers.ts (return 문 내)
+
+return {
+  // ... 기존 필드들 ...
+  caretUserProfile,    // ⭐ 필수 - Line ~472
+  inputHistory,        // ⭐ 필수 - Line ~473
+}
+```
+
+**체크리스트**:
+- [ ] return 객체에 필드 추가
+- [ ] 필드명이 state-keys.ts와 정확히 일치
+- [ ] 모든 3 Point 완료 후 컴파일 검증
+
+##### 🚫 Point 4: Proto는 필요 없음
+```typescript
+// ❌ proto/cline/state.proto에 추가하지 말 것
+// optional string caret_user_profile = 230;  // 잘못된 시도
+
+// ✅ globalState + TypeScript 타입으로만 관리
+// Reason: VSCode extension은 globalState를 사용, proto는 serialization용
+```
+
+**체크리스트**:
+- [ ] proto 파일에 추가하지 않았는지 확인
+- [ ] 복잡한 객체는 globalState 직접 사용 원칙 확인
+
+##### 📋 검증 방법
+```bash
+# 1. 타입 정의 확인
+grep "caretUserProfile" src/core/storage/state-keys.ts
+
+# 2. 로딩 코드 확인
+grep -A 2 "caretUserProfile.*globalState.get" src/core/storage/utils/state-helpers.ts
+
+# 3. State 포함 확인
+grep "caretUserProfile," src/core/storage/utils/state-helpers.ts
+
+# 4. Frontend 타입 확인
+grep "caretUserProfile" src/shared/api.ts
+grep "caretUser" webview-ui/src/components/account/AccountView.tsx
+```
+
+**완료 기준**:
+- ✅ 3 Point 모두 구현 완료
+- ✅ Proto에 추가하지 않음 (globalState만 사용)
+- ✅ 컴파일 성공 (TypeScript 0 errors)
+- ✅ Frontend에서 데이터 정상 수신 확인
+
+**⚠️ 절대 규칙**:
+1. 타입만 정의하고 로딩/포함을 빠뜨리면 → 데이터 null (가장 흔한 실수)
+2. Proto로 전달하려 하면 → 타입 충돌 발생
+3. 필드명 불일치 (예: caretUser vs caretUserProfile) → undefined 발생
 
 #### 재구현 순서 (의존성 기반)
 
@@ -1478,9 +1622,74 @@ providers.{providerId}.modelPicker.{key}
 **목표**: 통합 테스트 및 배포 준비
 
 **예상 시간**: 4-6시간
-**현재 상태**: ⏸️ 대기 중 (Phase 5 완료 후)
+**현재 상태**: 🔄 진행 중 (10차 피드백 완료, **Cline 프롬프트 개선사항 반영 완료 ✅**)
 
 #### 작업 단계
+
+##### Step 6.0: Cline 프롬프트 개선사항 반영 ⭐ **신규** (2025-10-14)
+
+**목표**: Cline upstream 프롬프트 개선사항을 Caret JSON 시스템에 적용
+
+**작업 내용**:
+- ✅ **Multiple SEARCH/REPLACE blocks 최적화** (Cline commit 41202df74)
+  - 같은 파일 편집 시 단일 API 요청으로 처리
+  - 예상 효과: API 요청 30-50% 감소
+  - 파일: `caret-src/core/prompts/sections/CARET_FILE_EDITING.json`
+  - 변경: 20줄 → 23줄, ~130 → ~320 토큰 (+146%)
+
+- ✅ **TODO 업데이트 타이밍 명확화** (Cline commit f0cd7fd36)
+  - "Every 10th API request" 명시적 타이밍
+  - "Chatbot → Agent" 모드 전환 시 자동 생성
+  - "Silent Updates" (사용자에게 공지 안 함)
+  - Quality Standards 추가 (actionable, meaningful, user value)
+  - 파일: `caret-src/core/prompts/sections/CARET_TODO_MANAGEMENT.json`
+  - 변경: 11줄 → 27줄, ~40 → ~320 토큰 (+700%)
+  - 구조: Legacy (chatbot/agent 분리) → 표준 (sections, mode: "both")
+
+**검증 완료**:
+- ✅ 다른 AI(Claude Sonnet 4.5) 독립 크로스체크 (95% 신뢰도)
+- ✅ JSON 문법 검증 통과
+- ✅ TypeScript 컴파일 성공 (0 errors)
+- ✅ 구조 일관성 확인 (mode: "both")
+- ✅ Legacy 키 제거 확인 (chatbot, agent 삭제)
+- ✅ 핵심 문구 포함 확인 ("multiple SEARCH/REPLACE blocks", "Every 10th API request")
+
+**백업 생성**:
+- `CARET_FILE_EDITING.json.bak-20251014` (1,000 bytes)
+- `CARET_TODO_MANAGEMENT.json.bak-20251014` (187 bytes)
+
+**예상 효과**:
+- 🚀 API 요청 30-50% 감소 (같은 파일 다중 편집)
+- ⏱️ 응답 시간 67% 단축 (15초 → 5초)
+- 📊 TODO 관리 일관성 100% 개선 (10회마다 업데이트)
+- 📝 전체 시스템 토큰 +0.47% (무시 가능)
+
+**관련 문서**:
+- `caret-docs/work-logs/luke/2025-10-14-cline-prompt-analysis.md` - 초기 분석
+- `caret-docs/work-logs/luke/2025-10-14-DETAILED-MODIFICATION-SPECS.md` - 상세 명세
+- `caret-docs/work-logs/luke/2025-10-14-CROSS-CHECK-VALIDATION-GUIDE.md` - 검증 가이드
+- `caret-docs/work-logs/luke/2025-10-14-prompt-spec-verification-report.md` - 검증 보고서
+- `caret-docs/work-logs/luke/2025-10-14-FINAL-IMPLEMENTATION-FILES.md` - 최종 구현
+- `caret-docs/work-logs/luke/2025-10-14-IMPLEMENTATION-COMPLETE.md` - 완료 보고서
+
+**체크리스트**:
+- [x] Cline 프롬프트 변경사항 분석 완료
+- [x] 상세 수정 명세서 작성 완료
+- [x] 크로스체크 검증 가이드 작성 완료
+- [x] 다른 AI 독립 검증 완료 (95% 신뢰도 APPROVED)
+- [x] 최종 구현 파일 작성 완료
+- [x] 백업 생성 완료
+- [x] JSON 파일 수정 완료
+- [x] JSON 문법 검증 완료
+- [x] TypeScript 컴파일 성공 확인
+- [ ] VS Code Extension Host 수동 테스트 (다음 단계)
+- [ ] Agent 모드 프롬프트 확인 (다음 단계)
+- [ ] Chatbot 모드 프롬프트 확인 (다음 단계)
+
+**프로세스 표준화**:
+이 작업 프로세스가 `merge-standard-guide.md`의 "교훈 3"으로 추가되어 향후 Cline 프롬프트 개선사항 반영 시 재사용 가능
+
+---
 
 ##### Step 6.1: 통합 테스트
 ```bash
@@ -1518,6 +1727,15 @@ npm run test:e2e
 - [ ] F09: Feature Config 정상 동작
 - [ ] F10: 프로바이더 설정 정상
 - [ ] F11: Input History 정상
+
+**State Management 검증** (7차 피드백 교훈 반영):
+- [ ] state-keys.ts: 모든 Caret 필드 타입 정의 확인
+- [ ] state-helpers.ts: globalState 로드 코드 확인
+- [ ] state-helpers.ts: ExtensionState 반환 객체 필드 확인
+- [ ] updateSettings.ts: 모든 Caret 설정 핸들러 확인
+- [ ] proto/cline/state.proto: 모든 Caret 필드 정의 확인
+- [ ] Backend-Frontend 동기화: ExtensionStateContext 필드명 일치 확인
+- [ ] 초기값 테스트: 설정값이 undefined가 아닌 정상 기본값으로 초기화되는지 확인
 
 ##### Step 6.3: 성능 및 안정성 검증
 - [ ] 메모리 누수 체크
@@ -1578,6 +1796,250 @@ git tag v0.3.0
 - ✅ 11개 Feature 정상 동작
 - ✅ 문서 업데이트 완료
 - ✅ v0.3.0 릴리스 준비 완료
+
+#### Phase 6 Lessons Learned (2025-10-14 추가)
+
+##### 7차 피드백 근본 원인: State Management 코드 완전 손실
+
+**문제점**:
+- **증상**: Backend가 `currentMode: 'caret'` 반환하지만 Frontend ExtensionState는 `undefined`
+- **근본 원인**: Cline upstream 머징 시 Caret backend state 관리 코드가 완전히 누락됨
+  - `state-keys.ts`: caretModeSystem 타입 정의 손실
+  - `state-helpers.ts`: globalState 로드 코드 손실
+  - `updateSettings.ts`: request.modeSystem 핸들러 손실
+  - Proto 정의만 존재하고 백엔드 처리 로직 없음
+
+**왜 머징에서 손실되었나**:
+- Caret 기능은 caret-main에만 존재 (Cline upstream에 없음)
+- 머징 시 Cline의 state-keys.ts로 완전히 덮어씌워짐
+- state-helpers.ts, updateSettings.ts도 동일하게 Caret 추가 코드 손실
+- Proto 정의만 남고 실제 처리 로직이 빠진 상태로 남음
+
+**7차 수정사항 (2025-10-14)**:
+1. `src/core/storage/state-keys.ts` (lines 174-187): Caret 타입 정의 재추가
+2. `src/core/storage/utils/state-helpers.ts` (lines 256-261, 585-590): globalState 로드 및 반환 코드 재추가
+3. `src/core/controller/state/updateSettings.ts` (lines 294-311): Caret 설정 핸들러 재추가
+4. `proto/cline/state.proto` (line 347): current_persona 필드 추가
+
+**향후 머징 개선 방안**:
+
+1. **State 파일 체크리스트 필수 확인**:
+   - [ ] `state-keys.ts`: 모든 Caret 타입 정의 존재 확인
+   - [ ] `state-helpers.ts`: 모든 Caret 필드 로드 코드 존재 확인
+   - [ ] `state-helpers.ts`: ExtensionState 반환 객체에 모든 Caret 필드 포함 확인
+   - [ ] `updateSettings.ts`: 모든 Caret 설정 핸들러 존재 확인
+
+2. **Proto-Backend-Frontend 전체 플로우 검증**:
+   - Proto에 필드 추가 시 → 반드시 backend 처리 로직 포함 확인
+   - Backend 처리 로직 없으면 항상 undefined 반환
+   - Frontend ExtensionStateContext 필드명이 backend와 일치하는지 확인
+
+3. **백엔드 초기화 로직 검증**:
+   - globalState.get() 호출이 모든 Caret 필드에 대해 존재하는지 확인
+   - 기본값 설정이 올바른지 확인 (예: `modeSystem || "caret"`)
+   - setGlobalState() 호출이 updateSettings.ts에 모두 존재하는지 확인
+
+4. **머징 전략 개선**:
+   - State 관련 파일은 "Cline 우선 → Caret 추가" 방식 금지
+   - 반드시 "Caret 파일 유지 → Cline 변경사항 선택적 추가" 방식 사용
+   - 머징 후 즉시 state 관련 파일 3종 검증 (keys, helpers, updateSettings)
+
+##### 8차 피드백 근본 원인: Upstream Cline이 i18n을 영문 하드코딩으로 덮어씀
+
+**문제점 (Item 1.5)**:
+- **증상**: OpenRouterModelPicker의 featuredModels 설명이 영문으로 표시
+  - "Recommended for agentic coding in Cline"
+  - "Advanced model with 262K context for complex coding"
+- **근본 원인**: Cline upstream 커밋이 Caret의 i18n을 영문 하드코딩으로 덮어씀
+  - Caret v0.2.2 (53ca45269): `t("providers.openrouter.modelPicker.featuredModelDescriptionBest", "settings")` 사용
+  - Cline upstream (ab88599e0): `description: "Recommended for agentic coding in Cline"` 하드코딩
+  - 머징 시: Cline의 변경사항이 Caret의 i18n을 완전히 덮어버림
+
+**왜 머징에서 손실되었나**:
+- Phase 5.0에서 caret-main/webview-ui를 전체 복사했으나, Cline이 이후 변경한 파일은 자동으로 Cline 버전 채택
+- OpenRouterModelPicker.tsx가 Phase 5 체크리스트에 없어서 검증 누락
+- i18n 검증 단계가 없어서 영문 하드코딩 발견 못함
+
+**8차 수정사항 (2025-10-13)**:
+1. `webview-ui/src/components/settings/OpenRouterModelPicker.tsx`:
+   - featuredModels 배열 i18n 재적용 (lines 48-65)
+   - "Model" 레이블 i18n 적용 (line 244)
+2. `webview-ui/src/components/settings/common/ContextWindowSwitcher.tsx`:
+   - "Switch to 1M/200K context window model" i18n 적용 (lines 27, 33)
+3. `webview-ui/src/components/settings/providers/AnthropicProvider.tsx`:
+   - providerName 하드코딩 제거, t() 함수로 변경
+4. `webview-ui/src/components/settings/common/ApiKeyField.tsx`:
+   - caret-main에서 완전 복원 (전체 i18n 지원)
+5. `webview-ui/src/caret/locale/ko/settings.json` (및 en, ja, zh):
+   - LiteLLM 번역 키 6개 추가 (fetchModels, fetchingModels, baseUrlRequired, noModelsFound, fetchError, selectModelPlaceholder)
+   - 근본 원인: Anthony의 두 브랜치 머징(096a2e4d6) 시 손실됨
+
+**향후 머징 개선 방안**:
+
+1. **Frontend i18n 전체 검증 체크리스트 필수**:
+   - [ ] 모든 ModelPicker 파일 하드코딩된 문자열 확인
+   - [ ] featuredModels 배열 i18n 적용 확인
+   - [ ] ContextWindowSwitcher 등 공통 컴포넌트 i18n 확인
+   - [ ] ApiKeyField 등 공통 form 컴포넌트 i18n 확인
+   - [ ] 모든 Provider 컴포넌트 providerName prop i18n 확인
+   - [ ] 번역 파일(ko/en/ja/zh settings.json) 키 누락 확인
+   - [ ] 머징 후 언어 전환 테스트 실시 (한글/영어/일본어/중국어)
+
+2. **Cline 변경 파일 추적 시스템**:
+   - Cline upstream이 변경한 파일 목록 자동 추출
+   - 각 변경 파일에 대해 Caret i18n 손실 여부 검증
+   - 체크리스트에 자동 추가하여 누락 방지
+
+3. **i18n 무결성 자동 검증**:
+   - 하드코딩된 영문 문자열 자동 탐지 스크립트 작성
+   - `t("key", "namespace")` 패턴 누락 검사
+   - CI/CD 파이프라인에 i18n 검증 단계 추가
+
+4. **머징 후 즉시 검증**:
+   - Phase 5 완료 후 즉시 전체 i18n 검증 실행
+   - 각 언어별 UI 스크린샷 비교 (자동화)
+   - 하드코딩된 문자열 발견 시 자동 알림
+
+##### 8차 피드백: CHANGELOG 및 버전 관리
+
+**작업 내용 (Item 2.2)**:
+- **CHANGELOG-CLINE.md 생성**: 기존 `CHANGELOG.md` → `CHANGELOG-CLINE.md`로 이름 변경
+- **새로운 CHANGELOG.md 작성**: Caret v0.3.0 릴리스 노트 작성
+  - v0.3.0: Cline v3.32.7 머징 (commit `03177da87`), 브랜치: `merge/cline-upstream-20251009`
+  - **중요**: v0.3.0에는 **Cline에서 가져온 기능만** 기록 (Focus Chain, 새 모델 지원 등)
+  - Previous versions: 모든 이전 버전 유지 (v0.2.3~v0.1.0)
+- **CHANGELOG 날짜 수정** (VS Code Marketplace 실제 배포 날짜로 수정):
+  - v0.2.3: 2025-10-01
+  - v0.2.22: 2025-09-21
+  - v0.2.21: 2025-09-18
+  - v0.2.0: 2025-09-11
+  - v0.1.3: 날짜 제거 (마켓플레이스에 없음)
+  - v0.1.2: 2025-08-13
+  - v0.1.1: 2025-07-18
+  - v0.1.0: 2025-07-06
+  - 4개 언어 모두 업데이트: CHANGELOG.md, caret-docs/ko/CHANGELOG.md, ja/CHANGELOG.md, zh-cn/CHANGELOG.md
+- **announcement.json 4개 언어 업데이트** (정확한 구분):
+  - **Current (v0.3.0)**: **Cline 기능만** - 최신 AI 모델 지원, 새로운 기능(.clineignore, AWS Bedrock), Focus Chain, 아키텍처 개선
+  - **Previous (v0.2.x)**: **Caret 기능만** - 시스템 프롬프트 보강, 페르소나 이미지 저장, 다국어 지원, 버그 수정
+  - 언어: ko, en, ja, zh 모두 업데이트
+- **package.json 버전 확인**: v0.3.0 (이미 설정됨)
+
+**향후 릴리스 가이드**:
+1. **버전 번호 규칙**:
+   - Major (x.0.0): Cline upstream major merge
+   - Minor (0.x.0): Caret feature additions or Cline upstream minor merge
+   - Patch (0.0.x): Bug fixes and minor improvements
+2. **CHANGELOG 작성 규칙**:
+   - **Cline 머징 버전**: Cline에서 가져온 기능만 기록 (Caret 작업 내역 제외)
+   - **Caret 버전**: Caret 자체 기능만 기록
+   - Merge 커밋 번호 명시
+   - Merge 브랜치 이름 기록
+   - **날짜는 VS Code Marketplace 실제 배포 날짜 사용** (추정하지 말 것)
+   - 모든 이전 버전 내용 유지 (삭제하지 말 것)
+3. **announcement.json 작성 규칙**:
+   - **Current**: 현재 버전(v0.3.0)의 기능 - Cline 머징 시 Cline 기능만
+   - **Previous**: 이전 버전(v0.2.x)의 대표 기능 - Caret 고유 기능
+   - Current/Previous 구조로 CHANGELOG와 일관성 유지
+4. **Cline CHANGELOG 관리**:
+   - Upstream merge 시 항상 `CHANGELOG-CLINE.md`로 보존
+   - Caret CHANGELOG와 별도 관리
+
+##### 9차 피드백: VS Code API 중복, 브랜딩 하드코딩, Account 메뉴 해결 (2025-10-14)
+
+**작업 내용**:
+- **9차 수정 1**: VS Code API Duplication 해결 ✅
+  - **근본 원인**: `acquireVsCodeApi()` 2회 호출
+    1. `webview-ui/src/config/platform.config.ts:55` - 직접 호출
+    2. `webview-ui/src/utils/vscode.ts:27` - VSCodeAPIWrapper에서 호출
+  - **3-way 비교**:
+    - cline-latest: utils/vscode.ts 없음 (Caret 전용 파일)
+    - caret-main: vscode singleton 패턴 사용 (중복 방지)
+    - 현재: 머징 후 중복 호출 발생
+  - **수정 파일**: `webview-ui/src/config/platform.config.ts`
+    - Line 2: `import { vscode as vscodeSingleton } from "../utils/vscode"` 추가
+    - Line 55: 직접 `acquireVsCodeApi()` 호출 제거, `vscodeSingleton.postMessage()` 사용
+  - **검증**: Webview 정상 로딩 확인
+
+- **9차 수정 2**: 브랜딩 하드코딩 수정 ✅
+  - **근본 원인**: `src/common.ts` 버전 메시지에 "Cline" 하드코딩
+    - Line 88-89: "Cline version changed" 로거
+    - Lines 97-100: "Cline has been updated", "Welcome to Cline"
+    - Cline upstream 머징 시 Caret 브랜딩 손실
+  - **수정 파일**: `src/common.ts`
+    - Line 88-89: "Cline" → "Caret" + CARET MODIFICATION 주석
+    - Lines 96-100: 모든 "Cline" → "Caret" 변경
+  - **검증**: 버전 메시지 "Caret has been updated to v0.3.0" 정상 표시
+
+- **9차 수정 3**: Account 메뉴 CaretAccountView 미표시 해결 ✅
+  - **근본 원인**:
+    - AccountView.tsx 3-way 분기는 이미 구현됨: `caretUser?.id ? <CaretAccountView /> : ...`
+    - 백엔드 state-helpers.ts는 caretUserProfile 로딩 정상 (lines 200, 471)
+    - **문제**: ExtensionStateContext.tsx가 backend의 caretUserProfile을 caretUser state로 설정 안 함
+    - 결과: caretUser 항상 null → ClineAccountView만 표시됨
+  - **수정 파일 1**: `webview-ui/src/context/ExtensionStateContext.tsx`
+    - Lines 417-420: backend stateData.apiConfiguration.caretUserProfile 체크
+    - `setCaretUserState(stateData.apiConfiguration.caretUserProfile)` 호출 추가
+  - **수정 파일 2**: `webview-ui/src/components/account/AccountView.tsx`
+    - Lines 45-51: Debug logging 추가 (hasCaretUser, caretUserId, hasClineUser, clineUserUid)
+  - **검증 대기**: VS Code 재시작 후 CaretAccountView 정상 표시 확인 필요
+
+**향후 머징 개선 사항**:
+1. **Singleton 패턴 체크**: Caret 전용 파일 (utils/vscode.ts)을 다른 파일에서 사용 시 중복 호출 주의
+2. **브랜딩 일관성**: common.ts, extension.ts 등 초기화 코드의 하드코딩 체크
+3. **State Flow 검증**: Backend (state-helpers) → ExtensionState → Frontend Context 전체 흐름 확인
+
+##### 10차 피드백: Mode 초기화, JSON 로더, 프롬프트 분석 준비 ✅ **완료** (2025-10-14)
+
+**작업 문서**: `caret-docs/work-logs/luke/2025-10-14-merge-feedback.md`
+
+**완료된 작업**:
+
+1. **Default Mode 초기화 하드코딩 제거** ✅
+   - **근본 원인**: state-helpers.ts와 ExtensionStateContext.tsx에서 "act" 하드코딩
+   - **수정사항**:
+     - `caret-src/shared/ModeSystem.ts`: `getDefaultModeForModeSystem()` 헬퍼 함수 추가
+     - `src/core/storage/utils/state-helpers.ts` (line 576-578): 헬퍼 함수 사용하도록 수정
+     - `webview-ui/src/context/ExtensionStateContext.tsx` (line 244): `DEFAULT_CARET_SETTINGS.mode` 사용
+   - **검증**: Caret 모드는 "agent", Cline 모드는 "act" 기본값 정상 동작
+
+2. **Mode Type 확장** ✅
+   - **근본 원인**: Mode 타입이 "plan" | "act" 만 포함, Caret의 "chatbot" | "agent" 미지원
+   - **수정사항**:
+     - `src/shared/storage/types.ts` (line 3-4): `Mode` 타입을 4개 모드로 확장
+     - `webview-ui/src/components/settings/utils/useApiConfigurationHandlers.ts` (line 69-76): Caret→Cline 모드 매핑 추가
+   - **검증**: TypeScript 컴파일 성공, 모든 4개 모드 타입 지원
+
+3. **JsonTemplateLoader 초기화 버그 수정** ✅
+   - **근본 원인**: JsonTemplateLoader.initialize()가 extension 시작 시 호출되지 않음
+   - **증상**: Agent 모드에서 "JsonTemplateLoader has not been initialized" 에러
+   - **수정사항**:
+     - `src/common.ts` (line 43-51): StateManager 초기화 후 JsonTemplateLoader 초기화 추가
+     - `caret-src/core/prompts/CaretPromptWrapper.ts` (line 34-43): 중복 초기화 코드 제거
+   - **검증**: Agent 모드에서 JSON 프롬프트 정상 로딩
+
+4. **Cline 프롬프트 분석 작업 준비** ✅
+   - **작업 문서 생성**: `caret-docs/work-logs/luke/2025-10-14-prompt-analysis-task-specification.md` (15페이지)
+   - **초기 분석 문서**: `caret-docs/work-logs/luke/2025-10-14-cline-prompt-analysis.md`
+   - **내용**:
+     - Cline의 5가지 시스템 프롬프트 개선사항 식별
+     - 우선순위 분류 (HIGH 3개, MEDIUM 2개)
+     - Caret JSON 시스템 반영 방안 제시
+     - 외부 AI가 상세 분석할 수 있도록 필요한 모든 정보 포함
+
+**수정된 파일 목록**:
+- `caret-src/shared/ModeSystem.ts` - getDefaultModeForModeSystem() 추가
+- `src/shared/storage/types.ts` - Mode 타입 확장
+- `src/core/storage/utils/state-helpers.ts` - 헬퍼 함수 사용
+- `webview-ui/src/context/ExtensionStateContext.tsx` - 기본값 상수 사용
+- `webview-ui/src/components/settings/utils/useApiConfigurationHandlers.ts` - 모드 매핑
+- `src/common.ts` - JsonTemplateLoader 초기화
+- `caret-src/core/prompts/CaretPromptWrapper.ts` - 중복 초기화 제거
+
+**향후 머징 개선 사항**:
+1. **공통 타입 사용 강제**: 하드코딩된 문자열 대신 상수/헬퍼 함수 사용
+2. **초기화 시점 검증**: Singleton 패턴 객체는 extension 시작 시 초기화 필수
+3. **타입 완전성 확인**: Caret 추가 타입이 모든 관련 파일에 반영되었는지 검증
+4. **프롬프트 개선 추적**: Upstream 프롬프트 변경사항을 Caret에 주기적으로 반영
 
 ---
 
@@ -1806,6 +2268,7 @@ git reset --hard backup/main-v0.2.4-20251009
 - ✅ 모든 테스트 통과 (컴파일, 타입, unit, E2E)
 - ✅ CARET MODIFICATION 주석 일관성
 - ✅ 최소 침습 원칙 준수
+- ✅ Caret 고유 타입 시스템 보존 ⭐ **신규**
 
 ### 바람직한 조건 (Should Have)
 - ✅ 성능 저하 없음
@@ -1817,6 +2280,138 @@ git reset --hard backup/main-v0.2.4-20251009
 - ✅ 추가 기능 개선
 - ✅ 리팩토링 기회 활용
 - ✅ 테스트 커버리지 향상
+
+---
+
+### 🛡️ Caret 타입 시스템 보존 가이드라인 ⭐ **신규**
+
+**배경**: 2025-10-13 Account System 복원 시 발견된 타입 손상 사례
+- 증상: `src/shared/api.ts`에서 `caretUserProfile?: CaretUser`가 `caretUserProfile?: string`으로 변경됨
+- 영향: TypeScript는 컴파일 성공하지만, Frontend에서 올바른 객체 구조 사용 불가
+- 근본 원인: Merge 과정에서 Caret 타입이 단순 타입으로 손상
+
+**필수 검증 항목**:
+
+#### ✅ 1. CaretUser 타입 보존
+```typescript
+// ❌ 잘못된 예 (merge 과정에서 손상됨)
+export interface ApiConfiguration {
+  caretUserProfile?: string  // 타입 손상
+}
+
+// ✅ 올바른 예
+import type { CaretUser } from "./CaretAccount"
+export interface ApiConfiguration {
+  caretUserProfile?: CaretUser  // 완전한 객체 타입
+}
+```
+
+**검증 명령어**:
+```bash
+# CaretUser 타입 사용 확인
+grep -n "caretUserProfile.*CaretUser" src/shared/api.ts
+
+# 손상 여부 확인 (string으로 변경되었는지)
+grep -n "caretUserProfile.*string" src/shared/api.ts
+```
+
+#### ✅ 2. CaretUser 타입 정의 일관성
+```typescript
+// src/shared/CaretAccount.ts - 단일 정의 소스
+export interface CaretUser {
+  id: string           // ⚠️ NOT "uid" - Caret는 "id" 사용
+  email: string
+  displayName: string
+  apiKey?: string
+  models?: CaretModel[]
+  dailyUsage?: DailyUsage
+  // ... 기타 필드들
+}
+```
+
+**중복 정의 방지**:
+- ❌ `webview-ui/src/context/ExtensionStateContext.tsx`에 로컬 CaretUser 정의 금지
+- ✅ 항상 `@shared/CaretAccount`에서 import
+
+**검증 명령어**:
+```bash
+# 중복 정의 확인 (단일 정의만 존재해야 함)
+grep -rn "interface CaretUser" src/ webview-ui/src/
+
+# 올바른 import 확인
+grep -rn "import.*CaretUser.*@shared/CaretAccount" src/ webview-ui/src/
+```
+
+#### ✅ 3. 필드명 일관성 (id vs uid)
+```typescript
+// ✅ Caret Account System은 "id" 사용
+caretUser?.id   // Correct
+
+// ❌ Cline Account System은 "uid" 사용 (혼동 주의)
+clineUser?.uid  // Different system
+```
+
+**검증 명령어**:
+```bash
+# Caret 컴포넌트에서 uid 사용 확인 (있으면 안됨)
+grep -rn "caretUser.*uid" webview-ui/src/caret/
+
+# id 사용 확인 (정상)
+grep -rn "caretUser.*\\.id" webview-ui/src/caret/
+```
+
+#### ✅ 4. PersonaProfile 타입 보존
+```typescript
+// src/shared/types.ts 또는 caret-src/shared/
+export interface PersonaProfile {
+  id: string
+  name: string
+  description: string
+  imageUrl?: string
+  // ... 기타 필드들
+}
+```
+
+**검증 명령어**:
+```bash
+# PersonaProfile 타입 사용 확인
+grep -rn "PersonaProfile" src/core/storage/state-keys.ts
+
+# 타입 손상 확인 (string으로 변경되었는지)
+grep -rn "personaProfile.*string" src/
+```
+
+#### 📋 머징 후 필수 검증 체크리스트
+
+**Phase 2 (Upstream 완전 채택) 직후**:
+- [ ] `src/shared/api.ts`: CaretUser 타입 확인 (NOT string)
+- [ ] `src/shared/CaretAccount.ts`: CaretUser 타입 정의 존재 확인
+- [ ] `src/core/storage/state-keys.ts`: CaretUser, PersonaProfile 타입 사용 확인
+
+**Phase 4 (Backend 재구현) 중**:
+- [ ] 타입 import 추가 시 정확한 경로 사용 (`@shared/CaretAccount`)
+- [ ] 중복 타입 정의 금지 (기존 타입 재사용)
+- [ ] 필드명 일관성 확인 (id vs uid)
+
+**Phase 5 (Frontend 재구현) 중**:
+- [ ] Frontend 컴포넌트에서 올바른 타입 import
+- [ ] ExtensionStateContext에 중복 정의 없음 확인
+- [ ] CaretAccountView에서 caretUser.id 사용 (NOT uid)
+
+**최종 검증**:
+```bash
+# 전체 타입 일관성 검증
+npm run check-types
+
+# 특정 타입 검증 스크립트
+bash caret-scripts/verify-caret-types.sh
+```
+
+**⚠️ 절대 규칙**:
+1. **CaretUser는 객체 타입** - 절대 string으로 단순화하지 말 것
+2. **단일 정의 원칙** - `@shared/CaretAccount`에서만 정의, 다른 곳에서 import
+3. **필드명 일관성** - Caret는 `id`, Cline은 `uid` (혼동 금지)
+4. **Proto 회피** - 복잡한 객체는 globalState + TypeScript 타입 사용, proto 사용 금지
 
 ---
 

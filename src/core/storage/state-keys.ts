@@ -4,6 +4,8 @@ import { LanguageModelChatSelector } from "vscode"
 import { WorkspaceRoot } from "@/core/workspace/WorkspaceRoot"
 import { AutoApprovalSettings } from "@/shared/AutoApprovalSettings"
 import { BrowserSettings } from "@/shared/BrowserSettings"
+// CARET MODIFICATION: Import CaretUser for account system
+import { CaretUser } from "@/shared/CaretAccount"
 import { ClineRulesToggles } from "@/shared/cline-rules"
 import { DictationSettings } from "@/shared/DictationSettings"
 import { HistoryItem } from "@/shared/HistoryItem"
@@ -97,6 +99,7 @@ export interface Settings {
 	mode: Mode
 	dictationSettings: DictationSettings
 	focusChainSettings: FocusChainSettings
+	focusChainFeatureFlagEnabled: boolean
 	customPrompt: "compact" | undefined
 	difyBaseUrl: string | undefined
 	autoCondenseThreshold: number | undefined // number from 0 to 1
@@ -171,6 +174,26 @@ export interface Settings {
 	actModeVercelAiGatewayModelInfo: ModelInfo | undefined
 	actModeOcaModelId: string | undefined
 	actModeOcaModelInfo: OcaModelInfo | undefined
+	// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 (Caret/Cline 구분)
+	caretModeSystem: "caret" | "cline" | undefined
+	// CARET MODIFICATION: Frontend-compatible field name (maps to caretModeSystem in storage)
+	modeSystem: "caret" | "cline" | undefined
+	// CARET MODIFICATION: Persona system settings
+	enablePersonaSystem: boolean | undefined
+	currentPersona: string | undefined
+	personaProfile:
+		| {
+				name?: string
+				description?: string
+				custom_instruction?: string
+				avatar_uri?: string
+				thinking_avatar_uri?: string
+		  }
+		| undefined
+	// CARET MODIFICATION: Caret account profile for account system
+	caretUserProfile: CaretUser | undefined
+	// CARET MODIFICATION: F11 - Input History System
+	inputHistory: string[] | undefined
 }
 
 export interface Secrets {

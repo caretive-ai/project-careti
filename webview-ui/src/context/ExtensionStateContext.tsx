@@ -1,12 +1,14 @@
 import type React from "react"
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import "../../../src/shared/webview/types"
-// import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
 // CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 타입과 유틸리티 임포트 (caret-src에서)
 import { type CaretModeSystem } from "@caret/shared/ModeSystem"
 import { DEFAULT_AUTO_APPROVAL_SETTINGS } from "@shared/AutoApprovalSettings"
 import { findLastIndex } from "@shared/array"
 import { DEFAULT_BROWSER_SETTINGS } from "@shared/BrowserSettings"
+// import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
+// CARET MODIFICATION: Import CaretUser from @shared/CaretAccount instead of defining locally
+import type { CaretUser } from "@shared/CaretAccount"
 import type { CaretSettings } from "@shared/CaretSettings"
 import { DEFAULT_CARET_SETTINGS } from "@shared/CaretSettings"
 import { DEFAULT_PLATFORM, type ExtensionState } from "@shared/ExtensionMessage"
@@ -46,14 +48,7 @@ import {
 	UiServiceClient,
 } from "../services/grpc-client"
 
-// CARET MODIFICATION: CaretUser type based on ClineUser for Caret account system
-export interface CaretUser {
-	uid: string
-	email?: string
-	displayName?: string
-	photoUrl?: string
-	appBaseUrl?: string
-}
+// CARET NOTE: CaretUser type now imported from @shared/CaretAccount above
 
 export interface ExtensionStateContextType extends ExtensionState {
 	caretSettings?: CaretSettings
@@ -176,6 +171,7 @@ export const ExtensionStateContextProvider: React.FC<{
 	const [showHistory, setShowHistory] = useState(false)
 	const [showAccount, setShowAccount] = useState(false)
 	const [showAnnouncement, setShowAnnouncement] = useState(false)
+	const [showChatModelSelector, setShowChatModelSelector] = useState(false)
 	// CARET MODIFICATION: Caret user state
 	const [caretUser, setCaretUserState] = useState<CaretUser | null>(null)
 
@@ -241,10 +237,11 @@ export const ExtensionStateContextProvider: React.FC<{
 		autoApprovalSettings: DEFAULT_AUTO_APPROVAL_SETTINGS,
 		browserSettings: DEFAULT_BROWSER_SETTINGS,
 		focusChainSettings: DEFAULT_FOCUS_CHAIN_SETTINGS,
-		focusChainFeatureFlagEnabled: false,
+		focusChainFeatureFlagEnabled: true,
 		preferredLanguage: "English",
 		openaiReasoningEffort: "medium",
-		mode: "act",
+		// CARET MODIFICATION: Use DEFAULT_CARET_SETTINGS.mode instead of hardcoded "act"
+		mode: DEFAULT_CARET_SETTINGS.mode,
 		// CARET MODIFICATION: Caret 전역 브랜드 모드 플래그 기본값 - Caret 모드로 시작
 		modeSystem: "caret" as CaretModeSystem,
 		showChatModelSelector: false,
@@ -416,6 +413,11 @@ export const ExtensionStateContextProvider: React.FC<{
 									: prevState.autoApprovalSettings,
 								// CARET MODIFICATION: Preserve localStorage persona setting
 								enablePersonaSystem: personaSetting,
+							}
+
+							// CARET MODIFICATION: Set caretUser from backend caretUserProfile
+							if (stateData.apiConfiguration?.caretUserProfile) {
+								setCaretUserState(stateData.apiConfiguration.caretUserProfile)
 							}
 
 							// CARET MODIFICATION: Sync ExtensionState to localStorage
@@ -834,10 +836,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		groqModels: groqModelsState,
 		caretModels: caretModelsState,
 		basetenModels: basetenModelsState,
-		showChatModelSelector: false,
-		setShowChatModelSelector: (_value: boolean) => {
-			// TODO: Implement chat model selector state
-		},
+		showChatModelSelector,
+		setShowChatModelSelector,
 		huggingFaceModels,
 		vercelAiGatewayModels,
 		mcpServers,

@@ -1,0 +1,582 @@
+# Caret 유틸리티 함수 가이드
+
+## 1. 상태 관리 유틸리티
+
+### 1.1 Storage Manager (확장)
+
+실제 구현 위치: `caret-src/core/storage/StorageManager.ts`
+
+```typescript
+export class StorageManager {
+	constructor(private context: vscode.ExtensionContext) {}
+
+	// Global State 관리
+	async save(key: string, value: any): Promise<void> {
+		try {
+			await this.context.globalState.update(key, value)
+			caretLogger.debug(`Saved data for key: ${key}`, "StorageManager")
+		} catch (error) {
+			caretLogger.error(`Failed to save data for key ${key}: ${error.message}`, "StorageManager")
+			throw error
+		}
+	}
+
+	async load(key: string): Promise<any> {
+		try {
+			const value = this.context.globalState.get(key)
+			caretLogger.debug(`Loaded data for key: ${key}`, "StorageManager")
+			return value
+		} catch (error) {
+			caretLogger.error(`Failed to load data for key ${key}: ${error.message}`, "StorageManager")
+			throw error
+		}
+	}
+
+	// Workspace State 관리
+	async saveWorkspace(key: string, value: any): Promise<void> {
+		try {
+			await this.context.workspaceState.update(key, value)
+			caretLogger.debug(`Saved workspace data for key: ${key}`, "StorageManager")
+		} catch (error) {
+			caretLogger.error(`Failed to save workspace data for key ${key}: ${error.message}`, "StorageManager")
+			throw error
+		}
+	}
+
+	async loadWorkspace(key: string): Promise<any> {
+		try {
+			const value = this.context.workspaceState.get(key)
+			caretLogger.debug(`Loaded workspace data for key: ${key}`, "StorageManager")
+			return value
+		} catch (error) {
+			caretLogger.error(`Failed to load workspace data for key ${key}: ${error.message}`, "StorageManager")
+			throw error
+		}
+	}
+}
+```
+
+### 1.2 Secret Manager (확장)
+
+실제 구현 위치: `caret-src/core/storage/SecretManager.ts`
+
+```typescript
+export class SecretManager {
+	constructor(private context: vscode.ExtensionContext) {}
+
+	// Secret 저장
+	async store(key: string, value: string): Promise<void> {
+		try {
+			await this.context.secrets.store(key, value)
+			caretLogger.debug(`Secret stored for key: ${key}`, "SecretManager")
+		} catch (error) {
+			caretLogger.error(`Failed to store secret for key ${key}: ${error.message}`, "SecretManager")
+			throw error
+		}
+	}
+
+	// Secret 로드
+	async get(key: string): Promise<string | undefined> {
+		try {
+			const value = await this.context.secrets.get(key)
+			caretLogger.debug(`Secret retrieved for key: ${key}`, "SecretManager")
+			return value
+		} catch (error) {
+			caretLogger.error(`Failed to get secret for key ${key}: ${error.message}`, "SecretManager")
+			throw error
+		}
+	}
+
+	// Secret 삭제
+	async delete(key: string): Promise<void> {
+		try {
+			await this.context.secrets.delete(key)
+			caretLogger.debug(`Secret deleted for key: ${key}`, "SecretManager")
+		} catch (error) {
+			caretLogger.error(`Failed to delete secret for key ${key}: ${error.message}`, "SecretManager")
+			throw error
+		}
+	}
+}
+```
+
+## 2. 파일 시스템 유틸리티
+
+### 2.1 경로 관리
+
+```typescript
+// 확장 저장소 경로
+function getExtensionStoragePath(context: vscode.ExtensionContext): string {
+	return context.globalStorageUri.fsPath
+}
+
+// 워크스페이스 경로
+function getWorkspacePath(): string {
+	return vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || ""
+}
+
+// 상대 경로 해결
+function resolveWorkspacePath(relativePath: string): string {
+	const workspacePath = getWorkspacePath()
+	if (!workspacePath) {
+		throw new Error("No workspace folder found")
+	}
+	return path.join(workspacePath, relativePath)
+}
+```
+
+### 2.2 파일 조작 (Node.js fs/promises 기반)
+
+```typescript
+import * as fs from "fs/promises"
+import * as path from "path"
+
+// 파일 읽기
+async function readFile(filePath: string): Promise<string> {
+	try {
+		return await fs.readFile(filePath, "utf-8")
+	} catch (error) {
+		caretLogger.error(`Failed to read file: ${filePath}`, "FileUtils")
+		throw error
+	}
+}
+
+// 파일 쓰기
+async function writeFile(filePath: string, content: string): Promise<void> {
+	try {
+		await ensureDirectory(path.dirname(filePath))
+		await fs.writeFile(filePath, content, "utf-8")
+		caretLogger.debug(`File written: ${filePath}`, "FileUtils")
+	} catch (error) {
+		caretLogger.error(`Failed to write file: ${filePath}`, "FileUtils")
+		throw error
+	}
+}
+
+// 디렉토리 생성 (재귀적)
+async function ensureDirectory(dirPath: string): Promise<void> {
+	try {
+		await fs.mkdir(dirPath, { recursive: true })
+	} catch (error) {
+		caretLogger.error(`Failed to create directory: ${dirPath}`, "FileUtils")
+		throw error
+	}
+}
+
+// 파일 존재 확인
+async function fileExists(filePath: string): Promise<boolean> {
+	try {
+		await fs.access(filePath)
+		return true
+	} catch {
+		return false
+	}
+}
+```
+
+## 3. 메시지 유틸리티
+
+### 3.1 Webview 메시지 시스템
+
+실제 구현 위치: `caret-src/core/webview/CaretProvider.ts`
+
+```typescript
+export class CaretProvider extends WebviewProvider {
+	// 메시지 전송
+	protected postMessage(message: any): void {
+		try {
+			this.webviewPanel?.webview.postMessage(message)
+			caretLogger.debug(`Message sent: ${message.type}`, "CaretProvider")
+		} catch (error) {
+			caretLogger.error(`Failed to send message: ${error.message}`, "CaretProvider")
+		}
+	}
+
+	// 메시지 핸들러
+	protected async handleWebviewMessage(message: any): Promise<any> {
+		try {
+			caretLogger.debug(`Message received: ${message.type}`, "CaretProvider")
+
+			switch (message.type) {
+				case "saveData":
+					return await this.handleSaveData(message)
+				case "loadData":
+					return await this.handleLoadData(message)
+				case "saveSecret":
+					return await this.handleSaveSecret(message)
+				case "loadSecret":
+					return await this.handleLoadSecret(message)
+				default:
+					throw new Error(`Unknown message type: ${message.type}`)
+			}
+		} catch (error) {
+			caretLogger.error(`Message handling failed: ${error.message}`, "CaretProvider")
+			return { type: "error", error: error.message }
+		}
+	}
+}
+```
+
+### 3.2 알림 메시지
+
+```typescript
+// 정보 메시지
+function showInfo(message: string): Thenable<string | undefined> {
+	caretLogger.info(`Showing info: ${message}`, "Notifications")
+	return vscode.window.showInformationMessage(message)
+}
+
+// 경고 메시지
+function showWarning(message: string): Thenable<string | undefined> {
+	caretLogger.warn(`Showing warning: ${message}`, "Notifications")
+	return vscode.window.showWarningMessage(message)
+}
+
+// 에러 메시지
+function showError(message: string): Thenable<string | undefined> {
+	caretLogger.error(`Showing error: ${message}`, "Notifications")
+	return vscode.window.showErrorMessage(message)
+}
+
+// 선택 메시지
+function showQuickPick(items: string[], options?: vscode.QuickPickOptions): Thenable<string | undefined> {
+	caretLogger.debug(`Showing quick pick with ${items.length} items`, "Notifications")
+	return vscode.window.showQuickPick(items, options)
+}
+```
+
+## 4. 로깅 유틸리티
+
+### 4.1 Caret Logger 통합
+
+실제 구현 위치: `caret-src/utils/caret-logger.ts`
+
+```typescript
+import { caretLogger } from "../utils/caret-logger"
+
+// 구조화된 로깅
+function logOperation(operation: string, details?: any): void {
+	caretLogger.info(`Operation: ${operation}`, "Utils", details)
+}
+
+function logError(operation: string, error: Error, context?: string): void {
+	caretLogger.error(`${operation} failed: ${error.message}`, context || "Utils", {
+		error: error.stack,
+		operation,
+	})
+}
+
+function logPerformance(operation: string, startTime: number): void {
+	const duration = Date.now() - startTime
+	caretLogger.debug(`${operation} completed in ${duration}ms`, "Performance")
+}
+```
+
+### 4.2 Webview Logger 통합
+
+실제 구현 위치: `webview-ui/src/caret/utils/CaretWebviewLogger.ts`
+
+```typescript
+import WebviewLogger from "./CaretWebviewLogger"
+
+// 프론트엔드에서 사용
+const logger = new WebviewLogger("Utils")
+
+function logUIOperation(operation: string, data?: any): void {
+	logger.info(`UI Operation: ${operation}`, data)
+}
+
+function logUIError(operation: string, error: Error): void {
+	logger.error(`UI Operation failed: ${operation}`, {
+		message: error.message,
+		stack: error.stack,
+	})
+}
+```
+
+**주요 기능:**
+- 안전한 webview 로깅 (오류로 인한 webview 로딩 실패 방지)
+- 개발/프로덕션 모드 자동 감지
+- 확장 호스트와의 안전한 통신
+- 브라우저 콘솔 로깅 지원
+
+### 4.3 URL 상수 관리
+
+실제 구현 위치: `webview-ui/src/caret/utils/urls.ts`
+
+```typescript
+import { CARET_URLS, CARET_LOCALIZED_URLS } from "./urls"
+
+// Caret 서비스 URL
+const serviceUrl = CARET_URLS.CARET_SERVICE
+const githubUrl = CARET_URLS.CARET_GITHUB
+
+// 다국어 지원 URL
+const getLocalizedUrl = (key: string, locale: string = "en") => {
+	return CARET_LOCALIZED_URLS[locale]?.[key] || CARET_URLS[key]
+}
+```
+
+**지원 URL 카테고리:**
+- Caret 서비스 관련 URL (공식 사이트, 계정, 크레딧)  
+- GitHub 저장소 URL (메인, 문서, 이슈)
+- 외부 서비스 URL (AI 프로바이더 등)
+- 다국어별 특화 URL
+
+## 5. 검증 유틸리티
+
+### 5.1 데이터 검증
+
+```typescript
+// 필수 필드 검증
+function validateRequiredFields(data: any, fields: string[]): boolean {
+	if (!data || typeof data !== "object") {
+		return false
+	}
+
+	return fields.every((field) => {
+		const value = data[field]
+		return value !== undefined && value !== null && value !== ""
+	})
+}
+
+// 타입 검증
+function validateType(value: any, expectedType: string): boolean {
+	const actualType = typeof value
+	return actualType === expectedType
+}
+
+// 배열 검증
+function validateArray<T>(value: any, validator?: (item: T) => boolean): value is T[] {
+	if (!Array.isArray(value)) {
+		return false
+	}
+
+	if (validator) {
+		return value.every(validator)
+	}
+
+	return true
+}
+
+// 문자열 길이 검증
+function validateStringLength(value: string, minLength?: number, maxLength?: number): boolean {
+	if (typeof value !== "string") {
+		return false
+	}
+
+	if (minLength !== undefined && value.length < minLength) {
+		return false
+	}
+
+	if (maxLength !== undefined && value.length > maxLength) {
+		return false
+	}
+
+	return true
+}
+```
+
+### 5.2 설정 검증
+
+```typescript
+// API 키 검증
+function validateApiKey(key: string): boolean {
+	if (!key || typeof key !== "string") {
+		return false
+	}
+
+	// 기본적인 API 키 형식 검증 (영숫자, 하이픈, 언더스코어)
+	return /^[A-Za-z0-9\-_]{8,}$/.test(key)
+}
+
+// URL 검증
+function validateUrl(url: string): boolean {
+	try {
+		new URL(url)
+		return true
+	} catch {
+		return false
+	}
+}
+
+// 모드 설정 검증
+function validateModeConfig(config: any): boolean {
+	const requiredFields = ["id", "name", "description"]
+
+	return (
+		validateRequiredFields(config, requiredFields) &&
+		validateType(config.id, "string") &&
+		validateType(config.name, "string") &&
+		validateType(config.description, "string") &&
+		validateStringLength(config.id, 1, 50) &&
+		validateStringLength(config.name, 1, 100)
+	)
+}
+```
+
+## 6. 비동기 유틸리티
+
+### 6.1 재시도 메커니즘
+
+```typescript
+// 재시도 유틸리티
+async function retry<T>(operation: () => Promise<T>, maxRetries: number = 3, delay: number = 1000): Promise<T> {
+	let lastError: Error
+
+	for (let i = 0; i < maxRetries; i++) {
+		try {
+			return await operation()
+		} catch (error) {
+			lastError = error as Error
+			caretLogger.warn(`Operation failed, retry ${i + 1}/${maxRetries}: ${error.message}`, "RetryUtils")
+
+			if (i < maxRetries - 1) {
+				await new Promise((resolve) => setTimeout(resolve, delay))
+			}
+		}
+	}
+
+	throw lastError!
+}
+
+// 지수 백오프
+async function retryWithBackoff<T>(operation: () => Promise<T>, maxRetries: number = 3, baseDelay: number = 1000): Promise<T> {
+	let lastError: Error
+
+	for (let i = 0; i < maxRetries; i++) {
+		try {
+			return await operation()
+		} catch (error) {
+			lastError = error as Error
+
+			if (i < maxRetries - 1) {
+				const delay = baseDelay * Math.pow(2, i)
+				caretLogger.warn(`Operation failed, retrying in ${delay}ms (attempt ${i + 1}/${maxRetries})`, "RetryUtils")
+				await new Promise((resolve) => setTimeout(resolve, delay))
+			}
+		}
+	}
+
+	throw lastError!
+}
+```
+
+### 6.2 타임아웃 유틸리티
+
+```typescript
+// 타임아웃 래퍼
+async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, timeoutMessage?: string): Promise<T> {
+	const timeoutPromise = new Promise<never>((_, reject) => {
+		setTimeout(() => {
+			reject(new Error(timeoutMessage || `Operation timed out after ${timeoutMs}ms`))
+		}, timeoutMs)
+	})
+
+	return Promise.race([promise, timeoutPromise])
+}
+
+// 배치 처리
+async function processBatch<T, R>(
+	items: T[],
+	processor: (item: T) => Promise<R>,
+	batchSize: number = 10,
+	delayMs: number = 100,
+): Promise<R[]> {
+	const results: R[] = []
+
+	for (let i = 0; i < items.length; i += batchSize) {
+		const batch = items.slice(i, i + batchSize)
+		const batchResults = await Promise.all(batch.map(processor))
+		results.push(...batchResults)
+
+		if (i + batchSize < items.length && delayMs > 0) {
+			await new Promise((resolve) => setTimeout(resolve, delayMs))
+		}
+	}
+
+	return results
+}
+```
+
+## 7. 테스트 유틸리티
+
+### 7.1 Mock 헬퍼
+
+```typescript
+// VSCode Extension Context Mock
+export function createMockExtensionContext(): Partial<vscode.ExtensionContext> {
+	return {
+		globalState: {
+			get: vi.fn(),
+			update: vi.fn(),
+			keys: vi.fn().mockReturnValue([]),
+		},
+		workspaceState: {
+			get: vi.fn(),
+			update: vi.fn(),
+			keys: vi.fn().mockReturnValue([]),
+		},
+		secrets: {
+			get: vi.fn(),
+			store: vi.fn(),
+			delete: vi.fn(),
+		},
+		globalStorageUri: vscode.Uri.file("/test/storage"),
+		extensionUri: vscode.Uri.file("/test/extension"),
+	} as any
+}
+
+// Webview Mock
+export function createMockWebview(): Partial<vscode.Webview> {
+	return {
+		postMessage: vi.fn(),
+		onDidReceiveMessage: vi.fn(),
+	} as any
+}
+```
+
+### 7.2 테스트 데이터 생성
+
+```typescript
+// 테스트 데이터 팩토리
+export class TestDataFactory {
+	static createMessage(type: string, payload?: any) {
+		return {
+			type,
+			timestamp: new Date().toISOString(),
+			...payload,
+		}
+	}
+
+	static createConfig(overrides?: Partial<any>) {
+		return {
+			id: "test-config",
+			name: "Test Configuration",
+			description: "Test configuration for unit tests",
+			enabled: true,
+			...overrides,
+		}
+	}
+
+	static createLogEntry(level: string = "info", message: string = "Test message") {
+		return {
+			timestamp: new Date().toISOString(),
+			level,
+			component: "Test",
+			message,
+			data: {},
+		}
+	}
+}
+```
+
+## 8. 업데이트 기록
+
+- 2024-03-21: 초기 문서 작성
+- 2024-03-21: 유틸리티 함수 정리
+- 2024-03-21: 예제 코드 추가
+- 2024-03-21: 검증 유틸리티 추가
+- 2025-06-21: .mdx로 변환하고 실제 코드 구조에 맞게 업데이트
+- 2025-06-21: Caret Logger 통합, Vitest 테스트 유틸리티 추가
+- 2025-08-29: f01 공통 유틸리티 포트 완료 - CaretWebviewLogger, urls.ts 추가

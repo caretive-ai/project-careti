@@ -3,20 +3,28 @@
 	"previousHeader": "Previous Updates:",
 	"bullets": {
 		"current": {
-			"1": "Cline v3.27.x Merge Complete",
-			"1-desc": "Merged latest Cline upstream with improved model support, provider system enhancements, and numerous bug fixes",
-			"2": "Settings UI Improvements",
-			"2-desc": "Enhanced provider selection, improved settings organization with better tab layout, and complete i18n coverage",
-			"3": "Feature Additions",
-			"3-desc": "Added dictation support, YOLO mode, Focus Chain, and other Cline features with full multilingual support"
+			"1": "Latest AI Model Support",
+			"1-desc": "Claude Sonnet 4.5 (200K/1M context), GPT-5 with extended thinking, enhanced model info and pricing display",
+			"2": "New Features",
+			"2-desc": ".clineignore file support, AWS Bedrock profiles, Requesty/Together/Alibaba Qwen providers, automatic retry on rate limits",
+			"3": "Focus Chain (Task Management)",
+			"3-desc": "Automatic to-do list generation and tracking for complex tasks",
+			"4": "AI Prompt Optimization",
+			"4-desc": "30-50% API request reduction for multi-edits, smart TODO auto-management, Claude Sonnet 4.5 optimized",
+			"5": "Architecture Improvements",
+			"5-desc": "Complete protobuf type system, enhanced MCP support, provider system refactoring"
 		},
 		"previous": {
-			"1": "Persona System Fixes",
-			"1-desc": "Fixed critical persona image reset bug and improved initial setup flow",
-			"2": "Cline v3.26.6 Merge",
-			"2-desc": "Latest GPT-5, Claude 4, Grok model support and 15+ new API providers",
-			"3": "Task Management",
-			"3-desc": "Focus Chain automatic to-do list generation for complex tasks"
+			"1": "Message History Navigation",
+			"1-desc": "Implemented arrow key navigation for message history in chat input box",
+			"2": "LiteLLM Model Fetching",
+			"2-desc": "Automatic LiteLLM model fetching and FeatureConfig refactoring",
+			"3": "Agent Protocol Enhancement",
+			"3-desc": "Enhanced agent protocol for explicit approval",
+			"4": "System Prompt Refactoring",
+			"4-desc": "Refactored system prompts and added Korean documentation (COLLABORATIVE_PRINCIPLES)",
+			"5": "Bug Fixes",
+			"5-desc": "Fixed ActionButtons layout overflow when two buttons are displayed"
 		}
 	},
 	"links": {

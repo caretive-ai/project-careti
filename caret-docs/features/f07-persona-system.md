@@ -1,4 +1,4 @@
-# F08 - Persona System
+# F07 - Persona System
 
 **상태**: ✅ Phase 4 완료 (Backend)
 **구현도**: Backend 100%, Frontend Phase 5

@@ -16,7 +16,7 @@ export const CaretAccountInfoCard = ({ onViewAccount }: CaretAccountInfoCardProp
 	const [balance, setBalance] = useState<number | null>(null)
 
 	const fetchBalance = useCallback(async () => {
-		if (!caretUser?.uid) {
+		if (!caretUser?.id) {
 			return
 		}
 
@@ -24,7 +24,7 @@ export const CaretAccountInfoCard = ({ onViewAccount }: CaretAccountInfoCardProp
 			setIsLoading(true)
 			// TODO: Implement actual Caret API call for balance
 			// Placeholder implementation
-			console.log("[CARET-ACCOUNT-CARD] Fetching balance for:", caretUser.uid)
+			console.log("[CARET-ACCOUNT-CARD] Fetching balance for:", caretUser.id)
 
 			// Simulate API call
 			await new Promise((resolve) => setTimeout(resolve, 500))
@@ -34,15 +34,15 @@ export const CaretAccountInfoCard = ({ onViewAccount }: CaretAccountInfoCardProp
 		} finally {
 			setIsLoading(false)
 		}
-	}, [caretUser?.uid])
+	}, [caretUser?.id])
 
 	useEffect(() => {
-		if (caretUser?.uid) {
+		if (caretUser?.id) {
 			fetchBalance()
 		}
-	}, [caretUser?.uid, fetchBalance])
+	}, [caretUser?.id, fetchBalance])
 
-	if (!caretUser?.uid) {
+	if (!caretUser?.id) {
 		return null // Don't show card if no Caret user
 	}
 

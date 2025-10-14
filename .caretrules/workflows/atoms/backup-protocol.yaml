@@ -1,0 +1,50 @@
+workflow: backup-protocol
+category: atom
+description: File backup procedures when modifying Cline original files
+
+context: You are modifying a Cline original file and need to create a backup.
+
+deprecatedMethod:
+  format: "{filename}.{extension}.cline"
+  status: NO LONGER USED
+  reason: Complexity and merge conflicts
+
+currentMethod:
+  format: CARET MODIFICATION comment only
+  backup: Not required
+  comment: "// CARET MODIFICATION: [clear description]"
+
+protectedDirectories:
+  - src/
+  - webview-ui/
+  - proto/
+  - scripts/
+  - evals/
+  - docs/
+  - locales/
+  - root configs/
+
+modificationRules:
+  - Check if file is in protected directories
+  - Add CARET MODIFICATION comment before changes
+  - Keep changes minimal (1-3 lines max per file)
+  - Never comment out old code, replace completely
+  - Verify compilation after changes (npm run compile)
+
+examples:
+  - file: src/extension.ts
+    code: |
+      // CARET MODIFICATION: Initialize Caret wrapper
+      const caretWrapper = new CaretProviderWrapper(context);
+
+  - file: src/core/controller/index.ts
+    code: |
+      // CARET MODIFICATION: Add Caret gRPC handlers
+      await setupCaretGrpcHandlers(this);
+
+relatedWorkflows: [modification-levels, comment-protocol, verification-steps]
+
+guidelines:
+  - Backup protocol simplified to comment-only approach
+  - Focus on minimal invasive changes to Cline core
+  - Always verify compilation after modifications

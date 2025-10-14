@@ -11,6 +11,7 @@ import { Logger } from "./services/logging/Logger"
 import "./utils/path" // necessary to have access to String.prototype.toPosix
 
 import { HostProvider } from "@/hosts/host-provider"
+import { WebviewProviderType } from "@/shared/webview/types"
 import { FileContextTracker } from "./core/context/context-tracking/FileContextTracker"
 import { StateManager } from "./core/storage/StateManager"
 import { ExtensionRegistryInfo } from "./registry"
@@ -37,6 +38,16 @@ export async function initialize(context: vscode.ExtensionContext): Promise<Webv
 			type: ShowMessageType.ERROR,
 			message: "Failed to initialize Cline's application state. Please restart the extension.",
 		})
+	}
+
+	// CARET MODIFICATION: Initialize JsonTemplateLoader for Caret JSON prompt system
+	try {
+		const { JsonTemplateLoader } = await import("@caret/core/prompts/system/JsonTemplateLoader")
+		const sectionsDirPath = vscode.Uri.joinPath(context.extensionUri, "caret-src", "core", "prompts", "sections").fsPath
+		await JsonTemplateLoader.getInstance().initialize(sectionsDirPath)
+		Logger.debug(`[Extension] JsonTemplateLoader initialized from: ${sectionsDirPath}`)
+	} catch (error) {
+		Logger.error(`[Extension] Failed to initialize JsonTemplateLoader: ${error}`)
 	}
 
 	// Set the distinct ID for logging and telemetry
@@ -67,7 +78,8 @@ export async function initialize(context: vscode.ExtensionContext): Promise<Webv
 	// Clean up orphaned file context warnings (startup cleanup)
 	await FileContextTracker.cleanupOrphanedWarnings(context)
 
-	const webview = HostProvider.get().createWebviewProvider()
+	// CARET MODIFICATION: Pass WebviewProviderType.SIDEBAR for sidebar instance
+	const webview = HostProvider.get().createWebviewProvider(WebviewProviderType.SIDEBAR)
 
 	await showVersionUpdateAnnouncement(context)
 
@@ -83,17 +95,19 @@ async function showVersionUpdateAnnouncement(context: vscode.ExtensionContext) {
 	// Perform post-update actions if necessary
 	try {
 		if (!previousVersion || currentVersion !== previousVersion) {
-			Logger.log(`Cline version changed: ${previousVersion} -> ${currentVersion}. First run or update detected.`)
+			// CARET MODIFICATION: Changed branding from Cline to Caret
+			Logger.log(`Caret version changed: ${previousVersion} -> ${currentVersion}. First run or update detected.`)
 
 			// Use the same condition as announcements: focus when there's a new announcement to show
 			const lastShownAnnouncementId = context.globalState.get<string>("lastShownAnnouncementId")
 			const latestAnnouncementId = getLatestAnnouncementId()
 
 			if (lastShownAnnouncementId !== latestAnnouncementId) {
-				// Focus Cline when there's a new announcement to show (major/minor updates or fresh installs)
+				// CARET MODIFICATION: Changed branding from Cline to Caret
+				// Focus Caret when there's a new announcement to show (major/minor updates or fresh installs)
 				const message = previousVersion
-					? `Cline has been updated to v${currentVersion}`
-					: `Welcome to Cline v${currentVersion}`
+					? `Caret has been updated to v${currentVersion}`
+					: `Welcome to Caret v${currentVersion}`
 				await HostProvider.workspace.openClineSidebarPanel({})
 				await new Promise((resolve) => setTimeout(resolve, 200))
 				HostProvider.window.showMessage({

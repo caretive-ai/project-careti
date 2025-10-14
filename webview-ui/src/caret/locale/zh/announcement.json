@@ -3,20 +3,28 @@
 	"previousHeader": "以前的更新:",
 	"bullets": {
 		"current": {
-			"1": "Cline v3.27.x 合并完成",
-			"1-desc": "合并最新Cline上游，改进模型支持、增强提供商系统并修复多个错误",
-			"2": "设置UI改进",
-			"2-desc": "增强提供商选择、改进选项卡布局并应用完整的多语言翻译",
-			"3": "功能添加",
-			"3-desc": "添加语音输入、YOLO模式、Focus Chain等Cline功能，并提供完整的多语言支持"
+			"1": "最新AI模型支持",
+			"1-desc": "Claude Sonnet 4.5 (200K/1M上下文)、GPT-5扩展思考功能、增强的模型信息和价格显示",
+			"2": "新功能添加",
+			"2-desc": ".clineignore文件支持、AWS Bedrock配置文件、Requesty/Together/Alibaba Qwen提供商、速率限制自动重试",
+			"3": "Focus Chain (任务管理)",
+			"3-desc": "为复杂任务自动生成和跟踪待办事项列表",
+			"4": "AI提示优化",
+			"4-desc": "多编辑时API请求减少30-50%、智能TODO自动管理、Claude Sonnet 4.5专项优化",
+			"5": "架构改进",
+			"5-desc": "完全的protobuf类型系统、增强的MCP支持、提供商系统重构"
 		},
 		"previous": {
-			"1": "角色系统修复",
-			"1-desc": "修复角色图片重置错误并改进初始设置流程",
-			"2": "Cline v3.26.6 合并",
-			"2-desc": "最新GPT-5、Claude 4、Grok模型支持及15+新API提供商",
-			"3": "任务管理",
-			"3-desc": "Focus Chain自动待办事项列表生成用于复杂任务"
+			"1": "消息历史导航",
+			"1-desc": "在聊天输入框中实现了箭头键消息历史导航",
+			"2": "LiteLLM模型获取",
+			"2-desc": "自动LiteLLM模型获取和FeatureConfig重构",
+			"3": "代理协议增强",
+			"3-desc": "增强代理协议以实现明确批准",
+			"4": "系统提示重构",
+			"4-desc": "重构系统提示并添加韩文文档 (COLLABORATIVE_PRINCIPLES)",
+			"5": "错误修复",
+			"5-desc": "修复显示两个按钮时ActionButtons布局溢出问题"
 		}
 	},
 	"links": {

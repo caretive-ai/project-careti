@@ -71,11 +71,12 @@ interface DifyConversationResponse {
 }
 
 export class DifyHandler implements ApiHandler {
+	private options: DifyHandlerOptions
 	private baseUrl: string
 	private apiKey: string
 	private conversationId: string | null = null
-	private options: DifyHandlerOptions
-	private currentTaskId: string | undefined
+	private currentTaskId: string | null = null
+	private abortController: AbortController | null = null
 
 	constructor(options: DifyHandlerOptions) {
 		this.options = options
@@ -654,6 +655,6 @@ export class DifyHandler implements ApiHandler {
 	 */
 	resetConversation(): void {
 		this.conversationId = null
-		this.currentTaskId = undefined
+		this.currentTaskId = null
 	}
 }

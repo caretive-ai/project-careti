@@ -81,7 +81,8 @@ describe("Rule Priority System Integration Test", () => {
 			extension: { packageJSON: { version: "0.0.1" } },
 		} as unknown as vscode.ExtensionContext
 
-		controller = new Controller(context)
+		// CARET MODIFICATION: Controller now requires clientId as second parameter (merge fix)
+		controller = new Controller(context, "test-client-id")
 	})
 
 	afterEach(async () => {

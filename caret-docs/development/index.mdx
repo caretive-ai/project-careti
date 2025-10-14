@@ -1,0 +1,597 @@
+# Caret 개발 가이드
+
+Caret은 Cline을 기반으로 하는 VSCode 확장입니다. 이 가이드는 개발자가 프로젝트에 기여하기 위해 필요한 모든 정보를 담고 있습니다.
+
+## 🏗️ 프로젝트 아키텍처
+
+### Fork 기반 구조
+
+Caret은 [Cline](https://github.com/cline/cline)의 완전한 Fork입니다:
+
+- **`src/`**: Cline 원본 코드 (최대한 보존)
+- **`caret-src/`**: Caret 고유 확장 기능 (최소화)
+- **`webview-ui/`**: React 프론트엔드 (Cline 빌드 시스템 활용)
+
+자세한 아키텍처 정보는 [Caret 아키텍처 가이드](./caret-architecture-and-implementation-guide.mdx)를 참조하세요.
+
+### ⚡ Frontend-Backend 상호작용 패턴
+
+Caret의 webview와 Extension Host 간 통신에는 **검증된 표준 패턴**을 사용하세요:
+
+- **단일 필드 업데이트**: 변경된 필드만 전송하여 순환 메시지 방지
+- **Optimistic Update**: 즉시 UI 업데이트 후 백엔드 동기화
+- **별도 업데이트 함수**: `setUILanguage`, `setPersona` 등 전용 함수 생성
+
+자세한 패턴은 [Frontend-Backend 상호작용 가이드](./frontend-backend-interaction-patterns.mdx)를 참조하세요.
+
+### 🛠️ 개발 지원 스크립트
+
+프로젝트 루트의 `caret-scripts/` 폴더에는 개발 과정에서 유용한 도구들이 체계적으로 구성되어 있습니다:
+
+#### 📊 분석 유틸리티 (`utils/`)
+- **`semantic-equivalence-checker.js`** - Markdown/JSON 워크플로우 간 의미론적 동등성 검증
+- **`token-efficiency-analyzer.js`** - 문서 포맷 간 토큰 효율성 분석  
+- **`universal-semantic-analyzer.js`** - 범용 의미론적 동등성 분석기 (특허 기술)
+
+#### 🔧 개발 도구 (`tools/`)
+- **`caret-cline-comparison.js`** - Caret vs Cline 기능 커버리지 비교
+- **`package-release.js`** - 패키지 빌드 및 릴리스 관리
+
+사용법은 각 스크립트 파일의 주석을 참조하거나 [Caret 규칙 가이드](./caret-rules.ko.md)를 확인하세요.
+
+## 📝 **Caret 개발 원칙**
+
+### **🏷️ 코드 수정 표준 (필수 준수)**
+
+#### **주석 마커 규칙**
+
+모든 Caret 관련 수정에는 반드시 주석을 추가하세요:
+
+```typescript
+// CARET MODIFICATION: [기능 설명]
+
+// 예시:
+// CARET MODIFICATION: Rule priority system implementation
+// CARET MODIFICATION: Add .caretrules support for UI display
+// CARET MODIFICATION: Account system integration
+```
+
+#### **브랜딩 원칙**
+
+- **사용자 노출 부분**: `Caret`으로 변경 (UI 텍스트, 파일명 등)
+- **내부 구현**: `cline` 유지 (Command ID, Context 변수, 함수명 등)
+
+#### **로깅 시스템 규칙**
+
+**백엔드 로깅**:
+
+```typescript
+// CARET 기능 로깅
+import { CaretLogger } from "@/services/logging/CaretLogger"
+CaretLogger.debug(`[CARET] Toggle request - rulePath: ${rulePath}`)
+
+// Cline 기존 로깅 (유지)
+import { Logger } from "@/services/logging/Logger"
+Logger.debug("Cline existing functionality")
+```
+
+**웹뷰 로깅** (개발 모드만):
+
+```typescript
+// 개발 모드에서만 허용
+if (process.env.NODE_ENV === "development") {
+	console.log(`[CARET UI] Toggle clicked`)
+}
+```
+
+**금지사항**:
+
+- ❌ 릴리즈 빌드에서 `console.log` 남기기
+- ❌ Caret 기능에 `Logger` 클래스 사용 (충돌 위험)
+
+### **📄 문서 동기화 (필수)**
+
+#### **Feature 문서 업데이트**
+
+새로운 기능이나 기존 기능 수정 시:
+
+1. **해당 기능 문서 업데이트**: `caret-docs/features/[feature-name].mdx`
+2. **수정 파일 목록 기록**: 모든 변경된 파일 경로와 변경 내용
+3. **실제 구현 반영**: 의사코드가 아닌 실제 코드 스니펫 사용
+4. **테스트 상태 명시**: 단위/통합 테스트 결과
+
+#### **완료 검증 체크리스트**
+
+```bash
+# 1. 주석 확인
+grep -r "CARET MODIFICATION" src/ webview-ui/src/ proto/
+
+# 2. 문서 업데이트 확인
+ls caret-docs/features/[feature-name].mdx
+
+# 3. 빌드 및 테스트
+npm run compile && npm run test:unit
+
+# 4. Git 커밋
+git add . && git commit -m "feat: [feature] - CARET MODIFICATION applied with docs"
+```
+
+### **🧪 TDD 개발 흐름**
+
+1. **코드 분석**: 기존 구현 철저히 분석
+2. **테스트 작성**: 단위/통합 테스트 먼저 작성
+3. **기능 구현**: 테스트 통과하도록 구현
+4. **문서 업데이트**: 실제 구현 기준으로 문서 수정
+
+## 🚀 빠른 시작
+
+### 필수 요구사항
+
+- Node.js 18+
+- npm 또는 yarn
+- VSCode (개발 및 테스트용)
+- Git
+
+### 설치 및 실행
+
+1. **저장소 클론**
+
+    ```bash
+    git clone https://github.com/aicoding-caret/caret.git
+    cd caret
+    ```
+
+2. **의존성 설치**
+
+    ```bash
+    npm install
+    cd webview-ui && npm install && cd ..
+    ```
+
+3. **Protocol Buffer 컴파일**
+
+    ```bash
+    npm run protos
+    ```
+
+4. **TypeScript 컴파일**
+
+    ```bash
+    npm run compile
+    # 또는 빠른 개발용
+    npm run compile:fast
+    ```
+
+5. **확장 실행 (개발 모드)**
+    - VSCode에서 F5를 누르거나 Debug > Start Debugging
+    - 새 VSCode 창이 열리며 Caret 확장이 활성화됩니다
+
+## 🧪 테스트
+
+Caret은 **테스트 커버리지 100%** (Caret 전용 코드 기준) 및 **TDD(테스트 주도 개발)**를 지향하며, 모든 코드는 푸시 전에 반드시 전체 테스트를 통과해야 합니다.
+
+### 테스트 프레임워크
+
+Caret은 **Vitest**를 사용하여 프론트엔드와 백엔드 테스트를 모두 관리합니다.
+
+### 주요 테스트 명령어
+
+```bash
+# ⭐ 권장: 전체 테스트 실행 (프론트엔드 + 백엔드)
+# Git 푸시 전 반드시 이 명령어로 전체 테스트를 실행하여 통과 여부를 확인해야 합니다.
+npm run test:all
+
+# ⚠️ 주의: 과거 ESM 관련 이슈가 있었던 명령어
+# 현재는 'npm run test:all'과 동일하게 동작하며 모든 테스트가 통과합니다.
+# 하지만, 'npm run test:all' 사용을 우선적으로 권장합니다.
+npm test
+
+# 개별 테스트 실행 (자세한 내용은 테스팅 가이드 참조)
+npm run test:backend    # 백엔드만
+npm run test:webview    # 프론트엔드만 (웹뷰 UI)
+
+# 테스트 watch 모드 (개발 중)
+npm run test:backend:watch # 백엔드 watch
+# npm run test:webview:watch # 프론트엔드 watch (필요시 package.json에 추가)
+```
+
+### 테스트 실행 흐름 및 원칙
+
+1.  **개발 중**: 변경사항 발생 시 수시로 `npm run test:all` 또는 관련된 개별 테스트 (`test:backend`, `test:webview`)를 실행하여 즉시 피드백을 받습니다.
+2.  **커밋 및 푸시 전**: **반드시 `npm run compile && npm run test:all`을 실행**하여 모든 빌드가 성공하고, 모든 테스트가 통과하는지 확인합니다.
+    - **원칙**: 단 하나의 테스트라도 실패하면 원인을 해결하기 전까지 코드를 푸시하지 않습니다.
+3.  **CI/CD**: GitHub Actions를 통해 푸시된 코드에 대해 자동으로 `npm run test:all`을 실행하여 품질을 검증합니다. (향후 구축 예정)
+
+자세한 테스트 전략, 테스트 작성 방법, 다양한 테스트 명령어 옵션 등은 **[Caret 테스트 가이드](./testing-guide.mdx)** 문서를 반드시 참조하세요. 이 가이드가 테스트에 관한 가장 상세하고 정확한 정보를 제공합니다.
+
+### 테스트 커버리지 확인
+
+```bash
+# 전체 커버리지 확인 (백엔드 + 프론트엔드 통합은 현재 설정 검토 필요)
+npm run test:coverage # 주로 백엔드 커버리지를 나타낼 수 있음
+
+# Caret 전용 코드 커버리지 상세 분석 (스크립트 활용)
+node caret-scripts/caret-coverage-check.js
+```
+
+자세한 내용은 [테스트 가이드](./testing-guide.mdx)의 커버리지 섹션을 참조하세요.
+
+## 🏗️ 빌드 시스템
+
+### 주요 빌드 명령어
+
+```bash
+# Protocol Buffer 컴파일 (gRPC 통신용)
+npm run protos
+
+# TypeScript 컴파일 (백엔드) - 전체 검증 포함
+npm run compile
+
+# 빠른 컴파일 (개발 중 빠른 빌드용)
+npm run compile:fast
+
+# Webview UI 빌드 (프론트엔드)
+cd webview-ui
+npm run build
+
+# VSIX 패키지 생성
+npm run package
+
+# VSIX 릴리즈 패키지 생성 (타임스탬프 포함)
+npm run package:release
+
+# 개발용 watch 모드
+npm run watch
+```
+
+### 빌드 명령어 상세 설명
+
+#### `npm run compile`
+
+- **완전한 빌드**: 타입 체크 + 린팅 + 컴파일
+- **사용 시점**: PR 제출 전, 배포 전 최종 확인
+- **시간**: 상대적으로 오래 걸림 (완전 검증)
+
+#### `npm run compile:fast`
+
+- **빠른 빌드**: 컴파일만 실행 (검증 생략)
+- **사용 시점**: 개발 중 빠른 테스트, 반복 개발
+- **시간**: 매우 빠름 (1-2초)
+
+### Cline 패턴 기반 빌드 최적화
+
+- **Protocol Buffer**: MCP 서버 통신을 위한 protobuf 컴파일
+- **esbuild**: 빠른 TypeScript 번들링
+- **Vite**: React 컴포넌트 빌드 및 HMR
+
+## 🔐 보안 설정
+
+### .env 파일 관리
+
+Caret 프로젝트의 Auth0 로그인 기능을 위한 환경 변수는 **`.env` 파일**을 통해 관리되며, 보안상 중요하므로 **Caretive에서 중앙 관리**되고 있습니다.
+
+#### 관리 대상 파일
+
+- **`.env`**: 프로젝트 루트의 환경 변수 파일 (Auth0 클라이언트 ID, 시크릿, 도메인 등 민감한 정보 포함)
+
+#### 개발 시 주의사항
+
+1. **Git 추적 제외**: `.env` 파일들은 이미 `.gitignore`에 추가되어 Git에서 추적하지 않습니다.
+2. **중앙 관리**: 실제 운영/개발 환경의 Auth0 설정값은 Caretive에서 관리합니다.
+3. **개발 요청**: Auth0 관련 기능 개발이 필요한 경우 다음과 같이 진행하세요:
+    ```bash
+    # 개발 요청 프로세스
+    # 1. GitHub Issue 생성 또는 Slack에서 요청
+    # 2. 필요한 환경 명시 (개발/운영)
+    # 3. 사용 목적 및 기간 명시
+    ```
+
+#### .env 파일 구조
+
+```bash
+# .env (프로젝트 루트)
+# Auth0 설정 - 개발 환경
+AUTH0_DOMAIN=dev-mhyfo64i58pmcx8a.us.auth0.com
+AUTH0_CLIENT_ID=dJfQIAoLllarppDygmrcLyIPjuZpIcJP
+AUTH0_CLIENT_SECRET=5NXKiI37SP6MSfQF7t1lcINV_dZ_leN_7g_dgQNivYjRYRi9TBMwsYjGCfHFlA3X
+AUTH0_AUDIENCE=https://dev-api.caret.team
+AUTH0_CALLBACK_URL=https://dev-api.caret.team/api/auth/callback
+
+# 운영 환경의 경우:
+# AUTH0_DOMAIN=dev-mhyfo64i58pmcx8a.us.auth0.com
+# AUTH0_CLIENT_ID=laToc0hwDOIoSyLDnEocL3yFOqGYK6Xv
+# AUTH0_CLIENT_SECRET=5QKm-yRtB-3jx3eOSeFl6wVL5BWO8HWYD8Nz78fSyg5Py_1bzV1V7AAdKmnjnTts
+# AUTH0_AUDIENCE=https://api.caret.team
+# AUTH0_CALLBACK_URL=https://api.caret.team/api/auth/callback
+```
+
+#### 환경 변수 로드 방법
+
+`accountLoginClicked.ts`에서 환경 변수를 사용하는 방법:
+
+```typescript
+import * as dotenv from "dotenv"
+import * as path from "path"
+
+// 프로젝트 루트의 .env 파일 로드
+dotenv.config({ path: path.join(__dirname, "../../../../.env") })
+
+// 환경 변수 사용
+const authDomain = process.env.AUTH0_DOMAIN
+const clientId = process.env.AUTH0_CLIENT_ID
+const clientSecret = process.env.AUTH0_CLIENT_SECRET
+```
+
+#### 보안 원칙
+
+- **민감한 정보 노출 금지**: .env 파일은 절대 Git에 커밋하지 않습니다.
+- **환경별 분리**: 개발/운영 환경의 설정을 명확히 구분합니다.
+- **접근 권한 제한**: 실제 .env 파일은 권한이 있는 개발자만 접근할 수 있습니다.
+
+#### 문제 해결
+
+Auth0 관련 설정이나 로그인 기능에 문제가 있는 경우:
+
+1. **로그 확인**: VSCode Output 패널에서 Caret 로그를 확인하세요.
+2. **환경 변수 확인**: .env 파일이 올바른 위치에 있고, 필요한 변수들이 설정되어 있는지 확인하세요.
+3. **테스트 환경**: 개발 환경에서 먼저 테스트 후 운영 환경에 적용하세요.
+4. **지원 요청**: 문제가 해결되지 않을 경우 Caretive 팀에 문의하세요.
+
+### 기타 보안 고려사항
+
+- **API 키 관리**: VSCode의 SecretStorage를 활용하여 API 키를 안전하게 저장합니다.
+- **사용자 데이터**: 사용자의 개인정보나 코드는 로컬에서만 처리하며 외부로 전송하지 않습니다.
+- **확장 권한**: 필요한 최소한의 VSCode 권한만 요청합니다.
+
+## 🔧 개발 워크플로우
+
+### 1. 새 기능 개발 (Cline 패턴 활용)
+
+#### 백엔드 확장
+
+```typescript
+// caret-src/core/feature/NewFeature.ts
+import { WebviewProvider } from "../../../src/core/webview/WebviewProvider"
+
+export class NewFeature extends WebviewProvider {
+	// Cline 기능 확장
+	override async handleRequest(request: any) {
+		// Caret 고유 로직
+		const caretResult = await this.processCaretSpecific(request)
+
+		// Cline 기본 처리와 결합
+		const baseResult = await super.handleRequest(request)
+
+		return { ...baseResult, ...caretResult }
+	}
+}
+```
+
+#### 프론트엔드 확장
+
+```typescript
+// webview-ui/src/caret/components/NewComponent.tsx
+import React from 'react'
+import { useExtensionState } from '../../context/ExtensionStateContext'
+
+export const NewComponent: React.FC = () => {
+  const { state } = useExtensionState()
+
+  return (
+    <div className="caret-new-component">
+      {/* Caret 고유 UI */}
+    </div>
+  )
+}
+```
+
+### 2. Task 실행 시스템 활용
+
+Cline의 검증된 Task 실행 패턴을 확장:
+
+```typescript
+// caret-src/core/task/CaretTask.ts
+import { Task } from "../../../src/core/task/Task"
+
+export class CaretTask extends Task {
+	async initiateTaskLoop(userContent: UserContent, isNewTask: boolean) {
+		while (!this.abort) {
+			// 1. API 스트리밍 (Cline 패턴)
+			const stream = this.attemptApiRequest()
+
+			// 2. 실시간 메시지 처리 (Cline 패턴)
+			for await (const chunk of stream) {
+				await this.handleStreamingChunk(chunk)
+			}
+
+			// 3. Caret 고유 처리 추가
+			await this.processCaretSpecificTasks()
+		}
+	}
+}
+```
+
+### 3. 상태 관리 (Cline 패턴)
+
+```typescript
+// caret-src/core/state/CaretStateManager.ts
+export class CaretStateManager {
+	async initializeState() {
+		// Global State (모든 VSCode 인스턴스 공유)
+		const globalSettings = await this.context.globalState.get("caret.settings")
+
+		// Workspace State (현재 워크스페이스)
+		const workspaceData = await this.context.workspaceState.get("caret.workspace")
+
+		// Secrets (안전한 저장)
+		const apiKeys = await this.context.secrets.get("caret.apiKeys")
+	}
+}
+```
+
+## 📝 문서화
+
+### 코드 문서화
+
+- **TSDoc**: 모든 public 메서드에 TSDoc 주석
+- **README**: 각 패키지/모듈별 README 작성
+- **Architecture**: 주요 설계 결정사항 문서화
+
+````typescript
+/**
+ * Caret 고유 기능을 처리하는 메인 클래스
+ * @example
+ * ```typescript
+ * const caret = new CaretProvider()
+ * await caret.initialize()
+ * ```
+ */
+export class CaretProvider extends WebviewProvider {
+	/**
+	 * Caret 특화 메시지를 처리합니다
+	 * @param message - 처리할 메시지 객체
+	 * @returns 처리 결과 Promise
+	 */
+	async handleCaretMessage(message: CaretMessage): Promise<CaretResponse> {
+		// 구현...
+	}
+}
+````
+
+### 문서 작성 가이드
+
+모든 문서는 [문서 작성 가이드](./documentation-guide.mdx)를 따라 작성해주세요.
+
+## 🔍 디버깅
+
+### VSCode 확장 디버깅
+
+1. **F5** 또는 **Run > Start Debugging**
+2. 새 VSCode 창에서 확장 테스트
+3. **Developer Tools**에서 웹뷰 디버깅
+4. **Output** 패널에서 로그 확인
+
+### 로깅 시스템 (Cline 패턴 확장)
+
+```typescript
+// caret-src/utils/caret-logger.ts
+import { Logger } from "../../src/services/logging/Logger"
+
+export class CaretLogger extends Logger {
+	constructor(name: string) {
+		super(`Caret.${name}`)
+	}
+
+	logWithContext(level: LogLevel, message: string, context?: any) {
+		const caretContext = {
+			...context,
+			caretVersion: this.getCaretVersion(),
+			timestamp: new Date().toISOString(),
+		}
+
+		super.log(level, message, caretContext)
+	}
+}
+
+// 사용 예시
+const logger = new CaretLogger("FeatureName")
+logger.logWithContext("info", "Feature initialized", { feature: "newFeature" })
+```
+
+자세한 로깅 가이드는 [로깅 가이드](./logging.mdx)를 참조하세요.
+
+## 🎯 품질 관리
+
+### 코드 품질
+
+- **ESLint**: 코드 스타일 및 품질 검사
+- **Prettier**: 코드 포맷팅
+- **TypeScript**: 엄격한 타입 검사
+
+```bash
+# 린팅 실행
+npm run lint
+
+# 포맷팅 실행
+npm run format
+
+# 타입 검사 (Protocol Buffer 포함)
+npm run check-types
+
+# 빠른 개발을 위한 명령어 조합
+npm run compile:fast  # 빠른 컴파일 (타입 체크 + 린팅 생략)
+npm run compile       # 완전한 컴파일 (모든 검증 포함)
+```
+
+### 개발 효율성 팁
+
+#### 빠른 개발 사이클
+
+```bash
+# 1. 코드 수정 후 빠른 확인
+npm run compile:fast
+
+# 2. 테스트 상태 확인
+npm run test:all
+
+# 3. 최종 검증 (PR 제출 전)
+npm run compile && npm run test:all
+# 주의: npm test는 현재 ESM/CJS 문제로 실패하므로 test:all 사용
+```
+
+#### Watch 모드 활용
+
+```bash
+# 백그라운드에서 자동 컴파일
+npm run watch
+
+# 별도 터미널에서 테스트 watch
+npm run test:backend:watch
+```
+
+### 커밋 컨벤션
+
+```
+feat: 새로운 기능 추가
+fix: 버그 수정
+docs: 문서 수정
+style: 코드 포맷팅
+refactor: 코드 리팩토링
+test: 테스트 코드
+chore: 빌드/설정 변경
+```
+
+## 🔄 업스트림 머징
+
+Cline의 업데이트를 Caret에 통합하는 과정:
+
+1. **Cline 저장소에서 변경사항 확인**
+2. **충돌 해결** (주로 `src/` 디렉토리)
+3. **Caret 기능 호환성 테스트**
+4. **문서 업데이트**
+
+자세한 머징 가이드는 [업스트림 머징 가이드](../guides/upstream-merging.mdx)를 참조하세요.
+
+## 📚 추가 리소스
+
+### 핵심 문서들
+
+- [아키텍처 가이드](./caret-architecture-and-implementation-guide.mdx) - 전체 시스템 구조
+- [테스트 가이드](./testing-guide.mdx) - 테스트 작성 및 실행
+- [로깅 가이드](./logging.mdx) - 로깅 시스템 사용법
+- [문서화 가이드](./documentation-guide.mdx) - 문서 작성 표준
+- [UI-Storage 플로우 가이드](./ui-to-storage-flow.mdx) - 데이터 흐름 이해
+
+### Cline 패턴 활용 가이드
+
+- **스트리밍 처리**: race condition 방지 잠금 메커니즘
+- **상태 관리**: Global/Workspace/Secrets 다중 저장소
+- **API 관리**: 토큰 추적 및 컨텍스트 관리
+- **에러 처리**: 자동 재시도 및 사용자 확인 프로세스
+
+### 개발 도구들
+
+- [유틸리티 가이드](./utilities.mdx) - 개발 유틸리티 사용법
+- [웹뷰 통신 가이드](./webview-extension-communication.mdx) - 프론트엔드-백엔드 통신
+
+이 가이드를 통해 Caret 개발에 효과적으로 참여할 수 있습니다. 추가 질문이나 도움이 필요하시면 언제든 문의해주세요!

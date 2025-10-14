@@ -1,8 +1,9 @@
 # Caret-Cline 머징 표준 가이드
 
 **작성일**: 2025-10-12
-**버전**: v1.0
-**기반**: 2025-10-09 머징 경험 및 교훈
+**최종 업데이트**: 2025-10-14
+**버전**: v1.1
+**기반**: 2025-10-09~2025-10-14 머징 경험 및 피드백 (1차~9차)
 **상태**: 🔄 Living Document - 계속 개선
 
 ---
@@ -697,7 +698,129 @@ git reset --hard upstream/main
 - 빌드 검증 + 런타임 검증 필수
 - F5 실행 및 주요 기능 동작 확인
 
-### 교훈 3: "Feature 문서는 구체적으로"
+### 교훈 3: "Cline 프롬프트 개선사항은 Caret JSON 시스템에 반영" ⭐ **신규**
+
+**배경**:
+- Cline upstream은 TypeScript 기반 프롬프트 시스템 사용
+- Caret는 JSON 기반 독립 프롬프트 시스템 (L1 아키텍처)
+- Cline 개선사항을 Caret에 수동 반영 필요
+
+**프로세스** (2025-10-14 실제 사례):
+
+#### 1️⃣ Cline 변경사항 분석
+```bash
+# Cline upstream 커밋 확인
+git log upstream/main --oneline -- src/core/prompts/
+
+# 핵심 개선사항 추출
+- commit 41202df74: Multiple SEARCH/REPLACE blocks 최적화
+- commit f0cd7fd36: TODO 업데이트 타이밍 명확화
+```
+
+**분석 문서 작성**:
+- `caret-docs/work-logs/luke/YYYY-MM-DD-cline-prompt-analysis.md`
+- Cline 원본 코드 발췌
+- Caret 적용 가능성 평가
+
+#### 2️⃣ 상세 수정 명세서 작성
+**파일**: `YYYY-MM-DD-DETAILED-MODIFICATION-SPECS.md`
+
+**포함 내용**:
+- ✅ 수정 전/후 완전한 JSON 코드
+- ✅ 변경 사항 라인 단위 분석
+- ✅ 토큰 수 계산 (before → after)
+- ✅ 원본 Cline 코드 비교
+- ✅ 80+ 검증 체크리스트
+- ✅ jq/grep 자동 검증 명령어
+
+#### 3️⃣ 크로스체크 검증 (다른 AI)
+**파일**: `YYYY-MM-DD-CROSS-CHECK-VALIDATION-GUIDE.md`
+
+**검증 항목**:
+- JSON 문법 오류 확인
+- 구조 일관성 (mode: "both")
+- Cline 원본 반영 정확성
+- 토큰 수 계산 검증
+- Legacy 구조 제거 확인
+
+**검증 결과**: `YYYY-MM-DD-prompt-spec-verification-report.md`
+- 95% 신뢰도 APPROVED
+- 토큰 수 미세 조정 (~280 → ~320)
+
+#### 4️⃣ 최종 구현
+**파일**: `YYYY-MM-DD-FINAL-IMPLEMENTATION-FILES.md`
+
+**실행 단계**:
+1. 백업 생성
+   ```bash
+   cp CARET_FILE_EDITING.json CARET_FILE_EDITING.json.bak-YYYYMMDD
+   cp CARET_TODO_MANAGEMENT.json CARET_TODO_MANAGEMENT.json.bak-YYYYMMDD
+   ```
+
+2. JSON 파일 수정
+   - `caret-src/core/prompts/sections/CARET_FILE_EDITING.json`
+   - `caret-src/core/prompts/sections/CARET_TODO_MANAGEMENT.json`
+
+3. 검증
+   ```bash
+   jq '.' 파일명  # JSON 문법
+   npm run compile  # TypeScript 컴파일
+   ```
+
+4. 테스트
+   - VS Code Extension Host 실행 (F5)
+   - Agent/Chatbot 모드 프롬프트 확인
+   - Logger 출력 확인
+
+**실제 결과** (2025-10-14):
+- ✅ JSON 문법 통과
+- ✅ 컴파일 성공 (0 errors)
+- ✅ 토큰 증가: +470 (+276%, 전체 대비 +0.47%)
+- ✅ 예상 효과: API 요청 30-50% 감소
+
+#### 5️⃣ 문서화
+**완료 보고서**: `YYYY-MM-DD-IMPLEMENTATION-COMPLETE.md`
+
+**포함 내용**:
+- 수정 파일 목록 + 백업 경로
+- 검증 결과 상세
+- 변경 사항 비교표
+- 예상 효과 (정량/정성)
+- Git 커밋 메시지
+- 롤백 방법
+
+**Git 커밋**:
+```bash
+git add caret-src/core/prompts/sections/CARET_FILE_EDITING.json
+git add caret-src/core/prompts/sections/CARET_TODO_MANAGEMENT.json
+git commit -m "feat(prompts): Apply Cline prompt improvements to Caret dual-mode system
+
+- Add multiple SEARCH/REPLACE blocks optimization (30-50% API reduction)
+- Clarify TODO update timing (every 10th request, mode switch)
+- Add Quality Standards for actionable TODO items
+
+Based on Cline commits: 41202df74, f0cd7fd36
+Verified by: Claude Sonnet 4.5 cross-check (95% confidence)"
+```
+
+**핵심 교훈**:
+- ✅ Caret JSON 시스템은 TypeScript보다 수정 용이
+- ✅ `mode: "both"` 필드로 Agent/Chatbot 동시 적용
+- ✅ 다른 AI 크로스체크로 95% 신뢰도 확보
+- ✅ 토큰 증가는 전체 시스템 대비 미미 (+0.47%)
+- ✅ 상세 문서화로 향후 동일 프로세스 재현 가능
+
+**적용 빈도**: Cline upstream 주요 프롬프트 개선 시마다 (분기 1-2회 예상)
+
+**관련 문서**:
+- `caret-docs/work-logs/luke/2025-10-14-cline-prompt-analysis.md`
+- `caret-docs/work-logs/luke/2025-10-14-DETAILED-MODIFICATION-SPECS.md`
+- `caret-docs/work-logs/luke/2025-10-14-CROSS-CHECK-VALIDATION-GUIDE.md`
+- `caret-docs/work-logs/luke/2025-10-14-prompt-spec-verification-report.md`
+- `caret-docs/work-logs/luke/2025-10-14-FINAL-IMPLEMENTATION-FILES.md`
+- `caret-docs/work-logs/luke/2025-10-14-IMPLEMENTATION-COMPLETE.md`
+
+### 교훈 4: "Feature 문서는 구체적으로"
 
 **나쁜 예**:
 ```markdown
@@ -746,6 +869,47 @@ Frontend: Phase 5
 **Mixed**:
 - Cline 변경 + Caret 기능
 - → Cline 기반 + Caret 기능 추가 (가장 어려움)
+
+### 교훈 6: "신규 Cline 파일도 브랜딩 체크 필수"
+
+**문제 사례 (AccountWelcomeView)**:
+- Cline v3.32.7에서 새로 추가된 파일
+- "Cline Only" 파일로 분류되어 그대로 채택
+- Cline 브랜딩 (로고, 텍스트, URL) 그대로 통과
+- 로그아웃 상태 테스트 누락으로 발견 안 됨
+
+**올바른 프로세스**:
+
+1. **신규 파일 목록 확인**:
+   ```bash
+   # Cline upstream과 비교하여 새로 추가된 파일 찾기
+   cd cline-latest
+   git log --name-status upstream/main..HEAD | grep "^A" | awk '{print $2}'
+   ```
+
+2. **UI 컴포넌트 브랜딩 체크**:
+   - Logo import (`ClineLogoWhite` → `CaretLogoWhite` 또는 PersonaAvatar)
+   - 하드코딩된 텍스트 ("Sign up with Cline" → i18n)
+   - URL (`cline.bot` → `github.com/aicoding-caret/caret`)
+   - 스타일 클래스명에 브랜드 이름 포함 여부
+
+3. **i18n 적용 확인**:
+   - 모든 사용자 노출 텍스트 `t()` 함수 사용
+   - 4개 언어 파일 모두 번역 키 추가 (en, ko, ja, zh)
+
+4. **런타임 테스트 전체 시나리오**:
+   - ✅ 로그인 상태
+   - ✅ 로그아웃 상태
+   - ✅ 계정 전환 (Caret ↔ Cline)
+   - ✅ 각 상태별 UI 컴포넌트 표시 확인
+
+**체크리스트**:
+- [ ] `git diff` 또는 `git log`로 신규 파일 목록 작성
+- [ ] 각 신규 UI 컴포넌트 파일 열어서 브랜딩 확인
+- [ ] Logo import 검색: `grep -r "ClineLogo" webview-ui/src`
+- [ ] 하드코딩 텍스트 검색: `grep -r "Sign up with Cline" webview-ui/src`
+- [ ] URL 검색: `grep -r "cline\.bot" webview-ui/src`
+- [ ] i18n 미적용 검색: `grep -r "className.*<p>.*[A-Z]" webview-ui/src` (대문자로 시작하는 하드코딩)
 
 ---
 
@@ -800,6 +964,53 @@ useCaretI18nContext must be used within a CaretI18nProvider
 2. 언어 파일 존재 확인 (`webview-ui/src/caret/locales/`)
 3. Console에 파일 로딩 에러 확인
 
+### 문제 5: VS Code API 중복 획득 에러
+
+**증상**:
+```
+An instance of the VS Code API has already been acquired
+Found unexpected null at assertIsDefined
+Webview 로딩 실패
+```
+
+**원인**: `acquireVsCodeApi()` 함수가 여러 곳에서 호출됨
+- VS Code는 webview당 `acquireVsCodeApi()` 1회만 허용
+- Caret의 `webview-ui/src/utils/vscode.ts`는 singleton 패턴 사용
+- 다른 파일에서 직접 `acquireVsCodeApi()` 호출 시 충돌 발생
+
+**해결**:
+1. **3-way 비교 실행** (cline-latest, caret-main, 현재):
+   ```bash
+   # Cline에 해당 파일이 있는지 확인
+   ls cline-latest/webview-ui/src/utils/vscode.ts
+   # → 없으면 Caret 전용 파일
+   ```
+
+2. **중복 호출 찾기**:
+   ```bash
+   # webview-ui에서 acquireVsCodeApi 직접 호출 검색
+   cd webview-ui
+   grep -r "acquireVsCodeApi()" --include="*.ts" --include="*.tsx"
+   ```
+
+3. **수정 방법**:
+   - `platform.config.ts` 등에서 직접 호출 제거
+   - vscode singleton import 사용:
+     ```typescript
+     import { vscode as vscodeSingleton } from "../utils/vscode"
+     vscodeSingleton.postMessage(message)
+     ```
+
+4. **검증**:
+   - F5로 Extension 실행
+   - Console에 "An instance of the VS Code API..." 에러 없음 확인
+   - Webview 정상 로딩 확인
+
+**교훈**:
+- Caret 전용 파일(`utils/vscode.ts`)은 singleton 패턴 유지
+- 머징 시 Cline 파일에서 `acquireVsCodeApi()` 직접 호출 발견되면 singleton으로 교체 필요
+- VS Code API 제약사항 (1회만 획득 가능)을 항상 염두에 둘 것
+
 ---
 
 ## 다음 머징 회차 체크리스트
@@ -834,11 +1045,12 @@ useCaretI18nContext must be used within a CaretI18nProvider
 **Phase 5.0: Frontend 기본 (2-3시간) ⭐ 가장 중요**
 - [ ] Caret 디렉토리 복사 (`webview-ui/src/caret/`)
 - [ ] Cline Only 파일 복사
+- [ ] 🔴 **신규 Cline 파일 브랜딩 체크** (추가된 파일 목록 확인)
 - [ ] 🔴 App.tsx - Context Provider 통합
 - [ ] 🔴 Providers.tsx - 순서 확인
 - [ ] Mixed 파일 통합
 - [ ] 컴파일 검증
-- [ ] **런타임 검증 (F5)**
+- [ ] **런타임 검증 (F5) - 로그인/로그아웃 모두 테스트**
 
 **Phase 5.1~5.8: Frontend Feature (6-8시간)**
 - [ ] F01 ~ F10 순차 통합

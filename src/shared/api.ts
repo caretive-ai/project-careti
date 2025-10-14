@@ -1,4 +1,6 @@
 import type { LanguageModelChatSelector } from "../core/api/providers/types"
+// CARET MODIFICATION: Import CaretUser for account system
+import type { CaretUser } from "./CaretAccount"
 
 export type ApiProvider =
 	| "anthropic"
@@ -196,7 +198,8 @@ export interface ApiHandlerOptions {
 	planModeCaretModelInfo?: ModelInfo
 	actModeCaretModelId?: string
 	actModeCaretModelInfo?: ModelInfo
-	caretUserProfile?: string
+	// CARET MODIFICATION: Caret account profile (CaretUser type, not string)
+	caretUserProfile?: CaretUser
 }
 
 export type ApiConfiguration = ApiHandlerOptions &

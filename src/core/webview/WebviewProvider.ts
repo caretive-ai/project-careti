@@ -2,6 +2,8 @@ import path from "node:path"
 import { Controller } from "@core/controller/index"
 import axios from "axios"
 import { readFile } from "fs/promises"
+// CARET MODIFICATION: Add uuid for clientId generation
+import { v4 as uuidv4 } from "uuid"
 import * as vscode from "vscode"
 import { HostProvider } from "@/hosts/host-provider"
 import { ShowMessageType } from "@/shared/proto/host/window"
@@ -9,18 +11,37 @@ import { getNonce } from "./getNonce"
 
 export abstract class WebviewProvider {
 	private static instance: WebviewProvider | null = null
+	// CARET MODIFICATION: Add clientId system for webview instance identification
+	private static clientIdMap = new Map<WebviewProvider, string>()
 	controller: Controller
+	private clientId: string
 
 	constructor(readonly context: vscode.ExtensionContext) {
 		WebviewProvider.instance = this
+		// CARET MODIFICATION: Generate and store clientId
+		this.clientId = uuidv4()
+		WebviewProvider.clientIdMap.set(this, this.clientId)
 
 		// Create controller with cache service
-		this.controller = new Controller(context)
+		// CARET MODIFICATION: Pass clientId to Controller
+		this.controller = new Controller(context, this.clientId)
+	}
+
+	// CARET MODIFICATION: Add method to get clientId
+	public getClientId(): string {
+		return this.clientId
+	}
+
+	// CARET MODIFICATION: Add static method to get clientId for instance
+	public static getClientIdForInstance(instance: WebviewProvider): string | undefined {
+		return WebviewProvider.clientIdMap.get(instance)
 	}
 
 	async dispose() {
 		await this.controller.dispose()
 		WebviewProvider.instance = null
+		// CARET MODIFICATION: Remove from clientId map
+		WebviewProvider.clientIdMap.delete(this)
 	}
 
 	public static getInstance(): WebviewProvider {
@@ -120,8 +141,9 @@ export abstract class WebviewProvider {
 			<body>
 				<noscript>You need to enable JavaScript to run this app.</noscript>
 				<div id="root"></div>
+				<script nonce="${nonce}">window.clineClientId = "${this.clientId}"</script>
 				<script type="module" nonce="${nonce}" src="${scriptUrl}"></script>
-				<script src="http://localhost:8097"></script> 
+				<script src="http://localhost:8097"></script>
 			</body>
 		</html>
 		`
@@ -219,6 +241,7 @@ export abstract class WebviewProvider {
 				</head>
 				<body>
 					<div id="root"></div>
+					<script nonce="${nonce}">window.clineClientId = "${this.clientId}"</script>
 					${reactRefresh}
 					<script type="module" src="${scriptUrl}"></script>
 				</body>

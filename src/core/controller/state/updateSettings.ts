@@ -291,6 +291,21 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			controller.stateManager.setGlobalState("multiRootEnabled", !!request.multiRootEnabled)
 		}
 
+		// CARET MODIFICATION: Update mode system setting
+		if (request.modeSystem !== undefined) {
+			const modeSystem = request.modeSystem === "caret" ? "caret" : "cline"
+			controller.stateManager.setGlobalState("caretModeSystem", modeSystem)
+		}
+
+		// CARET MODIFICATION: Update persona system settings
+		if (request.enablePersonaSystem !== undefined) {
+			controller.stateManager.setGlobalState("enablePersonaSystem", request.enablePersonaSystem)
+		}
+
+		if (request.currentPersona !== undefined) {
+			controller.stateManager.setGlobalState("currentPersona", request.currentPersona)
+		}
+
 		// Post updated state to webview
 		await controller.postStateToWebview()
 

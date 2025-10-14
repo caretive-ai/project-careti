@@ -219,6 +219,7 @@
 		"openaiReasoningEffort": "OpenAI推論の努力",
 		"openaiReasoningEffortDescription": "OpenAIモデルファミリーの推論の努力（すべてのOpenAIモデルプロバイダーに適用）",
 		"reasoningEffort": {
+			"minimal": "最小",
 			"low": "低",
 			"medium": "中",
 			"high": "高"

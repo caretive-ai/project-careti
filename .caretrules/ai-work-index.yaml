@@ -1,0 +1,70 @@
+workflow: ai-work-index
+description: Efficiently select relevant documentation based on work nature
+
+context: You are working with the Caret project and need to efficiently select relevant documentation based on work nature.
+
+steps:
+  - step: 1
+    title: Analyze Work Nature
+    duration: 30 seconds
+    action: Extract keywords from user request to categorize work
+
+    categories:
+      - name: Architecture & Design
+        keywords: [architecture, design, structure, system, scaling, fork, Cline modification]
+        docs: [caret-architecture-and-implementation-guide.mdx, extension-architecture.mmd]
+
+      - name: B2B Branding & Conversion
+        keywords: [b2b, brand, codecenter, conversion, slexn]
+        docs: [b2b-branding-workflow.md]
+
+      - name: AI System Development
+        keywords: [AI, message, system prompt, chatbot, agent, conversation]
+        docs: [ai-message-flow-guide.mdx, system-prompt-implementation.mdx]
+
+      - name: Frontend-Backend Communication
+        keywords: [webview, communication, state management, message passing, UI integration]
+        docs: [frontend-backend-interaction-patterns.mdx, webview-extension-communication.mdx]
+
+      - name: UI/UX Development
+        keywords: [component, React, UI, UX, persona, multilingual, i18n]
+        docs: [component-architecture-principles.mdx, locale.mdx]
+
+      - name: Testing & Quality
+        keywords: [test, TDD, quality, coverage, verification, bug]
+        docs: [testing-guide.mdx, logging.mdx]
+
+      - name: Development Tools
+        keywords: [utility, tool, file handling, image, link, build]
+        docs: [utilities.mdx, file-storage-and-image-loading-guide.mdx]
+
+      - name: Cline Original Modification
+        keywords: [Cline modification, source change, src/ directory, backup]
+        docs: [caret-architecture-and-implementation-guide.mdx]
+        note: Re-check .caretrules backup rules
+
+  - step: 2
+    title: Smart Reading Strategy
+    duration: 5-10 minutes
+    priorities:
+      high: Direct relevance (1-2 docs max)
+      medium: Indirect relevance (scan only if needed)
+      low: Reference docs (check links only)
+
+  - step: 3
+    title: Essential Pre-Work Checks
+    checklist:
+      - .caretrules file modification checklist confirmed
+      - TDD principle (Red → Green → Refactor) understood
+      - Backup creation plan (for Cline original modifications)
+      - CARET MODIFICATION comment plan (for Cline original modifications)
+
+  - step: 4
+    title: Next Step
+    action: After document selection and reading, use /ai-work-protocol for detailed phase-based implementation approach
+
+guidelines:
+  - Optimizes AI context usage by selecting only relevant documents based on work nature keywords
+  - Goal is maximum efficiency with minimal context usage
+  - Read only what's necessary for the specific task
+  - Always follow the sequence: work analysis → document selection → focused reading → protocol execution

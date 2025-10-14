@@ -1,0 +1,10 @@
+{
+	"chatbot": {
+		"style": "analysis",
+		"template": "Analysis steps:\n- Step 1\n- Step 2"
+	},
+	"agent": {
+		"style": "execution",
+		"template": "Task sequence:\n- Step 1\n- Step 2"
+	}
+}

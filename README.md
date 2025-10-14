@@ -64,7 +64,7 @@
 - ✅ **Minimal Invasion Strategy** - Only 9 Cline files modified (291 lines) for perfect compatibility
 - ✅ **Enhanced AI Prompts** - 30-50% API request reduction with optimized editing workflows
 - ✅ **Focus Chain** - Automatic task management for complex workflows
-- ✅ **237 Unique AI Models** - Supported from 20 providers including Claude Sonnet 4.5, GPT-5, and more
+- ✅ **300 Unique AI Models** - Supported from 25 providers including Claude Sonnet 4.5, GPT-5, and more
 
 ### Migration Highlights:
 - **Phase 4**: Backend reimplementation (100% complete ✅)
@@ -75,19 +75,23 @@
 
 ---
 
-## Why Choose Caret?
+## Why Choose Caret? 6 Key Reasons
 
-**Cline/Caret Toggle** - One-click switching between two modes  
-**Personalized AI Companion** - Your unique persona for enjoyable coding  
-**Enhanced System Prompts** - Smarter and more efficient AI responses  
-**4 Languages Support** - English, Korean, Japanese, Chinese + 4-language manuals
-**20 Providers, 237 Models** - Latest Cline v3.32.7 fully compatible + extended  
+1. **🔄 One-Click Mode Switching** - Perfect Cline compatibility, switch anytime
+2. **🎭 Personalized AI Companion** - Your unique persona for enjoyable coding
+3. **🧠 Enhanced System Prompts** - Smarter and more efficient AI responses
+4. **🌍 4 Languages Support** - English, Korean, Japanese, Chinese + 4-language manuals
+5. **⌨️ Enhanced UX** - Prompt history, automatic model fetching, and more
+6. **🎯 25 Providers, 300 Models** - Cline v3.32.7 fully compatible + extended
+
+👉 **See all exclusive features**: [Complete Features Overview](https://docs.caret.team/en/caret-exclusive/overview)  
 
 ## #1 Feature: Create Your Personal AI Coding Partner
 
 The **Persona System** that completely differentiates from other AI tools! Beyond simple text chat, code with a visually vibrant AI companion.
 
 ### Default Personas:
+
 <div align="center">
 <table>
 <tr>

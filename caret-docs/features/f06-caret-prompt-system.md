@@ -1,4 +1,4 @@
-# F06-F07 - Caret Prompt System
+# F06 - Caret Prompt System
 ## Chatbot/Agent 모드와 하이브리드 프롬프트 아키텍처
 
 **상태**: ✅ Phase 4 완료 (Backend)

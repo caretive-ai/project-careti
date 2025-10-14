@@ -1,7 +1,7 @@
 # Cline Upstream 머징 실행 마스터 플랜
 
 **작성일**: 2025-10-09
-**최종 업데이트**: 2025-10-14 (10차 피드백 완료 - Mode 초기화, JSON 로더, 프롬프트 분석 준비)
+**최종 업데이트**: 2025-10-14 (10차 피드백 완료 - 루트 파일 무결성 검증 추가)
 **프로젝트**: Caret v0.3.0 - Cline Upstream Complete Adoption
 **전략**: Cline 완전 채택 + Caret Features 순차 재구현 (Adapter Pattern)
 **현재 브랜치**: merge/cline-upstream-20251009
@@ -1736,6 +1736,50 @@ npm run test:e2e
 - [ ] proto/cline/state.proto: 모든 Caret 필드 정의 확인
 - [ ] Backend-Frontend 동기화: ExtensionStateContext 필드명 일치 확인
 - [ ] 초기값 테스트: 설정값이 undefined가 아닌 정상 기본값으로 초기화되는지 확인
+
+##### Step 6.2.5: 루트 파일 무결성 검증 ⭐ **신규** (2025-10-14)
+
+**목표**: caret-main과 비교하여 필수 루트 파일 누락 방지
+
+**검증 명령어**:
+```bash
+# 1. caret-main 루트 파일 리스트
+ls -la /path/to/caret-main/ | grep -v "^d" | awk '{print $9}' | grep -v "^$" > /tmp/caret-main-root-files.txt
+
+# 2. 현재 caret 루트 파일 리스트
+ls -la /path/to/caret/ | grep -v "^d" | awk '{print $9}' | grep -v "^$" > /tmp/caret-root-files.txt
+
+# 3. 차이 비교 (caret-main에는 있지만 caret에는 없는 파일)
+comm -13 <(sort /tmp/caret-root-files.txt) <(sort /tmp/caret-main-root-files.txt)
+```
+
+**필수 루트 파일 체크리스트** (2025-10-14 기준):
+- [x] **README.md** - Caret 버전 (NOT Cline 버전) ✅
+- [x] **AGENTS.md** - AI 개발자 가이드 ✅
+- [x] **DEVELOPER_GUIDE.md** - 개발자 온보딩 문서 ✅
+- [ ] **CHANGELOG.md** - Caret 변경 로그 (정기 업데이트 필요)
+- [x] **CHANGELOG-CLINE.md** - Cline upstream 변경 로그 ✅ (cline-latest 최신 버전)
+- [x] **CLAUDE.md** - Claude Code AI 지침 ✅
+- [x] **CODE_OF_CONDUCT.md** - 행동 강령 ✅
+- [x] **CONTRIBUTING.md** - 기여 가이드 ✅
+- [x] **LICENSE** - 라이선스 파일 ✅
+- [ ] **caret-b2b-README.md** - B2B 솔루션 문서 (선택사항)
+- [ ] **batch*-progress.md** - 개발 진행 로그 (임시 파일, 선택사항)
+
+**검증 결과** (2025-10-14):
+- ✅ README.md: Cline 버전 발견 → Caret 버전으로 교체 완료
+- ✅ AGENTS.md: 누락 발견 → caret-main에서 복사 완료
+- ✅ DEVELOPER_GUIDE.md: 누락 발견 → caret-main에서 복사 완료
+- ✅ CHANGELOG-CLINE.md: cline-latest 최신 버전 확인 (v3.26.6)
+
+**교훈**:
+- **문제**: 루트 문서 파일 누락으로 인한 개발자 온보딩 어려움
+- **원인**: 머징 시 루트 디렉토리 파일 비교 절차 누락
+- **해결**: Phase 6.2.5 체크리스트 추가 + 자동화 스크립트 권장
+- **예방**: 모든 머징 후 `diff -r root_files` 비교 필수
+
+**관련 문서**:
+- `caret-docs/work-logs/luke/2025-10-14-root-files-verification.md` (신규 생성 권장)
 
 ##### Step 6.3: 성능 및 안정성 검증
 - [ ] 메모리 누수 체크

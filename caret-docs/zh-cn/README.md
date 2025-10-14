@@ -52,19 +52,43 @@
   <p><em>选择并定制您的专属AI编程伙伴！</em></p>
 </div>
 
+---
+
+## 🚀 最新更新: Cline v3.32.7完全集成！
+
+**Caret v0.3.0**现已包含**Cline v3.32.7的所有功能**，同时保持与Caret独特扩展的100%兼容性！
+
+### 本次合并的主要内容:
+- ✅ **完全采用Cline v3.32.7** - 包含所有最新Cline功能和改进
+- ✅ **重新实现10个Caret功能** - 以最小侵入保留所有功能 ([查看详情](../features/index.md))
+- ✅ **最小侵入策略** - 仅修改9个Cline文件（291行）实现完美兼容
+- ✅ **AI提示优化** - 通过优化的编辑工作流减少30-50%的API请求
+- ✅ **Focus Chain** - 复杂工作流的自动任务管理
+- ✅ **237个独特AI模型** - 支持20个提供商，包括Claude Sonnet 4.5、GPT-5等
+
+### 迁移亮点:
+- **Phase 4**: 后端重新实现 (100%完成 ✅)
+- **Phase 5**: 前端重新实现 (100%完成 ✅)
+- **Phase 6**: 最终验证进行中 🔄
+
+**完整合并文档**: 请参阅 [merge-execution-master-plan.md](../merging/merge-execution-master-plan.md)
+
+---
+
 ## 🌟 为什么选择Caret？
 
-**🔄 Cline/Caret切换** - 一键自由切换两种模式  
-**🎭 个性化AI伙伴** - 用自己的角色愉快编程  
-**🧠 改进的系统提示** - 更智能高效的AI回应  
-**🌍 4语言完美支持** - 中文、韩文、日文、英文 + 4语言手册  
-**🎯 25个提供商，300个模型** - Cline v3.26.6完全兼容 + 扩展  
+**🔄 Cline/Caret切换** - 一键自由切换两种模式
+**🎭 个性化AI伙伴** - 用自己的角色愉快编程
+**🧠 改进的系统提示** - 更智能高效的AI回应
+**🌍 4语言完美支持** - 中文、韩文、日文、英文 + 4语言手册
+**🎯 20个提供商，237个模型** - 最新Cline v3.32.7完全兼容 + 扩展  
 
 ## 🎭 首要特色：打造专属AI编程伙伴
 
 与其他AI工具完全差异化的**角色系统**！超越简单文字聊天，与视觉生动的AI伙伴一起编程。
 
 ### 预设角色：
+<div align="center">
 <table>
 <tr>
 <td align="center" width="120">
@@ -94,6 +118,7 @@
 </td>
 </tr>
 </table>
+</div>
 
 **🎨 自定义**: 可注册自己的AI名字和头像！
 **⚡ 随时切换**: 即时开关角色功能 - 也可使用纯净Cline模式
@@ -119,7 +144,7 @@
 - 🌍 **4语言支持** - 完美多语言环境
 - 🎯 **Chatbot/Agent** - 更直观的对话方式
 
-## 🚀 Caret的11大核心功能
+## 🚀 Caret的10大核心功能
 
 Caret在保持与Cline 100%兼容的同时，扩展了强大的新功能：
 
@@ -145,12 +170,12 @@ Caret在保持与Cline 100%兼容的同时，扩展了强大的新功能：
 
 ## 🎯 支持的AI模型 
 
-### 🚀 **最新Cline v3.26.6架构完全兼容**
+### 🚀 **最新Cline v3.32.7架构完全兼容**
 
 <div align="center">
-  <h3>🎯 <strong>25个提供商</strong> | 🤖 <strong>300个模型</strong> | 📊 <strong>Cline v3.26.6完全兼容</strong></h3>
+  <h3>🎯 <strong>20个提供商</strong> | 🤖 <strong>237个独特模型</strong> | 📊 <strong>Cline v3.32.7完全兼容</strong></h3>
   
-  **主要提供商**: OpenAI GPT-5, Anthropic Claude-4, Google Gemini 2.5, DeepSeek V3, Qwen3等
+  **主要提供商**: OpenAI GPT-5, Anthropic Claude Sonnet 4.5, Google Gemini 2.5, DeepSeek V3, Qwen3等
   
   <a href="../development/support-model-list.mdx">
     <strong>📋 查看实时更新的完整模型列表 →</strong>

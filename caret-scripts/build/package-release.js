@@ -42,26 +42,31 @@ function cleanDirectory(directoryPath, description) {
 	}
 }
 
-console.log("🚀 Starting Caret VSIX release packaging process...")
+console.log("🚀 Starting VSIX release packaging process...")
 
-// 1. Read version from package.json
-let version
+// 1. Read version and name from package.json
+let version, packageName
 try {
 	const packageJsonPath = path.join(projectRoot, "package.json")
 	const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"))
 	version = packageJson.version
+	packageName = packageJson.name
 	if (!version) {
 		throw new Error("Version not found in package.json")
 	}
+	if (!packageName) {
+		throw new Error("Name not found in package.json")
+	}
+	console.log(`ℹ️ Project name: ${packageName}`)
 	console.log(`ℹ️ Project version: ${version}`)
 } catch (error) {
-	console.error(`❌ Failed to read version from package.json: ${error.message}`)
+	console.error(`❌ Failed to read from package.json: ${error.message}`)
 	process.exit(1)
 }
 
 // 2. Generate timestamp and VSIX filename/path
 const timestamp = getTimestamp()
-const vsixFilename = `caret-${version}-${timestamp}.vsix`
+const vsixFilename = `${packageName}-${version}-${timestamp}.vsix`
 const outputDir = path.join(projectRoot, "output")
 const outputPath = path.join(outputDir, vsixFilename)
 console.log(`ℹ️ Target VSIX file: ${outputPath}`)
@@ -145,7 +150,7 @@ const packageSize = analyzePackageSize()
 
 console.log(`\n🎉 Successfully packaged VSIX: ${outputPath}`)
 console.log(`📦 Final package size: ${formatSize(packageSize)} MB`)
-console.log("\n✨ Caret release packaging process completed! ✨")
+console.log("\n✨ Release packaging process completed! ✨")
 console.log("\n👉 To examine which files are included in your VSIX package, you can:")
 console.log("   1. Rename the .vsix file to .zip")
 console.log("   2. Extract the contents")

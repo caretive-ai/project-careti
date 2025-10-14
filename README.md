@@ -1,146 +1,318 @@
-<div align="center"><sub>
-English | <a href="https://github.com/cline/cline/blob/main/locales/es/README.md" target="_blank">Español</a> | <a href="https://github.com/cline/cline/blob/main/locales/de/README.md" target="_blank">Deutsch</a> | <a href="https://github.com/cline/cline/blob/main/locales/ja/README.md" target="_blank">日本語</a> | <a href="https://github.com/cline/cline/blob/main/locales/zh-cn/README.md" target="_blank">简体中文</a> | <a href="https://github.com/cline/cline/blob/main/locales/zh-tw/README.md" target="_blank">繁體中文</a> | <a href="https://github.com/cline/cline/blob/main/locales/ko/README.md" target="_blank">한국어</a>
-</sub></div>
-
-# Cline – \#1 on OpenRouter
-
-<p align="center">
-  <img src="https://media.githubusercontent.com/media/cline/cline/main/assets/docs/demo.gif" width="100%" />
-</p>
 
 <div align="center">
 <table>
-<tbody>
-<td align="center">
-<a href="https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev" target="_blank"><strong>Download on VS Marketplace</strong></a>
-</td>
-<td align="center">
-<a href="https://discord.gg/cline" target="_blank"><strong>Discord</strong></a>
-</td>
-<td align="center">
-<a href="https://www.reddit.com/r/cline/" target="_blank"><strong>r/cline</strong></a>
-</td>
-<td align="center">
-<a href="https://github.com/cline/cline/discussions/categories/feature-requests?discussions_q=is%3Aopen+category%3A%22Feature+Requests%22+sort%3Atop" target="_blank"><strong>Feature Requests</strong></a>
-</td>
-<td align="center">
-<a href="https://docs.cline.bot/getting-started/for-new-coders" target="_blank"><strong>Getting Started</strong></a>
-</td>
-</tbody>
-</table>
+    <tr>
+      <td align="center">
+        <a href="https://github.com/aicoding-caret/caret/blob/main/README.md">
+            <img src="https://img.shields.io/badge/English-2563eb?style=for-the-badge&labelColor=1e40af" alt="English"/>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/aicoding-caret/caret/blob/main/caret-docs/ko/README.md">
+          <img src="https://img.shields.io/badge/한국어-16a34a?style=for-the-badge&labelColor=15803d" alt="한국어"/>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/aicoding-caret/caret/blob/main/caret-docs/ja/README.md">
+          <img src="https://img.shields.io/badge/日本語-ea580c?style=for-the-badge&labelColor=c2410c" alt="日本語"/>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/aicoding-caret/caret/blob/main/caret-docs/zh-cn/README.md">
+          <img src="https://img.shields.io/badge/中文-dc2626?style=for-the-badge&labelColor=b91c1c" alt="中文"/>
+        </a>
+      </td>
+    </tr>
+  </table>
+  <h1>🎯 Caret: Your Personal AI Coding Partner</h1>
+  <p><strong>All Cline Features + Personalized AI Companion + Enhanced System Prompts</strong></p>
+  
+  <!-- Strong CTA Button -->
+  <p>
+    <a href="https://marketplace.visualstudio.com/items?itemName=caretive.caret" style="background: #007ACC; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; margin: 8px;">
+      📥 Install Now in VS Code
+    </a>
+    <a href="https://docs.caret.team/en/getting-started/what-is-caret" style="background: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; margin: 8px;">
+      📖 Documentation
+    </a>
+  </p>
+  
+  <!-- Badges -->
+  <p>
+    <a href="https://marketplace.visualstudio.com/items?itemName=caretive.caret">
+      <img src="https://img.shields.io/visual-studio-marketplace/v/caretive.caret.svg?color=blue&label=VS%20Code%20Marketplace" alt="VS Code Marketplace">
+    </a>
+    <a href="https://github.com/aicoding-caret/caret">
+      <img src="https://img.shields.io/github/stars/aicoding-caret/caret.svg?style=social&label=Star" alt="GitHub stars">
+    </a>
+  </p>
+
+  <!-- Persona Image at Top -->
+  <img src="assets/template_characters/caret_illust.png" alt="Caret Personas" width="400"/>
+  <p><em>Choose and customize your personal AI coding partner!</em></p>
 </div>
-
-Meet Cline, an AI assistant that can use your **CLI** a**N**d **E**ditor.
-
-Thanks to [Claude Sonnet's agentic coding capabilities](https://www.anthropic.com/claude/sonnet), Cline can handle complex software development tasks step-by-step. With tools that let him create & edit files, explore large projects, use the browser, and execute terminal commands (after you grant permission), he can assist you in ways that go beyond code completion or tech support. Cline can even use the Model Context Protocol (MCP) to create new tools and extend his own capabilities. While autonomous AI scripts traditionally run in sandboxed environments, this extension provides a human-in-the-loop GUI to approve every file change and terminal command, providing a safe and accessible way to explore the potential of agentic AI.
-
-1. Enter your task and add images to convert mockups into functional apps or fix bugs with screenshots.
-2. Cline starts by analyzing your file structure & source code ASTs, running regex searches, and reading relevant files to get up to speed in existing projects. By carefully managing what information is added to context, Cline can provide valuable assistance even for large, complex projects without overwhelming the context window.
-3. Once Cline has the information he needs, he can:
-    - Create and edit files + monitor linter/compiler errors along the way, letting him proactively fix issues like missing imports and syntax errors on his own.
-    - Execute commands directly in your terminal and monitor their output as he works, letting him e.g., react to dev server issues after editing a file.
-    - For web development tasks, Cline can launch the site in a headless browser, click, type, scroll, and capture screenshots + console logs, allowing him to fix runtime errors and visual bugs.
-4. When a task is completed, Cline will present the result to you with a terminal command like `open -a "Google Chrome" index.html`, which you run with a click of a button.
-
-> [!TIP]
-> Use the `CMD/CTRL + Shift + P` shortcut to open the command palette and type "Cline: Open In New Tab" to open the extension as a tab in your editor. This lets you use Cline side-by-side with your file explorer, and see how he changes your workspace more clearly.
 
 ---
 
-<img align="right" width="340" src="https://github.com/user-attachments/assets/3cf21e04-7ce9-4d22-a7b9-ba2c595e88a4">
+## 🚀 Latest Update: Cline v3.32.7 Fully Integrated!
 
-### Use any API and Model
+**Caret v0.3.0** now includes **all features from Cline v3.32.7** while maintaining 100% backward compatibility with Caret's unique extensions!
 
-Cline supports API providers like OpenRouter, Anthropic, OpenAI, Google Gemini, AWS Bedrock, Azure, GCP Vertex, Cerebras and Groq. You can also configure any OpenAI compatible API, or use a local model through LM Studio/Ollama. If you're using OpenRouter, the extension fetches their latest model list, allowing you to use the newest models as soon as they're available.
+### What's New in This Merge:
+- ✅ **Complete Cline v3.32.7 Adoption** - All latest Cline features and improvements
+- ✅ **11 Caret Features Reimplemented** - All features preserved with minimal invasion ([View Details](caret-docs/features/index.md))
+- ✅ **Minimal Invasion Strategy** - Only 9 Cline files modified (291 lines) for perfect compatibility
+- ✅ **Enhanced AI Prompts** - 30-50% API request reduction with optimized editing workflows
+- ✅ **Focus Chain** - Automatic task management for complex workflows
+- ✅ **237 Unique AI Models** - Supported from 20 providers including Claude Sonnet 4.5, GPT-5, and more
 
-The extension also keeps track of total tokens and API usage cost for the entire task loop and individual requests, keeping you informed of spend every step of the way.
+### Migration Highlights:
+- **Phase 4**: Backend reimplementation (100% complete ✅)
+- **Phase 5**: Frontend reimplementation (100% complete ✅)
+- **Phase 6**: Final verification in progress 🔄
 
-<!-- Transparent pixel to create line break after floating image -->
+**Full merge documentation**: See [merge-execution-master-plan.md](caret-docs/merging/merge-execution-master-plan.md)
 
-<img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
+---
 
-<img align="left" width="370" src="https://github.com/user-attachments/assets/81be79a8-1fdb-4028-9129-5fe055e01e76">
+## Why Choose Caret?
 
-### Run Commands in Terminal
+**Cline/Caret Toggle** - One-click switching between two modes  
+**Personalized AI Companion** - Your unique persona for enjoyable coding  
+**Enhanced System Prompts** - Smarter and more efficient AI responses  
+**4 Languages Support** - English, Korean, Japanese, Chinese + 4-language manuals
+**20 Providers, 237 Models** - Latest Cline v3.32.7 fully compatible + extended  
 
-Thanks to the new [shell integration updates in VSCode v1.93](https://code.visualstudio.com/updates/v1_93#_terminal-shell-integration-api), Cline can execute commands directly in your terminal and receive the output. This allows him to perform a wide range of tasks, from installing packages and running build scripts to deploying applications, managing databases, and executing tests, all while adapting to your dev environment & toolchain to get the job done right.
+## #1 Feature: Create Your Personal AI Coding Partner
 
-For long running processes like dev servers, use the "Proceed While Running" button to let Cline continue in the task while the command runs in the background. As Cline works he’ll be notified of any new terminal output along the way, letting him react to issues that may come up, such as compile-time errors when editing files.
+The **Persona System** that completely differentiates from other AI tools! Beyond simple text chat, code with a visually vibrant AI companion.
 
-<!-- Transparent pixel to create line break after floating image -->
+### Default Personas:
+<div align="center">
+<table>
+<tr>
+<td align="center" width="120">
+  <img src="assets/template_characters/caret.png" width="80" style="border-radius: 50%;"/><br/>
+  <strong>Caret</strong><br/>
+  <small>Friendly robot friend</small>
+</td>
+<td align="center" width="120">
+  <img src="assets/template_characters/sarang.png" width="80" style="border-radius: 50%;"/><br/>
+  <strong>Oh Sarang</strong><br/>
+  <small>K-POP idol developer</small>
+</td>
+<td align="center" width="120">
+  <img src="assets/template_characters/ichika.png" width="80" style="border-radius: 50%;"/><br/>
+  <strong>Madobe Ichika</strong><br/>
+  <small>Windows 11 OS-tan</small>
+</td>
+<td align="center" width="120">
+  <img src="assets/template_characters/cyan.png" width="80" style="border-radius: 50%;"/><br/>
+  <strong>Cyan Macin</strong><br/>
+  <small>macOS assistant</small>
+</td>
+<td align="center" width="120">
+  <img src="assets/template_characters/ubuntu.png" width="80" style="border-radius: 50%;"/><br/>
+  <strong>Tando Ubuntu</strong><br/>
+  <small>Open source collaborator</small>
+</td>
+</tr>
+</table>
+</div>
 
-<img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
+**🎨 Customization**: Register your own AI name and profile image!
+**⚡ Toggle Anytime**: Enable/disable personas instantly - pure Cline mode available
 
-<img align="right" width="400" src="https://github.com/user-attachments/assets/c5977833-d9b8-491e-90f9-05f9cd38c588">
+## Cline/Caret Toggle - Master Two Modes Freely!
 
-### Create and Edit Files
+### One-Click Mode Switching
+<div align="center">
+  <img src="https://img.shields.io/badge/Cline_Mode-Classic_Way-blue?style=for-the-badge" alt="Cline Mode"/>
+  <strong> ⇄ </strong>
+  <img src="https://img.shields.io/badge/Caret_Mode-Extended_Features-green?style=for-the-badge" alt="Caret Mode"/>
+</div>
 
-Cline can create and edit files directly in your editor, presenting you a diff view of the changes. You can edit or revert Cline's changes directly in the diff view editor, or provide feedback in chat until you're satisfied with the result. Cline also monitors linter/compiler errors (missing imports, syntax errors, etc.) so he can fix issues that come up along the way on his own.
+**Cline Mode** - Original Cline exactly as is:
+- **Plan/Act approach** - Familiar method for existing Cline users
+- **All settings compatible** - Use existing settings as-is
+- **Same workflow** - Familiar usage methods unchanged
+- **Stability guaranteed** - Cline's proven core engine
 
-All changes made by Cline are recorded in your file's Timeline, providing an easy way to track and revert modifications if needed.
+**Caret Mode** - Extended features:
+- **Persona System** - Create your personal AI companion
+- **Enhanced System Prompts** - Smarter and more efficient AI
+- **4 Languages Support** - Perfect multilingual environment
+- **Chatbot/Agent** - More intuitive conversation style
 
-<!-- Transparent pixel to create line break after floating image -->
+### Switch Anytime
+- **Existing Cline users**: Start with Cline mode → Try Caret mode when needed
+- **New users**: Start with Caret mode → Switch to classic Cline mode anytime
+- **Per-project settings**: Use different modes for different projects
 
-<img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
+## Coding Without Language Barriers
 
-<img align="left" width="370" src="https://github.com/user-attachments/assets/bc2e85ba-dfeb-4fe6-9942-7cfc4703cbe5">
+**Perfect 4-language support** for developers worldwide to use comfortably in their native language:
 
-### Use the Browser
+### Supported Languages (UI + Docs + Manuals)
+- **English** - Native support (UI, AI chat, docs, manuals)
+- **Korean** - Complete Korean support (UI, AI chat, docs, manuals)
+- **Japanese** - Complete Japanese support (UI, AI chat, docs, manuals) 
+- **Chinese** - Complete Chinese support (UI, AI chat, docs, manuals)
 
-With Claude Sonnet's new [Computer Use](https://www.anthropic.com/news/3-5-models-and-computer-use) capability, Cline can launch a browser, click elements, type text, and scroll, capturing screenshots and console logs at each step. This allows for interactive debugging, end-to-end testing, and even general web use! This gives him autonomy to fixing visual bugs and runtime issues without you needing to handhold and copy-pasting error logs yourself.
+### 📖 Complete Documentation
+- **All feature documentation** - Learn from installation to advanced features
+- **Step-by-step tutorials** - Comprehensive guides for all skill levels
+- **API reference** - Detailed technical documentation
+- **Community examples** - Real-world use cases and best practices
 
-Try asking Cline to "test the app", and watch as he runs a command like `npm run dev`, launches your locally running dev server in a browser, and performs a series of tests to confirm that everything works. [See a demo here.](https://x.com/sdrzn/status/1850880547825823989)
+## 🚀 Get Started in 5 Minutes
 
-<!-- Transparent pixel to create line break after floating image -->
+### Step 1: Installation
+```
+Search "Caret" in VS Code Extensions tab → Install
+```
 
-<img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
+### Step 2: API Key Setup  
+```
+Enter API key for your preferred AI provider in settings
+(Caret supports 300 models from 25 providers)
+```
 
-<img align="right" width="350" src="https://github.com/user-attachments/assets/ac0efa14-5c1f-4c26-a42d-9d7c56f5fadd">
+### Step 3: Choose Persona
+```
+Select your favorite AI persona from sidebar
+or create your own custom persona
+```
 
-### "add a tool that..."
+### Step 4: Start Coding!
+```
+Press Ctrl+' to open chat window
+Type "Hello! Create a React component for me"
+```
 
-Thanks to the [Model Context Protocol](https://github.com/modelcontextprotocol), Cline can extend his capabilities through custom tools. While you can use [community-made servers](https://github.com/modelcontextprotocol/servers), Cline can instead create and install tools tailored to your specific workflow. Just ask Cline to "add a tool" and he will handle everything, from creating a new MCP server to installing it into the extension. These custom tools then become part of Cline's toolkit, ready to use in future tasks.
+## 🚀 Caret's 10 Core Features
 
--   "add a tool that fetches Jira tickets": Retrieve ticket ACs and put Cline to work
--   "add a tool that manages AWS EC2s": Check server metrics and scale instances up or down
--   "add a tool that pulls the latest PagerDuty incidents": Fetch details and ask Cline to fix bugs
+Caret extends Cline with powerful new capabilities while maintaining 100% compatibility:
 
-<!-- Transparent pixel to create line break after floating image -->
+<div align="center">
 
-<img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
+| Feature | Description | Documentation |
+|---------|-------------|---------------|
+| **F01** | **Common Utilities** | Shared utility functions and helpers | [📖 Details](caret-docs/features/f01-common-util.md) |
+| **F02** | **Multilingual i18n** | 4-language support (EN/KO/JA/ZH) | [📖 Details](caret-docs/features/f02-multilingual-i18n.md) |
+| **F03** | **Branding & UI System** | Dynamic brand switching (Caret/CodeCenter) | [📖 Details](caret-docs/features/f03-branding-ui.md) |
+| **F04** | **Caret Account System** | User authentication and management | [📖 Details](caret-docs/features/f04-caret-account.md) |
+| **F05** | **Rule Priority System** | Multi-layer rule configuration | [📖 Details](caret-docs/features/f05-rule-priority-system.md) |
+| **F06** | **Caret Prompt System** | JSON dynamic prompts & mode switching | [📖 Details](caret-docs/features/f06-caret-prompt-system.md) |
+| **F07** | **Persona System** | Customizable AI companions | [📖 Details](caret-docs/features/f07-persona-system.md) |
+| **F08** | **Feature Config System** | Modular feature management | [📖 Details](caret-docs/features/f08-feature-config-system.md) |
+| **F09** | **Enhanced Provider Setup** | Advanced AI provider configuration | [📖 Details](caret-docs/features/f09-enhanced-provider-setup.md) |
+| **F10** | **Input History System** | Terminal-like command history | [📖 Details](caret-docs/features/f10-input-history-system.md) |
 
-<img align="left" width="360" src="https://github.com/user-attachments/assets/7fdf41e6-281a-4b4b-ac19-020b838b6970">
+</div>
 
-### Add Context
+→ **[View Complete Features Index](caret-docs/features/index.md)**
 
-**`@url`:** Paste in a URL for the extension to fetch and convert to markdown, useful when you want to give Cline the latest docs
+## Outstanding Performance and Economy
 
-**`@problems`:** Add workspace errors and warnings ('Problems' panel) for Cline to fix
+<div align="center">
 
-**`@file`:** Adds a file's contents so you don't have to waste API requests approving read file (+ type to search files)
+| Comparison | Other AI Tools | **Caret** |
+|------------|----------------|-----------|
+| **Token Usage** | Standard | **Optimized** |
+| **API Cost** | Standard | **Reduced** |
+| **Response Speed** | Average | **Optimized** |
+| **Multi-language** | No | **Yes 4 Languages + Manuals** |
+| **Personas** | No | **Yes Supported** |
+| **Cline Compatible** | No | **Yes 100%** |
 
-**`@folder`:** Adds folder's files all at once to speed up your workflow even more
+</div>
 
-<!-- Transparent pixel to create line break after floating image -->
+System prompt optimization provides more efficient AI responses.
 
-<img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
+## Supported AI Models
 
-<img align="right" width="350" src="https://github.com/user-attachments/assets/140c8606-d3bf-41b9-9a1f-4dbf0d4c90cb">
+### Latest Cline v3.32.7 Architecture Fully Compatible
 
-### Checkpoints: Compare and Restore
+<div align="center">
+  <h3><strong>20 Providers</strong> | <strong>237 Unique Models</strong> | <strong>Cline v3.32.7 Fully Compatible</strong></h3>
 
-As Cline works through a task, the extension takes a snapshot of your workspace at each step. You can use the 'Compare' button to see a diff between the snapshot and your current workspace, and the 'Restore' button to roll back to that point.
+  **Major Providers**: OpenAI GPT-5, Anthropic Claude Sonnet 4.5, Google Gemini 2.5, DeepSeek V3, Qwen3, etc.
 
-For example, when working with a local web server, you can use 'Restore Workspace Only' to quickly test different versions of your app, then use 'Restore Task and Workspace' when you find the version you want to continue building from. This lets you safely explore different approaches without losing progress.
+  <a href="./caret-docs/development/support-model-list.en.mdx">
+    <strong>View Complete Real-time Updated Model List →</strong>
+  </a>
+</div>
 
-<!-- Transparent pixel to create line break after floating image -->
+### All Cline Features + Caret Extensions
+- **Plan/Act Mode** - Cline's proven transparent development process
+- **MCP Support** - Model Context Protocol for external system connections
+- **Zero Trust Security** - Complete client-side execution
+- **Free Model Switching** - Instant switching between Claude, Gemini, Kimi, etc.
+- **Persona System** - Caret's unique personalized AI companions
+- **Enhanced System Prompts** - Smarter and more efficient AI responses
+- **4 Languages Support** - Perfect multilingual environment
 
-<img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
+## Roadmap: Caret Getting Even Stronger
 
-## Contributing
+**Coming Soon** (within 1-2 weeks):
+- **Self-login System** - Simplified API key management
+- **Credit Purchase System** - More convenient billing system
+- **Local LLM Support** - Usable without internet
+- **Korea-specialized Models** - Hyperclova X, EXAONE, etc.
 
-To contribute to the project, start with our [Contributing Guide](CONTRIBUTING.md) to learn the basics. You can also join our [Discord](https://discord.gg/cline) to chat with other contributors in the `#contributors` channel. If you're looking for full-time work, check out our open positions on our [careers page](https://cline.bot/join-us)!
+**Long-term Plans**:
+- **Team Collaboration Features** - Multiple people working with AI together
+- **Learning Features** - Personalization that learns your coding style
+- **Plugin System** - Community extension features
 
-## License
+## Growing Together as Open Source
 
-[Apache 2.0 © 2025 Cline Bot Inc.](./LICENSE)
+### Contributor Benefits
+- **Service Credits** - Free usage rights based on contribution scale
+- **Contributor Listing** - Name listed on GitHub and official website
+- **Beta Tester** - Priority access to new features
+
+### How to Participate
+1. **Bug Reports** → Report at [Issues](https://github.com/aicoding-caret/caret/issues)
+2. **Feature Suggestions** → Share new ideas
+3. **Code Contributions** → Fork then Pull Request
+4. **Document Translation** → Participate in other language translations
+5. **Contributor Guide** → Read [Repository Guidelines](./AGENTS.md) before opening a PR
+
+## Support & Community
+
+- **Official Homepage**: https://caret.team
+- **Discord Community**: [Join](https://discord.gg/caret) 
+- **Email Inquiry**: support@caret.team
+- **Bug Reports**: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)
+
+---
+
+<div align="center">
+  <h2>Start Right Now!</h2>
+  
+  <a href="https://marketplace.visualstudio.com/items?itemName=caretive.caret" style="background: #007ACC; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 18px; display: inline-block; margin: 16px;">
+    Free Install in VS Code
+  </a>
+  
+  <p><small>If you like it, please give us a Star on GitHub!</small></p>
+</div>
+
+---
+
+## Detailed Documentation for Developers
+
+If you want to participate in development, check out these documents:
+
+### Core Guides
+- **[Developer Guide](./DEVELOPER_GUIDE.md)** - Basic information on build and testing
+- **[Caret Architecture](./caret-docs/development/caret-architecture-and-implementation-guide.mdx)** - Overall system structure
+- **[New Developer Guide](./caret-docs/development/new-developer-guide.mdx)** - Project onboarding
+
+### Technical Documentation
+- **[AI Message Flow](./caret-docs/development/ai-message-flow-guide.mdx)** - Understanding AI systems
+- **[Testing Guide](./caret-docs/development/testing-guide.mdx)** - TDD development methods
+- **[Multilingual System](./caret-docs/development/locale.mdx)** - i18n implementation
+
+**Must-read before development**: Please first read the [AI Work Methodology Guide](./caret-docs/guides/ai-work-method-guide.mdx).

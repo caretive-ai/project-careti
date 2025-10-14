@@ -2,7 +2,7 @@
 	"action_strategy": {
 		"sections": [
 			{
-				"content": "Strategy: Understand→Plan→Execute→Verify.\nUse <thinking> before tools. One step at a time.\nMissing params→ask_followup_question. Task done→attempt_completion.\nMinimize back-and-forth. Be direct and technical.",
+				"content": "Strategy: Understand→Design→Execute→Verify.\nUse <thinking> before tools. One step at a time.\nMissing params→ask_followup_question. Task done→attempt_completion.\nMinimize back-and-forth. Be direct and technical.",
 				"mode": "both",
 				"tokens": "~40"
 			}

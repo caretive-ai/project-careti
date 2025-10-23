@@ -8,6 +8,7 @@ export default defineConfig({
 		environment: "node",
 		mockReset: true,
 		setupFiles: ["./vitest.setup.ts"],
+		// CARET MODIFICATION: Enable caret-src/__tests__/ to run unit tests for Caret-specific features
 		exclude: [
 			"**/node_modules/**",
 			"**/dist/**",
@@ -17,7 +18,6 @@ export default defineConfig({
 			"**/caret-scripts/**/*.test.js",
 			"**/webview-ui/src/**/*.spec.tsx",
 			"**/webview-ui/src/**/*integration.test.tsx",
-			"**/caret-src/__tests__/**/*.test.ts",
 		],
 		deps: {
 			// CARET MODIFICATION: Removed external vscode dependency as it is now fully mocked in tests

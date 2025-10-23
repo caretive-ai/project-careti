@@ -34,7 +34,32 @@ export class ClaudeCodeSDKHandler implements ApiHandler {
 
 	constructor(options: ClaudeCodeSDKHandlerOptions) {
 		this.options = options
-		Logger.debug(`[ClaudeCodeSDKHandler] 🚀 Initialized with SDK v0.1.25`)
+		// CARET MODIFICATION: Safe logging for test environment
+		this.safeLog("debug", `[ClaudeCodeSDKHandler] 🚀 Initialized with SDK v0.1.25`)
+	}
+
+	/**
+	 * Safe logging that doesn't throw in test environments
+	 */
+	private safeLog(level: "debug" | "info" | "warn" | "error", message: string, error?: any) {
+		try {
+			switch (level) {
+				case "debug":
+					Logger.debug(message)
+					break
+				case "info":
+					Logger.info(message)
+					break
+				case "warn":
+					Logger.warn(message)
+					break
+				case "error":
+					Logger.error(message, error)
+					break
+			}
+		} catch {
+			// Silently ignore logging errors in test environments
+		}
 	}
 
 	/**
@@ -47,7 +72,7 @@ export class ClaudeCodeSDKHandler implements ApiHandler {
 		// Set timeout if specified (replaces hard-coded 10-minute CLI limit)
 		if (this.options.timeoutMs) {
 			setTimeout(() => {
-				Logger.warn(`[ClaudeCodeSDKHandler] ⏱️ Timeout after ${this.options.timeoutMs}ms`)
+				this.safeLog("warn", `[ClaudeCodeSDKHandler] ⏱️ Timeout after ${this.options.timeoutMs}ms`)
 				this.abortController?.abort()
 			}, this.options.timeoutMs)
 		}
@@ -76,7 +101,7 @@ export class ClaudeCodeSDKHandler implements ApiHandler {
 						hooks: [
 							async (input) => {
 								if (input.hook_event_name === "PreToolUse") {
-									Logger.debug(`[ClaudeCodeSDKHandler] 🔧 Pre-tool: ${input.tool_name}`)
+									this.safeLog("debug", `[ClaudeCodeSDKHandler] 🔧 Pre-tool: ${input.tool_name}`)
 								}
 								return {}
 							},
@@ -88,7 +113,7 @@ export class ClaudeCodeSDKHandler implements ApiHandler {
 						hooks: [
 							async (input) => {
 								if (input.hook_event_name === "PostToolUse") {
-									Logger.debug(`[ClaudeCodeSDKHandler] ✅ Post-tool: ${input.tool_name}`)
+									this.safeLog("debug", `[ClaudeCodeSDKHandler] ✅ Post-tool: ${input.tool_name}`)
 								}
 								return {}
 							},
@@ -99,7 +124,7 @@ export class ClaudeCodeSDKHandler implements ApiHandler {
 					{
 						hooks: [
 							async () => {
-								Logger.info(`[ClaudeCodeSDKHandler] 🚀 Session started`)
+								this.safeLog("info", `[ClaudeCodeSDKHandler] 🚀 Session started`)
 								return {}
 							},
 						],
@@ -109,7 +134,7 @@ export class ClaudeCodeSDKHandler implements ApiHandler {
 					{
 						hooks: [
 							async () => {
-								Logger.info(`[ClaudeCodeSDKHandler] 🏁 Session ended`)
+								this.safeLog("info", `[ClaudeCodeSDKHandler] 🏁 Session ended`)
 								return {}
 							},
 						],
@@ -224,7 +249,8 @@ export class ClaudeCodeSDKHandler implements ApiHandler {
 		case "result": {
 			// Task completion
 			if (sdkMessage.subtype === "success") {
-				Logger.info(
+				this.safeLog(
+					"info",
 					`[ClaudeCodeSDKHandler] ✅ Task completed in ${sdkMessage.duration_ms}ms - ${sdkMessage.num_turns} turns`,
 				)
 				if (sdkMessage.usage) {
@@ -240,11 +266,11 @@ export class ClaudeCodeSDKHandler implements ApiHandler {
 			break
 		}
 
-			case "system": {
-				// System messages (init, compact_boundary, hook_response)
-				Logger.debug(`[ClaudeCodeSDKHandler] 📋 System: ${sdkMessage.subtype}`)
-				break
-			}
+		case "system": {
+			// System messages (init, compact_boundary, hook_response)
+			this.safeLog("debug", `[ClaudeCodeSDKHandler] 📋 System: ${sdkMessage.subtype}`)
+			break
+		}
 		}
 	}
 
@@ -253,7 +279,7 @@ export class ClaudeCodeSDKHandler implements ApiHandler {
 	 * Note: No retry decorator - handle errors at caller level
 	 */
 	async *createMessage(systemPrompt: string, messages: Anthropic.Messages.MessageParam[]): ApiStream {
-		Logger.info(`[ClaudeCodeSDKHandler] 🚀 Starting SDK query`)
+		this.safeLog("info", `[ClaudeCodeSDKHandler] 🚀 Starting SDK query`)
 
 		const prompt = this.buildPrompt(messages)
 		const options = this.buildOptions(systemPrompt)
@@ -265,7 +291,7 @@ export class ClaudeCodeSDKHandler implements ApiHandler {
 				options,
 			})
 		} catch (error) {
-			Logger.error(`[ClaudeCodeSDKHandler] ❌ Failed to initialize query`, error)
+			this.safeLog("error", `[ClaudeCodeSDKHandler] ❌ Failed to initialize query`, error)
 			throw error
 		}
 
@@ -274,14 +300,14 @@ export class ClaudeCodeSDKHandler implements ApiHandler {
 				yield* this.adaptMessage(sdkMessage)
 			}
 
-			Logger.info(`[ClaudeCodeSDKHandler] ✅ Query completed`)
+			this.safeLog("info", `[ClaudeCodeSDKHandler] ✅ Query completed`)
 		} catch (error) {
 			if (this.abortController?.signal.aborted) {
-				Logger.error(`[ClaudeCodeSDKHandler] ⏱️ Query aborted due to timeout`)
+				this.safeLog("error", `[ClaudeCodeSDKHandler] ⏱️ Query aborted due to timeout`)
 				throw new Error("Query timed out")
 			}
 
-			Logger.error(`[ClaudeCodeSDKHandler] ❌ Query failed`, error)
+			this.safeLog("error", `[ClaudeCodeSDKHandler] ❌ Query failed`, error)
 			throw error
 		}
 	}
@@ -311,6 +337,6 @@ export class ClaudeCodeSDKHandler implements ApiHandler {
 			this.abortController.abort()
 			this.abortController = undefined
 		}
-		Logger.debug(`[ClaudeCodeSDKHandler] 🧹 Disposed`)
+		this.safeLog("debug", `[ClaudeCodeSDKHandler] 🧹 Disposed`)
 	}
 }

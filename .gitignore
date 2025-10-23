@@ -85,3 +85,6 @@ spec-kit/
 # Spec kit directory
 spec-kit/
 system_prompts_leaks/
+
+# Ignore caret-intellij-plugin directory
+caret-intellij-plugin/

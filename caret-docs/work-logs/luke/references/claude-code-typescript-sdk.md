@@ -1,19 +1,20 @@
-Agent SDK 참조 - TypeScript
+Agent SDK
+Agent SDK reference - TypeScript
 
-페이지 복사
+Copy page
 
-모든 함수, 타입, 인터페이스를 포함한 TypeScript Agent SDK의 완전한 API 참조입니다.
+Complete API reference for the TypeScript Agent SDK, including all functions, types, and interfaces.
 
 ​
-설치
+Installation
 
 Copy
 npm install @anthropic-ai/claude-agent-sdk
 ​
-함수
+Functions
 ​
 query()
-Claude Code와 상호작용하기 위한 주요 함수입니다. 메시지가 도착하는 대로 스트리밍하는 비동기 제너레이터를 생성합니다.
+The primary function for interacting with Claude Code. Creates an async generator that streams messages as they arrive.
 
 Copy
 function query({
@@ -24,16 +25,16 @@ function query({
   options?: Options;
 }): Query
 ​
-매개변수
-매개변수	타입	설명
-prompt	string | AsyncIterable<SDKUserMessage>	문자열 또는 스트리밍 모드를 위한 비동기 이터러블로서의 입력 프롬프트
-options	Options	선택적 구성 객체 (아래 Options 타입 참조)
+Parameters
+Parameter	Type	Description
+prompt	string | AsyncIterable<SDKUserMessage>	The input prompt as a string or async iterable for streaming mode
+options	Options	Optional configuration object (see Options type below)
 ​
-반환값
-추가 메서드가 있는 AsyncGenerator<SDKMessage, void>를 확장하는 Query 객체를 반환합니다.
+Returns
+Returns a Query object that extends AsyncGenerator<SDKMessage, void> with additional methods.
 ​
 tool()
-SDK MCP 서버와 함께 사용할 타입 안전한 MCP 도구 정의를 생성합니다.
+Creates a type-safe MCP tool definition for use with SDK MCP servers.
 
 Copy
 function tool<Schema extends ZodRawShape>(
@@ -43,15 +44,15 @@ function tool<Schema extends ZodRawShape>(
   handler: (args: z.infer<ZodObject<Schema>>, extra: unknown) => Promise<CallToolResult>
 ): SdkMcpToolDefinition<Schema>
 ​
-매개변수
-매개변수	타입	설명
-name	string	도구의 이름
-description	string	도구가 수행하는 작업에 대한 설명
-inputSchema	Schema extends ZodRawShape	도구의 입력 매개변수를 정의하는 Zod 스키마
-handler	(args, extra) => Promise<CallToolResult>	도구 로직을 실행하는 비동기 함수
+Parameters
+Parameter	Type	Description
+name	string	The name of the tool
+description	string	A description of what the tool does
+inputSchema	Schema extends ZodRawShape	Zod schema defining the tool’s input parameters
+handler	(args, extra) => Promise<CallToolResult>	Async function that executes the tool logic
 ​
 createSdkMcpServer()
-애플리케이션과 동일한 프로세스에서 실행되는 MCP 서버 인스턴스를 생성합니다.
+Creates an MCP server instance that runs in the same process as your application.
 
 Copy
 function createSdkMcpServer(options: {
@@ -60,48 +61,48 @@ function createSdkMcpServer(options: {
   tools?: Array<SdkMcpToolDefinition<any>>;
 }): McpSdkServerConfigWithInstance
 ​
-매개변수
-매개변수	타입	설명
-options.name	string	MCP 서버의 이름
-options.version	string	선택적 버전 문자열
-options.tools	Array<SdkMcpToolDefinition>	tool()로 생성된 도구 정의 배열
+Parameters
+Parameter	Type	Description
+options.name	string	The name of the MCP server
+options.version	string	Optional version string
+options.tools	Array<SdkMcpToolDefinition>	Array of tool definitions created with tool()
 ​
-타입
+Types
 ​
 Options
-query() 함수를 위한 구성 객체입니다.
-속성	타입	기본값	설명
-abortController	AbortController	new AbortController()	작업 취소를 위한 컨트롤러
-additionalDirectories	string[]	[]	Claude가 접근할 수 있는 추가 디렉터리
-agents	Record<string, [AgentDefinition](#agentdefinition)>	undefined	프로그래밍 방식으로 하위 에이전트 정의
-allowedTools	string[]	모든 도구	허용된 도구 이름 목록
-canUseTool	CanUseTool	undefined	도구 사용을 위한 사용자 정의 권한 함수
-continue	boolean	false	가장 최근 대화 계속하기
-cwd	string	process.cwd()	현재 작업 디렉터리
-disallowedTools	string[]	[]	허용되지 않는 도구 이름 목록
-env	Dict<string>	process.env	환경 변수
-executable	'bun' | 'deno' | 'node'	자동 감지	사용할 JavaScript 런타임
-executableArgs	string[]	[]	실행 파일에 전달할 인수
-extraArgs	Record<string, string | null>	{}	추가 인수
-fallbackModel	string	undefined	주 모델이 실패할 경우 사용할 모델
-forkSession	boolean	false	resume으로 재개할 때 원래 세션을 계속하는 대신 새 세션 ID로 분기
-hooks	Partial<Record<HookEvent, HookCallbackMatcher[]>>	{}	이벤트를 위한 훅 콜백
-includePartialMessages	boolean	false	부분 메시지 이벤트 포함
-maxThinkingTokens	number	undefined	사고 과정을 위한 최대 토큰
-maxTurns	number	undefined	최대 대화 턴
-mcpServers	Record<string, [McpServerConfig](#mcpserverconfig)>	{}	MCP 서버 구성
-model	string	CLI 기본값	사용할 Claude 모델
-pathToClaudeCodeExecutable	string	자동 감지	Claude Code 실행 파일 경로
-permissionMode	PermissionMode	'default'	세션을 위한 권한 모드
-permissionPromptToolName	string	undefined	권한 프롬프트를 위한 MCP 도구 이름
-resume	string	undefined	재개할 세션 ID
-settingSources	SettingSource[]	[] (설정 없음)	로드할 파일시스템 설정을 제어합니다. 생략하면 설정이 로드되지 않습니다. 참고: CLAUDE.md 파일을 로드하려면 'project'를 포함해야 합니다
-stderr	(data: string) => void	undefined	stderr 출력을 위한 콜백
-strictMcpConfig	boolean	false	엄격한 MCP 검증 강제
-systemPrompt	string | { type: 'preset'; preset: 'claude_code'; append?: string }	undefined (빈 프롬프트)	시스템 프롬프트 구성. 사용자 정의 프롬프트의 경우 문자열을 전달하거나, Claude Code의 시스템 프롬프트를 사용하려면 { type: 'preset', preset: 'claude_code' }를 전달합니다. 프리셋 객체 형식을 사용할 때 append를 추가하여 추가 지침으로 시스템 프롬프트를 확장할 수 있습니다
+Configuration object for the query() function.
+Property	Type	Default	Description
+abortController	AbortController	new AbortController()	Controller for cancelling operations
+additionalDirectories	string[]	[]	Additional directories Claude can access
+agents	Record<string, [AgentDefinition](#agentdefinition)>	undefined	Programmatically define subagents
+allowedTools	string[]	All tools	List of allowed tool names
+canUseTool	CanUseTool	undefined	Custom permission function for tool usage
+continue	boolean	false	Continue the most recent conversation
+cwd	string	process.cwd()	Current working directory
+disallowedTools	string[]	[]	List of disallowed tool names
+env	Dict<string>	process.env	Environment variables
+executable	'bun' | 'deno' | 'node'	Auto-detected	JavaScript runtime to use
+executableArgs	string[]	[]	Arguments to pass to the executable
+extraArgs	Record<string, string | null>	{}	Additional arguments
+fallbackModel	string	undefined	Model to use if primary fails
+forkSession	boolean	false	When resuming with resume, fork to a new session ID instead of continuing the original session
+hooks	Partial<Record<HookEvent, HookCallbackMatcher[]>>	{}	Hook callbacks for events
+includePartialMessages	boolean	false	Include partial message events
+maxThinkingTokens	number	undefined	Maximum tokens for thinking process
+maxTurns	number	undefined	Maximum conversation turns
+mcpServers	Record<string, [McpServerConfig](#mcpserverconfig)>	{}	MCP server configurations
+model	string	Default from CLI	Claude model to use
+pathToClaudeCodeExecutable	string	Auto-detected	Path to Claude Code executable
+permissionMode	PermissionMode	'default'	Permission mode for the session
+permissionPromptToolName	string	undefined	MCP tool name for permission prompts
+resume	string	undefined	Session ID to resume
+settingSources	SettingSource[]	[] (no settings)	Control which filesystem settings to load. When omitted, no settings are loaded. Note: Must include 'project' to load CLAUDE.md files
+stderr	(data: string) => void	undefined	Callback for stderr output
+strictMcpConfig	boolean	false	Enforce strict MCP validation
+systemPrompt	string | { type: 'preset'; preset: 'claude_code'; append?: string }	undefined (empty prompt)	System prompt configuration. Pass a string for custom prompt, or { type: 'preset', preset: 'claude_code' } to use Claude Code’s system prompt. When using the preset object form, add append to extend the system prompt with additional instructions
 ​
 Query
-query() 함수에서 반환되는 인터페이스입니다.
+Interface returned by the query() function.
 
 Copy
 interface Query extends AsyncGenerator<SDKMessage, void> {
@@ -109,13 +110,13 @@ interface Query extends AsyncGenerator<SDKMessage, void> {
   setPermissionMode(mode: PermissionMode): Promise<void>;
 }
 ​
-메서드
-메서드	설명
-interrupt()	쿼리를 중단합니다 (스트리밍 입력 모드에서만 사용 가능)
-setPermissionMode()	권한 모드를 변경합니다 (스트리밍 입력 모드에서만 사용 가능)
+Methods
+Method	Description
+interrupt()	Interrupts the query (only available in streaming input mode)
+setPermissionMode()	Changes the permission mode (only available in streaming input mode)
 ​
 AgentDefinition
-프로그래밍 방식으로 정의된 하위 에이전트를 위한 구성입니다.
+Configuration for a subagent defined programmatically.
 
 Copy
 type AgentDefinition = {
@@ -124,105 +125,105 @@ type AgentDefinition = {
   prompt: string;
   model?: 'sonnet' | 'opus' | 'haiku' | 'inherit';
 }
-필드	필수	설명
-description	예	이 에이전트를 언제 사용할지에 대한 자연어 설명
-tools	아니오	허용된 도구 이름 배열. 생략하면 모든 도구를 상속
-prompt	예	에이전트의 시스템 프롬프트
-model	아니오	이 에이전트를 위한 모델 재정의. 생략하면 주 모델 사용
+Field	Required	Description
+description	Yes	Natural language description of when to use this agent
+tools	No	Array of allowed tool names. If omitted, inherits all tools
+prompt	Yes	The agent’s system prompt
+model	No	Model override for this agent. If omitted, uses the main model
 ​
 SettingSource
-SDK가 설정을 로드하는 파일시스템 기반 구성 소스를 제어합니다.
+Controls which filesystem-based configuration sources the SDK loads settings from.
 
 Copy
 type SettingSource = 'user' | 'project' | 'local';
-값	설명	위치
-'user'	전역 사용자 설정	~/.claude/settings.json
-'project'	공유 프로젝트 설정 (버전 제어됨)	.claude/settings.json
-'local'	로컬 프로젝트 설정 (gitignore됨)	.claude/settings.local.json
+Value	Description	Location
+'user'	Global user settings	~/.claude/settings.json
+'project'	Shared project settings (version controlled)	.claude/settings.json
+'local'	Local project settings (gitignored)	.claude/settings.local.json
 ​
-기본 동작
-settingSources가 생략되거나 undefined일 때, SDK는 파일시스템 설정을 로드하지 않습니다. 이는 SDK 애플리케이션에 격리를 제공합니다.
+Default behavior
+When settingSources is omitted or undefined, the SDK does not load any filesystem settings. This provides isolation for SDK applications.
 ​
-settingSources를 사용하는 이유?
-모든 파일시스템 설정 로드 (레거시 동작):
+Why use settingSources?
+Load all filesystem settings (legacy behavior):
 
 Copy
-// SDK v0.0.x처럼 모든 설정 로드
+// Load all settings like SDK v0.0.x did
 const result = query({
-  prompt: "이 코드를 분석해",
+  prompt: "Analyze this code",
   options: {
-    settingSources: ['user', 'project', 'local']  // 모든 설정 로드
+    settingSources: ['user', 'project', 'local']  // Load all settings
   }
 });
-특정 설정 소스만 로드:
+Load only specific setting sources:
 
 Copy
-// 프로젝트 설정만 로드, 사용자 및 로컬 설정 무시
+// Load only project settings, ignore user and local
 const result = query({
-  prompt: "CI 검사 실행",
+  prompt: "Run CI checks",
   options: {
-    settingSources: ['project']  // .claude/settings.json만
+    settingSources: ['project']  // Only .claude/settings.json
   }
 });
-테스트 및 CI 환경:
+Testing and CI environments:
 
 Copy
-// 로컬 설정을 제외하여 CI에서 일관된 동작 보장
+// Ensure consistent behavior in CI by excluding local settings
 const result = query({
-  prompt: "테스트 실행",
+  prompt: "Run tests",
   options: {
-    settingSources: ['project'],  // 팀 공유 설정만
+    settingSources: ['project'],  // Only team-shared settings
     permissionMode: 'bypassPermissions'
   }
 });
-SDK 전용 애플리케이션:
+SDK-only applications:
 
 Copy
-// 모든 것을 프로그래밍 방식으로 정의 (기본 동작)
-// 파일시스템 종속성 없음 - settingSources 기본값은 []
+// Define everything programmatically (default behavior)
+// No filesystem dependencies - settingSources defaults to []
 const result = query({
-  prompt: "이 PR 검토",
+  prompt: "Review this PR",
   options: {
-    // settingSources: []가 기본값이므로 지정할 필요 없음
+    // settingSources: [] is the default, no need to specify
     agents: { /* ... */ },
     mcpServers: { /* ... */ },
     allowedTools: ['Read', 'Grep', 'Glob']
   }
 });
-CLAUDE.md 프로젝트 지침 로드:
+Loading CLAUDE.md project instructions:
 
 Copy
-// CLAUDE.md 파일을 포함하기 위해 프로젝트 설정 로드
+// Load project settings to include CLAUDE.md files
 const result = query({
-  prompt: "프로젝트 규칙에 따라 새 기능 추가",
+  prompt: "Add a new feature following project conventions",
   options: {
     systemPrompt: {
       type: 'preset',
-      preset: 'claude_code'  // CLAUDE.md 사용에 필요
+      preset: 'claude_code'  // Required to use CLAUDE.md
     },
-    settingSources: ['project'],  // 프로젝트 디렉터리에서 CLAUDE.md 로드
+    settingSources: ['project'],  // Loads CLAUDE.md from project directory
     allowedTools: ['Read', 'Write', 'Edit']
   }
 });
 ​
-설정 우선순위
-여러 소스가 로드될 때, 설정은 다음 우선순위로 병합됩니다 (높음에서 낮음):
-로컬 설정 (.claude/settings.local.json)
-프로젝트 설정 (.claude/settings.json)
-사용자 설정 (~/.claude/settings.json)
-프로그래밍 방식 옵션 (agents, allowedTools 등)은 항상 파일시스템 설정을 재정의합니다.
+Settings precedence
+When multiple sources are loaded, settings are merged with this precedence (highest to lowest):
+Local settings (.claude/settings.local.json)
+Project settings (.claude/settings.json)
+User settings (~/.claude/settings.json)
+Programmatic options (like agents, allowedTools) always override filesystem settings.
 ​
 PermissionMode
 
 Copy
 type PermissionMode =
-  | 'default'           // 표준 권한 동작
-  | 'acceptEdits'       // 파일 편집 자동 승인
-  | 'bypassPermissions' // 모든 권한 검사 우회
-  | 'plan'              // 계획 모드 - 실행 없음
+  | 'default'           // Standard permission behavior
+  | 'acceptEdits'       // Auto-accept file edits
+  | 'bypassPermissions' // Bypass all permission checks
+  | 'plan'              // Planning mode - no execution
 ​
 CanUseTool
-도구 사용을 제어하기 위한 사용자 정의 권한 함수 타입입니다.
+Custom permission function type for controlling tool usage.
 
 Copy
 type CanUseTool = (
@@ -235,7 +236,7 @@ type CanUseTool = (
 ) => Promise<PermissionResult>;
 ​
 PermissionResult
-권한 검사의 결과입니다.
+Result of a permission check.
 
 Copy
 type PermissionResult = 
@@ -251,7 +252,7 @@ type PermissionResult =
     }
 ​
 McpServerConfig
-MCP 서버를 위한 구성입니다.
+Configuration for MCP servers.
 
 Copy
 type McpServerConfig = 
@@ -297,10 +298,10 @@ type McpSdkServerConfigWithInstance = {
   instance: McpServer;
 }
 ​
-메시지 타입
+Message Types
 ​
 SDKMessage
-쿼리에서 반환되는 모든 가능한 메시지의 유니온 타입입니다.
+Union type of all possible messages returned by the query.
 
 Copy
 type SDKMessage = 
@@ -313,31 +314,31 @@ type SDKMessage =
   | SDKCompactBoundaryMessage;
 ​
 SDKAssistantMessage
-어시스턴트 응답 메시지입니다.
+Assistant response message.
 
 Copy
 type SDKAssistantMessage = {
   type: 'assistant';
   uuid: UUID;
   session_id: string;
-  message: APIAssistantMessage; // Anthropic SDK에서
+  message: APIAssistantMessage; // From Anthropic SDK
   parent_tool_use_id: string | null;
 }
 ​
 SDKUserMessage
-사용자 입력 메시지입니다.
+User input message.
 
 Copy
 type SDKUserMessage = {
   type: 'user';
   uuid?: UUID;
   session_id: string;
-  message: APIUserMessage; // Anthropic SDK에서
+  message: APIUserMessage; // From Anthropic SDK
   parent_tool_use_id: string | null;
 }
 ​
 SDKUserMessageReplay
-필수 UUID가 있는 재생된 사용자 메시지입니다.
+Replayed user message with required UUID.
 
 Copy
 type SDKUserMessageReplay = {
@@ -349,7 +350,7 @@ type SDKUserMessageReplay = {
 }
 ​
 SDKResultMessage
-최종 결과 메시지입니다.
+Final result message.
 
 Copy
 type SDKResultMessage = 
@@ -382,7 +383,7 @@ type SDKResultMessage =
     }
 ​
 SDKSystemMessage
-시스템 초기화 메시지입니다.
+System initialization message.
 
 Copy
 type SDKSystemMessage = {
@@ -404,19 +405,19 @@ type SDKSystemMessage = {
 }
 ​
 SDKPartialAssistantMessage
-스트리밍 부분 메시지 (includePartialMessages가 true일 때만).
+Streaming partial message (only when includePartialMessages is true).
 
 Copy
 type SDKPartialAssistantMessage = {
   type: 'stream_event';
-  event: RawMessageStreamEvent; // Anthropic SDK에서
+  event: RawMessageStreamEvent; // From Anthropic SDK
   parent_tool_use_id: string | null;
   uuid: UUID;
   session_id: string;
 }
 ​
 SDKCompactBoundaryMessage
-대화 압축 경계를 나타내는 메시지입니다.
+Message indicating a conversation compaction boundary.
 
 Copy
 type SDKCompactBoundaryMessage = {
@@ -431,7 +432,7 @@ type SDKCompactBoundaryMessage = {
 }
 ​
 SDKPermissionDenial
-거부된 도구 사용에 대한 정보입니다.
+Information about a denied tool use.
 
 Copy
 type SDKPermissionDenial = {
@@ -440,10 +441,10 @@ type SDKPermissionDenial = {
   tool_input: ToolInput;
 }
 ​
-훅 타입
+Hook Types
 ​
 HookEvent
-사용 가능한 훅 이벤트입니다.
+Available hook events.
 
 Copy
 type HookEvent = 
@@ -458,17 +459,17 @@ type HookEvent =
   | 'PreCompact';
 ​
 HookCallback
-훅 콜백 함수 타입입니다.
+Hook callback function type.
 
 Copy
 type HookCallback = (
-  input: HookInput, // 모든 훅 입력 타입의 유니온
+  input: HookInput, // Union of all hook input types
   toolUseID: string | undefined,
   options: { signal: AbortSignal }
 ) => Promise<HookJSONOutput>;
 ​
 HookCallbackMatcher
-선택적 매처가 있는 훅 구성입니다.
+Hook configuration with optional matcher.
 
 Copy
 interface HookCallbackMatcher {
@@ -477,7 +478,7 @@ interface HookCallbackMatcher {
 }
 ​
 HookInput
-모든 훅 입력 타입의 유니온 타입입니다.
+Union type of all hook input types.
 
 Copy
 type HookInput = 
@@ -492,7 +493,7 @@ type HookInput =
   | PreCompactHookInput;
 ​
 BaseHookInput
-모든 훅 입력 타입이 확장하는 기본 인터페이스입니다.
+Base interface that all hook input types extend.
 
 Copy
 type BaseHookInput = {
@@ -580,7 +581,7 @@ type PreCompactHookInput = BaseHookInput & {
 }
 ​
 HookJSONOutput
-훅 반환값입니다.
+Hook return value.
 
 Copy
 type HookJSONOutput = AsyncHookJSONOutput | SyncHookJSONOutput;
@@ -623,11 +624,11 @@ type SyncHookJSONOutput = {
       };
 }
 ​
-도구 입력 타입
-모든 내장 Claude Code 도구의 입력 스키마 문서입니다. 이러한 타입은 @anthropic-ai/claude-agent-sdk에서 내보내지며 타입 안전한 도구 상호작용에 사용할 수 있습니다.
+Tool Input Types
+Documentation of input schemas for all built-in Claude Code tools. These types are exported from @anthropic-ai/claude-agent-sdk and can be used for type-safe tool interactions.
 ​
 ToolInput
-참고: 이는 명확성을 위한 문서 전용 타입입니다. 모든 도구 입력 타입의 유니온을 나타냅니다.
+Note: This is a documentation-only type for clarity. It represents the union of all tool input types.
 
 Copy
 type ToolInput = 
@@ -649,343 +650,343 @@ type ToolInput =
   | ReadMcpResourceInput;
 ​
 Task
-도구 이름: Task
+Tool name: Task
 
 Copy
 interface AgentInput {
   /**
-   * 작업에 대한 짧은 (3-5단어) 설명
+   * A short (3-5 word) description of the task
    */
   description: string;
   /**
-   * 에이전트가 수행할 작업
+   * The task for the agent to perform
    */
   prompt: string;
   /**
-   * 이 작업에 사용할 전문 에이전트 타입
+   * The type of specialized agent to use for this task
    */
   subagent_type: string;
 }
-복잡한 다단계 작업을 자율적으로 처리하기 위해 새 에이전트를 시작합니다.
+Launches a new agent to handle complex, multi-step tasks autonomously.
 ​
 Bash
-도구 이름: Bash
+Tool name: Bash
 
 Copy
 interface BashInput {
   /**
-   * 실행할 명령
+   * The command to execute
    */
   command: string;
   /**
-   * 선택적 타임아웃 (밀리초, 최대 600000)
+   * Optional timeout in milliseconds (max 600000)
    */
   timeout?: number;
   /**
-   * 이 명령이 수행하는 작업에 대한 명확하고 간결한 5-10단어 설명
+   * Clear, concise description of what this command does in 5-10 words
    */
   description?: string;
   /**
-   * 이 명령을 백그라운드에서 실행하려면 true로 설정
+   * Set to true to run this command in the background
    */
   run_in_background?: boolean;
 }
-선택적 타임아웃과 백그라운드 실행이 가능한 지속적인 셸 세션에서 bash 명령을 실행합니다.
+Executes bash commands in a persistent shell session with optional timeout and background execution.
 ​
 BashOutput
-도구 이름: BashOutput
+Tool name: BashOutput
 
 Copy
 interface BashOutputInput {
   /**
-   * 출력을 검색할 백그라운드 셸의 ID
+   * The ID of the background shell to retrieve output from
    */
   bash_id: string;
   /**
-   * 출력 라인을 필터링할 선택적 정규식
+   * Optional regex to filter output lines
    */
   filter?: string;
 }
-실행 중이거나 완료된 백그라운드 bash 셸에서 출력을 검색합니다.
+Retrieves output from a running or completed background bash shell.
 ​
 Edit
-도구 이름: Edit
+Tool name: Edit
 
 Copy
 interface FileEditInput {
   /**
-   * 수정할 파일의 절대 경로
+   * The absolute path to the file to modify
    */
   file_path: string;
   /**
-   * 교체할 텍스트
+   * The text to replace
    */
   old_string: string;
   /**
-   * 교체할 새 텍스트 (old_string과 달라야 함)
+   * The text to replace it with (must be different from old_string)
    */
   new_string: string;
   /**
-   * old_string의 모든 발생을 교체 (기본값 false)
+   * Replace all occurrences of old_string (default false)
    */
   replace_all?: boolean;
 }
-파일에서 정확한 문자열 교체를 수행합니다.
+Performs exact string replacements in files.
 ​
 Read
-도구 이름: Read
+Tool name: Read
 
 Copy
 interface FileReadInput {
   /**
-   * 읽을 파일의 절대 경로
+   * The absolute path to the file to read
    */
   file_path: string;
   /**
-   * 읽기를 시작할 라인 번호
+   * The line number to start reading from
    */
   offset?: number;
   /**
-   * 읽을 라인 수
+   * The number of lines to read
    */
   limit?: number;
 }
-텍스트, 이미지, PDF, Jupyter 노트북을 포함하여 로컬 파일시스템에서 파일을 읽습니다.
+Reads files from the local filesystem, including text, images, PDFs, and Jupyter notebooks.
 ​
 Write
-도구 이름: Write
+Tool name: Write
 
 Copy
 interface FileWriteInput {
   /**
-   * 쓸 파일의 절대 경로
+   * The absolute path to the file to write
    */
   file_path: string;
   /**
-   * 파일에 쓸 내용
+   * The content to write to the file
    */
   content: string;
 }
-로컬 파일시스템에 파일을 쓰며, 존재하면 덮어씁니다.
+Writes a file to the local filesystem, overwriting if it exists.
 ​
 Glob
-도구 이름: Glob
+Tool name: Glob
 
 Copy
 interface GlobInput {
   /**
-   * 파일과 매치할 glob 패턴
+   * The glob pattern to match files against
    */
   pattern: string;
   /**
-   * 검색할 디렉터리 (기본값은 cwd)
+   * The directory to search in (defaults to cwd)
    */
   path?: string;
 }
-모든 코드베이스 크기에서 작동하는 빠른 파일 패턴 매칭입니다.
+Fast file pattern matching that works with any codebase size.
 ​
 Grep
-도구 이름: Grep
+Tool name: Grep
 
 Copy
 interface GrepInput {
   /**
-   * 검색할 정규식 패턴
+   * The regular expression pattern to search for
    */
   pattern: string;
   /**
-   * 검색할 파일 또는 디렉터리 (기본값은 cwd)
+   * File or directory to search in (defaults to cwd)
    */
   path?: string;
   /**
-   * 파일을 필터링할 Glob 패턴 (예: "*.js")
+   * Glob pattern to filter files (e.g. "*.js")
    */
   glob?: string;
   /**
-   * 검색할 파일 타입 (예: "js", "py", "rust")
+   * File type to search (e.g. "js", "py", "rust")
    */
   type?: string;
   /**
-   * 출력 모드: "content", "files_with_matches", 또는 "count"
+   * Output mode: "content", "files_with_matches", or "count"
    */
   output_mode?: 'content' | 'files_with_matches' | 'count';
   /**
-   * 대소문자 구분 없는 검색
+   * Case insensitive search
    */
   '-i'?: boolean;
   /**
-   * 라인 번호 표시 (content 모드용)
+   * Show line numbers (for content mode)
    */
   '-n'?: boolean;
   /**
-   * 각 매치 전에 표시할 라인 수
+   * Lines to show before each match
    */
   '-B'?: number;
   /**
-   * 각 매치 후에 표시할 라인 수
+   * Lines to show after each match
    */
   '-A'?: number;
   /**
-   * 각 매치 전후에 표시할 라인 수
+   * Lines to show before and after each match
    */
   '-C'?: number;
   /**
-   * 출력을 첫 N개 라인/항목으로 제한
+   * Limit output to first N lines/entries
    */
   head_limit?: number;
   /**
-   * 멀티라인 모드 활성화
+   * Enable multiline mode
    */
   multiline?: boolean;
 }
-정규식 지원이 있는 ripgrep 기반의 강력한 검색 도구입니다.
+Powerful search tool built on ripgrep with regex support.
 ​
 KillBash
-도구 이름: KillBash
+Tool name: KillBash
 
 Copy
 interface KillShellInput {
   /**
-   * 종료할 백그라운드 셸의 ID
+   * The ID of the background shell to kill
    */
   shell_id: string;
 }
-ID로 실행 중인 백그라운드 bash 셸을 종료합니다.
+Kills a running background bash shell by its ID.
 ​
 NotebookEdit
-도구 이름: NotebookEdit
+Tool name: NotebookEdit
 
 Copy
 interface NotebookEditInput {
   /**
-   * Jupyter 노트북 파일의 절대 경로
+   * The absolute path to the Jupyter notebook file
    */
   notebook_path: string;
   /**
-   * 편집할 셀의 ID
+   * The ID of the cell to edit
    */
   cell_id?: string;
   /**
-   * 셀의 새 소스
+   * The new source for the cell
    */
   new_source: string;
   /**
-   * 셀의 타입 (code 또는 markdown)
+   * The type of the cell (code or markdown)
    */
   cell_type?: 'code' | 'markdown';
   /**
-   * 편집 타입 (replace, insert, delete)
+   * The type of edit (replace, insert, delete)
    */
   edit_mode?: 'replace' | 'insert' | 'delete';
 }
-Jupyter 노트북 파일의 셀을 편집합니다.
+Edits cells in Jupyter notebook files.
 ​
 WebFetch
-도구 이름: WebFetch
+Tool name: WebFetch
 
 Copy
 interface WebFetchInput {
   /**
-   * 콘텐츠를 가져올 URL
+   * The URL to fetch content from
    */
   url: string;
   /**
-   * 가져온 콘텐츠에서 실행할 프롬프트
+   * The prompt to run on the fetched content
    */
   prompt: string;
 }
-URL에서 콘텐츠를 가져와 AI 모델로 처리합니다.
+Fetches content from a URL and processes it with an AI model.
 ​
 WebSearch
-도구 이름: WebSearch
+Tool name: WebSearch
 
 Copy
 interface WebSearchInput {
   /**
-   * 사용할 검색 쿼리
+   * The search query to use
    */
   query: string;
   /**
-   * 이 도메인의 결과만 포함
+   * Only include results from these domains
    */
   allowed_domains?: string[];
   /**
-   * 이 도메인의 결과는 절대 포함하지 않음
+   * Never include results from these domains
    */
   blocked_domains?: string[];
 }
-웹을 검색하고 형식화된 결과를 반환합니다.
+Searches the web and returns formatted results.
 ​
 TodoWrite
-도구 이름: TodoWrite
+Tool name: TodoWrite
 
 Copy
 interface TodoWriteInput {
   /**
-   * 업데이트된 할 일 목록
+   * The updated todo list
    */
   todos: Array<{
     /**
-     * 작업 설명
+     * The task description
      */
     content: string;
     /**
-     * 작업 상태
+     * The task status
      */
     status: 'pending' | 'in_progress' | 'completed';
     /**
-     * 작업 설명의 능동형
+     * Active form of the task description
      */
     activeForm: string;
   }>;
 }
-진행 상황 추적을 위한 구조화된 작업 목록을 생성하고 관리합니다.
+Creates and manages a structured task list for tracking progress.
 ​
 ExitPlanMode
-도구 이름: ExitPlanMode
+Tool name: ExitPlanMode
 
 Copy
 interface ExitPlanModeInput {
   /**
-   * 사용자 승인을 위해 실행할 계획
+   * The plan to run by the user for approval
    */
   plan: string;
 }
-계획 모드를 종료하고 사용자에게 계획 승인을 요청합니다.
+Exits planning mode and prompts the user to approve the plan.
 ​
 ListMcpResources
-도구 이름: ListMcpResources
+Tool name: ListMcpResources
 
 Copy
 interface ListMcpResourcesInput {
   /**
-   * 리소스를 필터링할 선택적 서버 이름
+   * Optional server name to filter resources by
    */
   server?: string;
 }
-연결된 서버에서 사용 가능한 MCP 리소스를 나열합니다.
+Lists available MCP resources from connected servers.
 ​
 ReadMcpResource
-도구 이름: ReadMcpResource
+Tool name: ReadMcpResource
 
 Copy
 interface ReadMcpResourceInput {
   /**
-   * MCP 서버 이름
+   * The MCP server name
    */
   server: string;
   /**
-   * 읽을 리소스 URI
+   * The resource URI to read
    */
   uri: string;
 }
-서버에서 특정 MCP 리소스를 읽습니다.
+Reads a specific MCP resource from a server.
 ​
-도구 출력 타입
-모든 내장 Claude Code 도구의 출력 스키마 문서입니다. 이러한 타입은 각 도구에서 반환되는 실제 응답 데이터를 나타냅니다.
+Tool Output Types
+Documentation of output schemas for all built-in Claude Code tools. These types represent the actual response data returned by each tool.
 ​
 ToolOutput
-참고: 이는 명확성을 위한 문서 전용 타입입니다. 모든 도구 출력 타입의 유니온을 나타냅니다.
+Note: This is a documentation-only type for clarity. It represents the union of all tool output types.
 
 Copy
 type ToolOutput = 
@@ -1007,16 +1008,16 @@ type ToolOutput =
   | ReadMcpResourceOutput;
 ​
 Task
-도구 이름: Task
+Tool name: Task
 
 Copy
 interface TaskOutput {
   /**
-   * 하위 에이전트의 최종 결과 메시지
+   * Final result message from the subagent
    */
   result: string;
   /**
-   * 토큰 사용 통계
+   * Token usage statistics
    */
   usage?: {
     input_tokens: number;
@@ -1025,82 +1026,82 @@ interface TaskOutput {
     cache_read_input_tokens?: number;
   };
   /**
-   * USD 단위 총 비용
+   * Total cost in USD
    */
   total_cost_usd?: number;
   /**
-   * 실행 지속 시간 (밀리초)
+   * Execution duration in milliseconds
    */
   duration_ms?: number;
 }
-위임된 작업을 완료한 후 하위 에이전트의 최종 결과를 반환합니다.
+Returns the final result from the subagent after completing the delegated task.
 ​
 Bash
-도구 이름: Bash
+Tool name: Bash
 
 Copy
 interface BashOutput {
   /**
-   * stdout과 stderr 출력 결합
+   * Combined stdout and stderr output
    */
   output: string;
   /**
-   * 명령의 종료 코드
+   * Exit code of the command
    */
   exitCode: number;
   /**
-   * 타임아웃으로 인해 명령이 종료되었는지 여부
+   * Whether the command was killed due to timeout
    */
   killed?: boolean;
   /**
-   * 백그라운드 프로세스용 셸 ID
+   * Shell ID for background processes
    */
   shellId?: string;
 }
-종료 상태와 함께 명령 출력을 반환합니다. 백그라운드 명령은 shellId와 함께 즉시 반환됩니다.
+Returns command output with exit status. Background commands return immediately with a shellId.
 ​
 BashOutput
-도구 이름: BashOutput
+Tool name: BashOutput
 
 Copy
 interface BashOutputToolOutput {
   /**
-   * 마지막 확인 이후 새로운 출력
+   * New output since last check
    */
   output: string;
   /**
-   * 현재 셸 상태
+   * Current shell status
    */
   status: 'running' | 'completed' | 'failed';
   /**
-   * 종료 코드 (완료 시)
+   * Exit code (when completed)
    */
   exitCode?: number;
 }
-백그라운드 셸에서 증분 출력을 반환합니다.
+Returns incremental output from background shells.
 ​
 Edit
-도구 이름: Edit
+Tool name: Edit
 
 Copy
 interface EditOutput {
   /**
-   * 확인 메시지
+   * Confirmation message
    */
   message: string;
   /**
-   * 수행된 교체 수
+   * Number of replacements made
    */
   replacements: number;
   /**
-   * 편집된 파일 경로
+   * File path that was edited
    */
   file_path: string;
 }
-교체 수와 함께 성공적인 편집의 확인을 반환합니다.
+Returns confirmation of successful edits with replacement count.
 ​
 Read
-도구 이름: Read
+Tool name: Read
 
 Copy
 type ReadOutput = 
@@ -1111,37 +1112,37 @@ type ReadOutput =
 
 interface TextFileOutput {
   /**
-   * 라인 번호가 있는 파일 내용
+   * File contents with line numbers
    */
   content: string;
   /**
-   * 파일의 총 라인 수
+   * Total number of lines in file
    */
   total_lines: number;
   /**
-   * 실제로 반환된 라인 수
+   * Lines actually returned
    */
   lines_returned: number;
 }
 
 interface ImageFileOutput {
   /**
-   * Base64 인코딩된 이미지 데이터
+   * Base64 encoded image data
    */
   image: string;
   /**
-   * 이미지 MIME 타입
+   * Image MIME type
    */
   mime_type: string;
   /**
-   * 파일 크기 (바이트)
+   * File size in bytes
    */
   file_size: number;
 }
 
 interface PDFFileOutput {
   /**
-   * 페이지 내용 배열
+   * Array of page contents
    */
   pages: Array<{
     page_number: number;
@@ -1152,14 +1153,14 @@ interface PDFFileOutput {
     }>;
   }>;
   /**
-   * 총 페이지 수
+   * Total number of pages
    */
   total_pages: number;
 }
 
 interface NotebookFileOutput {
   /**
-   * Jupyter 노트북 셀
+   * Jupyter notebook cells
    */
   cells: Array<{
     cell_type: 'code' | 'markdown';
@@ -1168,54 +1169,54 @@ interface NotebookFileOutput {
     execution_count?: number;
   }>;
   /**
-   * 노트북 메타데이터
+   * Notebook metadata
    */
   metadata?: Record<string, any>;
 }
-파일 타입에 적합한 형식으로 파일 내용을 반환합니다.
+Returns file contents in format appropriate to file type.
 ​
 Write
-도구 이름: Write
+Tool name: Write
 
 Copy
 interface WriteOutput {
   /**
-   * 성공 메시지
+   * Success message
    */
   message: string;
   /**
-   * 쓰여진 바이트 수
+   * Number of bytes written
    */
   bytes_written: number;
   /**
-   * 쓰여진 파일 경로
+   * File path that was written
    */
   file_path: string;
 }
-파일을 성공적으로 쓴 후 확인을 반환합니다.
+Returns confirmation after successfully writing the file.
 ​
 Glob
-도구 이름: Glob
+Tool name: Glob
 
 Copy
 interface GlobOutput {
   /**
-   * 매치되는 파일 경로 배열
+   * Array of matching file paths
    */
   matches: string[];
   /**
-   * 찾은 매치 수
+   * Number of matches found
    */
   count: number;
   /**
-   * 사용된 검색 디렉터리
+   * Search directory used
    */
   search_path: string;
 }
-수정 시간으로 정렬된 glob 패턴과 매치되는 파일 경로를 반환합니다.
+Returns file paths matching the glob pattern, sorted by modification time.
 ​
 Grep
-도구 이름: Grep
+Tool name: Grep
 
 Copy
 type GrepOutput = 
@@ -1225,7 +1226,7 @@ type GrepOutput =
 
 interface GrepContentOutput {
   /**
-   * 컨텍스트가 있는 매치되는 라인
+   * Matching lines with context
    */
   matches: Array<{
     file: string;
@@ -1235,140 +1236,140 @@ interface GrepContentOutput {
     after_context?: string[];
   }>;
   /**
-   * 총 매치 수
+   * Total number of matches
    */
   total_matches: number;
 }
 
 interface GrepFilesOutput {
   /**
-   * 매치를 포함하는 파일
+   * Files containing matches
    */
   files: string[];
   /**
-   * 매치가 있는 파일 수
+   * Number of files with matches
    */
   count: number;
 }
 
 interface GrepCountOutput {
   /**
-   * 파일별 매치 수
+   * Match counts per file
    */
   counts: Array<{
     file: string;
     count: number;
   }>;
   /**
-   * 모든 파일의 총 매치 수
+   * Total matches across all files
    */
   total: number;
 }
-output_mode에서 지정한 형식으로 검색 결과를 반환합니다.
+Returns search results in the format specified by output_mode.
 ​
 KillBash
-도구 이름: KillBash
+Tool name: KillBash
 
 Copy
 interface KillBashOutput {
   /**
-   * 성공 메시지
+   * Success message
    */
   message: string;
   /**
-   * 종료된 셸의 ID
+   * ID of the killed shell
    */
   shell_id: string;
 }
-백그라운드 셸을 종료한 후 확인을 반환합니다.
+Returns confirmation after terminating the background shell.
 ​
 NotebookEdit
-도구 이름: NotebookEdit
+Tool name: NotebookEdit
 
 Copy
 interface NotebookEditOutput {
   /**
-   * 성공 메시지
+   * Success message
    */
   message: string;
   /**
-   * 수행된 편집 타입
+   * Type of edit performed
    */
   edit_type: 'replaced' | 'inserted' | 'deleted';
   /**
-   * 영향을 받은 셀 ID
+   * Cell ID that was affected
    */
   cell_id?: string;
   /**
-   * 편집 후 노트북의 총 셀 수
+   * Total cells in notebook after edit
    */
   total_cells: number;
 }
-Jupyter 노트북을 수정한 후 확인을 반환합니다.
+Returns confirmation after modifying the Jupyter notebook.
 ​
 WebFetch
-도구 이름: WebFetch
+Tool name: WebFetch
 
 Copy
 interface WebFetchOutput {
   /**
-   * 프롬프트에 대한 AI 모델의 응답
+   * AI model's response to the prompt
    */
   response: string;
   /**
-   * 가져온 URL
+   * URL that was fetched
    */
   url: string;
   /**
-   * 리디렉션 후 최종 URL
+   * Final URL after redirects
    */
   final_url?: string;
   /**
-   * HTTP 상태 코드
+   * HTTP status code
    */
   status_code?: number;
 }
-가져온 웹 콘텐츠에 대한 AI의 분석을 반환합니다.
+Returns the AI’s analysis of the fetched web content.
 ​
 WebSearch
-도구 이름: WebSearch
+Tool name: WebSearch
 
 Copy
 interface WebSearchOutput {
   /**
-   * 검색 결과
+   * Search results
    */
   results: Array<{
     title: string;
     url: string;
     snippet: string;
     /**
-     * 사용 가능한 경우 추가 메타데이터
+     * Additional metadata if available
      */
     metadata?: Record<string, any>;
   }>;
   /**
-   * 총 결과 수
+   * Total number of results
    */
   total_results: number;
   /**
-   * 검색된 쿼리
+   * The query that was searched
    */
   query: string;
 }
-웹에서 형식화된 검색 결과를 반환합니다.
+Returns formatted search results from the web.
 ​
 TodoWrite
-도구 이름: TodoWrite
+Tool name: TodoWrite
 
 Copy
 interface TodoWriteOutput {
   /**
-   * 성공 메시지
+   * Success message
    */
   message: string;
   /**
-   * 현재 할 일 통계
+   * Current todo statistics
    */
   stats: {
     total: number;
@@ -1377,31 +1378,31 @@ interface TodoWriteOutput {
     completed: number;
   };
 }
-현재 작업 통계와 함께 확인을 반환합니다.
+Returns confirmation with current task statistics.
 ​
 ExitPlanMode
-도구 이름: ExitPlanMode
+Tool name: ExitPlanMode
 
 Copy
 interface ExitPlanModeOutput {
   /**
-   * 확인 메시지
+   * Confirmation message
    */
   message: string;
   /**
-   * 사용자가 계획을 승인했는지 여부
+   * Whether user approved the plan
    */
   approved?: boolean;
 }
-계획 모드를 종료한 후 확인을 반환합니다.
+Returns confirmation after exiting plan mode.
 ​
 ListMcpResources
-도구 이름: ListMcpResources
+Tool name: ListMcpResources
 
 Copy
 interface ListMcpResourcesOutput {
   /**
-   * 사용 가능한 리소스
+   * Available resources
    */
   resources: Array<{
     uri: string;
@@ -1411,19 +1412,19 @@ interface ListMcpResourcesOutput {
     server: string;
   }>;
   /**
-   * 총 리소스 수
+   * Total number of resources
    */
   total: number;
 }
-사용 가능한 MCP 리소스 목록을 반환합니다.
+Returns list of available MCP resources.
 ​
 ReadMcpResource
-도구 이름: ReadMcpResource
+Tool name: ReadMcpResource
 
 Copy
 interface ReadMcpResourceOutput {
   /**
-   * 리소스 내용
+   * Resource contents
    */
   contents: Array<{
     uri: string;
@@ -1432,16 +1433,16 @@ interface ReadMcpResourceOutput {
     blob?: string;
   }>;
   /**
-   * 리소스를 제공한 서버
+   * Server that provided the resource
    */
   server: string;
 }
-요청된 MCP 리소스의 내용을 반환합니다.
+Returns the contents of the requested MCP resource.
 ​
-권한 타입
+Permission Types
 ​
 PermissionUpdate
-권한 업데이트를 위한 작업입니다.
+Operations for updating permissions.
 
 Copy
 type PermissionUpdate = 
@@ -1488,10 +1489,10 @@ PermissionUpdateDestination
 
 Copy
 type PermissionUpdateDestination = 
-  | 'userSettings'     // 전역 사용자 설정
-  | 'projectSettings'  // 디렉터리별 프로젝트 설정
-  | 'localSettings'    // Gitignore된 로컬 설정
-  | 'session'          // 현재 세션만
+  | 'userSettings'     // Global user settings
+  | 'projectSettings'  // Per-directory project settings
+  | 'localSettings'    // Gitignored local settings
+  | 'session'          // Current session only
 ​
 PermissionRuleValue
 
@@ -1501,7 +1502,7 @@ type PermissionRuleValue = {
   ruleContent?: string;
 }
 ​
-기타 타입
+Other Types
 ​
 ApiKeySource
 
@@ -1514,7 +1515,7 @@ Copy
 type ConfigScope = 'local' | 'user' | 'project';
 ​
 NonNullableUsage
-모든 nullable 필드가 non-nullable로 만들어진 Usage 버전입니다.
+A version of Usage with all nullable fields made non-nullable.
 
 Copy
 type NonNullableUsage = {
@@ -1522,7 +1523,7 @@ type NonNullableUsage = {
 }
 ​
 Usage
-토큰 사용 통계 (@anthropic-ai/sdk에서).
+Token usage statistics (from @anthropic-ai/sdk).
 
 Copy
 type Usage = {
@@ -1533,20 +1534,25 @@ type Usage = {
 }
 ​
 CallToolResult
-MCP 도구 결과 타입 (@modelcontextprotocol/sdk/types.js에서).
+MCP tool result type (from @modelcontextprotocol/sdk/types.js).
 
 Copy
 type CallToolResult = {
   content: Array<{
     type: 'text' | 'image' | 'resource';
-    // 추가 필드는 타입에 따라 다름
+    // Additional fields vary by type
   }>;
   isError?: boolean;
 }
 ​
 AbortError
-중단 작업을 위한 사용자 정의 오류 클래스입니다.
+Custom error class for abort operations.
 
 Copy
 class AbortError extends Error {}
 ​
+See also
+SDK overview - General SDK concepts
+Python SDK reference - Python SDK documentation
+CLI reference - Command-line interface
+Common workflows - Step-by-step guides

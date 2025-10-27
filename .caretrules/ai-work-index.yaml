@@ -22,10 +22,14 @@ steps:
         docs: [.caretrules/b2b-branding-workflow.md]
 
       - name: AI System Development
-        keywords: [AI, message, system prompt, chatbot, agent, conversation]
+        keywords: [AI, message, system prompt, chatbot, agent, conversation, model, provider]
         docs:
-          - .caretrules/system-prompt.md             # Quick AI rules (coming soon)
-        detail_docs: [caret-docs/development/system-prompt-implementation.md]
+          - .caretrules/system-prompt.md             # Quick AI rules
+          - .caretrules/message-processing.md        # Message architecture
+        detail_docs:
+          - caret-docs/development/system-prompt-implementation.md
+          - caret-docs/development/message-processing-architecture.md
+          - caret-docs/development/support-model-list.md  # AI models & providers list
 
       - name: Frontend-Backend Communication
         keywords: [webview, communication, state management, message passing, UI integration, gRPC]
@@ -37,10 +41,13 @@ steps:
           - caret-docs/development/webview-extension-communication.md
 
       - name: UI/UX Development
-        keywords: [component, React, UI, UX, persona, multilingual, i18n]
+        keywords: [component, React, UI, UX, persona, multilingual, i18n, button, interaction]
         docs:
           - .caretrules/component-architecture.md     # Component principles
-        detail_docs: [caret-docs/development/component-architecture-principles.md, caret-docs/development/locale.md]
+        detail_docs:
+          - caret-docs/development/component-architecture-principles.md
+          - caret-docs/development/locale.md
+          - caret-docs/development/button-system-architecture-guide.md  # Button interaction patterns
 
       - name: Testing & Quality
         keywords: [test, TDD, quality, coverage, verification, bug]
@@ -50,11 +57,13 @@ steps:
         detail_docs: [caret-docs/development/testing-guide.md]
 
       - name: Development Tools
-        keywords: [utility, tool, file handling, image, link, build]
+        keywords: [utility, tool, file handling, image, link, build, storage, flow]
         docs: [.caretrules/build-system.md]
         detail_docs:
           - caret-docs/development/utilities.md
           - caret-docs/development/file-storage-and-image-loading-guide.md
+          - caret-docs/development/link-management-guide.md  # Link validation & management
+          - caret-docs/development/ui-to-storage-flow.md     # Complete UI→Storage integration
 
       - name: Documentation & Knowledge Sync
         keywords: [documentation, knowledge sync, atomization, F11, doc structure]
@@ -67,6 +76,25 @@ steps:
           - .caretrules/cline-modification.md         # Modification protocol
           - .caretrules/caret-architecture-guide.md   # Architecture context
         note: Always check backup and comment requirements
+
+      - name: Developer Onboarding
+        keywords: [onboarding, new developer, getting started, setup, overview]
+        docs: []
+        detail_docs:
+          - caret-docs/development/index.md           # Main developer guide
+          - caret-docs/development/new-developer-guide.md  # New developer onboarding
+
+      - name: Code Standards & Conventions
+        keywords: [code standard, convention, JSON, comment, formatting]
+        docs: []
+        detail_docs:
+          - caret-docs/development/json-comment-conventions.md  # JSON commenting rules
+
+      - name: Checkpoint System
+        keywords: [checkpoint, save, restore, state management]
+        docs: []
+        detail_docs:
+          - caret-docs/development/checkpoint-architecture.md  # Checkpoint system design
 
   - step: 2
     title: Smart Reading Strategy

@@ -1,181 +1,81 @@
-You are creating new components using TDD and consistent patterns.
+# New Component Creation - Quick Reference
 
-<detailed_sequence_of_steps>
-# New Component - TDD Component Creation Workflow
+**Purpose**: Create React components or service classes using TDD with consistent patterns and proper integration.
 
-## Atomic Components Used
-- `/tdd-cycle` - RED→GREEN→REFACTOR methodology
-- `/naming-conventions` - Consistent file and variable naming
-- `/storage-patterns` - Appropriate state management
-- `/verification-steps` - Complete testing validation
+**When to use**: Adding new UI components, services, utilities, or any new module to the codebase.
 
-## Pre-Development Phase
+## Core Principles
 
-### Step 1: Component Planning
-**Define component purpose and integration:**
-- [ ] What user interaction does this component handle?
-- [ ] How does it integrate with existing system?
-- [ ] What storage scope is needed (workspace vs global)?
-- [ ] Is this a React component (.tsx) or service class (.ts)?
+1. **Integration-First TDD**: Test actual user scenarios, not isolated units
+2. **Consistent Naming**: React components (PascalCase.tsx), services (kebab-case.ts)
+3. **Proper Storage**: Choose workspace vs global state appropriately
+4. **Clean Integration**: Follow L1→L2→L3 hierarchy for Cline integration
 
-### Step 2: Naming Decision (`/naming-conventions`)
-```
-// For React Components (Frontend)
-PersonaSelector.tsx → PersonaSelector.test.tsx
+## Quick Workflow
 
-// For Service Classes (Backend)  
-persona-service.ts → persona-service.test.ts
+**Pre-Development:**
+- [ ] Define component purpose and user interactions
+- [ ] Choose storage scope (workspace vs global)
+- [ ] Decide naming convention (React .tsx vs service .ts)
+- [ ] Determine integration level (L1 preferred)
 
-// For Utility Functions
-message-processor.ts → message-processor.test.ts
-```
+**TDD Cycle:**
+- [ ] RED: Write integration test for user scenario (not helper units)
+- [ ] GREEN: Implement minimal code to pass integration test
+- [ ] REFACTOR: Improve quality, add error handling, optimize
 
-## TDD Implementation Phase
+**Verification:**
+- [ ] `npm run test:webview` (React) or `npm run test:backend` (service)
+- [ ] `npm run compile` - TypeScript compilation succeeds
+- [ ] Manual test - F5 in VSCode development window
 
-### Step 3: RED - Integration Test First (`/tdd-cycle`)
-**Write test for actual user scenario, not isolated units:**
+## Naming Conventions
 
-```typescript
-// Example: React Component Integration Test
-describe('PersonaSelector Component', () => {
-  it('should update AI behavior when user selects new persona', async () => {
-    render(<PersonaSelector />);
-    
-    // User interaction
-    const personaOption = screen.getByText('Creative Assistant');
-    fireEvent.click(personaOption);
-    
-    // Expected system behavior  
-    expect(mockPersonaService.setActive).toHaveBeenCalledWith('creative');
-    expect(mockAIService.updateContext).toHaveBeenCalled();
-  });
-});
-```
+**React Components (Frontend)**:
+`PersonaSelector.tsx` → `PersonaSelector.test.tsx`
 
-```typescript
-// Example: Service Integration Test
-describe('PersonaService', () => {
-  it('should persist persona selection and update AI context', async () => {
-    const service = new PersonaService(mockContext);
-    
-    // Business operation
-    await service.selectPersona('creative');
-    
-    // Expected outcomes
-    expect(mockContext.workspaceState.update).toHaveBeenCalledWith(
-      'selectedPersona', 'creative'
-    );
-    expect(mockAIService.updateSystemPrompt).toHaveBeenCalled();
-  });
-});
-```
+**Service Classes (Backend)**:
+`persona-service.ts` → `persona-service.test.ts`
 
-### Step 4: GREEN - Implementation (`/storage-patterns`)
-**Create minimal implementation to pass integration test:**
+**Utilities**:
+`message-processor.ts` → `message-processor.test.ts`
 
-```typescript
-// Apply storage patterns appropriately
-export class PersonaService {
-  constructor(private context: vscode.ExtensionContext) {}
-  
-  async selectPersona(personaId: string): Promise<void> {
-    // Workspace storage - persona selection is project-specific
-    await this.context.workspaceState.update('selectedPersona', personaId);
-    
-    // Update AI system with new context
-    await this.aiService.updateSystemPrompt(this.buildPrompt(personaId));
-  }
-  
-  getSelectedPersona(): string {
-    // Consistent storage pattern
-    return this.context.workspaceState.get('selectedPersona', 'default');
-  }
-}
-```
+## File Structure
 
-### Step 5: REFACTOR - Quality Improvement
-**Improve implementation while keeping tests passing:**
-- Extract common patterns
-- Add error handling
-- Optimize performance
-- Add unit tests as byproducts (not starting points)
-
-## Post-Implementation Phase
-
-### Step 6: Full Verification (`/verification-steps`)
-```bash
-# Test verification
-npm run test:webview      # For React components
-# (test:backend when available) # For service classes
-
-# Compile verification  
-npm run compile
-npm run check-types
-
-# Execute verification
-npm run watch            # Start development
-# F5 in VSCode to test extension
-```
-
-### Step 7: Integration Validation
-- [ ] Component integrates with existing UI/system
-- [ ] Storage patterns work correctly (data persists/loads)
-- [ ] No memory leaks or performance issues
-- [ ] Error handling works appropriately
-- [ ] Naming follows project conventions
-
-## File Structure Examples
-
-### React Component Creation:
+**React Component**:
 ```
 webview-ui/src/caret/components/
-├── PersonaSelector.tsx
-├── PersonaSelector.test.tsx
-└── PersonaSelector.module.css (if needed)
+├── ComponentName.tsx
+├── ComponentName.test.tsx
+└── ComponentName.module.css (optional)
 ```
 
-### Service Class Creation:
+**Service Class**:
 ```
 caret-src/services/
-├── persona-service.ts
-├── persona-service.test.ts
-└── types/
-    └── persona-types.ts
+├── service-name.ts
+├── service-name.test.ts
+└── types/service-types.ts
 ```
 
-## Integration with Other Workflows
+## Key Atomic Components
 
-### Use with `/message-flow`:
-```typescript
-// Component that communicates with backend
-const PersonaSelector: React.FC = () => {
-  const sendMessage = useExtensionMessage();
-  
-  const handlePersonaSelect = (personaId: string) => {
-    sendMessage({
-      type: 'personaUpdate',
-      payload: { personaId },
-      requestId: generateId()
-    });
-  };
-};
-```
-
-### Use with `/modification-levels`:
-- **Level 1**: New components in caret-src/ or caret components
-- **Level 2**: Integration points with existing Cline components  
-- **Level 3**: Major modifications to existing Cline components (avoid)
+- `/tdd-cycle` - RED→GREEN→REFACTOR methodology
+- `/naming-conventions` - File and variable naming standards
+- `/storage-patterns` - Workspace vs global state rules
+- `/verification-steps` - Testing and compilation validation
 
 ## Related Workflows
-- Apply `/critical-verification` when component design is complex
-- Use `/cline-modification` if integration with Cline components needed
-- Consider `/message-flow` for frontend-backend communication
-</detailed_sequence_of_steps>
 
-<general_guidelines>
-This workflow ensures new components follow TDD principles and integrate cleanly with the existing system.
+- `/message-flow` - Frontend-backend communication patterns
+- `/cline-modification` - When integrating with Cline components
+- `/critical-verification` - For complex component designs
+- `/modification-levels` - L1 (caret-src/) vs L2/L3 integration
 
-The focus on integration tests first prevents isolated components that don't work in real scenarios.
+---
 
-Consistent naming and storage patterns maintain codebase coherence and predictability.
-</general_guidelines>
+**📖 For detailed workflow with code examples:**
+See `.caretrules/workflows/new-component.md`
+
+**📖 For Korean developer documentation:**
+See `caret-docs/development/component-architecture-principles.md`

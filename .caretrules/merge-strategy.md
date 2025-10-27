@@ -1,88 +1,52 @@
-You are helping with Caret project merging strategy. Follow the merging-strategy-guide principles when handling Cline code modifications.
+# Caret-Cline Merging Strategy - Quick Reference
 
-<detailed_sequence_of_steps>
-# Caret-Cline Merging Strategy Workflow
+**Purpose**: Minimize Cline code modifications while extending Caret functionality, following L1→L2→L3 hierarchy.
 
-## 1. Analyze Modification Scope
-1. Identify the nature of changes needed:
-   ```bash
-   # Check what files are being modified
-   git status
-   git diff --name-only
-   ```
+**When to use**: Any Caret feature development that might touch Cline original files.
 
-2. Classify modification level:
-   - **Level 1**: Independent modules (caret-src/, caret-docs/) - Full freedom
-   - **Level 2**: Conditional integration - Minimal Cline code changes
-   - **Level 3**: Direct modification - Last resort with backup
+## Core Principle
 
-## 2. Apply Merging Strategy
-1. **Prefer Level 1 (Independent Module)**:
-   - Create new features in `caret-src/` directory
-   - Use inheritance/composition to extend Cline functionality
-   - Example: `CaretProvider extends WebviewProvider`
+**Hierarchy: Level 1 → Level 2 → Level 3**
+Never jump to Level 3 without exploring Level 1 and 2 options first.
 
-2. **When Level 2 (Conditional Integration) needed**:
-   - Backup original file: `cp original.ts original.ts.cline`
-   - Add `// CARET MODIFICATION:` comment
-   - Make minimal 1-3 line changes
-   - Use conditional logic: `if (isCaretMode()) { ... }`
+## Modification Levels
 
-3. **Level 3 (Direct Modification) - Last Resort**:
-   - Only when inheritance/composition impossible
-   - Must backup original file first
-   - Document reason in CARET MODIFICATION comment
-   - Test both Cline and Caret functionality
+**Level 1: Independent Module** (Preferred)
+- Create features in `caret-src/`, `caret-docs/` directories
+- Use inheritance/composition to extend Cline functionality
+- Example: `CaretProvider extends WebviewProvider`
+- **No backup needed** (full freedom)
 
-## 3. Verification Steps
-1. Verify backups exist and are restorable:
-   ```bash
-   # Check backup files exist
-   find . -name "*.cline" | head -10
-   
-   # Test restoration process
-   cp src/extension.ts.cline src/extension.ts
-   npm run compile  # Should work
-   git checkout src/extension.ts  # Restore modification
-   ```
+**Level 2: Conditional Integration** (When needed)
+- Backup file: ~~`cp original.ts original.ts.cline`~~ **DEPRECATED: Use comment only**
+- Add `// CARET MODIFICATION: [description]` comment
+- Make minimal 1-3 line changes
+- Use conditional logic: `if (isCaretMode()) { ... }`
 
-2. Test both modes:
-   - Cline original functionality still works
-   - Caret extensions work as expected
-   - No conflicts or regressions
+**Level 3: Direct Modification** (Last resort)
+- Only when inheritance/composition impossible
+- Must add `// CARET MODIFICATION: [reason]` comment
+- Document reason thoroughly
+- Test both Cline and Caret functionality
 
-## 4. Future Merging Preparation
-1. Document all Cline file modifications:
-   ```bash
-   # Find all CARET MODIFICATION comments
-   grep -r "CARET MODIFICATION" src/ webview-ui/ --include="*.ts" --include="*.tsx"
-   ```
+## Quick Decision Tree
 
-2. Create merge conflict resolution plan:
-   - List modified files and change reasons
-   - Prepare conflict resolution strategies
-   - Test merge scenarios with dummy branches
+1. Can feature be in `caret-src/`? → **Level 1**
+2. Can use inheritance/composition? → **Level 1**
+3. Need minimal hook in Cline file (1-3 lines)? → **Level 2**
+4. Must modify Cline core logic? → **Level 3** (ask user first)
 
-## 5. Ask for User Confirmation
-Before applying any Level 2 or Level 3 modifications:
-   ```xml
-   <ask_followup_question>
-   <question>I need to modify Cline original file: {filename}
-   
-   Modification reason: {reason}
-   Change scope: {number} lines
-   Backup will be created: {filename}.cline
-   
-   Would you like me to proceed with this Cline file modification?</question>
-   <options>["Yes, proceed with backup", "No, find alternative approach", "Let me review the change first"]</options>
-   </ask_followup_question>
-   ```
-</detailed_sequence_of_steps>
+## Verification
 
-<general_guidelines>
-Always follow the hierarchy: Level 1 → Level 2 → Level 3. Never jump directly to Level 3 without exploring Level 1 and 2 options.
+- [ ] `npm run compile` - TypeScript compiles successfully
+- [ ] Cline original functionality still works
+- [ ] Caret extensions work as expected
+- [ ] No conflicts or regressions
 
-When modifying Cline files, think about future merging scenarios. The fewer files modified, the easier upstream merging becomes.
+---
 
-Document all architectural decisions and modification reasons for future reference.
-</general_guidelines>
+**📖 For detailed merging workflow and verification steps:**
+See `.caretrules/workflows/merge-strategy.md`
+
+**📖 For Korean architecture guide:**
+See `caret-docs/development/caret-architecture-and-implementation-guide.md`

@@ -103,4 +103,28 @@ Never modify Cline files without backup and CARET MODIFICATION comment.
 Prefer Level 1 (independent modules) over Level 2 (conditional integration).
 
 Document new patterns and update guides when discoveries are made.
+
+## Internationalization (i18n) Guidelines
+
+**Namespace Rules**:
+- Use feature-based namespaces: Each feature has its own JSON file
+- `common.json`: Shared UI elements only (`button.save`, `error.generic`)
+- `settings.json`: Settings content (`providers.openrouter.name`)
+- Never include namespace in key name
+
+**Translation Usage**:
+```typescript
+// ✅ Correct
+t('providers.openrouter.name', 'settings')
+t('button.save', 'common')
+
+// ❌ Wrong
+t('settings.providers.openrouter.name')
+t('common.button.save')
+```
+
+**Dynamic Pattern** (for language switching):
+- Convert static constants to dynamic functions
+- Use `useMemo(() => getFunction(), [language])` in components
+- Reference: `.caretrules/workflows/atoms/i18n-dynamic-pattern.md`
 </general_guidelines>

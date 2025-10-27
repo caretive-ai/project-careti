@@ -443,61 +443,83 @@ npm run test:all      # Full verification
 
 ### Rule Management System & AI Workflow Documentation
 
-**AI maintains dual workflow system with semantic equivalence:**
+**Three-Level Documentation Structure:**
 
-#### `.caretrules/workflows/` (Machine-Optimized)
-- **Format**: Hybrid strategy
-  - YAML (0-2 code examples): Token-optimized, ~33% reduction
-  - Markdown (3+ examples): Better for one-shot prompts
-- **Purpose**: Caret app `/command` usage + AI consumption
+#### `.caretrules/` ROOT (Quick Reference - AI Task Catalog)
+- **Purpose**: Token-optimized summaries for frequent AI reference
+- **Format**: Markdown (50-80 lines per file)
 - **Language**: English
-- **Optimization**: Token efficiency priority
+- **Content**: "What tasks can AI do" - Quick checklists, core principles, workflows references
+- **Structure**: 24 files
+  - `ai-feature.md`, `ai-work-protocol.md`, `caret-development.md`
+  - `cline-modification.md`, `critical-verification.md`, `document-organization.md`
+  - `merge-strategy.md`, `new-component.md`, `testing-work.md`
+  - Plus 15 other task-specific files
+- **Optimization**: 61% token reduction (ROOT files reference detailed workflows)
 
-#### `caret-docs/development/workflows/` (Human-Friendly)
-- **Format**: Always Markdown
-- **Purpose**: Korean developer reference
+#### `.caretrules/workflows/` (Detailed Procedures - AI Execution)
+- **Purpose**: "How to perform tasks" - Step-by-step detailed procedures
+- **Format**: Markdown (100-250 lines per file)
+- **Language**: English
+- **Content**: Complete workflows with code examples, verification steps, checklists
+- **Structure**: 11 files
+  - `ai-feature.md`, `ai-work-protocol.md`, `caret-development.md`
+  - `cline-modification.md`, `critical-verification.md`, `document-organization.md`
+  - `merge-strategy.md`, `new-component.md`, `testing-work.md`
+  - `branding-and-logging.md`, `i18n-static-translation-fix.md`
+
+#### `.caretrules/workflows/atoms/` (Reusable Units)
+- **Purpose**: Minimal reusable knowledge units
+- **Format**: YAML or Markdown
+- **Language**: English
+- **Content**: Atomic patterns like `/tdd-cycle`, `/naming-conventions`, `/storage-patterns`
+- **Structure**: 12 atomic workflow units
+
+#### `caret-docs/development/` (Developer Documentation)
+- **Purpose**: Korean developer-friendly guides
+- **Format**: Markdown
 - **Language**: Korean (한글)
-- **Optimization**: Readability priority
+- **Content**: 23+ architecture and development guides
+  - `caret-architecture-and-implementation-guide.md`
+  - `component-architecture-principles.md`
+  - `frontend-backend-interaction-patterns.md`
+  - `ai-message-flow-guide.md`, `testing-guide.md`, `link-management-guide.md`
+  - And more...
 
-#### `caret-docs/development/*.md` (Architecture Documentation)
-- **Format**: MDX (Markdown + JSX)
-- **Purpose**: Korean developer architecture guides
-- **Language**: Korean (한글)
-- **Content**: 23 architecture documents
+#### Documentation Rules (AI Responsibility)
+1. **Language Separation**:
+   - `.caretrules/*` = English (AI consumption, token-optimized)
+   - `caret-docs/development/*` = Korean (developer-friendly)
+2. **Reference Structure**:
+   - ROOT files reference workflows: "See `.caretrules/workflows/[filename].md` for details"
+   - Workflows may reference atoms: Use `/atom-name` pattern
+3. **Consistency**: ROOT and workflows must be semantically aligned
+4. **Token Optimization**: ROOT = summaries, WORKFLOWS = complete procedures
 
-#### Synchronization Rules (AI Responsibility)
-1. **Semantic Equivalence**: Both .caretrules and caret-docs workflows must be semantically identical
-2. **Format Independence**: .caretrules can be YAML or MD, caret-docs always MD
-3. **Update Propagation**: Any change to one must sync to the other
-4. **Verification**: Use `caret-scripts/ai-semantic-analyzer.js` to verify
-
-#### Format Decision Criteria
+#### How to Use This Structure
 ```bash
-# Count code examples in workflow
-grep -c '```' workflow.md
+# AI starting a task:
+# 1. Check ROOT for quick overview (ai-feature.md, 60 lines)
+# 2. If needed, read detailed workflow (workflows/ai-feature.md, 245 lines)
+# 3. Reference atoms as needed (workflows/atoms/tdd-cycle.md)
 
-# Decision:
-# 0-2 examples → .caretrules/*.yaml (token-optimized)
-# 3+ examples  → .caretrules/*.md (learning-optimized)
-# Always       → caret-docs/*.md (Korean, human-friendly)
+# Example task flow:
+# User: "Implement AI feature X"
+# AI: Read .caretrules/ai-feature.md (60 lines, quick checklist)
+# AI: If complex, read .caretrules/workflows/ai-feature.md (245 lines, detailed)
+# AI: Apply atoms: /tdd-cycle, /verification-steps, /storage-patterns
 ```
 
-### Available Workflows and Documentation
+### Available Documentation
 
-#### Workflows (`.caretrules/workflows/`)
-- **Main**: `ai-work-index.md`, `ai-work-protocol.md`, `caret-development.md`
-- **Architecture**: `merge-strategy.md`, `architecture-guide.md`
-- **Development**: `cline-modification.md`, `new-component.md`, `testing-work.md`
-- **Atoms**: `tdd-cycle.md`, `naming-conventions.md`, `storage-patterns.md`
+#### ROOT Quick References (`.caretrules/*.md`)
+24 files - Token-optimized task catalog
 
-#### Korean Dev Docs (`caret-docs/development/`)
-- **Architecture**: `caret-architecture-and-implementation-guide.md`
-- **Components**: `component-architecture-principles.md`
-- **Frontend-Backend**: `frontend-backend-interaction-patterns.md`
-- **AI Flow**: `ai-message-flow-guide.md`
-- **Testing**: `testing-guide.md`
+#### Detailed Workflows (`.caretrules/workflows/*.md`)
+11 files - Complete procedures with examples
 
-#### Utility Scripts (`caret-scripts/`)
-- `ai-semantic-analyzer.js` - AI-powered semantic comparison
-- `universal-semantic-analyzer.js` - Format comparison tool
-- `token-efficiency-analyzer.js` - Token usage analysis
+#### Atomic Patterns (`.caretrules/workflows/atoms/`)
+12 files - Reusable minimal units
+
+#### Korean Developer Docs (`caret-docs/development/*.md`)
+23+ files - Developer-friendly Korean guides

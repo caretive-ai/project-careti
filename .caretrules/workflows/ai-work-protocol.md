@@ -6,7 +6,7 @@ You are following the detailed AI work protocol for systematic development appro
 ## Phase 0: Mandatory Pre-Review and Architecture Decision
 1. **User Identification**: Check `git config user.name`
 2. **Date Confirmation**: Check current date with OS command
-3. **Work Log Check**: Verify/create `caret-docs/work-logs/{username}/{date}.md`
+3. **Work Log Check**: Verify/create `caret-docs/work-logs/{username}/{YYYYMMDD-N-description}.md` (N is the sequential number for the day's tasks)
 
 ### Critical Work Nature Analysis
 Based on work keywords, ensure you've read relevant docs (use `/ai-work-index` first):

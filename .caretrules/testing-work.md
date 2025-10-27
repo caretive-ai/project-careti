@@ -1,254 +1,83 @@
-You are implementing comprehensive testing following integration-first TDD methodology.
+# Testing Work - Quick Reference
 
-<detailed_sequence_of_steps>
-# Testing Work - Comprehensive Testing Implementation
+**Purpose**: Implement comprehensive testing following integration-first TDD methodology with proper coverage and quality validation.
 
-## Atomic Components Used
-- `/tdd-cycle` - RED→GREEN→REFACTOR with integration tests first
-- `/verification-steps` - Test→Compile→Execute validation sequence
-- `/naming-conventions` - Consistent test file naming and structure
+**When to use**: Any feature development, bug fixes, refactoring, or code quality improvements.
 
-## Pre-Testing Phase
+## Core Principles
 
-### Step 1: Test Strategy Planning
-**Define testing scope and approach:**
-- [ ] What is the main user scenario being tested?
-- [ ] Which system components need integration testing?
-- [ ] What edge cases and error conditions exist?
-- [ ] Are there performance or reliability requirements?
-- [ ] What external dependencies need mocking?
+1. **Integration-First**: Test real user scenarios before isolated units
+2. **TDD Cycle**: RED (failing test) → GREEN (minimal code) → REFACTOR (improve quality)
+3. **Test Quality**: Edge cases, error handling, performance requirements
+4. **Naming Consistency**: `ComponentName.test.ts` matches `ComponentName.ts`
 
-### Step 2: Test Environment Setup
-```bash
-# Verify test infrastructure
-npm run test:webview     # Frontend testing capability
-# npm run test:backend   # Backend testing (planned)
-npm run test:coverage    # Coverage reporting available
-```
+## Quick Workflow
 
-## TDD Implementation Cycle
+**Pre-Testing:**
+- [ ] Define main user scenario being tested
+- [ ] Identify system components for integration testing
+- [ ] List edge cases and error conditions
+- [ ] Determine external dependencies needing mocks
 
-### Step 3: RED - Integration Test First (`/tdd-cycle`)
-**Write failing integration test for real user scenario:**
+**TDD Cycle:**
+- [ ] RED: Write integration test for complete user workflow (fails)
+- [ ] GREEN: Implement minimal code to pass integration test
+- [ ] REFACTOR: Add edge case tests, error handling, performance tests
 
-```typescript
-// Example: Complete feature integration test
-describe('Persona System Integration', () => {
-  it('should allow user to select persona, persist choice, and affect AI responses', async () => {
-    // Setup real-like environment
-    const mockContext = createMockExtensionContext();
-    const mockAIService = createMockAIService();
-    const mockWebview = createMockWebviewProvider();
-    
-    // Initialize complete system
-    const personaSystem = new PersonaSystem(mockContext, mockAIService);
-    const ui = render(<PersonaSelector personaSystem={personaSystem} />);
-    
-    // User interaction: Select creative persona
-    const creativePersona = ui.getByText('Creative Assistant');
-    fireEvent.click(creativePersona);
-    
-    // Wait for async operations
-    await waitFor(() => {
-      // Verify storage persistence  
-      expect(mockContext.workspaceState.update).toHaveBeenCalledWith(
-        'selectedPersona', 'creative'
-      );
-      
-      // Verify AI system update
-      expect(mockAIService.updateSystemPrompt).toHaveBeenCalledWith(
-        expect.stringContaining('creative and imaginative')
-      );
-      
-      // Verify UI feedback
-      expect(ui.getByText('Creative Assistant Selected')).toBeInTheDocument();
-    });
-    
-    // Test AI response with new persona
-    const chatInput = ui.getByPlaceholderText('Type your message...');
-    fireEvent.change(chatInput, { target: { value: 'Help me write a story' } });
-    fireEvent.submit(chatInput.closest('form'));
-    
-    await waitFor(() => {
-      // Verify AI called with creative context
-      expect(mockAIService.query).toHaveBeenCalledWith({
-        systemPrompt: expect.stringContaining('creative persona'),
-        userQuery: 'Help me write a story',
-        context: expect.objectContaining({ persona: 'creative' })
-      });
-    });
-  });
-});
-```
+**Validation:**
+- [ ] `npm run test:webview` (frontend) or `npm run test:backend` (backend)
+- [ ] `npm run test:coverage` - Target: >90% line coverage
+- [ ] `npm run compile` - TypeScript compilation succeeds
+- [ ] `npm run watch` - Manual runtime testing (F5)
 
-### Step 4: GREEN - Minimal Implementation
-**Create just enough code to make integration test pass:**
+## Test Types
 
-```typescript
-// PersonaSystem - minimal implementation
-export class PersonaSystem {
-  constructor(
-    private context: vscode.ExtensionContext,
-    private aiService: AIService
-  ) {}
-  
-  async selectPersona(personaId: string): Promise<void> {
-    // Persist selection
-    await this.context.workspaceState.update('selectedPersona', personaId);
-    
-    // Update AI system
-    const prompt = this.buildPersonaPrompt(personaId);
-    await this.aiService.updateSystemPrompt(prompt);
-    
-    // Notify UI (simplified)
-    this.notifyUIUpdate(personaId);
-  }
-  
-  private buildPersonaPrompt(personaId: string): string {
-    const personas = {
-      'creative': 'You are a creative and imaginative assistant...',
-      'technical': 'You are a precise technical assistant...',
-      'default': 'You are a helpful assistant...'
-    };
-    return personas[personaId] || personas.default;
-  }
-}
-```
+**Integration Tests** (primary):
+Test complete user workflows across multiple components
 
-### Step 5: REFACTOR - Add Comprehensive Testing
-**Improve implementation and add supporting tests:**
+**Edge Case Tests**:
+Invalid inputs, network failures, storage errors, boundary conditions
 
-```typescript
-// Add edge case tests
-describe('PersonaSystem Edge Cases', () => {
-  it('should handle invalid persona selection gracefully', async () => {
-    const personaSystem = new PersonaSystem(mockContext, mockAIService);
-    
-    // Test invalid persona ID
-    await expect(personaSystem.selectPersona('invalid-persona')).resolves.not.toThrow();
-    
-    // Should fallback to default
-    expect(mockAIService.updateSystemPrompt).toHaveBeenCalledWith(
-      expect.stringContaining('helpful assistant')
-    );
-  });
-  
-  it('should handle storage failures gracefully', async () => {
-    mockContext.workspaceState.update.mockRejectedValue(new Error('Storage failed'));
-    
-    const personaSystem = new PersonaSystem(mockContext, mockAIService);
-    
-    // Should not crash on storage failure
-    await expect(personaSystem.selectPersona('creative')).resolves.not.toThrow();
-    
-    // Should log error appropriately
-    expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('Storage failed'));
-  });
-});
+**Performance Tests**:
+Response times, memory usage, resource limits
 
-// Add performance tests
-describe('PersonaSystem Performance', () => {
-  it('should select persona within reasonable time', async () => {
-    const personaSystem = new PersonaSystem(mockContext, mockAIService);
-    
-    const startTime = performance.now();
-    await personaSystem.selectPersona('creative');
-    const duration = performance.now() - startTime;
-    
-    expect(duration).toBeLessThan(100); // 100ms limit
-  });
-});
-```
+**Unit Tests** (byproducts):
+Helper functions, utilities (created during refactor, not starting points)
 
-## Testing Validation Phase
+## Test Naming Conventions
 
-### Step 6: Test Coverage Verification (`/verification-steps`)
-```bash
-# Run comprehensive test suite
-npm run test:webview
-npm run test:coverage
+**✅ Correct**:
+- `PersonaSystem.test.ts` (matches `PersonaSystem.ts`)
+- `persona-service.test.ts` (matches `persona-service.ts`)
+- `PersonaSelector.test.tsx` (matches `PersonaSelector.tsx`)
 
-# Verify coverage meets requirements
-# Target: >90% line coverage for new features
-# Target: 100% integration test coverage for user flows
-```
+**❌ Wrong**:
+- `TestPersonaSystem.ts`, `persona-system-test.ts`, `PersonaSelectorTests.tsx`
 
-### Step 7: Test Quality Validation
-- [ ] **Integration tests cover real user scenarios** (not just isolated units)
-- [ ] **Edge cases tested** (invalid inputs, network failures, storage errors)
-- [ ] **Error handling verified** (graceful degradation, user feedback)
-- [ ] **Performance requirements met** (response times, memory usage)
-- [ ] **Cross-browser/platform compatibility** (if applicable)
+## Coverage Targets
 
-### Step 8: Test Naming Verification (`/naming-conventions`)
-```
-✅ PersonaSystem.test.ts          (matches PersonaSystem.ts)
-✅ persona-service.test.ts        (matches persona-service.ts) 
-✅ PersonaSelector.test.tsx       (matches PersonaSelector.tsx)
+- **Integration tests**: 100% coverage for user flows
+- **Line coverage**: >90% for new features
+- **Edge cases**: All error conditions tested
+- **Performance**: All critical paths benchmarked
 
-❌ TestPersonaSystem.ts           (wrong pattern)
-❌ persona-system-test.ts         (wrong pattern)
-❌ PersonaSelectorTests.tsx       (wrong pattern)
-```
+## Key Atomic Components
 
-## Post-Testing Phase
-
-### Step 9: Complete Verification Cycle (`/verification-steps`)
-```bash
-# Full validation sequence
-npm run test:coverage     # Comprehensive test run
-npm run compile          # TypeScript compilation
-npm run check-types      # Type validation
-npm run watch           # Runtime testing (F5 in VSCode)
-```
-
-### Step 10: Test Maintenance Setup
-- [ ] **Test documentation** - README with test running instructions
-- [ ] **CI integration** - Tests run on every commit
-- [ ] **Test data management** - Mock data and fixtures organized
-- [ ] **Flaky test monitoring** - Process for handling unstable tests
-
-## Testing Patterns & Best Practices
-
-### Effective Test Structure:
-```typescript
-describe('Feature Integration', () => {
-  // Setup once per test suite
-  beforeEach(() => {
-    // Reset mocks and state
-  });
-  
-  describe('Happy Path Scenarios', () => {
-    it('should handle typical user workflow', () => {
-      // Test main success path
-    });
-  });
-  
-  describe('Edge Cases', () => {
-    it('should handle invalid inputs gracefully', () => {
-      // Test error conditions
-    });
-  });
-  
-  describe('Performance', () => {
-    it('should complete operations within time limits', () => {
-      // Test performance requirements
-    });
-  });
-});
-```
+- `/tdd-cycle` - RED→GREEN→REFACTOR methodology
+- `/verification-steps` - Test→Compile→Execute sequence
+- `/naming-conventions` - Consistent test file naming
 
 ## Related Workflows
-- Essential completion step for `/new-component` development
-- Critical validation for `/ai-feature` implementations  
-- Required before `/cline-modification` changes
-- Apply `/critical-verification` when test strategy is complex
-</detailed_sequence_of_steps>
 
-<general_guidelines>
-Comprehensive testing prevents regressions and ensures reliable user experiences.
+- Essential for `/new-component` completion
+- Required for `/ai-feature` validation
+- Mandatory before `/cline-modification` changes
+- Use `/critical-verification` for complex test strategies
 
-Integration-first testing catches real-world problems that unit tests often miss.
+---
 
-Good test coverage enables confident refactoring and feature development.
-</general_guidelines>
+**📖 For detailed testing workflow with code examples:**
+See `.caretrules/workflows/testing-work.md`
+
+**📖 For Korean developer documentation:**
+See `caret-docs/development/testing-guide.md`

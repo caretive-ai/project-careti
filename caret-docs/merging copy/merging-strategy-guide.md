@@ -294,7 +294,7 @@ npm run test:backend -- feature
 - **목적**: 나중에 코드 추적 및 머징 시 구분 용이
 
 #### **📄 문서 동기화 (필수)**
-- **기능 문서 업데이트**: `caret-docs/features/[feature-name].mdx` 필수 업데이트
+- **기능 문서 업데이트**: `caret-docs/features/[feature-name].md` 필수 업데이트
 - **수정 파일 목록**: 모든 변경된 파일 경로와 변경 내용 기록
 - **아키텍처 반영**: 실제 구현된 구조로 문서 업데이트
 - **테스트 현황**: 단위/통합 테스트 상태 명시
@@ -305,7 +305,7 @@ npm run test:backend -- feature
 grep -r "CARET MODIFICATION" src/ webview-ui/src/ proto/
 
 # 2. 문서 업데이트 확인
-ls caret-docs/features/[feature-name].mdx
+ls caret-docs/features/[feature-name].md
 
 # 3. 빌드 테스트
 npm run compile && npm run test:unit

@@ -507,7 +507,7 @@ CARET_TODO_MANAGEMENT.json: ~50 tokens (추정)
 ### Caret 프로젝트 문서
 1. **F06 명세서**: `caret-docs/features/f06-caret-prompt-system.md`
 2. **머징 마스터 플랜**: `caret-docs/merging/merge-execution-master-plan.md`
-3. **Caret 아키텍처 가이드**: `caret-docs/development/caret-architecture-and-implementation-guide.mdx`
+3. **Caret 아키텍처 가이드**: `caret-docs/development/caret-architecture-and-implementation-guide.md`
 
 ### Cline 참고 자료
 1. **Cline GitHub**: https://github.com/cline/cline

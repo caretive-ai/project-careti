@@ -54,20 +54,20 @@ index.md 없음 ❌
 **분석**:
 - ✅ f06-07 분리는 **의도된 구조 개선** (10차 피드백에 명시)
 - ✅ f08~f11 번호 당김은 **정상**
-- ⚠️ **index.md 누락** - 하지만 caret-main의 index.md는 **구 버전** (확장자 .mdx 참조)
+- ⚠️ **index.md 누락** - 하지만 caret-main의 index.md는 **구 버전** (확장자 .md 참조)
 
 #### ⚠️ index.md 상세 분석
 
 **caret-main/features/index.md 내용**:
 ```markdown
-- [f06 JSON 동적 시스템 프롬프트](./f06-json-system-prompt.mdx)
-- [f07 챗봇/에이전트 모드](./f07-chatbot-agent.mdx)
-- [f08 페르소나 시스템](./f08-persona-system.mdx)
+- [f06 JSON 동적 시스템 프롬프트](./f06-json-system-prompt.md)
+- [f07 챗봇/에이전트 모드](./f07-chatbot-agent.md)
+- [f08 페르소나 시스템](./f08-persona-system.md)
 ...
 ```
 
 **문제점**:
-1. 확장자 `.mdx` 참조 (실제는 `.md`)
+1. 확장자 `.md` 참조 (실제는 `.md`)
 2. f06, f07 번호가 구 버전 구조
 3. 내용이 outdated
 

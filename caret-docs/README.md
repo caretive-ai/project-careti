@@ -8,34 +8,34 @@
 ## 📖 핵심 문서 (Core Documents)
 
 ### 🎯 개발 가이드 (Development Guides)
-- **[개발 가이드 메인](./development/index.mdx)**: 전체 개발 프로세스 개요
-- **[아키텍처 및 구현 가이드](./development/caret-architecture-and-implementation-guide.mdx)**: Caret-Cline 통합 아키텍처 전체 가이드
-- **[테스팅 가이드](./development/testing-guide.mdx)**: Vitest 기반 TDD 방법론
-- **[로깅 가이드](./development/logging.mdx)**: CaretLogger, CaretWebviewLogger 사용법
+- **[개발 가이드 메인](./development/index.md)**: 전체 개발 프로세스 개요
+- **[아키텍처 및 구현 가이드](./development/caret-architecture-and-implementation-guide.md)**: Caret-Cline 통합 아키텍처 전체 가이드
+- **[테스팅 가이드](./development/testing-guide.md)**: Vitest 기반 TDD 방법론
+- **[로깅 가이드](./development/logging.md)**: CaretLogger, CaretWebviewLogger 사용법
 
 ### 🛠️ 작업 방법론 (Work Methodology)
-- **[AI 업무 방법 가이드](./guides/ai-work-method-guide.mdx)**: AI 어시스턴트 작업 표준 절차 (강화된 체크포인트)
-- **[업스트림 머징 가이드](./guides/upstream-merging.mdx)**: Cline 원본 변경사항 안전한 병합 방법
+- **[AI 업무 방법 가이드](./guides/ai-work-method-guide.md)**: AI 어시스턴트 작업 표준 절차 (강화된 체크포인트)
+- **[업스트림 머징 가이드](./guides/upstream-merging.md)**: Cline 원본 변경사항 안전한 병합 방법
 
 ## 📂 문서 구조 안내
 
 ### 📂 `development/` (핵심 개발 문서)
 > **_For: 새로운 기여자, 시스템 동작 원리를 이해하고 싶은 개발자, AI 어시스턴트_**
 
-- **[컴포넌트 아키텍처 원칙](./development/component-architecture-principles.mdx)**
-- **[Frontend-Backend 상호작용 패턴](./development/frontend-backend-interaction-patterns.mdx)**
-- **[국제화(i18n) 가이드](./development/internationalization.mdx)**
-- **[메시지 처리 아키텍처](./development/message-processing-architecture.mdx)**
+- **[컴포넌트 아키텍처 원칙](./development/component-architecture-principles.md)**
+- **[Frontend-Backend 상호작용 패턴](./development/frontend-backend-interaction-patterns.md)**
+- **[국제화(i18n) 가이드](./development/internationalization.md)**
+- **[메시지 처리 아키텍처](./development/message-processing-architecture.md)**
 
 ### 📂 `features/` (기능 문서)
 > **_For: 특정 기능의 구현 방법과 아키텍처를 이해하고 싶은 개발자, AI_**
 
-- **[페르소나 시스템](./features/persona-system.mdx)**: AI 캐릭터 페르소나 시스템 전체 구현 가이드 ✨ **최신 완료**
+- **[페르소나 시스템](./features/persona-system.md)**: AI 캐릭터 페르소나 시스템 전체 구현 가이드 ✨ **최신 완료**
 
 ### 📂 `guides/` (작업별 가이드)
 > **_For: 특정 작업을 수행해야 하는 개발자, AI_**
 
-- **[작업 문서 작성 가이드](./guides/writing-task-documents-guide.mdx)**
+- **[작업 문서 작성 가이드](./guides/writing-task-documents-guide.md)**
 
 ### 📂 `tasks/` (작업 문서)
 > **_For: 특정 기능 개발 작업을 진행하는 개발자, AI_**
@@ -47,9 +47,9 @@
 ### 📂 `user-guide/` (사용자 가이드)
 > **_For: Caret을 사용하는 최종 사용자_**
 
-- **[Caret이란?](./user-guide/what-is-caret.mdx)**
-- **[Caret 설치하기](./user-guide/installing-caret.mdx)**
-- **[Caret 기능 소개](./user-guide/caret-features.mdx)**
+- **[Caret이란?](./user-guide/what-is-caret.md)**
+- **[Caret 설치하기](./user-guide/installing-caret.md)**
+- **[Caret 기능 소개](./user-guide/caret-features.md)**
 
 ---
 
@@ -57,16 +57,16 @@
 
 ### **AI 어시스턴트를 위한 문서**
 - **핵심 룰**: `caretrules.ko.md` - 프로젝트 전체 원칙과 규칙
-- **작업 방법**: `guides/ai-work-method-guide.mdx` - 강화된 체크포인트 포함
-- **아키텍처**: `development/caret-architecture-and-implementation-guide.mdx` - 하이브리드 패턴 v3.1 포함 ✨
-- **패턴**: `development/frontend-backend-interaction-patterns.mdx`
-- **페르소나 구현**: `features/persona-system.mdx` - 실제 구현 사례와 기술 세부사항
+- **작업 방법**: `guides/ai-work-method-guide.md` - 강화된 체크포인트 포함
+- **아키텍처**: `development/caret-architecture-and-implementation-guide.md` - 하이브리드 패턴 v3.1 포함 ✨
+- **패턴**: `development/frontend-backend-interaction-patterns.md`
+- **페르소나 구현**: `features/persona-system.md` - 실제 구현 사례와 기술 세부사항
 
 ### **개발자를 위한 문서**
-- **시작하기**: `development/index.mdx` → 전체 개발 프로세스 개요
-- **아키텍처 이해**: `development/caret-architecture-and-implementation-guide.mdx`
-- **테스트 작성**: `development/testing-guide.mdx` (Vitest 기반 TDD)
-- **업스트림 머징**: `guides/upstream-merging.mdx`
+- **시작하기**: `development/index.md` → 전체 개발 프로세스 개요
+- **아키텍처 이해**: `development/caret-architecture-and-implementation-guide.md`
+- **테스트 작성**: `development/testing-guide.md` (Vitest 기반 TDD)
+- **업스트림 머징**: `guides/upstream-merging.md`
 
 ### **최근 업데이트 (2025-01-21)**
 - ✅ **문서 표준화 완료**: 모든 개발 문서 MDX 형식 통일

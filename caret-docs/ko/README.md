@@ -254,7 +254,7 @@ Caret은 Cline과 100% 호환성을 유지하면서 강력한 새 기능들을 �
 
   **주요 제공자**: OpenAI GPT-5, Anthropic Claude Sonnet 4.5, Google Gemini 2.5, DeepSeek V3, Qwen3 등
 
-  <a href="../../caret-docs/development/support-model-list.mdx">
+  <a href="../../caret-docs/development/support-model-list.md">
     <strong>📋 실시간 업데이트되는 전체 모델 목록 보기 →</strong>
   </a>
 </div>
@@ -321,12 +321,12 @@ Caret은 Cline과 100% 호환성을 유지하면서 강력한 새 기능들을 �
 
 ### 📚 핵심 가이드
 - **[개발자 가이드](../../DEVELOPER_GUIDE.md)** - 빌드, 테스트 기본 정보
-- **[Caret 아키텍처](../development/caret-architecture-and-implementation-guide.mdx)** - 전체 시스템 구조
-- **[신입 개발자 가이드](../development/new-developer-guide.mdx)** - 프로젝트 입문
+- **[Caret 아키텍처](../development/caret-architecture-and-implementation-guide.md)** - 전체 시스템 구조
+- **[신입 개발자 가이드](../development/new-developer-guide.md)** - 프로젝트 입문
 
 ### 🔧 기술 문서
-- **[AI 메시지 플로우](../development/ai-message-flow-guide.mdx)** - AI 시스템 이해
-- **[테스트 가이드](../development/testing-guide.mdx)** - TDD 개발 방법
-- **[다국어 시스템](../development/locale.mdx)** - i18n 구현
+- **[AI 메시지 플로우](../development/ai-message-flow-guide.md)** - AI 시스템 이해
+- **[테스트 가이드](../development/testing-guide.md)** - TDD 개발 방법
+- **[다국어 시스템](../development/locale.md)** - i18n 구현
 
-💡 **개발 시작 전 필독**: [AI 작업 방법론 가이드](../guides/ai-work-method-guide.mdx)를 먼저 읽어보세요.
+💡 **개발 시작 전 필독**: [AI 작업 방법론 가이드](../guides/ai-work-method-guide.md)를 먼저 읽어보세요.

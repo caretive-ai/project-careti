@@ -38,13 +38,13 @@ You are following Cline-compatible naming conventions for consistency.
 ```
 
 ### Documentation
-**Pattern**: `kebab-case.mdx` or `kebab-case.md`
+**Pattern**: `kebab-case.md` or `kebab-case.md`
 ```
-✅ new-developer-guide.mdx
-✅ testing-guide.mdx
-✅ ai-work-index.mdx
-❌ NewDeveloperGuide.mdx
-❌ Testing_Guide.mdx
+✅ new-developer-guide.md
+✅ testing-guide.md
+✅ ai-work-index.md
+❌ NewDeveloperGuide.md
+❌ Testing_Guide.md
 ```
 
 ## Directory Structure

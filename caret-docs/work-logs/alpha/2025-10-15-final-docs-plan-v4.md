@@ -6,7 +6,7 @@
 ## 2. 세부 계획
 
 ### 단계 1: 한국어 문서 생성 (`docs-ko`)
-- **파일명**: `docs.caret.team/docs-ko/caret-exclusive/knowledge-parity-system.mdx`
+- **파일명**: `docs.caret.team/docs-ko/caret-exclusive/knowledge-parity-system.md`
 - **내용 (학습된 스타일 완벽 적용)**:
   ```markdown
   ---

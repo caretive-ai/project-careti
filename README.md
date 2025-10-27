@@ -254,7 +254,7 @@ System prompt optimization provides more efficient AI responses.
 
   **Major Providers**: OpenAI GPT-5, Anthropic Claude Sonnet 4.5, Google Gemini 2.5, DeepSeek V3, Qwen3, etc.
 
-  <a href="./caret-docs/development/support-model-list.en.mdx">
+  <a href="./caret-docs/development/support-model-list.en.md">
     <strong>View Complete Real-time Updated Model List →</strong>
   </a>
 </div>
@@ -322,12 +322,12 @@ If you want to participate in development, check out these documents:
 
 ### Core Guides
 - **[Developer Guide](./DEVELOPER_GUIDE.md)** - Basic information on build and testing
-- **[Caret Architecture](./caret-docs/development/caret-architecture-and-implementation-guide.mdx)** - Overall system structure
-- **[New Developer Guide](./caret-docs/development/new-developer-guide.mdx)** - Project onboarding
+- **[Caret Architecture](./caret-docs/development/caret-architecture-and-implementation-guide.md)** - Overall system structure
+- **[New Developer Guide](./caret-docs/development/new-developer-guide.md)** - Project onboarding
 
 ### Technical Documentation
-- **[AI Message Flow](./caret-docs/development/ai-message-flow-guide.mdx)** - Understanding AI systems
-- **[Testing Guide](./caret-docs/development/testing-guide.mdx)** - TDD development methods
-- **[Multilingual System](./caret-docs/development/locale.mdx)** - i18n implementation
+- **[AI Message Flow](./caret-docs/development/ai-message-flow-guide.md)** - Understanding AI systems
+- **[Testing Guide](./caret-docs/development/testing-guide.md)** - TDD development methods
+- **[Multilingual System](./caret-docs/development/locale.md)** - i18n implementation
 
-**Must-read before development**: Please first read the [AI Work Methodology Guide](./caret-docs/guides/ai-work-method-guide.mdx).
+**Must-read before development**: Please first read the [AI Work Methodology Guide](./caret-docs/guides/ai-work-method-guide.md).

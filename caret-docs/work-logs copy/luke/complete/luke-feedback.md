@@ -259,7 +259,7 @@ const koNamespaceData = translations.ko[namespace]
 - [ ] **API 설정 페이지**: 프로바이더 정보 i18n 적용
 
 #### 3단계: 아키텍처 문서화
-- [ ] `f04-caret-account.mdx`에 전체 구조 정리
+- [ ] `f04-caret-account.md`에 전체 구조 정리
 - [ ] 현재: API 키 직접 라우팅 (`caret.team` 직접 호출)
 - [ ] 향후: OpenRouter 스타일 프록시 전환 계획
 

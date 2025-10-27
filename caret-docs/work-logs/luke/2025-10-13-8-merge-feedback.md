@@ -122,7 +122,7 @@
       - ✅ Welcome 배너 이미지 정상 표시
       - ✅ 페르소나 템플릿 선택 이미지 정상 표시
       - ✅ 리로드 없이 즉시 표시됨
-    * **참고 문서**: `caret-docs/development/file-storage-and-image-loading-guide.mdx`
+    * **참고 문서**: `caret-docs/development/file-storage-and-image-loading-guide.md`
       - CSP(Content Security Policy) 제약으로 인한 Base64 data URI 변환 필요성 확인
       - asset:// 프로토콜 사용 불가, data: URI만 허용
     * **머징 개선 사항**:

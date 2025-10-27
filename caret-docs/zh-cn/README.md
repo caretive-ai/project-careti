@@ -191,7 +191,7 @@ Caret在保持与Cline 100%兼容的同时，扩展了强大的新功能：
   
   **主要提供商**: OpenAI GPT-5, Anthropic Claude Sonnet 4.5, Google Gemini 2.5, DeepSeek V3, Qwen3等
   
-  <a href="../development/support-model-list.mdx">
+  <a href="../development/support-model-list.md">
     <strong>📋 查看实时更新的完整模型列表 →</strong>
   </a>
 </div>
@@ -256,12 +256,12 @@ VS Code扩展页面搜索"Caret" → 安装
 
 ### 📚 核心指南
 - **[开发者指南](../../DEVELOPER_GUIDE.md)** - 构建、测试基础信息
-- **[Caret架构](../development/caret-architecture-and-implementation-guide.mdx)** - 整体系统结构
-- **[新手开发者指南](../development/new-developer-guide.mdx)** - 项目入门
+- **[Caret架构](../development/caret-architecture-and-implementation-guide.md)** - 整体系统结构
+- **[新手开发者指南](../development/new-developer-guide.md)** - 项目入门
 
 ### 🔧 技术文档
-- **[AI消息流程](../development/ai-message-flow-guide.mdx)** - AI系统理解
-- **[测试指南](../development/testing-guide.mdx)** - TDD开发方法
-- **[多语言系统](../development/locale.mdx)** - i18n实现
+- **[AI消息流程](../development/ai-message-flow-guide.md)** - AI系统理解
+- **[测试指南](../development/testing-guide.md)** - TDD开发方法
+- **[多语言系统](../development/locale.md)** - i18n实现
 
-💡 **开发前必读**: 请先阅读[AI工作方法论指南](../guides/ai-work-method-guide.mdx)。
+💡 **开发前必读**: 请先阅读[AI工作方法论指南](../guides/ai-work-method-guide.md)。

@@ -626,8 +626,8 @@ npm run test:backend -- caret-src/__tests__/prompts/prompt-improvements.test.ts
 ## 📚 참고 문서
 
 ### Caret 아키텍처
-- `caret-docs/development/caret-architecture-and-implementation-guide.mdx`
-- `caret-docs/development/frontend-backend-interaction-patterns.mdx`
+- `caret-docs/development/caret-architecture-and-implementation-guide.md`
+- `caret-docs/development/frontend-backend-interaction-patterns.md`
 - `CLAUDE.md` (프로젝트 개요)
 
 ### Cline 원본 파일

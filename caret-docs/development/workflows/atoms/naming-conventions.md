@@ -38,13 +38,13 @@
 ```
 
 ### 문서
-**패턴**: `kebab-case.mdx` 또는 `kebab-case.md`
+**패턴**: `kebab-case.md` 또는 `kebab-case.md`
 ```
-✅ new-developer-guide.mdx
-✅ testing-guide.mdx
-✅ ai-work-index.mdx
-❌ NewDeveloperGuide.mdx
-❌ Testing_Guide.mdx
+✅ new-developer-guide.md
+✅ testing-guide.md
+✅ ai-work-index.md
+❌ NewDeveloperGuide.md
+❌ Testing_Guide.md
 ```
 
 ## 디렉토리 구조

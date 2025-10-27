@@ -95,7 +95,15 @@
       "WebSearch",
       "Bash(git rebase:*)",
       "Bash(git submodule:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(comm:*)",
+      "Read(//tmp/**)",
+      "Bash(git mv:*)",
+      "Bash(xargs:*)",
+      "Bash(for file in caret-docs/guides/*.{md,mdx})",
+      "Bash(do:*)",
+      "Bash(head:*)",
+      "Bash(while read file)"
     ],
     "deny": [],
     "ask": []

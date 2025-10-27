@@ -448,7 +448,7 @@ jq -r '.file_editing.sections[0].content' caret-src/core/prompts/sections/CARET_
 ### 선택 문서 (맥락 이해용)
 - `CLAUDE.md` (Caret 프로젝트 개요)
 - `caret-docs/work-logs/luke/2025-10-14-cline-prompt-improvements-caret-application-plan.md`
-- `caret-docs/development/caret-architecture-and-implementation-guide.mdx`
+- `caret-docs/development/caret-architecture-and-implementation-guide.md`
 
 ### 유용한 명령어
 ```bash

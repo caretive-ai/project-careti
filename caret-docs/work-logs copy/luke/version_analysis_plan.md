@@ -614,7 +614,7 @@ caret-b2b/worklog/t12-requirements-for-ai.md
 src/core/storage/StateManager.ts
 caret-b2b/worklog/20250929-session-guide.md
 src/shared/CaretBrandConfig.ts
-caret-docs/features/f01-common-util.mdx
+caret-docs/features/f01-common-util.md
 caret-src/shared/feature-config.json
 caret-b2b/worklog/20250930-featureconfig-deployment-checklist.md
 ../../Documents/Caret/Rules/persona.md

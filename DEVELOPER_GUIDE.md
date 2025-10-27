@@ -315,7 +315,7 @@ Caret 프로젝트는 다음 TDD 원칙을 준수합니다:
 
 **새로운 기능 개발 시 반드시 테스트를 먼저 작성해야 합니다!**
 
-자세한 테스트 가이드는 **[테스트 가이드](./caret-docs/development/testing-guide.mdx)**를 참조하세요.
+자세한 테스트 가이드는 **[테스트 가이드](./caret-docs/development/testing-guide.md)**를 참조하세요.
 
 ## 🔄 개발 워크플로우
 
@@ -392,31 +392,31 @@ npm run watch
 ## 📚 상세 개발 가이드
 
 ### 🏗️ 아키텍처 & 설계 가이드
-- **[Caret 아키텍처 가이드](./caret-docs/development/caret-architecture-and-implementation-guide.mdx)** - Fork 구조, 확장 전략, 설계 원칙
-- **[개발 가이드 개요](./caret-docs/development/index.mdx)** - 전체 개발 가이드 네비게이션
-- **[AI 작업 방법론](./caret-docs/guides/ai-work-method-guide.mdx)** - TDD, 아키텍처 검토, Phase 기반 작업
+- **[Caret 아키텍처 가이드](./caret-docs/development/caret-architecture-and-implementation-guide.md)** - Fork 구조, 확장 전략, 설계 원칙
+- **[개발 가이드 개요](./caret-docs/development/index.md)** - 전체 개발 가이드 네비게이션
+- **[AI 작업 방법론](./caret-docs/guides/ai-work-method-guide.md)** - TDD, 아키텍처 검토, Phase 기반 작업
 
 ### 🔄 Frontend-Backend 통신 가이드
-- **[상호작용 패턴](./caret-docs/development/frontend-backend-interaction-patterns.mdx)** - 순환 메시지 방지, Optimistic Update 패턴
-- **[Webview 통신](./caret-docs/development/webview-extension-communication.mdx)** - 메시지 타입, 상태 관리, 통신 구조
+- **[상호작용 패턴](./caret-docs/development/frontend-backend-interaction-patterns.md)** - 순환 메시지 방지, Optimistic Update 패턴
+- **[Webview 통신](./caret-docs/development/webview-extension-communication.md)** - 메시지 타입, 상태 관리, 통신 구조
 
 ### 🎨 UI/UX 개발 가이드
-- **[컴포넌트 아키텍처](./caret-docs/development/component-architecture-principles.mdx)** - React 컴포넌트 설계 원칙
-- **[i18n 시스템](./caret-docs/development/backend-i18n-system.mdx)** - 다국어 지원 구현 가이드
+- **[컴포넌트 아키텍처](./caret-docs/development/component-architecture-principles.md)** - React 컴포넌트 설계 원칙
+- **[i18n 시스템](./caret-docs/development/backend-i18n-system.md)** - 다국어 지원 구현 가이드
 
 ### 🔧 개발 도구 & 유틸리티
-- **[로깅 시스템](./caret-docs/development/logging.mdx)** - 통합 로깅, 디버깅, 개발/프로덕션 모드
-- **[문서화 가이드](./caret-docs/development/documentation-guide.mdx)** - MDX 형식, 문서 작성 표준
+- **[로깅 시스템](./caret-docs/development/logging.md)** - 통합 로깅, 디버깅, 개발/프로덕션 모드
+- **[문서화 가이드](./caret-docs/development/documentation-guide.md)** - MDX 형식, 문서 작성 표준
 
 ### 🎯 개발 시작 추천 순서
 
-1. **아키텍처 이해**: [Caret 아키텍처 가이드](./caret-docs/development/caret-architecture-and-implementation-guide.mdx)
-2. **개발 방법론**: [AI 작업 방법론](./caret-docs/guides/ai-work-method-guide.mdx)
-3. **테스트 전략**: [테스트 가이드](./caret-docs/development/testing-guide.mdx)
-4. **통신 패턴**: [상호작용 패턴](./caret-docs/development/frontend-backend-interaction-patterns.mdx)
-5. **UI 컴포넌트**: [컴포넌트 아키텍처](./caret-docs/development/component-architecture-principles.mdx)
+1. **아키텍처 이해**: [Caret 아키텍처 가이드](./caret-docs/development/caret-architecture-and-implementation-guide.md)
+2. **개발 방법론**: [AI 작업 방법론](./caret-docs/guides/ai-work-method-guide.md)
+3. **테스트 전략**: [테스트 가이드](./caret-docs/development/testing-guide.md)
+4. **통신 패턴**: [상호작용 패턴](./caret-docs/development/frontend-backend-interaction-patterns.md)
+5. **UI 컴포넌트**: [컴포넌트 아키텍처](./caret-docs/development/component-architecture-principles.md)
 
-💡 **개발 시작 전 필독**: [AI 작업 방법론 가이드](./caret-docs/guides/ai-work-method-guide.mdx)에서 TDD 기반 개발 프로세스와 아키텍처 원칙을 먼저 숙지하시기 바랍니다.
+💡 **개발 시작 전 필독**: [AI 작업 방법론 가이드](./caret-docs/guides/ai-work-method-guide.md)에서 TDD 기반 개발 프로세스와 아키텍처 원칙을 먼저 숙지하시기 바랍니다.
 
 ## 🔬 특허 기술
 

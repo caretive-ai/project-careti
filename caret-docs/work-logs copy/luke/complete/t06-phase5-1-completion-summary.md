@@ -28,7 +28,7 @@ if (newState.mode !== undefined) {
 **효과**: UI-백엔드 모드 불일치 근본 해결
 
 #### **2. 문서 용어 정리 (완전 독립 → 대체품 방식)**
-**파일**: `caret-docs/features/f07-chatbot-agent.mdx`
+**파일**: `caret-docs/features/f07-chatbot-agent.md`
 **변경**: "완전 독립 시스템" → "대체품 방식" 용어 통일
 **추가**: 실제 구현된 분기 로직 예시 코드 포함
 **효과**: 문서와 코드 간 일치성 확보

@@ -19,8 +19,8 @@
 .caretrules/caret-rules.json           ↔ caret-docs/development-en/caret-rules.md (EN)
                                        ↔ caret-docs/development/caret-rules.ko.md (KO)
 .caretrules/workflows/*.md             ↔ caret-docs/development-en/workflows/*.md
-.caretrules/workflows/ai-work-index.md ↔ caret-docs/development/ai-work-index.mdx
-.caretrules/workflows/ai-work-protocol.md ↔ caret-docs/guides/ai-work-method-guide.mdx
+.caretrules/workflows/ai-work-index.md ↔ caret-docs/development/ai-work-index.md
+.caretrules/workflows/ai-work-protocol.md ↔ caret-docs/guides/ai-work-method-guide.md
 .caretrules/workflows/caret-development.md ↔ caret-docs/development/caret-rules.ko.md
 .caretrules/workflows/merge-strategy.md ↔ caret-docs/guides/merging-strategy-guide.md
 ```
@@ -86,7 +86,7 @@ Caret의 webview와 Extension Host 간 통신 표준 패턴:
 - **유틸리티**: kebab-case (`brand-utils.ts`)
 - **컴포넌트**: PascalCase (`CaretProvider.ts`)
 - **테스트**: 소스와 일치 (`brand-utils.test.ts`)
-- **문서**: kebab-case (`new-developer-guide.mdx`)
+- **문서**: kebab-case (`new-developer-guide.md`)
 
 ## 개발 지원 스크립트
 

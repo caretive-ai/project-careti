@@ -131,4 +131,4 @@ npm run build:webview
 
 ---
 **워크플로우 버전**: v1.1 (2025-09-06)
-**관련 문서**: f02-multilingual-i18n.mdx, merging-strategy-guide.md
+**관련 문서**: f02-multilingual-i18n.md, merging-strategy-guide.md

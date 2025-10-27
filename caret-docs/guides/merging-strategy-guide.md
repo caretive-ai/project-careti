@@ -16,7 +16,7 @@ Caret은 Cline의 Fork 프로젝트로서, 지속적인 upstream 동기화가 �
 
 ### **🎯 Caret 독립 시스템 참조**
 
-**[Caret 독립적 Chatbot/Agent 시스템](../features/caret-independent-system.mdx)**이 본 가이드의 핵심 원칙을 완벽하게 구현한 모범 사례입니다:
+**[Caret 독립적 Chatbot/Agent 시스템](../features/caret-independent-system.md)**이 본 가이드의 핵심 원칙을 완벽하게 구현한 모범 사례입니다:
 
 - **✅ Level 1 독립 모듈**: 8-10개 핵심 파일만 수정으로 최소 변경 달성
 - **✅ 어댑터 패턴**: ModeSystemRegistry를 통한 분기 로직 완전 중앙화

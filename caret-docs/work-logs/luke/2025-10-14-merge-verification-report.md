@@ -111,7 +111,7 @@ diff -rq: 차이 없음 (완벽 동기화)
 │   └── *.md            # 15개 composite workflow
 caret-docs/
 ├── development/        # 개발자용 (Korean, descriptive)
-│   ├── *.mdx           # 23개 아키텍처 가이드 (한글)
+│   ├── *.md           # 23개 아키텍처 가이드 (한글)
 │   └── workflows/      # ⚠️ 중복된 workflow (English)
 │       ├── atoms/      # 10개 원자 workflow
 │       └── *.md        # 13개 composite workflow
@@ -195,7 +195,7 @@ caret-docs/development/  ← 한글 개발자 문서 (human-readable architectur
 ### Rule Management System  # 현재 존재
 - **AI Reference**: `.caretrules/` directory (workflows and rules)
 - **Workflows**: `.caretrules/workflows/*.md` (English, AI procedures)
-- **Korean Dev Docs**: `caret-docs/development/*.mdx` (Korean architecture guides)
+- **Korean Dev Docs**: `caret-docs/development/*.md` (Korean architecture guides)
 - **English Workflows**: `caret-docs/development-en/*.md` (English workflows)
 - **Note**: Korean folder has MDX architecture docs, English folder has MD workflows
 
@@ -262,17 +262,17 @@ cp caret-docs/development/workflows/atoms/modification-protocol.md .caretrules/w
         └── ... (13 composites)
 
 caret-docs/development/     # Korean Developer Documentation (Human-Readable)
-├── *.mdx                   # 23 architecture guides in Korean
+├── *.md                   # 23 architecture guides in Korean
 └── [cross-references]      # References to .caretrules/workflows/ for AI procedures
 ```
 
 ### Cross-Reference System
 
 **Korean Docs → AI Workflows Mapping**:
-- `caret-architecture-and-implementation-guide.mdx` → `/modification-levels` + `/backup-protocol`
-- `component-architecture-principles.mdx` → `/component-patterns` + `/naming-conventions`
-- `frontend-backend-interaction-patterns.mdx` → `/message-flow` + `/storage-patterns`
-- `testing-guide.mdx` → `/tdd-cycle` + `/testing-strategies` + `/verification-steps`
+- `caret-architecture-and-implementation-guide.md` → `/modification-levels` + `/backup-protocol`
+- `component-architecture-principles.md` → `/component-patterns` + `/naming-conventions`
+- `frontend-backend-interaction-patterns.md` → `/message-flow` + `/storage-patterns`
+- `testing-guide.md` → `/tdd-cycle` + `/testing-strategies` + `/verification-steps`
 
 ### Atomic Workflow Composition
 
@@ -287,7 +287,7 @@ When AI encounters a task, it should:
 Task: "Modify Cline source file"
 → Load: /cline-modification
 → Atoms: backup-protocol + modification-levels + comment-protocol + verification-steps
-→ Reference: caret-architecture-and-implementation-guide.mdx (Korean context)
+→ Reference: caret-architecture-and-implementation-guide.md (Korean context)
 ```
 ```
 
@@ -309,8 +309,8 @@ Task: "Modify Cline source file"
 
 #### E. 원자 workflow 완성
 **document-organization.md에서 제안된 원자** (일부 미구현):
-- `/component-patterns` - 부분 구현 (component-architecture-principles.mdx 참조)
-- `/ai-integration` - 부분 구현 (ai-message-flow-guide.mdx 참조)
+- `/component-patterns` - 부분 구현 (component-architecture-principles.md 참조)
+- `/ai-integration` - 부분 구현 (ai-message-flow-guide.md 참조)
 - `/file-operations` - 미구현 ❌
 - `/testing-strategies` - 부분 구현 (testing-guide.md 참조)
 
@@ -374,7 +374,7 @@ diff -rq .caretrules/workflows/ caret-docs/development/workflows/
 
 # 파일 수 카운트
 find caret-src/ -name "*.ts" | wc -l
-find caret-docs/development/ -name "*.mdx" | wc -l
+find caret-docs/development/ -name "*.md" | wc -l
 
 # Workflow 참조 검색
 grep -r "\.caretrules/workflows/" caret-docs/development/

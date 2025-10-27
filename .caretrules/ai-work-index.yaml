@@ -12,36 +12,61 @@ steps:
     categories:
       - name: Architecture & Design
         keywords: [architecture, design, structure, system, scaling, fork, Cline modification]
-        docs: [caret-architecture-and-implementation-guide.mdx, extension-architecture.mmd]
+        docs:
+          - .caretrules/caret-architecture-guide.md  # Quick reference (5-min read)
+          - .caretrules/architecture-guide.yaml      # Ultra-quick (30-sec read)
+        detail_docs: [caret-docs/development/caret-architecture-and-implementation-guide.md]
 
       - name: B2B Branding & Conversion
         keywords: [b2b, brand, codecenter, conversion, slexn]
-        docs: [b2b-branding-workflow.md]
+        docs: [.caretrules/b2b-branding-workflow.md]
 
       - name: AI System Development
         keywords: [AI, message, system prompt, chatbot, agent, conversation]
-        docs: [ai-message-flow-guide.mdx, system-prompt-implementation.mdx]
+        docs:
+          - .caretrules/system-prompt.md             # Quick AI rules (coming soon)
+        detail_docs: [caret-docs/development/system-prompt-implementation.md]
 
       - name: Frontend-Backend Communication
-        keywords: [webview, communication, state management, message passing, UI integration]
-        docs: [frontend-backend-interaction-patterns.mdx, webview-extension-communication.mdx]
+        keywords: [webview, communication, state management, message passing, UI integration, gRPC]
+        docs:
+          - .caretrules/frontend-backend-patterns.md  # Core patterns
+          - .caretrules/webview-communication.md      # Communication guide
+        detail_docs:
+          - caret-docs/development/frontend-backend-interaction-patterns.md
+          - caret-docs/development/webview-extension-communication.md
 
       - name: UI/UX Development
         keywords: [component, React, UI, UX, persona, multilingual, i18n]
-        docs: [component-architecture-principles.mdx, locale.mdx]
+        docs:
+          - .caretrules/component-architecture.md     # Component principles
+        detail_docs: [caret-docs/development/component-architecture-principles.md, caret-docs/development/locale.md]
 
       - name: Testing & Quality
         keywords: [test, TDD, quality, coverage, verification, bug]
-        docs: [testing-guide.mdx, logging.mdx]
+        docs:
+          - .caretrules/testing-guide.yaml            # Quick TDD guide
+          - .caretrules/logging-rules.md              # Logging standards
+        detail_docs: [caret-docs/development/testing-guide.md]
 
       - name: Development Tools
         keywords: [utility, tool, file handling, image, link, build]
-        docs: [utilities.mdx, file-storage-and-image-loading-guide.mdx]
+        docs: [.caretrules/build-system.md]
+        detail_docs:
+          - caret-docs/development/utilities.md
+          - caret-docs/development/file-storage-and-image-loading-guide.md
+
+      - name: Documentation & Knowledge Sync
+        keywords: [documentation, knowledge sync, atomization, F11, doc structure]
+        docs: [.caretrules/documentation-guide.md]    # Knowledge atomization strategy
+        detail_docs: [caret-docs/development/documentation-guide.md]
 
       - name: Cline Original Modification
         keywords: [Cline modification, source change, src/ directory, backup]
-        docs: [caret-architecture-and-implementation-guide.mdx]
-        note: Re-check .caretrules backup rules
+        docs:
+          - .caretrules/cline-modification.md         # Modification protocol
+          - .caretrules/caret-architecture-guide.md   # Architecture context
+        note: Always check backup and comment requirements
 
   - step: 2
     title: Smart Reading Strategy

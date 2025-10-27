@@ -274,7 +274,7 @@ The project uses TypeScript path aliases defined in `tsconfig.json`:
 - **Utilities**: kebab-case (`brand-utils.ts`)
 - **Components**: PascalCase (`CaretProvider.ts`)
 - **Tests**: Match source (`brand-utils.test.ts`)
-- **Docs**: kebab-case (`new-developer-guide.mdx`)
+- **Docs**: kebab-case (`new-developer-guide.md`)
 - **Backups**: `{filename-extension}.cline`
 
 ### Testing Strategy
@@ -459,7 +459,7 @@ npm run test:all      # Full verification
 - **Language**: Korean (한글)
 - **Optimization**: Readability priority
 
-#### `caret-docs/development/*.mdx` (Architecture Documentation)
+#### `caret-docs/development/*.md` (Architecture Documentation)
 - **Format**: MDX (Markdown + JSX)
 - **Purpose**: Korean developer architecture guides
 - **Language**: Korean (한글)
@@ -491,11 +491,11 @@ grep -c '```' workflow.md
 - **Atoms**: `tdd-cycle.md`, `naming-conventions.md`, `storage-patterns.md`
 
 #### Korean Dev Docs (`caret-docs/development/`)
-- **Architecture**: `caret-architecture-and-implementation-guide.mdx`
-- **Components**: `component-architecture-principles.mdx`
-- **Frontend-Backend**: `frontend-backend-interaction-patterns.mdx`
-- **AI Flow**: `ai-message-flow-guide.mdx`
-- **Testing**: `testing-guide.mdx`
+- **Architecture**: `caret-architecture-and-implementation-guide.md`
+- **Components**: `component-architecture-principles.md`
+- **Frontend-Backend**: `frontend-backend-interaction-patterns.md`
+- **AI Flow**: `ai-message-flow-guide.md`
+- **Testing**: `testing-guide.md`
 
 #### Utility Scripts (`caret-scripts/`)
 - `ai-semantic-analyzer.js` - AI-powered semantic comparison

@@ -248,14 +248,6 @@ webview-ui/src/components/chat/
 └── OptionsButtons.tsx         # 옵션 선택 버튼
 ```
 
-### **Factory 패턴 구현**
-```
-caret-src/core/messaging/
-├── ButtonConfigFactory.ts          # 시스템별 버튼 설정
-├── CaretButtonConfigHandler.ts     # Caret 전용 로직
-└── ClineButtonConfigHandler.ts     # Cline 전용 로직
-```
-
 ---
 
 **이 문서는 Caret의 완전한 버튼 시스템을 설명합니다. PRD 자동생성 기능 개발 시 이 패턴들을 참조하여 일관된 사용자 경험을 구현할 수 있습니다.**

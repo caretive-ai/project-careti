@@ -235,7 +235,7 @@ declare module "vscode" {
 ### ✅ Phase 4: 문서 업데이트 완료
 - **README 4개 언어**: 모델 통계 35개 제공자, 223개 모델로 업데이트
 - **DEVELOPER_GUIDE**: 영어/한국어 버전 루트 복사
-- **utilities.mdx**: CaretWebviewLogger, urls.ts 사용법 추가
+- **utilities.md**: CaretWebviewLogger, urls.ts 사용법 추가
 - **merging-work.md**: CLINE BUG FIX 주석 원칙 추가
 
 ## 🎯 최종 성과

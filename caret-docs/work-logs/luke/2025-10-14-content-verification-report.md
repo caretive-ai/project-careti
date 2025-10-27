@@ -83,7 +83,7 @@
 
 #### 4.1 핵심 아키텍처 문서
 
-**caret-architecture-and-implementation-guide.mdx** (1,204 lines)
+**caret-architecture-and-implementation-guide.md** (1,204 lines)
 - 12개 주요 섹션 포함:
   - Fork 기반 아키텍처 원칙
   - 래퍼 패턴 기반 확장 아키텍처
@@ -100,7 +100,7 @@
 - 검증 절차 및 체크리스트
 - **결론**: 완전한 머징 가이드
 
-**new-developer-guide.mdx** (265 lines)
+**new-developer-guide.md** (265 lines)
 - 신규 개발자 온보딩 가이드
 - 프로젝트 구조 설명
 - 개발 환경 설정
@@ -246,7 +246,7 @@ done
 
 ### 4. 주요 문서 라인 수 확인
 ```bash
-wc -l caret-docs/development/caret-architecture-and-implementation-guide.mdx
+wc -l caret-docs/development/caret-architecture-and-implementation-guide.md
 wc -l caret-docs/merging/merge-execution-master-plan.md
 ```
 

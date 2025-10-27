@@ -76,7 +76,7 @@ Caret 기능
 
 ## 관련 문서
 
-- **아키텍처**: `caret-docs/development/caret-architecture-and-implementation-guide.mdx`
+- **아키텍처**: `caret-docs/development/caret-architecture-and-implementation-guide.md`
 - **머징 가이드**: `caret-docs/merging/merge-execution-master-plan.md`
 - **워크플로우**: `.caretrules/workflows/` (AI 개발 절차)
 

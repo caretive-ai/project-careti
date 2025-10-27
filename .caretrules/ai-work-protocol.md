@@ -12,8 +12,8 @@ You are following the detailed AI work protocol for systematic development appro
 Based on work keywords, ensure you've read relevant docs (use `/ai-work-index` first):
 
 **Frontend-Backend Interaction**:
-- frontend-backend-interaction-patterns.mdx
-- caret-architecture-and-implementation-guide.mdx (sections 10-11)
+- frontend-backend-interaction-patterns.md
+- caret-architecture-and-implementation-guide.md (sections 10-11)
 
 **Cline Original Modification**:
 - File modification checklist in .caretrules
@@ -21,12 +21,12 @@ Based on work keywords, ensure you've read relevant docs (use `/ai-work-index` f
 - CARET MODIFICATION comment requirements
 
 **Component/UI Development**:
-- component-architecture-principles.mdx
+- component-architecture-principles.md
 - VSCode theme integration guide
 - i18n internationalization patterns
 
 **Testing Related**:
-- testing-guide.mdx (Vitest mocking patterns)
+- testing-guide.md (Vitest mocking patterns)
 - TDD mandatory principles (RED → GREEN → REFACTOR)
 - Test-first approach enforcement
 

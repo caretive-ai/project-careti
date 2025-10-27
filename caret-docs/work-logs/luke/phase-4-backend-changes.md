@@ -248,7 +248,7 @@ git reset --hard <commit-before-f03-f08>
 
 ## References
 
-- [F03 Feature Doc](../../features/f03-branding-ui.mdx)
-- [F08 Feature Doc](../../features/f08-persona-system.mdx)
+- [F03 Feature Doc](../../features/f03-branding-ui.md)
+- [F08 Feature Doc](../../features/f08-persona-system.md)
 - [Invasion Master Status](../../merging/cline-invasion-master-status.md)
 - [Merge Execution Plan](../../merging/merge-execution-master-plan.md)

@@ -75,7 +75,7 @@
 - ✅ Caret 타입 솔루션 검증 완료 (9개 오류 모두 해결됨)
 
 #### 결과물
-- [x] `caret-docs/features/f01-f11.mdx` - 11개 Feature 완전 문서화
+- [x] `caret-docs/features/f01-f11.md` - 11개 Feature 완전 문서화
 - [x] `caret-docs/merging/cline-invasion-master-status.md` - 침습 현황 분석
 - [x] `caret-docs/merging/merge-execution-master-plan.md` - 머징 실행 계획 (현재 문서)
 - [x] `caret-docs/merging/cline-v3.32.7-root-cause-analysis.md` - Cline 빌드 오류 분석 ⭐ **신규**
@@ -378,7 +378,7 @@ Caret은 이미 모든 오류를 해결했으므로, 머징 시 Caret의 솔루�
 #### ⭐ 모든 Phase 4.x 작업에 공통으로 포함되는 단계
 
 **Feature 문서 복원 및 업데이트** (필수):
-1. `caret-docs/features/fXX-*.mdx` 파일을 backup 브랜치에서 복원
+1. `caret-docs/features/fXX-*.md` 파일을 backup 브랜치에서 복원
 2. Modified Files 섹션을 현재 구현 상황에 맞게 업데이트
 3. Implementation Status 업데이트 (Backend ✅/🔄, Frontend ⏸️)
 4. Merge Notes 추가 (특이사항, lint 오류, 보류 사항 등 기록)
@@ -612,7 +612,7 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
    - [x] 컴파일 성공
 
 4. **Feature 문서 복원 및 업데이트** ⭐ **중요**
-   - [x] `caret-docs/features/f09-feature-config-system.mdx` 복원
+   - [x] `caret-docs/features/f09-feature-config-system.md` 복원
    - [ ] Modified Files 섹션 업데이트 (현재 구현 상황 반영)
    - [ ] Implementation Status 업데이트 (Backend ✅, Frontend ⏸️)
    - [ ] Merge Notes 추가 (특이사항 기록)
@@ -648,7 +648,7 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
    - [x] 컴파일 성공 (TypeScript 0 errors)
 
 5. **Feature 문서 복원 및 업데이트** ⭐ **중요**
-   - [x] `caret-docs/features/f03-branding-ui.mdx` 복원
+   - [x] `caret-docs/features/f03-branding-ui.md` 복원
    - [ ] Modified Files 섹션 업데이트 (disk.ts만 Backend에서 수정)
    - [ ] Implementation Status 업데이트 (Backend 부분 완료)
    - [ ] Merge Notes 추가 (package.json은 Frontend Phase로 연기)
@@ -688,7 +688,7 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
    - [x] 컴파일 성공 (TypeScript 0 errors)
 
 5. **Feature 문서 복원 및 업데이트** ⭐ **중요**
-   - [x] `caret-docs/features/f08-persona-system.mdx` 복원
+   - [x] `caret-docs/features/f08-persona-system.md` 복원
    - [ ] Modified Files 섹션 업데이트 (Backend 파일 목록)
    - [ ] Implementation Status 업데이트 (Backend 부분 완료, extension.ts는 Frontend)
    - [ ] Merge Notes 추가 (Lint 오류 2개 남음)
@@ -720,7 +720,7 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
    - [x] 컴파일 성공 (TypeScript: 0 errors, Lint: 0 errors)
 
 3. **Feature 문서 복원 및 업데이트**
-   - [x] `caret-docs/features/f02-multilingual-i18n.mdx` 복원
+   - [x] `caret-docs/features/f02-multilingual-i18n.md` 복원
    - [x] Modified Files 확인 (Languages.ts만 Backend)
    - [x] Implementation Status 업데이트
 
@@ -759,7 +759,7 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
    - [x] 컴파일 성공 (TypeScript: 0 errors, Lint: 0 errors)
 
 4. **Feature 문서 복원 및 업데이트**
-   - [x] `caret-docs/features/f06-json-system-prompt.mdx` 복원
+   - [x] `caret-docs/features/f06-json-system-prompt.md` 복원
    - [x] Modified Files 확인 (24 files total)
    - [x] Implementation Status 업데이트
 
@@ -917,7 +917,7 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
 **완료 기준**: ✅ F10 Backend 재구현 완료, proto generator 다중 패키지 지원
 
 **변경 파일**:
-- `caret-docs/features/f10-enhanced-provider-setup.mdx` (신규)
+- `caret-docs/features/f10-enhanced-provider-setup.md` (신규)
 - `proto/caret/account.proto` (CaretAccountService 주석 처리)
 - `scripts/generate-protobus-setup.mjs` (다중 패키지 지원)
 - `scripts/proto-utils.mjs` (caret 패키지 추가)

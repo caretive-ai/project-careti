@@ -2,11 +2,11 @@
 
 ## 1. 작업 개요
 
-본 작업의 목표는 `f02-multilingual-i18n.mdx` 문서에 정의된 **Provider 키 통합 규칙**에 따라, 프로젝트 내 모든 모델 피커(Model Picker) 컴포넌트에서 사용되는 다국어(i18n) 리소스를 체계적으로 통합하고 정리하는 것입니다.
+본 작업의 목표는 `f02-multilingual-i18n.md` 문서에 정의된 **Provider 키 통합 규칙**에 따라, 프로젝트 내 모든 모델 피커(Model Picker) 컴포넌트에서 사용되는 다국어(i18n) 리소스를 체계적으로 통합하고 정리하는 것입니다.
 
 현재 `common.json`, `settings.json`, `models.json` 등 여러 파일에 분산된 번역 키들을 `settings.json` 파일 하나로 통합하여 일관성을 확보하고 유지보수성을 향상시킵니다.
 
-### 관련 규칙 (`f02-multilingual-i18n.mdx` 발췌)
+### 관련 규칙 (`f02-multilingual-i18n.md` 발췌)
 
 > **Provider 키 통합 규칙 (Provider Key Unification Rule)**
 >

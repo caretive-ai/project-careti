@@ -61,7 +61,7 @@ commonPatterns:
   - "State Testing: Extension state and storage testing"
 
 guidelines:
-  - Provides AI access to same testing knowledge as developers (testing-guide.mdx)
+  - Provides AI access to same testing knowledge as developers (testing-guide.md)
   - Always start with integration tests representing real user scenarios
   - Never start with isolated unit tests
   - Goal is to ensure code works in actual usage contexts, not just in isolation

@@ -255,7 +255,7 @@ t03 브랜딩 시스템, t06 JSON 시스템 프롬프트, t02 다국어 i18n 작
 - **t06 JSON 시스템**: `t06-json-system-prompt.md`  
 - **t02 다국어 i18n**: `t02-multilingual-i18n.md`
 - **브랜딩 규칙**: `caret-b2b/brands/codecenter/brand-config.json`
-- **i18n 시스템**: `caret-docs/features/f02-multilingual-i18n.mdx`
+- **i18n 시스템**: `caret-docs/features/f02-multilingual-i18n.md`
 
 ---
 

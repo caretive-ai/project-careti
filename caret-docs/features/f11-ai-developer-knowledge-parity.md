@@ -35,7 +35,10 @@
 ### 2. 지식의 원천: `workflows/` 와 `atoms/`
 - **위치**: `.caretrules/workflows/`
 - **역할**: 실제 작업 절차를 담고 있는 "지식 원자(Atomic Workflow)"들의 집합입니다.
-- **구조**:
+- **구조 및 형식 원칙**:
+  - **AI 우선 형식**: 구조화된 데이터(예: `ai-work-index.yaml`)는 **YAML** 또는 **JSON** 형식을 사용합니다. 이는 AI의 토큰 효율성을 극대화하고 해석의 명확성을 보장하기 위함입니다.
+  - **사람 우선 형식**: 복합적인 절차나 가이드(예: `new-component.md`)는 **Markdown** 형식을 사용합니다.
+  - **중복 금지**: 동일한 내용이 `.md`와 `.yaml`로 중복 존재하는 것을 금지하며, 구조화된 데이터는 항상 `.yaml` 또는 `.json`을 단일 정보 소스로 사용합니다.
   - `workflows/`: 특정 작업을 위한 복합 워크플로우 (예: `new-component.md`)
   - `workflows/atoms/`: 여러 워크플로우에서 재사용되는 가장 작은 단위의 지식 (예: `tdd-cycle.yaml`)
 

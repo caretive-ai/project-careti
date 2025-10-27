@@ -7,7 +7,7 @@
 
 ### 단계 1: 핵심 문서 내용 전면 수정 (4개 언어 공통)
 
-- **파일명**: `docs.caret.team/docs-ko/caret-exclusive/knowledge-parity-system.mdx` (및 en, ja, zh)
+- **파일명**: `docs.caret.team/docs-ko/caret-exclusive/knowledge-parity-system.md` (및 en, ja, zh)
 - **수정된 내용 (사용자 관점 강조)**:
   ```markdown
   ---
@@ -52,12 +52,12 @@
   저희는 이 강력한 '지식 동기화' 개념을 더욱 발전시켜, **사용자가 직접 AI의 지식 기반을 커스터마이징**할 수 있는 기능으로 확장하는 방안을 적극적으로 고민하고 있습니다. 앞으로도 많은 기대 부탁드립니다.
   ```
 
-### 단계 2: 관련 문서 업데이트 (`what-is-caret.mdx`, `overview.mdx`)
+### 단계 2: 관련 문서 업데이트 (`what-is-caret.md`, `overview.md`)
 
-- **대상 파일**: `docs.caret.team/docs-ko/getting-started/what-is-caret.mdx`
+- **대상 파일**: `docs.caret.team/docs-ko/getting-started/what-is-caret.md`
 - **수정 방식**: "Caret 독점 기능" 목록에 새 항목 추가
 
-- **대상 파일**: `docs.caret.team/docs-ko/caret-exclusive/overview.mdx`
+- **대상 파일**: `docs.caret.team/docs-ko/caret-exclusive/overview.md`
 - **수정 방식**: "Caret 독점 기능 둘러보기" 섹션에 새 항목 추가
 
 ### 단계 3: 다국어 동시 적용
@@ -65,6 +65,6 @@
 
 ## 3. 실행 순서
 1. 이 최종 계획에 대해 마스터의 승인을 받습니다.
-2. **한국어 문서부터** 순서대로 `knowledge-parity-system.mdx` 내용을 수정하고, `what-is-caret.mdx`, `overview.mdx`를 업데이트합니다.
+2. **한국어 문서부터** 순서대로 `knowledge-parity-system.md` 내용을 수정하고, `what-is-caret.md`, `overview.md`를 업데이트합니다.
 3. **영어, 일본어, 중국어 순서로** 번역 및 업데이트를 반복합니다.
 4. 모든 작업 완료 후 최종 보고합니다.

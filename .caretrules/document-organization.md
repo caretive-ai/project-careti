@@ -39,19 +39,19 @@ Break down complex documents into reusable knowledge atoms:
 
 ### Phase 2: Map Developer Docs to Atomic Workflows
 **Architecture Domain**:
-- caret-architecture-and-implementation-guide.mdx → `/modification-levels` + `/backup-protocol`
-- component-architecture-principles.mdx → `/component-patterns` + `/naming-conventions`
+- caret-architecture-and-implementation-guide.md → `/modification-levels` + `/backup-protocol`
+- component-architecture-principles.md → `/component-patterns` + `/naming-conventions`
 
 **Communication Domain**:
-- frontend-backend-interaction-patterns.mdx → `/message-flow` + `/storage-patterns`
-- webview-extension-communication.mdx → `/message-flow` + `/verification-steps`
+- frontend-backend-interaction-patterns.md → `/message-flow` + `/storage-patterns`
+- webview-extension-communication.md → `/message-flow` + `/verification-steps`
 
 **AI Domain**:
-- ai-message-flow-guide.mdx → `/ai-integration` + `/message-flow`
-- system-prompt-implementation.mdx → `/ai-integration` + `/component-patterns`
+- ai-message-flow-guide.md → `/ai-integration` + `/message-flow`
+- system-prompt-implementation.md → `/ai-integration` + `/component-patterns`
 
 **Testing Domain**:
-- testing-guide.mdx → `/tdd-cycle` + `/testing-strategies` + `/verification-steps`
+- testing-guide.md → `/tdd-cycle` + `/testing-strategies` + `/verification-steps`
 
 ### Phase 3: Create Composite Workflows
 Combine atoms for specific work scenarios:

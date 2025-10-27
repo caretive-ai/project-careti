@@ -331,7 +331,7 @@ const SafeWrapper: React.FC<Props> = (props) => {
 
 ## 📚 참고 자료
 
-- [Caret i18n 시스템 아키텍처](./caret-architecture-and-implementation-guide.mdx)
+- [Caret i18n 시스템 아키텍처](./caret-architecture-and-implementation-guide.md)
 - [027-7: 최종 다국어 통합 작업](../tasks/027-7-final-i18n-integration.md)
 - [React 국제화 베스트 프랙티스](https://react.i18next.com/)
 

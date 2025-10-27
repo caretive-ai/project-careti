@@ -89,8 +89,8 @@ specs/[feature]/                    # 기능별 문서 구조
 
 caret-docs/development/
 ├── caret-rules.ko.md             # 한국어 개발자 문서
-├── ai-message-flow-guide.mdx     # AI 메시지 플로우
-└── [architecture-guides].mdx    # 아키텍처 가이드들
+├── ai-message-flow-guide.md     # AI 메시지 플로우
+└── [architecture-guides].md    # 아키텍처 가이드들
 ```
 
 #### AI 제약 메커니즘

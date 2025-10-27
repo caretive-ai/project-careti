@@ -4,7 +4,7 @@
 `/newrule` 명령어의 동작을 수정하여, "Caret 모드"에서는 규칙 파일을 `.caretrules` 디렉토리에 생성하고, "Cline 모드"에서는 기본 동작(`.clinerules`에 생성)을 유지하도록 합니다. 이 작업은 Caret의 아키텍처 원칙에 따라 Cline 원본 코드 수정을 최소화하는 방식으로 이루어져야 합니다.
 
 ## 2. 분석
-`f06-json-system-prompt.mdx` 문서와 마스터의 피드백에 따르면, `src/core/prompts/commands.ts`의 시스템 프롬프트를 직접 수정하는 것은 Cline 원본 파일을 변경하고 Cline의 도구 시스템 재사용 원칙에 위배되므로 이상적인 접근 방식이 아닙니다.
+`f06-json-system-prompt.md` 문서와 마스터의 피드백에 따르면, `src/core/prompts/commands.ts`의 시스템 프롬프트를 직접 수정하는 것은 Cline 원본 파일을 변경하고 Cline의 도구 시스템 재사용 원칙에 위배되므로 이상적인 접근 방식이 아닙니다.
 
 더 나은 접근 방식은 `new_rule` 도구의 실행을 가로채서 현재 모드나 브랜드에 따라 파일 경로를 동적으로 조정하는 것입니다. 이를 통해 로직 변경을 Caret 자체 로직(`caret-src/`) 내에 국한시키고 Cline 핵심 코드는 그대로 둘 수 있습니다.
 

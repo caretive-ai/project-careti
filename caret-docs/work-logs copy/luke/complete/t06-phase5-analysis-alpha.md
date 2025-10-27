@@ -23,14 +23,14 @@
    - Agent 모드에서 시작했으나, 프롬프트 생성 로그는 `Generating prompt for mode: chatbot`으로 기록됨.
    - Chatbot 모드로 전환 시, AI가 "PLAN 모드에서는... 실행할 수 없습니다"라고 응답하여 Caret 모드(Chatbot)가 아닌 Cline 모드(Plan) 용어를 사용함.
 
-2. __`f06-json-system-prompt.mdx` 문서 자체 분석__:
+2. __`f06-json-system-prompt.md` 문서 자체 분석__:
 
    - 문서 후반부 `localStorage vs ExtensionState 동기화 문제` 섹션에서 근본 원인을 명확히 지적함.
    - __원인__: 백엔드(`ExtensionState`)의 최신 상태가 프론트엔드 `localStorage`에 동기화되지 않고, `ButtonConfig`와 같은 주요 컴포넌트가 `localStorage`의 오래된 값을 참조하여 상태 불일치가 발생함.
 
 #### 🔧 해결 방안 (How to fix it?)
 
-`f06-json-system-prompt.mdx` 문서에 제시된 해결책을 즉시 적용한다.
+`f06-json-system-prompt.md` 문서에 제시된 해결책을 즉시 적용한다.
 
 1. __상태 동기화 구현 (`ExtensionStateContext.tsx`)__:
 

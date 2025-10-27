@@ -12,8 +12,8 @@
 작업 키워드에 따라 관련 문서를 읽었는지 확인 (먼저 `/ai-work-index` 사용):
 
 **Frontend-Backend 상호작용**:
-- frontend-backend-interaction-patterns.mdx
-- caret-architecture-and-implementation-guide.mdx (섹션 10-11)
+- frontend-backend-interaction-patterns.md
+- caret-architecture-and-implementation-guide.md (섹션 10-11)
 
 **Cline 원본 수정**:
 - .caretrules의 파일 수정 체크리스트
@@ -21,12 +21,12 @@
 - CARET MODIFICATION 주석 요구사항
 
 **컴포넌트/UI 개발**:
-- component-architecture-principles.mdx
+- component-architecture-principles.md
 - VSCode 테마 통합 가이드
 - i18n 국제화 패턴
 
 **테스트 관련**:
-- testing-guide.mdx (Vitest mocking 패턴)
+- testing-guide.md (Vitest mocking 패턴)
 - TDD 필수 원칙 (RED → GREEN → REFACTOR)
 - 테스트 우선 접근 방식 강제
 

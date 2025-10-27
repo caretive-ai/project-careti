@@ -505,17 +505,17 @@ git checkout HEAD -- caret-scripts/
 ## 📚 참고 문서 (References)
 
 ### Feature 문서
-- [F01 - Common Util](../features/f01-common-util.mdx)
-- [F02 - Multilingual i18n](../features/f02-multilingual-i18n.mdx)
-- [F03 - Branding UI](../features/f03-branding-ui.mdx)
-- [F04 - Caret Account](../features/f04-caret-account.mdx)
-- [F05 - Rule Priority System](../features/f05-rule-priority-system.mdx)
-- [F06 - JSON System Prompt](../features/f06-json-system-prompt.mdx)
-- [F07 - Chatbot Agent Mode](../features/f07-chatbot-agent.mdx)
-- [F08 - Persona System](../features/f08-persona-system.mdx)
-- [F09 - Feature Config System](../features/f09-feature-config-system.mdx)
-- [F10 - Enhanced Provider Setup](../features/f10-enhanced-provider-setup.mdx)
-- [F11 - Input History System](../features/f11-input-history-system.mdx)
+- [F01 - Common Util](../features/f01-common-util.md)
+- [F02 - Multilingual i18n](../features/f02-multilingual-i18n.md)
+- [F03 - Branding UI](../features/f03-branding-ui.md)
+- [F04 - Caret Account](../features/f04-caret-account.md)
+- [F05 - Rule Priority System](../features/f05-rule-priority-system.md)
+- [F06 - JSON System Prompt](../features/f06-json-system-prompt.md)
+- [F07 - Chatbot Agent Mode](../features/f07-chatbot-agent.md)
+- [F08 - Persona System](../features/f08-persona-system.md)
+- [F09 - Feature Config System](../features/f09-feature-config-system.md)
+- [F10 - Enhanced Provider Setup](../features/f10-enhanced-provider-setup.md)
+- [F11 - Input History System](../features/f11-input-history-system.md)
 
 ### 분석 문서
 - [analysis-of-102-modifications.md](../../보고서(reports)/프로젝트 개선/Cline머징 전략/analysis-of-102-modifications.md) (⚠️ 오류 있음)

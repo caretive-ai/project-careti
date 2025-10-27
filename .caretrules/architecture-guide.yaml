@@ -64,7 +64,7 @@ integrationPoints:
   - MCP (Model Context Protocol) integration
 
 guidelines:
-  - Provides AI access to same architectural knowledge as developers (caret-architecture-and-implementation-guide.mdx)
+  - Provides AI access to same architectural knowledge as developers (caret-architecture-and-implementation-guide.md)
   - Focus on understanding three-level modification strategy
   - Always prefer Level 1 independent modules over Cline modifications
   - Architecture designed for minimal disruption to Cline core while enabling Caret extensions

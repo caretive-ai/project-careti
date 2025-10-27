@@ -19,8 +19,8 @@
 .caretrules/caret-rules.json           ↔ caret-docs/development-en/caret-rules.md (EN)
                                        ↔ caret-docs/development/caret-rules.ko.md (KO)
 .caretrules/workflows/*.md             ↔ caret-docs/development-en/workflows/*.md
-.caretrules/workflows/ai-work-index.md ↔ caret-docs/development/ai-work-index.mdx
-.caretrules/workflows/ai-work-protocol.md ↔ caret-docs/guides/ai-work-method-guide.mdx
+.caretrules/workflows/ai-work-index.md ↔ caret-docs/development/ai-work-index.md
+.caretrules/workflows/ai-work-protocol.md ↔ caret-docs/guides/ai-work-method-guide.md
 .caretrules/workflows/caret-development.md ↔ caret-docs/development/caret-rules.ko.md
 .caretrules/workflows/merge-strategy.md ↔ caret-docs/guides/merging-strategy-guide.md
 ```
@@ -79,7 +79,7 @@
 - **Utilities**: kebab-case (`brand-utils.ts`)
 - **Components**: PascalCase (`CaretProvider.ts`)
 - **Tests**: match source (`brand-utils.test.ts`)
-- **Docs**: kebab-case (`new-developer-guide.mdx`)
+- **Docs**: kebab-case (`new-developer-guide.md`)
 
 ## Development Support Scripts
 

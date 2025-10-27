@@ -158,11 +158,11 @@ const modeSystem = extensionState?.modeSystem ||
 
 다음 파일들의 구현이 올바른지 검토 요청:
 
-1. **`caret-docs/features/f06-json-system-prompt.mdx`**
+1. **`caret-docs/features/f06-json-system-prompt.md`**
    - f06을 "기술 인프라 레이어"로 정의한 것이 적절한가?
    - f07과의 역할 구분이 명확한가?
 
-2. **`caret-docs/features/f07-chatbot-agent.mdx`**  
+2. **`caret-docs/features/f07-chatbot-agent.md`**  
    - "사용자 경험 레이어"로 정의한 것이 맞는가?
    - 대체품 방식 설명이 정확한가?
 
@@ -229,8 +229,8 @@ const modeSystem = extensionState?.modeSystem ||
 
 ### **관련 문서**
 - **구현 계획**: `caret-docs/work-logs/luke/t06-phase5-1-caret-mode-fix.md`
-- **f06 문서**: `caret-docs/features/f06-json-system-prompt.mdx`  
-- **f07 문서**: `caret-docs/features/f07-chatbot-agent.mdx`
+- **f06 문서**: `caret-docs/features/f06-json-system-prompt.md`  
+- **f07 문서**: `caret-docs/features/f07-chatbot-agent.md`
 
 ### **핵심 구현 파일**
 - **분기 로직**: `src/core/prompts/system-prompt/index.ts`

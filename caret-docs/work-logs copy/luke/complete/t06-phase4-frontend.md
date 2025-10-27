@@ -107,7 +107,7 @@ DEBUG [PromptSystemManager] Using adapter: caret
 
 ### 1. Plan/Act 버튼 다국어 수정
 **문제**: Plan/Act 모드 토글 버튼에서 다국어 네임스페이스와 JSON 키가 틀려서 i18n 키가 그대로 노출됨
-- **참고 문서**: `caret-docs/features/f02-multilingual-i18n.mdx`
+- **참고 문서**: `caret-docs/features/f02-multilingual-i18n.md`
 - **해결 방법**: 올바른 네임스페이스와 JSON 키 매핑 수정 필요
 
 ### 2. Caret 모드 시 하단 버튼 변경

@@ -42,6 +42,8 @@ import { formatContentBlockToMarkdown } from "@integrations/misc/export-markdown
 import { processFilesIntoText } from "@integrations/misc/extract-text"
 import { showSystemNotification } from "@integrations/notifications"
 import { TerminalManager } from "@integrations/terminal/TerminalManager"
+// CARET MODIFICATION: Subagent support from Cline v3.34.0
+import { isSubagentCommand, transformClineCommand } from "@/integrations/cli-subagents/subagent_command"
 import { BrowserSession } from "@services/browser/BrowserSession"
 import { UrlContentFetcher } from "@services/browser/UrlContentFetcher"
 import { listFiles } from "@services/glob/list-files"
@@ -1035,6 +1037,12 @@ export class Task {
 	}
 
 	async executeCommandTool(command: string, timeoutSeconds: number | undefined): Promise<[boolean, ToolResponse]> {
+		// CARET MODIFICATION: Subagent detection from Cline v3.34.0
+		const isSubagent = isSubagentCommand(command)
+		if (transformClineCommand(command) !== command && isSubagent) {
+			command = transformClineCommand(command)
+		}
+
 		Logger.info("IS_TEST: " + isInTestMode())
 
 		// Check if we're in test mode
@@ -1045,9 +1053,39 @@ export class Task {
 		}
 		Logger.info("Executing command in terminal: " + command)
 
-		const terminalInfo = await this.terminalManager.getOrCreateTerminal(this.cwd)
+		// CARET MODIFICATION: Conditional TerminalManager selection for Subagent support
+		let terminalManager: TerminalManager
+		if (isSubagent) {
+			// Use StandaloneTerminalManager for CLI subagents
+			try {
+				const standaloneModulePath = path.join(__dirname, "../standalone/runtime-files/vscode/enhanced-terminal.js")
+				const { StandaloneTerminalManager } = require(standaloneModulePath) as {
+					StandaloneTerminalManager?: new () => TerminalManager
+				}
+				if (StandaloneTerminalManager) {
+					terminalManager = new StandaloneTerminalManager()
+				} else {
+					terminalManager = new TerminalManager()
+				}
+			} catch (error) {
+				console.error("[DEBUG] Failed to load standalone terminal manager for subagent", error)
+				terminalManager = new TerminalManager()
+			}
+			// Copy subagent settings from main terminal manager (if available)
+			const mainManager = this.terminalManager as any
+			if (mainManager.subagentTerminalOutputLineLimit !== undefined) {
+				(terminalManager as any).setSubagentTerminalOutputLineLimit?.(
+					mainManager.subagentTerminalOutputLineLimit || 2000
+				)
+			}
+		} else {
+			// Preserve Caret logic: Use configured terminal manager for regular commands
+			terminalManager = this.terminalManager
+		}
+
+		const terminalInfo = await terminalManager.getOrCreateTerminal(this.cwd)
 		terminalInfo.terminal.show() // weird visual bug when creating new terminals (even manually) where there's an empty space at the top.
-		const process = this.terminalManager.runCommand(terminalInfo, command)
+		const process = terminalManager.runCommand(terminalInfo, command)
 
 		let userFeedback: { text?: string; images?: string[]; files?: string[] } | undefined
 		let didContinue = false

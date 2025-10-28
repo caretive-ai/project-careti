@@ -75,6 +75,7 @@ steps:
         keywords: [b2b, brand, codecenter, conversion, slexn]
         root: .caretrules/b2b-branding-workflow.md
         workflow: .caretrules/workflows/branding-and-logging.md # Branding implementation (157 lines)
+        korean: caret-docs/development/b2b-branding-workflow.md
 
       - name: i18n Static Translation Fix
         keywords: [i18n, translation, static, dynamic, language switching]

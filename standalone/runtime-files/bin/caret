@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+// Caret CLI Wrapper
+// This script wraps the cline-core.js to provide the 'caret' command
+
+const path = require('path');
+const { spawn } = require('child_process');
+
+// Get the directory containing cline-core.js
+const coreDir = path.join(__dirname, '..');
+const corePath = path.join(coreDir, 'cline-core.js');
+
+// Forward all arguments to cline-core.js
+const args = process.argv.slice(2);
+
+// Execute cline-core.js with the same arguments
+const child = spawn(process.execPath, [corePath, ...args], {
+    stdio: 'inherit',
+    cwd: coreDir,
+    env: {
+        ...process.env,
+        CARET_CLI: 'true', // Mark that this is running via Caret CLI
+    }
+});
+
+child.on('exit', (code) => {
+    process.exit(code || 0);
+});

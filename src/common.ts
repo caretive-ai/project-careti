@@ -43,7 +43,8 @@ export async function initialize(context: vscode.ExtensionContext): Promise<Webv
 	// CARET MODIFICATION: Initialize JsonTemplateLoader for Caret JSON prompt system
 	try {
 		const { JsonTemplateLoader } = await import("@caret/core/prompts/system/JsonTemplateLoader")
-		const sectionsDirPath = vscode.Uri.joinPath(context.extensionUri, "caret-src", "core", "prompts", "sections").fsPath
+		const path = await import("path")
+		const sectionsDirPath = path.join(context.extensionPath, "caret-src", "core", "prompts", "sections")
 		await JsonTemplateLoader.getInstance().initialize(sectionsDirPath)
 		Logger.debug(`[Extension] JsonTemplateLoader initialized from: ${sectionsDirPath}`)
 	} catch (error) {

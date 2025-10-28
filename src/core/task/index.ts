@@ -1039,6 +1039,7 @@ export class Task {
 	async executeCommandTool(command: string, timeoutSeconds: number | undefined): Promise<[boolean, ToolResponse]> {
 		// CARET MODIFICATION: Subagent detection from Cline v3.34.0
 		const isSubagent = isSubagentCommand(command)
+		Logger.debug(`🧪 [Subagent Test] command: "${command}", isSubagent: ${isSubagent}`)
 		if (transformClineCommand(command) !== command && isSubagent) {
 			command = transformClineCommand(command)
 		}

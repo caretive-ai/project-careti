@@ -15,8 +15,13 @@ import { PROTOBUS_PORT, startProtobusService } from "./protobus-service"
 import { log } from "./utils"
 // CARET MODIFICATION: initializeContext removed - extensionContext is pre-initialized in vscode-context.ts
 import { extensionContext } from "./vscode-context"
+// CARET MODIFICATION: Import HostBridge server for automatic startup
+import { startHostBridgeServer } from "./hostbridge-server"
+import type { Controller } from "@/core/controller"
 
 let globalLockManager: SqliteLockManager | undefined
+let hostBridgeServer: any | undefined
+let globalController: Controller | undefined
 
 async function main() {
 	log("\n\n\nStarting cline-core service...\n\n\n")
@@ -49,17 +54,19 @@ async function main() {
 	}
 
 	try {
-		log("\n\n\nStarting cline-core service...\n\n\n")
-
 		// Set up error handlers FIRST (before any service starts)
 		setupGlobalErrorHandlers()
 
+		// CARET MODIFICATION: Start embedded HostBridge server
+		log("Starting embedded HostBridge server...")
+		hostBridgeServer = await startHostBridgeServer()
 		const hostAddress = await waitForHostBridgeReady()
 
 		// The host bridge should be available before creating the host provider because it depends on the host bridge.
 		setupHostProvider(extensionContext, EXTENSION_DIR, DATA_DIR)
 
 		const webviewProvider = await initialize(extensionContext)
+		globalController = webviewProvider.controller
 
 		// Enable the localhost HTTP server that handles auth redirects.
 		AuthHandler.getInstance().setEnabled(true)
@@ -83,6 +90,16 @@ async function main() {
 		globalLockManager.touchInstance()
 
 		log("✅ All services started successfully")
+
+		// CARET MODIFICATION: CLI mode - execute task and exit
+		if (args.task) {
+			log(`CLI Mode: Executing task "${args.task}"`)
+			await runCliTask(args.task)
+			await shutdownGracefully(globalLockManager)
+			process.exit(0)
+		} else {
+			log("Server Mode: Ready for connections")
+		}
 	} catch (err) {
 		log(`FATAL ERROR during startup: ${err}`)
 		log(`Cleaning up and shutting down...`)
@@ -177,6 +194,73 @@ async function requestHostBridgeShutdown(): Promise<void> {
 }
 
 /**
+ * CARET MODIFICATION: Run a task in CLI mode and wait for completion
+ */
+async function runCliTask(taskText: string): Promise<void> {
+	try {
+		if (!globalController) {
+			throw new Error("Controller not initialized")
+		}
+
+		log(`Initializing task: ${taskText}`)
+		const taskId = await globalController.initTask(taskText)
+
+		if (!taskId) {
+			throw new Error("Failed to initialize task")
+		}
+
+		log(`Task ${taskId} started, waiting for completion...`)
+
+		// Wait for task completion
+		await waitForTaskCompletion(taskId)
+
+		log(`Task ${taskId} completed`)
+	} catch (error) {
+		log(`Error running CLI task: ${error}`)
+		throw error
+	}
+}
+
+/**
+ * CARET MODIFICATION: Wait for task completion by monitoring controller state
+ * FIXME: This is a simple implementation. Should be improved with proper event listeners.
+ */
+async function waitForTaskCompletion(taskId: string): Promise<void> {
+	return new Promise((resolve) => {
+		let checkCount = 0
+		const maxChecks = 300 // 5 minutes timeout (300 * 1 second)
+
+		const checkInterval = setInterval(() => {
+			checkCount++
+
+			if (!globalController) {
+				log("Controller not available, stopping wait")
+				clearInterval(checkInterval)
+				resolve()
+				return
+			}
+
+			// Check if current task is no longer the one we're waiting for
+			const currentTask = globalController.task
+			if (!currentTask || currentTask.taskId !== taskId) {
+				// Task is no longer active, it completed
+				log(`Task ${taskId} is no longer active, assuming completion`)
+				clearInterval(checkInterval)
+				resolve()
+				return
+			}
+
+			// Timeout after max checks
+			if (checkCount >= maxChecks) {
+				log(`Task ${taskId} timeout after ${maxChecks} seconds`)
+				clearInterval(checkInterval)
+				resolve()
+			}
+		}, 1000) // Check every second
+	})
+}
+
+/**
  * Gracefully shutdown the cline-core process by:
  * 1. Calling shutdown RPC on the paired host bridge
  * 2. Cleaning up the lock manager entry
@@ -185,6 +269,13 @@ async function requestHostBridgeShutdown(): Promise<void> {
  */
 async function shutdownGracefully(lockManager?: SqliteLockManager) {
 	try {
+		// CARET MODIFICATION: Shutdown embedded HostBridge server
+		if (hostBridgeServer) {
+			log("Shutting down embedded HostBridge server...")
+			hostBridgeServer.forceShutdown()
+			log("HostBridge server shut down")
+		}
+
 		// Step 1: Tell the paired host bridge to shut down
 		log("Requesting host bridge shutdown...")
 		if (HostProvider.isInitialized()) {
@@ -227,11 +318,14 @@ interface CliArgs {
 	hostBridgePort?: number
 	config?: string
 	help?: boolean
+	task?: string // CARET MODIFICATION: CLI mode task argument
 }
 
 function parseArgs(): CliArgs {
 	const args: CliArgs = {}
 	const argv = process.argv.slice(2)
+	// CARET MODIFICATION: Collect non-flag arguments for task
+	const nonFlagArgs: string[] = []
 
 	for (let i = 0; i < argv.length; i++) {
 		const arg = argv[i]
@@ -251,7 +345,17 @@ function parseArgs(): CliArgs {
 			case "-h":
 				args.help = true
 				break
+			default:
+				// CARET MODIFICATION: Collect non-flag arguments as task
+				if (!arg.startsWith("-")) {
+					nonFlagArgs.push(arg)
+				}
 		}
+	}
+
+	// CARET MODIFICATION: Join non-flag args as task text
+	if (nonFlagArgs.length > 0) {
+		args.task = nonFlagArgs.join(" ")
 	}
 
 	return args

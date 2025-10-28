@@ -1,22 +1,24 @@
 /**
- * Pattern to match simplified Cline CLI syntax: cline "prompt" or cline 'prompt'
+ * Pattern to match simplified Cline/Caret CLI syntax: cline "prompt" or caret "prompt"
  * with optional additional flags after the closing quote
+ *
+ * CARET MODIFICATION: Support both 'cline' and 'caret' commands for branding consistency
  */
-const CLINE_COMMAND_PATTERN = /^cline\s+(['"])(.+?)\1(\s+.*)?$/
+const CLINE_COMMAND_PATTERN = /^(cline|caret)\s+(['"])(.+?)\2(\s+.*)?$/
 
 /**
- * Detects if a command is a Cline CLI subagent command.
+ * Detects if a command is a Cline/Caret CLI subagent command.
  *
- * Matches the simplified syntax: cline "prompt" or cline 'prompt'
+ * Matches the simplified syntax: cline "prompt" or caret "prompt"
  * This allows the system to apply subagent-specific settings like autonomous execution.
  *
  * @param command - The command string to check
- * @returns True if the command is a Cline CLI subagent command, false otherwise
+ * @returns True if the command is a Cline/Caret CLI subagent command, false otherwise
  */
 export function isSubagentCommand(command: string): boolean {
 	// Match simplified syntaxes
-	// cline "prompt"
-	// cline 'prompt'
+	// cline "prompt" or caret "prompt"
+	// cline 'prompt' or caret 'prompt'
 	return CLINE_COMMAND_PATTERN.test(command)
 }
 
@@ -46,13 +48,15 @@ export function transformClineCommand(command: string): string {
 }
 
 /**
- * Injects subagent-specific command structure and settings into Cline CLI commands.
+ * Injects subagent-specific command structure and settings into Cline/Caret CLI commands.
  *
- * @param command - The Cline CLI command (simplified or full syntax)
+ * CARET MODIFICATION: Preserve command name (cline or caret) in transformed output
+ *
+ * @param command - The Cline/Caret CLI command (simplified or full syntax)
  * @returns The command with injected flags and settings
  */
 function injectSubagentSettings(command: string): string {
-	// No pre-prompt flags needed - use standard "cline 'prompt'" syntax
+	// No pre-prompt flags needed - use standard "cline 'prompt'" or "caret 'prompt'" syntax
 	const prePromptFlags: string[] = []
 
 	// Flags/settings to insert after the prompt
@@ -61,11 +65,12 @@ function injectSubagentSettings(command: string): string {
 	const match = command.match(CLINE_COMMAND_PATTERN)
 
 	if (match) {
-		const quote = match[1]
-		const prompt = match[2]
-		const additionalFlags = match[3] || ""
+		const commandName = match[1] // 'cline' or 'caret'
+		const quote = match[2]
+		const prompt = match[3]
+		const additionalFlags = match[4] || ""
 		const prePromptPart = prePromptFlags.length > 0 ? prePromptFlags.join(" ") + " " : ""
-		return `cline ${prePromptPart}${quote}${prompt}${quote} ${postPromptFlags.join(" ")}${additionalFlags}`
+		return `${commandName} ${prePromptPart}${quote}${prompt}${quote} ${postPromptFlags.join(" ")}${additionalFlags}`
 	}
 
 	// Already full format: just inject settings after prompt

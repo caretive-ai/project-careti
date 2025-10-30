@@ -17,6 +17,9 @@ import { Providers } from "./Providers"
 import { UiServiceClient } from "./services/grpc-client"
 
 const AppContent = () => {
+	console.log("[AppContent] AppContent component rendering...")
+
+	console.log("[AppContent] Calling useExtensionState...")
 	const {
 		didHydrateState,
 		showWelcome,
@@ -36,9 +39,15 @@ const AppContent = () => {
 		hideAccount,
 		hideAnnouncement,
 	} = useExtensionState()
+	console.log("[AppContent] useExtensionState OK, didHydrateState:", didHydrateState)
 
+	console.log("[AppContent] Calling useCaretState...")
 	const { showPersonaSelector } = useCaretState()
+	console.log("[AppContent] useCaretState OK")
+
+	console.log("[AppContent] Calling useClineAuth...")
 	const { clineUser, organizations, activeOrganization } = useClineAuth()
+	console.log("[AppContent] useClineAuth OK")
 
 	useEffect(() => {
 		if (shouldShowAnnouncement) {
@@ -93,6 +102,7 @@ const AppContent = () => {
 }
 
 const App = () => {
+	console.log("[App] App component rendering...")
 	return (
 		<Providers>
 			{/* CARET MODIFICATION: Wrap app with i18n context for multilingual support */}

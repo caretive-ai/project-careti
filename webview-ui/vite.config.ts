@@ -79,11 +79,15 @@ export default defineConfig({
 		minify: !isDevBuild,
 		// Enable inline source maps for dev build
 		sourcemap: isDevBuild ? "inline" : false,
+		lib: {
+			entry: resolve(__dirname, "src/main.tsx"),
+			name: "CaretApp",
+			formats: ["iife"],
+			fileName: () => "assets/index.js",
+		},
 		rollupOptions: {
 			output: {
 				inlineDynamicImports: true,
-				entryFileNames: `assets/[name].js`,
-				chunkFileNames: `assets/[name].js`,
 				assetFileNames: `assets/[name].[ext]`,
 				// Disable compact output for dev build
 				compact: !isDevBuild,

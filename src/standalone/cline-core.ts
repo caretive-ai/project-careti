@@ -41,6 +41,16 @@ async function main() {
 	const DATA_DIR = process.env.CLINE_DIR ? path.join(process.env.CLINE_DIR, "data") : path.join(os.homedir(), ".cline", "data")
 	const EXTENSION_DIR = extensionContext.extensionPath
 
+	// CARET MODIFICATION: Check for Subagent mode to use different ports
+	const isSubagentMode = process.env.CARET_SUBAGENT_MODE === "true"
+	if (isSubagentMode) {
+		log("🔧 Running in Subagent mode - using dedicated ports to avoid conflicts")
+		const subagentProtobusPort = process.env.CARET_SUBAGENT_PROTOBUS_PORT || "26050"
+		const subagentHostBridgePort = process.env.CARET_SUBAGENT_HOSTBRIDGE_PORT || "26051"
+		process.env.PROTOBUS_ADDRESS = `127.0.0.1:${subagentProtobusPort}`
+		process.env.HOST_BRIDGE_ADDRESS = `127.0.0.1:${subagentHostBridgePort}`
+	}
+
 	// Configure ports - CLI args override everything
 	if (args.port) {
 		process.env.PROTOBUS_ADDRESS = `127.0.0.1:${args.port}`

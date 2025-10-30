@@ -1057,6 +1057,12 @@ export class Task {
 		// CARET MODIFICATION: Conditional TerminalManager selection for Subagent support
 		let terminalManager: TerminalManager
 		if (isSubagent) {
+			// Set environment variables for Subagent to use different ports
+			// This prevents port conflicts when running Subagent from Extension
+			globalThis.process.env.CARET_SUBAGENT_MODE = "true"
+			globalThis.process.env.CARET_SUBAGENT_PROTOBUS_PORT = "26050"
+			globalThis.process.env.CARET_SUBAGENT_HOSTBRIDGE_PORT = "26051"
+
 			// Use StandaloneTerminalManager for CLI subagents
 			try {
 				const standaloneModulePath = path.join(__dirname, "../standalone/runtime-files/vscode/enhanced-terminal.js")

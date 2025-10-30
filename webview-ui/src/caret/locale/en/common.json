@@ -206,7 +206,7 @@
 			"searchPlaceholder": "Search and select a model...",
 			"clearSearch": "Clear search",
 			"info": {
-				"fullText": "The extension automatically fetches the latest list of models available on <0>Requesty.</0> If you're unsure which model to choose, Cline works best with <1>anthropic/claude-3-7-sonnet-latest.</1>"
+				"fullText": "The extension automatically fetches the latest list of models available on <0>Requesty.</0> If you're unsure which model to choose, Caret works best with <1>anthropic/claude-3-7-sonnet-latest.</1>"
 			}
 		},
 		"sapAiCore": {
@@ -480,7 +480,7 @@
 			"noSubscription": "• Use this if you don't have a Cerebras subscription",
 			"contextWindow": "• 64K context window",
 			"rateLimits": "• Rate limits: 150K TPM, 1M TPH/TPD, 10 RPM, 100 RPH/RPD",
-			"upgrade": "Upgrade for higher limits: https://cloud.cerebras.ai/?utm=cline"
+			"upgrade": "Upgrade for higher limits: https://cloud.cerebras.ai/?utm=caret"
 		},
 		"vercelAiGateway": {
 			"description": "Use models through the Vercel AI Gateway."

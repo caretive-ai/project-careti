@@ -3,6 +3,8 @@ import { formatResponse } from "@core/prompts/responses"
 import { processFilesIntoText } from "@integrations/misc/extract-text"
 import { showSystemNotification } from "@integrations/notifications"
 import { ClineDefaultTool } from "@/shared/tools"
+// CARET MODIFICATION: Import brand utility for dynamic branding
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import type { ToolResponse } from "../../index"
 import type { IPartialBlockHandler, IToolHandler } from "../ToolExecutorCoordinator"
 import type { TaskConfig } from "../types/TaskConfig"
@@ -37,9 +39,11 @@ export class NewTaskHandler implements IToolHandler, IPartialBlockHandler {
 
 		// Show notification if auto-approval is enabled
 		if (config.autoApprovalSettings.enabled && config.autoApprovalSettings.enableNotifications) {
+			// CARET MODIFICATION: Use brand utility for dynamic notification branding
+			const brandName = getCurrentBrandName()
 			showSystemNotification({
-				subtitle: "Caret wants to start a new task...",
-				message: `Caret is suggesting to start a new task with: ${context}`,
+				subtitle: `${brandName} wants to start a new task...`,
+				message: `${brandName} is suggesting to start a new task with: ${context}`,
 			})
 		}
 

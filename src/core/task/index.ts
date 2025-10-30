@@ -72,6 +72,8 @@ import { HostProvider } from "@/hosts/host-provider"
 import { ErrorService } from "@/services/error"
 import { TerminalHangStage, TerminalUserInterventionAction, telemetryService } from "@/services/telemetry"
 import { ShowMessageType } from "@/shared/proto/index.host"
+// CARET MODIFICATION: Import brand utility for dynamic branding
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import { isInTestMode } from "../../services/test/TestMode"
 import { ensureLocalClineDirExists } from "../context/instructions/user-instructions/rule-helpers"
 import { refreshWorkflowToggles } from "../context/instructions/user-instructions/workflows"
@@ -660,11 +662,12 @@ export class Task {
 	}
 
 	async sayAndCreateMissingParamError(toolName: ClineDefaultTool, paramName: string, relPath?: string) {
+		// CARET MODIFICATION: Use brand-neutral language for error messages
 		await this.say(
 			"error",
-			`Cline tried to use ${toolName}${
-				relPath ? ` for '${relPath.toPosix()}'` : ""
-			} without value for required parameter '${paramName}'. Retrying...`,
+			`Missing required parameter '${paramName}' for ${toolName}${
+				relPath ? ` (path: '${relPath.toPosix()}')` : ""
+			}. Retrying...`,
 		)
 		return formatResponse.toolError(formatResponse.missingToolParameterError(paramName))
 	}
@@ -1673,14 +1676,14 @@ export class Task {
 			if (autoApprovalSettings.enabled && autoApprovalSettings.enableNotifications) {
 				showSystemNotification({
 					subtitle: "Error",
-					message: "Caret is having trouble. Would you like to continue the task?",
+					message: `${getCurrentBrandName()} is having trouble. Would you like to continue the task?`,
 				})
 			}
 			const { response, text, images, files } = await this.ask(
 				"mistake_limit_reached",
 				this.api.getModel().id.includes("claude")
 					? `This may indicate a failure in his thought process or inability to use a tool properly, which can be mitigated with some user guidance (e.g. "Try breaking down the task into smaller steps").`
-					: "Caret uses complex prompts and iterative task execution that may be challenging for less capable models. For best results, it's recommended to use Claude 4 Sonnet for its advanced agentic coding capabilities.",
+					: `${getCurrentBrandName()} uses complex prompts and iterative task execution that may be challenging for less capable models. For best results, it's recommended to use Claude 4 Sonnet for its advanced agentic coding capabilities.`,
 			)
 			if (response === "messageResponse") {
 				// Display the user's message in the chat UI
@@ -1723,13 +1726,13 @@ export class Task {
 				showSystemNotification({
 					subtitle: "Max Requests Reached",
 					// CARET MODIFICATION: Brand name changed from Cline to Caret
-					message: `Caret has auto-approved ${autoApprovalSettings.maxRequests.toString()} API requests.`,
+					message: `${getCurrentBrandName()} has auto-approved ${autoApprovalSettings.maxRequests.toString()} API requests.`,
 				})
 			}
 			const { response, text, images, files } = await this.ask(
 				"auto_approval_max_req_reached",
 				// CARET MODIFICATION: Brand name changed from Cline to Caret
-				`Caret has auto-approved ${autoApprovalSettings.maxRequests.toString()} API requests. Would you like to reset the count and proceed with the task?`,
+				`${getCurrentBrandName()} has auto-approved ${autoApprovalSettings.maxRequests.toString()} API requests. Would you like to reset the count and proceed with the task?`,
 			)
 			// if we get past the promise it means the user approved and did not start a new task
 			this.taskState.consecutiveAutoApprovedRequestsCount = 0
@@ -2291,9 +2294,9 @@ export class Task {
 					requestId: reqId,
 				})
 
-				// CARET MODIFICATION: Changed branding from Cline to Caret
+				// CARET MODIFICATION: Use brand-neutral language for error messages
 				const baseErrorMessage =
-					"Invalid API Response: The provider returned an empty or unparsable response. This is a provider-side issue where the model failed to generate valid output or returned tool calls that Caret cannot process. Retrying the request may help resolve this issue."
+					"Invalid API Response: The provider returned an empty or unparsable response. This is a provider-side issue where the model failed to generate valid output or returned tool calls that cannot be processed. Retrying the request may help resolve this issue."
 				const errorText = reqId ? `${baseErrorMessage} (Request ID: ${reqId})` : baseErrorMessage
 
 				await this.say("error", errorText)

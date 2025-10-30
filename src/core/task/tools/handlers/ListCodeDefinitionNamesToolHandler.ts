@@ -4,6 +4,8 @@ import { parseSourceCodeForDefinitionsTopLevel } from "@services/tree-sitter"
 import { getReadablePath, isLocatedInWorkspace } from "@utils/path"
 import { formatResponse } from "@/core/prompts/responses"
 import { telemetryService } from "@/services/telemetry"
+// CARET MODIFICATION: Import brand utility for dynamic branding
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import { ClineDefaultTool } from "@/shared/tools"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApprovalIfAutoApprovalEnabled } from "../../utils"
@@ -88,7 +90,7 @@ export class ListCodeDefinitionNamesToolHandler implements IFullyManagedTool {
 		} else {
 			// Manual approval flow
 			// CARET MODIFICATION: Changed branding from Cline to Caret
-			const notificationMessage = `Caret wants to analyze code definitions in ${getWorkspaceBasename(absolutePath, "ListCodeDefinitionNamesToolHandler.notification")}`
+			const notificationMessage = `${getCurrentBrandName()} wants to analyze code definitions in ${getWorkspaceBasename(absolutePath, "ListCodeDefinitionNamesToolHandler.notification")}`
 
 			// Show notification
 			showNotificationForApprovalIfAutoApprovalEnabled(

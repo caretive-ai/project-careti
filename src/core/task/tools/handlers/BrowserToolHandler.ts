@@ -4,6 +4,8 @@ import { ToolUse } from "../../../assistant-message"
 import { formatResponse } from "../../../prompts/responses"
 import { ToolResponse } from "../.."
 import { showNotificationForApprovalIfAutoApprovalEnabled } from "../../utils"
+// CARET MODIFICATION: Import brand utility for dynamic branding
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
 import type { TaskConfig } from "../types/TaskConfig"
 import type { StronglyTypedUIHelpers } from "../types/UIHelpers"
@@ -107,7 +109,7 @@ export class BrowserToolHandler implements IFullyManagedTool {
 				} else {
 					// Show notification for approval if auto approval enabled
 					showNotificationForApprovalIfAutoApprovalEnabled(
-						`Caret wants to use a browser and launch ${url}`,
+						`${getCurrentBrandName()} wants to use a browser and launch ${url}`,
 						config.autoApprovalSettings.enabled,
 						config.autoApprovalSettings.enableNotifications,
 					)

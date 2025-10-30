@@ -7,8 +7,6 @@ import { useInterval } from "react-use"
 import styled from "styled-components"
 // CARET MODIFICATION: Import i18n context for language reactivity
 import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
-// CARET MODIFICATION: Import getCurrentFeatureConfig for provider filtering
-import { getCurrentFeatureConfig } from "@/caret/shared/FeatureConfig"
 // CARET MODIFICATION: Import i18n
 import { t } from "@/caret/utils/i18n"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
@@ -97,14 +95,11 @@ const ApiOptions = ({
 	forcePlanActSeparate,
 }: ApiOptionsProps) => {
 	// Use full context state for immediate save payload
-	const { apiConfiguration } = useExtensionState()
+	// CARET MODIFICATION: Get featureConfig from ExtensionState instead of getCurrentFeatureConfig
+	const { apiConfiguration, featureConfig } = useExtensionState()
 
 	// CARET MODIFICATION: Use i18n context to detect language changes
 	const { language } = useCaretI18nContext()
-
-	// CARET MODIFICATION: Get feature config directly (consistent with ChatRow and TaskHeader pattern)
-	const featureConfig = getCurrentFeatureConfig()
-
 
 	const { selectedProvider } = normalizeApiConfiguration(apiConfiguration, currentMode)
 
@@ -154,7 +149,10 @@ const ApiOptions = ({
 		}
 
 		const baseOptions = [
-			{ value: "caret", label: t("providers.caret.name", "settings") },
+			// CARET MODIFICATION: Only show caret provider if enableCaretAccountFeatures is true
+			...(featureConfig.enableCaretAccountFeatures
+				? [{ value: "caret", label: t("providers.caret.name", "settings") }]
+				: []),
 			{ value: "openrouter", label: t("providers.openrouter.name", "settings") },
 			{ value: "gemini", label: t("providers.gemini.name", "settings") },
 			{ value: "openai", label: t("providers.openai.name", "settings") },

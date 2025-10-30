@@ -1,4 +1,3 @@
-import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
 import { mentionRegexGlobal } from "@shared/context-mentions"
 import { ClineMessage } from "@shared/ExtensionMessage"
 import { FOCUS_CHAIN_ITEM_REGEX, isCompletedFocusChainItem, isFocusChainItem } from "@shared/focus-chain-utils"
@@ -84,9 +83,9 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 	onClose,
 	onScrollToMessage,
 }) => {
-	const { apiConfiguration, currentTaskItem, checkpointTrackerErrorMessage, clineMessages, navigateToSettings, mode } =
+	// CARET MODIFICATION: Use featureConfig from ExtensionState instead of getCurrentFeatureConfig
+	const { apiConfiguration, currentTaskItem, checkpointTrackerErrorMessage, clineMessages, navigateToSettings, mode, featureConfig } =
 		useExtensionState()
-	const featureConfig = getCurrentFeatureConfig()
 	const [isTaskExpanded, setIsTaskExpanded] = useState(true)
 	const [isTextExpanded, setIsTextExpanded] = useState(false)
 	const [showSeeMore, setShowSeeMore] = useState(false)

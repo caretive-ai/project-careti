@@ -3,6 +3,7 @@ import { PersonaImages, PersonaProfile } from "@shared/proto/index.caret"
 import React, { createContext, type ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react"
 import { PersonaServiceClient } from "../services/CaretGrpcClient"
 import { CaretWebviewLogger } from "../utils/webview-logger"
+import { type FeatureConfig, getCurrentFeatureConfig } from "../shared/FeatureConfig"
 
 // CARET MODIFICATION: Add window type definitions for persona images injected by CaretProvider.
 declare global {
@@ -30,6 +31,7 @@ interface CaretStateContextType {
 	updatePersona: (profile: PersonaProfile) => Promise<void>
 	showPersonaSelector: boolean
 	setShowPersonaSelector: (show: boolean) => void
+	featureConfig?: FeatureConfig
 }
 
 const logger = new CaretWebviewLogger("CaretStateContext")
@@ -107,6 +109,7 @@ export const CaretStateContextProvider: React.FC<{ children: ReactNode }> = ({ c
 		updatePersona,
 		showPersonaSelector,
 		setShowPersonaSelector,
+		featureConfig: getCurrentFeatureConfig(),
 	}
 
 	return <CaretStateContext.Provider value={contextValue}>{children}</CaretStateContext.Provider>

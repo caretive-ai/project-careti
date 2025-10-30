@@ -70,6 +70,8 @@ const AccountView = ({ onDone, clineUser, organizations, activeOrganization }: A
 
 export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganization }: ClineAccountViewProps) => {
 	const { email, displayName, appBaseUrl, uid } = clineUser
+	// CARET MODIFICATION: Get featureConfig to control account features visibility
+	const { featureConfig } = useExtensionState()
 
 	// Source of truth: Dedicated state for dropdown value that persists through failures
 	// and represents that user's current selection.
@@ -283,43 +285,54 @@ export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganizat
 								<h2 className="text-[var(--vscode-foreground)] m-0 text-lg font-medium">{displayName}</h2>
 							)}
 
-							{email && <div className="text-sm text-[var(--vscode-descriptionForeground)]">{email}</div>}
+							{/* CARET MODIFICATION: Hide email and organization dropdown when enableCaretAccountFeatures is false */}
+							{featureConfig?.enableCaretAccountFeatures && (
+								<>
+									{email && <div className="text-sm text-[var(--vscode-descriptionForeground)]">{email}</div>}
 
-							<div className="flex gap-2 items-center mt-1">
-								<VSCodeDropdown
-									className="w-full"
-									currentValue={dropdownValue}
-									disabled={isLoading}
-									onChange={handleOrganizationChange}>
-									<VSCodeOption key="personal" value={uid}>
-										{t("account.personal", "common")}
-									</VSCodeOption>
-									{userOrganizations?.map((org: UserOrganization) => (
-										<VSCodeOption key={org.organizationId} value={org.organizationId}>
-											{org.name}
-										</VSCodeOption>
-									))}
-								</VSCodeDropdown>
-								{activeOrganization && (
-									<VSCodeTag className="text-xs p-2" title={t("account.role", "common")}>
-										{getMainRole(activeOrganization.roles)}
-									</VSCodeTag>
-								)}
-							</div>
+									<div className="flex gap-2 items-center mt-1">
+										<VSCodeDropdown
+											className="w-full"
+											currentValue={dropdownValue}
+											disabled={isLoading}
+											onChange={handleOrganizationChange}>
+											<VSCodeOption key="personal" value={uid}>
+												{t("account.personal", "common")}
+											</VSCodeOption>
+											{userOrganizations?.map((org: UserOrganization) => (
+												<VSCodeOption key={org.organizationId} value={org.organizationId}>
+													{org.name}
+												</VSCodeOption>
+											))}
+										</VSCodeDropdown>
+										{activeOrganization && (
+											<VSCodeTag className="text-xs p-2" title={t("account.role", "common")}>
+												{getMainRole(activeOrganization.roles)}
+											</VSCodeTag>
+										)}
+									</div>
+								</>
+							)}
 						</div>
 					</div>
 				</div>
 
-				<div className="w-full flex gap-2 flex-col min-[225px]:flex-row">
-					<div className="w-full min-[225px]:w-1/2">
-						<VSCodeButtonLink appearance="primary" className="w-full" href={getClineUris(clineUrl, "dashboard").href}>
-							{t("account.dashboard", "common")}
-						</VSCodeButtonLink>
+				{/* CARET MODIFICATION: Hide dashboard and logout buttons when enableCaretAccountFeatures is false */}
+				{featureConfig?.enableCaretAccountFeatures && (
+					<div className="w-full flex gap-2 flex-col min-[225px]:flex-row">
+						<div className="w-full min-[225px]:w-1/2">
+							<VSCodeButtonLink
+								appearance="primary"
+								className="w-full"
+								href={getClineUris(clineUrl, "dashboard").href}>
+								{t("account.dashboard", "common")}
+							</VSCodeButtonLink>
+						</div>
+						<VSCodeButton appearance="secondary" className="w-full min-[225px]:w-1/2" onClick={() => handleSignOut()}>
+							{t("account.logOut", "common")}
+						</VSCodeButton>
 					</div>
-					<VSCodeButton appearance="secondary" className="w-full min-[225px]:w-1/2" onClick={() => handleSignOut()}>
-						{t("account.logOut", "common")}
-					</VSCodeButton>
-				</div>
+				)}
 
 				<VSCodeDivider className="w-full my-6" />
 

@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import "../../../src/shared/webview/types"
 // CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 타입과 유틸리티 임포트 (caret-src에서)
 import { type CaretModeSystem } from "@caret/shared/ModeSystem"
+import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
 import { DEFAULT_AUTO_APPROVAL_SETTINGS } from "@shared/AutoApprovalSettings"
 import { findLastIndex } from "@shared/array"
 import { DEFAULT_BROWSER_SETTINGS } from "@shared/BrowserSettings"
@@ -242,8 +243,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		openaiReasoningEffort: "medium",
 		// CARET MODIFICATION: Use DEFAULT_CARET_SETTINGS.mode instead of hardcoded "act"
 		mode: DEFAULT_CARET_SETTINGS.mode,
-		// CARET MODIFICATION: Caret 전역 브랜드 모드 플래그 기본값 - Caret 모드로 시작
-		modeSystem: "caret" as CaretModeSystem,
+		// CARET MODIFICATION: Caret 전역 브랜드 모드 플래그 기본값 - feature-config에서 가져옴
+		modeSystem: getCurrentFeatureConfig().defaultModeSystem as CaretModeSystem,
 		showChatModelSelector: false,
 		featureConfig: undefined,
 		checkpointTrackerErrorMessage: undefined,
@@ -273,7 +274,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		// CARET MODIFICATION: Initialize caretBanner with actual banner image
 		caretBanner: "/assets/welcome-banner.webp",
 		// CARET MODIFICATION: Initialize persona system from backend globalState only
-		enablePersonaSystem: true, // Default value, will be overridden by backend
+		enablePersonaSystem: getCurrentFeatureConfig().defaultPersonaEnabled, // Default value, will be overridden by backend
 		dictationSettings: {
 			featureEnabled: false,
 			dictationEnabled: false,

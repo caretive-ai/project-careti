@@ -7,6 +7,8 @@ import { arePathsEqual, getReadablePath, isLocatedInWorkspace } from "@utils/pat
 import { telemetryService } from "@/services/telemetry"
 import { ClineSayTool } from "@/shared/ExtensionMessage"
 import { ClineDefaultTool } from "@/shared/tools"
+// CARET MODIFICATION: Import brand utility for dynamic branding
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApprovalIfAutoApprovalEnabled } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -103,7 +105,7 @@ export class ReadFileToolHandler implements IFullyManagedTool {
 		} else {
 			// Manual approval flow
 			// CARET MODIFICATION: Changed branding from Cline to Caret
-			const notificationMessage = `Caret wants to read ${getWorkspaceBasename(absolutePath, "ReadFileToolHandler.notification")}`
+			const notificationMessage = `${getCurrentBrandName()} wants to read ${getWorkspaceBasename(absolutePath, "ReadFileToolHandler.notification")}`
 
 			// Show notification
 			showNotificationForApprovalIfAutoApprovalEnabled(

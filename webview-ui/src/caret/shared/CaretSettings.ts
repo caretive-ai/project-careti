@@ -2,6 +2,7 @@
 // All Caret-specific features grouped in one place
 
 import type { CaretModeSystem } from "./ModeSystem"
+import { getCurrentFeatureConfig } from "./FeatureConfig"
 
 /**
  * Centralized Caret settings interface
@@ -40,7 +41,7 @@ export interface CaretSettings {
  * Default Caret settings
  */
 export const DEFAULT_CARET_SETTINGS: CaretSettings = {
-	modeSystem: "caret",
+	modeSystem: getCurrentFeatureConfig().defaultModeSystem as CaretModeSystem,
 	version: 1,
 }
 

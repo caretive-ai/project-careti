@@ -1,4 +1,5 @@
 // CARET MODIFICATION: Import getDefaultModeForModeSystem for mode initialization
+import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
 import { getDefaultModeForModeSystem } from "@caret/shared/ModeSystem"
 import { ANTHROPIC_MIN_THINKING_BUDGET, ApiProvider, fireworksDefaultModelId, ModelInfo, type OcaModelInfo } from "@shared/api"
 import { ExtensionContext } from "vscode"
@@ -428,8 +429,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		if (planModeApiProvider) {
 			apiProvider = planModeApiProvider
 		} else {
-			// New users should default to openrouter, since they've opted to use an API key instead of signing in
-			apiProvider = "openrouter"
+			// CARET MODIFICATION: Use feature-config defaultProvider instead of hardcoded "openrouter"
+			apiProvider = getCurrentFeatureConfig().defaultProvider as ApiProvider
 		}
 
 		const mcpResponsesCollapsed = mcpResponsesCollapsedRaw ?? false
@@ -597,7 +598,7 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			openaiReasoningEffort: (openaiReasoningEffort as OpenaiReasoningEffort) || "medium",
 			// CARET MODIFICATION: Use getDefaultModeForModeSystem instead of hardcoded "act"
 			// Caret mode defaults to "agent", Cline mode defaults to "act"
-			mode: mode || getDefaultModeForModeSystem(modeSystem || "caret"),
+			mode: mode || getDefaultModeForModeSystem(modeSystem || getCurrentFeatureConfig().defaultModeSystem),
 			userInfo,
 			mcpMarketplaceEnabled: mcpMarketplaceEnabledRaw ?? true,
 			mcpDisplayMode: mcpDisplayMode ?? DEFAULT_MCP_DISPLAY_MODE,
@@ -622,12 +623,12 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			// For now, always return false to disable multi-root support by default
 			multiRootEnabled: !!multiRootEnabled,
 			// CARET MODIFICATION: Caret 전역 브랜드 모드 시스템 (Caret/Cline 구분)
-			caretModeSystem: modeSystem || "caret",
+			caretModeSystem: modeSystem || getCurrentFeatureConfig().defaultModeSystem,
 			modeSystem:
-				(Logger.debug(`[state-helpers] 📤 Returning modeSystem in state: ${modeSystem || "caret"}`),
-				modeSystem || "caret"),
+				(Logger.debug(`[state-helpers] 📤 Returning modeSystem in state: ${modeSystem || getCurrentFeatureConfig().defaultModeSystem}`),
+				modeSystem || getCurrentFeatureConfig().defaultModeSystem),
 			// CARET MODIFICATION: Persona system settings
-			enablePersonaSystem: enablePersonaSystem ?? true,
+			enablePersonaSystem: enablePersonaSystem ?? getCurrentFeatureConfig().defaultPersonaEnabled,
 			currentPersona: currentPersona,
 			personaProfile: personaProfile,
 		}

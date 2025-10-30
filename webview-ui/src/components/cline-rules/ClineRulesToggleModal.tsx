@@ -39,9 +39,10 @@ const ClineRulesToggleModal: React.FC = () => {
 		setLocalWindsurfRulesToggles,
 		setLocalWorkflowToggles,
 		setGlobalWorkflowToggles,
-		// CARET MODIFICATION: Add modeSystem and enablePersonaSystem for conditional rendering
+		// CARET MODIFICATION: Get featureConfig from ExtensionState for runtime dynamic delivery
 		modeSystem,
 		enablePersonaSystem,
+		featureConfig,
 	} = useExtensionState()
 	const [isVisible, setIsVisible] = useState(false)
 	const buttonRef = useRef<HTMLDivElement>(null)
@@ -324,8 +325,10 @@ const ClineRulesToggleModal: React.FC = () => {
 
 					{currentView === "rules" ? (
 						<>
-							{/* CARET MODIFICATION: Persona Management Section - only shown in Caret mode with persona system enabled */}
-							{modeSystem === "caret" && enablePersonaSystem && <PersonaManagement className="mb-3" />}
+							{/* CARET MODIFICATION: Persona Management Section - only shown when feature flag enabled AND user enabled it */}
+							{featureConfig?.showPersonaSettings && modeSystem === "caret" && enablePersonaSystem && (
+								<PersonaManagement className="mb-3" />
+							)}
 
 							{/* Global Rules Section */}
 							<div className="mb-3">

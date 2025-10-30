@@ -12,12 +12,14 @@ describe("FeatureConfig Integration Tests", () => {
 
 			// When: 설정을 확인
 			// Then: JSON 파일의 설정값이 적용됨
+			expect(config.enableCaretAccountFeatures).toBe(true)
 			expect(config.showPersonaSettings).toBe(true)
 			expect(config.redirectAfterApiSetup).toBe("persona")
 			expect(config.defaultModeSystem).toBe("caret")
-			expect(config.firstListingProvider).toBe("openrouter")
-			expect(config.defaultProvider).toBe("openrouter")
+			expect(config.firstListingProvider).toBe("litellm")
+			expect(config.defaultProvider).toBe("litellm")
 			expect(config.showOnlyDefaultProvider).toBe(false)
+			expect(config.defaultPersonaEnabled).toBe(true)
 		})
 	})
 
@@ -25,14 +27,15 @@ describe("FeatureConfig Integration Tests", () => {
 		it("should show persona settings when enabled in config", () => {
 			// Given: 페르소나 설정이 활성화된 설정
 			const config: FeatureConfig = {
+				enableCaretAccountFeatures: true,
 				showPersonaSettings: true,
-				defaultPersonaEnabled: true,
 				redirectAfterApiSetup: "persona",
 				defaultModeSystem: "caret",
-				firstListingProvider: "openrouter",
-				defaultProvider: "openrouter",
+				firstListingProvider: "litellm",
+				defaultProvider: "litellm",
 				showOnlyDefaultProvider: false,
 				showCostInformation: true,
+				defaultPersonaEnabled: true,
 			}
 
 			// When: UI에서 페르소나 표시 여부 확인
@@ -45,14 +48,15 @@ describe("FeatureConfig Integration Tests", () => {
 		it("should hide persona settings when disabled in config", () => {
 			// Given: 페르소나 설정이 비활성화된 설정
 			const config: FeatureConfig = {
+				enableCaretAccountFeatures: false,
 				showPersonaSettings: false,
-				defaultPersonaEnabled: false,
 				redirectAfterApiSetup: "home",
 				defaultModeSystem: "cline",
 				firstListingProvider: "litellm",
 				defaultProvider: "litellm",
 				showOnlyDefaultProvider: true,
 				showCostInformation: false,
+				defaultPersonaEnabled: false,
 			}
 
 			// When: UI에서 페르소나 표시 여부 확인
@@ -65,14 +69,15 @@ describe("FeatureConfig Integration Tests", () => {
 		it("should redirect to persona after API setup when configured", () => {
 			// Given: 페르소나로 리다이렉트하도록 설정됨
 			const config: FeatureConfig = {
+				enableCaretAccountFeatures: true,
 				showPersonaSettings: true,
-				defaultPersonaEnabled: true,
 				redirectAfterApiSetup: "persona",
 				defaultModeSystem: "caret",
-				firstListingProvider: "openrouter",
-				defaultProvider: "openrouter",
+				firstListingProvider: "litellm",
+				defaultProvider: "litellm",
 				showOnlyDefaultProvider: false,
 				showCostInformation: true,
+				defaultPersonaEnabled: true,
 			}
 
 			// When: API 설정 완료 후 리다이렉트 위치 확인
@@ -85,14 +90,15 @@ describe("FeatureConfig Integration Tests", () => {
 		it("should redirect to home after API setup when configured", () => {
 			// Given: 홈으로 리다이렉트하도록 설정됨
 			const config: FeatureConfig = {
+				enableCaretAccountFeatures: false,
 				showPersonaSettings: false,
-				defaultPersonaEnabled: false,
 				redirectAfterApiSetup: "home",
 				defaultModeSystem: "cline",
 				firstListingProvider: "litellm",
 				defaultProvider: "litellm",
 				showOnlyDefaultProvider: true,
 				showCostInformation: false,
+				defaultPersonaEnabled: false,
 			}
 
 			// When: API 설정 완료 후 리다이렉트 위치 확인
@@ -107,14 +113,15 @@ describe("FeatureConfig Integration Tests", () => {
 		it("should show only default provider when showOnlyDefaultProvider is true", () => {
 			// Given: 기본 프로바이더만 표시하도록 설정됨
 			const config: FeatureConfig = {
+				enableCaretAccountFeatures: false,
 				showPersonaSettings: false,
-				defaultPersonaEnabled: false,
 				redirectAfterApiSetup: "home",
 				defaultModeSystem: "cline",
 				firstListingProvider: "litellm",
 				defaultProvider: "litellm",
 				showOnlyDefaultProvider: true,
 				showCostInformation: false,
+				defaultPersonaEnabled: false,
 			}
 
 			// When: 프로바이더 표시 설정 확인
@@ -129,14 +136,15 @@ describe("FeatureConfig Integration Tests", () => {
 		it("should show all providers when showOnlyDefaultProvider is false", () => {
 			// Given: 모든 프로바이더를 표시하도록 설정됨
 			const config: FeatureConfig = {
+				enableCaretAccountFeatures: true,
 				showPersonaSettings: true,
-				defaultPersonaEnabled: true,
 				redirectAfterApiSetup: "persona",
 				defaultModeSystem: "caret",
-				firstListingProvider: "openrouter",
-				defaultProvider: "openrouter",
+				firstListingProvider: "litellm",
+				defaultProvider: "litellm",
 				showOnlyDefaultProvider: false,
 				showCostInformation: true,
+				defaultPersonaEnabled: true,
 			}
 
 			// When: 프로바이더 표시 설정 확인

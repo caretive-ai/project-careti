@@ -1,4 +1,3 @@
-import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
 import { COMMAND_OUTPUT_STRING, COMMAND_REQ_APP_STRING } from "@shared/combineCommandSequences"
 import {
 	ClineApiReqInfo,
@@ -152,8 +151,8 @@ export const ChatRowContent = memo(
 		sendMessageFromChatRow,
 		onSetQuote,
 	}: ChatRowContentProps) => {
-		const featureConfig = getCurrentFeatureConfig()
-		const { mcpServers, mcpMarketplaceCatalog, onRelinquishControl, apiConfiguration, modeSystem, enablePersonaSystem } =
+		// CARET MODIFICATION: Use featureConfig from ExtensionState instead of getCurrentFeatureConfig
+		const { mcpServers, mcpMarketplaceCatalog, onRelinquishControl, apiConfiguration, modeSystem, enablePersonaSystem, featureConfig } =
 			useExtensionState()
 
 		// CARET MODIFICATION: Get persona profile from Caret context
@@ -1004,7 +1003,7 @@ export const ChatRowContent = memo(
 					case "text":
 						return (
 							<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-								{enablePersonaSystem && (
+								{featureConfig?.showPersonaSettings && enablePersonaSystem && (
 									<PersonaAvatar
 										isThinking={false}
 										personaProfile={personaProfile}
@@ -1038,7 +1037,7 @@ export const ChatRowContent = memo(
 					case "reasoning":
 						return (
 							<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-								{enablePersonaSystem && (
+								{featureConfig?.showPersonaSettings && enablePersonaSystem && (
 									<PersonaAvatar
 										isThinking={true}
 										personaProfile={personaProfile}
@@ -1252,7 +1251,8 @@ export const ChatRowContent = memo(
 									</span>
 								</div>
 								<div style={{ color: "var(--vscode-foreground)", opacity: 0.8 }}>
-									Cline may have trouble viewing the command's output. Please update VSCode (
+									{/* CARET MODIFICATION: Use brand-neutral language for shell integration warning */}
+									The assistant may have trouble viewing the command's output. Please update VSCode (
 									<code>CMD/CTRL + Shift + P</code> → "Update") and make sure you're using a supported shell:
 									zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → "Terminal: Select Default
 									Profile").{" "}

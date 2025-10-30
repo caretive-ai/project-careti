@@ -6,6 +6,8 @@ import { listFiles } from "@services/glob/list-files"
 import { arePathsEqual, getReadablePath, isLocatedInWorkspace } from "@utils/path"
 import { telemetryService } from "@/services/telemetry"
 import { ClineDefaultTool } from "@/shared/tools"
+// CARET MODIFICATION: Import brand utility for dynamic branding
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApprovalIfAutoApprovalEnabled } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -105,7 +107,7 @@ export class ListFilesToolHandler implements IFullyManagedTool {
 		} else {
 			// Manual approval flow
 			// CARET MODIFICATION: Changed branding from Cline to Caret
-			const notificationMessage = `Caret wants to view directory ${getWorkspaceBasename(absolutePath, "ListFilesToolHandler.notification")}/`
+			const notificationMessage = `${getCurrentBrandName()} wants to view directory ${getWorkspaceBasename(absolutePath, "ListFilesToolHandler.notification")}/`
 
 			// Show notification
 			showNotificationForApprovalIfAutoApprovalEnabled(

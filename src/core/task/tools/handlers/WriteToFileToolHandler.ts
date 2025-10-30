@@ -11,6 +11,8 @@ import { arePathsEqual, getReadablePath, isLocatedInWorkspace } from "@utils/pat
 import { fixModelHtmlEscaping, removeInvalidChars } from "@utils/string"
 import { telemetryService } from "@/services/telemetry"
 import { ClineDefaultTool } from "@/shared/tools"
+// CARET MODIFICATION: Import brand utility for dynamic branding
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApprovalIfAutoApprovalEnabled } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -171,7 +173,7 @@ export class WriteToFileToolHandler implements IFullyManagedTool {
 			} else {
 				// Manual approval flow with detailed feedback handling
 				// CARET MODIFICATION: Changed branding from Cline to Caret
-				const notificationMessage = `Caret wants to ${fileExists ? "edit" : "create"} ${getWorkspaceBasename(relPath, "WriteToFile.notification")}`
+				const notificationMessage = `${getCurrentBrandName()} wants to ${fileExists ? "edit" : "create"} ${getWorkspaceBasename(relPath, "WriteToFile.notification")}`
 
 				// Show notification
 				showNotificationForApprovalIfAutoApprovalEnabled(

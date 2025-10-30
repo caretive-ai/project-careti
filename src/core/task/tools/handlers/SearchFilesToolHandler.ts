@@ -9,6 +9,8 @@ import { resolveWorkspacePath } from "@/core/workspace/WorkspaceResolver"
 import { telemetryService } from "@/services/telemetry"
 import { ClineSayTool } from "@/shared/ExtensionMessage"
 import { ClineDefaultTool } from "@/shared/tools"
+// CARET MODIFICATION: Import brand utility for dynamic branding
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApprovalIfAutoApprovalEnabled } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -310,7 +312,7 @@ export class SearchFilesToolHandler implements IFullyManagedTool {
 			telemetryService.captureToolUsage(config.ulid, block.name, config.api.getModel().id, true, true, workspaceContext)
 		} else {
 			// Manual approval flow
-			const notificationMessage = `Caret wants to search files for ${regex}`
+			const notificationMessage = `${getCurrentBrandName()} wants to search files for ${regex}`
 
 			// Show notification
 			showNotificationForApprovalIfAutoApprovalEnabled(

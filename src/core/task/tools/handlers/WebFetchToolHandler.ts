@@ -1,6 +1,8 @@
 import { UrlContentFetcher } from "@services/browser/UrlContentFetcher"
 import { ClineAsk, ClineSayTool } from "@shared/ExtensionMessage"
 import { ClineDefaultTool } from "@shared/tools"
+// CARET MODIFICATION: Import brand utility for dynamic branding
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import { telemetryService } from "@/services/telemetry"
 import { ToolUse } from "../../../assistant-message"
 import { formatResponse } from "../../../prompts/responses"
@@ -64,7 +66,7 @@ export class WebFetchToolHandler implements IFullyManagedTool {
 			} else {
 				// Manual approval flow
 				showNotificationForApprovalIfAutoApprovalEnabled(
-					`Caret wants to fetch content from ${url}`,
+					`${getCurrentBrandName()} wants to fetch content from ${url}`,
 					config.autoApprovalSettings.enabled,
 					config.autoApprovalSettings.enableNotifications,
 				)

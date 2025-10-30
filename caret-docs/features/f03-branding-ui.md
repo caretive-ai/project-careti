@@ -60,6 +60,207 @@ webview-ui/src/caret/styles/
 └── CaretWelcome.css               # 🎨 Caret 전용 스타일
 ```
 
+## 📐 **브랜드명 사용 표준 가이드라인**
+
+### **🎯 원칙: 메시지 대상에 따른 브랜딩 전략**
+
+Caret의 브랜드명 사용은 **메시지 대상**에 따라 명확히 구분됩니다:
+
+| 메시지 유형 | 대상 | 브랜딩 방식 | 예시 |
+|-------------|------|-------------|------|
+| **OS Notification** | 사용자 | `getCurrentBrandName()` | "Caret wants to..." |
+| **채팅 UI (일반)** | 사용자 | `getCurrentBrandName()` | "Caret has completed..." |
+| **채팅 UI (에러)** | 사용자 | 브랜드 중립적 | "Missing required parameter..." |
+| **Tool Response** | AI 모델 | 브랜드 중립적 | "Tool execution failed..." |
+| **Logger** | 개발자 | 브랜드 중립적 | "[Task] Error executing..." |
+
+### **📍 백엔드 브랜드명 호출 방법**
+
+#### **1. Notification 메시지 (사용자 대면 알림)**
+
+```typescript
+// ✅ 올바른 방법
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
+
+showSystemNotification({
+    subtitle: `${getCurrentBrandName()} wants to...`,
+    message: `${getCurrentBrandName()} is suggesting to...`
+})
+
+// ❌ 잘못된 방법
+showSystemNotification({
+    subtitle: "Caret wants to...",  // 하드코딩 금지
+    message: "Cline wants to..."     // 하드코딩 금지
+})
+```
+
+#### **2. 채팅 UI 일반 메시지**
+
+```typescript
+// ✅ 올바른 방법
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
+
+await this.say(
+    "completion_result",
+    `${getCurrentBrandName()} has completed the task.`
+)
+
+// ❌ 잘못된 방법
+await this.say(
+    "completion_result",
+    "Caret has completed the task."  // 하드코딩 금지
+)
+```
+
+#### **3. 에러 메시지 (채팅 UI 노출)**
+
+```typescript
+// ✅ 올바른 방법 - 브랜드 중립적
+await this.say(
+    "error",
+    `Missing required parameter '${paramName}' for ${toolName}. Retrying...`
+)
+
+await this.say(
+    "error",
+    `Invalid JSON argument for ${tool_name}. Retrying...`
+)
+
+// ❌ 잘못된 방법
+await this.say(
+    "error",
+    `Attempted to use ${toolName}...`  // 주어 없음 (문법 오류)
+)
+
+await this.say(
+    "error",
+    `Caret attempted to use ${toolName}...`  // 에러에 브랜드명 불필요
+)
+```
+
+#### **4. Tool Response (AI 전용)**
+
+```typescript
+// ✅ 올바른 방법 - 브랜드 중립적
+return formatResponse.toolError(
+    `Tool execution failed: ${error.message}`
+)
+
+return formatResponse.toolResult(
+    `File not found: ${filePath}`
+)
+
+// ❌ 잘못된 방법
+return formatResponse.toolError(
+    `Caret failed to execute tool`  // AI에게 브랜드명 불필요
+)
+```
+
+### **🔧 getCurrentBrandName() 함수 상세**
+
+#### **함수 위치**
+```typescript
+// caret-src/utils/brand-utils.ts
+export function getCurrentBrandName(): string
+```
+
+#### **동작 원리**
+```typescript
+// 1. package.json에서 displayName 읽기
+const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"))
+const displayName = packageJson.displayName || "Cline"
+
+// 2. 캐싱으로 성능 최적화
+if (_cachedBrandName) return _cachedBrandName!
+
+_cachedBrandName = displayName  // "Caret" or "CodeCenter"
+return _cachedBrandName!
+```
+
+#### **반환값**
+- **Caret 빌드**: `"Caret"`
+- **CodeCenter 빌드**: `"CodeCenter"`
+- **Fallback**: `"Cline"` (오류 시)
+
+### **📋 적용 체크리스트**
+
+#### **✅ 브랜드명 적용이 필요한 경우**
+- [ ] OS 시스템 알림 (`showSystemNotification`)
+- [ ] 자동 승인 알림 (`showNotificationForApprovalIfAutoApprovalEnabled`)
+- [ ] 사용자 대면 완료/성공 메시지
+- [ ] 채팅 UI의 인사말/안내 메시지
+
+#### **✅ 브랜드 중립적이어야 하는 경우**
+- [ ] 에러 메시지 (기술적 오류)
+- [ ] Tool execution 응답
+- [ ] 파라미터 검증 오류
+- [ ] AI 모델에게 전달되는 메시지
+- [ ] 디버그 로그 (Logger)
+
+### **🚫 안티패턴**
+
+#### **❌ 패턴 1: 하드코딩된 브랜드명**
+```typescript
+// BAD
+const message = "Caret wants to execute command"
+const notification = "Cline has completed the task"
+```
+
+#### **❌ 패턴 2: 주어 없는 문법 오류**
+```typescript
+// BAD - "Attempted to use..." (주어 없음)
+await this.say("error", `Attempted to use ${toolName}...`)
+```
+
+#### **❌ 패턴 3: 에러 메시지에 브랜드명**
+```typescript
+// BAD - 기술적 에러에는 브랜드명 불필요
+await this.say("error", `Caret attempted to use ${toolName}...`)
+```
+
+#### **❌ 패턴 4: AI 응답에 브랜드명**
+```typescript
+// BAD - AI는 브랜드명 알 필요 없음
+return formatResponse.toolResult(`Caret successfully executed the tool`)
+```
+
+### **✅ 올바른 패턴**
+
+#### **✅ 패턴 1: 사용자 알림**
+```typescript
+// GOOD
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
+
+showSystemNotification({
+    subtitle: `${getCurrentBrandName()} wants to execute command`,
+    message: `${getCurrentBrandName()} is requesting approval`
+})
+```
+
+#### **✅ 패턴 2: 브랜드 중립적 에러**
+```typescript
+// GOOD
+await this.say("error", `Missing required parameter '${paramName}'. Retrying...`)
+await this.say("error", `Tool execution failed: ${error.message}`)
+```
+
+#### **✅ 패턴 3: 브랜드 중립적 Tool Response**
+```typescript
+// GOOD
+return formatResponse.toolError(`Invalid parameter: ${paramName}`)
+return formatResponse.toolResult(`Command executed successfully`)
+```
+
+### **📊 실제 적용 통계**
+
+| 카테고리 | 적용 위치 | 개수 | 상태 |
+|----------|-----------|------|------|
+| **Notification** | Tool Handlers | 15개 | ⚠️ 수정 필요 |
+| **UI Messages** | index.ts | 3개 | ⚠️ 수정 필요 |
+| **Error Messages** | index.ts, UseMcpToolHandler | 2개 | ⚠️ 수정 필요 |
+| **Tool Responses** | formatResponse | 다수 | ✅ 이미 중립적 |
+| **Logger** | 전역 | 다수 | ✅ 이미 중립적 |
+
 ## 🎨 **브랜드 디자인 시스템**
 
 ### **컬러 팔레트**

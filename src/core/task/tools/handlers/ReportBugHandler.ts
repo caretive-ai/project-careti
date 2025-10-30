@@ -2,6 +2,8 @@ import type { ToolUse } from "@core/assistant-message"
 import { formatResponse } from "@core/prompts/responses"
 import { processFilesIntoText } from "@integrations/misc/extract-text"
 import { showSystemNotification } from "@integrations/notifications"
+// CARET MODIFICATION: Import brand utility for dynamic branding
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import { createAndOpenGitHubIssue } from "@utils/github-url-utils"
 import * as os from "os"
 import { HostProvider } from "@/hosts/host-provider"
@@ -67,8 +69,8 @@ export class ReportBugHandler implements IToolHandler, IPartialBlockHandler {
 		// Show notification if auto-approval is enabled
 		if (config.autoApprovalSettings.enabled && config.autoApprovalSettings.enableNotifications) {
 			showSystemNotification({
-				subtitle: "Caret wants to create a github issue...",
-				message: `Caret is suggesting to create a github issue with the title: ${title}`,
+				subtitle: `${getCurrentBrandName()} wants to create a github issue...`,
+				message: `${getCurrentBrandName()} is suggesting to create a github issue with the title: ${title}`,
 			})
 		}
 

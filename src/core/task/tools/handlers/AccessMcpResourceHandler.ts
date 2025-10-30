@@ -3,6 +3,8 @@ import { formatResponse } from "@core/prompts/responses"
 import { ClineAsk, ClineAskUseMcpServer } from "@shared/ExtensionMessage"
 import { telemetryService } from "@/services/telemetry"
 import { ClineDefaultTool } from "@/shared/tools"
+// CARET MODIFICATION: Import brand utility for dynamic branding
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApprovalIfAutoApprovalEnabled } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -79,7 +81,7 @@ export class AccessMcpResourceHandler implements IFullyManagedTool {
 			telemetryService.captureToolUsage(config.ulid, block.name, config.api.getModel().id, true, true)
 		} else {
 			// Manual approval flow
-			const notificationMessage = `Caret wants to access ${uri || "unknown resource"} on ${server_name || "unknown server"}`
+			const notificationMessage = `${getCurrentBrandName()} wants to access ${uri || "unknown resource"} on ${server_name || "unknown server"}`
 
 			// Show notification
 			showNotificationForApprovalIfAutoApprovalEnabled(

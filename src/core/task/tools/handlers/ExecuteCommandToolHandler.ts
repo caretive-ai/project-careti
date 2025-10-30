@@ -8,6 +8,8 @@ import { arePathsEqual } from "@utils/path"
 import { fixModelHtmlEscaping } from "@utils/string"
 import { telemetryService } from "@/services/telemetry"
 import { ClineDefaultTool } from "@/shared/tools"
+// CARET MODIFICATION: Import brand utility for dynamic branding
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApprovalIfAutoApprovalEnabled } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -160,7 +162,7 @@ export class ExecuteCommandToolHandler implements IFullyManagedTool {
 			// Manual approval flow
 			// CARET MODIFICATION: Changed branding from Cline to Caret
 			showNotificationForApprovalIfAutoApprovalEnabled(
-				`Caret wants to execute a command: ${actualCommand}`,
+				`${getCurrentBrandName()} wants to execute a command: ${actualCommand}`,
 				config.autoApprovalSettings.enabled,
 				config.autoApprovalSettings.enableNotifications,
 			)

@@ -82,6 +82,8 @@ export interface ExtensionState {
 	multiRootSetting: ClineFeatureSetting
 	lastDismissedInfoBannerVersion: number
 	lastDismissedModelBannerVersion: number
+	// CARET MODIFICATION: Feature configuration for brand-specific behavior
+	featureConfig?: any
 	// CARET MODIFICATION: F11 - Input History System
 	inputHistory?: string[]
 	// CARET MODIFICATION: F01 - Mode System
@@ -105,7 +107,6 @@ export interface ExtensionState {
 	// CARET MODIFICATION: UI State
 	showChatModelSelector?: boolean
 	checkpointTrackerErrorMessage?: string
-	featureConfig?: any
 }
 
 export interface ClineMessage {

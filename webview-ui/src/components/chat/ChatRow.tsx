@@ -1252,7 +1252,8 @@ export const ChatRowContent = memo(
 									</span>
 								</div>
 								<div style={{ color: "var(--vscode-foreground)", opacity: 0.8 }}>
-									Cline may have trouble viewing the command's output. Please update VSCode (
+									{/* CARET MODIFICATION: Use brand-neutral language for shell integration warning */}
+									The assistant may have trouble viewing the command's output. Please update VSCode (
 									<code>CMD/CTRL + Shift + P</code> → "Update") and make sure you're using a supported shell:
 									zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → "Terminal: Select Default
 									Profile").{" "}

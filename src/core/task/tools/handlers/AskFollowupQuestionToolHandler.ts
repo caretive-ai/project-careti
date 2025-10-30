@@ -4,6 +4,8 @@ import { findLast, parsePartialArrayString } from "@shared/array"
 import { ClineAsk, ClineAskQuestion } from "@shared/ExtensionMessage"
 import { ClineDefaultTool } from "@shared/tools"
 import { telemetryService } from "@/services/telemetry"
+// CARET MODIFICATION: Import brand utility for dynamic branding
+import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import { ToolUse } from "../../../assistant-message"
 import { formatResponse } from "../../../prompts/responses"
 import { ToolResponse } from "../.."
@@ -42,9 +44,9 @@ export class AskFollowupQuestionToolHandler implements IToolHandler, IPartialBlo
 
 		// Show notification if auto-approval is enabled
 		if (config.autoApprovalSettings.enabled && config.autoApprovalSettings.enableNotifications) {
+			// CARET MODIFICATION: Use brand utility for dynamic notification branding
 			showSystemNotification({
-				// CARET MODIFICATION: Changed branding from Cline to Caret
-				subtitle: "Caret has a question...",
+				subtitle: `${getCurrentBrandName()} has a question...`,
 				message: question.replace(/\n/g, " "),
 			})
 		}

@@ -5,10 +5,10 @@
 import featureConfigData from "./feature-config.json"
 
 export interface FeatureConfig {
+	/** Caret 계정 관련 기능 활성화 여부 (로그인/가입 UI 등) */
+	enableCaretAccountFeatures: boolean
 	/** 페르소나 설정 표시 여부 */
 	showPersonaSettings: boolean
-	/** 페르소나 시스템 기본 활성화 상태 */
-	defaultPersonaEnabled: boolean
 	/** API 설정 완료 후 이동할 위치 */
 	redirectAfterApiSetup: "persona" | "home"
 	/** 기본 모드 시스템 */
@@ -21,6 +21,8 @@ export interface FeatureConfig {
 	showOnlyDefaultProvider: boolean
 	/** 비용 정보 표시 여부 */
 	showCostInformation: boolean
+	/** 음성 입력 기능 활성화 여부 */
+	enableDictationFeature: boolean
 	// 향후 추가될 기능별 옵션들
 }
 

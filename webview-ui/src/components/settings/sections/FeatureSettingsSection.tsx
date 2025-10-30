@@ -4,6 +4,7 @@ import { OpenaiReasoningEffort } from "@shared/storage/types"
 import { VSCodeCheckbox, VSCodeDropdown, VSCodeOption, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import { memo } from "react"
 import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
+import { useCaretState } from "@/caret/context/CaretStateContext"
 import { t } from "@/caret/utils/i18n"
 import { getLocalizedUrl } from "@/caret/constants/urls"
 import McpDisplayModeDropdown from "@/components/mcp/chat-display/McpDisplayModeDropdown"
@@ -29,6 +30,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 		focusChainSettings,
 	} = useExtensionState()
 	const { language } = useCaretI18nContext()
+	const { featureConfig } = useCaretState()
 
 	const handleReasoningEffortChange = (newValue: OpenaiReasoningEffort) => {
 		updateSetting("openaiReasoningEffort", newValue)
@@ -176,6 +178,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 							<div className="mt-2.5">
 								<VSCodeCheckbox
 									checked={dictationSettings?.dictationEnabled}
+									disabled={!featureConfig?.enableDictationFeature}
 									onChange={(e: any) => {
 										const checked = e.target.checked === true
 										const updatedDictationSettings = {

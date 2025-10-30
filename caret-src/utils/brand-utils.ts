@@ -124,6 +124,24 @@ export function getBrandDescription(mode: CaretModeSystem): string {
 }
 
 /**
+ * Get brand rules file name based on current brand
+ * @returns Rules file name (e.g., ".caretrules", ".codecenterrules")
+ */
+export function getBrandRulesFileName(): string {
+	const brandName = getCurrentBrandName().toLowerCase()
+	return `.${brandName}rules`
+}
+
+/**
+ * Get brand MCP settings file name based on current brand
+ * @returns MCP settings file name (e.g., "caret_mcp_settings.json", "codecenter_mcp_settings.json")
+ */
+export function getBrandMcpSettingsFileName(): string {
+	const brandName = getCurrentBrandName().toLowerCase()
+	return `${brandName}_mcp_settings.json`
+}
+
+/**
  * Clear cached values (for testing)
  */
 export function clearCache(): void {

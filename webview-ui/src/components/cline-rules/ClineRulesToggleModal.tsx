@@ -15,6 +15,7 @@ import styled from "styled-components"
 // CARET MODIFICATION: Import PersonaManagement for persona system integration
 import PersonaManagement from "@/caret/components/PersonaManagement"
 import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
+import { useCaretState } from "@/caret/context/CaretStateContext"
 import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import Tooltip from "@/components/common/Tooltip"
@@ -24,6 +25,8 @@ import RulesToggleList from "./RulesToggleList"
 
 const ClineRulesToggleModal: React.FC = () => {
 	const { language } = useCaretI18nContext()
+	// CARET MODIFICATION: Get featureConfig for showPersonaSettings check
+	const { featureConfig } = useCaretState()
 	const {
 		globalClineRulesToggles = {},
 		localClineRulesToggles = {},
@@ -324,8 +327,10 @@ const ClineRulesToggleModal: React.FC = () => {
 
 					{currentView === "rules" ? (
 						<>
-							{/* CARET MODIFICATION: Persona Management Section - only shown in Caret mode with persona system enabled */}
-							{modeSystem === "caret" && enablePersonaSystem && <PersonaManagement className="mb-3" />}
+							{/* CARET MODIFICATION: Persona Management Section - only shown when feature flag enabled AND user enabled it */}
+							{featureConfig?.showPersonaSettings && modeSystem === "caret" && enablePersonaSystem && (
+								<PersonaManagement className="mb-3" />
+							)}
 
 							{/* Global Rules Section */}
 							<div className="mb-3">

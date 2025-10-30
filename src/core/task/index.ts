@@ -660,9 +660,10 @@ export class Task {
 	}
 
 	async sayAndCreateMissingParamError(toolName: ClineDefaultTool, paramName: string, relPath?: string) {
+		// CARET MODIFICATION: Use brand-neutral language for error messages
 		await this.say(
 			"error",
-			`Cline tried to use ${toolName}${
+			`Attempted to use ${toolName}${
 				relPath ? ` for '${relPath.toPosix()}'` : ""
 			} without value for required parameter '${paramName}'. Retrying...`,
 		)

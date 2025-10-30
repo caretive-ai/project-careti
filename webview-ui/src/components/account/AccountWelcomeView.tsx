@@ -7,7 +7,12 @@ import { handleLogin } from "../settings/CaretAuthHandler"
 
 export const AccountWelcomeView = () => {
 	// CARET MODIFICATION: Use persona avatar for account welcome
-	const { personaProfile } = useCaretState()
+	const { personaProfile, featureConfig } = useCaretState()
+
+	// CARET MODIFICATION: Hide account features if disabled in feature config
+	if (!featureConfig?.enableCaretAccountFeatures) {
+		return null
+	}
 
 	return (
 		<div className="flex flex-col items-center pr-3">

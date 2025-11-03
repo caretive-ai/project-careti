@@ -1,4 +1,3 @@
 caret-main: 0fac25aa6ef225ef7387b7aaad9c420fef072673
-cline-latest: e0fd4b3583d1ec8ab04009be2abcc3c6f1fca408
+cline-latest: 3698d2356c3488a7bf7617ac1ac1fe17ef409778 (v3.35.0)
 작업 브랜치: merge/cline-v3.34.0-method3
-백업 브랜치: backup/before-method3-20251103

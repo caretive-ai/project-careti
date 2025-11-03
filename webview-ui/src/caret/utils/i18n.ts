@@ -324,15 +324,6 @@ const replaceTemplateVariables = (
 						const enNamespaceData = translations.en[namespace as keyof (typeof translations)["en"]]
 						value = getNestedValue(enNamespaceData, `brand.${brandKey}`)
 					}
-				} else if (keyPath === "brandName") {
-					// CARET MODIFICATION: Handle {{brandName|이}} shorthand for brand.appName
-					const namespaceData = translations[language]?.[namespace as keyof (typeof translations)[typeof language]]
-					value = getNestedValue(namespaceData, "brand.appName")
-					if (!value) {
-						// Fallback to English namespace
-						const enNamespaceData = translations.en[namespace as keyof (typeof translations)["en"]]
-						value = getNestedValue(enNamespaceData, "brand.appName")
-					}
 				} else {
 					const namespaceData = translations[language]?.[namespace as keyof (typeof translations)[typeof language]]
 					value = getNestedValue(namespaceData, keyPath)
@@ -356,20 +347,6 @@ const replaceTemplateVariables = (
 				// Fallback to English
 				const enNamespaceData = translations.en[namespace as keyof (typeof translations)["en"]]
 				const enBrandValue = getNestedValue(enNamespaceData, `brand.${brandKey}`)
-				if (enBrandValue) {
-					return enBrandValue
-				}
-			} else if (expression === "brandName") {
-				// CARET MODIFICATION: Handle {{brandName}} shorthand for brand.appName
-				const namespaceData = translations[language]?.[namespace as keyof (typeof translations)[typeof language]]
-				const brandValue = getNestedValue(namespaceData, "brand.appName")
-				if (brandValue) {
-					return brandValue
-				}
-
-				// Fallback to English
-				const enNamespaceData = translations.en[namespace as keyof (typeof translations)["en"]]
-				const enBrandValue = getNestedValue(enNamespaceData, "brand.appName")
 				if (enBrandValue) {
 					return enBrandValue
 				}

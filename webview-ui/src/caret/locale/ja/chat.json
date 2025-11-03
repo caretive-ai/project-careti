@@ -5,28 +5,28 @@
 		"unknown": "エラー: {{message}}",
 		"unknownError": "不明なエラー",
 		"label": "エラー",
-		"mistakeLimitReached": "Caretが問題に遭遇しています...",
+		"mistakeLimitReached": "{{brandName}}が問題に遭遇しています...",
 		"maxRequestsReached": "最大リクエスト数に到達しました"
 	},
 	"mcp": {
-		"useServer": "Caretは{{serverName}} MCPサーバーで{{type}}を使用しようとしています:",
+		"useServer": "{{brandName}}は{{serverName}} MCPサーバーで{{type}}を使用しようとしています:",
 		"tool": "ツール",
 		"resource": "リソース"
 	},
 	"taskCompleted": "タスク完了",
 	"tool": {
 		"outsideWorkspace": "このファイルはワークスペース外にあります",
-		"editFile": "Caretはこのファイルを編集しようとしています",
-		"createFile": "Caretは新しいファイルを作成しようとしています",
-		"readFile": "Caretはこのファイルを読み取ろうとしています",
-		"listFilesTopLevel": "Caretはこのディレクトリのトップレベルファイルを確認しようとしています",
-		"listFilesRecursive": "Caretはこのディレクトリ内のすべてのファイルを再帰的に確認しようとしています",
-		"listCodeDefinitionNames": "Caretはこのディレクトリで使用されているソースコード定義名を確認しようとしています",
-		"searchFiles": "Caretはこのディレクトリで検索しようとしています",
-		"summarizeTask": "Caretは会話を要約しています",
+		"editFile": "{{brandName}}はこのファイルを編集しようとしています",
+		"createFile": "{{brandName}}は新しいファイルを作成しようとしています",
+		"readFile": "{{brandName}}はこのファイルを読み取ろうとしています",
+		"listFilesTopLevel": "{{brandName}}はこのディレクトリのトップレベルファイルを確認しようとしています",
+		"listFilesRecursive": "{{brandName}}はこのディレクトリ内のすべてのファイルを再帰的に確認しようとしています",
+		"listCodeDefinitionNames": "{{brandName}}はこのディレクトリで使用されているソースコード定義名を確認しようとしています",
+		"searchFiles": "{{brandName}}はこのディレクトリで検索しようとしています",
+		"summarizeTask": "{{brandName}}は会話を要約しています",
 		"summary": "要約",
 		"externalUrl": "このURLは外部です",
-		"webFetch": "CaretはこのURLからコンテンツを取得しようとしています",
+		"webFetch": "{{brandName}}はこのURLからコンテンツを取得しようとしています",
 		"commandOutput": "コマンド出力",
 		"commandApprovalRequired": "モデルはこのコマンドに明示的な承認が必要であると判断しました。",
 		"mcpNotification": "MCP通知",
@@ -37,11 +37,11 @@
 		"seeNewChanges": "新しい変更を見る",
 		"shellIntegration": {
 			"unavailable": "シェル統合が利用できません",
-			"description": "Caretはコマンドの出力を表示するのに問題がある可能性があります。VSCodeを更新し（<code>CMD/CTRL + Shift + P</code> → \"Update\"）、サポートされているシェル（zsh、bash、fish、またはPowerShell (<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\")）を使用していることを確認してください。",
+			"description": "{{brandName}}はコマンドの出力を表示するのに問題がある可能性があります。VSCodeを更新し（<code>CMD/CTRL + Shift + P</code> → \"Update\"）、サポートされているシェル（zsh、bash、fish、またはPowerShell (<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\")）を使用していることを確認してください。",
 			"troubleshooting": "まだ問題がありますか？"
 		},
-		"condenseConversation": "Caretは会話を要約しようとしています",
-		"createGithubIssue": "CaretはGithub issueを作成しようとしています"
+		"condenseConversation": "{{brandName}}は会話を要約しようとしています",
+		"createGithubIssue": "{{brandName}}はGithub issueを作成しようとしています"
 	},
 	"image": {
 		"dimensionError": "画像の寸法が7500pxを超えています",
@@ -52,7 +52,7 @@
 	"addFilesImages": "ファイルと画像を追加",
 	"mode": {
 		"tooltip": {
-			"description": "{{mode_type}}モードでは、Caretは{{action}}",
+			"description": "{{mode_type}}モードでは、{{brandName}}は{{action}}",
 			"act": {
 				"action": "すぐにタスクを完了します"
 			},
@@ -106,9 +106,9 @@
 		"troubleshootingGuide": "トラブルシューティングガイド",
 		"period": ".",
 		"clickRetryBelow": "(下の\"再試行\"をクリック)",
-		"signInToCline": "Caretにサインイン",
+		"signInToCline": "{{brandName}}にサインイン",
 		"diffError": "モデルはファイル内で一致する検索パターンを使用しませんでした。再試行中...",
-		"clineTriedToAccess": "Caretがアクセスしようとしました",
+		"clineTriedToAccess": "{{brandName}}がアクセスしようとしました",
 		"isBlockedBy": "は次のファイルによってブロックされました。",
 		"file": "ファイル。"
 	},
@@ -120,7 +120,7 @@
 		"providerModel": "プロバイダー/モデル",
 		"operatingSystem": "オペレーティングシステム",
 		"systemInfo": "システム情報",
-		"clineVersion": "Caretバージョン",
+		"clineVersion": "{{brandName}}バージョン",
 		"additionalContext": "追加コンテキスト"
 	},
 	"serversToggleModal": {
@@ -179,9 +179,9 @@
 	},
 	"telemetryBanner": {
 		"closeAndEnable": "バナーを閉じてテレメトリを有効にする",
-		"helpImproveCline": "Caretの改善にご協力ください",
+		"helpImproveCline": "{{brandName}}の改善にご協力ください",
 		"accessExperimentalFeatures": "(および実験的機能にアクセス)",
-		"dataCollectionInfo": "Caretは、バグを修正し、拡張機能を改善するのに役立つエラーおよび使用状況データを収集します。コード、プロンプト、個人情報が送信されることはありません。",
+		"dataCollectionInfo": "{{brandName}}は、バグを修正し、拡張機能を改善するのに役立つエラーおよび使用状況データを収集します。コード、プロンプト、個人情報が送信されることはありません。",
 		"turnOffSetting": "この設定は",
 		"settings": "設定"
 	},
@@ -262,15 +262,15 @@
 	"brandMarketplace": {
 		"preparing": "{{brandName}} MCPマーケットプレイスを準備中。",
 		"preparingDescription": "{{brandName}}専用のMCPツールがまもなく利用可能になります。",
-		"caretPreparing": "Caret MCPマーケットプレイスを準備中。",
-		"caretPreparingDescription": "Caret専用のMCPツールがまもなく利用可能になります。"
+		"caretPreparing": "{{brandName}} MCPマーケットプレイスを準備中。",
+		"caretPreparingDescription": "{{brandName}}専用のMCPツールがまもなく利用可能になります。"
 	},
 	"configureServersView": {
 		"mcpDescription": " ",
 		"modelContextProtocol": "モデルコンテキストプロトコル",
-		"mcpDescriptionMiddle2": "は、Caretの機能を拡張するための追加ツールとリソースを提供するローカルで実行されているMCPサーバーとの通信を可能にします。",
+		"mcpDescriptionMiddle2": "は、{{brandName}}の機能を拡張するための追加ツールとリソースを提供するローカルで実行されているMCPサーバーとの通信を可能にします。",
 		"communityMadeServers": "コミュニティ作成サーバー",
-		"mcpDescriptionEnd": "を使用するか、Caretにワークフローに固有の新しいツールを作成するように依頼できます（例：「最新のnpmドキュメントを取得するツールを追加して」）。",
+		"mcpDescriptionEnd": "を使用するか、{{brandName}}にワークフローに固有の新しいツールを作成するように依頼できます（例：「最新のnpmドキュメントを取得するツールを追加して」）。",
 		"seeDemoHere": "デモはこちらをご覧ください。",
 		"configureMcpServers": "MCPサーバーを構成",
 		"advancedMcpSettings": "高度なMCP設定"
@@ -336,7 +336,7 @@
 		"helpOthersDiscover": "github.com/cline/mcp-marketplaceにIssueを提出して、他の人が素晴らしいMCPサーバーを発見できるように支援してください。"
 	},
 	"clineRulesToggleModal": {
-		"manageRulesWorkflows": "Caretルールとワークフローを管理",
+		"manageRulesWorkflows": "{{brandName}}ルールとワークフローを管理",
 		"rulesTab": "ルール",
 		"workflowsTab": "ワークフロー",
 		"rulesDescription": "ルールを使用すると、Clineにシステムレベルのガイダンスを提供できます。プロジェクトまたはすべての会話に対して、コンテキストと設定を永続的に含める方法と考えてください。",

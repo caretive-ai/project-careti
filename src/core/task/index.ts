@@ -1679,6 +1679,7 @@ export class Task {
 					message: `${getCurrentBrandName()} is having trouble. Would you like to continue the task?`,
 				})
 			}
+			// CARET MODIFICATION: Use dynamic brand name instead of hardcoded "Cline"
 			const { response, text, images, files } = await this.ask(
 				"mistake_limit_reached",
 				this.api.getModel().id.includes("claude")

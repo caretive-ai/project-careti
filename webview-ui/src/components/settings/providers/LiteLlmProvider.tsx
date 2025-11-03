@@ -79,7 +79,7 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 	}
 
 	return (
-		<div>
+		<div style={{ paddingBottom: liteLlmModels.length > 10 ? "195px" : "0" }}>
 			<DebouncedTextField
 				initialValue={apiConfiguration?.liteLlmBaseUrl || ""}
 				onChange={(value) => handleFieldChange("liteLlmBaseUrl", value)}
@@ -97,30 +97,42 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 				<span style={{ fontWeight: 500 }}>{t("providers.litellm.apiKeyLabel", "settings")}</span>
 			</DebouncedTextField>
 			{/* CARET MODIFICATION: Replace text field with dropdown and fetch button */}
-			<div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
-				<div style={{ flex: 1 }}>
+			<div style={{ display: "flex", gap: "10px", alignItems: "flex-end", flexWrap: "wrap" }}>
+				<div style={{ flex: 1, minWidth: "200px", position: "relative" }}>
 					<span style={{ fontWeight: 500, display: "block", marginBottom: "5px" }}>
 						{t("providers.litellm.modelIdLabel", "settings")}
 					</span>
 					{liteLlmModels.length > 0 ? (
-						<VSCodeDropdown
-							onChange={(e: any) => {
-								const value = e.target.value
-								handleModeFieldChange(
-									{ plan: "planModeLiteLlmModelId", act: "actModeLiteLlmModelId" },
-									value,
-									currentMode,
-								)
-							}}
-							style={{ width: "100%" }}
-							value={liteLlmModelId || ""}>
-							<VSCodeOption value="">{t("providers.litellm.selectModelPlaceholder", "settings")}</VSCodeOption>
-							{liteLlmModels.map((model) => (
-								<VSCodeOption key={model} value={model}>
-									{model}
-								</VSCodeOption>
-							))}
-						</VSCodeDropdown>
+						<div className="dropdown-container">
+							<VSCodeDropdown
+								onChange={(e: any) => {
+									const value = e.target.value
+									handleModeFieldChange(
+										{ plan: "planModeLiteLlmModelId", act: "actModeLiteLlmModelId" },
+										value,
+										currentMode,
+									)
+								}}
+								style={{ width: "100%" }}
+								value={liteLlmModelId || ""}>
+								<VSCodeOption value="">{t("providers.litellm.selectModelPlaceholder", "settings")}</VSCodeOption>
+								{liteLlmModels.map((model) => (
+									<VSCodeOption key={model} value={model}>
+										{model}
+									</VSCodeOption>
+								))}
+							</VSCodeDropdown>
+							<style>{`
+								.dropdown-container vscode-dropdown::part(listbox) {
+									max-height: 130px !important;
+									overflow-y: auto !important;
+									position: absolute !important;
+									z-index: 9999 !important;
+									left: 0 !important;
+									right: 0 !important;
+								}
+							`}</style>
+						</div>
 					) : (
 						<DebouncedTextField
 							initialValue={liteLlmModelId || ""}
@@ -139,7 +151,7 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 				<VSCodeButton
 					disabled={isLoadingModels || !apiConfiguration?.liteLlmBaseUrl}
 					onClick={handleFetchModels}
-					style={{ minWidth: "120px" }}>
+					style={{ minWidth: "120px", flexShrink: 0 }}>
 					{isLoadingModels
 						? t("providers.litellm.fetchingModels", "settings")
 						: t("providers.litellm.fetchModels", "settings")}

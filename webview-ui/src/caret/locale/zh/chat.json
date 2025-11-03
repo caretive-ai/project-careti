@@ -5,28 +5,28 @@
 		"unknown": "错误: {{message}}",
 		"unknownError": "未知错误",
 		"label": "错误",
-		"mistakeLimitReached": "Caret遇到了一些问题...",
+		"mistakeLimitReached": "{{brandName}}遇到了一些问题...",
 		"maxRequestsReached": "达到最大请求数"
 	},
 	"mcp": {
-		"useServer": "Caret将尝试在 {{serverName}} MCP 服务器上 {{type}}：",
+		"useServer": "{{brandName}}将尝试在 {{serverName}} MCP 服务器上 {{type}}：",
 		"tool": "工具",
 		"resource": "资源"
 	},
 	"taskCompleted": "任务完成",
 	"tool": {
 		"outsideWorkspace": "此文件位于工作区之外",
-		"editFile": "Caret想要编辑此文件",
-		"createFile": "Caret想要创建一个新文件",
-		"readFile": "Caret想要读取此文件",
-		"listFilesTopLevel": "Caret想要查看此目录中的顶级文件",
-		"listFilesRecursive": "Caret想要递归查看此目录中的所有文件",
-		"listCodeDefinitionNames": "Caret想要查看此目录中使用的源代码定义名称",
-		"searchFiles": "Caret想要在此目录中搜索",
-		"summarizeTask": "Caret正在总结对话",
+		"editFile": "{{brandName}}想要编辑此文件",
+		"createFile": "{{brandName}}想要创建一个新文件",
+		"readFile": "{{brandName}}想要读取此文件",
+		"listFilesTopLevel": "{{brandName}}想要查看此目录中的顶级文件",
+		"listFilesRecursive": "{{brandName}}想要递归查看此目录中的所有文件",
+		"listCodeDefinitionNames": "{{brandName}}想要查看此目录中使用的源代码定义名称",
+		"searchFiles": "{{brandName}}想要在此目录中搜索",
+		"summarizeTask": "{{brandName}}正在总结对话",
 		"summary": "摘要",
 		"externalUrl": "此URL是外部的",
-		"webFetch": "Caret想要从此URL获取内容",
+		"webFetch": "{{brandName}}想要从此URL获取内容",
 		"commandOutput": "命令输出",
 		"commandApprovalRequired": "模型已确定此命令需要明确批准。",
 		"mcpNotification": "MCP通知",
@@ -37,11 +37,11 @@
 		"seeNewChanges": "查看新更改",
 		"shellIntegration": {
 			"unavailable": "Shell集成不可用",
-			"description": "Caret查看命令输出时可能遇到问题。请更新VSCode（<code>CMD/CTRL + Shift + P</code> → \"Update\"）并确保您正在使用支持的shell：zsh、bash、fish或PowerShell（<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\"）。",
+			"description": "{{brandName}}查看命令输出时可能遇到问题。请更新VSCode（<code>CMD/CTRL + Shift + P</code> → \"Update\"）并确保您正在使用支持的shell：zsh、bash、fish或PowerShell（<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\"）。",
 			"troubleshooting": "仍然有问题？"
 		},
-		"condenseConversation": "Caret想要总结您的对话",
-		"createGithubIssue": "Caret想要创建一个Github问题"
+		"condenseConversation": "{{brandName}}想要总结您的对话",
+		"createGithubIssue": "{{brandName}}想要创建一个Github问题"
 	},
 	"image": {
 		"dimensionError": "图像尺寸超过7500px",
@@ -52,7 +52,7 @@
 	"addFilesImages": "添加文件和图像",
 	"mode": {
 		"tooltip": {
-			"description": "在{{mode_type}}模式下，Caret将{{action}}",
+			"description": "在{{mode_type}}模式下，{{brandName}}将{{action}}",
 			"act": {
 				"action": "立即完成任务"
 			},
@@ -108,7 +108,7 @@
 		"clickRetryBelow": "（点击下方的“重试”）",
 		"signInToCline": "登录到Cline",
 		"diffError": "模型使用的搜索模式与文件中任何内容都不匹配。正在重试...",
-		"clineTriedToAccess": "Caret尝试访问",
+		"clineTriedToAccess": "{{brandName}}尝试访问",
 		"isBlockedBy": "被以下文件阻止：",
 		"file": "文件。"
 	},
@@ -120,7 +120,7 @@
 		"providerModel": "提供商/模型",
 		"operatingSystem": "操作系统",
 		"systemInfo": "系统信息",
-		"clineVersion": "Caret版本",
+		"clineVersion": "{{brandName}}版本",
 		"additionalContext": "附加上下文"
 	},
 	"serversToggleModal": {
@@ -181,7 +181,7 @@
 		"closeAndEnable": "关闭横幅并启用遥测",
 		"helpImproveCline": "帮助改进Cline",
 		"accessExperimentalFeatures": "（并访问实验功能）",
-		"dataCollectionInfo": "Caret收集错误和使用数据以帮助我们修复错误和改进扩展。绝不会发送代码、提示或个人信息。",
+		"dataCollectionInfo": "{{brandName}}收集错误和使用数据以帮助我们修复错误和改进扩展。绝不会发送代码、提示或个人信息。",
 		"turnOffSetting": "您可以在",
 		"settings": "设置"
 	},
@@ -262,15 +262,15 @@
 	"brandMarketplace": {
 		"preparing": "{{brandName}} MCP市场正在准备中。",
 		"preparingDescription": "{{brandName}}专属MCP工具即将推出。",
-		"caretPreparing": "Caret MCP市场正在准备中。",
-		"caretPreparingDescription": "Caret专属MCP工具即将推出。"
+		"caretPreparing": "{{brandName}} MCP市场正在准备中。",
+		"caretPreparingDescription": "{{brandName}}专属MCP工具即将推出。"
 	},
 	"configureServersView": {
 		"mcpDescription": " ",
 		"modelContextProtocol": "模型上下文协议",
-		"mcpDescriptionMiddle2": "允许与本地运行的MCP服务器通信，这些服务器提供额外的工具和资源以扩展Caret的功能。您可以使用",
+		"mcpDescriptionMiddle2": "允许与本地运行的MCP服务器通信，这些服务器提供额外的工具和资源以扩展{{brandName}}的功能。您可以使用",
 		"communityMadeServers": "社区制作的服务器",
-		"mcpDescriptionEnd": "，或者要求Caret创建特定于您工作流的新工具（例如，「添加一个获取最新npm文档的工具」）。",
+		"mcpDescriptionEnd": "，或者要求{{brandName}}创建特定于您工作流的新工具（例如，「添加一个获取最新npm文档的工具」）。",
 		"seeDemoHere": "在此处查看演示。",
 		"configureMcpServers": "配置MCP服务器",
 		"advancedMcpSettings": "高级MCP设置"

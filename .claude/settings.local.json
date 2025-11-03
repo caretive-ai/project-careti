@@ -104,7 +104,10 @@
       "Bash(do:*)",
       "Bash(head:*)",
       "Bash(while read file)",
-      "Bash(for lang in ko en ja zh)"
+      "Bash(for lang in ko en ja zh)",
+      "Bash(webview-ui/src/caret/locale/en/chat.json)",
+      "Bash(webview-ui/src/caret/locale/ja/chat.json)",
+      "Bash(webview-ui/src/caret/locale/zh/chat.json)"
     ],
     "deny": [],
     "ask": []

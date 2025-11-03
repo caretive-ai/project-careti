@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import styled from "styled-components"
 import {
 	getAsVar,
@@ -16,15 +16,18 @@ interface TooltipProps {
 	style?: React.CSSProperties
 }
 
+// CARET MODIFICATION: Improve tooltip positioning to prevent screen overflow
 // add styled component for tooltip
-const TooltipBody = styled.div<Pick<TooltipProps, "style">>`
+const TooltipBody = styled.div<Pick<TooltipProps, "style"> & { $autoPosition?: boolean }>`
 	position: absolute;
 	background-color: ${getAsVar(VSC_SIDEBAR_BACKGROUND)};
 	color: ${getAsVar(VSC_DESCRIPTION_FOREGROUND)};
 	padding: 5px;
 	border-radius: 5px;
 	bottom: 100%;
-	left: ${(props) => props.style?.left ?? -180}%;
+	left: ${(props) => (props.$autoPosition ? "auto" : props.style?.left !== undefined ? `${props.style.left}%` : "-100%")};
+	right: ${(props) => (props.$autoPosition ? "0" : "auto")};
+	transform: ${(props) => (props.$autoPosition ? "none" : "translateX(-50%)")};
 	z-index: ${(props) => props.style?.zIndex ?? 1000};
 	white-space: wrap;
 	max-width: 200px;
@@ -42,18 +45,37 @@ const Hint = styled.div`
 
 const Tooltip: React.FC<TooltipProps> = ({ visible, tipText, hintText, children, style }) => {
 	const [isHovered, setIsHovered] = useState(false)
+	const [autoPosition, setAutoPosition] = useState(false)
+	const tooltipRef = useRef<HTMLDivElement>(null)
+	const containerRef = useRef<HTMLDivElement>(null)
 
 	// Determine final visibility based on prop or internal state
 	const shouldShow = visible !== undefined ? visible : isHovered
 
+	// CARET MODIFICATION: Check if tooltip overflows screen and adjust position
+	useEffect(() => {
+		if (shouldShow && tooltipRef.current && containerRef.current) {
+			const tooltipRect = tooltipRef.current.getBoundingClientRect()
+			const containerRect = containerRef.current.getBoundingClientRect()
+
+			// Check if tooltip is cut off on the left side
+			if (tooltipRect.left < 0 || containerRect.right > window.innerWidth - 220) {
+				setAutoPosition(true)
+			} else {
+				setAutoPosition(false)
+			}
+		}
+	}, [shouldShow])
+
 	return (
 		<div
+			ref={containerRef}
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 			style={{ position: "relative", display: "inline-block" }}>
 			{children}
 			{shouldShow && (
-				<TooltipBody style={style}>
+				<TooltipBody ref={tooltipRef} style={style} $autoPosition={autoPosition}>
 					{tipText}
 					{hintText && <Hint>{hintText}</Hint>}
 				</TooltipBody>

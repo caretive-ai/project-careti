@@ -3,6 +3,7 @@ import * as proto from "@shared/proto"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton, VSCodeCheckbox, VSCodeDropdown, VSCodeLink, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
+import { CARET_URLS } from "@/caret/constants/urls"
 import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CaretSystemServiceClient } from "@/services/grpc-client"
@@ -88,57 +89,71 @@ export const BizRouterProvider = ({ showModelOptions, isPopup, currentMode }: Bi
 				<span style={{ fontWeight: 500 }}>{t("providers.bizrouter.apiKeyLabel", "settings")}</span>
 			</DebouncedTextField>
 			{/* Replace text field with dropdown and fetch button */}
-			<div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
-				<div style={{ flex: 1 }}>
-					<span style={{ fontWeight: 500, display: "block", marginBottom: "5px" }}>
-						{t("providers.bizrouter.modelIdLabel", "settings")}
-					</span>
-					{bizRouterModels.length > 0 ? (
-						<VSCodeDropdown
-							onChange={(e: any) => {
-								const value = e.target.value
-								handleModeFieldChange(
-									{ plan: "planModeBizRouterModelId", act: "actModeBizRouterModelId" },
-									value,
-									currentMode,
-								)
-							}}
-							style={{ width: "100%" }}
-							value={bizRouterModelId || ""}>
-							<VSCodeOption value="">{t("providers.bizrouter.selectModelPlaceholder", "settings")}</VSCodeOption>
-							{bizRouterModels.map((model) => (
-								<VSCodeOption key={model} value={model}>
-									{model}
-								</VSCodeOption>
-							))}
-						</VSCodeDropdown>
-					) : (
-						<DebouncedTextField
-							initialValue={bizRouterModelId || ""}
-							onChange={(value) =>
-								handleModeFieldChange(
-									{ plan: "planModeBizRouterModelId", act: "actModeBizRouterModelId" },
-									value,
-									currentMode,
-								)
-							}
-							placeholder={t("providers.bizrouter.modelIdPlaceholder", "settings")}
-							style={{ width: "100%" }}
-						/>
-					)}
+			<div>
+				<div style={{ display: "flex", gap: "10px", alignItems: "flex-end", flexWrap: "wrap" }}>
+					<div style={{ flex: 1, minWidth: "200px", position: "relative" }}>
+						<span style={{ fontWeight: 500, display: "block", marginBottom: "5px" }}>
+							{t("providers.bizrouter.modelIdLabel", "settings")}
+						</span>
+						{bizRouterModels.length > 0 ? (
+							<div className="dropdown-container">
+								<VSCodeDropdown
+									onChange={(e: any) => {
+										const value = e.target.value
+										handleModeFieldChange(
+											{ plan: "planModeBizRouterModelId", act: "actModeBizRouterModelId" },
+											value,
+											currentMode,
+										)
+									}}
+									style={{ width: "100%" }}
+									value={bizRouterModelId || ""}>
+									<VSCodeOption value="">{t("providers.bizrouter.selectModelPlaceholder", "settings")}</VSCodeOption>
+									{bizRouterModels.map((model) => (
+										<VSCodeOption key={model} value={model}>
+											{model}
+										</VSCodeOption>
+									))}
+								</VSCodeDropdown>
+								<style>{`
+									.dropdown-container vscode-dropdown::part(listbox) {
+										max-height: 130px !important;
+										overflow-y: auto !important;
+										position: absolute !important;
+										z-index: 9999 !important;
+										left: 0 !important;
+										right: 0 !important;
+									}
+								`}</style>
+							</div>
+						) : (
+							<DebouncedTextField
+								initialValue={bizRouterModelId || ""}
+								onChange={(value) =>
+									handleModeFieldChange(
+										{ plan: "planModeBizRouterModelId", act: "actModeBizRouterModelId" },
+										value,
+										currentMode,
+									)
+								}
+								placeholder={t("providers.bizrouter.modelIdPlaceholder", "settings")}
+								style={{ width: "100%" }}
+							/>
+						)}
+					</div>
+					<VSCodeButton
+						disabled={isLoadingModels || !apiConfiguration?.bizRouterApiKey}
+						onClick={handleFetchModels}
+						style={{ minWidth: "120px", flexShrink: 0 }}>
+						{isLoadingModels
+							? t("providers.bizrouter.fetchingModels", "settings")
+							: t("providers.bizrouter.fetchModels", "settings")}
+					</VSCodeButton>
 				</div>
-				<VSCodeButton
-					disabled={isLoadingModels || !apiConfiguration?.bizRouterApiKey}
-					onClick={handleFetchModels}
-					style={{ minWidth: "120px" }}>
-					{isLoadingModels
-						? t("providers.bizrouter.fetchingModels", "settings")
-						: t("providers.bizrouter.fetchModels", "settings")}
-				</VSCodeButton>
+				{modelsError && (
+					<p style={{ color: "var(--vscode-errorForeground)", fontSize: "12px", marginTop: "5px" }}>{modelsError}</p>
+				)}
 			</div>
-			{modelsError && (
-				<p style={{ color: "var(--vscode-errorForeground)", fontSize: "12px", marginTop: "5px" }}>{modelsError}</p>
-			)}
 
 			<ThinkingBudgetSlider currentMode={currentMode} />
 			<p
@@ -149,7 +164,7 @@ export const BizRouterProvider = ({ showModelOptions, isPopup, currentMode }: Bi
 				}}>
 				{t("providers.bizrouter.extendedThinkingDescription1", "settings")}{" "}
 				<VSCodeLink
-					href="https://bizrouter.ai/docs"
+					href={CARET_URLS.BIZROUTER_MODELS}
 					style={{ display: "inline", fontSize: "inherit" }}>
 					{t("providers.bizrouter.extendedThinkingLink", "settings")}
 				</VSCodeLink>
@@ -386,7 +401,7 @@ export const BizRouterProvider = ({ showModelOptions, isPopup, currentMode }: Bi
 					color: "var(--vscode-descriptionForeground)",
 				}}>
 				{t("providers.bizrouter.description1", "settings")}{" "}
-				<VSCodeLink href="https://bizrouter.ai/" style={{ display: "inline", fontSize: "inherit" }}>
+				<VSCodeLink href={CARET_URLS.BIZROUTER_DOCS} style={{ display: "inline", fontSize: "inherit" }}>
 					{t("providers.bizrouter.quickstartGuideLink", "settings")}
 				</VSCodeLink>{" "}
 				{t("providers.bizrouter.description2", "settings")}
@@ -395,6 +410,7 @@ export const BizRouterProvider = ({ showModelOptions, isPopup, currentMode }: Bi
 			{showModelOptions && (
 				<ModelInfoView isPopup={isPopup} modelInfo={selectedModelInfo} selectedModelId={selectedModelId} />
 			)}
+			
 		</div>
 	)
 }

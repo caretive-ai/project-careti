@@ -5,11 +5,11 @@
 		"unknown": "Error: {{message}}",
 		"unknownError": "Unknown error",
 		"label": "Error",
-		"mistakeLimitReached": "Caret is having trouble...",
+		"mistakeLimitReached": "{{brandName}} is having trouble...",
 		"maxRequestsReached": "Maximum Requests Reached"
 	},
 	"mcp": {
-		"useServer": "Caret wants to {{type}} on the {{serverName}} MCP server:",
+		"useServer": "{{brandName}} wants to {{type}} on the {{serverName}} MCP server:",
 		"tool": "use a tool",
 		"resource": "access a resource"
 	},
@@ -17,17 +17,17 @@
 	"seeNewChanges": "See new changes",
 	"tool": {
 		"outsideWorkspace": "This file is outside of your workspace",
-		"editFile": "Caret wants to edit this file",
-		"createFile": "Caret wants to create a new file",
-		"readFile": "Caret wants to read this file",
-		"listFilesTopLevel": "Caret wants to view the top level files in this directory",
-		"listFilesRecursive": "Caret wants to recursively view all files in this directory",
-		"listCodeDefinitionNames": "Caret wants to view source code definition names used in this directory",
-		"searchFiles": "Caret wants to search this directory for",
-		"summarizeTask": "Caret is condensing the conversation",
+		"editFile": "{{brandName}} wants to edit this file",
+		"createFile": "{{brandName}} wants to create a new file",
+		"readFile": "{{brandName}} wants to read this file",
+		"listFilesTopLevel": "{{brandName}} wants to view the top level files in this directory",
+		"listFilesRecursive": "{{brandName}} wants to recursively view all files in this directory",
+		"listCodeDefinitionNames": "{{brandName}} wants to view source code definition names used in this directory",
+		"searchFiles": "{{brandName}} wants to search this directory for",
+		"summarizeTask": "{{brandName}} is condensing the conversation",
 		"summary": "Summary",
 		"externalUrl": "This URL is external",
-		"webFetch": "Caret wants to fetch content from this URL",
+		"webFetch": "{{brandName}} wants to fetch content from this URL",
 		"commandOutput": "Command Output",
 		"commandApprovalRequired": "The model has determined this command requires explicit approval.",
 		"mcpNotification": "MCP Notification",
@@ -38,11 +38,11 @@
 		"seeNewChanges": "See new changes",
 		"shellIntegration": {
 			"unavailable": "Shell Integration Unavailable",
-			"description": "Caret may have trouble viewing the command's output. Please update VSCode (<code>CMD/CTRL + Shift + P</code> → \"Update\") and make sure you're using a supported shell: zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\").",
+			"description": "{{brandName}} may have trouble viewing the command's output. Please update VSCode (<code>CMD/CTRL + Shift + P</code> → \"Update\") and make sure you're using a supported shell: zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\").",
 			"troubleshooting": "Still having trouble?"
 		},
-		"condenseConversation": "Caret wants to condense your conversation",
-		"createGithubIssue": "Caret wants to create a Github issue"
+		"condenseConversation": "{{brandName}} wants to condense your conversation",
+		"createGithubIssue": "{{brandName}} wants to create a Github issue"
 	},
 	"image": {
 		"dimensionError": "Image dimensions exceed 7500px",
@@ -50,7 +50,7 @@
 	},
 	"mode": {
 		"tooltip": {
-			"description": "In {{mode_type}} mode, Caret will {{action}}",
+			"description": "In {{mode_type}} mode, {{brandName}} will {{action}}",
 			"act": {
 				"action": "complete the task immediately"
 			},
@@ -107,9 +107,9 @@
 		"troubleshootingGuide": "troubleshooting guide",
 		"period": ".",
 		"clickRetryBelow": "(Click \"Retry\" below)",
-		"signInToCline": "Sign in to Caret",
+		"signInToCline": "Sign in to {{brandName}}",
 		"diffError": "The model used search patterns that don't match anything in the file. Retrying...",
-		"clineTriedToAccess": "Caret tried to access",
+		"clineTriedToAccess": "{{brandName}} tried to access",
 		"isBlockedBy": "which is blocked by the",
 		"file": "file."
 	},
@@ -180,9 +180,9 @@
 	},
 	"telemetryBanner": {
 		"closeAndEnable": "Close banner and enable telemetry",
-		"helpImproveCline": "Help Improve Caret",
+		"helpImproveCline": "Help Improve {{brandName}}",
 		"accessExperimentalFeatures": "(and access experimental features)",
-		"dataCollectionInfo": "Caret collects error and usage data to help us fix bugs and improve the extension. No code, prompts, or personal information is ever sent.",
+		"dataCollectionInfo": "{{brandName}} collects error and usage data to help us fix bugs and improve the extension. No code, prompts, or personal information is ever sent.",
 		"turnOffSetting": "You can turn this setting off in ",
 		"settings": "settings"
 	},
@@ -269,9 +269,9 @@
 	"configureServersView": {
 		"mcpDescription": "The",
 		"modelContextProtocol": "Model Context Protocol",
-		"mcpDescriptionMiddle2": "enables communication with locally running MCP servers that provide additional tools and resources to extend Caret's capabilities. You can use",
+		"mcpDescriptionMiddle2": "enables communication with locally running MCP servers that provide additional tools and resources to extend {{brandName}}'s capabilities. You can use",
 		"communityMadeServers": "community-made servers",
-		"mcpDescriptionEnd": "or ask Caret to create new tools specific to your workflow (e.g., \"add a tool that gets the latest npm docs\").",
+		"mcpDescriptionEnd": "or ask {{brandName}} to create new tools specific to your workflow (e.g., \"add a tool that gets the latest npm docs\").",
 		"seeDemoHere": "See a demo here.",
 		"configureMcpServers": "Configure MCP Servers",
 		"advancedMcpSettings": "Advanced MCP Settings"
@@ -337,12 +337,12 @@
 		"helpOthersDiscover": "Help others discover great MCP servers by submitting an issue to github.com/cline/mcp-marketplace."
 	},
 	"clineRulesToggleModal": {
-		"manageRulesWorkflows": "Manage Caret Rules & Workflows",
+		"manageRulesWorkflows": "Manage {{brandName}} Rules & Workflows",
 		"rulesTab": "Rules",
 		"workflowsTab": "Workflows",
-		"rulesDescription": "Rules allow you to provide Caret with system-level guidance. Think of them as a persistent way to include context and preferences for your projects or globally for every conversation.",
+		"rulesDescription": "Rules allow you to provide {{brandName}} with system-level guidance. Think of them as a persistent way to include context and preferences for your projects or globally for every conversation.",
 		"docs": "Docs",
-		"workflowsDescription": "Workflows allow you to define a series of steps to guide Caret through a repetitive set of tasks, such as deploying a service or submitting a PR. To invoke a workflow, type",
+		"workflowsDescription": "Workflows allow you to define a series of steps to guide {{brandName}} through a repetitive set of tasks, such as deploying a service or submitting a PR. To invoke a workflow, type",
 		"workflowName": "/workflow-name",
 		"globalRules": "Global Rules",
 		"workspaceRules": "Workspace Rules",

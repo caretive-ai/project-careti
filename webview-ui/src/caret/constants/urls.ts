@@ -10,7 +10,11 @@ export const CARET_URLS = {
 
 	// Account Related
 	CARET_APP_CREDITS: "https://caret.team/credits",
-	CARET_APP_CREDITS_BUY: "https://caret.team/credits/#buy"
+	CARET_APP_CREDITS_BUY: "https://caret.team/credits/#buy",
+
+	// BizRouter
+	BIZROUTER_DOCS: "https://bizrouter.ai/docs",
+	BIZROUTER_MODELS: "https://bizrouter.ai/docs/models"
 } as const
 
 // Language-specific URLs for educational content and documentation

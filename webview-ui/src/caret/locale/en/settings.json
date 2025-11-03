@@ -560,7 +560,7 @@
 			"outputPriceLabel": "Output Price / 1M tokens",
 			"temperatureLabel": "Temperature",
 			"notePrefix": "Note:",
-			"noteText": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
+			"noteText": "{{brandName}} uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
 			"refreshModelsError": "Failed to refresh OpenAI models:",
 			"providerName": "OpenAI Compatible"
 		},
@@ -642,7 +642,7 @@
 			"descriptionPart1": "Ollama allows you to run models locally on your computer. For instructions on how to get started, see their ",
 			"quickstartGuideLinkText": "quickstart guide.",
 			"notePrefix": "Note:",
-			"noteText": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
+			"noteText": "{{brandName}} uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
 			"fetchModelsErrorLog": "Failed to fetch Ollama models:",
 			"providerName": "Ollama",
 			"contextWindowPlaceholder": "e.g. 32768"
@@ -898,7 +898,7 @@
 			"modelIdPlaceholder": "Enter Model ID...",
 			"modelIdLabel": "Model ID",
 			"notePrefix": "Note:",
-			"noteText": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
+			"noteText": "{{brandName}} uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
 			"providerName": "Together"
 		},
 		"qwen": {
@@ -944,7 +944,7 @@
 			"description2": "You will also need to start LM Studio's ",
 			"localServerLink": "local server",
 			"description3": " feature with lms server start to use it with this extension. ",
-			"noteBody": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
+			"noteBody": "{{brandName}} uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
 			"contextWindowLabel": "Context Window"
 		},
 		"moonshot": {
@@ -968,7 +968,7 @@
 		"nebius": {
 			"name": "Nebius AI Studio",
 			"description": "Nebius AI offers AI services based on Yandex's technology.",
-			"apiKeyHelpText": "This key is stored locally and only used to make API requests from this extension. (Note: Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.)"
+			"apiKeyHelpText": "This key is stored locally and only used to make API requests from this extension. (Note: {{brandName}} uses complex prompts and works best with Claude models. Less capable models may not work as expected.)"
 		},
 		"asksage": {
 			"name": "AskSage",
@@ -983,7 +983,7 @@
 			"description": "xAI develops Grok, a large language model that aims to be truthful.",
 			"providerName": "xAI",
 			"notePrefix": "Note:",
-			"noteText": "Caret uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
+			"noteText": "{{brandName}} uses complex prompts and works best with Claude models. Less capable models may not work as expected.",
 			"modifyReasoningEffort": "Modify reasoning effort",
 			"reasoningEffortLabel": "Reasoning Effort",
 			"reasoningEffortOptions": {

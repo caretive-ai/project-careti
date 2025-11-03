@@ -48,6 +48,7 @@ export class CaretJsonAdapter implements IPromptSystem {
 			"CARET_CAPABILITIES",
 			"CARET_USER_INSTRUCTIONS",
 			// CARET_TOOL_SYSTEM removed - replaced with Cline original tool system (inserted after CARET_USER_INSTRUCTIONS)
+			context.isSubagentsEnabledAndCliInstalled && !isChatbotMode ? "CLI_SUBAGENTS" : null, // CARET MODIFICATION: Cline v3.34.0 Subagent support
 			isClaudeCodeProvider ? "CLAUDE_CODE_TASK_TOOL" : null, // CARET MODIFICATION: F12 - Claude Code Task tool for subagent support
 			"CARET_FILE_EDITING",
 			"CARET_BEHAVIOR_RULES",
@@ -366,6 +367,9 @@ export class CaretJsonAdapter implements IPromptSystem {
 			content = this.processTemplateSections(template.tool_system.sections, isChatbotMode)
 		} else if (template.mcp_integration?.sections) {
 			content = this.processTemplateSections(template.mcp_integration.sections, isChatbotMode)
+		} else if (template.cli_subagents?.sections) {
+			// CARET MODIFICATION: Cline v3.34.0 Subagent support
+			content = this.processTemplateSections(template.cli_subagents.sections, isChatbotMode)
 		}
 		// Legacy format support
 		else if (template.add?.sections) {

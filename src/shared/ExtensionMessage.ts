@@ -82,6 +82,8 @@ export interface ExtensionState {
 	multiRootSetting: ClineFeatureSetting
 	lastDismissedInfoBannerVersion: number
 	lastDismissedModelBannerVersion: number
+	// CARET MODIFICATION: Cline v3.34.0 merge - Subagents
+	subagentsEnabled?: boolean
 	// CARET MODIFICATION: F11 - Input History System
 	inputHistory?: string[]
 	// CARET MODIFICATION: F01 - Mode System

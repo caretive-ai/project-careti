@@ -245,6 +245,12 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			context.globalState.get<GlobalStateAndSettings["terminalReuseEnabled"]>("terminalReuseEnabled")
 		const terminalOutputLineLimit =
 			context.globalState.get<GlobalStateAndSettings["terminalOutputLineLimit"]>("terminalOutputLineLimit")
+		// CARET MODIFICATION: Cline v3.34.0 merge - Subagents
+		const maxConsecutiveMistakes =
+			context.globalState.get<GlobalStateAndSettings["maxConsecutiveMistakes"]>("maxConsecutiveMistakes")
+		const subagentTerminalOutputLineLimit = context.globalState.get<
+			GlobalStateAndSettings["subagentTerminalOutputLineLimit"]
+		>("subagentTerminalOutputLineLimit")
 		const defaultTerminalProfile =
 			context.globalState.get<GlobalStateAndSettings["defaultTerminalProfile"]>("defaultTerminalProfile")
 		const sapAiCoreBaseUrl = context.globalState.get<GlobalStateAndSettings["sapAiCoreBaseUrl"]>("sapAiCoreBaseUrl")
@@ -280,6 +286,9 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const enablePersonaSystem = context.globalState.get<GlobalStateAndSettings["enablePersonaSystem"]>("enablePersonaSystem")
 		const currentPersona = context.globalState.get<GlobalStateAndSettings["currentPersona"]>("currentPersona")
 		const personaProfile = context.globalState.get<GlobalStateAndSettings["personaProfile"]>("personaProfile")
+		// CARET MODIFICATION: Cline v3.34.0 merge - Subagents
+		const hooksEnabled = context.globalState.get<GlobalStateAndSettings["hooksEnabled"]>("hooksEnabled")
+		const subagentsEnabled = context.globalState.get<GlobalStateAndSettings["subagentsEnabled"]>("subagentsEnabled")
 		// Get mode-related configurations
 		const mode = context.globalState.get<GlobalStateAndSettings["mode"]>("mode")
 
@@ -608,11 +617,17 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			shellIntegrationTimeout: shellIntegrationTimeout || 4000,
 			terminalReuseEnabled: terminalReuseEnabled ?? true,
 			terminalOutputLineLimit: terminalOutputLineLimit ?? 500,
+			// CARET MODIFICATION: Cline v3.34.0 merge - Subagents
+			maxConsecutiveMistakes: maxConsecutiveMistakes ?? 3,
+			subagentTerminalOutputLineLimit: subagentTerminalOutputLineLimit ?? 2000,
 			defaultTerminalProfile: defaultTerminalProfile ?? "default",
 			globalWorkflowToggles: globalWorkflowToggles || {},
 			qwenCodeOauthPath,
 			customPrompt,
 			autoCondenseThreshold: autoCondenseThreshold || 0.75, // default to 0.75 if not set
+			// CARET MODIFICATION: Cline v3.34.0 merge - Subagents require explicit user opt-in
+			hooksEnabled: hooksEnabled ?? false,
+			subagentsEnabled: subagentsEnabled ?? true, // TEMPORARY: true for testing (should be false in production)
 			lastDismissedInfoBannerVersion: lastDismissedInfoBannerVersion ?? 0,
 			lastDismissedModelBannerVersion: lastDismissedModelBannerVersion ?? 0,
 			// Multi-root workspace support

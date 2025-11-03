@@ -3,8 +3,8 @@
 	"defaultPersonaEnabled": true,
 	"redirectAfterApiSetup": "persona",
 	"defaultModeSystem": "caret",
-	"firstListingProvider": "litellm",
-	"defaultProvider": "litellm",
+	"firstListingProvider": "caret",
+	"defaultProvider": "caret",
 	"showOnlyDefaultProvider": false,
-	"showCostInformation": false
+	"showCostInformation": true
 }

@@ -3,6 +3,7 @@ import { getActVsPlanModeSection } from "./act_vs_plan_mode"
 import { getAgentRoleSection } from "./agent_role"
 import { getTodoListSection } from "./auto_todo"
 import { getCapabilitiesSection } from "./capabilities"
+import { getCliSubagentsSection } from "./cli_subagents" // CARET MODIFICATION: Subagent support
 import { getEditingFilesSection } from "./editing_files"
 import { getFeedbackSection } from "./feedback"
 import { getMcp } from "./mcp"
@@ -23,6 +24,7 @@ export function getSystemPromptComponents() {
 		{ id: SystemPromptSection.AGENT_ROLE, fn: getAgentRoleSection },
 		{ id: SystemPromptSection.SYSTEM_INFO, fn: getSystemInfo },
 		{ id: SystemPromptSection.MCP, fn: getMcp },
+		{ id: SystemPromptSection.CLI_SUBAGENTS, fn: getCliSubagentsSection }, // CARET MODIFICATION: Subagent support
 		{ id: SystemPromptSection.TODO, fn: getTodoListSection },
 		{
 			id: SystemPromptSection.USER_INSTRUCTIONS,

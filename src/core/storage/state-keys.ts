@@ -88,6 +88,8 @@ export interface Settings {
 	shellIntegrationTimeout: number
 	defaultTerminalProfile: string
 	terminalOutputLineLimit: number
+	maxConsecutiveMistakes: number // CARET MODIFICATION: Cline v3.34.0 merge - Subagents
+	subagentTerminalOutputLineLimit: number // CARET MODIFICATION: Cline v3.34.0 merge - Subagents
 	sapAiCoreTokenUrl: string | undefined
 	sapAiCoreBaseUrl: string | undefined
 	sapAiResourceGroup: string | undefined
@@ -108,6 +110,8 @@ export interface Settings {
 	autoCondenseThreshold: number | undefined // number from 0 to 1
 	ocaBaseUrl: string | undefined
 	ocaMode: string | undefined
+	hooksEnabled: boolean // CARET MODIFICATION: Cline v3.34.0 merge
+	subagentsEnabled: boolean // CARET MODIFICATION: Cline v3.34.0 merge
 
 	// Plan mode configurations
 	planModeApiProvider: ApiProvider

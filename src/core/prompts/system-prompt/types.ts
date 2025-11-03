@@ -109,6 +109,8 @@ export interface SystemPromptContext {
 	readonly yoloModeToggled?: boolean
 	readonly isMultiRootEnabled?: boolean
 	readonly workspaceRoots?: Array<{ path: string; name: string; vcs?: string }>
+	readonly isSubagentsEnabledAndCliInstalled?: boolean // CARET MODIFICATION: Subagent support
+	readonly isCliSubagent?: boolean // CARET MODIFICATION: Subagent support
 }
 
 /**

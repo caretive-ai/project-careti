@@ -44,6 +44,7 @@ import { showSystemNotification } from "@integrations/notifications"
 import { TerminalManager } from "@integrations/terminal/TerminalManager"
 // CARET MODIFICATION: Subagent support from Cline v3.34.0
 import { isSubagentCommand, transformClineCommand } from "@/integrations/cli-subagents/subagent_command"
+import { isClineCliInstalled, isCliSubagentContext } from "@/utils/cli-detector"
 import { BrowserSession } from "@services/browser/BrowserSession"
 import { UrlContentFetcher } from "@services/browser/UrlContentFetcher"
 import { listFiles } from "@services/glob/list-files"
@@ -1438,6 +1439,25 @@ export class Task {
 			}))
 		}
 
+		// CARET MODIFICATION: Cline v3.34.0 merge - Check CLI installation status only if subagents are enabled
+		const subagentsEnabled = this.stateManager.getGlobalSettingsKey("subagentsEnabled")
+		Logger.debug(`[Task] 🔧 Subagent check: subagentsEnabled=${subagentsEnabled}`)
+		let isSubagentsEnabledAndCliInstalled = false
+		if (subagentsEnabled) {
+			Logger.debug(`[Task] 🔍 Checking CLI installation...`)
+			const clineCliInstalled = await isClineCliInstalled()
+			Logger.debug(`[Task] 📦 CLI installed: ${clineCliInstalled}`)
+			isSubagentsEnabledAndCliInstalled = subagentsEnabled && clineCliInstalled
+		}
+		Logger.debug(`[Task] ✅ isSubagentsEnabledAndCliInstalled=${isSubagentsEnabledAndCliInstalled}`)
+
+		// Detect if this is a CLI subagent to prevent nested subagent creation
+		const isCliSubagent = isCliSubagentContext({
+			yoloModeToggled: this.stateManager.getGlobalSettingsKey("yoloModeToggled"),
+			maxConsecutiveMistakes: this.stateManager.getGlobalSettingsKey("maxConsecutiveMistakes"),
+		})
+		Logger.debug(`[Task] 🤖 isCliSubagent=${isCliSubagent}`)
+
 		const promptContext: SystemPromptContext = {
 			cwd: this.cwd,
 			ide,
@@ -1457,6 +1477,8 @@ export class Task {
 			yoloModeToggled: this.stateManager.getGlobalSettingsKey("yoloModeToggled"),
 			isMultiRootEnabled: multiRootEnabled,
 			workspaceRoots,
+			isSubagentsEnabledAndCliInstalled, // CARET MODIFICATION: CLI Subagents support
+			isCliSubagent, // CARET MODIFICATION: Prevent nested subagents
 		}
 
 		const systemPrompt = await getSystemPrompt(promptContext)

@@ -103,7 +103,8 @@
       "Bash(for file in caret-docs/guides/*.{md,mdx})",
       "Bash(do:*)",
       "Bash(head:*)",
-      "Bash(while read file)"
+      "Bash(while read file)",
+      "Bash(for lang in ko en ja zh)"
     ],
     "deny": [],
     "ask": []

@@ -1,4 +1,4 @@
-import { ApiProvider, ModelInfo, type OcaModelInfo } from "@shared/api"
+import { ApiProvider, BizRouterModelInfo, ModelInfo, type OcaModelInfo } from "@shared/api"
 import { FocusChainSettings } from "@shared/FocusChainSettings"
 import { LanguageModelChatSelector } from "vscode"
 import { WorkspaceRoot } from "@/core/workspace/WorkspaceRoot"
@@ -73,6 +73,7 @@ export interface Settings {
 	browserSettings: BrowserSettings
 	liteLlmBaseUrl: string | undefined
 	liteLlmUsePromptCache: boolean | undefined
+	bizRouterUsePromptCache: boolean | undefined // caret
 	caretBaseUrl: string | undefined // caret
 	caretUsePromptCache: boolean | undefined // caret
 	fireworksModelMaxCompletionTokens: number | undefined
@@ -125,6 +126,8 @@ export interface Settings {
 	planModeLmStudioModelId: string | undefined
 	planModeLiteLlmModelId: string | undefined
 	planModeLiteLlmModelInfo: ModelInfo | undefined
+	planModeBizRouterModelId: string | undefined // caret
+	planModeBizRouterModelInfo: BizRouterModelInfo | undefined // caret
 	planModeCaretModelId: string | undefined // caret
 	planModeCaretModelInfo: ModelInfo | undefined // caret
 	planModeRequestyModelId: string | undefined
@@ -159,6 +162,8 @@ export interface Settings {
 	actModeLmStudioModelId: string | undefined
 	actModeLiteLlmModelId: string | undefined
 	actModeLiteLlmModelInfo: ModelInfo | undefined
+	actModeBizRouterModelId: string | undefined // caret
+	actModeBizRouterModelInfo: BizRouterModelInfo | undefined // caret
 	actModeCaretModelId: string | undefined // caret
 	actModeCaretModelInfo: ModelInfo | undefined // caret
 	actModeRequestyModelId: string | undefined
@@ -245,6 +250,7 @@ export interface Secrets {
 
 	caretAuthToken: string | undefined //caret
 	caretApiKey: string | undefined //caret
+	bizRouterApiKey: string | undefined //caret
 }
 
 export interface LocalState {

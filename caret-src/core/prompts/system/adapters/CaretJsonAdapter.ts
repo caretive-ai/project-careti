@@ -4,10 +4,10 @@ import { PromptRegistry } from "@core/prompts/system-prompt/registry/PromptRegis
 import { Logger } from "@services/logging/Logger"
 import { ModelFamily } from "@shared/prompts"
 import { ClineDefaultTool } from "@shared/tools"
-import { API_PROVIDERS, CARET_MODES } from "../../../../shared/constants/PromptSystemConstants"
-import { IPromptSystem } from "../IPromptSystem"
-import { JsonTemplateLoader } from "../JsonTemplateLoader"
-import { CaretSystemPromptContext } from "../types"
+import { API_PROVIDERS, CARET_MODES } from "@caret/shared/constants/PromptSystemConstants"
+import { IPromptSystem } from "@caret/core/prompts/system/IPromptSystem"
+import { JsonTemplateLoader } from "@caret/core/prompts/system/JsonTemplateLoader"
+import { CaretSystemPromptContext } from "@caret/core/prompts/system/types"
 
 /**
  * Adapter for Caret's JSON-based prompt system.

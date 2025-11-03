@@ -34,6 +34,7 @@ import {
 	internationalZAiDefaultModelId,
 	internationalZAiModels,
 	liteLlmModelInfoSaneDefaults,
+	bizRouterModelInfoSaneDefaults,
 	ModelInfo,
 	mainlandQwenDefaultModelId,
 	mainlandQwenModels,
@@ -240,6 +241,16 @@ export function normalizeApiConfiguration(
 				selectedModelId: liteLlmModelId || "",
 				selectedModelInfo: liteLlmModelInfo || liteLlmModelInfoSaneDefaults,
 			}
+		case "bizrouter":
+			const bizRouterModelId =
+				currentMode === "plan" ? apiConfiguration?.planModeBizRouterModelId : apiConfiguration?.actModeBizRouterModelId
+			const bizRouterModelInfo =
+				currentMode === "plan" ? apiConfiguration?.planModeBizRouterModelInfo : apiConfiguration?.actModeBizRouterModelInfo
+			return {
+				selectedProvider: provider,
+				selectedModelId: bizRouterModelId || "",
+				selectedModelInfo: bizRouterModelInfo || bizRouterModelInfoSaneDefaults,
+			}
 		case "caret":
 			const caretModelId =
 				currentMode === "plan" ? apiConfiguration?.planModeCaretModelId : apiConfiguration?.actModeCaretModelId
@@ -384,6 +395,7 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 			ollamaModelId: undefined,
 			caretModelId: undefined, // caret
 			liteLlmModelId: undefined,
+			bizRouterModelId: undefined,
 			requestyModelId: undefined,
 			openAiModelId: undefined,
 			openRouterModelId: undefined,
@@ -397,6 +409,7 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 			openAiModelInfo: undefined,
 			caretModelInfo: undefined, // caret
 			liteLlmModelInfo: undefined,
+			bizRouterModelInfo: undefined,
 			openRouterModelInfo: undefined,
 			requestyModelInfo: undefined,
 			groqModelInfo: undefined,
@@ -429,6 +442,7 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 		lmStudioModelId: mode === "plan" ? apiConfiguration.planModeLmStudioModelId : apiConfiguration.actModeLmStudioModelId,
 		ollamaModelId: mode === "plan" ? apiConfiguration.planModeOllamaModelId : apiConfiguration.actModeOllamaModelId,
 		liteLlmModelId: mode === "plan" ? apiConfiguration.planModeLiteLlmModelId : apiConfiguration.actModeLiteLlmModelId,
+		bizRouterModelId: mode === "plan" ? apiConfiguration.planModeBizRouterModelId : apiConfiguration.actModeBizRouterModelId,
 		requestyModelId: mode === "plan" ? apiConfiguration.planModeRequestyModelId : apiConfiguration.actModeRequestyModelId,
 		openAiModelId: mode === "plan" ? apiConfiguration.planModeOpenAiModelId : apiConfiguration.actModeOpenAiModelId,
 		openRouterModelId:
@@ -446,6 +460,7 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 		// Model info objects
 		openAiModelInfo: mode === "plan" ? apiConfiguration.planModeOpenAiModelInfo : apiConfiguration.actModeOpenAiModelInfo,
 		liteLlmModelInfo: mode === "plan" ? apiConfiguration.planModeLiteLlmModelInfo : apiConfiguration.actModeLiteLlmModelInfo,
+		bizRouterModelInfo: mode === "plan" ? apiConfiguration.planModeBizRouterModelInfo : apiConfiguration.actModeBizRouterModelInfo,
 		caretModelInfo: mode === "plan" ? apiConfiguration.planModeCaretModelInfo : apiConfiguration.actModeCaretModelInfo,
 		openRouterModelInfo:
 			mode === "plan" ? apiConfiguration.planModeOpenRouterModelInfo : apiConfiguration.actModeOpenRouterModelInfo,
@@ -567,6 +582,13 @@ export async function syncModeConfigurations(
 			updates.actModeLiteLlmModelId = sourceFields.liteLlmModelId
 			updates.planModeLiteLlmModelInfo = sourceFields.liteLlmModelInfo
 			updates.actModeLiteLlmModelInfo = sourceFields.liteLlmModelInfo
+			break
+
+		case "bizrouter":
+			updates.planModeBizRouterModelId = sourceFields.bizRouterModelId
+			updates.actModeBizRouterModelId = sourceFields.bizRouterModelId
+			updates.planModeBizRouterModelInfo = sourceFields.bizRouterModelInfo
+			updates.actModeBizRouterModelInfo = sourceFields.bizRouterModelInfo
 			break
 
 		case "groq":

@@ -210,7 +210,9 @@ enum ApiProvider {
   QWEN_CODE = 33;
   DIFY = 34;
   OCA = 35;
-  CARET = 36;
+  // CARET MODIFICATION: Caret-specific providers use 1000+ to avoid conflicts with Cline
+  CARET = 1001;
+  BIZROUTER = 1002;
 }
 
 // Model info for OpenAI-compatible models
@@ -263,6 +265,31 @@ message LiteLLMModelInfo {
   optional string description = 11;
   repeated ModelTier tiers = 12;
   optional double temperature = 13;
+}
+
+// CARET MODIFICATION: Model info for BizRouter models
+message BizRouterModelInfo {
+  optional int64 max_tokens = 1;
+  optional int64 context_window = 2;
+  optional bool supports_images = 3;
+  bool supports_prompt_cache = 4;
+  optional double input_price = 5;
+  optional double output_price = 6;
+  optional ThinkingConfig thinking_config = 7;
+  optional bool supports_global_endpoint = 8;
+  optional double cache_writes_price = 9;
+  optional double cache_reads_price = 10;
+  optional string description = 11;
+  repeated ModelTier tiers = 12;
+  optional double temperature = 13;
+  // OpenAI-compatible parameters
+  optional double top_p = 14;
+  optional double frequency_penalty = 15;
+  optional double presence_penalty = 16;
+  // BizRouter extended parameters
+  optional int32 top_k = 17;
+  optional double repetition_penalty = 18;
+  optional double min_p = 19;
 }
 
 // Main ApiConfiguration message
@@ -350,6 +377,9 @@ message ModelsApiConfiguration {
   optional string caret_base_url = 1073;
   optional string caret_api_key = 1074;
   optional bool caret_use_prompt_cache = 1075;
+  // CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
+  optional string biz_router_api_key = 1076;
+  optional bool biz_router_use_prompt_cache = 1077;
 
   // Plan mode configurations
   optional ApiProvider plan_mode_api_provider = 100;
@@ -387,6 +417,8 @@ message ModelsApiConfiguration {
   optional OcaModelInfo plan_mode_oca_model_info = 132;
   optional string plan_mode_caret_model_id = 190;
   optional LiteLLMModelInfo plan_mode_caret_model_info = 191;
+  optional string plan_mode_biz_router_model_id = 192;
+  optional BizRouterModelInfo plan_mode_biz_router_model_info = 193;
 
 
   // Act mode configurations
@@ -426,4 +458,6 @@ message ModelsApiConfiguration {
 
   optional string act_mode_caret_model_id = 301;
   optional CaretModelInfo act_mode_caret_model_info = 302; // caret
+  optional string act_mode_biz_router_model_id = 303;
+  optional BizRouterModelInfo act_mode_biz_router_model_info = 304;
 }

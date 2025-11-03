@@ -6,9 +6,9 @@
 import * as fs from "fs"
 import * as path from "path"
 import { describe, expect, test } from "vitest"
-import { JsonTemplateLoader } from "../core/prompts/system/JsonTemplateLoader"
-import { PromptSystemManager } from "../core/prompts/system/PromptSystemManager"
-import { CARET_MODES } from "../shared/constants/PromptSystemConstants"
+import { JsonTemplateLoader } from "@caret/core/prompts/system/JsonTemplateLoader"
+import { PromptSystemManager } from "@caret/core/prompts/system/PromptSystemManager"
+import { CARET_MODES } from "@caret/shared/constants/PromptSystemConstants"
 
 describe("Prompt Generation Verification", () => {
 	test("Generate and compare Caret and cline prompts", async () => {

@@ -32,6 +32,7 @@ import { GroqProvider } from "./providers/GroqProvider"
 import { HuaweiCloudMaasProvider } from "./providers/HuaweiCloudMaasProvider"
 import { HuggingFaceProvider } from "./providers/HuggingFaceProvider"
 import { LiteLlmProvider } from "./providers/LiteLlmProvider"
+import { BizRouterProvider } from "./providers/BizRouterProvider"
 import { LMStudioProvider } from "./providers/LMStudioProvider"
 import { MistralProvider } from "./providers/MistralProvider"
 import { MoonshotProvider } from "./providers/MoonshotProvider"
@@ -157,6 +158,7 @@ const ApiOptions = ({
 			{ value: "gemini", label: t("providers.gemini.name", "settings") },
 			{ value: "openai", label: t("providers.openai.name", "settings") },
 			{ value: "anthropic", label: t("providers.anthropic.name", "settings") },
+			{ value: "bizrouter", label: t("providers.bizrouter.name", "settings") },
 			{ value: "bedrock", label: t("providers.bedrock.name", "settings") },
 			{ value: "vscode-lm", label: t("providers.vscode-lm.name", "settings") },
 			{ value: "deepseek", label: t("providers.deepseek.name", "settings") },
@@ -496,6 +498,10 @@ const ApiOptions = ({
 				)}
 				{apiConfiguration && selectedProvider === "litellm" && (
 					<LiteLlmProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
+				)}
+
+				{apiConfiguration && selectedProvider === "bizrouter" && (
+					<BizRouterProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
 				{apiConfiguration && selectedProvider === "caret" && (

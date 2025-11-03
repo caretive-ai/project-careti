@@ -37,6 +37,7 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		mistralApiKey,
 		fireworksApiKey,
 		liteLlmApiKey,
+		bizRouterApiKey,
     caretApiKey,
 		caretAuthToken,
 		asksageApiKey,
@@ -78,6 +79,7 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		context.secrets.get("mistralApiKey") as Promise<Secrets["mistralApiKey"]>,
 		context.secrets.get("fireworksApiKey") as Promise<Secrets["fireworksApiKey"]>,
 		context.secrets.get("liteLlmApiKey") as Promise<Secrets["liteLlmApiKey"]>,
+		context.secrets.get("bizRouterApiKey") as Promise<string | undefined>, // caret
     context.secrets.get("caretApiKey") as Promise<string | undefined>, // caret
 		context.secrets.get("caretAuthToken") as Promise<string | undefined>, // caret
 		context.secrets.get("asksageApiKey") as Promise<Secrets["asksageApiKey"]>,
@@ -125,6 +127,7 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		asksageApiKey,
 		fireworksApiKey,
 		liteLlmApiKey,
+		bizRouterApiKey,
     caretApiKey,
 		caretAuthToken,
 		doubaoApiKey,
@@ -207,6 +210,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const liteLlmBaseUrl = context.globalState.get<GlobalStateAndSettings["liteLlmBaseUrl"]>("liteLlmBaseUrl")
 		const liteLlmUsePromptCache =
 			context.globalState.get<GlobalStateAndSettings["liteLlmUsePromptCache"]>("liteLlmUsePromptCache")
+		const bizRouterUsePromptCache =
+			context.globalState.get<GlobalStateAndSettings["bizRouterUsePromptCache"]>("bizRouterUsePromptCache")
     const caretBaseUrl = context.globalState.get("caretBaseUrl") as string | undefined
 	  const caretUsePromptCache = context.globalState.get("caretUsePromptCache") as boolean | undefined
 	
@@ -315,9 +320,13 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			context.globalState.get<GlobalStateAndSettings["planModeLiteLlmModelId"]>("planModeLiteLlmModelId")
 		const planModeLiteLlmModelInfo =
 			context.globalState.get<GlobalStateAndSettings["planModeLiteLlmModelInfo"]>("planModeLiteLlmModelInfo")
+		const planModeBizRouterModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeBizRouterModelId"]>("planModeBizRouterModelId")
+		const planModeBizRouterModelInfo =
+			context.globalState.get<GlobalStateAndSettings["planModeBizRouterModelInfo"]>("planModeBizRouterModelInfo")
     const planModeCaretModelId = context.globalState.get("planModeCaretModelId") as string | undefined
     const planModeCaretModelInfo = context.globalState.get("planModeCaretModelInfo") as ModelInfo | undefined
-      
+
 		const planModeRequestyModelId =
 			context.globalState.get<GlobalStateAndSettings["planModeRequestyModelId"]>("planModeRequestyModelId")
 		const planModeRequestyModelInfo =
@@ -384,9 +393,13 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			context.globalState.get<GlobalStateAndSettings["actModeLiteLlmModelId"]>("actModeLiteLlmModelId")
 		const actModeLiteLlmModelInfo =
 			context.globalState.get<GlobalStateAndSettings["actModeLiteLlmModelInfo"]>("actModeLiteLlmModelInfo")
+		const actModeBizRouterModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeBizRouterModelId"]>("actModeBizRouterModelId")
+		const actModeBizRouterModelInfo =
+			context.globalState.get<GlobalStateAndSettings["actModeBizRouterModelInfo"]>("actModeBizRouterModelInfo")
     const actModeCaretModelId = context.globalState.get("actModeCaretModelId") as string | undefined // caret
     const actModeCaretModelInfo = context.globalState.get("actModeCaretModelInfo") as ModelInfo | undefined // caret
-      
+
 		const actModeRequestyModelId =
 			context.globalState.get<GlobalStateAndSettings["actModeRequestyModelId"]>("actModeRequestyModelId")
 		const actModeRequestyModelInfo =
@@ -488,6 +501,7 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			openRouterProviderSorting,
 			liteLlmBaseUrl,
 			liteLlmUsePromptCache,
+			bizRouterUsePromptCache, // caret
       caretBaseUrl, // caret
 		  caretUsePromptCache, // caret
 		  caretUserProfile, // caret
@@ -522,6 +536,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			planModeLmStudioModelId,
 			planModeLiteLlmModelId,
 			planModeLiteLlmModelInfo,
+			planModeBizRouterModelId, // caret
+			planModeBizRouterModelInfo, // caret
       planModeCaretModelId, // caret
 		  planModeCaretModelInfo, // caret
 			planModeRequestyModelId,
@@ -558,6 +574,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			actModeLmStudioModelId,
 			actModeLiteLlmModelId,
 			actModeLiteLlmModelInfo,
+			actModeBizRouterModelId, // caret
+			actModeBizRouterModelInfo, // caret
       actModeCaretModelId, // caret
 		  actModeCaretModelInfo, // caret
 			actModeRequestyModelId,

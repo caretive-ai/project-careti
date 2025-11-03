@@ -9,7 +9,7 @@ import { ModelInfo, openRouterDefaultModelId, openRouterDefaultModelInfo } from 
 import { shouldSkipReasoningForModel } from "@utils/model-utils"
 import axios from "axios"
 import OpenAI from "openai"
-import { version as extensionVersion } from "../../../package.json"
+import { version as extensionVersion } from "@root/package.json"
 
 interface CaretApiHandlerOptions extends CommonApiHandlerOptions {
 	ulid?: string

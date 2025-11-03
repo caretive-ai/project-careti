@@ -28,6 +28,7 @@ const aliasResolverPlugin = {
 			"@packages": path.resolve(__dirname, "src/packages"),
 			"@caret": path.resolve(__dirname, "caret-src"),
 			"@/caret-src": path.resolve(__dirname, "caret-src"),
+			"@root": path.resolve(__dirname),
 		}
 
 		// For each alias entry, create a resolver

@@ -199,6 +199,9 @@ async function postProcessGeneratedFiles() {
 				// CARET MODIFICATION: Fix LiteLLM service types
 				content = content.replace(/cline\.FetchLiteLlmModelsRequest/g, "caret.FetchLiteLlmModelsRequest")
 				content = content.replace(/cline\.FetchLiteLlmModelsResponse/g, "caret.FetchLiteLlmModelsResponse")
+				// CARET MODIFICATION: Fix BizRouter service types
+				content = content.replace(/cline\.FetchBizRouterModelsRequest/g, "caret.FetchBizRouterModelsRequest")
+				content = content.replace(/cline\.FetchBizRouterModelsResponse/g, "caret.FetchBizRouterModelsResponse")
 
 				const changesCount =
 					originalContent !== content ? (originalContent.match(/cline\.(Caret|GetCaret)/g) || []).length : 0

@@ -1,5 +1,5 @@
 import { SystemPromptContext as ClineSystemPromptContext } from "@/core/prompts/system-prompt/types"
-import { CARET_MODES } from "../../../shared/constants/PromptSystemConstants"
+import { CARET_MODES } from "@caret/shared/constants/PromptSystemConstants"
 
 /**
  * Extends the base SystemPromptContext with Caret-specific properties.

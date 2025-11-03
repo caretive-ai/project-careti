@@ -1,7 +1,4 @@
 {
-  "brand": {
-    "appName": "캐럿"
-  },
   "button": {
     "freeStart": "무료로 시작하기",
     "useOwnKey": "자신의 API 키 사용하기",

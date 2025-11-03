@@ -1,7 +1,4 @@
 {
-  "brand": {
-    "appName": "キャレット"
-  },
   "button": {
     "freeStart": "無料で始める",
     "useOwnKey": "独自のAPIキーを使用する",

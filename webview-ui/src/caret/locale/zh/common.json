@@ -1,7 +1,4 @@
 {
-  "brand": {
-    "appName": "Caret"
-  },
   "button": {
     "freeStart": "免费开始",
     "useOwnKey": "使用您自己的 API 密钥",

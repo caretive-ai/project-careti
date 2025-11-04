@@ -29,20 +29,36 @@ describe("fetchLiteLlmModels", () => {
 		vi.resetAllMocks()
 	})
 
-	it("should successfully fetch models from LiteLLM /v1/models endpoint", async () => {
-		// CARET MODIFICATION: Test successful model fetching from /v1/models endpoint
+	it("should successfully fetch and filter models using /health and /v1/models endpoints", async () => {
+		// CARET MODIFICATION: Test health-based filtering
+		// Mock /health response
+		const mockHealthResponse = {
+			data: {
+				healthy_endpoints: [
+					{ model: "gpt-3.5-turbo" },
+					{ model: "gpt-4" },
+					{ model: "claude-3-sonnet" },
+					{ model: "unhealthy-model" }, // This won't be in /v1/models
+				],
+				unhealthy_endpoints: [],
+			},
+		}
+
+		// Mock /v1/models response
 		const mockModelsResponse = {
 			data: {
 				data: [
 					{ id: "gpt-3.5-turbo", object: "model", created: 1677610602, owned_by: "openai" },
 					{ id: "gpt-4", object: "model", created: 1677610602, owned_by: "openai" },
 					{ id: "claude-3-sonnet", object: "model", created: 1677610602, owned_by: "anthropic" },
+					{ id: "unavailable-model", object: "model", created: 1677610602, owned_by: "other" }, // This is available but not healthy
 				],
 				object: "list",
 			},
 		}
 
-		mockedAxios.get.mockResolvedValueOnce(mockModelsResponse)
+		// First call: /health, Second call: /v1/models
+		mockedAxios.get.mockResolvedValueOnce(mockHealthResponse).mockResolvedValueOnce(mockModelsResponse)
 
 		const request = proto.caret.FetchLiteLlmModelsRequest.create({
 			baseUrl: "https://api.litellm.com",
@@ -51,10 +67,22 @@ describe("fetchLiteLlmModels", () => {
 
 		const result = await fetchLiteLlmModels(mockController, request)
 
+		// Should return intersection: models that are both healthy AND available
 		expect(result.success).toBe(true)
 		expect(result.models).toEqual(["claude-3-sonnet", "gpt-3.5-turbo", "gpt-4"])
 		expect(result.errorMessage).toBe("")
-		expect(mockedAxios.get).toHaveBeenCalledWith(
+
+		// Verify both endpoints were called
+		expect(mockedAxios.get).toHaveBeenCalledTimes(2)
+		expect(mockedAxios.get).toHaveBeenNthCalledWith(1, "https://api.litellm.com/health", {
+			headers: {
+				accept: "application/json",
+				Authorization: "Bearer test-key",
+			},
+			timeout: 60000,
+		})
+		expect(mockedAxios.get).toHaveBeenNthCalledWith(
+			2,
 			"https://api.litellm.com/v1/models?return_wildcard_routes=false&include_model_access_groups=false&only_model_access_groups=false&include_metadata=false",
 			{
 				headers: {
@@ -80,7 +108,42 @@ describe("fetchLiteLlmModels", () => {
 		expect(mockedAxios.get).not.toHaveBeenCalled()
 	})
 
-	it("should handle HTTP errors gracefully", async () => {
+	it("should handle /health failure and fallback to /v1/models only", async () => {
+		// /health fails
+		mockedAxios.get.mockRejectedValueOnce(new Error("Health check unavailable"))
+
+		// /v1/models succeeds
+		const mockModelsResponse = {
+			data: {
+				data: [
+					{ id: "gpt-3.5-turbo", object: "model", created: 1677610602, owned_by: "openai" },
+					{ id: "gpt-4", object: "model", created: 1677610602, owned_by: "openai" },
+				],
+				object: "list",
+			},
+		}
+		mockedAxios.get.mockResolvedValueOnce(mockModelsResponse)
+
+		const request = proto.caret.FetchLiteLlmModelsRequest.create({
+			baseUrl: "https://api.litellm.com",
+			apiKey: "test-key",
+		})
+
+		const result = await fetchLiteLlmModels(mockController, request)
+
+		// Should succeed with all available models (no health filtering)
+		expect(result.success).toBe(true)
+		expect(result.models).toEqual(["gpt-3.5-turbo", "gpt-4"])
+		expect(result.errorMessage).toBe("")
+	})
+
+	it("should handle HTTP errors gracefully when /v1/models fails", async () => {
+		// /health succeeds
+		mockedAxios.get.mockResolvedValueOnce({
+			data: { healthy_endpoints: [{ model: "gpt-4" }], unhealthy_endpoints: [] },
+		})
+
+		// /v1/models fails
 		mockedAxios.get.mockRejectedValueOnce(new Error("Network error"))
 
 		const request = proto.caret.FetchLiteLlmModelsRequest.create({
@@ -96,13 +159,18 @@ describe("fetchLiteLlmModels", () => {
 	})
 
 	it("should handle empty models list", async () => {
+		// /health returns some healthy models
+		mockedAxios.get.mockResolvedValueOnce({
+			data: { healthy_endpoints: [{ model: "gpt-4" }], unhealthy_endpoints: [] },
+		})
+
+		// /v1/models returns empty list
 		const mockEmptyResponse = {
 			data: {
 				data: [],
 				object: "list",
 			},
 		}
-
 		mockedAxios.get.mockResolvedValueOnce(mockEmptyResponse)
 
 		const request = proto.caret.FetchLiteLlmModelsRequest.create({
@@ -113,18 +181,23 @@ describe("fetchLiteLlmModels", () => {
 		const result = await fetchLiteLlmModels(mockController, request)
 
 		expect(result.success).toBe(true)
-		expect(result.models).toEqual([])
+		expect(result.models).toEqual([]) // Empty intersection
 		expect(result.errorMessage).toBe("")
 	})
 
 	it("should work without API key (for public endpoints)", async () => {
+		// /health without API key
+		mockedAxios.get.mockResolvedValueOnce({
+			data: { healthy_endpoints: [{ model: "public-model" }], unhealthy_endpoints: [] },
+		})
+
+		// /v1/models without API key
 		const mockModelsResponse = {
 			data: {
 				data: [{ id: "public-model", object: "model", created: 1677610602, owned_by: "provider" }],
 				object: "list",
 			},
 		}
-
 		mockedAxios.get.mockResolvedValueOnce(mockModelsResponse)
 
 		const request = proto.caret.FetchLiteLlmModelsRequest.create({
@@ -136,7 +209,18 @@ describe("fetchLiteLlmModels", () => {
 
 		expect(result.success).toBe(true)
 		expect(result.models).toEqual(["public-model"])
-		expect(mockedAxios.get).toHaveBeenCalledWith(
+
+		// Verify both calls made without API key
+		expect(mockedAxios.get).toHaveBeenCalledTimes(2)
+		expect(mockedAxios.get).toHaveBeenNthCalledWith(1, "https://api.litellm.com/health", {
+			headers: {
+				accept: "application/json",
+				// No Authorization header when API key is empty
+			},
+			timeout: 60000,
+		})
+		expect(mockedAxios.get).toHaveBeenNthCalledWith(
+			2,
 			"https://api.litellm.com/v1/models?return_wildcard_routes=false&include_model_access_groups=false&only_model_access_groups=false&include_metadata=false",
 			{
 				headers: {
@@ -147,4 +231,45 @@ describe("fetchLiteLlmModels", () => {
 			},
 		)
 	})
+
+})
+
+// CARET MODIFICATION: Integration test with real LiteLLM server (separate file to avoid mock conflicts)
+// Run this test separately: npx vitest run caret-src/core/controller/fetchLiteLlmModels.test.ts --grep "Integration"
+describe.skip("Integration test with real LiteLLM server", () => {
+	// This test is skipped by default to avoid mock conflicts
+	// To run: remove .skip and run with --no-isolate flag
+	const mockController = {} as Controller
+
+	it(
+		"should fetch and filter models from real LiteLLM server",
+		async () => {
+			const request = proto.caret.FetchLiteLlmModelsRequest.create({
+				baseUrl: "https://api.litellm.com",
+				apiKey: "test-key",
+			})
+
+			const result = await fetchLiteLlmModels(mockController, request)
+
+			// Assertions
+			expect(result.success).toBe(true)
+			expect(result.models).toBeDefined()
+			expect(Array.isArray(result.models)).toBe(true)
+			expect(result.errorMessage).toBe("")
+
+			console.log(`\n✅ Integration test result:`)
+			console.log(`   Total filtered models: ${result.models.length}`)
+			console.log(`   Models:`, result.models)
+
+			// Verify that models are strings
+			result.models.forEach((model: string) => {
+				expect(typeof model).toBe("string")
+				expect(model.length).toBeGreaterThan(0)
+			})
+
+			// Based on previous manual test, we know at least one model should be returned
+			expect(result.models.length).toBeGreaterThan(0)
+		},
+		90000,
+	) // 90 second timeout for real API calls
 })

@@ -4,11 +4,12 @@ import axios from "axios"
 import { Controller } from "@/core/controller"
 
 /**
- * CARET MODIFICATION: Fetches available models from LiteLLM /v1/models endpoint
- * This endpoint returns only models assigned to the provided API key with health check OK
+ * CARET MODIFICATION: Fetches available AND healthy models from LiteLLM
+ * Uses /health endpoint to get healthy models and /v1/models to get accessible models
+ * Returns intersection of both (models that are healthy AND accessible with provided API key)
  * @param controller The controller instance
  * @param request The request containing base URL and API key
- * @returns Response with model names or error
+ * @returns Response with filtered model names or error
  */
 export async function fetchLiteLlmModels(
 	_controller: Controller,
@@ -36,42 +37,85 @@ export async function fetchLiteLlmModels(
 			})
 		}
 
-		// Prepare headers
-		const headers: Record<string, string> = {
+		const baseUrl = request.baseUrl.replace(/\/$/, "")
+
+		// Prepare headers for /health endpoint (uses Authorization: Bearer)
+		const healthHeaders: Record<string, string> = {
 			accept: "application/json",
 		}
-		// Only add API key header if it's provided and not empty
 		if (request.apiKey && request.apiKey.trim() !== "") {
-			// LiteLLM requires x-litellm-api-key header for API key authentication
-			headers["x-litellm-api-key"] = request.apiKey
+			healthHeaders["Authorization"] = `Bearer ${request.apiKey}`
 		}
 
-		// Call LiteLLM /v1/models endpoint with query parameters
-		// These parameters filter out unnecessary data and return only accessible models
-		const baseUrl = request.baseUrl.replace(/\/$/, "")
+		// Prepare headers for /v1/models endpoint (uses x-litellm-api-key)
+		const modelsHeaders: Record<string, string> = {
+			accept: "application/json",
+		}
+		if (request.apiKey && request.apiKey.trim() !== "") {
+			modelsHeaders["x-litellm-api-key"] = request.apiKey
+		}
+
+		// Step 1: Fetch healthy models from /health endpoint
+		Logger.debug(`[CaretSystemService] 🏥 Calling /health endpoint: ${baseUrl}/health`)
+		const healthUrl = `${baseUrl}/health`
+		let healthyModels: string[] = []
+
+		try {
+			const healthResponse = await axios.get(healthUrl, {
+				headers: healthHeaders,
+				timeout: 60000, // 60 second timeout (health check can be slow)
+			})
+
+			const healthyEndpoints = healthResponse.data?.healthy_endpoints || []
+			healthyModels = healthyEndpoints
+				.map((endpoint: any) => endpoint.model)
+				.filter((model: string) => model && typeof model === "string")
+
+			Logger.debug(`[CaretSystemService] 🏥 Health check returned ${healthyModels.length} healthy models`)
+		} catch (healthError) {
+			Logger.warn(`[CaretSystemService] ⚠️ Failed to fetch health status: ${healthError instanceof Error ? healthError.message : "Unknown error"}`)
+			// Continue with /v1/models only if /health fails
+		}
+
+		// Step 2: Fetch available models from /v1/models endpoint
 		const modelsUrl = `${baseUrl}/v1/models?return_wildcard_routes=false&include_model_access_groups=false&only_model_access_groups=false&include_metadata=false`
 		Logger.debug(`[CaretSystemService] 🔍 Calling /v1/models endpoint: ${modelsUrl}`)
 
-		const response = await axios.get(modelsUrl, {
-			headers,
+		const modelsResponse = await axios.get(modelsUrl, {
+			headers: modelsHeaders,
 			timeout: 10000, // 10 second timeout
 		})
 
-		// Extract model IDs from /v1/models response
-		const modelsData = response.data?.data || []
-		Logger.debug(`[CaretSystemService] 📋 Models response received with ${modelsData.length} models`)
-
-		// Extract model IDs (these are already filtered by API key and health check)
-		const modelNames = modelsData
+		const modelsData = modelsResponse.data?.data || []
+		const availableModels = modelsData
 			.map((model: any) => model.id)
 			.filter((id: string) => id && typeof id === "string")
-			.sort()
 
-		Logger.info(`[CaretSystemService] ✅ Successfully fetched ${modelNames.length} LiteLLM models: ${modelNames.join(", ")}`)
+		Logger.debug(`[CaretSystemService] 📋 /v1/models returned ${availableModels.length} available models`)
+
+		// Step 3: Calculate intersection (models that are both healthy AND available)
+		let filteredModels: string[]
+
+		if (healthyModels.length === 0) {
+			// If health check failed or returned no models, return all available models
+			Logger.info(`[CaretSystemService] ℹ️ Using all available models (health check unavailable)`)
+			filteredModels = availableModels
+		} else {
+			// Return only models that are both healthy AND available
+			const healthySet = new Set(healthyModels)
+			filteredModels = availableModels.filter((model: string) => healthySet.has(model))
+
+			Logger.info(
+				`[CaretSystemService] ✅ Filtered to ${filteredModels.length} models (healthy: ${healthyModels.length}, available: ${availableModels.length})`,
+			)
+		}
+
+		const sortedModels = filteredModels.sort()
+		Logger.info(`[CaretSystemService] ✅ Final model list: ${sortedModels.join(", ")}`)
 
 		return proto.caret.FetchLiteLlmModelsResponse.create({
 			success: true,
-			models: modelNames,
+			models: sortedModels,
 		})
 	} catch (error) {
 		const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"

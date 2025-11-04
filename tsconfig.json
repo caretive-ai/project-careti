@@ -75,6 +75,7 @@
 		"node_modules",
 		".vscode-test",
 		"webview-ui",
-		"src/test/e2e/**/*"
+		"src/test/e2e/**/*",
+		"**/__tests__/**/*"
 	]
 }

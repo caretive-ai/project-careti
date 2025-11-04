@@ -21,6 +21,8 @@ export enum ClineDefaultTool {
 	SUMMARIZE_TASK = "summarize_task",
 	REPORT_BUG = "report_bug",
 	NEW_RULE = "new_rule",
+	// CARET MODIFICATION: Terminal Tool for interactive terminal control
+	TERMINAL = "terminal",
 }
 
 // Array of all tool names for compatibility

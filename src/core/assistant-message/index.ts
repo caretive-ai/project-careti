@@ -39,6 +39,11 @@ export const toolParamNames = [
 	"needs_more_exploration",
 	"task_progress",
 	"timeout",
+	// CARET MODIFICATION: Terminal Tool parameters
+	"session_id",
+	"args",
+	"cwd",
+	"input",
 ] as const
 
 export type ToolParamName = (typeof toolParamNames)[number]

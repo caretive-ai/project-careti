@@ -1,0 +1,36 @@
+{
+	"terminal_tool": {
+		"description": "Terminal Tool enables interactive control of terminal sessions for programs like Python REPL, Node REPL, or Claude Code CLI.",
+		"sections": [
+			{
+				"title": "Terminal Tool Overview",
+				"content": "The terminal tool allows you to:\n- Open and manage interactive terminal sessions\n- Send input to running programs\n- Read output from terminal sessions\n- Control program execution (stop, close)\n- List active sessions\n\nUseful for: Python REPL, Node.js REPL, CLI tools, interactive programs",
+				"mode": "both",
+				"tokens": "~60"
+			},
+			{
+				"title": "Terminal Actions",
+				"content": "Available actions:\n\n1. open: Start new terminal session\n   - Required: command (e.g., \"python3\", \"node\", \"claude\")\n   - Optional: args (array), cwd (working directory)\n   - Returns: session_id for subsequent operations\n\n2. send: Send input to session\n   - Required: session_id, input (text to send)\n   - Automatically appends newline\n   - Returns: current output buffer\n\n3. read: Read session output\n   - Required: session_id\n   - Returns: accumulated output\n\n4. stop: Send Ctrl+C signal\n   - Required: session_id\n   - Interrupts running command\n\n5. close: Terminate session\n   - Required: session_id\n   - Closes terminal and cleans up\n\n6. list: View active sessions\n   - Returns: array of session info (id, command, timestamps)",
+				"mode": "agent",
+				"tokens": "~180"
+			},
+			{
+				"title": "Usage Examples",
+				"content": "Python REPL:\n1. {\"action\": \"open\", \"command\": \"python3\", \"args\": [\"-i\"]}\n   → Returns session_id\n2. {\"action\": \"send\", \"session_id\": \"...\", \"input\": \"print('hello')\"}\n   → Execute and read output\n3. {\"action\": \"close\", \"session_id\": \"...\"}\n   → Clean exit\n\nNode.js REPL:\n1. {\"action\": \"open\", \"command\": \"node\"}\n2. {\"action\": \"send\", \"session_id\": \"...\", \"input\": \"console.log('test')\"}\n3. {\"action\": \"read\", \"session_id\": \"...\"}\n\nClaude Code:\n1. {\"action\": \"open\", \"command\": \"claude\", \"args\": [\"code\"]}\n2. {\"action\": \"send\", \"session_id\": \"...\", \"input\": \"Create README\"}\n3. Wait for completion, then read output",
+				"mode": "agent",
+				"tokens": "~150"
+			},
+			{
+				"title": "Best Practices",
+				"content": "- Keep sessions organized: Use descriptive session tracking\n- Wait for output: Allow time for programs to process (500ms typical)\n- Clean up: Always close sessions when done\n- Handle errors: Check session existence before operations\n- Session IDs: Store and reuse for the same terminal\n\nLimitations:\n- Sessions persist until explicitly closed\n- Output buffering may have delays\n- No TTY emulation (some programs may behave differently)",
+				"mode": "agent",
+				"tokens": "~90"
+			}
+		],
+		"total_estimated_tokens": "~480 (agent mode), ~60 (chatbot mode)"
+	},
+	"template_vars": {
+		"description": "Terminal Tool guide for interactive terminal session control",
+		"source": "Caret Smart Terminal implementation (Phase 1-4)"
+	}
+}

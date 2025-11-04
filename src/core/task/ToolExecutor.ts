@@ -37,6 +37,8 @@ import { SummarizeTaskHandler } from "./tools/handlers/SummarizeTaskHandler"
 import { UseMcpToolHandler } from "./tools/handlers/UseMcpToolHandler"
 import { WebFetchToolHandler } from "./tools/handlers/WebFetchToolHandler"
 import { WriteToFileToolHandler } from "./tools/handlers/WriteToFileToolHandler"
+// CARET MODIFICATION: Import TerminalToolHandler
+import { TerminalToolHandler } from "./tools/handlers/TerminalToolHandler"
 import { IPartialBlockHandler, SharedToolHandler, ToolExecutorCoordinator } from "./tools/ToolExecutorCoordinator"
 import { ToolValidator } from "./tools/ToolValidator"
 import { TaskConfig, validateTaskConfig } from "./tools/types/TaskConfig"
@@ -205,6 +207,8 @@ export class ToolExecutor {
 		this.coordinator.register(new CondenseHandler())
 		this.coordinator.register(new SummarizeTaskHandler())
 		this.coordinator.register(new ReportBugHandler())
+		// CARET MODIFICATION: Register TerminalToolHandler
+		this.coordinator.register(new TerminalToolHandler(validator))
 	}
 
 	/**

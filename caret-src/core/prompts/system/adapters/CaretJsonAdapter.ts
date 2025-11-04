@@ -49,6 +49,7 @@ export class CaretJsonAdapter implements IPromptSystem {
 			"CARET_USER_INSTRUCTIONS",
 			// CARET_TOOL_SYSTEM removed - replaced with Cline original tool system (inserted after CARET_USER_INSTRUCTIONS)
 			isClaudeCodeProvider ? "CLAUDE_CODE_TASK_TOOL" : null, // CARET MODIFICATION: F12 - Claude Code Task tool for subagent support
+			"TERMINAL_TOOL_GUIDE", // CARET MODIFICATION: Smart Terminal Tool guide
 			"CARET_FILE_EDITING",
 			"CARET_BEHAVIOR_RULES",
 			"CARET_TASK_OBJECTIVE",
@@ -352,6 +353,9 @@ export class CaretJsonAdapter implements IPromptSystem {
 			content = this.processTemplateSections(template.capabilities.sections, isChatbotMode)
 		} else if (template.file_editing?.sections) {
 			content = this.processTemplateSections(template.file_editing.sections, isChatbotMode)
+		} else if (template.terminal_tool?.sections) {
+			// CARET MODIFICATION: Handle TERMINAL_TOOL_GUIDE.json
+			content = this.processTemplateSections(template.terminal_tool.sections, isChatbotMode)
 		} else if (template.user_instructions?.sections) {
 			content = this.processTemplateSections(template.user_instructions.sections, isChatbotMode)
 		} else if (template.task_objective?.sections) {

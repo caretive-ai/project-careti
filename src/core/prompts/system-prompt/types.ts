@@ -111,6 +111,7 @@ export interface SystemPromptContext {
 	readonly workspaceRoots?: Array<{ path: string; name: string; vcs?: string }>
 	readonly isSubagentsEnabledAndCliInstalled?: boolean // CARET MODIFICATION: Subagent support
 	readonly isCliSubagent?: boolean // CARET MODIFICATION: Subagent support
+	readonly enableNativeToolCalls?: boolean // Cline v3.35.0: Native tool calling support
 }
 
 /**

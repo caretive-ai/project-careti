@@ -98,7 +98,7 @@ export class ListFilesToolHandler implements IFullyManagedTool {
 			// Auto-approval flow
 			await config.callbacks.removeLastPartialMessageIfExistsWithType("ask", "tool")
 			await config.callbacks.say("tool", completeMessage, undefined, undefined, false)
-			config.taskState.consecutiveAutoApprovedRequestsCount++
+			// config.taskState.consecutiveAutoApprovedRequestsCount++ // Removed in Cline v3.35.0
 
 			// Capture telemetry
 			telemetryService.captureToolUsage(config.ulid, block.name, config.api.getModel().id, true, true, workspaceContext)

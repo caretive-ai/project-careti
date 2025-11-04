@@ -42,7 +42,8 @@ export interface GlobalState {
 	multiRootEnabled: boolean
 	lastDismissedInfoBannerVersion: number
 	lastDismissedModelBannerVersion: number
-  caretUserProfile: CaretUser | undefined //caret
+	nativeToolCallEnabled: boolean // Cline v3.35.0 - Native tool calling support
+	caretUserProfile: CaretUser | undefined //caret
 }
 
 export interface Settings {

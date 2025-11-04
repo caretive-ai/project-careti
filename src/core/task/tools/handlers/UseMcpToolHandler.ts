@@ -88,7 +88,7 @@ export class UseMcpToolHandler implements IFullyManagedTool {
 			// Auto-approval flow
 			await config.callbacks.removeLastPartialMessageIfExistsWithType("ask", "use_mcp_server")
 			await config.callbacks.say("use_mcp_server", completeMessage, undefined, undefined, false)
-			config.taskState.consecutiveAutoApprovedRequestsCount++
+			// config.taskState.consecutiveAutoApprovedRequestsCount++ // Removed in Cline v3.35.0
 
 			// Capture telemetry
 			telemetryService.captureToolUsage(config.ulid, block.name, config.api.getModel().id, true, true)

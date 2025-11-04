@@ -63,6 +63,7 @@ enum ClineSay {
   LOAD_MCP_DOCUMENTATION = 25;
   INFO = 26;
   TASK_PROGRESS = 27;
+  ERROR_RETRY = 28; // Cline v3.35.0: Auto-retry with exponential backoff
 }
 
 // Enum for ClineSayTool tool types

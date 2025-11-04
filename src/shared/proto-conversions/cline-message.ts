@@ -74,6 +74,7 @@ function convertClineSayToProtoEnum(say: AppClineSay | undefined): ClineSay | un
 	const mapping: Record<AppClineSay, ClineSay> = {
 		task: ClineSay.TASK,
 		error: ClineSay.ERROR,
+		error_retry: ClineSay.ERROR_RETRY, // Cline v3.35.0
 		api_req_started: ClineSay.API_REQ_STARTED,
 		api_req_finished: ClineSay.API_REQ_FINISHED,
 		text: ClineSay.TEXT,
@@ -86,6 +87,7 @@ function convertClineSayToProtoEnum(say: AppClineSay | undefined): ClineSay | un
 		command_output: ClineSay.COMMAND_OUTPUT_SAY,
 		tool: ClineSay.TOOL_SAY,
 		shell_integration_warning: ClineSay.SHELL_INTEGRATION_WARNING,
+		shell_integration_warning_with_suggestion: ClineSay.SHELL_INTEGRATION_WARNING, // Cline v3.35.0: Maps to same enum
 		browser_action_launch: ClineSay.BROWSER_ACTION_LAUNCH_SAY,
 		browser_action: ClineSay.BROWSER_ACTION,
 		browser_action_result: ClineSay.BROWSER_ACTION_RESULT,
@@ -119,6 +121,7 @@ function convertProtoEnumToClineSay(say: ClineSay): AppClineSay | undefined {
 	const mapping: Record<Exclude<ClineSay, ClineSay.UNRECOGNIZED>, AppClineSay> = {
 		[ClineSay.TASK]: "task",
 		[ClineSay.ERROR]: "error",
+		[ClineSay.ERROR_RETRY]: "error_retry", // Cline v3.35.0
 		[ClineSay.API_REQ_STARTED]: "api_req_started",
 		[ClineSay.API_REQ_FINISHED]: "api_req_finished",
 		[ClineSay.TEXT]: "text",

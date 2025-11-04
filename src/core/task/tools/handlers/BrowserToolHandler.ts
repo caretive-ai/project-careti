@@ -103,7 +103,7 @@ export class BrowserToolHandler implements IFullyManagedTool {
 				if (autoApprover.shouldAutoApproveTool(block.name)) {
 					await config.callbacks.removeLastPartialMessageIfExistsWithType("ask", "browser_action_launch")
 					await config.callbacks.say("browser_action_launch", url, undefined, undefined, false)
-					config.taskState.consecutiveAutoApprovedRequestsCount++
+					// config.taskState.consecutiveAutoApprovedRequestsCount++ // Removed in Cline v3.35.0 auto-approval redesign
 				} else {
 					// Show notification for approval if auto approval enabled
 					showNotificationForApprovalIfAutoApprovalEnabled(

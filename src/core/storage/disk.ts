@@ -3,7 +3,7 @@ import { TaskMetadata } from "@core/context/context-tracking/ContextTrackerTypes
 import { execa } from "@packages/execa"
 import { ClineMessage } from "@shared/ExtensionMessage"
 import { HistoryItem } from "@shared/HistoryItem"
-import { fileExistsAtPath } from "@utils/fs"
+import { fileExistsAtPath, isDirectory } from "@utils/fs"
 import fsSync from "fs"
 import fs from "fs/promises"
 import os from "os"
@@ -52,6 +52,7 @@ export const GlobalFileNames = {
 	cursorRulesDir: ".cursor/rules",
 	cursorRulesFile: ".cursorrules",
 	windsurfRules: ".windsurfrules",
+	hooksDir: ".clinerules/hooks", // Cline v3.35.0: Hooks system
 	taskMetadata: "task_metadata.json",
 	persona: "persona.md", // CARET MODIFICATION: F08 Persona system
 	customInstructions: "custom_instructions.md", // CARET MODIFICATION: F08 Legacy persona migration
@@ -108,6 +109,19 @@ export async function ensureRulesDirectoryExists(): Promise<string> {
 		return path.join(os.homedir(), "Documents", "Caret", "Rules") // CARET MODIFICATION: F03 Branding // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
 	}
 	return clineRulesDir
+}
+
+export async function ensureHooksDirectoryExists(): Promise<string> {
+	const rulesDir = await ensureRulesDirectoryExists()
+	const clineHooksDir = path.join(rulesDir, "Hooks")
+	try {
+		await fs.mkdir(clineHooksDir, { recursive: true })
+		return clineHooksDir
+	} catch (_error) {
+		// If mkdir fails, return a fallback path based on the Rules directory fallback
+		// This matches the pattern of other ensure*DirectoryExists functions
+		return path.join(rulesDir, "Hooks")
+	}
 }
 
 export async function ensureWorkflowsDirectoryExists(): Promise<string> {
@@ -315,4 +329,64 @@ export async function writeTaskSettingsToStorage(taskId: string, settings: Parti
 		console.error("[Disk] Failed to write task settings:", error)
 		throw error
 	}
+}
+
+// Cline v3.35.0: Hooks system functions
+import { StateManager } from "./StateManager"
+
+/**
+ * Gets the path to the global hooks directory if it exists.
+ * Returns undefined if the directory doesn't exist.
+ */
+export async function getGlobalHooksDir(): Promise<string | undefined> {
+	const globalHooksDir = await ensureHooksDirectoryExists()
+	return (await isDirectory(globalHooksDir)) ? globalHooksDir : undefined
+}
+
+/**
+ * Gets the paths to all hooks directories to search for hooks, including:
+ * 1. The global hooks directory (if it exists)
+ * 2. Each workspace root's .clinerules/hooks directory (if they exist)
+ *
+ * Note: Hooks from different directories may be executed concurrently.
+ * No execution order is guaranteed between hooks from different directories.
+ * A workspace may not use hooks, and the resulting array will be empty. A
+ * multi-root workspace may have multiple hooks directories.
+ */
+export async function getAllHooksDirs(): Promise<string[]> {
+	const hooksDirs: string[] = []
+
+	// Add global hooks directory (if it exists)
+	const globalHooksDir = await getGlobalHooksDir()
+	if (globalHooksDir) {
+		hooksDirs.push(globalHooksDir)
+	}
+
+	// Add workspace hooks directories
+	const workspaceHooksDirs = await getWorkspaceHooksDirs()
+	hooksDirs.push(...workspaceHooksDirs)
+
+	return hooksDirs
+}
+
+/**
+ * Gets the paths to the workspace's .clinerules/hooks directories to search for
+ * hooks. A workspace may not use hooks, and the resulting array will be empty. A
+ * multi-root workspace may have multiple hooks directories.
+ */
+export async function getWorkspaceHooksDirs(): Promise<string[]> {
+	const workspaceRootPaths =
+		StateManager.get()
+			.getGlobalStateKey("workspaceRoots")
+			?.map((root) => root.path) || []
+
+	return (
+		await Promise.all(
+			workspaceRootPaths.map(async (workspaceRootPath) => {
+				// Look for a .clinerules/hooks folder in this workspace root.
+				const candidate = path.join(workspaceRootPath, GlobalFileNames.hooksDir)
+				return (await isDirectory(candidate)) ? candidate : undefined
+			}),
+		)
+	).filter((path): path is string => Boolean(path))
 }

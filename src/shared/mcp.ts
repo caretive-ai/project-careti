@@ -1,5 +1,6 @@
 export const DEFAULT_MCP_TIMEOUT_SECONDS = 60 // matches Anthropic's default timeout in their MCP SDK
 export const MIN_MCP_TIMEOUT_SECONDS = 1
+export const CLINE_MCP_TOOL_IDENTIFIER = "0mcp0"
 export type McpMode = "full" | "server-use-only" | "off"
 
 export type McpServer = {

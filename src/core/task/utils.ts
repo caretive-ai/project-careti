@@ -132,3 +132,15 @@ export async function detectAvailableCliTools(): Promise<string[]> {
 
 	return availableCommands
 }
+
+export function extractProviderDomainFromUrl(url: string | undefined): string | undefined {
+	if (!url) {
+		return undefined
+	}
+	try {
+		const urlObj = new URL(url)
+		return urlObj.hostname
+	} catch {
+		return undefined
+	}
+}

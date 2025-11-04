@@ -31,6 +31,8 @@ export type Platform = "aix" | "darwin" | "freebsd" | "linux" | "openbsd" | "sun
 
 export const DEFAULT_PLATFORM = "unknown"
 
+export const COMMAND_CANCEL_TOKEN = "__cline_command_cancel__"
+
 export interface ExtensionState {
 	isNewUser: boolean
 	welcomeViewCompleted: boolean
@@ -149,6 +151,7 @@ export type ClineAsk =
 export type ClineSay =
 	| "task"
 	| "error"
+	| "error_retry"
 	| "api_req_started"
 	| "api_req_finished"
 	| "text"

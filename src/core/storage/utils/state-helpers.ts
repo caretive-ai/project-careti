@@ -275,6 +275,9 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const lastDismissedModelBannerVersion = context.globalState.get<
 			GlobalStateAndSettings["lastDismissedModelBannerVersion"]
 		>("lastDismissedModelBannerVersion")
+		const lastDismissedCliBannerVersion = context.globalState.get<
+			GlobalStateAndSettings["lastDismissedCliBannerVersion"]
+		>("lastDismissedCliBannerVersion") // Cline v3.35.0
 		const qwenCodeOauthPath = context.globalState.get<GlobalStateAndSettings["qwenCodeOauthPath"]>("qwenCodeOauthPath")
 		const customPrompt = context.globalState.get<GlobalStateAndSettings["customPrompt"]>("customPrompt")
 		const autoCondenseThreshold =
@@ -466,6 +469,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		 */
 		const primaryRootIndex = context.globalState.get<GlobalStateAndSettings["primaryRootIndex"]>("primaryRootIndex")
 		const multiRootEnabled = context.globalState.get<GlobalStateAndSettings["multiRootEnabled"]>("multiRootEnabled")
+		const nativeToolCallEnabled =
+			context.globalState.get<GlobalStateAndSettings["nativeToolCallEnabled"]>("nativeToolCallEnabled")
 
 		return {
 			// api configuration fields
@@ -630,6 +635,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			subagentsEnabled: subagentsEnabled ?? true, // TEMPORARY: true for testing (should be false in production)
 			lastDismissedInfoBannerVersion: lastDismissedInfoBannerVersion ?? 0,
 			lastDismissedModelBannerVersion: lastDismissedModelBannerVersion ?? 0,
+			lastDismissedCliBannerVersion: lastDismissedCliBannerVersion ?? 0, // Cline v3.35.0
+			nativeToolCallEnabled: nativeToolCallEnabled ?? false, // Cline v3.35.0
 			// Multi-root workspace support
 			workspaceRoots,
 			primaryRootIndex: primaryRootIndex ?? 0,

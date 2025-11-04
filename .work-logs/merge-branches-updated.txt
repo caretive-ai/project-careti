@@ -1,0 +1,9 @@
+caret-main: 93583bbf2 (최신, +3 commits from 0fac25aa)
+cline-latest: 3698d2356 (v3.35.0)
+Merge base: 554e4d1b
+
+통계 (업데이트):
+- Caret: 1357개 파일 수정
+- Cline v3.35.0: 612개 파일 수정
+- 양쪽 수정: 168개 파일 (충돌 가능)
+- 충돌 비율: 27.5%

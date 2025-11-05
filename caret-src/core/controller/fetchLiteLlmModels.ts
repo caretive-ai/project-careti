@@ -15,6 +15,22 @@ export async function fetchLiteLlmModels(
 	_controller: Controller,
 	request: proto.caret.FetchLiteLlmModelsRequest,
 ): Promise<proto.caret.FetchLiteLlmModelsResponse> {
+	/**
+	 * Normalize model name for comparison between /health and /v1/models
+	 * - Removes "ollama_chat/" prefix
+	 * - Replaces ":" with "-"
+	 */
+	const normalizeModelName = (name: string): string => {
+		let normalized = name
+		// Remove ollama_chat/ prefix
+		if (normalized.startsWith("ollama_chat/")) {
+			normalized = normalized.replace("ollama_chat/", "")
+		}
+		// Replace : with - (ollama naming convention)
+		normalized = normalized.replace(":", "-")
+		return normalized
+	}
+
 	try {
 		Logger.debug(`[CaretSystemService] 🎯 Fetching LiteLLM models from ${request.baseUrl}`)
 
@@ -93,7 +109,8 @@ export async function fetchLiteLlmModels(
 
 		Logger.debug(`[CaretSystemService] 📋 /v1/models returned ${availableModels.length} available models`)
 
-		// Step 3: Calculate intersection (models that are both healthy AND available)
+		// Step 3: Filter healthy models by availability
+		// Start with healthy models (full names) and check if normalized name exists in available models
 		let filteredModels: string[]
 
 		if (healthyModels.length === 0) {
@@ -101,9 +118,20 @@ export async function fetchLiteLlmModels(
 			Logger.info(`[CaretSystemService] ℹ️ Using all available models (health check unavailable)`)
 			filteredModels = availableModels
 		} else {
-			// Return only models that are both healthy AND available
-			const healthySet = new Set(healthyModels)
-			filteredModels = availableModels.filter((model: string) => healthySet.has(model))
+			// Filter healthy models: keep only those available in /v1/models (after normalization)
+			const availableSet = new Set(availableModels)
+			filteredModels = healthyModels.filter((healthyModel: string) => {
+				const normalizedName = normalizeModelName(healthyModel)
+				const isAvailable = availableSet.has(normalizedName)
+
+				if (!isAvailable) {
+					Logger.debug(
+						`[CaretSystemService] 🔍 Model not available: ${healthyModel} (normalized: ${normalizedName})`,
+					)
+				}
+
+				return isAvailable
+			})
 
 			Logger.info(
 				`[CaretSystemService] ✅ Filtered to ${filteredModels.length} models (healthy: ${healthyModels.length}, available: ${availableModels.length})`,

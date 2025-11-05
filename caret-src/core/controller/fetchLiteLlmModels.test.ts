@@ -30,28 +30,30 @@ describe("fetchLiteLlmModels", () => {
 	})
 
 	it("should successfully fetch and filter models using /health and /v1/models endpoints", async () => {
-		// CARET MODIFICATION: Test health-based filtering
-		// Mock /health response
+		// CARET MODIFICATION: Test health-based filtering with model name normalization
+		// Mock /health response (includes ollama_chat prefix and colon separator)
 		const mockHealthResponse = {
 			data: {
 				healthy_endpoints: [
-					{ model: "gpt-3.5-turbo" },
-					{ model: "gpt-4" },
-					{ model: "claude-3-sonnet" },
-					{ model: "unhealthy-model" }, // This won't be in /v1/models
+					{ model: "ollama_chat/phi3:mini" }, // Will match phi3-mini after normalization
+					{ model: "ollama_chat/qwen2.5:1.5b-instruct" }, // Will match qwen2.5-1.5b-instruct
+					{ model: "openrouter/z-ai/glm-4.5-air" }, // Exact match
+					{ model: "openai/Qwen3/Qwen3-Coder-30B-A3B-Instruct" }, // Exact match
+					{ model: "openrouter/qwen/qwen3-235b-a22b-2507" }, // Not in /v1/models - will be filtered out
 				],
 				unhealthy_endpoints: [],
 			},
 		}
 
-		// Mock /v1/models response
+		// Mock /v1/models response (normalized names)
 		const mockModelsResponse = {
 			data: {
 				data: [
-					{ id: "gpt-3.5-turbo", object: "model", created: 1677610602, owned_by: "openai" },
-					{ id: "gpt-4", object: "model", created: 1677610602, owned_by: "openai" },
-					{ id: "claude-3-sonnet", object: "model", created: 1677610602, owned_by: "anthropic" },
-					{ id: "unavailable-model", object: "model", created: 1677610602, owned_by: "other" }, // This is available but not healthy
+					{ id: "phi3-mini", object: "model", created: 1677610602, owned_by: "openai" },
+					{ id: "qwen2.5-1.5b-instruct", object: "model", created: 1677610602, owned_by: "openai" },
+					{ id: "openrouter/z-ai/glm-4.5-air", object: "model", created: 1677610602, owned_by: "openai" },
+					{ id: "openai/Qwen3/Qwen3-Coder-30B-A3B-Instruct", object: "model", created: 1677610602, owned_by: "openai" },
+					{ id: "unavailable-model", object: "model", created: 1677610602, owned_by: "other" }, // Available but not healthy
 				],
 				object: "list",
 			},
@@ -67,9 +69,15 @@ describe("fetchLiteLlmModels", () => {
 
 		const result = await fetchLiteLlmModels(mockController, request)
 
-		// Should return intersection: models that are both healthy AND available
+		// Should return healthy models with FULL NAMES (not normalized)
+		// After filtering by availability in /v1/models
 		expect(result.success).toBe(true)
-		expect(result.models).toEqual(["claude-3-sonnet", "gpt-3.5-turbo", "gpt-4"])
+		expect(result.models).toEqual([
+			"ollama_chat/phi3:mini", // Full name from /health (matched phi3-mini in /v1/models)
+			"ollama_chat/qwen2.5:1.5b-instruct", // Full name from /health
+			"openai/Qwen3/Qwen3-Coder-30B-A3B-Instruct",
+			"openrouter/z-ai/glm-4.5-air",
+		])
 		expect(result.errorMessage).toBe("")
 
 		// Verify both endpoints were called

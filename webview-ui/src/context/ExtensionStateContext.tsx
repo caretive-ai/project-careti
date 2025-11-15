@@ -289,6 +289,12 @@ export const ExtensionStateContextProvider: React.FC<{
 		},
 		lastDismissedInfoBannerVersion: 0,
 		lastDismissedModelBannerVersion: 0,
+		// Cline v3.35.0: Terminal and subagent settings
+		maxConsecutiveMistakes: 3,
+		subagentTerminalOutputLineLimit: 2000,
+		vscodeTerminalExecutionMode: "vscodeTerminal",
+		backgroundCommandRunning: false,
+		lastDismissedCliBannerVersion: 0,
 	})
 	const [didHydrateState, setDidHydrateState] = useState(false)
 	const [showWelcome, setShowWelcome] = useState(false)

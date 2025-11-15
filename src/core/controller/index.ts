@@ -942,6 +942,14 @@ export class Controller {
 		const distinctId = getDistinctId()
 		const version = ExtensionRegistryInfo.version
 
+		// Cline v3.35.0: Terminal and subagent settings
+		const vscodeTerminalExecutionMode = this.stateManager.getGlobalStateKey("vscodeTerminalExecutionMode") || "vscodeTerminal"
+		const maxConsecutiveMistakes = this.stateManager.getGlobalSettingsKey("maxConsecutiveMistakes") || 3
+		const subagentTerminalOutputLineLimit = this.stateManager.getGlobalSettingsKey("subagentTerminalOutputLineLimit") || 2000
+		const lastDismissedCliBannerVersion = this.stateManager.getGlobalStateKey("lastDismissedCliBannerVersion") || 0
+		const hooksEnabled = this.stateManager.getGlobalStateKey("hooksEnabled")
+		const nativeToolCallEnabled = this.stateManager.getGlobalStateKey("nativeToolCallEnabled")
+
 		// Set feature flag in dictation settings based on platform
 		const updatedDictationSettings = {
 			...dictationSettings,
@@ -985,6 +993,17 @@ export class Controller {
 			welcomeViewCompleted: welcomeViewCompleted as boolean, // Can be undefined but is set to either true or false by the migration that runs on extension launch in extension.ts
 			mcpResponsesCollapsed,
 			terminalOutputLineLimit,
+			// Cline v3.35.0: Subagent and terminal settings
+			maxConsecutiveMistakes,
+			subagentTerminalOutputLineLimit,
+			vscodeTerminalExecutionMode,
+			backgroundCommandRunning: this.backgroundCommandRunning,
+			backgroundCommandTaskId: this.backgroundCommandTaskId,
+			lastCompletedCommandTs: undefined, // TODO: Add to TaskState when implementing background commands
+			lastDismissedCliBannerVersion,
+			hooksEnabled: hooksEnabled !== undefined ? { user: hooksEnabled, featureFlag: true } : undefined,
+			nativeToolCallSetting:
+				nativeToolCallEnabled !== undefined ? { user: nativeToolCallEnabled, featureFlag: true } : undefined,
 			customPrompt,
 			taskHistory: processedTaskHistory,
 			platform,

@@ -58,7 +58,13 @@ export interface ExtensionState {
 	shellIntegrationTimeout: number
 	terminalReuseEnabled?: boolean
 	terminalOutputLineLimit: number
+	maxConsecutiveMistakes: number // Cline v3.35.0
+	subagentTerminalOutputLineLimit: number // Cline v3.35.0
 	defaultTerminalProfile?: string
+	vscodeTerminalExecutionMode: string // Cline v3.35.0
+	backgroundCommandRunning?: boolean // Cline v3.35.0
+	backgroundCommandTaskId?: string // Cline v3.35.0
+	lastCompletedCommandTs?: number // Cline v3.35.0
 	userInfo?: UserInfo
 	version: string
 	distinctId: string
@@ -84,6 +90,9 @@ export interface ExtensionState {
 	multiRootSetting: ClineFeatureSetting
 	lastDismissedInfoBannerVersion: number
 	lastDismissedModelBannerVersion: number
+	lastDismissedCliBannerVersion: number // Cline v3.35.0
+	hooksEnabled?: ClineFeatureSetting // Cline v3.35.0
+	nativeToolCallSetting?: ClineFeatureSetting // Cline v3.35.0
 	// CARET MODIFICATION: Cline v3.34.0 merge - Subagents
 	subagentsEnabled?: boolean
 	// CARET MODIFICATION: F11 - Input History System

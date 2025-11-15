@@ -23,6 +23,27 @@ declare module "vscode" {
 
 	interface LanguageModelChatSelector extends LanguageModelChatSelectorFromTypes {}
 
+	interface LanguageModelChat {
+		id: string
+		name?: string
+		vendor: string
+		family: string
+		version: string
+		maxInputTokens: number
+		sendRequest(
+			messages: LanguageModelChatMessage[],
+			options?: LanguageModelChatRequestOptions,
+			token?: vscode.CancellationToken,
+		): Thenable<LanguageModelChatResponse>
+		countTokens(text: string | LanguageModelChatMessage, token?: vscode.CancellationToken): Thenable<number>
+	}
+
+	namespace lm {
+		export function selectChatModels(
+			selector?: LanguageModelChatSelector,
+		): Thenable<LanguageModelChat[]>
+	}
+
 	interface LanguageModelChatTool {
 		name: string
 		description: string

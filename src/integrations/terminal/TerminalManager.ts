@@ -62,12 +62,29 @@ Resources:
 - https://github.com/microsoft/vscode-extension-samples/blob/main/shell-integration-sample/src/extension.ts
 */
 
-/*
-The shellIntegration API gives us access to terminal command execution output handling.
-These types are now part of the standard VSCode API (TerminalShellIntegration, onDidStartTerminalShellExecution).
-Users on older VSCode versions will automatically fall back to using sendText for terminal command execution.
-This approach allows us to leverage advanced features when available while ensuring broad compatibility.
-*/
+// CARET MODIFICATION: Terminal API type declarations integrated from Cline v3.35.0
+// These types enable shell integration features while maintaining compatibility with older VSCode versions.
+// The shellIntegration API provides terminal command execution output handling in newer VSCode versions,
+// with automatic fallback to sendText for older versions.
+declare module "vscode" {
+	// https://github.com/microsoft/vscode/blob/f0417069c62e20f3667506f4b7e53ca0004b4e3e/src/vscode-dts/vscode.d.ts#L7442
+	interface Terminal {
+		shellIntegration?: {
+			cwd?: vscode.Uri
+			executeCommand?: (command: string) => {
+				read: () => AsyncIterable<string>
+			}
+		}
+	}
+	// https://github.com/microsoft/vscode/blob/f0417069c62e20f3667506f4b7e53ca0004b4e3e/src/vscode-dts/vscode.d.ts#L10794
+	export namespace window {
+		export function onDidStartTerminalShellExecution(
+			listener: (e: any) => any,
+			thisArgs?: any,
+			disposables?: vscode.Disposable[],
+		): vscode.Disposable
+	}
+}
 
 export class TerminalManager {
 	private terminalIds: Set<number> = new Set()

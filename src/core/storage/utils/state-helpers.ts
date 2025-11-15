@@ -1,4 +1,5 @@
 // CARET MODIFICATION: Import getDefaultModeForModeSystem for mode initialization
+import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
 import { getDefaultModeForModeSystem } from "@caret/shared/ModeSystem"
 import { ANTHROPIC_MIN_THINKING_BUDGET, ApiProvider, fireworksDefaultModelId, ModelInfo, type OcaModelInfo } from "@shared/api"
 import { ExtensionContext } from "vscode"
@@ -440,8 +441,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		if (planModeApiProvider) {
 			apiProvider = planModeApiProvider
 		} else {
-			// New users should default to openrouter, since they've opted to use an API key instead of signing in
-			apiProvider = "openrouter"
+			// CARET MODIFICATION: Use feature-config defaultProvider instead of hardcoded "openrouter"
+			apiProvider = getCurrentFeatureConfig().defaultProvider as ApiProvider
 		}
 
 		const mcpResponsesCollapsed = mcpResponsesCollapsedRaw ?? false

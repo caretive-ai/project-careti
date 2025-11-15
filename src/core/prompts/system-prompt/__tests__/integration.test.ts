@@ -248,7 +248,8 @@ describe("Prompt System Integration Tests", () => {
 							this.timeout(30000) // Allow more time for prompt generation
 
 							try {
-								const prompt = await getSystemPrompt(context as SystemPromptContext)
+								const result = await getSystemPrompt(context as SystemPromptContext)
+								const prompt = result.systemPrompt // Cline v3.35.0: getSystemPrompt returns object
 
 								// Basic structure assertions
 								expect(prompt).to.be.a("string")
@@ -313,8 +314,8 @@ describe("Prompt System Integration Tests", () => {
 			const contextWithBrowser = { ...baseContext, supportsBrowserUse: true }
 
 			try {
-				const prompt = await getSystemPrompt(contextWithBrowser)
-				expect(prompt.toLowerCase()).to.include("browser")
+				const result = await getSystemPrompt(contextWithBrowser)
+				expect(result.systemPrompt.toLowerCase()).to.include("browser")
 			} catch (error) {
 				if (error instanceof Error && error.message.includes("No prompt variant found")) {
 					this.skip()

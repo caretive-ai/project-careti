@@ -7,6 +7,7 @@ export type ApiStreamChunk =
 	| ApiStreamAnthropicRedactedThinkingChunk
 	| ApiStreamUsageChunk
 	| ApiStreamToolUseChunk // CARET MODIFICATION: Support Task tool for subagent feature (F12)
+	| ApiStreamToolCallsChunk // Cline v3.35.0: OpenAI-compatible tool calls format
 
 export interface ApiStreamTextChunk {
 	type: "text"
@@ -50,4 +51,20 @@ export interface ApiStreamToolUseChunk {
 	id: string
 	name: string
 	input: any
+}
+
+// Cline v3.35.0: OpenAI-compatible tool calls format
+export interface ApiStreamToolCallsChunk {
+	type: "tool_calls"
+	tool_call: ApiStreamToolCall
+}
+
+export interface ApiStreamToolCall {
+	call_id?: string // The call / request ID associated with this tool call
+	// Information about the tool being called
+	function: {
+		id?: string // The tool call ID
+		name?: string
+		arguments?: any
+	}
 }

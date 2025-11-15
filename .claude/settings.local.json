@@ -149,7 +149,8 @@
       "Bash(else echo \"cline-latest 없음\")",
       "Bash(fi)",
       "Bash(git tag:*)",
-      "Bash(./scripts/3way-diff.sh:*)"
+      "Bash(./scripts/3way-diff.sh:*)",
+      "Bash(npm ls:*)"
     ],
     "deny": [],
     "ask": []

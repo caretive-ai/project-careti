@@ -63,32 +63,11 @@ Resources:
 */
 
 /*
-The new shellIntegration API gives us access to terminal command execution output handling.
-However, we don't update our VSCode type definitions or engine requirements to maintain compatibility
-with older VSCode versions. Users on older versions will automatically fall back to using sendText
-for terminal command execution.
-Interestingly, some environments like Cursor enable these APIs even without the latest VSCode engine.
+The shellIntegration API gives us access to terminal command execution output handling.
+These types are now part of the standard VSCode API (TerminalShellIntegration, onDidStartTerminalShellExecution).
+Users on older VSCode versions will automatically fall back to using sendText for terminal command execution.
 This approach allows us to leverage advanced features when available while ensuring broad compatibility.
 */
-declare module "vscode" {
-	// https://github.com/microsoft/vscode/blob/f0417069c62e20f3667506f4b7e53ca0004b4e3e/src/vscode-dts/vscode.d.ts#L7442
-	interface Terminal {
-		shellIntegration?: {
-			cwd?: vscode.Uri
-			executeCommand?: (command: string) => {
-				read: () => AsyncIterable<string>
-			}
-		}
-	}
-	// https://github.com/microsoft/vscode/blob/f0417069c62e20f3667506f4b7e53ca0004b4e3e/src/vscode-dts/vscode.d.ts#L10794
-	interface Window {
-		onDidStartTerminalShellExecution?: (
-			listener: (e: any) => any,
-			thisArgs?: any,
-			disposables?: vscode.Disposable[],
-		) => vscode.Disposable
-	}
-}
 
 export class TerminalManager {
 	private terminalIds: Set<number> = new Set()
@@ -103,7 +82,7 @@ export class TerminalManager {
 	constructor() {
 		let disposable: vscode.Disposable | undefined
 		try {
-			disposable = (vscode.window as vscode.Window).onDidStartTerminalShellExecution?.(async (e) => {
+			disposable = vscode.window.onDidStartTerminalShellExecution?.(async (e) => {
 				// Creating a read stream here results in a more consistent output. This is most obvious when running the `date` command.
 				e?.execution?.read()
 			})

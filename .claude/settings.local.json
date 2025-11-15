@@ -141,7 +141,15 @@
       "Bash(cline --help)",
       "Bash(cline auth:*)",
       "Bash(cline config:*)",
-      "WebFetch(domain:plugins.jetbrains.com)"
+      "WebFetch(domain:plugins.jetbrains.com)",
+      "Bash(for file in src/core/task/tools/handlers/{ExecuteCommandToolHandler,ListCodeDefinitionNamesToolHandler,ListFilesToolHandler,ReadFileToolHandler,SearchFilesToolHandler,UseMcpToolHandler,WebFetchToolHandler,WriteToFileToolHandler}.ts)",
+      "Bash(for file in ExecuteCommandToolHandler ListCodeDefinitionNamesToolHandler ListFilesToolHandler ReadFileToolHandler SearchFilesToolHandler UseMcpToolHandler WebFetchToolHandler WriteToFileToolHandler)",
+      "Bash(if [ -d /var/home/luke/dev/caret-merging/cline-latest ])",
+      "Bash(then cd /var/home/luke/dev/caret-merging/cline-latest)",
+      "Bash(else echo \"cline-latest 없음\")",
+      "Bash(fi)",
+      "Bash(git tag:*)",
+      "Bash(./scripts/3way-diff.sh:*)"
     ],
     "deny": [],
     "ask": []

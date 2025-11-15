@@ -534,3 +534,77 @@ npx tsc --noEmit  # 29 errors (31 → 29, -2)
 
 ---
 
+
+
+### Stage 4: Controller 메서드 추가 ✅
+
+**완료일**: 2025-11-15
+**에러 변화**: 29 → 25 (4개 감소)
+
+#### 추가된 필드
+```typescript
+// src/core/controller/index.ts
+
+private backgroundCommandRunning = false // line 77
+private backgroundCommandTaskId?: string // line 78
+
+private shellIntegrationWarningTracker: {
+  timestamps: number[]
+  lastSuggestionShown?: number
+} = { timestamps: [] } // lines 81-84
+```
+
+#### 추가된 메서드
+
+**1. updateBackgroundCommandState()** (line 392)
+```typescript
+updateBackgroundCommandState(running: boolean, taskId?: string) {
+  const nextTaskId = running ? taskId : undefined
+  if (this.backgroundCommandRunning === running && this.backgroundCommandTaskId === nextTaskId) {
+    return
+  }
+  this.backgroundCommandRunning = running
+  this.backgroundCommandTaskId = nextTaskId
+  void this.postStateToWebview()
+}
+```
+
+**2. cancelBackgroundCommand()** (line 402)
+```typescript
+async cancelBackgroundCommand(): Promise<void> {
+  const didCancel = await this.task?.cancelBackgroundCommand()
+  if (!didCancel) {
+    this.updateBackgroundCommandState(false)
+  }
+}
+```
+
+**3. shouldShowBackgroundTerminalSuggestion()** (line 413)
+```typescript
+shouldShowBackgroundTerminalSuggestion(): boolean {
+  const oneHourAgo = Date.now() - 60 * 60 * 1000
+  
+  // Clean old timestamps
+  this.shellIntegrationWarningTracker.timestamps = 
+    this.shellIntegrationWarningTracker.timestamps.filter((ts) => ts > oneHourAgo)
+  
+  // Add current warning
+  this.shellIntegrationWarningTracker.timestamps.push(Date.now())
+  
+  // Show suggestion if 3+ warnings in last hour
+  if (this.shellIntegrationWarningTracker.timestamps.length >= 3) {
+    this.shellIntegrationWarningTracker.lastSuggestionShown = Date.now()
+    return true
+  }
+  
+  return false
+}
+```
+
+**검증**
+```bash
+npx tsc --noEmit  # 25 errors (29 → 25, -4)
+```
+
+---
+

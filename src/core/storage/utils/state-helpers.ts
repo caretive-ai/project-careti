@@ -471,6 +471,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const multiRootEnabled = context.globalState.get<GlobalStateAndSettings["multiRootEnabled"]>("multiRootEnabled")
 		const nativeToolCallEnabled =
 			context.globalState.get<GlobalStateAndSettings["nativeToolCallEnabled"]>("nativeToolCallEnabled")
+		const vscodeTerminalExecutionMode =
+			context.globalState.get<GlobalStateAndSettings["vscodeTerminalExecutionMode"]>("vscodeTerminalExecutionMode")
 
 		return {
 			// api configuration fields
@@ -622,6 +624,7 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			shellIntegrationTimeout: shellIntegrationTimeout || 4000,
 			terminalReuseEnabled: terminalReuseEnabled ?? true,
 			terminalOutputLineLimit: terminalOutputLineLimit ?? 500,
+			vscodeTerminalExecutionMode: vscodeTerminalExecutionMode ?? "vscodeTerminal",
 			// CARET MODIFICATION: Cline v3.34.0 merge - Subagents
 			maxConsecutiveMistakes: maxConsecutiveMistakes ?? 3,
 			subagentTerminalOutputLineLimit: subagentTerminalOutputLineLimit ?? 2000,

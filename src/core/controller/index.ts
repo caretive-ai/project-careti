@@ -74,6 +74,14 @@ export class Controller {
 
 	// NEW: Add workspace manager (optional initially)
 	private workspaceManager?: WorkspaceRootManager
+	private backgroundCommandRunning = false // Cline v3.35.0
+	private backgroundCommandTaskId?: string // Cline v3.35.0
+
+	// Shell integration warning tracker (Cline v3.35.0)
+	private shellIntegrationWarningTracker: {
+		timestamps: number[]
+		lastSuggestionShown?: number
+	} = { timestamps: [] }
 
 	// Public getter for workspace manager with lazy initialization - To get workspaces when task isn't initialized (Used by file mentions)
 	async ensureWorkspaceManager(): Promise<WorkspaceRootManager | undefined> {
@@ -378,6 +386,56 @@ export class Controller {
 		if (history) {
 			await this.initTask(undefined, undefined, undefined, history.historyItem)
 		}
+	}
+
+	// Cline v3.35.0: Background command state management
+	updateBackgroundCommandState(running: boolean, taskId?: string) {
+		const nextTaskId = running ? taskId : undefined
+		if (this.backgroundCommandRunning === running && this.backgroundCommandTaskId === nextTaskId) {
+			return
+		}
+		this.backgroundCommandRunning = running
+		this.backgroundCommandTaskId = nextTaskId
+		void this.postStateToWebview()
+	}
+
+	async cancelBackgroundCommand(): Promise<void> {
+		const didCancel = await this.task?.cancelBackgroundCommand()
+		if (!didCancel) {
+			this.updateBackgroundCommandState(false)
+		}
+	}
+
+	/**
+	 * Check if we should show the background terminal suggestion based on shell integration warning frequency
+	 * @returns true if we should show the suggestion, false otherwise
+	 */
+	shouldShowBackgroundTerminalSuggestion(): boolean {
+		const oneHourAgo = Date.now() - 60 * 60 * 1000
+
+		// Clean old timestamps (older than 1 hour)
+		this.shellIntegrationWarningTracker.timestamps = this.shellIntegrationWarningTracker.timestamps.filter(
+			(ts) => ts > oneHourAgo,
+		)
+
+		// Add current warning
+		this.shellIntegrationWarningTracker.timestamps.push(Date.now())
+
+		// Don't show suggestion if already shown in the last hour
+		if (
+			this.shellIntegrationWarningTracker.lastSuggestionShown &&
+			Date.now() - this.shellIntegrationWarningTracker.lastSuggestionShown < 60 * 60 * 1000
+		) {
+			return false
+		}
+
+		// Show suggestion if we've had 3+ warnings in the last hour
+		if (this.shellIntegrationWarningTracker.timestamps.length >= 3) {
+			this.shellIntegrationWarningTracker.lastSuggestionShown = Date.now()
+			return true
+		}
+
+		return false
 	}
 
 	async updateTelemetrySetting(telemetrySetting: TelemetrySetting) {

@@ -13,6 +13,7 @@ export type McpServer = {
 	resourceTemplates?: McpResourceTemplate[]
 	disabled?: boolean
 	timeout?: number
+	uid?: string
 }
 
 export type McpTool = {

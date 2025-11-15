@@ -18,6 +18,7 @@ import { GroqHandler } from "./providers/groq"
 import { HuaweiCloudMaaSHandler } from "./providers/huawei-cloud-maas"
 import { HuggingFaceHandler } from "./providers/huggingface"
 import { LiteLlmHandler } from "./providers/litellm"
+import { BizRouterHandler } from "@caret/core/api/providers/BizRouterApiProvider" // CARET MODIFICATION
 import { LmStudioHandler } from "./providers/lmstudio"
 import { MistralHandler } from "./providers/mistral"
 import { MoonshotHandler } from "./providers/moonshot"
@@ -270,6 +271,18 @@ function createHandlerForProvider(
 				thinkingBudgetTokens:
 					mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
 				liteLlmUsePromptCache: options.liteLlmUsePromptCache,
+				ulid: options.ulid,
+			})
+		case "bizrouter":
+			// CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
+			return new BizRouterHandler({
+				onRetryAttempt: options.onRetryAttempt,
+				bizRouterApiKey: options.bizRouterApiKey,
+				bizRouterModelId: mode === "plan" ? options.planModeBizRouterModelId : options.actModeBizRouterModelId,
+				bizRouterModelInfo: mode === "plan" ? options.planModeBizRouterModelInfo : options.actModeBizRouterModelInfo,
+				thinkingBudgetTokens:
+					mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
+				bizRouterUsePromptCache: options.bizRouterUsePromptCache,
 				ulid: options.ulid,
 			})
 		case "moonshot":

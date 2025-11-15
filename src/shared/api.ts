@@ -24,7 +24,7 @@ export type ApiProvider =
 	| "cline"
 	| "caret"
 	| "litellm"
-	| "caret"
+	| "bizrouter" // CARET MODIFICATION
 	| "moonshot"
 	| "nebius"
 	| "fireworks"
@@ -46,6 +46,7 @@ export type ApiProvider =
 export interface ApiHandlerSecrets {
 	apiKey?: string // anthropic
 	liteLlmApiKey?: string
+	bizRouterApiKey?: string // CARET MODIFICATION
 	awsAccessKey?: string
 	awsSecretKey?: string
 	openRouterApiKey?: string
@@ -87,6 +88,8 @@ export interface ApiHandlerOptions {
 	ulid?: string // Used to identify the task in API requests
 	liteLlmBaseUrl?: string
 	liteLlmUsePromptCache?: boolean
+	// CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
+	bizRouterUsePromptCache?: boolean
 	caretBaseUrl?: string // caret
 	caretApiKey?: string // caret
 	caretUsePromptCache?: boolean // caret
@@ -147,6 +150,8 @@ export interface ApiHandlerOptions {
 	planModeLmStudioModelId?: string
 	planModeLiteLlmModelId?: string
 	planModeLiteLlmModelInfo?: LiteLLMModelInfo
+	planModeBizRouterModelId?: string // CARET MODIFICATION
+	planModeBizRouterModelInfo?: BizRouterModelInfo // CARET MODIFICATION
 	planModeCaretModelId?: string // caret
 	planModeCaretModelInfo?: ModelInfo // caret
 	planModeRequestyModelId?: string
@@ -184,6 +189,8 @@ export interface ApiHandlerOptions {
 	actModeLmStudioModelId?: string
 	actModeLiteLlmModelId?: string
 	actModeLiteLlmModelInfo?: LiteLLMModelInfo
+	actModeBizRouterModelId?: string // CARET MODIFICATION
+	actModeBizRouterModelInfo?: BizRouterModelInfo // CARET MODIFICATION
 	actModeCaretModelId?: string // caret
 	actModeCaretModelInfo?: ModelInfo // caret
 	actModeRequestyModelId?: string
@@ -2376,6 +2383,34 @@ export const liteLlmModelInfoSaneDefaults: LiteLLMModelInfo = {
 	cacheWritesPrice: 0,
 	cacheReadsPrice: 0,
 	temperature: 0,
+}
+
+// BizRouter
+// https://bizrouter.ai/ - CARET MODIFICATION
+export type BizRouterModelId = string
+export const bizRouterDefaultModelId = "openai/gpt-4o"
+export interface BizRouterModelInfo extends ModelInfo {
+	temperature?: number
+	// OpenAI-compatible parameters
+	topP?: number // 0-1, default 1
+	frequencyPenalty?: number // -2 to 2, default 0
+	presencePenalty?: number // -2 to 2, default 0
+	// BizRouter extended parameters
+	topK?: number // 1-100 (Anthropic, Google models)
+	repetitionPenalty?: number // 0.1-2.0 (Anthropic models)
+	minP?: number // 0-1 (some models)
+}
+
+export const bizRouterModelInfoSaneDefaults: BizRouterModelInfo = {
+	maxTokens: -1,
+	contextWindow: 128_000,
+	supportsImages: true,
+	supportsPromptCache: false,
+	inputPrice: 0,
+	outputPrice: 0,
+	cacheWritesPrice: 0,
+	cacheReadsPrice: 0,
+	// CARET MODIFICATION: No default temperature - let user set it explicitly to avoid conflicts with top_p
 }
 
 // AskSage Models

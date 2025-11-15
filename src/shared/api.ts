@@ -26,6 +26,7 @@ export type ApiProvider =
 	| "litellm"
 	| "bizrouter" // CARET MODIFICATION
 	| "moonshot"
+	| "minimax" // Cline v3.35.0
 	| "nebius"
 	| "fireworks"
 	| "asksage"
@@ -69,6 +70,7 @@ export interface ApiHandlerSecrets {
 	asksageApiKey?: string
 	xaiApiKey?: string
 	moonshotApiKey?: string
+	minimaxApiKey?: string // Cline v3.35.0
 	zaiApiKey?: string
 	huggingFaceApiKey?: string
 	nebiusApiKey?: string
@@ -123,6 +125,7 @@ export interface ApiHandlerOptions {
 	azureApiVersion?: string
 	qwenApiLine?: string
 	moonshotApiLine?: string
+	minimaxApiLine?: string // Cline v3.35.0
 	asksageApiUrl?: string
 	requestTimeoutMs?: number
 	sapAiResourceGroup?: string
@@ -3390,6 +3393,24 @@ export const moonshotModels = {
 } as const satisfies Record<string, ModelInfo>
 export type MoonshotModelId = keyof typeof moonshotModels
 export const moonshotDefaultModelId = "kimi-k2-0905-preview" satisfies MoonshotModelId
+
+// Minimax - Cline v3.35.0
+// https://www.minimax.io/platform/document/text_api_intro
+// https://www.minimax.io/platform/document/pricing
+export type MinimaxModelId = keyof typeof minimaxModels
+export const minimaxDefaultModelId: MinimaxModelId = "MiniMax-M2"
+export const minimaxModels = {
+	"MiniMax-M2": {
+		maxTokens: 128_000,
+		contextWindow: 192_000,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.3,
+		outputPrice: 1.2,
+		cacheWritesPrice: 0,
+		cacheReadsPrice: 0,
+	},
+} as const satisfies Record<string, ModelInfo>
 
 // Huawei Cloud MaaS
 // Dify.ai - No model selection needed, models are configured in Dify workflows

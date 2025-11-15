@@ -22,6 +22,7 @@ import { BizRouterHandler } from "@caret/core/api/providers/BizRouterApiProvider
 import { LmStudioHandler } from "./providers/lmstudio"
 import { MistralHandler } from "./providers/mistral"
 import { MoonshotHandler } from "./providers/moonshot"
+import { MinimaxHandler } from "./providers/minimax" // Cline v3.35.0
 import { NebiusHandler } from "./providers/nebius"
 import { OcaHandler } from "./providers/oca"
 import { OllamaHandler } from "./providers/ollama"
@@ -290,6 +291,13 @@ function createHandlerForProvider(
 				onRetryAttempt: options.onRetryAttempt,
 				moonshotApiKey: options.moonshotApiKey,
 				moonshotApiLine: options.moonshotApiLine,
+				apiModelId: mode === "plan" ? options.planModeApiModelId : options.actModeApiModelId,
+			})
+		case "minimax": // Cline v3.35.0
+			return new MinimaxHandler({
+				onRetryAttempt: options.onRetryAttempt,
+				minimaxApiKey: options.minimaxApiKey,
+				minimaxApiLine: options.minimaxApiLine,
 				apiModelId: mode === "plan" ? options.planModeApiModelId : options.actModeApiModelId,
 			})
 		case "huggingface":

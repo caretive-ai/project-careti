@@ -33,6 +33,7 @@ export interface GlobalState {
 	mcpMarketplaceEnabled: boolean
 	mcpResponsesCollapsed: boolean
 	terminalReuseEnabled: boolean
+	vscodeTerminalExecutionMode: "vscodeTerminal" | "backgroundExec" // Cline v3.35.0
 	isNewUser: boolean
 	welcomeViewCompleted: boolean | undefined
 	mcpDisplayMode: McpDisplayMode
@@ -40,8 +41,10 @@ export interface GlobalState {
 	workspaceRoots: WorkspaceRoot[] | undefined
 	primaryRootIndex: number
 	multiRootEnabled: boolean
+	hooksEnabled: boolean // Cline v3.35.0
 	lastDismissedInfoBannerVersion: number
 	lastDismissedModelBannerVersion: number
+	lastDismissedCliBannerVersion: number // Cline v3.35.0
 	nativeToolCallEnabled: boolean // Cline v3.35.0 - Native tool calling support
 	caretUserProfile: CaretUser | undefined //caret
 }

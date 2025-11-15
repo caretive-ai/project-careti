@@ -85,23 +85,6 @@ declare module "vscode" {
 		)
 	}
 
-	// Terminal Integration types (from TerminalManager.ts)
-	// https://github.com/microsoft/vscode/blob/f0417069c62e20f3667506f4b7e53ca0004b4e3e/src/vscode-dts/vscode.d.ts#L7442
-	interface Terminal {
-		shellIntegration?: {
-			cwd?: vscode.Uri
-			executeCommand?: (command: string) => {
-				read: () => AsyncIterable<string>
-			}
-		}
-	}
-
-	// https://github.com/microsoft/vscode/blob/f0417069c62e20f3667506f4b7e53ca0004b4e3e/src/vscode-dts/vscode.d.ts#L10794
-	interface Window {
-		onDidStartTerminalShellExecution?: (
-			listener: (e: any) => any,
-			thisArgs?: any,
-			disposables?: vscode.Disposable[],
-		) => vscode.Disposable
-	}
+	// CARET MODIFICATION: Terminal Integration types removed to prevent conflict with TerminalManager.ts
+	// Terminal and Window interfaces are now defined in src/integrations/terminal/TerminalManager.ts (Cline v3.35.0)
 }

@@ -51,6 +51,7 @@ import {
 import { PersistenceErrorEvent, StateManager } from "../storage/StateManager"
 import { Settings } from "../storage/state-keys"
 import { Task } from "../task"
+import { tryAcquireTaskLockWithRetry } from "@core/task/TaskLockUtils"
 import { sendMcpMarketplaceCatalogEvent } from "./mcp/subscribeToMcpMarketplaceCatalog"
 import { appendClineStealthModels } from "./models/refreshOpenRouterModels"
 import { sendStateUpdate } from "./state/subscribeToState"
@@ -289,7 +290,9 @@ export class Controller {
 		const autoApprovalSettings = this.stateManager.getGlobalSettingsKey("autoApprovalSettings")
 		const shellIntegrationTimeout = this.stateManager.getGlobalSettingsKey("shellIntegrationTimeout")
 		const terminalReuseEnabled = this.stateManager.getGlobalStateKey("terminalReuseEnabled")
+		const vscodeTerminalExecutionMode = this.stateManager.getGlobalStateKey("vscodeTerminalExecutionMode")
 		const terminalOutputLineLimit = this.stateManager.getGlobalSettingsKey("terminalOutputLineLimit")
+		const subagentTerminalOutputLineLimit = this.stateManager.getGlobalSettingsKey("subagentTerminalOutputLineLimit")
 		const defaultTerminalProfile = this.stateManager.getGlobalSettingsKey("defaultTerminalProfile")
 		const isNewUser = this.stateManager.getGlobalStateKey("isNewUser")
 		const taskHistory = this.stateManager.getGlobalStateKey("taskHistory")
@@ -320,6 +323,24 @@ export class Controller {
 
 		const taskId = historyItem?.id || Date.now().toString()
 
+		// Acquire task lock
+		let taskLockAcquired = false
+		const lockResult = await tryAcquireTaskLockWithRetry(taskId)
+
+		if (!lockResult.acquired && !lockResult.skipped) {
+			const errorMessage = lockResult.conflictingLock
+				? `Task locked by instance (${lockResult.conflictingLock.held_by})`
+				: "Failed to acquire task lock"
+			throw new Error(errorMessage) // Prevents task initialization
+		}
+
+		taskLockAcquired = lockResult.acquired
+		if (lockResult.acquired) {
+			console.debug(`[Task ${taskId}] Task lock acquired`)
+		} else {
+			console.debug(`[Task ${taskId}] Task lock skipped (VS Code)`)
+		}
+
 		await this.stateManager.loadTaskSettings(taskId)
 		if (taskSettings) {
 			this.stateManager.setTaskSettingsBatch(taskId, taskSettings)
@@ -335,7 +356,9 @@ export class Controller {
 			shellIntegrationTimeout,
 			terminalReuseEnabled: terminalReuseEnabled ?? true,
 			terminalOutputLineLimit: terminalOutputLineLimit ?? 500,
+			subagentTerminalOutputLineLimit: subagentTerminalOutputLineLimit ?? 2000,
 			defaultTerminalProfile: defaultTerminalProfile ?? "default",
+			vscodeTerminalExecutionMode,
 			cwd,
 			stateManager: this.stateManager,
 			workspaceManager: this.workspaceManager,
@@ -344,6 +367,7 @@ export class Controller {
 			files,
 			historyItem,
 			taskId,
+			taskLockAcquired,
 		})
 
 		return this.task.taskId

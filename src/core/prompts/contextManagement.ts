@@ -1,11 +1,19 @@
-export const summarizeTask = (focusChainSettings?: { enabled: boolean }) =>
-	`<explicit_instructions type="summarize_task">
+export const summarizeTask = (focusChainSettings?: { enabled: boolean }, cwd?: string, isMultiRootEnabled?: boolean) => {
+	// Build CWD display text
+	const CWD = cwd ? cwd.toPosix() : ""
+
+	// Build MULTI_ROOT_HINT text (matches pattern in tools.ts)
+	const MULTI_ROOT_HINT = isMultiRootEnabled
+		? " Use @workspace:path syntax (e.g., @frontend:src/index.ts) to specify a workspace."
+		: ""
+
+	return `<explicit_instructions type="summarize_task">
 The current conversation is rapidly running out of context. Now, your urgent task is to create a comprehensive detailed summary of the conversation so far, paying close attention to the user's explicit requests and your previous actions.
 This summary should be thorough in capturing technical details, code patterns, and architectural decisions that would be essential for continuing development work without losing context.
 
-You have only two options: If you are immediately prepared to call the attempt_completion tool, and have completed all items in your task_progress list, you may call attempt_completion at this time. If you are not prepared to call the attempt_completion tool, and have not completed all items in your task_progress list, you must call the summarize_task tool.
+You have only two options: If you are immediately prepared to call the attempt_completion tool, and have completed all items in your task_progress list, you may call attempt_completion at this time. If you are not prepared to call the attempt_completion tool, and have not completed all items in your task_progress list, you must call the summarize_task tool - in this case you must call the summarize_task tool whether you are in PLAN or ACT mode.
 
-You MUST ONLY respond to this message by using either the attempt_completion tool or the summarize_task tool call.
+You MUST ONLY respond to this message by using either the attempt_completion tool or the summarize_task tool call. When using the summarize_task tool call, you must include ALL information in the summary required for continuing with the task at hand. This is because you will lose access to all messages other than this summary.
 
 When responding with the summarize_task tool call, follow these instructions:
 
@@ -93,6 +101,7 @@ ${
 
 </explicit_instructions>\n
 `
+}
 
 export const continuationPrompt = (summaryText: string) => `
 This session is being continued from a previous conversation that ran out of context. The conversation is summarized below:

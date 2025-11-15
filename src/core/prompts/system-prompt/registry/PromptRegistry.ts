@@ -13,6 +13,7 @@ export class PromptRegistry {
 	private variants: Map<string, PromptVariant> = new Map()
 	private components: ComponentRegistry = {}
 	private loaded: boolean = false
+	public nativeTools: any[] | undefined = undefined
 
 	private constructor() {
 		registerClineToolSets()
@@ -104,6 +105,10 @@ export class PromptRegistry {
 					`Registry state: loaded=${this.loaded}, variants=${this.variants.size}, components=${Object.keys(this.components).length}`,
 			)
 		}
+
+		// TODO: Implement native tool calling support (Cline v3.35.0 feature)
+		// this.nativeTools = ClineToolSet.getNativeTools(variant, context)
+		this.nativeTools = undefined
 
 		const builder = new PromptBuilder(variant, context, this.components)
 		return await builder.build()

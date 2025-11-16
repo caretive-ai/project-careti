@@ -218,10 +218,17 @@ const ApiOptions = ({
 		return processedOptions
 	}, [language])
 
-	const currentProviderLabel = useMemo(() => {
-		const providerInfo = providerOptions.find((option) => option.value === selectedProvider)
-		return providerInfo ? providerInfo.label : selectedProvider
-	}, [providerOptions, selectedProvider])
+		const [localProvider, setLocalProvider] = useState<string>(selectedProvider)
+
+		// Keep local mirror in sync with backend updates
+		useEffect(() => {
+			setLocalProvider(selectedProvider)
+		}, [selectedProvider])
+
+		const currentProviderLabel = useMemo(() => {
+			const providerInfo = providerOptions.find((option) => option.value === localProvider)
+			return providerInfo ? providerInfo.label : localProvider
+		}, [providerOptions, localProvider])
 
 	// Sync search term with current provider when not searching
 	useEffect(() => {
@@ -259,7 +266,12 @@ const ApiOptions = ({
 
 	const handleProviderChange = (newProvider: string) => {
 		// CARET MODIFICATION: Add logging for provider changes
-		console.log(`🔄 [ApiOptions] Provider change: "${selectedProvider}" → "${newProvider}" (mode: ${currentMode})`)
+		console.log(`🔄 [ApiOptions] Provider change: "${localProvider}" → "${newProvider}" (mode: ${currentMode})`)
+		// Optimistic update for immediate UI feedback
+		setLocalProvider(newProvider)
+		const providerInfo = providerOptions.find((option) => option.value === newProvider)
+		// Reflect selection immediately in input field to avoid lag
+		setSearchTerm(providerInfo?.label ?? newProvider)
 		handleModeFieldChange({ plan: "planModeApiProvider", act: "actModeApiProvider" }, newProvider as any, currentMode)
 		setIsDropdownVisible(false)
 		setSelectedIndex(-1)
@@ -592,15 +604,21 @@ const ProviderDropdownList = styled.div`
 	z-index: ${DROPDOWN_Z_INDEX - 1};
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 3px;
+	font-size: 12px;
+	color: var(--vscode-dropdown-foreground);
 `
 
-const ProviderDropdownItem = styled.div<{ isSelected: boolean }>`
+const ProviderDropdownItem = styled.div.withConfig({
+	shouldForwardProp: (prop) => prop !== "isSelected",
+})<{ isSelected: boolean }>`
 	padding: 5px 10px;
 	cursor: pointer;
 	word-break: break-all;
 	white-space: normal;
 
 	background-color: ${({ isSelected }) => (isSelected ? "var(--vscode-list-activeSelectionBackground)" : "inherit")};
+	color: var(--vscode-foreground);
+	font-size: 12px;
 
 	&:hover {
 		background-color: var(--vscode-list-activeSelectionBackground);

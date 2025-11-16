@@ -89,7 +89,9 @@ body[data-platform="standalone"] .list-row,
 body[data-platform="standalone"] .dropdown-options,
 body[data-platform="standalone"] .dropdown-list,
 body[data-platform="standalone"] .list-widget,
-body[data-platform="standalone"] .list-container .monaco-list-rows {
+body[data-platform="standalone"] .list-container .monaco-list-rows,
+body[data-platform="standalone"] .dropdown-container .dropdown-list,
+body[data-platform="standalone"] .dropdown-container .dropdown-list * {
 	background-color: var(--vscode-dropdown-background, #1e1e1e) !important;
 	color: var(--vscode-dropdown-foreground, #e1eaf2) !important;
 	font-size: 12px !important;

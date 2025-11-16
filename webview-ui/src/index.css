@@ -71,6 +71,18 @@ body[data-platform="standalone"] vscode-dropdown::part(control) {
 	font-size: 12px;
 }
 
+/* Generic popovers/overlays in standalone: ensure opaque bg and readable text */
+body[data-platform="standalone"] .select-menu,
+body[data-platform="standalone"] .dropdown,
+body[data-platform="standalone"] .dropdown-menu,
+body[data-platform="standalone"] .context-view,
+body[data-platform="standalone"] .monaco-list,
+body[data-platform="standalone"] .list-container,
+body[data-platform="standalone"] vscode-option::part(root) {
+	background-color: var(--vscode-dropdown-background, #1e1e1e) !important;
+	color: var(--vscode-dropdown-foreground, #e1eaf2) !important;
+}
+
 #root {
 	height: 100%;
 	width: 100%;

@@ -26,6 +26,8 @@ export const CaretI18nProvider: React.FC<CaretI18nProviderProps> = ({ children, 
 	const { preferredLanguage } = useExtensionState()
 	const [language, setLanguageState] = useState<SupportedLanguage>(defaultLanguage)
 	const [isLoading, setIsLoading] = useState(false)
+	// 최근 사용자 변경 시점 (백엔드 state 지연으로 인한 언어 되돌림 방지)
+	const lastManualChangeRef = React.useRef<number>(0)
 
 	// 초기화 로그는 한 번만 출력
 	const [hasInitialized, setHasInitialized] = useState(false)
@@ -47,7 +49,10 @@ export const CaretI18nProvider: React.FC<CaretI18nProviderProps> = ({ children, 
 	// ExtensionState의 preferredLanguage가 변경될 때마다 UI 언어 업데이트
 	useEffect(() => {
 		const newLanguage = getLanguageFromExtensionState()
-		if (newLanguage !== language) {
+		// 최근 수동 변경 직후에는 백엔드 state의 늦은 응답으로 덮어쓰지 않도록 가드
+		const now = Date.now()
+		const recentlyChanged = now - lastManualChangeRef.current < 2000
+		if (newLanguage !== language && !recentlyChanged) {
 			setLanguageState(newLanguage)
 			setGlobalUILanguage(newLanguage)
 		}
@@ -67,6 +72,7 @@ export const CaretI18nProvider: React.FC<CaretI18nProviderProps> = ({ children, 
 			}
 			setIsLoading(true)
 			try {
+				lastManualChangeRef.current = Date.now()
 				// Update global i18n state first
 				setGlobalUILanguage(newLanguage)
 

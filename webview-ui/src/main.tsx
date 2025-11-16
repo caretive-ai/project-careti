@@ -4,6 +4,13 @@ import "./index.css"
 
 import App from "./App.tsx"
 
+declare const __PLATFORM__: string
+
+// Tag body with the current build platform to scope platform-specific styles
+if (typeof document !== "undefined" && document.body) {
+	document.body.dataset.platform = __PLATFORM__
+}
+
 try {
 	const rootElement = document.getElementById("root")
 	if (!rootElement) {

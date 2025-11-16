@@ -55,8 +55,20 @@ body {
 	line-height: 1.25;
 	height: 100%;
 	width: 100%;
+}
+
+/* Apply default text/bg colors only for standalone (IntelliJ) builds to avoid VS Code theme regressions */
+body[data-platform="standalone"] {
 	color: var(--vscode-foreground, #e1eaf2);
 	background-color: var(--vscode-editor-background, #1e1e1e);
+}
+
+/* Fix VS Code combo (dropdown) visibility in standalone: ensure background and reasonable font */
+body[data-platform="standalone"] vscode-dropdown::part(listbox),
+body[data-platform="standalone"] vscode-dropdown::part(control) {
+	background-color: var(--vscode-dropdown-background, #1e1e1e);
+	color: var(--vscode-dropdown-foreground, #e1eaf2);
+	font-size: 12px;
 }
 
 #root {

@@ -38,7 +38,8 @@ if (!VALID_PLATFORMS.includes(platform)) {
 console.log("Building webview for", platform)
 
 export default defineConfig({
-	base: './', // Use relative paths for assets (required for IntelliJ JCEF file:// protocol)
+	// IntelliJ JCEF(file://)는 상대경로가 필요하므로 standalone 빌드에서만 base를 './'로 설정
+	base: platform === "standalone" ? "./" : "/",
 	plugins: [react(), tailwindcss(), writePortToFile()],
 	test: {
 		environment: "jsdom",

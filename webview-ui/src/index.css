@@ -55,6 +55,8 @@ body {
 	line-height: 1.25;
 	height: 100%;
 	width: 100%;
+	color: var(--vscode-foreground, #e1eaf2);
+	background-color: var(--vscode-editor-background, #1e1e1e);
 }
 
 #root {

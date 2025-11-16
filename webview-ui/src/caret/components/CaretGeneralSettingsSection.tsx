@@ -48,15 +48,8 @@ const CaretGeneralSettingsSection: React.FC<CaretGeneralSettingsSectionProps> = 
 								className="mb-[5px]"
 								onChange={(e: any) => {
 									const checked = e.target.checked === true
-									console.log("[PERSONA-DEBUG] Toggle clicked:", {
-										checked,
-										currentState: enablePersonaSystem,
-										timestamp: new Date().toISOString(),
-									})
 
 									setEnablePersonaSystem(checked)
-
-									console.log("[PERSONA-DEBUG] setEnablePersonaSystem called with:", checked)
 								}}>
 								{t("persona.enablePersonaSystem", "settings")}
 							</VSCodeCheckbox>

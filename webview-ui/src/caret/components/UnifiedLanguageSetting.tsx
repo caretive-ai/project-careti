@@ -40,42 +40,28 @@ const UnifiedLanguageSetting: React.FC<UnifiedLanguageSettingProps> = ({ hideLab
 		// 선택된 언어 옵션 찾기
 		const selectedOption = languageOptions.find((option) => option.key === newLanguageKey)
 		if (!selectedOption) {
-			console.error("❌ Invalid language selected:", newLanguageKey)
+			console.error("Invalid language selected:", newLanguageKey)
 			return
 		}
-
-		console.log("🌐 Unified Language change requested:", {
-			key: newLanguageKey,
-			display: selectedOption.display,
-		})
 
 		try {
 			// 1. 언어 설정 분석
 			const languageConfig = getLanguageSettings(newLanguageKey)
-			console.log("📋 Language configuration:", languageConfig)
 
 			// 2. LLM 언어 설정 (백엔드 전송)
 			updateSetting("preferredLanguage", selectedOption.display)
-			console.log("🤖 LLM Language updated:", selectedOption.display)
 
 			// 3. UI 언어 자동 동기화 (지원하는 경우만)
 			if (languageConfig.isUISupported) {
 				await changeLanguage(languageConfig.caretLanguage)
-				console.log(`✅ UI Language also changed to: ${languageConfig.caretLanguage}`)
 			} else {
-				console.log(`ℹ️ UI Language not supported for: ${newLanguageKey}, keeping English UI`)
 			}
 
 			// 4. 언어 변경 시 새 작업 시작 (기존 동작 유지)
 			TaskServiceClient.clearTask({})
-			console.log("🆕 Starting new task due to language change")
 
-			console.log("✅ Unified Language setting completed:", {
-				llm: selectedOption.display,
-				ui: languageConfig.isUISupported ? languageConfig.caretLanguage : "en (unchanged)",
-			})
 		} catch (error) {
-			console.error("❌ Failed to change unified language:", error)
+			console.error("Failed to change unified language:", error)
 		}
 	}
 

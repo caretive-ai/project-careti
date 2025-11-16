@@ -128,11 +128,7 @@ class I18nPerformanceMonitor {
 		const metrics = this.getMetrics()
 
 		console.group("📊 i18n Performance Summary")
-		console.log(`🔄 Total translations: ${metrics.translationCalls}`)
-		console.log(`⚡ Average time: ${metrics.averageTranslationTime.toFixed(2)}ms`)
-		console.log(`💾 Cache hit rate: ${(metrics.cacheHitRate * 100).toFixed(1)}%`)
-		console.log(`🔤 Template processing: ${metrics.templateProcessingTime.toFixed(2)}ms avg`)
-		console.log(`🇰🇷 Korean particles: ${metrics.koreanParticleProcessingTime.toFixed(2)}ms avg`)
+
 		console.groupEnd()
 	}
 }

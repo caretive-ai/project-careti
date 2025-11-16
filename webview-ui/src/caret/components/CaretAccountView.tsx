@@ -181,23 +181,6 @@ const CaretAccountView = memo(({ caretUser }: CaretAccountViewProps) => {
 	}, [])
 
 	// Log render state
-	console.log("[CARET-ACCOUNT-VIEW] 🎨 Rendering with gRPC state:", {
-		user: { id, email, displayName },
-		usage: {
-			daily: {
-				promptTokens: dailyUsage.prompt_tokens,
-				completionTokens: dailyUsage.completion_tokens,
-				totalTokens: dailyUsage.total_tokens,
-				totalCost: dailyUsage.spend,
-			},
-			monthly: {
-				promptTokens: monthlyUsage.prompt_tokens,
-				completionTokens: monthlyUsage.completion_tokens,
-				totalTokens: monthlyUsage.total_tokens,
-				totalCost: monthlyUsage.spend,
-			},
-		},
-	})
 
 	return (
 		<div className="max-w-lg mx-auto p-4">

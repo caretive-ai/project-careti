@@ -42,7 +42,6 @@ export const ClineAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 	}, [userOrganizations])
 
 	useEffect(() => {
-		console.log("Extension: ClineAuthContext: user updated:", user?.uid)
 	}, [user?.uid])
 
 	// Handle auth status update events
@@ -64,7 +63,6 @@ export const ClineAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 				console.error("Error in auth callback subscription:", error)
 			},
 			onComplete: () => {
-				console.log("Auth callback subscription completed")
 			},
 		})
 

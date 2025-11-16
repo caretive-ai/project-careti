@@ -162,6 +162,7 @@ export const ExtensionStateContext = createContext<ExtensionStateContextType | u
 export const ExtensionStateContextProvider: React.FC<{
 	children: React.ReactNode
 }> = ({ children }) => {
+	const didFetchStateRef = useRef(false)
 	// Get the current webview provider type
 	const currentProviderType = window.WEBVIEW_PROVIDER_TYPE === "sidebar" ? "sidebar" : "tab"
 	// UI view state
@@ -382,6 +383,7 @@ export const ExtensionStateContextProvider: React.FC<{
 				if (response.stateJson) {
 					try {
 						const stateData = JSON.parse(response.stateJson) as ExtensionState
+						console.warn("[ExtensionState] stateJson received")
 						if (stateData.enablePersonaSystem !== undefined) {
 							caretWebviewLogger.debug(
 								"Backend state received - enablePersonaSystem:",
@@ -452,38 +454,52 @@ export const ExtensionStateContextProvider: React.FC<{
 
 							// Update welcome screen state based on API configuration
 							setShowWelcome(!newState.welcomeViewCompleted)
+							console.warn("[ExtensionState] didHydrateState=true")
 							setDidHydrateState(true)
 
-							console.log("[DEBUG] returning new state in ESC")
-
-							return newState
-						})
-					} catch (error) {
-						console.error("Error parsing state JSON:", error)
-						console.log("[DEBUG] ERR getting state", error)
+								return newState
+							})
+						} catch (error) {
+							console.error("Error parsing state JSON:", error)
+						}
+					} else if (!didFetchStateRef.current) {
+						console.warn("[ExtensionState] subscribeToState response missing stateJson; fetching latest once")
+						didFetchStateRef.current = true
+						StateServiceClient.getLatestState(EmptyRequest.create({}))
+							.then((latestState) => {
+								if (!latestState.stateJson) {
+									console.warn("[ExtensionState] getLatestState returned empty stateJson")
+									return
+								}
+								const stateData = JSON.parse(latestState.stateJson) as ExtensionState
+								setState(() => stateData)
+								setShowWelcome(!stateData.welcomeViewCompleted)
+								console.warn("[ExtensionState] hydrated via getLatestState")
+								setDidHydrateState(true)
+							})
+							.catch((error) => {
+								console.error("Failed to fetch latest state:", error)
+							})
+					} else {
+						console.warn("[ExtensionState] subscribeToState response missing stateJson (already fetched latest)")
 					}
-				}
-				console.log('[DEBUG] ended "got subscribed state"')
-			},
+				},
 			onError: (error) => {
 				console.error("Error in state subscription:", error)
 			},
 			onComplete: () => {
-				console.log("State subscription completed")
 			},
 		})
 
 		// Subscribe to MCP button clicked events with webview type
 		mcpButtonUnsubscribeRef.current = UiServiceClient.subscribeToMcpButtonClicked(EmptyRequest.create(), {
 			onResponse: () => {
-				console.log("[DEBUG] Received mcpButtonClicked event from gRPC stream")
 				navigateToMcp()
 			},
 			onError: (error) => {
 				console.error("Error in mcpButtonClicked subscription:", error)
 			},
 			onComplete: () => {
-				console.log("mcpButtonClicked subscription completed")
 			},
 		})
 
@@ -493,14 +509,12 @@ export const ExtensionStateContextProvider: React.FC<{
 			{
 				onResponse: () => {
 					// When history button is clicked, navigate to history view
-					console.log("[DEBUG] Received history button clicked event from gRPC stream")
 					navigateToHistory()
 				},
 				onError: (error) => {
 					console.error("Error in history button clicked subscription:", error)
 				},
 				onComplete: () => {
-					console.log("History button clicked subscription completed")
 				},
 			},
 		)
@@ -509,7 +523,6 @@ export const ExtensionStateContextProvider: React.FC<{
 		chatButtonUnsubscribeRef.current = UiServiceClient.subscribeToChatButtonClicked(EmptyRequest.create({}), {
 			onResponse: () => {
 				// When chat button is clicked, navigate to chat
-				console.log("[DEBUG] Received chat button clicked event from gRPC stream")
 				navigateToChat()
 			},
 			onError: (error) => {
@@ -521,7 +534,6 @@ export const ExtensionStateContextProvider: React.FC<{
 		// Subscribe to didBecomeVisible events
 		didBecomeVisibleUnsubscribeRef.current = UiServiceClient.subscribeToDidBecomeVisible(EmptyRequest.create({}), {
 			onResponse: () => {
-				console.log("[DEBUG] Received didBecomeVisible event from gRPC stream")
 				window.dispatchEvent(new CustomEvent("focusChatInput"))
 			},
 			onError: (error) => {
@@ -533,7 +545,6 @@ export const ExtensionStateContextProvider: React.FC<{
 		// Subscribe to MCP servers updates
 		mcpServersSubscriptionRef.current = McpServiceClient.subscribeToMcpServers(EmptyRequest.create(), {
 			onResponse: (response) => {
-				console.log("[DEBUG] Received MCP servers update from gRPC stream")
 				if (response.mcpServers) {
 					setMcpServers(convertProtoMcpServersToMcpServers(response.mcpServers))
 				}
@@ -542,7 +553,6 @@ export const ExtensionStateContextProvider: React.FC<{
 				console.error("Error in MCP servers subscription:", error)
 			},
 			onComplete: () => {
-				console.log("MCP servers subscription completed")
 			},
 		})
 
@@ -558,7 +568,6 @@ export const ExtensionStateContextProvider: React.FC<{
 					console.error("Error in settings button clicked subscription:", error)
 				},
 				onComplete: () => {
-					console.log("Settings button clicked subscription completed")
 				},
 			},
 		)
@@ -567,13 +576,13 @@ export const ExtensionStateContextProvider: React.FC<{
 		partialMessageUnsubscribeRef.current = UiServiceClient.subscribeToPartialMessage(EmptyRequest.create({}), {
 			onResponse: (protoMessage) => {
 				try {
-					// Validate critical fields
-					if (!protoMessage.ts || protoMessage.ts <= 0) {
-						console.error("Invalid timestamp in partial message:", protoMessage)
-						return
+					// Validate critical fields; fall back to current time if timestamp is missing
+					const patchedProto = {
+						...protoMessage,
+						ts: protoMessage.ts && protoMessage.ts > 0 ? protoMessage.ts : Date.now(),
 					}
 
-					const partialMessage = convertProtoToClineMessage(protoMessage)
+					const partialMessage = convertProtoToClineMessage(patchedProto)
 					setState((prevState) => {
 						// worth noting it will never be possible for a more up-to-date message to be sent here or in normal messages post since the presentAssistantContent function uses lock
 						const lastIndex = findLastIndex(prevState.clineMessages, (msg) => msg.ts === partialMessage.ts)
@@ -592,28 +601,24 @@ export const ExtensionStateContextProvider: React.FC<{
 				console.error("Error in partialMessage subscription:", error)
 			},
 			onComplete: () => {
-				console.log("[DEBUG] partialMessage subscription completed")
 			},
 		})
 
 		// Subscribe to MCP marketplace catalog updates
 		mcpMarketplaceUnsubscribeRef.current = McpServiceClient.subscribeToMcpMarketplaceCatalog(EmptyRequest.create({}), {
 			onResponse: (catalog) => {
-				console.log("[DEBUG] Received MCP marketplace catalog update from gRPC stream")
 				setMcpMarketplaceCatalog(catalog)
 			},
 			onError: (error) => {
 				console.error("Error in MCP marketplace catalog subscription:", error)
 			},
 			onComplete: () => {
-				console.log("MCP marketplace catalog subscription completed")
 			},
 		})
 
 		// Subscribe to OpenRouter models updates
 		openRouterModelsUnsubscribeRef.current = ModelsServiceClient.subscribeToOpenRouterModels(EmptyRequest.create({}), {
 			onResponse: (response: OpenRouterCompatibleModelInfo) => {
-				console.log("[DEBUG] Received OpenRouter models update from gRPC stream")
 				const models = response.models
 				setOpenRouterModels({
 					[openRouterDefaultModelId]: openRouterDefaultModelInfo, // in case the extension sent a model list without the default model
@@ -624,14 +629,12 @@ export const ExtensionStateContextProvider: React.FC<{
 				console.error("Error in OpenRouter models subscription:", error)
 			},
 			onComplete: () => {
-				console.log("OpenRouter models subscription completed")
 			},
 		})
 
 		// Initialize webview using gRPC
 		UiServiceClient.initializeWebview(EmptyRequest.create({}))
 			.then(() => {
-				console.log("[DEBUG] Webview initialization completed via gRPC")
 			})
 			.catch((error) => {
 				console.error("Failed to initialize webview via gRPC:", error)
@@ -641,14 +644,12 @@ export const ExtensionStateContextProvider: React.FC<{
 		accountButtonClickedSubscriptionRef.current = UiServiceClient.subscribeToAccountButtonClicked(EmptyRequest.create(), {
 			onResponse: () => {
 				// When account button is clicked, navigate to account view
-				console.log("[DEBUG] Received account button clicked event from gRPC stream")
 				navigateToAccount()
 			},
 			onError: (error) => {
 				console.error("Error in account button clicked subscription:", error)
 			},
 			onComplete: () => {
-				console.log("Account button clicked subscription completed")
 			},
 		})
 
@@ -713,7 +714,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		// 				setCaretUserState((prevUser) => {
 		// 					// Only update if user info changed to avoid unnecessary re-renders
 		// 					if (!prevUser || prevUser.uid !== newCaretUser.uid || prevUser.email !== newCaretUser.email) {
-		// 						console.log("[CARET-AUTH] CaretUser updated:", newCaretUser)
+		//
 		// 						return newCaretUser
 		// 					}
 		// 					return prevUser
@@ -722,7 +723,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		// 		} else {
 		// 			setCaretUserState((prevUser) => {
 		// 				if (prevUser !== null) {
-		// 					console.log("[CARET-AUTH] CaretUser cleared")
+		//
 		// 					return null
 		// 				}
 		// 				return prevUser
@@ -897,12 +898,6 @@ export const ExtensionStateContextProvider: React.FC<{
 			const timestamp = new Date().toISOString()
 
 			// 백엔드 전역 변수 로깅
-			console.log("[GLOBAL-BACKEND] modeSystem state:", {
-				before: previousMode,
-				after: modeSystem,
-				timestamp,
-			})
-			console.log(`[BACKEND] modeSystem changed: ${previousMode} -> ${modeSystem}`)
 
 			// 프론트엔드 전역 변수 로깅
 			console.debug("[GLOBAL-FRONTEND] modeSystem state:", {
@@ -926,7 +921,6 @@ export const ExtensionStateContextProvider: React.FC<{
 				} as any
 				request.modeSystem = modeSystem
 				await StateServiceClient.updateSettings(request)
-				console.log(`[API] StateServiceClient.updateSettings called with modeSystem: ${modeSystem}`)
 			} catch (error) {
 				console.error("[API] Failed to update modeSystem via StateServiceClient:", error)
 			}
@@ -1042,7 +1036,6 @@ export const ExtensionStateContextProvider: React.FC<{
 		setUserInfo: (userInfo?: UserInfo) => setState((prevState) => ({ ...prevState, userInfo })),
 		// CARET MODIFICATION: setCaretUser implementation
 		setCaretUser: (user: CaretUser | null) => {
-			console.log("[CARET-AUTH] setCaretUser called with:", user)
 			setCaretUserState(user)
 		},
 	}

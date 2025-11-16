@@ -35,7 +35,13 @@
       "Bash(PLATFORM=standalone npm run build:webview:*)",
       "Bash(PLATFORM=standalone npm run build:*)",
       "Bash(env PLATFORM=standalone npm run build)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(node --version:*)",
+      "Read(//home/luke/.cache/**)",
+      "Bash(node vscode-stub-wrapper.js:*)",
+      "Bash(git config:*)",
+      "Read(//var/home/luke/dev/**)",
+      "Read(//var/home/luke/**)"
     ],
     "deny": [],
     "ask": []

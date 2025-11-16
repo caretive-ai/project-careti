@@ -111,10 +111,6 @@ export class CaretApiMockServer {
 			status: "completed",
 		})
 
-		console.log("[CARET-API-MOCK] Server initialized with mock data")
-		console.log("[CARET-API-MOCK] User:", this.mockUser.email)
-		console.log("[CARET-API-MOCK] Balance: $" + this.mockBalance.currentBalance)
-		console.log("[CARET-API-MOCK] Usage history entries:", this.mockUsageHistory.length)
 	}
 
 	public static getInstance(): CaretApiMockServer {
@@ -128,13 +124,10 @@ export class CaretApiMockServer {
 	 * Mock: GET /api/v1/account/balance
 	 */
 	public async getBalance(): Promise<CaretApiBalance> {
-		console.log("[CARET-API-MOCK] GET /api/v1/account/balance")
 		await this.delay()
 
 		// Update lastUpdated to current time
 		this.mockBalance.lastUpdated = new Date().toISOString()
-
-		console.log("[CARET-API-MOCK] Balance response:", this.mockBalance)
 		return { ...this.mockBalance }
 	}
 
@@ -142,11 +135,9 @@ export class CaretApiMockServer {
 	 * Mock: GET /api/v1/account/usage
 	 */
 	public async getUsageHistory(limit = 10): Promise<CaretApiUsage[]> {
-		console.log(`[CARET-API-MOCK] GET /api/v1/account/usage?limit=${limit}`)
 		await this.delay()
 
 		const response = this.mockUsageHistory.slice(0, limit)
-		console.log("[CARET-API-MOCK] Usage history response:", response.length, "entries")
 		return response
 	}
 
@@ -154,15 +145,12 @@ export class CaretApiMockServer {
 	 * Mock: GET /generation?id={generationId}
 	 */
 	public async getGeneration(generationId: string): Promise<CaretApiGeneration | null> {
-		console.log(`[CARET-API-MOCK] GET /generation?id=${generationId}`)
 		await this.delay()
 
 		const generation = this.mockGenerations.get(generationId)
 		if (generation) {
-			console.log("[CARET-API-MOCK] Generation found:", generation)
 			return { ...generation }
 		} else {
-			console.log("[CARET-API-MOCK] Generation not found:", generationId)
 			return null
 		}
 	}
@@ -171,10 +159,7 @@ export class CaretApiMockServer {
 	 * Mock: GET /api/v1/account/profile
 	 */
 	public async getUserProfile(): Promise<CaretApiUser> {
-		console.log("[CARET-API-MOCK] GET /api/v1/account/profile")
 		await this.delay()
-
-		console.log("[CARET-API-MOCK] User profile response:", this.mockUser)
 		return { ...this.mockUser }
 	}
 
@@ -183,9 +168,7 @@ export class CaretApiMockServer {
 	 * This would be called by CaretApiProvider, but we're just logging here
 	 */
 	public async simulateChatCompletion(messages: any[], model: string): Promise<string> {
-		console.log(`[CARET-API-MOCK] POST /api/v1/chat/completions`)
-		console.log(`[CARET-API-MOCK] Model: ${model}`)
-		console.log(`[CARET-API-MOCK] Messages: ${messages.length}`)
+
 		await this.delay(1000) // Longer delay for chat completion
 
 		// Generate a mock generation ID for tracking
@@ -203,8 +186,6 @@ export class CaretApiMockServer {
 
 		// Store for later retrieval
 		this.mockGenerations.set(generationId, mockGeneration)
-
-		console.log(`[CARET-API-MOCK] Generated completion with ID: ${generationId}`)
 		return generationId
 	}
 
@@ -235,7 +216,6 @@ export class CaretApiMockServer {
 	 * Update mock balance (for testing balance changes)
 	 */
 	public updateBalance(newBalance: number): void {
-		console.log(`[CARET-API-MOCK] Updating balance: $${this.mockBalance.currentBalance} -> $${newBalance}`)
 		this.mockBalance.currentBalance = newBalance
 		this.mockBalance.lastUpdated = new Date().toISOString()
 	}
@@ -256,7 +236,6 @@ export class CaretApiMockServer {
 		}
 
 		this.mockUsageHistory.unshift(newUsage) // Add to beginning
-		console.log("[CARET-API-MOCK] Added usage entry:", newUsage.id)
 
 		// Update balance (subtract cost)
 		this.updateBalance(this.mockBalance.currentBalance - newUsage.totalCost)
@@ -266,7 +245,6 @@ export class CaretApiMockServer {
 	 * Reset mock data (for testing)
 	 */
 	public reset(): void {
-		console.log("[CARET-API-MOCK] Resetting mock data")
 		this.mockBalance.currentBalance = 125.5
 		this.mockUsageHistory = []
 		this.mockGenerations.clear()

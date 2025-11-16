@@ -27,5 +27,6 @@
 		"source.removeUnused.biome": "always",
 		"source.removeUnusedImports": "always",
 		"source.organizeImports.biome": "always"
-	}
+	},
+	"chatgpt.openOnStartup": true
 }

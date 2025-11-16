@@ -39,7 +39,6 @@ type CachedData = {
 
 const AccountView = ({ onDone, clineUser, organizations, activeOrganization }: AccountViewProps) => {
 	const { apiConfiguration } = useExtensionState()
-	console.log("<===== account view apiConfiguration=====>", apiConfiguration)
 	const caretUser = apiConfiguration?.caretUserProfile
 
 	return (

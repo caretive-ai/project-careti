@@ -287,7 +287,6 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				console.error(t("errorInAddToInputSubscription", "chat"), error)
 			},
 			onComplete: () => {
-				console.log(t("addToInputSubscriptionCompleted", "chat"))
 			},
 		})
 

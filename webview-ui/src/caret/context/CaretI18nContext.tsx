@@ -31,9 +31,6 @@ export const CaretI18nProvider: React.FC<CaretI18nProviderProps> = ({ children, 
 	const [hasInitialized, setHasInitialized] = useState(false)
 
 	if (!hasInitialized) {
-		console.log(
-			`🚀 [CaretI18nProvider] Initializing i18n system: defaultLang="${defaultLanguage}", ExtensionState="${preferredLanguage}"`,
-		)
 		setHasInitialized(true)
 	}
 
@@ -59,7 +56,6 @@ export const CaretI18nProvider: React.FC<CaretI18nProviderProps> = ({ children, 
 	// Initialize language on mount
 	useEffect(() => {
 		const initialLanguage = getLanguageFromExtensionState()
-		console.log(`🎯 [CaretI18nProvider] Initial language: "${initialLanguage}"`)
 		setLanguageState(initialLanguage)
 		setGlobalUILanguage(initialLanguage)
 	}, [])
@@ -69,8 +65,6 @@ export const CaretI18nProvider: React.FC<CaretI18nProviderProps> = ({ children, 
 			if (newLanguage === language) {
 				return
 			}
-
-			console.log(`🔄 [CaretI18nProvider] Language change requested: "${language}" → "${newLanguage}"`)
 			setIsLoading(true)
 			try {
 				// Update global i18n state first
@@ -78,8 +72,6 @@ export const CaretI18nProvider: React.FC<CaretI18nProviderProps> = ({ children, 
 
 				// Force immediate state update
 				setLanguageState(newLanguage)
-
-				console.log(`✅ [CaretI18nProvider] Language change completed: "${newLanguage}"`)
 			} catch (error) {
 				console.error(`❌ [CaretI18nProvider] Language change failed:`, error)
 				throw error // Re-throw to handle in component

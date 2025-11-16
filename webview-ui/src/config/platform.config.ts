@@ -65,7 +65,6 @@ const postMessageStrategies: Record<string, PostMessageFunction> = {
 			return
 		}
 		const json = JSON.stringify(message)
-		console.log("Standalone postMessage: " + json.slice(0, 200))
 		window.standalonePostMessage(json)
 	},
 }
@@ -88,7 +87,6 @@ declare const __PLATFORM__: string
 // Get the specific platform config at compile time
 const configs = platformConfigs as PlatformConfigs
 const selectedConfig = configs[__PLATFORM__]
-console.log("[PLATFORM_CONFIG] Build platform:", __PLATFORM__)
 
 // Build the platform config with injected functions
 // Callers should use this in the situations where the react component is not available.

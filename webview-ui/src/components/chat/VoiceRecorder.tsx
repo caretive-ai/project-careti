@@ -66,7 +66,6 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
 			// Only set recording state after backend confirms success
 			setIsRecording(true)
-			console.log("Recording started successfully")
 		} catch (error) {
 			console.error("Error starting recording:", error)
 			const errorMessage = error instanceof Error ? error.message : "Failed to start recording"
@@ -189,8 +188,6 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 				setError(response.error || "Failed to cancel recording")
 				return
 			}
-
-			console.log("Recording canceled successfully")
 		} catch (error) {
 			console.error("Error canceling recording:", error)
 			const errorMessage = error instanceof Error ? error.message : "Failed to cancel recording"

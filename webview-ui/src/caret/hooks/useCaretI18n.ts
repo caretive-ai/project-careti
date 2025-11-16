@@ -71,8 +71,6 @@ export const useCaretI18n = (): UseCaretI18nReturn => {
 
 				// Update global language state
 				setGlobalUILanguage(newLanguage)
-
-				console.log(`🌐 Caret i18n: Language changed to ${newLanguage}`)
 			} catch (error) {
 				console.error("❌ Failed to change language:", error)
 				throw error

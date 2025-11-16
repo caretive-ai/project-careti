@@ -43,7 +43,6 @@ export const TabList = forwardRef<
 >(({ children, className, value, onValueChange, ...props }, ref) => {
 	const handleTabSelect = useCallback(
 		(tabValue: string) => {
-			console.log("Tab selected:", tabValue)
 			onValueChange(tabValue)
 		},
 		[onValueChange],

@@ -600,13 +600,14 @@ const ProviderDropdownList = styled.div`
 	width: calc(100% - 2px);
 	max-height: 200px;
 	overflow-y: auto;
-	background-color: var(--vscode-dropdown-background);
+	background-color: var(--vscode-dropdown-background, #1e1e1e);
+	color: var(--vscode-dropdown-foreground, #e1eaf2);
 	border: 1px solid var(--vscode-list-activeSelectionBackground);
 	z-index: ${DROPDOWN_Z_INDEX - 1};
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 3px;
 	font-size: 12px;
-	color: var(--vscode-dropdown-foreground);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
 `
 
 const ProviderDropdownItem = styled.div.withConfig({
@@ -617,8 +618,9 @@ const ProviderDropdownItem = styled.div.withConfig({
 	word-break: break-all;
 	white-space: normal;
 
-	background-color: ${({ isSelected }) => (isSelected ? "var(--vscode-list-activeSelectionBackground)" : "inherit")};
-	color: var(--vscode-foreground);
+	background-color: ${({ isSelected }) =>
+		isSelected ? "var(--vscode-list-activeSelectionBackground)" : "var(--vscode-dropdown-background, #1e1e1e)"};
+	color: var(--vscode-dropdown-foreground, #e1eaf2);
 	font-size: 12px;
 
 	&:hover {

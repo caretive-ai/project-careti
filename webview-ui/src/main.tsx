@@ -9,6 +9,21 @@ declare const __PLATFORM__: string
 // Tag body with the current build platform to scope platform-specific styles
 if (typeof document !== "undefined" && document.body) {
 	document.body.dataset.platform = __PLATFORM__
+
+	// For standalone (IntelliJ) ensure http(s) links open externally instead of navigating the webview
+	if (__PLATFORM__ === "standalone") {
+		document.addEventListener("click", (event) => {
+			const target = event.target as HTMLElement | null
+			if (!target) return
+			const anchor = target.closest("a") as HTMLAnchorElement | null
+			if (!anchor || !anchor.href) return
+			const href = anchor.href
+			if (href.startsWith("http://") || href.startsWith("https://")) {
+				event.preventDefault()
+				window.open(href, "_blank", "noopener")
+			}
+		})
+	}
 }
 
 try {

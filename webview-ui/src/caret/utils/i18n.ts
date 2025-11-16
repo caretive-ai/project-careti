@@ -221,15 +221,15 @@ export const setExtensionLanguageProvider = (provider: () => SupportedLanguage) 
 
 // 내부적으로 현재 적용된 UI 언어를 가져오는 함수
 const getInternalCurrentLanguage = (): SupportedLanguage => {
+	// 설정된 전역 언어가 있으면 우선 사용(사용자 즉시 변경 반영)
+	if (currentEffectiveLanguage) {
+		return currentEffectiveLanguage
+	}
+
 	// ExtensionState에서 언어를 가져올 수 있으면 사용
 	if (getExtensionLanguage) {
 		const extensionLang = getExtensionLanguage()
 		return extensionLang
-	}
-
-	// 설정된 전역 언어가 있으면 사용
-	if (currentEffectiveLanguage) {
-		return currentEffectiveLanguage
 	}
 
 	// 마지막 fallback은 영어

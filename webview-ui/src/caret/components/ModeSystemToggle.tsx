@@ -112,7 +112,9 @@ const ModeSystemToggle: React.FC<ModeSystemToggleProps> = ({ className }) => {
 					</ModeSwitchOption>
 				</ModeSwitchContainer>
 			</div>
-			<p className="text-xs text-[var(--vscode-descriptionForeground)]">{t("modeSystem.description", "settings")}</p>
+			<p className="text-xs text-[var(--vscode-descriptionForeground)]">
+				{translate("modeSystem.description", "settings")}
+			</p>
 		</div>
 	)
 }

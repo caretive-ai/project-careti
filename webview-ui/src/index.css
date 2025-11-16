@@ -84,10 +84,17 @@ body[data-platform="standalone"] .dropdown-panel,
 body[data-platform="standalone"] .select-menu-dropdown,
 body[data-platform="standalone"] .dropdown-body,
 body[data-platform="standalone"] .vscode-select-list,
-body[data-platform="standalone"] .list-row {
+body[data-platform="standalone"] .vscode-select-list .monaco-list-rows,
+body[data-platform="standalone"] .list-row,
+body[data-platform="standalone"] .dropdown-options,
+body[data-platform="standalone"] .dropdown-list,
+body[data-platform="standalone"] .list-widget,
+body[data-platform="standalone"] .list-container .monaco-list-rows {
 	background-color: var(--vscode-dropdown-background, #1e1e1e) !important;
 	color: var(--vscode-dropdown-foreground, #e1eaf2) !important;
 	font-size: 12px !important;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+	border: 1px solid var(--vscode-dropdown-border, var(--vscode-list-activeSelectionBackground, #3a3d41));
 }
 
 #root {

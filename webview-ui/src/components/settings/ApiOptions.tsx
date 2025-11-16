@@ -107,6 +107,14 @@ const ApiOptions = ({
 
 
 	const { selectedProvider } = normalizeApiConfiguration(apiConfiguration, currentMode)
+	const [localProvider, setLocalProvider] = useState<string>(selectedProvider)
+
+	// Keep local provider in sync when backend updates arrive
+	useEffect(() => {
+		setLocalProvider(selectedProvider)
+	}, [selectedProvider])
+
+	const providerForRender = localProvider || selectedProvider
 
 	const { handleModeFieldChange } = useApiConfigurationHandlers({ forceSeparate: forcePlanActSeparate })
 
@@ -114,7 +122,7 @@ const ApiOptions = ({
 
 	// Poll ollama/vscode-lm models
 	const requestLocalModels = useCallback(async () => {
-		if (selectedProvider === "ollama") {
+		if (providerForRender === "ollama") {
 			try {
 				const response = await ModelsServiceClient.getOllamaModels(
 					StringRequest.create({
@@ -129,13 +137,13 @@ const ApiOptions = ({
 				setOllamaModels([])
 			}
 		}
-	}, [selectedProvider, apiConfiguration?.ollamaBaseUrl])
+	}, [providerForRender, apiConfiguration?.ollamaBaseUrl])
 	useEffect(() => {
-		if (selectedProvider === "ollama") {
+		if (providerForRender === "ollama") {
 			requestLocalModels()
 		}
-	}, [selectedProvider, requestLocalModels])
-	useInterval(requestLocalModels, selectedProvider === "ollama" ? 2000 : null)
+	}, [providerForRender, requestLocalModels])
+	useInterval(requestLocalModels, providerForRender === "ollama" ? 2000 : null)
 
 	// Provider search state
 	const [searchTerm, setSearchTerm] = useState("")
@@ -218,43 +226,36 @@ const ApiOptions = ({
 		return processedOptions
 	}, [language])
 
-		const [localProvider, setLocalProvider] = useState<string>(selectedProvider)
-
-		// Keep local mirror in sync with backend updates
-		useEffect(() => {
-			setLocalProvider(selectedProvider)
-		}, [selectedProvider])
-
 		const currentProviderLabel = useMemo(() => {
-			const providerInfo = providerOptions.find((option) => option.value === localProvider)
-			return providerInfo ? providerInfo.label : localProvider
-		}, [providerOptions, localProvider])
+			const providerInfo = providerOptions.find((option) => option.value === providerForRender)
+			return providerInfo ? providerInfo.label : providerForRender
+		}, [providerOptions, providerForRender])
 
-	// Sync search term with current provider when not searching
-	useEffect(() => {
-		if (!isDropdownVisible) {
-			setSearchTerm(currentProviderLabel)
-		}
-	}, [currentProviderLabel, isDropdownVisible])
+		// Sync search term with current provider when not searching
+		useEffect(() => {
+			if (!isDropdownVisible) {
+				setSearchTerm(currentProviderLabel)
+			}
+		}, [currentProviderLabel, isDropdownVisible])
 
-	const searchableItems = useMemo(() => {
-		return providerOptions.map((option) => ({
-			value: option.value,
-			html: option.label,
-		}))
-	}, [providerOptions])
+		const searchableItems = useMemo(() => {
+			return providerOptions.map((option) => ({
+				value: option.value,
+				html: option.label,
+			}))
+		}, [providerOptions])
 
-	const fuse = useMemo(() => {
-		return new Fuse(searchableItems, {
-			keys: ["html"],
-			threshold: 0.3,
-			shouldSort: true,
-			isCaseSensitive: false,
-			ignoreLocation: false,
-			includeMatches: true,
-			minMatchCharLength: 1,
-		})
-	}, [searchableItems])
+			const fuse = useMemo(() => {
+				return new Fuse(searchableItems, {
+					keys: ["html"],
+					threshold: 0.3,
+				shouldSort: true,
+				isCaseSensitive: false,
+				ignoreLocation: false,
+				includeMatches: true,
+				minMatchCharLength: 1,
+			})
+		}, [searchableItems])
 
 	const providerSearchResults = useMemo(() => {
 		if (!searchTerm || searchTerm === currentProviderLabel) {
@@ -266,7 +267,7 @@ const ApiOptions = ({
 
 	const handleProviderChange = (newProvider: string) => {
 		// CARET MODIFICATION: Add logging for provider changes
-		console.log(`🔄 [ApiOptions] Provider change: "${localProvider}" → "${newProvider}" (mode: ${currentMode})`)
+		console.log(`🔄 [ApiOptions] Provider change: "${selectedProvider}" → "${newProvider}" (mode: ${currentMode})`)
 		// Optimistic update for immediate UI feedback
 		setLocalProvider(newProvider)
 		const providerInfo = providerOptions.find((option) => option.value === newProvider)
@@ -420,143 +421,143 @@ const ApiOptions = ({
 				</DropdownContainer>
 
 				{/* CARET MODIFICATION: Hide Cline Provider from UI */}
-				{apiConfiguration && selectedProvider === "cline" && false && (
+				{apiConfiguration && providerForRender === "cline" && false && (
 					<div>{t("apiOptions.clineProviderHidden", "settings")}</div>
 				)}
 
-				{apiConfiguration && selectedProvider === "asksage" && (
+				{apiConfiguration && providerForRender === "asksage" && (
 					<AskSageProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "anthropic" && (
+				{apiConfiguration && providerForRender === "anthropic" && (
 					<AnthropicProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "claude-code" && (
+				{apiConfiguration && providerForRender === "claude-code" && (
 					<ClaudeCodeProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "openai-native" && (
+				{apiConfiguration && providerForRender === "openai-native" && (
 					<OpenAINativeProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "qwen" && (
+				{apiConfiguration && providerForRender === "qwen" && (
 					<QwenProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "qwen-code" && (
+				{apiConfiguration && providerForRender === "qwen-code" && (
 					<QwenCodeProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "doubao" && (
+				{apiConfiguration && providerForRender === "doubao" && (
 					<DoubaoProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "mistral" && (
+				{apiConfiguration && providerForRender === "mistral" && (
 					<MistralProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "openrouter" && (
+				{apiConfiguration && providerForRender === "openrouter" && (
 					<OpenRouterProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "deepseek" && (
+				{apiConfiguration && providerForRender === "deepseek" && (
 					<DeepSeekProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "together" && (
+				{apiConfiguration && providerForRender === "together" && (
 					<TogetherProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "openai" && (
+				{apiConfiguration && providerForRender === "openai" && (
 					<OpenAICompatibleProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "vercel-ai-gateway" && (
+				{apiConfiguration && providerForRender === "vercel-ai-gateway" && (
 					<VercelAIGatewayProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "sambanova" && (
+				{apiConfiguration && providerForRender === "sambanova" && (
 					<SambanovaProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "bedrock" && (
+				{apiConfiguration && providerForRender === "bedrock" && (
 					<BedrockProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "vertex" && (
+				{apiConfiguration && providerForRender === "vertex" && (
 					<VertexProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "gemini" && (
+				{apiConfiguration && providerForRender === "gemini" && (
 					<GeminiProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "requesty" && (
+				{apiConfiguration && providerForRender === "requesty" && (
 					<RequestyProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "fireworks" && (
+				{apiConfiguration && providerForRender === "fireworks" && (
 					<FireworksProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "vscode-lm" && <VSCodeLmProvider currentMode={currentMode} />}
+				{apiConfiguration && providerForRender === "vscode-lm" && <VSCodeLmProvider currentMode={currentMode} />}
 
-				{apiConfiguration && selectedProvider === "groq" && (
+				{apiConfiguration && providerForRender === "groq" && (
 					<GroqProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
-				{apiConfiguration && selectedProvider === "baseten" && (
+				{apiConfiguration && providerForRender === "baseten" && (
 					<BasetenProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
-				{apiConfiguration && selectedProvider === "litellm" && (
+				{apiConfiguration && providerForRender === "litellm" && (
 					<LiteLlmProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "caret" && (
+				{apiConfiguration && providerForRender === "caret" && (
 					<CaretProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} /> // caret
 				)}
 
-				{apiConfiguration && selectedProvider === "lmstudio" && (
+				{apiConfiguration && providerForRender === "lmstudio" && (
 					<LMStudioProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "ollama" && (
+				{apiConfiguration && providerForRender === "ollama" && (
 					<OllamaProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "moonshot" && (
+				{apiConfiguration && providerForRender === "moonshot" && (
 					<MoonshotProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "huggingface" && (
+				{apiConfiguration && providerForRender === "huggingface" && (
 					<HuggingFaceProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "nebius" && (
+				{apiConfiguration && providerForRender === "nebius" && (
 					<NebiusProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "xai" && (
+				{apiConfiguration && providerForRender === "xai" && (
 					<XaiProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "cerebras" && (
+				{apiConfiguration && providerForRender === "cerebras" && (
 					<CerebrasProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "sapaicore" && (
+				{apiConfiguration && providerForRender === "sapaicore" && (
 					<SapAiCoreProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "huawei-cloud-maas" && (
+				{apiConfiguration && providerForRender === "huawei-cloud-maas" && (
 					<HuaweiCloudMaasProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "dify" && (
+				{apiConfiguration && providerForRender === "dify" && (
 					<DifyProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "zai" && (
+				{apiConfiguration && providerForRender === "zai" && (
 					<ZAiProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 

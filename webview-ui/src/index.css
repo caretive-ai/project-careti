@@ -78,9 +78,13 @@ body[data-platform="standalone"] .dropdown-menu,
 body[data-platform="standalone"] .context-view,
 body[data-platform="standalone"] .monaco-list,
 body[data-platform="standalone"] .list-container,
-body[data-platform="standalone"] vscode-option::part(root) {
+body[data-platform="standalone"] vscode-option::part(root),
+body[data-platform="standalone"] .vscode-dropdown,
+body[data-platform="standalone"] .dropdown-panel,
+body[data-platform="standalone"] .select-menu-dropdown {
 	background-color: var(--vscode-dropdown-background, #1e1e1e) !important;
 	color: var(--vscode-dropdown-foreground, #e1eaf2) !important;
+	font-size: 12px !important;
 }
 
 #root {

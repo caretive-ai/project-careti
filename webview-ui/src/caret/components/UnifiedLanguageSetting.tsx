@@ -7,7 +7,6 @@ import { updateSetting } from "@/components/settings/utils/settingsHandlers"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { TaskServiceClient } from "@/services/grpc-client"
 import { useCaretI18n } from "../hooks/useCaretI18n"
-import { t } from "../utils/i18n"
 
 interface UnifiedLanguageSettingProps {
 	hideLabel?: boolean
@@ -28,7 +27,8 @@ interface UnifiedLanguageSettingProps {
  */
 const UnifiedLanguageSetting: React.FC<UnifiedLanguageSettingProps> = ({ hideLabel = false }) => {
 	const { preferredLanguage } = useExtensionState()
-	const { changeLanguage } = useCaretI18n()
+	const { changeLanguage, t: translate, currentLanguage } = useCaretI18n()
+	void currentLanguage
 
 	// 현재 설정된 언어의 키 값 가져오기
 	const currentLanguageKey = getLanguageKey(preferredLanguage as LanguageDisplay)
@@ -68,7 +68,9 @@ const UnifiedLanguageSetting: React.FC<UnifiedLanguageSettingProps> = ({ hideLab
 	return (
 		<div className="setting-container">
 			{!hideLabel && (
-				<label htmlFor="unified-language-select">{t("settings.unifiedLanguage.label", "settings") || "Language"}</label>
+				<label htmlFor="unified-language-select">
+					{translate("settings.unifiedLanguage.label", "settings") || "Language"}
+				</label>
 			)}
 			<p>
 				<VSCodeDropdown

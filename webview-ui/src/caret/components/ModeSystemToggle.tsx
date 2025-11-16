@@ -67,6 +67,9 @@ interface ModeSystemToggleProps {
  */
 const ModeSystemToggle: React.FC<ModeSystemToggleProps> = ({ className }) => {
 	const { modeSystem, setModeSystem } = useExtensionState()
+	// CARET MODIFICATION: subscribe to i18n context so labels re-render on language change
+	const { t: translate, currentLanguage } = useCaretI18n()
+	void currentLanguage
 
 	const handleToggle = async () => {
 		const newMode = modeSystem === "caret" ? "cline" : "caret"
@@ -98,14 +101,14 @@ const ModeSystemToggle: React.FC<ModeSystemToggleProps> = ({ className }) => {
 	return (
 		<div className={`mb-[15px] ${className || ""}`}>
 			<div className="flex items-center justify-between mb-2">
-				<label className="text-sm font-medium">{t("modeSystem.label", "settings")}</label>
+				<label className="text-sm font-medium">{translate("modeSystem.label", "settings")}</label>
 				<ModeSwitchContainer data-testid="mode-system-toggle-container" disabled={false} onClick={handleToggle}>
 					<ModeSlider isCaret={modeSystem === "caret"} isCline={modeSystem === "cline"} />
 					<ModeSwitchOption data-testid="caret-mode-option" isActive={modeSystem === "caret"}>
-						{t("modeSystem.options.caret", "settings")}
+						{translate("modeSystem.options.caret", "settings")}
 					</ModeSwitchOption>
 					<ModeSwitchOption data-testid="cline-mode-option" isActive={modeSystem === "cline"}>
-						{t("modeSystem.options.cline", "settings")}
+						{translate("modeSystem.options.cline", "settings")}
 					</ModeSwitchOption>
 				</ModeSwitchContainer>
 			</div>

@@ -96,7 +96,7 @@ const UnifiedLanguageSetting: React.FC<UnifiedLanguageSettingProps> = ({ hideLab
 					opacity: 0.8,
 					marginTop: "4px",
 				}}>
-				{t("settings.unifiedLanguage.description", "settings") ||
+				{translate("settings.unifiedLanguage.description", "settings") ||
 					"Set language for AI responses and interface. Languages with 🎨 support both AI and UI."}
 			</p>
 		</div>

@@ -4,7 +4,7 @@ import React from "react"
 import styled from "styled-components"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CaretSystemServiceClient } from "@/services/grpc-client"
-import { t } from "../utils/i18n"
+import { useCaretI18n } from "../hooks/useCaretI18n"
 import { CaretWebviewLogger } from "../utils/webview-logger"
 
 const logger = new CaretWebviewLogger("ModeSystemToggle")

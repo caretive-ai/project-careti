@@ -32,6 +32,7 @@
 | 준비-1 | Attempt-2 실행 계획 작성 (`attempt-2-plan.md`) | ✅ 완료 | Backend=Cline / Webview=Caret 원칙 명시
 | 준비-2 | 상위 표준 문서 업데이트 (`merge-standard-guide.md`) | ✅ 완료 | Attempt-2 참조 문구 추가
 | 준비-3 | 작업 마스터 파일 작성 (`attempt-2-master.md`) | ✅ 완료 | 리뷰 피드백 반영, 코드 리뷰 게이트 정의
+| Section 0 | Caret Feature 원칙 재확인 (F01~F11) | ✅ 완료 | features/index.md/F01~F11 재검토
 | Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ⏳ 예정 | classify/extract 스크립트 필요
 | Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ⏳ 예정 | incremental-merge.sh 필요
 | Phase C | 통합 테스트 & E2E 복구 | ⏳ 예정 | Node20 환경 준비 필요
@@ -44,10 +45,21 @@
 
 ## 🗂️ 세부 작업 목록
 
+### Section 0: Caret Feature 원칙 재확인
+- [ ] `caret-docs/features/index.md` 및 F01~F11 문서 빠르게 훑기
+- [ ] 핵심 요소 체크:
+  - [ ] F01 CommonUtil / F05 RulePriority (`.caretrules` 우선순위, disk.ts 확장)
+  - [ ] F02 Multilingual i18n / F03 Branding UI (4개 언어, Caret/CodeCenter 테마)
+  - [ ] F04 CaretAccount / F07 Persona System (CaretGlobalManager, webview context)
+  - [ ] F06 Prompt System / F10 Input History / F11 Knowledge Parity
+  - [ ] F08 FeatureConfig / F09 Provider Setup (BizRouter, Minimax, Remote config)
+- [ ] 머징 의사결정 기준을 feature 요구사항에 맞춤
+
 ### Phase A: 분석 및 도구 준비
-- [ ] `scripts/classify-files.ts`: `git diff --name-only cline/v3.35.0..cline/v3.38.1` vs `cline/v3.35.0..merge/cline-v3.34.0-method3` 결과를 비교해 파일별 전략(`AUTO_ADOPT`, `AUTO_KEEP`, `SIMPLE_MERGE`, `COMPLEX_MERGE`, `PROTO_MERGE`, `UI_MERGE`, `MANUAL_REVIEW`)과 우선순위를 JSON/Markdown으로 출력.
-- [ ] `scripts/extract-caret-mods.ts`: CARET 주석, Proto 1072+, `caret-src/**` 등의 커스텀 자산을 자동 수집하고 보고서 생성.
-- [ ] `scripts/analyze-dependencies.ts`: Provider/Transform/Controller 간 의존성 그래프 생성(선택) – 충돌 예상 지점 기록.
+- [x] `scripts/classify-files.ts`: `git diff --name-only v3.35.0..v3.38.1` vs `v3.35.0..merge/cline-v3.34.0-method3` 결과를 비교해 파일별 전략(`AUTO_ADOPT`, `AUTO_KEEP`, `SIMPLE_MERGE`, `COMPLEX_MERGE`, `PROTO_MERGE`, `UI_MERGE`, `MANUAL_REVIEW`)과 우선순위를 JSON/Markdown으로 출력.
+- [x] `scripts/extract-caret-mods.ts`: CARET 주석, Proto 1072+, `caret-src/**` 등의 커스텀 자산을 자동 수집하고 보고서 생성.
+- [x] `scripts/analyze-dependencies.ts`: Provider/Transform/Controller 간 의존성 그래프 생성 – 충돌 예상 지점 기록.
+- [x] `upstream-files.txt` / `caret-files.txt` 생성 및 diff 추적.
 
 ### Phase B: 점진적 머지
 - [ ] `scripts/incremental-merge.sh`: 카테고리별 patch를 적용하고 단계마다 `npm run compile` 확인.
@@ -73,7 +85,9 @@
 - [ ] `caret-docs/merging/v3.38.1/attempt-2-plan.md` / `attempt-2-master.md` 지속 업데이트.
 
 ### 코드 리뷰 게이트
-- 각 주요 단계 후 다른 Codex/리뷰어에게 아래 항목을 기반으로 검토를 요청하고, 피드백을 본 문서에 기록한다.
+> **자세한 리뷰 프로세스는 `attempt-2-plan.md` "코드 리뷰 게이트" 섹션 참조**
+
+- 각 주요 단계 후 다른 Codex/리뷰어에게 7가지 체크 항목으로 검토 요청:
   1. 3-way 비교(base/cline/caret) 정확성
   2. 버그 수정 시에도 3-way 비교로 원인 추적했는지
   3. 최소 침습 및 `// CARET MODIFICATION` 주석 유지 여부
@@ -81,7 +95,7 @@
   5. Caret 정책(브랜딩, RulePriority, Persona 등) 준수 여부
   6. 보안 위험 코드 추가 여부
   7. 더미/미완성 코드(Stub) 남김 여부
-- 리뷰 체크포인트: Proto → Controller/Services → Webview → Scripts/Docs → 최종 통합. 승인 후에만 다음 단계 진행.
+- 리뷰 타이밍: Gate #1 (Proto) → #2 (Controller/Services) → #3 (Webview) → #4 (Scripts/Docs) → #5 (최종). 승인 후에만 다음 단계 진행.
 
 ---
 
@@ -93,6 +107,8 @@
 | 2025-11-19 17:55 | Codex | `merge-standard-guide.md`에 Attempt-2 원칙 링크 추가
 | 2025-11-19 18:00 | Codex | 작업 마스터 문서 초안 작성 (현재 문서)
 | 2025-11-19 18:20 | Codex | Feature 원칙/코드 리뷰 게이트/루트·문서 전략 반영, 계획/마스터 업데이트 |
+| 2025-11-19 18:30 | Codex | Section 0 수행 – features/index + F01~F11 재확인, 체크리스트 완료 |
+| 2025-11-19 18:45 | Codex | Phase A 스크립트 실행: diff 리스트, 파일 분류, Caret 수정 추출, 의존성 그래프 산출 |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

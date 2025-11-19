@@ -33,7 +33,7 @@
 | 준비-2 | 상위 표준 문서 업데이트 (`merge-standard-guide.md`) | ✅ 완료 | Attempt-2 참조 문구 추가
 | 준비-3 | 작업 마스터 파일 작성 (`attempt-2-master.md`) | ✅ 완료 | 리뷰 피드백 반영, 코드 리뷰 게이트 정의
 | Section 0 | Caret Feature 원칙 재확인 (F01~F11) | ✅ 완료 | features/index.md/F01~F11 재검토
-| Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ⏳ 예정 | classify/extract 스크립트 필요
+| Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ✅ 완료 | diff 리스트 + 스크립트 결과 산출
 | Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ⏳ 예정 | incremental-merge.sh 필요
 | Phase C | 통합 테스트 & E2E 복구 | ⏳ 예정 | Node20 환경 준비 필요
 | Phase D | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | 릴리스 체크리스트 필요

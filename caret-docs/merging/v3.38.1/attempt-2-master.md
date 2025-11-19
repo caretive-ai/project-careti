@@ -21,6 +21,7 @@
 3. **파일 누락 금지**: `scripts/compare-with-cline.mjs` (작성 예정)로 `git diff --name-status cline/v3.38.1..HEAD` 에서 `D`가 나오지 않도록 자동 검증.
 4. **자동화 도구 필수**: 파일 분류(`scripts/classify-files.ts`), Caret 수정 추출(`scripts/extract-caret-mods.ts`), 점진적 머지(`scripts/incremental-merge.sh`)를 우선 구현.
 5. **테스트 환경**: Node 20, Playwright 의존성 설치, `pnpm run compile` + `pnpm run test` + `pnpm run test:e2e` 통과 후에만 완료로 간주.
+6. **Feature 원칙 준수**: `caret-docs/features/index.md` 및 F01~F11 문서를 참조하여 CommonUtil/RulePriority/i18n/Branding/Persona/InputHistory/Provider 등 Caret 고유 기능이 유지되도록 확인한다.
 
 ---
 
@@ -70,6 +71,17 @@
 - [ ] `scripts/detect-stubs.mjs`, `scripts/verify-providers.mjs`, `scripts/verify-caret-mods.mjs` 등 자동화 검증 스크립트를 추가하고 package.json scripts에 연결.
 - [ ] PR 템플릿에 Gap Checklist(Providers, Hooks, Prompts, Terminal, Webview i18n 등)와 자동화 체크 항목을 추가한다.
 - [ ] `caret-docs/merging/v3.38.1/attempt-2-plan.md` / `attempt-2-master.md` 지속 업데이트.
+
+### 코드 리뷰 게이트
+- 각 주요 단계 후 다른 Codex/리뷰어에게 아래 항목을 기반으로 검토를 요청하고, 피드백을 본 문서에 기록한다.
+  1. 3-way 비교(base/cline/caret) 정확성
+  2. 버그 수정 시에도 3-way 비교로 원인 추적했는지
+  3. 최소 침습 및 `// CARET MODIFICATION` 주석 유지 여부
+  4. 하드코딩/정책 위반(i18n 미적용 등) 존재 여부
+  5. Caret 정책(브랜딩, RulePriority, Persona 등) 준수 여부
+  6. 보안 위험 코드 추가 여부
+  7. 더미/미완성 코드(Stub) 남김 여부
+- 리뷰 체크포인트: Proto → Controller/Services → Webview → Scripts/Docs → 최종 통합. 승인 후에만 다음 단계 진행.
 
 ---
 

@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package caret;
+import "cline/common.proto";
+option java_package = "bot.caret.proto";
+option java_multiple_files = true;
+
+// PersonaService defines the gRPC service for managing Caret's persona.
+// CARET MODIFICATION: This service is specific to Caret and is separate from Cline's services.
+service PersonaService {
+  // Retrieves the user's current persona profile.
+  rpc GetPersonaProfile(cline.EmptyRequest) returns (PersonaProfile);
+
+  // Updates the user's current persona settings.
+  rpc UpdatePersona(UpdatePersonaRequest) returns (cline.Empty);
+
+  // Subscribes to real-time changes of the persona's images.
+  rpc SubscribeToPersonaChanges(cline.EmptyRequest) returns (stream PersonaImages);
+
+  // Uploads a custom image for the persona.
+  rpc UploadCustomImage(UploadCustomImageRequest) returns (cline.Empty);
+}
+
+// Represents the full profile of a persona.
+message PersonaProfile {
+  string name = 1;
+  string description = 2;
+  // The custom instructions that define the persona's behavior.
+  string custom_instruction = 3;
+  string avatar_uri = 4;
+  string thinking_avatar_uri = 5;
+}
+
+// Request to update the persona.
+message UpdatePersonaRequest {
+  PersonaProfile profile = 1;
+}
+
+// Contains the URIs for the persona's avatar images.
+message PersonaImages {
+  string avatar_uri = 1;
+  string thinking_avatar_uri = 2;
+}
+
+// Request to upload a custom image.
+message UploadCustomImageRequest {
+  // The type of image being uploaded (e.g., "avatar", "thinking_avatar").
+  string image_type = 1;
+  // The image data as a byte array.
+  bytes image_data = 2;
+}

@@ -292,7 +292,9 @@ message AutoApprovalSettingsRequest {
   Metadata metadata = 1;
   int32 version = 2;
   AutoApprovalActions actions = 3;
-  bool enable_notifications = 4;
+  optional bool enable_notifications = 4;
+  // CARET COMPATIBILITY: retained legacy field for request count
+  optional int32 max_requests = 5;
 }
 
 enum TelemetrySettingEnum {
@@ -362,7 +364,12 @@ message UpdateSettingsRequest {
   optional int32 subagent_terminal_output_line_limit = 30;
   optional string cline_env = 31;
   optional bool native_tool_call_enabled = 32;
-  optional OnboardingModelGroup onboarding_models = 33;
+  optional bool show_onboarding_flow = 33;
+  // CARET MODIFICATION: F01/F07/F11 extensions
+  optional string mode_system = 1001;
+  optional bool enable_persona_system = 1002;
+  optional string current_persona = 1003;
+  repeated string input_history = 1004;
 }
 
 message UpdateTerminalConnectionTimeoutRequest {

@@ -52,11 +52,17 @@ service FileService {
   // Toggle an Agents rule (enable or disable)
   rpc toggleAgentsRule(ToggleAgentsRuleRequest) returns (ClineRulesToggles);
 
+  // CARET MODIFICATION: Toggle a Caret rule (enable or disable)
+  rpc toggleCaretRule(ToggleCaretRuleRequest) returns (ClineRulesToggles);
+
   // Refreshes all rule toggles (Cline, External, and Workflows)
   rpc refreshRules(EmptyRequest) returns (RefreshedRules);
 
   // Opens a task's conversation history file on disk
   rpc openDiskConversationHistory(StringRequest) returns (Empty);
+
+  // CARET MODIFICATION: Opens a task history folder on disk
+  rpc openTaskHistory(StringRequest) returns (Empty);
 
   // Toggles a workflow on or off
   rpc toggleWorkflow(ToggleWorkflowRequest) returns (ClineRulesToggles);
@@ -80,6 +86,8 @@ message RefreshedRules {
   ClineRulesToggles local_agents_rules_toggles = 5;
   ClineRulesToggles local_workflow_toggles = 6;
   ClineRulesToggles global_workflow_toggles = 7;
+  // CARET MODIFICATION: Add Caret rules toggles
+  ClineRulesToggles local_caret_rules_toggles = 8;
 }
 
 // Request to toggle a Windsurf rule
@@ -91,6 +99,13 @@ message ToggleWindsurfRuleRequest {
 
 // Request to toggle an Agents rule
 message ToggleAgentsRuleRequest {
+  Metadata metadata = 1;
+  string rule_path = 2; // Path to the rule file
+  bool enabled = 3; // Whether to enable or disable the rule
+}
+
+// CARET MODIFICATION: Request to toggle a Caret rule
+message ToggleCaretRuleRequest {
   Metadata metadata = 1;
   string rule_path = 2; // Path to the rule file
   bool enabled = 3; // Whether to enable or disable the rule
@@ -180,6 +195,8 @@ message ToggleClineRuleRequest {
   RuleScope scope = 2; // Scope of the rule (local, global, or remote)
   string rule_path = 3; // Path to the rule file
   bool enabled = 4; // Whether to enable or disable the rule
+  // CARET COMPATIBILITY: legacy flag retained for downstream usage
+  optional bool is_global = 5;
 }
 
 // Maps from filepath to enabled/disabled status, matching app's ClineRulesToggles type
@@ -207,4 +224,6 @@ message ToggleWorkflowRequest {
   string workflow_path = 2;
   bool enabled = 3;
   RuleScope scope = 4; // Scope of the workflow (local, global, or remote)
+  // CARET COMPATIBILITY: retained legacy flag for downstream usage
+  optional bool is_global = 5;
 }

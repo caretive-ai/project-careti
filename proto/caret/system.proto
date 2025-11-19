@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package caret;
+
+option java_package = "bot.caret.proto";
+option java_multiple_files = true;
+
+// Caret System Service for managing application-level settings
+service CaretSystemService {
+  // Set the prompt system mode (caret/cline)
+  rpc SetPromptSystemMode(SetPromptSystemModeRequest) returns (SetPromptSystemModeResponse);
+
+  // Get the current prompt system mode
+  rpc GetPromptSystemMode(GetPromptSystemModeRequest) returns (GetPromptSystemModeResponse);
+
+  // Set the Caret-specific mode (chatbot/agent) - CARET MODIFICATION
+  rpc SetCaretMode(SetCaretModeRequest) returns (SetCaretModeResponse);
+
+  // Get the current Caret-specific mode
+  rpc GetCaretMode(GetCaretModeRequest) returns (GetCaretModeResponse);
+
+  // CARET MODIFICATION: LiteLLM model fetching service
+  rpc FetchLiteLlmModels(FetchLiteLlmModelsRequest) returns (FetchLiteLlmModelsResponse);
+}
+
+// Request to set prompt system mode
+message SetPromptSystemModeRequest {
+  string mode = 1; // "caret" or "cline"
+}
+
+// Response for setting prompt system mode
+message SetPromptSystemModeResponse {
+  bool success = 1;
+  string current_mode = 2;
+  string error_message = 3;
+}
+
+// Request to get current prompt system mode
+message GetPromptSystemModeRequest {
+  // Empty request
+}
+
+// Response with current prompt system mode
+message GetPromptSystemModeResponse {
+  string current_mode = 1;
+}
+
+// Request to set Caret-specific mode (chatbot/agent) - CARET MODIFICATION
+message SetCaretModeRequest {
+  string mode = 1; // "chatbot" or "agent"
+}
+
+// Response for setting Caret-specific mode
+message SetCaretModeResponse {
+  bool success = 1;
+  string current_mode = 2; // "chatbot" or "agent"
+  string error_message = 3;
+}
+
+// Request to get current Caret-specific mode
+message GetCaretModeRequest {
+  // Empty request
+}
+
+// Response with current Caret-specific mode
+message GetCaretModeResponse {
+  string current_mode = 1; // "chatbot" or "agent"
+}
+
+// CARET MODIFICATION: LiteLLM model fetching messages
+message FetchLiteLlmModelsRequest {
+  string base_url = 1;    // LiteLLM base URL
+  string api_key = 2;     // LiteLLM API key
+}
+
+message FetchLiteLlmModelsResponse {
+  bool success = 1;
+  repeated string models = 2;     // List of available model names
+  string error_message = 3;       // Error message if failed
+}

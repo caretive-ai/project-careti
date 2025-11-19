@@ -105,6 +105,24 @@ message OpenRouterCompatibleModelInfo {
   map<string, OpenRouterModelInfo> models = 1;
 }
 
+// Model info for Caret models (BizRouter/Caret providers)
+message CaretModelInfo {
+  optional int64 max_tokens = 1;
+  optional int64 context_window = 2;
+  optional bool supports_images = 3;
+  bool supports_prompt_cache = 4;
+  optional double input_price = 5;
+  optional double output_price = 6;
+  optional ThinkingConfig thinking_config = 7;
+  optional bool supports_global_endpoint = 8;
+  optional double cache_writes_price = 9;
+  optional double cache_reads_price = 10;
+  optional string description = 11;
+  repeated ModelTier tiers = 12;
+  optional double temperature = 13;
+  optional bool is_r1_format_required = 14;
+}
+
 // Request for fetching OpenAI models
 message OpenAiModelsRequest {
   Metadata metadata = 1;
@@ -424,6 +442,9 @@ enum ApiProvider {
   HICAP = 37;
   AIHUBMIX = 38;
   NOUSRESEARCH = 39;
+  // CARET MODIFICATION: BizRouter/Caret providers
+  CARET = 1001;
+  BIZROUTER = 1002;
 }
 
 // Model info for OpenAI-compatible models
@@ -446,6 +467,23 @@ message OpenAiCompatibleModelInfo {
 
 // Model info for LiteLLM models
 message LiteLLMModelInfo {
+  optional int64 max_tokens = 1;
+  optional int64 context_window = 2;
+  optional bool supports_images = 3;
+  bool supports_prompt_cache = 4;
+  optional double input_price = 5;
+  optional double output_price = 6;
+  optional ThinkingConfig thinking_config = 7;
+  optional bool supports_global_endpoint = 8;
+  optional double cache_writes_price = 9;
+  optional double cache_reads_price = 10;
+  optional string description = 11;
+  repeated ModelTier tiers = 12;
+  optional double temperature = 13;
+}
+
+// Model info for BizRouter models
+message BizRouterModelInfo {
   optional int64 max_tokens = 1;
   optional int64 context_window = 2;
   optional bool supports_images = 3;
@@ -549,6 +587,12 @@ message ModelsApiConfiguration {
   optional string aihubmix_base_url = 83;
   optional string aihubmix_app_code = 84;
   optional string nous_research_api_key = 85;
+  // CARET MODIFICATION: caret/bizrouter global settings use high numbers to avoid conflicts
+  optional string caret_base_url = 1073;
+  optional string caret_api_key = 1074;
+  optional bool caret_use_prompt_cache = 1075;
+  optional string biz_router_api_key = 1076;
+  optional bool biz_router_use_prompt_cache = 1077;
 
   // Plan mode configurations
   optional ApiProvider plan_mode_api_provider = 100;
@@ -589,6 +633,10 @@ message ModelsApiConfiguration {
   optional string plan_mode_aihubmix_model_id = 135;
   optional OpenAiCompatibleModelInfo plan_mode_aihubmix_model_info = 136;
   optional string plan_mode_nous_research_model_id = 137;
+  optional string plan_mode_caret_model_id = 190;
+  optional CaretModelInfo plan_mode_caret_model_info = 191;
+  optional string plan_mode_biz_router_model_id = 192;
+  optional BizRouterModelInfo plan_mode_biz_router_model_info = 193;
 
   // Act mode configurations
   optional ApiProvider act_mode_api_provider = 200;
@@ -628,5 +676,9 @@ message ModelsApiConfiguration {
   optional OpenRouterModelInfo act_mode_hicap_model_info = 234;
   optional string act_mode_aihubmix_model_id = 235;
   optional OpenAiCompatibleModelInfo act_mode_aihubmix_model_info = 236;
+  optional string act_mode_caret_model_id = 301;
+  optional CaretModelInfo act_mode_caret_model_info = 302;
+  optional string act_mode_biz_router_model_id = 303;
+  optional BizRouterModelInfo act_mode_biz_router_model_info = 304;
   optional string act_mode_nous_research_model_id = 237;
 }

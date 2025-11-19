@@ -109,6 +109,7 @@
 | 2025-11-19 18:20 | Codex | Feature 원칙/코드 리뷰 게이트/루트·문서 전략 반영, 계획/마스터 업데이트 |
 | 2025-11-19 18:30 | Codex | Section 0 수행 – features/index + F01~F11 재확인, 체크리스트 완료 |
 | 2025-11-19 18:45 | Codex | Phase A 스크립트 실행: diff 리스트, 파일 분류, Caret 수정 추출, 의존성 그래프 산출 |
+| 2025-11-19 19:15 | Codex | Phase B 시작 – cline/v3.38.1 기준으로 reset, caret proto 재적용, incremental-merge 스크립트 추가 |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

@@ -18,6 +18,18 @@
 
 ---
 
+## 0. Caret Feature 원칙 재확인
+- 작업 시작 전에 `caret-docs/features/index.md`와 F01~F11 문서를 빠르게 훑어 Caret 고유 기능과 개발 원칙을 상기한다.
+- 핵심 지켜야 할 요소:
+  1. **F01 CommonUtil / F05 RulePriority**: `.caretrules` vs `.clinerules` 우선순위, disk.ts 확장 로직.
+  2. **F02 Multilingual i18n / F03 Branding UI**: 모든 UI 문자열은 `t("key","namespace")` 사용, 4개 언어 locale 동기화, Caret/CodeCenter 테마 스위치 유지.
+  3. **F04 CaretAccount / F07 Persona System**: Account/Persona 상태를 `CaretGlobalManager`와 webview context로 일관되게 전달.
+  4. **F06 Prompt System / F10 Input History / F11 Knowledge Parity**: Prompt variants, input history persistence, AI developer knowledge 설정 유지.
+  5. **F08 FeatureConfig / F09 Provider Setup**: BizRouter/Minimax 등 사용자 정의 프로바이더 설정, Remote config 플로우 보존.
+- 머징 중 의사결정(코드 선택, 삭제 등)은 위 feature 요구사항을 기준으로 판단하고, 논리가 모호하면 해당 feature 문서에 근거를 남긴다.
+
+---
+
 ## 2. 단계별 실행
 
 ### Phase A. 사전 준비 + 차이 분석
@@ -376,7 +388,28 @@
    - [ ] BizRouter 프로바이더 작동
    - [ ] 페르소나 시스템 작동
    - [ ] Remote Rules 충돌 없음
-   ```
+```
+
+---
+
+## 코드 리뷰 게이트 (Cross-Agent Review)
+- 각 주요 Phase 완료 시 다른 Codex/코드 리뷰어에게 아래 7가지 관점으로 리뷰를 요청한다.
+- 리뷰어에게 전달할 체크 항목:
+  1. **3-way 비교 정확성** – base / cline / caret 소스를 혼동하지 않았는지, merge commit이 세 버전을 모두 반영하는지.
+  2. **문제 해결 과정** – 머지 후 버그 픽스 시에도 항상 3-way 비교로 원인을 찾았는지, 임시 해킹으로 덮지 않았는지.
+  3. **최소 침습 & CARET 주석** – Cline 코드 수정이 최소화되었고 `// CARET MODIFICATION` 주석을 유지/추가했는지.
+  4. **하드코딩 금지** – 문제 해결 과정에서 i18n 무시, 상수 하드코딩 등 Caret 정책을 위반하지 않았는지.
+  5. **Caret 정책 준수** – 특히 Webview i18n/브랜딩/RulePriority 등 feature 문서에 정의된 규칙을 지켰는지.
+  6. **보안 검토** – Credentials/토큰/파일 경로 등 보안 위험이 되는 변경이 없는지.
+  7. **더미/미완성 코드** – “추후 구현” 주석이나 빈 함수(Stub)를 남기지 않았는지.
+- 리뷰 타이밍:
+  - **Gate #1 (Proto 완료 후)**: Proto + Controller merge 전, 스크립트 또는 diff 링크 공유.
+  - **Gate #2 (Controller/Services 완료 후)**: API/Services/Transform 적용 이후.
+  - **Gate #3 (Webview 완료 후)**: Webview + i18n/브랜딩 재적용 후.
+  - **Gate #4 (Scripts/Root/Docs 완료 후)**: 루트 설정/스크립트/문서/CHANGELOG 갱신 후.
+  - **Gate #5 (최종 검증 후)**: Phase C/E 종료 후 전체 diff 리뷰.
+
+Gate 통과 후에만 다음 Phase로 이동하며, 피드백/이슈는 `attempt-2-master.md` 로그에 기록한다.
 
 ---
 

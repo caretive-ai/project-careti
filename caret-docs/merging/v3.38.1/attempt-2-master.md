@@ -31,7 +31,7 @@
 | 준비-0 | 머징 디렉토리 정리, v3.32.7/v3.35.0 아카이브 분리 | ✅ 완료 | 버전별 폴더 생성
 | 준비-1 | Attempt-2 실행 계획 작성 (`attempt-2-plan.md`) | ✅ 완료 | Backend=Cline / Webview=Caret 원칙 명시
 | 준비-2 | 상위 표준 문서 업데이트 (`merge-standard-guide.md`) | ✅ 완료 | Attempt-2 참조 문구 추가
-| 준비-3 | 작업 마스터 파일 작성 (`attempt-2-master.md`) | 🔄 진행중 | 본 문서 업데이트 중
+| 준비-3 | 작업 마스터 파일 작성 (`attempt-2-master.md`) | ✅ 완료 | 리뷰 피드백 반영, 코드 리뷰 게이트 정의
 | Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ⏳ 예정 | classify/extract 스크립트 필요
 | Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ⏳ 예정 | incremental-merge.sh 필요
 | Phase C | 통합 테스트 & E2E 복구 | ⏳ 예정 | Node20 환경 준비 필요
@@ -92,6 +92,7 @@
 | 2025-11-19 17:45 | Codex | Attempt-2 계획서 작성 및 리뷰 반영(Backend=Cline, Webview=Caret)
 | 2025-11-19 17:55 | Codex | `merge-standard-guide.md`에 Attempt-2 원칙 링크 추가
 | 2025-11-19 18:00 | Codex | 작업 마스터 문서 초안 작성 (현재 문서)
+| 2025-11-19 18:20 | Codex | Feature 원칙/코드 리뷰 게이트/루트·문서 전략 반영, 계획/마스터 업데이트 |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

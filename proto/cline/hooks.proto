@@ -32,7 +32,7 @@ message HookOutput {
   optional bool cancel = 2;
   string error_message = 3;
   // CARET COMPATIBILITY: allow legacy flow control flag
-  bool should_continue = 4;
+  optional bool should_continue = 4;
 }
 
 // Data for PreToolUse hook

@@ -88,10 +88,10 @@
 - [x] 체크포인트 태그 남기기 (`checkpoint-proto-b1`)
 
 **B2 Controller/Services(API)**
-- [ ] 파일 매트릭스 확정(Controller 20, Services/API 15)
-- [ ] 3-way 배치 머지(5~10개) → `npx tsc --noEmit`
-- [ ] 체크포인트 태그 남기기
-  - 1차 배치: Controller AUTO_ADOPT 12건 중 diff 발생 1건(`src/core/controller/models/refreshRequestyModels.ts`), cline v3.38.1로 복원, `npx tsc --noEmit` 클린
+- [x] 파일 매트릭스 확정(Controller 20, Services/API 15) → v3.38.1 기준 전체 재적용(backend=Cline 원칙)
+- [x] 3-way 배치 머지(5~10개) → `npx tsc --noEmit`
+- [x] 체크포인트 태그 남기기 (`checkpoint-controller-b2`)
+  - 작업: `src/core/controller/**`, `src/services/**` 전부 v3.38.1로 재적용(backend=Cline 100% 원칙), `npm run protos` + `npx tsc --noEmit` 클린
 
 **B3 Webview**
 - [ ] Webview 역이식 원칙 문서화(Caret 유지 + Cline 변경분만 역이식)

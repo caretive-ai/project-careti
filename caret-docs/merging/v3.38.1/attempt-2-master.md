@@ -25,7 +25,7 @@
 
 ---
 
-## ✅ 현재 진행 현황 (2025-11-19 18:00)
+## ✅ 현재 진행 현황 (2025-11-20 20:05)
 | 단계 | 설명 | 상태 | 비고 |
 | --- | --- | --- | --- |
 | 준비-0 | 머징 디렉토리 정리, v3.32.7/v3.35.0 아카이브 분리 | ✅ 완료 | 버전별 폴더 생성
@@ -34,7 +34,7 @@
 | 준비-3 | 작업 마스터 파일 작성 (`attempt-2-master.md`) | ✅ 완료 | 리뷰 피드백 반영, 코드 리뷰 게이트 정의
 | Section 0 | Caret Feature 원칙 재확인 (F01~F11) | ✅ 완료 | features/index.md/F01~F11 재검토
 | Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ✅ 완료 | diff 리스트 + 스크립트 결과 산출
-| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ⏳ 예정 | incremental-merge.sh 필요
+| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ⏳ 재시작 필요 | incremental-merge.sh 작성 후 소규모 배치(5~10파일) 단위 진행 (tsc 현재 caret proto 미생성으로 오류)
 | Phase C | 통합 테스트 & E2E 복구 | ⏳ 예정 | Node20 환경 준비 필요
 | Phase D | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | 릴리스 체크리스트 필요
 | Phase E | 누락 방지 자동화 및 체크리스트 업데이터 | ⏳ 예정 | compare-with-cline.mjs, PR 템플릿 반영
@@ -62,11 +62,11 @@
 - [x] `upstream-files.txt` / `caret-files.txt` 생성 및 diff 추적.
 
 ### Phase B: 점진적 머지
-- [ ] `scripts/incremental-merge.sh`: 카테고리별 patch를 적용하고 단계마다 `npm run compile` 확인.
-- [ ] Proto(16개) → Controller(20개) → Services/API(15개) → Webview(선택 구간) 순으로 진행. 각 카테고리 완료 시 git 태그/체크포인트 남김.
-- [ ] Webview는 Caret 버전을 유지하면서 Cline 변경 구간만 역으로 이식한다는 규칙을 파일별로 문서화.
-- [ ] 루트 파일(`package.json`, `pnpm-lock.yaml`, `.vscode/`, `.github/`, `playwright.config.ts`)과 스크립트(`scripts/*.sh`, `caret-scripts/**`)를 별도 분류해 Cline → Caret 오버레이 전략을 문서화한다.
-- [ ] `docs/**`, `caret-docs/**`, `.caretrules/**`, `.claude/**` 변경 내역을 attempt-2-master에 기록하고, i18n/정책 누락 여부를 확인한다.
+- [ ] `scripts/incremental-merge.sh` 구현: 카테고리별 patch 적용 + 단계별 `pnpm exec tsc --noEmit` 확인
+- [ ] 파일 매트릭스 작성: Proto(16)·Controller(20)·Services/API(15)·Webview(선택) 각 파일명/전략/Base·Cline·Caret/작업 방식 명시
+- [ ] 5~10개 파일 소규모 배치로 처리 후 검증, 성공 시 체크포인트 태그 남기기
+- [ ] Webview 역이식 규칙 문서화(Caret 유지 + Cline 변경분만 역이식 기준 정의)
+- [ ] 루트/스크립트/문서 분리 전략 문서화 및 이력 기록
 
 ### Phase C: 검증
 - [ ] `pnpm run compile`, `pnpm run test`(unit), `pnpm run test:e2e` 실행. Node20 + `npx playwright install-deps` 필수.
@@ -83,6 +83,19 @@
 - [ ] `scripts/detect-stubs.mjs`, `scripts/verify-providers.mjs`, `scripts/verify-caret-mods.mjs` 등 자동화 검증 스크립트를 추가하고 package.json scripts에 연결.
 - [ ] PR 템플릿에 Gap Checklist(Providers, Hooks, Prompts, Terminal, Webview i18n 등)와 자동화 체크 항목을 추가한다.
 - [ ] `caret-docs/merging/v3.38.1/attempt-2-plan.md` / `attempt-2-master.md` 지속 업데이트.
+
+### 3-Way 비교 실행 방법 (명령 예시)
+1. 기준 파일 추출
+```
+git show v3.35.0:src/path/file.ts > /tmp/base.ts
+git show v3.38.1:src/path/file.ts > /tmp/cline.ts
+git show caret-main:src/path/file.ts > /tmp/caret.ts
+```
+2. 3-way 머지 결과 확인
+```
+diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
+```
+3. 수동 검토/적용 후 단계별 `pnpm exec tsc --noEmit` 실행
 
 ### 코드 리뷰 게이트
 > **자세한 리뷰 프로세스는 `attempt-2-plan.md` "코드 리뷰 게이트" 섹션 참조**
@@ -110,6 +123,7 @@
 | 2025-11-19 18:30 | Codex | Section 0 수행 – features/index + F01~F11 재확인, 체크리스트 완료 |
 | 2025-11-19 18:45 | Codex | Phase A 스크립트 실행: diff 리스트, 파일 분류, Caret 수정 추출, 의존성 그래프 산출 |
 | 2025-11-19 19:15 | Codex | Phase B 시작 – cline/v3.38.1 기준으로 reset, caret proto 재적용, incremental-merge 스크립트 추가 |
+| 2025-11-20 19:50 | Codex | 워킹트리 origin/merge/cline-v3.38.1-attempt2로 초기화, `comparison/`만 .gitignore 추가, Phase B 재시작 준비 |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

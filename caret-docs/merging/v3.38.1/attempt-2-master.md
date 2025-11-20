@@ -61,12 +61,31 @@
 - [x] `scripts/analyze-dependencies.ts`: Provider/Transform/Controller 간 의존성 그래프 생성 – 충돌 예상 지점 기록.
 - [x] `upstream-files.txt` / `caret-files.txt` 생성 및 diff 추적.
 
-### Phase B: 점진적 머지
-- [ ] `scripts/incremental-merge.sh` 구현: 카테고리별 patch 적용 + 단계별 `npm run tsc -- --noEmit` 확인
-- [ ] 파일 매트릭스 작성: Proto(16)·Controller(20)·Services/API(15)·Webview(선택) 각 파일명/전략/Base·Cline·Caret/작업 방식 명시
-- [ ] 5~10개 파일 소규모 배치로 처리 후 검증, 성공 시 체크포인트 태그 남기기
-- [ ] Webview 역이식 규칙 문서화(Caret 유지 + Cline 변경분만 역이식 기준 정의)
-- [ ] 루트/스크립트/문서 분리 전략 문서화 및 이력 기록
+### Phase B: 점진적 머지 (세분화)
+**B0 준비**
+- [x] 의존성 설치(`npm install`), 프로토 재생성(`npm run protos`), `npx tsc --noEmit` 클린
+- [x] `scripts/incremental-merge.sh` 구현(3-way diff3, `--apply`, `--no-tsc` 옵션)
+- [x] proto String shadow 패치 자동화(`build-proto.mjs` 후처리)
+- [ ] 파일 매트릭스 초안 작성 (카테고리/전략/Base-Cline-Caret/작업 방식)
+
+**B1 Proto 배치 (우선 처리)**
+- [ ] 프로토 3-way 검토 + 적용(5~10개 단위) → 배치별 `npx tsc --noEmit`
+- [ ] Generated 검증: String shadow 재발 여부 확인(`npm run protos` 후 tsc)
+- [ ] 체크포인트 태그 남기기
+
+**B2 Controller/Services(API)**
+- [ ] 파일 매트릭스 확정(Controller 20, Services/API 15)
+- [ ] 3-way 배치 머지(5~10개) → `npx tsc --noEmit`
+- [ ] 체크포인트 태그 남기기
+
+**B3 Webview**
+- [ ] Webview 역이식 원칙 문서화(Caret 유지 + Cline 변경분만 역이식)
+- [ ] 영향 파일 선정(UI_MERGE/SIMPLE_MERGE) 후 5~10개 배치 머지
+- [ ] 체크포인트 태그 남기기
+
+**B4 루트/스크립트/문서**
+- [ ] 루트/스크립트/문서 분리 전략 문서화
+- [ ] 잔여 파일 처리 및 `npx tsc --noEmit`
 
 ### Phase C: 검증
 - [ ] `npm run compile`, `npm run test`(unit), `npm run test:e2e` 실행. Node20 + `npx playwright install-deps` 필수.

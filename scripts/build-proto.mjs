@@ -60,6 +60,7 @@ async function compileProtos() {
 	tsProtoc(GRPC_JS_OUT_DIR, protoFiles, ["outputServices=grpc-js", ...TS_PROTO_OPTIONS])
 	// nice-js is used for the Host Bridge client impls because it uses promises.
 	tsProtoc(NICE_JS_OUT_DIR, protoFiles, ["outputServices=nice-grpc,useExactTypes=false", ...TS_PROTO_OPTIONS])
+	await fixStringShadow()
 
 	const descriptorFile = path.join(DESCRIPTOR_OUT_DIR, "descriptor_set.pb")
 	const descriptorProtocCommand = [
@@ -152,6 +153,29 @@ async function cleanup() {
 	]
 	for (const file of [...oldhostbridgefiles, ...oldprotobusfiles]) {
 		await rmrf(file)
+	}
+}
+
+// Some generated files import a proto message named `String` which shadows the global constructor,
+// producing `acc[key] = String(value)` (MessageFns<String> is not callable). Normalize to globalThis.
+async function fixStringShadow() {
+	const pattern = "acc[key] = String(value);"
+	const replacement = "acc[key] = globalThis.String(value);"
+	const files = await globby(["src/generated/**/*.ts", "src/shared/proto/**/*.ts"], {
+		absolute: true,
+	})
+	let patched = 0
+	for (const file of files) {
+		const text = await fs.readFile(file, "utf8")
+		if (!text.includes(pattern)) continue
+		const updated = text.split(pattern).join(replacement)
+		if (updated !== text) {
+			await fs.writeFile(file, updated)
+			patched += 1
+		}
+	}
+	if (patched > 0) {
+		console.log(chalk.yellow(`[build-proto] Patched String shadow in ${patched} generated file(s)`))
 	}
 }
 

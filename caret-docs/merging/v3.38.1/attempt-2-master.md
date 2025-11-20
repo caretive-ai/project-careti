@@ -91,6 +91,7 @@
 - [ ] 파일 매트릭스 확정(Controller 20, Services/API 15)
 - [ ] 3-way 배치 머지(5~10개) → `npx tsc --noEmit`
 - [ ] 체크포인트 태그 남기기
+  - 1차 배치: Controller AUTO_ADOPT 12건 중 diff 발생 1건(`src/core/controller/models/refreshRequestyModels.ts`), cline v3.38.1로 복원, `npx tsc --noEmit` 클린
 
 **B3 Webview**
 - [ ] Webview 역이식 원칙 문서화(Caret 유지 + Cline 변경분만 역이식)

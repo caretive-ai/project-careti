@@ -85,7 +85,7 @@
 **B1 Proto 배치 (우선 처리)**
 - [x] 프로토 3-way 검토 + 적용(5~10개 단위) → 배치별 `npx tsc --noEmit`
 - [x] Generated 검증: String shadow 재발 여부 확인(`npm run protos` 후 tsc)
-- [ ] 체크포인트 태그 남기기
+- [x] 체크포인트 태그 남기기 (`checkpoint-proto-b1`)
 
 **B2 Controller/Services(API)**
 - [ ] 파일 매트릭스 확정(Controller 20, Services/API 15)
@@ -163,6 +163,7 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-20 23:16 | Codex | Phase B 착수: `npm install`→`npm run protos` 완료. `npx tsc --noEmit` 오류 발생(hook-factory undefined assign, generated account proto MessageFns call signatures) – 원인 조사 및 3-way 머지 진행 예정 |
 | 2025-11-20 23:22 | Codex | hook-factory/test-utils를 cline v3.38.1 버전으로 복원, generated proto `String(value)`를 `globalThis.String`으로 교체하여 타입 오류 해소. `npx tsc --noEmit` 통과. 3-way 배치 머지 준비 완료 |
 | 2025-11-20 23:38 | Codex | B1 Proto 배치 1차: cline/*.proto 7개를 cline v3.38.1 기준으로 재적용(diff3 후 cline 채택), caret/*.proto는 caret-main 그대로 유지, `npm run protos`+`npx tsc --noEmit` 통과. checkpoint 태그는 추후 일괄 생성 예정 |
+| 2025-11-20 23:42 | Codex | B1 체크포인트 태그 생성: `checkpoint-proto-b1` (proto 배치 완료 시점 기준) |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

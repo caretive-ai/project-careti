@@ -34,7 +34,7 @@
 | 준비-3 | 작업 마스터 파일 작성 (`attempt-2-master.md`) | ✅ 완료 | 리뷰 피드백 반영, 코드 리뷰 게이트 정의
 | Section 0 | Caret Feature 원칙 재확인 (F01~F11) | ✅ 완료 | features/index.md/F01~F11 재검토
 | Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ✅ 완료(스켈레톤) | 스크립트 뼈대만 존재, 구현 필요
-| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ⏳ 재시작 필요 | incremental-merge.sh 작성 후 소규모 배치(5~10파일) 단위 진행 (tsc 현재 caret proto 미생성 + npm registry DNS 차단)
+| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ⏳ 재시작 필요 | npm 기준 재시작: 네트워크 회복 후 `npm install` → `npm run protos` → `npm run tsc` 진행, 소규모 배치(5~10파일)로 머지
 | Phase C | 통합 테스트 & E2E 복구 | ⏳ 예정 | Node20 환경 준비 필요
 | Phase D | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | 릴리스 체크리스트 필요
 | Phase E | 누락 방지 자동화 및 체크리스트 업데이터 | ⏳ 예정 | compare-with-cline.mjs, PR 템플릿 반영

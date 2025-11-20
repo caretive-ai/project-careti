@@ -223,6 +223,39 @@ export class Controller {
 		}
 	}
 
+	// CARET MODIFICATION: Caret logout helper
+	async handleCaretSignOut() {
+		try {
+			this.stateManager.setGlobalState("userInfo", undefined)
+			;(this.stateManager as any).setGlobalState?.("caretUserProfile", undefined)
+			;(this.stateManager as any).setGlobalState?.(
+				"caretBaseUrl",
+				process.env.CARET_ROUTER_ENDPOINT || "https://api.caret.team",
+			)
+			;(this.stateManager as any).setSecret?.("caretApiKey", undefined)
+			;(this.stateManager as any).setSecret?.("caretAuthToken", undefined)
+
+			const apiConfiguration = this.stateManager.getApiConfiguration()
+			const updatedConfig = {
+				...apiConfiguration,
+				planModeApiProvider: "caret" as ApiProvider,
+				actModeApiProvider: "caret" as ApiProvider,
+			}
+			this.stateManager.setApiConfiguration(updatedConfig)
+
+			await this.postStateToWebview()
+			HostProvider.window.showMessage({
+				type: ShowMessageType.INFORMATION,
+				message: "Successfully logged out of Caret",
+			})
+		} catch (_error) {
+			HostProvider.window.showMessage({
+				type: ShowMessageType.INFORMATION,
+				message: "Caret logout failed",
+			})
+		}
+	}
+
 	// Oca Auth methods
 	async handleOcaSignOut() {
 		try {

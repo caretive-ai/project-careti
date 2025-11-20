@@ -83,8 +83,8 @@
   | proto/host/*.proto | AUTO_ADOPT | v3.35.0 | v3.38.1 | caret-main | 호스트 인터페이스는 cline 그대로 |
 
 **B1 Proto 배치 (우선 처리)**
-- [ ] 프로토 3-way 검토 + 적용(5~10개 단위) → 배치별 `npx tsc --noEmit`
-- [ ] Generated 검증: String shadow 재발 여부 확인(`npm run protos` 후 tsc)
+- [x] 프로토 3-way 검토 + 적용(5~10개 단위) → 배치별 `npx tsc --noEmit`
+- [x] Generated 검증: String shadow 재발 여부 확인(`npm run protos` 후 tsc)
 - [ ] 체크포인트 태그 남기기
 
 **B2 Controller/Services(API)**
@@ -131,6 +131,7 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 3. 수동 검토/적용 후 단계별 `npm run tsc -- --noEmit` 실행
 
 ### 코드 리뷰 게이트
+> 코드 리뷰 작업은 페이스나 단계마다 Claude Code가 리뷰 진행, `attempt-2-claude-review.md` 파일에 작성한다.
 > **자세한 리뷰 프로세스는 `attempt-2-plan.md` "코드 리뷰 게이트" 섹션 참조**
 
 - 각 주요 단계 후 다른 Codex/리뷰어에게 7가지 체크 항목으로 검토 요청:
@@ -161,6 +162,7 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-20 23:06 | Codex | Phase A 완결: classify/extract/analyze/compare/incremental 스크립트 구현, 리포트 생성(classification.md/json, caret-mod-report.md/json, dependency-report.md/json) |
 | 2025-11-20 23:16 | Codex | Phase B 착수: `npm install`→`npm run protos` 완료. `npx tsc --noEmit` 오류 발생(hook-factory undefined assign, generated account proto MessageFns call signatures) – 원인 조사 및 3-way 머지 진행 예정 |
 | 2025-11-20 23:22 | Codex | hook-factory/test-utils를 cline v3.38.1 버전으로 복원, generated proto `String(value)`를 `globalThis.String`으로 교체하여 타입 오류 해소. `npx tsc --noEmit` 통과. 3-way 배치 머지 준비 완료 |
+| 2025-11-20 23:38 | Codex | B1 Proto 배치 1차: cline/*.proto 7개를 cline v3.38.1 기준으로 재적용(diff3 후 cline 채택), caret/*.proto는 caret-main 그대로 유지, `npm run protos`+`npx tsc --noEmit` 통과. checkpoint 태그는 추후 일괄 생성 예정 |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

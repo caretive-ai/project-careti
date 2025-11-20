@@ -29,10 +29,8 @@ message HookInput {
 // Output message for all hooks
 message HookOutput {
   string context_modification = 1;
-  optional bool cancel = 2;
+  bool cancel = 2;
   string error_message = 3;
-  // CARET COMPATIBILITY: allow legacy flow control flag
-  optional bool should_continue = 4;
 }
 
 // Data for PreToolUse hook

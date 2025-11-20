@@ -34,7 +34,7 @@
 | 준비-3 | 작업 마스터 파일 작성 (`attempt-2-master.md`) | ✅ 완료 | 리뷰 피드백 반영, 코드 리뷰 게이트 정의
 | Section 0 | Caret Feature 원칙 재확인 (F01~F11) | ✅ 완료 | features/index.md/F01~F11 재검토
 | Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ✅ 완료 | classify/extract/analyze/compare/incremental 구현 및 리포트 생성
-| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ⏳ 재시작 필요 | npm 기준 재시작: 네트워크 회복 후 `npm install` → `npm run protos` → `npm run tsc` 진행, 소규모 배치(5~10파일)로 머지
+| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ▶ 진행 중 | `npm install`/`npm run protos` 완료, `npx tsc --noEmit` 클린(Generated String shadow fix, hook-factory를 cline 버전으로 복원). 이제 3-way 소규모 배치 머지 착수.
 | Phase C | 통합 테스트 & E2E 복구 | ⏳ 예정 | Node20 환경 준비 필요
 | Phase D | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | 릴리스 체크리스트 필요
 | Phase E | 누락 방지 자동화 및 체크리스트 업데이터 | ⏳ 예정 | compare-with-cline.mjs, PR 템플릿 반영
@@ -126,6 +126,8 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-20 19:50 | Codex | 워킹트리 origin/merge/cline-v3.38.1-attempt2로 초기화, `comparison/`만 .gitignore 추가, Phase B 재시작 준비 |
 | 2025-11-20 20:44 | Codex | npm 기준으로 명령/테스트 환경 정리, `next-session.md`와 마스터 문서에서 pnpm 표기 제거 |
 | 2025-11-20 23:06 | Codex | Phase A 완결: classify/extract/analyze/compare/incremental 스크립트 구현, 리포트 생성(classification.md/json, caret-mod-report.md/json, dependency-report.md/json) |
+| 2025-11-20 23:16 | Codex | Phase B 착수: `npm install`→`npm run protos` 완료. `npx tsc --noEmit` 오류 발생(hook-factory undefined assign, generated account proto MessageFns call signatures) – 원인 조사 및 3-way 머지 진행 예정 |
+| 2025-11-20 23:22 | Codex | hook-factory/test-utils를 cline v3.38.1 버전으로 복원, generated proto `String(value)`를 `globalThis.String`으로 교체하여 타입 오류 해소. `npx tsc --noEmit` 통과. 3-way 배치 머지 준비 완료 |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

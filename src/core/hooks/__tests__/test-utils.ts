@@ -2,7 +2,6 @@ import * as fs from "fs/promises"
 import * as path from "path"
 import should from "should"
 import { HookOutput } from "../../../shared/proto/cline/hooks"
-import type { HookResult } from "../hook-factory"
 import { Hooks, NamedHookInput } from "../hook-factory"
 
 // Define HookName locally since it's not exported from hook-factory
@@ -287,11 +286,11 @@ function isSerializable(value: any): boolean {
  * mockRunner.assertCalledWith({ preToolUse: { toolName: "write_to_file" } })
  */
 export class MockHookRunner<Name extends HookName> {
-	private response: HookResult = {
+	private response: HookOutput = {
 		cancel: false,
 		contextModification: "",
 		errorMessage: "",
-	} as HookResult
+	}
 	public executionLog: Array<{ input: NamedHookInput<Name>; timestamp: number }> = []
 	public readonly hookName: Name
 
@@ -309,14 +308,14 @@ export class MockHookRunner<Name extends HookName> {
 			cancel: output.cancel ?? false,
 			contextModification: output.contextModification ?? "",
 			errorMessage: output.errorMessage ?? "",
-		} as HookResult
+		}
 	}
 
 	/**
 	 * Mock run method that records calls and returns preset response.
 	 * Does not use the actual HookRunner execution mechanism.
 	 */
-	async run(params: NamedHookInput<Name>): Promise<HookResult> {
+	async run(params: NamedHookInput<Name>): Promise<HookOutput> {
 		// Validate params are serializable
 		if (!isSerializable(params)) {
 			throw new Error(

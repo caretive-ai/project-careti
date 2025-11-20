@@ -29,23 +29,28 @@ const MAX_CONTEXT_MODIFICATION_SIZE = 50000 // ~50KB
  * Validates hook output JSON structure.
  * Ensures required fields are present and have correct types.
  */
-function validateHookOutput(output: Record<string, unknown>): { valid: boolean; error?: string } {
-	// Handle legacy shouldContinue flag by translating to cancel semantics
+function validateHookOutput(output: any): { valid: boolean; error?: string } {
+	// Check if deprecated shouldContinue field is present
 	if (output.shouldContinue !== undefined) {
-		if (typeof output.shouldContinue !== "boolean") {
-			return {
-				valid: false,
-				error:
-					"Invalid hook output: 'shouldContinue' must be a boolean.\n\n" +
-					`Received type: ${typeof output.shouldContinue}\n\n` +
-					"Example valid response:\n" +
-					JSON.stringify({ shouldContinue: false, errorMessage: "..." }, null, 2),
-			}
+		return {
+			valid: false,
+			error:
+				"Invalid hook output: The 'shouldContinue' field has been removed.\n\n" +
+				"Use 'cancel: true' instead to trigger task cancellation.\n\n" +
+				"Migration guide:\n" +
+				"  Before: { shouldContinue: false, errorMessage: '...' }\n" +
+				"  After:  { cancel: true, errorMessage: '...' }\n\n" +
+				"Example valid response:\n" +
+				JSON.stringify(
+					{
+						cancel: false,
+						contextModification: "Optional context here",
+						errorMessage: "",
+					},
+					null,
+					2,
+				),
 		}
-
-		// shouldContinue=false => cancel task, true => proceed
-		output.cancel = output.shouldContinue ? false : true
-		delete output.shouldContinue
 	}
 
 	// cancel is optional, but if provided must be a boolean
@@ -85,22 +90,6 @@ function validateHookOutput(output: Record<string, unknown>): { valid: boolean; 
 	}
 
 	return { valid: true }
-}
-
-export type HookResult = HookOutput & { cancel: boolean }
-
-type HookOutputInit = Partial<HookOutput>
-
-function createHookOutput(init: HookOutputInit): HookResult {
-	return HookOutput.create({
-		...init,
-		cancel: init.cancel ?? false,
-		shouldContinue: undefined,
-	}) as HookResult
-}
-
-function normalizeHookOutput(output: HookOutput): HookResult {
-	return createHookOutput(output)
 }
 
 export interface Hooks {
@@ -166,12 +155,12 @@ export abstract class HookRunner<Name extends HookName> {
 	 * @param params Hook-specific parameters (taskId, preToolUse/postToolUse data)
 	 * @returns The hook output containing shouldContinue, contextModification, and errorMessage
 	 */
-	async run(params: NamedHookInput<Name>): Promise<HookResult> {
+	async run(params: NamedHookInput<Name>): Promise<HookOutput> {
 		const input = HookInput.create(await this.completeParams(params))
 		return this[exec](input)
 	}
 
-	abstract [exec](params: HookInput): Promise<HookResult>
+	abstract [exec](params: HookInput): Promise<HookOutput>
 
 	/**
 	 * Completes the hook input by adding common metadata to caller-provided parameters.
@@ -221,8 +210,8 @@ class NoOpRunner<Name extends HookName> extends HookRunner<Name> {
 	 * @param _ Hook input (ignored)
 	 * @returns A successful hook output (no cancellation)
 	 */
-	override async [exec](_: HookInput): Promise<HookResult> {
-		return createHookOutput({
+	override async [exec](_: HookInput): Promise<HookOutput> {
+		return HookOutput.create({
 			cancel: false,
 		})
 	}
@@ -262,7 +251,7 @@ class StdioHookRunner<Name extends HookName> extends HookRunner<Name> {
 		super(hookName)
 	}
 
-	override async [exec](input: HookInput): Promise<HookResult> {
+	override async [exec](input: HookInput): Promise<HookOutput> {
 		// Check if already aborted before starting
 		if (this.abortSignal?.aborted) {
 			throw HookExecutionError.cancellation(this.scriptPath)
@@ -292,7 +281,7 @@ class StdioHookRunner<Name extends HookName> extends HookRunner<Name> {
 			const exitCode = hookProcess.getExitCode()
 
 			// Try to parse JSON output
-			const parseJsonOutput = (): HookResult | null => {
+			const parseJsonOutput = (): HookOutput | null => {
 				try {
 					const outputData = JSON.parse(stdout)
 
@@ -303,7 +292,7 @@ class StdioHookRunner<Name extends HookName> extends HookRunner<Name> {
 						return null
 					}
 
-					const output = normalizeHookOutput(HookOutput.fromJSON(outputData))
+					const output = HookOutput.fromJSON(outputData)
 
 					// Validate and truncate context modification if too large
 					if (output.contextModification && output.contextModification.length > MAX_CONTEXT_MODIFICATION_SIZE) {
@@ -370,7 +359,7 @@ class StdioHookRunner<Name extends HookName> extends HookRunner<Name> {
 								return null
 							}
 
-							const output = normalizeHookOutput(HookOutput.fromJSON(outputData))
+							const output = HookOutput.fromJSON(outputData)
 
 							// Validate and truncate context modification if too large
 							if (output.contextModification && output.contextModification.length > MAX_CONTEXT_MODIFICATION_SIZE) {
@@ -414,7 +403,7 @@ class StdioHookRunner<Name extends HookName> extends HookRunner<Name> {
 			if (exitCode === 0) {
 				// Hook succeeded but didn't provide JSON - allow execution (no cancellation)
 				console.warn(`[Hook ${this.hookName}] Completed successfully but no JSON response found`)
-				return createHookOutput({
+				return HookOutput.create({
 					cancel: false,
 				})
 			} else {
@@ -473,7 +462,7 @@ class CombinedHookRunner<Name extends HookName> extends HookRunner<Name> {
 		super(hookName)
 	}
 
-	override async [exec](input: HookInput): Promise<HookResult> {
+	override async [exec](input: HookInput): Promise<HookOutput> {
 		// Run all hooks in parallel
 		const results = await Promise.all(this.runners.map((runner) => runner[exec](input)))
 
@@ -492,7 +481,7 @@ class CombinedHookRunner<Name extends HookName> extends HookRunner<Name> {
 			.filter((msg) => msg)
 			.join("\n")
 
-		return createHookOutput({
+		return HookOutput.create({
 			cancel,
 			contextModification,
 			errorMessage,

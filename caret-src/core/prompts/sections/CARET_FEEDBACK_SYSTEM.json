@@ -1,0 +1,10 @@
+{
+	"chatbot": {
+		"request": "Questions about this analysis?",
+		"approach": "consultative"
+	},
+	"agent": {
+		"request": "Any modifications needed?",
+		"approach": "collaborative"
+	}
+}

@@ -1,0 +1,15 @@
+{
+	"action_strategy": {
+		"sections": [
+			{
+				"content": "Strategy: Understand→Design→Execute→Verify.\nUse <thinking> before tools. One step at a time.\nMissing params→ask_followup_question. Task done→attempt_completion.\nMinimize back-and-forth. Be direct and technical.",
+				"mode": "both",
+				"tokens": "~40"
+			}
+		]
+	},
+	"template_vars": {
+		"description": "Action strategy adapted from cline's act_vs_plan_mode.ts to fit Caret's CHATBOT/AGENT philosophy",
+		"adaptation": "Reimagined cline's planning/execution split within Caret's mode system"
+	}
+}

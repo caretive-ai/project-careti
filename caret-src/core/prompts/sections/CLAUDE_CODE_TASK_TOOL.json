@@ -1,0 +1,22 @@
+{
+	"name": "Task",
+	"description": "Start a new autonomous agent to handle complex multi-step tasks. The subagent will work independently and return its final result to you. Use this tool when you need to delegate a self-contained task that requires multiple steps or specialized focus.",
+	"input_schema": {
+		"type": "object",
+		"properties": {
+			"description": {
+				"type": "string",
+				"description": "A short (3-5 word) description of the task"
+			},
+			"prompt": {
+				"type": "string",
+				"description": "The task for the agent to perform. Be specific and clear about what needs to be accomplished."
+			},
+			"subagent_type": {
+				"type": "string",
+				"description": "The type of specialized agent to use for this task (e.g., 'code-reviewer', 'debugger', 'researcher'). If no custom agents are defined, use 'default'."
+			}
+		},
+		"required": ["description", "prompt", "subagent_type"]
+	}
+}

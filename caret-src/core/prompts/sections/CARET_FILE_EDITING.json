@@ -1,0 +1,22 @@
+{
+	"file_editing": {
+		"sections": [
+			{
+				"content": "# FILE EDITING PROTOCOL\n\n## Tool Selection\n\n**replace_in_file**: Default for targeted edits. Safer, precise, efficient for small changes.\n\n**write_to_file**: Use for new files, major restructuring, or extensive changes.\n\n## Workflow Best Practices\n\n### Multiple Changes to Same File\n\n**IMPORTANT**: When you need to make several changes to the same file, prefer to use a **single replace_in_file call with multiple SEARCH/REPLACE blocks**. DO NOT make multiple successive replace_in_file calls for the same file.\n\n**Example**: Adding a component to a file\n- ✅ **Correct**: One replace_in_file call with:\n  - SEARCH/REPLACE block 1: Add import statement\n  - SEARCH/REPLACE block 2: Add component usage\n- ❌ **Wrong**: Separate replace_in_file calls for import and usage\n\n**Benefits**:\n- Fewer API requests (30-50% reduction)\n- Better context efficiency\n- Reduced user wait time\n- Optimized for Claude Sonnet 4.5\n\n## AGENT Mode Guidelines\n- Full file operation access\n- Apply multiple SEARCH/REPLACE blocks in single call\n- Consider auto-formatting effects\n- Reference updated file state for subsequent edits\n\n## CHATBOT Mode Guidelines\n- Read-only file access\n- Suggest edits with multiple SEARCH/REPLACE blocks in single suggestion\n- Analysis and planning only",
+				"mode": "both",
+				"tokens": "~320"
+			}
+		]
+	},
+	"mode_restrictions": {
+		"chatbot": "Read-only access, suggest edits only",
+		"agent": "Full editing capabilities with both tools"
+	},
+	"template_vars": {
+		"description": "File editing guidelines with multiple SEARCH/REPLACE optimization from cline-latest",
+		"source": "Based on cline editing_files.ts (commit 41202df74) with Caret dual-mode adaptation",
+		"changelog": "2025-10-14: Added multiple SEARCH/REPLACE blocks best practice for both modes",
+		"cline_commit": "41202df74",
+		"token_increase": "+190 (~146% increase)"
+	}
+}

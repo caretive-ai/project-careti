@@ -3,7 +3,7 @@
 1) 네트워크/DNS 확인
 - `ping registry.npmjs.org` 또는 `curl -I https://registry.npmjs.org`
 
-2) 의존성 설치 및 프로토 생성
+2) 의존성 설치 및 프로토 생성 (모든 명령 **npm 기준**)
 - `npm install`
 - `npm run protos`
 - `npm run tsc` (또는 `npm run compile`)로 타입/생성물 확인

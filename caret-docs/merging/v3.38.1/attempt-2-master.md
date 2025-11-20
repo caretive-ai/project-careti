@@ -20,7 +20,7 @@
 2. **Webview**: Caret 브랜치 버전을 기본으로 유지. `git blame cline/v3.38.1 -- <file>`로 변경 구간을 확인한 뒤 필요한 곳만 역으로 이식.
 3. **파일 누락 금지**: `scripts/compare-with-cline.mjs` (작성 예정)로 `git diff --name-status cline/v3.38.1..HEAD` 에서 `D`가 나오지 않도록 자동 검증.
 4. **자동화 도구 필수**: 파일 분류(`scripts/classify-files.ts`), Caret 수정 추출(`scripts/extract-caret-mods.ts`), 점진적 머지(`scripts/incremental-merge.sh`)를 우선 구현.
-5. **테스트 환경**: Node 20, Playwright 의존성 설치, `pnpm run compile` + `pnpm run test` + `pnpm run test:e2e` 통과 후에만 완료로 간주.
+5. **테스트 환경**: Node 20, Playwright 의존성 설치, `npm run compile` + `npm run test` + `npm run test:e2e` 통과 후에만 완료로 간주.
 6. **Feature 원칙 준수**: `caret-docs/features/index.md` 및 F01~F11 문서를 참조하여 CommonUtil/RulePriority/i18n/Branding/Persona/InputHistory/Provider 등 Caret 고유 기능이 유지되도록 확인한다.
 
 ---
@@ -33,7 +33,7 @@
 | 준비-2 | 상위 표준 문서 업데이트 (`merge-standard-guide.md`) | ✅ 완료 | Attempt-2 참조 문구 추가
 | 준비-3 | 작업 마스터 파일 작성 (`attempt-2-master.md`) | ✅ 완료 | 리뷰 피드백 반영, 코드 리뷰 게이트 정의
 | Section 0 | Caret Feature 원칙 재확인 (F01~F11) | ✅ 완료 | features/index.md/F01~F11 재검토
-| Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ✅ 완료(스켈레톤) | 스크립트 뼈대만 존재, 구현 필요
+| Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ✅ 완료 | classify/extract/analyze/compare/incremental 구현 및 리포트 생성
 | Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ⏳ 재시작 필요 | npm 기준 재시작: 네트워크 회복 후 `npm install` → `npm run protos` → `npm run tsc` 진행, 소규모 배치(5~10파일)로 머지
 | Phase C | 통합 테스트 & E2E 복구 | ⏳ 예정 | Node20 환경 준비 필요
 | Phase D | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | 릴리스 체크리스트 필요
@@ -62,14 +62,14 @@
 - [x] `upstream-files.txt` / `caret-files.txt` 생성 및 diff 추적.
 
 ### Phase B: 점진적 머지
-- [ ] `scripts/incremental-merge.sh` 구현: 카테고리별 patch 적용 + 단계별 `pnpm exec tsc --noEmit` 확인
+- [ ] `scripts/incremental-merge.sh` 구현: 카테고리별 patch 적용 + 단계별 `npm run tsc -- --noEmit` 확인
 - [ ] 파일 매트릭스 작성: Proto(16)·Controller(20)·Services/API(15)·Webview(선택) 각 파일명/전략/Base·Cline·Caret/작업 방식 명시
 - [ ] 5~10개 파일 소규모 배치로 처리 후 검증, 성공 시 체크포인트 태그 남기기
 - [ ] Webview 역이식 규칙 문서화(Caret 유지 + Cline 변경분만 역이식 기준 정의)
 - [ ] 루트/스크립트/문서 분리 전략 문서화 및 이력 기록
 
 ### Phase C: 검증
-- [ ] `pnpm run compile`, `pnpm run test`(unit), `pnpm run test:e2e` 실행. Node20 + `npx playwright install-deps` 필수.
+- [ ] `npm run compile`, `npm run test`(unit), `npm run test:e2e` 실행. Node20 + `npx playwright install-deps` 필수.
 - [ ] Attempt-1에서 누락된 시나리오(Providers, Hooks, Settings, Terminal 모드, LiteLLM 로그 등)를 수동/자동 테스트로 검증.
 
 ### Phase D: 문서 & 릴리스
@@ -95,7 +95,7 @@ git show caret-main:src/path/file.ts > /tmp/caret.ts
 ```
 diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 ```
-3. 수동 검토/적용 후 단계별 `pnpm exec tsc --noEmit` 실행
+3. 수동 검토/적용 후 단계별 `npm run tsc -- --noEmit` 실행
 
 ### 코드 리뷰 게이트
 > **자세한 리뷰 프로세스는 `attempt-2-plan.md` "코드 리뷰 게이트" 섹션 참조**
@@ -124,6 +124,8 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-19 18:45 | Codex | Phase A 스크립트 실행: diff 리스트, 파일 분류, Caret 수정 추출, 의존성 그래프 산출 |
 | 2025-11-19 19:15 | Codex | Phase B 시작 – cline/v3.38.1 기준으로 reset, caret proto 재적용, incremental-merge 스크립트 추가 |
 | 2025-11-20 19:50 | Codex | 워킹트리 origin/merge/cline-v3.38.1-attempt2로 초기화, `comparison/`만 .gitignore 추가, Phase B 재시작 준비 |
+| 2025-11-20 20:44 | Codex | npm 기준으로 명령/테스트 환경 정리, `next-session.md`와 마스터 문서에서 pnpm 표기 제거 |
+| 2025-11-20 23:06 | Codex | Phase A 완결: classify/extract/analyze/compare/incremental 스크립트 구현, 리포트 생성(classification.md/json, caret-mod-report.md/json, dependency-report.md/json) |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

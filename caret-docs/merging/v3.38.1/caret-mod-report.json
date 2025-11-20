@@ -1,0 +1,16 @@
+{
+	"meta": {
+		"generatedAt": "2025-11-20T14:06:10.802Z",
+		"repo": "/var/home/luke/dev/caret-merging"
+	},
+	"counts": {
+		"caretModification": 0,
+		"proto1072": 0,
+		"caretSrcFiles": 0,
+		"caretrulesFiles": 0
+	},
+	"caretModification": [],
+	"proto1072": [],
+	"caretSrcFiles": [],
+	"caretrulesFiles": []
+}

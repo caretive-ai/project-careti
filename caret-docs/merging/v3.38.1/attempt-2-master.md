@@ -66,7 +66,21 @@
 - [x] 의존성 설치(`npm install`), 프로토 재생성(`npm run protos`), `npx tsc --noEmit` 클린
 - [x] `scripts/incremental-merge.sh` 구현(3-way diff3, `--apply`, `--no-tsc` 옵션)
 - [x] proto String shadow 패치 자동화(`build-proto.mjs` 후처리)
-- [ ] 파일 매트릭스 초안 작성 (카테고리/전략/Base-Cline-Caret/작업 방식)
+- [x] 파일 매트릭스 초안 작성 (주요 proto 중심)
+
+  | 파일 | 전략 | Base | Cline | Caret | 메모 |
+  | --- | --- | --- | --- | --- | --- |
+  | proto/cline/common.proto | PROTO_MERGE | v3.35.0 | v3.38.1 | caret-main | 공통 메시지 충돌 여부 확인 |
+  | proto/cline/account.proto | PROTO_MERGE | v3.35.0 | v3.38.1 | caret-main | CARET Auth 필드(1000+ offset) 병합 |
+  | proto/cline/models.proto | PROTO_MERGE | v3.35.0 | v3.38.1 | caret-main | provider/model 확장 주의 |
+  | proto/cline/hooks.proto | PROTO_MERGE | v3.35.0 | v3.38.1 | caret-main | HookOutput cancel/shouldContinue 정합성 |
+  | proto/cline/task.proto | PROTO_MERGE | v3.35.0 | v3.38.1 | caret-main | Task metadata 확장 확인 |
+  | proto/cline/ui.proto | PROTO_MERGE | v3.35.0 | v3.38.1 | caret-main | UI 이벤트/필드 추가 확인 |
+  | proto/cline/web.proto | PROTO_MERGE | v3.35.0 | v3.38.1 | caret-main | Web bridge 필드 확장 |
+  | proto/caret/account.proto | PROTO_MERGE | v3.35.0 | v3.38.1 | caret-main | CARET 전용(1000+), cline 대비 유지 |
+  | proto/caret/persona.proto | PROTO_MERGE | v3.35.0 | v3.38.1 | caret-main | Persona 필드 유지 |
+  | proto/caret/system.proto | PROTO_MERGE | v3.35.0 | v3.38.1 | caret-main | 시스템 설정 확장 |
+  | proto/host/*.proto | AUTO_ADOPT | v3.35.0 | v3.38.1 | caret-main | 호스트 인터페이스는 cline 그대로 |
 
 **B1 Proto 배치 (우선 처리)**
 - [ ] 프로토 3-way 검토 + 적용(5~10개 단위) → 배치별 `npx tsc --noEmit`

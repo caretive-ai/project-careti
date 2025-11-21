@@ -268,6 +268,28 @@ export interface OcaModelInfo extends OpenAiCompatibleModelInfo {
 	surveyContent?: string
 }
 
+export interface BizRouterModelInfo extends OpenAiCompatibleModelInfo {
+	topK?: number
+	topP?: number
+	repetitionPenalty?: number
+	frequencyPenalty?: number
+	presencePenalty?: number
+	minP?: number
+}
+
+export const bizRouterModelInfoSaneDefaults: BizRouterModelInfo = {
+	maxTokens: 4096,
+	contextWindow: 8192,
+	supportsImages: true,
+	supportsPromptCache: false,
+	inputPrice: 0,
+	outputPrice: 0,
+	temperature: 0.7,
+	topP: 1,
+	frequencyPenalty: 0,
+	presencePenalty: 0,
+}
+
 export const CLAUDE_SONNET_1M_SUFFIX = ":1m"
 export const CLAUDE_SONNET_1M_TIERS = [
 	{

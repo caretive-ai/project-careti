@@ -402,6 +402,18 @@
   5. **Caret 정책 준수** – 특히 Webview i18n/브랜딩/RulePriority 등 feature 문서에 정의된 규칙을 지켰는지.
   6. **보안 검토** – Credentials/토큰/파일 경로 등 보안 위험이 되는 변경이 없는지.
   7. **더미/미완성 코드** – “추후 구현” 주석이나 빈 함수(Stub)를 남기지 않았는지.
+
+### 🚨 리뷰 프로세스 개선 (2025-11-21 반영)
+> **Phase B2/B3 실패 교훈 반영:** 단순 파일 존재/컴파일 성공은 기능 완료를 보장하지 않음.
+1. **Traceability Check (추적 검사):**
+   - 파일 존재 여부가 아닌 **진입점(Entry Point)부터 실제 호출(Call Site)까지의 연결(Wiring)**을 확인.
+   - 예: `BizRouterHandler` 파일 존재(O) -> `api/index.ts` 스위치문에 등록됨(X) -> **FAIL**.
+2. **Feature-based Review (기능 중심 리뷰):**
+   - 파일 단위가 아닌 **기능(Feature) 단위**로 검증. (F01~F11 기준)
+   - 예: "F09 Provider Setup이 완료되었는가?"라는 질문으로 검증.
+3. **Stub/TODO 능동 탐지:**
+   - `grep` 등을 사용하여 `TODO`, `FIXME`, 빈 함수 블록을 능동적으로 찾아내야 함.
+
 - 리뷰 타이밍:
   - **Gate #1 (Proto 완료 후)**: Proto + Controller merge 전, 스크립트 또는 diff 링크 공유.
   - **Gate #2 (Controller/Services 완료 후)**: API/Services/Transform 적용 이후.

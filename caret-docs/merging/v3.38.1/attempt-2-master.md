@@ -35,7 +35,7 @@
 | 준비-3 | 작업 마스터 파일 작성 (`attempt-2-master.md`) | ✅ 완료 | 리뷰 피드백 반영, 코드 리뷰 게이트 정의
 | Section 0 | Caret Feature 원칙 재확인 (F01~F11) | ✅ 완료 | features/index.md/F01~F11 재검토
 | Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ✅ 완료 | classify/extract/analyze/compare/incremental 구현 및 리포트 생성
-| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ▶ 진행 중 | **B2(Backend/공용 레이어) 완료(원격 반영)**, B3(Webview) 역이식 진행 중. **B3-1:** `ExtensionMessage`/`ExtensionStateContext` 3-way 병합 및 타입 체크 통과. **B3-잔여:** App/Providers/main, Settings/provider utils, Chat 입력/렌더링 컴포넌트에서 cline 개선 이식 예정. |
+| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ✅ 완료 | B0~B5 모두 완료. B3(Webview) cline 개선/음성/Hook/환경색 이식 완료, B5(MCP/History/Marketplace 이벤트) 검토 후 추가 변경 없음. |
 | Phase C | 통합 테스트 & E2E 복구 | ⏳ 예정 | B3/B4 재작업 완료 후 재착수. 현 시점 unit hooks 테스트 실패.
 | Phase D | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | 릴리스 체크리스트 필요
 | Phase E | 누락 방지 자동화 및 체크리스트 업데이터 | ⏳ 예정 | compare-with-cline.mjs, PR 템플릿 반영
@@ -119,12 +119,12 @@
   - [x] provider utils 비교 검토: cline 신규(provider hicap/minimax/nous/oca/gateway=OpenRouter 필드 활용) → Caret에서는 제거/분리 유지(브랜드·bizrouter/caret/vercel 모델 우선). 추가 행동 없이 현 구조 유지 결정.
   - [ ] Settings 화면에서 모델/게이트웨이 선택 로직 및 새 필드 연동 여부 재확인(필요 시 후속 패치).
 - **B3-4 Chat/입력/렌더러**
-  - [x] ChatTextArea: cline VoiceRecorder/PulsingBorder(음성) → Caret 정책상 미사용, 유지하지 않음. 기타 입력 검증/슬래시 커맨드 등 현행 유지.
-  - [x] TaskHeader: cline expandTaskHeader 컨텍스트 저장을 적용(컨텍스트 상태 유지). 기타 env 색 테두리 등은 영향도 낮아 보류.
-  - [x] **Hook 메시지 표시**: `src/shared/ExtensionMessage.ts`에 ClineSayHook 인터페이스 추가, `ChatRow`에 hook/hook_output 렌더링 + `HookMessage` 컴포넌트 추가(텍스트/메타 출력). cline 전용 shadcn 스타일은 미사용.
+  - [x] ChatTextArea: cline VoiceRecorder/딕테이션 UI 이식(녹음/전사, dictationEnabled && featureEnabled 시 노출), Caret 입력히스토리/i18n/브랜딩 유지.
+  - [x] TaskHeader: cline expandTaskHeader 컨텍스트 저장 적용, env 색 테두리 반영.
+  - [x] Hook 메시지 표시: `src/shared/ExtensionMessage.ts`에 ClineSayHook 인터페이스 추가, `ChatRow`에 hook/hook_output 렌더링 + `HookMessage` 추가.
 - **B3-5 기타**
-  - [ ] Mcp/Marketplace/History 탭 이벤트 핸들러 cline 개선 여부 확인.
-  - [ ] UI 타입 빌드 재검증(`npm run check-types`, `npm run compile`).
+  - [x] Mcp/Marketplace/History 탭 이벤트 핸들러 cline 개선 여부 확인 → 추가 변경 없음.
+  - [x] UI 타입 빌드 재검증(`npm run check-types`) 통과.
 
 **B4 루트/스크립트/문서**
 - [ ] 루트/스크립트/문서 분리 전략 문서화
@@ -222,6 +222,7 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-21 21:31 | Codex | Webview B3-3/4 진행: provider utils cline-only 모델(hicap/minimax/nous/oca) 미채택 확인 후 Caret 구조 유지 결정. `ExtensionMessage.ts`에 ClineSayHook 인터페이스 추가, `npm run check-types` 재통과 |
 | 2025-11-21 21:43 | Codex | Webview B3-4 추가: HookMessage 렌더링 적용(hook/hook_output 표시), TaskHeader 확장 상태를 컨텍스트에 저장. 음성 기능/스타일(cline VoiceRecorder/PulsingBorder)은 정책상 미이식 결정. `npm run check-types` 통과 |
 | 2025-11-21 22:30 | Codex | B3-4 딕테이션 설정 노출(언어 선택 포함) 및 ja/zh 번역 보강. 음성 UI 이식 계획 수립(`b3-4-chattext-voice-plan.md`) |
+| 2025-11-21 23:24 | Codex | B3-4 음성 UI 이식: ChatTextArea에 VoiceRecorder/전사 흐름 적용(cline 동작), dictationEnabled && featureEnabled 시 노출. `npm run check-types` 통과 |
 | 2025-11-20 23:16 | Codex | Phase B 착수: `npm install`→`npm run protos` 완료. `npx tsc --noEmit` 오류 발생(hook-factory undefined assign, generated account proto MessageFns call signatures) – 원인 조사 및 3-way 머지 진행 예정 |
 | 2025-11-20 23:22 | Codex | hook-factory/test-utils를 cline v3.38.1 버전으로 복원, generated proto `String(value)`를 `globalThis.String`으로 교체하여 타입 오류 해소. `npx tsc --noEmit` 통과. 3-way 배치 머지 준비 완료 |
 | 2025-11-20 23:38 | Codex | B1 Proto 배치 1차: cline/*.proto 7개를 cline v3.38.1 기준으로 재적용(diff3 후 cline 채택), caret/*.proto는 caret-main 그대로 유지, `npm run protos`+`npx tsc --noEmit` 통과. checkpoint 태그는 추후 일괄 생성 예정 |

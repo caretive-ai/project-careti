@@ -1,10 +1,8 @@
 import { TranscribeAudioRequest } from "@shared/proto/cline/dictation"
 import { EmptyRequest } from "@shared/proto/index.cline"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { SquareIcon, StopCircleIcon } from "lucide-react"
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
 import { DictationServiceClient } from "@/services/grpc-client"
 import { formatSeconds } from "@/utils/format"
 
@@ -178,37 +176,27 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
 	return (
 		<div className="flex items-center gap-2">
-			<Tooltip>
-				<TooltipTrigger asChild>
-					<Button
-						aria-label="Hold to talk"
-						className={cn(
-							"relative h-9 w-9 rounded-full p-0",
-							isRecording ? "bg-(--vscode-errorForeground)" : "bg-(--vscode-button-background)",
-						)}
-						disabled={disabled || isProcessing || isStarting}
-						onKeyDown={handleKeyDown}
-						onMouseDown={() => startRecording()}
-						onMouseUp={() => stopRecording()}
-						onTouchEnd={() => stopRecording()}
-						onTouchStart={() => startRecording()}
-						style={{
-							boxShadow: isRecording ? "0 0 0 2px rgba(255,0,0,0.35)" : undefined,
-							transition: "box-shadow 0.2s ease",
-						}}
-						title="Hold to talk"
-						variant="outline">
-						{isRecording ? <SquareIcon className="h-4 w-4" /> : <StopCircleIcon className="h-4 w-4" />}
-					</Button>
-				</TooltipTrigger>
-				<TooltipContent className="max-w-[260px]">
-					<p>Hold to talk. Releases to transcribe. Max 5 minutes per message.</p>
-					{language && <p className="text-xs text-muted-foreground mt-1">Language: {language}</p>}
-					{!isAuthenticated && (
-						<p className="text-xs text-[var(--vscode-errorForeground)] mt-1">Sign in to use dictation.</p>
-					)}
-				</TooltipContent>
-			</Tooltip>
+			<VSCodeButton
+				appearance="icon"
+				aria-label="Hold to talk"
+				disabled={disabled || isProcessing || isStarting}
+				onKeyDown={handleKeyDown}
+				onMouseDown={() => startRecording()}
+				onMouseUp={() => stopRecording()}
+				onTouchEnd={() => stopRecording()}
+				onTouchStart={() => startRecording()}
+				style={{
+					width: 36,
+					height: 36,
+					borderRadius: "50%",
+					display: "inline-flex",
+					alignItems: "center",
+					justifyContent: "center",
+					backgroundColor: isRecording ? "var(--vscode-errorForeground)" : "var(--vscode-button-background)",
+				}}
+				title={`Hold to talk (max 5 min/message). Language: ${language}. ${isAuthenticated ? "" : "Sign in may be required."}`}>
+				{isRecording ? <SquareIcon className="h-4 w-4" /> : <StopCircleIcon className="h-4 w-4" />}
+			</VSCodeButton>
 
 			{isRecording && (
 				<div className="flex items-center gap-2 px-3 py-1 rounded-md bg-[var(--vscode-editor-background)] border border-(--vscode-editorGroup-border)">

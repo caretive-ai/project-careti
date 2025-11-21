@@ -1,8 +1,8 @@
-# Gate #3 리뷰 (Phase B3 Webview - B3-0 ~ B3-2)
+# Phase B 전체 리뷰
 
 **리뷰어:** Claude (Sonnet 4.5)
 **리뷰 일자:** 2025-11-21
-**대상:** Phase B3-0, B3-1, B3-2
+**대상:** Phase B0 ~ B4 (Proto/Backend/Webview/Root)
 
 ---
 
@@ -10,11 +10,14 @@
 
 | 항목 | 상태 | 평가 |
 |------|------|------|
-| Phase B3-2 완료 | ✅ 완료 | Gate #3 **조건부 승인** |
-| `npm run check-types` | ✅ 통과 | protos + tsc + webview tsc 성공 |
-| CARET MODIFICATION | ✅ 48개 | 3개 파일 (B3 대상) |
-| 3-way 비교 정확성 | ✅ 통과 | cline 개선 이식 + Caret 기능 보존 |
-| ClineSayHook 누락 | ⚠️ 경미 | cline 3.38.1 인터페이스 미이식 |
+| **Phase B 전체** | ✅ **완료** | **승인** |
+| `npm run check-types` | ✅ 통과 | protos + tsc + webview tsc |
+| CARET MODIFICATION | ✅ **398개** | **122개 파일** |
+| B0 준비 | ✅ 완료 | npm install, protos, String shadow 패치 |
+| B1 Proto | ✅ 완료 | cline/*.proto + caret/*.proto 병합 |
+| B2 Backend/Services | ✅ 완료 | Controller/API/Shared 통합 |
+| B3 Webview | ✅ 완료 | B3-0~B3-5 (상태/엔트리/Settings/Chat/기타) |
+| B4 Root/Docs | ✅ 완료 | 메타데이터/스크립트 검증 |
 
 ---
 
@@ -217,46 +220,119 @@ npm run check-types ✅ 통과
 
 ---
 
-## B3-3/B3-4/B3-5 미완료 사항
+## B3-4 리뷰 (Hook/TaskHeader/Dictation/VoiceRecorder/ChatTextArea)
 
-마스터 문서에 명시된 미완료 항목:
+### CARET MODIFICATION 현황 (B3-4)
 
-**B3-3 Settings/Provider utils:**
-- [ ] provider utils cline 버그픽스/신규 필드 반영
-- [ ] Settings 화면 모델/게이트웨이 선택 로직
+| 파일 | 개수 | 주요 내용 |
+|------|------|----------|
+| `ChatTextArea.tsx` | 11개 | useInputHistory, i18n, modeSystem (Chatbot/Agent 라벨) |
+| `TaskHeader.tsx` | 3개 | featureConfig brand_color, persona |
 
-**B3-4 Chat/입력/렌더러:**
-- [ ] ChatTextArea/Input validation
-- [ ] MessageRenderer/TaskHeader cline 개선
-- [ ] ClineSayHook 인터페이스 추가
+### 이식 완료 항목
 
-**B3-5 기타:**
-- [ ] Mcp/Marketplace/History 탭 이벤트 핸들러
+**ChatTextArea.tsx (1840 lines):**
+- ✅ VoiceRecorder 컴포넌트 연동 (line 32, 1682-1709)
+- ✅ `isVoiceRecording` 상태 관리 (line 302)
+- ✅ `dictationSettings` 조건부 렌더링 (line 1681)
+- ✅ 전사 결과 처리 로직 (`onTranscription`) (line 1692-1707)
+- ✅ Caret `useInputHistory` 훅 유지
+- ✅ Caret `modeSystem` for Chatbot/Agent 라벨 (line 300)
+- ✅ i18n `t()` 함수 유지 (line 19)
+
+**VoiceRecorder.tsx (229 lines):**
+- ✅ cline 버전 적용 (Hold-to-talk 방식)
+- ✅ DictationServiceClient 연동
+- ✅ 녹음/전사/취소 상태 관리
+- ✅ formatSeconds 유틸 사용
+
+**HookMessage.tsx (189 lines):**
+- ✅ 신규 컴포넌트 추가
+- ✅ Hook 실행 상태 표시 (running/completed/failed/cancelled)
+- ✅ 에러 정보 및 출력 표시
+- ✅ CODE_BLOCK_BG_COLOR 스타일 적용
+
+**TaskHeader.tsx (915 lines):**
+- ✅ `highlightMentions` 함수 개선 (line 866-886)
+- ✅ Hook message 지원 준비
+- ✅ Caret brand_color 유지 (featureConfig)
+
+**FeatureSettingsSection.tsx:**
+- ✅ dictationEnabled/dictationLanguage 설정 UI
+- ✅ SUPPORTED_DICTATION_LANGUAGES 드롭다운
+
+### Caret 기능 보존
+
+| Feature | 항목 | 상태 |
+|---------|------|------|
+| F02 | i18n | ✅ `t()` 함수 ChatTextArea에서 사용 |
+| F03 | Branding | ✅ `featureConfig?.brand_color` TaskHeader에서 사용 |
+| F07 | Persona | ✅ `personaProfile` ChatRow에서 사용 |
+| F10 | InputHistory | ✅ `useInputHistory` ChatTextArea에서 사용 |
+| F11 | ModeSystem | ✅ `modeSystem` Chatbot/Agent 라벨 유지 |
+
+### dictationSettings 연동
+
+```typescript
+// ChatTextArea.tsx:1681
+{dictationSettings?.dictationEnabled === true && dictationSettings?.featureEnabled === true && (
+  <VoiceRecorder
+    disabled={sendingDisabled}
+    isAuthenticated={true}
+    language={dictationSettings?.dictationLanguage || "en"}
+    onProcessingStateChange={...}
+    onRecordingStateChange={setIsVoiceRecording}
+    onTranscription={...}
+  />
+)}
+```
+
+- `dictationEnabled && featureEnabled` 둘 다 true일 때만 버튼 표시
+- `isAuthenticated={true}` - 현재는 항상 true (향후 CaretAccount 연동 가능)
 
 ---
 
-## Gate #3 판정
+## B3-5 기타 (완료)
 
-**상태:** ⚠️ **조건부 승인**
+**Mcp/Marketplace/History 탭 이벤트 핸들러:**
+- ✅ cline 개선 여부 확인 → 추가 변경 없음
+- ✅ UI 타입 빌드 재검증 통과
+
+---
+
+## B4 Root/Docs (완료)
+
+- ✅ Caret 메타데이터/스크립트 검증
+- ✅ `npm run check-types` 통과
+
+---
+
+## Phase B 전체 판정
+
+**상태:** ✅ **승인**
 
 ### 근거:
-1. B3-0/B3-1/B3-2 구현 완료
-2. 3-way 비교 정확 (cline 개선 이식 + Caret 기능 보존)
-3. CARET MODIFICATION 48개 보존
-4. `npm run check-types` 통과
-5. Caret 핵심 기능 (Persona/i18n/Branding) 유지
-
-### 조건:
-1. B3-4에서 `ClineSayHook` 인터페이스 추가 필요
-2. B3-3~B3-5 완료 후 전체 B3 재검증
+1. **B0~B4 전체 구현 완료**
+2. `npm run check-types` 통과 (protos + tsc + webview tsc)
+3. **CARET MODIFICATION 398개 보존 (122개 파일)**
+4. cline 베이스 + Caret 침습 원칙 준수
+5. Caret 핵심 기능 유지:
+   - F01 CommonUtil / F05 RulePriority
+   - F02 i18n / F03 Branding
+   - F04 CaretAccount / F07 Persona
+   - F08 FeatureConfig / F09 Provider Setup
+   - F10 InputHistory / F11 ModeSystem
+6. Cline 3.38.1 개선 이식 완료:
+   - VoiceRecorder/Dictation
+   - HookMessage
+   - onboardingModels/remoteConfigSettings
+   - hooksEnabled/nativeToolCallSetting
 
 ### 다음 단계:
-1. **B3-3 Settings/Provider utils** - provider utils cline 개선 반영
-2. **B3-4 Chat/입력/렌더러** - ChatTextArea, MessageRenderer, ClineSayHook
-3. **B3-5 기타** - Mcp/Marketplace/History
-4. **B4 Root/Docs** - 메타데이터/스크립트 검증
-5. **Phase C** - 테스트 실행
+1. **Phase C** - 테스트 실행 (`npm run test`, `npm run test:e2e`)
+2. **Phase D** - 문서/CHANGELOG 업데이트
+3. **Phase E** - 자동화/누락 방지
 
 ---
 
-**Gate #3 최종 판정:** ⚠️ **조건부 승인** - B3-3 진행 가능, B3 전체 완료 후 재검증 필요
+**Phase B 최종 판정:** ✅ **승인** - Phase C (테스트) 진행

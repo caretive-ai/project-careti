@@ -232,6 +232,10 @@
 		"focusChainDescription": "タスク全体で強化されたタスク進捗追跡と自動フォーカスチェーンリスト管理を有効にします。",
 		"focusChainReminderInterval": "フォーカスチェーンリマインダー間隔",
 		"focusChainReminderIntervalDescription": "Caretにフォーカスチェーンチェックリストをリマインドする間隔（メッセージ単位、1-100）。値が小さいほど頻繁にリマインドされます。",
+		"enableDictation": "ディクテーションを有効にする",
+		"enableDictationDescription": "Clineアカウントを使用して音声をテキストに変換します。Whisperモデルを使用し、処理1分あたり $0.006 のクレジットを消費します。1メッセージあたり最大5分。",
+		"dictationLanguage": "ディクテーション言語",
+		"dictationLanguageDescription": "ディクテーションサービスで話す言語を設定します。UIの優先言語とは別に設定されます。",
 		"autoCompact": "自動コンパクトを有効にする",
 		"autoCompactDescription": "LLMベースの凝縮を使用した次世代モデルの高度なコンテキスト管理システムを有効にします。",
 		"learnMore": "詳細はこちら"

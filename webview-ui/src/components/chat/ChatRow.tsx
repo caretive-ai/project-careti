@@ -35,6 +35,7 @@ import { CheckpointControls } from "../common/CheckpointControls"
 import CodeAccordian, { cleanPathPrefix } from "../common/CodeAccordian"
 import { ErrorBlockTitle } from "./ErrorBlockTitle"
 import ErrorRow from "./ErrorRow"
+import HookMessage from "./HookMessage"
 import NewTaskPreview from "./NewTaskPreview"
 import QuoteButton from "./QuoteButton"
 import ReportBugPreview from "./ReportBugPreview"
@@ -107,7 +108,7 @@ const Markdown = memo(({ markdown }: { markdown?: string }) => {
 
 const ChatRow = memo(
 	(props: ChatRowProps) => {
-		const { isLast, onHeightChange, message, lastModifiedMessage, inputValue } = props
+		const { isLast, onHeightChange, message } = props
 		// Store the previous height to compare with the current height
 		// This allows us to detect changes without causing re-renders
 		const prevHeightRef = useRef(0)
@@ -152,15 +153,7 @@ export const ChatRowContent = memo(
 		onSetQuote,
 	}: ChatRowContentProps) => {
 		// CARET MODIFICATION: Use featureConfig from ExtensionState instead of getCurrentFeatureConfig
-		const {
-			mcpServers,
-			mcpMarketplaceCatalog,
-			onRelinquishControl,
-			apiConfiguration,
-			modeSystem,
-			enablePersonaSystem,
-			featureConfig,
-		} = useExtensionState()
+		const { mcpServers, mcpMarketplaceCatalog, onRelinquishControl, enablePersonaSystem, featureConfig } = useExtensionState()
 
 		// CARET MODIFICATION: Get persona profile from Caret context
 		const { personaProfile } = useCaretState()
@@ -1274,6 +1267,10 @@ export const ChatRowContent = memo(
 								</div>
 							</div>
 						)
+					case "hook":
+						return <HookMessage message={message} />
+					case "hook_output":
+						return null
 					case "task_progress":
 						return null // task_progress messages should be displayed in TaskHeader only, not in chat
 					default:

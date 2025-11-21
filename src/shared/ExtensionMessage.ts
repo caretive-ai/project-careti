@@ -1,6 +1,7 @@
 // type that represents json data that is sent from extension to webview, called ExtensionMessage and has 'type' enum which can be 'plusButtonClicked' or 'settingsButtonClicked' or 'hello'
 
 import { WorkspaceRoot } from "@shared/multi-root/types"
+import type { Environment } from "../config"
 import { AutoApprovalSettings } from "./AutoApprovalSettings"
 import { ApiConfiguration } from "./api"
 import { BrowserSettings } from "./BrowserSettings"
@@ -10,6 +11,9 @@ import { DictationSettings } from "./DictationSettings"
 import { FocusChainSettings } from "./FocusChainSettings"
 import { HistoryItem } from "./HistoryItem"
 import { McpDisplayMode } from "./McpDisplayMode"
+import { ClineMessageModelInfo } from "./messages/content"
+import { OnboardingModelGroup } from "./proto/cline/state"
+import { RemoteConfigFields } from "./storage/state-keys"
 import { Mode, OpenaiReasoningEffort } from "./storage/types"
 import { TelemetrySetting } from "./TelemetrySetting"
 import { UserInfo } from "./UserInfo"
@@ -35,6 +39,7 @@ export const COMMAND_CANCEL_TOKEN = "__cline_command_cancel__"
 export interface ExtensionState {
 	isNewUser: boolean
 	welcomeViewCompleted: boolean
+	onboardingModels: OnboardingModelGroup | undefined
 	apiConfiguration?: ApiConfiguration
 	autoApprovalSettings: AutoApprovalSettings
 	browserSettings: BrowserSettings
@@ -51,13 +56,20 @@ export interface ExtensionState {
 	planActSeparateModelsSetting: boolean
 	enableCheckpointsSetting?: boolean
 	platform: Platform
+	environment?: Environment
 	shouldShowAnnouncement: boolean
 	taskHistory: HistoryItem[]
 	telemetrySetting: TelemetrySetting
 	shellIntegrationTimeout: number
 	terminalReuseEnabled?: boolean
 	terminalOutputLineLimit: number
+	maxConsecutiveMistakes: number
+	subagentTerminalOutputLineLimit: number
 	defaultTerminalProfile?: string
+	vscodeTerminalExecutionMode: string
+	backgroundCommandRunning?: boolean
+	backgroundCommandTaskId?: string
+	lastCompletedCommandTs?: number
 	userInfo?: UserInfo
 	version: string
 	distinctId: string
@@ -69,6 +81,9 @@ export interface ExtensionState {
 	globalWorkflowToggles: ClineRulesToggles
 	localCursorRulesToggles: ClineRulesToggles
 	localWindsurfRulesToggles: ClineRulesToggles
+	remoteRulesToggles?: ClineRulesToggles
+	remoteWorkflowToggles?: ClineRulesToggles
+	localAgentsRulesToggles: ClineRulesToggles
 	mcpResponsesCollapsed?: boolean
 	strictPlanModeEnabled?: boolean
 	yoloModeToggled?: boolean
@@ -85,6 +100,7 @@ export interface ExtensionState {
 	multiRootSetting: ClineFeatureSetting
 	lastDismissedInfoBannerVersion: number
 	lastDismissedModelBannerVersion: number
+	lastDismissedCliBannerVersion: number
 	// CARET MODIFICATION: Feature configuration for brand-specific behavior
 	featureConfig?: any
 	// CARET MODIFICATION: F11 - Input History System
@@ -110,6 +126,11 @@ export interface ExtensionState {
 	// CARET MODIFICATION: UI State
 	showChatModelSelector?: boolean
 	checkpointTrackerErrorMessage?: string
+	// NEW: Remote config and agent toggles (cline 3.38.1)
+	remoteConfigSettings?: Partial<RemoteConfigFields>
+	subagentsEnabled?: boolean
+	hooksEnabled?: ClineFeatureSetting
+	nativeToolCallSetting?: ClineFeatureSetting
 }
 
 export interface ClineMessage {
@@ -127,7 +148,7 @@ export interface ClineMessage {
 	isOperationOutsideWorkspace?: boolean
 	conversationHistoryIndex?: number
 	conversationHistoryDeletedRange?: [number, number] // for when conversation history is truncated for API requests
-	modelInfo?: any
+	modelInfo?: ClineMessageModelInfo
 	commandCompleted?: boolean
 	[key: string]: any
 }
@@ -135,6 +156,7 @@ export interface ClineMessage {
 export type ClineAsk =
 	| "followup"
 	| "plan_mode_respond"
+	| "act_mode_respond"
 	| "command"
 	| "command_output"
 	| "completion_result"
@@ -204,6 +226,33 @@ export interface ClineSayTool {
 	regex?: string
 	filePattern?: string
 	operationIsLocatedInWorkspace?: boolean
+}
+
+// cline 3.38.1 hook message payload
+export interface ClineSayHook {
+	hookName: string
+	toolName?: string
+	status: "running" | "completed" | "failed" | "cancelled"
+	exitCode?: number
+	hasJsonResponse?: boolean
+	pendingToolInfo?: {
+		tool: string
+		path?: string
+		command?: string
+		content?: string
+		diff?: string
+		regex?: string
+		url?: string
+		mcpTool?: string
+		mcpServer?: string
+		resourceUri?: string
+	}
+	error?: {
+		type: "timeout" | "validation" | "execution" | "cancellation"
+		message: string
+		details?: string
+		scriptPath?: string
+	}
 }
 
 // must keep in sync with system prompt

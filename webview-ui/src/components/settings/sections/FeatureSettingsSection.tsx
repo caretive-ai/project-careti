@@ -1,11 +1,10 @@
-import { SUPPORTED_DICTATION_LANGUAGES } from "@shared/DictationSettings"
+import { DEFAULT_DICTATION_SETTINGS, SUPPORTED_DICTATION_LANGUAGES } from "@shared/DictationSettings"
 import { McpDisplayMode } from "@shared/McpDisplayMode"
 import { OpenaiReasoningEffort } from "@shared/storage/types"
 import { VSCodeCheckbox, VSCodeDropdown, VSCodeOption, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import { memo } from "react"
 import { getLocalizedUrl } from "@/caret/constants/urls"
 import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
-import { useCaretState } from "@/caret/context/CaretStateContext"
 import { t } from "@/caret/utils/i18n"
 import McpDisplayModeDropdown from "@/components/mcp/chat-display/McpDisplayModeDropdown"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -29,8 +28,8 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 		useAutoCondense,
 		focusChainSettings,
 	} = useExtensionState()
+	const dictation = dictationSettings ?? DEFAULT_DICTATION_SETTINGS
 	const { language } = useCaretI18nContext()
-	const { featureConfig } = useCaretState()
 
 	const handleReasoningEffortChange = (newValue: OpenaiReasoningEffort) => {
 		updateSetting("openaiReasoningEffort", newValue)
@@ -173,57 +172,51 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 							</p>
 						</div>
 					)}
-					{dictationSettings?.featureEnabled && (
-						<>
-							<div className="mt-2.5">
-								<VSCodeCheckbox
-									checked={dictationSettings?.dictationEnabled}
-									onChange={(e: any) => {
-										const checked = e.target.checked === true
-										const updatedDictationSettings = {
-											...dictationSettings,
-											dictationEnabled: checked,
-										}
-										updateSetting("dictationSettings", updatedDictationSettings)
-									}}>
-									{t("features.enableDictation", "settings")}
-								</VSCodeCheckbox>
-								<p className="text-xs text-description mt-1">
-									{t("features.enableDictationDescription", "settings")}
-								</p>
-							</div>
+					<div className="mt-2.5">
+						<VSCodeCheckbox
+							checked={dictation.dictationEnabled}
+							onChange={(e: any) => {
+								const checked = e.target.checked === true
+								const updatedDictationSettings = {
+									...dictation,
+									dictationEnabled: checked,
+								}
+								updateSetting("dictationSettings", updatedDictationSettings)
+							}}>
+							{t("features.enableDictation", "settings")}
+						</VSCodeCheckbox>
+						<p className="text-xs text-description mt-1">{t("features.enableDictationDescription", "settings")}</p>
+					</div>
 
-							{dictationSettings?.dictationEnabled && (
-								<div className="mt-2.5 ml-5">
-									<label
-										className="block text-sm font-medium text-foreground mb-1"
-										htmlFor="dictation-language-dropdown">
-										{t("features.dictationLanguage", "settings")}
-									</label>
-									<VSCodeDropdown
-										className="w-full"
-										currentValue={dictationSettings?.dictationLanguage || "en"}
-										id="dictation-language-dropdown"
-										onChange={(e: any) => {
-											const newValue = e.target.value
-											const updatedDictationSettings = {
-												...dictationSettings,
-												dictationLanguage: newValue,
-											}
-											updateSetting("dictationSettings", updatedDictationSettings)
-										}}>
-										{SUPPORTED_DICTATION_LANGUAGES.map((language) => (
-											<VSCodeOption className="py-0.5" key={language.code} value={language.code}>
-												{language.name}
-											</VSCodeOption>
-										))}
-									</VSCodeDropdown>
-									<p className="text-xs mt-1 text-description">
-										{t("features.dictationLanguageDescription", "settings")}
-									</p>
-								</div>
-							)}
-						</>
+					{dictation.dictationEnabled && (
+						<div className="mt-2.5 ml-5">
+							<label
+								className="block text-sm font-medium text-foreground mb-1"
+								htmlFor="dictation-language-dropdown">
+								{t("features.dictationLanguage", "settings")}
+							</label>
+							<VSCodeDropdown
+								className="w-full"
+								currentValue={dictation.dictationLanguage || "en"}
+								id="dictation-language-dropdown"
+								onChange={(e: any) => {
+									const newValue = e.target.value
+									const updatedDictationSettings = {
+										...dictation,
+										dictationLanguage: newValue,
+									}
+									updateSetting("dictationSettings", updatedDictationSettings)
+								}}>
+								{SUPPORTED_DICTATION_LANGUAGES.map((language) => (
+									<VSCodeOption className="py-0.5" key={language.code} value={language.code}>
+										{language.name}
+									</VSCodeOption>
+								))}
+							</VSCodeDropdown>
+							<p className="text-xs mt-1 text-description">
+								{t("features.dictationLanguageDescription", "settings")}
+							</p>
+						</div>
 					)}
 					<div style={{ marginTop: 10 }}>
 						<VSCodeCheckbox

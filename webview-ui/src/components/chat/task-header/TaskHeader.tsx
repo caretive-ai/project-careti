@@ -12,6 +12,7 @@ import Thumbnails from "@/components/common/Thumbnails"
 import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { FileServiceClient, UiServiceClient } from "@/services/grpc-client"
+import { getEnvironmentColor } from "@/utils/environmentColors"
 import { formatLargeNumber, formatSize } from "@/utils/format"
 import { validateSlashCommand } from "@/utils/slash-commands"
 import CopyTaskButton from "./buttons/CopyTaskButton"
@@ -92,8 +93,11 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 		navigateToSettings,
 		mode,
 		featureConfig,
+		expandTaskHeader,
+		setExpandTaskHeader,
+		environment,
 	} = useExtensionState()
-	const [isTaskExpanded, setIsTaskExpanded] = useState(true)
+	const [isTaskExpanded, setIsTaskExpanded] = useState(expandTaskHeader ?? true)
 	const [isTextExpanded, setIsTextExpanded] = useState(false)
 	const [showSeeMore, setShowSeeMore] = useState(false)
 	const [isTodoExpanded, setIsTodoExpanded] = useState(false)
@@ -102,6 +106,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 
 	const { selectedModelInfo } = useMemo(() => normalizeApiConfiguration(apiConfiguration, mode), [apiConfiguration, mode])
 	const contextWindow = selectedModelInfo?.contextWindow
+	const environmentBorderColor = useMemo(() => getEnvironmentColor(environment, "border"), [environment])
 
 	// Open task header when checkpoint tracker error message is set
 	const prevErrorMessageRef = useRef(checkpointTrackerErrorMessage)
@@ -111,6 +116,11 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 			prevErrorMessageRef.current = checkpointTrackerErrorMessage
 		}
 	}, [checkpointTrackerErrorMessage])
+
+	// Persist expand state to context so it survives re-render
+	useEffect(() => {
+		setExpandTaskHeader?.(isTaskExpanded)
+	}, [isTaskExpanded, setExpandTaskHeader])
 
 	// Reset isTextExpanded when task is collapsed
 	useEffect(() => {
@@ -269,6 +279,9 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 					gap: 6,
 					position: "relative",
 					zIndex: 1,
+					border:
+						"1px solid " +
+						(featureConfig?.brand_color ?? environmentBorderColor ?? "var(--vscode-editorGroup-border)"),
 				}}>
 				<div
 					style={{
@@ -864,6 +877,7 @@ export const highlightMentions = (text: string, withShadow = true) => {
 			return (
 				<span
 					className={withShadow ? "mention-context-highlight-with-shadow" : "mention-context-highlight"}
+					// biome-ignore lint/suspicious/noArrayIndexKey: index needed for duplicate mentions
 					key={`mention-${part}-${index}`}
 					onClick={() => FileServiceClient.openMention(StringRequest.create({ value: part }))}
 					style={{ cursor: "pointer" }}>

@@ -1,5 +1,4 @@
 import { cn } from "@heroui/react"
-// CARET MODIFICATION: PulsingBorder removed (voice feature deleted)
 import { caretDefaultModelId } from "@shared/api"
 import { mentionRegex, mentionRegexGlobal } from "@shared/context-mentions"
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
@@ -54,8 +53,6 @@ import {
 import { validateApiConfiguration, validateModelId } from "@/utils/validate"
 import ClineRulesToggleModal from "../cline-rules/ClineRulesToggleModal"
 import ServersToggleModal from "./ServersToggleModal"
-
-// CARET MODIFICATION: VoiceRecorder removed (voice feature deleted)
 
 const { MAX_IMAGES_AND_FILES_PER_MESSAGE } = CHAT_CONSTANTS
 

@@ -286,6 +286,10 @@
 		"focusChainDescription": "启用增强的任务进度跟踪和在整个任务过程中的自动焦点链列表管理。",
 		"focusChainReminderInterval": "焦点链提醒间隔",
 		"focusChainReminderIntervalDescription": "提醒 Caret 其焦点链检查列表的间隔（以消息为单位，1-100）。较低的值提供更频繁的提醒。",
+		"enableDictation": "启用语音输入",
+		"enableDictationDescription": "使用您的 Cline 帐号进行语音转文本。使用 Whisper 模型，每处理 1 分钟音频消耗 $0.006 额度。每条消息最多 5 分钟。",
+		"dictationLanguage": "语音输入语言",
+		"dictationLanguageDescription": "设置在语音输入服务中使用的语言，与首选 UI 语言分开。",
 		"autoCompact": "启用自动紧凑",
 		"autoCompactDescription": "启用高级上下文管理系统，该系统使用基于 LLM 的压缩技术适用于下一代模型。",
 		"learnMore": "了解更多"

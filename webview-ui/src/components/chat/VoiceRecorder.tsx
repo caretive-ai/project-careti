@@ -1,10 +1,12 @@
-import { cn } from "@heroui/react"
 import { TranscribeAudioRequest } from "@shared/proto/cline/dictation"
 import { EmptyRequest } from "@shared/proto/index.cline"
+import { SquareIcon, StopCircleIcon } from "lucide-react"
 import React, { useCallback, useEffect, useRef, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { cn } from "@/lib/utils"
 import { DictationServiceClient } from "@/services/grpc-client"
 import { formatSeconds } from "@/utils/format"
-import HeroTooltip from "../common/HeroTooltip"
 
 interface VoiceRecorderProps {
 	onTranscription: (text: string) => void
@@ -27,20 +29,17 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 }) => {
 	const [isRecording, setIsRecording] = useState(false)
 	const [isProcessing, setIsProcessing] = useState(false)
-	const [isStarting, setIsStarting] = useState(false) // New state for loading
+	const [isStarting, setIsStarting] = useState(false)
 	const [recordingDuration, setRecordingDuration] = useState(0)
 	const [error, setError] = useState<string | null>(null)
 	const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
-	// Notify parent when recording state changes
 	useEffect(() => {
 		onRecordingStateChange?.(isRecording)
 	}, [isRecording, onRecordingStateChange])
 
-	// Auto-clear authentication errors when user signs in
 	useEffect(() => {
 		if (isAuthenticated && error) {
-			// Clear error if it's related to authentication
 			if (error.toLowerCase().includes("sign in") || error.toLowerCase().includes("cline account")) {
 				setError(null)
 			}
@@ -49,30 +48,21 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
 	const startRecording = useCallback(async () => {
 		try {
-			// Show loading state instead of immediately setting recording
 			setIsStarting(true)
-			setError(null) // Clear any previous errors
-			onProcessingStateChange?.(false) // Clear any previous processing state
-			setRecordingDuration(0) // Reset recording duration
+			setError(null)
+			onProcessingStateChange?.(false)
+			setRecordingDuration(0)
 
-			// Call Extension Host to start recording
 			const response = await DictationServiceClient.startRecording(EmptyRequest.create({}))
-
 			if (!response.success) {
-				console.error("Failed to start recording:", response.error)
 				setError(response.error || "Failed to start recording")
 				return
 			}
-
-			// Only set recording state after backend confirms success
 			setIsRecording(true)
-			console.log("Recording started successfully")
 		} catch (error) {
-			console.error("Error starting recording:", error)
 			const errorMessage = error instanceof Error ? error.message : "Failed to start recording"
 			setError(errorMessage)
 		} finally {
-			// Always clear the starting state
 			setIsStarting(false)
 		}
 	}, [onProcessingStateChange])
@@ -83,11 +73,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 			setIsProcessing(true)
 			onProcessingStateChange?.(true, "Processing...")
 
-			// Call Extension Host to stop recording and get audio
 			const response = await DictationServiceClient.stopRecording(EmptyRequest.create({}))
-
 			if (!response.success) {
-				console.error("Failed to stop recording:", response.error)
 				setIsProcessing(false)
 				const errorMessage = response.error || "Failed to stop recording"
 				setError(errorMessage)
@@ -103,10 +90,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 				return
 			}
 
-			// Update processing state for transcription
 			onProcessingStateChange?.(true, "Transcribing...")
-
-			// Transcribe the audio using OpenAI Whisper
 			const transcriptionResponse = await DictationServiceClient.transcribeAudio(
 				TranscribeAudioRequest.create({
 					audioBase64: response.audioBase64,
@@ -117,7 +101,6 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 			if (transcriptionResponse.error) {
 				setError(transcriptionResponse.error)
 				onTranscription("")
-				// Clear the error after a delay
 				setTimeout(() => {
 					setError(null)
 					onProcessingStateChange?.(false)
@@ -128,24 +111,20 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 				onProcessingStateChange?.(false)
 			}
 		} catch (error) {
-			console.error("Error stopping recording:", error)
 			const errorMessage = error instanceof Error ? error.message : "An error occurred"
 			setError(errorMessage)
 			onTranscription("")
 		} finally {
 			setIsProcessing(false)
 		}
-	}, [onTranscription, onProcessingStateChange])
+	}, [language, onProcessingStateChange, onTranscription])
 
-	// Poll recording status while recording to update duration
 	useEffect(() => {
 		const pollRecordingStatus = async () => {
 			try {
 				const statusResponse = await DictationServiceClient.getRecordingStatus(EmptyRequest.create({}))
 				if (statusResponse.isRecording) {
 					setRecordingDuration(Math.floor(statusResponse.durationSeconds))
-
-					// Auto-stop if max duration reached
 					if (statusResponse.durationSeconds >= MAX_DURATION) {
 						stopRecording()
 					}
@@ -157,15 +136,11 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
 		if (isRecording && !isProcessing) {
 			pollingIntervalRef.current = setInterval(pollRecordingStatus, 1000)
-		} else {
-			// Clear polling when not recording
-			if (pollingIntervalRef.current) {
-				clearInterval(pollingIntervalRef.current)
-				pollingIntervalRef.current = null
-			}
+		} else if (pollingIntervalRef.current) {
+			clearInterval(pollingIntervalRef.current)
+			pollingIntervalRef.current = null
 		}
 
-		// Cleanup on unmount
 		return () => {
 			if (pollingIntervalRef.current) {
 				clearInterval(pollingIntervalRef.current)
@@ -180,100 +155,85 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 			setError(null)
 			onProcessingStateChange?.(false)
 			onTranscription("")
-
-			// Call Extension Host to cancel recording
 			const response = await DictationServiceClient.cancelRecording(EmptyRequest.create({}))
-
 			if (!response.success) {
-				console.error("Failed to cancel recording:", response.error)
 				setError(response.error || "Failed to cancel recording")
-				return
 			}
-
-			console.log("Recording canceled successfully")
 		} catch (error) {
-			console.error("Error canceling recording:", error)
 			const errorMessage = error instanceof Error ? error.message : "Failed to cancel recording"
 			setError(errorMessage)
 		}
 	}, [onProcessingStateChange, onTranscription])
 
-	const handleStartClick = useCallback(() => {
-		if (disabled || isProcessing || isStarting) {
+	const handleKeyDown = (event: React.KeyboardEvent) => {
+		if (!isRecording) {
 			return
 		}
-		if (error) {
-			return setError(null)
+		if (event.code === "Space") {
+			event.preventDefault()
+			event.stopPropagation()
+			stopRecording()
 		}
-		startRecording()
-	}, [startRecording, disabled, isProcessing, isStarting, error])
-
-	const handleCancelClick = useCallback(() => {
-		if (disabled || isProcessing) {
-			return
-		}
-		cancelRecording()
-	}, [cancelRecording, disabled, isProcessing])
-
-	const handleStopClick = useCallback(() => {
-		if (disabled || isProcessing) {
-			return
-		}
-		stopRecording()
-	}, [stopRecording, disabled, isProcessing])
-
-	const iconAnimation = isProcessing || isStarting ? "animate-spin" : ""
-	const iconAdjustment = isProcessing || isStarting ? "mt-0" : error ? "mt-1" : "mt-0.5"
-	// When not recording, show single mic button
-	if (!isRecording) {
-		const iconClass = isProcessing
-			? "codicon-loading"
-			: isStarting
-				? "codicon-loading"
-				: error
-					? "codicon-error"
-					: "codicon-mic"
-		const iconColor = error ? "text-error" : ""
-		const tooltipContent = isProcessing
-			? "Transcribing..."
-			: isStarting
-				? "Starting recording..."
-				: error
-					? `Error: ${error}`
-					: null
-
-		return (
-			<HeroTooltip content={tooltipContent} placement="top">
-				<div
-					className={`input-icon-button mr-1.5 text-base ${iconAdjustment} ${iconAnimation} ${disabled || isProcessing || isStarting ? "disabled" : ""}`}
-					onClick={handleStartClick}
-					style={{ color: iconColor }}>
-					<span className={`codicon ${iconClass}`} />
-				</div>
-			</HeroTooltip>
-		)
 	}
 
 	return (
-		<div className={`flex items-center ${isRecording ? "mr-0.5" : "mr-1.5"}`}>
-			<HeroTooltip
-				content={`Stop Recording (${formatSeconds(recordingDuration)}/${formatSeconds(MAX_DURATION)})`}
-				placement="top">
-				<div
-					className={cn("input-icon-button mr-1.5 text-error", iconAdjustment, iconAnimation, {
-						disabled: disabled || isProcessing,
-					})}
-					onClick={handleStopClick}>
-					<span className="codicon codicon-stop-circle" />
+		<div className="flex items-center gap-2">
+			<Tooltip>
+				<TooltipTrigger asChild>
+					<Button
+						aria-label="Hold to talk"
+						className={cn(
+							"relative h-9 w-9 rounded-full p-0",
+							isRecording ? "bg-(--vscode-errorForeground)" : "bg-(--vscode-button-background)",
+						)}
+						disabled={disabled || isProcessing || isStarting}
+						onKeyDown={handleKeyDown}
+						onMouseDown={() => startRecording()}
+						onMouseUp={() => stopRecording()}
+						onTouchEnd={() => stopRecording()}
+						onTouchStart={() => startRecording()}
+						style={{
+							boxShadow: isRecording ? "0 0 0 2px rgba(255,0,0,0.35)" : undefined,
+							transition: "box-shadow 0.2s ease",
+						}}
+						title="Hold to talk"
+						variant="outline">
+						{isRecording ? <SquareIcon className="h-4 w-4" /> : <StopCircleIcon className="h-4 w-4" />}
+					</Button>
+				</TooltipTrigger>
+				<TooltipContent className="max-w-[260px]">
+					<p>Hold to talk. Releases to transcribe. Max 5 minutes per message.</p>
+					{language && <p className="text-xs text-muted-foreground mt-1">Language: {language}</p>}
+					{!isAuthenticated && (
+						<p className="text-xs text-[var(--vscode-errorForeground)] mt-1">Sign in to use dictation.</p>
+					)}
+				</TooltipContent>
+			</Tooltip>
+
+			{isRecording && (
+				<div className="flex items-center gap-2 px-3 py-1 rounded-md bg-[var(--vscode-editor-background)] border border-(--vscode-editorGroup-border)">
+					<div className="flex items-center gap-2 text-[var(--vscode-foreground)]">
+						<span className="h-2 w-2 rounded-full bg-[var(--vscode-errorForeground)] animate-pulse" />
+						<span className="text-xs font-semibold">Recording</span>
+					</div>
+					<span className="text-xs text-[var(--vscode-descriptionForeground)]">{formatSeconds(recordingDuration)}</span>
+					<button className="text-xs underline" onClick={cancelRecording} type="button">
+						Cancel
+					</button>
 				</div>
-			</HeroTooltip>
-			<HeroTooltip content="Cancel Recording" placement="top">
-				<div
-					className={`input-icon-button text-base ${isRecording ? "mt-0.5" : "mt-1"} text-foreground ${disabled || isProcessing ? "disabled" : ""}`}
-					onClick={handleCancelClick}>
-					<span className="codicon codicon-close" />
+			)}
+
+			{isProcessing && (
+				<div className="text-xs text-[var(--vscode-descriptionForeground)]" role="status">
+					Processing audio...
 				</div>
-			</HeroTooltip>
+			)}
+
+			{error && (
+				<div className="text-xs text-[var(--vscode-errorForeground)]" role="alert">
+					{error}
+				</div>
+			)}
 		</div>
 	)
 }

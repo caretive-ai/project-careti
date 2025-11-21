@@ -12,16 +12,20 @@ import { DEFAULT_BROWSER_SETTINGS } from "@shared/BrowserSettings"
 import type { CaretUser } from "@shared/CaretAccount"
 import type { CaretSettings } from "@shared/CaretSettings"
 import { DEFAULT_CARET_SETTINGS } from "@shared/CaretSettings"
+import { ClineFeatureSetting } from "@shared/ClineFeatureSetting"
+import { DEFAULT_DICTATION_SETTINGS, type DictationSettings } from "@shared/DictationSettings"
 import { DEFAULT_PLATFORM, type ExtensionState } from "@shared/ExtensionMessage"
 import { DEFAULT_FOCUS_CHAIN_SETTINGS } from "@shared/FocusChainSettings"
 import { DEFAULT_MCP_DISPLAY_MODE } from "@shared/McpDisplayMode"
 import type { UserInfo } from "@shared/proto/cline/account"
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import type { OpenRouterCompatibleModelInfo } from "@shared/proto/cline/models"
-import { type TerminalProfile } from "@shared/proto/cline/state"
+import { OnboardingModelGroup, type TerminalProfile } from "@shared/proto/cline/state"
 import * as proto from "@shared/proto/index"
 import { convertProtoToClineMessage } from "@shared/proto-conversions/cline-message"
 import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mcp/mcp-server-conversion"
+import { fromProtobufModels } from "@shared/proto-conversions/models/typeConversion"
+import { Environment } from "../../../src/config"
 import {
 	basetenDefaultModelId,
 	basetenModels,
@@ -55,9 +59,11 @@ export interface ExtensionStateContextType extends ExtensionState {
 	caretSettings?: CaretSettings
 	didHydrateState: boolean
 	showWelcome: boolean
+	onboardingModels: OnboardingModelGroup | undefined
 	// CARET MODIFICATION: Add caretUser state for Caret account system
 	caretUser: CaretUser | null
 	openRouterModels: Record<string, ModelInfo>
+	hicapModels: Record<string, ModelInfo>
 	openAiModels: string[]
 	requestyModels: Record<string, ModelInfo>
 	groqModels: Record<string, ModelInfo>
@@ -69,6 +75,7 @@ export interface ExtensionStateContextType extends ExtensionState {
 	mcpMarketplaceCatalog: McpMarketplaceCatalog
 	totalTasksSize: number | null
 	availableTerminalProfiles: TerminalProfile[]
+	expandTaskHeader: boolean
 	// CARET MODIFICATION: Add caretBanner for Caret welcome page logo
 	caretBanner: string
 
@@ -119,19 +126,28 @@ export interface ExtensionStateContextType extends ExtensionState {
 	setBasetenModels: (value: Record<string, ModelInfo>) => void
 	setHuggingFaceModels: (value: Record<string, ModelInfo>) => void
 	setVercelAiGatewayModels: (value: Record<string, ModelInfo>) => void
+	setHicapModels: (value: Record<string, ModelInfo>) => void
 	setGlobalClineRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalClineRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalCaretRulesToggles: (toggles: Record<string, boolean>) => void // CARET MODIFICATION: Add caret rules setter
 	setInputHistory: (history: string[]) => void // CARET MODIFICATION: Input history setter
 	setLocalCursorRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalWindsurfRulesToggles: (toggles: Record<string, boolean>) => void
+	setLocalAgentsRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalWorkflowToggles: (toggles: Record<string, boolean>) => void
 	setGlobalWorkflowToggles: (toggles: Record<string, boolean>) => void
+	setRemoteRulesToggles: (toggles: Record<string, boolean>) => void
+	setRemoteWorkflowToggles: (toggles: Record<string, boolean>) => void
 	setMcpMarketplaceCatalog: (value: McpMarketplaceCatalog) => void
 	setTotalTasksSize: (value: number | null) => void
+	setExpandTaskHeader: (value: boolean) => void
+	setShowWelcome: (value: boolean) => void
+	setOnboardingModels: (value: OnboardingModelGroup | undefined) => void
+	setDictationSettings: (value: DictationSettings) => void
 
 	// Refresh functions
 	refreshOpenRouterModels: () => void
+	refreshHicapModels: () => void
 	setUserInfo: (userInfo?: UserInfo) => void
 	// CARET MODIFICATION: Caret user management
 	setCaretUser: (user: CaretUser | null) => void
@@ -237,6 +253,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		shouldShowAnnouncement: false,
 		autoApprovalSettings: DEFAULT_AUTO_APPROVAL_SETTINGS,
 		browserSettings: DEFAULT_BROWSER_SETTINGS,
+		dictationSettings: DEFAULT_DICTATION_SETTINGS,
 		focusChainSettings: DEFAULT_FOCUS_CHAIN_SETTINGS,
 		focusChainFeatureFlagEnabled: true,
 		preferredLanguage: "English",
@@ -249,6 +266,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		featureConfig: undefined,
 		checkpointTrackerErrorMessage: undefined,
 		platform: DEFAULT_PLATFORM,
+		environment: Environment.production,
 		telemetrySetting: "unset",
 		distinctId: "",
 		planActSeparateModelsSetting: true,
@@ -259,27 +277,34 @@ export const ExtensionStateContextProvider: React.FC<{
 		localCaretRulesToggles: {}, // CARET MODIFICATION: Add caret rules state
 		localCursorRulesToggles: {},
 		localWindsurfRulesToggles: {},
+		localAgentsRulesToggles: {},
 		localWorkflowToggles: {},
 		globalWorkflowToggles: {},
+		remoteRulesToggles: {},
+		remoteWorkflowToggles: {},
 		shellIntegrationTimeout: 4000,
 		terminalReuseEnabled: true,
+		vscodeTerminalExecutionMode: "vscodeTerminal",
 		terminalOutputLineLimit: 500,
+		maxConsecutiveMistakes: 3,
+		subagentTerminalOutputLineLimit: 2000,
 		defaultTerminalProfile: "default",
+		backgroundCommandRunning: false,
+		backgroundCommandTaskId: undefined,
+		lastCompletedCommandTs: undefined,
 		isNewUser: false,
 		welcomeViewCompleted: false,
+		onboardingModels: undefined,
 		mcpResponsesCollapsed: false, // Default value (expanded), will be overwritten by extension state
 		strictPlanModeEnabled: false,
+		yoloModeToggled: false,
 		customPrompt: undefined,
 		useAutoCondense: false,
+		autoCondenseThreshold: undefined,
 		// CARET MODIFICATION: Initialize caretBanner with actual banner image
 		caretBanner: "/assets/welcome-banner.webp",
 		// CARET MODIFICATION: Initialize persona system from backend globalState only
 		enablePersonaSystem: getCurrentFeatureConfig().defaultPersonaEnabled, // Default value, will be overridden by backend
-		dictationSettings: {
-			featureEnabled: false,
-			dictationEnabled: false,
-			dictationLanguage: "en-US",
-		},
 		favoritedModelIds: [],
 		workspaceRoots: [],
 		primaryRootIndex: 0,
@@ -288,16 +313,24 @@ export const ExtensionStateContextProvider: React.FC<{
 			user: false,
 			featureFlag: false,
 		},
+		hooksEnabled: { user: false, featureFlag: false } as ClineFeatureSetting,
+		nativeToolCallSetting: { user: false, featureFlag: false } as ClineFeatureSetting,
+		remoteConfigSettings: {},
+		subagentsEnabled: false,
 		lastDismissedInfoBannerVersion: 0,
 		lastDismissedModelBannerVersion: 0,
+		lastDismissedCliBannerVersion: 0,
 	})
 	const [didHydrateState, setDidHydrateState] = useState(false)
 	const [showWelcome, setShowWelcome] = useState(false)
+	const [onboardingModels, setOnboardingModels] = useState<OnboardingModelGroup | undefined>(undefined)
 	const [openRouterModels, setOpenRouterModels] = useState<Record<string, ModelInfo>>({
 		[openRouterDefaultModelId]: openRouterDefaultModelInfo,
 	})
+	const [hicapModels, setHicapModels] = useState<Record<string, ModelInfo>>({})
 	const [totalTasksSize, setTotalTasksSize] = useState<number | null>(null)
 	const [availableTerminalProfiles, setAvailableTerminalProfiles] = useState<TerminalProfile[]>([])
+	const [expandTaskHeader, setExpandTaskHeader] = useState(true)
 
 	const [openAiModels, _setOpenAiModels] = useState<string[]>([])
 	const [requestyModels, setRequestyModels] = useState<Record<string, ModelInfo>>({
@@ -414,6 +447,14 @@ export const ExtensionStateContextProvider: React.FC<{
 									: prevState.autoApprovalSettings,
 								// CARET MODIFICATION: Preserve localStorage persona setting
 								enablePersonaSystem: personaSetting,
+								localAgentsRulesToggles:
+									stateData.localAgentsRulesToggles ?? prevState.localAgentsRulesToggles ?? {},
+								remoteRulesToggles: stateData.remoteRulesToggles ?? prevState.remoteRulesToggles ?? {},
+								remoteWorkflowToggles: stateData.remoteWorkflowToggles ?? prevState.remoteWorkflowToggles ?? {},
+								hooksEnabled: stateData.hooksEnabled ?? prevState.hooksEnabled,
+								nativeToolCallSetting: stateData.nativeToolCallSetting ?? prevState.nativeToolCallSetting,
+								remoteConfigSettings: stateData.remoteConfigSettings ?? prevState.remoteConfigSettings ?? {},
+								dictationSettings: stateData.dictationSettings ?? prevState.dictationSettings,
 							}
 
 							// CARET MODIFICATION: Set caretUser from backend caretUserProfile
@@ -452,7 +493,13 @@ export const ExtensionStateContextProvider: React.FC<{
 							// }
 
 							// Update welcome screen state based on API configuration
-							setShowWelcome(!newState.welcomeViewCompleted)
+							if (!newState.welcomeViewCompleted && !showWelcome) {
+								setShowWelcome(true)
+								setOnboardingModels(newState.onboardingModels)
+							} else if (newState.welcomeViewCompleted) {
+								setShowWelcome(false)
+								setOnboardingModels(undefined)
+							}
 							setDidHydrateState(true)
 
 							console.log("[DEBUG] returning new state in ESC")
@@ -615,7 +662,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		openRouterModelsUnsubscribeRef.current = ModelsServiceClient.subscribeToOpenRouterModels(EmptyRequest.create({}), {
 			onResponse: (response: OpenRouterCompatibleModelInfo) => {
 				console.log("[DEBUG] Received OpenRouter models update from gRPC stream")
-				const models = response.models
+				const models = fromProtobufModels(response.models)
 				setOpenRouterModels({
 					[openRouterDefaultModelId]: openRouterDefaultModelInfo, // in case the extension sent a model list without the default model
 					...models,
@@ -805,13 +852,23 @@ export const ExtensionStateContextProvider: React.FC<{
 	const refreshOpenRouterModels = useCallback(() => {
 		ModelsServiceClient.refreshOpenRouterModelsRpc(EmptyRequest.create({}))
 			.then((response: OpenRouterCompatibleModelInfo) => {
-				const models = response.models
+				const models = fromProtobufModels(response.models)
 				setOpenRouterModels({
 					[openRouterDefaultModelId]: openRouterDefaultModelInfo, // in case the extension sent a model list without the default model
 					...models,
 				})
 			})
 			.catch((error: Error) => console.error("Failed to refresh OpenRouter models:", error))
+	}, [])
+
+	const refreshHicapModels = useCallback(() => {
+		ModelsServiceClient.refreshHicapModels(EmptyRequest.create({}))
+			.then((response: OpenRouterCompatibleModelInfo) => {
+				setHicapModels({
+					...response.models,
+				})
+			})
+			.catch((error: Error) => console.error("Failed to refresh Hicap models:", error))
 	}, [])
 
 	// Create CaretSettings from ExtensionState fields
@@ -829,9 +886,11 @@ export const ExtensionStateContextProvider: React.FC<{
 		caretSettings,
 		didHydrateState,
 		showWelcome,
+		onboardingModels,
 		// CARET MODIFICATION: Add caretUser to context
 		caretUser,
 		openRouterModels,
+		hicapModels,
 		openAiModels,
 		requestyModels,
 		groqModels: groqModelsState,
@@ -845,6 +904,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		mcpMarketplaceCatalog,
 		totalTasksSize,
 		availableTerminalProfiles,
+		expandTaskHeader,
 		// CARET MODIFICATION: Add caretBanner to context value with window injection fallback
 		caretBanner: (window as any).caretBannerImage || state.caretBanner || "/assets/welcome-banner.webp",
 
@@ -869,10 +929,15 @@ export const ExtensionStateContextProvider: React.FC<{
 		localClineRulesToggles: state.localClineRulesToggles || {},
 		localCursorRulesToggles: state.localCursorRulesToggles || {},
 		localWindsurfRulesToggles: state.localWindsurfRulesToggles || {},
+		localAgentsRulesToggles: state.localAgentsRulesToggles || {},
 		localWorkflowToggles: state.localWorkflowToggles || {},
 		globalWorkflowToggles: state.globalWorkflowToggles || {},
+		remoteRulesToggles: state.remoteRulesToggles || {},
+		remoteWorkflowToggles: state.remoteWorkflowToggles || {},
 		enableCheckpointsSetting: state.enableCheckpointsSetting,
 		currentFocusChainChecklist: state.currentFocusChainChecklist,
+		hooksEnabled: state.hooksEnabled || { user: false, featureFlag: false },
+		nativeToolCallSetting: state.nativeToolCallSetting || { user: false, featureFlag: false },
 
 		// Navigation functions
 		navigateToMcp,
@@ -887,6 +952,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		hideAccount,
 		hideAnnouncement,
 		setShowAnnouncement,
+		setShowWelcome,
+		setOnboardingModels,
 		setShouldShowAnnouncement: (value) =>
 			setState((prevState) => ({
 				...prevState,
@@ -939,6 +1006,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		setBasetenModels: (models: Record<string, ModelInfo>) => setBasetenModels(models),
 		setHuggingFaceModels: (models: Record<string, ModelInfo>) => setHuggingFaceModels(models),
 		setVercelAiGatewayModels: (models: Record<string, ModelInfo>) => setVercelAiGatewayModels(models),
+		setHicapModels: (models: Record<string, ModelInfo>) => setHicapModels(models),
 		setMcpMarketplaceCatalog: (catalog: McpMarketplaceCatalog) => setMcpMarketplaceCatalog(catalog),
 		setShowMcp,
 		closeMcpView,
@@ -976,6 +1044,11 @@ export const ExtensionStateContextProvider: React.FC<{
 				...prevState,
 				localWindsurfRulesToggles: toggles,
 			})),
+		setLocalAgentsRulesToggles: (toggles) =>
+			setState((prevState) => ({
+				...prevState,
+				localAgentsRulesToggles: toggles,
+			})),
 		setLocalWorkflowToggles: (toggles) =>
 			setState((prevState) => ({
 				...prevState,
@@ -986,9 +1059,21 @@ export const ExtensionStateContextProvider: React.FC<{
 				...prevState,
 				globalWorkflowToggles: toggles,
 			})),
+		setRemoteRulesToggles: (toggles) =>
+			setState((prevState) => ({
+				...prevState,
+				remoteRulesToggles: toggles,
+			})),
+		setRemoteWorkflowToggles: (toggles) =>
+			setState((prevState) => ({
+				...prevState,
+				remoteWorkflowToggles: toggles,
+			})),
+		setExpandTaskHeader,
 		setMcpTab,
 		setTotalTasksSize,
 		refreshOpenRouterModels,
+		refreshHicapModels,
 		onRelinquishControl,
 		// CARET MODIFICATION: Persona system setters - also save to localStorage and backend
 		setEnablePersonaSystem: async (enabled: boolean) => {
@@ -1041,6 +1126,11 @@ export const ExtensionStateContextProvider: React.FC<{
 				personaProfile: profile,
 			})),
 		setUserInfo: (userInfo?: UserInfo) => setState((prevState) => ({ ...prevState, userInfo })),
+		setDictationSettings: (value: DictationSettings) =>
+			setState((prevState) => ({
+				...prevState,
+				dictationSettings: value,
+			})),
 		// CARET MODIFICATION: setCaretUser implementation
 		setCaretUser: (user: CaretUser | null) => {
 			console.log("[CARET-AUTH] setCaretUser called with:", user)

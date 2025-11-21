@@ -51,6 +51,7 @@ export const GlobalFileNames = {
 	caretRules: BRAND_RULES_DIR, // CARET MODIFICATION: Caret rule directory support
 	clineRules: ".clinerules",
 	workflows: BRAND_WORKFLOWS_DIR, // CARET MODIFICATION: brand-aware workflows path
+	persona: "persona.md",
 	hooksDir: ".clinerules/hooks",
 	cursorRulesDir: ".cursor/rules",
 	cursorRulesFile: ".cursorrules",

@@ -1,4 +1,6 @@
 import {
+	BizRouterModelInfo,
+	CaretModelInfo,
 	LiteLLMModelInfo,
 	OpenAiCompatibleModelInfo,
 	OpenRouterModelInfo,
@@ -10,6 +12,8 @@ import {
 import {
 	ApiConfiguration,
 	ApiProvider,
+	BizRouterModelInfo as AppBizRouterModelInfo,
+	CaretModelInfo as AppCaretModelInfo,
 	LiteLLMModelInfo as AppLiteLLMModelInfo,
 	OpenAiCompatibleModelInfo as AppOpenAiCompatibleModelInfo,
 	BedrockModelId,
@@ -232,6 +236,110 @@ function convertProtoToOpenAiCompatibleModelInfo(
 	}
 }
 
+// Convert application CaretModelInfo to proto CaretModelInfo
+function convertCaretModelInfoToProto(info: AppCaretModelInfo | undefined): CaretModelInfo | undefined {
+	if (!info) {
+		return undefined
+	}
+
+	return {
+		maxTokens: info.maxTokens,
+		contextWindow: info.contextWindow,
+		supportsImages: info.supportsImages,
+		supportsPromptCache: info.supportsPromptCache ?? false,
+		inputPrice: info.inputPrice,
+		outputPrice: info.outputPrice,
+		thinkingConfig: convertThinkingConfigToProto(info.thinkingConfig),
+		supportsGlobalEndpoint: info.supportsGlobalEndpoint,
+		cacheWritesPrice: info.cacheWritesPrice,
+		cacheReadsPrice: info.cacheReadsPrice,
+		description: info.description,
+		tiers: info.tiers || [],
+		temperature: info.temperature,
+	}
+}
+
+// Convert proto CaretModelInfo to application CaretModelInfo
+function convertProtoToCaretModelInfo(info: CaretModelInfo | undefined): AppCaretModelInfo | undefined {
+	if (!info) {
+		return undefined
+	}
+
+	return {
+		maxTokens: info.maxTokens,
+		contextWindow: info.contextWindow,
+		supportsImages: info.supportsImages,
+		supportsPromptCache: info.supportsPromptCache,
+		inputPrice: info.inputPrice,
+		outputPrice: info.outputPrice,
+		thinkingConfig: convertProtoToThinkingConfig(info.thinkingConfig),
+		supportsGlobalEndpoint: info.supportsGlobalEndpoint,
+		cacheWritesPrice: info.cacheWritesPrice,
+		cacheReadsPrice: info.cacheReadsPrice,
+		description: info.description,
+		tiers: info.tiers.length > 0 ? info.tiers : undefined,
+		temperature: info.temperature,
+	}
+}
+
+// Convert application BizRouterModelInfo to proto BizRouterModelInfo
+function convertBizRouterModelInfoToProto(info: AppBizRouterModelInfo | undefined): BizRouterModelInfo | undefined {
+	if (!info) {
+		return undefined
+	}
+
+	return {
+		maxTokens: info.maxTokens,
+		contextWindow: info.contextWindow,
+		supportsImages: info.supportsImages,
+		supportsPromptCache: info.supportsPromptCache ?? false,
+		inputPrice: info.inputPrice,
+		outputPrice: info.outputPrice,
+		thinkingConfig: convertThinkingConfigToProto(info.thinkingConfig),
+		supportsGlobalEndpoint: info.supportsGlobalEndpoint,
+		cacheWritesPrice: info.cacheWritesPrice,
+		cacheReadsPrice: info.cacheReadsPrice,
+		description: info.description,
+		tiers: info.tiers || [],
+		temperature: info.temperature,
+		topP: info.topP,
+		frequencyPenalty: info.frequencyPenalty,
+		presencePenalty: info.presencePenalty,
+		topK: info.topK,
+		repetitionPenalty: info.repetitionPenalty,
+		minP: info.minP,
+	}
+}
+
+// Convert proto BizRouterModelInfo to application BizRouterModelInfo
+function convertProtoToBizRouterModelInfo(info: BizRouterModelInfo | undefined): AppBizRouterModelInfo | undefined {
+	if (!info) {
+		return undefined
+	}
+
+	return {
+		maxTokens: info.maxTokens,
+		contextWindow: info.contextWindow,
+		supportsImages: info.supportsImages,
+		supportsPromptCache: info.supportsPromptCache,
+		inputPrice: info.inputPrice,
+		outputPrice: info.outputPrice,
+		thinkingConfig: convertProtoToThinkingConfig(info.thinkingConfig),
+		supportsGlobalEndpoint: info.supportsGlobalEndpoint,
+		cacheWritesPrice: info.cacheWritesPrice,
+		cacheReadsPrice: info.cacheReadsPrice,
+		description: info.description,
+		tiers: info.tiers.length > 0 ? info.tiers : undefined,
+		temperature: info.temperature,
+		topP: info.topP,
+		frequencyPenalty: info.frequencyPenalty,
+		presencePenalty: info.presencePenalty,
+		topK: info.topK,
+		repetitionPenalty: info.repetitionPenalty,
+		minP: info.minP,
+	}
+}
+
 // Convert application ApiProvider to proto ApiProvider
 function convertApiProviderToProto(provider: string | undefined): ProtoApiProvider {
 	switch (provider) {
@@ -315,6 +423,10 @@ function convertApiProviderToProto(provider: string | undefined): ProtoApiProvid
 			return ProtoApiProvider.HICAP
 		case "nousResearch":
 			return ProtoApiProvider.NOUSRESEARCH
+		case "caret":
+			return ProtoApiProvider.CARET
+		case "bizrouter":
+			return ProtoApiProvider.BIZROUTER
 		default:
 			return ProtoApiProvider.ANTHROPIC
 	}
@@ -403,6 +515,10 @@ export function convertProtoToApiProvider(provider: ProtoApiProvider): ApiProvid
 			return "minimax"
 		case ProtoApiProvider.NOUSRESEARCH:
 			return "nousResearch"
+		case ProtoApiProvider.CARET:
+			return "caret"
+		case ProtoApiProvider.BIZROUTER:
+			return "bizrouter"
 		default:
 			return "anthropic"
 	}
@@ -494,6 +610,11 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		aihubmixAppCode: config.aihubmixAppCode,
 		hicapApiKey: config.hicapApiKey,
 		hicapModelId: config.hicapModelId,
+		caretBaseUrl: config.caretBaseUrl,
+		caretApiKey: config.caretApiKey,
+		caretUsePromptCache: config.caretUsePromptCache,
+		bizRouterApiKey: config.bizRouterApiKey,
+		bizRouterUsePromptCache: config.bizRouterUsePromptCache,
 
 		// Plan mode configurations
 		planModeApiProvider: config.planModeApiProvider ? convertApiProviderToProto(config.planModeApiProvider) : undefined,
@@ -532,6 +653,10 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		planModeHicapModelId: config.planModeHicapModelId,
 		planModeHicapModelInfo: convertModelInfoToProtoOpenRouter(config.planModeHicapModelInfo),
 		planModeNousResearchModelId: config.planModeNousResearchModelId,
+		planModeCaretModelId: config.planModeCaretModelId,
+		planModeCaretModelInfo: convertCaretModelInfoToProto(config.planModeCaretModelInfo),
+		planModeBizRouterModelId: config.planModeBizRouterModelId,
+		planModeBizRouterModelInfo: convertBizRouterModelInfoToProto(config.planModeBizRouterModelInfo),
 
 		// Act mode configurations
 		actModeApiProvider: config.actModeApiProvider ? convertApiProviderToProto(config.actModeApiProvider) : undefined,
@@ -570,6 +695,10 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		actModeHicapModelId: config.actModeHicapModelId,
 		actModeHicapModelInfo: convertModelInfoToProtoOpenRouter(config.actModeHicapModelInfo),
 		actModeNousResearchModelId: config.actModeNousResearchModelId,
+		actModeCaretModelId: config.actModeCaretModelId,
+		actModeCaretModelInfo: convertCaretModelInfoToProto(config.actModeCaretModelInfo),
+		actModeBizRouterModelId: config.actModeBizRouterModelId,
+		actModeBizRouterModelInfo: convertBizRouterModelInfoToProto(config.actModeBizRouterModelInfo),
 	}
 }
 
@@ -659,6 +788,11 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		hicapApiKey: protoConfig.hicapApiKey,
 		hicapModelId: protoConfig.hicapModelId,
 		nousResearchApiKey: protoConfig.nousResearchApiKey,
+		caretBaseUrl: protoConfig.caretBaseUrl,
+		caretApiKey: protoConfig.caretApiKey,
+		caretUsePromptCache: protoConfig.caretUsePromptCache,
+		bizRouterApiKey: protoConfig.bizRouterApiKey,
+		bizRouterUsePromptCache: protoConfig.bizRouterUsePromptCache,
 
 		// Plan mode configurations
 		planModeApiProvider:
@@ -700,6 +834,10 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		planModeHicapModelId: protoConfig.planModeHicapModelId,
 		planModeHicapModelInfo: convertProtoToModelInfo(protoConfig.planModeHicapModelInfo),
 		planModeNousResearchModelId: protoConfig.planModeNousResearchModelId,
+		planModeCaretModelId: protoConfig.planModeCaretModelId,
+		planModeCaretModelInfo: convertProtoToCaretModelInfo(protoConfig.planModeCaretModelInfo),
+		planModeBizRouterModelId: protoConfig.planModeBizRouterModelId,
+		planModeBizRouterModelInfo: convertProtoToBizRouterModelInfo(protoConfig.planModeBizRouterModelInfo),
 
 		// Act mode configurations
 		actModeApiProvider:
@@ -739,5 +877,9 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		actModeHicapModelId: protoConfig.actModeHicapModelId,
 		actModeHicapModelInfo: convertProtoToModelInfo(protoConfig.actModeHicapModelInfo),
 		actModeNousResearchModelId: protoConfig.actModeNousResearchModelId,
+		actModeCaretModelId: protoConfig.actModeCaretModelId,
+		actModeCaretModelInfo: convertProtoToCaretModelInfo(protoConfig.actModeCaretModelInfo),
+		actModeBizRouterModelId: protoConfig.actModeBizRouterModelId,
+		actModeBizRouterModelInfo: convertProtoToBizRouterModelInfo(protoConfig.actModeBizRouterModelInfo),
 	}
 }

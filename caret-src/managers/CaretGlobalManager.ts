@@ -14,6 +14,7 @@ export class CaretGlobalManager {
 	// CARET MODIFICATION: Auth0 management fields
 	private _jwtToken?: string
 	private _userInfo?: CaretUser
+	private _caretMode: "chatbot" | "agent" = "chatbot"
 	// CARET MODIFICATION: Input history management fields
 	private _inputHistory: string[] = []
 	private _inputHistoryResolver?: (history: string[]) => Promise<void>
@@ -89,6 +90,14 @@ export class CaretGlobalManager {
 		return this._currentMode === "caret" ? "ko" : "en"
 	}
 
+	public getCaretMode(): "chatbot" | "agent" {
+		return this._caretMode
+	}
+
+	public setCaretMode(mode: "chatbot" | "agent"): void {
+		this._caretMode = mode
+	}
+
 	// Static accessors for concise access (following HostProvider pattern)
 	public static get currentMode(): CaretModeSystem {
 		return CaretGlobalManager.get().getCurrentMode()
@@ -108,6 +117,14 @@ export class CaretGlobalManager {
 
 	public static get defaultLanguage(): "ko" | "en" {
 		return CaretGlobalManager.get().getDefaultLanguage()
+	}
+
+	public static get currentCaretMode(): "chatbot" | "agent" {
+		return CaretGlobalManager.get().getCaretMode()
+	}
+
+	public static setCurrentCaretMode(mode: "chatbot" | "agent"): void {
+		CaretGlobalManager.get().setCaretMode(mode)
 	}
 
 	/**
@@ -132,9 +149,9 @@ export class CaretGlobalManager {
 			const vsCodeCallbackUrl = `${uriScheme}://caretive.caret/auth`
 
 			// Build external auth URL
-      const authEndpoint = process.env.CARET_AUTH_ENDPOINT || "https://caret.team"
-      const authUrl = vscode.Uri.parse(
-				`${authEndpoint}/login?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`
+			const authEndpoint = process.env.CARET_AUTH_ENDPOINT || "https://caret.team"
+			const authUrl = vscode.Uri.parse(
+				`${authEndpoint}/login?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`,
 			)
 
 			console.log("[CARET-GLOBAL-MANAGER] 🌐 Opening external auth URL:", authUrl.toString())
@@ -149,9 +166,9 @@ export class CaretGlobalManager {
 		}
 	}
 
-  public async setTokenFromCallback(token: string): Promise<void> {
+	public async setTokenFromCallback(token: string): Promise<void> {
 		console.log("[CARET-GLOBAL-MANAGER] 🔑 Setting token from callback")
-		
+
 		this._jwtToken = token
 
 		// Fetch user profile using Apollo Client
@@ -160,7 +177,7 @@ export class CaretGlobalManager {
 			const caretAccountService = CaretAccountService.getInstance()
 			const userInfo = await caretAccountService.fetchMe()
 			console.log("Caret Global Manager userInfo=====>", userInfo)
-      console.log("Caret router Model", userInfo?.models)
+			console.log("Caret router Model", userInfo?.models)
 			this._userInfo = userInfo
 			console.log("[CARET-GLOBAL-MANAGER] ✅ User profile loaded:", this._userInfo?.email)
 		} catch (error) {
@@ -172,7 +189,7 @@ export class CaretGlobalManager {
 	 * Logout from Auth0
 	 */
 	public async logout(): Promise<void> {
-    // TODO: implement logout - logout api call
+		// TODO: implement logout - logout api call
 		this._jwtToken = undefined
 		this._userInfo = undefined
 	}
@@ -206,7 +223,7 @@ export class CaretGlobalManager {
 		return CaretGlobalManager.get().logout()
 	}
 
-  public static async setTokenFromCallback(token: string): Promise<void> {
+	public static async setTokenFromCallback(token: string): Promise<void> {
 		return CaretGlobalManager.get().setTokenFromCallback(token)
 	}
 

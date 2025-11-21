@@ -175,6 +175,10 @@ message ModelsApiSecrets {
   optional string oca_refresh_token = 37;
   optional string minimax_api_key = 38;
   optional string aihubmix_api_key = 39;
+  // CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
+  optional string caret_api_key = 1074;
+  // CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
+  optional string biz_router_api_key = 1076;
 }
 
 // API configuration options (non-secret settings)
@@ -223,6 +227,11 @@ message ModelsApiOptions {
   optional string minimax_api_line = 41;
   optional string aihubmix_base_url = 42;
   optional string aihubmix_app_code = 43;
+  // CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
+  optional string caret_base_url = 1073;
+  optional bool caret_use_prompt_cache = 1075;
+  // CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
+  optional bool biz_router_use_prompt_cache = 1077;
 
   // Plan mode configurations
   optional ApiProvider plan_mode_api_provider = 100;
@@ -260,6 +269,10 @@ message ModelsApiOptions {
   optional OcaModelInfo plan_mode_oca_model_info = 132;
   optional string plan_mode_aihubmix_model_id = 133;
   optional OpenAiCompatibleModelInfo plan_mode_aihubmix_model_info = 134;
+  optional string plan_mode_caret_model_id = 190;
+  optional LiteLLMModelInfo plan_mode_caret_model_info = 191;
+  optional string plan_mode_biz_router_model_id = 192;
+  optional BizRouterModelInfo plan_mode_biz_router_model_info = 193;
 
   // Act mode configurations
   optional ApiProvider act_mode_api_provider = 200;
@@ -297,6 +310,10 @@ message ModelsApiOptions {
   optional OcaModelInfo act_mode_oca_model_info = 232;
   optional string act_mode_aihubmix_model_id = 233;
   optional OpenAiCompatibleModelInfo act_mode_aihubmix_model_info = 234;
+  optional string act_mode_caret_model_id = 301;
+  optional CaretModelInfo act_mode_caret_model_info = 302; // caret
+  optional string act_mode_biz_router_model_id = 303;
+  optional BizRouterModelInfo act_mode_biz_router_model_info = 304;
 }
 
 // Request for updating API configuration (legacy - uses combined configuration)
@@ -424,6 +441,9 @@ enum ApiProvider {
   HICAP = 37;
   AIHUBMIX = 38;
   NOUSRESEARCH = 39;
+  // CARET MODIFICATION: Caret-specific providers use 1000+ to avoid conflicts with Cline
+  CARET = 1001;
+  BIZROUTER = 1002;
 }
 
 // Model info for OpenAI-compatible models
@@ -444,6 +464,23 @@ message OpenAiCompatibleModelInfo {
   optional bool is_r1_format_required = 14;
 }
 
+// Model info for Caret models
+message CaretModelInfo {
+  optional int64 max_tokens = 1;
+  optional int64 context_window = 2;
+  optional bool supports_images = 3;
+  bool supports_prompt_cache = 4;
+  optional double input_price = 5;
+  optional double output_price = 6;
+  optional ThinkingConfig thinking_config = 7;
+  optional bool supports_global_endpoint = 8;
+  optional double cache_writes_price = 9;
+  optional double cache_reads_price = 10;
+  optional string description = 11;
+  repeated ModelTier tiers = 12;
+  optional double temperature = 13;
+}
+
 // Model info for LiteLLM models
 message LiteLLMModelInfo {
   optional int64 max_tokens = 1;
@@ -459,6 +496,31 @@ message LiteLLMModelInfo {
   optional string description = 11;
   repeated ModelTier tiers = 12;
   optional double temperature = 13;
+}
+
+// CARET MODIFICATION: Model info for BizRouter models
+message BizRouterModelInfo {
+  optional int64 max_tokens = 1;
+  optional int64 context_window = 2;
+  optional bool supports_images = 3;
+  bool supports_prompt_cache = 4;
+  optional double input_price = 5;
+  optional double output_price = 6;
+  optional ThinkingConfig thinking_config = 7;
+  optional bool supports_global_endpoint = 8;
+  optional double cache_writes_price = 9;
+  optional double cache_reads_price = 10;
+  optional string description = 11;
+  repeated ModelTier tiers = 12;
+  optional double temperature = 13;
+  // OpenAI-compatible parameters
+  optional double top_p = 14;
+  optional double frequency_penalty = 15;
+  optional double presence_penalty = 16;
+  // BizRouter extended parameters
+  optional int32 top_k = 17;
+  optional double repetition_penalty = 18;
+  optional double min_p = 19;
 }
 
 // Main ApiConfiguration message
@@ -549,6 +611,13 @@ message ModelsApiConfiguration {
   optional string aihubmix_base_url = 83;
   optional string aihubmix_app_code = 84;
   optional string nous_research_api_key = 85;
+  // CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
+  optional string caret_base_url = 1073;
+  optional string caret_api_key = 1074;
+  optional bool caret_use_prompt_cache = 1075;
+  // CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
+  optional string biz_router_api_key = 1076;
+  optional bool biz_router_use_prompt_cache = 1077;
 
   // Plan mode configurations
   optional ApiProvider plan_mode_api_provider = 100;
@@ -589,6 +658,10 @@ message ModelsApiConfiguration {
   optional string plan_mode_aihubmix_model_id = 135;
   optional OpenAiCompatibleModelInfo plan_mode_aihubmix_model_info = 136;
   optional string plan_mode_nous_research_model_id = 137;
+  optional string plan_mode_caret_model_id = 190;
+  optional LiteLLMModelInfo plan_mode_caret_model_info = 191;
+  optional string plan_mode_biz_router_model_id = 192;
+  optional BizRouterModelInfo plan_mode_biz_router_model_info = 193;
 
   // Act mode configurations
   optional ApiProvider act_mode_api_provider = 200;
@@ -629,4 +702,8 @@ message ModelsApiConfiguration {
   optional string act_mode_aihubmix_model_id = 235;
   optional OpenAiCompatibleModelInfo act_mode_aihubmix_model_info = 236;
   optional string act_mode_nous_research_model_id = 237;
+  optional string act_mode_caret_model_id = 301;
+  optional CaretModelInfo act_mode_caret_model_info = 302; // caret
+  optional string act_mode_biz_router_model_id = 303;
+  optional BizRouterModelInfo act_mode_biz_router_model_info = 304;
 }

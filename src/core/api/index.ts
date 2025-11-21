@@ -1,4 +1,6 @@
 import { Anthropic } from "@anthropic-ai/sdk"
+import { BizRouterHandler } from "@caret/core/api/providers/BizRouterApiProvider"
+import { CaretApiProvider } from "@caret/core/api/providers/CaretApiProvider"
 import { ApiConfiguration, ModelInfo, QwenApiRegions } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { ClineTool } from "@/shared/tools"
@@ -262,6 +264,30 @@ function createHandlerForProvider(
 				thinkingBudgetTokens:
 					mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
 				liteLlmUsePromptCache: options.liteLlmUsePromptCache,
+				ulid: options.ulid,
+			})
+		case "caret":
+			return new CaretApiProvider({
+				onRetryAttempt: options.onRetryAttempt,
+				caretApiKey: options.caretApiKey,
+				caretBaseUrl: options.caretBaseUrl,
+				caretModelId: mode === "plan" ? options.planModeCaretModelId : options.actModeCaretModelId,
+				caretModelInfo: mode === "plan" ? options.planModeCaretModelInfo : options.actModeCaretModelInfo,
+				thinkingBudgetTokens:
+					mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
+				caretUsePromptCache: options.caretUsePromptCache,
+				ulid: options.ulid,
+			})
+		case "bizrouter":
+			// CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
+			return new BizRouterHandler({
+				onRetryAttempt: options.onRetryAttempt,
+				bizRouterApiKey: options.bizRouterApiKey,
+				bizRouterModelId: mode === "plan" ? options.planModeBizRouterModelId : options.actModeBizRouterModelId,
+				bizRouterModelInfo: mode === "plan" ? options.planModeBizRouterModelInfo : options.actModeBizRouterModelInfo,
+				thinkingBudgetTokens:
+					mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
+				bizRouterUsePromptCache: options.bizRouterUsePromptCache,
 				ulid: options.ulid,
 			})
 		case "moonshot":

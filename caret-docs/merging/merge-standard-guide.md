@@ -36,7 +36,6 @@ Cline upstream을 Caret에 안전하게 머징하기 위한 표준 프로세스 
 - **Level 1 (Preferred)**: Caret 전용 디렉토리 (`caret-src/`, `caret-docs/` 등)
 - **Level 2 (Conditional)**: Cline 파일 최소 수정 (1-3 lines, `CARET MODIFICATION` 주석)
 - **Level 3 (Critical)**: Frontend Context 통합 등 필수 수정
-- **v3.38.1 Attempt-2 적용 원칙**: Backend/Proto는 Cline 최신 버전을 100% 채택한 후 Caret 확장만 재주입하고, Webview는 Caret 버전을 기본으로 유지한 상태에서 Cline이 분기 후 업데이트한 구간만 역으로 이식한다. 세부 절차는 `caret-docs/merging/v3.38.1/attempt-2-plan.md` 참고.
 
 ---
 
@@ -402,36 +401,6 @@ src/services/mcp/McpHub.ts
 - [ ] 통합 방식 결정 (Cline 우선 vs Caret 추가)
 - [ ] 컴파일 검증
 - [ ] Feature 문서 업데이트
-
----
-
-### Phase 6: Scripts / Root / 문서 & 릴리스 아티팩트
-
-**목표**: 루트 설정, 스크립트, 문서, CHANGELOG 및 announcement까지 일관성 있게 병합한다. (상세 단계는 `caret-docs/merging/v3.38.1/attempt-2-plan.md` 참조)
-
-1. **Root 파일 (`package.json`, `pnpm-lock.yaml`, `tsconfig.json`, `.vscode/`, `.github/` 등)**
-   - Cline v3.38.1 버전을 우선 채택하고 Caret 전용 필드(이름, publisher, brand scripts, telemetry 등)를 재주입한다.
-   - `playwright.config.ts`, `esbuild.mjs`, `package.json` scripts 섹션에서 Caret 전용 스크립트(`brand:*`, `report:i18n-*` 등)가 유지됐는지 확인한다.
-
-2. **Scripts 디렉터리**
-   - `scripts/*.sh`, `caret-scripts/**`, `slexn-codecenter/**` 파일은 Cline 변경분을 적용한 뒤 Caret 자동화(브랜딩 변환, 패키징 등)를 덧입힌다.
-   - 변경 후 `npm run compile`, `npm run test`, `pnpm run test:e2e`로 스크립트 동작을 검증한다.
-
-3. **문서/정책**
-   - Upstream `docs/**` 변경분을 채택하고, `caret-docs/**`는 버전별 폴더(`v3.38.1/`)로 아카이빙한다.
-   - `.caretrules/**`, `.claude/**` 등 정책 문서는 Caret 버전을 그대로 유지하되, 수정 시 CARET 주석을 추가한다.
-
-4. **CHANGELOG & announcement 전략** *(merge-execution-master-plan 8차 피드백 준수)*:
-   - `CHANGELOG-CLINE.md`: Cline upstream 변경 이력 보존.
-   - `CHANGELOG.md`, `caret-docs/ko/CHANGELOG.md` (필요 시 ja/zh) : Caret 릴리스 노트, 버전 규칙(Major=대규모 병합, Minor=Caret 기능 추가, Patch=버그 수정)을 따른다.
-   - Version 항목에는 merge 커밋/브랜치, 주요 기능, VS Code Marketplace 실제 배포 일자를 기록한다.
-   - `webview-ui/src/caret/locale/{ko,en,ja,zh}/announcement.json`: `current`에는 이번 머지(Cline 기능), `previous`에는 직전 Caret 기능을 기재하고, 4개 언어를 동시에 업데이트한다.
-
-5. **체크리스트**
-   - [ ] 루트 및 스크립트 파일 diff 확인, CARET 스크립트 유지 여부 검증
-   - [ ] `npm run lint`, `npm run compile`, `npm run test`, `pnpm run test:e2e` 재실행
-   - [ ] `CHANGELOG.md`/`CHANGELOG-CLINE.md`/다국어 CHANGELOG/announcement 업데이트
-   - [ ] PR/릴리스 노트에 변경 요약 및 문서 링크 첨부
 
 ---
 

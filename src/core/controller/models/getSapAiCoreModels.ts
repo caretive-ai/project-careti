@@ -61,7 +61,7 @@ async function fetchAiCoreDeploymentsAndOrchestration(
 		Authorization: `Bearer ${accessToken}`,
 		"AI-Resource-Group": resourceGroup || "default",
 		"Content-Type": "application/json",
-		"AI-Client-Type": "Cline",
+		"AI-Client-Type": "Caret",
 	}
 
 	const url = `${baseUrl}/v2/lm/deployments?$top=10000&$skip=0`
@@ -104,7 +104,7 @@ async function fetchAiCoreDeploymentsAndOrchestration(
  * @returns SapAiCoreModelsResponse with deployments and orchestration availability
  */
 export async function getSapAiCoreModels(
-	controller: Controller,
+	_controller: Controller,
 	request: SapAiCoreModelsRequest,
 ): Promise<SapAiCoreModelsResponse> {
 	try {

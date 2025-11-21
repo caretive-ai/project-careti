@@ -51,6 +51,9 @@
 			"@shared/*": [
 				"src/shared/*"
 			],
+			"@caret/*": [
+				"caret-src/*"
+			],
 			"@utils/*": [
 				"src/utils/*"
 			]
@@ -63,6 +66,7 @@
 		"node_modules",
 		".vscode-test",
 		"webview-ui",
-		"src/test/e2e/**/*"
+		"src/test/e2e/**/*",
+		"caret-src/**/*"
 	]
 }

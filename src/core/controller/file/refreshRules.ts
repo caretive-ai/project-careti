@@ -7,7 +7,7 @@ import { getCwd, getDesktopDir } from "@/utils/path"
 import type { Controller } from "../index"
 
 /**
- * Refreshes all rule toggles (Cline, External, and Workflows)
+ * Refreshes all rule toggles (Caret/Cline/Cursor/Windsurf/Agents + Workflows)
  * @param controller The controller instance
  * @param _request The empty request
  * @returns RefreshedRules containing updated toggles for all rule types
@@ -16,15 +16,14 @@ export async function refreshRules(controller: Controller, _request: EmptyReques
 	try {
 		const cwd = await getCwd(getDesktopDir())
 		const { globalToggles, localToggles } = await refreshClineRulesToggles(controller, cwd)
-		const { cursorLocalToggles, windsurfLocalToggles, agentsLocalToggles } = await refreshExternalRulesToggles(
-			controller,
-			cwd,
-		)
+		const { caretLocalToggles, clineLocalToggles, cursorLocalToggles, windsurfLocalToggles, agentsLocalToggles } =
+			await refreshExternalRulesToggles(controller, cwd, { clineLocalToggles: localToggles })
 		const { localWorkflowToggles, globalWorkflowToggles } = await refreshWorkflowToggles(controller, cwd)
 
 		return RefreshedRules.create({
 			globalClineRulesToggles: { toggles: globalToggles },
 			localClineRulesToggles: { toggles: localToggles },
+			localCaretRulesToggles: { toggles: caretLocalToggles },
 			localCursorRulesToggles: { toggles: cursorLocalToggles },
 			localWindsurfRulesToggles: { toggles: windsurfLocalToggles },
 			localAgentsRulesToggles: { toggles: agentsLocalToggles },

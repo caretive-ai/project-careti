@@ -1,5 +1,6 @@
 import { ensureCacheDirectoryExists, GlobalFileNames } from "@core/storage/disk"
-import { ModelInfo } from "@shared/api"
+import { EmptyRequest } from "@shared/proto/cline/common"
+import { OpenRouterCompatibleModelInfo, OpenRouterModelInfo } from "@shared/proto/cline/models"
 import { fileExistsAtPath } from "@utils/fs"
 import axios from "axios"
 import fs from "fs/promises"
@@ -8,14 +9,18 @@ import { getAxiosSettings } from "@/shared/net"
 import { Controller } from ".."
 
 /**
- * Core function: Refreshes Vercel AI Gateway models and returns application types
- * @param _controller The controller instance (unused)
- * @returns Record of model ID to ModelInfo (application types)
+ * Refreshes Vercel AI Gateway models and returns updated model list
+ * @param controller The controller instance
+ * @param request Empty request object
+ * @returns Response containing Vercel AI Gateway models
  */
-export async function refreshVercelAiGatewayModels(_controller: Controller): Promise<Record<string, ModelInfo>> {
+export async function refreshVercelAiGatewayModels(
+	_controller: Controller,
+	_request: EmptyRequest,
+): Promise<OpenRouterCompatibleModelInfo> {
 	const vercelAiGatewayModelsFilePath = path.join(await ensureCacheDirectoryExists(), GlobalFileNames.vercelAiGatewayModels)
 
-	let models: Record<string, ModelInfo> = {}
+	let models: Record<string, OpenRouterModelInfo> = {}
 
 	try {
 		const response = await axios.get("https://ai-gateway.vercel.sh/v1/models", getAxiosSettings())
@@ -34,7 +39,7 @@ export async function refreshVercelAiGatewayModels(_controller: Controller): Pro
 					continue
 				}
 
-				const modelInfo: ModelInfo = {
+				const modelInfo = OpenRouterModelInfo.create({
 					maxTokens: rawModel.max_tokens ?? 0,
 					contextWindow: rawModel.context_window ?? 0,
 					inputPrice: parsePrice(rawModel.pricing?.input) ?? 0,
@@ -44,7 +49,7 @@ export async function refreshVercelAiGatewayModels(_controller: Controller): Pro
 					supportsImages: true, // assume all models support images since vercel ai doesn't give this info
 					supportsPromptCache: !!(rawModel.pricing?.input_cache_read && rawModel.pricing?.input_cache_write),
 					description: rawModel.description ?? "",
-				}
+				})
 
 				models[rawModel.id] = modelInfo
 			}
@@ -64,13 +69,13 @@ export async function refreshVercelAiGatewayModels(_controller: Controller): Pro
 		}
 	}
 
-	return models
+	return OpenRouterCompatibleModelInfo.create({ models })
 }
 
 /**
- * Reads cached Vercel AI Gateway models from disk (application types)
+ * Reads cached Vercel AI Gateway models from disk
  */
-async function readVercelAiGatewayModels(): Promise<Record<string, ModelInfo> | undefined> {
+async function readVercelAiGatewayModels(): Promise<Record<string, OpenRouterModelInfo> | undefined> {
 	const vercelAiGatewayModelsFilePath = path.join(await ensureCacheDirectoryExists(), GlobalFileNames.vercelAiGatewayModels)
 	const fileExists = await fileExistsAtPath(vercelAiGatewayModelsFilePath)
 	if (fileExists) {

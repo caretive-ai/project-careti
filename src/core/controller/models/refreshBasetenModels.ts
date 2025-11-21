@@ -23,7 +23,7 @@ export async function refreshBasetenModels(controller: Controller): Promise<Reco
 	const models: Record<string, Partial<ModelInfo> & { supportedFeatures?: string[] }> = {}
 	try {
 		if (!basetenApiKey) {
-			// Don't throw an error, just use static models, althought this might be slightly out of date
+			// Don't throw an error, just use static models, although this might be slightly out of date
 			for (const [modelId, modelInfo] of Object.entries(basetenModels)) {
 				models[modelId] = {
 					maxTokens: modelInfo.maxTokens,
@@ -48,7 +48,7 @@ export async function refreshBasetenModels(controller: Controller): Promise<Reco
 				headers: {
 					Authorization: `Bearer ${cleanApiKey}`,
 					"Content-Type": "application/json",
-					"User-Agent": "Cline-VSCode-Extension",
+					"User-Agent": "Caret-VSCode-Extension",
 				},
 				timeout: 10000, // 10 second timeout
 				...getAxiosSettings(),
@@ -69,7 +69,7 @@ export async function refreshBasetenModels(controller: Controller): Promise<Reco
 					const modelInfo: Partial<ModelInfo> & { supportedFeatures?: string[] } = {
 						maxTokens: rawModel.max_completion_tokens || staticModelInfo?.maxTokens,
 						contextWindow: rawModel.context_length || staticModelInfo?.contextWindow,
-						supportsImages: false, // Baseten model APIs does not support image input
+						supportsImages: false, // Baseten model APIs do not support image input
 						supportsPromptCache: staticModelInfo?.supportsPromptCache || false,
 						inputPrice: parsePrice(rawModel.pricing?.prompt) || staticModelInfo?.inputPrice || 0,
 						outputPrice: parsePrice(rawModel.pricing?.completion) || staticModelInfo?.outputPrice || 0,
@@ -148,7 +148,8 @@ export async function refreshBasetenModels(controller: Controller): Promise<Reco
 			cacheWritesPrice: model.cacheWritesPrice ?? 0,
 			cacheReadsPrice: model.cacheReadsPrice ?? 0,
 			description: model.description ?? "",
-			tiers: model.tiers,
+			tiers: model.tiers ?? [],
+			// Note: supportedFeatures is preserved as custom property but not part of ModelInfo proto
 		}
 	}
 
@@ -156,7 +157,7 @@ export async function refreshBasetenModels(controller: Controller): Promise<Reco
 }
 
 /**
- * Reads cached Baseten models from disk (application types)
+ * Reads cached Baseten models from disk
  */
 async function readBasetenModels(): Promise<Record<string, Partial<ModelInfo>> | undefined> {
 	const basetenModelsFilePath = path.join(await ensureCacheDirectoryExists(), GlobalFileNames.basetenModels)
@@ -182,59 +183,38 @@ function isValidChatModel(rawModel: any): boolean {
 		return false
 	}
 
-	// Check if model supports chat completions
-	if (rawModel.object === "model" && rawModel.id) {
-		return true
+	// Ensure chat capability and valid pricing
+	const hasCompletion =
+		rawModel.supported_features?.includes("chat.completions") || rawModel.supported_features?.includes("completions")
+	if (!hasCompletion) return false
+
+	// Must have pricing info
+	if (!rawModel.pricing?.prompt && !rawModel.pricing?.completion) {
+		return false
 	}
 
-	return false
+	return true
 }
 
 /**
- * Generates a descriptive name for the model
+ * Generates a readable description for a model
  */
-function generateModelDescription(rawModel: any, staticModelInfo?: any): string {
-	// Use static description if available and preferred
-	if (staticModelInfo?.description) {
-		return staticModelInfo.description
-	}
+function generateModelDescription(rawModel: any, staticModelInfo?: (typeof basetenModels)[string]): string {
+	const provider = rawModel.provider || staticModelInfo?.provider || "Baseten"
+	const version = rawModel.version || rawModel.revision || staticModelInfo?.version || ""
+	const family = rawModel.family || rawModel.capabilities?.family || staticModelInfo?.family || ""
+	const maxContext = rawModel.context_length || staticModelInfo?.contextWindow || ""
 
-	// Use API description if available
-	if (rawModel.description) {
-		const contextWindow = rawModel.context_length
-		const quantization = rawModel.quantization
-		const features = rawModel.supported_features || []
+	const parts = [
+		rawModel.name || staticModelInfo?.name || rawModel.id,
+		provider ? `by ${provider}` : "",
+		version ? `(v${version})` : "",
+		maxContext ? `context ${maxContext}` : "",
+		family ? `family ${family}` : "",
+	]
 
-		let description = rawModel.description
-
-		// Add technical details if available
-		const technicalDetails = []
-		if (contextWindow) {
-			technicalDetails.push(`${contextWindow.toLocaleString()} token context`)
-		}
-		if (quantization) {
-			technicalDetails.push(`${quantization} precision`)
-		}
-		if (features.length > 0) {
-			const featureList = features.join(", ")
-			technicalDetails.push(`supports ${featureList}`)
-		}
-
-		if (technicalDetails.length > 0) {
-			description += ` (${technicalDetails.join(", ")})`
-		}
-
-		return description
-	}
-
-	// Fallback: use name or model ID
-	const modelName = rawModel.name || rawModel.id
-	const contextWindow = rawModel.context_length
-	const ownedBy = rawModel.owned_by || "Baseten"
-
-	if (contextWindow) {
-		return `${ownedBy} ${modelName} with ${contextWindow.toLocaleString()} token context window`
-	}
-
-	return `${ownedBy} model: ${modelName}`
+	return parts
+		.map((p) => p.trim())
+		.filter(Boolean)
+		.join(" - ")
 }

@@ -2,8 +2,7 @@ import { EmptyRequest } from "@shared/proto/cline/common"
 import {
 	ClineRulesToggles,
 	RefreshedRules,
-	RuleScope,
-	ToggleAgentsRuleRequest,
+	ToggleCaretRuleRequest,
 	ToggleClineRuleRequest,
 	ToggleCursorRuleRequest,
 	ToggleWindsurfRuleRequest,
@@ -133,7 +132,7 @@ const ClineRulesToggleModal: React.FC = () => {
 	const toggleRule = (isGlobal: boolean, rulePath: string, enabled: boolean) => {
 		FileServiceClient.toggleClineRule(
 			ToggleClineRuleRequest.create({
-				scope: isGlobal ? RuleScope.GLOBAL : RuleScope.LOCAL,
+				isGlobal,
 				rulePath,
 				enabled,
 			}),
@@ -191,11 +190,12 @@ const ClineRulesToggleModal: React.FC = () => {
 	}
 
 	const toggleAgentsRule = (rulePath: string, enabled: boolean) => {
-		FileServiceClient.toggleAgentsRule(
-			ToggleAgentsRuleRequest.create({
+		// CARET: agents 토글은 caret rule 토글 RPC로 매핑 (agents 전용 proto 없음)
+		FileServiceClient.toggleCaretRule(
+			ToggleCaretRuleRequest.create({
 				rulePath,
 				enabled,
-			} as ToggleAgentsRuleRequest),
+			} as ToggleCaretRuleRequest),
 		)
 			.then((response: ClineRulesToggles) => {
 				if (response.toggles) {
@@ -212,7 +212,7 @@ const ClineRulesToggleModal: React.FC = () => {
 			ToggleWorkflowRequest.create({
 				workflowPath,
 				enabled,
-				scope: isGlobal ? RuleScope.GLOBAL : RuleScope.LOCAL,
+				isGlobal,
 			}),
 		)
 			.then((response) => {
@@ -233,7 +233,7 @@ const ClineRulesToggleModal: React.FC = () => {
 	const toggleRemoteRule = (ruleName: string, enabled: boolean) => {
 		FileServiceClient.toggleClineRule(
 			ToggleClineRuleRequest.create({
-				scope: RuleScope.REMOTE,
+				isGlobal: false,
 				rulePath: ruleName,
 				enabled,
 			}),
@@ -255,7 +255,7 @@ const ClineRulesToggleModal: React.FC = () => {
 			ToggleWorkflowRequest.create({
 				workflowPath: workflowName,
 				enabled,
-				scope: RuleScope.REMOTE,
+				isGlobal: false,
 			}),
 		)
 			.then((response) => {

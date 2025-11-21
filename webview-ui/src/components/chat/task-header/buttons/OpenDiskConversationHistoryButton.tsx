@@ -1,8 +1,7 @@
+import { Button, cn } from "@heroui/react"
 import { StringRequest } from "@shared/proto/cline/common"
 import { ArrowDownToLineIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
+import HeroTooltip from "@/components/common/HeroTooltip"
 import { FileServiceClient } from "@/services/grpc-client"
 
 const OpenDiskConversationHistoryButton: React.FC<{
@@ -14,30 +13,25 @@ const OpenDiskConversationHistoryButton: React.FC<{
 			return
 		}
 
-		FileServiceClient.openDiskConversationHistory(StringRequest.create({ value: taskId })).catch((err) => {
+		// CARET MODIFICATION: Use openTaskHistory instead of openDiskConversationHistory
+		FileServiceClient.openTaskHistory(StringRequest.create({ value: taskId })).catch((err: any) => {
 			console.error(err)
 		})
 	}
 
 	return (
-		<Tooltip>
-			<TooltipContent>Open Conversation History File</TooltipContent>
-			<TooltipTrigger className={cn("flex items-center", className)}>
-				<Button
-					aria-label="Open Disk Conversation History"
-					onClick={(e) => {
-						e.preventDefault()
-						e.stopPropagation()
-						handleOpenDiskConversationHistory()
-					}}
-					size="icon"
-					variant="icon">
-					<ArrowDownToLineIcon />
-				</Button>
-			</TooltipTrigger>
-		</Tooltip>
+		<HeroTooltip content="Open Conversation History File" placement="right">
+			<Button
+				aria-label="Open Disk Conversation History"
+				className={cn("flex items-center border-0 text-sm font-bold bg-transparent hover:opacity-100", className)}
+				isIconOnly={true}
+				onPress={() => handleOpenDiskConversationHistory()}
+				radius="sm"
+				size="sm">
+				<ArrowDownToLineIcon size="14" />
+			</Button>
+		</HeroTooltip>
 	)
 }
 
-OpenDiskConversationHistoryButton.displayName = "OpenDiskConversationHistoryButton"
 export default OpenDiskConversationHistoryButton

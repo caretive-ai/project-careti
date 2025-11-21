@@ -36,10 +36,6 @@ const mockVSCodeDarkTheme = {
 	"--vscode-menu-foreground": "#CCCCCC",
 	"--vscode-menu-selectionBackground": "#062F4A",
 	"--vscode-menu-selectionForeground": "#FFFFFF",
-	"--vscode-inputValidation-errorBackground": "#eb1424",
-	"--vscode-inputValidation-errorForeground": "#fcd1c1",
-	"--vscode-editor-foldBackground": "#252526",
-	"--vscode-editor-foldPlaceholderForeground": "#454545",
 }
 
 const mockVSCodeLightTheme = {
@@ -79,8 +75,6 @@ const mockVSCodeLightTheme = {
 	"--vscode-menu-foreground": "#6F6F6F",
 	"--vscode-menu-selectionBackground": "#007ACC",
 	"--vscode-menu-selectionForeground": "#FFFFFF",
-	"--vscode-inputValidation-errorBackground": "#f48771",
-	"--vscode-inputValidation-errorForeground": "#c72e0f",
 }
 
 // Mock VSCode theme variables for Storybook

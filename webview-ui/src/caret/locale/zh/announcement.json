@@ -1,0 +1,44 @@
+{
+	"header": "🎉 v{{version}} 的新功能",
+	"previousHeader": "以前的更新:",
+	"bullets": {
+		"current": {
+			"1": "添加Caret提供商",
+			"1-desc": "官方Caret AI提供商集成 - 促销期间提供$10免费积分，付费积分购买系统即将推出",
+			"2": "合并Cline v3.32.7",
+			"2-desc": "合并最新Cline上游改进",
+			"3": "最新AI模型支持",
+			"3-desc": "Claude Sonnet 4.5 (200K/1M上下文)、GPT-5扩展思考功能、增强的模型信息和价格显示",
+			"4": "新功能添加",
+			"4-desc": ".clineignore文件支持、AWS Bedrock配置文件、Requesty/Together/Alibaba Qwen提供商、速率限制自动重试",
+			"5": "Focus Chain (任务管理)",
+			"5-desc": "为复杂任务自动生成和跟踪待办事项列表",
+			"6": "AI提示优化",
+			"6-desc": "多编辑时API请求减少30-50%、智能TODO自动管理、Claude Sonnet 4.5专项优化",
+			"7": "架构改进",
+			"7-desc": "完全的protobuf类型系统、增强的MCP支持、提供商系统重构"
+		},
+		"previous": {
+			"1": "最新AI模型支持",
+			"1-desc": "Claude Sonnet 4.5 (200K/1M上下文)、GPT-5扩展思考功能、增强的模型信息和价格显示",
+			"2": "新功能添加",
+			"2-desc": ".clineignore文件支持、AWS Bedrock配置文件、Requesty/Together/Alibaba Qwen提供商、速率限制自动重试",
+			"3": "Focus Chain (任务管理)",
+			"3-desc": "为复杂任务自动生成和跟踪待办事项列表",
+			"4": "AI提示优化",
+			"4-desc": "多编辑时API请求减少30-50%、智能TODO自动管理、Claude Sonnet 4.5专项优化",
+			"5": "架构改进",
+			"5-desc": "完全的protobuf类型系统、增强的MCP支持、提供商系统重构",
+			"6": "消息历史导航",
+			"6-desc": "在聊天输入框中实现了箭头键消息历史导航",
+			"7": "LiteLLM模型获取",
+			"7-desc": "自动LiteLLM模型获取和FeatureConfig重构"
+		}
+	},
+	"links": {
+		"korean": "韩语",
+		"japanese": "日语",
+		"chinese": "中文",
+		"english": "英语"
+	}
+}

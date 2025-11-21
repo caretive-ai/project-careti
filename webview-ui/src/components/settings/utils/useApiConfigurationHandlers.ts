@@ -2,11 +2,17 @@ import { ApiConfiguration } from "@shared/api"
 import { UpdateApiConfigurationRequest } from "@shared/proto/cline/models"
 import { convertApiConfigurationToProto } from "@shared/proto-conversions/models/api-configuration-conversion"
 import { Mode } from "@shared/storage/types"
+import { createContext, useContext } from "react"
 import { useExtensionState } from "@/context/ExtensionStateContext"
+
 import { ModelsServiceClient } from "@/services/grpc-client"
 
-export const useApiConfigurationHandlers = () => {
+export const PlanActSeparateOverrideContext = createContext<boolean | undefined>(undefined)
+
+export const useApiConfigurationHandlers = (options?: { forceSeparate?: boolean }) => {
 	const { apiConfiguration, planActSeparateModelsSetting } = useExtensionState()
+	const overrideSeparate = options?.forceSeparate ?? useContext(PlanActSeparateOverrideContext)
+	const isSeparate = overrideSeparate ?? planActSeparateModelsSetting
 
 	/**
 	 * Updates a single field in the API configuration.
@@ -60,8 +66,22 @@ export const useApiConfigurationHandlers = () => {
 		value: ApiConfiguration[PlanK] & ApiConfiguration[ActK], // Intersection ensures value is compatible with both field types
 		currentMode: Mode,
 	) => {
-		if (planActSeparateModelsSetting) {
-			const targetField = fieldPair[currentMode]
+		// CARET MODIFICATION: Map Caret modes (chatbot/agent) to Cline modes (plan/act)
+		const modeMapping: Record<string, "plan" | "act"> = {
+			chatbot: "plan", // Caret chatbot → Cline plan
+			agent: "act", // Caret agent → Cline act
+			plan: "plan",
+			act: "act",
+		}
+		const mappedMode = modeMapping[currentMode]
+
+		// CARET MODIFICATION: Add logging for mode field changes
+		console.log(
+			`📝 [ApiConfigHandler] Mode field change: ${fieldPair[mappedMode]} = "${value}" (mode: ${currentMode} → ${mappedMode})`,
+		)
+
+		if (isSeparate) {
+			const targetField = fieldPair[mappedMode]
 			await handleFieldChange(targetField, value)
 		} else {
 			await handleFieldsChange({
@@ -86,7 +106,7 @@ export const useApiConfigurationHandlers = () => {
 		values: T,
 		currentMode: Mode,
 	) => {
-		if (planActSeparateModelsSetting) {
+		if (isSeparate) {
 			// Update only the current mode's fields
 			const updates: Partial<ApiConfiguration> = {}
 			Object.entries(fieldPairs).forEach(([key, { plan, act }]) => {

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useDebounceEffect } from "@/utils/useDebounceEffect"
 
 /**
@@ -17,6 +17,11 @@ export function useDebouncedInput<T>(
 ): [T, (value: T) => void] {
 	// Local state to prevent jumpy input - initialize once
 	const [localValue, setLocalValue] = useState(initialValue)
+
+	// CARET MODIFICATION: Sync local state when initialValue changes from backend
+	useEffect(() => {
+		setLocalValue(initialValue)
+	}, [initialValue])
 
 	// Debounced backend save - saves after user stops changing value
 	useDebounceEffect(

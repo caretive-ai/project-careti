@@ -1,9 +1,11 @@
+import { StringRequest } from "@shared/proto/cline/common"
 import { UpdateTerminalConnectionTimeoutResponse } from "@shared/proto/index.cline"
 import { VSCodeCheckbox, VSCodeDropdown, VSCodeOption, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import React, { useState } from "react"
-import { PlatformType } from "@/config/platform.config"
+import { getLocalizedUrl } from "@/caret/constants/urls"
+import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { usePlatform } from "@/context/PlatformContext"
 import { StateServiceClient } from "../../../services/grpc-client"
 import Section from "../Section"
 import TerminalOutputLineLimitSlider from "../TerminalOutputLineLimitSlider"
@@ -14,15 +16,9 @@ interface TerminalSettingsSectionProps {
 }
 
 export const TerminalSettingsSection: React.FC<TerminalSettingsSectionProps> = ({ renderSectionHeader }) => {
-	const {
-		shellIntegrationTimeout,
-		terminalReuseEnabled,
-		defaultTerminalProfile,
-		availableTerminalProfiles,
-		vscodeTerminalExecutionMode,
-	} = useExtensionState()
-	const platformConfig = usePlatform()
-	const isVsCodePlatform = platformConfig.type === PlatformType.VSCODE
+	const { shellIntegrationTimeout, terminalReuseEnabled, defaultTerminalProfile, availableTerminalProfiles } =
+		useExtensionState()
+	const { language } = useCaretI18nContext()
 
 	const [inputValue, setInputValue] = useState((shellIntegrationTimeout / 1000).toString())
 	const [inputError, setInputError] = useState<string | null>(null)
@@ -35,7 +31,7 @@ export const TerminalSettingsSection: React.FC<TerminalSettingsSectionProps> = (
 
 		const seconds = parseFloat(value)
 		if (Number.isNaN(seconds) || seconds <= 0) {
-			setInputError("Please enter a positive number")
+			setInputError(t("terminal.positiveNumberError", "settings"))
 			return
 		}
 
@@ -69,19 +65,21 @@ export const TerminalSettingsSection: React.FC<TerminalSettingsSectionProps> = (
 		updateSetting("terminalReuseEnabled", checked)
 	}
 
-	const handleExecutionModeChange = (event: Event) => {
-		const target = event.target as HTMLSelectElement
-		const value = target.value === "backgroundExec" ? "backgroundExec" : "vscodeTerminal"
-		updateSetting("vscodeTerminalExecutionMode", value)
-	}
-
 	// Use any to avoid type conflicts between Event and FormEvent
 	const handleDefaultTerminalProfileChange = (event: any) => {
 		const target = event.target as HTMLSelectElement
 		const profileId = target.value
 
-		// Save immediately using the consolidated updateSettings approach
-		updateSetting("defaultTerminalProfile", profileId || "default")
+		// Save immediately - the backend will call postStateToWebview() to update our state
+		const updateFn =
+			(StateServiceClient as any).updateDefaultTerminalProfile ??
+			(StateServiceClient as any).setTerminalExecutionMode ??
+			(() => Promise.resolve())
+		updateFn({
+			value: profileId || "default",
+		} as StringRequest).catch((error: Error) => {
+			console.error("Failed to update default terminal profile:", error)
+		})
 	}
 
 	const profilesToShow = availableTerminalProfiles
@@ -93,7 +91,7 @@ export const TerminalSettingsSection: React.FC<TerminalSettingsSectionProps> = (
 				<div className="mb-5" id="terminal-settings-section">
 					<div className="mb-4">
 						<label className="font-medium block mb-1" htmlFor="default-terminal-profile">
-							Default Terminal Profile
+							{t("terminal.defaultProfile", "settings")}
 						</label>
 						<VSCodeDropdown
 							className="w-full"
@@ -106,28 +104,27 @@ export const TerminalSettingsSection: React.FC<TerminalSettingsSectionProps> = (
 								</VSCodeOption>
 							))}
 						</VSCodeDropdown>
-						<p className="text-xs text-(--vscode-descriptionForeground) mt-1">
-							Select the default terminal Cline will use. 'Default' uses your VSCode global setting.
+						<p className="text-xs text-[var(--vscode-descriptionForeground)] mt-1">
+							{t("terminal.defaultProfileDescription", "settings")}
 						</p>
 					</div>
 
 					<div className="mb-4">
 						<div className="mb-2">
-							<label className="font-medium block mb-1">Shell integration timeout (seconds)</label>
+							<label className="font-medium block mb-1">{t("terminal.shellTimeout", "settings")}</label>
 							<div className="flex items-center">
 								<VSCodeTextField
 									className="w-full"
 									onBlur={handleInputBlur}
 									onChange={(event) => handleTimeoutChange(event as Event)}
-									placeholder="Enter timeout in seconds"
+									placeholder={t("terminal.timeoutPlaceholder", "settings")}
 									value={inputValue}
 								/>
 							</div>
-							{inputError && <div className="text-(--vscode-errorForeground) text-xs mt-1">{inputError}</div>}
+							{inputError && <div className="text-[var(--vscode-errorForeground)] text-xs mt-1">{inputError}</div>}
 						</div>
-						<p className="text-xs text-(--vscode-descriptionForeground)">
-							Set how long Cline waits for shell integration to activate before executing commands. Increase this
-							value if you experience terminal connection timeouts.
+						<p className="text-xs text-[var(--vscode-descriptionForeground)]">
+							{t("terminal.shellTimeoutDescription", "settings")}
 						</p>
 					</div>
 
@@ -136,50 +133,31 @@ export const TerminalSettingsSection: React.FC<TerminalSettingsSectionProps> = (
 							<VSCodeCheckbox
 								checked={terminalReuseEnabled ?? true}
 								onChange={(event) => handleTerminalReuseChange(event as Event)}>
-								Enable aggressive terminal reuse
+								{t("terminal.aggressiveReuse", "settings")}
 							</VSCodeCheckbox>
 						</div>
-						<p className="text-xs text-(--vscode-descriptionForeground)">
-							When enabled, Cline will reuse existing terminal windows that aren't in the current working directory.
-							Disable this if you experience issues with task lockout after a terminal command.
+						<p className="text-xs text-[var(--vscode-descriptionForeground)]">
+							{t("terminal.aggressiveReuseDescription", "settings")}
 						</p>
 					</div>
-					{isVsCodePlatform && (
-						<div className="mb-4">
-							<label className="font-medium block mb-1" htmlFor="terminal-execution-mode">
-								Terminal Execution Mode
-							</label>
-							<VSCodeDropdown
-								className="w-full"
-								id="terminal-execution-mode"
-								onChange={(event) => handleExecutionModeChange(event as Event)}
-								value={vscodeTerminalExecutionMode ?? "vscodeTerminal"}>
-								<VSCodeOption value="vscodeTerminal">VS Code Terminal</VSCodeOption>
-								<VSCodeOption value="backgroundExec">Background Exec</VSCodeOption>
-							</VSCodeDropdown>
-							<p className="text-xs text-[var(--vscode-descriptionForeground)] mt-1">
-								Choose whether Cline runs commands in the VS Code terminal or a background process.
-							</p>
-						</div>
-					)}
 					<TerminalOutputLineLimitSlider />
-					<div className="mt-5 p-3 bg-(--vscode-textBlockQuote-background) rounded border border-(--vscode-textBlockQuote-border)">
+					<div className="mt-5 p-3 bg-[var(--vscode-textBlockQuote-background)] rounded border border-[var(--vscode-textBlockQuote-border)]">
 						<p className="text-[13px] m-0">
-							<strong>Having terminal issues?</strong> Check our{" "}
+							<strong>{t("terminal.issuesTitle", "settings")}</strong> {t("terminal.checkOur", "settings")}{" "}
 							<a
-								className="text-(--vscode-textLink-foreground) underline hover:no-underline"
-								href="https://docs.cline.bot/troubleshooting/terminal-quick-fixes"
+								className="text-[var(--vscode-textLink-foreground)] underline hover:no-underline"
+								href={getLocalizedUrl("TERMINAL_QUICK_FIXES", language)}
 								rel="noopener noreferrer"
 								target="_blank">
-								Terminal Quick Fixes
+								{t("terminal.quickFixesLink", "settings")}
 							</a>{" "}
-							or the{" "}
+							{t("terminal.orThe", "settings")}{" "}
 							<a
-								className="text-(--vscode-textLink-foreground) underline hover:no-underline"
-								href="https://docs.cline.bot/troubleshooting/terminal-integration-guide"
+								className="text-[var(--vscode-textLink-foreground)] underline hover:no-underline"
+								href={getLocalizedUrl("TERMINAL_TROUBLESHOOTING_GUIDE", language)}
 								rel="noopener noreferrer"
 								target="_blank">
-								Complete Troubleshooting Guide
+								{t("terminal.troubleshootingGuideLink", "settings")}
 							</a>
 							.
 						</p>

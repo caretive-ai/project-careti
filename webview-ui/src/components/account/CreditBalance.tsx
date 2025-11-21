@@ -1,4 +1,5 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import { t } from "@/caret/utils/i18n"
 import VSCodeButtonLink from "../common/VSCodeButtonLink"
 import { StyledCreditDisplay } from "./StyledCreditDisplay"
 
@@ -14,10 +15,12 @@ export const CreditBalance = ({ balance, fetchCreditBalance, creditUrl, lastFetc
 	return (
 		<div
 			className="w-full flex flex-col items-center"
-			title={`Last updated: ${new Date(lastFetchTime).toLocaleTimeString()}`}>
-			<div className="text-sm text-(--vscode-descriptionForeground) mb-3 font-azeret-mono font-light">CURRENT BALANCE</div>
+			title={`${t("account.lastUpdated", "common")}: ${new Date(lastFetchTime).toLocaleTimeString()}`}>
+			<div className="text-sm text-[var(--vscode-descriptionForeground)] mb-3 font-azeret-mono font-light">
+				{t("account.currentBalance", "common").toUpperCase()}
+			</div>
 
-			<div className="font-bold text-2xl mb-6 flex items-center gap-2">
+			<div className="text-4xl font-bold text-[var(--vscode-foreground)] mb-6 flex items-center gap-2">
 				{balance === null ? <span>----</span> : <StyledCreditDisplay balance={balance} />}
 				<VSCodeButton
 					appearance="icon"
@@ -30,7 +33,7 @@ export const CreditBalance = ({ balance, fetchCreditBalance, creditUrl, lastFetc
 
 			<div className="w-full">
 				<VSCodeButtonLink className="w-full" href={creditUrl.href}>
-					Add Credits
+					{t("account.addCredits", "common")}
 				</VSCodeButtonLink>
 			</div>
 		</div>

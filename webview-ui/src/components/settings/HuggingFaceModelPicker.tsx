@@ -5,6 +5,7 @@ import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react"
 import { useMount } from "react-use"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { ModelsServiceClient } from "../../services/grpc-client"
 import { highlight } from "../history/HistoryView"
@@ -59,7 +60,7 @@ const HuggingFaceModelPicker: React.FC<HuggingFaceModelPickerProps> = ({ isPopup
 				})
 			})
 			.catch((err) => {
-				console.error("Failed to refresh Hugging Face models:", err)
+				console.error(t("providers.huggingface.fetchModelsError", "settings"), err)
 			})
 	})
 
@@ -166,12 +167,12 @@ const HuggingFaceModelPicker: React.FC<HuggingFaceModelPickerProps> = ({ isPopup
 		<div className="w-full">
 			<div className="flex flex-col">
 				<label htmlFor="hf-model-search">
-					<span className="font-medium">Model</span>
+					<span className="font-medium">{t("modelPicker.label", "settings")}</span>
 				</label>
 
 				<div className="relative w-full" ref={dropdownRef}>
 					<VSCodeTextField
-						className="w-full relative z-1000"
+						className="w-full relative z-[1000]"
 						id="hf-model-search"
 						onFocus={() => setIsDropdownVisible(true)}
 						onInput={(e: any) => {
@@ -180,11 +181,11 @@ const HuggingFaceModelPicker: React.FC<HuggingFaceModelPickerProps> = ({ isPopup
 							setSelectedIndex(-1)
 						}}
 						onKeyDown={handleKeyDown}
-						placeholder="Search models..."
+						placeholder={t("providers.huggingface.searchPlaceholder", "settings")}
 						value={searchTerm}>
 						{searchTerm && (
 							<div
-								aria-label="Clear search"
+								aria-label={t("providers.huggingface.clearSearch", "settings")}
 								className="input-icon-button codicon codicon-close"
 								onClick={() => {
 									setSearchTerm("")
@@ -204,13 +205,13 @@ const HuggingFaceModelPicker: React.FC<HuggingFaceModelPickerProps> = ({ isPopup
 						<div
 							className={`absolute top-[calc(100%-3px)] left-0 w-[calc(100%-2px)] ${
 								isPopup ? "max-h-[90px]" : "max-h-[200px]"
-							} overflow-y-auto bg-(--vscode-dropdown-background) border border-(--vscode-list-activeSelectionBackground) z-999 rounded-b-[3px]`}
+							} overflow-y-auto bg-[var(--vscode-dropdown-background)] border border-[var(--vscode-list-activeSelectionBackground)] z-[999] rounded-b-[3px]`}
 							ref={dropdownListRef}>
 							{modelSearchResults.map((result, index) => (
 								<div
 									className={`p-[5px_10px] cursor-pointer break-all whitespace-normal ${
-										index === selectedIndex ? "bg-(--vscode-list-activeSelectionBackground)" : ""
-									} hover:bg-(--vscode-list-activeSelectionBackground)`}
+										index === selectedIndex ? "bg-[var(--vscode-list-activeSelectionBackground)]" : ""
+									} hover:bg-[var(--vscode-list-activeSelectionBackground)]`}
 									key={result.id}
 									onClick={() => {
 										handleModelChange(result.id)
@@ -219,7 +220,7 @@ const HuggingFaceModelPicker: React.FC<HuggingFaceModelPickerProps> = ({ isPopup
 									onMouseEnter={() => setSelectedIndex(index)}
 									ref={(el: HTMLDivElement | null) => (itemRefs.current[index] = el)}>
 									<div
-										className="[&_.model-item-highlight]:bg-(--vscode-editor-findMatchHighlightBackground) [&_.model-item-highlight]:text-inherit"
+										className="[&_.model-item-highlight]:bg-[var(--vscode-editor-findMatchHighlightBackground)] [&_.model-item-highlight]:text-inherit"
 										dangerouslySetInnerHTML={{ __html: result.html }}
 									/>
 								</div>

@@ -1,0 +1,20 @@
+{
+	"normalState": "默认图片",
+	"thinkingState": "思考中图片",
+	"selector": {
+		"title": "AI助手模板角色设置",
+		"description": "选择您喜欢的角色。您可以自由编辑所选角色，创建您自己的角色。",
+		"selectButtonText": "选择",
+		"selectedButtonText": "已选择",
+		"infoTextCustomInstructions": "所选角色的指令将保存在 custom_instructions.md (全局规则) 中。"
+	},
+	"selectorTitle": "AI助手模板角色设置",
+	"selectorDescription": "选择您喜欢的角色。您可以自由编辑所选角色，创建您自己的角色。",
+	"infoTextCustomInstructions": "所选角色的指令将保存在 custom_instructions.md (全局规则) 中。",
+	"upload": {
+		"normal": "上传默认图片",
+		"thinking": "上传思考中图片",
+		"success": "图片上传成功",
+		"error": "图片上传失败"
+	}
+}

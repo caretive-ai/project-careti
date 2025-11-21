@@ -1,6 +1,7 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React from "react"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 
 const PreviewContainer = styled.div`
 	background-color: var(--vscode-input-background); /* Outer box matches text area */
@@ -28,7 +29,7 @@ const ContentRow = styled.div`
 `
 
 const TextContainer = styled.div`
-	grow: 1;
+	flex-grow: 1;
 	margin: 0 2px; /* Further reduced space around text */
 	white-space: pre-wrap;
 	word-break: break-word;
@@ -45,7 +46,7 @@ const TextContainer = styled.div`
 
 const DismissButton = styled(VSCodeButton)`
 	/* margin-left: auto; */ /* Removed as ContentRow handles spacing */
-	shrink: 0; /* Prevent button from shrinking */
+	flex-shrink: 0; /* Prevent button from shrinking */
 	min-width: 22px;
 	height: 22px;
 	padding: 0;
@@ -58,7 +59,7 @@ const DismissButton = styled(VSCodeButton)`
 const ReplyIcon = styled.span`
 	color: var(--vscode-descriptionForeground);
 	margin-right: 2px; /* Further reduced space between icon and text */
-	shrink: 0;
+	flex-shrink: 0;
 	font-size: 13px; /* Make icon even smaller */
 	/* transform: translateY(-1px); */ /* Removed vertical transform */
 `
@@ -78,7 +79,7 @@ const QuotedMessagePreview: React.FC<QuotedMessagePreviewProps> = ({ text, onDis
 			<ContentRow>
 				<ReplyIcon className="codicon codicon-reply"></ReplyIcon>
 				<TextContainer title={text}>{text}</TextContainer>
-				<DismissButton appearance="icon" aria-label="Dismiss quote" onClick={onDismiss}>
+				<DismissButton appearance="icon" aria-label={t("chat.dismissQuote", "Dismiss quote")} onClick={onDismiss}>
 					<span className="codicon codicon-close"></span>
 				</DismissButton>
 			</ContentRow>

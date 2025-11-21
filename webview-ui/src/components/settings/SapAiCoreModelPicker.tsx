@@ -2,6 +2,7 @@ import { sapAiCoreModels } from "@shared/api"
 import { SapAiCoreModelDeployment } from "@shared/proto/index.cline"
 import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import React, { memo, useEffect, useMemo } from "react"
+import { t } from "@/caret/utils/i18n"
 import { DropdownContainer } from "./common/ModelSelector"
 
 export const SAP_AI_CORE_MODEL_PICKER_Z_INDEX = 1_000
@@ -26,7 +27,7 @@ const SapAiCoreModelPicker: React.FC<SapAiCoreModelPickerProps> = ({
 	selectedModelId,
 	selectedDeploymentId,
 	onModelChange,
-	placeholder = "Select a model...",
+	placeholder,
 	useOrchestrationMode = false,
 }) => {
 	// Auto-fix deployment ID mismatch or missing deployment ID when deployments change (when ai core creds changes)
@@ -123,7 +124,7 @@ const SapAiCoreModelPicker: React.FC<SapAiCoreModelPickerProps> = ({
 				// Add section separator (disabled option)
 				options.push(
 					<VSCodeOption disabled key="deployed-header" value="">
-						── Deployed Models ──
+						{t("providers.sap-ai-core.deployedModels", "settings")}
 					</VSCodeOption>,
 				)
 
@@ -141,7 +142,7 @@ const SapAiCoreModelPicker: React.FC<SapAiCoreModelPickerProps> = ({
 				// Add section separator (disabled option)
 				options.push(
 					<VSCodeOption disabled key="supported-header" value="">
-						── Not Deployed Models ──
+						{t("providers.sap-ai-core.notDeployedModels", "settings")}
 					</VSCodeOption>,
 				)
 
@@ -161,7 +162,7 @@ const SapAiCoreModelPicker: React.FC<SapAiCoreModelPickerProps> = ({
 	return (
 		<DropdownContainer className="dropdown-container" zIndex={SAP_AI_CORE_MODEL_PICKER_Z_INDEX}>
 			<label htmlFor="sap-ai-core-model-dropdown">
-				<span className="font-medium">Model</span>
+				<span className="font-medium">{t("modelPicker.label", "settings")}</span>
 			</label>
 			<VSCodeDropdown
 				id="sap-ai-core-model-dropdown"

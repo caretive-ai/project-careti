@@ -7,6 +7,7 @@ import rehypeHighlight, { Options } from "rehype-highlight"
 import styled from "styled-components"
 import type { Node } from "unist"
 import { visit } from "unist-util-visit"
+import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import MermaidBlock from "@/components/common/MermaidBlock"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -19,7 +20,7 @@ const ActModeHighlight: React.FC = () => {
 
 	return (
 		<span
-			className={`text-(--vscode-textLink-foreground) inline-flex items-center gap-1 ${
+			className={`text-[var(--vscode-textLink-foreground)] inline-flex items-center gap-1 ${
 				mode === "plan" ? "hover:opacity-90 cursor-pointer" : "cursor-default opacity-60"
 			}`}
 			onClick={() => {
@@ -32,11 +33,13 @@ const ActModeHighlight: React.FC = () => {
 					)
 				}
 			}}
-			title={mode === "plan" ? "Click to toggle to Act Mode" : "Already in Act Mode"}>
-			<div className="p-1 rounded-[12px] bg-(--vscode-editor-background) flex items-center justify-end w-4 border border-(--vscode-input-border)">
-				<div className="rounded-full bg-(--vscode-textLink-foreground) w-2 h-2" />
+			title={
+				mode === "plan" ? t("markdownBlock.clickToToggleActMode", "chat") : t("markdownBlock.alreadyInActMode", "chat")
+			}>
+			<div className="p-1 rounded-[12px] bg-[var(--vscode-editor-background)] flex items-center justify-end w-4 border-[1px] border-[var(--vscode-input-border)]">
+				<div className="rounded-full bg-[var(--vscode-textLink-foreground)] w-2 h-2" />
 			</div>
-			Act Mode (⌘⇧A)
+			{t("markdownBlock.actModeShortcut", "chat")}
 		</span>
 	)
 }
@@ -314,7 +317,7 @@ const PreWithCopyButton = ({ children, ...preProps }: React.HTMLAttributes<HTMLP
 	}
 
 	return (
-		<WithCopyButton ariaLabel="Copy code" onCopy={handleCopy} position="top-right">
+		<WithCopyButton ariaLabel={t("markdownBlock.copyCode", "chat")} onCopy={handleCopy} position="top-right">
 			<pre {...preProps} ref={preRef}>
 				{children}
 			</pre>
@@ -407,9 +410,9 @@ const MarkdownBlock = memo(({ markdown, compact }: MarkdownBlockProps) => {
 							<>
 								<code {...props} />
 								<button
-									className="codicon codicon-link-external bg-transparent border-0 appearance-none p-0 ml-0.5 leading-none align-middle opacity-70 hover:opacity-100 transition-opacity text-[1em] relative top-px text-(--vscode-textPreformat-foreground) translate-y-[-2px]"
+									className="codicon codicon-link-external bg-transparent border-0 appearance-none p-0 ml-0.5 leading-none align-middle opacity-70 hover:opacity-100 transition-opacity text-[1em] relative top-[1px] text-[var(--vscode-textPreformat-foreground)] translate-y-[-2px]"
 									onClick={() => FileServiceClient.openFileRelativePath({ value: filePath })}
-									title={`Open ${filePath} in editor`}
+									title={t("markdownBlock.openFileInEditor", "chat", { filePath })}
 									type="button"
 								/>
 							</>

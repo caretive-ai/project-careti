@@ -2,6 +2,7 @@ import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from "react"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { highlight } from "../history/HistoryView"
 
 export const OLLAMA_MODEL_PICKER_Z_INDEX = 1_000
@@ -13,12 +14,7 @@ export interface OllamaModelPickerProps {
 	placeholder?: string
 }
 
-const OllamaModelPicker: React.FC<OllamaModelPickerProps> = ({
-	ollamaModels,
-	selectedModelId,
-	onModelChange,
-	placeholder = "Search and select a model...",
-}) => {
+const OllamaModelPicker: React.FC<OllamaModelPickerProps> = ({ ollamaModels, selectedModelId, onModelChange, placeholder }) => {
 	const [searchTerm, setSearchTerm] = useState(selectedModelId || "")
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false)
 	const [selectedIndex, setSelectedIndex] = useState(-1)
@@ -138,7 +134,7 @@ const OllamaModelPicker: React.FC<OllamaModelPickerProps> = ({
 						setIsDropdownVisible(true)
 					}}
 					onKeyDown={handleKeyDown}
-					placeholder={placeholder}
+					placeholder={placeholder || t("providers.ollama.searchPlaceholder", "settings")}
 					style={{
 						width: "100%",
 						zIndex: OLLAMA_MODEL_PICKER_Z_INDEX,
@@ -147,7 +143,7 @@ const OllamaModelPicker: React.FC<OllamaModelPickerProps> = ({
 					value={searchTerm}>
 					{searchTerm && (
 						<div
-							aria-label="Clear search"
+							aria-label={t("providers.ollama.clearSearch", "settings")}
 							className="input-icon-button codicon codicon-close"
 							onClick={() => {
 								handleModelChange("")

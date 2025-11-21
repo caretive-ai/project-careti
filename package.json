@@ -1,43 +1,46 @@
 {
-	"name": "claude-dev",
-	"displayName": "Cline",
-	"description": "Autonomous coding agent right in your IDE, capable of creating/editing files, running commands, using the browser, and more with your permission every step of the way.",
+	"name": "caret",
+	"displayName": "Caret",
+	"description": "🎯 Transform your coding workflow with the most intelligent AI assistant for Visual Studio Code. Autonomous code generation, multi-file refactoring, and 20+ AI models. Supports: 한국어, 日本語, 中文.",
 	"version": "3.38.1",
 	"icon": "assets/icons/icon.png",
 	"engines": {
 		"vscode": "^1.84.0"
 	},
 	"author": {
-		"name": "Cline Bot Inc."
+		"name": "Caretive Inc."
 	},
 	"license": "Apache-2.0",
-	"publisher": "saoudrizwan",
+	"publisher": "caretive",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/cline/cline"
+		"url": "https://github.com/aicoding-caret/caret"
 	},
-	"homepage": "https://cline.bot",
+	"homepage": "https://caret.team",
 	"categories": [
 		"AI",
 		"Chat",
 		"Programming Languages",
 		"Education",
-		"Snippets",
-		"Testing"
+		"Machine Learning",
+		"Other"
 	],
 	"keywords": [
-		"cline",
-		"claude",
-		"dev",
-		"mcp",
-		"openrouter",
-		"coding",
-		"agent",
+		"ai",
+		"coding assistant",
 		"autonomous",
+		"code generation",
+		"refactoring",
+		"claude",
+		"gpt",
+		"gemini",
 		"chatgpt",
 		"sonnet",
-		"ai",
-		"llama"
+		"mcp",
+		"pair programming",
+		"한국어",
+		"日本語",
+		"中文"
 	],
 	"activationEvents": [
 		"onLanguage",
@@ -48,22 +51,22 @@
 	"contributes": {
 		"walkthroughs": [
 			{
-				"id": "ClineWalkthrough",
-				"title": "Meet Cline, your new coding partner",
-				"description": "Cline codes like a developer because it thinks like one. Here are 5 ways to put it to work:",
+				"id": "CaretWalkthrough",
+				"title": "Meet Caret, your new coding partner",
+				"description": "Caret codes like a developer because it thinks like one. Here are 5 ways to put it to work:",
 				"steps": [
 					{
 						"id": "welcome",
 						"title": "Start with a Goal, Not Just a Prompt",
-						"description": "Tell Cline what you want to achieve. It plans, asks, and then codes, like a true partner.",
+						"description": "Tell Caret what you want to achieve. It plans, asks, and then codes, like a true partner.",
 						"media": {
 							"markdown": "walkthrough/step1.md"
 						}
 					},
 					{
 						"id": "learn",
-						"title": "Let Cline Learn Your Codebase",
-						"description": "Point Cline to your project. It builds understanding to make smart, context-aware changes.",
+						"title": "Let Caret Learn Your Codebase",
+						"description": "Point Caret to your project. It builds understanding to make smart, context-aware changes.",
 						"media": {
 							"markdown": "walkthrough/step2.md"
 						}
@@ -71,7 +74,7 @@
 					{
 						"id": "advanced-features",
 						"title": "Always Use the Best AI Models",
-						"description": "Cline empowers you with State-of-the-Art AI, connecting to top models (Anthropic, Gemini, OpenAI & more).",
+						"description": "Caret empowers you with State-of-the-Art AI, connecting to top models (Anthropic, Gemini, OpenAI & more).",
 						"media": {
 							"markdown": "walkthrough/step3.md"
 						}
@@ -87,7 +90,7 @@
 					{
 						"id": "getting-started",
 						"title": "You're Always in Control",
-						"description": "Review Cline's plans and diffs. Approve changes before they happen. No surprises.",
+						"description": "Review Caret's plans and diffs. Approve changes before they happen. No surprises.",
 						"media": {
 							"markdown": "walkthrough/step5.md"
 						},

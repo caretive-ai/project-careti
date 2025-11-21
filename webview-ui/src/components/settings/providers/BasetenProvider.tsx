@@ -1,4 +1,5 @@
 import { Mode } from "@shared/storage/types"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import BasetenModelPicker from "../BasetenModelPicker"
 import { ApiKeyField } from "../common/ApiKeyField"
@@ -21,11 +22,15 @@ export const BasetenProvider = ({ showModelOptions, isPopup, currentMode }: Base
 	const { handleFieldChange } = useApiConfigurationHandlers()
 
 	return (
-		<div>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.baseten.description", "settings")}
+			</p>
 			<ApiKeyField
+				helpText={t("providers.baseten.apiKeyHelp", "settings", { providerName: "Baseten" })}
 				initialValue={apiConfiguration?.basetenApiKey || ""}
 				onChange={(value) => handleFieldChange("basetenApiKey", value)}
-				providerName="Baseten"
+				providerName={t("providers.baseten.name", "settings")}
 				signupUrl="https://app.baseten.co/settings/api_keys"
 			/>
 

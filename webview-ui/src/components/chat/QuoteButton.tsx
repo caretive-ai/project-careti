@@ -1,6 +1,7 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React from "react"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 
 interface QuoteButtonProps {
 	top: number
@@ -37,13 +38,13 @@ const QuoteButton: React.FC<QuoteButtonProps> = ({ top, left, onClick }) => {
 		<ButtonContainer $left={left} $top={top} className="quote-button-class">
 			<VSCodeButton
 				appearance="icon"
-				aria-label="Quote selection"
+				aria-label={t("chat.quoteSelection", "Quote selection")}
 				onClick={(e) => {
 					e.stopPropagation() // Prevent triggering mouseup on the parent
 					onClick()
 				}}
 				style={{ padding: "2px 4px", height: "auto", minWidth: "auto" }}
-				title="Quote selection in reply">
+				title={t("chat.quoteSelectionInReply", "Quote selection in reply")}>
 				{" "}
 				{/* Adjust padding */}
 				<span

@@ -38,6 +38,7 @@ if (!VALID_PLATFORMS.includes(platform)) {
 console.log("Building webview for", platform)
 
 export default defineConfig({
+	base: "./", // Use relative paths for assets (required for IntelliJ JCEF file:// protocol)
 	plugins: [react(), tailwindcss(), writePortToFile()],
 	test: {
 		environment: "jsdom",
@@ -132,6 +133,8 @@ export default defineConfig({
 			"@context": resolve(__dirname, "./src/context"),
 			"@shared": resolve(__dirname, "../src/shared"),
 			"@utils": resolve(__dirname, "./src/utils"),
+			"@caret": resolve(__dirname, "./src/caret"),
 		},
+		extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
 	},
 })

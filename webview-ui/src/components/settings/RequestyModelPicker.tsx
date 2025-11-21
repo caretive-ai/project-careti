@@ -1,14 +1,17 @@
 import { requestyDefaultModelId, requestyDefaultModelInfo } from "@shared/api"
-import { toRequestyServiceUrl } from "@shared/clients/requesty"
 import { EmptyRequest } from "@shared/proto/cline/common"
+import { toRequestyServiceUrl } from "@shared/providers/requesty"
 import { Mode } from "@shared/storage/types"
 import { VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
-import React, { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react"
+import React, { KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from "react"
+import { useRemark } from "react-remark"
 import { useMount } from "react-use"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { ModelsServiceClient } from "../../services/grpc-client"
+import { CODE_BLOCK_BG_COLOR } from "../common/CodeBlock"
 import { highlight } from "../history/HistoryView"
 import { ModelInfoView } from "./common/ModelInfoView"
 import ThinkingBudgetSlider from "./ThinkingBudgetSlider"
@@ -187,7 +190,7 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, base
 			</style>
 			<div style={{ display: "flex", flexDirection: "column" }}>
 				<label htmlFor="model-search">
-					<span style={{ fontWeight: 500 }}>Model</span>
+					<span style={{ fontWeight: 500 }}>{t("modelPicker.label", "settings")}</span>
 				</label>
 				<DropdownWrapper ref={dropdownRef}>
 					<VSCodeTextField
@@ -198,7 +201,7 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, base
 							setIsDropdownVisible(true)
 						}}
 						onKeyDown={handleKeyDown}
-						placeholder="Search and select a model..."
+						placeholder={t("providers.requesty.searchPlaceholder", "settings")}
 						style={{
 							width: "100%",
 							zIndex: REQUESTY_MODEL_PICKER_Z_INDEX,
@@ -207,7 +210,7 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, base
 						value={searchTerm}>
 						{searchTerm && (
 							<div
-								aria-label="Clear search"
+								aria-label={t("providers.requesty.clearSearch", "settings")}
 								className="input-icon-button codicon codicon-close"
 								onClick={() => {
 									handleModelChange("")
@@ -227,6 +230,7 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, base
 						<DropdownList ref={dropdownListRef}>
 							{modelSearchResults.map((item, index) => (
 								<DropdownItem
+									// biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
 									dangerouslySetInnerHTML={{
 										__html: item.html,
 									}}
@@ -237,7 +241,9 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, base
 										setIsDropdownVisible(false)
 									}}
 									onMouseEnter={() => setSelectedIndex(index)}
-									ref={(el) => (itemRefs.current[index] = el)}
+									ref={(el) => {
+										itemRefs.current[index] = el
+									}}
 								/>
 							))}
 						</DropdownList>
@@ -257,18 +263,24 @@ const RequestyModelPicker: React.FC<RequestyModelPickerProps> = ({ isPopup, base
 						marginTop: 0,
 						color: "var(--vscode-descriptionForeground)",
 					}}>
-					<>
-						The extension automatically fetches the latest list of models available on{" "}
-						<VSCodeLink href={requestyModelListUrl?.toString()} style={{ display: "inline", fontSize: "inherit" }}>
-							Requesty.
-						</VSCodeLink>
-						If you're unsure which model to choose, Cline works best with{" "}
-						<VSCodeLink
-							onClick={() => handleModelChange("anthropic/claude-3-7-sonnet-latest")}
-							style={{ display: "inline", fontSize: "inherit" }}>
-							anthropic/claude-3-7-sonnet-latest.
-						</VSCodeLink>
-					</>
+					The extension automatically fetches the latest list of models available on{" "}
+					<VSCodeLink href={requestyModelListUrl?.toString()} style={{ display: "inline", fontSize: "inherit" }}>
+						Requesty.
+					</VSCodeLink>
+					If you're unsure which model to choose, Cline works best with{" "}
+					<VSCodeLink
+						href={t("providers.requesty.requestyUrl", "settings")}
+						key="requesty"
+						style={{ display: "inline", fontSize: "inherit" }}>
+						{t("providers.requesty.info.linkText", "settings")}
+					</VSCodeLink>{" "}
+					{t("providers.requesty.info.fullText.part2", "settings")}{" "}
+					<VSCodeLink
+						key="claude"
+						onClick={() => handleModelChange("anthropic/claude-3-7-sonnet-latest")}
+						style={{ display: "inline", fontSize: "inherit" }}>
+						{t("providers.requesty.info.recommendedModel", "settings")}
+					</VSCodeLink>
 				</p>
 			)}
 		</div>
@@ -312,3 +324,158 @@ const DropdownItem = styled.div<{ isSelected: boolean }>`
     background-color: var(--vscode-list-activeSelectionBackground);
   }
 `
+
+// Markdown
+
+const StyledMarkdown = styled.div`
+  font-family:
+    var(--vscode-font-family),
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
+  font-size: 12px;
+  color: var(--vscode-descriptionForeground);
+
+  p,
+  li,
+  ol,
+  ul {
+    line-height: 1.25;
+    margin: 0;
+  }
+
+  ol,
+  ul {
+    padding-left: 1.5em;
+    margin-left: 0;
+  }
+
+  p {
+    white-space: pre-wrap;
+  }
+
+  a {
+    text-decoration: none;
+  }
+  a {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`
+
+export const ModelDescriptionMarkdown = memo(
+	({
+		markdown,
+		key,
+		isExpanded,
+		setIsExpanded,
+		isPopup,
+	}: {
+		markdown?: string
+		key: string
+		isExpanded: boolean
+		setIsExpanded: (isExpanded: boolean) => void
+		isPopup?: boolean
+	}) => {
+		const [reactContent, setMarkdown] = useRemark()
+		// const [isExpanded, setIsExpanded] = useState(false)
+		const [showSeeMore, setShowSeeMore] = useState(false)
+		const textContainerRef = useRef<HTMLDivElement>(null)
+		const textRef = useRef<HTMLDivElement>(null)
+
+		useEffect(() => {
+			setMarkdown(markdown || "")
+		}, [markdown, setMarkdown])
+
+		useEffect(() => {
+			if (textRef.current && textContainerRef.current) {
+				const { scrollHeight } = textRef.current
+				const { clientHeight } = textContainerRef.current
+				const isOverflowing = scrollHeight > clientHeight
+				setShowSeeMore(isOverflowing)
+				// if (!isOverflowing) {
+				// 	setIsExpanded(false)
+				// }
+			}
+		}, [reactContent, setIsExpanded])
+
+		return (
+			<StyledMarkdown key={key} style={{ display: "inline-block", marginBottom: 0 }}>
+				<div
+					ref={textContainerRef}
+					style={{
+						overflowY: isExpanded ? "auto" : "hidden",
+						position: "relative",
+						wordBreak: "break-word",
+						overflowWrap: "anywhere",
+					}}>
+					<div
+						ref={textRef}
+						style={{
+							display: "-webkit-box",
+							WebkitLineClamp: isExpanded ? "unset" : 3,
+							WebkitBoxOrient: "vertical",
+							overflow: "hidden",
+							// whiteSpace: "pre-wrap",
+							// wordBreak: "break-word",
+							// overflowWrap: "anywhere",
+						}}>
+						{reactContent}
+					</div>
+					{!isExpanded && showSeeMore && (
+						<div
+							style={{
+								position: "absolute",
+								right: 0,
+								bottom: 0,
+								display: "flex",
+								alignItems: "center",
+							}}>
+							<div
+								style={{
+									width: 30,
+									height: "1.2em",
+									background: "linear-gradient(to right, transparent, var(--vscode-sideBar-background))",
+								}}
+							/>
+							<VSCodeLink
+								onClick={() => setIsExpanded(true)}
+								style={{
+									// cursor: "pointer",
+									// color: "var(--vscode-textLink-foreground)",
+									fontSize: "inherit",
+									paddingRight: 0,
+									paddingLeft: 3,
+									backgroundColor: isPopup ? CODE_BLOCK_BG_COLOR : "var(--vscode-sideBar-background)",
+								}}>
+								{t("common.seeMore")}
+							</VSCodeLink>
+						</div>
+					)}
+				</div>
+				{/* {isExpanded && showSeeMore && (
+				<div
+					style={{
+						cursor: "pointer",
+						color: "var(--vscode-textLink-foreground)",
+						marginLeft: "auto",
+						textAlign: "right",
+						paddingRight: 2,
+					}}
+					onClick={() => setIsExpanded(false)}>
+					See less
+				</div>
+			)} */}
+			</StyledMarkdown>
+		)
+	},
+)

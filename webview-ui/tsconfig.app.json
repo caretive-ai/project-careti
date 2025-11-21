@@ -45,10 +45,14 @@
 			],
 			"@utils/*": [
 				"src/utils/*"
+			],
+			"@caret/*": [
+				"src/caret/*"
 			]
 		}
 	},
 	"include": [
-		"src"
+		"src",
+		"src/caret/utils"
 	]
 }

@@ -1,0 +1,282 @@
+현재 브랜치 merge/cline-v3.38.1-attempt2
+브랜치가 'origin/merge/cline-v3.38.1-attempt2'보다 2개 커밋만큼 앞에 있습니다.
+  (로컬에 있는 커밋을 제출하려면 "git push"를 사용하십시오)
+
+커밋하도록 정하지 않은 변경 사항:
+  (무엇을 커밋할지 바꾸려면 "git add/rm <파일>..."을 사용하십시오)
+  (use "git restore <file>..." to discard changes in working directory)
+	수정함:        caret-docs/merging/v3.38.1/attempt-2-claude-review.md
+	수정함:        caret-src/services/persona/persona-initializer.ts
+	수정함:        package.json
+	수정함:        proto/caret/account.proto
+	수정함:        proto/caret/persona.proto
+	수정함:        proto/caret/system.proto
+	수정함:        proto/cline/file.proto
+	수정함:        scripts/proto-utils.mjs
+	수정함:        src/core/hooks/hook-executor.ts
+	수정함:        src/shared/ExtensionMessage.ts
+	수정함:        src/shared/Languages.ts
+	수정함:        src/shared/combineHookSequences.ts
+	수정함:        src/shared/proto-conversions/cline-message.ts
+	수정함:        src/shared/storage/types.ts
+	수정함:        webview-ui/.storybook/themes.ts
+	삭제함:        webview-ui/components.json
+	수정함:        webview-ui/index.html
+	삭제함:        webview-ui/package-lock.json
+	수정함:        webview-ui/package.json
+	수정함:        webview-ui/src/App.stories.tsx
+	수정함:        webview-ui/src/App.tsx
+	수정함:        webview-ui/src/Providers.tsx
+	수정함:        webview-ui/src/assets/ClineLogoVariable.tsx
+	수정함:        webview-ui/src/components/account/AccountOptions.tsx
+	수정함:        webview-ui/src/components/account/AccountView.tsx
+	수정함:        webview-ui/src/components/account/AccountWelcomeView.tsx
+	수정함:        webview-ui/src/components/account/CreditBalance.tsx
+	수정함:        webview-ui/src/components/account/CreditsHistoryTable.tsx
+	수정함:        webview-ui/src/components/account/StyledCreditDisplay.tsx
+	수정함:        webview-ui/src/components/browser/BrowserSettingsMenu.tsx
+	수정함:        webview-ui/src/components/chat/Announcement.tsx
+	수정함:        webview-ui/src/components/chat/BrowserSessionRow.tsx
+	수정함:        webview-ui/src/components/chat/ChatErrorBoundary.tsx
+	수정함:        webview-ui/src/components/chat/ChatRow.tsx
+	수정함:        webview-ui/src/components/chat/ChatTextArea.tsx
+	수정함:        webview-ui/src/components/chat/ChatView.tsx
+	수정함:        webview-ui/src/components/chat/ContextMenu.tsx
+	수정함:        webview-ui/src/components/chat/CreditLimitError.tsx
+	수정함:        webview-ui/src/components/chat/ErrorBlockTitle.tsx
+	수정함:        webview-ui/src/components/chat/ErrorRow.stories.tsx
+	삭제함:        webview-ui/src/components/chat/ErrorRow.test.tsx
+	수정함:        webview-ui/src/components/chat/ErrorRow.tsx
+	삭제함:        webview-ui/src/components/chat/HookMessage.tsx
+	수정함:        webview-ui/src/components/chat/NewTaskPreview.tsx
+	수정함:        webview-ui/src/components/chat/QuoteButton.tsx
+	수정함:        webview-ui/src/components/chat/QuotedMessagePreview.tsx
+	수정함:        webview-ui/src/components/chat/ReportBugPreview.tsx
+	수정함:        webview-ui/src/components/chat/ServersToggleModal.tsx
+	수정함:        webview-ui/src/components/chat/SlashCommandMenu.tsx
+	수정함:        webview-ui/src/components/chat/TaskFeedbackButtons.tsx
+	수정함:        webview-ui/src/components/chat/UserMessage.tsx
+	수정함:        webview-ui/src/components/chat/VoiceRecorder.tsx
+	삭제함:        webview-ui/src/components/chat/__tests__/Announcement.spec.tsx
+	삭제함:        webview-ui/src/components/chat/__tests__/ErrorBlockTitle.spec.tsx
+	삭제함:        webview-ui/src/components/chat/__tests__/UserMessage.ime.test.tsx
+	수정함:        webview-ui/src/components/chat/auto-approve-menu/AutoApproveBar.tsx
+	수정함:        webview-ui/src/components/chat/auto-approve-menu/AutoApproveMenuItem.tsx
+	수정함:        webview-ui/src/components/chat/auto-approve-menu/AutoApproveModal.tsx
+	수정함:        webview-ui/src/components/chat/auto-approve-menu/AutoApproveSettingsAPI.ts
+	수정함:        webview-ui/src/components/chat/auto-approve-menu/constants.ts
+	수정함:        webview-ui/src/components/chat/auto-approve-menu/types.ts
+	수정함:        webview-ui/src/components/chat/chat-view/components/layout/ActionButtons.tsx
+	수정함:        webview-ui/src/components/chat/chat-view/components/layout/InputSection.tsx
+	수정함:        webview-ui/src/components/chat/chat-view/components/layout/MessagesArea.tsx
+	수정함:        webview-ui/src/components/chat/chat-view/components/layout/TaskSection.tsx
+	수정함:        webview-ui/src/components/chat/chat-view/components/layout/WelcomeSection.tsx
+	수정함:        webview-ui/src/components/chat/chat-view/components/messages/MessageRenderer.tsx
+	수정함:        webview-ui/src/components/chat/chat-view/hooks/useMessageHandlers.ts
+	수정함:        webview-ui/src/components/chat/chat-view/shared/buttonConfig.test.ts
+	수정함:        webview-ui/src/components/chat/chat-view/shared/buttonConfig.ts
+	수정함:        webview-ui/src/components/chat/chat-view/types/chatTypes.ts
+	수정함:        webview-ui/src/components/chat/chat-view/utils/messageUtils.ts
+	삭제함:        webview-ui/src/components/chat/constants.ts
+	수정함:        webview-ui/src/components/chat/task-header/CheckpointError.tsx
+	수정함:        webview-ui/src/components/chat/task-header/ContextWindow.tsx
+	수정함:        webview-ui/src/components/chat/task-header/ContextWindowSummary.tsx
+	수정함:        webview-ui/src/components/chat/task-header/FocusChain.tsx
+	삭제함:        webview-ui/src/components/chat/task-header/TaskHeader.stories.tsx
+	수정함:        webview-ui/src/components/chat/task-header/TaskHeader.tsx
+	수정함:        webview-ui/src/components/chat/task-header/TaskTimeline.tsx
+	수정함:        webview-ui/src/components/chat/task-header/TaskTimelineTooltip.tsx
+	수정함:        webview-ui/src/components/chat/task-header/buttons/CompactTaskButton.tsx
+	수정함:        webview-ui/src/components/chat/task-header/buttons/CopyTaskButton.tsx
+	수정함:        webview-ui/src/components/chat/task-header/buttons/DeleteTaskButton.tsx
+	수정함:        webview-ui/src/components/chat/task-header/buttons/NewTaskButton.tsx
+	수정함:        webview-ui/src/components/chat/task-header/buttons/OpenDiskConversationHistoryButton.tsx
+	수정함:        webview-ui/src/components/chat/task-header/util.ts
+	수정함:        webview-ui/src/components/cline-rules/ClineRulesToggleModal.tsx
+	수정함:        webview-ui/src/components/cline-rules/NewRuleRow.tsx
+	수정함:        webview-ui/src/components/cline-rules/RuleRow.tsx
+	수정함:        webview-ui/src/components/cline-rules/RulesToggleList.tsx
+	수정함:        webview-ui/src/components/common/AlertDialog.tsx
+	수정함:        webview-ui/src/components/common/ChecklistRenderer.tsx
+	수정함:        webview-ui/src/components/common/CheckmarkControl.tsx
+	수정함:        webview-ui/src/components/common/CheckpointControls.tsx
+	삭제함:        webview-ui/src/components/common/CliInstallBanner.tsx
+	수정함:        webview-ui/src/components/common/CodeAccordian.tsx
+	수정함:        webview-ui/src/components/common/CodeBlock.tsx
+	수정함:        webview-ui/src/components/common/CopyButton.tsx
+	수정함:        webview-ui/src/components/common/DangerButton.tsx
+	수정함:        webview-ui/src/components/common/Demo.tsx
+	수정함:        webview-ui/src/components/common/InfoBanner.tsx
+	수정함:        webview-ui/src/components/common/MarkdownBlock.tsx
+	수정함:        webview-ui/src/components/common/MermaidBlock.tsx
+	수정함:        webview-ui/src/components/common/NewModelBanner.tsx
+	수정함:        webview-ui/src/components/common/SettingsButton.tsx
+	수정함:        webview-ui/src/components/common/SuccessButton.tsx
+	수정함:        webview-ui/src/components/common/Tab.tsx
+	수정함:        webview-ui/src/components/common/TelemetryBanner.tsx
+	수정함:        webview-ui/src/components/common/Thumbnails.tsx
+	수정함:        webview-ui/src/components/history/HistoryPreview.tsx
+	수정함:        webview-ui/src/components/history/HistoryView.tsx
+	수정함:        webview-ui/src/components/mcp/chat-display/ImagePreview.tsx
+	수정함:        webview-ui/src/components/mcp/chat-display/LinkPreview.tsx
+	수정함:        webview-ui/src/components/mcp/chat-display/McpResponseDisplay.tsx
+	수정함:        webview-ui/src/components/mcp/configuration/McpConfigurationView.tsx
+	수정함:        webview-ui/src/components/mcp/configuration/tabs/add-server/AddLocalServerForm.tsx
+	수정함:        webview-ui/src/components/mcp/configuration/tabs/add-server/AddRemoteServerForm.tsx
+	수정함:        webview-ui/src/components/mcp/configuration/tabs/installed/ConfigureServersView.tsx
+	수정함:        webview-ui/src/components/mcp/configuration/tabs/installed/ServersToggleList.tsx
+	수정함:        webview-ui/src/components/mcp/configuration/tabs/installed/server-row/McpResourceRow.tsx
+	수정함:        webview-ui/src/components/mcp/configuration/tabs/installed/server-row/McpToolRow.tsx
+	수정함:        webview-ui/src/components/mcp/configuration/tabs/installed/server-row/ServerRow.tsx
+	수정함:        webview-ui/src/components/mcp/configuration/tabs/marketplace/McpMarketplaceCard.tsx
+	수정함:        webview-ui/src/components/mcp/configuration/tabs/marketplace/McpMarketplaceView.tsx
+	수정함:        webview-ui/src/components/mcp/configuration/tabs/marketplace/McpSubmitCard.tsx
+	수정함:        webview-ui/src/components/menu/Navbar.tsx
+	삭제함:        webview-ui/src/components/onboarding/OnboardingView.tsx
+	삭제함:        webview-ui/src/components/onboarding/data-models.ts
+	삭제함:        webview-ui/src/components/onboarding/data-steps.ts
+	수정함:        webview-ui/src/components/settings/ApiOptions.tsx
+	수정함:        webview-ui/src/components/settings/BasetenModelPicker.tsx
+	수정함:        webview-ui/src/components/settings/ClineAccountInfoCard.tsx
+	수정함:        webview-ui/src/components/settings/GroqModelPicker.tsx
+	삭제함:        webview-ui/src/components/settings/HicapModelPicker.tsx
+	수정함:        webview-ui/src/components/settings/HuggingFaceModelPicker.tsx
+	수정함:        webview-ui/src/components/settings/ModelDescriptionMarkdown.tsx
+	수정함:        webview-ui/src/components/settings/OllamaModelPicker.tsx
+	수정함:        webview-ui/src/components/settings/OpenRouterModelPicker.tsx
+	수정함:        webview-ui/src/components/settings/PreferredLanguageSetting.tsx
+	수정함:        webview-ui/src/components/settings/RequestyModelPicker.tsx
+	수정함:        webview-ui/src/components/settings/SapAiCoreModelPicker.tsx
+	수정함:        webview-ui/src/components/settings/SectionHeader.tsx
+	수정함:        webview-ui/src/components/settings/SettingsView.tsx
+	삭제함:        webview-ui/src/components/settings/SubagentOutputLineLimitSlider.tsx
+	수정함:        webview-ui/src/components/settings/TerminalOutputLineLimitSlider.tsx
+	수정함:        webview-ui/src/components/settings/ThinkingBudgetSlider.tsx
+	수정함:        webview-ui/src/components/settings/UseCustomPromptCheckbox.tsx
+	삭제함:        webview-ui/src/components/settings/__tests__/APIOptions.spec.tsx
+	삭제함:        webview-ui/src/components/settings/__tests__/OllamaModelPicker.spec.tsx
+	삭제함:        webview-ui/src/components/settings/__tests__/SapAiCoreModelPicker.spec.tsx
+	수정함:        webview-ui/src/components/settings/common/ApiKeyField.tsx
+	수정함:        webview-ui/src/components/settings/common/BaseUrlField.tsx
+	수정함:        webview-ui/src/components/settings/common/ContextWindowSwitcher.tsx
+	수정함:        webview-ui/src/components/settings/common/DebouncedTextField.tsx
+	수정함:        webview-ui/src/components/settings/common/ModelInfoView.tsx
+	수정함:        webview-ui/src/components/settings/common/ModelSelector.tsx
+	삭제함:        webview-ui/src/components/settings/providers/AihubmixProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/AnthropicProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/AskSageProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/BasetenProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/BedrockProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/CerebrasProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/ClaudeCodeProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/ClineProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/DeepSeekProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/DifyProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/DoubaoProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/FireworksProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/GeminiProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/GroqProvider.tsx
+	삭제함:        webview-ui/src/components/settings/providers/HicapProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/HuaweiCloudMaasProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/HuggingFaceProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/LMStudioProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/LiteLlmProvider.tsx
+	삭제함:        webview-ui/src/components/settings/providers/MiniMaxProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/MistralProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/MoonshotProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/NebiusProvider.tsx
+	삭제함:        webview-ui/src/components/settings/providers/NousresearchProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/OcaModelPicker.tsx
+	수정함:        webview-ui/src/components/settings/providers/OcaProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/OllamaProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/OpenAICompatible.tsx
+	수정함:        webview-ui/src/components/settings/providers/OpenAINative.tsx
+	수정함:        webview-ui/src/components/settings/providers/OpenRouterProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/QwenCodeProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/QwenProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/RequestyProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/SambanovaProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/SapAiCoreProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/TogetherProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/VSCodeLmProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/VercelAIGatewayProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/VertexProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/XaiProvider.tsx
+	수정함:        webview-ui/src/components/settings/providers/ZAiProvider.tsx
+	수정함:        webview-ui/src/components/settings/sections/AboutSection.tsx
+	수정함:        webview-ui/src/components/settings/sections/ApiConfigurationSection.tsx
+	수정함:        webview-ui/src/components/settings/sections/BrowserSettingsSection.tsx
+	수정함:        webview-ui/src/components/settings/sections/DebugSection.tsx
+	수정함:        webview-ui/src/components/settings/sections/FeatureSettingsSection.tsx
+	수정함:        webview-ui/src/components/settings/sections/GeneralSettingsSection.tsx
+	수정함:        webview-ui/src/components/settings/sections/TerminalSettingsSection.tsx
+	수정함:        webview-ui/src/components/settings/utils/pricingUtils.ts
+	수정함:        webview-ui/src/components/settings/utils/providerUtils.ts
+	수정함:        webview-ui/src/components/settings/utils/settingsHandlers.ts
+	수정함:        webview-ui/src/components/settings/utils/useApiConfigurationHandlers.ts
+	수정함:        webview-ui/src/components/settings/utils/useDebouncedInput.ts
+	삭제함:        webview-ui/src/components/ui/alert.tsx
+	삭제함:        webview-ui/src/components/ui/badge.tsx
+	삭제함:        webview-ui/src/components/ui/button.tsx
+	삭제함:        webview-ui/src/components/ui/hover-card.tsx
+	삭제함:        webview-ui/src/components/ui/input.tsx
+	삭제함:        webview-ui/src/components/ui/item.tsx
+	삭제함:        webview-ui/src/components/ui/popover.tsx
+	삭제함:        webview-ui/src/components/ui/progress.tsx
+	삭제함:        webview-ui/src/components/ui/separator.tsx
+	삭제함:        webview-ui/src/components/ui/switch.tsx
+	삭제함:        webview-ui/src/components/ui/tooltip.tsx
+	수정함:        webview-ui/src/components/welcome/HomeHeader.tsx
+	수정함:        webview-ui/src/components/welcome/QuickWinCard.tsx
+	수정함:        webview-ui/src/components/welcome/SuggestedTasks.tsx
+	수정함:        webview-ui/src/components/welcome/WelcomeView.tsx
+	수정함:        webview-ui/src/config/platform.config.ts
+	수정함:        webview-ui/src/constants.ts
+	수정함:        webview-ui/src/context/ExtensionStateContext.tsx
+	수정함:        webview-ui/src/hooks/useAutoApproveActions.ts
+	수정함:        webview-ui/src/index.css
+	삭제함:        webview-ui/src/lib/utils.ts
+	삭제함:        webview-ui/src/main.css
+	수정함:        webview-ui/src/main.tsx
+	삭제함:        webview-ui/src/theme.css
+	수정함:        webview-ui/src/utils/context-mentions.ts
+	삭제함:        webview-ui/src/utils/environmentColors.ts
+	수정함:        webview-ui/src/utils/format.ts
+	수정함:        webview-ui/src/utils/platformUtils.ts
+	수정함:        webview-ui/src/utils/slash-commands.ts
+	수정함:        webview-ui/src/utils/validate.ts
+	수정함:        webview-ui/src/vite-env.d.ts
+	수정함:        webview-ui/tsconfig.app.json
+	수정함:        webview-ui/tsconfig.json
+	수정함:        webview-ui/vite.config.ts
+
+추적하지 않는 파일:
+  (커밋할 사항에 포함하려면 "git add <파일>..."을 사용하십시오)
+	0001-B2-restore-Caret-backend-wiring-and-services.patch
+	src/shared/CaretSettings.ts
+	src/shared/proto-conversions/models/auto-approval-settings-conversion.ts
+	src/shared/providers/requesty.ts
+	src/shared/webview/
+	status.txt
+	webview-ui/__mocks__/
+	webview-ui/src/assets/CaretLogoVariable.tsx
+	webview-ui/src/assets/CaretLogoWhite.tsx
+	webview-ui/src/caret/
+	webview-ui/src/components/chat/task-header/buttons/OpenDiskTaskHistoryButton.tsx
+	webview-ui/src/components/common/HeroTooltip.tsx
+	webview-ui/src/components/common/Tooltip.tsx
+	webview-ui/src/components/settings/CaretAuthHandler.tsx
+	webview-ui/src/components/settings/CaretModelPicker.tsx
+	webview-ui/src/components/settings/providers/BizRouterProvider.tsx
+	webview-ui/src/components/settings/providers/CaretProvider.tsx
+	webview-ui/src/components/settings/providers/CaretProvider.tsx_
+	webview-ui/src/components/welcome/WelcomeView.tsx.cline
+	webview-ui/src/context/__tests__/
+	webview-ui/src/contexts/
+	webview-ui/src/test/
+	webview-ui/src/utils/vscode.ts
+	webview-ui/tsconfig.tsbuildinfo
+	webview-ui/vitest.config.ts
+
+커밋할 변경 사항을 추가하지 않았습니다 ("git add" 및/또는 "git commit -a"를
+사용하십시오)

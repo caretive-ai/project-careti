@@ -22,6 +22,25 @@ export function formatDollars(cents?: number): string {
 	return (cents / 100).toFixed(2)
 }
 
+export function formatCurrencyAmount(value: number | string | null | undefined, fractionDigits = 2, fallback = "0.00"): string {
+	if (value === null || value === undefined) {
+		return fallback
+	}
+
+	const numericValue = typeof value === "number" ? value : Number(value)
+	const digits = Math.min(20, Math.max(0, fractionDigits))
+
+	if (Number.isFinite(numericValue)) {
+		return numericValue.toFixed(digits)
+	}
+
+	if (typeof value === "string" && value.trim().length > 0) {
+		return value
+	}
+
+	return fallback
+}
+
 /**
  * Converts microcredits to credits for display purposes.
  *

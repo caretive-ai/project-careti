@@ -328,8 +328,9 @@ export async function resetPersonaData(context: vscode.ExtensionContext): Promis
 		}
 
 		// 3. globalState의 레거시 페르소나 프로필 삭제
-		await context.globalState.update("personaProfile", undefined)
-		Logger.info("[CARET-PERSONA] Legacy personaProfile from globalState deleted.")
+		const { globalState } = context
+		await globalState.update("personaProfile", undefined)
+		Logger.info("[CARET-PERSONA] Legacy personaProfile removed.")
 
 		Logger.info("[CARET-PERSONA] Persona data reset completed")
 	} catch (error) {

@@ -47,13 +47,22 @@ export async function loadServicesFromProtoDescriptor() {
 			addTypeNameToFqn(name, `proto.host.${name}`)
 		}
 	}
-	const protobusServices = {}
-	for (const [name, def] of Object.entries(proto.cline)) {
-		if (def && "service" in def) {
-			protobusServices[name] = def
-		} else {
-			addTypeNameToFqn(name, `proto.cline.${name}`)
+	const protobusServices = []
+
+	const addServices = (pkg, services) => {
+		for (const [name, def] of Object.entries(services)) {
+			if (def && "service" in def) {
+				protobusServices.push({ name, def, pkg })
+			} else {
+				addTypeNameToFqn(name, `proto.${pkg}.${name}`)
+			}
 		}
 	}
+
+	addServices("cline", proto.cline)
+	if (proto.caret) {
+		addServices("caret", proto.caret)
+	}
+
 	return { protobusServices, hostServices }
 }

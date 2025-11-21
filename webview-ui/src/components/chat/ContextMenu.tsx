@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { cleanPathPrefix } from "@/components/common/CodeAccordian"
 import { ContextMenuOptionType, ContextMenuQueryItem, getContextMenuOptions, SearchResult } from "@/utils/context-mentions"
 
@@ -82,13 +83,13 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 	const renderOptionContent = (option: ContextMenuQueryItem) => {
 		switch (option.type) {
 			case ContextMenuOptionType.Problems:
-				return <span>Problems</span>
+				return <span>{t("contextMenu.problems", "chat")}</span>
 			case ContextMenuOptionType.Terminal:
-				return <span>Terminal</span>
+				return <span>{t("contextMenu.terminal", "chat")}</span>
 			case ContextMenuOptionType.URL:
-				return <span>Paste URL to fetch contents</span>
+				return <span>{t("contextMenu.pasteUrlToFetchContents", "chat")}</span>
 			case ContextMenuOptionType.NoResults:
-				return <span>No results found</span>
+				return <span>{t("contextMenu.noResultsFound", "chat")}</span>
 			case ContextMenuOptionType.Git:
 				if (option.value) {
 					return (
@@ -111,7 +112,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 						</div>
 					)
 				} else {
-					return <span>Git Commits</span>
+					return <span>{t("contextMenu.gitCommits", "chat")}</span>
 				}
 			case ContextMenuOptionType.File:
 			case ContextMenuOptionType.Folder:
@@ -138,7 +139,14 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 						</>
 					)
 				} else {
-					return <span>Add {option.type === ContextMenuOptionType.File ? "File" : "Folder"}</span>
+					return (
+						<span>
+							{t("contextMenu.add", "chat")}{" "}
+							{option.type === ContextMenuOptionType.File
+								? t("contextMenu.file", "chat")
+								: t("contextMenu.folder", "chat")}
+						</span>
+					)
 				}
 		}
 	}
@@ -202,7 +210,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 							opacity: 0.7,
 						}}>
 						<i className="codicon codicon-loading codicon-modifier-spin" style={{ fontSize: "14px" }} />
-						<span>Searching...</span>
+						<span>{t("contextMenu.searching", "chat")}</span>
 					</div>
 				)}
 				{filteredOptions.map((option, index) => {

@@ -1,6 +1,7 @@
 import { Mode } from "@shared/storage/types"
 import { VSCodeCheckbox, VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ClineAccountInfoCard } from "../ClineAccountInfoCard"
 import { DropdownContainer } from "../common/ModelSelector"
@@ -45,7 +46,7 @@ export const ClineProvider = ({ showModelOptions, isPopup, currentMode }: ClineP
 							}
 						}}
 						style={{ marginTop: -10 }}>
-						Sort underlying provider routing
+						{t("clineProvider.sortUnderlyingProviderRouting", "settings")}
 					</VSCodeCheckbox>
 
 					{providerSortingSelected && (
@@ -57,21 +58,23 @@ export const ClineProvider = ({ showModelOptions, isPopup, currentMode }: ClineP
 									}}
 									style={{ width: "100%", marginTop: 3 }}
 									value={apiConfiguration?.openRouterProviderSorting}>
-									<VSCodeOption value="">Default</VSCodeOption>
-									<VSCodeOption value="price">Price</VSCodeOption>
-									<VSCodeOption value="throughput">Throughput</VSCodeOption>
-									<VSCodeOption value="latency">Latency</VSCodeOption>
+									<VSCodeOption value="">{t("clineProvider.defaultOption", "settings")}</VSCodeOption>
+									<VSCodeOption value="price">{t("clineProvider.priceOption", "settings")}</VSCodeOption>
+									<VSCodeOption value="throughput">
+										{t("clineProvider.throughputOption", "settings")}
+									</VSCodeOption>
+									<VSCodeOption value="latency">{t("clineProvider.latencyOption", "settings")}</VSCodeOption>
 								</VSCodeDropdown>
 							</DropdownContainer>
 							<p style={{ fontSize: "12px", marginTop: 3, color: "var(--vscode-descriptionForeground)" }}>
 								{!apiConfiguration?.openRouterProviderSorting &&
-									"Default behavior is to load balance requests across providers (like AWS, Google Vertex, Anthropic), prioritizing price while considering provider uptime"}
+									t("clineProvider.defaultSortingDescription", "settings")}
 								{apiConfiguration?.openRouterProviderSorting === "price" &&
-									"Sort providers by price, prioritizing the lowest cost provider"}
+									t("clineProvider.priceSortingDescription", "settings")}
 								{apiConfiguration?.openRouterProviderSorting === "throughput" &&
-									"Sort providers by throughput, prioritizing the provider with the highest throughput (may increase cost)"}
+									t("clineProvider.throughputSortingDescription", "settings")}
 								{apiConfiguration?.openRouterProviderSorting === "latency" &&
-									"Sort providers by response time, prioritizing the provider with the lowest latency"}
+									t("clineProvider.latencySortingDescription", "settings")}
 							</p>
 						</div>
 					)}

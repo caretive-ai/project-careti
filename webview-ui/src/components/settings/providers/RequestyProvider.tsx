@@ -1,10 +1,8 @@
-import { toRequestyServiceUrl } from "@shared/clients/requesty"
-import { StringRequest } from "@shared/proto/cline/common"
 import { Mode } from "@shared/storage/types"
-import { VSCodeButton, VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { AccountServiceClient } from "@/services/grpc-client"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { DebouncedTextField } from "../common/DebouncedTextField"
 import RequestyModelPicker from "../RequestyModelPicker"
@@ -28,35 +26,15 @@ export const RequestyProvider = ({ showModelOptions, isPopup, currentMode }: Req
 
 	const [requestyEndpointSelected, setRequestyEndpointSelected] = useState(!!apiConfiguration?.requestyBaseUrl)
 
-	const resolvedUrl = toRequestyServiceUrl(apiConfiguration?.requestyBaseUrl, "app")
-	const apiKeyUrl = resolvedUrl != null ? new URL("api-keys", resolvedUrl).toString() : undefined
-
 	return (
-		<div style={{ display: "flex", flexDirection: "column" }}>
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ whiteSpace: "pre-wrap" }}>{t("providers.requesty.description", "settings")}</p>
 			<ApiKeyField
 				initialValue={apiConfiguration?.requestyApiKey || ""}
 				onChange={(value) => handleFieldChange("requestyApiKey", value)}
-				providerName="Requesty"
-				signupUrl={apiKeyUrl}
+				providerName={t("providers.requesty.name", "settings")}
+				signupUrl="https://app.requesty.ai/api-keys"
 			/>
-			{!apiConfiguration?.requestyApiKey && (
-				<VSCodeButton
-					appearance="secondary"
-					onClick={async () => {
-						try {
-							await AccountServiceClient.requestyAuthClicked(
-								StringRequest.create({
-									value: apiConfiguration?.requestyBaseUrl || "",
-								}),
-							)
-						} catch (error) {
-							console.error("Failed to open Requesty auth:", error)
-						}
-					}}
-					style={{ margin: "5px 0 0 0" }}>
-					Get Requesty API Key
-				</VSCodeButton>
-			)}
 			<VSCodeCheckbox
 				checked={requestyEndpointSelected}
 				onChange={(e: any) => {
@@ -64,29 +42,23 @@ export const RequestyProvider = ({ showModelOptions, isPopup, currentMode }: Req
 					setRequestyEndpointSelected(isChecked)
 
 					if (!isChecked) {
-						handleFieldChange("requestyBaseUrl", undefined)
+						handleFieldChange("requestyBaseUrl", "")
 					}
 				}}>
-				Use custom base URL
+				{t("providers.requesty.useCustomBaseUrlLabel", "settings")}
 			</VSCodeCheckbox>
 			{requestyEndpointSelected && (
 				<DebouncedTextField
 					initialValue={apiConfiguration?.requestyBaseUrl ?? ""}
 					onChange={(value) => {
-						if (value.length === 0) {
-							handleFieldChange("requestyBaseUrl", undefined)
-						} else {
-							handleFieldChange("requestyBaseUrl", value)
-						}
+						handleFieldChange("requestyBaseUrl", value)
 					}}
-					placeholder="Custom base URL"
+					placeholder={t("providers.requesty.customBaseUrlPlaceholder", "settings")}
 					style={{ width: "100%", marginBottom: 5 }}
-					type="text"
+					type="url"
 				/>
 			)}
-			{showModelOptions && (
-				<RequestyModelPicker baseUrl={apiConfiguration?.requestyBaseUrl} currentMode={currentMode} isPopup={isPopup} />
-			)}
+			{showModelOptions && <RequestyModelPicker currentMode={currentMode} isPopup={isPopup} />}
 		</div>
 	)
 }

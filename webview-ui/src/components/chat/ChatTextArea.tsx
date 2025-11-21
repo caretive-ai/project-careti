@@ -1,4 +1,6 @@
-import { PulsingBorder } from "@paper-design/shaders-react"
+import { cn } from "@heroui/react"
+// CARET MODIFICATION: PulsingBorder removed (voice feature deleted)
+import { caretDefaultModelId } from "@shared/api"
 import { mentionRegex, mentionRegexGlobal } from "@shared/context-mentions"
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import { FileSearchRequest, FileSearchType, RelativePathsRequest } from "@shared/proto/cline/file"
@@ -13,19 +15,21 @@ import { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, u
 import DynamicTextArea from "react-textarea-autosize"
 import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
+import { useInputHistory } from "@/caret/hooks/useInputHistory"
+// CARET MODIFICATION: Import i18n for Chatbot/Agent mode labels
+import { t } from "@/caret/utils/i18n"
 import ContextMenu from "@/components/chat/ContextMenu"
 import { CHAT_CONSTANTS } from "@/components/chat/chat-view/constants"
 import SlashCommandMenu from "@/components/chat/SlashCommandMenu"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import Thumbnails from "@/components/common/Thumbnails"
+import Tooltip from "@/components/common/Tooltip"
 import ApiOptions from "@/components/settings/ApiOptions"
 import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { useClineAuth } from "@/context/ClineAuthContext"
+// CARET MODIFICATION: useClineAuth removed (only used for voice feature)
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { usePlatform } from "@/context/PlatformContext"
-import { cn } from "@/lib/utils"
-import { FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
+import { CaretSystemServiceClient, FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
 import {
 	ContextMenuOptionType,
 	getContextMenuOptionIndex,
@@ -50,7 +54,8 @@ import {
 import { validateApiConfiguration, validateModelId } from "@/utils/validate"
 import ClineRulesToggleModal from "../cline-rules/ClineRulesToggleModal"
 import ServersToggleModal from "./ServersToggleModal"
-import VoiceRecorder from "./VoiceRecorder"
+
+// CARET MODIFICATION: VoiceRecorder removed (voice feature deleted)
 
 const { MAX_IMAGES_AND_FILES_PER_MESSAGE } = CHAT_CONSTANTS
 
@@ -90,6 +95,7 @@ interface ChatTextAreaProps {
 	shouldDisableFilesAndImages: boolean
 	onHeightChange?: (height: number) => void
 	onFocusChange?: (isFocused: boolean) => void
+	inputHistory?: string[] // CARET MODIFICATION: Persistent input history functionality
 }
 
 interface GitCommit {
@@ -102,19 +108,42 @@ interface GitCommit {
 const PLAN_MODE_COLOR = "var(--vscode-activityWarningBadge-background)"
 const ACT_MODE_COLOR = "var(--vscode-focusBorder)"
 
+const SwitchOption = styled.div.withConfig({
+	shouldForwardProp: (prop) => !["isActive"].includes(prop),
+})<{ isActive: boolean }>`
+	padding: 2px 8px;
+	color: ${(props) => (props.isActive ? "white" : "var(--vscode-input-foreground)")};
+	z-index: 1;
+	transition: color 0.2s ease;
+	font-size: 12px;
+	flex: 1;
+	min-width: 60px;
+	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+	&:hover {
+		background-color: ${(props) => (!props.isActive ? "var(--vscode-toolbar-hoverBackground)" : "transparent")};
+	}
+`
+
 const SwitchContainer = styled.div<{ disabled: boolean }>`
+	position: relative;
 	display: flex;
 	align-items: center;
-	background-color: transparent;
+	background-color: var(--vscode-editor-background);
 	border: 1px solid var(--vscode-input-border);
 	border-radius: 12px;
 	overflow: hidden;
 	cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
-	transform: scale(1);
+	transform: scale(0.85);
 	transform-origin: right center;
-	margin-left: 0;
-	user-select: none; // Prevent text selection
+	margin-left: -10px;
+	user-select: none;
+	width: 180px;
+	height: 28px;
 `
 
 const Slider = styled.div.withConfig({
@@ -257,6 +286,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			shouldDisableFilesAndImages,
 			onHeightChange,
 			onFocusChange,
+			inputHistory = [], // CARET MODIFICATION: Persistent input history functionality
 		},
 		ref,
 	) => {
@@ -267,17 +297,16 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			platform,
 			localWorkflowToggles,
 			globalWorkflowToggles,
-			remoteWorkflowToggles,
-			remoteConfigSettings,
 			showChatModelSelector: showModelSelector,
 			setShowChatModelSelector: setShowModelSelector,
-			dictationSettings,
+			// CARET MODIFICATION: dictationSettings removed (voice feature deleted)
+			modeSystem, // CARET MODIFICATION: Get modeSystem for Chatbot/Agent vs Plan/Act labels
 		} = useExtensionState()
-		const { clineUser } = useClineAuth()
+		// CARET MODIFICATION: clineUser removed (only used for voice feature)
 		const [isTextAreaFocused, setIsTextAreaFocused] = useState(false)
 		const [isDraggingOver, setIsDraggingOver] = useState(false)
 		const [gitCommits, setGitCommits] = useState<GitCommit[]>([])
-		const [isVoiceRecording, setIsVoiceRecording] = useState(false)
+		// CARET MODIFICATION: isVoiceRecording removed (voice feature deleted)
 		const [showSlashCommandsMenu, setShowSlashCommandsMenu] = useState(false)
 		const [selectedSlashCommandsIndex, setSelectedSlashCommandsIndex] = useState(0)
 		const [slashCommandsQuery, setSlashCommandsQuery] = useState("")
@@ -314,6 +343,13 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		const [fileSearchResults, setFileSearchResults] = useState<SearchResult[]>([])
 		const [searchLoading, setSearchLoading] = useState(false)
 		const [, metaKeyChar] = useMetaKeyDetection(platform)
+
+		// CARET MODIFICATION: Persistent input history functionality - hook for handling arrow key navigation
+		const { handleKeyDown: handleHistoryKeyDown } = useInputHistory({
+			history: inputHistory,
+			inputValue,
+			setInputValue,
+		})
 
 		// Add a ref to track previous menu state
 		const prevShowModelSelector = useRef(showModelSelector)
@@ -503,6 +539,14 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		)
 		const handleKeyDown = useCallback(
 			(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+				// CARET MODIFICATION: Handle input history navigation (ArrowUp/Down) when menus are not shown
+				if (!showSlashCommandsMenu && !showContextMenu) {
+					const handled = handleHistoryKeyDown(event)
+					if (handled) {
+						return
+					}
+				}
+
 				if (showSlashCommandsMenu) {
 					if (event.key === "Escape") {
 						setShowSlashCommandsMenu(false)
@@ -519,8 +563,6 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								slashCommandsQuery,
 								localWorkflowToggles,
 								globalWorkflowToggles,
-								remoteWorkflowToggles,
-								remoteConfigSettings?.remoteGlobalWorkflows,
 							)
 
 							if (allCommands.length === 0) {
@@ -539,13 +581,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 					if ((event.key === "Enter" || event.key === "Tab") && selectedSlashCommandsIndex !== -1) {
 						event.preventDefault()
-						const commands = getMatchingSlashCommands(
-							slashCommandsQuery,
-							localWorkflowToggles,
-							globalWorkflowToggles,
-							remoteWorkflowToggles,
-							remoteConfigSettings?.remoteGlobalWorkflows,
-						)
+						const commands = getMatchingSlashCommands(slashCommandsQuery, localWorkflowToggles, globalWorkflowToggles)
 						if (commands.length > 0) {
 							handleSlashCommandsSelect(commands[selectedSlashCommandsIndex])
 						}
@@ -704,6 +740,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				slashCommandsQuery,
 				handleSlashCommandsSelect,
 				sendingDisabled,
+				handleHistoryKeyDown, // CARET MODIFICATION: Add history navigation handler
 			],
 		)
 
@@ -979,7 +1016,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 			processedText = processedText
 				.replace(/\n$/, "\n\n")
-				.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" })[c] || c)
+				.replace(/[<>&]/g, (c) => ({ "<": "<", ">": ">", "&": "&" })[c] || c)
 				// highlight @mentions
 				.replace(mentionRegexGlobal, '<mark class="mention-context-textarea-highlight">$&</mark>')
 
@@ -993,13 +1030,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 				// extract and validate the exact command text
 				const commandText = processedText.substring(slashIndex + 1, endIndex)
-				const isValidCommand = validateSlashCommand(
-					commandText,
-					localWorkflowToggles,
-					globalWorkflowToggles,
-					remoteWorkflowToggles,
-					remoteConfigSettings?.remoteGlobalWorkflows,
-				)
+				const isValidCommand = validateSlashCommand(commandText, localWorkflowToggles, globalWorkflowToggles)
 
 				if (isValidCommand) {
 					const fullCommand = processedText.substring(slashIndex, endIndex) // includes slash
@@ -1079,6 +1110,27 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						},
 					}),
 				)
+
+				// CARET MODIFICATION: Synchronize Caret mode when using Caret system
+				if (modeSystem === "caret") {
+					try {
+						const newCaretMode = mode === "plan" ? "agent" : "chatbot"
+						console.log(`[ChatTextArea] Synchronizing Caret mode: plan/act ${mode} → Caret ${newCaretMode}`)
+
+						const caretResponse = await CaretSystemServiceClient.SetCaretMode({
+							mode: newCaretMode,
+						})
+
+						if (caretResponse.success) {
+							console.log(`[ChatTextArea] ✅ Caret mode synchronized: ${caretResponse.currentMode}`)
+						} else {
+							console.error(`[ChatTextArea] ❌ Failed to synchronize Caret mode: ${caretResponse.errorMessage}`)
+						}
+					} catch (error) {
+						console.error(`[ChatTextArea] ❌ Error synchronizing Caret mode:`, error)
+					}
+				}
+
 				// Focus the textarea after mode toggle with slight delay
 				setTimeout(() => {
 					if (response.value) {
@@ -1155,8 +1207,15 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		// Get model display name
 		const modelDisplayName = useMemo(() => {
 			const { selectedProvider, selectedModelId } = normalizeApiConfiguration(apiConfiguration, mode)
-			const { vsCodeLmModelSelector, togetherModelId, lmStudioModelId, ollamaModelId, liteLlmModelId, requestyModelId } =
-				getModeSpecificFields(apiConfiguration, mode)
+			const {
+				vsCodeLmModelSelector,
+				togetherModelId,
+				lmStudioModelId,
+				ollamaModelId,
+				liteLlmModelId,
+				caretModelId,
+				requestyModelId,
+			} = getModeSpecificFields(apiConfiguration, mode)
 			const unknownModel = "unknown"
 			if (!apiConfiguration) {
 				return unknownModel
@@ -1176,6 +1235,10 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					return `${selectedProvider}:${ollamaModelId}`
 				case "litellm":
 					return `${selectedProvider}:${liteLlmModelId}`
+				case "caret": {
+					const fallbackCaretModelId = caretModelId || selectedModelId || caretDefaultModelId
+					return `${selectedProvider}:${fallbackCaretModelId}`
+				}
 				case "requesty":
 					return `${selectedProvider}:${requestyModelId}`
 				case "anthropic":
@@ -1452,35 +1515,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					onDragLeave={handleDragLeave}
 					onDragOver={onDragOver}
 					onDrop={onDrop}>
-					{isVoiceRecording && (
-						<div
-							className={cn(
-								"absolute pointer-events-none z-10 overflow-hidden rounded-xs transition-all ease-in-out duration-300 left-3.5 right-3.5 top-2.5 bottom-2.5",
-							)}>
-							<PulsingBorder
-								bloom={1}
-								className="w-full h-full"
-								colorBack={"rgba(0,0,0,0)"}
-								colors={[
-									"#9d57fa", // purple
-									"#57c7fa", // cyan
-									"#fa57a8", // pink
-									"#9d57fa", // purple again for smooth loop
-								]}
-								intensity={0.4}
-								pulse={0.3}
-								roundness={0} // Match textarea border radius
-								scale={1.0}
-								smoke={0.25}
-								smokeSize={0.8}
-								softness={0.8}
-								speed={1.5}
-								spotSize={0.5}
-								spots={4}
-								thickness={0.1}
-							/>
-						</div>
-					)}
+					{/* CARET MODIFICATION: Voice recording animation removed (voice feature deleted) */}
 
 					{showDimensionError && (
 						<div className="absolute inset-2.5 bg-[rgba(var(--vscode-errorForeground-rgb),0.1)] border-2 border-error rounded-xs flex items-center justify-center z-10 pointer-events-none">
@@ -1500,8 +1535,6 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseDown={handleMenuMouseDown}
 								onSelect={handleSlashCommandsSelect}
 								query={slashCommandsQuery}
-								remoteWorkflows={remoteConfigSettings?.remoteGlobalWorkflows}
-								remoteWorkflowToggles={remoteWorkflowToggles}
 								selectedIndex={selectedSlashCommandsIndex}
 								setSelectedIndex={setSelectedSlashCommandsIndex}
 							/>
@@ -1526,9 +1559,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					<div
 						className={cn(
 							"absolute bottom-2.5 top-2.5 whitespace-pre-wrap break-words rounded-xs overflow-hidden bg-input-background",
-							isTextAreaFocused || isVoiceRecording
-								? "left-3.5 right-3.5"
-								: "left-3.5 right-3.5 border border-input-border",
+							isTextAreaFocused ? "left-3.5 right-3.5" : "left-3.5 right-3.5 border border-input-border",
 						)}
 						ref={highlightLayerRef}
 						style={{
@@ -1542,11 +1573,11 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 							fontSize: "var(--vscode-editor-font-size)",
 							lineHeight: "var(--vscode-editor-line-height)",
 							borderRadius: 2,
-							borderLeft: isTextAreaFocused || isVoiceRecording ? 0 : undefined,
-							borderRight: isTextAreaFocused || isVoiceRecording ? 0 : undefined,
-							borderTop: isTextAreaFocused || isVoiceRecording ? 0 : undefined,
-							borderBottom: isTextAreaFocused || isVoiceRecording ? 0 : undefined,
-							padding: `9px ${dictationSettings?.dictationEnabled ? "48" : "28"}px ${9 + thumbnailsHeight}px 9px`,
+							borderLeft: isTextAreaFocused ? 0 : undefined,
+							borderRight: isTextAreaFocused ? 0 : undefined,
+							borderTop: isTextAreaFocused ? 0 : undefined,
+							borderBottom: isTextAreaFocused ? 0 : undefined,
+							padding: `9px 28px ${9 + thumbnailsHeight}px 9px`,
 						}}
 					/>
 					<DynamicTextArea
@@ -1609,7 +1640,8 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 							// borderLeft: "9px solid transparent", // NOTE: react-textarea-autosize doesn't calculate correct height when using borderLeft/borderRight so we need to use horizontal padding instead
 							// Instead of using boxShadow, we use a div with a border to better replicate the behavior when the textarea is focused
 							// boxShadow: "0px 0px 0px 1px var(--vscode-input-border)",
-							padding: `9px ${dictationSettings?.dictationEnabled ? "48" : "28"}px 9px 9px`,
+							// CARET MODIFICATION: Voice feature removed, fixed padding to 28px
+							padding: `9px 28px 9px 9px`,
 							cursor: "text",
 							flex: 1,
 							zIndex: 1,
@@ -1624,7 +1656,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						value={inputValue}
 					/>
 					{!inputValue && selectedImages.length === 0 && selectedFiles.length === 0 && (
-						<div className="text-xs absolute bottom-5 left-6.5 right-16 text-(--vscode-input-placeholderForeground)/50 whitespace-nowrap overflow-hidden text-ellipsis pointer-events-none z-1">
+						<div className="text-[10px] absolute bottom-5 left-5 right-16 text-[var(--vscode-input-placeholderForeground)]/50 whitespace-nowrap overflow-hidden text-ellipsis pointer-events-none z-1">
 							Type @ for context, / for slash commands & workflows, hold shift to drag in files/images
 						</div>
 					)}
@@ -1649,108 +1681,57 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						className="absolute flex items-end bottom-4.5 right-5 z-10 h-8 text-xs"
 						style={{ height: textAreaBaseHeight }}>
 						<div className="flex flex-row items-center">
-							{dictationSettings?.dictationEnabled === true && dictationSettings?.featureEnabled && (
-								<VoiceRecorder
-									disabled={sendingDisabled}
-									isAuthenticated={!!clineUser?.uid}
-									language={dictationSettings?.dictationLanguage || "en"}
-									onProcessingStateChange={(isProcessing, message) => {
-										if (isProcessing && message) {
-											// Show processing message in input
-											setInputValue(`${inputValue} [${message}]`.trim())
-										}
-										// When processing is done, the onTranscription callback will handle the final text
-									}}
-									onRecordingStateChange={setIsVoiceRecording}
-									onTranscription={(text) => {
-										// Remove any processing text first
-										const processingPattern = /\s*\[Transcribing\.\.\.\]$/
-										const cleanedValue = inputValue.replace(processingPattern, "")
-
-										if (!text) {
-											setInputValue(cleanedValue)
-											return
-										}
-
-										// Append the transcribed text to the cleaned input
-										const newValue = cleanedValue + (cleanedValue ? " " : "") + text
-										setInputValue(newValue)
-										// Focus the textarea and move cursor to end
-										setTimeout(() => {
-											if (textAreaRef.current) {
-												textAreaRef.current.focus()
-												const length = newValue.length
-												textAreaRef.current.setSelectionRange(length, length)
-											}
-										}, 0)
-									}}
-								/>
-							)}
-							{!isVoiceRecording && (
-								<div
-									className={cn(
-										"input-icon-button",
-										{ disabled: sendingDisabled },
-										"codicon codicon-send text-sm",
-									)}
-									data-testid="send-button"
-									onClick={() => {
-										if (!sendingDisabled) {
-											setIsTextAreaFocused(false)
-											onSend()
-										}
-									}}
-								/>
-							)}
+							{/* CARET MODIFICATION: VoiceRecorder removed (voice feature deleted) */}
+							<div
+								className={cn("input-icon-button", { disabled: sendingDisabled }, "codicon codicon-send text-sm")}
+								data-testid="send-button"
+								onClick={() => {
+									if (!sendingDisabled) {
+										setIsTextAreaFocused(false)
+										onSend()
+									}
+								}}
+							/>
 						</div>
 					</div>
 				</div>
-				<div className="flex justify-between items-center -mt-[2px] px-3 pb-2">
+				<div className="flex justify-between items-center -mt-1 px-3 pb-2">
 					{/* Always render both components, but control visibility with CSS */}
 					<div className="relative flex-1 min-w-0 h-5">
 						{/* ButtonGroup - always in DOM but visibility controlled */}
 						<ButtonGroup className="absolute top-0 left-0 right-0 ease-in-out w-full h-5 z-10 flex items-center">
-							<Tooltip>
-								<TooltipContent>Add Context</TooltipContent>
-								<TooltipTrigger>
-									<VSCodeButton
-										appearance="icon"
-										aria-label="Add Context"
-										className="p-0 m-0 flex items-center"
-										data-testid="context-button"
-										onClick={handleContextButtonClick}>
-										<ButtonContainer>
-											<AtSignIcon size={12} />
-										</ButtonContainer>
-									</VSCodeButton>
-								</TooltipTrigger>
+							<Tooltip style={{ left: 0 }} tipText="Add Context">
+								<VSCodeButton
+									appearance="icon"
+									aria-label="Add Context"
+									className="p-0 m-0 flex items-center"
+									data-testid="context-button"
+									onClick={handleContextButtonClick}>
+									<ButtonContainer>
+										<AtSignIcon size={12} />
+									</ButtonContainer>
+								</VSCodeButton>
 							</Tooltip>
 
-							<Tooltip>
-								<TooltipContent>Add Files & Images</TooltipContent>
-								<TooltipTrigger>
-									<VSCodeButton
-										appearance="icon"
-										aria-label="Add Files & Images"
-										className="p-0 m-0 flex items-center"
-										data-testid="files-button"
-										disabled={shouldDisableFilesAndImages}
-										onClick={() => {
-											if (!shouldDisableFilesAndImages) {
-												onSelectFilesAndImages()
-											}
-										}}>
-										<ButtonContainer>
-											<PlusIcon size={13} />
-										</ButtonContainer>
-									</VSCodeButton>
-								</TooltipTrigger>
+							<Tooltip tipText={t("addFilesImages", "chat")}>
+								<VSCodeButton
+									appearance="icon"
+									aria-label="Add Files & Images"
+									className="p-0 m-0 flex items-center"
+									data-testid="files-button"
+									disabled={shouldDisableFilesAndImages}
+									onClick={() => {
+										if (!shouldDisableFilesAndImages) {
+											onSelectFilesAndImages()
+										}
+									}}>
+									<ButtonContainer>
+										<PlusIcon size={13} />
+									</ButtonContainer>
+								</VSCodeButton>
 							</Tooltip>
-
 							<ServersToggleModal />
-
 							<ClineRulesToggleModal />
-
 							<ModelContainer ref={modelSelectorRef}>
 								<ModelButtonWrapper ref={buttonRef}>
 									<ModelDisplayButton
@@ -1759,8 +1740,8 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 										onClick={handleModelButtonClick}
 										role="button"
 										tabIndex={0}
-										title="Select Model / API Provider">
-										<ModelButtonContent className="text-xs">{modelDisplayName}</ModelButtonContent>
+										title={t("selectModelApiProvider", "chat")}>
+										<ModelButtonContent>{modelDisplayName}</ModelButtonContent>
 									</ModelDisplayButton>
 								</ModelButtonWrapper>
 								{showModelSelector && (
@@ -1783,34 +1764,39 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						</ButtonGroup>
 					</div>
 					{/* Tooltip for Plan/Act toggle remains outside the conditional rendering */}
-					<Tooltip>
-						<TooltipContent
-							className="text-xs px-2 flex flex-col gap-1"
-							hidden={shownTooltipMode === null}
-							side="top">
-							{`In ${shownTooltipMode === "act" ? "Act" : "Plan"}  mode, Cline will ${shownTooltipMode === "act" ? "complete the task immediately" : "gather information to architect a plan"}`}
-							<p className="text-description/80 text-xs mb-0">
-								Toggle w/ <kbd className="text-muted-foreground mx-1">{togglePlanActKeys}</kbd>
-							</p>
-						</TooltipContent>
-						<TooltipTrigger>
-							<SwitchContainer data-testid="mode-switch" disabled={false} onClick={onModeToggle}>
-								<Slider isAct={mode === "act"} isPlan={mode === "plan"} />
-								{["Plan", "Act"].map((m) => (
-									<div
-										aria-checked={mode === m.toLowerCase()}
-										className={cn(
-											"pt-0.5 pb-px px-2 z-10 text-xs w-1/2 text-center bg-transparent",
-											mode === m.toLowerCase() ? "text-white" : "text-input-foreground",
-										)}
-										onMouseLeave={() => setShownTooltipMode(null)}
-										onMouseOver={() => setShownTooltipMode(m.toLowerCase() === "plan" ? "plan" : "act")}
-										role="switch">
-										{m}
-									</div>
-								))}
-							</SwitchContainer>
-						</TooltipTrigger>
+					{/* CARET MODIFICATION: Tooltip for Plan/Act or Chatbot/Agent toggle based on modeSystem */}
+					<Tooltip
+						hintText={`Toggle w/ ${togglePlanActKeys}`}
+						style={{ zIndex: 1000 }}
+						tipText={
+							modeSystem === "caret"
+								? shownTooltipMode === "act"
+									? t("mode.tooltip.agent", "common")
+									: t("mode.tooltip.chatbot", "common")
+								: shownTooltipMode === "act"
+									? t("mode.tooltip.act", "common")
+									: t("mode.tooltip.plan", "common")
+						}
+						visible={shownTooltipMode !== null}>
+						<SwitchContainer data-testid="mode-switch" disabled={false} onClick={onModeToggle}>
+							<Slider isAct={mode === "act"} isPlan={mode === "plan"} />
+							<SwitchOption
+								aria-checked={mode === "plan"}
+								isActive={mode === "plan"}
+								onMouseLeave={() => setShownTooltipMode(null)}
+								onMouseOver={() => setShownTooltipMode("plan")}
+								role="switch">
+								{modeSystem === "caret" ? t("mode.chatbot.label", "chat") : t("mode.plan.label", "chat")}
+							</SwitchOption>
+							<SwitchOption
+								aria-checked={mode === "act"}
+								isActive={mode === "act"}
+								onMouseLeave={() => setShownTooltipMode(null)}
+								onMouseOver={() => setShownTooltipMode("act")}
+								role="switch">
+								{modeSystem === "caret" ? t("mode.agent.label", "chat") : t("mode.act.label", "chat")}
+							</SwitchOption>
+						</SwitchContainer>
 					</Tooltip>
 				</div>
 			</div>

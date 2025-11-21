@@ -264,7 +264,7 @@ async function reorderHookAndToolMessages(messageStateHandler: MessageStateHandl
 	// Check if there are any hook messages after the tool message
 	let hasHookMessagesAfterTool = false
 	for (let i = lastToolMessageIndex + 1; i < clineMessages.length; i++) {
-		if (clineMessages[i].say === "hook" || clineMessages[i].say === "hook_output") {
+		if ((clineMessages[i].say as any) === "hook" || (clineMessages[i].say as any) === "hook_output") {
 			hasHookMessagesAfterTool = true
 			break
 		}

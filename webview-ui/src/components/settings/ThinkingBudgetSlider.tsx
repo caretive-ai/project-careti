@@ -3,6 +3,7 @@ import { Mode } from "@shared/storage/types"
 import { VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react"
 import { memo, useCallback, useEffect, useState } from "react"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { getModeSpecificFields } from "./utils/providerUtils"
 import { useApiConfigurationHandlers } from "./utils/useApiConfigurationHandlers"
@@ -120,7 +121,8 @@ const ThinkingBudgetSlider = ({ currentMode }: ThinkingBudgetSliderProps) => {
 	return (
 		<>
 			<VSCodeCheckbox checked={isEnabled} onClick={handleToggleChange}>
-				Enable thinking{localValue && localValue > 0 ? ` (${localValue.toLocaleString()} tokens)` : ""}
+				{t("thinkingBudget.enable", "settings")}
+				{localValue && localValue > 0 ? ` (${localValue.toLocaleString()} tokens)` : ""}
 			</VSCodeCheckbox>
 
 			{isEnabled && (

@@ -1,15 +1,17 @@
 import { liteLlmModelInfoSaneDefaults } from "@shared/api"
-import { UpdateApiConfigurationRequestNew } from "@shared/proto/index.cline"
+import * as proto from "@shared/proto"
 import { Mode } from "@shared/storage/types"
-import { VSCodeCheckbox, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton, VSCodeCheckbox, VSCodeDropdown, VSCodeLink, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { ModelsServiceClient } from "@/services/grpc-client"
+import { CaretSystemServiceClient } from "@/services/grpc-client"
 import { getAsVar, VSC_DESCRIPTION_FOREGROUND } from "@/utils/vscStyles"
 import { DebouncedTextField } from "../common/DebouncedTextField"
 import { ModelInfoView } from "../common/ModelInfoView"
 import ThinkingBudgetSlider from "../ThinkingBudgetSlider"
 import { getModeSpecificFields, normalizeApiConfiguration } from "../utils/providerUtils"
+import { useApiConfigurationHandlers } from "../utils/useApiConfigurationHandlers"
 
 /**
  * Props for the LiteLlmProvider component
@@ -25,6 +27,7 @@ interface LiteLlmProviderProps {
  */
 export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: LiteLlmProviderProps) => {
 	const { apiConfiguration } = useExtensionState()
+	const { handleFieldChange, handleModeFieldChange } = useApiConfigurationHandlers()
 
 	// Get the normalized configuration
 	const { selectedModelId, selectedModelInfo } = normalizeApiConfiguration(apiConfiguration, currentMode)
@@ -35,92 +38,144 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 	// Local state for collapsible model configuration section
 	const [modelConfigurationSelected, setModelConfigurationSelected] = useState(false)
 
+	// CARET MODIFICATION: Local state for model fetching
+	const [liteLlmModels, setLiteLlmModels] = useState<string[]>([])
+	const [isLoadingModels, setIsLoadingModels] = useState(false)
+	const [modelsError, setModelsError] = useState<string | null>(null)
+
+	// CARET MODIFICATION: Function to fetch models from LiteLLM
+	const handleFetchModels = async () => {
+		if (!apiConfiguration?.liteLlmBaseUrl) {
+			setModelsError(t("providers.litellm.baseUrlRequired", "settings"))
+			return
+		}
+
+		setIsLoadingModels(true)
+		setModelsError(null)
+
+		try {
+			const request = proto.caret.FetchLiteLlmModelsRequest.create({
+				baseUrl: apiConfiguration.liteLlmBaseUrl,
+				apiKey: apiConfiguration.liteLlmApiKey || "",
+			})
+
+			const response = await CaretSystemServiceClient.FetchLiteLlmModels(request)
+
+			if (response.success) {
+				setLiteLlmModels(response.models || [])
+				if (response.models.length === 0) {
+					setModelsError(t("providers.litellm.noModelsFound", "settings"))
+				}
+			} else {
+				setModelsError(response.errorMessage || t("providers.litellm.fetchError", "settings"))
+				setLiteLlmModels([])
+			}
+		} catch (error) {
+			setModelsError(error instanceof Error ? error.message : t("providers.litellm.fetchError", "settings"))
+			setLiteLlmModels([])
+		} finally {
+			setIsLoadingModels(false)
+		}
+	}
+
 	return (
-		<div>
+		<div style={{ paddingBottom: liteLlmModels.length > 10 ? "195px" : "0" }}>
 			<DebouncedTextField
 				initialValue={apiConfiguration?.liteLlmBaseUrl || ""}
-				onChange={async (value) => {
-					await ModelsServiceClient.updateApiConfiguration(
-						UpdateApiConfigurationRequestNew.create({
-							updates: {
-								options: {
-									liteLlmBaseUrl: value,
-								},
-							},
-							updateMask: ["options.liteLlmBaseUrl"],
-						}),
-					)
-				}}
-				placeholder={"Default: http://localhost:4000"}
+				onChange={(value) => handleFieldChange("liteLlmBaseUrl", value)}
+				placeholder={t("providers.litellm.baseUrlPlaceholder", "settings")}
 				style={{ width: "100%" }}
-				type="text">
-				<span style={{ fontWeight: 500 }}>Base URL (optional)</span>
+				type="url">
+				<span style={{ fontWeight: 500 }}>{t("baseUrlField.label", "settings")}</span>
 			</DebouncedTextField>
 			<DebouncedTextField
 				initialValue={apiConfiguration?.liteLlmApiKey || ""}
-				onChange={async (value) => {
-					await ModelsServiceClient.updateApiConfiguration(
-						UpdateApiConfigurationRequestNew.create({
-							updates: {
-								secrets: {
-									liteLlmApiKey: value,
-								},
-							},
-							updateMask: ["secrets.liteLlmApiKey"],
-						}),
-					)
-				}}
-				placeholder="Default: noop"
+				onChange={(value) => handleFieldChange("liteLlmApiKey", value)}
+				placeholder={t("providers.litellm.apiKeyPlaceholder", "settings")}
 				style={{ width: "100%" }}
 				type="password">
-				<span style={{ fontWeight: 500 }}>API Key</span>
+				<span style={{ fontWeight: 500 }}>{t("providers.litellm.apiKeyLabel", "settings")}</span>
 			</DebouncedTextField>
-			<DebouncedTextField
-				initialValue={liteLlmModelId || ""}
-				onChange={async (value) => {
-					await ModelsServiceClient.updateApiConfiguration(
-						UpdateApiConfigurationRequestNew.create(
-							currentMode === "plan"
-								? {
-										updates: { options: { planModeLiteLlmModelId: value } },
-										updateMask: ["options.planModeLiteLlmModelId"],
-									}
-								: {
-										updates: { options: { actModeLiteLlmModelId: value } },
-										updateMask: ["options.actModeLiteLlmModelId"],
-									},
-						),
-					)
-				}}
-				placeholder={"e.g. anthropic/claude-sonnet-4-20250514"}
-				style={{ width: "100%" }}>
-				<span style={{ fontWeight: 500 }}>Model ID</span>
-			</DebouncedTextField>
+			{/* CARET MODIFICATION: Replace text field with dropdown and fetch button */}
+			<div style={{ display: "flex", gap: "10px", alignItems: "flex-end", flexWrap: "wrap" }}>
+				<div style={{ flex: 1, minWidth: "200px", position: "relative" }}>
+					<span style={{ fontWeight: 500, display: "block", marginBottom: "5px" }}>
+						{t("providers.litellm.modelIdLabel", "settings")}
+					</span>
+					{liteLlmModels.length > 0 ? (
+						<div className="dropdown-container">
+							<VSCodeDropdown
+								onChange={(e: any) => {
+									const value = e.target.value
+									handleModeFieldChange(
+										{ plan: "planModeLiteLlmModelId", act: "actModeLiteLlmModelId" },
+										value,
+										currentMode,
+									)
+								}}
+								style={{ width: "100%" }}
+								value={liteLlmModelId || ""}>
+								<VSCodeOption value="">{t("providers.litellm.selectModelPlaceholder", "settings")}</VSCodeOption>
+								{liteLlmModels.map((model) => (
+									<VSCodeOption key={model} value={model}>
+										{model}
+									</VSCodeOption>
+								))}
+							</VSCodeDropdown>
+							<style>{`
+								.dropdown-container vscode-dropdown::part(listbox) {
+									max-height: 130px !important;
+									overflow-y: auto !important;
+									position: absolute !important;
+									z-index: 9999 !important;
+									left: 0 !important;
+									right: 0 !important;
+								}
+							`}</style>
+						</div>
+					) : (
+						<DebouncedTextField
+							initialValue={liteLlmModelId || ""}
+							onChange={(value) =>
+								handleModeFieldChange(
+									{ plan: "planModeLiteLlmModelId", act: "actModeLiteLlmModelId" },
+									value,
+									currentMode,
+								)
+							}
+							placeholder={t("providers.litellm.modelIdPlaceholder", "settings")}
+							style={{ width: "100%" }}
+						/>
+					)}
+				</div>
+				<VSCodeButton
+					disabled={isLoadingModels || !apiConfiguration?.liteLlmBaseUrl}
+					onClick={handleFetchModels}
+					style={{ minWidth: "120px", flexShrink: 0 }}>
+					{isLoadingModels
+						? t("providers.litellm.fetchingModels", "settings")
+						: t("providers.litellm.fetchModels", "settings")}
+				</VSCodeButton>
+			</div>
+			{modelsError && (
+				<p style={{ color: "var(--vscode-errorForeground)", fontSize: "12px", marginTop: "5px" }}>{modelsError}</p>
+			)}
 
 			<div style={{ display: "flex", flexDirection: "column", marginTop: 10, marginBottom: 10 }}>
 				{selectedModelInfo.supportsPromptCache && (
 					<>
 						<VSCodeCheckbox
 							checked={apiConfiguration?.liteLlmUsePromptCache || false}
-							onChange={async (e: any) => {
+							onChange={(e: any) => {
 								const isChecked = e.target.checked === true
 
-								await ModelsServiceClient.updateApiConfiguration(
-									UpdateApiConfigurationRequestNew.create({
-										updates: {
-											options: {
-												liteLlmUsePromptCache: isChecked,
-											},
-										},
-										updateMask: ["options.liteLlmUsePromptCache"],
-									}),
-								)
+								handleFieldChange("liteLlmUsePromptCache", isChecked)
 							}}
 							style={{ fontWeight: 500, color: "var(--vscode-charts-green)" }}>
-							Use prompt caching (GA)
+							{t("providers.litellm.usePromptCachingLabel", "settings")}
 						</VSCodeCheckbox>
 						<p style={{ fontSize: "12px", marginTop: 3, color: "var(--vscode-charts-green)" }}>
-							Prompt caching requires a supported provider and model
+							{t("providers.litellm.usePromptCachingDescription", "settings")}
 						</p>
 					</>
 				)}
@@ -133,11 +188,11 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 					marginTop: "5px",
 					color: "var(--vscode-descriptionForeground)",
 				}}>
-				Extended thinking is available for models such as Sonnet-4, o3-mini, Deepseek R1, etc. More info on{" "}
+				{t("providers.litellm.extendedThinkingDescription1", "settings")}{" "}
 				<VSCodeLink
 					href="https://docs.litellm.ai/docs/reasoning_content"
 					style={{ display: "inline", fontSize: "inherit" }}>
-					thinking mode configuration
+					{t("providers.litellm.extendedThinkingLink", "settings")}
 				</VSCodeLink>
 			</p>
 
@@ -160,33 +215,25 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 						fontWeight: 700,
 						textTransform: "uppercase",
 					}}>
-					Model Configuration
+					{t("providers.litellm.modelConfigurationLabel", "settings")}
 				</span>
 			</div>
 			{modelConfigurationSelected && (
 				<>
 					<VSCodeCheckbox
 						checked={!!liteLlmModelInfo?.supportsImages}
-						onChange={async (e: any) => {
+						onChange={(e: any) => {
 							const isChecked = e.target.checked === true
 							const modelInfo = liteLlmModelInfo ? liteLlmModelInfo : { ...liteLlmModelInfoSaneDefaults }
 							modelInfo.supportsImages = isChecked
 
-							await ModelsServiceClient.updateApiConfiguration(
-								UpdateApiConfigurationRequestNew.create(
-									currentMode === "plan"
-										? {
-												updates: { options: { planModeLiteLlmModelInfo: modelInfo } },
-												updateMask: ["options.planModeLiteLlmModelInfo"],
-											}
-										: {
-												updates: { options: { actModeLiteLlmModelInfo: modelInfo } },
-												updateMask: ["options.actModeLiteLlmModelInfo"],
-											},
-								),
+							handleModeFieldChange(
+								{ plan: "planModeLiteLlmModelInfo", act: "actModeLiteLlmModelInfo" },
+								modelInfo,
+								currentMode,
 							)
 						}}>
-						Supports Images
+						{t("providers.litellm.supportsImagesLabel", "settings")}
 					</VSCodeCheckbox>
 					<div style={{ display: "flex", gap: 10, marginTop: "5px" }}>
 						<DebouncedTextField
@@ -195,26 +242,18 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 									? liteLlmModelInfo.contextWindow.toString()
 									: (liteLlmModelInfoSaneDefaults.contextWindow?.toString() ?? "")
 							}
-							onChange={async (value) => {
+							onChange={(value) => {
 								const modelInfo = liteLlmModelInfo ? liteLlmModelInfo : { ...liteLlmModelInfoSaneDefaults }
 								modelInfo.contextWindow = Number(value)
 
-								await ModelsServiceClient.updateApiConfiguration(
-									UpdateApiConfigurationRequestNew.create(
-										currentMode === "plan"
-											? {
-													updates: { options: { planModeLiteLlmModelInfo: modelInfo } },
-													updateMask: ["options.planModeLiteLlmModelInfo"],
-												}
-											: {
-													updates: { options: { actModeLiteLlmModelInfo: modelInfo } },
-													updateMask: ["options.actModeLiteLlmModelInfo"],
-												},
-									),
+								handleModeFieldChange(
+									{ plan: "planModeLiteLlmModelInfo", act: "actModeLiteLlmModelInfo" },
+									modelInfo,
+									currentMode,
 								)
 							}}
 							style={{ flex: 1 }}>
-							<span style={{ fontWeight: 500 }}>Context Window Size</span>
+							<span style={{ fontWeight: 500 }}>{t("providers.litellm.contextWindowSizeLabel", "settings")}</span>
 						</DebouncedTextField>
 						<DebouncedTextField
 							initialValue={
@@ -222,26 +261,18 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 									? liteLlmModelInfo.maxTokens.toString()
 									: (liteLlmModelInfoSaneDefaults.maxTokens?.toString() ?? "")
 							}
-							onChange={async (value) => {
+							onChange={(value) => {
 								const modelInfo = liteLlmModelInfo ? liteLlmModelInfo : { ...liteLlmModelInfoSaneDefaults }
 								modelInfo.maxTokens = Number(value)
 
-								await ModelsServiceClient.updateApiConfiguration(
-									UpdateApiConfigurationRequestNew.create(
-										currentMode === "plan"
-											? {
-													updates: { options: { planModeLiteLlmModelInfo: modelInfo } },
-													updateMask: ["options.planModeLiteLlmModelInfo"],
-												}
-											: {
-													updates: { options: { actModeLiteLlmModelInfo: modelInfo } },
-													updateMask: ["options.actModeLiteLlmModelInfo"],
-												},
-									),
+								handleModeFieldChange(
+									{ plan: "planModeLiteLlmModelInfo", act: "actModeLiteLlmModelInfo" },
+									modelInfo,
+									currentMode,
 								)
 							}}
 							style={{ flex: 1 }}>
-							<span style={{ fontWeight: 500 }}>Max Output Tokens</span>
+							<span style={{ fontWeight: 500 }}>{t("providers.litellm.maxOutputTokensLabel", "settings")}</span>
 						</DebouncedTextField>
 					</div>
 					<div style={{ display: "flex", gap: 10, marginTop: "5px" }}>
@@ -251,7 +282,7 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 									? liteLlmModelInfo.temperature.toString()
 									: (liteLlmModelInfoSaneDefaults.temperature?.toString() ?? "")
 							}
-							onChange={async (value) => {
+							onChange={(value) => {
 								const modelInfo = liteLlmModelInfo ? liteLlmModelInfo : { ...liteLlmModelInfoSaneDefaults }
 
 								// Check if the input ends with a decimal point or has trailing zeros after decimal
@@ -260,21 +291,13 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 								modelInfo.temperature =
 									value === "" ? liteLlmModelInfoSaneDefaults.temperature : parseFloat(value)
 
-								await ModelsServiceClient.updateApiConfiguration(
-									UpdateApiConfigurationRequestNew.create(
-										currentMode === "plan"
-											? {
-													updates: { options: { planModeLiteLlmModelInfo: modelInfo } },
-													updateMask: ["options.planModeLiteLlmModelInfo"],
-												}
-											: {
-													updates: { options: { actModeLiteLlmModelInfo: modelInfo } },
-													updateMask: ["options.actModeLiteLlmModelInfo"],
-												},
-									),
+								handleModeFieldChange(
+									{ plan: "planModeLiteLlmModelInfo", act: "actModeLiteLlmModelInfo" },
+									modelInfo,
+									currentMode,
 								)
 							}}>
-							<span style={{ fontWeight: 500 }}>Temperature</span>
+							<span style={{ fontWeight: 500 }}>{t("providers.litellm.temperatureLabel", "settings")}</span>
 						</DebouncedTextField>
 					</div>
 				</>
@@ -285,11 +308,11 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 					marginTop: "5px",
 					color: "var(--vscode-descriptionForeground)",
 				}}>
-				LiteLLM provides a unified interface to access various LLM providers' models. See their{" "}
+				{t("providers.litellm.description1", "settings")}{" "}
 				<VSCodeLink href="https://docs.litellm.ai/docs/" style={{ display: "inline", fontSize: "inherit" }}>
-					quickstart guide
+					{t("providers.litellm.quickstartGuideLink", "settings")}
 				</VSCodeLink>{" "}
-				for more information.
+				{t("providers.litellm.description2", "settings")}
 			</p>
 
 			{showModelOptions && (

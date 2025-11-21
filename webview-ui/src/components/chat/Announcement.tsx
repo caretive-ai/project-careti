@@ -1,14 +1,13 @@
-import { VSCodeLink } from "@vscode/webview-ui-toolkit/react"
-import { XIcon } from "lucide-react"
+import { Accordion, AccordionItem } from "@heroui/react"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { CSSProperties, memo } from "react"
-import { useMount } from "react-use"
-import { Button } from "@/components/ui/button"
-import { useExtensionState } from "@/context/ExtensionStateContext"
+import { t } from "@/caret/utils/i18n"
 import { getAsVar, VSC_DESCRIPTION_FOREGROUND, VSC_INACTIVE_SELECTION_BACKGROUND } from "@/utils/vscStyles"
 
 interface AnnouncementProps {
-	version: string
+	version: string // CARET MODIFICATION: Accept version from parent (AboutSection)
 	hideAnnouncement: () => void
+	showCloseButton?: boolean
 }
 
 const containerStyle: CSSProperties = {
@@ -19,8 +18,9 @@ const containerStyle: CSSProperties = {
 	position: "relative",
 	flexShrink: 0,
 }
-const h4TitleStyle: CSSProperties = { margin: "0 0 8px", fontWeight: "bold" }
-const ulStyle: CSSProperties = { margin: "0 0 8px", paddingLeft: "12px", listStyleType: "disc" }
+const closeIconStyle: CSSProperties = { position: "absolute", top: "8px", right: "8px" }
+const h3TitleStyle: CSSProperties = { margin: "0 0 8px" }
+const ulStyle: CSSProperties = { margin: "0 0 8px", paddingLeft: "12px" }
 const _accountIconStyle: CSSProperties = { fontSize: 11 }
 const hrStyle: CSSProperties = {
 	height: "1px",
@@ -28,60 +28,86 @@ const hrStyle: CSSProperties = {
 	opacity: 0.1,
 	margin: "8px 0",
 }
-const linkContainerStyle: CSSProperties = { margin: "0" }
-const linkStyle: CSSProperties = { display: "inline" }
+const _linkContainerStyle: CSSProperties = { margin: "0" }
+const _linkStyle: CSSProperties = { display: "inline" }
 
 /*
-Announcements are automatically shown when the major.minor version changes (for ex 3.19.x → 3.20.x or 4.0.x). 
-The latestAnnouncementId is now automatically generated from the extension's package.json version. 
+Announcements are automatically shown when the major.minor version changes (for ex 3.19.x → 3.20.x or 4.0.x).
+The latestAnnouncementId is now automatically generated from the extension's package.json version.
 Patch releases (3.19.1 → 3.19.2) will not trigger new announcements.
 */
-const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
-	const minorVersion = version.split(".").slice(0, 2).join(".") // 2.0.0 -> 2.0
-	const { refreshOpenRouterModels } = useExtensionState()
-	// Need to get latest model list in case user hits shortcut button to set model
-	useMount(refreshOpenRouterModels)
+const Announcement = ({ version, hideAnnouncement, showCloseButton = true }: AnnouncementProps) => {
+	// Dynamically get current bullet points
+	const getCurrentBullets = () => {
+		const bullets = []
+		let i = 1
+		while (true) {
+			const title = t(`bullets.current.${i}`, "announcement", { fallback: "" })
+			const desc = t(`bullets.current.${i}-desc`, "announcement", { fallback: "" })
+
+			if (!title || title === `bullets.current.${i}`) {
+				break
+			}
+
+			bullets.push({ title, desc })
+			i++
+		}
+		return bullets
+	}
+
+	const currentBullets = getCurrentBullets()
 
 	return (
 		<div style={containerStyle}>
-			<Button
-				className="absolute top-2.5 right-2"
-				data-testid="close-announcement-button"
-				onClick={hideAnnouncement}
-				size="icon"
-				variant="icon">
-				<XIcon />
-			</Button>
-			<h4 style={h4TitleStyle}>
-				🎉{"  "}New in v{minorVersion}
-			</h4>
+			{showCloseButton && (
+				<VSCodeButton appearance="icon" data-testid="close-button" onClick={hideAnnouncement} style={closeIconStyle}>
+					<span className="codicon codicon-close"></span>
+				</VSCodeButton>
+			)}
+			<h3 style={h3TitleStyle}>{t("header", "announcement", { version })}</h3>
 			<ul style={ulStyle}>
-				<li>
-					<strong>MiniMax-M2</strong> is currently free to use in Cline!
-				</li>
-				<li>
-					<strong>Gemini 3 Pro Preview</strong> is now available with SOTA reasoning and coding capabilities.
-				</li>
-				<li>
-					<strong>AquaVoice's Avalon</strong> model scores 97.3% accuracy on AISpeak and now powers voice-to-text
-					dictation.
-				</li>
+				{currentBullets.map((bullet, index) => (
+					<li key={index + 1}>
+						<b>{bullet.title}:</b> {bullet.desc}
+					</li>
+				))}
 			</ul>
+			<Accordion className="pl-0">
+				<AccordionItem
+					aria-label={t("previousHeader", "announcement")}
+					classNames={{
+						trigger: "bg-transparent border-0 pl-0 pb-0 w-fit",
+						title: "font-bold text-[var(--vscode-foreground)]",
+						indicator:
+							"text-[var(--vscode-foreground)] mb-0.5 -rotate-180 data-[open=true]:-rotate-90 rtl:rotate-0 rtl:data-[open=true]:-rotate-90",
+					}}
+					key="1"
+					title={t("previousHeader", "announcement")}>
+					<ul style={ulStyle}>
+						{(() => {
+							const bullets = []
+							let i = 1
+							while (true) {
+								const title = t(`bullets.previous.${i}`, "announcement", { fallback: "" })
+								const desc = t(`bullets.previous.${i}-desc`, "announcement", { fallback: "" })
+
+								if (!title || title === `bullets.previous.${i}`) {
+									break
+								}
+
+								bullets.push(
+									<li key={i}>
+										<b>{title}:</b> {desc}
+									</li>,
+								)
+								i++
+							}
+							return bullets
+						})()}
+					</ul>
+				</AccordionItem>
+			</Accordion>
 			<div style={hrStyle} />
-			<p style={linkContainerStyle}>
-				Join us on{" "}
-				<VSCodeLink href="https://x.com/cline" style={linkStyle}>
-					X,
-				</VSCodeLink>{" "}
-				<VSCodeLink href="https://discord.gg/cline" style={linkStyle}>
-					discord,
-				</VSCodeLink>{" "}
-				or{" "}
-				<VSCodeLink href="https://www.reddit.com/r/cline/" style={linkStyle}>
-					r/cline
-				</VSCodeLink>
-				for more updates!
-			</p>
 		</div>
 	)
 }

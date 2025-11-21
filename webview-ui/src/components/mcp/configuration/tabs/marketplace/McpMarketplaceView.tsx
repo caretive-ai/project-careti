@@ -9,14 +9,14 @@ import {
 	VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react"
 import { useEffect, useMemo, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { McpServiceClient } from "@/services/grpc-client"
 import McpMarketplaceCard from "./McpMarketplaceCard"
 import McpSubmitCard from "./McpSubmitCard"
 
 const McpMarketplaceView = () => {
-	const { mcpServers, mcpMarketplaceCatalog, setMcpMarketplaceCatalog, mcpMarketplaceEnabled, remoteConfigSettings } =
-		useExtensionState()
+	const { mcpServers, mcpMarketplaceCatalog, setMcpMarketplaceCatalog, mcpMarketplaceEnabled } = useExtensionState()
 	const [isLoading, setIsLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
 	const [isRefreshing, setIsRefreshing] = useState(false)
@@ -87,7 +87,7 @@ const McpMarketplaceView = () => {
 				})
 				.catch((error) => {
 					console.error("Error refreshing MCP marketplace:", error)
-					setError("Failed to load marketplace data")
+					setError(t("mcpMarketplaceView.failedToLoadMarketplaceData", "chat"))
 					setIsLoading(false)
 					setIsRefreshing(false)
 				})
@@ -124,7 +124,7 @@ const McpMarketplaceView = () => {
 				<div style={{ color: "var(--vscode-errorForeground)" }}>{error}</div>
 				<VSCodeButton appearance="secondary" onClick={() => fetchMarketplace(true)}>
 					<span className="codicon codicon-refresh" style={{ marginRight: "6px" }} />
-					Retry
+					{t("mcpMarketplaceView.retry", "chat")}
 				</VSCodeButton>
 			</div>
 		)
@@ -141,7 +141,7 @@ const McpMarketplaceView = () => {
 				{/* Search row */}
 				<VSCodeTextField
 					onInput={(e) => setSearchQuery((e.target as HTMLInputElement).value)}
-					placeholder="Search MCPs..."
+					placeholder={t("mcpMarketplaceView.searchMcps", "chat")}
 					style={{ width: "100%" }}
 					value={searchQuery}>
 					<div
@@ -154,7 +154,7 @@ const McpMarketplaceView = () => {
 					/>
 					{searchQuery && (
 						<div
-							aria-label="Clear search"
+							aria-label={t("mcpMarketplaceView.clearSearch", "chat")}
 							className="codicon codicon-close"
 							onClick={() => setSearchQuery("")}
 							slot="end"
@@ -184,7 +184,7 @@ const McpMarketplaceView = () => {
 							fontWeight: 500,
 							flexShrink: 0,
 						}}>
-						Filter:
+						{t("mcpMarketplaceView.filter", "chat")}:
 					</span>
 					<div
 						style={{
@@ -198,7 +198,7 @@ const McpMarketplaceView = () => {
 								width: "100%",
 							}}
 							value={selectedCategory || ""}>
-							<VSCodeOption value="">All Categories</VSCodeOption>
+							<VSCodeOption value="">{t("mcpMarketplaceView.allCategories", "chat")}</VSCodeOption>
 							{categories.map((category) => (
 								<VSCodeOption key={category} value={category}>
 									{category}
@@ -222,7 +222,7 @@ const McpMarketplaceView = () => {
 							fontWeight: 500,
 							marginTop: "3px",
 						}}>
-						Sort:
+						{t("mcpMarketplaceView.sort", "chat")}:
 					</span>
 					<VSCodeRadioGroup
 						onChange={(e) => setSortBy((e.target as HTMLInputElement).value as typeof sortBy)}
@@ -232,10 +232,10 @@ const McpMarketplaceView = () => {
 							marginTop: "-2.5px",
 						}}
 						value={sortBy}>
-						<VSCodeRadio value="downloadCount">Most Installs</VSCodeRadio>
-						<VSCodeRadio value="newest">Newest</VSCodeRadio>
-						<VSCodeRadio value="stars">GitHub Stars</VSCodeRadio>
-						<VSCodeRadio value="name">Name</VSCodeRadio>
+						<VSCodeRadio value="downloadCount">{t("mcpMarketplaceView.mostInstalls", "chat")}</VSCodeRadio>
+						<VSCodeRadio value="newest">{t("mcpMarketplaceView.newest", "chat")}</VSCodeRadio>
+						<VSCodeRadio value="stars">{t("mcpMarketplaceView.githubStars", "chat")}</VSCodeRadio>
+						<VSCodeRadio value="name">{t("mcpMarketplaceView.name", "chat")}</VSCodeRadio>
 					</VSCodeRadioGroup>
 				</div>
 			</div>
@@ -259,15 +259,6 @@ const McpMarketplaceView = () => {
 				}
 			`}
 			</style>
-
-			{/* Remote config banner */}
-			{remoteConfigSettings?.allowedMCPServers && (
-				<div className="flex items-center gap-2 px-5 py-3 mx-5 mb-4 bg-vscode-textBlockQuote-background border-l-[3px] border-vscode-textLink-foreground">
-					<i className="codicon codicon-lock text-sm" />
-					<span className="text-[13px]">Your organization has pre-configured the available MCP servers</span>
-				</div>
-			)}
-
 			<div style={{ display: "flex", flexDirection: "column" }}>
 				{filteredItems.length === 0 ? (
 					<div
@@ -280,8 +271,8 @@ const McpMarketplaceView = () => {
 							color: "var(--vscode-descriptionForeground)",
 						}}>
 						{searchQuery || selectedCategory
-							? "No matching MCP servers found"
-							: "No MCP servers found in the marketplace"}
+							? t("mcpMarketplaceView.noMatchingMcpServersFound", "chat")
+							: t("mcpMarketplaceView.noMcpServersFoundInMarketplace", "chat")}
 					</div>
 				) : (
 					filteredItems.map((item) => (

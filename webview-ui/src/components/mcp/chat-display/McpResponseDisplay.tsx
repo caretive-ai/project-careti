@@ -2,6 +2,7 @@ import { McpDisplayMode } from "@shared/McpDisplayMode"
 import { VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
 import React, { useCallback, useEffect, useState } from "react"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import ChatErrorBoundary from "@/components/chat/ChatErrorBoundary"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import MarkdownBlock from "@/components/common/MarkdownBlock"
@@ -20,14 +21,12 @@ const ResponseHeader = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 5px 5px 5px 8px;
+	padding: 9px 10px;
 	color: var(--vscode-descriptionForeground);
 	cursor: pointer;
 	user-select: none;
 	border-bottom: 1px dashed var(--vscode-editorGroup-border);
 	margin-bottom: 8px;
-	font-family: var(--vscode-font-family);
-	font-size: var(--vscode-font-size);
 
 	.header-title {
 		display: flex;
@@ -224,7 +223,7 @@ const McpResponseDisplay: React.FC<McpResponseDisplayProps> = ({ responseText })
 					}}>
 					<div className="header-title">
 						<span className={`codicon codicon-chevron-${isExpanded ? "down" : "right"} header-icon`}></span>
-						Response
+						{t("mcpResponseDisplay.response", "chat")}
 					</div>
 					<DropdownContainer
 						style={{ minWidth: isExpanded ? "auto" : "0", visibility: isExpanded ? "visible" : "hidden" }}>
@@ -248,12 +247,14 @@ const McpResponseDisplay: React.FC<McpResponseDisplayProps> = ({ responseText })
 				<ResponseHeader onClick={toggleExpand}>
 					<div className="header-title">
 						<span className={`codicon codicon-chevron-${isExpanded ? "down" : "right"} header-icon`}></span>
-						Response (Error)
+						{t("mcpResponseDisplay.responseError", "chat")}
 					</div>
 				</ResponseHeader>
 				{isExpanded && (
 					<div className="response-content">
-						<div style={{ color: "var(--vscode-errorForeground)" }}>Error parsing response:</div>
+						<div style={{ color: "var(--vscode-errorForeground)" }}>
+							{t("mcpResponseDisplay.errorParsingResponse", "chat")}
+						</div>
 						<UrlText>{responseText}</UrlText>
 					</div>
 				)}

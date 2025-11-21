@@ -1,0 +1,14 @@
+{
+	"navbar": {
+		"chatName": "Chat",
+		"newTaskTooltip": "New Task",
+		"mcpName": "MCP",
+		"mcpServersTooltip": "MCP Servers",
+		"historyName": "History",
+		"historyTooltip": "History",
+		"accountName": "Account",
+		"accountTooltip": "Account",
+		"settingsName": "Settings",
+		"settingsTooltip": "Settings"
+	}
+}

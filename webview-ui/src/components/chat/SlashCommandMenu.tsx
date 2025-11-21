@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef } from "react"
+import { t } from "@/caret/utils/i18n"
 import { getMatchingSlashCommands, SlashCommand } from "@/utils/slash-commands"
 
 interface SlashCommandMenuProps {
@@ -9,8 +10,6 @@ interface SlashCommandMenuProps {
 	query: string
 	localWorkflowToggles?: Record<string, boolean>
 	globalWorkflowToggles?: Record<string, boolean>
-	remoteWorkflowToggles?: Record<string, boolean>
-	remoteWorkflows?: any[]
 }
 
 const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
@@ -21,8 +20,6 @@ const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
 	query,
 	localWorkflowToggles = {},
 	globalWorkflowToggles = {},
-	remoteWorkflowToggles,
-	remoteWorkflows,
 }) => {
 	const menuRef = useRef<HTMLDivElement>(null)
 
@@ -50,13 +47,7 @@ const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
 	}, [selectedIndex])
 
 	// Filter commands based on query
-	const filteredCommands = getMatchingSlashCommands(
-		query,
-		localWorkflowToggles,
-		globalWorkflowToggles,
-		remoteWorkflowToggles,
-		remoteWorkflows,
-	)
+	const filteredCommands = getMatchingSlashCommands(query, localWorkflowToggles, globalWorkflowToggles)
 	const defaultCommands = filteredCommands.filter((cmd) => cmd.section === "default" || !cmd.section)
 	const workflowCommands = filteredCommands.filter((cmd) => cmd.section === "custom")
 
@@ -68,18 +59,18 @@ const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
 
 		return (
 			<>
-				<div className="text-xs text-(--vscode-descriptionForeground) px-3 py-1 font-bold border-b border-(--vscode-editorGroup-border)">
-					{title}
+				<div className="text-xs text-[var(--vscode-descriptionForeground)] px-3 py-1 font-bold border-b border-[var(--vscode-editorGroup-border)]">
+					{t(title, "chat")}
 				</div>
 				{commands.map((command, index) => {
 					const itemIndex = index + indexOffset
 					return (
 						<div
-							className={`slash-command-menu-item py-2 px-3 cursor-pointer flex flex-col border-b border-(--vscode-editorGroup-border) ${
+							className={`slash-command-menu-item py-2 px-3 cursor-pointer flex flex-col border-b border-[var(--vscode-editorGroup-border)] ${
 								itemIndex === selectedIndex
-									? "bg-(--vscode-quickInputList-focusBackground) text-(--vscode-quickInputList-focusForeground)"
+									? "bg-[var(--vscode-quickInputList-focusBackground)] text-[var(--vscode-quickInputList-focusForeground)]"
 									: ""
-							} hover:bg-(--vscode-list-hoverBackground)`}
+							} hover:bg-[var(--vscode-list-hoverBackground)]`}
 							id={`slash-command-menu-item-${itemIndex}`}
 							key={command.name}
 							onClick={() => handleClick(command)}
@@ -88,7 +79,7 @@ const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
 								<span className="ph-no-capture">/{command.name}</span>
 							</div>
 							{showDescriptions && command.description && (
-								<div className="text-[0.85em] text-(--vscode-descriptionForeground) whitespace-normal overflow-hidden text-ellipsis">
+								<div className="text-[0.85em] text-[var(--vscode-descriptionForeground)] whitespace-normal overflow-hidden text-ellipsis">
 									<span className="ph-no-capture">{command.description}</span>
 								</div>
 							)}
@@ -101,21 +92,27 @@ const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
 
 	return (
 		<div
-			className="absolute bottom-[calc(100%-10px)] left-[15px] right-[15px] overflow-x-hidden z-1000"
-			data-testid="slash-commands-menu"
+			className="absolute bottom-[calc(100%-10px)] left-[15px] right-[15px] overflow-x-hidden z-[1000]"
 			onMouseDown={onMouseDown}>
 			<div
-				className="bg-(--vscode-dropdown-background) border border-(--vscode-editorGroup-border) rounded-[3px] shadow-[0_4px_10px_rgba(0,0,0,0.25)] flex flex-col overflow-y-auto"
+				className="bg-[var(--vscode-dropdown-background)] border border-[var(--vscode-editorGroup-border)] rounded-[3px] shadow-[0_4px_10px_rgba(0,0,0,0.25)] flex flex-col overflow-y-auto"
 				ref={menuRef}
 				style={{ maxHeight: "min(200px, calc(50vh))", overscrollBehavior: "contain" }}>
 				{filteredCommands.length > 0 ? (
 					<>
-						{renderCommandSection(defaultCommands, "Default Commands", 0, true)}
-						{renderCommandSection(workflowCommands, "Workflow Commands", defaultCommands.length, false)}
+						{renderCommandSection(defaultCommands, "slashCommandMenu.defaultCommands", 0, true)}
+						{renderCommandSection(
+							workflowCommands,
+							"slashCommandMenu.workflowCommands",
+							defaultCommands.length,
+							false,
+						)}
 					</>
 				) : (
 					<div className="py-2 px-3 cursor-default flex flex-col">
-						<div className="text-[0.85em] text-(--vscode-descriptionForeground)">No matching commands found</div>
+						<div className="text-[0.85em] text-[var(--vscode-descriptionForeground)]">
+							{t("slashCommandMenu.noMatchingCommandsFound", "chat")}
+						</div>
 					</div>
 				)}
 			</div>

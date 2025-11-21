@@ -2,6 +2,7 @@ import { CheckpointRestoreRequest } from "@shared/proto/cline/checkpoints"
 import { ClineCheckpointRestore } from "@shared/WebviewMessage"
 import React, { forwardRef, useRef, useState } from "react"
 import DynamicTextArea from "react-textarea-autosize"
+import { t } from "@/caret/utils/i18n"
 import Thumbnails from "@/components/common/Thumbnails"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CheckpointsServiceClient } from "@/services/grpc-client"
@@ -127,19 +128,19 @@ const UserMessage: React.FC<UserMessageProps> = ({ text, images, files, messageT
 						{!checkpointManagerErrorMessage && (
 							<RestoreButton
 								isPrimary={false}
-								label="Restore All"
+								label={t("userMessage.restoreAll", "chat")}
 								onClick={handleRestoreWorkspace}
 								ref={restoreAllButtonRef}
-								title="Restore both the chat and workspace files to this checkpoint and send your edited message"
+								title={t("userMessage.restoreAllTooltip", "chat")}
 								type="taskAndWorkspace"
 							/>
 						)}
 						<RestoreButton
 							isPrimary={true}
-							label="Restore Chat"
+							label={t("userMessage.restoreChat", "chat")}
 							onClick={handleRestoreWorkspace}
 							ref={restoreChatButtonRef}
-							title="Restore just the chat to this checkpoint and send your edited message"
+							title={t("userMessage.restoreChatTooltip", "chat")}
 							type="task"
 						/>
 					</div>

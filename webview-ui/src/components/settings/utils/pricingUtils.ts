@@ -1,4 +1,5 @@
-import type { ModelInfo } from "@shared/api"
+import { ModelInfo } from "@shared/api"
+import { t } from "@/caret/utils/i18n"
 
 /**
  * Formats a price as a currency string
@@ -17,14 +18,14 @@ export const formatPrice = (price: number) => {
  * @param price The price per million tokens
  */
 export const formatTokenPrice = (price: number) => {
-	return `${formatPrice(price)}/million tokens`
+	return `${formatPrice(price)}${t("pricing.perMillionTokens", "settings")}`
 }
 
 /**
  * Helper function to determine if a model supports thinking budget
  */
 export const hasThinkingBudget = (modelInfo: ModelInfo): boolean => {
-	return !!modelInfo.thinkingConfig && Object.keys(modelInfo.thinkingConfig).length > 0
+	return !!modelInfo.thinkingConfig
 }
 
 /**

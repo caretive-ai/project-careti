@@ -1,9 +1,11 @@
 syntax = "proto3";
 
 package caret;
+
 import "cline/common.proto";
-option java_package = "bot.caret.proto";
+
 option java_multiple_files = true;
+option java_package = "bot.caret.proto";
 
 // CARET MODIFICATION: Service for Caret account-related operations
 // Extends Cline's AccountService with Caret-specific functionality
@@ -11,20 +13,18 @@ service CaretAccountService {
   // Handles the user clicking the Caret login link in the UI.
   // Generates Auth0 authentication flow and manages JWT tokens.
   rpc caretAccountLoginClicked(cline.EmptyRequest) returns (cline.String);
-    
+
   // Handles the user clicking the Caret logout button in the UI.
   // Clears Auth0 tokens and user state.
   rpc caretAccountLogoutClicked(cline.EmptyRequest) returns (cline.Empty);
 
   // Subscribe to Caret auth status update events (when Auth0 authentication state changes)
-  rpc subscribeToCaretAuthStatusUpdate(cline.EmptyRequest) 
-      returns (stream CaretAuthState);
-    
+  rpc subscribeToCaretAuthStatusUpdate(cline.EmptyRequest) returns (stream CaretAuthState);
+
   // Handles Auth0 authentication state changes.
   // Updates the user info in global state and returns the updated value.
-  rpc caretAuthStateChanged(CaretAuthStateChangedRequest) 
-      returns (CaretAuthState);
-    
+  rpc caretAuthStateChanged(CaretAuthStateChangedRequest) returns (CaretAuthState);
+
   // Fetches all Caret user credits data
   // (balance, usage transactions, payment transactions)
   rpc getCaretUserCredits(cline.EmptyRequest) returns (CaretUserCreditsData);

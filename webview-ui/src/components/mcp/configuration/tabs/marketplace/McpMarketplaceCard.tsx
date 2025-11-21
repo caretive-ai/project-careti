@@ -2,6 +2,7 @@ import { McpMarketplaceItem, McpServer } from "@shared/mcp"
 import { StringRequest } from "@shared/proto/cline/common"
 import { useEffect, useMemo, useRef, useState } from "react"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { McpServiceClient } from "@/services/grpc-client"
 
@@ -49,9 +50,16 @@ const McpMarketplaceCard = ({ item, installedServers, setError }: McpMarketplace
 					}
 				`}
 			</style>
-			<a
+			<div
 				className="mcp-card"
-				href={item.githubUrl}
+				onClick={() => window.open(item.githubUrl, "_blank")}
+				onKeyDown={(e) => {
+					if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault()
+						window.open(item.githubUrl, "_blank")
+					}
+				}}
+				role="button"
 				style={{
 					padding: "14px 16px",
 					display: "flex",
@@ -60,13 +68,14 @@ const McpMarketplaceCard = ({ item, installedServers, setError }: McpMarketplace
 					cursor: isLoading ? "wait" : "pointer",
 					textDecoration: "none",
 					color: "inherit",
-				}}>
+				}}
+				tabIndex={0}>
 				{/* Main container with logo and content */}
 				<div style={{ display: "flex", gap: "12px" }}>
 					{/* Logo */}
 					{item.logoUrl && (
 						<img
-							alt={`${item.name} logo`}
+							alt={t("mcp.logoAlt", "{{name}} logo", { name: item.name })}
 							src={item.logoUrl}
 							style={{
 								width: 42,
@@ -128,7 +137,11 @@ const McpMarketplaceCard = ({ item, installedServers, setError }: McpMarketplace
 								}}
 								style={{}}>
 								<StyledInstallButton $isInstalled={isInstalled} disabled={isInstalled || isDownloading}>
-									{isInstalled ? "Installed" : isDownloading ? "Installing..." : "Install"}
+									{isInstalled
+										? t("mcp.installed", "Installed")
+										: isDownloading
+											? t("mcp.installing", "Installing...")
+											: t("mcp.install", "Install")}
 								</StyledInstallButton>
 							</div>
 						</div>
@@ -148,6 +161,9 @@ const McpMarketplaceCard = ({ item, installedServers, setError }: McpMarketplace
 							<a
 								className="github-link"
 								href={githubAuthorUrl}
+								onClick={(e) => {
+									e.stopPropagation()
+								}}
 								onMouseEnter={(e) => {
 									e.currentTarget.style.opacity = "1"
 									e.currentTarget.style.color = "var(--link-active-foreground)"
@@ -201,7 +217,11 @@ const McpMarketplaceCard = ({ item, installedServers, setError }: McpMarketplace
 								<span style={{ wordBreak: "break-all" }}>{item.downloadCount?.toLocaleString() ?? 0}</span>
 							</div>
 							{item.requiresApiKey && (
-								<span className="codicon codicon-key" style={{ flexShrink: 0 }} title="Requires API key" />
+								<span
+									className="codicon codicon-key"
+									style={{ flexShrink: 0 }}
+									title={t("mcp.requiresApiKey", "Requires API key")}
+								/>
 							)}
 						</div>
 					</div>
@@ -283,7 +303,7 @@ const McpMarketplaceCard = ({ item, installedServers, setError }: McpMarketplace
 						/>
 					</div>
 				</div>
-			</a>
+			</div>
 		</>
 	)
 }

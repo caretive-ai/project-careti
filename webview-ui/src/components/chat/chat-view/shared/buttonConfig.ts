@@ -1,5 +1,6 @@
 import type { ClineMessage, ClineSayTool } from "@shared/ExtensionMessage"
 import type { Mode } from "@shared/storage/types"
+import type { TFunction } from "@/caret/hooks/useCaretI18n"
 
 /**
  * Button action types that determine the behavior
@@ -11,7 +12,6 @@ export type ButtonActionType =
 	| "new_task" // Start a new task
 	| "cancel" // Cancel streaming
 	| "utility" // Execute utility function (condense, report_bug)
-	| "retry" // Retry the last action
 
 /**
  * Button configuration for different message states
@@ -29,21 +29,29 @@ export interface ButtonConfig {
  * Centralized button state configurations based on task lifecycle
  * This is the single source of truth for both button display and actions
  */
-export const BUTTON_CONFIGS: Record<string, ButtonConfig> = {
+export const getButtonConfigs = (t: TFunction): Record<string, ButtonConfig> => ({
 	// Error recovery states - user must take action
 	api_req_failed: {
-		sendingDisabled: true,
+		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Retry",
-		secondaryText: "Start New Task",
-		primaryAction: "retry",
+		primaryText: t("button.retry", "common"),
+		secondaryText: t("startNewTask", "chat"),
+		primaryAction: "approve",
 		secondaryAction: "new_task",
 	},
 	mistake_limit_reached: {
 		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Proceed Anyways",
-		secondaryText: "Start New Task",
+		primaryText: t("button.proceedAnyways", "common"),
+		secondaryText: t("startNewTask", "chat"),
+		primaryAction: "proceed",
+		secondaryAction: "new_task",
+	},
+	auto_approval_max_req_reached: {
+		sendingDisabled: false,
+		enableButtons: true,
+		primaryText: t("button.proceed", "common"),
+		secondaryText: t("startNewTask", "chat"),
 		primaryAction: "proceed",
 		secondaryAction: "new_task",
 	},
@@ -52,16 +60,16 @@ export const BUTTON_CONFIGS: Record<string, ButtonConfig> = {
 	tool_approve: {
 		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Approve",
-		secondaryText: "Reject",
+		primaryText: t("button.approve", "common"),
+		secondaryText: t("button.reject", "common"),
 		primaryAction: "approve",
 		secondaryAction: "reject",
 	},
 	tool_save: {
 		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Save",
-		secondaryText: "Reject",
+		primaryText: t("button.save", "common"),
+		secondaryText: t("button.reject", "common"),
 		primaryAction: "approve",
 		secondaryAction: "reject",
 	},
@@ -70,15 +78,15 @@ export const BUTTON_CONFIGS: Record<string, ButtonConfig> = {
 	command: {
 		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Run Command",
-		secondaryText: "Reject",
+		primaryText: t("button.runCommand", "common"),
+		secondaryText: t("button.reject", "common"),
 		primaryAction: "approve",
 		secondaryAction: "reject",
 	},
 	command_output: {
 		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Proceed While Running",
+		primaryText: t("button.proceedWhileRunning", "common"),
 		secondaryText: undefined,
 		primaryAction: "proceed",
 		secondaryAction: undefined,
@@ -88,16 +96,16 @@ export const BUTTON_CONFIGS: Record<string, ButtonConfig> = {
 	browser_action_launch: {
 		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Approve",
-		secondaryText: "Reject",
+		primaryText: t("button.approve", "common"),
+		secondaryText: t("button.reject", "common"),
 		primaryAction: "approve",
 		secondaryAction: "reject",
 	},
 	use_mcp_server: {
 		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Approve",
-		secondaryText: "Reject",
+		primaryText: t("button.approve", "common"),
+		secondaryText: t("button.reject", "common"),
 		primaryAction: "approve",
 		secondaryAction: "reject",
 	},
@@ -122,7 +130,7 @@ export const BUTTON_CONFIGS: Record<string, ButtonConfig> = {
 	completion_result: {
 		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Start New Task",
+		primaryText: t("startNewTask", "chat"),
 		secondaryText: undefined,
 		primaryAction: "new_task",
 		secondaryAction: undefined,
@@ -130,7 +138,7 @@ export const BUTTON_CONFIGS: Record<string, ButtonConfig> = {
 	resume_task: {
 		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Resume Task",
+		primaryText: t("button.resumeTask", "common"),
 		secondaryText: undefined,
 		primaryAction: "proceed",
 		secondaryAction: undefined,
@@ -138,15 +146,15 @@ export const BUTTON_CONFIGS: Record<string, ButtonConfig> = {
 	resume_completed_task: {
 		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Start New Task",
+		primaryText: t("startNewTask", "chat"),
 		secondaryText: undefined,
-		primaryAction: "new_task",
+		primaryAction: "proceed",
 		secondaryAction: undefined,
 	},
 	new_task: {
 		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Start New Task with Context",
+		primaryText: t("button.startNewTaskWithContext", "common"),
 		secondaryText: undefined,
 		primaryAction: "new_task",
 		secondaryAction: undefined,
@@ -156,7 +164,7 @@ export const BUTTON_CONFIGS: Record<string, ButtonConfig> = {
 	condense: {
 		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Condense Conversation",
+		primaryText: t("button.condenseConversation", "common"),
 		secondaryText: undefined,
 		primaryAction: "utility",
 		secondaryAction: undefined,
@@ -164,7 +172,7 @@ export const BUTTON_CONFIGS: Record<string, ButtonConfig> = {
 	report_bug: {
 		sendingDisabled: false,
 		enableButtons: true,
-		primaryText: "Report GitHub issue",
+		primaryText: t("button.reportGitHubIssue", "common"),
 		secondaryText: undefined,
 		primaryAction: "utility",
 		secondaryAction: undefined,
@@ -175,7 +183,7 @@ export const BUTTON_CONFIGS: Record<string, ButtonConfig> = {
 		sendingDisabled: true,
 		enableButtons: true,
 		primaryText: undefined,
-		secondaryText: "Cancel",
+		secondaryText: t("button.cancel", "common"),
 		primaryAction: undefined,
 		secondaryAction: "cancel",
 	},
@@ -193,19 +201,20 @@ export const BUTTON_CONFIGS: Record<string, ButtonConfig> = {
 		sendingDisabled: true,
 		enableButtons: true,
 		primaryText: undefined,
-		secondaryText: "Cancel",
+		secondaryText: t("button.cancel", "common"),
 		primaryAction: undefined,
 		secondaryAction: "cancel",
 	},
-}
+})
 
-const errorTypes = ["api_req_failed", "mistake_limit_reached"]
+const errorTypes = ["api_req_failed", "mistake_limit_reached", "auto_approval_max_req_reached"]
 
 /**
  * Determines button configuration based on message type and state
  * This is the single source of truth used by both ActionButtons and useMessageHandlers
  */
-export function getButtonConfig(message: ClineMessage | undefined, _mode: Mode = "act"): ButtonConfig {
+export function getButtonConfig(message: ClineMessage | undefined, _mode: Mode = "act", t: TFunction): ButtonConfig {
+	const BUTTON_CONFIGS = getButtonConfigs(t)
 	if (!message) {
 		return BUTTON_CONFIGS.default
 	}
@@ -227,13 +236,15 @@ export function getButtonConfig(message: ClineMessage | undefined, _mode: Mode =
 				return BUTTON_CONFIGS.api_req_failed
 			case "mistake_limit_reached":
 				return BUTTON_CONFIGS.mistake_limit_reached
+			case "auto_approval_max_req_reached":
+				return BUTTON_CONFIGS.auto_approval_max_req_reached
 
 			// Tool approval (most common)
 			case "tool": {
 				// Only parse JSON if we need to determine save vs approve
 				try {
 					const tool = JSON.parse(message.text || "{}") as ClineSayTool
-					if (tool.tool === "editedExistingFile" || tool.tool === "newFileCreated" || tool.tool === "fileDeleted") {
+					if (tool.tool === "editedExistingFile" || tool.tool === "newFileCreated") {
 						return BUTTON_CONFIGS.tool_save
 					}
 				} catch {

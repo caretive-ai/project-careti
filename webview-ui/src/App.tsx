@@ -1,10 +1,14 @@
 import type { Boolean, EmptyRequest } from "@shared/proto/cline/common"
 import { useEffect } from "react"
+import PersonaTemplateSelector from "./caret/components/PersonaTemplateSelector"
+// CARET MODIFICATION: Add i18n support for the entire app
+import CaretI18nProvider from "./caret/context/CaretI18nContext"
+// CARET MODIFICATION: Import CaretStateContextProvider for persona system
+import { CaretStateContextProvider, useCaretState } from "./caret/context/CaretStateContext"
 import AccountView from "./components/account/AccountView"
 import ChatView from "./components/chat/ChatView"
 import HistoryView from "./components/history/HistoryView"
 import McpView from "./components/mcp/configuration/McpConfigurationView"
-import OnboardingView from "./components/onboarding/OnboardingView"
 import SettingsView from "./components/settings/SettingsView"
 import WelcomeView from "./components/welcome/WelcomeView"
 import { useClineAuth } from "./context/ClineAuthContext"
@@ -23,7 +27,6 @@ const AppContent = () => {
 		showHistory,
 		showAccount,
 		showAnnouncement,
-		onboardingModels,
 		setShowAnnouncement,
 		setShouldShowAnnouncement,
 		closeMcpView,
@@ -34,6 +37,7 @@ const AppContent = () => {
 		hideAnnouncement,
 	} = useExtensionState()
 
+	const { showPersonaSelector } = useCaretState()
 	const { clineUser, organizations, activeOrganization } = useClineAuth()
 
 	useEffect(() => {
@@ -56,7 +60,12 @@ const AppContent = () => {
 	}
 
 	if (showWelcome) {
-		return onboardingModels ? <OnboardingView onboardingModels={onboardingModels} /> : <WelcomeView />
+		return <WelcomeView />
+	}
+
+	if (showPersonaSelector) {
+		// onSelectPersona는 필수 prop이지만, 여기서는 선택 후 화면 전환만 하면 되므로 빈 함수를 전달합니다.
+		return <PersonaTemplateSelector onSelectPersona={() => {}} />
 	}
 
 	return (
@@ -86,7 +95,13 @@ const AppContent = () => {
 const App = () => {
 	return (
 		<Providers>
-			<AppContent />
+			{/* CARET MODIFICATION: Wrap app with i18n context for multilingual support */}
+			<CaretI18nProvider defaultLanguage="en">
+				{/* CARET MODIFICATION: Wrap with CaretStateContextProvider for persona system */}
+				<CaretStateContextProvider>
+					<AppContent />
+				</CaretStateContextProvider>
+			</CaretI18nProvider>
 		</Providers>
 	)
 }

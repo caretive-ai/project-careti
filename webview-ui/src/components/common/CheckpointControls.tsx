@@ -4,6 +4,7 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useEffect, useRef, useState } from "react"
 import { useClickAway } from "react-use"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CheckpointsServiceClient } from "@/services/grpc-client"
@@ -138,7 +139,7 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 					}
 				}}
 				style={{ cursor: compareDisabled ? "wait" : "pointer" }}
-				title="Compare">
+				title={t("checkpointControls.compare", "chat")}>
 				<i className="codicon codicon-diff-multiple" style={{ position: "absolute" }} />
 			</VSCodeButton>
 			<div ref={containerRef} style={{ position: "relative" }}>
@@ -146,7 +147,7 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 					appearance="secondary"
 					onClick={() => setShowRestoreConfirm(true)}
 					style={{ cursor: "pointer" }}
-					title="Restore">
+					title={t("checkpointControls.restore", "chat")}>
 					<i className="codicon codicon-discard" style={{ position: "absolute" }} />
 				</VSCodeButton>
 				{showRestoreConfirm && (
@@ -158,9 +159,9 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 								style={{
 									cursor: restoreBothDisabled ? "wait" : "pointer",
 								}}>
-								Restore Task and Workspace
+								{t("checkpointControls.restoreTaskAndWorkspace", "chat")}
 							</VSCodeButton>
-							<p>Restores the task and your project's files back to a snapshot taken at this point</p>
+							<p>{t("checkpointControls.restoreTaskAndWorkspaceDescription", "chat")}</p>
 						</RestoreOption>
 						<RestoreOption>
 							<VSCodeButton
@@ -169,9 +170,9 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 								style={{
 									cursor: restoreTaskDisabled ? "wait" : "pointer",
 								}}>
-								Restore Task Only
+								{t("checkpointControls.restoreTaskOnly", "chat")}
 							</VSCodeButton>
-							<p>Deletes messages after this point (does not affect workspace)</p>
+							<p>{t("checkpointControls.restoreTaskOnlyDescription", "chat")}</p>
 						</RestoreOption>
 						<RestoreOption>
 							<VSCodeButton
@@ -180,9 +181,9 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 								style={{
 									cursor: restoreWorkspaceDisabled ? "wait" : "pointer",
 								}}>
-								Restore Workspace Only
+								{t("checkpointControls.restoreWorkspaceOnly", "chat")}
 							</VSCodeButton>
-							<p>Restores your project's files to a snapshot taken at this point (task may become out of sync)</p>
+							<p>{t("checkpointControls.restoreWorkspaceOnlyDescription", "chat")}</p>
 						</RestoreOption>
 					</RestoreConfirmTooltip>
 				)}

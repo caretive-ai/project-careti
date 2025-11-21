@@ -1,6 +1,7 @@
 import { ModelInfo } from "@shared/api"
 import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import styled from "styled-components"
+import { t } from "@/caret/utils/i18n"
 
 /**
  * Container for dropdowns that ensures proper z-index handling
@@ -46,16 +47,24 @@ OG Saoud Note:
 /**
  * A reusable component for selecting models from a dropdown
  */
-export const ModelSelector = ({ models, selectedModelId, onChange, zIndex, label = "Model" }: ModelSelectorProps) => {
+export const ModelSelector = ({ models, selectedModelId, onChange, zIndex, label }: ModelSelectorProps) => {
+	const finalLabel = label ?? t("modelSelector.label", "settings")
 	return (
 		<DropdownContainer className="dropdown-container" zIndex={zIndex}>
 			<label htmlFor="model-id">
-				<span className="font-medium">{label}</span>
+				<span style={{ fontWeight: 500 }}>{finalLabel}</span>
 			</label>
-			<VSCodeDropdown className="w-full" id="model-id" onChange={onChange} value={selectedModelId}>
-				<VSCodeOption value="">Select a model...</VSCodeOption>
+			<VSCodeDropdown id="model-id" onChange={onChange} style={{ width: "100%" }} value={selectedModelId}>
+				<VSCodeOption value="">{t("modelSelector.placeholder", "settings")}</VSCodeOption>
 				{Object.keys(models).map((modelId) => (
-					<VSCodeOption className="break-words whitespace-normal max-w-full" key={modelId} value={modelId}>
+					<VSCodeOption
+						key={modelId}
+						style={{
+							whiteSpace: "normal",
+							wordWrap: "break-word",
+							maxWidth: "100%",
+						}}
+						value={modelId}>
 						{modelId}
 					</VSCodeOption>
 				))}

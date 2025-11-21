@@ -1,0 +1,722 @@
+{
+	"button": {
+		"freeStart": "無料で始める",
+		"useOwnKey": "独自のAPIキーを使用する",
+		"letsGo": "始めましょう！",
+		"save": "保存",
+		"cancel": "キャンセル",
+		"done": "完了",
+		"runCommand": "コマンド実行",
+		"reject": "拒否",
+		"setupApiOrLocal": "APIキーまたはローカルLLMをセットアップする",
+		"notifyCaretAccount": "Caretサブスクリプションの通知を受け取る",
+		"saveAndStart": "保存して開始",
+		"startNewTaskWithContext": "コンテキストと共に新しいタスクを開始",
+		"retry": "Retry",
+		"approve": "Approve",
+		"proceed": "Proceed",
+		"proceedAnyways": "Proceed Anyways",
+		"proceedWhileRunning": "Proceed While Running",
+		"resumeTask": "Resume Task",
+		"condenseConversation": "Condense Conversation",
+		"reportGitHubIssue": "Report GitHub Issue"
+	},
+	"error": {
+		"generic": "エラーが発生しました。",
+		"apiKeyRequired": "APIキーが必要です",
+		"openaiApiKeyRequired": "OpenAI APIキーが必要です",
+		"anthropicApiKeyRequired": "Anthropic APIキーが必要です",
+		"geminiApiKeyRequired": "Gemini APIキーが必要です"
+	},
+	"imageAlt": {
+		"caretBanner": "Caretロゴバナー"
+	},
+	"title": {
+		"apiKeySettings": "APIキー設定"
+	},
+	"text": {
+		"finalThoughts": "{{appName}}と一緒に素晴らしい開発の旅を始めましょう！"
+	},
+	"link": {
+		"learnMoreCaretGit": "Caret GitHubでもっと学ぶ"
+	},
+	"apiSetup": {
+		"backButton": "戻る",
+		"title": "Caretを始めよう",
+		"description": "CaretはさまざまなLLMをサポートしています。Caretサービスに登録して無料アクセスを利用するか、ChatGPT、Claude、Gemma APIを使用するか、ローカルLLMを設定できます。",
+		"instructions": "手順：",
+		"supportLinks": {
+			"llmList": "サポートされるLLM一覧",
+			"geminiCredit": "無料Gemini APIクレジットを取得"
+		},
+		"saveButton": "保存して開始",
+		"help": {
+			"title": "サポートが必要ですか？",
+			"button": "ドキュメントを見る"
+		}
+	},
+	"welcome": {
+		"title": "Caretへようこそ！🎉",
+		"subtitle": "AI搭載コーディングアシスタント",
+		"description": "CaretはAIコーディングアシスタントで、コードの作成、デバッグ、改善をサポートします。一緒に始めましょう！",
+		"getStarted": "始める",
+		"learnMore": "詳しく学ぶ",
+		"whatCanIDo": "何がお手伝いできますか？",
+		"recentTasks": "最近のタスク",
+		"noRecentTasks": "最近のタスクはありません",
+		"viewAllHistory": "全ての履歴を表示",
+		"quickWinsTitle": "Caretでの簡単<span>[成果]</span>"
+	},
+	"rules": {
+		"tab": {
+			"rules": "ルール",
+			"workflows": "ワークフロー"
+		},
+		"section": {
+			"personaManagement": "ペルソナ管理",
+			"globalRules": "グローバルルール",
+			"workspaceRules": "ワークスペースルール",
+			"globalWorkflows": "グローバルワークフロー",
+			"localWorkflows": "ローカルワークフロー"
+		},
+		"subTitle": {
+			"caretRules": "Caret Rules (.caretrules)",
+			"CaretRules": "Caret Rules (.caretrules)",
+			"cursorRules": "カーソルルール (.cursorrules)",
+			"windsurfRules": "ウィンドサーフルール (.windsurfrules)"
+		},
+		"button": {
+			"selectPersonaTemplate": "テンプレートキャラクターを選択",
+			"changePersonaTemplate": "テンプレートキャラクターを変更"
+		},
+		"description": {
+			"personaManagement": "コーディングスタイルや好みに合ったAIペルソナを選択してください。",
+			"rulesDescription": "ルールを使用すると、システムレベルのガイダンスを提供できます。プロジェクトまたはすべての会話でグローバルにコンテキストと設定を含める永続的な方法と考えてください。",
+			"workflowsDescription": "ワークフローを使用すると、CaretがサービスのデプロイやPRの送信などの反復的なタスクを実行するための一連のステップを定義できます。ワークフローを実行するには、チャットで /workflow-name と入力してください。"
+		},
+		"action": {
+			"newRuleFile": "新しいルールファイル..."
+		},
+		"title": "Caretルールとワークフロー管理",
+		"docsLink": "ドキュメント",
+		"toggleError": "ルール切り替えエラー"
+	},
+	"persona": {
+		"description": "ペルソナシステムを有効にして、さまざまなAIキャラクターとカスタマイズされた体験を楽しめます。",
+		"management": "ペルソナ管理",
+		"docs": "ドキュメント",
+		"availablePersonas": "利用可能なペルソナ",
+		"selectDescription": "お好みのペルソナを選択するか、新しいペルソナを作成してAIアシスタントをカスタマイズしてください。",
+		"select": "選択",
+		"createNew": "新しいペルソナを作成",
+		"creating": "作成中...",
+		"uploadNormal": "アバターをアップロード",
+		"uploadThinking": "思考アバターをアップロード",
+		"default": {
+			"name": "デフォルトCaret",
+			"description": "デフォルトのAIコーディングアシスタントペルソナです。"
+		}
+	},
+	"rulesModal": {
+		"tooltip": {},
+		"ariaLabel": {}
+	},
+	"mode": {
+		"chatbot": {
+			"label": "💬 チャットボット",
+			"title": "チャットボットモード",
+			"description": "専門家によるコンサルテーションと分析"
+		},
+		"agent": {
+			"label": "🤖 エージェント",
+			"title": "エージェントモード",
+			"description": "共同開発と実装"
+		},
+		"plan": {
+			"label": "📋 プラン",
+			"title": "プランモード",
+			"description": "戦略策定と設計"
+		},
+		"act": {
+			"label": "⚡ アクト",
+			"title": "アクトモード",
+			"description": "実装と実行"
+		},
+		"tooltip": {
+			"chatbot": "チャットボットモードでは、Caretが専門家によるコンサルテーションと分析を提供します",
+			"agent": "エージェントモードでは、Caretが協力してソリューションを実装します",
+			"plan": "プランモードでは、戦略と計画を策定します",
+			"act": "アクトモードでは、計画を実行および実装します",
+			"toggle": "{{metaKey}}+Shift+A で切り替え"
+		}
+	},
+	"settings": {
+		"openAIReasoningEffort": {
+			"high": "高 (より詳細、低速、高コスト)",
+			"label": "OpenAI推論の労力",
+			"description": "OpenAIモデルの推論の労力を調整します。労力を高くすると、より詳細な応答が得られる可能性がありますが、低速でコストが高くなる場合があります。"
+		},
+		"uiLanguage": {
+			"label": "UI言語",
+			"description": "Caret UIの表示言語を選択します。",
+			"option": {
+				"ko": "Korean (한국어)",
+				"en": "English",
+				"ja": "Japanese (日本語)",
+				"zh": "Chinese (中文)"
+			}
+		},
+		"preferredLanguage": {
+			"label": "AI応答言語",
+			"description": "Caretがコミュニケーションに使用する言語を選択します。"
+		},
+		"modeSystem": {
+			"label": "モード設定",
+			"description": "Caretのプラン/アクトモードを使用するためにCaretモード設定を有効にします。",
+			"options": {
+				"caret": "Caret",
+				"Caret": "Caret",
+				"cline": "Caret"
+			}
+		},
+		"separateModels": {
+			"label": "チャットボットモードとエージェントモードで異なるモデルを使用する",
+			"description": "チャットボットモードとエージェントモードを切り替えると、以前のモードで使用されたAPIとモデルが保持されます。これは、専門家によるコンサルテーション（チャットボット）には強力な推論モデルを使用し、共同開発（エージェント）には安価なコーディングモデルを使用する場合などに役立ちます。"
+		},
+		"apiKey": {
+			"placeholder": "APIキーを入力してください...",
+			"getYourKeyAn": "こちらで登録して{{providerName}} APIキーを入手できます。",
+			"getYourKeyA": "こちらで登録して{{providerName}} APIキーを入手できます。",
+			"label": "{{providerName}} APIキー",
+			"helpText": "このキーはローカルに保存され、この拡張機能からAPIリクエストを行うためだけに使用されます。"
+		},
+		"baseUrl": {
+			"label": "カスタムベースURLを使用",
+			"placeholder": "デフォルト: https://api.example.com"
+		},
+		"modelSelector": {
+			"label": "モデル",
+			"placeholder": "モデルを選択..."
+		},
+		"modelIdField": {
+			"label": "モデル"
+		},
+		"requesty": {
+			"modelLabel": "モデル",
+			"searchPlaceholder": "モデルを検索して選択...",
+			"clearSearch": "検索をクリア",
+			"info": {
+				"fullText": "拡張機能は<0>Requesty</0>で利用可能な最新のモデルリストを自動的に取得します。どのモデルを選択すればよいかわからない場合は、Clineは<1>anthropic/claude-3-7-sonnet-latest</1>で最適に動作します。"
+			}
+		},
+		"sapAiCore": {
+			"placeholder": "モデルを選択...",
+			"deployedModels": "── デプロイ済みモデル ──",
+			"notDeployedModels": "── 未デプロイモデル ──",
+			"modelLabel": "モデル"
+		},
+		"vertex": {
+			"projectIdPlaceholder": "プロジェクトIDを入力...",
+			"projectIdLabel": "Google CloudプロジェクトID",
+			"regionLabel": "Google Cloudリージョン",
+			"selectRegionPlaceholder": "リージョンを選択してください...",
+			"setupDescription": "Google Cloud Vertex AIを使用するには以下が必要です: ",
+			"setupLink1": "1) Google Cloudアカウントを作成 › Vertex AI APIを有効化 › 目的のClaudeモデルを有効化,",
+			"setupLink2": " 2) Google Cloud CLIをインストール › アプリケーションのデフォルト認証情報を設定。"
+		},
+		"terminalOutputLineLimit": {
+			"label": "ターミナル出力制限",
+			"description": "コマンド実行時にターミナル出力に含める最大行数。超過した場合、行は中央から削除され、トークンを節約します。"
+		},
+		"thinkingBudget": {
+			"enable": "拡張思考を有効にする",
+			"budgetText": "<strong>予算:</strong> {{value}}トークン",
+			"ariaLabel": "思考予算: {{value}}トークン",
+			"description": "予算を高くすると、より包括的でニュアンスのある推論が可能になります。"
+		},
+		"useCustomPrompt": {
+			"label": "コンパクトプロンプトを使用",
+			"description": "より小さなコンテキストウィンドウ（例: 8k以下）に最適化されたシステムプロンプト。",
+			"warning": "Mcpとフォーカスチェーンはサポートしていません"
+		},
+		"loading": "読み込み中...",
+		"signUpDescription": "最新モデルへのアクセス、使用状況とクレジットを表示する請求ダッシュボード、および今後の機能を利用するには、アカウントにサインアップしてください。",
+		"termsOfService": "利用規約",
+		"privacyPolicy": "プライバシーポリシー",
+		"byContining": "続行することにより、あなたは",
+		"subscription": "サブスクリプションプラン",
+		"subscriptionFree": "無料",
+		"subscriptionBasic": "ベーシック",
+		"payAsYouGo": "従量課金制",
+		"organization": "組織",
+		"payAsYouGoDescription": "* すべてのサブスクリプション使用量が使い果たされた後、追加料金が適用されます。",
+		"title": "アカウント",
+		"usageSummary": "使用状況サマリー",
+		"timeframe": "期間",
+		"dailyUsage": "日次の使用量",
+		"monthlyUsage": "月次の使用量",
+		"promptTokens": "プロンプトトークン",
+		"completionTokens": "完了トークン",
+		"totalTokens": "合計トークン数",
+		"totalCost": "合計コスト",
+		"termsOfServiceUrl": "https://caretive.ai/terms.en.html",
+		"privacyPolicyUrl": "https://caretive.ai/privacy.en.html"
+	},
+	"account": {
+		"signUpWithCaret": "Caretアカウントでログイン＆サインアップ",
+		"viewBillingUsage": "請求と使用状況を表示",
+		"dashboard": "ダッシュボード",
+		"addCredits": "クレジットを追加",
+		"currentBalance": "現在の残高",
+		"logOut": "ログアウト",
+		"loading": "読み込み中...",
+		"signUpDescription": "最新モデルへのアクセス、使用状況とクレジットを表示する請求ダッシュボード、および今後の機能を利用するには、アカウントにサインアップしてください。",
+		"termsOfService": "利用規約",
+		"privacyPolicy": "プライバシーポリシー",
+		"byContining": "続行することにより、あなたは",
+		"subscription": "サブスクリプションプラン",
+		"subscriptionFree": "無料",
+		"subscriptionBasic": "ベーシック",
+		"payAsYouGo": "従量課金制",
+		"organization": "組織",
+		"payAsYouGoDescription": "* すべてのサブスクリプション使用量が使い果たされた後、追加料金が適用されます。",
+		"title": "アカウント"
+	},
+	"common": {
+		"and": "と",
+		"scrollToBottom": "一番下までスクロール",
+		"defaultValue": "0",
+		"seeMore": "もっと見る"
+	},
+	"chat": {
+		"caretHasQuestion": "Caretからの質問",
+		"typeMessage": "メッセージを入力...",
+		"typeTaskHere": "ここにタスクを入力...",
+		"cancel": "キャンセル",
+		"addContext": "コンテキストを追加",
+		"addFilesImages": "ファイル/画像を追加",
+		"selectModelApiProvider": "モデル/APIプロバイダーを選択",
+		"dismissQuote": "引用を閉じる",
+		"apiRequestCancelled": "APIリクエストがキャンセルされました",
+		"apiStreamingFailed": "APIストリーミングに失敗しました",
+		"apiRequest": "APIリクエスト",
+		"apiRequestFailed": "APIリクエストに失敗しました",
+		"apiRequestPending": "APIリクエスト中...",
+		"errorBlockTitle": {
+			"apiRequest": "APIリクエスト",
+			"apiRequestFailed": "APIリクエストに失敗しました"
+		},
+		"image": {
+			"dimensionError": "画像の寸法は7500pxを超えることはできません。",
+			"unsupportedFileError": "サポートされていないファイルタイプです。画像のみドロップできます。"
+		},
+		"caretWantsToCreateNewFile": "Caretが新しいファイルを作成しようとしています:",
+		"placeholderHint": "コンテキストには@、スラッシュコマンドとワークフローには/を入力するか、Shiftを押しながらファイル/画像をドラッグ＆ドロップしてください",
+		"caretIsUsingBrowser": "Caretがブラウザを使用しています:",
+		"caretWantsToUseBrowser": "Caretがブラウザを使用しようとしています:",
+		"executeCommand": "Caretがこのコマンドを実行しようとしています:",
+		"errorLabel": "エラー",
+		"mistakeLimitReached": "間違いの制限に達しました",
+		"maxRequestsReached": "自動承認の最大リクエスト数に達しました",
+		"useMcpServer": "{{serverName}}から{{type}}を使用",
+		"mcpTool": "ツール",
+		"mcpResource": "リソース",
+		"taskCompleted": "タスク完了",
+		"thinking": "思考中",
+		"commandOutput": "コマンド出力",
+		"commandApprovalRequired": "このコマンドを実行するには承認が必要です。",
+		"mcpArguments": "引数",
+		"mcpNotification": "MCP通知: ",
+		"loadingMcpDocumentation": "MCPドキュメントを読み込み中",
+		"seeNewChanges": "新しい変更を表示",
+		"shellIntegrationUnavailable": "シェル統合が利用できません",
+		"shellIntegrationWarning": "Caretはコマンドの出力を表示できない可能性があります。VSCodeを更新し（<code>CMD/CTRL + Shift + P</code> → \"Update\"）、サポートされているシェル（zsh、bash、fish、またはPowerShell）を使用していることを確認してください（<code>CMD/CTRL + Shift + P</code> → \"Terminal: Select Default Profile\"）。",
+		"stillHavingTrouble": "まだ問題がありますか？",
+		"wantsToStartNewTask": "Caretが新しいタスクを開始しようとしています:",
+		"wantsToCondense": "Caretが会話を要約しようとしています:",
+		"wantsToCreateGithubIssue": "CaretがGithubイシューを作成しようとしています:",
+		"tool": {
+			"outsideWorkspace": "ワークスペース外",
+			"editFile": "既存ファイルを編集",
+			"createFile": "新規ファイルを作成",
+			"readFile": "ファイルを読み込み",
+			"wantsToListFilesTopLevel": "このディレクトリのトップレベルファイルを一覧表示しようとしています",
+			"listedFilesTopLevel": "このディレクトリのトップレベルファイルを一覧表示しました",
+			"wantsToListFilesRecursive": "このディレクトリのすべてのファイルを再帰的に一覧表示しようとしています",
+			"listedFilesRecursive": "このディレクトリのすべてのファイルを再帰的に一覧表示しました",
+			"wantsToListCodeDefinitionNames": "このディレクトリで使用されているソースコード定義名を一覧表示しようとしています",
+			"listedCodeDefinitionNames": "このディレクトリで使用されているソースコード定義名を一覧表示しました",
+			"searchFiles": "正規表現 {{regex}} でファイルを検索しました",
+			"summarizeTask": "タスクを要約",
+			"summary": "要約",
+			"externalUrl": "外部URL",
+			"wantsToWebFetch": "このURLからコンテンツを取得しようとしています",
+			"webFetched": "このURLからコンテンツを取得しました"
+		},
+		"quoteSelection": "選択を引用",
+		"quoteSelectionInReply": "返信で選択を引用"
+	},
+	"historyPreview": {
+		"recentTasks": "最近のタスク",
+		"favorited": "お気に入り",
+		"tokens": "トークン: {{tokensIn}} 入力, {{tokensOut}} 出力",
+		"cache": "キャッシュ: +{{cacheWrites}}, →{{cacheReads}}",
+		"apiCost": "APIコスト: ${{totalCost}}",
+		"viewAllHistory": "すべての履歴を表示",
+		"noRecentTasks": "最近のタスクはありません"
+	},
+	"checkmarkControl": {
+		"checkpointRestored": "チェックポイント (復元済み)",
+		"checkpoint": "チェックポイント",
+		"compare": "比較",
+		"restore": "復元",
+		"restoreFiles": "ファイルを復元",
+		"restoreFilesDescription": "このチェックポイントからのファイル変更のみを復元します。",
+		"restoreTaskOnly": "タスクのみ復元",
+		"restoreTaskOnlyDescription": "このチェックポイントからのタスクのみを復元します。",
+		"restoreFilesAndTask": "ファイルとタスクを復元",
+		"restoreFilesAndTaskDescription": "このチェックポイントからのファイル変更とタスクの両方を復元します。"
+	},
+	"taskTimelineTooltip": {
+		"taskMessage": "タスクメッセージ",
+		"userMessage": "ユーザーメッセージ",
+		"assistantResponse": "アシスタント応答",
+		"fileRead": "ファイル読み込み: {{tool}}",
+		"fileEdit": "ファイル編集: {{path}}",
+		"newFile": "新規ファイル: {{path}}",
+		"webFetch": "ウェブフェッチ: {{path}}",
+		"unknownFile": "不明なファイル",
+		"unknownUrl": "不明なURL",
+		"tool": "ツール: {{tool}}",
+		"toolUse": "ツール使用",
+		"terminalCommand": "ターミナルコマンド",
+		"terminalOutput": "ターミナル出力",
+		"browserAction": "ブラウザアクション",
+		"browserResult": "ブラウザ結果",
+		"taskCompleted": "タスク完了",
+		"checkpointCreated": "チェックポイント作成済み",
+		"unknown": "不明",
+		"assistantMessage": "アシスタントメッセージ",
+		"planningResponse": "計画応答",
+		"fileReadApproval": "ファイル読み込み承認: {{tool}}",
+		"fileEditApproval": "ファイル編集承認: {{path}}",
+		"newFileApproval": "新規ファイル承認: {{path}}",
+		"toolApproval": "ツール承認: {{tool}}",
+		"terminalCommandApproval": "ターミナルコマンド承認",
+		"browserActionApproval": "ブラウザアクション承認",
+		"unknownMessageType": "不明なメッセージタイプ"
+	},
+	"taskHeader.task": "タスク",
+	"taskHeader.cache": "キャッシュ",
+	"taskHeader.tokens": "トークン",
+	"taskHeader.closeTask": "タスクを閉じる",
+	"taskHeader.seeMore": "もっと見る",
+	"taskHeader.seeLess": "折りたたむ",
+	"taskHeader.promptTokens": "プロンプトトークン",
+	"taskHeader.completionTokens": "完了トークン",
+	"taskHeader.tokensWrittenToCache": "キャッシュに書き込まれたトークン",
+	"taskHeader.tokensReadFromCache": "キャッシュから読み取ったトークン",
+	"taskHeader.disablingCheckpoints": "チェックポイントを無効化しています。",
+	"taskHeader.seeHereForInstructions": "こちらで手順を確認してください。",
+	"taskHeader.currentTokens": "このリクエストで使用された現在のトークン",
+	"taskHeader.contextWindowUsage": "コンテキストウィンドウ使用量",
+	"taskHeader.maxContextWindow": "このモデルの最大コンテキストウィンドウサイズ",
+	"taskHeader.allStepsCompleted": "すべての{{totalCount}}ステップが完了しました！",
+	"taskHeader.newStepsGenerated": "会話に基づいて新しいステップが生成される場合があります。",
+	"taskHeader.editFocusChainList": "フォーカスチェーンリストを編集",
+	"modelInfoView": {
+		"tokensSuffix": "/百万トークン"
+	},
+	"modelInfo": {
+		"supportsImages": "画像をサポート",
+		"doesNotSupportImages": "画像をサポートしていません",
+		"supportsBrowserUse": "ブラウザ使用をサポート",
+		"doesNotSupportBrowserUse": "ブラウザ使用未対応",
+		"supportsPromptCaching": "プロンプトキャッシュをサポート",
+		"doesNotSupportPromptCaching": "プロンプトキャッシュ未対応",
+		"maxOutput": "最大出力",
+		"inputPrice": "入力価格",
+		"outputPrice": "出力価格",
+		"outputPriceStandard": "出力価格 (標準)",
+		"outputPriceThinkingBudget": "出力価格 (思考予算 > 0)",
+		"basedOnInputTokens": "(入力トークンに基づく)",
+		"cacheWritesPrice": "キャッシュ書き込み価格",
+		"cacheReadsPrice": "キャッシュ読み込み価格",
+		"freeRequestsPerMinute": "* 1分あたり{{count}}リクエストまで無料。それ以降はプロンプトサイズに応じて課金されます。",
+		"forMoreInfo": "詳細については、料金詳細を参照してください。",
+		"tokensSuffix": "/百万トークン"
+	},
+	"providers": {
+		"caret": {
+			"name": "Caret",
+			"description": "CaretはさまざまなLLMをサポートしています。Caretサービスに登録して無料アクセスを利用するか、ChatGPT、Claude、Gemma APIを使用するか、ローカルLLMを設定できます。",
+			"login": "Caretアカウントでログイン＆サインアップ",
+			"or": "または",
+			"apiKeyConfigured": "APIキーが設定されています。ログインは不要です。",
+			"features": "機能:",
+			"feature1": "最新モデルへのアクセス",
+			"feature2": "使用状況とクレジットを表示する請求ダッシュボード",
+			"feature3": "プロンプトプレイグラウンド",
+			"feature4": "その他の今後の機能",
+			"visit": "訪問",
+			"getApiKey": "でAPIキーを入手してください。"
+		},
+		"openAICompatible": {
+			"description": "OpenAI互換のAPIエンドポイントを使用します。"
+		},
+		"claudeCode": {
+			"cliPath": "CLIパス",
+			"cliPathDescription": "'claude-code' CLI実行可能ファイルへのパス。"
+		},
+		"sapAiCore": {
+			"description": "SAP AI Coreにデプロイされたモデルを使用します。",
+			"pricingNote": "価格は直接的なUSD価格ではなく、SAPのキャパシティユニットを使用して計算されます。"
+		},
+		"zAi": {
+			"glm45Description": "GLM-4.5はZhipuの最新特徴モデルです。推論、コーディング、エージェントの総合的な性能はオープンソースモデルの中でSOTA（最高水準）レベルに達し、128kまでのコンテキスト長を持ちます。"
+		},
+		"groq": {
+			"modelLabel": "モデル"
+		},
+		"cerebras": {
+			"sotaDescription": "SOTAコーディングモデル、約2000トークン/秒（$0無料枠）",
+			"noSubscription": "• Cerebrasサブスクリプションをお持ちでない場合はこれを使用してください",
+			"contextWindow": "• 64Kコンテキストウィンドウ",
+			"rateLimits": "• レート制限: 150K TPM, 1M TPH/TPD, 10 RPM, 100 RPH/RPD",
+			"upgrade": "より高い制限のためにアップグレード: https://cloud.cerebras.ai/?utm=cline"
+		},
+		"vercelAiGateway": {
+			"description": "Vercel AI Gatewayを介してモデルを使用します。"
+		},
+		"baseten": {
+			"apiKeyHelp": "このキーはローカルに保存され、この拡張機能からAPIリクエストを行うためだけに使用されます。こちらでサインアップして{{providerName}} APIキーを入手できます。"
+		},
+		"requesty": {
+			"claudeDescription": "Anthropicの最もインテリジェントなモデル。最高レベルの知能と能力。"
+		},
+		"fireworks": {
+			"kimiK2Description": "Kimi K2は、320億のアクティブ化されたパラメーターと1兆の総パラメーターを持つ最先端の混合エキスパート（MoE）言語モデルです。MuonオプティマイザーでトレーニングされたKimi K2は、フロンティア知識、推論、コーディングタスク全体で卓越したパフォーマンスを達成し、エージェント機能のために細心の注意を払って最適化されています。"
+		},
+		"qwenCode": {
+			"description": "Qwen3 Coder Plus - 大規模なコードベース向けの1Mコンテキストウィンドウを備えた高性能コーディングモデル"
+		},
+		"lmStudio": {
+			"contextWindowLabel": "コンテキストウィンドウ"
+		},
+		"huggingFace": {
+			"modelLabel": "モデル",
+			"advancedReasoning": "コーディング、数学、一般的な機能全体にわたって優秀な性能を持つ高度な推論モデル。"
+		},
+		"dify": {
+			"workflowDescription": "Difyワークフロー - モデル選択はDifyアプリケーションで設定されます"
+		},
+		"nebius": {
+			"apiKeyHelpText": "こちらでサインアップして{{providerName}} APIキーを入手できます。"
+		}
+	},
+	"caretProvider": {
+		"futureSupport": "今後のサポート",
+		"futureProviders": "ChatGPTとClaudeは今後サポートされます",
+		"modelLabel": "モデル",
+		"geminiProModel": "Gemini 2.5 Pro",
+		"geminiFlashModel": "Gemini 2.5 Flash",
+		"bestLabel": "最高",
+		"valueLabel": "コスパ",
+		"geminiProDescription": "複雑なタスクと高度な推論に最適化されたプレミアム性能モデル",
+		"geminiFlashDescription": "一般的なタスクに適した高速で効率的なモデル、優れたコストパフォーマンス",
+		"tagBest": "最高",
+		"tagCostEffective": "コスパ良好"
+	},
+	"apiOptions": {
+		"apiProvider": "APIプロバイダー",
+		"selectModel": "モデルを選択...",
+		"selectRegion": "リージョンを選択...",
+		"enterApiKey": "APIキーを入力...",
+		"loading": "読み込み中...",
+		"caretComplexPrompts": "Caretは複雑なプロンプトを使用し、Claudeモデルで最も良く動作します。性能の低いモデルは期待通りに動作しない場合があります。",
+		"note": "注:",
+		"model": "モデル",
+		"custom": "カスタム",
+		"modelId": "モデルID",
+		"enterModelId": "カスタムモデルIDを入力...",
+		"baseInferenceModel": "ベース推論モデル",
+		"askSageApiKey": "AskSage APIキー",
+		"askSageApiUrl": "AskSage API URL",
+		"enterAskSageUrl": "AskSage API URLを入力...",
+		"anthropicApiKey": "Anthropic APIキー",
+		"anthropicBaseUrl": "AnthropicベースURL",
+		"anthropicBaseUrlPlaceholder": "デフォルト: https://api.anthropic.com",
+		"openAiApiKey": "OpenAI APIキー",
+		"deepSeekApiKey": "DeepSeek APIキー",
+		"alibabaApiLine": "Alibaba APIライン",
+		"chinaApi": "中国API",
+		"internationalApi": "国際API",
+		"qwenApiKey": "Qwen APIキー",
+		"doubaoApiKey": "Doubao APIキー",
+		"mistralApiKey": "Mistral APIキー",
+		"openRouterApiKey": "OpenRouter APIキー",
+		"openRouterRecommended": "OpenRouterは高いレート制限と多様なモデルに推奨されます。",
+		"awsCredentials": "AWS認証情報",
+		"awsProfile": "AWSプロファイル",
+		"awsProfileName": "AWSプロファイル名",
+		"awsProfilePlaceholder": "プロファイル名を入力 (空の場合はデフォルト)",
+		"awsAccessKey": "AWSアクセスキー",
+		"awsSecretKey": "AWSシークレットキー",
+		"awsSessionToken": "AWSセッショントークン",
+		"awsRegion": "AWSリージョン",
+		"gcpProjectId": "Google CloudプロジェクトID",
+		"gcpRegion": "Google Cloudリージョン",
+		"languageModel": "言語モデル",
+		"apiKey": "APIキー",
+		"fireworksApiKey": "Fireworks APIキー",
+		"maxCompletionTokens": "最大完了トークン",
+		"maxContextTokens": "最大コンテキストトークン",
+		"enterSecretKey": "シークレットキーを入力...",
+		"enterAccessKey": "アクセスキーを入力...",
+		"enterSessionToken": "セッショントークンを入力...",
+		"enterVpcEndpoint": "VPCエンドポイントURLを入力 (オプション)",
+		"enterCustomModelId": "カスタムモデルIDを入力...",
+		"enterProjectId": "プロジェクトIDを入力...",
+		"useCustomBaseUrl": "カスタムベースURLを使用",
+		"defaultAnthropicUrl": "デフォルト: https://api.anthropic.com",
+		"thisKeyStoredLocally": "このキーはローカルに保存され、この拡張機能からAPIリクエストを行うためだけに使用されます。",
+		"getApiKeySignUp": "こちらでサインアップしてAPIキーを入手できます。",
+		"getAnthropicApiKey": "こちらでサインアップしてAnthropic APIキーを入手できます。",
+		"getOpenAiApiKey": "こちらでサインアップしてOpenAI APIキーを入手できます。",
+		"getGeminiApiKey": "こちらでサインアップしてGemini APIキーを入手できます。",
+		"comingSoon": "近日公開",
+		"providerComingSoon": "{{provider}}のサポートは今後のアップデートで追加されます。",
+		"millionTokens": "百万トークン",
+		"tokens": "トークン",
+		"systemMessages": {
+			"viewedTopLevelFiles": "Caretはこのディレクトリのトップレベルファイルを表示しました:",
+			"wantsToViewTopLevelFiles": "Caretはこのディレクトリのトップレベルファイルを表示しようとしています:",
+			"viewedFilesRecursively": "Caretはこのディレクトリのすべてのファイルを再帰的に表示しました:",
+			"wantsToViewFilesRecursively": "Caretはこのディレクトリのすべてのファイルを再帰的に表示しようとしています:",
+			"viewedCodeDefinitions": "Caretはこのディレクトリで使用されているソースコード定義名を表示しました:",
+			"wantsToViewCodeDefinitions": "Caretはこのディレクトリで使用されているソースコード定義名を表示しようとしています:",
+			"wantsToSearchDirectory": "Caretはこのディレクトリを検索しようとしています:",
+			"fetchedContentFromUrl": "CaretはこのURLからコンテンツを取得しました:",
+			"wantsToFetchContentFromUrl": "CaretはこのURLからコンテンツを取得しようとしています:",
+			"taskCompleted": "タスク完了"
+		},
+		"geminiApiKey": "Gemini APIキー",
+		"geminiModelStrong": "Gemini 2.5 Pro Preview 06-05 (強力)",
+		"geminiModelCostEffective": "Gemini 2.5 Flash Preview 05-20 (費用対効果)",
+		"reasoningEnabled": "推論はデフォルトで有効"
+	},
+	"telemetry": {
+		"helpImprove": "Caretの開発を応援",
+		"description": "Caretはオープンソースプロジェクトです。GitHubで貢献、問題報告、フィードバックをお願いします。",
+		"githubLinkPrefix": "詳細はこちら",
+		"githubLink": "github.com/aicoding-caret/caret",
+		"closeBannerAria": "バナーを閉じる",
+		"settingsLink": "設定"
+	},
+	"history": {
+		"title": "履歴",
+		"deleteAllHistory": "すべての履歴を削除",
+		"fuzzySearchPlaceholder": "履歴をあいまい検索...",
+		"sortNewest": "新しい順",
+		"sortOldest": "古い順",
+		"sortMostExpensive": "最も高価な順",
+		"sortMostTokens": "最もトークンが多い順",
+		"sortMostRelevant": "最も関連性の高い順",
+		"filterWorkspace": "ワークスペース",
+		"filterFavorites": "お気に入り",
+		"selectAll": "すべて選択",
+		"selectNone": "なしを選択"
+	},
+	"mcp": {
+		"title": "MCPサーバー",
+		"marketplace": "マーケットプレイス",
+		"remoteServers": "リモートサーバー",
+		"installed": "インストール済み",
+		"noServersInstalled": "MCPサーバーがインストールされていません",
+		"configureServers": "MCPサーバーを設定",
+		"noMatchingServers": "一致するMCPサーバーが見つかりません",
+		"noServersFound": "マーケットプレイスでMCPサーバーが見つかりません",
+		"description": "モデルコンテキストプロトコルは、Caretの機能を拡張するための追加ツールとリソースを提供するローカルで実行されているMCPサーバーとの通信を可能にします。",
+		"autoApprove": "自動承認",
+		"autoApproveAllTools": "すべてのツールを自動承認"
+	},
+	"autoApprove": {
+		"addQuickAccess": "クイックアクセスメニューに追加",
+		"removeQuickAccess": "クイックアクセスメニューから削除",
+		"autoApproveLabel": "自動承認:"
+	},
+	"task": {
+		"deleteTask": "タスクを削除",
+		"deleteTaskAriaLabel": "タスクを削除",
+		"copyTask": "タスクをコピー"
+	},
+	"announcement": {
+		"newVersion": "🎉 新バージョン v{{version}}",
+		"features": {
+			"freeStealth": {
+				"title": "無料ステルスモデル",
+				"description": "複雑なコーディングタスク向けに設計された262Kコンテキストウィンドウを持つ高度なステルスモデル。Caretプロバイダーで無料で利用可能。"
+			},
+			"focusChain": {
+				"title": "フォーカスチェーン",
+				"description": "自動TODOリスト管理により、Caretが長期的なタスクに集中し、複雑なタスクを管理可能なステップに分解し、リアルタイムの進捗追跡と受動的なリマインダーを提供します。"
+			},
+			"autoCompact": {
+				"title": "自動コンパクト",
+				"description": "会話がモデルのコンテキストウィンドウ制限に近づくと、タスクと次のステップを自動的に要約します。これにより、Caretが長時間のタスクセッションで軌道に乗るのに大いに役立ちます！"
+			},
+			"deepPlanning": {
+				"title": "ディーププランニング",
+				"description": "新しい /deep-planning スラッシュコマンドは、Caretをコードベースを調査し、明確な質問をし、コードを書く前に包括的な計画を作成するアーキテクトに変えます。"
+			}
+		},
+		"previousUpdates": "以前のアップデート:",
+		"previousFeatures": {
+			"claude1M": {
+				"title": "Claude Sonnet 4の1Mコンテキスト",
+				"description": "Caret/OpenRouterユーザーは即座にアクセスでき、AnthropicユーザーはTier 4、Bedrockユーザーはサポートされているリージョンにいる必要があります。"
+			},
+			"optimizedClaude4": {
+				"title": "Claude 4に最適化",
+				"description": "CaretはClaude 4ファミリーのモデルで動作するように最適化され、パフォーマンス、信頼性、および新機能が向上しました。"
+			},
+			"workflows": {
+				"title": "ワークフロー",
+				"description": "スラッシュコマンドを介して会話に挿入できるワークフローファイルを作成および管理し、反復的なタスクを簡単に自動化できます。"
+			}
+		},
+		"joinUs": "参加してください",
+		"forMoreUpdates": "でさらなるアップデートを！"
+	},
+	"browserTool": {
+		"title": "ブラウザツール",
+		"description": "ウェブブラウザの起動と操作",
+		"placeholder": "URLを入力...",
+		"launchButton": "ブラウザ起動"
+	},
+	"browser": {
+		"connectionInfo": "ブラウザ接続情報",
+		"popover": {
+			"title": "ブラウザ接続",
+			"statusLabel": "ステータス:",
+			"connected": "接続済み",
+			"disconnected": "切断済み",
+			"typeLabel": "タイプ:",
+			"remote": "リモート",
+			"local": "ローカル",
+			"remoteHostLabel": "リモートホスト:"
+		}
+	},
+	"navbar": {
+		"chat": "チャット",
+		"newTaskTooltip": "新しいタスク",
+		"mcp": "MCP",
+		"mcpServersTooltip": "MCPサーバー",
+		"history": "履歴",
+		"historyTooltip": "履歴",
+		"account": "アカウント",
+		"accountTooltip": "アカウント",
+		"settings": "設定",
+		"settingsTooltip": "設定"
+	}
+}

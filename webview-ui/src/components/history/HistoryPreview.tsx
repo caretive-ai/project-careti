@@ -1,6 +1,7 @@
 import { StringRequest } from "@shared/proto/cline/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { memo, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { TaskServiceClient } from "@/services/grpc-client"
 import { formatLargeNumber } from "@/utils/format"
@@ -93,12 +94,12 @@ const HistoryPreview = ({ showHistoryView }: HistoryPreviewProps) => {
 						fontSize: "0.85em",
 						textTransform: "uppercase",
 					}}>
-					Recent Tasks
+					{t("historyPreview.recentTasks", "chat")}
 				</span>
 			</div>
 
 			{isExpanded && (
-				<div className="px-5">
+				<div style={{ padding: "0px 20px 0 20px" }}>
 					{taskHistory.filter((item) => item.ts && item.task).length > 0 ? (
 						<>
 							{taskHistory
@@ -129,33 +130,61 @@ const HistoryPreview = ({ showHistoryView }: HistoryPreviewProps) => {
 														right: "12px",
 														color: "var(--vscode-button-background)",
 													}}>
-													<span aria-label="Favorited" className="codicon codicon-star-full" />
+													<span
+														aria-label={t("historyPreview.favorited", "chat")}
+														className="codicon codicon-star-full"
+													/>
 												</div>
 											)}
 
 											<div
-												className="history-preview-task text-base text-description mb-2 overflow-hidden whitespace-pre-wrap wrap-anywhere"
+												className="history-preview-task"
 												id={`history-preview-task-${item.id}`}
 												style={{
+													fontSize: "var(--vscode-font-size)",
+													color: "var(--vscode-descriptionForeground)",
+													marginBottom: "8px",
 													display: "-webkit-box",
 													WebkitLineClamp: 3,
 													WebkitBoxOrient: "vertical",
+													overflow: "hidden",
+													whiteSpace: "pre-wrap",
+													wordBreak: "break-word",
+													overflowWrap: "anywhere",
 												}}>
 												<span className="ph-no-capture">{item.task}</span>
 											</div>
-											<div className="text-sm text-description">
-												<span className="mr-1">
-													Tokens: ↑{formatLargeNumber(item.tokensIn || 0)} ↓
-													{formatLargeNumber(item.tokensOut || 0)}
+											<div
+												style={{
+													fontSize: "0.85em",
+													color: "var(--vscode-descriptionForeground)",
+												}}>
+												<span>
+													{t("historyPreview.tokens", "chat", {
+														tokensIn: formatLargeNumber(item.tokensIn || 0),
+														tokensOut: formatLargeNumber(item.tokensOut || 0),
+													})}
 												</span>
 												{!!item.cacheWrites && (
-													<span className="mr-1">
-														• Cache: +{formatLargeNumber(item.cacheWrites || 0)} →{" "}
-														{formatLargeNumber(item.cacheReads || 0)}
-													</span>
+													<>
+														{" • "}
+														<span>
+															{t("historyPreview.cache", "chat", {
+																cacheWrites: formatLargeNumber(item.cacheWrites || 0),
+																cacheReads: formatLargeNumber(item.cacheReads || 0),
+															})}
+														</span>
+													</>
 												)}
 												{!!item.totalCost && (
-													<span className="mr-1">• API Cost: ${item.totalCost?.toFixed(4)}</span>
+													<>
+														{" • "}
+														<span>
+															{t("historyPreview.apiCost", "chat", {
+																totalCost: item.totalCost?.toFixed(4),
+															})}
+														</span>
+													</>
 												)}
 											</div>
 										</div>
@@ -179,7 +208,7 @@ const HistoryPreview = ({ showHistoryView }: HistoryPreviewProps) => {
 											fontSize: "var(--vscode-font-size)",
 											color: "var(--vscode-descriptionForeground)",
 										}}>
-										View all history
+										{t("historyPreview.viewAllHistory", "chat")}
 									</div>
 								</VSCodeButton>
 							</div>
@@ -192,7 +221,7 @@ const HistoryPreview = ({ showHistoryView }: HistoryPreviewProps) => {
 								fontSize: "var(--vscode-font-size)",
 								padding: "10px 0",
 							}}>
-							No recent tasks
+							{t("historyPreview.noRecentTasks", "chat")}
 						</div>
 					)}
 				</div>

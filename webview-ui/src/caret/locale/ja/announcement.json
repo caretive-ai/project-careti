@@ -1,0 +1,44 @@
+{
+	"header": "🎉 v{{version}}の新機能",
+	"previousHeader": "以前のアップデート:",
+	"bullets": {
+		"current": {
+			"1": "Caretプロバイダー追加",
+			"1-desc": "公式Caret AIプロバイダー統合 - プロモーション期間中$10無料クレジット提供中、有料クレジット購入システムは提供予定",
+			"2": "Cline v3.32.7 マージ",
+			"2-desc": "最新のClineアップストリーム改善をマージ",
+			"3": "最新AIモデルサポート",
+			"3-desc": "Claude Sonnet 4.5 (200K/1Mコンテキスト)、GPT-5拡張思考機能、強化されたモデル情報と価格表示",
+			"4": "新機能追加",
+			"4-desc": ".clineignoreファイルサポート、AWS Bedrockプロファイル、Requesty/Together/Alibaba Qwenプロバイダー、レート制限自動リトライ",
+			"5": "Focus Chain (タスク管理)",
+			"5-desc": "複雑なタスクのための自動To-Doリスト生成と追跡機能",
+			"6": "AIプロンプト最適化",
+			"6-desc": "マルチ編集時にAPIリクエストを30-50%削減、スマートなTODO自動管理、Claude Sonnet 4.5特化最適化",
+			"7": "アーキテクチャ改善",
+			"7-desc": "完全なprotobuf型システム、強化されたMCPサポート、プロバイダーシステムのリファクタリング"
+		},
+		"previous": {
+			"1": "最新AIモデルサポート",
+			"1-desc": "Claude Sonnet 4.5 (200K/1Mコンテキスト)、GPT-5拡張思考機能、強化されたモデル情報と価格表示",
+			"2": "新機能追加",
+			"2-desc": ".clineignoreファイルサポート、AWS Bedrockプロファイル、Requesty/Together/Alibaba Qwenプロバイダー、レート制限自動リトライ",
+			"3": "Focus Chain (タスク管理)",
+			"3-desc": "複雑なタスクのための自動To-Doリスト生成と追跡機能",
+			"4": "AIプロンプト最適化",
+			"4-desc": "マルチ編集時にAPIリクエストを30-50%削減、スマートなTODO自動管理、Claude Sonnet 4.5特化最適化",
+			"5": "アーキテクチャ改善",
+			"5-desc": "完全なprotobuf型システム、強化されたMCPサポート、プロバイダーシステムのリファクタリング",
+			"6": "メッセージ履歴ナビゲーション",
+			"6-desc": "チャット入力ボックスで矢印キーによるメッセージ履歴ナビゲーションを実装",
+			"7": "LiteLLMモデル取得",
+			"7-desc": "LiteLLMモデルの自動取得とFeatureConfigリファクタリング"
+		}
+	},
+	"links": {
+		"korean": "韓国語",
+		"japanese": "日本語",
+		"chinese": "中文",
+		"english": "英語"
+	}
+}

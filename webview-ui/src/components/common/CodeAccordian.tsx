@@ -1,4 +1,5 @@
 import { memo, useMemo } from "react"
+import { t } from "@/caret/utils/i18n"
 import CodeBlock, { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import { getLanguageFromPath } from "@/utils/getLanguageFromPath"
 
@@ -81,7 +82,7 @@ const CodeAccordian = ({
 									textOverflow: "ellipsis",
 									marginRight: "8px",
 								}}>
-								{isFeedback ? "User Edits" : "Console Logs"}
+								{isFeedback ? t("codeAccordian.userEdits", "chat") : t("codeAccordian.consoleLogs", "chat")}
 							</span>
 						</div>
 					) : (

@@ -1,7 +1,8 @@
 import type { Mode } from "@shared/storage/types"
-import { VSCodeDropdown, VSCodeLink, VSCodeOption, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeDropdown, VSCodeOption, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useInterval } from "react-use"
+import { t } from "@/caret/utils/i18n"
 import UseCustomPromptCheckbox from "@/components/settings/UseCustomPromptCheckbox"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ModelsServiceClient } from "@/services/grpc-client"
@@ -65,7 +66,7 @@ export const LMStudioProvider = ({ currentMode }: LMStudioProviderProps) => {
 				}
 			})
 			.catch((error) => {
-				console.error("Failed to parse LM Studio models:", error)
+				console.error(t("providers.lmstudio.parseModelsError", "settings"), error)
 			})
 	}, [endpoint])
 
@@ -93,15 +94,18 @@ export const LMStudioProvider = ({ currentMode }: LMStudioProviderProps) => {
 	useInterval(requestLmStudioModels, 6000)
 
 	return (
-		<div className="flex flex-col gap-2">
+		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
+			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
+				{t("providers.lmstudio.description", "settings")}
+			</p>
 			<BaseUrlField
 				initialValue={apiConfiguration?.lmStudioBaseUrl}
-				label="Use custom base URL"
+				label={t("baseUrlField.label", "settings")}
 				onChange={(value) => handleFieldChange("lmStudioBaseUrl", value)}
-				placeholder="Default: http://localhost:1234"
+				placeholder={t("providers.lmstudio.baseUrlPlaceholder", "settings")}
 			/>
 
-			<div className="font-semibold">Model</div>
+			<div className="font-semibold">{t("modelSelector.label", "settings")}</div>
 			{lmStudioModels.length > 0 ? (
 				<DropdownContainer className="dropdown-container" zIndex={10}>
 					<VSCodeDropdown
@@ -138,36 +142,20 @@ export const LMStudioProvider = ({ currentMode }: LMStudioProviderProps) => {
 							currentMode,
 						)
 					}
-					placeholder={"e.g. meta-llama-3.1-8b-instruct"}
+					placeholder={t("providers.lmstudio.modelPlaceholder", "settings")}
 					style={{ width: "100%" }}
 				/>
 			)}
 
-			<div className="font-semibold">Context Window</div>
+			<div className="font-semibold">{t("modelInfoView.contextWindowLabel", "settings")}</div>
 			<VSCodeTextField
 				className="w-full pointer-events-none"
 				disabled={true}
-				title="Not editable - the value is returned by the connected endpoint"
+				title={t("providers.lmstudio.contextWindowTooltip", "settings")}
 				value={String(currentLoadedContext ?? lmStudioMaxTokens ?? "0")}
 			/>
 
 			<UseCustomPromptCheckbox providerId="lmstudio" />
-
-			<div className="text-xs text-description">
-				LM Studio allows you to run models locally on your computer. For instructions on how to get started, see their
-				<VSCodeLink href="https://lmstudio.ai/docs" style={{ display: "inline", fontSize: "inherit" }}>
-					quickstart guide.
-				</VSCodeLink>
-				You will also need to start LM Studio's{" "}
-				<VSCodeLink className="inline" href="https://lmstudio.ai/docs/basics/server">
-					local server
-				</VSCodeLink>{" "}
-				feature with <code>lms server start</code> to use it with this extension.{" "}
-				<div className="text-error">
-					<span className="font-semibold">Note:</span> Cline uses complex prompts and works best with Claude models.
-					Less capable models may not work as expected.
-				</div>
-			</div>
 		</div>
 	)
 }

@@ -42,17 +42,17 @@ const AccordionItem = memo<{
 	)
 
 	return (
-		<div className="flex flex-col w-full">
+		<div className="flex flex-col">
 			<div
-				className="flex justify-between items-center gap-1 cursor-pointer hover:bg-foreground/5 rounded p-0.5 transition-colors w-full"
+				className="flex justify-between items-center gap-3 cursor-pointer hover:bg-foreground/5 rounded px-1 py-0.5 transition-colors"
 				onClick={handleClick}>
 				<div className="flex items-center gap-1">
 					{isExpanded ? <ChevronDownIcon size={12} /> : <ChevronRightIcon size={12} />}
-					<div className="font-semibold">{title}</div>
+					<div className="font-semibold text-sm">{title}</div>
 				</div>
-				<div className="text-muted-foreground">{value}</div>
+				<div className="text-muted-foreground text-sm">{value}</div>
 			</div>
-			{isExpanded && children && <div className="ml-5 my-1 text-xs text-muted-foreground">{children}</div>}
+			{isExpanded && children && <div className="ml-4 mt-2 mb-1 text-xs text-muted-foreground">{children}</div>}
 		</div>
 	)
 })
@@ -77,10 +77,13 @@ const TokenUsageDetails = memo<TokenUsageInfoProps>(({ tokensIn, tokensOut, cach
 	}
 
 	return (
-		<div className="space-y-1">
+		<div className="space-y-2">
 			{contextTokenDetails.map((item) => (
-				<div className="flex justify-between">
-					<span>{item.title}</span>
+				<div className="flex items-center justify-between" key={item.icon}>
+					<div className="flex items-center gap-1">
+						<i className={`codicon ${item.icon} text-xs`} />
+						<span>{item.title}</span>
+					</div>
 					<span className="font-mono">{formatTokenNumber(item.value || 0)}</span>
 				</div>
 			))}
@@ -121,7 +124,7 @@ export const ContextWindowSummary: React.FC<TaskContextWindowButtonsProps> = ({
 	const totalTokens = (tokensIn || 0) + (tokensOut || 0) + (cacheWrites || 0) + (cacheReads || 0)
 
 	return (
-		<div className="context-window-tooltip-content flex flex-col gap-2 bg-menu rounded shadow-sm z-100 w-60 p-1">
+		<div className="context-window-tooltip-content flex flex-col gap-2 bg-menu rounded shadow-sm border border-menu-border z-100 w-60 p-4">
 			{autoCompactThreshold > 0 && (
 				<AccordionItem
 					isExpanded={expandedSections.has("threshold")}
@@ -143,7 +146,7 @@ export const ContextWindowSummary: React.FC<TaskContextWindowButtonsProps> = ({
 				isExpanded={expandedSections.has("context")}
 				onToggle={(event) => toggleSection("context", event)}
 				title="Context Window"
-				value={percentage ? `${percentage.toFixed(1)}%` : formatTokenNumber(contextWindow)}>
+				value={percentage ? `${percentage.toFixed(1)}% used` : formatTokenNumber(contextWindow)}>
 				<div className="space-y-1">
 					<div className="flex justify-between">
 						<span>Used:</span>
@@ -165,7 +168,7 @@ export const ContextWindowSummary: React.FC<TaskContextWindowButtonsProps> = ({
 					isExpanded={expandedSections.has("tokens")}
 					onToggle={(event) => toggleSection("tokens", event)}
 					title="Token Usage"
-					value={`${formatTokenNumber(totalTokens)}`}>
+					value={`${formatTokenNumber(totalTokens)} total`}>
 					<TokenUsageDetails
 						cacheReads={cacheReads}
 						cacheWrites={cacheWrites}

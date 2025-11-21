@@ -51,17 +51,13 @@ declare global {
 	function acquireVsCodeApi(): any
 }
 
-// Initialize the vscode API if available
-const vsCodeApi = typeof acquireVsCodeApi === "function" ? acquireVsCodeApi() : null
+// CARET MODIFICATION: Import vscode singleton to avoid duplicate acquireVsCodeApi() calls
+import { vscode as vscodeSingleton } from "../utils/vscode"
 
 // Implementations for post message handling
 const postMessageStrategies: Record<string, PostMessageFunction> = {
 	vscode: (message: any) => {
-		if (vsCodeApi) {
-			vsCodeApi.postMessage(message)
-		} else {
-			console.log("postMessage fallback: ", message)
-		}
+		vscodeSingleton.postMessage(message)
 	},
 	standalone: (message: any) => {
 		if (!window.standalonePostMessage) {

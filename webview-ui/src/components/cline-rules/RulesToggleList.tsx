@@ -1,3 +1,4 @@
+import { t } from "@/caret/utils/i18n"
 import NewRuleRow from "./NewRuleRow"
 import RuleRow from "./RuleRow"
 
@@ -9,8 +10,6 @@ const RulesToggleList = ({
 	ruleType,
 	showNewRule,
 	showNoRules,
-	isRemote = false,
-	alwaysEnabledMap = {},
 }: {
 	rules: [string, boolean][]
 	toggleRule: (rulePath: string, enabled: boolean) => void
@@ -19,8 +18,6 @@ const RulesToggleList = ({
 	ruleType: string
 	showNewRule: boolean
 	showNoRules: boolean
-	isRemote?: boolean
-	alwaysEnabledMap?: Record<string, boolean>
 }) => {
 	const gapClasses = {
 		small: "gap-0",
@@ -36,10 +33,8 @@ const RulesToggleList = ({
 				<>
 					{rules.map(([rulePath, enabled]) => (
 						<RuleRow
-							alwaysEnabled={alwaysEnabledMap[rulePath]}
 							enabled={enabled}
 							isGlobal={isGlobal}
-							isRemote={isRemote}
 							key={rulePath}
 							rulePath={rulePath}
 							ruleType={ruleType}
@@ -51,8 +46,10 @@ const RulesToggleList = ({
 			) : (
 				<>
 					{showNoRules && (
-						<div className="flex flex-col items-center gap-3 my-3 text-(--vscode-descriptionForeground)">
-							{ruleType === "workflow" ? "No workflows found" : "No rules found"}
+						<div className="flex flex-col items-center gap-3 my-3 text-[var(--vscode-descriptionForeground)]">
+							{ruleType === "workflow"
+								? t("rulesToggleList.noWorkflowsFound", "chat")
+								: t("rulesToggleList.noRulesFound", "chat")}
 						</div>
 					)}
 					{showNewRule && <NewRuleRow isGlobal={isGlobal} ruleType={ruleType} />}

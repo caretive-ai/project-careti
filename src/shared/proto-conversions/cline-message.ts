@@ -8,10 +8,9 @@ function convertClineAskToProtoEnum(ask: AppClineAsk | undefined): ClineAsk | un
 		return undefined
 	}
 
-	const mapping: Record<AppClineAsk, ClineAsk> = {
+	const mapping: any = {
 		followup: ClineAsk.FOLLOWUP,
 		plan_mode_respond: ClineAsk.PLAN_MODE_RESPOND,
-		act_mode_respond: ClineAsk.ACT_MODE_RESPOND,
 		command: ClineAsk.COMMAND,
 		command_output: ClineAsk.COMMAND_OUTPUT,
 		completion_result: ClineAsk.COMPLETION_RESULT,
@@ -20,15 +19,17 @@ function convertClineAskToProtoEnum(ask: AppClineAsk | undefined): ClineAsk | un
 		resume_task: ClineAsk.RESUME_TASK,
 		resume_completed_task: ClineAsk.RESUME_COMPLETED_TASK,
 		mistake_limit_reached: ClineAsk.MISTAKE_LIMIT_REACHED,
+		auto_approval_max_req_reached: (ClineAsk as any).AUTO_APPROVAL_MAX_REQ_REACHED ?? ClineAsk.API_REQ_FAILED,
 		browser_action_launch: ClineAsk.BROWSER_ACTION_LAUNCH,
 		use_mcp_server: ClineAsk.USE_MCP_SERVER,
 		new_task: ClineAsk.NEW_TASK,
 		condense: ClineAsk.CONDENSE,
 		summarize_task: ClineAsk.SUMMARIZE_TASK,
 		report_bug: ClineAsk.REPORT_BUG,
-	}
+		act_mode_respond: (ClineAsk as any).ACT_MODE_RESPOND ?? ClineAsk.PLAN_MODE_RESPOND,
+	} as const as Record<string, ClineAsk>
 
-	const result = mapping[ask]
+	const result = mapping[ask as any]
 	if (result === undefined) {
 		console.warn(`Unknown ClineAsk value: ${ask}`)
 	}
@@ -42,10 +43,9 @@ function convertProtoEnumToClineAsk(ask: ClineAsk): AppClineAsk | undefined {
 		return undefined
 	}
 
-	const mapping: Record<Exclude<ClineAsk, ClineAsk.UNRECOGNIZED>, AppClineAsk> = {
+	const mapping = {
 		[ClineAsk.FOLLOWUP]: "followup",
 		[ClineAsk.PLAN_MODE_RESPOND]: "plan_mode_respond",
-		[ClineAsk.ACT_MODE_RESPOND]: "act_mode_respond",
 		[ClineAsk.COMMAND]: "command",
 		[ClineAsk.COMMAND_OUTPUT]: "command_output",
 		[ClineAsk.COMPLETION_RESULT]: "completion_result",
@@ -54,15 +54,17 @@ function convertProtoEnumToClineAsk(ask: ClineAsk): AppClineAsk | undefined {
 		[ClineAsk.RESUME_TASK]: "resume_task",
 		[ClineAsk.RESUME_COMPLETED_TASK]: "resume_completed_task",
 		[ClineAsk.MISTAKE_LIMIT_REACHED]: "mistake_limit_reached",
+		[(ClineAsk as any).AUTO_APPROVAL_MAX_REQ_REACHED ?? "auto_approval_max_req_reached"]: "auto_approval_max_req_reached",
 		[ClineAsk.BROWSER_ACTION_LAUNCH]: "browser_action_launch",
 		[ClineAsk.USE_MCP_SERVER]: "use_mcp_server",
 		[ClineAsk.NEW_TASK]: "new_task",
 		[ClineAsk.CONDENSE]: "condense",
 		[ClineAsk.SUMMARIZE_TASK]: "summarize_task",
 		[ClineAsk.REPORT_BUG]: "report_bug",
-	}
+		[(ClineAsk as any).ACT_MODE_RESPOND ?? "act_mode_respond"]: "act_mode_respond",
+	} as const as Record<string, AppClineAsk>
 
-	return mapping[ask]
+	return mapping[ask as any]
 }
 
 // Helper function to convert ClineSay string to enum
@@ -71,7 +73,7 @@ function convertClineSayToProtoEnum(say: AppClineSay | undefined): ClineSay | un
 		return undefined
 	}
 
-	const mapping: Record<AppClineSay, ClineSay> = {
+	const mapping = {
 		task: ClineSay.TASK,
 		error: ClineSay.ERROR,
 		api_req_started: ClineSay.API_REQ_STARTED,
@@ -86,7 +88,6 @@ function convertClineSayToProtoEnum(say: AppClineSay | undefined): ClineSay | un
 		command_output: ClineSay.COMMAND_OUTPUT_SAY,
 		tool: ClineSay.TOOL_SAY,
 		shell_integration_warning: ClineSay.SHELL_INTEGRATION_WARNING,
-		shell_integration_warning_with_suggestion: ClineSay.SHELL_INTEGRATION_WARNING,
 		browser_action_launch: ClineSay.BROWSER_ACTION_LAUNCH_SAY,
 		browser_action: ClineSay.BROWSER_ACTION,
 		browser_action_result: ClineSay.BROWSER_ACTION_RESULT,
@@ -101,12 +102,14 @@ function convertClineSayToProtoEnum(say: AppClineSay | undefined): ClineSay | un
 		load_mcp_documentation: ClineSay.LOAD_MCP_DOCUMENTATION,
 		info: ClineSay.INFO,
 		task_progress: ClineSay.TASK_PROGRESS,
-		error_retry: ClineSay.ERROR_RETRY,
-		hook: ClineSay.INFO,
-		hook_output: ClineSay.COMMAND_OUTPUT_SAY,
-	}
+		error_retry: (ClineSay as any).ERROR_RETRY ?? ClineSay.ERROR,
+		hook: (ClineSay as any).HOOK ?? ClineSay.ERROR,
+		hook_output: (ClineSay as any).HOOK_OUTPUT ?? ClineSay.ERROR,
+		shell_integration_warning_with_suggestion:
+			(ClineSay as any).SHELL_INTEGRATION_WARNING_WITH_SUGGESTION ?? ClineSay.SHELL_INTEGRATION_WARNING,
+	} as const as Record<string, ClineSay>
 
-	const result = mapping[say]
+	const result = mapping[say as any]
 	if (result === undefined) {
 		console.warn(`Unknown ClineSay value: ${say}`)
 	}
@@ -120,7 +123,7 @@ function convertProtoEnumToClineSay(say: ClineSay): AppClineSay | undefined {
 		return undefined
 	}
 
-	const mapping: Record<Exclude<ClineSay, ClineSay.UNRECOGNIZED>, AppClineSay> = {
+	const mapping = {
 		[ClineSay.TASK]: "task",
 		[ClineSay.ERROR]: "error",
 		[ClineSay.API_REQ_STARTED]: "api_req_started",
@@ -149,10 +152,14 @@ function convertProtoEnumToClineSay(say: ClineSay): AppClineSay | undefined {
 		[ClineSay.LOAD_MCP_DOCUMENTATION]: "load_mcp_documentation",
 		[ClineSay.INFO]: "info",
 		[ClineSay.TASK_PROGRESS]: "task_progress",
-		[ClineSay.ERROR_RETRY]: "error_retry",
-	}
+		[(ClineSay as any).ERROR_RETRY ?? "error_retry"]: "error_retry",
+		[(ClineSay as any).HOOK ?? "hook"]: "hook",
+		[(ClineSay as any).HOOK_OUTPUT ?? "hook_output"]: "hook_output",
+		[(ClineSay as any).SHELL_INTEGRATION_WARNING_WITH_SUGGESTION ?? "shell_integration_warning_with_suggestion"]:
+			"shell_integration_warning_with_suggestion",
+	} as const as Record<string, AppClineSay>
 
-	return mapping[say]
+	return mapping[say as any]
 }
 
 /**
@@ -178,6 +185,7 @@ export function convertClineMessageToProto(message: AppClineMessage): ProtoCline
 		type: message.type === "ask" ? ClineMessageType.ASK : ClineMessageType.SAY,
 		ask: finalAskEnum,
 		say: finalSayEnum,
+		modelInfo: (message as any).modelInfo || undefined,
 		text: message.text ?? "",
 		reasoning: message.reasoning ?? "",
 		images: message.images ?? [],
@@ -202,7 +210,6 @@ export function convertClineMessageToProto(message: AppClineMessage): ProtoCline
 		askQuestion: undefined,
 		askNewTask: undefined,
 		apiReqInfo: undefined,
-		modelInfo: message.modelInfo ?? undefined,
 	}
 
 	return protoMessage
@@ -216,6 +223,7 @@ export function convertProtoToClineMessage(protoMessage: ProtoClineMessage): App
 		ts: protoMessage.ts,
 		type: protoMessage.type === ClineMessageType.ASK ? "ask" : "say",
 	}
+	;(message as any).modelInfo = (protoMessage as any).modelInfo
 
 	// Convert ask enum to string
 	if (protoMessage.type === ClineMessageType.ASK) {

@@ -1,4 +1,5 @@
 import { McpServer } from "@shared/mcp"
+import { t } from "@/caret/utils/i18n"
 import ServerRow from "./server-row/ServerRow"
 
 const ServersToggleList = ({
@@ -27,8 +28,8 @@ const ServersToggleList = ({
 			))}
 		</div>
 	) : (
-		<div className="flex flex-col items-center gap-3 my-5 text-(--vscode-descriptionForeground)">
-			No MCP servers installed
+		<div className="flex flex-col items-center gap-3 my-5 text-[var(--vscode-descriptionForeground)]">
+			{t("serversToggleList.noMcpServersInstalled", "chat")}
 		</div>
 	)
 }

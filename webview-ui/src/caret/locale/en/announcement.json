@@ -1,0 +1,44 @@
+{
+	"header": "🎉 v{{version}} New Features",
+	"previousHeader": "Previous Updates:",
+	"bullets": {
+		"current": {
+			"1": "Caret Provider Added",
+			"1-desc": "Official Caret AI provider integration - $10 free credits during promotional period, paid credit purchase system coming soon",
+			"2": "Cline v3.32.7 Merge",
+			"2-desc": "Merged latest Cline upstream improvements",
+			"3": "Latest AI Model Support",
+			"3-desc": "Claude Sonnet 4.5 (200K/1M context), GPT-5 with extended thinking, enhanced model info and pricing display",
+			"4": "New Features",
+			"4-desc": ".clineignore file support, AWS Bedrock profiles, Requesty/Together/Alibaba Qwen providers, automatic retry on rate limits",
+			"5": "Focus Chain (Task Management)",
+			"5-desc": "Automatic to-do list generation and tracking for complex tasks",
+			"6": "AI Prompt Optimization",
+			"6-desc": "30-50% API request reduction for multi-edits, smart TODO auto-management, Claude Sonnet 4.5 optimized",
+			"7": "Architecture Improvements",
+			"7-desc": "Complete protobuf type system, enhanced MCP support, provider system refactoring"
+		},
+		"previous": {
+			"1": "Latest AI Model Support",
+			"1-desc": "Claude Sonnet 4.5 (200K/1M context), GPT-5 with extended thinking, enhanced model info and pricing display",
+			"2": "New Features",
+			"2-desc": ".clineignore file support, AWS Bedrock profiles, Requesty/Together/Alibaba Qwen providers, automatic retry on rate limits",
+			"3": "Focus Chain (Task Management)",
+			"3-desc": "Automatic to-do list generation and tracking for complex tasks",
+			"4": "AI Prompt Optimization",
+			"4-desc": "30-50% API request reduction for multi-edits, smart TODO auto-management, Claude Sonnet 4.5 optimized",
+			"5": "Architecture Improvements",
+			"5-desc": "Complete protobuf type system, enhanced MCP support, provider system refactoring",
+			"6": "Message History Navigation",
+			"6-desc": "Implemented arrow key navigation for message history in chat input box",
+			"7": "LiteLLM Model Fetching",
+			"7-desc": "Automatic LiteLLM model fetching and FeatureConfig refactoring"
+		}
+	},
+	"links": {
+		"korean": "Korean",
+		"japanese": "Japanese",
+		"chinese": "Chinese",
+		"english": "English"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"normalState": "デフォルト画像",
+	"thinkingState": "考え中画像",
+	"selector": {
+		"title": "AIエージェントテンプレートキャラクター設定",
+		"description": "ご希望のキャラクターを選択してください。選択したペルソナは「ルール」メニューで編集し、「一般設定」でオン・オフを切り替えることができます。",
+		"selectButtonText": "選択",
+		"selectedButtonText": "選択済み",
+		"infoTextCustomInstructions": "選択されたペルソナの指示はcustom_instructions.md (グローバルルール) に保存されます。"
+	},
+	"selectorTitle": "AIエージェントテンプレートキャラクター設定",
+	"selectorDescription": "ご希望のキャラクターを選択してください。選択したペルソナは「ルール」メニューで編集し、「一般設定」でオン・オフを切り替えることができます。",
+	"infoTextCustomInstructions": "選択されたペルソナの指示はcustom_instructions.md (グローバルルール) に保存されます。",
+	"upload": {
+		"normal": "デフォルト画像をアップロード",
+		"thinking": "考え中画像をアップロード",
+		"success": "画像を正常にアップロードしました",
+		"error": "画像のアップロードに失敗しました"
+	}
+}

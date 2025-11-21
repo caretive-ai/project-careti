@@ -1,0 +1,44 @@
+{
+	"header": "🎉 v{{version}}의 새로운 기능",
+	"previousHeader": "이전 업데이트:",
+	"bullets": {
+		"current": {
+			"1": "Caret Provider 추가",
+			"1-desc": "공식 Caret AI 프로바이더 통합 - 프로모션 기간 동안 $10 무료 크레딧 제공 중, 유료 추가 크레딧 구매는 제공 예정",
+			"2": "Cline v3.32.7 머지",
+			"2-desc": "최신 Cline 업스트림 개선사항 병합",
+			"3": "최신 AI 모델 지원",
+			"3-desc": "Claude Sonnet 4.5 (200K/1M 컨텍스트), GPT-5 확장 사고 기능, 향상된 모델 정보 및 가격 표시",
+			"4": "새로운 기능",
+			"4-desc": ".clineignore 파일 지원, AWS Bedrock 프로필, Requesty/Together/Alibaba Qwen 프로바이더, 속도 제한 자동 재시도",
+			"5": "Focus Chain (작업 관리)",
+			"5-desc": "복잡한 작업을 위한 자동 할 일 목록 생성 및 추적 기능",
+			"6": "AI 프롬프트 최적화",
+			"6-desc": "다중 편집 시 API 요청 30-50% 감소, 스마트 TODO 자동 관리, Claude Sonnet 4.5 특화 최적화",
+			"7": "아키텍처 개선",
+			"7-desc": "완전한 protobuf 타입 시스템, 향상된 MCP 지원, 프로바이더 시스템 리팩토링"
+		},
+		"previous": {
+			"1": "최신 AI 모델 지원",
+			"1-desc": "Claude Sonnet 4.5 (200K/1M 컨텍스트), GPT-5 확장 사고 기능, 향상된 모델 정보 및 가격 표시",
+			"2": "새로운 기능",
+			"2-desc": ".clineignore 파일 지원, AWS Bedrock 프로필, Requesty/Together/Alibaba Qwen 프로바이더, 속도 제한 자동 재시도",
+			"3": "Focus Chain (작업 관리)",
+			"3-desc": "복잡한 작업을 위한 자동 할 일 목록 생성 및 추적 기능",
+			"4": "AI 프롬프트 최적화",
+			"4-desc": "다중 편집 시 API 요청 30-50% 감소, 스마트 TODO 자동 관리, Claude Sonnet 4.5 특화 최적화",
+			"5": "아키텍처 개선",
+			"5-desc": "완전한 protobuf 타입 시스템, 향상된 MCP 지원, 프로바이더 시스템 리팩토링",
+			"6": "메시지 히스토리 탐색",
+			"6-desc": "채팅 입력창에서 화살표 키로 이전 메시지 탐색 기능 구현",
+			"7": "LiteLLM 모델 가져오기",
+			"7-desc": "LiteLLM 모델 자동 가져오기 및 FeatureConfig 리팩토링"
+		}
+	},
+	"links": {
+		"korean": "한국어",
+		"japanese": "일본어",
+		"chinese": "중국어",
+		"english": "영어"
+	}
+}

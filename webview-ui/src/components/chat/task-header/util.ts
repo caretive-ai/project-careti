@@ -29,11 +29,7 @@ export const getColor = (message: ClineMessage): string => {
 							toolData.tool === "searchFiles"
 						) {
 							return COLOR_BEIGE // Beige for file read operations
-						} else if (
-							toolData.tool === "editedExistingFile" ||
-							toolData.tool === "newFileCreated" ||
-							toolData.tool === "deletedFile"
-						) {
+						} else if (toolData.tool === "editedExistingFile" || toolData.tool === "newFileCreated") {
 							return COLOR_BLUE // Blue for file edit/create operations
 						} else if (toolData.tool === "webFetch") {
 							return COLOR_PURPLE // Purple for web fetch operations
@@ -73,11 +69,7 @@ export const getColor = (message: ClineMessage): string => {
 							toolData.tool === "searchFiles"
 						) {
 							return COLOR_BEIGE // Beige for file read operations
-						} else if (
-							toolData.tool === "editedExistingFile" ||
-							toolData.tool === "newFileCreated" ||
-							toolData.tool === "deletedFile"
-						) {
+						} else if (toolData.tool === "editedExistingFile" || toolData.tool === "newFileCreated") {
 							return COLOR_BLUE // Blue for file edit/create operations
 						} else if (toolData.tool === "webFetch") {
 							return COLOR_PURPLE // Purple for web fetch operations

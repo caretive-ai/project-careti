@@ -1,5 +1,6 @@
 import { VSCodeCheckbox, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { useDebouncedInput } from "../utils/useDebouncedInput"
 
 /**
@@ -11,21 +12,12 @@ interface BaseUrlFieldProps {
 	defaultValue?: string
 	label?: string
 	placeholder?: string
-	disabled?: boolean
-	showLockIcon?: boolean
 }
 
 /**
  * A reusable component for toggling and entering custom base URLs
  */
-export const BaseUrlField = ({
-	initialValue,
-	onChange,
-	label = "Use custom base URL",
-	placeholder = "Default: https://api.example.com",
-	disabled = false,
-	showLockIcon = false,
-}: BaseUrlFieldProps) => {
+export const BaseUrlField = ({ initialValue, onChange, label, placeholder }: BaseUrlFieldProps) => {
 	const [isEnabled, setIsEnabled] = useState(!!initialValue)
 	const [localValue, setLocalValue] = useDebouncedInput(initialValue || "", onChange)
 
@@ -37,22 +29,21 @@ export const BaseUrlField = ({
 		}
 	}
 
+	const finalLabel = label ?? t("settings.baseUrl.label", "Use custom base URL")
+	const finalPlaceholder = placeholder ?? t("settings.baseUrl.placeholder", "Default: https://api.example.com")
+
 	return (
 		<div>
-			<div className="flex items-center gap-2">
-				<VSCodeCheckbox checked={isEnabled} disabled={disabled} onChange={handleToggle}>
-					{label}
-				</VSCodeCheckbox>
-				{showLockIcon && <i className="codicon codicon-lock text-(--vscode-descriptionForeground) text-sm" />}
-			</div>
+			<VSCodeCheckbox checked={isEnabled} onChange={handleToggle}>
+				{finalLabel}
+			</VSCodeCheckbox>
 
 			{isEnabled && (
 				<VSCodeTextField
-					disabled={disabled}
 					onInput={(e: any) => setLocalValue(e.target.value.trim())}
-					placeholder={placeholder}
+					placeholder={finalPlaceholder}
 					style={{ width: "100%", marginTop: 3 }}
-					type="text"
+					type="url"
 					value={localValue}
 				/>
 			)}

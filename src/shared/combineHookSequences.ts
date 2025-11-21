@@ -28,7 +28,7 @@ function isToolOrCommandMessage(msg: ClineMessage): boolean {
  * Returns null if parsing fails or message is not a hook.
  */
 function parseHookMetadata(hookMessage: ClineMessage): HookMetadata | null {
-	if (hookMessage.say !== "hook" || !hookMessage.text) {
+	if ((hookMessage.say as any) !== "hook" || !hookMessage.text) {
 		return null
 	}
 
@@ -84,8 +84,8 @@ function combineHookWithOutputs(
 	let i = startIndex + 1
 
 	// Collect all hook_output messages until we hit another hook or end of array
-	while (i < messages.length && messages[i].say !== "hook") {
-		if (messages[i].say === "hook_output") {
+	while (i < messages.length && (messages[i].say as any) !== "hook") {
+		if ((messages[i].say as any) === "hook_output") {
 			// Add marker before first output
 			if (!hasOutput) {
 				combinedText += `\n${HOOK_OUTPUT_STRING}`
@@ -119,7 +119,7 @@ function combineAllHooks(messages: ClineMessage[]): ClineMessage[] {
 	const combinedHooksByTs = new Map<number, ClineMessage>()
 
 	for (let i = 0; i < messages.length; i++) {
-		if (messages[i].say === "hook") {
+		if ((messages[i].say as any) === "hook") {
 			const { combined, nextIndex } = combineHookWithOutputs(messages[i], i, messages)
 			combinedHooksByTs.set(combined.ts, combined)
 			i = nextIndex - 1 // Adjust for loop increment
@@ -130,8 +130,8 @@ function combineAllHooks(messages: ClineMessage[]): ClineMessage[] {
 	const result: ClineMessage[] = []
 
 	for (const msg of messages) {
-		if (msg.say === "hook_output") {
-		} else if (msg.say === "hook") {
+		if ((msg.say as any) === "hook_output") {
+		} else if ((msg.say as any) === "hook") {
 			// Use combined version
 			result.push(combinedHooksByTs.get(msg.ts) || msg)
 		} else {
@@ -169,7 +169,7 @@ function findImmediateNextToolTimestamp(hookIndex: number, messages: ClineMessag
 
 		// If we hit another PreToolUse hook before finding a tool, stop searching
 		// This prevents matching a hook to a tool that has its own PreToolUse hook
-		if (msg.say === "hook") {
+		if ((msg.say as any) === "hook") {
 			const metadata = parseHookMetadata(msg)
 			if (metadata?.hookName === "PreToolUse") {
 				return null

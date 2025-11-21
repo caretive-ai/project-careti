@@ -1,216 +1,143 @@
-# Phase B2 진행 리뷰
+# Gate #2 리뷰 (Phase B2 Controller/Services)
 
 **리뷰어:** Claude (Sonnet 4.5)
 **리뷰 일자:** 2025-11-21
-**대상:** Codex Phase B2 작업 (Batch 1 + 2.5 + 2 진행 중)
+**대상:** Phase B2 (B1~B2.1 포함)
 
 ---
 
-## 요약
+## 최종 요약
 
 | 항목 | 상태 | 평가 |
 |------|------|------|
-| Batch 1 (Provider/Rule/Settings) | ✅ 완료 | 3-way 머지 정상 |
-| Batch 2.5 (caret-src 통합) | ✅ 완료 | 인프라 복구됨 |
-| Batch 2 (Controller 통합) | ▶ 진행 중 | CaretGlobalManager/FeatureConfig 재주입 완료 |
-| CARET MODIFICATION | ✅ 76개 | Batch 1 대비 +23개 |
-| tsc --noEmit | ✅ 클린 | 타입 오류 없음 |
-
-**결론:** 이전 리뷰에서 지적한 `caret-src/` 미통합 이슈가 **완전히 해결**됨. B2 작업이 올바른 방향으로 진행 중.
+| Phase B2 전체 | ✅ 완료 | Gate #2 **승인** |
+| `npm run compile` | ✅ 통과 | proto + tsc + lint 성공 |
+| CARET MODIFICATION | ✅ 136개 | 37개 파일 |
+| Provider Wiring | ✅ 통과 | Caret/BizRouter 등록 확인 |
+| caret-src 통합 | ✅ 통과 | CaretApiProvider/BizRouterHandler 존재 |
 
 ---
 
-## 이전 리뷰 이슈 해결 확인
+## Traceability Check (추적 검사)
 
-### ✅ 해결됨: `caret-src/` 디렉토리 미통합
+### Provider Wiring 검증
 
-**이전 상태:**
-- `caret-src/` 디렉토리 없음
-- `@caret/*` imports 없음
-- CaretGlobalManager/FeatureConfig 사용 불가
+**Caret Provider:**
+- ✅ `src/core/api/index.ts:269` - `case "caret":` 등록
+- ✅ `CaretApiProvider` import from `@caret/core/api/providers/CaretApiProvider`
+- ✅ `caret-src/core/api/providers/CaretApiProvider.ts` 존재 (7,167 bytes)
 
-**현재 상태:**
-- `caret-src/` 디렉토리 존재 ✅
-  ```
-  caret-src/
-  ├── managers/CaretGlobalManager.ts (8578 bytes)
-  ├── shared/
-  ├── core/
-  ├── services/
-  └── utils/
-  ```
-- `@caret/*` imports 정상 작동 ✅
-- 마스터 문서에 Batch 2.5 추가됨 ✅
+**BizRouter Provider:**
+- ✅ `src/core/api/index.ts:281` - `case "bizrouter":` 등록
+- ✅ `BizRouterHandler` import from `@caret/core/api/providers/BizRouterApiProvider`
+- ✅ `caret-src/core/api/providers/BizRouterApiProvider.ts` 존재 (14,068 bytes)
 
----
+### Controller 통합 검증
 
-## 검증 상세
-
-### 1. Batch 2.5: caret-src 통합
-
-**커밋:** 별도 커밋 없음 (로그 2025-11-21 10:25)
-
-**검증 결과:**
-- `caret-src/managers/CaretGlobalManager.ts` 존재 (8578 bytes)
-- tsconfig path alias `@caret/*` 정상 해석
-- F07 Persona, F08 FeatureConfig 의존성 확보
+**CaretGlobalManager/FeatureConfig:**
+- ✅ `src/core/controller/index.ts:2-3` - imports 확인
+- ✅ Line 233-234: `CaretGlobalManager.userInfo`, `CaretGlobalManager.authToken`
+- ✅ Line 629: `getCurrentFeatureConfig().defaultProvider`
+- ✅ Line 974-977: `featureConfig`, `CaretGlobalManager.currentMode`
 
 ---
 
-### 2. Batch 2: Controller 통합
+## Feature-based Review (F01-F11)
 
-**커밋:** `ddfdc9303 feat: fold caret persona/feature config into controller`
-
-**변경 파일:**
-- `src/core/controller/index.ts` (+78 lines, -8 lines)
-- `src/services/account/CaretAccountService.ts` (376 lines 신규)
-
-**Controller 통합 내용:**
-```typescript
-// src/core/controller/index.ts (lines 2-3)
-import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
-import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
-```
-
-**검증된 사용처:**
-- Line 233: `CaretGlobalManager.userInfo`
-- Line 234: `CaretGlobalManager.authToken`
-- Line 629: `getCurrentFeatureConfig().defaultProvider`
-- Line 974: `getCurrentFeatureConfig()`
-- Line 977: `CaretGlobalManager.currentMode`
-
-**평가:** F04 CaretAccount, F07 Persona, F08 FeatureConfig 통합 완료
+| Feature | 항목 | 상태 | 검증 |
+|---------|------|------|------|
+| F01 | CommonUtil | ✅ | `disk.ts` BRAND_SLUG 설정 |
+| F05 | RulePriority | ✅ | `external-rules.ts` priority system (8 CARET MOD) |
+| F07 | Persona | ✅ | `CaretGlobalManager` 통합, persona handlers |
+| F08 | FeatureConfig | ✅ | `getCurrentFeatureConfig()` 사용 |
+| F09 | Provider Setup | ✅ | Caret/BizRouter/Vercel 연결 완료 |
+| F04 | CaretAccount | ✅ | `CaretAccountService.ts` (21 CARET MOD) |
 
 ---
 
-### 3. CaretAccountService 신규 구현
+## 7가지 코드 리뷰 게이트
 
-**파일:** `src/services/account/CaretAccountService.ts` (376 lines)
-
-**검증된 내용:**
-- CARET MODIFICATION 주석 21개
-- CaretGlobalManager 통합 (`authToken` 사용)
-- Caret API 엔드포인트 (`api.caret.team`)
-- 싱글톤 패턴 구현
-- Auth0 Bearer 토큰 인증
-
-**코드 품질:** 양호
-- 에러 처리 적절
-- 로깅 포함 (단, Logger vs console.log 혼용 - 아래 참조)
-
----
-
-### 4. CARET MODIFICATION 현황
-
-**총 개수:** 76개 (이전: 53개, +23개)
-
-**파일별 분포:**
-| 파일 | 개수 |
-|------|------|
-| `src/shared/proto/caret/account.ts` | 22 |
-| `src/services/account/CaretAccountService.ts` | 21 |
-| `src/core/context/.../external-rules.ts` | 8 |
-| `src/shared/CaretAccount.ts` | 7 |
-| `src/core/storage/disk.ts` | 4 |
-| `src/shared/proto/caret/system.ts` | 4 |
-| `src/core/controller/state/updateSettings.ts` | 4 |
-| `src/core/controller/index.ts` | 3 |
-| `src/core/controller/models/updateApiConfigurationProto.ts` | 2 |
-| `src/shared/proto/caret/persona.ts` | 1 |
-
----
-
-## 7가지 코드 리뷰 체크리스트
-
-| # | 항목 | 평가 | 비고 |
+| # | 항목 | 결과 | 비고 |
 |---|------|------|------|
-| 1 | 3-way 비교 정확성 | ✅ 통과 | comparison/base\|cline\|caret diff3 사용 |
-| 2 | 버그 수정 시 3-way 추적 | ✅ 통과 | 타입 오류 3-way로 해결 |
-| 3 | 최소 침습 & CARET MODIFICATION | ✅ 통과 | 76개 주석 (증가) |
-| 4 | 하드코딩/정책 위반 | ⚠️ 경미 | console.log 사용 (아래 참조) |
-| 5 | Caret 정책 준수 | ✅ 통과 | CaretGlobalManager/FeatureConfig 통합 |
-| 6 | 보안 위험 코드 | ✅ 통과 | 없음 |
-| 7 | 더미/미완성 코드 | ✅ 통과 | 없음 |
+| 1 | 3-way 비교 정확성 | ✅ | comparison/base\|cline\|caret diff3 사용 |
+| 2 | 버그 수정 시 3-way 추적 | ✅ | proto String shadow 3-way 해결 |
+| 3 | 최소 침습 & CARET MOD | ✅ | 136개 주석 (37 파일) |
+| 4 | 하드코딩/정책 위반 | ✅ | 없음 |
+| 5 | Caret 정책 준수 | ✅ | CaretGlobalManager/FeatureConfig 통합 |
+| 6 | 보안 위험 코드 | ✅ | 없음 |
+| 7 | 더미/미완성 코드 | ✅ | Critical stub 없음 |
 
 ---
 
-## 발견된 경미한 이슈
+## CARET MODIFICATION 현황
 
-### 1. console.log vs Logger 혼용
-**심각도:** 낮음
-**현상:**
-- `CaretAccountService.ts`에서 `console.log` 사용
-- `controller/index.ts`에서 `Logger` import됨
-- Caret 코딩 정책: "NEVER use console.log - Use Logger.debug/info/warn/error"
+**총 136개 (37개 파일)**
 
-**영향:** 프로덕션 로깅 일관성
-**권장:** Phase C/D에서 Logger로 통일 검토
+주요 파일:
+- `src/shared/proto/caret/account.ts` - 22개
+- `src/services/account/CaretAccountService.ts` - 21개
+- `src/shared/ExtensionMessage.ts` - 9개
+- `src/shared/proto/cline/models.ts` - 8개
+- `src/core/context/.../external-rules.ts` - 8개
+- `src/shared/CaretAccount.ts` - 7개
 
-**예시:**
-```typescript
-// 현재 (CaretAccountService.ts:23)
-console.log("[CARET-ACCOUNT-SERVICE] 🚀 CaretAccountService initialized...")
+---
 
-// 권장
-Logger.info("[CaretAccountService] Initialized with baseUrl:", this._baseUrl)
+## Stub/TODO 검사
+
+**Critical Stubs:** 없음
+- `return {}` / `return []` placeholder 없음
+
+**Minor TODOs (경미):**
+- `CaretGlobalManager.ts:143` - nonce storage
+- `CaretGlobalManager.ts:192` - logout API
+- `brand-utils.ts:41` - user settings
+
+---
+
+## 컴파일 상태
+
+```
+npm run compile ✅ 통과
+- protos: 24개 처리, String shadow 12개 패치
+- tsc --noEmit: 클린
+- webview tsc -b --noEmit: 클린
+- lint: 1,235 파일 체크, 오류 없음
 ```
 
 ---
 
-## Gate #2 중간 판정
+## B3/B4 미완료 사항
 
-**상태:** ▶ 진행 중 (Batch 1 ✅, Batch 2.5 ✅, Batch 2 진행 중, Batch 3 대기)
+마스터 문서에 명시된 미완료 항목:
 
-**현재까지 평가:** ✅ **양호**
+**B3 Webview:**
+- [ ] Webview 역이식 원칙 문서화
+- [ ] Caret Webview 오버레이 + Cline 변경분 역이식
+- [ ] 체크포인트 태그
 
-### 완료된 작업:
-1. **Batch 1**: Provider/Rule/Settings 경로 (disk.ts, external-rules.ts 등)
-2. **Batch 2.5**: caret-src 전체 통합
-3. **Batch 2 일부**: Controller CaretGlobalManager/FeatureConfig/CaretAccountService
-
-### 남은 작업:
-1. **Batch 2 잔여**: `ui/initializeWebview.ts` 등 나머지 Controller/웹뷰 진입 파일
-2. **Batch 3**: 잔여 Services/API
+**B4 루트/스크립트/문서:**
+- [ ] 루트/스크립트/문서 분리 전략 문서화
+- [ ] Caret 메타데이터/스크립트 검증
 
 ---
 
-## 진행 로그 반영 확인
+## Gate #2 판정
 
-마스터 문서 진행 로그 업데이트 확인:
-- [x] 10:20 Claude 리뷰 피드백 기록
-- [x] 10:25 Batch 2.5 착수 기록
-- [x] 11:18 Batch 2 진행 기록
-- [x] Batch 2.5 계획 추가 (line 102)
+**상태:** ✅ **승인**
 
----
+### 근거:
+1. Provider Wiring 완전 (Caret/BizRouter entry → handler 연결)
+2. CaretGlobalManager/FeatureConfig 핵심 인프라 통합
+3. CARET MODIFICATION 136개 보존
+4. `npm run compile` 통과 (백엔드 + 웹뷰)
+5. Critical stub 없음
 
-## 권장 사항
-
-### 즉시 필요
-없음 - 현재 작업이 올바르게 진행 중
-
-### Phase B 완료 전
-1. Batch 2 잔여 파일 처리 (`ui/initializeWebview.ts` 등)
-2. Batch 3 잔여 Services/API
-
-### Phase C/D 검토 사항
-1. `console.log` → `Logger` 통일
-2. CaretAccountService 디버그 로그 레벨 조정
+### 다음 단계:
+1. **B3 Webview 역이식** - Caret 유지 + Cline 변경분
+2. **B4 Root/Docs** - 메타데이터/스크립트 검증
+3. **Phase C** - 테스트 실행 (Hook 테스트 실패 해결 필요)
 
 ---
 
-## 총평
-
-B2 작업이 **올바른 방향으로 잘 진행**되고 있습니다.
-
-**장점:**
-- 이전 리뷰 이슈 (caret-src/ 미통합) 신속히 해결
-- 3-way 머지 원칙 준수
-- CARET MODIFICATION 주석 증가 (53 → 76)
-- CaretGlobalManager/FeatureConfig 핵심 인프라 통합 완료
-- tsc 타입 체크 지속 통과
-
-**결론:**
-- Gate #2 중간 판정: **진행 양호**
-- Batch 2 잔여 + Batch 3 완료 후 Gate #2 최종 승인 가능
-- 현재 수준으로 계속 진행 권장
+**Gate #2 최종 판정:** ✅ **승인** - Phase B3/B4 진행 가능

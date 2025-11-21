@@ -1,4 +1,5 @@
 import { buildApiHandler } from "@core/api"
+
 import { Empty } from "@shared/proto/cline/common"
 import {
 	PlanActMode,
@@ -157,6 +158,7 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			)
 		}
 
+		// Update subagent terminal output line limit
 		if (request.subagentTerminalOutputLineLimit !== undefined) {
 			controller.stateManager.setGlobalState(
 				"subagentTerminalOutputLineLimit",
@@ -164,6 +166,15 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			)
 		}
 
+		// Update subagent terminal output line limit
+		if (request.subagentTerminalOutputLineLimit !== undefined) {
+			controller.stateManager.setGlobalState(
+				"subagentTerminalOutputLineLimit",
+				Number(request.subagentTerminalOutputLineLimit),
+			)
+		}
+
+		// Update max consecutive mistakes
 		if (request.maxConsecutiveMistakes !== undefined) {
 			controller.stateManager.setGlobalState("maxConsecutiveMistakes", Number(request.maxConsecutiveMistakes))
 		}
@@ -183,7 +194,7 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 		if (request.dictationSettings !== undefined) {
 			// Convert from protobuf format (snake_case) to TypeScript format (camelCase)
 			const dictationSettings = {
-				// CARET MODIFICATION: Default featureEnabled to false (voice feature removed)
+				// CARET MODIFICATION: default featureEnabled to false (voice feature off by default)
 				featureEnabled: request.dictationSettings.featureEnabled ?? false,
 				dictationEnabled: request.dictationSettings.dictationEnabled ?? true,
 				dictationLanguage: request.dictationSettings.dictationLanguage ?? "en",
@@ -363,7 +374,7 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			controller.stateManager.setGlobalState("caretModeSystem", modeSystem)
 		}
 
-		// CARET MODIFICATION: Update persona system settings
+		// CARET MODIFICATION: Persona system
 		if (request.enablePersonaSystem !== undefined) {
 			controller.stateManager.setGlobalState("enablePersonaSystem", request.enablePersonaSystem)
 		}

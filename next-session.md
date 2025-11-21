@@ -2,7 +2,6 @@
 
 1) 네트워크/DNS 확인
 - `ping registry.npmjs.org` 또는 `curl -I https://registry.npmjs.org`
-- 푸시 재시도: `git push origin merge/cline-v3.38.1-attempt2` (이전 세션 DNS 실패)
 
 2) 의존성 설치 및 프로토 생성 (모든 명령 **npm 기준**)
 - `npm install`
@@ -14,7 +13,7 @@
 - 5~10개 파일 배치로 Proto → Controller → Services/API → Webview 순서 처리
 - 배치마다 `npm run tsc` 확인, 깨끗하면 체크포인트 태그 남김
 
-4) 스크립트 뼈대(TODO 구현 필요)
+4) 스크립트 뼈대(TODO 구현 필요) - **모든 명령 npm 기준, pnpm 사용 금지**
 - scripts/classify-files.ts
 - scripts/extract-caret-mods.ts
 - scripts/analyze-dependencies.ts

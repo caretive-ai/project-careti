@@ -176,6 +176,10 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
    - `src/shared/api.ts`와 같이 공용 파일 수정 시, **반드시 3-way 비교(`diff3`)를 수행**하여 `// CARET MODIFICATION` 주석이 유실되지 않았는지 확인해야 함.
    - **삭제된 Caret 주석**이 있는지 눈에 불을 켜고 찾아야 함.
 
+5. **클라인 개선 적극 이식 + Caret 기능 보존 원칙:**
+   - cline 3.38.1의 구조/기능 개선(신규 모델/상태/버그픽스 등)은 **이점이 명확하면 적극 이식**하되, Caret 고유 기능(i18n/Persona/InputHistory/Branding/Account)은 유지·병합한다.
+   - Webview는 `comparison/base|cline|caret` 3-way 비교 후 “이식 대상/보류 대상”을 별도 분석 파일로 기록하고 그 결과에 따라 적용한다.
+
 - 리뷰 타이밍: Gate #1 (Proto) → #2 (Controller/Services) → #3 (Webview) → #4 (Scripts/Docs) → #5 (최종). 승인 후에만 다음 단계 진행.
 
 ---

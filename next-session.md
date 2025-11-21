@@ -2,6 +2,7 @@
 
 1) 네트워크/DNS 확인
 - `ping registry.npmjs.org` 또는 `curl -I https://registry.npmjs.org`
+- 푸시 재시도: `git push origin merge/cline-v3.38.1-attempt2` (이전 세션 DNS 실패)
 
 2) 의존성 설치 및 프로토 생성 (모든 명령 **npm 기준**)
 - `npm install`

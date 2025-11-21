@@ -1,4 +1,6 @@
 import type { Anthropic } from "@anthropic-ai/sdk"
+import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
+import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
 import { buildApiHandler } from "@core/api"
 import { tryAcquireTaskLockWithRetry } from "@core/task/TaskLockUtils"
 import { detectWorkspaceRoots } from "@core/workspace/detection"
@@ -32,7 +34,9 @@ import { OcaAuthService } from "@/services/auth/oca/OcaAuthService"
 import { LogoutReason } from "@/services/auth/types"
 import { featureFlagsService } from "@/services/feature-flags"
 import { getDistinctId } from "@/services/logging/distinctId"
+import { Logger } from "@/services/logging/Logger"
 import { telemetryService } from "@/services/telemetry"
+import { CaretUser } from "@/shared/CaretAccount"
 import { getAxiosSettings } from "@/shared/net"
 import { ShowMessageType } from "@/shared/proto/host/window"
 import type { AuthState } from "@/shared/proto/index.cline"
@@ -223,7 +227,47 @@ export class Controller {
 		}
 	}
 
-	// CARET MODIFICATION: Caret logout helper
+	// CARET MODIFICATION: Integrate CaretGlobalManager userInfo with StateManager setSecret
+	async syncCaretUserInfoToSecret() {
+		try {
+			const caretUserInfo = CaretGlobalManager.userInfo
+			const customToken = CaretGlobalManager.authToken as string
+			if (caretUserInfo) {
+				console.log("[Controller] 🔑 Syncing Caret user info to secret storage", caretUserInfo)
+				;(this.stateManager as any).setGlobalState?.("caretUserProfile", caretUserInfo)
+				;(this.stateManager as any).setGlobalState?.(
+					"caretBaseUrl",
+					process.env.CARET_ROUTER_ENDPOINT || "https://api.caret.team",
+				)
+				;(this.stateManager as any).setGlobalState?.("planModeCaretModelId", caretUserInfo.models[0])
+				;(this.stateManager as any).setGlobalState?.("actModeCaretModelId", caretUserInfo.models[1])
+				;(this.stateManager as any).setSecret?.("caretApiKey", caretUserInfo.apiKey)
+				;(this.stateManager as any).setSecret?.("caretAuthToken", customToken)
+				console.log("[Controller] ✅ Caret user info stored in secret storage")
+			} else {
+				console.log("[Controller] ⚠️ No Caret user info available to sync")
+			}
+		} catch (error) {
+			console.error("[Controller] ❌ Failed to sync Caret user info to secret:", error)
+		}
+	}
+
+	// CARET MODIFICATION: Retrieve Caret user info from secret storage
+	async getCaretUserInfoFromSecret(): Promise<CaretUser | undefined> {
+		try {
+			const userInfo = (this.stateManager as any).getGlobalStateKey?.("caretUserProfile")
+			if (userInfo) {
+				console.log("[Controller] 📋 Retrieved Caret user info from secret storage")
+				return userInfo as CaretUser
+			}
+			console.log("[Controller] ⚠️ No Caret user info found in secret storage")
+			return undefined
+		} catch (error) {
+			console.error("[Controller] ❌ Failed to retrieve Caret user info from secret:", error)
+			return undefined
+		}
+	}
+
 	async handleCaretSignOut() {
 		try {
 			this.stateManager.setGlobalState("userInfo", undefined)
@@ -574,9 +618,16 @@ export class Controller {
 
 	async handleAuthCallback(customToken: string, provider: string | null = null) {
 		try {
-			await this.authService.handleAuthCallback(customToken, provider ? provider : "google")
+			// CARET MODIFICATION: support caret login path with feature-config defaults
+			if (provider === "caret") {
+				this.syncCaretUserInfoToSecret()
+			} else {
+				await this.authService.handleAuthCallback(customToken, provider ? provider : "google")
+			}
 
-			const clineProvider: ApiProvider = "cline"
+			const defaultProvider: ApiProvider =
+				(getCurrentFeatureConfig().defaultProvider as ApiProvider) ?? ("openrouter" as ApiProvider)
+			const clineProvider: ApiProvider = provider === "caret" ? ("caret" as ApiProvider) : ("cline" as ApiProvider)
 
 			// Get current settings to determine how to update providers
 			const planActSeparateModelsSetting = this.stateManager.getGlobalSettingsKey("planActSeparateModelsSetting")
@@ -589,16 +640,14 @@ export class Controller {
 			const updatedConfig = { ...currentApiConfiguration }
 
 			if (planActSeparateModelsSetting) {
-				// Only update the current mode's provider
 				if (currentMode === "plan") {
 					updatedConfig.planModeApiProvider = clineProvider
 				} else {
 					updatedConfig.actModeApiProvider = clineProvider
 				}
 			} else {
-				// Update both modes to keep them in sync
-				updatedConfig.planModeApiProvider = clineProvider
-				updatedConfig.actModeApiProvider = clineProvider
+				updatedConfig.planModeApiProvider = defaultProvider
+				updatedConfig.actModeApiProvider = defaultProvider
 			}
 
 			// Update the API configuration through cache service
@@ -922,6 +971,13 @@ export class Controller {
 		const lastDismissedModelBannerVersion = this.stateManager.getGlobalStateKey("lastDismissedModelBannerVersion") || 0
 		const lastDismissedCliBannerVersion = this.stateManager.getGlobalStateKey("lastDismissedCliBannerVersion") || 0
 		const subagentsEnabled = this.stateManager.getGlobalSettingsKey("subagentsEnabled")
+		const featureConfig = getCurrentFeatureConfig()
+		Logger.debug(`[Controller] 📋 Loaded featureConfig to send to webview: ${JSON.stringify(featureConfig)}`)
+		const inputHistory = this.stateManager.getGlobalSettingsKey("inputHistory" as any)
+		const modeSystem = CaretGlobalManager.currentMode
+		const enablePersonaSystem = this.stateManager.getGlobalSettingsKey("enablePersonaSystem" as any)
+		const currentPersona = this.stateManager.getGlobalStateKey("currentPersona" as any)
+		const personaProfile = this.stateManager.getGlobalStateKey("personaProfile" as any)
 
 		const localClineRulesToggles = this.stateManager.getWorkspaceStateKey("localClineRulesToggles")
 		const localWindsurfRulesToggles = this.stateManager.getWorkspaceStateKey("localWindsurfRulesToggles")
@@ -1005,6 +1061,7 @@ export class Controller {
 			autoCondenseThreshold,
 			backgroundCommandRunning: this.backgroundCommandRunning,
 			backgroundCommandTaskId: this.backgroundCommandTaskId,
+			featureConfig,
 			// NEW: Add workspace information
 			workspaceRoots: this.workspaceManager?.getRoots() ?? [],
 			primaryRootIndex: this.workspaceManager?.getPrimaryIndex() ?? 0,
@@ -1022,11 +1079,16 @@ export class Controller {
 			remoteConfigSettings: this.stateManager.getRemoteConfigSettings(),
 			lastDismissedCliBannerVersion,
 			subagentsEnabled,
+			inputHistory,
+			modeSystem,
+			enablePersonaSystem,
+			currentPersona,
+			personaProfile,
 			nativeToolCallSetting: {
 				user: this.stateManager.getGlobalStateKey("nativeToolCallEnabled"),
 				featureFlag: featureFlagsService.getNativeToolCallEnabled(),
 			},
-		}
+		} as any
 	}
 
 	async clearTask() {

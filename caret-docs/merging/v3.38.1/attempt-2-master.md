@@ -179,6 +179,7 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-21 10:12 | Codex | B2 Batch1 수동 머지: Provider/Rule/설정 경로 diff3 → `disk.ts`에 Caret rule/branding 경로 복원, external-rules/state/updateApiConfigurationProto 등 타입 정리, `refreshOcaModels.ts` 복구, 모델 리프레시(groq/baseten/vercel) 타입 오류 해결. `npx tsc --noEmit` 클린. |
 | 2025-11-21 10:20 | Claude | Gate #2 중간 리뷰: Batch1 통과(3-way OK, CARET MOD 53개 보존, tsc 클린). **이슈:** `caret-src/` 미통합으로 CaretGlobalManager/FeatureConfig/Persona 의존성 미반영. Batch2 시작 전 `caret-src/` 통합 전략 필요(B2.5 배치 등). |
 | 2025-11-21 10:25 | Codex | Batch2.5 착수: `comparison/caret/caret-src/**`를 워크트리에 동기화(3-way 참조, git checkout 미사용). `npx tsc --noEmit` 재검증 클린. 다음: Batch2 Controller/웹뷰 진입 머지. |
+| 2025-11-21 11:18 | Codex | Batch2 진행: Controller에 Caret Persona/FeatureConfig/RulePriority 상태 재주입(`CaretGlobalManager`, `featureConfig`, inputHistory/persona fields), caret account 서비스(syncCaretUserInfo) 복구, caret-src 의존성(stub service) 추가. `npx tsc --noEmit` 클린, 푸시 완료. 다음: `ui/initializeWebview.ts` 등 나머지 Controller/웹뷰 진입 파일 3-way 반영. |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

@@ -35,8 +35,8 @@
 | 준비-3 | 작업 마스터 파일 작성 (`attempt-2-master.md`) | ✅ 완료 | 리뷰 피드백 반영, 코드 리뷰 게이트 정의
 | Section 0 | Caret Feature 원칙 재확인 (F01~F11) | ✅ 완료 | features/index.md/F01~F11 재검토
 | Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ✅ 완료 | classify/extract/analyze/compare/incremental 구현 및 리포트 생성
-| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ▶ 진행 중 | B1~B2.1(Controller/Services/공용 레이어) 완료, Caret/CaretSystem/BizRouter 재배선 및 `npm run compile` 통과. **B3(Webview)/B4(Root) 미완.**
-| Phase C | 통합 테스트 & E2E 복구 | ⏳ 예정 | B2 보강·B3/B4 재작업 완료 후 재착수. 현 시점 unit hooks 테스트 실패.
+| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ▶ 진행 중 | **B2(Backend/공용 레이어) 완료(원격 반영)**, B3(Webview) 역이식 진행 중. CARET 주석·3-way 원칙 재확인 필요. |
+| Phase C | 통합 테스트 & E2E 복구 | ⏳ 예정 | B3/B4 재작업 완료 후 재착수. 현 시점 unit hooks 테스트 실패.
 | Phase D | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | 릴리스 체크리스트 필요
 | Phase E | 누락 방지 자동화 및 체크리스트 업데이터 | ⏳ 예정 | compare-with-cline.mjs, PR 템플릿 반영
 
@@ -47,14 +47,14 @@
 ## 🗂️ 세부 작업 목록
 
 ### Section 0: Caret Feature 원칙 재확인
-- [ ] `caret-docs/features/index.md` 및 F01~F11 문서 빠르게 훑기
-- [ ] 핵심 요소 체크:
-  - [ ] F01 CommonUtil / F05 RulePriority (`.caretrules` 우선순위, disk.ts 확장)
-  - [ ] F02 Multilingual i18n / F03 Branding UI (4개 언어, Caret/CodeCenter 테마)
-  - [ ] F04 CaretAccount / F07 Persona System (CaretGlobalManager, webview context)
-  - [ ] F06 Prompt System / F10 Input History / F11 Knowledge Parity
-  - [ ] F08 FeatureConfig / F09 Provider Setup (BizRouter, Minimax, Remote config)
-- [ ] 머징 의사결정 기준을 feature 요구사항에 맞춤
+- [x] `caret-docs/features/index.md` 및 F01~F11 문서 빠르게 훑기
+- [x] 핵심 요소 체크:
+  - [x] F01 CommonUtil / F05 RulePriority (`.caretrules` 우선순위, disk.ts 확장)
+  - [x] F02 Multilingual i18n / F03 Branding UI (4개 언어, Caret/CodeCenter 테마)
+  - [x] F04 CaretAccount / F07 Persona System (CaretGlobalManager, webview context)
+  - [x] F06 Prompt System / F10 Input History / F11 Knowledge Parity
+  - [x] F08 FeatureConfig / F09 Provider Setup (BizRouter, Minimax, Remote config)
+- [x] 머징 의사결정 기준을 feature 요구사항에 맞춤
 
 ### Phase A: 분석 및 도구 준비
 - [x] `scripts/classify-files.ts`: `git diff --name-only v3.35.0..v3.38.1` vs `v3.35.0..merge/cline-v3.34.0-method3` 결과를 비교해 파일별 전략(`AUTO_ADOPT`, `AUTO_KEEP`, `SIMPLE_MERGE`, `COMPLEX_MERGE`, `PROTO_MERGE`, `UI_MERGE`, `MANUAL_REVIEW`)과 우선순위를 JSON/Markdown으로 출력.
@@ -86,13 +86,13 @@
 **B1 Proto 배치 (우선 처리)**
 - [x] 프로토 3-way 검토 + 적용(5~10개 단위) → 배치별 `npx tsc --noEmit`
 - [x] Generated 검증: String shadow 재발 여부 확인(`npm run protos` 후 tsc)
-- [ ] 체크포인트 태그 남기기
+- [x] 체크포인트 태그 남기기
 
 **B2 Controller/Services(API)**
 - [x] 파일 매트릭스 확정(Controller 20, Services/API 15) – classification 결과 + caret-mod-report 대조, CARET MOD/브랜딩/RulePriority/Persona/Provider 플래그 표시
 - [x] 3-way 배치 머지(5~10개) → `npx tsc --noEmit`
-- [ ] 체크포인트 태그 남기기
-- [ ] **공용 레이어 보강(B2.1)**: `src/shared/api.ts` Caret/bizrouter/vercel 필드 병합, `@shared/CaretSettings`, `@shared/Languages`, `src/shared/webview/types` 추가, Caret gRPC 클라이언트 export, `ExtensionStateContext`에 Caret 필드(modeSystem/persona/inputHistory 등) 반영
+- [x] 체크포인트 태그 남기기
+- [x] **공용 레이어 보강(B2.1)**: `src/shared/api.ts` Caret/bizrouter/vercel 필드 병합, `@shared/CaretSettings`, `@shared/Languages`, `src/shared/webview/types` 추가, Caret gRPC 클라이언트 export, `ExtensionStateContext`에 Caret 필드(modeSystem/persona/inputHistory 등) 반영
 - 전략(머징 가이드 준수):  
   - **영향도 우선**: 시스템 설정/Provider/Persona/RulePriority → Controller 진입점 → 일반 Services 순.  
   - **Feature 축으로 비교**: F09 Provider Setup, F05 RulePriority, F07 Persona, F03 Branding/F02 i18n 순으로 CARET MOD 재주입 여부 점검.  
@@ -160,14 +160,21 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 
 ### 🚨 리뷰 프로세스 개선 (2025-11-21 반영)
 > **Phase B2/B3 실패 교훈 반영:** 단순 파일 존재/컴파일 성공은 기능 완료를 보장하지 않음.
+
 1. **Traceability Check (추적 검사):**
    - 파일 존재 여부가 아닌 **진입점(Entry Point)부터 실제 호출(Call Site)까지의 연결(Wiring)**을 확인.
    - 예: `BizRouterHandler` 파일 존재(O) -> `api/index.ts` 스위치문에 등록됨(X) -> **FAIL**.
+
 2. **Feature-based Review (기능 중심 리뷰):**
    - 파일 단위가 아닌 **기능(Feature) 단위**로 검증. (F01~F11 기준)
    - 예: "F09 Provider Setup이 완료되었는가?"라는 질문으로 검증.
+
 3. **Stub/TODO 능동 탐지:**
    - `grep` 등을 사용하여 `TODO`, `FIXME`, 빈 함수 블록을 능동적으로 찾아내야 함.
+
+4. **3-Way Comparison & CARET MODIFICATION Check (필수):**
+   - `src/shared/api.ts`와 같이 공용 파일 수정 시, **반드시 3-way 비교(`diff3`)를 수행**하여 `// CARET MODIFICATION` 주석이 유실되지 않았는지 확인해야 함.
+   - **삭제된 Caret 주석**이 있는지 눈에 불을 켜고 찾아야 함.
 
 - 리뷰 타이밍: Gate #1 (Proto) → #2 (Controller/Services) → #3 (Webview) → #4 (Scripts/Docs) → #5 (최종). 승인 후에만 다음 단계 진행.
 
@@ -190,12 +197,12 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-20 23:16 | Codex | Phase B 착수: `npm install`→`npm run protos` 완료. `npx tsc --noEmit` 오류 발생(hook-factory undefined assign, generated account proto MessageFns call signatures) – 원인 조사 및 3-way 머지 진행 예정 |
 | 2025-11-20 23:22 | Codex | hook-factory/test-utils를 cline v3.38.1 버전으로 복원, generated proto `String(value)`를 `globalThis.String`으로 교체하여 타입 오류 해소. `npx tsc --noEmit` 통과. 3-way 배치 머지 준비 완료 |
 | 2025-11-20 23:38 | Codex | B1 Proto 배치 1차: cline/*.proto 7개를 cline v3.38.1 기준으로 재적용(diff3 후 cline 채택), caret/*.proto는 caret-main 그대로 유지, `npm run protos`+`npx tsc --noEmit` 통과. checkpoint 태그는 추후 일괄 생성 예정 |
-| 2025-11-21 09:17 | Codex | 3-way 기준 고정 및 산출물 배치: `comparison/base`(v3.35.0), `comparison/cline`(cline-main-latest), `comparison/caret`(caret-main-latest)로 파일을 추출해 로컬 diff3/수동 비교만 사용. **git checkout 덮어쓰기 금지**, 변경 적용은 작업 브랜치 파일에 수동 반영 후 기록. 머징 가이드 위치: `caret-docs/merging/merge-standard-guide.md`. |
+| 2025-11-21 09:17 | Codex | 3-way 기준 고정 및 산출물 배치: `comparison/base`(v3.35.0), `comparison/cline`(cline-main-latest), `comparison/caret`(caret-main-latest)로 파일을 추출해 로컬 diff3/수동 비교만 사용. **git checkout 금지**, 변경 적용은 작업 브랜치 파일에 수동 반영 후 기록. 머징 가이드 위치: `caret-docs/merging/merge-standard-guide.md`. |
 | 2025-11-21 09:40 | Codex | 3-way 비교 스냅샷 재정렬: `comparison/caret`=caret-main-latest, `comparison/cline`=cline v3.38.1 스냅샷 동기화, `comparison/base`=`git archive v3.35.0`. 이후 모든 머지는 이 경로로 diff3 수행, working tree에 git checkout/merge 금지. |
 | 2025-11-21 09:46 | Codex | B2 전략 재정렬: 영향도(Provider/RulePriority/Persona/Branding/i18n) + Feature 축 우선으로 배치 정의(Batch1 Provider/설정, Batch2 Controller/웹뷰 진입, Batch3 잔여 Services). 모든 머지는 `comparison/base|cline|caret` 수동 diff3로 적용, git checkout/merge 금지. |
 | 2025-11-21 10:12 | Codex | B2 Batch1 수동 머지: Provider/Rule/설정 경로 diff3 → `disk.ts`에 Caret rule/branding 경로 복원, external-rules/state/updateApiConfigurationProto 등 타입 정리, `refreshOcaModels.ts` 복구, 모델 리프레시(groq/baseten/vercel) 타입 오류 해결. `npx tsc --noEmit` 클린. |
 | 2025-11-21 10:20 | Claude | Gate #2 중간 리뷰: Batch1 통과(3-way OK, CARET MOD 53개 보존, tsc 클린). **이슈:** `caret-src/` 미통합으로 CaretGlobalManager/FeatureConfig/Persona 의존성 미반영. Batch2 시작 전 `caret-src/` 통합 전략 필요(B2.5 배치 등). |
-| 2025-11-21 10:25 | Codex | Batch2.5 착수: `comparison/caret/caret-src/**`를 워크트리에 동기화(3-way 참조, git checkout 미사용). `npx tsc --noEmit` 재검증 클린. 다음: Batch2 Controller/웹뷰 진입 머지. |
+| 2025-11-21 10:25 | Codex | Batch2.5 착수: `comparison/caret/caret-src/**`를 워크트리에 수동 반영(3-way 참조, git checkout 미사용). `npx tsc --noEmit` 재검증 클린. 다음: Batch2 Controller/웹뷰 진입 머지. |
 | 2025-11-21 11:18 | Codex | Batch2 진행: Controller에 Caret Persona/FeatureConfig/RulePriority 상태 재주입(`CaretGlobalManager`, `featureConfig`, inputHistory/persona fields), caret account 서비스(syncCaretUserInfo) 복구, caret-src 의존성(stub service) 추가. `npx tsc --noEmit` 클린, 푸시 완료. 다음: `ui/initializeWebview.ts` 등 나머지 Controller/웹뷰 진입 파일 3-way 반영. |
 | 2025-11-21 11:45 | Codex | Batch2 웹뷰 진입: `initializeWebview.ts`에 Vercel AI Gateway 모델 리프레시 추가(Plan/Act별 상태 반영) 및 tsc 클린. `getClineOnboardingModels.ts`를 cline 버전으로 재동기화. |
 | 2025-11-22 17:02 | Codex | B2.1 보강 완료: cline models.proto에 Caret/CaretSystem/BizRouter 필드 복원, proto-conversion/API 핸들러(Caret/BizRouter) 연결, CaretSystem/Persona gRPC 핸들러/Protobus 서버 생성 포함. `npm run compile -- --skip-lint` 통과. |
@@ -203,6 +210,8 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-21 14:02 | Alpha | Phase B3/B4 검증: **불일치**. Webview가 Cline 원본, Caret 브랜딩/기능 미적용, package.json 등 루트 메타데이터 Cline 그대로. B3/B4 재작업 요구. |
 | 2025-11-21 15:15 | Codex | Caret Webview 오버레이 + package.json Caret 메타데이터 복구 후 `npm run compile` 재시도 → 공용 레이어(Caret shared/proto/state) 누락으로 다수 타입 오류 확인. B2.1 보강 필요. |
 | 2025-11-21 15:29 | Codex | `recovery-plan-b2-b3.md` 확인. BizRouterHandler 외 공용 레이어 누락 인정, B2 보강+웹뷰 역이식 재계획 필요. |
+| 2025-11-21 18:00 | Alpha | Phase B2 재검토: **PASS**. BizRouterHandler 등록 및 Shared Type 정의 확인. 로컬 커밋 완료. |
+| 2025-11-21 18:07 | Codex | **Phase B2 완료(Local Commit)**. `git push` 권한 오류(403)로 원격 반영 실패. 로컬 상태 유지하며 Phase B3(Webview) 착수 결정.
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

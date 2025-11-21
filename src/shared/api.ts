@@ -1,4 +1,5 @@
 import type { LanguageModelChatSelector } from "../core/api/providers/types"
+import type { CaretUser } from "./CaretAccount" // CARET MODIFICATION: Caret account/profile support
 
 export type ApiProvider =
 	| "anthropic"
@@ -20,6 +21,8 @@ export type ApiProvider =
 	| "mistral"
 	| "vscode-lm"
 	| "cline"
+	| "caret" // CARET MODIFICATION: Caret provider
+	| "bizrouter" // CARET MODIFICATION: BizRouter provider
 	| "litellm"
 	| "moonshot"
 	| "nebius"
@@ -45,6 +48,8 @@ export type ApiProvider =
 export interface ApiHandlerSecrets {
 	apiKey?: string // anthropic
 	liteLlmApiKey?: string
+	bizRouterApiKey?: string // CARET MODIFICATION: BizRouter API key
+	caretApiKey?: string // CARET MODIFICATION: Caret API key
 	awsAccessKey?: string
 	awsSecretKey?: string
 	openRouterApiKey?: string
@@ -92,6 +97,14 @@ export interface ApiHandlerOptions {
 	ulid?: string // Used to identify the task in API requests
 	liteLlmBaseUrl?: string
 	liteLlmUsePromptCache?: boolean
+	// CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
+	bizRouterUsePromptCache?: boolean
+	// CARET MODIFICATION: Caret API/account wiring
+	caretBaseUrl?: string
+	caretApiKey?: string
+	caretUsePromptCache?: boolean
+	caretUserProfile?: CaretUser
+	caretAuthToken?: string
 	openAiHeaders?: Record<string, string> // Custom headers for OpenAI requests
 	anthropicBaseUrl?: string
 	openRouterProviderSorting?: string
@@ -153,6 +166,11 @@ export interface ApiHandlerOptions {
 	planModeLmStudioModelId?: string
 	planModeLiteLlmModelId?: string
 	planModeLiteLlmModelInfo?: LiteLLMModelInfo
+	// CARET MODIFICATION: BizRouter/Caret plan-mode
+	planModeBizRouterModelId?: string
+	planModeBizRouterModelInfo?: BizRouterModelInfo
+	planModeCaretModelId?: string
+	planModeCaretModelInfo?: ModelInfo
 	planModeRequestyModelId?: string
 	planModeRequestyModelInfo?: ModelInfo
 	planModeTogetherModelId?: string
@@ -163,6 +181,8 @@ export interface ApiHandlerOptions {
 	planModeGroqModelInfo?: ModelInfo
 	planModeBasetenModelId?: string
 	planModeBasetenModelInfo?: ModelInfo
+	planModeVercelAiGatewayModelId?: string
+	planModeVercelAiGatewayModelInfo?: ModelInfo
 	planModeHuggingFaceModelId?: string
 	planModeHuggingFaceModelInfo?: ModelInfo
 	planModeHuaweiCloudMaasModelId?: string
@@ -192,6 +212,11 @@ export interface ApiHandlerOptions {
 	actModeLmStudioModelId?: string
 	actModeLiteLlmModelId?: string
 	actModeLiteLlmModelInfo?: LiteLLMModelInfo
+	// CARET MODIFICATION: BizRouter/Caret act-mode
+	actModeBizRouterModelId?: string
+	actModeBizRouterModelInfo?: BizRouterModelInfo
+	actModeCaretModelId?: string
+	actModeCaretModelInfo?: ModelInfo
 	actModeRequestyModelId?: string
 	actModeRequestyModelInfo?: ModelInfo
 	actModeTogetherModelId?: string
@@ -202,6 +227,8 @@ export interface ApiHandlerOptions {
 	actModeGroqModelInfo?: ModelInfo
 	actModeBasetenModelId?: string
 	actModeBasetenModelInfo?: ModelInfo
+	actModeVercelAiGatewayModelId?: string
+	actModeVercelAiGatewayModelInfo?: ModelInfo
 	actModeHuggingFaceModelId?: string
 	actModeHuggingFaceModelInfo?: ModelInfo
 	actModeHuaweiCloudMaasModelId?: string
@@ -277,6 +304,8 @@ export interface BizRouterModelInfo extends OpenAiCompatibleModelInfo {
 	minP?: number
 }
 
+export type CaretModelInfo = ModelInfo
+
 export const bizRouterModelInfoSaneDefaults: BizRouterModelInfo = {
 	maxTokens: 4096,
 	contextWindow: 8192,
@@ -290,7 +319,20 @@ export const bizRouterModelInfoSaneDefaults: BizRouterModelInfo = {
 	presencePenalty: 0,
 }
 
+// CARET MODIFICATION: Caret models (placeholder defaults from Caret)
+export const caretModels: Record<string, ModelInfo> = {
+	"caret-claude-sonnet": {
+		maxTokens: 4096,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+	},
+}
+export type CaretModelId = keyof typeof caretModels
+export const caretDefaultModelId: CaretModelId = "caret-claude-sonnet"
+
 export const CLAUDE_SONNET_1M_SUFFIX = ":1m"
+export const CLAUDE_SONNET_4_1M_SUFFIX = ":1m"
 export const CLAUDE_SONNET_1M_TIERS = [
 	{
 		contextWindow: 200000,
@@ -845,6 +887,15 @@ export const OPENROUTER_PROVIDER_PREFERENCES: Record<string, { order: string[]; 
 		order: ["z-ai", "novita", "baseten", "fireworks", "chutes"],
 		allow_fallbacks: false,
 	},
+}
+
+// Vercel AI Gateway defaults (fallback placeholders until fetched)
+export const vercelAiGatewayDefaultModelId = "gpt-4o-mini"
+export const vercelAiGatewayDefaultModelInfo: ModelInfo = {
+	maxTokens: 4096,
+	contextWindow: 128000,
+	supportsImages: true,
+	supportsPromptCache: false,
 }
 
 // Vertex AI

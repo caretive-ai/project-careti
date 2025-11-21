@@ -12,7 +12,7 @@
 - `caret-docs/merging/v3.38.1/attempt-2-plan-review.md` – Claude 리뷰 피드백 (타임라인, 분류 체계, 충돌 해결 시나리오)
 - `caret-docs/merging/v3.37.1/attempt-1/` – 직전 버전의 1차 실패 산출물 (갭/감사/테스트 리포트)
 - `caret-docs/merging/v3.38.1/attempt-2-master.md` – 현재 문서 (모든 진행 상황 기록)
-- **3-way 비교 로컬 경로(반드시 git checkout 금지):** `comparison/base` = `git show v3.35.0:<file>`, `comparison/cline` = 수동 fetch한 `cline-main-latest`, `comparison/caret` = 수동 fetch한 `caret-main-latest`
+- **3-way 비교 로컬 경로(반드시 git checkout 금지):** `comparison/base` = `git archive v3.35.0` 전체 추출, `comparison/cline` = 수동 가져온 `cline-main-latest` 풀 체크아웃, `comparison/caret` = 수동 가져온 `caret-main-latest` 풀 체크아웃 (현재 디렉토리: base / caret / caret-main / cline / cline-v3.38.1)
 
 ---
 

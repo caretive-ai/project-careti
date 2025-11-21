@@ -99,7 +99,8 @@
 - 실행 순서(배치 기준):
   - Batch 1 (Provider/Rule/설정 – 영향도 최상위): `src/models/refreshVercelAiGatewayModels.ts`, `refreshGroqAiStableModels.ts`, `refreshBasetenModels.ts`, `refreshSapAiModels.ts`, `refreshOcaModels.ts`(존재 시), `src/file/refreshRules.ts`, `src/context/**/external-rules.ts`, `src/models/updateApiConfigurationProto.ts`, `src/state/updateSettings.ts`
   - Batch 2 (Controller/웹뷰 진입 – Persona/Branding 라우트): `src/core/controller/index.ts`, `ui/initializeWebview.ts`, Provider setup/라우팅/핸들러(매트릭스에 명시) – CARET Persona/Branding/RulePriority 재주입
-  - Batch 3 (잔여 Services/API): Batch 1·2 외 `src/core/controller/*.ts`, `src/models/*.ts`, `src/services/*.ts`, `src/api/**/*.ts` 등 남은 5~10개 단위 처리
+  - Batch 2.5 (caret-src 통합): `comparison/caret/caret-src/**`를 워크트리에 수동 반영(3-way 참조) → CaretGlobalManager/FeatureConfig/Persona/Branding 의존성 확보 후 Controller/Services import 재연결. 적용 후 `npx tsc --noEmit`.
+  - Batch 3 (잔여 Services/API): Batch 1·2·2.5 외 `src/core/controller/*.ts`, `src/models/*.ts`, `src/services/*.ts`, `src/api/**/*.ts` 등 남은 5~10개 단위 처리
 
 **B3 Webview**
 - [ ] Webview 역이식 원칙 문서화(Caret 유지 + Cline 변경분만 역이식)
@@ -176,6 +177,7 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-21 09:40 | Codex | 3-way 비교 스냅샷 재정렬: `comparison/caret`=caret-main-latest, `comparison/cline`=cline v3.38.1 스냅샷 동기화, `comparison/base`=`git archive v3.35.0`. 이후 모든 머지는 이 경로로 diff3 수행, working tree에 git checkout/merge 금지. |
 | 2025-11-21 09:46 | Codex | B2 전략 재정렬: 영향도(Provider/RulePriority/Persona/Branding/i18n) + Feature 축 우선으로 배치 정의(Batch1 Provider/설정, Batch2 Controller/웹뷰 진입, Batch3 잔여 Services). 모든 머지는 `comparison/base|cline|caret` 수동 diff3로 적용, git checkout/merge 금지. |
 | 2025-11-21 10:12 | Codex | B2 Batch1 수동 머지: Provider/Rule/설정 경로 diff3 → `disk.ts`에 Caret rule/branding 경로 복원, external-rules/state/updateApiConfigurationProto 등 타입 정리, `refreshOcaModels.ts` 복구, 모델 리프레시(groq/baseten/vercel) 타입 오류 해결. `npx tsc --noEmit` 클린. |
+| 2025-11-21 10:20 | Claude | Gate #2 중간 리뷰: Batch1 통과(3-way OK, CARET MOD 53개 보존, tsc 클린). **이슈:** `caret-src/` 미통합으로 CaretGlobalManager/FeatureConfig/Persona 의존성 미반영. Batch2 시작 전 `caret-src/` 통합 전략 필요(B2.5 배치 등). |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

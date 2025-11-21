@@ -300,6 +300,7 @@
 	"scripts": {
 		"vscode:prepublish": "npm run package",
 		"compile": "npm run check-types && npm run lint && node esbuild.mjs",
+		"compile:backend": "npm run protos && npx tsc --noEmit",
 		"compile-standalone": "npm run check-types && npm run lint && node esbuild.mjs --standalone",
 		"compile-standalone-npm": "npm run protos && npm run protos-go && npm run check-types && npm run lint && node esbuild.mjs --standalone",
 		"compile-cli": "scripts/build-cli.sh",

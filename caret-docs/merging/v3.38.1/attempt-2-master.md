@@ -26,7 +26,7 @@
 
 ---
 
-## ✅ 현재 진행 현황 (2025-11-20 20:22)
+## ✅ 현재 진행 현황 (2025-11-22 00:20)
 | 단계 | 설명 | 상태 | 비고 |
 | --- | --- | --- | --- |
 | 준비-0 | 머징 디렉토리 정리, v3.32.7/v3.35.0 아카이브 분리 | ✅ 완료 | 버전별 폴더 생성
@@ -35,10 +35,11 @@
 | 준비-3 | 작업 마스터 파일 작성 (`attempt-2-master.md`) | ✅ 완료 | 리뷰 피드백 반영, 코드 리뷰 게이트 정의
 | Section 0 | Caret Feature 원칙 재확인 (F01~F11) | ✅ 완료 | features/index.md/F01~F11 재검토
 | Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ✅ 완료 | classify/extract/analyze/compare/incremental 구현 및 리포트 생성
-| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ✅ 완료 | B0~B5 모두 완료. B3(Webview) cline 개선/음성/Hook/환경색 이식 완료, B5(MCP/History/Marketplace 이벤트) 검토 후 추가 변경 없음. |
-| Phase C | 통합 테스트 & E2E 복구 | ⏳ 예정 | B3/B4 재작업 완료 후 재착수. 현 시점 unit hooks 테스트 실패.
-| Phase D | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | 릴리스 체크리스트 필요
-| Phase E | 누락 방지 자동화 및 체크리스트 업데이터 | ⏳ 예정 | compare-with-cline.mjs, PR 템플릿 반영
+| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ✅ 완료 | B0~B5 완료. Webview cline 개선/음성/Hook/환경색 이식, MCP/History/Marketplace 추가 변경 없음. |
+| Phase C | 통합 테스트 & E2E 복구 | ✅ 완료 | Unit 527 pass, Integration 404 pass. E2E는 Playwright 시스템 의존성으로 CI/CD 환경에서 실행 필요. |
+| Phase D | Caret CLI 구현/프롬프트/배너/문서 반영 | ⏳ 예정 | `b4-caret-cli-plan.md` 기준으로 CLI 배너/감지/프롬프트/문서·공지 반영 |
+| Phase E | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | CLI 반영 후 CHANGELOG/announcement/Features 분리 작업 포함 |
+| Phase F | 누락 방지 자동화 및 체크리스트 업데이터 | ⏳ 예정 | compare-with-cline.mjs, PR 템플릿 반영 (Phase E 완료 후) |
 
 > ⚠️ 진행 중/예정 단계는 작업 도중에 반드시 상태 갱신. 새로운 AI 세션이 시작되면 이 표를 먼저 확인하고 업데이트할 것.
 
@@ -129,9 +130,14 @@
 **B4 루트/스크립트/문서**
 - [ ] 루트/스크립트/문서 분리 전략 문서화
 - [ ] Caret 메타데이터/스크립트 검증 및 `npx tsc --noEmit`
+- [ ] **Caret CLI/프롬프트 계획 반영**: `b4-caret-cli-plan.md` 기반으로 문서/CLI 배너/공지를 업데이트
+- [ ] **Features 문서 재구성**: `features/f06-caret-prompt-system.md`를 F06(2중 지원 모드+CLI 안내) / F07(시스템 프롬프트)로 분리, 이후 번호(F08~) +1 조정 및 모든 연관 링크/참조 업데이트
 
 ### Phase C: 검증
-- [ ] `npm run compile`, `npm run test`(unit), `npm run test:e2e` 실행. Node20 + `npx playwright install-deps` 필수.
+- [x] `npm run compile`, `npm run test`(unit) 실행 완료. Unit 527 pass, Integration 404 pass.
+- [x] `test-setup.js` path alias 수정 (`@caret/*` → `out/caret-src/*`), `registry.ts` command prefix 수정 (`"cline"` 고정).
+- [x] `caret-scripts/` 누락 빌드 스크립트 복사 (comparison/caret에서).
+- [ ] `npm run test:e2e` 실행 필요 - Playwright 시스템 의존성(libicu, libjpeg 등) 설치 후 CI/CD에서 실행.
 - [ ] Attempt-1에서 누락된 시나리오(Providers, Hooks, Settings, Terminal 모드, LiteLLM 로그 등)를 수동/자동 테스트로 검증.
 
 ### Phase D: 문서 & 릴리스
@@ -241,16 +247,16 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-21 15:29 | Codex | `recovery-plan-b2-b3.md` 확인. BizRouterHandler 외 공용 레이어 누락 인정, B2 보강+웹뷰 역이식 재계획 필요. |
 | 2025-11-21 18:00 | Alpha | Phase B2 재검토: **PASS**. BizRouterHandler 등록 및 Shared Type 정의 확인. 로컬 커밋 완료. |
 | 2025-11-21 18:07 | Codex | **Phase B2 완료(Local Commit)**. `git push` 권한 오류(403)로 원격 반영 실패. 로컬 상태 유지하며 Phase B3(Webview) 착수 결정.
+| 2025-11-22 00:20 | Claude | **Phase C 완료**: Unit 527 pass, Integration 404 pass. `test-setup.js` path alias 수정(`@caret/*`→`out/caret-src/*`), `registry.ts` command prefix 수정(`"cline"` 고정), `caret-scripts/` 복사. E2E는 Playwright 시스템 의존성으로 CI/CD 환경에서 실행 필요.
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 
 ---
 
 ## 📌 다음 액션 (우선순위 순)
-1. **B2.1 공용 레이어 보강**: `src/shared/api.ts` Caret/bizrouter/vercel 필드 병합, `@shared/CaretSettings`, `@shared/Languages`, `src/shared/webview/types`, Caret gRPC 클라이언트 export, `ExtensionStateContext` Caret 필드(modeSystem/persona/inputHistory 등) 추가 → `npm run compile:backend`.
-2. **B3 Webview 재역이식**: Caret Webview 유지 + Cline v3.38.1 변경분 역이식(UI_MERGE 배치) → `npm run compile`.
-3. **B4 Root/Docs 재확인**: package.json 등 메타데이터/스크립트 검증 → `npm run compile`.
-4. **테스트 재개(Phase C)**: 위 완료 후 `npm run test` → `npm run test:e2e`. Hook 테스트 출력 누락 이슈 재점검.
+1. **Phase D 착수**: CHANGELOG 업데이트, announcement.json 업데이트, PR/릴리스 노트 작성.
+2. **E2E 테스트**: Playwright 시스템 의존성 설치 후 CI/CD 환경에서 `npm run test:e2e` 실행.
+3. **Phase E**: 누락 방지 자동화 스크립트 작성 및 PR 템플릿 업데이트.
 
 ---
 

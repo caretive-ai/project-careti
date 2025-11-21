@@ -17,7 +17,16 @@ const tsConfig = JSON.parse(fs.readFileSync(path.join(baseUrl, "tsconfig.json"),
 const outPaths = {}
 Object.keys(tsConfig.compilerOptions.paths).forEach((key) => {
 	const value = tsConfig.compilerOptions.paths[key]
-	outPaths[key] = value.map((path) => path.replace("src", "out/src"))
+	outPaths[key] = value.map((p) => {
+		// Handle different source directories correctly
+		if (p.startsWith("src/")) {
+			return p.replace("src/", "out/src/")
+		} else if (p.startsWith("caret-src/")) {
+			return p.replace("caret-src/", "out/caret-src/")
+		}
+		// Fallback: prepend out/ for any other paths
+		return `out/${p}`
+	})
 })
 
 tsConfigPaths.register({

@@ -1,6 +1,8 @@
 import { name, publisher, version } from "../package.json"
 
-const prefix = name === "claude-dev" ? "cline" : name
+// Command prefix: use "cline" for consistency with package.json command definitions
+// This ensures commands registered in code match those defined in package.json
+const prefix = "cline"
 
 /**
  * List of commands with the name of the extension they are registered under.

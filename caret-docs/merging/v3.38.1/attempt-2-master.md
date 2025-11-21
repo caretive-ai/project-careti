@@ -128,25 +128,29 @@
   - [x] UI 타입 빌드 재검증(`npm run check-types`) 통과.
 
 **B4 루트/스크립트/문서**
-- [ ] 루트/스크립트/문서 분리 전략 문서화
-- [ ] Caret 메타데이터/스크립트 검증 및 `npx tsc --noEmit`
-- [ ] **Caret CLI/프롬프트 계획 반영**: `b4-caret-cli-plan.md` 기반으로 문서/CLI 배너/공지를 업데이트
-- [ ] **Features 문서 재구성**: `features/f06-caret-prompt-system.md`를 F06(2중 지원 모드+CLI 안내) / F07(시스템 프롬프트)로 분리, 이후 번호(F08~) +1 조정 및 모든 연관 링크/참조 업데이트
+- [x] 루트/스크립트/문서 분리 전략 문서화
+- [x] Caret 메타데이터/스크립트 검증 및 `npx tsc --noEmit` (Phase C 빌드 과정 포함)
 
 ### Phase C: 검증
 - [x] `npm run compile`, `npm run test`(unit) 실행 완료. Unit 527 pass, Integration 404 pass.
 - [x] `test-setup.js` path alias 수정 (`@caret/*` → `out/caret-src/*`), `registry.ts` command prefix 수정 (`"cline"` 고정).
 - [x] `caret-scripts/` 누락 빌드 스크립트 복사 (comparison/caret에서).
-- [ ] `npm run test:e2e` 실행 필요 - Playwright 시스템 의존성(libicu, libjpeg 등) 설치 후 CI/CD에서 실행.
+- [x] `npm run test:e2e` 실행 완료. VSIX 빌드 및 Playwright 테스트 통과.
 - [ ] Attempt-1에서 누락된 시나리오(Providers, Hooks, Settings, Terminal 모드, LiteLLM 로그 등)를 수동/자동 테스트로 검증.
 
-### Phase D: 문서 & 릴리스
+### Phase D: Caret CLI/프롬프트/배너/문서 (신규)
+- [ ] `b4-caret-cli-plan.md` 실행: CLI 배너(`CliInstallBanner.tsx`) 이식 및 Caret/Cline 분기, cli-detector/설치/컨트롤러 분기 추가.
+- [ ] 시스템 프롬프트: cline `cli_subagents` 개선분 병합 + Caret CLI 명칭 반영.
+- [ ] Features 문서 분리: `features/f06-caret-prompt-system.md` → F06(2중 지원 모드+CLI 안내) / F07(시스템 프롬프트)로 분리, 이후 번호(F08~) +1 및 모든 참조 업데이트.
+- [ ] Announcement(사용자 공지): Caret CLI 안내 추가(사용자 영향만), cline CLI는 cline 모드에서 유지.
+
+### Phase E: 문서 & 릴리스
 - [ ] `CHANGELOG-CLINE.md`, `CHANGELOG.md`, `caret-docs/{ko,ja,zh}/CHANGELOG.md` 업데이트 (버전/날짜/브랜치/주요 기능 포함).
-- [ ] `webview-ui/src/caret/locale/{ko,en,ja,zh}/announcement.json` Current/Previous 섹션 업데이트, 내용이 CHANGELOG와 일치하는지 확인.
+- [ ] `webview-ui/src/caret/locale/{ko,en,ja,zh}/announcement.json` Current/Previous 섹션 업데이트(Phase D 결과 반영).
 - [ ] attempt-2-master에 최종 체크리스트/테스트 로그를 기록하고, `.caretrules/**` 등의 정책 변경을 문서화.
 - [ ] PR/릴리스 노트에 위 항목 링크를 첨부한다.
 
-### Phase E: 자동화 & 누락 방지
+### Phase F: 자동화 & 누락 방지
 - [ ] `scripts/compare-with-cline.mjs`를 작성해 `git diff --name-status cline/v3.38.1..HEAD` 결과가 전부 `M/A`인지 확인.
 - [ ] `scripts/detect-stubs.mjs`, `scripts/verify-providers.mjs`, `scripts/verify-caret-mods.mjs` 등 자동화 검증 스크립트를 추가하고 package.json scripts에 연결.
 - [ ] PR 템플릿에 Gap Checklist(Providers, Hooks, Prompts, Terminal, Webview i18n 등)와 자동화 체크 항목을 추가한다.
@@ -247,7 +251,8 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-21 15:29 | Codex | `recovery-plan-b2-b3.md` 확인. BizRouterHandler 외 공용 레이어 누락 인정, B2 보강+웹뷰 역이식 재계획 필요. |
 | 2025-11-21 18:00 | Alpha | Phase B2 재검토: **PASS**. BizRouterHandler 등록 및 Shared Type 정의 확인. 로컬 커밋 완료. |
 | 2025-11-21 18:07 | Codex | **Phase B2 완료(Local Commit)**. `git push` 권한 오류(403)로 원격 반영 실패. 로컬 상태 유지하며 Phase B3(Webview) 착수 결정.
-| 2025-11-22 00:20 | Claude | **Phase C 완료**: Unit 527 pass, Integration 404 pass. `test-setup.js` path alias 수정(`@caret/*`→`out/caret-src/*`), `registry.ts` command prefix 수정(`"cline"` 고정), `caret-scripts/` 복사. E2E는 Playwright 시스템 의존성으로 CI/CD 환경에서 실행 필요.
+| 2025-11-22 00:20 | Claude | **Phase C 진행**: Unit 527 pass, Integration 404 pass. `test-setup.js` path alias 수정(`@caret/*`→`out/caret-src/*`), `registry.ts` command prefix 수정(`"cline"` 고정), `caret-scripts/` 복사.
+| 2025-11-22 00:45 | Luke | **Phase C E2E 완료**: `npm run test:e2e` 실행 완료. VSIX 빌드 및 Playwright 테스트 통과. Phase C 검증 완료.
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

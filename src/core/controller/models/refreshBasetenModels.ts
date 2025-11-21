@@ -24,7 +24,7 @@ export async function refreshBasetenModels(controller: Controller): Promise<Reco
 	try {
 		if (!basetenApiKey) {
 			// Don't throw an error, just use static models, although this might be slightly out of date
-			for (const [modelId, modelInfo] of Object.entries(basetenModels)) {
+			for (const [modelId, modelInfo] of Object.entries(basetenModels as Record<string, any>)) {
 				models[modelId] = {
 					maxTokens: modelInfo.maxTokens,
 					contextWindow: modelInfo.contextWindow,
@@ -118,7 +118,7 @@ export async function refreshBasetenModels(controller: Controller): Promise<Reco
 			}
 		} else {
 			// Fall back to static models from shared/api.ts
-			for (const [modelId, modelInfo] of Object.entries(basetenModels)) {
+			for (const [modelId, modelInfo] of Object.entries(basetenModels as Record<string, any>)) {
 				models[modelId] = {
 					maxTokens: modelInfo.maxTokens,
 					contextWindow: modelInfo.contextWindow,
@@ -199,7 +199,7 @@ function isValidChatModel(rawModel: any): boolean {
 /**
  * Generates a readable description for a model
  */
-function generateModelDescription(rawModel: any, staticModelInfo?: (typeof basetenModels)[string]): string {
+function generateModelDescription(rawModel: any, staticModelInfo?: any): string {
 	const provider = rawModel.provider || staticModelInfo?.provider || "Baseten"
 	const version = rawModel.version || rawModel.revision || staticModelInfo?.version || ""
 	const family = rawModel.family || rawModel.capabilities?.family || staticModelInfo?.family || ""

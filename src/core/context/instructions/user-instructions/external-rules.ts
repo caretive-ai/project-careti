@@ -41,10 +41,18 @@ export async function refreshExternalRulesToggles(
 	// CARET MODIFICATION: Implement rule priority system (.caretrules > .clinerules > .cursorrules > .windsurfrules)
 
 	// Step 1: Get current toggles for all rule types
-	const localCaretRulesToggles = cloneToggles(controller.stateManager.getWorkspaceStateKey("localCaretRulesToggles"))
-	const localWindsurfRulesToggles = cloneToggles(controller.stateManager.getWorkspaceStateKey("localWindsurfRulesToggles"))
-	const localCursorRulesToggles = cloneToggles(controller.stateManager.getWorkspaceStateKey("localCursorRulesToggles"))
-	const localAgentsRulesToggles = cloneToggles(controller.stateManager.getWorkspaceStateKey("localAgentsRulesToggles"))
+	const localCaretRulesToggles = cloneToggles(
+		controller.stateManager.getWorkspaceStateKey("localCaretRulesToggles" as any) as any,
+	)
+	const localWindsurfRulesToggles = cloneToggles(
+		controller.stateManager.getWorkspaceStateKey("localWindsurfRulesToggles" as any) as any,
+	)
+	const localCursorRulesToggles = cloneToggles(
+		controller.stateManager.getWorkspaceStateKey("localCursorRulesToggles" as any) as any,
+	)
+	const localAgentsRulesToggles = cloneToggles(
+		controller.stateManager.getWorkspaceStateKey("localAgentsRulesToggles" as any) as any,
+	)
 	const localClineRulesToggles = cloneToggles(options?.clineLocalToggles)
 
 	// Step 2: Synchronize toggles normally (this handles file discovery and cleanup)
@@ -147,10 +155,10 @@ export async function refreshExternalRulesToggles(
 		effectiveWindsurfToggles = {}
 	}
 
-	controller.stateManager.setWorkspaceState("localCaretRulesToggles", effectiveCaretToggles)
-	controller.stateManager.setWorkspaceState("localWindsurfRulesToggles", effectiveWindsurfToggles)
-	controller.stateManager.setWorkspaceState("localCursorRulesToggles", effectiveCursorToggles)
-	controller.stateManager.setWorkspaceState("localClineRulesToggles", effectiveClineToggles)
+	controller.stateManager.setWorkspaceState("localCaretRulesToggles" as any, effectiveCaretToggles as any)
+	controller.stateManager.setWorkspaceState("localWindsurfRulesToggles" as any, effectiveWindsurfToggles as any)
+	controller.stateManager.setWorkspaceState("localCursorRulesToggles" as any, effectiveCursorToggles as any)
+	controller.stateManager.setWorkspaceState("localClineRulesToggles" as any, effectiveClineToggles as any)
 
 	Logger.debug(`[CARET] FINAL - returning toggles: ${JSON.stringify(effectiveCaretToggles)}`)
 	Logger.debug(`[CLINE] FINAL - returning toggles: ${JSON.stringify(effectiveClineToggles)}`)
@@ -265,7 +273,10 @@ export const getLocalCaretRules = async (cwd: string, toggles: ClineRulesToggles
 					Logger.info(
 						`[getLocalCaretRules] Successfully loaded .caretrules content (${rulesFilesTotalContent.length} chars)`,
 					)
-					caretRulesFileInstructions = formatResponse.caretRulesLocalDirectoryInstructions(cwd, rulesFilesTotalContent)
+					const caretDirInstr =
+						(formatResponse as any).caretRulesLocalDirectoryInstructions ??
+						(formatResponse as any).clineRulesLocalDirectoryInstructions
+					caretRulesFileInstructions = caretDirInstr?.(cwd, rulesFilesTotalContent)
 				} else {
 					Logger.warn(`[getLocalCaretRules] No content loaded from .caretrules (all files disabled or empty)`)
 				}
@@ -279,7 +290,11 @@ export const getLocalCaretRules = async (cwd: string, toggles: ClineRulesToggles
 					const ruleFileContent = (await fs.readFile(caretRulesFilePath, "utf8")).trim()
 					if (ruleFileContent) {
 						Logger.info(`[getLocalCaretRules] Loaded .caretrules file (${ruleFileContent.length} chars)`)
-						caretRulesFileInstructions = formatResponse.caretRulesLocalFileInstructions(cwd, ruleFileContent)
+						const caretFileInstr =
+							(formatResponse as any).caretRulesLocalFileInstructions ??
+							(formatResponse as any).agentsRulesLocalFileInstructions ??
+							(formatResponse as any).clineRulesLocalDirectoryInstructions
+						caretRulesFileInstructions = caretFileInstr?.(cwd, ruleFileContent)
 					}
 				}
 			} catch (error) {

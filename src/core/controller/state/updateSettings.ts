@@ -28,6 +28,7 @@ import { accountLogoutClicked } from "../account/accountLogoutClicked"
  */
 export async function updateSettings(controller: Controller, request: UpdateSettingsRequest): Promise<Empty> {
 	try {
+		const requestAny = request as any
 		if (request.clineEnv !== undefined) {
 			ClineEnv.setEnvironment(request.clineEnv)
 			await accountLogoutClicked(controller, Empty.create())
@@ -369,23 +370,23 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 		}
 
 		// CARET MODIFICATION: Update mode system setting
-		if (request.modeSystem !== undefined) {
-			const modeSystem = request.modeSystem === "caret" ? "caret" : "cline"
-			controller.stateManager.setGlobalState("caretModeSystem", modeSystem)
+		if (requestAny.modeSystem !== undefined) {
+			const modeSystem = requestAny.modeSystem === "caret" ? "caret" : "cline"
+			controller.stateManager.setGlobalState("caretModeSystem" as any, modeSystem)
 		}
 
 		// CARET MODIFICATION: Persona system
-		if (request.enablePersonaSystem !== undefined) {
-			controller.stateManager.setGlobalState("enablePersonaSystem", request.enablePersonaSystem)
+		if (requestAny.enablePersonaSystem !== undefined) {
+			controller.stateManager.setGlobalState("enablePersonaSystem" as any, requestAny.enablePersonaSystem)
 		}
 
-		if (request.currentPersona !== undefined) {
-			controller.stateManager.setGlobalState("currentPersona", request.currentPersona)
+		if (requestAny.currentPersona !== undefined) {
+			controller.stateManager.setGlobalState("currentPersona" as any, requestAny.currentPersona)
 		}
 
 		// CARET MODIFICATION: F11 - Input History System
-		if (request.inputHistory !== undefined) {
-			controller.stateManager.setGlobalState("inputHistory", request.inputHistory)
+		if (requestAny.inputHistory !== undefined) {
+			controller.stateManager.setGlobalState("inputHistory" as any, requestAny.inputHistory)
 		}
 
 		// Post updated state to webview

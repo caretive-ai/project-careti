@@ -108,9 +108,9 @@ export async function refreshGroqModels(controller: Controller): Promise<Record<
 
 		telemetryService.captureProviderApiError({
 			provider: "Groq",
-			message: errorMessage,
+			errorMessage,
 			statusCode: axios.isAxiosError(error) ? error.response?.status : undefined,
-		})
+		} as any)
 
 		// If we failed to fetch models, try to read cached models first
 		const cachedModels = await readGroqModels()
@@ -126,7 +126,7 @@ export async function refreshGroqModels(controller: Controller): Promise<Record<
 	// Convert the Record<string, Partial<ModelInfo>> to Record<string, ModelInfo>
 	// by filling in any missing required fields with defaults
 	const typedModels: Record<string, ModelInfo> = {}
-	for (const [key, model] of Object.entries(models)) {
+	for (const [key, model] of Object.entries(models as Record<string, Partial<ModelInfo>>)) {
 		typedModels[key] = {
 			maxTokens: model.maxTokens ?? 8192,
 			contextWindow: model.contextWindow ?? 8192,
@@ -183,7 +183,7 @@ function isValidChatModel(rawModel: any): boolean {
 /**
  * Detects if the model supports image input
  */
-function detectImageSupport(rawModel: any, staticModelInfo?: (typeof groqModels)[string]): boolean {
+function detectImageSupport(rawModel: any, staticModelInfo?: any): boolean {
 	if (rawModel.capabilities?.image === "Y") {
 		return true
 	}
@@ -193,7 +193,7 @@ function detectImageSupport(rawModel: any, staticModelInfo?: (typeof groqModels)
 /**
  * Generates a readable description for a model
  */
-function generateModelDescription(rawModel: any, staticModelInfo?: (typeof groqModels)[string]): string {
+function generateModelDescription(rawModel: any, staticModelInfo?: any): string {
 	const provider = rawModel.provider || staticModelInfo?.provider || "Groq"
 	const family = rawModel.family || rawModel.capabilities?.family || staticModelInfo?.family || ""
 	const context = rawModel.context_window || staticModelInfo?.contextWindow || ""

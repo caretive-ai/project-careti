@@ -6,12 +6,37 @@ import { HistoryItem } from "@shared/HistoryItem"
 import { RemoteConfig } from "@shared/remote-config/schema"
 import { GlobalState, Settings } from "@shared/storage/state-keys"
 import { fileExistsAtPath, isDirectory } from "@utils/fs"
+import fsSync from "fs"
 import fs from "fs/promises"
 import os from "os"
 import * as path from "path"
 import { HostProvider } from "@/hosts/host-provider"
 import { McpMarketplaceCatalog } from "@/shared/mcp"
 import { StateManager } from "./StateManager"
+
+// CARET MODIFICATION: Brand-aware configuration (used for Caret/Cline/other branded builds)
+const resolveBrandSlug = () => {
+	try {
+		const packageJsonPath = path.join(process.cwd(), "package.json")
+		if (!fsSync.existsSync(packageJsonPath)) {
+			return "caret"
+		}
+		const packageJson = JSON.parse(fsSync.readFileSync(packageJsonPath, "utf8")) as { name?: string }
+		const rawName = packageJson?.name ?? "caret"
+		const normalized = String(rawName)
+			.toLowerCase()
+			.replace(/[^a-z0-9]/g, "")
+		return normalized || "caret"
+	} catch {
+		return "caret"
+	}
+}
+
+const BRAND_SLUG = resolveBrandSlug()
+const BRAND_RULES_DIR = `.${BRAND_SLUG}rules`
+const BRAND_WORKFLOWS_DIR = `${BRAND_RULES_DIR}/workflows`
+const BRAND_MCP_SETTINGS_FILE = `${BRAND_SLUG}_mcp_settings.json`
+const BRAND_DOCS_FOLDER = BRAND_SLUG === "cline" ? "Cline" : "Caret"
 
 export const GlobalFileNames = {
 	apiConversationHistory: "api_conversation_history.json",
@@ -22,9 +47,10 @@ export const GlobalFileNames = {
 	groqModels: "groq_models.json",
 	basetenModels: "baseten_models.json",
 	hicapModels: "hicap_models.json",
-	mcpSettings: "cline_mcp_settings.json",
+	mcpSettings: BRAND_MCP_SETTINGS_FILE, // CARET MODIFICATION: brand-aware MCP settings file
+	caretRules: BRAND_RULES_DIR, // CARET MODIFICATION: Caret rule directory support
 	clineRules: ".clinerules",
-	workflows: ".clinerules/workflows",
+	workflows: BRAND_WORKFLOWS_DIR, // CARET MODIFICATION: brand-aware workflows path
 	hooksDir: ".clinerules/hooks",
 	cursorRulesDir: ".cursor/rules",
 	cursorRulesFile: ".cursorrules",
@@ -77,44 +103,44 @@ export async function ensureTaskDirectoryExists(taskId: string): Promise<string>
 
 export async function ensureRulesDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
-	const clineRulesDir = path.join(userDocumentsPath, "Cline", "Rules")
+	const clineRulesDir = path.join(userDocumentsPath, BRAND_DOCS_FOLDER, "Rules")
 	try {
 		await fs.mkdir(clineRulesDir, { recursive: true })
 	} catch (_error) {
-		return path.join(os.homedir(), "Documents", "Cline", "Rules") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
+		return path.join(os.homedir(), "Documents", BRAND_DOCS_FOLDER, "Rules") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
 	}
 	return clineRulesDir
 }
 
 export async function ensureWorkflowsDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
-	const clineWorkflowsDir = path.join(userDocumentsPath, "Cline", "Workflows")
+	const clineWorkflowsDir = path.join(userDocumentsPath, BRAND_DOCS_FOLDER, "Workflows")
 	try {
 		await fs.mkdir(clineWorkflowsDir, { recursive: true })
 	} catch (_error) {
-		return path.join(os.homedir(), "Documents", "Cline", "Workflows") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
+		return path.join(os.homedir(), "Documents", BRAND_DOCS_FOLDER, "Workflows") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
 	}
 	return clineWorkflowsDir
 }
 
 export async function ensureMcpServersDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
-	const mcpServersDir = path.join(userDocumentsPath, "Cline", "MCP")
+	const mcpServersDir = path.join(userDocumentsPath, BRAND_DOCS_FOLDER, "MCP")
 	try {
 		await fs.mkdir(mcpServersDir, { recursive: true })
 	} catch (_error) {
-		return path.join(os.homedir(), "Documents", "Cline", "MCP") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine since this path is only ever used in the system prompt
+		return path.join(os.homedir(), "Documents", BRAND_DOCS_FOLDER, "MCP") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine since this path is only ever used in the system prompt
 	}
 	return mcpServersDir
 }
 
 export async function ensureHooksDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
-	const clineHooksDir = path.join(userDocumentsPath, "Cline", "Hooks")
+	const clineHooksDir = path.join(userDocumentsPath, BRAND_DOCS_FOLDER, "Hooks")
 	try {
 		await fs.mkdir(clineHooksDir, { recursive: true })
 	} catch (_error) {
-		return path.join(os.homedir(), "Documents", "Cline", "Hooks") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
+		return path.join(os.homedir(), "Documents", BRAND_DOCS_FOLDER, "Hooks") // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
 	}
 	return clineHooksDir
 }
@@ -382,13 +408,11 @@ export async function getAllHooksDirs(): Promise<string[]> {
  */
 export async function getWorkspaceHooksDirs(): Promise<string[]> {
 	const workspaceRootPaths =
-		StateManager.get()
-			.getGlobalStateKey("workspaceRoots")
-			?.map((root) => root.path) || []
+		(StateManager.get().getGlobalStateKey("workspaceRoots") as { path: string }[] | undefined)?.map((root) => root.path) || []
 
 	return (
 		await Promise.all(
-			workspaceRootPaths.map(async (workspaceRootPath) => {
+			workspaceRootPaths.map(async (workspaceRootPath: string) => {
 				// Look for a .clinerules/hooks folder in this workspace root.
 				const candidate = path.join(workspaceRootPath, GlobalFileNames.hooksDir)
 				return (await isDirectory(candidate)) ? candidate : undefined

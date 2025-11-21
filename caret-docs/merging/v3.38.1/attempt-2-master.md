@@ -175,6 +175,7 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-21 09:17 | Codex | 3-way 기준 고정 및 산출물 배치: `comparison/base`(v3.35.0), `comparison/cline`(cline-main-latest), `comparison/caret`(caret-main-latest)로 파일을 추출해 로컬 diff3/수동 비교만 사용. **git checkout 덮어쓰기 금지**, 변경 적용은 작업 브랜치 파일에 수동 반영 후 기록. 머징 가이드 위치: `caret-docs/merging/merge-standard-guide.md`. |
 | 2025-11-21 09:40 | Codex | 3-way 비교 스냅샷 재정렬: `comparison/caret`=caret-main-latest, `comparison/cline`=cline v3.38.1 스냅샷 동기화, `comparison/base`=`git archive v3.35.0`. 이후 모든 머지는 이 경로로 diff3 수행, working tree에 git checkout/merge 금지. |
 | 2025-11-21 09:46 | Codex | B2 전략 재정렬: 영향도(Provider/RulePriority/Persona/Branding/i18n) + Feature 축 우선으로 배치 정의(Batch1 Provider/설정, Batch2 Controller/웹뷰 진입, Batch3 잔여 Services). 모든 머지는 `comparison/base|cline|caret` 수동 diff3로 적용, git checkout/merge 금지. |
+| 2025-11-21 10:12 | Codex | B2 Batch1 수동 머지: Provider/Rule/설정 경로 diff3 → `disk.ts`에 Caret rule/branding 경로 복원, external-rules/state/updateApiConfigurationProto 등 타입 정리, `refreshOcaModels.ts` 복구, 모델 리프레시(groq/baseten/vercel) 타입 오류 해결. `npx tsc --noEmit` 클린. |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

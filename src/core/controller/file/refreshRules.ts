@@ -29,7 +29,7 @@ export async function refreshRules(controller: Controller, _request: EmptyReques
 			localAgentsRulesToggles: { toggles: agentsLocalToggles },
 			localWorkflowToggles: { toggles: localWorkflowToggles },
 			globalWorkflowToggles: { toggles: globalWorkflowToggles },
-		})
+		} as any)
 	} catch (error) {
 		console.error("Failed to refresh rules:", error)
 		throw error

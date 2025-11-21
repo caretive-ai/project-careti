@@ -116,8 +116,8 @@ export async function updateApiConfigurationProto(
 		console.log("🔧 [Backend] API Config Update:", {
 			planProvider: convertedApiConfigurationFromProto.planModeApiProvider,
 			actProvider: convertedApiConfigurationFromProto.actModeApiProvider,
-			caretApiKey: convertedApiConfigurationFromProto.caretApiKey ? "***SET***" : "not set",
 			hasApiKey: !!convertedApiConfigurationFromProto.apiKey,
+			ocaKey: (convertedApiConfigurationFromProto as any).ocaApiKey ? "***SET***" : "not set",
 		})
 
 		// Update the API configuration in storage
@@ -140,7 +140,7 @@ export async function updateApiConfigurationProto(
 		console.log("✅ [Backend] Final stored state:", {
 			planProvider: finalState?.planModeApiProvider,
 			actProvider: finalState?.actModeApiProvider,
-			caretApiKey: finalState?.caretApiKey ? "***STORED***" : "not stored",
+			apiKey: finalState?.apiKey ? "***STORED***" : "not stored",
 		})
 
 		return Empty.create()

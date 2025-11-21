@@ -140,6 +140,10 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 ```
 3. 수동 검토/적용 후 단계별 `npm run tsc -- --noEmit` 실행
 
+### 빌드/체크 명령 구분
+- 백엔드/프로토만 확인: `npm run compile:backend` (protos + 루트 `npx tsc --noEmit`, 웹뷰 미포함)
+- 전체 빌드 체크: `npm run compile` (webview `tsc -b --noEmit` 포함 → 현재 웹뷰 타입 불일치로 실패; Webview B3 역이식 후 재시도)
+
 ### 코드 리뷰 게이트
 > 코드 리뷰 작업은 페이스나 단계마다 Claude Code가 리뷰 진행, `attempt-2-claude-review.md` 파일에 작성한다.
 > **자세한 리뷰 프로세스는 `attempt-2-plan.md` "코드 리뷰 게이트" 섹션 참조**

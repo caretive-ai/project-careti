@@ -12,6 +12,7 @@
 - `caret-docs/merging/v3.38.1/attempt-2-plan-review.md` – Claude 리뷰 피드백 (타임라인, 분류 체계, 충돌 해결 시나리오)
 - `caret-docs/merging/v3.37.1/attempt-1/` – 직전 버전의 1차 실패 산출물 (갭/감사/테스트 리포트)
 - `caret-docs/merging/v3.38.1/attempt-2-master.md` – 현재 문서 (모든 진행 상황 기록)
+- **3-way 비교 로컬 경로(반드시 git checkout 금지):** `comparison/base` = `git show v3.35.0:<file>`, `comparison/cline` = 수동 fetch한 `cline-main-latest`, `comparison/caret` = 수동 fetch한 `caret-main-latest`
 
 ---
 
@@ -88,9 +89,17 @@
 - [ ] 체크포인트 태그 남기기
 
 **B2 Controller/Services(API)**
-- [ ] 파일 매트릭스 확정(Controller 20, Services/API 15)
+- [ ] 파일 매트릭스 확정(Controller 20, Services/API 15) – classification 결과 + caret-mod-report 대조, CARET MOD/브랜딩/RulePriority/Persona/Provider 플래그 표시
 - [ ] 3-way 배치 머지(5~10개) → `npx tsc --noEmit`
 - [ ] 체크포인트 태그 남기기
+- 전략(머징 가이드 준수):  
+  - **영향도 우선**: 시스템 설정/Provider/Persona/RulePriority → Controller 진입점 → 일반 Services 순.  
+  - **Feature 축으로 비교**: F09 Provider Setup, F05 RulePriority, F07 Persona, F03 Branding/F02 i18n 순으로 CARET MOD 재주입 여부 점검.  
+  - **수단**: `comparison/base|cline|caret` 로컬 스냅샷만으로 diff3/수동 반영, git checkout/merge 사용 금지.
+- 실행 순서(배치 기준):
+  - Batch 1 (Provider/Rule/설정 – 영향도 최상위): `src/models/refreshVercelAiGatewayModels.ts`, `refreshGroqAiStableModels.ts`, `refreshBasetenModels.ts`, `refreshSapAiModels.ts`, `refreshOcaModels.ts`(존재 시), `src/file/refreshRules.ts`, `src/context/**/external-rules.ts`, `src/models/updateApiConfigurationProto.ts`, `src/state/updateSettings.ts`
+  - Batch 2 (Controller/웹뷰 진입 – Persona/Branding 라우트): `src/core/controller/index.ts`, `ui/initializeWebview.ts`, Provider setup/라우팅/핸들러(매트릭스에 명시) – CARET Persona/Branding/RulePriority 재주입
+  - Batch 3 (잔여 Services/API): Batch 1·2 외 `src/core/controller/*.ts`, `src/models/*.ts`, `src/services/*.ts`, `src/api/**/*.ts` 등 남은 5~10개 단위 처리
 
 **B3 Webview**
 - [ ] Webview 역이식 원칙 문서화(Caret 유지 + Cline 변경분만 역이식)
@@ -163,15 +172,18 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-20 23:16 | Codex | Phase B 착수: `npm install`→`npm run protos` 완료. `npx tsc --noEmit` 오류 발생(hook-factory undefined assign, generated account proto MessageFns call signatures) – 원인 조사 및 3-way 머지 진행 예정 |
 | 2025-11-20 23:22 | Codex | hook-factory/test-utils를 cline v3.38.1 버전으로 복원, generated proto `String(value)`를 `globalThis.String`으로 교체하여 타입 오류 해소. `npx tsc --noEmit` 통과. 3-way 배치 머지 준비 완료 |
 | 2025-11-20 23:38 | Codex | B1 Proto 배치 1차: cline/*.proto 7개를 cline v3.38.1 기준으로 재적용(diff3 후 cline 채택), caret/*.proto는 caret-main 그대로 유지, `npm run protos`+`npx tsc --noEmit` 통과. checkpoint 태그는 추후 일괄 생성 예정 |
+| 2025-11-21 09:17 | Codex | 3-way 기준 고정 및 산출물 배치: `comparison/base`(v3.35.0), `comparison/cline`(cline-main-latest), `comparison/caret`(caret-main-latest)로 파일을 추출해 로컬 diff3/수동 비교만 사용. **git checkout 덮어쓰기 금지**, 변경 적용은 작업 브랜치 파일에 수동 반영 후 기록. 머징 가이드 위치: `caret-docs/merging/merge-standard-guide.md`. |
+| 2025-11-21 09:40 | Codex | 3-way 비교 스냅샷 재정렬: `comparison/caret`=caret-main-latest, `comparison/cline`=cline v3.38.1 스냅샷 동기화, `comparison/base`=`git archive v3.35.0`. 이후 모든 머지는 이 경로로 diff3 수행, working tree에 git checkout/merge 금지. |
+| 2025-11-21 09:46 | Codex | B2 전략 재정렬: 영향도(Provider/RulePriority/Persona/Branding/i18n) + Feature 축 우선으로 배치 정의(Batch1 Provider/설정, Batch2 Controller/웹뷰 진입, Batch3 잔여 Services). 모든 머지는 `comparison/base|cline|caret` 수동 diff3로 적용, git checkout/merge 금지. |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 
 ---
 
 ## 📌 다음 액션 (우선순위 순)
-1. Phase A 스크립트 세트(classify/extract/analyze) 작성 시작 → 완료 시 체크박스 갱신.
-2. Node 20 + Playwright 의존성 설치 여부 재확인 (`next-session.md` 메모 참조) – 필요 시 환경 준비.
-3. 점진적 머지 스크립트 뼈대 작성 후 Proto 카테고리부터 병합 착수.
+1. **Phase B2 Batch 1**: 모델/규칙/설정 서비스 3-way 수동 머지(위 우선순위 표) → `npx tsc --noEmit`.
+2. **Phase B2 Batch 2**: Controller/웹뷰 초기화 3-way 머지, CARET Persona/Branding/Provider 재주입 → `npx tsc --noEmit`.
+3. Batch 완료 시 체크포인트 태그/로그 기록 후 다음 배치 진행.
 
 ---
 

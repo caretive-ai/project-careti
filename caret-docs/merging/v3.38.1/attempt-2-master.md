@@ -35,7 +35,7 @@
 | 준비-3 | 작업 마스터 파일 작성 (`attempt-2-master.md`) | ✅ 완료 | 리뷰 피드백 반영, 코드 리뷰 게이트 정의
 | Section 0 | Caret Feature 원칙 재확인 (F01~F11) | ✅ 완료 | features/index.md/F01~F11 재검토
 | Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ✅ 완료 | classify/extract/analyze/compare/incremental 구현 및 리포트 생성
-| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ▶ 진행 중 | `npm install`/`npm run protos` 완료, `npx tsc --noEmit` 클린(Generated String shadow fix, hook-factory를 cline 버전으로 복원). 이제 3-way 소규모 배치 머지 착수.
+| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ▶ 진행 중 | B2(Controller/Services) 완료·tsc 클린, caret-src 통합 반영. B3(Webview) 이후 진행.
 | Phase C | 통합 테스트 & E2E 복구 | ⏳ 예정 | Node20 환경 준비 필요
 | Phase D | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | 릴리스 체크리스트 필요
 | Phase E | 누락 방지 자동화 및 체크리스트 업데이터 | ⏳ 예정 | compare-with-cline.mjs, PR 템플릿 반영
@@ -89,8 +89,8 @@
 - [ ] 체크포인트 태그 남기기
 
 **B2 Controller/Services(API)**
-- [ ] 파일 매트릭스 확정(Controller 20, Services/API 15) – classification 결과 + caret-mod-report 대조, CARET MOD/브랜딩/RulePriority/Persona/Provider 플래그 표시
-- [ ] 3-way 배치 머지(5~10개) → `npx tsc --noEmit`
+- [x] 파일 매트릭스 확정(Controller 20, Services/API 15) – classification 결과 + caret-mod-report 대조, CARET MOD/브랜딩/RulePriority/Persona/Provider 플래그 표시
+- [x] 3-way 배치 머지(5~10개) → `npx tsc --noEmit`
 - [ ] 체크포인트 태그 남기기
 - 전략(머징 가이드 준수):  
   - **영향도 우선**: 시스템 설정/Provider/Persona/RulePriority → Controller 진입점 → 일반 Services 순.  

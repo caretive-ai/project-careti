@@ -1,5 +1,4 @@
 import { buildApiHandler } from "@core/api"
-
 import { Empty } from "@shared/proto/cline/common"
 import {
 	PlanActMode,
@@ -10,7 +9,6 @@ import {
 import { convertProtoToApiProvider } from "@shared/proto-conversions/models/api-configuration-conversion"
 import { OpenaiReasoningEffort } from "@shared/storage/types"
 import { TelemetrySetting } from "@shared/TelemetrySetting"
-import { ClineEnv } from "@/config"
 import { HostProvider } from "@/hosts/host-provider"
 import { TerminalInfo } from "@/integrations/terminal/TerminalRegistry"
 import { McpDisplayMode } from "@/shared/McpDisplayMode"
@@ -18,9 +16,8 @@ import { ShowMessageType } from "@/shared/proto/host/window"
 import { telemetryService } from "../../../services/telemetry"
 import { BrowserSettings as SharedBrowserSettings } from "../../../shared/BrowserSettings"
 import { Controller } from ".."
-import { accountLogoutClicked } from "../account/accountLogoutClicked"
 
-/**
+/**caret-docs/merging/v3.38.1/attempt-2-claude-review.md
  * Updates multiple extension settings in a single request
  * @param controller The controller instance
  * @param request The request containing the settings to update
@@ -28,12 +25,6 @@ import { accountLogoutClicked } from "../account/accountLogoutClicked"
  */
 export async function updateSettings(controller: Controller, request: UpdateSettingsRequest): Promise<Empty> {
 	try {
-		const requestAny = request as any
-		if (request.clineEnv !== undefined) {
-			ClineEnv.setEnvironment(request.clineEnv)
-			await accountLogoutClicked(controller, Empty.create())
-		}
-
 		if (request.apiConfiguration) {
 			const protoApiConfiguration = request.apiConfiguration
 
@@ -152,34 +143,6 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			controller.stateManager.setGlobalState("terminalOutputLineLimit", Number(request.terminalOutputLineLimit))
 		}
 
-		if (request.vscodeTerminalExecutionMode !== undefined && request.vscodeTerminalExecutionMode !== "") {
-			controller.stateManager.setGlobalState(
-				"vscodeTerminalExecutionMode",
-				request.vscodeTerminalExecutionMode === "backgroundExec" ? "backgroundExec" : "vscodeTerminal",
-			)
-		}
-
-		// Update subagent terminal output line limit
-		if (request.subagentTerminalOutputLineLimit !== undefined) {
-			controller.stateManager.setGlobalState(
-				"subagentTerminalOutputLineLimit",
-				Number(request.subagentTerminalOutputLineLimit),
-			)
-		}
-
-		// Update subagent terminal output line limit
-		if (request.subagentTerminalOutputLineLimit !== undefined) {
-			controller.stateManager.setGlobalState(
-				"subagentTerminalOutputLineLimit",
-				Number(request.subagentTerminalOutputLineLimit),
-			)
-		}
-
-		// Update max consecutive mistakes
-		if (request.maxConsecutiveMistakes !== undefined) {
-			controller.stateManager.setGlobalState("maxConsecutiveMistakes", Number(request.maxConsecutiveMistakes))
-		}
-
 		// Update strict plan mode setting
 		if (request.strictPlanModeEnabled !== undefined) {
 			controller.stateManager.setGlobalState("strictPlanModeEnabled", request.strictPlanModeEnabled)
@@ -195,7 +158,7 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 		if (request.dictationSettings !== undefined) {
 			// Convert from protobuf format (snake_case) to TypeScript format (camelCase)
 			const dictationSettings = {
-				// CARET MODIFICATION: default featureEnabled to false (voice feature off by default)
+				// CARET MODIFICATION: Default featureEnabled to false (voice feature removed)
 				featureEnabled: request.dictationSettings.featureEnabled ?? false,
 				dictationEnabled: request.dictationSettings.dictationEnabled ?? true,
 				dictationLanguage: request.dictationSettings.dictationLanguage ?? "en",
@@ -330,12 +293,6 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 
 		if (request.hooksEnabled !== undefined) {
 			const isEnabled = !!request.hooksEnabled
-
-			// Platform validation: Only allow enabling hooks on macOS and Linux
-			if (isEnabled && process.platform === "win32") {
-				throw new Error("Hooks are not yet supported on Windows")
-			}
-
 			controller.stateManager.setGlobalState("hooksEnabled", isEnabled)
 		}
 
@@ -344,17 +301,13 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			const wasEnabled = currentSettings ?? false
 			const isEnabled = !!request.subagentsEnabled
 
-			// Platform validation: Only allow enabling subagents on macOS and Linux
-			if (isEnabled && process.platform !== "darwin" && process.platform !== "linux") {
-				throw new Error("CLI subagents are only supported on macOS and Linux platforms")
-			}
-
 			controller.stateManager.setGlobalState("subagentsEnabled", isEnabled)
 
 			// Capture telemetry when setting changes
 			if (wasEnabled !== isEnabled) {
 				telemetryService.captureSubagentToggle(isEnabled)
 			}
+			controller.stateManager.setGlobalState("subagentsEnabled", !!request.subagentsEnabled)
 		}
 
 		if (request.nativeToolCallEnabled !== undefined) {
@@ -370,23 +323,23 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 		}
 
 		// CARET MODIFICATION: Update mode system setting
-		if (requestAny.modeSystem !== undefined) {
-			const modeSystem = requestAny.modeSystem === "caret" ? "caret" : "cline"
-			controller.stateManager.setGlobalState("caretModeSystem" as any, modeSystem)
+		if (request.modeSystem !== undefined) {
+			const modeSystem = request.modeSystem === "caret" ? "caret" : "cline"
+			controller.stateManager.setGlobalState("caretModeSystem", modeSystem)
 		}
 
-		// CARET MODIFICATION: Persona system
-		if (requestAny.enablePersonaSystem !== undefined) {
-			controller.stateManager.setGlobalState("enablePersonaSystem" as any, requestAny.enablePersonaSystem)
+		// CARET MODIFICATION: Update persona system settings
+		if (request.enablePersonaSystem !== undefined) {
+			controller.stateManager.setGlobalState("enablePersonaSystem", request.enablePersonaSystem)
 		}
 
-		if (requestAny.currentPersona !== undefined) {
-			controller.stateManager.setGlobalState("currentPersona" as any, requestAny.currentPersona)
+		if (request.currentPersona !== undefined) {
+			controller.stateManager.setGlobalState("currentPersona", request.currentPersona)
 		}
 
 		// CARET MODIFICATION: F11 - Input History System
-		if (requestAny.inputHistory !== undefined) {
-			controller.stateManager.setGlobalState("inputHistory" as any, requestAny.inputHistory)
+		if (request.inputHistory !== undefined) {
+			controller.stateManager.setGlobalState("inputHistory", request.inputHistory)
 		}
 
 		// Post updated state to webview

@@ -187,7 +187,9 @@ function extractDomainPatterns(content, elements, analysisType) {
 
 	relevantPatterns.forEach((pattern) => {
 		const matches = content.match(pattern) || []
-		matches.forEach((match) => elements.concepts.push(match.toLowerCase()))
+		for (const match of matches) {
+			elements.concepts.push(match.toLowerCase())
+		}
 	})
 }
 

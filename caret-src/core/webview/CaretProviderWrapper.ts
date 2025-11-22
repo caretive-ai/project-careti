@@ -431,7 +431,9 @@ export class CaretProviderWrapper implements vscode.WebviewViewProvider {
 	 */
 	async dispose(): Promise<void> {
 		// Dispose Caret-specific resources
-		this.disposables.forEach((disposable) => disposable.dispose())
+		for (const disposable of this.disposables) {
+			disposable.dispose()
+		}
 		this.disposables = []
 
 		// Delegate to Cline provider

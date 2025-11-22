@@ -31,11 +31,21 @@ Cline upstream을 Caret에 안전하게 머징하기 위한 표준 프로세스 
 2. **Caret 보존**: Caret 기능 100% 유지
 3. **검증 철저**: 빌드 + 런타임 검증 필수
 4. **문서화**: 모든 변경사항 기록
+5. **빌드-우선 완화**: Cline 소스는 기능 변경 없이 린트/빌드 통과가 가능하도록 설정을 우선 조정하고, 불가피하게 코드 수정 시 1~3줄 이내 + `// CARET MODIFICATION` 주석으로 최소 침습 적용 (Caret 소스는 자유 수정 가능)
 
 ### 머징 전략
 - **Level 1 (Preferred)**: Caret 전용 디렉토리 (`caret-src/`, `caret-docs/` 등)
 - **Level 2 (Conditional)**: Cline 파일 최소 수정 (1-3 lines, `CARET MODIFICATION` 주석)
 - **Level 3 (Critical)**: Frontend Context 통합 등 필수 수정
+- **Frontend 머지 이후 필수 정리**: Webview/루트 브랜딩과 빌드 정합성을 즉시 확인한다.
+  - `package.json` contributes(views/commands/category), ActivityBar/Webview ID, Output channel/Logger 이름이 Caret인지 확인.
+  - 브랜드 자산(`assets/icons/*`, 배너/agent 이미지 등) 재복사 후 빌드.
+  - **가장 먼저**: upstream `package.json`/정적 리소스(`assets/**`, public/icons 등)를 그대로 복사해 빌드/런타임이 깨지지 않는지 확인하고, 이후 Caret 브랜딩을 덮어쓴다. 이 단계를 건너뛰면 CLI/아이콘 누락이 뒤늦게 발견된다.
+  - **3-way 원칙(구조 변경 시)**: Webview 구조/컴포넌트가 upstream에서 바뀌었으면 base/cline/caret 3-way로 구조를 먼저 가져온 뒤, Caret 전용 기능·i18n·브랜딩을 다시 주입한다(“구조는 cline, 기능은 caret”). 임의로 기존 구조를 고집하지 않는다.
+  - **Feature 매핑 의무화**: f03(브랜딩/자산), f04(계정), f07(페르소나) 등 기능 문서의 필수 조건(자산 번들 포함, caretUserProfile 전달, persona import 매핑)을 체크리스트로 작성해, 모든 항목 체크 후에만 머지 완료로 간주한다.
+  - **상태 전파 검증**: `postStateToWebview`/apiConfiguration에 caret 필드(caretUserProfile 등)가 내려가는지 로그/단위테스트로 확인하고, 로그인/모드/모델이 실제 반영되는지 실행 경고까지 검사한다.
+  - Cline 소스에 손댄 부분은 1~3줄 이내 + `// CARET MODIFICATION` 주석 필수.
+  - 린트/빌드 오류는 설정 override/제외로 우선 해결, 범위를 최소화하고 문서화.
 
 ---
 

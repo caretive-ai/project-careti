@@ -114,7 +114,9 @@ function validateLanguageConsistency() {
 	if (inconsistencies.length === 0) {
 		log("green", "✅ 모든 언어의 providers 구조가 일관됨")
 	} else {
-		inconsistencies.forEach((issue) => log("red", issue))
+		for (const issue of inconsistencies) {
+			log("red", issue)
+		}
 	}
 
 	return inconsistencies

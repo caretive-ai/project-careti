@@ -392,7 +392,7 @@
 	"clineAccountInfoCard": {
 		"loginError": "获取登录 URL 失败：",
 		"viewBillingAndUsage": "查看账单和使用情况",
-		"signUpWithCline": "使用 Caret 注册"
+		"signUpWithCline": "使用 Cline 登录"
 	},
 	"apiKeyField": {
 		"placeholder": "输入 API 密钥...",
@@ -959,8 +959,8 @@
 			"baseUrlPlaceholder": "请输入您的 Dify 基础 URL..."
 		},
 		"cline": {
-			"name": "Caret",
-			"description": "Caret 提供高质量的 AI 模型，针对编码任务进行了优化。"
+			"name": "Cline",
+			"description": "Cline 提供来自 Cline 服务的 AI 模型和语音功能。"
 		},
 		"claude-code": {
 			"name": "Claude Code",

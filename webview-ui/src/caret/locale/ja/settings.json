@@ -337,7 +337,7 @@
 	},
 	"clineAccountInfoCard": {
 		"viewBillingAndUsage": "請求と使用量を表示",
-		"signUpWithCline": "Caretでサインアップ",
+		"signUpWithCline": "Clineでログイン",
 		"loginError": "ログインURLの取得に失敗しました:"
 	},
 	"apiKeyField": {
@@ -966,8 +966,8 @@
 			"baseUrlPlaceholder": "DifyベースURLを入力してください..."
 		},
 		"cline": {
-			"name": "Caret",
-			"description": "Caretは、コーディングタスク向けに最適化された高品質なAIモデルを提供します。"
+			"name": "Cline",
+			"description": "ClineはClineサービスのAIモデルと音声機能を提供します。"
 		},
 		"claude-code": {
 			"name": "Claude Code",

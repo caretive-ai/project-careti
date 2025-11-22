@@ -42,15 +42,22 @@ const AccountView = ({ onDone, clineUser, organizations, activeOrganization }: A
 	console.log("<===== account view apiConfiguration=====>", apiConfiguration)
 	const caretUser = apiConfiguration?.caretUserProfile
 
+	// CARET MODIFICATION: Caret 기본, Cline 로그인 시에만 Cline 표시
+	const accountProviderLabel = caretUser?.id
+		? t("providers.caret.name", "settings")
+		: clineUser?.uid
+			? "Cline"
+			: t("account.title", "common")
+
 	return (
 		<div className="fixed inset-0 flex flex-col overflow-hidden pt-[10px] pl-[20px]">
 			<div className="flex justify-between items-center mb-[17px] pr-[17px]">
-				<h3 className="text-[var(--vscode-foreground)] m-0">{t("account.title", "common")}</h3>
+				<h3 className="text-[var(--vscode-foreground)] m-0">{accountProviderLabel}</h3>
 				<VSCodeButton onClick={onDone}>{t("button.done", "common")}</VSCodeButton>
 			</div>
 			<div className="flex-grow overflow-hidden pr-[8px] flex flex-col">
 				<div className="h-full mb-[5px]">
-					{/* CARET MODIFICATION: Priority to caretUser, fallback to clineUser, then AccountWelcomeView */}
+					{/* CARET MODIFICATION: Caret 기본, Cline 로그인 시에만 Cline 뷰 */}
 					{caretUser?.id ? (
 						<CaretAccountView caretUser={caretUser} />
 					) : clineUser?.uid ? (

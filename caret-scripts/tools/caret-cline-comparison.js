@@ -108,13 +108,17 @@ function compareCaretCline() {
 
 	if (missingProviders.length > 0) {
 		console.log(`➕ **Caret에 누락된 프로바이더 (${missingProviders.length}개):**`)
-		missingProviders.forEach((p) => console.log(`   • ${p}`))
+		for (const p of missingProviders) {
+			console.log(`   • ${p}`)
+		}
 		console.log()
 	}
 
 	if (extraProviders.length > 0) {
 		console.log(`🔥 **Caret 전용 프로바이더 (${extraProviders.length}개):**`)
-		extraProviders.forEach((p) => console.log(`   • ${p}`))
+		for (const p of extraProviders) {
+			console.log(`   • ${p}`)
+		}
 		console.log()
 	}
 
@@ -125,8 +129,12 @@ function compareCaretCline() {
 	let caretTotalModels = 0
 	let clineTotalModels = 0
 
-	caretSections.forEach((models) => (caretTotalModels += models.length))
-	clineSections.forEach((models) => (clineTotalModels += models.length))
+	for (const models of caretSections) {
+		caretTotalModels += models.length
+	}
+	for (const models of clineSections) {
+		clineTotalModels += models.length
+	}
 
 	console.log("📍 **모델 비교:**")
 	console.log(`🟦 Caret: ${caretTotalModels}개 모델 (${caretSections.size}개 섹션)`)

@@ -10,6 +10,7 @@ import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
 // CARET MODIFICATION: Import i18n
 import { t } from "@/caret/utils/i18n"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
+import { useClineAuth } from "@/context/ClineAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ModelsServiceClient } from "@/services/grpc-client"
 import { highlight } from "../history/HistoryView"
@@ -22,8 +23,7 @@ import { BizRouterProvider } from "./providers/BizRouterProvider"
 import { CaretProvider } from "./providers/CaretProvider"
 import { CerebrasProvider } from "./providers/CerebrasProvider"
 import { ClaudeCodeProvider } from "./providers/ClaudeCodeProvider"
-// CARET MODIFICATION: Hide Cline Provider and use Caret Provider instead
-// import { ClineProvider } from "./providers/ClineProvider"
+import { ClineProvider } from "./providers/ClineProvider"
 import { DeepSeekProvider } from "./providers/DeepSeekProvider"
 import { DifyProvider } from "./providers/DifyProvider"
 import { DoubaoProvider } from "./providers/DoubaoProvider"
@@ -98,6 +98,7 @@ const ApiOptions = ({
 	// Use full context state for immediate save payload
 	// CARET MODIFICATION: Get featureConfig from ExtensionState instead of getCurrentFeatureConfig
 	const { apiConfiguration, featureConfig } = useExtensionState()
+	const { clineUser } = useClineAuth()
 
 	// CARET MODIFICATION: Use i18n context to detect language changes
 	const { language } = useCaretI18nContext()
@@ -142,15 +143,15 @@ const ApiOptions = ({
 	const dropdownListRef = useRef<HTMLDivElement>(null)
 
 	const providerOptions = useMemo(() => {
-		// CARET MODIFICATION: Restore original Cline provider list, add Caret provider, hide Cline by default
-		const showClineProvider = typeof process !== "undefined" && process.env?.CARET_SHOW_CLINE_PROVIDER === "true"
+		// CARET MODIFICATION: Restore original Cline provider list, add Caret provider (Cline visible by default)
+		const showClineProvider = true
 
 		if (!featureConfig) {
 			return []
 		}
 
 		const baseOptions = [
-			// CARET MODIFICATION: Only show caret provider if enableCaretAccountFeatures is true
+			{ value: "cline", label: t("providers.cline.name", "settings") }, // always available (Cline login/voice)
 			...(featureConfig.enableCaretAccountFeatures
 				? [{ value: "caret", label: t("providers.caret.name", "settings") }]
 				: []),
@@ -191,13 +192,15 @@ const ApiOptions = ({
 			{ value: "dify", label: t("providers.dify.name", "settings") },
 		]
 
-		// CARET MODIFICATION: Only show Cline provider if environment variable is set
-		if (showClineProvider) {
-			baseOptions.unshift({ value: "cline", label: t("providers.cline.name", "settings") })
+		// CARET MODIFICATION: Deduplicate provider list
+		const processedOptions: { value: string; label: string }[] = []
+		const seen = new Set<string>()
+		for (const option of baseOptions) {
+			if (!seen.has(option.value)) {
+				seen.add(option.value)
+				processedOptions.push(option)
+			}
 		}
-
-		// CARET MODIFICATION: Sort providers to show the first listing provider at the top
-		const processedOptions = [...baseOptions]
 
 		const firstProvider = featureConfig.firstListingProvider
 		if (firstProvider) {
@@ -208,15 +211,22 @@ const ApiOptions = ({
 			}
 		}
 
-		// CARET MODIFICATION: Show only the default provider if the flag is set
+		// CARET MODIFICATION: Respect showOnlyDefaultProvider but still allow Cline for login access
 		if (featureConfig.showOnlyDefaultProvider) {
 			const defaultProvider = featureConfig.defaultProvider
-			const defaultProviderOption = processedOptions.find((option) => option.value === defaultProvider)
-			return defaultProviderOption ? [defaultProviderOption] : []
+			const allowed = new Set([defaultProvider, "cline"])
+			return processedOptions.filter((option) => allowed.has(option.value))
 		}
 
 		return processedOptions
 	}, [language])
+
+	// CARET MODIFICATION: Auto-select Cline provider on login to match UX expectation
+	useEffect(() => {
+		if (clineUser?.uid && selectedProvider !== "cline") {
+			handleModeFieldChange({ plan: "planModeApiProvider", act: "actModeApiProvider" }, "cline" as any, currentMode)
+		}
+	}, [clineUser?.uid, selectedProvider, handleModeFieldChange, currentMode])
 
 	const currentProviderLabel = useMemo(() => {
 		const providerInfo = providerOptions.find((option) => option.value === selectedProvider)
@@ -407,9 +417,9 @@ const ApiOptions = ({
 					</ProviderDropdownWrapper>
 				</DropdownContainer>
 
-				{/* CARET MODIFICATION: Hide Cline Provider from UI */}
-				{apiConfiguration && selectedProvider === "cline" && false && (
-					<div>{t("apiOptions.clineProviderHidden", "settings")}</div>
+				{/* CARET MODIFICATION: Show Cline Provider UI */}
+				{apiConfiguration && selectedProvider === "cline" && (
+					<ClineProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
 				{apiConfiguration && selectedProvider === "asksage" && (

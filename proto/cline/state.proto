@@ -363,6 +363,13 @@ message UpdateSettingsRequest {
   optional string cline_env = 31;
   optional bool native_tool_call_enabled = 32;
   optional OnboardingModelGroup onboarding_models = 33;
+  // CARET MODIFICATION: F11 - Input History System (use 1000+ to avoid conflicts with Cline fields)
+  repeated string input_history = 1001;
+  // CARET MODIFICATION: F01 - Mode System
+  optional string mode_system = 1002;
+  // CARET MODIFICATION: F08 - Persona System
+  optional bool enable_persona_system = 1003;
+  optional string current_persona = 1004;
 }
 
 message UpdateTerminalConnectionTimeoutRequest {

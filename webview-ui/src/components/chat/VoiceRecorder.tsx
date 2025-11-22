@@ -1,6 +1,6 @@
+import { cn } from "@heroui/react"
 import { TranscribeAudioRequest } from "@shared/proto/cline/dictation"
 import { EmptyRequest } from "@shared/proto/index.cline"
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { SquareIcon, StopCircleIcon } from "lucide-react"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { DictationServiceClient } from "@/services/grpc-client"
@@ -163,65 +163,84 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 		}
 	}, [onProcessingStateChange, onTranscription])
 
-	const handleKeyDown = (event: React.KeyboardEvent) => {
-		if (!isRecording) {
+	const handleStartClick = useCallback(() => {
+		if (disabled || isProcessing || isStarting) {
 			return
 		}
-		if (event.code === "Space") {
-			event.preventDefault()
-			event.stopPropagation()
-			stopRecording()
+		if (error) {
+			setError(null)
+			return
 		}
+		startRecording()
+	}, [disabled, isProcessing, isStarting, error, startRecording])
+
+	const handleStopClick = useCallback(() => {
+		if (disabled || isProcessing) {
+			return
+		}
+		stopRecording()
+	}, [disabled, isProcessing, stopRecording])
+
+	const handleCancelClick = useCallback(() => {
+		if (disabled || isProcessing) {
+			return
+		}
+		cancelRecording()
+	}, [disabled, isProcessing, cancelRecording])
+
+	const iconAdjustment = isProcessing || isStarting ? "mt-0" : error ? "mt-1" : "mt-0.5"
+
+	// Render a single mic button when idle/processing
+	if (!isRecording) {
+		const iconClass = isProcessing || isStarting ? "codicon-loading" : error ? "codicon-error" : "codicon-mic"
+		const iconColor = error ? "text-error" : ""
+		const tooltipContent = isProcessing
+			? "Transcribing..."
+			: isStarting
+				? "Starting recording..."
+				: error
+					? `Error: ${error}`
+					: "Voice Input"
+
+		return (
+			<div
+				className={cn("pt-1 input-icon-button mr-1.5 text-base", iconAdjustment, {
+					disabled: disabled || isProcessing || isStarting,
+					"animate-spin": isProcessing || isStarting,
+				})}
+				data-testid="voice-recorder-start-button"
+				onClick={handleStartClick}
+				style={{ color: iconColor }}
+				title={tooltipContent}>
+				<span className={`codicon ${iconClass}`} />
+			</div>
+		)
 	}
 
+	// Recording state: show stop/cancel buttons with timers
 	return (
-		<div className="flex items-center gap-2">
-			<VSCodeButton
-				appearance="icon"
-				aria-label="Hold to talk"
-				disabled={disabled || isProcessing || isStarting}
-				onKeyDown={handleKeyDown}
-				onMouseDown={() => startRecording()}
-				onMouseUp={() => stopRecording()}
-				onTouchEnd={() => stopRecording()}
-				onTouchStart={() => startRecording()}
-				style={{
-					width: 36,
-					height: 36,
-					borderRadius: "50%",
-					display: "inline-flex",
-					alignItems: "center",
-					justifyContent: "center",
-					backgroundColor: isRecording ? "var(--vscode-errorForeground)" : "var(--vscode-button-background)",
-				}}
-				title={`Hold to talk (max 5 min/message). Language: ${language}. ${isAuthenticated ? "" : "Sign in may be required."}`}>
-				{isRecording ? <SquareIcon className="h-4 w-4" /> : <StopCircleIcon className="h-4 w-4" />}
-			</VSCodeButton>
+		<div className={cn("flex items-center mb-2", { "mr-0.5": isRecording, "mr-1.5": !isRecording })}>
+			<div
+				className={cn("input-icon-button p-1 m-0 mr-1.5 text-base", iconAdjustment, {
+					disabled: disabled || isProcessing,
+					"animate-spin": isProcessing || isStarting,
+				})}
+				data-testid="stop-recording-button"
+				onClick={handleStopClick}
+				title={`Stop Recording (${formatSeconds(recordingDuration)}/${formatSeconds(MAX_DURATION)})`}>
+				<StopCircleIcon />
+			</div>
 
-			{isRecording && (
-				<div className="flex items-center gap-2 px-3 py-1 rounded-md bg-[var(--vscode-editor-background)] border border-(--vscode-editorGroup-border)">
-					<div className="flex items-center gap-2 text-[var(--vscode-foreground)]">
-						<span className="h-2 w-2 rounded-full bg-[var(--vscode-errorForeground)] animate-pulse" />
-						<span className="text-xs font-semibold">Recording</span>
-					</div>
-					<span className="text-xs text-[var(--vscode-descriptionForeground)]">{formatSeconds(recordingDuration)}</span>
-					<button className="text-xs underline" onClick={cancelRecording} type="button">
-						Cancel
-					</button>
-				</div>
-			)}
-
-			{isProcessing && (
-				<div className="text-xs text-[var(--vscode-descriptionForeground)]" role="status">
-					Processing audio...
-				</div>
-			)}
-
-			{error && (
-				<div className="text-xs text-[var(--vscode-errorForeground)]" role="alert">
-					{error}
-				</div>
-			)}
+			<div
+				className={cn("input-icon-button p-1 m-0 text-base text-error", iconAdjustment, {
+					"animate-spin": isProcessing || isStarting,
+					disabled: disabled || isProcessing,
+				})}
+				data-testid="cancel-recording-button"
+				onClick={handleCancelClick}
+				title="Cancel Recording">
+				<SquareIcon />
+			</div>
 		</div>
 	)
 }

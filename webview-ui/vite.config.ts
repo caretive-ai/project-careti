@@ -105,6 +105,10 @@ export default defineConfig({
 			host: "localhost",
 			protocol: "ws",
 		},
+		// CARET MODIFICATION: allow resolving shared code outside webview-ui (../src/shared)
+		fs: {
+			allow: [".."],
+		},
 		cors: {
 			origin: "*",
 			methods: "*",

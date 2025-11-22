@@ -620,13 +620,13 @@ export class Controller {
 		try {
 			// CARET MODIFICATION: support caret login path with feature-config defaults
 			if (provider === "caret") {
-				this.syncCaretUserInfoToSecret()
+				await this.syncCaretUserInfoToSecret()
 			} else {
 				await this.authService.handleAuthCallback(customToken, provider ? provider : "google")
 			}
 
-			const defaultProvider: ApiProvider =
-				(getCurrentFeatureConfig().defaultProvider as ApiProvider) ?? ("openrouter" as ApiProvider)
+			const featureConfig = getCurrentFeatureConfig()
+			const defaultProvider: ApiProvider = (featureConfig.defaultProvider as ApiProvider) ?? ("openrouter" as ApiProvider)
 			const clineProvider: ApiProvider = provider === "caret" ? ("caret" as ApiProvider) : ("cline" as ApiProvider)
 
 			// Get current settings to determine how to update providers
@@ -639,15 +639,34 @@ export class Controller {
 
 			const updatedConfig = { ...currentApiConfiguration }
 
-			if (planActSeparateModelsSetting) {
-				if (currentMode === "plan") {
-					updatedConfig.planModeApiProvider = clineProvider
-				} else {
-					updatedConfig.actModeApiProvider = clineProvider
+			if (provider === "caret") {
+				// CARET MODIFICATION: force caret provider on caret login
+				updatedConfig.planModeApiProvider = "caret"
+				updatedConfig.actModeApiProvider = "caret"
+				// populate caret model ids from user info if present
+				const caretUserInfo = CaretGlobalManager.userInfo
+				if (caretUserInfo?.models?.length) {
+					updatedConfig.planModeCaretModelId = caretUserInfo.models[0] || updatedConfig.planModeCaretModelId
+					updatedConfig.actModeCaretModelId = caretUserInfo.models[1] || updatedConfig.actModeCaretModelId
 				}
+				// expose caret user profile to webview via apiConfiguration
+				if (caretUserInfo) {
+					;(updatedConfig as any).caretUserProfile = caretUserInfo
+				}
+				// ensure modeSystem defaults to caret on caret login
+				// Store modeSystem under settings/global state if available
+				;(this.stateManager as any).setGlobalState?.("caretModeSystem", "caret")
 			} else {
-				updatedConfig.planModeApiProvider = defaultProvider
-				updatedConfig.actModeApiProvider = defaultProvider
+				if (planActSeparateModelsSetting) {
+					if (currentMode === "plan") {
+						updatedConfig.planModeApiProvider = clineProvider
+					} else {
+						updatedConfig.actModeApiProvider = clineProvider
+					}
+				} else {
+					updatedConfig.planModeApiProvider = defaultProvider
+					updatedConfig.actModeApiProvider = defaultProvider
+				}
 			}
 
 			// Update the API configuration through cache service
@@ -931,6 +950,10 @@ export class Controller {
 		// Get API configuration from cache for immediate access
 		const onboardingModels = getClineOnboardingModels()
 		const apiConfiguration = this.stateManager.getApiConfiguration()
+		const caretUserProfile = (this.stateManager as any).getGlobalStateKey?.("caretUserProfile")
+		if (caretUserProfile) {
+			;(apiConfiguration as any).caretUserProfile = caretUserProfile
+		}
 		const lastShownAnnouncementId = this.stateManager.getGlobalStateKey("lastShownAnnouncementId")
 		const taskHistory = this.stateManager.getGlobalStateKey("taskHistory")
 		const autoApprovalSettings = this.stateManager.getGlobalSettingsKey("autoApprovalSettings")
@@ -940,6 +963,7 @@ export class Controller {
 		const preferredLanguage = this.stateManager.getGlobalSettingsKey("preferredLanguage")
 		const openaiReasoningEffort = this.stateManager.getGlobalSettingsKey("openaiReasoningEffort")
 		const mode = this.stateManager.getGlobalSettingsKey("mode")
+		const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretGlobalManager.currentMode
 		const strictPlanModeEnabled = this.stateManager.getGlobalSettingsKey("strictPlanModeEnabled")
 		const yoloModeToggled = this.stateManager.getGlobalSettingsKey("yoloModeToggled")
 		const useAutoCondense = this.stateManager.getGlobalSettingsKey("useAutoCondense")
@@ -974,7 +998,6 @@ export class Controller {
 		const featureConfig = getCurrentFeatureConfig()
 		Logger.debug(`[Controller] 📋 Loaded featureConfig to send to webview: ${JSON.stringify(featureConfig)}`)
 		const inputHistory = this.stateManager.getGlobalSettingsKey("inputHistory" as any)
-		const modeSystem = CaretGlobalManager.currentMode
 		const enablePersonaSystem = this.stateManager.getGlobalSettingsKey("enablePersonaSystem" as any)
 		const currentPersona = this.stateManager.getGlobalStateKey("currentPersona" as any)
 		const personaProfile = this.stateManager.getGlobalStateKey("personaProfile" as any)

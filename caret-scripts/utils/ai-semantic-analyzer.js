@@ -365,17 +365,23 @@ Output a detailed equivalence report in JSON:
 
 		if (comparison.missing_in_b.length > 0) {
 			console.log(`\n⚠️ Missing in ${file2Name}:`)
-			comparison.missing_in_b.forEach((item) => console.log(`   - ${item}`))
+			for (const item of comparison.missing_in_b) {
+				console.log(`   - ${item}`)
+			}
 		}
 
 		if (comparison.missing_in_a.length > 0) {
 			console.log(`\n⚠️ Missing in ${file1Name}:`)
-			comparison.missing_in_a.forEach((item) => console.log(`   - ${item}`))
+			for (const item of comparison.missing_in_a) {
+				console.log(`   - ${item}`)
+			}
 		}
 
 		if (comparison.conflicts.length > 0) {
 			console.log("\n❌ Conflicts detected:")
-			comparison.conflicts.forEach((conflict) => console.log(`   - ${conflict}`))
+			for (const conflict of comparison.conflicts) {
+				console.log(`   - ${conflict}`)
+			}
 		}
 
 		console.log("\n💡 RECOMMENDATION:")

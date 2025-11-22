@@ -280,7 +280,17 @@
 		"payAsYouGo": "従量課金制",
 		"organization": "組織",
 		"payAsYouGoDescription": "* すべてのサブスクリプション使用量が使い果たされた後、追加料金が適用されます。",
-		"title": "アカウント"
+		"title": "アカウント",
+		"personal": "個人",
+		"date": "日付",
+		"model": "モデル",
+		"creditsUsed": "使用クレジット",
+		"userHistory": "利用履歴",
+		"paymentHistory": "支払履歴",
+		"usageHistory": "利用履歴",
+		"paymentsHistory": "支払履歴",
+		"noUsageHistory": "利用履歴がありません",
+		"noPaymentHistory": "支払履歴がありません"
 	},
 	"common": {
 		"and": "と",

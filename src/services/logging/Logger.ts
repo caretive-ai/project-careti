@@ -5,7 +5,8 @@ import { ErrorService } from "../error"
  * Simple logging utility for the extension's backend code.
  */
 export class Logger {
-	public readonly channelName = "Cline Dev Logger"
+	// CARET MODIFICATION: align output channel branding with Caret
+	public readonly channelName = "Caret Dev Logger"
 	static error(message: string, error?: Error) {
 		Logger.#output("ERROR", message, error)
 		ErrorService.get().logMessage(message, "error")

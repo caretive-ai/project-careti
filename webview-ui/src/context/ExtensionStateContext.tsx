@@ -25,6 +25,7 @@ import * as proto from "@shared/proto/index"
 import { convertProtoToClineMessage } from "@shared/proto-conversions/cline-message"
 import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mcp/mcp-server-conversion"
 import { fromProtobufModels } from "@shared/proto-conversions/models/typeConversion"
+import caretBannerAsset from "@/assets/welcome-banner.webp?inline"
 import { Environment } from "../../../src/config"
 import {
 	basetenDefaultModelId,
@@ -302,7 +303,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		useAutoCondense: false,
 		autoCondenseThreshold: undefined,
 		// CARET MODIFICATION: Initialize caretBanner with actual banner image
-		caretBanner: "/assets/welcome-banner.webp",
+		caretBanner: caretBannerAsset,
 		// CARET MODIFICATION: Initialize persona system from backend globalState only
 		enablePersonaSystem: getCurrentFeatureConfig().defaultPersonaEnabled, // Default value, will be overridden by backend
 		favoritedModelIds: [],
@@ -906,7 +907,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		availableTerminalProfiles,
 		expandTaskHeader,
 		// CARET MODIFICATION: Add caretBanner to context value with window injection fallback
-		caretBanner: (window as any).caretBannerImage || state.caretBanner || "/assets/welcome-banner.webp",
+		caretBanner: (window as any).caretBannerImage || state.caretBanner || caretBannerAsset,
 
 		// CARET MODIFICATION: Persona system values
 		enablePersonaSystem: state.enablePersonaSystem ?? false,

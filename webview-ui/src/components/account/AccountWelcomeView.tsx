@@ -9,8 +9,10 @@ export const AccountWelcomeView = () => {
 	// CARET MODIFICATION: Use persona avatar for account welcome
 	const { personaProfile, featureConfig } = useCaretState()
 
-	// CARET MODIFICATION: Hide account features if disabled in feature config
-	if (!featureConfig?.enableCaretAccountFeatures) {
+	const showCaretCta = featureConfig?.enableCaretAccountFeatures ?? true
+	const showClineCta = false // Cline 로그인은 Provider 영역에서 처리
+
+	if (!showCaretCta && !showClineCta) {
 		return null
 	}
 
@@ -22,9 +24,11 @@ export const AccountWelcomeView = () => {
 
 			<p>{t("account.signUpDescription", "common")}</p>
 
-			<VSCodeButton className="w-full mb-4" onClick={() => handleLogin()}>
-				{t("account.signUpWithCaret", "common")}
-			</VSCodeButton>
+			{showCaretCta && (
+				<VSCodeButton className="w-full mb-2" onClick={() => handleLogin()}>
+					{t("account.signUpWithCaret", "common")}
+				</VSCodeButton>
+			)}
 
 			<p className="text-[var(--vscode-descriptionForeground)] text-xs text-center m-0">
 				{t("account.byContining", "common")}{" "}

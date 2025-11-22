@@ -280,7 +280,17 @@
 		"totalTokens": "Tokens",
 		"totalCost": "Cost",
 		"termsOfServiceUrl": "https://caretive.ai/terms.en.html",
-		"privacyPolicyUrl": "https://caretive.ai/privacy.en.html"
+		"privacyPolicyUrl": "https://caretive.ai/privacy.en.html",
+		"personal": "Personal",
+		"date": "Date",
+		"model": "Model",
+		"creditsUsed": "Credits used",
+		"userHistory": "Usage history",
+		"paymentHistory": "Payment history",
+		"usageHistory": "Usage history",
+		"paymentsHistory": "Payment history",
+		"noUsageHistory": "No usage history found",
+		"noPaymentHistory": "No payment history found"
 	},
 	"common": {
 		"and": "and",

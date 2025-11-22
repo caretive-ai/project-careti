@@ -25,6 +25,7 @@ import Thumbnails from "@/components/common/Thumbnails"
 import Tooltip from "@/components/common/Tooltip"
 import ApiOptions from "@/components/settings/ApiOptions"
 import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
+import { handleSignIn, useClineAuth } from "@/context/ClineAuthContext"
 // CARET MODIFICATION: useClineAuth removed (only used for voice feature)
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { usePlatform } from "@/context/PlatformContext"
@@ -52,6 +53,8 @@ import {
 } from "@/utils/slash-commands"
 import { validateApiConfiguration, validateModelId } from "@/utils/validate"
 import ClineRulesToggleModal from "../cline-rules/ClineRulesToggleModal"
+// CARET MODIFICATION: Provider-specific login CTA in chat
+import { handleLogin as handleCaretLogin } from "../settings/CaretAuthHandler"
 import ServersToggleModal from "./ServersToggleModal"
 import VoiceRecorder from "./VoiceRecorder"
 
@@ -173,7 +176,9 @@ const ButtonContainer = styled.div`
 	width: 100%;
 `
 
-const ModelSelectorTooltip = styled.div<ModelSelectorTooltipProps>`
+const ModelSelectorTooltip = styled.div.withConfig({
+	shouldForwardProp: (prop) => !["arrowPosition", "menuPosition"].includes(prop as string),
+})<ModelSelectorTooltipProps>`
 	position: fixed;
 	bottom: calc(100% + 9px);
 	left: 15px;
@@ -220,13 +225,46 @@ const ModelContainer = styled.div`
 	min-width: 0;
 `
 
+// CARET MODIFICATION: Lightweight recording glow to mirror Cline voice UI without external deps
+const RecordingGlow = styled.div`
+	position: absolute;
+	inset: 10px 14px 12px 14px;
+	pointer-events: none;
+	border-radius: 4px;
+	background: radial-gradient(circle at 20% 20%, rgba(157, 87, 250, 0.18), transparent 40%),
+		radial-gradient(circle at 80% 30%, rgba(87, 199, 250, 0.18), transparent 40%),
+		radial-gradient(circle at 50% 70%, rgba(250, 87, 168, 0.18), transparent 45%);
+	box-shadow:
+		0 0 12px rgba(157, 87, 250, 0.35),
+		0 0 18px rgba(87, 199, 250, 0.25),
+		0 0 18px rgba(250, 87, 168, 0.25);
+	animation: recording-glow 1.8s ease-in-out infinite;
+
+	@keyframes recording-glow {
+		0% {
+			opacity: 0.7;
+			transform: scale(1);
+		}
+		50% {
+			opacity: 1;
+			transform: scale(1.01);
+		}
+		100% {
+			opacity: 0.7;
+			transform: scale(1);
+		}
+	}
+`
+
 const ModelButtonWrapper = styled.div`
 	display: inline-flex; // Make it shrink to content
 	min-width: 0; // Allow shrinking
 	max-width: 100%; // Don't overflow parent
 `
 
-const ModelDisplayButton = styled.a<{ isActive?: boolean; disabled?: boolean }>`
+const ModelDisplayButton = styled.a.withConfig({
+	shouldForwardProp: (prop) => !["isActive", "disabled"].includes(prop as string),
+})<{ isActive?: boolean; disabled?: boolean }>`
 	padding: 0px 0px;
 	height: 20px;
 	width: 100%;
@@ -340,6 +378,12 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		const [fileSearchResults, setFileSearchResults] = useState<SearchResult[]>([])
 		const [searchLoading, setSearchLoading] = useState(false)
 		const [, metaKeyChar] = useMetaKeyDetection(platform)
+		const { clineUser } = useClineAuth()
+		const caretUser = apiConfiguration?.caretUserProfile
+		const selectedProvider = useMemo(
+			() => normalizeApiConfiguration(apiConfiguration, mode).selectedProvider,
+			[apiConfiguration, mode],
+		)
 
 		// CARET MODIFICATION: Persistent input history functionality - hook for handling arrow key navigation
 		const { handleKeyDown: handleHistoryKeyDown } = useInputHistory({
@@ -1512,7 +1556,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					onDragLeave={handleDragLeave}
 					onDragOver={onDragOver}
 					onDrop={onDrop}>
-					{/* CARET MODIFICATION: Voice recording animation removed (voice feature deleted) */}
+					{isVoiceRecording && <RecordingGlow />}
 
 					{showDimensionError && (
 						<div className="absolute inset-2.5 bg-[rgba(var(--vscode-errorForeground-rgb),0.1)] border-2 border-error rounded-xs flex items-center justify-center z-10 pointer-events-none">
@@ -1644,7 +1688,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 							outline:
 								isDraggingOver && !showUnsupportedFileError // Only show drag outline if not showing error
 									? "2px dashed var(--vscode-focusBorder)"
-									: isTextAreaFocused
+									: isTextAreaFocused || isVoiceRecording
 										? `1px solid ${mode === "plan" ? PLAN_MODE_COLOR : "var(--vscode-focusBorder)"}`
 										: "none",
 							outlineOffset: isDraggingOver && !showUnsupportedFileError ? "1px" : "0px", // Add offset for drag-over outline
@@ -1680,7 +1724,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 							{dictationSettings?.dictationEnabled === true && dictationSettings?.featureEnabled === true && (
 								<VoiceRecorder
 									disabled={sendingDisabled}
-									isAuthenticated={true}
+									isAuthenticated={!!clineUser?.uid}
 									language={dictationSettings?.dictationLanguage || "en"}
 									onProcessingStateChange={(isProcessing: boolean, message?: string) => {
 										if (isProcessing && message) {
@@ -1775,6 +1819,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 										<ModelButtonContent>{modelDisplayName}</ModelButtonContent>
 									</ModelDisplayButton>
 								</ModelButtonWrapper>
+								{/* CARET MODIFICATION: Provider-specific login CTA (below selector to avoid overlay) */}
 								{showModelSelector && (
 									<ModelSelectorTooltip
 										arrowPosition={arrowPosition}
@@ -1782,6 +1827,21 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 										style={{
 											bottom: `calc(100vh - ${menuPosition}px + 6px)`,
 										}}>
+										{/* Provider-specific login CTA inside selector to avoid duplication when closed */}
+										{selectedProvider === "cline" && !clineUser?.uid && (
+											<div className="mb-2">
+												<VSCodeButton appearance="secondary" onClick={() => handleSignIn()}>
+													Sign in with Cline
+												</VSCodeButton>
+											</div>
+										)}
+										{selectedProvider === "caret" && !caretUser?.id && (
+											<div className="mb-2">
+												<VSCodeButton appearance="secondary" onClick={() => handleCaretLogin()}>
+													{t("providers.caret.login", "settings")}
+												</VSCodeButton>
+											</div>
+										)}
 										<ApiOptions
 											apiErrorMessage={undefined}
 											currentMode={mode}

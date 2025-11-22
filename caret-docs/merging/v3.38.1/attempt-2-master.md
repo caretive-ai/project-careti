@@ -35,11 +35,18 @@
 | 준비-3 | 작업 마스터 파일 작성 (`attempt-2-master.md`) | ✅ 완료 | 리뷰 피드백 반영, 코드 리뷰 게이트 정의
 | Section 0 | Caret Feature 원칙 재확인 (F01~F11) | ✅ 완료 | features/index.md/F01~F11 재검토
 | Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ✅ 완료 | classify/extract/analyze/compare/incremental 구현 및 리포트 생성
-| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ✅ 완료 | B0~B5 완료. Webview cline 개선/음성/Hook/환경색 이식, MCP/History/Marketplace 추가 변경 없음. |
+| Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ✅ 완료 | B0~B5 완료. Webview cline 개선/Hook/환경색 이식, MCP/History/Marketplace 추가 변경 없음. **2025-11-22: package.json Activity Bar/명령 카테고리 및 assets 아이콘을 Caret 브랜드로 재정렬(누락 복구)**. **2025-11-22: Cline 기반 음성 UI(녹음 글로우 포함) 및 Provider CTA 정렬, 계정 i18n 키 누락 복구, Cline 로그인 시 자동 provider 선택 적용, Caret 로그인 콜백 처리 복원(SharedUriHandler) 및 Persona 템플릿 이미지 번들링 복구** |
 | Phase C | 통합 테스트 & E2E 복구 | ✅ 완료 | Unit 527 pass, Integration 404 pass. E2E는 Playwright 시스템 의존성으로 CI/CD 환경에서 실행 필요. |
 | Phase D | Caret CLI 구현/프롬프트/배너/문서 반영 | ⏳ 예정 | `b4-caret-cli-plan.md` 기준으로 CLI 배너/감지/프롬프트/문서·공지 반영 |
 | Phase E | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | CLI 반영 후 CHANGELOG/announcement/Features 분리 작업 포함 |
 | Phase F | 누락 방지 자동화 및 체크리스트 업데이터 | ⏳ 예정 | compare-with-cline.mjs, PR 템플릿 반영 (Phase E 완료 후) |
+
+### 신규 Action 항목 (2025-11-22 요청)
+- [ ] **Cline 로그인/프로바이더 복구**: Cline 음성 옵션 노출 시 Cline 로그인 가능하게 하고, Cline provider를 복원. Cline 로그인 상태에서는 계정 메뉴/레이블이 Cline으로 표시되도록 브랜드 토글 처리.
+- [ ] **Frontend re-sync(포크 이후 변경분 반영)**: Webview를 Cline 기준으로 다시 3-way 비교해 TaskHeader/Voice/Provider 선택/툴팁/아이콘/레이아웃을 재동기화하고, Caret i18n/브랜딩을 재주입한다. Provider CTA는 모델 선택 오버레이를 가리지 않도록 별도 영역에 배치.
+- [ ] **리소스/패키지 선복사 규칙 준수**: 머지 시작 시점에 upstream `package.json`/정적 자산(`assets/icons`, cli/banner 등)을 그대로 복사해 빌드·런타임을 먼저 복구하고, 이후 Caret 브랜딩을 덮어쓴다(merge-standard-guide에 원칙 추가).
+- [ ] **Webview 구조 변경 시 3-way 원칙 적용**: base/cline/caret 3-way 비교로 upstream 구조를 먼저 가져오고(Cline 구조), 이후 Caret 기능·i18n·브랜딩을 재주입한다(“구조는 Cline, 기능은 Caret”). 기존 구조를 고집하지 말 것.
+- [ ] **Feature 매핑 + 상태 전파 검증**: f03/f04/f07 필수 조건(자산 번들 포함, caretUserProfile 전달, persona import 매핑)을 체크리스트로 확인하고, `postStateToWebview`/apiConfiguration에 caret 필드가 내려가는지 로그·테스트로 검증한다.
 
 > ⚠️ 진행 중/예정 단계는 작업 도중에 반드시 상태 갱신. 새로운 AI 세션이 시작되면 이 표를 먼저 확인하고 업데이트할 것.
 
@@ -136,7 +143,7 @@
 - [x] `test-setup.js` path alias 수정 (`@caret/*` → `out/caret-src/*`), `registry.ts` command prefix 수정 (`"cline"` 고정).
 - [x] `caret-scripts/` 누락 빌드 스크립트 복사 (comparison/caret에서).
 - [x] `npm run test:e2e` 실행 완료. VSIX 빌드 및 Playwright 테스트 통과.
-- [ ] Attempt-1에서 누락된 시나리오(Providers, Hooks, Settings, Terminal 모드, LiteLLM 로그 등)를 수동/자동 테스트로 검증.
+B
 
 ### Phase D: Caret CLI/프롬프트/배너/문서 (신규)
 - [ ] `b4-caret-cli-plan.md` 실행: CLI 배너(`CliInstallBanner.tsx`) 이식 및 Caret/Cline 분기, cli-detector/설치/컨트롤러 분기 추가.

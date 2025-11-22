@@ -1,3 +1,5 @@
+// CARET MODIFICATION: Handle Caret auth token bootstrap
+import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
 import { WebviewProvider } from "@/core/webview"
 import { Logger } from "../logging/Logger"
 
@@ -60,9 +62,22 @@ export class SharedUriHandler {
 
 					Logger.info(`SharedUriHandler - Auth callback received for ${provider} - ${path}`)
 
-					const token = query.get("refreshToken") || query.get("idToken") || query.get("code")
+					const token = query.get("token") || query.get("refreshToken") || query.get("idToken") || query.get("code")
+					const state = query.get("state")
+					const apiKey = query.get("apiKey")
+
 					if (token) {
-						await visibleWebview.controller.handleAuthCallback(token, provider)
+						// CARET MODIFICATION: Initialize Caret session when provider=caret (or unspecified but token present)
+						if (!provider || provider === "caret") {
+							try {
+								console.log("SharedUriHandler: Setting Caret token from callback", { state, apiKey })
+								await CaretGlobalManager.get().setTokenFromCallback(token)
+							} catch (error) {
+								console.error("SharedUriHandler: Failed to bootstrap Caret token", error)
+							}
+						}
+
+						await visibleWebview.controller.handleAuthCallback(token, provider || "caret")
 						return true
 					}
 					Logger.warn("SharedUriHandler: Missing idToken parameter for auth callback")

@@ -369,7 +369,7 @@
 	"clineAccountInfoCard": {
 		"loginError": "Failed to get login URL:",
 		"viewBillingAndUsage": "View Billing & Usage",
-		"signUpWithCline": "Sign Up with Caret"
+		"signUpWithCline": "Sign in with Cline"
 	},
 	"apiKeyField": {
 		"placeholder": "Enter API Key...",
@@ -1009,8 +1009,8 @@
 			"baseUrlPlaceholder": "Enter Dify Base URL..."
 		},
 		"cline": {
-			"name": "Caret",
-			"description": "Caret provides high-quality AI models with optimized performance for coding tasks.",
+			"name": "Cline",
+			"description": "Cline provides AI models and voice features from the Cline service.",
 			"sortUnderlyingProviderRouting": "Sort underlying provider routing",
 			"defaultOption": "Default",
 			"priceOption": "Price",

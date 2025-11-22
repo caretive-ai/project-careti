@@ -377,7 +377,7 @@
 	"clineAccountInfoCard": {
 		"loginError": "로그인 URL을 가져오는 데 실패했습니다:",
 		"viewBillingAndUsage": "결제 및 사용 내역 보기",
-		"signUpWithCline": "Caret으로 가입"
+		"signUpWithCline": "Cline으로 로그인"
 	},
 	"apiKeyField": {
 		"placeholder": "API 키를 입력하세요...",
@@ -956,8 +956,8 @@
 			"baseUrlPlaceholder": "Dify 기본 URL을 입력하세요..."
 		},
 		"cline": {
-			"name": "Caret",
-			"description": "Caret은 코딩 작업에 최적화된 고품질 AI 모델을 제공합니다."
+			"name": "Cline",
+			"description": "Cline은 Cline 서비스의 AI 모델 및 음성 기능을 제공합니다."
 		},
 		"sap-ai-core": {
 			"name": "SAP AI Core",

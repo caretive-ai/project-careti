@@ -3,15 +3,102 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import templateCharacters from "@/caret/assets/persona/template_characters.json"
+// CARET MODIFICATION: Inline template character assets (base64) to avoid webview 403
+import caretAvatar from "@/caret/assets/template_characters/caret.png?inline"
+import caretIllust from "@/caret/assets/template_characters/caret_illust.png?inline"
+import caretThinking from "@/caret/assets/template_characters/caret_thinking.png?inline"
+import cyanAvatar from "@/caret/assets/template_characters/cyan.png?inline"
+import cyanIllust from "@/caret/assets/template_characters/cyan_illust.png?inline"
+import cyanThinking from "@/caret/assets/template_characters/cyan_thinking.png?inline"
+import ichikaAvatar from "@/caret/assets/template_characters/ichika.png?inline"
+import ichikaIllust from "@/caret/assets/template_characters/ichika_illust.png?inline"
+import ichikaThinking from "@/caret/assets/template_characters/ichika_thinking.png?inline"
+import sarangAvatar from "@/caret/assets/template_characters/sarang.png?inline"
+import sarangIllust from "@/caret/assets/template_characters/sarang_illust.png?inline"
+import sarangThinking from "@/caret/assets/template_characters/sarang_thinking.png?inline"
+import ubuntuAvatar from "@/caret/assets/template_characters/ubuntu.png?inline"
+import ubuntuIllust from "@/caret/assets/template_characters/ubuntu_illust.png?inline"
+import ubuntuThinking from "@/caret/assets/template_characters/ubuntu_thinking.png?inline"
 import { useCaretState } from "@/caret/context/CaretStateContext"
 import { t } from "@/caret/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CaretWebviewLogger } from "../utils/webview-logger"
 
+// Basename map for bare filenames (403 방지)
+const filenameMap: Record<string, string> = {
+	"caret.png": caretAvatar,
+	"caret_thinking.png": caretThinking,
+	"caret_illust.png": caretIllust,
+	"caret_profile.png": caretAvatar,
+	"sarang.png": sarangAvatar,
+	"sarang_thinking.png": sarangThinking,
+	"sarang_illust.png": sarangIllust,
+	"sarang_profile.png": sarangAvatar,
+	"ichika.png": ichikaAvatar,
+	"ichika_thinking.png": ichikaThinking,
+	"ichika_illust.png": ichikaIllust,
+	"ichika_profile.png": ichikaAvatar,
+	"cyan.png": cyanAvatar,
+	"cyan_thinking.png": cyanThinking,
+	"cyan_illust.png": cyanIllust,
+	"cyan_profile.png": cyanAvatar,
+	"ubuntu.png": ubuntuAvatar,
+	"ubuntu_thinking.png": ubuntuThinking,
+	"ubuntu_illust.png": ubuntuIllust,
+	"ubuntu_profile.png": ubuntuAvatar,
+}
+
 const convertAssetToBase64 = async (assetUri: string): Promise<string> => {
-	if (!assetUri.startsWith("asset:")) {
+	// Direct URL or data URL (handle bare filenames by mapping below)
+	if (!assetUri.startsWith("asset:") && !assetUri.startsWith("asset://")) {
+		// Try basename mapping for bare filenames
+		const basename = assetUri.split("/").pop() || assetUri
+		const mappedFromName = filenameMap[basename]
+		if (mappedFromName) {
+			return mappedFromName
+		}
 		return assetUri
 	}
+
+	const assetMap: Record<string, string> = {
+		"asset:/assets/template_characters/caret.png": caretAvatar,
+		"asset:/assets/template_characters/caret_thinking.png": caretThinking,
+		"asset:/assets/template_characters/caret_illust.png": caretIllust,
+		"asset://template_characters/caret_profile.png": caretAvatar,
+		"asset://template_characters/caret_thinking.png": caretThinking,
+		"asset:/assets/template_characters/sarang.png": sarangAvatar,
+		"asset:/assets/template_characters/sarang_thinking.png": sarangThinking,
+		"asset:/assets/template_characters/sarang_illust.png": sarangIllust,
+		"asset://template_characters/sarang_profile.png": sarangAvatar,
+		"asset://template_characters/sarang_thinking.png": sarangThinking,
+		"asset:/assets/template_characters/ichika.png": ichikaAvatar,
+		"asset:/assets/template_characters/ichika_thinking.png": ichikaThinking,
+		"asset:/assets/template_characters/ichika_illust.png": ichikaIllust,
+		"asset://template_characters/ichika_profile.png": ichikaAvatar,
+		"asset://template_characters/ichika_thinking.png": ichikaThinking,
+		"asset:/assets/template_characters/cyan.png": cyanAvatar,
+		"asset:/assets/template_characters/cyan_thinking.png": cyanThinking,
+		"asset:/assets/template_characters/cyan_illust.png": cyanIllust,
+		"asset://template_characters/cyan_profile.png": cyanAvatar,
+		"asset://template_characters/cyan_thinking.png": cyanThinking,
+		"asset:/assets/template_characters/ubuntu.png": ubuntuAvatar,
+		"asset:/assets/template_characters/ubuntu_thinking.png": ubuntuThinking,
+		"asset:/assets/template_characters/ubuntu_illust.png": ubuntuIllust,
+		"asset://template_characters/ubuntu_profile.png": ubuntuAvatar,
+		"asset://template_characters/ubuntu_thinking.png": ubuntuThinking,
+	}
+
+	// If starts with asset:, convert
+	if (assetUri in assetMap) {
+		return assetMap[assetUri]
+	}
+
+	// Fallback by basename for asset:// or bare filenames
+	const basename = assetUri.split("/").pop() || ""
+	if (filenameMap[basename]) {
+		return filenameMap[basename]
+	}
+
 	for (const char of templateCharacters) {
 		if (char.avatarUri === assetUri) {
 			const windowKey = `templateImage_${char.character}`

@@ -502,6 +502,12 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const remoteRulesToggles = context.globalState.get<GlobalStateAndSettings["remoteRulesToggles"]>("remoteRulesToggles")
 		const remoteWorkflowToggles =
 			context.globalState.get<GlobalStateAndSettings["remoteWorkflowToggles"]>("remoteWorkflowToggles")
+		// CARET MODIFICATION: Caret mode/persona/input history fields
+		const caretModeSystem = context.globalState.get<GlobalStateAndSettings["caretModeSystem"]>("caretModeSystem")
+		const enablePersonaSystem = context.globalState.get<GlobalStateAndSettings["enablePersonaSystem"]>("enablePersonaSystem")
+		const currentPersona = context.globalState.get<GlobalStateAndSettings["currentPersona"]>("currentPersona")
+		const inputHistory = context.globalState.get<GlobalStateAndSettings["inputHistory"]>("inputHistory")
+		const caretUserProfile = context.globalState.get<GlobalStateAndSettings["caretUserProfile"]>("caretUserProfile")
 
 		return {
 			// api configuration fields
@@ -667,6 +673,12 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			lastDismissedModelBannerVersion: lastDismissedModelBannerVersion ?? 0,
 			lastDismissedCliBannerVersion: lastDismissedCliBannerVersion ?? 0,
 			nativeToolCallEnabled: nativeToolCallEnabled ?? false,
+			// CARET MODIFICATION: Caret-specific global state defaults
+			caretModeSystem: caretModeSystem ?? "caret",
+			enablePersonaSystem: enablePersonaSystem ?? true,
+			currentPersona: currentPersona ?? undefined,
+			inputHistory: inputHistory ?? [],
+			caretUserProfile: caretUserProfile ?? undefined,
 			// Multi-root workspace support
 			workspaceRoots,
 			primaryRootIndex: primaryRootIndex ?? 0,

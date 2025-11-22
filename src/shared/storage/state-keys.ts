@@ -1,6 +1,7 @@
 import { AutoApprovalSettings } from "@shared/AutoApprovalSettings"
 import { ApiProvider, ModelInfo, type OcaModelInfo } from "@shared/api"
 import { BrowserSettings } from "@shared/BrowserSettings"
+import { CaretUser } from "@shared/CaretAccount"
 import { ClineRulesToggles } from "@shared/cline-rules"
 import { DictationSettings } from "@shared/DictationSettings"
 import { FocusChainSettings } from "@shared/FocusChainSettings"
@@ -56,6 +57,13 @@ export interface GlobalState {
 	nativeToolCallEnabled: boolean
 	remoteRulesToggles: ClineRulesToggles
 	remoteWorkflowToggles: ClineRulesToggles
+	// CARET MODIFICATION: Mode/Persona/Input history
+	caretModeSystem: "caret" | "cline" | undefined
+	enablePersonaSystem: boolean
+	currentPersona: string | undefined
+	inputHistory: string[]
+	// CARET MODIFICATION: Caret user profile propagated to webview
+	caretUserProfile: CaretUser | undefined
 }
 
 export interface Settings {

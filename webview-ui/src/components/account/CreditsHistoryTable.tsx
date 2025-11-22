@@ -20,11 +20,11 @@ const CreditsHistoryTable = ({ isLoading, usageData, paymentsData, showPayments 
 			{/* Tabs container */}
 			<div className="flex border-b border-[var(--vscode-panel-border)]">
 				<TabButton isActive={activeTab === "usage"} onClick={() => setActiveTab("usage")}>
-					{t("account.usageHistory", "common").toUpperCase()}
+					{t("account.usageHistory", "common")}
 				</TabButton>
 				{showPayments && (
 					<TabButton isActive={activeTab === "payments"} onClick={() => setActiveTab("payments")}>
-						{t("account.paymentsHistory", "common").toUpperCase()}
+						{t("account.paymentsHistory", "common")}
 					</TabButton>
 				)}
 			</div>

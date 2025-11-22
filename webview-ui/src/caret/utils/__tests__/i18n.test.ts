@@ -237,7 +237,10 @@ describe("i18n 성능 테스트", () => {
 		const start = Date.now()
 
 		for (let i = 0; i < 1000; i++) {
-			testWords.forEach((word) => hasLastConsonant(word))
+			// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+			for (const word of testWords) {
+				hasLastConsonant(word)
+			}
 		}
 
 		const duration = Date.now() - start

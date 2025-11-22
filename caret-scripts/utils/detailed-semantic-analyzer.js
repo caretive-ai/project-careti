@@ -125,10 +125,12 @@ function extractModes(data) {
 
 	const modePatterns = [/plan|act|planning|acting/gi, /chatbot|agent|chat|conversation/gi, /mode|state|context/gi]
 
-	modePatterns.forEach((pattern) => {
+	for (const pattern of modePatterns) {
 		const matches = dataStr.match(pattern) || []
-		matches.forEach((match) => modes.add(match.toLowerCase()))
-	})
+		for (const match of matches) {
+			modes.add(match.toLowerCase())
+		}
+	}
 
 	return Array.from(modes)
 }
@@ -197,10 +199,12 @@ function extractUserExperienceElements(data) {
 		/command|action|operation|function|feature/gi,
 	]
 
-	uxPatterns.forEach((pattern) => {
+	for (const pattern of uxPatterns) {
 		const matches = dataStr.match(pattern) || []
-		matches.forEach((match) => elements.add(match.toLowerCase()))
-	})
+		for (const match of matches) {
+			elements.add(match.toLowerCase())
+		}
+	}
 
 	return Array.from(elements)
 }
@@ -249,10 +253,12 @@ function extractAPIPatterns(data) {
 		/mcp|protocol|server|client/gi,
 	]
 
-	apiPatterns.forEach((pattern) => {
+	for (const pattern of apiPatterns) {
 		const matches = dataStr.match(pattern) || []
-		matches.forEach((match) => apis.add(match.toLowerCase()))
-	})
+		for (const match of matches) {
+			apis.add(match.toLowerCase())
+		}
+	}
 
 	return Array.from(apis)
 }

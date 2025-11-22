@@ -63,7 +63,9 @@ function extractCommands(content) {
 
 	// Extract workflow references
 	const workflowMatches = content.match(/\/[\w-]+(?:-workflow)?/g) || []
-	workflowMatches.forEach((ref) => commands.add(ref))
+	for (const ref of workflowMatches) {
+		commands.add(ref)
+	}
 
 	return Array.from(commands)
 }

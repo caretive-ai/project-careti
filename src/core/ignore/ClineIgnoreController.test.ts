@@ -47,7 +47,10 @@ describe("ClineIgnoreController", () => {
 				controller.validateAccess("README.md"),
 				controller.validateAccess("package.json"),
 			]
-			results.forEach((result) => result.should.be.true())
+			// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+			for (const result of results) {
+				result.should.be.true()
+			}
 		})
 
 		it("should block access to .clineignore file", async () => {
@@ -65,7 +68,10 @@ describe("ClineIgnoreController", () => {
 				controller.validateAccess("nested/deep/file.secret"),
 				controller.validateAccess("private/nested/deep/file.txt"),
 			]
-			results.forEach((result) => result.should.be.false())
+			// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+			for (const result of results) {
+				result.should.be.false()
+			}
 		})
 
 		it("should allow access to non-ignored files", async () => {
@@ -76,7 +82,10 @@ describe("ClineIgnoreController", () => {
 				controller.validateAccess("nested/deep/file.txt"),
 				controller.validateAccess("not-private/data.txt"),
 			]
-			results.forEach((result) => result.should.be.true())
+			// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+			for (const result of results) {
+				result.should.be.true()
+			}
 		})
 
 		it("should handle pattern edge cases", async () => {

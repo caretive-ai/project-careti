@@ -280,7 +280,17 @@
 		"payAsYouGo": "按使用付费",
 		"organization": "组织",
 		"payAsYouGoDescription": "* 所有订阅使用量耗尽后适用额外收费。",
-		"title": "账户"
+		"title": "账户",
+		"personal": "个人",
+		"date": "日期",
+		"model": "模型",
+		"creditsUsed": "已用积分",
+		"userHistory": "使用记录",
+		"paymentHistory": "付款记录",
+		"usageHistory": "使用记录",
+		"paymentsHistory": "付款记录",
+		"noUsageHistory": "暂无使用记录",
+		"noPaymentHistory": "暂无付款记录"
 	},
 	"common": {
 		"and": "和",

@@ -335,7 +335,10 @@ export class TerminalManager {
 		// }
 		this.terminalIds.clear()
 		this.processes.clear()
-		this.disposables.forEach((disposable) => disposable.dispose())
+		// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+		for (const disposable of this.disposables) {
+			disposable.dispose()
+		}
 		this.disposables = []
 	}
 

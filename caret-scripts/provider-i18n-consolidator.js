@@ -308,7 +308,9 @@ function validateConsolidation(providerId) {
 		return true
 	} else {
 		log("red", `❌ ${providerId} 통합 검증 실패:`)
-		issues.forEach((issue) => log("red", issue))
+		for (const issue of issues) {
+			log("red", issue)
+		}
 		return false
 	}
 }

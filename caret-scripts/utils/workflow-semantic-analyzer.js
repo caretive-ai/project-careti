@@ -96,7 +96,9 @@ function extractWorkflowConcepts(content) {
 
 	conceptPatterns.forEach((pattern) => {
 		const matches = contentStr.match(pattern) || []
-		matches.forEach((match) => concepts.add(match.toLowerCase()))
+		for (const match of matches) {
+			concepts.add(match.toLowerCase())
+		}
 	})
 
 	return Array.from(concepts)

@@ -68,7 +68,10 @@ export class EventEmitter<T> {
 	}
 
 	fire(data: T): void {
-		this.listeners.forEach((listener) => listener(data))
+		// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+		for (const listener of this.listeners) {
+			listener(data)
+		}
 	}
 }
 

@@ -271,7 +271,17 @@
 		"totalCost": "총 비용",
 		"logout": "로그아웃",
 		"termsOfServiceUrl": "https://caretive.ai/terms.ko.html",
-		"privacyPolicyUrl": "https://caretive.ai/privacy.ko.html"
+		"privacyPolicyUrl": "https://caretive.ai/privacy.ko.html",
+		"personal": "개인",
+		"date": "날짜",
+		"model": "모델",
+		"creditsUsed": "사용 크레딧",
+		"userHistory": "사용 이력",
+		"paymentHistory": "결제 이력",
+		"usageHistory": "사용 이력",
+		"paymentsHistory": "결제 이력",
+		"noUsageHistory": "사용 이력이 없습니다",
+		"noPaymentHistory": "결제 이력이 없습니다"
 	},
 	"common": {
 		"and": "및",

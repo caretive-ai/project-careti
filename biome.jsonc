@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.3.7/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -161,6 +161,14 @@
 			"plugins": [
 				"src/dev/grit/use-cache-service.grit"
 			]
+		},
+		{
+			"includes": [
+				"webview-ui/src/index.css"
+			],
+			"linter": {
+				"enabled": false
+			}
 		}
 	]
 }

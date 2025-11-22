@@ -1,4 +1,5 @@
 import { setTimeout as setTimeoutPromise } from "node:timers/promises"
+import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
 import { ApiHandler, ApiProviderInfo, buildApiHandler } from "@core/api"
 import { ApiStream } from "@core/api/transform/stream"
 import { AssistantMessageContent, parseAssistantMessageV2 } from "@core/assistant-message"
@@ -2078,10 +2079,13 @@ export class Task {
 			maxConsecutiveMistakes: this.stateManager.getGlobalSettingsKey("maxConsecutiveMistakes"),
 		})
 
+		const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretGlobalManager.currentMode
+
 		const promptContext: SystemPromptContext = {
 			cwd: this.cwd,
 			ide,
 			providerInfo,
+			modeSystem,
 			supportsBrowserUse,
 			mcpHub: this.mcpHub,
 			focusChainSettings: this.stateManager.getGlobalSettingsKey("focusChainSettings"),

@@ -1,0 +1,34 @@
+---
+title: "Caret 정책/기능 차이 레퍼런스 (소스 기반)"
+description: "Caret 소스/가이드에서 확인된 정책·기능 차이를 정리한 문서. 문서 업데이트 시 참조용."
+---
+
+## 개요
+- 기준: `caret-main` 소스와 `caret-docs` 가이드(예: `caret-features-specification.md`, `merging/attempt-2-master.md` 등).
+- 목적: 캐럿 전용 정책/기능을 문서화할 때 인용할 근거와 파일 위치를 한눈에 제공.
+
+## 주요 차이/정책 (요약)
+- **Rule Priority System**: `src/core/context/instructions/`에 구현된 규칙 우선순위. Cline 기본 룰보다 캐럿 규칙을 우선 적용하도록 문서에 명시.
+- **Account & Organization**: `src/services/account/`, `webview-ui/src/caret/components/`에서 계정/조직 관리. 인증/라우팅 차이와 조직별 설정 존재 여부를 주석으로 안내.
+- **다국어 i18n**: `webview-ui/src/caret/locale/` (30+ JSON). UI 텍스트/라벨은 캐럿 번역 기준으로 유지한다는 점을 문서에 병기.
+- **브랜딩 & UI**: `assets/`, `webview-ui/src/caret/components/` 기반의 캐럿 브랜딩(아이콘/배너/라벨). 캐럿 에셋을 우선 사용함을 문서에 명시.
+- **로깅 시스템**: `caret-src/utils/`, `webview-ui/src/caret/utils/` 경량 로깅. 텔레메트리 문서에서 캐럿 로깅 경로/옵션을 구분 필요.
+- **Voice/스타일 미이식**: `merging/v3.38.1/attempt-2-master.md` 기록에 따라 cline VoiceRecorder/PulsingBorder 스타일 일부는 정책상 미이식. 음성 기능 문서에 주석 필요.
+- **AGENTS.md/Rules**: 캐럿은 Rule Priority와 병행. AGENTS.md 지원 시 캐럿 규칙 우선 순서/스코프를 문서에 명시.
+
+## 소스/근거 파일
+- `caret-docs/caret-features-specification.md`: Caret vs Cline 차별화 표 (Rule Priority, Account/Org, i18n, Logging, Branding).
+- `caret-docs/merging/v3.38.1/attempt-2-master.md`: 정책상 미이식 항목(음성 스타일 등) 및 체크리스트.
+- `caret-docs/merging/merge-standard-guide.md`: 모델 버튼/설정 전파 확인, 정책 준수 검사 항목.
+- 코드 경로: `src/services/account/`, `src/core/context/instructions/`, `webview-ui/src/caret/components/`, `webview-ui/src/caret/locale/`, `caret-src/utils/`.
+
+## 문서 반영 가이드
+- 프로바이더/모델 문서: 지원/차단 모델, 지역/계정 제한, 라우팅 차이를 `<Note>`로 명시. 캐럿 라우터/조직 정책이 있으면 링크.
+- 기능 문서(룰, 멀티루트, 음성, 훅): 캐럿 우선 규칙/제한을 `<Note>`로 추가하고, Cline 기본 동작과 구분.
+- 텔레메트리 문서: 수집 항목/옵트인·옵트아웃/저장 위치를 캐럿 기준으로 명시.
+- 브랜딩/온보딩: 캐럿 에셋/라벨 사용, 지원 IDE/스토어 차이를 병기.
+
+## TODO (정책 값 확정 필요)
+- 모델 지원/차단 구체 목록과 지역/요금제 제한.
+- 인증/라우팅 세부(캐럿 라우터/로컬 엔드포인트) 및 조직별 정책.
+- 텔레메트리/로그 수집 항목과 보관 정책.

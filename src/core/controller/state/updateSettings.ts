@@ -99,6 +99,10 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 		if (request.mode !== undefined) {
 			const mode = request.mode === PlanActMode.PLAN ? "plan" : "act"
 			controller.stateManager.setGlobalState("mode", mode)
+			// CARET MODIFICATION: update caretModeSystem alongside plan/act mode
+			if (request.modeSystem !== undefined) {
+				controller.stateManager.setGlobalState("caretModeSystem", request.modeSystem as any)
+			}
 		}
 
 		if (request.openaiReasoningEffort !== undefined) {

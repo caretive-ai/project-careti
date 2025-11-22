@@ -461,6 +461,20 @@ export const ExtensionStateContextProvider: React.FC<{
 							// CARET MODIFICATION: Set caretUser from backend caretUserProfile
 							if (stateData.apiConfiguration?.caretUserProfile) {
 								setCaretUserState(stateData.apiConfiguration.caretUserProfile)
+								// CARET MODIFICATION: hydrate caret models from user profile if present
+								const userModels = stateData.apiConfiguration.caretUserProfile.models || []
+								if (userModels.length > 0) {
+									const mappedModels: Record<string, ModelInfo> = {}
+									userModels.forEach((modelId) => {
+										mappedModels[modelId] = caretModels[modelId as keyof typeof caretModels] || {
+											maxTokens: -1,
+											contextWindow: 128_000,
+											supportsImages: true,
+											supportsPromptCache: true,
+										}
+									})
+									setCaretModels(mappedModels)
+								}
 							}
 
 							// CARET MODIFICATION: Sync ExtensionState to localStorage

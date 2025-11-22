@@ -94,6 +94,8 @@ export interface SystemPromptContext {
 	readonly providerInfo: ApiProviderInfo
 	readonly cwd?: string
 	readonly ide: string
+	// CARET MODIFICATION: caret/cline mode system for prompt selection
+	readonly modeSystem?: "caret" | "cline"
 	readonly supportsBrowserUse?: boolean
 	readonly mcpHub?: McpHub
 	readonly focusChainSettings?: FocusChainSettings

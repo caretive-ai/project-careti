@@ -1,11 +1,11 @@
 {
-	"enableCaretAccountFeatures": false,
-	"showPersonaSettings": false,
-	"redirectAfterApiSetup": "home",
+	"enableCaretAccountFeatures": true,
+	"showPersonaSettings": true,
+	"redirectAfterApiSetup": "persona",
 	"defaultModeSystem": "caret",
-	"firstListingProvider": "litellm",
-	"defaultProvider": "litellm",
+	"firstListingProvider": "caret",
+	"defaultProvider": "caret",
 	"showOnlyDefaultProvider": false,
-	"showCostInformation": false,
-	"defaultPersonaEnabled": false
+	"showCostInformation": true,
+	"defaultPersonaEnabled": true
 }

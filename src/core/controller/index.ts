@@ -230,8 +230,19 @@ export class Controller {
 	// CARET MODIFICATION: Integrate CaretGlobalManager userInfo with StateManager setSecret
 	async syncCaretUserInfoToSecret() {
 		try {
-			const caretUserInfo = CaretGlobalManager.userInfo
+			let caretUserInfo = CaretGlobalManager.userInfo
 			const customToken = CaretGlobalManager.authToken as string
+
+			// If the token arrived but user profile has not been populated yet, populate it now.
+			if (!caretUserInfo && customToken) {
+				try {
+					await CaretGlobalManager.get().setTokenFromCallback(customToken)
+					caretUserInfo = CaretGlobalManager.userInfo
+				} catch (error) {
+					console.error("[Controller] ❌ Failed to fetch Caret user info from token:", error)
+				}
+			}
+
 			if (caretUserInfo) {
 				console.log("[Controller] 🔑 Syncing Caret user info to secret storage", caretUserInfo)
 				;(this.stateManager as any).setGlobalState?.("caretUserProfile", caretUserInfo)
@@ -1045,6 +1056,7 @@ export class Controller {
 			preferredLanguage,
 			openaiReasoningEffort,
 			mode,
+			modeSystem,
 			strictPlanModeEnabled,
 			yoloModeToggled,
 			useAutoCondense,
@@ -1103,7 +1115,6 @@ export class Controller {
 			lastDismissedCliBannerVersion,
 			subagentsEnabled,
 			inputHistory,
-			modeSystem,
 			enablePersonaSystem,
 			currentPersona,
 			personaProfile,

@@ -20,12 +20,19 @@ export class SharedUriHandler {
 		// by replacing them with a placeholder before parsing
 		const queryString = parsedUrl.search.slice(1) // Remove leading '?'
 		const query = new URLSearchParams(queryString.replace(/\+/g, "%2B"))
+		// Some auth providers (Cline, Caret) return tokens in the hash fragment.
+		const hashString = parsedUrl.hash.startsWith("#") ? parsedUrl.hash.slice(1) : parsedUrl.hash
+		const hashQuery = hashString ? new URLSearchParams(hashString.replace(/\+/g, "%2B")) : undefined
+
+		// Unified getter that checks query first, then fragment
+		const getParam = (key: string) => query.get(key) || hashQuery?.get(key)
 
 		Logger.info(
 			"SharedUriHandler: Processing URI:" +
 				JSON.stringify({
 					path: path,
 					query: query,
+					hashQuery: hashQuery,
 					scheme: parsedUrl.protocol,
 				}),
 		)
@@ -58,13 +65,14 @@ export class SharedUriHandler {
 					return false
 				}
 				case "/auth": {
-					const provider = query.get("provider")
+					const provider = getParam("provider")
 
 					Logger.info(`SharedUriHandler - Auth callback received for ${provider} - ${path}`)
 
-					const token = query.get("token") || query.get("refreshToken") || query.get("idToken") || query.get("code")
-					const state = query.get("state")
-					const apiKey = query.get("apiKey")
+					const token =
+						getParam("token") || getParam("refreshToken") || getParam("idToken") || getParam("code") || undefined
+					const state = getParam("state")
+					const apiKey = getParam("apiKey")
 
 					if (token) {
 						// CARET MODIFICATION: Initialize Caret session when provider=caret (or unspecified but token present)

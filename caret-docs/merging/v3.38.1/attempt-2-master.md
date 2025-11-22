@@ -36,6 +36,7 @@
 | Section 0 | Caret Feature 원칙 재확인 (F01~F11) | ✅ 완료 | features/index.md/F01~F11 재검토
 | Phase A | 파일 매트릭스 & 자동 추출 스크립트 작성 | ✅ 완료 | classify/extract/analyze/compare/incremental 구현 및 리포트 생성
 | Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ✅ 완료 | B0~B5 완료. Webview cline 개선/Hook/환경색 이식, MCP/History/Marketplace 추가 변경 없음. **2025-11-22: package.json Activity Bar/명령 카테고리 및 assets 아이콘을 Caret 브랜드로 재정렬(누락 복구)**. **2025-11-22: Cline 기반 음성 UI(녹음 글로우 포함) 및 Provider CTA 정렬, 계정 i18n 키 누락 복구, Cline 로그인 시 자동 provider 선택 적용, Caret 로그인 콜백 처리 복원(SharedUriHandler) 및 Persona 템플릿 이미지 번들링 복구** |
+| Phase B-추가 | 프론트 잔여 보강 | ✅ 완료 | **2025-11-23:** Persona/배너 자산 `?inline` 인라인 로드(403 방지), caretUserProfile GlobalState 타입/로드 경로 추가, Caret 로그인 시 await 적용 및 caretModeSystem 전달 보강, 모델 선택 CTA 중복 제거. 빌드 `npm run compile -- --filter webview-ui` 통과 |
 | Phase C | 통합 테스트 & E2E 복구 | ✅ 완료 | Unit 527 pass, Integration 404 pass. E2E는 Playwright 시스템 의존성으로 CI/CD 환경에서 실행 필요. |
 | Phase D | Caret CLI 구현/프롬프트/배너/문서 반영 | ⏳ 예정 | `b4-caret-cli-plan.md` 기준으로 CLI 배너/감지/프롬프트/문서·공지 반영 |
 | Phase E | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | CLI 반영 후 CHANGELOG/announcement/Features 분리 작업 포함 |
@@ -260,6 +261,7 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-21 18:07 | Codex | **Phase B2 완료(Local Commit)**. `git push` 권한 오류(403)로 원격 반영 실패. 로컬 상태 유지하며 Phase B3(Webview) 착수 결정.
 | 2025-11-22 00:20 | Claude | **Phase C 진행**: Unit 527 pass, Integration 404 pass. `test-setup.js` path alias 수정(`@caret/*`→`out/caret-src/*`), `registry.ts` command prefix 수정(`"cline"` 고정), `caret-scripts/` 복사.
 | 2025-11-22 00:45 | Luke | **Phase C E2E 완료**: `npm run test:e2e` 실행 완료. VSIX 빌드 및 Playwright 테스트 통과. Phase C 검증 완료.
+| 2025-11-23 02:17 | Codex | 피드백 6건 1차 정리: auth 콜백에서 hash fragment 파싱 추가(Caret/Cline 로그인 토큰 누락 해결), Caret user 프로필 미로딩 시 토큰 재사용 fetch, system prompt context에 modeSystem 전파, webview `feature-config.json`을 backend 값으로 복원(계정 CTA/Provider 기본값 노출). `npm run compile -- --filter webview-ui` 통과. |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 

@@ -253,7 +253,9 @@
 						"pages": [
 							"troubleshooting/terminal-quick-fixes",
 							"troubleshooting/terminal-integration-guide",
-							"more-info/telemetry"
+							"more-info/telemetry",
+							"merging/update-strategy",
+							"merging/caret-docs-playbook"
 						]
 					}
 				]

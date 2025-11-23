@@ -1,40 +1,535 @@
-# Repository Guidelines
+# AGENTS.md
 
-## Project Structure & Module Organization
-- Core VS Code extension code lives in `src/` (activation in `src/extension.ts`; hosts, services, and proto-generated helpers under `src/hosts`, `src/services`, `src/generated`).
-- Webview UI (React + Vite + Tailwind) sits in `webview-ui/` with Storybook support; shared assets in `assets/`.
-- CLI and packaging helpers reside in `cli/`, `scripts/`, and `caret-scripts/`; protocol definitions in `proto/`.
-- Tests are split across `tests/` (e2e/flow), `src/test/` (extension integration harness), and `webview-ui` tests.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Build, Test, and Development Commands
-- Install deps: `npm run install:all` (root + `webview-ui`).
-- Develop extension: `npm run dev` (build protos + watch TypeScript) and `npm run dev:webview` for UI-only work.
-- Type checks/lint: `npm run check-types`, `npm run lint`, `npm run format` (changed files), `npm run fix:all` (aggressive).
-- Build: `npm run compile` for extension, `npm run build:webview` for UI, `npm run package` for production bundle.
-- Tests: `npm test` (unit + integration), `npm run test:unit`, `npm run test:integration`, `npm run e2e` (Playwright), `npm run test:webview` (Vitest), `npm run test:coverage` for coverage.
+## Project Overview
 
-## Coding Style & Naming Conventions
-- TypeScript everywhere; prefer explicit types on exports and async boundaries. React components in `webview-ui` use functional components/hooks.
-- Follow Biome defaults (imports sorted, single quotes allowed per config). Run linters/formatters before pushing.
-- Use `PascalCase` for React components and classes, `camelCase` for functions/variables, `SCREAMING_SNAKE_CASE` for env constants.
-- Co-locate module-specific helpers with their feature directories; avoid deep relative paths by using existing tsconfig path aliases.
+**Caret** is an autonomous AI coding assistant VS Code extension that can create/edit files, run terminal commands, use the browser, and integrate with various AI models. It's a **Cline-based fork** with minimal extension strategy - preserving Cline core functionality while adding Caret-specific features through `caret-src/` directory.
 
-## Testing Guidelines
-- Unit tests use Mocha/Chai (`*.test.ts`) for extension logic; integration uses `vscode-test`. Webview tests use Vitest and React Testing Library.
-- E2E flows use Playwright; run `npm run test:e2e:build` before `npm run e2e` if packaging is needed locally.
-- Update prompt snapshots with `UPDATE_SNAPSHOTS=true npm run test:unit`.
-- Prefer deterministic fixtures and avoid hitting real APIs; mock providers and file I/O where possible. Keep coverage healthy with `npm run test:coverage`.
+- **Name Origin**: Caret refers to the '^' symbol (NOT carrot 🥕)
+- **Architecture**: Direct Cline integration with Level 1-3 modification strategy
+- **Repository**: https://github.com/aicoding-caret/caret
 
-## Commit & Pull Request Guidelines
-- Write concise, present-tense commit subjects (e.g., `Fix webview auth timeout`, `Add proto build guard`). Keep related changes together.
-- Before opening a PR: ensure `npm run check-types`, `npm run lint`, and relevant tests pass; include `npm run test:webview` for UI changes.
-- PR description should state the problem, the solution, and test evidence; link related issues and add screenshots for UI-visible changes.
-- Avoid committing generated artifacts (`dist/`, `dist-standalone/`, `out/`, `node_modules/`); run `npm run clean:build` if needed before packaging.
+## 🤖 Agent Configuration
+```json
+{
+    "auto_read_paths": [
+        ".caretrules/caret-rules.json"
+    ],
+    "instruction": "Read .caretrules/caret-rules.json first. It contains the project rules and an index of workflows. Read specific workflow files ON DEMAND as needed."
+}
+```
 
-## 한국어 안내
-- 문서/PR/커밋은 영어가 기본이지만, 설명이 더 명확하다면 한국어도 허용합니다. PR 본문에는 영어 요약 한 줄을 추가해 주세요.
-- 에러 로그나 재현 절차는 원문(영문/한글) 그대로 첨부하고, 필요한 경우 짧은 영어 주석을 덧붙여 주세요.
+## Critical Caret-Specific Rules
 
-## Security & Configuration Tips
-- Do not commit API keys or user data; prefer local env files and VS Code secret storage. Check `.gitignore` before adding new config.
-- When adding MCP providers or external calls, validate inputs and sanitize logs to avoid leaking tokens. Use existing config helpers in `src/config.ts`.
+### 🚨 File Modification Protocol (.cline backup deprecated - use CARET MODIFICATION only)
+Before modifying ANY Cline original file:
+1. **Check if it's protected**: `src/`, `webview-ui/`, `proto/`, `scripts/`, `evals/`, `docs/`, `locales/`, root configs/
+2. **Add comment**: `// CARET MODIFICATION: [clear description]`
+3. **Minimal changes**: Maximum 1-3 lines per file
+4. **Complete replacement**: Never comment out old code
+5. **Verify compilation**: `npm run compile` must pass
+
+### Architecture Levels (L1→L2→L3 Framework)
+- **Level 1 (Preferred)**: Independent modules in `caret-src/`, `caret-docs/` (full freedom)
+- **Level 2 (Conditional)**: Minimal Cline modifications with CARET MODIFICATION comment
+- **Level 3 (Last Resort)**: Direct modification with complete documentation
+
+### Caret Extensions
+- **caret-src/**: Caret-specific code (complete freedom)
+- **caret-docs/**: Caret documentation system
+- **assets/**: Caret resources
+- **caret-scripts/**: Caret automation scripts
+
+## TDD Development Guidelines
+
+### 🚨 Critical: Proper TDD Order
+
+**❌ Wrong Approach (Bottom-up)**:
+```
+1. Write unit tests for helper functions → Implement helpers → Refactor
+2. Later: "Integrate into actual usage"
+```
+
+**✅ Correct Approach (Top-down)**:
+```  
+1. RED: Write integration/E2E test for actual usage scenario
+2. GREEN: Implement all necessary code to make integration test pass
+3. REFACTOR: Improve code quality while keeping integration test passing
+```
+
+**Example - WebView Feature Development**:
+- ❌ Wrong: Start with `isValidInput()` unit test
+- ✅ Correct: Start with "User clicks button → Expected result shown" component test
+
+**Example - Backend Feature Development**:
+- ❌ Wrong: Start with `parseConfig()` unit test  
+- ✅ Correct: Start with "Config change → System behavior change" integration test
+
+### TDD Checklist
+- [ ] Start with actual usage scenario test (integration/E2E)
+- [ ] Verify test fails (RED)
+- [ ] Implement minimum code to make test pass (GREEN)
+- [ ] Refactor while keeping test passing
+- [ ] Unit tests are byproducts, not starting points
+
+## Common Commands
+
+### Development
+```bash
+# Install dependencies for both extension and webview
+npm run install:all
+
+# Start development (launches new VS Code window with extension)
+npm run watch
+
+# Build extension
+npm run compile
+
+# Build for production
+npm run package
+
+# Build standalone version
+npm run compile-standalone
+```
+
+### Testing
+```bash
+# 🚨 CARET SPECIFIC: Fast testing commands (use these)
+npm run test:backend        # Backend tests (fast)
+npm run test:webview       # Frontend tests (fast)
+npm run test:backend:watch # Watch mode
+
+# Full test suites (slower)
+npm run test:all           # Complete test suite
+npm run test:ci            # Full CI test suite
+npm run caret:coverage     # Coverage report
+
+# ❌ NEVER USE: npm test (extremely slow - full build+compile+lint+all tests)
+```
+
+### Code Quality
+```bash
+# Type checking
+npm run check-types
+
+# Linting
+npm run lint
+
+# Auto-format code
+npm run format:fix
+
+# Fix all issues (including unsafe fixes)
+npm run fix:all
+
+# Protocol buffer generation
+npm run protos
+```
+
+### Webview Development
+```bash
+# Start webview dev server
+npm run dev:webview
+
+# Build webview for production  
+npm run build:webview
+```
+
+## Architecture Overview
+
+### Core Structure (Caret Fork)
+```
+src/                   # Cline original (preserve, backup before changes)
+├── extension.ts       # VS Code extension entry point
+├── core/             # Main extension logic
+│   ├── webview/      # Webview lifecycle management
+│   ├── controller/   # Message handling & task management
+│   ├── task/        # Tool execution & API requests
+│   ├── api/         # AI provider integrations
+│   ├── context/     # Context management & tracking
+│   ├── prompts/     # System prompt generation
+│   └── storage/     # State persistence
+├── integrations/    # External service integrations
+├── services/       # Shared services (auth, logging, etc.)
+├── shared/         # Types & utilities shared between extension/webview
+├── hosts/          # Host platform abstractions (VS Code, external)
+└── utils/         # General utilities
+
+caret-src/            # Caret extensions (full freedom)
+├── extension.ts      # Caret-specific entry points
+├── core/            # Caret-specific core logic
+├── shared/         # Caret-specific shared utilities
+└── utils/          # Caret-specific utilities
+
+caret-docs/          # Caret documentation (full freedom)
+assets/        # Caret resources (full freedom)
+caret-scripts/       # Caret automation (full freedom)
+webview-ui/          # React frontend (Cline original, backup before changes)
+```
+
+### Key Components
+
+**Extension Flow**: `extension.ts` → `WebviewProvider` → `Controller` → `Task` execution
+
+**Caret Extensions**: `CaretProvider extends WebviewProvider` (Level 1 architecture)
+
+**Webview**: React-based UI built separately in `webview-ui/` directory using Vite
+
+**AI Integration**: Modular provider system in `src/core/api/providers/` supporting 20+ AI services
+
+**Tool System**: Extensible tool handlers in `src/core/task/tools/handlers/` for file operations, terminal commands, browser automation, etc.
+
+**Context Management**: Smart context window management with file tracking and AST parsing
+
+**MCP Integration**: Model Context Protocol support for custom tool extensions
+
+### Caret-Specific Components
+- **Brand Management**: Dynamic branding system (Caret ↔ CodeCenter switching)
+- **Prompt System**: Dual prompt system switching (Caret AGENT MODE ↔ Cline ACT MODE)
+- **Frontend-Backend Communication**: **ALL communication MUST use gRPC** - NO custom message types
+- **Storage Patterns**: globalState vs workspaceState consistency
+- **Rule System**: JSON-based rules (`.caretrules/caret-rules.json`) with Korean docs
+
+## Development Patterns
+
+### Frontend-Backend Communication
+**CRITICAL**: ALL frontend-backend communication MUST use gRPC protocol to maintain Cline code integrity:
+
+**✅ Correct - gRPC Method**:
+```typescript
+// Frontend
+import { CaretSystemServiceClient } from "@/services/grpc-client"
+const response = await CaretSystemServiceClient.SetPromptSystemMode({ mode: "caret" })
+
+// Backend - Add to proto/caret/*.proto, then implement handler
+export async function SetPromptSystemMode(controller: Controller, request: proto.caret.SetPromptSystemModeRequest)
+```
+
+**❌ Wrong - Custom Message Types**:
+```typescript
+// DON'T DO THIS - requires modifying Cline's WebviewMessage type
+vscode.postMessage({ type: 'custom/message', payload: data })
+```
+
+**Implementation Steps**:
+1. Define service in `proto/caret/*.proto`
+2. Run `npm run protos` to generate client/server code
+3. Implement handler in `src/core/controller/[service]/`
+4. Use generated `*ServiceClient` in frontend
+
+### Caret State Management Pattern
+**CRITICAL**: Use CaretGlobalManager for persistent Caret state that needs backend integration:
+
+**✅ Correct - CaretGlobalManager Pattern**:
+```typescript
+// CaretGlobalManager.ts - Add state management methods
+export class CaretGlobalManager {
+  private _inputHistory: string[] = []
+
+  public async getInputHistory(): Promise<string[]> {
+    if (this._inputHistory.length === 0) {
+      const response = await StateServiceClient.getSettings()
+      this._inputHistory = response.inputHistory || []
+    }
+    return this._inputHistory
+  }
+
+  public async setInputHistory(history: string[]): Promise<void> {
+    this._inputHistory = history // Local cache for performance
+    await StateServiceClient.updateSettings({ inputHistory: history })
+  }
+
+  // Static accessors for convenience
+  public static async getInputHistory(): Promise<string[]> {
+    return CaretGlobalManager.get().getInputHistory()
+  }
+}
+
+// Usage in frontend hooks
+const { inputHistory, addToHistory } = usePersistentInputHistory()
+// Inside hook: await CaretGlobalManager.setInputHistory(newHistory)
+```
+
+**Pattern Benefits**:
+- **Hybrid Storage**: Local cache (fast access) + gRPC backend (persistence)
+- **Cross-Session**: Survives VS Code restart/workspace switching
+- **Singleton Access**: Consistent state across all components
+- **Type Safety**: Full TypeScript integration via gRPC
+
+### Path Aliases
+The project uses TypeScript path aliases defined in `tsconfig.json`:
+- `@/*` → `src/*`
+- `@core/*` → `src/core/*`
+- `@integrations/*` → `src/integrations/*`
+- `@services/*` → `src/services/*`
+- `@shared/*` → `src/shared/*`
+- `@utils/*` → `src/utils/*`
+
+### Code Style
+- **Formatter**: Biome (configured in `biome.jsonc`) - NOT Prettier
+- **Testing**: Vitest - NOT Jest
+- **Indentation**: Tabs (width 4)
+- **Line width**: 130 characters
+- **Semicolons**: As needed
+- **Quotes**: Double quotes for JSX, preference for consistency elsewhere
+
+### Logging Guidelines
+- **NEVER use console.log/warn/error** - Use Logger.debug/info/warn/error instead
+- **Debug logging**: `Logger.debug()` for development debugging (controlled by log level)
+- **Production logging**: `Logger.info()` for important events, `Logger.warn()` for warnings
+- **Error logging**: `Logger.error()` for actual errors that need attention
+- **Format**: Use consistent prefixes like `[ComponentName] 🎯 Message` for easy filtering
+
+### Naming Conventions (Caret-Specific)
+- **Utilities**: kebab-case (`brand-utils.ts`)
+- **Components**: PascalCase (`CaretProvider.ts`)
+- **Tests**: Match source (`brand-utils.test.ts`)
+- **Docs**: kebab-case (`new-developer-guide.md`)
+- **Backups**: `{filename-extension}.cline`
+
+### Testing Strategy
+- **Unit tests**: Core logic and utilities
+- **Integration tests**: Extension functionality with VS Code API
+- **E2E tests**: Full user workflows with Playwright
+- **Test files**: Located alongside source files with `.test.ts` suffix
+
+### Protocol Buffers
+The project uses protobuf for type-safe communication:
+- Definitions in `proto/` directory
+- Generated code in `src/generated/`
+- Run `npm run protos` after modifying `.proto` files
+
+### State Management
+- Extension state persisted via VS Code's storage API
+- Context tracking for file changes and model usage
+- State migrations handled in `src/core/storage/state-migrations.ts`
+
+### Internationalization (i18n)
+Caret supports multilingual UI with 4 languages: Korean, English, Japanese, Chinese.
+
+**Namespace Rules**:
+- Use **feature-based namespaces**: Each major feature has its own JSON file
+- `common.json`: Shared UI elements (`button.save`, `error.generic`)
+- `settings.json`: Settings page content (`settings.tabs.api`, `providers.openrouter.name`)
+- `chat.json`: Chat interface content
+- Other feature-specific namespaces as needed
+
+**Translation Function Usage**:
+```typescript
+import { t } from '@/caret/utils/i18n'
+
+// ✅ Correct pattern
+t('button.save', 'common')                    // Basic usage
+t('providers.openrouter.name', 'settings')   // Provider translations
+t('message.welcome', 'common', { user: 'John' }) // With variables
+
+// ❌ Wrong patterns - NEVER include namespace in key
+t('common.button.save')                       // Wrong
+t('settings.providers.openrouter.name')      // Wrong
+```
+
+**Dynamic Translation Pattern** (for language switching):
+```typescript
+// Convert static constants to dynamic functions
+export const getMenuItems = () => [
+    { label: t('menu.file', 'common') },
+    { label: t('menu.edit', 'common') }
+]
+
+// Use with useMemo in components
+const { language } = useCaretI18nContext()
+const menuItems = useMemo(() => getMenuItems(), [language])
+```
+
+**Key Guidelines**:
+- Place translations in correct namespace (`settings` vs `common`)
+- Provider keys follow `providers.{providerId}.{key}` pattern
+- Model picker keys: `providers.{providerId}.modelPicker.{key}`
+- Always use namespace as second parameter, never in key name
+
+## Key Files to Understand
+
+### Cline Original Files (Backup Before Modifying)
+- `src/extension.ts` - Extension activation and command registration
+- `src/core/webview/WebviewProvider.ts` - Webview lifecycle and communication
+- `src/core/controller/index.ts` - Main message routing and task coordination
+- `src/core/task/index.ts` - Task execution engine and tool orchestration
+- `src/core/prompts/system-prompt/` - Dynamic system prompt generation
+- `src/shared/ExtensionMessage.ts` - Message types between extension and webview
+- `webview-ui/src/App.tsx` - Main React application entry point
+
+### Caret-Specific Files (Full Freedom)
+- `caret-src/extension.ts` - Caret extension entry points
+- `caret-src/core/webview/CaretProvider.ts` - Caret webview provider
+- `caret-src/shared/brand-utils.ts` - Brand management utilities
+- `caret-src/utils/` - Caret-specific utilities
+- `.caretrules/caret-rules.json` - Caret development rules (AI reference)
+- `caret-docs/development/caret-rules.ko.md` - Korean rule documentation
+
+## Common Issues
+
+### Build Issues
+
+#### TypeScript Compilation
+- **Critical**: TypeScript (`tsc`) is configured with `noEmit: true` in `tsconfig.json`
+- This means `tsc` ONLY checks types and NEVER generates .js files
+- Only `esbuild.mjs` creates the bundled output at `dist/extension.js`
+
+#### Stray .js Files Problem
+If changes aren't reflected after `npm run compile`:
+```bash
+# 1. Check for stray .js files in source directories
+find src caret-src -name "*.js" -o -name "*.js.map"
+
+# 2. If found, delete them
+find src caret-src -name "*.js" -o -name "*.js.map" | xargs rm -f
+
+# 3. Clean build
+npm run clean
+npm run compile
+
+# 4. Reload VS Code window
+# Command: Developer: Reload Window (Cmd+Shift+P)
+```
+
+**Why this happens**: Someone ran `tsc` without `--noEmit` before `noEmit: true` was added to tsconfig.json, or VSCode is loading old .js files instead of the bundled dist/extension.js.
+
+#### Standard Build Issues
+- Run `npm run clean` to clear build artifacts
+- Ensure protobuf generation is up to date with `npm run protos`
+- Check that both root and webview-ui dependencies are installed
+
+**See also**: `.caretrules/build-system.md` for detailed build system rules
+
+### Testing Issues
+- Linux requires specific system libraries (see CONTRIBUTING.md)
+- E2E tests need the extension packaged first
+- Use `npm run test:ci` for complete test validation
+
+### Development Setup
+- Install recommended VS Code extensions when prompted
+- Use F5 to launch development instance
+- Webview changes require extension reload in development window
+
+## Caret Development Quick Reference
+
+### 🚨 Pre-Development Checklist
+1. **Read Rules**: Check `.caretrules/caret-rules.json` for current constraints
+2. **Korean Docs**: Reference `caret-docs/development/caret-rules.ko.md` for detailed explanations
+3. **TDD First**: Always start with integration tests, not unit tests
+4. **Backup Required**: Before modifying any `src/`, `webview-ui/` files
+
+### Storage Usage Patterns
+- **chatSettings**: Use `workspaceState` (project-specific)
+- **globalSettings**: Use `globalState` (user-wide)
+- **Consistency Rule**: Save and load must use same storage type
+
+### Protocol Buffer Development Rules
+- **Caret Fields**: Use `current_cline_max + 1000` to avoid merge conflicts
+- **Example**: If Cline's last field is `72`, Caret uses `1072+`
+- **Location**: `proto/cline/models.proto` ModelsApiConfiguration message
+- **Comment Format**: `// CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)`
+
+### 🚨 CRITICAL: Generated Proto Code Modification Rules
+**NEVER directly edit generated proto files** - they are overwritten on every `npm run protos`:
+- ❌ **NEVER**: Edit `src/generated/**/*.ts` directly
+- ❌ **NEVER**: Edit `webview-ui/src/services/grpc-client.ts` directly
+- ✅ **ALWAYS**: Modify `scripts/build-proto.mjs` for fixes
+- ✅ **UPDATE**: `postProcessGeneratedFiles()` function for namespace/import fixes
+- **Example**: Add new Caret types to the replacement patterns in the script
+
+### Testing Workflow
+```bash
+# 1. Write integration test first (TDD RED)
+npm run test:webview  # Verify test fails
+
+# 2. Implement minimal code (TDD GREEN)
+npm run compile       # Verify compilation
+npm run test:backend  # Verify backend tests
+
+# 3. Refactor (TDD REFACTOR)
+npm run test:all      # Full verification
+```
+
+### Rule Management System & AI Workflow Documentation
+
+**Three-Level Documentation Structure:**
+
+#### `.caretrules/` ROOT (Quick Reference - AI Task Catalog)
+- **Purpose**: Token-optimized summaries for frequent AI reference
+- **Format**: Markdown (50-80 lines per file)
+- **Language**: English
+- **Content**: "What tasks can AI do" - Quick checklists, core principles, workflows references
+- **Structure**: 24 files
+  - `ai-feature.md`, `ai-work-protocol.md`, `caret-development.md`
+  - `cline-modification.md`, `critical-verification.md`, `document-organization.md`
+  - `merge-strategy.md`, `new-component.md`, `testing-work.md`
+  - Plus 15 other task-specific files
+- **Optimization**: 61% token reduction (ROOT files reference detailed workflows)
+
+#### `.caretrules/workflows/` (Detailed Procedures - AI Execution)
+- **Purpose**: "How to perform tasks" - Step-by-step detailed procedures
+- **Format**: Markdown (100-250 lines per file)
+- **Language**: English
+- **Content**: Complete workflows with code examples, verification steps, checklists
+- **Structure**: 11 files
+  - `ai-feature.md`, `ai-work-protocol.md`, `caret-development.md`
+  - `cline-modification.md`, `critical-verification.md`, `document-organization.md`
+  - `merge-strategy.md`, `new-component.md`, `testing-work.md`
+  - `branding-and-logging.md`, `i18n-static-translation-fix.md`
+
+#### `.caretrules/workflows/atoms/` (Reusable Units)
+- **Purpose**: Minimal reusable knowledge units
+- **Format**: YAML or Markdown
+- **Language**: English
+- **Content**: Atomic patterns like `/tdd-cycle`, `/naming-conventions`, `/storage-patterns`
+- **Structure**: 12 atomic workflow units
+
+#### `caret-docs/development/` (Developer Documentation)
+- **Purpose**: Korean developer-friendly guides
+- **Format**: Markdown
+- **Language**: Korean (한글)
+- **Content**: 23+ architecture and development guides
+  - `caret-architecture-and-implementation-guide.md`
+  - `component-architecture-principles.md`
+  - `frontend-backend-interaction-patterns.md`
+  - `ai-message-flow-guide.md`, `testing-guide.md`, `link-management-guide.md`
+  - And more...
+
+#### Documentation Rules (AI Responsibility)
+1. **Language Separation**:
+   - `.caretrules/*` = English (AI consumption, token-optimized)
+   - `caret-docs/development/*` = Korean (developer-friendly)
+2. **Reference Structure**:
+   - ROOT files reference workflows: "See `.caretrules/workflows/[filename].md` for details"
+   - Workflows may reference atoms: Use `/atom-name` pattern
+3. **Consistency**: ROOT and workflows must be semantically aligned
+4. **Token Optimization**: ROOT = summaries, WORKFLOWS = complete procedures
+
+#### How to Use This Structure
+```bash
+# AI starting a task:
+# 1. Check ROOT for quick overview (ai-feature.md, 60 lines)
+# 2. If needed, read detailed workflow (workflows/ai-feature.md, 245 lines)
+# 3. Reference atoms as needed (workflows/atoms/tdd-cycle.md)
+
+# Example task flow:
+# User: "Implement AI feature X"
+# AI: Read .caretrules/ai-feature.md (60 lines, quick checklist)
+# AI: If complex, read .caretrules/workflows/ai-feature.md (245 lines, detailed)
+# AI: Apply atoms: /tdd-cycle, /verification-steps, /storage-patterns
+```
+
+### Available Documentation
+
+#### ROOT Quick References (`.caretrules/*.md`)
+24 files - Token-optimized task catalog
+
+#### Detailed Workflows (`.caretrules/workflows/*.md`)
+11 files - Complete procedures with examples
+
+#### Atomic Patterns (`.caretrules/workflows/atoms/`)
+12 files - Reusable minimal units
+
+#### Korean Developer Docs (`caret-docs/development/*.md`)
+23+ files - Developer-friendly Korean guides

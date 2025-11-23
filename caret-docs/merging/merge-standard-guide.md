@@ -18,6 +18,34 @@
 6. [Feature 문서 작성 기준](#feature-문서-작성-기준)
 7. [교훈 및 함정](#교훈-및-함정)
 8. [문제 해결 가이드](#문제-해결-가이드)
+9. [최신 머징 전략 (Attempt 2 기반)](#최신-머징-전략-attempt-2-기반)
+
+---
+
+## 최신 머징 전략 (Attempt 2 기반)
+
+### 1. Hybrid Pattern (하이브리드 패턴)
+**정의**: Cline의 기존 로직을 유지하면서 Caret의 기능을 선택적으로 주입하는 패턴. `Level 2 (Conditional)`의 구체화된 형태입니다.
+
+**적용 원칙**:
+- **Intercept & Delegate**: Cline의 핵심 로직 실행 직전에 Caret 모드인지 확인하고, 맞다면 Caret 전용 로직으로 위임합니다.
+- **Fallback to Base**: Caret 모드가 아니거나 특정 조건이 맞지 않으면 즉시 Cline 원본 로직으로 떨어집니다.
+
+**성공 사례 (Attempt 2)**:
+- **System Prompt**: `Task/index.ts`에서 `modeSystem`을 확인. `"caret"`이면 `CaretPromptWrapper` 사용, 아니면 기존 `PromptRegistry` 사용.
+- **Auth**: `SharedUriHandler.ts`에서 `provider === "caret"`일 때만 `CaretGlobalManager`로 토큰 처리, 그 외엔 기존 로직 수행.
+
+### 2. Logic-based 3-way Comparison (논리 기반 3자 비교)
+**정의**: 단순한 코드 diff가 아니라, **Base Logic (Cline)**, **Target Logic (Caret Specs)**, **Merged Logic (Implementation)** 3가지 차원에서 논리적 정합성을 검증하는 방법.
+
+**검증 프로세스**:
+1. **Base Logic 분석**: 원본 Cline이 어떻게 동작하는지 파악 (예: Query 파라미터만 파싱).
+2. **Target Logic 정의**: Caret이 무엇을 필요로 하는지 정의 (예: Hash 파라미터 파싱 필요).
+3. **Merged Logic 검증**: 구현된 코드가 Base를 해치지 않으면서 Target을 달성했는지 확인 (예: Query + Hash 모두 파싱하도록 확장).
+
+**문서화**: 리뷰 문서 작성 시 이 3가지 차원의 비교 표를 포함하여 "왜 이렇게 수정했는지"를 논리적으로 증명해야 합니다.
+
+---
 
 ---
 
@@ -96,6 +124,23 @@ cd webview-ui && npm run build
 ---
 
 ## Phase별 상세 프로세스
+
+### Phase 0: AI Rules 우선 복구 (Priority 0) ⭐ **가장 중요**
+
+**목표**: AI 에이전트가 올바른 머징 규칙(Hybrid Pattern, Minimal Invasion)을 따르도록 규칙 파일을 가장 먼저 복구.
+
+**이유**: `.caretrules`에는 머징 전략과 AI 행동 지침이 포함되어 있습니다. 이 파일들이 없으면 AI가 머징 과정에서 잘못된 판단을 할 수 있습니다.
+
+**체크리스트**:
+- [ ] `.caretrules` 디렉토리 우선 복구
+  ```bash
+  # 백업에서 .caretrules만 먼저 복구
+  cp -r /tmp/caret-backup-$(date +%Y%m%d)/.caretrules ./
+  ```
+- [ ] AI 세션 재시작 또는 규칙 리로드 (필요 시)
+- [ ] AI에게 현재 머징 전략(`merge-standard-guide.md`)을 인지시킴
+
+---
 
 ### Phase 1: 준비 및 백업
 
@@ -708,7 +753,17 @@ git reset --hard upstream/main
 - 빌드 검증 + 런타임 검증 필수
 - F5 실행 및 주요 기능 동작 확인
 
-### 교훈 3: "Cline 프롬프트 개선사항은 Caret JSON 시스템에 반영" ⭐ **신규**
+### 교훈 3: "AI Rules(.caretrules)는 코드보다 먼저 머지되어야 한다" ⭐ **신규**
+
+**배경**:
+- AI 에이전트는 `.caretrules`에 정의된 규칙(Minimal Invasion, Hybrid Pattern 등)을 따릅니다.
+- 머지 초기 단계(Reset 직후)에 이 파일들이 없으면 AI는 "일반적인 코딩 관습"대로 행동하여 Caret의 엄격한 머징 규칙을 위반할 수 있습니다.
+
+**해결**:
+- **Phase 0**를 신설하여 `.caretrules`를 가장 먼저 복구합니다.
+- AI가 작업을 시작하기 전에 "나는 Caret 머징 규칙을 따르고 있는가?"를 스스로 확인하게 합니다.
+
+### 교훈 4: "Cline 프롬프트 개선사항은 Caret JSON 시스템에 반영" ⭐ **신규**
 
 **배경**:
 - Cline upstream은 TypeScript 기반 프롬프트 시스템 사용

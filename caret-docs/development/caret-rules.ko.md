@@ -2,27 +2,21 @@
 
 ## 규칙 관리 시스템
 
-### 문서 접근 패턴
-- **AI 읽기**: `.caretrules/caret-rules.json` (영문 JSON, 핵심 원칙만)
-- **AI 워크플로우**: `.caretrules/workflows/*.md` (영문 MD, 필요시 상세 절차)
-- **개발자 읽기 (한국어)**: `caret-docs/development/caret-rules.ko.md` (한글 MD, 개발자 참조)
-- **개발자 읽기 (영어)**: `caret-docs/development-en/caret-rules.md` (영문 MD, 개발자 참조)
-- **동기화 방법**: AI가 규칙 편집시 모든 형식을 자동 동기화
-- **읽기 흐름**: AI: JSON 규칙 → (필요시) 워크플로우 MD → 구현
+### 문서 접근 패턴 (AI 동작 방식)
+- **1단계 (초기화)**: AI는 세션 시작 시 `.caretrules/caret-rules.json` (JSON 인덱스)만 읽습니다.
+- **2단계 (작업 분석)**: JSON의 `workflows.index`를 참조하여 현재 작업에 필요한 워크플로우 파일을 식별합니다.
+- **3단계 (온디맨드 로드)**: 식별된 워크플로우 파일(예: `.caretrules/workflows/ai-feature.md`)을 **필요한 시점에만** 읽습니다.
+- **이유**: 모든 규칙을 한 번에 읽는 것은 토큰 낭비이며, AI의 주의력을 분산시킵니다.
 
 ### ⚠️ 문서 편집 가이드라인
 - **AI 개발자**: 규칙에 특정 버전 번호, 타임스탬프, 스냅샷 데이터 등을 포함하지 않아야 함
 - **사람 개발자**: 가급적 `.caretrules/` 파일을 직접 편집하지 말고 문서 워크플로우 업데이트를 통해 수정
 
-### 파일 매핑
+### 파일 매핑 (동기화 구조)
 ```
-.caretrules/caret-rules.json           ↔ caret-docs/development-en/caret-rules.md (EN)
-                                       ↔ caret-docs/development/caret-rules.ko.md (KO)
+.caretrules/caret-rules.json           ↔ caret-docs/development/caret-rules.ko.md (본 문서)
 .caretrules/workflows/*.md             ↔ caret-docs/development-en/workflows/*.md
 .caretrules/workflows/ai-work-index.md ↔ caret-docs/development/ai-work-index.md
-.caretrules/workflows/ai-work-protocol.md ↔ caret-docs/guides/ai-work-method-guide.md
-.caretrules/workflows/caret-development.md ↔ caret-docs/development/caret-rules.ko.md
-.caretrules/workflows/merge-strategy.md ↔ caret-docs/guides/merging-strategy-guide.md
 ```
 
 ## 핵심 원칙

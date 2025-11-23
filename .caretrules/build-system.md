@@ -1,7 +1,162 @@
-# Caret 빌드/린트 완화 원칙
+# Build System Rules
 
-- **Cline 소스 최소 침습**: upstream Cline에서 온 파일(`src/`, `webview-ui/` 등)에서 린트/포맷/빌드 오류가 날 때는 코드 수정보다 **도구 설정**(lint override, 빌드 스크립트 옵션, 파일 제외 등)을 우선 검토한다.
-- **불가피한 수정 시**: Cline 소스에 손대야 한다면 1~3줄 이내로 축소하고 `// CARET MODIFICATION` 주석을 붙여 추적 가능하게 한다.
-- **Caret 소스는 자유**: `caret-src/`, `caret-scripts/`, `caret-docs/` 등 Caret 전용 자산은 정책 범위 내에서 필요한 수정/추가를 수행한다.
-- **머지 초기에 리소스 복사**: 빌드/런타임 깨짐을 막기 위해 upstream `package.json`/정적 자산(`assets/**`, public/icons 등)을 먼저 복사·적용한 뒤 Caret 브랜딩을 덮어쓴다. (누락된 CLI/아이콘 방지)
-- **빌드 파이프라인**: 린트 예외가 필요한 파일은 `biome.jsonc` 등 빌드 설정에서 최소 범위로 제외/완화하고, 문서로 근거를 남긴다.
+## Build Architecture
+
+### Core Principle: Separation of Concerns
+
+**TypeScript (tsc)**: Type checking ONLY - No .js file generation
+**esbuild**: Bundling and compilation - Single `dist/extension.js` output
+
+### Critical Configuration
+
+#### tsconfig.json
+```json
+{
+  "compilerOptions": {
+    "noEmit": true,  // ✅ CRITICAL: Prevents .js file generation
+    "sourceMap": true,
+    "rootDir": ".",
+    // ... other options
+  }
+}
+```
+
+**Why `noEmit: true`?**
+- TypeScript must NEVER generate .js files in source directories
+- Only esbuild should create output files (dist/extension.js)
+- Prevents old .js files from being loaded instead of bundled code
+
+### Build Scripts
+
+```json
+{
+  "compile": "npm run check-types && npm run lint && node esbuild.mjs",
+  "check-types": "npm run protos && npx tsc && cd webview-ui && npx tsc -b --noEmit",
+  "watch:tsc": "tsc --watch --project tsconfig.json"
+}
+```
+
+**Important**:
+- `tsc` runs for type checking only (noEmit in tsconfig.json)
+- No `--noEmit` flag needed in scripts (configured in tsconfig.json)
+- esbuild.mjs handles all bundling
+
+## Protected Directories
+
+### Source Directories (NO .js files allowed)
+- `src/**/*.js` - FORBIDDEN
+- `src/**/*.js.map` - FORBIDDEN
+- `caret-src/**/*.js` - FORBIDDEN
+- `caret-src/**/*.js.map` - FORBIDDEN
+
+### Build Output (ONLY .js files allowed)
+- `dist/` - esbuild output
+- `dist-standalone/` - standalone build
+- `webview-ui/build/` - Vite output
+
+## Development Rules
+
+### Pre-Development Checklist
+1. **Verify no stray .js files**: 
+   ```bash
+   find src caret-src -name "*.js" -o -name "*.js.map"
+   # Should return nothing
+   ```
+
+2. **Clean build**:
+   ```bash
+   npm run clean
+   npm run compile
+   ```
+
+3. **Verify output**:
+   ```bash
+   ls -la dist/extension.js  # Should exist
+   find caret-src -name "*.js"  # Should be empty
+   ```
+
+### Common Issues
+
+#### Issue: Changes not reflected after `npm run compile`
+**Cause**: Old .js files in source directories being loaded
+**Solution**:
+```bash
+# Delete all .js files in source directories
+find src caret-src -name "*.js" -o -name "*.js.map" | xargs rm -f
+
+# Reload VS Code
+# Developer: Reload Window (Cmd+Shift+P)
+```
+
+#### Issue: TypeScript errors but build succeeds
+**Cause**: noEmit:true in tsconfig.json - tsc only checks types
+**Solution**: This is expected behavior. Fix TypeScript errors.
+
+### Verification Commands
+
+```bash
+# Type check only (no output)
+npm run check-types
+
+# Full build (type check + lint + bundle)
+npm run compile
+
+# Verify no .js files in source
+find src caret-src -name "*.js" -o -name "*.js.map"
+```
+
+## File Modification Protocol
+
+### When modifying tsconfig.json
+1. ✅ Ensure `noEmit: true` is ALWAYS present
+2. ✅ Test: `tsc` should not create .js files
+3. ✅ Verify: `npm run compile` still works
+
+### When modifying esbuild.mjs
+1. ✅ Test bundling: `node esbuild.mjs`
+2. ✅ Verify output: `dist/extension.js` exists
+3. ✅ Test in VSCode: F5 (Run Extension)
+
+### When modifying package.json scripts
+1. ✅ Never add `--noEmit` to scripts (configured in tsconfig.json)
+2. ✅ Keep separation: tsc for types, esbuild for bundling
+3. ✅ Test full build: `npm run compile`
+
+## Integration with Development Workflow
+
+### TDD Workflow
+```bash
+# 1. Write test
+npm run test:webview
+
+# 2. Implement
+# (edit TypeScript files)
+
+# 3. Type check
+npm run check-types
+
+# 4. Build
+npm run compile
+
+# 5. Test
+npm run test:webview
+```
+
+### Watch Mode Development
+```bash
+# Terminal 1: Type checking
+npm run watch:tsc
+
+# Terminal 2: Build watching
+npm run watch
+
+# Terminal 3: Test watching (optional)
+npm run test:backend:watch
+```
+
+## Reference Documents
+
+- **Problem Analysis**: `caret-docs/work-logs/alpha/2025-10-16-js-file-generation-issue.md`
+- **Improvement Plan**: `caret-docs/work-logs/alpha/2025-10-16-build-script-improvements.md`
+- **Build Commands**: `CLAUDE.md` - Common Commands section
+- **Architecture**: `CLAUDE.md` - Architecture Overview section

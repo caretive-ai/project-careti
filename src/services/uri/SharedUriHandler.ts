@@ -65,18 +65,24 @@ export class SharedUriHandler {
 					return false
 				}
 				case "/auth": {
-					const provider = getParam("provider")
+					const providerParam = getParam("provider")
 
-					Logger.info(`SharedUriHandler - Auth callback received for ${provider} - ${path}`)
+					Logger.info(`SharedUriHandler - Auth callback received for ${providerParam} - ${path}`)
 
-					const token =
-						getParam("token") || getParam("refreshToken") || getParam("idToken") || getParam("code") || undefined
-					const state = getParam("state")
+					const tokenParam = getParam("token") || getParam("refreshToken") || getParam("idToken") || undefined
+					const codeParam = getParam("code") || undefined
 					const apiKey = getParam("apiKey")
+
+					// CARET MODIFICATION: Infer provider from payload (tokens => Caret, code-only => Cline)
+					const hasCaretToken = !!tokenParam
+					const provider = providerParam ?? (hasCaretToken ? "caret" : null)
+
+					const token = hasCaretToken ? tokenParam : codeParam
+					const state = getParam("state")
 
 					if (token) {
 						// CARET MODIFICATION: Initialize Caret session when provider=caret (or unspecified but token present)
-						if (!provider || provider === "caret") {
+						if (provider === "caret") {
 							try {
 								console.log("SharedUriHandler: Setting Caret token from callback", { state, apiKey })
 								await CaretGlobalManager.get().setTokenFromCallback(token)
@@ -85,7 +91,7 @@ export class SharedUriHandler {
 							}
 						}
 
-						await visibleWebview.controller.handleAuthCallback(token, provider || "caret")
+						await visibleWebview.controller.handleAuthCallback(token, provider)
 						return true
 					}
 					Logger.warn("SharedUriHandler: Missing idToken parameter for auth callback")

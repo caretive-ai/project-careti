@@ -131,6 +131,8 @@ export interface ExtensionState {
 	subagentsEnabled?: boolean
 	hooksEnabled?: ClineFeatureSetting
 	nativeToolCallSetting?: ClineFeatureSetting
+	// CARET MODIFICATION: CLI Subagent Mode
+	isCliSubagent: boolean
 }
 
 export interface ClineMessage {

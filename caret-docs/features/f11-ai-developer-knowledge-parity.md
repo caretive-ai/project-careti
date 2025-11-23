@@ -1,7 +1,7 @@
 # F11: AI-개발자 지식 동기화 시스템
 
-**상태**: ✅ 설계 완료 및 문서화 진행중 (2025-10-15)
-**구현도**: 100% (문서 시스템)
+**상태**: ✅ 구현 완료 및 배포 (2025-11-23)
+**구현도**: 100% (JSON 인덱스 + 온디맨드 로딩 시스템)
 **우선순위**: HIGH - 프로젝트의 핵심 정체성
 
 ---
@@ -26,11 +26,12 @@
 - **역할**: AI에게 문서 시스템의 전체 구조와 파일 탐색 경로를 알려주는 최상위 규칙 파일입니다.
 - **핵심 로직**:
   ```markdown
-  ### Document Access Pattern
-  - **AI reads**: `.caretrules/caret-rules.json`
-  - **AI workflows**: `.caretrules/workflows/*.md`
+  ### Document Access Pattern (On-Demand System)
+  - **1. Initialize**: AI reads `.caretrules/caret-rules.json` (JSON Index)
+  - **2. Analyze**: AI identifies required workflow from `workflows.index`
+  - **3. Load**: AI reads specific workflow file (e.g., `.caretrules/workflows/ai-feature.md`) ONLY when needed
   ```
-  이 규칙을 통해 AI는 상세 작업 절차가 필요할 때 `.caretrules/workflows/` 디렉토리를 참조해야 함을 인지합니다.
+  이 규칙을 통해 AI는 모든 규칙을 한 번에 읽지 않고, JSON 인덱스를 통해 필요한 지식만 "온디맨드"로 로드하여 토큰 효율성을 극대화합니다.
 
 ### 2. 지식의 원천: `workflows/` 와 `atoms/`
 - **위치**: `.caretrules/workflows/`

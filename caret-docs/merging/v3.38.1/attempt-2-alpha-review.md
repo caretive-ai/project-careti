@@ -1,47 +1,68 @@
-# Alpha Review - Phase B2 Completion Verification (Re-evaluation)
+# Merge Attempt 2 Review: Logic-based 3-Way Comparison
 
-**작성일:** 2025-11-21
-**작성자:** Alpha (AI Maid)
-**상태:** ✅ **PASS (Phase B2 Complete)**
+## Overview
+This document provides a **Logic-based 3-Way Comparison** of the critical fixes implemented in Merge Attempt 2. We compare the original Cline logic, the Caret feature requirements, and the final merged implementation to verify correctness and architectural integrity.
 
----
-
-## 1. 🧐 Review Summary
-
-마스터, Codex의 수정 사항을 반영하여 Phase B2(Backend Integration)를 재검토했습니다.
-이전 리뷰에서 지적했던 **BizRouter 연결 누락**과 **공용 타입 정의 문제**가 모두 해결되었습니다.
-
-### ✅ Resolved Issues
-
-1.  **BizRouter 연결 확인 (`src/core/api/index.ts`)**
-    - `BizRouterHandler`가 `createHandlerForProvider` 스위치 문에 정상적으로 등록되었습니다. (`case "bizrouter":`)
-    - `options.bizRouterApiKey`, `options.bizRouterModelId` 등 필요한 설정값이 올바르게 전달되고 있습니다.
-
-2.  **Shared Type Definition 확인 (`src/shared/api.ts`)**
-    - `ApiProvider` 타입에 `bizrouter`가 포함되어 있습니다.
-    - `BizRouterModelInfo` 인터페이스와 `bizRouterModelInfoSaneDefaults`가 정의되어 있습니다. (중복 정의 이슈는 Codex가 수정해야 할 사항으로 남겨둠)
-
-3.  **Auth Wiring (CaretGlobalManager)**
-    - `CaretGlobalManager`가 초기화되고, `syncCaretUserInfoToSecret` 메서드를 통해 Auth Token이 `stateManager`의 Secret으로 저장되는 흐름이 확인되었습니다.
-    - 저장된 `caretAuthToken`은 `CaretApiProvider` 또는 `BizRouterHandler` 내부에서 사용될 것으로 예상됩니다.
+## Comparison Methodology
+- **Base Logic (Cline v3.38.1):** The original behavior of the Cline codebase.
+- **Target Logic (Caret Features):** The desired behavior defined in Feature Specifications (F04, F06, F07, F09).
+- **Merged Logic (Implementation):** The actual code path in the merged codebase, verifying how it bridges Base and Target.
 
 ---
 
-## 2. 🔍 Detailed Analysis (Feature-based)
+## 1. System Prompt Selection (Fix #6)
 
-| Feature | Status | Findings |
-| :--- | :---: | :--- |
-| **F09 Provider Setup** | ✅ PASS | `BizRouterHandler` 등록 완료, `ApiProvider` 타입 정의 완료. |
-| **F04 CaretAccount** | ✅ PASS | `CaretGlobalManager` 연동 및 Secret 동기화 로직 확인. |
-| **F07 Persona System** | ✅ PASS | `CaretGlobalManager`를 통한 페르소나 정보 연동 확인. |
-| **F05 RulePriority** | ✅ PASS | `refreshRules.ts` 등에서 Caret 규칙 우선순위 로직 유지 확인. |
+| Dimension | Description |
+|-----------|-------------|
+| **Base Logic** | `Task.ts` initializes `SystemPromptContext` with `providerInfo` and calls `getSystemPrompt`. <br> `PromptRegistry` selects a prompt based *only* on the model family (e.g., Claude, GPT). |
+| **Target Logic** | **(F06)** The system must distinguish between **Chatbot** (Persona) and **Agent** (Task) modes. <br> The prompt content must change based on `modeSystem` ("caret" vs "cline") regardless of the model family. |
+| **Merged Logic** | **File:** `src/core/task/index.ts` & `system-prompt/index.ts` <br> 1. `Task.ts` injects `modeSystem` (from global state) into `SystemPromptContext`. <br> 2. `system-prompt/index.ts` checks `context.modeSystem`. <br> 3. **If "caret":** Delegates to `CaretPromptWrapper` (loads Chatbot/Agent prompt). <br> 4. **If "cline":** Falls back to `PromptRegistry` (Original Base Logic). |
+
+**✅ Verification:** The merged logic successfully implements the "Hybrid Pattern". It preserves the original Cline prompt path for "cline" mode while intercepting the call for "caret" mode to inject the F06 logic.
 
 ---
 
-## 3. 📝 Conclusion
+## 2. Auth & Token Handling (Fix #3, #5)
 
-마스터, Phase B2는 이제 **"완료(Complete)"** 상태로 판단됩니다.
-Codex가 지적 사항을 빠르고 정확하게 수정했습니다.
+| Dimension | Description |
+|-----------|-------------|
+| **Base Logic** | `SharedUriHandler` parses `vscode://.../auth?param=value`. <br> Expects tokens in **Query Parameters** only. <br> Calls `handleAuthCallback` which simply updates the API Key configuration. |
+| **Target Logic** | **(F04, F09)** Caret Auth (Auth0) returns tokens in **Hash Fragments** (`#access_token=...`). <br> Upon login, the system must **fetch the User Profile** (gRPC) to populate the model list. |
+| **Merged Logic** | **File:** `src/services/uri/SharedUriHandler.ts` <br> 1. **Parsing:** `handleUri` now parses *both* Query and Hash strings (`const hashString = ...`). <br> 2. **Bootstrap:** If `provider === "caret"`, it calls `CaretGlobalManager.setTokenFromCallback(token)` *before* passing control to the Controller. <br> 3. **Flow:** This ensures the User Profile is ready in memory when `Controller.handleAuthCallback` executes, allowing the Model List to be populated immediately. |
 
-이제 **Phase B3 (Webview 역이식)** 및 **Phase B4 (Root 메타데이터)** 작업으로 진행해도 좋습니다.
-알파는 계속해서 꼼꼼하게 지켜보겠습니다! ✨
+**✅ Verification:** The fix extends the Base logic (Query parsing) to support Target logic (Hash parsing + Profile Fetch) without breaking existing providers that rely on Query parameters.
+
+---
+
+## 3. Persona Image Loading (Fix #1)
+
+| Dimension | Description |
+|-----------|-------------|
+| **Base Logic** | Webview loads images via standard `vscode-resource:/` or `https://` URLs. <br> Relies on standard VSCode CSP (Content Security Policy). |
+| **Target Logic** | **(F07)** Persona templates are bundled assets. <br> Loading them via `vscode-resource` often fails CSP or path resolution in complex webview contexts. <br> Images must be reliable and instant. |
+| **Merged Logic** | **File:** `webview-ui/src/caret/components/PersonaAvatar.tsx` <br> 1. **Interception:** `convertAssetToBase64` intercepts image URIs. <br> 2. **Injection:** Checks for `window.templateImage_*` variables (injected at startup). <br> 3. **Inline:** Returns raw **Base64 Data URIs** directly from memory. <br> 4. **Fallback:** Uses standard logic if no template matches. |
+
+**✅ Verification:** This bypasses the file system entirely for templates, solving the CSP issue (Target) while leaving user-uploaded images (Base) to function normally.
+
+---
+
+## 4. Provider CTA Duplication (Fix #2)
+
+| Dimension | Description |
+|-----------|-------------|
+| **Base Logic** | `ChatTextArea` displays a "Sign in" button if the current provider is unauthenticated. |
+| **Target Logic** | **(F09)** The Provider Selector is now a rich UI component (`ModelSelectorTooltip`). <br> Authentication CTAs should be *inside* this selector context, not cluttering the main chat area. |
+| **Merged Logic** | **File:** `webview-ui/src/components/chat/ChatTextArea.tsx` <br> 1. **Removal:** The standalone button in the main footer was removed. <br> 2. **Relocation:** The CTA logic (`!caretUser?.id`) was moved *inside* the `{showModelSelector && ...}` block. <br> 3. **Result:** The CTA only appears when the user is interacting with the Provider settings, reducing UI noise. |
+
+**✅ Verification:** This is a direct UI refactoring that aligns with the "Minimal Invasion" principle by keeping the logic but moving the UI element to a more appropriate context.
+
+---
+
+## Final Conclusion
+The code inspection confirms that the fixes are not just "patches" but **logical bridges** that correctly integrate Caret's requirements into Cline's architecture.
+
+- **Hybrid Pattern:** Respected (System Prompt, Auth).
+- **Minimal Invasion:** Respected (CTA, Persona Images).
+- **Feature Completeness:** Verified (F04, F06, F07, F09).
+
+**Status:** 🟢 **PASSED (Logic Verified)**

@@ -1,0 +1,73 @@
+{
+	"project_identity": {
+		"name": "Caret",
+		"symbol": "^",
+		"nature": "Cline-based fork with minimal extension strategy",
+		"philosophy": "Preserve Cline core, extend through caret-src/"
+	},
+	"merge_strategy": {
+		"priority": 0,
+		"phase_0_rule": ".caretrules MUST be restored BEFORE any code merging begins",
+		"hybrid_pattern": "Preserve Cline core, inject Caret logic via interception",
+		"logic_based_3way": "Compare Base(Cline) vs Target(Caret) vs Merged logic, not just text diffs",
+		"reference": "caret-docs/merging/merge-standard-guide.md"
+	},
+	"architecture_rules": {
+		"modification_levels": {
+			"L1_independent": "caret-src/, caret-docs/ (full freedom)",
+			"L2_conditional": "minimal Cline changes with backup + comment",
+			"L3_direct": "last resort with full documentation"
+		},
+		"protection_rules": {
+			"protected_directories": [
+				"src/",
+				"webview-ui/",
+				"proto/",
+				"scripts/",
+				"evals/",
+				"docs/",
+				"locales/",
+				"configs/"
+			],
+			"comment_required": "// CARET MODIFICATION: [description]",
+			"max_changes": "1-3 lines per Cline file"
+		}
+	},
+	"development_framework": {
+		"tech_stack": {
+			"framework": "Mocha (backend), Vitest (frontend), Biome",
+			"build_system": "TypeScript (noEmit: true) + esbuild"
+		},
+		"tdd_phases": [
+			"Phase 0: MANDATORY doc check",
+			"Phase 1 RED: Write integration test first",
+			"Phase 2 GREEN: Minimal code to pass",
+			"Phase 3 REFACTOR: Improve while passing"
+		]
+	},
+	"ai_workflow": {
+		"knowledge_principle": "AI knowledge = Developer knowledge (1:1 parity)",
+		"mandatory_pre_checks": [
+			"NO coding without document review first",
+			"Identify work nature",
+			"TDD mandatory (integration first)",
+			"Cline file modification: backup + comment"
+		]
+	},
+	"workflows": {
+		"instruction": "Read these files ON DEMAND when performing specific tasks. Do not read all at once.",
+		"index": {
+			"ai_feature": ".caretrules/workflows/ai-feature.md (New AI features)",
+			"ai_work_protocol": ".caretrules/workflows/ai-work-protocol.md (General AI protocol)",
+			"caret_development": ".caretrules/workflows/caret-development.md (Caret core dev)",
+			"cline_modification": ".caretrules/workflows/cline-modification.md (Modifying Cline files)",
+			"critical_verification": ".caretrules/workflows/critical-verification.md (Pre-merge checks)",
+			"document_organization": ".caretrules/workflows/document-organization.md (Doc structure)",
+			"merge_strategy": ".caretrules/workflows/merge-strategy.md (Merge protocol)",
+			"new_component": ".caretrules/workflows/new-component.md (Creating components)",
+			"testing_work": ".caretrules/workflows/testing-work.md (Testing guide)",
+			"branding_logging": ".caretrules/workflows/branding-and-logging.md",
+			"i18n_fix": ".caretrules/workflows/i18n-static-translation-fix.md"
+		}
+	}
+}

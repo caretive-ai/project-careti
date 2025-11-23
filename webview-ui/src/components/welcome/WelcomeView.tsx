@@ -13,20 +13,20 @@ import UnifiedLanguageSetting from "@/caret/components/UnifiedLanguageSetting"
 // CARET MODIFICATION: URL 상수 및 UiServiceClient 임포트
 import { CARET_URLS } from "@/caret/constants/urls"
 import { useCaretState } from "@/caret/context/CaretStateContext"
-import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
 import { t } from "@/caret/utils/i18n"
 import { CaretWebviewLogger } from "@/caret/utils/webview-logger"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 // CARET MODIFICATION: UiServiceClient 임포트 추가
 import { StateServiceClient, UiServiceClient } from "@/services/grpc-client"
 import { validateApiConfiguration } from "@/utils/validate"
+import CliInstallBanner from "./CliInstallBanner"
 
 const logger = new CaretWebviewLogger("WelcomeView")
 
 const WelcomeView = () => {
-	const { apiConfiguration, mode, version, caretBanner, featureConfig } = useExtensionState()
+	const { apiConfiguration, mode, caretBanner, featureConfig } = useExtensionState()
 	const { setShowPersonaSelector } = useCaretState()
-	const { currentLanguage } = useCaretI18n()
+	// const { currentLanguage } = useCaretI18n() // Unused
 	const [apiErrorMessage, setApiErrorMessage] = useState<string | undefined>(undefined)
 	const [showApiOptions, setShowApiOptions] = useState(false)
 
@@ -193,7 +193,6 @@ const WelcomeView = () => {
 						}}
 					/>
 				</center>
-
 				{/* 첫 줄 타이틀 가운데 정렬 */}
 				<div style={{ textAlign: "center", marginBottom: "15px" }}>
 					<h2
@@ -206,9 +205,9 @@ const WelcomeView = () => {
 						{t("coreFeatures.header", "welcome")}
 					</h2>
 				</div>
-
+				{/* CARET MODIFICATION: CLI Install Banner */}
+				<CliInstallBanner />
 				{renderSection("", "coreFeatures.description")}
-
 				{/* 언어 선택과 시작 섹션 */}
 				<CaretWelcomeSection allowHtml={true} bodyKey="" headerKey="">
 					{/* CARET MODIFICATION: 언어 설정을 일반설정의 선호언어로 연결 */}
@@ -231,7 +230,6 @@ const WelcomeView = () => {
 						</VSCodeButton>
 					</div>
 				</CaretWelcomeSection>
-
 				{/* CARET MODIFICATION: 하드코딩된 URL을 상수로 변경 */}
 				{renderSection(
 					"community.header",
@@ -240,7 +238,6 @@ const WelcomeView = () => {
 					() => handleOpenLink(CARET_URLS.GITHUB_REPOSITORY),
 					"secondary",
 				)}
-
 				{/* Footer 컴포넌트 */}
 				<CaretFooter />
 			</div>

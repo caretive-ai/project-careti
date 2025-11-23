@@ -101,6 +101,7 @@ export interface ExtensionStateContextType extends ExtensionState {
 	showChatModelSelector: boolean
 	checkpointTrackerErrorMessage?: string
 	featureConfig?: any
+	isCliSubagent: boolean
 
 	// Setters
 	setShowAnnouncement: (value: boolean) => void
@@ -321,6 +322,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		lastDismissedInfoBannerVersion: 0,
 		lastDismissedModelBannerVersion: 0,
 		lastDismissedCliBannerVersion: 0,
+		// CARET MODIFICATION: Add isCliSubagent state
+		isCliSubagent: false,
 	})
 	const [didHydrateState, setDidHydrateState] = useState(false)
 	const [showWelcome, setShowWelcome] = useState(false)
@@ -1151,6 +1154,7 @@ export const ExtensionStateContextProvider: React.FC<{
 			console.log("[CARET-AUTH] setCaretUser called with:", user)
 			setCaretUserState(user)
 		},
+		isCliSubagent: state.isCliSubagent,
 	}
 
 	return <ExtensionStateContext.Provider value={contextValue}>{children}</ExtensionStateContext.Provider>

@@ -14,7 +14,8 @@
 
 1. **사용자 식별**: `git config user.name`으로 현재 사용자 확인
 2. **날짜 확인**: OS별 명령어로 현재 날짜 확인
-3. **작업 로그 확인**: `caret-docs/work-logs/{username}/{date}.md` 체크/생성
+3. **규칙 인덱스 로드**: `.caretrules/caret-rules.json` 읽기 (필수)
+4. **온디맨드 워크플로우 로드**: 작업 성격에 맞는 워크플로우 파일(예: `.caretrules/workflows/ai-feature.md`)을 JSON 인덱스에서 찾아 읽기
 
 **🚨 CRITICAL: 작업 성격 분석 및 필수 문서 확인**
 

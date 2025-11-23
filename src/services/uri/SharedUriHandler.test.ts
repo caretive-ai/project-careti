@@ -80,11 +80,12 @@ describe("SharedUriHandler", () => {
 				sinon.assert.calledOnceWithExactly(handleAuthCallbackStub, "jwt123", "google")
 			})
 
+			// CARET MODIFICATION: Caret token callbacks often omit provider, so default to Caret path
 			it("should successfully handle auth callback without provider", async () => {
 				const result = await SharedUriHandler.handleUri("vscode://cline.cline/auth?idToken=jwt123")
 
 				expect(result).to.be.true
-				sinon.assert.calledOnceWithExactly(handleAuthCallbackStub, "jwt123", null)
+				sinon.assert.calledOnceWithExactly(handleAuthCallbackStub, "jwt123", "caret")
 			})
 
 			it("should return false when idToken is missing", async () => {

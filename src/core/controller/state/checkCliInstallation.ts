@@ -1,5 +1,5 @@
 import { Boolean } from "@shared/proto/cline/common"
-import { isClineCliInstalled } from "@/utils/cli-detector"
+import { isCaretCliInstalled, isClineCliInstalled } from "@/utils/cli-detector"
 import { Controller } from ".."
 
 /**
@@ -9,7 +9,9 @@ import { Controller } from ".."
  */
 export async function checkCliInstallation(_controller: Controller): Promise<Boolean> {
 	try {
-		const isInstalled = await isClineCliInstalled()
+		const modeSystem = _controller.stateManager.getGlobalStateKey("caretModeSystem") || "cline"
+		// CARET MODIFICATION: Detect CLI per modeSystem
+		const isInstalled = modeSystem === "caret" ? await isCaretCliInstalled() : await isClineCliInstalled()
 		return Boolean.create({ value: isInstalled })
 	} catch (error) {
 		console.error("Failed to check CLI installation:", error)

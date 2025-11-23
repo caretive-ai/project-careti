@@ -1,13 +1,13 @@
+import { IPromptSystem } from "@caret/core/prompts/system/IPromptSystem"
+import { JsonTemplateLoader } from "@caret/core/prompts/system/JsonTemplateLoader"
+import { CaretSystemPromptContext } from "@caret/core/prompts/system/types"
+import { API_PROVIDERS, CARET_MODES } from "@caret/shared/constants/PromptSystemConstants"
 import { ClineToolSet } from "@core/prompts/system-prompt/registry/ClineToolSet"
 import { PromptBuilder } from "@core/prompts/system-prompt/registry/PromptBuilder"
 import { PromptRegistry } from "@core/prompts/system-prompt/registry/PromptRegistry"
 import { Logger } from "@services/logging/Logger"
 import { ModelFamily } from "@shared/prompts"
 import { ClineDefaultTool } from "@shared/tools"
-import { API_PROVIDERS, CARET_MODES } from "@caret/shared/constants/PromptSystemConstants"
-import { IPromptSystem } from "@caret/core/prompts/system/IPromptSystem"
-import { JsonTemplateLoader } from "@caret/core/prompts/system/JsonTemplateLoader"
-import { CaretSystemPromptContext } from "@caret/core/prompts/system/types"
 
 /**
  * Adapter for Caret's JSON-based prompt system.
@@ -217,6 +217,8 @@ export class CaretJsonAdapter implements IPromptSystem {
 				// FIXED: tools: [] for cline-latest compatibility - triggers automatic loading of all tools for family
 				tools: [] as readonly ClineDefaultTool[],
 				toolOverrides: undefined,
+				// CARET MODIFICATION: matcher required by PromptVariant (cline v3.38.1) to allow tool loading path
+				matcher: () => true,
 			} as const
 
 			Logger.debug(
@@ -487,7 +489,7 @@ export class CaretJsonAdapter implements IPromptSystem {
 		if (template.input_schema?.properties) {
 			content += "Parameters:\n"
 			const required = template.input_schema.required || []
-			
+
 			for (const [paramName, paramDef] of Object.entries(template.input_schema.properties)) {
 				const param = paramDef as any
 				const isRequired = required.includes(paramName)
@@ -498,18 +500,16 @@ export class CaretJsonAdapter implements IPromptSystem {
 		// Add usage example
 		content += "Usage:\n"
 		content += `<${template.name.toLowerCase()}>\n`
-		
+
 		if (template.input_schema?.properties) {
 			for (const paramName of Object.keys(template.input_schema.properties)) {
 				content += `<${paramName}>${paramName} here</${paramName}>\n`
 			}
 		}
-		
+
 		content += `</${template.name.toLowerCase()}>\n`
 
-		Logger.debug(
-			`[CaretJsonAdapter] 🔧 Formatted Task tool: ${template.name} (${content.length} chars)`,
-		)
+		Logger.debug(`[CaretJsonAdapter] 🔧 Formatted Task tool: ${template.name} (${content.length} chars)`)
 
 		return content
 	}

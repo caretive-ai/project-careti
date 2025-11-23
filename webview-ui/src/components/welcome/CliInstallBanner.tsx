@@ -5,7 +5,7 @@ import { useExtensionState } from "@/context/ExtensionStateContext"
 import { vscode } from "@/utils/vscode"
 
 const CliInstallBanner = () => {
-	const { isCliSubagent } = useExtensionState()
+	const { isCliSubagent, modeSystem } = useExtensionState()
 	const [isInstalled, setIsInstalled] = useState<boolean | null>(null)
 
 	useEffect(() => {
@@ -21,14 +21,19 @@ const CliInstallBanner = () => {
 	}, [])
 
 	const handleInstall = () => {
+		const isCaret = modeSystem === "caret"
+		const installUrl = isCaret
+			? "https://github.com/aicoding-caret/caret#cli-installation"
+			: "https://github.com/cline/cline#cli-installation"
+		const installCommand = isCaret ? "npm install -g @caret-ai/cli" : "npm install -g cline-cli"
 		vscode.postMessage({
 			type: "openExternal",
-			url: "https://github.com/aicoding-caret/caret#cli-installation", // Replace with actual install guide URL
+			url: installUrl,
 		} as any)
 		// Or copy command to clipboard
 		vscode.postMessage({
 			type: "copyToClipboard",
-			text: "npm install -g @caret-ai/cli",
+			text: installCommand,
 		} as any)
 	}
 

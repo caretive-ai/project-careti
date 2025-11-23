@@ -71,5 +71,10 @@
 	"welcome": {
 		"tooltipContent": "我可以通过编辑文件、探索项目、运行命令和使用浏览器来逐步开发软件。我甚至可以使用MCP工具扩展我的能力，以超越基本的代码补全功能。",
 		"takeATour": "开始导览"
+	},
+	"cliBanner": {
+		"title": "安装 CLI 并利用子代理",
+		"description": "大规模搜索与调研可交给 CLI 代理处理。Caret/Cline 模式下命令不同。",
+		"button": "安装 CLI"
 	}
 }

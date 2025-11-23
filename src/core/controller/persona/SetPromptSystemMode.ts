@@ -31,6 +31,8 @@ export async function SetPromptSystemMode(
 		Logger.debug(
 			`[SetPromptSystemMode] After setCurrentMode: CaretGlobalManager.currentMode=${CaretGlobalManager.currentMode}`,
 		)
+		// CARET MODIFICATION: Persist caretModeSystem to globalState for restart consistency
+		controller.stateManager.setGlobalStateBatch({ caretModeSystem: newMode })
 
 		// CARET MODIFICATION: Post updated state to webview
 		Logger.debug(`[SetPromptSystemMode] Before postStateToWebview`)

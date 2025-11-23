@@ -26,7 +26,7 @@
 
 ---
 
-## ✅ 현재 진행 현황 (2025-11-22 00:20)
+## ✅ 현재 진행 현황 (2025-11-23 15:30)
 | 단계 | 설명 | 상태 | 비고 |
 | --- | --- | --- | --- |
 | 준비-0 | 머징 디렉토리 정리, v3.32.7/v3.35.0 아카이브 분리 | ✅ 완료 | 버전별 폴더 생성
@@ -38,7 +38,7 @@
 | Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ✅ 완료 | B0~B5 완료. Webview cline 개선/Hook/환경색 이식, MCP/History/Marketplace 추가 변경 없음. **2025-11-22: package.json Activity Bar/명령 카테고리 및 assets 아이콘을 Caret 브랜드로 재정렬(누락 복구)**. **2025-11-22: Cline 기반 음성 UI(녹음 글로우 포함) 및 Provider CTA 정렬, 계정 i18n 키 누락 복구, Cline 로그인 시 자동 provider 선택 적용, Caret 로그인 콜백 처리 복원(SharedUriHandler) 및 Persona 템플릿 이미지 번들링 복구** |
 | Phase B-추가 | 프론트 잔여 보강 | ✅ 완료 | **2025-11-23:** Persona/배너 자산 `?inline` 인라인 로드(403 방지), caretUserProfile GlobalState 타입/로드 경로 추가, Caret 로그인 시 await 적용 및 caretModeSystem 전달 보강, 모델 선택 CTA 중복 제거. 빌드 `npm run compile -- --filter webview-ui` 통과 |
 | Phase C | 통합 테스트 & E2E 복구 | ✅ 완료 | Unit 527 pass, Integration 404 pass. E2E는 Playwright 시스템 의존성으로 CI/CD 환경에서 실행 필요. |
-| Phase D | Caret CLI 구현/프롬프트/배너/문서 반영 | ⏳ 예정 | `b4-caret-cli-plan.md` 기준으로 CLI 배너/감지/프롬프트/문서·공지 반영 |
+| Phase D | ModeSystem 버그 수정 + Caret CLI 구현 | ⏳ 예정 | **D-1**: getSystemPrompt/SetPromptSystemMode 버그 수정 (필수 선행). **D-2**: CLI 배너/감지/프롬프트/문서 반영. 코드 분석 완료, 구체적 수정 사항 문서화됨 |
 | Phase E | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | CLI 반영 후 CHANGELOG/announcement/Features 분리 작업 포함 |
 | Phase F | 누락 방지 자동화 및 체크리스트 업데이터 | ⏳ 예정 | compare-with-cline.mjs, PR 템플릿 반영 (Phase E 완료 후) |
 
@@ -146,11 +146,172 @@
 - [x] `npm run test:e2e` 실행 완료. VSIX 빌드 및 Playwright 테스트 통과.
 B
 
-### Phase D: Caret CLI/프롬프트/배너/문서 (신규)
-- [ ] `b4-caret-cli-plan.md` 실행: CLI 배너(`CliInstallBanner.tsx`) 이식 및 Caret/Cline 분기, cli-detector/설치/컨트롤러 분기 추가.
-- [ ] 시스템 프롬프트: cline `cli_subagents` 개선분 병합 + Caret CLI 명칭 반영.
-- [ ] Features 문서 분리: `features/f06-caret-prompt-system.md` → F06(2중 지원 모드+CLI 안내) / F07(시스템 프롬프트)로 분리, 이후 번호(F08~) +1 및 모든 참조 업데이트.
-- [ ] Announcement(사용자 공지): Caret CLI 안내 추가(사용자 영향만), cline CLI는 cline 모드에서 유지.
+### Phase D: ModeSystem 버그 수정 + Caret CLI 구현
+
+> ⚠️ **우선순위**: D-1 버그 수정을 먼저 완료한 후 D-2 CLI 구현 진행. modeSystem이 정상 동작해야 CLI가 올바르게 분기됨.
+
+---
+
+#### D-1: ModeSystem 회귀 버그 수정 (필수 선행)
+
+**증상**:
+- UI에서 Caret↔Cline 토글이 반영되지 않음
+- Caret JSON 시스템 프롬프트가 로드되지 않음 (Plan/Act만 사용)
+
+**원인 1 - getSystemPrompt Caret 분기 누락** (확인됨):
+- 파일: `src/core/prompts/system-prompt/index.ts:16-21`
+- 현재 상태: 순수 Cline 버전, `context.modeSystem` 무시
+- `CaretPromptWrapper` 호출 경로 완전 제거됨
+
+**원인 2 - SetPromptSystemMode GlobalState 영속화 누락** (확인됨):
+- 파일: `src/core/controller/persona/SetPromptSystemMode.ts:29-38`
+- 현재 상태: `CaretGlobalManager` 인메모리만 업데이트
+- 누락: `controller.stateManager.setGlobalStateBatch({ caretModeSystem: newMode })`
+
+---
+
+**D-1.1 수정: SetPromptSystemMode.ts** (5분)
+
+위치: `src/core/controller/persona/SetPromptSystemMode.ts:29-38`
+
+```typescript
+// 기존 코드 (line 29-33)
+CaretGlobalManager.get().setCurrentMode(newMode)
+Logger.debug(`[SetPromptSystemMode] After setCurrentMode...`)
+
+// 아래 코드 추가 (line 34-38)
+// CARET MODIFICATION: Persist to globalState (StateManager reads from here on restart)
+controller.stateManager.setGlobalStateBatch({
+    caretModeSystem: newMode,
+})
+Logger.debug(`[SetPromptSystemMode] Saved to globalState: caretModeSystem=${newMode}`)
+
+// 기존 postStateToWebview 호출 유지
+await controller.postStateToWebview()
+```
+
+---
+
+**D-1.2 수정: system-prompt/index.ts** (30분)
+
+위치: `src/core/prompts/system-prompt/index.ts:16-21`
+
+```typescript
+import { PromptRegistry } from "./registry/PromptRegistry"
+import type { SystemPromptContext } from "./types"
+
+// ... exports 유지 ...
+
+/**
+ * Get the system prompt by id
+ * CARET MODIFICATION: Mode branching for Caret/Cline prompt systems
+ */
+export async function getSystemPrompt(context: SystemPromptContext) {
+    // CARET MODIFICATION: Route to CaretPromptWrapper when in Caret mode
+    if (context.modeSystem === "caret") {
+        const { CaretPromptWrapper } = await import("@caret/core/prompts/CaretPromptWrapper")
+        const systemPrompt = await CaretPromptWrapper.getCaretSystemPrompt(context)
+        // Caret은 tools를 별도 관리 (CaretModeManager.isToolAllowed)
+        return { systemPrompt, tools: [] }
+    }
+
+    // Cline: Original logic preserved
+    const registry = PromptRegistry.getInstance()
+    const systemPrompt = await registry.get(context)
+    const tools = registry.nativeTools
+    return { systemPrompt, tools }
+}
+```
+
+**반환 타입 정리**:
+- Cline: `{ systemPrompt: string, tools: Tool[] }` - native tool calls 지원
+- Caret: `{ systemPrompt: string, tools: [] }` - CaretModeManager가 도구 필터링 담당
+- Task.ts (line 2111-2112)는 현재 `{ systemPrompt, tools }` 기대 → 수정 불필요
+
+---
+
+**D-1.3 테스트 추가** (1시간)
+
+파일: `caret-src/__tests__/prompt-system/mode-system.test.ts` (신규)
+
+```typescript
+describe("ModeSystem Integration", () => {
+    it("should persist caretModeSystem to globalState on mode change", async () => {
+        // SetPromptSystemMode 호출 후 globalState 확인
+    })
+
+    it("should route to CaretPromptWrapper when modeSystem is caret", async () => {
+        // getSystemPrompt({ modeSystem: "caret", ... }) 호출
+        // CaretPromptWrapper.getCaretSystemPrompt 호출 확인
+    })
+
+    it("should use Cline registry when modeSystem is cline", async () => {
+        // getSystemPrompt({ modeSystem: "cline", ... }) 호출
+        // PromptRegistry.get 호출 확인
+    })
+
+    it("should show Chatbot/Agent labels in Caret mode", async () => {
+        // Webview state 확인
+    })
+
+    it("should show Plan/Act labels in Cline mode", async () => {
+        // Webview state 확인
+    })
+})
+```
+
+---
+
+**D-1.4 검증 체크리스트**
+
+- [ ] `npm run compile` 통과
+- [ ] `npm run test` 통과 (신규 테스트 포함)
+- [ ] UI에서 Caret↔Cline 토글 즉시 반영
+- [ ] Caret 모드에서 Chatbot/Agent 라벨 표시
+- [ ] Cline 모드에서 Plan/Act 라벨 유지
+- [ ] Caret 모드에서 JSON 프롬프트 로드 (CaretPromptWrapper 로그 확인)
+- [ ] 확장 재시작 후 모드 유지 (globalState 영속화 확인)
+
+---
+
+#### D-2: Caret CLI 구현 (D-1 완료 후)
+
+> `b4-caret-cli-plan.md` 기준 실행
+
+**D-2.1 코드/배너/감지**
+- [ ] `webview-ui/src/components/common/CliInstallBanner.tsx` 이식
+  - Caret/Cline 브랜딩 분기 (modeSystem 기반)
+  - 설치 안내 URL 분기
+- [ ] `src/utils/cli-detector.ts` 분기
+  - Caret CLI: `caret` 바이너리, `~/.caret/bin`
+  - Cline CLI: `cline` 바이너리, `~/.cline/bin`
+- [ ] 컨트롤러 분기: `installClineCli.ts`, `checkCliInstallation.ts`
+- [ ] 슬래시 커맨드 안내: `webview-ui/src/utils/slash-commands.ts`
+
+**D-2.2 프롬프트**
+- [ ] `src/core/prompts/system-prompt/components/cli_subagents.ts` 3-way 병합
+  - cline 개선점 흡수
+  - Caret CLI 명칭/용도 반영
+- [ ] variants overrides에 Caret CLI 안내 추가
+
+**D-2.3 문서**
+- [ ] Features 문서 분리:
+  - `f06-caret-prompt-system.md` → F06(2중 지원 모드+CLI) / F07(시스템 프롬프트)
+  - F08~ 번호 +1 조정 및 참조 업데이트
+- [ ] Announcement: Caret CLI 소개 (사용자 공지)
+- [ ] CHANGELOG 업데이트
+
+**D-2.4 테스트**
+- [ ] cli-detector: Caret CLI / Cline CLI 모두 정상 감지
+- [ ] 배너 노출 조건: 플랫폼/모드/설치 여부
+- [ ] 프롬프트 오동작 여부 (Agent/CLI 모드 혼동) 점검
+
+---
+
+**D-2 완료 기준**:
+- Caret 모드에서 Caret CLI 안내/감지/배너/프롬프트가 cline 수준으로 동작
+- Cline 모드에서는 기존 Cline CLI 흐름 유지 (회귀 없음)
+- CHANGELOG/announcement에 사용자 영향 부분만 반영
 
 ### Phase E: 문서 & 릴리스
 - [ ] `CHANGELOG-CLINE.md`, `CHANGELOG.md`, `caret-docs/{ko,ja,zh}/CHANGELOG.md` 업데이트 (버전/날짜/브랜치/주요 기능 포함).
@@ -262,15 +423,25 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-22 00:20 | Claude | **Phase C 진행**: Unit 527 pass, Integration 404 pass. `test-setup.js` path alias 수정(`@caret/*`→`out/caret-src/*`), `registry.ts` command prefix 수정(`"cline"` 고정), `caret-scripts/` 복사.
 | 2025-11-22 00:45 | Luke | **Phase C E2E 완료**: `npm run test:e2e` 실행 완료. VSIX 빌드 및 Playwright 테스트 통과. Phase C 검증 완료.
 | 2025-11-23 02:17 | Codex | 피드백 6건 1차 정리: auth 콜백에서 hash fragment 파싱 추가(Caret/Cline 로그인 토큰 누락 해결), Caret user 프로필 미로딩 시 토큰 재사용 fetch, system prompt context에 modeSystem 전파, webview `feature-config.json`을 backend 값으로 복원(계정 CTA/Provider 기본값 노출). `npm run compile -- --filter webview-ui` 통과. |
+| 2025-11-23 15:30 | Claude | **Phase D 설계 보강**: 코드 분석 후 원인 검증 완료. D-1(ModeSystem 버그 수정)과 D-2(CLI 구현)로 분리, 구체적 코드 수정 사항/파일 위치/테스트 케이스 문서화. SetPromptSystemMode.ts:29-38 `setGlobalStateBatch` 누락, system-prompt/index.ts:16-21 Caret 분기 누락 확인. |
+| 2025-11-23 15:55 | Codex | D-1 핫픽스 반영: `system-prompt/index.ts` Caret 분기 복원(dual shape), `SetPromptSystemMode.ts` globalState 영속화 추가, `CaretJsonAdapter` mockVariant에 matcher 필드 추가(cline v3.38.1 PromptVariant 호환). 테스트/빌드 미실행, D-1.3 테스트/CLI 분기 작업은 여전히 필요. |
+| 2025-11-23 16:10 | Codex | D-1 테스트 추가(`mode-system.test.ts` Caret/Cline 분기 mock 검증), D-2 1차 구현: CLI 감지/배너/프롬프트 모드 분기(caret=caret CLI, cline=cline CLI), cli_subagents 템플릿 모드별 명령 반영, locale(welcome) CLI 배너 키 추가. checkCliInstallation/Task에서 modeSystem 기준으로 CLI 감지. 빌드/테스트 미실행. |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 
 ---
 
 ## 📌 다음 액션 (우선순위 순)
-1. **Phase D 착수**: CHANGELOG 업데이트, announcement.json 업데이트, PR/릴리스 노트 작성.
-2. **E2E 테스트**: Playwright 시스템 의존성 설치 후 CI/CD 환경에서 `npm run test:e2e` 실행.
-3. **Phase E**: 누락 방지 자동화 스크립트 작성 및 PR 템플릿 업데이트.
+1. **Phase D-1 착수 (필수 선행)**: ModeSystem 회귀 버그 수정
+   - `SetPromptSystemMode.ts`에 `setGlobalStateBatch` 추가 (5분)
+   - `system-prompt/index.ts`에 Caret 분기 복원 (30분)
+   - TDD 테스트 추가 및 검증 (1시간)
+2. **Phase D-2**: Caret CLI 구현 (D-1 완료 후)
+   - CLI 배너/감지/컨트롤러 분기
+   - 프롬프트/문서 업데이트
+3. **Phase E**: 문서 & 릴리스
+   - CHANGELOG/announcement.json 업데이트
+   - Features 문서 분리 (F06→F06/F07)
 
 ---
 

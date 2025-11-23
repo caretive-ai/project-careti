@@ -71,5 +71,10 @@
 	"welcome": {
 		"tooltipContent": "I can develop software step-by-step by editing files, exploring projects, running commands, and using browsers. I can even extend my capabilities with MCP tools to assist beyond basic code completion.",
 		"takeATour": "Take a Tour"
+	},
+	"cliBanner": {
+		"title": "Install the CLI to delegate subagents",
+		"description": "Use the CLI to launch focused agents for large searches or research tasks. Commands differ by Caret/Cline mode.",
+		"button": "Install CLI"
 	}
 }

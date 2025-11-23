@@ -1,334 +1,191 @@
-# Phase B-추가 피드백 대응 코드 리뷰
+# Phase D-1 코드 리뷰: ModeSystem 회귀 버그 수정
 
-**리뷰 날짜**: 2025-11-23
-**리뷰어**: Claude Code (Sonnet 4.5)
-**검토 범위**: 2025-11-22 피드백 6건 수정 사항
-**검토 원칙**: Feature 문서(F01~F11) 기준 기능 완성도 + 코드 품질
+**리뷰어**: Claude
+**리뷰 일시**: 2025-11-23
+**대상**: SetPromptSystemMode.ts, system-prompt/index.ts 수정
 
 ---
 
-## 📋 리뷰 요약
+## 📊 리뷰 요약
 
-### 전체 판정: ✅ 승인 (런타임 테스트 권장)
-
-| 항목 | 상태 | 비고 |
+| 항목 | 평가 | 비고 |
 |------|------|------|
-| 피드백 6건 수정 완료 | ✅ 확인됨 | 코드 레벨에서 모든 수정 확인 |
-| Feature 요구사항 충족 | ✅ 충족 | F03/F04/F07 핵심 기능 보존 |
-| 최소 침습 원칙 | ✅ 준수 | CARET MODIFICATION 주석 유지 |
-| 보안 위험 | ✅ 없음 | 인젝션/XSS 위험 없음 |
+| 3-way 비교 정확성 | ✅ PASS | 설계 명세대로 구현 |
+| 최소 침습 원칙 | ✅ PASS | CARET MODIFICATION 주석 포함 |
+| 기능 완전성 | ⚠️ PARTIAL | 테스트 미구현 |
+| 빌드 검증 | ❌ FAIL | TypeScript 오류 1건 |
+
+**최종 판정**: ⚠️ **조건부 승인** - TypeScript 오류 해결 및 테스트 추가 필요
 
 ---
 
-## 🔍 피드백별 수정 검토
+## ✅ 구현 검증
 
-### Issue #1: 페르소나 템플릿 이미지 (F07)
+### 1. SetPromptSystemMode.ts
 
-**문제**: 페르소나 템플릿 이미지 403 에러 / 경로 미스
+**파일**: `src/core/controller/persona/SetPromptSystemMode.ts:34-35`
 
-**수정 내용**:
-- **파일**: `webview-ui/src/caret/components/PersonaTemplateSelector.tsx:7-21`
-- **방법**: 모든 template_characters 에셋을 Vite `?inline` 쿼리로 로드
-
-```typescript
-import caretAvatar from "@/caret/assets/template_characters/caret.png?inline"
-import caretIllust from "@/caret/assets/template_characters/caret_illust.png?inline"
-import caretThinking from "@/caret/assets/template_characters/caret_thinking.png?inline"
-// ... (총 15개 이미지)
+**변경 내용** (git diff):
+```diff
++		// CARET MODIFICATION: Persist caretModeSystem to globalState for restart consistency
++		controller.stateManager.setGlobalStateBatch({ caretModeSystem: newMode })
 ```
 
-**검토 결과**: ✅ **정상**
-- Vite `?inline`은 이미지를 base64 data URI로 인라인하여 별도 HTTP 요청 없이 로드
-- F07 (Persona System) 요구사항인 "CSP 호환 Base64 변환" 원칙 준수
-- 403 에러와 경로 문제 동시 해결
+**검증 결과**:
+- [x] `setGlobalStateBatch` 호출 추가됨
+- [x] CARET MODIFICATION 주석 포함
+- [x] 올바른 위치 (setCurrentMode 후, postStateToWebview 전)
+- [x] 설계 명세와 일치
+
+**평가**: ✅ **PASS**
 
 ---
 
-### Issue #2: 프로바이더 CTA 중복 버튼 (F09)
+### 2. system-prompt/index.ts
 
-**문제**: 하단 프로바이더 설정에 캐럿/클라인 버튼 두 개 표시
+**파일**: `src/core/prompts/system-prompt/index.ts:16-21`
 
-**수정 내용**:
-- **조치**: 모델 선택기 내부 CTA만 유지, 채팅 하단 중복 버튼 제거
+**변경 내용** (git diff):
+```diff
++	// CARET MODIFICATION: Route Caret mode to CaretPromptWrapper while preserving cline tool shape
++	if (context.modeSystem === "caret") {
++		const { CaretPromptWrapper } = await import("@caret/core/prompts/CaretPromptWrapper")
++		return { systemPrompt: await CaretPromptWrapper.getCaretSystemPrompt(context), tools: [] }
++	}
+```
 
-**검토 결과**: ⚠️ **런타임 확인 필요**
-- 코드 레벨에서 명확한 중복 제거 패턴을 확인하지 못함
-- F09 (Enhanced Provider Setup) 관점에서 UI 중복은 UX 저하 요인
-- **권장**: 실제 확장 실행하여 Provider 설정 화면에서 중복 여부 재확인
+**검증 결과**:
+- [x] modeSystem 분기 로직 추가됨
+- [x] CaretPromptWrapper 동적 import
+- [x] 반환 타입 `{ systemPrompt, tools: [] }` 일치
+- [x] Cline 기존 로직 보존
+- [x] CARET MODIFICATION 주석 포함
+- [x] 설계 명세와 일치
+
+**평가**: ✅ **PASS**
 
 ---
 
-### Issue #3: 캐럿 로그인 후 모델 리스트 (F04)
+## ❌ 미완료 항목
 
-**문제**: 캐럿 로그인 후 claude 모델만 표시, 정상 모델 리스트 미표시
+### 1. TypeScript 컴파일 오류
 
-**수정 내용**:
-1. **파일**: `src/core/controller/index.ts:231-260`
-   - `syncCaretUserInfoToSecret()`: 토큰만 있고 userInfo 없는 경우 재-fetch
+**오류 내용**:
+```
+caret-src/core/prompts/system/adapters/CaretJsonAdapter.ts(226,60): error TS2345
+Argument of type '...' is not assignable to parameter of type 'PromptVariant'.
+Property 'matcher' is missing in type '...' but required in type 'PromptVariant'.
+```
 
+**원인 분석**:
+- `CaretJsonAdapter.ts`에서 사용하는 mock variant에 `matcher` 속성 누락
+- Cline v3.38.1에서 `PromptVariant` 타입에 `matcher` 필드가 추가된 것으로 추정
+- D-1 구현과 직접 관련은 없지만, CaretPromptWrapper 호출 경로에 영향
+
+**해결 방안**:
 ```typescript
-// 토큰이 있지만 userInfo가 없으면 재-fetch
-if (!caretUserInfo && customToken) {
-    await CaretGlobalManager.get().setTokenFromCallback(customToken)
-    caretUserInfo = CaretGlobalManager.userInfo
+// caret-src/core/prompts/system/adapters/CaretJsonAdapter.ts:226
+// mockVariant에 matcher 속성 추가 필요
+const mockVariant = {
+    // ... 기존 속성들
+    matcher: () => true,  // 또는 적절한 matcher 함수
 }
 ```
 
-2. **파일**: `src/core/controller/index.ts:657-666`
-   - `handleAuthCallback()`: models를 apiConfiguration에 설정
+---
 
-```typescript
-const caretUserInfo = CaretGlobalManager.userInfo
-if (caretUserInfo?.models?.length) {
-    updatedConfig.planModeCaretModelId = caretUserInfo.models[0]
-    updatedConfig.actModeCaretModelId = caretUserInfo.models[1]
-}
-// caretUserProfile을 webview에 전파
-if (caretUserInfo) {
-    (updatedConfig as any).caretUserProfile = caretUserInfo
-}
-```
+### 2. 테스트 미구현
 
-**검토 결과**: ✅ **정상**
-- F04 (Caret Account) 요구사항의 "토큰 → userInfo 변환" 로직 구현
-- Auth 콜백에서 race condition 방지를 위한 재-fetch 패턴 적용
-- globalState에 model ID 저장하여 영구 지속성 확보
+**설계에 명시된 테스트**:
+- `caret-src/__tests__/prompt-system/mode-system.test.ts` (신규)
+
+**필요한 테스트 케이스**:
+1. `should persist caretModeSystem to globalState on mode change`
+2. `should route to CaretPromptWrapper when modeSystem is caret`
+3. `should use Cline registry when modeSystem is cline`
+4. `should show Chatbot/Agent labels in Caret mode`
+5. `should show Plan/Act labels in Cline mode`
+
+**현재 상태**: ❌ 테스트 파일 없음
 
 ---
 
-### Issue #4: 캐럿 미로그인 계정 UI (F04)
+## 🔍 7가지 체크 항목 검증
 
-**문제**: 캐럿 미로그인 시 계정 영역에 로그인 페이지 미표시
-
-**수정 내용**:
-- **파일**: `webview-ui/src/caret/shared/feature-config.json`
-
-```json
-{
-    "enableCaretAccountFeatures": true,
-    "showPersonaSettings": true,
-    "defaultProvider": "caret",
-    "defaultModeSystem": "caret"
-}
-```
-
-**검토 결과**: ✅ **정상**
-- F04 (Caret Account) 요구사항의 "진입점 분기" 로직 활성화
-- `enableCaretAccountFeatures: true`로 로그인 CTA/계정 안내 노출
-- `defaultProvider: "caret"`로 기본 프로바이더 설정
+| # | 항목 | 결과 | 비고 |
+|---|------|------|------|
+| 1 | 3-way 비교 정확성 | ✅ | 설계 명세 기반 구현 |
+| 2 | 버그 수정 시 3-way 비교 | ✅ | 원인 분석 후 최소 수정 |
+| 3 | 최소 침습 + CARET MODIFICATION 주석 | ✅ | 양쪽 파일 모두 주석 포함 |
+| 4 | 하드코딩/정책 위반 | ✅ | 없음 |
+| 5 | Caret 정책 준수 | ✅ | modeSystem 분기, 브랜딩 유지 |
+| 6 | 보안 위험 코드 | ✅ | 없음 |
+| 7 | 더미/미완성 코드 | ⚠️ | TypeScript 오류로 인해 빌드 실패 가능 |
 
 ---
 
-### Issue #5: 클라인 로그인 처리 (Auth System)
+## 📋 필수 조치 사항
 
-**문제**: 클라인 로그인 실패 - query가 비어있어 토큰 미수집
+### 즉시 해결 필요
 
-**수정 내용**:
-- **파일**: `src/services/uri/SharedUriHandler.ts:21-28, 68-88`
+1. **TypeScript 오류 수정** (우선순위: HIGH)
+   - 파일: `caret-src/core/prompts/system/adapters/CaretJsonAdapter.ts:226`
+   - 조치: `matcher` 속성 추가
 
-```typescript
-// hash fragment 파싱 추가
-const hashString = parsedUrl.hash.startsWith("#")
-    ? parsedUrl.hash.slice(1)
-    : parsedUrl.hash
-const hashQuery = hashString
-    ? new URLSearchParams(hashString.replace(/\+/g, "%2B"))
-    : undefined
+2. **빌드 검증**
+   - `npm run compile` 통과 확인
+   - `npm run test` 실행
 
-// query와 hash 모두에서 파라미터 검색
-const getParam = (key: string) => query.get(key) || hashQuery?.get(key)
+### 권장 사항
 
-// /auth 경로에서 통합 getter 사용
-const token = getParam("token") || getParam("refreshToken")
-    || getParam("idToken") || getParam("code") || undefined
-```
+3. **테스트 추가** (우선순위: MEDIUM)
+   - `mode-system.test.ts` 파일 생성
+   - 5개 테스트 케이스 구현
 
-**검토 결과**: ✅ **정상**
-- OAuth 콜백에서 hash fragment 반환 케이스 처리 (Cline/Caret 공통)
-- URL 인코딩된 `+` 문자 보존을 위한 전처리 포함
-- 상세 로깅으로 디버깅 용이성 확보
+4. **수동 검증**
+   - UI에서 Caret↔Cline 토글 테스트
+   - 확장 재시작 후 모드 유지 확인
+   - Logger 출력 확인
 
 ---
 
-### Issue #6: 캐럿 시스템 프롬프트 modeSystem (F06)
+## 📝 코드 품질 평가
 
-**문제**: 캐럿 모드의 JSON 시스템 프롬프트 로딩 실패
+### 장점
+- 설계 명세를 정확히 따름
+- 최소 침습 원칙 준수 (각 파일 2-5줄 추가)
+- CARET MODIFICATION 주석으로 추적 용이
+- 반환 타입 호환성 유지
 
-**수정 내용**:
-1. **파일**: `src/core/prompts/system-prompt/types.ts:97-98`
-   - SystemPromptContext 타입에 modeSystem 필드 추가
-
-```typescript
-// CARET MODIFICATION: caret/cline mode system for prompt selection
-readonly modeSystem?: "caret" | "cline"
-```
-
-2. **파일**: `src/core/task/index.ts:2082-2088`
-   - 실제 prompt context에 modeSystem 주입
-
-```typescript
-const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem")
-    || CaretGlobalManager.currentMode
-
-const promptContext: SystemPromptContext = {
-    cwd: this.cwd,
-    ide,
-    providerInfo,
-    modeSystem,  // ✅ 주입됨
-    // ...
-}
-```
-
-3. **파일**: `src/core/controller/index.ts:669`
-   - Caret 로그인 시 modeSystem을 globalState에 저장
-
-```typescript
-;(this.stateManager as any).setGlobalState?.("caretModeSystem", "caret")
-```
-
-**검토 결과**: ✅ **정상**
-- F06 (Caret Prompt System) 요구사항의 "모드 기반 프롬프트 선택" 구현
-- globalState 우선, CaretGlobalManager fallback으로 이중 보호
-- 타입 안전성 확보 (타입 정의 + 런타임 값 주입)
+### 개선 필요
+- TypeScript 타입 호환성 검증 부족
+- 테스트 코드 미작성
+- 로깅 일관성 (SetPromptSystemMode에 `setGlobalStateBatch` 후 로그 누락)
 
 ---
 
-## 📊 Feature 구현 상태 (F01~F11)
+## 🔄 후속 작업
 
-| Feature | 이름 | 수정 전 | 수정 후 | 비고 |
-|---------|------|---------|---------|------|
-| **F01** | Common Util | ✅ | ✅ | 변경 없음 |
-| **F02** | Multilingual i18n | ✅ | ✅ | 변경 없음 |
-| **F03** | Branding UI | ⚠️ | ✅ | 배너/Persona 자산 로딩 수정 |
-| **F04** | Caret Account | ⚠️ | ✅ | 로그인 콜백 + 모델 리스트 수정 |
-| **F05** | Rule Priority | ✅ | ✅ | 변경 없음 |
-| **F06** | Caret Prompt | ⚠️ | ✅ | modeSystem context 전파 수정 |
-| **F07** | Persona System | ⚠️ | ✅ | 템플릿 이미지 인라인 로드 |
-| **F08** | Feature Config | ✅ | ✅ | feature-config.json 값 복원 |
-| **F09** | Enhanced Provider | ⚠️ | ⚠️ | CTA 중복 런타임 확인 필요 |
-| **F10** | Input History | ✅ | ✅ | 변경 없음 |
-| **F11** | AI-Dev Parity | ✅ | ✅ | 변경 없음 |
+1. **D-1 완료 조건 충족**
+   - [ ] TypeScript 오류 해결
+   - [ ] `npm run compile` 통과
+   - [ ] `npm run test` 통과
+   - [ ] 수동 UI 테스트
+
+2. **D-2 진행 조건**
+   - D-1 완료 후 CLI 구현 시작
+   - modeSystem 정상 동작 필수
 
 ---
 
-## 🔄 3-Way 비교 분석 (Base/Cline/Caret)
+## 결론
 
-### SharedUriHandler.ts
+Phase D-1의 핵심 로직은 올바르게 구현되었습니다. `SetPromptSystemMode.ts`의 globalState 영속화와 `system-prompt/index.ts`의 Caret 분기가 설계대로 추가되었습니다.
 
-| 항목 | Base (v3.35.0) | Cline (v3.38.1) | Caret (main) | Working Tree |
-|------|----------------|-----------------|--------------|--------------|
-| hash fragment 파싱 | ❌ | ❌ | ❌ | ✅ **신규** |
-| getParam 통합 함수 | ❌ | ❌ | ❌ | ✅ **신규** |
-| `/requesty` 경로 | ✅ | ✅ | ❌ | ✅ |
-| MCP OAuth 콜백 | ❌ | ✅ **추가** | ❌ | ✅ |
-| CaretGlobalManager 연동 | ❌ | ❌ | ✅ | ✅ |
-| "token" 파라미터 검색 | ❌ | ❌ | ✅ | ✅ |
+그러나 **TypeScript 컴파일 오류**로 인해 현재 빌드가 실패하며, 이는 `CaretJsonAdapter.ts`의 `PromptVariant` 타입 불일치에서 발생합니다. 이 오류를 해결하고 테스트를 추가해야 D-1이 완료됩니다.
 
-**3-way 판정**: ✅ **정상 병합**
-- Cline 신규 기능 (MCP OAuth) 이식됨
-- Caret 기능 (CaretGlobalManager) 보존됨
-- hash fragment 파싱은 Cline/Caret 모두에 없던 신규 개선 (피드백 #5 해결용)
+**승인 조건**: TypeScript 오류 해결 후 재검토
 
 ---
 
-### controller/index.ts - handleAuthCallback
-
-| 항목 | Base (v3.35.0) | Cline (v3.38.1) | Caret (main) | Working Tree |
-|------|----------------|-----------------|--------------|--------------|
-| provider 분기 | ❌ cline만 | ❌ cline만 | ✅ caret/기타 | ✅ caret/cline |
-| syncCaretUserInfoToSecret | ❌ | ❌ | ⚠️ await 없음 | ✅ await 있음 |
-| featureConfig 기본값 | ❌ | ❌ | ✅ | ✅ |
-| caretUserProfile 전파 | ❌ | ❌ | ❌ | ✅ **신규** |
-| models 자동 설정 | ❌ | ❌ | ❌ | ✅ **신규** |
-| modeSystem 저장 | ❌ | ❌ | ❌ | ✅ **신규** |
-
-**3-way 판정**: ✅ **정상 병합 + 개선**
-- Caret 버전의 `await` 누락 버그 수정됨 (피드백 #3 원인)
-- caretUserProfile/models/modeSystem 전파 로직 신규 추가
-- Cline 기본 로직 보존
-
----
-
-### task/index.ts - promptContext
-
-| 항목 | Base (v3.35.0) | Cline (v3.38.1) | Caret (main) | Working Tree |
-|------|----------------|-----------------|--------------|--------------|
-| localAgentsRulesFileInstructions | ❌ | ✅ **추가** | ❌ | ✅ |
-| clineWebToolsEnabled | ❌ | ✅ **추가** | ❌ | ✅ |
-| isSubagentsEnabledAndCliInstalled | ❌ | ✅ **추가** | ❌ | ✅ |
-| isCliSubagent | ❌ | ✅ **추가** | ❌ | ✅ |
-| enableNativeToolCalls | ❌ | ✅ **추가** | ❌ | ✅ |
-| localCaretRulesFileInstructions | ❌ | ❌ | ✅ | ✅ |
-| modeSystem | ❌ | ❌ | ❌ | ✅ **신규** |
-
-**3-way 판정**: ✅ **정상 병합**
-- Cline v3.38.1 신규 필드 5개 모두 이식됨
-- Caret 고유 필드 (localCaretRulesFileInstructions) 보존됨
-- modeSystem 신규 추가 (피드백 #6 해결용)
-
----
-
-### 3-Way 비교 종합 결과
-
-| 파일 | Cline 이식 | Caret 보존 | 신규 개선 | 판정 |
-|------|-----------|-----------|----------|------|
-| SharedUriHandler.ts | ✅ MCP OAuth | ✅ CaretGlobalManager | ✅ hash fragment | **PASS** |
-| controller/index.ts | ✅ 기본 로직 | ✅ Caret 분기 | ✅ await 수정 | **PASS** |
-| task/index.ts | ✅ 5개 필드 | ✅ caretRules | ✅ modeSystem | **PASS** |
-
-**총평**: 머징 가이드의 "구조는 Cline, 기능은 Caret" 원칙 준수
-
----
-
-## 🔧 코드 품질 검토
-
-### 긍정적 측면
-
-1. **최소 침습 원칙 준수**
-   - 모든 수정에 `// CARET MODIFICATION` 주석 포함
-   - Cline 원본 코드 보존하면서 기능 확장
-
-2. **타입 안전성**
-   - `SystemPromptContext`에 modeSystem 타입 정의
-   - `FeatureConfig` 인터페이스로 설정 값 타입 보장
-
-3. **에러 처리**
-   - `syncCaretUserInfoToSecret()`에서 재-fetch 실패 시 graceful 처리
-   - `SharedUriHandler`에서 상세 로깅으로 디버깅 용이
-
-### 개선 권장 사항
-
-1. **타입 캐스팅 정리** (낮은 우선순위)
-```typescript
-// 현재
-;(updatedConfig as any).caretUserProfile = caretUserInfo
-;(this.stateManager as any).setGlobalState?.("caretModeSystem", "caret")
-
-// 권장: 타입 정의 확장 후 캐스팅 제거
-```
-
-2. **런타임 테스트 필수**
-   - Issue #2 (Provider CTA 중복)는 실제 UI에서 재확인 필요
-   - 전체 로그인 플로우 (Caret/Cline) E2E 테스트 권장
-
----
-
-## ✅ 결론
-
-### 승인 조건
-
-1. ✅ 6개 피드백 이슈 중 5개 코드 레벨 해결 확인
-2. ✅ F01~F11 핵심 Feature 요구사항 충족
-3. ✅ 보안 위험 없음
-4. ⚠️ Issue #2 (Provider CTA) 런타임 확인 필요
-
-### 다음 단계 권장
-
-1. **즉시**: 확장 실행하여 Provider 설정 화면 중복 확인
-2. **Phase D 진행 전**: Caret/Cline 전체 로그인 플로우 E2E 테스트
-3. **향후**: 타입 캐스팅 정리 (기능에 영향 없음)
-
----
-
-*리뷰 완료: 2025-11-23*
-*빌드 확인: `npm run compile -- --filter webview-ui` 성공*
+*Phase D-1 리뷰 완료: 2025-11-23*

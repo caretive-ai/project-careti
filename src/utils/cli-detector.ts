@@ -35,6 +35,16 @@ export async function isClineCliInstalled(): Promise<boolean> {
 	}
 }
 
+// CARET MODIFICATION: Caret CLI detection (Phase D-2)
+export async function isCaretCliInstalled(): Promise<boolean> {
+	try {
+		const { stdout } = await execAsync("caret version", { timeout: 5000 })
+		return stdout.toLowerCase().includes("caret cli")
+	} catch (_error) {
+		return false
+	}
+}
+
 /**
  * Detect if the current Cline instance is running as a CLI subagent.
  * CLI subagents are identified by specific parameter patterns set by the transformClineCommand function.

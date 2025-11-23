@@ -10,15 +10,15 @@
 			},
 			{
 				"title": "Terminal Actions",
-				"content": "Available actions:\n\n1. open: Start new terminal session\n   - Required: command (e.g., \"python3\", \"node\", \"claude\")\n   - Optional: args (array), cwd (working directory)\n   - Returns: session_id for subsequent operations\n\n2. send: Send input to session\n   - Required: session_id, input (text to send)\n   - Automatically appends newline\n   - Returns: current output buffer\n\n3. read: Read session output\n   - Required: session_id\n   - Returns: accumulated output\n\n4. stop: Send Ctrl+C signal\n   - Required: session_id\n   - Interrupts running command\n\n5. close: Terminate session\n   - Required: session_id\n   - Closes terminal and cleans up\n\n6. list: View active sessions\n   - Returns: array of session info (id, command, timestamps)",
+				"content": "Available actions:\n\n1. open: Start new terminal session\n   - Required: command (e.g., \"python3\", \"node\", \"claude\")\n   - Optional: args (array), cwd (working directory)\n   - Returns: session_id for subsequent operations\n\n2. send: Send input AND read response\n   - Required: session_id, input (text to send)\n   - Automatically appends newline and waits for output (2s timeout)\n   - Returns: NEW output from the command\n   - This is your PRIMARY action - it both sends and reads\n\n3. read: Read output without sending\n   - Required: session_id\n   - Use when: checking output without sending new commands\n   - Waits for new output (1s timeout)\n   - Returns: NEW output since last read\n\n4. stop: Send Ctrl+C signal\n   - Required: session_id\n   - Interrupts running command\n\n5. close: Terminate session\n   - Required: session_id\n   - Closes terminal and cleans up\n\n6. list: View active sessions\n   - Returns: array of session info (id, command, timestamps)",
 				"mode": "agent",
-				"tokens": "~180"
+				"tokens": "~200"
 			},
 			{
 				"title": "Usage Examples",
-				"content": "Python REPL:\n1. {\"action\": \"open\", \"command\": \"python3\", \"args\": [\"-i\"]}\n   → Returns session_id\n2. {\"action\": \"send\", \"session_id\": \"...\", \"input\": \"print('hello')\"}\n   → Execute and read output\n3. {\"action\": \"close\", \"session_id\": \"...\"}\n   → Clean exit\n\nNode.js REPL:\n1. {\"action\": \"open\", \"command\": \"node\"}\n2. {\"action\": \"send\", \"session_id\": \"...\", \"input\": \"console.log('test')\"}\n3. {\"action\": \"read\", \"session_id\": \"...\"}\n\nClaude Code:\n1. {\"action\": \"open\", \"command\": \"claude\", \"args\": [\"code\"]}\n2. {\"action\": \"send\", \"session_id\": \"...\", \"input\": \"Create README\"}\n3. Wait for completion, then read output",
+				"content": "Python REPL (typical workflow):\n1. {\"action\": \"open\", \"command\": \"python3\", \"args\": [\"-i\"]}\n   → Get session_id\n2. {\"action\": \"send\", \"session_id\": \"...\", \"input\": \"print('hello')\"}\n   → Sends command AND returns output immediately\n3. {\"action\": \"send\", \"session_id\": \"...\", \"input\": \"2+2\"}\n   → Each send returns the result\n4. {\"action\": \"close\", \"session_id\": \"...\"}\n\nNode.js REPL:\n1. {\"action\": \"open\", \"command\": \"node\"}\n2. {\"action\": \"send\", \"session_id\": \"...\", \"input\": \"console.log('test')\"}\n   → Output is in the response, no separate read needed\n\nClaude Code (long-running):\n1. {\"action\": \"open\", \"command\": \"claude\", \"args\": [\"code\"]}\n2. {\"action\": \"send\", \"session_id\": \"...\", \"input\": \"Create README\"}\n   → Initial response\n3. {\"action\": \"read\", \"session_id\": \"...\"}\n   → Check for completion (use read for polling without sending)\n\nKey insight: 'send' returns output automatically. Use 'read' only when polling without sending new input.",
 				"mode": "agent",
-				"tokens": "~150"
+				"tokens": "~200"
 			},
 			{
 				"title": "Best Practices",
@@ -27,7 +27,7 @@
 				"tokens": "~90"
 			}
 		],
-		"total_estimated_tokens": "~480 (agent mode), ~60 (chatbot mode)"
+		"total_estimated_tokens": "~540 (agent mode), ~60 (chatbot mode)"
 	},
 	"template_vars": {
 		"description": "Terminal Tool guide for interactive terminal session control",

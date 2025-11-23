@@ -61,6 +61,39 @@ export class InteractiveSession extends EventEmitter {
 	}
 
 	/**
+	 * 새 출력이 도착할 때까지 대기하며 읽기 (비동기)
+	 *
+	 * 이 메서드는 새로운 출력이 버퍼에 추가될 때까지 대기합니다.
+	 * 타임아웃 내에 출력이 도착하면 즉시 반환하고,
+	 * 타임아웃이 지나면 빈 배열을 반환합니다.
+	 *
+	 * @param timeout 최대 대기 시간 (밀리초, 기본값: 2000ms)
+	 * @returns 새로 추가된 출력 라인 배열
+	 */
+	async readOutput(timeout: number = 2000): Promise<string[]> {
+		const startLength = this.outputBuffer.length
+		const startTime = Date.now()
+
+		return new Promise((resolve) => {
+			const checkOutput = () => {
+				// 새 출력이 있으면 즉시 반환
+				if (this.outputBuffer.length > startLength) {
+					resolve(this.outputBuffer.slice(startLength))
+				}
+				// 타임아웃 도달
+				else if (Date.now() - startTime >= timeout) {
+					resolve([]) // 빈 배열 반환
+				}
+				// 계속 대기 (100ms 간격)
+				else {
+					setTimeout(checkOutput, 100)
+				}
+			}
+			checkOutput()
+		})
+	}
+
+	/**
 	 * 출력 버퍼 초기화
 	 */
 	clearOutput(): void {

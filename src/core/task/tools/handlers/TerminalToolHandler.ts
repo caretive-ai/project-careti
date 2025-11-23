@@ -4,7 +4,7 @@ import type { ToolUse } from "@core/assistant-message"
 import { formatResponse } from "@core/prompts/responses"
 import { ClineAsk } from "@shared/ExtensionMessage"
 import { ClineDefaultTool } from "@shared/tools"
-import { getGlobalSessionManager } from "@caret/integrations/terminal/interactive/adapters/vscode"
+import { getTerminalService } from "@caret/integrations/terminal/interactive/adapters/vscode"
 import type { TerminalToolInput, TerminalToolOutput } from "@caret/integrations/terminal/interactive/core/types"
 import type { ToolResponse } from "../../index"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -72,27 +72,27 @@ export class TerminalToolHandler implements IFullyManagedTool {
 		config.taskState.consecutiveMistakeCount = 0
 
 		try {
-			const manager = getGlobalSessionManager()
+			const service = getTerminalService()
 			let result: TerminalToolOutput
 
 			switch (input.action) {
 				case "open":
-					result = await this.handleOpen(manager, input, config)
+					result = await this.handleOpen(service, input, config)
 					break
 				case "send":
-					result = await this.handleSend(manager, input, config)
+					result = await this.handleSend(service, input, config)
 					break
 				case "read":
-					result = await this.handleRead(manager, input, config)
+					result = await this.handleRead(service, input, config)
 					break
 				case "stop":
-					result = await this.handleStop(manager, input, config)
+					result = await this.handleStop(service, input, config)
 					break
 				case "close":
-					result = await this.handleClose(manager, input, config)
+					result = await this.handleClose(service, input, config)
 					break
 				case "list":
-					result = await this.handleList(manager)
+					result = await this.handleList(service)
 					break
 				default:
 					throw new Error(`Unknown terminal action: ${input.action}`)
@@ -134,17 +134,11 @@ export class TerminalToolHandler implements IFullyManagedTool {
 			throw new Error("input is required for send action")
 		}
 
-		const session = manager.getSession(input.sessionId)
-		if (!session) {
-			throw new Error(`Session not found: ${input.sessionId}`)
-		}
+		await manager.sendInput(input.sessionId, input.input)
 
-		session.sendInput(input.input)
-
-		// Wait for output (500ms)
-		await new Promise((resolve) => setTimeout(resolve, 500))
-
-		const output = session.getOutput().join("")
+		// Wait for new output asynchronously (up to 2 seconds)
+		const result = await manager.readOutput(input.sessionId, 2000)
+		const output = result.output ?? ""
 
 		return {
 			success: true,
@@ -158,12 +152,9 @@ export class TerminalToolHandler implements IFullyManagedTool {
 			throw new Error("sessionId is required for read action")
 		}
 
-		const session = manager.getSession(input.sessionId)
-		if (!session) {
-			throw new Error(`Session not found: ${input.sessionId}`)
-		}
-
-		const output = session.getOutput().join("")
+		// Wait for new output asynchronously (up to 1 second)
+		const result = await manager.readOutput(input.sessionId, 1000)
+		const output = result.output ?? ""
 
 		return {
 			success: true,
@@ -177,13 +168,8 @@ export class TerminalToolHandler implements IFullyManagedTool {
 			throw new Error("sessionId is required for stop action")
 		}
 
-		const session = manager.getSession(input.sessionId)
-		if (!session) {
-			throw new Error(`Session not found: ${input.sessionId}`)
-		}
-
 		// Send Ctrl+C
-		session.sendInput("\x03")
+		await manager.sendInput(input.sessionId, "\x03")
 
 		return {
 			success: true,
@@ -197,12 +183,7 @@ export class TerminalToolHandler implements IFullyManagedTool {
 			throw new Error("sessionId is required for close action")
 		}
 
-		manager.closeSession(input.sessionId)
-
-		return {
-			success: true,
-			output: `Terminal session closed: ${input.sessionId}`,
-		}
+		return manager.closeSession(input.sessionId)
 	}
 
 	private async handleList(manager: any): Promise<TerminalToolOutput> {

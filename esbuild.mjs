@@ -173,7 +173,7 @@ const extensionConfig = {
 	...baseConfig,
 	entryPoints: ["src/extension.ts"],
 	outfile: `${destDir}/extension.js`,
-	external: ["vscode"],
+	external: ["vscode", "node-pty"], // CARET MODIFICATION: node-pty는 네이티브 모듈이므로 external 처리
 }
 
 // Standalone-specific configuration

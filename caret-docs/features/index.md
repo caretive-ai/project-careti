@@ -43,6 +43,9 @@ Caret은 Cline을 기반으로 한 자율 AI 코딩 어시스턴트로, 다음�
 - **[F11: AI-개발자 지식 동기화 시스템](./f11-ai-developer-knowledge-parity.md)**
   AI와 개발자 간의 1:1 지식 동기화를 통해 진정한 AI 파트너십을 구현하는 핵심 시스템
 
+- **[F12: Smart Terminal Hub](./f12-smart-terminal-hub.md)**
+  멀티 에이전트/CLI 오케스트레이션을 위한 터미널 허브 (스트리밍/헤드리스/중재 지원)
+
 ---
 
 ## 기능 맵
@@ -58,11 +61,12 @@ Caret 기능
 ├── AI 시스템 (F06-F07)
 │   ├── 프롬프트 시스템
 │   └── 페르소나 시스템
-└── 설정/통합 (F08-F11)
+└── 설정/통합 (F08-F12)
     ├── Feature Config
     ├── Provider Setup
     ├── 입력 히스토리
-    └── 지식 동기화 시스템
+    ├── 지식 동기화 시스템
+    └── Smart Terminal Hub
 ```
 
 ## 개발 가이드

@@ -319,17 +319,51 @@ export const bizRouterModelInfoSaneDefaults: BizRouterModelInfo = {
 	presencePenalty: 0,
 }
 
-// CARET MODIFICATION: Caret models (placeholder defaults from Caret)
-export const caretModels: Record<string, ModelInfo> = {
-	"caret-claude-sonnet": {
-		maxTokens: 4096,
-		contextWindow: 200_000,
+// CARET MODIFICATION: Caret models (Gemini 기반)
+export type CaretModelId = keyof typeof caretModels
+export const caretDefaultModelId: CaretModelId = "gemini/gemini-2.5-flash"
+export const caretModels = {
+	"gemini/gemini-2.5-pro": {
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
 		supportsImages: true,
 		supportsPromptCache: true,
+		supportsGlobalEndpoint: true,
+		inputPrice: 2.5,
+		outputPrice: 15,
+		cacheReadsPrice: 0.625,
+		thinkingConfig: {
+			maxBudget: 32767,
+		},
+		tiers: [
+			{
+				contextWindow: 200000,
+				inputPrice: 1.25,
+				outputPrice: 10,
+				cacheReadsPrice: 0.31,
+			},
+			{
+				contextWindow: Infinity,
+				inputPrice: 2.5,
+				outputPrice: 15,
+				cacheReadsPrice: 0.625,
+			},
+		],
 	},
-}
-export type CaretModelId = keyof typeof caretModels
-export const caretDefaultModelId: CaretModelId = "caret-claude-sonnet"
+	"gemini/gemini-2.5-flash": {
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: true,
+		supportsGlobalEndpoint: true,
+		inputPrice: 0.3,
+		outputPrice: 2.5,
+		thinkingConfig: {
+			maxBudget: 24576,
+			outputPrice: 3.5,
+		},
+	},
+} as const satisfies Record<string, ModelInfo>
 
 export const CLAUDE_SONNET_1M_SUFFIX = ":1m"
 export const CLAUDE_SONNET_4_1M_SUFFIX = ":1m"

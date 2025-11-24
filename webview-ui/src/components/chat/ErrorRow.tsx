@@ -3,7 +3,10 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { memo } from "react"
 import { t } from "@/caret/utils/i18n"
 import CreditLimitError from "@/components/chat/CreditLimitError"
+import { useExtensionState } from "@/context/ExtensionStateContext"
 import { handleSignIn, useClineAuth } from "@/context/ClineAuthContext"
+import { handleLogin as handleCaretLogin } from "../settings/CaretAuthHandler"
+import { normalizeApiConfiguration } from "../settings/utils/providerUtils"
 import { ClineError, ClineErrorType } from "../../../../src/services/error/ClineError"
 
 const _errorColor = "var(--vscode-errorForeground)"
@@ -17,6 +20,27 @@ interface ErrorRowProps {
 
 const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStreamingFailedMessage }: ErrorRowProps) => {
 	const { clineUser } = useClineAuth()
+	const { apiConfiguration, mode } = useExtensionState()
+	const caretUser = apiConfiguration?.caretUserProfile
+	const { selectedProvider } = normalizeApiConfiguration(apiConfiguration, mode as any)
+
+	const renderProviderLoginCTA = () => {
+		if (selectedProvider === "caret" && !caretUser) {
+			return (
+				<VSCodeButton className="w-full mb-4" onClick={handleCaretLogin}>
+					{t("providers.caret.login", "settings")}
+				</VSCodeButton>
+			)
+		}
+		if (selectedProvider === "cline" && !clineUser) {
+			return (
+				<VSCodeButton className="w-full mb-4" onClick={handleSignIn}>
+					{t("errorRow.signInToCline", "chat")}
+				</VSCodeButton>
+			)
+		}
+		return null
+	}
 
 	console.log("message", message)
 	console.log("errorType", errorType)
@@ -88,15 +112,14 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 								<>
 									<br />
 									<br />
-									{/* The user is signed in or not using cline provider */}
-									{clineUser && !isClineProvider ? (
+									{/* Provider-specific CTA */}
+									{/* Provider-specific CTA fallback */}
+									{(caretUser && selectedProvider === "caret") || (clineUser && selectedProvider === "cline") ? (
 										<span className="mb-4 text-[var(--vscode-descriptionForeground)]">
 											{t("errorRow.clickRetryBelow", "chat")}
 										</span>
 									) : (
-										<VSCodeButton className="w-full mb-4" onClick={handleSignIn}>
-											{t("errorRow.signInToCline", "chat")}
-										</VSCodeButton>
+										renderProviderLoginCTA()
 									)}
 								</>
 							)}
@@ -106,7 +129,10 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 
 				// Regular error message
 				return (
-					<p className="m-0 whitespace-pre-wrap text-[var(--vscode-errorForeground)] wrap-anywhere">{message.text}</p>
+					<>
+						<p className="m-0 whitespace-pre-wrap text-[var(--vscode-errorForeground)] wrap-anywhere">{message.text}</p>
+						{renderProviderLoginCTA()}
+					</>
 				)
 
 			case "diff_error":

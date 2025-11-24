@@ -10,7 +10,6 @@ import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
 // CARET MODIFICATION: Import i18n
 import { t } from "@/caret/utils/i18n"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
-import { useClineAuth } from "@/context/ClineAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ModelsServiceClient } from "@/services/grpc-client"
 import { highlight } from "../history/HistoryView"
@@ -19,7 +18,6 @@ import { AnthropicProvider } from "./providers/AnthropicProvider"
 import { AskSageProvider } from "./providers/AskSageProvider"
 import { BasetenProvider } from "./providers/BasetenProvider"
 import { BedrockProvider } from "./providers/BedrockProvider"
-import { BizRouterProvider } from "./providers/BizRouterProvider"
 import { CaretProvider } from "./providers/CaretProvider"
 import { CerebrasProvider } from "./providers/CerebrasProvider"
 import { ClaudeCodeProvider } from "./providers/ClaudeCodeProvider"
@@ -33,6 +31,7 @@ import { GroqProvider } from "./providers/GroqProvider"
 import { HuaweiCloudMaasProvider } from "./providers/HuaweiCloudMaasProvider"
 import { HuggingFaceProvider } from "./providers/HuggingFaceProvider"
 import { LiteLlmProvider } from "./providers/LiteLlmProvider"
+import { BizRouterProvider } from "./providers/BizRouterProvider"
 import { LMStudioProvider } from "./providers/LMStudioProvider"
 import { MistralProvider } from "./providers/MistralProvider"
 import { MoonshotProvider } from "./providers/MoonshotProvider"
@@ -98,7 +97,6 @@ const ApiOptions = ({
 	// Use full context state for immediate save payload
 	// CARET MODIFICATION: Get featureConfig from ExtensionState instead of getCurrentFeatureConfig
 	const { apiConfiguration, featureConfig } = useExtensionState()
-	const { clineUser } = useClineAuth()
 
 	// CARET MODIFICATION: Use i18n context to detect language changes
 	const { language } = useCaretI18nContext()
@@ -143,15 +141,18 @@ const ApiOptions = ({
 	const dropdownListRef = useRef<HTMLDivElement>(null)
 
 	const providerOptions = useMemo(() => {
-		// CARET MODIFICATION: Restore original Cline provider list, add Caret provider (Cline visible by default)
-		const showClineProvider = true
-
+		// CARET MODIFICATION: Restore original Cline provider list, add Caret provider (Cline always visible)
 		if (!featureConfig) {
-			return []
+			// featureConfig 미도착 시에도 기본 Caret/Cline 선택 가능하도록 안전값 제공
+			return [
+				{ value: "cline", label: t("providers.cline.name", "settings") },
+				{ value: "caret", label: t("providers.caret.name", "settings") },
+			]
 		}
 
 		const baseOptions = [
 			{ value: "cline", label: t("providers.cline.name", "settings") }, // always available (Cline login/voice)
+			// CARET MODIFICATION: Only show caret provider if enableCaretAccountFeatures is true
 			...(featureConfig.enableCaretAccountFeatures
 				? [{ value: "caret", label: t("providers.caret.name", "settings") }]
 				: []),
@@ -211,7 +212,7 @@ const ApiOptions = ({
 			}
 		}
 
-		// CARET MODIFICATION: Respect showOnlyDefaultProvider but still allow Cline for login access
+		// CARET MODIFICATION: Show only the default provider but still allow Cline for login access
 		if (featureConfig.showOnlyDefaultProvider) {
 			const defaultProvider = featureConfig.defaultProvider
 			const allowed = new Set([defaultProvider, "cline"])
@@ -220,13 +221,6 @@ const ApiOptions = ({
 
 		return processedOptions
 	}, [language])
-
-	// CARET MODIFICATION: Auto-select Cline provider on login to match UX expectation
-	useEffect(() => {
-		if (clineUser?.uid && selectedProvider !== "cline") {
-			handleModeFieldChange({ plan: "planModeApiProvider", act: "actModeApiProvider" }, "cline" as any, currentMode)
-		}
-	}, [clineUser?.uid, selectedProvider, handleModeFieldChange, currentMode])
 
 	const currentProviderLabel = useMemo(() => {
 		const providerInfo = providerOptions.find((option) => option.value === selectedProvider)
@@ -417,8 +411,7 @@ const ApiOptions = ({
 					</ProviderDropdownWrapper>
 				</DropdownContainer>
 
-				{/* CARET MODIFICATION: Show Cline Provider UI */}
-				{apiConfiguration && selectedProvider === "cline" && (
+				{selectedProvider === "cline" && (
 					<ClineProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 

@@ -38,7 +38,7 @@
 | Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ✅ 완료 | B0~B5 완료. Webview cline 개선/Hook/환경색 이식, MCP/History/Marketplace 추가 변경 없음. **2025-11-22: package.json Activity Bar/명령 카테고리 및 assets 아이콘을 Caret 브랜드로 재정렬(누락 복구)**. **2025-11-22: Cline 기반 음성 UI(녹음 글로우 포함) 및 Provider CTA 정렬, 계정 i18n 키 누락 복구, Cline 로그인 시 자동 provider 선택 적용, Caret 로그인 콜백 처리 복원(SharedUriHandler) 및 Persona 템플릿 이미지 번들링 복구** |
 | Phase B-추가 | 프론트 잔여 보강 | ✅ 완료 | **2025-11-23:** Persona/배너 자산 `?inline` 인라인 로드(403 방지), caretUserProfile GlobalState 타입/로드 경로 추가, Caret 로그인 시 await 적용 및 caretModeSystem 전달 보강, 모델 선택 CTA 중복 제거. 빌드 `npm run compile -- --filter webview-ui` 통과 |
 | Phase C | 통합 테스트 & E2E 복구 | ✅ 완료 | Unit 527 pass, Integration 404 pass. E2E는 Playwright 시스템 의존성으로 CI/CD 환경에서 실행 필요. |
-| Phase D | ModeSystem 버그 수정 + Caret CLI 구현 | ⏳ 예정 | **D-1**: getSystemPrompt/SetPromptSystemMode 버그 수정 (필수 선행). **D-2**: CLI 배너/감지/프롬프트/문서 반영. 코드 분석 완료, 구체적 수정 사항 문서화됨 |
+| Phase D | ModeSystem 버그 수정 + Caret CLI 구현 | ⚠ 진행중 | **D-1**: 코드+테스트 완료(ModeSystem 분기/영속화, 단위테스트 실행 통과). **D-2**: CLI 배너/감지/프롬프트/문서/패키징/서버 연동 **재적용 필요** |
 | Phase E | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | CLI 반영 후 CHANGELOG/announcement/Features 분리 작업 포함 |
 | Phase F | 누락 방지 자동화 및 체크리스트 업데이터 | ⏳ 예정 | compare-with-cline.mjs, PR 템플릿 반영 (Phase E 완료 후) |
 
@@ -276,42 +276,55 @@ describe("ModeSystem Integration", () => {
 
 #### D-2: Caret CLI 구현 (D-1 완료 후)
 
-> `b4-caret-cli-plan.md` 기준 실행
+> `b4-caret-cli-plan.md` + 2025-11-24 리커버리 메모 기준 재적용
 
-**D-2.1 코드/배너/감지**
-- [ ] `webview-ui/src/components/common/CliInstallBanner.tsx` 이식
-  - Caret/Cline 브랜딩 분기 (modeSystem 기반)
-  - 설치 안내 URL 분기
-- [ ] `src/utils/cli-detector.ts` 분기
-  - Caret CLI: `caret` 바이너리, `~/.caret/bin`
-  - Cline CLI: `cline` 바이너리, `~/.cline/bin`
-- [ ] 컨트롤러 분기: `installClineCli.ts`, `checkCliInstallation.ts`
-- [ ] 슬래시 커맨드 안내: `webview-ui/src/utils/slash-commands.ts`
+**D-2.1 CLI 브랜딩/프로바이더 (Go)**
+- [ ] `cli-caret/pkg/cli/auth/{providers_list.go,auth_menu.go,auth_cline_provider.go}`: Caret 라벨·도메인(`caret.team`), BYO Gemini 노출, CARET 주석 유지.
+- [ ] 단위 테스트 추가: `providers_list_test.go`로 프로바이더 라벨/URL/표시 여부 검증.
 
-**D-2.2 프롬프트**
-- [ ] `src/core/prompts/system-prompt/components/cli_subagents.ts` 3-way 병합
-  - cline 개선점 흡수
-  - Caret CLI 명칭/용도 반영
-- [ ] variants overrides에 Caret CLI 안내 추가
+**D-2.2 패키징/설치 스크립트**
+- [ ] `cli-caret/scripts/install-local.sh`, `install-local-clean.sh`, `publish-caret-cli.sh`: dist-standalone 싱크, `caret-src/core/prompts` → dist-standalone/extension 복사, extension/package.json 주입, bin/caret·caret-host 빌드 후 bin/cline·cline-host 복사, package.json/.npmignore/.gitignore(tgz 제외) 정리.
+- [ ] `scripts/build-go-proto.mjs` 실행 경로/Go PATH 확인.
 
-**D-2.3 문서**
-- [ ] Features 문서 분리:
-  - `f06-caret-prompt-system.md` → F06(2중 지원 모드+CLI) / F07(시스템 프롬프트)
-  - F08~ 번호 +1 조정 및 참조 업데이트
-- [ ] Announcement: Caret CLI 소개 (사용자 공지)
-- [ ] CHANGELOG 업데이트
+**D-2.3 웹뷰/감지/배너**
+- [ ] `webview-ui/src/components/common/CliInstallBanner.tsx`: modeSystem별 URL/설치 명령 분기(Caret/Cline).
+- [ ] `src/utils/cli-detector.ts`: `isCaretCliInstalled` 추가, 기존 Cline 감지와 병행.
+- [ ] `src/core/prompts/system-prompt/components/cli_subagents.ts`: Caret/Cline 명칭·명령 분기(템플릿 텍스트).
+- [ ] `webview-ui/src/caret/locale/{ko,en,ja,zh}/welcome.json`: `cliBanner.{title,description,button}` 추가.
+- [ ] 배너/슬래시 커맨드/컨트롤러에서 cli-detector 분기 사용 여부 점검(`installClineCli.ts`, `checkCliInstallation.ts`, `webview-ui/src/utils/slash-commands.ts`).
 
-**D-2.4 테스트**
-- [ ] cli-detector: Caret CLI / Cline CLI 모두 정상 감지
-- [ ] 배너 노출 조건: 플랫폼/모드/설치 여부
-- [ ] 프롬프트 오동작 여부 (Agent/CLI 모드 혼동) 점검
+**D-2.4 문서/피처 번호 재정렬**
+- [ ] F05→F04(“Cline 완전 호환/CLI 포함”), 기존 F04→F05, 이후 번호 시프트(F12 등 참조 전부 교체).
+- [ ] `features/index.md`, 다국어 README 표 업데이트.
+- [ ] 신규 F05(전 F04) 문서 작성: Cline 모드 호환/CLI 포함, Caret 추가 기능 서술. `f06-caret-prompt-system.md`는 Caret 전용 프롬프트+CLI 연동 보강.
+- [ ] Announcement/CHANGELOG에 CLI 영향 반영.
+
+**D-2.5 서버팀 안내**
+- [ ] `caret-docs/merging/cli-provider-servers.md`: 인증 `https://caret.team`, API `https://api.caret.team`, 엔드포인트/토큰 요구사항 명시.
+
+**D-2.6 빌드/검증**
+- [ ] `npm run compile`, `npm run test` 클린.
+- [ ] CLI 수동 검증: caret/cline 모드별 배너·감지·프롬프트·auth 흐름 정상, `caret version`/`caret task new` 동작 확인.
 
 ---
 
 **D-2 완료 기준**:
-- Caret 모드에서 Caret CLI 안내/감지/배너/프롬프트가 cline 수준으로 동작
-- Cline 모드에서는 기존 Cline CLI 흐름 유지 (회귀 없음)
-- CHANGELOG/announcement에 사용자 영향 부분만 반영
+- Caret 모드: Caret CLI 안내/감지/배너/프롬프트가 정상 동작, BYO/Gemini 노출, 브랜딩·도메인 caret.team 적용.
+- Cline 모드: 기존 Cline CLI 흐름 유지(회귀 없음).
+- 문서/피처 번호/CHANGELOG/announcement 반영 완료, 대용량 산출물(tgz) 커밋 금지.
+
+### 2025-11-24 리커버리 메모 (Phase D 재적용 계획)
+- 워크트리 재정비: D-1 코드만 남아 있으며 테스트/CLI/문서/패키징 작업은 유실된 상태. Cline 파일 수정 시 `// CARET MODIFICATION` 유지, 최소 침습 원칙 재확인.
+- D-1 잔여: `caret-src/__tests__/prompt-system/mode-system.test.ts` 작성(영속화/분기/UI 라벨 5케이스), `npm run compile && npm run test`로 회귀 검증.
+- D-2 재적용 필수 항목:
+  - **CLI 브랜딩/프로바이더**: `cli-caret/pkg/cli/auth/{providers_list.go,auth_menu.go,auth_cline_provider.go}` Caret 라벨·도메인(caret.team)·BYO Gemini 표시, 단위 테스트 추가(`providers_list_test.go`).
+  - **패키징/설치 스크립트**: `cli-caret/scripts/install-local.sh`, `install-local-clean.sh`, `publish-caret-cli.sh`에서 dist-standalone 동기화, `caret-src/core/prompts` → dist-standalone/extension 복사, extension/package.json 주입, bin/caret·caret-host 빌드 후 bin/cline·cline-host 복사, package.json/.npmignore/.gitignore 정리(tgz 제외).
+  - **웹뷰 UI**: `CliInstallBanner` 모드 분기(명령·URL), `cli-detector`에 `isCaretCliInstalled` 추가, `cli_subagents`에서 Caret/Cline 명칭·명령 분기, i18n `welcome.json`(ko/en/ja/zh) `cliBanner.*` 키 추가, `cli-detector` 사용처(슬래시 커맨드, 배너) 검증.
+  - **문서/피처 번호 정리**: F05→F04(“Cline 완전 호환/CLI 포함”), 기존 F04→F05, 이후 번호 시프팅(F12 등 참조 전부 업데이트). `features/index.md`와 ko/ja/zh README 표, `caret-docs/features/f06-caret-prompt-system.md` 분리/보강, 신규 F05(전 F04) 링크 교체. CLI/모드 호환을 설명하는 `caret-docs/features/f05-<naming TBD>.md` 신설.
+  - **서버팀 전달 사항**: `caret-docs/merging/cli-provider-servers.md`에 인증 도메인 `https://caret.team`, API `https://api.caret.team`, 필요 엔드포인트/토큰 요구사항 정리.
+  - **빌드/생성물**: `scripts/build-go-proto.mjs` 실행 확인(Go PATH 의존), CLI 모드 환경변수(`CARET_MODE_SYSTEM`) 주입 확인, task auto-start 분기(Task/instance) 재검증.
+- 푸시 시 tgz 등 대용량 산출물은 커밋 금지(LFS 제외). 기존 .gitignore 유지.
+- 신규/복원 문서(필독): `caret-docs/features/f04-cline-compatibility-and-cli.md`, `caret-docs/merging/cli-provider-servers.md`. Phase D 구현 시 이 문서들을 역참조하며 개발할 것.
 
 ### Phase E: 문서 & 릴리스
 - [ ] `CHANGELOG-CLINE.md`, `CHANGELOG.md`, `caret-docs/{ko,ja,zh}/CHANGELOG.md` 업데이트 (버전/날짜/브랜치/주요 기능 포함).
@@ -426,22 +439,20 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-23 15:30 | Claude | **Phase D 설계 보강**: 코드 분석 후 원인 검증 완료. D-1(ModeSystem 버그 수정)과 D-2(CLI 구현)로 분리, 구체적 코드 수정 사항/파일 위치/테스트 케이스 문서화. SetPromptSystemMode.ts:29-38 `setGlobalStateBatch` 누락, system-prompt/index.ts:16-21 Caret 분기 누락 확인. |
 | 2025-11-23 15:55 | Codex | D-1 핫픽스 반영: `system-prompt/index.ts` Caret 분기 복원(dual shape), `SetPromptSystemMode.ts` globalState 영속화 추가, `CaretJsonAdapter` mockVariant에 matcher 필드 추가(cline v3.38.1 PromptVariant 호환). 테스트/빌드 미실행, D-1.3 테스트/CLI 분기 작업은 여전히 필요. |
 | 2025-11-23 16:10 | Codex | D-1 테스트 추가(`mode-system.test.ts` Caret/Cline 분기 mock 검증), D-2 1차 구현: CLI 감지/배너/프롬프트 모드 분기(caret=caret CLI, cline=cline CLI), cli_subagents 템플릿 모드별 명령 반영, locale(welcome) CLI 배너 키 추가. checkCliInstallation/Task에서 modeSystem 기준으로 CLI 감지. 빌드/테스트 미실행. |
+| 2025-11-24 22:00 | Codex | 워크트리 재정비: 로컬 히스토리 손실로 현재 HEAD는 깨끗. D-1 코드만 남아 있으며 D-1 테스트/CLI 재적용/문서 보강 필요. `2025-11-24 리커버리 메모`에 재실행 계획 정리. |
+| 2025-11-24 22:35 | Codex | D-1 단위테스트 실행: `SetPromptSystemMode` 영속화/분기 테스트 추가(`caret-src/__tests__/prompt-system/set-prompt-system-mode.test.ts`), `mode-system.test.ts`와 함께 `npm run test:unit -- ...` 통과. DevDeps 재설치(webview-ui 포함). D-2 미착수. |
+| 2025-11-25 00:16 | Codex | Cline/Caret UI 팝업 CTA 중복 제거(모델 선택 팝업 상단 CTA 제거), Cline Provider 복원(cline 스냅샷), Caret 모델 리스트를 caret-main 기준(Gemini 모델)으로 복구. ErrorRow에서 auth 오류 시 선택된 프로바이더에 따라 Caret/Cline 로그인 버튼을 분기하도록 수정. i18n 누락 키(`contextWindowSwitcher`) 추가. |
+| 2025-11-25 00:45 | Codex | 채팅 오류 CTA 보완: ErrorRow에서 선택된 프로바이더에 따라 로그인 버튼을 강제 분기(Caret↔Cline), 기본 오류 메시지에도 CTA 추가. ClineProvider i18n 적용(clineProvider.*), Caret/Cline 로그인 번역 키 보강. |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 
 ---
 
 ## 📌 다음 액션 (우선순위 순)
-1. **Phase D-1 착수 (필수 선행)**: ModeSystem 회귀 버그 수정
-   - `SetPromptSystemMode.ts`에 `setGlobalStateBatch` 추가 (5분)
-   - `system-prompt/index.ts`에 Caret 분기 복원 (30분)
-   - TDD 테스트 추가 및 검증 (1시간)
-2. **Phase D-2**: Caret CLI 구현 (D-1 완료 후)
-   - CLI 배너/감지/컨트롤러 분기
-   - 프롬프트/문서 업데이트
-3. **Phase E**: 문서 & 릴리스
-   - CHANGELOG/announcement.json 업데이트
-   - Features 문서 분리 (F06→F06/F07)
+1. **D-1 마무리**: `mode-system.test.ts` 작성 및 `npm run compile && npm run test` 재실행. Caret/Cline 라벨/프롬프트 분기 통합 테스트 포함.
+2. **D-2 재적용**: CLI 전 영역 복구(브랜딩/프로바이더/패키징/배너/감지/프롬프트/i18n) + 서버팀 안내 문서. 상세 항목은 `2025-11-24 리커버리 메모` 참고.
+3. **Feature 문서/번호 재정렬**: F05→F04, 기존 F04→F05 등 참조 전부 업데이트 후 announcement/CHANGELOG 반영.
+4. **회귀 검증**: CLI 설치/감지/배너/프롬프트 수동 테스트, `npm run compile`, `npm run test`, 필요 시 `npm run compile-standalone-npm` 재검증.
 
 ---
 

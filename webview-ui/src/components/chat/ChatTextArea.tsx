@@ -1821,35 +1821,20 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								</ModelButtonWrapper>
 								{/* CARET MODIFICATION: Provider-specific login CTA (below selector to avoid overlay) */}
 								{showModelSelector && (
-									<ModelSelectorTooltip
-										arrowPosition={arrowPosition}
-										menuPosition={menuPosition}
-										style={{
-											bottom: `calc(100vh - ${menuPosition}px + 6px)`,
-										}}>
-										{/* Provider-specific login CTA inside selector to avoid duplication when closed */}
-										{selectedProvider === "cline" && !clineUser?.uid && (
-											<div className="mb-2">
-												<VSCodeButton appearance="secondary" onClick={() => handleSignIn()}>
-													Sign in with Cline
-												</VSCodeButton>
-											</div>
-										)}
-										{selectedProvider === "caret" && !caretUser?.id && (
-											<div className="mb-2">
-												<VSCodeButton appearance="secondary" onClick={() => handleCaretLogin()}>
-													{t("providers.caret.login", "settings")}
-												</VSCodeButton>
-											</div>
-										)}
-										<ApiOptions
-											apiErrorMessage={undefined}
-											currentMode={mode}
-											isPopup={true}
-											modelIdErrorMessage={undefined}
-											showModelOptions={true}
-										/>
-									</ModelSelectorTooltip>
+								<ModelSelectorTooltip
+									arrowPosition={arrowPosition}
+									menuPosition={menuPosition}
+									style={{
+										bottom: `calc(100vh - ${menuPosition}px + 6px)`,
+									}}>
+									<ApiOptions
+										apiErrorMessage={undefined}
+										currentMode={mode}
+										isPopup={true}
+										modelIdErrorMessage={undefined}
+										showModelOptions={true}
+									/>
+								</ModelSelectorTooltip>
 								)}
 							</ModelContainer>
 						</ButtonGroup>

@@ -1,7 +1,7 @@
 import { Mode } from "@shared/storage/types"
 import { VSCodeCheckbox, VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
-import { useState } from "react"
 import { t } from "@/caret/utils/i18n"
+import { useState } from "react"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ClineAccountInfoCard } from "../ClineAccountInfoCard"
 import { DropdownContainer } from "../common/ModelSelector"
@@ -52,12 +52,12 @@ export const ClineProvider = ({ showModelOptions, isPopup, currentMode }: ClineP
 					{providerSortingSelected && (
 						<div style={{ marginBottom: -6 }}>
 							<DropdownContainer className="dropdown-container" zIndex={OPENROUTER_MODEL_PICKER_Z_INDEX + 1}>
-								<VSCodeDropdown
-									onChange={(e: any) => {
-										handleFieldChange("openRouterProviderSorting", e.target.value)
-									}}
-									style={{ width: "100%", marginTop: 3 }}
-									value={apiConfiguration?.openRouterProviderSorting}>
+									<VSCodeDropdown
+										onChange={(e: any) => {
+											handleFieldChange("openRouterProviderSorting", e.target.value)
+										}}
+										style={{ width: "100%", marginTop: 3 }}
+										value={apiConfiguration?.openRouterProviderSorting}>
 									<VSCodeOption value="">{t("clineProvider.defaultOption", "settings")}</VSCodeOption>
 									<VSCodeOption value="price">{t("clineProvider.priceOption", "settings")}</VSCodeOption>
 									<VSCodeOption value="throughput">

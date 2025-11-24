@@ -63,6 +63,11 @@ caret-src/core/prompts/CaretModeManager.ts
 - 모드 전환 로직
 ```
 
+### ⚠️ 초기화 가드 (머지 시 필수 확인)
+- `src/common.ts`: `StateManager.initialize` 직후 `JsonTemplateLoader.initialize(<extension>/caret-src/core/prompts/sections)` 호출이 있어야 함. 누락 시 Caret 모드에서 `JsonTemplateLoader has not been initialized` 예외 발생.
+- (과거 Caret 원본) `src/extension.ts`에도 동일 초기화가 있었으나, 현재는 `common.ts` 초기화만으로 동작. 3-way 머지 시 Cline(AUTO_ADOPT)로 덮어쓰지 않도록 주의.
+- 체크 항목: 1) CARET MODIFICATION 주석 존재 여부 2) 경로 `caret-src/core/prompts/sections` 사용 여부 3) 실패 시 Logger.error 로깅 여부.
+
 ---
 
 ## 🤖 Chatbot vs Agent 모드

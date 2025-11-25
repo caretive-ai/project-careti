@@ -174,17 +174,21 @@ func (ih *InputHandler) Start(ctx context.Context, errChan chan error) {
 						if newMode == "act" {
 							// Act mode: can send mode + message in one call
 							if err := ih.manager.SetMode(ctx, newMode, &remainingMessage, nil, nil); err != nil {
-								output.Printf("\nError switching to act mode with message: %v\n", err)
+								// CARET MODIFICATION: user-facing label agent
+								output.Printf("\nError switching to agent mode with message: %v\n", err)
 								continue
 							}
-							output.Printf("\n%s\n", actStyle.Render("Switched to act mode"))
+								// CARET MODIFICATION: mode label uses agent/chat terminology
+								output.Printf("\n%s\n", actStyle.Render("Switched to agent mode"))
 						} else {
 							// Plan mode: must switch first, then send message separately
 							if err := ih.manager.SetMode(ctx, newMode, nil, nil, nil); err != nil {
-								output.Printf("\nError switching to plan mode: %v\n", err)
+								// CARET MODIFICATION: user-facing label chatbot
+								output.Printf("\nError switching to chatbot mode: %v\n", err)
 								continue
 							}
-							output.Printf("\n%s\n", planStyle.Render("Switched to plan mode"))
+							// CARET MODIFICATION: mode label uses agent/chat terminology
+							output.Printf("\n%s\n", planStyle.Render("Switched to chat mode"))
 
 							// Now send the message separately
 							time.Sleep(500 * time.Millisecond) // Give mode switch time to process
@@ -196,14 +200,23 @@ func (ih *InputHandler) Start(ctx context.Context, errChan chan error) {
 					} else {
 						// Just switch mode, no message
 						if err := ih.manager.SetMode(ctx, newMode, nil, nil, nil); err != nil {
-							output.Printf("\nError switching to %s mode: %v\n", newMode, err)
-							continue
+						// CARET MODIFICATION: user-facing label agent/chatbot
+						modeLabel := newMode
+						if newMode == "act" {
+							modeLabel = "agent"
+						} else if newMode == "plan" {
+							modeLabel = "chatbot"
 						}
+						output.Printf("\nError switching to %s mode: %v\n", modeLabel, err)
+						continue
+					}
 						// Color based on mode
 						if newMode == "act" {
-							output.Printf("\n%s\n", actStyle.Render("Switched to act mode"))
+							// CARET MODIFICATION: mode label uses agent/chat terminology
+							output.Printf("\n%s\n", actStyle.Render("Switched to agent mode"))
 						} else {
-							output.Printf("\n%s\n", planStyle.Render("Switched to plan mode"))
+							// CARET MODIFICATION: mode label uses agent/chat terminology
+							output.Printf("\n%s\n", planStyle.Render("Switched to chat mode"))
 						}
 					}
 
@@ -280,10 +293,11 @@ func determineAutoApprovalAction(msg *types.ClineMessage) (string, error) {
 func (ih *InputHandler) promptForInput(ctx context.Context) (string, bool, error) {
 	currentMode := ih.manager.GetCurrentMode()
 
+		// CARET MODIFICATION: branding + mode hint text
 	model := output.NewInputModel(
 		output.InputTypeMessage,
-		"Cline is ready for your message...",
-		"/plan or /act to switch modes\nctrl+e to open editor",
+		"Caret is ready for your message...",
+		"/chatbot or /agent to switch modes\nctrl+e to open editor",
 		currentMode,
 	)
 
@@ -295,9 +309,10 @@ func (ih *InputHandler) promptForApproval(ctx context.Context, msg *types.ClineM
 	// Store the approval message for later use in determining auto-approval action
 	ih.approvalMessage = msg
 	
+	// CARET MODIFICATION: branding
 	model := output.NewInputModel(
 		output.InputTypeApproval,
-		"Let Cline use this tool?",
+		"Let Caret use this tool?",
 		"",
 		ih.manager.GetCurrentMode(),
 	)
@@ -474,18 +489,26 @@ func (w *inputProgramWrapper) View() string {
 	return w.model.View()
 }
 
-// parseModeSwitch checks if message starts with /act or /plan and extracts the mode and remaining message
+// parseModeSwitch checks if message starts with /act or /plan (and Caret aliases /agent or /chatbot) and extracts the mode and remaining message
 func (ih *InputHandler) parseModeSwitch(message string) (string, string, bool) {
 	trimmed := strings.TrimSpace(message)
 	lower := strings.ToLower(trimmed)
 
-	if strings.HasPrefix(lower, "/plan") {
-		remaining := strings.TrimSpace(trimmed[5:])
+	if strings.HasPrefix(lower, "/plan") || strings.HasPrefix(lower, "/chatbot") { // CARET MODIFICATION: /chatbot alias for plan
+		prefixLen := 5
+		if strings.HasPrefix(lower, "/chatbot") {
+			prefixLen = len("/chatbot")
+		}
+		remaining := strings.TrimSpace(trimmed[prefixLen:])
 		return "plan", remaining, true
 	}
 
-	if strings.HasPrefix(lower, "/act") {
-		remaining := strings.TrimSpace(trimmed[4:])
+	if strings.HasPrefix(lower, "/act") || strings.HasPrefix(lower, "/agent") { // CARET MODIFICATION: /agent alias for act
+		prefixLen := 4
+		if strings.HasPrefix(lower, "/agent") {
+			prefixLen = len("/agent")
+		}
+		remaining := strings.TrimSpace(trimmed[prefixLen:])
 		return "act", remaining, true
 	}
 

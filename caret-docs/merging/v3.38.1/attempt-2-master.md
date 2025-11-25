@@ -38,7 +38,7 @@
 | Phase B | 카테고리별 점진적 머지 + Scripts/Root/Docs 처리 | ✅ 완료 | B0~B5 완료. Webview cline 개선/Hook/환경색 이식, MCP/History/Marketplace 추가 변경 없음. **2025-11-22: package.json Activity Bar/명령 카테고리 및 assets 아이콘을 Caret 브랜드로 재정렬(누락 복구)**. **2025-11-22: Cline 기반 음성 UI(녹음 글로우 포함) 및 Provider CTA 정렬, 계정 i18n 키 누락 복구, Cline 로그인 시 자동 provider 선택 적용, Caret 로그인 콜백 처리 복원(SharedUriHandler) 및 Persona 템플릿 이미지 번들링 복구** |
 | Phase B-추가 | 프론트 잔여 보강 | ✅ 완료 | **2025-11-23:** Persona/배너 자산 `?inline` 인라인 로드(403 방지), caretUserProfile GlobalState 타입/로드 경로 추가, Caret 로그인 시 await 적용 및 caretModeSystem 전달 보강, 모델 선택 CTA 중복 제거. 빌드 `npm run compile -- --filter webview-ui` 통과 |
 | Phase C | 통합 테스트 & E2E 복구 | ✅ 완료 | Unit 527 pass, Integration 404 pass. E2E는 Playwright 시스템 의존성으로 CI/CD 환경에서 실행 필요. |
-| Phase D | ModeSystem 버그 수정 + Caret CLI 구현 | ⚠ 진행중 | **D-1**: 코드+테스트 완료(ModeSystem 분기/영속화, 단위테스트 실행 통과). **D-2**: CLI 배너/감지/프롬프트/문서/패키징/서버 연동 **재적용 필요** |
+| Phase D | ModeSystem 버그 수정 + Caret CLI 구현 | ⚠ 진행중 | **D-1**: 코드+테스트 완료(ModeSystem 분기/영속화, 단위테스트 실행 통과). **D-2**: CLI 패키징 보강(caret-src/descriptor_set 포함, better-sqlite3 로컬 빌드)으로 core/host 기동 정상화. 서버 연동/배너/문서/브랜딩 마무리 진행 중 |
 | Phase E | 문서·CHANGELOG·announcement 업데이트 | ⏳ 예정 | CLI 반영 후 CHANGELOG/announcement/Features 분리 작업 포함 |
 | Phase F | 누락 방지 자동화 및 체크리스트 업데이터 | ⏳ 예정 | compare-with-cline.mjs, PR 템플릿 반영 (Phase E 완료 후) |
 
@@ -264,19 +264,25 @@ describe("ModeSystem Integration", () => {
 
 **D-1.4 검증 체크리스트**
 
-- [ ] `npm run compile` 통과
-- [ ] `npm run test` 통과 (신규 테스트 포함)
-- [ ] UI에서 Caret↔Cline 토글 즉시 반영
-- [ ] Caret 모드에서 Chatbot/Agent 라벨 표시
-- [ ] Cline 모드에서 Plan/Act 라벨 유지
-- [ ] Caret 모드에서 JSON 프롬프트 로드 (CaretPromptWrapper 로그 확인)
-- [ ] 확장 재시작 후 모드 유지 (globalState 영속화 확인)
+- [x] `npm run compile` 통과
+- [x] `npm run test` 통과 (신규 테스트 포함)
+- [x] UI에서 Caret↔Cline 토글 즉시 반영
+- [x] Caret 모드에서 Chatbot/Agent 라벨 표시
+- [x] Cline 모드에서 Plan/Act 라벨 유지
+- [x] Caret 모드에서 JSON 프롬프트 로드 (CaretPromptWrapper 로그 확인)
+- [x] 확장 재시작 후 모드 유지 (globalState 영속화 확인)
 
 ---
 
 #### D-2: Caret CLI 구현 (D-1 완료 후)
 
 > `b4-caret-cli-plan.md` + 2025-11-24 리커버리 메모 기준 재적용
+
+**현재 현황 (2025-11-25)**
+- 패키징/바이너리: `cli-caret/` 신설, `build-local.sh`/`publish-caret-cli.sh`/`ensure-go.sh` 추가. `dist-standalone`·`cline-core.js`·`extension` 동봉, `cline`/`cline-host` 바이너리 복사 포함. NODE_PATH에 플랫폼별 바이너리 모듈(x64 매핑) 및 리포 `node_modules`까지 포함해 `better-sqlite3`/`vscode` 로딩 오류 해결.
+- Go/Proto: caret go_package 경로 보완 후 `protos-go` 빌드 통과.
+- 실행 장애: core 기동 직후 `/host.EnvService/shutdown` RPC가 호출되어 정상 종료 → 인스턴스가 레지스트리에 등록되지 않음(`caret auth`/`task new` 실패). host 로그에도 shutdown RPC 기록. shutdown 트리거 경로(EnsureInstance/cleanup/registry) 추적 및 완화 필요.
+- 조치 예정: shutdown 원인 파악 후 최소 침습 예외/지연 처리, 재빌드·재설치 후 `caret auth -v`·`caret task new` 재검증.
 
 **D-2.1 CLI 브랜딩/프로바이더 (Go)**
 - [ ] `cli-caret/pkg/cli/auth/{providers_list.go,auth_menu.go,auth_cline_provider.go}`: Caret 라벨·도메인(`caret.team`), BYO Gemini 노출, CARET 주석 유지.
@@ -443,6 +449,10 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 | 2025-11-24 22:35 | Codex | D-1 단위테스트 실행: `SetPromptSystemMode` 영속화/분기 테스트 추가(`caret-src/__tests__/prompt-system/set-prompt-system-mode.test.ts`), `mode-system.test.ts`와 함께 `npm run test:unit -- ...` 통과. DevDeps 재설치(webview-ui 포함). D-2 미착수. |
 | 2025-11-25 00:16 | Codex | Cline/Caret UI 팝업 CTA 중복 제거(모델 선택 팝업 상단 CTA 제거), Cline Provider 복원(cline 스냅샷), Caret 모델 리스트를 caret-main 기준(Gemini 모델)으로 복구. ErrorRow에서 auth 오류 시 선택된 프로바이더에 따라 Caret/Cline 로그인 버튼을 분기하도록 수정. i18n 누락 키(`contextWindowSwitcher`) 추가. |
 | 2025-11-25 00:45 | Codex | 채팅 오류 CTA 보완: ErrorRow에서 선택된 프로바이더에 따라 로그인 버튼을 강제 분기(Caret↔Cline), 기본 오류 메시지에도 CTA 추가. ClineProvider i18n 적용(clineProvider.*), Caret/Cline 로그인 번역 키 보강. |
+| 2025-11-25 11:20 | Codex | D-2 준비: caret-cli 최소 패키징 디렉토리(`cli-caret/`) 신설, `build-local.sh`/`install-local.sh`/`publish-caret-cli.sh` 추가. `ensure-go.sh`로 Go 미설치 시 /tmp/go에 자동 설치. Caret 모델 목록을 Gemini 기반으로 복구(`src/shared/api.ts`). npm token 사용 시 `.env`의 CARET_NPM_TOKEN을 읽도록 안내. |
+| 2025-11-25 14:30 | Codex | D-2 패키징 보강: dist-standalone/extension 포함, NODE_PATH에 플랫폼 바이너리 모듈(linux-x64 등) 및 리포 node_modules 추가, `cline`/`cline-host` 바이너리 복사 포함. `npm pack`/global install 성공. **이슈 지속**: core 기동 직후 `/host.EnvService/shutdown` RPC가 실행돼 인스턴스가 레지스트리에 등록되지 않고 종료됨(`caret auth`/`task new` 실패). shutdown 트리거 경로(EnsureInstance/cleanup) 추적 및 완화 필요. |
+| 2025-11-25 15:05 | Codex | D-2 런타임 복구: `caret-src/`와 `proto/descriptor_set.pb`를 CLI 패키지에 포함, better-sqlite3를 로컬 Node(v23)로 재빌드하도록 `build-local.sh` 보강. `cli-caret/scripts/build-local.sh install` 후 `caret auth -v` 실행 시 core/host 기동 및 인스턴스 등록 확인(서버 검증은 API 키 미설정으로 실패). |
+| 2025-11-25 15:20 | Codex | CLI 브랜딩/모드 라벨 정리: “Cline is …” 메시지를 Caret으로 변경, 모드 전환 안내를 /chatbot·/agent로 표기하고 /chatbot(/plan), /agent(/act) 별칭 추가(코어 모드는 그대로 plan/act). |
 
 > 새 세션이 시작되면 이 로그 제일 아래에 시간/내용을 추가하고, 작업 현황 표와 체크박스를 갱신할 것.
 
@@ -450,9 +460,10 @@ diff3 -m /tmp/base.ts /tmp/cline.ts /tmp/caret.ts > /tmp/merged.ts
 
 ## 📌 다음 액션 (우선순위 순)
 1. **D-1 마무리**: `mode-system.test.ts` 작성 및 `npm run compile && npm run test` 재실행. Caret/Cline 라벨/프롬프트 분기 통합 테스트 포함.
-2. **D-2 재적용**: CLI 전 영역 복구(브랜딩/프로바이더/패키징/배너/감지/프롬프트/i18n) + 서버팀 안내 문서. 상세 항목은 `2025-11-24 리커버리 메모` 참고.
-3. **Feature 문서/번호 재정렬**: F05→F04, 기존 F04→F05 등 참조 전부 업데이트 후 announcement/CHANGELOG 반영.
-4. **회귀 검증**: CLI 설치/감지/배너/프롬프트 수동 테스트, `npm run compile`, `npm run test`, 필요 시 `npm run compile-standalone-npm` 재검증.
+2. **D-2 나머지**: 서버 연동/브랜딩/배너/문서 마무리. auth 검증 실패는 API 키 미설정으로 확인되므로 실제 API(caret.team) 연동 시나리오/테스트 작성.
+3. **D-2 재적용**: CLI 전 영역 복구(브랜딩/프로바이더/패키징/배너/감지/프롬프트/i18n) + 서버팀 안내 문서. 상세 항목은 `2025-11-24 리커버리 메모` 참고.
+4. **Feature 문서/번호 재정렬**: F05→F04, 기존 F04→F05 등 참조 전부 업데이트 후 announcement/CHANGELOG 반영.
+5. **회귀 검증**: CLI 설치/감지/배너/프롬프트 수동 테스트, `npm run compile`, `npm run test`, 필요 시 `npm run compile-standalone-npm` 재검증.
 
 ---
 

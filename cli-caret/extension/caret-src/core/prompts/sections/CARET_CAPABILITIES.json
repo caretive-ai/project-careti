@@ -1,0 +1,23 @@
+{
+	"capabilities": {
+		"sections": [
+			{
+				"content": "Core Abilities: Code analysis, technical guidance, project understanding, multi-language support, pattern recognition.\nEnvironment: {{working_dir}} on {{os}}.\nContext awareness through file tracking and AST parsing.",
+				"mode": "both",
+				"tokens": "~50"
+			}
+		]
+	},
+	"mode_specific": {
+		"chatbot": {
+			"mode_capabilities": "Focused on analysis, guidance, and planning without file modifications"
+		},
+		"agent": {
+			"mode_capabilities": "Full autonomous capabilities with complete tool access"
+		}
+	},
+	"template_vars": {
+		"description": "AI capabilities adapted from cline's capabilities.ts with Caret mode differentiation",
+		"source": "Based on cline capabilities.ts but streamlined for token efficiency"
+	}
+}

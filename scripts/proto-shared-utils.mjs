@@ -14,8 +14,9 @@ export async function parseProtoForServices(protoFilePaths, protoDir) {
 		const content = await fs.readFile(path.join(protoDir, protoFilePath), "utf8")
 		const serviceMatches = content.matchAll(/service\s+(\w+Service)\s*\{([\s\S]*?)\}/g)
 
+		// CARET MODIFICATION: handle caret-specific proto package
 		// Determine proto package from file path
-		const protoPackage = protoFilePath.startsWith("host/") ? "host" : "cline"
+		const protoPackage = protoFilePath.startsWith("host/") ? "host" : protoFilePath.startsWith("caret/") ? "caret" : "cline"
 
 		for (const serviceMatch of serviceMatches) {
 			const serviceName = serviceMatch[1]
@@ -49,7 +50,9 @@ export async function parseProtoForServices(protoFilePaths, protoDir) {
 export function createServiceNameMap(services) {
 	const serviceNameMap = {}
 	for (const [serviceKey, serviceDef] of Object.entries(services)) {
-		const packagePrefix = serviceDef.protoPackage === "host" ? "host" : "cline"
+		// CARET MODIFICATION: preserve caret package prefix for service map
+		const packagePrefix =
+			serviceDef.protoPackage === "host" ? "host" : serviceDef.protoPackage === "caret" ? "caret" : "cline"
 		serviceNameMap[serviceKey] = `${packagePrefix}.${serviceDef.name}`
 	}
 	return serviceNameMap

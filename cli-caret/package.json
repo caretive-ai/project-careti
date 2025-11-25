@@ -1,0 +1,23 @@
+{
+	"name": "@caretive/caret-cli",
+	"version": "0.0.1",
+	"description": "Caret CLI (minimal fork of Cline CLI, packaged for caretive)",
+	"license": "MIT",
+	"bin": {
+		"caret": "./bin/caret",
+		"caret-host": "./bin/caret-host"
+	},
+	"files": [
+		"bin/*",
+		"cline-core.js",
+		"proto/descriptor_set.pb",
+		"dist-standalone/**/*",
+		"extension/**/*",
+		"README.md",
+		"scripts/*.sh"
+	],
+	"scripts": {
+		"build": "./scripts/build-local.sh",
+		"pack": "npm pack"
+	}
+}

@@ -1,0 +1,10 @@
+{
+	"chatbot": {
+		"style": "Analysis progress",
+		"completion": "Analysis complete. Review needed?"
+	},
+	"agent": {
+		"style": "Task progress",
+		"completion": "Task complete. Continuing next steps."
+	}
+}

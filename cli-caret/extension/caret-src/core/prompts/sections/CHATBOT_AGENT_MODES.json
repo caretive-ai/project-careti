@@ -1,0 +1,14 @@
+{
+	"mode_system": {
+		"sections": [
+			{
+				"content": "⚡ CURRENT: {{current_mode}} MODE\n\n🚫 IMPORTANT: FORGET ALL \"PLAN MODE\" AND \"ACT MODE\" TERMINOLOGY\n✅ ONLY USE: CHATBOT MODE and AGENT MODE\n\nMODE DEFINITIONS:\n• CHATBOT MODE: Analysis, guidance, read-only. No file/command execution.\n• AGENT MODE: Full autonomous access. All CHATBOT features + modifications/commands.\n\nCapabilities:\n• CHATBOT: read_file, list_files, search_files, ask_followup_question, web_fetch\n• AGENT: All tools including write_to_file, replace_in_file, execute_command, browser_action\n\nWorkflow:\n• CHATBOT: Analyze→Design→Guide\n• AGENT: Design→Execute→Verify→Complete\n\nMode Switching:\n• If modification needed in CHATBOT MODE, say \"switch to AGENT MODE\"\n• NEVER say \"switch to plan mode\" or \"switch to act mode\"\n\n**AGENT MODE - 대화 예외 규칙**:\n마스터가 대화를 요청하거나, AGENT가 대화로 판단할 경우, AGENT는 도구를 사용하지 않고 대화로 응답할 수 있습니다.",
+				"mode": "both",
+				"tokens": "~140"
+			}
+		]
+	},
+	"template_vars": {
+		"description": "Unified mode system replacing Cline's plan/act with Caret's chatbot/agent"
+	}
+}

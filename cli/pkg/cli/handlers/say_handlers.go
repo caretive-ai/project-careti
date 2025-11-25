@@ -193,7 +193,8 @@ func (h *SayHandler) handleText(msg *types.ClineMessage, dc *DisplayContext) err
 		output.Printf("%s\n", rendered)
 	} else {
 		// In non-streaming mode, render header + body together
-		markdown := fmt.Sprintf("### Cline responds\n\n%s", msg.Text)
+		// CARET MODIFICATION: branding
+		markdown := fmt.Sprintf("### Caret responds\n\n%s", msg.Text)
 		rendered = dc.Renderer.RenderMarkdown(markdown)
 		output.Printf("\n%s\n", rendered)
 	}
@@ -213,7 +214,8 @@ func (h *SayHandler) handleReasoning(msg *types.ClineMessage, dc *DisplayContext
 		output.Printf("%s\n", rendered)
 	} else {
 		// In non-streaming mode, render header + body together
-		markdown := fmt.Sprintf("### Cline is thinking\n\n%s", msg.Text)
+		// CARET MODIFICATION: Caret branding in streaming header
+		markdown := fmt.Sprintf("### Caret is thinking\n\n%s", msg.Text)
 		rendered = dc.Renderer.RenderMarkdown(markdown)
 		output.Printf("\n%s\n", rendered)
 	}

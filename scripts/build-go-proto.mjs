@@ -2,6 +2,7 @@
 
 import chalk from "chalk"
 import { execSync } from "child_process"
+import { existsSync } from "fs"
 import * as fs from "fs/promises"
 import { globby } from "globby"
 import { createRequire } from "module"
@@ -20,6 +21,17 @@ const GO_CLIENT_DIR = path.join(GO_PROTO_DIR, "client")
 const GO_SERVICE_CLIENT_DIR = path.join(GO_CLIENT_DIR, "services")
 
 const COMMON_TYPES = ["StringRequest", "EmptyRequest", "Empty", "String", "Int64Request", "KeyValuePair"]
+
+// CARET MODIFICATION: ensure common Go bin dirs are on PATH so protoc plugins are found
+function ensureGoBinsOnPath() {
+	const extraBins = [path.join(process.env.HOME || "", "go", "bin"), "/tmp/go/bin"].filter((p) => p && existsSync(p))
+
+	if (extraBins.length > 0) {
+		const current = process.env.PATH ? process.env.PATH.split(path.delimiter) : []
+		const merged = [...extraBins, ...current].filter(Boolean)
+		process.env.PATH = merged.join(path.delimiter)
+	}
+}
 
 // Check if Go is installed
 function checkGoInstallation() {
@@ -120,6 +132,9 @@ function checkToolsInPath() {
 async function setupGoDependencies() {
 	console.log(chalk.cyan("Checking Go dependencies..."))
 
+	// CARET MODIFICATION: add typical Go bin locations before checking tools
+	ensureGoBinsOnPath()
+
 	// Check if Go is installed
 	if (!checkGoInstallation()) {
 		console.error(chalk.red("Error: Go is not installed or not in PATH."))
@@ -139,6 +154,9 @@ async function setupGoDependencies() {
 	} else {
 		console.log(chalk.green("✓ Go protobuf tools are available"))
 	}
+
+	// CARET MODIFICATION: ensure newly installed tools are picked up
+	ensureGoBinsOnPath()
 
 	// Verify tools are in PATH
 	checkToolsInPath()
@@ -529,8 +547,13 @@ func (sc *${capitalizedServiceName}Client) ${capitalizedMethodName}(ctx context.
 			.join("\n")
 
 		// Determine the correct proto import path based on the service location
+		// CARET MODIFICATION: route caret services to caret proto import
 		const protoImportPath =
-			serviceDef.protoPackage === "host" ? '"github.com/cline/grpc-go/host"' : '"github.com/cline/grpc-go/cline"'
+			serviceDef.protoPackage === "host"
+				? '"github.com/cline/grpc-go/host"'
+				: serviceDef.protoPackage === "caret"
+					? '"github.com/cline/grpc-go/caret"'
+					: '"github.com/cline/grpc-go/cline"'
 
 		// Check if we need to import cline package for common types
 		const needsClineImport = serviceDef.methods.some((method) => {

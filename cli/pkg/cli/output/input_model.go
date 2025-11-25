@@ -355,7 +355,14 @@ func (m *InputModel) View() string {
 		modeStyle = modeStyle.Foreground(blue)
 	}
 
-	modeIndicator := modeStyle.Render(fmt.Sprintf("[%s mode]", m.currentMode))
+	// CARET MODIFICATION: map plan/act to chatbot/agent for user-facing label
+	modeLabel := m.currentMode
+	if m.currentMode == "plan" {
+		modeLabel = "chatbot"
+	} else if m.currentMode == "act" {
+		modeLabel = "agent"
+	}
+	modeIndicator := modeStyle.Render(fmt.Sprintf("[%s mode]", modeLabel))
 	titleText := m.styles.title.Render(m.title)
 	fullTitle := fmt.Sprintf("%s %s", modeIndicator, titleText)
 	parts = append(parts, fullTitle)

@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"runtime"
 	"syscall"
 	"time"
 
@@ -254,6 +255,13 @@ func startClineHost(hostPort, corePort int) (*exec.Cmd, error) {
 	}
 	binDir := path.Dir(execPath)
 	clineHostPath := path.Join(binDir, "cline-host")
+	// CARET MODIFICATION: support caret-host fallback for packaged caret CLI
+	if _, statErr := os.Stat(clineHostPath); statErr != nil {
+		alt := path.Join(binDir, "caret-host")
+		if _, altErr := os.Stat(alt); altErr == nil {
+			clineHostPath = alt
+		}
+	}
 
 	// Start the cline-host process
 	cmd := exec.Command(clineHostPath,
@@ -404,23 +412,42 @@ func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 	var finalClineCorePath string
 	var finalInstallDir string
 	if _, err := os.Stat(clineCorePath); os.IsNotExist(err) {
-		// Development mode: Try ../../dist-standalone/cline-core.js
-		// This handles the case where we're running from cli/bin/cline
-		devClineCorePath := path.Join(binDir, "..", "..", "dist-standalone", "cline-core.js")
-		devInstallDir := path.Join(binDir, "..", "..", "dist-standalone")
-		
-		if Config.Verbose {
-			fmt.Printf("Primary location not found, trying development path: %s\n", devClineCorePath)
+		// CARET MODIFICATION: support packaged caret paths
+		devPaths := []struct {
+			corePath   string
+			installDir string
+			label      string
+		}{
+			{
+				corePath:   path.Join(binDir, "..", "..", "dist-standalone", "cline-core.js"),        // dev mode
+				installDir: path.Join(binDir, "..", "..", "dist-standalone"),
+				label:      "development",
+			},
+			{
+				corePath:   path.Join(installDir, "dist-standalone", "cline-core.js"),                // npm packaged dist
+				installDir: path.Join(installDir, "dist-standalone"),
+				label:      "npm packaged",
+			},
 		}
-		
-		if _, err := os.Stat(devClineCorePath); os.IsNotExist(err) {
-			return nil, fmt.Errorf("cline-core.js not found at '%s' or '%s'. Please ensure you're running from the correct location or reinstall with 'npm install -g cline'", clineCorePath, devClineCorePath)
+
+		var found bool
+		for _, candidate := range devPaths {
+			if Config.Verbose {
+				fmt.Printf("Primary location not found, trying %s path: %s\n", candidate.label, candidate.corePath)
+			}
+			if _, err := os.Stat(candidate.corePath); err == nil {
+				finalClineCorePath = candidate.corePath
+				finalInstallDir = candidate.installDir
+				found = true
+				if Config.Verbose {
+					fmt.Printf("Using %s mode: cline-core.js found at %s\n", candidate.label, finalClineCorePath)
+				}
+				break
+			}
 		}
-		
-		finalClineCorePath = devClineCorePath
-		finalInstallDir = devInstallDir
-		if Config.Verbose {
-			fmt.Printf("Using development mode: cline-core.js found at %s\n", finalClineCorePath)
+
+		if !found {
+			return nil, fmt.Errorf("cline-core.js not found at '%s' or in packaged dist-standalone. Please reinstall with 'npm install -g @caretive/caret-cli' or run from repository root after building dist-standalone", clineCorePath)
 		}
 	} else {
 		finalClineCorePath = clineCorePath
@@ -470,12 +497,21 @@ func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 	}
 
 	// Set environment variables with NODE_PATH for both real and fake node_modules
-	// The fake node_modules contains the vscode stub that can't be in the real node_modules
+	// CARET MODIFICATION: include packaged dist-standalone node_modules for caret-cli
 	env := os.Environ()
-	realNodeModules := path.Join(finalInstallDir, "node_modules")
-	fakeNodeModules := path.Join(finalInstallDir, "fake_node_modules")
-	nodePath := fmt.Sprintf("%s%c%s", realNodeModules, os.PathListSeparator, fakeNodeModules)
-	
+	nodePathParts := []string{
+		path.Join(finalInstallDir, "node_modules"),
+		path.Join(finalInstallDir, "fake_node_modules"),
+		path.Join(installDir, "dist-standalone", "node_modules"),
+		path.Join(installDir, "dist-standalone", "fake_node_modules"),
+		// CARET MODIFICATION: use packaged binary-specific node_modules (map amd64->x64)
+		path.Join(installDir, "dist-standalone", "binaries", mapBinaryPlatform(), "node_modules"),
+		// CARET MODIFICATION: fallback to repo node_modules for native deps (better-sqlite3)
+		path.Join(installDir, "..", "..", "node_modules"),
+		path.Join(installDir, "..", "..", "..", "node_modules"),
+	}
+	nodePath := pathList(nodePathParts)
+
 	env = append(env,
 		fmt.Sprintf("NODE_PATH=%s", nodePath),
 		"GRPC_TRACE=all",
@@ -483,7 +519,7 @@ func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 		"NODE_ENV=development",
 	)
 	cmd.Env = env
-	
+
 	if Config.Verbose {
 		fmt.Printf("NODE_PATH set to: %s\n", nodePath)
 	}
@@ -498,4 +534,33 @@ func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 		fmt.Printf("Logging cline-core output to: %s\n", logFilePath)
 	}
 	return cmd, nil
+}
+
+// CARET MODIFICATION: helper to join path list with OS separator
+func pathList(paths []string) string {
+	if len(paths) == 0 {
+		return ""
+	}
+
+	sep := string(os.PathListSeparator)
+	var result string
+	for _, p := range paths {
+		if p == "" {
+			continue
+		}
+		result += p + sep
+	}
+	if len(result) == 0 {
+		return ""
+	}
+	return result[:len(result)-1]
+}
+
+// CARET MODIFICATION: map GOOS/GOARCH to binaries folder name (amd64 -> x64)
+func mapBinaryPlatform() string {
+	arch := runtime.GOARCH
+	if arch == "amd64" {
+		arch = "x64"
+	}
+	return runtime.GOOS + "-" + arch
 }

@@ -203,16 +203,4 @@ export class VscodeWebviewProvider extends WebviewProvider implements vscode.Web
 	private async postMessageToWebview(message: ExtensionMessage): Promise<boolean | undefined> {
 		return this.webview?.webview.postMessage(message)
 	}
-
-	override async dispose() {
-		// WebviewView doesn't have a dispose method, it's managed by VSCode
-		// We just need to clean up our disposables
-		while (this.disposables.length) {
-			const x = this.disposables.pop()
-			if (x) {
-				x.dispose()
-			}
-		}
-		super.dispose()
-	}
 }

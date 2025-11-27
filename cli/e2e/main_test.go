@@ -1,6 +1,7 @@
 package e2e
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -14,6 +15,8 @@ import (
 //	npm run compile-standalone
 //	npm run compile-cli
 func TestMain(m *testing.M) {
+	flag.Parse()
+
 	// Determine repo root from cli/e2e
 	wd, err := os.Getwd()
 	if err != nil {

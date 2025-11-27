@@ -41,6 +41,17 @@
 - 스크립트에 `--noEmit` 플래그를 추가할 필요가 없습니다 (`tsconfig.json`에 설정됨).
 - `esbuild.mjs`가 모든 번들링을 처리합니다.
 
+## Proto Generation Pipeline
+
+| 계층 | 명령어 | 실제 스크립트 | 산출 위치 | 비고 |
+| --- | --- | --- | --- | --- |
+| TypeScript/Node | `npm run protos` | `caret-scripts/build/build-proto.mjs` | `src/shared/proto/**`, `src/generated/**`, `webview-ui/src/services/**` 등 | Generated 파일을 직접 수정하지 말 것 |
+| Go/CLI | `npm run protos-go` | `scripts/build-go-proto.mjs` | `src/generated/grpc-go/**` | CLI gRPC 클라이언트/호스트브릿지용 코드 자동 생성 |
+
+- proto(`proto/**/*.proto`)를 수정하면 **반드시 두 명령을 순차적으로 실행**하여 TS/Go 생성 코드를 모두 갱신하고, 실행 로그를 머지 문서(D-섹션)나 워크로그에 남깁니다.
+- `npm run protos`는 공용 formatter까지 실행하므로, 생성물이 변경되면 `git status`에서 확인 가능한지 검증합니다.
+- `src/generated/**`, `src/generated/grpc-go/**`, `webview-ui/src/services/grpc-client/**`는 모두 위 스크립트 결과물입니다. 수동 편집이 발견되면 즉시 되돌리고 재생성해야 합니다.
+
 ## 보호된 디렉토리
 
 ### 소스 디렉토리 (`.js` 파일 금지)

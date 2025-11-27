@@ -49,8 +49,9 @@ func (s *WorkspaceService) SaveOpenDocumentIfDirty(ctx context.Context, req *hos
 
 	// For console implementation, we'll assume the document is already saved
 	// In a real implementation, we'd check if the file has unsaved changes
+	wasSaved := false
 	return &host.SaveOpenDocumentIfDirtyResponse{
-		WasSaved: false, // Assume no changes to save
+		WasSaved: &wasSaved, // Assume no changes to save
 	}, nil
 }
 

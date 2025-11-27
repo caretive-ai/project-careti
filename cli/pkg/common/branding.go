@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
@@ -26,18 +27,23 @@ var (
 // CARET MODIFICATION: resolve brand display name from nearest package.json (install root), fallback to default.
 func BrandDisplayName() string {
 	brandDisplayNameOnce.Do(func() {
-		if name := readBrandFromPackageJSON(); name != "" {
+		execPath, err := os.Executable()
+		if err != nil {
+			brandDisplayName = defaultBrandDisplayName
+			return
+		}
+		if name := readBrandFromPackageJSON(execPath); name != "" {
 			brandDisplayName = name
+			return
+		}
+		if resolved := ResolveBrandNameForPath(execPath); resolved != "" {
+			brandDisplayName = resolved
 		}
 	})
 	return brandDisplayName
 }
 
-func readBrandFromPackageJSON() string {
-	execPath, err := os.Executable()
-	if err != nil {
-		return ""
-	}
+func readBrandFromPackageJSON(execPath string) string {
 	dir := filepath.Dir(execPath)
 	// Walk up to 4 levels to find package.json (npm global or repo layout).
 	for i := 0; i < 4; i++ {
@@ -71,4 +77,21 @@ func DefaultConfigPath() (string, error) {
 // CARET MODIFICATION: shared logs dir helper for caret CLI.
 func LogsDir(configPath string) string {
 	return filepath.Join(configPath, "logs")
+}
+
+// ResolveBrandNameForPath infers the correct brand label from the binary path.
+func ResolveBrandNameForPath(execPath string) string {
+	if execPath == "" {
+		return defaultBrandDisplayName
+	}
+
+	base := strings.ToLower(filepath.Base(execPath))
+	switch {
+	case strings.Contains(base, "cline"):
+		return "Cline"
+	case strings.Contains(base, "caret"):
+		return "Caret"
+	default:
+		return defaultBrandDisplayName
+	}
 }

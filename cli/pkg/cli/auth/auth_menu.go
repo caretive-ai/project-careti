@@ -165,7 +165,7 @@ func ShowAuthMenuWithStatus(isCaretAuthenticated bool, isClineAuthenticated bool
 
 	options = append(options,
 		huh.NewOption("Configure BYO API providers", AuthActionBYOSetup),
-		huh.NewOption("Select active provider (Caret, Cline, or BYO)", AuthActionSelectProvider),
+		huh.NewOption("Select active provider", AuthActionSelectProvider),
 		huh.NewOption("Exit authorization wizard", AuthActionExit),
 	)
 

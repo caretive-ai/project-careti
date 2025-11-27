@@ -1,6 +1,10 @@
 package main
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/cline/cli/pkg/common"
+)
 
 func TestBrandNameUsesClineForClineBinary(t *testing.T) {
 	t.Helper()
@@ -17,9 +21,9 @@ func TestBrandNameUsesClineForClineBinary(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := brandNameForTest(tt.execBase)
+			got := common.ResolveBrandNameForPath(tt.execBase)
 			if got != tt.want {
-				t.Fatalf("brandNameForTest(%q)=%q, want %q", tt.execBase, got, tt.want)
+				t.Fatalf("ResolveBrandNameForPath(%q)=%q, want %q", tt.execBase, got, tt.want)
 			}
 		})
 	}

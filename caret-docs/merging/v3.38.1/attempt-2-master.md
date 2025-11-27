@@ -319,17 +319,23 @@ describe("ModeSystem Integration", () => {
 
 **D-2.4 CLI Caret/LiteLLM 프로바이더 추가**
   * Caret auth에 관한 내용으로 아래의 내용을 구현하되, 먼저 분석을 통해 보강할 수 있으면 보강진행
-- [ ] Authenticate with Caret account : 메뉴 추가 (Cline대체 아니고 추가임. Cline위에 메뉴하나 더)
+  - [x] Authenticate with Caret account : 메뉴 추가 (Cline대체 아니고 추가임. Cline위에 메뉴하나 더)
      - 아래 처럼 인증 url변경 cline.bot -> caret.team으로, api.cline.bot -> api.caret.team으로 (동일하게 동작 시킬것)
        Opening browser for authentication...
   If the browser doesn't open automatically, visit this URL:
   https://caret.team/user_management/authorize?client_id=client_01K3A541FN8TA3EPPHTD2325AR&provider=authkit&redirect_uri=https%3A%2F%2Fapi.caret.team%2Fapi%2Fv1%2Fauth%2Fcallback&response_type=code&state=eyJjbGllbnRfdHlwZSI6ImV4dGVuc2lvbiIsImNhbGxiYWNrX3VybCI6Imh0dHA6Ly8xMjcuMC4wLjE6NDg4MDEvYXV0aCJ9hIkbAUzErRUoJnuGiuuXSPreWNCLMWO0jwIlaO3pCDM%3D
       - 로그인/로그아웃 프로바이더 선택, 모두 Cline과 동일하게 구현할 것. 프로바이더 선택시 나오는 모델 리스트는 캐럿의 모델 리스트 참고 하게 할 것 (실제 캐럿 프로바이더의 모델리스트의 코드를 한군데 모아서 중복 코드 만들지 말 것)
-- [ ] Configure BYO API providers를 Select active provider 와 순서변경 (Caret, Cline, BYO 순으로 3번째로)
-- [ ] Select active provider (Cline or BYO) 에서 (Cline or BYO)문구 삭제하고 4번째로.
-- [ ] Configure BYO API providers > Add or change an API provider > LiteLLM(추가)
+- [x] Configure BYO API providers를 Select active provider 와 순서변경 (Caret, Cline, BYO 순으로 3번째로)
+- [x] Select active provider (Cline or BYO) 에서 (Cline or BYO)문구 삭제하고 4번째로.
+- [x] Configure BYO API providers > Add or change an API provider > LiteLLM(추가)
    -> 다른 Provider 들 참고해서 liteLlm구현 할 것. 캐럿의 litellm 은 모델 가져오기 기능도 지원을 하므로 동일하게 동작하도록 할 것
   * 추후 Codecenter 브랜딩 작업 : LiteLLM Provider를 CodeCenter라는 이름으로 맨 위에 표기시켜서 바로 설정할 수 있게 할 예정, 본 작업에서는 진행하지 않음
+
+  * 구현 메모
+    - `cli/pkg/cli/auth/auth_menu.go`, `auth_caret_provider.go`에 Caret 인증 흐름/모델 선택 보강, Cline 메뉴와 병렬 노출. Go 브랜딩 유틸(`cli/pkg/common/branding.go`)에 바이너리 경로 기반 브랜드 감지 추가해 CLI 배너·로그가 실행 파일 이름을 따르도록 정리.
+    - LiteLLM BYO 경로(`cli/pkg/cli/auth/wizard_byo.go`, `models_list_fetch.go`)에 Caret System gRPC 호출을 추가, `/proto/caret/system.proto` 경로로 생성된 서비스 클라이언트를 사용해 모델 목록을 불러온 뒤 인터랙티브 메뉴에 공급.
+    - hostbridge `workspace` 스텁과 gofmt로 생성된 grpc-go 모듈이 최신 proto 구조와 맞지 않아 Go 테스트 실패 → 불필요한 watch 스텁 제거 및 optional 필드 포인터 처리로 빌드 오염 해소.
+    - 테스트: `npm run protos-go`, `/tmp/go/bin/go test -short ./cli/...` (`cli/e2e`는 dist 아티팩트 미생성 상태라 `-short`로 스킵함)
 
 
 **D-2.5 Caret 프로바이더 검토**

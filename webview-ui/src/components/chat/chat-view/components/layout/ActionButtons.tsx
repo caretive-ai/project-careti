@@ -4,6 +4,7 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import type React from "react"
 import { useEffect, useMemo, useState } from "react"
 import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
+import { useShortcut } from "@/utils/hooks"
 import { type ButtonActionType, getButtonConfig } from "../../shared/buttonConfig"
 import type { ChatState, MessageHandlers } from "../../types/chatTypes"
 
@@ -79,6 +80,17 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 			setSecondaryAction(buttonConfig.secondaryAction)
 		}
 	}, [messages, setSendingDisabled, mode, t])
+
+	useShortcut(
+		"Escape",
+		() => {
+			if (!isStreaming || secondaryAction !== "cancel") {
+				return
+			}
+			void messageHandlers.executeButtonAction("cancel", inputValue, selectedImages, selectedFiles)
+		},
+		{ disableTextInputs: false },
+	)
 
 	if (!task) {
 		return null

@@ -19,6 +19,22 @@ export class VscodeWebviewProvider extends WebviewProvider implements vscode.Web
 
 	private webview?: vscode.WebviewView
 	private disposables: vscode.Disposable[] = []
+	private clearWebviewResources() {
+		while (this.disposables.length) {
+			const disposable = this.disposables.pop()
+			try {
+				disposable?.dispose()
+			} catch (error) {
+				console.error("Failed to dispose webview resource:", error)
+			}
+		}
+		this.webview = undefined
+	}
+
+	override async dispose() {
+		this.clearWebviewResources()
+		await super.dispose()
+	}
 
 	override getWebviewUrl(path: string) {
 		if (!this.webview) {
@@ -90,7 +106,7 @@ export class VscodeWebviewProvider extends WebviewProvider implements vscode.Web
 		// This happens when the user closes the view or when the view is closed programmatically
 		webviewView.onDidDispose(
 			async () => {
-				await this.dispose()
+				this.clearWebviewResources()
 			},
 			null,
 			this.disposables,

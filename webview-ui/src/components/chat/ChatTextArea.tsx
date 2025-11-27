@@ -25,8 +25,7 @@ import Thumbnails from "@/components/common/Thumbnails"
 import Tooltip from "@/components/common/Tooltip"
 import ApiOptions from "@/components/settings/ApiOptions"
 import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
-import { handleSignIn, useClineAuth } from "@/context/ClineAuthContext"
-// CARET MODIFICATION: useClineAuth removed (only used for voice feature)
+import { useClineAuth } from "@/context/ClineAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { usePlatform } from "@/context/PlatformContext"
 import { CaretSystemServiceClient, FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
@@ -54,7 +53,6 @@ import {
 import { validateApiConfiguration, validateModelId } from "@/utils/validate"
 import ClineRulesToggleModal from "../cline-rules/ClineRulesToggleModal"
 // CARET MODIFICATION: Provider-specific login CTA in chat
-import { handleLogin as handleCaretLogin } from "../settings/CaretAuthHandler"
 import ServersToggleModal from "./ServersToggleModal"
 import VoiceRecorder from "./VoiceRecorder"
 
@@ -379,12 +377,6 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		const [searchLoading, setSearchLoading] = useState(false)
 		const [, metaKeyChar] = useMetaKeyDetection(platform)
 		const { clineUser } = useClineAuth()
-		const caretUser = apiConfiguration?.caretUserProfile
-		const selectedProvider = useMemo(
-			() => normalizeApiConfiguration(apiConfiguration, mode).selectedProvider,
-			[apiConfiguration, mode],
-		)
-
 		// CARET MODIFICATION: Persistent input history functionality - hook for handling arrow key navigation
 		const { handleKeyDown: handleHistoryKeyDown } = useInputHistory({
 			history: inputHistory,
@@ -1821,20 +1813,20 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								</ModelButtonWrapper>
 								{/* CARET MODIFICATION: Provider-specific login CTA (below selector to avoid overlay) */}
 								{showModelSelector && (
-								<ModelSelectorTooltip
-									arrowPosition={arrowPosition}
-									menuPosition={menuPosition}
-									style={{
-										bottom: `calc(100vh - ${menuPosition}px + 6px)`,
-									}}>
-									<ApiOptions
-										apiErrorMessage={undefined}
-										currentMode={mode}
-										isPopup={true}
-										modelIdErrorMessage={undefined}
-										showModelOptions={true}
-									/>
-								</ModelSelectorTooltip>
+									<ModelSelectorTooltip
+										arrowPosition={arrowPosition}
+										menuPosition={menuPosition}
+										style={{
+											bottom: `calc(100vh - ${menuPosition}px + 6px)`,
+										}}>
+										<ApiOptions
+											apiErrorMessage={undefined}
+											currentMode={mode}
+											isPopup={true}
+											modelIdErrorMessage={undefined}
+											showModelOptions={true}
+										/>
+									</ModelSelectorTooltip>
 								)}
 							</ModelContainer>
 						</ButtonGroup>

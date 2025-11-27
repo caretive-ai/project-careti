@@ -33,6 +33,11 @@
 			"max_changes": "1-3 lines per Cline file"
 		}
 	},
+	"branding_policy": {
+		"typescript_brand_util": "caret-src/utils/brand-utils.ts",
+		"go_cli_brand_util": "cli/pkg/common/branding.go",
+		"rule": "브랜드명/규칙/파일명을 계산할 때는 반드시 위 유틸 함수를 호출하고 문자열을 하드코딩하지 않는다."
+	},
 	"development_framework": {
 		"tech_stack": {
 			"framework": "Mocha (backend), Vitest (frontend), Biome",

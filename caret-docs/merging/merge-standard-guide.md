@@ -189,6 +189,18 @@ cd webview-ui && npm run build
   git commit -m "chore: Restore Caret-specific directories after upstream reset"
   ```
 
+#### Phase 2.1: 루트 빌드/ignore 파일 즉시 복구 (VSIX 용량 보호)
+
+**목표**: Cline 기본 `.vscodeignore`/`.gitignore`가 그대로 덮어쓰여 VSIX가 수백 MB로 커지는 사고를 예방.
+
+**체크리스트**:
+- [ ] `caret-main/.vscodeignore` → 리포지터리 루트로 복사 (화이트리스트 버전 유지)
+- [ ] `caret-main/.gitignore` → 루트로 복사 (필요 시 Caret 항목 병합)
+- [ ] 복구 직후 `npx vsce ls --packageManager npm` 또는 `ls -lah dist/ webview-ui/build/`로 포함 파일 확인
+- [ ] `npm run package:release` 실행 전, VSIX 용량이 50MB 내외인지 확인 (경고 발생 시 .vscodeignore 재점검)
+
+> **WHY?** upstream reset 이후 이 단계가 누락되면 CLI/standalone/merge 비교 디렉토리가 그대로 포함되어 1GB 이상의 VSIX가 생성된다. 모든 프런트/백엔드 수정 전에 반드시 ignore 파일부터 복원한다.
+
 ---
 
 ### Phase 3: 타입 파일 보호
@@ -508,10 +520,17 @@ grep "<title>" webview-ui/index.html
 ### Backend Critical Files
 
 ```
-src/types/vscode-extensions.d.ts  (타입 확장)
-src/core/storage/disk.ts           (브랜딩, 페르소나 경로)
-src/extension.ts                   (명령어 등록)
+src/types/vscode-extensions.d.ts               (타입 확장)
+src/core/storage/disk.ts                       (브랜딩, 페르소나 경로)
+src/extension.ts                               (명령어 등록)
+src/integrations/terminal/TerminalRegistry.ts  (터미널 이름/아이콘, initialize 호출 필수)
+src/integrations/terminal/TerminalProcess.ts   (Linux shellIntegration 정지 현상 방지)
+src/hosts/vscode/hostbridge/workspace/executeCommandInTerminal.ts (즉시 터미널 실행 시 브랜딩 재사용)
 ```
+
+- ✅ `TerminalRegistry.initialize(context)`가 `activate()` 초기에 호출되는지 확인하고, `getTerminalBranding()`으로 Caret 이름/아이콘을 공유한다.
+- ✅ `TerminalProcess`에는 **stream idle timeout(5초)** 래퍼가 반드시 존재해야 하며, Linux에서 출력이 멈춘 채 끝나지 않는 버그를 막아야 한다.
+- ✅ VS Code 호스트에서 즉시 만드는 터미널(`executeCommandInTerminal`)도 같은 브랜딩/아이콘을 사용하도록 한다.
 
 ---
 

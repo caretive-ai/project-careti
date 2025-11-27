@@ -8,6 +8,7 @@ import (
 
 	"github.com/charmbracelet/huh"
 	"github.com/cline/cli/pkg/cli/task"
+	"github.com/cline/grpc-go/caret"
 	"github.com/cline/grpc-go/cline"
 	"golang.org/x/term"
 )
@@ -40,7 +41,6 @@ func ConvertOpenRouterModelsToInterface(models map[string]*cline.OpenRouterModel
 	return result
 }
 
-
 // FetchOpenAiModels fetches available OpenAI models from Cline Core
 // Takes the API key and returns a list of model IDs
 func FetchOpenAiModels(ctx context.Context, manager *task.Manager, baseURL, apiKey string) ([]string, error) {
@@ -68,6 +68,28 @@ func FetchOllamaModels(ctx context.Context, manager *task.Manager, baseURL strin
 		return nil, fmt.Errorf("failed to fetch Ollama models: %w", err)
 	}
 	return resp.Values, nil
+}
+
+// FetchLiteLlmModels fetches available LiteLLM models via Caret System gRPC service
+func FetchLiteLlmModels(ctx context.Context, manager *task.Manager, baseURL, apiKey string) ([]string, error) {
+	req := &caret.FetchLiteLlmModelsRequest{
+		BaseUrl: baseURL,
+		ApiKey:  apiKey,
+	}
+
+	resp, err := manager.GetClient().Caretsystem.FetchLiteLlmModels(ctx, req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch LiteLLM models: %w", err)
+	}
+
+	if !resp.GetSuccess() {
+		if resp.GetErrorMessage() != "" {
+			return nil, fmt.Errorf("LiteLLM error: %s", resp.GetErrorMessage())
+		}
+		return nil, fmt.Errorf("LiteLLM model fetching failed with unknown error")
+	}
+
+	return resp.GetModels(), nil
 }
 
 // DisplayModelSelectionMenu shows an interactive menu for selecting a model from a list.

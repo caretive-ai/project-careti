@@ -20,3 +20,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Architecture Rules (L1-L3 Levels)
 - Development Framework (Tech Stack, TDD)
 - AI Workflow & Forbidden Actions
+
+## 🪪 Branding Utilities (필수)
+- 브랜드명/표기/규칙을 사용할 때는 반드시 **공용 유틸**을 호출합니다.
+  - TypeScript/Extension: `caret-src/utils/brand-utils.ts`
+  - Go/CLI: `cli/pkg/common/branding.go`
+- 문자열로 `Caret`, `Cline` 등을 직접 적지 말고 해당 헬퍼를 통해 계산하세요. B2B 브랜드 분기(BR rename)가 있을 때 여기만 수정하면 되도록 유지해야 합니다.

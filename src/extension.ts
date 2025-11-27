@@ -34,6 +34,7 @@ import { focusChatInput, getContextForCommand } from "./hosts/vscode/commandUtil
 import { abortCommitGeneration, generateCommitMsg } from "./hosts/vscode/commit-message-generator"
 import { VscodeDiffViewProvider } from "./hosts/vscode/VscodeDiffViewProvider"
 import { VscodeWebviewProvider } from "./hosts/vscode/VscodeWebviewProvider"
+import { TerminalRegistry } from "./integrations/terminal/TerminalRegistry"
 import { ExtensionRegistryInfo } from "./registry"
 import { AuthService } from "./services/auth/AuthService"
 import { LogoutReason } from "./services/auth/types"
@@ -54,6 +55,8 @@ https://github.com/microsoft/vscode-webview-ui-toolkit-samples/tree/main/framewo
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
 	setupHostProvider(context)
+	// CARET MODIFICATION: initialize terminal branding/icon resolver
+	TerminalRegistry.initialize(context)
 
 	// Initialize hook discovery cache for performance optimization
 	HookDiscoveryCache.getInstance().initialize(

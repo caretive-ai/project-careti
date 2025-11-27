@@ -76,6 +76,8 @@ Caret의 브랜드명 사용은 **메시지 대상**에 따라 명확히 구분�
 
 ### **📍 백엔드 브랜드명 호출 방법**
 
+> 🔁 **CLI/Go 계층에서도 동일한 원칙을 적용합니다.** `cli/pkg/common/branding.go`의 `common.BrandDisplayName()`을 사용하면 바이너리 이름(예: Caret, Cline, CodeCenter)에 맞춰 라벨을 자동 생성할 수 있습니다. CLI에서 사용자에게 노출되는 메시지(`fmt.Printf`, Cobra `Use/Short/Long` 등)는 반드시 이 헬퍼를 통해 가져온 값을 사용하고, 문자열 하드코딩은 금지입니다.
+
 #### **1. Notification 메시지 (사용자 대면 알림)**
 
 ```typescript

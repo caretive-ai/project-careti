@@ -1,3 +1,4 @@
+import { getCurrentBrandDisplayName } from "@caret/utils/brand-utils"
 import * as vscode from "vscode"
 
 export interface TerminalInfo {
@@ -19,12 +20,25 @@ export interface TerminalInfo {
 export class TerminalRegistry {
 	private static terminals: TerminalInfo[] = []
 	private static nextTerminalId = 1
+	private static context: vscode.ExtensionContext | null = null
+	private static brandNameOverride: string | null = null
+
+	// CARET MODIFICATION: Capture extension context so we can resolve branded icon assets
+	public static initialize(context: vscode.ExtensionContext) {
+		TerminalRegistry.context = context
+		// Prefer VS Code's extension manifest to avoid fs reads failing inside asar environments
+		const displayName = (context.extension?.packageJSON as { displayName?: string } | undefined)?.displayName
+		if (displayName) {
+			TerminalRegistry.brandNameOverride = displayName
+		}
+	}
 
 	static createTerminal(cwd?: string | vscode.Uri | undefined, shellPath?: string): TerminalInfo {
+		const branding = TerminalRegistry.getTerminalBranding()
 		const terminalOptions: vscode.TerminalOptions = {
 			cwd,
-			name: "Cline",
-			iconPath: new vscode.ThemeIcon("robot"),
+			name: branding.name,
+			iconPath: branding.iconPath,
 			env: {
 				CLINE_ACTIVE: "true",
 			},
@@ -77,5 +91,27 @@ export class TerminalRegistry {
 	// The exit status of the terminal will be undefined while the terminal is active. (This value is set when onDidCloseTerminal is fired.)
 	private static isTerminalClosed(terminal: vscode.Terminal): boolean {
 		return terminal.exitStatus !== undefined
+	}
+
+	// CARET MODIFICATION: Provide shared branding config for any VS Code terminal entry point
+	public static getTerminalBranding(): Pick<vscode.TerminalOptions, "name" | "iconPath"> {
+		const brandDisplayName = TerminalRegistry.brandNameOverride ?? getCurrentBrandDisplayName()
+
+		if (TerminalRegistry.context) {
+			const { extensionUri } = TerminalRegistry.context
+			return {
+				name: brandDisplayName,
+				iconPath: {
+					light: vscode.Uri.joinPath(extensionUri, "assets", "icons", "robot_panel_light.png"),
+					dark: vscode.Uri.joinPath(extensionUri, "assets", "icons", "robot_panel_dark.png"),
+				},
+			}
+		}
+
+		// Fallback to default icon if context isn't ready (e.g., early calls during activation)
+		return {
+			name: brandDisplayName,
+			iconPath: new vscode.ThemeIcon("robot"),
+		}
 	}
 }

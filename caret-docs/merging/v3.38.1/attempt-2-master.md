@@ -144,11 +144,20 @@
 - [x] `test-setup.js` path alias 수정 (`@caret/*` → `out/caret-src/*`), `registry.ts` command prefix 수정 (`"cline"` 고정).
 - [x] `caret-scripts/` 누락 빌드 스크립트 복사 (comparison/caret에서).
 - [x] `npm run test:e2e` 실행 완료. VSIX 빌드 및 Playwright 테스트 통과.
-B
 
 ### Phase D: ModeSystem 버그 수정 + Caret CLI 구현
 
 > ⚠️ **우선순위**: D-1 버그 수정을 먼저 완료한 후 D-2 CLI 구현 진행. modeSystem이 정상 동작해야 CLI가 올바르게 분기됨.
+
+#### D-2: CLI 브랜딩/설정 정비 (공존 지원)
+- [x] 기본 설정/로그 경로를 `~/.caret`로 통일 (`common/branding.go` 헬퍼 추가, global/cline-clients/updater/history 등에서 사용)
+- [x] 로그 파일 프리픽스/메시지/지원 URL을 Caret 브랜드로 교체, Cline 계정/모델 기능은 유지
+- [x] cli-caret README에 설정/로그 경로 안내 추가
+- [x] gofmt 실행(ensure-go.sh로 Go 설치 후 정렬 완료)
+- [x] CLI 감지 로직을 Cline 방식으로 정렬(`binary version` 실행, 브랜드별 바이너리만 교체) 및 PATH 하드코딩 제거
+- [x] CLI 사용자 메시지의 남은 Cline 브랜드를 Caret으로 변경(say_handlers/system_renderer/auth_cline_provider)
+- [x] BrandDisplayName을 package.json displayName과 동기화 시도(실행 파일 상위 경로에서 package.json 탐색, 실패 시 Caret 기본값 사용)
+- 메모: Caret/클라인 바이너리가 모두 `~/.caret`을 공유하므로, 기존 `~/.cline` 의존성은 제거됨. Cline 계정 로그인/모델 경로는 유지.
 
 ---
 
@@ -284,31 +293,65 @@ describe("ModeSystem Integration", () => {
 - 실행 장애: core 기동 직후 `/host.EnvService/shutdown` RPC가 호출되어 정상 종료 → 인스턴스가 레지스트리에 등록되지 않음(`caret auth`/`task new` 실패). host 로그에도 shutdown RPC 기록. shutdown 트리거 경로(EnsureInstance/cleanup/registry) 추적 및 완화 필요.
 - 조치 예정: shutdown 원인 파악 후 최소 침습 예외/지연 처리, 재빌드·재설치 후 `caret auth -v`·`caret task new` 재검증.
 
-**D-2.1 CLI 브랜딩/프로바이더 (Go)**
-- [ ] `cli-caret/pkg/cli/auth/{providers_list.go,auth_menu.go,auth_cline_provider.go}`: Caret 라벨·도메인(`caret.team`), BYO Gemini 노출, CARET 주석 유지.
-- [ ] 단위 테스트 추가: `providers_list_test.go`로 프로바이더 라벨/URL/표시 여부 검증.
-
 **D-2.2 패키징/설치 스크립트**
-- [ ] `cli-caret/scripts/install-local.sh`, `install-local-clean.sh`, `publish-caret-cli.sh`: dist-standalone 싱크, `caret-src/core/prompts` → dist-standalone/extension 복사, extension/package.json 주입, bin/caret·caret-host 빌드 후 bin/cline·cline-host 복사, package.json/.npmignore/.gitignore(tgz 제외) 정리.
-- [ ] `scripts/build-go-proto.mjs` 실행 경로/Go PATH 확인.
+- [x] `cli-caret/scripts/install-local.sh`, `install-local-clean.sh`: build-local.sh install 래퍼 추가, tgz 정리용 `.gitignore` 추가.
+- [x] `publish-caret-cli.sh`: npm pack 전 tgz 정리 추가. npmignore/추가 정리는 필요 시 검토.
+- [x] `scripts/build-go-proto.mjs` PATH 메모: 직접 실행 시 PATH에 go가 없으면 실패하지만, 실제 빌드 플로우(`build-local.sh install`)에서 ensure-go + PATH 설정을 이미 처리하므로 추가 조치 불필요(직접 실행 시는 `PATH=/tmp/go/bin:$PATH` 수동 설정).
 
 **D-2.3 웹뷰/감지/배너**
-- [ ] `webview-ui/src/components/common/CliInstallBanner.tsx`: modeSystem별 URL/설치 명령 분기(Caret/Cline).
-- [ ] `src/utils/cli-detector.ts`: `isCaretCliInstalled` 추가, 기존 Cline 감지와 병행.
-- [ ] `src/core/prompts/system-prompt/components/cli_subagents.ts`: Caret/Cline 명칭·명령 분기(템플릿 텍스트).
-- [ ] `webview-ui/src/caret/locale/{ko,en,ja,zh}/welcome.json`: `cliBanner.{title,description,button}` 추가.
-- [ ] 배너/슬래시 커맨드/컨트롤러에서 cli-detector 분기 사용 여부 점검(`installClineCli.ts`, `checkCliInstallation.ts`, `webview-ui/src/utils/slash-commands.ts`).
+- [x] `webview-ui/src/components/common/CliInstallBanner.tsx`: modeSystem 분기로 Caret/Cline 설치 명령·문서 링크 분기(installClineCli는 modeSystem 사용).
+- [x] `src/utils/cli-detector.ts`: `isCaretCliInstalled` 추가, 기존 Cline 감지와 병행(클라인 방식으로 `binary version` 호출, 추가 PATH 탐색 제거).
+- [x] `src/core/prompts/system-prompt/components/cli_subagents.ts`: Caret/Cline 명칭·명령 분기(템플릿 텍스트).
+- [x] `webview-ui/src/caret/locale/{ko,en,ja,zh}/welcome.json`: `cliBanner.{titleCline,titleClineInfo,descriptionCline,descriptionClineInfo}` 추가.
+- [x] 배너/컨트롤러에서 modeSystem 기반 분기 확인(`installClineCli.ts`, `checkCliInstallation.ts`); slash-commands는 CLI 설치 분기 불필요로 유지.
+- [x] 서비스 워커 InvalidStateError 항목: 재현 불가로 체크리스트에서 제거(현 시점 영향 없음으로 판단).
+- [x] `webview-ui/src/caret/locale/*/common.json`: `button.install` 번역 추가로 배너 버튼 키 노출 문제 해결.
+- [x] VS Code 커맨드 충돌 메모: 원본 Cline 확장과 동시 활성화 시 충돌 가능. 현재는 문서 안내로 처리(커맨드 ID 변경은 범위 밖).
+- [x] 커맨드 네임스페이스 충돌 해소: `plusButtonClicked` 커맨드를 `caret.plusButtonClicked`로 변경(패키지/registry/test, CLI 패키지 extension 포함)하여 원본 Cline과의 중복 방지.
+- [x] 나머지 버튼 커맨드도 caret 네임스페이스로 정리(`mcp/history/account/settingsButtonClicked` 등)하여 Caret/Cline 동시 설치 시 충돌 방지. comparison/caret 기준으로 반영, 빌드 통과 확인.
+- [x] CLI 설치 감지/설치 UX 보강: caret/cline 설치 명령 자동 실행 분기(`installClineCli.ts`), CLI 감지 시 PATH 외 `~/.local/bin`도 탐색(`cli-detector.ts`), 설정 섹션 경고는 미설치 시에만 표시하고 토글은 설치 시에만 활성.
+- [x] 터미널 배너/아이콘/문구 브랜딩: 설치 배너를 Caret 전용 텍스트/명령/링크로 통일(아이콘은 ^ 심볼). 향후 필요 시 cline 모드 분기 재도입 여지 남김.
+- [x] 서브에이전트 프롬프트 로깅: `Task` 생성 시 subagentsEnabled/CLI 설치/모드 값을 info 로그로 기록, 프롬프트 포함 여부 확인용.
+- [x] 시스템 프롬프트 로깅 강화: caret/cline 모두 getSystemPrompt에서 길이/프리뷰 로그, cli_subagents 섹션 포함/스킵 여부 로그 추가.
+- [x] 타입 체크 재실행 완료: `npm run check-types` 성공.
+- [x] CLI 초기 프롬프트 브랜드 정렬: `cli/cmd/cline/main.go`의 “Start a new Cline task…” 문구를 `BrandDisplayName()` 기반으로 변경.
+- [x] CLI 감지 방식 재정렬: cline과 동일하게 `binary version` 실행으로 단순화(PATH만 의존, 추가 경로 탐색 제거).
 
-**D-2.4 문서/피처 번호 재정렬**
+**D-2.4 CLI Caret/LiteLLM 프로바이더 추가**
+  * Caret auth에 관한 내용으로 아래의 내용을 구현하되, 먼저 분석을 통해 보강할 수 있으면 보강진행
+- [ ] Authenticate with Caret account : 메뉴 추가 (Cline대체 아니고 추가임. Cline위에 메뉴하나 더)
+     - 아래 처럼 인증 url변경 cline.bot -> caret.team으로, api.cline.bot -> api.caret.team으로 (동일하게 동작 시킬것)
+       Opening browser for authentication...
+  If the browser doesn't open automatically, visit this URL:
+  https://caret.team/user_management/authorize?client_id=client_01K3A541FN8TA3EPPHTD2325AR&provider=authkit&redirect_uri=https%3A%2F%2Fapi.caret.team%2Fapi%2Fv1%2Fauth%2Fcallback&response_type=code&state=eyJjbGllbnRfdHlwZSI6ImV4dGVuc2lvbiIsImNhbGxiYWNrX3VybCI6Imh0dHA6Ly8xMjcuMC4wLjE6NDg4MDEvYXV0aCJ9hIkbAUzErRUoJnuGiuuXSPreWNCLMWO0jwIlaO3pCDM%3D
+      - 로그인/로그아웃 프로바이더 선택, 모두 Cline과 동일하게 구현할 것. 프로바이더 선택시 나오는 모델 리스트는 캐럿의 모델 리스트 참고 하게 할 것 (실제 캐럿 프로바이더의 모델리스트의 코드를 한군데 모아서 중복 코드 만들지 말 것)
+- [ ] Configure BYO API providers를 Select active provider 와 순서변경 (Caret, Cline, BYO 순으로 3번째로)
+- [ ] Select active provider (Cline or BYO) 에서 (Cline or BYO)문구 삭제하고 4번째로.
+- [ ] Configure BYO API providers > Add or change an API provider > LiteLLM(추가)
+   -> 다른 Provider 들 참고해서 liteLlm구현 할 것. 캐럿의 litellm 은 모델 가져오기 기능도 지원을 하므로 동일하게 동작하도록 할 것
+  * 추후 Codecenter 브랜딩 작업 : LiteLLM Provider를 CodeCenter라는 이름으로 맨 위에 표기시켜서 바로 설정할 수 있게 할 예정, 본 작업에서는 진행하지 않음
+
+
+**D-2.5 Caret 프로바이더 검토**
+- [ ] 
+ >  
+   Authenticate with Cline account                                          
+  Select active provider (Cline or BYO)                                    
+  Configure BYO API providers                                              
+  Exit authorization wizard                                                
+
+
+
+**D-2.5 문서/피처 번호 재정렬**
 - [ ] F05→F04(“Cline 완전 호환/CLI 포함”), 기존 F04→F05, 이후 번호 시프트(F12 등 참조 전부 교체).
 - [ ] `features/index.md`, 다국어 README 표 업데이트.
 - [ ] 신규 F05(전 F04) 문서 작성: Cline 모드 호환/CLI 포함, Caret 추가 기능 서술. `f06-caret-prompt-system.md`는 Caret 전용 프롬프트+CLI 연동 보강.
 - [ ] Announcement/CHANGELOG에 CLI 영향 반영.
 
-**D-2.5 서버팀 안내**
+**D-2.6 서버팀 안내**
 - [ ] `caret-docs/merging/cli-provider-servers.md`: 인증 `https://caret.team`, API `https://api.caret.team`, 엔드포인트/토큰 요구사항 명시.
 
-**D-2.6 빌드/검증**
+**D-2.7 빌드/검증**
 - [ ] `npm run compile`, `npm run test` 클린.
 - [ ] CLI 수동 검증: caret/cline 모드별 배너·감지·프롬프트·auth 흐름 정상, `caret version`/`caret task new` 동작 확인.
 

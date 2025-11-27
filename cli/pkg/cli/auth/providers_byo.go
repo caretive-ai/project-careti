@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/charmbracelet/huh"
 	"github.com/cline/grpc-go/cline"
@@ -21,6 +22,7 @@ func GetBYOProviderList() []BYOProviderOption {
 		{Name: "OpenAI Compatible", Provider: cline.ApiProvider_OPENAI},
 		{Name: "OpenAI (Official)", Provider: cline.ApiProvider_OPENAI_NATIVE},
 		{Name: "OpenRouter", Provider: cline.ApiProvider_OPENROUTER},
+		{Name: "LiteLLM", Provider: cline.ApiProvider_LITELLM},
 		{Name: "X AI (Grok)", Provider: cline.ApiProvider_XAI},
 		{Name: "AWS Bedrock", Provider: cline.ApiProvider_BEDROCK},
 		{Name: "Google Gemini", Provider: cline.ApiProvider_GEMINI},
@@ -71,6 +73,8 @@ func SupportsBYOModelFetching(provider cline.ApiProvider) bool {
 		return true
 	case cline.ApiProvider_OPENAI:
 		return true
+	case cline.ApiProvider_LITELLM:
+		return true
 	case cline.ApiProvider_OLLAMA:
 		return true
 	case cline.ApiProvider_OCA:
@@ -99,6 +103,8 @@ func GetBYOProviderPlaceholder(provider cline.ApiProvider) string {
 		return "e.g., gemini-2.5-pro"
 	case cline.ApiProvider_OLLAMA:
 		return "e.g., qwen3-coder:30b"
+	case cline.ApiProvider_LITELLM:
+		return "e.g., anthropic/claude-3-7-sonnet-20250219"
 	case cline.ApiProvider_CEREBRAS:
 		return "e.g., gpt-oss-120b"
 	case cline.ApiProvider_NOUSRESEARCH:
@@ -158,6 +164,30 @@ func PromptForAPIKey(provider cline.ApiProvider) (string, string, error) {
 
 	if err := form.Run(); err != nil {
 		return "", "", fmt.Errorf("failed to get API key: %w", err)
+	}
+
+	if provider == cline.ApiProvider_LITELLM {
+		var baseURL string
+		baseURLForm := huh.NewForm(
+			huh.NewGroup(
+				huh.NewInput().
+					Title("LiteLLM Base URL").
+					Placeholder("e.g., https://api.your-litellm-host/v1").
+					Value(&baseURL).
+					Validate(func(s string) error {
+						if strings.TrimSpace(s) == "" {
+							return fmt.Errorf("Base URL cannot be empty for LiteLLM")
+						}
+						return nil
+					}),
+			),
+		)
+
+		if err := baseURLForm.Run(); err != nil {
+			return "", "", fmt.Errorf("failed to get LiteLLM base URL: %w", err)
+		}
+
+		return apiKey, baseURL, nil
 	}
 
 	// For OpenAI (Compatible) provider, prompt for base URL

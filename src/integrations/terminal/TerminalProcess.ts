@@ -48,7 +48,48 @@ export class TerminalProcess extends EventEmitter<TerminalProcessEvents> {
 			let didOutputNonCommand = false
 			let didEmitEmptyLine = false
 
-			for await (let data of stream) {
+			// CARET MODIFICATION: prevent Linux terminals from hanging forever by forcing completion when no output arrives
+			let lastOutputTime = Date.now()
+			const STREAM_IDLE_TIMEOUT = 5000 // 5 seconds without output = assume completed
+
+			const streamWithTimeout = async function* () {
+				const iterator = stream[Symbol.asyncIterator]()
+				let currentTimeout: NodeJS.Timeout | null = null
+
+				try {
+					while (true) {
+						const timeoutPromise: Promise<IteratorResult<string, any>> = new Promise((resolve) => {
+							currentTimeout = setTimeout(() => {
+								const idleTime = Date.now() - lastOutputTime
+								console.log(`[TerminalProcess] Stream idle for ${idleTime}ms, forcing completion`)
+								resolve({ done: true, value: undefined })
+							}, STREAM_IDLE_TIMEOUT)
+						})
+
+						const result = await Promise.race([iterator.next(), timeoutPromise])
+
+						if (currentTimeout) {
+							clearTimeout(currentTimeout)
+							currentTimeout = null
+						}
+
+						if (result.done) {
+							break
+						}
+
+						lastOutputTime = Date.now()
+						if (result.value !== undefined) {
+							yield result.value
+						}
+					}
+				} finally {
+					if (currentTimeout) {
+						clearTimeout(currentTimeout)
+					}
+				}
+			}
+
+			for await (let data of streamWithTimeout()) {
 				// 1. Process chunk and remove artifacts
 				if (isFirstChunk) {
 					/*

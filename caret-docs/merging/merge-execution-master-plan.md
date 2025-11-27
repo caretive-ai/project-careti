@@ -268,6 +268,15 @@ git commit -m "chore: Restore Caret-specific directories after upstream reset"
 
 #### 작업 단계
 
+1. **루트 ignore/빌드 파일 즉시 복구 (필수)**
+   - [ ] `caret-main/.vscodeignore` → 루트에 복사 (화이트리스트 버전)
+   - [ ] `caret-main/.gitignore` → 루트에 복사 (필요 시 Caret 항목 병합)
+   - [ ] `npx vsce ls --packageManager npm | head` 로 포함 경로 확인 (CLI/merge 비교 디렉토리가 나오면 실패)
+   - [ ] `npm run package:release` Dry-run으로 VSIX 용량(≈50MB) 확인
+   - 📌 **이유**: upstream reset 뒤 .vscodeignore가 Cline 기본값으로 돌아가면 `comparison/`, `cli/`, `caret-docs/`가 그대로 VSIX에 포함되어 1GB 넘는 패키지가 생성된다.
+
+2. 기존 Phase 2 체크리스트 수행 (Caret 전용 디렉토리 복원 등)
+
 ##### Step 2.1: Caret 전용 디렉토리 백업
 **체크리스트**:
 - [ ] `caret-src/` 백업 완료
@@ -731,6 +740,45 @@ grep -E "(LanguageModelChatMessageRole|Terminal|shellIntegration)" src/types/vsc
 **변경 파일**:
 - `src/shared/Languages.ts` (+59 lines)
 - `caret-src/core/prompts/system/adapters/CaretJsonAdapter.ts` (lint fix: -2 unused imports)
+
+---
+
+#### Phase 4.T: Terminal 안정화 (Linux hang + 브랜딩) 🔴 **필수**
+
+**목표**: VS Code Shell Integration 지원 여부와 관계없이 터미널 명령이 멈추지 않게 하고, 모든 경로에서 Caret 이름/아이콘을 유지한다.
+
+**필수 파일**
+```
+src/integrations/terminal/TerminalProcess.ts
+src/integrations/terminal/TerminalRegistry.ts
+src/hosts/vscode/hostbridge/workspace/executeCommandInTerminal.ts
+src/extension.ts (TerminalRegistry.initialize 호출 확인)
+caret-src/utils/brand-utils.ts (package.json 탐색 경로 보강)
+```
+
+**체크리스트**
+1. **TerminalProcess**
+   - [ ] `STREAM_IDLE_TIMEOUT` (5초) 래퍼로 Linux 무출력 hang 방지.
+   - [ ] Ctrl+C, shellIntegration 미지원 시 `completed` 이벤트 emit 확인.
+2. **TerminalRegistry / executeCommandInTerminal**
+   - [ ] `TerminalRegistry.initialize(context)`가 activate 초기에 실행.
+   - [ ] `getTerminalBranding()`이 Caret displayName과 `robot_panel_(light|dark).png`를 반환.
+   - [ ] `executeCommandInTerminal`도 동일 브랜딩을 재사용 (CLI 설치 흐름 포함).
+3. **brand-utils.ts**
+   - [ ] dist/CLI 환경에서도 `package.json`을 찾도록 다중 경로(`../../..`, `process.cwd()`) 검사.
+
+**검증**
+```bash
+# Linux Dev Host에서 Caret CLI 설치 흐름 실행
+npx tsx scripts/dev-cli-watch.mjs
+# VS Code Dev Host → Caret에게 `node -v`, `npm -v` 실행 요청
+```
+
+- [ ] 명령 실행 후 5초 내 `TerminalProcess`가 `continue` 이벤트를 emit.
+- [ ] CLI 설치 화면 및 VS Code 터미널 제목이 "Caret" + 로봇 아이콘으로 표시되는 스크린샷 첨부.
+- [ ] Regression 문서(`caret-docs/features/f00-terminal-bugfix.md`)에 사례 추가.
+
+**완료 기준**: Linux에서 `executeCommandTool` / `executeCommandInTerminal`이 hang 없이 종료되고, 터미널 브랜딩이 Caret으로 유지됨.
 
 ---
 

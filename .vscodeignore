@@ -1,79 +1,63 @@
-# Default
-.vscode/**
-.vscode-test/**
-out/
-dist-standalone/
-node_modules/
-src/**
-standalone/**
-.gitignore
-.yarnrc
-esbuild.js
-vsc-extension-quickstart.md
-tsconfig*.json
-**/.eslintrc.json
-**/*.map
-**/*.ts
-**/.vscode-test.*
-eslint-rules/**
-.github/**
-.husky/**
-.env
+# 🚨 WHITELIST APPROACH: exclude everything, then allow only release artifacts
+**
 
-# cli
-cli/**
+# ✅ Core metadata
+!package.json
+!README.md
+!LICENSE
+!CHANGELOG.md
 
-# Custom
-**/demo.gif
-.nvmrc
-.gitattributes
-.prettierignore
-.husky/
-.github/
-eslint-rules/
-old_docs/
-evals/
-.changie.yaml
-.codespellrc
-.mocharc.json
-buf.yaml
-.changeset/
-.clinerules/
+# ✅ Built extension code
+!dist/
+!dist/**
+!webview-ui/build/
+!webview-ui/build/**
 
-# Include specific file needed for Background Exec mode
-!standalone/runtime-files/vscode/enhanced-terminal.js
-
-# Ignore all webview-ui files except the build directory (https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/frameworks/hello-world-react-cra/.vscodeignore)
-webview-ui/src/**
-webview-ui/public/**
-webview-ui/index.html
-webview-ui/README.md
-webview-ui/package.json
-webview-ui/package-lock.json
-webview-ui/node_modules/**
-**/.gitignore
-
-# Ignore docs
-docs/**
-old_docs/**
-
-# Fix issue where codicons don't get packaged (https://github.com/microsoft/vscode-extension-samples/issues/692)
-!node_modules/@vscode/codicons/dist/codicon.css
-!node_modules/@vscode/codicons/dist/codicon.ttf
-
-# Include default themes JSON files used in getTheme
+# ✅ Assets / themes
+!assets/
+!assets/**
+!src/integrations/theme/default-themes/
 !src/integrations/theme/default-themes/**
 
-# Include icons
-!assets/icons/**
+# ✅ Caret runtime sources used at runtime
+!caret-src/
+!caret-src/**
 
-# Ignore E2E build files
-e2e-build.mjs
-e2e.vsix
-test-results/
+# ❌ Exclude merge/development directories
+caret-main/**
+caret-compare/**
+caret-b2b/**
+caret-docs/**
+comparison/**
+cli/**
+cli-caret/**
+standalone/**
+dist-standalone/**
+scripts/**
+caret-scripts/**
+testing-platform/**
+spec-kit/**
+output/**
+.caretrules/**
 
-# Ignore Storybook files
-**/*.stories.tsx
-*storybook.log
-storybook-static
-**/StorybookDecorator.tsx
+# ❌ Exclude source/config/docs we don't ship
+src/**
+webview-ui/**
+docs/**
+old_docs/**
+docs.caret.team/**
+node_modules/**
+.vscode/**
+.github/**
+.husky/**
+.changeset/**
+.clinerules/**
+*.mdx
+
+# ✅ Allow specific dependency assets / runtime shims
+!node_modules/@vscode/codicons/dist/codicon.css
+!node_modules/@vscode/codicons/dist/codicon.ttf
+!standalone/
+!standalone/runtime-files/
+!standalone/runtime-files/vscode/
+!standalone/runtime-files/vscode/enhanced-terminal.js

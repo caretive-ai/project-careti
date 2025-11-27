@@ -100,7 +100,9 @@ func (r *ProviderListResult) GetAllReadyProviders() []*ProviderDisplay {
 	seenProviders := make(map[cline.ApiProvider]bool)
 
 	// Check all possible providers
+	// CARET MODIFICATION: include Caret/LiteLLM providers in detection
 	allProviders := []cline.ApiProvider{
+		cline.ApiProvider_CARET,
 		cline.ApiProvider_CLINE,
 		cline.ApiProvider_ANTHROPIC,
 		cline.ApiProvider_OPENAI,
@@ -114,6 +116,8 @@ func (r *ProviderListResult) GetAllReadyProviders() []*ProviderDisplay {
 		cline.ApiProvider_NOUSRESEARCH,
 		cline.ApiProvider_OCA,
 		cline.ApiProvider_HICAP,
+		cline.ApiProvider_LITELLM,
+		cline.ApiProvider_BIZROUTER,
 	}
 
 	// Check each provider to see if it's ready to use
@@ -129,10 +133,16 @@ func (r *ProviderListResult) GetAllReadyProviders() []*ProviderDisplay {
 
 		// Determine if credentials exist
 		hasCreds := checkAPIKeyExists(r.apiConfig, provider)
+		if provider == cline.ApiProvider_CLINE && IsAuthenticated(context.Background()) {
+			hasCreds = true
+		}
+		if provider == cline.ApiProvider_CARET && IsCaretAuthenticated(context.Background()) {
+			hasCreds = true
+		}
 
 		// Determine readiness: OCA uses auth state presence; others need creds and model
 		if provider == cline.ApiProvider_OCA {
-			state, _ := GetLatestOCAState(context.Background(), 2 *time.Second)
+			state, _ := GetLatestOCAState(context.Background(), 2*time.Second)
 			if state == nil || state.User == nil {
 				continue
 			}
@@ -215,7 +225,7 @@ func extractProviderFromState(stateData map[string]interface{}, mode string) *Pr
 // Returns (provider, ok) where ok is false if the provider is unknown
 func mapProviderStringToEnum(providerStr string) (cline.ApiProvider, bool) {
 	normalizedStr := strings.ToLower(providerStr)
-	
+
 	// Map string values to enum values
 	switch normalizedStr {
 	case "anthropic":
@@ -236,8 +246,14 @@ func mapProviderStringToEnum(providerStr string) (cline.ApiProvider, bool) {
 		return cline.ApiProvider_OLLAMA, true
 	case "cerebras":
 		return cline.ApiProvider_CEREBRAS, true
+	case "caret":
+		return cline.ApiProvider_CARET, true
 	case "cline":
 		return cline.ApiProvider_CLINE, true
+	case "litellm":
+		return cline.ApiProvider_LITELLM, true
+	case "bizrouter":
+		return cline.ApiProvider_BIZROUTER, true
 	case "oca":
 		return cline.ApiProvider_OCA, true
 	case "hicap":
@@ -271,8 +287,14 @@ func GetProviderIDForEnum(provider cline.ApiProvider) string {
 		return "ollama"
 	case cline.ApiProvider_CEREBRAS:
 		return "cerebras"
+	case cline.ApiProvider_CARET:
+		return "caret"
 	case cline.ApiProvider_CLINE:
 		return "cline"
+	case cline.ApiProvider_LITELLM:
+		return "litellm"
+	case cline.ApiProvider_BIZROUTER:
+		return "bizrouter"
 	case cline.ApiProvider_OCA:
 		return "oca"
 	case cline.ApiProvider_HICAP:
@@ -352,8 +374,14 @@ func GetProviderDisplayName(provider cline.ApiProvider) string {
 		return "Ollama"
 	case cline.ApiProvider_CEREBRAS:
 		return "Cerebras"
+	case cline.ApiProvider_CARET:
+		return "Caret (Official)"
 	case cline.ApiProvider_CLINE:
 		return "Cline (Official)"
+	case cline.ApiProvider_LITELLM:
+		return "LiteLLM"
+	case cline.ApiProvider_BIZROUTER:
+		return "BizRouter"
 	case cline.ApiProvider_OCA:
 		return "Oracle Code Assist"
 	case cline.ApiProvider_HICAP:
@@ -409,7 +437,7 @@ func FormatProviderList(result *ProviderListResult) string {
 				} else {
 					output.WriteString("    Base URL: (default)\n")
 				}
-			} else if display.Provider == cline.ApiProvider_CLINE || display.Provider == cline.ApiProvider_OCA {
+			} else if display.Provider == cline.ApiProvider_CLINE || display.Provider == cline.ApiProvider_OCA || display.Provider == cline.ApiProvider_CARET {
 				output.WriteString("    Status:   Authenticated\n")
 			} else {
 				output.WriteString("    API Key:  Configured\n")
@@ -460,6 +488,11 @@ func DetectAllConfiguredProviders(ctx context.Context, manager *task.Manager) ([
 		configuredProviders = append(configuredProviders, cline.ApiProvider_CLINE)
 		verboseLog("[DEBUG] Cline provider is authenticated")
 	}
+	// CARET MODIFICATION: include caret auth-based provider
+	if IsCaretAuthenticated(ctx) {
+		configuredProviders = append(configuredProviders, cline.ApiProvider_CARET)
+		verboseLog("[DEBUG] Caret provider is authenticated")
+	}
 
 	// Check OCA provider via global auth subscription (state presence)
 	if state, _ := GetLatestOCAState(context.Background(), 2*time.Second); state != nil && state.User != nil {
@@ -480,9 +513,11 @@ func DetectAllConfiguredProviders(ctx context.Context, manager *task.Manager) ([
 		{cline.ApiProvider_BEDROCK, "awsAccessKey"},
 		{cline.ApiProvider_GEMINI, "geminiApiKey"},
 		{cline.ApiProvider_OLLAMA, "ollamaBaseUrl"}, // Ollama uses baseUrl instead of API key
+		{cline.ApiProvider_LITELLM, "liteLlmApiKey"},
 		{cline.ApiProvider_CEREBRAS, "cerebrasApiKey"},
 		{cline.ApiProvider_HICAP, "hicapApiKey"},
 		{cline.ApiProvider_NOUSRESEARCH, "nousResearchApiKey"},
+		{cline.ApiProvider_BIZROUTER, "bizRouterApiKey"},
 	}
 
 	for _, providerCheck := range providersToCheck {
@@ -497,7 +532,6 @@ func DetectAllConfiguredProviders(ctx context.Context, manager *task.Manager) ([
 			verboseLog("[DEBUG]   Key %s not found", providerCheck.keyField)
 		}
 	}
-
 
 	verboseLog("[DEBUG] Total configured providers: %d", len(configuredProviders))
 	for _, p := range configuredProviders {

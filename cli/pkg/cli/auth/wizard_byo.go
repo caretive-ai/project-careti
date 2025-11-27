@@ -120,7 +120,7 @@ func (pw *ProviderWizard) handleAddProvider() error {
 	}
 
 	// Step 4: Try to fetch models and let user select (with fallback to manual entry for providers that don't support fetch)
-	modelID, modelInfo, err := pw.selectModel(provider, apiKey)
+	modelID, modelInfo, err := pw.selectModel(provider, apiKey, baseURL)
 	if err != nil {
 		return fmt.Errorf("model selection failed: %w", err)
 	}
@@ -150,7 +150,7 @@ func (pw *ProviderWizard) handleAddBedrockProvider() error {
 	}
 
 	// Step 2: Select model
-	modelID, modelInfo, err := pw.selectModel(cline.ApiProvider_BEDROCK, "")
+	modelID, modelInfo, err := pw.selectModel(cline.ApiProvider_BEDROCK, "", "")
 	if err != nil {
 		return fmt.Errorf("model selection failed: %w", err)
 	}
@@ -190,7 +190,7 @@ func (pw *ProviderWizard) handleAddOcaProvider() error {
 	}
 
 	// Step 3: Select model
-	modelID, _, err := pw.selectModel(cline.ApiProvider_OCA, "")
+	modelID, _, err := pw.selectModel(cline.ApiProvider_OCA, "", "")
 	if err != nil {
 		return fmt.Errorf("model selection failed: %w", err)
 	}
@@ -227,13 +227,13 @@ func (pw *ProviderWizard) handleListProviders() error {
 }
 
 // selectModel attempts to fetch available models and let user select, or falls back to manual entry
-func (pw *ProviderWizard) selectModel(provider cline.ApiProvider, apiKey string) (string, interface{}, error) {
+func (pw *ProviderWizard) selectModel(provider cline.ApiProvider, apiKey string, baseURL string) (string, interface{}, error) {
 	// For providers that support model fetching, try to fetch and display models
 	canFetchModels := pw.supportsModelFetching(provider)
 
 	if canFetchModels {
 		fmt.Println("Fetching available models...")
-		models, modelInfoMap, err := pw.fetchModelsForProvider(provider, apiKey)
+		models, modelInfoMap, err := pw.fetchModelsForProvider(provider, apiKey, baseURL)
 
 		if err != nil {
 			fmt.Println("\n⚠ Unable to fetch model list from the provider. Please enter the model ID manually instead.")
@@ -280,7 +280,7 @@ func (pw *ProviderWizard) supportsModelFetching(provider cline.ApiProvider) bool
 
 // fetchModelsForProvider fetches models for a given provider
 // Supports both dynamic API fetching (OpenRouter, OpenAI, Ollama) and static model lists (Anthropic, Bedrock, Gemini, X AI)
-func (pw *ProviderWizard) fetchModelsForProvider(provider cline.ApiProvider, apiKey string) ([]string, map[string]interface{}, error) {
+func (pw *ProviderWizard) fetchModelsForProvider(provider cline.ApiProvider, apiKey string, baseURL string) ([]string, map[string]interface{}, error) {
 	// Try dynamic/remote model fetching first
 	switch provider {
 	case cline.ApiProvider_OPENROUTER:
@@ -293,8 +293,11 @@ func (pw *ProviderWizard) fetchModelsForProvider(provider cline.ApiProvider, api
 
 	case cline.ApiProvider_OPENAI:
 		// For OpenAI, we need to pass the base URL and API key
-		baseURL := "https://api.openai.com/v1" // Default OpenAI API base URL
-		modelIDs, err := FetchOpenAiModels(pw.ctx, pw.manager, baseURL, apiKey)
+		resolvedBaseURL := "https://api.openai.com/v1" // Default OpenAI API base URL
+		if baseURL != "" {
+			resolvedBaseURL = baseURL
+		}
+		modelIDs, err := FetchOpenAiModels(pw.ctx, pw.manager, resolvedBaseURL, apiKey)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -303,12 +306,22 @@ func (pw *ProviderWizard) fetchModelsForProvider(provider cline.ApiProvider, api
 
 	case cline.ApiProvider_OLLAMA:
 		// For Ollama, apiKey actually contains the base URL (or empty for default)
-		baseURL := apiKey // The "API key" field for Ollama is actually the base URL
-		modelIDs, err := FetchOllamaModels(pw.ctx, pw.manager, baseURL)
+		ollamaBaseURL := apiKey // The "API key" field for Ollama is actually the base URL
+		modelIDs, err := FetchOllamaModels(pw.ctx, pw.manager, ollamaBaseURL)
 		if err != nil {
 			return nil, nil, err
 		}
 		// Ollama returns just model IDs without additional info, so modelInfo map is nil
+		return modelIDs, nil, nil
+
+	case cline.ApiProvider_LITELLM:
+		if baseURL == "" {
+			return nil, nil, fmt.Errorf("LiteLLM requires a base URL")
+		}
+		modelIDs, err := FetchLiteLlmModels(pw.ctx, pw.manager, baseURL, apiKey)
+		if err != nil {
+			return nil, nil, err
+		}
 		return modelIDs, nil, nil
 
 	case cline.ApiProvider_OCA:
@@ -472,6 +485,7 @@ func (pw *ProviderWizard) handleChangeModel() error {
 
 	// Step 5: Retrieve API key if needed for model fetching
 	var apiKey string
+	var baseURL string
 	if pw.supportsModelFetching(provider) {
 		// For providers that support fetching, we need to retrieve the API key from state
 		state, err := pw.manager.GetClient().State.GetLatestState(pw.ctx, &cline.EmptyRequest{})
@@ -493,9 +507,10 @@ func (pw *ProviderWizard) handleChangeModel() error {
 		if apiKey == "" {
 			return fmt.Errorf("no API key found for provider %s", GetProviderDisplayName(provider))
 		}
+		baseURL = getProviderBaseURLFromState(apiConfig, provider)
 	}
 
-	modelID, modelInfo, err := pw.selectModel(provider, apiKey)
+	modelID, modelInfo, err := pw.selectModel(provider, apiKey, baseURL)
 	if err != nil {
 		return fmt.Errorf("model selection failed: %w", err)
 	}
@@ -585,11 +600,11 @@ func getProviderModelIDFromState(stateData map[string]interface{}, provider clin
 	return ""
 }
 
- // getProviderAPIKeyFromState retrieves the API key for a specific provider from state
+// getProviderAPIKeyFromState retrieves the API key for a specific provider from state
 func getProviderAPIKeyFromState(stateData map[string]interface{}, provider cline.ApiProvider) string {
 	// OCA uses account authentication, not API keys. Consider it "present" if authenticated.
 	if provider == cline.ApiProvider_OCA {
-		if state, _ := GetLatestOCAState(context.TODO(), 2 * time.Second); state != nil && state.User != nil {
+		if state, _ := GetLatestOCAState(context.TODO(), 2*time.Second); state != nil && state.User != nil {
 			// Return a sentinel non-empty string so upstream checks pass.
 			return "OCA_AUTH_VERIFIED"
 		}
@@ -603,6 +618,20 @@ func getProviderAPIKeyFromState(stateData map[string]interface{}, provider cline
 
 	if apiKey, ok := stateData[fields.APIKeyField].(string); ok {
 		return apiKey
+	}
+
+	return ""
+}
+
+// getProviderBaseURLFromState retrieves the base URL for a specific provider from state
+func getProviderBaseURLFromState(stateData map[string]interface{}, provider cline.ApiProvider) string {
+	fields, err := GetProviderFields(provider)
+	if err != nil || fields.BaseURLField == "" {
+		return ""
+	}
+
+	if baseURL, ok := stateData[fields.BaseURLField].(string); ok {
+		return baseURL
 	}
 
 	return ""
@@ -747,7 +776,6 @@ func (pw *ProviderWizard) handleRemoveProvider() error {
 func (pw *ProviderWizard) clearProviderAPIKey(provider cline.ApiProvider) error {
 	return RemoveProviderPartial(pw.ctx, pw.manager, provider)
 }
-
 
 func signOutOca(ctx context.Context) error {
 	client, err := global.GetDefaultClient(ctx)

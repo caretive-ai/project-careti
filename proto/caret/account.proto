@@ -2,10 +2,9 @@ syntax = "proto3";
 
 package caret;
 
-option go_package = "github.com/cline/grpc-go/caret;caret";
-
 import "cline/common.proto";
 
+option go_package = "github.com/cline/grpc-go/caret;caret";
 option java_multiple_files = true;
 option java_package = "bot.caret.proto";
 

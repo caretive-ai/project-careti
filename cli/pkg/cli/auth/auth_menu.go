@@ -20,27 +20,28 @@ const authInstanceAddressKey contextKey = "authInstanceAddress"
 type AuthAction string
 
 const (
-	AuthActionClineLogin         AuthAction = "cline_login"
-	AuthActionBYOSetup           AuthAction = "provider_setup"
-	AuthActionChangeClineModel   AuthAction = "change_cline_model"
-	AuthActionSelectOrganization AuthAction = "select_organization"
-	AuthActionSelectProvider     AuthAction = "select_provider"
-	AuthActionExit               AuthAction = "exit_wizard"
+	// CARET MODIFICATION: add Caret auth menu action
+	AuthActionCaretLogin     AuthAction = "caret_login"
+	AuthActionClineLogin     AuthAction = "cline_login"
+	AuthActionBYOSetup       AuthAction = "provider_setup"
+	AuthActionSelectProvider AuthAction = "select_provider"
+	AuthActionExit           AuthAction = "exit_wizard"
 )
 
-//  Cline Auth Menu
+//  Cline/Caret Auth Menu
 //  Example Layout
 //
+//	┃ Caret Account: <authenticated/not authenticated>
 //	┃ Cline Account: <authenticated/not authenticated>
 //	┃ Active Provider: <provider name or none configured>
 //	┃ Active Model: <model name or none configured>
 //	┃
 //	┃ What would you like to do?
-//	┃   Change Cline model (only if authenticated)				- hidden if not authenticated
-//	┃   Authenticate with Cline account / Sign out of Cline		- changes based on auth status
-//	┃   Select active provider (Cline or BYO)					- always shown. Used to switch between Cline and BYO providers
-//	┃   Configure BYO API providers								- always shown. Launches provider setup wizard
-//	┃   Exit authorization wizard								- always shown. Exits the auth menu
+//	┃   Authenticate/Sign out of Caret account		- changes based on auth status
+//	┃   Authenticate/Sign out of Cline account		- changes based on auth status
+//	┃   Configure BYO API providers			- always shown. Launches provider setup wizard
+//	┃   Select active provider (Caret, Cline, or BYO)	- always shown
+//	┃   Exit authorization wizard			- always shown. Exits the auth menu
 
 // RunAuthFlow is the entry point for the entire auth flow with instance management
 // It spawns a fresh instance for auth operations and cleans it up when done
@@ -102,7 +103,8 @@ func getAuthInstanceAddress(ctx context.Context) string {
 
 // HandleAuthMenuNoArgs prepares the auth menu when no arguments are provided
 func HandleAuthMenuNoArgs(ctx context.Context) error {
-	// Check if Cline is authenticated
+	// Check if Caret/Cline are authenticated
+	isCaretAuth := IsCaretAuthenticated(ctx)
 	isClineAuth := IsAuthenticated(ctx)
 
 	// Get current provider config for display
@@ -117,17 +119,7 @@ func HandleAuthMenuNoArgs(ctx context.Context) error {
 		}
 	}
 
-	// Fetch organizations if authenticated
-	var hasOrganizations bool
-	if isClineAuth {
-		if client, err := global.GetDefaultClient(ctx); err == nil {
-			if orgsResponse, err := client.Account.GetUserOrganizations(ctx, &cline.EmptyRequest{}); err == nil {
-				hasOrganizations = len(orgsResponse.GetOrganizations()) > 0
-			}
-		}
-	}
-
-	action, err := ShowAuthMenuWithStatus(isClineAuth, hasOrganizations, currentProvider, currentModel)
+	action, err := ShowAuthMenuWithStatus(isCaretAuth, isClineAuth, currentProvider, currentModel)
 	if err != nil {
 		// Check if user cancelled - propagate for clean exit
 		if err == huh.ErrUserAborted {
@@ -137,14 +129,13 @@ func HandleAuthMenuNoArgs(ctx context.Context) error {
 	}
 
 	switch action {
+	case AuthActionCaretLogin:
+		// CARET MODIFICATION: caret auth entry
+		return HandleCaretAuth(ctx)
 	case AuthActionClineLogin:
 		return HandleClineAuth(ctx)
 	case AuthActionBYOSetup:
 		return HandleAPIProviderSetup(ctx)
-	case AuthActionChangeClineModel:
-		return HandleChangeClineModel(ctx)
-	case AuthActionSelectOrganization:
-		return HandleSelectOrganization(ctx)
 	case AuthActionSelectProvider:
 		return HandleSelectProvider(ctx)
 	case AuthActionExit:
@@ -155,45 +146,43 @@ func HandleAuthMenuNoArgs(ctx context.Context) error {
 }
 
 // ShowAuthMenuWithStatus displays the main auth menu with Cline + provider status
-func ShowAuthMenuWithStatus(isClineAuthenticated bool, hasOrganizations bool, currentProvider, currentModel string) (AuthAction, error) {
+func ShowAuthMenuWithStatus(isCaretAuthenticated bool, isClineAuthenticated bool, currentProvider, currentModel string) (AuthAction, error) {
 	var action AuthAction
 	var options []huh.Option[AuthAction]
 
-	// Build menu options based on authentication status
-	if isClineAuthenticated {
-		options = []huh.Option[AuthAction]{
-			huh.NewOption("Change Cline model", AuthActionChangeClineModel),
-		}
-
-		// Add organization selection if user has organizations
-		if hasOrganizations {
-			options = append(options, huh.NewOption("Select organization", AuthActionSelectOrganization))
-		}
-
-		options = append(options,
-			huh.NewOption("Sign out of Cline", AuthActionClineLogin),
-			huh.NewOption("Select active provider (Cline or BYO)", AuthActionSelectProvider),
-			huh.NewOption("Configure BYO API providers", AuthActionBYOSetup),
-			huh.NewOption("Exit authorization wizard", AuthActionExit),
-		)
+	// CARET MODIFICATION: include caret/cline account actions
+	if isCaretAuthenticated {
+		options = append(options, huh.NewOption("Sign out of Caret", AuthActionCaretLogin))
 	} else {
-		options = []huh.Option[AuthAction]{
-			huh.NewOption("Authenticate with Cline account", AuthActionClineLogin),
-			huh.NewOption("Select active provider (Cline or BYO)", AuthActionSelectProvider),
-			huh.NewOption("Configure BYO API providers", AuthActionBYOSetup),
-			huh.NewOption("Exit authorization wizard", AuthActionExit),
-		}
+		options = append(options, huh.NewOption("Authenticate with Caret account", AuthActionCaretLogin))
 	}
+
+	if isClineAuthenticated {
+		options = append(options, huh.NewOption("Sign out of Cline", AuthActionClineLogin))
+	} else {
+		options = append(options, huh.NewOption("Authenticate with Cline account", AuthActionClineLogin))
+	}
+
+	options = append(options,
+		huh.NewOption("Configure BYO API providers", AuthActionBYOSetup),
+		huh.NewOption("Select active provider (Caret, Cline, or BYO)", AuthActionSelectProvider),
+		huh.NewOption("Exit authorization wizard", AuthActionExit),
+	)
 
 	// Determine menu title based on status
 	var title string
 	renderer := display.NewRenderer(global.Config.OutputFormat)
 
-	// Always show Cline authentication status
-	if isClineAuthenticated {
-		title = fmt.Sprintf("Cline Account: %s Authenticated\n", renderer.Green("✓"))
+	// CARET MODIFICATION: show caret + cline auth status
+	if isCaretAuthenticated {
+		title = fmt.Sprintf("Caret Account: %s Authenticated\n", renderer.Green("✓"))
 	} else {
-		title = fmt.Sprintf("Cline Account: %s Not authenticated\n", renderer.Red("✗"))
+		title = fmt.Sprintf("Caret Account: %s Not authenticated\n", renderer.Red("✗"))
+	}
+	if isClineAuthenticated {
+		title += fmt.Sprintf("Cline Account: %s Authenticated\n", renderer.Green("✓"))
+	} else {
+		title += fmt.Sprintf("Cline Account: %s Not authenticated\n", renderer.Red("✗"))
 	}
 
 	// Show active provider and model if configured (regardless of Cline auth status)
@@ -297,11 +286,13 @@ func HandleSelectProvider(ctx context.Context) error {
 	selectedProvider := providerMapping[selected]
 
 	// Apply the selected provider
-	if selectedProvider == cline.ApiProvider_CLINE {
-		// Configure Cline as the active provider
+	switch selectedProvider {
+	case cline.ApiProvider_CLINE:
 		return SelectClineModel(ctx, manager)
-	} else {
-		// Switch to the selected BYO provider
+	case cline.ApiProvider_CARET:
+		// CARET MODIFICATION: support caret provider selection
+		return SelectCaretModel(ctx, manager)
+	default:
 		return SwitchToBYOProvider(ctx, manager, selectedProvider)
 	}
 }

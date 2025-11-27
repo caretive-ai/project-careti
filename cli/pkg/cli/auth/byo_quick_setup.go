@@ -15,7 +15,7 @@ var (
 	QuickProvider string // Provider ID (e.g., "openai", "anthropic")
 	QuickAPIKey   string // API key for the provider
 	QuickModelID  string // Model ID to configure
-	QuickBaseURL  string // Base URL (optional, for openai compatible only)
+	QuickBaseURL  string // Base URL (OpenAI optional, LiteLLM required)
 )
 
 // QuickSetupFromFlags performs quick setup using command-line flags
@@ -131,14 +131,21 @@ func validateQuickSetupInputs(provider, apiKey, modelID, baseURL string) (cline.
 // validateBaseURL checks if the user's input includes a baseURL for a provider other than OpenAI (compatible)
 // Returns error if baseURL is provided for unsupported providers
 func validateBaseURL(baseURL string, providerEnum cline.ApiProvider) error {
-	if providerEnum != cline.ApiProvider_OPENAI {
-		if baseURL != "" {
-			return fmt.Errorf("base URL is only supported for OpenAI and OpenAI-compatible providers")
+	switch providerEnum {
+	case cline.ApiProvider_OPENAI:
+		return nil
+	case cline.ApiProvider_LITELLM:
+		if strings.TrimSpace(baseURL) == "" {
+			return fmt.Errorf("LiteLLM provider requires --baseurl to be specified")
 		}
+		return nil
+	default:
+		if baseURL != "" {
+			return fmt.Errorf("base URL is only supported for OpenAI-compatible or LiteLLM providers")
+		}
+		return nil
 	}
-	return nil
 }
-
 
 // validateQuickSetupProvider validates the provider ID and returns the enum value
 // Returns error if provider is invalid or not supported for quick setup
@@ -177,6 +184,7 @@ func validateQuickSetupProvider(providerID string) (cline.ApiProvider, error) {
 		cline.ApiProvider_CEREBRAS:      true,
 		cline.ApiProvider_OLLAMA:        true,
 		cline.ApiProvider_NOUSRESEARCH:  true,
+		cline.ApiProvider_LITELLM:       true,
 	}
 
 	if !supportedProviders[provider] {

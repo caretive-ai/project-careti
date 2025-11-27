@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/cline/grpc-go/cline"
 	"github.com/cline/grpc-go/host"
 )
 
@@ -43,7 +44,7 @@ func (s *WorkspaceService) GetWorkspacePaths(ctx context.Context, req *host.GetW
 // SaveOpenDocumentIfDirty saves an open document if it has unsaved changes
 func (s *WorkspaceService) SaveOpenDocumentIfDirty(ctx context.Context, req *host.SaveOpenDocumentIfDirtyRequest) (*host.SaveOpenDocumentIfDirtyResponse, error) {
 	if s.verbose {
-		log.Printf("SaveOpenDocumentIfDirty called for path: %s", req.GetPath())
+		log.Printf("SaveOpenDocumentIfDirty called for path: %s", req.GetFilePath())
 	}
 
 	// For console implementation, we'll assume the document is already saved
@@ -56,11 +57,11 @@ func (s *WorkspaceService) SaveOpenDocumentIfDirty(ctx context.Context, req *hos
 // GetDiagnostics returns diagnostic information for a file
 func (s *WorkspaceService) GetDiagnostics(ctx context.Context, req *host.GetDiagnosticsRequest) (*host.GetDiagnosticsResponse, error) {
 	if s.verbose {
-		log.Printf("GetDiagnostics called for path: %s", req.GetPath())
+		log.Printf("GetDiagnostics called")
 	}
 
 	// For console implementation, return empty diagnostics
 	return &host.GetDiagnosticsResponse{
-		Diagnostics: []*host.Diagnostic{},
+		FileDiagnostics: []*cline.FileDiagnostics{},
 	}, nil
 }

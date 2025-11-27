@@ -1,5 +1,6 @@
 import { ExecuteCommandInTerminalRequest, ExecuteCommandInTerminalResponse } from "@shared/proto/host/workspace"
 import * as vscode from "vscode"
+import { TerminalRegistry } from "@/integrations/terminal/TerminalRegistry"
 
 /**
  * Executes a command in a new terminal
@@ -10,10 +11,12 @@ export async function executeCommandInTerminal(
 	request: ExecuteCommandInTerminalRequest,
 ): Promise<ExecuteCommandInTerminalResponse> {
 	try {
+		// CARET MODIFICATION: Align terminal branding with current Caret skin
+		const branding = TerminalRegistry.getTerminalBranding()
 		// Create terminal with fixed options
 		const terminalOptions: vscode.TerminalOptions = {
-			name: "Cline",
-			iconPath: new vscode.ThemeIcon("robot"),
+			name: branding.name,
+			iconPath: branding.iconPath,
 			env: {
 				CLINE_ACTIVE: "true",
 			},

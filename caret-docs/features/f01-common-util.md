@@ -240,6 +240,8 @@ public isI18nEnabled(): boolean {
 }
 ```
 
+> 📌 **CLI/Go 주의**: CLI나 host bridge에서 브랜드 문자열이 필요한 경우 TypeScript 유틸이 아니라 `cli/pkg/common/branding.go`의 `BrandDisplayName()`을 호출해야 합니다. 이렇게 하면 npm 패키지 `displayName`만 바꿔도 VS Code/CLI가 동시에 갱신됩니다.
+
 ### CaretGlobalManager 사용
 
 ```typescript

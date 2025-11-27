@@ -29,6 +29,29 @@ contextKey: "cline.isActive"
 functionName: "clineProvider.handleMessage"
 ```
 
+## Branding Utilities (MUST USE)
+
+> **중요**: 브랜드명을 계산하거나 노출할 때는 반드시 공용 유틸을 호출하세요. 직접 문자열을 하드코딩하거나 별도 헬퍼를 만들면 B2B 브랜드(Rename Run)에서 누락이 발생합니다.
+
+- **TypeScript / VS Code Extension**: `caret-src/utils/brand-utils.ts`
+  - `getCurrentBrandName`, `getBrandDisplayName`, `getBrandRulesFileName` 등을 통해 UI/알림/파일명을 결정합니다.
+  - 예시
+    ```ts
+    import { getCurrentBrandName } from "@caret/utils/brand-utils"
+
+    banner.title = `${getCurrentBrandName()} CLI 설치 안내`
+    ```
+- **Go / CLI 레이어**: `cli/pkg/common/branding.go`
+  - `common.BrandDisplayName()`를 통해 바이너리 이름이 `caret`, `cline`, B2B 스핀오프일 때 모두 일관된 문구를 제공합니다.
+  - 예시
+    ```go
+    import "github.com/cline/cli/pkg/common"
+
+    fmt.Printf("Welcome to %s CLI\\n", common.BrandDisplayName())
+    ```
+
+이 두 파일 외에 브랜드명을 계산하는 메서드가 등장하면 안 됩니다. 새 기능을 작성할 때는 관련 문서(본 워크플로와 caret-docs/features/f03-branding-ui.md)를 다시 확인하고, 리뷰 시에도 브랜드 util 사용 여부를 반드시 체크하세요.
+
 ## Logging System Architecture (Current State)
 
 ### Backend Logging → Unified Cline System

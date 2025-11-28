@@ -3,6 +3,7 @@ import { TemplateEngine } from "../templates/TemplateEngine"
 import type { PromptVariant, SystemPromptContext } from "../types"
 
 const getCliSubagentsTemplateText = (context: SystemPromptContext) => {
+	// CARET MODIFICATION: Dynamic CLI name/command based on modeSystem
 	const isCaret = context.modeSystem === "caret"
 	const cliName = isCaret ? "Caret CLI tool" : "Cline CLI tool"
 	const agentName = isCaret ? "Caret AI agents" : "Cline AI agents"

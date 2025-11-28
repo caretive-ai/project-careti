@@ -1,5 +1,5 @@
 import { AutoApprovalSettings } from "@shared/AutoApprovalSettings"
-import { ApiProvider, ModelInfo, type OcaModelInfo } from "@shared/api"
+import { ApiProvider, BizRouterModelInfo, ModelInfo, type OcaModelInfo } from "@shared/api"
 import { BrowserSettings } from "@shared/BrowserSettings"
 import { CaretUser } from "@shared/CaretAccount"
 import { ClineRulesToggles } from "@shared/cline-rules"
@@ -94,6 +94,9 @@ export interface Settings {
 	browserSettings: BrowserSettings
 	liteLlmBaseUrl: string | undefined
 	liteLlmUsePromptCache: boolean | undefined
+	bizRouterUsePromptCache: boolean | undefined
+	caretBaseUrl: string | undefined
+	caretUsePromptCache: boolean | undefined
 	fireworksModelMaxCompletionTokens: number | undefined
 	fireworksModelMaxTokens: number | undefined
 	qwenApiLine: string | undefined
@@ -152,6 +155,10 @@ export interface Settings {
 	planModeLmStudioModelId: string | undefined
 	planModeLiteLlmModelId: string | undefined
 	planModeLiteLlmModelInfo: ModelInfo | undefined
+	planModeBizRouterModelId: string | undefined
+	planModeBizRouterModelInfo: BizRouterModelInfo | undefined
+	planModeCaretModelId: string | undefined
+	planModeCaretModelInfo: ModelInfo | undefined
 	planModeRequestyModelId: string | undefined
 	planModeRequestyModelInfo: ModelInfo | undefined
 	planModeTogetherModelId: string | undefined
@@ -166,6 +173,8 @@ export interface Settings {
 	planModeHuggingFaceModelInfo: ModelInfo | undefined
 	planModeHuaweiCloudMaasModelId: string | undefined
 	planModeHuaweiCloudMaasModelInfo: ModelInfo | undefined
+	planModeVercelAiGatewayModelId: string | undefined
+	planModeVercelAiGatewayModelInfo: ModelInfo | undefined
 	planModeOcaModelId: string | undefined
 	planModeOcaModelInfo: OcaModelInfo | undefined
 	planModeHicapModelId: string | undefined
@@ -189,6 +198,10 @@ export interface Settings {
 	actModeLmStudioModelId: string | undefined
 	actModeLiteLlmModelId: string | undefined
 	actModeLiteLlmModelInfo: ModelInfo | undefined
+	actModeBizRouterModelId: string | undefined
+	actModeBizRouterModelInfo: BizRouterModelInfo | undefined
+	actModeCaretModelId: string | undefined
+	actModeCaretModelInfo: ModelInfo | undefined
 	actModeRequestyModelId: string | undefined
 	actModeRequestyModelInfo: ModelInfo | undefined
 	actModeTogetherModelId: string | undefined
@@ -203,6 +216,8 @@ export interface Settings {
 	actModeHuggingFaceModelInfo: ModelInfo | undefined
 	actModeHuaweiCloudMaasModelId: string | undefined
 	actModeHuaweiCloudMaasModelInfo: ModelInfo | undefined
+	actModeVercelAiGatewayModelId: string | undefined
+	actModeVercelAiGatewayModelInfo: ModelInfo | undefined
 	actModeOcaModelId: string | undefined
 	actModeOcaModelInfo: OcaModelInfo | undefined
 	actModeHicapModelId: string | undefined
@@ -272,6 +287,9 @@ export interface Secrets {
 	aihubmixApiKey: string | undefined
 	mcpOAuthSecrets: string | undefined
 	nousResearchApiKey: string | undefined
+	caretAuthToken: string | undefined
+	caretApiKey: string | undefined
+	bizRouterApiKey: string | undefined
 }
 
 export interface LocalState {
@@ -280,4 +298,5 @@ export interface LocalState {
 	localWindsurfRulesToggles: ClineRulesToggles
 	localAgentsRulesToggles: ClineRulesToggles
 	workflowToggles: ClineRulesToggles
+	localCaretRulesToggles: ClineRulesToggles
 }

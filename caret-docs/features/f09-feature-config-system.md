@@ -1,6 +1,46 @@
-# 기능 선택 빌드 옵션 시스템 (Feature Config System)
+# F09 - Feature Config System (기능 선택 빌드 옵션)
 
-Caret의 **기능 선택 빌드 옵션 시스템**은 다양한 배포 환경(일반 사용자용, 엔터프라이즈용)에 맞춰 기능을 동적으로 켜고 끌 수 있는 설정 시스템입니다.
+**상태**: ✅ Phase 2 완료  
+**영향 범위**: Backend (Controller, Storage), Webview (Settings, UI)  
+**우선순위**: 🔴 High
+
+---
+
+## 📋 개요
+
+Caret의 **Feature Config System**은 다양한 배포 환경(일반 사용자용, 엔터프라이즈용 CodeCenter 등)에 맞춰 기능을 동적으로 켜고 끌 수 있는 설정 시스템입니다.  
+컴파일 타임 상수와 런타임 설정을 조합하여 유연한 화이트라벨링을 지원합니다.
+
+---
+
+## 🆚 Cline 대비 개선점 (Improvements)
+
+| 기능 | Cline (Original) | Caret (Enhanced) |
+| --- | --- | --- |
+| **기능 제어** | 하드코딩된 기능 세트 | **Dynamic Feature Flags**. JSON 설정을 통해 계정, 페르소나, 프로바이더 등의 활성화 여부 제어. |
+| **배포 환경** | 단일 배포 (Cline) | **Multi-Environment Support**. Caret(B2C)과 CodeCenter(B2B) 등 다양한 환경에 맞는 빌드 구성 지원. |
+| **설정 전달** | 없음 | **Runtime Config Injection**. 백엔드에서 로드한 설정을 웹뷰 초기화 시 주입하여 UI를 동적으로 제어. |
+
+---
+
+## 🏗 코드 범위 (Code Scope)
+
+### 1. Configuration (Definition & Data)
+- **`caret-src/shared/FeatureConfig.ts`**: 기능 설정 인터페이스 정의.
+- **`caret-src/shared/feature-config.json`**: 실제 설정 값 (빌드 시 교체 가능).
+
+### 2. Backend (Loader & Transmission)
+- **`src/core/controller/index.ts`**: 웹뷰 초기화 시 `featureConfig` 로드 및 전달 (`postStateToWebview`).
+- **`src/core/storage/StateManager.ts`**: 최초 실행 시 `defaultModeSystem`, `defaultProvider` 설정 적용.
+- **`src/shared/ExtensionMessage.ts`**: `ExtensionState`에 `featureConfig` 필드 추가.
+
+### 3. Webview (UI Control)
+- **`webview-ui/src/context/ExtensionStateContext.tsx`**: `featureConfig` 상태 관리.
+- **`webview-ui/src/components/settings/sections/CaretGeneralSettingsSection.tsx`**: `showPersonaSettings` 플래그에 따른 UI 제어.
+- **`webview-ui/src/components/account/AccountWelcomeView.tsx`**: `enableCaretAccountFeatures` 플래그에 따른 UI 제어.
+- **`webview-ui/src/components/settings/ApiOptions.tsx`**: `firstListingProvider`, `showOnlyDefaultProvider` 플래그 적용.
+
+---
 
 ## 📋 **기능 개요**
 

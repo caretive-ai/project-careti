@@ -75,6 +75,11 @@
 	"cliBanner": {
 		"title": "Install the CLI to delegate subagents",
 		"description": "Use the CLI to launch focused agents for large searches or research tasks. Commands differ by Caret/Cline mode.",
-		"button": "Install CLI"
+		"button": "Install CLI",
+		"copyCommand": "Copy command",
+		"copied": "Copied!",
+		"learnMore": "Learn more",
+		"installed": "Installed",
+		"dismissTitle": "Dismiss CLI banner"
 	}
 }

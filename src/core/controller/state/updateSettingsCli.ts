@@ -90,6 +90,8 @@ export async function updateSettingsCli(controller: Controller, request: UpdateS
 					...(autoApprovalSettings.enableNotifications !== undefined && {
 						enableNotifications: autoApprovalSettings.enableNotifications,
 					}),
+					// CARET MODIFICATION: Preserve max_requests from CLI settings payload
+					...(autoApprovalSettings.maxRequests !== undefined && { maxRequests: autoApprovalSettings.maxRequests }),
 					actions: {
 						...currentAutoApprovalSettings.actions,
 						...(autoApprovalSettings.actions

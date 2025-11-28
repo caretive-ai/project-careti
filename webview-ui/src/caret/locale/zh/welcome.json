@@ -75,6 +75,11 @@
 	"cliBanner": {
 		"title": "安装 CLI 并利用子代理",
 		"description": "大规模搜索与调研可交给 CLI 代理处理。Caret/Cline 模式下命令不同。",
-		"button": "安装 CLI"
+		"button": "安装 CLI",
+		"copyCommand": "复制命令",
+		"copied": "已复制！",
+		"learnMore": "了解更多",
+		"installed": "已安装",
+		"dismissTitle": "关闭 CLI 横幅"
 	}
 }

@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.0]
+
+> **Note**: Caret v0.4.0 is based on Cline v3.38.1
+
+### Added
+- **Cline v3.38.1 Complete Merge**: Fully integrated all features from Cline v3.38.1
+- **Dual Mode System**: Seamlessly switch between Caret Mode (Extended features) and Cline Mode (Stock experience).
+- **Caret CLI unified CLI tool `caret` that supports both modes and enhanced authentication.
+- **Enhanced Provider Setup**: Auto-fetching models for LiteLLM and BizRouter with health checks.
+- **JSON Prompt System**: Dynamic system prompt configuration via JSON files.
+- **JSON Prompt System**: Dynamic system prompt configuration via JSON files.
+
+### Fixed
+- **Terminal Hang**: Fixed issue where terminal commands would hang on Linux systems with shell integration.
+- **Branding**: Restored correct Caret branding across all UI components and CLI outputs.
+
 ## [3.38.1]
 
 ### Fixed
@@ -81,7 +97,7 @@
 - Fix: show reasoning budget slider to models with valid thinking config
 - Requesty base URL, and API key fixes
 - Delete all Auth Tokens when logging out
-- Support for <think> tags for models that prefer that over <thinking>
+- Support for <nk> t>for models that prefer that over <think<>
 
 ## [3.34.1]
 

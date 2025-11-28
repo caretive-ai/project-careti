@@ -1,30 +1,42 @@
-# F06 - Caret Prompt System
-## Chatbot/Agent 모드와 하이브리드 프롬프트 아키텍처
+# F07 - Caret Prompt System
 
-**상태**: ✅ Phase 4 완료 (Backend)
-**구현도**: 100% 완료
-**우선순위**: HIGH - 핵심 사용자 경험
+**상태**: ✅ Phase 4 완료 (Backend)  
+**영향 범위**: Core (Prompt), Webview (Settings)  
+**우선순위**: 🔴 High
 
 ---
 
 ## 📋 개요
 
-**F06 (기술 인프라)**: JSON + Cline 하이브리드 프롬프트 시스템
-**F07 (사용자 경험)**: Chatbot/Agent 모드, 직관적 용어, 도구 제한
-
-**통합 이유**: F06과 F07은 단일 시스템의 양면 - 기술적으로는 하이브리드(F06), 사용자에게는 Chatbot/Agent(F07)
+Caret의 프롬프트 시스템은 **JSON 기반의 동적 프롬프트**와 **Hybrid Architecture**를 결합하여, 유연한 시스템 프롬프트 제어와 **Chatbot/Agent 모드**를 제공합니다.  
+기존 Cline의 하드코딩된 프롬프트 방식에서 벗어나, 구조화된 JSON 설정을 통해 AI의 행동을 제어합니다.
 
 ---
 
-## 🤔 Cline vs Caret 차이
+## 🆚 Cline 대비 개선점 (Improvements)
 
-### Plan/Act (Cline) vs Chatbot/Agent (Caret)
+| 기능 | Cline (Original) | Caret (Enhanced) |
+| --- | --- | --- |
+| **프롬프트 관리** | `src/core/prompts/system.ts` 내 하드코딩 텍스트 | **JSON Configuration**. `caret-src/core/prompts/json/` 하위 JSON 파일로 관리되어 수정 및 확장이 용이함. |
+| **운영 모드** | Plan/Act 모드 (기술적 구분) | **Chatbot/Agent 모드** (사용자 경험 중심). Chatbot은 읽기 전용으로 안전한 탐색, Agent는 전체 권한으로 실행. |
+| **도구 제어** | 모드별 제한이 제한적 | **Granular Tool Control**. Chatbot 모드에서 `write_to_file`, `execute_command` 등을 원천 차단하여 안전성 확보. |
+| **용어 시스템** | Plan/Act 고정 | **Terminology Replacement**. `PLAN/ACT` 용어를 런타임에 `CHATBOT/AGENT`로 자동 치환하여 일관된 UX 제공. |
 
-| 구분 | Cline Plan/Act | Caret Chatbot/Agent |
-|------|---------------|---------------------|
-| **경험** | 분절된 (계획→승인→실행) | 단일 연속 (자연스러운 대화) |
-| **AI 역할** | 도구 사용 중심 | 대화와 협업 중심 |
-| **용어** | 기술적 (Plan/Act) | 직관적 (Chatbot/Agent) |
+---
+
+## 🏗 코드 범위 (Code Scope)
+
+### 1. Core (System Prompt)
+- **`src/core/prompts/system-prompt/index.ts`**: `modeSystem` 분기 로직 (Caret vs Cline).
+- **`caret-src/core/prompts/CaretPromptWrapper.ts`**: JSON 템플릿 로드 및 프롬프트 조립.
+- **`caret-src/core/prompts/CaretModeManager.ts`**: 모드별 도구 제한 및 권한 관리.
+- **`caret-src/core/prompts/CaretJsonAdapter.ts`**: JSON 설정 파싱 및 용어 치환 로직.
+
+### 2. Resources (JSON Prompts)
+- **`caret-src/core/prompts/json/`**:
+  - `AGENT_BEHAVIOR_DIRECTIVES.json`: Agent 모드 행동 지침.
+  - `CHATBOT_BEHAVIOR_DIRECTIVES.json`: Chatbot 모드 행동 지침.
+  - `CARET_SYSTEM_INFO.json`: 시스템 기본 정보.
 
 ---
 

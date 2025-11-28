@@ -23,11 +23,17 @@
 		"rootDir": "."
 	},
 	"include": [
-		"src/**/*.test.ts"
+		"src/**/*.test.ts",
+		"caret-src/**/*.test.ts"
 	],
 	"exclude": [
 		"src/test/**/*.js",
 		"src/**/__tests__/*",
-		"src/test/e2e/**/*.test.ts"
+		"src/test/e2e/**/*.test.ts",
+		"caret-src/**/__tests__/*",
+		"caret-src/test/e2e/**/*.test.ts",
+		"caret-src/**/*.integration.test.ts",
+		"caret-src/core/controller/fetchLiteLlmModels.test.ts",
+		"caret-src/shared/FeatureConfig.test.ts"
 	]
 }

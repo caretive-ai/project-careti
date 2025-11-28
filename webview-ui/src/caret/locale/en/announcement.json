@@ -3,24 +3,24 @@
 	"previousHeader": "Previous Updates:",
 	"bullets": {
 		"current": {
-			"1": "Caret Provider Added",
-			"1-desc": "Official Caret AI provider integration - $10 free credits during promotional period, paid credit purchase system coming soon",
-			"2": "Cline v3.32.7 Merge",
-			"2-desc": "Merged latest Cline upstream improvements",
-			"3": "Latest AI Model Support",
-			"3-desc": "Claude Sonnet 4.5 (200K/1M context), GPT-5 with extended thinking, enhanced model info and pricing display",
-			"4": "New Features",
-			"4-desc": ".clineignore file support, AWS Bedrock profiles, Requesty/Together/Alibaba Qwen providers, automatic retry on rate limits",
-			"5": "Focus Chain (Task Management)",
-			"5-desc": "Automatic to-do list generation and tracking for complex tasks",
-			"6": "AI Prompt Optimization",
-			"6-desc": "30-50% API request reduction for multi-edits, smart TODO auto-management, Claude Sonnet 4.5 optimized",
-			"7": "Architecture Improvements",
-			"7-desc": "Complete protobuf type system, enhanced MCP support, provider system refactoring"
+			"1": "Free Monthly Credits",
+			"1-desc": "New users get $0.1 (10 credits) monthly recurring! First month bonus: Start with up to $0.2. Available for Gemini 3, 2.5 Pro, Lite.",
+			"2": "Cline v3.38.1 Complete Merge",
+			"2-desc": "Fully integrated all features from Cline v3.38.1 including latest model support and core improvements",
+			"3": "Dual Account System",
+			"3-desc": "Use both Caret and Cline accounts simultaneously. Cline users can now access all features without restriction.",
+			"4": "New Shortcut System",
+			"4-desc": "Added Cancel (Esc) and Resume (Ctrl+Shift+R) shortcuts with a new management system.",
+			"5": "Caret CLI (Beta)",
+			"5-desc": "Unified CLI with LiteLLM and Caret account support coming to BYO (Separate release next week).",
+			"6": "Enhanced Provider Setup",
+			"6-desc": "Auto-fetching models for LiteLLM and BizRouter with real-time health checks",
+			"7": "AI Model Support",
+			"7-desc": "Supports 248 unique AI models across 20 providers"
 		},
 		"previous": {
-			"1": "Latest AI Model Support",
-			"1-desc": "Claude Sonnet 4.5 (200K/1M context), GPT-5 with extended thinking, enhanced model info and pricing display",
+			"1": "Caret Provider Added",
+			"1-desc": "Official Caret AI provider integration - $10 free credits during promotional period",
 			"2": "New Features",
 			"2-desc": ".clineignore file support, AWS Bedrock profiles, Requesty/Together/Alibaba Qwen providers, automatic retry on rate limits",
 			"3": "Focus Chain (Task Management)",
@@ -28,11 +28,7 @@
 			"4": "AI Prompt Optimization",
 			"4-desc": "30-50% API request reduction for multi-edits, smart TODO auto-management, Claude Sonnet 4.5 optimized",
 			"5": "Architecture Improvements",
-			"5-desc": "Complete protobuf type system, enhanced MCP support, provider system refactoring",
-			"6": "Message History Navigation",
-			"6-desc": "Implemented arrow key navigation for message history in chat input box",
-			"7": "LiteLLM Model Fetching",
-			"7-desc": "Automatic LiteLLM model fetching and FeatureConfig refactoring"
+			"5-desc": "Complete protobuf type system, enhanced MCP support, provider system refactoring"
 		}
 	},
 	"links": {

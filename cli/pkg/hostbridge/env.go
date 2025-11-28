@@ -4,6 +4,8 @@ import (
 	"context"
 	"log"
 	"os"
+	"sync/atomic"
+	"time"
 
 	"github.com/atotto/clipboard"
 	"github.com/cline/cli/pkg/cli/global"
@@ -14,9 +16,12 @@ import (
 
 // Global shutdown channel - simple approach
 var globalShutdownCh chan struct{}
+var shutdownRequestCount atomic.Int64
+var lastShutdownRequest atomic.Value
 
 func init() {
 	globalShutdownCh = make(chan struct{})
+	lastShutdownRequest.Store(time.Time{})
 }
 
 // EnvService implements the host.EnvServiceServer interface
@@ -83,11 +88,27 @@ func (s *EnvService) GetHostVersion(ctx context.Context, req *cline.EmptyRequest
 	}, nil
 }
 
+func recordShutdownRequest() (int64, time.Time) {
+	now := time.Now()
+	lastShutdownRequest.Store(now)
+	return shutdownRequestCount.Add(1), now
+}
+
+// GetShutdownDiagnostics returns the number of shutdown requests received and the last timestamp.
+// Intended for observability/diagnostics; not used in production control flow.
+func GetShutdownDiagnostics() (int64, time.Time) {
+	count := shutdownRequestCount.Load()
+	var last time.Time
+	if ts, ok := lastShutdownRequest.Load().(time.Time); ok {
+		last = ts
+	}
+	return count, last
+}
+
 // Shutdown initiates a graceful shutdown of the host bridge service
 func (s *EnvService) Shutdown(ctx context.Context, req *cline.EmptyRequest) (*cline.Empty, error) {
-	if s.verbose {
-		log.Printf("Shutdown requested via RPC")
-	}
+	count, ts := recordShutdownRequest()
+	log.Printf("Shutdown requested via RPC (count=%d, last=%s)", count, ts.Format(time.RFC3339Nano))
 
 	// Trigger global shutdown signal
 	select {

@@ -75,6 +75,11 @@
 	"cliBanner": {
 		"title": "CLI をインストールしてサブエージェントを活用",
 		"description": "大規模な検索やリサーチは CLI のエージェントに任せられます。Caret/Cline モードでコマンドが異なります。",
-		"button": "CLI をインストール"
+		"button": "CLI をインストール",
+		"copyCommand": "コマンドをコピー",
+		"copied": "コピーしました！",
+		"learnMore": "詳しく見る",
+		"installed": "インストール済み",
+		"dismissTitle": "CLIバナーを閉じる"
 	}
 }

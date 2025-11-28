@@ -1,6 +1,42 @@
-# 입력 히스토리 및 단축키 시스템 (Input History & Shortcuts)
+# F11 - Input History & Shortcuts (입력 히스토리 및 단축키)
 
-Caret의 **채팅 입력 히스토리 시스템**은 터미널과 일관된 사용자 경험을 제공하는 영구 저장 기반의 메시지 히스토리 관리 시스템입니다.
+**상태**: ✅ Phase 2 완료  
+**영향 범위**: Backend (Manager, gRPC), Webview (Hooks, UI)  
+**우선순위**: 🟡 Medium
+
+---
+
+## 📋 개요
+
+Caret의 **Input History & Shortcuts** 시스템은 터미널과 유사한 사용자 경험을 제공합니다.  
+입력했던 메시지를 `↑` / `↓` 키로 탐색할 수 있으며, 워크스페이스별로 영구 저장됩니다. 또한 자주 쓰는 동작에 대한 단축키를 제공합니다.
+
+---
+
+## 🆚 Cline 대비 개선점 (Improvements)
+
+| 기능 | Cline (Original) | Caret (Enhanced) |
+| --- | --- | --- |
+| **입력 히스토리** | 없음 (새로고침 시 사라짐) | **Persistent History**. 입력 내용은 백엔드에 즉시 저장되어 VS Code 재시작 후에도 유지됨. |
+| **탐색 UX** | 지원 안 함 | **Terminal-like UX**. `ArrowUp` / `ArrowDown` 키로 이전/다음 입력 내용을 빠르게 탐색. |
+| **단축키** | 제한적 | **Expanded Shortcuts**. `Esc`(취소), `Ctrl+Shift+R`(작업 재개) 등 생산성 단축키 지원. |
+| **데이터 관리** | 관리 안 됨 | **Clean Data**. AI 응답은 제외하고 순수 사용자 입력만 저장하여 탐색 효율성 극대화. |
+
+---
+
+## 🏗 코드 범위 (Code Scope)
+
+### 1. Backend (State Management)
+- **`caret-src/managers/CaretGlobalManager.ts`**: 입력 히스토리 캐싱 및 gRPC 저장 리졸버 연동.
+- **`src/core/controller/index.ts`**: 웹뷰 초기화 시 저장된 히스토리 로드 (`getStateToPostToWebview`).
+
+### 2. Webview (Hooks & Components)
+- **`webview-ui/src/caret/hooks/usePersistentInputHistory.ts`**: 백엔드 상태 구독 및 로컬 캐시 관리 훅.
+- **`webview-ui/src/caret/hooks/useInputHistory.ts`**: 키보드 이벤트(`ArrowUp/Down`) 처리 및 입력창 제어 로직.
+- **`webview-ui/src/components/chat/ChatTextArea.tsx`**: 키보드 이벤트 핸들러 통합.
+- **`webview-ui/src/caret/shortcuts/shortcuts.json`**: 단축키 정의 파일.
+
+---
 
 ## 📋 **기능 개요**
 
@@ -14,14 +50,6 @@ Caret의 **채팅 입력 히스토리 시스템**은 터미널과 일관된 사�
   - 스트리밍 취소: `Esc` (Cancel)
   - 작업 재개: `Ctrl+Shift+R` (Resume/Proceed)
   - 정의는 전역 JSON(`webview-ui/src/caret/shortcuts/shortcuts.json`)에 저장하고 매니저(`ShortcutManager`)를 통해 로드·표시한다.
-
-### **Cline 대비 개선사항**
-| 구분 | Cline | Caret |
-|---|---|---|
-| **히스토리 기능** | ❌ 없음 | ✅ 완전 구현 |
-| **저장 방식** | - | ✅ 영구 저장 |
-| **사용자 경험** | - | ✅ 터미널과 일관된 UX |
-| **데이터 정확성** | - | ✅ 사용자 입력만 저장 |
 
 ## 🏗️ **시스템 아키텍처**
 

@@ -1,26 +1,34 @@
-# Rule Priority System
+# F06 - Rule Priority System
 
-Caret의 **규칙 우선순위 시스템**은 토큰 낭비를 방지하고 설정 충돌을 해결하는 핵심 차별화 기능입니다.
+**상태**: ✅ Phase 2-2 완료  
+**영향 범위**: Backend (Instructions, Storage), Webview (Settings)  
+**우선순위**: 🟡 Medium
 
-## 📋 **기능 개요**
+---
 
-### **해결하는 문제**
+## 📋 개요
 
-기존 Cline에서는 `.clinerules`, `.cursorrules`, `.windsurfrules` 파일이 모두 존재할 때 중복으로 로딩되어 동일한 내용이 여러 번 프롬프트에 포함되는 문제가 있었습니다.
+Caret의 **규칙 우선순위 시스템**은 토큰 낭비를 방지하고 설정 충돌을 해결하는 핵심 차별화 기능입니다.  
+여러 규칙 파일(`.clinerules`, `.cursorrules` 등)이 혼재할 때, 단 하나만 선택하여 로딩합니다.
 
-### **Caret의 해결책**
-
-**우선순위 기반 단일 선택** 시스템:
-
+**우선순위 순서**:
 ```
 .caretrules > .clinerules > .cursorrules > .windsurfrules
 ```
 
-- **단일 선택**: 우선순위가 높은 규칙 파일이 존재하면 나머지는 무시
-- **중복 방지**: 동일한 규칙이 여러 번 로딩되는 것을 완전 차단
-- **토큰 절약**: 불필요한 중복 내용으로 인한 토큰 사용량 절약
+---
 
-## 🏗️ **구현 아키텍처**
+## 🆚 Cline 대비 개선점 (Improvements)
+
+| 기능 | Cline (Original) | Caret (Enhanced) |
+| --- | --- | --- |
+| **규칙 로딩** | 발견된 모든 규칙 파일을 전부 로딩하여 병합 (중복 발생) | **Priority Based Loading**. 우선순위가 높은 1개 파일만 로딩. |
+| **토큰 효율** | 중복 로딩으로 인한 토큰 낭비 발생 | **Token Saving**. 불필요한 규칙 제외로 컨텍스트 윈도우 절약. |
+| **지원 포맷** | `.clinerules` 위주 | **Extended Support**. `.caretrules` (전용) 및 타 도구 규칙 호환성 보장. |
+
+---
+
+## 🏗 코드 범위 (Code Scope)
 
 ### **수정된 핵심 파일 구조**
 

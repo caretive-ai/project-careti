@@ -50,6 +50,7 @@ message AutoApprovalSettings {
   int32 version = 1;
   AutoApprovalActions actions = 2;
   optional bool enable_notifications = 3;
+  optional int32 max_requests = 4;
 }
 
 message Secrets {
@@ -293,6 +294,7 @@ message AutoApprovalSettingsRequest {
   int32 version = 2;
   AutoApprovalActions actions = 3;
   bool enable_notifications = 4;
+  optional int32 max_requests = 5;
 }
 
 enum TelemetrySettingEnum {

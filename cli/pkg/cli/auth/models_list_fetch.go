@@ -13,6 +13,17 @@ import (
 	"golang.org/x/term"
 )
 
+type liteLlmClient interface {
+	FetchLiteLlmModels(ctx context.Context, in *caret.FetchLiteLlmModelsRequest) (*caret.FetchLiteLlmModelsResponse, error)
+}
+
+var liteLlmClientFactory = func(manager *task.Manager) liteLlmClient {
+	if manager == nil {
+		return nil
+	}
+	return manager.GetClient().Caretsystem
+}
+
 // FetchOpenRouterModels fetches available OpenRouter models from Cline Core
 func FetchOpenRouterModels(ctx context.Context, manager *task.Manager) (map[string]*cline.OpenRouterModelInfo, error) {
 	resp, err := manager.GetClient().Models.RefreshOpenRouterModelsRpc(ctx, &cline.EmptyRequest{})
@@ -77,7 +88,12 @@ func FetchLiteLlmModels(ctx context.Context, manager *task.Manager, baseURL, api
 		ApiKey:  apiKey,
 	}
 
-	resp, err := manager.GetClient().Caretsystem.FetchLiteLlmModels(ctx, req)
+	client := liteLlmClientFactory(manager)
+	if client == nil {
+		return nil, fmt.Errorf("failed to fetch LiteLLM models: client unavailable")
+	}
+
+	resp, err := client.FetchLiteLlmModels(ctx, req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch LiteLLM models: %w", err)
 	}

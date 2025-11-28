@@ -1,6 +1,43 @@
-# Persona System
+# F08 - Persona System
 
-Caret의 **페르소나 시스템**은 사전 정의된 AI 캐릭터 페르소나를 선택하여 AI와의 상호작용을 개인화하는 핵심 기능입니다. 사용자는 다양한 페르소나 중에서 선택하거나 커스텀 이미지를 업로드하여 개인화된 AI 경험을 만들 수 있습니다.
+**상태**: ✅ Phase 4 완료 (gRPC Based)  
+**영향 범위**: Backend (Service, gRPC), Webview (UI, Context)  
+**우선순위**: 🔴 High
+
+---
+
+## 📋 개요
+
+Caret의 **페르소나 시스템**은 AI와의 상호작용을 개인화하는 핵심 기능입니다.  
+사전 정의된 캐릭터(캐럿, 오사랑 등)를 선택하거나 커스텀 이미지를 업로드하여, 채팅 UI와 AI 응답에 캐릭터성을 부여합니다.
+
+---
+
+## 🆚 Cline 대비 개선점 (Improvements)
+
+| 기능 | Cline (Original) | Caret (Enhanced) |
+| --- | --- | --- |
+| **캐릭터성** | 없음 (기본 AI) | **Persona Identity**. 선택된 페르소나의 말투, 전문 분야, 이미지가 적용됨. |
+| **시각적 요소** | 텍스트 중심 | **Visual Avatar**. 채팅 내 AI 메시지에 아바타 표시, Thinking 상태 시 별도 이미지(움짤 등) 지원. |
+| **커스터마이징** | 불가 | **Custom Upload**. 사용자 지정 이미지(프로필/생각중) 업로드 및 즉시 반영 가능. |
+| **기술 스택** | 단방향 메시지 | **Real-time Sync**. gRPC 스트리밍을 통해 페르소나 변경 시 모든 윈도우에 즉시 반영. |
+
+---
+
+## 🏗 코드 범위 (Code Scope)
+
+### 1. Backend (Service & gRPC)
+- **`src/services/persona/persona-service.ts`**: 페르소나 상태 관리 및 변경 이벤트 발행.
+- **`src/services/persona/persona-storage.ts`**: `persona.md` 파일 입출력 및 이미지 자산 관리.
+- **`src/controllers/persona/`**: `UpdatePersona`, `GetPersonaProfile` 등 gRPC 핸들러.
+- **`proto/caret/persona.proto`**: 페르소나 데이터 구조 및 서비스 정의.
+
+### 2. Webview (UI)
+- **`webview-ui/src/caret/components/PersonaManagement.tsx`**: 페르소나 선택 및 관리 UI.
+- **`webview-ui/src/caret/components/PersonaAvatar.tsx`**: CSP 호환 이미지 렌더링 및 상태(Thinking) 반영.
+- **`webview-ui/src/components/chat/ChatRow.tsx`**: AI 메시지에 아바타 렌더링 통합 (Hybrid Pattern).
+
+---
 
 ## 📋 **기능 개요**
 
@@ -23,50 +60,6 @@ Caret의 **페르소나 시스템**은 사전 정의된 AI 캐릭터 페르소�
 - **다국어 지원**: 한국어/영어 페르소나 설명 및 UI
 - **채팅 통합**: AI 텍스트 및 추론 응답에 페르소나 아바타 표시
 
-## 🏗️ **구현 아키텍처 (gRPC 기반)**
-
-### **파일 구조**
-
-```
-assets/
-└── template_characters/
-    ├── template_characters.json      # 🎯 페르소나 정의 데이터
-    └── ... (페르소나 이미지)
-
-proto/
-└── caret/
-    └── persona.proto               # 📦 페르소나 gRPC 서비스 및 메시지 정의
-
-caret-src/
-├── core/
-│   └── webview/
-│       ├── CaretProvider.ts.legacy   # 🗂️ 레거시 (v2.x, 더 이상 사용 안함)
-│       └── CaretProviderWrapper.ts   # ✨ 하이브리드 패턴 (v3.1) - Cline 래핑 + 페르소나 이미지 주입 완료
-├── controllers/
-│   └── persona/                    # 📡 gRPC 서비스 핸들러
-└── services/
-    └── persona/
-        ├── persona-initializer.ts    # 🔧 백엔드 페르소나 초기화 로직
-        ├── persona-storage.ts        # 💾 페르소나 데이터 저장/로드 (파일 I/O 전용)
-        └── __tests__/
-            └── ... (테스트 파일)
-
-webview-ui/
-└── src/
-    ├── caret/
-    │   ├── components/
-    │   │   ├── PersonaManagement.tsx     # 🎭 페르소나 관리 메인 UI
-    │   │   └── ... (관련 UI 컴포넌트)
-    │   ├── context/
-    ├── components/
-    │   └── cline-rules/
-    │       └── ClineRulesToggleModal.tsx # 👈 **UI 통합 지점**
-    │   │   └── CaretStateContext.tsx     # ✨ Caret 전용 상태 및 gRPC 통신 관리
-    │   └── services/
-    │       └── CaretGrpcClient.ts      # 📡 Caret 전용 gRPC 클라이언트 (수동 구현)
-    └── context/
-        └── ExtensionStateContext.tsx # 🔧 Cline 핵심 상태 관리 (수정 최소화)
-```
 
 ### **데이터 및 로직 흐름 (gRPC)**
 

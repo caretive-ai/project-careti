@@ -1,6 +1,45 @@
-# 개선된 프로바이더 설정 시스템 (Enhanced Provider Setup)
+# F10 - Enhanced Provider Setup (개선된 프로바이더 설정)
 
-Caret의 **개선된 프로바이더 설정 시스템**은 AI 프로바이더 설정 과정을 단순화하고 사용자 경험을 향상시키는 통합 시스템입니다. 수동 설정 입력을 최소화하고 자동화된 모델 검색 및 설정 기능을 제공합니다.
+**상태**: ✅ Phase 2 완료  
+**영향 범위**: Backend (Controller, gRPC), Webview (Settings, UI)  
+**우선순위**: 🔴 High
+
+---
+
+## 📋 개요
+
+Caret의 **Enhanced Provider Setup**은 AI 프로바이더 설정 과정을 자동화하여 사용자 경험을 획기적으로 개선합니다.  
+LiteLLM, BizRouter 등의 모델 목록을 자동으로 페칭하고, 연결 상태를 즉시 검증합니다.
+
+---
+
+## 🆚 Cline 대비 개선점 (Improvements)
+
+| 기능 | Cline (Original) | Caret (Enhanced) |
+| --- | --- | --- |
+| **모델 설정** | 수동 입력 (모델 ID 타이핑) | **Auto Fetching**. 버튼 클릭 한 번으로 사용 가능한 모델 목록을 자동 검색하여 드롭다운 제공. |
+| **연결 검증** | 사용 시점에 실패 확인 | **Real-time Validation**. 설정 단계에서 API 연결 및 키 유효성을 즉시 확인하고 피드백 제공. |
+| **필터링** | 없음 | **Smart Filtering**. LiteLLM의 `/health` 엔드포인트와 연동하여 실제 작동 가능한 모델만 표시. |
+| **프로바이더** | 기본 제공 목록 한정 | **Extensible Architecture**. gRPC 기반 플러그인 구조로 BizRouter 등 커스텀 프로바이더 쉽게 추가 가능. |
+
+---
+
+## 🏗 코드 범위 (Code Scope)
+
+### 1. Backend (Controller & gRPC)
+- **`caret-src/core/controller/fetchLiteLlmModels.ts`**: LiteLLM 모델 페칭 로직 (Health check + Available intersection).
+- **`caret-src/core/controller/caretSystem/FetchBizRouterModels.ts`**: BizRouter 모델 페칭 로직.
+- **`proto/caret/system.proto`**: `FetchLiteLlmModels`, `FetchBizRouterModels` RPC 정의.
+
+### 2. Webview (UI Component)
+- **`webview-ui/src/components/settings/providers/LiteLlmProvider.tsx`**: LiteLLM 설정 UI (모델 페칭 버튼, 드롭다운).
+- **`webview-ui/src/components/settings/providers/BizRouterProvider.tsx`**: BizRouter 설정 UI.
+
+### 3. Tests
+- **`caret-src/core/controller/fetchLiteLlmModels.test.ts`**: 모델 정규화 및 필터링 로직 단위 테스트.
+- **`caret-src/core/controller/fetchLiteLlmModels.integration.test.ts`**: 실제 서버 연동 통합 테스트.
+
+---
 
 ## 📋 **기능 개요**
 

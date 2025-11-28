@@ -154,7 +154,7 @@ Caretは単なるAIコーディングツールではなく、**開発者と共�
 - 🌍 **4言語サポート** - 完璧な多言語環境
 - 🎯 **Chatbot/Agent** - より直感的な対話方式
 
-## 🚀 Caretの11の主要機能
+## 🚀 Caretの12の主要機能
 
 CaretはClineとの100%互換性を維持しながら、強力な新機能を拡張します：
 
@@ -162,17 +162,19 @@ CaretはClineとの100%互換性を維持しながら、強力な新機能を拡
 
 | 機能 | 説明 | ドキュメント |
 |------|------|-------------|
+| **F00** | **Cline Bugfix & Patch** | Clineオリジナルバグ修正および安定化パッチ | [📖 詳細](../features/f00-cline-bugfix-patch.md) |
 | **F01** | **共通ユーティリティ** | 共有ユーティリティ関数とヘルパー | [📖 詳細](../features/f01-common-util.md) |
 | **F02** | **多言語i18n** | 4言語サポート（日/韓/英/中） | [📖 詳細](../features/f02-multilingual-i18n.md) |
 | **F03** | **ブランディング & UIシステム** | 動的ブランド切り替え（Caret/CodeCenter） | [📖 詳細](../features/f03-branding-ui.md) |
-| **F04** | **Caretアカウントシステム** | ユーザー認証と管理 | [📖 詳細](../features/f04-caret-account.md) |
-| **F05** | **ルール優先順位システム** | 多層ルール構成システム | [📖 詳細](../features/f05-rule-priority-system.md) |
-| **F06** | **Caretプロンプトシステム** | JSON動的プロンプト & モード切り替え | [📖 詳細](../features/f06-caret-prompt-system.md) |
-| **F07** | **ペルソナシステム** | カスタマイズ可能なAIコンパニオン | [📖 詳細](../features/f07-persona-system.md) |
-| **F08** | **機能設定システム** | モジュラー機能管理 | [📖 詳細](../features/f08-feature-config-system.md) |
-| **F09** | **拡張プロバイダー設定** | 高度なAIプロバイダー構成 | [📖 詳細](../features/f09-enhanced-provider-setup.md) |
-| **F10** | **入力履歴・ショートカット** | ターミナル風履歴と共通ショートカット | [📖 詳細](../features/f10-input-history-and-shortcuts.md) |
-| **F11** | **知識同期システム** | AIと開発者が同じ知識を共有し、円滑な協業を保証します | [📖 詳細](../features/f11-ai-developer-knowledge-parity.md) |
+| **F04** | **Cline互換性 & CLI** | Clineモード100%互換およびCaret CLI拡張 | [📖 詳細](../features/f04-cline-compatibility-and-cli.md) |
+| **F05** | **Caretアカウントシステム** | ユーザー認証と管理 | [📖 詳細](../features/f05-caret-account.md) |
+| **F06** | **ルール優先順位システム** | 多層ルール構成システム (.caretrules) | [📖 詳細](../features/f06-rule-priority-system.md) |
+| **F07** | **Caretプロンプトシステム** | JSON動的プロンプト & モード切り替え | [📖 詳細](../features/f07-caret-prompt-system.md) |
+| **F08** | **ペルソナシステム** | カスタマイズ可能なAIコンパニオン | [📖 詳細](../features/f08-persona-system.md) |
+| **F09** | **機能設定システム** | モジュラー機能管理 (ホワイトラベリング) | [📖 詳細](../features/f09-feature-config-system.md) |
+| **F10** | **拡張プロバイダー設定** | 高度なAIプロバイダー構成 (自動化) | [📖 詳細](../features/f10-enhanced-provider-setup.md) |
+| **F11** | **入力履歴・ショートカット** | ターミナル風履歴と共通ショートカット | [📖 詳細](../features/f11-input-history-and-shortcuts.md) |
+| **F12** | **知識同期システム** | AI-開発者間の知識同期 (On-Demand) | [📖 詳細](../features/f12-ai-developer-knowledge-parity.md) |
 
 </div>
 

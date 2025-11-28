@@ -20,6 +20,8 @@ export async function updateAutoApprovalSettings(controller: Controller, request
 			...currentSettings,
 			...(request.version !== undefined && { version: request.version }),
 			...(request.enableNotifications !== undefined && { enableNotifications: request.enableNotifications }),
+			// CARET MODIFICATION: Preserve max_requests from webview updates
+			...(request.maxRequests !== undefined && { maxRequests: request.maxRequests }),
 			actions: {
 				...currentSettings.actions,
 				...(request.actions

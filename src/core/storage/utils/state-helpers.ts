@@ -32,6 +32,9 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		mistralApiKey,
 		fireworksApiKey,
 		liteLlmApiKey,
+		bizRouterApiKey,
+		caretApiKey,
+		caretAuthToken,
 		asksageApiKey,
 		xaiApiKey,
 		sambanovaApiKey,
@@ -76,6 +79,9 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		context.secrets.get("mistralApiKey") as Promise<Secrets["mistralApiKey"]>,
 		context.secrets.get("fireworksApiKey") as Promise<Secrets["fireworksApiKey"]>,
 		context.secrets.get("liteLlmApiKey") as Promise<Secrets["liteLlmApiKey"]>,
+		context.secrets.get("bizRouterApiKey") as Promise<Secrets["bizRouterApiKey"]>,
+		context.secrets.get("caretApiKey") as Promise<Secrets["caretApiKey"]>,
+		context.secrets.get("caretAuthToken") as Promise<Secrets["caretAuthToken"]>,
 		context.secrets.get("asksageApiKey") as Promise<Secrets["asksageApiKey"]>,
 		context.secrets.get("xaiApiKey") as Promise<Secrets["xaiApiKey"]>,
 		context.secrets.get("sambanovaApiKey") as Promise<Secrets["sambanovaApiKey"]>,
@@ -126,6 +132,9 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		asksageApiKey,
 		fireworksApiKey,
 		liteLlmApiKey,
+		bizRouterApiKey,
+		caretApiKey,
+		caretAuthToken,
 		doubaoApiKey,
 		mistralApiKey,
 		openAiNativeApiKey,
@@ -154,6 +163,7 @@ export async function readWorkspaceStateFromDisk(context: ExtensionContext): Pro
 	const localWindsurfRulesToggles = context.workspaceState.get("localWindsurfRulesToggles") as ClineRulesToggles | undefined
 	const localCursorRulesToggles = context.workspaceState.get("localCursorRulesToggles") as ClineRulesToggles | undefined
 	const localAgentsRulesToggles = context.workspaceState.get("localAgentsRulesToggles") as ClineRulesToggles | undefined
+	const localCaretRulesToggles = context.workspaceState.get("localCaretRulesToggles") as ClineRulesToggles | undefined
 	const localWorkflowToggles = context.workspaceState.get("workflowToggles") as ClineRulesToggles | undefined
 
 	return {
@@ -161,6 +171,7 @@ export async function readWorkspaceStateFromDisk(context: ExtensionContext): Pro
 		localWindsurfRulesToggles: localWindsurfRulesToggles || {},
 		localCursorRulesToggles: localCursorRulesToggles || {},
 		localAgentsRulesToggles: localAgentsRulesToggles || {},
+		localCaretRulesToggles: localCaretRulesToggles || {},
 		workflowToggles: localWorkflowToggles || {},
 	}
 }
@@ -211,6 +222,12 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const liteLlmBaseUrl = context.globalState.get<GlobalStateAndSettings["liteLlmBaseUrl"]>("liteLlmBaseUrl")
 		const liteLlmUsePromptCache =
 			context.globalState.get<GlobalStateAndSettings["liteLlmUsePromptCache"]>("liteLlmUsePromptCache")
+		const bizRouterUsePromptCache =
+			context.globalState.get<GlobalStateAndSettings["bizRouterUsePromptCache"]>("bizRouterUsePromptCache")
+		const caretBaseUrl = context.globalState.get<GlobalStateAndSettings["caretBaseUrl"]>("caretBaseUrl")
+		const caretUsePromptCache = context.globalState.get<GlobalStateAndSettings["caretUsePromptCache"]>("caretUsePromptCache")
+		const caretUserProfile = context.globalState.get<GlobalStateAndSettings["caretUserProfile"]>("caretUserProfile")
+		const inputHistory = context.globalState.get<GlobalStateAndSettings["inputHistory"]>("inputHistory")
 		const fireworksModelMaxCompletionTokens = context.globalState.get<
 			GlobalStateAndSettings["fireworksModelMaxCompletionTokens"]
 		>("fireworksModelMaxCompletionTokens")
@@ -351,6 +368,14 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			context.globalState.get<GlobalStateAndSettings["planModeLiteLlmModelId"]>("planModeLiteLlmModelId")
 		const planModeLiteLlmModelInfo =
 			context.globalState.get<GlobalStateAndSettings["planModeLiteLlmModelInfo"]>("planModeLiteLlmModelInfo")
+		const planModeBizRouterModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeBizRouterModelId"]>("planModeBizRouterModelId")
+		const planModeBizRouterModelInfo =
+			context.globalState.get<GlobalStateAndSettings["planModeBizRouterModelInfo"]>("planModeBizRouterModelInfo")
+		const planModeCaretModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeCaretModelId"]>("planModeCaretModelId")
+		const planModeCaretModelInfo =
+			context.globalState.get<GlobalStateAndSettings["planModeCaretModelInfo"]>("planModeCaretModelInfo")
 		const planModeRequestyModelId =
 			context.globalState.get<GlobalStateAndSettings["planModeRequestyModelId"]>("planModeRequestyModelId")
 		const planModeRequestyModelInfo =
@@ -375,6 +400,11 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const planModeHuaweiCloudMaasModelInfo = context.globalState.get<
 			GlobalStateAndSettings["planModeHuaweiCloudMaasModelInfo"]
 		>("planModeHuaweiCloudMaasModelInfo")
+		const planModeVercelAiGatewayModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeVercelAiGatewayModelId"]>("planModeVercelAiGatewayModelId")
+		const planModeVercelAiGatewayModelInfo = context.globalState.get<
+			GlobalStateAndSettings["planModeVercelAiGatewayModelInfo"]
+		>("planModeVercelAiGatewayModelInfo")
 		const planModeBasetenModelId =
 			context.globalState.get<GlobalStateAndSettings["planModeBasetenModelId"]>("planModeBasetenModelId")
 		const planModeBasetenModelInfo =
@@ -422,6 +452,13 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			context.globalState.get<GlobalStateAndSettings["actModeLiteLlmModelId"]>("actModeLiteLlmModelId")
 		const actModeLiteLlmModelInfo =
 			context.globalState.get<GlobalStateAndSettings["actModeLiteLlmModelInfo"]>("actModeLiteLlmModelInfo")
+		const actModeBizRouterModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeBizRouterModelId"]>("actModeBizRouterModelId")
+		const actModeBizRouterModelInfo =
+			context.globalState.get<GlobalStateAndSettings["actModeBizRouterModelInfo"]>("actModeBizRouterModelInfo")
+		const actModeCaretModelId = context.globalState.get<GlobalStateAndSettings["actModeCaretModelId"]>("actModeCaretModelId")
+		const actModeCaretModelInfo =
+			context.globalState.get<GlobalStateAndSettings["actModeCaretModelInfo"]>("actModeCaretModelInfo")
 		const actModeRequestyModelId =
 			context.globalState.get<GlobalStateAndSettings["actModeRequestyModelId"]>("actModeRequestyModelId")
 		const actModeRequestyModelInfo =
@@ -446,6 +483,11 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const actModeHuaweiCloudMaasModelInfo = context.globalState.get<
 			GlobalStateAndSettings["actModeHuaweiCloudMaasModelInfo"]
 		>("actModeHuaweiCloudMaasModelInfo")
+		const actModeVercelAiGatewayModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeVercelAiGatewayModelId"]>("actModeVercelAiGatewayModelId")
+		const actModeVercelAiGatewayModelInfo = context.globalState.get<
+			GlobalStateAndSettings["actModeVercelAiGatewayModelInfo"]
+		>("actModeVercelAiGatewayModelInfo")
 		const actModeBasetenModelId =
 			context.globalState.get<GlobalStateAndSettings["actModeBasetenModelId"]>("actModeBasetenModelId")
 		const actModeBasetenModelInfo =
@@ -506,8 +548,6 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const caretModeSystem = context.globalState.get<GlobalStateAndSettings["caretModeSystem"]>("caretModeSystem")
 		const enablePersonaSystem = context.globalState.get<GlobalStateAndSettings["enablePersonaSystem"]>("enablePersonaSystem")
 		const currentPersona = context.globalState.get<GlobalStateAndSettings["currentPersona"]>("currentPersona")
-		const inputHistory = context.globalState.get<GlobalStateAndSettings["inputHistory"]>("inputHistory")
-		const caretUserProfile = context.globalState.get<GlobalStateAndSettings["caretUserProfile"]>("caretUserProfile")
 
 		return {
 			// api configuration fields
@@ -538,6 +578,11 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			openRouterProviderSorting,
 			liteLlmBaseUrl,
 			liteLlmUsePromptCache,
+			bizRouterUsePromptCache,
+			caretBaseUrl,
+			caretUsePromptCache,
+			caretUserProfile,
+			inputHistory: inputHistory || [],
 			fireworksModelMaxCompletionTokens,
 			fireworksModelMaxTokens,
 			asksageApiUrl,
@@ -572,6 +617,10 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			planModeLmStudioModelId,
 			planModeLiteLlmModelId,
 			planModeLiteLlmModelInfo,
+			planModeBizRouterModelId,
+			planModeBizRouterModelInfo,
+			planModeCaretModelId,
+			planModeCaretModelInfo,
 			planModeRequestyModelId,
 			planModeRequestyModelInfo,
 			planModeTogetherModelId,
@@ -584,6 +633,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			planModeHuggingFaceModelInfo,
 			planModeHuaweiCloudMaasModelId,
 			planModeHuaweiCloudMaasModelInfo,
+			planModeVercelAiGatewayModelId,
+			planModeVercelAiGatewayModelInfo,
 			planModeBasetenModelId,
 			planModeBasetenModelInfo,
 			planModeOcaModelId,
@@ -609,6 +660,10 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			actModeLmStudioModelId,
 			actModeLiteLlmModelId,
 			actModeLiteLlmModelInfo,
+			actModeBizRouterModelId,
+			actModeBizRouterModelInfo,
+			actModeCaretModelId,
+			actModeCaretModelInfo,
 			actModeRequestyModelId,
 			actModeRequestyModelInfo,
 			actModeTogetherModelId,
@@ -621,6 +676,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			actModeHuggingFaceModelInfo,
 			actModeHuaweiCloudMaasModelId,
 			actModeHuaweiCloudMaasModelInfo,
+			actModeVercelAiGatewayModelId,
+			actModeVercelAiGatewayModelInfo,
 			actModeBasetenModelId,
 			actModeBasetenModelInfo,
 			actModeOcaModelId,
@@ -677,8 +734,6 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			caretModeSystem: caretModeSystem ?? "caret",
 			enablePersonaSystem: enablePersonaSystem ?? true,
 			currentPersona: currentPersona ?? undefined,
-			inputHistory: inputHistory ?? [],
-			caretUserProfile: caretUserProfile ?? undefined,
 			// Multi-root workspace support
 			workspaceRoots,
 			primaryRootIndex: primaryRootIndex ?? 0,

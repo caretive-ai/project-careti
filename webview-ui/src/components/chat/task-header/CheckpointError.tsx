@@ -2,6 +2,7 @@ import { Alert } from "@heroui/react"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { XIcon } from "lucide-react"
 import { useMemo, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 
 interface CheckpointErrorProps {
 	checkpointManagerErrorMessage?: string
@@ -36,14 +37,14 @@ export const CheckpointError: React.FC<CheckpointErrorProps> = ({
 							<button
 								className="underline cursor-pointer bg-transparent border-0 p-0 text-inherit"
 								onClick={handleCheckpointSettingsClick}>
-								Disable Checkpoints
+								{t("checkpointError.disable", "chat")}
 							</button>
 						)}
 						{messages.showGitInstructions && (
 							<a
 								className="text-link underline"
 								href="https://github.com/cline/cline/wiki/Installing-Git-for-Checkpoints">
-								See instructions
+								{t("checkpointError.seeInstructions", "chat")}
 							</a>
 						)}
 					</div>
@@ -51,10 +52,10 @@ export const CheckpointError: React.FC<CheckpointErrorProps> = ({
 				endContent={
 					<VSCodeButton
 						appearance="icon"
-						aria-label="Dismiss"
+						aria-label={t("checkpointError.dismiss", "chat")}
 						className="inline-flex opacity-100 hover:bg-transparent hover:opacity-60 p-0"
 						onClick={() => setDismissed(true)}
-						title="Dismiss Checkpoint Error">
+						title={t("checkpointError.dismissTitle", "chat")}>
 						<XIcon size={12} />
 					</VSCodeButton>
 				}

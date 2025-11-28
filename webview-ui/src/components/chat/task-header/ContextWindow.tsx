@@ -2,6 +2,7 @@ import { cn, Progress, Tooltip } from "@heroui/react"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import debounce from "debounce"
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { updateSetting } from "@/components/settings/utils/settingsHandlers"
 import { formatLargeNumber as formatTokenNumber } from "@/utils/format"
 import { AutoCondenseMarker } from "./AutoCondenseMarker"
@@ -30,24 +31,24 @@ const ConfirmationDialog = memo<{
 	onCancel: (e: React.MouseEvent) => void
 }>(({ onConfirm, onCancel }) => (
 	<div className="text-xs my-2 flex items-center gap-0 justify-between">
-		<span className="font-semibold text-sm">Compact the current task?</span>
+		<span className="font-semibold text-sm">{t("contextWindow.confirmTitle", "chat")}</span>
 		<span className="flex gap-1">
 			<VSCodeButton
 				appearance="secondary"
 				className="text-xs"
 				onClick={onCancel}
-				title="No, keep the task as is"
+				title={t("contextWindow.confirmNo", "chat")}
 				type="button">
-				Cancel
+				{t("contextWindow.confirmNo", "chat")}
 			</VSCodeButton>
 			<VSCodeButton
 				appearance="primary"
 				autoFocus={true}
 				className="text-xs"
 				onClick={onConfirm}
-				title="Yes, compact the task"
+				title={t("contextWindow.confirmYes", "chat")}
 				type="button">
-				Yes
+				{t("contextWindow.confirmYes", "chat")}
 			</VSCodeButton>
 		</span>
 	</div>
@@ -206,7 +207,7 @@ const ContextWindow: React.FC<ContextWindowProgressProps> = ({
 		<div className="flex flex-col my-1.5" onMouseLeave={debounceCloseHover}>
 			<div className="flex gap-1 flex-row @max-xs:flex-col @max-xs:items-start items-center text-sm">
 				<div className="flex items-center gap-1.5 flex-1 whitespace-nowrap text-xs">
-					<span className="cursor-pointer" title="Current tokens used in this request">
+					<span className="cursor-pointer" title={t("contextWindow.currentTokensTooltip", "chat")}>
 						{formatTokenNumber(tokenData.used)}
 					</span>
 					<div className="flex relative items-center gap-1 flex-1 w-full h-full" onMouseEnter={() => setIsOpened(true)}>
@@ -270,7 +271,7 @@ const ContextWindow: React.FC<ContextWindowProgressProps> = ({
 							</div>
 						</Tooltip>
 					</div>
-					<span className="cursor-pointer" title="Maximum context window size for this model">
+					<span className="cursor-pointer" title={t("contextWindow.maxContextWindowTooltip", "chat")}>
 						{formatTokenNumber(tokenData.max)}
 					</span>
 				</div>

@@ -75,6 +75,11 @@
 	"cliBanner": {
 		"title": "CLI를 설치해 서브에이전트를 활용하세요",
 		"description": "대규모 검색·리서치 작업은 CLI로 분리된 에이전트에 맡길 수 있습니다. Caret/Cline 모드에 따라 명령이 달라집니다.",
-		"button": "CLI 설치"
+		"button": "CLI 설치",
+		"copyCommand": "명령어 복사",
+		"copied": "복사됨!",
+		"learnMore": "자세히 보기",
+		"installed": "설치됨",
+		"dismissTitle": "CLI 배너 닫기"
 	}
 }

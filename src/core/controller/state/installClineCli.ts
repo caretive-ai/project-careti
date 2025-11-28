@@ -10,8 +10,12 @@ import { Controller } from ".."
  * @param _request The empty request
  * @returns Empty response
  */
-export async function installClineCli(_controller: Controller, _request: EmptyRequest): Promise<Empty> {
-	const installCommand = "npm install -g cline"
+export async function installClineCli(controller: Controller, _request: EmptyRequest): Promise<Empty> {
+	const modeSystem = controller.stateManager.getGlobalStateKey("caretModeSystem") || "cline"
+	// CARET MODIFICATION: install Caret CLI when caret mode is active
+	const isCaretMode = modeSystem === "caret"
+	const installCommand = isCaretMode ? "npm install -g @caretive/caret-cli" : "npm install -g cline"
+	const cliLabel = isCaretMode ? "Caret CLI" : "Cline CLI"
 
 	try {
 		// Use the HostProvider to execute the command in a terminal
@@ -29,7 +33,7 @@ export async function installClineCli(_controller: Controller, _request: EmptyRe
 		console.error("Error executing CLI installation:", error)
 		await HostProvider.window.showMessage({
 			type: ShowMessageType.ERROR,
-			message: `Failed to start CLI installation: ${error instanceof Error ? error.message : "Unknown error"}`,
+			message: `Failed to start ${cliLabel} installation: ${error instanceof Error ? error.message : "Unknown error"}`,
 			options: { items: [] },
 		})
 	}

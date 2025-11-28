@@ -1552,12 +1552,12 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 					{showDimensionError && (
 						<div className="absolute inset-2.5 bg-[rgba(var(--vscode-errorForeground-rgb),0.1)] border-2 border-error rounded-xs flex items-center justify-center z-10 pointer-events-none">
-							<span className="text-error font-bold text-xs text-center">Image dimensions exceed 7500px</span>
+							<span className="text-error font-bold text-xs text-center">{t("image.dimensionError", "chat")}</span>
 						</div>
 					)}
 					{showUnsupportedFileError && (
 						<div className="absolute inset-2.5 bg-[rgba(var(--vscode-errorForeground-rgb),0.1)] border-2 border-error rounded-xs flex items-center justify-center z-10 pointer-events-none">
-							<span className="text-error font-bold text-xs">Files other than images are currently disabled</span>
+							<span className="text-error font-bold text-xs">{t("image.unsupportedFileError", "chat")}</span>
 						</div>
 					)}
 					{showSlashCommandsMenu && (
@@ -1767,10 +1767,10 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					<div className="relative flex-1 min-w-0 h-5">
 						{/* ButtonGroup - always in DOM but visibility controlled */}
 						<ButtonGroup className="absolute top-0 left-0 right-0 ease-in-out w-full h-5 z-10 flex items-center">
-							<Tooltip style={{ left: 0 }} tipText="Add Context">
+							<Tooltip style={{ left: 0 }} tipText={t("addContext", "chat")}>
 								<VSCodeButton
 									appearance="icon"
-									aria-label="Add Context"
+									aria-label={t("addContext", "chat")}
 									className="p-0 m-0 flex items-center"
 									data-testid="context-button"
 									onClick={handleContextButtonClick}>
@@ -1783,7 +1783,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 							<Tooltip tipText={t("addFilesImages", "chat")}>
 								<VSCodeButton
 									appearance="icon"
-									aria-label="Add Files & Images"
+									aria-label={t("addFilesImages", "chat")}
 									className="p-0 m-0 flex items-center"
 									data-testid="files-button"
 									disabled={shouldDisableFilesAndImages}

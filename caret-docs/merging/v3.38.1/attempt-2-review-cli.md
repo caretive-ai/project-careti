@@ -56,3 +56,32 @@ The implementation of Caret Account and LiteLLM (BYO) in the CLI is logically co
 - [x] LiteLLM Base URL prompt in CLI Wizard.
 - [x] Caret Login flow in CLI.
 - [ ] **Run Tests**: Create and run `providers_list_test.go`.
+
+## 🧩 Sub-agent & System Prompt Implementation (D-1/D-2)
+
+### 1. System Prompt Branching ✅
+- **`src/core/prompts/system-prompt/index.ts`**:
+  - Correctly implements `// CARET MODIFICATION` to branch logic.
+  - `modeSystem === "caret"` routes to `CaretPromptWrapper`.
+  - `modeSystem === "cline"` routes to `PromptRegistry` (original behavior).
+  - **Verdict**: Compliant with Dual Mode architecture.
+
+### 2. Sub-agent Prompt Generation ✅
+- **`src/core/prompts/system-prompt/components/cli_subagents.ts`**:
+  - **Logic**: Dynamically switches between "Caret CLI" and "Cline CLI" terminology based on `modeSystem`.
+  - **3-Way Merge**: This file exists in Cline v3.38.1. Caret modified it to add dynamic logic.
+  - **Fix Applied**: Added missing `// CARET MODIFICATION` comment to `getCliSubagentsTemplateText` to satisfy merge standards.
+  - **Integration**: Registered in `components/index.ts` and used in `generic` variant template (which natively includes `{{CLI_SUBAGENTS_SECTION}}` in Cline v3.38.1).
+
+### 3. CLI Installation Detection ✅
+- **`src/core/controller/state/checkCliInstallation.ts`**:
+  - Correctly checks `caretModeSystem` global state.
+  - Calls `isCaretCliInstalled()` or `isClineCliInstalled()` appropriately.
+  - Ensures `isSubagentsEnabledAndCliInstalled` context variable is accurate for the current mode.
+
+### 4. Caret Prompt Wrapper ✅
+- **`caret-src/core/prompts/CaretPromptWrapper.ts`**:
+  - Implements independent prompt generation using `CaretModeManager`.
+  - Ensures complete isolation for Caret mode.
+
+**Overall Sub-agent Status:** 🟢 **Pass** (after applying comment fix)

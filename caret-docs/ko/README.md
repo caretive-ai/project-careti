@@ -1,4 +1,3 @@
-
 <div align="center">
 <table>
     <tr>
@@ -25,7 +24,7 @@
     </tr>
   </table>
   <h1>🎯 Caret: 나만의 AI 코딩 파트너</h1>
-  <p><strong>클라인(Cline)의 모든 기능 + 개성 있는 AI 동료 + 개선된 시스템 프롬프트</strong></p>
+  <p><strong>Cline v3.38.1 기반 + 듀얼 모드 + 페르소나 시스템 + 완벽한 한글화</strong></p>
   
   <!-- 강력한 CTA 버튼 -->
   <p>
@@ -54,53 +53,44 @@
 
 ---
 
-## 🎁 신규: 공식 Caret AI 프로바이더 - 무료 $10 크레딧 제공!
+## 🎁 신규: 공식 Caret AI 프로바이더 - 매월 무료 크레딧!
 
 **반가운 소식!** Caret이 이제 자체 공식 AI 프로바이더 통합을 제공합니다:
 
-- 🎉 **프로모션 혜택**: 프로모션 기간 동안 모든 사용자에게 **$10 무료 크레딧** 제공 중
-- 💳 **유료 크레딧 구매**: 제공 예정 - 추가 크레딧 구매 시스템이 곧 출시됩니다
+- 🎉 **무료 크레딧**: 신규 사용자에게 **매월 $0.1 (10 크레딧)** 제공! (첫 달은 최대 $0.2까지 이용 가능)
+- 🤖 **지원 모델**: Gemini 3, 2.5 Pro, Lite 등 최신 모델 지원
 - 🚀 **간편한 설정**: 설정에서 "Caret"을 AI 프로바이더로 선택하면 바로 시작할 수 있습니다
 
 ---
 
-## 🚀 최신 업데이트: Cline v3.32.7 완전 통합!
+## 🚀 최신 업데이트: Cline v3.38.1 완전 통합!
 
-**Caret v0.3.0**은 이제 **Cline v3.32.7의 모든 기능**을 포함하며 Caret 고유 확장 기능과 100% 호환됩니다!
+**Caret v0.4.0**은 이제 **Cline v3.38.1의 모든 기능**을 포함하며 Caret 고유 확장 기능과 100% 호환됩니다!
 
-### 이번 머징의 주요 내용:
-- ✅ **Cline v3.32.7 완전 채택** - 최신 Cline 기능 및 개선사항 모두 포함
-- ✅ **10개 Caret 기능 재구현** - 최소 침습으로 모든 기능 보존 ([자세히 보기](../features/index.md))
-- ✅ **최소 침습 전략** - Cline 파일 9개만 수정 (291줄)로 완벽한 호환성
-- ✅ **AI 프롬프트 최적화** - 최적화된 편집 워크플로우로 API 요청 30-50% 감소
-- ✅ **Focus Chain** - 복잡한 워크플로우를 위한 자동 작업 관리
-- ✅ **300개 고유 AI 모델** - Claude Sonnet 4.5, GPT-5 등 25개 제공자 지원
-
-### 마이그레이션 하이라이트:
-- **Phase 4**: Backend 재구현 (100% 완료 ✅)
-- **Phase 5**: Frontend 재구현 (100% 완료 ✅)
-- **Phase 6**: 최종 검증 진행 중 🔄
-
-**전체 머징 문서**: [merge-execution-master-plan.md](../merging/merge-execution-master-plan.md) 참조
+### 주요 업데이트 내용:
+- ✅ **Cline v3.38.1 완전 채택** - 최신 Cline 기능 및 코어 엔진 개선사항 모두 포함
+- ✅ **이중 계정 시스템 (Dual Account)** - **기존 Cline 계정 완벽 지원!** 로그인만 하면 Caret의 확장 기능을 즉시 사용할 수 있습니다.
+- ✅ **Caret CLI (베타)** - 터미널에서 Caret 기능을 직접 사용 (LiteLLM 지원)
+- ✅ **입력 히스토리** - 터미널처럼 화살표 키로 이전 명령 탐색
+- ✅ **향상된 프로바이더 설정** - 모델 자동 검색 및 실시간 상태 확인
+- ✅ **248개 고유 AI 모델** - Claude Sonnet 4.5, GPT-5 등 20개 제공자 지원
 
 ---
 
 ## 🌟 Caret을 선택해야 하는 6가지 이유
 
-1. **🔄 원클릭 모드 전환** - Cline 완벽 호환, 언제든 전환 가능
-2. **🎭 개성 있는 AI 동료** - 나만의 페르소나로 재미있게 코딩
-3. **🧠 개선된 시스템 프롬프트** - 더 똑똑하고 효율적인 AI 응답
-4. **🌍 4개국어 완벽 지원** - 한국어, 영어, 일본어, 중국어 + 4개국어 매뉴얼
-5. **⌨️ 향상된 UX** - 프롬프트 히스토리, 자동 모델 조회 등
-6. **🎯 25개 제공자, 300개 모델** - Cline v3.32.7 완전 호환 + 확장
+1. **🔄 듀얼 모드 시스템** - 확장된 Caret 모드와 순정 Cline 모드를 자유롭게 전환
+2. **🎭 페르소나 시스템** - 나만의 개성 있는 AI 동료와 함께 코딩
+3. **🧠 향상된 시스템 프롬프트** - 더 똑똑하고 효율적인 AI 응답 (비용 절감)
+4. **🌍 4개국어 완벽 지원** - UI, 문서, 매뉴얼까지 완벽한 한글화
+5. **⌨️ 향상된 UX** - 입력 히스토리, 편리한 단축키(Esc, Ctrl+Shift+R)
+6. **🎯 압도적인 모델 지원** - 20개 제공자, 248개 모델 (Cline v3.38.1 호환)
 
-👉 **모든 독점 기능 보기**: [Caret 독점 기능 개요](https://docs.caret.team/ko/caret-exclusive/overview)  
+👉 **모든 독점 기능 보기**: [Caret 독점 기능 개요](../features/index.md)
 
-## 🎭 1순위 특징: 나만의 AI 코딩 파트너 만들기
+## 🎭 특징 1: 나만의 AI 코딩 파트너 만들기
 
 다른 AI 도구들과 완전히 차별화되는 **페르소나 시스템**! 단순한 텍스트 채팅을 넘어 시각적으로 생동감 넘치는 AI 동료와 함께 코딩하세요.
-
-### 기본 제공 페르소나들:
 
 <div align="center">
 <table>
@@ -135,76 +125,29 @@
 </div>
 
 **🎨 커스터마이징**: 나만의 AI 이름과 프로필 이미지 등록 가능!
-**⚡ 언제든 전환 가능**: 페르소나 즉시 활성화/비활성화 - 순수 Cline 모드 사용 가능
+**⚡ 언제든 전환 가능**: 페르소나 즉시 활성화/비활성화
 
-## 🔄 Cline/Caret 토글 - 두 가지 모드를 자유자재로!
+## 🔄 특징 2: 듀얼 모드 - 두 가지 경험을 하나로!
 
-### 🎛️ **원클릭 모드 전환**
 <div align="center">
-  <img src="https://img.shields.io/badge/Cline_모드-기존_방식-blue?style=for-the-badge" alt="Cline Mode"/>
+  <img src="https://img.shields.io/badge/Cline_모드-클래식_경험-blue?style=for-the-badge" alt="Cline Mode"/>
   <strong> ⇄ </strong>
   <img src="https://img.shields.io/badge/Caret_모드-확장_기능-green?style=for-the-badge" alt="Caret Mode"/>
 </div>
 
-**🔵 Cline 모드** - 기존 Cline 그대로:
-- ✅ **Plan/Act 방식** - 기존 Cline 사용자 친숙한 방식
-- ✅ **모든 설정 호환** - 기존 설정 그대로 사용
-- ✅ **워크플로우 동일** - 익숙한 사용법 그대로
-- ✅ **안정성 보장** - Cline의 검증된 코어 엔진
+**🔵 Cline 모드** - 순정 그대로:
+- ✅ **Plan/Act 방식** - 기존 Cline 사용자에게 친숙한 워크플로우
+- ✅ **계정 호환** - 기존 Cline 계정으로 로그인하여 그대로 사용 가능
+- ✅ **100% 호환성** - 기존 설정과 기능을 그대로 사용
+- ✅ **검증된 안정성** - Cline의 코어 엔진 그대로
 
-**🟢 Caret 모드** - 확장된 기능들:
-- 🎭 **페르소나 시스템** - 나만의 AI 동료 만들기
-- 🧠 **개선된 시스템 프롬프트** - 더 똑똑하고 효율적인 AI
-- 🌍 **4개국어 지원** - 완벽한 다국어 환경
+**🟢 Caret 모드** - 더 강력하게:
+- 🎭 **페르소나 시스템** - 더 즐거운 코딩 경험
+- 🧠 **스마트 프롬프트** - 최적화된 성능과 비용 효율
+- 🌍 **다국어 지원** - 완벽한 한글 환경
 - 🎯 **Chatbot/Agent** - 더 직관적인 대화 방식
 
-### 💡 **언제든 전환 가능**
-- **기존 Cline 사용자**: Cline 모드로 시작 → 필요시 Caret 모드 체험
-- **새로운 사용자**: Caret 모드로 시작 → 원할 때 클래식 Cline 모드
-- **프로젝트별 설정**: 프로젝트마다 다른 모드 사용 가능
-
-## 🌍 언어의 장벽 없는 코딩
-
-**4개국어 완벽 지원**으로 전 세계 개발자들이 모국어로 편리하게 사용할 수 있습니다:
-
-### 🎌 지원 언어 (UI + 문서 + 메뉴얼)
-- 🇰🇷 **한국어** - 완전한 한글화 (UI, AI 대화, 문서, 매뉴얼)
-- 🇺🇸 **영어** - 네이티브 지원 (UI, AI 대화, 문서, 매뉴얼) 
-- 🇯🇵 **일본어** - 완전한 일본어화 (UI, AI 대화, 문서, 매뉴얼)
-- 🇨🇳 **중국어** - 완전한 중국어화 (UI, AI 대화, 문서, 매뉴얼)
-
-### 📖 다국어 메뉴얼 시스템
-- **docs.cline.bot 다국어화 진행 중** - Caret 전용 4개국어 메뉴얼 사이트
-- **모든 기능 설명서** - 설치부터 고급 기능까지 모국어로 학습
-- **실시간 언어 전환** - 언어별 즉시 전환 가능
-- **커뮤니티 번역** - 각국 커뮤니티가 함께 만드는 정확한 번역
-
-## 🚀 5분 만에 시작하기
-
-### 1단계: 설치
-```
-VS Code 확장 탭에서 "Caret" 검색 → 설치
-```
-
-### 2단계: API 키 설정  
-```
-설정에서 사용할 AI 제공자의 API 키 입력
-(OpenAI, Claude, Gemini 등 25개 제공자에서 300개 모델 지원)
-```
-
-### 3단계: 페르소나 선택
-```
-사이드바에서 마음에 드는 AI 페르소나 선택
-또는 나만의 커스텀 페르소나 만들기
-```
-
-### 4단계: 코딩 시작!
-```
-Ctrl+' 단축키로 채팅창 열고
-"안녕! 리액트 컴포넌트 만들어줘" 입력
-```
-
-## 🚀 Caret의 11가지 핵심 특징
+## 🚀 Caret의 12가지 핵심 특징
 
 Caret은 Cline과 100% 호환성을 유지하면서 강력한 새 기능들을 확장합니다:
 
@@ -212,81 +155,27 @@ Caret은 Cline과 100% 호환성을 유지하면서 강력한 새 기능들을 �
 
 | 특징 | 설명 | 문서 |
 |------|------|------|
+| **F00** | **Cline Bugfix & Patch** | Cline 원본 버그 수정 및 안정화 패치 | [📖 상세보기](../features/f00-cline-bugfix-patch.md) |
 | **F01** | **공통 유틸리티** | 공유 유틸리티 함수 및 헬퍼 | [📖 상세보기](../features/f01-common-util.md) |
 | **F02** | **다국어 i18n** | 4개국어 지원 (한/영/일/중) | [📖 상세보기](../features/f02-multilingual-i18n.md) |
 | **F03** | **브랜딩 & UI 시스템** | 동적 브랜드 전환 (Caret/CodeCenter) | [📖 상세보기](../features/f03-branding-ui.md) |
-| **F04** | **Caret 계정 시스템** | 사용자 인증 및 관리 | [📖 상세보기](../features/f04-caret-account.md) |
-| **F05** | **다중 룰 우선순위 설정** | 다층 룰 구성 시스템 | [📖 상세보기](../features/f05-rule-priority-system.md) |
-| **F06** | **Caret 프롬프트 시스템** | JSON 동적 프롬프트 & 모드 전환 | [📖 상세보기](../features/f06-caret-prompt-system.md) |
-| **F07** | **페르소나 시스템** | 커스터마이즈 가능한 AI 동료 | [📖 상세보기](../features/f07-persona-system.md) |
-| **F08** | **Feature Config 시스템** | 모듈식 기능 관리 | [📖 상세보기](../features/f08-feature-config-system.md) |
-| **F09** | **Enhanced Provider Setup** | 고급 AI 프로바이더 구성 | [📖 상세보기](../features/f09-enhanced-provider-setup.md) |
-| **F10** | **입력 히스토리·단축키** | 터미널 스타일 히스토리 + 공용 단축키 | [📖 상세보기](../features/f10-input-history-and-shortcuts.md) |
-| **F11** | **지식 동기화 시스템** | AI와 개발자가 동일한 지식을 공유하여 원활한 협업을 보장합니다 | [📖 상세보기](../features/f11-ai-developer-knowledge-parity.md) |
+| **F04** | **Cline 호환성 & CLI** | Cline 모드 100% 호환 및 Caret CLI 확장 | [📖 상세보기](../features/f04-cline-compatibility-and-cli.md) |
+| **F05** | **Caret 계정 시스템** | 사용자 인증 및 관리 | [📖 상세보기](../features/f05-caret-account.md) |
+| **F06** | **다중 룰 우선순위 설정** | 다층 룰 구성 시스템 (.caretrules) | [📖 상세보기](../features/f06-rule-priority-system.md) |
+| **F07** | **Caret 프롬프트 시스템** | JSON 동적 프롬프트 & 모드 전환 | [📖 상세보기](../features/f07-caret-prompt-system.md) |
+| **F08** | **페르소나 시스템** | 커스터마이즈 가능한 AI 동료 | [📖 상세보기](../features/f08-persona-system.md) |
+| **F09** | **Feature Config 시스템** | 모듈식 기능 관리 (화이트라벨링) | [📖 상세보기](../features/f09-feature-config-system.md) |
+| **F10** | **Enhanced Provider Setup** | 고급 AI 프로바이더 구성 (자동화) | [📖 상세보기](../features/f10-enhanced-provider-setup.md) |
+| **F11** | **입력 히스토리·단축키** | 터미널 스타일 히스토리 + 공용 단축키 | [📖 상세보기](../features/f11-input-history-and-shortcuts.md) |
+| **F12** | **지식 동기화 시스템** | AI-개발자 간 지식 동기화 (On-Demand) | [📖 상세보기](../features/f12-ai-developer-knowledge-parity.md) |
 
 </div>
 
 → **[전체 특징 색인 보기](../features/index.md)**
 
-## 💪 압도적인 성능과 경제성
-
-<div align="center">
-
-| 비교 항목 | 다른 AI 도구들 | **Caret** |
-|-----------|---------------|-----------|
-| **토큰 사용량** | 기본 | **최적화됨** |
-| **API 비용** | 기본 | **절약됨** |
-| **응답 속도** | 보통 | **최적화됨** |
-| **다국어 지원** | ❌ | **✅ 4개국어 + 매뉴얼** |
-| **페르소나** | ❌ | **✅ 지원** |
-| **Cline 호환** | ❌ | **✅ 100%** |
-
-</div>
-
-시스템 프롬프트 최적화를 통해 더 효율적인 AI 응답을 제공합니다.
-
-## 🎯 지원하는 AI 모델
-
-### 🚀 **최신 Cline v3.32.7 아키텍처 완전 호환**
-
-<div align="center">
-  <h3>🎯 <strong>20개 제공자</strong> | 🤖 <strong>237개 고유 모델</strong> | 📊 <strong>Cline v3.32.7 완전 호환</strong></h3>
-
-  **주요 제공자**: OpenAI GPT-5, Anthropic Claude Sonnet 4.5, Google Gemini 2.5, DeepSeek V3, Qwen3 등
-
-  <a href="../../caret-docs/development/support-model-list.md">
-    <strong>📋 실시간 업데이트되는 전체 모델 목록 보기 →</strong>
-  </a>
-</div>
-
-### 💡 **Cline의 모든 기능 + Caret 확장**
-- ✅ **Plan/Act 모드** - Cline의 검증된 투명한 개발 프로세스
-- ✅ **MCP 지원** - Model Context Protocol로 외부 시스템 연결
-- ✅ **제로 트러스트 보안** - 클라이언트 사이드 완전 실행
-- ✅ **모델 자유 전환** - Claude, Gemini, Kimi 등 즉시 전환
-- ➕ **페르소나 시스템** - Caret만의 개성 있는 AI 동료
-- ➕ **개선된 시스템 프롬프트** - 더 똑똑하고 효율적인 AI 응답
-- ➕ **4개국어 지원** - 완벽한 다국어 환경
-
-## 🔮 로드맵: 더 강력해질 Caret
-
-**곧 출시 예정** (1-2주 내):
-- 🔐 **자체 로그인 시스템** - API 키 관리 간소화
-- 💳 **크레딧 구매 시스템** - 더 편리한 과금 체계
-- 🏠 **로컬 LLM 지원** - 인터넷 없이도 사용 가능
-- 🇰🇷 **한국 특화 모델** - Hyperclova X, EXAONE 등
-
-**장기 계획**:
-- 👥 **팀 협업 기능** - 여러 명이 함께 AI와 작업
-- 🎓 **학습 기능** - 내 코딩 스타일 학습하는 개인화
-- 🔌 **플러그인 시스템** - 커뮤니티 확장 기능
+---
 
 ## 🤝 함께 만들어가는 오픈소스
-
-### 🎁 기여자 혜택
-- 💰 **서비스 크레딧** - 기여 규모에 따른 무료 사용권
-- 🌟 **기여자 등재** - GitHub과 공식 웹사이트에 이름 등재
-- 🚀 **베타 테스터** - 새 기능 우선 체험
 
 ### 참여 방법
 1. **버그 신고** → [Issues](https://github.com/aicoding-caret/caret/issues)에서 신고
@@ -319,14 +208,8 @@ Caret은 Cline과 100% 호환성을 유지하면서 강력한 새 기능들을 �
 
 개발에 참여하고 싶다면 아래 문서들을 확인하세요:
 
-### 📚 핵심 가이드
 - **[개발자 가이드](../../DEVELOPER_GUIDE.md)** - 빌드, 테스트 기본 정보
 - **[Caret 아키텍처](../development/caret-architecture-and-implementation-guide.md)** - 전체 시스템 구조
 - **[신입 개발자 가이드](../development/new-developer-guide.md)** - 프로젝트 입문
-
-### 🔧 기술 문서
-- **[AI 메시지 플로우](../development/ai-message-flow-guide.md)** - AI 시스템 이해
-- **[테스트 가이드](../development/testing-guide.md)** - TDD 개발 방법
-- **[다국어 시스템](../development/locale.md)** - i18n 구현
 
 💡 **개발 시작 전 필독**: [AI 작업 방법론 가이드](../guides/ai-work-method-guide.md)를 먼저 읽어보세요.

@@ -1,4 +1,46 @@
-# f04 - Caret Account System (ClineAccount 완전 대체)
+# F05 - Caret Account System (ClineAccount 완전 대체)
+
+**상태**: ✅ Phase 4 완료  
+**영향 범위**: Backend (Controller, Service), Webview (AccountView, Settings), gRPC  
+**우선순위**: 🔴 High
+
+---
+
+## 📋 개요
+
+ClineAccount를 대체하는 Caret만의 독립적인 계정 시스템입니다.  
+Cline 코드를 100% 보존하면서 진입점 분기(Branching Entry Point)를 통해 Caret 계정 시스템을 활성화합니다.
+
+---
+
+## 🆚 Cline 대비 개선점 (Improvements)
+
+| 기능 | Cline (Original) | Caret (Enhanced) |
+| --- | --- | --- |
+| **계정 시스템** | ClineAccount (단일) | **Dual Account System** (Caret / Cline 공존 가능, 진입점에서 분기) |
+| **서버 통신** | REST API (`cline.bot`) | **gRPC + REST** (`api.caret.team`). Protocol Buffers 기반의 타입 안전성 확보. |
+| **인증 방식** | Auth0 (Cline Tenant) | **Custom Auth0** (Caret Tenant). 조직/개인 계정 분리 및 JWT 토큰 기반 인증. |
+| **UI 통합** | Account Webview | **Unified Account View**. Settings 및 사이드바에서 Caret 계정 정보(잔액/사용량) 직접 확인 가능. |
+
+---
+
+## 🏗 코드 범위 (Code Scope)
+
+### 1. Backend (Controller & Service)
+- **`src/core/controller/caretAccount/`**: `getCaretUserCredits.ts`, `caretAccountLoginClicked.ts` 등 8개 gRPC 핸들러.
+- **`src/services/account/CaretAccountService.ts`**: 실제 `caret.team` API 호출 로직.
+- **`proto/caret/account.proto`**: Caret 계정 관련 Protocol Buffer 정의 (1000+ 오프셋 사용).
+
+### 2. Webview (UI Component)
+- **`webview-ui/src/caret/components/CaretAccountView.tsx`**: Caret 계정 메인 뷰. (ClineAccountView 대체)
+- **`webview-ui/src/caret/components/CaretAccountInfoCard.tsx`**: Settings 페이지 내 계정 정보 카드.
+- **`webview-ui/src/components/account/AccountView.tsx`**: 진입점 분기 로직 (`{caretUser?.uid ? ... : ...}`).
+- **`webview-ui/src/context/ExtensionStateContext.tsx`**: `caretUser` 상태 관리 및 Auth0 토큰 동기화.
+
+### 3. API Provider
+- **`src/api/providers/CaretApiProvider.ts`**: OpenAI 호환 채팅 API (`/api/v1/chat/completions`) 연동.
+
+---
 
 ## 🎯 **목표**
 **ClineAccount 완전 대체** - 진입점만 변경하여 Cline 코드 보존하면서 Caret 독립 계정 시스템 구축
@@ -105,14 +147,6 @@ GET /org               // 조직 관리
 }
 ```
 
-## 🔍 **Cline vs Caret 아키텍처 차이**
-
-| 구분 | Cline | Caret |
-|------|-------|-------|
-| **서버 URL** | `clineEnvConfig.apiBaseUrl` | `https://api.caret.team` |
-| **인증 서비스** | `ClineAccountService` + `AuthService` | `CaretGlobalManager` |
-| **토큰 타입** | `clineAccountAuthToken` | `caretApiKey` |
-| **지원 모델** | `cline/sonic` 등 | `google/gemini-2.5-*` 등 |
 
 ## ⚠️ **주의사항**
 

@@ -1,5 +1,6 @@
 import { ChevronDownIcon, ChevronRightIcon } from "lucide-react"
 import React, { memo, useCallback, useMemo, useState } from "react"
+import { t } from "@/caret/utils/i18n"
 import { formatLargeNumber as formatTokenNumber } from "@/utils/format"
 
 interface TokenUsageInfoProps {
@@ -7,12 +8,6 @@ interface TokenUsageInfoProps {
 	tokensOut?: number
 	cacheWrites?: number
 	cacheReads?: number
-}
-
-interface TokenDetail {
-	title: string
-	value?: number
-	icon: string
 }
 
 interface TaskContextWindowButtonsProps extends TokenUsageInfoProps {
@@ -24,7 +19,6 @@ interface TaskContextWindowButtonsProps extends TokenUsageInfoProps {
 	isThresholdFadingOut?: boolean
 }
 
-// New accordion item component
 const AccordionItem = memo<{
 	title: string
 	value: React.ReactNode
@@ -58,22 +52,19 @@ const AccordionItem = memo<{
 })
 AccordionItem.displayName = "AccordionItem"
 
-// Constants
-const TOKEN_DETAILS_CONFIG: Omit<TokenDetail, "value">[] = [
-	{ title: "Prompt Tokens", icon: "codicon-arrow-up" },
-	{ title: "Completion Tokens", icon: "codicon-arrow-down" },
-	{ title: "Cache Writes", icon: "codicon-arrow-left" },
-	{ title: "Cache Reads", icon: "codicon-arrow-right" },
-]
-
 const TokenUsageDetails = memo<TokenUsageInfoProps>(({ tokensIn, tokensOut, cacheWrites, cacheReads }) => {
 	const contextTokenDetails = useMemo(() => {
-		const values = [tokensIn, tokensOut, cacheWrites || 0, cacheReads || 0]
-		return TOKEN_DETAILS_CONFIG.map((config, index) => ({ ...config, value: values[index] })).filter((item) => item.value)
-	}, [tokensIn, tokensOut, cacheWrites, cacheReads])
+		const config = [
+			{ title: t("contextWindowSummary.promptTokens", "chat"), icon: "codicon-arrow-up", value: tokensIn },
+			{ title: t("contextWindowSummary.completionTokens", "chat"), icon: "codicon-arrow-down", value: tokensOut },
+			{ title: t("contextWindowSummary.cacheWrites", "chat"), icon: "codicon-arrow-left", value: cacheWrites || 0 },
+			{ title: t("contextWindowSummary.cacheReads", "chat"), icon: "codicon-arrow-right", value: cacheReads || 0 },
+		]
+		return config.filter((item) => item.value)
+	}, [cacheReads, cacheWrites, tokensIn, tokensOut])
 
 	if (!tokensIn) {
-		return <div>No token usage data available</div>
+		return <div>{t("contextWindowSummary.noTokenData", "chat")}</div>
 	}
 
 	return (
@@ -129,15 +120,13 @@ export const ContextWindowSummary: React.FC<TaskContextWindowButtonsProps> = ({
 				<AccordionItem
 					isExpanded={expandedSections.has("threshold")}
 					onToggle={(event) => toggleSection("threshold", event)}
-					title="Auto Condense Threshold"
+					title={t("contextWindowSummary.autoCondenseThreshold", "chat")}
 					value={<span className="text-muted-foreground">{`${(autoCompactThreshold * 100).toFixed(0)}%`}</span>}>
 					<div className="space-y-1">
 						<p className="text-xs leading-relaxed text-white">
-							Click on the context window bar to set a new threshold.
+							{t("contextWindowSummary.autoCondenseHint1", "chat")}
 						</p>
-						<p className="text-xs leading-relaxed mt-0 mb-0">
-							When the context window usage exceeds this threshold, the task will be automatically condensed.
-						</p>
+						<p className="text-xs leading-relaxed mt-0 mb-0">{t("contextWindowSummary.autoCondenseHint2", "chat")}</p>
 					</div>
 				</AccordionItem>
 			)}
@@ -145,19 +134,23 @@ export const ContextWindowSummary: React.FC<TaskContextWindowButtonsProps> = ({
 			<AccordionItem
 				isExpanded={expandedSections.has("context")}
 				onToggle={(event) => toggleSection("context", event)}
-				title="Context Window"
-				value={percentage ? `${percentage.toFixed(1)}% used` : formatTokenNumber(contextWindow)}>
+				title={t("contextWindowSummary.contextWindow", "chat")}
+				value={
+					percentage
+						? t("contextWindowSummary.contextWindowPercentUsed", "chat", { value: percentage.toFixed(1) })
+						: formatTokenNumber(contextWindow)
+				}>
 				<div className="space-y-1">
 					<div className="flex justify-between">
-						<span>Used:</span>
+						<span>{t("contextWindowSummary.used", "chat")}</span>
 						<span className="font-mono">{formatTokenNumber(tokenUsed)}</span>
 					</div>
 					<div className="flex justify-between">
-						<span>Total:</span>
+						<span>{t("contextWindowSummary.total", "chat")}</span>
 						<span className="font-mono">{formatTokenNumber(contextWindow)}</span>
 					</div>
 					<div className="flex justify-between">
-						<span>Remaining:</span>
+						<span>{t("contextWindowSummary.remaining", "chat")}</span>
 						<span className="font-mono">{formatTokenNumber(contextWindow - tokenUsed)}</span>
 					</div>
 				</div>
@@ -167,8 +160,8 @@ export const ContextWindowSummary: React.FC<TaskContextWindowButtonsProps> = ({
 				<AccordionItem
 					isExpanded={expandedSections.has("tokens")}
 					onToggle={(event) => toggleSection("tokens", event)}
-					title="Token Usage"
-					value={`${formatTokenNumber(totalTokens)} total`}>
+					title={t("contextWindowSummary.tokenUsage", "chat")}
+					value={t("contextWindowSummary.tokenUsageTotal", "chat", { value: formatTokenNumber(totalTokens) })}>
 					<TokenUsageDetails
 						cacheReads={cacheReads}
 						cacheWrites={cacheWrites}

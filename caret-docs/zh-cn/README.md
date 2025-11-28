@@ -158,7 +158,7 @@
 - 🌍 **4语言支持** - 完美多语言环境
 - 🎯 **Chatbot/Agent** - 更直观的对话方式
 
-## 🚀 Caret的10大核心功能
+## 🚀 Caret的12大核心功能
 
 Caret在保持与Cline 100%兼容的同时，扩展了强大的新功能：
 
@@ -166,17 +166,19 @@ Caret在保持与Cline 100%兼容的同时，扩展了强大的新功能：
 
 | 功能 | 说明 | 文档 |
 |------|------|------|
+| **F00** | **Cline Bugfix & Patch** | Cline原版错误修复和稳定性补丁 | [📖 详情](../features/f00-cline-bugfix-patch.md) |
 | **F01** | **通用工具库** | 共享工具函数和助手 | [📖 详情](../features/f01-common-util.md) |
 | **F02** | **多语言i18n** | 4语言支持（中/韩/日/英） | [📖 详情](../features/f02-multilingual-i18n.md) |
 | **F03** | **品牌与UI系统** | 动态品牌切换（Caret/CodeCenter） | [📖 详情](../features/f03-branding-ui.md) |
-| **F04** | **Caret账户系统** | 用户认证与管理 | [📖 详情](../features/f04-caret-account.md) |
-| **F05** | **规则优先级系统** | 多层规则配置系统 | [📖 详情](../features/f05-rule-priority-system.md) |
-| **F06** | **Caret提示系统** | JSON动态提示 & 模式切换 | [📖 详情](../features/f06-caret-prompt-system.md) |
-| **F07** | **角色系统** | 可定制的AI伙伴 | [📖 详情](../features/f07-persona-system.md) |
-| **F08** | **功能配置系统** | 模块化功能管理 | [📖 详情](../features/f08-feature-config-system.md) |
-| **F09** | **增强的提供商设置** | 高级AI提供商配置 | [📖 详情](../features/f09-enhanced-provider-setup.md) |
-| **F10** | **输入历史与快捷键** | 终端风格历史 + 全局快捷键 | [📖 详情](../features/f10-input-history-and-shortcuts.md) |
-| **F11** | **知识同步系统** | 确保AI和开发者共享相同知识，实现无缝协作 | [📖 详情](../features/f11-ai-developer-knowledge-parity.md) |
+| **F04** | **Cline兼容性 & CLI** | Cline模式100%兼容及Caret CLI扩展 | [📖 详情](../features/f04-cline-compatibility-and-cli.md) |
+| **F05** | **Caret账户系统** | 用户认证与管理 | [📖 详情](../features/f05-caret-account.md) |
+| **F06** | **规则优先级系统** | 多层规则配置系统 (.caretrules) | [📖 详情](../features/f06-rule-priority-system.md) |
+| **F07** | **Caret提示系统** | JSON动态提示 & 模式切换 | [📖 详情](../features/f07-caret-prompt-system.md) |
+| **F08** | **角色系统** | 可定制的AI伙伴 | [📖 详情](../features/f08-persona-system.md) |
+| **F09** | **功能配置系统** | 模块化功能管理 (白标支持) | [📖 详情](../features/f09-feature-config-system.md) |
+| **F10** | **增强的提供商设置** | 高级AI提供商配置 (自动化) | [📖 详情](../features/f10-enhanced-provider-setup.md) |
+| **F11** | **输入历史与快捷键** | 终端风格历史 + 全局快捷键 | [📖 详情](../features/f11-input-history-and-shortcuts.md) |
+| **F12** | **知识同步系统** | AI-开发者知识同步 (按需加载) | [📖 详情](../features/f12-ai-developer-knowledge-parity.md) |
 
 </div>
 

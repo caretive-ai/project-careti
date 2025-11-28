@@ -447,6 +447,7 @@ export class StateManager {
 			anthropicBaseUrl,
 			geminiApiKey,
 			geminiBaseUrl,
+			bizRouterApiKey,
 			openAiNativeApiKey,
 			deepSeekApiKey,
 			requestyApiKey,
@@ -460,9 +461,15 @@ export class StateManager {
 			liteLlmBaseUrl,
 			liteLlmApiKey,
 			liteLlmUsePromptCache,
+			bizRouterUsePromptCache,
+			caretBaseUrl,
+			caretApiKey,
+			caretUsePromptCache,
+			caretUserProfile,
 			qwenApiLine,
 			moonshotApiLine,
 			zaiApiLine,
+			caretAuthToken,
 			asksageApiKey,
 			asksageApiUrl,
 			xaiApiKey,
@@ -517,6 +524,10 @@ export class StateManager {
 			planModeLmStudioModelId,
 			planModeLiteLlmModelId,
 			planModeLiteLlmModelInfo,
+			planModeBizRouterModelId,
+			planModeBizRouterModelInfo,
+			planModeCaretModelId,
+			planModeCaretModelInfo,
 			planModeRequestyModelId,
 			planModeRequestyModelInfo,
 			planModeTogetherModelId,
@@ -531,6 +542,8 @@ export class StateManager {
 			planModeHuggingFaceModelInfo,
 			planModeHuaweiCloudMaasModelId,
 			planModeHuaweiCloudMaasModelInfo,
+			planModeVercelAiGatewayModelId,
+			planModeVercelAiGatewayModelInfo,
 			planModeOcaModelId,
 			planModeOcaModelInfo,
 			planModeHicapModelId,
@@ -554,6 +567,10 @@ export class StateManager {
 			actModeLmStudioModelId,
 			actModeLiteLlmModelId,
 			actModeLiteLlmModelInfo,
+			actModeBizRouterModelId,
+			actModeBizRouterModelInfo,
+			actModeCaretModelId,
+			actModeCaretModelInfo,
 			actModeRequestyModelId,
 			actModeRequestyModelInfo,
 			actModeTogetherModelId,
@@ -568,6 +585,8 @@ export class StateManager {
 			actModeHuggingFaceModelInfo,
 			actModeHuaweiCloudMaasModelId,
 			actModeHuaweiCloudMaasModelInfo,
+			actModeVercelAiGatewayModelId,
+			actModeVercelAiGatewayModelInfo,
 			actModeOcaModelId,
 			actModeOcaModelInfo,
 			actModeHicapModelId,
@@ -595,6 +614,10 @@ export class StateManager {
 			planModeLmStudioModelId,
 			planModeLiteLlmModelId,
 			planModeLiteLlmModelInfo,
+			planModeBizRouterModelId,
+			planModeBizRouterModelInfo,
+			planModeCaretModelId,
+			planModeCaretModelInfo,
 			planModeRequestyModelId,
 			planModeRequestyModelInfo,
 			planModeTogetherModelId,
@@ -609,6 +632,8 @@ export class StateManager {
 			planModeHuggingFaceModelInfo,
 			planModeHuaweiCloudMaasModelId,
 			planModeHuaweiCloudMaasModelInfo,
+			planModeVercelAiGatewayModelId,
+			planModeVercelAiGatewayModelInfo,
 			planModeOcaModelId,
 			planModeOcaModelInfo,
 			planModeHicapModelId,
@@ -633,6 +658,10 @@ export class StateManager {
 			actModeLmStudioModelId,
 			actModeLiteLlmModelId,
 			actModeLiteLlmModelInfo,
+			actModeBizRouterModelId,
+			actModeBizRouterModelInfo,
+			actModeCaretModelId,
+			actModeCaretModelInfo,
 			actModeRequestyModelId,
 			actModeRequestyModelInfo,
 			actModeTogetherModelId,
@@ -647,6 +676,8 @@ export class StateManager {
 			actModeHuggingFaceModelInfo,
 			actModeHuaweiCloudMaasModelId,
 			actModeHuaweiCloudMaasModelInfo,
+			actModeVercelAiGatewayModelId,
+			actModeVercelAiGatewayModelInfo,
 			actModeOcaModelId,
 			actModeOcaModelInfo,
 			actModeHicapModelId,
@@ -679,6 +710,10 @@ export class StateManager {
 			openRouterProviderSorting,
 			liteLlmBaseUrl,
 			liteLlmUsePromptCache,
+			bizRouterUsePromptCache,
+			caretBaseUrl,
+			caretUsePromptCache,
+			caretUserProfile,
 			qwenApiLine,
 			moonshotApiLine,
 			zaiApiLine,
@@ -721,6 +756,9 @@ export class StateManager {
 			doubaoApiKey,
 			mistralApiKey,
 			liteLlmApiKey,
+			bizRouterApiKey,
+			caretApiKey,
+			caretAuthToken,
 			fireworksApiKey,
 			asksageApiKey,
 			xaiApiKey,
@@ -1025,6 +1063,8 @@ export class StateManager {
 			openAiApiKey: this.secretsCache["openAiApiKey"],
 			ollamaApiKey: this.secretsCache["ollamaApiKey"],
 			geminiApiKey: this.secretsCache["geminiApiKey"],
+			caretApiKey: this.secretsCache["caretApiKey"],
+			caretAuthToken: this.secretsCache["caretAuthToken"],
 			openAiNativeApiKey: this.secretsCache["openAiNativeApiKey"],
 			deepSeekApiKey: this.secretsCache["deepSeekApiKey"],
 			requestyApiKey: this.secretsCache["requestyApiKey"],
@@ -1052,6 +1092,7 @@ export class StateManager {
 			minimaxApiKey: this.secretsCache["minimaxApiKey"],
 			hicapApiKey: this.secretsCache["hicapApiKey"],
 			aihubmixApiKey: this.secretsCache["aihubmixApiKey"],
+			bizRouterApiKey: this.secretsCache["bizRouterApiKey"],
 
 			// Global state (with remote config precedence for applicable fields)
 			awsRegion:
@@ -1102,6 +1143,11 @@ export class StateManager {
 				this.taskStateCache["openRouterProviderSorting"] || this.globalStateCache["openRouterProviderSorting"],
 			liteLlmBaseUrl: this.taskStateCache["liteLlmBaseUrl"] || this.globalStateCache["liteLlmBaseUrl"],
 			liteLlmUsePromptCache: this.taskStateCache["liteLlmUsePromptCache"] || this.globalStateCache["liteLlmUsePromptCache"],
+			bizRouterUsePromptCache:
+				this.taskStateCache["bizRouterUsePromptCache"] || this.globalStateCache["bizRouterUsePromptCache"],
+			caretBaseUrl: this.taskStateCache["caretBaseUrl"] || this.globalStateCache["caretBaseUrl"],
+			caretUsePromptCache: this.taskStateCache["caretUsePromptCache"] || this.globalStateCache["caretUsePromptCache"],
+			caretUserProfile: this.globalStateCache["caretUserProfile"],
 			qwenApiLine: this.taskStateCache["qwenApiLine"] || this.globalStateCache["qwenApiLine"],
 			moonshotApiLine: this.taskStateCache["moonshotApiLine"] || this.globalStateCache["moonshotApiLine"],
 			zaiApiLine: this.taskStateCache["zaiApiLine"] || this.globalStateCache["zaiApiLine"],
@@ -1159,6 +1205,12 @@ export class StateManager {
 				this.taskStateCache["planModeLiteLlmModelId"] || this.globalStateCache["planModeLiteLlmModelId"],
 			planModeLiteLlmModelInfo:
 				this.taskStateCache["planModeLiteLlmModelInfo"] || this.globalStateCache["planModeLiteLlmModelInfo"],
+			planModeBizRouterModelId:
+				this.taskStateCache["planModeBizRouterModelId"] || this.globalStateCache["planModeBizRouterModelId"],
+			planModeBizRouterModelInfo:
+				this.taskStateCache["planModeBizRouterModelInfo"] || this.globalStateCache["planModeBizRouterModelInfo"],
+			planModeCaretModelId: this.globalStateCache["planModeCaretModelId"],
+			planModeCaretModelInfo: this.globalStateCache["planModeCaretModelInfo"],
 			planModeRequestyModelId:
 				this.taskStateCache["planModeRequestyModelId"] || this.globalStateCache["planModeRequestyModelId"],
 			planModeRequestyModelInfo:
@@ -1186,6 +1238,11 @@ export class StateManager {
 			planModeHuaweiCloudMaasModelInfo:
 				this.taskStateCache["planModeHuaweiCloudMaasModelInfo"] ||
 				this.globalStateCache["planModeHuaweiCloudMaasModelInfo"],
+			planModeVercelAiGatewayModelId:
+				this.taskStateCache["planModeVercelAiGatewayModelId"] || this.globalStateCache["planModeVercelAiGatewayModelId"],
+			planModeVercelAiGatewayModelInfo:
+				this.taskStateCache["planModeVercelAiGatewayModelInfo"] ||
+				this.globalStateCache["planModeVercelAiGatewayModelInfo"],
 			planModeOcaModelId: this.globalStateCache["planModeOcaModelId"],
 			planModeOcaModelInfo: this.globalStateCache["planModeOcaModelInfo"],
 			planModeHicapModelId: this.taskStateCache["planModeHicapModelId"] || this.globalStateCache["planModeHicapModelId"],
@@ -1229,6 +1286,12 @@ export class StateManager {
 			actModeLiteLlmModelId: this.taskStateCache["actModeLiteLlmModelId"] || this.globalStateCache["actModeLiteLlmModelId"],
 			actModeLiteLlmModelInfo:
 				this.taskStateCache["actModeLiteLlmModelInfo"] || this.globalStateCache["actModeLiteLlmModelInfo"],
+			actModeBizRouterModelId:
+				this.taskStateCache["actModeBizRouterModelId"] || this.globalStateCache["actModeBizRouterModelId"],
+			actModeBizRouterModelInfo:
+				this.taskStateCache["actModeBizRouterModelInfo"] || this.globalStateCache["actModeBizRouterModelInfo"],
+			actModeCaretModelId: this.globalStateCache["actModeCaretModelId"],
+			actModeCaretModelInfo: this.globalStateCache["actModeCaretModelInfo"],
 			actModeRequestyModelId:
 				this.taskStateCache["actModeRequestyModelId"] || this.globalStateCache["actModeRequestyModelId"],
 			actModeRequestyModelInfo:
@@ -1255,6 +1318,11 @@ export class StateManager {
 			actModeHuaweiCloudMaasModelInfo:
 				this.taskStateCache["actModeHuaweiCloudMaasModelInfo"] ||
 				this.globalStateCache["actModeHuaweiCloudMaasModelInfo"],
+			actModeVercelAiGatewayModelId:
+				this.taskStateCache["actModeVercelAiGatewayModelId"] || this.globalStateCache["actModeVercelAiGatewayModelId"],
+			actModeVercelAiGatewayModelInfo:
+				this.taskStateCache["actModeVercelAiGatewayModelInfo"] ||
+				this.globalStateCache["actModeVercelAiGatewayModelInfo"],
 			actModeOcaModelId: this.globalStateCache["actModeOcaModelId"],
 			actModeOcaModelInfo: this.globalStateCache["actModeOcaModelInfo"],
 			actModeHicapModelId: this.globalStateCache["actModeHicapModelId"],

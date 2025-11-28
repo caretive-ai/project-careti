@@ -1,14 +1,19 @@
 import { DEFAULT_DICTATION_SETTINGS, SUPPORTED_DICTATION_LANGUAGES } from "@shared/DictationSettings"
 import { McpDisplayMode } from "@shared/McpDisplayMode"
+import { EmptyRequest } from "@shared/proto/index.cline"
 import { OpenaiReasoningEffort } from "@shared/storage/types"
-import { VSCodeCheckbox, VSCodeDropdown, VSCodeOption, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
-import { memo } from "react"
+import { VSCodeButton, VSCodeCheckbox, VSCodeDropdown, VSCodeOption, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
+import { memo, useEffect, useMemo, useState } from "react"
 import { getLocalizedUrl } from "@/caret/constants/urls"
 import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
 import { t } from "@/caret/utils/i18n"
 import McpDisplayModeDropdown from "@/components/mcp/chat-display/McpDisplayModeDropdown"
+import { PLATFORM_CONFIG, PlatformType } from "@/config/platform.config"
 import { useExtensionState } from "@/context/ExtensionStateContext"
+import { StateServiceClient } from "@/services/grpc-client"
+import { isMacOSOrLinux } from "@/utils/platformUtils"
 import Section from "../Section"
+import SubagentOutputLineLimitSlider from "../SubagentOutputLineLimitSlider"
 import { updateSetting } from "../utils/settingsHandlers"
 
 interface FeatureSettingsSectionProps {
@@ -27,19 +32,130 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 		dictationSettings,
 		useAutoCondense,
 		focusChainSettings,
+		modeSystem,
+		subagentsEnabled,
 	} = useExtensionState()
 	const dictation = dictationSettings ?? DEFAULT_DICTATION_SETTINGS
 	const { language } = useCaretI18nContext()
+	const [isCliInstalled, setIsCliInstalled] = useState(false)
+
+	const isCaretMode = modeSystem === "caret"
+	const cliLabel = isCaretMode ? "Caret CLI" : "Cline CLI"
+	const installCommand = useMemo(
+		() => (isCaretMode ? "npm install -g @caretive/caret-cli" : "npm install -g cline"),
+		[isCaretMode],
+	)
+	const installWarningKey = isCaretMode ? "features.subagents.caretWarning" : "features.subagents.clineWarning"
+	const installStatusKey = isCliInstalled ? "features.subagents.installed" : "features.subagents.notInstalled"
 
 	const handleReasoningEffortChange = (newValue: OpenaiReasoningEffort) => {
 		updateSetting("openaiReasoningEffort", newValue)
 	}
+
+	// CLI 설치 여부 폴링 (modeSystem에 맞춰 Caret/Cline CLI 감지)
+	useEffect(() => {
+		let cancelled = false
+
+		const checkInstallation = async () => {
+			try {
+				const result = await StateServiceClient.checkCliInstallation(EmptyRequest.create())
+				if (!cancelled) {
+					setIsCliInstalled(result.value)
+				}
+			} catch (error) {
+				console.error("[FeatureSettingsSection] Failed to check CLI installation", error)
+			}
+		}
+
+		checkInstallation()
+		const interval = setInterval(checkInstallation, 1500)
+		return () => {
+			cancelled = true
+			clearInterval(interval)
+		}
+	}, [modeSystem])
 
 	return (
 		<div>
 			{renderSectionHeader("features")}
 			<Section>
 				<div style={{ marginBottom: 20 }}>
+					{/* 서브에이전트 설정 (VS Code, macOS/Linux 한정) */}
+					{isMacOSOrLinux() && PLATFORM_CONFIG.type === PlatformType.VSCODE && (
+						<div
+							className="relative p-3 mb-3 rounded-md"
+							id="subagents-section"
+							style={{
+								border: "1px solid var(--vscode-widget-border)",
+								backgroundColor: "var(--vscode-list-hoverBackground)",
+							}}>
+							<div
+								className="mt-1.5 mb-2 px-2 pt-0.5 pb-1.5 rounded"
+								style={{
+									backgroundColor: "color-mix(in srgb, var(--vscode-sideBar-background) 99%, black)",
+								}}>
+								<p
+									className="text-xs mb-2 flex items-start"
+									style={{ color: "var(--vscode-inputValidation-warningForeground)" }}>
+									<span
+										className="codicon codicon-warning mr-1"
+										style={{ fontSize: "12px", marginTop: "1px", flexShrink: 0 }}></span>
+									<span>
+										{t(installWarningKey, "settings")}{" "}
+										<code
+											className="ml-1 px-1 rounded"
+											style={{
+												backgroundColor: "var(--vscode-editor-background)",
+												color: "var(--vscode-foreground)",
+												opacity: 0.9,
+											}}>
+											{installCommand}
+										</code>
+									</span>
+								</p>
+								<div className="flex items-center gap-2 flex-wrap">
+									<VSCodeButton
+										appearance="secondary"
+										disabled={isCliInstalled}
+										onClick={() => {
+											StateServiceClient.installClineCli(EmptyRequest.create()).catch((error) =>
+												console.error("[FeatureSettingsSection] Failed to trigger CLI install", error),
+											)
+										}}
+										style={{ transform: "scale(0.9)", transformOrigin: "left center", marginLeft: "-2px" }}>
+										{isCliInstalled
+											? t("features.subagents.installed", "settings")
+											: t("features.subagents.install", "settings")}
+									</VSCodeButton>
+									<span className="text-xs text-description">
+										{t(installStatusKey, "settings")} · {cliLabel}
+									</span>
+								</div>
+							</div>
+							<VSCodeCheckbox
+								checked={subagentsEnabled}
+								disabled={!isCliInstalled}
+								onChange={(e: any) => {
+									const checked = e.target.checked === true
+									updateSetting("subagentsEnabled", checked)
+								}}>
+								<span className="font-semibold">
+									{subagentsEnabled
+										? t("features.subagents.enabled", "settings")
+										: t("features.subagents.enable", "settings")}
+								</span>
+							</VSCodeCheckbox>
+							<p className="text-xs mt-1 mb-0 text-description">
+								{t("features.subagents.description", "settings")} ({cliLabel})
+							</p>
+							{subagentsEnabled && (
+								<div className="mt-3">
+									<SubagentOutputLineLimitSlider />
+								</div>
+							)}
+						</div>
+					)}
+
 					<div>
 						<VSCodeCheckbox
 							checked={enableCheckpointsSetting}

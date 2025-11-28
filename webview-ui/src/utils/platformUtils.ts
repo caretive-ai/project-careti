@@ -40,3 +40,9 @@ const userAgent = navigator?.userAgent || ""
 export const isChrome = userAgent.indexOf("Chrome") >= 0
 
 export const isSafari = !isChrome && userAgent.indexOf("Safari") >= 0
+
+// CARET MODIFICATION: helper for mac/linux gating in settings banner
+export const isMacOSOrLinux = () => {
+	const platform = ((navigator as any)?.userAgentData?.platform || navigator?.platform || "").toLowerCase()
+	return ["mac", "linux"].includes(detectOS(platform))
+}

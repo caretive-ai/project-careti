@@ -11,6 +11,8 @@ import (
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 )
 
+var updateApiConfigurationPartialFn = updateApiConfigurationPartial
+
 // updateApiConfigurationPartial is a helper that calls the gRPC method with optional verbose logging.
 // This replaces the Manager.updateApiConfigurationPartial method to keep auth-specific code in the auth package.
 func updateApiConfigurationPartial(ctx context.Context, manager *task.Manager, request *cline.UpdateApiConfigurationPartialRequest) error {
@@ -64,6 +66,38 @@ func GetProviderFields(provider cline.ApiProvider) (ProviderFields, error) {
 			APIKeyField:          "apiKey",
 			PlanModeModelIDField: "planModeApiModelId",
 			ActModeModelIDField:  "actModeApiModelId",
+		}, nil
+	case cline.ApiProvider_LITELLM:
+		return ProviderFields{
+			APIKeyField:                          "liteLlmApiKey",
+			BaseURLField:                         "liteLlmBaseUrl",
+			PlanModeModelIDField:                 "planModeApiModelId",
+			ActModeModelIDField:                  "actModeApiModelId",
+			PlanModeModelInfoField:               "planModeLiteLlmModelInfo",
+			ActModeModelInfoField:                "actModeLiteLlmModelInfo",
+			PlanModeProviderSpecificModelIDField: "planModeLiteLlmModelId",
+			ActModeProviderSpecificModelIDField:  "actModeLiteLlmModelId",
+		}, nil
+	case cline.ApiProvider_CARET:
+		return ProviderFields{
+			APIKeyField:                          "caretApiKey",
+			BaseURLField:                         "caretBaseUrl",
+			PlanModeModelIDField:                 "planModeApiModelId",
+			ActModeModelIDField:                  "actModeApiModelId",
+			PlanModeModelInfoField:               "planModeCaretModelInfo",
+			ActModeModelInfoField:                "actModeCaretModelInfo",
+			PlanModeProviderSpecificModelIDField: "planModeCaretModelId",
+			ActModeProviderSpecificModelIDField:  "actModeCaretModelId",
+		}, nil
+	case cline.ApiProvider_BIZROUTER:
+		return ProviderFields{
+			APIKeyField:                          "bizRouterApiKey",
+			PlanModeModelIDField:                 "planModeApiModelId",
+			ActModeModelIDField:                  "actModeApiModelId",
+			PlanModeModelInfoField:               "planModeBizRouterModelInfo",
+			ActModeModelInfoField:                "actModeBizRouterModelInfo",
+			PlanModeProviderSpecificModelIDField: "planModeBizRouterModelId",
+			ActModeProviderSpecificModelIDField:  "actModeBizRouterModelId",
 		}, nil
 
 	case cline.ApiProvider_OPENAI:
@@ -265,6 +299,10 @@ func setAPIKeyField(apiConfig *cline.ModelsApiConfiguration, fieldName string, v
 	switch fieldName {
 	case "apiKey":
 		apiConfig.ApiKey = value
+	case "bizRouterApiKey":
+		apiConfig.BizRouterApiKey = value
+	case "caretApiKey":
+		apiConfig.CaretApiKey = value
 	case "openAiApiKey":
 		apiConfig.OpenAiApiKey = value
 	case "openAiNativeApiKey":
@@ -281,6 +319,8 @@ func setAPIKeyField(apiConfig *cline.ModelsApiConfiguration, fieldName string, v
 		apiConfig.OllamaBaseUrl = value
 	case "cerebrasApiKey":
 		apiConfig.CerebrasApiKey = value
+	case "liteLlmApiKey":
+		apiConfig.LiteLlmApiKey = value
 	case "clineApiKey":
 		apiConfig.ClineApiKey = value
 	case "ocaApiKey":
@@ -298,6 +338,12 @@ func setProviderSpecificModelID(apiConfig *cline.ModelsApiConfiguration, fieldNa
 	case "planModeOpenAiModelId":
 		apiConfig.PlanModeOpenAiModelId = value
 		apiConfig.ActModeOpenAiModelId = value
+	case "planModeBizRouterModelId":
+		apiConfig.PlanModeBizRouterModelId = value
+		apiConfig.ActModeBizRouterModelId = value
+	case "planModeCaretModelId":
+		apiConfig.PlanModeCaretModelId = value
+		apiConfig.ActModeCaretModelId = value
 	case "planModeOpenRouterModelId":
 		apiConfig.PlanModeOpenRouterModelId = value
 		apiConfig.ActModeOpenRouterModelId = value
@@ -313,6 +359,9 @@ func setProviderSpecificModelID(apiConfig *cline.ModelsApiConfiguration, fieldNa
 	case "planModeHicapModelId":
 		apiConfig.PlanModeHicapModelId = value
 		apiConfig.ActModeHicapModelId = value
+	case "planModeLiteLlmModelId":
+		apiConfig.PlanModeLiteLlmModelId = value
+		apiConfig.ActModeLiteLlmModelId = value
 	case "planModeNousResearchModelId":
 		apiConfig.PlanModeNousResearchModelId = value
 		apiConfig.ActModeNousResearchModelId = value
@@ -372,7 +421,7 @@ func AddProviderPartial(ctx context.Context, manager *task.Manager, provider cli
 		UpdateMask:       fieldMask,
 	}
 
-	if err := updateApiConfigurationPartial(ctx, manager, request); err != nil {
+	if err := updateApiConfigurationPartialFn(ctx, manager, request); err != nil {
 		return fmt.Errorf("failed to update API configuration: %w", err)
 	}
 
@@ -439,7 +488,7 @@ func UpdateProviderPartial(ctx context.Context, manager *task.Manager, provider 
 		UpdateMask:       fieldMask,
 	}
 
-	if err := updateApiConfigurationPartial(ctx, manager, request); err != nil {
+	if err := updateApiConfigurationPartialFn(ctx, manager, request); err != nil {
 		return fmt.Errorf("failed to update API configuration: %w", err)
 	}
 
@@ -474,7 +523,7 @@ func RemoveProviderPartial(ctx context.Context, manager *task.Manager, provider 
 		UpdateMask:       fieldMask,
 	}
 
-	if err := updateApiConfigurationPartial(ctx, manager, request); err != nil {
+	if err := updateApiConfigurationPartialFn(ctx, manager, request); err != nil {
 		return fmt.Errorf("failed to update API configuration: %w", err)
 	}
 
@@ -484,6 +533,8 @@ func RemoveProviderPartial(ctx context.Context, manager *task.Manager, provider 
 // setBaseURLField sets the appropriate base URL field in the config based on the field name
 func setBaseURLField(apiConfig *cline.ModelsApiConfiguration, fieldName string, value *string) {
 	switch fieldName {
+	case "caretBaseUrl":
+		apiConfig.CaretBaseUrl = value
 	case "ocaBaseUrl":
 		apiConfig.OcaBaseUrl = value
 	case "ollamaBaseUrl":

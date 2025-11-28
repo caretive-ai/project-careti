@@ -14,17 +14,17 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 
 # 📊 지원 모델 현황
 
-총 **20개 제공자**에서 **248개 고유 모델** (총 329개 모델 정의)을 지원합니다.
+총 **20개 제공자**에서 **251개 고유 모델** (총 333개 모델 정의)을 지원합니다.
 
 ## 🔍 제공자별 지원 모델
 
 | 제공자 | 모델 수 | 주요 모델 |
 |--------|---------|-----------|
 | **Caret** | 2개 | `gemini/gemini-2.5-pro`, `gemini/gemini-2.5-flash` |
-| **Anthropic** | 12개 | `claude-sonnet-4-5-20250929`, `claude-sonnet-4-5-20250929:1m`, `claude-haiku-4-5-20251001` 외 9개 |
-| **Claudecode** | 7개 | `claude-haiku-4-5-20251001`, `claude-sonnet-4-5-20250929`, `claude-sonnet-4-20250514` 외 4개 |
-| **Bedrock** | 23개 | `anthropic.claude-sonnet-4-5-20250929-v1:0`, `anthropic.claude-sonnet-4-5-20250929-v1:0:1m`, `anthropic.claude-haiku-4-5-20251001-v1:0` 외 20개 |
-| **Vertex** | 32개 | `gemini-3-pro-preview`, `claude-sonnet-4-5@20250929`, `claude-sonnet-4@20250514` 외 29개 |
+| **Anthropic** | 13개 | `claude-sonnet-4-5-20250929`, `claude-sonnet-4-5-20250929:1m`, `claude-haiku-4-5-20251001` 외 10개 |
+| **Claudecode** | 8개 | `claude-haiku-4-5-20251001`, `claude-sonnet-4-5-20250929`, `claude-sonnet-4-20250514` 외 5개 |
+| **Bedrock** | 24개 | `anthropic.claude-sonnet-4-5-20250929-v1:0`, `anthropic.claude-sonnet-4-5-20250929-v1:0:1m`, `anthropic.claude-haiku-4-5-20251001-v1:0` 외 21개 |
+| **Vertex** | 33개 | `gemini-3-pro-preview`, `claude-sonnet-4-5@20250929`, `claude-sonnet-4@20250514` 외 30개 |
 | **Gemini** | 16개 | `gemini-3-pro-preview`, `gemini-2.5-pro`, `gemini-2.5-flash-lite-preview-06-17` 외 13개 |
 | **Openainative** | 17개 | `gpt-5-2025-08-07`, `gpt-5-mini-2025-08-07`, `gpt-5-nano-2025-08-07` 외 14개 |
 | **Deepseek** | 2개 | `deepseek-chat`, `deepseek-reasoner` |
@@ -58,7 +58,7 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 | `gemini/gemini-2.5-pro` | 65,536 | 1 | ✅ | 2.5 | 15 |
 | `gemini/gemini-2.5-flash` | 65,536 | 1 | ✅ | 0.3 | 2.5 |
 
-### Anthropic (12개)
+### Anthropic (13개)
 
 | 모델명 | 최대 토큰 | 컨텍스트 윈도우 | 이미지 지원 | 입력 가격 ($/1M토큰) | 출력 가격 ($/1M토큰) |
 |--------|-----------|----------------|-------------|-----------|-----------|
@@ -67,6 +67,7 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 | `claude-haiku-4-5-20251001` | 8,192 | 200 | ✅ | 1 | 5 |
 | `claude-sonnet-4-20250514` | 8,192 | 200 | ✅ | 3 | 15 |
 | `claude-sonnet-4-20250514:1m` | 8,192 | 1 | ✅ | 3 | 15 |
+| `claude-opus-4-5-20251101` | 8,192 | 200 | ✅ | 5 | 25 |
 | `claude-opus-4-1-20250805` | 8,192 | 200 | ✅ | 15 | 75 |
 | `claude-opus-4-20250514` | 8,192 | 200 | ✅ | 15 | 75 |
 | `claude-3-7-sonnet-20250219` | 8,192 | 200 | ✅ | 3 | 15 |
@@ -75,19 +76,20 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 | `claude-3-opus-20240229` | 4,096 | 200 | ✅ | 15 | 75 |
 | `claude-3-haiku-20240307` | 4,096 | 200 | ✅ | 0.25 | 1.25 |
 
-### Claudecode (7개)
+### Claudecode (8개)
 
 | 모델명 | 최대 토큰 | 컨텍스트 윈도우 | 이미지 지원 | 입력 가격 ($/1M토큰) | 출력 가격 ($/1M토큰) |
 |--------|-----------|----------------|-------------|-----------|-----------|
 | `claude-haiku-4-5-20251001` | N/A | N/A | ❌ | N/A | N/A |
 | `claude-sonnet-4-5-20250929` | N/A | N/A | ❌ | N/A | N/A |
 | `claude-sonnet-4-20250514` | N/A | N/A | ❌ | N/A | N/A |
+| `claude-opus-4-5-20251101` | N/A | N/A | ❌ | N/A | N/A |
 | `claude-opus-4-1-20250805` | N/A | N/A | ❌ | N/A | N/A |
 | `claude-opus-4-20250514` | N/A | N/A | ❌ | N/A | N/A |
 | `claude-3-7-sonnet-20250219` | N/A | N/A | ❌ | N/A | N/A |
 | `claude-3-5-haiku-20241022` | N/A | N/A | ❌ | N/A | N/A |
 
-### Bedrock (23개)
+### Bedrock (24개)
 
 | 모델명 | 최대 토큰 | 컨텍스트 윈도우 | 이미지 지원 | 입력 가격 ($/1M토큰) | 출력 가격 ($/1M토큰) |
 |--------|-----------|----------------|-------------|-----------|-----------|
@@ -96,6 +98,7 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 | `anthropic.claude-haiku-4-5-20251001-v1:0` | 8,192 | 200 | ✅ | 1 | 5 |
 | `anthropic.claude-sonnet-4-20250514-v1:0` | 8,192 | 200 | ✅ | 3 | 15 |
 | `anthropic.claude-sonnet-4-20250514-v1:0:1m` | 8,192 | 1 | ✅ | 3 | 15 |
+| `anthropic.claude-opus-4-5-20251101-v1:0` | 8,192 | 200 | ✅ | 5 | 25 |
 | `anthropic.claude-opus-4-20250514-v1:0` | 8,192 | 200 | ✅ | 15 | 75 |
 | `anthropic.claude-opus-4-1-20250805-v1:0` | 8,192 | 200 | ✅ | 15 | 75 |
 | `amazon.nova-premier-v1:0` | 10 | 1 | ✅ | 2.5 | 12.5 |
@@ -115,7 +118,7 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 | `qwen.qwen3-coder-30b-a3b-v1:0` | 8,192 | 262 | ❌ | 0.15 | 0.6 |
 | `qwen.qwen3-coder-480b-a35b-v1:0` | 8,192 | 262 | ❌ | 0.22 | 1.8 |
 
-### Vertex (32개)
+### Vertex (33개)
 
 | 모델명 | 최대 토큰 | 컨텍스트 윈도우 | 이미지 지원 | 입력 가격 ($/1M토큰) | 출력 가격 ($/1M토큰) |
 |--------|-----------|----------------|-------------|-----------|-----------|
@@ -123,6 +126,7 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 | `claude-sonnet-4-5@20250929` | 8,192 | 200 | ✅ | 3 | 15 |
 | `claude-sonnet-4@20250514` | 8,192 | 200 | ✅ | 3 | 15 |
 | `claude-haiku-4-5@20251001` | 8,192 | 200 | ❌ | 1 | 5 |
+| `claude-opus-4-5@20251101` | 8,192 | 200 | ✅ | 5 | 25 |
 | `claude-opus-4-1@20250805` | 8,192 | 200 | ✅ | 15 | 75 |
 | `claude-opus-4@20250514` | 8,192 | 200 | ✅ | 15 | 75 |
 | `claude-3-7-sonnet@20250219` | 8,192 | 200 | ✅ | 3 | 15 |
@@ -523,6 +527,6 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 
 ---
 
-**총 248개 고유 AI 모델을 20개 제공자에서 지원합니다.**
+**총 251개 고유 AI 모델을 20개 제공자에서 지원합니다.**
 
 *이 문서는 자동으로 생성되었습니다. (`caret-scripts/generate-support-model-list.js`)*

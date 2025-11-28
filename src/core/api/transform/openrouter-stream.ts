@@ -43,6 +43,7 @@ export async function createOpenRouterStream(
 		case "anthropic/claude-sonnet-4.5":
 		case "anthropic/claude-4.5-sonnet": // OpenRouter accidentally included this in model list for a brief moment, and users may be using this model id. And to support prompt caching, we need to add it here.
 		case "anthropic/claude-sonnet-4":
+		case "anthropic/claude-opus-4.5":
 		case "anthropic/claude-opus-4.1":
 		case "anthropic/claude-opus-4":
 		case "anthropic/claude-3.7-sonnet":
@@ -68,7 +69,7 @@ export async function createOpenRouterStream(
 					{
 						type: "text",
 						text: systemPrompt,
-						// @ts-ignore-next-line
+						// @ts-expect-error-next-line
 						cache_control: { type: "ephemeral" },
 					},
 				],
@@ -88,7 +89,7 @@ export async function createOpenRouterStream(
 						lastTextPart = { type: "text", text: "..." }
 						msg.content.push(lastTextPart)
 					}
-					// @ts-ignore-next-line
+					// @ts-expect-error-next-line
 					lastTextPart["cache_control"] = { type: "ephemeral" }
 				}
 			})
@@ -106,6 +107,7 @@ export async function createOpenRouterStream(
 		case "anthropic/claude-sonnet-4.5":
 		case "anthropic/claude-4.5-sonnet":
 		case "anthropic/claude-sonnet-4":
+		case "anthropic/claude-opus-4.5":
 		case "anthropic/claude-opus-4.1":
 		case "anthropic/claude-opus-4":
 		case "anthropic/claude-3.7-sonnet":
@@ -150,6 +152,7 @@ export async function createOpenRouterStream(
 		case "anthropic/claude-sonnet-4.5":
 		case "anthropic/claude-4.5-sonnet":
 		case "anthropic/claude-sonnet-4":
+		case "anthropic/claude-opus-4.5":
 		case "anthropic/claude-opus-4.1":
 		case "anthropic/claude-opus-4":
 		case "anthropic/claude-3.7-sonnet":
@@ -177,7 +180,7 @@ export async function createOpenRouterStream(
 		openRouterProviderSorting = undefined
 	}
 
-	// @ts-ignore-next-line
+	// @ts-expect-error-next-line
 	const stream = await client.chat.completions.create({
 		model: model.id,
 		max_tokens: maxTokens,

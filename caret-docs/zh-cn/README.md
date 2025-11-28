@@ -1,10 +1,9 @@
-
 <div align="center">
-<table>
+  <table>
     <tr>
       <td align="center">
         <a href="https://github.com/aicoding-caret/caret/blob/main/README.md">
-            <img src="https://img.shields.io/badge/English-2563eb?style=for-the-badge&labelColor=1e40af" alt="English"/>
+          <img src="https://img.shields.io/badge/English-2563eb?style=for-the-badge&labelColor=1e40af" alt="English"/>
         </a>
       </td>
       <td align="center">
@@ -24,20 +23,18 @@
       </td>
     </tr>
   </table>
-  <h1>🎯 Caret: 您的新AI编程伙伴</h1>
-  <p><strong>Cline的所有功能 + 个性化AI伙伴 + 改进的系统提示</strong></p>
-  
-  <!-- 强力CTA按钮 -->
+  <h1>🎯 Caret：你的 AI 编程伙伴</h1>
+  <p><strong>基于 Cline v3.38.2 + 双模式 + 角色系统 + 完整本地化</strong></p>
+
   <p>
     <a href="https://marketplace.visualstudio.com/items?itemName=caretive.caret" style="background: #007ACC; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; margin: 8px;">
-      📥 在VS Code中立即安装
+      📥 在 VS Code 中安装
     </a>
     <a href="https://docs.caret.team/zh-Hans/getting-started/what-is-caret" style="background: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; margin: 8px;">
-      📖 使用指南
+      📖 文档
     </a>
   </p>
-  
-  <!-- 徽章 -->
+
   <p>
     <a href="https://marketplace.visualstudio.com/items?itemName=caretive.caret">
       <img src="https://img.shields.io/visual-studio-marketplace/v/caretive.caret.svg?color=blue&label=VS%20Code%20Marketplace" alt="VS Code Marketplace">
@@ -47,223 +44,167 @@
     </a>
   </p>
 
-  <!-- Persona Image at Top -->
-  <img src="../../assets/template_characters/caret_illust.png" alt="Caret Personas" width="400"/>
-  <p><em>选择并定制您的专属AI编程伙伴！</em></p>
+  <img src="https://raw.githubusercontent.com/aicoding-caret/caret/main/assets/template_characters/caret_illust.png" alt="Caret Personas" width="400"/>
+  <p><em>选择并定制你的专属 AI 编程伙伴！</em></p>
 </div>
 
 ---
 
-## 🎁 新增: 官方Caret AI提供商 - 免费$10积分！
+## 🎁 新增：官方 Caret AI 提供商 — 每月免费积分
 
-**好消息！** Caret现在提供自己的官方AI提供商集成:
+**好消息！** Caret 现已提供官方 AI 提供商集成：
 
-- 🎉 **促销优惠**: 促销期间所有用户可获得**$10免费积分**
-- 💳 **付费积分购买**: 即将推出 - 额外积分购买系统即将发布
-- 🚀 **轻松设置**: 在设置中选择"Caret"作为AI提供商即可开始使用
-
----
-
-## 🚀 最新更新: Cline v3.32.7完全集成！
-
-**Caret v0.3.0**现已包含**Cline v3.32.7的所有功能**，同时保持与Caret独特扩展的100%兼容性！
-
-### 本次合并的主要内容:
-- ✅ **完全采用Cline v3.32.7** - 包含所有最新Cline功能和改进
-- ✅ **重新实现10个Caret功能** - 以最小侵入保留所有功能 ([查看详情](../features/index.md))
-- ✅ **最小侵入策略** - 仅修改9个Cline文件（291行）实现完美兼容
-- ✅ **AI提示优化** - 通过优化的编辑工作流减少30-50%的API请求
-- ✅ **Focus Chain** - 复杂工作流的自动任务管理
-- ✅ **300个独特AI模型** - 支持25个提供商，包括Claude Sonnet 4.5、GPT-5等
-
-### 迁移亮点:
-- **Phase 4**: 后端重新实现 (100%完成 ✅)
-- **Phase 5**: 前端重新实现 (100%完成 ✅)
-- **Phase 6**: 最终验证进行中 🔄
-
-**完整合并文档**: 请参阅 [merge-execution-master-plan.md](../merging/merge-execution-master-plan.md)
+- 🎉 **免费积分**：新用户每月 **$0.1（10 积分）**，首月最高 $0.2
+- 🤖 **最新模型**：Gemini 3、2.5 Pro、Lite 等
+- 🚀 **快速上手**：在设置中选择 “Caret” 即可立即使用
 
 ---
 
-## 🌟 选择Caret的6大理由
+## 🚀 最新更新：Cline v3.38.2 + GPT 5.1、Claude Opus 4.5、Gemini 3
 
-1. **🔄 一键模式切换** - Cline完美兼容，随时切换
-2. **🎭 个性化AI伙伴** - 用自己的角色愉快编程
-3. **🧠 改进的系统提示** - 更智能高效的AI回应
-4. **🌍 4语言完美支持** - 中文、韩文、日文、英文 + 4语言手册
-5. **⌨️ 增强的UX** - 提示历史、自动模型获取等
-6. **🎯 25个提供商，300个模型** - Cline v3.32.7完全兼容 + 扩展
+**Caret v0.4.0** 已包含 **Cline v3.38.2 的全部功能**，并与 Caret 扩展保持 100% 兼容。
 
-👉 **查看所有独家功能**: [Caret独家功能概览](https://docs.caret.team/zh/caret-exclusive/overview)  
+### 亮点
+- ✅ **完全采用 Cline v3.38.2**：包含核心改进与 Claude Opus 4.5
+- ✅ **双账户系统**：继续支持现有 Cline 账户
+- ✅ **Caret CLI（测试版）**：支持 LiteLLM 的统一 CLI
+- ✅ **输入历史**：类终端的历史导航
+- ✅ **增强的提供商设置**：自动拉取 LiteLLM / [BizRouter](https://bizrouter.ai/) 模型并进行健康检查
+- ✅ **251 个独立模型**：支持 20 个提供商（含 Claude Opus 4.5、GPT-5、Gemini 3）
 
-## 🎭 首要特色：打造专属AI编程伙伴
+---
 
-与其他AI工具完全差异化的**角色系统**！超越简单文字聊天，与视觉生动的AI伙伴一起编程。
+## 🌟 选择 Caret 的 6 个理由
 
-### 预设角色：
+1. **🔄 双模式** — Caret（扩展）/ Cline（经典）一键切换  
+2. **🎭 角色系统** — 与个性化 AI 队友协作  
+3. **🧠 更智能的提示** — 成本与性能优化  
+4. **🌍 完整本地化** — 界面与文档支持 4 种语言  
+5. **⌨️ 更佳体验** — 输入历史、快捷键（Esc、Ctrl+Shift+R）  
+6. **🎯 海量模型** — 20 提供商 / 251 模型（兼容 Cline v3.38.2）  
+
+👉 **查看全部独占功能**: [Feature index](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/index.md)
+
+---
+
+## 🎭 特性 1：打造专属 AI 编程伙伴
+
+不仅是文本聊天，**角色系统** 让你与更生动的 AI 同事协作。
 
 <div align="center">
 <table>
 <tr>
 <td align="center" width="120">
-  <img src="../../assets/template_characters/caret.png" width="80" style="border-radius: 50%;"/><br/>
+  <img src="https://raw.githubusercontent.com/aicoding-caret/caret/main/assets/template_characters/caret.png" width="80" style="border-radius: 50%;"/><br/>
   <strong>Caret</strong><br/>
-  <small>友善机器人朋友</small>
+  <small>友善的机器人伙伴</small>
 </td>
 <td align="center" width="120">
-  <img src="../../assets/template_characters/sarang.png" width="80" style="border-radius: 50%;"/><br/>
-  <strong>吴莎朗</strong><br/>
-  <small>K-POP偶像程序员</small>
+  <img src="https://raw.githubusercontent.com/aicoding-caret/caret/main/assets/template_characters/sarang.png" width="80" style="border-radius: 50%;"/><br/>
+  <strong>Sarang</strong><br/>
+  <small>K-POP 开发偶像</small>
 </td>
 <td align="center" width="120">
-  <img src="../../assets/template_characters/ichika.png" width="80" style="border-radius: 50%;"/><br/>
-  <strong>窗边一花</strong><br/>
-  <small>Windows 11 OS娘</small>
+  <img src="https://raw.githubusercontent.com/aicoding-caret/caret/main/assets/template_characters/ichika.png" width="80" style="border-radius: 50%;"/><br/>
+  <strong>Ichika</strong><br/>
+  <small>Windows 11 OS-tan</small>
 </td>
 <td align="center" width="120">
-  <img src="../../assets/template_characters/cyan.png" width="80" style="border-radius: 50%;"/><br/>
-  <strong>青苹果</strong><br/>
-  <small>macOS助手</small>
+  <img src="https://raw.githubusercontent.com/aicoding-caret/caret/main/assets/template_characters/cyan.png" width="80" style="border-radius: 50%;"/><br/>
+  <strong>Cyan</strong><br/>
+  <small>macOS 助手</small>
 </td>
 <td align="center" width="120">
-  <img src="../../assets/template_characters/ubuntu.png" width="80" style="border-radius: 50%;"/><br/>
-  <strong>坦朵乌班图</strong><br/>
-  <small>开源协作者</small>
+  <img src="https://raw.githubusercontent.com/aicoding-caret/caret/main/assets/template_characters/ubuntu.png" width="80" style="border-radius: 50%;"/><br/>
+  <strong>Tando</strong><br/>
+  <small>开源伙伴</small>
 </td>
 </tr>
 </table>
 </div>
 
-**🎨 自定义**: 可注册自己的AI名字和头像！
-**⚡ 随时切换**: 即时开关角色功能 - 也可使用纯净Cline模式
+**🎨 自由定制**：自定义 AI 名称与头像  
+**⚡ 即刻切换**：随时启用/关闭角色或回到纯 Cline 模式  
 
-## 🔄 Cline/Caret切换 - 两种模式随心切换！
+---
 
-### 🎛️ **一键模式切换**
+## 🔄 特性 2：双模式 — 两种体验合二为一
+
 <div align="center">
-  <img src="https://img.shields.io/badge/Cline_模式-原版方式-blue?style=for-the-badge" alt="Cline Mode"/>
+  <img src="https://img.shields.io/badge/Cline_Mode-Classic-blue?style=for-the-badge" alt="Cline Mode"/>
   <strong> ⇄ </strong>
-  <img src="https://img.shields.io/badge/Caret_模式-扩展功能-green?style=for-the-badge" alt="Caret Mode"/>
+  <img src="https://img.shields.io/badge/Caret_Mode-Extended-green?style=for-the-badge" alt="Caret Mode"/>
 </div>
 
-**🔵 Cline模式** - 原版Cline：
-- ✅ **Plan/Act方式** - 原版Cline用户熟悉的方式
-- ✅ **所有设置兼容** - 原有设置原样使用
-- ✅ **工作流程不变** - 熟悉的使用方法
-- ✅ **稳定性保证** - Cline验证过的核心引擎
+**🔵 Cline 模式** — 经典体验  
+- ✅ 熟悉的 Plan/Act 工作流  
+- ✅ 与现有设置和账户完全兼容  
+- ✅ 继承 Cline 核心的稳定性  
 
-**🟢 Caret模式** - 扩展功能：
-- 🎭 **角色系统** - 打造专属AI伙伴
-- 🧠 **改进的系统提示** - 更智能高效的AI
-- 🌍 **4语言支持** - 完美多语言环境
-- 🎯 **Chatbot/Agent** - 更直观的对话方式
+**🟢 Caret 模式** — 扩展体验  
+- 🎭 角色系统  
+- 🧠 优化提示，平衡性能与成本  
+- 🌍 多语言支持  
+- 🎯 直观的 Chatbot / Agent 流程  
 
-## 🚀 Caret的12大核心功能
+---
 
-Caret在保持与Cline 100%兼容的同时，扩展了强大的新功能：
+## 🚀 Caret 的 12 个核心功能
 
 <div align="center">
 
-| 功能 | 说明 | 文档 |
+| 功能 | 描述 | Docs |
 |------|------|------|
-| **F00** | **Cline Bugfix & Patch** | Cline原版错误修复和稳定性补丁 | [📖 详情](../features/f00-cline-bugfix-patch.md) |
-| **F01** | **通用工具库** | 共享工具函数和助手 | [📖 详情](../features/f01-common-util.md) |
-| **F02** | **多语言i18n** | 4语言支持（中/韩/日/英） | [📖 详情](../features/f02-multilingual-i18n.md) |
-| **F03** | **品牌与UI系统** | 动态品牌切换（Caret/CodeCenter） | [📖 详情](../features/f03-branding-ui.md) |
-| **F04** | **Cline兼容性 & CLI** | Cline模式100%兼容及Caret CLI扩展 | [📖 详情](../features/f04-cline-compatibility-and-cli.md) |
-| **F05** | **Caret账户系统** | 用户认证与管理 | [📖 详情](../features/f05-caret-account.md) |
-| **F06** | **规则优先级系统** | 多层规则配置系统 (.caretrules) | [📖 详情](../features/f06-rule-priority-system.md) |
-| **F07** | **Caret提示系统** | JSON动态提示 & 模式切换 | [📖 详情](../features/f07-caret-prompt-system.md) |
-| **F08** | **角色系统** | 可定制的AI伙伴 | [📖 详情](../features/f08-persona-system.md) |
-| **F09** | **功能配置系统** | 模块化功能管理 (白标支持) | [📖 详情](../features/f09-feature-config-system.md) |
-| **F10** | **增强的提供商设置** | 高级AI提供商配置 (自动化) | [📖 详情](../features/f10-enhanced-provider-setup.md) |
-| **F11** | **输入历史与快捷键** | 终端风格历史 + 全局快捷键 | [📖 详情](../features/f11-input-history-and-shortcuts.md) |
-| **F12** | **知识同步系统** | AI-开发者知识同步 (按需加载) | [📖 详情](../features/f12-ai-developer-knowledge-parity.md) |
+| **F00** | Cline 修复与稳定性补丁 | [Details](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/f00-cline-bugfix-patch.md) |
+| **F01** | 通用工具 | [Details](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/f01-common-util.md) |
+| **F02** | 多语言 i18n | [Details](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/f02-multilingual-i18n.md) |
+| **F03** | 品牌与 UI | [Details](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/f03-branding-ui.md) |
+| **F04** | Cline 兼容与 CLI | [Details](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/f04-cline-compatibility-and-cli.md) |
+| **F05** | Caret 账户系统 | [Details](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/f05-caret-account.md) |
+| **F06** | 规则优先级系统 | [Details](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/f06-rule-priority-system.md) |
+| **F07** | Caret 提示系统 | [Details](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/f07-caret-prompt-system.md) |
+| **F08** | 角色系统 | [Details](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/f08-persona-system.md) |
+| **F09** | Feature Config | [Details](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/f09-feature-config-system.md) |
+| **F10** | 高级提供商设置 | [Details](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/f10-enhanced-provider-setup.md) |
+| **F11** | 输入历史与快捷键 | [Details](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/f11-input-history-and-shortcuts.md) |
+| **F12** | AI-开发者知识同步 | [Details](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/f12-ai-developer-knowledge-parity.md) |
 
 </div>
 
-→ **[查看完整功能索引](../../caret-docs/features/index.md)**
+→ **[功能索引](https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/index.md)**
 
-## 🎯 支持的AI模型 
+---
 
-### 🚀 **最新Cline v3.32.7架构完全兼容**
+## 🤝 共同打造开源
 
-<div align="center">
-  <h3>🎯 <strong>20个提供商</strong> | 🤖 <strong>237个独特模型</strong> | 📊 <strong>Cline v3.32.7完全兼容</strong></h3>
-  
-  **主要提供商**: OpenAI GPT-5, Anthropic Claude Sonnet 4.5, Google Gemini 2.5, DeepSeek V3, Qwen3等
-  
-  <a href="../development/support-model-list.md">
-    <strong>📋 查看实时更新的完整模型列表 →</strong>
-  </a>
-</div>
+1. **报告 Bug** → [Issues](https://github.com/aicoding-caret/caret/issues)  
+2. **功能提案** → 分享你的想法  
+3. **代码贡献** → Fork 并提交 PR  
+4. **翻译支持** → 参与改进多语言  
 
-### 💡 **Cline的所有功能 + Caret扩展**
-- ✅ **Plan/Act模式** - Cline验证过的透明开发流程
-- ✅ **MCP支持** - Model Context Protocol连接外部系统
-- ✅ **零信任安全** - 客户端完全执行
-- ✅ **模型自由切换** - Claude、Gemini、Kimi等即时切换
-- ➕ **角色系统** - Caret独有的个性化AI伙伴
-- ➕ **改进的系统提示** - 更智能高效的AI回应
-- ➕ **4语言支持** - 完美多语言环境
+## 📞 支持与社区
 
-### 📖 完整文档
-- **所有功能文档** - 从安装到高级功能的完整指南
-- **分步教程** - 适合所有水平的全面指导
-- **API参考** - 详细的技术文档
-- **社区示例** - 真实使用案例和最佳实践
-
-## 🚀 5分钟开始
-
-### 第1步：安装
-```
-VS Code扩展页面搜索"Caret" → 安装
-```
-
-### 第2步：API密钥设置  
-```
-在设置中输入要使用的AI提供商API密钥
-(支持OpenAI, Claude, Gemini等36个提供商)
-```
-
-### 第3步：选择角色
-```
-在侧边栏选择喜欢的AI角色
-或创建专属自定义角色
-```
-
-### 第4步：开始编程！
-```
-按Ctrl+'打开聊天窗口
-输入"你好！帮我做个React组件"
-```
+- 🏠 **Website**: https://caret.team  
+- 💬 **Facebook Group**: https://www.facebook.com/groups/aicodingcaret  
+- 📧 **Email**: support@caret.team  
+- 🐛 **Bug reports**: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)  
 
 ---
 
 <div align="center">
-  <h2>🎯 立即开始！</h2>
-  
+  <h2>🎯 立即开始</h2>
   <a href="https://marketplace.visualstudio.com/items?itemName=caretive.caret" style="background: #007ACC; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 18px; display: inline-block; margin: 16px;">
-    📥 在VS Code中免费安装
+    📥 在 VS Code 免费安装
   </a>
-  
-  <p><small>⭐ 喜欢的话请在GitHub给个Star！</small></p>
+  <p><small>喜欢的话，请在 GitHub 上点个 ⭐！</small></p>
 </div>
 
 ---
 
-## 🛠️ 开发者详细文档
+## 🛠️ 开发者文档
 
-想参与开发请查看以下文档：
+- **[Developer Guide](https://github.com/aicoding-caret/caret/blob/main/DEVELOPER_GUIDE.md)** — 构建/测试基础  
+- **[Caret Architecture](https://github.com/aicoding-caret/caret/blob/main/caret-docs/development/caret-architecture-and-implementation-guide.md)** — 系统概览  
+- **[New Developer Guide](https://github.com/aicoding-caret/caret/blob/main/caret-docs/development/new-developer-guide.md)** — 新人上手指南  
+- **[AI Work Method Guide](https://github.com/aicoding-caret/caret/blob/main/caret-docs/guides/ai-work-method-guide.md)** — 贡献前必读  
 
-### 📚 核心指南
-- **[开发者指南](../../DEVELOPER_GUIDE.md)** - 构建、测试基础信息
-- **[Caret架构](../development/caret-architecture-and-implementation-guide.md)** - 整体系统结构
-- **[新手开发者指南](../development/new-developer-guide.md)** - 项目入门
-
-### 🔧 技术文档
-- **[AI消息流程](../development/ai-message-flow-guide.md)** - AI系统理解
-- **[测试指南](../development/testing-guide.md)** - TDD开发方法
-- **[多语言系统](../development/locale.md)** - i18n实现
-
-💡 **开发前必读**: 请先阅读[AI工作方法论指南](../guides/ai-work-method-guide.md)。

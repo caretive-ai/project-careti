@@ -2,10 +2,10 @@
 
 ## [0.4.0]
 
-> **Note**: Caret v0.4.0 is based on Cline v3.38.1
+> **Note**: Caret v0.4.0 is based on Cline v3.38.2
 
 ### Added
-- **Cline v3.38.1 Complete Merge**: Fully integrated all features from Cline v3.38.1
+- **Cline v3.38.2 Complete Merge**: Fully integrated all features from Cline v3.38.2, including Claude Opus 4.5
 - **Dual Mode System**: Seamlessly switch between Caret Mode (Extended features) and Cline Mode (Stock experience).
 - **Caret CLI unified CLI tool `caret` that supports both modes and enhanced authentication.
 - **Enhanced Provider Setup**: Auto-fetching models for LiteLLM and BizRouter with health checks.
@@ -15,6 +15,11 @@
 ### Fixed
 - **Terminal Hang**: Fixed issue where terminal commands would hang on Linux systems with shell integration.
 - **Branding**: Restored correct Caret branding across all UI components and CLI outputs.
+
+## [3.38.2]
+
+### Added
+- Added Claude Opus 4.5 (Anthropic/OpenRouter/Bedrock/Vertex) with prompt caching prices
 
 ## [3.38.1]
 

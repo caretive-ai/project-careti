@@ -3,7 +3,7 @@ import { combineApiRequests } from "@shared/combineApiRequests"
 import { combineCommandSequences } from "@shared/combineCommandSequences"
 import type { ClineApiReqInfo, ClineMessage } from "@shared/ExtensionMessage"
 import { getApiMetrics } from "@shared/getApiMetrics"
-import { BooleanRequest, StringRequest } from "@shared/proto/cline/common"
+import { BooleanRequest, EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import { useCallback, useEffect, useMemo } from "react"
 import { useMount } from "react-use"
 import { usePersistentInputHistory } from "@/caret/hooks/usePersistentInputHistory" // CARET MODIFICATION: Persistent input history
@@ -258,14 +258,8 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 
 	// Set up addToInput subscription
 	useEffect(() => {
-		const clientId = (window as { clineClientId?: string }).clineClientId
-		if (!clientId) {
-			console.error(t("clientIdNotFound", "chat"))
-			return
-		}
-
-		const request = StringRequest.create({ value: clientId })
-		const cleanup = UiServiceClient.subscribeToAddToInput(request, {
+		// CARET MODIFICATION: match Cline behavior and subscribe unconditionally so Caret (not Cline) always receives queued Add-to events
+		const cleanup = UiServiceClient.subscribeToAddToInput(EmptyRequest.create({}), {
 			onResponse: (event) => {
 				if (event.value) {
 					setInputValue((prevValue) => {

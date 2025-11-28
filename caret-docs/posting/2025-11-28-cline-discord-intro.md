@@ -22,7 +22,20 @@
 
 현재 저희는 Cline의 원본 코드를 최대한 유지하면서 필요한 기능을 확장하는 **'최소 침습(Minimal Invasion)'** 전략을 통해 개발을 진행하고 있습니다. 이는 오픈소스의 업데이트를 지속적으로 반영하면서도, 저희만의 비즈니스 로직을 안정적으로 유지하기 위한 방법론입니다.
 
-한편으로는 저희의 비즈니스 활동이 커뮤니티에 혹시라도 불편함을 드리지 않을까 하는 조심스러운 마음도 가지고 있습니다. 저희는 Cline과 경쟁하거나 대립하는 관계가 아닌, 서로의 성장을 돕는 협력적인 파트너가 되기를 진심으로 희망합니다.
+한편으로는 저희의 B2B 비즈니스 활동이 커뮤니티에 혹시라도 불편함을 드리지 않을까 하는 조심스러운 마음도 가지고 있습니다. 저희는 Cline과 경쟁하거나 대립하는 관계가 아닌, 서로의 성장을 돕는 협력적인 파트너가 되기를 진심으로 희망합니다.
+
+저희의 모든 작업은 아래 GitHub 저장소에서 확인하실 수 있습니다.
+`https://github.com/aicoding-caret/caret`
+
+저희는 Cline의 강력한 기반 위에 B2B 환경과 글로벌 사용자를 위한 몇 가지 기능들을 추가하고 있습니다. 주요 내용은 다음과 같습니다.
+*   **글로벌 지원:** 4개 국어(한/영/일/중)를 지원하는 다국어(i18n) 시스템과 B2B 고객사를 위한 동적 브랜딩 및 UI 커스터마이징 기능을 구현했습니다.
+*   **독립적인 시스템:** gRPC 기반의 자체 계정 인증 시스템과, `.caretrules`의 우선순위를 관리하는 규칙 시스템을 구축하여 독립적인 운영이 가능하도록 했습니다.
+*   **AI 경험 강화:** 사용자가 AI의 페르소나를 직접 선택하고 관리할 수 있는 시스템과, Chatbot/Agent 모드 전환을 포함한 JSON 기반의 고급 프롬프트 시스템을 개발하여 AI와의 상호작용을 풍부하게 만들고 있습니다.
+
+전체 기능 목록과 상세 내용은 아래 링크에서 확인하실 수 있습니다.
+`https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/index.md`
+
+또한, Cline의 터미널 안정성 문제를 해결하기 위한 작은 패치(F00)를 진행했습니다. 혹시 도움이 된다면 나중에 upstream에 반영해 주시면 감사하겠습니다.
 
 이제 투자를 유치하고 조금 더 안정적인 환경이 마련된 만큼, 앞으로는 Cline 메인 프로젝트와 더 자주 소통하고 싶습니다. 저희가 한국 시장에서 시도하는 B2B 비즈니스 경험이 커뮤니티에도 도움이 되길 바라며, 사업적으로 협력할 수 있는 부분이 있다면 적극적으로 논의하고 싶습니다.
 
@@ -45,6 +58,19 @@ This time, we are planning a B2B-focused business in Korea and are developing co
 Currently, we are developing with a **'Minimal Invasion'** strategy, extending necessary features while maintaining Cline's original code as much as possible. This methodology allows us to stably maintain our business logic while continuously reflecting updates from the open source.
 
 On the other hand, we are also cautious and hope that our B2B business activities do not cause any discomfort to the community. We sincerely hope to be a collaborative partner that helps each other grow, rather than competing or conflicting with Cline.
+
+You can check out all our work in our GitHub repository:
+`https://github.com/aicoding-caret/caret`
+
+We are adding several features for B2B environments and global users on top of Cline's powerful foundation. Here are some of the key highlights:
+*   **Global Support:** We've implemented a multilingual (i18n) system supporting four languages (KO/EN/JA/CN) and a dynamic branding/UI customization feature for our B2B clients.
+*   **Independent Systems:** We've built our own gRPC-based account authentication system and a rule system to manage `.caretrules` priorities, allowing for independent operation.
+*   **Enhanced AI Experience:** We are enriching the interaction with AI by developing a system where users can select and manage AI personas, and an advanced JSON-based prompt system that includes switching between Chatbot and Agent modes.
+
+You can find a full list of features and more details at the link below:
+`https://github.com/aicoding-caret/caret/blob/main/caret-docs/features.en/index.md`
+
+We have also created a small patch (F00) to address terminal stability issues in Cline. We would be grateful if you consider incorporating it upstream if you find it helpful.
 
 Now that we have secured some investment, we hope to communicate more with the Cline main repository. We are also open to cooperation if there are any business opportunities to collaborate.
 

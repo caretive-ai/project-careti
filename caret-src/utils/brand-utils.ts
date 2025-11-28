@@ -7,29 +7,6 @@ import path from "path"
 
 // Cached brand name for performance
 let _cachedBrandName: string | null = null
-let _cachedPackageJsonPath: string | null = null
-
-function resolvePackageJsonPath(): string | null {
-	if (_cachedPackageJsonPath) {
-		return _cachedPackageJsonPath
-	}
-
-	const candidates = [
-		path.join(__dirname, "..", "..", "package.json"),
-		path.join(__dirname, "..", "..", "..", "package.json"),
-		path.join(__dirname, "..", "..", "..", "..", "package.json"),
-		path.join(process.cwd(), "package.json"),
-	]
-
-	for (const candidate of candidates) {
-		if (fs.existsSync(candidate)) {
-			_cachedPackageJsonPath = candidate
-			return candidate
-		}
-	}
-
-	return null
-}
 
 /**
  * Detect current brand name from package.json (cached for performance)
@@ -41,10 +18,7 @@ export function detectCurrentBrandName(): string {
 	}
 
 	try {
-		const packageJsonPath = resolvePackageJsonPath()
-		if (!packageJsonPath) {
-			throw new Error("Unable to locate package.json for brand detection")
-		}
+		const packageJsonPath = path.join(__dirname, "..", "..", "package.json")
 		const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"))
 		const displayName = packageJson.displayName || "Cline"
 
@@ -172,5 +146,4 @@ export function getBrandMcpSettingsFileName(): string {
  */
 export function clearCache(): void {
 	_cachedBrandName = null
-	_cachedPackageJsonPath = null
 }

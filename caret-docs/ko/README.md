@@ -24,7 +24,7 @@
     </tr>
   </table>
   <h1>🎯 Caret: 나만의 AI 코딩 파트너</h1>
-  <p><strong>Cline v3.38.1 기반 + 듀얼 모드 + 페르소나 시스템 + 완벽한 한글화</strong></p>
+  <p><strong>Cline v3.38.2 기반 + 듀얼 모드 + 페르소나 시스템 + 완벽한 한글화</strong></p>
   
   <!-- 강력한 CTA 버튼 -->
   <p>
@@ -63,17 +63,17 @@
 
 ---
 
-## 🚀 최신 업데이트: Cline v3.38.1 완전 통합!
+## 🚀 최신 업데이트: Cline v3.38.2 + GPT 5.1, Claude Opus 4.5, Gemini 3
 
-**Caret v0.4.0**은 이제 **Cline v3.38.1의 모든 기능**을 포함하며 Caret 고유 확장 기능과 100% 호환됩니다!
+**Caret v0.4.0**은 이제 **Cline v3.38.2의 모든 기능**을 포함하며 Caret 고유 확장 기능과 100% 호환됩니다!
 
 ### 주요 업데이트 내용:
-- ✅ **Cline v3.38.1 완전 채택** - 최신 Cline 기능 및 코어 엔진 개선사항 모두 포함
+- ✅ **Cline v3.38.2 완전 채택** - 최신 Cline 기능 및 코어 엔진 개선사항 모두 포함 (Claude Opus 4.5 추가)
 - ✅ **이중 계정 시스템 (Dual Account)** - **기존 Cline 계정 완벽 지원!** 로그인만 하면 Caret의 확장 기능을 즉시 사용할 수 있습니다.
 - ✅ **Caret CLI (베타)** - 터미널에서 Caret 기능을 직접 사용 (LiteLLM 지원)
 - ✅ **입력 히스토리** - 터미널처럼 화살표 키로 이전 명령 탐색
-- ✅ **향상된 프로바이더 설정** - 모델 자동 검색 및 실시간 상태 확인
-- ✅ **248개 고유 AI 모델** - Claude Sonnet 4.5, GPT-5 등 20개 제공자 지원
+- ✅ **향상된 프로바이더 설정** - LiteLLM / [BizRouter](https://bizrouter.ai/) 모델 자동 검색 및 실시간 상태 확인
+- ✅ **251개 고유 AI 모델** - Claude Opus 4.5, GPT-5 등 20개 제공자 지원
 
 ---
 
@@ -84,7 +84,7 @@
 3. **🧠 향상된 시스템 프롬프트** - 더 똑똑하고 효율적인 AI 응답 (비용 절감)
 4. **🌍 4개국어 완벽 지원** - UI, 문서, 매뉴얼까지 완벽한 한글화
 5. **⌨️ 향상된 UX** - 입력 히스토리, 편리한 단축키(Esc, Ctrl+Shift+R)
-6. **🎯 압도적인 모델 지원** - 20개 제공자, 248개 모델 (Cline v3.38.1 호환)
+6. **🎯 압도적인 모델 지원** - 20개 제공자, 251개 모델 (Cline v3.38.2 호환)
 
 👉 **모든 독점 기능 보기**: [Caret 독점 기능 개요](../features/index.md)
 
@@ -186,7 +186,7 @@ Caret은 Cline과 100% 호환성을 유지하면서 강력한 새 기능들을 �
 ## 📞 지원 및 커뮤니티
 
 - 🏠 **공식 홈페이지**: https://caret.team
-- 💬 **Discord 커뮤니티**: [참여하기](https://discord.gg/caret) 
+- 💬 **페이스북 커뮤니티**: [참여하기]https://www.facebook.com/groups/aicodingcaret) 
 - 📧 **이메일 문의**: support@caret.team
 - 🐛 **버그 신고**: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)
 

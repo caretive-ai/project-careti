@@ -221,7 +221,7 @@ Caret은 Cline과 100% 호환성을 유지하면서 강력한 새 기능들을 �
 | **F07** | **페르소나 시스템** | 커스터마이즈 가능한 AI 동료 | [📖 상세보기](../features/f07-persona-system.md) |
 | **F08** | **Feature Config 시스템** | 모듈식 기능 관리 | [📖 상세보기](../features/f08-feature-config-system.md) |
 | **F09** | **Enhanced Provider Setup** | 고급 AI 프로바이더 구성 | [📖 상세보기](../features/f09-enhanced-provider-setup.md) |
-| **F10** | **입력 히스토리 시스템** | 터미널 스타일 명령 히스토리 | [📖 상세보기](../features/f10-input-history-system.md) |
+| **F10** | **입력 히스토리·단축키** | 터미널 스타일 히스토리 + 공용 단축키 | [📖 상세보기](../features/f10-input-history-and-shortcuts.md) |
 | **F11** | **지식 동기화 시스템** | AI와 개발자가 동일한 지식을 공유하여 원활한 협업을 보장합니다 | [📖 상세보기](../features/f11-ai-developer-knowledge-parity.md) |
 
 </div>

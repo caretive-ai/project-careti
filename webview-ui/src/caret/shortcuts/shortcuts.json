@@ -1,0 +1,16 @@
+{
+	"cancel_stream": {
+		"keys": [
+			"Escape"
+		],
+		"label": "Esc",
+		"description": "Cancel the current streaming response in chat"
+	},
+	"resume_task": {
+		"keys": [
+			"Control+Shift+R"
+		],
+		"label": "Ctrl+Shift+R",
+		"description": "Resume or proceed when a task is paused"
+	}
+}

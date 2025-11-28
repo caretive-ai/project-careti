@@ -175,7 +175,7 @@ Caret在保持与Cline 100%兼容的同时，扩展了强大的新功能：
 | **F07** | **角色系统** | 可定制的AI伙伴 | [📖 详情](../features/f07-persona-system.md) |
 | **F08** | **功能配置系统** | 模块化功能管理 | [📖 详情](../features/f08-feature-config-system.md) |
 | **F09** | **增强的提供商设置** | 高级AI提供商配置 | [📖 详情](../features/f09-enhanced-provider-setup.md) |
-| **F10** | **输入历史系统** | 终端风格命令历史 | [📖 详情](../features/f10-input-history-system.md) |
+| **F10** | **输入历史与快捷键** | 终端风格历史 + 全局快捷键 | [📖 详情](../features/f10-input-history-and-shortcuts.md) |
 | **F11** | **知识同步系统** | 确保AI和开发者共享相同知识，实现无缝协作 | [📖 详情](../features/f11-ai-developer-knowledge-parity.md) |
 
 </div>

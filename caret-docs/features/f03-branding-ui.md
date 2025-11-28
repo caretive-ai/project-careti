@@ -18,6 +18,11 @@ Caret의 **브랜딩 및 UI 시스템**은 고유한 시각적 정체성과 사�
 - **확장성**: 새로운 브랜딩 요소 쉽게 추가 가능
 - **일관성**: 모든 UI 요소에서 통일된 디자인 언어
 
+### **단축키 카탈로그 (브랜딩 연동)**
+- 단축키 정의는 전역 JSON(`webview-ui/src/caret/shortcuts/shortcuts.json`)에 저장하고, 매니저(`ShortcutManager`)를 통해 로드합니다.
+- 버튼 라벨에도 단축키를 병기해 UX 일관성을 유지합니다. 예) “Cancel (Esc)”, “Resume (Ctrl+Shift+R)”.
+- 키 문자열은 i18n 문구와 동일하게 브랜드 유틸(`@caret/utils/brand-utils`)과 함께 사용해 브랜드/언어 변경에 따른 라벨 불일치가 없도록 합니다.
+
 ## 🏗️ **구현 아키텍처**
 
 ### **에셋 리소스 구조**
@@ -689,6 +694,9 @@ Caret은 완전 자동화된 브랜딩 전환 시스템을 제공하여 다양�
 - TerminalRegistry.ts: 터미널 이름 "Caret" 적용
 - 확장 ID: "caretive.caret" 변환
 - 커스텀 터미널 아이콘 적용
+- **7. 코드 액션/명령 브랜딩**
+  - VS Code 코드 액션(예: “Add to \<Brand\>”, “Explain/Improve/Fix with \<Brand\>”) 제목은 `@caret/utils/brand-utils`의 `getCurrentBrandDisplayName()`으로 계산한다.
+  - 명령 ID는 기존 네임스페이스를 유지하더라도(예: `cline.addToChat`), 사용자에게 노출되는 라벨은 반드시 브랜드 유틸 호출 결과를 사용한다.
 
 ### **🔧 VS Code 명령어 네임스페이스 충돌 해결**
 

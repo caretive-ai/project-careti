@@ -4,6 +4,7 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import type React from "react"
 import { useEffect, useMemo, useState } from "react"
 import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
+import { shortcutManager } from "@/caret/shortcuts/ShortcutManager"
 import { useShortcut } from "@/utils/hooks"
 import { type ButtonActionType, getButtonConfig } from "../../shared/buttonConfig"
 import type { ChatState, MessageHandlers } from "../../types/chatTypes"
@@ -34,6 +35,11 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 }) => {
 	const { t } = useCaretI18n()
 	const { inputValue, selectedImages, selectedFiles, setSendingDisabled } = chatState
+	const resumeText = t("button.resumeTask", "common")
+	const cancelShortcut = shortcutManager.getKeys("cancel_stream")[0] ?? "Escape"
+	const resumeShortcut = shortcutManager.getKeys("resume_task")[0] ?? "Control+Shift+R"
+	const cancelShortcutLabel = shortcutManager.getLabel("cancel_stream")
+	const resumeShortcutLabel = shortcutManager.getLabel("resume_task")
 
 	const isStreaming = useMemo(() => task?.partial === true, [task])
 
@@ -82,12 +88,25 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 	}, [messages, setSendingDisabled, mode, t])
 
 	useShortcut(
-		"Escape",
+		cancelShortcut,
 		() => {
-			if (!isStreaming || secondaryAction !== "cancel") {
+			if (secondaryAction !== "cancel" || !enableButtons) {
 				return
 			}
 			void messageHandlers.executeButtonAction("cancel", inputValue, selectedImages, selectedFiles)
+		},
+		{ disableTextInputs: false },
+	)
+
+	useShortcut(
+		resumeShortcut,
+		() => {
+			if (!enableButtons) {
+				return
+			}
+			if (primaryAction === "proceed" && primaryButtonText === resumeText) {
+				void messageHandlers.executeButtonAction("proceed", inputValue, selectedImages, selectedFiles)
+			}
 		},
 		{ disableTextInputs: false },
 	)
@@ -140,6 +159,9 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 						}
 					}}>
 					{primaryButtonText}
+					{primaryAction === "proceed" && primaryButtonText === resumeText && resumeShortcutLabel
+						? ` (${resumeShortcutLabel})`
+						: null}
 				</VSCodeButton>
 			)}
 			{secondaryButtonText && (
@@ -153,6 +175,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 						}
 					}}>
 					{secondaryButtonText}
+					{secondaryAction === "cancel" && cancelShortcutLabel ? ` (${cancelShortcutLabel})` : null}
 				</VSCodeButton>
 			)}
 		</div>

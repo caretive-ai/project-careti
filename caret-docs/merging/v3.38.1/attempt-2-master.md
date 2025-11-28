@@ -336,6 +336,10 @@ describe("ModeSystem Integration", () => {
     - LiteLLM BYO 경로(`cli/pkg/cli/auth/wizard_byo.go`, `models_list_fetch.go`)에 Caret System gRPC 호출을 추가, `/proto/caret/system.proto` 경로로 생성된 서비스 클라이언트를 사용해 모델 목록을 불러온 뒤 인터랙티브 메뉴에 공급.
     - hostbridge `workspace` 스텁과 gofmt로 생성된 grpc-go 모듈이 최신 proto 구조와 맞지 않아 Go 테스트 실패 → 불필요한 watch 스텁 제거 및 optional 필드 포인터 처리로 빌드 오염 해소.
     - 테스트: `npm run protos-go`, `/tmp/go/bin/go test -short ./cli/...` (`cli/e2e`는 dist 아티팩트 미생성 상태라 `-short`로 스킵함)
+    - 웹뷰 회귀 수정: sidebar 웹뷰 dispose 시 싱글턴을 null 처리해 `WebviewProvider instance not initialized` 예외가 발생하던 문제를 리소스만 정리하도록 변경.
+    - 액션 버튼 ESC 단축키: 스트리밍 중일 때 ESC로 “Cancel” 버튼을 실행해 빈도 높은 취소 작업을 키보드로 처리 가능.
+    - 작업 재개 단축키/카탈로그: `Ctrl+Shift+R`로 Resume/Proceed 실행, 단축키 정의를 전역 JSON(`webview-ui/src/caret/shortcuts/shortcuts.json`) + `ShortcutManager`로 일원화하고 버튼 라벨에 병기.
+    - VSCode 코드 액션 브랜딩: “Add/Explain/Improve/Fix with \<Brand\>” 라벨을 `brand-utils` 기반으로 계산해 브랜드 불일치(UI에 Cline 표기) 회귀 제거.
 
 
 **D-2.5 Caret 프로바이더 검토**

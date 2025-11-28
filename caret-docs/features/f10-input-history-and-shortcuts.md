@@ -1,4 +1,4 @@
-# 채팅 입력 히스토리 시스템 (Input History System)
+# 입력 히스토리 및 단축키 시스템 (Input History & Shortcuts)
 
 Caret의 **채팅 입력 히스토리 시스템**은 터미널과 일관된 사용자 경험을 제공하는 영구 저장 기반의 메시지 히스토리 관리 시스템입니다.
 
@@ -9,6 +9,11 @@ Caret의 **채팅 입력 히스토리 시스템**은 터미널과 일관된 사�
 - **영구 저장**: VS Code 워크스페이스별 히스토리 영구 보관
 - **즉시 저장**: 메시지 전송 시점에 히스토리 추가
 - **정확성**: AI 응답 혼입 없이 사용자 입력만 순수 저장
+- **단축키 카탈로그**:
+  - `ArrowUp/ArrowDown`을 공식 히스토리 단축키로 정의(터미널 UX)
+  - 스트리밍 취소: `Esc` (Cancel)
+  - 작업 재개: `Ctrl+Shift+R` (Resume/Proceed)
+  - 정의는 전역 JSON(`webview-ui/src/caret/shortcuts/shortcuts.json`)에 저장하고 매니저(`ShortcutManager`)를 통해 로드·표시한다.
 
 ### **Cline 대비 개선사항**
 | 구분 | Cline | Caret |

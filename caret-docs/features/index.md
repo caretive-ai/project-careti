@@ -41,7 +41,7 @@ Caret은 Cline을 기반으로 한 자율 AI 코딩 어시스턴트로, 다음�
 - **[F09: Enhanced Provider Setup](./f09-enhanced-provider-setup.md)**
   향상된 AI 프로바이더 설정 및 관리
 
-- **[F10: 입력 히스토리 시스템](./f10-input-history-system.md)**
+- **[F10: 입력 히스토리·단축키 시스템](./f10-input-history-and-shortcuts.md)**
   채팅 입력 자동 완성 및 히스토리 관리
 
 - **[F11: AI-개발자 지식 동기화 시스템](./f11-ai-developer-knowledge-parity.md)**

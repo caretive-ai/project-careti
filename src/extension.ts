@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 
 import assert from "node:assert"
+import { getCurrentBrandDisplayName } from "@caret/utils/brand-utils"
 import { DIFF_VIEW_URI_SCHEME } from "@hosts/vscode/VscodeDiffViewProvider"
 import * as vscode from "vscode"
 import { sendAccountButtonClickedEvent } from "./core/controller/ui/subscribeToAccountButtonClicked"
@@ -270,39 +271,46 @@ export async function activate(context: vscode.ExtensionContext) {
 					}
 
 					// Add to Cline (Always available)
-					const addAction = new vscode.CodeAction("Add to Cline", vscode.CodeActionKind.QuickFix)
+					const brandName = getCurrentBrandDisplayName()
+					const addAction = new vscode.CodeAction(`Add to ${brandName}`, vscode.CodeActionKind.QuickFix)
 					addAction.command = {
 						command: commands.AddToChat,
-						title: "Add to Cline",
+						title: `Add to ${brandName}`,
 						arguments: [expandedRange, context.diagnostics],
 					}
 					actions.push(addAction)
 
-					// Explain with Cline (Always available)
-					const explainAction = new vscode.CodeAction("Explain with Cline", vscode.CodeActionKind.RefactorExtract) // Using a refactor kind
+					// Explain with Caret/Cline (Always available)
+					const explainAction = new vscode.CodeAction(
+						`Explain with ${brandName}`,
+						vscode.CodeActionKind.RefactorExtract, // Using a refactor kind
+					)
 					explainAction.command = {
 						command: commands.ExplainCode,
-						title: "Explain with Cline",
+						title: `Explain with ${brandName}`,
 						arguments: [expandedRange],
 					}
 					actions.push(explainAction)
 
-					// Improve with Cline (Always available)
-					const improveAction = new vscode.CodeAction("Improve with Cline", vscode.CodeActionKind.RefactorRewrite) // Using a refactor kind
+					// Improve with Caret/Cline (Always available)
+					const improveAction = new vscode.CodeAction(
+						`Improve with ${brandName}`,
+						vscode.CodeActionKind.RefactorRewrite, // Using a refactor kind
+					)
 					improveAction.command = {
 						command: commands.ImproveCode,
-						title: "Improve with Cline",
+						title: `Improve with ${brandName}`,
 						arguments: [expandedRange],
 					}
 					actions.push(improveAction)
 
 					// Fix with Cline (Only if diagnostics exist)
 					if (context.diagnostics.length > 0) {
-						const fixAction = new vscode.CodeAction("Fix with Cline", vscode.CodeActionKind.QuickFix)
+						const fixAction = new vscode.CodeAction(`Fix with ${brandName}`, vscode.CodeActionKind.QuickFix)
 						fixAction.isPreferred = true
 						fixAction.command = {
 							command: commands.FixWithCline,
-							title: "Fix with Cline",
+							title: `Fix with ${brandName}`,
 							arguments: [expandedRange, context.diagnostics],
 						}
 						actions.push(fixAction)

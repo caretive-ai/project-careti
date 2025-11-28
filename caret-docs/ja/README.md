@@ -171,7 +171,7 @@ CaretはClineとの100%互換性を維持しながら、強力な新機能を拡
 | **F07** | **ペルソナシステム** | カスタマイズ可能なAIコンパニオン | [📖 詳細](../features/f07-persona-system.md) |
 | **F08** | **機能設定システム** | モジュラー機能管理 | [📖 詳細](../features/f08-feature-config-system.md) |
 | **F09** | **拡張プロバイダー設定** | 高度なAIプロバイダー構成 | [📖 詳細](../features/f09-enhanced-provider-setup.md) |
-| **F10** | **入力履歴システム** | ターミナル風コマンド履歴 | [📖 詳細](../features/f10-input-history-system.md) |
+| **F10** | **入力履歴・ショートカット** | ターミナル風履歴と共通ショートカット | [📖 詳細](../features/f10-input-history-and-shortcuts.md) |
 | **F11** | **知識同期システム** | AIと開発者が同じ知識を共有し、円滑な協業を保証します | [📖 詳細](../features/f11-ai-developer-knowledge-parity.md) |
 
 </div>

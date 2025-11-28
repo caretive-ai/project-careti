@@ -1,3 +1,4 @@
+import type { ApiConfiguration } from "@shared/api"
 import { Empty } from "@shared/proto/cline/common"
 import { UpdateApiConfigurationRequest } from "@shared/proto/cline/models"
 import { convertProtoToApiProvider } from "@shared/proto-conversions/models/api-configuration-conversion"
@@ -112,24 +113,38 @@ export async function updateApiConfigurationProto(
 				: undefined,
 		}
 
+		const existingApiConfiguration = controller.stateManager.getApiConfiguration()
+		const mergedApiConfiguration: ApiConfiguration = { ...(convertedApiConfigurationFromProto as ApiConfiguration) }
+
+		// CARET MODIFICATION: Preserve Caret auth/session fields when proto payload omits them
+		if (mergedApiConfiguration.caretUserProfile === undefined && existingApiConfiguration?.caretUserProfile !== undefined) {
+			mergedApiConfiguration.caretUserProfile = existingApiConfiguration.caretUserProfile
+		}
+		if (mergedApiConfiguration.caretApiKey === undefined && existingApiConfiguration?.caretApiKey !== undefined) {
+			mergedApiConfiguration.caretApiKey = existingApiConfiguration.caretApiKey
+		}
+		if (mergedApiConfiguration.caretAuthToken === undefined && existingApiConfiguration?.caretAuthToken !== undefined) {
+			mergedApiConfiguration.caretAuthToken = existingApiConfiguration.caretAuthToken
+		}
+		if (mergedApiConfiguration.caretBaseUrl === undefined && existingApiConfiguration?.caretBaseUrl !== undefined) {
+			mergedApiConfiguration.caretBaseUrl = existingApiConfiguration.caretBaseUrl
+		}
+
 		// CARET MODIFICATION: Add logging for API configuration updates
 		console.log("🔧 [Backend] API Config Update:", {
-			planProvider: convertedApiConfigurationFromProto.planModeApiProvider,
-			actProvider: convertedApiConfigurationFromProto.actModeApiProvider,
-			hasApiKey: !!convertedApiConfigurationFromProto.apiKey,
-			ocaKey: (convertedApiConfigurationFromProto as any).ocaApiKey ? "***SET***" : "not set",
+			planProvider: mergedApiConfiguration.planModeApiProvider,
+			actProvider: mergedApiConfiguration.actModeApiProvider,
+			hasApiKey: !!mergedApiConfiguration.apiKey,
+			ocaKey: (mergedApiConfiguration as any).ocaApiKey ? "***SET***" : "not set",
 		})
 
 		// Update the API configuration in storage
-		controller.stateManager.setApiConfiguration(convertedApiConfigurationFromProto)
+		controller.stateManager.setApiConfiguration(mergedApiConfiguration)
 
 		// Update the task's API handler if there's an active task
 		if (controller.task) {
 			const currentMode = controller.stateManager.getGlobalSettingsKey("mode")
-			controller.task.api = buildApiHandler(
-				{ ...convertedApiConfigurationFromProto, ulid: controller.task.ulid },
-				currentMode,
-			)
+			controller.task.api = buildApiHandler({ ...mergedApiConfiguration, ulid: controller.task.ulid }, currentMode)
 		}
 
 		// Post updated state to webview

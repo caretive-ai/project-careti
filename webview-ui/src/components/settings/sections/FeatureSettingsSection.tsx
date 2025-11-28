@@ -47,6 +47,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 	)
 	const installWarningKey = isCaretMode ? "features.subagents.caretWarning" : "features.subagents.clineWarning"
 	const installStatusKey = isCliInstalled ? "features.subagents.installed" : "features.subagents.notInstalled"
+	const authCommand = isCaretMode ? "caret auth" : "cline auth"
 
 	const handleReasoningEffortChange = (newValue: OpenaiReasoningEffort) => {
 		updateSetting("openaiReasoningEffort", newValue)
@@ -90,6 +91,14 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 								backgroundColor: "var(--vscode-list-hoverBackground)",
 							}}>
 							<div
+								className="absolute -top-2 -right-2 px-2 py-0.5 rounded text-xs font-semibold"
+								style={{
+									backgroundColor: "var(--vscode-button-secondaryBackground)",
+									color: "var(--vscode-button-secondaryForeground)",
+								}}>
+								NEW
+							</div>
+							<div
 								className="mt-1.5 mb-2 px-2 pt-0.5 pb-1.5 rounded"
 								style={{
 									backgroundColor: "color-mix(in srgb, var(--vscode-sideBar-background) 99%, black)",
@@ -111,9 +120,20 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 											}}>
 											{installCommand}
 										</code>
+										, then run
+										<code
+											className="ml-1 px-1 rounded"
+											style={{
+												backgroundColor: "var(--vscode-editor-background)",
+												color: "var(--vscode-foreground)",
+												opacity: 0.9,
+											}}>
+											{authCommand}
+										</code>
+										to authenticate with the CLI.
 									</span>
 								</p>
-								<div className="flex items-center gap-2 flex-wrap">
+								{!isCliInstalled && (
 									<VSCodeButton
 										appearance="secondary"
 										disabled={isCliInstalled}
@@ -122,15 +142,10 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 												console.error("[FeatureSettingsSection] Failed to trigger CLI install", error),
 											)
 										}}
-										style={{ transform: "scale(0.9)", transformOrigin: "left center", marginLeft: "-2px" }}>
-										{isCliInstalled
-											? t("features.subagents.installed", "settings")
-											: t("features.subagents.install", "settings")}
+										style={{ transform: "scale(0.85)", transformOrigin: "left center", marginLeft: "-2px" }}>
+										{t("features.subagents.install", "settings")}
 									</VSCodeButton>
-									<span className="text-xs text-description">
-										{t(installStatusKey, "settings")} · {cliLabel}
-									</span>
-								</div>
+								)}
 							</div>
 							<VSCodeCheckbox
 								checked={subagentsEnabled}
@@ -145,8 +160,12 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 										: t("features.subagents.enable", "settings")}
 								</span>
 							</VSCodeCheckbox>
-							<p className="text-xs mt-1 mb-0 text-description">
-								{t("features.subagents.description", "settings")} ({cliLabel})
+							<p className="text-xs mt-1 mb-0">
+								<span className="text-[var(--vscode-errorForeground)]">Experimental: </span>{" "}
+								<span className="text-description">
+									Allows the CLI to spawn subprocesses to handle focused tasks like exploring large codebases,
+									keeping your main context clean.
+								</span>
 							</p>
 							{subagentsEnabled && (
 								<div className="mt-3">

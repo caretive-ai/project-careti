@@ -1,7 +1,60 @@
 import { exec } from "child_process"
+import fs from "fs"
+import os from "os"
+import path from "path"
 import { promisify } from "util"
 
 const execAsync = promisify(exec)
+
+function getCandidatePaths(binaryName: string): string[] {
+	const homeDir = os.homedir()
+	const candidates: string[] = [path.join("/usr/local/bin", binaryName), path.join(homeDir, ".local/bin", binaryName)]
+
+	const nvmRoots = [path.join(homeDir, ".nvm/versions/node"), path.join(homeDir, ".config/nvm/versions/node")]
+	for (const root of nvmRoots) {
+		if (!fs.existsSync(root)) continue
+		try {
+			for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+				if (entry.isDirectory()) {
+					candidates.push(path.join(root, entry.name, "bin", binaryName))
+				}
+			}
+		} catch {
+			// ignore fs errors
+		}
+	}
+
+	return candidates
+}
+
+async function tryExecVersion(command: string): Promise<boolean> {
+	try {
+		const { stdout } = await execAsync(command, { timeout: 5000 })
+		return stdout.toLowerCase().includes("version")
+	} catch {
+		return false
+	}
+}
+
+async function checkCliInstalled(primaryCommand: string, binaryName: string): Promise<boolean> {
+	if (await tryExecVersion(`${primaryCommand} version`)) {
+		return true
+	}
+
+	for (const candidate of getCandidatePaths(binaryName)) {
+		try {
+			if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+				if (await tryExecVersion(`"${candidate}" version`)) {
+					return true
+				}
+			}
+		} catch {
+			// ignore and continue
+		}
+	}
+
+	return false
+}
 
 /**
  * Parameters used to detect CLI subagent context
@@ -18,31 +71,12 @@ interface CliSubagentDetectionParams {
  * @returns true if CLI is installed, false otherwise
  */
 export async function isClineCliInstalled(): Promise<boolean> {
-	try {
-		// Try to get the version of the cline CLI tool
-		// This will fail if the tool is not installed
-		const { stdout } = await execAsync("cline version", {
-			timeout: 5000, // 5 second timeout
-		})
-
-		// If we get here, the CLI is installed
-		// We could also validate the version if needed
-		return stdout.includes("Cline CLI Version") || stdout.includes("Cline Core Version")
-	} catch (error) {
-		// Command failed, which likely means CLI is not installed
-		// or not in PATH
-		return false
-	}
+	return checkCliInstalled("cline", "cline")
 }
 
 // CARET MODIFICATION: Caret CLI detection (Phase D-2)
 export async function isCaretCliInstalled(): Promise<boolean> {
-	try {
-		const { stdout } = await execAsync("caret version", { timeout: 5000 })
-		return stdout.toLowerCase().includes("caret cli")
-	} catch (_error) {
-		return false
-	}
+	return checkCliInstalled("caret", "caret")
 }
 
 /**

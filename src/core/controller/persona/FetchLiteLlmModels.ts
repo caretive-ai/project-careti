@@ -69,6 +69,8 @@ export async function fetchLiteLlmModels(
 		}
 		if (request.apiKey && request.apiKey.trim() !== "") {
 			modelsHeaders["x-litellm-api-key"] = request.apiKey
+			// CARET MODIFICATION: some LiteLLM deployments expect Authorization header as well
+			modelsHeaders["Authorization"] = `Bearer ${request.apiKey}`
 		}
 
 		// Step 1: Fetch healthy models from /health endpoint

@@ -5,7 +5,7 @@ import { OpenRouterErrorResponse } from "@core/api/providers/types"
 import { withRetry } from "@core/api/retry"
 import { createOpenRouterStream } from "@core/api/transform/openrouter-stream"
 import { ApiStream, ApiStreamUsageChunk } from "@core/api/transform/stream"
-import { ModelInfo, openRouterDefaultModelId, openRouterDefaultModelInfo } from "@shared/api"
+import { caretModels, ModelInfo, openRouterDefaultModelId, openRouterDefaultModelInfo } from "@shared/api"
 import { shouldSkipReasoningForModel } from "@utils/model-utils"
 import axios from "axios"
 import OpenAI from "openai"
@@ -31,11 +31,17 @@ export class CaretApiProvider implements ApiHandler {
 	private options: CaretApiHandlerOptions
 	private globalManager = CaretGlobalManager.get()
 	private client: OpenAI | undefined
-	private readonly _baseUrl = process.env.CARET_ROUTER_ENDPOINT || "https://api.caret.team"
+	private readonly _baseUrl: string
 	lastGenerationId?: string
 
 	constructor(options: CaretApiHandlerOptions) {
 		this.options = options
+		const rawBaseUrl = (options.caretBaseUrl || process.env.CARET_ROUTER_ENDPOINT || "https://api.caret.team").replace(
+			/\/+$/,
+			"",
+		)
+		// Normalize to avoid double /api/v1 when users include it in settings
+		this._baseUrl = rawBaseUrl.replace(/\/(api\/)?v1$/i, "")
 	}
 
 	private async ensureClient(): Promise<OpenAI> {
@@ -49,7 +55,7 @@ export class CaretApiProvider implements ApiHandler {
 		if (!this.client) {
 			try {
 				this.client = new OpenAI({
-					baseURL: `${this._baseUrl}/api/v1`,
+					baseURL: `${this._baseUrl}/v1`,
 					apiKey: authToken,
 					defaultHeaders: {
 						"HTTP-Referer": "https://caret.team",
@@ -201,11 +207,24 @@ export class CaretApiProvider implements ApiHandler {
 	}
 
 	getModel(): { id: string; info: ModelInfo } {
-		const modelId = this.options.openRouterModelId
-		const modelInfo = this.options.openRouterModelInfo
-		if (modelId && modelInfo) {
-			return { id: modelId, info: modelInfo }
+		// Prefer Caret-specific model selection when present
+		const caretModelId = this.options.caretModelId
+		const caretModelInfo = this.options.caretModelInfo
+		if (caretModelId && caretModelInfo) {
+			return { id: caretModelId, info: caretModelInfo }
 		}
+		if (caretModelId && caretModels[caretModelId as keyof typeof caretModels]) {
+			return { id: caretModelId, info: caretModels[caretModelId as keyof typeof caretModels] }
+		}
+
+		// Fallback to OpenRouter-style selection for compatibility with existing configs
+		const openRouterModelId = this.options.openRouterModelId
+		const openRouterModelInfo = this.options.openRouterModelInfo
+		if (openRouterModelId && openRouterModelInfo) {
+			return { id: openRouterModelId, info: openRouterModelInfo }
+		}
+
+		// Final fallback to known defaults
 		return { id: openRouterDefaultModelId, info: openRouterDefaultModelInfo }
 	}
 

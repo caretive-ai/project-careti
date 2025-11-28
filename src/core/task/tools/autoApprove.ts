@@ -61,6 +61,10 @@ export class AutoApprove {
 		}
 
 		const autoApprovalSettings = this.stateManager.getGlobalSettingsKey("autoApprovalSettings")
+		// CARET MODIFICATION: Respect global auto-approval toggle
+		if (autoApprovalSettings?.enabled === false) {
+			return false
+		}
 
 		switch (toolName) {
 			case ClineDefaultTool.FILE_READ:

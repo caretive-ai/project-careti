@@ -10,7 +10,7 @@
 - **Caret CLI unified CLI tool `caret` that supports both modes and enhanced authentication.
 - **Enhanced Provider Setup**: Auto-fetching models for LiteLLM and BizRouter with health checks.
 - **JSON Prompt System**: Dynamic system prompt configuration via JSON files.
-- **JSON Prompt System**: Dynamic system prompt configuration via JSON files.
+
 
 ### Fixed
 - **Terminal Hang**: Fixed issue where terminal commands would hang on Linux systems with shell integration.

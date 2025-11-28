@@ -10,8 +10,15 @@ import { Controller } from ".."
 export async function checkCliInstallation(_controller: Controller): Promise<Boolean> {
 	try {
 		const modeSystem = _controller.stateManager.getGlobalStateKey("caretModeSystem") || "cline"
-		// CARET MODIFICATION: Detect CLI per modeSystem
-		const isInstalled = modeSystem === "caret" ? await isCaretCliInstalled() : await isClineCliInstalled()
+		// CARET MODIFICATION: Detect CLI per modeSystem with fallback (caret ↔ cline)
+		const primaryCheck = modeSystem === "caret" ? isCaretCliInstalled : isClineCliInstalled
+		const fallbackCheck = modeSystem === "caret" ? isClineCliInstalled : isCaretCliInstalled
+
+		let isInstalled = await primaryCheck()
+		if (!isInstalled) {
+			isInstalled = await fallbackCheck()
+		}
+
 		return Boolean.create({ value: isInstalled })
 	} catch (error) {
 		console.error("Failed to check CLI installation:", error)

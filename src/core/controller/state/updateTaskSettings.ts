@@ -79,6 +79,9 @@ export async function updateTaskSettings(controller: Controller, request: Update
 					...(autoApprovalSettings.enableNotifications !== undefined && {
 						enableNotifications: autoApprovalSettings.enableNotifications,
 					}),
+					// CARET MODIFICATION: Propagate global auto-approval toggle and max request limit from request
+					...(autoApprovalSettings.enabled !== undefined && { enabled: autoApprovalSettings.enabled }),
+					...(autoApprovalSettings.maxRequests !== undefined && { maxRequests: autoApprovalSettings.maxRequests }),
 					actions: {
 						...currentAutoApprovalSettings.actions,
 						...(autoApprovalSettings.actions

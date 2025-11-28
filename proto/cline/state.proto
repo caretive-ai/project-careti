@@ -51,6 +51,8 @@ message AutoApprovalSettings {
   AutoApprovalActions actions = 2;
   optional bool enable_notifications = 3;
   optional int32 max_requests = 4;
+  // CARET MODIFICATION: Allow globally disabling auto-approval without altering individual action preferences
+  optional bool enabled = 5;
 }
 
 message Secrets {
@@ -295,6 +297,8 @@ message AutoApprovalSettingsRequest {
   AutoApprovalActions actions = 3;
   bool enable_notifications = 4;
   optional int32 max_requests = 5;
+  // CARET MODIFICATION: Propagate global auto-approval toggle from webview
+  optional bool enabled = 6;
 }
 
 enum TelemetrySettingEnum {

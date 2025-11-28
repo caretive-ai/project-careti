@@ -92,6 +92,8 @@ export async function updateSettingsCli(controller: Controller, request: UpdateS
 					}),
 					// CARET MODIFICATION: Preserve max_requests from CLI settings payload
 					...(autoApprovalSettings.maxRequests !== undefined && { maxRequests: autoApprovalSettings.maxRequests }),
+					// CARET MODIFICATION: Respect CLI global auto-approval toggle
+					...(autoApprovalSettings.enabled !== undefined && { enabled: autoApprovalSettings.enabled }),
 					actions: {
 						...currentAutoApprovalSettings.actions,
 						...(autoApprovalSettings.actions

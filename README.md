@@ -213,3 +213,4 @@ Go beyond text chat. The **Persona System** lets you work with visually engaging
 - **[Caret Architecture](https://github.com/aicoding-caret/caret/blob/main/caret-docs/development/caret-architecture-and-implementation-guide.md)** — system overview  
 - **[New Developer Guide](https://github.com/aicoding-caret/caret/blob/main/caret-docs/development/new-developer-guide.md)** — onboarding steps  
 - **[AI Work Method Guide](https://github.com/aicoding-caret/caret/blob/main/caret-docs/guides/ai-work-method-guide.md)** — required reading before contributing
+ 

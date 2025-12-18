@@ -119,10 +119,15 @@ export class GeminiHandler implements ApiHandler {
 		const _thinkingBudget = this.options.thinkingBudgetTokens ?? 0
 		const maxBudget = info.thinkingConfig?.maxBudget ?? 24576
 		const thinkingBudget = Math.min(_thinkingBudget, maxBudget)
+		// CARET MODIFICATION: Gemini 3 Pro 계열은 thinkingLevel 누락 시 기본 LOW로 채우고,
+		// thinkingLevel이 있으면 thinkingBudget과 배타적으로 처리하며 includeThoughts를 활성화 (upstream 326c9c9f9, R-3400-05)
 		const thinkLevel = info.thinkingConfig?.thinkingLevel
-		// When ThinkingLevel is defineded, thinking budget cannot be zero
-		// and only level is used to control thinking behavior.
-		const thinkingLevel = thinkLevel ? (thinkLevel === "low" ? ThinkingLevel.LOW : ThinkingLevel.HIGH) : undefined
+		let thinkingLevel: ThinkingLevel | undefined
+		if (thinkLevel === "high") {
+			thinkingLevel = ThinkingLevel.HIGH
+		} else if (thinkLevel === "low" || modelId.includes("gemini-3-pro")) {
+			thinkingLevel = ThinkingLevel.LOW
+		}
 
 		// Set up base generation config
 		const requestConfig: GenerateContentConfig = {
@@ -141,9 +146,9 @@ export class GeminiHandler implements ApiHandler {
 			// Turn on dynamic thinking:
 			// thinkingBudget: -1
 			// Turn on fixed thinking budget:
-			thinkingBudget: thinkingLevel ? undefined : thinkingBudget,
+			thinkingBudget: thinkingLevel ? undefined : thinkingBudget, // Use budget only if thinkingLevel is not set
 			thinkingLevel,
-			includeThoughts: thinkingBudget > 0,
+			includeThoughts: thinkingBudget > 0 || !!thinkingLevel,
 		}
 
 		// Generate content using the configured parameters

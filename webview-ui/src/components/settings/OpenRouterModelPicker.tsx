@@ -15,6 +15,8 @@ import { highlight } from "../history/HistoryView"
 import { ContextWindowSwitcher } from "./common/ContextWindowSwitcher"
 import { ModelInfoView } from "./common/ModelInfoView"
 import FeaturedModelCard from "./FeaturedModelCard"
+// CARET MODIFICATION: OpenRouter Featured 모델 목록을 분리 파일에서 로드해 테스트 가능/재사용성 확보 (R-3450-01)
+import { openRouterFeaturedModels } from "./openrouter-featured-models"
 import ThinkingBudgetSlider from "./ThinkingBudgetSlider"
 import { getModeSpecificFields, normalizeApiConfiguration } from "./utils/providerUtils"
 import { useApiConfigurationHandlers } from "./utils/useApiConfigurationHandlers"
@@ -44,25 +46,6 @@ export interface OpenRouterModelPickerProps {
 	isPopup?: boolean
 	currentMode: Mode
 }
-
-// CARET MODIFICATION: i18n applied to featured models
-const featuredModels = [
-	{
-		id: "anthropic/claude-sonnet-4.5",
-		description: t("providers.openrouter.modelPicker.featuredModelDescriptionBest", "settings"),
-		label: t("providers.openrouter.modelPicker.featuredModelLabelBest", "settings"),
-	},
-	{
-		id: "x-ai/grok-code-fast-1",
-		description: t("providers.openrouter.modelPicker.featuredModelDescriptionFree", "settings"),
-		label: t("providers.openrouter.modelPicker.featuredModelLabelFree", "settings"),
-	},
-	{
-		id: "cline/code-supernova-1-million",
-		description: t("providers.openrouter.modelPicker.featuredModelDescriptionSupernova", "settings"),
-		label: t("providers.openrouter.modelPicker.featuredModelLabelFree", "settings"),
-	},
-]
 
 const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup, currentMode }) => {
 	const { handleModeFieldsChange } = useApiConfigurationHandlers()
@@ -247,7 +230,7 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup, 
 
 				{modeFields.apiProvider === "cline" && (
 					<div style={{ marginBottom: "6px", marginTop: 4 }}>
-						{featuredModels.map((model) => (
+						{openRouterFeaturedModels.map((model) => (
 							<FeaturedModelCard
 								description={model.description}
 								isSelected={selectedModelId === model.id}

@@ -112,14 +112,49 @@ export class ClineAuthProvider implements IAuthProvider {
 			}
 
 			if (await this.shouldRefreshIdToken(storedAuthData.refreshToken, storedAuthData.expiresAt)) {
-				// Try to refresh the token using the refresh token
-				const authInfo = await this.refreshToken(storedAuthData.refreshToken)
-				const newAuthInfoString = JSON.stringify(authInfo)
-				if (newAuthInfoString !== storedAuthDataString) {
-					controller.stateManager.setSecret("clineAccountId", undefined) // cleanup old key
-					controller.stateManager.setSecret("cline:clineAccountId", newAuthInfoString)
+				try {
+					// Try to refresh the token using the refresh token
+					const authInfo = await this.refreshToken(storedAuthData.refreshToken)
+					const newAuthInfoString = JSON.stringify(authInfo)
+					if (newAuthInfoString !== storedAuthDataString) {
+						controller.stateManager.setSecret("clineAccountId", undefined) // cleanup old key
+						controller.stateManager.setSecret("cline:clineAccountId", newAuthInfoString)
+					}
+					return authInfo || null
+				} catch (error: any) {
+					// CARET MODIFICATION: 네트워크 오류/오프라인 시 토큰 갱신 실패로 세션이 null 처리되어 로그아웃되는 것을 방지
+					const errorCode = error?.code ?? error?.cause?.code
+					const message = typeof error?.message === "string" ? error.message.toLowerCase() : ""
+					const networkErrorCodes = new Set([
+						"ENOTFOUND",
+						"EAI_AGAIN",
+						"ECONNRESET",
+						"ECONNREFUSED",
+						"ETIMEDOUT",
+						"ERR_NETWORK",
+					])
+					const isNetworkError =
+						error instanceof TypeError ||
+						(typeof errorCode === "string" && networkErrorCodes.has(errorCode)) ||
+						message.includes("fetch failed") ||
+						message.includes("network")
+
+					if (isNetworkError) {
+						try {
+							Logger.error("Token refresh failed due to network error; keeping stored auth data.", error)
+						} catch (logError) {
+							console.error("Token refresh failed due to network error; keeping stored auth data.", logError, error)
+						}
+						return storedAuthData
+					}
+
+					try {
+						Logger.error("Token refresh failed; returning null auth info.", error)
+					} catch (logError) {
+						console.error("Token refresh failed; returning null auth info.", logError, error)
+					}
+					return null
 				}
-				return authInfo || null
 			}
 
 			// Is the token valid?

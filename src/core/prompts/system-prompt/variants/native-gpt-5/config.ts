@@ -1,4 +1,4 @@
-import { isGPT5ModelFamily, isGPT51Model, isNextGenModelProvider } from "@utils/model-utils"
+import { isGPT5ModelFamily, isGPT51Model, isGPT52Model, isNextGenModelProvider } from "@utils/model-utils"
 import { ModelFamily } from "@/shared/prompts"
 import { ClineDefaultTool } from "@/shared/tools"
 import { SystemPromptSection } from "../../templates/placeholders"
@@ -25,10 +25,12 @@ export const config = createVariant(ModelFamily.NATIVE_GPT_5)
 		const providerInfo = context.providerInfo
 		const modelId = providerInfo.model.id
 
+		// CARET MODIFICATION: GPT-5.1/5.2는 별도 변형(native-gpt-5-1)으로 라우팅되므로 여기서는 제외 (R-3410-01)
 		// gpt-5-chat models do not support native tool use
 		return (
 			isGPT5ModelFamily(modelId) &&
 			!isGPT51Model(modelId) &&
+			!isGPT52Model(modelId) &&
 			!modelId.includes("chat") &&
 			isNextGenModelProvider(providerInfo)
 		)

@@ -525,6 +525,7 @@
 				"starIconEmpty": "☆",
 				"featuredModelDescriptionBest": "Recommended for Caret's agent coding",
 				"featuredModelLabelBest": "Best",
+				"featuredModelDescriptionGemini3FlashPreview": "Intelligent model built for speed and price efficiency",
 				"featuredModelDescriptionNew": "Claude Opus 4.5: SOTA coding performance at 3x lower cost than Opus 4.1",
 				"featuredModelLabelNew": "New",
 				"featuredModelDescriptionFree": "Advanced model with 262K context for complex coding",

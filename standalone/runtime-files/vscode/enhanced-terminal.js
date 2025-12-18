@@ -32,8 +32,8 @@ class StandaloneTerminalProcess extends EventEmitter {
 		const shellArgs = this.getShellArgs(shell, command)
 
 		try {
-			// Spawn the process
-			this.childProcess = spawn(shell, shellArgs, {
+			// Create shell options
+			const shellOptions = {
 				cwd: cwd,
 				stdio: ["ignore", "pipe", "pipe"], // Disable STDIN to prevent interactivity
 				env: {
@@ -45,7 +45,19 @@ class StandaloneTerminalProcess extends EventEmitter {
 					SYSTEMD_PAGER: "", // Disable systemd pager
 					MANPAGER: "cat", // Disable man pager
 				},
-			})
+			}
+
+			// CARET MODIFICATION: Windows cmd.exe에서 큰따옴표가 과도하게 escape 되는 문제를 방지하기 위해 shell:true + cmd.exe로 spawn (R-3400-02)
+			// Enable the shell option for "cmd.exe" to prevent double quotes from being over escaped
+			if (shell.toLowerCase().includes("cmd")) {
+				shellOptions.shell = true
+
+				// Spawn the process with special handling for "cmd.exe"
+				this.childProcess = spawn("cmd.exe", shellArgs, shellOptions)
+			} else {
+				// Spawn the process
+				this.childProcess = spawn(shell, shellArgs, shellOptions)
+			}
 
 			// Track process state
 			let didEmitEmptyLine = false
@@ -196,12 +208,20 @@ class StandaloneTerminalProcess extends EventEmitter {
 	}
 
 	getShellArgs(shell, command) {
-		if (process.platform === "win32") {
-			if (shell.toLowerCase().includes("powershell") || shell.toLowerCase().includes("pwsh")) {
+		// CARET MODIFICATION: 테스트/런타임 환경에서 shell 문자열이 Windows 계열이면 Windows 인자 규칙을 적용 (R-3383-07)
+		const normalizedShell = (shell || "").toLowerCase()
+		const isWindowsShell =
+			process.platform === "win32" ||
+			normalizedShell.includes("powershell") ||
+			normalizedShell.includes("pwsh") ||
+			normalizedShell.includes("cmd")
+
+		if (isWindowsShell) {
+			if (normalizedShell.includes("powershell") || normalizedShell.includes("pwsh")) {
 				return ["-Command", command]
 			} else {
-				// Use /s /c with quoted command for proper quote handling in cmd.exe
-				return ["/s", "/c", `"${command}"`]
+				// CARET MODIFICATION: cmd.exe 인자 단순화(/s 제거 + 추가 quoting 제거)로 Windows에서 명령 실행 깨짐 방지 (R-3383-07)
+				return ["/c", command]
 			}
 		} else {
 			// Use -l for login shell, -c for command

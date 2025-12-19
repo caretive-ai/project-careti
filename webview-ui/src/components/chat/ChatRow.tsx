@@ -363,7 +363,7 @@ export const ChatRowContent = memo(
 								color: normalColor,
 								marginBottom: "-1.5px",
 							}}></span>,
-						<span style={{ color: normalColor, fontWeight: "bold" }}>{t("caretHasQuestion", "common")}:</span>,
+						<span style={{ color: normalColor, fontWeight: "bold" }}>{t("chat.caretHasQuestion", "common")}:</span>,
 					]
 				default:
 					return [null, null]

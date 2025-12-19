@@ -63,11 +63,13 @@ describe("Caret image generation task runner", () => {
 				await runCaretImageGenerationTask(io, "Initial prompt")
 			})
 
+			askStub.callCount.should.equal(2)
+			const followupRequest = JSON.parse(askStub.getCall(0)!.args[1] as string)
+			followupRequest.question.should.equal("이미지 프롬프트를 입력해 주세요.")
+
 			// Initial prompt generation
 			sayCalls[0]![0].should.equal("text")
-			;(sayCalls[0]![1] as string).should.match(/이미지 생성 중\.\.\./)
-			;(sayCalls[0]![1] as string).should.match(/```diff/)
-			;(sayCalls[0]![1] as string).should.match(/\+ 생성 중\.\.\./)
+			;(sayCalls[0]![1] as string).should.match(/이미지 생성 중 \[/)
 			;(sayCalls[0]![4] as boolean).should.equal(true)
 
 			sayCalls[1]![0].should.equal("text")
@@ -92,9 +94,7 @@ describe("Caret image generation task runner", () => {
 			;(sayCalls[6]![1] as string).should.equal("Next prompt")
 
 			sayCalls[7]![0].should.equal("text")
-			;(sayCalls[7]![1] as string).should.match(/이미지 생성 중\.\.\./)
-			;(sayCalls[7]![1] as string).should.match(/```diff/)
-			;(sayCalls[7]![1] as string).should.match(/\+ 생성 중\.\.\./)
+			;(sayCalls[7]![1] as string).should.match(/이미지 생성 중 \[/)
 			;(sayCalls[7]![4] as boolean).should.equal(true)
 
 			sayCalls[8]![0].should.equal("text")

@@ -91,8 +91,24 @@ async function generateAndSayImage(io: TaskIO, prompt: string, generationIndex: 
 	if (io.isAborted()) return
 
 	const fileName = `Gemini_Generated_Image_${io.ulid}_${generationIndex}.png`
-	const loadingMarkdown = `이미지 생성 중...\n\n\`\`\`diff\n+ 생성 중...\n\`\`\``
-	await io.say("text", loadingMarkdown, undefined, undefined, true)
+	const loadingTextBase = "이미지 생성 중"
+	const loadingFrames = ["[-]", "[\\]", "[|]", "[/]"]
+	let frameIndex = 0
+	await io.say("text", `${loadingTextBase} ${loadingFrames[frameIndex]}`, undefined, undefined, true)
+	frameIndex = (frameIndex + 1) % loadingFrames.length
+	let loadingTimer: ReturnType<typeof setInterval> | undefined
+	const updateLoadingText = () => {
+		if (io.isAborted()) {
+			if (loadingTimer) {
+				clearInterval(loadingTimer)
+				loadingTimer = undefined
+			}
+			return
+		}
+		void io.say("text", `${loadingTextBase} ${loadingFrames[frameIndex]}`, undefined, undefined, true).catch(() => {})
+		frameIndex = (frameIndex + 1) % loadingFrames.length
+	}
+	loadingTimer = setInterval(updateLoadingText, 450)
 
 	try {
 		const { mimeType, base64, texts = [], thoughts = [] } = await requestGeneratedImage(io, prompt)
@@ -118,11 +134,19 @@ async function generateAndSayImage(io: TaskIO, prompt: string, generationIndex: 
 		if (message.includes("로그인이 필요합니다") || message.includes("(401)") || message.includes("(403)")) {
 			await io.say("error", message)
 		}
+	} finally {
+		if (loadingTimer) {
+			clearInterval(loadingTimer)
+		}
 	}
 }
 
 export async function runCaretImageGenerationTask(io: TaskIO, initialPrompt?: string): Promise<void> {
 	let generationIndex = 0
+	const followupQuestion = JSON.stringify({
+		question: "이미지 프롬프트를 입력해 주세요.",
+		options: [],
+	})
 	if (initialPrompt && initialPrompt.trim()) {
 		generationIndex += 1
 		await generateAndSayImage(io, initialPrompt.trim(), generationIndex)
@@ -131,7 +155,7 @@ export async function runCaretImageGenerationTask(io: TaskIO, initialPrompt?: st
 	while (!io.isAborted()) {
 		let askResult: AskResult
 		try {
-			askResult = await io.ask("followup")
+			askResult = await io.ask("followup", followupQuestion)
 		} catch {
 			return
 		}

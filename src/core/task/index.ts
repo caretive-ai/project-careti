@@ -1035,6 +1035,13 @@ export class Task {
 			})
 		}
 
+		if (
+			await (await import("@caret/core/task/image/maybeRunCaretImageGenerationTask")).maybeRunCaretImageGenerationTask(
+				this,
+				task,
+			)
+		)
+			return // CARET MODIFICATION: Route image-generation model tasks through gateway /v1/generate/image (no LLM loop)
 		await this.initiateTaskLoop(userContent)
 	}
 
@@ -1297,6 +1304,13 @@ export class Task {
 			})
 		}
 
+		if (
+			await (await import("@caret/core/task/image/maybeRunCaretImageGenerationTask")).maybeRunCaretImageGenerationTask(
+				this,
+				responseText,
+			)
+		)
+			return // CARET MODIFICATION: Route image-generation model tasks through gateway /v1/generate/image (no LLM loop)
 		await this.messageStateHandler.overwriteApiConversationHistory(modifiedApiConversationHistory)
 		await this.initiateTaskLoop(newUserContent)
 	}

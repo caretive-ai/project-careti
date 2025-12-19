@@ -22,6 +22,34 @@ type TaskIO = {
 type GenerateImageResponse = {
 	mimeType: string
 	base64: string
+	texts?: string[]
+	thoughts?: string[]
+}
+
+function getPngDimensionsFromBase64(base64: string): { width: number; height: number } | undefined {
+	try {
+		const buf = Buffer.from(base64, "base64")
+		if (buf.length < 24) return undefined
+		// PNG signature: 89 50 4E 47 0D 0A 1A 0A
+		if (
+			buf[0] !== 0x89 ||
+			buf[1] !== 0x50 ||
+			buf[2] !== 0x4e ||
+			buf[3] !== 0x47 ||
+			buf[4] !== 0x0d ||
+			buf[5] !== 0x0a ||
+			buf[6] !== 0x1a ||
+			buf[7] !== 0x0a
+		)
+			return undefined
+		const view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength)
+		const width = view.getUint32(16, false)
+		const height = view.getUint32(20, false)
+		if (!width || !height) return undefined
+		return { width, height }
+	} catch {
+		return undefined
+	}
 }
 
 async function requestGeneratedImage(io: TaskIO, prompt: string): Promise<GenerateImageResponse> {
@@ -54,19 +82,35 @@ async function requestGeneratedImage(io: TaskIO, prompt: string): Promise<Genera
 	if (!data?.base64 || !data?.mimeType) {
 		throw new Error("이미지 생성 API 응답 형식이 올바르지 않습니다.")
 	}
-	return { mimeType: data.mimeType, base64: data.base64 }
+	const texts = Array.isArray(data.texts) ? data.texts : []
+	const thoughts = Array.isArray(data.thoughts) ? data.thoughts : []
+	return { mimeType: data.mimeType, base64: data.base64, texts, thoughts }
 }
 
-async function generateAndSayImage(io: TaskIO, prompt: string): Promise<void> {
+async function generateAndSayImage(io: TaskIO, prompt: string, generationIndex: number): Promise<void> {
 	if (io.isAborted()) return
 
-	await io.say("text", "이미지 생성 중...", undefined, undefined, true)
+	const fileName = `Gemini_Generated_Image_${io.ulid}_${generationIndex}.png`
+	const loadingMarkdown = `이미지 생성 중...\n\n\`\`\`diff\n+ 생성 중...\n\`\`\``
+	await io.say("text", loadingMarkdown, undefined, undefined, true)
 
 	try {
-		const { mimeType, base64 } = await requestGeneratedImage(io, prompt)
+		const { mimeType, base64, texts = [], thoughts = [] } = await requestGeneratedImage(io, prompt)
 		if (io.isAborted()) return
+		await io.say("text", "", undefined, undefined, false)
+		const thoughtText = thoughts.filter(Boolean).join("\n\n")
+		if (thoughtText) {
+			await io.say("reasoning", thoughtText)
+		}
+		const responseText = texts.filter(Boolean).join("\n\n")
+		if (responseText) {
+			await io.say("text", responseText)
+		}
 		const dataUrl = `data:${mimeType};base64,${base64}`
-		await io.say("text", `![](${dataUrl})`, undefined, undefined, false)
+		const dimensions = getPngDimensionsFromBase64(base64)
+		const label = dimensions ? `[${fileName} ${dimensions.width}x${dimensions.height}]` : `[${fileName}]`
+		await io.say("text", `${label}\n\n![](${dataUrl})`, undefined, undefined, false)
+		await io.say("text", "완료")
 	} catch (error) {
 		if (io.isAborted()) return
 		const message = error instanceof Error ? error.message : String(error)
@@ -78,8 +122,10 @@ async function generateAndSayImage(io: TaskIO, prompt: string): Promise<void> {
 }
 
 export async function runCaretImageGenerationTask(io: TaskIO, initialPrompt?: string): Promise<void> {
+	let generationIndex = 0
 	if (initialPrompt && initialPrompt.trim()) {
-		await generateAndSayImage(io, initialPrompt.trim())
+		generationIndex += 1
+		await generateAndSayImage(io, initialPrompt.trim(), generationIndex)
 	}
 
 	while (!io.isAborted()) {
@@ -96,6 +142,7 @@ export async function runCaretImageGenerationTask(io: TaskIO, initialPrompt?: st
 
 		// Show the user's prompt in the chat history (consistent with existing follow-up UX).
 		await io.say("user_feedback", prompt, askResult.images, askResult.files)
-		await generateAndSayImage(io, prompt)
+		generationIndex += 1
+		await generateAndSayImage(io, prompt, generationIndex)
 	}
 }

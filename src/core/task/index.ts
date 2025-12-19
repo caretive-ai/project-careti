@@ -41,6 +41,7 @@ import { ensureCheckpointInitialized } from "@integrations/checkpoints/initializ
 import { ICheckpointManager } from "@integrations/checkpoints/types"
 import { DiffViewProvider } from "@integrations/editor/DiffViewProvider"
 import { formatContentBlockToMarkdown } from "@integrations/misc/export-markdown"
+import { buildImagePromptContext } from "./image/prompt-context"
 import { processFilesIntoText } from "@integrations/misc/extract-text"
 import { showSystemNotification } from "@integrations/notifications"
 import { TerminalManager } from "@integrations/terminal/TerminalManager"
@@ -919,6 +920,64 @@ export class Task {
 		}
 	}
 
+	// CARET MODIFICATION: Continue task with a new prompt after image generation handoff.
+	private async continueTaskWithUserPrompt(prompt: string, images?: string[], files?: string[]): Promise<void> {
+		const trimmedPrompt = prompt?.trim()
+		if (!trimmedPrompt) {
+			return
+		}
+
+		const userContent: ClineUserContent[] = [
+			{
+				type: "text",
+				text: trimmedPrompt,
+			},
+		]
+
+		if (images && images.length > 0) {
+			userContent.push(...formatResponse.imageBlocks(images))
+		}
+
+		if (files && files.length > 0) {
+			const fileContentString = await processFilesIntoText(files)
+			if (fileContentString) {
+				userContent.push({
+					type: "text",
+					text: fileContentString,
+				})
+			}
+		}
+
+		const pendingContextWarning = await this.fileContextTracker.retrieveAndClearPendingFileContextWarning()
+		if (pendingContextWarning && pendingContextWarning.length > 0) {
+			const fileContextWarning = formatResponse.fileContextWarning(pendingContextWarning)
+			userContent.push({
+				type: "text",
+				text: fileContextWarning,
+			})
+		}
+
+		const userPromptHookResult = await this.runUserPromptSubmitHook(userContent, "feedback")
+
+		if (this.taskState.abort) {
+			return
+		}
+
+		if (userPromptHookResult.cancel === true) {
+			await this.cancelTask()
+			return
+		}
+
+		if (userPromptHookResult.contextModification) {
+			userContent.push({
+				type: "text",
+				text: `<hook_context source="UserPromptSubmit">\n${userPromptHookResult.contextModification}\n</hook_context>`,
+			})
+		}
+
+		await this.initiateTaskLoop(userContent)
+	}
+
 	// Task lifecycle
 
 	public async startTask(task?: string, images?: string[], files?: string[]): Promise<void> {
@@ -1035,13 +1094,19 @@ export class Task {
 			})
 		}
 
-		if (
-			await (await import("@caret/core/task/image/maybeRunCaretImageGenerationTask")).maybeRunCaretImageGenerationTask(
-				this,
-				task,
-			)
-		)
+		const imageTaskResult = await (
+			await import("@caret/core/task/image/maybeRunCaretImageGenerationTask")
+		).maybeRunCaretImageGenerationTask(this, task)
+		if (imageTaskResult.handled) {
+			if (imageTaskResult.handoff) {
+				await this.continueTaskWithUserPrompt(
+					imageTaskResult.handoff.prompt,
+					imageTaskResult.handoff.images,
+					imageTaskResult.handoff.files,
+				)
+			}
 			return // CARET MODIFICATION: Route image-generation model tasks through gateway /v1/generate/image (no LLM loop)
+		}
 		await this.initiateTaskLoop(userContent)
 	}
 
@@ -1304,13 +1369,20 @@ export class Task {
 			})
 		}
 
-		if (
-			await (await import("@caret/core/task/image/maybeRunCaretImageGenerationTask")).maybeRunCaretImageGenerationTask(
-				this,
-				responseText,
-			)
-		)
+		const imageTaskResult = await (
+			await import("@caret/core/task/image/maybeRunCaretImageGenerationTask")
+		).maybeRunCaretImageGenerationTask(this, responseText)
+		if (imageTaskResult.handled) {
+			if (imageTaskResult.handoff) {
+				await this.messageStateHandler.overwriteApiConversationHistory(modifiedApiConversationHistory)
+				await this.continueTaskWithUserPrompt(
+					imageTaskResult.handoff.prompt,
+					imageTaskResult.handoff.images,
+					imageTaskResult.handoff.files,
+				)
+			}
 			return // CARET MODIFICATION: Route image-generation model tasks through gateway /v1/generate/image (no LLM loop)
+		}
 		await this.messageStateHandler.overwriteApiConversationHistory(modifiedApiConversationHistory)
 		await this.initiateTaskLoop(newUserContent)
 	}
@@ -2475,6 +2547,27 @@ export class Task {
 		// Check abort flag at the very start to prevent any execution after cancellation
 		if (this.taskState.abort) {
 			throw new Error("Task instance aborted")
+		}
+
+		const { prompt: imagePrompt, hasLikelyUserText } = buildImagePromptContext(userContent)
+		if (imagePrompt && hasLikelyUserText) {
+			try {
+				const imageTaskResult = await (
+					await import("@caret/core/task/image/maybeRunCaretImageGenerationTask")
+				).maybeRunCaretImageGenerationTask(this, imagePrompt)
+				if (imageTaskResult.handled) {
+					if (imageTaskResult.handoff) {
+						await this.continueTaskWithUserPrompt(
+							imageTaskResult.handoff.prompt,
+							imageTaskResult.handoff.images,
+							imageTaskResult.handoff.files,
+						)
+					}
+					return true
+				}
+			} catch (error) {
+				Logger.error("Image generation branch failed", error)
+			}
 		}
 
 		// Increment API request counter for focus chain list management

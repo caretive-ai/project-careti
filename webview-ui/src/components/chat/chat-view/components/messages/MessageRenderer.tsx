@@ -59,7 +59,8 @@ export const MessageRenderer: React.FC<MessageRendererProps> = ({
 	return (
 		<ChatRow
 			inputValue={inputValue}
-			isExpanded={expandedRows[messageOrGroup.ts] || false}
+			// CARET MODIFICATION: expand reasoning while streaming, collapse after final unless user toggled.
+			isExpanded={expandedRows[messageOrGroup.ts] ?? (messageOrGroup.say === "reasoning" && messageOrGroup.partial !== false)}
 			isLast={isLast}
 			key={messageOrGroup.ts}
 			lastModifiedMessage={modifiedMessages.at(-1)}

@@ -1035,6 +1035,7 @@ export const ChatRowContent = memo(
 							</div>
 						)
 					case "reasoning":
+						// CARET MODIFICATION: Render reasoning markdown as HTML for expanded view.
 						return (
 							<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
 								{featureConfig?.showPersonaSettings && enablePersonaSystem && (
@@ -1071,7 +1072,9 @@ export const ChatRowContent = memo(
 															}}
 														/>
 													</span>
-													<span className="ph-no-capture">{message.text}</span>
+													<div className="ph-no-capture">
+														<Markdown markdown={message.text} />
+													</div>
 												</div>
 											) : (
 												<div style={{ display: "flex", alignItems: "center" }}>

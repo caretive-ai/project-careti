@@ -210,7 +210,8 @@
 		"alreadyInActMode": "すでにActモードです",
 		"actModeShortcut": "Actモード (⌘⇧A)",
 		"copyCode": "コードをコピー",
-		"openFileInEditor": "{{filePath}}をエディタで開く"
+		"openFileInEditor": "{{filePath}}をエディタで開く",
+		"openImageInEditor": "画像をエディタで開く"
 	},
 	"mermaidBlock": {
 		"generatingDiagram": "Mermaidダイアグラムを生成中...",

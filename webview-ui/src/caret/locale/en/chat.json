@@ -211,7 +211,8 @@
 		"alreadyInActMode": "Already in Agent Mode",
 		"actModeShortcut": "Agent Mode (⌘⇧A)",
 		"copyCode": "Copy code",
-		"openFileInEditor": "Open {{filePath}} in editor"
+		"openFileInEditor": "Open {{filePath}} in editor",
+		"openImageInEditor": "Open image in editor"
 	},
 	"mermaidBlock": {
 		"generatingDiagram": "Generating mermaid diagram...",

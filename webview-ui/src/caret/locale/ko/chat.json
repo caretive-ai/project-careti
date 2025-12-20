@@ -211,7 +211,8 @@
 		"alreadyInActMode": "이미 에이전트 모드입니다",
 		"actModeShortcut": "에이전트 모드 (⌘⇧A)",
 		"copyCode": "코드 복사",
-		"openFileInEditor": "편집기에서 {{filePath}} 열기"
+		"openFileInEditor": "편집기에서 {{filePath}} 열기",
+		"openImageInEditor": "이미지를 편집기에서 열기"
 	},
 	"mermaidBlock": {
 		"generatingDiagram": "Mermaid 다이어그램 생성 중...",

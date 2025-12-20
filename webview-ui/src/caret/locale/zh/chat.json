@@ -210,7 +210,8 @@
 		"alreadyInActMode": "已在Act模式",
 		"actModeShortcut": "Act模式 (⌘⇧A)",
 		"copyCode": "复制代码",
-		"openFileInEditor": "在编辑器中打开 {{filePath}}"
+		"openFileInEditor": "在编辑器中打开 {{filePath}}",
+		"openImageInEditor": "在编辑器中打开图像"
 	},
 	"mermaidBlock": {
 		"generatingDiagram": "正在生成Mermaid图表...",

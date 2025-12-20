@@ -421,6 +421,39 @@ const MarkdownBlock = memo(({ markdown, compact }: MarkdownBlockProps) => {
 
 					return <code {...props} />
 				},
+				img: (imgProps: ComponentProps<"img"> & { [key: string]: any }) => {
+					const { src, onClick, title: propTitle, className, style, ...rest } = imgProps
+					const shouldOpenInEditor = Boolean(src && src.startsWith("data:"))
+					const tooltip = propTitle ?? (shouldOpenInEditor ? t("markdownBlock.openImageInEditor", "chat") : undefined)
+
+					const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
+						if (typeof onClick === "function") {
+							onClick(event)
+						}
+
+						if (shouldOpenInEditor && src) {
+							void FileServiceClient.openImage(StringRequest.create({ value: src })).catch((err) => {
+								console.debug("Failed to open image in editor:", err)
+							})
+						}
+					}
+
+					return (
+						<img
+							{...rest}
+							src={src}
+							className={className}
+							style={{
+								...(style as React.CSSProperties),
+								cursor: shouldOpenInEditor ? "pointer" : undefined,
+							}}
+							onClick={handleClick}
+							title={tooltip}
+							role={shouldOpenInEditor ? "button" : undefined}
+							aria-label={shouldOpenInEditor ? tooltip : undefined}
+						/>
+					)
+				},
 				strong: (props: ComponentProps<"strong">) => {
 					// Check if this is an "Act Mode" strong element by looking for the keyboard shortcut
 					// Handle both string children and array of children cases

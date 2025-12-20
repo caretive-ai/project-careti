@@ -376,11 +376,7 @@
 		"report-issue": "node scripts/report-issue.js",
 		"package:release": "node caret-scripts/build/package-release.js"
 	},
-	"lint-staged": {
-		"*": [
-			"biome check --write --staged --no-errors-on-unmatched --files-ignore-unknown=true"
-		]
-	},
+
 	"devDependencies": {
 		"@biomejs/biome": "^2.1.4",
 		"@bufbuild/buf": "^1.54.0",

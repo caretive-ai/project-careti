@@ -344,6 +344,22 @@ export const caretModels = {
 			},
 		],
 	},
+	"gemini/gemini-3-flash-preview": {
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: true,
+		supportsGlobalEndpoint: true,
+		inputPrice: 0.5,
+		outputPrice: 3.0,
+		cacheWritesPrice: 0.05,
+		cacheReadsPrice: 0.03,
+		temperature: 1.0,
+		description: "Gemini 3.0 Flash (Preview)",
+		thinkingConfig: {
+			thinkingLevel: "high",
+		},
+	},
 	// CARET MODIFICATION: Image generation model (routes to gateway /v1/generate/image instead of chat completions)
 	"gemini/gemini-3-pro-image-preview": {
 		maxTokens: 0,

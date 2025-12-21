@@ -437,4 +437,5 @@ export async function runCaretImageGenerationTask(
 		promptFiles = askResult.files
 		await io.say("user_feedback", prompt, promptImages, promptFiles)
 	}
+	return
 }

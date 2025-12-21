@@ -74,6 +74,12 @@ export function isGPT51Model(id: string): boolean {
 	return modelId.includes("gpt-5.1") || modelId.includes("gpt-5-1")
 }
 
+export function isGPT52Model(id: string): boolean {
+	// CARET MODIFICATION: OpenAI GPT-5.2 모델 식별을 추가해 프롬프트/매처 로직에서 정확히 분기 (R-3410-01)
+	const modelId = normalize(id)
+	return modelId.includes("gpt-5.2") || modelId.includes("gpt-5-2")
+}
+
 export function isGLMModelFamily(id: string): boolean {
 	const modelId = normalize(id)
 	return (

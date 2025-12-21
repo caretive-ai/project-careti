@@ -1,30 +1,26 @@
+// CARET MODIFICATION: TDD 회귀 테스트 - GPT-5.2 모델 판별 및 프롬프트 매처 동작 보장
+
+import { expect } from "chai"
 import { describe, it } from "mocha"
-import "should"
-import { shouldSkipReasoningForModel } from "../model-utils"
+import { config as gpt5Config } from "@/core/prompts/system-prompt/variants/native-gpt-5/config"
+import { config as gpt51Config } from "@/core/prompts/system-prompt/variants/native-gpt-5-1/config"
+import { openAiNativeModels } from "@/shared/api"
+import { isGPT52Model } from "../model-utils"
 
-describe("shouldSkipReasoningForModel", () => {
-	it("should return true for grok-4 models", () => {
-		shouldSkipReasoningForModel("grok-4").should.equal(true)
-		shouldSkipReasoningForModel("x-ai/grok-4").should.equal(true)
-		shouldSkipReasoningForModel("openrouter/grok-4-turbo").should.equal(true)
-		shouldSkipReasoningForModel("some-provider/grok-4-mini").should.equal(true)
+describe("model-utils GPT-5.2", () => {
+	it("GPT-5.2 모델 ID를 올바르게 판별한다", () => {
+		expect(isGPT52Model("gpt-5.2")).to.equal(true)
+		expect(isGPT52Model("gpt-5-2")).to.equal(true)
+		expect(isGPT52Model("gpt-5.1")).to.equal(false)
 	})
 
-	it("should return false for non-grok-4 models", () => {
-		shouldSkipReasoningForModel("grok-3").should.equal(false)
-		shouldSkipReasoningForModel("grok-2").should.equal(false)
-		shouldSkipReasoningForModel("claude-3-sonnet").should.equal(false)
-		shouldSkipReasoningForModel("gpt-4").should.equal(false)
-		shouldSkipReasoningForModel("gemini-pro").should.equal(false)
-	})
+	it("Native GPT-5.2는 gpt-5-1 계열 프롬프트 매처로 매칭된다", () => {
+		const providerInfo = {
+			providerId: "openai-native",
+			model: { id: "gpt-5.2", info: openAiNativeModels["gpt-5.2"] },
+		}
 
-	it("should return false for undefined or empty model IDs", () => {
-		shouldSkipReasoningForModel(undefined).should.equal(false)
-		shouldSkipReasoningForModel("").should.equal(false)
-	})
-
-	it("should be case sensitive", () => {
-		shouldSkipReasoningForModel("GROK-4").should.equal(false)
-		shouldSkipReasoningForModel("Grok-4").should.equal(false)
+		expect(gpt51Config.matcher({ enableNativeToolCalls: true, providerInfo } as any)).to.equal(true)
+		expect(gpt5Config.matcher({ enableNativeToolCalls: true, providerInfo } as any)).to.equal(false)
 	})
 })

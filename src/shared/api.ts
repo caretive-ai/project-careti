@@ -1006,6 +1006,23 @@ export const vertexModels = {
 		description: "Gemini 3.0 Pro",
 		temperature: 1.0,
 	},
+	// CARET MODIFICATION: Gemini 3 Flash Preview 모델 구성 추가 (upstream #8142)
+	"gemini-3-flash-preview": {
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: true,
+		supportsGlobalEndpoint: true,
+		inputPrice: 0.5,
+		outputPrice: 3.0,
+		cacheWritesPrice: 0.05,
+		cacheReadsPrice: 0.03,
+		temperature: 1.0,
+		description: "Gemini 3.0 Flash (Preview)",
+		thinkingConfig: {
+			thinkingLevel: "high",
+		},
+	},
 	"claude-sonnet-4-5@20250929": {
 		maxTokens: 8192,
 		contextWindow: 200_000,
@@ -1395,6 +1412,35 @@ export const geminiModels = {
 			},
 		],
 	},
+	// CARET MODIFICATION: Gemini 3 Flash Preview 모델 구성 추가 (upstream #8142)
+	"gemini-3-flash-preview": {
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: true,
+		supportsGlobalEndpoint: true,
+		inputPrice: 0.5,
+		outputPrice: 3.0,
+		cacheWritesPrice: 0.05,
+		cacheReadsPrice: 0.03,
+		thinkingConfig: {
+			thinkingLevel: "low",
+		},
+		tiers: [
+			{
+				contextWindow: 200000,
+				inputPrice: 0.3,
+				outputPrice: 2.5,
+				cacheReadsPrice: 0.03,
+			},
+			{
+				contextWindow: Infinity,
+				inputPrice: 0.3,
+				outputPrice: 2.5,
+				cacheReadsPrice: 0.03,
+			},
+		],
+	},
 	"gemini-2.5-pro": {
 		maxTokens: 65536,
 		contextWindow: 1_048_576,
@@ -1631,6 +1677,17 @@ export const openAiNativeModels = {
 		inputPrice: 1.25,
 		outputPrice: 10,
 		cacheReadsPrice: 0.125,
+	},
+	// CARET MODIFICATION: GPT-5.2 모델 추가 (upstream #8045)
+	"gpt-5.2": {
+		maxTokens: 8_192,
+		contextWindow: 272000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 1.75,
+		outputPrice: 14.0,
+		cacheReadsPrice: 0.175,
+		temperature: 1,
 	},
 	o3: {
 		maxTokens: 100_000,
@@ -2989,6 +3046,34 @@ export const nebiusDefaultModelId = "Qwen/Qwen2.5-32B-Instruct-fast" satisfies N
 export type XAIModelId = keyof typeof xaiModels
 export const xaiDefaultModelId: XAIModelId = "grok-4"
 export const xaiModels = {
+	// CARET MODIFICATION: Grok 4.1 / Grok Code 모델 추가 (upstream 9792f174b, R-3383-02)
+	"grok-4-1-fast-reasoning": {
+		contextWindow: 2_000_000,
+		supportsImages: false,
+		supportsPromptCache: true,
+		inputPrice: 0.2,
+		cacheReadsPrice: 0.05,
+		outputPrice: 0.5,
+		description: "xAI's Grok 4.1 Reasoning Fast - multimodal model with 2M context.",
+	},
+	"grok-4-1-fast-non-reasoning": {
+		contextWindow: 2_000_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 0.2,
+		cacheReadsPrice: 0.05,
+		outputPrice: 0.5,
+		description: "xAI's Grok 4.1 Non-Reasoning Fast - multimodal model with 2M context.",
+	},
+	"grok-code-fast-1": {
+		contextWindow: 256_000,
+		supportsImages: false,
+		supportsPromptCache: true,
+		inputPrice: 0.2,
+		cacheReadsPrice: 0.02,
+		outputPrice: 1.5,
+		description: "xAI's Grok Coding model.",
+	},
 	"grok-4-fast-reasoning": {
 		maxTokens: 30000,
 		contextWindow: 2000000,

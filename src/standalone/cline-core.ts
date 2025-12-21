@@ -10,6 +10,7 @@ import { AuthHandler } from "@/hosts/external/AuthHandler"
 import { HostProvider } from "@/hosts/host-provider"
 import { DiffViewProvider } from "@/integrations/editor/DiffViewProvider"
 import { HOSTBRIDGE_PORT, waitForHostBridgeReady } from "./hostbridge-client"
+import { setStandaloneInstallDirCwd } from "./install-cwd"
 import { setLockManager } from "./lock-manager"
 import { PROTOBUS_PORT, startProtobusService } from "./protobus-service"
 import { log } from "./utils"
@@ -29,6 +30,9 @@ async function main() {
 		showHelp()
 		process.exit(0)
 	}
+
+	// CARET MODIFICATION: Standalone에서 리소스 로딩을 위해 cwd를 설치 디렉토리로 고정 (upstream b1d15d4fe)
+	setStandaloneInstallDirCwd(__dirname)
 
 	// Initialize context with optional custom directory from CLI
 	const { extensionContext, DATA_DIR, EXTENSION_DIR } = initializeContext(args.config)

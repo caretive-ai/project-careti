@@ -11,6 +11,15 @@ type AskResult = {
 	files?: string[]
 }
 
+type ImageUsage = {
+	inputTokens: number
+	outputTokens: number
+	totalTokens?: number
+	totalCost?: number
+	cacheWriteTokens?: number
+	cacheReadTokens?: number
+}
+
 type TaskIO = {
 	controller: unknown
 	ulid: string
@@ -18,6 +27,8 @@ type TaskIO = {
 	say: (type: ClineSay, text?: string, images?: string[], files?: string[], partial?: boolean) => Promise<number | undefined>
 	ask: (type: ClineAsk, text?: string, partial?: boolean) => Promise<AskResult>
 	isImageModel?: () => boolean
+	startApiRequest?: (request: string) => Promise<number | undefined>
+	updateApiRequestUsage?: (apiReqIndex: number | undefined, usage: ImageUsage) => Promise<void>
 }
 
 type GenerateImageResponse = {
@@ -25,6 +36,7 @@ type GenerateImageResponse = {
 	base64: string
 	texts?: string[]
 	thoughts?: string[]
+	usage?: ImageUsage
 }
 
 type ImageGenerationHandoff = {
@@ -37,6 +49,7 @@ type ImageStreamEvent =
 	| { type: "thought"; content: string }
 	| { type: "text"; content: string }
 	| { type: "image"; mimeType: string; base64: string }
+	| ({ type: "usage" } & ImageUsage)
 	| { type: "done" }
 	| { type: "error"; message: string }
 
@@ -102,7 +115,8 @@ async function parseGeneratedImageResponse(resp: Response): Promise<GenerateImag
 	}
 	const texts = Array.isArray(data.texts) ? data.texts : []
 	const thoughts = Array.isArray(data.thoughts) ? data.thoughts : []
-	return { mimeType: data.mimeType, base64: data.base64, texts, thoughts }
+	const usage = data.usage && typeof data.usage === "object" ? (data.usage as ImageUsage) : undefined
+	return { mimeType: data.mimeType, base64: data.base64, texts, thoughts, usage }
 }
 
 function extractSsePayloads(rawEvent: string): string[] {
@@ -187,6 +201,34 @@ function mergeStreamContent(current: string, incoming: string): string {
 async function generateAndSayImage(io: TaskIO, prompt: string, generationIndex: number): Promise<boolean> {
 	if (io.isAborted()) return false
 
+	let apiReqIndex: number | undefined
+	let usageApplied = false
+	const normalizeUsage = (raw: Partial<ImageUsage> | undefined): ImageUsage | undefined => {
+		if (!raw) return undefined
+		let inputTokens = typeof raw.inputTokens === "number" ? raw.inputTokens : 0
+		const outputTokens = typeof raw.outputTokens === "number" ? raw.outputTokens : 0
+		const totalTokens = typeof raw.totalTokens === "number" ? raw.totalTokens : undefined
+		const totalCost = typeof raw.totalCost === "number" ? raw.totalCost : undefined
+		const cacheWriteTokens = typeof raw.cacheWriteTokens === "number" ? raw.cacheWriteTokens : 0
+		const cacheReadTokens = typeof raw.cacheReadTokens === "number" ? raw.cacheReadTokens : 0
+		if (!inputTokens && totalTokens && totalTokens > 0) {
+			if (outputTokens > 0 && totalTokens > outputTokens) {
+				inputTokens = totalTokens - outputTokens
+			} else {
+				inputTokens = totalTokens
+			}
+		}
+		return { inputTokens, outputTokens, totalTokens, totalCost, cacheWriteTokens, cacheReadTokens }
+	}
+	const applyUsageUpdate = async (usage: ImageUsage) => {
+		if (usageApplied || apiReqIndex === undefined || !io.updateApiRequestUsage) return
+		usageApplied = true
+		await io.updateApiRequestUsage(apiReqIndex, usage)
+	}
+
+	const requestSummary = `POST /v1/generate/image\n\n${prompt}`
+	apiReqIndex = await io.startApiRequest?.(requestSummary)
+
 	const fileName = `Gemini_Generated_Image_${io.ulid}_${generationIndex}.png`
 	const loadingTextBase = "이미지 생성 중"
 	const loadingFrames = ["[-]", "[\\]", "[|]", "[/]"]
@@ -270,9 +312,17 @@ async function generateAndSayImage(io: TaskIO, prompt: string, generationIndex: 
 				textStreaming = false
 			}
 
-				for await (const event of parseImageStreamEvents(resp)) {
-					if (io.isAborted()) return false
+			for await (const event of parseImageStreamEvents(resp)) {
+				if (io.isAborted()) return false
 				await clearLoadingIfNeeded()
+
+				if (event.type === "usage") {
+					const usage = normalizeUsage(event)
+					if (usage) {
+						await applyUsageUpdate(usage)
+					}
+					continue
+				}
 
 				if (event.type === "thought") {
 					if (textStarted) continue
@@ -335,7 +385,11 @@ async function generateAndSayImage(io: TaskIO, prompt: string, generationIndex: 
 			return true
 		}
 		await clearLoadingIfNeeded()
-		const { mimeType, base64, texts = [], thoughts = [] } = await parseGeneratedImageResponse(resp)
+		const { mimeType, base64, texts = [], thoughts = [], usage: responseUsage } = await parseGeneratedImageResponse(resp)
+		const usage = normalizeUsage(responseUsage)
+		if (usage) {
+			await applyUsageUpdate(usage)
+		}
 		const thoughtText = thoughts.filter(Boolean).join("\n\n")
 		if (thoughtText) {
 			await io.say("reasoning", thoughtText)

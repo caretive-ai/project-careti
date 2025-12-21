@@ -63,8 +63,22 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 	const modifiedMessages = useMemo(() => combineApiRequests(combineCommandSequences(messages.slice(1))), [messages])
 	// has to be after api_req_finished are all reduced into api_req_started messages
 	const apiMetrics = useMemo(() => getApiMetrics(modifiedMessages), [modifiedMessages])
+	const { selectedProvider, selectedModelId } = useMemo(
+		() => normalizeApiConfiguration(apiConfiguration, mode),
+		[apiConfiguration, mode],
+	)
+	const isCaretImageModel =
+		selectedProvider === "caret" && selectedModelId === "gemini/gemini-3-pro-image-preview"
 
 	const lastApiReqTotalTokens = useMemo(() => {
+		if (isCaretImageModel) {
+			return (
+				(apiMetrics.totalTokensIn || 0) +
+				(apiMetrics.totalTokensOut || 0) +
+				(apiMetrics.totalCacheWrites || 0) +
+				(apiMetrics.totalCacheReads || 0)
+			)
+		}
 		const getTotalTokensFromApiReqMessage = (msg: ClineMessage) => {
 			if (!msg.text) {
 				return 0
@@ -82,7 +96,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 			return undefined
 		}
 		return getTotalTokensFromApiReqMessage(lastApiReqMessage)
-	}, [modifiedMessages])
+	}, [apiMetrics.totalCacheReads, apiMetrics.totalCacheWrites, apiMetrics.totalTokensIn, apiMetrics.totalTokensOut, isCaretImageModel, modifiedMessages])
 
 	// Use custom hooks for state management
 	const chatState = useChatState(messages)

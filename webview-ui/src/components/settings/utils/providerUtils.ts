@@ -258,10 +258,21 @@ export function normalizeApiConfiguration(
 				currentMode === "plan" ? apiConfiguration?.planModeCaretModelId : apiConfiguration?.actModeCaretModelId
 			const caretModelInfo =
 				currentMode === "plan" ? apiConfiguration?.planModeCaretModelInfo : apiConfiguration?.actModeCaretModelInfo
+			const resolvedCaretModelId = caretModelId || caretDefaultModelId
+			const fallbackCaretModelInfo =
+				caretModels[resolvedCaretModelId as keyof typeof caretModels] || caretModels[caretDefaultModelId]
+			const mergedCaretModelInfo = caretModelInfo
+				? {
+						...fallbackCaretModelInfo,
+						...caretModelInfo,
+						contextWindow: caretModelInfo.contextWindow || fallbackCaretModelInfo.contextWindow,
+						maxTokens: caretModelInfo.maxTokens || fallbackCaretModelInfo.maxTokens,
+					}
+				: fallbackCaretModelInfo
 			return {
 				selectedProvider: provider,
-				selectedModelId: caretModelId || "",
-				selectedModelInfo: caretModelInfo || caretModels[caretDefaultModelId],
+				selectedModelId: resolvedCaretModelId,
+				selectedModelInfo: mergedCaretModelInfo,
 			}
 		case "xai":
 			return getProviderData(xaiModels, xaiDefaultModelId)

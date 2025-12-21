@@ -362,8 +362,8 @@ export const caretModels = {
 	},
 	// CARET MODIFICATION: Image generation model (routes to gateway /v1/generate/image instead of chat completions)
 	"gemini/gemini-3-pro-image-preview": {
-		maxTokens: 0,
-		contextWindow: 0,
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
 		supportsImages: false,
 		supportsPromptCache: false,
 		inputPrice: 0,

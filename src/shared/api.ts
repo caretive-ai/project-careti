@@ -364,10 +364,13 @@ export const caretModels = {
 	"gemini/gemini-3-pro-image-preview": {
 		maxTokens: 65536,
 		contextWindow: 1_048_576,
-		supportsImages: false,
+		supportsImages: true,
 		supportsPromptCache: false,
-		inputPrice: 0,
-		outputPrice: 0,
+		inputPrice: 2.0,
+		outputPrice: 120,
+		thinkingConfig: {
+			thinkingLevel: "high",
+		},
 		description: "Image generation (single PNG) via gateway /v1/generate/image",
 	},
 	"gemini/gemini-2.5-pro": {

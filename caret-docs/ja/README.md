@@ -43,24 +43,52 @@
 
 ---
 
+## ⚡ v0.4.2 ハイライト
+
+- 🚀 **最新モデル**: Gemini 3 Pro/Flash + GPT-5.2 に対応。Caret アカウントは Gemini 3 Pro/Flash を提供。
+- 🖼️ **ナノバナナ画像モデル**: `gemini-3-pro-image-preview` で生成した画像をプロジェクトリソースに挿入し、エディタで直接確認。
+- 🧾 **アカウント/クレジット/決済の安定化**: Caret アカウント、クレジット、決済フローを改善。
+
 ## 🎉 公式Caret AI Providerが公開 — 無料クレジットをゲットしよう！
 
 **素晴らしいニュースです！** 公式のCaret AIプロバイダーが安定し、誰でも利用できるようになりました：
 
 - 🎉 **無料クレジット**: 新規ユーザーは**毎月$0.1 (10クレジット)**がもらえます！(初月は最大$0.2)
-- 🤖 **最新モデル**: Gemini 3、2.5 Pro、Liteのような強力なモデルにアクセスできます。
+- 🤖 **最新モデル**: Caret アカウントは **Gemini 3 Pro/Flash**、対応プロバイダーでは **GPT-5.2** まで利用可能。
 - 🚀 **簡単なセットアップ**: 設定でAIプロバイダーとして「Caret」を選択するだけで、すぐに始められます。
+- 🔧 **ランタイム**: Webview gRPC → CaretAccountService → `api.caret.team`（OpenAI互換）。モデル一覧は `src/shared/api.ts` から生成されます。
 
 ---
 
-## 🚀 最新アップデート：Cline v3.38.2 + GPT 5.1, Claude Opus 4.5, Gemini 3
+## 🚀 最新アップデート：v0.4.2 — 最新モデル、ナノバナナ画像、アカウント安定化
 
-**Caret v0.4.0**には、Caret独自の拡張機能との100%の互換性を保ちながら、**Cline v3.38.2のすべての機能**が含まれています。
+**Caret v0.4.2** は Cline コアとの互換性を保ちながら、Caret 独自の機能を拡張しました。
 
 ### ハイライト
-- ✅ **Cline v3.38.2の採用**: Claude Opus 4.5を含む、すべての最新のコア改善
-- ✅ **デュアルアカウントシステム**: 既存のClineアカウントを完全にサポート
-- ✅ **Caret CLI (ベータ版)**: LiteLLMをサポートする統一CLI
-- ✅ **入力履歴**: ターミナルのように過去のコマンドをナビゲート
-- ✅ **強化されたプロバイダー設定**: LiteLLM / [BizRouter](https://bizrouter.ai/)用のモデルを自動取得し、ヘルスチェックも実施
-- ✅ **251のユニークなAIモデル**: Claude Opus 4.5、GPT-5、Gemini 3を含む20のプロバイダー
+- ✅ **最新モデル対応**: Gemini 3 Pro/Flash + GPT-5.2（Caret アカウントは Gemini 3 Pro/Flash を提供）
+- ✅ **ナノバナナ画像モデル**: 画像生成後、プロジェクトリソースに挿入しエディタで表示
+- ✅ **アカウント安定化**: Caret アカウント/クレジット/決済フローを改善
+- ✅ **343のユニークなAIモデル**: GPT-5.2、Gemini 3 を含む27のプロバイダー
+
+---
+
+## 🌟 Caretを選ぶ6つの理由
+
+1. **🔄 デュアルモード** — Caret（拡張）と Cline（クラシック）を切り替え
+2. **🎭 ペルソナシステム** — 個性あるAI同僚と一緒にコーディング
+3. **🧠 より賢いプロンプト** — コストと性能に最適化
+4. **🌍 完全ローカライズ** — UI・ドキュメント・マニュアルが4言語対応
+5. **⌨️ より良いUX** — 入力履歴と便利なショートカット（Esc、Ctrl+Shift+R）
+6. **🎯 圧倒的なモデル対応** — 343モデル、27プロバイダー。[モデル一覧](../development/support-model-list.en.md)
+
+👉 **独自機能の一覧**: [機能インデックス](../features/index.md)
+
+---
+
+## 📞 サポート & コミュニティ
+
+- 🏠 **Website**: https://caret.team  
+- 💬 **Discord**: https://discord.gg/K3mU3EEvWm  
+- ▶️ **YouTube**: https://www.youtube.com/@aicoding-caret  
+- 📧 **Email**: support@caret.team  
+- 🐛 **Bug reports**: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)

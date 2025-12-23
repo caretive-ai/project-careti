@@ -1,0 +1,3 @@
+./capi_linux_amd64.go
+./more_linux_amd64.go
+./signal_linux_amd64.go

@@ -1,15 +1,12 @@
 // CARET MODIFICATION: verify reasoning messages default to expanded in chat rendering.
-import React from "react"
-import { renderToStaticMarkup } from "react-dom/server"
 import type { ClineMessage } from "@shared/ExtensionMessage"
+import { renderToStaticMarkup } from "react-dom/server"
 import { describe, expect, it, vi } from "vitest"
-import { MessageRenderer } from "./MessageRenderer"
 import type { MessageHandlers } from "../../types/chatTypes"
+import { MessageRenderer } from "./MessageRenderer"
 
 vi.mock("@/components/chat/ChatRow", () => ({
-	default: ({ isExpanded }: { isExpanded: boolean }) => (
-		<div data-testid="chat-row" data-expanded={String(isExpanded)} />
-	),
+	default: ({ isExpanded }: { isExpanded: boolean }) => <div data-expanded={String(isExpanded)} data-testid="chat-row" />,
 }))
 
 vi.mock("@/components/chat/BrowserSessionRow", () => ({
@@ -45,7 +42,7 @@ describe("MessageRenderer", () => {
 				onHeightChange={vi.fn()}
 				onSetQuote={vi.fn()}
 				onToggleExpand={vi.fn()}
-			/>
+			/>,
 		)
 
 		expect(markup).toContain('data-expanded="true"')
@@ -80,7 +77,7 @@ describe("MessageRenderer", () => {
 				onHeightChange={vi.fn()}
 				onSetQuote={vi.fn()}
 				onToggleExpand={vi.fn()}
-			/>
+			/>,
 		)
 
 		expect(markup).toContain('data-expanded="false"')

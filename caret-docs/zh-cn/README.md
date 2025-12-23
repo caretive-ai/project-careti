@@ -43,24 +43,52 @@
 
 ---
 
+## ⚡ v0.4.2 亮点
+
+- 🚀 **最新模型**：支持 Gemini 3 Pro/Flash + GPT-5.2。Caret 账号提供 Gemini 3 Pro/Flash。
+- 🖼️ **纳米香蕉图像模型**：使用 `gemini-3-pro-image-preview` 生成图像，插入为项目资源并在编辑器中直接查看。
+- 🧾 **账户/积分/支付稳定性**：优化 Caret 账户、积分与支付流程。
+
 ## 🎉 官方 Caret AI Provider 已上线 — 获取您的免费积分！
 
 **好消息！** 官方 Caret AI Provider 现已稳定，可供大家使用：
 
 - 🎉 **免费积分**：新用户**每月可获得 0.1 美元（10 积分）**！（首月最高可达 0.2 美元）
-- 🤖 **最新模型**：访问 Gemini 3、2.5 Pro 和 Lite 等强大模型。
+- 🤖 **最新模型**：Caret 账号提供 **Gemini 3 Pro/Flash**，支持的提供商可使用 **GPT-5.2**。
 - 🚀 **简便设置**：只需在设置中选择“Caret”作为您的 AI 提供商，即可立即开始。
+- 🔧 **运行时**：Webview gRPC → CaretAccountService → `api.caret.team`（OpenAI 兼容）。模型列表由 `src/shared/api.ts` 生成。
 
 ---
 
-## 🚀 最新更新：Cline v3.38.2 + GPT 5.1, Claude Opus 4.5, Gemini 3
+## 🚀 最新更新：v0.4.2 — 最新模型、纳米香蕉图像、账户稳定性
 
-**Caret v0.4.0** 现已包含 **Cline v3.38.2 的所有功能**，同时保持与 Caret 独家扩展的 100% 兼容性。
+**Caret v0.4.2** 在保持与 Cline 核心兼容的同时，扩展了 Caret 专属能力。
 
 ### 亮点
-- ✅ **采用 Cline v3.38.2**: 包括 Claude Opus 4.5 在内的所有最新核心改进
-- ✅ **双账户系统**: 完全支持现有的 Cline 账户
-- ✅ **Caret CLI (测试版)**: 支持 LiteLLM 的统一 CLI
-- ✅ **输入历史**: 像终端一样浏览过去的命令
-- ✅ **增强的提供商设置**: 自动获取 LiteLLM / [BizRouter](https://bizrouter.ai/) 的模型并进行健康检查
-- ✅ **251 种独特的 AI 模型**: 包括 Claude Opus 4.5、GPT-5、Gemini 3 在内的 20 家提供商
+- ✅ **最新模型支持**：Gemini 3 Pro/Flash + GPT-5.2（Caret 账号提供 Gemini 3 Pro/Flash）
+- ✅ **纳米香蕉图像模型**：生成图像后插入为项目资源并在编辑器中打开
+- ✅ **账户稳定性**：改善 Caret 账户/积分/支付流程
+- ✅ **343 种独特的 AI 模型**：包含 GPT-5.2、Gemini 3 的 27 家提供商
+
+---
+
+## 🌟 选择 Caret 的 6 个理由
+
+1. **🔄 双模式** — 在 Caret（扩展）与 Cline（经典）之间切换
+2. **🎭 角色系统** — 与个性化 AI 同伴一起编码
+3. **🧠 更聪明的提示词** — 兼顾成本与性能优化
+4. **🌍 完整本地化** — UI、文档、手册支持 4 种语言
+5. **⌨️ 更好的 UX** — 输入历史与便捷快捷键（Esc、Ctrl+Shift+R）
+6. **🎯 海量模型支持** — 343 个模型、27 家提供商。[模型列表](../development/support-model-list.en.md)
+
+👉 **查看全部独有功能**：[功能索引](../features/index.md)
+
+---
+
+## 📞 支持与社区
+
+- 🏠 **Website**: https://caret.team  
+- 💬 **Discord**: https://discord.gg/K3mU3EEvWm  
+- ▶️ **YouTube**: https://www.youtube.com/@aicoding-caret  
+- 📧 **Email**: support@caret.team  
+- 🐛 **Bug reports**: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)

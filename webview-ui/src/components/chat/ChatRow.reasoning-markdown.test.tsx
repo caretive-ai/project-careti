@@ -1,9 +1,8 @@
 // CARET MODIFICATION: verify reasoning messages render markdown content.
-import React from "react"
+import type { ClineMessage } from "@shared/ExtensionMessage"
 import { renderToStaticMarkup } from "react-dom/server"
 import { describe, expect, it, vi } from "vitest"
 import { ChatRowContent } from "./ChatRow"
-import type { ClineMessage } from "@shared/ExtensionMessage"
 
 vi.mock("@/context/ExtensionStateContext", () => ({
 	useExtensionState: () => ({
@@ -45,13 +44,7 @@ describe("ChatRowContent", () => {
 		}
 
 		const markup = renderToStaticMarkup(
-			<ChatRowContent
-				isExpanded={true}
-				isLast={false}
-				message={message}
-				onSetQuote={vi.fn()}
-				onToggleExpand={vi.fn()}
-			/>
+			<ChatRowContent isExpanded={true} isLast={false} message={message} onSetQuote={vi.fn()} onToggleExpand={vi.fn()} />,
 		)
 
 		expect(markup).toContain('data-testid="markdown"')

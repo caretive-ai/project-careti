@@ -1,0 +1,10 @@
+./diff.pb.go
+./diff_grpc.pb.go
+./env.pb.go
+./env_grpc.pb.go
+./testing.pb.go
+./testing_grpc.pb.go
+./window.pb.go
+./window_grpc.pb.go
+./workspace.pb.go
+./workspace_grpc.pb.go

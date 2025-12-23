@@ -56,28 +56,32 @@
 
 ---
 
+## ⚡ v0.4.2 Highlights (Business Priority)
+
+- 🚀 **Latest models**: Gemini 3 Pro/Flash + GPT-5.2. Caret accounts provide Gemini 3 Pro/Flash.
+- 🖼️ **Nanobanana image model**: Generate with `gemini-3-pro-image-preview`, insert as project resources, and open directly in the editor.
+- 🧾 **Account stability**: Improved Caret account, credit, and billing flows.
+
 ## 🎉 Official Caret AI Provider is Live — Get Your Free Credits!
 
 **Great news!** The official Caret AI provider is now stable and ready for everyone:
 
 - 🎉 **Free credits**: New users get **$0.1 (10 credits) monthly**! (Up to $0.2 for the first month)
-- 🤖 **Latest models**: Access powerful models like **Gemini 3 Pro Preview**, **Gemini 2.5 Pro**, **Gemini 2.5 Flash** (default).
+- 🤖 **Latest models**: **Gemini 3 Pro/Flash** on Caret accounts, plus **GPT-5.2** on supported providers.
 - 🚀 **Easy setup**: Select “Caret” in Settings → Providers. Login opens the Caret auth page; the selected Caret model is stored per Plan/Act mode.
-- 🔧 **Runtime**: Webview gRPC → CaretAccountService → `api.caret.team` (OpenAI-compatible). CLI uses the same Caret auth flow; static model list is generated from `src/shared/api.ts`.
+- 🔧 **Runtime**: Webview gRPC → CaretAccountService → `api.caret.team` (OpenAI-compatible). Static model list is generated from `src/shared/api.ts`.
 
 ---
 
-## 🚀 Latest Update: Cline v3.38.2 + GPT 5.1, Claude Opus 4.5, Gemini 3
+## 🚀 Latest Update: v0.4.2 — Latest Models, Nanobanana Images, Account Stability
 
-**Caret v0.4.0** now includes **all features from Cline v3.38.2** while keeping 100% compatibility with Caret-exclusive extensions.
+**Caret v0.4.2** keeps full compatibility with the Cline core while expanding Caret-exclusive capabilities.
 
 ### Highlights
-- ✅ **Cline v3.38.2 adoption**: All latest core improvements plus Claude Opus 4.5
-- ✅ **Dual account system**: Full support for existing Cline accounts
-- ✅ **Caret CLI (Beta)**: Unified CLI with LiteLLM support
-- ✅ **Input history**: Navigate past commands like a terminal
-- ✅ **Enhanced provider setup**: Auto-fetch models for LiteLLM / [BizRouter](https://bizrouter.ai/) with health checks
-- ✅ **251 unique AI models**: 20 providers including Claude Opus 4.5, GPT-5, Gemini 3
+- ✅ **Latest model support**: Gemini 3 Pro/Flash + GPT-5.2 (Caret accounts provide Gemini 3 Pro/Flash)
+- ✅ **Nanobanana image model**: Generate and insert images as project resources, open in editor
+- ✅ **Account stability**: Improved Caret account, credit, and billing flows
+- ✅ **343 unique AI models**: 27 providers including GPT-5.2 and Gemini 3
 
 ---
 
@@ -88,7 +92,7 @@
 3. **🧠 Smarter prompts** — optimized for cost and performance
 4. **🌍 Full localization** — UI, docs, and manuals in 4 languages
 5. **⌨️ Better UX** — input history and handy shortcuts (Esc, Ctrl+Shift+R)
-6. **🎯 Massive model support** — 251 models, 20 providers (Cline v3.38.2 compatible)
+6. **🎯 Massive model support** — 343 models, 27 providers. [Model list](caret-docs/development/support-model-list.en.md)
 
 👉 **See all exclusive features**: [Feature index](caret-docs/features.en/index.md)
 
@@ -199,7 +203,8 @@ Go beyond text chat. The **Persona System** lets you work with visually engaging
 ## 📞 Support & Community
 
 - 🏠 **Website**: https://caret.team  
-- 💬 **Facebook Group**: https://www.facebook.com/groups/aicodingcaret  
+- 💬 **Discord**: https://discord.gg/K3mU3EEvWm  
+- ▶️ **YouTube**: https://www.youtube.com/@aicoding-caret  
 - 📧 **Email**: support@caret.team  
 - 🐛 **Bug reports**: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)  
 

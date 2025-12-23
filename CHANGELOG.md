@@ -25,6 +25,24 @@
   </table>
 </div>
 
+## [0.4.2] 2025-12-23
+
+### ✨ Improved
+- **Image generation experience**: Added loading/thinking messages, open generated images in editor tabs, and improved cost/token display in the header.
+- **Caret account view**: Added a Caret-specific account screen and refined credit/usage/payment history fetch flow (removed redundant calls, adjusted refresh interval).
+- **CLI**: Improved Caret CLI auth/subscription and LiteLLM BYO setup/model list fetching; officially released Caret CLI with BYO LiteLLM and Caret provider.
+- **Upstream/stability**: Resolved ask request race conditions and cherry-picked Cline v3.45.0 bug fixes.
+- **Command prefix**: Switched `cline` → `caretive.caret` to reduce conflicts when both are installed.
+- **Model metadata**: Gemini 3 Pro Image Preview now supports images with pricing and thinking configuration.
+
+### Added
+- **Image generation model**: Added Gemini 3 Flash Preview.
+- **Caret account model**: Added gemini-3-pro-image-preview (Nanobanana Pro).
+
+### Fixed
+- **Login profile photo**: Fixed missing profile photo after login.
+- **Default provider**: Adjusted default provider to Cline.
+
 ## [0.4.1] 2025-12-10
 
 ### ✨ Improved

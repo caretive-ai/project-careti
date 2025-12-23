@@ -8,24 +8,24 @@ Caret supports a wide variety of AI models and providers, giving you the freedom
 2. **Configure Caret**: Click "Get Started" on the welcome page to set up APIs
 3. **Select Models**: Choose your desired models in the settings page
 
-> 📝 **Updated**: 11/28/2025  
+> 📝 **Updated**: 12/23/2025  
 > 📧 **Contact**: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)
 
 # 📊 Model Support Overview
 
-Total **20 providers** supporting **251 unique models** (333 total model definitions).
+Total **20 providers** supporting **260 unique models** (344 total model definitions).
 
 ## 🔍 Models by Provider
 
 | Provider | Model Count | Key Models |
 |----------|-------------|------------|
-| **Caret** | 2 | `gemini/gemini-2.5-pro`, `gemini/gemini-2.5-flash` |
+| **Caret** | 7 | `gemini/gemini-3-pro-preview`, `gemini/gemini-3-flash-preview`, `gemini/gemini-3-flash` +4 more |
 | **Anthropic** | 13 | `claude-sonnet-4-5-20250929`, `claude-sonnet-4-5-20250929:1m`, `claude-haiku-4-5-20251001` +10 more |
 | **Claudecode** | 8 | `claude-haiku-4-5-20251001`, `claude-sonnet-4-5-20250929`, `claude-sonnet-4-20250514` +5 more |
 | **Bedrock** | 24 | `anthropic.claude-sonnet-4-5-20250929-v1:0`, `anthropic.claude-sonnet-4-5-20250929-v1:0:1m`, `anthropic.claude-haiku-4-5-20251001-v1:0` +21 more |
-| **Vertex** | 33 | `gemini-3-pro-preview`, `claude-sonnet-4-5@20250929`, `claude-sonnet-4@20250514` +30 more |
-| **Gemini** | 16 | `gemini-3-pro-preview`, `gemini-2.5-pro`, `gemini-2.5-flash-lite-preview-06-17` +13 more |
-| **Openainative** | 17 | `gpt-5-2025-08-07`, `gpt-5-mini-2025-08-07`, `gpt-5-nano-2025-08-07` +14 more |
+| **Vertex** | 34 | `gemini-3-pro-preview`, `gemini-3-flash-preview`, `claude-sonnet-4-5@20250929` +31 more |
+| **Gemini** | 17 | `gemini-3-pro-preview`, `gemini-3-flash-preview`, `gemini-2.5-pro` +14 more |
+| **Openainative** | 18 | `gpt-5-2025-08-07`, `gpt-5-mini-2025-08-07`, `gpt-5-nano-2025-08-07` +15 more |
 | **Deepseek** | 2 | `deepseek-chat`, `deepseek-reasoner` |
 | **Huggingface** | 7 | `openai/gpt-oss-120b`, `openai/gpt-oss-20b`, `moonshotai/Kimi-K2-Instruct` +4 more |
 | **Internationalqwen** | 30 | `qwen3-coder-plus`, `qwen3-coder-480b-a35b-instruct`, `qwen3-235b-a22b` +27 more |
@@ -33,7 +33,7 @@ Total **20 providers** supporting **251 unique models** (333 total model definit
 | **Doubao** | 4 | `doubao-1-5-pro-256k-250115`, `doubao-1-5-pro-32k-250115`, `deepseek-v3-250324` +1 more |
 | **Mistral** | 13 | `mistral-large-2411`, `pixtral-large-2411`, `ministral-3b-2410` +10 more |
 | **Asksage** | 31 | `gpt-4o`, `gpt-4o-gov`, `gpt-4.1` +28 more |
-| **xAI** | 18 | `grok-4-fast-reasoning`, `grok-4`, `grok-3-beta` +15 more |
+| **xAI** | 21 | `grok-4-1-fast-reasoning`, `grok-4-1-fast-non-reasoning`, `grok-code-fast-1` +18 more |
 | **Sambanova** | 13 | `Llama-4-Maverick-17B-128E-Instruct`, `Llama-4-Scout-17B-16E-Instruct`, `Meta-Llama-3.3-70B-Instruct` +10 more |
 | **Cerebras** | 6 | `zai-glm-4.6`, `gpt-oss-120b`, `qwen-3-235b-a22b-instruct-2507` +3 more |
 | **Groq** | 11 | `openai/gpt-oss-120b`, `openai/gpt-oss-20b`, `compound-beta` +8 more |
@@ -50,10 +50,15 @@ Total **20 providers** supporting **251 unique models** (333 total model definit
 
 ## 📋 Complete Model Details
 
-### Caret (2 models)
+### Caret (7 models)
 
 | Model Name | Max Tokens | Context Window | Image Support | Input Price ($/1M tokens) | Output Price ($/1M tokens) |
 |------------|------------|----------------|---------------|-------------|--------------|
+| `gemini/gemini-3-pro-preview` | 65,536 | 1 | ✅ | 4 | 18 |
+| `gemini/gemini-3-flash-preview` | 65,536 | 1 | ✅ | 0.5 | 3 |
+| `gemini/gemini-3-flash` | 65,536 | 1 | ✅ | 0.5 | 3 |
+| `gemini/gemini-3-pro-image-preview` | 65,536 | 1 | ❌ | 0 | 0 |
+| `gemini/gemini-3-flash-preview` | 65,536 | 1 | ✅ | 0.5 | 3 |
 | `gemini/gemini-2.5-pro` | 65,536 | 1 | ✅ | 2.5 | 15 |
 | `gemini/gemini-2.5-flash` | 65,536 | 1 | ✅ | 0.3 | 2.5 |
 
@@ -117,11 +122,12 @@ Total **20 providers** supporting **251 unique models** (333 total model definit
 | `qwen.qwen3-coder-30b-a3b-v1:0` | 8,192 | 262 | ❌ | 0.15 | 0.6 |
 | `qwen.qwen3-coder-480b-a35b-v1:0` | 8,192 | 262 | ❌ | 0.22 | 1.8 |
 
-### Vertex (33 models)
+### Vertex (34 models)
 
 | Model Name | Max Tokens | Context Window | Image Support | Input Price ($/1M tokens) | Output Price ($/1M tokens) |
 |------------|------------|----------------|---------------|-------------|--------------|
 | `gemini-3-pro-preview` | 8,192 | 1 | ✅ | 2 | 12 |
+| `gemini-3-flash-preview` | 65,536 | 1 | ✅ | 0.5 | 3 |
 | `claude-sonnet-4-5@20250929` | 8,192 | 200 | ✅ | 3 | 15 |
 | `claude-sonnet-4@20250514` | 8,192 | 200 | ✅ | 3 | 15 |
 | `claude-haiku-4-5@20251001` | 8,192 | 200 | ❌ | 1 | 5 |
@@ -155,11 +161,12 @@ Total **20 providers** supporting **251 unique models** (333 total model definit
 | `gemini-1.5-pro-002` | 8,192 | 2 | ✅ | 1.25 | 5 |
 | `gemini-1.5-pro-exp-0827` | 8,192 | 2 | ✅ | 0 | 0 |
 
-### Gemini (16 models)
+### Gemini (17 models)
 
 | Model Name | Max Tokens | Context Window | Image Support | Input Price ($/1M tokens) | Output Price ($/1M tokens) |
 |------------|------------|----------------|---------------|-------------|--------------|
 | `gemini-3-pro-preview` | 65,536 | 1 | ✅ | 4 | 18 |
+| `gemini-3-flash-preview` | 65,536 | 1 | ✅ | 0.5 | 3 |
 | `gemini-2.5-pro` | 65,536 | 1 | ✅ | 2.5 | 15 |
 | `gemini-2.5-flash-lite-preview-06-17` | 64,000 | 1 | ✅ | 0.1 | 0.4 |
 | `gemini-2.5-flash` | 65,536 | 1 | ✅ | 0.3 | 2.5 |
@@ -176,7 +183,7 @@ Total **20 providers** supporting **251 unique models** (333 total model definit
 | `gemini-1.5-pro-exp-0827` | 8,192 | 2 | ✅ | 0 | 0 |
 | `gemini-exp-1206` | 8,192 | 2 | ✅ | 0 | 0 |
 
-### Openainative (17 models)
+### Openainative (18 models)
 
 | Model Name | Max Tokens | Context Window | Image Support | Input Price ($/1M tokens) | Output Price ($/1M tokens) |
 |------------|------------|----------------|---------------|-------------|--------------|
@@ -187,6 +194,7 @@ Total **20 providers** supporting **251 unique models** (333 total model definit
 | `gpt-5.1-2025-11-13` | 8 | 272,000 | ✅ | 1.25 | 10 |
 | `gpt-5.1` | 8 | 272,000 | ✅ | 1.25 | 10 |
 | `gpt-5.1-chat-latest` | 8 | 400,000 | ✅ | 1.25 | 10 |
+| `gpt-5.2` | 8 | 272,000 | ✅ | 1.75 | 14 |
 | `o4-mini` | 100 | 200 | ✅ | 1.1 | 4.4 |
 | `gpt-4.1` | 32 | 1 | ✅ | 2 | 8 |
 | `gpt-4.1-mini` | 32 | 1 | ✅ | 0.4 | 1.6 |
@@ -350,10 +358,13 @@ Total **20 providers** supporting **251 unique models** (333 total model definit
 | `Qwen/Qwen3-32B` | 16,384 | 41 | ❌ | 0.1 | 0.3 |
 | `Qwen/Qwen3-32B-fast` | 16,384 | 41 | ❌ | 0.2 | 0.6 |
 
-### xAI (18 models)
+### xAI (21 models)
 
 | Model Name | Max Tokens | Context Window | Image Support | Input Price ($/1M tokens) | Output Price ($/1M tokens) |
 |------------|------------|----------------|---------------|-------------|--------------|
+| `grok-4-1-fast-reasoning` | N/A | 2 | ❌ | 0.2 | 0.5 |
+| `grok-4-1-fast-non-reasoning` | N/A | 2 | ✅ | 0.2 | 0.5 |
+| `grok-code-fast-1` | N/A | 256 | ❌ | 0.2 | 1.5 |
 | `grok-4-fast-reasoning` | 30,000 | 2,000,000 | ✅ | 0.2 | 0.5 |
 | `grok-4` | 8,192 | 262,144 | ✅ | 3 | 15 |
 | `grok-3-beta` | 8,192 | 131,072 | ❌ | 3 | 15 |
@@ -526,6 +537,6 @@ Total **20 providers** supporting **251 unique models** (333 total model definit
 
 ---
 
-**Caret supports 251 unique AI models across 20 providers.**
+**Caret supports 260 unique AI models across 20 providers.**
 
 *This document is automatically generated by `caret-scripts/generate-support-model-list.js`*

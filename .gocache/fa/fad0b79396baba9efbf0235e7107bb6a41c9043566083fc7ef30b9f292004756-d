@@ -1,0 +1,5 @@
+./capi_linux_amd64.go
+./defs.go
+./hooks.go
+./mutex.go
+./sqlite_linux_amd64.go

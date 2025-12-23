@@ -3,6 +3,16 @@
 	"previousHeader": "Previous Updates:",
 	"bullets": {
 		"current": {
+			"0": "Latest Model Support",
+			"0-desc": "Supports the latest Gemini 3 Pro/Flash and GPT-5.2 models. Caret accounts provide Gemini 3 Pro/Flash.",
+			"1": "Nanobanana Image Model Resource Insertion",
+			"1-desc": "Images generated with gemini-3-pro-image-preview (Nanobanana Pro) can be inserted as project resources and viewed directly in the editor.",
+			"2": "Account/Credit/Billing Stabilization",
+			"2-desc": "Improved the Caret account view and the balance/usage/payment history flow for more reliable refresh.",
+			"3": "Stability & Bug Fixes",
+			"3-desc": "Applied key stability improvements and bug fixes."
+		},
+		"previous": {
 			"0": "Caret Provider Stabilized",
 			"0-desc": "The anyLLM-based Caret Provider is now stable for the official launch of the caret.team service, ensuring enhanced reliability.",
 			"1": "Free Monthly Credits",
@@ -21,18 +31,6 @@
 			"7-desc": "Auto-fetching models for LiteLLM and BizRouter with real-time health checks",
 			"8": "AI Model Support",
 			"8-desc": "Supports 251 unique AI models across 20 providers"
-		},
-		"previous": {
-			"1": "Caret Provider Added",
-			"1-desc": "Official Caret AI provider integration - $10 free credits during promotional period",
-			"2": "New Features",
-			"2-desc": ".caretignore file support (legacy .clineignore), AWS Bedrock profiles, Requesty/Together/Alibaba Qwen providers, automatic retry on rate limits",
-			"3": "Focus Chain (Task Management)",
-			"3-desc": "Automatic to-do list generation and tracking for complex tasks",
-			"4": "AI Prompt Optimization",
-			"4-desc": "30-50% API request reduction for multi-edits, smart TODO auto-management, Claude Sonnet 4.5 optimized",
-			"5": "Architecture Improvements",
-			"5-desc": "Complete protobuf type system, enhanced MCP support, provider system refactoring"
 		}
 	},
 	"links": {

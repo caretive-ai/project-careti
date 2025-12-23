@@ -23,6 +23,7 @@ var (
 	coreAddress  string
 	verbose      bool
 	outputFormat string
+	configPath   string
 
 	// Task creation flags (for root command)
 	images   []string
@@ -70,6 +71,7 @@ see the manual page: man %s`, brand, cliCommand, cliCommand, cliCommand, cliComm
 			}
 
 			return global.InitializeGlobalConfig(&global.GlobalConfig{
+				ConfigPath:   configPath,
 				Verbose:      verbose,
 				OutputFormat: outputFormat,
 				CoreAddress:  coreAddress,
@@ -179,6 +181,7 @@ see the manual page: man %s`, brand, cliCommand, cliCommand, cliCommand, cliComm
 		fmt.Sprintf("localhost:%d", common.DEFAULT_CLINE_CORE_PORT),
 		fmt.Sprintf("%s Core gRPC address", brand),
 	)
+	rootCmd.PersistentFlags().StringVar(&configPath, "config", "", "config directory")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output-format", "F", "rich", "output format (rich|json|plain)")
 	rootCmd.PersistentFlags().BoolVar(&clineParity, "cline-parity", false, "force CLI to behave like upstream cline")
@@ -236,13 +239,13 @@ func promptForInitialTask(ctx context.Context, instanceAddress, modeFlag string)
 
 	form := huh.NewForm(
 		huh.NewGroup(
-				huh.NewText().
-					Title(fmt.Sprintf("Start a new %s task", brand)).
-					Description(fmt.Sprintf("What would you like %s to help you with?", brand)).
-					Placeholder("e.g., Create a REST API with authentication...").
-					Lines(5).
-					Value(&prompt),
-			),
+			huh.NewText().
+				Title(fmt.Sprintf("Start a new %s task", brand)).
+				Description(fmt.Sprintf("What would you like %s to help you with?", brand)).
+				Placeholder("e.g., Create a REST API with authentication...").
+				Lines(5).
+				Value(&prompt),
+		),
 	).WithWidth(48).WithTheme(theme)
 
 	err := form.Run()

@@ -1,0 +1,6 @@
+./sqlite_helper.go
+./default_update_test.go
+./helpers_test.go
+./main_test.go
+./mixed_stress_test.go
+./start_list_test.go

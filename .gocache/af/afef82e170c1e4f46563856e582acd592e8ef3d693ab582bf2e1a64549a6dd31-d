@@ -1,0 +1,4 @@
+./decoder.go
+./encoder.go
+./graphics.go
+./options.go

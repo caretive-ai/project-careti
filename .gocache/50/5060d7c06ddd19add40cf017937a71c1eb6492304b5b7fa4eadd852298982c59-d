@@ -1,6 +1,0 @@
-./account.pb.go
-./account_grpc.pb.go
-./persona.pb.go
-./persona_grpc.pb.go
-./system.pb.go
-./system_grpc.pb.go

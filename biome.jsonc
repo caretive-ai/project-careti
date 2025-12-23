@@ -114,6 +114,8 @@
 	"files": {
 		"includes": [
 			"**",
+			// CARET MODIFICATION: ignore local cline snapshot to avoid nested config errors.
+			"!**/cline-latest",
 			"!**/dist",
 			"!**/dist-*",
 			"!**/out",

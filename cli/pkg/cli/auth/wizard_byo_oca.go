@@ -36,7 +36,7 @@ func PromptForOcaConfig(ctx context.Context, manager *task.Manager) (*OcaConfig,
 
 			huh.NewSelect[string]().
 				Title("Choose OCA mode (used for authentication)").
-				Description("Select 'Internal' to use Cline's internal OCA, or 'External' for your own OCA instance").
+				Description("Select 'Internal' to use the built-in OCA, or 'External' for your own OCA instance").
 				Options(
 					huh.NewOption("Internal", "internal"),
 					huh.NewOption("External", "external"),

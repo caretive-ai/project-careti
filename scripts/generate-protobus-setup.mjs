@@ -163,15 +163,16 @@ async function generateStandaloneProtobusServiceSetup(protobusServices) {
 			imports.push(`import { ${rpcName} } from "@core/controller/${dir}/${rpcName}"`)
 			const requestType = getFqn(rpc.requestType.type.name)
 			const responseType = getFqn(rpc.responseType.type.name)
+			const handlerKey = rpcName.charAt(0).toLowerCase() + rpcName.slice(1) // CARET MODIFICATION: ensure gRPC method keys are lowerCamel
 			if (rpc.requestStream) {
 				throw new Error("Request streaming is not supported")
 			}
 			if (rpc.responseStream) {
 				handlerSetup.push(
-					`        ${rpcName}: wrapStreamingResponse<${requestType},${responseType}>(${rpcName}, controller),`,
+					`        ${handlerKey}: wrapStreamingResponse<${requestType},${responseType}>(${rpcName}, controller),`,
 				)
 			} else {
-				handlerSetup.push(`         ${rpcName}: wrapper<${requestType},${responseType}>(${rpcName}, controller),`)
+				handlerSetup.push(`         ${handlerKey}: wrapper<${requestType},${responseType}>(${rpcName}, controller),`)
 			}
 		}
 		handlerSetup.push(`    });`)

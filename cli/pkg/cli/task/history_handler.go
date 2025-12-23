@@ -23,7 +23,7 @@ func ListTasksFromDisk() error {
 	}
 
 	// CARET MODIFICATION: use brand config directory for task history
-	filePath := filepath.Join(homeDir, common.ConfigDirName, "data", "state", "taskHistory.json")
+	filePath := filepath.Join(homeDir, common.ConfigDirName(), "data", "state", "taskHistory.json")
 
 	// Read the file
 	data, err := os.ReadFile(filePath)

@@ -7,6 +7,7 @@ import (
 
 	"github.com/cline/cli/pkg/cli/global"
 	"github.com/cline/cli/pkg/cli/task"
+	"github.com/cline/cli/pkg/common"
 	"github.com/cline/grpc-go/cline"
 )
 
@@ -106,8 +107,8 @@ func QuickSetupFromFlags(ctx context.Context, provider, apiKey, modelID, baseURL
 	if finalBaseURL != "" {
 		fmt.Printf("  Custom Base URL: %s\n", finalBaseURL)
 	}
-	fmt.Println("\nYou can now use Cline with this provider.")
-	fmt.Println("Run 'cline start' to begin a new task.")
+	fmt.Printf("\nYou can now use %s with this provider.\n", common.BrandDisplayName())
+	fmt.Printf("Run '%s start' to begin a new task.\n", common.CliCommandName())
 
 	return nil
 }
@@ -169,16 +170,17 @@ func validateQuickSetupProvider(providerID string) (cline.ApiProvider, error) {
 
 	// Explicitly block Bedrock
 	if normalizedID == "bedrock" {
-		return cline.ApiProvider_BEDROCK, fmt.Errorf("bedrock provider is not supported for quick setup due to complex authentication requirements. Please use interactive setup: cline auth")
+		return cline.ApiProvider_BEDROCK, fmt.Errorf("bedrock provider is not supported for quick setup due to complex authentication requirements. Please use interactive setup: %s auth", common.CliCommandName())
 	}
 
 	// Map provider string to enum using existing function
 	provider, ok := mapProviderStringToEnum(normalizedID)
 	if !ok {
 		// Provider not found - provide helpful error message
+		// CARET MODIFICATION: include openai-compatible and litellm in quick setup hints.
 		supportedProviders := []string{
-			"openai-native", "openai", "anthropic", "gemini",
-			"openrouter", "xai", "cerebras", "ollama",
+			"openai-compatible", "openai-native", "openai", "anthropic", "gemini",
+			"openrouter", "xai", "cerebras", "ollama", "litellm",
 		}
 		return cline.ApiProvider_ANTHROPIC, fmt.Errorf(
 			"invalid provider '%s'. Supported providers: %s",
@@ -203,8 +205,9 @@ func validateQuickSetupProvider(providerID string) (cline.ApiProvider, error) {
 
 	if !supportedProviders[provider] {
 		return provider, fmt.Errorf(
-			"provider '%s' is not supported for quick setup. Please use interactive setup: cline auth",
+			"provider '%s' is not supported for quick setup. Please use interactive setup: %s auth",
 			providerID,
+			common.CliCommandName(),
 		)
 	}
 

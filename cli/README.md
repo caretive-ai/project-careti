@@ -1,4 +1,4 @@
-# Cline CLI
+# Caret CLI
 
 ```
 /_____/\ /_/\      /_______/\/__/\ /__/\ /_____/\
@@ -13,19 +13,19 @@ Autonomous coding agent CLI - capable of creating/editing files, running command
 
 ## Installation
 
-Install Cline globally using npm:
+Install Caret globally using npm:
 
 ```bash
-npm install -g cline
+npm install -g @caretive/caret-cli
 ```
 
 ## Usage
 
 ```bash
-cline
+caret
 ```
 
-This will start the Cline CLI interface where you can interact with the autonomous coding agent.
+This will start the Caret CLI interface where you can interact with the autonomous coding agent.
 
 ## Features
 
@@ -45,28 +45,28 @@ This will start the Cline CLI interface where you can interact with the autonomo
 
 ## Configuration
 
-Cline can be configured through:
+Caret can be configured through:
 
 -   Environment variables
 -   Configuration files
 -   Command-line arguments
 
-See the [main documentation](https://cline.bot) for detailed configuration options.
+See the [main documentation](https://caret.team) for detailed configuration options.
 
 ## Links
 
--   **Website**: [https://cline.bot](https://cline.bot)
--   **Documentation**: [https://docs.cline.bot](https://docs.cline.bot)
--   **GitHub**: [https://github.com/cline/cline](https://github.com/cline/cline)
+-   **Website**: [https://caret.team](https://caret.team)
+-   **Documentation**: [https://github.com/aicoding-caret/caret](https://github.com/aicoding-caret/caret)
+-   **GitHub**: [https://github.com/aicoding-caret/caret](https://github.com/aicoding-caret/caret)
 -   **VSCode Extension**: Available in the VSCode Marketplace
 -   **JetBrains Extension**: Available in the JetBrains Marketplace
 
 ## License
 
-Apache-2.0 - see [LICENSE](https://github.com/cline/cline/blob/main/LICENSE) for details.
+Apache-2.0 - see [LICENSE](https://github.com/aicoding-caret/caret/blob/main/LICENSE) for details.
 
 ## Support
 
--   Report issues: [GitHub Issues](https://github.com/cline/cline/issues)
--   Community: [GitHub Discussions](https://github.com/cline/cline/discussions)
--   Documentation: [docs.cline.bot](https://docs.cline.bot)
+-   Report issues: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)
+-   Community: [GitHub Discussions](https://github.com/aicoding-caret/caret/discussions)
+-   Documentation: [https://caret.team](https://caret.team)

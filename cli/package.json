@@ -1,11 +1,11 @@
 {
-	"name": "cline",
+	"name": "@caretive/caret-cli",
 	"version": "1.0.3",
 	"description": "Autonomous coding agent CLI - capable of creating/editing files, running commands, using the browser, and more",
-	"main": "cline-core.js",
+	"main": "caret-core.js",
 	"bin": {
-		"cline": "./bin/cline",
-		"cline-host": "./bin/cline-host"
+		"caret": "./bin/caret",
+		"caret-host": "./bin/caret-host"
 	},
 	"man": "./man/cline.1",
 	"scripts": {
@@ -23,7 +23,7 @@
 		"node": ">=20.0.0"
 	},
 	"keywords": [
-		"cline",
+		"caret",
 		"claude",
 		"dev",
 		"mcp",
@@ -38,16 +38,16 @@
 		"cli"
 	],
 	"author": {
-		"name": "Cline Bot Inc."
+		"name": "Caretive Inc."
 	},
 	"license": "Apache-2.0",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/cline/cline"
+		"url": "https://github.com/aicoding-caret/caret"
 	},
-	"homepage": "https://cline.bot",
+	"homepage": "https://caret.team",
 	"bugs": {
-		"url": "https://github.com/cline/cline/issues"
+		"url": "https://github.com/aicoding-caret/caret/issues"
 	},
 	"dependencies": {
 		"@grpc/grpc-js": "^1.13.3",

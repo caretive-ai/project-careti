@@ -16,7 +16,7 @@ import (
 )
 
 // DefaultCaretModelID is the default model ID for the Caret provider.
-const DefaultCaretModelID = "gemini/gemini-2.5-flash"
+const DefaultCaretModelID = "gemini/gemini-3-flash"
 const DefaultCaretBaseURL = "https://api.caret.team"
 
 func generatedModelInfoToCaretModelInfo(modelInfo generated.ModelInfo) *cline.CaretModelInfo {

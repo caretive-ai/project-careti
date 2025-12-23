@@ -14,8 +14,9 @@ import (
 	"github.com/cline/cli/pkg/cli/display"
 	"github.com/cline/cli/pkg/cli/global"
 	"github.com/cline/cli/pkg/cli/handlers"
+	"github.com/cline/cli/pkg/cli/slash"
 	"github.com/cline/cli/pkg/cli/types"
-	"github.com/cline/grpc-go/caret"
+	"github.com/cline/cli/pkg/common"
 	"github.com/cline/grpc-go/client"
 	"github.com/cline/grpc-go/cline"
 )
@@ -40,6 +41,8 @@ type Manager struct {
 	isStreamingMode  bool
 	isInteractive    bool
 	currentMode      string // "plan" or "act"
+	slashRegistry    *slash.Registry
+	partialStall     *partialStallTracker
 }
 
 // NewManager creates a new task manager
@@ -65,6 +68,8 @@ func NewManager(client *client.ClineClient) *Manager {
 		streamingDisplay: streamingDisplay,
 		handlerRegistry:  registry,
 		currentMode:      "plan", // Default mode
+		slashRegistry:    slash.NewRegistry(),
+		partialStall:     newPartialStallTracker(partialStallTimeout),
 	}
 }
 
@@ -77,7 +82,8 @@ func NewManagerForAddress(ctx context.Context, address string) (*Manager, error)
 
 	manager := NewManager(client)
 	manager.clientAddress = address
-	manager.setCaretMode(ctx) // CARET MODIFICATION: default CLI to caret prompt system
+	// CARET MODIFICATION: Phase D rollback (restore upstream behavior, no caret prompt system)
+	manager.fetchSlashCommands(ctx)
 	return manager, nil
 }
 
@@ -94,19 +100,21 @@ func NewManagerForDefault(ctx context.Context) (*Manager, error) {
 	if global.Clients != nil {
 		manager.clientAddress = global.Clients.GetRegistry().GetDefaultInstance()
 	}
-	manager.setCaretMode(ctx) // CARET MODIFICATION: default CLI to caret prompt system
+	// CARET MODIFICATION: Phase D rollback (restore upstream behavior, no caret prompt system)
+	manager.fetchSlashCommands(ctx)
 
 	return manager, nil
 }
 
-// CARET MODIFICATION: ensure CLI sessions run in caret prompt system
-func (m *Manager) setCaretMode(ctx context.Context) {
-	if m == nil || m.client == nil || m.client.Caretsystem == nil {
-		return
-	}
-	_, err := m.client.Caretsystem.SetPromptSystemMode(ctx, &caret.SetPromptSystemModeRequest{Mode: "caret"})
-	if err != nil && global.Config.Verbose {
-		fmt.Printf("[DEBUG] Failed to set caret prompt mode: %v\n", err)
+// CARET MODIFICATION: Phase D rollback (restore upstream slash command fetch behavior).
+func (m *Manager) fetchSlashCommands(ctx context.Context) {
+	if err := m.slashRegistry.FetchFromBackend(ctx, m.client); err != nil {
+		if global.Config.Verbose {
+			m.renderer.RenderDebug("Failed to fetch slash commands: %v", err)
+		}
+		// Non-fatal: CLI-local commands are still available
+	} else if global.Config.Verbose {
+		m.renderer.RenderDebug("Loaded %d slash commands", len(m.slashRegistry.GetCommands()))
 	}
 }
 
@@ -277,6 +285,9 @@ func (m *Manager) CheckSendEnabled(ctx context.Context) error {
 
 	// Check if there is an active task
 	if stateData.CurrentTaskItem == nil {
+		if m.partialStall != nil {
+			m.partialStall.Reset()
+		}
 		return ErrNoActiveTask
 	}
 
@@ -286,11 +297,17 @@ func (m *Manager) CheckSendEnabled(ctx context.Context) error {
 	}
 
 	if len(messages) == 0 {
+		if m.partialStall != nil {
+			m.partialStall.Reset()
+		}
 		return nil
 	}
 
 	// Use final message to perform validation
 	lastMessage := messages[len(messages)-1]
+	if !lastMessage.Partial && m.partialStall != nil {
+		m.partialStall.Reset()
+	}
 
 	// Error types which we allow sending on
 	errorTypes := []string{
@@ -315,8 +332,16 @@ func (m *Manager) CheckSendEnabled(ctx context.Context) error {
 		if global.Config.Verbose {
 			m.renderer.RenderDebug("Send disabled: task is streaming and non-error")
 		}
+		if m.partialStall != nil && m.partialStall.AllowIfStalled(lastMessage, time.Now()) {
+			if global.Config.Verbose {
+				m.renderer.RenderDebug("Send enabled: partial message stalled beyond timeout")
+			}
+			return nil
+		}
 		return ErrTaskBusy
 	}
+	
+	// Message is not partial (or is error), we can proceed (no reset needed as fields are removed)
 
 	// All ask messages allow sending, EXCEPT command_output
 	if lastMessage.Type == types.MessageTypeAsk {
@@ -626,7 +651,7 @@ func (m *Manager) ShowConversation(ctx context.Context) error {
 	if err != nil {
 		// Handle specific error cases
 		if errors.Is(err, ErrNoActiveTask) {
-			fmt.Println("No active task found. Use 'cline task new' to create a task first.")
+			fmt.Printf("No active task found. Use '%s task new' to create a task first.\n", common.CliCommandName())
 			return nil
 		}
 		// For other errors (like task busy), we can still show the conversation
@@ -767,7 +792,21 @@ func (m *Manager) FollowConversation(ctx context.Context, instanceAddress string
 }
 
 // FollowConversationUntilCompletion streams conversation updates until task completion
-func (m *Manager) FollowConversationUntilCompletion(ctx context.Context) error {
+func (m *Manager) FollowConversationUntilCompletion(ctx context.Context, opts FollowOptions) error {
+	// Check if there's an active task before entering follow mode
+	// Skip this check if we just created a task (to avoid race condition where task isn't active yet)
+	if !opts.SkipActiveTaskCheck {
+		err := m.CheckSendEnabled(ctx)
+		if err != nil {
+			if errors.Is(err, ErrNoActiveTask) {
+				fmt.Println("No task is currently running.")
+				return nil
+			}
+			// For other errors (like task busy), we can still enter follow mode
+			// as the user may want to observe the task
+		}
+	}
+
 	// Enable streaming mode
 	m.mu.Lock()
 	m.isStreamingMode = true
@@ -788,6 +827,16 @@ func (m *Manager) FollowConversationUntilCompletion(ctx context.Context) error {
 		totalMessageCount = 0
 	}
 	coordinator.SetConversationTurnStartIndex(totalMessageCount)
+
+	// If the task already completed before we started following, exit after printing history.
+	if completionFound, usageFound, err := m.getFollowCompletionStatus(ctx); err == nil {
+		if usageFound {
+			coordinator.SetUsageDisplayed()
+		}
+		if completionFound && coordinator.HasUsageDisplayed() {
+			return nil
+		}
+	}
 
 	// Start both streams concurrently
 	errChan := make(chan error, 2)
@@ -868,7 +917,7 @@ func (m *Manager) processStateUpdateJsonMode(stateUpdate *cline.State, coordinat
 		}
 
 		// Exit after we've seen a task completion & printed out the usage info
-		if msg.Say == string(types.SayTypeCompletionResult) {
+		if msg.Say == string(types.SayTypeCompletionResult) || msg.Ask == string(types.AskTypeCompletionResult) {
 			foundCompletion = true
 		}
 
@@ -904,8 +953,12 @@ func (m *Manager) processStateUpdateJsonMode(stateUpdate *cline.State, coordinat
 		}
 	}
 
+	if displayedUsage {
+		coordinator.SetUsageDisplayed()
+	}
+
 	// We only want to exit after we've displayed the usage, for the case of seeing completion result
-	if completionChan != nil && foundCompletion && displayedUsage {
+	if completionChan != nil && foundCompletion && (displayedUsage || coordinator.HasUsageDisplayed()) {
 		completionChan <- true
 	}
 
@@ -936,7 +989,7 @@ func (m *Manager) processStateUpdate(stateUpdate *cline.State, coordinator *Stre
 		}
 
 		// Exit after we've seen a task completion & printed out the usage info
-		if msg.Say == string(types.SayTypeCompletionResult) {
+		if msg.Say == string(types.SayTypeCompletionResult) || msg.Ask == string(types.AskTypeCompletionResult) {
 			foundCompletion = true
 		}
 
@@ -1034,8 +1087,12 @@ func (m *Manager) processStateUpdate(stateUpdate *cline.State, coordinator *Stre
 		}
 	}
 
+	if displayedUsage {
+		coordinator.SetUsageDisplayed()
+	}
+
 	// We only want to exit after we've displayed the usage, for the case of seeing completion result
-	if completionChan != nil && foundCompletion && displayedUsage {
+	if completionChan != nil && foundCompletion && (displayedUsage || coordinator.HasUsageDisplayed()) {
 		completionChan <- true
 	}
 
@@ -1199,6 +1256,21 @@ func (m *Manager) loadAndDisplayRecentHistory(ctx context.Context) (int, error) 
 	return totalMessages, nil
 }
 
+func (m *Manager) getFollowCompletionStatus(ctx context.Context) (bool, bool, error) {
+	state, err := m.client.State.GetLatestState(ctx, &cline.EmptyRequest{})
+	if err != nil {
+		return false, false, fmt.Errorf("failed to get state: %w", err)
+	}
+
+	messages, err := m.extractMessagesFromState(state.StateJson)
+	if err != nil {
+		return false, false, fmt.Errorf("failed to extract messages: %w", err)
+	}
+
+	foundCompletion, foundUsage := evaluateFollowCompletion(messages)
+	return foundCompletion, foundUsage, nil
+}
+
 // extractMessagesFromState parses the state JSON and extracts messages
 func (m *Manager) extractMessagesFromState(stateJson string) ([]*types.ClineMessage, error) {
 	return types.ExtractMessagesFromStateJSON(stateJson)
@@ -1294,4 +1366,9 @@ func (m *Manager) Cleanup() {
 	if m.streamingDisplay != nil {
 		m.streamingDisplay.Cleanup()
 	}
+}
+
+// GetSlashRegistry returns the slash command registry
+func (m *Manager) GetSlashRegistry() *slash.Registry {
+	return m.slashRegistry
 }

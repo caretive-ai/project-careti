@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/cline/cli/pkg/common"
 	"github.com/cline/grpc-go/caret"
 	"github.com/cline/grpc-go/cline"
 )
@@ -30,7 +31,7 @@ func NewCaretAuthStatusListener(parentCtx context.Context) (*CaretAuthStatusList
 	stream, err := client.Caretaccount.SubscribeToCaretAuthStatusUpdate(ctx, &cline.EmptyRequest{})
 	if err != nil {
 		cancel()
-		return nil, fmt.Errorf("failed to subscribe to Caret auth updates: %w", err)
+		return nil, fmt.Errorf("failed to subscribe to %s auth updates: %w", common.BrandDisplayName(), err)
 	}
 
 	return &CaretAuthStatusListener{
@@ -43,7 +44,7 @@ func NewCaretAuthStatusListener(parentCtx context.Context) (*CaretAuthStatusList
 }
 
 func (l *CaretAuthStatusListener) Start() error {
-	verboseLog("Starting Caret auth status listener...")
+	verboseLog("Starting %s auth status listener...", common.BrandDisplayName())
 	go l.readStream()
 	return nil
 }
@@ -55,12 +56,12 @@ func (l *CaretAuthStatusListener) readStream() {
 	for {
 		select {
 		case <-l.ctx.Done():
-			verboseLog("Caret auth listener context cancelled")
+			verboseLog("%s auth listener context cancelled", common.BrandDisplayName())
 			return
 		default:
 			state, err := l.stream.Recv()
 			if err != nil {
-				verboseLog("Error reading from Caret auth status stream: %v", err)
+				verboseLog("Error reading from %s auth status stream: %v", common.BrandDisplayName(), err)
 				select {
 				case l.errCh <- err:
 				case <-l.ctx.Done():
@@ -68,7 +69,7 @@ func (l *CaretAuthStatusListener) readStream() {
 				return
 			}
 
-			verboseLog("Received Caret auth state update: user=%v", state.GetUser() != nil)
+			verboseLog("Received %s auth state update: user=%v", common.BrandDisplayName(), state.GetUser() != nil)
 
 			select {
 			case l.updatesCh <- state:
@@ -108,7 +109,7 @@ func (l *CaretAuthStatusListener) WaitForAuthentication(timeout time.Duration) e
 }
 
 func (l *CaretAuthStatusListener) Stop() {
-	verboseLog("Stopping Caret auth status listener...")
+	verboseLog("Stopping %s auth status listener...", common.BrandDisplayName())
 	l.cancel()
 }
 

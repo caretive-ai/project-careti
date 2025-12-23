@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/cline/cli/pkg/cli/clerror"
+	"github.com/cline/cli/pkg/common"
 )
 
 // ErrorSeverity represents the severity level of an error
@@ -112,10 +113,8 @@ func (sr *SystemMessageRenderer) RenderBalanceError(err *clerror.ClineError) err
 	if url := err.GetBuyCreditsURL(); url != "" {
 		parts = append(parts, fmt.Sprintf("**→ Buy credits:** %s", url))
 	} else {
-		// Fallback - show both personal and org URLs
-		parts = append(parts, "**→ Buy credits:**")
-		parts = append(parts, "  - Personal: https://app.cline.bot/dashboard/account?tab=credits")
-		parts = append(parts, "  - Organization: https://app.cline.bot/dashboard/organization?tab=credits")
+		// CARET MODIFICATION: avoid hardcoded Cline URLs for white-label builds
+		parts = append(parts, "**→ Buy credits:** Open your billing/credits page in your dashboard.")
 	}
 
 	// Request ID (less prominent at the end)
@@ -150,8 +149,8 @@ func (sr *SystemMessageRenderer) RenderAuthError(err *clerror.ClineError) error 
 	// Guidance
 	parts = append(parts, "**Next Steps:**")
 	parts = append(parts, "- Check your API key configuration")
-	parts = append(parts, "- Run `cline auth` to authenticate")
-	parts = append(parts, "- Verify your account status at https://app.cline.bot")
+	parts = append(parts, fmt.Sprintf("- Run `%s auth` to authenticate", common.CliCommandName()))
+	parts = append(parts, "- Verify your account status in your dashboard")
 
 	// Request ID
 	if err.RequestID != "" {

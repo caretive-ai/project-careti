@@ -7,6 +7,7 @@ type StreamCoordinator struct {
 	conversationTurnStartIndex int             // First message index of current turn
 	processedInCurrentTurn     map[string]bool // What we've handled in THIS turn
 	inputAllowed               bool            // Whether user input is currently allowed
+	usageDisplayed             bool            // Whether usage info has been displayed
 	mu                         sync.RWMutex    // Protects inputAllowed
 }
 
@@ -57,4 +58,18 @@ func (sc *StreamCoordinator) IsInputAllowed() bool {
 	sc.mu.RLock()
 	defer sc.mu.RUnlock()
 	return sc.inputAllowed
+}
+
+// SetUsageDisplayed marks usage info as displayed for the current follow session.
+func (sc *StreamCoordinator) SetUsageDisplayed() {
+	sc.mu.Lock()
+	defer sc.mu.Unlock()
+	sc.usageDisplayed = true
+}
+
+// HasUsageDisplayed returns whether usage info has been displayed.
+func (sc *StreamCoordinator) HasUsageDisplayed() bool {
+	sc.mu.RLock()
+	defer sc.mu.RUnlock()
+	return sc.usageDisplayed
 }

@@ -5,6 +5,7 @@ import (
 	"runtime"
 
 	"github.com/cline/cli/pkg/cli/global"
+	"github.com/cline/cli/pkg/common"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +17,7 @@ func NewVersionCommand() *cobra.Command {
 		Use:     "version",
 		Aliases: []string{"v"},
 		Short:   "Show version information",
-		Long:    `Display version information for the Cline CLI.`,
+		Long:    fmt.Sprintf("Display version information for the %s CLI.", common.BrandDisplayName()),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Versions are injected at build time via ldflags
 			if short {
@@ -24,9 +25,10 @@ func NewVersionCommand() *cobra.Command {
 				return nil
 			}
 
-			fmt.Printf("Cline CLI\n")
-			fmt.Printf("Cline CLI Version:  %s\n", global.CliVersion)
-			fmt.Printf("Cline Core Version: %s\n", global.Version)
+			brand := common.BrandDisplayName()
+			fmt.Printf("%s CLI\n", brand)
+			fmt.Printf("%s CLI Version:  %s\n", brand, global.CliVersion)
+			fmt.Printf("%s Core Version: %s\n", brand, global.Version)
 			fmt.Printf("Commit:             %s\n", global.Commit)
 			fmt.Printf("Built:              %s\n", global.Date)
 			fmt.Printf("Built by:           %s\n", global.BuiltBy)

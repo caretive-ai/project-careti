@@ -2,6 +2,7 @@ import type { IncomingMessage, Server, ServerResponse } from "node:http"
 import http from "node:http"
 import type { AddressInfo } from "node:net"
 import { SharedUriHandler } from "@/services/uri/SharedUriHandler"
+import { getCurrentBrandDisplayName } from "@caret/utils/brand-utils" // CARET MODIFICATION: brand-aware auth success page title
 import { HostProvider } from "../host-provider"
 
 const SERVER_TIMEOUT = 10 * 60 * 1000 // 10 minutes
@@ -219,13 +220,14 @@ function createAuthSucceededHtml(redirectUri?: string): string {
 	const redirect = redirectUri ? `<script>setTimeout(() => { window.location.href = '${redirectUri}'; }, 1000);</script>` : ""
 	// Use "terminal" for CLI (no redirect), "IDE" for VSCode/JetBrains (with redirect)
 	const platform = redirectUri ? "IDE" : "terminal"
+	const brand = getCurrentBrandDisplayName() // CARET MODIFICATION: avoid hardcoded "Cline" in HTML title
 
 	const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cline - Authentication Success</title>
+    <title>${brand} - Authentication Success</title>
 	${redirect}
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@300;400;700&display=swap');

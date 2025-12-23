@@ -658,7 +658,7 @@ func (pw *ProviderWizard) handleChangeModel() error {
 	// Step 3: Check if there are any configurable providers
 	if len(configurableProviders) == 0 {
 		fmt.Println("\nNo configurable providers found.")
-		fmt.Println("Note: Cline provider has its own model selection in the main menu.")
+		fmt.Println("Note: Official provider has its own model selection in the main menu.")
 		return nil
 	}
 
@@ -968,7 +968,7 @@ func (pw *ProviderWizard) handleRemoveProvider() error {
 	// Step 3: Check if there are providers to remove
 	if len(removableProviders) == 0 {
 		fmt.Println("\nNo providers available to remove.")
-		fmt.Println("Note: Cline provider cannot be removed via this menu.")
+		fmt.Println("Note: Official provider cannot be removed via this menu.")
 		return nil
 	}
 

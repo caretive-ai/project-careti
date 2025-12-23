@@ -100,11 +100,12 @@ func RunAuthFlow(ctx context.Context, args []string) error {
 // Main entry point for handling the `cline auth` command
 // HandleAuthCommand routes the auth command based on the number of arguments
 func HandleAuthCommand(ctx context.Context, args []string) error {
+	cliCommand := common.CliCommandName()
 
 	// Check if flags are provided for quick setup
 	if QuickProvider != "" || QuickAPIKey != "" || QuickModelID != "" || QuickBaseURL != "" {
 		if QuickProvider == "" || QuickAPIKey == "" || QuickModelID == "" {
-			return fmt.Errorf("quick setup requires --provider, --apikey, and --modelid flags. Use 'cline auth --help' for more information")
+			return fmt.Errorf("quick setup requires --provider, --apikey, and --modelid flags. Use '%s auth --help' for more information", cliCommand)
 		}
 		return QuickSetupFromFlags(ctx, QuickProvider, QuickAPIKey, QuickModelID, QuickBaseURL)
 	}
@@ -115,7 +116,7 @@ func HandleAuthCommand(ctx context.Context, args []string) error {
 		return HandleAuthMenuNoArgs(ctx)
 	case 1, 2, 3, 4:
 		fmt.Println("Invalid positional arguments. Correct usage:")
-		fmt.Println("  cline auth --provider <provider> --apikey <key> --modelid <model> --baseurl <optional>")
+		fmt.Printf("  %s auth --provider <provider> --apikey <key> --modelid <model> --baseurl <optional>\n", cliCommand)
 		return nil
 	default:
 		return fmt.Errorf("too many arguments. Use flags for quick setup: --provider, --apikey, --modelid --baseurl(optional)")
@@ -133,9 +134,15 @@ func getAuthInstanceAddress(ctx context.Context) string {
 
 // HandleAuthMenuNoArgs prepares the auth menu when no arguments are provided
 func HandleAuthMenuNoArgs(ctx context.Context) error {
-	// Check if Caret/Cline are authenticated
-	isCaretAuth := IsCaretAuthenticated(ctx)
-	isClineAuth := IsAuthenticated(ctx)
+	brandSlug := common.BrandSlug()
+	isCaretAuth := false
+	isClineAuth := false
+	// CARET MODIFICATION: caret CLI is caret-only by default; cline auth flow is only exposed when running the cline-branded binary.
+	if brandSlug == "cline" {
+		isClineAuth = IsAuthenticated(ctx)
+	} else {
+		isCaretAuth = IsCaretAuthenticated(ctx)
+	}
 
 	// Get current provider config for display
 	var currentProvider string
@@ -179,18 +186,22 @@ func HandleAuthMenuNoArgs(ctx context.Context) error {
 func ShowAuthMenuWithStatus(isCaretAuthenticated bool, isClineAuthenticated bool, currentProvider, currentModel string) (AuthAction, error) {
 	var action AuthAction
 	var options []huh.Option[AuthAction]
+	brand := common.BrandDisplayName()
+	brandSlug := common.BrandSlug()
 
-	// CARET MODIFICATION: include caret/cline account actions
-	if isCaretAuthenticated {
-		options = append(options, huh.NewOption("Sign out of Caret", AuthActionCaretLogin))
+	// CARET MODIFICATION: show only the official account for the current brand.
+	if brandSlug == "cline" {
+		if isClineAuthenticated {
+			options = append(options, huh.NewOption(fmt.Sprintf("Sign out of %s", brand), AuthActionClineLogin))
+		} else {
+			options = append(options, huh.NewOption(fmt.Sprintf("Authenticate with %s account", brand), AuthActionClineLogin))
+		}
 	} else {
-		options = append(options, huh.NewOption("Authenticate with Caret account", AuthActionCaretLogin))
-	}
-
-	if isClineAuthenticated {
-		options = append(options, huh.NewOption("Sign out of Cline", AuthActionClineLogin))
-	} else {
-		options = append(options, huh.NewOption("Authenticate with Cline account", AuthActionClineLogin))
+		if isCaretAuthenticated {
+			options = append(options, huh.NewOption(fmt.Sprintf("Sign out of %s", brand), AuthActionCaretLogin))
+		} else {
+			options = append(options, huh.NewOption(fmt.Sprintf("Authenticate with %s account", brand), AuthActionCaretLogin))
+		}
 	}
 
 	options = append(options,
@@ -203,16 +214,15 @@ func ShowAuthMenuWithStatus(isCaretAuthenticated bool, isClineAuthenticated bool
 	var title string
 	renderer := display.NewRenderer(global.Config.OutputFormat)
 
-	// CARET MODIFICATION: show caret + cline auth status
-	if isCaretAuthenticated {
-		title = fmt.Sprintf("Caret Account: %s Authenticated\n", renderer.Green("✓"))
-	} else {
-		title = fmt.Sprintf("Caret Account: %s Not authenticated\n", renderer.Red("✗"))
+	// CARET MODIFICATION: show only the official account status for the current brand.
+	isOfficialAuthenticated := isCaretAuthenticated
+	if brandSlug == "cline" {
+		isOfficialAuthenticated = isClineAuthenticated
 	}
-	if isClineAuthenticated {
-		title += fmt.Sprintf("Cline Account: %s Authenticated\n", renderer.Green("✓"))
+	if isOfficialAuthenticated {
+		title = fmt.Sprintf("%s Account: %s Authenticated\n", brand, renderer.Green("✓"))
 	} else {
-		title += fmt.Sprintf("Cline Account: %s Not authenticated\n", renderer.Red("✗"))
+		title = fmt.Sprintf("%s Account: %s Not authenticated\n", brand, renderer.Red("✗"))
 	}
 
 	// Show active provider and model if configured (regardless of Cline auth status)

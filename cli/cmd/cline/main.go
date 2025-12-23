@@ -31,32 +31,42 @@ var (
 	settings []string
 	yolo     bool
 	oneshot  bool
+	// CARET MODIFICATION: CLI parity flag to force Cline behavior.
+	clineParity bool
 )
 
 func main() {
+	// CARET MODIFICATION: apply parity override before any brand lookup.
+	applyClineParityFromArgs(os.Args[1:])
+	brand := common.BrandDisplayName()
+	cliCommand := common.CliCommandName()
 	rootCmd := &cobra.Command{
-		Use:   "cline [prompt]",
-		Short: "Cline CLI - AI-powered coding assistant",
-		Long: `A command-line interface for interacting with Cline AI coding assistant.
+		Use:   fmt.Sprintf("%s [prompt]", cliCommand),
+		Short: fmt.Sprintf("%s CLI - AI-powered coding assistant", brand),
+		Long: fmt.Sprintf(`A command-line interface for interacting with %s AI coding assistant.
 
 Start a new task by providing a prompt:
-  cline "Create a new Python script that prints hello world"
+  %s "Create a new Python script that prints hello world"
 
 Or pipe a prompt via stdin:
-  echo "Create a todo app" | cline
-  cat prompt.txt | cline --yolo
+  echo "Create a todo app" | %s
+  cat prompt.txt | %s --yolo
 
 Or run with no arguments to enter interactive mode:
-  cline
+  %s
 
 This CLI also provides task management, configuration, and monitoring capabilities.
 
 For detailed documentation including all commands, options, and examples,
-see the manual page: man cline`,
+see the manual page: man %s`, brand, cliCommand, cliCommand, cliCommand, cliCommand, cliCommand),
 		Args: cobra.ArbitraryArgs,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			if outputFormat != "rich" && outputFormat != "json" && outputFormat != "plain" {
 				return fmt.Errorf("invalid output format '%s': must be one of 'rich', 'json', or 'plain'", outputFormat)
+			}
+			// CARET MODIFICATION: enforce cline parity mode when requested.
+			if clineParity {
+				common.EnableClineParity()
 			}
 
 			return global.InitializeGlobalConfig(&global.GlobalConfig{
@@ -73,7 +83,7 @@ see the manual page: man cline`,
 			// If --address flag not provided, start instance BEFORE getting prompt
 			if !cmd.Flags().Changed("address") {
 				if global.Config.Verbose {
-					fmt.Println("Starting new Cline instance...")
+					fmt.Printf("Starting new %s instance...\n", brand)
 				}
 				instance, err := global.Clients.StartNewInstance(ctx)
 				if err != nil {
@@ -113,10 +123,10 @@ see the manual page: man cline`,
 
 					// Re-check after auth wizard
 					if !isUserReadyToUse(ctx, instanceAddress) {
-						return fmt.Errorf("credentials still not configured - please run 'cline auth' to complete setup")
+						return fmt.Errorf("credentials still not configured - please run '%s auth' to complete setup", cliCommand)
 					}
 
-					fmt.Printf("\n%s\n\n", renderer.Dim("✓ Setup complete, you can now use the Cline CLI"))
+					fmt.Printf("\n%s\n\n", renderer.Dim(fmt.Sprintf("✓ Setup complete, you can now use the %s CLI", brand)))
 				}
 			} else {
 				// User specified --address flag, use that
@@ -163,9 +173,15 @@ see the manual page: man cline`,
 		},
 	}
 
-	rootCmd.PersistentFlags().StringVar(&coreAddress, "address", fmt.Sprintf("localhost:%d", common.DEFAULT_CLINE_CORE_PORT), "Cline Core gRPC address")
+	rootCmd.PersistentFlags().StringVar(
+		&coreAddress,
+		"address",
+		fmt.Sprintf("localhost:%d", common.DEFAULT_CLINE_CORE_PORT),
+		fmt.Sprintf("%s Core gRPC address", brand),
+	)
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output-format", "F", "rich", "output format (rich|json|plain)")
+	rootCmd.PersistentFlags().BoolVar(&clineParity, "cline-parity", false, "force CLI to behave like upstream cline")
 
 	// Task creation flags (only apply when using root command with prompt)
 	rootCmd.Flags().StringSliceVarP(&images, "image", "i", nil, "attach image files")
@@ -189,7 +205,18 @@ see the manual page: man cline`,
 	}
 }
 
+// CARET MODIFICATION: allow parity flag before brand lookup.
+func applyClineParityFromArgs(args []string) {
+	for _, arg := range args {
+		if arg == "--cline-parity" || strings.HasPrefix(arg, "--cline-parity=true") || strings.HasPrefix(arg, "--cline-parity=1") {
+			common.EnableClineParity()
+			return
+		}
+	}
+}
+
 func promptForInitialTask(ctx context.Context, instanceAddress, modeFlag string) (string, error) {
+	brand := common.BrandDisplayName()
 	// Show session banner before the initial input
 	showSessionBanner(ctx, instanceAddress, modeFlag)
 
@@ -209,13 +236,13 @@ func promptForInitialTask(ctx context.Context, instanceAddress, modeFlag string)
 
 	form := huh.NewForm(
 		huh.NewGroup(
-			huh.NewText().
-				Title("Start a new Cline task").
-				Description("What would you like Cline to help you with?").
-				Placeholder("e.g., Create a REST API with authentication...").
-				Lines(5).
-				Value(&prompt),
-		),
+				huh.NewText().
+					Title(fmt.Sprintf("Start a new %s task", brand)).
+					Description(fmt.Sprintf("What would you like %s to help you with?", brand)).
+					Placeholder("e.g., Create a REST API with authentication...").
+					Lines(5).
+					Value(&prompt),
+			),
 	).WithWidth(48).WithTheme(theme)
 
 	err := form.Run()

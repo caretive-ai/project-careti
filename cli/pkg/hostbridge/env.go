@@ -9,6 +9,7 @@ import (
 
 	"github.com/atotto/clipboard"
 	"github.com/cline/cli/pkg/cli/global"
+	"github.com/cline/cli/pkg/common"
 	"github.com/cline/grpc-go/cline"
 	"github.com/cline/grpc-go/host"
 	"google.golang.org/protobuf/proto"
@@ -81,7 +82,8 @@ func (s *EnvService) GetHostVersion(ctx context.Context, req *cline.EmptyRequest
 	}
 
 	return &host.GetHostVersionResponse{
-		Platform:     proto.String("Cline CLI"),
+		// CARET MODIFICATION: brand-aware platform label
+		Platform:     proto.String(common.BrandDisplayName() + " CLI"),
 		Version:      proto.String(""),
 		ClineType:    proto.String("CLI"),
 		ClineVersion: proto.String(global.CliVersion),

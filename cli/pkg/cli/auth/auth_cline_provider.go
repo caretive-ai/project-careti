@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/huh"
+	"github.com/cline/cli/pkg/common"
 	"github.com/cline/grpc-go/cline"
 )
 
@@ -14,7 +15,9 @@ var isSessionAuthenticated bool
 // Cline provider specific code
 
 func HandleClineAuth(ctx context.Context) error {
-	verboseLog("Authenticating with Cline...")
+	brand := common.BrandDisplayName()
+	cliCommand := common.CliCommandName()
+	verboseLog("Authenticating with %s...", brand)
 
 	// Check if already authenticated
 	if IsAuthenticated(ctx) {
@@ -32,8 +35,8 @@ func HandleClineAuth(ctx context.Context) error {
 
 	// Configure default Cline model after successful authentication
 	if err := configureDefaultClineModel(ctx); err != nil {
-		fmt.Printf("Warning: Could not configure default Cline model: %v\n", err)
-		fmt.Println("You can configure a model later with 'cline auth' and selecting 'Change Cline model'")
+		fmt.Printf("Warning: Could not configure default %s model: %v\n", brand, err)
+		fmt.Printf("You can configure a model later with '%s auth' and selecting 'Change model'\n", cliCommand)
 	}
 
 	// Return to main auth menu after successful authentication
@@ -51,7 +54,7 @@ func signOut(ctx context.Context) error {
 	}
 
 	isSessionAuthenticated = false
-	fmt.Println("You have been signed out of Cline.")
+	fmt.Printf("You have been signed out of %s.\n", common.BrandDisplayName())
 	return nil
 }
 
@@ -60,7 +63,7 @@ func signOutDialog(ctx context.Context) error {
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewConfirm().
-				Title("You are already signed in to Cline.").
+				Title(fmt.Sprintf("You are already signed in to %s.", common.BrandDisplayName())).
 				Description("Would you like to sign out?").
 				Value(&confirm),
 		),
@@ -124,7 +127,7 @@ func signIn(ctx context.Context) error {
 	if err := listener.WaitForAuthentication(5 * time.Minute); err != nil {
 		verboseLog("Authentication failed or timed out: %v", err)
 		fmt.Println("\n  Authentication failed or timed out.")
-		fmt.Println("  Please try again with 'cline auth'")
+		fmt.Printf("  Please try again with '%s auth'\n", common.CliCommandName())
 		return err
 	}
 
@@ -163,7 +166,7 @@ func IsAuthenticated(ctx context.Context) bool {
 func HandleChangeClineModel(ctx context.Context) error {
 	// Ensure user is authenticated
 	if !IsAuthenticated(ctx) {
-		return fmt.Errorf("you must be authenticated with Cline to change models. Run 'cline auth' to sign in")
+		return fmt.Errorf("you must be authenticated with %s to change models. Run '%s auth' to sign in", common.BrandDisplayName(), common.CliCommandName())
 	}
 
 	// Get task manager
@@ -178,7 +181,7 @@ func HandleChangeClineModel(ctx context.Context) error {
 
 // configureDefaultClineModel configures the default Cline model after authentication
 func configureDefaultClineModel(ctx context.Context) error {
-	verboseLog("Configuring default Cline model...")
+	verboseLog("Configuring default %s model...", common.BrandDisplayName())
 
 	// Create task manager
 	manager, err := createTaskManager(ctx)
@@ -194,7 +197,7 @@ func configureDefaultClineModel(ctx context.Context) error {
 func HandleSelectOrganization(ctx context.Context) error {
 	// Ensure user is authenticated
 	if !IsAuthenticated(ctx) {
-		return fmt.Errorf("you must be authenticated with Cline to select an organization. Run 'cline auth' to sign in")
+		return fmt.Errorf("you must be authenticated with %s to select an organization. Run '%s auth' to sign in", common.BrandDisplayName(), common.CliCommandName())
 	}
 
 	// Get client
@@ -212,7 +215,7 @@ func HandleSelectOrganization(ctx context.Context) error {
 	organizations := orgsResponse.GetOrganizations()
 	if len(organizations) == 0 {
 		fmt.Println("You don't have any organizations yet.")
-		fmt.Println("Visit https://app.cline.bot/dashboard to create an organization.")
+		fmt.Println("Visit your dashboard to create an organization.")
 		return HandleAuthMenuNoArgs(ctx)
 	}
 

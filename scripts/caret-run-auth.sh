@@ -8,13 +8,12 @@ if [ -d "$HOME/.config/nvm/versions/node/v20.19.5/bin" ]; then
 fi
 export PATH="$ROOT/dist-standalone/bin:$PATH"
 
-# CARET: optionally skip killing existing auth/host/core (default: no kill)
-if [ -z "${CARET_SKIP_KILL:-}" ]; then
-  if pkill -f "caret-host|cline-host|cline-core|cline-host" >/dev/null 2>&1; then
-    echo "[info] Stopped existing caret/cline host/core processes before auth run"
-  fi
-else
-  echo "[info] CARET_SKIP_KILL set, skipping host/core shutdown before auth run"
+# CARET: default is to NOT kill other running instances (avoid cline/caret dev conflicts).
+# Set CARET_FORCE_KILL=1 to stop only the caret-branded host and caret-configured core.
+if [ -n "${CARET_FORCE_KILL:-}" ]; then
+  pkill -f "caret-host" >/dev/null 2>&1 || true
+  pkill -f "caret-core.*--config[ =]${HOME}/\\.caret" >/dev/null 2>&1 || true
+  echo "[info] CARET_FORCE_KILL set; stopped caret host/core processes before auth run"
 fi
 
 exec "${ROOT}/dist-standalone/bin/caret" auth -v "$@"

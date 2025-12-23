@@ -7,16 +7,19 @@ import (
 	"github.com/cline/cli/pkg/cli/global"
 	"github.com/cline/cli/pkg/cli/terminal"
 	"github.com/cline/cli/pkg/cli/updater"
+	"github.com/cline/cli/pkg/common"
 	"github.com/spf13/cobra"
 )
 
 // NewDoctorCommand creates the doctor command
 func NewDoctorCommand() *cobra.Command {
+	brand := common.BrandDisplayName()
 	cmd := &cobra.Command{
 		Use:     "doctor",
 		Aliases: []string{"d"},
 		Short:   "Check system health and diagnose problems",
-		Long: `Check the health of your Cline CLI installation and diagnose problems.
+		// CARET MODIFICATION: use brand-aware core label in help text.
+		Long: fmt.Sprintf(`Check the health of your %s CLI installation and diagnose problems.
 
 Currently this command performs the following checks and fixes:
 
@@ -33,8 +36,10 @@ CLI Updates:
   - Respects NO_AUTO_UPDATE environment variable
   - Skipped in CI environments
 
+// CARET MODIFICATION: use brand-aware core label in help text.
 Note: Future versions will include additional health checks for Node.js version,
-npm availability, Cline Core connectivity, database integrity, and more.`,
+npm availability, %s Core connectivity, database integrity, and more.`,
+			brand, brand),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runDoctorChecks()
 		},
@@ -47,7 +52,7 @@ npm availability, Cline Core connectivity, database integrity, and more.`,
 func runDoctorChecks() error {
 	renderer := display.NewRenderer(global.Config.OutputFormat)
 
-	fmt.Printf("\n%s\n\n", renderer.Bold("Cline Doctor - System Health Check"))
+	fmt.Printf("\n%s\n\n", renderer.Bold(fmt.Sprintf("%s Doctor - System Health Check", common.BrandDisplayName())))
 
 	// Configure terminal keybindings (terminal.go prints its own status)
 	fmt.Printf("%s\n\n", renderer.Dim("━━━ Terminal Configuration ━━━"))

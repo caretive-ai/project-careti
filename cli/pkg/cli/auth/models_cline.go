@@ -6,6 +6,7 @@ import (
 
 	"github.com/cline/cli/pkg/cli/global"
 	"github.com/cline/cli/pkg/cli/task"
+	"github.com/cline/cli/pkg/common"
 	"github.com/cline/grpc-go/cline"
 )
 
@@ -18,13 +19,13 @@ const DefaultClineModelID = "anthropic/claude-sonnet-4.5"
 // The models are fetched using the same method as OpenRouter.
 func FetchClineModels(ctx context.Context, manager *task.Manager) (map[string]*cline.OpenRouterModelInfo, error) {
 	if global.Config.Verbose {
-		fmt.Println("Fetching Cline models (using OpenRouter-compatible API)")
+		fmt.Printf("Fetching %s models (using OpenRouter-compatible API)\n", common.BrandDisplayName())
 	}
 
 	// Cline uses OpenRouter model fetching
 	models, err := FetchOpenRouterModels(ctx, manager)
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch Cline models: %w", err)
+		return nil, fmt.Errorf("failed to fetch %s models: %w", common.BrandDisplayName(), err)
 	}
 
 	return models, nil
@@ -47,7 +48,7 @@ func SetDefaultClineModel(ctx context.Context, manager *task.Manager) error {
 	models, err := FetchClineModels(ctx, manager)
 	if err != nil {
 		// If we can't fetch models, we'll use the default without model info
-		fmt.Printf("Warning: Could not fetch Cline models: %v\n", err)
+		fmt.Printf("Warning: Could not fetch %s models: %v\n", common.BrandDisplayName(), err)
 		fmt.Printf("Using default model: %s\n", DefaultClineModelID)
 		return applyDefaultClineModel(ctx, manager, nil)
 	}
@@ -61,7 +62,7 @@ func SetDefaultClineModel(ctx context.Context, manager *task.Manager) error {
 			fmt.Printf("Using available model: %s\n", modelID)
 			return applyClineModelConfiguration(ctx, manager, modelID, models[modelID])
 		}
-		return fmt.Errorf("no usable Cline models found")
+		return fmt.Errorf("no usable %s models found", common.BrandDisplayName())
 	}
 
 	if err := applyClineModelConfiguration(ctx, manager, DefaultClineModelID, modelInfo); err != nil {
@@ -81,7 +82,7 @@ func SelectClineModel(ctx context.Context, manager *task.Manager) error {
 	// Fetch models (uses OpenRouter-compatible format)
 	models, err := FetchClineModels(ctx, manager)
 	if err != nil {
-		return fmt.Errorf("failed to fetch Cline models: %w", err)
+		return fmt.Errorf("failed to fetch %s models: %w", common.BrandDisplayName(), err)
 	}
 
 	// Convert to interface map for generic utilities
@@ -91,7 +92,7 @@ func SelectClineModel(ctx context.Context, manager *task.Manager) error {
 	modelIDs := ConvertModelsMapToSlice(modelMap)
 
 	// Display selection menu
-	selectedModelID, err := DisplayModelSelectionMenu(modelIDs, "Cline")
+	selectedModelID, err := DisplayModelSelectionMenu(modelIDs, common.BrandDisplayName())
 	if err != nil {
 		return fmt.Errorf("model selection failed: %w", err)
 	}

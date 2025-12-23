@@ -3,6 +3,7 @@ import fs from "fs"
 import os from "os"
 import path from "path"
 import { promisify } from "util"
+import { getModeSystemCliCommandName } from "@caret/utils/brand-utils"
 
 const execAsync = promisify(exec)
 
@@ -74,9 +75,16 @@ export async function isClineCliInstalled(): Promise<boolean> {
 	return checkCliInstalled("cline", "cline")
 }
 
-// CARET MODIFICATION: Caret CLI detection (Phase D-2)
+// CARET MODIFICATION: Caret-mode CLI detection (white-label capable)
 export async function isCaretCliInstalled(): Promise<boolean> {
-	return checkCliInstalled("caret", "caret")
+	const caretModeCommand = getModeSystemCliCommandName("caret")
+	return checkCliInstalled(caretModeCommand, caretModeCommand)
+}
+
+// CARET MODIFICATION: modeSystem-aware CLI detection helper
+export async function isModeSystemCliInstalled(modeSystem: "caret" | "cline"): Promise<boolean> {
+	const command = getModeSystemCliCommandName(modeSystem)
+	return checkCliInstalled(command, command)
 }
 
 /**

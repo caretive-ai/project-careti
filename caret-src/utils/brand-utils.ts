@@ -75,6 +75,29 @@ export function getCurrentBrandName(): string {
 }
 
 /**
+ * Convert a display name into a safe CLI/package slug.
+ * - lowercased
+ * - spaces -> '-'
+ * - removes characters outside [a-z0-9-]
+ */
+export function toBrandSlug(displayName: string): string {
+	return (displayName || "")
+		.trim()
+		.toLowerCase()
+		.replace(/\s+/g, "-")
+		.replace(/[^a-z0-9-]/g, "")
+		.replace(/-+/g, "-")
+		.replace(/^-|-$/g, "")
+}
+
+/**
+ * Get brand slug for the current Caret-mode brand (white-label capable).
+ */
+export function getCurrentBrandSlug(): string {
+	return toBrandSlug(getCurrentBrandDisplayName()) || "caret"
+}
+
+/**
  * Check if current mode supports i18n features
  * @returns true if i18n is enabled for current mode
  */
@@ -135,6 +158,57 @@ export function getBrandDisplayName(mode: CaretModeSystem): string {
  */
 export function getBrandDescription(mode: CaretModeSystem): string {
 	return CARET_MODE_SYSTEM_CONFIG[mode].description
+}
+
+/**
+ * Get the user-facing brand name for the given modeSystem.
+ * - caret: current product brand (white-label capable)
+ * - cline: upstream brand (stable label)
+ */
+export function getModeSystemBrandName(modeSystem: CaretModeSystem): string {
+	if (modeSystem === "caret") {
+		return getCurrentBrandDisplayName()
+	}
+
+	return CARET_MODE_SYSTEM_CONFIG.cline.name
+}
+
+/**
+ * Get the user-facing CLI label for the given modeSystem.
+ */
+export function getModeSystemCliLabel(modeSystem: CaretModeSystem): string {
+	return `${getModeSystemBrandName(modeSystem)} CLI`
+}
+
+/**
+ * Get the CLI command name for the given modeSystem.
+ * - caret: brand slug (e.g., "caret", "codecenter")
+ * - cline: upstream "cline"
+ */
+export function getModeSystemCliCommandName(modeSystem: CaretModeSystem): string {
+	if (modeSystem === "caret") {
+		return getCurrentBrandSlug()
+	}
+	return "cline"
+}
+
+/**
+ * Get the npm package name for the CLI for the given modeSystem.
+ * - caret: `@caretive/<brandSlug>-cli` (default: `@caretive/caret-cli`)
+ * - cline: `cline` (upstream)
+ */
+export function getModeSystemCliNpmPackageName(modeSystem: CaretModeSystem): string {
+	if (modeSystem === "caret") {
+		return `@caretive/${getCurrentBrandSlug()}-cli`
+	}
+	return "cline"
+}
+
+export function getModeSystemCliInstallCommand(modeSystem: CaretModeSystem): string {
+	if (modeSystem === "caret") {
+		return `npm install -g ${getModeSystemCliNpmPackageName("caret")}`
+	}
+	return "npm install -g cline"
 }
 
 /**

@@ -293,12 +293,13 @@ func determineAutoApprovalAction(msg *types.ClineMessage) (string, error) {
 func (ih *InputHandler) promptForInput(ctx context.Context) (string, bool, error) {
 	currentMode := ih.manager.GetCurrentMode()
 
-		// CARET MODIFICATION: branding + mode hint text
-	model := output.NewInputModel(
+	// CARET MODIFICATION: branding + mode hint text
+	model := output.NewInputModelWithRegistry(
 		output.InputTypeMessage,
 		"Caret is ready for your message...",
 		"/chatbot or /agent to switch modes\nctrl+e to open editor",
 		currentMode,
+		ih.manager.GetSlashRegistry(),
 	)
 
 	return ih.runInputProgram(ctx, model)
@@ -310,11 +311,12 @@ func (ih *InputHandler) promptForApproval(ctx context.Context, msg *types.ClineM
 	ih.approvalMessage = msg
 	
 	// CARET MODIFICATION: branding
-	model := output.NewInputModel(
+	model := output.NewInputModelWithRegistry(
 		output.InputTypeApproval,
 		"Let Caret use this tool?",
 		"",
 		ih.manager.GetCurrentMode(),
+		ih.manager.GetSlashRegistry(),
 	)
 
 	message, shouldSend, err := ih.runInputProgram(ctx, model)

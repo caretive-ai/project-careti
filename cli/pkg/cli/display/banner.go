@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/cline/cli/pkg/common"
 )
 
 // BannerInfo contains information to display in the session banner
@@ -49,8 +50,8 @@ func RenderSessionBanner(info BannerInfo) string {
 		versionStr = "v" + versionStr
 	}
 
-	// First line: "cline cli vX.X.X" on left, "plan mode" on right (Caret: plan=chatbot, act=agent)
-	leftSide := titleStyle.Render("caret cli preview") + " " + dimStyle.Render(versionStr)
+	// First line: "<cli> cli vX.X.X" on left, "<mode> mode" on right
+	leftSide := titleStyle.Render(fmt.Sprintf("%s cli preview", common.CliCommandName())) + " " + dimStyle.Render(versionStr)
 
 	if info.Mode != "" {
 		modeColor := lipgloss.Color("3") // Yellow for plan

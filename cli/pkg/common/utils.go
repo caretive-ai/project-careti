@@ -167,6 +167,11 @@ func RetryOperation(maxRetries int, timeoutPerAttempt time.Duration, operation f
 		}
 	}
 
+	logsPath := fmt.Sprintf("~/%s/logs/", ConfigDirName())
+	if configPath, err := DefaultConfigPath(); err == nil {
+		logsPath = LogsDir(configPath)
+	}
+
 	return fmt.Errorf(`operation failed to after %d attempts: %w
 
 This is usually caused by an incompatible Node.js version
@@ -176,10 +181,10 @@ REQUIREMENTS:
 • Current Node.js version: %s
 
 DEBUGGING STEPS:
-1. View recent logs: cline log list
-2. Logs are available in: ~/.caret/logs/
-3. The most recent cline-core log file is usually valuable
+1. View recent logs: %s log list
+2. Logs are available in: %s
+3. The most recent core log file is usually valuable
 
-For additional help, visit: https://github.com/cline/cline/issues
-`, maxRetries, lastErr, GetNodeVersion())
+For additional help, visit: %s
+`, maxRetries, lastErr, GetNodeVersion(), BrandSlug(), logsPath, SupportURL())
 }

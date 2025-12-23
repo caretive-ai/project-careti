@@ -16,6 +16,17 @@ const RUNTIME_DEPS_DIR = "standalone/runtime-files"
 const RIPGREP_BINARIES_DIR = `${BUILD_DIR}/ripgrep-binaries`
 const CLI_BINARIES_DIR = "cli/bin"
 const IS_DEBUG_BUILD = process.env.IS_DEBUG_BUILD === "true"
+// CARET MODIFICATION: derive CLI/brand metadata from package.json instead of hardcoding.
+const ROOT_PACKAGE_JSON = JSON.parse(fs.readFileSync("package.json", "utf8"))
+const CLI_PACKAGE_JSON_PATH = path.join("cli", "package.json")
+const CLI_PACKAGE_JSON = JSON.parse(fs.readFileSync(CLI_PACKAGE_JSON_PATH, "utf8"))
+const CLI_BIN_MAP = CLI_PACKAGE_JSON.bin || {}
+const CLI_BIN_NAMES = Object.keys(CLI_BIN_MAP)
+const CLI_COMMAND_NAME =
+	CLI_BIN_NAMES.find((name) => !name.endsWith("-host")) || CLI_BIN_NAMES[0] || "cli"
+const CLI_HOST_COMMAND_NAME =
+	CLI_BIN_NAMES.find((name) => name.endsWith("-host")) || `${CLI_COMMAND_NAME}-host`
+const BRAND_DISPLAY_NAME = ROOT_PACKAGE_JSON.displayName || ROOT_PACKAGE_JSON.name || CLI_COMMAND_NAME
 
 // This should match the node version packaged with the JetBrains plugin.
 const TARGET_NODE_VERSION = "22.15.0"
@@ -54,9 +65,10 @@ function getCurrentPlatform() {
 
 async function main() {
 	const buildType = IS_NPM_BUILD ? "NPM Package" : "JetBrains"
-	console.log(`🚀 Building Cline ${buildType} Package\n`)
+	console.log(`🚀 Building ${BRAND_DISPLAY_NAME} ${buildType} Package\n`)
 
 	await installNodeDependencies()
+	await ensureBrandedCoreAlias()
 
 	if (IS_NPM_BUILD) {
 		await copyCliBinaries()
@@ -105,7 +117,7 @@ async function installNodeDependencies() {
 }
 
 /**
- * Copy CLI binaries (cline and cline-host) for all platforms
+ * Copy CLI binaries for all platforms
  * The Go binaries are cross-compiled for darwin/linux arm64/amd64
  */
 async function copyCliBinaries() {
@@ -127,23 +139,23 @@ async function copyCliBinaries() {
 	for (const { os, arch } of platforms) {
 		const platformSuffix = `${os}-${arch}`
 
-		// Copy cline binary
-		const clineSource = path.join(CLI_BINARIES_DIR, `cline-${platformSuffix}`)
-		const clineDest = path.join(binDir, `cline-${platformSuffix}`)
+		// Copy CLI binary
+		const cliSource = path.join(CLI_BINARIES_DIR, `${CLI_COMMAND_NAME}-${platformSuffix}`)
+		const cliDest = path.join(binDir, `${CLI_COMMAND_NAME}-${platformSuffix}`)
 
-		if (!fs.existsSync(clineSource)) {
-			console.error(`Error: CLI binary not found at ${clineSource}`)
+		if (!fs.existsSync(cliSource)) {
+			console.error(`Error: CLI binary not found at ${cliSource}`)
 			console.error(`Please run: npm run compile-cli`)
 			process.exit(1)
 		}
 
-		await cpr(clineSource, clineDest)
-		fs.chmodSync(clineDest, 0o755)
-		console.log(`✓ cline-${platformSuffix} copied`)
+		await cpr(cliSource, cliDest)
+		fs.chmodSync(cliDest, 0o755)
+		console.log(`✓ ${CLI_COMMAND_NAME}-${platformSuffix} copied`)
 
-		// Copy cline-host binary
-		const hostSource = path.join(CLI_BINARIES_DIR, `cline-host-${platformSuffix}`)
-		const hostDest = path.join(binDir, `cline-host-${platformSuffix}`)
+		// Copy CLI host binary
+		const hostSource = path.join(CLI_BINARIES_DIR, `${CLI_HOST_COMMAND_NAME}-${platformSuffix}`)
+		const hostDest = path.join(binDir, `${CLI_HOST_COMMAND_NAME}-${platformSuffix}`)
 
 		if (!fs.existsSync(hostSource)) {
 			console.error(`Error: CLI binary not found at ${hostSource}`)
@@ -153,7 +165,7 @@ async function copyCliBinaries() {
 
 		await cpr(hostSource, hostDest)
 		fs.chmodSync(hostDest, 0o755)
-		console.log(`✓ cline-host-${platformSuffix} copied`)
+		console.log(`✓ ${CLI_HOST_COMMAND_NAME}-${platformSuffix} copied`)
 	}
 
 	console.log(`✓ All platform binaries copied to ${binDir}`)
@@ -254,6 +266,25 @@ async function createVersionFile() {
 	console.log(`✓ VERSION file created: ${version} (${platform})`)
 }
 
+// CARET MODIFICATION: create/refresh a branded core bundle alias for CLI packages.
+async function ensureBrandedCoreAlias() {
+	const source = path.join(BUILD_DIR, "cline-core.js")
+	const destName = `${CLI_COMMAND_NAME}-core.js`
+	if (destName === "cline-core.js") {
+		return
+	}
+	const dest = path.join(BUILD_DIR, destName)
+	const sourceMap = `${source}.map`
+	const destMap = `${dest}.map`
+
+	if (fs.existsSync(source)) {
+		await cpr(source, dest)
+	}
+	if (fs.existsSync(sourceMap)) {
+		await cpr(sourceMap, destMap)
+	}
+}
+
 /**
  * Copy NPM package files (package.json, README.md, and man page) from cli/ directory
  */
@@ -284,7 +315,7 @@ async function createNpmPackageFiles() {
 	await cpr(readmeSource, readmeDest)
 	console.log(`✓ README.md copied from ${readmeSource}`)
 
-	// Copy man page from cli/man/ directory
+	// CARET MODIFICATION: keep upstream cline man filename to reduce merge conflicts.
 	const manPageSource = path.join("cli", "man", "cline.1")
 	const manDir = path.join(BUILD_DIR, "man")
 	const manPageDest = path.join(manDir, "cline.1")

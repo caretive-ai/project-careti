@@ -15,7 +15,9 @@ var isCaretSessionAuthenticated bool
 // Caret provider specific code
 
 func HandleCaretAuth(ctx context.Context) error {
-	verboseLog("Authenticating with Caret...")
+	brand := common.BrandDisplayName()
+	cliCommand := common.CliCommandName()
+	verboseLog("Authenticating with %s...", brand)
 
 	if IsCaretAuthenticated(ctx) {
 		return caretSignOutDialog(ctx)
@@ -26,11 +28,11 @@ func HandleCaretAuth(ctx context.Context) error {
 	}
 
 	fmt.Println()
-	verboseLog("✓ You are signed in to Caret!")
+	verboseLog("✓ You are signed in to %s!", brand)
 
 	if err := configureDefaultCaretModel(ctx); err != nil {
-		fmt.Printf("Warning: Could not configure default Caret model: %v\n", err)
-		fmt.Println("You can configure a model later with 'cline auth' and selecting 'Select active provider'")
+		fmt.Printf("Warning: Could not configure default %s model: %v\n", brand, err)
+		fmt.Printf("You can configure a model later with '%s auth' and selecting 'Select active provider'\n", cliCommand)
 	}
 
 	return HandleAuthMenuNoArgs(ctx)
@@ -48,7 +50,7 @@ func caretSignOut(ctx context.Context) error {
 
 	clearCaretLocalSession()
 	isCaretSessionAuthenticated = false
-	fmt.Println("You have been signed out of Caret (caret.team).")
+	fmt.Printf("You have been signed out of %s.\n", common.BrandDisplayName())
 	return nil
 }
 
@@ -57,7 +59,7 @@ func caretSignOutDialog(ctx context.Context) error {
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewConfirm().
-				Title("You are already signed in to Caret.").
+				Title(fmt.Sprintf("You are already signed in to %s.", common.BrandDisplayName())).
 				Description("Would you like to sign out?").
 				Value(&confirm),
 		),
@@ -81,20 +83,22 @@ func caretSignIn(ctx context.Context) error {
 		return nil
 	}
 
-	verboseLog("Subscribing to Caret auth status updates...")
+	brand := common.BrandDisplayName()
+	cliCommand := common.CliCommandName()
+	verboseLog("Subscribing to %s auth status updates...", brand)
 	listener, err := NewCaretAuthStatusListener(ctx)
 	if err != nil {
-		verboseLog("Failed to subscribe to Caret auth updates: %v", err)
-		return fmt.Errorf("failed to subscribe to Caret auth updates: %w", err)
+		verboseLog("Failed to subscribe to %s auth updates: %v", brand, err)
+		return fmt.Errorf("failed to subscribe to %s auth updates: %w", brand, err)
 	}
 	defer listener.Stop()
 
 	if err := listener.Start(); err != nil {
-		verboseLog("Failed to start Caret auth listener: %v", err)
-		return fmt.Errorf("failed to start Caret auth listener: %w", err)
+		verboseLog("Failed to start %s auth listener: %v", brand, err)
+		return fmt.Errorf("failed to start %s auth listener: %w", brand, err)
 	}
 
-	verboseLog("Initiating Caret login...")
+	verboseLog("Initiating %s login...", brand)
 	client, err := getAuthClient(ctx)
 	if err != nil {
 		verboseLog("Failed to obtain client: %v", err)
@@ -103,31 +107,29 @@ func caretSignIn(ctx context.Context) error {
 
 	response, err := client.Caretaccount.CaretAccountLoginClicked(ctx, &cline.EmptyRequest{})
 	if err != nil {
-		verboseLog("Failed to initiate Caret login: %v", err)
-		return fmt.Errorf("failed to initiate Caret login: %w", err)
+		verboseLog("Failed to initiate %s login: %v", brand, err)
+		return fmt.Errorf("failed to initiate %s login: %w", brand, err)
 	}
 
-	fmt.Println("\n  Opening browser for Caret authentication (caret.team)...")
+	fmt.Printf("\n  Opening browser for %s authentication...\n", brand)
 	if response != nil && response.Value != "" {
 		fmt.Printf("  If the browser doesn't open automatically, visit this URL:\n  %s\n\n", response.Value)
 	} else {
-		fmt.Println("  If the browser doesn't open automatically, copy/paste this URL:")
-		fmt.Println("  https://caret.team")
-		fmt.Println()
+		fmt.Println("  If the browser doesn't open automatically, re-run the command and check the output URL.")
 	}
 	fmt.Println("  Waiting for you to complete authentication in your browser...")
 	fmt.Println("   (This may take a few moments. Timeout: 5 minutes)")
 
-	verboseLog("Waiting for Caret authentication to complete...")
+	verboseLog("Waiting for %s authentication to complete...", brand)
 	if err := listener.WaitForAuthentication(5 * time.Minute); err != nil {
-		verboseLog("Caret authentication failed or timed out: %v", err)
+		verboseLog("%s authentication failed or timed out: %v", brand, err)
 		fmt.Println("\n  Authentication failed or timed out.")
-		fmt.Println("  Please try again with 'caret auth'")
+		fmt.Printf("  Please try again with '%s auth'\n", cliCommand)
 		return err
 	}
 
 	isCaretSessionAuthenticated = true
-	verboseLog("Caret login successful")
+	verboseLog("%s login successful", brand)
 	return nil
 }
 
@@ -160,7 +162,7 @@ func IsCaretAuthenticated(ctx context.Context) bool {
 func HandleChangeCaretModel(ctx context.Context) error {
 	// Ensure user is authenticated
 	if !IsCaretAuthenticated(ctx) {
-		return fmt.Errorf("you must be authenticated with Caret to change models. Run 'cline auth' to sign in")
+		return fmt.Errorf("you must be authenticated with %s to change models. Run '%s auth' to sign in", common.BrandDisplayName(), common.CliCommandName())
 	}
 
 	// Get task manager
@@ -175,7 +177,7 @@ func HandleChangeCaretModel(ctx context.Context) error {
 
 // configureDefaultCaretModel configures the default Caret model after authentication
 func configureDefaultCaretModel(ctx context.Context) error {
-	verboseLog("Configuring default Caret model...")
+	verboseLog("Configuring default %s model...", common.BrandDisplayName())
 
 	manager, err := createTaskManager(ctx)
 	if err != nil {
@@ -193,7 +195,6 @@ func configureDefaultCaretModel(ctx context.Context) error {
 
 // HandleSelectCaretOrganization is disabled because Caret org RPCs are commented out in proto (upstream state).
 func HandleSelectCaretOrganization(ctx context.Context) error {
-	fmt.Println("Caret organization selection is currently unavailable in this build.")
-	fmt.Println("Visit https://app.caret.team/dashboard to manage organizations.")
+	fmt.Printf("%s organization selection is currently unavailable in this build.\n", common.BrandDisplayName())
 	return HandleAuthMenuNoArgs(ctx)
 }

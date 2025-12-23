@@ -10,14 +10,8 @@ import { Controller } from ".."
 export async function checkCliInstallation(_controller: Controller): Promise<Boolean> {
 	try {
 		const modeSystem = _controller.stateManager.getGlobalStateKey("caretModeSystem") || "cline"
-		// CARET MODIFICATION: Detect CLI per modeSystem with fallback (caret ↔ cline)
-		const primaryCheck = modeSystem === "caret" ? isCaretCliInstalled : isClineCliInstalled
-		const fallbackCheck = modeSystem === "caret" ? isClineCliInstalled : isCaretCliInstalled
-
-		let isInstalled = await primaryCheck()
-		if (!isInstalled) {
-			isInstalled = await fallbackCheck()
-		}
+		// CARET MODIFICATION: Strict detection per modeSystem (no caret↔cline fallback)
+		const isInstalled = modeSystem === "caret" ? await isCaretCliInstalled() : await isClineCliInstalled()
 
 		return Boolean.create({ value: isInstalled })
 	} catch (error) {

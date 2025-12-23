@@ -46,23 +46,23 @@ func (c *ClineClients) StartNewInstance(ctx context.Context) (*common.CoreInstan
 	}
 
 	if Config.Verbose {
-		fmt.Printf("Starting new Cline instance on ports %d (core) and %d (host bridge)\n", corePort, hostPort)
+		fmt.Printf("Starting new %s instance on ports %d (core) and %d (host bridge)\n", common.BrandDisplayName(), corePort, hostPort)
 	}
 
-	// Start cline-host first
+	// Start host bridge first
 	hostCmd, err := startClineHost(hostPort, corePort)
 	if err != nil {
-		return nil, fmt.Errorf("failed to start cline-host: %w", err)
+		return nil, fmt.Errorf("failed to start %s: %w", common.CliHostCommandName(), err)
 	}
 
-	// Start cline-core (it will register itself in SQLite locks database)
+	// Start core (it will register itself in SQLite locks database)
 	coreCmd, err := startClineCore(corePort, hostPort)
 	if err != nil {
 		// Clean up host process if core fails to start
 		if hostCmd != nil && hostCmd.Process != nil {
 			hostCmd.Process.Kill()
 		}
-		return nil, fmt.Errorf("failed to start cline-core: %w", err)
+		return nil, fmt.Errorf("failed to start core: %w", err)
 	}
 
 	fullAddress := fmt.Sprintf("localhost:%d", corePort)
@@ -139,27 +139,27 @@ func (c *ClineClients) StartNewInstanceAtPort(ctx context.Context, corePort int)
 
 	// Check if the specified core port is available
 	if common.IsInstanceHealthy(ctx, coreAddress) {
-		return nil, fmt.Errorf("port %d is already in use by another Cline instance", corePort)
+		return nil, fmt.Errorf("port %d is already in use by another %s instance", corePort, common.BrandDisplayName())
 	}
 
 	if Config.Verbose {
-		fmt.Printf("Starting new Cline instance on ports %d (core) and %d (host bridge)\n", corePort, hostPort)
+		fmt.Printf("Starting new %s instance on ports %d (core) and %d (host bridge)\n", common.BrandDisplayName(), corePort, hostPort)
 	}
 
-	// Start cline-host first
+	// Start host bridge first
 	hostCmd, err := startClineHost(hostPort, corePort)
 	if err != nil {
-		return nil, fmt.Errorf("failed to start cline-host: %w", err)
+		return nil, fmt.Errorf("failed to start %s: %w", common.CliHostCommandName(), err)
 	}
 
-	// Start cline-core (it will register itself in SQLite locks database)
+	// Start core (it will register itself in SQLite locks database)
 	coreCmd, err := startClineCore(corePort, hostPort)
 	if err != nil {
 		// Clean up host process if core fails to start
 		if hostCmd != nil && hostCmd.Process != nil {
 			hostCmd.Process.Kill()
 		}
-		return nil, fmt.Errorf("failed to start cline-core: %w", err)
+		return nil, fmt.Errorf("failed to start core: %w", err)
 	}
 
 	fullAddress := fmt.Sprintf("localhost:%d", corePort)
@@ -255,8 +255,9 @@ func (c *ClineClients) EnsureInstanceAtAddress(ctx context.Context, address stri
 }
 
 func startClineHost(hostPort, corePort int) (*exec.Cmd, error) {
+	hostCommand := common.CliHostCommandName()
 	if Config.Verbose {
-		fmt.Printf("Starting cline-host on port %d\n", hostPort)
+		fmt.Printf("Starting %s on port %d\n", hostCommand, hostPort)
 	}
 
 	// Get the directory where the cline binary is located
@@ -265,16 +266,20 @@ func startClineHost(hostPort, corePort int) (*exec.Cmd, error) {
 		return nil, fmt.Errorf("failed to get executable path: %w", err)
 	}
 	binDir := path.Dir(execPath)
-	clineHostPath := path.Join(binDir, "cline-host")
-	// CARET MODIFICATION: support caret-host fallback for packaged caret CLI
-	if _, statErr := os.Stat(clineHostPath); statErr != nil {
-		alt := path.Join(binDir, "caret-host")
-		if _, altErr := os.Stat(alt); altErr == nil {
-			clineHostPath = alt
+	// CARET MODIFICATION: prefer brand host binary name, but keep caret/cline fallbacks for dev/legacy layouts.
+	var clineHostPath string
+	for _, candidate := range []string{hostCommand, "caret-host", "cline-host"} {
+		p := path.Join(binDir, candidate)
+		if _, statErr := os.Stat(p); statErr == nil {
+			clineHostPath = p
+			break
 		}
 	}
+	if clineHostPath == "" {
+		return nil, fmt.Errorf("host bridge binary not found in %s (expected %s)", binDir, hostCommand)
+	}
 
-	// Start the cline-host process
+	// Start the host bridge process
 	cmd := exec.Command(clineHostPath,
 		"--verbose",
 		"--port", fmt.Sprintf("%d", hostPort))
@@ -287,7 +292,7 @@ func startClineHost(hostPort, corePort int) (*exec.Cmd, error) {
 
 	// Create timestamped log file
 	timestamp := time.Now().Format("2006-01-02-15-04-05")
-	logFileName := fmt.Sprintf("cline-host-%s-localhost-%d.log", timestamp, hostPort)
+	logFileName := fmt.Sprintf("%s-%s-localhost-%d.log", hostCommand, timestamp, hostPort)
 	logFilePath := path.Join(logsDir, logFileName)
 	logFile, err := os.Create(logFilePath)
 	if err != nil {
@@ -305,12 +310,12 @@ func startClineHost(hostPort, corePort int) (*exec.Cmd, error) {
 
 	if err := cmd.Start(); err != nil {
 		logFile.Close()
-		return nil, fmt.Errorf("failed to start cline-host: %w", err)
+		return nil, fmt.Errorf("failed to start %s: %w", hostCommand, err)
 	}
 
 	if Config.Verbose {
-		fmt.Printf("Started cline-host (PID: %d)\n", cmd.Process.Pid)
-		fmt.Printf("Logging cline-host output to: %s\n", logFilePath)
+		fmt.Printf("Started %s (PID: %d)\n", hostCommand, cmd.Process.Pid)
+		fmt.Printf("Logging %s output to: %s\n", hostCommand, logFilePath)
 	}
 	return cmd, nil
 }
@@ -384,7 +389,7 @@ func KillInstanceByAddress(ctx context.Context, registry *ClientRegistry, addres
 
 func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 	if Config.Verbose {
-		fmt.Printf("Starting cline-core on port %d (with hostbridge on %d)\n", corePort, hostPort)
+		fmt.Printf("Starting core on port %d (with host bridge on %d)\n", corePort, hostPort)
 	}
 
 	// Get the executable path and resolve symlinks (for npm global installs)
@@ -407,7 +412,27 @@ func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 
 	binDir := path.Dir(realPath)
 	installDir := path.Dir(binDir)
-	clineCorePath := path.Join(installDir, "cline-core.js")
+	// CARET MODIFICATION: prefer brand-specific core bundle name with legacy fallback.
+	primaryCoreEntryFile := fmt.Sprintf("%s-core.js", common.CliCommandName())
+	legacyCoreEntryFile := "cline-core.js"
+	coreEntryCandidates := []string{primaryCoreEntryFile}
+	if primaryCoreEntryFile != legacyCoreEntryFile {
+		coreEntryCandidates = append(coreEntryCandidates, legacyCoreEntryFile)
+	}
+	coreEntryFile := ""
+	clineCorePath := ""
+	for _, candidate := range coreEntryCandidates {
+		candidatePath := path.Join(installDir, candidate)
+		if _, err := os.Stat(candidatePath); err == nil {
+			coreEntryFile = candidate
+			clineCorePath = candidatePath
+			break
+		}
+	}
+	if coreEntryFile == "" {
+		coreEntryFile = primaryCoreEntryFile
+		clineCorePath = path.Join(installDir, coreEntryFile)
+	}
 
 	if Config.Verbose {
 		fmt.Printf("Executable path: %s\n", execPath)
@@ -416,55 +441,59 @@ func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 		}
 		fmt.Printf("Bin directory: %s\n", binDir)
 		fmt.Printf("Install directory: %s\n", installDir)
-		fmt.Printf("Looking for cline-core.js at: %s\n", clineCorePath)
+		fmt.Printf("Looking for %s at: %s\n", coreEntryFile, clineCorePath)
 	}
 
-	// Check if cline-core.js exists at the primary location
+	// Check if core bundle exists at the primary location
 	var finalClineCorePath string
 	var finalInstallDir string
 	if _, err := os.Stat(clineCorePath); os.IsNotExist(err) {
 		// CARET MODIFICATION: support packaged caret paths
-		devPaths := []struct {
-			corePath   string
-			installDir string
-			label      string
+		devPathBases := []struct {
+			baseDir string
+			label   string
 		}{
 			{
-				corePath:   path.Join(binDir, "..", "..", "dist-standalone", "cline-core.js"), // dev mode
-				installDir: path.Join(binDir, "..", "..", "dist-standalone"),
-				label:      "development",
+				baseDir: path.Join(binDir, "..", "..", "dist-standalone"),
+				label:   "development",
 			},
 			{
-				corePath:   path.Join(installDir, "dist-standalone", "cline-core.js"), // npm packaged dist
-				installDir: path.Join(installDir, "dist-standalone"),
-				label:      "npm packaged",
+				baseDir: path.Join(installDir, "dist-standalone"),
+				label:   "npm packaged",
 			},
 		}
 
 		var found bool
-		for _, candidate := range devPaths {
-			if Config.Verbose {
-				fmt.Printf("Primary location not found, trying %s path: %s\n", candidate.label, candidate.corePath)
-			}
-			if _, err := os.Stat(candidate.corePath); err == nil {
-				finalClineCorePath = candidate.corePath
-				finalInstallDir = candidate.installDir
-				found = true
+		for _, base := range devPathBases {
+			for _, candidate := range coreEntryCandidates {
+				candidatePath := path.Join(base.baseDir, candidate)
 				if Config.Verbose {
-					fmt.Printf("Using %s mode: cline-core.js found at %s\n", candidate.label, finalClineCorePath)
+					fmt.Printf("Primary location not found, trying %s path: %s\n", base.label, candidatePath)
 				}
+				if _, err := os.Stat(candidatePath); err == nil {
+					coreEntryFile = candidate
+					finalClineCorePath = candidatePath
+					finalInstallDir = base.baseDir
+					found = true
+					if Config.Verbose {
+						fmt.Printf("Using %s mode: %s found at %s\n", base.label, coreEntryFile, finalClineCorePath)
+					}
+					break
+				}
+			}
+			if found {
 				break
 			}
 		}
 
 		if !found {
-			return nil, fmt.Errorf("cline-core.js not found at '%s' or in packaged dist-standalone. Please reinstall with 'npm install -g @caretive/caret-cli' or run from repository root after building dist-standalone", clineCorePath)
+			return nil, fmt.Errorf("%s not found at '%s' or in packaged dist-standalone. Please reinstall with '%s' or run from repository root after building dist-standalone", coreEntryFile, clineCorePath, common.NpmInstallCommand("latest"))
 		}
 	} else {
 		finalClineCorePath = clineCorePath
 		finalInstallDir = installDir
 		if Config.Verbose {
-			fmt.Printf("Using production mode: cline-core.js found at %s\n", finalClineCorePath)
+			fmt.Printf("Using production mode: %s found at %s\n", coreEntryFile, finalClineCorePath)
 		}
 	}
 
@@ -476,14 +505,14 @@ func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 
 	// Create timestamped log file
 	timestamp := time.Now().Format("2006-01-02-15-04-05")
-	logFileName := fmt.Sprintf("cline-core-%s-localhost-%d.log", timestamp, corePort)
+	logFileName := fmt.Sprintf("%s-core-%s-localhost-%d.log", common.CliCommandName(), timestamp, corePort)
 	logFilePath := path.Join(logsDir, logFileName)
 	logFile, err := os.Create(logFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create log file: %w", err)
 	}
 
-	// Start the cline-core process with --config flag using system node
+	// Start the core process with --config flag using system node
 	args := []string{finalClineCorePath,
 		"--port", fmt.Sprintf("%d", corePort),
 		"--host-bridge-port", fmt.Sprintf("%d", hostPort),
@@ -537,12 +566,12 @@ func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 
 	if err := cmd.Start(); err != nil {
 		logFile.Close()
-		return nil, fmt.Errorf("failed to start cline-core: %w", err)
+		return nil, fmt.Errorf("failed to start core: %w", err)
 	}
 
 	if Config.Verbose {
-		fmt.Printf("Started cline-core (PID: %d)\n", cmd.Process.Pid)
-		fmt.Printf("Logging cline-core output to: %s\n", logFilePath)
+		fmt.Printf("Started core (PID: %d)\n", cmd.Process.Pid)
+		fmt.Printf("Logging core output to: %s\n", logFilePath)
 	}
 	return cmd, nil
 }

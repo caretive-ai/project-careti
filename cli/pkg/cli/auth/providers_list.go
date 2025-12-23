@@ -9,6 +9,7 @@ import (
 
 	"github.com/cline/cli/pkg/cli/global"
 	"github.com/cline/cli/pkg/cli/task"
+	"github.com/cline/cli/pkg/common"
 	"github.com/cline/grpc-go/cline"
 )
 
@@ -31,10 +32,10 @@ type ProviderListResult struct {
 // GetProviderConfigurations retrieves and parses provider configurations from Cline Core state
 func GetProviderConfigurations(ctx context.Context, manager *task.Manager) (*ProviderListResult, error) {
 	if global.Config.Verbose {
-		fmt.Println("[DEBUG] Retrieving provider configurations from Cline Core")
+		fmt.Printf("[DEBUG] Retrieving provider configurations from %s Core\n", common.BrandDisplayName())
 	}
 
-	// Get latest state from Cline Core
+	// Get latest state from Core
 	state, err := manager.GetClient().State.GetLatestState(ctx, &cline.EmptyRequest{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to get state: %w", err)
@@ -118,6 +119,10 @@ func (r *ProviderListResult) GetAllReadyProviders() []*ProviderDisplay {
 		cline.ApiProvider_HICAP,
 		cline.ApiProvider_LITELLM,
 		cline.ApiProvider_BIZROUTER,
+	}
+	// CARET MODIFICATION: remove Caret provider in cline parity mode.
+	if common.IsClineParityEnabled() {
+		allProviders = allProviders[1:]
 	}
 
 	// Check each provider to see if it's ready to use
@@ -375,9 +380,9 @@ func GetProviderDisplayName(provider cline.ApiProvider) string {
 	case cline.ApiProvider_CEREBRAS:
 		return "Cerebras"
 	case cline.ApiProvider_CARET:
-		return "Caret (Official)"
+		return fmt.Sprintf("%s (Official)", common.BrandDisplayName())
 	case cline.ApiProvider_CLINE:
-		return "Cline (Official)"
+		return fmt.Sprintf("%s (Official)", common.BrandDisplayName())
 	case cline.ApiProvider_LITELLM:
 		return "LiteLLM"
 	case cline.ApiProvider_BIZROUTER:
@@ -457,7 +462,9 @@ func FormatProviderList(result *ProviderListResult) string {
 func DetectAllConfiguredProviders(ctx context.Context, manager *task.Manager) ([]cline.ApiProvider, error) {
 	verboseLog("[DEBUG] Detecting all configured providers...")
 
-	// Get latest state from Cline Core
+	brandSlug := common.BrandSlug()
+
+	// Get latest state from Core
 	state, err := manager.GetClient().State.GetLatestState(ctx, &cline.EmptyRequest{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to get state: %w", err)
@@ -483,15 +490,17 @@ func DetectAllConfiguredProviders(ctx context.Context, manager *task.Manager) ([
 
 	var configuredProviders []cline.ApiProvider
 
-	// Check for Cline provider (uses authentication instead of API key)
-	if IsAuthenticated(ctx) {
-		configuredProviders = append(configuredProviders, cline.ApiProvider_CLINE)
-		verboseLog("[DEBUG] Cline provider is authenticated")
-	}
-	// CARET MODIFICATION: include caret auth-based provider
-	if IsCaretAuthenticated(ctx) {
-		configuredProviders = append(configuredProviders, cline.ApiProvider_CARET)
-		verboseLog("[DEBUG] Caret provider is authenticated")
+	// CARET MODIFICATION: only expose the official provider for the current brand.
+	if brandSlug == "cline" {
+		if IsAuthenticated(ctx) {
+			configuredProviders = append(configuredProviders, cline.ApiProvider_CLINE)
+			verboseLog("[DEBUG] Official provider is authenticated")
+		}
+	} else {
+		if IsCaretAuthenticated(ctx) {
+			configuredProviders = append(configuredProviders, cline.ApiProvider_CARET)
+			verboseLog("[DEBUG] Official provider is authenticated")
+		}
 	}
 
 	// Check OCA provider via global auth subscription (state presence)

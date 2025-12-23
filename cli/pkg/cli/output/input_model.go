@@ -9,6 +9,7 @@ import (
 	"github.com/charmbracelet/bubbles/textarea"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/cline/cli/pkg/cli/slash"
 )
 
 // InputType represents the type of input being collected
@@ -58,6 +59,9 @@ type InputModel struct {
 	currentMode string // "plan" or "act"
 	width       int
 	lastHeight  int    // Track height for cleanup on submit
+
+	// Slash command completion
+	completion CompletionModel
 
 	// For approval type
 	approvalOptions []string
@@ -115,6 +119,11 @@ func newFieldStyles() fieldStyles {
 
 // NewInputModel creates a new input model
 func NewInputModel(inputType InputType, title, placeholder, currentMode string) InputModel {
+	return NewInputModelWithRegistry(inputType, title, placeholder, currentMode, nil)
+}
+
+// NewInputModelWithRegistry creates a new input model with slash command registry
+func NewInputModelWithRegistry(inputType InputType, title, placeholder, currentMode string, registry *slash.Registry) InputModel {
 	ta := textarea.New()
 	ta.Placeholder = placeholder
 	ta.Focus()
@@ -154,6 +163,7 @@ func NewInputModel(inputType InputType, title, placeholder, currentMode string) 
 		currentMode: currentMode,
 		width:       0, // Will be set by first WindowSizeMsg
 		styles:      styles,
+		completion:  NewCompletionModel(registry),
 	}
 
 	// For approval type, set up options
@@ -239,18 +249,75 @@ func (m *InputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Open external editor (like huh does)
 				return m, m.openEditor()
 
-			case "enter":
-				// Intercept enter for submit (textarea handles alt+enter and ctrl+j for newlines)
-				return m.handleSubmit()
-
-			case "up", "down", "left", "right":
+			case "up", "down":
+				// Check completion info specific keys first
+				if m.completion.Visible() {
+					newComp, compCmd, handled := m.completion.Update(msg)
+					m.completion = newComp
+					if handled {
+						return m, compCmd
+					}
+				}
 				// Let textarea handle navigation
 				m.textarea, cmd = m.textarea.Update(msg)
 				return m, cmd
-			}
 
+			case "tab":
+				if m.completion.Visible() {
+					newComp, compCmd, handled := m.completion.Update(msg)
+					m.completion = newComp
+					if handled {
+						// Apply completion
+						if apply := m.completion.Apply(); apply != "" {
+							m.textarea.SetValue(apply)
+							// Set cursor to end of inserted value
+                            m.textarea.SetCursor(len(apply))
+						}
+						return m, compCmd
+					}
+				}
+				// Default tab handling (insert tab or whatever)
+				m.textarea, cmd = m.textarea.Update(msg)
+				return m, cmd
+				
+			case "esc":
+				if m.completion.Visible() {
+					newComp, compCmd, handled := m.completion.Update(msg)
+					m.completion = newComp
+					if handled {
+						return m, compCmd
+					}
+				}
+				return m, func() tea.Msg { return InputCancelMsg{} } // Default esc behavior is cancel? No, actually current code doesn't handle esc explicitly except maybe bubbles?
+				
+			case "enter":
+				// Check completion first
+				if m.completion.Visible() {
+					newComp, compCmd, handled := m.completion.Update(msg)
+					m.completion = newComp
+					if handled {
+						// Apply completion
+						if apply := m.completion.Apply(); apply != "" {
+							m.textarea.SetValue(apply)
+							m.textarea.SetCursor(len(apply))
+						}
+						return m, compCmd
+					}
+				}
+				// Intercept enter for submit (textarea handles alt+enter and ctrl+j for newlines)
+				return m.handleSubmit()
+			}
+			
+			// Check for other keys handled by completion (if any)
+			// But mostly we pass to textarea, THEN update completion
+			
 			// Pass all other keys to textarea (including alt+enter, ctrl+j for newlines)
-			m.textarea, cmd = m.textarea.Update(msg)
+			newTa, cmd := m.textarea.Update(msg)
+			m.textarea = newTa
+			
+			// After textarea update, check for slash commands
+			m.completion.CheckInput(m.textarea.Value())
+			
 			return m, cmd
 		}
 
@@ -371,6 +438,11 @@ func (m *InputModel) View() string {
 	switch m.inputType {
 	case InputTypeMessage, InputTypeFeedback:
 		parts = append(parts, m.textarea.View())
+		
+		// Render completion menu overlay if visible
+		if m.completion.Visible() {
+			parts = append(parts, m.completion.View())
+		}
 
 	case InputTypeApproval:
 		var options []string
@@ -453,6 +525,7 @@ func (m *InputModel) Clone() *InputModel {
 		selectedOption:  m.selectedOption,
 		pendingApproval: m.pendingApproval, // Preserve approval decision
 		styles:          m.styles,
+		completion:      NewCompletionModel(m.completion.registry), // Clone with same registry
 	}
 
 	return clone

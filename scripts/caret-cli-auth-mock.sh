@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # End-to-end Caret CLI auth test against the local mock API.
-# - Kills running caret/cline core/host
+# - Kills running caret core/host (does not touch cline)
 # - Scrubs Caret/Cline tokens from ~/.caret/data
 # - Starts the mock API (scripts/mock-caret-api.js)
 # - Launches `caret auth -v` against CARET_ENVIRONMENT=local
@@ -17,8 +17,10 @@ fi
 export PATH="$ROOT/dist-standalone/bin:$PATH"
 
 kill_procs() {
-  pkill -f "caret-host|cline-host|cline-core|caret-core" >/dev/null 2>&1 && \
-    echo "[info] Stopped existing caret/cline host/core processes"
+  pkill -f "caret-host" >/dev/null 2>&1 || true
+  pkill -f "caret-core.*--config[ =]${HOME}/\\.caret" >/dev/null 2>&1 || true
+  pkill -f "caret-core" >/dev/null 2>&1 || true
+  echo "[info] Stopped existing caret host/core processes"
 }
 
 scrub_state() {

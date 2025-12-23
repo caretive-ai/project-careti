@@ -129,7 +129,7 @@ func (h *AskHandler) showApprovalHint(dc *DisplayContext) {
 	if !dc.IsInteractive {
 		// CARET MODIFICATION: branding
 		output.Printf("\n%s\n", dc.Renderer.Dim(fmt.Sprintf("%s is requesting approval to use this tool", common.BrandDisplayName())))
-		output.Printf("%s\n", dc.Renderer.Dim("Use cline task send --approve or --deny to respond"))
+		output.Printf("%s\n", dc.Renderer.Dim(fmt.Sprintf("Use %s task send --approve or --deny to respond", common.CliCommandName())))
 	}
 }
 
@@ -246,7 +246,7 @@ func (h *AskHandler) handleMistakeLimitReached(msg *types.ClineMessage, dc *Disp
 		dc.SystemRenderer.RenderError(
 			"critical",
 			"Mistake Limit Reached",
-			"Cline has made too many consecutive mistakes and needs your guidance to proceed.",
+			fmt.Sprintf("%s has made too many consecutive mistakes and needs your guidance to proceed.", common.BrandDisplayName()),
 			details,
 		)
 		fmt.Printf("\n**Approval required to continue.**\n")

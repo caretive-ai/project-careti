@@ -1,8 +1,10 @@
 package auth
 
 import (
+	"fmt"
 	"testing"
 
+	"github.com/cline/cli/pkg/common"
 	"github.com/cline/grpc-go/cline"
 	"google.golang.org/protobuf/proto"
 )
@@ -78,8 +80,9 @@ func TestGetProviderFieldsIncludesCaretAndLiteLLM(t *testing.T) {
 }
 
 func TestGetProviderDisplayNameReturnsNewLabels(t *testing.T) {
+	officialLabel := fmt.Sprintf("%s (Official)", common.BrandDisplayName())
 	testCases := map[cline.ApiProvider]string{
-		cline.ApiProvider_CARET:     "Caret (Official)",
+		cline.ApiProvider_CARET:     officialLabel,
 		cline.ApiProvider_LITELLM:   "LiteLLM",
 		cline.ApiProvider_BIZROUTER: "BizRouter",
 	}

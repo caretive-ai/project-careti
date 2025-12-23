@@ -7,6 +7,7 @@ import (
 	"github.com/cline/cli/pkg/cli/config"
 	"github.com/cline/cli/pkg/cli/global"
 	"github.com/cline/cli/pkg/cli/task"
+	"github.com/cline/cli/pkg/common"
 	"github.com/spf13/cobra"
 )
 
@@ -53,8 +54,8 @@ func NewConfigCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "config",
 		Aliases: []string{"c"},
-		Short:   "Manage Cline configuration",
-		Long:    `Set and manage global Cline configuration variables.`,
+		Short:   fmt.Sprintf("Manage %s configuration", common.BrandDisplayName()),
+		Long:    fmt.Sprintf("Set and manage global %s configuration variables.", common.BrandDisplayName()),
 	}
 
 	cmd.AddCommand(newConfigListCommand())
@@ -87,7 +88,7 @@ func newConfigGetCommand() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&address, "address", "", "specific Cline instance address to use")
+	cmd.Flags().StringVar(&address, "address", "", fmt.Sprintf("specific %s instance address to use", common.BrandDisplayName()))
 	return cmd
 }
 
@@ -98,7 +99,7 @@ func newConfigListCommand() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"l"},
 		Short:   "List all configuration settings",
-		Long:    `List all configuration settings from the Cline instance.`,
+		Long:    fmt.Sprintf("List all configuration settings from the %s instance.", common.BrandDisplayName()),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
 
@@ -112,7 +113,7 @@ func newConfigListCommand() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&address, "address", "", "specific Cline instance address to use")
+	cmd.Flags().StringVar(&address, "address", "", fmt.Sprintf("specific %s instance address to use", common.BrandDisplayName()))
 	return cmd
 }
 
@@ -147,6 +148,6 @@ unspecified fields. Only the fields you explicitly set will be updated.`,
 		},
 	}
 
-	cmd.Flags().StringVar(&address, "address", "", "specific Cline instance address to use")
+	cmd.Flags().StringVar(&address, "address", "", fmt.Sprintf("specific %s instance address to use", common.BrandDisplayName()))
 	return cmd
 }

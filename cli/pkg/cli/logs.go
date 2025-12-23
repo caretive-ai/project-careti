@@ -11,6 +11,7 @@ import (
 
 	"github.com/cline/cli/pkg/cli/display"
 	"github.com/cline/cli/pkg/cli/global"
+	"github.com/cline/cli/pkg/common"
 	"github.com/spf13/cobra"
 )
 
@@ -25,8 +26,8 @@ func NewLogsCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "logs",
 		Aliases: []string{"log", "l"},
-		Short:   "Manage Cline log files",
-		Long:    `List and manage log files created by Cline instances.`,
+		Short:   fmt.Sprintf("Manage %s log files", common.BrandDisplayName()),
+		Long:    fmt.Sprintf("List and manage log files created by %s instances.", common.BrandDisplayName()),
 	}
 
 	cmd.AddCommand(newLogsListCommand())
@@ -41,7 +42,7 @@ func newLogsListCommand() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"l", "ls"},
 		Short:   "List all log files",
-		Long:    `List all log files in the Cline logs directory with their sizes and ages.`,
+		Long:    fmt.Sprintf("List all log files in the %s logs directory with their sizes and ages.", common.BrandDisplayName()),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if global.Config == nil {
 				return fmt.Errorf("config not initialized")
@@ -151,7 +152,7 @@ func newLogsPathCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "path",
 		Short: "Print the logs directory path",
-		Long:  `Print the absolute path to the Cline logs directory.`,
+		Long:  fmt.Sprintf("Print the absolute path to the %s logs directory.", common.BrandDisplayName()),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if global.Config == nil {
 				return fmt.Errorf("config not initialized")

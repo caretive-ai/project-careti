@@ -1,6 +1,7 @@
 import { Empty, EmptyRequest } from "@shared/proto/cline/common"
 import { ShowMessageType } from "@shared/proto/host/window"
 import { ExecuteCommandInTerminalRequest } from "@shared/proto/host/workspace"
+import { getModeSystemCliInstallCommand, getModeSystemCliLabel } from "@caret/utils/brand-utils"
 import { HostProvider } from "@/hosts/host-provider"
 import { Controller } from ".."
 
@@ -14,8 +15,9 @@ export async function installClineCli(controller: Controller, _request: EmptyReq
 	const modeSystem = controller.stateManager.getGlobalStateKey("caretModeSystem") || "cline"
 	// CARET MODIFICATION: install Caret CLI when caret mode is active
 	const isCaretMode = modeSystem === "caret"
-	const installCommand = isCaretMode ? "npm install -g @caretive/caret-cli" : "npm install -g cline"
-	const cliLabel = isCaretMode ? "Caret CLI" : "Cline CLI"
+	const installCommand = getModeSystemCliInstallCommand(isCaretMode ? "caret" : "cline")
+	// CARET MODIFICATION: brand-aware CLI label (white-label safe)
+	const cliLabel = getModeSystemCliLabel(isCaretMode ? "caret" : "cline")
 
 	try {
 		// Use the HostProvider to execute the command in a terminal

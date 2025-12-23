@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -193,8 +194,7 @@ func checkAndUpdateInternal(bypassCache bool) error {
 
 	// Attempt update
 	if verbose {
-		output.Printf("[updater] Running: npm install -g cline%s\n",
-			map[bool]string{true: "@" + channel, false: ""}[channel == "nightly"])
+		output.Printf("[updater] Running: %s\n", common.NpmInstallCommand(channel))
 	}
 
 	if err := attemptUpdate(channel); err != nil {
@@ -223,7 +223,9 @@ func fetchLatestVersion() (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), requestTimeout)
 	defer cancel()
 
-	req, err := http.NewRequestWithContext(ctx, "GET", "https://registry.npmjs.org/cline", nil)
+	// CARET MODIFICATION: support scoped packages (e.g., @caretive/<brand>-cli)
+	packagePath := url.PathEscape(common.NpmPackageName())
+	req, err := http.NewRequestWithContext(ctx, "GET", "https://registry.npmjs.org/"+packagePath, nil)
 	if err != nil {
 		return "", err
 	}
@@ -250,9 +252,9 @@ func fetchLatestVersion() (string, error) {
 }
 
 func attemptUpdate(channel string) error {
-	packageName := "cline"
+	packageName := common.NpmPackageName()
 	if channel == "nightly" {
-		packageName = "cline@nightly"
+		packageName = packageName + "@nightly"
 	}
 
 	cmd := exec.Command("npm", "install", "-g", packageName)
@@ -362,21 +364,16 @@ func showSuccessMessage(version string) {
 }
 
 func showFailureMessage(channel string) {
-	packageName := "cline"
-	if channel == "nightly" {
-		packageName = "cline@nightly"
-	}
-
 	output.Printf("\n%s Auto-update failed %s Try: %s\n\n",
 		errorStyle.Render("✗"),
 		dimStyle.Render("·"),
-		"npm install -g "+packageName,
+		common.NpmInstallCommand(channel),
 	)
 }
 
 func getCacheFilePath() string {
 	// CARET MODIFICATION: use brand config directory
-	configDir := filepath.Join(os.Getenv("HOME"), common.ConfigDirName, "data")
+	configDir := filepath.Join(os.Getenv("HOME"), common.ConfigDirName(), "data")
 	return filepath.Join(configDir, "cli-update-cache")
 }
 

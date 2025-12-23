@@ -316,7 +316,7 @@ export type CaretModelId = keyof typeof caretModels
 export interface CaretModelInfo extends ModelInfo {
 	temperature?: number
 }
-export const caretDefaultModelId: CaretModelId = "gemini/gemini-2.5-flash"
+export const caretDefaultModelId: CaretModelId = "gemini/gemini-3-flash" // CARET MODIFICATION: default to gemini-3-flash
 export const caretModels = {
 	"gemini/gemini-3-pro-preview": {
 		maxTokens: 65536,
@@ -360,6 +360,7 @@ export const caretModels = {
 			thinkingLevel: "high",
 		},
 	},
+	"gemini/gemini-3-flash": { maxTokens: 65536, contextWindow: 1_048_576, supportsImages: true, supportsPromptCache: true, supportsGlobalEndpoint: true, inputPrice: 0.5, outputPrice: 3.0, cacheWritesPrice: 0.05, cacheReadsPrice: 0.03, temperature: 1.0, description: "Gemini 3.0 Flash", thinkingConfig: { thinkingLevel: "high" } }, // CARET MODIFICATION: add gemini-3-flash (mirrors preview config)
 	// CARET MODIFICATION: Image generation model (routes to gateway /v1/generate/image instead of chat completions)
 	"gemini/gemini-3-pro-image-preview": {
 		maxTokens: 65536,
@@ -370,6 +371,34 @@ export const caretModels = {
 		outputPrice: 0,
 		description: "Image generation (single PNG) via gateway /v1/generate/image",
 	},
+	/*"gemini/gemini-3-flash-preview": {
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: true,
+		supportsGlobalEndpoint: true,
+		inputPrice: 0.5,
+		outputPrice: 3.0,
+		cacheWritesPrice: 0.05,
+		cacheReadsPrice: 0.03,
+		thinkingConfig: {
+			thinkingLevel: "low",
+		},
+		tiers: [
+			{
+				contextWindow: 200000,
+				inputPrice: 0.3,
+				outputPrice: 2.5,
+				cacheReadsPrice: 0.03,
+			},
+			{
+				contextWindow: Infinity,
+				inputPrice: 0.3,
+				outputPrice: 2.5,
+				cacheReadsPrice: 0.03,
+			},
+		],
+	},*/
 	"gemini/gemini-2.5-pro": {
 		maxTokens: 65536,
 		contextWindow: 1_048_576,

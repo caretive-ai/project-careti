@@ -194,8 +194,8 @@ func (r *ClientRegistry) CleanupStaleInstances(ctx context.Context) error {
 		if instance.Status != grpc_health_v1.HealthCheckResponse_SERVING {
 			// Try to gracefully shutdown the paired host process before cleanup
 
-			fmt.Printf("Attempting to shutdown dangling host service %s for stale cline core instance %s\n",
-				instance.HostServiceAddress, instance.Address)
+			fmt.Printf("Attempting to shutdown dangling host service %s for stale %s core instance %s\n",
+				instance.HostServiceAddress, common.BrandDisplayName(), instance.Address)
 			r.tryShutdownHostProcess(instance.HostServiceAddress)
 
 			// Remove from SQLite database

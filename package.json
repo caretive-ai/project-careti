@@ -1,6 +1,6 @@
 {
-	"name": "caret",
-	"displayName": "Caret",
+	"name": "codecenter",
+	"displayName": "CodeCenter",
 	"description": "🎯 Transform your coding workflow with the most intelligent AI assistant for Visual Studio Code. Autonomous code generation, multi-file refactoring, and 20+ AI models. Supports: 한국어, 日本語, 中文.",
 	"version": "0.4.2",
 	"icon": "assets/icons/icon.png",
@@ -8,15 +8,15 @@
 		"vscode": "^1.84.0"
 	},
 	"author": {
-		"name": "Caretive Inc."
+		"name": "Slexn Inc."
 	},
 	"license": "Apache-2.0",
-	"publisher": "caretive",
+	"publisher": "slexn",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/aicoding-caret/caret"
+		"url": "https://github.com/slexn/codecenter"
 	},
-	"homepage": "https://caret.team",
+	"homepage": "https://www.slexn.com/product/codecenter/",
 	"categories": [
 		"AI",
 		"Chat",
@@ -51,22 +51,22 @@
 	"contributes": {
 		"walkthroughs": [
 			{
-				"id": "CaretWalkthrough",
-				"title": "Meet Caret, your new coding partner",
-				"description": "Caret codes like a developer because it thinks like one. Here are 5 ways to put it to work:",
+				"id": "CodeCenterWalkthrough",
+				"title": "Meet Codecenter, your new coding partner",
+				"description": "CodeCenter codes like a developer because it thinks like one. Here are 5 ways to put it to work:",
 				"steps": [
 					{
 						"id": "welcome",
 						"title": "Start with a Goal, Not Just a Prompt",
-						"description": "Tell Caret what you want to achieve. It plans, asks, and then codes, like a true partner.",
+						"description": "Tell CodeCenter what you want to achieve. It plans, asks, and then codes, like a true partner.",
 						"media": {
 							"markdown": "walkthrough/step1.md"
 						}
 					},
 					{
 						"id": "learn",
-						"title": "Let Caret Learn Your Codebase",
-						"description": "Point Caret to your project. It builds understanding to make smart, context-aware changes.",
+						"title": "Let Codecenter Learn Your Codebase",
+						"description": "Point CodeCenter to your project. It builds understanding to make smart, context-aware changes.",
 						"media": {
 							"markdown": "walkthrough/step2.md"
 						}
@@ -74,7 +74,7 @@
 					{
 						"id": "advanced-features",
 						"title": "Always Use the Best AI Models",
-						"description": "Caret empowers you with State-of-the-Art AI, connecting to top models (Anthropic, Gemini, OpenAI & more).",
+						"description": "CodeCenter empowers you with State-of-the-Art AI, connecting to top models (Anthropic, Gemini, OpenAI & more).",
 						"media": {
 							"markdown": "walkthrough/step3.md"
 						}
@@ -90,7 +90,7 @@
 					{
 						"id": "getting-started",
 						"title": "You're Always in Control",
-						"description": "Review Caret's plans and diffs. Approve changes before they happen. No surprises.",
+						"description": "Review CodeCenter's plans and diffs. Approve changes before they happen. No surprises.",
 						"media": {
 							"markdown": "walkthrough/step5.md"
 						},
@@ -104,24 +104,24 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "caret-ActivityBar",
-					"title": "Caret (⌘+')",
+					"id": "codecenter-ActivityBar",
+					"title": "CodeCenter (⌘+')",
 					"icon": "assets/icons/icon.svg",
 					"when": "isMac"
 				},
 				{
-					"id": "caret-ActivityBar",
-					"title": "Caret (Ctrl+')",
+					"id": "codecenter-ActivityBar",
+					"title": "CodeCenter (Ctrl+')",
 					"icon": "assets/icons/icon.svg",
 					"when": "!isMac"
 				}
 			]
 		},
 		"views": {
-			"caret-ActivityBar": [
+			"codecenter-ActivityBar": [
 				{
 					"type": "webview",
-					"id": "caret.SidebarProvider",
+					"id": "codecenter.SidebarProvider",
 					"name": "",
 					"icon": "assets/icons/icon.svg"
 				}
@@ -129,96 +129,96 @@
 		},
 		"commands": [
 			{
-				"command": "caretive.caret.plusButtonClicked",
+				"command": "slexn.codecenter.plusButtonClicked",
 				"title": "New Task",
 				"icon": "$(add)"
 			},
 			{
-				"command": "caretive.caret.mcpButtonClicked",
+				"command": "slexn.codecenter.mcpButtonClicked",
 				"title": "MCP Servers",
 				"icon": "$(server)"
 			},
 			{
-				"command": "caretive.caret.historyButtonClicked",
+				"command": "slexn.codecenter.historyButtonClicked",
 				"title": "History",
 				"icon": "$(history)"
 			},
 			{
-				"command": "caretive.caret.accountButtonClicked",
+				"command": "slexn.codecenter.accountButtonClicked",
 				"title": "Account",
 				"icon": "$(account)"
 			},
 			{
-				"command": "caretive.caret.settingsButtonClicked",
+				"command": "slexn.codecenter.settingsButtonClicked",
 				"title": "Settings",
 				"icon": "$(settings-gear)"
 			},
 			{
-				"command": "caretive.caret.dev.createTestTasks",
+				"command": "slexn.codecenter.dev.createTestTasks",
 				"title": "Create Test Tasks",
-				"category": "Caret",
+				"category": "CodeCenter",
 				"when": "cline.isDevMode"
 			},
 			{
-				"command": "caretive.caret.dev.expireMcpOAuthTokens",
+				"command": "slexn.codecenter.dev.expireMcpOAuthTokens",
 				"title": "Expire MCP OAuth Tokens (for testing)",
-				"category": "Caret",
+				"category": "CodeCenter",
 				"when": "cline.isDevMode"
 			},
 			{
-				"command": "caretive.caret.addToChat",
-				"title": "Add to Caret",
-				"category": "Caret"
+				"command": "slexn.codecenter.addToChat",
+				"title": "Add to Codecenter",
+				"category": "CodeCenter"
 			},
 			{
-				"command": "caretive.caret.addTerminalOutputToChat",
-				"title": "Add to Caret",
-				"category": "Caret"
+				"command": "slexn.codecenter.addTerminalOutputToChat",
+				"title": "Add to Codecenter",
+				"category": "CodeCenter"
 			},
 			{
-				"command": "caretive.caret.focusChatInput",
+				"command": "slexn.codecenter.focusChatInput",
 				"title": "Jump to Chat Input",
-				"category": "Caret"
+				"category": "CodeCenter"
 			},
 			{
-				"command": "caretive.caret.generateGitCommitMessage",
-				"title": "Generate Commit Message with Caret",
-				"category": "Caret",
+				"command": "slexn.codecenter.generateGitCommitMessage",
+				"title": "Generate Commit Message with Codecenter",
+				"category": "CodeCenter",
 				"icon": {
 					"light": "assets/icons/robot_panel_light.png",
 					"dark": "assets/icons/robot_panel_dark.png"
 				}
 			},
 			{
-				"command": "caretive.caret.abortGitCommitMessage",
-				"title": "Generate Commit Message with Caret - Stop",
-				"category": "Caret",
+				"command": "slexn.codecenter.abortGitCommitMessage",
+				"title": "Generate Commit Message with Codecenter - Stop",
+				"category": "CodeCenter",
 				"icon": "$(debug-stop)"
 			},
 			{
-				"command": "caretive.caret.explainCode",
-				"title": "Explain with Caret",
-				"category": "Caret"
+				"command": "slexn.codecenter.explainCode",
+				"title": "Explain with Codecenter",
+				"category": "CodeCenter"
 			},
 			{
-				"command": "caretive.caret.improveCode",
-				"title": "Improve with Caret",
-				"category": "Caret"
+				"command": "slexn.codecenter.improveCode",
+				"title": "Improve with Codecenter",
+				"category": "CodeCenter"
 			},
 			{
-				"command": "caretive.caret.openWalkthrough",
+				"command": "slexn.codecenter.openWalkthrough",
 				"title": "Open Walkthrough",
-				"category": "Caret"
+				"category": "CodeCenter"
 			},
 			{
-				"command": "caretive.caret.reconstructTaskHistory",
+				"command": "slexn.codecenter.reconstructTaskHistory",
 				"title": "Reconstruct Task History",
-				"category": "Caret"
+				"category": "CodeCenter"
 			}
 		],
 		"keybindings": [
 			{
-				"command": "caretive.caret.addToChat",
+				"command": "slexn.codecenter.addToChat",
 				"key": "cmd+'",
 				"mac": "cmd+'",
 				"win": "ctrl+'",
@@ -226,11 +226,11 @@
 				"when": "editorHasSelection"
 			},
 			{
-				"command": "caretive.caret.generateGitCommitMessage",
+				"command": "slexn.codecenter.generateGitCommitMessage",
 				"when": "config.git.enabled && scmProvider == git"
 			},
 			{
-				"command": "caretive.caret.focusChatInput",
+				"command": "slexn.codecenter.focusChatInput",
 				"key": "cmd+'",
 				"mac": "cmd+'",
 				"win": "ctrl+'",
@@ -241,69 +241,69 @@
 		"menus": {
 			"view/title": [
 				{
-					"command": "caretive.caret.plusButtonClicked",
+					"command": "slexn.codecenter.plusButtonClicked",
 					"group": "navigation@1",
-					"when": "view == caret.SidebarProvider"
+					"when": "view == codecenter.SidebarProvider"
 				},
 				{
-					"command": "caretive.caret.mcpButtonClicked",
+					"command": "slexn.codecenter.mcpButtonClicked",
 					"group": "navigation@2",
-					"when": "view == caret.SidebarProvider"
+					"when": "view == codecenter.SidebarProvider"
 				},
 				{
-					"command": "caretive.caret.historyButtonClicked",
+					"command": "slexn.codecenter.historyButtonClicked",
 					"group": "navigation@3",
-					"when": "view == caret.SidebarProvider"
+					"when": "view == codecenter.SidebarProvider"
 				},
 				{
-					"command": "caretive.caret.accountButtonClicked",
+					"command": "slexn.codecenter.accountButtonClicked",
 					"group": "navigation@5",
-					"when": "view == caret.SidebarProvider"
+					"when": "view == codecenter.SidebarProvider && codecenter.showAccountUI"
 				},
 				{
-					"command": "caretive.caret.settingsButtonClicked",
+					"command": "slexn.codecenter.settingsButtonClicked",
 					"group": "navigation@6",
-					"when": "view == caret.SidebarProvider"
+					"when": "view == codecenter.SidebarProvider"
 				}
 			],
 			"editor/context": [
 				{
-					"command": "caretive.caret.addToChat",
+					"command": "slexn.codecenter.addToChat",
 					"group": "navigation",
 					"when": "editorHasSelection"
 				}
 			],
 			"terminal/context": [
 				{
-					"command": "caretive.caret.addTerminalOutputToChat",
+					"command": "slexn.codecenter.addTerminalOutputToChat",
 					"group": "navigation"
 				}
 			],
 			"scm/title": [
 				{
-					"command": "caretive.caret.generateGitCommitMessage",
+					"command": "slexn.codecenter.generateGitCommitMessage",
 					"group": "navigation",
 					"when": "config.git.enabled && scmProvider == git && !cline.isGeneratingCommit"
 				},
 				{
-					"command": "caretive.caret.abortGitCommitMessage",
+					"command": "slexn.codecenter.abortGitCommitMessage",
 					"group": "navigation",
 					"when": "config.git.enabled && scmProvider == git && cline.isGeneratingCommit"
 				}
 			],
 			"commandPalette": [
 				{
-					"command": "caretive.caret.generateGitCommitMessage",
+					"command": "slexn.codecenter.generateGitCommitMessage",
 					"when": "config.git.enabled && !cline.isGeneratingCommit"
 				},
 				{
-					"command": "caretive.caret.abortGitCommitMessage",
+					"command": "slexn.codecenter.abortGitCommitMessage",
 					"when": "config.git.enabled && cline.isGeneratingCommit"
 				}
 			]
 		},
 		"configuration": {
-			"title": "Caret",
+			"title": "CodeCenter",
 			"properties": {}
 		}
 	},

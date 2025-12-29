@@ -23,7 +23,10 @@ export interface FeatureConfig {
 	showCostInformation: boolean
 	/** 페르소나 시스템 기본 활성화 상태 (enablePersonaSystem 초기값) */
 	defaultPersonaEnabled: boolean
-	// 향후 추가될 기능별 옵션들
+	/* 향후 추가될 기능별 옵션들(mode system, account, 음성 입력)*/
+	showModeSystemToggle: boolean
+	showAccountUI: boolean
+	showDictationToggle: boolean
 }
 
 // 현재 기능 설정을 가져오는 함수

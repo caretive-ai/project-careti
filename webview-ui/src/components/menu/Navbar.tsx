@@ -1,5 +1,5 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
-import { HistoryIcon, PlusIcon, SettingsIcon, UserCircleIcon } from "lucide-react"
+import { HistoryIcon, PlusIcon, SettingsIcon } from "lucide-react"
 import { useMemo } from "react"
 import { t } from "@/caret/utils/i18n"
 import { TaskServiceClient } from "@/services/grpc-client"
@@ -15,7 +15,8 @@ const McpServerIcon = ({ className, size }: { className?: string; size?: number 
 )
 
 export const Navbar = () => {
-	const { navigateToHistory, navigateToSettings, navigateToAccount, navigateToMcp, navigateToChat } = useExtensionState()
+	const { navigateToHistory, navigateToSettings, navigateToMcp, navigateToChat, featureConfig, navigateToAccount } =
+		useExtensionState()
 
 	const SETTINGS_TABS = useMemo(
 		() => [
@@ -48,13 +49,6 @@ export const Navbar = () => {
 				navigate: navigateToHistory,
 			},
 			{
-				id: "account",
-				name: t("navbar.account", "Account"),
-				tooltip: t("navbar.accountTooltip", "Account"),
-				icon: UserCircleIcon,
-				navigate: navigateToAccount,
-			},
-			{
 				id: "settings",
 				name: t("navbar.settings", "Settings"),
 				tooltip: t("navbar.settingsTooltip", "Settings"),
@@ -62,7 +56,7 @@ export const Navbar = () => {
 				navigate: navigateToSettings,
 			},
 		],
-		[t, navigateToAccount, navigateToChat, navigateToHistory, navigateToMcp, navigateToSettings],
+		[t, navigateToChat, navigateToHistory, navigateToMcp, navigateToSettings],
 	)
 
 	return (
@@ -70,21 +64,22 @@ export const Navbar = () => {
 			className="flex-none inline-flex justify-end bg-transparent gap-2 mb-1 z-10 border-none items-center mr-4!"
 			id="cline-navbar-container"
 			style={{ gap: "4px" }}>
-			{SETTINGS_TABS.map((tab) => (
-				<HeroTooltip content={tab.tooltip} key={`navbar-tooltip-${tab.id}`} placement="bottom">
-					<VSCodeButton
-						appearance="icon"
-						aria-label={tab.tooltip}
-						data-testid={`tab-${tab.id}`}
-						key={`navbar-button-${tab.id}`}
-						onClick={() => tab.navigate()}
-						style={{ padding: "0px", height: "20px" }}>
-						<div className="flex items-center gap-1 text-xs whitespace-nowrap min-w-0 w-full">
-							<tab.icon className="text-[var(--vscode-foreground)]" size={18} strokeWidth={1} />
-						</div>
-					</VSCodeButton>
-				</HeroTooltip>
-			))}
+			{SETTINGS_TABS.filter((tab) => featureConfig?.showAccountUI !== false || tab.id !== "account") // CARET MODIFICATION: Hide account tab when disabled
+				.map((tab) => (
+					<HeroTooltip content={tab.tooltip} key={`navbar-tooltip-${tab.id}`} placement="bottom">
+						<VSCodeButton
+							appearance="icon"
+							aria-label={tab.tooltip}
+							data-testid={`tab-${tab.id}`}
+							key={`navbar-button-${tab.id}`}
+							onClick={() => tab.navigate()}
+							style={{ padding: "0px", height: "20px" }}>
+							<div className="flex items-center gap-1 text-xs whitespace-nowrap min-w-0 w-full">
+								<tab.icon className="text-[var(--vscode-foreground)]" size={18} strokeWidth={1} />
+							</div>
+						</VSCodeButton>
+					</HeroTooltip>
+				))}
 		</nav>
 	)
 }

@@ -21,7 +21,9 @@ interface CaretProviderProps {
  */
 export const CaretProvider = ({ showModelOptions, isPopup, currentMode }: CaretProviderProps) => {
 	const { caretUser } = useCaretAuth()
-	const { navigateToAccount } = useExtensionState()
+	const { navigateToAccount, featureConfig } = useExtensionState()
+	// CARET MODIFICATION: Hide account UI when feature flag disabled
+	const showAccountUI = featureConfig?.showAccountUI !== false
 
 	const user = caretUser || undefined
 
@@ -43,18 +45,26 @@ export const CaretProvider = ({ showModelOptions, isPopup, currentMode }: CaretP
 
 			{user ? (
 				<>
-					<VSCodeButton appearance="secondary" onClick={handleShowAccount}>
-						{t("clineAccountInfoCard.viewBillingAndUsage", "settings")}
-					</VSCodeButton>
+					{showAccountUI && (
+						<VSCodeButton appearance="secondary" onClick={handleShowAccount}>
+							{t("clineAccountInfoCard.viewBillingAndUsage", "settings")}
+						</VSCodeButton>
+					)}
 					{showModelOptions && <CaretModelPicker currentMode={currentMode} isPopup={isPopup} />}
 				</>
 			) : (
 				<>
-					<div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-						<VSCodeButton appearance="primary" className="w-full" onClick={handleLogin} style={{ minWidth: "120px" }}>
-							{t("providers.caret.login", "settings")}
-						</VSCodeButton>
-					</div>
+					{showAccountUI && (
+						<div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+							<VSCodeButton
+								appearance="primary"
+								className="w-full"
+								onClick={handleLogin}
+								style={{ minWidth: "120px" }}>
+								{t("providers.caret.login", "settings")}
+							</VSCodeButton>
+						</div>
+					)}
 				</>
 			)}
 		</div>

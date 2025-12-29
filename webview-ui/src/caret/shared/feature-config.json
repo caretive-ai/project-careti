@@ -7,5 +7,8 @@
 	"defaultProvider": "caret",
 	"showOnlyDefaultProvider": false,
 	"showCostInformation": true,
-	"defaultPersonaEnabled": true
+	"defaultPersonaEnabled": true,
+	"showModeSystemToggle": false,
+	"showAccountUI": false,
+	"showDictationToggle": false
 }

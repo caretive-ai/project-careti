@@ -1,4 +1,3 @@
-import { refreshClineRulesToggles } from "@core/context/instructions/user-instructions/cline-rules"
 import { refreshExternalRulesToggles } from "@core/context/instructions/user-instructions/external-rules"
 import * as fs from "fs/promises"
 import * as path from "path"
@@ -43,15 +42,12 @@ describe("Rule Priority System Integration Test", () => {
 
 	beforeEach(async () => {
 		await fs.rm(workspaceDir, { recursive: true, force: true }).catch(() => undefined)
-		await fs.mkdir(path.join(workspaceDir, ".clinerules"), { recursive: true })
-		await fs.writeFile(path.join(workspaceDir, ".clinerules", "rule1.md"), "cline rule content")
-		await fs.writeFile(path.join(workspaceDir, ".cursorrules"), "cursor rule content")
+		await fs.mkdir(path.join(workspaceDir, ".agents/context"), { recursive: true })
+		await fs.writeFile(path.join(workspaceDir, ".agents/context", "rule1.md"), "caret rule content")
 
 		const workspaceState = new Map<string, unknown>()
 		workspaceState.set("localCaretRulesToggles", {})
-		workspaceState.set("localClineRulesToggles", {})
-		workspaceState.set("localCursorRulesToggles", {})
-		workspaceState.set("localWindsurfRulesToggles", {})
+		workspaceState.set("localAgentsRulesToggles", {})
 
 		const mockStateManager = {
 			initialize: vi.fn().mockResolvedValue(undefined),
@@ -82,7 +78,7 @@ describe("Rule Priority System Integration Test", () => {
 		} as unknown as vscode.ExtensionContext
 
 		// CARET MODIFICATION: Controller now requires clientId as second parameter (merge fix)
-		controller = new Controller(context, "test-client-id")
+		controller = new Controller(context)
 	})
 
 	afterEach(async () => {
@@ -90,51 +86,39 @@ describe("Rule Priority System Integration Test", () => {
 		vi.clearAllMocks()
 	})
 
-	it("should activate .clinerules when .caretrules does not exist", async () => {
-		// Simulate file system where only .clinerules and .cursorrules exist
-		await fs.writeFile(path.join(workspaceDir, ".clinerules", "my-rule.txt"), "This is a cline rule.")
-		await fs.writeFile(path.join(workspaceDir, ".cursorrules"), "This is a cursor rule.")
-
-		// Refresh toggles for both systems
-		const { localToggles: clineToggles } = await refreshClineRulesToggles(controller, workspaceDir)
-		const { caretLocalToggles, clineLocalToggles, cursorLocalToggles, windsurfLocalToggles, activeSource } =
-			await refreshExternalRulesToggles(controller, workspaceDir, {
-				clineLocalToggles: clineToggles,
-			})
-
-		// Assertion
-		const clineRulePath = path.join(workspaceDir, ".clinerules", "my-rule.txt")
-
-		expect(clineToggles[clineRulePath]).toBe(true)
-		expect(caretLocalToggles[clineRulePath]).toBe(true)
-		expect(Object.keys(clineLocalToggles).length).toBe(0)
-		expect(cursorLocalToggles[path.join(workspaceDir, ".cursorrules")]).toBeUndefined()
-		expect(Object.keys(windsurfLocalToggles).length).toBe(0)
-		expect(activeSource).toBe("cline")
-	})
-
-	it("should activate .caretrules even if it contains non-.md files", async () => {
-		// Setup: Create .caretrules with a .yaml file and .clinerules with a .md file
-		await fs.mkdir(path.join(workspaceDir, ".caretrules"), { recursive: true })
-		await fs.writeFile(path.join(workspaceDir, ".caretrules", "rule.yaml"), "caret rule content")
-		await fs.mkdir(path.join(workspaceDir, ".clinerules"), { recursive: true })
-		await fs.writeFile(path.join(workspaceDir, ".clinerules", "rule.md"), "cline rule content")
-
-		// Action: Refresh toggles
-		const { localToggles: clineToggles } = await refreshClineRulesToggles(controller, workspaceDir)
-		const { activeSource, caretLocalToggles, clineLocalToggles } = await refreshExternalRulesToggles(
+	it("should activate .agents/context when it exists", async () => {
+		await fs.writeFile(path.join(workspaceDir, ".agents/context", "my-rule.txt"), "This is a caret rule.")
+		const { caretLocalToggles, agentsLocalToggles, activeSource } = await refreshExternalRulesToggles(
 			controller,
 			workspaceDir,
-			{
-				clineLocalToggles: clineToggles,
-			},
 		)
 
-		// Assertion: .caretrules should be active, and .clinerules should be inactive
-		const caretRulePath = path.join(workspaceDir, ".caretrules", "rule.yaml")
+		// Assertion
+		const caretRulePath = path.join(workspaceDir, ".agents/context", "my-rule.txt")
+
+		expect(caretLocalToggles[caretRulePath]).toBe(true)
+		expect(Object.keys(agentsLocalToggles).length).toBe(0)
+		expect(activeSource).toBe("caret")
+	})
+
+	it("should activate .agents/context even if it contains non-.md files", async () => {
+		// Setup: Create .agents/context with a .yaml file and .agents/context with a .md file
+		await fs.mkdir(path.join(workspaceDir, ".agents/context"), { recursive: true })
+		await fs.writeFile(path.join(workspaceDir, ".agents/context", "rule.yaml"), "caret rule content")
+		await fs.mkdir(path.join(workspaceDir, ".agents/context"), { recursive: true })
+		await fs.writeFile(path.join(workspaceDir, ".agents/context", "rule.md"), "cline rule content")
+
+		// Action: Refresh toggles
+		const { activeSource, caretLocalToggles, agentsLocalToggles } = await refreshExternalRulesToggles(
+			controller,
+			workspaceDir,
+		)
+
+		// Assertion: .agents/context should be active, and .agents/context should be inactive
+		const caretRulePath = path.join(workspaceDir, ".agents/context", "rule.yaml")
 
 		expect(activeSource).toBe("caret")
 		expect(caretLocalToggles[caretRulePath]).toBe(true)
-		expect(Object.keys(clineLocalToggles).length).toBe(0)
+		expect(Object.keys(agentsLocalToggles).length).toBe(0)
 	})
 })

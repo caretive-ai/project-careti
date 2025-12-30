@@ -3,7 +3,7 @@
 체계적인 개발 접근을 위해 상세한 AI 작업 프로토콜을 따릅니다.
 
 ## 0단계: 필수 사전 검토 및 아키텍처 결정
-1.  **규칙 로드**: `.caretrules/caret-rules.json` 확인(온디맨드 워크플로우 인덱스)
+1.  **규칙 로드**: `.agents/context/caret-rules.json` 확인(온디맨드 워크플로우 인덱스)
 2.  **사용자 식별**: `git config user.name` 확인
 3.  **날짜 확인**: OS 명령어로 현재 날짜 확인
 4.  **작업 로그 확인**: `caret-docs/work-logs/{username}/...` 하위에 기록(프로젝트 관례에 맞춰 디렉터리 선택)
@@ -16,7 +16,7 @@
 - `caret-architecture-and-implementation-guide.md` (섹션 10-11)
 
 **Cline 원본 수정**:
-- `.caretrules`의 파일 수정 체크리스트
+- `.agents/context`의 파일 수정 체크리스트
 - `.cline` 백업 생성 규칙은 Deprecated (새로 만들지 않음)
 - `CARET MODIFICATION` 주석 요구사항
 

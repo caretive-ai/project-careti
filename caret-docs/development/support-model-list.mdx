@@ -9,24 +9,24 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 3. **모델 선택**: 설정 페이지에서 사용하고 싶은 모델을 선택하세요
 
 
-> 📝 **업데이트**: 2025. 11. 28.  
+> 📝 **업데이트**: 2025. 12. 29.  
 > 📧 **문의**: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)
 
 # 📊 지원 모델 현황
 
-총 **20개 제공자**에서 **251개 고유 모델** (총 333개 모델 정의)을 지원합니다.
+총 **20개 제공자**에서 **260개 고유 모델** (총 343개 모델 정의)을 지원합니다.
 
 ## 🔍 제공자별 지원 모델
 
 | 제공자 | 모델 수 | 주요 모델 |
 |--------|---------|-----------|
-| **Caret** | 2개 | `gemini/gemini-2.5-pro`, `gemini/gemini-2.5-flash` |
+| **Caret** | 3개 | `gemini/gemini-3-pro-preview`, `gemini/gemini-2.5-pro`, `gemini/gemini-2.5-flash` |
 | **Anthropic** | 13개 | `claude-sonnet-4-5-20250929`, `claude-sonnet-4-5-20250929:1m`, `claude-haiku-4-5-20251001` 외 10개 |
 | **Claudecode** | 8개 | `claude-haiku-4-5-20251001`, `claude-sonnet-4-5-20250929`, `claude-sonnet-4-20250514` 외 5개 |
 | **Bedrock** | 24개 | `anthropic.claude-sonnet-4-5-20250929-v1:0`, `anthropic.claude-sonnet-4-5-20250929-v1:0:1m`, `anthropic.claude-haiku-4-5-20251001-v1:0` 외 21개 |
-| **Vertex** | 33개 | `gemini-3-pro-preview`, `claude-sonnet-4-5@20250929`, `claude-sonnet-4@20250514` 외 30개 |
-| **Gemini** | 16개 | `gemini-3-pro-preview`, `gemini-2.5-pro`, `gemini-2.5-flash-lite-preview-06-17` 외 13개 |
-| **Openainative** | 17개 | `gpt-5-2025-08-07`, `gpt-5-mini-2025-08-07`, `gpt-5-nano-2025-08-07` 외 14개 |
+| **Vertex** | 34개 | `gemini-3-pro-preview`, `gemini-3-flash-preview`, `claude-sonnet-4-5@20250929` 외 31개 |
+| **Gemini** | 17개 | `gemini-3-pro-preview`, `gemini-3-flash-preview`, `gemini-2.5-pro` 외 14개 |
+| **Openainative** | 18개 | `gpt-5-2025-08-07`, `gpt-5-mini-2025-08-07`, `gpt-5-nano-2025-08-07` 외 15개 |
 | **Deepseek** | 2개 | `deepseek-chat`, `deepseek-reasoner` |
 | **Huggingface** | 7개 | `openai/gpt-oss-120b`, `openai/gpt-oss-20b`, `moonshotai/Kimi-K2-Instruct` 외 4개 |
 | **Internationalqwen** | 30개 | `qwen3-coder-plus`, `qwen3-coder-480b-a35b-instruct`, `qwen3-235b-a22b` 외 27개 |
@@ -34,13 +34,14 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 | **Doubao** | 4개 | `doubao-1-5-pro-256k-250115`, `doubao-1-5-pro-32k-250115`, `deepseek-v3-250324` 외 1개 |
 | **Mistral** | 13개 | `mistral-large-2411`, `pixtral-large-2411`, `ministral-3b-2410` 외 10개 |
 | **Asksage** | 31개 | `gpt-4o`, `gpt-4o-gov`, `gpt-4.1` 외 28개 |
-| **xAI** | 18개 | `grok-4-fast-reasoning`, `grok-4`, `grok-3-beta` 외 15개 |
+| **xAI** | 21개 | `grok-4-1-fast-reasoning`, `grok-4-1-fast-non-reasoning`, `grok-code-fast-1` 외 18개 |
 | **Sambanova** | 13개 | `Llama-4-Maverick-17B-128E-Instruct`, `Llama-4-Scout-17B-16E-Instruct`, `Meta-Llama-3.3-70B-Instruct` 외 10개 |
 | **Cerebras** | 6개 | `zai-glm-4.6`, `gpt-oss-120b`, `qwen-3-235b-a22b-instruct-2507` 외 3개 |
 | **Groq** | 11개 | `openai/gpt-oss-120b`, `openai/gpt-oss-20b`, `compound-beta` 외 8개 |
 | **Sapaicore** | 20개 | `anthropic--claude-4.5-sonnet`, `anthropic--claude-4-sonnet`, `anthropic--claude-4-opus` 외 17개 |
 | **Moonshot** | 5개 | `kimi-k2-0905-preview`, `kimi-k2-0711-preview`, `kimi-k2-turbo-preview` 외 2개 |
 | **Huaweicloudmaas** | 5개 | `DeepSeek-V3`, `DeepSeek-R1`, `deepseek-r1-250528` 외 2개 |
+| **Naver Cloud** | 3개 | `HCX-007`, `HCX-005`, `HCX-DASH-002` |
 | **Baseten** | 9개 | `zai-org/GLM-4.6`, `Qwen/Qwen3-235B-A22B-Instruct-2507`, `deepseek-ai/DeepSeek-R1` 외 6개 |
 | **Internationalzai** | 3개 | `glm-4.6`, `glm-4.5`, `glm-4.5-air` |
 | **Mainlandzai** | 3개 | `glm-4.6`, `glm-4.5`, `glm-4.5-air` |
@@ -51,10 +52,11 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 
 ## 📋 전체 모델 상세 리스트
 
-### Caret (2개)
+### Caret (3개)
 
 | 모델명 | 최대 토큰 | 컨텍스트 윈도우 | 이미지 지원 | 입력 가격 ($/1M토큰) | 출력 가격 ($/1M토큰) |
 |--------|-----------|----------------|-------------|-----------|-----------|
+| `gemini/gemini-3-pro-preview` | 65,536 | 1 | ✅ | 4 | 18 |
 | `gemini/gemini-2.5-pro` | 65,536 | 1 | ✅ | 2.5 | 15 |
 | `gemini/gemini-2.5-flash` | 65,536 | 1 | ✅ | 0.3 | 2.5 |
 
@@ -118,11 +120,12 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 | `qwen.qwen3-coder-30b-a3b-v1:0` | 8,192 | 262 | ❌ | 0.15 | 0.6 |
 | `qwen.qwen3-coder-480b-a35b-v1:0` | 8,192 | 262 | ❌ | 0.22 | 1.8 |
 
-### Vertex (33개)
+### Vertex (34개)
 
 | 모델명 | 최대 토큰 | 컨텍스트 윈도우 | 이미지 지원 | 입력 가격 ($/1M토큰) | 출력 가격 ($/1M토큰) |
 |--------|-----------|----------------|-------------|-----------|-----------|
 | `gemini-3-pro-preview` | 8,192 | 1 | ✅ | 2 | 12 |
+| `gemini-3-flash-preview` | 65,536 | 1 | ✅ | 0.5 | 3 |
 | `claude-sonnet-4-5@20250929` | 8,192 | 200 | ✅ | 3 | 15 |
 | `claude-sonnet-4@20250514` | 8,192 | 200 | ✅ | 3 | 15 |
 | `claude-haiku-4-5@20251001` | 8,192 | 200 | ❌ | 1 | 5 |
@@ -156,11 +159,12 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 | `gemini-1.5-pro-002` | 8,192 | 2 | ✅ | 1.25 | 5 |
 | `gemini-1.5-pro-exp-0827` | 8,192 | 2 | ✅ | 0 | 0 |
 
-### Gemini (16개)
+### Gemini (17개)
 
 | 모델명 | 최대 토큰 | 컨텍스트 윈도우 | 이미지 지원 | 입력 가격 ($/1M토큰) | 출력 가격 ($/1M토큰) |
 |--------|-----------|----------------|-------------|-----------|-----------|
 | `gemini-3-pro-preview` | 65,536 | 1 | ✅ | 4 | 18 |
+| `gemini-3-flash-preview` | 65,536 | 1 | ✅ | 0.5 | 3 |
 | `gemini-2.5-pro` | 65,536 | 1 | ✅ | 2.5 | 15 |
 | `gemini-2.5-flash-lite-preview-06-17` | 64,000 | 1 | ✅ | 0.1 | 0.4 |
 | `gemini-2.5-flash` | 65,536 | 1 | ✅ | 0.3 | 2.5 |
@@ -177,7 +181,7 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 | `gemini-1.5-pro-exp-0827` | 8,192 | 2 | ✅ | 0 | 0 |
 | `gemini-exp-1206` | 8,192 | 2 | ✅ | 0 | 0 |
 
-### Openainative (17개)
+### Openainative (18개)
 
 | 모델명 | 최대 토큰 | 컨텍스트 윈도우 | 이미지 지원 | 입력 가격 ($/1M토큰) | 출력 가격 ($/1M토큰) |
 |--------|-----------|----------------|-------------|-----------|-----------|
@@ -188,6 +192,7 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 | `gpt-5.1-2025-11-13` | 8 | 272,000 | ✅ | 1.25 | 10 |
 | `gpt-5.1` | 8 | 272,000 | ✅ | 1.25 | 10 |
 | `gpt-5.1-chat-latest` | 8 | 400,000 | ✅ | 1.25 | 10 |
+| `gpt-5.2` | 8 | 272,000 | ✅ | 1.75 | 14 |
 | `o4-mini` | 100 | 200 | ✅ | 1.1 | 4.4 |
 | `gpt-4.1` | 32 | 1 | ✅ | 2 | 8 |
 | `gpt-4.1-mini` | 32 | 1 | ✅ | 0.4 | 1.6 |
@@ -351,10 +356,13 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 | `Qwen/Qwen3-32B` | 16,384 | 41 | ❌ | 0.1 | 0.3 |
 | `Qwen/Qwen3-32B-fast` | 16,384 | 41 | ❌ | 0.2 | 0.6 |
 
-### xAI (18개)
+### xAI (21개)
 
 | 모델명 | 최대 토큰 | 컨텍스트 윈도우 | 이미지 지원 | 입력 가격 ($/1M토큰) | 출력 가격 ($/1M토큰) |
 |--------|-----------|----------------|-------------|-----------|-----------|
+| `grok-4-1-fast-reasoning` | N/A | 2 | ❌ | 0.2 | 0.5 |
+| `grok-4-1-fast-non-reasoning` | N/A | 2 | ✅ | 0.2 | 0.5 |
+| `grok-code-fast-1` | N/A | 256 | ❌ | 0.2 | 1.5 |
 | `grok-4-fast-reasoning` | 30,000 | 2,000,000 | ✅ | 0.2 | 0.5 |
 | `grok-4` | 8,192 | 262,144 | ✅ | 3 | 15 |
 | `grok-3-beta` | 8,192 | 131,072 | ❌ | 3 | 15 |
@@ -464,6 +472,14 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 | `qwen3-235b-a22b` | 8 | 32 | ❌ | 0.27 | 1.1 |
 | `qwen3-32b` | 8 | 32 | ❌ | 0.27 | 1.1 |
 
+### Naver Cloud (3개)
+
+| 모델명 | 최대 토큰 | 컨텍스트 윈도우 | 이미지 지원 | 입력 가격 ($/1M토큰) | 출력 가격 ($/1M토큰) |
+|--------|-----------|----------------|-------------|-----------|-----------|
+| `HCX-007` | 32 | 128 | ❌ | N/A | N/A |
+| `HCX-005` | 4 | 128 | ✅ | N/A | N/A |
+| `HCX-DASH-002` | 4 | 32 | ❌ | N/A | N/A |
+
 ### Baseten (9개)
 
 | 모델명 | 최대 토큰 | 컨텍스트 윈도우 | 이미지 지원 | 입력 가격 ($/1M토큰) | 출력 가격 ($/1M토큰) |
@@ -527,6 +543,6 @@ Caret은 다양한 AI 모델과 제공자를 지원하여 여러분의 필요에
 
 ---
 
-**총 251개 고유 AI 모델을 20개 제공자에서 지원합니다.**
+**총 260개 고유 AI 모델을 20개 제공자에서 지원합니다.**
 
 *이 문서는 자동으로 생성되었습니다. (`caret-scripts/generate-support-model-list.js`)*

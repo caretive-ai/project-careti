@@ -1,0 +1,141 @@
+workflow: ai-work-index
+description: Three-level documentation structure for efficient AI task execution
+
+context: |
+  You are working with Caret's three-level documentation structure:
+  - ROOT (.agents/context/*.md): Quick references (50-80 lines, token-optimized)
+  - WORKFLOWS (.agents/context/workflows/*.md): Detailed procedures (100-250 lines)
+  - KOREAN DOCS (caret-docs/development/*.md): Developer guides (Korean)
+
+steps:
+  - step: 1
+    title: Analyze Work Nature
+    duration: 30 seconds
+    action: Extract keywords from user request to categorize work
+
+    categories:
+      - name: AI Feature Development
+        keywords: [AI, feature, integration, system prompt, chatbot, agent, conversation]
+        root: .agents/context/ai-feature.md              # Quick reference (60 lines)
+        workflow: .agents/context/workflows/ai-feature.md # Detailed procedure (245 lines)
+        korean: caret-docs/development/ai-feature.md  # Korean guide
+
+      - name: AI Work Protocol
+        keywords: [work protocol, phase, TDD, verification, documentation review]
+        root: .agents/context/ai-work-protocol.md        # Quick reference (64 lines)
+        workflow: .agents/context/workflows/ai-work-protocol.md # Detailed (104 lines)
+
+      - name: Architecture & Design
+        keywords: [architecture, design, structure, system, scaling, fork, Cline modification]
+        root:
+          - .agents/context/caret-architecture-guide.md  # Quick reference
+          - .agents/context/architecture-guide.yaml      # Ultra-quick
+        korean: caret-docs/development/caret-architecture-and-implementation-guide.md
+
+      - name: Caret Development Workflow
+        keywords: [caret development, development workflow, TDD, document-driven]
+        root: .agents/context/caret-development.md       # Quick reference (68 lines)
+        workflow: .agents/context/workflows/caret-development.md # Detailed (129 lines)
+
+      - name: Cline Original Modification
+        keywords: [Cline modification, source change, src/ directory, L1 L2 L3, proto]
+        root: .agents/context/cline-modification.md      # Quick reference (78 lines)
+        workflow: .agents/context/workflows/cline-modification.md # Detailed (146 lines)
+        note: Always follow backup + `// CARET MODIFICATION:` comment requirements
+
+      - name: Critical Verification
+        keywords: [verification, critical analysis, 3-stage, balanced review]
+        root: .agents/context/critical-verification.md   # Quick reference (53 lines)
+        workflow: .agents/context/workflows/critical-verification.md # Detailed (93 lines)
+
+      - name: Document Organization
+        keywords: [documentation, knowledge sync, atomization, F11, 1:1 parity]
+        root: .agents/context/document-organization.md   # Quick reference (47 lines)
+        workflow: .agents/context/workflows/document-organization.md # Detailed (100 lines)
+        korean: caret-docs/development/documentation-guide.md
+
+      - name: Merge Strategy
+        keywords: [merge, fork, L1 L2 L3, Cline integration, upstream]
+        root: .agents/context/merge-strategy.md          # Quick reference (51 lines)
+        workflow: .agents/context/workflows/merge-strategy.md # Detailed (87 lines)
+
+      - name: New Component Creation
+        keywords: [component, React, new feature, UI, service, TDD]
+        root: .agents/context/new-component.md           # Quick reference (80 lines)
+        workflow: .agents/context/workflows/new-component.md # Detailed (180 lines)
+        korean: caret-docs/development/component-architecture-principles.md
+
+      - name: Testing & Quality
+        keywords: [test, TDD, quality, coverage, verification, bug, integration test]
+        root: .agents/context/testing-work.md            # Quick reference (82 lines)
+        workflow: .agents/context/workflows/testing-work.md # Detailed (253 lines)
+        korean: caret-docs/development/testing-guide.md
+
+      - name: B2B Branding & Conversion
+        keywords: [b2b, brand, codecenter, conversion, slexn]
+        root: .agents/context/b2b-branding-workflow.md
+        workflow: .agents/context/workflows/branding-and-logging.md # Branding implementation (157 lines)
+        korean: caret-docs/development/b2b-branding-workflow.md
+
+      - name: i18n Static Translation Fix
+        keywords: [i18n, translation, static, dynamic, language switching]
+        workflow: .agents/context/workflows/i18n-static-translation-fix.md # i18n bug fix (130 lines)
+
+      - name: Frontend-Backend Communication
+        keywords: [webview, communication, state management, message passing, UI integration, gRPC]
+        root:
+          - .agents/context/frontend-backend-patterns.md
+          - .agents/context/webview-communication.md
+        korean:
+          - caret-docs/development/frontend-backend-interaction-patterns.md
+          - caret-docs/development/webview-extension-communication.md
+
+      - name: AI System Development
+        keywords: [AI, message, system prompt, chatbot, agent, model, provider]
+        root:
+          - .agents/context/system-prompt.md
+          - .agents/context/message-processing.md
+        korean:
+          - caret-docs/development/system-prompt-implementation.md
+          - caret-docs/development/message-processing-architecture.md
+
+      - name: UI/UX Development
+        keywords: [UI, UX, persona, multilingual, i18n, button, interaction, link management]
+        root: .agents/context/component-architecture.md
+        korean:
+          - caret-docs/development/component-architecture-principles.md
+          - caret-docs/development/link-management-guide.md
+
+      - name: Development Tools
+        keywords: [utility, tool, file handling, image, link, build, storage, flow]
+        root: .agents/context/build-system.md
+        korean:
+          - caret-docs/development/utilities.md
+          - caret-docs/development/file-storage-and-image-loading-guide.md
+          - caret-docs/development/ui-to-storage-flow.md
+
+  - step: 2
+    title: Smart Reading Strategy
+    duration: 5-10 minutes
+    priorities:
+      high: Direct relevance (1-2 docs max)
+      medium: Indirect relevance (scan only if needed)
+      low: Reference docs (check links only)
+
+  - step: 3
+    title: Essential Pre-Work Checks
+    checklist:
+      - .agents/context file modification checklist confirmed
+      - TDD principle (Red → Green → Refactor) understood
+      - Backup creation plan (for Cline original modifications)
+      - CARET MODIFICATION comment plan (for Cline original modifications)
+
+  - step: 4
+    title: Next Step
+    action: After document selection and reading, use /ai-work-protocol for detailed phase-based implementation approach
+
+guidelines:
+  - Optimizes AI context usage by selecting only relevant documents based on work nature keywords
+  - Goal is maximum efficiency with minimal context usage
+  - Read only what's necessary for the specific task
+  - Always follow the sequence: work analysis → document selection → focused reading → protocol execution

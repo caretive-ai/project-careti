@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 Atom은 `.caretrules/workflows/atoms/message-flow.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 Atom은 `.agents/context/workflows/atoms/message-flow.md`를 기준으로 보세요.
 
 # Frontend-Backend Message Flow Pattern
 

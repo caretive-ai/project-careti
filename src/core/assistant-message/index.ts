@@ -42,6 +42,11 @@ export const toolParamNames = [
 	"task_progress",
 	"timeout",
 	"input",
+	"prompt",
+	"model",
+	"aspect_ratio",
+	"image_size",
+	"stream",
 ] as const
 
 export type ToolParamName = (typeof toolParamNames)[number]

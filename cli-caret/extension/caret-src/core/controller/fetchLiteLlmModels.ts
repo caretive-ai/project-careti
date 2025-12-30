@@ -91,9 +91,7 @@ export async function fetchLiteLlmModels(
 			healthCheckAvailable = true
 			Logger.debug(`[CaretSystemService] 🏥 Health check returned ${healthyModels.length} healthy models`)
 		} catch (healthError) {
-			Logger.warn(
-				`[CaretSystemService] ⚠️ Failed to fetch health status: ${healthError instanceof Error ? healthError.message : "Unknown error"}`,
-			)
+			Logger.warn(`[CaretSystemService] ⚠️ Failed to fetch health status: ${healthError instanceof Error ? healthError.message : "Unknown error"}`)
 			// Continue with /v1/models only if /health fails
 		}
 
@@ -107,7 +105,9 @@ export async function fetchLiteLlmModels(
 		})
 
 		const modelsData = modelsResponse.data?.data || []
-		const availableModels = modelsData.map((model: any) => model.id).filter((id: string) => id && typeof id === "string")
+		const availableModels = modelsData
+			.map((model: any) => model.id)
+			.filter((id: string) => id && typeof id === "string")
 
 		Logger.debug(`[CaretSystemService] 📋 /v1/models returned ${availableModels.length} available models`)
 
@@ -130,7 +130,9 @@ export async function fetchLiteLlmModels(
 				const isAvailable = availableSet.has(normalizedName)
 
 				if (!isAvailable) {
-					Logger.debug(`[CaretSystemService] 🔍 Model not available: ${healthyModel} (normalized: ${normalizedName})`)
+					Logger.debug(
+						`[CaretSystemService] 🔍 Model not available: ${healthyModel} (normalized: ${normalizedName})`,
+					)
 				}
 
 				return isAvailable

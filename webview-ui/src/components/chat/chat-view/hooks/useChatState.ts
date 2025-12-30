@@ -1,5 +1,6 @@
+import { findLast } from "@shared/array"
 import { ClineMessage } from "@shared/ExtensionMessage"
-import { useCallback, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { ChatState } from "../types/chatTypes"
 
 /**
@@ -27,7 +28,40 @@ export function useChatState(messages: ClineMessage[]): ChatState {
 	// Derived state
 	const lastMessage = useMemo(() => messages.at(-1), [messages])
 	const secondLastMessage = useMemo(() => messages.at(-2), [messages])
-	const clineAsk = useMemo(() => (lastMessage?.type === "ask" ? lastMessage.ask : undefined), [lastMessage])
+	const [pendingAsk, setPendingAsk] = useState<ClineMessage | undefined>(undefined)
+	const respondedAskTsRef = useRef<number | null>(null)
+
+	useEffect(() => {
+		if (messages.length === 0) {
+			setPendingAsk(undefined)
+			respondedAskTsRef.current = null
+			return
+		}
+
+		const lastAsk = findLast(messages, (message) => message.type === "ask" && !message.askResolved)
+		if (!lastAsk) {
+			setPendingAsk(undefined)
+			return
+		}
+
+		if (respondedAskTsRef.current !== null && lastAsk.ts <= respondedAskTsRef.current) {
+			setPendingAsk(undefined)
+			return
+		}
+
+		setPendingAsk(lastAsk)
+	}, [messages])
+
+	const markAskResponded = useCallback((askTs?: number) => {
+		if (!askTs) {
+			return
+		}
+		respondedAskTsRef.current = askTs
+		setPendingAsk(undefined)
+	}, [])
+
+	const clineAsk = useMemo(() => pendingAsk?.ask, [pendingAsk])
+	const pendingAskTs = useMemo(() => pendingAsk?.ts, [pendingAsk])
 
 	// Clear expanded rows when task changes
 	const task = useMemo(() => messages.at(0), [messages])
@@ -78,11 +112,13 @@ export function useChatState(messages: ClineMessage[]): ChatState {
 		lastMessage,
 		secondLastMessage,
 		clineAsk,
+		pendingAskTs,
 		task,
 
 		// Handlers
 		handleFocusChange,
 		clearExpandedRows,
 		resetState,
+		markAskResponded,
 	}
 }

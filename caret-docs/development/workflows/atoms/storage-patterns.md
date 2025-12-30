@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 Atom은 `.caretrules/workflows/atoms/storage-patterns.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 Atom은 `.agents/context/workflows/atoms/storage-patterns.md`를 기준으로 보세요.
 
 VSCode 확장 상태 관리를 위한 일관된 저장 패턴을 따르고 있습니다.
 

@@ -137,6 +137,7 @@ function getProviderName(provider) {
 		.replace(/\bOpenai\b/g, "OpenAI") // OpenAI 특수 처리
 		.replace(/\bVs Code\b/g, "VS Code") // VS Code 특수 처리
 		.replace(/\bXai\b/g, "xAI") // xAI 특수 처리
+		.replace(/\bNavercloud\b/g, "Naver Cloud") // Naver Cloud 특수 처리
 }
 
 // 한국어 지원 모델 리스트 생성

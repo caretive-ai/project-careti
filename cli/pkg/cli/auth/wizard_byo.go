@@ -461,11 +461,41 @@ func (pw *ProviderWizard) supportsModelFetching(provider cline.ApiProvider) bool
 	return SupportsBYOModelFetching(provider)
 }
 
+func providerRequiresCredentialsForModelFetching(provider cline.ApiProvider) bool {
+	switch provider {
+	case cline.ApiProvider_OPENROUTER:
+		return true
+	case cline.ApiProvider_OPENAI:
+		return true
+	case cline.ApiProvider_LITELLM:
+		return true
+	case cline.ApiProvider_OLLAMA:
+		return true
+	default:
+		return false
+	}
+}
+
 // fetchModelsForProvider fetches models for a given provider
 // Supports both dynamic API fetching (OpenRouter, OpenAI, Ollama) and static model lists (Anthropic, Bedrock, Gemini, X AI)
 func (pw *ProviderWizard) fetchModelsForProvider(provider cline.ApiProvider, apiKey string, baseURL string) ([]string, map[string]interface{}, error) {
 	// Try dynamic/remote model fetching first
 	switch provider {
+	case cline.ApiProvider_CARET:
+		modelIDs, modelInfos, err := FetchStaticModels(provider)
+		if err != nil {
+			return nil, nil, err
+		}
+		interfaceMap := make(map[string]interface{}, len(modelInfos))
+		for _, modelID := range modelIDs {
+			info, ok := modelInfos[modelID]
+			if !ok {
+				continue
+			}
+			interfaceMap[modelID] = generatedModelInfoToCaretModelInfo(info)
+		}
+		return modelIDs, interfaceMap, nil
+
 	case cline.ApiProvider_OPENROUTER:
 		models, err := FetchOpenRouterModels(pw.ctx, pw.manager)
 		if err != nil {
@@ -669,7 +699,7 @@ func (pw *ProviderWizard) handleChangeModel() error {
 	// Step 5: Retrieve API key if needed for model fetching
 	var apiKey string
 	var baseURL string
-	if pw.supportsModelFetching(provider) {
+	if pw.supportsModelFetching(provider) && providerRequiresCredentialsForModelFetching(provider) {
 		// For providers that support fetching, we need to retrieve the API key from state
 		state, err := pw.manager.GetClient().State.GetLatestState(pw.ctx, &cline.EmptyRequest{})
 		if err != nil {

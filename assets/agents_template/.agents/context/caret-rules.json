@@ -1,0 +1,41 @@
+{
+	"project_identity": {
+		"name": "ProjectName",
+		"symbol": "^",
+		"nature": "Describe the project",
+		"philosophy": "Describe the philosophy"
+	},
+	"architecture_rules": {
+		"modification_levels": {
+			"L1_independent": "List directories with full freedom",
+			"L2_conditional": "List directories with constraints",
+			"L3_direct": "List directories requiring full documentation"
+		},
+		"protection_rules": {
+			"protected_directories": [],
+			"comment_required": "",
+			"max_changes": ""
+		}
+	},
+	"ai_workflow": {
+		"knowledge_principle": "AI knowledge = Developer knowledge (1:1 parity)",
+		"mandatory_pre_checks": [
+			"Read caret-rules.json first",
+			"Identify work nature",
+			"Apply minimal-change principles"
+		]
+	},
+	"workflows": {
+		"instruction": "Read workflows on demand. Do not load all at once.",
+		"selection_guide": {
+			"reference": ".agents/context/ai-work-index.yaml",
+			"steps": [
+				"Extract keywords from the user request",
+				"Match the category in ai-work-index.yaml",
+				"Read the matching root quick reference first",
+				"Load the workflow document only if the task still needs details"
+			]
+		},
+		"index": {}
+	}
+}

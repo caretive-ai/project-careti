@@ -69,6 +69,13 @@ export const getActionMetadata = (): ActionMetadata[] => [
 		icon: "codicon-globe",
 	},
 	{
+		id: "generateImages",
+		label: t("autoApprove.generateImages.label", "settings"),
+		shortName: t("autoApprove.generateImages.shortName", "settings"),
+		description: t("autoApprove.generateImages.description", "settings"),
+		icon: "codicon-device-camera",
+	},
+	{
 		id: "useMcp",
 		label: t("autoApprove.useMcp.label", "settings"),
 		shortName: t("autoApprove.useMcp.shortName", "settings"),

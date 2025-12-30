@@ -334,6 +334,11 @@
 			"shortName": "Browser",
 			"description": "Allows Caret to launch and interact with any website in the browser."
 		},
+		"generateImages": {
+			"label": "Generate images",
+			"shortName": "Images",
+			"description": "Allows Caret to generate images using the image tool."
+		},
 		"useMcp": {
 			"label": "Use MCP server",
 			"shortName": "MCP",
@@ -420,7 +425,13 @@
 		"supportsCacheLabel": "Supports prompt caching:",
 		"doesNotSupportImagesLabel": "Does not support images:",
 		"doesNotSupportComputerUseLabel": "Does not support computer use:",
-		"doesNotSupportCacheLabel": "Does not support prompt caching:"
+		"doesNotSupportCacheLabel": "Does not support prompt caching:",
+		"imageGeneration": {
+			"title": "Image generation defaults",
+			"aspectRatio": "Aspect ratio",
+			"size": "Image size",
+			"auto": "Automatic (model default)"
+		}
 	},
 	"ollamaModelPicker": {
 		"searchPlaceholder": "Search and select a model...",
@@ -443,18 +454,18 @@
 	"rules": {
 		"section": {
 			"title": "Rules Management",
-			"description": "Manage project rule files and set priorities.",
+			"description": "Manage Caret rule files and workflows.",
 			"workspaceRules": "Workspace Rules",
 			"globalRules": "Global Rules",
-			"caretRules": ".caretrules files",
-			"clineRules": ".clinerules files",
-			"cursorRules": ".cursorrules files",
-			"windsurfRules": ".windsurfrules files"
+			"caretRules": ".agents/context directory",
+			"clineRules": "Legacy .agents/context (ignored)",
+			"cursorRules": "Legacy .agents/context (ignored)",
+			"windsurfRules": "Legacy .agents/context (ignored)"
 		},
 		"priority": {
-			"title": "Rule Priority",
-			"description": "Rule file priority: .caretrules > .clinerules > .cursorrules > .windsurfrules",
-			"info": "When higher priority rules exist, lower priority rules are automatically disabled."
+			"title": "Rule Sources",
+			"description": "Caret reads .agents/context plus AGENTS.md (recursive). Legacy rule files are ignored.",
+			"info": "Rules are combined; no priority switching is applied."
 		},
 		"buttons": {
 			"toggle": "Toggle",
@@ -525,6 +536,7 @@
 				"starIconEmpty": "☆",
 				"featuredModelDescriptionBest": "Recommended for Caret's agent coding",
 				"featuredModelLabelBest": "Best",
+				"featuredModelDescriptionGemini3FlashPreview": "Intelligent model built for speed and price efficiency",
 				"featuredModelDescriptionNew": "Claude Opus 4.5: SOTA coding performance at 3x lower cost than Opus 4.1",
 				"featuredModelLabelNew": "New",
 				"featuredModelDescriptionFree": "Advanced model with 262K context for complex coding",
@@ -1013,6 +1025,10 @@
 			"name": "Huawei Cloud MaaS",
 			"description": "Huawei Cloud MaaS (Model-as-a-Service) offers a variety of AI models.",
 			"providerName": "Huawei Cloud MaaS"
+		},
+		"naver-cloud": {
+			"name": "Naver Cloud",
+			"description": "Naver Cloud provides Hyper Clova X (HCX) models optimized for Korean context."
 		},
 		"dify": {
 			"name": "Dify.ai",

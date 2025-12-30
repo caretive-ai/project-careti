@@ -164,6 +164,9 @@ export const ChatRowContent = memo(
 			left: 0,
 			selectedText: "",
 		})
+		const [resolvedImageUrl, setResolvedImageUrl] = useState<string | undefined>(undefined)
+		const [resolvedImageRelativePath, setResolvedImageRelativePath] = useState<string | undefined>(undefined)
+		const lastImageRequestKeyRef = useRef<string | null>(null)
 		const contentRef = useRef<HTMLDivElement>(null)
 		const [cost, apiReqCancelReason, apiReqStreamingFailedMessage, retryStatus] = useMemo(() => {
 			if (message.text != null && message.say === "api_req_started") {
@@ -399,6 +402,90 @@ export const ChatRowContent = memo(
 			}
 			return null
 		}, [message.ask, message.say, message.text])
+
+		const imageRelativePath = tool?.tool === "generateImage" ? tool.workspaceRelativePath : undefined
+		const imageAbsolutePath = tool?.tool === "generateImage" ? tool.workspaceAbsolutePath : undefined
+		const imageInlineUrl = tool?.tool === "generateImage" ? tool.imageUrl : undefined
+		const imageAbsoluteFallback = !imageAbsolutePath && imageRelativePath?.startsWith("/") ? imageRelativePath : undefined
+		const imageAbsoluteCandidate = imageAbsolutePath ?? imageAbsoluteFallback
+		const imageRequestId = tool?.tool === "generateImage" ? tool.requestId : undefined
+		const imageStatus = tool?.tool === "generateImage" ? tool.status : undefined
+
+		useEffect(() => {
+			if (imageInlineUrl) {
+				setResolvedImageUrl(imageInlineUrl)
+				setResolvedImageRelativePath(undefined)
+				lastImageRequestKeyRef.current = `inline:${imageRequestId ?? "unknown"}`
+				return
+			}
+
+			if (!imageRelativePath && !imageAbsoluteCandidate && !imageRequestId) {
+				setResolvedImageUrl(undefined)
+				setResolvedImageRelativePath(undefined)
+				lastImageRequestKeyRef.current = null
+				return
+			}
+
+			const requestKey = `${imageRequestId ?? "unknown"}:${imageRelativePath ?? ""}:${imageAbsoluteCandidate ?? ""}:${imageStatus ?? ""}`
+			if (lastImageRequestKeyRef.current === requestKey) {
+				return
+			}
+			lastImageRequestKeyRef.current = requestKey
+			setResolvedImageUrl(undefined)
+			setResolvedImageRelativePath(undefined)
+
+			let cancelled = false
+			const loadImage = async () => {
+				try {
+					const tryRead = async (pathValue: string) => {
+						const response = await FileServiceClient.readFileDataUrlRelativePath(
+							StringRequest.create({ value: pathValue }),
+						)
+						if (!cancelled && response.value) {
+							setResolvedImageUrl(response.value)
+							return true
+						}
+						return false
+					}
+
+					if (imageAbsoluteCandidate) {
+						await tryRead(imageAbsoluteCandidate)
+						return
+					}
+
+					if (imageRelativePath && (await tryRead(imageRelativePath))) {
+						return
+					}
+
+					if (!imageRequestId) {
+						return
+					}
+
+					const extensions = ["png", "jpg", "jpeg", "webp", "gif", "avif", "svg"]
+					for (const extension of extensions) {
+						const candidate = `assets/${imageRequestId}.${extension}`
+						if (await tryRead(candidate)) {
+							setResolvedImageRelativePath(candidate)
+							return
+						}
+						if (cancelled) {
+							return
+						}
+					}
+				} catch (err: unknown) {
+					if (!cancelled) {
+						console.error("Failed to load image file:", err)
+						setResolvedImageUrl(undefined)
+					}
+				}
+			}
+
+			void loadImage()
+
+			return () => {
+				cancelled = true
+			}
+		}, [imageRelativePath, imageAbsoluteCandidate, imageRequestId, imageStatus, imageInlineUrl])
 
 		// Helper function to check if file is an image
 		const isImageFile = (filePath: string): boolean => {
@@ -740,6 +827,161 @@ export const ChatRowContent = memo(
 							{/* <div style={{ paddingTop: 5, fontSize: '0.9em', opacity: 0.8 }}>{tool.content}</div> */}
 						</>
 					)
+				case "generateImage": {
+					const imageUrl = resolvedImageUrl ?? imageInlineUrl
+					console.log("imageURL", imageUrl)
+					const workspaceRelativePath = tool.workspaceRelativePath ?? resolvedImageRelativePath
+					const workspaceAbsolutePath = tool.workspaceAbsolutePath
+					const displayPath = workspaceAbsolutePath ?? workspaceRelativePath
+					const status = tool.status || (message.partial ? "generating" : "completed")
+					const isGenerating = status === "pending" || status === "generating" || message.partial
+					const handleOpenImage = () => {
+						if (workspaceAbsolutePath) {
+							FileServiceClient.openFile(StringRequest.create({ value: workspaceAbsolutePath })).catch((err) => {
+								console.error("Failed to open image:", err)
+							})
+							return
+						}
+						if (workspaceRelativePath) {
+							FileServiceClient.openFileRelativePath(StringRequest.create({ value: workspaceRelativePath })).catch(
+								(err) => {
+									console.error("Failed to open image:", err)
+								},
+							)
+							return
+						}
+						if (!imageUrl) {
+							return
+						}
+						FileServiceClient.openImage(StringRequest.create({ value: imageUrl })).catch((err) => {
+							console.error("Failed to open image:", err)
+						})
+					}
+
+					console.log("workspaceAbsolutePath", workspaceAbsolutePath)
+
+					return (
+						<>
+							<div style={headerStyle}>
+								{toolIcon("device-camera")}
+								<span style={{ fontWeight: "bold" }}>{t("tool.generateImage", "chat")}:</span>
+								{isGenerating && <ProgressIndicator />}
+							</div>
+							<div
+								style={{
+									borderRadius: 3,
+									backgroundColor: CODE_BLOCK_BG_COLOR,
+									overflow: "hidden",
+									border: "1px solid var(--vscode-editorGroup-border)",
+								}}>
+								<div style={{ padding: "9px 10px", display: "flex", flexDirection: "column", gap: "6px" }}>
+									{tool.prompt && (
+										<div className="ph-no-capture">
+											<span style={{ fontWeight: "bold", marginRight: 6 }}>
+												{t("tool.generateImagePrompt", "chat")}:
+											</span>
+											<span style={{ color: "var(--vscode-foreground)" }}>{tool.prompt}</span>
+										</div>
+									)}
+									{tool.model && (
+										<div className="ph-no-capture">
+											<span style={{ fontWeight: "bold", marginRight: 6 }}>
+												{t("tool.generateImageModel", "chat")}:
+											</span>
+											<span style={{ color: "var(--vscode-foreground)" }}>{tool.model}</span>
+										</div>
+									)}
+									{tool.aspectRatio && (
+										<div className="ph-no-capture">
+											<span style={{ fontWeight: "bold", marginRight: 6 }}>
+												{t("tool.generateImageAspectRatio", "chat")}:
+											</span>
+											<span style={{ color: "var(--vscode-foreground)" }}>{tool.aspectRatio}</span>
+										</div>
+									)}
+									{tool.imageSize && (
+										<div className="ph-no-capture">
+											<span style={{ fontWeight: "bold", marginRight: 6 }}>
+												{t("tool.generateImageSize", "chat")}:
+											</span>
+											<span style={{ color: "var(--vscode-foreground)" }}>{tool.imageSize}</span>
+										</div>
+									)}
+									{tool.progressText && (
+										<div className="ph-no-capture" style={{ color: "var(--vscode-descriptionForeground)" }}>
+											{tool.progressText}
+										</div>
+									)}
+									{status === "error" && tool.errorMessage && (
+										<div className="ph-no-capture" style={{ color: errorColor }}>
+											{tool.errorMessage}
+										</div>
+									)}
+								</div>
+								<div
+									style={{
+										borderTop: "1px solid var(--vscode-editorGroup-border)",
+										backgroundColor: "var(--vscode-editor-background)",
+									}}>
+									{imageUrl ? (
+										<>
+											<img
+												alt={t("tool.generateImageAlt", "chat")}
+												onClick={handleOpenImage}
+												src={imageUrl}
+												style={{ width: "100%", height: "auto", display: "block", cursor: "pointer" }}
+												title="Open image"
+											/>
+											{workspaceRelativePath && (
+												<div
+													className="ph-no-capture"
+													onClick={handleOpenImage}
+													style={{
+														padding: "8px 10px",
+														color: "var(--vscode-descriptionForeground)",
+														fontSize: 12,
+														cursor: "pointer",
+														borderTop: "1px solid rgba(255, 255, 255, 0.1)",
+													}}
+													title={workspaceRelativePath}>
+													{t("tool.generateImageSavedPath", "chat", { path: workspaceRelativePath })}
+												</div>
+											)}
+										</>
+									) : (
+										<div
+											className="ph-no-capture"
+											style={{
+												padding: "10px",
+												color: "var(--vscode-descriptionForeground)",
+											}}>
+											{isGenerating
+												? t("tool.generateImageStatusGenerating", "chat")
+												: t("tool.generateImageImageUnavailable", "chat")}
+											{displayPath && (
+												<div
+													className="ph-no-capture"
+													onClick={handleOpenImage}
+													style={{
+														paddingTop: "8px",
+														color: "var(--vscode-descriptionForeground)",
+														fontSize: 12,
+														cursor: "pointer",
+														whiteSpace: "nowrap",
+														overflow: "hidden",
+														textOverflow: "ellipsis",
+													}}
+													title={displayPath}>
+													{t("tool.generateImageSavedPath", "chat", { path: displayPath })}
+												</div>
+											)}
+										</div>
+									)}
+								</div>
+							</div>
+						</>
+					)
+				}
 				default:
 					return null
 			}

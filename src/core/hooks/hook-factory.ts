@@ -478,7 +478,7 @@ class StdioHookRunner<Name extends HookName> extends HookRunner<Name> {
  * Combines multiple hook runners and executes them in parallel.
  *
  * Used in multi-root workspaces where both global hooks (from ~/Documents/Cline/Hooks/)
- * and workspace-specific hooks (from each workspace's .clinerules/hooks/) exist for the
+ * and workspace-specific hooks (from each workspace's .agents/hooks/) exist for the
  * same hook type.
  *
  * Behavior:
@@ -547,7 +547,7 @@ function isExpectedHookError(error: unknown): boolean {
 	}
 
 	// Expected: Permission denied (file not executable or not readable)
-	// Note: This is expected because users may have hooks in .clinerules that they don't want to execute
+	// Note: This is expected because users may have hooks in .agents/hooks that they don't want to execute
 	if (nodeError.code === "EACCES") {
 		return true
 	}
@@ -615,7 +615,7 @@ export class HookFactory {
 	/**
 	 * @returns A list of paths to scripts for the given hook name.
 	 * Includes both global hooks (from ~/Documents/Cline/Hooks/) and workspace hooks
-	 * (from .clinerules/hooks/ in each workspace root).
+	 * (from .agents/hooks/ in each workspace root).
 	 */
 	private static async findHookScripts(hookName: HookName): Promise<string[]> {
 		const hookScripts = []
@@ -627,10 +627,10 @@ export class HookFactory {
 	}
 
 	/**
-	 * Finds the path to a hook in a .clinerules hooks directory.
+	 * Finds the path to a hook in a .agents/hooks hooks directory.
 	 *
 	 * @param hookName the name of the hook to search for, for example 'PreToolUse'
-	 * @param hooksDir the .clinerules directory path to search
+	 * @param hooksDir the .agents/hooks directory path to search
 	 * @returns the path to the hook to execute, or undefined if none found
 	 * @throws Error if an unexpected file system error occurs
 	 */
@@ -667,7 +667,7 @@ export class HookFactory {
 	 * Finds a hook on Unix-like systems (Linux, macOS) by checking for an executable file.
 	 *
 	 * @param hookName the name of the hook to search for
-	 * @param hooksDir the .clinerules directory path to search
+	 * @param hooksDir the .agents/hooks directory path to search
 	 * @returns the path to the hook to execute, or undefined if none found
 	 * @throws Error if an unexpected file system error occurs
 	 */

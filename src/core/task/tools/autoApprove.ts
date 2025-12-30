@@ -56,6 +56,7 @@ export class AutoApprove {
 				case ClineDefaultTool.WEB_FETCH:
 				case ClineDefaultTool.MCP_ACCESS:
 				case ClineDefaultTool.MCP_USE:
+				case ClineDefaultTool.GENERATE_IMAGE:
 					return true
 			}
 		}
@@ -88,6 +89,8 @@ export class AutoApprove {
 			case ClineDefaultTool.MCP_ACCESS:
 			case ClineDefaultTool.MCP_USE:
 				return autoApprovalSettings.actions.useMcp
+			case ClineDefaultTool.GENERATE_IMAGE:
+				return autoApprovalSettings.actions.generateImages ?? false
 		}
 		return false
 	}

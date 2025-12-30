@@ -1,10 +1,10 @@
 import { Anthropic } from "@anthropic-ai/sdk"
+import { bizRouterModelInfoSaneDefaults, BizRouterModelInfo } from "@shared/api"
+import OpenAI from "openai"
 import { ApiHandler, CommonApiHandlerOptions } from "@core/api"
 import { withRetry } from "@core/api/retry"
 import { convertToOpenAiMessages } from "@core/api/transform/openai-format"
 import { ApiStream } from "@core/api/transform/stream"
-import { BizRouterModelInfo, bizRouterModelInfoSaneDefaults } from "@shared/api"
-import OpenAI from "openai"
 
 interface BizRouterHandlerOptions extends CommonApiHandlerOptions {
 	bizRouterApiKey?: string
@@ -293,15 +293,12 @@ export class BizRouterHandler implements ApiHandler {
 
 		// OpenAI-compatible parameters
 		if (modelConfig.topP !== undefined && !isNaN(modelConfig.topP)) requestParams.top_p = modelConfig.topP
-		if (modelConfig.frequencyPenalty !== undefined && !isNaN(modelConfig.frequencyPenalty))
-			requestParams.frequency_penalty = modelConfig.frequencyPenalty
-		if (modelConfig.presencePenalty !== undefined && !isNaN(modelConfig.presencePenalty))
-			requestParams.presence_penalty = modelConfig.presencePenalty
+		if (modelConfig.frequencyPenalty !== undefined && !isNaN(modelConfig.frequencyPenalty)) requestParams.frequency_penalty = modelConfig.frequencyPenalty
+		if (modelConfig.presencePenalty !== undefined && !isNaN(modelConfig.presencePenalty)) requestParams.presence_penalty = modelConfig.presencePenalty
 
 		// BizRouter extended parameters (Anthropic, Google models)
 		if (modelConfig.topK !== undefined && !isNaN(modelConfig.topK)) requestParams.top_k = modelConfig.topK
-		if (modelConfig.repetitionPenalty !== undefined && !isNaN(modelConfig.repetitionPenalty))
-			requestParams.repetition_penalty = modelConfig.repetitionPenalty
+		if (modelConfig.repetitionPenalty !== undefined && !isNaN(modelConfig.repetitionPenalty)) requestParams.repetition_penalty = modelConfig.repetitionPenalty
 		if (modelConfig.minP !== undefined && !isNaN(modelConfig.minP)) requestParams.min_p = modelConfig.minP
 
 		// CARET MODIFICATION: Log request for debugging

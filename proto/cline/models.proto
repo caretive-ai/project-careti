@@ -175,6 +175,7 @@ message ModelsApiSecrets {
   optional string oca_refresh_token = 37;
   optional string minimax_api_key = 38;
   optional string aihubmix_api_key = 39;
+  optional string naver_cloud_api_key = 40;
   // CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
   optional string caret_api_key = 1074;
   // CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
@@ -441,6 +442,7 @@ enum ApiProvider {
   HICAP = 37;
   AIHUBMIX = 38;
   NOUSRESEARCH = 39;
+  NAVER_CLOUD = 40;
   // CARET MODIFICATION: Caret-specific providers use 1000+ to avoid conflicts with Cline
   CARET = 1001;
   BIZROUTER = 1002;
@@ -611,6 +613,7 @@ message ModelsApiConfiguration {
   optional string aihubmix_base_url = 83;
   optional string aihubmix_app_code = 84;
   optional string nous_research_api_key = 85;
+  optional string naver_cloud_api_key = 86;
   // CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
   optional string caret_base_url = 1073;
   optional string caret_api_key = 1074;
@@ -658,6 +661,8 @@ message ModelsApiConfiguration {
   optional string plan_mode_aihubmix_model_id = 135;
   optional OpenAiCompatibleModelInfo plan_mode_aihubmix_model_info = 136;
   optional string plan_mode_nous_research_model_id = 137;
+  optional string plan_mode_naver_cloud_model_id = 138;
+  optional OpenRouterModelInfo plan_mode_naver_cloud_model_info = 139;
   optional string plan_mode_caret_model_id = 190;
   optional LiteLLMModelInfo plan_mode_caret_model_info = 191;
   optional string plan_mode_biz_router_model_id = 192;
@@ -702,6 +707,8 @@ message ModelsApiConfiguration {
   optional string act_mode_aihubmix_model_id = 235;
   optional OpenAiCompatibleModelInfo act_mode_aihubmix_model_info = 236;
   optional string act_mode_nous_research_model_id = 237;
+  optional string act_mode_naver_cloud_model_id = 238;
+  optional OpenRouterModelInfo act_mode_naver_cloud_model_info = 239;
   optional string act_mode_caret_model_id = 301;
   optional CaretModelInfo act_mode_caret_model_info = 302; // caret
   optional string act_mode_biz_router_model_id = 303;

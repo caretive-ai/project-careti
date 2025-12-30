@@ -26,8 +26,8 @@ Caret builds on Cline while adding the following enhancements.
 - **[F05: Caret Account System](./f05-caret-account.md)**  
   Caret-only account management and authentication (gRPC-based).
 
-- **[F06: Rule Priority System](./f06-rule-priority-system.md)**  
-  Rule precedence management for `.caretrules` and conflict resolution.
+- **[F06: Agent Standardization (AAIF SoT)](./f06-agent-standardization.md)**  
+  Standardized `.agents/context` SoT, AGENTS.md hierarchy, and init scaffolding.
 
 ### AI Systems
 
@@ -65,7 +65,7 @@ Caret Features
 │   ├── Branding & UI
 │   ├── Cline Compatibility / CLI
 │   ├── Account System
-│   └── Rule Priority
+│   └── Agent Standardization
 ├── AI Systems (F07–F08)
 │   ├── Prompt System
 │   └── Persona System
@@ -89,7 +89,7 @@ Each feature document provides:
 
 - **Architecture**: `caret-docs/development/caret-architecture-and-implementation-guide.md`
 - **Merging**: `caret-docs/merging/merge-execution-master-plan.md`
-- **Workflows**: `.caretrules/workflows/` (AI development procedures)
+- **Workflows**: `.agents/context/workflows/` (AI development procedures)
 
 ---
 

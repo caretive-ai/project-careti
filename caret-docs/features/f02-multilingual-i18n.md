@@ -57,30 +57,30 @@ Caret의 i18n 시스템은 **기능별 네임스페이스**를 기본 원칙으�
 
 API Provider 설정과 같이 복잡한 UI는 일관된 규칙을 따릅니다. 모든 Provider 관련 번역 키는 `settings` 네임스페이스 내의 `providers` 객체 아래에 각 `providerId`로 그룹화하여 통합합니다.
 
-### **🚨 중요: Provider ID vs JSON 키 명명 규칙 차이점**
+### **🚨 중요: Provider ID vs JSON 키 케이스 규칙**
 
-**주의사항**: Cline 코드베이스에서 Provider ID와 JSON i18n 키는 서로 다른 케이스 규칙을 사용합니다:
+**주의사항**: Provider ID와 JSON i18n 키는 동일하게 케밥케이스를 사용합니다:
 
 | 항목 | 케이스 | 예시 | 위치 |
 |---|---|---|---|
 | **Provider ID** (Backend) | 케밥케이스 | `vercel-ai-gateway`, `qwen-code`, `claude-code` | `src/shared/proto-conversions/` |
-| **JSON i18n 키** (Frontend) | 카멜케이스 | `vercelAiGateway`, `qwenCode`, `claudeCode` | `webview-ui/src/caret/locale/` |
+| **JSON i18n 키** (Frontend) | 케밥케이스 (현재) | `vercel-ai-gateway`, `qwen-code`, `claude-code` | `webview-ui/src/caret/locale/` |
 
 **❌ 흔한 실수:**
 ```typescript
-// 틀림 - Provider ID를 JSON 키에 그대로 사용
-t('providers.vercel-ai-gateway.description', 'settings')
-t('providers.qwen-code.description', 'settings')
-```
-
-**✅ 올바른 사용:**
-```typescript
-// 맞음 - JSON 키는 카멜케이스로 변환
+// 틀림 - camelCase 사용
 t('providers.vercelAiGateway.description', 'settings')
 t('providers.qwenCode.description', 'settings')
 ```
 
-이 차이점은 Cline 원본 코드의 구조적 제약으로 인한 것이므로 주의 깊게 확인해야 합니다.
+**✅ 올바른 사용:**
+```typescript
+// 맞음 - Provider ID와 동일한 케밥케이스 사용
+t('providers.vercel-ai-gateway.description', 'settings')
+t('providers.qwen-code.description', 'settings')
+```
+
+camelCase 사용은 금지하며, Provider ID를 그대로 i18n 키에 사용합니다.
 
 **❌ AS-IS (혼재된 패턴 - 사용 금지):**
 ```typescript
@@ -492,14 +492,9 @@ const desc = t(`bullets.current.${i}-desc`, "announcement")
 - [ ] 전체 다국어 파일 일관성 검증 및 누락 번역 보완
 
 #### **장기 과제 (아키텍처 개선)**
-- [ ] **🚨 Provider ID 명명 규칙 통일**: 케밥케이스 vs 카멜케이스 혼재 문제 해결
-  - **현재 문제**: Backend(케밥케이스) vs Frontend JSON(카멜케이스) 불일치로 개발자 혼란
-  - **목표**: 전체 시스템에서 일관된 명명 규칙 적용
-  - **방법**:
-    - 옵션 1: Cline 업스트림 따라가기 (케밥케이스 유지)
-    - 옵션 2: Frontend JSON을 케밥케이스로 변경 (대대적 수정 필요)
-    - 옵션 3: Provider ID 매핑 레이어 구축
-  - **우선순위**: 중요도 높음 - AI 개발 및 유지보수 효율성에 직접 영향
+- [ ] **Provider ID 케이스 규칙 유지**: Backend/Frontend 모두 케밥케이스 유지. 신규 키/레거시 모두 동일 규칙 적용.
+  - **현재 원칙**: `providers.{providerId}`는 Provider ID 그대로 사용
+  - **변경 필요 시**: 전면 마이그레이션 + 매핑 레이어 포함한 별도 계획 수립
 
 ### **검증 도구 개선 필요**
 - [ ] **중복 키 검출**: JSON 파일 내 동일 키 중복 자동 검출 스크립트

@@ -44,6 +44,10 @@ const TaskTimelineTooltip = ({ message, children }: TaskTimelineTooltipProps) =>
 								return t("taskTimelineTooltip.webFetch", "chat", {
 									path: toolData.path || t("taskTimelineTooltip.unknownUrl", "chat"),
 								})
+							} else if (toolData.tool === "generateImage") {
+								return t("taskTimelineTooltip.generateImage", "chat", {
+									prompt: toolData.prompt || t("taskTimelineTooltip.unknownPrompt", "chat"),
+								})
 							}
 							return t("taskTimelineTooltip.tool", "chat", { tool: toolData.tool })
 						} catch (_e) {
@@ -95,6 +99,10 @@ const TaskTimelineTooltip = ({ message, children }: TaskTimelineTooltipProps) =>
 							} else if (toolData.tool === "webFetch") {
 								return t("taskTimelineTooltip.webFetch", "chat", {
 									path: toolData.path || t("taskTimelineTooltip.unknownUrl", "chat"),
+								})
+							} else if (toolData.tool === "generateImage") {
+								return t("taskTimelineTooltip.generateImageApproval", "chat", {
+									prompt: toolData.prompt || t("taskTimelineTooltip.unknownPrompt", "chat"),
 								})
 							}
 							return t("taskTimelineTooltip.toolApproval", "chat", { tool: toolData.tool })

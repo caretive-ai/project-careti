@@ -923,7 +923,7 @@ function isIntentionallyExcluded(file: string): boolean {
   const excludePatterns = [
     /^cli\//,           // Cline CLI (Caret은 미사용)
     /^docs\//,          // Cline docs (Caret 별도)
-    /\.clinerules\//,   // Cline rules (Caret은 .caretrules)
+    /\.agents/context\//,   // Agent context rules (.agents/context)
     /^evals\//,         // Evaluation scripts
   ]
 

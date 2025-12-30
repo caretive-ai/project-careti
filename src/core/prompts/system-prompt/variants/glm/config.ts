@@ -43,6 +43,7 @@ export const config = createVariant(ModelFamily.GLM)
 		ClineDefaultTool.LIST_FILES,
 		ClineDefaultTool.LIST_CODE_DEF,
 		ClineDefaultTool.BROWSER,
+		ClineDefaultTool.GENERATE_IMAGE,
 		ClineDefaultTool.MCP_USE,
 		ClineDefaultTool.MCP_ACCESS,
 		ClineDefaultTool.ASK,

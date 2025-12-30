@@ -49,6 +49,41 @@ func BrandDisplayName() string {
 	return brandDisplayName
 }
 
+// BrandCommandName returns the lowercase CLI command name for the current brand.
+func BrandCommandName() string {
+	return strings.ToLower(BrandDisplayName())
+}
+
+// BrandCLIName returns a display label for the CLI (e.g., "Caret CLI").
+func BrandCLIName() string {
+	return fmt.Sprintf("%s CLI", BrandDisplayName())
+}
+
+// BrandCoreName returns a display label for the core service (e.g., "Caret Core").
+func BrandCoreName() string {
+	return fmt.Sprintf("%s Core", BrandDisplayName())
+}
+
+// BrandAppURL returns the brand-specific web app base URL.
+func BrandAppURL() string {
+	switch strings.ToLower(BrandDisplayName()) {
+	case "cline":
+		return "https://app.cline.bot"
+	default:
+		return "https://app.caret.team"
+	}
+}
+
+// BrandDocsURL returns the brand-specific documentation base URL.
+func BrandDocsURL() string {
+	switch strings.ToLower(BrandDisplayName()) {
+	case "cline":
+		return "https://docs.cline.bot"
+	default:
+		return "https://docs.caret.team"
+	}
+}
+
 func readBrandFromPackageJSON(execPath string) string {
 	dir := filepath.Dir(execPath)
 	// Walk up to 4 levels to find package.json (npm global or repo layout).

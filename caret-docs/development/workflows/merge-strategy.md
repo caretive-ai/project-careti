@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.caretrules/workflows/merge-strategy.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.agents/context/workflows/merge-strategy.md`를 기준으로 보세요.
 
 Caret 프로젝트 병합 전략을 도와드립니다. Cline 코드 수정을 다룰 때 병합 전략 가이드 원칙을 따르세요.
 

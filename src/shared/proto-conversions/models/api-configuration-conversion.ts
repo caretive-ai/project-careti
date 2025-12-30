@@ -407,6 +407,8 @@ function convertApiProviderToProto(provider: string | undefined): ProtoApiProvid
 			return ProtoApiProvider.CLAUDE_CODE
 		case "huawei-cloud-maas":
 			return ProtoApiProvider.HUAWEI_CLOUD_MAAS
+		case "naver-cloud":
+			return ProtoApiProvider.NAVER_CLOUD
 		case "vercel-ai-gateway":
 			return ProtoApiProvider.VERCEL_AI_GATEWAY
 		case "zai":
@@ -499,6 +501,8 @@ export function convertProtoToApiProvider(provider: ProtoApiProvider): ApiProvid
 			return "claude-code"
 		case ProtoApiProvider.HUAWEI_CLOUD_MAAS:
 			return "huawei-cloud-maas"
+		case ProtoApiProvider.NAVER_CLOUD:
+			return "naver-cloud"
 		case ProtoApiProvider.VERCEL_AI_GATEWAY:
 			return "vercel-ai-gateway"
 		case ProtoApiProvider.ZAI:
@@ -596,6 +600,7 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		sapAiCoreBaseUrl: config.sapAiCoreBaseUrl,
 		sapAiCoreUseOrchestrationMode: config.sapAiCoreUseOrchestrationMode,
 		huaweiCloudMaasApiKey: config.huaweiCloudMaasApiKey,
+		naverCloudApiKey: config.naverCloudApiKey,
 		zaiApiLine: config.zaiApiLine,
 		zaiApiKey: config.zaiApiKey,
 		difyApiKey: config.difyApiKey,
@@ -642,6 +647,8 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		planModeSapAiCoreModelId: config.planModeSapAiCoreModelId,
 		planModeHuaweiCloudMaasModelId: config.planModeHuaweiCloudMaasModelId,
 		planModeHuaweiCloudMaasModelInfo: convertModelInfoToProtoOpenRouter(config.planModeHuaweiCloudMaasModelInfo),
+		planModeNaverCloudModelId: config.planModeNaverCloudModelId,
+		planModeNaverCloudModelInfo: convertModelInfoToProtoOpenRouter(config.planModeNaverCloudModelInfo),
 		planModeSapAiCoreDeploymentId: config.planModeSapAiCoreDeploymentId,
 		planModeOcaModelId: config.planModeOcaModelId,
 		planModeOcaModelInfo: convertOcaModelInfoToProtoOcaModelInfo(config.planModeOcaModelInfo),
@@ -684,6 +691,8 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		actModeSapAiCoreModelId: config.actModeSapAiCoreModelId,
 		actModeHuaweiCloudMaasModelId: config.actModeHuaweiCloudMaasModelId,
 		actModeHuaweiCloudMaasModelInfo: convertModelInfoToProtoOpenRouter(config.actModeHuaweiCloudMaasModelInfo),
+		actModeNaverCloudModelId: config.actModeNaverCloudModelId,
+		actModeNaverCloudModelInfo: convertModelInfoToProtoOpenRouter(config.actModeNaverCloudModelInfo),
 		actModeSapAiCoreDeploymentId: config.actModeSapAiCoreDeploymentId,
 		actModeOcaModelId: config.actModeOcaModelId,
 		actModeOcaModelInfo: convertOcaModelInfoToProtoOcaModelInfo(config.actModeOcaModelInfo),
@@ -771,6 +780,7 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		sapAiCoreBaseUrl: protoConfig.sapAiCoreBaseUrl,
 		sapAiCoreUseOrchestrationMode: protoConfig.sapAiCoreUseOrchestrationMode,
 		huaweiCloudMaasApiKey: protoConfig.huaweiCloudMaasApiKey,
+		naverCloudApiKey: protoConfig.naverCloudApiKey,
 		zaiApiLine: protoConfig.zaiApiLine,
 		zaiApiKey: protoConfig.zaiApiKey,
 		difyApiKey: protoConfig.difyApiKey,
@@ -820,6 +830,8 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		planModeSapAiCoreModelId: protoConfig.planModeSapAiCoreModelId,
 		planModeHuaweiCloudMaasModelId: protoConfig.planModeHuaweiCloudMaasModelId,
 		planModeHuaweiCloudMaasModelInfo: convertProtoToModelInfo(protoConfig.planModeHuaweiCloudMaasModelInfo),
+		planModeNaverCloudModelId: protoConfig.planModeNaverCloudModelId,
+		planModeNaverCloudModelInfo: convertProtoToModelInfo(protoConfig.planModeNaverCloudModelInfo),
 		planModeSapAiCoreDeploymentId: protoConfig.planModeSapAiCoreDeploymentId,
 		planModeOcaModelId: protoConfig.planModeOcaModelId,
 		planModeOcaModelInfo: convertProtoOcaModelInfoToOcaModelInfo(protoConfig.planModeOcaModelInfo),
@@ -863,6 +875,8 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		actModeSapAiCoreModelId: protoConfig.actModeSapAiCoreModelId,
 		actModeHuaweiCloudMaasModelId: protoConfig.actModeHuaweiCloudMaasModelId,
 		actModeHuaweiCloudMaasModelInfo: convertProtoToModelInfo(protoConfig.actModeHuaweiCloudMaasModelInfo),
+		actModeNaverCloudModelId: protoConfig.actModeNaverCloudModelId,
+		actModeNaverCloudModelInfo: convertProtoToModelInfo(protoConfig.actModeNaverCloudModelInfo),
 		actModeSapAiCoreDeploymentId: protoConfig.actModeSapAiCoreDeploymentId,
 		actModeOcaModelId: protoConfig.actModeOcaModelId,
 		actModeOcaModelInfo: convertProtoOcaModelInfoToOcaModelInfo(protoConfig.actModeOcaModelInfo),

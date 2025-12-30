@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.caretrules/workflows/critical-verification.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.agents/context/workflows/critical-verification.md`를 기준으로 보세요.
 
 과도한 비판과 맹목적 수용을 모두 피하기 위해 3단계 분석 접근법을 사용한 중요 검증을 수행합니다.
 

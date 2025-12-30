@@ -10,7 +10,7 @@ import type {
 	UserResponse,
 } from "@shared/ClineAccount"
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
-import { CLINE_API_ENDPOINT } from "@/shared/cline/api"
+import { Logger } from "@/services/logging/Logger"
 import { getAxiosSettings } from "@/shared/net"
 
 export class CaretAccountService {
@@ -50,7 +50,6 @@ export class CaretAccountService {
 	private async authenticatedRequest<T>(endpoint: string, config: AxiosRequestConfig = {}): Promise<T> {
 		const url = new URL(endpoint, this.baseUrl).toString() // Validate URL
 		const caretAccountAuthToken = await this._authService.getAuthToken()
-		console.log("caretAccountAuthToken====>", caretAccountAuthToken)
 
 		if (!caretAccountAuthToken) {
 			throw new Error("No Caret account auth token found")
@@ -92,15 +91,15 @@ export class CaretAccountService {
 	 */
 	async fetchBalanceRPC(): Promise<BalanceResponse | undefined> {
 		try {
-			// const me = await this.fetchMe()
-			// if (!me || !me.id) {
-			// 	console.error("Failed to fetch user ID for usage transactions")
-			// 	return undefined
-			// }
+			const me = await this.fetchMe()
+			if (!me || !me.id) {
+				Logger.error("Failed to fetch user ID for usage transactions")
+				return undefined
+			}
 			const data = await this.authenticatedRequest<BalanceResponse>(CARET_API_ENDPOINT.BALANCE)
 			return data
 		} catch (error) {
-			console.error("Failed to fetch balance (RPC):", error)
+			Logger.error("Failed to fetch balance (RPC):", error as Error)
 			return undefined
 		}
 	}
@@ -111,15 +110,15 @@ export class CaretAccountService {
 	 */
 	async fetchUsageTransactionsRPC(): Promise<UsageTransaction[] | undefined> {
 		try {
-			// const me = await this.fetchMe()
-			// if (!me || !me.id) {
-			// 	console.error("Failed to fetch user ID for usage transactions")
-			// 	return undefined
-			// }
+			const me = await this.fetchMe()
+			if (!me || !me.id) {
+				Logger.error("Failed to fetch user ID for usage transactions")
+				return undefined
+			}
 			const data = await this.authenticatedRequest<{ items: UsageTransaction[] }>(CARET_API_ENDPOINT.LOGS)
 			return data.items
 		} catch (error) {
-			console.error("Failed to fetch usage transactions (RPC):", error)
+			Logger.error("Failed to fetch usage transactions (RPC):", error as Error)
 			return undefined
 		}
 	}
@@ -130,17 +129,17 @@ export class CaretAccountService {
 	 */
 	async fetchPaymentTransactionsRPC(): Promise<PaymentTransaction[] | undefined> {
 		try {
-			// const me = await this.fetchMe()
-			// if (!me || !me.id) {
-			// 	console.error("Failed to fetch user ID for usage transactions")
-			// 	return undefined
-			// }
+			const me = await this.fetchMe()
+			if (!me || !me.id) {
+				Logger.error("Failed to fetch user ID for usage transactions")
+				return undefined
+			}
 			const data = await this.authenticatedRequest<{ paymentTransactions: PaymentTransaction[] }>(
 				CARET_API_ENDPOINT.PAYMENTS,
 			)
 			return data.paymentTransactions
 		} catch (error) {
-			console.error("Failed to fetch payment transactions (RPC):", error)
+			Logger.error("Failed to fetch payment transactions (RPC):", error as Error)
 			return undefined
 		}
 	}
@@ -154,7 +153,7 @@ export class CaretAccountService {
 			const data = await this.authenticatedRequest<UserResponse>(CARET_API_ENDPOINT.USER_INFO)
 			return data
 		} catch (error) {
-			console.error("Failed to fetch user data (RPC):", error)
+			Logger.error("Failed to fetch user data (RPC):", error as Error)
 			return undefined
 		}
 	}
@@ -167,12 +166,12 @@ export class CaretAccountService {
 		try {
 			const me = await this.fetchMe()
 			if (!me || !me.organizations) {
-				console.error("Failed to fetch user organizations")
+				Logger.error("Failed to fetch user organizations")
 				return undefined
 			}
 			return me.organizations
 		} catch (error) {
-			console.error("Failed to fetch user organizations (RPC):", error)
+			Logger.error("Failed to fetch user organizations (RPC):", error as Error)
 			return undefined
 		}
 	}
@@ -188,7 +187,7 @@ export class CaretAccountService {
 			)
 			return data
 		} catch (error) {
-			console.error("Failed to fetch active organization balance (RPC):", error)
+			Logger.error("Failed to fetch active organization balance (RPC):", error as Error)
 			return undefined
 		}
 	}
@@ -201,12 +200,12 @@ export class CaretAccountService {
 		try {
 			const me = await this.fetchMe()
 			if (!me || !me.id) {
-				console.error("Failed to fetch user ID for active organization transactions")
+				Logger.error("Failed to fetch user ID for active organization transactions")
 				return undefined
 			}
 			const memberId = me.organizations.find((org) => org.organizationId === organizationId)?.memberId
 			if (!memberId) {
-				console.error("Failed to find member ID for active organization transactions")
+				Logger.error("Failed to find member ID for active organization transactions")
 				return undefined
 			}
 			const data = await this.authenticatedRequest<{ items: OrganizationUsageTransaction[] }>(
@@ -214,36 +213,8 @@ export class CaretAccountService {
 			)
 			return data.items
 		} catch (error) {
-			console.error("Failed to fetch active organization transactions (RPC):", error)
+			Logger.error("Failed to fetch active organization transactions (RPC):", error as Error)
 			return undefined
-		}
-	}
-
-	/**
-	 * Switches the active account to the specified organization or personal account.
-	 * @param organizationId - Optional organization ID to switch to. If not provided, it will switch to the personal account.
-	 * @returns {Promise<void>} A promise that resolves when the account switch is complete.
-	 * @throws {Error} If the account switch fails, an error will be thrown.
-	 */
-	async switchAccount(organizationId?: string): Promise<void> {
-		// Call API to switch account
-		try {
-			// make XHR request to switch account
-			const _response = await this.authenticatedRequest<string>(CLINE_API_ENDPOINT.ACTIVE_ACCOUNT, {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				data: {
-					organizationId: organizationId || null, // Pass organization if provided
-				},
-			})
-		} catch (error) {
-			console.error("Error switching account:", error)
-			throw error
-		} finally {
-			// After user switches account, we will force a refresh of the id token by calling this function that restores the refresh token and retrieves new auth info
-			await this._authService.restoreRefreshTokenAndRetrieveAuthInfo()
 		}
 	}
 

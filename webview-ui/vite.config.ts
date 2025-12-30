@@ -138,6 +138,7 @@ export default defineConfig({
 			"@": resolve(__dirname, "./src"),
 			"@components": resolve(__dirname, "./src/components"),
 			"@context": resolve(__dirname, "./src/context"),
+			"@shared/proto": resolve(__dirname, "../src/shared/proto"),
 			"@shared": resolve(__dirname, "../src/shared"),
 			"@utils": resolve(__dirname, "./src/utils"),
 			"@caret": resolve(__dirname, "./src/caret"),

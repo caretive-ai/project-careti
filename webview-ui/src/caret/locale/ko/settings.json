@@ -342,6 +342,11 @@
 			"shortName": "브라우저",
 			"description": "Caret이 브라우저에서 모든 웹사이트를 실행하고 상호 작용하도록 허용합니다."
 		},
+		"generateImages": {
+			"label": "이미지 생성",
+			"shortName": "이미지",
+			"description": "Caret이 이미지 생성 도구를 사용해 이미지를 생성하도록 허용합니다."
+		},
 		"useMcp": {
 			"label": "MCP 서버 사용",
 			"shortName": "MCP",
@@ -428,7 +433,13 @@
 		"supportsCacheLabel": "프롬프트 캐싱 지원:",
 		"doesNotSupportImagesLabel": "이미지 미지원:",
 		"doesNotSupportComputerUseLabel": "컴퓨터 사용 미지원:",
-		"doesNotSupportCacheLabel": "프롬프트 캐싱 미지원:"
+		"doesNotSupportCacheLabel": "프롬프트 캐싱 미지원:",
+		"imageGeneration": {
+			"title": "이미지 생성 기본값",
+			"aspectRatio": "비율",
+			"size": "크기",
+			"auto": "자동 (모델 기본값)"
+		}
 	},
 	"ollamaModelPicker": {
 		"searchPlaceholder": "모델 검색 및 선택...",
@@ -503,6 +514,7 @@
 				"starIconEmpty": "☆",
 				"featuredModelDescriptionBest": "Recommended for Caret's agent coding",
 				"featuredModelLabelBest": "Best",
+				"featuredModelDescriptionGemini3FlashPreview": "속도와 가격 효율을 위한 Gemini 3 Flash Preview 모델",
 				"featuredModelDescriptionNew": "Claude Opus 4.5: Opus 4.1 대비 3배 저렴한 비용으로 SOTA 코딩 성능",
 				"featuredModelLabelNew": "New",
 				"featuredModelDescriptionFree": "Advanced model with 262K context for complex coding",
@@ -547,6 +559,7 @@
 				"starIconEmpty": "☆",
 				"featuredModelDescriptionBest": "Recommended for Caret's agent coding",
 				"featuredModelLabelBest": "Best",
+				"featuredModelDescriptionGemini3FlashPreview": "속도와 가격 효율을 위한 Gemini 3 Flash Preview 모델",
 				"featuredModelDescriptionNew": "Claude Opus 4.5: Opus 4.1 대비 3배 저렴한 비용으로 SOTA 코딩 성능",
 				"featuredModelLabelNew": "New",
 				"featuredModelDescriptionFree": "Advanced model with 262K context for complex coding",
@@ -961,6 +974,10 @@
 			"description": "Huawei Cloud MaaS(Model-as-a-Service)는 다양한 AI 모델을 제공합니다.",
 			"providerName": "Huawei Cloud MaaS"
 		},
+		"naver-cloud": {
+			"name": "Naver Cloud",
+			"description": "Naver Cloud는 한국어 맥락에 최적화된 Hyper Clova X(HCX) 모델을 제공합니다."
+		},
 		"dify": {
 			"name": "Dify.ai",
 			"description": "Dify.ai는 LLM 기반 애플리케이션을 구축하고 운영하기 위한 플랫폼입니다.",
@@ -1003,18 +1020,18 @@
 	"rules": {
 		"section": {
 			"title": "규칙 관리",
-			"description": "프로젝트 규칙 파일을 관리하고 우선순위를 설정하세요.",
-			"workspaceRules": "작업공간 규칙",
+			"description": "Caret 규칙과 워크플로우를 관리합니다.",
+			"workspaceRules": "워크스페이스 규칙",
 			"globalRules": "전역 규칙",
-			"caretRules": ".caretrules 파일",
-			"clineRules": ".clinerules 파일",
-			"cursorRules": ".cursorrules 파일",
-			"windsurfRules": ".windsurfrules 파일"
+			"caretRules": ".agents/context 디렉토리",
+			"clineRules": "레거시 .agents/context (무시됨)",
+			"cursorRules": "레거시 .agents/context (무시됨)",
+			"windsurfRules": "레거시 .agents/context (무시됨)"
 		},
 		"priority": {
-			"title": "규칙 우선순위",
-			"description": "규칙 파일 우선순위: .caretrules > .clinerules > .cursorrules > .windsurfrules",
-			"info": "우선순위가 높은 규칙이 존재하면 낮은 우선순위 규칙은 자동으로 비활성화됩니다."
+			"title": "규칙 소스",
+			"description": "Caret은 .agents/context와 AGENTS.md(재귀)를 읽습니다. 레거시 규칙 파일은 무시합니다.",
+			"info": "규칙은 합쳐서 적용되며 우선순위 전환은 없습니다."
 		},
 		"buttons": {
 			"toggle": "토글",

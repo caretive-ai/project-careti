@@ -58,7 +58,7 @@
 ### Section 0: Caret Feature 원칙 재확인
 - [x] `caret-docs/features/index.md` 및 F01~F11 문서 빠르게 훑기
 - [x] 핵심 요소 체크:
-  - [x] F01 CommonUtil / F05 RulePriority (`.caretrules` 우선순위, disk.ts 확장)
+  - [x] F01 CommonUtil / F05 RulePriority (`.agents/context` 우선순위, disk.ts 확장)
   - [x] F02 Multilingual i18n / F03 Branding UI (4개 언어, Caret/CodeCenter 테마)
   - [x] F04 CaretAccount / F07 Persona System (CaretGlobalManager, webview context)
   - [x] F06 Prompt System / F10 Input History / F11 Knowledge Parity
@@ -392,7 +392,7 @@ describe("ModeSystem Integration", () => {
 ### Phase E: 문서 & 릴리스
 - [ ] `CHANGELOG-CLINE.md`, `CHANGELOG.md`, `caret-docs/{ko,ja,zh}/CHANGELOG.md` 업데이트 (버전/날짜/브랜치/주요 기능 포함).
 - [ ] `webview-ui/src/caret/locale/{ko,en,ja,zh}/announcement.json` Current/Previous 섹션 업데이트(Phase D 결과 반영).
-- [ ] attempt-2-master에 최종 체크리스트/테스트 로그를 기록하고, `.caretrules/**` 등의 정책 변경을 문서화.
+- [ ] attempt-2-master에 최종 체크리스트/테스트 로그를 기록하고, `.agents/context/**` 등의 정책 변경을 문서화.
 - [ ] PR/릴리스 노트에 위 항목 링크를 첨부한다.
 
 ### Phase F: 자동화 & 누락 방지

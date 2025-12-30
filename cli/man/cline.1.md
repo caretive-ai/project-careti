@@ -315,18 +315,18 @@ Cline operates on a three-layer architecture:
 
 # BUGS
 
-Report bugs at: <https://github.com/cline/cline/issues>
+Report bugs at: <https://github.com/aicoding-caret/caret/issues>
 
 For real-time help, join the Discord community at: <https://discord.gg/cline>
 
 # SEE ALSO
 
-Full documentation: <https://docs.cline.bot>
+Full documentation: <https://docs.caret.team>
 
 # AUTHORS
 
-Cline is developed by the Cline Bot Inc. and the open source community.
+Caret is developed by the Caret team and the open source community.
 
 # COPYRIGHT
 
-Copyright © 2025 Cline Bot Inc. Licensed under the Apache License 2.0.
+Copyright © 2025 Caret Team. Licensed under the Apache License 2.0.

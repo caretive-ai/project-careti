@@ -29,7 +29,7 @@
 
 저희는 Cline의 강력한 기반 위에 B2B 환경과 글로벌 사용자를 위한 몇 가지 기능들을 추가하고 있습니다. 주요 내용은 다음과 같습니다.
 *   **글로벌 지원:** 4개 국어(한/영/일/중)를 지원하는 다국어(i18n) 시스템과 B2B 고객사를 위한 동적 브랜딩 및 UI 커스터마이징 기능을 구현했습니다.
-*   **독립적인 시스템:** gRPC 기반의 자체 계정 인증 시스템과, `.caretrules`의 우선순위를 관리하는 규칙 시스템을 구축하여 독립적인 운영이 가능하도록 했습니다.
+*   **독립적인 시스템:** gRPC 기반의 자체 계정 인증 시스템과, `.agents/context`의 우선순위를 관리하는 규칙 시스템을 구축하여 독립적인 운영이 가능하도록 했습니다.
 *   **AI 경험 강화:** 사용자가 AI의 페르소나를 직접 선택하고 관리할 수 있는 시스템과, Chatbot/Agent 모드 전환을 포함한 JSON 기반의 고급 프롬프트 시스템을 개발하여 AI와의 상호작용을 풍부하게 만들고 있습니다.
 
 전체 기능 목록과 상세 내용은 아래 링크에서 확인하실 수 있습니다.
@@ -65,7 +65,7 @@ You can check out all our work in our GitHub repository:
 
 We are adding several features for B2B environments and global users on top of Cline's powerful foundation. Here are some of the key highlights:
 *   **Global Support:** We've implemented a multilingual (i18n) system supporting four languages (KO/EN/JA/CN) and a dynamic branding/UI customization feature for our B2B clients.
-*   **Independent Systems:** We've built our own gRPC-based account authentication system and a rule system to manage `.caretrules` priorities, allowing for independent operation.
+*   **Independent Systems:** We've built our own gRPC-based account authentication system and a rule system to manage `.agents/context` priorities, allowing for independent operation.
 *   **Enhanced AI Experience:** We are enriching the interaction with AI by developing a system where users can select and manage AI personas, and an advanced JSON-based prompt system that includes switching between Chatbot and Agent modes.
 
 You can find a full list of features and more details at the link below:

@@ -48,8 +48,6 @@ const AppContent = () => {
 	const accountOrganizations = caretUser ? null : organizations
 	const accountActiveOrganization = caretUser ? null : activeOrganization
 
-	console.log("<===== app content user=====>", caretUser)
-
 	useEffect(() => {
 		if (shouldShowAnnouncement) {
 			setShowAnnouncement(true)

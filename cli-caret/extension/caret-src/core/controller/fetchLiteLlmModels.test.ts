@@ -239,6 +239,7 @@ describe("fetchLiteLlmModels", () => {
 			},
 		)
 	})
+
 })
 
 // CARET MODIFICATION: Integration test with real LiteLLM server (separate file to avoid mock conflicts)
@@ -248,31 +249,35 @@ describe.skip("Integration test with real LiteLLM server", () => {
 	// To run: remove .skip and run with --no-isolate flag
 	const mockController = {} as Controller
 
-	it("should fetch and filter models from real LiteLLM server", async () => {
-		const request = proto.caret.FetchLiteLlmModelsRequest.create({
-			baseUrl: "https://api.litellm.com",
-			apiKey: "test-key",
-		})
+	it(
+		"should fetch and filter models from real LiteLLM server",
+		async () => {
+			const request = proto.caret.FetchLiteLlmModelsRequest.create({
+				baseUrl: "https://api.litellm.com",
+				apiKey: "test-key",
+			})
 
-		const result = await fetchLiteLlmModels(mockController, request)
+			const result = await fetchLiteLlmModels(mockController, request)
 
-		// Assertions
-		expect(result.success).toBe(true)
-		expect(result.models).toBeDefined()
-		expect(Array.isArray(result.models)).toBe(true)
-		expect(result.errorMessage).toBe("")
+			// Assertions
+			expect(result.success).toBe(true)
+			expect(result.models).toBeDefined()
+			expect(Array.isArray(result.models)).toBe(true)
+			expect(result.errorMessage).toBe("")
 
-		console.log(`\n✅ Integration test result:`)
-		console.log(`   Total filtered models: ${result.models.length}`)
-		console.log(`   Models:`, result.models)
+			console.log(`\n✅ Integration test result:`)
+			console.log(`   Total filtered models: ${result.models.length}`)
+			console.log(`   Models:`, result.models)
 
-		// Verify that models are strings
-		result.models.forEach((model: string) => {
-			expect(typeof model).toBe("string")
-			expect(model.length).toBeGreaterThan(0)
-		})
+			// Verify that models are strings
+			result.models.forEach((model: string) => {
+				expect(typeof model).toBe("string")
+				expect(model.length).toBeGreaterThan(0)
+			})
 
-		// Based on previous manual test, we know at least one model should be returned
-		expect(result.models.length).toBeGreaterThan(0)
-	}, 90000) // 90 second timeout for real API calls
+			// Based on previous manual test, we know at least one model should be returned
+			expect(result.models.length).toBeGreaterThan(0)
+		},
+		90000,
+	) // 90 second timeout for real API calls
 })

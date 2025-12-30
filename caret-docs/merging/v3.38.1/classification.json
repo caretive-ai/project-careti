@@ -513,337 +513,337 @@
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules.original/caret-rules.json",
+			"file": ".agents/context.original/caret-rules.json",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules.original/workflows/ai-work-index.md",
+			"file": ".agents/context.original/workflows/ai-work-index.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules.original/workflows/ai-work-protocol.md",
+			"file": ".agents/context.original/workflows/ai-work-protocol.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules.original/workflows/architecture-guide.md",
+			"file": ".agents/context.original/workflows/architecture-guide.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules.original/workflows/caret-development.md",
+			"file": ".agents/context.original/workflows/caret-development.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules.original/workflows/document-organization.md",
+			"file": ".agents/context.original/workflows/document-organization.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules.original/workflows/merge-strategy.md",
+			"file": ".agents/context.original/workflows/merge-strategy.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules.original/workflows/testing-guide.md",
+			"file": ".agents/context.original/workflows/testing-guide.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/ai-feature.md",
+			"file": ".agents/context/ai-feature.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/ai-work-index.yaml",
+			"file": ".agents/context/ai-work-index.yaml",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/ai-work-protocol.md",
+			"file": ".agents/context/ai-work-protocol.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/architecture-guide.yaml",
+			"file": ".agents/context/architecture-guide.yaml",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/b2b-branding-workflow.md",
+			"file": ".agents/context/b2b-branding-workflow.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/build-system.md",
+			"file": ".agents/context/build-system.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/caret-architecture-guide.md",
+			"file": ".agents/context/caret-architecture-guide.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/caret-development.md",
+			"file": ".agents/context/caret-development.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/caret-rules.md",
+			"file": ".agents/context/caret-rules.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/cline-cli-subagent-research.md",
+			"file": ".agents/context/cline-cli-subagent-research.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/cline-modification.md",
+			"file": ".agents/context/cline-modification.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/component-architecture.md",
+			"file": ".agents/context/component-architecture.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/critical-verification.md",
+			"file": ".agents/context/critical-verification.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/document-organization.md",
+			"file": ".agents/context/document-organization.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/documentation-guide.md",
+			"file": ".agents/context/documentation-guide.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/frontend-backend-patterns.md",
+			"file": ".agents/context/frontend-backend-patterns.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/logging-rules.md",
+			"file": ".agents/context/logging-rules.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/merge-strategy.md",
+			"file": ".agents/context/merge-strategy.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/message-processing.md",
+			"file": ".agents/context/message-processing.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/new-component.md",
+			"file": ".agents/context/new-component.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/prompt-management.md",
+			"file": ".agents/context/prompt-management.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/system-prompt.md",
+			"file": ".agents/context/system-prompt.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/testing-guide.yaml",
+			"file": ".agents/context/testing-guide.yaml",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/testing-work.md",
+			"file": ".agents/context/testing-work.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/webview-communication.md",
+			"file": ".agents/context/webview-communication.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/ai-feature.md",
+			"file": ".agents/context/workflows/ai-feature.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/ai-work-protocol.md",
+			"file": ".agents/context/workflows/ai-work-protocol.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/atoms/backup-protocol.yaml",
+			"file": ".agents/context/workflows/atoms/backup-protocol.yaml",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/atoms/comment-protocol.md",
+			"file": ".agents/context/workflows/atoms/comment-protocol.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/atoms/hardcoding-prevention.md",
+			"file": ".agents/context/workflows/atoms/hardcoding-prevention.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/atoms/i18n-dynamic-pattern.md",
+			"file": ".agents/context/workflows/atoms/i18n-dynamic-pattern.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/atoms/message-flow.md",
+			"file": ".agents/context/workflows/atoms/message-flow.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/atoms/modification-levels.md",
+			"file": ".agents/context/workflows/atoms/modification-levels.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/atoms/modification-protocol.md",
+			"file": ".agents/context/workflows/atoms/modification-protocol.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/atoms/naming-conventions.md",
+			"file": ".agents/context/workflows/atoms/naming-conventions.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/atoms/semantic-equivalence-verification.md",
+			"file": ".agents/context/workflows/atoms/semantic-equivalence-verification.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/atoms/storage-patterns.md",
+			"file": ".agents/context/workflows/atoms/storage-patterns.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/atoms/tdd-cycle.yaml",
+			"file": ".agents/context/workflows/atoms/tdd-cycle.yaml",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/atoms/verification-steps.md",
+			"file": ".agents/context/workflows/atoms/verification-steps.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/branding-and-logging.md",
+			"file": ".agents/context/workflows/branding-and-logging.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/caret-development.md",
+			"file": ".agents/context/workflows/caret-development.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/cline-modification.md",
+			"file": ".agents/context/workflows/cline-modification.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/critical-verification.md",
+			"file": ".agents/context/workflows/critical-verification.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/document-organization.md",
+			"file": ".agents/context/workflows/document-organization.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/i18n-static-translation-fix.md",
+			"file": ".agents/context/workflows/i18n-static-translation-fix.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/merge-strategy.md",
+			"file": ".agents/context/workflows/merge-strategy.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/new-component.md",
+			"file": ".agents/context/workflows/new-component.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".caretrules/workflows/testing-work.md",
+			"file": ".agents/context/workflows/testing-work.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
@@ -885,259 +885,259 @@
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/ai-feature.md",
+			"file": ".agents/context/ai-feature.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/ai-work-index.md",
+			"file": ".agents/context/ai-work-index.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/ai-work-protocol.md",
+			"file": ".agents/context/ai-work-protocol.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/architecture-guide.md",
+			"file": ".agents/context/architecture-guide.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/caret-development.md",
+			"file": ".agents/context/caret-development.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/caret-rules.md",
+			"file": ".agents/context/caret-rules.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/cline-modification.md",
+			"file": ".agents/context/cline-modification.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/critical-verification.md",
+			"file": ".agents/context/critical-verification.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/document-organization.md",
+			"file": ".agents/context/document-organization.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/hooks/PostToolUse.example",
+			"file": ".agents/hooks/PostToolUse.example",
 			"strategy": "COMPLEX_MERGE",
 			"category": "CORE",
 			"reason": "양측 변경 → 3-way 필요"
 		},
 		{
-			"file": ".clinerules/hooks/PreToolUse.example",
+			"file": ".agents/hooks/PreToolUse.example",
 			"strategy": "COMPLEX_MERGE",
 			"category": "CORE",
 			"reason": "양측 변경 → 3-way 필요"
 		},
 		{
-			"file": ".clinerules/hooks/README.md",
+			"file": ".agents/hooks/README.md",
 			"strategy": "COMPLEX_MERGE",
 			"category": "CORE",
 			"reason": "양측 변경 → 3-way 필요"
 		},
 		{
-			"file": ".clinerules/hooks/TaskCancel.example",
+			"file": ".agents/hooks/TaskCancel.example",
 			"strategy": "AUTO_ADOPT",
 			"category": "CORE",
 			"reason": "cline-only 변경"
 		},
 		{
-			"file": ".clinerules/hooks/TaskResume.example",
+			"file": ".agents/hooks/TaskResume.example",
 			"strategy": "AUTO_ADOPT",
 			"category": "CORE",
 			"reason": "cline-only 변경"
 		},
 		{
-			"file": ".clinerules/hooks/TaskStart.example",
+			"file": ".agents/hooks/TaskStart.example",
 			"strategy": "AUTO_ADOPT",
 			"category": "CORE",
 			"reason": "cline-only 변경"
 		},
 		{
-			"file": ".clinerules/hooks/UserPromptSubmit.example",
+			"file": ".agents/hooks/UserPromptSubmit.example",
 			"strategy": "AUTO_ADOPT",
 			"category": "CORE",
 			"reason": "cline-only 변경"
 		},
 		{
-			"file": ".clinerules/merge-strategy.md",
+			"file": ".agents/context/merge-strategy.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/new-component.md",
+			"file": ".agents/context/new-component.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/testing-guide.md",
+			"file": ".agents/context/testing-guide.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/testing-work.md",
+			"file": ".agents/context/testing-work.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/ai-feature.md",
+			"file": ".agents/context/workflows/ai-feature.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/ai-work-index.md",
+			"file": ".agents/context/workflows/ai-work-index.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/ai-work-protocol.md",
+			"file": ".agents/context/workflows/ai-work-protocol.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/architecture-guide.md",
+			"file": ".agents/context/workflows/architecture-guide.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/atoms/backup-protocol.md",
+			"file": ".agents/context/workflows/atoms/backup-protocol.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/atoms/comment-protocol.md",
+			"file": ".agents/context/workflows/atoms/comment-protocol.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/atoms/message-flow.md",
+			"file": ".agents/context/workflows/atoms/message-flow.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/atoms/modification-levels.md",
+			"file": ".agents/context/workflows/atoms/modification-levels.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/atoms/naming-conventions.md",
+			"file": ".agents/context/workflows/atoms/naming-conventions.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/atoms/semantic-equivalence-verification.md",
+			"file": ".agents/context/workflows/atoms/semantic-equivalence-verification.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/atoms/storage-patterns.md",
+			"file": ".agents/context/workflows/atoms/storage-patterns.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/atoms/tdd-cycle.md",
+			"file": ".agents/context/workflows/atoms/tdd-cycle.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/atoms/verification-steps.md",
+			"file": ".agents/context/workflows/atoms/verification-steps.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/branding-and-logging.md",
+			"file": ".agents/context/workflows/branding-and-logging.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/caret-development.md",
+			"file": ".agents/context/workflows/caret-development.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/cline-modification.md",
+			"file": ".agents/context/workflows/cline-modification.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/critical-verification.md",
+			"file": ".agents/context/workflows/critical-verification.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/document-organization.md",
+			"file": ".agents/context/workflows/document-organization.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/extension-release.md",
+			"file": ".agents/context/workflows/extension-release.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/merge-strategy.md",
+			"file": ".agents/context/workflows/merge-strategy.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/new-component.md",
+			"file": ".agents/context/workflows/new-component.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/testing-guide.md",
+			"file": ".agents/context/workflows/testing-guide.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": ".clinerules/workflows/testing-work.md",
+			"file": ".agents/context/workflows/testing-work.md",
 			"strategy": "AUTO_KEEP",
 			"category": "CORE",
 			"reason": "caret-only 변경"
@@ -1971,7 +1971,7 @@
 			"reason": "caret-only 변경"
 		},
 		{
-			"file": "caret-docs/features/f05-rule-priority-system.md",
+			"file": "caret-docs/features/f06-agent-standardization.md",
 			"strategy": "AUTO_KEEP",
 			"category": "DOC",
 			"reason": "caret-only 변경"

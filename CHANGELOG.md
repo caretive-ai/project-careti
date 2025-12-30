@@ -25,6 +25,29 @@
   </table>
 </div>
 
+## [0.4.4] 2025-12-30
+
+### ✨ Improved
+- **Caret account Nano Banana integration**: Integrated Gemini Nano Banana image generation for Caret accounts so outputs can be used as project assets.
+- **Caret CLI**: Officially released the Caret CLI supporting Caret accounts and LiteLLM BYO providers.
+- **[Naver Cloud](https://clova.ai/) (Hyper Clova X)**: Added the Naver Cloud provider and HCX-007/HCX-005/HCX-DASH-002 models.
+- **AAIF international-standard Agents.md + project initialization**: Migrated legacy Caret/Cline rules to the AAIF standard and added project initialization support.
+- **Build/Release**: Stabilized build scripts and fixed asset sync order to improve build reliability.
+- **Rate-limit retries**: Implemented 5/10/20/40/60s backoff with user-visible countdowns.
+- **Docs/Model list**: Updated provider setup docs and the support-model list.
+- **Upstream**: Cherry-picked Cline v3.45.0 bugfixes.
+- **Cline v3.45.0 bug fixes**: Integrated the bugfix code that landed in Cline v3.45.0.
+- **Telemetry**: Added telemetry for error/quality tracking.
+
+### Fixed
+- **History images**: Fixed absolute-path images not rendering in history.
+- **Input drop**: Mitigated prompts being dropped after a response.
+- **Caret Provider**: Fixed Gemini3 behavior issues.
+- **Profile images**: Fixed missing images after login.
+- **Ask race**: Resolved ask race conditions.
+- **[Naver Cloud](https://clova.ai/) response handling**: Detects `status.code` and empty responses, with 429 mapping.
+- **Streaming stability**: Guarded empty stream chunks and improved streaming failure logging.
+
 ## [0.4.1] 2025-12-10
 
 ### ✨ Improved

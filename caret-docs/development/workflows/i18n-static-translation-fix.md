@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.caretrules/workflows/i18n-static-translation-fix.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.agents/context/workflows/i18n-static-translation-fix.md`를 기준으로 보세요.
 
 # i18n 정적 번역 문제 해결 워크플로우
 

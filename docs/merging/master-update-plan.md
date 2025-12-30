@@ -26,7 +26,7 @@ description: "Cline v3.38.1 머지 이후 캐럿 매뉴얼(MDX) 전반을 최신
 ## 5) 진행 상태(요약)
 - 완료: 전역 가이드/플레이북/차이요약 작성, 캐럿 `<Note>` 추가(Introduction Overview, Installing, Selecting Model, Your First Project, Anthropic, OpenAI, OpenRouter, Baseten, Mistral, Claude Code, Cerebras, Multiroot, Tasks Overview, Sidebar, Model Comparison, Context Windows, Local Models Overview, LM Studio, Ollama, Enterprise Overview/Security, Telemetry, Cline Rules, Hooks, Dictation).
 - 미완: 남은 모델·프로바이더(기타 세부), 기능/엔터프라이즈 세부 최신 내용 반영, 텍스트 본문 업스트림 최신화.
-  - 문서화 보조: `docs/merging/caret-policy-reference.mdx`와 `docs/merging/caret-policy-reference.md`로 캐럿 정책/차이 근거 정리 (F01~F11, 브랜딩/계정/Rule Priority/프롬프트/페르소나/피쳐 토글/프로바이더 세팅/입력 히스토리 등).
+  - 문서화 보조: `docs/merging/caret-policy-reference.mdx`와 `docs/merging/caret-policy-reference.md`로 캐럿 정책/차이 근거 정리 (F01~F12, 브랜딩/계정/Agent Standardization/프롬프트/페르소나/피쳐 토글/프로바이더 세팅/입력 히스토리/지식 패리티 등).
 
 ## 6) 작업 절차 체크리스트
 - [x] `git diff caret-main..cline-latest -- docs/<path>`로 대상 확인 후 파일 단위로 진행.

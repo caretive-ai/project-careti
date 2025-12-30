@@ -1,5 +1,6 @@
 import { Anthropic } from "@anthropic-ai/sdk"
 import { AssistantMessageContent } from "@core/assistant-message"
+import type { ClineContent } from "@shared/messages/content"
 import { ClineAskResponse } from "@shared/WebviewMessage"
 import type { HookExecution } from "./types/HookExecution"
 
@@ -48,9 +49,12 @@ export class TaskState {
 
 	// Retry tracking for auto-retry feature
 	autoRetryAttempts: number = 0
+	retryUserContent?: ClineContent[]
+	retryIncludeFileDetails?: boolean
 
 	// Task Initialization
 	isInitialized = false
+	agentsInitPrompted = false
 
 	// Focus Chain / Todo List Management
 	apiRequestCount: number = 0

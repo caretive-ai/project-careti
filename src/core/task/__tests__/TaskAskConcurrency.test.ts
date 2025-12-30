@@ -3,6 +3,7 @@ import { describe, it } from "mocha"
 import "should"
 import { Task } from "../index"
 import { TaskState } from "../TaskState"
+import { HostProvider } from "@/hosts/host-provider"
 
 class SimpleMutex {
 	private queue = Promise.resolve<void>(undefined)
@@ -24,12 +25,38 @@ class FakeMessageStateHandler {
 	async addToClineMessages(message: any) {
 		this.messages.push(message)
 	}
+	async updateClineMessage(index: number, updates: any) {
+		this.messages[index] = { ...this.messages[index], ...updates }
+	}
 }
 
 const tick = async () => new Promise((resolve) => setTimeout(resolve, 0))
 
 describe("Task.ask concurrency", () => {
+	const initHostProvider = () => {
+		// CARET MODIFICATION: Provide a minimal HostProvider stub for Logger usage.
+		if (HostProvider.isInitialized()) {
+			HostProvider.reset()
+		}
+		HostProvider.initialize(
+			() => ({} as any),
+			() => ({} as any),
+			{
+				workspaceClient: {} as any,
+				envClient: {} as any,
+				windowClient: {} as any,
+				diffClient: {} as any,
+			},
+			() => {},
+			async () => "",
+			async () => "",
+			"",
+			"",
+		)
+	}
+
 	it("should not ignore an ask when lastMessageTs changes (e.g. say() during ask)", async () => {
+		initHostProvider()
 		const task = Object.create(Task.prototype) as Task
 		;(task as any).taskState = new TaskState()
 		;(task as any).messageStateHandler = new FakeMessageStateHandler()
@@ -50,6 +77,7 @@ describe("Task.ask concurrency", () => {
 	})
 
 	it("should still ignore the previous ask when a new ask starts before responding", async () => {
+		initHostProvider()
 		const task = Object.create(Task.prototype) as Task
 		;(task as any).taskState = new TaskState()
 		;(task as any).messageStateHandler = new FakeMessageStateHandler()

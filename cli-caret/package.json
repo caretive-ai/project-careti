@@ -1,6 +1,6 @@
 {
 	"name": "@caretive/caret-cli",
-	"version": "0.0.1",
+	"version": "0.0.9",
 	"description": "Caret CLI (minimal fork of Cline CLI, packaged for caretive)",
 	"license": "MIT",
 	"bin": {
@@ -11,13 +11,26 @@
 		"bin/*",
 		"cline-core.js",
 		"proto/descriptor_set.pb",
-		"dist-standalone/**/*",
+		"dist-standalone/cline-core.js",
+		"dist-standalone/README.md",
+		"dist-standalone/package.json",
+		"dist-standalone/postinstall.js",
+		"dist-standalone/rg",
+		"dist-standalone/tree-sitter*.wasm",
+		"dist-standalone/binaries/**",
+		"dist-standalone/fake_node_modules/**",
+		"dist-standalone/node_modules/**",
+		"dist-standalone/extension/**",
+		"dist-standalone/proto/**",
+		"dist-standalone/man/**",
 		"extension/**/*",
 		"README.md",
+		"postinstall.js",
 		"scripts/*.sh"
 	],
 	"scripts": {
 		"build": "./scripts/build-local.sh",
-		"pack": "npm pack"
+		"pack": "npm pack",
+		"postinstall": "node ./postinstall.js"
 	}
 }

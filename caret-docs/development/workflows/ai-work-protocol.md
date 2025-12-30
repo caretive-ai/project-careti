@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.caretrules/workflows/ai-work-protocol.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.agents/context/workflows/ai-work-protocol.md`를 기준으로 보세요.
 
 체계적인 개발 접근을 위한 상세한 AI 작업 프로토콜을 따르고 있습니다.
 
@@ -18,7 +18,7 @@
 - caret-architecture-and-implementation-guide.md (섹션 10-11)
 
 **Cline 원본 수정**:
-- .caretrules의 파일 수정 체크리스트
+- .agents/context의 파일 수정 체크리스트
 - `.cline` 백업 생성 규칙은 Deprecated (새로 만들지 않음)
 - CARET MODIFICATION 주석 요구사항
 

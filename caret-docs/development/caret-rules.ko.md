@@ -3,20 +3,29 @@
 ## 규칙 관리 시스템
 
 ### 문서 접근 패턴 (AI 동작 방식)
-- **1단계 (초기화)**: AI는 세션 시작 시 `.caretrules/caret-rules.json` (JSON 인덱스)만 읽습니다.
+- **1단계 (초기화)**: AI는 세션 시작 시 `.agents/context/caret-rules.json` (JSON 인덱스)만 읽습니다.
 - **2단계 (작업 분석)**: JSON의 `workflows.index`를 참조하여 현재 작업에 필요한 워크플로우 파일을 식별합니다.
-- **3단계 (온디맨드 로드)**: 식별된 워크플로우 파일(예: `.caretrules/workflows/ai-feature.md`)을 **필요한 시점에만** 읽습니다.
+- **3단계 (온디맨드 로드)**: 식별된 워크플로우 파일(예: `.agents/context/workflows/ai-feature.md`)을 **필요한 시점에만** 읽습니다.
 - **이유**: 모든 규칙을 한 번에 읽는 것은 토큰 낭비이며, AI의 주의력을 분산시킵니다.
+
+### 워크플로우 선택 가이드 (온디맨드)
+- 기준 문서: `.agents/context/ai-work-index.yaml`
+- 절차:
+  1. 사용자 요청에서 키워드를 추출한다.
+  2. `ai-work-index.yaml`의 카테고리와 매칭한다.
+  3. 루트 요약(quick reference)을 먼저 읽는다.
+  4. 세부 절차가 필요할 때만 워크플로우 문서를 읽는다.
+  5. 사람용 문서 갱신은 `caret-docs/development/**`를 기준으로 한다.
 
 ### ⚠️ 문서 편집 가이드라인
 - **AI 개발자**: 규칙에 특정 버전 번호, 타임스탬프, 스냅샷 데이터 등을 포함하지 않아야 함
-- **사람 개발자**: 가급적 `.caretrules/` 파일을 직접 편집하지 말고 문서 워크플로우 업데이트를 통해 수정
+- **사람 개발자**: 가급적 `.agents/context/` 파일을 직접 편집하지 말고 문서 워크플로우 업데이트를 통해 수정
 
 ### 파일 매핑 (동기화 구조)
 ```
-.caretrules/caret-rules.json           ↔ caret-docs/development/caret-rules.ko.md (본 문서)
-.caretrules/workflows/*.md             ↔ caret-docs/development/*.md (대응 가이드)
-.caretrules/workflows/atoms/*.md        ↔ caret-docs/development/ 내 관련 가이드(예: testing-guide.md)
+.agents/context/caret-rules.json           ↔ caret-docs/development/caret-rules.ko.md (본 문서)
+.agents/context/workflows/*.md             ↔ caret-docs/development/*.md (대응 가이드)
+.agents/context/workflows/atoms/*.md        ↔ caret-docs/development/ 내 관련 가이드(예: testing-guide.md)
 ```
 
 ## 핵심 원칙
@@ -111,7 +120,7 @@ Caret의 webview와 Extension Host 간 통신 표준 패턴:
 - AI는 워크플로우를 통해 개발자와 동일한 정보에 접근해야 함
 
 ### 사용 가능한 워크플로우
-상세 절차는 `.caretrules/workflows/` 참조:
+상세 절차는 `.agents/context/workflows/` 참조:
 
 - **주요 워크플로우**: `ai-work-index.md`, `ai-work-protocol.md`, `caret-development.md`
 - **중요 검증**: `critical-verification.md`
@@ -185,10 +194,10 @@ content = content.replace(/cline\.GetCaretModeResponse/g, "caret.GetCaretModeRes
 
 ## 문서 구조 (KO 우선, features만 EN 병행)
 
-- **규칙/워크플로우 (AI & 프로젝트 규칙)**: `.caretrules/caret-rules.json`, `.caretrules/workflows/*`
+- **규칙/워크플로우 (AI & 프로젝트 규칙)**: `.agents/context/caret-rules.json`, `.agents/context/workflows/*`
 - **개발자 문서 (KO 우선)**: `caret-docs/development/index.md`
 - **기능 스펙 (EN 병행 유지)**: `caret-docs/features.en/index.md`
 
 **상호 참조**:
-- AI 규칙 인덱스: [.caretrules/caret-rules.json](../../.caretrules/caret-rules.json)
+- AI 규칙 인덱스: [.agents/context/caret-rules.json](../../.agents/context/caret-rules.json)
 - Knowledge Parity(F12): [f12-ai-developer-knowledge-parity.md](../features.en/f12-ai-developer-knowledge-parity.md)

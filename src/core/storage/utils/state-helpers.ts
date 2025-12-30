@@ -45,6 +45,7 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		sapAiCoreClientId,
 		sapAiCoreClientSecret,
 		huaweiCloudMaasApiKey,
+		naverCloudApiKey,
 		basetenApiKey,
 		zaiApiKey,
 		ollamaApiKey,
@@ -91,6 +92,7 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		context.secrets.get("sapAiCoreClientId") as Promise<Secrets["sapAiCoreClientId"]>,
 		context.secrets.get("sapAiCoreClientSecret") as Promise<Secrets["sapAiCoreClientSecret"]>,
 		context.secrets.get("huaweiCloudMaasApiKey") as Promise<Secrets["huaweiCloudMaasApiKey"]>,
+		context.secrets.get("naverCloudApiKey") as Promise<Secrets["naverCloudApiKey"]>,
 		context.secrets.get("basetenApiKey") as Promise<Secrets["basetenApiKey"]>,
 		context.secrets.get("zaiApiKey") as Promise<Secrets["zaiApiKey"]>,
 		context.secrets.get("ollamaApiKey") as Promise<Secrets["ollamaApiKey"]>,
@@ -116,6 +118,7 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		"caret:caretAccountId": caretAccountId,
 		huggingFaceApiKey,
 		huaweiCloudMaasApiKey,
+		naverCloudApiKey,
 		basetenApiKey,
 		zaiApiKey,
 		ollamaApiKey,
@@ -395,6 +398,11 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const planModeHuaweiCloudMaasModelInfo = context.globalState.get<
 			GlobalStateAndSettings["planModeHuaweiCloudMaasModelInfo"]
 		>("planModeHuaweiCloudMaasModelInfo")
+		// CARET MODIFICATION: Naver Cloud model selections
+		const planModeNaverCloudModelId =
+			context.globalState.get<GlobalStateAndSettings["planModeNaverCloudModelId"]>("planModeNaverCloudModelId")
+		const planModeNaverCloudModelInfo =
+			context.globalState.get<GlobalStateAndSettings["planModeNaverCloudModelInfo"]>("planModeNaverCloudModelInfo")
 		const planModeVercelAiGatewayModelId =
 			context.globalState.get<GlobalStateAndSettings["planModeVercelAiGatewayModelId"]>("planModeVercelAiGatewayModelId")
 		const planModeVercelAiGatewayModelInfo = context.globalState.get<
@@ -478,6 +486,11 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const actModeHuaweiCloudMaasModelInfo = context.globalState.get<
 			GlobalStateAndSettings["actModeHuaweiCloudMaasModelInfo"]
 		>("actModeHuaweiCloudMaasModelInfo")
+		// CARET MODIFICATION: Naver Cloud model selections
+		const actModeNaverCloudModelId =
+			context.globalState.get<GlobalStateAndSettings["actModeNaverCloudModelId"]>("actModeNaverCloudModelId")
+		const actModeNaverCloudModelInfo =
+			context.globalState.get<GlobalStateAndSettings["actModeNaverCloudModelInfo"]>("actModeNaverCloudModelInfo")
 		const actModeVercelAiGatewayModelId =
 			context.globalState.get<GlobalStateAndSettings["actModeVercelAiGatewayModelId"]>("actModeVercelAiGatewayModelId")
 		const actModeVercelAiGatewayModelInfo = context.globalState.get<
@@ -543,6 +556,9 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const caretModeSystem = context.globalState.get<GlobalStateAndSettings["caretModeSystem"]>("caretModeSystem")
 		const enablePersonaSystem = context.globalState.get<GlobalStateAndSettings["enablePersonaSystem"]>("enablePersonaSystem")
 		const currentPersona = context.globalState.get<GlobalStateAndSettings["currentPersona"]>("currentPersona")
+		const imageGenerationAspectRatio =
+			context.globalState.get<GlobalStateAndSettings["imageGenerationAspectRatio"]>("imageGenerationAspectRatio")
+		const imageGenerationSize = context.globalState.get<GlobalStateAndSettings["imageGenerationSize"]>("imageGenerationSize")
 
 		return {
 			// api configuration fields
@@ -625,6 +641,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			planModeHuggingFaceModelInfo,
 			planModeHuaweiCloudMaasModelId,
 			planModeHuaweiCloudMaasModelInfo,
+			planModeNaverCloudModelId,
+			planModeNaverCloudModelInfo,
 			planModeVercelAiGatewayModelId,
 			planModeVercelAiGatewayModelInfo,
 			planModeBasetenModelId,
@@ -668,6 +686,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			actModeHuggingFaceModelInfo,
 			actModeHuaweiCloudMaasModelId,
 			actModeHuaweiCloudMaasModelInfo,
+			actModeNaverCloudModelId,
+			actModeNaverCloudModelInfo,
 			actModeVercelAiGatewayModelId,
 			actModeVercelAiGatewayModelInfo,
 			actModeBasetenModelId,
@@ -722,11 +742,14 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			lastDismissedInfoBannerVersion: lastDismissedInfoBannerVersion ?? 0,
 			lastDismissedModelBannerVersion: lastDismissedModelBannerVersion ?? 0,
 			lastDismissedCliBannerVersion: lastDismissedCliBannerVersion ?? 0,
-			nativeToolCallEnabled: nativeToolCallEnabled ?? false,
+			// CARET MODIFICATION: Match Cline latest default to avoid duplicate plan_mode_respond text.
+			nativeToolCallEnabled: nativeToolCallEnabled ?? true,
 			// CARET MODIFICATION: Caret-specific global state defaults
 			caretModeSystem: caretModeSystem ?? "caret",
 			enablePersonaSystem: enablePersonaSystem ?? true,
 			currentPersona: currentPersona ?? undefined,
+			imageGenerationAspectRatio,
+			imageGenerationSize,
 			// Multi-root workspace support
 			workspaceRoots,
 			primaryRootIndex: primaryRootIndex ?? 0,
@@ -801,6 +824,7 @@ export async function resetGlobalState(controller: Controller) {
 		"nebiusApiKey",
 		"huggingFaceApiKey",
 		"huaweiCloudMaasApiKey",
+		"naverCloudApiKey",
 		"vercelAiGatewayApiKey",
 		"zaiApiKey",
 		"difyApiKey",

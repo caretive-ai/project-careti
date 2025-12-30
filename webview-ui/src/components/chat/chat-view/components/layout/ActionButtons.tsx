@@ -9,6 +9,41 @@ import { useShortcut } from "@/utils/hooks"
 import { type ButtonActionType, getButtonConfig } from "../../shared/buttonConfig"
 import type { ChatState, MessageHandlers } from "../../types/chatTypes"
 
+const IGNORED_SAY_TYPES_FOR_BUTTONS: ClineMessage["say"][] = [
+	"api_req_finished",
+	"api_req_retried",
+	"deleted_api_reqs",
+	"task_progress",
+	"mcp_server_request_started",
+]
+
+const shouldIgnoreMessageForButtons = (message: ClineMessage) => {
+	if (message.type !== "say") {
+		return false
+	}
+	if (message.say && IGNORED_SAY_TYPES_FOR_BUTTONS.includes(message.say)) {
+		return true
+	}
+	if (message.say === "text" && (message.text ?? "") === "" && (message.images?.length ?? 0) === 0) {
+		return true
+	}
+	return false
+}
+
+const getLastMessageForButtons = (messages: ClineMessage[]) => {
+	for (let index = messages.length - 1; index >= 0; index -= 1) {
+		const message = messages[index]
+		if (!message) {
+			continue
+		}
+		if (shouldIgnoreMessageForButtons(message)) {
+			continue
+		}
+		return message
+	}
+	return messages.at(-1)
+}
+
 interface ActionButtonsProps {
 	task?: ClineMessage
 	messages: ClineMessage[]
@@ -54,6 +89,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 		return [messages.at(-1), messages.at(-2)]
 	}, [messages])
 
+	const lastMessageForButtons = useMemo(() => getLastMessageForButtons(messages), [messages])
+
 	// Clear input when transitioning from command_output to api_req
 	// This happens when user provides feedback during command execution
 	useEffect(() => {
@@ -66,14 +103,14 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
 	// Apply button configuration with a single batched update
 	useEffect(() => {
-		const buttonConfig = getButtonConfig(lastMessage, mode, t)
+		const buttonConfig = getButtonConfig(lastMessageForButtons, mode, t)
 		setEnableButtons(buttonConfig.enableButtons)
 		setSendingDisabled(buttonConfig.sendingDisabled)
 		setPrimaryButtonText(buttonConfig.primaryText)
 		setSecondaryButtonText(buttonConfig.secondaryText)
 		setPrimaryAction(buttonConfig.primaryAction)
 		setSecondaryAction(buttonConfig.secondaryAction)
-	}, [lastMessage, mode, setSendingDisabled, t])
+	}, [lastMessageForButtons, mode, setSendingDisabled, t])
 
 	useEffect(() => {
 		if (!messages?.length) {

@@ -41,6 +41,7 @@ export const config = createVariant(ModelFamily.XS)
 		ClineDefaultTool.FILE_EDIT,
 		ClineDefaultTool.SEARCH,
 		ClineDefaultTool.LIST_FILES,
+		ClineDefaultTool.GENERATE_IMAGE,
 		ClineDefaultTool.ASK,
 		ClineDefaultTool.ATTEMPT,
 		ClineDefaultTool.NEW_TASK,

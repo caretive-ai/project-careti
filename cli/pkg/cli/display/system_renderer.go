@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/cline/cli/pkg/cli/clerror"
+	"github.com/cline/cli/pkg/common"
 )
 
 // ErrorSeverity represents the severity level of an error
@@ -114,8 +115,9 @@ func (sr *SystemMessageRenderer) RenderBalanceError(err *clerror.ClineError) err
 	} else {
 		// Fallback - show both personal and org URLs
 		parts = append(parts, "**→ Buy credits:**")
-		parts = append(parts, "  - Personal: https://app.cline.bot/dashboard/account?tab=credits")
-		parts = append(parts, "  - Organization: https://app.cline.bot/dashboard/organization?tab=credits")
+		appURL := common.BrandAppURL()
+		parts = append(parts, fmt.Sprintf("  - Personal: %s/dashboard/account?tab=credits", appURL))
+		parts = append(parts, fmt.Sprintf("  - Organization: %s/dashboard/organization?tab=credits", appURL))
 	}
 
 	// Request ID (less prominent at the end)
@@ -150,8 +152,8 @@ func (sr *SystemMessageRenderer) RenderAuthError(err *clerror.ClineError) error 
 	// Guidance
 	parts = append(parts, "**Next Steps:**")
 	parts = append(parts, "- Check your API key configuration")
-	parts = append(parts, "- Run `cline auth` to authenticate")
-	parts = append(parts, "- Verify your account status at https://app.cline.bot")
+	parts = append(parts, fmt.Sprintf("- Run `%s auth` to authenticate", common.BrandCommandName()))
+	parts = append(parts, fmt.Sprintf("- Verify your account status at %s", common.BrandAppURL()))
 
 	// Request ID
 	if err.RequestID != "" {

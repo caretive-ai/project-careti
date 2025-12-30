@@ -2,7 +2,7 @@
 	"name": "caret",
 	"displayName": "Caret",
 	"description": "🎯 Transform your coding workflow with the most intelligent AI assistant for Visual Studio Code. Autonomous code generation, multi-file refactoring, and 20+ AI models. Supports: 한국어, 日本語, 中文.",
-	"version": "3.38.1",
+	"version": "0.4.4",
 	"icon": "assets/icons/icon.png",
 	"engines": {
 		"vscode": "^1.84.0"
@@ -129,59 +129,59 @@
 		},
 		"commands": [
 			{
-				"command": "cline.plusButtonClicked",
+				"command": "caretive.caret.plusButtonClicked",
 				"title": "New Task",
 				"icon": "$(add)"
 			},
 			{
-				"command": "cline.mcpButtonClicked",
+				"command": "caretive.caret.mcpButtonClicked",
 				"title": "MCP Servers",
 				"icon": "$(server)"
 			},
 			{
-				"command": "cline.historyButtonClicked",
+				"command": "caretive.caret.historyButtonClicked",
 				"title": "History",
 				"icon": "$(history)"
 			},
 			{
-				"command": "cline.accountButtonClicked",
+				"command": "caretive.caret.accountButtonClicked",
 				"title": "Account",
 				"icon": "$(account)"
 			},
 			{
-				"command": "cline.settingsButtonClicked",
+				"command": "caretive.caret.settingsButtonClicked",
 				"title": "Settings",
 				"icon": "$(settings-gear)"
 			},
 			{
-				"command": "cline.dev.createTestTasks",
+				"command": "caretive.caret.dev.createTestTasks",
 				"title": "Create Test Tasks",
 				"category": "Caret",
 				"when": "cline.isDevMode"
 			},
 			{
-				"command": "cline.dev.expireMcpOAuthTokens",
+				"command": "caretive.caret.dev.expireMcpOAuthTokens",
 				"title": "Expire MCP OAuth Tokens (for testing)",
 				"category": "Caret",
 				"when": "cline.isDevMode"
 			},
 			{
-				"command": "cline.addToChat",
+				"command": "caretive.caret.addToChat",
 				"title": "Add to Caret",
 				"category": "Caret"
 			},
 			{
-				"command": "cline.addTerminalOutputToChat",
+				"command": "caretive.caret.addTerminalOutputToChat",
 				"title": "Add to Caret",
 				"category": "Caret"
 			},
 			{
-				"command": "cline.focusChatInput",
+				"command": "caretive.caret.focusChatInput",
 				"title": "Jump to Chat Input",
 				"category": "Caret"
 			},
 			{
-				"command": "cline.generateGitCommitMessage",
+				"command": "caretive.caret.generateGitCommitMessage",
 				"title": "Generate Commit Message with Caret",
 				"category": "Caret",
 				"icon": {
@@ -190,35 +190,35 @@
 				}
 			},
 			{
-				"command": "cline.abortGitCommitMessage",
+				"command": "caretive.caret.abortGitCommitMessage",
 				"title": "Generate Commit Message with Caret - Stop",
 				"category": "Caret",
 				"icon": "$(debug-stop)"
 			},
 			{
-				"command": "cline.explainCode",
+				"command": "caretive.caret.explainCode",
 				"title": "Explain with Caret",
 				"category": "Caret"
 			},
 			{
-				"command": "cline.improveCode",
+				"command": "caretive.caret.improveCode",
 				"title": "Improve with Caret",
 				"category": "Caret"
 			},
 			{
-				"command": "cline.openWalkthrough",
+				"command": "caretive.caret.openWalkthrough",
 				"title": "Open Walkthrough",
 				"category": "Caret"
 			},
 			{
-				"command": "cline.reconstructTaskHistory",
+				"command": "caretive.caret.reconstructTaskHistory",
 				"title": "Reconstruct Task History",
 				"category": "Caret"
 			}
 		],
 		"keybindings": [
 			{
-				"command": "cline.addToChat",
+				"command": "caretive.caret.addToChat",
 				"key": "cmd+'",
 				"mac": "cmd+'",
 				"win": "ctrl+'",
@@ -226,11 +226,11 @@
 				"when": "editorHasSelection"
 			},
 			{
-				"command": "cline.generateGitCommitMessage",
+				"command": "caretive.caret.generateGitCommitMessage",
 				"when": "config.git.enabled && scmProvider == git"
 			},
 			{
-				"command": "cline.focusChatInput",
+				"command": "caretive.caret.focusChatInput",
 				"key": "cmd+'",
 				"mac": "cmd+'",
 				"win": "ctrl+'",
@@ -241,63 +241,63 @@
 		"menus": {
 			"view/title": [
 				{
-					"command": "cline.plusButtonClicked",
+					"command": "caretive.caret.plusButtonClicked",
 					"group": "navigation@1",
 					"when": "view == caret.SidebarProvider"
 				},
 				{
-					"command": "cline.mcpButtonClicked",
+					"command": "caretive.caret.mcpButtonClicked",
 					"group": "navigation@2",
 					"when": "view == caret.SidebarProvider"
 				},
 				{
-					"command": "cline.historyButtonClicked",
+					"command": "caretive.caret.historyButtonClicked",
 					"group": "navigation@3",
 					"when": "view == caret.SidebarProvider"
 				},
 				{
-					"command": "cline.accountButtonClicked",
+					"command": "caretive.caret.accountButtonClicked",
 					"group": "navigation@5",
 					"when": "view == caret.SidebarProvider"
 				},
 				{
-					"command": "cline.settingsButtonClicked",
+					"command": "caretive.caret.settingsButtonClicked",
 					"group": "navigation@6",
 					"when": "view == caret.SidebarProvider"
 				}
 			],
 			"editor/context": [
 				{
-					"command": "cline.addToChat",
+					"command": "caretive.caret.addToChat",
 					"group": "navigation",
 					"when": "editorHasSelection"
 				}
 			],
 			"terminal/context": [
 				{
-					"command": "cline.addTerminalOutputToChat",
+					"command": "caretive.caret.addTerminalOutputToChat",
 					"group": "navigation"
 				}
 			],
 			"scm/title": [
 				{
-					"command": "cline.generateGitCommitMessage",
+					"command": "caretive.caret.generateGitCommitMessage",
 					"group": "navigation",
 					"when": "config.git.enabled && scmProvider == git && !cline.isGeneratingCommit"
 				},
 				{
-					"command": "cline.abortGitCommitMessage",
+					"command": "caretive.caret.abortGitCommitMessage",
 					"group": "navigation",
 					"when": "config.git.enabled && scmProvider == git && cline.isGeneratingCommit"
 				}
 			],
 			"commandPalette": [
 				{
-					"command": "cline.generateGitCommitMessage",
+					"command": "caretive.caret.generateGitCommitMessage",
 					"when": "config.git.enabled && !cline.isGeneratingCommit"
 				},
 				{
-					"command": "cline.abortGitCommitMessage",
+					"command": "caretive.caret.abortGitCommitMessage",
 					"when": "config.git.enabled && cline.isGeneratingCommit"
 				}
 			]
@@ -309,7 +309,7 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",
-		"compile": "npm run check-types && npm run lint && node esbuild.mjs",
+		"compile": "GOPATH= npm run check-types:backend && npm run lint && node esbuild.mjs",
 		"compile:backend": "npm run protos && npx tsc --noEmit",
 		"compile-standalone": "npm run check-types && npm run lint && node esbuild.mjs --standalone",
 		"compile-standalone-npm": "npm run protos && npm run protos-go && npm run check-types && npm run lint && node esbuild.mjs --standalone",
@@ -337,15 +337,18 @@
 		"clean:all": "npm run clean:build && npm run clean:deps",
 		"compile-tests": "node ./scripts/build-tests.js",
 		"watch-tests": "tsc -p . -w --outDir out",
-		"check-types": "npm run protos && npx tsc --noEmit && cd webview-ui && npx tsc -b --noEmit",
+		"check-types": "npm run check-types:backend && npm run check-types:frontend",
+		"check-types:backend": "npm run protos && npx tsc --noEmit",
+		"check-types:frontend": "cd webview-ui && npm run copy:assets && npx tsc -b --noEmit",
 		"lint": "biome lint --no-errors-on-unmatched --files-ignore-unknown=true --diagnostic-level=error && npm run lint:proto",
 		"lint:proto": "bash ./scripts/proto-lint.sh",
 		"format": "biome format --changed --no-errors-on-unmatched --files-ignore-unknown=true --diagnostic-level=error",
 		"format:fix": "biome check --changed --no-errors-on-unmatched --files-ignore-unknown=true --write",
 		"fix:all": "biome check --no-errors-on-unmatched --files-ignore-unknown=true --write --diagnostic-level=error --unsafe",
 		"ci:check-all": "npm-run-all -p check-types lint format",
-		"ci:build": "npm run protos && npm run build:webview && node esbuild.mjs && npm run compile-tests",
+		"ci:build": "GOPATH= npm run protos && npm run build:webview && node esbuild.mjs && npm run compile-tests",
 		"pretest": "npm run compile && npm run compile-tests && npm run compile-standalone && npm run lint",
+		"test:all": "npm-run-all test:unit test:integration",
 		"test": "npm-run-all test:unit test:integration",
 		"test:integration": "vscode-test",
 		"test:unit": "cross-env TS_NODE_PROJECT=./tsconfig.unit-test.json mocha # Use `UPDATE_SNAPSHOTS=true npm run test:unit` to rebuild prompt snapshots",
@@ -370,7 +373,8 @@
 		"docs": "cd docs && npm run dev",
 		"docs:check-links": "cd docs && npm run check",
 		"docs:rename-file": "cd docs && npm run rename",
-		"report-issue": "node scripts/report-issue.js"
+		"report-issue": "node scripts/report-issue.js",
+		"package:release": "node caret-scripts/build/package-release.js"
 	},
 	"lint-staged": {
 		"*": [
@@ -386,6 +390,7 @@
 		"@types/clone-deep": "^4.0.4",
 		"@types/diff": "^5.2.1",
 		"@types/get-folder-size": "^3.0.4",
+		"@types/minimist": "^1.2.5",
 		"@types/mocha": "^10.0.7",
 		"@types/node": "20.x",
 		"@types/pdf-parse": "^1.1.4",
@@ -426,6 +431,7 @@
 		"@aws-sdk/client-bedrock-runtime": "^3.922.0",
 		"@aws-sdk/credential-providers": "^3.922.0",
 		"@bufbuild/protobuf": "^2.2.5",
+		"@caretive/caret-cli": "^0.0.4",
 		"@cerebras/cerebras_cloud_sdk": "^1.35.0",
 		"@google-cloud/vertexai": "^1.9.3",
 		"@google/genai": "^1.30.0",
@@ -508,6 +514,7 @@
 		"ulid": "^2.4.0",
 		"undici": "^7.16.0",
 		"uuid": "^11.1.0",
+		"vitest": "^4.0.15",
 		"vscode-uri": "^3.1.0",
 		"web-tree-sitter": "^0.22.6",
 		"zod": "^3.24.2"

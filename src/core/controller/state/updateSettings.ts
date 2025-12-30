@@ -291,6 +291,16 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			controller.stateManager.setGlobalState("autoCondenseThreshold", threshold)
 		}
 
+		if (request.imageGenerationAspectRatio !== undefined) {
+			const ratio = (request.imageGenerationAspectRatio || "").trim()
+			controller.stateManager.setGlobalState("imageGenerationAspectRatio", ratio || undefined)
+		}
+
+		if (request.imageGenerationSize !== undefined) {
+			const size = (request.imageGenerationSize || "").trim()
+			controller.stateManager.setGlobalState("imageGenerationSize", size || undefined)
+		}
+
 		if (request.multiRootEnabled !== undefined) {
 			controller.stateManager.setGlobalState("multiRootEnabled", !!request.multiRootEnabled)
 		}

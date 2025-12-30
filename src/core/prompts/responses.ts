@@ -241,28 +241,28 @@ Otherwise, if you have not completed the task and do not need additional informa
 		`# ${PRIMARY_IGNORE_FILENAME} (.clineignore legacy)\n\n(The following is provided by a root-level ${PRIMARY_IGNORE_FILENAME}/${LEGACY_IGNORE_FILENAME} file where the user has specified files and directories that should not be accessed. When using list_files, you'll notice a ${LOCK_TEXT_SYMBOL} next to files that are blocked. Attempting to access the file's contents e.g. through read_file will result in an error.)\n\n${content}\n${PRIMARY_IGNORE_FILENAME}`,
 
 	clineRulesGlobalDirectoryInstructions: (globalClineRulesFilePath: string, content: string) =>
-		`# .clinerules/\n\nThe following is provided by a global .clinerules/ directory, located at ${globalClineRulesFilePath.toPosix()}, where the user has specified instructions for all working directories:\n\n${content}`,
+		`# ${BRAND_RULES_FILE_NAME}/\n\nThe following is provided by a global ${BRAND_RULES_FILE_NAME}/ directory, located at ${globalClineRulesFilePath.toPosix()}, where the user has specified instructions for all working directories:\n\n${content}`,
 
 	caretRulesLocalDirectoryInstructions: (cwd: string, content: string) =>
 		`# ${BRAND_RULES_FILE_NAME}/\n\nThe following is provided by a root-level ${BRAND_RULES_FILE_NAME}/ directory where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
 
 	clineRulesLocalDirectoryInstructions: (cwd: string, content: string) =>
-		`# .clinerules/\n\nThe following is provided by a root-level .clinerules/ directory where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
+		`# ${BRAND_RULES_FILE_NAME}/\n\nThe following is provided by a root-level ${BRAND_RULES_FILE_NAME}/ directory where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
 
 	caretRulesLocalFileInstructions: (cwd: string, content: string) =>
 		`# ${BRAND_RULES_FILE_NAME}\n\nThe following is provided by a root-level ${BRAND_RULES_FILE_NAME} file where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
 
 	clineRulesLocalFileInstructions: (cwd: string, content: string) =>
-		`# .clinerules\n\nThe following is provided by a root-level .clinerules file where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
+		`# ${BRAND_RULES_FILE_NAME}\n\nThe following is provided by a root-level ${BRAND_RULES_FILE_NAME} file where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
 
 	windsurfRulesLocalFileInstructions: (cwd: string, content: string) =>
-		`# .windsurfrules\n\nThe following is provided by a root-level .windsurfrules file where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
+		`# .agents/context\n\nThe following is provided by a root-level .agents/context file where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
 
 	cursorRulesLocalFileInstructions: (cwd: string, content: string) =>
-		`# .cursorrules\n\nThe following is provided by a root-level .cursorrules file where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
+		`# .agents/context\n\nThe following is provided by a root-level .agents/context file where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
 
 	cursorRulesLocalDirectoryInstructions: (cwd: string, content: string) =>
-		`# .cursor/rules\n\nThe following is provided by a root-level .cursor/rules directory where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
+		`# .agents/context\n\nThe following is provided by a root-level .agents/context directory where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${content}`,
 
 	agentsRulesLocalFileInstructions: (cwd: string, content: string) =>
 		`# AGENTS.md\n\nThe following is provided by AGENTS.md files found recursively throughout this working directory (${cwd.toPosix()}) where the user has specified instructions. Nested AGENTS.md will be combined below, and you should only apply the instructions for each AGENTS.md file that is directly applicable to the current task, i.e. if you are reading or writing to a file in that directory.\n\n${content}`,

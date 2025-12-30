@@ -8,179 +8,179 @@
 | .3way-merge-rules.md | comment | 12 | # 2단계: CARET MODIFICATION 검색 |
 | .3way-merge-rules.md | comment | 20 | 1. **Caret 수정사항 식별** - CARET MODIFICATION 주석 찾기 |
 | .3way-merge-rules.md | comment | 33 | - [ ] CARET MODIFICATION 확인 |
-| .caretrules.original/caret-rules.json | comment | 30 | "comment_required": "// CARET MODIFICATION: [description]", |
-| .caretrules.original/caret-rules.json | comment | 42 | "CARET MODIFICATION comment added?", |
-| .caretrules.original/caret-rules.json | comment | 62 | "Cline file modification: backup + CARET MODIFICATION comment required", |
-| .caretrules.original/caret-rules.json | comment | 84 | "Skip CARET MODIFICATION comment" |
-| .caretrules.original/workflows/ai-work-index.md | comment | 46 | - [ ] CARET MODIFICATION comment plan (for Cline original modifications) |
-| .caretrules.original/workflows/ai-work-protocol.md | comment | 21 | - CARET MODIFICATION comment requirements |
-| .caretrules.original/workflows/ai-work-protocol.md | comment | 55 | - Add comment: `// CARET MODIFICATION: [clear description]` |
-| .caretrules.original/workflows/architecture-guide.md | comment | 19 | - Mandatory: backup + CARET MODIFICATION comment |
-| .caretrules.original/workflows/architecture-guide.md | comment | 41 | 3. **Comment Protocol**: // CARET MODIFICATION: [clear description] |
-| .caretrules.original/workflows/caret-development.md | comment | 24 | - **Cline Modification**: Backup rules, CARET MODIFICATION requirements |
-| .caretrules.original/workflows/caret-development.md | comment | 42 | - Add `// CARET MODIFICATION:` comment |
-| .caretrules.original/workflows/caret-development.md | comment | 101 | Never modify Cline files without backup and CARET MODIFICATION comment. |
-| .caretrules.original/workflows/document-organization.md | comment | 31 | - `/comment-protocol`: CARET MODIFICATION requirements |
-| .caretrules.original/workflows/merge-strategy.md | comment | 27 | - Add `// CARET MODIFICATION:` comment |
-| .caretrules.original/workflows/merge-strategy.md | comment | 34 | - Document reason in CARET MODIFICATION comment |
-| .caretrules.original/workflows/merge-strategy.md | comment | 57 | # Find all CARET MODIFICATION comments |
-| .caretrules.original/workflows/merge-strategy.md | comment | 58 | grep -r "CARET MODIFICATION" src/ webview-ui/ --include="*.ts" --include="*.tsx" |
-| .caretrules/ai-work-index.yaml | comment | 44 | note: Always check CARET MODIFICATION comment requirements (backup deprecated) |
-| .caretrules/ai-work-index.yaml | comment | 131 | - CARET MODIFICATION comment plan (for Cline original modifications) |
-| .caretrules/ai-work-protocol.md | comment | 28 | - [ ] Add `// CARET MODIFICATION:` comment (~~backup deprecated~~) |
-| .caretrules/architecture-guide.yaml | comment | 24 | mandatory: [backup, CARET MODIFICATION comment] |
-| .caretrules/architecture-guide.yaml | comment | 51 | - Comment Protocol: "// CARET MODIFICATION: [clear description]" |
-| .caretrules/caret-architecture-guide.md | comment | 17 | **Frontend**: Minimal modifications with `CARET MODIFICATION` comments |
-| .caretrules/caret-architecture-guide.md | comment | 26 | // CARET MODIFICATION: Added PersonaAvatar for visual identification |
-| .caretrules/caret-architecture-guide.md | comment | 45 | - Mandatory: `// CARET MODIFICATION: [description]` comment |
-| .caretrules/caret-architecture-guide.md | comment | 141 | - ✅ Add `CARET MODIFICATION` comments for Cline file changes |
-| .caretrules/caret-architecture-guide.md | comment | 146 | - ❌ Never modify Cline files without `CARET MODIFICATION` comment |
-| .caretrules/caret-development.md | comment | 23 | - [ ] GREEN: Minimal implementation (add `// CARET MODIFICATION:` if touching Cline files) |
-| .caretrules/caret-development.md | comment | 39 | **Cline Modification**: ~~Backup rules~~ (deprecated), CARET MODIFICATION comment requirements |
-| .caretrules/caret-rules.md | comment | 49 | - **Comment required**: `// CARET MODIFICATION: [description]` |
-| .caretrules/caret-rules.md | comment | 71 | 2. CARET MODIFICATION comment added? |
-| .caretrules/caret-rules.md | comment | 110 | - Cline file modification: backup + CARET MODIFICATION comment required |
-| .caretrules/caret-rules.md | comment | 130 | - `comment-protocol.md` - CARET MODIFICATION tracking |
-| .caretrules/caret-rules.md | comment | 149 | - Modify Cline files without CARET MODIFICATION comment |
-| .caretrules/caret-rules.md | comment | 152 | - Skip CARET MODIFICATION comment |
-| .caretrules/cline-modification.md | comment | 11 | 3. **Clear Tracking**: `// CARET MODIFICATION:` comment for all changes |
-| .caretrules/cline-modification.md | comment | 22 | - [ ] Add `// CARET MODIFICATION: [what and why]` comment |
-| .caretrules/cline-modification.md | comment | 36 | // CARET MODIFICATION: Caret fields (72 + 1000 = 1072+) |
-| .caretrules/cline-modification.md | comment | 63 | - `/comment-protocol` - CARET MODIFICATION tracking rules |
-| .caretrules/documentation-guide.md | comment | 51 | ## CARET MODIFICATION Comment Protocol |
-| .caretrules/documentation-guide.md | comment | 57 | // CARET MODIFICATION: [clear description] |
-| .caretrules/documentation-guide.md | comment | 62 | /* CARET MODIFICATION: [clear description] */ |
-| .caretrules/documentation-guide.md | comment | 67 | <!-- CARET MODIFICATION: [clear description] --> |
-| .caretrules/documentation-guide.md | comment | 72 | # CARET MODIFICATION: [clear description] |
-| .caretrules/merge-strategy.md | comment | 22 | - Add `// CARET MODIFICATION: [description]` comment |
-| .caretrules/merge-strategy.md | comment | 28 | - Must add `// CARET MODIFICATION: [reason]` comment |
-| .caretrules/workflows/ai-work-protocol.md | comment | 21 | - CARET MODIFICATION comment requirements |
-| .caretrules/workflows/ai-work-protocol.md | comment | 55 | - Add comment: `// CARET MODIFICATION: [clear description]` |
-| .caretrules/workflows/atoms/backup-protocol.yaml | comment | 13 | format: CARET MODIFICATION comment only |
-| .caretrules/workflows/atoms/backup-protocol.yaml | comment | 15 | comment: "// CARET MODIFICATION: [clear description]" |
-| .caretrules/workflows/atoms/backup-protocol.yaml | comment | 29 | - Add CARET MODIFICATION comment before changes |
-| .caretrules/workflows/atoms/backup-protocol.yaml | comment | 37 | // CARET MODIFICATION: Initialize Caret wrapper |
-| .caretrules/workflows/atoms/backup-protocol.yaml | comment | 42 | // CARET MODIFICATION: Add Caret gRPC handlers |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 4 | # Comment Protocol - CARET MODIFICATION Tracking |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 10 | **Required format**: `// CARET MODIFICATION: [clear description]` |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 14 | // CARET MODIFICATION: Initialize Caret wrapper for persona system |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 17 | // CARET MODIFICATION: Add branding toggle for dynamic brand switching |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 20 | // CARET MODIFICATION: Integrate i18n message filtering |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 37 | // CARET MODIFICATION: Add Caret provider initialization |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 47 | // CARET MODIFICATION: Apply backend message filtering and branding |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 58 | * CARET MODIFICATION: Integrate persona-aware message processing |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 74 | // CARET MODIFICATION: Enable dynamic branding for multi-tenant support |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 75 | // CARET MODIFICATION: Add TDD integration test runner for caret-src tests |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 76 | // CARET MODIFICATION: Implement persona context in system prompt generation |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 81 | ❌ // CARET MODIFICATION: Fixed bug |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 82 | ❌ // CARET MODIFICATION: Added feature |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 83 | ❌ // CARET MODIFICATION: Updated code |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 90 | 2. Add CARET MODIFICATION comment |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 96 | git log --grep="CARET MODIFICATION" --oneline |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 103 | - Keep original CARET MODIFICATION comment |
-| .caretrules/workflows/atoms/comment-protocol.md | comment | 105 | - Never remove CARET MODIFICATION markers |
-| .caretrules/workflows/atoms/i18n-dynamic-pattern.md | comment | 33 | // CARET MODIFICATION: Use i18n context to detect language changes |
-| .caretrules/workflows/atoms/i18n-dynamic-pattern.md | comment | 36 | // CARET MODIFICATION: Use dynamic function with language dependency for i18n updates |
-| .caretrules/workflows/atoms/i18n-dynamic-pattern.md | comment | 56 | // CARET MODIFICATION: Added useMemo for i18n reactivity |
-| .caretrules/workflows/atoms/i18n-dynamic-pattern.md | comment | 58 | // CARET MODIFICATION: Import i18n context for language reactivity |
-| .caretrules/workflows/atoms/i18n-dynamic-pattern.md | comment | 81 | ### CARET MODIFICATION Comments |
-| .caretrules/workflows/atoms/i18n-dynamic-pattern.md | comment | 83 | // CARET MODIFICATION: Convert static constant to dynamic function for i18n support |
-| .caretrules/workflows/atoms/i18n-dynamic-pattern.md | comment | 86 | // CARET MODIFICATION: Use i18n context to detect language changes |
-| .caretrules/workflows/atoms/i18n-dynamic-pattern.md | comment | 89 | // CARET MODIFICATION: Use dynamic function with language dependency for i18n updates |
-| .caretrules/workflows/atoms/i18n-dynamic-pattern.md | comment | 114 | - [ ] Add `CARET MODIFICATION` comments |
-| .caretrules/workflows/atoms/modification-levels.md | comment | 29 | - **Mandatory comment**: `// CARET MODIFICATION: [description]` |
-| .caretrules/workflows/atoms/modification-levels.md | comment | 43 | // CARET MODIFICATION: Initialize Caret wrapper |
-| .caretrules/workflows/atoms/modification-protocol.md | comment | 7 | **Minimize modifications to Cline original files using CARET MODIFICATION comments** |
-| .caretrules/workflows/atoms/modification-protocol.md | comment | 16 | // CARET MODIFICATION: [Clear description of what and why] |
-| .caretrules/workflows/atoms/modification-protocol.md | comment | 22 | 1. **Add comment**: `// CARET MODIFICATION: [clear description]` |
-| .caretrules/workflows/atoms/modification-protocol.md | comment | 28 | - [ ] CARET MODIFICATION comment present and clear |
-| .caretrules/workflows/atoms/modification-protocol.md | comment | 41 | This protocol ensures safe modification of Cline files while maintaining the ability to merge upstream changes. The CARET MODIFICATION comment approach replaces the deprecated .cline backup method. |
-| .caretrules/workflows/atoms/semantic-equivalence-verification.md | comment | 33 | 2. Add comment: // CARET MODIFICATION: [description] |
-| .caretrules/workflows/atoms/semantic-equivalence-verification.md | comment | 39 | 2. Apply modification_rules.comment: // CARET MODIFICATION: [description] |
-| .caretrules/workflows/caret-development.md | comment | 24 | - **Cline Modification**: Backup rules, CARET MODIFICATION requirements |
-| .caretrules/workflows/caret-development.md | comment | 42 | - Add `// CARET MODIFICATION:` comment |
-| .caretrules/workflows/caret-development.md | comment | 101 | Never modify Cline files without backup and CARET MODIFICATION comment. |
-| .caretrules/workflows/cline-modification.md | comment | 9 | - `/comment-protocol` - CARET MODIFICATION tracking |
-| .caretrules/workflows/cline-modification.md | comment | 40 | // CARET MODIFICATION: [Clear description of what and why] |
-| .caretrules/workflows/cline-modification.md | comment | 52 | // CARET MODIFICATION: Caret-specific fields (current_max + 1000 to avoid Cline conflicts) |
-| .caretrules/workflows/cline-modification.md | comment | 82 | - [ ] CARET MODIFICATION comment present and clear |
-| .caretrules/workflows/cline-modification.md | comment | 110 | // CARET MODIFICATION: Initialize Caret wrapper for enhanced features |
-| .caretrules/workflows/document-organization.md | comment | 31 | - `/comment-protocol`: CARET MODIFICATION requirements |
-| .caretrules/workflows/i18n-static-translation-fix.md | comment | 52 | // Apply CARET MODIFICATION pattern |
-| .caretrules/workflows/i18n-static-translation-fix.md | comment | 56 | // CARET MODIFICATION: Use i18n context to detect language changes |
-| .caretrules/workflows/i18n-static-translation-fix.md | comment | 59 | // CARET MODIFICATION: Use dynamic function with language dependency for i18n updates |
-| .caretrules/workflows/i18n-static-translation-fix.md | comment | 97 | - [ ] Add `CARET MODIFICATION` comments |
-| .caretrules/workflows/i18n-static-translation-fix.md | comment | 126 | 5. ✅ `CARET MODIFICATION` comments are complete |
-| .caretrules/workflows/merge-strategy.md | comment | 27 | - Add `// CARET MODIFICATION:` comment |
-| .caretrules/workflows/merge-strategy.md | comment | 34 | - Document reason in CARET MODIFICATION comment |
-| .caretrules/workflows/merge-strategy.md | comment | 57 | # Find all CARET MODIFICATION comments |
-| .caretrules/workflows/merge-strategy.md | comment | 58 | grep -r "CARET MODIFICATION" src/ webview-ui/ --include="*.ts" --include="*.tsx" |
-| .clinerules/ai-work-index.md | comment | 46 | - [ ] CARET MODIFICATION comment plan (for Cline original modifications) |
-| .clinerules/ai-work-protocol.md | comment | 21 | - CARET MODIFICATION comment requirements |
-| .clinerules/ai-work-protocol.md | comment | 55 | - Add comment: `// CARET MODIFICATION: [clear description]` |
-| .clinerules/architecture-guide.md | comment | 19 | - Mandatory: backup + CARET MODIFICATION comment |
-| .clinerules/architecture-guide.md | comment | 41 | 3. **Comment Protocol**: // CARET MODIFICATION: [clear description] |
-| .clinerules/caret-development.md | comment | 24 | - **Cline Modification**: Backup rules, CARET MODIFICATION requirements |
-| .clinerules/caret-development.md | comment | 42 | - Add `// CARET MODIFICATION:` comment |
-| .clinerules/caret-development.md | comment | 101 | Never modify Cline files without backup and CARET MODIFICATION comment. |
-| .clinerules/caret-rules.md | comment | 50 | - **Comment required**: `// CARET MODIFICATION: [description]` |
-| .clinerules/caret-rules.md | comment | 68 | 3. CARET MODIFICATION comment added? |
-| .clinerules/caret-rules.md | comment | 104 | - Cline file modification: backup + CARET MODIFICATION comment required |
-| .clinerules/caret-rules.md | comment | 123 | - `comment-protocol.md` - CARET MODIFICATION tracking |
-| .clinerules/caret-rules.md | comment | 146 | - Skip CARET MODIFICATION comment |
-| .clinerules/cline-modification.md | comment | 9 | - `/comment-protocol` - CARET MODIFICATION tracking |
-| .clinerules/cline-modification.md | comment | 40 | // CARET MODIFICATION: [Clear description of what and why] |
-| .clinerules/cline-modification.md | comment | 68 | - [ ] CARET MODIFICATION comment present and clear |
-| .clinerules/cline-modification.md | comment | 96 | // CARET MODIFICATION: Initialize Caret wrapper for enhanced features |
-| .clinerules/document-organization.md | comment | 31 | - `/comment-protocol`: CARET MODIFICATION requirements |
-| .clinerules/merge-strategy.md | comment | 27 | - Add `// CARET MODIFICATION:` comment |
-| .clinerules/merge-strategy.md | comment | 34 | - Document reason in CARET MODIFICATION comment |
-| .clinerules/merge-strategy.md | comment | 57 | # Find all CARET MODIFICATION comments |
-| .clinerules/merge-strategy.md | comment | 58 | grep -r "CARET MODIFICATION" src/ webview-ui/ --include="*.ts" --include="*.tsx" |
-| .clinerules/workflows/ai-work-index.md | comment | 46 | - [ ] CARET MODIFICATION comment plan (for Cline original modifications) |
-| .clinerules/workflows/ai-work-protocol.md | comment | 21 | - CARET MODIFICATION comment requirements |
-| .clinerules/workflows/ai-work-protocol.md | comment | 55 | - Add comment: `// CARET MODIFICATION: [clear description]` |
-| .clinerules/workflows/architecture-guide.md | comment | 19 | - Mandatory: backup + CARET MODIFICATION comment |
-| .clinerules/workflows/architecture-guide.md | comment | 41 | 3. **Comment Protocol**: // CARET MODIFICATION: [clear description] |
-| .clinerules/workflows/atoms/backup-protocol.md | comment | 7 | **Minimize modifications to Cline original files using CARET MODIFICATION comments** |
-| .clinerules/workflows/atoms/backup-protocol.md | comment | 16 | // CARET MODIFICATION: [Clear description of what and why] |
-| .clinerules/workflows/atoms/backup-protocol.md | comment | 22 | 1. **Add comment**: `// CARET MODIFICATION: [clear description]` |
-| .clinerules/workflows/atoms/backup-protocol.md | comment | 28 | - [ ] CARET MODIFICATION comment present and clear |
-| .clinerules/workflows/atoms/backup-protocol.md | comment | 41 | This protocol ensures safe modification of Cline files while maintaining the ability to merge upstream changes. The CARET MODIFICATION comment approach replaces the deprecated .cline backup method. |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 4 | # Comment Protocol - CARET MODIFICATION Tracking |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 10 | **Required format**: `// CARET MODIFICATION: [clear description]` |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 14 | // CARET MODIFICATION: Initialize Caret wrapper for persona system |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 17 | // CARET MODIFICATION: Add branding toggle for dynamic brand switching |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 20 | // CARET MODIFICATION: Integrate i18n message filtering |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 37 | // CARET MODIFICATION: Add Caret provider initialization |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 47 | // CARET MODIFICATION: Apply backend message filtering and branding |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 58 | * CARET MODIFICATION: Integrate persona-aware message processing |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 74 | // CARET MODIFICATION: Enable dynamic branding for multi-tenant support |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 75 | // CARET MODIFICATION: Add TDD integration test runner for caret-src tests |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 76 | // CARET MODIFICATION: Implement persona context in system prompt generation |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 81 | ❌ // CARET MODIFICATION: Fixed bug |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 82 | ❌ // CARET MODIFICATION: Added feature |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 83 | ❌ // CARET MODIFICATION: Updated code |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 90 | 2. Add CARET MODIFICATION comment |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 96 | git log --grep="CARET MODIFICATION" --oneline |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 103 | - Keep original CARET MODIFICATION comment |
-| .clinerules/workflows/atoms/comment-protocol.md | comment | 105 | - Never remove CARET MODIFICATION markers |
-| .clinerules/workflows/atoms/modification-levels.md | comment | 29 | - **Mandatory comment**: `// CARET MODIFICATION: [description]` |
-| .clinerules/workflows/atoms/modification-levels.md | comment | 43 | // CARET MODIFICATION: Initialize Caret wrapper |
-| .clinerules/workflows/atoms/semantic-equivalence-verification.md | comment | 33 | 2. Add comment: // CARET MODIFICATION: [description] |
-| .clinerules/workflows/atoms/semantic-equivalence-verification.md | comment | 39 | 2. Apply modification_rules.comment: // CARET MODIFICATION: [description] |
-| .clinerules/workflows/caret-development.md | comment | 24 | - **Cline Modification**: Backup rules, CARET MODIFICATION requirements |
-| .clinerules/workflows/caret-development.md | comment | 42 | - Add `// CARET MODIFICATION:` comment |
-| .clinerules/workflows/caret-development.md | comment | 101 | Never modify Cline files without backup and CARET MODIFICATION comment. |
-| .clinerules/workflows/cline-modification.md | comment | 9 | - `/comment-protocol` - CARET MODIFICATION tracking |
-| .clinerules/workflows/cline-modification.md | comment | 40 | // CARET MODIFICATION: [Clear description of what and why] |
-| .clinerules/workflows/cline-modification.md | comment | 68 | - [ ] CARET MODIFICATION comment present and clear |
-| .clinerules/workflows/cline-modification.md | comment | 96 | // CARET MODIFICATION: Initialize Caret wrapper for enhanced features |
-| .clinerules/workflows/document-organization.md | comment | 31 | - `/comment-protocol`: CARET MODIFICATION requirements |
-| .clinerules/workflows/merge-strategy.md | comment | 27 | - Add `// CARET MODIFICATION:` comment |
-| .clinerules/workflows/merge-strategy.md | comment | 34 | - Document reason in CARET MODIFICATION comment |
-| .clinerules/workflows/merge-strategy.md | comment | 57 | # Find all CARET MODIFICATION comments |
-| .clinerules/workflows/merge-strategy.md | comment | 58 | grep -r "CARET MODIFICATION" src/ webview-ui/ --include="*.ts" --include="*.tsx" |
+| .agents/context.original/caret-rules.json | comment | 30 | "comment_required": "// CARET MODIFICATION: [description]", |
+| .agents/context.original/caret-rules.json | comment | 42 | "CARET MODIFICATION comment added?", |
+| .agents/context.original/caret-rules.json | comment | 62 | "Cline file modification: backup + CARET MODIFICATION comment required", |
+| .agents/context.original/caret-rules.json | comment | 84 | "Skip CARET MODIFICATION comment" |
+| .agents/context.original/workflows/ai-work-index.md | comment | 46 | - [ ] CARET MODIFICATION comment plan (for Cline original modifications) |
+| .agents/context.original/workflows/ai-work-protocol.md | comment | 21 | - CARET MODIFICATION comment requirements |
+| .agents/context.original/workflows/ai-work-protocol.md | comment | 55 | - Add comment: `// CARET MODIFICATION: [clear description]` |
+| .agents/context.original/workflows/architecture-guide.md | comment | 19 | - Mandatory: backup + CARET MODIFICATION comment |
+| .agents/context.original/workflows/architecture-guide.md | comment | 41 | 3. **Comment Protocol**: // CARET MODIFICATION: [clear description] |
+| .agents/context.original/workflows/caret-development.md | comment | 24 | - **Cline Modification**: Backup rules, CARET MODIFICATION requirements |
+| .agents/context.original/workflows/caret-development.md | comment | 42 | - Add `// CARET MODIFICATION:` comment |
+| .agents/context.original/workflows/caret-development.md | comment | 101 | Never modify Cline files without backup and CARET MODIFICATION comment. |
+| .agents/context.original/workflows/document-organization.md | comment | 31 | - `/comment-protocol`: CARET MODIFICATION requirements |
+| .agents/context.original/workflows/merge-strategy.md | comment | 27 | - Add `// CARET MODIFICATION:` comment |
+| .agents/context.original/workflows/merge-strategy.md | comment | 34 | - Document reason in CARET MODIFICATION comment |
+| .agents/context.original/workflows/merge-strategy.md | comment | 57 | # Find all CARET MODIFICATION comments |
+| .agents/context.original/workflows/merge-strategy.md | comment | 58 | grep -r "CARET MODIFICATION" src/ webview-ui/ --include="*.ts" --include="*.tsx" |
+| .agents/context/ai-work-index.yaml | comment | 44 | note: Always check CARET MODIFICATION comment requirements (backup deprecated) |
+| .agents/context/ai-work-index.yaml | comment | 131 | - CARET MODIFICATION comment plan (for Cline original modifications) |
+| .agents/context/ai-work-protocol.md | comment | 28 | - [ ] Add `// CARET MODIFICATION:` comment (~~backup deprecated~~) |
+| .agents/context/architecture-guide.yaml | comment | 24 | mandatory: [backup, CARET MODIFICATION comment] |
+| .agents/context/architecture-guide.yaml | comment | 51 | - Comment Protocol: "// CARET MODIFICATION: [clear description]" |
+| .agents/context/caret-architecture-guide.md | comment | 17 | **Frontend**: Minimal modifications with `CARET MODIFICATION` comments |
+| .agents/context/caret-architecture-guide.md | comment | 26 | // CARET MODIFICATION: Added PersonaAvatar for visual identification |
+| .agents/context/caret-architecture-guide.md | comment | 45 | - Mandatory: `// CARET MODIFICATION: [description]` comment |
+| .agents/context/caret-architecture-guide.md | comment | 141 | - ✅ Add `CARET MODIFICATION` comments for Cline file changes |
+| .agents/context/caret-architecture-guide.md | comment | 146 | - ❌ Never modify Cline files without `CARET MODIFICATION` comment |
+| .agents/context/caret-development.md | comment | 23 | - [ ] GREEN: Minimal implementation (add `// CARET MODIFICATION:` if touching Cline files) |
+| .agents/context/caret-development.md | comment | 39 | **Cline Modification**: ~~Backup rules~~ (deprecated), CARET MODIFICATION comment requirements |
+| .agents/context/caret-rules.md | comment | 49 | - **Comment required**: `// CARET MODIFICATION: [description]` |
+| .agents/context/caret-rules.md | comment | 71 | 2. CARET MODIFICATION comment added? |
+| .agents/context/caret-rules.md | comment | 110 | - Cline file modification: backup + CARET MODIFICATION comment required |
+| .agents/context/caret-rules.md | comment | 130 | - `comment-protocol.md` - CARET MODIFICATION tracking |
+| .agents/context/caret-rules.md | comment | 149 | - Modify Cline files without CARET MODIFICATION comment |
+| .agents/context/caret-rules.md | comment | 152 | - Skip CARET MODIFICATION comment |
+| .agents/context/cline-modification.md | comment | 11 | 3. **Clear Tracking**: `// CARET MODIFICATION:` comment for all changes |
+| .agents/context/cline-modification.md | comment | 22 | - [ ] Add `// CARET MODIFICATION: [what and why]` comment |
+| .agents/context/cline-modification.md | comment | 36 | // CARET MODIFICATION: Caret fields (72 + 1000 = 1072+) |
+| .agents/context/cline-modification.md | comment | 63 | - `/comment-protocol` - CARET MODIFICATION tracking rules |
+| .agents/context/documentation-guide.md | comment | 51 | ## CARET MODIFICATION Comment Protocol |
+| .agents/context/documentation-guide.md | comment | 57 | // CARET MODIFICATION: [clear description] |
+| .agents/context/documentation-guide.md | comment | 62 | /* CARET MODIFICATION: [clear description] */ |
+| .agents/context/documentation-guide.md | comment | 67 | <!-- CARET MODIFICATION: [clear description] --> |
+| .agents/context/documentation-guide.md | comment | 72 | # CARET MODIFICATION: [clear description] |
+| .agents/context/merge-strategy.md | comment | 22 | - Add `// CARET MODIFICATION: [description]` comment |
+| .agents/context/merge-strategy.md | comment | 28 | - Must add `// CARET MODIFICATION: [reason]` comment |
+| .agents/context/workflows/ai-work-protocol.md | comment | 21 | - CARET MODIFICATION comment requirements |
+| .agents/context/workflows/ai-work-protocol.md | comment | 55 | - Add comment: `// CARET MODIFICATION: [clear description]` |
+| .agents/context/workflows/atoms/backup-protocol.yaml | comment | 13 | format: CARET MODIFICATION comment only |
+| .agents/context/workflows/atoms/backup-protocol.yaml | comment | 15 | comment: "// CARET MODIFICATION: [clear description]" |
+| .agents/context/workflows/atoms/backup-protocol.yaml | comment | 29 | - Add CARET MODIFICATION comment before changes |
+| .agents/context/workflows/atoms/backup-protocol.yaml | comment | 37 | // CARET MODIFICATION: Initialize Caret wrapper |
+| .agents/context/workflows/atoms/backup-protocol.yaml | comment | 42 | // CARET MODIFICATION: Add Caret gRPC handlers |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 4 | # Comment Protocol - CARET MODIFICATION Tracking |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 10 | **Required format**: `// CARET MODIFICATION: [clear description]` |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 14 | // CARET MODIFICATION: Initialize Caret wrapper for persona system |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 17 | // CARET MODIFICATION: Add branding toggle for dynamic brand switching |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 20 | // CARET MODIFICATION: Integrate i18n message filtering |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 37 | // CARET MODIFICATION: Add Caret provider initialization |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 47 | // CARET MODIFICATION: Apply backend message filtering and branding |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 58 | * CARET MODIFICATION: Integrate persona-aware message processing |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 74 | // CARET MODIFICATION: Enable dynamic branding for multi-tenant support |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 75 | // CARET MODIFICATION: Add TDD integration test runner for caret-src tests |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 76 | // CARET MODIFICATION: Implement persona context in system prompt generation |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 81 | ❌ // CARET MODIFICATION: Fixed bug |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 82 | ❌ // CARET MODIFICATION: Added feature |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 83 | ❌ // CARET MODIFICATION: Updated code |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 90 | 2. Add CARET MODIFICATION comment |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 96 | git log --grep="CARET MODIFICATION" --oneline |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 103 | - Keep original CARET MODIFICATION comment |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 105 | - Never remove CARET MODIFICATION markers |
+| .agents/context/workflows/atoms/i18n-dynamic-pattern.md | comment | 33 | // CARET MODIFICATION: Use i18n context to detect language changes |
+| .agents/context/workflows/atoms/i18n-dynamic-pattern.md | comment | 36 | // CARET MODIFICATION: Use dynamic function with language dependency for i18n updates |
+| .agents/context/workflows/atoms/i18n-dynamic-pattern.md | comment | 56 | // CARET MODIFICATION: Added useMemo for i18n reactivity |
+| .agents/context/workflows/atoms/i18n-dynamic-pattern.md | comment | 58 | // CARET MODIFICATION: Import i18n context for language reactivity |
+| .agents/context/workflows/atoms/i18n-dynamic-pattern.md | comment | 81 | ### CARET MODIFICATION Comments |
+| .agents/context/workflows/atoms/i18n-dynamic-pattern.md | comment | 83 | // CARET MODIFICATION: Convert static constant to dynamic function for i18n support |
+| .agents/context/workflows/atoms/i18n-dynamic-pattern.md | comment | 86 | // CARET MODIFICATION: Use i18n context to detect language changes |
+| .agents/context/workflows/atoms/i18n-dynamic-pattern.md | comment | 89 | // CARET MODIFICATION: Use dynamic function with language dependency for i18n updates |
+| .agents/context/workflows/atoms/i18n-dynamic-pattern.md | comment | 114 | - [ ] Add `CARET MODIFICATION` comments |
+| .agents/context/workflows/atoms/modification-levels.md | comment | 29 | - **Mandatory comment**: `// CARET MODIFICATION: [description]` |
+| .agents/context/workflows/atoms/modification-levels.md | comment | 43 | // CARET MODIFICATION: Initialize Caret wrapper |
+| .agents/context/workflows/atoms/modification-protocol.md | comment | 7 | **Minimize modifications to Cline original files using CARET MODIFICATION comments** |
+| .agents/context/workflows/atoms/modification-protocol.md | comment | 16 | // CARET MODIFICATION: [Clear description of what and why] |
+| .agents/context/workflows/atoms/modification-protocol.md | comment | 22 | 1. **Add comment**: `// CARET MODIFICATION: [clear description]` |
+| .agents/context/workflows/atoms/modification-protocol.md | comment | 28 | - [ ] CARET MODIFICATION comment present and clear |
+| .agents/context/workflows/atoms/modification-protocol.md | comment | 41 | This protocol ensures safe modification of Cline files while maintaining the ability to merge upstream changes. The CARET MODIFICATION comment approach replaces the deprecated .cline backup method. |
+| .agents/context/workflows/atoms/semantic-equivalence-verification.md | comment | 33 | 2. Add comment: // CARET MODIFICATION: [description] |
+| .agents/context/workflows/atoms/semantic-equivalence-verification.md | comment | 39 | 2. Apply modification_rules.comment: // CARET MODIFICATION: [description] |
+| .agents/context/workflows/caret-development.md | comment | 24 | - **Cline Modification**: Backup rules, CARET MODIFICATION requirements |
+| .agents/context/workflows/caret-development.md | comment | 42 | - Add `// CARET MODIFICATION:` comment |
+| .agents/context/workflows/caret-development.md | comment | 101 | Never modify Cline files without backup and CARET MODIFICATION comment. |
+| .agents/context/workflows/cline-modification.md | comment | 9 | - `/comment-protocol` - CARET MODIFICATION tracking |
+| .agents/context/workflows/cline-modification.md | comment | 40 | // CARET MODIFICATION: [Clear description of what and why] |
+| .agents/context/workflows/cline-modification.md | comment | 52 | // CARET MODIFICATION: Caret-specific fields (current_max + 1000 to avoid Cline conflicts) |
+| .agents/context/workflows/cline-modification.md | comment | 82 | - [ ] CARET MODIFICATION comment present and clear |
+| .agents/context/workflows/cline-modification.md | comment | 110 | // CARET MODIFICATION: Initialize Caret wrapper for enhanced features |
+| .agents/context/workflows/document-organization.md | comment | 31 | - `/comment-protocol`: CARET MODIFICATION requirements |
+| .agents/context/workflows/i18n-static-translation-fix.md | comment | 52 | // Apply CARET MODIFICATION pattern |
+| .agents/context/workflows/i18n-static-translation-fix.md | comment | 56 | // CARET MODIFICATION: Use i18n context to detect language changes |
+| .agents/context/workflows/i18n-static-translation-fix.md | comment | 59 | // CARET MODIFICATION: Use dynamic function with language dependency for i18n updates |
+| .agents/context/workflows/i18n-static-translation-fix.md | comment | 97 | - [ ] Add `CARET MODIFICATION` comments |
+| .agents/context/workflows/i18n-static-translation-fix.md | comment | 126 | 5. ✅ `CARET MODIFICATION` comments are complete |
+| .agents/context/workflows/merge-strategy.md | comment | 27 | - Add `// CARET MODIFICATION:` comment |
+| .agents/context/workflows/merge-strategy.md | comment | 34 | - Document reason in CARET MODIFICATION comment |
+| .agents/context/workflows/merge-strategy.md | comment | 57 | # Find all CARET MODIFICATION comments |
+| .agents/context/workflows/merge-strategy.md | comment | 58 | grep -r "CARET MODIFICATION" src/ webview-ui/ --include="*.ts" --include="*.tsx" |
+| .agents/context/ai-work-index.md | comment | 46 | - [ ] CARET MODIFICATION comment plan (for Cline original modifications) |
+| .agents/context/ai-work-protocol.md | comment | 21 | - CARET MODIFICATION comment requirements |
+| .agents/context/ai-work-protocol.md | comment | 55 | - Add comment: `// CARET MODIFICATION: [clear description]` |
+| .agents/context/architecture-guide.md | comment | 19 | - Mandatory: backup + CARET MODIFICATION comment |
+| .agents/context/architecture-guide.md | comment | 41 | 3. **Comment Protocol**: // CARET MODIFICATION: [clear description] |
+| .agents/context/caret-development.md | comment | 24 | - **Cline Modification**: Backup rules, CARET MODIFICATION requirements |
+| .agents/context/caret-development.md | comment | 42 | - Add `// CARET MODIFICATION:` comment |
+| .agents/context/caret-development.md | comment | 101 | Never modify Cline files without backup and CARET MODIFICATION comment. |
+| .agents/context/caret-rules.md | comment | 50 | - **Comment required**: `// CARET MODIFICATION: [description]` |
+| .agents/context/caret-rules.md | comment | 68 | 3. CARET MODIFICATION comment added? |
+| .agents/context/caret-rules.md | comment | 104 | - Cline file modification: backup + CARET MODIFICATION comment required |
+| .agents/context/caret-rules.md | comment | 123 | - `comment-protocol.md` - CARET MODIFICATION tracking |
+| .agents/context/caret-rules.md | comment | 146 | - Skip CARET MODIFICATION comment |
+| .agents/context/cline-modification.md | comment | 9 | - `/comment-protocol` - CARET MODIFICATION tracking |
+| .agents/context/cline-modification.md | comment | 40 | // CARET MODIFICATION: [Clear description of what and why] |
+| .agents/context/cline-modification.md | comment | 68 | - [ ] CARET MODIFICATION comment present and clear |
+| .agents/context/cline-modification.md | comment | 96 | // CARET MODIFICATION: Initialize Caret wrapper for enhanced features |
+| .agents/context/document-organization.md | comment | 31 | - `/comment-protocol`: CARET MODIFICATION requirements |
+| .agents/context/merge-strategy.md | comment | 27 | - Add `// CARET MODIFICATION:` comment |
+| .agents/context/merge-strategy.md | comment | 34 | - Document reason in CARET MODIFICATION comment |
+| .agents/context/merge-strategy.md | comment | 57 | # Find all CARET MODIFICATION comments |
+| .agents/context/merge-strategy.md | comment | 58 | grep -r "CARET MODIFICATION" src/ webview-ui/ --include="*.ts" --include="*.tsx" |
+| .agents/context/workflows/ai-work-index.md | comment | 46 | - [ ] CARET MODIFICATION comment plan (for Cline original modifications) |
+| .agents/context/workflows/ai-work-protocol.md | comment | 21 | - CARET MODIFICATION comment requirements |
+| .agents/context/workflows/ai-work-protocol.md | comment | 55 | - Add comment: `// CARET MODIFICATION: [clear description]` |
+| .agents/context/workflows/architecture-guide.md | comment | 19 | - Mandatory: backup + CARET MODIFICATION comment |
+| .agents/context/workflows/architecture-guide.md | comment | 41 | 3. **Comment Protocol**: // CARET MODIFICATION: [clear description] |
+| .agents/context/workflows/atoms/backup-protocol.md | comment | 7 | **Minimize modifications to Cline original files using CARET MODIFICATION comments** |
+| .agents/context/workflows/atoms/backup-protocol.md | comment | 16 | // CARET MODIFICATION: [Clear description of what and why] |
+| .agents/context/workflows/atoms/backup-protocol.md | comment | 22 | 1. **Add comment**: `// CARET MODIFICATION: [clear description]` |
+| .agents/context/workflows/atoms/backup-protocol.md | comment | 28 | - [ ] CARET MODIFICATION comment present and clear |
+| .agents/context/workflows/atoms/backup-protocol.md | comment | 41 | This protocol ensures safe modification of Cline files while maintaining the ability to merge upstream changes. The CARET MODIFICATION comment approach replaces the deprecated .cline backup method. |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 4 | # Comment Protocol - CARET MODIFICATION Tracking |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 10 | **Required format**: `// CARET MODIFICATION: [clear description]` |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 14 | // CARET MODIFICATION: Initialize Caret wrapper for persona system |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 17 | // CARET MODIFICATION: Add branding toggle for dynamic brand switching |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 20 | // CARET MODIFICATION: Integrate i18n message filtering |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 37 | // CARET MODIFICATION: Add Caret provider initialization |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 47 | // CARET MODIFICATION: Apply backend message filtering and branding |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 58 | * CARET MODIFICATION: Integrate persona-aware message processing |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 74 | // CARET MODIFICATION: Enable dynamic branding for multi-tenant support |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 75 | // CARET MODIFICATION: Add TDD integration test runner for caret-src tests |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 76 | // CARET MODIFICATION: Implement persona context in system prompt generation |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 81 | ❌ // CARET MODIFICATION: Fixed bug |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 82 | ❌ // CARET MODIFICATION: Added feature |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 83 | ❌ // CARET MODIFICATION: Updated code |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 90 | 2. Add CARET MODIFICATION comment |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 96 | git log --grep="CARET MODIFICATION" --oneline |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 103 | - Keep original CARET MODIFICATION comment |
+| .agents/context/workflows/atoms/comment-protocol.md | comment | 105 | - Never remove CARET MODIFICATION markers |
+| .agents/context/workflows/atoms/modification-levels.md | comment | 29 | - **Mandatory comment**: `// CARET MODIFICATION: [description]` |
+| .agents/context/workflows/atoms/modification-levels.md | comment | 43 | // CARET MODIFICATION: Initialize Caret wrapper |
+| .agents/context/workflows/atoms/semantic-equivalence-verification.md | comment | 33 | 2. Add comment: // CARET MODIFICATION: [description] |
+| .agents/context/workflows/atoms/semantic-equivalence-verification.md | comment | 39 | 2. Apply modification_rules.comment: // CARET MODIFICATION: [description] |
+| .agents/context/workflows/caret-development.md | comment | 24 | - **Cline Modification**: Backup rules, CARET MODIFICATION requirements |
+| .agents/context/workflows/caret-development.md | comment | 42 | - Add `// CARET MODIFICATION:` comment |
+| .agents/context/workflows/caret-development.md | comment | 101 | Never modify Cline files without backup and CARET MODIFICATION comment. |
+| .agents/context/workflows/cline-modification.md | comment | 9 | - `/comment-protocol` - CARET MODIFICATION tracking |
+| .agents/context/workflows/cline-modification.md | comment | 40 | // CARET MODIFICATION: [Clear description of what and why] |
+| .agents/context/workflows/cline-modification.md | comment | 68 | - [ ] CARET MODIFICATION comment present and clear |
+| .agents/context/workflows/cline-modification.md | comment | 96 | // CARET MODIFICATION: Initialize Caret wrapper for enhanced features |
+| .agents/context/workflows/document-organization.md | comment | 31 | - `/comment-protocol`: CARET MODIFICATION requirements |
+| .agents/context/workflows/merge-strategy.md | comment | 27 | - Add `// CARET MODIFICATION:` comment |
+| .agents/context/workflows/merge-strategy.md | comment | 34 | - Document reason in CARET MODIFICATION comment |
+| .agents/context/workflows/merge-strategy.md | comment | 57 | # Find all CARET MODIFICATION comments |
+| .agents/context/workflows/merge-strategy.md | comment | 58 | grep -r "CARET MODIFICATION" src/ webview-ui/ --include="*.ts" --include="*.tsx" |
 | ".work-logs/2025-11-04-v3.35.0-\353\250\270\354\247\200\354\236\221\354\227\205\353\241\234\352\267\270.md" | comment | 87 | 5. CARET MODIFICATION 주석 추가 |
 | ".work-logs/2025-11-04-v3.35.0-\353\250\270\354\247\200\354\236\221\354\227\205\353\241\234\352\267\270.md" | comment | 397 | 3. CARET MODIFICATION 주석 확인 |
 | ".work-logs/2025-11-04-v3.35.0-\353\250\270\354\247\225\354\240\204\353\236\265\353\271\204\352\265\220\353\260\217\354\213\244\355\226\211\352\263\204\355\232\215.md" | comment | 137 | #   4. 수동 merge (CARET MODIFICATION 주석) |
@@ -243,7 +243,7 @@
 | caret-docs/caret-features-specification.md | comment | 616 | - **CARET MODIFICATION** 마커로 수정 부분 명확 표시 |
 | caret-docs/caret-features-specification.md | comment | 623 | // src/core/prompts/system.ts (CARET MODIFICATION) |
 | caret-docs/caret-features-specification.md | comment | 626 | // CARET MODIFICATION: 우선순위 로직 추가 |
-| caret-docs/development/agent.md | comment | 13 | - **최소 침습**: Cline 원본은 가급적 손대지 않고, `caret-src/`·`caret-docs/`에 필요한 상세 구현만 추가합니다. 수정 시 `.caretrules/caret-development.md` 및 `caret-docs/development/caret-development.md`에 따라 CARET MODIFICATION 주석과 백업을 확보합니다. |
+| caret-docs/development/agent.md | comment | 13 | - **최소 침습**: Cline 원본은 가급적 손대지 않고, `caret-src/`·`caret-docs/`에 필요한 상세 구현만 추가합니다. 수정 시 `.agents/context/caret-development.md` 및 `caret-docs/development/caret-development.md`에 따라 CARET MODIFICATION 주석과 백업을 확보합니다. |
 | caret-docs/development/ai-work-index.md | comment | 119 | - [ ] CARET MODIFICATION 주석 추가 (Cline 소스 수정 시) |
 | caret-docs/development/ai-work-protocol.md | comment | 20 | - `CARET MODIFICATION` 주석 요구사항 |
 | caret-docs/development/ai-work-protocol.md | comment | 54 | - 주석 추가: `// CARET MODIFICATION: [명확한 설명]` |
@@ -283,7 +283,7 @@
 | caret-docs/development/documentation-guide.md | comment | 317 | 다음 파일 타입들은 주석을 지원하지 않으므로 CARET MODIFICATION 주석을 추가할 수 없습니다: |
 | caret-docs/development/index.md | comment | 51 | // CARET MODIFICATION: [기능 설명] |
 | caret-docs/development/index.md | comment | 54 | // CARET MODIFICATION: Rule priority system implementation |
-| caret-docs/development/index.md | comment | 55 | // CARET MODIFICATION: Add .caretrules support for UI display |
+| caret-docs/development/index.md | comment | 55 | // CARET MODIFICATION: Add .agents/context support for UI display |
 | caret-docs/development/index.md | comment | 56 | // CARET MODIFICATION: Account system integration |
 | caret-docs/development/index.md | comment | 107 | grep -r "CARET MODIFICATION" src/ webview-ui/src/ proto/ |
 | caret-docs/development/index.md | comment | 116 | git add . && git commit -m "feat: [feature] - CARET MODIFICATION applied with docs" |
@@ -354,24 +354,24 @@
 | caret-docs/experiments/semantic-equivalence-real-test.md | comment | 21 | 4. `// CARET MODIFICATION: Initialize Caret wrapper` 주석 추가 (modification_rules.comment) |
 | caret-docs/features/f01-common-util.md | comment | 186 | // CARET MODIFICATION: CaretGlobalManager 통합 |
 | caret-docs/features/f04-caret-account.md | comment | 314 | // CARET MODIFICATION: 자동 후처리 시스템 구현 |
-| caret-docs/features/f05-rule-priority-system.md | comment | 30 | ├── external-rules.ts              # 🎯 핵심 우선순위 로직 (CARET MODIFICATION) |
-| caret-docs/features/f05-rule-priority-system.md | comment | 36 | └── index.ts                       # 🔗 우선순위 시스템 통합 (CARET MODIFICATION) |
-| caret-docs/features/f05-rule-priority-system.md | comment | 40 | └── refreshRules.ts                # 📡 UI 데이터 전송 (CARET MODIFICATION) |
-| caret-docs/features/f05-rule-priority-system.md | comment | 44 | └── toggleCaretRule.ts             # 🔧 .caretrules 토글 기능 (CARET MODIFICATION) |
-| caret-docs/features/f05-rule-priority-system.md | comment | 48 | ├── disk.ts                        # 📁 .caretrules 파일명 정의 (CARET MODIFICATION) |
-| caret-docs/features/f05-rule-priority-system.md | comment | 49 | ├── state-keys.ts                  # 🗝️ 상태 키 정의 (CARET MODIFICATION) |
-| caret-docs/features/f05-rule-priority-system.md | comment | 50 | └── utils/state-helpers.ts         # 🛠️ 상태 초기화 (CARET MODIFICATION) |
-| caret-docs/features/f05-rule-priority-system.md | comment | 54 | └── file.proto                     # 📦 gRPC 통신 프로토콜 (CARET MODIFICATION) |
-| caret-docs/features/f05-rule-priority-system.md | comment | 58 | └── ClineRulesToggleModal.tsx      # 🎨 규칙 토글 UI (CARET MODIFICATION) |
-| caret-docs/features/f05-rule-priority-system.md | comment | 62 | └── ExtensionStateContext.tsx      # 🔄 전역 상태 관리 (CARET MODIFICATION) |
-| caret-docs/features/f05-rule-priority-system.md | comment | 67 | └── rule-priority-integration.test.ts # 🧪 통합 테스트 (CARET MODIFICATION) |
-| caret-docs/features/f05-rule-priority-system.md | comment | 72 | - **CARET MODIFICATION** 마커로 수정 부분 명확히 표시 |
-| caret-docs/features/f05-rule-priority-system.md | comment | 81 | // CARET MODIFICATION: Implement rule priority system (.caretrules > .clinerules > .cursorrules > .windsurfrules) |
-| caret-docs/features/f05-rule-priority-system.md | comment | 110 | // CARET MODIFICATION: Rule priority system (.caretrules > .clinerules > .cursorrules > .windsurfrules) |
-| caret-docs/features/f05-rule-priority-system.md | comment | 127 | // CARET MODIFICATION: Use priority system - only pass the active rule instead of all rules |
-| caret-docs/features/f05-rule-priority-system.md | comment | 208 | - **해결 방안**: CARET MODIFICATION 마커로 안전한 추가 |
-| caret-docs/features/f05-rule-priority-system.md | comment | 277 | - [ ] **마커 확인**: `// CARET MODIFICATION:` 주석으로 수정 부분 명확히 표시 |
-| caret-docs/features/f05-rule-priority-system.md | comment | 289 | - [x] **CARET MODIFICATION**: 모든 수정 부분 주석 표시 ✅ |
+| caret-docs/features/f06-agent-standardization.md | comment | 30 | ├── external-rules.ts              # 🎯 핵심 우선순위 로직 (CARET MODIFICATION) |
+| caret-docs/features/f06-agent-standardization.md | comment | 36 | └── index.ts                       # 🔗 우선순위 시스템 통합 (CARET MODIFICATION) |
+| caret-docs/features/f06-agent-standardization.md | comment | 40 | └── refreshRules.ts                # 📡 UI 데이터 전송 (CARET MODIFICATION) |
+| caret-docs/features/f06-agent-standardization.md | comment | 44 | └── toggleCaretRule.ts             # 🔧 .agents/context 토글 기능 (CARET MODIFICATION) |
+| caret-docs/features/f06-agent-standardization.md | comment | 48 | ├── disk.ts                        # 📁 .agents/context 파일명 정의 (CARET MODIFICATION) |
+| caret-docs/features/f06-agent-standardization.md | comment | 49 | ├── state-keys.ts                  # 🗝️ 상태 키 정의 (CARET MODIFICATION) |
+| caret-docs/features/f06-agent-standardization.md | comment | 50 | └── utils/state-helpers.ts         # 🛠️ 상태 초기화 (CARET MODIFICATION) |
+| caret-docs/features/f06-agent-standardization.md | comment | 54 | └── file.proto                     # 📦 gRPC 통신 프로토콜 (CARET MODIFICATION) |
+| caret-docs/features/f06-agent-standardization.md | comment | 58 | └── ClineRulesToggleModal.tsx      # 🎨 규칙 토글 UI (CARET MODIFICATION) |
+| caret-docs/features/f06-agent-standardization.md | comment | 62 | └── ExtensionStateContext.tsx      # 🔄 전역 상태 관리 (CARET MODIFICATION) |
+| caret-docs/features/f06-agent-standardization.md | comment | 67 | └── rule-priority-integration.test.ts # 🧪 통합 테스트 (CARET MODIFICATION) |
+| caret-docs/features/f06-agent-standardization.md | comment | 72 | - **CARET MODIFICATION** 마커로 수정 부분 명확히 표시 |
+| caret-docs/features/f06-agent-standardization.md | comment | 81 | // CARET MODIFICATION: Implement rule priority system (.agents/context) |
+| caret-docs/features/f06-agent-standardization.md | comment | 110 | // CARET MODIFICATION: Rule priority system (.agents/context) |
+| caret-docs/features/f06-agent-standardization.md | comment | 127 | // CARET MODIFICATION: Use priority system - only pass the active rule instead of all rules |
+| caret-docs/features/f06-agent-standardization.md | comment | 208 | - **해결 방안**: CARET MODIFICATION 마커로 안전한 추가 |
+| caret-docs/features/f06-agent-standardization.md | comment | 277 | - [ ] **마커 확인**: `// CARET MODIFICATION:` 주석으로 수정 부분 명확히 표시 |
+| caret-docs/features/f06-agent-standardization.md | comment | 289 | - [x] **CARET MODIFICATION**: 모든 수정 부분 주석 표시 ✅ |
 | caret-docs/features/f06-caret-prompt-system.md | comment | 37 | // CARET MODIFICATION: Caret mode branching |
 | caret-docs/features/f06-caret-prompt-system.md | comment | 165 | // CARET MODIFICATION: Replace PLAN/ACT terminology with CHATBOT/AGENT in tool descriptions |
 | caret-docs/features/f07-persona-system.md | comment | 196 | - **프론트엔드 최소 수정**: ChatRow.tsx에 PersonaAvatar 통합 (`CARET MODIFICATION` 주석 포함) |
@@ -477,7 +477,7 @@
 | caret-docs/merging/v3.35.0/phase-5-progress-20251010.md | comment | 56 | // CARET MODIFICATION: F01 - Mode System |
 | caret-docs/merging/v3.35.0/phase-5-progress-20251010.md | comment | 59 | // CARET MODIFICATION: F08 - Persona System |
 | caret-docs/merging/v3.35.0/phase-5-progress-20251010.md | comment | 70 | // CARET MODIFICATION: F03 - Branding |
-| caret-docs/merging/v3.35.0/phase-5-progress-20251010.md | comment | 73 | // CARET MODIFICATION: F05 - Rule Priority |
+| caret-docs/merging/v3.35.0/phase-5-progress-20251010.md | comment | 73 | // CARET MODIFICATION: F06 - Agent Standardization |
 | caret-docs/merging/v3.35.0/phase-5-progress-20251010.md | comment | 143 | // CARET MODIFICATION: Caret model configuration |
 | caret-docs/merging/v3.35.0/phase-5-progress-20251010.md | comment | 293 | // CARET MODIFICATION: Caret Models |
 | caret-docs/merging/v3.35.0/phase-5-progress-20251010.md | comment | 315 | // CARET MODIFICATION: Add 4.1m suffix for compatibility |

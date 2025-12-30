@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 Atom은 `.caretrules/workflows/atoms/modification-levels.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 Atom은 `.agents/context/workflows/atoms/modification-levels.md`를 기준으로 보세요.
 
 Caret 개발을 위한 3단계 수정 전략을 따르고 있습니다.
 

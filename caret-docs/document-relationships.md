@@ -3,8 +3,8 @@
 ## 📋 문서 분류 체계
 
 ### 🎯 핵심 룰 문서 (Core Rules)
-- **`caretrules.ko.md`** - 프로젝트 전체 원칙과 규칙 (마스터 문서)
-- **`.caretrules`** - AI용 JSON 룰 (caretrules.ko.md와 동기화)
+- **`development/caret-rules.ko.md`** - 프로젝트 전체 원칙과 규칙 (마스터 문서)
+- **`.agents/context/caret-rules.json`** - AI용 JSON SoT (development/caret-rules.ko.md와 의미 동기화)
 - **`guides/ai-work-method-guide.md`** - AI 작업 방법론 (강화된 체크포인트)
 
 ### 🏗️ 아키텍처 문서 (Architecture)
@@ -19,9 +19,9 @@
 
 ## 🔗 문서 간 연관관계
 
-### **caretrules.ko.md** ↔ **ai-work-method-guide.md**
+### **development/caret-rules.ko.md** ↔ **ai-work-method-guide.md**
 **관계**: 상호 보완
-- caretrules.ko.md: 프로젝트 전체 원칙 (WHAT)
+- development/caret-rules.ko.md: 프로젝트 전체 원칙 (WHAT)
 - ai-work-method-guide.md: 구체적 작업 절차 (HOW)
 - **일관성 포인트**: Phase 기반 작업, STOP POINT, TDD 원칙
 
@@ -53,7 +53,7 @@
 
 ### **Cline 원본 파일 수정 작업**
 **필수**:
-1. `caretrules.ko.md` (파일 수정 체크리스트)
+1. `development/caret-rules.ko.md` (파일 수정 체크리스트)
 2. `ai-work-method-guide.md` (STOP POINT 2)
 3. 백업 생성 및 CARET MODIFICATION 주석 규칙
 
@@ -77,18 +77,18 @@
 
 ## 🔄 문서 동기화 관계
 
-### **자동 동기화**
-- `caretrules.ko.md` → `.caretrules`, `.cursorrules`, `.windsurfrules`
-- 스크립트: `caret-scripts/sync-caretrules.js`
+### **동기화 원칙**
+- `development/caret-rules.ko.md` ↔ `.agents/context/caret-rules.json` 의미 일치 유지
+- 워크플로 문서는 `.agents/context/workflows/`와 대응 문서 간 수동 정합성 유지
 
 ### **수동 일관성 유지**
-- `ai-work-method-guide.md` ↔ `caretrules.ko.md`
+- `ai-work-method-guide.md` ↔ `development/caret-rules.ko.md`
 - Phase 기반 작업, STOP POINT, AI 실수 방지 원칙
 
 ## 📈 문서 진화 관계
 
 ### **상위 → 하위 전파**
-1. **프로젝트 원칙 변경** (caretrules.ko.md)
+1. **프로젝트 원칙 변경** (development/caret-rules.ko.md)
    → AI 작업 방법 업데이트 (ai-work-method-guide.md)
    → 구체적 가이드 반영 (각 development/*.md)
 
@@ -99,12 +99,12 @@
 ### **하위 → 상위 피드백**
 1. **실제 구현 경험** (작업 문서, 개발 과정)
    → 방법론 개선 (ai-work-method-guide.md)
-   → 룰 업데이트 (caretrules.ko.md)
+   → 룰 업데이트 (development/caret-rules.ko.md)
 
 ## 🎯 문서 우선순위
 
 ### **Tier 1: 핵심 필수**
-1. `caretrules.ko.md` - 전체 프로젝트 원칙
+1. `development/caret-rules.ko.md` - 전체 프로젝트 원칙
 2. `ai-work-method-guide.md` - AI 작업 표준
 3. `caret-architecture-and-implementation-guide.md` - 통합 아키텍처
 

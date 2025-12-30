@@ -347,7 +347,7 @@ const ClineRulesToggleModal: React.FC = () => {
 							{/* Local Rules Section */}
 							<div style={{ marginBottom: -10 }}>
 								<div className="text-sm font-normal mb-2">{t("rules.section.workspaceRules", "settings")}</div>
-								{/* CARET MODIFICATION: Add .caretrules display */}
+								{/* CARET MODIFICATION: Show .agents/context only */}
 								<RulesToggleList
 									isGlobal={false}
 									listGap="small" // CARET MODIFICATION: Use dedicated caret toggle
@@ -356,33 +356,6 @@ const ClineRulesToggleModal: React.FC = () => {
 									showNewRule={false}
 									showNoRules={false}
 									toggleRule={toggleCaretRule}
-								/>
-								<RulesToggleList
-									isGlobal={false}
-									listGap="small"
-									rules={localRules}
-									ruleType={"cline"}
-									showNewRule={false}
-									showNoRules={false}
-									toggleRule={(rulePath, enabled) => toggleRule(false, rulePath, enabled)}
-								/>
-								<RulesToggleList
-									isGlobal={false}
-									listGap="small"
-									rules={cursorRules}
-									ruleType={"cursor"}
-									showNewRule={false}
-									showNoRules={false}
-									toggleRule={toggleCursorRule}
-								/>
-								<RulesToggleList
-									isGlobal={false}
-									listGap="small"
-									rules={windsurfRules}
-									ruleType={"windsurf"}
-									showNewRule={true}
-									showNoRules={false}
-									toggleRule={toggleWindsurfRule}
 								/>
 							</div>
 						</>

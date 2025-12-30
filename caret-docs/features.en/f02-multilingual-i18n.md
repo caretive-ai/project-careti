@@ -42,15 +42,15 @@ Recommended:
 Provider-related strings live under `settings.providers.{providerId}.*`.
 
 ### Provider ID vs JSON Key Case
-Backend provider IDs are kebab-case; frontend JSON keys are camelCase.
+Backend provider IDs are kebab-case; frontend JSON keys currently follow the same kebab-case.
 
 | Item | Case | Example | Location |
 | --- | --- | --- | --- |
 | **Provider ID** (Backend) | kebab-case | `vercel-ai-gateway`, `qwen-code` | `src/shared/proto-conversions/` |
-| **JSON key** (Frontend) | camelCase | `vercelAiGateway`, `qwenCode` | `webview-ui/src/caret/locale/` |
+| **JSON key** (Frontend) | kebab-case (current) | `vercel-ai-gateway`, `qwen-code` | `webview-ui/src/caret/locale/` |
 
-- ❌ Wrong: `t('providers.vercel-ai-gateway.description', 'settings')`  
-- ✅ Correct: `t('providers.vercelAiGateway.description', 'settings')`
+- ❌ Wrong: `t('providers.vercelAiGateway.description', 'settings')`  
+- ✅ Correct: `t('providers.vercel-ai-gateway.description', 'settings')`
 
 AS-IS mixed pattern to avoid:
 ```typescript
@@ -238,7 +238,7 @@ useMemo(() => [{ value: "anthropic", label: t("providers.anthropic", "settings")
 - [ ] Full consistency check and missing translations sweep
 
 ### Long Term (Architecture)
-- [ ] Unify provider ID casing (kebab vs camel). Options: keep upstream kebab; change frontend JSON to kebab; or add an ID-mapping layer. High priority for maintenance clarity.
+- [ ] Keep provider ID casing aligned as kebab-case across backend/frontend. If a casing change is ever required, plan a full migration with an ID-mapping layer.
 
 ### Tooling Improvements
 - [ ] Auto-detect duplicate keys inside JSON files  

@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 Atom은 `.caretrules/workflows/atoms/hardcoding-prevention.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 Atom은 `.agents/context/workflows/atoms/hardcoding-prevention.md`를 기준으로 보세요.
 
 # 하드코딩 방지 워크플로우
 

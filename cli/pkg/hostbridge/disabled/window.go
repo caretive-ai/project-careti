@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/cline/cli/pkg/common"
 	proto "github.com/cline/grpc-go/host"
 )
 
@@ -30,7 +31,7 @@ func (s *WindowService) ShowTextDocument(ctx context.Context, req *proto.ShowTex
 	}
 
 	// For console implementation, we'll just log that we would open the document
-	fmt.Printf("[Cline] Would open document: %s\n", req.GetPath())
+	fmt.Printf("[%s] Would open document: %s\n", common.BrandDisplayName(), req.GetPath())
 
 	return &proto.TextEditorInfo{
 		DocumentPath: req.GetPath(),
@@ -57,7 +58,7 @@ func (s *WindowService) ShowMessage(ctx context.Context, req *proto.ShowMessageR
 	}
 
 	// Display message to console
-	fmt.Printf("[Cline] %s\n", req.GetMessage())
+	fmt.Printf("[%s] %s\n", common.BrandDisplayName(), req.GetMessage())
 
 	return &proto.SelectedResponse{}, nil
 }

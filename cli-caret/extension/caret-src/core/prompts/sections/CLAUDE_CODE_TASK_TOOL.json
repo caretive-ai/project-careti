@@ -17,10 +17,6 @@
 				"description": "The type of specialized agent to use for this task (e.g., 'code-reviewer', 'debugger', 'researcher'). If no custom agents are defined, use 'default'."
 			}
 		},
-		"required": [
-			"description",
-			"prompt",
-			"subagent_type"
-		]
+		"required": ["description", "prompt", "subagent_type"]
 	}
 }

@@ -128,6 +128,12 @@ export function validateApiConfiguration(currentMode: Mode, apiConfiguration?: A
 					return t("validation.apiKey.required", "settings")
 				}
 				break
+			// CARET MODIFICATION: Validate Naver Cloud API key
+			case "naver-cloud":
+				if (!apiConfiguration.naverCloudApiKey) {
+					return t("validation.apiKey.required", "settings")
+				}
+				break
 			case "sapaicore":
 				if (!apiConfiguration.sapAiCoreBaseUrl) {
 					return t("validation.baseUrl.required", "settings")

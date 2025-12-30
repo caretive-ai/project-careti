@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.caretrules/workflows/cline-modification.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.agents/context/workflows/cline-modification.md`를 기준으로 보세요.
 
 원자 워크플로우 조합을 사용하여 Cline 원본 파일을 안전하게 수정하고 있습니다.
 

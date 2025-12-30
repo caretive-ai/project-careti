@@ -22,7 +22,11 @@ const (
 	platformCLI       = "CLI"
 	platformJetBrains = "JetBrains"
 	platformNA        = "N/A"
-	hostPlatformCLI   = "Cline CLI" // Value returned by host bridge for CLI instances
+)
+
+var (
+	// Value returned by host bridge for CLI instances.
+	hostPlatformCLI = common.BrandCLIName()
 )
 
 // detectInstancePlatform connects to an instance's host bridge and determines its platform
@@ -62,8 +66,8 @@ func NewInstanceCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "instance",
 		Aliases: []string{"i"},
-		Short:   "Manage Cline instances",
-		Long:    `List and manage multiple Cline instances similar to kubectl contexts.`,
+		Short:   fmt.Sprintf("Manage %s instances", common.BrandDisplayName()),
+		Long:    fmt.Sprintf("List and manage multiple %s instances similar to kubectl contexts.", common.BrandDisplayName()),
 	}
 
 	cmd.AddCommand(newInstanceListCommand())
@@ -80,8 +84,8 @@ func newInstanceKillCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "kill <address>",
 		Aliases: []string{"k"},
-		Short:   "Kill a Cline instance by address",
-		Long:    `Kill a running Cline instance and clean up its registry entry.`,
+		Short:   fmt.Sprintf("Kill a %s instance by address", common.BrandDisplayName()),
+		Long:    fmt.Sprintf("Kill a running %s instance and clean up its registry entry.", common.BrandDisplayName()),
 		Args: func(cmd *cobra.Command, args []string) error {
 			if killAllCLI && len(args) > 0 {
 				return fmt.Errorf("cannot specify both --all-cli flag and address argument")
@@ -120,7 +124,7 @@ func killAllCLIInstances(ctx context.Context, registry *global.ClientRegistry) e
 	}
 
 	if len(instances) == 0 {
-		fmt.Println("No Cline instances found to kill.")
+		fmt.Printf("No %s instances found to kill.\n", common.BrandDisplayName())
 		return nil
 	}
 
@@ -273,8 +277,8 @@ func newInstanceListCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"l"},
-		Short:   "List all registered Cline instances",
-		Long:    `List all registered Cline instances with their status and connection details.`,
+		Short:   fmt.Sprintf("List all registered %s instances", common.BrandDisplayName()),
+		Long:    fmt.Sprintf("List all registered %s instances with their status and connection details.", common.BrandDisplayName()),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if global.Clients == nil {
 				return fmt.Errorf("clients not initialized")
@@ -291,7 +295,7 @@ func newInstanceListCommand() *cobra.Command {
 			defaultInstance := registry.GetDefaultInstance()
 
 			if len(instances) == 0 {
-				fmt.Println("No Cline instances found.")
+				fmt.Printf("No %s instances found.\n", common.BrandDisplayName())
 				fmt.Println("Run 'cline instance new' to start a new instance, or 'cline task new \"...\"' to auto-start one.")
 				return nil
 			}
@@ -422,8 +426,8 @@ func newInstanceDefaultCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "default <address>",
 		Aliases: []string{"d"},
-		Short:   "Set the default Cline instance",
-		Long:    `Set the default Cline instance to use for subsequent commands.`,
+		Short:   fmt.Sprintf("Set the default %s instance", common.BrandDisplayName()),
+		Long:    fmt.Sprintf("Set the default %s instance to use for subsequent commands.", common.BrandDisplayName()),
 		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			address := args[0]
@@ -459,8 +463,8 @@ func newInstanceNewCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "new",
 		Aliases: []string{"n"},
-		Short:   "Create a new Cline instance",
-		Long:    `Create a new Cline instance with automatically assigned ports.`,
+		Short:   fmt.Sprintf("Create a new %s instance", common.BrandDisplayName()),
+		Long:    fmt.Sprintf("Create a new %s instance with automatically assigned ports.", common.BrandDisplayName()),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
 
@@ -468,7 +472,7 @@ func newInstanceNewCommand() *cobra.Command {
 				return fmt.Errorf("clients not initialized")
 			}
 
-			fmt.Println("Starting new Cline instance...")
+			fmt.Printf("Starting new %s instance...\n", common.BrandDisplayName())
 
 			instance, err := global.Clients.StartNewInstance(ctx)
 			if err != nil {

@@ -1,5 +1,7 @@
 import type { Anthropic } from "@anthropic-ai/sdk"
 import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
+import { CaretAccountService } from "@caret/services/account/CaretAccountService"
+import { CaretAuthService } from "@caret/services/auth/CaretAuthService"
 import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
 import { buildApiHandler } from "@core/api"
 import { tryAcquireTaskLockWithRetry } from "@core/task/TaskLockUtils"
@@ -9,7 +11,6 @@ import type { WorkspaceRootManager } from "@core/workspace/WorkspaceRootManager"
 import { cleanupLegacyCheckpoints } from "@integrations/checkpoints/CheckpointMigration"
 import { downloadTask } from "@integrations/misc/export-markdown"
 import { ClineAccountService } from "@services/account/ClineAccountService"
-import { CaretAccountService } from "@caret/services/account/CaretAccountService"
 import { McpHub } from "@services/mcp/McpHub"
 import type { ApiProvider, ModelInfo } from "@shared/api"
 import type { ChatContent } from "@shared/ChatContent"
@@ -31,7 +32,6 @@ import { ClineEnv } from "@/config"
 import { HostProvider } from "@/hosts/host-provider"
 import { ExtensionRegistryInfo } from "@/registry"
 import { AuthService } from "@/services/auth/AuthService"
-import { CaretAuthService } from "@caret/services/auth/CaretAuthService"
 import { OcaAuthService } from "@/services/auth/oca/OcaAuthService"
 import { LogoutReason } from "@/services/auth/types"
 import { featureFlagsService } from "@/services/feature-flags"
@@ -925,6 +925,8 @@ export class Controller {
 		const localAgentsRulesToggles = this.stateManager.getWorkspaceStateKey("localAgentsRulesToggles")
 		const workflowToggles = this.stateManager.getWorkspaceStateKey("workflowToggles")
 		const autoCondenseThreshold = this.stateManager.getGlobalSettingsKey("autoCondenseThreshold")
+		const imageGenerationAspectRatio = this.stateManager.getGlobalSettingsKey("imageGenerationAspectRatio")
+		const imageGenerationSize = this.stateManager.getGlobalSettingsKey("imageGenerationSize")
 
 		const currentTaskItem = this.task?.taskId ? (taskHistory || []).find((item) => item.id === this.task?.taskId) : undefined
 		const clineMessages = this.task?.messageStateHandler.getClineMessages() || []
@@ -1000,6 +1002,8 @@ export class Controller {
 			shouldShowAnnouncement,
 			favoritedModelIds,
 			autoCondenseThreshold,
+			imageGenerationAspectRatio,
+			imageGenerationSize,
 			backgroundCommandRunning: this.backgroundCommandRunning,
 			backgroundCommandTaskId: this.backgroundCommandTaskId,
 			featureConfig,

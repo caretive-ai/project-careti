@@ -157,7 +157,7 @@ export async function migrateCustomInstructionsToGlobalRules(context: vscode.Ext
 		if (customInstructions?.trim()) {
 			console.log("Migrating custom instructions to global Cline rules...")
 
-			// Create global .clinerules directory if it doesn't exist
+			// Create global .agents/context directory if it doesn't exist
 			const globalRulesDir = await ensureRulesDirectoryExists()
 
 			// Use a fixed filename for custom instructions
@@ -592,6 +592,7 @@ export async function migrateWelcomeViewCompleted(context: vscode.ExtensionConte
 			const xaiApiKey = await context.secrets.get("xaiApiKey")
 			const sambanovaApiKey = await context.secrets.get("sambanovaApiKey")
 			const sapAiCoreClientId = await context.secrets.get("sapAiCoreClientId")
+			const naverCloudApiKey = await context.secrets.get("naverCloudApiKey")
 			const difyApiKey = await context.secrets.get("difyApiKey")
 			const hicapApiKey = await context.secrets.get("hicapApiKey")
 
@@ -635,6 +636,7 @@ export async function migrateWelcomeViewCompleted(context: vscode.ExtensionConte
 				xaiApiKey,
 				sambanovaApiKey,
 				sapAiCoreClientId,
+				naverCloudApiKey,
 				difyApiKey,
 				hicapApiKey,
 			].some((key) => key !== undefined)

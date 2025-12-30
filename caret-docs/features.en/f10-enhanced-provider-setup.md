@@ -15,7 +15,7 @@ Automates AI provider setup: fetches model lists (LiteLLM, BizRouter), validates
 
 ## 🏗 Code Scope
 - **Backend**: `caret-src/core/controller/fetchLiteLlmModels.ts` (health + available intersection), `FetchBizRouterModels.ts`; RPCs in `proto/caret/system.proto`.
-- **Webview**: `LiteLlmProvider.tsx`, `BizRouterProvider.tsx` with fetch buttons and dropdowns.
+- **Webview**: `LiteLlmProvider.tsx`, `BizRouterProvider.tsx` with fetch buttons and dropdowns; `NaverCloudProvider.tsx` for API key + model picker.
 - **Tests**: `fetchLiteLlmModels.test.ts` (unit) and `.integration.test.ts` (env-based).
 - **i18n**: `providers.litellm.*` keys across en/ko/ja/zh in settings.json.
 
@@ -24,6 +24,7 @@ Automates AI provider setup: fetches model lists (LiteLLM, BizRouter), validates
 | --- | --- | --- | --- | --- |
 | LiteLLM | ✅ | ✅ | ✅ Health-based | Done |
 | BizRouter | ✅ | ✅ | ❌ Simplified | Done |
+| [Naver Cloud](https://clova.ai/) | ✅ (built-in list) | ✅ (API key required) | ❌ | Done |
 
 ## 🔧 Architecture & Flow
 - gRPC services exposed via `CaretSystemService` (`FetchLiteLlmModels`, `FetchBizRouterModels`).
@@ -31,7 +32,7 @@ Automates AI provider setup: fetches model lists (LiteLLM, BizRouter), validates
 - UI: fetch button shows loading/error states, populates dropdown, and stores the chosen model/provider in settings.
 
 ## 🌐 Internationalization
-Provider labels/descriptions live under `providers.{id}.*` within `settings` namespace; 4 languages supported.
+Provider labels/descriptions live under `providers.{id}.*` within `settings` namespace; 4 languages supported (e.g., `providers.naver-cloud.*`).
 
 ## 🧪 Testing
 - Unit: normalization, filtering, error handling.

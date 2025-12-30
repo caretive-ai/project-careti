@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 Atom은 `.caretrules/workflows/atoms/naming-conventions.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 Atom은 `.agents/context/workflows/atoms/naming-conventions.md`를 기준으로 보세요.
 
 일관성을 위한 Cline 호환 naming convention을 따르고 있습니다.
 

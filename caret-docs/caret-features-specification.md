@@ -15,44 +15,45 @@
 
 ---
 
-## 🎯 **Caret vs Cline 핵심 차별화 요약**
+## 🎯 **Caret와 Cline 핵심 차별화 요약**
 
 ### **✅ 완전 구현된 차별화 기능들**
 
 | 기능                       | 구현 위치                                                   | 머징 우선순위 | 충돌 위험 | TDD 커버리지 |
 | -------------------------- | ----------------------------------------------------------- | ------------- | --------- | ------------ |
-| **Rule Priority System**   | `src/core/context/instructions/`                            | **HIGH**      | 🟡 MEDIUM | ✅ 100%      |
-| **Account & Organization** | `src/services/account/`, `webview-ui/src/caret/components/` | **HIGH**      | 🟢 LOW    | ✅ 100%      |
-| **다국어 i18n 시스템**     | `webview-ui/src/caret/locale/` (30+ JSON)                   | **HIGH**      | 🟢 LOW    | ✅ 100%      |
-| **로깅 시스템**            | `caret-src/utils/`, `webview-ui/src/caret/utils/`           | **HIGH**      | 🟢 LOW    | ✅ 100%      |
-| **브랜딩 & UI**            | `assets/`, `webview-ui/src/caret/components/`         | **MEDIUM**    | 🟢 LOW    | ✅ 100%      |
+| **에이전트 표준화(AAIF SoT)**   | `src/core/context/instructions/`                            | **상**      | 🟡 중 | ✅ 100%      |
+| **계정 및 조직 관리** | `src/services/account/`, `webview-ui/src/caret/components/` | **상**      | 🟢 하    | ✅ 100%      |
+| **다국어 i18n 시스템**     | `webview-ui/src/caret/locale/` (30+ JSON)                   | **상**      | 🟢 하    | ✅ 100%      |
+| **로깅 시스템**            | `caret-src/utils/`, `webview-ui/src/caret/utils/`           | **상**      | 🟢 하    | ✅ 100%      |
+| **브랜딩 & UI**            | `assets/`, `webview-ui/src/caret/components/`         | **중**    | 🟢 하    | ✅ 100%      |
 
 ### **🔄 부분 구현 / 복잡한 구조**
 
 | 기능                   | 구현 위치                                  | 머징 우선순위 | 충돌 위험 | 정리 필요도  |
 | ---------------------- | ------------------------------------------ | ------------- | --------- | ------------ |
-| **Chatbot/Agent Mode** | 다중 파일 산재                             | **HIGH**      | 🚨 HIGH   | **CRITICAL** |
-| **JSON System Prompt** | `caret-src/core/prompts/`                  | **MEDIUM**    | 🟡 MEDIUM | MEDIUM       |
-| **Persona System**     | `webview-ui/src/caret/components/persona/` | **MEDIUM**    | 🟢 LOW    | MEDIUM       |
+| **챗봇/에이전트 모드** | 다중 파일 산재                             | **상**      | 🚨 상   | **치명** |
+| **JSON 시스템 프롬프트** | `caret-src/core/prompts/`                  | **중**    | 🟡 중 | 중       |
+| **페르소나 시스템**     | `webview-ui/src/caret/components/persona/` | **중**    | 🟢 하    | 중       |
 
 ---
 
-## 🏗️ **Section 1: 핵심 차별화 기능 상세**
+## 🏗️ **섹션 1: 핵심 차별화 기능 상세**
 
-### **1. Rule Priority System** ✅ **완전 구현**
+### **1. 에이전트 표준화(AAIF SoT)** ✅ **완전 구현**
 
 #### **1.1 사용자 관점 차별화**
 
 **기존 Cline의 문제점:**
 
-- `.clinerules`, `.cursorrules`, `.windsurfrules` 파일이 모두 존재할 때 중복으로 로딩
+- 레거시 규칙 경로가 함께 존재할 때 중복 로딩
 - 동일한 내용이 여러 번 프롬프트에 포함되어 토큰 낭비 발생
 
 **Caret의 해결책:**
 
-- **우선순위 로직**: `.caretrules` > `.clinerules` > `.cursorrules` > `.windsurfrules`
-- **단일 선택**: 우선순위가 높은 규칙 파일이 존재하면 나머지는 무시
-- **중복 방지**: 동일한 규칙이 여러 번 로딩되는 것을 방지
+- **SoT 고정**: `.agents/context/caret-rules.json`을 단일 진입점으로 사용
+- **계층 적용**: `AGENTS.md`를 루트→하위로 재귀 로드
+- **온디맨드 워크플로우**: 필요한 문서만 추가 로드
+- **부트스트랩**: `/init`으로 표준 스캐폴드 생성
 
 #### **1.2 구현 아키텍처**
 
@@ -60,7 +61,7 @@
 
 ```
 src/core/context/instructions/user-instructions/
-├── external-rules.ts              # 핵심 우선순위 로직
+├── external-rules.ts              # 에이전트 표준화 로직
 
 src/core/prompts/
 ├── system.ts                      # 프롬프트 통합 지점
@@ -72,18 +73,18 @@ src/core/prompts/
 
 - **CARET MODIFICATION** 마커로 수정 부분 명확히 표시
 - 원본/비교/복구는 `.cline` 백업이 아니라 **git history(또는 업스트림 태그/브랜치)** 로 추적
-- `addUserInstructions` 함수에 우선순위 로직 추가
+- `user_instructions.ts`에서 SoT + AGENTS 합산 로직 유지
 
 #### **1.3 머징 정보**
 
-- **이식 우선순위**: **HIGH** (핵심 차별화 기능)
-- **충돌 위험도**: 🟡 **MEDIUM** (Cline 원본 수정 필요)
+- **이식 우선순위**: **상** (핵심 차별화 기능)
+- **충돌 위험도**: 🟡 **중** (Cline 원본 수정 필요)
 - **TDD 커버리지**: ✅ **100%** (`caret-src/__tests__/rule-priority.test.ts`)
 - **테스트 케이스**: 6개 시나리오 모두 통과
 
 ---
 
-### **2. Caret Account & Organization System** ✅ **완전 구현**
+### **2. Caret 계정 및 조직 관리 System** ✅ **완전 구현**
 
 #### **2.1 사용자 관점 차별화**
 
@@ -133,8 +134,8 @@ src/api/providers/
 
 #### **2.3 머징 정보**
 
-- **이식 우선순위**: **HIGH** (026번에서 핵심 구현됨)
-- **충돌 위험도**: 🟢 **LOW** (Cline에 없는 완전 독립 시스템)
+- **이식 우선순위**: **상** (026번에서 핵심 구현됨)
+- **충돌 위험도**: 🟢 **하** (Cline에 없는 완전 독립 시스템)
 - **TDD 커버리지**: ✅ **100%** (각 컴포넌트별 전용 테스트)
 - **특이사항**: Auth0 토큰 처리, caretApiKey 별도 관리
 
@@ -192,14 +193,14 @@ webview-ui/src/caret/components/
 
 #### **3.3 머징 정보**
 
-- **이식 우선순위**: **HIGH** (사용자 경험 핵심)
-- **충돌 위험도**: 🟢 **LOW** (Cline 원본과 완전 독립)
+- **이식 우선순위**: **상** (사용자 경험 핵심)
+- **충돌 위험도**: 🟢 **하** (Cline 원본과 완전 독립)
 - **TDD 커버리지**: ✅ **100%** (i18n 유틸리티 및 컴포넌트)
 - **파일 수량**: 30개 JSON 파일 (7개 네임스페이스 × 4개 언어 + α)
 
 ---
 
-### **4. Chatbot/Agent Mode System** 🚨 **복잡한 구조 - 정리 필요**
+### **4. 챗봇/에이전트 모드 System** 🚨 **복잡한 구조 - 정리 필요**
 
 #### **4.1 사용자 관점 차별화**
 
@@ -217,7 +218,7 @@ webview-ui/src/caret/components/
 
 #### **4.2 구현 아키텍처 (복잡함 주의)**
 
-**🚨 CRITICAL**: 현재 **5개 이상 파일에 산재**된 복잡한 구조로 **정리 시급**
+**🚨 치명**: 현재 **5개 이상 파일에 산재**된 복잡한 구조로 **정리 시급**
 
 **핵심 파일들:**
 
@@ -248,14 +249,14 @@ webview-ui/src/context/
 
 #### **4.3 머징 정보**
 
-- **이식 우선순위**: **HIGH** (핵심 차별화 기능)
-- **충돌 위험도**: 🚨 **HIGH** (Cline Plan/Act 시스템과 복잡한 상호작용)
+- **이식 우선순위**: **상** (핵심 차별화 기능)
+- **충돌 위험도**: 🚨 **상** (Cline Plan/Act 시스템과 복잡한 상호작용)
 - **TDD 커버리지**: ⚠️ **부분적** (개별 테스트 있으나 통합 테스트 부족)
-- **정리 필요도**: **CRITICAL** (아키텍처 단순화 필수)
+- **정리 필요도**: **치명** (아키텍처 단순화 필수)
 
 ---
 
-### **5. JSON System Prompt** 🔄 **부분 구현**
+### **5. JSON 시스템 프롬프트** 🔄 **부분 구현**
 
 #### **5.1 사용자 관점 차별화**
 
@@ -299,14 +300,14 @@ if (this.chatSettings.modeSystem === "caret") {
 
 #### **5.3 머징 정보**
 
-- **이식 우선순위**: **MEDIUM** (Caret 모드 핵심이지만 선택적 기능)
-- **충돌 위험도**: 🟡 **MEDIUM** (extensionPath 조건부 활성화로 안전)
+- **이식 우선순위**: **중** (Caret 모드 핵심이지만 선택적 기능)
+- **충돌 위험도**: 🟡 **중** (extensionPath 조건부 활성화로 안전)
 - **TDD 커버리지**: ⚠️ **부분적** (JSON 파싱 테스트 있으나 통합 테스트 부족)
 - **특이사항**: TRUE_CLINE_SYSTEM_PROMPT와 분리되어 충돌 없음
 
 ---
 
-### **6. Persona System** 🔄 **기본 구조 완성**
+### **6. 페르소나 시스템** 🔄 **기본 구조 완성**
 
 #### **6.1 사용자 관점 차별화**
 
@@ -351,8 +352,8 @@ webview-ui/src/caret/components/
 
 #### **6.3 머징 정보**
 
-- **이식 우선순위**: **MEDIUM** (차별화 기능이지만 필수 아님)
-- **충돌 위험도**: 🟢 **LOW** (독립 컴포넌트)
+- **이식 우선순위**: **중** (차별화 기능이지만 필수 아님)
+- **충돌 위험도**: 🟢 **하** (독립 컴포넌트)
 - **TDD 커버리지**: ✅ **100%** (컴포넌트 테스트 완비)
 - **구현 상태**: 기본 구조 완성, 세부 기능 보완 필요
 
@@ -404,8 +405,8 @@ logger.error("API call failed:", error)
 
 #### **7.3 머징 정보**
 
-- **이식 우선순위**: **HIGH** (개발 및 디버깅 필수)
-- **충돌 위험도**: 🟢 **LOW** (Cline 로깅과 독립적)
+- **이식 우선순위**: **상** (개발 및 디버깅 필수)
+- **충돌 위험도**: 🟢 **하** (Cline 로깅과 독립적)
 - **TDD 커버리지**: ✅ **100%** (로거 유틸리티 완전 테스트)
 - **특이사항**: Cline 원본 로깅과 병행 사용 가능
 
@@ -457,8 +458,8 @@ webview-ui/src/assets/
 
 #### **8.3 머징 정보**
 
-- **이식 우선순위**: **MEDIUM** (시각적 정체성, 기능에는 비필수)
-- **충돌 위험도**: 🟢 **LOW** (완전 독립적 에셋들)
+- **이식 우선순위**: **중** (시각적 정체성, 기능에는 비필수)
+- **충돌 위험도**: 🟢 **하** (완전 독립적 에셋들)
 - **TDD 커버리지**: ✅ **100%** (UI 컴포넌트 테스트)
 - **특이사항**: Cline 브랜딩과 완전 분리, 조건부 표시 가능
 
@@ -466,13 +467,13 @@ webview-ui/src/assets/
 
 ## 🔧 **Section 2: 머징 구현 전략**
 
-### **🚨 HIGH 우선순위 - 즉시 이식 필요**
+### **🚨 상 우선순위 - 즉시 이식 필요**
 
-1. **Rule Priority System**
+1. **에이전트 표준화(AAIF SoT)**
     - **이유**: 핵심 차별화 기능, 사용자 체감도 높음
     - **주의사항**: Cline 원본 수정 필요, 백업 필수
 
-2. **Account & Organization**
+2. **계정 및 조직 관리**
     - **이유**: 026번에서 핵심 구현, 비즈니스 로직 포함
     - **장점**: Cline과 완전 독립적, 충돌 위험 없음
 
@@ -484,17 +485,17 @@ webview-ui/src/assets/
     - **이유**: 개발 및 디버깅 필수 도구
     - **장점**: Cline 로깅과 병행 사용 가능
 
-5. **Chatbot/Agent Mode**
+5. **챗봇/에이전트 모드**
     - **이유**: 핵심 차별화 기능
     - **주의사항**: **복잡한 구조로 아키텍처 정리 우선 필요**
 
-### **🟡 MEDIUM 우선순위 - 안정성 확인 후 이식**
+### **🟡 중 우선순위 - 안정성 확인 후 이식**
 
-6. **JSON System Prompt**
+6. **JSON 시스템 프롬프트**
     - **이유**: Caret 모드 핵심이지만 선택적 기능
     - **장점**: extensionPath 조건부 활성화로 안전
 
-7. **Persona System**
+7. **페르소나 시스템**
     - **이유**: 차별화 기능이지만 필수 아님
     - **장점**: 독립 컴포넌트로 안전
 
@@ -504,19 +505,19 @@ webview-ui/src/assets/
 
 ### **🔥 복잡도별 이식 전략**
 
-#### **🟢 LOW 복잡도 (독립 모듈)**
+#### **🟢 하 복잡도 (독립 모듈)**
 
 - Account System, i18n, 로깅, 브랜딩, Persona
 - **전략**: 파일 복사 + 경로 수정으로 간단 이식
 
-#### **🟡 MEDIUM 복잡도 (조건부 활성화)**
+#### **🟡 중 복잡도 (조건부 활성화)**
 
-- Rule Priority, JSON Prompt
+- Agent Standardization, JSON Prompt
 - **전략**: 조건문 + 백업 파일로 안전 이식
 
-#### **🚨 HIGH 복잡도 (아키텍처 정리 필요)**
+#### **🚨 상 복잡도 (아키텍처 정리 필요)**
 
-- Chatbot/Agent Mode
+- 챗봇/에이전트 모드
 - **전략**: 아키텍처 단순화 → 단계별 이식
 
 ---
@@ -527,7 +528,7 @@ webview-ui/src/assets/
 
 | 기능              | 테스트 위치                                                            | 커버리지  | 테스트 케이스 수 | 상태      |
 | ----------------- | ---------------------------------------------------------------------- | --------- | ---------------- | --------- |
-| **Rule Priority** | `caret-src/__tests__/rule-priority.test.ts`                            | ✅ 100%   | 6개              | PASS      |
+| **Agent Standardization** | `caret-src/__tests__/rule-priority.test.ts`                            | ✅ 100%   | 6개              | PASS      |
 | **Account UI**    | `webview-ui/src/caret/components/__tests__/`                           | ✅ 100%   | 10+ 개           | PASS      |
 | **i18n System**   | `webview-ui/src/caret/utils/__tests__/i18n.test.ts`                    | ✅ 100%   | 8개              | PASS      |
 | **로깅 시스템**   | `webview-ui/src/caret/utils/__tests__/webview-logger.test.ts`          | ✅ 100%   | 5개              | PASS      |
@@ -621,7 +622,7 @@ caret/
 // 원본 비교/복구는 git로 수행: `git show <ref>:src/core/prompts/system.ts` / `git checkout -- src/core/prompts/system.ts`
 
 // CARET MODIFICATION: 우선순위 로직 추가
-const ruleFiles = [".caretrules", ".clinerules", ".cursorrules", ".windsurfrules"]
+const ruleFiles = [".agents/context"]
 // ... Caret 로직
 ```
 

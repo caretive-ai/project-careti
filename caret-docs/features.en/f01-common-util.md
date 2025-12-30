@@ -20,18 +20,16 @@ Ported, battle-tested scripts from caret-main to speed up development.
     "test:all": "node caret-scripts/test-report.js",
     "package:release": "node caret-scripts/build/package-release.js",
     "caret:coverage": "node caret-scripts/caret-coverage-check.js",
-    "caretrules:sync": "node caret-scripts/sync-caretrules.js",
     "models:generate": "node caret-scripts/generate-support-model-list.js"
   }
 }
 ```
 
-**Key scripts (6+)**
+**Key scripts**
 - `setup-dev-env.js`: Cross-platform dev environment setup  
 - `test-report.js`: Unified test report generator  
 - `package-release.js`: VSIX release packaging automation  
 - `caret-coverage-check.js`: Caret vs Cline coverage diff  
-- `sync-caretrules.js`: Sync `.caretrules` (.cursorrules, .clinerules, etc.)  
 - `generate-support-model-list.js`: Auto-generate supported model docs  
 - Includes colored logging/error helpers
 

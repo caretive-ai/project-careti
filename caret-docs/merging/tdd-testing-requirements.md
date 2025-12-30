@@ -113,11 +113,11 @@ npm run test:coverage:report
 
 ## 📋 **기능별 테스트 요구사항**
 
-### **Rule Priority System**
+### **Agent Standardization (AAIF SoT)**
 ```typescript
 // caret-src/__tests__/rule-priority.test.ts
-describe('Rule Priority System', () => {
-    test('should prioritize .caretrules over .clinerules', () => {
+describe('Agent Standardization (AAIF SoT)', () => {
+    test('should prioritize .agents/context', () => {
         // 테스트 로직
     })
     
@@ -361,7 +361,7 @@ fi
 - [ ] 기본 명령어 실행 테스트
 
 #### **Phase 2: 기본 브랜딩**
-- [ ] 규칙 우선순위 테스트 (6개 케이스)
+- [ ] 에이전트 표준화 테스트 (6개 케이스)
 - [ ] 앱명 변경 후 정상 동작 테스트
 - [ ] 브랜딩 요소 렌더링 테스트
 

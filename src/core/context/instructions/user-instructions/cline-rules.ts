@@ -4,7 +4,6 @@ import { ensureRulesDirectoryExists, GlobalFileNames } from "@core/storage/disk"
 import { StateManager } from "@core/storage/StateManager"
 import { ClineRulesToggles } from "@shared/cline-rules"
 import { fileExistsAtPath, isDirectory, readDirectory } from "@utils/fs"
-import fs from "fs/promises"
 import path from "path"
 import { Controller } from "@/core/controller"
 
@@ -21,7 +20,7 @@ export const getGlobalClineRules = async (globalClineRulesFilePath: string, togg
 					combinedContent = rulesFilesTotalContent
 				}
 			} catch {
-				console.error(`Failed to read .clinerules directory at ${globalClineRulesFilePath}`)
+				console.error(`Failed to read .agents/context directory at ${globalClineRulesFilePath}`)
 			}
 		} else {
 			console.error(`${globalClineRulesFilePath} is not a directory`)
@@ -55,36 +54,24 @@ export const getGlobalClineRules = async (globalClineRulesFilePath: string, togg
 }
 
 export const getLocalClineRules = async (cwd: string, toggles: ClineRulesToggles) => {
-	const clineRulesFilePath = path.resolve(cwd, GlobalFileNames.clineRules)
+	const clineRulesFilePath = path.resolve(cwd, GlobalFileNames.caretRules)
 
 	let clineRulesFileInstructions: string | undefined
 
 	if (await fileExistsAtPath(clineRulesFilePath)) {
 		if (await isDirectory(clineRulesFilePath)) {
 			try {
-				const rulesFilePaths = await readDirectory(clineRulesFilePath, [
-					[".clinerules", "workflows"],
-					[".clinerules", "hooks"],
-				])
+				const rulesFilePaths = await readDirectory(clineRulesFilePath)
 
 				const rulesFilesTotalContent = await getRuleFilesTotalContent(rulesFilePaths, cwd, toggles)
 				if (rulesFilesTotalContent) {
-					clineRulesFileInstructions = formatResponse.clineRulesLocalDirectoryInstructions(cwd, rulesFilesTotalContent)
+					clineRulesFileInstructions = formatResponse.caretRulesLocalDirectoryInstructions(cwd, rulesFilesTotalContent)
 				}
 			} catch {
-				console.error(`Failed to read .clinerules directory at ${clineRulesFilePath}`)
+				console.error(`Failed to read .agents/context directory at ${clineRulesFilePath}`)
 			}
 		} else {
-			try {
-				if (clineRulesFilePath in toggles && toggles[clineRulesFilePath] !== false) {
-					const ruleFileContent = (await fs.readFile(clineRulesFilePath, "utf8")).trim()
-					if (ruleFileContent) {
-						clineRulesFileInstructions = formatResponse.clineRulesLocalFileInstructions(cwd, ruleFileContent)
-					}
-				}
-			} catch {
-				console.error(`Failed to read .clinerules file at ${clineRulesFilePath}`)
-			}
+			console.error(`Expected .agents/context to be a directory: ${clineRulesFilePath}`)
 		}
 	}
 
@@ -105,13 +92,10 @@ export async function refreshClineRulesToggles(
 	controller.stateManager.setGlobalState("globalClineRulesToggles", updatedGlobalToggles)
 
 	// Local toggles
-	const localClineRulesToggles = controller.stateManager.getWorkspaceStateKey("localClineRulesToggles")
-	const localClineRulesFilePath = path.resolve(workingDirectory, GlobalFileNames.clineRules)
-	const updatedLocalToggles = await synchronizeRuleToggles(localClineRulesFilePath, localClineRulesToggles, "", [
-		[".clinerules", "workflows"],
-		[".clinerules", "hooks"],
-	])
-	controller.stateManager.setWorkspaceState("localClineRulesToggles", updatedLocalToggles)
+	const localClineRulesToggles = controller.stateManager.getWorkspaceStateKey("localCaretRulesToggles" as any)
+	const localClineRulesFilePath = path.resolve(workingDirectory, GlobalFileNames.caretRules)
+	const updatedLocalToggles = await synchronizeRuleToggles(localClineRulesFilePath, localClineRulesToggles)
+	controller.stateManager.setWorkspaceState("localCaretRulesToggles" as any, updatedLocalToggles as any)
 
 	return {
 		globalToggles: updatedGlobalToggles,

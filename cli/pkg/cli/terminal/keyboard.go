@@ -11,6 +11,7 @@ import (
 
 	"github.com/cline/cli/pkg/cli/display"
 	"github.com/cline/cli/pkg/cli/global"
+	"github.com/cline/cli/pkg/common"
 )
 
 // KeyboardProtocol manages enhanced keyboard protocol support for detecting
@@ -540,15 +541,15 @@ func SetupWezTermKeybindings() (bool, string) {
 	_ = os.WriteFile(backupPath, data, 0644)
 
 	// Keybinding to add (insert before final return statement)
-	keybinding := `
--- Shift+Enter for newlines (added by Cline CLI)
+	keybinding := fmt.Sprintf(`
+-- Shift+Enter for newlines (added by %s CLI)
 config.keys = config.keys or {}
 table.insert(config.keys, {
   key = 'Enter',
   mods = 'SHIFT',
   action = wezterm.action.SendString '\x1b\n',
 })
-`
+`, common.BrandDisplayName())
 
 	content := string(data)
 	// Try to insert before the final return statement
@@ -614,20 +615,20 @@ func SetupAlacrittyKeybindings() (bool, string) {
 	// Keybinding to add
 	var keybinding string
 	if strings.HasSuffix(configPath, ".yml") || strings.HasSuffix(configPath, ".yaml") {
-		keybinding = `
-# Shift+Enter for newlines (added by Cline CLI)
+		keybinding = fmt.Sprintf(`
+# Shift+Enter for newlines (added by %s CLI)
 key_bindings:
   - { key: Return, mods: Shift, chars: "\x1b\n" }
-`
+`, common.BrandDisplayName())
 	} else {
 		// TOML format
-		keybinding = `
-# Shift+Enter for newlines (added by Cline CLI)
+		keybinding = fmt.Sprintf(`
+# Shift+Enter for newlines (added by %s CLI)
 [[keyboard.bindings]]
 key = "Return"
 mods = "Shift"
 chars = "\x1b\n"
-`
+`, common.BrandDisplayName())
 	}
 
 	// Append to config
@@ -670,7 +671,7 @@ func SetupKittyKeybindings() (bool, string) {
 	}
 
 	// Keybinding to add
-	keybinding := "# Shift+Enter for newlines (added by Cline CLI)\nmap shift+enter send_text all \\x1b\\n\n"
+	keybinding := fmt.Sprintf("# Shift+Enter for newlines (added by %s CLI)\nmap shift+enter send_text all \\x1b\\n\n", common.BrandDisplayName())
 
 	// Append to config
 	newContent := append(existingContent, []byte(keybinding)...)

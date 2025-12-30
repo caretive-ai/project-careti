@@ -80,10 +80,10 @@
 			"localWorkflows": "本地工作流"
 		},
 		"subTitle": {
-			"caretRules": "Caret 规则 (.caretrules)",
-			"CaretRules": "Caret 规则 (.Caretrules)",
-			"cursorRules": "Cursor 规则 (.cursorrules)",
-			"windsurfRules": "Windsurf 规则 (.windsurfrules)"
+			"caretRules": "Caret 规则 (.agents/context)",
+			"CaretRules": "Caret 规则 (.agents/context)",
+			"cursorRules": "Cursor 规则 (.agents/context)",
+			"windsurfRules": "Windsurf 规则 (.agents/context)"
 		},
 		"button": {
 			"selectPersonaTemplate": "选择模板角色",

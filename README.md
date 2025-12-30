@@ -1,7 +1,7 @@
 <div align="center">
   <p>
-    <strong>🚀 Official Launch: The Caret AI Provider is Now Live!</strong><br>
-    We are thrilled to announce that the official Caret Provider, powered by <code>anyLLM</code>, is now stable and available to all users. Connect to <a href="https://caret.team">caret.team</a>'s dedicated AI service for an optimized and reliable experience. Get started with free monthly credits!
+    <strong>🚀 v0.4.4 Highlights: Nano Banana images, Caret CLI, <a href="https://clova.ai/">Naver Cloud</a> HCX, Agents.md + /init</strong><br>
+    Official Caret CLI, <a href="https://clova.ai/">Naver Cloud</a> Hyper Clova X, AAIF Agents.md/project init, and more — plus free monthly credits.
   </p>
 
   <table>
@@ -30,7 +30,7 @@
     </tr>
   </table>
   <h1>🎯 Caret: Your Personalized AI Coding Partner</h1>
-  <p><strong>Based on Cline v3.38.2 + Dual Mode + Persona System + Full Localization</strong></p>
+  <p><strong>Based on Cline v3.38.2 + v3.45.0 bugfixes + Dual Mode + Persona System + Full Localization</strong></p>
 
   <p>
     <a href="https://marketplace.visualstudio.com/items?itemName=caretive.caret" style="background: #007ACC; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; margin: 8px;">
@@ -56,18 +56,21 @@
 
 ---
 
-## 🎉 Official Caret AI Provider is Live — Get Your Free Credits!
+## 🎉 v0.4.4 Highlights
 
-**Great news!** The official Caret AI provider is now stable and ready for everyone:
+**What’s new in v0.4.4:**
 
-- 🎉 **Free credits**: New users get **$0.1 (10 credits) monthly**! (Up to $0.2 for the first month)
-- 🤖 **Latest models**: Access powerful models like **Gemini 3 Pro Preview**, **Gemini 2.5 Pro**, **Gemini 2.5 Flash** (default).
-- 🚀 **Easy setup**: Select “Caret” in Settings → Providers. Login opens the Caret auth page; the selected Caret model is stored per Plan/Act mode.
-- 🔧 **Runtime**: Webview gRPC → CaretAccountService → `api.caret.team` (OpenAI-compatible). CLI uses the same Caret auth flow; static model list is generated from `src/shared/api.ts`.
+- 🖼️ **Nano Banana image generation**: Caret accounts can generate Gemini Nano Banana images and save them as project assets.
+- 💳 **Free monthly credits**: New users get **$0.1 (10 credits) monthly** (up to $0.2 for the first month).
+- 🧰 **Caret CLI official**: Caret CLI is now officially released with Caret account + LiteLLM BYO support.
+- ☁️ **[Naver Cloud](https://clova.ai/) Hyper Clova X**: Added the Naver Cloud provider and HCX-007/HCX-005/HCX-DASH-002 models.
+- 🧩 **AAIF Agents.md + /init**: Migrated legacy rules to the AAIF standard and added project initialization support.
+- 🔁 **Dual account system**: Use Caret and Cline accounts together without restriction.
+- 🛠️ **Cline v3.45.0 bugfix integration**: Partially merged the bugfixes that landed in Cline v3.45.0.
 
 ---
 
-## 🚀 Latest Update: Cline v3.38.2 + GPT 5.1, Claude Opus 4.5, Gemini 3
+## 🚀 Previous Update: Cline v3.38.2 + GPT 5.1, Claude Opus 4.5, Gemini 3
 
 **Caret v0.4.0** now includes **all features from Cline v3.38.2** while keeping 100% compatibility with Caret-exclusive extensions.
 
@@ -168,7 +171,7 @@ Go beyond text chat. The **Persona System** lets you work with visually engaging
 | **F03** | Branding & UI system | [Details](caret-docs/features.en/f03-branding-ui.md) |
 | **F04** | Cline compatibility & CLI | [Details](caret-docs/features.en/f04-cline-compatibility-and-cli.md) |
 | **F05** | Caret account system | [Details](caret-docs/features.en/f05-caret-account.md) |
-| **F06** | Rule priority system | [Details](caret-docs/features.en/f06-rule-priority-system.md) |
+| **F06** | Agent standardization (AAIF SoT) | [Details](caret-docs/features.en/f06-agent-standardization.md) |
 | **F07** | Caret prompt system | [Details](caret-docs/features.en/f07-caret-prompt-system.md) |
 | **F08** | Persona system | [Details](caret-docs/features.en/f08-persona-system.md) |
 | **F09** | Feature Config system | [Details](caret-docs/features.en/f09-feature-config-system.md) |
@@ -185,7 +188,7 @@ Go beyond text chat. The **Persona System** lets you work with visually engaging
 ## 🛠 For Developers (KO-first)
 
 - 개발 문서 대시보드: `caret-docs/development/index.md` (환경/빌드/워크플로우/아키텍처 정리)
-- AI 규칙 ↔ 개발 문서 매핑: `.caretrules/caret-rules.json` + `.caretrules/workflows/*`는 대응되는 개발 가이드와 함께 유지됩니다. (F12 AI-Developer Knowledge Parity)
+- AI 규칙 ↔ 개발 문서 매핑: `.agents/context/caret-rules.json` + `.agents/context/workflows/*`는 대응되는 개발 가이드와 함께 유지됩니다. (F12 AI-Developer Knowledge Parity)
 
 ---
 

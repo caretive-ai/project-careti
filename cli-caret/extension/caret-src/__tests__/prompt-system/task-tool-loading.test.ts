@@ -1,8 +1,8 @@
+import type { ApiHandlerModel } from "@core/api"
+import { beforeEach, describe, expect, it } from "vitest"
 import { CaretJsonAdapter } from "@caret/core/prompts/system/adapters/CaretJsonAdapter"
 import { CaretSystemPromptContext } from "@caret/core/prompts/system/types"
 import { API_PROVIDERS, CARET_MODES } from "@caret/shared/constants/PromptSystemConstants"
-import type { ApiHandlerModel } from "@core/api"
-import { beforeEach, describe, expect, it } from "vitest"
 
 /**
  * TDD Test for F12 Claude Code Task Tool Loading

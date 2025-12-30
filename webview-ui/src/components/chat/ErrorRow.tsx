@@ -51,7 +51,10 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 		switch (errorType) {
 			case "error":
 			case "mistake_limit_reached":
-			case "auto_approval_max_req_reached":
+			case "auto_approval_max_req_reached": {
+				const isAuthErrorMessage = message.text
+					? (ClineError.parse(message.text)?.isErrorType(ClineErrorType.Auth) ?? false)
+					: false
 				// Handle API request errors with special error parsing
 				if (apiRequestFailedMessage || apiReqStreamingFailedMessage) {
 					// FIXME: ClineError parsing should not be applied to non-Cline providers, but it seems we're using clineErrorMessage below in the default error display
@@ -133,9 +136,10 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 						<p className="m-0 whitespace-pre-wrap text-[var(--vscode-errorForeground)] wrap-anywhere">
 							{message.text}
 						</p>
-						{renderProviderLoginCTA()}
+						{isAuthErrorMessage ? renderProviderLoginCTA() : null}
 					</>
 				)
+			}
 
 			case "diff_error":
 				return (

@@ -160,6 +160,7 @@ async function generateStandaloneProtobusServiceSetup(protobusServices) {
 		handlerSetup.push(`    // ${domain} Service`)
 		handlerSetup.push(`    server.addService(${packageName}.${name}Service, {`)
 		for (const [rpcName, rpc] of Object.entries(def.service)) {
+			const handlerKey = toLowerCamel(rpcName)
 			imports.push(`import { ${rpcName} } from "@core/controller/${dir}/${rpcName}"`)
 			const requestType = getFqn(rpc.requestType.type.name)
 			const responseType = getFqn(rpc.responseType.type.name)
@@ -168,10 +169,10 @@ async function generateStandaloneProtobusServiceSetup(protobusServices) {
 			}
 			if (rpc.responseStream) {
 				handlerSetup.push(
-					`        ${rpcName}: wrapStreamingResponse<${requestType},${responseType}>(${rpcName}, controller),`,
+					`        ${handlerKey}: wrapStreamingResponse<${requestType},${responseType}>(${rpcName}, controller),`,
 				)
 			} else {
-				handlerSetup.push(`         ${rpcName}: wrapper<${requestType},${responseType}>(${rpcName}, controller),`)
+				handlerSetup.push(`         ${handlerKey}: wrapper<${requestType},${responseType}>(${rpcName}, controller),`)
 			}
 		}
 		handlerSetup.push(`    });`)
@@ -216,6 +217,13 @@ function getDirName(serviceName) {
 	}
 	const domain = getDomainName(serviceName)
 	return domain.charAt(0).toLowerCase() + domain.slice(1)
+}
+
+function toLowerCamel(name) {
+	if (!name) {
+		return name
+	}
+	return name.charAt(0).toLowerCase() + name.slice(1)
 }
 
 // Only run main if this script is executed directly

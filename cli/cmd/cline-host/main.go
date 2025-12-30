@@ -6,10 +6,12 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/spf13/cobra"
 
+	"github.com/cline/cli/pkg/common"
 	"github.com/cline/cli/pkg/hostbridge"
 )
 
@@ -19,10 +21,12 @@ var (
 )
 
 func main() {
+	brandName := common.BrandDisplayName()
+	commandName := common.BrandCommandName()
 	rootCmd := &cobra.Command{
-		Use:   "cline-host",
-		Short: "Cline Host Bridge Service",
-		Long:  `A simple host bridge service that provides host operations for Cline Core.`,
+		Use:   fmt.Sprintf("%s-host", strings.ToLower(commandName)),
+		Short: fmt.Sprintf("%s Host Bridge Service", brandName),
+		Long:  fmt.Sprintf("A simple host bridge service that provides host operations for %s.", common.BrandCoreName()),
 		RunE:  runServer,
 	}
 
@@ -37,6 +41,7 @@ func main() {
 
 func runServer(cmd *cobra.Command, args []string) error {
 	ctx := cmd.Context()
+	brandName := common.BrandDisplayName()
 
 	// Create gRPC hostbridge service
 	service := hostbridge.NewGrpcServer(port, verbose)
@@ -59,7 +64,7 @@ func runServer(cmd *cobra.Command, args []string) error {
 
 	// Start server
 	if verbose {
-		log.Printf("Starting Cline Host Bridge on port %d", port)
+		log.Printf("Starting %s Host Bridge on port %d", brandName, port)
 	}
 
 	// Run the service

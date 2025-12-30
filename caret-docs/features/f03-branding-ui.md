@@ -659,7 +659,7 @@ Caret은 완전 자동화된 브랜딩 전환 시스템을 제공하여 다양�
 - VS Code Extension 메타데이터 (package.json 42개+ 필드)
 - 이미지 및 아이콘 자동 교체
 - 터미널 브랜딩 (이름, 확장 ID)
-- 규칙 파일 경로 (.clinerules ↔ .caretrules)
+- 규칙 파일 경로 (.agents/context)
 - 동적 버전 매핑 및 빌드 통합
 
 #### **✅ 구현 완료 영역**

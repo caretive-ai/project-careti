@@ -81,7 +81,7 @@ npm run test:backend
 ## 🏷️ **Phase 2: 기본 브랜딩**
 
 ### **목표**
-Cline → Caret 기본 브랜딩 적용 및 규칙 파일 우선순위 시스템 구축
+Cline → Caret 기본 브랜딩 적용 및 에이전트 표준화(AAIF SoT) 구축
 
 ### **작업 단계**
 
@@ -107,12 +107,12 @@ npm run build:webview
 ##### **🧪 TDD 1단계: 테스트 코드 작성**
 ```typescript
 // caret-src/__tests__/rule-priority.test.ts 생성
-describe('Rule Priority System', () => {
-    test('should prioritize .caretrules over .clinerules', () => {
+describe('Agent Standardization (AAIF SoT)', () => {
+    test('should prioritize .agents/context', () => {
         // 테스트 로직 구현
     })
     
-    test('should load .clinerules when .caretrules not exists', () => {
+    test('should load .agents/context when missing', () => {
         // 테스트 로직 구현  
     })
     
@@ -127,7 +127,7 @@ describe('Rule Priority System', () => {
 git checkout -- src/core/context/instructions/user-instructions/external-rules.ts
 
 # CARET MODIFICATION 적용
-# 우선순위 로직: .caretrules > .clinerules > .cursorrules > .windsurfrules
+# 우선순위 로직: .agents/context
 ```
 
 ##### **🧪 TDD 2단계: 테스트 검증**
@@ -145,9 +145,9 @@ F5 Extension Host 테스트
 
 ### **완료 기준**
 - [ ] 앱명 Cline → Caret 변경 완료
-- [ ] 규칙 우선순위 시스템 100% 테스트 통과
-- [ ] .caretrules 파일 우선 로딩 확인
-- [ ] 기존 .clinerules 호환성 유지
+- [ ] 에이전트 표준화(AAIF SoT) 100% 테스트 통과
+- [ ] .agents/context 파일 우선 로딩 확인
+- [ ] 기존 .agents/context 호환성 유지
 - [ ] 브랜딩 변경 후 정상 빌드
 
 ---

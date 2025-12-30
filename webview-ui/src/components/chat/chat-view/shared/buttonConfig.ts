@@ -218,13 +218,17 @@ export function getButtonConfig(message: ClineMessage | undefined, _mode: Mode =
 	if (!message) {
 		return BUTTON_CONFIGS.default
 	}
+	if (message.askResolved) {
+		return BUTTON_CONFIGS.default
+	}
 
+	const isCompletionResultSay = message.type === "say" && message.say === "completion_result"
 	const isStreaming = message.partial === true
 	const isError = message?.ask ? errorTypes.includes(message.ask) : false
 
 	// Handle partial/streaming messages first (most common during task execution)
 	// This must be checked before any other conditions to ensure streaming state takes precedence
-	if (isStreaming && !isError) {
+	if (isStreaming && !isError && !isCompletionResultSay) {
 		return BUTTON_CONFIGS.partial
 	}
 
@@ -291,8 +295,16 @@ export function getButtonConfig(message: ClineMessage | undefined, _mode: Mode =
 	}
 
 	// Handle say messages (typically don't require buttons except in special cases)
-	if (message.type === "say" && message.say === "api_req_started") {
-		return BUTTON_CONFIGS.api_req_active
+	if (message.type === "say") {
+		if (message.say === "api_req_started") {
+			return BUTTON_CONFIGS.api_req_active
+		}
+		if (message.say === "command_output") {
+			return BUTTON_CONFIGS.default
+		}
+		if (message.say === "completion_result") {
+			return BUTTON_CONFIGS.completion_result
+		}
 	}
 
 	return BUTTON_CONFIGS.partial

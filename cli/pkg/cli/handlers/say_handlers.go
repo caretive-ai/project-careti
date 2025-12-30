@@ -361,7 +361,8 @@ func (h *SayHandler) handleTool(msg *types.ClineMessage, dc *DisplayContext) err
 
 // handleShellIntegrationWarning handles shell integration warning messages
 func (h *SayHandler) handleShellIntegrationWarning(msg *types.ClineMessage, dc *DisplayContext) error {
-	return dc.Renderer.RenderMessage("WARNING", "Shell Integration Unavailable - Cline won't be able to view the command's output.", true)
+	brandName := common.BrandDisplayName()
+	return dc.Renderer.RenderMessage("WARNING", fmt.Sprintf("Shell Integration Unavailable - %s won't be able to view the command's output.", brandName), true)
 }
 
 // handleBrowserActionLaunch handles browser action launch messages

@@ -14,6 +14,7 @@ import (
 	"github.com/cline/cli/pkg/cli/global"
 	"github.com/cline/cli/pkg/cli/task"
 	"github.com/cline/cli/pkg/cli/updater"
+	"github.com/cline/cli/pkg/common"
 	"github.com/cline/grpc-go/cline"
 	"github.com/spf13/cobra"
 )
@@ -33,8 +34,8 @@ func NewTaskCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "task",
 		Aliases: []string{"t"},
-		Short:   "Manage Cline tasks",
-		Long:    `Create, monitor, and manage Cline AI tasks.`,
+		Short:   fmt.Sprintf("Manage %s tasks", common.BrandDisplayName()),
+		Long:    fmt.Sprintf("Create, monitor, and manage %s AI tasks.", common.BrandDisplayName()),
 	}
 
 	cmd.AddCommand(newTaskNewCommand())
@@ -110,7 +111,7 @@ func newTaskNewCommand() *cobra.Command {
 		Use:     "new <prompt>",
 		Aliases: []string{"n"},
 		Short:   "Create a new task",
-		Long:    `Create a new Cline task with the specified prompt. If no Cline instance exists at the specified address, a new one will be started automatically.`,
+		Long:    fmt.Sprintf("Create a new %s task with the specified prompt. If no %s instance exists at the specified address, a new one will be started automatically.", common.BrandDisplayName(), common.BrandDisplayName()),
 		Args:    cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
@@ -171,7 +172,7 @@ func newTaskNewCommand() *cobra.Command {
 
 	cmd.Flags().StringSliceVarP(&images, "image", "i", nil, "attach image files")
 	cmd.Flags().StringSliceVarP(&files, "file", "f", nil, "attach files")
-	cmd.Flags().StringVar(&address, "address", "", "specific Cline instance address to use")
+	cmd.Flags().StringVar(&address, "address", "", fmt.Sprintf("specific %s instance address to use", common.BrandDisplayName()))
 	cmd.Flags().StringVarP(&mode, "mode", "m", "", "mode (act|plan)")
 	cmd.Flags().StringSliceVarP(&settings, "setting", "s", nil, "task settings (key=value format, e.g., -s aws-region=us-west-2 -s mode=act)")
 	cmd.Flags().BoolVarP(&yolo, "yolo", "y", false, "enable yolo mode (non-interactive)")
@@ -204,7 +205,7 @@ func newTaskPauseCommand() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&address, "address", "", "specific Cline instance address to use")
+	cmd.Flags().StringVar(&address, "address", "", fmt.Sprintf("specific %s instance address to use", common.BrandDisplayName()))
 	return cmd
 }
 
@@ -320,7 +321,7 @@ func newTaskSendCommand() *cobra.Command {
 
 	cmd.Flags().StringSliceVarP(&images, "image", "i", nil, "attach image files")
 	cmd.Flags().StringSliceVarP(&files, "file", "f", nil, "attach files")
-	cmd.Flags().StringVar(&address, "address", "", "specific Cline instance address to use")
+	cmd.Flags().StringVar(&address, "address", "", fmt.Sprintf("specific %s instance address to use", common.BrandDisplayName()))
 	cmd.Flags().StringVarP(&mode, "mode", "m", "", "mode (act|plan)")
 	cmd.Flags().BoolVarP(&approve, "approve", "a", false, "approve pending request")
 	cmd.Flags().BoolVarP(&deny, "deny", "d", false, "deny pending request")
@@ -362,7 +363,7 @@ func newTaskChatCommand() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&address, "address", "", "specific Cline instance address to use")
+	cmd.Flags().StringVar(&address, "address", "", fmt.Sprintf("specific %s instance address to use", common.BrandDisplayName()))
 
 	return cmd
 }
@@ -404,7 +405,7 @@ func newTaskViewCommand() *cobra.Command {
 
 	cmd.Flags().BoolVarP(&follow, "follow", "f", false, "follow conversation forever")
 	cmd.Flags().BoolVarP(&followComplete, "follow-complete", "c", false, "follow until completion")
-	cmd.Flags().StringVar(&address, "address", "", "specific Cline instance address to use")
+	cmd.Flags().StringVar(&address, "address", "", fmt.Sprintf("specific %s instance address to use", common.BrandDisplayName()))
 
 	return cmd
 }
@@ -512,7 +513,7 @@ func newTaskOpenCommand() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&address, "address", "", "specific Cline instance address to use")
+	cmd.Flags().StringVar(&address, "address", "", fmt.Sprintf("specific %s instance address to use", common.BrandDisplayName()))
 	cmd.Flags().StringVarP(&mode, "mode", "m", "", "mode (act|plan)")
 	cmd.Flags().StringSliceVarP(&settings, "setting", "s", nil, "task settings (key=value format, e.g., -s model=claude)")
 	cmd.Flags().BoolVarP(&yolo, "yolo", "y", false, "enable yolo mode (non-interactive)")
@@ -570,7 +571,7 @@ func newTaskRestoreCommand() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&restoreType, "type", "t", "task", "Restore type (task, workspace, taskAndWorkspace)")
-	cmd.Flags().StringVar(&address, "address", "", "specific Cline instance address to use")
+	cmd.Flags().StringVar(&address, "address", "", fmt.Sprintf("specific %s instance address to use", common.BrandDisplayName()))
 
 	return cmd
 }

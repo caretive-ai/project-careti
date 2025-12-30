@@ -142,6 +142,7 @@ const (
 	OLLAMA = "ollama"
 	GEMINI = "gemini"
 	OPENAI_NATIVE = "openai-native"
+	CARET = "caret"
 	XAI = "xai"
 	CEREBRAS = "cerebras"
 	OCA = "oca"
@@ -159,6 +160,7 @@ var AllProviders = []string{
 	"ollama",
 	"gemini",
 	"openai-native",
+	"caret",
 	"xai",
 	"cerebras",
 	"oca",
@@ -549,6 +551,34 @@ var rawConfigFields = `	[
 
 // Raw model definitions data (parsed from TypeScript)
 var rawModelDefinitions = `	{
+	  "caret": {
+	    "gemini/gemini-3-pro-preview": {
+	      "maxTokens": 65536,
+	      "contextWindow": 1048576,
+	      "inputPrice": 4,
+	      "outputPrice": 18,
+	      "cacheReadsPrice": 0,
+	      "supportsImages": true,
+	      "supportsPromptCache": true
+	    },
+	    "gemini/gemini-2.5-pro": {
+	      "maxTokens": 65536,
+	      "contextWindow": 1048576,
+	      "inputPrice": 2,
+	      "outputPrice": 15,
+	      "cacheReadsPrice": 0,
+	      "supportsImages": true,
+	      "supportsPromptCache": true
+	    },
+	    "gemini/gemini-2.5-flash": {
+	      "maxTokens": 65536,
+	      "contextWindow": 1048576,
+	      "inputPrice": 0,
+	      "outputPrice": 2,
+	      "supportsImages": true,
+	      "supportsPromptCache": true
+	    }
+	  },
 	  "anthropic": {
 	    "claude-sonnet-4-5-20250929": {
 	      "maxTokens": 8192,
@@ -1554,6 +1584,18 @@ func GetProviderDefinitions() (map[string]ProviderDefinition, error) {
 		SetupInstructions: `Get your API key from your API provider`,
 	}
 
+	// Caret
+	definitions["caret"] = ProviderDefinition{
+		ID:              "caret",
+		Name:            "Caret",
+		RequiredFields:  getFieldsByProvider("caret", configFields, true),
+		OptionalFields:  getFieldsByProvider("caret", configFields, false),
+		Models:          modelDefinitions["caret"],
+		DefaultModelID:  "gemini/gemini-2.5-flash",
+		HasDynamicModels: false,
+		SetupInstructions: `Sign in via the CLI auth flow (caret auth)`,
+	}
+
 	// X AI (Grok)
 	definitions["xai"] = ProviderDefinition{
 		ID:              "xai",
@@ -1625,6 +1667,7 @@ func GetProviderDisplayName(providerID string) string {
 		"ollama": "Ollama",
 		"gemini": "Google Gemini",
 		"openai-native": "OpenAI",
+		"caret": "Caret",
 		"xai": "X AI (Grok)",
 		"cerebras": "Cerebras",
 		"oca": "Oca",

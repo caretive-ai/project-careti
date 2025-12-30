@@ -129,13 +129,13 @@ cd webview-ui && npm run build
 
 **목표**: AI 에이전트가 올바른 머징 규칙(Hybrid Pattern, Minimal Invasion)을 따르도록 규칙 파일을 가장 먼저 복구.
 
-**이유**: `.caretrules`에는 머징 전략과 AI 행동 지침이 포함되어 있습니다. 이 파일들이 없으면 AI가 머징 과정에서 잘못된 판단을 할 수 있습니다.
+**이유**: `.agents/context`에는 머징 전략과 AI 행동 지침이 포함되어 있습니다. 이 파일들이 없으면 AI가 머징 과정에서 잘못된 판단을 할 수 있습니다.
 
 **체크리스트**:
-- [ ] `.caretrules` 디렉토리 우선 복구
+- [ ] `.agents/context` 디렉토리 우선 복구
   ```bash
-  # 백업에서 .caretrules만 먼저 복구
-  cp -r /tmp/caret-backup-$(date +%Y%m%d)/.caretrules ./
+  # 백업에서 .agents/context만 먼저 복구
+  cp -r /tmp/caret-backup-$(date +%Y%m%d)/.agents/context ./
   ```
 - [ ] AI 세션 재시작 또는 규칙 리로드 (필요 시)
 - [ ] AI에게 현재 머징 전략(`merge-standard-guide.md`)을 인지시킴
@@ -155,7 +155,7 @@ cd webview-ui && npm run build
   cp -r caret-docs /tmp/caret-backup-$(date +%Y%m%d)/
   cp -r assets /tmp/caret-backup-$(date +%Y%m%d)/
   cp -r caret-scripts /tmp/caret-backup-$(date +%Y%m%d)/
-  cp -r .caretrules /tmp/caret-backup-$(date +%Y%m%d)/
+  cp -r .agents/context /tmp/caret-backup-$(date +%Y%m%d)/
   ```
 - [ ] 백업 크기 확인 (예상: 5-10MB)
 - [ ] Upstream Cline 버전 기록
@@ -181,11 +181,11 @@ cd webview-ui && npm run build
   cp -r /tmp/caret-backup-$(date +%Y%m%d)/caret-docs ./
   cp -r /tmp/caret-backup-$(date +%Y%m%d)/assets ./
   cp -r /tmp/caret-backup-$(date +%Y%m%d)/caret-scripts ./
-  cp -r /tmp/caret-backup-$(date +%Y%m%d)/.caretrules ./
+  cp -r /tmp/caret-backup-$(date +%Y%m%d)/.agents/context ./
   ```
 - [ ] Git에 추가 및 커밋
   ```bash
-  git add caret-src/ caret-docs/ assets/ caret-scripts/ .caretrules/
+  git add caret-src/ caret-docs/ assets/ caret-scripts/ .agents/context/
   git commit -m "chore: Restore Caret-specific directories after upstream reset"
   ```
 
@@ -773,14 +773,14 @@ git reset --hard upstream/main
 - 빌드 검증 + 런타임 검증 필수
 - F5 실행 및 주요 기능 동작 확인
 
-### 교훈 3: "AI Rules(.caretrules)는 코드보다 먼저 머지되어야 한다" ⭐ **신규**
+### 교훈 3: "AI Rules(.agents/context)는 코드보다 먼저 머지되어야 한다" ⭐ **신규**
 
 **배경**:
-- AI 에이전트는 `.caretrules`에 정의된 규칙(Minimal Invasion, Hybrid Pattern 등)을 따릅니다.
+- AI 에이전트는 `.agents/context`에 정의된 규칙(Minimal Invasion, Hybrid Pattern 등)을 따릅니다.
 - 머지 초기 단계(Reset 직후)에 이 파일들이 없으면 AI는 "일반적인 코딩 관습"대로 행동하여 Caret의 엄격한 머징 규칙을 위반할 수 있습니다.
 
 **해결**:
-- **Phase 0**를 신설하여 `.caretrules`를 가장 먼저 복구합니다.
+- **Phase 0**를 신설하여 `.agents/context`를 가장 먼저 복구합니다.
 - AI가 작업을 시작하기 전에 "나는 Caret 머징 규칙을 따르고 있는가?"를 스스로 확인하게 합니다.
 
 ### 교훈 4: "Cline 프롬프트 개선사항은 Caret JSON 시스템에 반영" ⭐ **신규**
@@ -1123,7 +1123,7 @@ Webview 로딩 실패
 - [ ] F03 Branding
 - [ ] F08 Persona
 - [ ] F01 Common Util
-- [ ] F05 Rule Priority
+- [ ] F06 Agent Standardization
 - [ ] F11 Input History
 - [ ] 각 Feature 후 컴파일 검증
 

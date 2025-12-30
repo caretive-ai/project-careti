@@ -6,7 +6,7 @@
  * CARET 특화 변경을 자동 수집한다.
  * - CARET MODIFICATION 주석 위치
  * - proto 파일 내 1072+ 필드 (Caret 확장 필드)
- * - caret-src/ 및 .caretrules 자산 목록
+ * - caret-src/ 및 .caret 자산 목록
  *
  * 출력:
  *  - `caret-docs/merging/v3.38.1/caret-mod-report.json`
@@ -70,9 +70,9 @@ const caretMods = caretModsRaw ? parseRipgrep(caretModsRaw) : []
 const protoRaw = runOrEmpty(`rg --no-heading --line-number "1072" proto || true`)
 const proto1072 = protoRaw ? parseRipgrep(protoRaw) : []
 
-// 3) caret-src 및 .caretrules 자산
+// 3) caret-src 및 .caret 자산
 const caretSrcFiles = existsSync("caret-src") ? listFiles("caret-src") : []
-const caretrulesFiles = existsSync(".caretrules") ? listFiles(".caretrules") : []
+const caretRulesFiles = existsSync(".caret") ? listFiles(".caret") : []
 
 const meta = {
 	generatedAt: new Date().toISOString(),
@@ -85,12 +85,12 @@ const payload = {
 		caretModification: caretMods.length,
 		proto1072: proto1072.length,
 		caretSrcFiles: caretSrcFiles.length,
-		caretrulesFiles: caretrulesFiles.length,
+		caretRulesFiles: caretRulesFiles.length,
 	},
 	caretModification: caretMods,
 	proto1072,
 	caretSrcFiles,
-	caretrulesFiles,
+	caretRulesFiles,
 }
 
 ensureDir(dirname(`${OUTPUT_DIR}/caret-mod-report.json`))
@@ -106,7 +106,7 @@ const mdLines = [
 	`- CARET MODIFICATION occurrences: ${caretMods.length}`,
 	`- proto 1072+ occurrences: ${proto1072.length}`,
 	`- caret-src files: ${caretSrcFiles.length}`,
-	`- .caretrules files: ${caretrulesFiles.length}`,
+	`- .caret files: ${caretRulesFiles.length}`,
 	"",
 	"## CARET MODIFICATION (file:line)",
 	caretMods.length ? caretMods.map((m) => `- ${m.file}:${m.line} | ${m.text}`).join("\n") : "- none",
@@ -117,8 +117,8 @@ const mdLines = [
 	"## caret-src files",
 	caretSrcFiles.length ? caretSrcFiles.map((f) => `- ${f}`).join("\n") : "- none",
 	"",
-	"## .caretrules files",
-	caretrulesFiles.length ? caretrulesFiles.map((f) => `- ${f}`).join("\n") : "- none",
+	"## .caret files",
+	caretRulesFiles.length ? caretRulesFiles.map((f) => `- ${f}`).join("\n") : "- none",
 ]
 
 writeFileSync(`${OUTPUT_DIR}/caret-mod-report.md`, mdLines.join("\n"))

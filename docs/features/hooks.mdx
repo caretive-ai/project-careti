@@ -55,7 +55,7 @@ Decide where to place your hooks:
 - These apply to all workspaces automatically
 
 **For project-specific hooks:**
-- Create hooks in `.clinerules/hooks/` in your project root
+- Create hooks in `.agents/hooks/` in your project root
 - These only apply to the specific workspace
 - Commit them to version control so your team can use them too
 </Step>
@@ -65,7 +65,7 @@ Hook files must have exact names with no file extensions. For example, to create
 
 ```bash
 # Create the hook file
-vim .clinerules/hooks/TaskStart
+vim .agents/hooks/TaskStart
 ```
 
 Add your script (must start with shebang)
@@ -87,7 +87,7 @@ This example script demonstrates the key mechanics of hook input/output: reading
 **Make it executable**
 
 ```bash
-chmod +x .clinerules/hooks/TaskStart
+chmod +x .agents/hooks/TaskStart
 ```
 </Step>
 

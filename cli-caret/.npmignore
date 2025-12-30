@@ -1,0 +1,6 @@
+dist-standalone/bin/**
+dist-standalone/ripgrep-binaries/**
+dist-standalone/standalone.zip
+extension/caret-src/**/__tests__/**
+extension/caret-src/**/backup/**
+extension/caret-src/**/*.bak-*

@@ -249,7 +249,7 @@ cp -r caret-src /tmp/caret-backup-20251009/
 cp -r caret-docs /tmp/caret-backup-20251009/
 cp -r assets /tmp/caret-backup-20251009/
 cp -r caret-scripts /tmp/caret-backup-20251009/
-cp -r .caretrules /tmp/caret-backup-20251009/
+cp -r .agents/context /tmp/caret-backup-20251009/
 
 # 2. Cline upstream 최신으로 Hard Reset
 git reset --hard upstream/main
@@ -259,10 +259,10 @@ cp -r /tmp/caret-backup-20251009/caret-src ./
 cp -r /tmp/caret-backup-20251009/caret-docs ./
 cp -r /tmp/caret-backup-20251009/assets ./
 cp -r /tmp/caret-backup-20251009/caret-scripts ./
-cp -r /tmp/caret-backup-20251009/.caretrules ./
+cp -r /tmp/caret-backup-20251009/.agents/context ./
 
 # 4. Git에 추가
-git add caret-src/ caret-docs/ assets/ caret-scripts/ .caretrules/
+git add caret-src/ caret-docs/ assets/ caret-scripts/ .agents/context/
 git commit -m "chore: Restore Caret-specific directories after upstream reset"
 ```
 
@@ -283,7 +283,7 @@ git commit -m "chore: Restore Caret-specific directories after upstream reset"
 - [ ] `caret-docs/` 백업 완료
 - [ ] `assets/` 백업 완료
 - [ ] `caret-scripts/` 백업 완료
-- [ ] `.caretrules/` 백업 완료
+- [ ] `.agents/context/` 백업 완료
 - [ ] 백업 파일 크기 확인 (예상: ~10MB)
 
 ##### Step 2.2: Upstream Hard Reset
@@ -504,7 +504,7 @@ Phase 4.5: F06 (JSON Prompt) - system-prompt 분기
 Phase 4.6: F11 (Input History) - controller/index.ts
 Phase 4.7: F01 (Common Util) - 최소 침습
 Phase 4.8: F04 (Caret Account) - 독립, 낮은 위험
-Phase 4.9: F05 (Rule Priority) - (검증 필요)
+Phase 4.9: F06 (Agent Standardization) - (검증 필요)
 Phase 4.10: F10 (Provider Setup) - API transform (마지막)
 Phase 4.11: (미사용 - 예약)
 Phase 4.12: 타입 충돌 최종 해결 (신규 추가) ⭐ 필수 검증
@@ -895,7 +895,7 @@ npx tsx scripts/dev-cli-watch.mjs
 
 ---
 
-#### Phase 4.8: F05 - Rule Priority System (Backend) ✅ **완료**
+#### Phase 4.8: F06 - Agent Standardization (AAIF SoT) (Backend) ✅ **완료**
 
 **예상 시간**: 2-3시간 → **실제**: 1시간
 **완료일**: 2025-10-10
@@ -903,7 +903,7 @@ npx tsx scripts/dev-cli-watch.mjs
 ##### 작업 단계
 1. **external-rules.ts 복원**
    - [x] caret-main에서 external-rules.ts 복원
-   - [x] Rule priority 로직 재구현 (.caretrules > .clinerules > .cursorrules > .windsurfrules)
+   - [x] Rule priority 로직 재구현 (.agents/context)
    - [x] refreshExternalRulesToggles 함수 업데이트
    - [x] getLocalCaretRules 함수 추가
 
@@ -994,8 +994,8 @@ npx tsx scripts/dev-cli-watch.mjs
 
 ##### 작업 단계
 
-1. **caret-docs 및 .caretrules 복원**
-   - [x] caret-main에서 .caretrules 디렉토리 복사
+1. **caret-docs 및 .agents/context 복원**
+   - [x] caret-main에서 .agents/context 디렉토리 복사
    - [x] Feature 문서들 (F01-F11) Phase 4 구조로 통일
      - 새로 작성: f04, f05, f06-07 (통합), f11
      - 기존 업데이트: f01, f02, f03, f08, f09, f10
@@ -1017,7 +1017,7 @@ npx tsx scripts/dev-cli-watch.mjs
 **완료 기준**: ✅ 모든 필수 파일 복원, webview 빌드 성공
 
 **변경 파일**:
-- `.caretrules/` (복원)
+- `.agents/context/` (복원)
 - `CLAUDE.md`, `caret-scripts/`, `brands/` (복원)
 - `webview-ui/vite.config.ts` (+1 line: extensions)
 - `caret-docs/features/*.md` (F01-F11 문서 통일)
@@ -1768,7 +1768,7 @@ npm run test:e2e
 - [ ] F02: 4개 언어 전환 정상
 - [ ] F03: Caret 브랜딩 정상 표시
 - [ ] F04: Caret 계정 시스템 정상
-- [ ] F05: Rule Priority 시스템 정상
+- [ ] F06: Agent Standardization 시스템 정상
 - [ ] F06: JSON System Prompt 정상
 - [ ] F07: Chatbot/Agent 모드 정상
 - [ ] F08: Persona 시스템 정상
@@ -1854,7 +1854,7 @@ Features:
 - F02: Multilingual i18n (4 languages)
 - F03: Branding UI (Complete Caret branding)
 - F04: Caret Account (99% independent)
-- F05: Rule Priority System
+- F06: Agent Standardization (AAIF SoT)
 - F06: JSON System Prompt (Caret mode)
 - F07: Chatbot/Agent Mode (UX layer)
 - F08: Persona System (Hybrid pattern)

@@ -67,6 +67,9 @@ service FileService {
   // Check if file exists in the project
   rpc ifFileExistsRelativePath(StringRequest) returns (BooleanResponse);
 
+  // Read a file as a data URL by a relative path
+  rpc readFileDataUrlRelativePath(StringRequest) returns (String);
+
   // Open a file in editor by a relative path
   rpc openFileRelativePath(StringRequest) returns (Empty);
 

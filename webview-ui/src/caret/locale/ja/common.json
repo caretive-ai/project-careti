@@ -80,10 +80,10 @@
 			"localWorkflows": "ローカルワークフロー"
 		},
 		"subTitle": {
-			"caretRules": "Caret Rules (.caretrules)",
-			"CaretRules": "Caret Rules (.caretrules)",
-			"cursorRules": "カーソルルール (.cursorrules)",
-			"windsurfRules": "ウィンドサーフルール (.windsurfrules)"
+			"caretRules": "Caret Rules (.agents/context)",
+			"CaretRules": "Caret Rules (.agents/context)",
+			"cursorRules": "カーソルルール (.agents/context)",
+			"windsurfRules": "ウィンドサーフルール (.agents/context)"
 		},
 		"button": {
 			"selectPersonaTemplate": "テンプレートキャラクターを選択",

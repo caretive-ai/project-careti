@@ -1,7 +1,7 @@
-import { Controller } from "@core/controller"
 import { Logger } from "@services/logging/Logger"
 import * as proto from "@shared/proto"
 import axios from "axios"
+import { Controller } from "@core/controller"
 
 /**
  * Fetches available models from BizRouter /api/v1/models endpoint

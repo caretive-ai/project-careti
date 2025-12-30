@@ -1,37 +1,30 @@
-# AGENTS.md
+# Project Overview
+- Caret: Cline 기반 포크이며, 핵심은 유지하고 caret-src/로 확장합니다.
+- SoT: `.agents/context/caret-rules.json`을 **세션 시작 시 반드시** 읽고, 필요 시 `.agents/context/workflows/`를 온디맨드로 로드합니다.
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+# Operations
+- Proto 갱신: `npm run protos`, `npm run protos-go` (proto 변경 시 순서대로 실행)
+- 컴파일: `npm run compile`
+- 패키지: `npm run package`
+- 테스트: `npm run test:unit`, `npm run test:integration`, `npm run test:webview`
 
-## 🤖 Agent Configuration
-```json
-{
-    "auto_read_paths": [
-        ".caretrules/caret-rules.json"
-    ],
-    "instruction": "Read .caretrules/caret-rules.json first. It contains the project rules and an index of workflows. Read specific workflow files ON DEMAND as needed. ALWAYS communicate with the user in Korean (한글)."
-}
-```
+# Conventions
+- **항상 한국어로 응답**합니다.
+- **사전지식 의존 금지**: 작업 전 `.agents/context/caret-rules.json` 및 관련 문서를 먼저 읽습니다.
+- TDD: Integration 테스트 우선 → 최소 구현 → 리팩터.
+- 브랜드/경로/표기 계산은 `caret-src/utils/brand-utils.ts`를 사용합니다.
 
-## ⚠️ Critical Instruction
-**DO NOT rely on pre-trained knowledge or assumptions.**
-**ALWAYS** read `.caretrules/caret-rules.json` at the start of the session. It is the **SINGLE SOURCE OF TRUTH** for:
-- Project Identity & Philosophy
-- Merge Strategy (Phase 0, Hybrid Pattern)
-- Architecture Rules (L1-L3 Levels)
-- Development Framework (Tech Stack, TDD)
-- AI Workflow & Forbidden Actions
+# Boundaries
+- 보호 디렉토리(`src/`, `webview-ui/` 등)에 신규 파일 추가 시 파일 상단에 `// CARET MODIFICATION:` 표기.
+- Cline 원본 파일 수정은 최소 침습 원칙(1~3줄)과 `// CARET MODIFICATION:` 주석을 준수.
+- `.cline` 백업 파일 생성 규칙은 **deprecated** (새로 만들지 않음).
+- `work-logs`는 사용자가 요청하지 않는 한 언급/수정하지 않습니다.
 
-## 🧩 Cline 소스 수정 메모
-- `.cline` 백업 파일 생성 규칙은 **deprecated** 입니다(새로 만들지 않습니다).
-- 보호 디렉토리(`src/`, `webview-ui/` 등) 내에 불가피하게 신규 파일을 추가해야 한다면(예: 테스트), 파일 상단에 `// CARET MODIFICATION:`으로 Caret 추가 파일임을 표기합니다.
+# Skills
+- 표준 경로: `.agents/skills/<skill>/SKILL.md`
+- 호환 링크: `.github/skills`, `.claude/skills`
+- 사용자가 스킬을 지정하거나 요청이 스킬 설명과 일치하면 해당 스킬을 우선 사용합니다.
 
-## 🪪 Branding Utilities (필수)
-- 브랜드명/표기/규칙을 사용할 때는 반드시 **공용 유틸**을 호출합니다.
-  - TypeScript/Extension: `caret-src/utils/brand-utils.ts`
-  - Go/CLI: `cli/pkg/common/branding.go`
-- 문자열로 `Caret`, `Cline` 등을 직접 적지 말고 해당 헬퍼를 통해 계산하세요. B2B 브랜드 분기(BR rename)가 있을 때 여기만 수정하면 되도록 유지해야 합니다.
-
-## 🧬 Proto Generation (필수)
-- **TypeScript/Node 층**: `npm run protos` (`caret-scripts/build/build-proto.mjs`)로만 `src/generated/**`, `src/shared/proto/**`를 갱신합니다. 수동 편집 금지.
-- **Go/CLI 층**: `npm run protos-go` (`scripts/build-go-proto.mjs`)가 `src/generated/grpc-go/**`를 재생성합니다. CLI 테스트 전에 항상 이 스크립트를 다시 돌려 최신 상태를 맞춥니다.
-- 프로토 정의(`proto/**`)를 수정했다면 위 두 스크립트를 순차 실행하고 린트/테스트 로그를 문서(D-섹션 체크리스트)에 남겨야 합니다.
+# MCP
+- MCP 설정은 프로젝트의 표준 설정(브랜드 유틸/설정 파일)을 따릅니다.
+- 토큰/비밀정보는 로그/문서에 남기지 않습니다.

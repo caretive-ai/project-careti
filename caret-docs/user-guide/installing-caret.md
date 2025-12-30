@@ -1,124 +1,123 @@
 ---
-title: "Installing Caret"
-description: "Step-by-step guide to install and set up Caret in VS Code."
+title: "Caret 설치하기"
+description: "VS Code에서 Caret을 설치하고 초기 설정을 완료하는 단계별 가이드입니다."
 ---
 
-# Installing Caret
+# Caret 설치하기
 
-Getting started with Caret is straightforward. This guide will walk you through the installation process and initial setup.
+Caret 설치는 간단합니다. 이 가이드는 설치 과정과 초기 설정을 단계별로 안내합니다.
 
-## Prerequisites
+## 사전 준비
 
-Before installing Caret, ensure you have:
+설치 전에 아래 항목을 확인하세요.
 
-- **VS Code**: Version 1.80.0 or higher
-- **Node.js**: Version 18 or higher (for development builds)
-- **Git**: For cloning the repository
+- **VS Code**: 1.80.0 이상
+- **Node.js**: 18 이상 (개발 빌드용)
+- **Git**: 저장소 클론용
 
-## Installation Methods
+## 설치 방법
 
-### Method 1: Install from VSIX (Recommended)
+### 방법 1: VSIX로 설치 (권장)
 
-1. **Download the latest release**:
-    - Visit the [Caret GitHub releases page](https://github.com/aicoding-caret/caret/releases)
-    - Download the latest `.vsix` file
+1. **최신 릴리즈 다운로드**
+    - [Caret GitHub 릴리즈 페이지](https://github.com/aicoding-caret/caret/releases)로 이동
+    - 최신 `.vsix` 파일 다운로드
 
-2. **Install in VS Code**:
+2. **VS Code에 설치**
 
     ```bash
     code --install-extension caret-*.vsix
     ```
 
-    Or through VS Code UI:
-    - Open VS Code
-    - Press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (Mac)
-    - Type "Extensions: Install from VSIX"
-    - Select the downloaded `.vsix` file
+    또는 VS Code UI로 설치:
+    - VS Code 열기
+    - `Ctrl+Shift+P`(Windows/Linux) 또는 `Cmd+Shift+P`(Mac)
+    - "확장: VSIX에서 설치" 검색
+    - 다운로드한 `.vsix` 파일 선택
 
-### Method 2: Build from Source
+### 방법 2: 소스 빌드로 설치
 
-For the latest features or development purposes:
+최신 기능 확인 또는 개발 목적이라면 다음을 따릅니다.
 
-1. **Clone the repository**:
+1. **저장소 클론**
 
     ```bash
     git clone https://github.com/aicoding-caret/caret.git
     cd caret
     ```
 
-2. **Install dependencies**:
+2. **의존성 설치**
 
     ```bash
     npm install
     cd webview-ui && npm install && cd ..
     ```
 
-3. **Build the extension**:
+3. **확장 빌드**
 
     ```bash
     npm run protos
     npm run compile
     ```
 
-4. **Package and install**:
+4. **패키징 및 설치**
     ```bash
     npm run package
     code --install-extension caret-*.vsix
     ```
 
-## Initial Setup
+## 초기 설정
 
-### 1. Open Caret
+### 1. Caret 열기
 
-After installation, you'll see the Caret icon in the VS Code sidebar. Click it to open the Caret panel.
+설치 후 VS Code 사이드바에 Caret 아이콘이 나타납니다. 클릭하여 Caret 패널을 여세요.
 
-### 2. Configure Your AI Provider
+### 2. AI 프로바이더 설정
 
-Caret supports all the same AI providers as Cline:
+Caret은 Cline과 동일한 프로바이더를 지원합니다.
 
 - **Anthropic (Claude)**
 - **OpenAI (GPT-4)**
 - **Google (Gemini)**
 - **Local models (Ollama, LM Studio)**
-- **And many more...**
+- **기타 다양한 모델 지원**
 
-Click the settings gear icon in the Caret panel to configure your preferred provider.
+Caret 패널의 설정 아이콘을 눌러 원하는 프로바이더를 설정하세요.
 
-### 3. Choose Your Persona (Optional)
+### 3. 페르소나 선택 (선택)
 
-One of Caret's unique features is the AI persona system:
+Caret의 고유 기능 중 하나는 AI 페르소나 시스템입니다.
 
-1. In the Caret panel, look for the persona selector
-2. Choose from available personas:
-    - **오사랑 (Oh Sarang)** - K-pop idol with emotional intelligence
-    - **마도베 이치카 (Madobe Ichika)** - Windows-inspired efficiency
-    - **사이안 매킨 (Cyan Mackin)** - macOS-inspired minimalism
-    - **탄도 우분투 (Thando Ubuntu)** - Ubuntu-inspired collaboration
+1. Caret 패널에서 페르소나 선택기를 찾습니다.
+2. 아래 페르소나 중 선택합니다:
+    - **오사랑 (Oh Sarang)** - 감성 지능 강조 K-pop 아이돌 콘셉트
+    - **마도베 이치카 (Madobe Ichika)** - Windows 감성의 효율 지향
+    - **사이안 매킨 (Cyan Mackin)** - macOS 감성의 미니멀리즘
+    - **탄도 우분투 (Thando Ubuntu)** - Ubuntu 감성의 협업 지향
 
-### 4. Set Up Rules (Optional)
+### 4. 규칙 설정 (선택)
 
-Caret's smart rule management prevents conflicts:
+Caret의 규칙 관리는 충돌을 방지합니다.
 
-- Create a `.clinerules` file in your project root for highest priority
-- Or use `.cursorrules` or `.windsurfrules` - Caret will automatically choose the right one
-- Only one rule file will be active at a time
+- 프로젝트 루트에 `.agents/context/` 디렉토리를 만들고 규칙 파일을 추가합니다.
+- 한 번에 하나의 규칙 파일만 활성화됩니다.
 
-## Verification
+## 확인 절차
 
-To verify your installation:
+설치가 정상인지 확인하려면 다음을 수행합니다.
 
-1. Open a project in VS Code
-2. Click the Caret icon in the sidebar
-3. Type a simple message like "Hello Caret!"
-4. You should see a response from your chosen AI provider
+1. VS Code에서 프로젝트를 엽니다.
+2. 사이드바의 Caret 아이콘을 클릭합니다.
+3. "안녕 Caret!" 같은 간단한 메시지를 입력합니다.
+4. 선택한 AI 프로바이더의 응답이 표시되면 정상입니다.
 
-## Troubleshooting
+## 문제 해결
 
-### Extension Not Appearing
+### 확장이 보이지 않는 경우
 
-- Restart VS Code
-- Check that the extension is enabled in the Extensions panel
-- Verify VS Code version compatibility
+- VS Code를 재시작합니다.
+- 확장 패널에서 Caret이 활성화되어 있는지 확인합니다.
+- VS Code 버전 호환성을 확인합니다.
 
 ### Build Issues
 

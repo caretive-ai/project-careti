@@ -91,18 +91,18 @@
 | :---- | :---- | :---- | :---- | :---- |
 | 실시간 협업/동기화 | 핵심 목표 (CRDT 기반 \- Yjs 제안) | 없음 (개인용 도구 중심) | 없음 (개인용 도구 중심) | 없음 (개인용 도구 중심) |
 | 에이전트 아키텍처 | 다중 에이전트 (Supervisor 패턴, Alpha \+ 전문 에이전트) | 단일 에이전트 중심, Composer Agent Mode 95, 규칙 기반 서비스 분할 가능성 37 | Agentic IDE (Flows, Cascade) 97, 자동 컨텍스트 관리 에이전트 | 단일 에이전트 (명령 실행, 컨텍스트 제공) |
-| 컨텍스트 관리 | 자동 \+ 수동 (Graph RAG, .caretrules 제어), 코드 인식 청킹 | 수동 중심 (@codebase, @file 등) 91, RAG 기반 38, 지능적 슬라이싱 38 | 자동 중심 (Context Engine, Cascade) 39, RAG 기반 39 | 수동 중심 (@file, @terminal 등 Context Providers) 94, RAG 가능 40 |
+| 컨텍스트 관리 | 자동 \+ 수동 (Graph RAG, .agents/context 제어), 코드 인식 청킹 | 수동 중심 (@codebase, @file 등) 91, RAG 기반 38, 지능적 슬라이싱 38 | 자동 중심 (Context Engine, Cascade) 39, RAG 기반 39 | 수동 중심 (@file, @terminal 등 Context Providers) 94, RAG 가능 40 |
 | 코드 인식 청킹 | 제안 (Recursive/AST/Semantic) | 명시적 언급 부족 (RAG 내부 처리 가능성) | Context Engine이 처리할 가능성 높음 39 | 사용자 정의 RAG에서 구현 가능 40 |
 | 시맨틱 캐싱 | 제안 | 명시적 언급 부족 | 명시적 언급 부족 | 명시적 언급 부족 |
 | 프롬프트 압축 | 제안 (추출적/추상적) | 명시적 언급 부족 | 명시적 언급 부족 | 명시적 언급 부족 |
 | Diff 업데이트 | 제안 | 명시적 언급 부족 (반복적 개선은 가능) | 명시적 언급 부족 (반복적 개선은 가능) | 명시적 언급 부족 |
 | 로컬 LLM 지원 (Ollama/vLLM) | 목표 (Ollama \+ vLLM 지원 제안) | 지원 (API 호환 모델, 로컬 모델) 3 | 지원 (API 호환 모델, 로컬 모델) | 지원 (Ollama, LM Studio 등 통합) |
-| .rules/맞춤화 | .caretrules (JSON 기반 정책, 4 모드) | .cursorrules (규칙, 제약 조건) 37 | 제한적 (모델 선택 등) | 구성 파일 (config.json/ts) 통한 광범위한 맞춤 설정 |
+| .rules/맞춤화 | .agents/context (JSON 기반 정책, 4 모드) | 레거시 규칙 경로(비지원) 37 | 제한적 (모델 선택 등) | 구성 파일 (config.json/ts) 통한 광범위한 맞춤 설정 |
 | Vibe Coding 지원 | 핵심 목표 | 간접적 (AI 지원 코딩 가속화) | 간접적 (AI 지원 코딩 가속화) | 간접적 (AI 지원 코딩 가속화) |
 | UI/UX 패러다임 | Vibe 중심 (실시간 상호작용 강조) | VSCode 기반 \+ AI 기능 통합 (버튼 다수) 95 | VSCode 기반 \+ 깔끔한 UI, 자동화된 흐름 강조 91 | VSCode 확장, 채팅 및 컨텍스트 태그 중심 |
 | 가격 모델 | 미정 | 유료 (개인 $20/월) 38 | 유료 (Pro $15/월) 91 | 오픈 소스 (자체 호스팅 LLM 비용 발생 가능) |
 
-- 제안된 Caret은 실시간 협업(Vibe Coding) 지원, 명시적인 다중 에이전트 아키텍처, 코드 구조를 고려한 고급 RAG 전략에서 경쟁 우위를 가질 수 있다. 반면, Cursor와 Windsurfer는 이미 성숙한 제품으로 다양한 편의 기능과 UI 완성도를 갖추고 있다. 특히 Windsurfer의 자동 컨텍스트 관리 및 Cascade 워크플로우 39, Cursor의 강력한 수동 컨텍스트 제어 및 다양한 통합 기능은 Caret이 벤치마킹해야 할 부분이다. Continue.dev는 오픈 소스로서 높은 사용자 정의 가능성을 제공한다. Caret의 .caretrules는 Cursor의 규칙 시스템과 유사한 방향성을 가지지만, Vibe Coding 및 다중 에이전트 제어에 더 특화될 필요가 있다. Windsurfer 및 Cursor와 같은 경쟁사들은 더 에이전트적인 워크플로우(Cascade, Composer Agent Mode)와 자동화된 컨텍스트 관리로 빠르게 진화하고 있다. Caret의 다중 에이전트 아키텍처와 고급 RAG에 대한 집중은 이러한 추세와 일치하지만, 이러한 에이전트와 상호 작용하는 사용자 경험("Vibe")이 핵심 차별화 요로 만듬  
+- 제안된 Caret은 실시간 협업(Vibe Coding) 지원, 명시적인 다중 에이전트 아키텍처, 코드 구조를 고려한 고급 RAG 전략에서 경쟁 우위를 가질 수 있다. 반면, Cursor와 Windsurfer는 이미 성숙한 제품으로 다양한 편의 기능과 UI 완성도를 갖추고 있다. 특히 Windsurfer의 자동 컨텍스트 관리 및 Cascade 워크플로우 39, Cursor의 강력한 수동 컨텍스트 제어 및 다양한 통합 기능은 Caret이 벤치마킹해야 할 부분이다. Continue.dev는 오픈 소스로서 높은 사용자 정의 가능성을 제공한다. Caret의 .agents/context는 Cursor의 규칙 시스템과 유사한 방향성을 가지지만, Vibe Coding 및 다중 에이전트 제어에 더 특화될 필요가 있다. Windsurfer 및 Cursor와 같은 경쟁사들은 더 에이전트적인 워크플로우(Cascade, Composer Agent Mode)와 자동화된 컨텍스트 관리로 빠르게 진화하고 있다. Caret의 다중 에이전트 아키텍처와 고급 RAG에 대한 집중은 이러한 추세와 일치하지만, 이러한 에이전트와 상호 작용하는 사용자 경험("Vibe")이 핵심 차별화 요로 만듬  
     
 - **참고 문서 :  [Caret 프로젝트 구조 개선 연구 보고서](https://docs.google.com/document/d/1Nb3WZwxlkqOU66CfQ-V-4EDKcSlNLHn2N6tZ4448V5o/edit?tab=t.0)**  
 - **[AI 기반 TypeScript IDE 파일 수정 명령 최적화 전략 연구 보고서](https://docs.google.com/document/d/1DWyDIX5eCE-vxzbeiJzyli1JCX4IJo_dGRnh6aT7_-o/edit?tab=t.0)**
@@ -111,7 +111,7 @@
 ### **4.2 주요 기술 단계**
 
 - **1단계:** 기초 리팩토링 및 동기화: Cline의 로컬 상태 관리를 선택한 CRDT 라이브러리(예: Yjs)로 교체하고 기본 서버 측 지속성 및 세션 관리를 구현한다. 새로운 상태 모델과 함께 작동하도록 핵심 구성 요소를 리팩토링한다. 초기 코드 청킹(예: 재귀적)을 도입한다. Cline의 단일 사용자 아키텍처 3에서 Caret의 실시간 협업 모델(섹션 III)로의 마이그레이션은 가장 높은 기술적 위험을 가지며 가장 중요한 아키텍처 변경을 요구한다. 2-4단계는 이 기반 위에 구축되지만, 1단계는 중요한 활성화 요소이다.  
-- **2단계:** 다중 에이전트 및 RAG 구현: Alpha 슈퍼바이저 에이전트와 초기 전문 에이전트(예: Coder, 기본 RAG)를 도입한다. 향상된 .caretrules 파서와 기본 DSL 지원을 구현한다. 벡터 DB 및 자동 동기화 메커니즘을 설정한다.  
+- **2단계:** 다중 에이전트 및 RAG 구현: Alpha 슈퍼바이저 에이전트와 초기 전문 에이전트(예: Coder, 기본 RAG)를 도입한다. 향상된 .agents/context 파서와 기본 DSL 지원을 구현한다. 벡터 DB 및 자동 동기화 메커니즘을 설정한다.  
 - **3단계:** 최적화 및 기능 동등성 확보: 고급 RAG(그래프 기반), 컨텍스트 캐싱, 프롬프트 압축, diff 기반 업데이트를 구현한다. 나머지 전문 에이전트(Test, Refactor, Doc)를 추가한다. 전체 프롬프트 제어 DSL을 구현한다. 개편된 로깅 시스템 및 다국어 지원 인프라를 개발한다.  
 * **4단계** : Vibe Coding UX 및 개선: Vibe Coding을 위한 사용자 경험 개선, 에이전트 상호 작용 유동성 향상, 존재 기능 강화, 사용성 피드백 해결에 집중한다.
 
@@ -185,4 +185,3 @@
   - AI기반의 SW개발 방법론 연구 및 실증  
   - AI기반의 차세대 SW개발 도구  
      
-

@@ -80,10 +80,10 @@
 			"localWorkflows": "Local Workflows"
 		},
 		"subTitle": {
-			"caretRules": "Caret Rules (.caretrules)",
-			"CaretRules": "Caret Rules (.Caretrules)",
-			"cursorRules": "Cursor Rules (.cursorrules)",
-			"windsurfRules": "Windsurf Rules (.windsurfrules)"
+			"caretRules": "Caret Rules (.agents/context)",
+			"CaretRules": "Caret Rules (.agents/context)",
+			"cursorRules": "Cursor Rules (.agents/context)",
+			"windsurfRules": "Windsurf Rules (.agents/context)"
 		},
 		"button": {
 			"selectPersonaTemplate": "Select Template Character",

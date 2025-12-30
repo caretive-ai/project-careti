@@ -35,17 +35,21 @@ export const MessageRenderer: React.FC<MessageRendererProps> = ({
 }) => {
 	// Browser session group
 	if (Array.isArray(messageOrGroup)) {
+		// CARET MODIFICATION: 마지막 메시지가 자동승인 바에 가려지지 않도록 마지막 그룹 아이템에 bottom padding 적용 (R-3400-04)
+		const isLast = index === groupedMessages.length - 1
 		return (
-			<BrowserSessionRow
-				expandedRows={expandedRows}
-				isLast={index === groupedMessages.length - 1}
-				key={messageOrGroup[0]?.ts}
-				lastModifiedMessage={modifiedMessages.at(-1)}
-				messages={messageOrGroup}
-				onHeightChange={onHeightChange}
-				onSetQuote={onSetQuote}
-				onToggleExpand={onToggleExpand}
-			/>
+			<div className={isLast ? "pb-2.5" : undefined}>
+				<BrowserSessionRow
+					expandedRows={expandedRows}
+					isLast={isLast}
+					key={messageOrGroup[0]?.ts}
+					lastModifiedMessage={modifiedMessages.at(-1)}
+					messages={messageOrGroup}
+					onHeightChange={onHeightChange}
+					onSetQuote={onSetQuote}
+					onToggleExpand={onToggleExpand}
+				/>
+			</div>
 		)
 	}
 
@@ -57,18 +61,20 @@ export const MessageRenderer: React.FC<MessageRendererProps> = ({
 
 	// Regular message
 	return (
-		<ChatRow
-			inputValue={inputValue}
-			isExpanded={expandedRows[messageOrGroup.ts] || false}
-			isLast={isLast}
-			key={messageOrGroup.ts}
-			lastModifiedMessage={modifiedMessages.at(-1)}
-			message={messageOrGroup}
-			onHeightChange={onHeightChange}
-			onSetQuote={onSetQuote}
-			onToggleExpand={onToggleExpand}
-			sendMessageFromChatRow={messageHandlers.handleSendMessage}
-		/>
+		<div className={isLast ? "pb-2.5" : undefined}>
+			<ChatRow
+				inputValue={inputValue}
+				isExpanded={expandedRows[messageOrGroup.ts] || false}
+				isLast={isLast}
+				key={messageOrGroup.ts}
+				lastModifiedMessage={modifiedMessages.at(-1)}
+				message={messageOrGroup}
+				onHeightChange={onHeightChange}
+				onSetQuote={onSetQuote}
+				onToggleExpand={onToggleExpand}
+				sendMessageFromChatRow={messageHandlers.handleSendMessage}
+			/>
+		</div>
 	)
 }
 

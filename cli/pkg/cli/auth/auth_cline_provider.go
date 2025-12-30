@@ -155,7 +155,7 @@ func IsAuthenticated(ctx context.Context) bool {
 		return true
 	}
 
-	verboseLog("Server verification failed: %v", err)
+	verboseLog("Server verification failed---->: %v", err)
 	return false
 }
 

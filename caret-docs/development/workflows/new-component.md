@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.caretrules/workflows/new-component.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.agents/context/workflows/new-component.md`를 기준으로 보세요.
 
 TDD와 일관된 패턴을 사용하여 새 컴포넌트를 생성하고 있습니다.
 

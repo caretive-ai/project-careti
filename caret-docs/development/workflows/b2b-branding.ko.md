@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 규칙은 `.caretrules/workflows/branding-and-logging.md` 및 개발 문서 `caret-docs/development/b2b-branding-workflow.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 규칙은 `.agents/context/workflows/branding-and-logging.md` 및 개발 문서 `caret-docs/development/b2b-branding-workflow.md`를 기준으로 보세요.
 
 # B2B 브랜딩 워크플로우
 

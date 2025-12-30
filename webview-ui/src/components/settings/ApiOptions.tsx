@@ -32,6 +32,8 @@ import { HuaweiCloudMaasProvider } from "./providers/HuaweiCloudMaasProvider"
 import { HuggingFaceProvider } from "./providers/HuggingFaceProvider"
 import { LiteLlmProvider } from "./providers/LiteLlmProvider"
 import { BizRouterProvider } from "./providers/BizRouterProvider"
+// CARET MODIFICATION: Add Naver Cloud provider
+import { NaverCloudProvider } from "./providers/NaverCloudProvider"
 import { LMStudioProvider } from "./providers/LMStudioProvider"
 import { MistralProvider } from "./providers/MistralProvider"
 import { MoonshotProvider } from "./providers/MoonshotProvider"
@@ -190,6 +192,7 @@ const ApiOptions = ({
 			{ value: "xai", label: t("providers.xai.name", "settings") },
 			{ value: "sambanova", label: t("providers.sambanova.name", "settings") },
 			{ value: "huawei-cloud-maas", label: t("providers.huawei-cloud-maas.name", "settings") },
+			{ value: "naver-cloud", label: t("providers.naver-cloud.name", "settings") },
 			{ value: "dify", label: t("providers.dify.name", "settings") },
 		]
 
@@ -545,6 +548,10 @@ const ApiOptions = ({
 
 				{apiConfiguration && selectedProvider === "huawei-cloud-maas" && (
 					<HuaweiCloudMaasProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
+				)}
+
+				{apiConfiguration && selectedProvider === "naver-cloud" && (
+					<NaverCloudProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
 				{apiConfiguration && selectedProvider === "dify" && (

@@ -23,7 +23,7 @@
 ### **✅ 완료된 기능**
 | 기능 | 상태 | v3.26.6 머지 결과 |
 |------|------|------------------|
-| **Rule Priority System** | ✅ **완료** | 성공적 보존 (.caretrules 우선순위) |
+| **Agent Standardization (AAIF SoT)** | ✅ **완료** | 성공적 보존 (.agents/context SoT) |
 | **Persona System** | ✅ **완료** | 상태 키 및 설정 보존 |
 | **브랜딩 시스템** | ✅ **완료** | 무충돌 완료 |
 | **기본 아키텍처** | ✅ **완료** | Wrapper 패턴 유지 |
@@ -89,7 +89,7 @@ src/core/prompts/    # CARET MODIFICATION 마커로 수정
 ```
 - **장점**: 기존 시스템과 자연스러운 통합
 - **주의**: 최소 변경(1~3줄) + 주석 필수, 필요 시 git으로 롤백
-- **적용**: Rule Priority, JSON Prompt
+- **적용**: Agent Standardization, JSON Prompt
 
 #### **⚠️ Level 3: 복잡한 통합 (정리 후 적용)**
 ```
@@ -241,7 +241,7 @@ npm run test:backend -- feature
 
 #### **주요 성과**
 - ✅ **v3.26.6 코어 기능 통합**: 29개 충돌 파일 성공적 해결
-- ✅ **Caret 핵심 기능 보존**: .caretrules 우선순위, 페르소나 시스템, mode_system 설정
+- ✅ **Caret 핵심 기능 보존**: .agents/context SoT, 페르소나 시스템, mode_system 설정
 - ✅ **최신 시스템 아키텍처**: 새로운 시스템 프롬프트, Biome 코드 품질 도구 도입
 - ✅ **충돌 최소화 전략 검증**: 예상 58개 → 실제 29개 충돌로 50% 감소 달성
 
@@ -251,7 +251,7 @@ npm run test:backend -- feature
 # ✅ 프로토콜 필드: mode_system = 20 (충돌 해결)
 # ✅ 시스템 프롬프트: v3.26.6 최신 아키텍처 도입
 # ✅ 브랜딩 시스템: 무충돌 완전 보존
-# ✅ 규칙 시스템: .caretrules 우선순위 완전 보존
+# ✅ 규칙 시스템: .agents/context SoT 완전 보존
 ```
 
 ### **🎯 Phase 4: Handler 아키텍처 전환** (진행중)
@@ -262,7 +262,7 @@ npm run test:backend -- feature
 - ✅ package.json: name, displayName, homepage, repository, author, keywords 변경
 - ✅ walkthrough: 모든 "Cline" → "Caret" 설명 변경
 - ✅ commands: 모든 category, title "Cline" → "Caret" 변경
-- ✅ .clinerules → .caretrules 디렉토리명 변경
+- ✅ .agents/context 디렉토리명 변경
 - ✅ 아이콘 브랜딩: Caret 전용 아이콘 교체 (icon.png, icon.svg, caret_shell_icon.svg 등)
 - ✅ 아이콘 최적화: 적절한 크기로 압축 및 최적화
 - ✅ 빌드 테스트 성공 확인
@@ -274,7 +274,7 @@ npm run test:backend -- feature
 - `package.json`: displayName, title, description, walkthrough 내용
 - UI 텍스트: commands의 title, category 표시명
 - 사용자 문서: README, 가이드, 설명서
-- 파일명: `.caretrules` (사용자 설정 파일)
+- 파일명: `.agents/context` (사용자 설정 파일)
 
 #### **❌ 변경 금지 (내부 구현)**
 - **기존 Cline 코드**: Command ID, Context 변수, Proto 구조, 함수/클래스명 → 모두 유지
@@ -316,7 +316,7 @@ git commit -m "feat: [feature] - CARET MODIFICATION applied with docs"
 
 ### **Phase 3: 핵심 기능 (HIGH 우선순위)**
 ```bash
-# Rule Priority System (조건부 통합)
+# Agent Standardization (AAIF SoT) (조건부 통합)
 # Chatbot/Agent Mode (아키텍처 정리 후)
 # JSON System Prompt (조건부 통합)
 ```
@@ -628,7 +628,7 @@ npm run test:coverage
 ### **✅ v3.26.6 머징 완료 기준 달성**
 
 #### **기능적 요구사항**
-- ✅ **핵심 Caret 기능 보존**: .caretrules 우선순위, 페르소나, 브랜딩
+- ✅ **핵심 Caret 기능 보존**: .agents/context SoT, 페르소나, 브랜딩
 - ✅ **기존 Cline 기능 100% 보존**: v3.26.6 신기능 완전 도입
 - ✅ **충돌 최소화**: 29개 파일만 충돌, 95% 자동 머지 성공
 - ✅ **아키텍처 업그레이드**: 최신 시스템 프롬프트, Biome 도구
@@ -700,7 +700,7 @@ git merge upstream/main
 
 **cline rules 관련 변경 감지 시 반드시 확인:**
 
-1. **`.clinerules` 관련 변경사항**이 있으면 **`.caretrules`도 동일하게 적용** 필요
+1. **`.agents/context` 관련 변경사항**이 있으면 **관련 문서(`caret-docs`)도 동일하게 적용** 필요
    - `toggleClineRule.ts` 변경 → `toggleCaretRule.ts` 동기화
    - `refreshClineRulesToggles` 로직 변경 → `refreshExternalRulesToggles`의 caret 로직 검토
    - Cline rules UI 변경 → Caret rules UI 동기화
@@ -709,7 +709,7 @@ git merge upstream/main
    ```
    Cline Rules                    Caret Rules (복사본)
    ├── toggleClineRule.ts    →   ├── toggleCaretRule.ts
-   ├── .clinerules 파일      →   ├── .caretrules 파일  
+   ├── 규칙 경로: `.agents/context` →   ├── 규칙 경로: `.agents/context` (단일 표준)
    ├── localClineRulesToggles →   ├── localCaretRulesToggles
    └── 우선순위: 2순위          └── 우선순위: 1순위 (최고)
    ```
@@ -724,7 +724,7 @@ git merge upstream/main
    - [ ] `src/core/context/instructions/user-instructions/` 내 cline rules 로직 확인  
    - [ ] 동일한 변경사항을 `toggleCaretRule.ts`와 caret 관련 로직에 적용
    - [ ] **로깅**: Caret 코드에 `CaretLogger` 사용 확인
-   - [ ] 우선순위 시스템 유지 확인 (`.caretrules > .clinerules`)
+   - [ ] 표준화 시스템 유지 확인 (`.agents/context`)
    - [ ] UI 토글 동작 테스트
 
 ---

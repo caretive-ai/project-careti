@@ -23,8 +23,12 @@ fi
 
 npm run protos
 npm run protos-go
+# CARET MODIFICATION: Node 버전 불일치로 인한 better-sqlite3 로딩 실패 방지
+npm rebuild better-sqlite3
 # Build standalone JS bundle for local run
 npm run compile-standalone
+# CARET MODIFICATION: package-standalone를 포함해 dist-standalone/runtime 의존성 준비
+npm run postcompile-standalone
 # CARET: ensure prompt sections are packaged for core startup
 mkdir -p "${ROOT}/dist-standalone/extension/caret-src/core/prompts/sections"
 cp -r "${ROOT}/caret-src/core/prompts/sections/." "${ROOT}/dist-standalone/extension/caret-src/core/prompts/sections/"

@@ -19,6 +19,7 @@ interface MessageStateHandlerParams {
 	updateTaskHistory: (historyItem: HistoryItem) => Promise<HistoryItem[]>
 	taskState: TaskState
 	checkpointManagerErrorMessage?: string
+	cwdOnTaskInitialization?: string
 }
 
 export class MessageStateHandler {
@@ -30,6 +31,7 @@ export class MessageStateHandler {
 	private taskId: string
 	private ulid: string
 	private taskState: TaskState
+	private cwdOnTaskInitialization?: string
 
 	// Mutex to prevent concurrent state modifications (RC-4)
 	// Protects against data loss from race conditions when multiple
@@ -43,6 +45,7 @@ export class MessageStateHandler {
 		this.taskState = params.taskState
 		this.taskIsFavorited = params.taskIsFavorited ?? false
 		this.updateTaskHistory = params.updateTaskHistory
+		this.cwdOnTaskInitialization = params.cwdOnTaskInitialization
 	}
 
 	setCheckpointTracker(tracker: CheckpointTracker | undefined) {
@@ -103,7 +106,7 @@ export class MessageStateHandler {
 			} catch (error) {
 				console.error("Failed to get task directory size:", taskDir, error)
 			}
-			const cwd = await getCwd(getDesktopDir())
+			const cwd = this.cwdOnTaskInitialization ?? (await getCwd(getDesktopDir()))
 			await this.updateTaskHistory({
 				id: this.taskId,
 				ulid: this.ulid,

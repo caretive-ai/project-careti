@@ -1,3 +1,6 @@
 [submodule "work-logs"]
 	path = work-logs
 	url = https://github.com/aicoding-caret/work-logs
+[submodule "docs.caret.team"]
+	path = docs.caret.team
+	url = https://github.com/aicoding-caret/docs.caret.team

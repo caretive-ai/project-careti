@@ -18,9 +18,9 @@ export PATH="/tmp/go/bin:${PATH}"
 
 # Ensure protos (TS + Go)
 echo "[caret-cli] Running protos (TS)..."
-npm run protos
+(cd "${ROOT_DIR}" && npm run protos)
 echo "[caret-cli] Running protos-go..."
-PATH=/tmp/go/bin:${PATH} npm run protos-go
+(cd "${ROOT_DIR}" && PATH=/tmp/go/bin:${PATH} npm run protos-go)
 
 # Copy extension package.json (for dist-standalone usage)
 mkdir -p "${ROOT_DIR}/dist-standalone/extension"
@@ -31,6 +31,18 @@ CORE_DIST="${ROOT_DIR}/dist-standalone"
 if [[ ! -f "${CORE_DIST}/cline-core.js" ]]; then
   echo "[caret-cli] ERROR: cline-core.js not found in dist-standalone. Run 'npm run compile-standalone-npm' first."
   exit 1
+fi
+# CARET MODIFICATION: ensure better-sqlite3 is present in dist-standalone runtime deps
+if command -v npm >/dev/null 2>&1 && [[ ! -d "${CORE_DIST}/node_modules/better-sqlite3" ]]; then
+  if [[ -d "${ROOT_DIR}/node_modules/better-sqlite3" ]]; then
+    mkdir -p "${CORE_DIST}/node_modules"
+    rsync -a --delete "${ROOT_DIR}/node_modules/better-sqlite3" "${CORE_DIST}/node_modules/"
+  else
+    (
+      cd "${CORE_DIST}"
+      npm install --no-audit --no-fund
+    )
+  fi
 fi
 mkdir -p "${PKG_DIR}/dist-standalone"
 rsync -a --delete "${CORE_DIST}/" "${PKG_DIR}/dist-standalone/"
@@ -46,10 +58,21 @@ mkdir -p "${PKG_DIR}/proto"
 cp "${ROOT_DIR}/dist-standalone/proto/descriptor_set.pb" "${PKG_DIR}/proto/"
 # CARET MODIFICATION: rebuild better-sqlite3 against local Node version for CLI runtime
 if command -v npm >/dev/null 2>&1; then
-  (
-    cd "${PKG_DIR}/dist-standalone/binaries/linux-x64/node_modules/better-sqlite3"
-    npm rebuild --build-from-source --unsafe-perm
-  )
+  BETTER_SQLITE_DIR=""
+  if [[ -d "${CORE_DIST}/binaries/linux-x64/node_modules/better-sqlite3" ]]; then
+    BETTER_SQLITE_DIR="${CORE_DIST}/binaries/linux-x64/node_modules/better-sqlite3"
+  elif [[ -d "${CORE_DIST}/node_modules/better-sqlite3" ]]; then
+    BETTER_SQLITE_DIR="${CORE_DIST}/node_modules/better-sqlite3"
+  fi
+
+  if [[ -n "${BETTER_SQLITE_DIR}" ]]; then
+    (
+      cd "${BETTER_SQLITE_DIR}"
+      npm rebuild --build-from-source --unsafe-perm
+    )
+  else
+    echo "[caret-cli] Warning: better-sqlite3 not found; skipping rebuild"
+  fi
 fi
 
 # ldflags (reusing cline globals)

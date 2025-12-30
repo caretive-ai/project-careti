@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.caretrules/workflows/ai-feature.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.agents/context/workflows/ai-feature.md`를 기준으로 보세요.
 
 적절한 메시지 플로우와 테스팅으로 AI 관련 기능을 구현하고 있습니다.
 

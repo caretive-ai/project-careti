@@ -17,7 +17,7 @@ Caret's ultimate vision is to become a **'Vibe Coding' development partner where
 *   **Real-time Collaboration:** An environment where multiple users and AI agents can simultaneously share and edit the workspace state.
 *   **Intelligent Agents:** Beyond a single agent, a multi-agent system consisting of a Supervisor (Alpha) coordinating tasks and Specialist agents (Coder, Tester, etc.) performing specific jobs.
 *   **Deep Context Understanding:** Providing accurate and relevant context through an advanced RAG (Retrieval-Augmented Generation) system that understands code structure and semantics.
-*   **Flexible Control & Customization:** Allowing users to finely control AI behavior and project rules through the `.caretrules` policy system and a prompt control DSL.
+*   **Flexible Control & Customization:** Allowing users to finely control AI behavior and project rules through the `.agents/context` policy system and a prompt control DSL.
 *   **Robust & Efficient Execution:** Supporting stable file modifications, optimized LLM usage (cost & performance), and a strong development infrastructure (logging, i18n).
 *   **(Long-term) Visual Workflow:** Exploring support for visual flow-based logic composition and LLM orchestration, moving beyond code-centric development.
 
@@ -54,7 +54,7 @@ To achieve Caret's long-term vision, we set the following specific goals:
 *   **[Goal 2] Implement Intelligent Multi-Agent System:** Design and implement Alpha Supervisor and Specialist Agent (Coder, RAG, Test, etc.) structure.
 *   **[Goal 3] Build Advanced RAG System:** Implement code-aware chunking (AST/Semantic), graph-based search, and automatic synchronization features.
 *   **[Goal 4] Ensure Robust and Stable File Modification:** Implement AST-based code modification (ts-morph), structured data handling (preserve comments/formatting), encoding/EOL normalization, and large file streaming processing.
-*   **[Goal 5] Enhance Flexible Control System (`.caretrules`):** Implement JSON-based policy definition, support for 4 modes (arch, dev, rule, talk), and design a prompt control DSL.
+*   **[Goal 5] Enhance Flexible Control System (`.agents/context`):** Implement JSON-based policy definition, support for 4 modes (arch, dev, rule, talk), and design a prompt control DSL.
 *   **[Goal 6] Optimize Performance & Cost:** Implement semantic caching, prompt compression, Diff updates, and intelligent LLM routing.
 *   **[Goal 7] Build Core Development Infrastructure:** Implement a structured logging system and multilingual (i18n) support system.
 *   **[Goal 8] Improve User Experience (UX):** Provide intuitive UI/UX tailored for Vibe Coding workflows and enhanced configuration management.
@@ -133,8 +133,8 @@ Based on the hybrid approach, the following phased roadmap is proposed. Each pha
     *   Implement automatic Vector DB synchronization mechanism upon code changes.
     *   `[Considerations/Risks]` Core of AI context understanding capability. Requires introducing and operating new technologies (Vector DB, Embedding). Stability of chunking strategy and synchronization mechanism is important.
     *   `[Prerequisites]` Stabilization of file handling foundation (Phase 1).
-*   **Enhance `.caretrules` System (`Goal 5` - Basic) (Difficulty: Medium, Est. Duration: M(1-2 months)):**
-    *   Implement JSON-based `.caretrules` parser and validator.
+*   **Enhance `.agents/context` System (`Goal 5` - Basic) (Difficulty: Medium, Est. Duration: M(1-2 months)):**
+    *   Implement JSON-based `.agents/context` parser and validator.
     *   Define 4 basic modes (arch, dev, rule, talk) and implement rule application logic.
     *   Define basic prompt control DSL syntax and implement parsing logic.
     *   `[Considerations/Risks]` Core for user customization and AI control. Requires considering flexibility and extensibility of DSL design and rule application logic.
@@ -148,7 +148,7 @@ Based on the hybrid approach, the following phased roadmap is proposed. Each pha
 *   **M2.1:** Alpha Supervisor agent basic logic implemented and operational.
 *   **M2.2:** Initial Specialist Agents (Coder, RAG) integrated and interactable with Alpha.
 *   **M2.3:** Basic RAG pipeline operational (Vector DB setup, code chunking, basic search & context injection possible).
-*   **M2.4:** `.caretrules` system V1 implemented (JSON rule parsing and 4 basic modes operational).
+*   **M2.4:** `.agents/context` system V1 implemented (JSON rule parsing and 4 basic modes operational).
 *   **M2.5:** CRDT integration stabilized (Synchronization applied to core features and major conflicts resolved).
 
 ### 5.3 Phase 3 (Long-term: 6+ months): Advanced Feature Optimization & Vibe UX Completion
@@ -168,7 +168,7 @@ Based on the hybrid approach, the following phased roadmap is proposed. Each pha
     *   `[Prerequisites]` Completion of the basic multi-agent system implementation from Phase 2.
 *   **Complete Control System (`Goal 5`) (Difficulty: Medium, Est. Duration: M(Ongoing Improvement)):**
     *   Implement and integrate full prompt control DSL features.
-    *   Extend `.caretrules` functionality (more granular control, UI integration, etc.).
+    *   Extend `.agents/context` functionality (more granular control, UI integration, etc.).
     *   `[Considerations/Risks]` Balancing user convenience and control capability. Managing complexity of DSL and rule system.
     *   `[Prerequisites]` Completion of the basic control system implementation from Phase 2.
 *   **Complete Vibe Coding UX (`Goal 1`, `Goal 8`) (Difficulty: Medium, Est. Duration: L(Ongoing Improvement)):**

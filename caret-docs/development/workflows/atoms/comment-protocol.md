@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 Atom은 `.caretrules/workflows/atoms/comment-protocol.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 Atom은 `.agents/context/workflows/atoms/comment-protocol.md`를 기준으로 보세요.
 
 Cline 파일 수정 사항 추적을 위한 주석 protocol을 따르고 있습니다.
 

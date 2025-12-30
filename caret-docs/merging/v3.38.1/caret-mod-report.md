@@ -7,7 +7,7 @@
 - CARET MODIFICATION occurrences: 0
 - proto 1072+ occurrences: 0
 - caret-src files: 0
-- .caretrules files: 0
+- .agents/context files: 0
 
 ## CARET MODIFICATION (file:line)
 - none
@@ -18,5 +18,5 @@
 ## caret-src files
 - none
 
-## .caretrules files
+## .agents/context files
 - none

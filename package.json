@@ -2,7 +2,7 @@
 	"name": "codecenter",
 	"displayName": "CodeCenter",
 	"description": "🎯 Transform your coding workflow with the most intelligent AI assistant for Visual Studio Code. Autonomous code generation, multi-file refactoring, and 20+ AI models. Supports: 한국어, 日本語, 中文.",
-	"version": "0.4.2",
+	"version": "0.4.4",
 	"icon": "assets/icons/icon.png",
 	"engines": {
 		"vscode": "^1.84.0"
@@ -390,6 +390,7 @@
 		"@types/clone-deep": "^4.0.4",
 		"@types/diff": "^5.2.1",
 		"@types/get-folder-size": "^3.0.4",
+		"@types/minimist": "^1.2.5",
 		"@types/mocha": "^10.0.7",
 		"@types/node": "20.x",
 		"@types/pdf-parse": "^1.1.4",
@@ -430,6 +431,7 @@
 		"@aws-sdk/client-bedrock-runtime": "^3.922.0",
 		"@aws-sdk/credential-providers": "^3.922.0",
 		"@bufbuild/protobuf": "^2.2.5",
+		"@caretive/caret-cli": "^0.0.4",
 		"@cerebras/cerebras_cloud_sdk": "^1.35.0",
 		"@google-cloud/vertexai": "^1.9.3",
 		"@google/genai": "^1.30.0",

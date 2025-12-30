@@ -14,8 +14,8 @@
 
 1. **사용자 식별**: `git config user.name`으로 현재 사용자 확인
 2. **날짜 확인**: OS별 명령어로 현재 날짜 확인
-3. **규칙 인덱스 로드**: `.caretrules/caret-rules.json` 읽기 (필수)
-4. **온디맨드 워크플로우 로드**: 작업 성격에 맞는 워크플로우 파일(예: `.caretrules/workflows/ai-feature.md`)을 JSON 인덱스에서 찾아 읽기
+3. **규칙 인덱스 로드**: `.agents/context/caret-rules.json` 읽기 (필수)
+4. **온디맨드 워크플로우 로드**: 작업 성격에 맞는 워크플로우 파일(예: `.agents/context/workflows/ai-feature.md`)을 JSON 인덱스에서 찾아 읽기
 
 **🚨 CRITICAL: 작업 성격 분석 및 필수 문서 확인**
 
@@ -41,7 +41,7 @@
 **업무 예시**: `src/`, `webview-ui/`, `proto/` 파일 수정
 **필수 체크 문서**:
 
-- **파일 수정 체크리스트** (`caret-docs/caretrules.ko.md` 내 체크리스트) ⚡ **MANDATORY**
+- **파일 수정 체크리스트** (`caret-docs/development/caret-rules.ko.md` 내 체크리스트) ⚡ **MANDATORY**
 - **백업 생성 규칙** 확인 필수
 - **CARET MODIFICATION 주석** 추가 규칙 확인
 

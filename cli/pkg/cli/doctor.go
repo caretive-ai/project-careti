@@ -7,6 +7,7 @@ import (
 	"github.com/cline/cli/pkg/cli/global"
 	"github.com/cline/cli/pkg/cli/terminal"
 	"github.com/cline/cli/pkg/cli/updater"
+	"github.com/cline/cli/pkg/common"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +17,7 @@ func NewDoctorCommand() *cobra.Command {
 		Use:     "doctor",
 		Aliases: []string{"d"},
 		Short:   "Check system health and diagnose problems",
-		Long: `Check the health of your Cline CLI installation and diagnose problems.
+		Long: fmt.Sprintf(`Check the health of your %s CLI installation and diagnose problems.
 
 Currently this command performs the following checks and fixes:
 
@@ -34,7 +35,10 @@ CLI Updates:
   - Skipped in CI environments
 
 Note: Future versions will include additional health checks for Node.js version,
-npm availability, Cline Core connectivity, database integrity, and more.`,
+npm availability, %s connectivity, database integrity, and more.`,
+			common.BrandDisplayName(),
+			common.BrandCoreName(),
+		),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runDoctorChecks()
 		},
@@ -47,7 +51,7 @@ npm availability, Cline Core connectivity, database integrity, and more.`,
 func runDoctorChecks() error {
 	renderer := display.NewRenderer(global.Config.OutputFormat)
 
-	fmt.Printf("\n%s\n\n", renderer.Bold("Cline Doctor - System Health Check"))
+	fmt.Printf("\n%s\n\n", renderer.Bold(fmt.Sprintf("%s Doctor - System Health Check", common.BrandDisplayName())))
 
 	// Configure terminal keybindings (terminal.go prints its own status)
 	fmt.Printf("%s\n\n", renderer.Dim("━━━ Terminal Configuration ━━━"))

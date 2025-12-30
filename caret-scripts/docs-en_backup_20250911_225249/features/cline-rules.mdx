@@ -10,7 +10,7 @@ You can create a rule by clicking the `+` button in the Rules tab. This will ope
 
 Once you save the file:
 
--   Your rule will be stored in the `.clinerules/` directory in your project (if it's a Workspace Rule)
+-   Your rule will be stored in the `.agents/context/` directory in your project (if it's a Workspace Rule)
 -   Or in the Global Rules directory (if it's a Global Rule):
 
 ### Global Rules Directory Location
@@ -64,16 +64,16 @@ Create ADRs in /docs/adr for:
 
 ### Key Benefits
 
-1. **Version Controlled**: The `.clinerules` file becomes part of your project's source code
+1. **Version Controlled**: The `.agents/context` file becomes part of your project's source code
 2. **Team Consistency**: Ensures consistent behavior across all team members
 3. **Project-Specific**: Rules and standards tailored to each project's needs
 4. **Institutional Knowledge**: Maintains project standards and practices in code
 
-Place the `.clinerules` file in your project's root directory:
+Place the `.agents/context` file in your project's root directory:
 
 ```
 your-project/
-├── .clinerules
+├── .agents/context
 ├── src/
 ├── docs/
 └── ...
@@ -87,11 +87,11 @@ Cline's system prompt, on the other hand, is not user-editable ([here's where yo
 -   Focus on Desired Outcomes: Describe the results you want, not the specific steps.
 -   Test and Iterate: Experiment to find what works best for your workflow.
 
-### .clinerules/ Folder System
+### .agents/context/ Folder System
 
 ```
 your-project/
-├── .clinerules/              # Folder containing active rules
+├── .agents/context/              # Folder containing active rules
 │   ├── 01-coding.md          # Core coding standards
 │   ├── 02-documentation.md   # Documentation requirements
 │   └── current-sprint.md     # Rules specific to current work
@@ -99,7 +99,7 @@ your-project/
 └── ...
 ```
 
-Cline automatically processes **all Markdown files** inside the `.clinerules/` directory, combining them into a unified set of rules. The numeric prefixes (optional) help organize files in a logical sequence.
+Cline automatically processes **all Markdown files** inside the `.agents/context/` directory, combining them into a unified set of rules. The numeric prefixes (optional) help organize files in a logical sequence.
 
 #### Using a Rules Bank
 
@@ -107,7 +107,7 @@ For projects with multiple contexts or teams, maintain a rules bank directory:
 
 ```
 your-project/
-├── .clinerules/              # Active rules - automatically applied
+├── .agents/context/              # Active rules - automatically applied
 │   ├── 01-coding.md
 │   └── client-a.md
 │
@@ -137,35 +137,35 @@ Switch between client projects:
 
 ```bash
 # Switch to Client B project
-rm .clinerules/client-a.md
-cp clinerules-bank/clients/client-b.md .clinerules/
+rm .agents/context/client-a.md
+cp clinerules-bank/clients/client-b.md .agents/context/
 ```
 
 Adapt to different tech stacks:
 
 ```bash
 # Frontend React project
-cp clinerules-bank/frameworks/react.md .clinerules/
+cp clinerules-bank/frameworks/react.md .agents/context/
 ```
 
 #### Implementation Tips
 
 -   Keep individual rule files focused on specific concerns
 -   Use descriptive filenames that clearly indicate the rule's purpose
--   Consider git-ignoring the active `.clinerules/` folder while tracking the `clinerules-bank/`
+-   Consider git-ignoring the active `.agents/context/` folder while tracking the `clinerules-bank/`
 -   Create team scripts to quickly activate common rule combinations
 
 The folder system transforms your Cline rules from a static document into a dynamic knowledge system that adapts to your team's changing contexts and requirements.
 
 ### Managing Rules with the Toggleable Popover
 
-To make managing both single `.clinerules` files and the folder system even easier, Cline v3.13 introduces a dedicated popover UI directly accessible from the chat interface.
+To make managing both single `.agents/context` files and the folder system even easier, Cline v3.13 introduces a dedicated popover UI directly accessible from the chat interface.
 
 Located conveniently under the chat input field, this popover allows you to:
 
--   **Instantly See Active Rules:** View which global rules (from your user settings) and workspace rules (`.clinerules` file or folder contents) are currently active.
--   **Quickly Toggle Rules:** Enable or disable specific rule files within your workspace `.clinerules/` folder with a single click. This is perfect for activating context-specific rules (like `react-rules.md` or `memory-bank.md`) only when needed.
--   **Easily Add/Manage Rules:** Quickly create a workspace `.clinerules` file or folder if one doesn't exist, or add new rule files to an existing folder.
+-   **Instantly See Active Rules:** View which global rules (from your user settings) and workspace rules (`.agents/context` file or folder contents) are currently active.
+-   **Quickly Toggle Rules:** Enable or disable specific rule files within your workspace `.agents/context/` folder with a single click. This is perfect for activating context-specific rules (like `react-rules.md` or `memory-bank.md`) only when needed.
+-   **Easily Add/Manage Rules:** Quickly create a workspace `.agents/context` file or folder if one doesn't exist, or add new rule files to an existing folder.
 
 This UI significantly simplifies switching contexts and managing different sets of instructions without needing to manually edit files or configurations during a conversation.
 

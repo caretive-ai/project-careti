@@ -1,5 +1,4 @@
 import type { CaretModeSystem } from "@caret/shared/ModeSystem"
-import { CaretAccountService } from "@services/account/CaretAccountService"
 import { randomBytes } from "crypto"
 import * as vscode from "vscode"
 import { CaretUser } from "@/shared/CaretAccount"
@@ -155,7 +154,6 @@ export class CaretGlobalManager {
 			)
 
 			console.log("[CARET-GLOBAL-MANAGER] 🌐 Opening external auth URL:", authUrl.toString())
-			// @ts-expect-error: VS Code API deprecation warning
 			const success = await vscode.env.openExternal(authUrl)
 			if (!success) {
 				throw new Error("Failed to open external URL")
@@ -166,24 +164,24 @@ export class CaretGlobalManager {
 		}
 	}
 
-	public async setTokenFromCallback(token: string): Promise<void> {
-		console.log("[CARET-GLOBAL-MANAGER] 🔑 Setting token from callback")
+	// public async setTokenFromCallback(token: string): Promise<void> {
+	// 	console.log("[CARET-GLOBAL-MANAGER] 🔑 Setting token from callback")
 
-		this._jwtToken = token
+	// 	this._jwtToken = token
 
-		// Fetch user profile using Apollo Client
-		try {
-			// this._userInfo = await this.apolloManager.getUserProfile()
-			const caretAccountService = CaretAccountService.getInstance()
-			const userInfo = await caretAccountService.fetchMe()
-			console.log("Caret Global Manager userInfo=====>", userInfo)
-			console.log("Caret router Model", userInfo?.models)
-			this._userInfo = userInfo
-			console.log("[CARET-GLOBAL-MANAGER] ✅ User profile loaded:", this._userInfo?.email)
-		} catch (error) {
-			console.error("[CARET-GLOBAL-MANAGER] ❌ Failed to fetch user profile:", error)
-		}
-	}
+	// 	// Fetch user profile using Apollo Client
+	// 	try {
+	// 		// this._userInfo = await this.apolloManager.getUserProfile()
+	// 		const caretAccountService = CaretAccountService.getInstance()
+	// 		const userInfo = await caretAccountService.fetchMe()
+	// 		console.log("Caret Global Manager userInfo=====>", userInfo)
+	// 		console.log("Caret router Model", userInfo?.models)
+	// 		this._userInfo = userInfo
+	// 		console.log("[CARET-GLOBAL-MANAGER] ✅ User profile loaded:", this._userInfo?.email)
+	// 	} catch (error) {
+	// 		console.error("[CARET-GLOBAL-MANAGER] ❌ Failed to fetch user profile:", error)
+	// 	}
+	// }
 
 	/**
 	 * Logout from Auth0
@@ -223,9 +221,9 @@ export class CaretGlobalManager {
 		return CaretGlobalManager.get().logout()
 	}
 
-	public static async setTokenFromCallback(token: string): Promise<void> {
-		return CaretGlobalManager.get().setTokenFromCallback(token)
-	}
+	// public static async setTokenFromCallback(token: string): Promise<void> {
+	// 	return CaretGlobalManager.get().setTokenFromCallback(token)
+	// }
 
 	public static get authToken(): string | undefined {
 		return CaretGlobalManager.get().getAuthToken()

@@ -3,8 +3,8 @@ set -eu
 
 # CARET MODIFICATION: default는 실행 중 인스턴스를 보존; 강제 종료하려면 CARET_FORCE_KILL=1
 if [ -n "${CARET_FORCE_KILL:-}" ]; then
-    if pkill -f "caret-host|cline-host|cline-core|cline-host" >/dev/null 2>&1; then
-        echo "[info] Stopped existing caret/cline host/core processes before build copy step"
+    if pkill -f "caret-host|cline-host|cline-core|caret-core|/bin/caret" >/dev/null 2>&1; then
+        echo "[info] Stopped existing caret/cline host/core/cli processes before build copy step"
     fi
 else
     echo "[info] CARET_FORCE_KILL not set; keeping existing host/core processes running during build"

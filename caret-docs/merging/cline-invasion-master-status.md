@@ -45,7 +45,7 @@
 | **F02 - i18n** | Level 2 | 5-7개 | 🟡 Medium |
 | **F03 - Branding** | Level 3 | 15-20개 | 🔴 High |
 | **F04 - Account** | Level 1 | 1개 | 🟢 Very Low |
-| **F05 - Rule Priority** | Level 3 | 10-12개 | 🔴 High |
+| **F06 - Agent Standardization** | Level 3 | 10-12개 | 🔴 High |
 | **F06 - JSON Prompt** | Level 2 | 3-5개 | 🟡 Medium |
 | **F07 - Chatbot/Agent** | Level 2 | (F06 공유) | 🟡 Medium |
 | **F08 - Persona** | Level 2 | 3개 | 🟡 Medium |
@@ -138,7 +138,7 @@
 
 ---
 
-### F05 - Rule Priority System (🔴 High Risk)
+### F06 - Agent Standardization (AAIF SoT) (🔴 High Risk)
 
 #### Cline 수정 파일 (10-12개 추정)
 
@@ -146,7 +146,7 @@
 
 예상 수정 파일:
 - Rule 파일 시스템 관련 다수 파일 수정
-- `.caretrules/` 디렉토리 처리 로직 추가
+- `.agents/context/` 디렉토리 처리 로직 추가
 
 ---
 
@@ -509,7 +509,7 @@ git checkout HEAD -- caret-scripts/
 - [F02 - Multilingual i18n](../features/f02-multilingual-i18n.md)
 - [F03 - Branding UI](../features/f03-branding-ui.md)
 - [F04 - Caret Account](../features/f04-caret-account.md)
-- [F05 - Rule Priority System](../features/f05-rule-priority-system.md)
+- [F06 - Agent Standardization (AAIF SoT)](../features/f06-agent-standardization.md)
 - [F06 - JSON System Prompt](../features/f06-json-system-prompt.md)
 - [F07 - Chatbot Agent Mode](../features/f07-chatbot-agent.md)
 - [F08 - Persona System](../features/f08-persona-system.md)

@@ -8,19 +8,24 @@
 
 Caret의 문서 시스템은 **AI와 개발자가 동일한 지식을 공유**하는 것을 목표로 합니다. 이를 위해 '지식 원자화(Knowledge Atomization)'라는 핵심 원칙을 따릅니다.
 
-### 2.1 시스템 구조: `.caretrules` 와 `caret-docs`
+### 2.1 시스템 구조: `.agents/context` 와 `caret-docs`
 
-Caret의 지식 시스템은 AI를 위한 `.caretrules`와 개발자를 위한 `caret-docs`라는 두 개의 미러링된 디렉토리로 구성됩니다.
+Caret의 지식 시스템은 AI를 위한 `.agents/context`와 개발자를 위한 `caret-docs`라는 두 개의 미러링된 디렉토리로 구성됩니다.
 
-1.  **`.caretrules` (AI의 지식 소스)**
+1.  **`.agents/context` (AI의 지식 소스)**
     -   AI가 작업을 수행할 때 직접 참조하는 규칙과 워크플로우의 집합입니다.
     -   토큰 효율성과 명확한 해석을 위해 기계가 읽기 좋은 형식(YAML, JSON, 간결한 Markdown)으로 작성됩니다.
 
 2.  **`caret-docs` (개발자의 지식 소스)**
-    -   `.caretrules`에 있는 모든 내용을 사람이 읽기 쉬운 형식(주로 한국어 Markdown)으로 번역하고 설명하는 문서의 집합입니다.
+    -   `.agents/context`에 있는 모든 내용을 사람이 읽기 쉬운 형식(주로 한국어 Markdown)으로 번역하고 설명하는 문서의 집합입니다.
     -   개발자는 이 디렉토리의 문서를 통해 AI가 어떤 원칙과 절차로 작업하는지 명확히 이해할 수 있습니다.
 
 **핵심 원칙**: 두 디렉토리의 내용은 항상 **1:1로 동기화**되어야 합니다.
+
+추가 규칙:
+- `docs/`는 Cline 원문(영문)이라 **편집하지 않습니다**.
+- `docs.caret.team/`는 배포용 다국어 문서로, `docs/` 복사본 + Caret 추가분으로 구성됩니다.
+- 영문 문서는 `.en` 접미사로 분리합니다(예: `features.en/**`).
 
 ### 2.2 지식 원자화 (Knowledge Atomization)
 
@@ -32,7 +37,7 @@ Caret의 지식 시스템은 AI를 위한 `.caretrules`와 개발자를 위한 `
 
 #### 1. 지식의 원자 (Atoms)
 
--   **위치**: `.caretrules/workflows/atoms/`
+-   **위치**: `.agents/context/workflows/atoms/`
 -   **역할**: 개발 작업의 가장 근본적이고 재사용 가능한 최소 단위 규칙입니다.
 -   **예시**:
     -   `tdd-cycle.yaml`: TDD(테스트 주도 개발)의 기본 사이클 (Red-Green-Refactor)을 정의합니다.
@@ -41,7 +46,7 @@ Caret의 지식 시스템은 AI를 위한 `.caretrules`와 개발자를 위한 `
 
 #### 2. 복합 워크플로우 (Composite Workflows)
 
--   **위치**: `.caretrules/workflows/`
+-   **위치**: `.agents/context/workflows/`
 -   **역할**: 특정 목표(예: '새 컴포넌트 생성')를 달성하기 위한 구체적인 작업 절차입니다. 이 워크플로우는 여러 '지식 원자'들을 참조하고 조합하여 구성됩니다.
 -   **예시**:
     -   `new-component.md`: 새 컴포넌트를 생성하는 워크플로우입니다. 내부적으로 `tdd-cycle`, `naming-conventions`, `verification-steps` 등의 '원자'들을 순서에 맞게 조합하여 사용하도록 AI에게 지시합니다.
@@ -55,18 +60,49 @@ Caret 프로젝트의 모든 문서는 최상위 `caret-docs/` 디렉토리 내�
 caret-docs/
 ├── development/     # AI와 개발자를 위한 핵심 개발 가이드 및 아키텍처 문서
 ├── features/        # 각 기능(Feature)에 대한 상세 설명 및 명세
+├── features.en/     # 기능 스펙(영문)
 ├── guides/          # 특정 주제에 대한 심층 가이드 (예: 병합 전략)
 ├── system-prompts-ko/ # AI 시스템 프롬프트의 한국어 버전 (가독성용)
 ├── user-guide/      # 최종 사용자를 위한 기능 안내서
 └── work-logs/       # AI와 개발자의 일일 작업 로그
 ```
 
-### 2.2 문서 파일 명명 규칙
+### 2.4 문서 파일 명명 규칙
 
 - 소문자와 하이픈 사용
 - 의미 있는 이름 사용
 - 확장자는 `.md` 사용
 - 예: `webview-extension-communication.md`
+
+### 2.5 문서/AI 가이드 업데이트 절차
+
+#### A) 문서 업데이트 (사람용)
+1. SoT 문서를 먼저 수정합니다 (`.agents/context/**`).
+2. 대응되는 한국어 가이드를 `caret-docs/development/**`에 반영합니다.
+3. 기능 스펙이 사용자 대상이면 `caret-docs/features.en/**`도 갱신합니다.
+4. 진입 문서(`caret-docs/development/index.md`) 링크를 최신화합니다.
+
+#### B) AI 가이드 업데이트 (시스템 프롬프트/행동 규칙)
+1. `.agents/context/**`의 규칙/프롬프트 소스를 갱신합니다.
+2. 사람이 읽는 프롬프트 문서(`caret-docs/system-prompts-ko/**`)를 함께 갱신합니다.
+3. 개발자 영향이 있는 변화는 `caret-docs/development/**`에 요약을 추가합니다.
+4. 워크플로우/카테고리가 바뀌면 `ai-work-index.yaml`도 갱신합니다.
+
+### 2.6 워크플로우 → 스킬 후보 검토
+반복적이고 결정 규칙이 명확하며, 스크립트로 자동화 가능한 작업은 스킬화 후보입니다.
+- 예: 모델 리스트 갱신, proto 생성, 표준 빌드/린트 실행
+- 제외: 아키텍처 판단/리뷰 등 인간 판단이 필요한 작업
+
+### 2.7 워크플로우 vs 스킬 (다른 시스템)
+- **워크플로우**: `.agents/context/workflows/**`에 있는 프로젝트 규칙/절차 문서이며, 작업 맥락에 따라 온디맨드로 로드됩니다.
+- **스킬**: `.agents/skills/**`의 Codex 기능 모듈로, 스킬 이름을 언급하거나 설명이 요청과 일치할 때만 로드됩니다.
+- 결정 규칙이 명확하고 스크립트로 자동화 가능한 경우에만 워크플로우를 스킬로 전환합니다.
+
+### 2.8 AGENTS 표준 초기화 (/init)
+- 표준 구조가 없으면 사용자 동의를 먼저 받습니다.
+- 동의 시 `assets/agents_template`를 스캐폴드하고, 프로젝트 컨텍스트를 채웁니다.
+- 채움 절차는 `.agents/context/workflows/agents-init.md`를 기준으로 수행합니다.
+- 확인되지 않은 정보는 작성하지 말고, 필요한 경우 사용자에게 질문합니다.
 
 ## 3. 마크다운 작성 규칙
 

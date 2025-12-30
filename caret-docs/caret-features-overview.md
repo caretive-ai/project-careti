@@ -4,33 +4,33 @@ Caret은 Cline을 기반으로 한 VSCode AI 코딩 어시스턴트 확장 프�
 
 > **Caret** 이름의 유래: 프로그래밍에서 위치와 방향을 나타내는 '^' (caret) 기호에서 따온 이름입니다.
 
-## 🎯 **Caret vs Cline 핵심 차이점**
+## 🎯 **Caret와 Cline 핵심 차이점**
 
 ### **✅ 완전 구현된 차별화 기능들**
 
-| 특징                          | 설명                    | 사용자 이점                      | 상세 문서                                         |
-| ----------------------------- | ----------------------- | -------------------------------- | ------------------------------------------------- |
-| **🔧 Rule Priority System**   | 규칙 파일 우선순위 로딩 | 토큰 낭비 방지, 설정 충돌 해결   | [→ 상세보기](./features/rule-priority-system.md) |
-| **👤 Account & Organization** | Auth0 기반 계정 시스템  | 팀 관리, 사용량 모니터링, 요금제 | [→ 상세보기](./features/account-organization.md) |
-| **🌍 Multilingual i18n**      | 4개국 완전 다국어 지원  | 한국어/영어/일본어/중국어 UI     | [→ 상세보기](./features/multilingual-i18n.md)    |
-| **📋 Logging System**         | 통합 로깅 아키텍처      | 개발 디버깅, 오류 추적 강화      | [→ 상세보기](./features/logging-system.md)       |
-| **🎨 Branding & UI**          | Caret 고유 브랜딩       | 시각적 정체성, 전용 페이지들     | [→ 상세보기](./features/branding-ui.md)          |
+| 특징                                | 설명                    | 사용자 이점                      | 상세 문서                                         |
+| ----------------------------------- | ----------------------- | -------------------------------- | ------------------------------------------------- |
+| **🔧 에이전트 표준화(AAIF SoT)**          | `.agents/context` SoT + AGENTS 계층 + `/init` 스캐폴드 | 규칙 충돌 제거, 온보딩 가속 | [→ 상세보기](./features/f06-agent-standardization.md) |
+| **👤 계정 및 조직 관리**             | Auth0 기반 계정 시스템  | 팀 관리, 사용량 모니터링, 요금제 | [→ 상세보기](./features/account-organization.md) |
+| **🌍 다국어 i18n**                   | 4개국 완전 다국어 지원  | 한국어/영어/일본어/중국어 UI     | [→ 상세보기](./features/multilingual-i18n.md)    |
+| **📋 로깅 시스템**                   | 통합 로깅 아키텍처      | 개발 디버깅, 오류 추적 강화      | [→ 상세보기](./features/logging-system.md)       |
+| **🎨 브랜딩 및 UI**                  | Caret 고유 브랜딩       | 시각적 정체성, 전용 페이지들     | [→ 상세보기](./features/branding-ui.md)          |
 
 ### **🔄 개발 중 / 고도화 기능들**
 
 | 특징                      | 설명                          | 개발 상태               | 상세 문서                                       |
 | ------------------------- | ----------------------------- | ----------------------- | ----------------------------------------------- |
-| **🤖 Chatbot/Agent Mode** | Plan/Act → Chatbot/Agent 매핑 | 복잡한 구조 정리 필요   | [→ 상세보기](./features/chatbot-agent-mode.md) |
-| **📄 JSON System Prompt** | 구조화된 프롬프트 시스템      | 부분 구현, 확장 예정    | [→ 상세보기](./features/json-system-prompt.md) |
-| **👥 Persona System**     | AI 캐릭터 페르소나 선택       | 기본 구조 완성, 보완 중 | [→ 상세보기](./features/persona-system.md)     |
+| **🤖 챗봇/에이전트 모드**  | Plan/Act → Chatbot/Agent 매핑 | 복잡한 구조 정리 필요   | [→ 상세보기](./features/chatbot-agent-mode.md) |
+| **📄 JSON 시스템 프롬프트** | 구조화된 프롬프트 시스템      | 부분 구현, 확장 예정    | [→ 상세보기](./features/json-system-prompt.md) |
+| **👥 페르소나 시스템**     | AI 캐릭터 페르소나 선택       | 기본 구조 완성, 보완 중 | [→ 상세보기](./features/persona-system.md)     |
 
 ## 🎭 **주요 특징 살펴보기**
 
-### **🔧 스마트한 규칙 관리**
+### **🔧 에이전트 표준화**
 
-- **문제**: `.clinerules`, `.cursorrules`, `.windsurfrules` 중복 로딩으로 토큰 낭비
-- **해결**: `.caretrules` > `.clinerules` > `.cursorrules` > `.windsurfrules` 우선순위로 단일 선택
-- **결과**: 토큰 사용량 절약, 설정 충돌 방지
+- **문제**: 레거시 규칙 경로 혼재로 컨텍스트 충돌
+- **해결**: `.agents/context` SoT + `AGENTS.md` 계층 + `/init` 스캐폴드
+- **결과**: 결정적 규칙 로딩, 온보딩 비용 감소
 
 ### **🌍 글로벌 서비스**
 
@@ -47,8 +47,8 @@ Caret은 Cline을 기반으로 한 VSCode AI 코딩 어시스턴트 확장 프�
 
 ### **🤖 직관적인 모드 시스템**
 
-- **Chatbot Mode**: 대화 중심, 빠른 응답
-- **Agent Mode**: 작업 중심, 정확한 실행
+- **챗봇 모드**: 대화 중심, 빠른 응답
+- **에이전트 모드**: 작업 중심, 정확한 실행
 - **호환성**: Cline Plan/Act 모드와 자동 매핑
 
 ## 🏗️ **아키텍처 철학**
@@ -82,7 +82,7 @@ caret/
 
 ### **주요 기능 활용**
 
-- **규칙 파일**: `.caretrules` 파일로 프로젝트별 설정
+- **규칙 파일**: `.agents/context` 파일로 프로젝트별 설정
 - **모드 전환**: `Cmd/Ctrl+Shift+A`로 Chatbot/Agent 모드 토글
 - **언어 변경**: 설정에서 UI 언어 선택
 - **계정 관리**: 사용량 모니터링 및 팀 설정
@@ -93,20 +93,20 @@ caret/
 
 ### **🔍 특징별 상세 문서**
 
-- [Rule Priority System](./features/rule-priority-system.md) - 규칙 우선순위 시스템
-- [Account & Organization](./features/account-organization.md) - 계정 및 조직 관리
-- [Multilingual i18n](./features/multilingual-i18n.md) - 다국어 지원 시스템
-- [Chatbot/Agent Mode](./features/chatbot-agent-mode.md) - 모드 시스템
-- [JSON System Prompt](./features/json-system-prompt.md) - JSON 프롬프트
-- [Persona System](./features/persona-system.md) - 페르소나 시스템
-- [Logging System](./features/logging-system.md) - 로깅 시스템
-- [Branding & UI](./features/branding-ui.md) - 브랜딩 및 UI
+- [에이전트 표준화(AAIF SoT)](./features/f06-agent-standardization.md) - `.agents/context` SoT + AGENTS 계층 + `/init`
+- [계정 및 조직 관리](./features/account-organization.md) - 계정 및 조직 관리
+- [다국어 i18n](./features/multilingual-i18n.md) - 다국어 지원 시스템
+- [챗봇/에이전트 모드](./features/chatbot-agent-mode.md) - 모드 시스템
+- [JSON 시스템 프롬프트](./features/json-system-prompt.md) - JSON 프롬프트
+- [페르소나 시스템](./features/persona-system.md) - 페르소나 시스템
+- [로깅 시스템](./features/logging-system.md) - 로깅 시스템
+- [브랜딩 및 UI](./features/branding-ui.md) - 브랜딩 및 UI
 
 ### **🔧 개발 및 머징 문서**
 
-- [Merging Strategy Guide](./merging/merging-strategy-guide.md) - 전체 머징 전략
-- [Phase Implementation Guide](./merging/phase-implementation-guide.md) - Phase별 구현 가이드
-- [TDD Testing Requirements](./merging/tdd-testing-requirements.md) - TDD 및 테스트 요구사항
+- [머징 전략 가이드](./merging/merging-strategy-guide.md) - 전체 머징 전략
+- [단계별 구현 가이드](./merging/phase-implementation-guide.md) - Phase별 구현 가이드
+- [TDD 테스트 요구사항](./merging/tdd-testing-requirements.md) - TDD 및 테스트 요구사항
 
 ### **🎯 전략 및 로드맵**
 

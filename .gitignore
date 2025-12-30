@@ -3,12 +3,13 @@ dist
 dist-standalone
 node_modules
 tmp
-work-logs
+# work-logs
 .vscode-test
 *.vsix
 .DS_Store
 .idea
 pnpm-lock.yaml
+package-lock.json
 .clineignore
 .venv
 .actrc
@@ -26,7 +27,7 @@ coverage-unit
 !.github/scripts/coverage/
 
 *evals.env
-# .env
+.env
 
 ## Generated files ##
 src/generated/
@@ -44,3 +45,4 @@ slexn-codecenter
 .cache/
 .gopath/
 caret-build-auth.out
+cline-latest

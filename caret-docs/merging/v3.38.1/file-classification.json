@@ -747,7 +747,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules.original/caret-rules.json",
+    "file": ".agents/context.original/caret-rules.json",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -756,7 +756,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules.original/workflows/ai-work-index.md",
+    "file": ".agents/context.original/workflows/ai-work-index.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -765,7 +765,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules.original/workflows/ai-work-protocol.md",
+    "file": ".agents/context.original/workflows/ai-work-protocol.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -774,7 +774,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules.original/workflows/architecture-guide.md",
+    "file": ".agents/context.original/workflows/architecture-guide.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -783,7 +783,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules.original/workflows/caret-development.md",
+    "file": ".agents/context.original/workflows/caret-development.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -792,7 +792,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules.original/workflows/document-organization.md",
+    "file": ".agents/context.original/workflows/document-organization.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -801,7 +801,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules.original/workflows/merge-strategy.md",
+    "file": ".agents/context.original/workflows/merge-strategy.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -810,7 +810,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules.original/workflows/testing-guide.md",
+    "file": ".agents/context.original/workflows/testing-guide.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -819,7 +819,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/ai-feature.md",
+    "file": ".agents/context/ai-feature.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -828,7 +828,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/ai-work-index.yaml",
+    "file": ".agents/context/ai-work-index.yaml",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -837,7 +837,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/ai-work-protocol.md",
+    "file": ".agents/context/ai-work-protocol.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -846,7 +846,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/architecture-guide.yaml",
+    "file": ".agents/context/architecture-guide.yaml",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -855,7 +855,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/b2b-branding-workflow.md",
+    "file": ".agents/context/b2b-branding-workflow.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -864,7 +864,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/build-system.md",
+    "file": ".agents/context/build-system.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -873,7 +873,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/caret-architecture-guide.md",
+    "file": ".agents/context/caret-architecture-guide.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -882,7 +882,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/caret-development.md",
+    "file": ".agents/context/caret-development.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -891,7 +891,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -900,7 +900,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/cline-cli-subagent-research.md",
+    "file": ".agents/context/cline-cli-subagent-research.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -909,7 +909,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/cline-modification.md",
+    "file": ".agents/context/cline-modification.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -918,7 +918,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/component-architecture.md",
+    "file": ".agents/context/component-architecture.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -927,7 +927,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/critical-verification.md",
+    "file": ".agents/context/critical-verification.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -936,7 +936,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/document-organization.md",
+    "file": ".agents/context/document-organization.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -945,7 +945,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/documentation-guide.md",
+    "file": ".agents/context/documentation-guide.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -954,7 +954,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/frontend-backend-patterns.md",
+    "file": ".agents/context/frontend-backend-patterns.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -963,7 +963,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/logging-rules.md",
+    "file": ".agents/context/logging-rules.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -972,7 +972,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/merge-strategy.md",
+    "file": ".agents/context/merge-strategy.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -981,7 +981,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/message-processing.md",
+    "file": ".agents/context/message-processing.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -990,7 +990,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/new-component.md",
+    "file": ".agents/context/new-component.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -999,7 +999,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/prompt-management.md",
+    "file": ".agents/context/prompt-management.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1008,7 +1008,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/system-prompt.md",
+    "file": ".agents/context/system-prompt.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1017,7 +1017,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/testing-guide.yaml",
+    "file": ".agents/context/testing-guide.yaml",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1026,7 +1026,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/testing-work.md",
+    "file": ".agents/context/testing-work.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1035,7 +1035,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/webview-communication.md",
+    "file": ".agents/context/webview-communication.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1044,7 +1044,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/ai-feature.md",
+    "file": ".agents/context/workflows/ai-feature.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1053,7 +1053,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/ai-work-protocol.md",
+    "file": ".agents/context/workflows/ai-work-protocol.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1062,7 +1062,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/atoms/backup-protocol.yaml",
+    "file": ".agents/context/workflows/atoms/backup-protocol.yaml",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1071,7 +1071,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1080,7 +1080,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/atoms/hardcoding-prevention.md",
+    "file": ".agents/context/workflows/atoms/hardcoding-prevention.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1089,7 +1089,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/atoms/i18n-dynamic-pattern.md",
+    "file": ".agents/context/workflows/atoms/i18n-dynamic-pattern.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1098,7 +1098,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/atoms/message-flow.md",
+    "file": ".agents/context/workflows/atoms/message-flow.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1107,7 +1107,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/atoms/modification-levels.md",
+    "file": ".agents/context/workflows/atoms/modification-levels.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1116,7 +1116,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/atoms/modification-protocol.md",
+    "file": ".agents/context/workflows/atoms/modification-protocol.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1125,7 +1125,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/atoms/naming-conventions.md",
+    "file": ".agents/context/workflows/atoms/naming-conventions.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1134,7 +1134,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/atoms/semantic-equivalence-verification.md",
+    "file": ".agents/context/workflows/atoms/semantic-equivalence-verification.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1143,7 +1143,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/atoms/storage-patterns.md",
+    "file": ".agents/context/workflows/atoms/storage-patterns.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1152,7 +1152,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/atoms/tdd-cycle.yaml",
+    "file": ".agents/context/workflows/atoms/tdd-cycle.yaml",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1161,7 +1161,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/atoms/verification-steps.md",
+    "file": ".agents/context/workflows/atoms/verification-steps.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1170,7 +1170,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/branding-and-logging.md",
+    "file": ".agents/context/workflows/branding-and-logging.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1179,7 +1179,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/caret-development.md",
+    "file": ".agents/context/workflows/caret-development.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1188,7 +1188,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/cline-modification.md",
+    "file": ".agents/context/workflows/cline-modification.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1197,7 +1197,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/critical-verification.md",
+    "file": ".agents/context/workflows/critical-verification.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1206,7 +1206,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/document-organization.md",
+    "file": ".agents/context/workflows/document-organization.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1215,7 +1215,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/i18n-static-translation-fix.md",
+    "file": ".agents/context/workflows/i18n-static-translation-fix.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1224,7 +1224,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/merge-strategy.md",
+    "file": ".agents/context/workflows/merge-strategy.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1233,7 +1233,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/new-component.md",
+    "file": ".agents/context/workflows/new-component.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1242,7 +1242,7 @@
     "presence": "caret"
   },
   {
-    "file": ".caretrules/workflows/testing-work.md",
+    "file": ".agents/context/workflows/testing-work.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [
@@ -1305,7 +1305,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/ai-feature.md",
+    "file": ".agents/context/ai-feature.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1314,7 +1314,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/ai-work-index.md",
+    "file": ".agents/context/ai-work-index.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1323,7 +1323,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/ai-work-protocol.md",
+    "file": ".agents/context/ai-work-protocol.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1332,7 +1332,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/architecture-guide.md",
+    "file": ".agents/context/architecture-guide.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1341,7 +1341,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/caret-development.md",
+    "file": ".agents/context/caret-development.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1350,7 +1350,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1359,7 +1359,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/cline-modification.md",
+    "file": ".agents/context/cline-modification.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1368,7 +1368,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/critical-verification.md",
+    "file": ".agents/context/critical-verification.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1377,7 +1377,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/document-organization.md",
+    "file": ".agents/context/document-organization.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1386,7 +1386,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/hooks/PostToolUse.example",
+    "file": ".agents/hooks/PostToolUse.example",
     "strategy": "MANUAL_REVIEW",
     "priority": "medium",
     "notes": [
@@ -1395,7 +1395,7 @@
     "presence": "both"
   },
   {
-    "file": ".clinerules/hooks/PreToolUse.example",
+    "file": ".agents/hooks/PreToolUse.example",
     "strategy": "MANUAL_REVIEW",
     "priority": "medium",
     "notes": [
@@ -1404,7 +1404,7 @@
     "presence": "both"
   },
   {
-    "file": ".clinerules/hooks/README.md",
+    "file": ".agents/hooks/README.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "medium",
     "notes": [
@@ -1413,7 +1413,7 @@
     "presence": "both"
   },
   {
-    "file": ".clinerules/hooks/TaskCancel.example",
+    "file": ".agents/hooks/TaskCancel.example",
     "strategy": "AUTO_ADOPT",
     "priority": "low",
     "notes": [
@@ -1422,7 +1422,7 @@
     "presence": "upstream"
   },
   {
-    "file": ".clinerules/hooks/TaskResume.example",
+    "file": ".agents/hooks/TaskResume.example",
     "strategy": "AUTO_ADOPT",
     "priority": "low",
     "notes": [
@@ -1431,7 +1431,7 @@
     "presence": "upstream"
   },
   {
-    "file": ".clinerules/hooks/TaskStart.example",
+    "file": ".agents/hooks/TaskStart.example",
     "strategy": "AUTO_ADOPT",
     "priority": "low",
     "notes": [
@@ -1440,7 +1440,7 @@
     "presence": "upstream"
   },
   {
-    "file": ".clinerules/hooks/UserPromptSubmit.example",
+    "file": ".agents/hooks/UserPromptSubmit.example",
     "strategy": "AUTO_ADOPT",
     "priority": "low",
     "notes": [
@@ -1449,7 +1449,7 @@
     "presence": "upstream"
   },
   {
-    "file": ".clinerules/merge-strategy.md",
+    "file": ".agents/context/merge-strategy.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1458,7 +1458,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/new-component.md",
+    "file": ".agents/context/new-component.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1467,7 +1467,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/testing-guide.md",
+    "file": ".agents/context/testing-guide.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1476,7 +1476,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/testing-work.md",
+    "file": ".agents/context/testing-work.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1485,7 +1485,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/ai-feature.md",
+    "file": ".agents/context/workflows/ai-feature.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1494,7 +1494,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/ai-work-index.md",
+    "file": ".agents/context/workflows/ai-work-index.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1503,7 +1503,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/ai-work-protocol.md",
+    "file": ".agents/context/workflows/ai-work-protocol.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1512,7 +1512,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/architecture-guide.md",
+    "file": ".agents/context/workflows/architecture-guide.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1521,7 +1521,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/atoms/backup-protocol.md",
+    "file": ".agents/context/workflows/atoms/backup-protocol.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1530,7 +1530,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1539,7 +1539,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/atoms/message-flow.md",
+    "file": ".agents/context/workflows/atoms/message-flow.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1548,7 +1548,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/atoms/modification-levels.md",
+    "file": ".agents/context/workflows/atoms/modification-levels.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1557,7 +1557,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/atoms/naming-conventions.md",
+    "file": ".agents/context/workflows/atoms/naming-conventions.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1566,7 +1566,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/atoms/semantic-equivalence-verification.md",
+    "file": ".agents/context/workflows/atoms/semantic-equivalence-verification.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1575,7 +1575,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/atoms/storage-patterns.md",
+    "file": ".agents/context/workflows/atoms/storage-patterns.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1584,7 +1584,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/atoms/tdd-cycle.md",
+    "file": ".agents/context/workflows/atoms/tdd-cycle.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1593,7 +1593,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/atoms/verification-steps.md",
+    "file": ".agents/context/workflows/atoms/verification-steps.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1602,7 +1602,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/branding-and-logging.md",
+    "file": ".agents/context/workflows/branding-and-logging.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1611,7 +1611,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/caret-development.md",
+    "file": ".agents/context/workflows/caret-development.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1620,7 +1620,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/cline-modification.md",
+    "file": ".agents/context/workflows/cline-modification.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1629,7 +1629,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/critical-verification.md",
+    "file": ".agents/context/workflows/critical-verification.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1638,7 +1638,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/document-organization.md",
+    "file": ".agents/context/workflows/document-organization.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1647,7 +1647,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/extension-release.md",
+    "file": ".agents/context/workflows/extension-release.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1656,7 +1656,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/merge-strategy.md",
+    "file": ".agents/context/workflows/merge-strategy.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1665,7 +1665,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/new-component.md",
+    "file": ".agents/context/workflows/new-component.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1674,7 +1674,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/testing-guide.md",
+    "file": ".agents/context/workflows/testing-guide.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -1683,7 +1683,7 @@
     "presence": "caret"
   },
   {
-    "file": ".clinerules/workflows/testing-work.md",
+    "file": ".agents/context/workflows/testing-work.md",
     "strategy": "AUTO_KEEP",
     "priority": "low",
     "notes": [
@@ -2934,7 +2934,7 @@
     "presence": "caret"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [

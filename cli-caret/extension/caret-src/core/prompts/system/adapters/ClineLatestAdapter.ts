@@ -1,6 +1,6 @@
+import type { SystemPromptContext as ClineSystemPromptContext } from "@/core/prompts/system-prompt/types"
 import { IPromptSystem } from "@caret/core/prompts/system/IPromptSystem"
 import { CaretSystemPromptContext } from "@caret/core/prompts/system/types"
-import type { SystemPromptContext as ClineSystemPromptContext } from "@/core/prompts/system-prompt/types"
 
 export class ClineLatestAdapter implements IPromptSystem {
 	/**

@@ -7,6 +7,7 @@ import (
 
 	"github.com/cline/cli/pkg/cli/global"
 	"github.com/cline/cli/pkg/cli/task"
+	"github.com/cline/cli/pkg/common"
 	"github.com/cline/grpc-go/cline"
 )
 
@@ -106,8 +107,8 @@ func QuickSetupFromFlags(ctx context.Context, provider, apiKey, modelID, baseURL
 	if finalBaseURL != "" {
 		fmt.Printf("  Custom Base URL: %s\n", finalBaseURL)
 	}
-	fmt.Println("\nYou can now use Cline with this provider.")
-	fmt.Println("Run 'cline start' to begin a new task.")
+	fmt.Printf("\nYou can now use %s with this provider.\n", common.BrandDisplayName())
+	fmt.Printf("Run '%s start' to begin a new task.\n", common.BrandCommandName())
 
 	return nil
 }

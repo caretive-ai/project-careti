@@ -1,6 +1,9 @@
 import { geminiModels, ModelInfo } from "@shared/api"
-import { Fragment, useState } from "react"
+import { ChangeEvent, Fragment, useCallback, useState } from "react"
+import styled from "styled-components"
 import { t } from "@/caret/utils/i18n"
+import { updateSetting } from "@/components/settings/utils/settingsHandlers"
+import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ModelDescriptionMarkdown } from "../OpenRouterModelPicker"
 import {
 	formatPrice,
@@ -85,6 +88,61 @@ const ModelInfoSupportsItem = ({ isSupported, supportsLabel, doesNotSupportLabel
 	</span>
 )
 
+const ASPECT_RATIO_OPTIONS = ["16:9", "9:16", "4:3", "3:4", "1:1"] as const
+const IMAGE_SIZE_OPTIONS = ["1K", "2K", "3K", "4K"] as const
+
+const InfoParagraph = styled.p`
+	font-size: 12px;
+	margin-top: 2px;
+	color: var(--vscode-descriptionForeground);
+`
+
+const ImageSettingsSection = styled.div`
+	margin-top: 12px;
+	padding: 10px;
+	border-radius: 6px;
+	border: 1px solid var(--vscode-editorGroup-border);
+	background-color: var(--vscode-editor-background);
+`
+
+const SectionHeader = styled.div`
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--vscode-descriptionForeground);
+	margin-bottom: 6px;
+`
+
+const ImageSettingsGrid = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+`
+
+const ImageSettingColumn = styled.div`
+	min-width: 140px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+`
+
+const SettingLabel = styled.span`
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	color: var(--vscode-descriptionForeground);
+`
+
+const SettingSelect = styled.select`
+	border: 1px solid var(--vscode-editorGroup-border);
+	border-radius: 4px;
+	background: var(--vscode-input-background);
+	color: var(--vscode-foreground);
+	padding: 4px 6px;
+	min-height: 30px;
+	font-size: 12px;
+	appearance: none;
+`
+
 /**
  * Props for the ModelInfoView component
  */
@@ -105,6 +163,30 @@ export const ModelInfoView = ({ selectedModelId, modelInfo, isPopup }: ModelInfo
 	const isGemini = Object.keys(geminiModels).includes(selectedModelId)
 	const hasThinkingConfig = hasThinkingBudget(modelInfo)
 	const hasTiers = !!modelInfo.tiers && modelInfo.tiers.length > 0
+	const { imageGenerationAspectRatio, imageGenerationSize } = useExtensionState()
+	const shouldShowImageSettings = supportsImages(modelInfo)
+
+	const handleAspectRatioChange = useCallback(
+		(event: ChangeEvent<HTMLSelectElement>) => {
+			const nextValue = event.target.value
+			if (nextValue === (imageGenerationAspectRatio ?? "")) {
+				return
+			}
+			updateSetting("imageGenerationAspectRatio", nextValue)
+		},
+		[imageGenerationAspectRatio],
+	)
+
+	const handleImageSizeChange = useCallback(
+		(event: ChangeEvent<HTMLSelectElement>) => {
+			const nextValue = event.target.value
+			if (nextValue === (imageGenerationSize ?? "")) {
+				return
+			}
+			updateSetting("imageGenerationSize", nextValue)
+		},
+		[imageGenerationSize],
+	)
 
 	// Create elements for input pricing
 	const inputPriceElement = hasTiers ? (
@@ -207,18 +289,44 @@ export const ModelInfoView = ({ selectedModelId, modelInfo, isPopup }: ModelInfo
 	].filter(Boolean)
 
 	return (
-		<p
-			style={{
-				fontSize: "12px",
-				marginTop: "2px",
-				color: "var(--vscode-descriptionForeground)",
-			}}>
-			{infoItems.map((item, index) => (
-				<Fragment key={index}>
-					{item}
-					{index < infoItems.length - 1 && <br />}
-				</Fragment>
-			))}
-		</p>
+		<>
+			<InfoParagraph>
+				{infoItems.map((item, index) => (
+					<Fragment key={index}>
+						{item}
+						{index < infoItems.length - 1 && <br />}
+					</Fragment>
+				))}
+			</InfoParagraph>
+			{shouldShowImageSettings && (
+				<ImageSettingsSection>
+					<SectionHeader>{t("modelInfoView.imageGeneration.title", "settings")}</SectionHeader>
+					<ImageSettingsGrid>
+						<ImageSettingColumn>
+							<SettingLabel>{t("modelInfoView.imageGeneration.aspectRatio", "settings")}</SettingLabel>
+							<SettingSelect onChange={handleAspectRatioChange} value={imageGenerationAspectRatio ?? ""}>
+								<option value="">{t("modelInfoView.imageGeneration.auto", "settings")}</option>
+								{ASPECT_RATIO_OPTIONS.map((ratio) => (
+									<option key={ratio} value={ratio}>
+										{ratio}
+									</option>
+								))}
+							</SettingSelect>
+						</ImageSettingColumn>
+						<ImageSettingColumn>
+							<SettingLabel>{t("modelInfoView.imageGeneration.size", "settings")}</SettingLabel>
+							<SettingSelect onChange={handleImageSizeChange} value={imageGenerationSize ?? ""}>
+								<option value="">{t("modelInfoView.imageGeneration.auto", "settings")}</option>
+								{IMAGE_SIZE_OPTIONS.map((size) => (
+									<option key={size} value={size}>
+										{size}
+									</option>
+								))}
+							</SettingSelect>
+						</ImageSettingColumn>
+					</ImageSettingsGrid>
+				</ImageSettingsSection>
+			)}
+		</>
 	)
 }

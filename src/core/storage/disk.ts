@@ -1,5 +1,5 @@
 import { Anthropic } from "@anthropic-ai/sdk"
-import { detectCurrentBrandName } from "@caret/utils/brand-utils"
+import { detectCurrentBrandName, getBrandRulesFileName, getBrandWorkflowsDirName } from "@caret/utils/brand-utils"
 import { TaskMetadata } from "@core/context/context-tracking/ContextTrackerTypes"
 import { execa } from "@packages/execa"
 import { ClineMessage } from "@shared/ExtensionMessage"
@@ -29,8 +29,9 @@ const resolveBrandSlug = () => {
 }
 
 const BRAND_SLUG = resolveBrandSlug()
-const BRAND_RULES_DIR = `.${BRAND_SLUG}rules`
-const BRAND_WORKFLOWS_DIR = `${BRAND_RULES_DIR}/workflows`
+// CARET MODIFICATION: Standard agents context paths for rules/workflows.
+const BRAND_RULES_DIR = getBrandRulesFileName()
+const BRAND_WORKFLOWS_DIR = getBrandWorkflowsDirName()
 const BRAND_MCP_SETTINGS_FILE = `${BRAND_SLUG}_mcp_settings.json`
 const BRAND_DOCS_FOLDER = BRAND_SLUG === "cline" ? "Cline" : "Caret"
 
@@ -45,13 +46,13 @@ export const GlobalFileNames = {
 	hicapModels: "hicap_models.json",
 	mcpSettings: BRAND_MCP_SETTINGS_FILE, // CARET MODIFICATION: brand-aware MCP settings file
 	caretRules: BRAND_RULES_DIR, // CARET MODIFICATION: Caret rule directory support
-	clineRules: ".clinerules",
+	clineRules: BRAND_RULES_DIR, // CARET MODIFICATION: legacy alias -> standard agents context
 	workflows: BRAND_WORKFLOWS_DIR, // CARET MODIFICATION: brand-aware workflows path
 	persona: "persona.md",
-	hooksDir: ".clinerules/hooks",
-	cursorRulesDir: ".cursor/rules",
-	cursorRulesFile: ".cursorrules",
-	windsurfRules: ".windsurfrules",
+	hooksDir: ".agents/hooks",
+	cursorRulesDir: BRAND_RULES_DIR, // CARET MODIFICATION: legacy alias -> standard agents context
+	cursorRulesFile: BRAND_RULES_DIR, // CARET MODIFICATION: legacy alias -> standard agents context
+	windsurfRules: BRAND_RULES_DIR, // CARET MODIFICATION: legacy alias -> standard agents context
 	agentsRulesFile: "AGENTS.md",
 	taskMetadata: "task_metadata.json",
 	mcpMarketplaceCatalog: "mcp_marketplace_catalog.json",
@@ -375,7 +376,7 @@ export async function getGlobalHooksDir(): Promise<string | undefined> {
 /**
  * Gets the paths to all hooks directories to search for hooks, including:
  * 1. The global hooks directory (if it exists)
- * 2. Each workspace root's .clinerules/hooks directory (if they exist)
+ * 2. Each workspace root's .agents/hooks directory (if they exist)
  *
  * Note: Hooks from different directories may be executed concurrently.
  * No execution order is guaranteed between hooks from different directories.
@@ -399,7 +400,7 @@ export async function getAllHooksDirs(): Promise<string[]> {
 }
 
 /**
- * Gets the paths to the workspace's .clinerules/hooks directories to search for
+ * Gets the paths to the workspace's .agents/hooks directories to search for
  * hooks. A workspace may not use hooks, and the resulting array will be empty. A
  * multi-root workspace may have multiple hooks directories.
  */
@@ -410,7 +411,7 @@ export async function getWorkspaceHooksDirs(): Promise<string[]> {
 	return (
 		await Promise.all(
 			workspaceRootPaths.map(async (workspaceRootPath: string) => {
-				// Look for a .clinerules/hooks folder in this workspace root.
+				// Look for a .agents/hooks folder in this workspace root.
 				const candidate = path.join(workspaceRootPath, GlobalFileNames.hooksDir)
 				return (await isDirectory(candidate)) ? candidate : undefined
 			}),

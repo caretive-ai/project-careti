@@ -150,8 +150,8 @@ export class CaretJsonAdapter implements IPromptSystem {
 	}
 
 	/**
-	 * Gets user instructions from Cline's actual system (.caretrules, .clinerules, etc.)
-	 * CARET MODIFICATION: This ensures .caretrules content is actually passed to AI
+	 * Gets user instructions from Cline's system (.agents/context + AGENTS.md).
+	 * CARET MODIFICATION: Ensure Caret rules are passed into the system prompt.
 	 */
 	private async getClineUserInstructions(context: CaretSystemPromptContext, isChatbotMode: boolean): Promise<string | null> {
 		try {
@@ -170,7 +170,7 @@ export class CaretJsonAdapter implements IPromptSystem {
 			}
 
 			// Call Cline's getUserInstructions with the context
-			// This will include .caretrules, .clinerules, etc. based on priority
+			// This will include .agents/context + AGENTS.md based on priority
 			const userInstructions = await getUserInstructions(variant, context as any)
 
 			if (userInstructions) {

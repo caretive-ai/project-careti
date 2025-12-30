@@ -1,3 +1,4 @@
+import { findLast } from "@shared/array"
 import type { ClineMessage } from "@shared/ExtensionMessage"
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import { AskResponseRequest, NewTaskRequest } from "@shared/proto/cline/task"
@@ -20,7 +21,9 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 		setSendingDisabled,
 		setEnableButtons,
 		clineAsk,
+		pendingAskTs,
 		lastMessage,
+		markAskResponded,
 	} = chatState
 
 	// Handle sending a message
@@ -28,6 +31,9 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 		async (text: string, images: string[], files: string[]) => {
 			let messageToSend = text.trim()
 			const hasContent = messageToSend || images.length > 0 || files.length > 0
+			const lastAskMessage = findLast(messages, (message) => message.type === "ask" && !message.askResolved)
+			const effectiveAsk = clineAsk ?? lastAskMessage?.ask
+			const effectiveAskTs = pendingAskTs ?? lastAskMessage?.ts
 
 			// Prepend the active quote if it exists
 			if (activeQuote && hasContent) {
@@ -38,11 +44,14 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 			}
 
 			if (hasContent) {
+				let didSend = false
+
 				console.log("[ChatView] handleSendMessage - Sending message:", messageToSend)
 				if (messages.length === 0) {
 					await TaskServiceClient.newTask(NewTaskRequest.create({ text: messageToSend, images, files }))
-				} else if (clineAsk) {
-					switch (clineAsk) {
+					didSend = true
+				} else if (effectiveAsk) {
+					switch (effectiveAsk) {
 						case "followup":
 						case "plan_mode_respond":
 						case "tool":
@@ -67,15 +76,25 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 									files,
 								}),
 							)
+							markAskResponded(effectiveAskTs)
+							didSend = true
 							break
 					}
 				}
-				setInputValue("")
-				setActiveQuote(null)
-				setSendingDisabled(true)
-				setSelectedImages([])
-				setSelectedFiles([])
-				setEnableButtons(false)
+				if (didSend) {
+					setInputValue("")
+					setActiveQuote(null)
+					setSendingDisabled(true)
+					setSelectedImages([])
+					setSelectedFiles([])
+					setEnableButtons(false)
+				} else {
+					console.warn("handleSendMessage: No pending ask to receive message response.", {
+						clineAsk,
+						effectiveAsk,
+						lastAskMessage,
+					})
+				}
 
 				// Reset auto-scroll
 				if ("disableAutoScrollRef" in chatState) {
@@ -84,7 +103,7 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 			}
 		},
 		[
-			messages.length,
+			messages,
 			clineAsk,
 			activeQuote,
 			setInputValue,
@@ -93,6 +112,8 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 			setSelectedImages,
 			setSelectedFiles,
 			setEnableButtons,
+			pendingAskTs,
+			markAskResponded,
 			chatState,
 		],
 	)
@@ -128,12 +149,14 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 								files: files,
 							}),
 						)
+						markAskResponded(pendingAskTs)
 					} else {
 						await TaskServiceClient.askResponse(
 							AskResponseRequest.create({
 								responseType: "yesButtonClicked",
 							}),
 						)
+						markAskResponded(pendingAskTs)
 						clearInputState()
 					}
 					break
@@ -148,12 +171,14 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 								files: files,
 							}),
 						)
+						markAskResponded(pendingAskTs)
 					} else {
 						await TaskServiceClient.askResponse(
 							AskResponseRequest.create({
 								responseType: "noButtonClicked",
 							}),
 						)
+						markAskResponded(pendingAskTs)
 					}
 					clearInputState()
 					break
@@ -167,6 +192,7 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 								responseType: "yesButtonClicked",
 							}),
 						)
+						markAskResponded(pendingAskTs)
 						clearInputState()
 					}
 					break
@@ -186,6 +212,7 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 								files: [],
 							}),
 						)
+						markAskResponded(pendingAskTs)
 					} else {
 						await startNewTask()
 					}
@@ -201,11 +228,13 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 							await SlashServiceClient.condense(StringRequest.create({ value: lastMessage?.text })).catch((err) =>
 								console.error(err),
 							)
+							markAskResponded(pendingAskTs)
 							break
 						case "report_bug":
 							await SlashServiceClient.reportBug(StringRequest.create({ value: lastMessage?.text })).catch((err) =>
 								console.error(err),
 							)
+							markAskResponded(pendingAskTs)
 							break
 					}
 					break
@@ -215,7 +244,17 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 				;(chatState as any).disableAutoScrollRef.current = false
 			}
 		},
-		[clineAsk, lastMessage, messages, clearInputState, handleSendMessage, startNewTask, chatState],
+		[
+			clineAsk,
+			lastMessage,
+			messages,
+			clearInputState,
+			handleSendMessage,
+			startNewTask,
+			chatState,
+			pendingAskTs,
+			markAskResponded,
+		],
 	)
 
 	// Unified button click handler that takes action directly

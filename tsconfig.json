@@ -61,7 +61,8 @@
 	},
 	"include": [
 		"src/**/*",
-		"caret-src/**/*"
+		"caret-src/**/*",
+		"scripts"
 	],
 	"exclude": [
 		"node_modules",

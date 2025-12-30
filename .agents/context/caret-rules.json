@@ -1,0 +1,97 @@
+{
+	"project_identity": {
+		"name": "Caret",
+		"symbol": "^",
+		"nature": "Cline-based fork with minimal extension strategy",
+		"philosophy": "Preserve Cline core, extend through caret-src/"
+	},
+	"merge_strategy": {
+		"priority": 0,
+		"phase_0_rule": ".agents/context MUST be restored BEFORE any code merging begins",
+		"hybrid_pattern": "Preserve Cline core, inject Caret logic via interception",
+		"logic_based_3way": "Compare Base(Cline) vs Target(Caret) vs Merged logic, not just text diffs",
+		"reference": "caret-docs/merging/merge-standard-guide.md"
+	},
+	"architecture_rules": {
+		"modification_levels": {
+			"L1_independent": "caret-src/, caret-docs/ (full freedom)",
+			"L2_conditional": "minimal Cline changes with backup + comment",
+			"L3_direct": "last resort with full documentation"
+		},
+		"protection_rules": {
+			"protected_directories": [
+				"src/",
+				"webview-ui/",
+				"proto/",
+				"scripts/",
+				"evals/",
+				"docs/",
+				"locales/",
+				"configs/"
+			],
+			"comment_required": "// CARET MODIFICATION: [description]",
+			"max_changes": "1-3 lines per Cline file"
+		}
+	},
+	"branding_policy": {
+		"typescript_brand_util": "caret-src/utils/brand-utils.ts",
+		"go_cli_brand_util": "cli/pkg/common/branding.go",
+		"rule": "브랜드명/규칙/파일명을 계산할 때는 반드시 위 유틸 함수를 호출하고 문자열을 하드코딩하지 않는다."
+	},
+	"development_framework": {
+		"tech_stack": {
+			"framework": "Mocha (backend), Vitest (frontend), Biome",
+			"build_system": "TypeScript (noEmit: true) + esbuild"
+		},
+		"tdd_phases": [
+			"Phase 0: MANDATORY doc check",
+			"Phase 1 RED: Write integration test first",
+			"Phase 2 GREEN: Minimal code to pass",
+			"Phase 3 REFACTOR: Improve while passing"
+		]
+	},
+	"proto_generation": {
+		"typescript_command": "npm run protos",
+		"go_command": "npm run protos-go",
+		"notes": [
+			"`npm run protos` → 실행 스크립트: caret-scripts/build/build-proto.mjs (TS/JS용 generated 코드 전체 관리)",
+			"`npm run protos-go` → 실행 스크립트: scripts/build-go-proto.mjs (CLI용 Go gRPC 클라이언트, src/generated/grpc-go/ 경로)",
+			"src/generated/** 와 src/shared/proto/** 는 스크립트로만 갱신하고 수동 편집 금지"
+		]
+	},
+	"ai_workflow": {
+		"knowledge_principle": "AI knowledge = Developer knowledge (1:1 parity)",
+		"mandatory_pre_checks": [
+			"NO coding without document review first",
+			"Identify work nature",
+			"TDD mandatory (integration first)",
+			"Cline file modification: comment-only (no .cline backups); new files in protected dirs must have CARET MODIFICATION header"
+		]
+	},
+	"workflows": {
+		"instruction": "Read these files ON DEMAND when performing specific tasks. Do not read all at once.",
+		"selection_guide": {
+			"reference": ".agents/context/ai-work-index.yaml",
+			"steps": [
+				"Extract keywords from the user request",
+				"Match the category in ai-work-index.yaml",
+				"Read the matching root quick reference first",
+				"Load the workflow document only if the task still needs details",
+				"Use Korean developer docs (caret-docs/development/**) when updating human-facing guidance"
+			]
+		},
+		"index": {
+			"ai_feature": ".agents/context/workflows/ai-feature.md (New AI features)",
+			"ai_work_protocol": ".agents/context/workflows/ai-work-protocol.md (General AI protocol)",
+			"caret_development": ".agents/context/workflows/caret-development.md (Caret core dev)",
+			"cline_modification": ".agents/context/workflows/cline-modification.md (Modifying Cline files)",
+			"critical_verification": ".agents/context/workflows/critical-verification.md (Pre-merge checks)",
+			"document_organization": ".agents/context/workflows/document-organization.md (Doc structure)",
+			"merge_strategy": ".agents/context/workflows/merge-strategy.md (Merge protocol)",
+			"new_component": ".agents/context/workflows/new-component.md (Creating components)",
+			"testing_work": ".agents/context/workflows/testing-work.md (Testing guide)",
+			"branding_logging": ".agents/context/workflows/branding-and-logging.md",
+			"i18n_fix": ".agents/context/workflows/i18n-static-translation-fix.md"
+		}
+	}
+}

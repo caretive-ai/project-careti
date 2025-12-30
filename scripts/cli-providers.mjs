@@ -96,6 +96,7 @@ const ENABLED_PROVIDERS = [
 	"cerebras", // Cerebras models
 	"oca", // Oracle Code Assist
 	"nousResearch", // NousResearch provider
+	"caret", // CARET MODIFICATION: include Caret provider in CLI build
 ]
 
 /**
@@ -349,6 +350,7 @@ function parseConfigurationFields(optionsContent, providerApiKeyMap, apiSecretsF
 			"together",
 			"claudecode",
 			"cline",
+			"caret", // CARET MODIFICATION: include Caret-specific fields
 		]
 
 		// If field name starts with or contains a provider prefix, categorize it as provider-specific
@@ -447,6 +449,7 @@ function extractModelDefinitions(content) {
 			nebius: "nebius",
 			askSage: "asksage",
 			qwenCode: "qwen-code",
+			caret: "caret", // CARET MODIFICATION: include Caret model definitions
 		}
 
 		const providerId = providerMapping[providerPrefix] || providerPrefix.toLowerCase()
@@ -878,6 +881,7 @@ function getProviderDisplayName(providerId) {
 		mistral: "Mistral AI",
 		"vscode-lm": "VSCode Language Models",
 		cline: "Cline",
+		caret: "Caret", // CARET MODIFICATION: include Caret display name
 		litellm: "LiteLLM",
 		moonshot: "Moonshot AI",
 		nebius: "Nebius AI",
@@ -958,6 +962,7 @@ function getSetupInstructions(providerId) {
 		ollama: "Install Ollama locally and ensure it's running on the specified port",
 		lmstudio: "Install LM Studio and start the local server",
 		gemini: "Get your API key from https://makersuite.google.com/app/apikey",
+		caret: "Sign in via the CLI auth flow (caret auth)",
 		deepseek: "Get your API key from https://platform.deepseek.com/",
 		qwen: "Get your API key from Alibaba Cloud DashScope",
 		doubao: "Get your API key from ByteDance Volcano Engine",

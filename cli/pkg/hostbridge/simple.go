@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+
+	"github.com/cline/cli/pkg/common"
 )
 
 // Simple implementations that don't rely on proto files for now
@@ -30,7 +32,7 @@ func (s *SimpleService) Start(ctx context.Context) error {
 	}
 
 	// For now, just log that we're running
-	fmt.Printf("[Cline Host Bridge] Service started on core address: %s\n", s.coreAddress)
+	fmt.Printf("[%s Host Bridge] Service started on core address: %s\n", common.BrandDisplayName(), s.coreAddress)
 
 	// Keep running until context is cancelled
 	<-ctx.Done()

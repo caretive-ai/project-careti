@@ -1,6 +1,7 @@
+import { describe, expect, it, beforeEach, vi } from "vitest"
+
 import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
 import { SetPromptSystemMode } from "@core/controller/persona/SetPromptSystemMode"
-import { beforeEach, describe, expect, it, vi } from "vitest"
 
 const createMockController = () => {
 	const stateManager = {
@@ -21,9 +22,12 @@ describe("SetPromptSystemMode", () => {
 	it("persists caretModeSystem to globalState and updates manager", async () => {
 		const controller = createMockController()
 
-		const response = await SetPromptSystemMode(controller, {
-			mode: "caret",
-		} as any)
+		const response = await SetPromptSystemMode(
+			controller,
+			{
+				mode: "caret",
+			} as any,
+		)
 
 		expect(response.success).toBe(true)
 		expect(response.currentMode).toBe("caret")
@@ -35,9 +39,12 @@ describe("SetPromptSystemMode", () => {
 	it("rejects invalid mode without persisting state", async () => {
 		const controller = createMockController()
 
-		const response = await SetPromptSystemMode(controller, {
-			mode: "invalid",
-		} as any)
+		const response = await SetPromptSystemMode(
+			controller,
+			{
+				mode: "invalid",
+			} as any,
+		)
 
 		expect(response.success).toBe(false)
 		expect(controller.stateManager.setGlobalStateBatch).not.toHaveBeenCalled()

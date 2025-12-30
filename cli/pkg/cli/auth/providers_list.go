@@ -310,13 +310,13 @@ func GetProviderIDForEnum(provider cline.ApiProvider) string {
 func getProviderSpecificModelID(stateData map[string]interface{}, mode string, provider cline.ApiProvider) string {
 	modelKey, err := GetModelIDFieldName(provider, mode)
 	if err != nil {
-		if global.Config.Verbose {
+		if global.Config != nil && global.Config.Verbose {
 			fmt.Printf("[DEBUG] Error getting model ID field name: %v\n", err)
 		}
 		return ""
 	}
 
-	if global.Config.Verbose {
+	if global.Config != nil && global.Config.Verbose {
 		fmt.Printf("[DEBUG] Looking for model ID in key: %s\n", modelKey)
 	}
 

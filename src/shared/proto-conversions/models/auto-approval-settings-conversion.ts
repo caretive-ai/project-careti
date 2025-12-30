@@ -15,6 +15,7 @@ export function convertAutoApprovalSettingsToProto(settings: AutoApprovalSetting
 			executeAllCommands: settings.actions.executeAllCommands || false,
 			useBrowser: settings.actions.useBrowser || false,
 			useMcp: settings.actions.useMcp || false,
+			generateImages: settings.actions.generateImages || false,
 		},
 	}
 	if ("enabled" in settings) req.enabled = (settings as any).enabled
@@ -37,6 +38,7 @@ export function convertProtoToAutoApprovalSettings(protoSettings: AutoApprovalSe
 			executeAllCommands: (protoSettings as any).actions?.executeAllCommands || false,
 			useBrowser: (protoSettings as any).actions?.useBrowser || false,
 			useMcp: (protoSettings as any).actions?.useMcp || false,
+			generateImages: (protoSettings as any).actions?.generateImages || false,
 		},
 	}
 	if ("enabled" in (protoSettings as any)) res.enabled = (protoSettings as any).enabled

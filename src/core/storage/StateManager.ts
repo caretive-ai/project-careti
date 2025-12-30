@@ -489,6 +489,7 @@ export class StateManager {
 			basetenApiKey,
 			huggingFaceApiKey,
 			huaweiCloudMaasApiKey,
+			naverCloudApiKey,
 			difyApiKey,
 			difyBaseUrl,
 			vercelAiGatewayApiKey,
@@ -538,6 +539,8 @@ export class StateManager {
 			planModeHuggingFaceModelInfo,
 			planModeHuaweiCloudMaasModelId,
 			planModeHuaweiCloudMaasModelInfo,
+			planModeNaverCloudModelId,
+			planModeNaverCloudModelInfo,
 			planModeVercelAiGatewayModelId,
 			planModeVercelAiGatewayModelInfo,
 			planModeOcaModelId,
@@ -581,6 +584,8 @@ export class StateManager {
 			actModeHuggingFaceModelInfo,
 			actModeHuaweiCloudMaasModelId,
 			actModeHuaweiCloudMaasModelInfo,
+			actModeNaverCloudModelId,
+			actModeNaverCloudModelInfo,
 			actModeVercelAiGatewayModelId,
 			actModeVercelAiGatewayModelInfo,
 			actModeOcaModelId,
@@ -628,6 +633,8 @@ export class StateManager {
 			planModeHuggingFaceModelInfo,
 			planModeHuaweiCloudMaasModelId,
 			planModeHuaweiCloudMaasModelInfo,
+			planModeNaverCloudModelId,
+			planModeNaverCloudModelInfo,
 			planModeVercelAiGatewayModelId,
 			planModeVercelAiGatewayModelInfo,
 			planModeOcaModelId,
@@ -672,6 +679,8 @@ export class StateManager {
 			actModeHuggingFaceModelInfo,
 			actModeHuaweiCloudMaasModelId,
 			actModeHuaweiCloudMaasModelInfo,
+			actModeNaverCloudModelId,
+			actModeNaverCloudModelInfo,
 			actModeVercelAiGatewayModelId,
 			actModeVercelAiGatewayModelInfo,
 			actModeOcaModelId,
@@ -764,6 +773,7 @@ export class StateManager {
 			basetenApiKey,
 			huggingFaceApiKey,
 			huaweiCloudMaasApiKey,
+			naverCloudApiKey,
 			difyApiKey,
 			vercelAiGatewayApiKey,
 			zaiApiKey,
@@ -1077,6 +1087,7 @@ export class StateManager {
 			sapAiCoreClientSecret: this.secretsCache["sapAiCoreClientSecret"],
 			huggingFaceApiKey: this.secretsCache["huggingFaceApiKey"],
 			huaweiCloudMaasApiKey: this.secretsCache["huaweiCloudMaasApiKey"],
+			naverCloudApiKey: this.secretsCache["naverCloudApiKey"],
 			difyApiKey: this.secretsCache["difyApiKey"],
 			vercelAiGatewayApiKey: this.secretsCache["vercelAiGatewayApiKey"],
 			zaiApiKey: this.secretsCache["zaiApiKey"],
@@ -1226,6 +1237,10 @@ export class StateManager {
 			planModeHuaweiCloudMaasModelInfo:
 				this.taskStateCache["planModeHuaweiCloudMaasModelInfo"] ||
 				this.globalStateCache["planModeHuaweiCloudMaasModelInfo"],
+			planModeNaverCloudModelId:
+				this.taskStateCache["planModeNaverCloudModelId"] || this.globalStateCache["planModeNaverCloudModelId"],
+			planModeNaverCloudModelInfo:
+				this.taskStateCache["planModeNaverCloudModelInfo"] || this.globalStateCache["planModeNaverCloudModelInfo"],
 			planModeVercelAiGatewayModelId:
 				this.taskStateCache["planModeVercelAiGatewayModelId"] || this.globalStateCache["planModeVercelAiGatewayModelId"],
 			planModeVercelAiGatewayModelInfo:
@@ -1306,6 +1321,10 @@ export class StateManager {
 			actModeHuaweiCloudMaasModelInfo:
 				this.taskStateCache["actModeHuaweiCloudMaasModelInfo"] ||
 				this.globalStateCache["actModeHuaweiCloudMaasModelInfo"],
+			actModeNaverCloudModelId:
+				this.taskStateCache["actModeNaverCloudModelId"] || this.globalStateCache["actModeNaverCloudModelId"],
+			actModeNaverCloudModelInfo:
+				this.taskStateCache["actModeNaverCloudModelInfo"] || this.globalStateCache["actModeNaverCloudModelInfo"],
 			actModeVercelAiGatewayModelId:
 				this.taskStateCache["actModeVercelAiGatewayModelId"] || this.globalStateCache["actModeVercelAiGatewayModelId"],
 			actModeVercelAiGatewayModelInfo:

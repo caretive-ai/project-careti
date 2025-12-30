@@ -4,25 +4,50 @@ import * as pathUtils from "@utils/path"
 import { expect } from "chai"
 import { afterEach, beforeEach, describe, it } from "mocha"
 import * as sinon from "sinon"
+import { HostProvider } from "@/hosts/host-provider"
+import { Logger } from "@/services/logging/Logger"
 import { ifFileExistsRelativePath } from "../ifFileExistsRelativePath"
 
 describe("ifFileExistsRelativePath", () => {
 	let sandbox: sinon.SinonSandbox
 	let mockController: Controller
 	let getWorkspacePathStub: sinon.SinonStub
-	let consoleErrorStub: sinon.SinonStub
+	let loggerErrorStub: sinon.SinonStub
 
 	beforeEach(() => {
 		sandbox = sinon.createSandbox()
 
+		// CARET MODIFICATION: Initialize HostProvider for Logger usage.
+		HostProvider.reset()
+		HostProvider.initialize(
+			() => ({}) as any,
+			() => ({}) as any,
+			{
+				workspaceClient: {
+					getWorkspacePaths: async () => ({ paths: [] }),
+				} as any,
+				envClient: {} as any,
+				windowClient: {} as any,
+				diffClient: {} as any,
+			},
+			() => {},
+			async () => "",
+			async () => "",
+			"",
+			"",
+		)
+
 		// Create a mock controller
-		mockController = {} as any
+		mockController = {
+			getWorkspaceManager: () => ({ getRoots: () => [] }),
+			stateManager: { getGlobalStateKey: () => undefined },
+		} as any
 
 		// Stub getWorkspacePath utility
 		getWorkspacePathStub = sandbox.stub(pathUtils, "getWorkspacePath")
 
-		// Stub console.error to prevent test output pollution
-		consoleErrorStub = sandbox.stub(console, "error")
+		// CARET MODIFICATION: Stub Logger.error for assertions and to avoid HostProvider output coupling.
+		loggerErrorStub = sandbox.stub(Logger, "error")
 	})
 
 	afterEach(() => {
@@ -48,7 +73,7 @@ describe("ifFileExistsRelativePath", () => {
 
 		for (const workspaceValue of noWorkspaceScenarios) {
 			getWorkspacePathStub.resolves(workspaceValue)
-			consoleErrorStub.resetHistory()
+			loggerErrorStub.resetHistory()
 
 			const request = StringRequest.create({
 				value: "src/test.ts",
@@ -57,7 +82,7 @@ describe("ifFileExistsRelativePath", () => {
 			const result = await ifFileExistsRelativePath(mockController, request)
 
 			expect(result).to.deep.equal(BooleanResponse.create({ value: false }))
-			expect(consoleErrorStub.called).to.be.true
+			expect(loggerErrorStub.called).to.be.true
 		}
 	})
 

@@ -37,15 +37,20 @@ export class PersonaInitializer {
 			const personaImagesExist = await this.checkPersonaImagesExist()
 			Logger.debug(`[CARET-PERSONA] PersonaInitializer: 페르소나 이미지 존재 여부: ${personaImagesExist}`)
 
-			// persona.md 파일이 존재하면 초기화 건너뛰기
-			if (await fileExistsAtPath(personaMdPath)) {
+			const personaMdExists = await fileExistsAtPath(personaMdPath)
+			let personaMdHasContent = false
+			// persona.md 파일이 존재하면 내용 여부 확인
+			if (personaMdExists) {
 				const stats = await fs.stat(personaMdPath)
-				if (stats.size > 2) {
-					// {}' 보다 크면 내용이 있는 것으로 간주
-					Logger.info(
-						"[CARET-PERSONA] PersonaInitializer: persona.md 파일이 이미 존재하고 내용이 있으므로 초기화를 건너뜁니다.",
-					)
+				personaMdHasContent = stats.size > 2
+				if (personaMdHasContent && personaImagesExist) {
+					// persona.md와 이미지가 모두 있으면 그대로 유지
+					Logger.info("[CARET-PERSONA] PersonaInitializer: persona.md와 이미지가 모두 존재하여 초기화를 건너뜁니다.")
 					return null
+				}
+
+				if (personaMdHasContent && !personaImagesExist) {
+					Logger.info("[CARET-PERSONA] PersonaInitializer: persona.md는 있으나 이미지가 없어 이미지만 복구합니다.")
 				}
 			}
 
@@ -62,7 +67,7 @@ export class PersonaInitializer {
 			Logger.info(`[CARET-PERSONA] PersonaInitializer: 기본 페르소나 '${defaultPersona.character || "알 수 없음"}' 설정`)
 
 			// 4. persona.md 파일이 없으면 생성/업데이트
-			if (!(await fileExistsAtPath(personaMdPath))) {
+			if (!personaMdExists) {
 				Logger.debug("[CARET-PERSONA] PersonaInitializer: persona.md 파일이 존재하지 않아 생성/업데이트 시도")
 				await this.updatePersonaMd(defaultPersona)
 				Logger.debug("[CARET-PERSONA] PersonaInitializer: persona.md 파일 생성/업데이트 완료")
@@ -113,7 +118,7 @@ export class PersonaInitializer {
 				this.context.extensionPath,
 				"assets",
 				"template_characters",
-				GlobalFileNames.templateCharacters,
+				"template_characters.json",
 			)
 
 			const templatesRaw = await fs.readFile(templatePath, "utf-8")
@@ -294,7 +299,7 @@ export class PersonaInitializer {
 	public async cleanupLegacyCustomInstructions(): Promise<void> {
 		try {
 			const globalRulesDir = await ensureRulesDirectoryExists()
-			const customInstructionsPath = path.join(globalRulesDir, GlobalFileNames.customInstructions)
+			const customInstructionsPath = path.join(globalRulesDir, "custom_instructions.md")
 			if (await fileExistsAtPath(customInstructionsPath)) {
 				await fs.unlink(customInstructionsPath)
 				Logger.info("[CARET-PERSONA] PersonaInitializer: 레거시 custom_instructions.md 파일을 정리했습니다.")

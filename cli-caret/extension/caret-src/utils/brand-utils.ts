@@ -1,9 +1,9 @@
 // CARET MODIFICATION: Caret brand utilities - centralized brand detection and configuration
 // Provides brand-specific functionality without cluttering Cline's env.ts
 
-import { CARET_MODE_SYSTEM_CONFIG, type CaretModeSystem } from "@caret/shared/ModeSystem"
 import fs from "fs"
 import path from "path"
+import { CARET_MODE_SYSTEM_CONFIG, type CaretModeSystem } from "../shared/ModeSystem"
 
 // Cached brand name for performance
 let _cachedBrandName: string | null = null
@@ -17,10 +17,24 @@ export function detectCurrentBrandName(): string {
 		return _cachedBrandName!
 	}
 
+	const candidates = [
+		path.join(__dirname, "..", "..", "package.json"),
+		path.join(__dirname, "..", "package.json"),
+		path.join(__dirname, "package.json"),
+		path.join(process.cwd(), "package.json"),
+	]
+
 	try {
-		const packageJsonPath = path.join(__dirname, "..", "..", "package.json")
+		const packageJsonPath = candidates.find((candidate) => fs.existsSync(candidate))
+		if (!packageJsonPath) {
+			console.warn("Failed to detect brand from package.json: no candidate file found")
+			_cachedBrandName = "Caret"
+			return _cachedBrandName!
+		}
+
 		const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"))
-		const displayName = packageJson.displayName || "Cline"
+		// CARET MODIFICATION: default brand fallback uses Caret when displayName is missing
+		const displayName = packageJson.displayName || "Caret"
 
 		// displayName을 그대로 브랜드명으로 사용
 		_cachedBrandName = displayName
@@ -28,7 +42,7 @@ export function detectCurrentBrandName(): string {
 		return _cachedBrandName!
 	} catch (error) {
 		console.error("Failed to detect brand from package.json:", error)
-		_cachedBrandName = "Cline" // Safe default
+		_cachedBrandName = "Caret" // CARET MODIFICATION: safe default brand fallback
 		return _cachedBrandName!
 	}
 }
@@ -124,12 +138,19 @@ export function getBrandDescription(mode: CaretModeSystem): string {
 }
 
 /**
- * Get brand rules file name based on current brand
- * @returns Rules file name (e.g., ".caretrules", ".codecenterrules")
+ * Get standard agents context directory name.
+ * @returns Agents context directory name (".agents/context")
  */
 export function getBrandRulesFileName(): string {
-	const brandName = getCurrentBrandName().toLowerCase()
-	return `.${brandName}rules`
+	return ".agents/context"
+}
+
+/**
+ * Get standard agents workflows directory name.
+ * @returns Workflows directory name (".agents/context/workflows")
+ */
+export function getBrandWorkflowsDirName(): string {
+	return ".agents/context/workflows"
 }
 
 /**
@@ -139,6 +160,36 @@ export function getBrandRulesFileName(): string {
 export function getBrandMcpSettingsFileName(): string {
 	const brandName = getCurrentBrandName().toLowerCase()
 	return `${brandName}_mcp_settings.json`
+}
+
+/**
+ * CARET MODIFICATION: Get brand-specific assets directory name (e.g., ".caretassets").
+ */
+export function getBrandAssetsDirName(): string {
+	const brandName = getCurrentBrandName().toLowerCase()
+	return `.${brandName}assets`
+}
+
+/**
+ * Get standard generated assets directory name (".agents/generated-assets").
+ */
+export function getBrandGeneratedAssetsDirName(): string {
+	return ".agents/generated-assets"
+}
+
+/**
+ * CARET MODIFICATION: Get brand-specific ignore filename (e.g., ".caretignore")
+ */
+export function getBrandIgnoreFileName(): string {
+	const brandName = getCurrentBrandName().toLowerCase()
+	return `.${brandName}ignore`
+}
+
+/**
+ * CARET MODIFICATION: Legacy Cline ignore filename for compatibility checks
+ */
+export function getLegacyClineIgnoreFileName(): string {
+	return ".clineignore"
 }
 
 /**

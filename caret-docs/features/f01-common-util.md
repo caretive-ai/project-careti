@@ -20,18 +20,16 @@ Caret-main에서 검증된 유용한 빌드 스크립트들을 이식하여 개�
     "test:all": "node caret-scripts/test-report.js",
     "package:release": "node caret-scripts/build/package-release.js",
     "caret:coverage": "node caret-scripts/caret-coverage-check.js",
-    "caretrules:sync": "node caret-scripts/sync-caretrules.js",
     "models:generate": "node caret-scripts/generate-support-model-list.js"
   }
 }
 ```
 
-**주요 스크립트 (6개):**
+**주요 스크립트:**
 - `setup-dev-env.js`: 크로스 플랫폼 개발 환경 설정
 - `test-report.js`: 통합 테스트 리포트 생성기
 - `package-release.js`: VSIX 릴리즈 패키지 빌드 자동화
 - `caret-coverage-check.js`: Caret vs Cline 코드 커버리지 분석
-- `sync-caretrules.js`: .caretrules 파일 자동 동기화 (.cursorrules, .clinerules 등)
 - `generate-support-model-list.js`: 지원 모델 문서 자동 생성
 - 색상 로깅 및 오류 처리 유틸리티 포함
 
@@ -108,9 +106,6 @@ npm run package:release
 
 # Caret vs Cline 코드 커버리지 분석
 npm run caret:coverage
-
-# .caretrules 파일 자동 동기화
-npm run caretrules:sync
 
 # 지원 모델 문서 생성
 npm run models:generate

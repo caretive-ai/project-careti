@@ -26,6 +26,44 @@ var (
 	ErrTaskBusy     = fmt.Errorf("task is currently busy")
 )
 
+var ignoredSayTypesForInput = map[string]bool{
+	string(types.SayTypeAPIReqFinished):        true,
+	string(types.SayTypeAPIReqRetried):         true,
+	string(types.SayTypeDeletedAPIReqs):        true,
+	string(types.SayTypeTaskProgress):          true,
+	string(types.SayTypeMcpServerRequestStarted): true,
+}
+
+func shouldIgnoreMessageForInput(msg *types.ClineMessage) bool {
+	if msg == nil || msg.Type != types.MessageTypeSay {
+		return false
+	}
+	if ignoredSayTypesForInput[msg.Say] {
+		return true
+	}
+	if msg.Say == string(types.SayTypeText) && msg.Text == "" && len(msg.Images) == 0 {
+		return true
+	}
+	return false
+}
+
+func getLastMessageForInput(messages []*types.ClineMessage) *types.ClineMessage {
+	for i := len(messages) - 1; i >= 0; i-- {
+		msg := messages[i]
+		if msg == nil {
+			continue
+		}
+		if shouldIgnoreMessageForInput(msg) {
+			continue
+		}
+		return msg
+	}
+	if len(messages) == 0 {
+		return nil
+	}
+	return messages[len(messages)-1]
+}
+
 // Manager handles task execution and message display
 type Manager struct {
 	mu               sync.RWMutex
@@ -77,7 +115,7 @@ func NewManagerForAddress(ctx context.Context, address string) (*Manager, error)
 
 	manager := NewManager(client)
 	manager.clientAddress = address
-	manager.setCaretMode(ctx) // CARET MODIFICATION: default CLI to caret prompt system
+	manager.setClineMode(ctx) // CARET MODIFICATION: default CLI to cline prompt system
 	return manager, nil
 }
 
@@ -94,19 +132,19 @@ func NewManagerForDefault(ctx context.Context) (*Manager, error) {
 	if global.Clients != nil {
 		manager.clientAddress = global.Clients.GetRegistry().GetDefaultInstance()
 	}
-	manager.setCaretMode(ctx) // CARET MODIFICATION: default CLI to caret prompt system
+	manager.setClineMode(ctx) // CARET MODIFICATION: default CLI to cline prompt system
 
 	return manager, nil
 }
 
-// CARET MODIFICATION: ensure CLI sessions run in caret prompt system
-func (m *Manager) setCaretMode(ctx context.Context) {
+// CARET MODIFICATION: ensure CLI sessions run in cline prompt system
+func (m *Manager) setClineMode(ctx context.Context) {
 	if m == nil || m.client == nil || m.client.Caretsystem == nil {
 		return
 	}
-	_, err := m.client.Caretsystem.SetPromptSystemMode(ctx, &caret.SetPromptSystemModeRequest{Mode: "caret"})
+	_, err := m.client.Caretsystem.SetPromptSystemMode(ctx, &caret.SetPromptSystemModeRequest{Mode: "cline"})
 	if err != nil && global.Config.Verbose {
-		fmt.Printf("[DEBUG] Failed to set caret prompt mode: %v\n", err)
+		fmt.Printf("[DEBUG] Failed to set cline prompt mode: %v\n", err)
 	}
 }
 
@@ -289,8 +327,11 @@ func (m *Manager) CheckSendEnabled(ctx context.Context) error {
 		return nil
 	}
 
-	// Use final message to perform validation
-	lastMessage := messages[len(messages)-1]
+	// Use the same "last message for buttons" logic as the UI
+	lastMessage := getLastMessageForInput(messages)
+	if lastMessage == nil {
+		return nil
+	}
 
 	// Error types which we allow sending on
 	errorTypes := []string{
@@ -368,8 +409,11 @@ func (m *Manager) CheckNeedsApproval(ctx context.Context) (bool, *types.ClineMes
 		return false, nil, nil
 	}
 
-	// Use final message to check if approval is needed
-	lastMessage := messages[len(messages)-1]
+	// Use the same "last message for buttons" logic as the UI
+	lastMessage := getLastMessageForInput(messages)
+	if lastMessage == nil {
+		return false, nil, nil
+	}
 
 	// Only check non-partial ask messages
 	if lastMessage.Partial {
@@ -1092,6 +1136,10 @@ func (m *Manager) handleStreamingMessage(msg *types.ClineMessage, coordinator *S
 		m.renderer.RenderDebug("Streaming display failed, using fallback: %v", err)
 		// Fallback to regular display
 		m.displayMessage(msg, true, false, -1)
+	}
+	if !msg.Partial {
+		// Avoid rendering the same completed message again from the state stream.
+		coordinator.MarkProcessedInCurrentTurn(fmt.Sprintf("%d", msg.Timestamp))
 	}
 
 	return nil

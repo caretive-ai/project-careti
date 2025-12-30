@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cline/grpc-go/caret"
 	"github.com/cline/cli/pkg/cli/global"
+	"github.com/cline/grpc-go/caret"
 )
 
 func TestWaitForAuthenticationReturnsOnStreamAuth(t *testing.T) {
@@ -24,7 +24,6 @@ func TestWaitForAuthenticationReturnsOnStreamAuth(t *testing.T) {
 		cancel:    cancel,
 	}
 
-	// send an authenticated state
 	listener.updatesCh <- &caret.CaretAuthState{
 		User: &caret.CaretUserInfo{Uid: "user-123"},
 	}
@@ -34,10 +33,11 @@ func TestWaitForAuthenticationReturnsOnStreamAuth(t *testing.T) {
 	}
 }
 
-func TestWaitForAuthenticationUsesPollingFallback(t *testing.T) {
+func TestWaitForAuthenticationReturnsStreamError(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	expectedErr := errors.New("stream failure")
 	listener := &CaretAuthStatusListener{
 		updatesCh: make(chan *caret.CaretAuthState, 1),
 		errCh:     make(chan error, 1),
@@ -45,30 +45,18 @@ func TestWaitForAuthenticationUsesPollingFallback(t *testing.T) {
 		cancel:    cancel,
 	}
 
-	// Speed up polling for the test and stub the check function to avoid gRPC calls.
-	originalInterval := caretAuthPollInterval
-	originalCheck := caretAuthCheckFn
-	caretAuthPollInterval = 10 * time.Millisecond
-	caretAuthCheckFn = func(_ context.Context) (bool, error) {
-		// first call returns false, second returns true
-		if isCaretSessionAuthenticated {
-			return true, nil
-		}
-		isCaretSessionAuthenticated = true
-		return false, nil
-	}
-	defer func() {
-		caretAuthPollInterval = originalInterval
-		caretAuthCheckFn = originalCheck
-		isCaretSessionAuthenticated = false
-	}()
+	listener.errCh <- expectedErr
 
-	if err := listener.WaitForAuthentication(200 * time.Millisecond); err != nil {
-		t.Fatalf("expected polling fallback to detect authentication, got error: %v", err)
+	err := listener.WaitForAuthentication(200 * time.Millisecond)
+	if err == nil {
+		t.Fatalf("expected error, got nil")
+	}
+	if !errors.Is(err, expectedErr) {
+		t.Fatalf("expected wrapped error %v, got %v", expectedErr, err)
 	}
 }
 
-func TestWaitForAuthenticationFailsAfterConsecutiveErrors(t *testing.T) {
+func TestWaitForAuthenticationTimesOut(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -79,58 +67,32 @@ func TestWaitForAuthenticationFailsAfterConsecutiveErrors(t *testing.T) {
 		cancel:    cancel,
 	}
 
-	originalInterval := caretAuthPollInterval
-	originalCheck := caretAuthCheckFn
-	caretAuthPollInterval = 10 * time.Millisecond
-	caretAuthCheckFn = func(_ context.Context) (bool, error) {
-		return false, errors.New("backend unavailable")
-	}
-	defer func() {
-		caretAuthPollInterval = originalInterval
-		caretAuthCheckFn = originalCheck
-	}()
-
-	err := listener.WaitForAuthentication(60 * time.Millisecond)
+	err := listener.WaitForAuthentication(20 * time.Millisecond)
 	if err == nil {
-		t.Fatalf("expected authentication to eventually timeout when backend stays unavailable")
+		t.Fatalf("expected timeout error, got nil")
 	}
-	if !errors.Is(err, context.DeadlineExceeded) && !strings.Contains(err.Error(), "timeout") {
+	if !strings.Contains(strings.ToLower(err.Error()), "timeout") {
 		t.Fatalf("expected timeout-driven error, got: %v", err)
 	}
 }
 
-func TestWaitForAuthenticationAllowsInternalFallbackOnlyDuringAuth(t *testing.T) {
+func TestWaitForAuthenticationReturnsOnCancel(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	cancel()
 
 	listener := &CaretAuthStatusListener{
 		updatesCh: make(chan *caret.CaretAuthState, 1),
 		errCh:     make(chan error, 1),
 		ctx:       ctx,
-		cancel:    cancel,
+		cancel:    func() {},
 	}
 
-	originalInterval := caretAuthPollInterval
-	originalCheck := caretAuthCheckFn
-	originalFlag := allowInternalAuthFallback
-	caretAuthPollInterval = 5 * time.Millisecond
-	caretAuthCheckFn = func(_ context.Context) (bool, error) {
-		if allowInternalAuthFallback {
-			return true, nil
-		}
-		return false, errors.New("backend unavailable")
+	err := listener.WaitForAuthentication(200 * time.Millisecond)
+	if err == nil {
+		t.Fatalf("expected cancellation error, got nil")
 	}
-	defer func() {
-		caretAuthPollInterval = originalInterval
-		caretAuthCheckFn = originalCheck
-		allowInternalAuthFallback = originalFlag
-	}()
-
-	if err := listener.WaitForAuthentication(200 * time.Millisecond); err != nil {
-		t.Fatalf("expected authentication to succeed via internal fallback, got error: %v", err)
-	}
-	if allowInternalAuthFallback {
-		t.Fatalf("expected internal fallback flag to be reset after auth flow")
+	if !strings.Contains(strings.ToLower(err.Error()), "cancel") {
+		t.Fatalf("expected cancellation-driven error, got: %v", err)
 	}
 }
 
@@ -166,3 +128,4 @@ func TestClearCaretLocalSessionRemovesKeys(t *testing.T) {
 		t.Fatalf("expected userInfo to be removed from globalState.json, got: %s", string(content))
 	}
 }
+

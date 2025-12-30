@@ -307,6 +307,11 @@
 			"shortName": "ブラウザ",
 			"description": "Caretがブラウザで任意のウェブサイトを実行および操作できるようにします。"
 		},
+		"generateImages": {
+			"label": "画像生成",
+			"shortName": "画像",
+			"description": "Caretが画像生成ツールで画像を生成できるようにします。"
+		},
 		"useMcp": {
 			"label": "MCPサーバーを使用する",
 			"shortName": "MCP",
@@ -389,7 +394,13 @@
 		"supportsCacheLabel": "プロンプトキャッシュをサポート:",
 		"doesNotSupportImagesLabel": "画像をサポートしていません:",
 		"doesNotSupportComputerUseLabel": "コンピュータ使用をサポートしていません:",
-		"doesNotSupportCacheLabel": "プロンプトキャッシュをサポートしていません:"
+		"doesNotSupportCacheLabel": "プロンプトキャッシュをサポートしていません:",
+		"imageGeneration": {
+			"title": "画像生成のデフォルト",
+			"aspectRatio": "アスペクト比",
+			"size": "サイズ",
+			"auto": "自動（モデルのデフォルト）"
+		}
 	},
 	"modelSelector": {
 		"label": "モデル",
@@ -420,18 +431,18 @@
 	"rules": {
 		"section": {
 			"title": "ルール管理",
-			"description": "プロジェクトルールファイルの管理と優先順位の設定。",
+			"description": "Caret のルールとワークフローを管理します。",
 			"workspaceRules": "ワークスペースルール",
 			"globalRules": "グローバルルール",
-			"caretRules": ".caretrulesファイル",
-			"clineRules": ".clinerulesファイル",
-			"cursorRules": ".cursorrulesファイル",
-			"windsurfRules": ".windsurfrulesファイル"
+			"caretRules": ".agents/context ディレクトリ",
+			"clineRules": "レガシー .agents/context（無視）",
+			"cursorRules": "レガシー .agents/context（無視）",
+			"windsurfRules": "レガシー .agents/context（無視）"
 		},
 		"priority": {
-			"title": "ルール優先順位",
-			"description": "ルールファイル優先順位: .caretrules > .clinerules > .cursorrules > .windsurfrules",
-			"info": "優先順位の高いルールが存在する場合、低い優先順位のルールは自動的に無効化されます。"
+			"title": "ルールのソース",
+			"description": "Caret は .agents/context と AGENTS.md（再帰）を読みます。レガシーのルールファイルは無視されます。",
+			"info": "ルールは結合して適用され、優先度の切り替えはありません。"
 		},
 		"buttons": {
 			"toggle": "切り替え",
@@ -528,6 +539,7 @@
 				"starIconEmpty": "☆",
 				"featuredModelDescriptionBest": "Recommended for Caret's agent coding",
 				"featuredModelLabelBest": "Best",
+				"featuredModelDescriptionGemini3FlashPreview": "速度と価格効率のための Gemini 3 Flash Preview モデル",
 				"featuredModelDescriptionNew": "Claude Opus 4.5: Opus 4.1の1/3のコストでSOTAのコーディング性能",
 				"featuredModelLabelNew": "New",
 				"featuredModelDescriptionFree": "Advanced model with 262K context for complex coding",
@@ -572,6 +584,7 @@
 				"starIconEmpty": "☆",
 				"featuredModelDescriptionBest": "Recommended for Caret's agent coding",
 				"featuredModelLabelBest": "Best",
+				"featuredModelDescriptionGemini3FlashPreview": "速度と価格効率のための Gemini 3 Flash Preview モデル",
 				"featuredModelDescriptionNew": "Claude Opus 4.5: Opus 4.1の1/3のコストでSOTAのコーディング性能",
 				"featuredModelLabelNew": "New",
 				"featuredModelDescriptionFree": "Advanced model with 262K context for complex coding",
@@ -970,6 +983,10 @@
 			"name": "Huawei Cloud MaaS",
 			"description": "Huawei Cloud MaaS (Model-as-a-Service) は、様々なAIモデルを提供します。",
 			"providerName": "Huawei Cloud MaaS"
+		},
+		"naver-cloud": {
+			"name": "Naver Cloud",
+			"description": "Naver Cloudは韓国語の文脈に最適化されたHyper Clova X (HCX)モデルを提供します。"
 		},
 		"dify": {
 			"name": "Dify.ai",

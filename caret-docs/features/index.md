@@ -26,8 +26,8 @@ Caret은 Cline을 기반으로 한 자율 AI 코딩 어시스턴트로, 다음�
 - **[F05: Caret 계정 시스템](./f05-caret-account.md)**
   Caret 전용 계정 관리 및 인증 시스템 (gRPC 기반)
 
-- **[F06: Rule Priority System](./f06-rule-priority-system.md)**
-  `.caretrules` 우선순위 관리 및 규칙 충돌 해결
+- **[F06: 에이전트 표준화(AAIF SoT)](./f06-agent-standardization.md)**
+  `.agents/context` 단일 SoT 및 표준 구조
 
 ### AI 시스템 (Intelligence)
 
@@ -65,7 +65,7 @@ Caret 기능
 │   ├── 브랜딩 UI
 │   ├── Cline 호환/CLI 확장
 │   ├── 계정 시스템
-│   └── 룰 우선순위
+│   └── 에이전트 표준화
 ├── AI 시스템 (F07-F08)
 │   ├── 프롬프트 시스템
 │   └── 페르소나 시스템
@@ -89,7 +89,7 @@ Caret 기능
 
 - **아키텍처**: `caret-docs/development/caret-architecture-and-implementation-guide.md`
 - **머징 가이드**: `caret-docs/merging/merge-execution-master-plan.md`
-- **워크플로우**: `.caretrules/workflows/` (AI 개발 절차)
+- **워크플로우**: `.agents/context/workflows/` (AI 개발 절차)
 
 ---
 

@@ -20,6 +20,7 @@ import { GeminiHandler } from "./providers/gemini"
 import { GroqHandler } from "./providers/groq"
 import { HicapHandler } from "./providers/hicap"
 import { HuaweiCloudMaaSHandler } from "./providers/huawei-cloud-maas"
+import { NaverCloudHandler } from "./providers/naver-cloud"
 import { HuggingFaceHandler } from "./providers/huggingface"
 import { LiteLlmHandler } from "./providers/litellm"
 import { LmStudioHandler } from "./providers/lmstudio"
@@ -384,6 +385,18 @@ function createHandlerForProvider(
 					mode === "plan" ? options.planModeHuaweiCloudMaasModelId : options.actModeHuaweiCloudMaasModelId,
 				huaweiCloudMaasModelInfo:
 					mode === "plan" ? options.planModeHuaweiCloudMaasModelInfo : options.actModeHuaweiCloudMaasModelInfo,
+			})
+		case "naver-cloud":
+			return new NaverCloudHandler({
+				onRetryAttempt: options.onRetryAttempt,
+				naverCloudApiKey: options.naverCloudApiKey,
+				naverCloudModelId:
+					mode === "plan" ? options.planModeNaverCloudModelId : options.actModeNaverCloudModelId,
+				naverCloudModelInfo:
+					mode === "plan" ? options.planModeNaverCloudModelInfo : options.actModeNaverCloudModelInfo,
+				thinkingBudgetTokens:
+					mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
+				ulid: options.ulid,
 			})
 		case "dify": // Add Dify.ai handler
 			return new DifyHandler({

@@ -46,7 +46,7 @@ func (c *ClineClients) StartNewInstance(ctx context.Context) (*common.CoreInstan
 	}
 
 	if Config.Verbose {
-		fmt.Printf("Starting new Cline instance on ports %d (core) and %d (host bridge)\n", corePort, hostPort)
+		fmt.Printf("Starting new %s instance on ports %d (core) and %d (host bridge)\n", common.BrandDisplayName(), corePort, hostPort)
 	}
 
 	// Start cline-host first
@@ -139,11 +139,11 @@ func (c *ClineClients) StartNewInstanceAtPort(ctx context.Context, corePort int)
 
 	// Check if the specified core port is available
 	if common.IsInstanceHealthy(ctx, coreAddress) {
-		return nil, fmt.Errorf("port %d is already in use by another Cline instance", corePort)
+		return nil, fmt.Errorf("port %d is already in use by another %s instance", corePort, common.BrandDisplayName())
 	}
 
 	if Config.Verbose {
-		fmt.Printf("Starting new Cline instance on ports %d (core) and %d (host bridge)\n", corePort, hostPort)
+		fmt.Printf("Starting new %s instance on ports %d (core) and %d (host bridge)\n", common.BrandDisplayName(), corePort, hostPort)
 	}
 
 	// Start cline-host first

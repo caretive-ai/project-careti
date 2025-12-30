@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 Atom은 `.caretrules/workflows/atoms/semantic-equivalence-verification.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 Atom은 `.agents/context/workflows/atoms/semantic-equivalence-verification.md`를 기준으로 보세요.
 
 확립된 방법론을 사용하여 Markdown과 JSON 워크플로우 형식 간의 의미적 동등성을 검증하고 있습니다.
 
@@ -118,7 +118,7 @@ node caret-scripts/utils/semantic-equivalence-checker.js <markdown-file> <json-f
 
 예시:
 ```bash
-node caret-scripts/utils/semantic-equivalence-checker.js .caretrules/workflows/backup-protocol.md caret-docs/experiments/backup-protocol-json.json
+node caret-scripts/utils/semantic-equivalence-checker.js .agents/context/workflows/backup-protocol.md caret-docs/experiments/backup-protocol-json.json
 ```
 
 고급 분석을 위해서는 범용 분석기를 사용:

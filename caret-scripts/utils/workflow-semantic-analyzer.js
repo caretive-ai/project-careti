@@ -2,7 +2,7 @@
 
 /**
  * Workflow Semantic Equivalence Analyzer
- * Specifically for comparing .caretrules Markdown vs JSON workflows
+ * Specifically for comparing .agents/context Markdown vs JSON workflows
  * NOT for system prompt comparison
  */
 

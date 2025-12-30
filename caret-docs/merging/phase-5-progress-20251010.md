@@ -70,7 +70,7 @@
        // CARET MODIFICATION: F03 - Branding
        caretBanner?: string
 
-       // CARET MODIFICATION: F05 - Rule Priority
+       // CARET MODIFICATION: F06 - Agent Standardization
        localCaretRulesToggles?: ClineRulesToggles
    }
    ```

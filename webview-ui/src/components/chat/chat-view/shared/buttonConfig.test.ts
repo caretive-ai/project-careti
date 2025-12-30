@@ -138,6 +138,27 @@ describe("getButtonConfig", () => {
 		expect(config).toEqual(BUTTON_CONFIGS.api_req_active)
 	})
 
+	it("returns completion_result config for completion_result say message", () => {
+		const completionMessage: ClineMessage = {
+			type: "say",
+			say: "completion_result",
+			ts: Date.now(),
+		}
+		const config = getButtonConfig(completionMessage, "act", mockT)
+		expect(config).toEqual(BUTTON_CONFIGS.completion_result)
+	})
+
+	it("returns completion_result config for partial completion_result say message", () => {
+		const completionMessage: ClineMessage = {
+			type: "say",
+			say: "completion_result",
+			partial: true,
+			ts: Date.now(),
+		}
+		const config = getButtonConfig(completionMessage, "act", mockT)
+		expect(config).toEqual(BUTTON_CONFIGS.completion_result)
+	})
+
 	// Test mode parameter (though not extensively used in the current implementation)
 	it("handles mode parameter without changing core behavior", () => {
 		const message: ClineMessage = {

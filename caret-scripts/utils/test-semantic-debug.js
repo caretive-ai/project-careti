@@ -161,8 +161,8 @@ function normalizeText(text) {
 // Debug test
 console.log("🔍 DEBUG: Analyzing what gets extracted from each format\n")
 
-const mdFile = ".caretrules/workflows/cline-modification.md"
-const jsonFile = ".caretrules/json-converted/cline-modification-v3.json"
+const mdFile = ".agents/context/workflows/cline-modification.md"
+const jsonFile = ".agents/context/json-converted/cline-modification-v3.json"
 
 const mdContent = fs.readFileSync(mdFile, "utf8")
 const jsonContent = fs.readFileSync(jsonFile, "utf8")

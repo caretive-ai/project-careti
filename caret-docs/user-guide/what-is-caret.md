@@ -1,63 +1,63 @@
 ---
-title: "What is Caret?"
-description: "An introduction to Caret, your enhanced AI-powered development assistant based on Cline."
+title: "Caret이란?"
+description: "Cline을 기반으로 확장된 Caret AI 개발 어시스턴트를 소개합니다."
 ---
 
-# What is Caret?
+# Caret이란?
 
-Caret is an enhanced AI development assistant built on top of Cline, integrating seamlessly with Microsoft Visual Studio Code. It provides all the powerful features of Cline while adding unique enhancements for a more personalized and efficient coding experience.
+Caret은 Cline을 기반으로 확장된 AI 개발 어시스턴트로, Visual Studio Code와 자연스럽게 통합됩니다. Cline의 핵심 기능은 그대로 유지하면서, 더 개인화되고 효율적인 개발 경험을 위해 Caret만의 확장 기능을 제공합니다.
 
 > **Caret** 이름의 유래: 프로그래밍에서 위치와 방향을 나타내는 '^' (caret) 기호에서 따온 이름입니다.
 
-## What Makes Caret Special
+## Caret의 차별점
 
-While Caret includes all of Cline's core functionality—reading/writing files, executing commands, using your web browser, and expanding capabilities with Model Context Protocol servers—it adds several unique features:
+Caret은 파일 읽기/쓰기, 명령 실행, 브라우저 사용, MCP 서버 연동 등 Cline의 모든 핵심 기능을 포함합니다. 여기에 Caret만의 확장 기능이 더해집니다.
 
 ### 🎭 AI Persona System
 
-Choose from pre-defined AI assistant personalities, each with unique communication styles and expertise areas:
+사전에 정의된 AI 어시스턴트 페르소나를 선택해, 커뮤니케이션 스타일과 전문성을 맞출 수 있습니다.
 
-- **오사랑 (Oh Sarang)** - K-pop idol with mathematical emotion analysis
-- **마도베 이치카 (Madobe Ichika)** - Windows 11-inspired, organized assistant
-- **사이안 매킨 (Cyan Mackin)** - macOS-inspired, minimalist efficiency
-- **탄도 우분투 (Thando Ubuntu)** - Ubuntu-inspired, open-source collaboration
+- **오사랑 (Oh Sarang)** - 수학적 감성 분석을 강조하는 K-pop 아이돌 콘셉트
+- **마도베 이치카 (Madobe Ichika)** - Windows 11 감성의 정돈된 어시스턴트
+- **사이안 매킨 (Cyan Mackin)** - macOS 감성의 미니멀 효율 지향
+- **탄도 우분투 (Thando Ubuntu)** - Ubuntu 감성의 오픈소스 협업 지향
 
 ### ⚡ Smart Rule Management
 
-Intelligent rule priority system that prevents duplicate configurations:
+에이전트 표준화(AAIF SoT)로 규칙 구조를 통일합니다.
 
-- **Priority Logic**: `.clinerules` > `.cursorrules` > `.windsurfrules`
-- **Conflict Prevention**: Only one rule type loads at a time
-- **Token Optimization**: Eliminates redundant instructions
+- **SoT**: `.agents/context/caret-rules.json`
+- **계층 지시**: `AGENTS.md` 재귀 로드
+- **부트스트랩**: `/init` 스캐폴드로 표준 구조 생성
 
 ### 🧪 Enhanced Testing System
 
-Improved test framework with better organization:
+테스트 체계를 정리해 가독성과 효율을 높였습니다.
 
-- **Vitest Integration**: Modern testing with better performance
-- **Clear Command Structure**: Intuitive test commands
-- **Comprehensive Coverage**: Dedicated test suites for Caret features
+- **Vitest 통합**: 최신 테스트 환경과 성능 개선
+- **명확한 명령 구조**: 직관적인 테스트 명령 구성
+- **충분한 커버리지**: Caret 기능별 전용 테스트
 
-## Caret's Philosophy
+## Caret의 철학
 
-Caret embraces the same thoughtful approach to code generation as Cline but adds personality and efficiency improvements. Rather than just generating code, Caret:
+Caret은 Cline의 신중한 코드 생성 철학을 유지하면서, 개성과 효율성을 강화합니다. 단순히 코드를 생성하는 것을 넘어서 다음을 지향합니다.
 
-- **Collaborates with Character**: Choose an AI personality that matches your working style
-- **Prevents Configuration Conflicts**: Smart rule management eliminates duplicate settings
-- **Maintains Cline Compatibility**: All Cline features work seamlessly
-- **Adds Korean Language Support**: Enhanced multilingual capabilities
+- **캐릭터 기반 협업**: 작업 스타일에 맞는 페르소나 선택
+- **설정 충돌 방지**: 규칙 관리로 중복 설정 제거
+- **Cline 호환성 유지**: Cline 기능과 완전 호환
+- **한국어 지원 강화**: 다국어 경험 개선
 
-## Technical Foundation
+## 기술 기반
 
-Caret is built as a **fork-based enhancement** of Cline:
+Caret은 Cline의 **포크 기반 확장**으로 설계되었습니다.
 
-- **Preserves Cline Core**: All original functionality maintained
-- **Minimal Extension Strategy**: Changes confined to dedicated directories
-- **Backward Compatibility**: Works with existing Cline projects
-- **Future-Proof**: Easy integration of Cline updates
+- **Cline 코어 보존**: 원본 기능 유지
+- **최소 확장 전략**: 전용 디렉토리에서 변경
+- **하위 호환성**: 기존 Cline 프로젝트와 호환
+- **미래 대응**: Cline 업데이트를 쉽게 통합
 
-## Getting Started
+## 시작하기
 
-Ready to experience enhanced AI-powered development? Check out our [installation guide](./installing-caret) to get started with Caret today.
+Caret을 시작하려면 [설치 가이드](./installing-caret)를 참고하세요.
 
-Caret transforms your coding experience from a simple tool interaction into a personalized collaboration with your chosen AI companion, all while maintaining the robust foundation that makes Cline so powerful.
+Caret은 Cline의 탄탄한 기반을 유지하면서, 단순한 도구 사용을 개인화된 협업 경험으로 확장합니다.

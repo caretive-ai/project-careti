@@ -68,10 +68,10 @@
 			"localWorkflows": "로컬 워크플로우"
 		},
 		"subTitle": {
-			"caretRules": "Caret 규칙 (.caretrules)",
-			"CaretRules": "Caret 규칙 (.Caretrules)",
-			"cursorRules": "Cursor 규칙 (.cursorrules)",
-			"windsurfRules": "Windsurf 규칙 (.windsurfrules)"
+			"caretRules": "Caret 규칙 (.agents/context)",
+			"CaretRules": "Caret 규칙 (.agents/context)",
+			"cursorRules": "Cursor 규칙 (.agents/context)",
+			"windsurfRules": "Windsurf 규칙 (.agents/context)"
 		},
 		"button": {
 			"selectPersonaTemplate": "템플릿 캐릭터 선택",

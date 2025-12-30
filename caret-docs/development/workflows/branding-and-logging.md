@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.caretrules/workflows/branding-and-logging.md`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 워크플로우는 `.agents/context/workflows/branding-and-logging.md`를 기준으로 보세요.
 
 Caret의 브랜딩 및 로깅 시스템의 현재 상태를 문서화하고 있습니다.
 

@@ -48,12 +48,14 @@ export interface ChatState {
 	lastMessage: ClineMessage | undefined
 	secondLastMessage: ClineMessage | undefined
 	clineAsk: ClineAsk | undefined
+	pendingAskTs: number | undefined
 	task: ClineMessage | undefined
 
 	// Handlers
 	handleFocusChange: (isFocused: boolean) => void
 	clearExpandedRows: () => void
 	resetState: () => void
+	markAskResponded: (askTs?: number) => void
 
 	// Scroll-related state (will be moved to scroll hook)
 	showScrollToBottom?: boolean

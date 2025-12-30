@@ -24,1039 +24,1039 @@
     "details": "- [ ] CARET MODIFICATION 확인"
   },
   {
-    "file": ".caretrules.original/caret-rules.json",
+    "file": ".agents/context.original/caret-rules.json",
     "kind": "comment",
     "line": 30,
     "details": "\"comment_required\": \"// CARET MODIFICATION: [description]\","
   },
   {
-    "file": ".caretrules.original/caret-rules.json",
+    "file": ".agents/context.original/caret-rules.json",
     "kind": "comment",
     "line": 42,
     "details": "\"CARET MODIFICATION comment added?\","
   },
   {
-    "file": ".caretrules.original/caret-rules.json",
+    "file": ".agents/context.original/caret-rules.json",
     "kind": "comment",
     "line": 62,
     "details": "\"Cline file modification: backup + CARET MODIFICATION comment required\","
   },
   {
-    "file": ".caretrules.original/caret-rules.json",
+    "file": ".agents/context.original/caret-rules.json",
     "kind": "comment",
     "line": 84,
     "details": "\"Skip CARET MODIFICATION comment\""
   },
   {
-    "file": ".caretrules.original/workflows/ai-work-index.md",
+    "file": ".agents/context.original/workflows/ai-work-index.md",
     "kind": "comment",
     "line": 46,
     "details": "- [ ] CARET MODIFICATION comment plan (for Cline original modifications)"
   },
   {
-    "file": ".caretrules.original/workflows/ai-work-protocol.md",
+    "file": ".agents/context.original/workflows/ai-work-protocol.md",
     "kind": "comment",
     "line": 21,
     "details": "- CARET MODIFICATION comment requirements"
   },
   {
-    "file": ".caretrules.original/workflows/ai-work-protocol.md",
+    "file": ".agents/context.original/workflows/ai-work-protocol.md",
     "kind": "comment",
     "line": 55,
     "details": "- Add comment: `// CARET MODIFICATION: [clear description]`"
   },
   {
-    "file": ".caretrules.original/workflows/architecture-guide.md",
+    "file": ".agents/context.original/workflows/architecture-guide.md",
     "kind": "comment",
     "line": 19,
     "details": "- Mandatory: backup + CARET MODIFICATION comment"
   },
   {
-    "file": ".caretrules.original/workflows/architecture-guide.md",
+    "file": ".agents/context.original/workflows/architecture-guide.md",
     "kind": "comment",
     "line": 41,
     "details": "3. **Comment Protocol**: // CARET MODIFICATION: [clear description]"
   },
   {
-    "file": ".caretrules.original/workflows/caret-development.md",
+    "file": ".agents/context.original/workflows/caret-development.md",
     "kind": "comment",
     "line": 24,
     "details": "- **Cline Modification**: Backup rules, CARET MODIFICATION requirements"
   },
   {
-    "file": ".caretrules.original/workflows/caret-development.md",
+    "file": ".agents/context.original/workflows/caret-development.md",
     "kind": "comment",
     "line": 42,
     "details": "- Add `// CARET MODIFICATION:` comment"
   },
   {
-    "file": ".caretrules.original/workflows/caret-development.md",
+    "file": ".agents/context.original/workflows/caret-development.md",
     "kind": "comment",
     "line": 101,
     "details": "Never modify Cline files without backup and CARET MODIFICATION comment."
   },
   {
-    "file": ".caretrules.original/workflows/document-organization.md",
+    "file": ".agents/context.original/workflows/document-organization.md",
     "kind": "comment",
     "line": 31,
     "details": "- `/comment-protocol`: CARET MODIFICATION requirements"
   },
   {
-    "file": ".caretrules.original/workflows/merge-strategy.md",
+    "file": ".agents/context.original/workflows/merge-strategy.md",
     "kind": "comment",
     "line": 27,
     "details": "- Add `// CARET MODIFICATION:` comment"
   },
   {
-    "file": ".caretrules.original/workflows/merge-strategy.md",
+    "file": ".agents/context.original/workflows/merge-strategy.md",
     "kind": "comment",
     "line": 34,
     "details": "- Document reason in CARET MODIFICATION comment"
   },
   {
-    "file": ".caretrules.original/workflows/merge-strategy.md",
+    "file": ".agents/context.original/workflows/merge-strategy.md",
     "kind": "comment",
     "line": 57,
     "details": "# Find all CARET MODIFICATION comments"
   },
   {
-    "file": ".caretrules.original/workflows/merge-strategy.md",
+    "file": ".agents/context.original/workflows/merge-strategy.md",
     "kind": "comment",
     "line": 58,
     "details": "grep -r \"CARET MODIFICATION\" src/ webview-ui/ --include=\"*.ts\" --include=\"*.tsx\""
   },
   {
-    "file": ".caretrules/ai-work-index.yaml",
+    "file": ".agents/context/ai-work-index.yaml",
     "kind": "comment",
     "line": 44,
     "details": "note: Always check CARET MODIFICATION comment requirements (backup deprecated)"
   },
   {
-    "file": ".caretrules/ai-work-index.yaml",
+    "file": ".agents/context/ai-work-index.yaml",
     "kind": "comment",
     "line": 131,
     "details": "- CARET MODIFICATION comment plan (for Cline original modifications)"
   },
   {
-    "file": ".caretrules/ai-work-protocol.md",
+    "file": ".agents/context/ai-work-protocol.md",
     "kind": "comment",
     "line": 28,
     "details": "- [ ] Add `// CARET MODIFICATION:` comment (~~backup deprecated~~)"
   },
   {
-    "file": ".caretrules/architecture-guide.yaml",
+    "file": ".agents/context/architecture-guide.yaml",
     "kind": "comment",
     "line": 24,
     "details": "mandatory: [backup, CARET MODIFICATION comment]"
   },
   {
-    "file": ".caretrules/architecture-guide.yaml",
+    "file": ".agents/context/architecture-guide.yaml",
     "kind": "comment",
     "line": 51,
     "details": "- Comment Protocol: \"// CARET MODIFICATION: [clear description]\""
   },
   {
-    "file": ".caretrules/caret-architecture-guide.md",
+    "file": ".agents/context/caret-architecture-guide.md",
     "kind": "comment",
     "line": 17,
     "details": "**Frontend**: Minimal modifications with `CARET MODIFICATION` comments"
   },
   {
-    "file": ".caretrules/caret-architecture-guide.md",
+    "file": ".agents/context/caret-architecture-guide.md",
     "kind": "comment",
     "line": 26,
     "details": "// CARET MODIFICATION: Added PersonaAvatar for visual identification"
   },
   {
-    "file": ".caretrules/caret-architecture-guide.md",
+    "file": ".agents/context/caret-architecture-guide.md",
     "kind": "comment",
     "line": 45,
     "details": "- Mandatory: `// CARET MODIFICATION: [description]` comment"
   },
   {
-    "file": ".caretrules/caret-architecture-guide.md",
+    "file": ".agents/context/caret-architecture-guide.md",
     "kind": "comment",
     "line": 141,
     "details": "- ✅ Add `CARET MODIFICATION` comments for Cline file changes"
   },
   {
-    "file": ".caretrules/caret-architecture-guide.md",
+    "file": ".agents/context/caret-architecture-guide.md",
     "kind": "comment",
     "line": 146,
     "details": "- ❌ Never modify Cline files without `CARET MODIFICATION` comment"
   },
   {
-    "file": ".caretrules/caret-development.md",
+    "file": ".agents/context/caret-development.md",
     "kind": "comment",
     "line": 23,
     "details": "- [ ] GREEN: Minimal implementation (add `// CARET MODIFICATION:` if touching Cline files)"
   },
   {
-    "file": ".caretrules/caret-development.md",
+    "file": ".agents/context/caret-development.md",
     "kind": "comment",
     "line": 39,
     "details": "**Cline Modification**: ~~Backup rules~~ (deprecated), CARET MODIFICATION comment requirements"
   },
   {
-    "file": ".caretrules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "kind": "comment",
     "line": 49,
     "details": "- **Comment required**: `// CARET MODIFICATION: [description]`"
   },
   {
-    "file": ".caretrules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "kind": "comment",
     "line": 71,
     "details": "2. CARET MODIFICATION comment added?"
   },
   {
-    "file": ".caretrules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "kind": "comment",
     "line": 110,
     "details": "- Cline file modification: backup + CARET MODIFICATION comment required"
   },
   {
-    "file": ".caretrules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "kind": "comment",
     "line": 130,
     "details": "- `comment-protocol.md` - CARET MODIFICATION tracking"
   },
   {
-    "file": ".caretrules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "kind": "comment",
     "line": 149,
     "details": "- Modify Cline files without CARET MODIFICATION comment"
   },
   {
-    "file": ".caretrules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "kind": "comment",
     "line": 152,
     "details": "- Skip CARET MODIFICATION comment"
   },
   {
-    "file": ".caretrules/cline-modification.md",
+    "file": ".agents/context/cline-modification.md",
     "kind": "comment",
     "line": 11,
     "details": "3. **Clear Tracking**: `// CARET MODIFICATION:` comment for all changes"
   },
   {
-    "file": ".caretrules/cline-modification.md",
+    "file": ".agents/context/cline-modification.md",
     "kind": "comment",
     "line": 22,
     "details": "- [ ] Add `// CARET MODIFICATION: [what and why]` comment"
   },
   {
-    "file": ".caretrules/cline-modification.md",
+    "file": ".agents/context/cline-modification.md",
     "kind": "comment",
     "line": 36,
     "details": "// CARET MODIFICATION: Caret fields (72 + 1000 = 1072+)"
   },
   {
-    "file": ".caretrules/cline-modification.md",
+    "file": ".agents/context/cline-modification.md",
     "kind": "comment",
     "line": 63,
     "details": "- `/comment-protocol` - CARET MODIFICATION tracking rules"
   },
   {
-    "file": ".caretrules/documentation-guide.md",
+    "file": ".agents/context/documentation-guide.md",
     "kind": "comment",
     "line": 51,
     "details": "## CARET MODIFICATION Comment Protocol"
   },
   {
-    "file": ".caretrules/documentation-guide.md",
+    "file": ".agents/context/documentation-guide.md",
     "kind": "comment",
     "line": 57,
     "details": "// CARET MODIFICATION: [clear description]"
   },
   {
-    "file": ".caretrules/documentation-guide.md",
+    "file": ".agents/context/documentation-guide.md",
     "kind": "comment",
     "line": 62,
     "details": "/* CARET MODIFICATION: [clear description] */"
   },
   {
-    "file": ".caretrules/documentation-guide.md",
+    "file": ".agents/context/documentation-guide.md",
     "kind": "comment",
     "line": 67,
     "details": "<!-- CARET MODIFICATION: [clear description] -->"
   },
   {
-    "file": ".caretrules/documentation-guide.md",
+    "file": ".agents/context/documentation-guide.md",
     "kind": "comment",
     "line": 72,
     "details": "# CARET MODIFICATION: [clear description]"
   },
   {
-    "file": ".caretrules/merge-strategy.md",
+    "file": ".agents/context/merge-strategy.md",
     "kind": "comment",
     "line": 22,
     "details": "- Add `// CARET MODIFICATION: [description]` comment"
   },
   {
-    "file": ".caretrules/merge-strategy.md",
+    "file": ".agents/context/merge-strategy.md",
     "kind": "comment",
     "line": 28,
     "details": "- Must add `// CARET MODIFICATION: [reason]` comment"
   },
   {
-    "file": ".caretrules/workflows/ai-work-protocol.md",
+    "file": ".agents/context/workflows/ai-work-protocol.md",
     "kind": "comment",
     "line": 21,
     "details": "- CARET MODIFICATION comment requirements"
   },
   {
-    "file": ".caretrules/workflows/ai-work-protocol.md",
+    "file": ".agents/context/workflows/ai-work-protocol.md",
     "kind": "comment",
     "line": 55,
     "details": "- Add comment: `// CARET MODIFICATION: [clear description]`"
   },
   {
-    "file": ".caretrules/workflows/atoms/backup-protocol.yaml",
+    "file": ".agents/context/workflows/atoms/backup-protocol.yaml",
     "kind": "comment",
     "line": 13,
     "details": "format: CARET MODIFICATION comment only"
   },
   {
-    "file": ".caretrules/workflows/atoms/backup-protocol.yaml",
+    "file": ".agents/context/workflows/atoms/backup-protocol.yaml",
     "kind": "comment",
     "line": 15,
     "details": "comment: \"// CARET MODIFICATION: [clear description]\""
   },
   {
-    "file": ".caretrules/workflows/atoms/backup-protocol.yaml",
+    "file": ".agents/context/workflows/atoms/backup-protocol.yaml",
     "kind": "comment",
     "line": 29,
     "details": "- Add CARET MODIFICATION comment before changes"
   },
   {
-    "file": ".caretrules/workflows/atoms/backup-protocol.yaml",
+    "file": ".agents/context/workflows/atoms/backup-protocol.yaml",
     "kind": "comment",
     "line": 37,
     "details": "// CARET MODIFICATION: Initialize Caret wrapper"
   },
   {
-    "file": ".caretrules/workflows/atoms/backup-protocol.yaml",
+    "file": ".agents/context/workflows/atoms/backup-protocol.yaml",
     "kind": "comment",
     "line": 42,
     "details": "// CARET MODIFICATION: Add Caret gRPC handlers"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 4,
     "details": "# Comment Protocol - CARET MODIFICATION Tracking"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 10,
     "details": "**Required format**: `// CARET MODIFICATION: [clear description]`"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 14,
     "details": "// CARET MODIFICATION: Initialize Caret wrapper for persona system"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 17,
     "details": "// CARET MODIFICATION: Add branding toggle for dynamic brand switching"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 20,
     "details": "// CARET MODIFICATION: Integrate i18n message filtering"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 37,
     "details": "// CARET MODIFICATION: Add Caret provider initialization"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 47,
     "details": "// CARET MODIFICATION: Apply backend message filtering and branding"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 58,
     "details": "* CARET MODIFICATION: Integrate persona-aware message processing"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 74,
     "details": "// CARET MODIFICATION: Enable dynamic branding for multi-tenant support"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 75,
     "details": "// CARET MODIFICATION: Add TDD integration test runner for caret-src tests"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 76,
     "details": "// CARET MODIFICATION: Implement persona context in system prompt generation"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 81,
     "details": "❌ // CARET MODIFICATION: Fixed bug"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 82,
     "details": "❌ // CARET MODIFICATION: Added feature"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 83,
     "details": "❌ // CARET MODIFICATION: Updated code"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 90,
     "details": "2. Add CARET MODIFICATION comment"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 96,
     "details": "git log --grep=\"CARET MODIFICATION\" --oneline"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 103,
     "details": "- Keep original CARET MODIFICATION comment"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 105,
     "details": "- Never remove CARET MODIFICATION markers"
   },
   {
-    "file": ".caretrules/workflows/atoms/i18n-dynamic-pattern.md",
+    "file": ".agents/context/workflows/atoms/i18n-dynamic-pattern.md",
     "kind": "comment",
     "line": 33,
     "details": "// CARET MODIFICATION: Use i18n context to detect language changes"
   },
   {
-    "file": ".caretrules/workflows/atoms/i18n-dynamic-pattern.md",
+    "file": ".agents/context/workflows/atoms/i18n-dynamic-pattern.md",
     "kind": "comment",
     "line": 36,
     "details": "// CARET MODIFICATION: Use dynamic function with language dependency for i18n updates"
   },
   {
-    "file": ".caretrules/workflows/atoms/i18n-dynamic-pattern.md",
+    "file": ".agents/context/workflows/atoms/i18n-dynamic-pattern.md",
     "kind": "comment",
     "line": 56,
     "details": "// CARET MODIFICATION: Added useMemo for i18n reactivity"
   },
   {
-    "file": ".caretrules/workflows/atoms/i18n-dynamic-pattern.md",
+    "file": ".agents/context/workflows/atoms/i18n-dynamic-pattern.md",
     "kind": "comment",
     "line": 58,
     "details": "// CARET MODIFICATION: Import i18n context for language reactivity"
   },
   {
-    "file": ".caretrules/workflows/atoms/i18n-dynamic-pattern.md",
+    "file": ".agents/context/workflows/atoms/i18n-dynamic-pattern.md",
     "kind": "comment",
     "line": 81,
     "details": "### CARET MODIFICATION Comments"
   },
   {
-    "file": ".caretrules/workflows/atoms/i18n-dynamic-pattern.md",
+    "file": ".agents/context/workflows/atoms/i18n-dynamic-pattern.md",
     "kind": "comment",
     "line": 83,
     "details": "// CARET MODIFICATION: Convert static constant to dynamic function for i18n support"
   },
   {
-    "file": ".caretrules/workflows/atoms/i18n-dynamic-pattern.md",
+    "file": ".agents/context/workflows/atoms/i18n-dynamic-pattern.md",
     "kind": "comment",
     "line": 86,
     "details": "// CARET MODIFICATION: Use i18n context to detect language changes"
   },
   {
-    "file": ".caretrules/workflows/atoms/i18n-dynamic-pattern.md",
+    "file": ".agents/context/workflows/atoms/i18n-dynamic-pattern.md",
     "kind": "comment",
     "line": 89,
     "details": "// CARET MODIFICATION: Use dynamic function with language dependency for i18n updates"
   },
   {
-    "file": ".caretrules/workflows/atoms/i18n-dynamic-pattern.md",
+    "file": ".agents/context/workflows/atoms/i18n-dynamic-pattern.md",
     "kind": "comment",
     "line": 114,
     "details": "- [ ] Add `CARET MODIFICATION` comments"
   },
   {
-    "file": ".caretrules/workflows/atoms/modification-levels.md",
+    "file": ".agents/context/workflows/atoms/modification-levels.md",
     "kind": "comment",
     "line": 29,
     "details": "- **Mandatory comment**: `// CARET MODIFICATION: [description]`"
   },
   {
-    "file": ".caretrules/workflows/atoms/modification-levels.md",
+    "file": ".agents/context/workflows/atoms/modification-levels.md",
     "kind": "comment",
     "line": 43,
     "details": "// CARET MODIFICATION: Initialize Caret wrapper"
   },
   {
-    "file": ".caretrules/workflows/atoms/modification-protocol.md",
+    "file": ".agents/context/workflows/atoms/modification-protocol.md",
     "kind": "comment",
     "line": 7,
     "details": "**Minimize modifications to Cline original files using CARET MODIFICATION comments**"
   },
   {
-    "file": ".caretrules/workflows/atoms/modification-protocol.md",
+    "file": ".agents/context/workflows/atoms/modification-protocol.md",
     "kind": "comment",
     "line": 16,
     "details": "// CARET MODIFICATION: [Clear description of what and why]"
   },
   {
-    "file": ".caretrules/workflows/atoms/modification-protocol.md",
+    "file": ".agents/context/workflows/atoms/modification-protocol.md",
     "kind": "comment",
     "line": 22,
     "details": "1. **Add comment**: `// CARET MODIFICATION: [clear description]`"
   },
   {
-    "file": ".caretrules/workflows/atoms/modification-protocol.md",
+    "file": ".agents/context/workflows/atoms/modification-protocol.md",
     "kind": "comment",
     "line": 28,
     "details": "- [ ] CARET MODIFICATION comment present and clear"
   },
   {
-    "file": ".caretrules/workflows/atoms/modification-protocol.md",
+    "file": ".agents/context/workflows/atoms/modification-protocol.md",
     "kind": "comment",
     "line": 41,
     "details": "This protocol ensures safe modification of Cline files while maintaining the ability to merge upstream changes. The CARET MODIFICATION comment approach replaces the deprecated .cline backup method."
   },
   {
-    "file": ".caretrules/workflows/atoms/semantic-equivalence-verification.md",
+    "file": ".agents/context/workflows/atoms/semantic-equivalence-verification.md",
     "kind": "comment",
     "line": 33,
     "details": "2. Add comment: // CARET MODIFICATION: [description]"
   },
   {
-    "file": ".caretrules/workflows/atoms/semantic-equivalence-verification.md",
+    "file": ".agents/context/workflows/atoms/semantic-equivalence-verification.md",
     "kind": "comment",
     "line": 39,
     "details": "2. Apply modification_rules.comment: // CARET MODIFICATION: [description]"
   },
   {
-    "file": ".caretrules/workflows/caret-development.md",
+    "file": ".agents/context/workflows/caret-development.md",
     "kind": "comment",
     "line": 24,
     "details": "- **Cline Modification**: Backup rules, CARET MODIFICATION requirements"
   },
   {
-    "file": ".caretrules/workflows/caret-development.md",
+    "file": ".agents/context/workflows/caret-development.md",
     "kind": "comment",
     "line": 42,
     "details": "- Add `// CARET MODIFICATION:` comment"
   },
   {
-    "file": ".caretrules/workflows/caret-development.md",
+    "file": ".agents/context/workflows/caret-development.md",
     "kind": "comment",
     "line": 101,
     "details": "Never modify Cline files without backup and CARET MODIFICATION comment."
   },
   {
-    "file": ".caretrules/workflows/cline-modification.md",
+    "file": ".agents/context/workflows/cline-modification.md",
     "kind": "comment",
     "line": 9,
     "details": "- `/comment-protocol` - CARET MODIFICATION tracking"
   },
   {
-    "file": ".caretrules/workflows/cline-modification.md",
+    "file": ".agents/context/workflows/cline-modification.md",
     "kind": "comment",
     "line": 40,
     "details": "// CARET MODIFICATION: [Clear description of what and why]"
   },
   {
-    "file": ".caretrules/workflows/cline-modification.md",
+    "file": ".agents/context/workflows/cline-modification.md",
     "kind": "comment",
     "line": 52,
     "details": "// CARET MODIFICATION: Caret-specific fields (current_max + 1000 to avoid Cline conflicts)"
   },
   {
-    "file": ".caretrules/workflows/cline-modification.md",
+    "file": ".agents/context/workflows/cline-modification.md",
     "kind": "comment",
     "line": 82,
     "details": "- [ ] CARET MODIFICATION comment present and clear"
   },
   {
-    "file": ".caretrules/workflows/cline-modification.md",
+    "file": ".agents/context/workflows/cline-modification.md",
     "kind": "comment",
     "line": 110,
     "details": "// CARET MODIFICATION: Initialize Caret wrapper for enhanced features"
   },
   {
-    "file": ".caretrules/workflows/document-organization.md",
+    "file": ".agents/context/workflows/document-organization.md",
     "kind": "comment",
     "line": 31,
     "details": "- `/comment-protocol`: CARET MODIFICATION requirements"
   },
   {
-    "file": ".caretrules/workflows/i18n-static-translation-fix.md",
+    "file": ".agents/context/workflows/i18n-static-translation-fix.md",
     "kind": "comment",
     "line": 52,
     "details": "// Apply CARET MODIFICATION pattern"
   },
   {
-    "file": ".caretrules/workflows/i18n-static-translation-fix.md",
+    "file": ".agents/context/workflows/i18n-static-translation-fix.md",
     "kind": "comment",
     "line": 56,
     "details": "// CARET MODIFICATION: Use i18n context to detect language changes"
   },
   {
-    "file": ".caretrules/workflows/i18n-static-translation-fix.md",
+    "file": ".agents/context/workflows/i18n-static-translation-fix.md",
     "kind": "comment",
     "line": 59,
     "details": "// CARET MODIFICATION: Use dynamic function with language dependency for i18n updates"
   },
   {
-    "file": ".caretrules/workflows/i18n-static-translation-fix.md",
+    "file": ".agents/context/workflows/i18n-static-translation-fix.md",
     "kind": "comment",
     "line": 97,
     "details": "- [ ] Add `CARET MODIFICATION` comments"
   },
   {
-    "file": ".caretrules/workflows/i18n-static-translation-fix.md",
+    "file": ".agents/context/workflows/i18n-static-translation-fix.md",
     "kind": "comment",
     "line": 126,
     "details": "5. ✅ `CARET MODIFICATION` comments are complete"
   },
   {
-    "file": ".caretrules/workflows/merge-strategy.md",
+    "file": ".agents/context/workflows/merge-strategy.md",
     "kind": "comment",
     "line": 27,
     "details": "- Add `// CARET MODIFICATION:` comment"
   },
   {
-    "file": ".caretrules/workflows/merge-strategy.md",
+    "file": ".agents/context/workflows/merge-strategy.md",
     "kind": "comment",
     "line": 34,
     "details": "- Document reason in CARET MODIFICATION comment"
   },
   {
-    "file": ".caretrules/workflows/merge-strategy.md",
+    "file": ".agents/context/workflows/merge-strategy.md",
     "kind": "comment",
     "line": 57,
     "details": "# Find all CARET MODIFICATION comments"
   },
   {
-    "file": ".caretrules/workflows/merge-strategy.md",
+    "file": ".agents/context/workflows/merge-strategy.md",
     "kind": "comment",
     "line": 58,
     "details": "grep -r \"CARET MODIFICATION\" src/ webview-ui/ --include=\"*.ts\" --include=\"*.tsx\""
   },
   {
-    "file": ".clinerules/ai-work-index.md",
+    "file": ".agents/context/ai-work-index.md",
     "kind": "comment",
     "line": 46,
     "details": "- [ ] CARET MODIFICATION comment plan (for Cline original modifications)"
   },
   {
-    "file": ".clinerules/ai-work-protocol.md",
+    "file": ".agents/context/ai-work-protocol.md",
     "kind": "comment",
     "line": 21,
     "details": "- CARET MODIFICATION comment requirements"
   },
   {
-    "file": ".clinerules/ai-work-protocol.md",
+    "file": ".agents/context/ai-work-protocol.md",
     "kind": "comment",
     "line": 55,
     "details": "- Add comment: `// CARET MODIFICATION: [clear description]`"
   },
   {
-    "file": ".clinerules/architecture-guide.md",
+    "file": ".agents/context/architecture-guide.md",
     "kind": "comment",
     "line": 19,
     "details": "- Mandatory: backup + CARET MODIFICATION comment"
   },
   {
-    "file": ".clinerules/architecture-guide.md",
+    "file": ".agents/context/architecture-guide.md",
     "kind": "comment",
     "line": 41,
     "details": "3. **Comment Protocol**: // CARET MODIFICATION: [clear description]"
   },
   {
-    "file": ".clinerules/caret-development.md",
+    "file": ".agents/context/caret-development.md",
     "kind": "comment",
     "line": 24,
     "details": "- **Cline Modification**: Backup rules, CARET MODIFICATION requirements"
   },
   {
-    "file": ".clinerules/caret-development.md",
+    "file": ".agents/context/caret-development.md",
     "kind": "comment",
     "line": 42,
     "details": "- Add `// CARET MODIFICATION:` comment"
   },
   {
-    "file": ".clinerules/caret-development.md",
+    "file": ".agents/context/caret-development.md",
     "kind": "comment",
     "line": 101,
     "details": "Never modify Cline files without backup and CARET MODIFICATION comment."
   },
   {
-    "file": ".clinerules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "kind": "comment",
     "line": 50,
     "details": "- **Comment required**: `// CARET MODIFICATION: [description]`"
   },
   {
-    "file": ".clinerules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "kind": "comment",
     "line": 68,
     "details": "3. CARET MODIFICATION comment added?"
   },
   {
-    "file": ".clinerules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "kind": "comment",
     "line": 104,
     "details": "- Cline file modification: backup + CARET MODIFICATION comment required"
   },
   {
-    "file": ".clinerules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "kind": "comment",
     "line": 123,
     "details": "- `comment-protocol.md` - CARET MODIFICATION tracking"
   },
   {
-    "file": ".clinerules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "kind": "comment",
     "line": 146,
     "details": "- Skip CARET MODIFICATION comment"
   },
   {
-    "file": ".clinerules/cline-modification.md",
+    "file": ".agents/context/cline-modification.md",
     "kind": "comment",
     "line": 9,
     "details": "- `/comment-protocol` - CARET MODIFICATION tracking"
   },
   {
-    "file": ".clinerules/cline-modification.md",
+    "file": ".agents/context/cline-modification.md",
     "kind": "comment",
     "line": 40,
     "details": "// CARET MODIFICATION: [Clear description of what and why]"
   },
   {
-    "file": ".clinerules/cline-modification.md",
+    "file": ".agents/context/cline-modification.md",
     "kind": "comment",
     "line": 68,
     "details": "- [ ] CARET MODIFICATION comment present and clear"
   },
   {
-    "file": ".clinerules/cline-modification.md",
+    "file": ".agents/context/cline-modification.md",
     "kind": "comment",
     "line": 96,
     "details": "// CARET MODIFICATION: Initialize Caret wrapper for enhanced features"
   },
   {
-    "file": ".clinerules/document-organization.md",
+    "file": ".agents/context/document-organization.md",
     "kind": "comment",
     "line": 31,
     "details": "- `/comment-protocol`: CARET MODIFICATION requirements"
   },
   {
-    "file": ".clinerules/merge-strategy.md",
+    "file": ".agents/context/merge-strategy.md",
     "kind": "comment",
     "line": 27,
     "details": "- Add `// CARET MODIFICATION:` comment"
   },
   {
-    "file": ".clinerules/merge-strategy.md",
+    "file": ".agents/context/merge-strategy.md",
     "kind": "comment",
     "line": 34,
     "details": "- Document reason in CARET MODIFICATION comment"
   },
   {
-    "file": ".clinerules/merge-strategy.md",
+    "file": ".agents/context/merge-strategy.md",
     "kind": "comment",
     "line": 57,
     "details": "# Find all CARET MODIFICATION comments"
   },
   {
-    "file": ".clinerules/merge-strategy.md",
+    "file": ".agents/context/merge-strategy.md",
     "kind": "comment",
     "line": 58,
     "details": "grep -r \"CARET MODIFICATION\" src/ webview-ui/ --include=\"*.ts\" --include=\"*.tsx\""
   },
   {
-    "file": ".clinerules/workflows/ai-work-index.md",
+    "file": ".agents/context/workflows/ai-work-index.md",
     "kind": "comment",
     "line": 46,
     "details": "- [ ] CARET MODIFICATION comment plan (for Cline original modifications)"
   },
   {
-    "file": ".clinerules/workflows/ai-work-protocol.md",
+    "file": ".agents/context/workflows/ai-work-protocol.md",
     "kind": "comment",
     "line": 21,
     "details": "- CARET MODIFICATION comment requirements"
   },
   {
-    "file": ".clinerules/workflows/ai-work-protocol.md",
+    "file": ".agents/context/workflows/ai-work-protocol.md",
     "kind": "comment",
     "line": 55,
     "details": "- Add comment: `// CARET MODIFICATION: [clear description]`"
   },
   {
-    "file": ".clinerules/workflows/architecture-guide.md",
+    "file": ".agents/context/workflows/architecture-guide.md",
     "kind": "comment",
     "line": 19,
     "details": "- Mandatory: backup + CARET MODIFICATION comment"
   },
   {
-    "file": ".clinerules/workflows/architecture-guide.md",
+    "file": ".agents/context/workflows/architecture-guide.md",
     "kind": "comment",
     "line": 41,
     "details": "3. **Comment Protocol**: // CARET MODIFICATION: [clear description]"
   },
   {
-    "file": ".clinerules/workflows/atoms/backup-protocol.md",
+    "file": ".agents/context/workflows/atoms/backup-protocol.md",
     "kind": "comment",
     "line": 7,
     "details": "**Minimize modifications to Cline original files using CARET MODIFICATION comments**"
   },
   {
-    "file": ".clinerules/workflows/atoms/backup-protocol.md",
+    "file": ".agents/context/workflows/atoms/backup-protocol.md",
     "kind": "comment",
     "line": 16,
     "details": "// CARET MODIFICATION: [Clear description of what and why]"
   },
   {
-    "file": ".clinerules/workflows/atoms/backup-protocol.md",
+    "file": ".agents/context/workflows/atoms/backup-protocol.md",
     "kind": "comment",
     "line": 22,
     "details": "1. **Add comment**: `// CARET MODIFICATION: [clear description]`"
   },
   {
-    "file": ".clinerules/workflows/atoms/backup-protocol.md",
+    "file": ".agents/context/workflows/atoms/backup-protocol.md",
     "kind": "comment",
     "line": 28,
     "details": "- [ ] CARET MODIFICATION comment present and clear"
   },
   {
-    "file": ".clinerules/workflows/atoms/backup-protocol.md",
+    "file": ".agents/context/workflows/atoms/backup-protocol.md",
     "kind": "comment",
     "line": 41,
     "details": "This protocol ensures safe modification of Cline files while maintaining the ability to merge upstream changes. The CARET MODIFICATION comment approach replaces the deprecated .cline backup method."
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 4,
     "details": "# Comment Protocol - CARET MODIFICATION Tracking"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 10,
     "details": "**Required format**: `// CARET MODIFICATION: [clear description]`"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 14,
     "details": "// CARET MODIFICATION: Initialize Caret wrapper for persona system"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 17,
     "details": "// CARET MODIFICATION: Add branding toggle for dynamic brand switching"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 20,
     "details": "// CARET MODIFICATION: Integrate i18n message filtering"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 37,
     "details": "// CARET MODIFICATION: Add Caret provider initialization"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 47,
     "details": "// CARET MODIFICATION: Apply backend message filtering and branding"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 58,
     "details": "* CARET MODIFICATION: Integrate persona-aware message processing"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 74,
     "details": "// CARET MODIFICATION: Enable dynamic branding for multi-tenant support"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 75,
     "details": "// CARET MODIFICATION: Add TDD integration test runner for caret-src tests"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 76,
     "details": "// CARET MODIFICATION: Implement persona context in system prompt generation"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 81,
     "details": "❌ // CARET MODIFICATION: Fixed bug"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 82,
     "details": "❌ // CARET MODIFICATION: Added feature"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 83,
     "details": "❌ // CARET MODIFICATION: Updated code"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 90,
     "details": "2. Add CARET MODIFICATION comment"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 96,
     "details": "git log --grep=\"CARET MODIFICATION\" --oneline"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 103,
     "details": "- Keep original CARET MODIFICATION comment"
   },
   {
-    "file": ".clinerules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "comment",
     "line": 105,
     "details": "- Never remove CARET MODIFICATION markers"
   },
   {
-    "file": ".clinerules/workflows/atoms/modification-levels.md",
+    "file": ".agents/context/workflows/atoms/modification-levels.md",
     "kind": "comment",
     "line": 29,
     "details": "- **Mandatory comment**: `// CARET MODIFICATION: [description]`"
   },
   {
-    "file": ".clinerules/workflows/atoms/modification-levels.md",
+    "file": ".agents/context/workflows/atoms/modification-levels.md",
     "kind": "comment",
     "line": 43,
     "details": "// CARET MODIFICATION: Initialize Caret wrapper"
   },
   {
-    "file": ".clinerules/workflows/atoms/semantic-equivalence-verification.md",
+    "file": ".agents/context/workflows/atoms/semantic-equivalence-verification.md",
     "kind": "comment",
     "line": 33,
     "details": "2. Add comment: // CARET MODIFICATION: [description]"
   },
   {
-    "file": ".clinerules/workflows/atoms/semantic-equivalence-verification.md",
+    "file": ".agents/context/workflows/atoms/semantic-equivalence-verification.md",
     "kind": "comment",
     "line": 39,
     "details": "2. Apply modification_rules.comment: // CARET MODIFICATION: [description]"
   },
   {
-    "file": ".clinerules/workflows/caret-development.md",
+    "file": ".agents/context/workflows/caret-development.md",
     "kind": "comment",
     "line": 24,
     "details": "- **Cline Modification**: Backup rules, CARET MODIFICATION requirements"
   },
   {
-    "file": ".clinerules/workflows/caret-development.md",
+    "file": ".agents/context/workflows/caret-development.md",
     "kind": "comment",
     "line": 42,
     "details": "- Add `// CARET MODIFICATION:` comment"
   },
   {
-    "file": ".clinerules/workflows/caret-development.md",
+    "file": ".agents/context/workflows/caret-development.md",
     "kind": "comment",
     "line": 101,
     "details": "Never modify Cline files without backup and CARET MODIFICATION comment."
   },
   {
-    "file": ".clinerules/workflows/cline-modification.md",
+    "file": ".agents/context/workflows/cline-modification.md",
     "kind": "comment",
     "line": 9,
     "details": "- `/comment-protocol` - CARET MODIFICATION tracking"
   },
   {
-    "file": ".clinerules/workflows/cline-modification.md",
+    "file": ".agents/context/workflows/cline-modification.md",
     "kind": "comment",
     "line": 40,
     "details": "// CARET MODIFICATION: [Clear description of what and why]"
   },
   {
-    "file": ".clinerules/workflows/cline-modification.md",
+    "file": ".agents/context/workflows/cline-modification.md",
     "kind": "comment",
     "line": 68,
     "details": "- [ ] CARET MODIFICATION comment present and clear"
   },
   {
-    "file": ".clinerules/workflows/cline-modification.md",
+    "file": ".agents/context/workflows/cline-modification.md",
     "kind": "comment",
     "line": 96,
     "details": "// CARET MODIFICATION: Initialize Caret wrapper for enhanced features"
   },
   {
-    "file": ".clinerules/workflows/document-organization.md",
+    "file": ".agents/context/workflows/document-organization.md",
     "kind": "comment",
     "line": 31,
     "details": "- `/comment-protocol`: CARET MODIFICATION requirements"
   },
   {
-    "file": ".clinerules/workflows/merge-strategy.md",
+    "file": ".agents/context/workflows/merge-strategy.md",
     "kind": "comment",
     "line": 27,
     "details": "- Add `// CARET MODIFICATION:` comment"
   },
   {
-    "file": ".clinerules/workflows/merge-strategy.md",
+    "file": ".agents/context/workflows/merge-strategy.md",
     "kind": "comment",
     "line": 34,
     "details": "- Document reason in CARET MODIFICATION comment"
   },
   {
-    "file": ".clinerules/workflows/merge-strategy.md",
+    "file": ".agents/context/workflows/merge-strategy.md",
     "kind": "comment",
     "line": 57,
     "details": "# Find all CARET MODIFICATION comments"
   },
   {
-    "file": ".clinerules/workflows/merge-strategy.md",
+    "file": ".agents/context/workflows/merge-strategy.md",
     "kind": "comment",
     "line": 58,
     "details": "grep -r \"CARET MODIFICATION\" src/ webview-ui/ --include=\"*.ts\" --include=\"*.tsx\""
@@ -1437,7 +1437,7 @@
     "file": "caret-docs/development/agent.md",
     "kind": "comment",
     "line": 13,
-    "details": "- **최소 침습**: Cline 원본은 가급적 손대지 않고, `caret-src/`·`caret-docs/`에 필요한 상세 구현만 추가합니다. 수정 시 `.caretrules/caret-development.md` 및 `caret-docs/development/caret-development.md`에 따라 CARET MODIFICATION 주석과 백업을 확보합니다."
+    "details": "- **최소 침습**: Cline 원본은 가급적 손대지 않고, `caret-src/`·`caret-docs/`에 필요한 상세 구현만 추가합니다. 수정 시 `.agents/context/caret-development.md` 및 `caret-docs/development/caret-development.md`에 따라 CARET MODIFICATION 주석과 백업을 확보합니다."
   },
   {
     "file": "caret-docs/development/ai-work-index.md",
@@ -1677,7 +1677,7 @@
     "file": "caret-docs/development/index.md",
     "kind": "comment",
     "line": 55,
-    "details": "// CARET MODIFICATION: Add .caretrules support for UI display"
+    "details": "// CARET MODIFICATION: Add .agents/context support for UI display"
   },
   {
     "file": "caret-docs/development/index.md",
@@ -2100,109 +2100,109 @@
     "details": "// CARET MODIFICATION: 자동 후처리 시스템 구현"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 30,
     "details": "├── external-rules.ts              # 🎯 핵심 우선순위 로직 (CARET MODIFICATION)"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 36,
     "details": "└── index.ts                       # 🔗 우선순위 시스템 통합 (CARET MODIFICATION)"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 40,
     "details": "└── refreshRules.ts                # 📡 UI 데이터 전송 (CARET MODIFICATION)"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 44,
-    "details": "└── toggleCaretRule.ts             # 🔧 .caretrules 토글 기능 (CARET MODIFICATION)"
+    "details": "└── toggleCaretRule.ts             # 🔧 .agents/context 토글 기능 (CARET MODIFICATION)"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 48,
-    "details": "├── disk.ts                        # 📁 .caretrules 파일명 정의 (CARET MODIFICATION)"
+    "details": "├── disk.ts                        # 📁 .agents/context 파일명 정의 (CARET MODIFICATION)"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 49,
     "details": "├── state-keys.ts                  # 🗝️ 상태 키 정의 (CARET MODIFICATION)"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 50,
     "details": "└── utils/state-helpers.ts         # 🛠️ 상태 초기화 (CARET MODIFICATION)"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 54,
     "details": "└── file.proto                     # 📦 gRPC 통신 프로토콜 (CARET MODIFICATION)"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 58,
     "details": "└── ClineRulesToggleModal.tsx      # 🎨 규칙 토글 UI (CARET MODIFICATION)"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 62,
     "details": "└── ExtensionStateContext.tsx      # 🔄 전역 상태 관리 (CARET MODIFICATION)"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 67,
     "details": "└── rule-priority-integration.test.ts # 🧪 통합 테스트 (CARET MODIFICATION)"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 72,
     "details": "- **CARET MODIFICATION** 마커로 수정 부분 명확히 표시"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 81,
-    "details": "// CARET MODIFICATION: Implement rule priority system (.caretrules > .clinerules > .cursorrules > .windsurfrules)"
+    "details": "// CARET MODIFICATION: Implement rule priority system (.agents/context)"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 110,
-    "details": "// CARET MODIFICATION: Rule priority system (.caretrules > .clinerules > .cursorrules > .windsurfrules)"
+    "details": "// CARET MODIFICATION: Rule priority system (.agents/context)"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 127,
     "details": "// CARET MODIFICATION: Use priority system - only pass the active rule instead of all rules"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 208,
     "details": "- **해결 방안**: CARET MODIFICATION 마커로 안전한 추가"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 277,
     "details": "- [ ] **마커 확인**: `// CARET MODIFICATION:` 주석으로 수정 부분 명확히 표시"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "comment",
     "line": 289,
     "details": "- [x] **CARET MODIFICATION**: 모든 수정 부분 주석 표시 ✅"
@@ -3489,7 +3489,7 @@
     "file": "\"caret-docs/work-logs copy/luke/complete/t05-\\353\\243\\260 \\354\\232\\260\\354\\204\\240\\354\\210\\234\\354\\234\\204 \\354\\213\\234\\354\\212\\244\\355\\205\\234.md\"",
     "kind": "comment",
     "line": 45,
-    "details": "├── disk.ts                        # .caretrules 파일명 정의 (CARET MODIFICATION)"
+    "details": "├── disk.ts                        # .agents/context 파일명 정의 (CARET MODIFICATION)"
   },
   {
     "file": "\"caret-docs/work-logs copy/luke/complete/t05-\\353\\243\\260 \\354\\232\\260\\354\\204\\240\\354\\210\\234\\354\\234\\204 \\354\\213\\234\\354\\212\\244\\355\\205\\234.md\"",
@@ -3525,13 +3525,13 @@
     "file": "\"caret-docs/work-logs copy/luke/complete/t05-\\353\\243\\260 \\354\\232\\260\\354\\204\\240\\354\\210\\234\\354\\234\\204 \\354\\213\\234\\354\\212\\244\\355\\205\\234.md\"",
     "kind": "comment",
     "line": 126,
-    "details": "// CARET MODIFICATION: Implement rule priority system (.caretrules > .clinerules > .cursorrules > .windsurfrules)"
+    "details": "// CARET MODIFICATION: Implement rule priority system (.agents/context)"
   },
   {
     "file": "\"caret-docs/work-logs copy/luke/complete/t05-\\353\\243\\260 \\354\\232\\260\\354\\204\\240\\354\\210\\234\\354\\234\\204 \\354\\213\\234\\354\\212\\244\\355\\205\\234.md\"",
     "kind": "comment",
     "line": 154,
-    "details": "// CARET MODIFICATION: Rule priority system (.caretrules > .clinerules > .cursorrules > .windsurfrules)"
+    "details": "// CARET MODIFICATION: Rule priority system (.agents/context)"
   },
   {
     "file": "\"caret-docs/work-logs copy/luke/complete/t05-\\353\\243\\260 \\354\\232\\260\\354\\204\\240\\354\\210\\234\\354\\234\\204 \\354\\213\\234\\354\\212\\244\\355\\205\\234.md\"",
@@ -3747,25 +3747,25 @@
     "file": "caret-docs/work-logs/alpha/2025-10-15-rule-system-fixes.md",
     "kind": "comment",
     "line": 76,
-    "details": "* CARET MODIFICATION: Use .caretrules instead of .clinerules for workspace rules"
+    "details": "* CARET MODIFICATION: Use .agents/context (single standard path) for workspace rules"
   },
   {
     "file": "caret-docs/work-logs/alpha/2025-10-15-rule-system-fixes.md",
     "kind": "comment",
     "line": 81,
-    "details": "// CARET MODIFICATION: Use .caretrules instead of .clinerules for workspace rules"
+    "details": "// CARET MODIFICATION: Use .agents/context (single standard path) for workspace rules"
   },
   {
     "file": "caret-docs/work-logs/alpha/2025-10-15-rule-system-fixes.md",
     "kind": "comment",
     "line": 96,
-    "details": "// CARET MODIFICATION: Create in .caretrules directory"
+    "details": "// CARET MODIFICATION: Create in .agents/context directory"
   },
   {
     "file": "caret-docs/work-logs/alpha/2025-10-15-rule-system-fixes.md",
     "kind": "comment",
     "line": 127,
-    "details": "// CARET MODIFICATION: Refresh both Cline and external rules (includes .caretrules)"
+    "details": "// CARET MODIFICATION: Refresh both Cline and external rules (includes .agents/context)"
   },
   {
     "file": "caret-docs/work-logs/alpha/2025-10-15-rule-system-fixes.md",
@@ -4473,7 +4473,7 @@
     "file": "\"caret-docs/work-logs/luke/complete/t05-\\353\\243\\260 \\354\\232\\260\\354\\204\\240\\354\\210\\234\\354\\234\\204 \\354\\213\\234\\354\\212\\244\\355\\205\\234.md\"",
     "kind": "comment",
     "line": 45,
-    "details": "├── disk.ts                        # .caretrules 파일명 정의 (CARET MODIFICATION)"
+    "details": "├── disk.ts                        # .agents/context 파일명 정의 (CARET MODIFICATION)"
   },
   {
     "file": "\"caret-docs/work-logs/luke/complete/t05-\\353\\243\\260 \\354\\232\\260\\354\\204\\240\\354\\210\\234\\354\\234\\204 \\354\\213\\234\\354\\212\\244\\355\\205\\234.md\"",
@@ -4509,13 +4509,13 @@
     "file": "\"caret-docs/work-logs/luke/complete/t05-\\353\\243\\260 \\354\\232\\260\\354\\204\\240\\354\\210\\234\\354\\234\\204 \\354\\213\\234\\354\\212\\244\\355\\205\\234.md\"",
     "kind": "comment",
     "line": 126,
-    "details": "// CARET MODIFICATION: Implement rule priority system (.caretrules > .clinerules > .cursorrules > .windsurfrules)"
+    "details": "// CARET MODIFICATION: Implement rule priority system (.agents/context)"
   },
   {
     "file": "\"caret-docs/work-logs/luke/complete/t05-\\353\\243\\260 \\354\\232\\260\\354\\204\\240\\354\\210\\234\\354\\234\\204 \\354\\213\\234\\354\\212\\244\\355\\205\\234.md\"",
     "kind": "comment",
     "line": 154,
-    "details": "// CARET MODIFICATION: Rule priority system (.caretrules > .clinerules > .cursorrules > .windsurfrules)"
+    "details": "// CARET MODIFICATION: Rule priority system (.agents/context)"
   },
   {
     "file": "\"caret-docs/work-logs/luke/complete/t05-\\353\\243\\260 \\354\\232\\260\\354\\204\\240\\354\\210\\234\\354\\234\\204 \\354\\213\\234\\354\\212\\244\\355\\205\\234.md\"",
@@ -5277,7 +5277,7 @@
     "file": "caret-src/core/prompts/system/adapters/CaretJsonAdapter.ts",
     "kind": "comment",
     "line": 155,
-    "details": "* CARET MODIFICATION: This ensures .caretrules content is actually passed to AI"
+    "details": "* CARET MODIFICATION: This ensures .agents/context content is actually passed to AI"
   },
   {
     "file": "caret-src/core/prompts/system/adapters/CaretJsonAdapter.ts",
@@ -5901,13 +5901,13 @@
     "file": "src/core/context/instructions/user-instructions/external-rules.ts",
     "kind": "comment",
     "line": 39,
-    "details": "// CARET MODIFICATION: Implement rule priority system (.caretrules > .clinerules > .cursorrules > .windsurfrules)"
+    "details": "// CARET MODIFICATION: Implement rule priority system (.agents/context)"
   },
   {
     "file": "src/core/context/instructions/user-instructions/external-rules.ts",
     "kind": "comment",
     "line": 48,
-    "details": "// CARET MODIFICATION: .caretrules is a directory, not a file (like .clinerules)"
+    "details": "// CARET MODIFICATION: .agents/context is a directory, not a file"
   },
   {
     "file": "src/core/context/instructions/user-instructions/external-rules.ts",
@@ -5925,31 +5925,31 @@
     "file": "src/core/context/instructions/user-instructions/external-rules.ts",
     "kind": "comment",
     "line": 233,
-    "details": "* CARET MODIFICATION: Added .caretrules support"
+    "details": "* CARET MODIFICATION: Added .agents/context support"
   },
   {
     "file": "src/core/context/instructions/user-instructions/external-rules.ts",
     "kind": "comment",
     "line": 245,
-    "details": "// CARET MODIFICATION: Handle .caretrules as directory (like .clinerules)"
+    "details": "// CARET MODIFICATION: Handle .agents/context as directory"
   },
   {
     "file": "src/core/context/instructions/user-instructions/rule-helpers.ts",
     "kind": "comment",
     "line": 169,
-    "details": "* CARET MODIFICATION: Use .caretrules instead of .clinerules for workspace rules"
+    "details": "* CARET MODIFICATION: Use .agents/context (single standard path) for workspace rules"
   },
   {
     "file": "src/core/context/instructions/user-instructions/rule-helpers.ts",
     "kind": "comment",
     "line": 183,
-    "details": "// CARET MODIFICATION: Use .caretrules instead of .clinerules for workspace rules"
+    "details": "// CARET MODIFICATION: Use .agents/context (single standard path) for workspace rules"
   },
   {
     "file": "src/core/context/instructions/user-instructions/rule-helpers.ts",
     "kind": "comment",
     "line": 205,
-    "details": "// CARET MODIFICATION: Create in .caretrules directory"
+    "details": "// CARET MODIFICATION: Create in .agents/context directory"
   },
   {
     "file": "src/core/controller/caretAccount/caretAccountLoginClicked.ts",
@@ -6039,7 +6039,7 @@
     "file": "src/core/controller/file/createRuleFile.ts",
     "kind": "comment",
     "line": 57,
-    "details": "// CARET MODIFICATION: Refresh both Cline and external rules (includes .caretrules)"
+    "details": "// CARET MODIFICATION: Refresh both Cline and external rules (includes .agents/context)"
   },
   {
     "file": "src/core/controller/file/refreshRules.ts",
@@ -6213,7 +6213,7 @@
     "file": "src/core/prompts/responses.ts",
     "kind": "comment",
     "line": 254,
-    "details": "// CARET MODIFICATION: F05 - Rule Priority System (.caretrules support)"
+    "details": "// CARET MODIFICATION: F05 - Rule Priority System (.agents/context support)"
   },
   {
     "file": "src/core/prompts/system-prompt/components/cli_subagents.ts",
@@ -6237,19 +6237,19 @@
     "file": "src/core/prompts/system-prompt/components/user_instructions.ts",
     "kind": "comment",
     "line": 16,
-    "details": "context.localCaretRulesFileInstructions, // CARET MODIFICATION: Include .caretrules content"
+    "details": "context.localCaretRulesFileInstructions, // CARET MODIFICATION: Include .agents/context content"
   },
   {
     "file": "src/core/prompts/system-prompt/components/user_instructions.ts",
     "kind": "comment",
     "line": 39,
-    "details": "localCaretRulesFileInstructions?: string, // CARET MODIFICATION: Add .caretrules parameter"
+    "details": "localCaretRulesFileInstructions?: string, // CARET MODIFICATION: Add .agents/context parameter"
   },
   {
     "file": "src/core/prompts/system-prompt/components/user_instructions.ts",
     "kind": "comment",
     "line": 60,
-    "details": "// CARET MODIFICATION: Add .caretrules content to AI prompt (highest priority for workspace rules)"
+    "details": "// CARET MODIFICATION: Add .agents/context content to AI prompt (highest priority for workspace rules)"
   },
   {
     "file": "src/core/prompts/system-prompt/index.ts",
@@ -6273,7 +6273,7 @@
     "file": "src/core/prompts/system-prompt/types.ts",
     "kind": "comment",
     "line": 100,
-    "details": "readonly localCaretRulesFileInstructions?: string // CARET MODIFICATION: Add .caretrules support"
+    "details": "readonly localCaretRulesFileInstructions?: string // CARET MODIFICATION: Add .agents/context support"
   },
   {
     "file": "src/core/prompts/system-prompt/types.ts",
@@ -6315,7 +6315,7 @@
     "file": "src/core/storage/disk.ts",
     "kind": "comment",
     "line": 49,
-    "details": "caretRules: BRAND_RULES_DIR, // CARET MODIFICATION: Added .caretrules support for F05 rule priority system"
+    "details": "caretRules: BRAND_RULES_DIR, // CARET MODIFICATION: Added .agents/context support for F05 rule priority system"
   },
   {
     "file": "src/core/storage/disk.ts",
@@ -6549,13 +6549,13 @@
     "file": "src/core/task/index.ts",
     "kind": "comment",
     "line": 1797,
-    "details": "// CARET MODIFICATION: Load .caretrules content for AI prompt"
+    "details": "// CARET MODIFICATION: Load .agents/context content for AI prompt"
   },
   {
     "file": "src/core/task/index.ts",
     "kind": "comment",
     "line": 1856,
-    "details": "localCaretRulesFileInstructions, // CARET MODIFICATION: Pass .caretrules content to AI"
+    "details": "localCaretRulesFileInstructions, // CARET MODIFICATION: Pass .agents/context content to AI"
   },
   {
     "file": "src/core/task/index.ts",
@@ -8109,7 +8109,7 @@
     "file": "webview-ui/src/components/cline-rules/ClineRulesToggleModal.tsx",
     "kind": "comment",
     "line": 347,
-    "details": "{/* CARET MODIFICATION: Add .caretrules display */}"
+    "details": "{/* CARET MODIFICATION: Add .agents/context display */}"
   },
   {
     "file": "webview-ui/src/components/cline-rules/ClineRulesToggleModal.tsx",
@@ -9108,289 +9108,289 @@
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/webview-communication.md",
+    "file": ".agents/context/webview-communication.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/testing-work.md",
+    "file": ".agents/context/testing-work.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/testing-guide.yaml",
+    "file": ".agents/context/testing-guide.yaml",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/system-prompt.md",
+    "file": ".agents/context/system-prompt.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/prompt-management.md",
+    "file": ".agents/context/prompt-management.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/new-component.md",
+    "file": ".agents/context/new-component.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/message-processing.md",
+    "file": ".agents/context/message-processing.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/merge-strategy.md",
+    "file": ".agents/context/merge-strategy.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/logging-rules.md",
+    "file": ".agents/context/logging-rules.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/frontend-backend-patterns.md",
+    "file": ".agents/context/frontend-backend-patterns.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/documentation-guide.md",
+    "file": ".agents/context/documentation-guide.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/document-organization.md",
+    "file": ".agents/context/document-organization.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/critical-verification.md",
+    "file": ".agents/context/critical-verification.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/component-architecture.md",
+    "file": ".agents/context/component-architecture.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/cline-modification.md",
+    "file": ".agents/context/cline-modification.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/cline-cli-subagent-research.md",
+    "file": ".agents/context/cline-cli-subagent-research.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/caret-rules.md",
+    "file": ".agents/context/caret-rules.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/caret-development.md",
+    "file": ".agents/context/caret-development.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/caret-architecture-guide.md",
+    "file": ".agents/context/caret-architecture-guide.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/build-system.md",
+    "file": ".agents/context/build-system.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/b2b-branding-workflow.md",
+    "file": ".agents/context/b2b-branding-workflow.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/architecture-guide.yaml",
+    "file": ".agents/context/architecture-guide.yaml",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/ai-work-protocol.md",
+    "file": ".agents/context/ai-work-protocol.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/ai-work-index.yaml",
+    "file": ".agents/context/ai-work-index.yaml",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/ai-feature.md",
+    "file": ".agents/context/ai-feature.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/testing-work.md",
+    "file": ".agents/context/workflows/testing-work.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/new-component.md",
+    "file": ".agents/context/workflows/new-component.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/merge-strategy.md",
+    "file": ".agents/context/workflows/merge-strategy.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/i18n-static-translation-fix.md",
+    "file": ".agents/context/workflows/i18n-static-translation-fix.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/document-organization.md",
+    "file": ".agents/context/workflows/document-organization.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/critical-verification.md",
+    "file": ".agents/context/workflows/critical-verification.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/cline-modification.md",
+    "file": ".agents/context/workflows/cline-modification.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/caret-development.md",
+    "file": ".agents/context/workflows/caret-development.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/branding-and-logging.md",
+    "file": ".agents/context/workflows/branding-and-logging.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/ai-work-protocol.md",
+    "file": ".agents/context/workflows/ai-work-protocol.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/ai-feature.md",
+    "file": ".agents/context/workflows/ai-feature.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/atoms/verification-steps.md",
+    "file": ".agents/context/workflows/atoms/verification-steps.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/atoms/tdd-cycle.yaml",
+    "file": ".agents/context/workflows/atoms/tdd-cycle.yaml",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/atoms/storage-patterns.md",
+    "file": ".agents/context/workflows/atoms/storage-patterns.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/atoms/semantic-equivalence-verification.md",
+    "file": ".agents/context/workflows/atoms/semantic-equivalence-verification.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/atoms/naming-conventions.md",
+    "file": ".agents/context/workflows/atoms/naming-conventions.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/atoms/modification-protocol.md",
+    "file": ".agents/context/workflows/atoms/modification-protocol.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/atoms/modification-levels.md",
+    "file": ".agents/context/workflows/atoms/modification-levels.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/atoms/message-flow.md",
+    "file": ".agents/context/workflows/atoms/message-flow.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/atoms/i18n-dynamic-pattern.md",
+    "file": ".agents/context/workflows/atoms/i18n-dynamic-pattern.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/atoms/hardcoding-prevention.md",
+    "file": ".agents/context/workflows/atoms/hardcoding-prevention.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/atoms/comment-protocol.md",
+    "file": ".agents/context/workflows/atoms/comment-protocol.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
   },
   {
-    "file": ".caretrules/workflows/atoms/backup-protocol.yaml",
+    "file": ".agents/context/workflows/atoms/backup-protocol.yaml",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"
@@ -11814,7 +11814,7 @@
     "details": "caret asset"
   },
   {
-    "file": "caret-docs/features/f05-rule-priority-system.md",
+    "file": "caret-docs/features/f06-agent-standardization.md",
     "kind": "caret-file",
     "line": 0,
     "details": "caret asset"

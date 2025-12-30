@@ -34,25 +34,36 @@ var (
 )
 
 func main() {
+	brandName := common.BrandDisplayName()
+	commandName := common.BrandCommandName()
+	coreName := common.BrandCoreName()
+
 	rootCmd := &cobra.Command{
-		Use:   "cline [prompt]",
-		Short: "Cline CLI - AI-powered coding assistant",
-		Long: `A command-line interface for interacting with Cline AI coding assistant.
+		Use:   fmt.Sprintf("%s [prompt]", commandName),
+		Short: fmt.Sprintf("%s CLI - AI-powered coding assistant", brandName),
+		Long: fmt.Sprintf(`A command-line interface for interacting with %s AI coding assistant.
 
 Start a new task by providing a prompt:
-  cline "Create a new Python script that prints hello world"
+  %s "Create a new Python script that prints hello world"
 
 Or pipe a prompt via stdin:
-  echo "Create a todo app" | cline
-  cat prompt.txt | cline --yolo
+  echo "Create a todo app" | %s
+  cat prompt.txt | %s --yolo
 
 Or run with no arguments to enter interactive mode:
-  cline
+  %s
 
 This CLI also provides task management, configuration, and monitoring capabilities.
 
 For detailed documentation including all commands, options, and examples,
-see the manual page: man cline`,
+see the manual page: man %s`,
+			brandName,
+			commandName,
+			commandName,
+			commandName,
+			commandName,
+			commandName,
+		),
 		Args: cobra.ArbitraryArgs,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			if outputFormat != "rich" && outputFormat != "json" && outputFormat != "plain" {
@@ -73,7 +84,7 @@ see the manual page: man cline`,
 			// If --address flag not provided, start instance BEFORE getting prompt
 			if !cmd.Flags().Changed("address") {
 				if global.Config.Verbose {
-					fmt.Println("Starting new Cline instance...")
+					fmt.Printf("Starting new %s instance...\n", brandName)
 				}
 				instance, err := global.Clients.StartNewInstance(ctx)
 				if err != nil {
@@ -113,10 +124,10 @@ see the manual page: man cline`,
 
 					// Re-check after auth wizard
 					if !isUserReadyToUse(ctx, instanceAddress) {
-						return fmt.Errorf("credentials still not configured - please run 'cline auth' to complete setup")
+						return fmt.Errorf("credentials still not configured - please run '%s auth' to complete setup", commandName)
 					}
 
-					fmt.Printf("\n%s\n\n", renderer.Dim("✓ Setup complete, you can now use the Cline CLI"))
+					fmt.Printf("\n%s\n\n", renderer.Dim(fmt.Sprintf("✓ Setup complete, you can now use the %s CLI", brandName)))
 				}
 			} else {
 				// User specified --address flag, use that
@@ -163,7 +174,7 @@ see the manual page: man cline`,
 		},
 	}
 
-	rootCmd.PersistentFlags().StringVar(&coreAddress, "address", fmt.Sprintf("localhost:%d", common.DEFAULT_CLINE_CORE_PORT), "Cline Core gRPC address")
+	rootCmd.PersistentFlags().StringVar(&coreAddress, "address", fmt.Sprintf("localhost:%d", common.DEFAULT_CLINE_CORE_PORT), fmt.Sprintf("%s gRPC address", coreName))
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output-format", "F", "rich", "output format (rich|json|plain)")
 
@@ -193,6 +204,7 @@ func promptForInitialTask(ctx context.Context, instanceAddress, modeFlag string)
 	// Show session banner before the initial input
 	showSessionBanner(ctx, instanceAddress, modeFlag)
 
+	brandName := common.BrandDisplayName()
 	var prompt string
 
 	// Create custom theme with mode-colored cursor and title
@@ -210,8 +222,8 @@ func promptForInitialTask(ctx context.Context, instanceAddress, modeFlag string)
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewText().
-				Title("Start a new Cline task").
-				Description("What would you like Cline to help you with?").
+				Title(fmt.Sprintf("Start a new %s task", brandName)).
+				Description(fmt.Sprintf("What would you like %s to help you with?", brandName)).
 				Placeholder("e.g., Create a REST API with authentication...").
 				Lines(5).
 				Value(&prompt),

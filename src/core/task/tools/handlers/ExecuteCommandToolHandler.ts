@@ -237,7 +237,9 @@ export class ExecuteCommandToolHandler implements IFullyManagedTool {
 			finalCommand = `cd "${executionDir}" && ${actualCommand}`
 		}
 
-		const [userRejected, result] = await config.callbacks.executeCommandTool(finalCommand, timeoutSeconds)
+		const [userRejected, result] = await config.callbacks.executeCommandTool(finalCommand, timeoutSeconds, {
+			autoContinueOnOutput: true,
+		})
 
 		if (timeoutId) {
 			clearTimeout(timeoutId)

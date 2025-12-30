@@ -21,7 +21,7 @@
 ## 0. Caret Feature 원칙 재확인
 - 작업 시작 전에 `caret-docs/features/index.md`와 F01~F11 문서를 빠르게 훑어 Caret 고유 기능과 개발 원칙을 상기한다.
 - 핵심 지켜야 할 요소:
-  1. **F01 CommonUtil / F05 RulePriority**: `.caretrules` vs `.clinerules` 우선순위, disk.ts 확장 로직.
+  1. **F01 CommonUtil / F05 RulePriority**: `.agents/context` 우선순위, disk.ts 확장 로직.
   2. **F02 Multilingual i18n / F03 Branding UI**: 모든 UI 문자열은 `t("key","namespace")` 사용, 4개 언어 locale 동기화, Caret/CodeCenter 테마 스위치 유지.
   3. **F04 CaretAccount / F07 Persona System**: Account/Persona 상태를 `CaretGlobalManager`와 webview context로 일관되게 전달.
   4. **F06 Prompt System / F10 Input History / F11 Knowledge Parity**: Prompt variants, input history persistence, AI developer knowledge 설정 유지.
@@ -64,7 +64,7 @@
      - Breaking changes 예측
      - 영향 받는 파일 목록 생성
 6. **루트/스크립트/문서 영향 범위 파악**:
-   - `git diff --name-only cline/v3.35.0..cline/v3.38.1 -- package.json pnpm-lock.yaml playwright.config.ts scripts docs caret-docs .caretrules` 등을 별도로 추출하여 카테고리(루트 설정/스크립트/문서)로 태깅한다.
+   - `git diff --name-only cline/v3.35.0..cline/v3.38.1 -- package.json pnpm-lock.yaml playwright.config.ts scripts docs caret-docs .agents/context` 등을 별도로 추출하여 카테고리(루트 설정/스크립트/문서)로 태깅한다.
    - `merge-execution-master-plan.md` 8차 피드백의 CHANGELOG/announcement 규칙을 재확인하고, 어떤 파일을 어떤 순서로 업데이트할지 초안(Release Checklist)을 만든다.
    - 결과는 `caret-docs/merging/v3.38.1/attempt-2-master.md`에 표로 정리해 이후 단계에서 바로 소비한다.
 
@@ -107,14 +107,14 @@
 
    5. Caret 전용 파일 (자동 복사)
       - caret-src/** (전체 복사)
-      - .caretrules/** (전체 복사)
+      - .agents/context/** (전체 복사)
       - .claude/** (전체 복사)
       → 검증: npm run compile
 
    6. Scripts / Root / Docs
       - `package.json`, `pnpm-lock.yaml`, `tsconfig.json`, `.vscode/`, `.github/`, `playwright.config.ts` 등 루트 파일은 Cline v3.38.1 버전을 채택한 뒤 Caret 브랜드/스크립트/아이콘 설정을 다시 적용한다.
       - `scripts/*.sh`, `caret-scripts/**`, `slexn-codecenter/**`는 Cline 변경분을 반영하되 Caret 자동화(브랜드 변환, 릴리스 패키징 등)가 모두 유지되는지 확인한다.
-      - `docs/**`, `caret-docs/**`, `.caretrules/**`, `.claude/**`는 버전별 폴더에 재배치하고, 변경 내역을 attempt-2-master에 남긴다.
+      - `docs/**`, `caret-docs/**`, `.agents/context/**`, `.claude/**`는 버전별 폴더에 재배치하고, 변경 내역을 attempt-2-master에 남긴다.
       - 변경 후 `npm run compile`, `npm run test`, `pnpm run test:e2e`로 전체 루트/스크립트 영향도를 검증한다.
 
    7. 최종 통합 검증
@@ -238,7 +238,7 @@
    - 언어 4종을 동시에 갱신하고, 각 항목이 CHANGELOG 내용과 일치하는지 확인한다.
 3. **문서 & 정책**
    - `caret-docs/merging/v3.38.1/attempt-2-master.md`에 최종 결과(테스트 로그, 자동화 통과 여부, 남은 TODO)를 기록한다.
-   - `.caretrules/**`, `.claude/**`, `caret-docs/**` 변경분은 이유와 영향 범위를 문서화해 추후 세션이 참고할 수 있게 한다.
+   - `.agents/context/**`, `.claude/**`, `caret-docs/**` 변경분은 이유와 영향 범위를 문서화해 추후 세션이 참고할 수 있게 한다.
 4. **PR/릴리스 노트**
    - PR 템플릿에 CHANGELOG/announcement 링크, 검증 로그를 첨부하고, 릴리스 노트 초안을 동시에 작성한다.
 
@@ -262,7 +262,7 @@
 
    // 의도적 제외 (CLI, docs 등)
    function isIntentionallyExcluded(file) {
-     return /^(cli|docs|\.clinerules|evals)\//.test(file)
+     return /^(cli|docs|\.agents/context|evals)\//.test(file)
    }
    ```
 

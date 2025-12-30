@@ -142,7 +142,7 @@ Caret은 Cline 대비 다음과 같은 혁신적 개선을 달성했습니다:
 │   ├── OBJECTIVE.json - 목표 및 절차
 │   └── USER_INSTRUCTIONS.json - 사용자 지침
 ├── rules/ (3개 파일) - 구체적 규칙
-│   ├── common_rules.json - .caretrules 원칙 반영
+│   ├── common_rules.json - .agents/context 원칙 반영
 │   ├── file_editing_rules.json - 품질 우선 파일 편집
 │   └── cost_consideration_rules.json - 토큰 효율성
 ├── CaretSystemPrompt.ts - 메인 클래스 (싱글톤)
@@ -437,8 +437,8 @@ interface JITLoadingSystem {
 
 ### **핵심 문서**
 
-- **[Prompt System Evolution Report](../reports/prompt-system-evolution-report.md)**: 프롬프트 시스템 변화 요약
-- **[System Prompt Comparison](../reports/system-prompt-comparison-cc-cline-caret.md)**: 비교 분석 보고서
+- **[Prompt System Evolution Report](../보고서(reports)/Caret 시스템 프롬프트 개선 분석 보고서/prompt-system-evolution-report.md)**: 프롬프트 시스템 변화 요약
+- **[System Prompt Comparison](../보고서(reports)/Caret 시스템 프롬프트 개선 분석 보고서/system-prompt-comparison-cc-cline-caret.md)**: 비교 분석 보고서
 - **[Caret Architecture Guide](./caret-architecture-and-implementation-guide.md)**: 전체 아키텍처
 - **[Testing Guide](./testing-guide.md)**: TDD 방법론
 - **[Upstream Merging Guide](../guides/upstream-merging.md)**: Cline 업데이트 통합

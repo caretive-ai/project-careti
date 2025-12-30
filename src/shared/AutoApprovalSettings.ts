@@ -20,6 +20,7 @@ export interface AutoApprovalSettings {
 		executeAllCommands?: boolean // Execute all commands
 		useBrowser: boolean // Use browser
 		useMcp: boolean // Use MCP servers
+		generateImages?: boolean // Generate images
 	}
 	// Global settings
 	enableNotifications: boolean // Show notifications for approval and task completion
@@ -39,6 +40,7 @@ export const DEFAULT_AUTO_APPROVAL_SETTINGS: AutoApprovalSettings = {
 		executeAllCommands: false,
 		useBrowser: false,
 		useMcp: true,
+		generateImages: false,
 	},
 	enableNotifications: false,
 }

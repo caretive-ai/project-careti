@@ -10,7 +10,7 @@ To get started with Cline Memory Bank:
 
 1. **Install or Open Cline**
 2. **Copy the Custom Instructions** - Use the code block below
-3. **Paste into Cline** - Add as custom instructions or in a .clinerules file
+3. **Paste into Cline** - Add as custom instructions or in a .agents/context file
 4. **Initialize** - Ask Cline to "initialize memory bank"
 
 [See detailed setup instructions](#getting-started-with-memory-bank)
@@ -267,12 +267,12 @@ Memory Bank updates should automatically occur when:
 
 The Memory Bank files are regular markdown files stored in your project repository, typically in a `memory-bank/` folder. They're not hidden system files - they're designed to be part of your project documentation.
 
-#### Should I use custom instructions or .clinerules?
+#### Should I use custom instructions or .agents/context?
 
 Either approach works - it's based on your preference:
 
 -   **Custom Instructions**: Applied globally to all Cline conversations. Good for consistent behavior across all projects.
--   **.clinerules file**: Project-specific and stored in your repository. Good for per-project customization.
+-   **.agents/context file**: Project-specific and stored in your repository. Good for per-project customization.
 
 Both methods achieve the same goal - the choice depends on whether you want global or local application of the Memory Bank system.
 
@@ -341,9 +341,9 @@ While similar in concept, the Memory Bank provides a more structured and compreh
 3. Find "Custom Instructions"
 4. Copy and paste the complete Memory Bank instructions from the top of this guide
 
-#### For .clinerules (Project-Specific)
+#### For .agents/context (Project-Specific)
 
-1. Create a `.clinerules` file in your project root
+1. Create a `.agents/context` file in your project root
 2. Copy and paste the Memory Bank instructions from the top of this guide
 3. Save the file
 4. Cline will automatically apply these rules when working in this project

@@ -1,18 +1,18 @@
 import { CaretEnv, EnvironmentConfig } from "@caret/config"
+import { CARET_API_ENDPOINT } from "@caret/shared/caret/api"
 import { Controller } from "@core/controller"
 import { HostProvider } from "@hosts/host-provider"
+import { IAuthProvider } from "@services/auth/providers/IAuthProvider"
 import { Logger } from "@services/logging/Logger"
-import { CARET_API_ENDPOINT } from "@caret/shared/caret/api"
 import { fetch } from "@shared/net"
 import type { CaretAuthInfo } from "../CaretAuthService"
-import { IAuthProvider } from "@services/auth/providers/IAuthProvider"
 
 interface CaretAuthApiUser {
 	subject: string | null
 	email: string
 	name: string
 	id: string | null
-  photoUrl: string | null
+	photoUrl: string | null
 	accounts: string[] | null
 }
 
@@ -54,9 +54,9 @@ export class CaretAuthProvider implements IAuthProvider {
 			const currentTime = Date.now() / 1000
 			const next5Min = currentTime + 5 * 60
 
-      console.log("expirationTime", expirationTime)
-      console.log("currentTime", currentTime)
-      console.log("next5Min", next5Min)
+			console.log("expirationTime", expirationTime)
+			console.log("currentTime", currentTime)
+			console.log("next5Min", next5Min)
 
 			// Check if token is expired or will expire in the next 5 minutes
 			return expirationTime < next5Min // Access token is expired or about to expire
@@ -72,11 +72,11 @@ export class CaretAuthProvider implements IAuthProvider {
 	 * @returns {Promise<CaretAuthInfo | null>} A promise that resolves with the auth info or null.
 	 */
 	async retrieveClineAuthInfo(controller: Controller): Promise<CaretAuthInfo | null> {
-    console.log("Retrieving auth info22222222")
+		console.log("Retrieving auth info22222222")
 		try {
 			// Get the stored auth data from secure storage
 			const storedAuthDataString = controller.stateManager.getSecretKey("caret:caretAccountId")
-      console.log("storedAuthDataString", storedAuthDataString)
+			console.log("storedAuthDataString", storedAuthDataString)
 
 			if (!storedAuthDataString) {
 				Logger.debug("No stored authentication data found")
@@ -93,7 +93,7 @@ export class CaretAuthProvider implements IAuthProvider {
 				return null
 			}
 
-      console.log("storedAuthData", storedAuthData)
+			console.log("storedAuthData", storedAuthData)
 
 			if (!storedAuthData.refreshToken || !storedAuthData?.idToken) {
 				console.error("No valid token found in stored authentication data")
@@ -102,7 +102,7 @@ export class CaretAuthProvider implements IAuthProvider {
 			}
 
 			if (await this.shouldRefreshIdToken(storedAuthData.refreshToken, storedAuthData.expiresAt)) {
-        console.log("shouldRefreshIdToken", storedAuthData.refreshToken, storedAuthData.expiresAt)
+				console.log("shouldRefreshIdToken", storedAuthData.refreshToken, storedAuthData.expiresAt)
 				// Try to refresh the token using the refresh token
 				const authInfo = await this.refreshToken(storedAuthData.refreshToken)
 				const newAuthInfoString = JSON.stringify(authInfo)
@@ -175,21 +175,21 @@ export class CaretAuthProvider implements IAuthProvider {
 			// const userInfo = await this.fetchRemoteUserInfo(data.data)
 
 			return {
-        idToken: data.data.accessToken,
-        expiresAt: new Date(data.data.expiresAt).getTime() / 1000,
-        refreshToken: data.data.refreshToken || refreshToken,
-        userInfo: {
-          createdAt: new Date().toISOString(),
-          email: data.data.userInfo.email || "",
-          id: data.data.userInfo.id || "",
-          displayName: data.data.userInfo.name || "",
-          photoUrl: data.data.userInfo.photoUrl || "",
-          organizations: [],
-          appBaseUrl: this.config.appBaseUrl,
-          subject: data.data.userInfo.subject || "",
-        },
-        provider: this.name,
-		  }
+				idToken: data.data.accessToken,
+				expiresAt: new Date(data.data.expiresAt).getTime() / 1000,
+				refreshToken: data.data.refreshToken || refreshToken,
+				userInfo: {
+					createdAt: new Date().toISOString(),
+					email: data.data.userInfo.email || "",
+					id: data.data.userInfo.id || "",
+					displayName: data.data.userInfo.name || "",
+					photoUrl: data.data.userInfo.photoUrl || "",
+					organizations: [],
+					appBaseUrl: this.config.appBaseUrl,
+					subject: data.data.userInfo.subject || "",
+				},
+				provider: this.name,
+			}
 		} catch (error: any) {
 			throw error
 		}
@@ -201,6 +201,8 @@ export class CaretAuthProvider implements IAuthProvider {
 		authUrl.searchParams.set("callback_url", callbackUrl)
 		// Ensure the redirect_uri is properly encoded and included
 		authUrl.searchParams.set("redirect_uri", callbackUrl)
+
+		console.log("authUrl", authUrl)
 
 		// The server will respond with a 302 redirect to the OAuth provider
 		// We need to follow the redirect and get the final URL
@@ -279,7 +281,7 @@ export class CaretAuthProvider implements IAuthProvider {
 			}
 
 			// const userInfo = await this.fetchRemoteUserInfo(tokenData)
-      const caretAuthInfo = {
+			const caretAuthInfo = {
 				idToken: tokenData.accessToken,
 				refreshToken: tokenData.refreshToken,
 				userInfo: {
@@ -294,7 +296,7 @@ export class CaretAuthProvider implements IAuthProvider {
 				provider: this.name,
 			}
 
-      console.log("CaretAuthInfo", caretAuthInfo)
+			console.log("CaretAuthInfo", caretAuthInfo)
 
 			controller.stateManager.setSecret("caret:caretAccountId", JSON.stringify(caretAuthInfo))
 
@@ -305,27 +307,27 @@ export class CaretAuthProvider implements IAuthProvider {
 		}
 	}
 
-// 	private async fetchRemoteUserInfo(tokenData: CaretAuthApiTokenExchangeResponse["data"]): Promise<CaretAccountUserInfo> {
-// 		try {
-// 			const userResponse = await axios.get(`${CaretEnv.config().apiBaseUrl}/api/v1/users/me`, {
-// 				headers: {
-// 					Authorization: `Bearer workos:${tokenData.accessToken}`,
-// 				},
-// 				...getAxiosSettings(),
-// 			})
+	// 	private async fetchRemoteUserInfo(tokenData: CaretAuthApiTokenExchangeResponse["data"]): Promise<CaretAccountUserInfo> {
+	// 		try {
+	// 			const userResponse = await axios.get(`${CaretEnv.config().apiBaseUrl}/api/v1/users/me`, {
+	// 				headers: {
+	// 					Authorization: `Bearer workos:${tokenData.accessToken}`,
+	// 				},
+	// 				...getAxiosSettings(),
+	// 			})
 
-// 			return userResponse.data.data
-// 		} catch (error) {
-// 			console.error("Error fetching user info:", error)
+	// 			return userResponse.data.data
+	// 		} catch (error) {
+	// 			console.error("Error fetching user info:", error)
 
-// 			// If fetching user info fail for whatever reason, fallback to the token data and refetch on token expiry (10 minutes)
-// 			return {
-// 				id: tokenData.userInfo.id || "",
-// 				email: tokenData.userInfo.email || "",
-// 				displayName: tokenData.userInfo.name || "",
-// 				createdAt: new Date().toISOString(),
-// 				organizations: [],
-// 			}
-// 		}
-// 	}
+	// 			// If fetching user info fail for whatever reason, fallback to the token data and refetch on token expiry (10 minutes)
+	// 			return {
+	// 				id: tokenData.userInfo.id || "",
+	// 				email: tokenData.userInfo.email || "",
+	// 				displayName: tokenData.userInfo.name || "",
+	// 				createdAt: new Date().toISOString(),
+	// 				organizations: [],
+	// 			}
+	// 		}
+	// 	}
 }

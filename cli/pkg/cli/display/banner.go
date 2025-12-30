@@ -49,7 +49,7 @@ func RenderSessionBanner(info BannerInfo) string {
 		versionStr = "v" + versionStr
 	}
 
-	// First line: "cline cli vX.X.X" on left, "plan mode" on right (Caret: plan=chatbot, act=agent)
+	// First line: "cline cli vX.X.X" on left, "plan/act mode" on right
 	leftSide := titleStyle.Render("caret cli preview") + " " + dimStyle.Render(versionStr)
 
 	if info.Mode != "" {
@@ -58,13 +58,7 @@ func RenderSessionBanner(info BannerInfo) string {
 			modeColor = lipgloss.Color("39") // Blue for act
 		}
 		modeStyle := lipgloss.NewStyle().Foreground(modeColor).Bold(true)
-		modeLabel := info.Mode
-		if info.Mode == "plan" {
-			modeLabel = "chatbot"
-		} else if info.Mode == "act" {
-			modeLabel = "agent"
-		}
-		rightSide := modeStyle.Render(modeLabel + " mode")
+		rightSide := modeStyle.Render(info.Mode + " mode")
 
 		// Calculate spacing to push mode to the right
 		// Assume a reasonable width (we'll adjust based on content)

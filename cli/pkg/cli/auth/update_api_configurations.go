@@ -497,6 +497,7 @@ func UpdateProviderPartial(ctx context.Context, manager *task.Manager, provider 
 
 	// Track what we're updating for field mask
 	includeAPIKey := updates.APIKey != nil
+	includeBaseURL := updates.BaseURL != nil && fields.BaseURLField != ""
 	includeModelID := updates.ModelID != nil
 	includeModelInfo := updates.ModelInfo != nil && fields.PlanModeModelInfoField != ""
 	includePromptCache := updates.UsePromptCache != nil
@@ -505,6 +506,11 @@ func UpdateProviderPartial(ctx context.Context, manager *task.Manager, provider 
 	// Update API key if provided
 	if updates.APIKey != nil {
 		setAPIKeyField(apiConfig, fields.APIKeyField, updates.APIKey)
+	}
+
+	// Update base URL if provided
+	if includeBaseURL {
+		setBaseURLField(apiConfig, fields.BaseURLField, updates.BaseURL)
 	}
 
 	// Update model ID if provided
@@ -529,6 +535,24 @@ func UpdateProviderPartial(ctx context.Context, manager *task.Manager, provider 
 			apiConfig.PlanModeLiteLlmModelInfo = liteLlmInfo
 			apiConfig.ActModeLiteLlmModelInfo = liteLlmInfo
 		}
+		if caretInfo, ok := updates.ModelInfo.(*cline.CaretModelInfo); ok && provider == cline.ApiProvider_CARET {
+			apiConfig.ActModeCaretModelInfo = caretInfo
+			apiConfig.PlanModeCaretModelInfo = &cline.LiteLLMModelInfo{
+				MaxTokens:              caretInfo.MaxTokens,
+				ContextWindow:          caretInfo.ContextWindow,
+				SupportsImages:         caretInfo.SupportsImages,
+				SupportsPromptCache:    caretInfo.SupportsPromptCache,
+				InputPrice:             caretInfo.InputPrice,
+				OutputPrice:            caretInfo.OutputPrice,
+				ThinkingConfig:         caretInfo.ThinkingConfig,
+				SupportsGlobalEndpoint: caretInfo.SupportsGlobalEndpoint,
+				CacheWritesPrice:       caretInfo.CacheWritesPrice,
+				CacheReadsPrice:        caretInfo.CacheReadsPrice,
+				Description:            caretInfo.Description,
+				Tiers:                  caretInfo.Tiers,
+				Temperature:            caretInfo.Temperature,
+			}
+		}
 	}
 
 	// Update prompt cache flag if provided (provider-specific)
@@ -545,7 +569,7 @@ func UpdateProviderPartial(ctx context.Context, manager *task.Manager, provider 
 	}
 
 	// Build field mask for only the fields being updated
-	fieldPaths := buildProviderFieldMask(fields, includeAPIKey, includeModelID, includeModelInfo, false, setAsActive)
+	fieldPaths := buildProviderFieldMask(fields, includeAPIKey, includeModelID, includeModelInfo, includeBaseURL, setAsActive)
 	if includePromptCache {
 		if fieldName := getPromptCacheField(provider); fieldName != "" {
 			fieldPaths = append(fieldPaths, fieldName)

@@ -1,4 +1,10 @@
 import type { ApiProviderInfo } from "@core/api"
+import {
+	formatAgentsInitInstructions,
+	formatAgentsInitNotice,
+	getAgentsInitWorkflowInstructions,
+	initializeAgentsContext,
+} from "@core/context/instructions/user-instructions/agents-init"
 import { ClineRulesToggles } from "@shared/cline-rules"
 import fs from "fs/promises"
 import { telemetryService } from "@/services/telemetry"
@@ -40,56 +46,90 @@ export async function parseSlashCommands(
 	focusChainSettings?: { enabled: boolean },
 	enableNativeToolCalls?: boolean,
 	providerInfo?: ApiProviderInfo,
+	cwd?: string,
 ): Promise<{ processedText: string; needsClinerulesFileCheck: boolean }> {
-	const SUPPORTED_DEFAULT_COMMANDS = ["newtask", "smol", "compact", "newrule", "reportbug", "deep-planning", "subagent"]
-
-	// Determine if the current provider/model/setting actually uses native tool calling
-	const willUseNativeTools = isNativeToolCallingConfig(providerInfo!, enableNativeToolCalls || false)
-
-	const commandReplacements: Record<string, string> = {
-		newtask: newTaskToolResponse(willUseNativeTools),
-		smol: condenseToolResponse(focusChainSettings),
-		compact: condenseToolResponse(focusChainSettings),
-		newrule: newRuleToolResponse(),
-		reportbug: reportBugToolResponse(),
-		"deep-planning": deepPlanningToolResponse(focusChainSettings, providerInfo),
-		subagent: subagentToolResponse(),
-	}
-
-	// this currently allows matching prepended whitespace prior to /slash-command
-	const tagPatterns = [
-		{ tag: "task", regex: /<task>(\s*\/([a-zA-Z0-9_.-]+))(\s+.+?)?\s*<\/task>/is },
-		{ tag: "feedback", regex: /<feedback>(\s*\/([a-zA-Z0-9_.-]+))(\s+.+?)?\s*<\/feedback>/is },
-		{ tag: "answer", regex: /<answer>(\s*\/([a-zA-Z0-9_.-]+))(\s+.+?)?\s*<\/answer>/is },
-		{ tag: "user_message", regex: /<user_message>(\s*\/([a-zA-Z0-9_.-]+))(\s+.+?)?\s*<\/user_message>/is },
+	const SUPPORTED_DEFAULT_COMMANDS = [
+		"init",
+		"newtask",
+		"smol",
+		"compact",
+		"newrule",
+		"reportbug",
+		"deep-planning",
+		"subagent",
 	]
 
+	// Determine if the current provider/model/setting actually uses native tool calling
+	const willUseNativeTools = providerInfo ? isNativeToolCallingConfig(providerInfo, enableNativeToolCalls || false) : false
+
+	// CARET MODIFICATION: 슬래시 커맨드 매핑은 lazy 평가로 구성(테스트/런타임에서 deep-planning 프롬프트 생성 부작용 방지)
+	const commandReplacements: Record<string, () => string> = {
+		newtask: () => newTaskToolResponse(willUseNativeTools),
+		smol: () => condenseToolResponse(focusChainSettings),
+		compact: () => condenseToolResponse(focusChainSettings),
+		newrule: () => newRuleToolResponse(),
+		reportbug: () => reportBugToolResponse(),
+		"deep-planning": () => deepPlanningToolResponse(focusChainSettings, providerInfo),
+		subagent: () => subagentToolResponse(),
+	}
+
+	// Regex patterns to extract content from different XML tags
+	const tagPatterns = [
+		{ tag: "task", regex: /<task>([\s\S]*?)<\/task>/i },
+		{ tag: "feedback", regex: /<feedback>([\s\S]*?)<\/feedback>/i },
+		{ tag: "answer", regex: /<answer>([\s\S]*?)<\/answer>/i },
+		{ tag: "user_message", regex: /<user_message>([\s\S]*?)<\/user_message>/i },
+	]
+
+	// Regex to find slash commands anywhere in text (not just at the beginning).
+	// Must be preceded by whitespace or start-of-string to avoid matching URLs/paths.
+	// Only the FIRST slash command per message is processed.
+	const slashCommandInTextRegex = /(^|\s)\/([a-zA-Z0-9_.-]+)(?=\s|$)/
+
+	// Helper to remove the matched slash command from the full original text
+	const removeSlashCommand = (fullText: string, contentStartIndex: number, slashMatch: RegExpExecArray): string => {
+		const slashPositionInContent = slashMatch.index + slashMatch[1].length
+		const slashPositionInFullText = contentStartIndex + slashPositionInContent
+		const commandText = "/" + slashMatch[2]
+		const commandEndPosition = slashPositionInFullText + commandText.length
+		return fullText.substring(0, slashPositionInFullText) + fullText.substring(commandEndPosition)
+	}
+
 	// if we find a valid match, we will return inside that block
-	for (const { tag, regex } of tagPatterns) {
+	for (const { regex } of tagPatterns) {
 		const regexObj = new RegExp(regex.source, regex.flags)
-		const match = regexObj.exec(text)
+		const tagMatch = regexObj.exec(text)
 
-		if (match) {
-			// match[1] is the command with any leading whitespace (e.g. " /newtask")
-			// match[2] is just the command name (e.g. "newtask")
+		if (tagMatch) {
+			const tagContent = tagMatch[1]
+			const tagStartIndex = tagMatch.index
+			const contentStartIndex = text.indexOf(tagContent, tagStartIndex)
 
-			const commandName = match[2] // casing matters
+			const slashMatch = slashCommandInTextRegex.exec(tagContent)
+			if (!slashMatch) {
+				continue
+			}
+
+			const commandName = slashMatch[2] // casing matters
 
 			// we give preference to the default commands if the user has a file with the same name
 			if (SUPPORTED_DEFAULT_COMMANDS.includes(commandName)) {
-				const fullMatchStartIndex = match.index
+				if (commandName === "init") {
+					const workspaceRoot = cwd ?? process.cwd()
+					const initResult = await initializeAgentsContext(workspaceRoot)
+					const initInstructions = await getAgentsInitWorkflowInstructions(workspaceRoot, initResult.templatePath)
+					const initBlock = formatAgentsInitInstructions(initInstructions) ?? ""
+					const textWithoutSlashCommand = removeSlashCommand(text, contentStartIndex, slashMatch)
+					const processedText = `[init] ${formatAgentsInitNotice(initResult)}\n` + initBlock + textWithoutSlashCommand
 
-				// find position of slash command within the full match
-				const fullMatch = match[0]
-				const relativeStartIndex = fullMatch.indexOf(match[1])
+					telemetryService.captureSlashCommandUsed(ulid, commandName, "builtin")
 
-				// calculate absolute indices in the original string
-				const slashCommandStartIndex = fullMatchStartIndex + relativeStartIndex
-				const slashCommandEndIndex = slashCommandStartIndex + match[1].length
+					return { processedText, needsClinerulesFileCheck: false }
+				}
 
 				// remove the slash command and add custom instructions at the top of this message
-				const textWithoutSlashCommand = text.substring(0, slashCommandStartIndex) + text.substring(slashCommandEndIndex)
-				const processedText = commandReplacements[commandName] + textWithoutSlashCommand
+				const textWithoutSlashCommand = removeSlashCommand(text, contentStartIndex, slashMatch)
+				const processedText = commandReplacements[commandName]() + textWithoutSlashCommand
 
 				// Track telemetry for builtin slash command usage
 				telemetryService.captureSlashCommandUsed(ulid, commandName, "builtin")
@@ -147,18 +187,8 @@ export async function parseSlashCommands(
 						workflowContent = (await fs.readFile(matchingWorkflow.fullPath, "utf8")).trim()
 					}
 
-					// find position of slash command within the full match
-					const fullMatchStartIndex = match.index
-					const fullMatch = match[0]
-					const relativeStartIndex = fullMatch.indexOf(match[1])
-
-					// calculate absolute indices in the original string
-					const slashCommandStartIndex = fullMatchStartIndex + relativeStartIndex
-					const slashCommandEndIndex = slashCommandStartIndex + match[1].length
-
 					// remove the slash command and add custom instructions at the top of this message
-					const textWithoutSlashCommand =
-						text.substring(0, slashCommandStartIndex) + text.substring(slashCommandEndIndex)
+					const textWithoutSlashCommand = removeSlashCommand(text, contentStartIndex, slashMatch)
 					const processedText =
 						`<explicit_instructions type="${matchingWorkflow.fileName}">\n${workflowContent}\n</explicit_instructions>\n` +
 						textWithoutSlashCommand

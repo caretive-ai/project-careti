@@ -1,4 +1,4 @@
-import { isGPT51Model } from "@utils/model-utils"
+import { isGPT51Model, isGPT52Model } from "@utils/model-utils"
 import { getShell } from "@utils/shell"
 import type { SystemPromptContext } from "@/core/prompts/system-prompt/types"
 import type { DeepPlanningVariant } from "../types"
@@ -17,7 +17,8 @@ export function createGPT51Variant(): DeepPlanningVariant {
 			if (!modelId) {
 				return false
 			}
-			return isGPT51Model(modelId)
+			// CARET MODIFICATION: GPT-5.2도 deep-planning 변형 대상에 포함 (R-3410-01)
+			return isGPT51Model(modelId) || isGPT52Model(modelId)
 		},
 		template: "", // Template is dynamically generated in getDeepPlanningPrompt() based on focus chain settings
 	}

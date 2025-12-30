@@ -185,6 +185,15 @@ message ClineApiReqInfo {
   ApiReqRetryStatus retry_status = 9;
 }
 
+// Message for tool image streaming events (ephemeral UI-only payloads)
+message ToolImageEvent {
+  string request_id = 1;
+  string mime_type = 2;
+  string base64 = 3;
+  optional string workspace_relative_path = 4;
+  optional string workspace_absolute_path = 5;
+}
+
 message ClineModelInfo {
   string provider_id = 1;
   string model_id = 2;
@@ -250,6 +259,9 @@ service UiService {
 
   // Subscribe to partial message updates (streaming Cline messages as they're built)
   rpc subscribeToPartialMessage(EmptyRequest) returns (stream ClineMessage);
+
+  // Subscribe to tool image events (ephemeral image payloads for UI rendering)
+  rpc subscribeToToolImageEvents(EmptyRequest) returns (stream ToolImageEvent);
 
   // Initialize webview when it launches
   rpc initializeWebview(EmptyRequest) returns (Empty);

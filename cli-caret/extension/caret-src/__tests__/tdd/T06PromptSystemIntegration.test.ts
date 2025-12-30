@@ -1,9 +1,9 @@
+import * as path from "path"
+import { beforeAll, describe, expect, it } from "vitest"
 import { JsonTemplateLoader } from "@caret/core/prompts/system/JsonTemplateLoader"
 import { PromptSystemManager } from "@caret/core/prompts/system/PromptSystemManager"
 import { CaretSystemPromptContext } from "@caret/core/prompts/system/types"
 import { CARET_MODES } from "@caret/shared/constants/PromptSystemConstants"
-import * as path from "path"
-import { beforeAll, describe, expect, it } from "vitest"
 
 describe("T06 - Prompt System Integration Test", () => {
 	// Initialize the JsonTemplateLoader before any tests run.

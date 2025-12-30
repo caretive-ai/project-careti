@@ -18,7 +18,7 @@ else
 fi
 
 if [ "$#" -eq 0 ]; then
-  set -- version
+  exec "${ROOT}/dist-standalone/bin/caret"
 fi
 
 exec "${ROOT}/dist-standalone/bin/caret" "$@"

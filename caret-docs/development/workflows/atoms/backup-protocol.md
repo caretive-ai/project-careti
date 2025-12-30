@@ -1,4 +1,4 @@
-> ⚠️ (Deprecated mirror) 최신 Atom은 `.caretrules/workflows/atoms/backup-protocol.yaml`를 기준으로 보세요.
+> ⚠️ (Deprecated mirror) 최신 Atom은 `.agents/context/workflows/atoms/backup-protocol.yaml`를 기준으로 보세요.
 
 Cline 원본 파일 수정을 위한 백업 프로토콜을 따르고 있습니다.
 

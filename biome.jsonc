@@ -124,7 +124,11 @@
 			"!**/webview-ui/build",
 			"!**/generated",
 			"!**/proto",
-			"!**/tests/specs"
+			"!**/tests/specs",
+			"!**/cline-latest",
+			"!**/cline-latest",
+			"!**/work-logs",
+			"!**/work-logs"
 		]
 	},
 	"plugins": [

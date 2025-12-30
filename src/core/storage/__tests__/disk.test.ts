@@ -65,7 +65,8 @@ describe("disk - hooks functionality", () => {
 		it("should return hooks directory when it exists", async () => {
 			// Create workspace root with hooks directory
 			const workspaceRoot = path.join(tempDir, "workspace1")
-			const hooksDir = path.join(workspaceRoot, ".clinerules", "hooks")
+			// CARET MODIFICATION: Hooks live under .agents/hooks (not .agents/context/hooks).
+			const hooksDir = path.join(workspaceRoot, ".agents", "hooks")
 			await fs.mkdir(hooksDir, { recursive: true })
 
 			sandbox.stub(StateManager, "get").returns({
@@ -81,7 +82,8 @@ describe("disk - hooks functionality", () => {
 		it("should not return hooks directory if it's a file instead of directory", async () => {
 			// Create workspace root with hooks as a file (not directory)
 			const workspaceRoot = path.join(tempDir, "workspace1")
-			const hooksPath = path.join(workspaceRoot, ".clinerules", "hooks")
+			// CARET MODIFICATION: Hooks live under .agents/hooks.
+			const hooksPath = path.join(workspaceRoot, ".agents", "hooks")
 			await fs.mkdir(path.dirname(hooksPath), { recursive: true })
 			await fs.writeFile(hooksPath, "not a directory")
 
@@ -98,8 +100,9 @@ describe("disk - hooks functionality", () => {
 			// Create multiple workspace roots with hooks directories
 			const workspaceRoot1 = path.join(tempDir, "workspace1")
 			const workspaceRoot2 = path.join(tempDir, "workspace2")
-			const hooksDir1 = path.join(workspaceRoot1, ".clinerules", "hooks")
-			const hooksDir2 = path.join(workspaceRoot2, ".clinerules", "hooks")
+			// CARET MODIFICATION: Hooks live under .agents/hooks.
+			const hooksDir1 = path.join(workspaceRoot1, ".agents", "hooks")
+			const hooksDir2 = path.join(workspaceRoot2, ".agents", "hooks")
 
 			await fs.mkdir(hooksDir1, { recursive: true })
 			await fs.mkdir(hooksDir2, { recursive: true })
@@ -120,8 +123,9 @@ describe("disk - hooks functionality", () => {
 			const workspaceRoot1 = path.join(tempDir, "workspace1")
 			const workspaceRoot2 = path.join(tempDir, "workspace2")
 			const workspaceRoot3 = path.join(tempDir, "workspace3")
-			const hooksDir1 = path.join(workspaceRoot1, ".clinerules", "hooks")
-			const hooksDir3 = path.join(workspaceRoot3, ".clinerules", "hooks")
+			// CARET MODIFICATION: Hooks live under .agents/hooks.
+			const hooksDir1 = path.join(workspaceRoot1, ".agents", "hooks")
+			const hooksDir3 = path.join(workspaceRoot3, ".agents", "hooks")
 
 			await fs.mkdir(hooksDir1, { recursive: true })
 			await fs.mkdir(workspaceRoot2, { recursive: true }) // No hooks dir
@@ -136,7 +140,7 @@ describe("disk - hooks functionality", () => {
 			result.length.should.equal(2)
 			result.should.containEql(hooksDir1)
 			result.should.containEql(hooksDir3)
-			result.should.not.containEql(path.join(workspaceRoot2, ".clinerules", "hooks"))
+			result.should.not.containEql(path.join(workspaceRoot2, ".agents", "hooks"))
 		})
 
 		it("should propagate errors when checking directory fails", async () => {
@@ -161,7 +165,8 @@ describe("disk - hooks functionality", () => {
 
 		it("should use correct path joining for hooks directory", async () => {
 			const workspaceRoot = path.join(tempDir, "workspace1")
-			const expectedHooksDir = path.join(workspaceRoot, ".clinerules", "hooks")
+			// CARET MODIFICATION: Hooks live under .agents/hooks.
+			const expectedHooksDir = path.join(workspaceRoot, ".agents", "hooks")
 			await fs.mkdir(expectedHooksDir, { recursive: true })
 
 			sandbox.stub(StateManager, "get").returns({
@@ -171,13 +176,15 @@ describe("disk - hooks functionality", () => {
 			const result = await getWorkspaceHooksDirs()
 			result[0].should.equal(expectedHooksDir)
 			// Verify it uses the correct path separator for the platform
-			result[0].should.match(/\.clinerules[\\/]hooks$/)
+			// CARET MODIFICATION: Use RegExp constructor to avoid invalid character parsing issues.
+			result[0].should.match(new RegExp("\\.agents[\\\\/]hooks$"))
 		})
 
 		it("should handle workspace roots with trailing slashes", async () => {
 			const workspaceRoot = path.join(tempDir, "workspace1")
 			const workspaceRootWithSlash = workspaceRoot + path.sep
-			const hooksDir = path.join(workspaceRoot, ".clinerules", "hooks")
+			// CARET MODIFICATION: Hooks live under .agents/hooks.
+			const hooksDir = path.join(workspaceRoot, ".agents", "hooks")
 			await fs.mkdir(hooksDir, { recursive: true })
 
 			sandbox.stub(StateManager, "get").returns({

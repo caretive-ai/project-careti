@@ -92,6 +92,8 @@ export interface ExtensionState {
 	dictationSettings: DictationSettings
 	customPrompt?: string
 	autoCondenseThreshold?: number
+	imageGenerationAspectRatio?: string
+	imageGenerationSize?: string
 	favoritedModelIds: string[]
 	// NEW: Add workspace information
 	workspaceRoots: WorkspaceRoot[]
@@ -220,6 +222,7 @@ export interface ClineSayTool {
 		| "listCodeDefinitionNames"
 		| "searchFiles"
 		| "webFetch"
+		| "generateImage"
 		| "summarizeTask"
 		| "fileDeleted"
 	path?: string
@@ -228,6 +231,23 @@ export interface ClineSayTool {
 	regex?: string
 	filePattern?: string
 	operationIsLocatedInWorkspace?: boolean
+	requestId?: string
+	prompt?: string
+	model?: string
+	aspectRatio?: string
+	imageSize?: string
+	status?: string
+	progressText?: string
+	workspaceRelativePath?: string
+	workspaceAbsolutePath?: string
+	imageUrl?: string
+	usage?: {
+		inputTokens?: number
+		outputTokens?: number
+		totalTokens?: number
+		totalCost?: number
+	}
+	errorMessage?: string
 }
 
 // cline 3.38.1 hook message payload

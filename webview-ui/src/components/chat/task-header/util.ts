@@ -33,6 +33,8 @@ export const getColor = (message: ClineMessage): string => {
 							return COLOR_BLUE // Blue for file edit/create operations
 						} else if (toolData.tool === "webFetch") {
 							return COLOR_PURPLE // Purple for web fetch operations
+						} else if (toolData.tool === "generateImage") {
+							return COLOR_PURPLE // Purple for image generation
 						}
 					} catch (_e) {
 						// JSON parse error here
@@ -73,6 +75,8 @@ export const getColor = (message: ClineMessage): string => {
 							return COLOR_BLUE // Blue for file edit/create operations
 						} else if (toolData.tool === "webFetch") {
 							return COLOR_PURPLE // Purple for web fetch operations
+						} else if (toolData.tool === "generateImage") {
+							return COLOR_PURPLE // Purple for image generation
 						}
 					} catch (_e) {
 						// JSON parse error here

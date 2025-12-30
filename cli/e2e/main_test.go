@@ -26,11 +26,14 @@ func TestMain(m *testing.M) {
 	repoRoot := filepath.Clean(filepath.Join(wd, "..", ".."))
 
 	cliBin := filepath.Join(repoRoot, "cli", "bin", "cline")
+	caretBin := filepath.Join(repoRoot, "cli", "bin", "caret")
 	coreJS := filepath.Join(repoRoot, "dist-standalone", "cline-core.js")
 
 	missing := []string{}
 	if _, err := os.Stat(cliBin); err != nil {
-		missing = append(missing, cliBin)
+		if _, caretErr := os.Stat(caretBin); caretErr != nil {
+			missing = append(missing, cliBin, caretBin)
+		}
 	}
 	if _, err := os.Stat(coreJS); err != nil {
 		missing = append(missing, coreJS)

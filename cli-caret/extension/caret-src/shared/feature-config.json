@@ -4,7 +4,7 @@
 	"defaultPersonaEnabled": true,
 	"redirectAfterApiSetup": "persona",
 	"defaultModeSystem": "caret",
-	"firstListingProvider": "caret",
+	"firstListingProvider": "caret", 
 	"defaultProvider": "caret",
 	"showOnlyDefaultProvider": false,
 	"showCostInformation": true

@@ -2,24 +2,15 @@ package auth
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"os"
-	"path/filepath"
 	"time"
 
 	"github.com/charmbracelet/huh"
-	"github.com/cline/cli/pkg/cli/task"
-	"github.com/cline/grpc-go/caret"
-	"github.com/cline/grpc-go/cline"
-	"github.com/cline/cli/pkg/cli/global"
 	"github.com/cline/cli/pkg/common"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"github.com/cline/grpc-go/cline"
 )
 
 var isCaretSessionAuthenticated bool
-var allowInternalAuthFallback bool
 
 // Caret provider specific code
 
@@ -39,7 +30,7 @@ func HandleCaretAuth(ctx context.Context) error {
 
 	if err := configureDefaultCaretModel(ctx); err != nil {
 		fmt.Printf("Warning: Could not configure default Caret model: %v\n", err)
-		fmt.Println("You can configure a model later with 'cline auth' and selecting 'Select active provider'")
+		fmt.Printf("You can configure a model later with '%s auth' and selecting 'Select active provider'\n", common.BrandCommandName())
 	}
 
 	return HandleAuthMenuNoArgs(ctx)
@@ -131,7 +122,7 @@ func caretSignIn(ctx context.Context) error {
 	if err := listener.WaitForAuthentication(5 * time.Minute); err != nil {
 		verboseLog("Caret authentication failed or timed out: %v", err)
 		fmt.Println("\n  Authentication failed or timed out.")
-		fmt.Println("  Please try again with 'cline auth'")
+		fmt.Printf("  Please try again with '%s auth'\n", common.BrandCommandName())
 		return err
 	}
 
@@ -141,12 +132,63 @@ func caretSignIn(ctx context.Context) error {
 }
 
 func IsCaretAuthenticated(ctx context.Context) bool {
-	isAuthed, err := caretAuthCheckFn(ctx)
+	if isCaretSessionAuthenticated {
+		verboseLog("Session is already authenticated")
+		return true
+	}
+
+	verboseLog("Verifying authentication with server...")
+	client, err := getAuthClient(ctx)
 	if err != nil {
-		verboseLog("Caret server verification failed: %v", err)
+		verboseLog("Failed to get client for auth check: %v", err)
 		return false
 	}
-	return isAuthed
+
+	_, err = client.Caretaccount.GetCaretUserCredits(ctx, &cline.EmptyRequest{})
+	if err == nil {
+		// Update session variable for future fast-path checks
+		verboseLog("Server verification successful, updating session flag")
+		isCaretSessionAuthenticated = true
+		return true
+	}
+
+	verboseLog("Server verification failed===>: %v", err)
+	return false
+}
+
+// HandleChangeClineModel allows Cline-authenticated users to change their Cline model selection. Hidden when not authenticated.
+func HandleChangeCaretModel(ctx context.Context) error {
+	// Ensure user is authenticated
+	if !IsCaretAuthenticated(ctx) {
+		return fmt.Errorf("you must be authenticated with Caret to change models. Run '%s auth' to sign in", common.BrandCommandName())
+	}
+
+	// Get task manager
+	manager, err := createTaskManager(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to create task manager: %w", err)
+	}
+
+	// Launch Cline model selection
+	return SelectCaretModel(ctx, manager)
+}
+
+// configureDefaultCaretModel configures the default Caret model after authentication
+func configureDefaultCaretModel(ctx context.Context) error {
+	verboseLog("Configuring default Caret model...")
+
+	manager, err := createTaskManager(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to create task manager: %w", err)
+	}
+
+	if caretHasExistingModel(ctx, manager) {
+		verboseLog("%s model already configured; skipping default model assignment", common.BrandDisplayName())
+		return nil
+	}
+
+	// Set default Caret model
+	return SetDefaultCaretModel(ctx, manager)
 }
 
 // HandleSelectCaretOrganization is disabled because Caret org RPCs are commented out in proto (upstream state).
@@ -154,324 +196,4 @@ func HandleSelectCaretOrganization(ctx context.Context) error {
 	fmt.Println("Caret organization selection is currently unavailable in this build.")
 	fmt.Println("Visit https://app.caret.team/dashboard to manage organizations.")
 	return HandleAuthMenuNoArgs(ctx)
-}
-
-// CaretAuthStatusListener manages subscription to Caret auth status updates
-type CaretAuthStatusListener struct {
-	stream    caret.CaretAccountService_SubscribeToCaretAuthStatusUpdateClient
-	updatesCh chan *caret.CaretAuthState
-	errCh     chan error
-	ctx       context.Context
-	cancel    context.CancelFunc
-}
-
-// NewCaretAuthStatusListener creates a new auth status listener for Caret
-func NewCaretAuthStatusListener(parentCtx context.Context) (*CaretAuthStatusListener, error) {
-	client, err := getAuthClient(parentCtx)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get client: %w", err)
-	}
-
-	ctx, cancel := context.WithCancel(parentCtx)
-
-	stream, err := client.Caretaccount.SubscribeToCaretAuthStatusUpdate(ctx, &cline.EmptyRequest{})
-	if err != nil {
-		cancel()
-		return nil, fmt.Errorf("failed to subscribe to Caret auth updates: %w", err)
-	}
-
-	return &CaretAuthStatusListener{
-		stream:    stream,
-		updatesCh: make(chan *caret.CaretAuthState, 10),
-		errCh:     make(chan error, 1),
-		ctx:       ctx,
-		cancel:    cancel,
-	}, nil
-}
-
-func (l *CaretAuthStatusListener) Start() error {
-	verboseLog("Starting Caret auth status listener...")
-	go l.readStream()
-	return nil
-}
-
-const defaultCaretAuthPollInterval = 3 * time.Second
-
-var caretAuthPollInterval = defaultCaretAuthPollInterval
-var caretAuthCheckFn = checkCaretAuthentication
-
-func checkCaretAuthentication(ctx context.Context) (bool, error) {
-	if isCaretSessionAuthenticated {
-		verboseLog("Caret session is already authenticated")
-		return true, nil
-	}
-
-	verboseLog("Verifying Caret authentication with server...")
-	client, err := getAuthClient(ctx)
-	if err != nil {
-		return false, fmt.Errorf("failed to get client for Caret auth check: %w", err)
-	}
-
-	_, err = client.Caretaccount.GetCaretUserCredits(ctx, &cline.EmptyRequest{})
-	if err != nil {
-		// Treat transient/internal server failures as authenticated to avoid blocking login when credits API is unavailable.
-		if status.Code(err) == codes.Internal && allowInternalAuthFallback {
-			verboseLog("Caret server verification returned internal error during auth; treating as authenticated for this session: %v", err)
-			isCaretSessionAuthenticated = true
-			return true, nil
-		}
-		return false, fmt.Errorf("failed to get latest getCaretUserCredits: %w", err)
-	}
-
-	verboseLog("Caret server verification successful, updating session flag")
-	isCaretSessionAuthenticated = true
-	return true, nil
-}
-
-func (l *CaretAuthStatusListener) readStream() {
-	defer close(l.updatesCh)
-	defer close(l.errCh)
-
-	for {
-		select {
-		case <-l.ctx.Done():
-			verboseLog("Caret auth listener context cancelled")
-			return
-		default:
-			state, err := l.stream.Recv()
-			if err != nil {
-				verboseLog("Error reading from Caret auth status stream: %v", err)
-				select {
-				case l.errCh <- err:
-				case <-l.ctx.Done():
-				}
-				return
-			}
-
-			verboseLog("Received Caret auth state update: user=%v", state.GetUser() != nil)
-
-			select {
-			case l.updatesCh <- state:
-			case <-l.ctx.Done():
-				return
-			}
-		}
-	}
-}
-
-func (l *CaretAuthStatusListener) WaitForAuthentication(timeout time.Duration) error {
-	verboseLog("Waiting for Caret authentication (timeout: %v)...", timeout)
-
-	timer := time.NewTimer(timeout)
-	defer timer.Stop()
-
-	prevInternalFallback := allowInternalAuthFallback
-	allowInternalAuthFallback = true
-	defer func() {
-		allowInternalAuthFallback = prevInternalFallback
-	}()
-
-	var pollCh <-chan time.Time
-	if caretAuthPollInterval > 0 {
-		ticker := time.NewTicker(caretAuthPollInterval)
-		defer ticker.Stop()
-		pollCh = ticker.C
-	}
-
-	var lastErr error
-
-	for {
-		select {
-		case <-timer.C:
-			if lastErr != nil {
-				return fmt.Errorf("authentication timeout after %v (last error: %v) - please try again", timeout, lastErr)
-			}
-			return fmt.Errorf("authentication timeout after %v - please try again", timeout)
-		case <-l.ctx.Done():
-			return fmt.Errorf("authentication cancelled")
-		case err := <-l.errCh:
-			return fmt.Errorf("authentication stream error: %w", err)
-		case <-pollCh:
-			isAuthed, err := caretAuthCheckFn(l.ctx)
-			if err != nil {
-				lastErr = err
-				continue
-			}
-			if isAuthed {
-				verboseLog("Caret authentication successful via direct check")
-				return nil
-			}
-		case state := <-l.updatesCh:
-			if isCaretAuthenticatedState(state) {
-				verboseLog("Caret authentication successful!")
-				return nil
-			}
-			verboseLog("Received Caret auth update but not authenticated yet...")
-		}
-	}
-}
-
-func (l *CaretAuthStatusListener) Stop() {
-	verboseLog("Stopping Caret auth status listener...")
-	l.cancel()
-}
-
-func isCaretAuthenticatedState(state *caret.CaretAuthState) bool {
-	return state != nil && state.User != nil
-}
-
-// DefaultCaretModelID is the default model ID for the Caret provider
-const DefaultCaretModelID = "gemini/gemini-2.5-flash"
-const DefaultCaretBaseURL = "https://api.caret.team"
-
-// FetchCaretModels retrieves available Caret models from static definitions
-func FetchCaretModels() ([]string, error) {
-	modelIDs, _, err := FetchStaticModels(cline.ApiProvider_CARET)
-	if err != nil {
-		return nil, fmt.Errorf("failed to fetch Caret models: %w", err)
-	}
-	return modelIDs, nil
-}
-
-// SetDefaultCaretModel configures the default Caret model after authentication
-func SetDefaultCaretModel(ctx context.Context, manager *task.Manager) error {
-	modelIDs, err := FetchCaretModels()
-	if err != nil {
-		fmt.Printf("Warning: Could not fetch Caret models: %v\n", err)
-		fmt.Printf("Using default model: %s\n", DefaultCaretModelID)
-		return applyCaretModelConfiguration(ctx, manager, DefaultCaretModelID)
-	}
-
-	// Use default if present, otherwise fallback to first model
-	for _, id := range modelIDs {
-		if id == DefaultCaretModelID {
-			return applyCaretModelConfiguration(ctx, manager, id)
-		}
-	}
-
-	if len(modelIDs) > 0 {
-		fmt.Printf("Using available Caret model: %s\n", modelIDs[0])
-		return applyCaretModelConfiguration(ctx, manager, modelIDs[0])
-	}
-
-	return fmt.Errorf("no usable Caret models found")
-}
-
-// SelectCaretModel presents a menu to select a Caret model and applies the configuration.
-func SelectCaretModel(ctx context.Context, manager *task.Manager) error {
-	modelIDs, err := FetchCaretModels()
-	if err != nil {
-		return fmt.Errorf("failed to fetch Caret models: %w", err)
-	}
-
-	selectedModelID, err := DisplayModelSelectionMenu(modelIDs, "Caret")
-	if err != nil {
-		return fmt.Errorf("model selection failed: %w", err)
-	}
-
-	if err := applyCaretModelConfiguration(ctx, manager, selectedModelID); err != nil {
-		return err
-	}
-
-	fmt.Println()
-	return HandleAuthMenuNoArgs(ctx)
-}
-
-// configureDefaultCaretModel configures the default Caret model after authentication
-func configureDefaultCaretModel(ctx context.Context) error {
-	manager, err := createTaskManager(ctx)
-	if err != nil {
-		return fmt.Errorf("failed to create task manager: %w", err)
-	}
-
-	if caretHasExistingModel(ctx, manager) {
-		verboseLog("Caret model already configured; skipping default model assignment")
-		return nil
-	}
-
-	if err := SetDefaultCaretModel(ctx, manager); err != nil {
-		return err
-	}
-
-	if err := setWelcomeViewCompletedWithManager(ctx, manager); err != nil {
-		verboseLog("Warning: Failed to mark welcome view as completed: %v", err)
-	}
-
-	return nil
-}
-
-func applyCaretModelConfiguration(ctx context.Context, manager *task.Manager, modelID string) error {
-	provider := cline.ApiProvider_CARET
-	baseURL := DefaultCaretBaseURL
-	thinkingBudget := int64(0)
-
-	updates := ProviderUpdatesPartial{
-		ModelID:              &modelID,
-		BaseURL:              &baseURL,
-		ThinkingBudgetTokens: &thinkingBudget,
-	}
-
-	return UpdateProviderPartial(ctx, manager, provider, updates, true)
-}
-
-func caretHasExistingModel(ctx context.Context, manager *task.Manager) bool {
-	providers, err := GetProviderConfigurations(ctx, manager)
-	if err != nil || providers == nil {
-		return false
-	}
-
-	for _, p := range []*ProviderDisplay{providers.ActProvider, providers.PlanProvider} {
-		if p != nil && p.Provider == cline.ApiProvider_CARET && p.ModelID != "" {
-			return true
-		}
-	}
-	return false
-}
-
-func clearCaretLocalSession() {
-	configDir := ""
-	if global.Config != nil && global.Config.ConfigPath != "" {
-		configDir = global.Config.ConfigPath
-	} else {
-		if path, err := common.DefaultConfigPath(); err == nil {
-			configDir = path
-		}
-	}
-	if configDir == "" {
-		return
-	}
-
-	dataDir := filepath.Join(configDir, "data")
-	paths := []string{
-		filepath.Join(dataDir, "secrets.json"),
-		filepath.Join(dataDir, "globalState.json"),
-	}
-	keys := []string{"caret:caretAccountId", "caretAccountId", "userInfo"}
-
-	for _, path := range paths {
-		payload, err := os.ReadFile(path)
-		if err != nil {
-			continue
-		}
-		var data map[string]interface{}
-		if err := json.Unmarshal(payload, &data); err != nil {
-			continue
-		}
-		changed := false
-		for _, key := range keys {
-			if _, ok := data[key]; ok {
-				delete(data, key)
-				changed = true
-			}
-		}
-		if !changed {
-			continue
-		}
-		updated, err := json.MarshalIndent(data, "", "  ")
-		if err != nil {
-			continue
-		}
-		_ = os.MkdirAll(filepath.Dir(path), 0755)
-		_ = os.WriteFile(path, updated, 0644)
-	}
 }

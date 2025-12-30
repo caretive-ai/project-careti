@@ -89,6 +89,41 @@ gRPC 통신 인터페이스를 관리하는 스크립트입니다.
 - **설명**: Pandoc을 사용하여 `cli/man/cline.1.md` 마크다운 파일을 `man` 페이지 형식으로 변환합니다.
 - **사용 시기**: CLI의 도움말 문서를 업데이트할 때 사용합니다.
 
+### CLI 배포 (npm)
+
+Caret CLI는 `cli-caret/` 패키지로 npm에 배포합니다. 실제 Go 소스는 `cli/`에 있으므로, 배포 전에 **standalone 코어 번들**을 먼저 생성해야 합니다.
+
+#### 사전 조건
+- `dist-standalone/cline-core.js`가 존재해야 합니다. (권장: `npm run compile-standalone-npm`)
+- `.env`에 `CARET_NPM_TOKEN`이 있어야 하며, 스크립트 실행 전에 **export** 되어 있어야 합니다. (`.env`는 자동 로드되지 않습니다.)
+- 배포 전 **버전 동기화**가 필요합니다.
+  - `cli/package.json` → CLI 바이너리에 주입되는 버전
+  - `cli-caret/package.json` → npm 패키지 버전
+
+#### 배포 절차
+```bash
+# 프로젝트 루트에서 실행
+## 1) 버전 올리기 (둘 다 동일하게 유지)
+# cli/package.json
+# cli-caret/package.json
+
+## 2) standalone 번들 생성 (npm 배포용)
+set -a; source .env; set +a
+npm run compile-standalone-npm
+bash cli-caret/scripts/publish-caret-cli.sh
+```
+
+- `publish-caret-cli.sh`는 `cli-caret/.npmrc`에 토큰을 주입하고 `npm pack` → `npm publish`를 수행합니다.
+- 최초 공개 배포라면 `npm publish --access public` 옵션이 필요할 수 있습니다. 필요 시 스크립트에서 옵션을 추가하세요.
+- 이 경로는 `TELEMETRY_SERVICE_API_KEY`/`ERROR_SERVICE_API_KEY`를 요구하지 않습니다. (해당 키는 standalone 번들에 주입될 수 있으므로 필요 시만 설정)
+- 배포 완료 후에는 보안을 위해 `cli-caret/.npmrc`를 제거하세요.
+  - 예시: `rm -f cli-caret/.npmrc`
+
+#### 배포 후 확인
+- `npm view @caretive/caret-cli version`
+- `npm i -g @caretive/caret-cli@<version>`
+- `caret version`로 CLI/코어 버전이 기대값인지 확인
+
 ### Caret 전용 헬퍼 스크립트 (scripts/)
 
 `package.json`의 스크립트들은 개별 단계를 실행하는 데 유용하지만, 실제 개발 과정에서는 여러 단계를 조합하여 실행하는 경우가 많습니다. `scripts/` 디렉토리의 셸 스크립트들은 일반적인 개발 시나리오를 자동화하여 편의성을 높인 도구입니다.

@@ -77,14 +77,14 @@ export class CaretPromptWrapper {
 				})}`,
 			)
 
-			// Generate prompt using Caret's independent system
-			const startTime = Date.now()
-			const prompt = await CaretPromptWrapper.promptManager.getPrompt(caretContext)
-			const endTime = Date.now()
+		// Generate prompt using Caret's independent system
+		const startTime = Date.now()
+		const prompt = await CaretPromptWrapper.promptManager.getPrompt(caretContext)
+		const endTime = Date.now()
 
-			Logger.info(`[CaretPromptWrapper] ✅ Prompt generated: ${prompt.length} chars in ${endTime - startTime}ms`)
+		Logger.info(`[CaretPromptWrapper] ✅ Prompt generated: ${prompt.length} chars in ${endTime - startTime}ms`)
 
-			return prompt
+		return prompt
 		} catch (error) {
 			Logger.error(`[CaretPromptWrapper] ❌ Failed to generate Caret prompt: ${error}`)
 			throw error
@@ -116,4 +116,5 @@ export class CaretPromptWrapper {
 			modeManagerInfo: CaretModeManager.getDebugInfo(),
 		}
 	}
+
 }

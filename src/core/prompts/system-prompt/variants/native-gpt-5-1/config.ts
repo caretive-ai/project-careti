@@ -1,4 +1,4 @@
-import { isGPT51Model, isNextGenModelProvider } from "@utils/model-utils"
+import { isGPT51Model, isGPT52Model, isNextGenModelProvider } from "@utils/model-utils"
 import { ModelFamily } from "@/shared/prompts"
 import { ClineDefaultTool } from "@/shared/tools"
 import { SystemPromptSection } from "../../templates/placeholders"
@@ -18,7 +18,7 @@ export const config = createVariant(ModelFamily.NATIVE_GPT_5_1)
 		advanced: 1,
 		use_native_tools: 1,
 	})
-	// Match GPT-5-1 models from providers that support native tools
+	// Match GPT-5.1 and GPT-5.2 models from providers that support native tools
 	.matcher((context) => {
 		if (!context.enableNativeToolCalls) {
 			return false
@@ -26,8 +26,11 @@ export const config = createVariant(ModelFamily.NATIVE_GPT_5_1)
 		const providerInfo = context.providerInfo
 		const modelId = providerInfo.model.id
 
-		// gpt-5-1-chat models do not support native tool use
-		return isGPT51Model(modelId) && !modelId.includes("chat") && isNextGenModelProvider(providerInfo)
+		// CARET MODIFICATION: GPT-5.2를 GPT-5.1과 동일한 native tool 변형으로 매칭 (R-3410-01)
+		// gpt-5.1 and gpt-5.2 chat models do not support native tool use
+		return (
+			(isGPT51Model(modelId) || isGPT52Model(modelId)) && !modelId.includes("chat") && isNextGenModelProvider(providerInfo)
+		)
 	})
 	.template(GPT_5_1_TEMPLATE_OVERRIDES.BASE)
 	.components(
@@ -55,6 +58,7 @@ export const config = createVariant(ModelFamily.NATIVE_GPT_5_1)
 		ClineDefaultTool.LIST_CODE_DEF,
 		ClineDefaultTool.BROWSER,
 		ClineDefaultTool.WEB_FETCH,
+		ClineDefaultTool.GENERATE_IMAGE,
 		ClineDefaultTool.MCP_ACCESS,
 		ClineDefaultTool.ASK,
 		ClineDefaultTool.ATTEMPT,

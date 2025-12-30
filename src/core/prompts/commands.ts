@@ -1,4 +1,4 @@
-import { getBrandIgnoreFileName } from "@caret/utils/brand-utils" // CARET MODIFICATION: brand-aware ignore filename
+import { getBrandIgnoreFileName, getBrandRulesFileName } from "@caret/utils/brand-utils" // CARET MODIFICATION: brand-aware ignore filename
 import type { ApiProviderInfo } from "@/core/api"
 import { getDeepPlanningPrompt } from "./commands/deep-planning"
 
@@ -141,23 +141,24 @@ ${
 `
 
 const BRAND_IGNORE_FILENAME = getBrandIgnoreFileName?.() ?? ".caretignore"
+const BRAND_RULES_DIR = getBrandRulesFileName?.() ?? ".agents/context"
 const DEFAULT_IGNORE_MARKDOWN = `default-${BRAND_IGNORE_FILENAME.slice(1)}.md`
 
 // CARET MODIFICATION: Update rule filename restriction to align with brand-aware ignore file
 export const newRuleToolResponse = () =>
 	`<explicit_instructions type="new_rule">
-The user has explicitly asked you to help them create a new Cline rule file inside the .clinerules top-level directory based on the conversation up to this point in time. The user may have provided instructions or additional information for you to consider when creating the new Cline rule.
-When creating a new Cline rule file, you should NOT overwrite or alter an existing Cline rule file. To create the Cline rule file you MUST use the new_rule tool. The new_rule tool can be used in either of the PLAN or ACT modes.
+The user has explicitly asked you to help them create a new agent context rule file inside the ${BRAND_RULES_DIR} top-level directory based on the conversation up to this point in time. The user may have provided instructions or additional information for you to consider when creating the new agent context rule.
+When creating a new agent context rule file, you should NOT overwrite or alter an existing agent context rule file. To create the agent context rule file you MUST use the new_rule tool. The new_rule tool can be used in either of the PLAN or ACT modes.
 
 The new_rule tool is defined below:
 
 Description:
-Your task is to create a new Cline rule file which includes guidelines on how to approach developing code in tandem with the user, which can be either project specific or cover more global rules. This includes but is not limited to: desired conversational style, favorite project dependencies, coding styles, naming conventions, architectural choices, ui/ux preferences, etc.
-The Cline rule file must be formatted as markdown and be a '.md' file. The name of the file you generate must be as succinct as possible and be encompassing the main overarching concept of the rules you added to the file (e.g., 'memory-bank.md' or 'project-overview.md').
+Your task is to create a new agent context rule file which includes guidelines on how to approach developing code in tandem with the user, which can be either project specific or cover more global rules. This includes but is not limited to: desired conversational style, favorite project dependencies, coding styles, naming conventions, architectural choices, ui/ux preferences, etc.
+The agent context rule file must be formatted as markdown and be a '.md' file. The name of the file you generate must be as succinct as possible and be encompassing the main overarching concept of the rules you added to the file (e.g., 'memory-bank.md' or 'project-overview.md').
 
 Parameters:
-- Path: (required) The path of the file to write to (relative to the current working directory). This will be the Cline rule file you create, and it must be placed inside the .clinerules top-level directory (create this if it doesn't exist). The filename created CANNOT be "${DEFAULT_IGNORE_MARKDOWN}". For filenames, use hyphens ("-") instead of underscores ("_") to separate words.
-- Content: (required) The content to write to the file. ALWAYS provide the COMPLETE intended content of the file, without any truncation or omissions. You MUST include ALL parts of the file, even if they haven't been modified. The content for the Cline rule file MUST be created according to the following instructions:
+- Path: (required) The path of the file to write to (relative to the current working directory). This will be the agent context rule file you create, and it must be placed inside the ${BRAND_RULES_DIR} top-level directory (create this if it doesn't exist). The filename created CANNOT be "${DEFAULT_IGNORE_MARKDOWN}". For filenames, use hyphens ("-") instead of underscores ("_") to separate words.
+- Content: (required) The content to write to the file. ALWAYS provide the COMPLETE intended content of the file, without any truncation or omissions. You MUST include ALL parts of the file, even if they haven't been modified. The content for the agent context rule file MUST be created according to the following instructions:
   1. Format the Cline rule file to have distinct guideline sections, each with their own markdown heading, starting with "## Brief overview". Under each of these headings, include bullet points fully fleshing out the details, with examples and/or trigger cases ONLY when applicable.
   2. These guidelines can be specific to the task(s) or project worked on thus far, or cover more high-level concepts. Guidelines can include coding conventions, general design patterns, preferred tech stack including favorite libraries and language, communication style with Cline (verbose vs concise), prompting strategies, naming conventions, testing strategies, comment verbosity, time spent on architecting prior to development, and other preferences.
   3. When creating guidelines, you should not invent preferences or make assumptions based on what you think a typical user might want. These should be specific to the conversation you had with the user. Your guidelines / rules should not be overly verbose.
@@ -165,13 +166,13 @@ Parameters:
 
 Usage:
 <new_rule>
-<path>.clinerules/{file name}.md</path>
-<content>Cline rule file content here</content>
+<path>${BRAND_RULES_DIR}/{file name}.md</path>
+<content>Agent context rule file content here</content>
 </new_rule>
 
 Example:
 <new_rule>
-<path>.clinerules/project-preferences.md</path>
+<path>${BRAND_RULES_DIR}/project-preferences.md</path>
 <content>
 ## Brief overview
   [Brief description of the rules, including if this set of guidelines is project-specific or global]
@@ -198,7 +199,7 @@ Example:
 </content>
 </new_rule>
 
-Below is the user's input when they indicated that they wanted to create a new Cline rule file.
+Below is the user's input when they indicated that they wanted to create a new agent context rule file.
 </explicit_instructions>\n
 `
 

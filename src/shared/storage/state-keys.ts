@@ -125,6 +125,8 @@ export interface Settings {
 	customPrompt: "compact" | undefined
 	difyBaseUrl: string | undefined
 	autoCondenseThreshold: number | undefined // number from 0 to 1
+	imageGenerationAspectRatio: string | undefined
+	imageGenerationSize: string | undefined
 	ocaBaseUrl: string | undefined
 	minimaxApiLine: string | undefined
 	ocaMode: string | undefined
@@ -168,6 +170,8 @@ export interface Settings {
 	planModeHuggingFaceModelInfo: ModelInfo | undefined
 	planModeHuaweiCloudMaasModelId: string | undefined
 	planModeHuaweiCloudMaasModelInfo: ModelInfo | undefined
+	planModeNaverCloudModelId: string | undefined // CARET MODIFICATION: Naver Cloud
+	planModeNaverCloudModelInfo: ModelInfo | undefined // CARET MODIFICATION: Naver Cloud
 	planModeVercelAiGatewayModelId: string | undefined
 	planModeVercelAiGatewayModelInfo: ModelInfo | undefined
 	planModeOcaModelId: string | undefined
@@ -211,6 +215,8 @@ export interface Settings {
 	actModeHuggingFaceModelInfo: ModelInfo | undefined
 	actModeHuaweiCloudMaasModelId: string | undefined
 	actModeHuaweiCloudMaasModelInfo: ModelInfo | undefined
+	actModeNaverCloudModelId: string | undefined // CARET MODIFICATION: Naver Cloud
+	actModeNaverCloudModelInfo: ModelInfo | undefined // CARET MODIFICATION: Naver Cloud
 	actModeVercelAiGatewayModelId: string | undefined
 	actModeVercelAiGatewayModelInfo: ModelInfo | undefined
 	actModeOcaModelId: string | undefined
@@ -274,6 +280,7 @@ export interface Secrets {
 	sapAiCoreClientSecret: string | undefined
 	groqApiKey: string | undefined
 	huaweiCloudMaasApiKey: string | undefined
+	naverCloudApiKey: string | undefined // CARET MODIFICATION: Naver Cloud API key
 	basetenApiKey: string | undefined
 	vercelAiGatewayApiKey: string | undefined
 	difyApiKey: string | undefined

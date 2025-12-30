@@ -245,9 +245,9 @@ const showPersona = featureConfig?.showPersonaSettings && modeSystem === "caret"
 ```typescript
 import { getBrandRulesFileName, getBrandMcpSettingsFileName } from '@caret/utils/brand-utils'
 
-// 동적 파일명 생성 (Caret → .caretrules, CodeCenter → .codecenterrules)
+// 표준 컨텍스트 경로 (.agents/context)
 const rulesFileName = getBrandRulesFileName()
-console.log(rulesFileName) // ".caretrules" or ".codecenterrules"
+console.log(rulesFileName) // ".agents/context"
 
 // MCP 설정 파일명 생성 (Caret → caret_mcp_settings.json, CodeCenter → codecenter_mcp_settings.json)
 const mcpSettingsFileName = getBrandMcpSettingsFileName()

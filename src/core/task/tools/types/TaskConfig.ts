@@ -99,7 +99,14 @@ export interface TaskCallbacks {
 
 	removeLastPartialMessageIfExistsWithType: (type: "ask" | "say", askOrSay: ClineAsk | ClineSay) => Promise<void>
 
-	executeCommandTool: (command: string, timeoutSeconds: number | undefined) => Promise<[boolean, any]>
+	executeCommandTool: (
+		command: string,
+		timeoutSeconds: number | undefined,
+		options?: {
+			autoContinueOnOutput?: boolean
+			autoContinueDelayMs?: number
+		},
+	) => Promise<[boolean, any]>
 
 	doesLatestTaskCompletionHaveNewChanges: () => Promise<boolean>
 

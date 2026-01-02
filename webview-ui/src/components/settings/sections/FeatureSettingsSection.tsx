@@ -36,20 +36,16 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 		focusChainSettings,
 		modeSystem,
 		subagentsEnabled,
+		featureConfig,
 	} = useExtensionState()
 	const dictation = dictationSettings ?? DEFAULT_DICTATION_SETTINGS
 	const { language } = useCaretI18nContext()
 	const [isCliInstalled, setIsCliInstalled] = useState(false)
 
-	const isCaretMode = modeSystem === "caret"
-	const cliLabel = isCaretMode ? "Caret CLI" : "Cline CLI"
-	const installCommand = useMemo(
-		() => (isCaretMode ? "npm install -g @caretive/caret-cli" : "npm install -g cline"),
-		[isCaretMode],
-	)
-	const installWarningKey = isCaretMode ? "features.subagents.caretWarning" : "features.subagents.clineWarning"
+	const installCommand = useMemo(() => "npm install -g @slexn/codecenter", [])
+	const installWarningKey = "features.subagents.caretWarning"
 	const installStatusKey = isCliInstalled ? "features.subagents.installed" : "features.subagents.notInstalled"
-	const authCommand = isCaretMode ? "caret auth" : "cline auth"
+	const authCommand = "codecenter auth"
 
 	const handleReasoningEffortChange = (newValue: OpenaiReasoningEffort) => {
 		updateSetting("openaiReasoningEffort", newValue)
@@ -163,13 +159,6 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 										: t("features.subagents.enable", "settings")}
 								</span>
 							</VSCodeCheckbox>
-							<p className="text-xs mt-1 mb-0">
-								<span className="text-[var(--vscode-errorForeground)]">Experimental: </span>{" "}
-								<span className="text-description">
-									Allows the CLI to spawn subprocesses to handle focused tasks like exploring large codebases,
-									keeping your main context clean.
-								</span>
-							</p>
 							{subagentsEnabled && (
 								<div className="mt-3">
 									<SubagentOutputLineLimitSlider />
@@ -313,51 +302,57 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 							</p>
 						</div>
 					)}
-					<div className="mt-2.5">
-						<VSCodeCheckbox
-							checked={dictation.dictationEnabled}
-							onChange={(e: any) => {
-								const checked = e.target.checked === true
-								const updatedDictationSettings = {
-									...dictation,
-									dictationEnabled: checked,
-								}
-								updateSetting("dictationSettings", updatedDictationSettings)
-							}}>
-							{t("features.enableDictation", "settings")}
-						</VSCodeCheckbox>
-						<p className="text-xs text-description mt-1">{t("features.enableDictationDescription", "settings")}</p>
-					</div>
+					{featureConfig?.showDictationToggle !== false && ( // CARET MODIFICATION: gate dictation UI by feature flag
+						<>
+							<div className="mt-2.5">
+								<VSCodeCheckbox
+									checked={dictation.dictationEnabled}
+									onChange={(e: any) => {
+										const checked = e.target.checked === true
+										const updatedDictationSettings = {
+											...dictation,
+											dictationEnabled: checked,
+										}
+										updateSetting("dictationSettings", updatedDictationSettings)
+									}}>
+									{t("features.enableDictation", "settings")}
+								</VSCodeCheckbox>
+								<p className="text-xs text-description mt-1">
+									{t("features.enableDictationDescription", "settings")}
+								</p>
+							</div>
 
-					{dictation.dictationEnabled && (
-						<div className="mt-2.5 ml-5">
-							<label
-								className="block text-sm font-medium text-foreground mb-1"
-								htmlFor="dictation-language-dropdown">
-								{t("features.dictationLanguage", "settings")}
-							</label>
-							<VSCodeDropdown
-								className="w-full"
-								currentValue={dictation.dictationLanguage || "en"}
-								id="dictation-language-dropdown"
-								onChange={(e: any) => {
-									const newValue = e.target.value
-									const updatedDictationSettings = {
-										...dictation,
-										dictationLanguage: newValue,
-									}
-									updateSetting("dictationSettings", updatedDictationSettings)
-								}}>
-								{SUPPORTED_DICTATION_LANGUAGES.map((language) => (
-									<VSCodeOption className="py-0.5" key={language.code} value={language.code}>
-										{language.name}
-									</VSCodeOption>
-								))}
-							</VSCodeDropdown>
-							<p className="text-xs mt-1 text-description">
-								{t("features.dictationLanguageDescription", "settings")}
-							</p>
-						</div>
+							{dictation.dictationEnabled && (
+								<div className="mt-2.5 ml-5">
+									<label
+										className="block text-sm font-medium text-foreground mb-1"
+										htmlFor="dictation-language-dropdown">
+										{t("features.dictationLanguage", "settings")}
+									</label>
+									<VSCodeDropdown
+										className="w-full"
+										currentValue={dictation.dictationLanguage || "en"}
+										id="dictation-language-dropdown"
+										onChange={(e: any) => {
+											const newValue = e.target.value
+											const updatedDictationSettings = {
+												...dictation,
+												dictationLanguage: newValue,
+											}
+											updateSetting("dictationSettings", updatedDictationSettings)
+										}}>
+										{SUPPORTED_DICTATION_LANGUAGES.map((language) => (
+											<VSCodeOption className="py-0.5" key={language.code} value={language.code}>
+												{language.name}
+											</VSCodeOption>
+										))}
+									</VSCodeDropdown>
+									<p className="text-xs mt-1 text-description">
+										{t("features.dictationLanguageDescription", "settings")}
+									</p>
+								</div>
+							)}
+						</>
 					)}
 					<div style={{ marginTop: 10 }}>
 						<VSCodeCheckbox

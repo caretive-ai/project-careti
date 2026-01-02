@@ -28,6 +28,7 @@ const AppContent = () => {
 		showSettings,
 		showHistory,
 		showAccount,
+		featureConfig,
 		showAnnouncement,
 		setShowAnnouncement,
 		setShouldShowAnnouncement,
@@ -81,6 +82,7 @@ const AppContent = () => {
 			{showHistory && <HistoryView onDone={hideHistory} />}
 			{showMcp && <McpView initialTab={mcpTab} onDone={closeMcpView} />}
 			{showAccount &&
+				featureConfig?.showAccountUI !== false && // CARET MODIFICATION: gate account UI by feature flag
 				(isCaret ? (
 					<CaretAccountView caretUser={caretUser} onDone={hideAccount} />
 				) : (
@@ -94,7 +96,7 @@ const AppContent = () => {
 			{/* Do not conditionally load ChatView, it's expensive and there's state we don't want to lose (user input, disableInput, askResponse promise, etc.) */}
 			<ChatView
 				hideAnnouncement={hideAnnouncement}
-				isHidden={showSettings || showHistory || showMcp || showAccount}
+				isHidden={showSettings || showHistory || showMcp || (showAccount && featureConfig?.showAccountUI !== false)}
 				showAnnouncement={showAnnouncement}
 				showHistoryView={navigateToHistory}
 			/>

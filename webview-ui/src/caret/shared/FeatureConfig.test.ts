@@ -20,6 +20,9 @@ describe("FeatureConfig Integration Tests", () => {
 			expect(config.defaultProvider).toBe("caret")
 			expect(config.showOnlyDefaultProvider).toBe(false)
 			expect(config.defaultPersonaEnabled).toBe(true)
+			expect(config.showModeSystemToggle).toBe(false)
+			expect(config.showAccountUI).toBe(false)
+			expect(config.showDictationToggle).toBe(false)
 		})
 	})
 
@@ -36,6 +39,9 @@ describe("FeatureConfig Integration Tests", () => {
 				showOnlyDefaultProvider: false,
 				showCostInformation: true,
 				defaultPersonaEnabled: true,
+				showModeSystemToggle: true,
+				showAccountUI: true,
+				showDictationToggle: true,
 			}
 
 			// When: UI에서 페르소나 표시 여부 확인
@@ -57,6 +63,9 @@ describe("FeatureConfig Integration Tests", () => {
 				showOnlyDefaultProvider: true,
 				showCostInformation: false,
 				defaultPersonaEnabled: false,
+				showModeSystemToggle: false,
+				showAccountUI: false,
+				showDictationToggle: false,
 			}
 
 			// When: UI에서 페르소나 표시 여부 확인
@@ -78,6 +87,9 @@ describe("FeatureConfig Integration Tests", () => {
 				showOnlyDefaultProvider: false,
 				showCostInformation: true,
 				defaultPersonaEnabled: true,
+				showModeSystemToggle: true,
+				showAccountUI: true,
+				showDictationToggle: true,
 			}
 
 			// When: API 설정 완료 후 리다이렉트 위치 확인
@@ -99,6 +111,9 @@ describe("FeatureConfig Integration Tests", () => {
 				showOnlyDefaultProvider: true,
 				showCostInformation: false,
 				defaultPersonaEnabled: false,
+				showModeSystemToggle: false,
+				showAccountUI: false,
+				showDictationToggle: false,
 			}
 
 			// When: API 설정 완료 후 리다이렉트 위치 확인
@@ -122,6 +137,9 @@ describe("FeatureConfig Integration Tests", () => {
 				showOnlyDefaultProvider: true,
 				showCostInformation: false,
 				defaultPersonaEnabled: false,
+				showModeSystemToggle: false,
+				showAccountUI: false,
+				showDictationToggle: false,
 			}
 
 			// When: 프로바이더 표시 설정 확인
@@ -145,6 +163,9 @@ describe("FeatureConfig Integration Tests", () => {
 				showOnlyDefaultProvider: false,
 				showCostInformation: true,
 				defaultPersonaEnabled: true,
+				showModeSystemToggle: true,
+				showAccountUI: true,
+				showDictationToggle: true,
 			}
 
 			// When: 프로바이더 표시 설정 확인

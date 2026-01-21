@@ -219,7 +219,7 @@ Available via Careti account even for text-only models.
 
 ## 📞 Support
 
-- 🏠 https://caret.team
+- 🏠 https://careti.ai
 - 💬 https://discord.gg/WB6yaR89YN
 - 🐛 [GitHub Issues](https://github.com/caretive-ai/careti/issues)
 

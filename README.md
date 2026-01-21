@@ -7,19 +7,19 @@
         <a href="https://docs.careti.ai/en/getting-started/what-is-caret">📖 Docs</a>
       </td>
       <td align="center">
-        <a href="https://github.com/caretive-ai/careti/blob/main/caret-docs/readme-i18n/README.ko.md">
+        <a href="https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/readme-i18n/README.ko.md">
           <img src="https://img.shields.io/badge/🇰🇷_한국어-16a34a?style=for-the-badge&labelColor=15803d" alt="한국어"/>
         </a><br/>
         <a href="https://docs.careti.ai/ko/getting-started/what-is-caret">📖 Docs</a>
       </td>
       <td align="center">
-        <a href="https://github.com/caretive-ai/careti/blob/main/caret-docs/readme-i18n/README.ja.md">
+        <a href="https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/readme-i18n/README.ja.md">
           <img src="https://img.shields.io/badge/🇯🇵_日本語-ea580c?style=for-the-badge&labelColor=c2410c" alt="日本語"/>
         </a><br/>
         <a href="https://docs.careti.ai/ja/getting-started/what-is-caret">📖 Docs</a>
       </td>
       <td align="center">
-        <a href="https://github.com/caretive-ai/careti/blob/main/caret-docs/readme-i18n/README.zh-cn.md">
+        <a href="https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/readme-i18n/README.zh-cn.md">
           <img src="https://img.shields.io/badge/🇨🇳_中文-eab308?style=for-the-badge&labelColor=ca8a04" alt="中文"/>
         </a><br/>
         <a href="https://docs.careti.ai/zh/getting-started/what-is-caret">📖 Docs</a>
@@ -27,17 +27,17 @@
     </tr>
     <tr>
       <td align="center" colspan="4">
-        <a href="https://github.com/caretive-ai/careti/blob/main/caret-docs/readme-i18n/README.fr.md">
+        <a href="https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/readme-i18n/README.fr.md">
           <img src="https://img.shields.io/badge/🇫🇷_Français-0055a4?style=for-the-badge&labelColor=003f7f" alt="Français"/>
         </a>
         <a href="https://docs.careti.ai/fr/getting-started/what-is-caret">📖</a>
         &nbsp;&nbsp;
-        <a href="https://github.com/caretive-ai/careti/blob/main/caret-docs/readme-i18n/README.de.md">
+        <a href="https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/readme-i18n/README.de.md">
           <img src="https://img.shields.io/badge/🇩🇪_Deutsch-ffcc00?style=for-the-badge&labelColor=dd0000" alt="Deutsch"/>
         </a>
         <a href="https://docs.careti.ai/de/getting-started/what-is-caret">📖</a>
         &nbsp;&nbsp;
-        <a href="https://github.com/caretive-ai/careti/blob/main/caret-docs/readme-i18n/README.ru.md">
+        <a href="https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/readme-i18n/README.ru.md">
           <img src="https://img.shields.io/badge/🇷🇺_Русский-0039a6?style=for-the-badge&labelColor=d52b1e" alt="Русский"/>
         </a>
         <a href="https://docs.careti.ai/ru/getting-started/what-is-caret">📖</a>
@@ -45,7 +45,7 @@
     </tr>
   </table>
 
-  <img src="https://raw.githubusercontent.com/caretive-ai/careti/main/assets/template_characters/caret_illust.png" alt="Caret" width="360"/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/pj-careti/main/assets/template_characters/caret_illust.png" alt="Caret" width="360"/>
 
   <h1>🎯 Caret</h1>
   <p><strong>Use your Cline settings as-is, with more features, 266 models, free monthly credits</strong></p>
@@ -56,8 +56,8 @@
     <a href="https://marketplace.visualstudio.com/items?itemName=caretive.caret">
       <img src="https://img.shields.io/visual-studio-marketplace/v/caretive.caret.svg?color=blue&amp;label=VS%20Code%20Marketplace" alt="VS Code Marketplace">
     </a>
-    <a href="https://github.com/caretive-ai/careti">
-      <img src="https://img.shields.io/github/stars/caretive-ai/careti.svg?style=social&amp;label=Star" alt="GitHub stars">
+    <a href="https://github.com/caretive-ai/pj-careti">
+      <img src="https://img.shields.io/github/stars/caretive-ai/pj-careti.svg?style=social&amp;label=Star" alt="GitHub stars">
     </a>
   </p>
 
@@ -118,27 +118,27 @@
 <table>
 <tr>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/caretive-ai/careti/main/assets/template_characters/caret.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/pj-careti/main/assets/template_characters/caret.png" width="60"/><br/>
   <strong>Caret</strong><br/>
   <small>Friendly Robot</small>
 </td>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/caretive-ai/careti/main/assets/template_characters/sarang.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/pj-careti/main/assets/template_characters/sarang.png" width="60"/><br/>
   <strong>Sarang</strong><br/>
   <small>K-POP Idol</small>
 </td>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/caretive-ai/careti/main/assets/template_characters/ichika.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/pj-careti/main/assets/template_characters/ichika.png" width="60"/><br/>
   <strong>Ichika</strong><br/>
   <small>Windows OS-tan</small>
 </td>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/caretive-ai/careti/main/assets/template_characters/cyan.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/pj-careti/main/assets/template_characters/cyan.png" width="60"/><br/>
   <strong>Cyan</strong><br/>
   <small>macOS Helper</small>
 </td>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/caretive-ai/careti/main/assets/template_characters/ubuntu.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/pj-careti/main/assets/template_characters/ubuntu.png" width="60"/><br/>
   <strong>Tando</strong><br/>
   <small>Open Source Ally</small>
 </td>
@@ -199,21 +199,21 @@ Available via Careti account even for text-only models.
 
 | Feature | Description | Docs |
 |---------|-------------|------|
-| F00 | Cline bugfix & stability | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f00-cline-bugfix-patch.md) |
-| F01 | Common utilities | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f01-common-util.md) |
-| F02 | Multilingual i18n | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f02-multilingual-i18n.md) |
-| F03 | Branding & UI | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f03-branding-ui.md) |
-| F04 | Cline compatibility | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f04-cline-compatibility-and-cli.md) |
-| F05 | Careti account | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f05-caret-account.md) |
-| F06 | Agent standardization (AAIF) | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f06-agent-standardization.md) |
-| F07 | Prompt system | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f07-caret-prompt-system.md) |
-| F08 | Persona system | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f08-persona-system.md) |
-| F09 | Feature Config | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f09-feature-config-system.md) |
-| F10 | Provider setup | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f10-enhanced-provider-setup.md) |
-| F11 | Input history & shortcuts | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f11-input-history-and-shortcuts.md) |
-| F12 | AI-developer knowledge parity | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f12-ai-developer-knowledge-parity.md) |
-| F13 | Image tools | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f13-image-tool.md) |
-| F14 | Document tools | [View](https://github.com/caretive-ai/careti/blob/main/caret-docs/features.en/f14-document-read-tool.md) |
+| F00 | Cline bugfix & stability | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f00-cline-bugfix-patch.md) |
+| F01 | Common utilities | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f01-common-util.md) |
+| F02 | Multilingual i18n | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f02-multilingual-i18n.md) |
+| F03 | Branding & UI | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f03-branding-ui.md) |
+| F04 | Cline compatibility | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f04-cline-compatibility-and-cli.md) |
+| F05 | Careti account | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f05-caret-account.md) |
+| F06 | Agent standardization (AAIF) | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f06-agent-standardization.md) |
+| F07 | Prompt system | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f07-caret-prompt-system.md) |
+| F08 | Persona system | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f08-persona-system.md) |
+| F09 | Feature Config | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f09-feature-config-system.md) |
+| F10 | Provider setup | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f10-enhanced-provider-setup.md) |
+| F11 | Input history & shortcuts | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f11-input-history-and-shortcuts.md) |
+| F12 | AI-developer knowledge parity | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f12-ai-developer-knowledge-parity.md) |
+| F13 | Image tools | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f13-image-tool.md) |
+| F14 | Document tools | [View](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/features.en/f14-document-read-tool.md) |
 
 ---
 
@@ -221,16 +221,16 @@ Available via Careti account even for text-only models.
 
 - 🏠 https://careti.ai
 - 💬 https://discord.gg/WB6yaR89YN
-- 🐛 [GitHub Issues](https://github.com/caretive-ai/careti/issues)
+- 🐛 [GitHub Issues](https://github.com/caretive-ai/pj-careti/issues)
 
 ---
 
 <details>
 <summary><strong>🛠️ For Developers</strong></summary>
 
-- [Developer Docs](https://github.com/caretive-ai/careti/blob/main/caret-docs/development/index.md)
-- [Architecture](https://github.com/caretive-ai/careti/blob/main/caret-docs/development/caret-architecture-and-implementation-guide.md)
-- [AI Work Guide](https://github.com/caretive-ai/careti/blob/main/caret-docs/guides/ai-work-method-guide.md)
+- [Developer Docs](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/development/index.md)
+- [Architecture](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/development/caret-architecture-and-implementation-guide.md)
+- [AI Work Guide](https://github.com/caretive-ai/pj-careti/blob/main/caret-docs/guides/ai-work-method-guide.md)
 
 **Contribute**: Fork → PR
 

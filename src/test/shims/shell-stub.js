@@ -1,4 +1,4 @@
-// CARET MODIFICATION: test stub for shell utilities to avoid ESM loader issues
+// CARETI MODIFICATION: test stub for shell utilities to avoid ESM loader issues
 module.exports = {
 	getShellPath: async () => "/bin/sh",
 	getUserShell: () => "/bin/sh",

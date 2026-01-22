@@ -11,13 +11,13 @@ import (
 
 const (
 	// defaultBrandDisplayName is used if package.json cannot be read.
-	defaultBrandDisplayName = "Caret"
+	defaultBrandDisplayName = "Careti"
 	// BrandSlug is a lowercase identifier used in log file names.
-	BrandSlug = "caret"
+	BrandSlug = "careti"
 	// ConfigDirName sets the root config directory (shared across caret/cline binaries).
 	ConfigDirName = ".caret"
 	// SupportURL should point to the Caret issue tracker.
-	SupportURL = "https://github.com/aicoding-caret/caret/issues"
+	SupportURL = "https://github.com/caretive-ai/project-careti/issues"
 )
 
 var (
@@ -25,12 +25,12 @@ var (
 	brandDisplayName     = defaultBrandDisplayName
 )
 
-// CARET MODIFICATION: compute ignore filename based on current brand (default ".caretignore")
+// CARETI MODIFICATION: compute ignore filename based on current brand (default ".caretignore")
 func BrandIgnoreFileName() string {
 	return fmt.Sprintf(".%signore", strings.ToLower(BrandDisplayName()))
 }
 
-// CARET MODIFICATION: resolve brand display name from nearest package.json (install root), fallback to default.
+// CARETI MODIFICATION: resolve brand display name from nearest package.json (install root), fallback to default.
 func BrandDisplayName() string {
 	brandDisplayNameOnce.Do(func() {
 		execPath, err := os.Executable()
@@ -70,7 +70,7 @@ func BrandAppURL() string {
 	case "cline":
 		return "https://app.cline.bot"
 	default:
-		return "https://caret.team"
+		return "https://careti.ai"
 	}
 }
 
@@ -80,7 +80,7 @@ func BrandDocsURL() string {
 	case "cline":
 		return "https://docs.cline.bot"
 	default:
-		return "https://docs.caret.team"
+		return "https://docs.careti.ai"
 	}
 }
 
@@ -106,7 +106,7 @@ func readBrandFromPackageJSON(execPath string) string {
 	return ""
 }
 
-// CARET MODIFICATION: centralized brand/config helpers for caret CLI.
+// CARETI MODIFICATION: centralized brand/config helpers for caret CLI.
 func DefaultConfigPath() (string, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
@@ -115,7 +115,7 @@ func DefaultConfigPath() (string, error) {
 	return filepath.Join(homeDir, ConfigDirName), nil
 }
 
-// CARET MODIFICATION: shared logs dir helper for caret CLI.
+// CARETI MODIFICATION: shared logs dir helper for caret CLI.
 func LogsDir(configPath string) string {
 	return filepath.Join(configPath, "logs")
 }
@@ -130,8 +130,8 @@ func ResolveBrandNameForPath(execPath string) string {
 	switch {
 	case strings.Contains(base, "cline"):
 		return "Cline"
-	case strings.Contains(base, "caret"):
-		return "Caret"
+	case strings.Contains(base, "careti"):
+		return "Careti"
 	default:
 		return defaultBrandDisplayName
 	}

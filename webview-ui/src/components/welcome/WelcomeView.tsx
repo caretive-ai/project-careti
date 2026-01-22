@@ -1,22 +1,22 @@
-// CARET MODIFICATION: Refactored to use caret-main architecture with improved navigation
-// CARET MODIFICATION: .cline 백업 규칙은 deprecated — 원본/복구는 git history로 추적
+// CARETI MODIFICATION: Refactored to use careti-main architecture with improved navigation
+// CARETI MODIFICATION: .cline 백업 규칙은 deprecated — 원본/복구는 git history로 추적
 
-// CARET MODIFICATION: Import feature configuration for redirect behavior
+// CARETI MODIFICATION: Import feature configuration for redirect behavior
 // Frontend는 ExtensionState의 featureConfig 사용
 import { BooleanRequest } from "@shared/proto/cline/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useState } from "react"
-import CaretApiSetup from "@/caret/components/CaretApiSetup"
-import CaretFooter from "@/caret/components/CaretFooter"
-import CaretWelcomeSection from "@/caret/components/CaretWelcomeSection"
-import UnifiedLanguageSetting from "@/caret/components/UnifiedLanguageSetting"
-// CARET MODIFICATION: URL 상수 및 UiServiceClient 임포트
-import { CARET_URLS } from "@/caret/constants/urls"
-import { useCaretState } from "@/caret/context/CaretStateContext"
-import { t } from "@/caret/utils/i18n"
-import { CaretWebviewLogger } from "@/caret/utils/webview-logger"
+import CaretApiSetup from "@/careti/components/CaretApiSetup"
+import CaretFooter from "@/careti/components/CaretFooter"
+import CaretWelcomeSection from "@/careti/components/CaretWelcomeSection"
+import UnifiedLanguageSetting from "@/careti/components/UnifiedLanguageSetting"
+// CARETI MODIFICATION: URL 상수 및 UiServiceClient 임포트
+import { CARET_URLS } from "@/careti/constants/urls"
+import { useCaretState } from "@/careti/context/CaretStateContext"
+import { t } from "@/careti/utils/i18n"
+import { CaretWebviewLogger } from "@/careti/utils/webview-logger"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-// CARET MODIFICATION: UiServiceClient 임포트 추가
+// CARETI MODIFICATION: UiServiceClient 임포트 추가
 import { StateServiceClient, UiServiceClient } from "@/services/grpc-client"
 import { validateApiConfiguration } from "@/utils/validate"
 import CliInstallBanner from "./CliInstallBanner"
@@ -30,7 +30,7 @@ const WelcomeView = () => {
 	const [apiErrorMessage, setApiErrorMessage] = useState<string | undefined>(undefined)
 	const [showApiOptions, setShowApiOptions] = useState(false)
 
-	// CARET MODIFICATION: Dynamically check for window.caretBannerImage (similar to PersonaAvatar pattern)
+	// CARETI MODIFICATION: Dynamically check for window.caretBannerImage (similar to PersonaAvatar pattern)
 	const [bannerSrc, setBannerSrc] = useState<string>(caretBanner)
 
 	useEffect(() => {
@@ -59,7 +59,7 @@ const WelcomeView = () => {
 
 	const handleSubmitApiKey = async () => {
 		try {
-			// CARET MODIFICATION: API 설정 완료 후 브랜드 설정에 따라 다른 처리
+			// CARETI MODIFICATION: API 설정 완료 후 브랜드 설정에 따라 다른 처리
 
 			if (featureConfig?.redirectAfterApiSetup === "persona") {
 				// 페르소나 선택 창을 띄움
@@ -87,7 +87,7 @@ const WelcomeView = () => {
 		setShowApiOptions(false)
 	}
 
-	// CARET MODIFICATION: UiServiceClient를 사용하여 외부 링크를 새 창에서 열도록 수정
+	// CARETI MODIFICATION: UiServiceClient를 사용하여 외부 링크를 새 창에서 열도록 수정
 	const handleOpenLink = async (link: string) => {
 		try {
 			await UiServiceClient.openUrl({ value: link })
@@ -130,8 +130,8 @@ const WelcomeView = () => {
 	if (showApiOptions) {
 		return (
 			<div
-				className="caret-api-setup-page"
-				data-testid="caret-api-setup-page"
+				className="careti-api-setup-page"
+				data-testid="careti-api-setup-page"
 				style={{
 					position: "fixed",
 					top: 0,
@@ -163,8 +163,8 @@ const WelcomeView = () => {
 	// 메인 웰컴 페이지
 	return (
 		<div
-			className="caret-welcome"
-			data-testid="caret-welcome-view"
+			className="careti-welcome"
+			data-testid="careti-welcome-view"
 			style={{
 				position: "fixed",
 				top: 0,
@@ -181,7 +181,7 @@ const WelcomeView = () => {
 					overflowY: "auto",
 				}}>
 				<center style={{ marginBottom: "20px" }}>
-					{/* CARET MODIFICATION: Use banner from window.caretBannerImage with dynamic check */}
+					{/* CARETI MODIFICATION: Use banner from window.caretBannerImage with dynamic check */}
 					<img
 						alt={t("imageAlt.caretBanner", "common")}
 						src={bannerSrc}
@@ -205,12 +205,12 @@ const WelcomeView = () => {
 						{t("coreFeatures.header", "welcome")}
 					</h2>
 				</div>
-				{/* CARET MODIFICATION: CLI Install Banner */}
+				{/* CARETI MODIFICATION: CLI Install Banner */}
 				<CliInstallBanner />
 				{renderSection("", "coreFeatures.description")}
 				{/* 언어 선택과 시작 섹션 */}
 				<CaretWelcomeSection allowHtml={true} bodyKey="" headerKey="">
-					{/* CARET MODIFICATION: 언어 설정을 일반설정의 선호언어로 연결 */}
+					{/* CARETI MODIFICATION: 언어 설정을 일반설정의 선호언어로 연결 */}
 					<div style={{ marginBottom: "20px" }}>
 						<UnifiedLanguageSetting />
 					</div>
@@ -230,7 +230,7 @@ const WelcomeView = () => {
 						</VSCodeButton>
 					</div>
 				</CaretWelcomeSection>
-				{/* CARET MODIFICATION: 하드코딩된 URL을 상수로 변경 */}
+				{/* CARETI MODIFICATION: 하드코딩된 URL을 상수로 변경 */}
 				{renderSection(
 					"community.header",
 					"community.body",

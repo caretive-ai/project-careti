@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/cline/cli/pkg/cli/clerror"
-	"github.com/cline/cli/pkg/cli/types"
 	"github.com/cline/cli/pkg/cli/output"
+	"github.com/cline/cli/pkg/cli/types"
 	"github.com/cline/cli/pkg/common"
 )
 
@@ -194,7 +194,7 @@ func (h *SayHandler) handleText(msg *types.ClineMessage, dc *DisplayContext) err
 		output.Printf("%s\n", rendered)
 	} else {
 		// In non-streaming mode, render header + body together
-		// CARET MODIFICATION: branding
+		// CARETI MODIFICATION: branding
 		markdown := fmt.Sprintf("### Caret responds\n\n%s", msg.Text)
 		rendered = dc.Renderer.RenderMarkdown(markdown)
 		output.Printf("\n%s\n", rendered)
@@ -215,7 +215,7 @@ func (h *SayHandler) handleReasoning(msg *types.ClineMessage, dc *DisplayContext
 		output.Printf("%s\n", rendered)
 	} else {
 		// In non-streaming mode, render header + body together
-		// CARET MODIFICATION: Caret branding in streaming header
+		// CARETI MODIFICATION: Caret branding in streaming header
 		markdown := fmt.Sprintf("### Caret is thinking\n\n%s", msg.Text)
 		rendered = dc.Renderer.RenderMarkdown(markdown)
 		output.Printf("\n%s\n", rendered)
@@ -472,11 +472,11 @@ func (h *SayHandler) handleDeletedAPIReqs(msg *types.ClineMessage, dc *DisplayCo
 	return nil
 }
 
-// CARET MODIFICATION: handle brand-aware ignore file (.caretignore default, .clineignore legacy) error messages
+// CARETI MODIFICATION: handle brand-aware ignore file (.caretignore default, .clineignore legacy) error messages
 func (h *SayHandler) handleClineignoreError(msg *types.ClineMessage, dc *DisplayContext) error {
 	ignoreFile := common.BrandIgnoreFileName()
 	legacyIgnoreFile := ".clineignore"
-	// CARET MODIFICATION: use dynamic brand name instead of hardcoded Cline
+	// CARETI MODIFICATION: use dynamic brand name instead of hardcoded Cline
 	brandName := common.BrandDisplayName()
 	if dc.SystemRenderer != nil {
 		return dc.SystemRenderer.RenderInfo(

@@ -1,4 +1,4 @@
-// CARET MODIFICATION: TDD 회귀 테스트 - 마지막 메시지가 자동승인 바에 가려지지 않도록 마지막 아이템에 bottom padding이 적용되어야 함 (R-3400-04)
+// CARETI MODIFICATION: TDD 회귀 테스트 - 마지막 메시지가 자동승인 바에 가려지지 않도록 마지막 아이템에 bottom padding이 적용되어야 함 (R-3400-04)
 
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"

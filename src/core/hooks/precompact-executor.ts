@@ -1,5 +1,5 @@
-// CARET MODIFICATION: PreCompact hook executor for context compaction
-// Ported from cline-latest/src/core/hooks/precompact-executor.ts with Caret path standards
+// CARETI MODIFICATION: PreCompact hook executor for context compaction
+// Ported from cline-latest/src/core/hooks/precompact-executor.ts with Careti path standards
 import { findLastIndex } from "@shared/array"
 import type { ClineMessage } from "@shared/ExtensionMessage"
 import type { ClineStorageMessage } from "@shared/messages/content"

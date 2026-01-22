@@ -73,7 +73,7 @@ export interface ExtensionState {
 	userInfo?: UserInfo
 	version: string
 	distinctId: string
-	// CARET MODIFICATION: optional model info and command completion flags
+	// CARETI MODIFICATION: optional model info and command completion flags
 	commandCompleted?: boolean
 	globalClineRulesToggles: ClineRulesToggles
 	localClineRulesToggles: ClineRulesToggles
@@ -94,7 +94,7 @@ export interface ExtensionState {
 	autoCondenseThreshold?: number
 	imageGenerationAspectRatio?: string
 	imageGenerationSize?: string
-	imageAnalysisModel?: string // CARET MODIFICATION: Image analysis model selection
+	imageAnalysisModel?: string // CARETI MODIFICATION: Image analysis model selection
 	favoritedModelIds: string[]
 	// NEW: Add workspace information
 	workspaceRoots: WorkspaceRoot[]
@@ -104,13 +104,13 @@ export interface ExtensionState {
 	lastDismissedInfoBannerVersion: number
 	lastDismissedModelBannerVersion: number
 	lastDismissedCliBannerVersion: number
-	// CARET MODIFICATION: Feature configuration for brand-specific behavior
+	// CARETI MODIFICATION: Feature configuration for brand-specific behavior
 	featureConfig?: any
-	// CARET MODIFICATION: F11 - Input History System
+	// CARETI MODIFICATION: F11 - Input History System
 	inputHistory?: string[]
-	// CARET MODIFICATION: F01 - Mode System
-	modeSystem?: "cline" | "caret"
-	// CARET MODIFICATION: F08 - Persona System
+	// CARETI MODIFICATION: F01 - Mode System
+	modeSystem?: "cline" | "careti"
+	// CARETI MODIFICATION: F08 - Persona System
 	enablePersonaSystem?: boolean
 	currentPersona?: string | null
 	personaProfile?: {
@@ -120,25 +120,25 @@ export interface ExtensionState {
 		avatar_uri?: string
 		thinking_avatar_uri?: string
 	} | null
-	// CARET MODIFICATION: F03 - Branding
+	// CARETI MODIFICATION: F03 - Branding
 	caretBanner?: string
-	// CARET MODIFICATION: F05 - Rule Priority
+	// CARETI MODIFICATION: F05 - Rule Priority
 	localCaretRulesToggles?: ClineRulesToggles
-	// CARET MODIFICATION: F04 - Feature Flag (future use)
+	// CARETI MODIFICATION: F04 - Feature Flag (future use)
 	focusChainFeatureFlagEnabled?: boolean
-	// CARET MODIFICATION: UI State
+	// CARETI MODIFICATION: UI State
 	showChatModelSelector?: boolean
 	checkpointTrackerErrorMessage?: string
 	// NEW: Remote config and agent toggles (cline 3.38.1)
 	remoteConfigSettings?: Partial<RemoteConfigFields>
 	subagentsEnabled?: boolean
 	hooksEnabled?: ClineFeatureSetting
-	// CARET MODIFICATION: Skills system
+	// CARETI MODIFICATION: Skills system
 	skillsEnabled?: boolean
 	globalSkillsToggles?: Record<string, boolean>
 	localSkillsToggles?: Record<string, boolean>
 	nativeToolCallSetting?: ClineFeatureSetting
-	// CARET MODIFICATION: CLI Subagent Mode
+	// CARETI MODIFICATION: CLI Subagent Mode
 	isCliSubagent: boolean
 }
 
@@ -159,7 +159,7 @@ export interface ClineMessage {
 	conversationHistoryDeletedRange?: [number, number] // for when conversation history is truncated for API requests
 	modelInfo?: ClineMessageModelInfo
 	commandCompleted?: boolean
-	// CARET MODIFICATION: operationId for reliable message updates (prevents duplicate UI)
+	// CARETI MODIFICATION: operationId for reliable message updates (prevents duplicate UI)
 	operationId?: string
 	[key: string]: any
 }
@@ -230,8 +230,8 @@ export interface ClineSayTool {
 		| "searchFiles"
 		| "webFetch"
 		| "generateImage"
-		| "analyzeImage" // CARET MODIFICATION: for analyze_image tool
-		| "readDocument" // CARET MODIFICATION: for read_document tool
+		| "analyzeImage" // CARETI MODIFICATION: for analyze_image tool
+		| "readDocument" // CARETI MODIFICATION: for read_document tool
 		| "summarizeTask"
 		| "fileDeleted"
 	path?: string
@@ -258,11 +258,11 @@ export interface ClineSayTool {
 		totalCost?: number
 	}
 	errorMessage?: string
-	// CARET MODIFICATION: for read_document tool
+	// CARETI MODIFICATION: for read_document tool
 	documentPath?: string
 	format?: string
 	fileSize?: string
-	// CARET MODIFICATION: for analyze_image tool
+	// CARETI MODIFICATION: for analyze_image tool
 	imagePath?: string
 	question?: string
 }

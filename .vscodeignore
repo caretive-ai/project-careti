@@ -20,21 +20,21 @@
 !src/integrations/theme/default-themes/**
 
 # ✅ Caret runtime sources used at runtime
-!caret-src/
-!caret-src/**
+!careti-src/
+!careti-src/**
 
 # ❌ Exclude merge/development directories
-caret-main/**
-caret-compare/**
-caret-b2b/**
-caret-docs/**
+careti-main/**
+careti-compare/**
+careti-b2b/**
+careti-docs/**
 comparison/**
 cli/**
 cli-caret/**
 standalone/**
 dist-standalone/**
 scripts/**
-caret-scripts/**
+careti-scripts/**
 testing-platform/**
 spec-kit/**
 output/**
@@ -45,7 +45,7 @@ src/**
 webview-ui/**
 docs/**
 old_docs/**
-docs.caret.team/**
+docs.careti.ai/**
 node_modules/**
 .vscode/**
 .github/**

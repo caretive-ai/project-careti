@@ -23,7 +23,7 @@ describe("openFileRelativePath", () => {
 	beforeEach(() => {
 		sandbox = sinon.createSandbox()
 
-		// CARET MODIFICATION: Initialize HostProvider for Logger usage.
+		// CARETI MODIFICATION: Initialize HostProvider for Logger usage.
 		HostProvider.reset()
 		HostProvider.initialize(
 			() => ({}) as any,
@@ -55,7 +55,7 @@ describe("openFileRelativePath", () => {
 		// Stub getWorkspacePath utility
 		getWorkspacePathStub = sandbox.stub(pathUtils, "getWorkspacePath")
 
-		// CARET MODIFICATION: Stub Logger.error for assertions and to avoid HostProvider output coupling.
+		// CARETI MODIFICATION: Stub Logger.error for assertions and to avoid HostProvider output coupling.
 		loggerErrorStub = sandbox.stub(Logger, "error")
 	})
 

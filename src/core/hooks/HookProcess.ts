@@ -238,10 +238,10 @@ export class HookProcess extends EventEmitter {
 		// Track size by stream
 		if (stream === "stdout") {
 			this.stdoutSize += dataSize
-			this.stdoutBuffer += data // CARET MODIFICATION: keep stdout for JSON parsing in tests/hooks
+			this.stdoutBuffer += data // CARETI MODIFICATION: keep stdout for JSON parsing in tests/hooks
 		} else {
 			this.stderrSize += dataSize
-			this.stderrBuffer += data // CARET MODIFICATION: keep stderr for diagnostics in tests/hooks
+			this.stderrBuffer += data // CARETI MODIFICATION: keep stderr for diagnostics in tests/hooks
 		}
 
 		// Store full output

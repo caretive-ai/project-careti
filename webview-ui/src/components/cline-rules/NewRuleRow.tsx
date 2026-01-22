@@ -1,10 +1,10 @@
-// CARET MODIFICATION: New rule/hook creation row component
-// Updated to support hooks from cline-latest with Caret standards
+// CARETI MODIFICATION: New rule/hook creation row component
+// Updated to support hooks from cline-latest with Careti standards
 import { CreateHookRequest, RuleFileRequest } from "@shared/proto/index.cline"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useClickAway } from "react-use"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { FileServiceClient } from "@/services/grpc-client"
 
 interface NewRuleRowProps {
@@ -14,7 +14,7 @@ interface NewRuleRowProps {
 	workspaceName?: string
 }
 
-// CARET MODIFICATION: Hook types for hooks tab
+// CARETI MODIFICATION: Hook types for hooks tab
 const HOOK_TYPES = [
 	{ name: "TaskStart", description: "Executes when a new task begins" },
 	{ name: "TaskResume", description: "Executes when a task is resumed" },
@@ -64,7 +64,7 @@ const NewRuleRow: React.FC<NewRuleRowProps> = ({ isGlobal, ruleType, existingHoo
 		return ext === "" || ext === ".md" || ext === ".txt"
 	}
 
-	// CARET MODIFICATION: Handler for creating hooks
+	// CARETI MODIFICATION: Handler for creating hooks
 	const handleCreateHook = async (hookName: string) => {
 		if (!hookName) return
 
@@ -132,14 +132,14 @@ const NewRuleRow: React.FC<NewRuleRowProps> = ({ isGlobal, ruleType, existingHoo
 				className={`flex items-center p-2 rounded bg-[var(--vscode-input-background)] transition-all duration-300 ease-in-out h-[18px] ${
 					isExpanded ? "shadow-sm" : ""
 				}`}>
-				{/* CARET MODIFICATION: Hook type dropdown for hooks tab */}
+				{/* CARETI MODIFICATION: Hook type dropdown for hooks tab */}
 				{ruleType === "hook" ? (
 					<>
 						<label className="sr-only" htmlFor="hook-type-select">
 							Select hook type to create
 						</label>
 						<span className="sr-only" id="hook-select-description">
-							Choose a hook type to create. Hooks execute at specific points in Caret's lifecycle. Available:{" "}
+							Choose a hook type to create. Hooks execute at specific points in Careti's lifecycle. Available:{" "}
 							{availableHookTypes.map((h) => h.name).join(", ")}
 						</span>
 						<select

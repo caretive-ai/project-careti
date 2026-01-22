@@ -6,15 +6,15 @@ This file provides guidance to Gemini when working with code in this repository.
 ```json
 {
     "auto_read_paths": [
-        ".agents/context/caret-rules.json"
+        ".agents/context/careti-rules.json"
     ],
-    "instruction": "Read .agents/context/caret-rules.json first. It contains the project rules and an index of workflows. Read specific workflow files ON DEMAND as needed. ALWAYS communicate with the user in Korean (한글)."
+    "instruction": "Read .agents/context/careti-rules.json first. It contains the project rules and an index of workflows. Read specific workflow files ON DEMAND as needed. ALWAYS communicate with the user in Korean (한글)."
 }
 ```
 
 ## ⚠️ Critical Instruction
 **DO NOT rely on pre-trained knowledge or assumptions.**
-**ALWAYS** read `.agents/context/caret-rules.json` at the start of the session. It is the **SINGLE SOURCE OF TRUTH** for:
+**ALWAYS** read `.agents/context/careti-rules.json` at the start of the session. It is the **SINGLE SOURCE OF TRUTH** for:
 - Project Identity & Philosophy
 - Merge Strategy (Phase 0, Hybrid Pattern)
 - Architecture Rules (L1-L3 Levels)

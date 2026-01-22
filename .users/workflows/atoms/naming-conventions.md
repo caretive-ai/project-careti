@@ -50,7 +50,7 @@
 
 ### Caret 확장
 ```
-caret-src/
+careti-src/
 ├── services/           (kebab-case 서비스)
 ├── controllers/        (kebab-case 컨트롤러)
 ├── core/              (kebab-case 코어 모듈)
@@ -85,17 +85,17 @@ const MAX_MESSAGE_LENGTH = 4000;
 
 ### 좋은 명명:
 ```
-caret-src/services/persona-service.ts
-caret-src/services/persona-service.test.ts
-caret-src/core/messaging/MessageHandler.ts
-caret-src/core/messaging/MessageHandler.test.ts
+careti-src/services/persona-service.ts
+careti-src/services/persona-service.test.ts
+careti-src/core/messaging/MessageHandler.ts
+careti-src/core/messaging/MessageHandler.test.ts
 ```
 
 ### 나쁜 명명:
 ```
-❌ caret-src/services/personaService.ts     (kebab-case여야 함)
-❌ caret-src/core/message-handler.ts        (클래스는 PascalCase여야 함)
-❌ caret-src/services/PersonaServiceTest.ts (소스 + .test.ts 형식이어야 함)
+❌ careti-src/services/personaService.ts     (kebab-case여야 함)
+❌ careti-src/core/message-handler.ts        (클래스는 PascalCase여야 함)
+❌ careti-src/services/PersonaServiceTest.ts (소스 + .test.ts 형식이어야 함)
 ```
 
 ## 관련 워크플로우

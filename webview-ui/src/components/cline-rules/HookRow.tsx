@@ -1,5 +1,5 @@
-// CARET MODIFICATION: Hook row component for hooks tab
-// Ported from cline-latest with Caret path standards (.agents/hooks)
+// CARETI MODIFICATION: Hook row component for hooks tab
+// Ported from cline-latest with Careti path standards (.agents/hooks)
 import { StringRequest } from "@shared/proto/cline/common"
 import { DeleteHookRequest, HooksToggles } from "@shared/proto/cline/file"
 import { VSCodeButton, VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react"

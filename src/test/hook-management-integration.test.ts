@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Hook management integration tests
+// CARETI MODIFICATION: Hook management integration tests
 // Ported from cline-latest with .agents/hooks path standard
 import { afterEach, beforeEach, describe, it } from "mocha"
 import "should"
@@ -19,7 +19,7 @@ import { CreateHookRequest, DeleteHookRequest, ToggleHookRequest } from "../shar
 /**
  * Integration tests for hook management
  * Tests the complete lifecycle: create -> enable -> disable -> delete
- * CARET MODIFICATION: Uses .agents/hooks path instead of .clinerules/hooks
+ * CARETI MODIFICATION: Uses .agents/hooks path instead of .clinerules/hooks
  */
 describe("Hook Management Integration", () => {
 	// Skip all hook tests on Windows as hooks are not yet supported on that platform
@@ -43,9 +43,9 @@ describe("Hook Management Integration", () => {
 
 		// Create temporary directories
 		tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "hook-integration-test-"))
-		// CARET MODIFICATION: Global hooks path matches Caret branding
-		globalHooksDir = path.join(tempDir, "global", "Documents", "Caret", "Hooks")
-		// CARET MODIFICATION: Workspace hooks use .agents/hooks (Caret standard)
+		// CARETI MODIFICATION: Global hooks path matches Careti branding
+		globalHooksDir = path.join(tempDir, "global", "Documents", "Careti", "Hooks")
+		// CARETI MODIFICATION: Workspace hooks use .agents/hooks (Careti standard)
 		workspaceHooksDir = path.join(tempDir, "workspace", ".agents", "hooks")
 
 		await fs.mkdir(globalHooksDir, { recursive: true })

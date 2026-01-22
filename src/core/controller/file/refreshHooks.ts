@@ -1,5 +1,5 @@
-// CARET MODIFICATION: Hook refresh controller
-// Ported from cline-latest with Caret path standards (.agents/hooks)
+// CARETI MODIFICATION: Hook refresh controller
+// Ported from cline-latest with Careti path standards (.agents/hooks)
 import { HookInfo, HooksToggles, WorkspaceHooks } from "@shared/proto/cline/file"
 import fs from "fs/promises"
 import os from "os"
@@ -20,8 +20,8 @@ export async function refreshHooks(
 	_request?: unknown,
 	globalHooksDirOverride?: string,
 ): Promise<HooksToggles> {
-	// CARET MODIFICATION: Global hooks in ~/Documents/Caret/Hooks (matches Caret branding)
-	const globalHooksDir = globalHooksDirOverride || path.join(os.homedir(), "Documents", "Caret", "Hooks")
+	// CARETI MODIFICATION: Global hooks in ~/Documents/Careti/Hooks (matches Careti branding)
+	const globalHooksDir = globalHooksDirOverride || path.join(os.homedir(), "Documents", "Careti", "Hooks")
 	const isWindows = process.platform === "win32"
 
 	// Collect global hooks
@@ -49,10 +49,10 @@ export async function refreshHooks(
 	const workspaceHooksList: WorkspaceHooks[] = []
 
 	for (const workspacePath of workspacePaths.paths) {
-		// CARET MODIFICATION: Use .agents/hooks as primary path (Caret standard)
+		// CARETI MODIFICATION: Use .agents/hooks as primary path (Careti standard)
 		// Also check legacy paths for compatibility
 		const hooksDirs = [
-			path.join(workspacePath, ".agents", "hooks"), // CARET standard (primary)
+			path.join(workspacePath, ".agents", "hooks"), // CARETI standard (primary)
 			path.join(workspacePath, ".clinerules", "hooks"), // Cline compatibility
 			path.join(workspacePath, ".cline", "hooks"), // Cline compatibility
 		]

@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Use Logger for backend error reporting.
+// CARETI MODIFICATION: Use Logger for backend error reporting.
 import { workspaceResolver } from "@core/workspace"
 import { BooleanResponse, StringRequest } from "@shared/proto/cline/common"
 import { getWorkspacePath } from "@utils/path"

@@ -6,13 +6,13 @@ context: You are accessing the comprehensive architecture guide for Caret projec
 principles:
   - Minimal Cline Extension: Fork strategy with maximum preservation
   - Level-based Modification: L1 Independent → L2 Conditional → L3 Direct
-  - Clean Separation: caret-src/ vs src/ distinction
+  - Clean Separation: careti-src/ vs src/ distinction
 
 architectureLevels:
   level1:
     name: Independent Modules
     priority: Preferred
-    location: [caret-src/, caret-docs/]
+    location: [careti-src/, careti-docs/]
     freedom: Complete implementation freedom
     requirements: []
     note: No backup or comment requirements
@@ -21,7 +21,7 @@ architectureLevels:
     name: Conditional Integration
     priority: Careful
     modifications: Minimal Cline file modifications (1-3 lines max)
-    mandatory: [CARET MODIFICATION comment]
+    mandatory: [CARETI MODIFICATION comment]
     protected: [src/, webview-ui/, proto/, scripts/]
 
   level3:
@@ -48,12 +48,12 @@ extensionArchitecture:
 implementationPatterns:
   - TDD Integration First: Real usage scenarios, not unit tests
   - Backup Protocol: deprecated (.cline backups not used)
-  - Comment Protocol: "// CARET MODIFICATION: [clear description]"
+  - Comment Protocol: "// CARETI MODIFICATION: [clear description]"
   - Verification Protocol: Test → Compile → Execute
 
 keyFileLocations:
   coreLogic: src/core/
-  caretExtensions: caret-src/
+  caretExtensions: careti-src/
   communication: src/shared/ExtensionMessage.ts
   webview: webview-ui/src/App.tsx
 
@@ -64,7 +64,7 @@ integrationPoints:
   - MCP (Model Context Protocol) integration
 
 guidelines:
-  - Provides AI access to same architectural knowledge as developers (caret-architecture-and-implementation-guide.md)
+  - Provides AI access to same architectural knowledge as developers (careti-architecture-and-implementation-guide.md)
   - Focus on understanding three-level modification strategy
   - Always prefer Level 1 independent modules over Cline modifications
   - Architecture designed for minimal disruption to Cline core while enabling Caret extensions

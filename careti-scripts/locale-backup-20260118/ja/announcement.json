@@ -1,0 +1,40 @@
+{
+	"header": "🎉 v{{version}} 新機能",
+	"previousHeader": "以前のアップデート:",
+	"bullets": {
+		"current": {
+			"0": "Caretアカウント Nano Banana統合",
+			"0-desc": "CaretアカウントにGemini 3 Flash Previewを追加し、Nano Banana画像生成機能を統合して生成物をプロジェクトのアセットとして利用できます。",
+			"1": "毎月の無料クレジット",
+			"1-desc": "新規ユーザーは毎月$0.1(10クレジット)を受け取れます！初月ボーナス：最大$0.2から始められます。Gemini 3、2.5 Pro、Liteで利用可能です。",
+			"2": "新しいプロバイダーとモデル: Naver Cloud (https://clova.ai/)、Hyper Clova X",
+			"2-desc": "Naver Cloud(https://clova.ai/)の新規プロバイダーとHCX-007/HCX-005/HCX-DASH-002モデルを追加しました。",
+			"3": "Agents.mdとプロジェクト初期化機能",
+			"3-desc": "従来のCaret/Cline専用ルールをAAIF国際標準に合わせて改訂し、プロジェクト初期設定を支援する機能を追加しました。",
+			"4": "デュアルアカウントシステム",
+			"4-desc": "CaretアカウントとClineアカウントを同時に使用できます。Clineユーザーは制限なくすべての機能にアクセスできるようになりました。",
+			"5": "Cline v3.45.0 バグ修正統合",
+			"5-desc": "Cline v3.45.0のバグ修正コードを部分的にマージしました。"
+		},
+		"previous": {
+			"0": "Caret Providerの安定化",
+			"0-desc": "careti.aiサービスの公式ローンチに合わせて、anyLLMベースのCaret Providerが安定しました。信頼性が向上しています。",
+			"1": "Cline v3.38.2の完全な統合",
+			"1-desc": "Claude Opus 4.5および最新のコア改善を含む、Cline v3.38.2のすべての機能を完全に統合しました。",
+			"2": "新モデル：Claude Opus 4.5",
+			"2-desc": "Anthropic、OpenRouter、Bedrock、およびVertex経由で利用可能になり、プロンプトキャッシング価格が適用されます。",
+			"3": "新しいショートカットシステム",
+			"3-desc": "新しい管理システムと共に、キャンセル(Esc)および再開(Ctrl+Shift+R)ショートカットが追加されました。",
+			"4": "強化されたプロバイダー設定",
+			"4-desc": "リアルタイムのヘルスチェック機能を備えたLiteLLMおよびBizRouterモデルの自動取得",
+			"5": "AIモデルサポート",
+			"5-desc": "20のプロバイダーにわたる251のユニークなAIモデルをサポート"
+		}
+	},
+	"links": {
+		"korean": "韓国語",
+		"japanese": "日本語",
+		"chinese": "中国語",
+		"english": "英語"
+	}
+}

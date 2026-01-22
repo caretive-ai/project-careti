@@ -1,4 +1,4 @@
-import { CaretUserCreditsData } from "@shared/proto/caret/account"
+import { CaretUserCreditsData } from "@shared/proto/careti/account"
 import type { EmptyRequest } from "@shared/proto/cline/common"
 import type { Controller } from "../index"
 

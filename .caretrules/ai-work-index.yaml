@@ -5,7 +5,7 @@ context: |
   You are working with Caret's three-level documentation structure:
   - ROOT (.caretrules/*.md): Quick references (50-80 lines, token-optimized)
   - WORKFLOWS (.caretrules/workflows/*.md): Detailed procedures (100-250 lines)
-  - KOREAN DOCS (caret-docs/development/*.md): Developer guides (Korean)
+  - KOREAN DOCS (careti-docs/development/*.md): Developer guides (Korean)
 
 steps:
   - step: 1
@@ -18,7 +18,7 @@ steps:
         keywords: [AI, feature, integration, system prompt, chatbot, agent, conversation]
         root: .caretrules/ai-feature.md              # Quick reference (60 lines)
         workflow: .caretrules/workflows/ai-feature.md # Detailed procedure (245 lines)
-        korean: caret-docs/development/ai-feature.md  # Korean guide
+        korean: careti-docs/development/ai-feature.md  # Korean guide
 
       - name: AI Work Protocol
         keywords: [work protocol, phase, TDD, verification, documentation review]
@@ -28,20 +28,20 @@ steps:
       - name: Architecture & Design
         keywords: [architecture, design, structure, system, scaling, fork, Cline modification]
         root:
-          - .caretrules/caret-architecture-guide.md  # Quick reference
+          - .caretrules/careti-architecture-guide.md  # Quick reference
           - .caretrules/architecture-guide.yaml      # Ultra-quick
-        korean: caret-docs/development/caret-architecture-and-implementation-guide.md
+        korean: careti-docs/development/careti-architecture-and-implementation-guide.md
 
       - name: Caret Development Workflow
         keywords: [caret development, development workflow, TDD, document-driven]
-        root: .caretrules/caret-development.md       # Quick reference (68 lines)
-        workflow: .caretrules/workflows/caret-development.md # Detailed (129 lines)
+        root: .caretrules/careti-development.md       # Quick reference (68 lines)
+        workflow: .caretrules/workflows/careti-development.md # Detailed (129 lines)
 
       - name: Cline Original Modification
         keywords: [Cline modification, source change, src/ directory, L1 L2 L3, proto]
         root: .caretrules/cline-modification.md      # Quick reference (78 lines)
         workflow: .caretrules/workflows/cline-modification.md # Detailed (146 lines)
-        note: Always follow backup + `// CARET MODIFICATION:` comment requirements
+        note: Always follow backup + `// CARETI MODIFICATION:` comment requirements
 
       - name: Critical Verification
         keywords: [verification, critical analysis, 3-stage, balanced review]
@@ -52,7 +52,7 @@ steps:
         keywords: [documentation, knowledge sync, atomization, F11, 1:1 parity]
         root: .caretrules/document-organization.md   # Quick reference (47 lines)
         workflow: .caretrules/workflows/document-organization.md # Detailed (100 lines)
-        korean: caret-docs/development/documentation-guide.md
+        korean: careti-docs/development/documentation-guide.md
 
       - name: Merge Strategy
         keywords: [merge, fork, L1 L2 L3, Cline integration, upstream]
@@ -63,19 +63,19 @@ steps:
         keywords: [component, React, new feature, UI, service, TDD]
         root: .caretrules/new-component.md           # Quick reference (80 lines)
         workflow: .caretrules/workflows/new-component.md # Detailed (180 lines)
-        korean: caret-docs/development/component-architecture-principles.md
+        korean: careti-docs/development/component-architecture-principles.md
 
       - name: Testing & Quality
         keywords: [test, TDD, quality, coverage, verification, bug, integration test]
         root: .caretrules/testing-work.md            # Quick reference (82 lines)
         workflow: .caretrules/workflows/testing-work.md # Detailed (253 lines)
-        korean: caret-docs/development/testing-guide.md
+        korean: careti-docs/development/testing-guide.md
 
       - name: B2B Branding & Conversion
         keywords: [b2b, brand, codecenter, conversion, slexn]
         root: .caretrules/b2b-branding-workflow.md
         workflow: .caretrules/workflows/branding-and-logging.md # Branding implementation (157 lines)
-        korean: caret-docs/development/b2b-branding-workflow.md
+        korean: careti-docs/development/b2b-branding-workflow.md
 
       - name: i18n Static Translation Fix
         keywords: [i18n, translation, static, dynamic, language switching]
@@ -87,8 +87,8 @@ steps:
           - .caretrules/frontend-backend-patterns.md
           - .caretrules/webview-communication.md
         korean:
-          - caret-docs/development/frontend-backend-interaction-patterns.md
-          - caret-docs/development/webview-extension-communication.md
+          - careti-docs/development/frontend-backend-interaction-patterns.md
+          - careti-docs/development/webview-extension-communication.md
 
       - name: AI System Development
         keywords: [AI, message, system prompt, chatbot, agent, model, provider]
@@ -96,23 +96,23 @@ steps:
           - .caretrules/system-prompt.md
           - .caretrules/message-processing.md
         korean:
-          - caret-docs/development/system-prompt-implementation.md
-          - caret-docs/development/message-processing-architecture.md
+          - careti-docs/development/system-prompt-implementation.md
+          - careti-docs/development/message-processing-architecture.md
 
       - name: UI/UX Development
         keywords: [UI, UX, persona, multilingual, i18n, button, interaction, link management]
         root: .caretrules/component-architecture.md
         korean:
-          - caret-docs/development/component-architecture-principles.md
-          - caret-docs/development/link-management-guide.md
+          - careti-docs/development/component-architecture-principles.md
+          - careti-docs/development/link-management-guide.md
 
       - name: Development Tools
         keywords: [utility, tool, file handling, image, link, build, storage, flow]
         root: .caretrules/build-system.md
         korean:
-          - caret-docs/development/utilities.md
-          - caret-docs/development/file-storage-and-image-loading-guide.md
-          - caret-docs/development/ui-to-storage-flow.md
+          - careti-docs/development/utilities.md
+          - careti-docs/development/file-storage-and-image-loading-guide.md
+          - careti-docs/development/ui-to-storage-flow.md
 
   - step: 2
     title: Smart Reading Strategy
@@ -128,7 +128,7 @@ steps:
       - .caretrules file modification checklist confirmed
       - TDD principle (Red → Green → Refactor) understood
       - Backup creation plan (for Cline original modifications)
-      - CARET MODIFICATION comment plan (for Cline original modifications)
+      - CARETI MODIFICATION comment plan (for Cline original modifications)
 
   - step: 4
     title: Next Step

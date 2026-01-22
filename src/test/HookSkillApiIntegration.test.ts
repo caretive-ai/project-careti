@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Hook and Skill API Integration tests with GLM4.7 and Gemini
+// CARETI MODIFICATION: Hook and Skill API Integration tests with GLM4.7 and Gemini
 // Tests that hooks and skills work correctly when integrated with LLM APIs
 // Run with: npm run test:integration -- --grep "Hook and Skill API"
 

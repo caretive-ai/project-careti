@@ -6,8 +6,8 @@ import { listFiles } from "@services/glob/list-files"
 import { arePathsEqual, getReadablePath, isLocatedInWorkspace } from "@utils/path"
 import { telemetryService } from "@/services/telemetry"
 import { ClineDefaultTool } from "@/shared/tools"
-// CARET MODIFICATION: import brand utils for dynamic brand name
-import { getCurrentBrandName } from "@caret/utils/brand-utils"
+// CARETI MODIFICATION: import brand utils for dynamic brand name
+import { getCurrentBrandName } from "@careti/utils/brand-utils"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApproval } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -86,7 +86,7 @@ export class ListFilesToolHandler implements IFullyManagedTool {
 			resolutionMethod: (typeof pathResult !== "string" ? "hint" : "primary_fallback") as "hint" | "primary_fallback",
 		}
 
-		// CARET MODIFICATION: Check .caretignore access (legacy .clineignore supported)
+		// CARETI MODIFICATION: Check .caretignore access (legacy .clineignore supported)
 		const accessValidation = this.validator.checkClineIgnorePath(relDirPath!)
 		if (!accessValidation.ok) {
 			await config.callbacks.say("clineignore_error", relDirPath)
@@ -126,7 +126,7 @@ export class ListFilesToolHandler implements IFullyManagedTool {
 			)
 		} else {
 			// Manual approval flow
-			// CARET MODIFICATION: use dynamic brand name
+			// CARETI MODIFICATION: use dynamic brand name
 			const notificationMessage = `${getCurrentBrandName()} wants to view directory ${getWorkspaceBasename(absolutePath, "ListFilesToolHandler.notification")}/`
 
 			// Show notification

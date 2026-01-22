@@ -1,6 +1,6 @@
 import type { ClineMessage, ClineSayTool } from "@shared/ExtensionMessage"
 import type { Mode } from "@shared/storage/types"
-import type { TFunction } from "@/caret/hooks/useCaretI18n"
+import type { TFunction } from "@/careti/hooks/useCaretI18n"
 
 /**
  * Button action types that determine the behavior
@@ -305,7 +305,7 @@ export function getButtonConfig(message: ClineMessage | undefined, _mode: Mode =
 		if (message.say === "completion_result") {
 			return BUTTON_CONFIGS.completion_result
 		}
-		// CARET MODIFICATION: Other say messages (text, reasoning, etc.) should allow input
+		// CARETI MODIFICATION: Other say messages (text, reasoning, etc.) should allow input
 		return BUTTON_CONFIGS.default
 	}
 

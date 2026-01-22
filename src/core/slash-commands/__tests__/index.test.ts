@@ -1,4 +1,4 @@
-// CARET MODIFICATION: TDD 회귀 테스트 - 슬래시 커맨드(/)를 메시지 어디서든 인식해야 함
+// CARETI MODIFICATION: TDD 회귀 테스트 - 슬래시 커맨드(/)를 메시지 어디서든 인식해야 함
 
 import { expect } from "chai"
 import fs from "fs/promises"

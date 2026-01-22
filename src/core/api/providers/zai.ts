@@ -35,7 +35,7 @@ export class ZAiHandler implements ApiHandler {
 		return this.options.zaiApiLine === "china"
 	}
 
-	// CARET MODIFICATION: Support coding endpoint for GLM Coding Plan
+	// CARETI MODIFICATION: Support coding endpoint for GLM Coding Plan
 	private useCodingApi(): boolean {
 		return this.options.zaiApiLine === "coding"
 	}
@@ -98,7 +98,7 @@ export class ZAiHandler implements ApiHandler {
 			{ role: "system", content: systemPrompt },
 			...convertToOpenAiMessages(messages),
 		]
-		// CARET MODIFICATION: Enable thinking mode for GLM-4.7/4.5 models
+		// CARETI MODIFICATION: Enable thinking mode for GLM-4.7/4.5 models
 		const supportsThinking = model.id.startsWith("glm-4.7") || model.id.startsWith("glm-4.5")
 		const thinkingParam = supportsThinking ? { thinking: { type: "enabled" } } : {}
 
@@ -117,7 +117,7 @@ export class ZAiHandler implements ApiHandler {
 		for await (const chunk of stream) {
 			const delta = chunk.choices[0]?.delta
 
-			// CARET MODIFICATION: Handle reasoning_content for GLM-4.7 thinking mode
+			// CARETI MODIFICATION: Handle reasoning_content for GLM-4.7 thinking mode
 			if (delta && "reasoning_content" in delta && delta.reasoning_content) {
 				yield {
 					type: "reasoning",
@@ -146,7 +146,7 @@ export class ZAiHandler implements ApiHandler {
 				}
 			}
 
-			// CARET MODIFICATION: Yield finish_reason for GLM4.7 loop termination fix
+			// CARETI MODIFICATION: Yield finish_reason for GLM4.7 loop termination fix
 			const finishReason = chunk.choices[0]?.finish_reason
 			if (finishReason) {
 				console.log(`[ZAI-DEBUG] finish_reason: ${finishReason}`)

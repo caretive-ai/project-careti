@@ -1,5 +1,5 @@
 import { ModelInfo } from "@shared/api"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 
 /**
  * Formats a price as a currency string

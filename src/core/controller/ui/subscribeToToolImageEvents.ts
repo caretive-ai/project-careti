@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Stream tool image events with Logger-based error reporting.
+// CARETI MODIFICATION: Stream tool image events with Logger-based error reporting.
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { ToolImageEvent } from "@shared/proto/cline/ui"
 import { Logger } from "@/services/logging/Logger"

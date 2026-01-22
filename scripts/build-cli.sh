@@ -1,9 +1,9 @@
 #!/bin/bash
 set -eu
 
-# CARET MODIFICATION: default는 실행 중 인스턴스를 보존; 강제 종료하려면 CARET_FORCE_KILL=1
+# CARETI MODIFICATION: default는 실행 중 인스턴스를 보존; 강제 종료하려면 CARET_FORCE_KILL=1
 if [ -n "${CARET_FORCE_KILL:-}" ]; then
-    if pkill -f "caret-host|cline-host|cline-core|caret-core|/bin/caret" >/dev/null 2>&1; then
+    if pkill -f "careti-host|cline-host|cline-core|careti-core|/bin/caret" >/dev/null 2>&1; then
         echo "[info] Stopped existing caret/cline host/core/cli processes before build copy step"
     fi
 else
@@ -55,23 +55,23 @@ echo "Building for current platform ($OS-$ARCH)..."
 GO111MODULE=on go build -ldflags "$LDFLAGS" -o bin/caret ./cmd/cline
 echo "  ✓ bin/caret built"
 
-GO111MODULE=on go build -ldflags "$LDFLAGS" -o bin/caret-host ./cmd/cline-host
-echo "  ✓ bin/caret-host built"
+GO111MODULE=on go build -ldflags "$LDFLAGS" -o bin/careti-host ./cmd/cline-host
+echo "  ✓ bin/careti-host built"
 
 echo ""
 echo "Build complete for current platform!"
 
-# CARET: ensure caret-only binary names (legacy cline bins removed)
+# CARET: ensure careti-only binary names (legacy cline bins removed)
 rm -f bin/cline bin/cline-host
 
 # Copy binaries to dist-standalone/bin with platform-specific names AND generic names
 cd ..
 mkdir -p dist-standalone/bin
-# CARET: clean legacy cline-named outputs (caret-only distribution)
+# CARET: clean legacy cline-named outputs (careti-only distribution)
 rm -f dist-standalone/bin/cline dist-standalone/bin/cline-* dist-standalone/bin/cline-host dist-standalone/bin/cline-host-*
 
 cp cli/bin/caret dist-standalone/bin/caret
-cp cli/bin/caret dist-standalone/bin/caret-${OS}-${ARCH}
-cp cli/bin/caret-host dist-standalone/bin/caret-host
-cp cli/bin/caret-host dist-standalone/bin/caret-host-${OS}-${ARCH}
+cp cli/bin/caret dist-standalone/bin/careti-${OS}-${ARCH}
+cp cli/bin/careti-host dist-standalone/bin/careti-host
+cp cli/bin/careti-host dist-standalone/bin/careti-host-${OS}-${ARCH}
 echo "Copied binaries to dist-standalone/bin/ (Caret naming)"

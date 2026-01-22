@@ -17,7 +17,7 @@ import {
 	VSCodePanelView,
 } from "@vscode/webview-ui-toolkit/react"
 import { useCallback, useMemo, useState } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import DangerButton from "@/components/common/DangerButton"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { McpServiceClient } from "@/services/grpc-client"

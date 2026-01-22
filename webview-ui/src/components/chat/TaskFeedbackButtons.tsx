@@ -3,7 +3,7 @@ import { TaskFeedbackType } from "@shared/WebviewMessage"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { TaskServiceClient } from "@/services/grpc-client"
 
 interface TaskFeedbackButtonsProps {

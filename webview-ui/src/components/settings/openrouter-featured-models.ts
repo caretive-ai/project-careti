@@ -1,6 +1,6 @@
-// CARET MODIFICATION: OpenRouter Featured 모델 목록을 분리해 테스트/재사용 가능하게 유지
+// CARETI MODIFICATION: OpenRouter Featured 모델 목록을 분리해 테스트/재사용 가능하게 유지
 
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 
 export type OpenRouterFeaturedModel = {
 	id: string

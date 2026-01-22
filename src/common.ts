@@ -1,4 +1,4 @@
-import { getCurrentBrandDisplayName } from "@caret/utils/brand-utils"
+import { getCurrentBrandDisplayName } from "@careti/utils/brand-utils"
 import * as vscode from "vscode"
 import {
 	cleanupMcpMarketplaceCatalogFromGlobalState,
@@ -7,15 +7,15 @@ import {
 	migrateWelcomeViewCompleted,
 	migrateWorkspaceToGlobalStorage,
 } from "./core/storage/state-migrations"
-// CARET MODIFICATION: Global path migration from ~/Documents/Caret/ to ~/Documents/.agents/
+// CARETI MODIFICATION: Global path migration from ~/Documents/Careti/ to ~/Documents/.agents/
 import { migrateGlobalPaths } from "./core/storage/global-migration"
 import { getDocumentsPath } from "./core/storage/disk"
 import { WebviewProvider } from "./core/webview"
 import { Logger } from "./services/logging/Logger"
 import "./utils/path" // necessary to have access to String.prototype.toPosix
 
-// CARET MODIFICATION: persona initializer for default avatar seeding
-import { PersonaInitializer } from "@caret/services/persona/persona-initializer"
+// CARETI MODIFICATION: persona initializer for default avatar seeding
+import { PersonaInitializer } from "@careti/services/persona/persona-initializer"
 import { HostProvider } from "@/hosts/host-provider"
 import { FileContextTracker } from "./core/context/context-tracking/FileContextTracker"
 import { StateManager } from "./core/storage/StateManager"
@@ -46,10 +46,10 @@ export async function initialize(context: vscode.ExtensionContext): Promise<Webv
 		})
 	}
 
-	// CARET MODIFICATION: Initialize Caret JSON prompt templates for Caret mode
+	// CARETI MODIFICATION: Initialize Careti JSON prompt templates for Careti mode
 	try {
-		const { JsonTemplateLoader } = await import("@caret/core/prompts/system/JsonTemplateLoader")
-		const sectionsDirPath = vscode.Uri.joinPath(context.extensionUri, "caret-src", "core", "prompts", "sections").fsPath
+		const { JsonTemplateLoader } = await import("@careti/core/prompts/system/JsonTemplateLoader")
+		const sectionsDirPath = vscode.Uri.joinPath(context.extensionUri, "careti-src", "core", "prompts", "sections").fsPath
 		await JsonTemplateLoader.getInstance().initialize(sectionsDirPath)
 		Logger.debug(`[Extension] JsonTemplateLoader initialized from: ${sectionsDirPath}`)
 	} catch (error) {
@@ -81,7 +81,7 @@ export async function initialize(context: vscode.ExtensionContext): Promise<Webv
 	// Clean up MCP marketplace catalog from global state (moved to disk cache)
 	await cleanupMcpMarketplaceCatalogFromGlobalState(context)
 
-	// CARET MODIFICATION: Migrate global paths from ~/Documents/Caret/ to ~/Documents/.agents/
+	// CARETI MODIFICATION: Migrate global paths from ~/Documents/Careti/ to ~/Documents/.agents/
 	try {
 		const documentsPath = await getDocumentsPath()
 		const migrationResult = await migrateGlobalPaths(documentsPath)
@@ -97,7 +97,7 @@ export async function initialize(context: vscode.ExtensionContext): Promise<Webv
 	// Clean up orphaned file context warnings (startup cleanup)
 	await FileContextTracker.cleanupOrphanedWarnings(context)
 
-	// CARET MODIFICATION: Ensure persona defaults are seeded even when persona UI is hidden
+	// CARETI MODIFICATION: Ensure persona defaults are seeded even when persona UI is hidden
 	try {
 		await new PersonaInitializer(context).initialize()
 	} catch (error) {

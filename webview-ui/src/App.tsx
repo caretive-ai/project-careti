@@ -1,11 +1,11 @@
-import CaretAccountView from "@caret/components/CaretAccountView"
+import CaretAccountView from "@careti/components/CaretAccountView"
 import type { Boolean, EmptyRequest } from "@shared/proto/cline/common"
 import { useEffect } from "react"
-import PersonaTemplateSelector from "./caret/components/PersonaTemplateSelector"
-// CARET MODIFICATION: Add i18n support for the entire app
-import CaretI18nProvider from "./caret/context/CaretI18nContext"
-// CARET MODIFICATION: Import CaretStateContextProvider for persona system
-import { CaretStateContextProvider, useCaretState } from "./caret/context/CaretStateContext"
+import PersonaTemplateSelector from "./careti/components/PersonaTemplateSelector"
+// CARETI MODIFICATION: Add i18n support for the entire app
+import CaretiI18nProvider from "./careti/context/CaretI18nContext"
+// CARETI MODIFICATION: Import CaretStateContextProvider for persona system
+import { CaretStateContextProvider, useCaretState } from "./careti/context/CaretStateContext"
 import AccountView from "./components/account/AccountView"
 import ChatView from "./components/chat/ChatView"
 import HistoryView from "./components/history/HistoryView"
@@ -82,7 +82,7 @@ const AppContent = () => {
 			{showHistory && <HistoryView onDone={hideHistory} />}
 			{showMcp && <McpView initialTab={mcpTab} onDone={closeMcpView} />}
 			{showAccount &&
-				featureConfig?.showAccountUI !== false && // CARET MODIFICATION: gate account UI by feature flag
+				featureConfig?.showAccountUI !== false && // CARETI MODIFICATION: gate account UI by feature flag
 				(isCaret ? (
 					<CaretAccountView caretUser={caretUser} onDone={hideAccount} />
 				) : (
@@ -107,13 +107,13 @@ const AppContent = () => {
 const App = () => {
 	return (
 		<Providers>
-			{/* CARET MODIFICATION: Wrap app with i18n context for multilingual support */}
-			<CaretI18nProvider defaultLanguage="en">
-				{/* CARET MODIFICATION: Wrap with CaretStateContextProvider for persona system */}
+			{/* CARETI MODIFICATION: Wrap app with i18n context for multilingual support */}
+			<CaretiI18nProvider defaultLanguage="en">
+				{/* CARETI MODIFICATION: Wrap with CaretStateContextProvider for persona system */}
 				<CaretStateContextProvider>
 					<AppContent />
 				</CaretStateContextProvider>
-			</CaretI18nProvider>
+			</CaretiI18nProvider>
 		</Providers>
 	)
 }

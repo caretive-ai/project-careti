@@ -51,7 +51,7 @@ You are following Cline-compatible naming conventions for consistency.
 
 ### Caret Extensions
 ```
-caret-src/
+careti-src/
 ├── services/           (kebab-case services)
 ├── controllers/        (kebab-case controllers)  
 ├── core/              (kebab-case core modules)
@@ -86,17 +86,17 @@ const MAX_MESSAGE_LENGTH = 4000;
 
 ### Good Naming:
 ```
-caret-src/services/persona-service.ts
-caret-src/services/persona-service.test.ts
-caret-src/core/messaging/MessageHandler.ts
-caret-src/core/messaging/MessageHandler.test.ts
+careti-src/services/persona-service.ts
+careti-src/services/persona-service.test.ts
+careti-src/core/messaging/MessageHandler.ts
+careti-src/core/messaging/MessageHandler.test.ts
 ```
 
 ### Bad Naming:
 ```
-❌ caret-src/services/personaService.ts     (should be kebab-case)
-❌ caret-src/core/message-handler.ts        (should be PascalCase for classes)  
-❌ caret-src/services/PersonaServiceTest.ts (should match source + .test.ts)
+❌ careti-src/services/personaService.ts     (should be kebab-case)
+❌ careti-src/core/message-handler.ts        (should be PascalCase for classes)  
+❌ careti-src/services/PersonaServiceTest.ts (should match source + .test.ts)
 ```
 
 ## Related Workflows

@@ -65,7 +65,7 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		context.secrets.get("openRouterApiKey") as Promise<Secrets["openRouterApiKey"]>,
 		context.secrets.get("clineAccountId") as Promise<Secrets["clineAccountId"]>,
 		context.secrets.get("cline:clineAccountId") as Promise<Secrets["cline:clineAccountId"]>,
-		context.secrets.get("caret:caretAccountId") as Promise<Secrets["caret:caretAccountId"]>,
+		context.secrets.get("careti:caretAccountId") as Promise<Secrets["careti:caretAccountId"]>,
 		context.secrets.get("awsAccessKey") as Promise<Secrets["awsAccessKey"]>,
 		context.secrets.get("awsSecretKey") as Promise<Secrets["awsSecretKey"]>,
 		context.secrets.get("awsSessionToken") as Promise<Secrets["awsSessionToken"]>,
@@ -117,7 +117,7 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		clineAccountId: firebaseClineAccountId,
 		"cline:clineAccountId": clineAccountId,
 		caretAccountId,
-		"caret:caretAccountId": caretAccountId,
+		"careti:caretAccountId": caretAccountId,
 		huggingFaceApiKey,
 		huaweiCloudMaasApiKey,
 		upstageApiKey,
@@ -169,7 +169,7 @@ export async function readWorkspaceStateFromDisk(context: ExtensionContext): Pro
 	const localAgentsRulesToggles = context.workspaceState.get("localAgentsRulesToggles") as ClineRulesToggles | undefined
 	const localCaretRulesToggles = context.workspaceState.get("localCaretRulesToggles") as ClineRulesToggles | undefined
 	const localWorkflowToggles = context.workspaceState.get("workflowToggles") as ClineRulesToggles | undefined
-	// CARET MODIFICATION: Skills system toggles
+	// CARETI MODIFICATION: Skills system toggles
 	const localSkillsToggles = context.workspaceState.get("localSkillsToggles") as Record<string, boolean> | undefined
 
 	return {
@@ -179,7 +179,7 @@ export async function readWorkspaceStateFromDisk(context: ExtensionContext): Pro
 		localAgentsRulesToggles: localAgentsRulesToggles || {},
 		localCaretRulesToggles: localCaretRulesToggles || {},
 		workflowToggles: localWorkflowToggles || {},
-		localSkillsToggles: localSkillsToggles || {}, // CARET MODIFICATION: Skills system toggles
+		localSkillsToggles: localSkillsToggles || {}, // CARETI MODIFICATION: Skills system toggles
 	}
 }
 
@@ -261,7 +261,7 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			context.globalState.get<GlobalStateAndSettings["mcpResponsesCollapsed"]>("mcpResponsesCollapsed")
 		const globalWorkflowToggles =
 			context.globalState.get<GlobalStateAndSettings["globalWorkflowToggles"]>("globalWorkflowToggles")
-		// CARET MODIFICATION: Skills system toggles
+		// CARETI MODIFICATION: Skills system toggles
 		const globalSkillsToggles =
 			context.globalState.get<GlobalStateAndSettings["globalSkillsToggles"]>("globalSkillsToggles")
 		const terminalReuseEnabled =
@@ -303,7 +303,7 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const autoCondenseThreshold =
 			context.globalState.get<GlobalStateAndSettings["autoCondenseThreshold"]>("autoCondenseThreshold") // number from 0 to 1
 		const hooksEnabled = context.globalState.get<GlobalStateAndSettings["hooksEnabled"]>("hooksEnabled")
-		// CARET MODIFICATION: Skills system
+		// CARETI MODIFICATION: Skills system
 		const skillsEnabled = context.globalState.get<GlobalStateAndSettings["skillsEnabled"]>("skillsEnabled")
 		const hicapModelId = context.globalState.get<GlobalStateAndSettings["hicapModelId"]>("hicapModelId")
 		const aihubmixBaseUrl = context.globalState.get<GlobalStateAndSettings["aihubmixBaseUrl"]>("aihubmixBaseUrl")
@@ -409,7 +409,7 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const planModeHuaweiCloudMaasModelInfo = context.globalState.get<
 			GlobalStateAndSettings["planModeHuaweiCloudMaasModelInfo"]
 		>("planModeHuaweiCloudMaasModelInfo")
-		// CARET MODIFICATION: Naver Cloud model selections
+		// CARETI MODIFICATION: Naver Cloud model selections
 		const planModeNaverCloudModelId =
 			context.globalState.get<GlobalStateAndSettings["planModeNaverCloudModelId"]>("planModeNaverCloudModelId")
 		const planModeNaverCloudModelInfo =
@@ -497,7 +497,7 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const actModeHuaweiCloudMaasModelInfo = context.globalState.get<
 			GlobalStateAndSettings["actModeHuaweiCloudMaasModelInfo"]
 		>("actModeHuaweiCloudMaasModelInfo")
-		// CARET MODIFICATION: Naver Cloud model selections
+		// CARETI MODIFICATION: Naver Cloud model selections
 		const actModeNaverCloudModelId =
 			context.globalState.get<GlobalStateAndSettings["actModeNaverCloudModelId"]>("actModeNaverCloudModelId")
 		const actModeNaverCloudModelInfo =
@@ -529,8 +529,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		if (planModeApiProvider) {
 			apiProvider = planModeApiProvider
 		} else {
-			// CARET MODIFICATION: New users should default to caret provider
-			apiProvider = "caret"
+			// CARETI MODIFICATION: New users should default to careti provider
+			apiProvider = "careti"
 		}
 
 		const mcpResponsesCollapsed = mcpResponsesCollapsedRaw ?? false
@@ -563,14 +563,14 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const remoteRulesToggles = context.globalState.get<GlobalStateAndSettings["remoteRulesToggles"]>("remoteRulesToggles")
 		const remoteWorkflowToggles =
 			context.globalState.get<GlobalStateAndSettings["remoteWorkflowToggles"]>("remoteWorkflowToggles")
-		// CARET MODIFICATION: Caret mode/persona/input history fields
+		// CARETI MODIFICATION: Careti mode/persona/input history fields
 		const caretModeSystem = context.globalState.get<GlobalStateAndSettings["caretModeSystem"]>("caretModeSystem")
 		const enablePersonaSystem = context.globalState.get<GlobalStateAndSettings["enablePersonaSystem"]>("enablePersonaSystem")
 		const currentPersona = context.globalState.get<GlobalStateAndSettings["currentPersona"]>("currentPersona")
 		const imageGenerationAspectRatio =
 			context.globalState.get<GlobalStateAndSettings["imageGenerationAspectRatio"]>("imageGenerationAspectRatio")
 		const imageGenerationSize = context.globalState.get<GlobalStateAndSettings["imageGenerationSize"]>("imageGenerationSize")
-		// CARET MODIFICATION: Image analysis model selection
+		// CARETI MODIFICATION: Image analysis model selection
 		const imageAnalysisModel = context.globalState.get<GlobalStateAndSettings["imageAnalysisModel"]>("imageAnalysisModel")
 
 		return {
@@ -724,7 +724,7 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			welcomeViewCompleted,
 			lastShownAnnouncementId,
 			taskHistory: taskHistory || [],
-			// CARET MODIFICATION: Merge defaults to hydrate legacy auto-approval fields (e.g., enabled/maxRequests)
+			// CARETI MODIFICATION: Merge defaults to hydrate legacy auto-approval fields (e.g., enabled/maxRequests)
 			autoApprovalSettings: { ...DEFAULT_AUTO_APPROVAL_SETTINGS, ...(autoApprovalSettings || {}) },
 			globalClineRulesToggles: globalClineRulesToggles || {},
 			browserSettings: { ...DEFAULT_BROWSER_SETTINGS, ...browserSettings }, // this will ensure that older versions of browserSettings (e.g. before remoteBrowserEnabled was added) are merged with the default values (false for remoteBrowserEnabled)
@@ -746,22 +746,22 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			subagentTerminalOutputLineLimit: subagentTerminalOutputLineLimit ?? 2000,
 			defaultTerminalProfile: defaultTerminalProfile ?? "default",
 			globalWorkflowToggles: globalWorkflowToggles || {},
-			globalSkillsToggles: globalSkillsToggles || {}, // CARET MODIFICATION: Skills system toggles
+			globalSkillsToggles: globalSkillsToggles || {}, // CARETI MODIFICATION: Skills system toggles
 			qwenCodeOauthPath,
 			customPrompt,
 			autoCondenseThreshold: autoCondenseThreshold || 0.75, // default to 0.75 if not set
 			// Hooks require explicit user opt-in and are only supported on macOS/Linux
 			hooksEnabled: getHooksEnabledSafe(hooksEnabled),
-			// CARET MODIFICATION: Skills system - default disabled
+			// CARETI MODIFICATION: Skills system - default disabled
 			skillsEnabled: skillsEnabled ?? false,
 			subagentsEnabled: subagentsEnabled ?? false,
 			lastDismissedInfoBannerVersion: lastDismissedInfoBannerVersion ?? 0,
 			lastDismissedModelBannerVersion: lastDismissedModelBannerVersion ?? 0,
 			lastDismissedCliBannerVersion: lastDismissedCliBannerVersion ?? 0,
-			// CARET MODIFICATION: Match Cline latest default to avoid duplicate plan_mode_respond text.
+			// CARETI MODIFICATION: Match Cline latest default to avoid duplicate plan_mode_respond text.
 			nativeToolCallEnabled: nativeToolCallEnabled ?? true,
-			// CARET MODIFICATION: Caret-specific global state defaults
-			caretModeSystem: caretModeSystem ?? "caret",
+			// CARETI MODIFICATION: Careti-specific global state defaults
+			caretModeSystem: caretModeSystem ?? "careti",
 			enablePersonaSystem: enablePersonaSystem ?? true,
 			currentPersona: currentPersona ?? undefined,
 			imageGenerationAspectRatio,

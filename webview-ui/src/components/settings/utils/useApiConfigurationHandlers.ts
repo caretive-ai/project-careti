@@ -66,16 +66,16 @@ export const useApiConfigurationHandlers = (options?: { forceSeparate?: boolean 
 		value: ApiConfiguration[PlanK] & ApiConfiguration[ActK], // Intersection ensures value is compatible with both field types
 		currentMode: Mode,
 	) => {
-		// CARET MODIFICATION: Map Caret modes (chatbot/agent) to Cline modes (plan/act)
+		// CARETI MODIFICATION: Map Careti modes (chatbot/agent) to Cline modes (plan/act)
 		const modeMapping: Record<string, "plan" | "act"> = {
-			chatbot: "plan", // Caret chatbot → Cline plan
-			agent: "act", // Caret agent → Cline act
+			chatbot: "plan", // Careti chatbot → Cline plan
+			agent: "act", // Careti agent → Cline act
 			plan: "plan",
 			act: "act",
 		}
 		const mappedMode = modeMapping[currentMode]
 
-		// CARET MODIFICATION: Add logging for mode field changes
+		// CARETI MODIFICATION: Add logging for mode field changes
 		console.log(
 			`📝 [ApiConfigHandler] Mode field change: ${fieldPair[mappedMode]} = "${value}" (mode: ${currentMode} → ${mappedMode})`,
 		)

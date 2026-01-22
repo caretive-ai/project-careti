@@ -1,8 +1,8 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
-// CARET MODIFICATION: Import persona avatar for Home header
-import PersonaAvatar from "@/caret/components/PersonaAvatar"
-import { useCaretState } from "@/caret/context/CaretStateContext"
-import { t } from "@/caret/utils/i18n"
+// CARETI MODIFICATION: Import persona avatar for Home header
+import PersonaAvatar from "@/careti/components/PersonaAvatar"
+import { useCaretState } from "@/careti/context/CaretStateContext"
+import { t } from "@/careti/utils/i18n"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { UiServiceClient } from "@/services/grpc-client"
 
@@ -11,7 +11,7 @@ interface HomeHeaderProps {
 }
 
 const HomeHeader = ({ shouldShowQuickWins = false }: HomeHeaderProps) => {
-	// CARET MODIFICATION: Use persona avatar instead of Cline logo
+	// CARETI MODIFICATION: Use persona avatar instead of Cline logo
 	const { personaProfile } = useCaretState()
 
 	const handleTakeATour = async () => {
@@ -25,7 +25,7 @@ const HomeHeader = ({ shouldShowQuickWins = false }: HomeHeaderProps) => {
 	return (
 		<div className="flex flex-col items-center mb-5">
 			<div className="my-5">
-				{/* CARET MODIFICATION: Show persona avatar only, no fallback to Cline logo */}
+				{/* CARETI MODIFICATION: Show persona avatar only, no fallback to Cline logo */}
 				{personaProfile && <PersonaAvatar isThinking={false} personaProfile={personaProfile} size={64} />}
 			</div>
 			<div className="text-center flex items-center justify-center">

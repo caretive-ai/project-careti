@@ -88,7 +88,7 @@ export class SummarizeTaskHandler implements IToolHandler, IPartialBlockHandler 
 						break
 					}
 
-					// CARET MODIFICATION: Check .caretignore first and skip ignored files (legacy .clineignore supported)
+					// CARETI MODIFICATION: Check .caretignore first and skip ignored files (legacy .clineignore supported)
 					const accessValidation = this.validator.checkClineIgnorePath(relPath)
 					if (!accessValidation.ok) {
 						continue

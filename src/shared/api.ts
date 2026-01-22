@@ -20,8 +20,8 @@ export type ApiProvider =
 	| "mistral"
 	| "vscode-lm"
 	| "cline"
-	| "caret" // CARET MODIFICATION: Caret provider
-	| "bizrouter" // CARET MODIFICATION: BizRouter provider
+	| "careti" // CARETI MODIFICATION: Careti provider
+	| "bizrouter" // CARETI MODIFICATION: BizRouter provider
 	| "litellm"
 	| "moonshot"
 	| "nebius"
@@ -34,8 +34,8 @@ export type ApiProvider =
 	| "groq"
 	| "huggingface"
 	| "huawei-cloud-maas"
-	| "upstage" // CARET MODIFICATION: Upstage Solar provider
-	| "naver-cloud" // CARET MODIFICATION: Naver Cloud provider
+	| "upstage" // CARETI MODIFICATION: Upstage Solar provider
+	| "naver-cloud" // CARETI MODIFICATION: Naver Cloud provider
 	| "dify"
 	| "baseten"
 	| "vercel-ai-gateway"
@@ -49,7 +49,7 @@ export type ApiProvider =
 export interface ApiHandlerSecrets {
 	apiKey?: string // anthropic
 	liteLlmApiKey?: string
-	bizRouterApiKey?: string // CARET MODIFICATION: BizRouter API key
+	bizRouterApiKey?: string // CARETI MODIFICATION: BizRouter API key
 	awsAccessKey?: string
 	awsSecretKey?: string
 	openRouterApiKey?: string
@@ -85,8 +85,8 @@ export interface ApiHandlerSecrets {
 	sapAiCoreClientSecret?: string
 	groqApiKey?: string
 	huaweiCloudMaasApiKey?: string
-	upstageApiKey?: string // CARET MODIFICATION: Upstage API key
-	naverCloudApiKey?: string // CARET MODIFICATION: Naver Cloud API key
+	upstageApiKey?: string // CARETI MODIFICATION: Upstage API key
+	naverCloudApiKey?: string // CARETI MODIFICATION: Naver Cloud API key
 	basetenApiKey?: string
 	vercelAiGatewayApiKey?: string
 	difyApiKey?: string
@@ -100,9 +100,9 @@ export interface ApiHandlerOptions {
 	ulid?: string // Used to identify the task in API requests
 	liteLlmBaseUrl?: string
 	liteLlmUsePromptCache?: boolean
-	// CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
+	// CARETI MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
 	bizRouterUsePromptCache?: boolean
-	// CARET MODIFICATION: Caret API/account wiring
+	// CARETI MODIFICATION: Careti API/account wiring
 	openAiHeaders?: Record<string, string> // Custom headers for OpenAI requests
 	anthropicBaseUrl?: string
 	openRouterProviderSorting?: string
@@ -164,10 +164,10 @@ export interface ApiHandlerOptions {
 	planModeLmStudioModelId?: string
 	planModeLiteLlmModelId?: string
 	planModeLiteLlmModelInfo?: LiteLLMModelInfo
-	// CARET MODIFICATION: BizRouter/Caret plan-mode
+	// CARETI MODIFICATION: BizRouter/Careti plan-mode
 	planModeBizRouterModelId?: string
 	planModeBizRouterModelInfo?: BizRouterModelInfo
-	// CARET MODIFICATION: Caret backend type (gemini: credit-based, claude: CLI)
+	// CARETI MODIFICATION: Careti backend type (gemini: credit-based, claude: CLI)
 	planModeCaretBackendType?: CaretBackendType
 	planModeCaretModelId?: string
 	planModeCaretModelInfo?: ModelInfo
@@ -187,10 +187,10 @@ export interface ApiHandlerOptions {
 	planModeHuggingFaceModelInfo?: ModelInfo
 	planModeHuaweiCloudMaasModelId?: string
 	planModeHuaweiCloudMaasModelInfo?: ModelInfo
-	planModeUpstageModelId?: string // CARET MODIFICATION: Upstage
-	planModeUpstageModelInfo?: ModelInfo // CARET MODIFICATION: Upstage
-	planModeNaverCloudModelId?: string // CARET MODIFICATION: Naver Cloud
-	planModeNaverCloudModelInfo?: ModelInfo // CARET MODIFICATION: Naver Cloud
+	planModeUpstageModelId?: string // CARETI MODIFICATION: Upstage
+	planModeUpstageModelInfo?: ModelInfo // CARETI MODIFICATION: Upstage
+	planModeNaverCloudModelId?: string // CARETI MODIFICATION: Naver Cloud
+	planModeNaverCloudModelInfo?: ModelInfo // CARETI MODIFICATION: Naver Cloud
 	planModeOcaModelId?: string
 	planModeOcaModelInfo?: OcaModelInfo
 	planModeAihubmixModelId?: string
@@ -216,7 +216,7 @@ export interface ApiHandlerOptions {
 	actModeLmStudioModelId?: string
 	actModeLiteLlmModelId?: string
 	actModeLiteLlmModelInfo?: LiteLLMModelInfo
-	// CARET MODIFICATION: BizRouter/Caret act-mode
+	// CARETI MODIFICATION: BizRouter/Careti act-mode
 	actModeBizRouterModelId?: string
 	actModeBizRouterModelInfo?: BizRouterModelInfo
 	actModeCaretBackendType?: CaretBackendType
@@ -238,10 +238,10 @@ export interface ApiHandlerOptions {
 	actModeHuggingFaceModelInfo?: ModelInfo
 	actModeHuaweiCloudMaasModelId?: string
 	actModeHuaweiCloudMaasModelInfo?: ModelInfo
-	actModeUpstageModelId?: string // CARET MODIFICATION: Upstage
-	actModeUpstageModelInfo?: ModelInfo // CARET MODIFICATION: Upstage
-	actModeNaverCloudModelId?: string // CARET MODIFICATION: Naver Cloud
-	actModeNaverCloudModelInfo?: ModelInfo // CARET MODIFICATION: Naver Cloud
+	actModeUpstageModelId?: string // CARETI MODIFICATION: Upstage
+	actModeUpstageModelInfo?: ModelInfo // CARETI MODIFICATION: Upstage
+	actModeNaverCloudModelId?: string // CARETI MODIFICATION: Naver Cloud
+	actModeNaverCloudModelInfo?: ModelInfo // CARETI MODIFICATION: Naver Cloud
 	actModeOcaModelId?: string
 	actModeOcaModelInfo?: OcaModelInfo
 	actModeAihubmixModelId?: string
@@ -326,7 +326,7 @@ export const bizRouterModelInfoSaneDefaults: BizRouterModelInfo = {
 	presencePenalty: 0,
 }
 
-// CARET MODIFICATION: Caret backend type selector
+// CARETI MODIFICATION: Careti backend type selector
 export type CaretBackendType = "gemini" | "claude"
 export const caretBackendTypes = {
 	gemini: {
@@ -339,7 +339,7 @@ export const caretBackendTypes = {
 	},
 } as const
 
-// CARET MODIFICATION: Caret models (Gemini 기반)
+// CARETI MODIFICATION: Careti models (Gemini 기반)
 export type CaretModelId = keyof typeof caretModels
 export interface CaretModelInfo extends ModelInfo {
 	temperature?: number
@@ -440,7 +440,7 @@ export const caretModels = {
 			outputPrice: 3.5,
 		},
 	},
-	// CARET MODIFICATION: GLM-4.7 with thinking mode support
+	// CARETI MODIFICATION: GLM-4.7 with thinking mode support
 	"zai/glm-4.7": {
 		maxTokens: 128_000,
 		contextWindow: 200_000,
@@ -450,7 +450,7 @@ export const caretModels = {
 		outputPrice: 2.2,
 		description: "GLM-4.7 with thinking mode and natural conversation support",
 	},
-	// CARET MODIFICATION: Claude 4.5 models for Caret Account (via Claude Code CLI)
+	// CARETI MODIFICATION: Claude 4.5 models for Careti Account (via Claude Code CLI)
 	// Opus first as the most capable model (default when switching to Claude backend)
 	"anthropic/claude-opus-4-5-20251101": {
 		maxTokens: 8192,
@@ -492,8 +492,8 @@ export const caretModels = {
 } as const satisfies Record<string, ModelInfo>
 export const caretDefaultModelInfo = caretModels[caretDefaultModelId]
 
-// CARET MODIFICATION: Filtered model lists by backend type
-export const caretGeminiModels = Object.fromEntries(
+// CARETI MODIFICATION: Filtered model lists by backend type
+export const caretiGeminiModels = Object.fromEntries(
 	Object.entries(caretModels).filter(([id]) => id.startsWith("gemini/") || id.startsWith("zai/")),
 ) as Record<string, ModelInfo>
 
@@ -1110,7 +1110,7 @@ export const vertexModels = {
 		description: "Gemini 3.0 Pro",
 		temperature: 1.0,
 	},
-	// CARET MODIFICATION: Gemini 3 Flash Preview 모델 구성 추가 (upstream #8142)
+	// CARETI MODIFICATION: Gemini 3 Flash Preview 모델 구성 추가 (upstream #8142)
 	"gemini-3-flash-preview": {
 		maxTokens: 65536,
 		contextWindow: 1_048_576,
@@ -1516,7 +1516,7 @@ export const geminiModels = {
 			},
 		],
 	},
-	// CARET MODIFICATION: Gemini 3 Flash Preview 모델 구성 추가 (upstream #8142)
+	// CARETI MODIFICATION: Gemini 3 Flash Preview 모델 구성 추가 (upstream #8142)
 	"gemini-3-flash-preview": {
 		maxTokens: 65536,
 		contextWindow: 1_048_576,
@@ -1782,7 +1782,7 @@ export const openAiNativeModels = {
 		outputPrice: 10,
 		cacheReadsPrice: 0.125,
 	},
-	// CARET MODIFICATION: GPT-5.2 모델 추가 (upstream #8045)
+	// CARETI MODIFICATION: GPT-5.2 모델 추가 (upstream #8045)
 	"gpt-5.2": {
 		maxTokens: 8_192,
 		contextWindow: 272000,
@@ -3150,7 +3150,7 @@ export const nebiusDefaultModelId = "Qwen/Qwen2.5-32B-Instruct-fast" satisfies N
 export type XAIModelId = keyof typeof xaiModels
 export const xaiDefaultModelId: XAIModelId = "grok-4"
 export const xaiModels = {
-	// CARET MODIFICATION: Grok 4.1 / Grok Code 모델 추가 (upstream 9792f174b, R-3383-02)
+	// CARETI MODIFICATION: Grok 4.1 / Grok Code 모델 추가 (upstream 9792f174b, R-3383-02)
 	"grok-4-1-fast-reasoning": {
 		contextWindow: 2_000_000,
 		supportsImages: false,
@@ -3950,7 +3950,7 @@ export const huaweiCloudMaasModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
-// CARET MODIFICATION: Upstage Solar
+// CARETI MODIFICATION: Upstage Solar
 export type UpstageModelId = keyof typeof upstageModels
 export interface UpstageModelInfo extends ModelInfo {}
 export const upstageDefaultModelId: UpstageModelId = "solar-pro2"
@@ -3977,7 +3977,7 @@ export const upstageModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
-// CARET MODIFICATION: Naver Cloud HyperCLOVA X
+// CARETI MODIFICATION: Naver Cloud HyperCLOVA X
 export type NaverCloudModelId = keyof typeof naverCloudModels
 export interface NaverCloudModelInfo extends ModelInfo {}
 export const naverCloudDefaultModelId: NaverCloudModelId = "HCX-007"

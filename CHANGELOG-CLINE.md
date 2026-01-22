@@ -1,6 +1,6 @@
 # Cline Upstream Changelog (Tracked for Caret)
 
-> CARET MODIFICATION: Upstream Cline release notes are recorded separately to keep Caret release history clean. Caret versions link back to these sections when a Cline merge is included.
+> CARETI MODIFICATION: Upstream Cline release notes are recorded separately to keep Caret release history clean. Caret versions link back to these sections when a Cline merge is included.
 
 ## [3.38.2]
 

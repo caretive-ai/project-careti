@@ -47,7 +47,7 @@ class StandaloneTerminalProcess extends EventEmitter {
 				},
 			}
 
-			// CARET MODIFICATION: Windows cmd.exe에서 큰따옴표가 과도하게 escape 되는 문제를 방지하기 위해 shell:true + cmd.exe로 spawn (R-3400-02)
+			// CARETI MODIFICATION: Windows cmd.exe에서 큰따옴표가 과도하게 escape 되는 문제를 방지하기 위해 shell:true + cmd.exe로 spawn (R-3400-02)
 			// Enable the shell option for "cmd.exe" to prevent double quotes from being over escaped
 			if (shell.toLowerCase().includes("cmd")) {
 				shellOptions.shell = true
@@ -208,7 +208,7 @@ class StandaloneTerminalProcess extends EventEmitter {
 	}
 
 	getShellArgs(shell, command) {
-		// CARET MODIFICATION: 테스트/런타임 환경에서 shell 문자열이 Windows 계열이면 Windows 인자 규칙을 적용 (R-3383-07)
+		// CARETI MODIFICATION: 테스트/런타임 환경에서 shell 문자열이 Windows 계열이면 Windows 인자 규칙을 적용 (R-3383-07)
 		const normalizedShell = (shell || "").toLowerCase()
 		const isWindowsShell =
 			process.platform === "win32" ||
@@ -220,7 +220,7 @@ class StandaloneTerminalProcess extends EventEmitter {
 			if (normalizedShell.includes("powershell") || normalizedShell.includes("pwsh")) {
 				return ["-Command", command]
 			} else {
-				// CARET MODIFICATION: cmd.exe 인자 단순화(/s 제거 + 추가 quoting 제거)로 Windows에서 명령 실행 깨짐 방지 (R-3383-07)
+				// CARETI MODIFICATION: cmd.exe 인자 단순화(/s 제거 + 추가 quoting 제거)로 Windows에서 명령 실행 깨짐 방지 (R-3383-07)
 				return ["/c", command]
 			}
 		} else {

@@ -1,9 +1,9 @@
-import { caretClaudeModels, caretGeminiModels, caretModels } from "@shared/api"
+import { caretClaudeModels, caretiGeminiModels, caretModels } from "@shared/api"
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton, VSCodeRadio, VSCodeRadioGroup } from "@vscode/webview-ui-toolkit/react"
 import { useMemo } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useCaretAuth } from "@/context/CaretAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CaretAccountServiceClient } from "@/services/grpc-client"
@@ -12,7 +12,7 @@ import { ModelInfoView } from "../common/ModelInfoView"
 import { getModeSpecificFields, normalizeApiConfiguration } from "../utils/providerUtils"
 import { useApiConfigurationHandlers } from "../utils/useApiConfigurationHandlers"
 
-// CARET MODIFICATION: Claude 4.5 models for radio button display (Opus first)
+// CARETI MODIFICATION: Claude 4.5 models for radio button display (Opus first)
 const claudeModelsForCaret = {
 	"anthropic/claude-opus-4-5-20251101": {
 		label: "Claude Opus 4.5",
@@ -28,7 +28,7 @@ const claudeModelsForCaret = {
 	},
 } as const
 
-// CARET MODIFICATION: Gemini models for radio button display
+// CARETI MODIFICATION: Gemini models for radio button display
 const geminiModelsForCaret = {
 	"gemini/gemini-3-pro-preview": {
 		label: "Gemini 3 Pro",
@@ -51,7 +51,7 @@ const geminiModelsForCaret = {
 type BackendType = "gemini" | "claude"
 
 /**
- * Props for the CaretProvider component
+ * Props for the CaretiProvider component
  */
 interface CaretProviderProps {
 	showModelOptions: boolean
@@ -60,18 +60,18 @@ interface CaretProviderProps {
 }
 
 /**
- * The Caret provider configuration component
+ * The Careti provider configuration component
  */
-export const CaretProvider = ({ showModelOptions, isPopup, currentMode }: CaretProviderProps) => {
+export const CaretiProvider = ({ showModelOptions, isPopup, currentMode }: CaretProviderProps) => {
 	const { caretUser } = useCaretAuth()
 	const { navigateToAccount, featureConfig, apiConfiguration } = useExtensionState()
 	const { handleFieldChange, handleModeFieldsChange } = useApiConfigurationHandlers()
-	// CARET MODIFICATION: Hide account UI when feature flag is disabled
+	// CARETI MODIFICATION: Hide account UI when feature flag is disabled
 	const showAccountUI = featureConfig?.showAccountUI !== false
 
 	const user = caretUser || undefined
 
-	// CARET MODIFICATION: Get current model ID and infer backend type from it
+	// CARETI MODIFICATION: Get current model ID and infer backend type from it
 	const modeFields = getModeSpecificFields(apiConfiguration, currentMode)
 
 	// Infer backend type from model ID (no separate storage needed)
@@ -89,7 +89,7 @@ export const CaretProvider = ({ showModelOptions, isPopup, currentMode }: CaretP
 		return normalizeApiConfiguration(apiConfiguration, currentMode)
 	}, [apiConfiguration, currentMode])
 
-	// CARET MODIFICATION: Handle backend type change by setting default model
+	// CARETI MODIFICATION: Handle backend type change by setting default model
 	const handleBackendTypeChange = (backendType: BackendType) => {
 		if (backendType === "claude") {
 			// Set default Claude model (Opus)
@@ -109,7 +109,7 @@ export const CaretProvider = ({ showModelOptions, isPopup, currentMode }: CaretP
 		} else {
 			// Set default Gemini model
 			const defaultGeminiModelId = Object.keys(geminiModelsForCaret)[0]
-			const defaultGeminiModelInfo = caretGeminiModels[defaultGeminiModelId]
+			const defaultGeminiModelInfo = caretiGeminiModels[defaultGeminiModelId]
 			handleModeFieldsChange(
 				{
 					caretModelId: { plan: "planModeCaretModelId", act: "actModeCaretModelId" },
@@ -124,7 +124,7 @@ export const CaretProvider = ({ showModelOptions, isPopup, currentMode }: CaretP
 		}
 	}
 
-	// CARET MODIFICATION: Handle model selection via radio buttons
+	// CARETI MODIFICATION: Handle model selection via radio buttons
 	const handleModelChange = (modelId: string) => {
 		const modelInfo = caretModels[modelId as keyof typeof caretModels]
 		handleModeFieldsChange(
@@ -153,22 +153,20 @@ export const CaretProvider = ({ showModelOptions, isPopup, currentMode }: CaretP
 	return (
 		<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 2 }}>
 			<p style={{ color: "var(--vscode-descriptionForeground)", fontSize: 13, margin: 0 }}>
-				{t("providers.caret.description", "settings")}
+				{t("providers.careti.description", "settings")}
 			</p>
 
 			{user ? (
 				<>
 					{showModelOptions && (
 						<>
-							{/* CARET MODIFICATION: Backend type selector */}
+							{/* CARETI MODIFICATION: Backend type selector */}
 							<div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-								<span style={{ fontWeight: 500 }}>
-									{t("providers.caret.backendType", "settings")}
-								</span>
+								<span style={{ fontWeight: 500 }}>{t("providers.careti.backendType", "settings")}</span>
 								<VSCodeRadioGroup
+									onChange={(e: any) => handleBackendTypeChange(e.target.value as BackendType)}
 									orientation="horizontal"
-									value={currentBackendType}
-									onChange={(e: any) => handleBackendTypeChange(e.target.value as BackendType)}>
+									value={currentBackendType}>
 									<VSCodeRadio value="gemini">
 										<span style={{ fontWeight: 500 }}>Gemini</span>
 										<span
@@ -177,7 +175,7 @@ export const CaretProvider = ({ showModelOptions, isPopup, currentMode }: CaretP
 												marginLeft: 6,
 												fontSize: 12,
 											}}>
-											({t("providers.caret.backendDescription.gemini", "settings")})
+											({t("providers.careti.backendDescription.gemini", "settings")})
 										</span>
 									</VSCodeRadio>
 									<VSCodeRadio value="claude">
@@ -188,24 +186,22 @@ export const CaretProvider = ({ showModelOptions, isPopup, currentMode }: CaretP
 												marginLeft: 6,
 												fontSize: 12,
 											}}>
-											({t("providers.caret.backendDescription.claude", "settings")})
+											({t("providers.careti.backendDescription.claude", "settings")})
 										</span>
 									</VSCodeRadio>
 								</VSCodeRadioGroup>
 							</div>
 
-							{/* CARET MODIFICATION: Model selection based on backend type */}
+							{/* CARETI MODIFICATION: Model selection based on backend type */}
 							{isClaudeBackend ? (
 								<>
 									{/* Claude model selection */}
 									<div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-										<span style={{ fontWeight: 500 }}>
-											{t("providers.caret.claudeModel", "settings")}
-										</span>
+										<span style={{ fontWeight: 500 }}>{t("providers.careti.claudeModel", "settings")}</span>
 										<VSCodeRadioGroup
+											onChange={(e: any) => handleModelChange(e.target.value)}
 											orientation="vertical"
-											value={modeFields.caretModelId || ""}
-											onChange={(e: any) => handleModelChange(e.target.value)}>
+											value={modeFields.caretModelId || ""}>
 											{Object.entries(claudeModelsForCaret).map(([modelId, info]) => (
 												<VSCodeRadio key={modelId} value={modelId}>
 													<span style={{ fontWeight: 500 }}>{info.label}</span>
@@ -229,22 +225,18 @@ export const CaretProvider = ({ showModelOptions, isPopup, currentMode }: CaretP
 										placeholder={t("providers.claude-code.cliPathPlaceholder", "settings")}
 										style={{ width: "100%", marginTop: 3 }}
 										type="text">
-										<span style={{ fontWeight: 500 }}>
-											{t("providers.claude-code.cliPath", "settings")}
-										</span>
+										<span style={{ fontWeight: 500 }}>{t("providers.claude-code.cliPath", "settings")}</span>
 									</DebouncedTextField>
 								</>
 							) : (
 								<>
 									{/* Gemini model selection */}
 									<div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-										<span style={{ fontWeight: 500 }}>
-											{t("providers.caret.geminiModel", "settings")}
-										</span>
+										<span style={{ fontWeight: 500 }}>{t("providers.careti.geminiModel", "settings")}</span>
 										<VSCodeRadioGroup
+											onChange={(e: any) => handleModelChange(e.target.value)}
 											orientation="vertical"
-											value={modeFields.caretModelId || ""}
-											onChange={(e: any) => handleModelChange(e.target.value)}>
+											value={modeFields.caretModelId || ""}>
 											{Object.entries(geminiModelsForCaret).map(([modelId, info]) => (
 												<VSCodeRadio key={modelId} value={modelId}>
 													<span style={{ fontWeight: 500 }}>{info.label}</span>
@@ -298,7 +290,7 @@ export const CaretProvider = ({ showModelOptions, isPopup, currentMode }: CaretP
 								className="w-full"
 								onClick={handleLogin}
 								style={{ minWidth: "120px" }}>
-								{t("providers.caret.login", "settings")}
+								{t("providers.careti.login", "settings")}
 							</VSCodeButton>
 						</div>
 					)}

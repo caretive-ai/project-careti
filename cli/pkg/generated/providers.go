@@ -142,7 +142,7 @@ const (
 	OLLAMA = "ollama"
 	GEMINI = "gemini"
 	OPENAI_NATIVE = "openai-native"
-	CARET = "caret"
+	CARETI = "careti"
 	XAI = "xai"
 	CEREBRAS = "cerebras"
 	OCA = "oca"
@@ -160,7 +160,7 @@ var AllProviders = []string{
 	"ollama",
 	"gemini",
 	"openai-native",
-	"caret",
+	"careti",
 	"xai",
 	"cerebras",
 	"oca",
@@ -217,7 +217,7 @@ var rawConfigFields = `	[
 	  {
 	    "name": "bizRouterApiKey",
 	    "type": "string",
-	    "comment": "CARET MODIFICATION: BizRouter API key",
+	    "comment": "CARETI MODIFICATION: BizRouter API key",
 	    "category": "general",
 	    "required": true,
 	    "fieldType": "password",
@@ -551,7 +551,7 @@ var rawConfigFields = `	[
 
 // Raw model definitions data (parsed from TypeScript)
 var rawModelDefinitions = `	{
-	  "caret": {
+	  "careti": {
 	    "gemini/gemini-3-pro-preview": {
 	      "maxTokens": 65536,
 	      "contextWindow": 1048576,
@@ -1650,12 +1650,12 @@ func GetProviderDefinitions() (map[string]ProviderDefinition, error) {
 	}
 
 	// Caret
-	definitions["caret"] = ProviderDefinition{
-		ID:              "caret",
-		Name:            "Caret",
-		RequiredFields:  getFieldsByProvider("caret", configFields, true),
-		OptionalFields:  getFieldsByProvider("caret", configFields, false),
-		Models:          modelDefinitions["caret"],
+	definitions["careti"] = ProviderDefinition{
+		ID:              "careti",
+		Name:            "Careti",
+		RequiredFields:  getFieldsByProvider("careti", configFields, true),
+		OptionalFields:  getFieldsByProvider("careti", configFields, false),
+		Models:          modelDefinitions["careti"],
 		DefaultModelID:  "gemini/gemini-2.5-flash",
 		HasDynamicModels: false,
 		SetupInstructions: `Sign in via the CLI auth flow (caret auth)`,
@@ -1732,7 +1732,7 @@ func GetProviderDisplayName(providerID string) string {
 		"ollama": "Ollama",
 		"gemini": "Google Gemini",
 		"openai-native": "OpenAI",
-		"caret": "Caret",
+		"careti": "Careti",
 		"xai": "X AI (Grok)",
 		"cerebras": "Cerebras",
 		"oca": "Oca",

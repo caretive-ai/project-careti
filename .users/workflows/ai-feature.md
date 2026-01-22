@@ -33,7 +33,7 @@ describe('AI Feature', () => {
 ```
 
 ### 4. 프롬프트 시스템 통합
-- `caret-src/core/prompts/` 활용
+- `careti-src/core/prompts/` 활용
 - JSON 기반 프롬프트 템플릿
 - 다국어 지원 고려
 
@@ -47,7 +47,7 @@ describe('AI Feature', () => {
 | 파일 | 용도 |
 |-----|------|
 | `src/core/prompts/` | 프롬프트 시스템 |
-| `caret-src/core/prompts/` | Caret 전용 프롬프트 |
+| `careti-src/core/prompts/` | Caret 전용 프롬프트 |
 | `.agents/context/system-prompt.md` | 시스템 프롬프트 가이드 |
 
 ## 체크리스트

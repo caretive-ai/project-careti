@@ -7,7 +7,7 @@ import {
 	getBrandUsersDirName,
 	getBrandUsersContextDirName,
 	getBrandUsersContextLegacyDirName,
-} from "@caret/utils/brand-utils"
+} from "@careti/utils/brand-utils"
 import { TaskMetadata } from "@core/context/context-tracking/ContextTrackerTypes"
 import { execa } from "@packages/execa"
 import { ClineMessage } from "@shared/ExtensionMessage"
@@ -22,7 +22,7 @@ import { HostProvider } from "@/hosts/host-provider"
 import { McpMarketplaceCatalog } from "@/shared/mcp"
 import { StateManager } from "./StateManager"
 
-// CARET MODIFICATION: Brand-aware configuration (used for Caret/Cline/other branded builds)
+// CARETI MODIFICATION: Brand-aware configuration (used for Careti/Cline/other branded builds)
 // Prefer extension package.json (via brand utils) over workspace package.json to avoid picking up user project names.
 const resolveBrandSlug = () => {
 	try {
@@ -30,14 +30,14 @@ const resolveBrandSlug = () => {
 		const normalized = String(brandName)
 			.toLowerCase()
 			.replace(/[^a-z0-9]/g, "")
-		return normalized || "caret"
+		return normalized || "careti"
 	} catch {
-		return "caret"
+		return "careti"
 	}
 }
 
 const BRAND_SLUG = resolveBrandSlug()
-// CARET MODIFICATION: Standard agents context paths for rules/workflows.
+// CARETI MODIFICATION: Standard agents context paths for rules/workflows.
 const BRAND_RULES_DIR = getBrandRulesFileName()
 const BRAND_WORKFLOWS_DIR = getBrandWorkflowsDirName()
 const BRAND_WORKFLOWS_LEGACY_DIR = getBrandWorkflowsLegacyDirName()
@@ -45,7 +45,7 @@ const BRAND_USERS_DIR = getBrandUsersDirName()
 const BRAND_USERS_CONTEXT_DIR = getBrandUsersContextDirName()
 const BRAND_USERS_CONTEXT_LEGACY_DIR = getBrandUsersContextLegacyDirName()
 const BRAND_MCP_SETTINGS_FILE = `${BRAND_SLUG}_mcp_settings.json`
-// CARET MODIFICATION: Use .agents folder for global agent configuration
+// CARETI MODIFICATION: Use .agents folder for global agent configuration
 // This provides consistency with project-level .agents/ directory structure
 const BRAND_DOCS_FOLDER = ".agents"
 
@@ -58,20 +58,20 @@ export const GlobalFileNames = {
 	groqModels: "groq_models.json",
 	basetenModels: "baseten_models.json",
 	hicapModels: "hicap_models.json",
-	mcpSettings: BRAND_MCP_SETTINGS_FILE, // CARET MODIFICATION: brand-aware MCP settings file
-	caretRules: BRAND_RULES_DIR, // CARET MODIFICATION: Caret rule directory support
-	clineRules: BRAND_RULES_DIR, // CARET MODIFICATION: legacy alias -> standard agents context
-	workflows: BRAND_WORKFLOWS_DIR, // CARET MODIFICATION: brand-aware workflows path (.agents/workflows)
-	workflowsLegacy: BRAND_WORKFLOWS_LEGACY_DIR, // CARET MODIFICATION: legacy workflows path (.agents/context/workflows)
-	usersDir: BRAND_USERS_DIR, // CARET MODIFICATION: users documentation directory (.users)
-	usersContextDir: BRAND_USERS_CONTEXT_DIR, // CARET MODIFICATION: users context directory (.users/context)
-	usersContextLegacyDir: BRAND_USERS_CONTEXT_LEGACY_DIR, // CARET MODIFICATION: legacy user context (.agents/context-for-user)
+	mcpSettings: BRAND_MCP_SETTINGS_FILE, // CARETI MODIFICATION: brand-aware MCP settings file
+	caretRules: BRAND_RULES_DIR, // CARETI MODIFICATION: Careti rule directory support
+	clineRules: BRAND_RULES_DIR, // CARETI MODIFICATION: legacy alias -> standard agents context
+	workflows: BRAND_WORKFLOWS_DIR, // CARETI MODIFICATION: brand-aware workflows path (.agents/workflows)
+	workflowsLegacy: BRAND_WORKFLOWS_LEGACY_DIR, // CARETI MODIFICATION: legacy workflows path (.agents/context/workflows)
+	usersDir: BRAND_USERS_DIR, // CARETI MODIFICATION: users documentation directory (.users)
+	usersContextDir: BRAND_USERS_CONTEXT_DIR, // CARETI MODIFICATION: users context directory (.users/context)
+	usersContextLegacyDir: BRAND_USERS_CONTEXT_LEGACY_DIR, // CARETI MODIFICATION: legacy user context (.agents/context-for-user)
 	persona: "persona.md",
 	hooksDir: ".agents/hooks",
-	skillsDir: ".agents/skills", // CARET MODIFICATION: skills directory
-	cursorRulesDir: BRAND_RULES_DIR, // CARET MODIFICATION: legacy alias -> standard agents context
-	cursorRulesFile: BRAND_RULES_DIR, // CARET MODIFICATION: legacy alias -> standard agents context
-	windsurfRules: BRAND_RULES_DIR, // CARET MODIFICATION: legacy alias -> standard agents context
+	skillsDir: ".agents/skills", // CARETI MODIFICATION: skills directory
+	cursorRulesDir: BRAND_RULES_DIR, // CARETI MODIFICATION: legacy alias -> standard agents context
+	cursorRulesFile: BRAND_RULES_DIR, // CARETI MODIFICATION: legacy alias -> standard agents context
+	windsurfRules: BRAND_RULES_DIR, // CARETI MODIFICATION: legacy alias -> standard agents context
 	agentsRulesFile: "AGENTS.md",
 	taskMetadata: "task_metadata.json",
 	imageRegistry: "image_registry.json",
@@ -119,7 +119,7 @@ export async function ensureTaskDirectoryExists(taskId: string): Promise<string>
 	return getGlobalStorageDir("tasks", taskId)
 }
 
-// CARET MODIFICATION: Global rules in ~/Documents/.agents/context/ (consistent with project .agents/context/)
+// CARETI MODIFICATION: Global rules in ~/Documents/.agents/context/ (consistent with project .agents/context/)
 export async function ensureRulesDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
 	const globalContextDir = path.join(userDocumentsPath, BRAND_DOCS_FOLDER, "context")
@@ -131,7 +131,7 @@ export async function ensureRulesDirectoryExists(): Promise<string> {
 	return globalContextDir
 }
 
-// CARET MODIFICATION: Global workflows in ~/Documents/.agents/workflows/
+// CARETI MODIFICATION: Global workflows in ~/Documents/.agents/workflows/
 export async function ensureWorkflowsDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
 	const globalWorkflowsDir = path.join(userDocumentsPath, BRAND_DOCS_FOLDER, "workflows")
@@ -143,7 +143,7 @@ export async function ensureWorkflowsDirectoryExists(): Promise<string> {
 	return globalWorkflowsDir
 }
 
-// CARET MODIFICATION: Global MCP servers in ~/Documents/.agents/mcp/
+// CARETI MODIFICATION: Global MCP servers in ~/Documents/.agents/mcp/
 export async function ensureMcpServersDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
 	const globalMcpDir = path.join(userDocumentsPath, BRAND_DOCS_FOLDER, "mcp")
@@ -155,7 +155,7 @@ export async function ensureMcpServersDirectoryExists(): Promise<string> {
 	return globalMcpDir
 }
 
-// CARET MODIFICATION: Global hooks in ~/Documents/.agents/hooks/
+// CARETI MODIFICATION: Global hooks in ~/Documents/.agents/hooks/
 export async function ensureHooksDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
 	const globalHooksDir = path.join(userDocumentsPath, BRAND_DOCS_FOLDER, "hooks")
@@ -167,7 +167,7 @@ export async function ensureHooksDirectoryExists(): Promise<string> {
 	return globalHooksDir
 }
 
-// CARET MODIFICATION: Global skills in ~/Documents/.agents/skills/
+// CARETI MODIFICATION: Global skills in ~/Documents/.agents/skills/
 export async function ensureSkillsDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
 	const globalSkillsDir = path.join(userDocumentsPath, BRAND_DOCS_FOLDER, "skills")
@@ -455,7 +455,7 @@ export async function getWorkspaceHooksDirs(): Promise<string[]> {
 	).filter((path): path is string => Boolean(path))
 }
 
-// CARET MODIFICATION: Hook-related helper functions from cline-latest
+// CARETI MODIFICATION: Hook-related helper functions from cline-latest
 
 /**
  * Atomically write data to a file using temp file + rename pattern.

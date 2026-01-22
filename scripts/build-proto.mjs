@@ -23,7 +23,7 @@ const resolvedProtoc =
 	normalizeProtocPath(process.env.PROTOC) ??
 	(process.platform === "win32" ? WINDOWS_PROTOC_CANDIDATES.find((candidate) => existsSync(candidate)) : undefined) ??
 	DEFAULT_PROTOC
-const PROTOC = `"${resolvedProtoc}"` // CARET MODIFICATION: quote protoc path + allow PROTOC override
+const PROTOC = `"${resolvedProtoc}"` // CARETI MODIFICATION: quote protoc path + allow PROTOC override
 
 const PROTO_DIR = path.resolve("proto")
 const TS_OUT_DIR = path.resolve("src/shared/proto")

@@ -20,8 +20,8 @@ import type { MessageStateHandler } from "../../message-state"
 import type { TaskState } from "../../TaskState"
 import type { AutoApprove } from "../../tools/autoApprove"
 import type { HookExecution } from "../../types/HookExecution"
-// CARET MODIFICATION: use caret image registry from caret-src
-import type { ImageRegistry } from "@caret/core/task/images/ImageRegistry"
+// CARETI MODIFICATION: use careti image registry from careti-src
+import type { ImageRegistry } from "@careti/core/task/images/ImageRegistry"
 import type { ToolExecutorCoordinator } from "../ToolExecutorCoordinator"
 import { TASK_CALLBACKS_KEYS, TASK_CONFIG_KEYS, TASK_SERVICES_KEYS } from "../utils/ToolConstants"
 
@@ -83,14 +83,14 @@ export interface TaskServices {
  * All callback functions available to tool handlers
  */
 export interface TaskCallbacks {
-	// CARET MODIFICATION: Added operationId parameter for reliable message updates
+	// CARETI MODIFICATION: Added operationId parameter for reliable message updates
 	say: (type: ClineSay, text?: string, images?: string[], files?: string[], partial?: boolean, operationId?: string) => Promise<number | undefined>
 
 	ask: (
 		type: ClineAsk,
 		text?: string,
 		partial?: boolean,
-		operationId?: string, // CARET MODIFICATION: allow reusing tool message for approval (prevents duplicate tool cards)
+		operationId?: string, // CARETI MODIFICATION: allow reusing tool message for approval (prevents duplicate tool cards)
 	) => Promise<{
 		response: ClineAskResponse
 		text?: string

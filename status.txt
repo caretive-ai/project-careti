@@ -5,8 +5,8 @@
 커밋하도록 정하지 않은 변경 사항:
   (무엇을 커밋할지 바꾸려면 "git add/rm <파일>..."을 사용하십시오)
   (use "git restore <file>..." to discard changes in working directory)
-	수정함:        caret-docs/merging/v3.38.1/attempt-2-claude-review.md
-	수정함:        caret-src/services/persona/persona-initializer.ts
+	수정함:        careti-docs/merging/v3.38.1/attempt-2-claude-review.md
+	수정함:        careti-src/services/persona/persona-initializer.ts
 	수정함:        package.json
 	수정함:        proto/caret/account.proto
 	수정함:        proto/caret/persona.proto

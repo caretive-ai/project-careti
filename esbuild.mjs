@@ -198,7 +198,7 @@ const extensionConfig = {
 	...baseConfig,
 	entryPoints: ["src/extension.ts"],
 	outfile: `${destDir}/extension.js`,
-	// CARET MODIFICATION: keep native addons external to avoid bundling issues in VSIX
+	// CARETI MODIFICATION: keep native addons external to avoid bundling issues in VSIX
 	external: ["vscode", "sharp", "@ohah/hwpjs", "@napi-rs/wasm-runtime"],
 }
 

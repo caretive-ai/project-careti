@@ -52,7 +52,7 @@ webview-ui/src/caret/components/
 
 **Service Class**:
 ```
-caret-src/services/
+careti-src/services/
 ├── service-name.ts
 ├── service-name.test.ts
 └── types/service-types.ts
@@ -70,7 +70,7 @@ caret-src/services/
 - `/message-flow` - Frontend-backend communication patterns
 - `/cline-modification` - When integrating with Cline components
 - `/critical-verification` - For complex component designs
-- `/modification-levels` - L1 (caret-src/) vs L2/L3 integration
+- `/modification-levels` - L1 (careti-src/) vs L2/L3 integration
 
 ---
 
@@ -78,4 +78,4 @@ caret-src/services/
 See `.caretrules/workflows/new-component.md`
 
 **📖 For Korean developer documentation:**
-See `caret-docs/development/component-architecture-principles.md`
+See `careti-docs/development/component-architecture-principles.md`

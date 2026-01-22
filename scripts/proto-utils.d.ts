@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Proto helper type declarations for build scripts.
+// CARETI MODIFICATION: Proto helper type declarations for build scripts.
 declare module "./proto-utils.mjs" {
 	import type { PackageDefinition, ServiceDefinition } from "@grpc/proto-loader"
 	// Some helpers return `any` for grpc responses so keep types open for now.

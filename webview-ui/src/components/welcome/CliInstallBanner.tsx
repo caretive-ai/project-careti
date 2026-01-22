@@ -1,7 +1,7 @@
 import { EmptyRequest, Int64Request } from "@shared/proto/index.cline"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "@/services/grpc-client"
 import { vscode } from "@/utils/vscode"
@@ -15,21 +15,21 @@ const CliInstallBanner = () => {
 	const [isInstalled, setIsInstalled] = useState(false)
 	const [isDismissed, setIsDismissed] = useState(false)
 	const [isCopied, setIsCopied] = useState(false)
-	const isCaretMode = modeSystem === "caret"
+	const isCaretMode = modeSystem === "careti"
 
 	const installCommand = useMemo(
-		() => (isCaretMode ? "npm install -g @caretive/caret-cli" : "npm install -g cline"),
+		() => (isCaretMode ? "npm install -g @caretive/careti-cli" : "npm install -g cline"),
 		[isCaretMode],
 	)
 	const docsUrl = useMemo(
 		() =>
 			isCaretMode
-				? "https://github.com/aicoding-caret/caret#cli-installation"
+				? "https://github.com/aicoding-careti/careti#cli-installation"
 				: "https://docs.cline.bot/cline-cli/overview",
 		[isCaretMode],
 	)
 
-	// CARET MODIFICATION: Hide CLI banner in Caret mode until Caret CLI is released
+	// CARETI MODIFICATION: Hide CLI banner in Careti mode until Careti CLI is released
 	const shouldHideBanner =
 		isCaretMode ||
 		isCliSubagent ||

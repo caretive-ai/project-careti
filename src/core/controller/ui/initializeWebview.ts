@@ -195,7 +195,7 @@ export async function initializeWebview(controller: Controller, _request: EmptyR
 			}
 		})
 
-		// Refresh Vercel AI Gateway models from API (Caret addition)
+		// Refresh Vercel AI Gateway models from API (Careti addition)
 		refreshVercelAiGatewayModels(controller, EmptyRequest.create()).then(async (response) => {
 			if (response && response.models) {
 				const apiConfiguration = controller.stateManager.getApiConfiguration()

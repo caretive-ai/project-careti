@@ -1,0 +1,40 @@
+{
+	"header": "🎉 v{{version}} 的新功能",
+	"previousHeader": "以前的更新:",
+	"bullets": {
+		"current": {
+			"0": "Caret 账号 Nano Banana 集成",
+			"0-desc": "Caret 账号新增 Gemini 3 Flash Preview，并整合 Nano Banana 图像生成功能，可将生成结果用作项目资产。",
+			"1": "每月免费积分",
+			"1-desc": "新用户每月可获得$0.1（10积分），首月最高$0.2。支持Gemini 3、2.5 Pro、Lite。",
+			"2": "新提供商与模型：Naver Cloud (https://clova.ai/)、Hyper Clova X",
+			"2-desc": "新增 Naver Cloud (https://clova.ai/) 提供商与 HCX-007/HCX-005/HCX-DASH-002 模型。",
+			"3": "Agents.md 与项目初始化功能",
+			"3-desc": "将原有 Caret/Cline 专用规则迁移为 AAIF 国际标准，并新增项目初始化支持功能。",
+			"4": "双账户系统",
+			"4-desc": "可同时使用Caret账户和Cline账户，Cline用户无需限制即可访问全部功能。",
+			"5": "Cline v3.45.0 修复合并",
+			"5-desc": "部分合并了 Cline v3.45.0 的修复代码。"
+		},
+		"previous": {
+			"0": "Caret Provider 已稳定",
+			"0-desc": "为配合 careti.ai 服务的正式上线，基于 anyLLM 的 Caret Provider 现已稳定，确保了更高的可靠性。",
+			"1": "Cline v3.38.2 完全整合",
+			"1-desc": "已整合Cline v3.38.2的全部功能，包括Claude Opus 4.5和最新核心改进。",
+			"2": "新模型：Claude Opus 4.5",
+			"2-desc": "可在Anthropic、OpenRouter、Bedrock、Vertex中使用，并已应用提示缓存价格。",
+			"3": "全新快捷键系统",
+			"3-desc": "新增取消(Esc)和恢复(Ctrl+Shift+R)快捷键，并提供新的管理界面。",
+			"4": "增强的提供商设置",
+			"4-desc": "自动拉取LiteLLM、BizRouter模型并进行实时健康检查。",
+			"5": "AI模型支持",
+			"5-desc": "支持20个提供商、251个独立模型。"
+		}
+	},
+	"links": {
+		"korean": "韩语",
+		"japanese": "日语",
+		"chinese": "中文",
+		"english": "英语"
+	}
+}

@@ -1,4 +1,4 @@
-# Caret 개발 워크플로우
+# 캐러티 개발 워크플로우
 
 Caret 프로젝트 개발은 확립된 패턴과 프로토콜을 따릅니다.
 
@@ -12,7 +12,7 @@ Caret 프로젝트 개발은 확립된 패턴과 프로토콜을 따릅니다.
    - 기타 (명시)
 
 2. **작업 유형에 따른 필수 문서 확인**:
-   - **Cline 수정**: 백업 규칙, CARET MODIFICATION 요구사항
+   - **Cline 수정**: 백업 규칙, CARETI MODIFICATION 요구사항
    - **Frontend-Backend**: 상호작용 패턴, 아키텍처 가이드
    - **컴포넌트/UI**: 컴포넌트 원칙, 테마 통합
    - **테스팅**: TDD 프로토콜, 테스팅 가이드
@@ -32,7 +32,7 @@ npm run test:unit
 
 ### GREEN 단계: 테스트 통과를 위한 최소 구현
 - Cline 파일 수정이 필요한지 확인
-- `// CARET MODIFICATION:` 주석 추가
+- `// CARETI MODIFICATION:` 주석 추가
 - `.cline` 백업 파일은 생성하지 않음 (Deprecated)
 - 최소 1-3줄 변경
 
@@ -83,12 +83,12 @@ npm run watch  # VS Code 확장 실행
 3. 토큰 내보내기 및 배포:
    ```bash
    set -a; source .env; set +a
-   bash cli-caret/scripts/publish-caret-cli.sh
+   bash cli-caret/scripts/publish-careti-cli.sh
    rm -f cli-caret/.npmrc
    ```
 4. 확인:
    ```bash
-   npm view @caretive/caret-cli version
+   npm view @caretive/careti-cli version
    caret version
    ```
 
@@ -103,7 +103,7 @@ Cline 파일 수정 전에 반드시 확인:
 ## 일반 가이드라인
 
 - 항상 TDD 사이클 준수: 통합 테스트 먼저, 최소 구현, 리팩터링
-- `// CARET MODIFICATION:` 주석 없이 Cline 파일 수정 금지 (백업 `.cline`은 deprecated)
+- `// CARETI MODIFICATION:` 주석 없이 Cline 파일 수정 금지 (백업 `.cline`은 deprecated)
 - Level 2(조건부 통합)보다 Level 1(독립 모듈) 선호
 - 새로운 패턴 발견 시 문서화 및 가이드 업데이트
 
@@ -133,4 +133,4 @@ t('common.button.save')
 
 ## 미러링 정책
 `.agents/`와 `.users/`는 1:1 미러링 구조입니다.
-- 이 파일 수정 시 `.agents/workflows/caret-development.md`도 동일하게 업데이트
+- 이 파일 수정 시 `.agents/workflows/careti-development.md`도 동일하게 업데이트

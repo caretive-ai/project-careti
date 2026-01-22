@@ -150,11 +150,11 @@ func (ss *StreamingSegment) renderFinal(currentBuffer string) {
 func (ss *StreamingSegment) generateRichHeader() string {
 	switch ss.sayType {
 	case string(types.SayTypeReasoning):
-		// CARET MODIFICATION: Caret branding in CLI status messages
+		// CARETI MODIFICATION: Caret branding in CLI status messages
 		return "### Caret is thinking\n"
 		
 	case string(types.SayTypeText):
-		// CARET MODIFICATION: branding
+		// CARETI MODIFICATION: branding
 		return "### Caret responds\n"
 		
 	case string(types.SayTypeCompletionResult):
@@ -185,7 +185,7 @@ func (ss *StreamingSegment) generateRichHeader() string {
 				command = strings.TrimSuffix(command, "REQ_APP")
 				command = strings.TrimSpace(command)
 			}
-			// CARET MODIFICATION: branding
+			// CARETI MODIFICATION: branding
 			return fmt.Sprintf("### Caret wants to run `%s`\n", command)
 		}
 
@@ -195,7 +195,7 @@ func (ss *StreamingSegment) generateRichHeader() string {
 		}
 
 		// For other ask types, show generic message
-		// CARET MODIFICATION: branding
+		// CARETI MODIFICATION: branding
 		return fmt.Sprintf("### Caret is asking (%s)\n", ss.msg.Ask)
 		
 	default:

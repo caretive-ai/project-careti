@@ -9,8 +9,8 @@ import { telemetryService } from "@/services/telemetry"
 import { BASH_WRAPPERS, DiffError, PATCH_MARKERS, type Patch, PatchActionType, type PatchChunk } from "@/shared/Patch"
 import { preserveEscaping } from "@/shared/string"
 import { ClineDefaultTool } from "@/shared/tools"
-// CARET MODIFICATION: import brand utils for dynamic brand name
-import { getCurrentBrandName } from "@caret/utils/brand-utils"
+// CARETI MODIFICATION: import brand utils for dynamic brand name
+import { getCurrentBrandName } from "@careti/utils/brand-utils"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApproval } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -465,7 +465,7 @@ export class ApplyPatchHandler implements IFullyManagedTool {
 			const absolutePath = typeof pathResult === "string" ? pathResult : pathResult.absolutePath
 			const resolvedPath = typeof pathResult === "string" ? filePath : pathResult.resolvedPath
 
-			// CARET MODIFICATION: Enforce .caretignore (.clineignore legacy) before loading file content
+			// CARETI MODIFICATION: Enforce .caretignore (.clineignore legacy) before loading file content
 			const accessValidation = this.validator.checkClineIgnorePath(resolvedPath)
 			if (!accessValidation.ok) {
 				await config.callbacks.say("clineignore_error", resolvedPath)
@@ -715,7 +715,7 @@ export class ApplyPatchHandler implements IFullyManagedTool {
 			return true
 		}
 
-		// CARET MODIFICATION: use dynamic brand name
+		// CARETI MODIFICATION: use dynamic brand name
 		showNotificationForApproval(`${getCurrentBrandName()} wants to edit '${message.path}'`, config.autoApprovalSettings.enableNotifications)
 
 		await config.callbacks.removeLastPartialMessageIfExistsWithType("say", "tool")

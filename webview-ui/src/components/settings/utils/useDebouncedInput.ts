@@ -18,7 +18,7 @@ export function useDebouncedInput<T>(
 	// Local state to prevent jumpy input - initialize once
 	const [localValue, setLocalValue] = useState(initialValue)
 
-	// CARET MODIFICATION: Sync local state when initialValue changes from backend
+	// CARETI MODIFICATION: Sync local state when initialValue changes from backend
 	useEffect(() => {
 		setLocalValue(initialValue)
 	}, [initialValue])

@@ -15,8 +15,8 @@ func TestBrandNameUsesClineForClineBinary(t *testing.T) {
 	}{
 		{"cline_linux", "/usr/local/bin/cline", "Cline"},
 		{"cline_windows", "C:\\Program Files\\cline.exe", "Cline"},
-		{"caret", "/usr/local/bin/caret", "Caret"},
-		{"unknown", "/tmp/something", "Caret"},
+		{"careti", "/usr/local/bin/caret", "Careti"},
+		{"unknown", "/tmp/something", "Careti"},
 	}
 
 	for _, tt := range tests {

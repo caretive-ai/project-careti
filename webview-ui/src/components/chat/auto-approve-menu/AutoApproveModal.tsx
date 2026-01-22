@@ -1,11 +1,11 @@
-// CARET MODIFICATION: Added useMemo for i18n reactivity
+// CARETI MODIFICATION: Added useMemo for i18n reactivity
 import { VSCodeButton, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
-// CARET MODIFICATION: Added useMemo for i18n reactivity
+// CARETI MODIFICATION: Added useMemo for i18n reactivity
 import React, { useEffect, useRef, useState } from "react"
 import { useClickAway, useWindowSize } from "react-use"
-// CARET MODIFICATION: quick toggle for mention image sending
-import MentionImageSendToggle from "@/caret/components/MentionImageSendToggle"
-import { t } from "@/caret/utils/i18n"
+// CARETI MODIFICATION: quick toggle for mention image sending
+import MentionImageSendToggle from "@/careti/components/MentionImageSendToggle"
+import { t } from "@/careti/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"

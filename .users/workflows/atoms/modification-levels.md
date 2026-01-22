@@ -1,12 +1,12 @@
 # 수정 레벨 - L1 → L2 → L3 결정 프레임워크
 
-Caret 개발을 위한 3단계 수정 전략을 따릅니다.
+캐러티 개발을 위한 3단계 수정 전략을 따릅니다.
 
 ## 핵심 원칙
 **항상 상위 레벨 선호 (L1 > L2 > L3). 하위 레벨은 더 강한 정당화 필요.**
 
 ## Level 1: 독립 모듈 (권장)
-**위치**: `caret-src/`, `caret-docs/`
+**위치**: `careti-src/`, `careti-docs/`
 **자유도**: 완전한 구현 자유
 **요구사항**: 없음 (백업 불필요, 주석 불필요)
 **사용 사례**:
@@ -16,7 +16,7 @@ Caret 개발을 위한 3단계 수정 전략을 따릅니다.
 - 독립 서비스
 
 ```typescript
-// 예: caret-src/services/persona-service.ts
+// 예: careti-src/services/persona-service.ts
 export class PersonaService {
   // 완전한 구현 자유
 }
@@ -25,7 +25,7 @@ export class PersonaService {
 ## Level 2: 조건부 통합 (주의 필요)
 **위치**: Cline 파일 (`src/`, `webview-ui/`, `proto/`, `scripts/`)
 **요구사항**:
-- **필수 주석**: `// CARET MODIFICATION: [설명]`
+- **필수 주석**: `// CARETI MODIFICATION: [설명]`
 - **최소 변경**: 파일당 최대 1-3줄
 - **완전 교체**: 기존 코드 주석 처리 금지
 - **검증 필요**: 모든 테스트 통과 필수
@@ -39,7 +39,7 @@ export class PersonaService {
 ```typescript
 // 예: src/extension.ts
 export function activate(context: vscode.ExtensionContext) {
-  // CARET MODIFICATION: Initialize Caret wrapper
+  // CARETI MODIFICATION: Initialize Caret wrapper
   const caretWrapper = new CaretProviderWrapper(context);
   // ... 나머지 Cline 코드 변경 없음
 }
@@ -59,7 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
 ## 결정 트리
 ```
 새 기능 필요
-├─ L1 독립으로 가능한가? → caret-src/ 사용
+├─ L1 독립으로 가능한가? → careti-src/ 사용
 ├─ Cline과 통합이 필수인가?
 │  ├─ 1-3줄로 가능한가? → L2 + 주석
 │  └─ 대규모 변경 필요? → L3 + 완전한 문서

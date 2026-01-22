@@ -1,5 +1,5 @@
-// CARET MODIFICATION: Integration-style test for image registry persistence limits.
-import { ImageRegistry } from "@caret/core/task/images/ImageRegistry"
+// CARETI MODIFICATION: Integration-style test for image registry persistence limits.
+import { ImageRegistry } from "@careti/core/task/images/ImageRegistry"
 import { describe, it } from "mocha"
 import "should"
 import fs from "fs/promises"
@@ -13,7 +13,7 @@ const createDataUrl = (sizeInBytes: number): string => {
 
 describe("ImageRegistry persistence limits", () => {
 	it("drops oversized data URLs when saving the snapshot", async () => {
-		const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "caret-image-registry-"))
+		const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "careti-image-registry-"))
 		try {
 			HostProvider.reset()
 			HostProvider.initialize(

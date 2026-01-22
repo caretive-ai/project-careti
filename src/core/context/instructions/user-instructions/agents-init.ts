@@ -1,4 +1,4 @@
-// CARET MODIFICATION: /init 명령어 처리 - 이중 디렉토리 아키텍처 지원
+// CARETI MODIFICATION: /init 명령어 처리 - 이중 디렉토리 아키텍처 지원
 // 새 경로: .agents/workflows/, .users/context/
 // 레거시 경로: .agents/context/workflows/, .agents/context-for-user/
 import { ContextSeparator } from "@core/context/context-separator"
@@ -11,7 +11,7 @@ import { Logger } from "@/services/logging/Logger"
 
 const AGENTS_RULES_JSON = "agents-rules.json"
 const AGENTS_TEMPLATE_DIR = path.join("assets", "agents_template")
-// CARET MODIFICATION: 새 워크플로우 경로 (레거시: .agents/context/workflows/)
+// CARETI MODIFICATION: 새 워크플로우 경로 (레거시: .agents/context/workflows/)
 const AGENTS_INIT_WORKFLOW_RELATIVE_PATH = path.join(".agents", "workflows", "agents-init.md")
 const AGENTS_INIT_WORKFLOW_LEGACY_PATH = path.join(".agents", "context", "workflows", "agents-init.md")
 
@@ -59,7 +59,7 @@ export async function getAgentsStandardStatus(cwd: string): Promise<AgentsStanda
 		missing.push(path.join(GlobalFileNames.caretRules, AGENTS_RULES_JSON))
 	}
 
-	// CARET MODIFICATION: .users/context/ 확인 (새 경로 또는 레거시 폴백)
+	// CARETI MODIFICATION: .users/context/ 확인 (새 경로 또는 레거시 폴백)
 	const usersContextDir = path.resolve(cwd, GlobalFileNames.usersContextDir)
 	const usersContextLegacyDir = path.resolve(cwd, GlobalFileNames.usersContextLegacyDir)
 	const usersContextExists =
@@ -69,7 +69,7 @@ export async function getAgentsStandardStatus(cwd: string): Promise<AgentsStanda
 		missing.push(GlobalFileNames.usersContextDir)
 	}
 
-	// CARET MODIFICATION: .agents/workflows/ 확인 (새 경로 또는 레거시 폴백)
+	// CARETI MODIFICATION: .agents/workflows/ 확인 (새 경로 또는 레거시 폴백)
 	const workflowsDir = path.resolve(cwd, GlobalFileNames.workflows)
 	const workflowsLegacyDir = path.resolve(cwd, GlobalFileNames.workflowsLegacy)
 	const workflowsExists =
@@ -131,7 +131,7 @@ export async function initializeAgentsContext(cwd: string): Promise<AgentsInitRe
 	}
 
 	try {
-		// CARET MODIFICATION: context-for-user 디렉토리 생성 (M02)
+		// CARETI MODIFICATION: context-for-user 디렉토리 생성 (M02)
 		await ContextSeparator.createUserContextDirectory(cwd)
 
 		// 기존 템플릿 복사
@@ -186,7 +186,7 @@ export async function getAgentsInitWorkflowInstructions(cwd: string, templateRoo
 		return undefined
 	}
 
-	// CARET MODIFICATION: 기존 규칙 파일 및 레거시 구조 감지하여 마이그레이션 안내 추가
+	// CARETI MODIFICATION: 기존 규칙 파일 및 레거시 구조 감지하여 마이그레이션 안내 추가
 	const additionalInstructions: string[] = []
 
 	// 기존 AGENTS.md/CLAUDE.md 감지
@@ -235,7 +235,7 @@ export function formatAgentsInitNotice(result: AgentsInitResult): string {
 	return `AGENTS standard init complete\nCreated: ${created}\nSkipped: ${skipped}`
 }
 
-// CARET MODIFICATION: 기존 AGENTS.md/CLAUDE.md 감지 및 내용 읽기
+// CARETI MODIFICATION: 기존 AGENTS.md/CLAUDE.md 감지 및 내용 읽기
 export type ExistingRulesInfo = {
 	hasExisting: boolean
 	agentsMdContent?: string
@@ -333,7 +333,7 @@ ${info.claudeMdContent}
 	return guide
 }
 
-// CARET MODIFICATION: 레거시 구조 감지 및 마이그레이션 가이드
+// CARETI MODIFICATION: 레거시 구조 감지 및 마이그레이션 가이드
 export type LegacyStructureInfo = {
 	hasLegacy: boolean
 	legacyPaths: string[]

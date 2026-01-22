@@ -1,4 +1,4 @@
-// CARET MODIFICATION: tool 승인 ask가 progress say와 분리되어 중복 카드가 생기는 문제 회귀 테스트
+// CARETI MODIFICATION: tool 승인 ask가 progress say와 분리되어 중복 카드가 생기는 문제 회귀 테스트
 import { describe, it } from "mocha"
 import "should"
 import { Task } from "../index"
@@ -34,7 +34,7 @@ const tick = async () => new Promise((resolve) => setTimeout(resolve, 0))
 
 describe("Task.ask tool approval operationId", () => {
 	const initHostProvider = () => {
-		// CARET MODIFICATION: Provide a minimal HostProvider stub for Logger usage.
+		// CARETI MODIFICATION: Provide a minimal HostProvider stub for Logger usage.
 		if (HostProvider.isInitialized()) {
 			HostProvider.reset()
 		}

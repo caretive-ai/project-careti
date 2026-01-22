@@ -19,7 +19,7 @@ import {
 	VSCodeTextArea,
 	VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 
 function Demo() {
 	const rowData = [

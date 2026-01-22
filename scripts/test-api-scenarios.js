@@ -9,8 +9,8 @@
  *   all           - 모든 테스트 실행 (기본값)
  *   gemini-text   - Gemini 텍스트 API 테스트
  *   gemini-image  - Gemini 이미지 분석 테스트
- *   caret-text    - Caret API 텍스트 테스트
- *   caret-image   - Caret API 이미지 분석 테스트
+ *   careti-text    - Caret API 텍스트 테스트
+ *   careti-image   - Caret API 이미지 분석 테스트
  *   hwp           - HWP 파싱 테스트
  *   document      - 문서 추출 테스트 (PDF, DOCX, HWP)
  *
@@ -207,7 +207,7 @@ async function testCaretText() {
 
   try {
     const res = await httpRequest({
-      hostname: 'api.caret.team',
+      hostname: 'api.careti.ai',
       path: '/v1/chat/completions',
       method: 'POST',
       headers: {
@@ -303,7 +303,7 @@ Provide clear, structured analysis relevant to the user's question.`;
 
   try {
     const res = await httpRequest({
-      hostname: 'api.caret.team',
+      hostname: 'api.careti.ai',
       path: '/v1/chat/completions',
       method: 'POST',
       headers: {
@@ -356,7 +356,7 @@ async function testAnalyzeImageE2E() {
 
   // Step 1: Generate an image (simulating generate_image tool)
   info('Step 1: Generating test image (simulating generate_image)...');
-  const testImagePath = '/tmp/caret-test-image.png';
+  const testImagePath = '/tmp/careti-test-image.png';
 
   await sharp({
     create: {
@@ -457,7 +457,7 @@ async function testAnalyzeImageE2E() {
 
   try {
     const res = await httpRequest({
-      hostname: 'api.caret.team',
+      hostname: 'api.careti.ai',
       path: '/v1/chat/completions',
       method: 'POST',
       headers: {
@@ -490,7 +490,7 @@ async function testAnalyzeImageE2E() {
 async function testHwpParsing() {
   header('HWP Parsing Test');
 
-  const hwpPath = path.join(__dirname, '..', 'caret-src/integrations/document/__tests__/fixtures/sample.hwp');
+  const hwpPath = path.join(__dirname, '..', 'careti-src/integrations/document/__tests__/fixtures/sample.hwp');
 
   if (!fs.existsSync(hwpPath)) {
     error(`Sample HWP file not found: ${hwpPath}`);
@@ -503,11 +503,11 @@ async function testHwpParsing() {
     // Try to load the compiled module
     let parseHwpFromFile;
     try {
-      const hwpParser = require('../out/caret-src/integrations/document/hwp-parser.js');
+      const hwpParser = require('../out/careti-src/integrations/document/hwp-parser.js');
       parseHwpFromFile = hwpParser.parseHwpFromFile;
     } catch (e) {
       // Try alternative path
-      const hwpParser = require('../dist/caret-src/integrations/document/hwp-parser.js');
+      const hwpParser = require('../dist/careti-src/integrations/document/hwp-parser.js');
       parseHwpFromFile = hwpParser.parseHwpFromFile;
     }
 
@@ -552,7 +552,7 @@ async function testHwpParsing() {
 async function testDocumentExtraction() {
   header('Document Extraction Test');
 
-  const fixturesDir = path.join(__dirname, '..', 'caret-src/integrations/document/__tests__/fixtures');
+  const fixturesDir = path.join(__dirname, '..', 'careti-src/integrations/document/__tests__/fixtures');
 
   const testFiles = [
     { name: 'sample.hwp', format: 'HWP' },
@@ -574,7 +574,7 @@ async function testDocumentExtraction() {
     info(`Testing ${file.format}: ${file.name}`);
 
     try {
-      const { DocumentExtractor } = require('../out/caret-src/integrations/document/document-extractor.js');
+      const { DocumentExtractor } = require('../out/careti-src/integrations/document/document-extractor.js');
       const extractor = new DocumentExtractor();
 
       if (!extractor.isSupported(filePath)) {
@@ -610,8 +610,8 @@ async function testDocumentExtraction() {
 const scenarios = {
   'gemini-text': testGeminiText,
   'gemini-image': testGeminiImage,
-  'caret-text': testCaretText,
-  'caret-image': testCaretImage,
+  'careti-text': testCaretText,
+  'careti-image': testCaretImage,
   'analyze-image-e2e': testAnalyzeImageE2E,
   'hwp': testHwpParsing,
   'document': testDocumentExtraction,

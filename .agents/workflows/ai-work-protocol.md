@@ -6,19 +6,19 @@ You are following the detailed AI work protocol for systematic development appro
 ## Phase 0: Mandatory Pre-Review and Architecture Decision
 1. **User Identification**: Check `git config user.name`
 2. **Date Confirmation**: Check current date with OS command
-3. **Work Log Check**: Verify/create `caret-docs/work-logs/{username}/{YYYYMMDD-N-description}.md` (N is the sequential number for the day's tasks)
+3. **Work Log Check**: Verify/create `careti-docs/work-logs/{username}/{YYYYMMDD-N-description}.md` (N is the sequential number for the day's tasks)
 
 ### Critical Work Nature Analysis
 Based on work keywords, ensure you've read relevant docs (use `/ai-work-index` first):
 
 **Frontend-Backend Interaction**:
 - frontend-backend-interaction-patterns.md
-- caret-architecture-and-implementation-guide.md (sections 10-11)
+- careti-architecture-and-implementation-guide.md (sections 10-11)
 
 **Cline Original Modification**:
 - File modification checklist in .agents/context
 - Backup creation rules verification
-- CARET MODIFICATION comment requirements
+- CARETI MODIFICATION comment requirements
 
 **Component/UI Development**:
 - component-architecture-principles.md
@@ -45,19 +45,19 @@ Based on work keywords, ensure you've read relevant docs (use `/ai-work-index` f
 
 🛑 **STOP POINT**: Verify test file location
 - webview: `webview-ui/src/**`
-- backend unit: `src/**/__tests__/*.ts` (and `caret-src/core/task/tools/__tests__/*.ts`)
+- backend unit: `src/**/__tests__/*.ts` (and `careti-src/core/task/tools/__tests__/*.ts`)
 - extension integration: `src/test/**`
 - Immediate verification: run test after creation
 
 ## Phase 2: TDD GREEN - Test Passing Implementation
 🛑 **STOP POINT**: Before modifying ANY Cline original file
 - Is it protected? (src/, webview-ui/, proto/, scripts/, evals/, docs/, locales/, root configs)
-- Add comment: `// CARET MODIFICATION: [clear description]`
+- Add comment: `// CARETI MODIFICATION: [clear description]`
 - Minimal changes: Maximum 1-3 lines per file
 - Complete replacement: Never comment out old code
 
 🛑 **STOP POINT**: New file creation directory check
-- Caret features go to `caret-src/`, `caret-docs/` (full freedom)
+- Caret features go to `careti-src/`, `careti-docs/` (full freedom)
 - Verify import paths are correct
 - Immediate verification: compile after modification
 

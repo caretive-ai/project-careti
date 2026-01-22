@@ -96,7 +96,7 @@ const ENABLED_PROVIDERS = [
 	"cerebras", // Cerebras models
 	"oca", // Oracle Code Assist
 	"nousResearch", // NousResearch provider
-	"caret", // CARET MODIFICATION: include Caret provider in CLI build
+	"careti", // CARETI MODIFICATION: include Caret provider in CLI build
 ]
 
 /**
@@ -350,7 +350,7 @@ function parseConfigurationFields(optionsContent, providerApiKeyMap, apiSecretsF
 			"together",
 			"claudecode",
 			"cline",
-			"caret", // CARET MODIFICATION: include Caret-specific fields
+			"careti", // CARETI MODIFICATION: include Caret-specific fields
 		]
 
 		// If field name starts with or contains a provider prefix, categorize it as provider-specific
@@ -449,7 +449,7 @@ function extractModelDefinitions(content) {
 			nebius: "nebius",
 			askSage: "asksage",
 			qwenCode: "qwen-code",
-			caret: "caret", // CARET MODIFICATION: include Caret model definitions
+			caret: "careti", // CARETI MODIFICATION: include Caret model definitions
 		}
 
 		const providerId = providerMapping[providerPrefix] || providerPrefix.toLowerCase()
@@ -881,7 +881,7 @@ function getProviderDisplayName(providerId) {
 		mistral: "Mistral AI",
 		"vscode-lm": "VSCode Language Models",
 		cline: "Cline",
-		caret: "Caret", // CARET MODIFICATION: include Caret display name
+		caret: "Careti", // CARETI MODIFICATION: include Caret display name
 		litellm: "LiteLLM",
 		moonshot: "Moonshot AI",
 		nebius: "Nebius AI",

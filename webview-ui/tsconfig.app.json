@@ -14,6 +14,7 @@
 		],
 		"module": "ESNext",
 		"skipLibCheck": true,
+		"resolveJsonModule": true,
 
 		/* Bundler mode */
 		"moduleResolution": "bundler",
@@ -48,6 +49,9 @@
 			],
 			"@caret/*": [
 				"src/caret/*"
+			],
+			"@careti/*": [
+				"src/careti/*"
 			]
 		}
 	},

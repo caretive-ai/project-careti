@@ -1,7 +1,7 @@
 import { StringRequest } from "@shared/proto/cline/common"
 import DOMPurify from "dompurify"
 import React from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import ChatErrorBoundary from "@/components/chat/ChatErrorBoundary"
 import { WebServiceClient } from "@/services/grpc-client"
 import { checkIfImageUrl, formatUrlForOpening, getSafeHostname } from "./utils/mcpRichUtil"

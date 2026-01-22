@@ -22,7 +22,7 @@ func ListTasksFromDisk() error {
 		return fmt.Errorf("failed to get home directory: %w", err)
 	}
 
-	// CARET MODIFICATION: use brand config directory for task history
+	// CARETI MODIFICATION: use brand config directory for task history
 	filePath := filepath.Join(homeDir, common.ConfigDirName, "data", "state", "taskHistory.json")
 
 	// Read the file

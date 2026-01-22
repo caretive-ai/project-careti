@@ -5,11 +5,11 @@ You are documenting the current state of Caret's branding and logging systems.
 
 ## Branding Principles (Implemented)
 
-### User-Facing Elements → "Caret"
-- **UI Text**: All visible text displays "Caret" instead of "Cline"
+### User-Facing Elements → "Careti"
+- **UI Text**: All visible text displays "Careti" instead of "Cline"
 - **File Names**: Extension files use Caret naming
 - **User Interface**: Settings, menus, and dialogs show Caret branding
-- **Extension Display Name**: VSCode marketplace shows "Caret"
+- **Extension Display Name**: VSCode marketplace shows "Careti"
 
 ### Internal Implementation → Keep "cline" 
 - **Command IDs**: VSCode command identifiers remain as `cline.*`
@@ -33,7 +33,7 @@ functionName: "clineProvider.handleMessage"
 
 > **중요**: 브랜드명을 계산하거나 노출할 때는 반드시 공용 유틸을 호출하세요. 직접 문자열을 하드코딩하거나 별도 헬퍼를 만들면 B2B 브랜드(Rename Run)에서 누락이 발생합니다.
 
-- **TypeScript / VS Code Extension**: `caret-src/utils/brand-utils.ts`
+- **TypeScript / VS Code Extension**: `careti-src/utils/brand-utils.ts`
   - `getCurrentBrandName`, `getBrandDisplayName`, `getBrandRulesFileName` 등을 통해 UI/알림/파일명을 결정합니다.
   - 예시
     ```ts
@@ -50,7 +50,7 @@ functionName: "clineProvider.handleMessage"
     fmt.Printf("Welcome to %s CLI\\n", common.BrandDisplayName())
     ```
 
-이 두 파일 외에 브랜드명을 계산하는 메서드가 등장하면 안 됩니다. 새 기능을 작성할 때는 관련 문서(본 워크플로와 caret-docs/features/f03-branding-ui.md)를 다시 확인하고, 리뷰 시에도 브랜드 util 사용 여부를 반드시 체크하세요.
+이 두 파일 외에 브랜드명을 계산하는 메서드가 등장하면 안 됩니다. 새 기능을 작성할 때는 관련 문서(본 워크플로와 careti-docs/features/f03-branding-ui.md)를 다시 확인하고, 리뷰 시에도 브랜드 util 사용 여부를 반드시 체크하세요.
 
 ## Logging System Architecture (Current State)
 
@@ -74,7 +74,7 @@ functionName: "clineProvider.handleMessage"
 ```typescript
 // Frontend logging pattern
 if (process.env.NODE_ENV === "development") {
-  console.log(`[CARET UI] Component rendered: ${componentName}`)
+  console.log(`[CARETI UI] Component rendered: ${componentName}`)
 }
 
 // Using CaretWebviewLogger
@@ -90,7 +90,7 @@ src/services/logging/
 ├── Logger.ts                    # Cline's main logger (used by Caret backend)
 └── (Caret uses existing infrastructure)
 
-caret-src/
+careti-src/
 ├── utils/                       # Caret-specific utilities
 └── (extends Cline functionality)
 ```
@@ -161,14 +161,14 @@ console.log("Debug info") // Will appear in user's DevTools
 ## Current Status Summary
 - ✅ **Backend**: Successfully integrated with Cline Logger
 - ✅ **Frontend**: CaretWebviewLogger implemented and working
-- ✅ **Branding**: User-facing elements use Caret, internals use cline
+- ✅ **Branding**: User-facing elements use Careti, internals use cline
 - ✅ **No Conflicts**: Systems operate independently and harmoniously
 
 ## Related Workflows
 - Apply `/cline-modification` when touching existing Cline logging code
 - Use `/new-component` when adding components that need logging
 - Consider `/critical-verification` when logging changes affect error handling
-- When executing a B2B branding run, capture notes in `caret-docs/work-logs/` and mirror any rule-handling updates here and in `AGENTS.md`.
+- When executing a B2B branding run, capture notes in `careti-docs/work-logs/` and mirror any rule-handling updates here and in `AGENTS.md`.
 </detailed_sequence_of_steps>
 
 <general_guidelines>

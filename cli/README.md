@@ -1,4 +1,4 @@
-# Caret CLI
+# Careti CLI
 
 ```
 /_____/\ /_/\      /_______/\/__/\ /__/\ /_____/\
@@ -13,19 +13,19 @@ Autonomous coding agent CLI - capable of creating/editing files, running command
 
 ## Installation
 
-Install Caret globally using npm:
+Install Careti globally using npm:
 
 ```bash
-npm install -g @caretive/caret-cli
+npm install -g @caretive/careti-cli
 ```
 
 ## Usage
 
 ```bash
-caret
+careti
 ```
 
-This will start the Caret CLI interface where you can interact with the autonomous coding agent.
+This will start the Careti CLI interface where you can interact with the autonomous coding agent.
 
 ## Features
 
@@ -45,28 +45,28 @@ This will start the Caret CLI interface where you can interact with the autonomo
 
 ## Configuration
 
-Caret can be configured through:
+Careti can be configured through:
 
 -   Environment variables
 -   Configuration files
 -   Command-line arguments
 
-See the [main documentation](https://caret.team) for detailed configuration options.
+See the [main documentation](https://careti.ai) for detailed configuration options.
 
 ## Links
 
--   **Website**: [https://caret.team](https://caret.team)
--   **Documentation**: [https://docs.caret.team](https://docs.caret.team)
--   **GitHub**: [https://github.com/aicoding-caret/caret](https://github.com/aicoding-caret/caret)
+-   **Website**: [https://careti.ai](https://careti.ai)
+-   **Documentation**: [https://docs.careti.ai](https://docs.careti.ai)
+-   **GitHub**: [https://github.com/aicoding-careti/careti](https://github.com/aicoding-careti/careti)
 -   **VSCode Extension**: Available in the VSCode Marketplace
 -   **JetBrains Extension**: Available in the JetBrains Marketplace
 
 ## License
 
-Apache-2.0 - see [LICENSE](https://github.com/aicoding-caret/caret/blob/main/LICENSE) for details.
+Apache-2.0 - see [LICENSE](https://github.com/aicoding-careti/careti/blob/main/LICENSE) for details.
 
 ## Support
 
--   Report issues: [GitHub Issues](https://github.com/aicoding-caret/caret/issues)
--   Community: [GitHub Discussions](https://github.com/aicoding-caret/caret/discussions)
--   Documentation: [docs.caret.team](https://docs.caret.team)
+-   Report issues: [GitHub Issues](https://github.com/aicoding-careti/careti/issues)
+-   Community: [GitHub Discussions](https://github.com/aicoding-careti/careti/discussions)
+-   Documentation: [docs.careti.ai](https://docs.careti.ai)

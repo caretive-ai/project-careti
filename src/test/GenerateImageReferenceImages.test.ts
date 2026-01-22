@@ -1,6 +1,6 @@
-// CARET MODIFICATION: Integration-style test for generate_image reference image logging and parsing.
-import { ImageRegistry } from "@caret/core/task/images/ImageRegistry"
-import { resolveReferenceImages } from "@caret/core/task/tools/handlers/GenerateImageToolHandler"
+// CARETI MODIFICATION: Integration-style test for generate_image reference image logging and parsing.
+import { ImageRegistry } from "@careti/core/task/images/ImageRegistry"
+import { resolveReferenceImages } from "@careti/core/task/tools/handlers/GenerateImageToolHandler"
 import type { TaskConfig } from "@core/task/tools/types/TaskConfig"
 import { describe, it } from "mocha"
 import "should"
@@ -13,7 +13,7 @@ import sharp from "sharp"
 
 describe("GenerateImage reference images integration", () => {
 	it("logs reference image parsing and resolution for newline-delimited paths", async () => {
-		const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "caret-generate-image-"))
+		const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "careti-generate-image-"))
 		const logs: string[] = []
 		try {
 			try {
@@ -94,7 +94,7 @@ describe("GenerateImage reference images integration", () => {
 	})
 
 	it("parses XML <image> tag format from Gemini-style models", async () => {
-		const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "caret-generate-image-xml-"))
+		const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "careti-generate-image-xml-"))
 		const logs: string[] = []
 		try {
 			try {

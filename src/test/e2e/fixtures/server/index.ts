@@ -580,7 +580,7 @@ export class ClineApiServerMock {
 		const server = ClineApiServerMock.globalSharedServer.server
 
 		// Clean shutdown - destroy all socket connections first
-		// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+		// CARETI MODIFICATION: replace forEach to satisfy lint without behavior change
 		for (const socket of ClineApiServerMock.globalSockets) {
 			socket.destroy()
 		}

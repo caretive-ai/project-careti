@@ -1,7 +1,7 @@
-// CARET MODIFICATION: Support data URL reads for tool-generated images with safe path checks.
+// CARETI MODIFICATION: Support data URL reads for tool-generated images with safe path checks.
 import { workspaceResolver } from "@core/workspace"
 import { String, StringRequest } from "@shared/proto/cline/common"
-import { getBrandGeneratedAssetsDirName } from "@caret/utils/brand-utils" // CARET MODIFICATION: brand-aware generated assets path
+import { getBrandGeneratedAssetsDirName } from "@careti/utils/brand-utils" // CARETI MODIFICATION: brand-aware generated assets path
 import { getWorkspacePath } from "@utils/path"
 import * as fs from "fs/promises"
 import path from "path"

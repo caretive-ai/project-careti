@@ -7,7 +7,7 @@
 		"dev": "vite",
 		"build": "npm run copy:assets && tsc -b && vite build",
 		"build:test": "npm run copy:assets && tsc -b && vite build -- --dev-build",
-		"copy:assets": "node ../caret-scripts/build/copy-assets.cjs",
+		"copy:assets": "node ../careti-scripts/build/copy-assets.cjs",
 		"preview": "vite preview",
 		"lint": "biome lint --changed --no-errors-on-unmatched",
 		"test": "vitest run",

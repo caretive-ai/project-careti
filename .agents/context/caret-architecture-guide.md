@@ -1,7 +1,7 @@
 # Caret Architecture Guide
 
 ## Context
-You are working with Caret, a Cline fork implementing minimal extension strategy with hybrid pattern architecture.
+You are working with Careti, a Cline fork implementing minimal extension strategy with hybrid pattern architecture.
 
 ## Core Architecture Principles
 
@@ -14,7 +14,7 @@ Caret directly includes Cline's entire codebase in `src/` directory:
 ### 2. Hybrid Pattern (v3.1+) ✨ Recommended
 
 **Backend**: Wrapper pattern (complete wrapping)
-**Frontend**: Minimal modifications with `CARET MODIFICATION` comments
+**Frontend**: Minimal modifications with `CARETI MODIFICATION` comments
 
 ```typescript
 // Backend: Wrapper pattern
@@ -23,7 +23,7 @@ const clineProvider = new VscodeWebviewProvider(context, clineController)
 const caretWrapper = new CaretProviderWrapper(context, clineProvider)
 
 // Frontend: Minimal modification + comment
-// CARET MODIFICATION: Added PersonaAvatar for visual identification
+// CARETI MODIFICATION: Added PersonaAvatar for visual identification
 <PersonaAvatar personaProfile={personaProfile} />
 ```
 
@@ -36,13 +36,13 @@ const caretWrapper = new CaretProviderWrapper(context, clineProvider)
 ### 3. Three-Level Modification Strategy
 
 **Level 1 (Preferred)**: Independent Modules
-- Location: `caret-src/`, `caret-docs/`, `assets/`
+- Location: `careti-src/`, `careti-docs/`, `assets/`
 - Freedom: Complete implementation freedom
 - Requirements: None (no backup or comments needed)
 
 **Level 2 (Conditional)**: Minimal Cline Modifications
 - Modifications: 1-3 lines max per file
-- Mandatory: `// CARET MODIFICATION: [description]` comment
+- Mandatory: `// CARETI MODIFICATION: [description]` comment
 - Protected: `src/`, `webview-ui/`, `proto/`, `scripts/`
 - Use: Only when Level 1 impossible
 
@@ -61,14 +61,14 @@ caret/
 │   │   ├── task/             # Task management
 │   │   └── prompts/          # Prompt system
 │   └── shared/               # Common types/utilities
-├── caret-src/                # Caret extensions (wrapper pattern)
+├── careti-src/                # Caret extensions (wrapper pattern)
 │   ├── extension.ts          # Caret entry point
 │   └── core/webview/
 │       └── CaretProviderWrapper.ts  # Wrapper pattern (v3.0+)
 ├── assets/                   # Caret-specific assets
 │   ├── template_characters/  # AI persona templates
 │   └── rules/                # Mode & rule definitions
-├── caret-docs/               # Caret documentation
+├── careti-docs/               # Caret documentation
 └── webview-ui/               # Frontend (Cline build system)
     ├── src/components/       # Cline components (preserve)
     └── src/caret/            # Caret components
@@ -79,7 +79,7 @@ caret/
 ### Core Wrapper Structure
 
 ```typescript
-// caret-src/core/webview/CaretProviderWrapper.ts
+// careti-src/core/webview/CaretProviderWrapper.ts
 export class CaretProviderWrapper implements vscode.WebviewViewProvider {
   private clineProvider: VscodeWebviewProvider
 
@@ -136,14 +136,14 @@ WebviewPanel ↔ Controller ↔ Task
 ## Implementation Guidelines
 
 ### DO's
-- ✅ Prefer Level 1 (independent modules in `caret-src/`)
+- ✅ Prefer Level 1 (independent modules in `careti-src/`)
 - ✅ Use wrapper pattern for backend extensions
-- ✅ Add `CARET MODIFICATION` comments for Cline file changes
+- ✅ Add `CARETI MODIFICATION` comments for Cline file changes
 - ✅ Follow TDD: Integration test first, then implement
 - ✅ Use Protocol Buffers for frontend-backend communication
 
 ### DON'Ts
-- ❌ Never modify Cline files without `CARET MODIFICATION` comment
+- ❌ Never modify Cline files without `CARETI MODIFICATION` comment
 - ❌ Don't exceed 1-3 lines per Cline file modification
 - ❌ Don't use Level 3 (direct modification) without full documentation
 - ❌ Don't create custom message types (use gRPC only)
@@ -152,7 +152,7 @@ WebviewPanel ↔ Controller ↔ Task
 ## Key File Locations
 
 **Core Logic**: `src/core/`
-**Caret Extensions**: `caret-src/`
+**Caret Extensions**: `careti-src/`
 **Communication**: `src/shared/ExtensionMessage.ts`
 **Webview**: `webview-ui/src/App.tsx`
 **Caret Components**: `webview-ui/src/caret/`
@@ -174,6 +174,6 @@ Every change must pass:
 
 ## Related Documents
 - `.agents/context/architecture-guide.yaml`: Quick reference (30-second read)
-- `caret-docs/development/caret-architecture-and-implementation-guide.md`: Complete guide (Korean)
+- `careti-docs/development/careti-architecture-and-implementation-guide.md`: Complete guide (Korean)
 - `.agents/context/component-architecture.md`: Frontend component patterns
 - `.agents/context/frontend-backend-patterns.md`: Communication patterns

@@ -175,7 +175,7 @@ export function parseAssistantMessageV2(assistantMessage: string): AssistantMess
 						name: toolName,
 						params: {},
 						partial: true, // Assume partial until closing tag is found
-						// CARET MODIFICATION: Stable operationId based on tool tag position (prevents duplicate tool UI during streaming)
+						// CARETI MODIFICATION: Stable operationId based on tool tag position (prevents duplicate tool UI during streaming)
 						operationId: `${toolName}_${currentCharIndex - tag.length + 1}`,
 					}
 					currentToolUseStart = currentCharIndex + 1 // Tool content starts after the opening tag

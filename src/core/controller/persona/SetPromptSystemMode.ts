@@ -1,40 +1,40 @@
-import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
+import { CaretiGlobalManager } from "@careti/managers/CaretiGlobalManager"
 import type { Controller } from "@/core/controller"
 import { Logger } from "@/services/logging/Logger"
 import type * as proto from "@/shared/proto"
 
 /**
- * CARET MODIFICATION: gRPC handler for setting prompt system mode
- * Handles switching between caret and cline prompt systems
+ * CARETI MODIFICATION: gRPC handler for setting prompt system mode
+ * Handles switching between careti and cline prompt systems
  */
 export async function SetPromptSystemMode(
 	controller: Controller,
-	request: proto.caret.SetPromptSystemModeRequest,
-): Promise<proto.caret.SetPromptSystemModeResponse> {
+	request: proto.careti.SetPromptSystemModeRequest,
+): Promise<proto.careti.SetPromptSystemModeResponse> {
 	try {
-		const newMode = request.mode as "caret" | "cline"
+		const newMode = request.mode as "careti" | "cline"
 
 		// Validate mode
-		if (newMode !== "caret" && newMode !== "cline") {
+		if (newMode !== "careti" && newMode !== "cline") {
 			Logger.error(`[SetPromptSystemMode] Invalid mode: ${newMode}`)
 			return {
 				success: false,
-				currentMode: CaretGlobalManager.currentMode,
-				errorMessage: `Invalid mode: ${newMode}. Must be 'caret' or 'cline'`,
+				currentMode: CaretiGlobalManager.currentMode,
+				errorMessage: `Invalid mode: ${newMode}. Must be 'careti' or 'cline'`,
 			}
 		}
 
-		Logger.debug(`[SetPromptSystemMode] Changing mode from ${CaretGlobalManager.currentMode} to ${newMode}`)
+		Logger.debug(`[SetPromptSystemMode] Changing mode from ${CaretiGlobalManager.currentMode} to ${newMode}`)
 
-		// Update CaretGlobalManager (in-memory)
-		CaretGlobalManager.get().setCurrentMode(newMode)
+		// Update CaretiGlobalManager (in-memory)
+		CaretiGlobalManager.get().setCurrentMode(newMode)
 		Logger.debug(
-			`[SetPromptSystemMode] After setCurrentMode: CaretGlobalManager.currentMode=${CaretGlobalManager.currentMode}`,
+			`[SetPromptSystemMode] After setCurrentMode: CaretiGlobalManager.currentMode=${CaretiGlobalManager.currentMode}`,
 		)
-		// CARET MODIFICATION: Persist caretModeSystem to globalState for restart consistency
+		// CARETI MODIFICATION: Persist caretModeSystem to globalState for restart consistency
 		controller.stateManager.setGlobalStateBatch({ caretModeSystem: newMode })
 
-		// CARET MODIFICATION: Post updated state to webview
+		// CARETI MODIFICATION: Post updated state to webview
 		Logger.debug(`[SetPromptSystemMode] Before postStateToWebview`)
 		await controller.postStateToWebview()
 		Logger.debug(`[SetPromptSystemMode] After postStateToWebview`)
@@ -50,7 +50,7 @@ export async function SetPromptSystemMode(
 		Logger.error(`[SetPromptSystemMode] Failed to set mode: ${error}`)
 		return {
 			success: false,
-			currentMode: CaretGlobalManager.currentMode,
+			currentMode: CaretiGlobalManager.currentMode,
 			errorMessage: `Failed to set mode: ${error}`,
 		}
 	}

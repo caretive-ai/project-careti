@@ -40,11 +40,11 @@ export type LanguageDisplay =
 
 export const DEFAULT_LANGUAGE_SETTINGS: LanguageKey = "en"
 
-// CARET MODIFICATION: UI에서 지원하는 언어 목록 (Caret i18n 시스템 기준)
+// CARETI MODIFICATION: UI에서 지원하는 언어 목록 (Careti i18n 시스템 기준)
 // Sovereign Cloud 지원: 프로바이더 국가 = UI 언어 지원
 export type UILanguageKey = "ko" | "en" | "ja" | "zh-CN" | "fr" | "de" | "ru"
 
-// CARET MODIFICATION: LLM 언어 코드를 UI 언어 코드로 매핑
+// CARETI MODIFICATION: LLM 언어 코드를 UI 언어 코드로 매핑
 export const LLM_TO_UI_LANGUAGE_MAP: Record<LanguageKey, UILanguageKey | null> = {
 	en: "en", // 영어 → 영어 UI
 	ko: "ko", // 한국어 → 한국어 UI
@@ -68,7 +68,7 @@ export const LLM_TO_UI_LANGUAGE_MAP: Record<LanguageKey, UILanguageKey | null> =
 	tr: null, // 터키어 → 영어 UI 유지
 }
 
-// CARET MODIFICATION: 직접적인 UI 지원 언어 목록 (🎨 아이콘 표시용)
+// CARETI MODIFICATION: 직접적인 UI 지원 언어 목록 (🎨 아이콘 표시용)
 // Sovereign Cloud: 미국, 한국, 일본, 중국, 프랑스, 독일, 러시아
 export const DIRECT_UI_SUPPORTED_LANGUAGES: LanguageKey[] = ["en", "ko", "ja", "zh-CN", "fr", "de", "ru"]
 
@@ -106,7 +106,7 @@ export function getLanguageKey(display: LanguageDisplay | undefined): LanguageKe
 	return DEFAULT_LANGUAGE_SETTINGS
 }
 
-// CARET MODIFICATION: 언어 통합 유틸리티 함수들
+// CARETI MODIFICATION: 언어 통합 유틸리티 함수들
 /**
  * LLM 언어가 UI에서 직접 지원되는지 확인 (🎨 아이콘 표시용)
  */
@@ -123,10 +123,10 @@ export function getUILanguageFromLLM(languageKey: LanguageKey): UILanguageKey {
 }
 
 /**
- * UI 언어 코드를 Caret i18n 시스템의 SupportedLanguage로 변환
+ * UI 언어 코드를 Careti i18n 시스템의 SupportedLanguage로 변환
  */
 export function getCaretSupportedLanguage(uiLanguageKey: UILanguageKey): "ko" | "en" | "ja" | "zh" | "fr" | "de" | "ru" {
-	// zh-CN을 zh로 매핑 (Caret i18n 시스템 호환성)
+	// zh-CN을 zh로 매핑 (Careti i18n 시스템 호환성)
 	if (uiLanguageKey === "zh-CN") {
 		return "zh"
 	}

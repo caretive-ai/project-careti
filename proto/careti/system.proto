@@ -1,0 +1,137 @@
+syntax = "proto3";
+
+package careti;
+
+option go_package = "github.com/cline/grpc-go/caret;caret";
+option java_multiple_files = true;
+option java_package = "bot.careti.proto";
+
+// Caret System Service for managing application-level settings
+service CaretSystemService {
+  // Set the prompt system mode (caret/cline)
+  rpc SetPromptSystemMode(SetPromptSystemModeRequest) returns (SetPromptSystemModeResponse);
+
+  // Get the current prompt system mode
+  rpc GetPromptSystemMode(GetPromptSystemModeRequest) returns (GetPromptSystemModeResponse);
+
+  // Set the Caret-specific mode (chatbot/agent) - CARETI MODIFICATION
+  rpc SetCaretMode(SetCaretModeRequest) returns (SetCaretModeResponse);
+
+  // Get the current Caret-specific mode
+  rpc GetCaretMode(GetCaretModeRequest) returns (GetCaretModeResponse);
+
+  // CARETI MODIFICATION: LiteLLM model fetching service
+  rpc FetchLiteLlmModels(FetchLiteLlmModelsRequest) returns (FetchLiteLlmModelsResponse);
+
+  // BizRouter model fetching service
+  rpc FetchBizRouterModels(FetchBizRouterModelsRequest) returns (FetchBizRouterModelsResponse);
+
+  // CARETI MODIFICATION: Toggle mention image sending
+  rpc GetMentionImageSendSetting(GetMentionImageSendSettingRequest) returns (GetMentionImageSendSettingResponse);
+  rpc SetMentionImageSendSetting(SetMentionImageSendSettingRequest) returns (SetMentionImageSendSettingResponse);
+
+  // CARETI MODIFICATION: Resolve image mention data URLs
+  rpc ResolveMentionImageDataUrls(ResolveMentionImageDataUrlsRequest) returns (ResolveMentionImageDataUrlsResponse);
+
+  // CARETI MODIFICATION: Optimize image data URLs (resize + webp)
+  rpc OptimizeImageDataUrls(OptimizeImageDataUrlsRequest) returns (OptimizeImageDataUrlsResponse);
+}
+
+// Request to set prompt system mode
+message SetPromptSystemModeRequest {
+  string mode = 1; // "careti" or "cline"
+}
+
+// Response for setting prompt system mode
+message SetPromptSystemModeResponse {
+  bool success = 1;
+  string current_mode = 2;
+  string error_message = 3;
+}
+
+// Request to get current prompt system mode
+message GetPromptSystemModeRequest {
+  // Empty request
+}
+
+// Response with current prompt system mode
+message GetPromptSystemModeResponse {
+  string current_mode = 1;
+}
+
+// Request to set Caret-specific mode (chatbot/agent) - CARETI MODIFICATION
+message SetCaretModeRequest {
+  string mode = 1; // "chatbot" or "agent"
+}
+
+// Response for setting Caret-specific mode
+message SetCaretModeResponse {
+  bool success = 1;
+  string current_mode = 2; // "chatbot" or "agent"
+  string error_message = 3;
+}
+
+// Request to get current Caret-specific mode
+message GetCaretModeRequest {
+  // Empty request
+}
+
+// Response with current Caret-specific mode
+message GetCaretModeResponse {
+  string current_mode = 1; // "chatbot" or "agent"
+}
+
+// CARETI MODIFICATION: LiteLLM model fetching messages
+message FetchLiteLlmModelsRequest {
+  string base_url = 1; // LiteLLM base URL
+  string api_key = 2; // LiteLLM API key
+}
+
+message FetchLiteLlmModelsResponse {
+  bool success = 1;
+  repeated string models = 2; // List of available model names
+  string error_message = 3; // Error message if failed
+}
+
+// BizRouter model fetching messages (URL hardcoded to https://bizrouter.ai/api/v1)
+message FetchBizRouterModelsRequest {
+  string api_key = 1; // BizRouter API key
+}
+
+message FetchBizRouterModelsResponse {
+  bool success = 1;
+  repeated string models = 2; // List of available model names
+  string error_message = 3; // Error message if failed
+}
+
+// CARETI MODIFICATION: Mention image send setting
+message GetMentionImageSendSettingRequest {}
+message GetMentionImageSendSettingResponse {
+  bool enabled = 1;
+}
+
+message SetMentionImageSendSettingRequest {
+  bool enabled = 1;
+}
+
+message SetMentionImageSendSettingResponse {
+  bool enabled = 1;
+}
+
+// CARETI MODIFICATION: Mention image data URL resolve
+message ResolveMentionImageDataUrlsRequest {
+  repeated string mentions = 1;
+}
+
+message ResolveMentionImageDataUrlsResponse {
+  repeated string data_urls = 1;
+}
+
+// CARETI MODIFICATION: Optimize image data URLs
+message OptimizeImageDataUrlsRequest {
+  repeated string data_urls = 1;
+}
+
+message OptimizeImageDataUrlsResponse {
+  repeated string data_urls = 1;
+}

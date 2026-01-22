@@ -11,7 +11,7 @@ You are implementing communication between Caret's webview (React) and extension
 
 1. **Create `proto/caret/` directory**: Establish Caret namespace
 2. **Define new `.proto` file**: Example: `proto/caret/persona.proto`
-3. **Implement independent service**: Create gRPC handlers in `caret-src`
+3. **Implement independent service**: Create gRPC handlers in `careti-src`
 4. **Register in `extension.ts`**: Add Caret service separately from Cline's `UiService`
 5. **Use in webview**: Access via Caret-specific gRPC client
 
@@ -211,4 +211,4 @@ When implementing new settings or state updates:
 ## Related Documents
 - `.agents/context/webview-communication.md`: Webview message flow details
 - `.agents/context/component-architecture.md`: Frontend component patterns
-- `caret-docs/development/frontend-backend-interaction-patterns.md`: Full guide (Korean)
+- `careti-docs/development/frontend-backend-interaction-patterns.md`: Full guide (Korean)

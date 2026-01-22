@@ -119,7 +119,7 @@ export class GeminiHandler implements ApiHandler {
 		const _thinkingBudget = this.options.thinkingBudgetTokens ?? 0
 		const maxBudget = info.thinkingConfig?.maxBudget ?? 24576
 		const thinkingBudget = Math.min(_thinkingBudget, maxBudget)
-		// CARET MODIFICATION: Gemini 3 Pro 계열은 thinkingLevel 누락 시 기본 LOW로 채우고,
+		// CARETI MODIFICATION: Gemini 3 Pro 계열은 thinkingLevel 누락 시 기본 LOW로 채우고,
 		// thinkingLevel이 있으면 thinkingBudget과 배타적으로 처리하며 includeThoughts를 활성화 (upstream 326c9c9f9, R-3400-05)
 		const thinkLevel = info.thinkingConfig?.thinkingLevel
 		let thinkingLevel: ThinkingLevel | undefined

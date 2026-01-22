@@ -1,25 +1,25 @@
-// CARET MODIFICATION: Rules, Workflows, and Hooks toggle modal
-// Updated to include hooks tab from cline-latest with Caret path standards
+// CARETI MODIFICATION: Rules, Workflows, and Hooks toggle modal
+// Updated to include hooks tab from cline-latest with Careti path standards
 import { EmptyRequest } from "@shared/proto/cline/common"
 import {
-	ClineRulesToggles,
-	RefreshedRules,
-	SkillInfo,
-	ToggleCaretRuleRequest,
-	ToggleClineRuleRequest,
-	ToggleCursorRuleRequest,
-	ToggleSkillRequest,
-	ToggleWindsurfRuleRequest,
-	ToggleWorkflowRequest,
+    ClineRulesToggles,
+    RefreshedRules,
+    SkillInfo,
+    ToggleCaretRuleRequest,
+    ToggleClineRuleRequest,
+    ToggleCursorRuleRequest,
+    ToggleSkillRequest,
+    ToggleWindsurfRuleRequest,
+    ToggleWorkflowRequest,
 } from "@shared/proto/cline/file"
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useRef, useState } from "react"
 import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
-// CARET MODIFICATION: Import PersonaManagement for persona system integration
-import PersonaManagement from "@/caret/components/PersonaManagement"
-import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
-import { t } from "@/caret/utils/i18n"
+// CARETI MODIFICATION: Import PersonaManagement for persona system integration
+import PersonaManagement from "@/careti/components/PersonaManagement"
+import { useCaretI18nContext } from "@/careti/context/CaretI18nContext"
+import { t } from "@/careti/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import Tooltip from "@/components/common/Tooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -35,7 +35,7 @@ const ClineRulesToggleModal: React.FC = () => {
 	const {
 		globalClineRulesToggles = {},
 		localClineRulesToggles = {},
-		localCaretRulesToggles = {}, // CARET MODIFICATION: Add missing localCaretRulesToggles
+		localCaretRulesToggles = {}, // CARETI MODIFICATION: Add missing localCaretRulesToggles
 		localCursorRulesToggles = {},
 		localWindsurfRulesToggles = {},
 		localWorkflowToggles = {},
@@ -47,25 +47,25 @@ const ClineRulesToggleModal: React.FC = () => {
 		setLocalWindsurfRulesToggles,
 		setLocalWorkflowToggles,
 		setGlobalWorkflowToggles,
-		// CARET MODIFICATION: Skills toggles
+		// CARETI MODIFICATION: Skills toggles
 		globalSkillsToggles = {},
 		localSkillsToggles = {},
 		setGlobalSkillsToggles,
 		setLocalSkillsToggles,
 		skillsEnabled,
-		// CARET MODIFICATION: Get featureConfig from ExtensionState for runtime dynamic delivery
+		// CARETI MODIFICATION: Get featureConfig from ExtensionState for runtime dynamic delivery
 		modeSystem,
 		enablePersonaSystem,
 		featureConfig,
 		hooksEnabled,
 	} = useExtensionState()
 
-	// CARET MODIFICATION: Hooks state management
+	// CARETI MODIFICATION: Hooks state management
 	const [globalHooks, setGlobalHooks] = useState<Array<{ name: string; enabled: boolean; absolutePath: string }>>([])
 	const [workspaceHooks, setWorkspaceHooks] = useState<
 		Array<{ workspaceName: string; hooks: Array<{ name: string; enabled: boolean; absolutePath: string }> }>
 	>([])
-	// CARET MODIFICATION: Skills state management
+	// CARETI MODIFICATION: Skills state management
 	const [globalSkills, setGlobalSkills] = useState<SkillInfo[]>([])
 	const [localSkills, setLocalSkills] = useState<SkillInfo[]>([])
 
@@ -78,14 +78,14 @@ const ClineRulesToggleModal: React.FC = () => {
 	const [menuPosition, setMenuPosition] = useState(0)
 	const [currentView, setCurrentView] = useState<"rules" | "workflows" | "hooks" | "skills">("rules")
 
-	// CARET MODIFICATION: Auto-switch to rules tab if hooks become disabled while viewing hooks tab
+	// CARETI MODIFICATION: Auto-switch to rules tab if hooks become disabled while viewing hooks tab
 	useEffect(() => {
 		if (currentView === "hooks" && !hooksEnabled) {
 			setCurrentView("rules")
 		}
 	}, [currentView, hooksEnabled])
 
-	// CARET MODIFICATION: Auto-switch to rules tab if skills become disabled while viewing skills tab
+	// CARETI MODIFICATION: Auto-switch to rules tab if skills become disabled while viewing skills tab
 	useEffect(() => {
 		if (currentView === "skills" && !skillsEnabled) {
 			setCurrentView("rules")
@@ -104,7 +104,7 @@ const ClineRulesToggleModal: React.FC = () => {
 						setLocalClineRulesToggles(response.localClineRulesToggles.toggles)
 					}
 					if (response.localCaretRulesToggles?.toggles) {
-						// CARET MODIFICATION: Add missing handler
+						// CARETI MODIFICATION: Add missing handler
 						setLocalCaretRulesToggles(response.localCaretRulesToggles.toggles)
 					}
 					if (response.localCursorRulesToggles?.toggles) {
@@ -126,7 +126,7 @@ const ClineRulesToggleModal: React.FC = () => {
 		}
 	}, [isVisible])
 
-	// CARET MODIFICATION: Refresh hooks when hooks tab becomes visible
+	// CARETI MODIFICATION: Refresh hooks when hooks tab becomes visible
 	useEffect(() => {
 		if (!isVisible || currentView !== "hooks") {
 			return
@@ -164,7 +164,7 @@ const ClineRulesToggleModal: React.FC = () => {
 		}
 	}, [isVisible, currentView])
 
-	// CARET MODIFICATION: Refresh skills when skills tab becomes visible
+	// CARETI MODIFICATION: Refresh skills when skills tab becomes visible
 	useEffect(() => {
 		if (!isVisible || currentView !== "skills") {
 			return
@@ -215,7 +215,7 @@ const ClineRulesToggleModal: React.FC = () => {
 		.map(([path, enabled]): [string, boolean] => [path, enabled as boolean])
 		.sort(([a], [b]) => a.localeCompare(b))
 
-	// CARET MODIFICATION: Add caretRules for display
+	// CARETI MODIFICATION: Add caretRules for display
 	const caretRules = Object.entries(localCaretRulesToggles || {})
 		.map(([path, enabled]): [string, boolean] => [path, enabled as boolean])
 		.sort(([a], [b]) => a.localeCompare(b))
@@ -255,7 +255,7 @@ const ClineRulesToggleModal: React.FC = () => {
 			})
 	}
 
-	// CARET MODIFICATION: Add toggleCaretRule function
+	// CARETI MODIFICATION: Add toggleCaretRule function
 	const toggleCaretRule = (rulePath: string, enabled: boolean) => {
 		FileServiceClient.toggleCaretRule(
 			ToggleCaretRuleRequest.create({
@@ -270,7 +270,7 @@ const ClineRulesToggleModal: React.FC = () => {
 				}
 			})
 			.catch((error) => {
-				console.error("Error toggling Caret rule:", error)
+				console.error("Error toggling Careti rule:", error)
 			})
 	}
 
@@ -309,7 +309,7 @@ const ClineRulesToggleModal: React.FC = () => {
 			})
 	}
 
-	// CARET MODIFICATION: Toggle hook handler
+	// CARETI MODIFICATION: Toggle hook handler
 	const toggleHook = (isGlobal: boolean, hookName: string, enabled: boolean, workspaceName?: string) => {
 		FileServiceClient.toggleHook({
 			metadata: {} as any,
@@ -349,7 +349,7 @@ const ClineRulesToggleModal: React.FC = () => {
 			})
 	}
 
-	// CARET MODIFICATION: Handle toggle for skills
+	// CARETI MODIFICATION: Handle toggle for skills
 	const toggleSkill = (isGlobal: boolean, skillPath: string, enabled: boolean) => {
 		FileServiceClient.toggleSkill(
 			ToggleSkillRequest.create({
@@ -452,13 +452,13 @@ const ClineRulesToggleModal: React.FC = () => {
 							<TabButton isActive={currentView === "workflows"} onClick={() => setCurrentView("workflows")}>
 								{t("clineRulesToggleModal.workflowsTab", "chat")}
 							</TabButton>
-							{/* CARET MODIFICATION: Hooks tab - only show when hooks feature is enabled */}
+							{/* CARETI MODIFICATION: Hooks tab - only show when hooks feature is enabled */}
 							{hooksEnabled && (
 								<TabButton isActive={currentView === "hooks"} onClick={() => setCurrentView("hooks")}>
 									{t("clineRulesToggleModal.hooksTab", "chat")}
 								</TabButton>
 							)}
-							{/* CARET MODIFICATION: Skills tab - only show when skills feature is enabled */}
+							{/* CARETI MODIFICATION: Skills tab - only show when skills feature is enabled */}
 							{skillsEnabled && (
 								<TabButton isActive={currentView === "skills"} onClick={() => setCurrentView("skills")}>
 									{t("clineRulesToggleModal.skillsTab", "chat")}
@@ -474,7 +474,7 @@ const ClineRulesToggleModal: React.FC = () => {
 								{t("clineRulesToggleModal.rulesDescription", "chat")}{" "}
 								<VSCodeLink
 									className="text-xs"
-									href={`https://docs.caret.team/${language}/features/caret-rules`}
+									href={`https://docs.careti.ai/${language}/features/careti-rules`}
 									style={{ display: "inline" }}>
 									{t("clineRulesToggleModal.docs", "chat")}
 								</VSCodeLink>
@@ -488,7 +488,7 @@ const ClineRulesToggleModal: React.FC = () => {
 								in the chat.{" "}
 								<VSCodeLink
 									className="text-xs"
-									href={`https://docs.caret.team/${language}/features/slash-commands/workflows`}
+									href={`https://docs.careti.ai/${language}/features/slash-commands/workflows`}
 									style={{ display: "inline" }}>
 									{t("clineRulesToggleModal.docs", "chat")}
 								</VSCodeLink>
@@ -502,8 +502,8 @@ const ClineRulesToggleModal: React.FC = () => {
 
 					{currentView === "rules" ? (
 						<>
-							{/* CARET MODIFICATION: Persona Management Section - only shown when feature flag enabled AND user enabled it */}
-							{featureConfig?.showPersonaSettings && modeSystem === "caret" && enablePersonaSystem && (
+							{/* CARETI MODIFICATION: Persona Management Section - only shown when feature flag enabled AND user enabled it */}
+							{featureConfig?.showPersonaSettings && modeSystem === "careti" && enablePersonaSystem && (
 								<PersonaManagement className="mb-3" />
 							)}
 
@@ -524,12 +524,12 @@ const ClineRulesToggleModal: React.FC = () => {
 							{/* Local Rules Section */}
 							<div style={{ marginBottom: -10 }}>
 								<div className="text-sm font-normal mb-2">{t("rules.section.workspaceRules", "settings")}</div>
-								{/* CARET MODIFICATION: Show .agents/context only */}
+								{/* CARETI MODIFICATION: Show .agents/context only */}
 								<RulesToggleList
 									isGlobal={false}
-									listGap="small" // CARET MODIFICATION: Use dedicated caret toggle
+									listGap="small" // CARETI MODIFICATION: Use dedicated careti toggle
 									rules={caretRules}
-									ruleType={"caret"}
+									ruleType={"careti"}
 									showNewRule={false}
 									showNoRules={false}
 									toggleRule={toggleCaretRule}
@@ -572,7 +572,7 @@ const ClineRulesToggleModal: React.FC = () => {
 						</>
 					) : currentView === "skills" ? (
 						<>
-							{/* CARET MODIFICATION: Skills Tab Content */}
+							{/* CARETI MODIFICATION: Skills Tab Content */}
 							{/* Global Skills Section */}
 							<div className="mb-3">
 								<div className="text-sm font-normal mb-2">
@@ -619,13 +619,13 @@ const ClineRulesToggleModal: React.FC = () => {
 						</>
 					) : (
 						<>
-							{/* CARET MODIFICATION: Hooks Tab Content */}
+							{/* CARETI MODIFICATION: Hooks Tab Content */}
 							<div className="text-xs text-[var(--vscode-descriptionForeground)] mb-4">
 								<p>
 									Toggle to enable/disable (chmod +x/-x).{" "}
 									<VSCodeLink
 										className="text-xs"
-										href={`https://docs.caret.team/${language}/features/hooks`}
+										href={`https://docs.careti.ai/${language}/features/hooks`}
 										style={{ display: "inline" }}>
 										{t("clineRulesToggleModal.docs", "chat")}
 									</VSCodeLink>
@@ -678,7 +678,7 @@ const ClineRulesToggleModal: React.FC = () => {
 							</div>
 
 							{/* Workspace Hooks - one section per workspace */}
-							{/* CARET MODIFICATION: Use .agents/hooks path instead of .clinerules/hooks */}
+							{/* CARETI MODIFICATION: Use .agents/hooks path instead of .clinerules/hooks */}
 							{workspaceHooks.map((workspace, index) => (
 								<div
 									key={workspace.workspaceName}

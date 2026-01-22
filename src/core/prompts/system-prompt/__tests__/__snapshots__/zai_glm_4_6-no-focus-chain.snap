@@ -294,6 +294,33 @@ You accomplish a given task iteratively, breaking it down into clear steps and w
 
 The following additional instructions are provided by the user, and should be followed to the best of your ability without interfering with the TOOL USE guidelines.
 
+# Context Structure Philosophy (Dual-directory Architecture)
+
+This project uses a dual-directory architecture for context management:
+
+## Directory Structure
+- `.agents/` - AI-optimized context (system rules, English, token-efficient)
+  - `context/` - System rules in JSON/YAML format
+  - `workflows/` - Task workflows and protocols
+    - `atoms/` - Reusable small protocols (building blocks)
+  - `skills/` - AI skills and capabilities
+  - `hooks/` - Event hooks and triggers
+- `.users/` - Human-readable context (native language, detailed explanations)
+  - `context/` - Project context in Markdown format
+  - `workflows/` - Human-readable workflow guides
+    - `atoms/` - Human-readable atom descriptions
+  - `skills/` - Human-readable skill guides
+  - `hooks/` - Human-readable hook documentation
+- `AGENTS.md` - Entry point for AI, contains project overview
+
+## Key Principles
+1. **1:1 Mirroring**: .users/ structure mirrors .agents/ exactly
+2. **Language Optimization**: .agents/ uses English for token efficiency, .users/ uses team's native language
+3. **Workflows vs Atoms**: Workflows are complete task flows, atoms are reusable building blocks
+4. **AI reads .agents/, humans read .users/**: Clear separation of concerns
+
+When creating or modifying context files, follow this architecture.
+
 Prefer TypeScript
 
 Follow global rules

@@ -13,7 +13,7 @@ const OpenDiskConversationHistoryButton: React.FC<{
 			return
 		}
 
-		// CARET MODIFICATION: Use openTaskHistory instead of openDiskConversationHistory
+		// CARETI MODIFICATION: Use openTaskHistory instead of openDiskConversationHistory
 		FileServiceClient.openTaskHistory(StringRequest.create({ value: taskId })).catch((err: any) => {
 			console.error(err)
 		})

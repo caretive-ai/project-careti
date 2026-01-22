@@ -315,18 +315,18 @@ Cline operates on a three-layer architecture:
 
 # BUGS
 
-Report bugs at: <https://github.com/aicoding-caret/caret/issues>
+Report bugs at: <https://github.com/aicoding-careti/careti/issues>
 
 For real-time help, join the Discord community at: <https://https://discord.gg/WB6yaR89YN>
 
 # SEE ALSO
 
-Full documentation: <https://docs.caret.team>
+Full documentation: <https://docs.careti.ai>
 
 # AUTHORS
 
-Caret is developed by the Caret team and the open source community.
+Careti is developed by the Careti team and the open source community.
 
 # COPYRIGHT
 
-Copyright © 2025 Caret Team. Licensed under the Apache License 2.0.
+Copyright © 2025 Careti Team. Licensed under the Apache License 2.0.

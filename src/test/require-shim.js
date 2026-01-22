@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Test shim to bypass ESM loader issues for specific modules
+// CARETI MODIFICATION: Test shim to bypass ESM loader issues for specific modules
 const Module = require("module")
 const path = require("path")
 const originalResolveFilename = Module._resolveFilename

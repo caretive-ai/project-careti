@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Skills system - on-demand agent instructions handler
+// CARETI MODIFICATION: Skills system - on-demand agent instructions handler
 // Ported from Cline v3.49.1
 
 import type { ToolUse } from "@core/assistant-message"

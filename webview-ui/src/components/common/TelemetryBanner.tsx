@@ -1,7 +1,7 @@
 import { TelemetrySettingEnum, TelemetrySettingRequest } from "@shared/proto/cline/state"
 import { useCallback } from "react"
-// CARET MODIFICATION: Import i18n for telemetry banner translation
-import { t } from "@/caret/utils/i18n"
+// CARETI MODIFICATION: Import i18n for telemetry banner translation
+import { t } from "@/careti/utils/i18n"
 import { StateServiceClient } from "@/services/grpc-client"
 
 const telemetryRequest = TelemetrySettingRequest.create({
@@ -13,9 +13,9 @@ export const TelemetryBanner: React.FC = () => {
 		StateServiceClient.updateTelemetrySetting(telemetryRequest).catch(console.error)
 	}, [])
 
-	// CARET MODIFICATION: Open Caret GitHub instead of settings (telemetry not implemented)
+	// CARETI MODIFICATION: Open Careti GitHub instead of settings (telemetry not implemented)
 	const handleOpenGitHub = useCallback(() => {
-		window.open("https://github.com/aicoding-caret/caret", "_blank")
+		window.open("https://github.com/aicoding-careti/careti", "_blank")
 	}, [])
 
 	return (

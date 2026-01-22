@@ -1,4 +1,4 @@
-import { CaretAuthState, CaretAuthStateChangedRequest } from "@shared/proto/caret/account"
+import { CaretAuthState, CaretAuthStateChangedRequest } from "@shared/proto/careti/account"
 import type { Controller } from "../index"
 
 /**
@@ -16,7 +16,7 @@ export async function caretAuthStateChanged(
 		// Store the user info directly in global state
 		controller.stateManager.setGlobalState("userInfo", request.user)
 
-		console.log("[CARET-HANDLER] 🔄 Caret auth state changed:", {
+		console.log("[CARET-HANDLER] 🔄 Careti auth state changed:", {
 			uid: request.user?.uid,
 			email: request.user?.email,
 		})

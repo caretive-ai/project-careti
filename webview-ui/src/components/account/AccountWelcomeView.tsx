@@ -1,13 +1,13 @@
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
-// CARET MODIFICATION: Import persona avatar and context for account welcome
-import PersonaAvatar from "@/caret/components/PersonaAvatar"
-import { useCaretState } from "@/caret/context/CaretStateContext"
-import { t } from "@/caret/utils/i18n"
+// CARETI MODIFICATION: Import persona avatar and context for account welcome
+import PersonaAvatar from "@/careti/components/PersonaAvatar"
+import { useCaretState } from "@/careti/context/CaretStateContext"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { handleLogin } from "../settings/CaretAuthHandler"
 
 export const AccountWelcomeView = () => {
-	// CARET MODIFICATION: Use persona avatar for account welcome
+	// CARETI MODIFICATION: Use persona avatar for account welcome
 	const { personaProfile } = useCaretState() // Keep for working profile image
 	const { featureConfig } = useExtensionState() // Use for correct feature flag
 
@@ -16,7 +16,7 @@ export const AccountWelcomeView = () => {
 
 	return (
 		<div className="flex flex-col items-center pr-3">
-			{/* CARET MODIFICATION: Show persona avatar instead of Cline logo */}
+			{/* CARETI MODIFICATION: Show persona avatar instead of Cline logo */}
 			{personaProfile && <PersonaAvatar isThinking={false} personaProfile={personaProfile} size={64} />}
 			<div className="mb-4" />
 

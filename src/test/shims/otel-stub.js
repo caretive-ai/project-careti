@@ -1,4 +1,4 @@
-// CARET MODIFICATION: test stub for OpenTelemetry provider
+// CARETI MODIFICATION: test stub for OpenTelemetry provider
 class OpenTelemetryTelemetryProvider {
 	async initialize() {
 		return this

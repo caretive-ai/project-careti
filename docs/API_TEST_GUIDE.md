@@ -1,11 +1,11 @@
 # API 통합 테스트 가이드
 
-Caret의 이미지 분석, 문서 읽기 등 API 기능을 테스트하는 방법입니다.
+Careti의 이미지 분석, 문서 읽기 등 API 기능을 테스트하는 방법입니다.
 
 ## 빠른 시작
 
 ```bash
-# 모든 테스트 실행 (Caret API 제외)
+# 모든 테스트 실행 (Careti API 제외)
 node scripts/test-api-scenarios.js
 
 # 개별 테스트 실행
@@ -106,7 +106,7 @@ node scripts/test-api-scenarios.js document
 
 **테스트 파일 위치:**
 ```
-caret-src/integrations/document/__tests__/fixtures/
+careti-src/integrations/document/__tests__/fixtures/
 ├── sample.hwp
 ├── sample.pdf
 ├── sample.docx
@@ -119,7 +119,7 @@ caret-src/integrations/document/__tests__/fixtures/
 
 ### analyze_image 도구 테스트
 
-1. Caret 확장 활성화
+1. Careti 확장 활성화
 2. 채팅에서 다음 입력:
    ```
    이 이미지를 분석해줘: ./path/to/image.png
@@ -193,7 +193,7 @@ caret-src/integrations/document/__tests__/fixtures/
 새 테스트 케이스 추가:
 
 ```
-caret-src/integrations/document/__tests__/fixtures/
+careti-src/integrations/document/__tests__/fixtures/
 ```
 
 에 파일 추가 후 `test-api-scenarios.js`의 `testFiles` 배열 수정.
@@ -238,7 +238,7 @@ UPSTAGE_KEY=your_upstage_api_key
 # ZAI (GLM4.7)
 ZAI_TOKEN=your_zai_api_key
 
-# Caret
+# Careti
 CARET_KEY=your_caret_api_key
 ```
 
@@ -393,7 +393,7 @@ testStreamingAPI().catch(console.error);
 | `scripts/test-upstage-api.js` | Upstage Solar API 테스트 |
 | `scripts/test-glm47-streaming.js` | GLM4.7 스트리밍 테스트 |
 | `scripts/test-api-hook-skill.js` | Hook & Skill 통합 테스트 |
-| `caret-src/core/task/tools/handlers/AnalyzeImageToolHandler.ts` | 이미지 분석 핸들러 |
-| `caret-src/core/task/tools/handlers/ReadDocumentToolHandler.ts` | 문서 읽기 핸들러 |
-| `caret-src/integrations/document/hwp-parser.ts` | HWP 파서 |
-| `caret-src/integrations/document/document-extractor.ts` | 문서 추출기 |
+| `careti-src/core/task/tools/handlers/AnalyzeImageToolHandler.ts` | 이미지 분석 핸들러 |
+| `careti-src/core/task/tools/handlers/ReadDocumentToolHandler.ts` | 문서 읽기 핸들러 |
+| `careti-src/integrations/document/hwp-parser.ts` | HWP 파서 |
+| `careti-src/integrations/document/document-extractor.ts` | 문서 추출기 |

@@ -70,7 +70,7 @@ async handleWebviewMessage(message: WebviewMessage) {
 export async function handleGrpcRequest(
   controller: Controller,
   request: {
-    service: string    // e.g., "caret.ModelsService"
+    service: string    // e.g., "careti.ModelsService"
     method: string     // e.g., "updateApiConfigurationProto"
     message: any       // Proto message
     request_id: string
@@ -88,7 +88,7 @@ export async function handleGrpcRequest(
 ```typescript
 // src/core/controller/grpc-service-config.ts
 const serviceHandlers = {
-  "caret.ModelsService": {
+  "careti.ModelsService": {
     requestHandler: async (controller, method, message) => {
       // Unary request processing
       return await handleUnaryMethod(controller, method, message)
@@ -252,4 +252,4 @@ async function handleMethod(controller, request) {
 ## Related Documents
 - `.agents/context/frontend-backend-patterns.md`: Frontend-backend interaction patterns
 - `.agents/context/webview-communication.md`: Webview communication details
-- `caret-docs/development/message-processing-architecture.md`: Complete guide (Korean)
+- `careti-docs/development/message-processing-architecture.md`: Complete guide (Korean)

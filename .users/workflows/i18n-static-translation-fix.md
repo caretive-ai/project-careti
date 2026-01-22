@@ -81,7 +81,7 @@ t('key', 'providers')   // providers.json
 
 ## 참조
 - `.agents/workflows/atoms/i18n-dynamic-pattern.md`
-- `caret-docs/features/f02-multilingual-i18n.md`
+- `careti-docs/features/f02-multilingual-i18n.md`
 
 ## 미러링 정책
 `.agents/`와 `.users/`는 1:1 미러링 구조입니다.

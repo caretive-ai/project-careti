@@ -28,7 +28,7 @@ testEnvironment:
 testFileLocations:
   backendUnitTests:
     - src/**/__tests__/*.ts
-    - caret-src/core/task/tools/__tests__/*.ts
+    - careti-src/core/task/tools/__tests__/*.ts
   integrationTests: src/test/**
   webviewTests: webview-ui/src/**
   note: Follow existing patterns in the repository; .mocharc.json defines Mocha globs.

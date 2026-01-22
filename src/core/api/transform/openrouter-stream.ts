@@ -38,7 +38,7 @@ export async function createOpenRouterStream(
 	// this was initially specifically for claude models (some models may 'support prompt caching' automatically without this)
 	// handles direct model.id match logic
 	switch (model.id) {
-		// CARET MODIFICATION: Caret Account Claude models
+		// CARETI MODIFICATION: Careti Account Claude models
 		case "anthropic/claude-sonnet-4-5-20250929":
 		case "anthropic/claude-haiku-4-5-20251001":
 		case "anthropic/claude-opus-4-5-20251101":
@@ -108,7 +108,7 @@ export async function createOpenRouterStream(
 	// (models usually default to max tokens allowed)
 	let maxTokens: number | undefined
 	switch (model.id) {
-		// CARET MODIFICATION: Caret Account Claude models
+		// CARETI MODIFICATION: Careti Account Claude models
 		case "anthropic/claude-sonnet-4-5-20250929":
 		case "anthropic/claude-haiku-4-5-20251001":
 		case "anthropic/claude-opus-4-5-20251101":
@@ -159,7 +159,7 @@ export async function createOpenRouterStream(
 
 	let reasoning: { max_tokens: number } | undefined
 	switch (model.id) {
-		// CARET MODIFICATION: Caret Account Claude models with extended thinking
+		// CARETI MODIFICATION: Careti Account Claude models with extended thinking
 		case "anthropic/claude-opus-4-5-20251101":
 		case "anthropic/claude-3-7-sonnet-20250219":
 		// Original OpenRouter models

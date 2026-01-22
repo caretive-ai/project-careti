@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Naver Cloud provider integration tests with real API calls.
+// CARETI MODIFICATION: Naver Cloud provider integration tests with real API calls.
 // Run with: npm run test:integration -- --grep "NaverCloudHandler Integration"
 import { expect } from "chai"
 import * as path from "path"

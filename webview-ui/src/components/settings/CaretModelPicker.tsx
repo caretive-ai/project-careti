@@ -3,7 +3,7 @@ import { Mode } from "@shared/storage/types"
 import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { highlight } from "../history/HistoryView"
 import { ModelInfoView } from "./common/ModelInfoView"
@@ -181,7 +181,7 @@ const CaretModelPicker: React.FC<CaretModelPickerProps> = ({ isPopup, currentMod
 			</style>
 			<div className="flex flex-col">
 				<label htmlFor="model-search">
-					<span className="font-medium">{t("providers.caret.modelPicker.modelLabel", "settings")}</span>
+					<span className="font-medium">{t("providers.careti.modelPicker.modelLabel", "settings")}</span>
 				</label>
 				<div className="relative w-full" ref={dropdownRef}>
 					<VSCodeTextField
@@ -192,7 +192,7 @@ const CaretModelPicker: React.FC<CaretModelPickerProps> = ({ isPopup, currentMod
 							setIsDropdownVisible(true)
 						}}
 						onKeyDown={handleKeyDown}
-						placeholder={t("providers.caret.modelPicker.searchPlaceholder", "settings")}
+						placeholder={t("providers.careti.modelPicker.searchPlaceholder", "settings")}
 						style={{
 							width: "100%",
 							zIndex: CARET_MODEL_PICKER_Z_INDEX,
@@ -201,7 +201,7 @@ const CaretModelPicker: React.FC<CaretModelPickerProps> = ({ isPopup, currentMod
 						value={searchTerm}>
 						{searchTerm && (
 							<div
-								aria-label={t("providers.caret.modelPicker.clearSearch", "settings")}
+								aria-label={t("providers.careti.modelPicker.clearSearch", "settings")}
 								className="input-icon-button codicon codicon-close flex justify-center items-center h-full"
 								onClick={() => {
 									setSearchTerm("")

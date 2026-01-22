@@ -1,0 +1,5 @@
+dist-standalone/bin/**
+dist-standalone/standalone.zip
+extension/careti-src/**/__tests__/**
+extension/careti-src/**/backup/**
+extension/careti-src/**/*.bak-*

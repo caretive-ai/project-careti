@@ -48,7 +48,7 @@ export class TerminalProcess extends EventEmitter<TerminalProcessEvents> {
 			let didOutputNonCommand = false
 			let didEmitEmptyLine = false
 
-			// CARET MODIFICATION: prevent Linux terminals from hanging forever by forcing completion when no output arrives
+			// CARETI MODIFICATION: prevent Linux terminals from hanging forever by forcing completion when no output arrives
 			let lastOutputTime = Date.now()
 			const STREAM_IDLE_TIMEOUT = 5000 // 5 seconds without output = assume completed
 

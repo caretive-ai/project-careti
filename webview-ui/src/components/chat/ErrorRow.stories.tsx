@@ -2,7 +2,7 @@ import { ClineMessage } from "@shared/ExtensionMessage"
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { useMemo } from "react"
 import { expect, userEvent, within } from "storybook/test"
-import { getBrandIgnoreFileName } from "@/caret/utils/brand-utils"
+import { getBrandIgnoreFileName } from "@/careti/utils/brand-utils"
 import { createStorybookDecorator } from "@/config/StorybookDecorator"
 import ErrorRow from "./ErrorRow"
 

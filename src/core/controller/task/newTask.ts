@@ -46,7 +46,7 @@ export async function newTask(controller: Controller, request: NewTaskRequest): 
 						...(incomingSettings.enableNotifications !== undefined && {
 							enableNotifications: incomingSettings.enableNotifications,
 						}),
-						// CARET MODIFICATION: Propagate global auto-approval toggle and request cap
+						// CARETI MODIFICATION: Propagate global auto-approval toggle and request cap
 						...(incomingSettings.enabled !== undefined && { enabled: incomingSettings.enabled }),
 						...(incomingSettings.maxRequests !== undefined && { maxRequests: incomingSettings.maxRequests }),
 						actions: {

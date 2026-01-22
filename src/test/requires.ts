@@ -2,10 +2,10 @@ const Module = require("module")
 const pathModule = require("path")
 const originalRequire = Module.prototype.require
 
-// CARET MODIFICATION: Signal hook runner to use file-capture fallback during tests.
+// CARETI MODIFICATION: Signal hook runner to use file-capture fallback during tests.
 process.env.CARET_TEST_HOOK_FALLBACK = "true"
 
-// CARET MODIFICATION: stub ESM-only posthog-node to prevent ts-node translator errors
+// CARETI MODIFICATION: stub ESM-only posthog-node to prevent ts-node translator errors
 try {
 	;(require as any).cache[require.resolve("posthog-node")] = {
 		id: "posthog-node-stub",
@@ -50,7 +50,7 @@ if (!(String.prototype as any).toPosix) {
 Module.prototype.require = function (path: string) {
 	// VS Code mocks
 	if (path === "vscode") {
-		return require("./vscode-mock.cjs") // CARET MODIFICATION: Node/ts-node 환경에서 ESM 변환 충돌을 피하기 위해 CJS mock을 사용
+		return require("./vscode-mock.cjs") // CARETI MODIFICATION: Node/ts-node 환경에서 ESM 변환 충돌을 피하기 위해 CJS mock을 사용
 	}
 	if (path === "@integrations/checkpoints") {
 		return {}
@@ -182,13 +182,13 @@ Module.prototype.require = function (path: string) {
 			return originalRequire.call(this, sourcePath)
 		}
 	}
-	if (path.startsWith("@caret/")) {
+	if (path.startsWith("@careti/")) {
 		const relativePart = path.substring(7)
-		const compiledPath = pathModule.join(projectRoot, "out/caret-src", relativePart)
+		const compiledPath = pathModule.join(projectRoot, "out/careti-src", relativePart)
 		try {
 			return originalRequire.call(this, compiledPath)
 		} catch {
-			const sourcePath = pathModule.join(projectRoot, "caret-src", relativePart)
+			const sourcePath = pathModule.join(projectRoot, "careti-src", relativePart)
 			return originalRequire.call(this, sourcePath)
 		}
 	}

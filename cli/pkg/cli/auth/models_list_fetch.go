@@ -21,7 +21,7 @@ import (
 )
 
 type liteLlmClient interface {
-	FetchLiteLlmModels(ctx context.Context, in *caret.FetchLiteLlmModelsRequest) (*caret.FetchLiteLlmModelsResponse, error)
+	FetchLiteLlmModels(ctx context.Context, in *careti.FetchLiteLlmModelsRequest) (*careti.FetchLiteLlmModelsResponse, error)
 }
 
 var liteLlmClientFactory = func(manager *task.Manager) liteLlmClient {
@@ -106,18 +106,18 @@ func FetchLiteLlmModels(ctx context.Context, manager *task.Manager, baseURL, api
 
 	client := liteLlmClientFactory(manager)
 	if client == nil {
-		// CARET MODIFICATION: fall back to direct HTTP when client is unavailable
+		// CARETI MODIFICATION: fall back to direct HTTP when client is unavailable
 		return fetchLiteLlmModelsHTTP(ctxWithTimeout, trimmedBaseURL, strings.TrimSpace(apiKey))
 	}
 
-	req := &caret.FetchLiteLlmModelsRequest{
+	req := &careti.FetchLiteLlmModelsRequest{
 		BaseUrl: trimmedBaseURL,
 		ApiKey:  strings.TrimSpace(apiKey),
 	}
 
 	resp, err := client.FetchLiteLlmModels(ctxWithTimeout, req)
 	if err != nil {
-		// CARET MODIFICATION: fallback to HTTP when server doesn't implement the RPC
+		// CARETI MODIFICATION: fallback to HTTP when server doesn't implement the RPC
 		if status.Code(err) == codes.Unimplemented {
 			return fetchLiteLlmModelsHTTP(ctxWithTimeout, trimmedBaseURL, strings.TrimSpace(apiKey))
 		}
@@ -137,7 +137,7 @@ func FetchLiteLlmModels(ctx context.Context, manager *task.Manager, baseURL, api
 	return resp.GetModels(), nil
 }
 
-// CARET MODIFICATION: direct HTTP fallback for LiteLLM /v1/models
+// CARETI MODIFICATION: direct HTTP fallback for LiteLLM /v1/models
 func fetchLiteLlmModelsHTTP(ctx context.Context, baseURL, apiKey string) ([]string, error) {
 	parsed, err := url.Parse(baseURL)
 	if err != nil || parsed.Scheme == "" || parsed.Host == "" {
@@ -256,7 +256,7 @@ func fetchLiteLlmModelsHTTP(ctx context.Context, baseURL, apiKey string) ([]stri
 		}
 	}
 
-	// CARET MODIFICATION: fallback if health returned models but intersection is empty (avoid empty list due to naming mismatches)
+	// CARETI MODIFICATION: fallback if health returned models but intersection is empty (avoid empty list due to naming mismatches)
 	if healthAvailable && len(finalModels) == 0 && len(healthyModels) > 0 && len(available) > 0 {
 		finalModels = available
 	}

@@ -43,7 +43,7 @@ phases:
       - 부산물로 유닛 테스트 추가 (시작점이 아님)
 
 testLocations:
-  backend: caret-src/__tests__/
+  backend: careti-src/__tests__/
   webview: webview-ui/src/**/*.test.tsx
   integration: 완전한 플로우 테스트
 

@@ -1,5 +1,5 @@
-// CARET MODIFICATION: Skills creation controller
-// Ported from cline-latest with Caret-specific path structure (.agents/skills)
+// CARETI MODIFICATION: Skills creation controller
+// Ported from cline-latest with Careti-specific path structure (.agents/skills)
 
 import { CreateSkillRequest, SkillsToggles } from "@shared/proto/cline/file"
 import fs from "fs/promises"
@@ -65,7 +65,7 @@ export async function createSkillFile(controller: Controller, request: CreateSki
 		if (!primaryWorkspace) {
 			throw new Error("No workspace folder open")
 		}
-		// CARET MODIFICATION: Create in .agents/skills (AAIF standard path)
+		// CARETI MODIFICATION: Create in .agents/skills (AAIF standard path)
 		const localSkillsDir = path.join(primaryWorkspace, ".agents", "skills")
 		await fs.mkdir(localSkillsDir, { recursive: true })
 		skillDir = path.join(localSkillsDir, sanitizedName)

@@ -11,7 +11,7 @@
 - Every workflow corresponds to developer documentation
 - No knowledge silos between human and AI systems
 - `docs/` is original Cline documentation (English, do not edit)
-- `docs.caret.team/` is multilingual delivery (generated from `docs/` + Caret additions)
+- `docs.careti.ai/` is multilingual delivery (generated from `docs/` + Caret additions)
 - English docs in Caret must use `.en` suffix (e.g., `features.en/**`)
 
 ## Atomic Workflow Strategy
@@ -38,8 +38,8 @@
 ## Document & AI Guide Updates (Summary)
 
 - Update `.agents/context/**` first
-- Sync Korean developer docs in `caret-docs/development/**`
-- Feature specs remain in `caret-docs/features.en/**`
+- Sync Korean developer docs in `careti-docs/development/**`
+- Feature specs remain in `careti-docs/features.en/**`
 - Update `ai-work-index.yaml` when workflows/categories change
 
 ## Success Criteria
@@ -55,4 +55,4 @@
 See `.agents/workflows/document-organization.md`
 
 **📖 For Korean developer documentation:**
-See `caret-docs/development/documentation-guide.md`
+See `careti-docs/development/documentation-guide.md`

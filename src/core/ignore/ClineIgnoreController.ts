@@ -1,4 +1,4 @@
-import { getBrandIgnoreFileName, getLegacyClineIgnoreFileName } from "@caret/utils/brand-utils"
+import { getBrandIgnoreFileName, getLegacyClineIgnoreFileName } from "@careti/utils/brand-utils"
 import { fileExistsAtPath } from "@utils/fs"
 import chokidar, { FSWatcher } from "chokidar"
 import fs from "fs/promises"
@@ -6,7 +6,7 @@ import ignore, { Ignore } from "ignore"
 import path from "path"
 
 export const LOCK_TEXT_SYMBOL = "\u{1F512}"
-// CARET MODIFICATION: default ignore file uses brand util (.caretignore by default), legacy .clineignore still supported
+// CARETI MODIFICATION: default ignore file uses brand util (.caretignore by default), legacy .clineignore still supported
 const PRIMARY_IGNORE_FILENAME = getBrandIgnoreFileName?.() ?? ".caretignore"
 const LEGACY_IGNORE_FILENAME = getLegacyClineIgnoreFileName?.() ?? ".clineignore"
 const IGNORE_FILENAMES = [PRIMARY_IGNORE_FILENAME, LEGACY_IGNORE_FILENAME]
@@ -33,7 +33,7 @@ export class ClineIgnoreController {
 	 * Must be called after construction and before using the controller
 	 */
 	async initialize(): Promise<void> {
-		// CARET MODIFICATION: Watch both .caretignore and legacy .clineignore files
+		// CARETI MODIFICATION: Watch both .caretignore and legacy .clineignore files
 		this.setupFileWatcher()
 		await this.loadClineIgnore()
 	}
@@ -261,7 +261,7 @@ export class ClineIgnoreController {
 		}
 	}
 
-	// CARET MODIFICATION: prefer .caretignore while keeping .clineignore compatibility
+	// CARETI MODIFICATION: prefer .caretignore while keeping .clineignore compatibility
 	private async resolveIgnorePath(): Promise<{ fullPath: string; filename: string } | null> {
 		for (const filename of IGNORE_FILENAMES) {
 			const fullPath = path.join(this.cwd, filename)

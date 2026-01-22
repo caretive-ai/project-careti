@@ -1,15 +1,15 @@
-import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
+import { CaretiGlobalManager } from "@careti/managers/CaretiGlobalManager"
 import type { Controller } from "@/core/controller"
 import { Logger } from "@/services/logging/Logger"
 import type * as proto from "@/shared/proto"
 
 /**
- * CARET MODIFICATION: gRPC handler for setting Caret-specific mode (chatbot/agent)
+ * CARETI MODIFICATION: gRPC handler for setting Careti-specific mode (chatbot/agent)
  */
 export async function SetCaretMode(
 	controller: Controller,
-	request: proto.caret.SetCaretModeRequest,
-): Promise<proto.caret.SetCaretModeResponse> {
+	request: proto.careti.SetCaretModeRequest,
+): Promise<proto.careti.SetCaretModeResponse> {
 	try {
 		const newMode = request.mode as "chatbot" | "agent"
 
@@ -18,17 +18,17 @@ export async function SetCaretMode(
 			Logger.error(`[SetCaretMode] Invalid mode: ${newMode}`)
 			return {
 				success: false,
-				currentMode: CaretGlobalManager.currentCaretMode,
+				currentMode: CaretiGlobalManager.currentCaretMode,
 				errorMessage: `Invalid mode: ${newMode}. Must be 'chatbot' or 'agent'`,
 			}
 		}
 
-		Logger.debug(`[SetCaretMode] Changing caret mode from ${CaretGlobalManager.currentCaretMode} to ${newMode}`)
+		Logger.debug(`[SetCaretMode] Changing careti mode from ${CaretiGlobalManager.currentCaretMode} to ${newMode}`)
 
-		// Update CaretGlobalManager (in-memory)
-		CaretGlobalManager.setCurrentCaretMode(newMode)
+		// Update CaretiGlobalManager (in-memory)
+		CaretiGlobalManager.setCurrentCaretMode(newMode)
 
-		// CARET MODIFICATION: Post updated state to webview
+		// CARETI MODIFICATION: Post updated state to webview
 		await controller.postStateToWebview()
 
 		Logger.info(`[SetCaretMode] Successfully changed to ${newMode} mode`)
@@ -39,11 +39,11 @@ export async function SetCaretMode(
 			errorMessage: "",
 		}
 	} catch (error) {
-		Logger.error(`[SetCaretMode] Failed to set caret mode: ${error}`)
+		Logger.error(`[SetCaretMode] Failed to set careti mode: ${error}`)
 		return {
 			success: false,
-			currentMode: CaretGlobalManager.currentCaretMode,
-			errorMessage: `Failed to set caret mode: ${error}`,
+			currentMode: CaretiGlobalManager.currentCaretMode,
+			errorMessage: `Failed to set careti mode: ${error}`,
 		}
 	}
 }

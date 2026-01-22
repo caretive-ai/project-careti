@@ -17,7 +17,7 @@ WebView Messages    Protocol Buffers/JSON
 
 ### Key Components:
 - **Frontend**: `webview-ui/src/` React components
-- **Backend**: `src/core/` extension logic + `caret-src/` extensions
+- **Backend**: `src/core/` extension logic + `careti-src/` extensions
 - **Protocols**: `proto/` definitions for type-safe communication
 
 ## Message Types & Patterns

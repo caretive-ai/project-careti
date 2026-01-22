@@ -1,8 +1,8 @@
 import { ClineMessage } from "@shared/ExtensionMessage"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { memo } from "react"
-import { getBrandIgnoreFileName, getBrandInfo } from "@/caret/utils/brand-utils"
-import { t } from "@/caret/utils/i18n"
+import { getBrandIgnoreFileName, getBrandInfo } from "@/careti/utils/brand-utils"
+import { t } from "@/careti/utils/i18n"
 import CreditLimitError from "@/components/chat/CreditLimitError"
 import { handleSignIn, useClineAuth } from "@/context/ClineAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -10,7 +10,7 @@ import { ClineError, ClineErrorType } from "../../../../src/services/error/Cline
 import { handleLogin as handleCaretLogin } from "../settings/CaretAuthHandler"
 import { normalizeApiConfiguration } from "../settings/utils/providerUtils"
 
-// CARET MODIFICATION: Type for auth_required error from image tools
+// CARETI MODIFICATION: Type for auth_required error from image tools
 interface AuthRequiredError {
 	type: "auth_required"
 	action: string
@@ -49,10 +49,10 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 	const { selectedProvider } = normalizeApiConfiguration(apiConfiguration, mode as any)
 
 	const renderProviderLoginCTA = () => {
-		if (selectedProvider === "caret") {
+		if (selectedProvider === "careti") {
 			return (
 				<VSCodeButton className="w-full mb-4" onClick={handleCaretLogin}>
-					{t("providers.caret.login", "settings")}
+					{t("providers.careti.login", "settings")}
 				</VSCodeButton>
 			)
 		}
@@ -83,16 +83,16 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 				if (apiRequestFailedMessage || apiReqStreamingFailedMessage) {
 					// FIXME: ClineError parsing should not be applied to non-Cline providers, but it seems we're using clineErrorMessage below in the default error display
 					const clineError = ClineError.parse(apiRequestFailedMessage || apiReqStreamingFailedMessage)
-					// CARET MODIFICATION: Safely parse JSON error message, handle non-JSON strings gracefully
+					// CARETI MODIFICATION: Safely parse JSON error message, handle non-JSON strings gracefully
 					let caretError: { type?: string; action?: string; toolName?: string; brandName?: string } | null = null
 					try {
-						caretError = JSON.parse(apiRequestFailedMessage || apiReqStreamingFailedMessage || "{}") // caret specific error
+						caretError = JSON.parse(apiRequestFailedMessage || apiReqStreamingFailedMessage || "{}") // careti specific error
 					} catch {
 						// Not a JSON string, ignore parsing error
 						caretError = null
 					}
 
-					// CARET MODIFICATION: Handle auth_required type with i18n
+					// CARETI MODIFICATION: Handle auth_required type with i18n
 					if (caretError?.type === "auth_required") {
 						const authError = caretError as AuthRequiredError
 						const translatedMessage = buildAuthRequiredMessage(authError)
@@ -108,7 +108,7 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 					}
 
 					const clineErrorMessage =
-						caretError?.type === "budget_exceeded" ? t("errorRow.budgetExceeded", "chat") : clineError?.message // caret language error message
+						caretError?.type === "budget_exceeded" ? t("errorRow.budgetExceeded", "chat") : clineError?.message // careti language error message
 					const requestId = clineError?._error?.request_id
 					const isClineProvider = clineError?.providerId === "cline" // FIXME: since we are modifying backend to return generic error, we need to make sure we're not expecting providerId here
 
@@ -164,7 +164,7 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 									<br />
 									{/* Provider-specific CTA */}
 									{/* Provider-specific CTA fallback */}
-									{selectedProvider === "caret" || (clineUser && selectedProvider === "cline") ? (
+									{selectedProvider === "careti" || (clineUser && selectedProvider === "cline") ? (
 										<span className="mb-4 text-[var(--vscode-descriptionForeground)]">
 											{t("errorRow.clickRetryBelow", "chat")}
 										</span>
@@ -196,7 +196,7 @@ const ErrorRow = memo(({ message, errorType, apiRequestFailedMessage, apiReqStre
 				)
 
 			case "clineignore_error":
-				// CARET MODIFICATION: Show .caretignore as primary ignore file (legacy .clineignore supported)
+				// CARETI MODIFICATION: Show .caretignore as primary ignore file (legacy .clineignore supported)
 				return (
 					<div className="flex flex-col p-2 rounded text-xs bg-[var(--vscode-textBlockQuote-background)] text-[var(--vscode-foreground)] opacity-80">
 						<div>

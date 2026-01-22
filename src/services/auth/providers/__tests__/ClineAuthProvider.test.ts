@@ -1,4 +1,4 @@
-// CARET MODIFICATION: TDD 회귀 테스트 - 토큰 갱신 중 네트워크 오류가 나도 로그아웃(세션 초기화)되지 않도록 보장
+// CARETI MODIFICATION: TDD 회귀 테스트 - 토큰 갱신 중 네트워크 오류가 나도 로그아웃(세션 초기화)되지 않도록 보장
 
 import { expect } from "chai"
 import { describe, it } from "mocha"

@@ -1,0 +1,57 @@
+{
+	"coreFeatures": {
+		"header": "Starten Sie 'Vibe Coding' mit Careti, dem KI-Codierungs-Agenten, der mit Ihnen wächst."
+	},
+	"getStarted": {
+		"button": "Loslegen"
+	},
+	"welcome": {
+		"tooltipContent": "Ich kann Software Schritt für Schritt entwickeln, indem ich Dateien bearbeite, Projekte erkunde, Befehle ausführe und Browser verwende. Ich kann meine Fähigkeiten sogar mit MCP-Tools erweitern, um über einfache Code-Vervollständigung hinaus zu unterstützen.",
+		"takeATour": "Tour starten"
+	},
+	"cliBanner": {
+		"title": "CLI installieren, um Subagenten zu delegieren",
+		"description": "Verwenden Sie die CLI, um fokussierte Agenten für große Suchen oder Rechercheaufgaben zu starten. Befehle unterscheiden sich je nach Careti/Cline-Modus.",
+		"button": "CLI installieren",
+		"copyCommand": "Befehl kopieren",
+		"copied": "Kopiert!",
+		"learnMore": "Mehr erfahren",
+		"installed": "Installiert",
+		"dismissTitle": "CLI-Banner schließen"
+	},
+	"apiSetup": {
+		"backButton": "← Zurück",
+		"title": "API-Einrichtung",
+		"description": "Wählen und konfigurieren Sie einen API-Anbieter, um KI-Modelle zu verwenden.",
+		"instructions": "Benötigen Sie Hilfe? Schauen Sie sich die folgenden Links an:",
+		"supportLinks": {
+			"llmList": "Unterstützte LLM-Liste anzeigen",
+			"geminiCredit": "Gemini-Gratisguthaben erhalten"
+		},
+		"saveButton": "Einstellungen speichern",
+		"help": {
+			"title": "Benötigen Sie weitere Hilfe?",
+			"button": "Dokumentation anzeigen"
+		}
+	},
+	"community": {
+		"header": "Treten Sie unserer Community bei",
+		"body": "Schauen Sie sich die neuesten Updates auf Careti GitHub an und teilen Sie Ihr Feedback.",
+		"githubLink": "GitHub besuchen"
+	},
+	"footer": {
+		"about": {
+			"description": "Careti ist ein Open-Source-KI-Codierungsagent, entwickelt von Caretive Inc.",
+			"link": "Mehr erfahren"
+		},
+		"links": {
+			"caretiGithub": "Careti GitHub",
+			"caretiService": "Careti Service",
+			"caretiveInc": "Caretive Inc.",
+			"support": "Support"
+		},
+		"copyright": {
+			"builtWith": "Mit ❤️ erstellt von Caretive Inc."
+		}
+	}
+}

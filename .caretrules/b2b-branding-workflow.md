@@ -1,7 +1,7 @@
 # B2B Branding Workflow - External Assets Guide
 
 ## Core Principle
-The main Caret repository must remain brand-agnostic. All B2B branding-specific logic, assets, and configurations are managed in a **separate, private repository** (e.g., `caret-b2b-assets`). These assets must NOT be committed to the main public repository.
+The main Caret repository must remain brand-agnostic. All B2B branding-specific logic, assets, and configurations are managed in a **separate, private repository** (e.g., `careti-b2b-assets`). These assets must NOT be committed to the main public repository.
 
 ## 1. Pre-Work: Asset Acquisition
 Before starting any branding work, ensure the private B2B assets repository is available locally.

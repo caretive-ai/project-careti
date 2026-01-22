@@ -5,7 +5,7 @@ import { VSCodeButton, VSCodeDivider, VSCodeDropdown, VSCodeOption, VSCodeTag } 
 import deepEqual from "fast-deep-equal"
 import { memo, useCallback, useEffect, useRef, useState } from "react"
 import { useInterval } from "react-use"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { type ClineUser, handleSignOut } from "@/context/ClineAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
@@ -61,7 +61,7 @@ const AccountView = ({ onDone, clineUser, organizations, activeOrganization }: A
 
 export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganization }: ClineAccountViewProps) => {
 	const { email, displayName, appBaseUrl, uid } = clineUser
-	// CARET MODIFICATION: Get featureConfig to control account features visibility
+	// CARETI MODIFICATION: Get featureConfig to control account features visibility
 	const { featureConfig } = useExtensionState()
 
 	// Source of truth: Dedicated state for dropdown value that persists through failures
@@ -276,7 +276,7 @@ export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganizat
 								<h2 className="text-[var(--vscode-foreground)] m-0 text-lg font-medium">{displayName}</h2>
 							)}
 
-							{/* CARET MODIFICATION: Hide email and organization dropdown when enableCaretAccountFeatures is false */}
+							{/* CARETI MODIFICATION: Hide email and organization dropdown when enableCaretAccountFeatures is false */}
 							{featureConfig?.enableCaretAccountFeatures && (
 								<>
 									{email && <div className="text-sm text-[var(--vscode-descriptionForeground)]">{email}</div>}
@@ -308,7 +308,7 @@ export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganizat
 					</div>
 				</div>
 
-				{/* CARET MODIFICATION: Hide dashboard and logout buttons when enableCaretAccountFeatures is false */}
+				{/* CARETI MODIFICATION: Hide dashboard and logout buttons when enableCaretAccountFeatures is false */}
 				{featureConfig?.enableCaretAccountFeatures && (
 					<div className="w-full flex gap-2 flex-col min-[225px]:flex-row">
 						<div className="w-full min-[225px]:w-1/2">

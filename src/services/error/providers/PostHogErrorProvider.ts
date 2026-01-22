@@ -1,4 +1,4 @@
-import { getCurrentBrandName } from "@caret/utils/brand-utils" // CARET MODIFICATION: brand-aware VS Code config scope
+import { getCurrentBrandName } from "@careti/utils/brand-utils" // CARETI MODIFICATION: brand-aware VS Code config scope
 import * as vscode from "vscode"
 import { HostProvider } from "@/hosts/host-provider"
 import { getDistinctId } from "@/services/logging/distinctId"
@@ -17,7 +17,7 @@ type PostHogCtor = new (...args: any[]) => MinimalPostHog
 
 const isTestEnv = process.env.NODE_ENV === "test"
 
-// CARET MODIFICATION: Avoid ESM translator crashes by skipping posthog-node require during tests,
+// CARETI MODIFICATION: Avoid ESM translator crashes by skipping posthog-node require during tests,
 // and falling back to a minimal stub if the package is unavailable.
 const PostHogImpl: PostHogCtor = (() => {
 	// Tests: always use a stub to keep mocha/ts-node running without touching posthog-node
@@ -94,7 +94,7 @@ export class PostHogErrorProvider implements IErrorProvider {
 		}
 
 		// Check extension-specific telemetry setting
-		// CARET MODIFICATION: Read telemetry setting from brand namespace, fallback to legacy cline for compatibility
+		// CARETI MODIFICATION: Read telemetry setting from brand namespace, fallback to legacy cline for compatibility
 		const brandNamespace = getCurrentBrandName().toLowerCase()
 		const caretConfig = vscode.workspace.getConfiguration(brandNamespace)
 		const clineConfig = vscode.workspace.getConfiguration("cline")

@@ -76,8 +76,8 @@ export class BrowserSession {
 	 * Migrates the chromeExecutablePath setting from VSCode configuration to browserSettings
 	 */
 	private async migrateChromeExecutablePathSetting(): Promise<void> {
-		// CARET MODIFICATION: read chromeExecutablePath from brand namespace, fallback to cline
-		const brandNamespace = (await import("@caret/utils/brand-utils")).getCurrentBrandName().toLowerCase()
+		// CARETI MODIFICATION: read chromeExecutablePath from brand namespace, fallback to cline
+		const brandNamespace = (await import("@careti/utils/brand-utils")).getCurrentBrandName().toLowerCase()
 		const config = vscode.workspace.getConfiguration(brandNamespace)
 		const configPath =
 			vscode.workspace.getConfiguration(brandNamespace).get<string>("chromeExecutablePath") ??

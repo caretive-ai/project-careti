@@ -12,7 +12,7 @@ import type { TaskConfig } from "./TaskConfig"
  */
 export interface StronglyTypedUIHelpers {
 	// Core UI methods
-	// CARET MODIFICATION: Added operationId parameter for reliable message updates
+	// CARETI MODIFICATION: Added operationId parameter for reliable message updates
 	say: (type: ClineSay, text?: string, images?: string[], files?: string[], partial?: boolean, operationId?: string) => Promise<number | undefined>
 
 	ask: (

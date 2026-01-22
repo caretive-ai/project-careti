@@ -100,7 +100,7 @@ func (r *ProviderListResult) GetAllReadyProviders() []*ProviderDisplay {
 	seenProviders := make(map[cline.ApiProvider]bool)
 
 	// Check all possible providers
-	// CARET MODIFICATION: include Caret/LiteLLM providers in detection
+	// CARETI MODIFICATION: include Caret/LiteLLM providers in detection
 	allProviders := []cline.ApiProvider{
 		cline.ApiProvider_CARET,
 		cline.ApiProvider_CLINE,
@@ -136,7 +136,7 @@ func (r *ProviderListResult) GetAllReadyProviders() []*ProviderDisplay {
 		if provider == cline.ApiProvider_CLINE && IsAuthenticated(context.Background()) {
 			hasCreds = true
 		}
-		if provider == cline.ApiProvider_CARET && IsCaretAuthenticated(context.Background()) {
+		if provider == cline.ApiProvider_CARETI && IsCaretAuthenticated(context.Background()) {
 			hasCreds = true
 		}
 
@@ -246,7 +246,7 @@ func mapProviderStringToEnum(providerStr string) (cline.ApiProvider, bool) {
 		return cline.ApiProvider_OLLAMA, true
 	case "cerebras":
 		return cline.ApiProvider_CEREBRAS, true
-	case "caret":
+	case "careti":
 		return cline.ApiProvider_CARET, true
 	case "cline":
 		return cline.ApiProvider_CLINE, true
@@ -288,7 +288,7 @@ func GetProviderIDForEnum(provider cline.ApiProvider) string {
 	case cline.ApiProvider_CEREBRAS:
 		return "cerebras"
 	case cline.ApiProvider_CARET:
-		return "caret"
+		return "careti"
 	case cline.ApiProvider_CLINE:
 		return "cline"
 	case cline.ApiProvider_LITELLM:
@@ -437,7 +437,7 @@ func FormatProviderList(result *ProviderListResult) string {
 				} else {
 					output.WriteString("    Base URL: (default)\n")
 				}
-			} else if display.Provider == cline.ApiProvider_CLINE || display.Provider == cline.ApiProvider_OCA || display.Provider == cline.ApiProvider_CARET {
+			} else if display.Provider == cline.ApiProvider_CLINE || display.Provider == cline.ApiProvider_OCA || display.Provider == cline.ApiProvider_CARETI {
 				output.WriteString("    Status:   Authenticated\n")
 			} else {
 				output.WriteString("    API Key:  Configured\n")
@@ -488,7 +488,7 @@ func DetectAllConfiguredProviders(ctx context.Context, manager *task.Manager) ([
 		configuredProviders = append(configuredProviders, cline.ApiProvider_CLINE)
 		verboseLog("[DEBUG] Cline provider is authenticated")
 	}
-	// CARET MODIFICATION: include caret auth-based provider
+	// CARETI MODIFICATION: include caret auth-based provider
 	if IsCaretAuthenticated(ctx) {
 		configuredProviders = append(configuredProviders, cline.ApiProvider_CARET)
 		verboseLog("[DEBUG] Caret provider is authenticated")

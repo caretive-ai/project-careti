@@ -751,7 +751,7 @@ export class McpHub {
 	}
 
 	private removeAllFileWatchers() {
-		// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+		// CARETI MODIFICATION: replace forEach to satisfy lint without behavior change
 		for (const [, watcher] of this.fileWatchers) {
 			watcher.close()
 		}

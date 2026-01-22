@@ -1,5 +1,5 @@
-// CARET MODIFICATION: State Keys Type Safety Tests
-// 이 테스트는 Caret의 현재 state-keys.ts 구조를 검증합니다.
+// CARETI MODIFICATION: State Keys Type Safety Tests
+// 이 테스트는 Careti의 현재 state-keys.ts 구조를 검증합니다.
 
 import { expect } from "chai"
 import { describe, it } from "mocha"

@@ -1,7 +1,7 @@
 import { cn, Tooltip } from "@heroui/react"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { FoldVerticalIcon } from "lucide-react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 
 const CompactTaskButton: React.FC<{
 	className?: string

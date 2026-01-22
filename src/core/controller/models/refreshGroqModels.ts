@@ -48,7 +48,7 @@ export async function refreshGroqModels(controller: Controller): Promise<Record<
 				headers: {
 					Authorization: `Bearer ${cleanApiKey}`,
 					"Content-Type": "application/json",
-					"User-Agent": "Caret-VSCode-Extension",
+					"User-Agent": "Careti-VSCode-Extension",
 				},
 				timeout: 10000, // 10 second timeout
 				...getAxiosSettings(),

@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Test script for Upstage Solar API integration
+// CARETI MODIFICATION: Test script for Upstage Solar API integration
 // Run: node scripts/test-upstage-api.js
 
 const fs = require('fs');

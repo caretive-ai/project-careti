@@ -1,0 +1,750 @@
+{
+	"settingsView": {
+		"title": "Caret-Einstellungen"
+	},
+	"tabs": {
+		"apiConfiguration": {
+			"name": "API-Konfiguration",
+			"tooltip": "API-Konfiguration",
+			"header": "API-Konfiguration"
+		},
+		"general": {
+			"name": "Allgemein",
+			"tooltip": "Allgemeine Einstellungen",
+			"header": "Allgemeine Einstellungen"
+		},
+		"features": {
+			"name": "Funktionen",
+			"tooltip": "Funktionseinstellungen",
+			"header": "Funktionseinstellungen"
+		},
+		"browser": {
+			"name": "Browser",
+			"tooltip": "Browser-Einstellungen",
+			"header": "Browser-Einstellungen"
+		},
+		"terminal": {
+			"name": "Terminal",
+			"tooltip": "Terminal-Einstellungen",
+			"header": "Terminal-Einstellungen"
+		},
+		"debug": {
+			"name": "Debug",
+			"tooltip": "Debug-Tools",
+			"header": "Debug"
+		},
+		"about": {
+			"name": "Info",
+			"tooltip": "Über Caret",
+			"header": "Info"
+		}
+	},
+	"planMode": "Plan-Modus",
+	"actMode": "Ausführungs-Modus",
+	"useDifferentModels": "Verschiedene Modelle für Plan- und Ausführungs-Modi verwenden",
+	"useDifferentModelsDescription": "Beim Wechsel zwischen Plan- und Ausführungs-Modus bleibt die im vorherigen Modus verwendete API und das Modell erhalten. Dies kann hilfreich sein, z.B. wenn ein starkes Reasoning-Modell zum Entwerfen eines Plans für ein günstigeres Codierungs-Modell verwendet wird.",
+	"modelSelector": {
+		"label": "Modell",
+		"placeholder": "Modell auswählen..."
+	},
+	"pricing": {
+		"perMillionTokens": "/Million Tokens"
+	},
+	"settings": {
+		"preferredLanguage": {
+			"label": "Bevorzugte Sprache",
+			"description": "Wählen Sie die Sprache, die Caret für die Kommunikation verwenden soll."
+		},
+		"unifiedLanguage": {
+			"label": "Sprache",
+			"description": "Sprache für KI-Antworten und Oberfläche festlegen. Sprachen mit 🎨 unterstützen sowohl KI als auch UI."
+		}
+	},
+	"buttons": {
+		"done": "Fertig"
+	},
+	"browser": {
+		"checkingConnection": "Verbindung wird überprüft...",
+		"connected": "Verbunden",
+		"notConnected": "Nicht verbunden",
+		"disableToolUse": "Browser-Tool-Verwendung deaktivieren",
+		"disableToolUseDescription": "Verhindert, dass Caret Browser-Aktionen verwendet (z.B. starten, klicken, tippen).",
+		"viewportSize": "Viewport-Größe",
+		"viewportSizeDescription": "Legen Sie die Größe des Browser-Viewports für Screenshots und Interaktionen fest.",
+		"useRemoteConnection": "Remote-Browser-Verbindung verwenden",
+		"remoteConnectionDescription1": "Aktivieren Sie Caret, um Ihren Chrome zu verwenden",
+		"chromeNotDetected": "(auf Ihrem Rechner nicht erkannt)",
+		"remoteConnectionDescription2": ". Sie können unten einen benutzerdefinierten Pfad angeben. Die Verwendung einer Remote-Browser-Verbindung erfordert das Starten von Chrome im Debug-Modus",
+		"remoteConnectionDescription3": "manuell (`--remote-debugging-port=9222`) oder mit der Schaltfläche unten. Geben Sie die Host-Adresse ein oder lassen Sie sie für automatische Erkennung leer.",
+		"launchBrowserDebug": "Browser im Debug-Modus starten",
+		"launchingBrowser": "Browser wird gestartet...",
+		"chromePathOptional": "Chrome-Ausführungspfad (Optional)",
+		"chromePathPlaceholder": "z.B. /usr/bin/google-chrome oder C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+		"chromePathDescription": "Leer lassen für automatische Erkennung.",
+		"customArgsOptional": "Benutzerdefinierte Browser-Argumente (Optional)",
+		"customArgsPlaceholder": "z.B. --no-sandbox --disable-setuid-sandbox",
+		"customArgsDescription": "Durch Leerzeichen getrennte Argumente, die an die Browser-Ausführungsdatei übergeben werden.",
+		"action": {
+			"launch": "Browser starten bei {{text}}",
+			"click": "Klicken ({{coordinate}})",
+			"type": "Eingeben \"{{text}}\"",
+			"scrollDown": "Nach unten scrollen",
+			"scrollUp": "Nach oben scrollen",
+			"close": "Browser schließen"
+		}
+	},
+	"terminal": {
+		"defaultProfile": "Standard-Terminal-Profil",
+		"defaultProfileDescription": "Wählen Sie das Standard-Terminal-Profil. Dies wird beim Starten neuer Terminal-Sitzungen verwendet.",
+		"shellTimeout": "Shell-Integrations-Timeout (Sekunden)",
+		"timeoutPlaceholder": "Timeout in Sekunden eingeben.",
+		"shellTimeoutDescription": "Zeit in Sekunden, die auf den erfolgreichen Abschluss der Shell-Integration gewartet wird. Wenn diese Zeit überschritten wird, öffnet sich das Terminal ohne Shell-Integration.",
+		"aggressiveReuse": "Aggressive Terminal-Wiederverwendung",
+		"aggressiveReuseDescription": "Bestehende verfügbare Terminals wiederverwenden, wenn neue Terminal-Sitzungen angefordert werden, wenn möglich.",
+		"positiveNumberError": "Bitte geben Sie eine positive Zahl ein.",
+		"issuesTitle": "Terminal-Probleme?",
+		"checkOur": "Überprüfen Sie unsere",
+		"quickFixesLink": "Terminal-Schnelllösungen",
+		"orThe": "oder den",
+		"troubleshootingGuideLink": "Vollständigen Fehlerbehebungsleitfaden"
+	},
+	"features": {
+		"enableCheckpoints": "Checkpoints aktivieren",
+		"enableCheckpointsDescription": "Ermöglicht der Erweiterung, Checkpoints Ihres Arbeitsbereichs während Aufgaben zu speichern. Dies verwendet intern Git und funktioniert möglicherweise nicht korrekt bei großen Arbeitsbereichen.",
+		"enableMcpMarketplace": "MCP-Marktplatz aktivieren",
+		"enableMcpMarketplaceDescription": "Aktiviert den MCP-Marktplatz-Tab, mit dem Sie MCP-Server entdecken und installieren können.",
+		"subagents": {
+			"enable": "Subagenten aktivieren",
+			"enabled": "Subagenten aktiviert",
+			"caretWarning": "Caret CLI ist für Subagenten erforderlich.",
+			"clineWarning": "Cline CLI ist für Subagenten erforderlich.",
+			"install": "Subagenten-CLI installieren",
+			"installed": "CLI erkannt",
+			"notInstalled": "CLI nicht erkannt",
+			"outputLimitLabel": "Subagenten-Ausgabelimit",
+			"outputLimitDescription": "Maximale Anzahl von Zeilen, die in der Ausgabe von CLI-Subagenten enthalten sein sollen. Kürzt die Mitte, um Tokens zu sparen."
+		},
+		"mcpDisplayMode": "MCP-Anzeigemodus",
+		"mcpDisplayModeDescription": "Steuert, wie MCP-Antworten angezeigt werden: Klartext, Rich-Formatierung mit Links/Bildern oder Markdown-Rendering.",
+		"collapseMcpResponses": "MCP-Antworten einklappen",
+		"collapseMcpResponsesDescription": "Legt den Standard-Anzeigemodus für MCP-Antwort-Panels fest",
+		"openaiReasoningEffort": "OpenAI-Reasoning-Aufwand",
+		"openaiReasoningEffortDescription": "Reasoning-Aufwand für die OpenAI-Modellfamilie (gilt für alle OpenAI-Modellanbieter)",
+		"reasoningEffort": {
+			"minimal": "Minimal",
+			"low": "Niedrig",
+			"medium": "Mittel",
+			"high": "Hoch"
+		},
+		"strictPlanMode": "Strikten Plan-Modus aktivieren",
+		"strictPlanModeDescription": "Erzwingt strikte Tool-Verwendung im Plan-Modus und verhindert Dateibearbeitungen.",
+		"focusChain": "Fokuskette aktivieren",
+		"focusChainDescription": "Aktiviert erweiterte Aufgabenfortschrittsverfolgung und automatische Fokusketten-Listenverwaltung während Aufgaben.",
+		"focusChainReminderInterval": "Fokusketten-Erinnerungsintervall",
+		"focusChainReminderIntervalDescription": "Intervall (in Nachrichten), um Caret an seine Fokusketten-Checkliste zu erinnern (1-100). Niedrigere Werte bieten häufigere Erinnerungen.",
+		"enableDictation": "Diktat aktivieren",
+		"enableDictationDescription": "Aktiviert Sprache-zu-Text-Transkription über Ihr Cline-Konto. Verwendet das Whisper-Modell, bei $0.006 Credits pro Minute verarbeiteter Audio. Maximal 5 Minuten pro Nachricht.",
+		"dictationLanguage": "Diktatsprache",
+		"dictationLanguageDescription": "Die Sprache, in der Sie mit dem Diktat-Dienst sprechen möchten. Dies ist unabhängig von Ihrer bevorzugten UI-Sprache.",
+		"autoCompact": "Automatische Komprimierung aktivieren",
+		"autoCompactDescription": "Aktiviert ein fortschrittliches Kontextverwaltungssystem, das LLM-basierte Kondensierung für Next-Gen-Modelle verwendet.",
+		"enableYoloMode": "YOLO-Modus aktivieren",
+		"enableYoloModeDescription": "EXPERIMENTELL & GEFÄHRLICH: Dieser Modus deaktiviert Sicherheitsprüfungen und Benutzerbestätigungen. Caret wird automatisch alle Aktionen ohne Nachfrage genehmigen. Mit äußerster Vorsicht verwenden.",
+		"learnMore": "Mehr erfahren",
+		"enableHooks": "Hooks aktivieren",
+		"enableHooksDescription": "Ermöglicht das Ausführen von Shell-Befehlen vor und nach KI-Aktionen (z.B. Code-Review vor Bearbeitungen).",
+		"enableSkills": "Skills aktivieren",
+		"enableSkillsDescription": "Ermöglicht die Definition wiederverwendbarer Anweisungssätze, die bei Bedarf aufgerufen werden können."
+	},
+	"autoApprove": {
+		"title": "Automatische Genehmigungseinstellungen",
+		"actionsHeader": "Aktionen",
+		"quickSettingsHeader": "Schnelleinstellungen",
+		"maxRequestsLabel": "Max. Anfragen",
+		"maxRequestsTooltip": "Maximale Anzahl aufeinanderfolgender Anfragen, die automatisch genehmigt werden können",
+		"enableAutoApprove": {
+			"label": "Automatische Genehmigung aktivieren",
+			"shortName": "Aktiviert",
+			"description": "Schaltet die automatische Genehmigungsfunktion ein oder aus."
+		},
+		"enableAll": {
+			"label": "Alle umschalten",
+			"shortName": "Alle",
+			"description": "Schaltet alle Aktionen ein oder aus."
+		},
+		"readFiles": {
+			"label": "Projektdateien lesen",
+			"shortName": "Lesen",
+			"description": "Erlaubt Caret, Dateien in Ihrem Arbeitsbereich zu lesen."
+		},
+		"readFilesExternally": {
+			"label": "Beliebige Dateien lesen",
+			"shortName": "Alle lesen",
+			"description": "Erlaubt Caret, beliebige Dateien auf Ihrem Computer zu lesen."
+		},
+		"editFiles": {
+			"label": "Projektdateien bearbeiten",
+			"shortName": "Bearbeiten",
+			"description": "Erlaubt Caret, Dateien in Ihrem Arbeitsbereich zu ändern."
+		},
+		"editFilesExternally": {
+			"label": "Beliebige Dateien bearbeiten",
+			"shortName": "Alle bearbeiten",
+			"description": "Erlaubt Caret, beliebige Dateien auf Ihrem Computer zu ändern."
+		},
+		"executeSafeCommands": {
+			"label": "Sichere Befehle ausführen",
+			"shortName": "Sichere Befehle",
+			"description": "Erlaubt Caret, sichere Terminal-Befehle auszuführen. Eine Genehmigung ist weiterhin erforderlich, wenn das Modell einen Befehl als potenziell destruktiv einstuft."
+		},
+		"executeAllCommands": {
+			"label": "Alle Befehle ausführen",
+			"shortName": "Alle Befehle",
+			"description": "Erlaubt Caret, beliebige Terminal-Befehle auszuführen. Verwendung auf eigene Gefahr."
+		},
+		"useBrowser": {
+			"label": "Browser verwenden",
+			"shortName": "Browser",
+			"description": "Erlaubt Caret, im Browser beliebige Websites zu starten und mit ihnen zu interagieren."
+		},
+		"generateImages": {
+			"label": "Bilder generieren",
+			"shortName": "Bilder",
+			"description": "Erlaubt Caret, Bilder mit dem Bildgenerierungs-Tool zu erstellen."
+		},
+		"analyzeImages": {
+			"label": "Bilder analysieren",
+			"shortName": "Analysieren",
+			"description": "Erlaubt Caret, Bilder mit dem Bildanalyse-Tool zu analysieren (für Modelle, die Bilder nicht nativ unterstützen)."
+		},
+		"useMcp": {
+			"label": "MCP-Server verwenden",
+			"shortName": "MCP",
+			"description": "Erlaubt Caret, konfigurierte MCP-Server zu verwenden, die das Dateisystem ändern oder mit APIs interagieren können."
+		},
+		"enableNotifications": {
+			"label": "Benachrichtigungen aktivieren",
+			"shortName": "Benachrichtigungen",
+			"description": "Erhalten Sie Systembenachrichtigungen, wenn Caret eine Genehmigung für einen Schritt benötigt oder wenn eine Aufgabe abgeschlossen ist."
+		}
+	},
+	"debug": {
+		"resetWorkspaceState": "Arbeitsbereichszustand zurücksetzen",
+		"resetGlobalState": "Globalen Zustand zurücksetzen",
+		"resetGlobalStateDescription": "Setzt den gesamten globalen Zustand und Geheimnisspeicher der Erweiterung zurück.",
+		"errorInSeconds": "Fehler in {{current}}/{{total}} Sekunden"
+	},
+	"modelPicker": {
+		"seeMore": "Mehr anzeigen"
+	},
+	"apiOptions": {
+		"apiProvider": "API-Anbieter",
+		"searchAndSelectProvider": "Anbieter suchen und auswählen...",
+		"clearSearch": "Suche löschen"
+	},
+	"clineAccountInfoCard": {
+		"loginError": "Anmelde-URL konnte nicht abgerufen werden:",
+		"viewBillingAndUsage": "Abrechnung & Nutzung anzeigen"
+	},
+	"apiKeyField": {
+		"placeholder": "API-Schlüssel eingeben...",
+		"defaultHelpText": "Dieser Schlüssel wird lokal gespeichert und nur für API-Anfragen von dieser Erweiterung verwendet.",
+		"signupText": "Sie können einen {{providerName}} API-Schlüssel erhalten, indem Sie sich hier anmelden."
+	},
+	"baseUrlField": {
+		"label": "Benutzerdefinierte Basis-URL verwenden"
+	},
+	"modelInfoView": {
+		"inputPrice": "Eingabepreis",
+		"outputPriceStandard": "Ausgabepreis (Standard)",
+		"outputPriceThinking": "Ausgabepreis (Thinking Budget > 0)",
+		"outputPrice": "Ausgabepreis",
+		"basedOnInputTokens": "(basierend auf Eingabe-Tokens)",
+		"doesNotSupportImages": "Unterstützt keine Bilder",
+		"supportsImages": "Unterstützt Bilder",
+		"doesNotSupportBrowser": "Unterstützt keine Browser-Verwendung",
+		"supportsBrowser": "Unterstützt Browser-Verwendung",
+		"doesNotSupportCache": "Unterstützt kein Prompt-Caching",
+		"supportsCache": "Unterstützt Prompt-Caching",
+		"contextWindow": "Kontextfenster",
+		"cacheWritesPrice": "Cache-Schreibpreis",
+		"cacheReadsPrice": "Cache-Lesepreis",
+		"contextWindowLabel": "Kontextfenster:",
+		"imageGeneration": {
+			"title": "Bildgenerierungs-Standardwerte",
+			"aspectRatio": "Seitenverhältnis",
+			"size": "Bildgröße",
+			"auto": "Automatisch (Modell-Standard)",
+			"analysisModel": "Analysemodell"
+		}
+	},
+	"rules": {
+		"section": {
+			"workspaceRules": "Arbeitsbereich-Regeln"
+		}
+	},
+	"providers": {
+		"openrouter": {
+			"name": "OpenRouter",
+			"description": "Zugriff auf eine Vielzahl von Open-Source- und proprietären Modellen mit einem einzigen API-Schlüssel.",
+			"balanceDisplay": {
+				"loading": "Wird geladen...",
+				"tooltip": "Verbleibendes Guthaben: {{remainingBalance}}\\nLimit: {{limit}}\\nNutzung: {{usage}}",
+				"label": "Guthaben: {{formattedBalance}}"
+			},
+			"apiKeyPlaceholder": "API-Schlüssel eingeben...",
+			"apiKeyLabel": "OpenRouter API-Schlüssel",
+			"getApiKeyButton": "OpenRouter API-Schlüssel erhalten",
+			"apiKeyHelpText": "Dieser Schlüssel wird lokal gespeichert und nur für API-Anfragen von dieser Erweiterung verwendet.",
+			"sortUnderlyingProviderRoutingCheckbox": "Zugrunde liegendes Anbieter-Routing sortieren",
+			"defaultOption": "Standard",
+			"priceOption": "Preis",
+			"throughputOption": "Durchsatz",
+			"latencyOption": "Latenz",
+			"defaultSortingDescription": "Standardverhalten ist Lastausgleich über Anbieter (wie AWS, Google Vertex, Anthropic), mit Priorisierung des Preises unter Berücksichtigung der Anbieter-Verfügbarkeit",
+			"priceSortingDescription": "Anbieter nach Preis sortieren, günstigsten Anbieter priorisieren",
+			"throughputSortingDescription": "Anbieter nach Durchsatz sortieren, Anbieter mit höchstem Durchsatz priorisieren (kann Kosten erhöhen)",
+			"latencySortingDescription": "Anbieter nach Antwortzeit sortieren, Anbieter mit niedrigster Latenz priorisieren",
+			"authError": "OpenRouter-Authentifizierung konnte nicht geöffnet werden:",
+			"modelPicker": {
+				"featuredModelDescriptionBest": "Empfohlen für Carets Agent-Codierung",
+				"featuredModelLabelBest": "Beste",
+				"featuredModelDescriptionGemini3FlashPreview": "Intelligentes Modell für Geschwindigkeit und Preiseffizienz",
+				"featuredModelDescriptionKatcoder": "KwaiKATs fortschrittlichstes agentisches Codierungsmodell der KAT-Coder-Serie",
+				"featuredModelLabelNew": "Neu",
+				"featuredModelDescriptionFree": "Fortschrittliches Modell mit 262K Kontext für komplexe Codierung",
+				"featuredModelLabelFree": "Kostenlos",
+				"searchPlaceholder": "Modell suchen und auswählen...",
+				"clearSearch": "Suche löschen",
+				"fetchModelsDescription": "Die Erweiterung ruft automatisch die neueste Liste der verfügbaren Modelle auf ",
+				"linkText": "OpenRouter ab.",
+				"unsureModelChoice": "Wenn Sie unsicher sind, welches Modell Sie wählen sollen, funktioniert Caret am besten mit "
+			}
+		},
+		"gemini": {
+			"name": "Google Gemini",
+			"description": "Verwenden Sie die Google AI API, um auf Googles Gemini-Modellfamilie zuzugreifen. Erfordert einen API-Schlüssel.",
+			"baseUrlPlaceholder": "Standard: https://generativelanguage.googleapis.com"
+		},
+		"openai": {
+			"name": "OpenAI-kompatibel",
+			"description": "Verbinden Sie sich mit jedem Modell-Endpunkt, der mit der OpenAI API kompatibel ist.",
+			"baseUrlPlaceholder": "Basis-URL eingeben...",
+			"baseUrlLabel": "Basis-URL",
+			"modelIdPlaceholder": "Modell-ID eingeben...",
+			"modelIdLabel": "Modell-ID",
+			"customHeadersLabel": "Benutzerdefinierte Header",
+			"addHeaderButton": "Header hinzufügen",
+			"headerNamePlaceholder": "Header-Name",
+			"headerValuePlaceholder": "Header-Wert",
+			"removeHeaderButton": "Entfernen",
+			"azureApiVersionLabel": "Azure API-Version festlegen",
+			"azureApiVersionPlaceholder": "Standard: {{defaultValue}}",
+			"modelConfigurationLabel": "Modellkonfiguration",
+			"supportsImagesCheckbox": "Unterstützt Bilder",
+			"supportsBrowserUseCheckbox": "Unterstützt Browser-Verwendung",
+			"enableR1FormatCheckbox": "R1-Nachrichtenformat aktivieren",
+			"contextWindowSizeLabel": "Kontextfenstergröße",
+			"maxOutputTokensLabel": "Max. Ausgabe-Tokens",
+			"inputPriceLabel": "Eingabepreis / 1M Tokens",
+			"outputPriceLabel": "Ausgabepreis / 1M Tokens",
+			"temperatureLabel": "Temperatur",
+			"refreshModelsError": "OpenAI-Modelle konnten nicht aktualisiert werden:",
+			"providerName": "OpenAI-kompatibel"
+		},
+		"anthropic": {
+			"name": "Anthropic",
+			"description": "Verwenden Sie die Anthropic API, um direkt auf die Claude-Modellfamilie zuzugreifen. Erfordert einen API-Schlüssel.",
+			"switchTo1MContext": "Zu 1M-Kontextfenster-Modell wechseln",
+			"switchTo200KContext": "Zu 200K-Kontextfenster-Modell wechseln"
+		},
+		"bedrock": {
+			"name": "Amazon Bedrock",
+			"description": "Amazon Bedrock bietet Zugang zu einer breiten Palette von Foundation-Modellen von Amazon und führenden KI-Startups.",
+			"apiKey": "API-Schlüssel",
+			"awsProfile": "AWS-Profil",
+			"awsCredentials": "AWS-Anmeldedaten",
+			"profileNamePlaceholder": "Profilname eingeben (Standard wenn leer)",
+			"profileNameLabel": "AWS-Profilname",
+			"bedrockApiKeyPlaceholder": "Bedrock API-Schlüssel eingeben",
+			"bedrockApiKeyLabel": "AWS Bedrock API-Schlüssel",
+			"accessKeyPlaceholder": "Access Key eingeben...",
+			"accessKeyLabel": "AWS Access Key",
+			"secretKeyPlaceholder": "Secret Key eingeben...",
+			"secretKeyLabel": "AWS Secret Key",
+			"sessionTokenPlaceholder": "Session Token eingeben...",
+			"sessionTokenLabel": "AWS Session Token",
+			"awsRegionLabel": "AWS-Region",
+			"selectRegionPlaceholder": "Region auswählen...",
+			"useCustomVpcEndpoint": "Benutzerdefinierten VPC-Endpunkt verwenden",
+			"vpcEndpointPlaceholder": "VPC-Endpunkt-URL eingeben (optional)",
+			"useCrossRegionInference": "Cross-Region-Inferenz verwenden",
+			"usePromptCaching": "Prompt-Caching verwenden",
+			"profileCredentialsHelpText": "Verwendung von AWS-Profil-Anmeldedaten aus ~/.aws/credentials. Lassen Sie den Profilnamen leer, um das Standardprofil zu verwenden. Diese Anmeldedaten werden nur lokal für API-Anfragen von dieser Erweiterung verwendet.",
+			"defaultCredentialsHelpText": "Authentifizieren Sie sich entweder durch Angabe der obigen Schlüssel oder verwenden Sie die Standard-AWS-Anmeldedatenanbieter, d.h. ~/.aws/credentials oder Umgebungsvariablen. Diese Anmeldedaten werden nur lokal für API-Anfragen von dieser Erweiterung verwendet.",
+			"modelLabel": "Modell",
+			"selectModelPlaceholder": "Modell auswählen...",
+			"customModelOption": "Benutzerdefiniert",
+			"customModelDescription": "Wählen Sie \"Benutzerdefiniert\" bei Verwendung des Application Inference Profile in Bedrock. Geben Sie den Application Inference Profile ARN im Modell-ID-Feld ein.",
+			"customModelIdPlaceholder": "Benutzerdefinierte Modell-ID eingeben...",
+			"modelIdLabel": "Modell-ID",
+			"baseInferenceModelLabel": "Basis-Inferenzmodell",
+			"selectBaseModelPlaceholder": "Modell auswählen..."
+		},
+		"vscode-lm": {
+			"name": "VS Code LM API",
+			"description": "Verwenden Sie Modelle, die von anderen Erweiterungen bereitgestellt werden (z.B. GitHub Copilot) über die VS Code Language Model API.",
+			"languageModelLabel": "Sprachmodell",
+			"selectModelPlaceholder": "Modell auswählen...",
+			"descriptionPart1": "Die VS Code Language Model API ermöglicht die Ausführung von Modellen, die von anderen VS Code-Erweiterungen bereitgestellt werden (einschließlich, aber nicht beschränkt auf GitHub Copilot). Der einfachste Einstieg ist die Installation der",
+			"copilotExtensionLinkText": "Copilot-Erweiterung",
+			"descriptionPart2": "aus dem VS Marketplace und die Aktivierung von Claude 4 Sonnet.",
+			"noteText": "Hinweis: Dies ist eine sehr experimentelle Integration und funktioniert möglicherweise nicht wie erwartet."
+		},
+		"deepseek": {
+			"name": "DeepSeek",
+			"description": "DeepSeek entwickelt Open-Source-Modelle mit starken Fähigkeiten in Code und Mathematik."
+		},
+		"openai-native": {
+			"name": "OpenAI",
+			"description": "Greifen Sie direkt über die offizielle OpenAI API auf GPT-Modelle zu. Erfordert einen API-Schlüssel."
+		},
+		"ollama": {
+			"name": "Ollama",
+			"description": "Führen Sie Modelle lokal auf Ihrem Computer mit Ollama aus. Lesen Sie deren Schnellstartanleitung für den Einstieg.",
+			"baseUrlLabel": "Benutzerdefinierte Basis-URL verwenden",
+			"baseUrlPlaceholder": "Standard: http://localhost:11434",
+			"apiKeyHelpText": "Optionaler API-Schlüssel für authentifizierte Ollama-Instanzen oder Cloud-Dienste. Für lokale Installationen leer lassen.",
+			"apiKeyPlaceholder": "API-Schlüssel eingeben (optional)...",
+			"modelLabel": "Modell",
+			"modelPickerPlaceholder": {
+				"search": "Modell suchen und auswählen...",
+				"example": "z.B. llama3.1"
+			},
+			"fetchModelsError": "Modelle konnten nicht vom Ollama-Server abgerufen werden. Stellen Sie sicher, dass Ollama läuft und erreichbar ist, oder geben Sie die Modell-ID oben manuell ein.",
+			"modelContextWindowLabel": "Modell-Kontextfenster",
+			"requestTimeoutPlaceholder": "Standard: 30000 (30 Sekunden)",
+			"requestTimeoutLabel": "Anfrage-Timeout (ms)",
+			"requestTimeoutDescription": "Maximale Zeit in Millisekunden zum Warten auf API-Antworten vor Timeout.",
+			"fetchModelsErrorLog": "Ollama-Modelle konnten nicht abgerufen werden:",
+			"providerName": "Ollama",
+			"contextWindowPlaceholder": "z.B. 32768"
+		},
+		"vertex": {
+			"name": "GCP Vertex AI",
+			"description": "Google Cloud Vertex AI bietet eine Vielzahl von KI-Modellen, einschließlich Googles modernster Modelle.",
+			"projectIdPlaceholder": "Projekt-ID eingeben...",
+			"projectIdLabel": "Google Cloud Projekt-ID",
+			"regionLabel": "Google Cloud Region",
+			"selectRegionPlaceholder": "Region auswählen...",
+			"setupDescription": "Um Google Cloud Vertex AI zu verwenden, müssen Sie",
+			"setupLink1": "1) ein Google Cloud-Konto erstellen › die Vertex AI API aktivieren › die gewünschten Claude-Modelle aktivieren,",
+			"setupLink2": "2) die Google Cloud CLI installieren › Application Default Credentials konfigurieren."
+		},
+		"careti": {
+			"name": "Careti",
+			"login": "Anmelden",
+			"loginError": "Anmelde-URL konnte nicht abgerufen werden:",
+			"description": "Careti-Anmeldebenutzer können mit kostenlosen bereitgestellten Credits auf Gemini- und Claude-Modelle zugreifen",
+			"backendType": "Standardmodell",
+			"backendDescription": {
+				"gemini": "Guthaben-Abzug",
+				"claude": "CLI-Integration"
+			},
+			"claudeModel": "Claude-Modell",
+			"geminiModel": "Gemini-Modell",
+			"modelPicker": {
+				"modelLabel": "Modell",
+				"searchPlaceholder": "Modell suchen und auswählen...",
+				"clearSearch": "Suche löschen"
+			}
+		},
+		"litellm": {
+			"name": "LiteLLM",
+			"baseUrlPlaceholder": "Standard: http://localhost:4000",
+			"apiKeyPlaceholder": "Standard: noop",
+			"apiKeyLabel": "API-Schlüssel",
+			"modelIdPlaceholder": "z.B. anthropic/claude-sonnet-4-20250514",
+			"modelIdLabel": "Modell-ID",
+			"usePromptCachingLabel": "Prompt-Caching verwenden (GA)",
+			"modelConfigurationLabel": "Modellkonfiguration",
+			"supportsImagesLabel": "Unterstützt Bilder",
+			"contextWindowSizeLabel": "Kontextfenstergröße",
+			"maxOutputTokensLabel": "Max. Ausgabe-Tokens",
+			"temperatureLabel": "Temperatur",
+			"usePromptCachingDescription": "Prompt-Caching erfordert einen unterstützten Anbieter und ein unterstütztes Modell",
+			"extendedThinkingDescription1": "Extended Thinking ist für Modelle wie Sonnet-4, o3-mini, Deepseek R1 usw. verfügbar. Weitere Infos zur",
+			"extendedThinkingLink": "Thinking-Modus-Konfiguration",
+			"description1": "LiteLLM bietet eine einheitliche Schnittstelle für den Zugriff auf Modelle verschiedener LLM-Anbieter. Lesen Sie deren",
+			"quickstartGuideLink": "Schnellstartanleitung",
+			"description2": "für weitere Informationen."
+		},
+		"bizrouter": {
+			"name": "BizRouter",
+			"apiKeyLabel": "BizRouter API-Schlüssel",
+			"apiKeyPlaceholder": "API-Schlüssel beginnend mit sk-br-v1-... eingeben",
+			"apiKeyRequired": "API-Schlüssel ist erforderlich",
+			"modelIdLabel": "Modell-ID",
+			"selectModelPlaceholder": "Modell auswählen...",
+			"modelIdPlaceholder": "z.B. openai/gpt-4o",
+			"fetchModels": "Modelle abrufen",
+			"fetchingModels": "Modelle werden abgerufen...",
+			"noModelsFound": "Keine Modelle gefunden",
+			"fetchError": "Modelle konnten nicht abgerufen werden",
+			"modelConfigurationLabel": "Modellkonfiguration",
+			"supportsImagesLabel": "Unterstützt Bilder",
+			"contextWindowSizeLabel": "Kontextfenstergröße",
+			"maxOutputTokensLabel": "Max. Ausgabe-Tokens",
+			"temperatureLabel": "Temperatur",
+			"extendedThinkingDescription1": "Extended Thinking ist für Modelle wie Sonnet-4, o3-mini, Deepseek R1 usw. verfügbar. Weitere Infos zur",
+			"extendedThinkingLink": "BizRouter-Dokumentation",
+			"description1": "BizRouter bietet KI-Routing-Dienste, die für den koreanischen Markt optimiert sind. Lesen Sie deren",
+			"quickstartGuideLink": "BizRouter-Schnellstartanleitung",
+			"description2": "für weitere Informationen."
+		},
+		"claude-code": {
+			"name": "Claude Code",
+			"description": "Claude Code ist ein spezialisiertes Modell von Anthropic, optimiert für Code-bezogene Aufgaben.",
+			"cliPath": "Claude Code CLI-Pfad",
+			"cliPathDescription": "Pfad zur Claude Code CLI.",
+			"cliPathPlaceholder": "Standard: claude",
+			"model": "Modell"
+		},
+		"sap-ai-core": {
+			"name": "SAP AI Core",
+			"description": "SAP AI Core ist ein Dienst zum Bereitstellen und Verwalten von KI-Modellen im SAP-Ökosystem.",
+			"clientIdLabel": "AI Core Client-ID",
+			"clientIdSetMessage": "Client-ID ist gesetzt. Um sie zu ändern, geben Sie den Wert bitte erneut ein.",
+			"clientSecretPlaceholder": "AI Core Client Secret eingeben...",
+			"clientSecretLabel": "AI Core Client Secret",
+			"clientSecretSetMessage": "Client Secret ist gesetzt. Um es zu ändern, geben Sie den Wert bitte erneut ein.",
+			"baseUrlPlaceholder": "AI Core Basis-URL eingeben...",
+			"baseUrlLabel": "AI Core Basis-URL",
+			"tokenUrlPlaceholder": "AI Core Auth-URL eingeben...",
+			"tokenUrlLabel": "AI Core Auth-URL",
+			"resourceGroupPlaceholder": "AI Core Ressourcengruppe eingeben...",
+			"resourceGroupLabel": "AI Core Ressourcengruppe",
+			"credentialsHelpText": "Diese Anmeldedaten werden lokal gespeichert und nur für API-Anfragen von dieser Erweiterung verwendet.",
+			"apiAccessInfoLinkText": "Weitere Informationen zum SAP AI Core API-Zugang finden Sie hier.",
+			"orchestrationModeLabel": "Orchestrierungsmodus",
+			"orchestrationModeDescriptionEnabled": "Wenn aktiviert, bietet Zugang zu allen verfügbaren Modellen ohne individuelle Bereitstellungen.",
+			"orchestrationModeDescriptionDisabled": "Wenn deaktiviert, bietet nur Zugang zu bereitgestellten Modellen in Ihrer AI Core-Dienstinstanz.",
+			"loadingModels": "Modelle werden geladen...",
+			"modelFetchError": "Modelle konnten nicht abgerufen werden. Bitte überprüfen Sie Ihre Konfiguration.",
+			"noModelsFound": "Modelle konnten nicht von der SAP AI Core-Dienstinstanz abgerufen werden. Bitte überprüfen Sie Ihre SAP AI Core-Konfiguration oder stellen Sie sicher, dass Ihre Bereitstellungen in der Dienstinstanz bereitgestellt und aktiv sind",
+			"configureCredentialsPrompt": "Bitte konfigurieren Sie Ihre SAP AI Core-Anmeldedaten, um verfügbare Modelle zu sehen.",
+			"fetchModelsErrorLog": "Fehler beim Abrufen von SAP AI Core-Modellen:",
+			"clientIdPlaceholder": "AI Core Client-ID eingeben...",
+			"retryButton": "Wiederholen",
+			"selectModelPlaceholder": "Modell auswählen..."
+		},
+		"mistral": {
+			"name": "Mistral",
+			"description": "Mistral AI entwickelt hochleistungsfähige Open-Source- und kommerzielle Modelle."
+		},
+		"zai": {
+			"name": "Z AI",
+			"description": "Zhipu AI bietet zweisprachige (Chinesisch und Englisch) Konversationsmodelle.",
+			"entrypointLabel": "Z AI-Einstiegspunkt",
+			"entrypointDescription": "Bitte wählen Sie den entsprechenden API-Einstiegspunkt basierend auf Ihrem Standort. Wenn Sie in China sind, wählen Sie open.bigmodel.cn. Andernfalls wählen Sie api.z.ai.",
+			"providerName": "Z AI"
+		},
+		"groq": {
+			"name": "Groq",
+			"description": "Groq bietet extrem schnelle Inferenzgeschwindigkeiten durch seine Language Processing Units (LPUs).",
+			"searchPlaceholder": "Modell suchen und auswählen...",
+			"clearSearch": "Suche löschen",
+			"fetchModelsError": "Groq-Modelle konnten nicht abgerufen werden:",
+			"fetchModelsDescription": "Die Erweiterung ruft automatisch die neueste Liste der verfügbaren Modelle auf ",
+			"groqLinkText": "Groq ab.",
+			"unsureModelChoice": "Wenn Sie unsicher sind, welches Modell Sie wählen sollen, funktioniert Caret am besten mit ",
+			"recommendedModel": "llama-3.3-70b-versatile.",
+			"recommendedModelId": "llama-3.3-70b-versatile",
+			"modelDocumentationUrl": "https://console.groq.com/docs/models"
+		},
+		"cerebras": {
+			"name": "Cerebras",
+			"sotaDescription": "Hochmoderne Modelle für komplexe, langfristige Aufgaben",
+			"noSubscription": "Kein Abonnement",
+			"contextWindow": "32K Tokens",
+			"rateLimits": "Unbegrenzte Anfragen",
+			"upgrade": "Für mehr Funktionen upgraden"
+		},
+		"vercel-ai-gateway": {
+			"name": "Vercel AI Gateway",
+			"description": "Das Vercel AI Gateway bietet eine zuverlässige Verbindung zu verschiedenen Modellanbietern.",
+			"apiKeyLabel": "Vercel AI Gateway API-Schlüssel",
+			"getApiKeyLinkText": "Sie können einen Vercel AI Gateway API-Schlüssel erhalten, indem Sie sich hier anmelden.",
+			"modelIdPlaceholder": "Modell-ID eingeben (z.B. openai/gpt-4o)...",
+			"modelIdLabel": "Modell-ID",
+			"fetchModelsError": "Modelle vom Vercel AI Gateway konnten nicht abgerufen werden.",
+			"noteText": "Hinweis: Free-Tier-Benutzer sehen $0 Kosten, da diese Anfragen kostenlos vom Vercel AI Gateway bereitgestellt werden.",
+			"fetchModelsErrorLog": "Vercel AI Gateway-Modelle konnten nicht abgerufen werden:"
+		},
+		"baseten": {
+			"name": "Baseten",
+			"description": "Baseten ist eine Plattform zum Bereitstellen und Betreiben benutzerdefinierter KI-Modelle.",
+			"searchPlaceholder": "Modell suchen und auswählen...",
+			"clearSearch": "Suche löschen",
+			"infoDescription": "Die Erweiterung ruft automatisch die neueste Liste der verfügbaren Modelle auf",
+			"infoLinkText": "Baseten ab.",
+			"recommendedModel": "moonshotai/Kimi-K2-Instruct.",
+			"unsureWhichModel": "Wenn Sie unsicher sind, welches Modell Sie wählen sollen, funktioniert Cline am besten mit",
+			"apiKeyHelp": "Dieser Schlüssel wird lokal gespeichert und nur für API-Anfragen von dieser Erweiterung verwendet.",
+			"basetenUrl": "https://www.baseten.co/products/model-apis/"
+		},
+		"requesty": {
+			"name": "Requesty",
+			"description": "Requesty ist eine Plattform für KI-gestütztes Anfragen-Routing und -Management.",
+			"useCustomBaseUrlLabel": "Benutzerdefinierte Basis-URL verwenden",
+			"customBaseUrlPlaceholder": "Benutzerdefinierte Basis-URL",
+			"searchPlaceholder": "Modell suchen und auswählen...",
+			"clearSearch": "Suche löschen",
+			"requestyUrl": "Requesty."
+		},
+		"fireworks": {
+			"name": "Fireworks AI",
+			"description": "Fireworks AI ist eine Plattform für Entwickler zum Experimentieren und Bereitstellen generativer KI-Modelle."
+		},
+		"together": {
+			"name": "Together",
+			"description": "Together AI bietet eine Cloud-Plattform zum Ausführen führender Open-Source-Modelle.",
+			"modelIdPlaceholder": "Modell-ID eingeben...",
+			"modelIdLabel": "Modell-ID",
+			"notePrefix": "Hinweis:",
+			"noteText": "{{brandName}} verwendet komplexe Prompts und funktioniert am besten mit Claude-Modellen. Weniger leistungsfähige Modelle funktionieren möglicherweise nicht wie erwartet."
+		},
+		"qwen": {
+			"name": "Alibaba Qwen",
+			"description": "Alibaba Qwen ist ein leistungsstarkes großes Sprachmodell für verschiedene Aufgaben der natürlichen Sprachverarbeitung.",
+			"apiLineLabel": "Alibaba API-Linie",
+			"apiLineDescription": "Bitte wählen Sie die entsprechende API-Schnittstelle basierend auf Ihrem Standort. Wenn Sie in China sind, wählen Sie die China API-Schnittstelle. Andernfalls wählen Sie die internationale API-Schnittstelle.",
+			"apiLineOptions": {
+				"international": "Internationale API",
+				"china": "China API"
+			}
+		},
+		"qwen-code": {
+			"name": "Qwen Code",
+			"description": "Qwen Code ist ein spezialisiertes KI-Modell von Alibaba für Code-Generierung und -Vervollständigung.",
+			"apiConfigurationTitle": "Qwen Code API-Konfiguration",
+			"oauthCredentialsPathPlaceholder": "~/.qwen/oauth_creds.json",
+			"oauthCredentialsPathLabel": "OAuth-Anmeldedaten-Pfad",
+			"oauthCredentialsPathDescription": "Pfad zu Ihrer Qwen OAuth-Anmeldedatendatei. Verwenden Sie ~/.qwen/oauth_creds.json oder geben Sie einen benutzerdefinierten Pfad an.",
+			"oauthAuthenticationDescription": "Qwen Code ist eine OAuth-basierte API, die eine Authentifizierung über den offiziellen Qwen-Client erfordert. Sie müssen zuerst OAuth-Anmeldedaten einrichten.",
+			"getStartedTitle": "Erste Schritte:",
+			"installClientStep": "Installieren Sie den offiziellen Qwen-Client",
+			"authenticateStep": "Authentifizieren Sie sich mit Ihrem Konto",
+			"credentialsStoredStep": "OAuth-Anmeldedaten werden automatisch gespeichert",
+			"setupInstructionsLinkText": "Einrichtungsanleitung"
+		},
+		"doubao": {
+			"name": "Bytedance Doubao",
+			"description": "Doubao ist eine Familie konversationeller KI-Modelle, entwickelt von Bytedance.",
+			"modelLabel": "Modell"
+		},
+		"lmstudio": {
+			"name": "LM Studio",
+			"description": "LM Studio ermöglicht es Ihnen, LLMs auf Ihrem lokalen Rechner zu entdecken, herunterzuladen und auszuführen.",
+			"baseUrlPlaceholder": "Standard: http://localhost:1234",
+			"modelPlaceholder": "z.B. meta-llama-3.1-8b-instruct",
+			"contextWindowTooltip": "Nicht bearbeitbar - der Wert wird vom verbundenen Endpunkt zurückgegeben",
+			"parseModelsError": "LM Studio-Modelle konnten nicht analysiert werden:"
+		},
+		"moonshot": {
+			"name": "Moonshot",
+			"description": "Moonshot AI spezialisiert sich auf Modelle mit langen Kontextfenstern.",
+			"entrypoint": "Moonshot-Einstiegspunkt"
+		},
+		"huggingface": {
+			"name": "Hugging Face",
+			"description": "Hugging Face bietet Inferenz-APIs für eine breite Palette von Open-Source-Modellen.",
+			"apiKeyPlaceholder": "API-Schlüssel eingeben...",
+			"apiKeyLabel": "Hugging Face API-Schlüssel",
+			"apiKeyHelpText": "Dieser Schlüssel wird lokal gespeichert und nur für API-Anfragen von dieser Erweiterung verwendet. Wir zeigen hier keine Preise an, da diese von Ihren Hugging Face-Anbietereinstellungen abhängen und nicht konsistent über deren API verfügbar sind.",
+			"getApiKeyLinkText": "Holen Sie sich Ihren API-Schlüssel hier",
+			"apiKeyUrl": "https://huggingface.co/settings/tokens",
+			"searchPlaceholder": "Modelle suchen...",
+			"clearSearch": "Suche löschen",
+			"fetchModelsError": "Hugging Face-Modelle konnten nicht abgerufen werden:"
+		},
+		"nebius": {
+			"name": "Nebius AI Studio",
+			"description": "Nebius AI bietet KI-Dienste basierend auf Yandex-Technologie.",
+			"apiKeyHelpText": "Dieser Schlüssel wird lokal gespeichert und nur für API-Anfragen von dieser Erweiterung verwendet. (Hinweis: {{brandName}} verwendet komplexe Prompts und funktioniert am besten mit Claude-Modellen. Weniger leistungsfähige Modelle funktionieren möglicherweise nicht wie erwartet.)"
+		},
+		"asksage": {
+			"name": "AskSage",
+			"description": "AskSage bietet KI-Modelle für Forschung und akademische Nutzung.",
+			"apiKeyHelpText": "Dieser Schlüssel wird lokal gespeichert und nur für API-Anfragen von dieser Erweiterung verwendet.",
+			"apiUrlPlaceholder": "AskSage API-URL eingeben...",
+			"apiUrlLabel": "AskSage API-URL",
+			"modelLabel": "Modell"
+		},
+		"xai": {
+			"name": "X AI",
+			"description": "xAI entwickelt Grok, ein großes Sprachmodell, das auf Wahrhaftigkeit abzielt.",
+			"providerName": "xAI",
+			"notePrefix": "Hinweis:",
+			"noteText": "{{brandName}} verwendet komplexe Prompts und funktioniert am besten mit Claude-Modellen. Weniger leistungsfähige Modelle funktionieren möglicherweise nicht wie erwartet.",
+			"modifyReasoningEffort": "Reasoning-Aufwand anpassen",
+			"reasoningEffortLabel": "Reasoning-Aufwand",
+			"reasoningEffortOptions": {
+				"low": "niedrig",
+				"high": "hoch"
+			},
+			"reasoningEffortDescription": "Hoher Aufwand kann eine gründlichere Analyse liefern, dauert aber länger und verbraucht mehr Tokens."
+		},
+		"sambanova": {
+			"name": "SambaNova",
+			"description": "SambaNova bietet hochleistungsfähige Modelle für KI-Anwendungen auf Unternehmensebene."
+		},
+		"huawei-cloud-maas": {
+			"name": "Huawei Cloud MaaS",
+			"description": "Huawei Cloud MaaS (Model-as-a-Service) bietet eine Vielzahl von KI-Modellen."
+		},
+		"upstage": {
+			"name": "Upstage",
+			"descriptionPart1": "",
+			"upstageLinkText": "Upstage",
+			"descriptionPart2": " bietet ",
+			"solarLinkText": "Solar LLM",
+			"descriptionPart3": "-Modelle, die für verschiedene KI-Aufgaben optimiert sind."
+		},
+		"naver-cloud": {
+			"name": "Naver Cloud",
+			"descriptionPart1": "",
+			"naverCloudLinkText": "Naver Cloud",
+			"descriptionPart2": " bietet ",
+			"hyperClovaLinkText": "Hyper Clova X (HCX)",
+			"descriptionPart3": "-Modelle, die für den koreanischen Kontext optimiert sind."
+		},
+		"dify": {
+			"name": "Dify.ai",
+			"description": "Dify.ai ist eine Plattform zum Erstellen und Betreiben von LLM-gestützten Anwendungen.",
+			"baseUrlLabel": "Basis-URL",
+			"baseUrlPlaceholder": "Dify Basis-URL eingeben..."
+		},
+		"cline": {
+			"name": "Cline"
+		}
+	},
+	"thinkingBudget": {
+		"enable": "Thinking Budget aktivieren"
+	},
+	"contextWindowSwitcher": {
+		"switchTo1M": "Zu 1M-Kontext wechseln",
+		"switchTo200K": "Zu 200K-Kontext wechseln"
+	},
+	"clineProvider": {
+		"sortUnderlyingProviderRouting": "Zugrunde liegendes Anbieter-Routing sortieren",
+		"defaultOption": "Standard",
+		"priceOption": "Preis",
+		"throughputOption": "Durchsatz",
+		"latencyOption": "Latenz",
+		"defaultSortingDescription": "Standard: Lastausgleich über Anbieter (AWS, Vertex, Anthropic), Preis und Verfügbarkeit priorisierend",
+		"priceSortingDescription": "Nach Preis sortieren, günstigsten Anbieter priorisieren",
+		"throughputSortingDescription": "Nach Durchsatz sortieren, höchsten Durchsatz priorisieren (kann Kosten erhöhen)",
+		"latencySortingDescription": "Nach Latenz sortieren, niedrigste Antwortzeit priorisieren"
+	}
+}

@@ -1,14 +1,14 @@
 import { useMemo, useRef, useState } from "react"
-// CARET MODIFICATION: Import i18n context for language reactivity
-import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
-import { t } from "@/caret/utils/i18n"
+// CARETI MODIFICATION: Import i18n context for language reactivity
+import { useCaretI18nContext } from "@/careti/context/CaretI18nContext"
+import { t } from "@/careti/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { useAutoApproveActions } from "@/hooks/useAutoApproveActions"
 import { getAsVar, VSC_TITLEBAR_INACTIVE_FOREGROUND } from "@/utils/vscStyles"
 import AutoApproveMenuItem from "./AutoApproveMenuItem"
 import AutoApproveModal from "./AutoApproveModal"
-// CARET MODIFICATION: Changed from static constants to dynamic functions for i18n support
+// CARETI MODIFICATION: Changed from static constants to dynamic functions for i18n support
 import { getActionMetadata, getNotificationsSetting } from "./constants"
 
 interface AutoApproveBarProps {
@@ -18,7 +18,7 @@ interface AutoApproveBarProps {
 const AutoApproveBar = ({ style }: AutoApproveBarProps) => {
 	const { autoApprovalSettings } = useExtensionState()
 	const { isChecked, isFavorited, updateAction } = useAutoApproveActions()
-	// CARET MODIFICATION: Use i18n context to detect language changes
+	// CARETI MODIFICATION: Use i18n context to detect language changes
 	const { language } = useCaretI18nContext()
 
 	const [isModalVisible, setIsModalVisible] = useState(false)
@@ -26,7 +26,7 @@ const AutoApproveBar = ({ style }: AutoApproveBarProps) => {
 
 	const favorites = useMemo(() => autoApprovalSettings.favorites || [], [autoApprovalSettings.favorites])
 
-	// CARET MODIFICATION: Use dynamic functions with language dependency for i18n updates
+	// CARETI MODIFICATION: Use dynamic functions with language dependency for i18n updates
 	const actionMetadata = useMemo(() => getActionMetadata(), [language])
 	const notificationsSetting = useMemo(() => getNotificationsSetting(), [language])
 

@@ -45,4 +45,4 @@
 See `.caretrules/workflows/document-organization.md`
 
 **📖 For Korean developer documentation:**
-See `caret-docs/development/documentation-guide.md`
+See `careti-docs/development/documentation-guide.md`

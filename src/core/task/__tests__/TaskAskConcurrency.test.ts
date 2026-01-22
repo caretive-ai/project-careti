@@ -1,4 +1,4 @@
-// CARET MODIFICATION: ask()/say() 동시성 레이스(ask 무효화) 회귀 테스트
+// CARETI MODIFICATION: ask()/say() 동시성 레이스(ask 무효화) 회귀 테스트
 import { describe, it } from "mocha"
 import "should"
 import { Task } from "../index"
@@ -34,7 +34,7 @@ const tick = async () => new Promise((resolve) => setTimeout(resolve, 0))
 
 describe("Task.ask concurrency", () => {
 	const initHostProvider = () => {
-		// CARET MODIFICATION: Provide a minimal HostProvider stub for Logger usage.
+		// CARETI MODIFICATION: Provide a minimal HostProvider stub for Logger usage.
 		if (HostProvider.isInitialized()) {
 			HostProvider.reset()
 		}

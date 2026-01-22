@@ -4,7 +4,7 @@ import axios from "axios"
 import { Controller } from "@/core/controller"
 
 /**
- * CARET MODIFICATION: Fetches available AND healthy models from LiteLLM
+ * CARETI MODIFICATION: Fetches available AND healthy models from LiteLLM
  * Uses /health endpoint to get healthy models and /v1/models to get accessible models
  * Returns intersection of both (models that are healthy AND accessible with provided API key)
  * @param controller The controller instance
@@ -13,8 +13,8 @@ import { Controller } from "@/core/controller"
  */
 export async function fetchLiteLlmModels(
 	_controller: Controller,
-	request: proto.caret.FetchLiteLlmModelsRequest,
-): Promise<proto.caret.FetchLiteLlmModelsResponse> {
+	request: proto.careti.FetchLiteLlmModelsRequest,
+): Promise<proto.careti.FetchLiteLlmModelsResponse> {
 	/**
 	 * Normalize model name for comparison between /health and /v1/models
 	 * - Removes "ollama_chat/" prefix
@@ -37,7 +37,7 @@ export async function fetchLiteLlmModels(
 		// Validate base URL
 		if (!request.baseUrl) {
 			Logger.warn("[CaretSystemService] ⚠️ Base URL is required")
-			return proto.caret.FetchLiteLlmModelsResponse.create({
+			return proto.careti.FetchLiteLlmModelsResponse.create({
 				success: false,
 				models: [],
 				errorMessage: "Base URL is required",
@@ -46,7 +46,7 @@ export async function fetchLiteLlmModels(
 
 		if (!URL.canParse(request.baseUrl)) {
 			Logger.warn(`[CaretSystemService] ⚠️ Invalid base URL format: ${request.baseUrl}`)
-			return proto.caret.FetchLiteLlmModelsResponse.create({
+			return proto.careti.FetchLiteLlmModelsResponse.create({
 				success: false,
 				models: [],
 				errorMessage: "Invalid base URL format",
@@ -69,7 +69,7 @@ export async function fetchLiteLlmModels(
 		}
 		if (request.apiKey && request.apiKey.trim() !== "") {
 			modelsHeaders["x-litellm-api-key"] = request.apiKey
-			// CARET MODIFICATION: some LiteLLM deployments expect Authorization header as well
+			// CARETI MODIFICATION: some LiteLLM deployments expect Authorization header as well
 			modelsHeaders["Authorization"] = `Bearer ${request.apiKey}`
 		}
 
@@ -125,7 +125,7 @@ export async function fetchLiteLlmModels(
 			filteredModels = availableModels
 		} else if (healthyModels.length === 0 && availableModels.length === 0) {
 			Logger.warn("[CaretSystemService] ⚠️ No models available in LiteLLM response")
-			return proto.caret.FetchLiteLlmModelsResponse.create({
+			return proto.careti.FetchLiteLlmModelsResponse.create({
 				success: false,
 				models: [],
 				errorMessage: "No models available",
@@ -140,13 +140,13 @@ export async function fetchLiteLlmModels(
 			Logger.info(`[CaretSystemService] 🧠 Filtered ${filteredModels.length} healthy and available models`)
 		}
 
-		return proto.caret.FetchLiteLlmModelsResponse.create({
+		return proto.careti.FetchLiteLlmModelsResponse.create({
 			success: true,
 			models: filteredModels,
 		})
 	} catch (error) {
 		Logger.error(`[CaretSystemService] ❌ Failed to fetch LiteLLM models: ${error}`)
-		return proto.caret.FetchLiteLlmModelsResponse.create({
+		return proto.careti.FetchLiteLlmModelsResponse.create({
 			success: false,
 			models: [],
 			errorMessage: `${(error as Error).message}`,

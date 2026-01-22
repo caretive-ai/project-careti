@@ -172,13 +172,13 @@ Usage:
 </browser_action>
 
 ## generate_image
-Description: Generate a single image from a text prompt. The image will be shown in the UI as a single card. Do not request or include raw image data in your own response.
+Description: Generate a single image from a text prompt. Output: WebP (max 1024px, Q86). Images >7500px rejected. UI shows card. No raw data needed. IMPORTANT: Unless user explicitly requests specific aspect_ratio or image_size, OMIT these parameters to use user's saved preferences.
 Parameters:
 - prompt: (required) A clear text prompt describing the image to generate.
 - model: (optional) Optional image model id. If omitted, the default image model will be used.
 - aspect_ratio: (optional) Optional aspect ratio for the output image (e.g., 16:9, 1:1, 4:3).
 - image_size: (optional) Optional image size preset (e.g., 1K, 2K).
-- reference_images: (optional) Optional reference image data URLs already provided by the user. Do not generate or paste image data; leave empty to use the most recent user images. If the user refers to @a/@b, treat them as the first/second attached images in the current message.
+- reference_images: (optional) Optional reference images. Supports: (1) file paths relative to workspace (e.g., 'images/logo.png'), (2) absolute paths, (3) data: URLs. One path per line for multiple images. Leave empty to use the most recent user-attached images. If user refers to @a/@b, treat them as first/second attached images in current message.
 - task_progress: (optional) A checklist showing task progress after this tool use is completed. The task_progress parameter must be included as a separate parameter inside of the parent tool call, it must be separate from other parameters such as content, arguments, etc. (See 'UPDATING TASK PROGRESS' section for more details)
 Usage:
 <generate_image>
@@ -652,6 +652,33 @@ You accomplish a given task iteratively, breaking it down into clear steps and w
 USER'S CUSTOM INSTRUCTIONS
 
 The following additional instructions are provided by the user, and should be followed to the best of your ability without interfering with the TOOL USE guidelines.
+
+# Context Structure Philosophy (Dual-directory Architecture)
+
+This project uses a dual-directory architecture for context management:
+
+## Directory Structure
+- `.agents/` - AI-optimized context (system rules, English, token-efficient)
+  - `context/` - System rules in JSON/YAML format
+  - `workflows/` - Task workflows and protocols
+    - `atoms/` - Reusable small protocols (building blocks)
+  - `skills/` - AI skills and capabilities
+  - `hooks/` - Event hooks and triggers
+- `.users/` - Human-readable context (native language, detailed explanations)
+  - `context/` - Project context in Markdown format
+  - `workflows/` - Human-readable workflow guides
+    - `atoms/` - Human-readable atom descriptions
+  - `skills/` - Human-readable skill guides
+  - `hooks/` - Human-readable hook documentation
+- `AGENTS.md` - Entry point for AI, contains project overview
+
+## Key Principles
+1. **1:1 Mirroring**: .users/ structure mirrors .agents/ exactly
+2. **Language Optimization**: .agents/ uses English for token efficiency, .users/ uses team's native language
+3. **Workflows vs Atoms**: Workflows are complete task flows, atoms are reusable building blocks
+4. **AI reads .agents/, humans read .users/**: Clear separation of concerns
+
+When creating or modifying context files, follow this architecture.
 
 Prefer TypeScript
 

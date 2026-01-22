@@ -7,17 +7,17 @@ import { fileExistsAtPath, isDirectory, readDirectory } from "@utils/fs"
 import fs from "fs/promises"
 import path from "path"
 import { Controller } from "@/core/controller"
-import { Logger } from "@/services/logging/Logger" // CARET MODIFICATION: Use Logger for debugging
+import { Logger } from "@/services/logging/Logger" // CARETI MODIFICATION: Use Logger for debugging
 
-export type RulePrioritySource = "caret" | null
+export type RulePrioritySource = "careti" | null
 
 const cloneToggles = (toggles?: ClineRulesToggles | undefined): ClineRulesToggles => ({
 	...(toggles || {}),
 })
 
 /**
- * Refreshes the toggles for caret rules and AGENTS.md.
- * CARET MODIFICATION: Only .agents/context + AGENTS.md are used for system prompt instructions.
+ * Refreshes the toggles for careti rules and AGENTS.md.
+ * CARETI MODIFICATION: Only .agents/context + AGENTS.md are used for system prompt instructions.
  */
 export async function refreshExternalRulesToggles(
 	controller: Controller,
@@ -55,7 +55,7 @@ export async function refreshExternalRulesToggles(
 		}`,
 	)
 
-	const activeSource: RulePrioritySource = caretHasFiles ? "caret" : null
+	const activeSource: RulePrioritySource = caretHasFiles ? "careti" : null
 	if (!caretHasFiles) {
 		Logger.warn(`[refreshExternalRulesToggles] ⚠️ No .agents/context found`)
 	}
@@ -68,7 +68,7 @@ export async function refreshExternalRulesToggles(
 }
 
 /**
- * Gather formatted caret rules
+ * Gather formatted careti rules
  */
 export const getLocalCaretRules = async (cwd: string, toggles: ClineRulesToggles) => {
 	const caretRulesFilePath = path.resolve(cwd, GlobalFileNames.caretRules)

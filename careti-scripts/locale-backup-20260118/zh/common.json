@@ -1,0 +1,739 @@
+{
+	"button": {
+		"freeStart": "免费开始",
+		"useOwnKey": "使用您自己的 API 密钥",
+		"letsGo": "开始吧！",
+		"save": "保存",
+		"cancel": "取消",
+		"done": "完成",
+		"runCommand": "运行命令",
+		"reject": "拒绝",
+		"setupApiOrLocal": "设置我的 API 密钥或本地 LLM",
+		"notifyCaretAccount": "通知我 Caret 订阅信息",
+		"saveAndStart": "保存并开始",
+		"startNewTaskWithContext": "使用上下文启动新任务",
+		"retry": "Retry",
+		"approve": "Approve",
+		"proceed": "Proceed",
+		"proceedAnyways": "Proceed Anyways",
+		"proceedWhileRunning": "Proceed While Running",
+		"resumeTask": "Resume Task",
+		"condenseConversation": "Condense Conversation",
+		"reportGitHubIssue": "Report GitHub Issue"
+	},
+	"error": {
+		"generic": "发生了错误。",
+		"apiKeyRequired": "需要API密钥",
+		"openaiApiKeyRequired": "需要OpenAI API密钥",
+		"anthropicApiKeyRequired": "需要Anthropic API密钥",
+		"geminiApiKeyRequired": "需要Gemini API密钥"
+	},
+	"imageAlt": {
+		"caretBanner": "Caret 标志横幅"
+	},
+	"title": {
+		"apiKeySettings": "API 密钥设置"
+	},
+	"text": {
+		"finalThoughts": "与 {{appName}} 一起开始您精彩的开发之旅！"
+	},
+	"link": {
+		"learnMoreCaretGit": "在 Caret GitHub 上了解更多"
+	},
+	"apiSetup": {
+		"backButton": "返回",
+		"title": "开始使用 Caret",
+		"description": "Caret 支持各种 LLM。您可以订阅 Caret 服务以获得免费访问，使用 ChatGPT、Claude、Gemma API，或配置本地 LLM。",
+		"instructions": "说明：",
+		"supportLinks": {
+			"llmList": "支持的 LLM 列表",
+			"geminiCredit": "获取免费 Gemini API 积分"
+		},
+		"saveButton": "保存并开始",
+		"help": {
+			"title": "需要帮助？",
+			"button": "查看文档"
+		}
+	},
+	"welcome": {
+		"title": "欢迎使用 Caret！🎉",
+		"subtitle": "您的 AI 动力编程助手",
+		"description": "Caret 是一个 AI 编程助手，帮助您编写、调试和改进代码。让我们开始吧！",
+		"getStarted": "开始使用",
+		"learnMore": "了解更多",
+		"whatCanIDo": "我能为您做什么？",
+		"recentTasks": "最近的任务",
+		"noRecentTasks": "没有最近的任务",
+		"viewAllHistory": "查看所有历史",
+		"quickWinsTitle": "Caret 快速<span>[成果]</span>"
+	},
+	"rules": {
+		"tab": {
+			"rules": "规则",
+			"workflows": "工作流"
+		},
+		"section": {
+			"personaManagement": "人格管理",
+			"globalRules": "全局规则",
+			"workspaceRules": "工作区规则",
+			"globalWorkflows": "全局工作流",
+			"localWorkflows": "本地工作流"
+		},
+		"subTitle": {
+			"caretRules": "Caret 规则 (.agents/context)",
+			"CaretRules": "Caret 规则 (.agents/context)",
+			"cursorRules": "Cursor 规则 (.agents/context)",
+			"windsurfRules": "Windsurf 规则 (.agents/context)"
+		},
+		"button": {
+			"selectPersonaTemplate": "选择模板角色",
+			"changePersonaTemplate": "更改人格模板"
+		},
+		"description": {
+			"personaManagement": "选择与您的编程风格和偏好匹配的 AI 人格。",
+			"rulesDescription": "规则允许您提供系统级指导。将它们视为为您的项目或每次对话持久包含上下文和偏好的方式。",
+			"workflowsDescription": "工作流允许您定义一系列步骤，供 Caret 执行重复性任务，如部署服务或提交 PR。要运行工作流，请在聊天中输入 /workflow-name。"
+		},
+		"action": {
+			"newRuleFile": "新建规则文件..."
+		},
+		"title": "Caret 规则和工作流管理",
+		"docsLink": "文档",
+		"toggleError": "规则切换错误"
+	},
+	"persona": {
+		"description": "启用人格系统，体验各种 AI 角色的个性化互动。",
+		"management": "人格管理",
+		"docs": "文档",
+		"availablePersonas": "可用人格",
+		"selectDescription": "选择您所需的人格或创建新人格来自定义您的 AI 助手。",
+		"select": "选择",
+		"createNew": "创建新人格",
+		"creating": "创建中...",
+		"uploadNormal": "上传头像",
+		"uploadThinking": "上传思考头像",
+		"default": {
+			"name": "默认 Caret",
+			"description": "默认的 AI 编程助手人格。"
+		}
+	},
+	"rulesModal": {
+		"tooltip.manageRulesWorkflows": "管理 Caret 规则和工作流",
+		"ariaLabel.CaretRulesButton": "Caret 规则"
+	},
+	"mode": {
+		"chatbot": {
+			"label": "💬 聊天机器人",
+			"title": "聊天机器人模式",
+			"description": "专家咨询和分析"
+		},
+		"agent": {
+			"label": "🤖 代理",
+			"title": "代理模式",
+			"description": "协作开发和实现"
+		},
+		"plan": {
+			"label": "📋 计划",
+			"title": "计划模式",
+			"description": "策略制定和设计"
+		},
+		"act": {
+			"label": "⚡ 执行",
+			"title": "执行模式",
+			"description": "实施和执行"
+		},
+		"tooltip": {
+			"chatbot": "在聊天机器人模式中，Caret 提供专家咨询和分析",
+			"agent": "在代理模式中，Caret 协作实现解决方案",
+			"plan": "在计划模式中，制定策略和计划",
+			"act": "在执行模式中，执行和实施计划",
+			"toggle": "使用 {{metaKey}}+Shift+A 切换"
+		}
+	},
+	"settings": {
+		"openAIReasoningEffort": {
+			"high": "高 (更详细，更慢，成本更高)",
+			"label": "OpenAI 推理努力程度",
+			"description": "调整OpenAI模型的推理努力程度。更高的努力程度可能会产生更详细的回答，但速度较慢且成本较高。"
+		},
+		"uiLanguage": {
+			"label": "界面语言",
+			"description": "选择 Caret 界面的显示语言。",
+			"option": {
+				"ko": "Korean (한국어)",
+				"en": "English",
+				"ja": "Japanese (日本語)",
+				"zh": "Chinese (中文)"
+			}
+		},
+		"preferredLanguage": {
+			"label": "AI 回复语言",
+			"description": "Caret 用于交流的语言。"
+		},
+		"modeSystem": {
+			"label": "模式设置",
+			"description": "启用 Caret 模式设置以使用 Caret 的计划/执行模式。",
+			"options": {
+				"careti": "Careti",
+				"Careti": "Careti",
+				"cline": "Careti"
+			}
+		},
+		"separateModels": {
+			"label": "为聊天机器人和代理模式使用不同的模型",
+			"description": "在聊天机器人和代理模式之间切换时，将保留在上一个模式中使用的API和模型。例如，当使用强推理模型进行专家咨询（聊天机器人）和使用便宜的编码模型进行协作开发（代理）时，这可能会有所帮助。"
+		},
+		"apiKey": {
+			"placeholder": "请输入API密钥...",
+			"getYourKeyAn": "您可以通过在此处注册来获取{{providerName}} API密钥。",
+			"getYourKeyA": "您可以通过在此处注册来获取{{providerName}} API密钥。",
+			"label": "{{providerName}} API 密钥",
+			"helpText": "此密钥存储在本地，仅用于从此扩展程序发出API请求。"
+		},
+		"baseUrl": {
+			"label": "使用自定义基础 URL",
+			"placeholder": "默认: https://api.example.com"
+		},
+		"modelSelector": {
+			"label": "模型",
+			"placeholder": "选择模型..."
+		},
+		"modelIdField": {
+			"label": "模型"
+		},
+		"requesty": {
+			"modelLabel": "模型",
+			"searchPlaceholder": "搜索并选择模型...",
+			"clearSearch": "清除搜索",
+			"info": {
+				"fullText": "扩展程序自动获取 <0>Requesty</0> 上可用的最新模型列表。如果您不确定选择哪个模型，Cline 在 <1>anthropic/claude-3-7-sonnet-latest</1> 上表现最佳。"
+			}
+		},
+		"sapAiCore": {
+			"placeholder": "选择模型...",
+			"deployedModels": "── 已部署模型 ──",
+			"notDeployedModels": "── 未部署模型 ──",
+			"modelLabel": "模型"
+		},
+		"vertex": {
+			"projectIdPlaceholder": "输入项目 ID...",
+			"projectIdLabel": "Google Cloud 项目 ID",
+			"regionLabel": "Google Cloud 地区",
+			"selectRegionPlaceholder": "选择地区...",
+			"setupDescription": "要使用Google Cloud Vertex AI，您需要 ",
+			"setupLink1": "1) 创建 Google Cloud 账户 › 启用 Vertex AI API › 启用所需的 Claude 模型，",
+			"setupLink2": " 2) 安装 Google Cloud CLI › 配置应用程序默认凭据。"
+		},
+		"terminalOutputLineLimit": {
+			"label": "终端输出限制",
+			"description": "执行命令时终端输出中包含的最大行数。超过时，将从中间删除行以节省令牌。"
+		},
+		"thinkingBudget": {
+			"enable": "启用扩展思考",
+			"budgetText": "<strong>预算:</strong> {{value}} 令牌",
+			"ariaLabel": "思考预算: {{value}} 令牌",
+			"description": "更高的预算可能允许您实现更全面和细致的推理"
+		},
+		"useCustomPrompt": {
+			"label": "使用紧凑提示",
+			"description": "为较小上下文窗口（例如 8k 或更少）优化的系统提示。",
+			"warning": "不支持 Mcp 和焦点链"
+		},
+		"loading": "加载中...",
+		"signUpDescription": "注册账户以访问最新模型、查看使用情况和积分的账单仪表板，以及更多即将推出的功能。",
+		"termsOfService": "服务条款",
+		"privacyPolicy": "隐私政策",
+		"byContining": "继续即表示您同意",
+		"subscription": "订阅计划",
+		"subscriptionFree": "免费",
+		"subscriptionBasic": "基础",
+		"payAsYouGo": "按使用付费",
+		"organization": "组织",
+		"payAsYouGoDescription": "* 所有订阅使用量耗尽后适用额外收费。",
+		"title": "账户",
+		"usageSummary": "使用量概览",
+		"timeframe": "时间范围",
+		"dailyUsage": "每日使用量",
+		"monthlyUsage": "每月使用量",
+		"promptTokens": "提示词 Token",
+		"completionTokens": "完成 Token",
+		"totalTokens": "总 Token 数",
+		"totalCost": "总费用",
+		"termsOfServiceUrl": "https://caretive.ai/terms.en.html",
+		"privacyPolicyUrl": "https://caretive.ai/privacy.en.html"
+	},
+	"account": {
+		"signUpWithCaret": "登录和注册",
+		"viewBillingUsage": "查看账单和使用情况",
+		"dashboard": "仪表板",
+		"addCredits": "添加积分",
+		"currentBalance": "当前余额",
+		"logOut": "注销",
+		"loading": "加载中...",
+    "failedToFetchUserCredit": "获取用户积分失败。",
+    "failedToFetchCreditBalance": "获取积分余额失败。",
+		"signUpDescription": "注册账户以访问最新模型、查看使用情况和积分的账单仪表板，以及更多即将推出的功能。",
+		"termsOfService": "服务条款",
+		"privacyPolicy": "隐私政策",
+		"byContining": "继续即表示您同意",
+		"subscription": "订阅计划",
+		"subscriptionFree": "免费",
+		"subscriptionBasic": "基础",
+		"payAsYouGo": "按使用付费",
+		"organization": "组织",
+		"payAsYouGoDescription": "* 所有订阅使用量耗尽后适用额外收费。",
+    "profileAlt": "个人头像",
+    "role": "角色",
+    "credits": "积分",
+    "lastUpdated": "上次更新",
+    "failedToGetLoginUrl": "获取登录链接失败。",
+		"title": "账户",
+		"personal": "个人",
+		"date": "日期",
+		"model": "模型",
+		"creditsUsed": "已用积分",
+		"userHistory": "使用记录",
+		"paymentHistory": "付款记录",
+		"usageHistory": "使用记录",
+		"paymentsHistory": "付款记录",
+		"noUsageHistory": "暂无使用记录",
+		"noPaymentHistory": "暂无付款记录"
+	},
+	"common": {
+		"and": "和",
+		"scrollToBottom": "滚动到底部",
+		"defaultValue": "0",
+		"seeMore": "查看更多"
+	},
+	"chat": {
+		"caretHasQuestion": "Caret 有个问题",
+		"typeMessage": "输入消息...",
+		"typeTaskHere": "在此输入您的任务...",
+		"cancel": "取消",
+		"addContext": "添加上下文",
+		"addFilesImages": "添加文件/图片",
+		"selectModelApiProvider": "选择模型/API 提供商",
+		"dismissQuote": "取消引用",
+		"apiRequestCancelled": "API 请求已取消",
+		"apiStreamingFailed": "API 流式传输失败",
+		"apiRequest": "API 请求",
+		"apiRequestFailed": "API 请求失败",
+		"apiRequestPending": "API 请求中...",
+		"errorBlockTitle": {
+			"apiRequest": "API 请求",
+			"apiRequestFailed": "API 请求失败"
+		},
+		"image": {
+			"dimensionError": "图片尺寸不能超过 7500px。",
+			"unsupportedFileError": "不支持的文件类型。只能拖放图片。"
+		},
+		"caretWantsToCreateNewFile": "Caret 想要创建新文件：",
+		"placeholderHint": "输入 @ 获取上下文，/ 获取斜杠命令和工作流，或在按住 Shift 时拖放文件/图片",
+		"caretIsUsingBrowser": "Caret 正在使用浏览器：",
+		"caretWantsToUseBrowser": "Caret 想要使用浏览器：",
+		"executeCommand": "Caret 想要执行此命令：",
+		"errorLabel": "错误",
+		"mistakeLimitReached": "错误限制已达到",
+		"maxRequestsReached": "自动批准最大请求数已达到",
+		"useMcpServer": "使用来自 {{serverName}} 的 {{type}}",
+		"mcpTool": "工具",
+		"mcpResource": "资源",
+		"taskCompleted": "任务已完成",
+		"thinking": "思考中",
+		"commandOutput": "命令输出",
+		"commandApprovalRequired": "此命令需要您的批准才能运行。",
+		"mcpArguments": "参数",
+		"mcpNotification": "MCP 通知: ",
+		"loadingMcpDocumentation": "正在加载 MCP 文档",
+		"seeNewChanges": "查看新变化",
+		"shellIntegrationUnavailable": "Shell 集成不可用",
+		"shellIntegrationWarning": "Caret 可能无法查看命令的输出。请更新 VSCode（<code>CMD/CTRL + Shift + P</code> → \"更新\"）并确保您使用的是受支持的 shell：zsh、bash、fish 或 PowerShell（<code>CMD/CTRL + Shift + P</code> → \"终端：选择默认配置文件\"）。",
+		"stillHavingTrouble": "仍然有问题？",
+		"wantsToStartNewTask": "Caret 想要开始新任务：",
+		"wantsToCondense": "Caret 想要压缩您的对话：",
+		"wantsToCreateGithubIssue": "Caret 想要创建 Github 问题：",
+		"tool": {
+			"outsideWorkspace": "工作区外",
+			"editFile": "编辑存在的文件",
+			"createFile": "创建新文件",
+			"readFile": "读取文件",
+			"wantsToListFilesTopLevel": "想要列出此目录中的文件",
+			"listedFilesTopLevel": "列出了此目录中的文件",
+			"wantsToListFilesRecursive": "想要列出此目录中的所有文件",
+			"listedFilesRecursive": "列出了此目录中的所有文件",
+			"wantsToListCodeDefinitionNames": "想要列出此目录中的源代码定义名称",
+			"listedCodeDefinitionNames": "列出了此目录中的源代码定义名称",
+			"searchFiles": "使用正则表达式 {{regex}} 搜索文件",
+			"summarizeTask": "汇总任务",
+			"summary": "摘要",
+			"externalUrl": "外部 URL",
+			"wantsToWebFetch": "想要从此 URL 获取内容",
+			"webFetched": "从此 URL 获取了内容"
+		},
+		"quoteSelection": "引用选择",
+		"quoteSelectionInReply": "在回复中引用选择"
+	},
+	"historyPreview": {
+		"recentTasks": "最近任务",
+		"favorited": "已收藏",
+		"tokens": "令牌: {{tokensIn}} 输入, {{tokensOut}} 输出",
+		"cache": "缓存: +{{cacheWrites}}, →{{cacheReads}}",
+		"apiCost": "API 费用: ${{totalCost}}",
+		"viewAllHistory": "查看所有历史",
+		"noRecentTasks": "无最近任务"
+	},
+	"checkmarkControl": {
+		"checkpointRestored": "检查点（已恢复）",
+		"checkpoint": "检查点",
+		"compare": "比较",
+		"restore": "恢复",
+		"restoreFiles": "恢复文件",
+		"restoreFilesDescription": "仅恢复此检查点的文件更改。",
+		"restoreTaskOnly": "仅恢复任务",
+		"restoreTaskOnlyDescription": "仅恢复此检查点的任务。",
+		"restoreFilesAndTask": "恢复文件和任务",
+		"restoreFilesAndTaskDescription": "恢复此检查点的文件更改和任务。"
+	},
+	"taskTimelineTooltip": {
+		"taskMessage": "任务消息",
+		"userMessage": "用户消息",
+		"assistantResponse": "助手响应",
+		"fileRead": "文件读取: {{tool}}",
+		"fileEdit": "文件编辑: {{path}}",
+		"newFile": "新文件: {{path}}",
+		"webFetch": "网页获取: {{path}}",
+		"unknownFile": "未知文件",
+		"unknownUrl": "未知 URL",
+		"tool": "工具: {{tool}}",
+		"toolUse": "工具使用",
+		"terminalCommand": "终端命令",
+		"terminalOutput": "终端输出",
+		"browserAction": "浏览器操作",
+		"browserResult": "浏览器结果",
+		"taskCompleted": "任务已完成",
+		"checkpointCreated": "检查点已创建",
+		"unknown": "未知",
+		"assistantMessage": "助手消息",
+		"planningResponse": "计划响应",
+		"fileReadApproval": "文件读取批准: {{tool}}",
+		"fileEditApproval": "文件编辑批准: {{path}}",
+		"newFileApproval": "新文件批准: {{path}}",
+		"toolApproval": "工具批准: {{tool}}",
+		"terminalCommandApproval": "终端命令批准",
+		"browserActionApproval": "浏览器操作批准",
+		"unknownMessageType": "未知消息类型"
+	},
+	"taskHeader.task": "任务",
+	"taskHeader.cache": "缓存",
+	"taskHeader.tokens": "令牌",
+	"taskHeader.closeTask": "关闭任务",
+	"taskHeader.seeMore": "查看更多",
+	"taskHeader.seeLess": "收起",
+	"taskHeader.promptTokens": "提示令牌",
+	"taskHeader.completionTokens": "完成令牌",
+	"taskHeader.tokensWrittenToCache": "写入缓存的令牌",
+	"taskHeader.tokensReadFromCache": "从缓存读取的令牌",
+	"taskHeader.disablingCheckpoints": "禁用检查点。",
+	"taskHeader.seeHereForInstructions": "请在此查看说明。",
+	"taskHeader.currentTokens": "此请求中使用的当前令牌",
+	"taskHeader.contextWindowUsage": "上下文窗口使用情况",
+	"taskHeader.maxContextWindow": "此模型的最大上下文窗口大小",
+	"taskHeader.allStepsCompleted": "所有{{totalCount}}个步骤已完成！",
+	"taskHeader.newStepsGenerated": "可能会根据对话生成新步骤。",
+	"taskHeader.editFocusChainList": "编辑焦点链列表",
+	"modelInfoView": {
+		"tokensSuffix": "/百万代币"
+	},
+	"modelInfo": {
+		"supportsImages": "支持图片",
+		"doesNotSupportImages": "不支持图片",
+		"supportsBrowserUse": "支持浏览器使用",
+		"doesNotSupportBrowserUse": "不支持浏览器使用",
+		"supportsPromptCaching": "支持提示缓存",
+		"doesNotSupportPromptCaching": "不支持提示缓存",
+		"maxOutput": "最大输出",
+		"inputPrice": "输入价格",
+		"outputPrice": "输出价格",
+		"outputPriceStandard": "输出价格（标准）",
+		"outputPriceThinkingBudget": "输出价格（思考预算 > 0）",
+		"basedOnInputTokens": "（基于输入令牌）",
+		"cacheWritesPrice": "缓存写入价格",
+		"cacheReadsPrice": "缓存读取价格",
+		"freeRequestsPerMinute": "* 每分钟免费 {{count}} 个请求。之后，计费取决于提示大小。",
+		"forMoreInfo": "有关更多信息，请查看定价详细信息。",
+		"tokensSuffix": "/百万代币"
+	},
+	"providers": {
+		"careti": {
+			"name": "Careti",
+			"description": "Caret 支持各种大型语言模型。您可以订阅 Caret 服务以免费访问，使用 ChatGPT、Claude、Gemma API，或配置本地大型语言模型。",
+			"login": "使用 Caret 账户登录和注册",
+			"or": "或",
+			"apiKeyConfigured": "API 密钥已配置。无需登录。",
+			"features": "功能：",
+			"feature1": "访问最新模型",
+			"feature2": "账单仪表板以查看使用情况和积分",
+			"feature3": "提示词演练场",
+			"feature4": "更多即将推出的功能",
+			"visit": "访问",
+			"getApiKey": "以获取您的 API 密钥。"
+		},
+		"openAICompatible": {
+			"description": "使用任何与 OpenAI 兼容的 API 端点。"
+		},
+		"claudeCode": {
+			"cliPath": "CLI 路径",
+			"cliPathDescription": "'claude-code' CLI 可执行文件的路径。"
+		},
+		"sapAiCore": {
+			"description": "使用部署在 SAP AI Core 上的模型。",
+			"pricingNote": "定价使用 SAP 的容量单位计算，而非直接美元定价。"
+		},
+		"zAi": {
+			"glm45Description": "GLM-4.5是智谱最新的特色模型。其在推理、编码和智能体方面的综合能力在开源模型中达到了最先进（SOTA）水平，上下文长度高达128k。"
+		},
+		"groq": {
+			"modelLabel": "模型"
+		},
+		"cerebras": {
+			"sotaDescription": "SOTA 编码模型，速度约为 2000 令牌/秒（免费套餐 $0）",
+			"noSubscription": "• 如果您没有 Cerebras 订阅，请使用此选项",
+			"contextWindow": "• 64K 上下文窗口",
+			"rateLimits": "• 速率限制：150K TPM, 1M TPH/TPD, 10 RPM, 100 RPH/RPD",
+			"upgrade": "升级以获得更高限制：https://cloud.cerebras.ai/?utm=cline"
+		},
+		"vercelAiGateway": {
+			"description": "通过 Vercel AI Gateway 使用模型。"
+		},
+		"baseten": {
+			"apiKeyHelp": "此密钥存储在本地，仅用于从此扩展程序发出 API 请求。您可以通过在此处注册来获取 {{providerName}} API 密钥。"
+		},
+		"requesty": {
+			"claudeDescription": "Anthropic 最智能的模型。最高水平的智能和能力。"
+		},
+		"fireworks": {
+			"kimiK2Description": "Kimi K2 是一个最先进的专家混合 (MoE) 语言模型，拥有 320 亿激活参数和 1 万亿总参数。通过 Muon 优化器训练，Kimi K2 在前沿知识、推理和编码任务中表现出色，并经过精心优化以实现代理能力。"
+		},
+		"qwenCode": {
+			"description": "Qwen3 Coder Plus - 具有 1M 上下文窗口的高性能编码模型，适用于大型代码库"
+		},
+		"lmStudio": {
+			"contextWindowLabel": "上下文窗口"
+		},
+		"huggingFace": {
+			"modelLabel": "模型",
+			"advancedReasoning": "在编码、数学和通用能力方面具有卓越性能的高级推理模型。"
+		},
+		"dify": {
+			"workflowDescription": "Dify 工作流 - 模型选择在您的 Dify 应用程序中配置"
+		},
+		"nebius": {
+			"apiKeyHelpText": "您可以通过在此处注册来获取 {{providerName}} API 密钥。"
+		}
+	},
+	"caretProvider": {
+		"futureSupport": "未来支持",
+		"futureProviders": "ChatGPT 和 Claude 将在未来支持",
+		"modelLabel": "模型",
+		"geminiProModel": "Gemini 2.5 Pro",
+		"geminiFlashModel": "Gemini 2.5 Flash",
+		"bestLabel": "最佳",
+		"valueLabel": "性价比",
+		"geminiProDescription": "针对复杂任务和高级推理优化的顶级性能模型",
+		"geminiFlashDescription": "适用于一般任务的快速高效模型，具有出色的成本效益",
+		"tagBest": "最佳",
+		"tagCostEffective": "性价比高"
+	},
+	"apiOptions": {
+		"apiProvider": "API 提供商",
+		"selectModel": "选择模型...",
+		"selectRegion": "选择地区...",
+		"enterApiKey": "输入 API 密钥...",
+		"loading": "加载中...",
+		"caretComplexPrompts": "Caret使用复杂的提示并与Claude模型配合使用效果最佳。性能较低的模型可能无法按预期工作。",
+		"note": "注意：",
+		"model": "模型",
+		"custom": "自定义",
+		"modelId": "模型 ID",
+		"enterModelId": "输入自定义模型 ID...",
+		"baseInferenceModel": "基础推理模型",
+		"askSageApiKey": "AskSage API 密钥",
+		"askSageApiUrl": "AskSage API URL",
+		"enterAskSageUrl": "输入 AskSage API URL...",
+		"anthropicApiKey": "Anthropic API 密钥",
+		"anthropicBaseUrl": "Anthropic 基础 URL",
+		"anthropicBaseUrlPlaceholder": "默认: https://api.anthropic.com",
+		"openAiApiKey": "OpenAI API 密钥",
+		"deepSeekApiKey": "DeepSeek API 密钥",
+		"alibabaApiLine": "阿里云 API 线路",
+		"chinaApi": "中国 API",
+		"internationalApi": "国际 API",
+		"qwenApiKey": "通义千问 API 密钥",
+		"doubaoApiKey": "豆包 API 密钥",
+		"mistralApiKey": "Mistral API 密钥",
+		"openRouterApiKey": "OpenRouter API 密钥",
+		"openRouterRecommended": "OpenRouter 推荐用于高速率限制和多种模型。",
+		"awsCredentials": "AWS 凭据",
+		"awsProfile": "AWS 配置文件",
+		"awsProfileName": "AWS 配置文件名称",
+		"awsProfilePlaceholder": "输入配置文件名称（为空则默认）",
+		"awsAccessKey": "AWS 访问密钥",
+		"awsSecretKey": "AWS 秘密密钥",
+		"awsSessionToken": "AWS 会话令牌",
+		"awsRegion": "AWS 区域",
+		"gcpProjectId": "Google Cloud 项目 ID",
+		"gcpRegion": "Google Cloud 区域",
+		"languageModel": "语言模型",
+		"apiKey": "API 密钥",
+		"fireworksApiKey": "Fireworks API 密钥",
+		"maxCompletionTokens": "最大完成令牌",
+		"maxContextTokens": "最大上下文令牌",
+		"enterSecretKey": "输入秘密密钥...",
+		"enterAccessKey": "输入访问密钥...",
+		"enterSessionToken": "输入会话令牌...",
+		"enterVpcEndpoint": "输入 VPC 端点 URL（可选）",
+		"enterCustomModelId": "输入自定义模型 ID...",
+		"enterProjectId": "输入项目 ID...",
+		"useCustomBaseUrl": "使用自定义基础 URL",
+		"defaultAnthropicUrl": "默认: https://api.anthropic.com",
+		"thisKeyStoredLocally": "此密钥存储在本地，仅用于从此扩展程序发出 API 请求。",
+		"getApiKeySignUp": "您可以通过在此处注册来获取 API 密钥。",
+		"getAnthropicApiKey": "您可以通过在此处注册来获取 Anthropic API 密钥。",
+		"getOpenAiApiKey": "您可以通过在此处注册来获取 OpenAI API 密钥。",
+		"getGeminiApiKey": "您可以通过在此处注册来获取 Gemini API 密钥。",
+		"comingSoon": "即将推出",
+		"providerComingSoon": "{{provider}} 支持将在未来更新中添加。",
+		"millionTokens": "百万代币",
+		"tokens": "令牌",
+		"systemMessages": {
+			"viewedTopLevelFiles": "Caret 查看了此目录中的顶级文件：",
+			"wantsToViewTopLevelFiles": "Caret 想要查看此目录中的顶级文件：",
+			"viewedFilesRecursively": "Caret 递归查看了此目录中的所有文件：",
+			"wantsToViewFilesRecursively": "Caret 想要递归查看此目录中的所有文件：",
+			"viewedCodeDefinitions": "Caret 查看了此目录中使用的源代码定义名称：",
+			"wantsToViewCodeDefinitions": "Caret 想要查看此目录中使用的源代码定义名称：",
+			"wantsToSearchDirectory": "Caret 想要在此目录中搜索：",
+			"fetchedContentFromUrl": "Caret 从此 URL 获取了内容：",
+			"wantsToFetchContentFromUrl": "Caret 想要从此 URL 获取内容：",
+			"taskCompleted": "任务已完成"
+		},
+		"geminiApiKey": "Gemini API 密钥",
+		"geminiModelStrong": "Gemini 2.5 Pro 预览版 06-05 (强)",
+		"geminiModelCostEffective": "Gemini 2.5 Flash 预览版 05-20 (性价比高)",
+		"reasoningEnabled": "默认启用推理"
+	},
+	"telemetry": {
+		"helpImprove": "支持 Caret 开发",
+		"description": "Caret 是一个开源项目。访问我们的 GitHub 贡献代码、报告问题或分享反馈。",
+		"githubLinkPrefix": "了解更多",
+		"githubLink": "github.com/caretive-ai/project-careti",
+		"closeBannerAria": "关闭横幅",
+		"settingsLink": "设置"
+	},
+	"history": {
+		"title": "History",
+		"deleteAllHistory": "Delete All History",
+		"fuzzySearchPlaceholder": "Fuzzy search history...",
+		"sortNewest": "Newest",
+		"sortOldest": "Oldest",
+		"sortMostExpensive": "Most Expensive",
+		"sortMostTokens": "Most Tokens",
+		"sortMostRelevant": "Most Relevant",
+		"filterWorkspace": "Workspace",
+		"filterFavorites": "Favorites",
+		"selectAll": "Select All",
+		"selectNone": "Select None"
+	},
+	"mcp": {
+		"title": "MCP Servers",
+		"marketplace": "Marketplace",
+		"remoteServers": "Remote Servers",
+		"installed": "Installed",
+		"noServersInstalled": "No MCP servers installed",
+		"configureServers": "Configure MCP servers",
+		"noMatchingServers": "No matching MCP servers found",
+		"noServersFound": "No MCP servers found in marketplace",
+		"description": "The Model Context Protocol enables communication with locally running MCP servers that provide additional tools and resources to extend Caret's capabilities.",
+		"autoApprove": "Auto-approve",
+		"autoApproveAllTools": "Auto-approve all tools"
+	},
+	"autoApprove": {
+		"addQuickAccess": "Add to quick-access menu",
+		"removeQuickAccess": "Remove from quick-access menu",
+		"autoApproveLabel": "Auto-approve:"
+	},
+	"task": {
+		"deleteTask": "Delete Task",
+		"deleteTaskAriaLabel": "Delete task",
+		"copyTask": "Copy Task"
+	},
+	"announcement": {
+		"newVersion": "🎉  New in v{{version}}",
+		"features": {
+			"freeStealth": {
+				"title": "Free Stealth Model",
+				"description": "Advanced stealth model with 262K context window designed for complex coding tasks. Available in the Caret provider for free."
+			},
+			"focusChain": {
+				"title": "Focus Chain",
+				"description": "Keeps Caret focused on long-horizon tasks with automatic todo list management, breaking down complex tasks into manageable steps with real-time progress tracking and passive reminders."
+			},
+			"autoCompact": {
+				"title": "Auto Compact",
+				"description": "Auto summarizes your task and next steps when your conversation approaches the model's context window limit. This significantly helps Caret stay on track for long task sessions!"
+			},
+			"deepPlanning": {
+				"title": "Deep Planning",
+				"description": "New /deep-planning slash command transforms Caret into an architect who investigates your codebase, asks clarifying questions, and creates a comprehensive plan before writing any code."
+			}
+		},
+		"previousUpdates": "Previous Updates:",
+		"previousFeatures": {
+			"claude1M": {
+				"title": "1M Context for Claude Sonnet 4",
+				"description": "Caret/OpenRouter users get instant access, Anthropic users need Tier 4, and Bedrock users must be on a supported region."
+			},
+			"optimizedClaude4": {
+				"title": "Optimized for Claude 4",
+				"description": "Caret is now optimized to work with the Claude 4 family of models, resulting in improved performance, reliability, and new capabilities."
+			},
+			"workflows": {
+				"title": "Workflows",
+				"description": "Create and manage workflow files that can be injected into conversations via slash commands, making it easy to automate repetitive tasks."
+			}
+		},
+		"joinUs": "Join us on",
+		"forMoreUpdates": "for more updates!"
+	},
+	"browserTool": {
+		"title": "浏览器工具",
+		"description": "启动和操作网页浏览器",
+		"placeholder": "输入URL...",
+		"launchButton": "启动浏览器"
+	},
+	"browser": {
+		"connectionInfo": "Browser connection info",
+		"popover": {
+			"title": "Browser Connection",
+			"statusLabel": "Status:",
+			"connected": "Connected",
+			"disconnected": "Disconnected",
+			"typeLabel": "Type:",
+			"remote": "Remote",
+			"local": "Local",
+			"remoteHostLabel": "Remote Host:"
+		}
+	},
+	"navbar": {
+		"chat": "聊天",
+		"newTaskTooltip": "新建任务",
+		"mcp": "MCP",
+		"mcpServersTooltip": "MCP 服务器",
+		"history": "历史记录",
+		"historyTooltip": "历史记录",
+		"account": "账户",
+		"accountTooltip": "账户",
+		"settings": "设置",
+		"settingsTooltip": "设置"
+	}
+}

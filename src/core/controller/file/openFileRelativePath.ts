@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Use Logger for backend error reporting.
+// CARETI MODIFICATION: Use Logger for backend error reporting.
 import { workspaceResolver } from "@core/workspace"
 import { openFile as openFileIntegration } from "@integrations/misc/open-file"
 import { Empty, StringRequest } from "@shared/proto/cline/common"

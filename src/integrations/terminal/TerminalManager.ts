@@ -335,7 +335,7 @@ export class TerminalManager {
 		// }
 		this.terminalIds.clear()
 		this.processes.clear()
-		// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+		// CARETI MODIFICATION: replace forEach to satisfy lint without behavior change
 		for (const disposable of this.disposables) {
 			disposable.dispose()
 		}

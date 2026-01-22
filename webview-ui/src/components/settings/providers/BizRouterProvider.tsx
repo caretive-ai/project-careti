@@ -3,8 +3,8 @@ import * as proto from "@shared/proto"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton, VSCodeCheckbox, VSCodeDropdown, VSCodeLink, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
-import { CARET_URLS } from "@/caret/constants/urls"
-import { t } from "@/caret/utils/i18n"
+import { CARET_URLS } from "@/careti/constants/urls"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CaretSystemServiceClient } from "@/services/grpc-client"
 import { getAsVar, VSC_DESCRIPTION_FOREGROUND } from "@/utils/vscStyles"
@@ -55,7 +55,7 @@ export const BizRouterProvider = ({ showModelOptions, isPopup, currentMode }: Bi
 		setModelsError(null)
 
 		try {
-			const request = proto.caret.FetchBizRouterModelsRequest.create({
+			const request = proto.careti.FetchBizRouterModelsRequest.create({
 				apiKey: apiConfiguration.bizRouterApiKey,
 			})
 

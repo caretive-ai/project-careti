@@ -1,0 +1,14 @@
+{
+	"enableCaretAccountFeatures": true,
+	"showPersonaSettings": true,
+	"defaultPersonaEnabled": true,
+	"redirectAfterApiSetup": "persona",
+	"defaultModeSystem": "careti",
+	"firstListingProvider": "careti", 
+	"defaultProvider": "careti",
+	"showOnlyDefaultProvider": false,
+	"showCostInformation": true,
+	"showModeSystemToggle": true,
+	"showAccountUI": true,
+	"showDictationToggle": true
+}

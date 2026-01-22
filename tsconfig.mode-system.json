@@ -6,11 +6,11 @@
 		"rootDir": "."
 	},
 	"include": [
-		"caret-src/__tests__/prompt-system/**/*.ts"
+		"careti-src/__tests__/prompt-system/**/*.ts"
 	],
 	"exclude": [
-		"caret-src/**/*.integration.test.ts",
-		"caret-src/__tests__/prompt-system/set-prompt-system-mode.test.ts",
-		"caret-src/__tests__/prompt-system/task-tool-loading.test.ts"
+		"careti-src/**/*.integration.test.ts",
+		"careti-src/__tests__/prompt-system/set-prompt-system-mode.test.ts",
+		"careti-src/__tests__/prompt-system/task-tool-loading.test.ts"
 	]
 }

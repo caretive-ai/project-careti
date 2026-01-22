@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Naver Cloud HyperCLOVA X provider implementation.
+// CARETI MODIFICATION: Naver Cloud HyperCLOVA X provider implementation.
 import type OpenAI from "openai"
 import type { ChatCompletionTool as OpenAITool } from "openai/resources/chat/completions"
 import {
@@ -181,7 +181,7 @@ export class NaverCloudHandler implements ApiHandler {
 			headers["X-NCP-CLOVASTUDIO-REQUEST-ID"] = this.options.ulid
 		}
 
-		// CARET MODIFICATION: Add timeout support using AbortController
+		// CARETI MODIFICATION: Add timeout support using AbortController
 		const timeoutMs = this.options.requestTimeoutMs ?? 60000 // Default 60 seconds
 		const abortController = new AbortController()
 		const timeoutId = setTimeout(() => {
@@ -303,11 +303,11 @@ export class NaverCloudHandler implements ApiHandler {
 
 			if (eventType === "result") {
 				if (!didYieldReasoning && parsed.message?.thinkingContent) {
-					didYieldReasoning = true // CARET MODIFICATION: track yielded reasoning from result events
+					didYieldReasoning = true // CARETI MODIFICATION: track yielded reasoning from result events
 					yield { type: "reasoning", reasoning: parsed.message.thinkingContent }
 				}
 				if (!didYieldText && parsed.message?.content) {
-					didYieldText = true // CARET MODIFICATION: track yielded text from result events
+					didYieldText = true // CARETI MODIFICATION: track yielded text from result events
 					yield { type: "text", text: parsed.message.content }
 				}
 				if (parsed.usage) {

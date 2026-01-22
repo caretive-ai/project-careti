@@ -1,12 +1,12 @@
 import { COMMAND_OUTPUT_STRING, COMMAND_REQ_APP_STRING } from "@shared/combineCommandSequences"
 import {
-	ClineApiReqInfo,
-	ClineAskQuestion,
-	ClineAskUseMcpServer,
-	ClineMessage,
-	ClinePlanModeResponse,
-	ClineSayTool,
-	COMPLETION_RESULT_CHANGES_FLAG,
+    ClineApiReqInfo,
+    ClineAskQuestion,
+    ClineAskUseMcpServer,
+    ClineMessage,
+    ClinePlanModeResponse,
+    ClineSayTool,
+    COMPLETION_RESULT_CHANGES_FLAG,
 } from "@shared/ExtensionMessage"
 import { EmptyRequest, Int64Request, StringRequest } from "@shared/proto/cline/common"
 import { VSCodeBadge, VSCodeButton, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
@@ -14,14 +14,14 @@ import deepEqual from "fast-deep-equal"
 import React, { MouseEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useSize } from "react-use"
 import styled from "styled-components"
-// CARET MODIFICATION: PersonaAvatar import for persona system
-import PersonaAvatar from "@/caret/components/PersonaAvatar"
-import { useCaretState } from "@/caret/context/CaretStateContext"
-import { t } from "@/caret/utils/i18n"
-// CARET MODIFICATION: use CaretWebviewLogger for webview logs
-import WebviewLogger from "@/caret/utils/CaretWebviewLogger"
-// CARET MODIFICATION: use brand-aware generated assets path for image fallback
-import { getBrandGeneratedAssetsDirName } from "@/caret/utils/brand-utils"
+// CARETI MODIFICATION: PersonaAvatar import for persona system
+import PersonaAvatar from "@/careti/components/PersonaAvatar"
+import { useCaretState } from "@/careti/context/CaretStateContext"
+// CARETI MODIFICATION: use brand-aware generated assets path for image fallback
+import { getBrandGeneratedAssetsDirName } from "@/careti/utils/brand-utils"
+// CARETI MODIFICATION: use CaretWebviewLogger for webview logs
+import WebviewLogger from "@/careti/utils/CaretWebviewLogger"
+import { t } from "@/careti/utils/i18n"
 import { OptionsButtons } from "@/components/chat/OptionsButtons"
 import TaskFeedbackButtons from "@/components/chat/TaskFeedbackButtons"
 import { CheckmarkControl } from "@/components/common/CheckmarkControl"
@@ -51,10 +51,10 @@ const successColor = "var(--vscode-charts-green)"
 const _cancelledColor = "var(--vscode-descriptionForeground)"
 const logger = new WebviewLogger("ChatRow")
 
-// CARET MODIFICATION: Direct Caret login handler matching CaretProvider pattern
+// CARETI MODIFICATION: Direct Careti login handler matching CaretiProvider pattern
 const handleCaretLogin = () => {
 	CaretAccountServiceClient.caretAccountLoginClicked(EmptyRequest.create()).catch((err) =>
-		console.error(t("providers.caret.loginError", "settings"), err),
+		console.error(t("providers.careti.loginError", "settings"), err),
 	)
 }
 
@@ -164,10 +164,10 @@ export const ChatRowContent = memo(
 		sendMessageFromChatRow,
 		onSetQuote,
 	}: ChatRowContentProps) => {
-		// CARET MODIFICATION: Use featureConfig from ExtensionState instead of getCurrentFeatureConfig
+		// CARETI MODIFICATION: Use featureConfig from ExtensionState instead of getCurrentFeatureConfig
 		const { mcpServers, mcpMarketplaceCatalog, onRelinquishControl, enablePersonaSystem, featureConfig } = useExtensionState()
 
-		// CARET MODIFICATION: Get persona profile from Caret context
+		// CARETI MODIFICATION: Get persona profile from Careti context
 		const { personaProfile } = useCaretState()
 		const [seeNewChangesDisabled, setSeeNewChangesDisabled] = useState(false)
 		const [quoteButtonState, setQuoteButtonState] = useState<QuoteButtonState>({
@@ -474,7 +474,7 @@ export const ChatRowContent = memo(
 						return
 					}
 
-					// CARET MODIFICATION: Only try extension-guessing when image generation is complete
+					// CARETI MODIFICATION: Only try extension-guessing when image generation is complete
 					// to avoid race condition where webview tries to load before file is saved
 					if (imageStatus !== "completed") {
 						return
@@ -871,10 +871,10 @@ export const ChatRowContent = memo(
 						if (!imageUrl) {
 							return
 						}
-							FileServiceClient.openImage(StringRequest.create({ value: imageUrl })).catch((err) => {
-								logger.error("Failed to open image", err)
-							})
-						}
+						FileServiceClient.openImage(StringRequest.create({ value: imageUrl })).catch((err) => {
+							logger.error("Failed to open image", err)
+						})
+					}
 
 					return (
 						<>
@@ -936,41 +936,56 @@ export const ChatRowContent = memo(
 											{tool.progressText}
 										</div>
 									)}
-									{status === "error" && tool.errorMessage && (() => {
-										// CARET MODIFICATION: Parse auth_required error and show login UI
-										let authError: { type?: string; action?: string; toolName?: string; brandName?: string } | null = null
-										try {
-											authError = JSON.parse(tool.errorMessage)
-										} catch {
-											authError = null
-										}
-										if (authError?.type === "auth_required") {
-											const action = authError.action ?? ""
-											const brandName = authError.brandName ?? ""
+									{status === "error" &&
+										tool.errorMessage &&
+										(() => {
+											// CARETI MODIFICATION: Parse auth_required error and show login UI
+											let authError: {
+												type?: string
+												action?: string
+												toolName?: string
+												brandName?: string
+											} | null = null
+											try {
+												authError = JSON.parse(tool.errorMessage)
+											} catch {
+												authError = null
+											}
+											if (authError?.type === "auth_required") {
+												const action = authError.action ?? ""
+												const brandName = authError.brandName ?? ""
+												return (
+													<div
+														className="ph-no-capture"
+														style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+														<div style={{ color: errorColor, whiteSpace: "pre-wrap" }}>
+															{t("imageTools.loginRequired.title", "chat", { action, brandName })}
+															{"\n\n"}
+															{t("imageTools.loginRequired.toUseFeature", "chat")}
+															{"\n"}
+															{t("imageTools.loginRequired.loginStep", "chat", { brandName })}
+														</div>
+														<div
+															style={{
+																color: "var(--vscode-charts-green)",
+																fontWeight: "bold",
+																textAlign: "center",
+																padding: "4px 0",
+															}}>
+															{t("imageTools.loginRequired.freeCreditsPromo", "chat")}
+														</div>
+														<VSCodeButton onClick={handleCaretLogin} style={{ width: "100%" }}>
+															{t("providers.careti.login", "settings")}
+														</VSCodeButton>
+													</div>
+												)
+											}
 											return (
-												<div className="ph-no-capture" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-													<div style={{ color: errorColor, whiteSpace: "pre-wrap" }}>
-														{t("imageTools.loginRequired.title", "chat", { action, brandName })}
-														{"\n\n"}
-														{t("imageTools.loginRequired.toUseFeature", "chat")}
-														{"\n"}
-														{t("imageTools.loginRequired.loginStep", "chat", { brandName })}
-													</div>
-													<div style={{ color: "var(--vscode-charts-green)", fontWeight: "bold", textAlign: "center", padding: "4px 0" }}>
-														{t("imageTools.loginRequired.freeCreditsPromo", "chat")}
-													</div>
-													<VSCodeButton style={{ width: "100%" }} onClick={handleCaretLogin}>
-														{t("providers.caret.login", "settings")}
-													</VSCodeButton>
+												<div className="ph-no-capture" style={{ color: errorColor }}>
+													{tool.errorMessage}
 												</div>
 											)
-										}
-										return (
-											<div className="ph-no-capture" style={{ color: errorColor }}>
-												{tool.errorMessage}
-											</div>
-										)
-									})()}
+										})()}
 								</div>
 								<div
 									style={{
@@ -1036,7 +1051,7 @@ export const ChatRowContent = memo(
 						</>
 					)
 				}
-				// CARET MODIFICATION: Add readDocument case for document reading progress UI
+				// CARETI MODIFICATION: Add readDocument case for document reading progress UI
 				case "readDocument": {
 					const status = tool.status || (message.partial ? "reading" : "completed")
 					const isReading = status === "pending" || status === "reading" || message.partial
@@ -1078,9 +1093,7 @@ export const ChatRowContent = memo(
 											<span style={{ fontWeight: "bold", marginRight: 6 }}>
 												{t("tool.readDocumentFormat", "chat")}:
 											</span>
-											<span style={{ color: "var(--vscode-foreground)" }}>
-												{tool.format.toUpperCase()}
-											</span>
+											<span style={{ color: "var(--vscode-foreground)" }}>{tool.format.toUpperCase()}</span>
 										</div>
 									)}
 									{tool.fileSize && (
@@ -1088,15 +1101,11 @@ export const ChatRowContent = memo(
 											<span style={{ fontWeight: "bold", marginRight: 6 }}>
 												{t("tool.readDocumentSize", "chat")}:
 											</span>
-											<span style={{ color: "var(--vscode-foreground)" }}>
-												{tool.fileSize}
-											</span>
+											<span style={{ color: "var(--vscode-foreground)" }}>{tool.fileSize}</span>
 										</div>
 									)}
 									{isReading && (
-										<div
-											className="ph-no-capture"
-											style={{ color: "var(--vscode-descriptionForeground)" }}>
+										<div className="ph-no-capture" style={{ color: "var(--vscode-descriptionForeground)" }}>
 											{t("tool.readDocumentReading", "chat")}
 										</div>
 									)}
@@ -1106,9 +1115,7 @@ export const ChatRowContent = memo(
 										</div>
 									)}
 									{status === "completed" && !tool.errorMessage && (
-										<div
-											className="ph-no-capture"
-											style={{ color: "var(--vscode-descriptionForeground)" }}>
+										<div className="ph-no-capture" style={{ color: "var(--vscode-descriptionForeground)" }}>
 											{t("tool.readDocumentCompleted", "chat")}
 										</div>
 									)}
@@ -1117,7 +1124,7 @@ export const ChatRowContent = memo(
 						</>
 					)
 				}
-				// CARET MODIFICATION: Add analyzeImage case for image analysis progress UI
+				// CARETI MODIFICATION: Add analyzeImage case for image analysis progress UI
 				case "analyzeImage": {
 					const status = tool.status || (message.partial ? "analyzing" : "completed")
 					const isAnalyzing = status === "pending" || status === "analyzing" || message.partial
@@ -1163,51 +1170,62 @@ export const ChatRowContent = memo(
 										</div>
 									)}
 									{isAnalyzing && (
-										<div
-											className="ph-no-capture"
-											style={{ color: "var(--vscode-descriptionForeground)" }}>
+										<div className="ph-no-capture" style={{ color: "var(--vscode-descriptionForeground)" }}>
 											{t("tool.analyzeImageAnalyzing", "chat")}
 										</div>
 									)}
-									{status === "error" && tool.errorMessage && (() => {
-										// CARET MODIFICATION: Parse auth_required error and show login UI
-										let authError: { type?: string; action?: string; toolName?: string; brandName?: string } | null = null
-										try {
-											authError = JSON.parse(tool.errorMessage)
-										} catch {
-											authError = null
-										}
-										if (authError?.type === "auth_required") {
-											const action = authError.action ?? ""
-											const brandName = authError.brandName ?? ""
+									{status === "error" &&
+										tool.errorMessage &&
+										(() => {
+											// CARETI MODIFICATION: Parse auth_required error and show login UI
+											let authError: {
+												type?: string
+												action?: string
+												toolName?: string
+												brandName?: string
+											} | null = null
+											try {
+												authError = JSON.parse(tool.errorMessage)
+											} catch {
+												authError = null
+											}
+											if (authError?.type === "auth_required") {
+												const action = authError.action ?? ""
+												const brandName = authError.brandName ?? ""
+												return (
+													<div
+														className="ph-no-capture"
+														style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+														<div style={{ color: errorColor, whiteSpace: "pre-wrap" }}>
+															{t("imageTools.loginRequired.title", "chat", { action, brandName })}
+															{"\n\n"}
+															{t("imageTools.loginRequired.toUseFeature", "chat")}
+															{"\n"}
+															{t("imageTools.loginRequired.loginStep", "chat", { brandName })}
+														</div>
+														<div
+															style={{
+																color: "var(--vscode-charts-green)",
+																fontWeight: "bold",
+																textAlign: "center",
+																padding: "4px 0",
+															}}>
+															{t("imageTools.loginRequired.freeCreditsPromo", "chat")}
+														</div>
+														<VSCodeButton onClick={handleCaretLogin} style={{ width: "100%" }}>
+															{t("providers.careti.login", "settings")}
+														</VSCodeButton>
+													</div>
+												)
+											}
 											return (
-												<div className="ph-no-capture" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-													<div style={{ color: errorColor, whiteSpace: "pre-wrap" }}>
-														{t("imageTools.loginRequired.title", "chat", { action, brandName })}
-														{"\n\n"}
-														{t("imageTools.loginRequired.toUseFeature", "chat")}
-														{"\n"}
-														{t("imageTools.loginRequired.loginStep", "chat", { brandName })}
-													</div>
-													<div style={{ color: "var(--vscode-charts-green)", fontWeight: "bold", textAlign: "center", padding: "4px 0" }}>
-														{t("imageTools.loginRequired.freeCreditsPromo", "chat")}
-													</div>
-													<VSCodeButton style={{ width: "100%" }} onClick={handleCaretLogin}>
-														{t("providers.caret.login", "settings")}
-													</VSCodeButton>
+												<div className="ph-no-capture" style={{ color: errorColor }}>
+													{tool.errorMessage}
 												</div>
 											)
-										}
-										return (
-											<div className="ph-no-capture" style={{ color: errorColor }}>
-												{tool.errorMessage}
-											</div>
-										)
-									})()}
+										})()}
 									{status === "completed" && !tool.errorMessage && (
-										<div
-											className="ph-no-capture"
-											style={{ color: "var(--vscode-descriptionForeground)" }}>
+										<div className="ph-no-capture" style={{ color: "var(--vscode-descriptionForeground)" }}>
 											{t("tool.analyzeImageCompleted", "chat")}
 										</div>
 									)}
@@ -1679,9 +1697,7 @@ export const ChatRowContent = memo(
 													Int64Request.create({
 														value: message.ts,
 													}),
-												).catch((err) =>
-													logger.error("Failed to show task completion view changes", err),
-												)
+												).catch((err) => logger.error("Failed to show task completion view changes", err))
 											}}
 											style={{
 												cursor: seeNewChangesDisabled ? "wait" : "pointer",
@@ -1727,7 +1743,7 @@ export const ChatRowContent = memo(
 									</span>
 								</div>
 								<div style={{ color: "var(--vscode-foreground)", opacity: 0.8 }}>
-									{/* CARET MODIFICATION: Use brand-neutral language for shell integration warning */}
+									{/* CARETI MODIFICATION: Use brand-neutral language for shell integration warning */}
 									The assistant may have trouble viewing the command's output. Please update VSCode (
 									<code>CMD/CTRL + Shift + P</code> → "Update") and make sure you're using a supported shell:
 									zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> → "Terminal: Select Default
@@ -1905,7 +1921,7 @@ export const ChatRowContent = memo(
 											marginBottom: "-1.5px",
 										}}></span>
 									<span style={{ color: normalColor, fontWeight: "bold" }}>
-										Caret wants to start a new task:
+										Careti wants to start a new task:
 									</span>
 								</div>
 								<NewTaskPreview context={message.text || ""} />
@@ -1922,7 +1938,7 @@ export const ChatRowContent = memo(
 											marginBottom: "-1.5px",
 										}}></span>
 									<span style={{ color: normalColor, fontWeight: "bold" }}>
-										Caret wants to condense your conversation:
+										Careti wants to condense your conversation:
 									</span>
 								</div>
 								<NewTaskPreview context={message.text || ""} />
@@ -1939,7 +1955,7 @@ export const ChatRowContent = memo(
 											marginBottom: "-1.5px",
 										}}></span>
 									<span style={{ color: normalColor, fontWeight: "bold" }}>
-										Caret wants to create a Github issue:
+										Careti wants to create a Github issue:
 									</span>
 								</div>
 								<ReportBugPreview data={message.text || ""} />

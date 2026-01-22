@@ -1,7 +1,7 @@
 import { VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react"
 import React from "react"
 import styled from "styled-components"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { ActionMetadata } from "./types"
 

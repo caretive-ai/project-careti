@@ -9,7 +9,7 @@ const TEST_HOOK_LATEST_STATE_DELAY = 50
 export function testHooks(controller: Controller): GrpcPostRecordHook[] {
 	return [
 		async (entry) => {
-			// CARET MODIFICATION: Allow tests to inject a recorder override to avoid module duplication issues.
+			// CARETI MODIFICATION: Allow tests to inject a recorder override to avoid module duplication issues.
 			const injectedRecorder = (globalThis as any).__CARETHOOK_RECORDER__ as
 				| ReturnType<typeof GrpcRecorderBuilder.getRecorder>
 				| undefined

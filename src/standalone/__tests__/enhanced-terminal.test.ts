@@ -1,4 +1,4 @@
-// CARET MODIFICATION: TDD 회귀 테스트 - Windows cmd.exe에서 큰따옴표 깨짐 방지를 위해 spawn 옵션 shell:true 적용
+// CARETI MODIFICATION: TDD 회귀 테스트 - Windows cmd.exe에서 큰따옴표 깨짐 방지를 위해 spawn 옵션 shell:true 적용
 
 import { EventEmitter } from "node:events"
 import { createRequire } from "node:module"

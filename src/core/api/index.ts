@@ -1,5 +1,5 @@
 import { Anthropic } from "@anthropic-ai/sdk"
-import { BizRouterHandler } from "@caret/core/api/providers/BizRouterApiProvider"
+import { BizRouterHandler } from "@careti/core/api/providers/BizRouterApiProvider"
 import { ApiConfiguration, ModelInfo, QwenApiRegions } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { ClineTool } from "@/shared/tools"
@@ -11,7 +11,7 @@ import { AwsBedrockHandler } from "./providers/bedrock"
 import { CerebrasHandler } from "./providers/cerebras"
 import { ClaudeCodeHandler } from "./providers/claude-code"
 import { ClineHandler } from "./providers/cline"
-import { CaretHandler } from "@caret/core/api/providers/caret"
+import { CaretHandler } from "@careti/core/api/providers/careti"
 import { DeepSeekHandler } from "./providers/deepseek"
 import { DifyHandler } from "./providers/dify"
 import { DoubaoHandler } from "./providers/doubao"
@@ -270,8 +270,8 @@ function createHandlerForProvider(
 				liteLlmUsePromptCache: options.liteLlmUsePromptCache,
 				ulid: options.ulid,
 			})
-		case "caret": {
-			// CARET MODIFICATION: Use Claude Code CLI for Claude 4.5 models
+		case "careti": {
+			// CARETI MODIFICATION: Use Claude Code CLI for Claude 4.5 models
 			const caretModelId = mode === "plan" ? options.planModeCaretModelId : options.actModeCaretModelId
 			if (caretModelId?.startsWith("anthropic/claude-")) {
 				// Extract Claude model ID (e.g., "anthropic/claude-opus-4-5-20251101" -> "claude-opus-4-5-20251101")
@@ -297,7 +297,7 @@ function createHandlerForProvider(
 			})
 		}
 		case "bizrouter":
-			// CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
+			// CARETI MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
 			return new BizRouterHandler({
 				onRetryAttempt: options.onRetryAttempt,
 				bizRouterApiKey: options.bizRouterApiKey,

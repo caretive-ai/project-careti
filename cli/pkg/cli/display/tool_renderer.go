@@ -22,7 +22,7 @@ func NewToolRenderer(mdRenderer *MarkdownRenderer, outputFormat string) *ToolRen
 	}
 }
 
-// CARET MODIFICATION: branding in tool headers
+// CARETI MODIFICATION: branding in tool headers
 // RenderToolApprovalRequest renders a tool approval request ("Caret wants to...")
 func (tr *ToolRenderer) RenderToolApprovalRequest(tool *types.ToolMessage) string {
 	var output strings.Builder
@@ -129,7 +129,7 @@ func (tr *ToolRenderer) generateToolHeader(tool *types.ToolMessage, verbTense st
 		} else {
 			action = "is recursively listing files in"
 		}
-		// CARET MODIFICATION: branding
+		// CARETI MODIFICATION: branding
 		return fmt.Sprintf("### Caret %s `%s`", action, tool.Path)
 
 	case string(types.ToolTypeSearchFiles):
@@ -286,7 +286,7 @@ func (tr *ToolRenderer) RenderCommandApprovalRequest(command string, autoApprova
 	}
 
 	// Generate header
-	// CARET MODIFICATION: branding
+	// CARETI MODIFICATION: branding
 	header := fmt.Sprintf("### Caret wants to run `%s`", command)
 	rendered := tr.renderMarkdown(header)
 	output.WriteString(rendered)
@@ -309,7 +309,7 @@ func (tr *ToolRenderer) RenderCommandApprovalRequest(command string, autoApprova
 // RenderCommandExecution renders a command execution announcement
 func (tr *ToolRenderer) RenderCommandExecution(command string) string {
 	command = strings.TrimSpace(command)
-	// CARET MODIFICATION: branding
+	// CARETI MODIFICATION: branding
 	header := fmt.Sprintf("### Caret is running `%s`", command)
 	rendered := tr.renderMarkdown(header)
 	return "\n" + rendered + "\n"
@@ -373,7 +373,7 @@ func (tr *ToolRenderer) renderMarkdown(markdown string) string {
 
 // GenerateAskFollowupHeader generates the header for followup questions
 func (tr *ToolRenderer) GenerateAskFollowupHeader() string {
-	// CARET MODIFICATION: branding
+	// CARETI MODIFICATION: branding
 	return "### Caret has a question\n"
 }
 
@@ -415,7 +415,7 @@ func (tr *ToolRenderer) GenerateAskFollowupBody(messageText string) string {
 
 // GeneratePlanModeRespondHeader generates the header for plan mode responses
 func (tr *ToolRenderer) GeneratePlanModeRespondHeader() string {
-	// CARET MODIFICATION: branding
+	// CARETI MODIFICATION: branding
 	return "### Caret has a plan\n"
 }
 

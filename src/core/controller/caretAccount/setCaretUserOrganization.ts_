@@ -1,4 +1,4 @@
-// CARET MODIFICATION: gRPC handler for setting active Caret organization
+// CARETI MODIFICATION: gRPC handler for setting active Caret organization
 
 import { Controller } from "@core/controller"
 import { CaretAccountService } from "@services/account/CaretAccountService"
@@ -9,7 +9,7 @@ import * as proto from "@shared/proto/index"
  */
 export async function setCaretUserOrganization(
 	_controller: Controller,
-	request: proto.caret.CaretUserOrganizationUpdateRequest,
+	request: proto.careti.CaretUserOrganizationUpdateRequest,
 ): Promise<proto.cline.Empty> {
 	console.log("[CARET-HANDLER] 🔄 setCaretUserOrganization called for org:", request.organizationId)
 

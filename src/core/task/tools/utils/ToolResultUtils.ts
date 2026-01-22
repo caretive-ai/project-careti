@@ -125,7 +125,7 @@ export class ToolResultUtils {
 		type: ClineAsk,
 		completeMessage: string,
 		config: TaskConfig,
-		operationId?: string, // CARET MODIFICATION: allow reusing tool message for approval (prevents duplicate tool cards)
+		operationId?: string, // CARETI MODIFICATION: allow reusing tool message for approval (prevents duplicate tool cards)
 	) {
 		const { response, text, images, files } = await config.callbacks.ask(type, completeMessage, false, operationId)
 

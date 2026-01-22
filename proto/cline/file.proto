@@ -43,7 +43,7 @@ service FileService {
   // Toggle a Cline rule (enable or disable)
   rpc toggleClineRule(ToggleClineRuleRequest) returns (ToggleClineRules);
 
-  // CARET MODIFICATION: Toggle a Caret rule (enable or disable)
+  // CARETI MODIFICATION: Toggle a Caret rule (enable or disable)
   rpc toggleCaretRule(ToggleCaretRuleRequest) returns (ClineRulesToggles);
 
   // Toggle a Cursor rule (enable or disable)
@@ -58,7 +58,7 @@ service FileService {
   // Opens a task's conversation history file on disk
   rpc openDiskConversationHistory(StringRequest) returns (Empty);
 
-  // CARET MODIFICATION: Opens a task history folder on disk
+  // CARETI MODIFICATION: Opens a task history folder on disk
   rpc openTaskHistory(StringRequest) returns (Empty);
 
   // Toggles a workflow on or off
@@ -76,7 +76,7 @@ service FileService {
   // Opens or creates a focus chain checklist markdown file for editing
   rpc openFocusChainFile(StringRequest) returns (Empty);
 
-  // CARET MODIFICATION: Hooks management RPCs
+  // CARETI MODIFICATION: Hooks management RPCs
   // Refreshes all hook toggles (discovers hooks and their enabled state)
   rpc refreshHooks(EmptyRequest) returns (HooksToggles);
 
@@ -89,7 +89,7 @@ service FileService {
   // Deletes an existing hook file
   rpc deleteHook(DeleteHookRequest) returns (DeleteHookResponse);
 
-  // CARET MODIFICATION: Skills management RPCs
+  // CARETI MODIFICATION: Skills management RPCs
   // Refreshes all skill toggles (discovers skills and their enabled state)
   rpc refreshSkills(EmptyRequest) returns (RefreshedSkills);
 
@@ -111,7 +111,7 @@ message RefreshedRules {
   ClineRulesToggles local_windsurf_rules_toggles = 4;
   ClineRulesToggles local_workflow_toggles = 5;
   ClineRulesToggles global_workflow_toggles = 6;
-  // CARET MODIFICATION: Add Caret rules toggles
+  // CARETI MODIFICATION: Add Caret rules toggles
   ClineRulesToggles local_caret_rules_toggles = 7;
 }
 
@@ -122,7 +122,7 @@ message ToggleWindsurfRuleRequest {
   bool enabled = 3; // Whether to enable or disable the rule
 }
 
-// CARET MODIFICATION: Request to toggle a Caret rule
+// CARETI MODIFICATION: Request to toggle a Caret rule
 message ToggleCaretRuleRequest {
   Metadata metadata = 1;
   string rule_path = 2; // Path to the rule file
@@ -234,7 +234,7 @@ message ToggleWorkflowRequest {
   bool is_global = 4;
 }
 
-// CARET MODIFICATION: Hooks-related messages
+// CARETI MODIFICATION: Hooks-related messages
 
 // Information about a single hook
 message HookInfo {
@@ -296,7 +296,7 @@ message DeleteHookResponse {
   HooksToggles hooks_toggles = 1;
 }
 
-// CARET MODIFICATION: Skills-related messages
+// CARETI MODIFICATION: Skills-related messages
 
 // Skill information structure
 message SkillInfo {

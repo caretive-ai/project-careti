@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Skills system support - on-demand agent instructions
+// CARETI MODIFICATION: Skills system support - on-demand agent instructions
 // Ported from Cline v3.49.1
 
 /**

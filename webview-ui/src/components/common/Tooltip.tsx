@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import {
-	getAsVar,
-	VSC_DESCRIPTION_FOREGROUND,
-	VSC_INPUT_BORDER,
-	VSC_INPUT_PLACEHOLDER_FOREGROUND,
-	VSC_SIDEBAR_BACKGROUND,
+    getAsVar,
+    VSC_DESCRIPTION_FOREGROUND,
+    VSC_INPUT_BORDER,
+    VSC_INPUT_PLACEHOLDER_FOREGROUND,
+    VSC_SIDEBAR_BACKGROUND,
 } from "@/utils/vscStyles"
 
 interface TooltipProps {
@@ -16,7 +16,7 @@ interface TooltipProps {
 	style?: React.CSSProperties
 }
 
-// CARET MODIFICATION: Improve tooltip positioning to prevent screen overflow
+// CARETI MODIFICATION: Improve tooltip positioning to prevent screen overflow
 // add styled component for tooltip
 const TooltipBody = styled.div<Pick<TooltipProps, "style"> & { $autoPosition?: boolean }>`
 	position: absolute;
@@ -52,7 +52,7 @@ const Tooltip: React.FC<TooltipProps> = ({ visible, tipText, hintText, children,
 	// Determine final visibility based on prop or internal state
 	const shouldShow = visible !== undefined ? visible : isHovered
 
-	// CARET MODIFICATION: Check if tooltip overflows screen and adjust position
+	// CARETI MODIFICATION: Check if tooltip overflows screen and adjust position
 	useEffect(() => {
 		if (shouldShow && tooltipRef.current && containerRef.current) {
 			const tooltipRect = tooltipRef.current.getBoundingClientRect()

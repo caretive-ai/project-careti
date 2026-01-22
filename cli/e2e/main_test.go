@@ -26,7 +26,7 @@ func TestMain(m *testing.M) {
 	repoRoot := filepath.Clean(filepath.Join(wd, "..", ".."))
 
 	cliBin := filepath.Join(repoRoot, "cli", "bin", "cline")
-	caretBin := filepath.Join(repoRoot, "cli", "bin", "caret")
+	caretBin := filepath.Join(repoRoot, "cli", "bin", "careti")
 	coreJS := filepath.Join(repoRoot, "dist-standalone", "cline-core.js")
 
 	missing := []string{}

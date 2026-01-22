@@ -3,8 +3,8 @@ import { formatResponse } from "@core/prompts/responses"
 import { ClineAsk, ClineAskUseMcpServer } from "@shared/ExtensionMessage"
 import { telemetryService } from "@/services/telemetry"
 import { ClineDefaultTool } from "@/shared/tools"
-// CARET MODIFICATION: import brand utils for dynamic brand name
-import { getCurrentBrandName } from "@caret/utils/brand-utils"
+// CARETI MODIFICATION: import brand utils for dynamic brand name
+import { getCurrentBrandName } from "@careti/utils/brand-utils"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApproval } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -94,7 +94,7 @@ export class AccessMcpResourceHandler implements IFullyManagedTool {
 			)
 		} else {
 			// Manual approval flow
-			// CARET MODIFICATION: use dynamic brand name
+			// CARETI MODIFICATION: use dynamic brand name
 			const notificationMessage = `${getCurrentBrandName()} wants to access ${uri || "unknown resource"} on ${server_name || "unknown server"}`
 
 			// Show notification

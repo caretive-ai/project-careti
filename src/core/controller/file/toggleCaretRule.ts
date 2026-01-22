@@ -1,14 +1,14 @@
 import type { Controller } from "@core/controller/index"
 import type { ToggleCaretRuleRequest } from "@shared/proto/cline/file"
 import { ClineRulesToggles } from "@shared/proto/cline/file"
-import { Logger } from "@/services/logging/Logger" // CARET MODIFICATION: Add Logger for debugging
+import { Logger } from "@/services/logging/Logger" // CARETI MODIFICATION: Add Logger for debugging
 
 /**
- * CARET MODIFICATION: Toggles a Caret rule (enable or disable)
+ * CARETI MODIFICATION: Toggles a Careti rule (enable or disable)
  * This is a separate implementation from toggleClineRule to avoid conflicts during merging
  * @param controller The controller instance
  * @param request The toggle request
- * @returns The updated Caret rule toggles
+ * @returns The updated Careti rule toggles
  */
 export async function toggleCaretRule(controller: Controller, request: ToggleCaretRuleRequest): Promise<ClineRulesToggles> {
 	const { rulePath, enabled } = request
@@ -21,10 +21,10 @@ export async function toggleCaretRule(controller: Controller, request: ToggleCar
 		throw new Error("Missing or invalid parameters for toggleCaretRule")
 	}
 
-	// CARET MODIFICATION: Add logging for toggle requests
+	// CARETI MODIFICATION: Add logging for toggle requests
 	Logger.debug(`[CARET] Toggle request - rulePath: ${rulePath}, enabled: ${enabled}`)
 
-	// CARET MODIFICATION: Update the toggles in workspace state for caret rules
+	// CARETI MODIFICATION: Update the toggles in workspace state for careti rules
 	const toggles = controller.stateManager.getWorkspaceStateKey("localCaretRulesToggles" as any)
 	Logger.debug(`[CARET] Before toggle - current state: ${JSON.stringify(toggles)}`)
 	toggles[rulePath] = enabled

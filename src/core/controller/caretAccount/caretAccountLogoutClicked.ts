@@ -1,6 +1,6 @@
 import type { EmptyRequest } from "@shared/proto/cline/common"
 import { Empty } from "@shared/proto/cline/common"
-import { CaretAuthService } from "@caret/services/auth/CaretAuthService"
+import { CaretAuthService } from "@careti/services/auth/CaretAuthService"
 import { LogoutReason } from "@/services/auth/types"
 import type { Controller } from "../index"
 

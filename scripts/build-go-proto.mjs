@@ -21,7 +21,7 @@ const resolvedProtoc =
 	normalizeProtocPath(process.env.PROTOC) ??
 	(process.platform === "win32" ? WINDOWS_PROTOC_CANDIDATES.find((candidate) => existsSync(candidate)) : undefined) ??
 	DEFAULT_PROTOC
-const PROTOC = `"${resolvedProtoc}"` // CARET MODIFICATION: quote protoc path + allow PROTOC override
+const PROTOC = `"${resolvedProtoc}"` // CARETI MODIFICATION: quote protoc path + allow PROTOC override
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url))
 const ROOT_DIR = path.resolve(SCRIPT_DIR, "..")
@@ -32,7 +32,7 @@ const GO_SERVICE_CLIENT_DIR = path.join(GO_CLIENT_DIR, "services")
 
 const COMMON_TYPES = ["StringRequest", "EmptyRequest", "Empty", "String", "Int64Request", "KeyValuePair"]
 
-// CARET MODIFICATION: ensure common Go bin dirs are on PATH so protoc plugins are found
+// CARETI MODIFICATION: ensure common Go bin dirs are on PATH so protoc plugins are found
 function ensureGoBinsOnPath() {
 	const extraBins = [path.join(process.env.HOME || "", "go", "bin"), "/tmp/go/bin"].filter((p) => p && existsSync(p))
 
@@ -144,7 +144,7 @@ function checkToolsInPath() {
 async function setupGoDependencies() {
 	console.log(chalk.cyan("Checking Go dependencies..."))
 
-	// CARET MODIFICATION: add typical Go bin locations before checking tools
+	// CARETI MODIFICATION: add typical Go bin locations before checking tools
 	ensureGoBinsOnPath()
 
 	// Check if Go is installed
@@ -167,7 +167,7 @@ async function setupGoDependencies() {
 		console.log(chalk.green("✓ Go protobuf tools are available"))
 	}
 
-	// CARET MODIFICATION: ensure newly installed tools are picked up
+	// CARETI MODIFICATION: ensure newly installed tools are picked up
 	ensureGoBinsOnPath()
 
 	// Verify tools are in PATH
@@ -559,11 +559,11 @@ func (sc *${capitalizedServiceName}Client) ${capitalizedMethodName}(ctx context.
 			.join("\n")
 
 		// Determine the correct proto import path based on the service location
-		// CARET MODIFICATION: route caret services to caret proto import
+		// CARETI MODIFICATION: route caret services to caret proto import
 		const protoImportPath =
 			serviceDef.protoPackage === "host"
 				? '"github.com/cline/grpc-go/host"'
-				: serviceDef.protoPackage === "caret"
+				: serviceDef.protoPackage === "careti"
 					? '"github.com/cline/grpc-go/caret"'
 					: '"github.com/cline/grpc-go/cline"'
 
@@ -610,7 +610,7 @@ ${methods}
 }
 
 // Main execution block - run if this script is executed directly
-if (import.meta.url === `file://${process.argv[1]}` || fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) { // CARET MODIFICATION: allow Windows argv path
+if (import.meta.url === `file://${process.argv[1]}` || fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) { // CARETI MODIFICATION: allow Windows argv path
 	async function main() {
 		try {
 			console.log(chalk.cyan("Starting Go protobuf code generation..."))

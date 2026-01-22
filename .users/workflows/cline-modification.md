@@ -5,13 +5,13 @@ Cline 원본 소스 파일 수정 시 따라야 할 절차입니다.
 ## 수정 레벨
 
 ### Level 1: 독립 모듈 (권장)
-- `caret-src/` 디렉토리에 새 파일 생성
+- `careti-src/` 디렉토리에 새 파일 생성
 - Cline 파일 수정 없음
 - 완전한 분리 유지
 
 ### Level 2: 조건부 통합
 - Cline 파일에 최소 변경 (1-3줄)
-- `// CARET MODIFICATION:` 주석 필수
+- `// CARETI MODIFICATION:` 주석 필수
 - 기능 플래그로 제어
 
 ### Level 3: 직접 수정 (피해야 함)
@@ -36,13 +36,13 @@ Cline 원본 소스 파일 수정 시 따라야 할 절차입니다.
 ### 3. 주석 규칙
 모든 수정에 다음 형식의 주석 필수:
 ```typescript
-// CARET MODIFICATION: [간단한 설명]
+// CARETI MODIFICATION: [간단한 설명]
 // 변경된 코드
 ```
 
 예시:
 ```typescript
-// CARET MODIFICATION: Add persona system integration
+// CARETI MODIFICATION: Add persona system integration
 if (caretMode) {
   await personaSystem.applyPersona();
 }
@@ -62,7 +62,7 @@ if (caretMode) {
 
 ### webview-ui/ 디렉토리
 - React 컴포넌트
-- 새 컴포넌트는 `caret-src/` 생성
+- 새 컴포넌트는 `careti-src/` 생성
 - 기존 컴포넌트 수정 시 주석 필수
 
 ### Proto 파일
@@ -80,7 +80,7 @@ npm run protos-go
 - [ ] 테스트 계획 수립
 
 ### 수정 중
-- [ ] `// CARET MODIFICATION:` 주석 추가
+- [ ] `// CARETI MODIFICATION:` 주석 추가
 - [ ] 최소 변경 원칙 준수
 - [ ] 기존 테스트 통과 확인
 

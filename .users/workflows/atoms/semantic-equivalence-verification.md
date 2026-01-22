@@ -29,13 +29,13 @@
 
 Markdown 형식 결과:
 1. Cline 원본인지 확인: ✓
-2. 주석 추가: // CARET MODIFICATION: [설명]
+2. 주석 추가: // CARETI MODIFICATION: [설명]
 3. 변경 제한: 최대 1-3줄
 4. 검증: npm run compile
 
 JSON 형식 결과:
 1. protected_dirs 확인: ✓
-2. modification_rules.comment 적용: // CARET MODIFICATION: [설명]
+2. modification_rules.comment 적용: // CARETI MODIFICATION: [설명]
 3. modification_rules.max_lines 적용: 3
 4. modification_rules.verification 실행: npm run compile
 
@@ -101,24 +101,24 @@ const overallScore = (
 
 ## 참조 구현
 검증된 방법론 기반:
-`caret-main/caret-docs/reports/json-caret/semantic-equivalence-report.md`
+`careti-main/careti-docs/reports/json-caret/semantic-equivalence-report.md`
 
 이 확립된 접근법은 완전한 기능 커버리지를 유지하면서 95.2% 의미적 동등성을 달성했습니다.
 
 ## 자동화 도구 사용
 자동화된 의미적 동등성 검사기 사용:
 ```bash
-node caret-scripts/utils/semantic-equivalence-checker.js <markdown-file> <json-file>
+node careti-scripts/utils/semantic-equivalence-checker.js <markdown-file> <json-file>
 ```
 
 예시:
 ```bash
-node caret-scripts/utils/semantic-equivalence-checker.js .agents/workflows/backup-protocol.md caret-docs/experiments/backup-protocol-json.json
+node careti-scripts/utils/semantic-equivalence-checker.js .agents/workflows/backup-protocol.md careti-docs/experiments/backup-protocol-json.json
 ```
 
 고급 분석을 위해 유니버설 분석기 사용:
 ```bash
-node caret-scripts/utils/universal-semantic-analyzer.js <file1> <file2> workflow markdown json
+node careti-scripts/utils/universal-semantic-analyzer.js <file1> <file2> workflow markdown json
 ```
 
 도구가 제공하는 것:

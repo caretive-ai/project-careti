@@ -10,11 +10,11 @@ The system prompt is managed through a combination of JSON configuration files a
 
 When modifying the AI's core behavior, the following files **must** be edited together as a pair:
 
-1.  **JSON Configuration (`/caret-src/core/prompts/sections/`)**:
+1.  **JSON Configuration (`/careti-src/core/prompts/sections/`)**:
     -   This is the source of truth that the system directly loads.
     -   Example: `AGENT_BEHAVIOR_DIRECTIVES.json`
 
-2.  **Korean Markdown Documentation (`/caret-docs/system-prompts-ko/`)**:
+2.  **Korean Markdown Documentation (`/careti-docs/system-prompts-ko/`)**:
     -   This document must be a direct, human-readable translation of the JSON file's content and structure.
     -   Example: `agent-behavior-directives.md`
 

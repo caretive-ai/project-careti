@@ -1,4 +1,4 @@
-import { getBrandIgnoreFileName, getBrandRulesFileName } from "@caret/utils/brand-utils" // CARET MODIFICATION: brand-aware ignore filename
+import { getBrandIgnoreFileName, getBrandRulesFileName } from "@careti/utils/brand-utils" // CARETI MODIFICATION: brand-aware ignore filename
 import type { ApiProviderInfo } from "@/core/api"
 import { getDeepPlanningPrompt } from "./commands/deep-planning"
 
@@ -144,7 +144,7 @@ const BRAND_IGNORE_FILENAME = getBrandIgnoreFileName?.() ?? ".caretignore"
 const BRAND_RULES_DIR = getBrandRulesFileName?.() ?? ".agents/context"
 const DEFAULT_IGNORE_MARKDOWN = `default-${BRAND_IGNORE_FILENAME.slice(1)}.md`
 
-// CARET MODIFICATION: Update rule filename restriction to align with brand-aware ignore file
+// CARETI MODIFICATION: Update rule filename restriction to align with brand-aware ignore file
 export const newRuleToolResponse = () =>
 	`<explicit_instructions type="new_rule">
 The user has explicitly asked you to help them create a new agent context rule file inside the ${BRAND_RULES_DIR} top-level directory based on the conversation up to this point in time. The user may have provided instructions or additional information for you to consider when creating the new agent context rule.

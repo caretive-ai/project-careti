@@ -6,20 +6,20 @@ Caret 프로젝트 개발을 위한 포괄적인 아키텍처 가이드입니다
 
 - **최소 Cline 확장**: 최대 보존을 가진 포크 전략
 - **레벨 기반 수정**: L1 독립 → L2 조건부 → L3 직접
-- **깨끗한 분리**: `caret-src/` vs `src/` 구분
+- **깨끗한 분리**: `careti-src/` vs `src/` 구분
 
 ## 아키텍처 레벨
 
 ### Level 1: 독립 모듈
 - **우선순위**: 권장
-- **위치**: `caret-src/`, `caret-docs/`
+- **위치**: `careti-src/`, `careti-docs/`
 - **자유도**: 완전한 구현 자유
 - **요구사항**: 없음 (백업 또는 주석 요구사항 없음)
 
 ### Level 2: 조건부 통합
 - **우선순위**: 주의 필요
 - **수정**: 최소 Cline 파일 수정 (최대 1-3줄)
-- **필수**: CARET MODIFICATION 주석
+- **필수**: CARETI MODIFICATION 주석
 - **보호**: `src/`, `webview-ui/`, `proto/`, `scripts/`
 
 ### Level 3: 직접 수정
@@ -49,7 +49,7 @@ Caret 프로젝트 개발을 위한 포괄적인 아키텍처 가이드입니다
 |------|------|
 | TDD 통합 우선 | 유닛 테스트가 아닌 실제 사용 시나리오 |
 | 백업 프로토콜 | deprecated (.cline 백업 미사용) |
-| 주석 프로토콜 | `// CARET MODIFICATION: [명확한 설명]` |
+| 주석 프로토콜 | `// CARETI MODIFICATION: [명확한 설명]` |
 | 검증 프로토콜 | 테스트 → 컴파일 → 실행 |
 
 ## 주요 파일 위치
@@ -57,7 +57,7 @@ Caret 프로젝트 개발을 위한 포괄적인 아키텍처 가이드입니다
 | 유형 | 위치 |
 |------|------|
 | 코어 로직 | `src/core/` |
-| Caret 확장 | `caret-src/` |
+| Caret 확장 | `careti-src/` |
 | 통신 | `src/shared/ExtensionMessage.ts` |
 | 웹뷰 | `webview-ui/src/App.tsx` |
 
@@ -70,7 +70,7 @@ Caret 프로젝트 개발을 위한 포괄적인 아키텍처 가이드입니다
 
 ## 가이드라인
 
-- 개발자와 동일한 아키텍처 지식에 AI 접근 제공 (caret-architecture-and-implementation-guide.md)
+- 개발자와 동일한 아키텍처 지식에 AI 접근 제공 (careti-architecture-and-implementation-guide.md)
 - 3단계 수정 전략 이해에 집중
 - Cline 수정보다 항상 Level 1 독립 모듈 선호
 - Caret 확장을 가능하게 하면서 Cline 코어에 최소한의 방해를 위해 설계된 아키텍처

@@ -5,8 +5,8 @@ import { getReadablePath, isLocatedInWorkspace } from "@utils/path"
 import { formatResponse } from "@/core/prompts/responses"
 import { telemetryService } from "@/services/telemetry"
 import { ClineDefaultTool } from "@/shared/tools"
-// CARET MODIFICATION: import brand utils for dynamic brand name
-import { getCurrentBrandName } from "@caret/utils/brand-utils"
+// CARETI MODIFICATION: import brand utils for dynamic brand name
+import { getCurrentBrandName } from "@careti/utils/brand-utils"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApproval } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -102,7 +102,7 @@ export class ListCodeDefinitionNamesToolHandler implements IFullyManagedTool {
 			)
 		} else {
 			// Manual approval flow
-			// CARET MODIFICATION: use dynamic brand name
+			// CARETI MODIFICATION: use dynamic brand name
 			const notificationMessage = `${getCurrentBrandName()} wants to analyze code definitions in ${getWorkspaceBasename(absolutePath, "ListCodeDefinitionNamesToolHandler.notification")}`
 
 			// Show notification

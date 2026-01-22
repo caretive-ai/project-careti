@@ -1,0 +1,57 @@
+{
+	"coreFeatures": {
+		"header": "与共同成长的AI编程助手Careti一起开始'Vibe Coding'。"
+	},
+	"getStarted": {
+		"button": "开始使用"
+	},
+	"welcome": {
+		"tooltipContent": "我可以通过编辑文件、探索项目、运行命令和使用浏览器来逐步开发软件。我甚至可以使用MCP工具扩展我的能力，以超越基本的代码补全功能。",
+		"takeATour": "开始导览"
+	},
+	"cliBanner": {
+		"title": "安装 CLI 并利用子代理",
+		"description": "大规模搜索与调研可交给 CLI 代理处理。Careti/Cline 模式下命令不同。",
+		"button": "安装 CLI",
+		"copyCommand": "复制命令",
+		"copied": "已复制！",
+		"learnMore": "了解更多",
+		"installed": "已安装",
+		"dismissTitle": "关闭 CLI 横幅"
+	},
+	"apiSetup": {
+		"backButton": "← 返回",
+		"title": "API 设置",
+		"description": "请选择并配置 API 提供商以使用 AI 模型。",
+		"instructions": "需要帮助？请查看以下链接：",
+		"supportLinks": {
+			"llmList": "查看支持的 LLM 列表",
+			"geminiCredit": "获取 Gemini 免费额度"
+		},
+		"saveButton": "保存设置",
+		"help": {
+			"title": "需要更多帮助？",
+			"button": "查看文档"
+		}
+	},
+	"community": {
+		"header": "加入我们的社区",
+		"body": "在 Careti GitHub 上查看最新更新并分享您的反馈。",
+		"githubLink": "访问 GitHub"
+	},
+	"footer": {
+		"about": {
+			"description": "Careti 是由 Caretive Inc. 开发的开源 AI 编程助手。",
+			"link": "了解更多"
+		},
+		"links": {
+			"caretiGithub": "Careti GitHub",
+			"caretiService": "Careti 服务",
+			"caretiveInc": "Caretive Inc.",
+			"support": "支持"
+		},
+		"copyright": {
+			"builtWith": "由 Caretive Inc. 用 ❤️ 打造"
+		}
+	}
+}

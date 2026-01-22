@@ -1,4 +1,4 @@
-// CARET MODIFICATION: native tool call 스트리밍에서 operationId 고정(중복 도구 카드 방지) 회귀 테스트
+// CARETI MODIFICATION: native tool call 스트리밍에서 operationId 고정(중복 도구 카드 방지) 회귀 테스트
 import { describe, it } from "mocha"
 import "should"
 import { ToolUseHandler } from "../tool-use-handler"

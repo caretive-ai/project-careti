@@ -81,7 +81,7 @@ export class OpenTelemetryClientProvider {
 
 		// Create resource with service information
 		const resource = new Resource({
-			[ATTR_SERVICE_NAME]: "caret",
+			[ATTR_SERVICE_NAME]: "careti",
 			[ATTR_SERVICE_VERSION]: ExtensionRegistryInfo.version,
 		})
 

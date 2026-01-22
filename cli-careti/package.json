@@ -1,0 +1,41 @@
+{
+	"name": "@caretive/careti-cli",
+	"version": "0.0.15",
+	"description": "Careti CLI (minimal fork of Cline CLI, packaged for caretive)",
+	"license": "MIT",
+	"bin": {
+		"careti": "./bin/caret",
+		"careti-host": "./bin/careti-host"
+	},
+	"files": [
+		"bin/*",
+		"proto/descriptor_set.pb",
+		"dist-standalone/cline-core.js",
+		"dist-standalone/README.md",
+		"dist-standalone/package.json",
+		"dist-standalone/postinstall.js",
+		"dist-standalone/ripgrep-binaries/*/rg*",
+		"dist-standalone/tree-sitter*.wasm",
+		"dist-standalone/fake_node_modules/**",
+		"dist-standalone/extension/**",
+		"dist-standalone/proto/**",
+		"dist-standalone/man/**",
+		"extension/**/*",
+		"README.md",
+		"postinstall.js",
+		"scripts/*.sh"
+	],
+	"scripts": {
+		"build": "./scripts/build-local.sh",
+		"pack": "npm pack",
+		"postinstall": "node ./postinstall.js"
+	},
+	"dependencies": {
+		"@grpc/grpc-js": "^1.13.3",
+		"@grpc/reflection": "^1.0.4",
+		"better-sqlite3": "^12.4.1",
+		"grpc-health-check": "^2.0.2",
+		"open": "^10.1.2",
+		"vscode-uri": "^3.1.0"
+	}
+}

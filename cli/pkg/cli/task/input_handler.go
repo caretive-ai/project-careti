@@ -174,20 +174,20 @@ func (ih *InputHandler) Start(ctx context.Context, errChan chan error) {
 						if newMode == "act" {
 							// Act mode: can send mode + message in one call
 							if err := ih.manager.SetMode(ctx, newMode, &remainingMessage, nil, nil); err != nil {
-								// CARET MODIFICATION: user-facing label plan/act
+								// CARETI MODIFICATION: user-facing label plan/act
 								output.Printf("\nError switching to act mode with message: %v\n", err)
 								continue
 							}
-							// CARET MODIFICATION: mode label uses plan/act terminology
+							// CARETI MODIFICATION: mode label uses plan/act terminology
 							output.Printf("\n%s\n", actStyle.Render("Switched to act mode"))
 						} else {
 							// Plan mode: must switch first, then send message separately
 							if err := ih.manager.SetMode(ctx, newMode, nil, nil, nil); err != nil {
-								// CARET MODIFICATION: user-facing label plan/act
+								// CARETI MODIFICATION: user-facing label plan/act
 								output.Printf("\nError switching to plan mode: %v\n", err)
 								continue
 							}
-							// CARET MODIFICATION: mode label uses plan/act terminology
+							// CARETI MODIFICATION: mode label uses plan/act terminology
 							output.Printf("\n%s\n", planStyle.Render("Switched to plan mode"))
 
 							// Now send the message separately
@@ -200,17 +200,17 @@ func (ih *InputHandler) Start(ctx context.Context, errChan chan error) {
 					} else {
 						// Just switch mode, no message
 						if err := ih.manager.SetMode(ctx, newMode, nil, nil, nil); err != nil {
-							// CARET MODIFICATION: user-facing label plan/act
+							// CARETI MODIFICATION: user-facing label plan/act
 							modeLabel := newMode
 							output.Printf("\nError switching to %s mode: %v\n", modeLabel, err)
 							continue
 						}
 						// Color based on mode
 						if newMode == "act" {
-							// CARET MODIFICATION: mode label uses plan/act terminology
+							// CARETI MODIFICATION: mode label uses plan/act terminology
 							output.Printf("\n%s\n", actStyle.Render("Switched to act mode"))
 						} else {
-							// CARET MODIFICATION: mode label uses plan/act terminology
+							// CARETI MODIFICATION: mode label uses plan/act terminology
 							output.Printf("\n%s\n", planStyle.Render("Switched to plan mode"))
 						}
 					}
@@ -288,7 +288,7 @@ func determineAutoApprovalAction(msg *types.ClineMessage) (string, error) {
 func (ih *InputHandler) promptForInput(ctx context.Context) (string, bool, error) {
 	currentMode := ih.manager.GetCurrentMode()
 
-	// CARET MODIFICATION: branding + mode hint text
+	// CARETI MODIFICATION: branding + mode hint text
 	model := output.NewInputModel(
 		output.InputTypeMessage,
 		"Caret is ready for your message...",
@@ -304,7 +304,7 @@ func (ih *InputHandler) promptForApproval(ctx context.Context, msg *types.ClineM
 	// Store the approval message for later use in determining auto-approval action
 	ih.approvalMessage = msg
 	
-	// CARET MODIFICATION: branding
+	// CARETI MODIFICATION: branding
 	model := output.NewInputModel(
 		output.InputTypeApproval,
 		"Let Caret use this tool?",

@@ -3,7 +3,7 @@
 ## Project Structure & Module Organization
 - Core VS Code extension code lives in `src/` (activation in `src/extension.ts`; hosts, services, and proto-generated helpers under `src/hosts`, `src/services`, `src/generated`).
 - Webview UI (React + Vite + Tailwind) sits in `webview-ui/` with Storybook support; shared assets in `assets/`.
-- CLI and packaging helpers reside in `cli/`, `scripts/`, and `caret-scripts/`; protocol definitions in `proto/`.
+- CLI and packaging helpers reside in `cli/`, `scripts/`, and `careti-scripts/`; protocol definitions in `proto/`.
 - Tests are split across `tests/` (e2e/flow), `src/test/` (extension integration harness), and `webview-ui` tests.
 
 ## Build, Test, and Development Commands
@@ -19,11 +19,11 @@
 - Use `PascalCase` for React components and classes, `camelCase` for functions/variables, `SCREAMING_SNAKE_CASE` for env constants.
 - Co-locate module-specific helpers with their feature directories; avoid deep relative paths by using existing tsconfig path aliases.
 
-## Caret/Cline Merge Discipline
-- When adding or altering logic not present in upstream Cline, mark the block with `// CARET MODIFICATION` (or file-level note) adjacent to the change; keep changes minimal and localized.
-- Prefer 3-way comparisons (base/cline/caret snapshots) instead of ad‑hoc edits; do not silently override upstream behavior.
-- Avoid hardcoding provider or account defaults; derive from callback payload/state and keep Cline/Caret flows separate.
-- Tests that encode Caret-specific expectations should clearly state the Caret path (comment or test name) so upstream/Cline behavior stays traceable.
+## Careti/Cline Merge Discipline
+- When adding or altering logic not present in upstream Cline, mark the block with `// CARETI MODIFICATION` (or file-level note) adjacent to the change; keep changes minimal and localized.
+- Prefer 3-way comparisons (base/cline/careti snapshots) instead of ad‑hoc edits; do not silently override upstream behavior.
+- Avoid hardcoding provider or account defaults; derive from callback payload/state and keep Cline/Careti flows separate.
+- Tests that encode Careti-specific expectations should clearly state the Careti path (comment or test name) so upstream/Cline behavior stays traceable.
 
 ## Testing Guidelines
 - Unit tests use Mocha/Chai (`*.test.ts`) for extension logic; integration uses `vscode-test`. Webview tests use Vitest and React Testing Library.

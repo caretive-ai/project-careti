@@ -1,4 +1,4 @@
-// CARET MODIFICATION: tool operationId 안정화 회귀 테스트 (스트리밍 중 중복 도구 카드 방지)
+// CARETI MODIFICATION: tool operationId 안정화 회귀 테스트 (스트리밍 중 중복 도구 카드 방지)
 import { describe, it } from "mocha"
 import "should"
 import { parseAssistantMessageV2 } from "../index"

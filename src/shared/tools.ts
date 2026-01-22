@@ -26,13 +26,13 @@ export enum ClineDefaultTool {
 	WEB_FETCH = "web_fetch",
 	GENERATE_IMAGE = "generate_image",
 	ANALYZE_IMAGE = "analyze_image",
-	READ_DOCUMENT = "read_document", // CARET MODIFICATION: Read document files (PDF, DOCX, HWPX, PPTX)
+	READ_DOCUMENT = "read_document", // CARETI MODIFICATION: Read document files (PDF, DOCX, HWPX, PPTX)
 	CONDENSE = "condense",
 	SUMMARIZE_TASK = "summarize_task",
 	REPORT_BUG = "report_bug",
 	NEW_RULE = "new_rule",
 	APPLY_PATCH = "apply_patch",
-	USE_SKILL = "use_skill", // CARET MODIFICATION: Skills system - on-demand agent instructions
+	USE_SKILL = "use_skill", // CARETI MODIFICATION: Skills system - on-demand agent instructions
 }
 
 // Array of all tool names for compatibility

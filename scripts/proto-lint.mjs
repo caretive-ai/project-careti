@@ -1,4 +1,4 @@
-// CARET MODIFICATION: cross-platform proto lint runner.
+// CARETI MODIFICATION: cross-platform proto lint runner.
 import { execSync } from "child_process"
 
 const root = process.cwd()

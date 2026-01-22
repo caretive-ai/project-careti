@@ -31,7 +31,7 @@ async function main() {
 		process.exit(0)
 	}
 
-	// CARET MODIFICATION: Standalone에서 리소스 로딩을 위해 cwd를 설치 디렉토리로 고정 (upstream b1d15d4fe)
+	// CARETI MODIFICATION: Standalone에서 리소스 로딩을 위해 cwd를 설치 디렉토리로 고정 (upstream b1d15d4fe)
 	setStandaloneInstallDirCwd(__dirname)
 
 	// Initialize context with optional custom directory from CLI

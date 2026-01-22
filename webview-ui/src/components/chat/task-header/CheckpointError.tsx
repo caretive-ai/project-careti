@@ -2,7 +2,7 @@ import { Alert } from "@heroui/react"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { XIcon } from "lucide-react"
 import { useMemo, useState } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 
 interface CheckpointErrorProps {
 	checkpointManagerErrorMessage?: string

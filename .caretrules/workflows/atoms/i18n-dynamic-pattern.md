@@ -30,10 +30,10 @@ import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
 import { getDynamicData } from "./constants"
 
 function Component() {
-    // CARET MODIFICATION: Use i18n context to detect language changes
+    // CARETI MODIFICATION: Use i18n context to detect language changes
     const { language } = useCaretI18nContext()
     
-    // CARET MODIFICATION: Use dynamic function with language dependency for i18n updates
+    // CARETI MODIFICATION: Use dynamic function with language dependency for i18n updates
     const dynamicData = useMemo(() => getDynamicData(), [language])
     
     // Use dynamicData instead of the old STATIC_DATA
@@ -53,9 +53,9 @@ MENU_ITEMS → getMenuItems()
 
 ### 2. Add Imports
 ```typescript
-// CARET MODIFICATION: Added useMemo for i18n reactivity
+// CARETI MODIFICATION: Added useMemo for i18n reactivity
 import { useMemo } from "react"
-// CARET MODIFICATION: Import i18n context for language reactivity  
+// CARETI MODIFICATION: Import i18n context for language reactivity  
 import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
 ```
 
@@ -78,15 +78,15 @@ const dynamicData = useMemo(() => getDynamicData(), [language])
 - `useMemo`: For performance optimization and handling the language dependency
 - `[language]`: Must be included in the dependency array
 
-### CARET MODIFICATION Comments
+### CARETI MODIFICATION Comments
 ```typescript
-// CARET MODIFICATION: Convert static constant to dynamic function for i18n support
+// CARETI MODIFICATION: Convert static constant to dynamic function for i18n support
 export const getDynamicData = () => [...]
 
-// CARET MODIFICATION: Use i18n context to detect language changes  
+// CARETI MODIFICATION: Use i18n context to detect language changes  
 const { language } = useCaretI18nContext()
 
-// CARET MODIFICATION: Use dynamic function with language dependency for i18n updates
+// CARETI MODIFICATION: Use dynamic function with language dependency for i18n updates
 const dynamicData = useMemo(() => getDynamicData(), [language])
 ```
 
@@ -111,7 +111,7 @@ npm run build:webview
 - [ ] Use `useCaretI18nContext`
 - [ ] Handle language dependency with `useMemo`  
 - [ ] Update all references to the dynamic variable
-- [ ] Add `CARET MODIFICATION` comments
+- [ ] Add `CARETI MODIFICATION` comments
 - [ ] Verify compilation and functionality
 
 ---

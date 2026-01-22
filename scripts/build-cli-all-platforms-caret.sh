@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# // CARET MODIFICATION: Linux/macOS build script for Caret CLI (all platforms).
+# // CARETI MODIFICATION: Linux/macOS build script for Caret CLI (all platforms).
 set -eu
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -46,10 +46,10 @@ for platform in "${PLATFORMS[@]}"; do
     EXT=".exe"
   fi
 
-  OUTPUT_NAME="bin/caret-${GOOS}-${GOARCH}${EXT}"
+  OUTPUT_NAME="bin/careti-${GOOS}-${GOARCH}${EXT}"
   GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "$LDFLAGS" -o "$OUTPUT_NAME" ./cmd/cline
 
-  OUTPUT_NAME="bin/caret-host-${GOOS}-${GOARCH}${EXT}"
+  OUTPUT_NAME="bin/careti-host-${GOOS}-${GOARCH}${EXT}"
   GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "$LDFLAGS" -o "$OUTPUT_NAME" ./cmd/cline-host
 done
 popd >/dev/null
@@ -57,17 +57,17 @@ popd >/dev/null
 mkdir -p "${ROOT_DIR}/dist-standalone/bin"
 rm -f "${ROOT_DIR}/dist-standalone/bin/cline"* "${ROOT_DIR}/dist-standalone/bin/caret"* || true
 
-cp "${ROOT_DIR}/cli/bin/caret-"* "${ROOT_DIR}/dist-standalone/bin/"
-cp "${ROOT_DIR}/cli/bin/caret-host-"* "${ROOT_DIR}/dist-standalone/bin/"
+cp "${ROOT_DIR}/cli/bin/careti-"* "${ROOT_DIR}/dist-standalone/bin/"
+cp "${ROOT_DIR}/cli/bin/careti-host-"* "${ROOT_DIR}/dist-standalone/bin/"
 
-# CARET MODIFICATION: keep cline aliases for legacy packaging scripts.
-for file in "${ROOT_DIR}/cli/bin/caret-"*; do
+# CARETI MODIFICATION: keep cline aliases for legacy packaging scripts.
+for file in "${ROOT_DIR}/cli/bin/careti-"*; do
   base=$(basename "$file")
-  cp "$file" "${ROOT_DIR}/dist-standalone/bin/${base/caret-/cline-}"
+  cp "$file" "${ROOT_DIR}/dist-standalone/bin/${base/careti-/cline-}"
 done
-for file in "${ROOT_DIR}/cli/bin/caret-host-"*; do
+for file in "${ROOT_DIR}/cli/bin/careti-host-"*; do
   base=$(basename "$file")
-  cp "$file" "${ROOT_DIR}/dist-standalone/bin/${base/caret-host-/cline-host-}"
+  cp "$file" "${ROOT_DIR}/dist-standalone/bin/${base/careti-host-/cline-host-}"
 done
 
 echo "Copied multi-platform binaries to dist-standalone/bin (Caret + Cline aliases)."

@@ -3,8 +3,8 @@ import type { ClineMessage } from "@shared/ExtensionMessage"
 import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import { AskResponseRequest, NewTaskRequest } from "@shared/proto/cline/task"
 import { useCallback } from "react"
-// CARET MODIFICATION: use CaretWebviewLogger instead of console
-import WebviewLogger from "@/caret/utils/CaretWebviewLogger"
+// CARETI MODIFICATION: use CaretWebviewLogger instead of console
+import WebviewLogger from "@/careti/utils/CaretWebviewLogger"
 import { SlashServiceClient, TaskServiceClient } from "@/services/grpc-client"
 import type { ButtonActionType } from "../shared/buttonConfig"
 import type { ChatState, MessageHandlers } from "../types/chatTypes"

@@ -283,13 +283,13 @@ class StdioHookRunner<Name extends HookName> extends HookRunner<Name> {
 			let stderr = hookProcess.getStderr()
 			const exitCode = hookProcess.getExitCode()
 
-			// CARET MODIFICATION: In test sandboxes, node child process stdout can be swallowed.
+			// CARETI MODIFICATION: In test sandboxes, node child process stdout can be swallowed.
 			// Fallback to file-based capture so hook tests still observe script output.
 			const shouldCaptureToFile = process.env.CARET_TEST_HOOK_FALLBACK === "true" || process.env.NODE_ENV === "test"
 			if (shouldCaptureToFile && !stdout) {
 				let tempDir: string | null = null
 				try {
-					tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "caret-hook-"))
+					tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "careti-hook-"))
 					const stdinFile = path.join(tempDir, "stdin.json")
 					const stdoutFile = path.join(tempDir, "stdout.log")
 					const stderrFile = path.join(tempDir, "stderr.log")

@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Naver Cloud provider tests.
+// CARETI MODIFICATION: Naver Cloud provider tests.
 import { expect } from "chai"
 import sinon from "sinon"
 import { NaverCloudHandler } from "@core/api/providers/naver-cloud"
@@ -20,13 +20,32 @@ describe("NaverCloudHandler", () => {
 	}
 
 	describe("timeout handling", () => {
-		it("should timeout after specified duration", async () => {
-			// Create a fetch stub that never resolves (simulates hanging request)
-			const fetchStub = sinon.stub().callsFake(() => {
-				return new Promise(() => {
-					// Never resolves - simulates a hanging connection
+		it("should timeout after specified duration", async function () {
+			this.timeout(5000)
+			// Create a fetch stub that never resolves, but rejects on AbortSignal abort (simulates hanging request with timeout)
+			const fetchStub = sinon
+				.stub()
+				.callsFake((_input: RequestInfo | URL, init?: RequestInit) => {
+					const signal = init?.signal as AbortSignal | undefined
+					return new Promise((_resolve, reject) => {
+						if (signal?.aborted) {
+							const error = new Error("The operation was aborted.")
+							;(error as { name?: string }).name = "AbortError"
+							reject(error)
+							return
+						}
+
+						signal?.addEventListener(
+							"abort",
+							() => {
+								const error = new Error("The operation was aborted.")
+								;(error as { name?: string }).name = "AbortError"
+								reject(error)
+							},
+							{ once: true },
+						)
+					})
 				})
-			})
 
 			const startTime = Date.now()
 			let errorThrown: Error | undefined

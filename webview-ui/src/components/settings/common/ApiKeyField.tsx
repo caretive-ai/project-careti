@@ -1,6 +1,6 @@
 import { VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
-// CARET MODIFICATION: Use Caret's i18n system instead of react-i18next
-import { t } from "@/caret/utils/i18n"
+// CARETI MODIFICATION: Use Careti's i18n system instead of react-i18next
+import { t } from "@/careti/utils/i18n"
 import { useDebouncedInput } from "../utils/useDebouncedInput"
 
 /**
@@ -19,7 +19,7 @@ interface ApiKeyFieldProps {
  * A reusable component for API key input fields with standard styling and help text for signing up for key
  */
 export const ApiKeyField = ({ initialValue, onChange, providerName, signupUrl, placeholder, helpText }: ApiKeyFieldProps) => {
-	// CARET MODIFICATION: Remove react-i18next usage
+	// CARETI MODIFICATION: Remove react-i18next usage
 	const [localValue, setLocalValue] = useDebouncedInput(initialValue, onChange)
 
 	const defaultPlaceholder = t("apiKeyField.placeholder", "settings")

@@ -427,8 +427,8 @@ function convertApiProviderToProto(provider: string | undefined): ProtoApiProvid
 			return ProtoApiProvider.HICAP
 		case "nousResearch":
 			return ProtoApiProvider.NOUSRESEARCH
-		case "caret":
-			return ProtoApiProvider.CARET
+		case "careti":
+			return ProtoApiProvider.CARETI
 		case "bizrouter":
 			return ProtoApiProvider.BIZROUTER
 		default:
@@ -523,8 +523,8 @@ export function convertProtoToApiProvider(provider: ProtoApiProvider): ApiProvid
 			return "minimax"
 		case ProtoApiProvider.NOUSRESEARCH:
 			return "nousResearch"
-		case ProtoApiProvider.CARET:
-			return "caret"
+		case ProtoApiProvider.CARETI:
+			return "careti"
 		case ProtoApiProvider.BIZROUTER:
 			return "bizrouter"
 		default:

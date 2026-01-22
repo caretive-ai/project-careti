@@ -1,9 +1,9 @@
-// CARET MODIFICATION: Import full language support
+// CARETI MODIFICATION: Import full language support
 import { type LanguageDisplay, languageOptions } from "@shared/Languages"
 import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import React from "react"
-import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
-import { t } from "@/caret/utils/i18n"
+import { useCaretI18n } from "@/careti/hooks/useCaretI18n"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { updateSetting } from "./utils/settingsHandlers"
 
@@ -12,7 +12,7 @@ const PreferredLanguageSetting: React.FC = () => {
 	const { changeLanguage } = useCaretI18n()
 
 	const handleLanguageChange = async (newLanguageDisplay: LanguageDisplay) => {
-		// CARET MODIFICATION: Handle full language support and immediate UI switching
+		// CARETI MODIFICATION: Handle full language support and immediate UI switching
 		try {
 			console.log(`🌐 [PreferredLanguageSetting] Language change requested: ${newLanguageDisplay}`)
 

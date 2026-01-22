@@ -5,12 +5,12 @@ Caret 브랜딩 적용 및 로깅 시스템 구현 가이드입니다.
 ## 브랜딩 시스템
 
 ### 브랜드 유틸리티
-`caret-src/utils/brand-utils.ts` 사용:
+`careti-src/utils/brand-utils.ts` 사용:
 ```typescript
 import { getBrandName, getBrandPath } from '@/utils/brand-utils';
 
 // 브랜드 이름 가져오기
-const name = getBrandName(); // "Caret" 또는 설정된 브랜드
+const name = getBrandName(); // "Careti" 또는 설정된 브랜드
 
 // 브랜드 경로 가져오기
 const path = getBrandPath(); // ".caret" 또는 설정된 경로

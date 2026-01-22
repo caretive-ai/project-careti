@@ -1,4 +1,4 @@
-// CARET MODIFICATION: test stub for PostHog providers to avoid ESM loader issues
+// CARETI MODIFICATION: test stub for PostHog providers to avoid ESM loader issues
 class PostHogErrorProvider {
 	constructor() {
 		this.errorSettings = { enabled: false, hostEnabled: false, level: "off" }

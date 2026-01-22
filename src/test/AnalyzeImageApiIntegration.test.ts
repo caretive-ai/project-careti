@@ -1,12 +1,12 @@
-// CARET MODIFICATION: Integration test for Analyze Image API with actual Gemini API calls
+// CARETI MODIFICATION: Integration test for Analyze Image API with actual Gemini API calls
 // This test requires GEMINI_TOKEN in .env file
 // Run with: npm run test:integration -- --grep "Analyze Image API"
 
-import { describe, it, before } from "mocha"
 import { expect } from "chai"
-import sharp from "sharp"
-import * as path from "path"
 import * as fs from "fs"
+import { before, describe, it } from "mocha"
+import * as path from "path"
+import sharp from "sharp"
 
 // Load .env manually (avoid dotenv dependency)
 const envPath = path.resolve(__dirname, "../../.env")
@@ -207,15 +207,15 @@ describeWithToken("Gemini API Connectivity", function () {
 })
 
 // ============================================================================
-// Caret API Tests (uses CARET_KEY to access Gemini via Caret proxy)
+// Careti API Tests (uses CARET_KEY to access Gemini via Careti proxy)
 // ============================================================================
 
 const CARET_KEY = process.env.CARET_KEY
-const CARET_API_URL = "https://api.caret.team/v1/chat/completions"
+const CARET_API_URL = "https://api.careti.ai/v1/chat/completions"
 
 const describeWithCaretKey = CARET_KEY ? describe : describe.skip
 
-describeWithCaretKey("Caret API Integration (Gemini via proxy)", function () {
+describeWithCaretKey("Careti API Integration (Gemini via proxy)", function () {
 	this.timeout(60000)
 
 	let testImageDataUrl: string
@@ -235,7 +235,7 @@ describeWithCaretKey("Caret API Integration (Gemini via proxy)", function () {
 					input: Buffer.from(
 						`<svg width="200" height="100">
 							<rect width="200" height="100" fill="white"/>
-							<text x="20" y="50" font-size="24" fill="black">Caret Test</text>
+							<text x="20" y="50" font-size="24" fill="black">Careti Test</text>
 							<rect x="140" y="20" width="50" height="60" fill="red"/>
 						</svg>`,
 					),
@@ -249,7 +249,7 @@ describeWithCaretKey("Caret API Integration (Gemini via proxy)", function () {
 		testImageDataUrl = `data:image/png;base64,${imageBuffer.toString("base64")}`
 	})
 
-	it("should analyze image via Caret API (OpenAI-compatible format)", async () => {
+	it("should analyze image via Careti API (OpenAI-compatible format)", async () => {
 		const response = await fetch(CARET_API_URL, {
 			method: "POST",
 			headers: {
@@ -279,24 +279,24 @@ describeWithCaretKey("Caret API Integration (Gemini via proxy)", function () {
 			}),
 		})
 
-		console.log("Caret API response status:", response.status)
+		console.log("Careti API response status:", response.status)
 
 		if (!response.ok) {
 			const errorText = await response.text()
 			console.error("Error response:", errorText)
 		}
 
-		expect(response.ok, `Caret API call failed: ${response.status}`).to.be.true
+		expect(response.ok, `Careti API call failed: ${response.status}`).to.be.true
 
 		const result = await response.json()
-		console.log("Caret API result:", JSON.stringify(result, null, 2))
+		console.log("Careti API result:", JSON.stringify(result, null, 2))
 
 		expect(result.choices).to.be.an("array").with.length.greaterThan(0)
 		expect(result.choices[0].message.content).to.be.a("string")
 		expect(result.choices[0].message.content.length).to.be.greaterThan(10)
 	})
 
-	it("should handle text-only requests via Caret API", async () => {
+	it("should handle text-only requests via Careti API", async () => {
 		const response = await fetch(CARET_API_URL, {
 			method: "POST",
 			headers: {

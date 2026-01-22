@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { getMatchingSlashCommands, SlashCommand } from "@/utils/slash-commands"
 
 interface SlashCommandMenuProps {

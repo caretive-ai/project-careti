@@ -1,5 +1,5 @@
-// CARET MODIFICATION: Hook toggle controller
-// Ported from cline-latest with Caret path standards (.agents/hooks)
+// CARETI MODIFICATION: Hook toggle controller
+// Ported from cline-latest with Careti path standards (.agents/hooks)
 import { ToggleHookRequest, ToggleHookResponse } from "@shared/proto/cline/file"
 import fs from "fs/promises"
 import path from "path"
@@ -23,7 +23,7 @@ export async function toggleHook(
 	const { hookName, isGlobal, enabled, workspaceName } = request
 
 	// Determine hook path
-	// CARET MODIFICATION: Uses .agents/hooks for workspace hooks (Caret standard)
+	// CARETI MODIFICATION: Uses .agents/hooks for workspace hooks (Careti standard)
 	const hooksDir = await resolveHooksDirectory(isGlobal, workspaceName, globalHooksDirOverride)
 
 	const hookPath = path.join(hooksDir, hookName)

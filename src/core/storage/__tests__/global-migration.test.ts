@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Tests for global path migration (~/Documents/Caret/ → ~/Documents/.agents/)
+// CARETI MODIFICATION: Tests for global path migration (~/Documents/Careti/ → ~/Documents/.agents/)
 import { afterEach, beforeEach, describe, it } from "mocha"
 import "should"
 import fs from "fs/promises"
@@ -36,14 +36,14 @@ describe("global-migration", () => {
 	})
 
 	describe("checkLegacyPathsExist", () => {
-		it("should return false when legacy Caret folder does not exist", async () => {
+		it("should return false when legacy Careti folder does not exist", async () => {
 			const result = await checkLegacyPathsExist(mockDocumentsPath)
 			result.should.be.false()
 		})
 
-		it("should return true when legacy Caret folder exists with content", async () => {
+		it("should return true when legacy Careti folder exists with content", async () => {
 			// Create legacy structure
-			const legacyRulesDir = path.join(mockDocumentsPath, "Caret", "Rules")
+			const legacyRulesDir = path.join(mockDocumentsPath, "Careti", "Rules")
 			await fs.mkdir(legacyRulesDir, { recursive: true })
 			await fs.writeFile(path.join(legacyRulesDir, "test-rule.md"), "# Test Rule")
 
@@ -51,8 +51,8 @@ describe("global-migration", () => {
 			result.should.be.true()
 		})
 
-		it("should return false when legacy Caret folder exists but is empty", async () => {
-			const legacyDir = path.join(mockDocumentsPath, "Caret")
+		it("should return false when legacy Careti folder exists but is empty", async () => {
+			const legacyDir = path.join(mockDocumentsPath, "Careti")
 			await fs.mkdir(legacyDir, { recursive: true })
 
 			const result = await checkLegacyPathsExist(mockDocumentsPath)
@@ -71,7 +71,7 @@ describe("global-migration", () => {
 
 		it("should skip migration when already migrated", async () => {
 			// Create legacy structure
-			const legacyRulesDir = path.join(mockDocumentsPath, "Caret", "Rules")
+			const legacyRulesDir = path.join(mockDocumentsPath, "Careti", "Rules")
 			await fs.mkdir(legacyRulesDir, { recursive: true })
 			await fs.writeFile(path.join(legacyRulesDir, "test-rule.md"), "# Test Rule")
 
@@ -87,7 +87,7 @@ describe("global-migration", () => {
 
 		it("should migrate Rules to context", async () => {
 			// Create legacy Rules
-			const legacyRulesDir = path.join(mockDocumentsPath, "Caret", "Rules")
+			const legacyRulesDir = path.join(mockDocumentsPath, "Careti", "Rules")
 			await fs.mkdir(legacyRulesDir, { recursive: true })
 			await fs.writeFile(path.join(legacyRulesDir, "my-rule.md"), "# My Rule Content")
 			await fs.writeFile(path.join(legacyRulesDir, "persona.md"), "# Persona")
@@ -108,7 +108,7 @@ describe("global-migration", () => {
 
 		it("should migrate all subdirectories with correct mapping", async () => {
 			// Create all legacy subdirectories
-			const legacyBase = path.join(mockDocumentsPath, "Caret")
+			const legacyBase = path.join(mockDocumentsPath, "Careti")
 			const subdirs = ["Rules", "Workflows", "Skills", "Hooks", "MCP"]
 
 			for (const subdir of subdirs) {
@@ -143,7 +143,7 @@ describe("global-migration", () => {
 
 		it("should not overwrite existing files in new location", async () => {
 			// Create legacy Rules
-			const legacyRulesDir = path.join(mockDocumentsPath, "Caret", "Rules")
+			const legacyRulesDir = path.join(mockDocumentsPath, "Careti", "Rules")
 			await fs.mkdir(legacyRulesDir, { recursive: true })
 			await fs.writeFile(path.join(legacyRulesDir, "existing.md"), "# Legacy Content")
 
@@ -164,7 +164,7 @@ describe("global-migration", () => {
 
 		it("should handle nested directories", async () => {
 			// Create nested structure in legacy Skills
-			const legacySkillsDir = path.join(mockDocumentsPath, "Caret", "Skills", "my-skill")
+			const legacySkillsDir = path.join(mockDocumentsPath, "Careti", "Skills", "my-skill")
 			await fs.mkdir(legacySkillsDir, { recursive: true })
 			await fs.writeFile(path.join(legacySkillsDir, "SKILL.md"), "# My Skill")
 			await fs.writeFile(path.join(legacySkillsDir, "helper.js"), "// helper")
@@ -184,7 +184,7 @@ describe("global-migration", () => {
 
 		it("should set migration status after successful migration", async () => {
 			// Create legacy Rules
-			const legacyRulesDir = path.join(mockDocumentsPath, "Caret", "Rules")
+			const legacyRulesDir = path.join(mockDocumentsPath, "Careti", "Rules")
 			await fs.mkdir(legacyRulesDir, { recursive: true })
 			await fs.writeFile(path.join(legacyRulesDir, "test.md"), "# Test")
 
@@ -196,7 +196,7 @@ describe("global-migration", () => {
 
 		it("should preserve legacy files (not delete them)", async () => {
 			// Create legacy Rules
-			const legacyRulesDir = path.join(mockDocumentsPath, "Caret", "Rules")
+			const legacyRulesDir = path.join(mockDocumentsPath, "Careti", "Rules")
 			await fs.mkdir(legacyRulesDir, { recursive: true })
 			await fs.writeFile(path.join(legacyRulesDir, "test.md"), "# Test")
 

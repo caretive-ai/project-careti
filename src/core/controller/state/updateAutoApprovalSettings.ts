@@ -20,9 +20,9 @@ export async function updateAutoApprovalSettings(controller: Controller, request
 			...currentSettings,
 			...(request.version !== undefined && { version: request.version }),
 			...(request.enableNotifications !== undefined && { enableNotifications: request.enableNotifications }),
-			// CARET MODIFICATION: Preserve max_requests from webview updates
+			// CARETI MODIFICATION: Preserve max_requests from webview updates
 			...(request.maxRequests !== undefined && { maxRequests: request.maxRequests }),
-			// CARET MODIFICATION: Respect global auto-approval enable/disable toggle
+			// CARETI MODIFICATION: Respect global auto-approval enable/disable toggle
 			...(request.enabled !== undefined && { enabled: request.enabled }),
 			actions: {
 				...currentSettings.actions,

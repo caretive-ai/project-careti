@@ -1,5 +1,5 @@
 # Project Overview
-- Caret: Cline 기반 포크이며, 핵심은 유지하고 caret-src/로 확장합니다.
+- Careti: Cline 기반 포크이며, 핵심은 유지하고 careti-src/로 확장합니다.
 - 이중 디렉토리: `.agents/` (AI용, 토큰 최적화), `.users/` (사람용, 상세 설명)
 
 # IMPORTANT: 세션 시작 시 필수 작업
@@ -19,11 +19,11 @@
 - **항상 한국어로 응답**합니다.
 - **사전지식 의존 금지**: 작업 전 위의 필수 파일들을 먼저 읽습니다.
 - TDD: Integration 테스트 우선 → 최소 구현 → 리팩터.
-- 브랜드/경로/표기 계산은 `caret-src/utils/brand-utils.ts`를 사용합니다.
+- 브랜드/경로/표기 계산은 `careti-src/utils/brand-utils.ts`를 사용합니다.
 
 # Boundaries
-- 보호 디렉토리(`src/`, `webview-ui/` 등)에 신규 파일 추가 시 파일 상단에 `// CARET MODIFICATION:` 표기.
-- Cline 원본 파일 수정은 최소 침습 원칙(1~3줄)과 `// CARET MODIFICATION:` 주석을 준수.
+- 보호 디렉토리(`src/`, `webview-ui/` 등)에 신규 파일 추가 시 파일 상단에 `// CARETI MODIFICATION:` 표기.
+- Cline 원본 파일 수정은 최소 침습 원칙(1~3줄)과 `// CARETI MODIFICATION:` 주석을 준수.
 - `.cline` 백업 파일 생성 규칙은 **deprecated** (새로 만들지 않음).
 - `work-logs`는 사용자가 요청하지 않는 한 언급/수정하지 않습니다.
 
@@ -56,4 +56,4 @@
 
 # Model List Documentation
 - **자동 업데이트**: `npm run models:generate` 실행
-- **스크립트**: `caret-scripts/build/generate-support-model-list.js`
+- **스크립트**: `careti-scripts/build/generate-support-model-list.js`

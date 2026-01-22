@@ -77,10 +77,10 @@ const handlePersonaChange = async (personaId: string) => {
 
 ### Server Implementation (Extension)
 ```typescript
-// caret-src/core/controller/persona/setPersona.ts
+// careti-src/core/controller/persona/setPersona.ts
 export async function SetPersona(
   controller: Controller,
-  request: proto.caret.SetPersonaRequest
+  request: proto.careti.SetPersonaRequest
 ): Promise<proto.google.protobuf.Empty> {
   const { persona_id } = request
 
@@ -270,4 +270,4 @@ test("persona change updates UI", async () => {
 ## Related Documents
 - `.agents/context/frontend-backend-patterns.md`: Interaction patterns and anti-patterns
 - `.agents/context/component-architecture.md`: Component design principles
-- `caret-docs/development/webview-extension-communication.md`: Full guide (Korean)
+- `careti-docs/development/webview-extension-communication.md`: Full guide (Korean)

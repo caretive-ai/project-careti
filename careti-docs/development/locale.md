@@ -1,0 +1,23 @@
+# 🌍 Internationalization (i18n) Guide
+
+> **Note:** This document provides a brief overview. For the complete and authoritative guide on i18n patterns, rules, and implementation, please refer to the primary documentation:
+>
+> **➡️ [Comprehensive i18n System Guide (EN)](../features.en/f02-multilingual-i18n.md)**
+
+## Core Principles Summary
+
+To maintain consistency across the project, all internationalization efforts must follow these core principles, which are detailed in the main guide.
+
+### 1. Feature-Based Namespaces
+Each primary feature or view (e.g., `welcome`, `history`, `settings`) must have its own dedicated namespace, which corresponds to a JSON file in the `webview-ui/src/careti/locale/{language}/` directory.
+
+-   **Example**: `t('history.title', 'history')`
+
+### 2. Unified Provider Key Structure
+All translation keys related to API Providers must be consolidated within the `settings.json` namespace under a single `providers` object. Each provider's translations are grouped by its unique ID.
+
+-   **Standard Pattern**: `t('providers.{providerId}.{key}', 'settings')`
+-   **Example**: `t('providers.openrouter.apiKeyLabel', 'settings')`
+
+---
+*Please refer to the [main guide (EN)](../features.en/f02-multilingual-i18n.md) for detailed implementation steps, code examples, and management processes.*

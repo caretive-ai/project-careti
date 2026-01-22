@@ -4,11 +4,11 @@ import { EmptyRequest } from "@shared/proto/index.cline"
 import { OpenaiReasoningEffort } from "@shared/storage/types"
 import { VSCodeButton, VSCodeCheckbox, VSCodeDropdown, VSCodeOption, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import { memo, useEffect, useMemo, useState } from "react"
-// CARET MODIFICATION: mention image send setting toggle
-import MentionImageSendToggle from "@/caret/components/MentionImageSendToggle"
-import { getLocalizedUrl } from "@/caret/constants/urls"
-import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
-import { t } from "@/caret/utils/i18n"
+// CARETI MODIFICATION: mention image send setting toggle
+import MentionImageSendToggle from "@/careti/components/MentionImageSendToggle"
+import { getLocalizedUrl } from "@/careti/constants/urls"
+import { useCaretI18nContext } from "@/careti/context/CaretI18nContext"
+import { t } from "@/careti/utils/i18n"
 import McpDisplayModeDropdown from "@/components/mcp/chat-display/McpDisplayModeDropdown"
 import { PLATFORM_CONFIG, PlatformType } from "@/config/platform.config"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -37,7 +37,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 		modeSystem,
 		subagentsEnabled,
 		featureConfig,
-		// CARET MODIFICATION: Hooks and Skills settings
+		// CARETI MODIFICATION: Hooks and Skills settings
 		hooksEnabled,
 		skillsEnabled,
 	} = useExtensionState()
@@ -45,21 +45,21 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 	const { language } = useCaretI18nContext()
 	const [isCliInstalled, setIsCliInstalled] = useState(false)
 
-	const isCaretMode = modeSystem === "caret"
-	const cliLabel = isCaretMode ? "Caret CLI" : "Cline CLI"
+	const isCaretMode = modeSystem === "careti"
+	const cliLabel = isCaretMode ? "Careti CLI" : "Cline CLI"
 	const installCommand = useMemo(
-		() => (isCaretMode ? "npm install -g @caretive/caret-cli" : "npm install -g cline"),
+		() => (isCaretMode ? "npm install -g @caretive/careti-cli" : "npm install -g cline"),
 		[isCaretMode],
 	)
 	const installWarningKey = isCaretMode ? "features.subagents.caretWarning" : "features.subagents.clineWarning"
 	const installStatusKey = isCliInstalled ? "features.subagents.installed" : "features.subagents.notInstalled"
-	const authCommand = isCaretMode ? "caret auth" : "cline auth"
+	const authCommand = isCaretMode ? "careti auth" : "cline auth"
 
 	const handleReasoningEffortChange = (newValue: OpenaiReasoningEffort) => {
 		updateSetting("openaiReasoningEffort", newValue)
 	}
 
-	// CLI 설치 여부 폴링 (modeSystem에 맞춰 Caret/Cline CLI 감지)
+	// CLI 설치 여부 폴링 (modeSystem에 맞춰 Careti/Cline CLI 감지)
 	useEffect(() => {
 		let cancelled = false
 
@@ -88,7 +88,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 			<Section>
 				<div style={{ marginBottom: 20 }}>
 					{/* 서브에이전트 설정 (VS Code, macOS/Linux 한정) */}
-					{/* CARET MODIFICATION: Disable subagents UI in Caret mode (CLI not released in v0.4.4) */}
+					{/* CARETI MODIFICATION: Disable subagents UI in Careti mode (CLI not released in v0.4.4) */}
 					{!isCaretMode && isMacOSOrLinux() && PLATFORM_CONFIG.type === PlatformType.VSCODE && (
 						<div
 							className="relative p-3 mb-3 rounded-md"
@@ -317,7 +317,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 							</p>
 						</div>
 					)}
-					{featureConfig?.showDictationToggle !== false && ( // CARET MODIFICATION: gate dictation UI by feature flag
+					{featureConfig?.showDictationToggle !== false && ( // CARETI MODIFICATION: gate dictation UI by feature flag
 						<>
 							<div className="mt-2.5">
 								<VSCodeCheckbox
@@ -389,7 +389,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 							</a>
 						</p>
 					</div>
-					{/* CARET MODIFICATION: Hooks setting */}
+					{/* CARETI MODIFICATION: Hooks setting */}
 					<div style={{ marginTop: 10 }}>
 						<VSCodeCheckbox
 							checked={hooksEnabled?.user ?? false}
@@ -411,7 +411,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 							</p>
 						)}
 					</div>
-					{/* CARET MODIFICATION: Skills setting */}
+					{/* CARETI MODIFICATION: Skills setting */}
 					<div style={{ marginTop: 10 }}>
 						<VSCodeCheckbox
 							checked={skillsEnabled}

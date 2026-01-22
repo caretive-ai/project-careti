@@ -1,4 +1,4 @@
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { ActionMetadata } from "./types"
 
 export const getActionMetadata = (): ActionMetadata[] => [

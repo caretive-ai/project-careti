@@ -17,7 +17,7 @@ export function createGPT51Variant(): DeepPlanningVariant {
 			if (!modelId) {
 				return false
 			}
-			// CARET MODIFICATION: GPT-5.2도 deep-planning 변형 대상에 포함 (R-3410-01)
+			// CARETI MODIFICATION: GPT-5.2도 deep-planning 변형 대상에 포함 (R-3410-01)
 			return isGPT51Model(modelId) || isGPT52Model(modelId)
 		},
 		template: "", // Template is dynamically generated in getDeepPlanningPrompt() based on focus chain settings

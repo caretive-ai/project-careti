@@ -35,7 +35,7 @@ const CaretWelcome = () => {
   )
 
   return (
-    <div className="caret-welcome">
+    <div className="careti-welcome">
       {renderSection('coreFeatures.header', 'coreFeatures.description')}
     </div>
   )
@@ -57,7 +57,7 @@ const CaretWelcomeSection: React.FC<CaretWelcomeSectionProps> = ({
   headerKey, bodyKey, buttonConfig
 }) => {
   return (
-    <div className="caret-welcome-section">
+    <div className="careti-welcome-section">
       <h3>{t(headerKey, 'welcome')}</h3>
       <p>{t(bodyKey, 'welcome')}</p>
       {buttonConfig && <CaretButton {...buttonConfig} />}
@@ -170,4 +170,4 @@ Before committing new components, verify:
 ## Related Documents
 - `.caretrules/frontend-backend-patterns.md`: Frontend-backend communication
 - `.caretrules/webview-communication.md`: Webview message flow
-- `caret-docs/development/component-architecture-principles.md`: Full guide (Korean)
+- `careti-docs/development/component-architecture-principles.md`: Full guide (Korean)

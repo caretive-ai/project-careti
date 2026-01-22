@@ -1,0 +1,1710 @@
+[
+  {
+    "from": "src/core/controller/index.ts",
+    "to": "src/core/prompts/system-prompt.ts"
+  },
+  {
+    "from": "src/core/controller/index.ts",
+    "to": "src/core/storage/StateManager.ts"
+  },
+  {
+    "from": "src/core/controller/index.ts",
+    "to": "src/core/storage/state-keys.ts"
+  },
+  {
+    "from": "src/core/controller/index.ts",
+    "to": "src/core/task.ts"
+  },
+  {
+    "from": "src/core/controller/index.ts",
+    "to": "src/core/controller/mcp/subscribeToMcpMarketplaceCatalog.ts"
+  },
+  {
+    "from": "src/core/controller/index.ts",
+    "to": "src/core/controller/models/refreshOpenRouterModels.ts"
+  },
+  {
+    "from": "src/core/controller/index.ts",
+    "to": "src/core/controller/state/subscribeToState.ts"
+  },
+  {
+    "from": "src/core/controller/index.ts",
+    "to": "src/core/controller/ui/subscribeToChatButtonClicked.ts"
+  },
+  {
+    "from": "src/core/controller/grpc-service.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/grpc-service.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/grpc-request-registry.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/grpc-handler.test.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/web/openInBrowser.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/web/fetchOpenGraphData.ts",
+    "to": "src/integrations/misc/link-preview.ts"
+  },
+  {
+    "from": "src/core/controller/web/fetchOpenGraphData.ts",
+    "to": "src/shared/proto-conversions/web/open-graph-conversion.ts"
+  },
+  {
+    "from": "src/core/controller/web/fetchOpenGraphData.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/web/checkIsImageUrl.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToSettingsButtonClicked.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToSettingsButtonClicked.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToRelinquishControl.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToRelinquishControl.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToPartialMessage.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToPartialMessage.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToMcpButtonClicked.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToMcpButtonClicked.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToHistoryButtonClicked.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToHistoryButtonClicked.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToFocusChatInput.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToFocusChatInput.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToDidBecomeVisible.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToDidBecomeVisible.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToChatButtonClicked.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToChatButtonClicked.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToAddToInput.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToAddToInput.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToAccountButtonClicked.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/ui/subscribeToAccountButtonClicked.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/setTerminalExecutionMode.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/ui/scrollToSettings.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/ui/openWalkthrough.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/openUrl.ts",
+    "to": "src/utils/github-url-utils.ts"
+  },
+  {
+    "from": "src/core/controller/ui/openUrl.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/onDidShowAnnouncement.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/initializeWebview.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ui/initializeWebview.ts",
+    "to": "src/core/controller/mcp/subscribeToMcpMarketplaceCatalog.ts"
+  },
+  {
+    "from": "src/core/controller/ui/initializeWebview.ts",
+    "to": "src/core/controller/models/refreshBasetenModels.ts"
+  },
+  {
+    "from": "src/core/controller/ui/initializeWebview.ts",
+    "to": "src/core/controller/models/refreshGroqModels.ts"
+  },
+  {
+    "from": "src/core/controller/ui/initializeWebview.ts",
+    "to": "src/core/controller/models/refreshOpenRouterModels.ts"
+  },
+  {
+    "from": "src/core/controller/ui/initializeWebview.ts",
+    "to": "src/core/controller/models/refreshVercelAiGatewayModels.ts"
+  },
+  {
+    "from": "src/core/controller/ui/initializeWebview.ts",
+    "to": "src/core/controller/models/subscribeToOpenRouterModels.ts"
+  },
+  {
+    "from": "src/core/controller/ui/getWebviewHtml.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/task/toggleTaskFavorite.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/task/taskFeedback.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/task/taskCompletionViewChanges.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/task/showTaskWithId.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/task/showTaskWithId.ts",
+    "to": "src/core/controller/ui/subscribeToChatButtonClicked.ts"
+  },
+  {
+    "from": "src/core/controller/task/newTask.ts",
+    "to": "src/shared/BrowserSettings.ts"
+  },
+  {
+    "from": "src/core/controller/task/newTask.ts",
+    "to": "src/shared/proto-conversions/models/auto-approval-settings-conversion.ts"
+  },
+  {
+    "from": "src/core/controller/task/newTask.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/task/getTotalTasksSize.ts",
+    "to": "src/utils/storage.ts"
+  },
+  {
+    "from": "src/core/controller/task/getTotalTasksSize.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/task/getTaskHistory.ts",
+    "to": "src/utils/path.ts"
+  },
+  {
+    "from": "src/core/controller/task/getTaskHistory.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/task/exportTaskWithId.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/task/executeQuickWin.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/task/deleteTasksWithIds.ts",
+    "to": "src/utils/fs.ts"
+  },
+  {
+    "from": "src/core/controller/task/deleteTasksWithIds.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/task/deleteAllTaskHistory.ts",
+    "to": "src/utils/fs.ts"
+  },
+  {
+    "from": "src/core/controller/task/deleteAllTaskHistory.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/task/clearTask.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/task/cancelTask.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/task/cancelBackgroundCommand.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/task/askResponse.ts",
+    "to": "src/shared/WebviewMessage.ts"
+  },
+  {
+    "from": "src/core/controller/task/askResponse.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateTerminalReuseEnabled.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateTerminalConnectionTimeout.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateTelemetrySetting.ts",
+    "to": "src/shared/proto-conversions/state/telemetry-setting-conversion.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateTelemetrySetting.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateTaskSettings.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateSettingsCli.ts",
+    "to": "src/services/telemetry.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateSettingsCli.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateSettings.ts",
+    "to": "src/services/telemetry.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateSettings.ts",
+    "to": "src/shared/BrowserSettings.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateSettings.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateModelBannerVersion.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateInfoBannerVersion.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateDefaultTerminalProfile.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateCliBannerVersion.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/updateAutoApprovalSettings.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/togglePlanActModeProto.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/toggleFavoriteModel.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/subscribeToState.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/state/subscribeToState.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/state/setWelcomeViewCompleted.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/state/resetState.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/resetState.ts",
+    "to": "src/core/controller/ui/subscribeToChatButtonClicked.ts"
+  },
+  {
+    "from": "src/core/controller/state/installClineCli.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/getProcessInfo.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/getLatestState.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/state/getAvailableTerminalProfiles.ts",
+    "to": "src/utils/shell.ts"
+  },
+  {
+    "from": "src/core/controller/state/getAvailableTerminalProfiles.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/state/flushPendingState.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/state/checkCliInstallation.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/state/captureOnboardingProgress.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/slash/reportBug.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/slash/condense.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/ocaAccount/ocaSubscribeToAuthStatusUpdate.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/ocaAccount/ocaSubscribeToAuthStatusUpdate.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/ocaAccount/ocaAccountLogoutClicked.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/ocaAccount/ocaAccountLoginClicked.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/models/updateApiConfigurationProto.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/models/updateApiConfigurationPartial.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/models/updateApiConfiguration.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/models/subscribeToOpenRouterModels.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/models/subscribeToOpenRouterModels.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshVercelAiGatewayModels.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshRequestyModels.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshOpenRouterModelsRpc.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshOpenRouterModelsRpc.ts",
+    "to": "src/core/controller/models/refreshOpenRouterModels.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshOpenRouterModels.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshOpenAiModels.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshOcaModels.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshHuggingFaceModels.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshHicapModels.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshGroqModelsRpc.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshGroqModelsRpc.ts",
+    "to": "src/core/controller/models/refreshGroqModels.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshGroqModels.ts",
+    "to": "src/shared/api.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshGroqModels.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshBasetenModelsRpc.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshBasetenModelsRpc.ts",
+    "to": "src/core/controller/models/refreshBasetenModels.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshBasetenModels.ts",
+    "to": "src/shared/api.ts"
+  },
+  {
+    "from": "src/core/controller/models/refreshBasetenModels.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/getVsCodeLmModels.ts",
+    "to": "src/shared/proto-conversions/models/vscode-lm-models-conversion.ts"
+  },
+  {
+    "from": "src/core/controller/models/getVsCodeLmModels.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/getSapAiCoreModels.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/getOllamaModels.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/getLmStudioModels.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/models/getAihubmixModels.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/updateMcpTimeout.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/toggleToolAutoApprove.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/toggleMcpServer.ts",
+    "to": "src/shared/proto-conversions/mcp/mcp-server-conversion.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/toggleMcpServer.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/subscribeToMcpServers.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/subscribeToMcpServers.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/subscribeToMcpMarketplaceCatalog.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/subscribeToMcpMarketplaceCatalog.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/restartMcpServer.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/refreshMcpMarketplace.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/openMcpSettings.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/getLatestMcpServers.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/downloadMcp.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/downloadMcp.ts",
+    "to": "src/core/controller/ui/subscribeToChatButtonClicked.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/deleteMcpServer.ts",
+    "to": "src/shared/proto-conversions/mcp/mcp-server-conversion.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/deleteMcpServer.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/authenticateMcpServer.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/mcp/addRemoteMcpServer.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/file/toggleWorkflow.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/toggleWindsurfRule.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/file/toggleCursorRule.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/file/toggleClineRule.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/file/toggleAgentsRule.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/file/selectFiles.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/searchFiles.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/searchCommits.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/refreshRules.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/file/openTaskHistory.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/openMention.ts",
+    "to": "src/core/mentions.ts"
+  },
+  {
+    "from": "src/core/controller/file/openMention.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/openImage.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/openFocusChainFile.ts",
+    "to": "src/services/telemetry.ts"
+  },
+  {
+    "from": "src/core/controller/file/openFocusChainFile.ts",
+    "to": "src/shared/proto/cline/common.ts"
+  },
+  {
+    "from": "src/core/controller/file/openFocusChainFile.ts",
+    "to": "src/core/task/focus-chain/file-utils.ts"
+  },
+  {
+    "from": "src/core/controller/file/openFocusChainFile.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/openFileRelativePath.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/openFile.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/openDiskConversationHistory.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/ifFileExistsRelativePath.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/getRelativePaths.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/deleteRuleFile.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/createRuleFile.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/createRuleFile.ts",
+    "to": "src/core/controller/file/openFile.ts"
+  },
+  {
+    "from": "src/core/controller/file/copyToClipboard.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/file/__tests__/openFileRelativePath.test.ts",
+    "to": "src/core/controller/file/openFileRelativePath.ts"
+  },
+  {
+    "from": "src/core/controller/file/__tests__/ifFileExistsRelativePath.test.ts",
+    "to": "src/core/controller/file/ifFileExistsRelativePath.ts"
+  },
+  {
+    "from": "src/core/controller/dictation/transcribeAudio.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/dictation/stopRecording.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/dictation/startRecording.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/dictation/cancelRecording.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/commands/improveWithCline.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/commands/fixWithCline.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/commands/explainWithCline.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/commands/addToCline.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/commands/addToCline.ts",
+    "to": "src/core/controller/ui/subscribeToAddToInput.ts"
+  },
+  {
+    "from": "src/core/controller/checkpoints/subscribeToCheckpoints.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/checkpoints/subscribeToCheckpoints.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/checkpoints/getCwdHash.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/checkpoints/checkpointRestore.ts",
+    "to": "src/shared/WebviewMessage.ts"
+  },
+  {
+    "from": "src/core/controller/checkpoints/checkpointRestore.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/checkpoints/checkpointDiff.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/browser/updateBrowserSettings.ts",
+    "to": "src/shared/BrowserSettings.ts"
+  },
+  {
+    "from": "src/core/controller/browser/updateBrowserSettings.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/browser/testBrowserConnection.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/browser/relaunchChromeDebugMode.ts",
+    "to": "src/services/browser/BrowserSession.ts"
+  },
+  {
+    "from": "src/core/controller/browser/relaunchChromeDebugMode.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/browser/getDetectedChromePath.ts",
+    "to": "src/services/browser/BrowserSession.ts"
+  },
+  {
+    "from": "src/core/controller/browser/getDetectedChromePath.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/browser/getBrowserConnectionInfo.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/browser/discoverBrowser.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/account/subscribeToAuthStatusUpdate.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/account/subscribeToAuthStatusUpdate.ts",
+    "to": "src/core/controller/grpc-handler.ts"
+  },
+  {
+    "from": "src/core/controller/account/setUserOrganization.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/account/requestyAuthClicked.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/account/openrouterAuthClicked.ts",
+    "to": "src/core/controller.ts"
+  },
+  {
+    "from": "src/core/controller/account/getUserOrganizations.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/account/getUserCredits.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/account/getRedirectUrl.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/account/getOrganizationCredits.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/account/authStateChanged.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/account/accountLogoutClicked.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/controller/account/accountLoginClicked.ts",
+    "to": "src/core/controller/index.ts"
+  },
+  {
+    "from": "src/core/api/retry.test.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/anthropic.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/asksage.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/baseten.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/bedrock.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/careti.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/cerebras.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/claude-code.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/cline.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/deepseek.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/dify.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/doubao.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/fireworks.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/gemini.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/groq.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/huawei-cloud-maas.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/huggingface.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/litellm.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/lmstudio.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/mistral.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/moonshot.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/minimax.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/nebius.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/oca.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/ollama.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/openai.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/openai-native.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/openrouter.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/qwen.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/qwen-code.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/requesty.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/sambanova.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/sapaicore.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/together.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/vercel-ai-gateway.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/vertex.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/vscode-lm.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/xai.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/providers/zai.ts"
+  },
+  {
+    "from": "src/core/api/index.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/transform/vscode-lm-format.test.ts",
+    "to": "src/core/api/transform/vscode-lm-format.ts"
+  },
+  {
+    "from": "src/core/api/transform/vercel-ai-gateway-stream.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/transform/tool-call-processor.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/transform/openrouter-stream.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/transform/openrouter-stream.ts",
+    "to": "src/core/api/transform/r1-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/zai.ts",
+    "to": "package.json.ts"
+  },
+  {
+    "from": "src/core/api/providers/zai.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/zai.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/zai.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/zai.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/xai.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/xai.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/xai.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/xai.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/vscode-lm.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/vscode-lm.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/vscode-lm.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/vscode-lm.ts",
+    "to": "src/core/api/transform/vscode-lm-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/vertex.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/vertex.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/vertex.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/vertex.ts",
+    "to": "src/core/api/providers/gemini.ts"
+  },
+  {
+    "from": "src/core/api/providers/vercel-ai-gateway.ts",
+    "to": "src/core/api/index.ts"
+  },
+  {
+    "from": "src/core/api/providers/vercel-ai-gateway.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/vercel-ai-gateway.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/vercel-ai-gateway.ts",
+    "to": "src/core/api/transform/vercel-ai-gateway-stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/together.ts",
+    "to": "src/core/api/index.ts"
+  },
+  {
+    "from": "src/core/api/providers/together.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/together.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/together.ts",
+    "to": "src/core/api/transform/r1-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/together.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/sapaicore.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/sapaicore.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/sapaicore.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/sapaicore.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/sambanova.ts",
+    "to": "src/core/api/index.ts"
+  },
+  {
+    "from": "src/core/api/providers/sambanova.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/sambanova.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/sambanova.ts",
+    "to": "src/core/api/transform/r1-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/sambanova.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/requesty.ts",
+    "to": "src/core/api/index.ts"
+  },
+  {
+    "from": "src/core/api/providers/requesty.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/requesty.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/requesty.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/qwen.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/qwen.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/qwen.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/qwen.ts",
+    "to": "src/core/api/transform/r1-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/qwen.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/qwen-code.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/qwen-code.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/qwen-code.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/qwen-code.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/openrouter.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/openrouter.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/openrouter.ts",
+    "to": "src/core/api/transform/openrouter-stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/openrouter.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/openrouter.ts",
+    "to": "src/core/api/providers/types.ts"
+  },
+  {
+    "from": "src/core/api/providers/openai.ts",
+    "to": "src/core/api/index.ts"
+  },
+  {
+    "from": "src/core/api/providers/openai.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/openai.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/openai.ts",
+    "to": "src/core/api/transform/r1-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/openai.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/openai-native.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/openai-native.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/openai-native.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/openai-native.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/ollama.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/ollama.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/ollama.ts",
+    "to": "src/core/api/transform/ollama-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/ollama.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/oca.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/oca.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/oca.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/oca.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/nebius.ts",
+    "to": "src/core/api/index.ts"
+  },
+  {
+    "from": "src/core/api/providers/nebius.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/nebius.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/nebius.ts",
+    "to": "src/core/api/transform/r1-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/nebius.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/moonshot.ts",
+    "to": "src/core/api/index.ts"
+  },
+  {
+    "from": "src/core/api/providers/moonshot.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/moonshot.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/moonshot.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/mistral.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/mistral.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/mistral.ts",
+    "to": "src/core/api/transform/mistral-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/mistral.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/minimax.ts",
+    "to": "src/core/api/index.ts"
+  },
+  {
+    "from": "src/core/api/providers/minimax.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/minimax.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/minimax.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/minimax.ts",
+    "to": "src/core/api/transform/tool-call-processor.ts"
+  },
+  {
+    "from": "src/core/api/providers/lmstudio.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/lmstudio.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/lmstudio.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/lmstudio.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/litellm.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/litellm.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/litellm.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/litellm.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/huggingface.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/huggingface.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/huggingface.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/huggingface.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/huawei-cloud-maas.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/huawei-cloud-maas.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/huawei-cloud-maas.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/huawei-cloud-maas.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/groq.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/groq.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/groq.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/groq.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/gemini.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/gemini.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/gemini.ts",
+    "to": "src/core/api/transform/gemini-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/gemini.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/fireworks.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/fireworks.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/fireworks.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/fireworks.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/doubao.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/doubao.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/doubao.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/doubao.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/dify.ts",
+    "to": "src/shared/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/dify.ts",
+    "to": "src/core/api/index.ts"
+  },
+  {
+    "from": "src/core/api/providers/dify.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/deepseek.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/deepseek.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/deepseek.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/deepseek.ts",
+    "to": "src/core/api/transform/r1-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/deepseek.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/cline.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/cline.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/cline.ts",
+    "to": "src/core/api/transform/openrouter-stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/cline.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/cline.ts",
+    "to": "src/core/api/providers/types.ts"
+  },
+  {
+    "from": "src/core/api/providers/claude-code.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/claude-code.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/claude-code.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/cerebras.ts",
+    "to": "src/core/api/index.ts"
+  },
+  {
+    "from": "src/core/api/providers/cerebras.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/cerebras.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/careti.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/careti.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/careti.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/careti.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/bedrock.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/bedrock.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/bedrock.ts",
+    "to": "src/core/api/transform/r1-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/bedrock.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/baseten.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/baseten.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/baseten.ts",
+    "to": "src/core/api/transform/openai-format.ts"
+  },
+  {
+    "from": "src/core/api/providers/baseten.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/asksage.ts",
+    "to": "src/core/api.ts"
+  },
+  {
+    "from": "src/core/api/providers/asksage.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/asksage.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/anthropic.ts",
+    "to": "src/core/api/index.ts"
+  },
+  {
+    "from": "src/core/api/providers/anthropic.ts",
+    "to": "src/core/api/retry.ts"
+  },
+  {
+    "from": "src/core/api/providers/anthropic.ts",
+    "to": "src/core/api/transform/stream.ts"
+  },
+  {
+    "from": "src/core/api/providers/__tests__/sapaicore.test.ts",
+    "to": "src/core/api/providers/sapaicore.ts"
+  },
+  {
+    "from": "src/core/api/providers/__tests__/ollama.test.ts",
+    "to": "src/core/api/providers/ollama.ts"
+  },
+  {
+    "from": "src/core/api/providers/__tests__/claude-code.test.ts",
+    "to": "src/core/api/providers/claude-code.ts"
+  },
+  {
+    "from": "src/core/api/providers/__tests__/bedrock.test.ts",
+    "to": "src/core/api/providers/bedrock.ts"
+  },
+  {
+    "from": "src/core/api/providers/__tests__/bedrock.test.ts",
+    "to": "src/core/api/providers/bedrock.ts"
+  }
+]

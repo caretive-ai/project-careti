@@ -5,10 +5,10 @@ import Fuse from "fuse.js"
 import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useInterval } from "react-use"
 import styled from "styled-components"
-// CARET MODIFICATION: Import i18n context for language reactivity
-import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
-// CARET MODIFICATION: Import i18n
-import { t } from "@/caret/utils/i18n"
+// CARETI MODIFICATION: Import i18n context for language reactivity
+import { useCaretI18nContext } from "@/careti/context/CaretI18nContext"
+// CARETI MODIFICATION: Import i18n
+import { t } from "@/careti/utils/i18n"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ModelsServiceClient } from "@/services/grpc-client"
@@ -18,7 +18,8 @@ import { AnthropicProvider } from "./providers/AnthropicProvider"
 import { AskSageProvider } from "./providers/AskSageProvider"
 import { BasetenProvider } from "./providers/BasetenProvider"
 import { BedrockProvider } from "./providers/BedrockProvider"
-import { CaretProvider } from "./providers/CaretProvider"
+import { BizRouterProvider } from "./providers/BizRouterProvider"
+import { CaretiProvider } from "./providers/CaretProvider"
 import { CerebrasProvider } from "./providers/CerebrasProvider"
 import { ClaudeCodeProvider } from "./providers/ClaudeCodeProvider"
 import { ClineProvider } from "./providers/ClineProvider"
@@ -31,14 +32,11 @@ import { GroqProvider } from "./providers/GroqProvider"
 import { HuaweiCloudMaasProvider } from "./providers/HuaweiCloudMaasProvider"
 import { HuggingFaceProvider } from "./providers/HuggingFaceProvider"
 import { LiteLlmProvider } from "./providers/LiteLlmProvider"
-import { BizRouterProvider } from "./providers/BizRouterProvider"
-// CARET MODIFICATION: Add Upstage provider
-import { UpstageProvider } from "./providers/UpstageProvider"
-// CARET MODIFICATION: Add Naver Cloud provider
-import { NaverCloudProvider } from "./providers/NaverCloudProvider"
 import { LMStudioProvider } from "./providers/LMStudioProvider"
 import { MistralProvider } from "./providers/MistralProvider"
 import { MoonshotProvider } from "./providers/MoonshotProvider"
+// CARETI MODIFICATION: Add Naver Cloud provider
+import { NaverCloudProvider } from "./providers/NaverCloudProvider"
 import { NebiusProvider } from "./providers/NebiusProvider"
 import { OllamaProvider } from "./providers/OllamaProvider"
 import { OpenAICompatibleProvider } from "./providers/OpenAICompatible"
@@ -50,6 +48,8 @@ import { RequestyProvider } from "./providers/RequestyProvider"
 import { SambanovaProvider } from "./providers/SambanovaProvider"
 import { SapAiCoreProvider } from "./providers/SapAiCoreProvider"
 import { TogetherProvider } from "./providers/TogetherProvider"
+// CARETI MODIFICATION: Add Upstage provider
+import { UpstageProvider } from "./providers/UpstageProvider"
 import { VercelAIGatewayProvider } from "./providers/VercelAIGatewayProvider"
 import { VertexProvider } from "./providers/VertexProvider"
 import { VSCodeLmProvider } from "./providers/VSCodeLmProvider"
@@ -99,10 +99,10 @@ const ApiOptions = ({
 	forcePlanActSeparate,
 }: ApiOptionsProps) => {
 	// Use full context state for immediate save payload
-	// CARET MODIFICATION: Get featureConfig from ExtensionState instead of getCurrentFeatureConfig
+	// CARETI MODIFICATION: Get featureConfig from ExtensionState instead of getCurrentFeatureConfig
 	const { apiConfiguration, featureConfig } = useExtensionState()
 
-	// CARET MODIFICATION: Use i18n context to detect language changes
+	// CARETI MODIFICATION: Use i18n context to detect language changes
 	const { language } = useCaretI18nContext()
 
 	const { selectedProvider } = normalizeApiConfiguration(apiConfiguration, currentMode)
@@ -145,16 +145,16 @@ const ApiOptions = ({
 	const dropdownListRef = useRef<HTMLDivElement>(null)
 
 	const providerOptions = useMemo(() => {
-		// CARET MODIFICATION: Restore original Cline provider list, add Caret provider (Cline always visible)
+		// CARETI MODIFICATION: Restore original Cline provider list, add Careti provider (Cline always visible)
 		if (!featureConfig) {
-			// featureConfig 미도착 시에도 기본 Caret/Cline 선택 가능하도록 안전값 제공
+			// featureConfig 미도착 시에도 기본 Careti/Cline 선택 가능하도록 안전값 제공
 			return [
 				{ value: "cline", label: t("providers.cline.name", "settings") },
-				{ value: "caret", label: t("providers.caret.name", "settings") },
+				{ value: "careti", label: t("providers.careti.name", "settings") },
 			]
 		}
 
-		// CARET MODIFICATION: Sovereign Cloud - Provider country flags
+		// CARETI MODIFICATION: Sovereign Cloud - Provider country flags
 		// 프로바이더 국가 = UI 언어 지원 원칙
 		const providerCountryFlags: Record<string, string> = {
 			// 🇺🇸 United States
@@ -177,7 +177,7 @@ const ApiOptions = ({
 			upstage: "🇰🇷",
 			"naver-cloud": "🇰🇷",
 			bizrouter: "🇰🇷",
-			caret: "🇰🇷",
+			careti: "🇰🇷",
 			// 🇨🇳 China
 			qwen: "🇨🇳",
 			"qwen-code": "🇨🇳",
@@ -210,7 +210,7 @@ const ApiOptions = ({
 			requesty: "🔧",
 		}
 
-		// CARET MODIFICATION: Regional featured providers (언어별 우선 표시)
+		// CARETI MODIFICATION: Regional featured providers (언어별 우선 표시)
 		const regionalFeaturedProviders: Record<string, string[]> = {
 			ko: ["upstage", "naver-cloud", "bizrouter"], // 🇰🇷 한국
 			zh: ["qwen", "doubao", "deepseek", "moonshot", "huawei-cloud-maas"], // 🇨🇳 중국
@@ -248,14 +248,14 @@ const ApiOptions = ({
 			return label
 		}
 
-		// CARET MODIFICATION: NEW badge providers (appear at top of their section)
+		// CARETI MODIFICATION: NEW badge providers (appear at top of their section)
 		const newProviders = new Set(["zai", "upstage", "naver-cloud"])
 
-		// CARET MODIFICATION: Base provider list (global order)
+		// CARETI MODIFICATION: Base provider list (global order)
 		const allProviders = [
-			// 1. Caret (if enabled)
+			// 1. Careti (if enabled)
 			...(featureConfig.enableCaretAccountFeatures
-				? [{ value: "caret", label: t("providers.caret.name", "settings") }]
+				? [{ value: "careti", label: t("providers.careti.name", "settings") }]
 				: []),
 			// 2. Cline (always available - login/voice)
 			{ value: "cline", label: t("providers.cline.name", "settings") },
@@ -303,7 +303,7 @@ const ApiOptions = ({
 			{ value: "bizrouter", label: t("providers.bizrouter.name", "settings") },
 		]
 
-		// CARET MODIFICATION: Build final provider list
+		// CARETI MODIFICATION: Build final provider list
 		// Rule: NEW > Section priority, NEW providers follow section order among themselves
 		const processedOptions: { value: string; label: string }[] = []
 		const seen = new Set<string>()
@@ -320,16 +320,16 @@ const ApiOptions = ({
 			}
 		}
 
-		// 1. First, add Caret and Cline (fixed at top, with country flags)
+		// 1. First, add Careti and Cline (fixed at top, with country flags)
 		for (const option of allProviders) {
-			if ((option.value === "caret" || option.value === "cline") && !seen.has(option.value)) {
+			if ((option.value === "careti" || option.value === "cline") && !seen.has(option.value)) {
 				seen.add(option.value)
 				const processed = getProcessedProvider(option.value)
 				if (processed) processedOptions.push(processed)
 			}
 		}
 
-		// 2. Build section-ordered list (excluding Caret/Cline)
+		// 2. Build section-ordered list (excluding Careti/Cline)
 		// Section order: Regional Featured → Global Major → Local LLM → Others
 		const sectionOrderedProviders: string[] = [
 			// Regional featured providers
@@ -346,9 +346,14 @@ const ApiOptions = ({
 			"vscode-lm",
 			// Others (rest from allProviders in order)
 			...allProviders
-				.filter((p) => !["caret", "cline"].includes(p.value))
+				.filter((p) => !["careti", "cline"].includes(p.value))
 				.filter((p) => !featuredProviders.includes(p.value))
-				.filter((p) => !["anthropic", "gemini", "openai-native", "xai", "groq", "ollama", "lmstudio", "vscode-lm"].includes(p.value))
+				.filter(
+					(p) =>
+						!["anthropic", "gemini", "openai-native", "xai", "groq", "ollama", "lmstudio", "vscode-lm"].includes(
+							p.value,
+						),
+				)
 				.map((p) => p.value),
 		]
 
@@ -379,7 +384,7 @@ const ApiOptions = ({
 			}
 		}
 
-		// CARET MODIFICATION: Show only the default provider but still allow Cline for login access
+		// CARETI MODIFICATION: Show only the default provider but still allow Cline for login access
 		if (featureConfig.showOnlyDefaultProvider) {
 			const defaultProvider = featureConfig.defaultProvider
 			const allowed = new Set([defaultProvider, "cline"])
@@ -429,7 +434,7 @@ const ApiOptions = ({
 	}, [searchableItems, searchTerm, fuse, currentProviderLabel])
 
 	const handleProviderChange = (newProvider: string) => {
-		// CARET MODIFICATION: Add logging for provider changes
+		// CARETI MODIFICATION: Add logging for provider changes
 		console.log(`🔄 [ApiOptions] Provider change: "${selectedProvider}" → "${newProvider}" (mode: ${currentMode})`)
 		handleModeFieldChange({ plan: "planModeApiProvider", act: "actModeApiProvider" }, newProvider as any, currentMode)
 		setIsDropdownVisible(false)
@@ -674,8 +679,8 @@ const ApiOptions = ({
 					<BizRouterProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 				)}
 
-				{apiConfiguration && selectedProvider === "caret" && (
-					<CaretProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} /> // caret
+				{apiConfiguration && selectedProvider === "careti" && (
+					<CaretiProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} /> // careti
 				)}
 
 				{apiConfiguration && selectedProvider === "lmstudio" && (

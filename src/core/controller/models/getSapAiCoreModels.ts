@@ -61,7 +61,7 @@ async function fetchAiCoreDeploymentsAndOrchestration(
 		Authorization: `Bearer ${accessToken}`,
 		"AI-Resource-Group": resourceGroup || "default",
 		"Content-Type": "application/json",
-		"AI-Client-Type": "Caret",
+		"AI-Client-Type": "Careti",
 	}
 
 	const url = `${baseUrl}/v2/lm/deployments?$top=10000&$skip=0`

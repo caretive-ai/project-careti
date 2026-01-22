@@ -175,11 +175,11 @@ message ModelsApiSecrets {
   optional string oca_refresh_token = 37;
   optional string minimax_api_key = 38;
   optional string aihubmix_api_key = 39;
-  optional string upstage_api_key = 40; // CARET MODIFICATION: Upstage Solar
+  optional string upstage_api_key = 40; // CARETI MODIFICATION: Upstage Solar
   optional string naver_cloud_api_key = 41;
-  // CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
+  // CARETI MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
   optional string caret_api_key = 1074;
-  // CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
+  // CARETI MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
   optional string biz_router_api_key = 1076;
 }
 
@@ -229,10 +229,10 @@ message ModelsApiOptions {
   optional string minimax_api_line = 41;
   optional string aihubmix_base_url = 42;
   optional string aihubmix_app_code = 43;
-  // CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
+  // CARETI MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
   optional string caret_base_url = 1073;
   optional bool caret_use_prompt_cache = 1075;
-  // CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
+  // CARETI MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
   optional bool biz_router_use_prompt_cache = 1077;
 
   // Plan mode configurations
@@ -443,10 +443,10 @@ enum ApiProvider {
   HICAP = 37;
   AIHUBMIX = 38;
   NOUSRESEARCH = 39;
-  UPSTAGE = 40; // CARET MODIFICATION: Upstage Solar
+  UPSTAGE = 40; // CARETI MODIFICATION: Upstage Solar
   NAVER_CLOUD = 41;
-  // CARET MODIFICATION: Caret-specific providers use 1000+ to avoid conflicts with Cline
-  CARET = 1001;
+  // CARETI MODIFICATION: Caret-specific providers use 1000+ to avoid conflicts with Cline
+  CARETI = 1001;
   BIZROUTER = 1002;
 }
 
@@ -502,7 +502,7 @@ message LiteLLMModelInfo {
   optional double temperature = 13;
 }
 
-// CARET MODIFICATION: Model info for BizRouter models
+// CARETI MODIFICATION: Model info for BizRouter models
 message BizRouterModelInfo {
   optional int64 max_tokens = 1;
   optional int64 context_window = 2;
@@ -615,13 +615,13 @@ message ModelsApiConfiguration {
   optional string aihubmix_base_url = 83;
   optional string aihubmix_app_code = 84;
   optional string nous_research_api_key = 85;
-  optional string upstage_api_key = 86; // CARET MODIFICATION: Upstage Solar
+  optional string upstage_api_key = 86; // CARETI MODIFICATION: Upstage Solar
   optional string naver_cloud_api_key = 87;
-  // CARET MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
+  // CARETI MODIFICATION: Caret-specific fields (72 + 1000 = 1072+ to avoid Cline conflicts)
   optional string caret_base_url = 1073;
   optional string caret_api_key = 1074;
   optional bool caret_use_prompt_cache = 1075;
-  // CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
+  // CARETI MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
   optional string biz_router_api_key = 1076;
   optional bool biz_router_use_prompt_cache = 1077;
 
@@ -664,8 +664,8 @@ message ModelsApiConfiguration {
   optional string plan_mode_aihubmix_model_id = 135;
   optional OpenAiCompatibleModelInfo plan_mode_aihubmix_model_info = 136;
   optional string plan_mode_nous_research_model_id = 137;
-  optional string plan_mode_upstage_model_id = 140; // CARET MODIFICATION: Upstage
-  optional OpenRouterModelInfo plan_mode_upstage_model_info = 141; // CARET MODIFICATION: Upstage
+  optional string plan_mode_upstage_model_id = 140; // CARETI MODIFICATION: Upstage
+  optional OpenRouterModelInfo plan_mode_upstage_model_info = 141; // CARETI MODIFICATION: Upstage
   optional string plan_mode_naver_cloud_model_id = 138;
   optional OpenRouterModelInfo plan_mode_naver_cloud_model_info = 139;
   optional string plan_mode_caret_model_id = 190;
@@ -712,8 +712,8 @@ message ModelsApiConfiguration {
   optional string act_mode_aihubmix_model_id = 235;
   optional OpenAiCompatibleModelInfo act_mode_aihubmix_model_info = 236;
   optional string act_mode_nous_research_model_id = 237;
-  optional string act_mode_upstage_model_id = 240; // CARET MODIFICATION: Upstage
-  optional OpenRouterModelInfo act_mode_upstage_model_info = 241; // CARET MODIFICATION: Upstage
+  optional string act_mode_upstage_model_id = 240; // CARETI MODIFICATION: Upstage
+  optional OpenRouterModelInfo act_mode_upstage_model_info = 241; // CARETI MODIFICATION: Upstage
   optional string act_mode_naver_cloud_model_id = 238;
   optional OpenRouterModelInfo act_mode_naver_cloud_model_info = 239;
   optional string act_mode_caret_model_id = 301;

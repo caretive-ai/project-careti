@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Skills deletion controller
+// CARETI MODIFICATION: Skills deletion controller
 // Ported from cline-latest
 
 import { DeleteSkillRequest, SkillsToggles } from "@shared/proto/cline/file"

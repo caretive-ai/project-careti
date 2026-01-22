@@ -34,11 +34,11 @@ export class OpenTelemetryTelemetryProvider implements ITelemetryProvider {
 		const loggerProvider = OpenTelemetryClientProvider.getLoggerProvider()
 
 		if (meterProvider) {
-			this.meter = meterProvider.getMeter("caret")
+			this.meter = meterProvider.getMeter("careti")
 		}
 
 		if (loggerProvider) {
-			this.logger = loggerProvider.getLogger("caret")
+			this.logger = loggerProvider.getLogger("careti")
 		}
 
 		// Log initialization status

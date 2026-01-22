@@ -1,11 +1,11 @@
-// CARET MODIFICATION: gRPC handler for fetching the current Caret user profile
+// CARETI MODIFICATION: gRPC handler for fetching the current Caret user profile
 
 import { Controller } from "@core/controller"
 import { CaretAccountService } from "@services/account/CaretAccountService"
 import type { CaretUsage } from "@shared/CaretAccount"
 import * as proto from "@shared/proto/index"
 
-const defaultUsage: proto.caret.CaretUsageSummary = {
+const defaultUsage: proto.careti.CaretUsageSummary = {
 	spend: 0,
 	currency: "USD",
 	promptTokens: 0,
@@ -13,7 +13,7 @@ const defaultUsage: proto.caret.CaretUsageSummary = {
 	totalTokens: 0,
 }
 
-const mapUsage = (usage?: CaretUsage | null): proto.caret.CaretUsageSummary => {
+const mapUsage = (usage?: CaretUsage | null): proto.careti.CaretUsageSummary => {
 	if (!usage) {
 		return { ...defaultUsage }
 	}
@@ -30,7 +30,7 @@ const mapUsage = (usage?: CaretUsage | null): proto.caret.CaretUsageSummary => {
 export async function getCaretUserProfile(
 	_controller: Controller,
 	_request: proto.cline.EmptyRequest,
-): Promise<proto.caret.CaretUserProfile> {
+): Promise<proto.careti.CaretUserProfile> {
 	try {
 		const caretAccountService = CaretAccountService.getInstance()
 		const profile = await caretAccountService.fetchMe()

@@ -2,8 +2,8 @@
 // Import the module and reference it with the alias vscode in your code below
 
 import assert from "node:assert"
-import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
-import { getCurrentBrandDisplayName } from "@caret/utils/brand-utils"
+import { getCurrentFeatureConfig } from "@careti/shared/FeatureConfig"
+import { getCurrentBrandDisplayName } from "@careti/utils/brand-utils"
 import { DIFF_VIEW_URI_SCHEME } from "@hosts/vscode/VscodeDiffViewProvider"
 import * as vscode from "vscode"
 import { sendAccountButtonClickedEvent } from "./core/controller/ui/subscribeToAccountButtonClicked"
@@ -18,7 +18,7 @@ import { cleanupTestMode, initializeTestMode } from "./services/test/TestMode"
 import "./utils/path" // necessary to have access to String.prototype.toPosix
 
 import path from "node:path"
-import { CaretAuthService } from "@caret/services/auth/CaretAuthService"
+import { CaretAuthService } from "@careti/services/auth/CaretAuthService"
 import type { ExtensionContext } from "vscode"
 import { HostProvider } from "@/hosts/host-provider"
 import { vscodeHostBridgeClient } from "@/hosts/vscode/hostbridge/client/host-grpc-client"
@@ -59,7 +59,7 @@ https://github.com/microsoft/vscode-webview-ui-toolkit-samples/tree/main/framewo
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
 	setupHostProvider(context)
-	// CARET MODIFICATION: initialize terminal branding/icon resolver
+	// CARETI MODIFICATION: initialize terminal branding/icon resolver
 	TerminalRegistry.initialize(context)
 
 	// Initialize hook discovery cache for performance optimization
@@ -88,15 +88,15 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const webview = (await initialize(context)) as VscodeWebviewProvider
 
-	Logger.log("Caret extension activated")
+	Logger.log("Careti extension activated")
 
 	const testModeWatchers = await initializeTestMode(webview)
 	// Initialize test mode and add disposables to context
 	context.subscriptions.push(...testModeWatchers)
 
 	vscode.commands.executeCommand("setContext", "cline.isDevMode", IS_DEV && IS_DEV === "true")
-	// CARET MODIFICATION: Control account menu visibility via feature flag
-	vscode.commands.executeCommand("setContext", "caret.showAccountUI", getCurrentFeatureConfig().showAccountUI !== false)
+	// CARETI MODIFICATION: Control account menu visibility via feature flag
+	vscode.commands.executeCommand("setContext", "careti.showAccountUI", getCurrentFeatureConfig().showAccountUI !== false)
 
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(VscodeWebviewProvider.SIDEBAR_ID, webview, {
@@ -179,7 +179,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			.then((module) => {
 				const devTaskCommands = module.registerTaskCommands(webview.controller)
 				context.subscriptions.push(...devTaskCommands)
-				Logger.log("Caret dev task commands registered")
+				Logger.log("Careti dev task commands registered")
 			})
 			.catch((error) => {
 				Logger.log("Failed to register dev task commands: " + error)
@@ -285,7 +285,7 @@ export async function activate(context: vscode.ExtensionContext) {
 					}
 					actions.push(addAction)
 
-					// Explain with Caret/Cline (Always available)
+					// Explain with Careti/Cline (Always available)
 					const explainAction = new vscode.CodeAction(
 						`Explain with ${brandName}`,
 						vscode.CodeActionKind.RefactorExtract, // Using a refactor kind
@@ -297,7 +297,7 @@ export async function activate(context: vscode.ExtensionContext) {
 					}
 					actions.push(explainAction)
 
-					// Improve with Caret/Cline (Always available)
+					// Improve with Careti/Cline (Always available)
 					const improveAction = new vscode.CodeAction(
 						`Improve with ${brandName}`,
 						vscode.CodeActionKind.RefactorRewrite, // Using a refactor kind
@@ -417,7 +417,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		context.secrets.onDidChange(async (event) => {
-			if (event.key === "cline:clineAccountId" || event.key === "caret:caretAccountId") {
+			if (event.key === "cline:clineAccountId" || event.key === "careti:caretAccountId") {
 				// Check if the secret was removed (logout) or added/updated (login)
 				const secretValue = await context.secrets.get(event.key)
 				const activeWebview = WebviewProvider.getVisibleInstance()
@@ -448,8 +448,8 @@ function setupHostProvider(context: ExtensionContext) {
 
 	const createWebview = () => new VscodeWebviewProvider(context)
 	const createDiffView = () => new VscodeDiffViewProvider()
-	// CARET MODIFICATION: rename output channel to Caret for branded Output view
-	const outputChannel = vscode.window.createOutputChannel("Caret")
+	// CARETI MODIFICATION: rename output channel to Careti for branded Output view
+	const outputChannel = vscode.window.createOutputChannel("Careti")
 	context.subscriptions.push(outputChannel)
 
 	const getCallbackUrl = async () => `${vscode.env.uriScheme || "vscode"}://${context.extension.id}`
@@ -494,7 +494,7 @@ async function getBinaryLocation(name: string): Promise<string> {
 
 // This method is called when your extension is deactivated
 export async function deactivate() {
-	Logger.log("Caret extension deactivating, cleaning up resources...")
+	Logger.log("Careti extension deactivating, cleaning up resources...")
 
 	tearDown()
 
@@ -507,7 +507,7 @@ export async function deactivate() {
 	// Clean up hook discovery cache
 	HookDiscoveryCache.getInstance().dispose()
 
-	Logger.log("Caret extension deactivated")
+	Logger.log("Careti extension deactivated")
 }
 
 // TODO: Find a solution for automatically removing DEV related content from production builds.

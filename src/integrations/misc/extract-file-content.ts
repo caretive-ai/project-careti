@@ -37,7 +37,7 @@ export async function extractFileContent(absolutePath: string, modelSupportsImag
 			throw new Error(imageResult.error)
 		}
 	} else if (isImage && !modelSupportsImages) {
-		// CARET MODIFICATION: Text-only models can't view images, return path info instead
+		// CARETI MODIFICATION: Text-only models can't view images, return path info instead
 		// Model can use analyze_image tool if it needs to examine the image content
 		const fileName = path.basename(absolutePath)
 		return {

@@ -23,7 +23,7 @@ const authInstanceAddressKey contextKey = "authInstanceAddress"
 type AuthAction string
 
 const (
-	// CARET MODIFICATION: add Caret auth menu action
+	// CARETI MODIFICATION: add Caret auth menu action
 	AuthActionCaretLogin     AuthAction = "caret_login"
 	AuthActionClineLogin     AuthAction = "cline_login"
 	AuthActionBYOSetup       AuthAction = "provider_setup"
@@ -43,13 +43,13 @@ const (
 //	┃   Authenticate/Sign out of Caret account		- changes based on auth status
 //	┃   Authenticate/Sign out of Cline account		- changes based on auth status
 //	┃   Configure BYO API providers			- always shown. Launches provider setup wizard
-//	┃   Select active provider (Caret, Cline, or BYO)	- always shown
+//	┃   Select active provider (Careti, Cline, or BYO)	- always shown
 //	┃   Exit authorization wizard			- always shown. Exits the auth menu
 
 // RunAuthFlow is the entry point for the entire auth flow with instance management
 // It spawns a fresh instance for auth operations and cleans it up when done
 func RunAuthFlow(ctx context.Context, args []string) error {
-	// CARET MODIFICATION: allow reusing a running instance when address is provided
+	// CARETI MODIFICATION: allow reusing a running instance when address is provided
 	addressOverride := os.Getenv("CARET_AUTH_ADDRESS")
 	if addressOverride == "" && global.Config != nil && global.Config.CoreAddress != "" &&
 		global.Config.CoreAddress != fmt.Sprintf("localhost:%d", common.DEFAULT_CLINE_CORE_PORT) {
@@ -66,7 +66,7 @@ func RunAuthFlow(ctx context.Context, args []string) error {
 		verboseLog("Provided auth instance at %s is unreachable; starting a temporary auth instance instead", addressOverride)
 	}
 
-	// CARET MODIFICATION: default = keep spawned auth instance; set CARET_AUTH_KILL to tear down
+	// CARETI MODIFICATION: default = keep spawned auth instance; set CARET_AUTH_KILL to tear down
 	persistAuth := true
 	if os.Getenv("CARET_AUTH_KILL") != "" {
 		persistAuth = false
@@ -160,7 +160,7 @@ func HandleAuthMenuNoArgs(ctx context.Context) error {
 
 	switch action {
 	case AuthActionCaretLogin:
-		// CARET MODIFICATION: caret auth entry
+		// CARETI MODIFICATION: caret auth entry
 		return HandleCaretAuth(ctx)
 	case AuthActionClineLogin:
 		return HandleClineAuth(ctx)
@@ -180,7 +180,7 @@ func ShowAuthMenuWithStatus(isCaretAuthenticated bool, isClineAuthenticated bool
 	var action AuthAction
 	var options []huh.Option[AuthAction]
 
-	// CARET MODIFICATION: include caret/cline account actions
+	// CARETI MODIFICATION: include caret/cline account actions
 	if isCaretAuthenticated {
 		options = append(options, huh.NewOption("Sign out of Caret", AuthActionCaretLogin))
 	} else {
@@ -203,7 +203,7 @@ func ShowAuthMenuWithStatus(isCaretAuthenticated bool, isClineAuthenticated bool
 	var title string
 	renderer := display.NewRenderer(global.Config.OutputFormat)
 
-	// CARET MODIFICATION: show caret + cline auth status
+	// CARETI MODIFICATION: show caret + cline auth status
 	if isCaretAuthenticated {
 		title = fmt.Sprintf("Caret Account: %s Authenticated\n", renderer.Green("✓"))
 	} else {
@@ -320,7 +320,7 @@ func HandleSelectProvider(ctx context.Context) error {
 	case cline.ApiProvider_CLINE:
 		return SelectClineModel(ctx, manager)
 	case cline.ApiProvider_CARET:
-		// CARET MODIFICATION: support caret provider selection
+		// CARETI MODIFICATION: support caret provider selection
 		return SelectCaretModel(ctx, manager)
 	default:
 		return SwitchToBYOProvider(ctx, manager, selectedProvider)

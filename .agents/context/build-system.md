@@ -152,6 +152,36 @@ npm run watch:tsc
 npm run watch
 ```
 
+## Package & Release
+
+### Package Commands
+
+```bash
+# Development package (root directory, no timestamp)
+npm run package
+
+# Release package (output/ directory, with timestamp)
+npm run package:release
+# Output: output/caret-{version}-{YYYYMMDDHHMM}.vsix
+# Example: output/caret-0.4.7-202601221424.vsix
+```
+
+### Release Workflow
+```bash
+# 1. Type check and build
+npm run compile
+
+# 2. Create release package
+npm run package:release
+
+# 3. Verify output
+ls -la output/*.vsix
+```
+
+**Important**:
+- `npm run package` - 개발용, 루트 디렉토리에 생성
+- `npm run package:release` - 릴리즈용, output/ 폴더에 타임스탬프 포함하여 생성
+
 ## Reference Documents
 
 - **Problem Analysis**: `caret-docs/work-logs/alpha/2025-10-16-js-file-generation-issue.md`

@@ -298,11 +298,18 @@
 		"caret": {
 			"name": "Caret",
 			"login": "Caret ログイン",
-			"description": "Caretログインユーザーは無料提供クレジットでGoogleの最新Geminiモデルを利用できます",
+			"description": "Caretログインユーザーは無料提供クレジットでGeminiとClaudeモデルを利用できます",
+			"backendType": "デフォルトモデル",
+			"backendDescription": {
+				"gemini": "クレジット課金",
+				"claude": "CLI連携"
+			},
+			"claudeModel": "Claudeモデル",
+			"geminiModel": "Geminiモデル",
 			"modelPicker": {
-				"modelLabel": "모델",
-				"searchPlaceholder": "모델 검색 및 선택...",
-				"clearSearch": "검색 지우기"
+				"modelLabel": "モデル",
+				"searchPlaceholder": "モデルを検索して選択...",
+				"clearSearch": "検索をクリア"
 			}
 		},
 		"openrouter": {

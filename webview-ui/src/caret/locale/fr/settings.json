@@ -444,7 +444,14 @@
 		"caret": {
 			"name": "Caret",
 			"login": "Connexion",
-			"description": "Les utilisateurs connectes a Caret peuvent acceder aux derniers modeles Gemini de Google avec des credits gratuits fournis",
+			"description": "Les utilisateurs connectes a Caret peuvent acceder aux modeles Gemini et Claude avec des credits gratuits fournis",
+			"backendType": "Modèle par défaut",
+			"backendDescription": {
+				"gemini": "Déduction de crédits",
+				"claude": "Intégration CLI"
+			},
+			"claudeModel": "Modèle Claude",
+			"geminiModel": "Modèle Gemini",
 			"modelPicker": {
 				"modelLabel": "Modele",
 				"searchPlaceholder": "Rechercher et selectionner un modele...",

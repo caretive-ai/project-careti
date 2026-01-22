@@ -268,7 +268,20 @@ function createHandlerForProvider(
 				liteLlmUsePromptCache: options.liteLlmUsePromptCache,
 				ulid: options.ulid,
 			})
-		case "caret":
+		case "caret": {
+			// CARET MODIFICATION: Use Claude Code CLI for Claude 4.5 models
+			const caretModelId = mode === "plan" ? options.planModeCaretModelId : options.actModeCaretModelId
+			if (caretModelId?.startsWith("anthropic/claude-")) {
+				// Extract Claude model ID (e.g., "anthropic/claude-opus-4-5-20251101" -> "claude-opus-4-5-20251101")
+				const claudeModelId = caretModelId.replace("anthropic/", "")
+				return new ClaudeCodeHandler({
+					onRetryAttempt: options.onRetryAttempt,
+					claudeCodePath: options.claudeCodePath,
+					apiModelId: claudeModelId,
+					thinkingBudgetTokens:
+						mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
+				})
+			}
 			return new CaretHandler({
 				onRetryAttempt: options.onRetryAttempt,
 				caretAccountId: options.caretAccountId,
@@ -280,6 +293,7 @@ function createHandlerForProvider(
 				caretModelId: mode === "plan" ? options.planModeCaretModelId : options.actModeCaretModelId,
 				caretModelInfo: mode === "plan" ? options.planModeCaretModelInfo : options.actModeCaretModelInfo,
 			})
+		}
 		case "bizrouter":
 			// CARET MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
 			return new BizRouterHandler({

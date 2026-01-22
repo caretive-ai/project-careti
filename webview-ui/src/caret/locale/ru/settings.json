@@ -444,7 +444,14 @@
 		"caret": {
 			"name": "Caret",
 			"login": "Войти",
-			"description": "Пользователи Caret могут получить доступ к новейшим моделям Gemini от Google с бесплатными предоставленными кредитами",
+			"description": "Пользователи Caret могут получить доступ к моделям Gemini и Claude с бесплатными предоставленными кредитами",
+			"backendType": "Модель по умолчанию",
+			"backendDescription": {
+				"gemini": "Списание кредитов",
+				"claude": "CLI интеграция"
+			},
+			"claudeModel": "Модель Claude",
+			"geminiModel": "Модель Gemini",
 			"modelPicker": {
 				"modelLabel": "Модель",
 				"searchPlaceholder": "Найти и выбрать модель...",

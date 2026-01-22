@@ -444,7 +444,14 @@
 		"caret": {
 			"name": "Caret",
 			"login": "Anmelden",
-			"description": "Caret-Anmeldebenutzer können mit kostenlosen bereitgestellten Credits auf Googles neueste Gemini-Modelle zugreifen",
+			"description": "Caret-Anmeldebenutzer können mit kostenlosen bereitgestellten Credits auf Gemini- und Claude-Modelle zugreifen",
+			"backendType": "Standardmodell",
+			"backendDescription": {
+				"gemini": "Guthaben-Abzug",
+				"claude": "CLI-Integration"
+			},
+			"claudeModel": "Claude-Modell",
+			"geminiModel": "Gemini-Modell",
 			"modelPicker": {
 				"modelLabel": "Modell",
 				"searchPlaceholder": "Modell suchen und auswählen...",

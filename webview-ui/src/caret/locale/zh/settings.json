@@ -298,11 +298,18 @@
 		"caret": {
 			"name": "Caret",
 			"login": "Caret 登录",
-			"description": "Caret登录用户可以使用免费提供的积分访问Google最新的Gemini模型",
+			"description": "Caret登录用户可以使用免费提供的积分访问Gemini和Claude模型",
+			"backendType": "默认模型",
+			"backendDescription": {
+				"gemini": "积分扣除",
+				"claude": "CLI集成"
+			},
+			"claudeModel": "Claude 模型",
+			"geminiModel": "Gemini 模型",
 			"modelPicker": {
-				"modelLabel": "모델",
-				"searchPlaceholder": "모델 검색 및 선택...",
-				"clearSearch": "검색 지우기"
+				"modelLabel": "模型",
+				"searchPlaceholder": "搜索并选择模型...",
+				"clearSearch": "清除搜索"
 			}
 		},
 		"openrouter": {

@@ -296,7 +296,14 @@
 		"caret": {
 			"name": "캐럿(Caret)",
 			"login": "캐럿에 로그인",
-			"description": "캐럿 로그인 사용자는 무료 제공 크레딧으로 Google의 최신 Gemini 모델을 사용할 수 있습니다",
+			"description": "캐럿 로그인 사용자는 무료 제공 크레딧으로 Gemini와 Claude 모델을 사용할 수 있습니다",
+			"backendType": "기본 모델",
+			"backendDescription": {
+				"gemini": "크레딧 차감",
+				"claude": "CLI 연동"
+			},
+			"claudeModel": "Claude 모델",
+			"geminiModel": "Gemini 모델",
 			"modelPicker": {
 				"modelLabel": "모델",
 				"searchPlaceholder": "모델 검색 및 선택...",

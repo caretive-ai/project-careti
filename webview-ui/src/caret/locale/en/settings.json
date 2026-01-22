@@ -444,11 +444,18 @@
 		"caret": {
 			"name": "Caret",
 			"login": "Login",
-			"description": "Caret login users can access Google's latest Gemini models with free provided credits",
+			"description": "Caret login users can access Gemini and Claude models with free provided credits",
+			"backendType": "Default Model",
+			"backendDescription": {
+				"gemini": "Credit-based",
+				"claude": "CLI integration"
+			},
+			"claudeModel": "Claude Model",
+			"geminiModel": "Gemini Model",
 			"modelPicker": {
-				"modelLabel": "모델",
-				"searchPlaceholder": "모델 검색 및 선택...",
-				"clearSearch": "검색 지우기"
+				"modelLabel": "Model",
+				"searchPlaceholder": "Search and select model...",
+				"clearSearch": "Clear search"
 			}
 		},
 		"litellm": {

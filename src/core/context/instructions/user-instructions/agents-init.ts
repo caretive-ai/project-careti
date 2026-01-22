@@ -349,7 +349,8 @@ export async function detectLegacyStructure(cwd: string): Promise<LegacyStructur
 	const migrationSuggestions: string[] = []
 
 	// 레거시 룰 디렉토리 확인
-	const legacyRuleDirs = [".caretrules", ".clinerules", ".claude"]
+	// Note: .claude/ is Claude Code standard directory, not legacy
+	const legacyRuleDirs = [".caretrules", ".clinerules"]
 	for (const dir of legacyRuleDirs) {
 		const dirPath = path.resolve(cwd, dir)
 		if ((await fileExistsAtPath(dirPath)) && (await isDirectory(dirPath))) {

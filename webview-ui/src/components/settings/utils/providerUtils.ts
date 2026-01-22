@@ -425,6 +425,7 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 			fireworksModelId: undefined,
 			lmStudioModelId: undefined,
 			ollamaModelId: undefined,
+			caretBackendType: undefined, // caret
 			caretModelId: undefined, // caret
 			liteLlmModelId: undefined,
 			bizRouterModelId: undefined,
@@ -483,6 +484,8 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 		openAiModelId: mode === "plan" ? apiConfiguration.planModeOpenAiModelId : apiConfiguration.actModeOpenAiModelId,
 		openRouterModelId:
 			mode === "plan" ? apiConfiguration.planModeOpenRouterModelId : apiConfiguration.actModeOpenRouterModelId,
+		caretBackendType:
+			mode === "plan" ? apiConfiguration.planModeCaretBackendType : apiConfiguration.actModeCaretBackendType,
 		caretModelId: mode === "plan" ? apiConfiguration.planModeCaretModelId : apiConfiguration.actModeCaretModelId,
 		groqModelId: mode === "plan" ? apiConfiguration.planModeGroqModelId : apiConfiguration.actModeGroqModelId,
 		basetenModelId: mode === "plan" ? apiConfiguration.planModeBasetenModelId : apiConfiguration.actModeBasetenModelId,

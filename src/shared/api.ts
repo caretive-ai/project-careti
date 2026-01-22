@@ -167,6 +167,8 @@ export interface ApiHandlerOptions {
 	// CARET MODIFICATION: BizRouter/Caret plan-mode
 	planModeBizRouterModelId?: string
 	planModeBizRouterModelInfo?: BizRouterModelInfo
+	// CARET MODIFICATION: Caret backend type (gemini: credit-based, claude: CLI)
+	planModeCaretBackendType?: CaretBackendType
 	planModeCaretModelId?: string
 	planModeCaretModelInfo?: ModelInfo
 	planModeRequestyModelId?: string
@@ -217,6 +219,7 @@ export interface ApiHandlerOptions {
 	// CARET MODIFICATION: BizRouter/Caret act-mode
 	actModeBizRouterModelId?: string
 	actModeBizRouterModelInfo?: BizRouterModelInfo
+	actModeCaretBackendType?: CaretBackendType
 	actModeCaretModelId?: string
 	actModeCaretModelInfo?: ModelInfo
 	actModeRequestyModelId?: string
@@ -322,6 +325,19 @@ export const bizRouterModelInfoSaneDefaults: BizRouterModelInfo = {
 	frequencyPenalty: 0,
 	presencePenalty: 0,
 }
+
+// CARET MODIFICATION: Caret backend type selector
+export type CaretBackendType = "gemini" | "claude"
+export const caretBackendTypes = {
+	gemini: {
+		label: "Gemini",
+		description: "Credit-based usage",
+	},
+	claude: {
+		label: "Claude Code",
+		description: "CLI integration",
+	},
+} as const
 
 // CARET MODIFICATION: Caret models (Gemini 기반)
 export type CaretModelId = keyof typeof caretModels
@@ -434,8 +450,56 @@ export const caretModels = {
 		outputPrice: 2.2,
 		description: "GLM-4.7 with thinking mode and natural conversation support",
 	},
+	// CARET MODIFICATION: Claude 4.5 models for Caret Account (via Claude Code CLI)
+	// Opus first as the most capable model (default when switching to Claude backend)
+	"anthropic/claude-opus-4-5-20251101": {
+		maxTokens: 8192,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 15.0,
+		outputPrice: 75.0,
+		cacheWritesPrice: 18.75,
+		cacheReadsPrice: 1.5,
+		thinkingConfig: {
+			maxBudget: 128000,
+			outputPrice: 75.0,
+		},
+		description: "Claude Opus 4.5 (via Claude Code)",
+	},
+	"anthropic/claude-sonnet-4-5-20250929": {
+		maxTokens: 8192,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 3.0,
+		outputPrice: 15.0,
+		cacheWritesPrice: 3.75,
+		cacheReadsPrice: 0.3,
+		description: "Claude Sonnet 4.5 (via Claude Code)",
+	},
+	"anthropic/claude-haiku-4-5-20251001": {
+		maxTokens: 8192,
+		contextWindow: 200_000,
+		supportsImages: true,
+		supportsPromptCache: true,
+		inputPrice: 1.0,
+		outputPrice: 5.0,
+		cacheWritesPrice: 1.25,
+		cacheReadsPrice: 0.1,
+		description: "Claude Haiku 4.5 (via Claude Code)",
+	},
 } as const satisfies Record<string, ModelInfo>
 export const caretDefaultModelInfo = caretModels[caretDefaultModelId]
+
+// CARET MODIFICATION: Filtered model lists by backend type
+export const caretGeminiModels = Object.fromEntries(
+	Object.entries(caretModels).filter(([id]) => id.startsWith("gemini/") || id.startsWith("zai/")),
+) as Record<string, ModelInfo>
+
+export const caretClaudeModels = Object.fromEntries(
+	Object.entries(caretModels).filter(([id]) => id.startsWith("anthropic/claude-")),
+) as Record<string, ModelInfo>
 
 export const CLAUDE_SONNET_1M_SUFFIX = ":1m"
 export const CLAUDE_SONNET_4_1M_SUFFIX = ":1m"

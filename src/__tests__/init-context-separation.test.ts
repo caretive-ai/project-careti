@@ -1,4 +1,4 @@
-// CARET MODIFICATION: /init 컨텍스트 분리 통합 테스트
+// CARETI MODIFICATION: /init 컨텍스트 분리 통합 테스트
 // TDD GREEN Phase: 컨텍스트 분리 기능 테스트 및 구현 확인
 
 import * as fs from "fs/promises"
@@ -15,7 +15,7 @@ describe("/init Context Separation", () => {
 	let contextForUserDir: string
 
 	beforeEach(async () => {
-		testDir = `/tmp/caret-test-${Date.now()}`
+		testDir = `/tmp/careti-test-${Date.now()}`
 		contextDir = path.join(testDir, ".agents", "context")
 		contextForUserDir = path.join(testDir, ".agents", "context-for-user")
 
@@ -34,7 +34,7 @@ describe("/init Context Separation", () => {
 			const rulesPath = path.join(contextDir, "agents-rules.json")
 			const rules = {
 				project_identity: {
-					name: "Caret",
+					name: "Careti",
 					symbol: "^",
 				},
 			}
@@ -44,7 +44,7 @@ describe("/init Context Separation", () => {
 			;(systemContext as any).should.not.be.null()
 			if (systemContext) {
 				;(systemContext as any).should.have.property("project_identity")
-				;(systemContext as any).project_identity.name.should.be.equal("Caret")
+				;(systemContext as any).project_identity.name.should.be.equal("Careti")
 			}
 
 			const loadedRules = await fs.readFile(rulesPath, "utf-8")
@@ -113,7 +113,7 @@ Test Description
 	describe("시스템 규칙 분리", () => {
 		it("should not include system rules in user context (markdown)", async () => {
 			const systemRules = {
-				project_identity: { name: "Caret" },
+				project_identity: { name: "Careti" },
 				merge_strategy: { priority: 0 },
 				architecture_rules: { modification_levels: {} },
 			}
@@ -206,7 +206,7 @@ Test Description
 	describe("AI 프롬프트에 분리된 컨텍스트 반영", () => {
 		it("should build AI prompt with separated contexts", async () => {
 			const systemRules = {
-				project_identity: { name: "Caret", symbol: "^" },
+				project_identity: { name: "Careti", symbol: "^" },
 				merge_strategy: { priority: 0 },
 			}
 
@@ -242,7 +242,7 @@ Test Description
 
 		it("should not include merge_strategy in user prompt section", async () => {
 			const systemRules = {
-				project_identity: { name: "Caret" },
+				project_identity: { name: "Careti" },
 				merge_strategy: {
 					priority: 0,
 					phase_0_rule: ".agents/context MUST be restored BEFORE any code merging begins",

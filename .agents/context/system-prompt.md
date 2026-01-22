@@ -49,7 +49,7 @@ You are working with Caret's JSON-based modular system prompt architecture, repl
 ## File Structure
 
 ```
-caret-src/core/prompts/
+careti-src/core/prompts/
 ├── sections/ (15 files)              # Modular prompt structure
 │   ├── BASE_PROMPT_INTRO.json        # Caret identity + Mode system
 │   ├── COLLABORATIVE_PRINCIPLES.json # 5 collaboration principles
@@ -170,7 +170,7 @@ const detailSections = [
 
 ```typescript
 // 1. Create JSON file
-// caret-src/core/prompts/sections/NEW_SECTION.json
+// careti-src/core/prompts/sections/NEW_SECTION.json
 {
   "id": "new_section",
   "title": "New Section Title",
@@ -213,13 +213,13 @@ private async loadSections() {
 ## Key File Locations
 
 **Main Implementation**:
-- System Prompt Class: `caret-src/core/prompts/CaretSystemPrompt.ts`
-- JSON Loader: `caret-src/core/prompts/JsonTemplateLoader.ts`
-- Integration: `caret-src/core/prompts/system.ts`
+- System Prompt Class: `careti-src/core/prompts/CaretSystemPrompt.ts`
+- JSON Loader: `careti-src/core/prompts/JsonTemplateLoader.ts`
+- Integration: `careti-src/core/prompts/system.ts`
 
 **JSON Modules**:
-- Sections: `caret-src/core/prompts/sections/*.json`
-- Rules: `caret-src/core/prompts/rules/*.json`
+- Sections: `careti-src/core/prompts/sections/*.json`
+- Rules: `careti-src/core/prompts/rules/*.json`
 
 **Cline Original** (DO NOT MODIFY):
 - `src/core/prompts/system.ts` (Original Cline prompt)
@@ -247,6 +247,6 @@ npm run dev
 4. **Compress examples**: Use concise code examples
 
 ## Related Documents
-- `.agents/context/caret-architecture-guide.md`: Overall architecture
+- `.agents/context/careti-architecture-guide.md`: Overall architecture
 - `.agents/context/prompt-management.md`: Prompt management workflow
-- `caret-docs/development/system-prompt-implementation.md`: Complete guide (Korean)
+- `careti-docs/development/system-prompt-implementation.md`: Complete guide (Korean)

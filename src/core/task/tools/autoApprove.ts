@@ -62,7 +62,7 @@ export class AutoApprove {
 		}
 
 		const autoApprovalSettings = this.stateManager.getGlobalSettingsKey("autoApprovalSettings")
-		// CARET MODIFICATION: Respect global auto-approval toggle
+		// CARETI MODIFICATION: Respect global auto-approval toggle
 		if (autoApprovalSettings?.enabled === false) {
 			return false
 		}
@@ -91,7 +91,7 @@ export class AutoApprove {
 				return autoApprovalSettings.actions.useMcp
 			case ClineDefaultTool.GENERATE_IMAGE:
 				return autoApprovalSettings.actions.generateImages ?? false
-			// CARET MODIFICATION: analyze_image reads files, so use analyzeImages + readFilesExternally
+			// CARETI MODIFICATION: analyze_image reads files, so use analyzeImages + readFilesExternally
 			case ClineDefaultTool.ANALYZE_IMAGE:
 				return [
 					autoApprovalSettings.actions.analyzeImages ?? true,

@@ -7,7 +7,7 @@ import type { McpHub } from "@/services/mcp/McpHub"
 import type { BrowserSettings } from "@/shared/BrowserSettings"
 import type { FocusChainSettings } from "@/shared/FocusChainSettings"
 import { ModelFamily } from "@/shared/prompts"
-import type { SkillMetadata } from "@/shared/skills" // CARET MODIFICATION: Skills system
+import type { SkillMetadata } from "@/shared/skills" // CARETI MODIFICATION: Skills system
 import { ClineDefaultTool } from "@/shared/tools"
 import type { ClineToolSpec } from "./spec"
 import { SystemPromptSection } from "./templates/placeholders"
@@ -92,7 +92,7 @@ export interface VersionMetadata {
  * Enhanced system prompt context with better typing
  */
 /**
- * CARET MODIFICATION: Tool enablement settings for image tools
+ * CARETI MODIFICATION: Tool enablement settings for image tools
  */
 export interface ToolSettings {
 	generateImages?: boolean // Enable image generation tool
@@ -102,11 +102,11 @@ export interface ToolSettings {
 export interface SystemPromptContext {
 	readonly providerInfo: ApiProviderInfo
 	readonly cwd?: string
-	readonly hasOpenWorkspace?: boolean // CARET MODIFICATION: Whether workspace folder is open
+	readonly hasOpenWorkspace?: boolean // CARETI MODIFICATION: Whether workspace folder is open
 	readonly ide: string
-	// CARET MODIFICATION: caret/cline mode system for prompt selection
-	readonly modeSystem?: "caret" | "cline"
-	// CARET MODIFICATION: Tool enablement settings for image tools
+	// CARETI MODIFICATION: careti/cline mode system for prompt selection
+	readonly modeSystem?: "careti" | "cline"
+	// CARETI MODIFICATION: Tool enablement settings for image tools
 	readonly toolSettings?: ToolSettings
 	readonly supportsBrowserUse?: boolean
 	readonly mcpHub?: McpHub
@@ -129,7 +129,7 @@ export interface SystemPromptContext {
 	readonly isSubagentsEnabledAndCliInstalled?: boolean
 	readonly isCliSubagent?: boolean
 	readonly enableNativeToolCalls?: boolean
-	readonly skills?: readonly SkillMetadata[] // CARET MODIFICATION: Skills system
+	readonly skills?: readonly SkillMetadata[] // CARETI MODIFICATION: Skills system
 }
 
 /**

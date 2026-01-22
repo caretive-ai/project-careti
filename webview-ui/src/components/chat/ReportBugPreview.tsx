@@ -1,5 +1,5 @@
 import React from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import MarkdownBlock from "../common/MarkdownBlock"
 
 interface ReportBugPreviewProps {

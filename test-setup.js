@@ -21,8 +21,8 @@ Object.keys(tsConfig.compilerOptions.paths).forEach((key) => {
 		// Handle different source directories correctly
 		if (p.startsWith("src/")) {
 			return p.replace("src/", "out/src/")
-		} else if (p.startsWith("caret-src/")) {
-			return p.replace("caret-src/", "out/caret-src/")
+		} else if (p.startsWith("careti-src/")) {
+			return p.replace("careti-src/", "out/careti-src/")
 		}
 		// Fallback: prepend out/ for any other paths
 		return `out/${p}`

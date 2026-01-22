@@ -36,7 +36,7 @@ var (
 
 func InitializeGlobalConfig(cfg *GlobalConfig) error {
 	if cfg.ConfigPath == "" {
-		// CARET MODIFICATION: use brand-aware default config dir (.caret)
+		// CARETI MODIFICATION: use brand-aware default config dir (.caret)
 		defaultPath, err := common.DefaultConfigPath()
 		if err != nil {
 			return fmt.Errorf("failed to get default config directory: %w", err)

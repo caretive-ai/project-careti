@@ -30,10 +30,10 @@ import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
 import { getDynamicData } from "./constants"
 
 function Component() {
-    // CARET MODIFICATION: i18n 컨텍스트를 사용하여 언어 변경 감지
+    // CARETI MODIFICATION: i18n 컨텍스트를 사용하여 언어 변경 감지
     const { language } = useCaretI18nContext()
 
-    // CARET MODIFICATION: 동적 함수를 언어 의존성과 함께 사용하여 i18n 업데이트
+    // CARETI MODIFICATION: 동적 함수를 언어 의존성과 함께 사용하여 i18n 업데이트
     const dynamicData = useMemo(() => getDynamicData(), [language])
 
     // 기존 STATIC_DATA 대신 dynamicData 사용
@@ -53,9 +53,9 @@ MENU_ITEMS → getMenuItems()
 
 ### 2. 임포트 추가
 ```typescript
-// CARET MODIFICATION: i18n 반응성을 위해 useMemo 추가
+// CARETI MODIFICATION: i18n 반응성을 위해 useMemo 추가
 import { useMemo } from "react"
-// CARET MODIFICATION: 언어 반응성을 위해 i18n 컨텍스트 임포트
+// CARETI MODIFICATION: 언어 반응성을 위해 i18n 컨텍스트 임포트
 import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
 ```
 
@@ -78,15 +78,15 @@ const dynamicData = useMemo(() => getDynamicData(), [language])
 - `useMemo`: 성능 최적화 및 언어 의존성 처리
 - `[language]`: 의존성 배열에 반드시 포함
 
-### CARET MODIFICATION 주석
+### CARETI MODIFICATION 주석
 ```typescript
-// CARET MODIFICATION: i18n 지원을 위해 정적 상수를 동적 함수로 변환
+// CARETI MODIFICATION: i18n 지원을 위해 정적 상수를 동적 함수로 변환
 export const getDynamicData = () => [...]
 
-// CARET MODIFICATION: i18n 컨텍스트를 사용하여 언어 변경 감지
+// CARETI MODIFICATION: i18n 컨텍스트를 사용하여 언어 변경 감지
 const { language } = useCaretI18nContext()
 
-// CARET MODIFICATION: 동적 함수를 언어 의존성과 함께 사용하여 i18n 업데이트
+// CARETI MODIFICATION: 동적 함수를 언어 의존성과 함께 사용하여 i18n 업데이트
 const dynamicData = useMemo(() => getDynamicData(), [language])
 ```
 
@@ -111,7 +111,7 @@ npm run build:webview
 - [ ] `useCaretI18nContext` 사용
 - [ ] `useMemo`로 언어 의존성 처리
 - [ ] 모든 참조를 동적 변수로 업데이트
-- [ ] `CARET MODIFICATION` 주석 추가
+- [ ] `CARETI MODIFICATION` 주석 추가
 - [ ] 컴파일 및 기능 검증
 
 ---

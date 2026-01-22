@@ -145,7 +145,7 @@ func GetBYOAPIKeyFieldConfig(provider cline.ApiProvider) APIKeyFieldConfig {
 func PromptForAPIKey(provider cline.ApiProvider) (string, string, error) {
 	var apiKey string
 
-	// CARET MODIFICATION: LiteLLM는 Host(Base URL) → API Key 순으로 받도록 순서 조정
+	// CARETI MODIFICATION: LiteLLM는 Host(Base URL) → API Key 순으로 받도록 순서 조정
 	if provider == cline.ApiProvider_LITELLM {
 		var baseURL string
 		baseURLForm := huh.NewForm(

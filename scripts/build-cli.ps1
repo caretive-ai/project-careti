@@ -1,5 +1,5 @@
 <# 
-// CARET MODIFICATION: Windows PowerShell build script for Caret CLI binaries.
+// CARETI MODIFICATION: Windows PowerShell build script for Caret CLI binaries.
 #>
 [CmdletBinding()]
 param(
@@ -63,10 +63,10 @@ if ($LASTEXITCODE -ne 0) { throw "npm run protos-go failed." }
 
 Push-Location $cliDir
 try {
-	go build -ldflags $ldflags -o (Join-Path $binDir "caret.exe") ./cmd/cline
-	if ($LASTEXITCODE -ne 0) { throw "go build failed for caret.exe" }
-	go build -ldflags $ldflags -o (Join-Path $binDir "caret-host.exe") ./cmd/cline-host
-	if ($LASTEXITCODE -ne 0) { throw "go build failed for caret-host.exe" }
+	go build -ldflags $ldflags -o (Join-Path $binDir "careti.exe") ./cmd/cline
+	if ($LASTEXITCODE -ne 0) { throw "go build failed for careti.exe" }
+	go build -ldflags $ldflags -o (Join-Path $binDir "careti-host.exe") ./cmd/cline-host
+	if ($LASTEXITCODE -ne 0) { throw "go build failed for careti-host.exe" }
 } finally {
 	Pop-Location
 }
@@ -82,14 +82,14 @@ Remove-Item -Path (Join-Path $distBin "caret*") -Force -ErrorAction SilentlyCont
 $os = "windows"
 $arch = "amd64"
 
-Copy-Item -Path (Join-Path $binDir "caret.exe") -Destination (Join-Path $distBin "caret.exe") -Force
-Copy-Item -Path (Join-Path $binDir "caret.exe") -Destination (Join-Path $distBin "caret-$os-$arch.exe") -Force
-Copy-Item -Path (Join-Path $binDir "caret-host.exe") -Destination (Join-Path $distBin "caret-host.exe") -Force
-Copy-Item -Path (Join-Path $binDir "caret-host.exe") -Destination (Join-Path $distBin "caret-host-$os-$arch.exe") -Force
-# CARET MODIFICATION: keep cline aliases for legacy packaging scripts.
-Copy-Item -Path (Join-Path $binDir "caret.exe") -Destination (Join-Path $distBin "cline.exe") -Force
-Copy-Item -Path (Join-Path $binDir "caret.exe") -Destination (Join-Path $distBin "cline-$os-$arch.exe") -Force
-Copy-Item -Path (Join-Path $binDir "caret-host.exe") -Destination (Join-Path $distBin "cline-host.exe") -Force
-Copy-Item -Path (Join-Path $binDir "caret-host.exe") -Destination (Join-Path $distBin "cline-host-$os-$arch.exe") -Force
+Copy-Item -Path (Join-Path $binDir "careti.exe") -Destination (Join-Path $distBin "careti.exe") -Force
+Copy-Item -Path (Join-Path $binDir "careti.exe") -Destination (Join-Path $distBin "careti-$os-$arch.exe") -Force
+Copy-Item -Path (Join-Path $binDir "careti-host.exe") -Destination (Join-Path $distBin "careti-host.exe") -Force
+Copy-Item -Path (Join-Path $binDir "careti-host.exe") -Destination (Join-Path $distBin "careti-host-$os-$arch.exe") -Force
+# CARETI MODIFICATION: keep cline aliases for legacy packaging scripts.
+Copy-Item -Path (Join-Path $binDir "careti.exe") -Destination (Join-Path $distBin "cline.exe") -Force
+Copy-Item -Path (Join-Path $binDir "careti.exe") -Destination (Join-Path $distBin "cline-$os-$arch.exe") -Force
+Copy-Item -Path (Join-Path $binDir "careti-host.exe") -Destination (Join-Path $distBin "cline-host.exe") -Force
+Copy-Item -Path (Join-Path $binDir "careti-host.exe") -Destination (Join-Path $distBin "cline-host-$os-$arch.exe") -Force
 
 Write-Host "Copied binaries to dist-standalone\\bin (Caret naming)."

@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Handle Caret auth token bootstrap
+// CARETI MODIFICATION: Handle Careti auth token bootstrap
 import { WebviewProvider } from "@/core/webview"
 import { Logger } from "../logging/Logger"
 
@@ -19,7 +19,7 @@ export class SharedUriHandler {
 		// by replacing them with a placeholder before parsing
 		const queryString = parsedUrl.search.slice(1) // Remove leading '?'
 		const query = new URLSearchParams(queryString.replace(/\+/g, "%2B"))
-		// Some auth providers (Cline, Caret) return tokens in the hash fragment.
+		// Some auth providers (Cline, Careti) return tokens in the hash fragment.
 		const hashString = parsedUrl.hash.startsWith("#") ? parsedUrl.hash.slice(1) : parsedUrl.hash
 		const hashQuery = hashString ? new URLSearchParams(hashString.replace(/\+/g, "%2B")) : undefined
 

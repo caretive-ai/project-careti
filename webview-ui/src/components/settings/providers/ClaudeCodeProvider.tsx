@@ -1,6 +1,6 @@
 import { claudeCodeModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { DebouncedTextField } from "../common/DebouncedTextField"
 import { ModelInfoView } from "../common/ModelInfoView"

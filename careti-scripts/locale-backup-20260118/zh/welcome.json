@@ -1,0 +1,85 @@
+{
+	"greeting": "您好！AI 开发伙伴，^Caret。",
+	"catchPhrase": "",
+	"bannerAlt": "Caret 主图",
+	"coreFeatures": {
+		"header": "与共同成长的AI编程助手Caret一起开始'Vibe Coding'。",
+		"description": "多语言支持、开发者主导的AI编排、工作流定制、透明的AI控制，以及强大的本地LLM集成。超越简单对话，Caret提出'氛围编程'开发文化，与AI系统性地创建文档，并基于这些记录共同成长。"
+	},
+	"getStarted": {
+		"header": "",
+		"body": "",
+		"button": "开始使用",
+		"preferredLanguage": "AI响应语言",
+		"uiLanguage": "界面语言"
+	},
+	"community": {
+		"header": "🌱 加入我们的社区",
+		"body": "与使用Caret的其他开发者连接！作为一个开源项目，Caret通过您在我们GitHub存储库中的参与而成长 - 报告问题，建议功能，帮助我们共同进步。<br/><br/>💻 <strong>代码贡献</strong>、🐛 <strong>错误报告</strong>、💡 <strong>想法与建议</strong>、💰 <strong>财务支持</strong>、📖 <strong>文档编写</strong> - 有很多参与方式！<br/><br/>🎁 <strong>贡献者福利</strong>：服务积分、GitHub认可、网站列名、新功能优先访问<br/><br/>了解更多 <a href=\"#\" data-external-url=\"https://github.com/caretive-ai/project-careti\">github.com/caretive-ai/project-careti</a>",
+		"githubLink": "GitHub存储库"
+	},
+	"educationOffer": {
+		"header": "✨ 立即开始！免费'Vibe Coding'教育和Google Gemini $300积分技巧！",
+		"body": "加入我们的<strong>开源教育计划</strong>，与Caret一起学习真正的'Vibe Coding'，体验AI博客代理开发的完整过程！该计划免费提供，为您迈出AI开发实质性第一步所需的温暖指导和丰富的实践环境。我们还为首次使用Google Gemini API的用户提供<strong>3个月可用的$300 GCP积分使用技巧</strong>。无成本负担地体验AI开发的乐趣！<br/><br/>📚 <a href=\"{{educationLink}}\" target=\"_blank\">了解教育项目详情</a><br/>💰 <a href=\"{{geminiCreditLink}}\" target=\"_blank\">如何获取免费积分</a>"
+	},
+	"apiSetup": {
+		"backButton": "← 返回",
+		"title": "🔧 API设置",
+		"description": "Caret支持各种LLM。您可以订阅Caret服务获得免费访问，使用ChatGPT、Claude、Gemma API，或配置本地LLM。",
+		"supportLinks": {
+			"llmList": "Caret支持的LLM AI列表",
+			"geminiCredit": "Google Gemini API $300积分优惠信息"
+		},
+		"instructions": "支持的LLM列表信息请参考下面的链接。",
+		"saveButton": "保存并开始",
+		"help": {
+			"title": "需要帮助？",
+			"button": "查看文档"
+		}
+	},
+	"footer": {
+		"links": {
+			"caretiGithub": "Caret GitHub",
+			"basedOnCline": "基于Cline",
+			"caretiService": "Caret服务",
+			"caretiveInc": "Caretive Inc",
+			"about": "公司介绍",
+			"terms": "使用条款",
+			"privacy": "隐私政策",
+			"youthProtection": "青少年保护政策",
+			"support": "客户支持"
+		},
+		"company": {
+			"name": "Caretive INC",
+			"businessNumber": "营业执照号：459-81-03703",
+			"address": "韩国京畿道华城市东滩循环大路823号4层409-681号（永泉洞，A-PLEX城市）"
+		},
+		"copyright": {
+			"text": "© 2025 Caretive INC. All rights reserved.",
+			"builtWith": "Built with ❤️ by Caret Team"
+		},
+		"about": {
+			"description": "如果您有任何问题或反馈，欢迎在GitHub上提交issue：",
+			"link": "GitHub Issues"
+		}
+	},
+	"personaSelector": {
+		"header": "🎭 选择您的AI助手角色",
+		"description": "选择您的AI助手伙伴的个性。每个角色都有独特的沟通风格和专业知识。",
+		"selectButton": "选择"
+	},
+	"welcome": {
+		"tooltipContent": "我可以通过编辑文件、探索项目、运行命令和使用浏览器来逐步开发软件。我甚至可以使用MCP工具扩展我的能力，以超越基本的代码补全功能。",
+		"takeATour": "开始导览"
+	},
+	"cliBanner": {
+		"title": "安装 CLI 并利用子代理",
+		"description": "大规模搜索与调研可交给 CLI 代理处理。Caret/Cline 模式下命令不同。",
+		"button": "安装 CLI",
+		"copyCommand": "复制命令",
+		"copied": "已复制！",
+		"learnMore": "了解更多",
+		"installed": "已安装",
+		"dismissTitle": "关闭 CLI 横幅"
+	}
+}

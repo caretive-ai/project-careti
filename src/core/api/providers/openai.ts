@@ -147,7 +147,7 @@ export class OpenAiHandler implements ApiHandler {
 				}
 			}
 
-			// CARET MODIFICATION: Yield finish_reason for GLM4.7 loop termination fix
+			// CARETI MODIFICATION: Yield finish_reason for GLM4.7 loop termination fix
 			const finishReason = chunk.choices[0]?.finish_reason
 			if (finishReason) {
 				yield {

@@ -2,7 +2,7 @@ import { bedrockDefaultModelId, bedrockModels, CLAUDE_SONNET_4_1M_SUFFIX } from 
 import { Mode } from "@shared/storage/types"
 import { VSCodeCheckbox, VSCodeDropdown, VSCodeOption, VSCodeRadio, VSCodeRadioGroup } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { DebouncedTextField } from "../common/DebouncedTextField"
 import { ModelInfoView } from "../common/ModelInfoView"

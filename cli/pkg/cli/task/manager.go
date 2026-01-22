@@ -115,7 +115,7 @@ func NewManagerForAddress(ctx context.Context, address string) (*Manager, error)
 
 	manager := NewManager(client)
 	manager.clientAddress = address
-	manager.setClineMode(ctx) // CARET MODIFICATION: default CLI to cline prompt system
+	manager.setClineMode(ctx) // CARETI MODIFICATION: default CLI to cline prompt system
 	return manager, nil
 }
 
@@ -132,17 +132,17 @@ func NewManagerForDefault(ctx context.Context) (*Manager, error) {
 	if global.Clients != nil {
 		manager.clientAddress = global.Clients.GetRegistry().GetDefaultInstance()
 	}
-	manager.setClineMode(ctx) // CARET MODIFICATION: default CLI to cline prompt system
+	manager.setClineMode(ctx) // CARETI MODIFICATION: default CLI to cline prompt system
 
 	return manager, nil
 }
 
-// CARET MODIFICATION: ensure CLI sessions run in cline prompt system
+// CARETI MODIFICATION: ensure CLI sessions run in cline prompt system
 func (m *Manager) setClineMode(ctx context.Context) {
 	if m == nil || m.client == nil || m.client.Caretsystem == nil {
 		return
 	}
-	_, err := m.client.Caretsystem.SetPromptSystemMode(ctx, &caret.SetPromptSystemModeRequest{Mode: "cline"})
+	_, err := m.client.Caretsystem.SetPromptSystemMode(ctx, &careti.SetPromptSystemModeRequest{Mode: "cline"})
 	if err != nil && global.Config.Verbose {
 		fmt.Printf("[DEBUG] Failed to set cline prompt mode: %v\n", err)
 	}

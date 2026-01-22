@@ -35,7 +35,7 @@ func buildTempCaretBinary(t *testing.T) string {
 	t.Helper()
 
 	tempDir := t.TempDir()
-	binPath := filepath.Join(tempDir, "caret")
+	binPath := filepath.Join(tempDir, "careti")
 
 	wd, err := os.Getwd()
 	if err != nil {

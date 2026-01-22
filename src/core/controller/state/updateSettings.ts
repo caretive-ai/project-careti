@@ -17,7 +17,7 @@ import { telemetryService } from "../../../services/telemetry"
 import { BrowserSettings as SharedBrowserSettings } from "../../../shared/BrowserSettings"
 import { Controller } from ".."
 
-/**caret-docs/merging/v3.38.1/attempt-2-claude-review.md
+/**careti-docs/merging/v3.38.1/attempt-2-claude-review.md
  * Updates multiple extension settings in a single request
  * @param controller The controller instance
  * @param request The request containing the settings to update
@@ -99,7 +99,7 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 		if (request.mode !== undefined) {
 			const mode = request.mode === PlanActMode.PLAN ? "plan" : "act"
 			controller.stateManager.setGlobalState("mode", mode)
-			// CARET MODIFICATION: update caretModeSystem alongside plan/act mode
+			// CARETI MODIFICATION: update caretModeSystem alongside plan/act mode
 			if (request.modeSystem !== undefined) {
 				controller.stateManager.setGlobalState("caretModeSystem", request.modeSystem as any)
 			}
@@ -162,7 +162,7 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 		if (request.dictationSettings !== undefined) {
 			// Convert from protobuf format (snake_case) to TypeScript format (camelCase)
 			const dictationSettings = {
-				// CARET MODIFICATION: Default featureEnabled to false (voice feature removed)
+				// CARETI MODIFICATION: Default featureEnabled to false (voice feature removed)
 				featureEnabled: request.dictationSettings.featureEnabled ?? false,
 				dictationEnabled: request.dictationSettings.dictationEnabled ?? true,
 				dictationLanguage: request.dictationSettings.dictationLanguage ?? "en",
@@ -301,7 +301,7 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			controller.stateManager.setGlobalState("imageGenerationSize", size || undefined)
 		}
 
-		// CARET MODIFICATION: Image analysis model selection
+		// CARETI MODIFICATION: Image analysis model selection
 		if (request.imageAnalysisModel !== undefined) {
 			const model = (request.imageAnalysisModel || "").trim()
 			controller.stateManager.setGlobalState("imageAnalysisModel", model || undefined)
@@ -316,16 +316,16 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			controller.stateManager.setGlobalState("hooksEnabled", isEnabled)
 		}
 
-		// CARET MODIFICATION: Prevent enabling subagents in Caret mode
-		const effectiveModeSystem = request.modeSystem ?? controller.stateManager.getGlobalStateKey("caretModeSystem") ?? "caret"
+		// CARETI MODIFICATION: Prevent enabling subagents in Careti mode
+		const effectiveModeSystem = request.modeSystem ?? controller.stateManager.getGlobalStateKey("caretModeSystem") ?? "careti"
 
 		if (request.subagentsEnabled !== undefined) {
-			// CARET MODIFICATION: block enabling subagents on unsupported platforms (Windows)
+			// CARETI MODIFICATION: block enabling subagents on unsupported platforms (Windows)
 			if (request.subagentsEnabled && process.platform !== "darwin" && process.platform !== "linux") {
 				throw new Error("CLI subagents are only supported on macOS and Linux platforms")
 			}
-			if (request.subagentsEnabled && effectiveModeSystem === "caret") {
-				throw new Error("CLI subagents are disabled in Caret mode")
+			if (request.subagentsEnabled && effectiveModeSystem === "careti") {
+				throw new Error("CLI subagents are disabled in Careti mode")
 			}
 			const currentSettings = controller.stateManager.getGlobalSettingsKey("subagentsEnabled")
 			const wasEnabled = currentSettings ?? false
@@ -352,13 +352,13 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			}
 		}
 
-		// CARET MODIFICATION: Update mode system setting
+		// CARETI MODIFICATION: Update mode system setting
 		if (request.modeSystem !== undefined) {
-			const modeSystem = request.modeSystem === "caret" ? "caret" : "cline"
+			const modeSystem = request.modeSystem === "careti" ? "careti" : "cline"
 			controller.stateManager.setGlobalState("caretModeSystem", modeSystem)
 		}
 
-		// CARET MODIFICATION: Update persona system settings
+		// CARETI MODIFICATION: Update persona system settings
 		if (request.enablePersonaSystem !== undefined) {
 			controller.stateManager.setGlobalState("enablePersonaSystem", request.enablePersonaSystem)
 		}
@@ -367,7 +367,7 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			controller.stateManager.setGlobalState("currentPersona", request.currentPersona)
 		}
 
-		// CARET MODIFICATION: F11 - Input History System
+		// CARETI MODIFICATION: F11 - Input History System
 		if (request.inputHistory !== undefined) {
 			controller.stateManager.setGlobalState("inputHistory", request.inputHistory)
 		}

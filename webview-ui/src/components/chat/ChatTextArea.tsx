@@ -14,11 +14,13 @@ import { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, u
 import DynamicTextArea from "react-textarea-autosize"
 import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
-import { useInputHistory } from "@/caret/hooks/useInputHistory"
-// CARET MODIFICATION: Import i18n for Chatbot/Agent mode labels
-import { t } from "@/caret/utils/i18n"
-// CARET MODIFICATION: use CaretWebviewLogger for webview logs
-import WebviewLogger from "@/caret/utils/CaretWebviewLogger"
+import { useInputHistory } from "@/careti/hooks/useInputHistory"
+// CARETI MODIFICATION: use CaretWebviewLogger for webview logs
+import WebviewLogger from "@/careti/utils/CaretWebviewLogger"
+// CARETI MODIFICATION: Import i18n for Chatbot/Agent mode labels
+import { t } from "@/careti/utils/i18n"
+// CARETI MODIFICATION: use careti image optimization utilities
+import { optimizeImageDataUrl } from "@/careti/utils/imageOptimization"
 import ContextMenu from "@/components/chat/ContextMenu"
 import { CHAT_CONSTANTS } from "@/components/chat/chat-view/constants"
 import SlashCommandMenu from "@/components/chat/SlashCommandMenu"
@@ -32,32 +34,30 @@ import { useExtensionState } from "@/context/ExtensionStateContext"
 import { usePlatform } from "@/context/PlatformContext"
 import { CaretSystemServiceClient, FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
 import {
-	ContextMenuOptionType,
-	getContextMenuOptionIndex,
-	getContextMenuOptions,
-	insertMention,
-	insertMentionDirectly,
-	removeMention,
-	type SearchResult,
-	shouldShowContextMenu,
+    ContextMenuOptionType,
+    getContextMenuOptionIndex,
+    getContextMenuOptions,
+    insertMention,
+    insertMentionDirectly,
+    removeMention,
+    type SearchResult,
+    shouldShowContextMenu,
 } from "@/utils/context-mentions"
 import { useMetaKeyDetection, useShortcut } from "@/utils/hooks"
-// CARET MODIFICATION: use caret image optimization utilities
-import { optimizeImageDataUrl } from "@/caret/utils/imageOptimization"
 import { isSafari } from "@/utils/platformUtils"
 import {
-	getMatchingSlashCommands,
-	insertSlashCommand,
-	removeSlashCommand,
-	type SlashCommand,
-	shouldShowSlashCommandsMenu,
-	slashCommandDeleteRegex,
-	slashCommandRegexGlobal,
-	validateSlashCommand,
+    getMatchingSlashCommands,
+    insertSlashCommand,
+    removeSlashCommand,
+    type SlashCommand,
+    shouldShowSlashCommandsMenu,
+    slashCommandDeleteRegex,
+    slashCommandRegexGlobal,
+    validateSlashCommand,
 } from "@/utils/slash-commands"
 import { validateApiConfiguration, validateModelId } from "@/utils/validate"
 import ClineRulesToggleModal from "../cline-rules/ClineRulesToggleModal"
-// CARET MODIFICATION: Provider-specific login CTA in chat
+// CARETI MODIFICATION: Provider-specific login CTA in chat
 import ServersToggleModal from "./ServersToggleModal"
 import VoiceRecorder from "./VoiceRecorder"
 
@@ -81,7 +81,7 @@ interface ChatTextAreaProps {
 	shouldDisableFilesAndImages: boolean
 	onHeightChange?: (height: number) => void
 	onFocusChange?: (isFocused: boolean) => void
-	inputHistory?: string[] // CARET MODIFICATION: Persistent input history functionality
+	inputHistory?: string[] // CARETI MODIFICATION: Persistent input history functionality
 }
 
 interface GitCommit {
@@ -211,7 +211,7 @@ const ModelContainer = styled.div`
 	min-width: 0;
 `
 
-// CARET MODIFICATION: Lightweight recording glow to mirror Cline voice UI without external deps
+// CARETI MODIFICATION: Lightweight recording glow to mirror Cline voice UI without external deps
 const RecordingGlow = styled.div`
 	position: absolute;
 	inset: 10px 14px 12px 14px;
@@ -308,7 +308,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			shouldDisableFilesAndImages,
 			onHeightChange,
 			onFocusChange,
-			inputHistory = [], // CARET MODIFICATION: Persistent input history functionality
+			inputHistory = [], // CARETI MODIFICATION: Persistent input history functionality
 		},
 		ref,
 	) => {
@@ -322,7 +322,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			showChatModelSelector: showModelSelector,
 			setShowChatModelSelector: setShowModelSelector,
 			dictationSettings,
-			modeSystem, // CARET MODIFICATION: Get modeSystem for Chatbot/Agent vs Plan/Act labels
+			modeSystem, // CARETI MODIFICATION: Get modeSystem for Chatbot/Agent vs Plan/Act labels
 		} = useExtensionState()
 		const [isVoiceRecording, setIsVoiceRecording] = useState(false)
 		const [isTextAreaFocused, setIsTextAreaFocused] = useState(false)
@@ -365,7 +365,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		const [searchLoading, setSearchLoading] = useState(false)
 		const [, metaKeyChar] = useMetaKeyDetection(platform)
 		const { clineUser } = useClineAuth()
-		// CARET MODIFICATION: Persistent input history functionality - hook for handling arrow key navigation
+		// CARETI MODIFICATION: Persistent input history functionality - hook for handling arrow key navigation
 		const { handleKeyDown: handleHistoryKeyDown } = useInputHistory({
 			history: inputHistory,
 			inputValue,
@@ -565,7 +565,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		)
 		const handleKeyDown = useCallback(
 			(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-				// CARET MODIFICATION: Handle input history navigation (ArrowUp/Down) when menus are not shown
+				// CARETI MODIFICATION: Handle input history navigation (ArrowUp/Down) when menus are not shown
 				if (!showSlashCommandsMenu && !showContextMenu) {
 					const handled = handleHistoryKeyDown(event)
 					if (handled) {
@@ -766,7 +766,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				slashCommandsQuery,
 				handleSlashCommandsSelect,
 				sendingDisabled,
-				handleHistoryKeyDown, // CARET MODIFICATION: Add history navigation handler
+				handleHistoryKeyDown, // CARETI MODIFICATION: Add history navigation handler
 			],
 		)
 
@@ -1137,23 +1137,23 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					}),
 				)
 
-				// CARET MODIFICATION: Synchronize Caret mode when using Caret system
-				if (modeSystem === "caret") {
+				// CARETI MODIFICATION: Synchronize Careti mode when using Careti system
+				if (modeSystem === "careti") {
 					try {
 						const newCaretMode = mode === "plan" ? "agent" : "chatbot"
-						logger.debug(`Synchronizing Caret mode: plan/act ${mode} → Caret ${newCaretMode}`)
+						logger.debug(`Synchronizing Careti mode: plan/act ${mode} → Careti ${newCaretMode}`)
 
 						const caretResponse = await CaretSystemServiceClient.SetCaretMode({
 							mode: newCaretMode,
 						})
 
 						if (caretResponse.success) {
-							logger.info(`Caret mode synchronized: ${caretResponse.currentMode}`)
+							logger.info(`Careti mode synchronized: ${caretResponse.currentMode}`)
 						} else {
-							logger.error(`Failed to synchronize Caret mode: ${caretResponse.errorMessage}`)
+							logger.error(`Failed to synchronize Careti mode: ${caretResponse.errorMessage}`)
 						}
 					} catch (error) {
-						logger.error("Error synchronizing Caret mode", error)
+						logger.error("Error synchronizing Careti mode", error)
 					}
 				}
 
@@ -1261,7 +1261,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					return `${selectedProvider}:${ollamaModelId}`
 				case "litellm":
 					return `${selectedProvider}:${liteLlmModelId}`
-				case "caret": {
+				case "careti": {
 					const fallbackCaretModelId = caretModelId || selectedModelId || caretDefaultModelId
 					return `${selectedProvider}:${fallbackCaretModelId}`
 				}
@@ -1804,7 +1804,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 										<ModelButtonContent>{modelDisplayName}</ModelButtonContent>
 									</ModelDisplayButton>
 								</ModelButtonWrapper>
-								{/* CARET MODIFICATION: Provider-specific login CTA (below selector to avoid overlay) */}
+								{/* CARETI MODIFICATION: Provider-specific login CTA (below selector to avoid overlay) */}
 								{showModelSelector && (
 									<ModelSelectorTooltip
 										arrowPosition={arrowPosition}
@@ -1825,12 +1825,12 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						</ButtonGroup>
 					</div>
 					{/* Tooltip for Plan/Act toggle remains outside the conditional rendering */}
-					{/* CARET MODIFICATION: Tooltip for Plan/Act or Chatbot/Agent toggle based on modeSystem */}
+					{/* CARETI MODIFICATION: Tooltip for Plan/Act or Chatbot/Agent toggle based on modeSystem */}
 					<Tooltip
 						hintText={`Toggle w/ ${togglePlanActKeys}`}
 						style={{ zIndex: 1000 }}
 						tipText={
-							modeSystem === "caret"
+							modeSystem === "careti"
 								? shownTooltipMode === "act"
 									? t("mode.tooltip.agent", "common")
 									: t("mode.tooltip.chatbot", "common")
@@ -1847,7 +1847,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("plan")}
 								role="switch">
-								{modeSystem === "caret" ? t("mode.chatbot.label", "chat") : t("mode.plan.label", "chat")}
+								{modeSystem === "careti" ? t("mode.chatbot.label", "chat") : t("mode.plan.label", "chat")}
 							</SwitchOption>
 							<SwitchOption
 								aria-checked={mode === "act"}
@@ -1855,7 +1855,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								onMouseLeave={() => setShownTooltipMode(null)}
 								onMouseOver={() => setShownTooltipMode("act")}
 								role="switch">
-								{modeSystem === "caret" ? t("mode.agent.label", "chat") : t("mode.act.label", "chat")}
+								{modeSystem === "careti" ? t("mode.agent.label", "chat") : t("mode.act.label", "chat")}
 							</SwitchOption>
 						</SwitchContainer>
 					</Tooltip>

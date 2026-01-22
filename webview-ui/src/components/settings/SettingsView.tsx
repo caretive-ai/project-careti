@@ -2,22 +2,22 @@ import { ExtensionMessage } from "@shared/ExtensionMessage"
 import { ResetStateRequest } from "@shared/proto/cline/state"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import {
-	CheckCheck,
-	FlaskConical,
-	Info,
-	LucideIcon,
-	SlidersHorizontal,
-	SquareMousePointer,
-	SquareTerminal,
-	Wrench,
+    CheckCheck,
+    FlaskConical,
+    Info,
+    LucideIcon,
+    SlidersHorizontal,
+    SquareMousePointer,
+    SquareTerminal,
+    Wrench,
 } from "lucide-react"
-// CARET MODIFICATION: Added useMemo for i18n reactivity
+// CARETI MODIFICATION: Added useMemo for i18n reactivity
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useEvent } from "react-use"
-// CARET MODIFICATION: Import CaretFooter for About tab
-// CARET MODIFICATION: Import i18n context for language reactivity
-import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
-import { t } from "@/caret/utils/i18n"
+// CARETI MODIFICATION: Import CaretFooter for About tab
+// CARETI MODIFICATION: Import i18n context for language reactivity
+import { useCaretI18nContext } from "@/careti/context/CaretI18nContext"
+import { t } from "@/careti/utils/i18n"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "@/services/grpc-client"
@@ -51,7 +51,7 @@ interface SettingsTab {
 	icon: LucideIcon
 }
 
-// CARET MODIFICATION: Convert static constant to dynamic function for i18n support
+// CARETI MODIFICATION: Convert static constant to dynamic function for i18n support
 // Tab order matches Cline upstream: API > Features > Browser > Terminal > Debug > General > About
 export const getSettingsTabs = (): SettingsTab[] => [
 	{
@@ -59,7 +59,7 @@ export const getSettingsTabs = (): SettingsTab[] => [
 		name: t("tabs.apiConfiguration.name", "settings"),
 		tooltipText: t("tabs.apiConfiguration.tooltip", "settings"),
 		headerText: t("tabs.apiConfiguration.header", "settings"),
-		icon: SlidersHorizontal, // CARET MODIFICATION: Match Cline icon
+		icon: SlidersHorizontal, // CARETI MODIFICATION: Match Cline icon
 	},
 	{
 		id: "features",
@@ -82,7 +82,7 @@ export const getSettingsTabs = (): SettingsTab[] => [
 		headerText: t("tabs.terminal.header", "settings"),
 		icon: SquareTerminal,
 	},
-	// CARET MODIFICATION: Always show debug section (removed IS_DEV condition for Caret release builds)
+	// CARETI MODIFICATION: Always show debug section (removed IS_DEV condition for Careti release builds)
 	{
 		id: "debug",
 		name: t("tabs.debug.name", "settings"),
@@ -95,7 +95,7 @@ export const getSettingsTabs = (): SettingsTab[] => [
 		name: t("tabs.general.name", "settings"),
 		tooltipText: t("tabs.general.tooltip", "settings"),
 		headerText: t("tabs.general.header", "settings"),
-		icon: Wrench, // CARET MODIFICATION: Match Cline icon
+		icon: Wrench, // CARETI MODIFICATION: Match Cline icon
 	},
 	{
 		id: "about",
@@ -112,10 +112,10 @@ type SettingsViewProps = {
 }
 
 const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
-	// CARET MODIFICATION: Use i18n context to detect language changes
+	// CARETI MODIFICATION: Use i18n context to detect language changes
 	const { language } = useCaretI18nContext()
 
-	// CARET MODIFICATION: Use dynamic function with language dependency for i18n updates
+	// CARETI MODIFICATION: Use dynamic function with language dependency for i18n updates
 	const settingsTabs = useMemo(() => getSettingsTabs(), [language])
 
 	// Track active tab
@@ -171,7 +171,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 				}),
 			)
 
-			// CARET MODIFICATION: Caret-specific settings are handled by globalState
+			// CARETI MODIFICATION: Careti-specific settings are handled by globalState
 			// enablePersonaSystem is managed through VS Code globalState, not localStorage
 		} catch (error) {
 			console.error("Failed to reset state:", error)
@@ -323,7 +323,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 							{/* Terminal Settings Tab */}
 							{activeTab === "terminal" && <TerminalSettingsSection renderSectionHeader={renderSectionHeader} />}
 
-							{/* Debug Tab - CARET MODIFICATION: Always show (removed IS_DEV condition) */}
+							{/* Debug Tab - CARETI MODIFICATION: Always show (removed IS_DEV condition) */}
 							{activeTab === "debug" && (
 								<DebugSection onResetState={handleResetState} renderSectionHeader={renderSectionHeader} />
 							)}

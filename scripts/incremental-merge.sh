@@ -3,7 +3,7 @@ set -euo pipefail
 
 BASE_REF="${BASE_REF:-v3.35.0}"
 CLINE_REF="${CLINE_REF:-v3.38.1}"
-CARET_REF="${CARET_REF:-caret-main}"
+CARET_REF="${CARET_REF:-careti-main}"
 RUN_TSC="${RUN_TSC:-yes}"
 APPLY="no"
 FILES=()

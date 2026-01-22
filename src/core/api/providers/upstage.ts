@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Upstage Solar provider implementation.
+// CARETI MODIFICATION: Upstage Solar provider implementation.
 import type OpenAI from "openai"
 import type { ChatCompletionTool as OpenAITool } from "openai/resources/chat/completions"
 import {

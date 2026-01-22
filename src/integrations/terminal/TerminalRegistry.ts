@@ -1,4 +1,4 @@
-import { getCurrentBrandDisplayName } from "@caret/utils/brand-utils"
+import { getCurrentBrandDisplayName } from "@careti/utils/brand-utils"
 import * as vscode from "vscode"
 
 export interface TerminalInfo {
@@ -23,7 +23,7 @@ export class TerminalRegistry {
 	private static context: vscode.ExtensionContext | null = null
 	private static brandNameOverride: string | null = null
 
-	// CARET MODIFICATION: Capture extension context so we can resolve branded icon assets
+	// CARETI MODIFICATION: Capture extension context so we can resolve branded icon assets
 	public static initialize(context: vscode.ExtensionContext) {
 		TerminalRegistry.context = context
 		// Prefer VS Code's extension manifest to avoid fs reads failing inside asar environments
@@ -93,7 +93,7 @@ export class TerminalRegistry {
 		return terminal.exitStatus !== undefined
 	}
 
-	// CARET MODIFICATION: Provide shared branding config for any VS Code terminal entry point
+	// CARETI MODIFICATION: Provide shared branding config for any VS Code terminal entry point
 	public static getTerminalBranding(): Pick<vscode.TerminalOptions, "name" | "iconPath"> {
 		const brandDisplayName = TerminalRegistry.brandNameOverride ?? getCurrentBrandDisplayName()
 
@@ -102,8 +102,8 @@ export class TerminalRegistry {
 			return {
 				name: brandDisplayName,
 				iconPath: {
-					light: vscode.Uri.joinPath(extensionUri, "assets", "icons", "robot_panel_light.png"),
-					dark: vscode.Uri.joinPath(extensionUri, "assets", "icons", "robot_panel_dark.png"),
+					light: vscode.Uri.joinPath(extensionUri, "assets", "icons", "robot_panel_light.webp"),
+					dark: vscode.Uri.joinPath(extensionUri, "assets", "icons", "robot_panel_dark.webp"),
 				},
 			}
 		}

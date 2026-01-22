@@ -6,14 +6,14 @@ import { defineConfig } from "vitest/config"
 export default defineConfig({
 	plugins: [react()],
 	define: {
-		// CARET MODIFICATION: Vitest 환경에서 compile-time 플랫폼 상수를 제공
+		// CARETI MODIFICATION: Vitest 환경에서 compile-time 플랫폼 상수를 제공
 		__PLATFORM__: JSON.stringify(process.env.PLATFORM || "vscode"),
 	},
 	resolve: {
 		alias: {
 			"@shared": path.resolve(__dirname, "../src/shared"),
 			"@": path.resolve(__dirname, "src"),
-			"@caret": path.resolve(__dirname, "src/caret"),
+			"@careti": path.resolve(__dirname, "src/careti"),
 		},
 	},
 	test: {

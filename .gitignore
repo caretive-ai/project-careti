@@ -18,6 +18,7 @@ package-lock.json
 webview-ui/src/**/*.js
 webview-ui/src/**/*.js.map
 webview-ui/src/caret/assets
+webview-ui/src/careti/assets
 
 # Ignore coverage directories and files
 coverage
@@ -44,7 +45,7 @@ slexn-codecenter
 # Local build caches (CARET)
 .cache/
 .gopath/
-caret-build-auth.out
+careti-build-auth.out
 cline-latest
 .local-test/
 .npm-cache/

@@ -1,5 +1,5 @@
 export type ApiStream = AsyncGenerator<ApiStreamChunk> & { id?: string }
-// CARET MODIFICATION: Add ApiStreamFinishChunk for GLM4.7 loop fix
+// CARETI MODIFICATION: Add ApiStreamFinishChunk for GLM4.7 loop fix
 export type ApiStreamChunk =
 	| ApiStreamTextChunk
 	| ApiStreamThinkingChunk
@@ -103,7 +103,7 @@ export interface ApiStreamThinkingChunk {
 	id?: string
 }
 
-// CARET MODIFICATION: Finish chunk for GLM4.7 loop termination fix
+// CARETI MODIFICATION: Finish chunk for GLM4.7 loop termination fix
 export interface ApiStreamFinishChunk {
 	type: "finish"
 	/**

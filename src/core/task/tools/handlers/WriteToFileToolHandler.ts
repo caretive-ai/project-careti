@@ -10,8 +10,8 @@ import { fileExistsAtPath } from "@utils/fs"
 import { arePathsEqual, getReadablePath, isLocatedInWorkspace } from "@utils/path"
 import { telemetryService } from "@/services/telemetry"
 import { ClineDefaultTool } from "@/shared/tools"
-// CARET MODIFICATION: import brand utils for dynamic brand name
-import { getCurrentBrandName } from "@caret/utils/brand-utils"
+// CARETI MODIFICATION: import brand utils for dynamic brand name
+import { getCurrentBrandName } from "@careti/utils/brand-utils"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApproval } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -189,7 +189,7 @@ export class WriteToFileToolHandler implements IFullyManagedTool {
 				await setTimeoutPromise(3_500)
 			} else {
 				// Manual approval flow with detailed feedback handling
-				// CARET MODIFICATION: use dynamic brand name
+				// CARETI MODIFICATION: use dynamic brand name
 				const notificationMessage = `${getCurrentBrandName()} wants to ${fileExists ? "edit" : "create"} ${getWorkspaceBasename(relPath, "WriteToFile.notification")}`
 
 				// Show notification
@@ -363,7 +363,7 @@ export class WriteToFileToolHandler implements IFullyManagedTool {
 			resolutionMethod: (typeof pathResult !== "string" ? "hint" : "primary_fallback") as "hint" | "primary_fallback",
 		}
 
-		// CARET MODIFICATION: Check .caretignore access first (legacy .clineignore supported)
+		// CARETI MODIFICATION: Check .caretignore access first (legacy .clineignore supported)
 		const accessValidation = this.validator.checkClineIgnorePath(resolvedPath)
 		if (!accessValidation.ok) {
 			// Show error and return early (full original behavior)

@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Resolve mention image data URLs with workspace-aware paths.
+// CARETI MODIFICATION: Resolve mention image data URLs with workspace-aware paths.
 import path from "path"
 import type { Controller } from "@/core/controller"
 import { readFileDataUrlRelativePath } from "@/core/controller/file/readFileDataUrlRelativePath"
@@ -82,11 +82,11 @@ const resolveMentionDataUrl = async (controller: Controller, mention: string): P
 
 export async function ResolveMentionImageDataUrls(
 	controller: Controller,
-	request: proto.caret.ResolveMentionImageDataUrlsRequest,
-): Promise<proto.caret.ResolveMentionImageDataUrlsResponse> {
+	request: proto.careti.ResolveMentionImageDataUrlsRequest,
+): Promise<proto.careti.ResolveMentionImageDataUrlsResponse> {
 	const mentions = request.mentions ?? []
 	const dataUrls = await Promise.all(mentions.map((mention) => resolveMentionDataUrl(controller, mention)))
-	return proto.caret.ResolveMentionImageDataUrlsResponse.create({
-		dataUrls: dataUrls.map((dataUrl) => dataUrl ?? ""),
+	return proto.careti.ResolveMentionImageDataUrlsResponse.create({
+		dataUrls: dataUrls.map((dataUrl: string | undefined) => dataUrl ?? ""),
 	})
 }

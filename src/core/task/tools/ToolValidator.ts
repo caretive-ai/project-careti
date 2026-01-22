@@ -1,4 +1,4 @@
-import { getBrandIgnoreFileName, getLegacyClineIgnoreFileName } from "@caret/utils/brand-utils"
+import { getBrandIgnoreFileName, getLegacyClineIgnoreFileName } from "@careti/utils/brand-utils"
 import type { ToolParamName, ToolUse } from "@core/assistant-message"
 import type { ClineIgnoreController } from "@core/ignore/ClineIgnoreController"
 
@@ -29,7 +29,7 @@ export class ToolValidator {
 	}
 
 	/**
-	 * CARET MODIFICATION: Verifies access using .caretignore (legacy .clineignore) rules.
+	 * CARETI MODIFICATION: Verifies access using .caretignore (legacy .clineignore) rules.
 	 * Callers should pass a repo-relative (workspace-relative) path.
 	 */
 	checkClineIgnorePath(relPath: string): ValidationResult {

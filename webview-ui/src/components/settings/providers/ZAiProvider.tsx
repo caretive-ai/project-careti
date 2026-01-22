@@ -2,7 +2,7 @@ import { internationalZAiModels, mainlandZAiModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import { useMemo } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { ModelInfoView } from "../common/ModelInfoView"
@@ -30,7 +30,7 @@ export const ZAiProvider = ({ showModelOptions, isPopup, currentMode }: ZAiProvi
 	const { selectedModelId, selectedModelInfo } = normalizeApiConfiguration(apiConfiguration, currentMode)
 
 	// Determine which models to use based on API line selection
-	// CARET MODIFICATION: coding endpoint uses international models
+	// CARETI MODIFICATION: coding endpoint uses international models
 	const zaiModels = useMemo(
 		() => (apiConfiguration?.zaiApiLine === "china" ? mainlandZAiModels : internationalZAiModels),
 		[apiConfiguration?.zaiApiLine],

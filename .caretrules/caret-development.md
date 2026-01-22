@@ -20,7 +20,7 @@
 
 **2. TDD Implementation**
 - [ ] RED: Write failing integration test (type에 따라 위치가 다름: `src/test/**` 또는 `webview-ui/src/**`)
-- [ ] GREEN: Minimal implementation (add `// CARET MODIFICATION:` if touching Cline files)
+- [ ] GREEN: Minimal implementation (add `// CARETI MODIFICATION:` if touching Cline files)
 - [ ] REFACTOR: Improve code quality while tests pass
 
 **3. Verification**
@@ -36,7 +36,7 @@
 
 ## Mandatory Docs by Work Type
 
-**Cline Modification**: Backup + `// CARET MODIFICATION:` comment requirements
+**Cline Modification**: Backup + `// CARETI MODIFICATION:` comment requirements
 **Frontend-Backend**: Interaction patterns, architecture guide (sections 10-11)
 **Component/UI**: Component principles, theme integration, i18n patterns
 **Testing**: TDD protocols, testing guide, Vitest mocking patterns
@@ -63,7 +63,7 @@ t('settings.providers.openrouter.name')
 ---
 
 **📖 For detailed workflow with verification steps:**
-See `.caretrules/workflows/caret-development.md`
+See `.caretrules/workflows/careti-development.md`
 
 **📖 For Korean developer documentation:**
-See `caret-docs/development/caret-development.md` (if exists)
+See `careti-docs/development/careti-development.md` (if exists)

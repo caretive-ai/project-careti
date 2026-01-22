@@ -1,8 +1,8 @@
 import type { Anthropic } from "@anthropic-ai/sdk"
-import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
-import { CaretAccountService } from "@caret/services/account/CaretAccountService"
-import { CaretAuthService } from "@caret/services/auth/CaretAuthService"
-import { getCurrentFeatureConfig } from "@caret/shared/FeatureConfig"
+import { CaretiGlobalManager } from "@careti/managers/CaretiGlobalManager"
+import { CaretAccountService } from "@careti/services/account/CaretAccountService"
+import { CaretAuthService } from "@careti/services/auth/CaretAuthService"
+import { getCurrentFeatureConfig } from "@careti/shared/FeatureConfig"
 import { buildApiHandler } from "@core/api"
 import { tryAcquireTaskLockWithRetry } from "@core/task/TaskLockUtils"
 import { detectWorkspaceRoots } from "@core/workspace/detection"
@@ -556,14 +556,14 @@ export class Controller {
 
 	async handleAuthCallback(customToken: string, provider: string | null = null) {
 		try {
-			if (provider === "caret") {
+			if (provider === "careti") {
 				await this.caretAuthService.handleAuthCallback(customToken, provider)
 			} else {
 				await this.authService.handleAuthCallback(customToken, provider ? provider : "google")
 			}
 			const featureConfig = getCurrentFeatureConfig()
 			const defaultProvider: ApiProvider = (featureConfig.defaultProvider as ApiProvider) ?? ("openrouter" as ApiProvider)
-			const clineProvider: ApiProvider = provider === "caret" ? ("caret" as ApiProvider) : ("cline" as ApiProvider)
+			const clineProvider: ApiProvider = provider === "careti" ? ("careti" as ApiProvider) : ("cline" as ApiProvider)
 
 			// Get current settings to determine how to update providers
 			const planActSeparateModelsSetting = this.stateManager.getGlobalSettingsKey("planActSeparateModelsSetting")
@@ -880,7 +880,7 @@ export class Controller {
 		const preferredLanguage = this.stateManager.getGlobalSettingsKey("preferredLanguage")
 		const openaiReasoningEffort = this.stateManager.getGlobalSettingsKey("openaiReasoningEffort")
 		const mode = this.stateManager.getGlobalSettingsKey("mode")
-		const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretGlobalManager.currentMode
+		const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretiGlobalManager.currentMode
 		const strictPlanModeEnabled = this.stateManager.getGlobalSettingsKey("strictPlanModeEnabled")
 		const yoloModeToggled = this.stateManager.getGlobalSettingsKey("yoloModeToggled")
 		const useAutoCondense = this.stateManager.getGlobalSettingsKey("useAutoCondense")

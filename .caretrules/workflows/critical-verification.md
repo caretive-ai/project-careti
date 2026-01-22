@@ -53,7 +53,7 @@ find . -name "*.test.ts" -o -name "*.test.js" | head -10
 grep -A5 -B5 "test:" package.json
 
 # Check actual directory structure
-ls -la caret-src/ 2>/dev/null || echo "Directory doesn't exist yet"
+ls -la careti-src/ 2>/dev/null || echo "Directory doesn't exist yet"
 ```
 
 ## Verification Cycle Application
@@ -82,7 +82,7 @@ ls -la caret-src/ 2>/dev/null || echo "Directory doesn't exist yet"
 ## Integration with Other Workflows
 - Use before `/document-organization` to ensure clean foundation
 - Apply during `/ai-work-protocol` Phase 0 for document review
-- Essential for `/caret-development` when modifying existing systems
+- Essential for `/careti-development` when modifying existing systems
 </detailed_sequence_of_steps>
 
 <general_guidelines>

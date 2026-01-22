@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Skills system - on-demand agent instructions tool
+// CARETI MODIFICATION: Skills system - on-demand agent instructions tool
 // Ported from Cline v3.49.1
 
 import { ModelFamily } from "@/shared/prompts"

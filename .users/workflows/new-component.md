@@ -24,12 +24,12 @@ React 컴포넌트, 서비스, UI 기능 등 새로운 컴포넌트 생성 시 �
 ### 2. 파일 생성
 ```bash
 # Frontend 컴포넌트
-# caret-src/webview/ 또는 webview-ui/src/caret/
+# careti-src/webview/ 또는 webview-ui/src/caret/
 touch MyComponent.tsx
 touch MyComponent.test.tsx
 
 # Backend 서비스
-# caret-src/services/
+# careti-src/services/
 touch my-service.ts
 touch my-service.test.ts
 ```
@@ -89,7 +89,7 @@ export default MyPage;
 ## 디렉토리 구조
 
 ```
-caret-src/
+careti-src/
 ├── webview/
 │   └── components/
 │       └── MyComponent/

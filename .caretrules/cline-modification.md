@@ -6,20 +6,20 @@
 
 ## Core Principles
 
-1. **Level Hierarchy**: L1 (caret-src/) > L2 (minimal hook) > L3 (major change)
+1. **Level Hierarchy**: L1 (careti-src/) > L2 (minimal hook) > L3 (major change)
 2. **Minimal Changes**: Maximum 1-3 lines per file, integration points only
-3. **Clear Tracking**: `// CARET MODIFICATION:` comment for all changes
+3. **Clear Tracking**: `// CARETI MODIFICATION:` comment for all changes
 4. **Verification**: Test → Compile → Execute before committing
 
 ## Quick Workflow
 
 **Pre-Modification:**
-- [ ] Level Assessment: Can this be L1 (caret-src/)? If yes, STOP
+- [ ] Level Assessment: Can this be L1 (careti-src/)? If yes, STOP
 - [ ] Must be L2 minimal change? Continue workflow
 - [ ] `.cline` 백업은 생성하지 않음 (comment-only + git 복구)
 
 **Modification:**
-- [ ] Add `// CARET MODIFICATION: [what and why]` comment
+- [ ] Add `// CARETI MODIFICATION: [what and why]` comment
 - [ ] Make minimal 1-3 line change (complete replacement, no commenting out)
 - [ ] For `.proto` files: Use field number = `current_cline_max + 1000`
 
@@ -33,14 +33,14 @@
 
 **Protocol Buffer Files** (`.proto`):
 ```protobuf
-// CARET MODIFICATION: Caret fields (72 + 1000 = 1072+)
+// CARETI MODIFICATION: Caret fields (72 + 1000 = 1072+)
 optional string caret_api_key = 1072;
 optional string next_field = 1073;
 ```
 
 **Recovery** (if verification fails):
 1. `git checkout -- filename.ext` (또는 `git restore filename.ext`)
-2. Fix in caret-src/ if possible
+2. Fix in careti-src/ if possible
 3. Revise minimal modification approach
 
 ## Works Well With / Avoid
@@ -54,13 +54,13 @@ optional string next_field = 1073;
 **❌ Avoid**:
 - Complex logic changes
 - Major architectural modifications
-- Multiple file changes for single feature (prefer caret-src/)
+- Multiple file changes for single feature (prefer careti-src/)
 
 ## Key Atomic Components
 
 - `/backup-protocol` - ~~File backup procedures~~ (deprecated)
 - `/modification-levels` - L1→L2→L3 decision framework
-- `/comment-protocol` - CARET MODIFICATION tracking rules
+- `/comment-protocol` - CARETI MODIFICATION tracking rules
 - `/verification-steps` - Test→Compile→Execute sequence
 
 ## Related Workflows
@@ -75,4 +75,4 @@ optional string next_field = 1073;
 See `.caretrules/workflows/cline-modification.md` (comment-only + git 복구)
 
 **📖 For Korean developer documentation:**
-See `caret-docs/development/cline-modification.md` (if exists)
+See `careti-docs/development/cline-modification.md` (if exists)

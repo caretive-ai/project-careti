@@ -1,9 +1,9 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import styled from "styled-components"
-// CARET MODIFICATION: 다국어 URL 지원을 위해 getLocalizedUrl 및 getCurrentLanguage 임포트
-import { getLocalizedUrl } from "@/caret/constants/urls"
-import { getCurrentLanguage, t } from "@/caret/utils/i18n"
+// CARETI MODIFICATION: 다국어 URL 지원을 위해 getLocalizedUrl 및 getCurrentLanguage 임포트
+import { getLocalizedUrl } from "@/careti/constants/urls"
+import { getCurrentLanguage, t } from "@/careti/utils/i18n"
 import { McpServiceClient } from "@/services/grpc-client"
 
 type AddLocalServerFormProps = {
@@ -17,7 +17,7 @@ const AddLocalServerForm = ({ onServerAdded }: AddLocalServerFormProps) => {
 				{t("addLocalServerForm.addLocalServerDescriptionPart1", "chat")}{" "}
 				<code>{t("addLocalServerForm.clineMcpSettingsJson", "chat")}</code>
 				{t("addLocalServerForm.addLocalServerDescriptionPart2", "chat")}
-				{/* CARET MODIFICATION: 다국어 문서 URL을 동적으로 가져오도록 수정 */}
+				{/* CARETI MODIFICATION: 다국어 문서 URL을 동적으로 가져오도록 수정 */}
 				<VSCodeLink href={getLocalizedUrl("LOCAL_MCP_SERVER_DOCS", getCurrentLanguage())} style={{ display: "inline" }}>
 					{t("addLocalServerForm.here", "chat")}
 				</VSCodeLink>

@@ -4,7 +4,7 @@ import { VSCodeButton, VSCodeCheckbox, VSCodeRadio, VSCodeRadioGroup, VSCodeText
 import Fuse, { FuseResult } from "fuse.js"
 import { memo, useCallback, useEffect, useMemo, useState } from "react"
 import { Virtuoso } from "react-virtuoso"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import DangerButton from "@/components/common/DangerButton"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { TaskServiceClient } from "@/services/grpc-client"

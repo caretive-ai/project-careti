@@ -10,7 +10,7 @@ interface InputSectionProps {
 	placeholderText: string
 	shouldDisableFilesAndImages: boolean
 	selectFilesAndImages: () => Promise<void>
-	inputHistory?: string[] // CARET MODIFICATION: Persistent input history functionality
+	inputHistory?: string[] // CARETI MODIFICATION: Persistent input history functionality
 }
 
 /**
@@ -74,7 +74,7 @@ export const InputSection: React.FC<InputSectionProps> = ({
 				setInputValue={setInputValue}
 				setSelectedFiles={setSelectedFiles}
 				setSelectedImages={setSelectedImages}
-				shouldDisableFilesAndImages={shouldDisableFilesAndImages} // CARET MODIFICATION: Pass persistent input history
+				shouldDisableFilesAndImages={shouldDisableFilesAndImages} // CARETI MODIFICATION: Pass persistent input history
 			/>
 		</>
 	)

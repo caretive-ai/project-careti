@@ -1,7 +1,7 @@
 import { Tooltip } from "@heroui/react"
 import { ClineMessage } from "@shared/ExtensionMessage"
 import React from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { getColor } from "./util"
 
 interface TaskTimelineTooltipProps {

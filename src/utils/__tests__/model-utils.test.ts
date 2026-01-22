@@ -1,4 +1,4 @@
-// CARET MODIFICATION: TDD 회귀 테스트 - GPT-5.2 모델 판별 및 프롬프트 매처 동작 보장
+// CARETI MODIFICATION: TDD 회귀 테스트 - GPT-5.2 모델 판별 및 프롬프트 매처 동작 보장
 
 import { expect } from "chai"
 import { describe, it } from "mocha"

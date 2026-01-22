@@ -1,7 +1,7 @@
 import { BrowserAction, BrowserActionResult, browserActions, ClineSayBrowserAction } from "@shared/ExtensionMessage"
 import { ClineDefaultTool } from "@/shared/tools"
-// CARET MODIFICATION: import brand utils for dynamic brand name
-import { getCurrentBrandName } from "@caret/utils/brand-utils"
+// CARETI MODIFICATION: import brand utils for dynamic brand name
+import { getCurrentBrandName } from "@careti/utils/brand-utils"
 import { ToolUse } from "../../../assistant-message"
 import { formatResponse } from "../../../prompts/responses"
 import { ToolResponse } from "../.."
@@ -96,7 +96,7 @@ export class BrowserToolHandler implements IFullyManagedTool {
 					await config.callbacks.say("browser_action_launch", url, undefined, undefined, false)
 				} else {
 					// Show notification for approval if enabled
-					// CARET MODIFICATION: use dynamic brand name
+					// CARETI MODIFICATION: use dynamic brand name
 					showNotificationForApproval(
 						`${getCurrentBrandName()} wants to use a browser and launch ${url}`,
 						config.autoApprovalSettings.enableNotifications,

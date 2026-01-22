@@ -7,10 +7,10 @@
 - **Hybrid Pattern**: Preserve Cline core, inject Caret logic via interception.
 
 **Reference**:
-- **Full Protocol**: `caret-docs/merging/merge-standard-guide.md` (Authoritative Source)
+- **Full Protocol**: `careti-docs/merging/merge-standard-guide.md` (Authoritative Source)
 - **Workflow**: `.caretrules/workflows/merge-strategy.md` (AI Execution Steps)
 
 **Modification Levels**:
-- **L1**: Independent (`caret-src/`)
-- **L2**: Conditional (`// CARET MODIFICATION`)
+- **L1**: Independent (`careti-src/`)
+- **L2**: Conditional (`// CARETI MODIFICATION`)
 - **L3**: Direct (Last Resort)

@@ -43,7 +43,7 @@ phases:
       - Add unit tests as byproducts (not starting points)
 
 testLocations:
-  backend: caret-src/__tests__/
+  backend: careti-src/__tests__/
   webview: webview-ui/src/**/*.test.tsx
   integration: Test complete flows
 

@@ -21,7 +21,7 @@ describe("updateSettings platform validation", () => {
 		mockController = {
 			stateManager: {
 				getGlobalSettingsKey: sinon.stub(),
-				// CARET MODIFICATION: Default to cline mode for subagent enablement tests
+				// CARETI MODIFICATION: Default to cline mode for subagent enablement tests
 				getGlobalStateKey: sinon.stub().returns("cline"),
 				setGlobalState: sinon.stub(),
 				setApiConfiguration: sinon.stub(),
@@ -110,11 +110,11 @@ describe("updateSettings platform validation", () => {
 		)
 	})
 
-	// CARET MODIFICATION: Caret mode should block subagent enablement
-	it("should throw error when trying to enable subagents in Caret mode", async () => {
+	// CARETI MODIFICATION: Careti mode should block subagent enablement
+	it("should throw error when trying to enable subagents in Careti mode", async () => {
 		Object.defineProperty(process, "platform", { value: "darwin" })
 
-		;(mockController.stateManager.getGlobalStateKey as sinon.SinonStub).returns("caret")
+		;(mockController.stateManager.getGlobalStateKey as sinon.SinonStub).returns("careti")
 		;(mockController.stateManager.getGlobalSettingsKey as sinon.SinonStub).returns(false)
 
 		const request = UpdateSettingsRequest.create({
@@ -127,14 +127,14 @@ describe("updateSettings platform validation", () => {
 		} catch (error) {
 			assert.strictEqual(
 				(error as Error).message,
-				"CLI subagents are disabled in Caret mode",
-				"Should throw Caret mode restriction error",
+				"CLI subagents are disabled in Careti mode",
+				"Should throw Careti mode restriction error",
 			)
 		}
 
 		assert.ok(
 			!(mockController.stateManager.setGlobalState as sinon.SinonStub).called,
-			"Should not call setGlobalState when Caret mode blocks subagents",
+			"Should not call setGlobalState when Careti mode blocks subagents",
 		)
 	})
 

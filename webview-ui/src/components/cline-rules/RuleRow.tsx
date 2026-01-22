@@ -1,7 +1,7 @@
 import { StringRequest } from "@shared/proto/cline/common"
 import { RuleFileRequest } from "@shared/proto/index.cline"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { FileServiceClient } from "@/services/grpc-client"
 
 const RuleRow: React.FC<{

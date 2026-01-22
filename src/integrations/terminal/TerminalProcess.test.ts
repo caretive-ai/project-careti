@@ -47,7 +47,7 @@ describe("TerminalProcess (Integration Tests)", () => {
 		// Remove any event listeners left on the TerminalProcess
 		process.removeAllListeners()
 		// Dispose all terminals created during the test
-		// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+		// CARETI MODIFICATION: replace forEach to satisfy lint without behavior change
 		for (const t of createdTerminals) {
 			t.dispose()
 		}

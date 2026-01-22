@@ -7,7 +7,7 @@ You are working with Caret's dual documentation system designed for AI-developer
 
 ### 1. AI-Developer Knowledge Synchronization
 - `.caretrules/`: AI's knowledge source (machine-optimized)
-- `caret-docs/`: Developer's knowledge source (human-friendly Korean)
+- `careti-docs/`: Developer's knowledge source (human-friendly Korean)
 - **Rule**: Both directories must maintain 1:1 semantic equivalence
 
 ### 2. Knowledge Atomization Strategy
@@ -30,7 +30,7 @@ You are working with Caret's dual documentation system designed for AI-developer
 - 3+ code examples → Markdown (learning-optimized)
 - Language: English
 
-**Developer Documents** (`caret-docs/`):
+**Developer Documents** (`careti-docs/`):
 - Always Markdown/MDX
 - Language: Korean (한글)
 
@@ -38,8 +38,8 @@ You are working with Caret's dual documentation system designed for AI-developer
 
 ### When Creating/Updating Documents:
 1. **AI Rule First**: Create/update `.caretrules/` version
-2. **Developer Mirror**: Create corresponding `caret-docs/development/` version
-3. **Semantic Check**: Use `caret-scripts/ai-semantic-analyzer.js` to verify equivalence
+2. **Developer Mirror**: Create corresponding `careti-docs/development/` version
+3. **Semantic Check**: Use `careti-scripts/ai-semantic-analyzer.js` to verify equivalence
 4. **Update Index**: Add to `ai-work-index.yaml` if workflow-related
 
 ### File Naming Conventions:
@@ -48,28 +48,28 @@ You are working with Caret's dual documentation system designed for AI-developer
 - Format: `[feature]-[aspect].md`
 - Examples: `webview-communication.md`, `component-architecture.md`
 
-## CARET MODIFICATION Comment Protocol
+## CARETI MODIFICATION Comment Protocol
 
 When modifying Cline original files, add file-type-appropriate comments:
 
 **TypeScript/JavaScript** (.ts, .tsx, .js, .jsx):
 ```typescript
-// CARET MODIFICATION: [clear description]
+// CARETI MODIFICATION: [clear description]
 ```
 
 **CSS** (.css, .scss):
 ```css
-/* CARET MODIFICATION: [clear description] */
+/* CARETI MODIFICATION: [clear description] */
 ```
 
 **HTML/Markdown** (.html, .md, .md):
 ```html
-<!-- CARET MODIFICATION: [clear description] -->
+<!-- CARETI MODIFICATION: [clear description] -->
 ```
 
 **Shell Scripts** (.sh, .bash):
 ```bash
-# CARET MODIFICATION: [clear description]
+# CARETI MODIFICATION: [clear description]
 ```
 
 **No Comment Support**: JSON, images, binaries → Document changes separately
@@ -84,7 +84,7 @@ When modifying Cline original files, add file-type-appropriate comments:
     └── atoms/            # Atomic rules
         └── *.md, *.yaml  # Minimal reusable units
 
-caret-docs/
+careti-docs/
 ├── development/          # AI-dev synced guides (Korean)
 │   ├── *.md            # Root guides (1:1 with .caretrules/)
 │   └── workflows/       # Workflow mirrors
@@ -104,4 +104,4 @@ caret-docs/
 
 ## Related Documents
 - `.caretrules/ai-work-index.yaml`: Document selection guide
-- `caret-docs/development/documentation-guide.md`: Full developer guide (Korean)
+- `careti-docs/development/documentation-guide.md`: Full developer guide (Korean)

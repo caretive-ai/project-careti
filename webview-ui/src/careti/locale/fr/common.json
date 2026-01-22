@@ -1,0 +1,109 @@
+{
+	"button": {
+		"save": "Enregistrer",
+		"cancel": "Annuler",
+		"done": "Terminé",
+		"runCommand": "Exécuter la commande",
+		"reject": "Rejeter",
+		"retry": "Réessayer",
+		"approve": "Approuver",
+		"proceed": "Continuer",
+		"proceedAnyways": "Continuer quand même",
+		"proceedWhileRunning": "Continuer pendant l'exécution",
+		"resumeTask": "Reprendre la tâche",
+		"startNewTaskWithContext": "Nouvelle tâche avec contexte",
+		"condenseConversation": "Condenser la conversation",
+		"reportGitHubIssue": "Signaler sur GitHub"
+	},
+	"imageAlt": {
+		"caretBanner": "Bannière du logo Caret"
+	},
+	"welcome": {
+		"whatCanIDo": "Que puis-je faire pour vous ?"
+	},
+	"rulesModal": {
+		"tooltip.manageRulesWorkflows": "Gérer les règles et workflows Caret",
+		"ariaLabel.CaretRulesButton": "Règles Caret"
+	},
+	"mode": {
+		"tooltip": {
+			"chatbot": "En mode Chatbot, Caret fournit des consultations et analyses d'expert",
+			"agent": "En mode Agent, Caret collabore pour implémenter des solutions",
+			"plan": "En mode Plan, formulez des stratégies et des plans",
+			"act": "En mode Act, exécutez et implémentez les plans"
+		}
+	},
+	"account": {
+		"signUpWithCaret": "Connexion et inscription",
+		"dashboard": "Tableau de bord",
+		"addCredits": "Ajouter des crédits",
+		"currentBalance": "Solde actuel",
+		"logOut": "Déconnexion",
+		"loading": "Chargement...",
+		"failedToFetchUserCredit": "Échec de récupération des crédits.",
+		"failedToFetchCreditBalance": "Échec de récupération du solde.",
+		"signUpDescription": "Inscrivez-vous pour accéder aux derniers modèles, au tableau de bord de facturation et plus encore.",
+		"termsOfService": "Conditions d'utilisation",
+		"privacyPolicy": "Politique de confidentialité",
+		"byContining": "En continuant, vous acceptez les",
+		"profileAlt": "Avatar du profil",
+		"role": "Rôle",
+		"title": "Compte",
+		"totalCost": "Coût",
+		"lastUpdated": "Dernière mise à jour",
+		"credits": "Crédits",
+		"failedToGetLoginUrl": "Échec d'obtention de l'URL de connexion.",
+		"termsOfServiceUrl": "https://caretive.ai/terms.en.html",
+		"privacyPolicyUrl": "https://caretive.ai/privacy.en.html",
+		"personal": "Personnel",
+		"date": "Date",
+		"model": "Modèle",
+		"creditsUsed": "Crédits utilisés",
+		"usageHistory": "Historique d'utilisation",
+		"paymentsHistory": "Historique des paiements",
+		"noUsageHistory": "Aucun historique d'utilisation",
+		"noPaymentHistory": "Aucun historique de paiement"
+	},
+	"common": {
+		"and": "et",
+		"scrollToBottom": "Aller en bas",
+		"defaultValue": "0",
+		"seeMore": "Voir plus"
+	},
+	"taskHeader.task": "Tâche",
+	"taskHeader.cache": "Cache",
+	"taskHeader.tokens": "Tokens",
+	"taskHeader.closeTask": "Fermer la tâche",
+	"taskHeader.seeMore": "Voir plus",
+	"taskHeader.seeLess": "Voir moins",
+	"taskHeader.promptTokens": "Tokens de prompt",
+	"taskHeader.completionTokens": "Tokens de complétion",
+	"taskHeader.tokensWrittenToCache": "Tokens écrits en cache",
+	"taskHeader.tokensReadFromCache": "Tokens lus du cache",
+	"taskHeader.disablingCheckpoints": "désactivation des points de contrôle.",
+	"taskHeader.seeHereForInstructions": "Voir les instructions ici.",
+	"taskHeader.currentTokens": "Tokens utilisés dans cette requête",
+	"taskHeader.contextWindowUsage": "Utilisation de la fenêtre de contexte",
+	"taskHeader.maxContextWindow": "Taille maximale de la fenêtre de contexte",
+	"taskHeader.allStepsCompleted": "Les {{totalCount}} étapes sont terminées !",
+	"taskHeader.newStepsGenerated": "De nouvelles étapes peuvent être générées.",
+	"taskHeader.editFocusChainList": "Modifier la liste de focus",
+	"modelInfo": {
+		"tokensSuffix": "/million de tokens"
+	},
+	"telemetry": {
+		"helpImprove": "Soutenir le développement de Caret",
+		"description": "Caret est un projet open-source. Visitez notre GitHub pour contribuer.",
+		"githubLinkPrefix": "En savoir plus sur",
+		"githubLink": "github.com/caretive-ai/project-careti",
+		"closeBannerAria": "Fermer la bannière"
+	},
+	"autoApprove": {
+		"autoApproveLabel": "Approbation auto :"
+	},
+	"task": {
+		"deleteTask": "Supprimer la tâche",
+		"deleteTaskAriaLabel": "Supprimer la tâche",
+		"copyTask": "Copier la tâche"
+	}
+}

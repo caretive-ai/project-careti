@@ -3,7 +3,7 @@ import * as proto from "@shared/proto"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton, VSCodeCheckbox, VSCodeDropdown, VSCodeLink, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CaretSystemServiceClient } from "@/services/grpc-client"
 import { getAsVar, VSC_DESCRIPTION_FOREGROUND } from "@/utils/vscStyles"
@@ -38,12 +38,12 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 	// Local state for collapsible model configuration section
 	const [modelConfigurationSelected, setModelConfigurationSelected] = useState(false)
 
-	// CARET MODIFICATION: Local state for model fetching
+	// CARETI MODIFICATION: Local state for model fetching
 	const [liteLlmModels, setLiteLlmModels] = useState<string[]>([])
 	const [isLoadingModels, setIsLoadingModels] = useState(false)
 	const [modelsError, setModelsError] = useState<string | null>(null)
 
-	// CARET MODIFICATION: Function to fetch models from LiteLLM
+	// CARETI MODIFICATION: Function to fetch models from LiteLLM
 	const handleFetchModels = async () => {
 		if (!apiConfiguration?.liteLlmBaseUrl) {
 			setModelsError(t("providers.litellm.baseUrlRequired", "settings"))
@@ -54,7 +54,7 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 		setModelsError(null)
 
 		try {
-			const request = proto.caret.FetchLiteLlmModelsRequest.create({
+			const request = proto.careti.FetchLiteLlmModelsRequest.create({
 				baseUrl: apiConfiguration.liteLlmBaseUrl,
 				apiKey: apiConfiguration.liteLlmApiKey || "",
 			})
@@ -96,7 +96,7 @@ export const LiteLlmProvider = ({ showModelOptions, isPopup, currentMode }: Lite
 				type="password">
 				<span style={{ fontWeight: 500 }}>{t("providers.litellm.apiKeyLabel", "settings")}</span>
 			</DebouncedTextField>
-			{/* CARET MODIFICATION: Replace text field with dropdown and fetch button */}
+			{/* CARETI MODIFICATION: Replace text field with dropdown and fetch button */}
 			<div style={{ display: "flex", gap: "10px", alignItems: "flex-end", flexWrap: "wrap" }}>
 				<div style={{ flex: 1, minWidth: "200px", position: "relative" }}>
 					<span style={{ fontWeight: 500, display: "block", marginBottom: "5px" }}>

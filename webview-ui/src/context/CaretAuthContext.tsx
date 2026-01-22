@@ -44,10 +44,10 @@ export const CaretAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 				})
 			},
 			onError: (error: Error) => {
-				console.error("Error in Caret auth callback subscription:", error)
+				console.error("Error in Careti auth callback subscription:", error)
 			},
 			onComplete: () => {
-				console.log("Caret auth callback subscription completed")
+				console.log("Careti auth callback subscription completed")
 			},
 		})
 

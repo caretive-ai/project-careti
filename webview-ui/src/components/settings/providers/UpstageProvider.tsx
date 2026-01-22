@@ -1,9 +1,9 @@
-// CARET MODIFICATION: Upstage Solar provider settings UI.
+// CARETI MODIFICATION: Upstage Solar provider settings UI.
 import { upstageModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { VSCodeLink } from "@vscode/webview-ui-toolkit/react"
-import { CARET_URLS } from "@/caret/constants/urls"
-import { t } from "@/caret/utils/i18n"
+import { CARET_URLS } from "@/careti/constants/urls"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { ModelInfoView } from "../common/ModelInfoView"

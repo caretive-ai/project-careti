@@ -5,8 +5,8 @@ import { ErrorService } from "../error"
  * Simple logging utility for the extension's backend code.
  */
 export class Logger {
-	// CARET MODIFICATION: align output channel branding with Caret
-	public readonly channelName = "Caret Dev Logger"
+	// CARETI MODIFICATION: align output channel branding with Careti
+	public readonly channelName = "Careti Dev Logger"
 	static error(message: string, error?: Error) {
 		Logger.#output("ERROR", message, error)
 		ErrorService.get().logMessage(message, "error")
@@ -33,7 +33,7 @@ export class Logger {
 		if (error?.message) {
 			fullMessage += ` ${error.message}`
 		}
-		// CARET MODIFICATION: Add timestamp for debugging timing issues
+		// CARETI MODIFICATION: Add timestamp for debugging timing issues
 		const timestamp = new Date().toISOString()
 		HostProvider.get().logToChannel(`[${timestamp}] ${level} ${fullMessage}`)
 		if (error?.stack) {

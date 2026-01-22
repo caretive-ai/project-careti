@@ -51,7 +51,7 @@ declare global {
 	function acquireVsCodeApi(): any
 }
 
-// CARET MODIFICATION: Import vscode singleton to avoid duplicate acquireVsCodeApi() calls
+// CARETI MODIFICATION: Import vscode singleton to avoid duplicate acquireVsCodeApi() calls
 import { vscode as vscodeSingleton } from "../utils/vscode"
 
 // Implementations for post message handling

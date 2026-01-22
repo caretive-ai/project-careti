@@ -10,18 +10,18 @@ Caret의 지원 모델 리스트를 자동 생성하고 관련 문서를 업데�
 
 ## 스크립트 위치
 ```
-caret-scripts/build/generate-support-model-list.js
+careti-scripts/build/generate-support-model-list.js
 ```
 
 ## 실행 명령
 ```bash
-node caret-scripts/build/generate-support-model-list.js
+node careti-scripts/build/generate-support-model-list.js
 ```
 
 ## 생성 파일
 스크립트 실행 시 다음 파일들이 자동 생성됩니다:
-- `caret-docs/development/support-model-list.mdx` (한국어)
-- `caret-docs/development/support-model-list.en.mdx` (영어)
+- `careti-docs/development/support-model-list.mdx` (한국어)
+- `careti-docs/development/support-model-list.en.mdx` (영어)
 
 ## 데이터 소스
 - **API 정의 파일**: `src/shared/api.ts`
@@ -33,7 +33,7 @@ node caret-scripts/build/generate-support-model-list.js
 
 ### 1. 스크립트 실행
 ```bash
-node caret-scripts/build/generate-support-model-list.js
+node careti-scripts/build/generate-support-model-list.js
 ```
 
 ### 2. 출력 확인
@@ -50,17 +50,17 @@ node caret-scripts/build/generate-support-model-list.js
 
 **메인 저장소:**
 - `README.md`
-- `caret-docs/readme-i18n/README.ko.md`
-- `caret-docs/readme-i18n/README.ja.md`
-- `caret-docs/readme-i18n/README.zh-cn.md`
-- `caret-docs/readme-i18n/README.fr.md`
-- `caret-docs/readme-i18n/README.de.md`
-- `caret-docs/readme-i18n/README.ru.md`
+- `careti-docs/readme-i18n/README.ko.md`
+- `careti-docs/readme-i18n/README.ja.md`
+- `careti-docs/readme-i18n/README.zh-cn.md`
+- `careti-docs/readme-i18n/README.fr.md`
+- `careti-docs/readme-i18n/README.de.md`
+- `careti-docs/readme-i18n/README.ru.md`
 
-**docs.caret.team:**
-- `docs.caret.team/README.md`
-- `docs.caret.team/README.ko.md`
-- `docs.caret.team/docs-*/getting-started/what-is-caret.mdx` (7개 언어)
+**docs.careti.ai:**
+- `docs.careti.ai/README.md`
+- `docs.careti.ai/README.ko.md`
+- `docs.careti.ai/docs-*/getting-started/what-is-careti.mdx` (7개 언어)
 
 ### 업데이트 텍스트 패턴
 스크립트 출력의 `모델 섹션` 수와 `유니크 모델` 수를 사용:
@@ -87,7 +87,7 @@ node caret-scripts/build/generate-support-model-list.js
 ### 스크립트가 실행되지 않을 때
 ```bash
 # 직접 실행
-node caret-scripts/build/generate-support-model-list.js
+node careti-scripts/build/generate-support-model-list.js
 ```
 
 ## 참고 사항

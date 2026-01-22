@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Minimal mock Caret API server for CLI auth flow verification
+// Minimal mock Careti API server for CLI auth flow verification
 // Endpoints:
 //   GET  /v1/auth/authorize   -> 302 redirect to callback with code/provider
 //   POST /v1/auth/token       -> returns access/refresh tokens and userInfo
@@ -63,7 +63,7 @@ async function handleToken(req, res) {
 			expiresAt,
 			userInfo: {
 				id: "user-123",
-				email: body.email || "mock@caret.team",
+				email: body.email || "mock@careti.ai",
 				name: body.name || "Mock User",
 			},
 		},
@@ -104,10 +104,10 @@ function requestHandler(req, res) {
 
 const server = http.createServer(requestHandler)
 server.listen(PORT, () => {
-	console.log(`[mock-caret-api] listening on http://localhost:${PORT}`)
+	console.log(`[mock-careti-api] listening on http://localhost:${PORT}`)
 })
 
 process.on("SIGINT", () => {
-	console.log("[mock-caret-api] shutting down")
+	console.log("[mock-careti-api] shutting down")
 	server.close(() => process.exit(0))
 })

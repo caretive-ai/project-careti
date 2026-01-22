@@ -1,5 +1,5 @@
 <# 
-// CARET MODIFICATION: Windows PowerShell build script for Caret CLI (all platforms).
+// CARETI MODIFICATION: Windows PowerShell build script for Caret CLI (all platforms).
 #>
 [CmdletBinding()]
 param(
@@ -86,8 +86,8 @@ try {
 		$env:GOOS = $os
 		$env:GOARCH = $arch
 
-		$outCli = Join-Path $binDir ("caret-{0}-{1}{2}" -f $os, $arch, $ext)
-		$outHost = Join-Path $binDir ("caret-host-{0}-{1}{2}" -f $os, $arch, $ext)
+		$outCli = Join-Path $binDir ("careti-{0}-{1}{2}" -f $os, $arch, $ext)
+		$outHost = Join-Path $binDir ("careti-host-{0}-{1}{2}" -f $os, $arch, $ext)
 
 		go build -ldflags $ldflags -o $outCli ./cmd/cline
 		if ($LASTEXITCODE -ne 0) { throw "go build failed for $outCli" }
@@ -104,20 +104,20 @@ New-Item -ItemType Directory -Force -Path $distBin | Out-Null
 Remove-Item -Path (Join-Path $distBin "cline*") -Force -ErrorAction SilentlyContinue
 Remove-Item -Path (Join-Path $distBin "caret*") -Force -ErrorAction SilentlyContinue
 
-Get-ChildItem -Path $binDir -Filter "caret-*" | ForEach-Object {
+Get-ChildItem -Path $binDir -Filter "careti-*" | ForEach-Object {
 	Copy-Item -Path $_.FullName -Destination (Join-Path $distBin $_.Name) -Force
 }
-Get-ChildItem -Path $binDir -Filter "caret-host-*" | ForEach-Object {
+Get-ChildItem -Path $binDir -Filter "careti-host-*" | ForEach-Object {
 	Copy-Item -Path $_.FullName -Destination (Join-Path $distBin $_.Name) -Force
 }
 
-# CARET MODIFICATION: keep cline aliases for legacy packaging scripts.
-Get-ChildItem -Path $binDir -Filter "caret-*" | ForEach-Object {
-	$clineName = $_.Name -replace "^caret-", "cline-"
+# CARETI MODIFICATION: keep cline aliases for legacy packaging scripts.
+Get-ChildItem -Path $binDir -Filter "careti-*" | ForEach-Object {
+	$clineName = $_.Name -replace "^careti-", "cline-"
 	Copy-Item -Path $_.FullName -Destination (Join-Path $distBin $clineName) -Force
 }
-Get-ChildItem -Path $binDir -Filter "caret-host-*" | ForEach-Object {
-	$clineName = $_.Name -replace "^caret-host-", "cline-host-"
+Get-ChildItem -Path $binDir -Filter "careti-host-*" | ForEach-Object {
+	$clineName = $_.Name -replace "^careti-host-", "cline-host-"
 	Copy-Item -Path $_.FullName -Destination (Join-Path $distBin $clineName) -Force
 }
 

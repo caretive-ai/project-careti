@@ -1,7 +1,7 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { AlertTriangle } from "lucide-react"
 import React, { ReactNode } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { OPENROUTER_MODEL_PICKER_Z_INDEX } from "../settings/OpenRouterModelPicker"
 
 interface AlertDialogProps {

@@ -1,5 +1,5 @@
-// CARET MODIFICATION: Hook script templates for all supported hook types
-// Ported from cline-latest/src/core/hooks/templates.ts with Caret branding
+// CARETI MODIFICATION: Hook script templates for all supported hook types
+// Ported from cline-latest/src/core/hooks/templates.ts with Careti branding
 /**
  * Hook script templates for all supported hook types.
  * Templates are provided as executable Bash shell scripts with comprehensive examples.
@@ -259,7 +259,7 @@ function getUserPromptSubmitTemplate(): string {
 #
 # UserPromptSubmit Hook
 #
-# Executes when the user submits a prompt to Caret.
+# Executes when the user submits a prompt to Careti.
 #
 # Input: { taskId, userPromptSubmit: { prompt: string }, caretVersion, timestamp, ... }
 # Output: { cancel: boolean, contextModification?: string, errorMessage?: string }

@@ -1,4 +1,4 @@
-// CARET MODIFICATION: 워크플로우 관리 - 새 경로 우선, 레거시 경로 폴백
+// CARETI MODIFICATION: 워크플로우 관리 - 새 경로 우선, 레거시 경로 폴백
 // 새 경로: .agents/workflows/
 // 레거시 경로: .agents/context/workflows/
 import { synchronizeRuleToggles } from "@core/context/instructions/user-instructions/rule-helpers"
@@ -51,7 +51,7 @@ export async function refreshWorkflowToggles(
 	controller.stateManager.setGlobalState("globalWorkflowToggles", updatedGlobalWorkflowToggles)
 
 	const workflowRulesToggles = controller.stateManager.getWorkspaceStateKey("workflowToggles")
-	// CARET MODIFICATION: 새 경로 우선, 레거시 경로 폴백
+	// CARETI MODIFICATION: 새 경로 우선, 레거시 경로 폴백
 	const workflowsDirPath = await resolveWorkflowsPath(workingDirectory)
 	const updatedWorkflowToggles = await synchronizeRuleToggles(workflowsDirPath, workflowRulesToggles)
 	controller.stateManager.setWorkspaceState("workflowToggles", updatedWorkflowToggles)

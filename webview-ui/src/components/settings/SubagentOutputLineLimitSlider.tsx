@@ -1,5 +1,5 @@
 import React, { memo } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { updateSetting } from "./utils/settingsHandlers"
 

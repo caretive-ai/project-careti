@@ -1,5 +1,5 @@
-// CARET MODIFICATION: Hook deletion controller
-// Ported from cline-latest with Caret path standards (.agents/hooks)
+// CARETI MODIFICATION: Hook deletion controller
+// Ported from cline-latest with Careti path standards (.agents/hooks)
 import { DeleteHookRequest, DeleteHookResponse } from "@shared/proto/cline/file"
 import fs from "fs/promises"
 import path from "path"
@@ -23,7 +23,7 @@ export async function deleteHook(
 	const { hookName, isGlobal, workspaceName } = request
 
 	// Determine hook path
-	// CARET MODIFICATION: Uses .agents/hooks for workspace hooks (Caret standard)
+	// CARETI MODIFICATION: Uses .agents/hooks for workspace hooks (Careti standard)
 	const hooksDir = await resolveHooksDirectory(isGlobal, workspaceName, globalHooksDirOverride)
 
 	const hookPath = path.join(hooksDir, hookName)

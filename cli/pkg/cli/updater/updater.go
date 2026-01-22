@@ -375,7 +375,7 @@ func showFailureMessage(channel string) {
 }
 
 func getCacheFilePath() string {
-	// CARET MODIFICATION: use brand config directory
+	// CARETI MODIFICATION: use brand config directory
 	homeDir, _ := os.UserHomeDir()
 	if homeDir == "" {
 		homeDir = os.Getenv("HOME")

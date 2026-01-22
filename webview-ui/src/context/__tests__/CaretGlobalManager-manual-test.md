@@ -1,24 +1,24 @@
-# CaretGlobalManager Integration Manual Test
+# CaretiGlobalManager Integration Manual Test
 
 ## ✅ Implementation Complete
 
-The CaretGlobalManager integration has been successfully implemented in `ExtensionStateContext.tsx`:
+The CaretiGlobalManager integration has been successfully implemented in `ExtensionStateContext.tsx`:
 
 ### Changes Made:
 
 1. **Import Added** (line 7):
    ```typescript
-   import { CaretGlobalManager } from "../../../caret-src/managers/CaretGlobalManager"
+   import { CaretiGlobalManager } from "../../../careti-src/managers/CaretiGlobalManager"
    ```
 
 2. **Integration Added** in `setModeSystem` function (lines 763-769):
    ```typescript
-   // CARET MODIFICATION: CaretGlobalManager 싱글톤 업데이트 (t01 미션 해결)
+   // CARETI MODIFICATION: CaretiGlobalManager 싱글톤 업데이트 (t01 미션 해결)
    try {
-       CaretGlobalManager.get().setCurrentMode(modeSystem)
-       console.log(`[GLOBAL-MANAGER] CaretGlobalManager.setCurrentMode called with: ${modeSystem}`)
+       CaretiGlobalManager.get().setCurrentMode(modeSystem)
+       console.log(`[GLOBAL-MANAGER] CaretiGlobalManager.setCurrentMode called with: ${modeSystem}`)
    } catch (error) {
-       console.error("[GLOBAL-MANAGER] Failed to update CaretGlobalManager:", error)
+       console.error("[GLOBAL-MANAGER] Failed to update CaretiGlobalManager:", error)
    }
    ```
 
@@ -31,26 +31,26 @@ The CaretGlobalManager integration has been successfully implemented in `Extensi
 ### Manual Testing Instructions:
 
 1. Start VS Code extension in development mode
-2. Open Caret settings
-3. Change Mode System toggle between "Caret" and "Cline"
+2. Open Careti settings
+3. Change Mode System toggle between "Careti" and "Cline"
 4. Check browser developer console for log messages:
    ```
-   [GLOBAL-MANAGER] CaretGlobalManager.setCurrentMode called with: cline
-   [GLOBAL-MANAGER] CaretGlobalManager.setCurrentMode called with: caret
+   [GLOBAL-MANAGER] CaretiGlobalManager.setCurrentMode called with: cline
+   [GLOBAL-MANAGER] CaretiGlobalManager.setCurrentMode called with: careti
    ```
 
 ### Expected Behavior:
 - ✅ ExtensionState.modeSystem updates
-- ✅ CaretGlobalManager._currentMode synchronizes  
+- ✅ CaretiGlobalManager._currentMode synchronizes  
 - ✅ StateServiceClient.updateSettings() called
 - ✅ Comprehensive logging on all levels
-- ✅ Both Caret and Cline modes work correctly
+- ✅ Both Careti and Cline modes work correctly
 
 ### Resolution:
 The t01 mission issue is resolved:
-- **Before**: CaretGlobalManager._currentMode always "caret" (unused)
-- **After**: CaretGlobalManager._currentMode syncs with actual user settings
+- **Before**: CaretiGlobalManager._currentMode always "careti" (unused)
+- **After**: CaretiGlobalManager._currentMode syncs with actual user settings
 
 ## Test Result: ✅ PASSED
 
-The CaretGlobalManager modeSystem integration is working correctly.
+The CaretiGlobalManager modeSystem integration is working correctly.

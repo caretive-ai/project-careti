@@ -5,19 +5,19 @@ You are safely modifying Cline original files using the atomic workflow combinat
 
 ## Atomic Components Used
 - `/modification-levels` - L1→L2→L3 decision framework
-- `/comment-protocol` - CARET MODIFICATION tracking
+- `/comment-protocol` - CARETI MODIFICATION tracking
 - `/verification-steps` - Test→Compile→Execute validation
 
 ## Pre-Modification Phase
 
 ### Step 1: Level Assessment (`/modification-levels`)
-- [ ] Can this be Level 1 (caret-src/)? → If yes, stop here, use caret-src/
+- [ ] Can this be Level 1 (careti-src/)? → If yes, stop here, use careti-src/
 - [ ] Must be Level 2 (minimal Cline change)? → Continue workflow
 - [ ] Requires Level 3 (major change)? → Requires full documentation
 
 ### Step 2: Backup 정책
 - `.cline` 백업 파일 생성 규칙은 **deprecated** 입니다(새로 만들지 않습니다).
-- 안전장치는 `// CARET MODIFICATION:` 주석 + 최소 변경 + 테스트/컴파일 검증으로 대체합니다.
+- 안전장치는 `// CARETI MODIFICATION:` 주석 + 최소 변경 + 테스트/컴파일 검증으로 대체합니다.
 
 ## Modification Phase
 
@@ -29,7 +29,7 @@ You are safely modifying Cline original files using the atomic workflow combinat
 
 ### Step 4: Comment Addition (`/comment-protocol`)
 ```typescript
-// CARET MODIFICATION: [Clear description of what and why]
+// CARETI MODIFICATION: [Clear description of what and why]
 const caretIntegration = new CaretFeature();
 ```
 
@@ -41,7 +41,7 @@ const caretIntegration = new CaretFeature();
 ### Step 4.5: Protocol Buffer Field Numbering (For .proto files)
 **When modifying `proto/cline/models.proto`:**
 ```protobuf
-// CARET MODIFICATION: Caret-specific fields (current_max + 1000 to avoid Cline conflicts)
+// CARETI MODIFICATION: Caret-specific fields (current_max + 1000 to avoid Cline conflicts)
 optional string caret_api_key = 1072; // If Cline's max is 72, use 72 + 1000 = 1072
 optional string next_caret_field = 1073; // Sequential increment
 ```
@@ -71,19 +71,19 @@ npm run watch  # Then F5 to test extension
 - [ ] New functionality works as expected
 - [ ] Existing Cline functionality unaffected
 - [ ] No console errors or warnings
-- [ ] CARET MODIFICATION comment present and clear
+- [ ] CARETI MODIFICATION comment present and clear
 
 ## Recovery Procedures
 
 ### If Verification Fails:
 ```bash
 # git을 기준으로 되돌립니다(예: git checkout -- filename.ext)
-# 가능하면 caret-src/로 이동하거나, 최소 변경으로 재조정합니다.
+# 가능하면 careti-src/로 이동하거나, 최소 변경으로 재조정합니다.
 ```
 
 ### If Integration Issues:
 1. **First try**: Reduce modification scope further
-2. **Second try**: Move logic to caret-src/ wrapper
+2. **Second try**: Move logic to careti-src/ wrapper
 3. **Last resort**: Document as Level 3 requirement
 
 ## Example Workflow Execution
@@ -95,7 +95,7 @@ npm run watch  # Then F5 to test extension
 // 2. Minimal modification:
 
 export async function activate(context: vscode.ExtensionContext) {
-  // CARET MODIFICATION: Initialize Caret wrapper for enhanced features
+  // CARETI MODIFICATION: Initialize Caret wrapper for enhanced features
   const caretProvider = new CaretProviderWrapper(context);
   
   // Original Cline activation continues...
@@ -122,7 +122,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 ## New File Exception (tests etc.)
 - 불가피하게 보호 디렉토리(`src/`, `webview-ui/` 등)에 **신규 파일**을 추가해야 하는 경우(예: TDD 테스트),
-  파일 최상단에 `// CARET MODIFICATION:`으로 “Caret에서 추가한 파일”임을 명확히 표시합니다.
+  파일 최상단에 `// CARETI MODIFICATION:`으로 “Caret에서 추가한 파일”임을 명확히 표시합니다.
 
 ## Related Workflows
 - Use `/critical-verification` when uncertain about approach
@@ -135,5 +135,5 @@ This workflow ensures safe modification of Cline files while preserving the abil
 
 The atomic approach provides clear procedures at each step, reducing the risk of introducing bugs or conflicts.
 
-When in doubt, prefer caret-src/ implementations over Cline file modifications.
+When in doubt, prefer careti-src/ implementations over Cline file modifications.
 </general_guidelines>

@@ -108,7 +108,7 @@ export default defineConfig({
 			host: "localhost",
 			protocol: "ws",
 		},
-		// CARET MODIFICATION: allow resolving shared code outside webview-ui (../src/shared)
+		// CARETI MODIFICATION: allow resolving shared code outside webview-ui (../src/shared)
 		fs: {
 			allow: [".."],
 		},
@@ -138,11 +138,12 @@ export default defineConfig({
 			"@": resolve(__dirname, "./src"),
 			"@components": resolve(__dirname, "./src/components"),
 			"@context": resolve(__dirname, "./src/context"),
-			"@shared/proto": resolve(__dirname, "../src/shared/proto"),
-			"@shared": resolve(__dirname, "../src/shared"),
-			"@utils": resolve(__dirname, "./src/utils"),
-			"@caret": resolve(__dirname, "./src/caret"),
+				"@shared/proto": resolve(__dirname, "../src/shared/proto"),
+				"@shared": resolve(__dirname, "../src/shared"),
+				"@utils": resolve(__dirname, "./src/utils"),
+				// CARETI MODIFICATION: Add Careti alias for rebrand
+				"@careti": resolve(__dirname, "./src/careti"),
+			},
+			extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
 		},
-		extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
-	},
-})
+	})

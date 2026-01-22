@@ -1,12 +1,12 @@
-// CARET MODIFICATION: Hook utilities for Caret
-// Ported from cline-latest/src/core/hooks/utils.ts with Caret path standards
+// CARETI MODIFICATION: Hook utilities for Careti
+// Ported from cline-latest/src/core/hooks/utils.ts with Careti path standards
 import os from "os"
 import path from "path"
 import { HostProvider } from "@/hosts/host-provider"
 import { getCwd, getDesktopDir } from "@/utils/path"
 
 /**
- * All valid hook types that can be created and executed by Caret.
+ * All valid hook types that can be created and executed by Careti.
  * These hooks correspond to specific lifecycle events in the task execution process.
  */
 export const VALID_HOOK_TYPES = [
@@ -39,7 +39,7 @@ export function isValidHookType(hookName: string): hookName is HookType {
  * Resolves the hooks directory path for either global or workspace hooks.
  * Handles both single and multi-root workspaces.
  *
- * CARET MODIFICATION: Uses .agents/hooks for project hooks (Caret standard)
+ * CARETI MODIFICATION: Uses .agents/hooks for project hooks (Careti standard)
  * instead of .clinerules/hooks (Cline standard)
  *
  * @param isGlobal - Whether to resolve the global hooks directory
@@ -54,8 +54,8 @@ export async function resolveHooksDirectory(
 	globalHooksDirOverride?: string,
 ): Promise<string> {
 	if (isGlobal) {
-		// CARET MODIFICATION: Global hooks in ~/Documents/Caret/Hooks (matches Caret branding)
-		return globalHooksDirOverride || path.join(os.homedir(), "Documents", "Caret", "Hooks")
+		// CARETI MODIFICATION: Global hooks in ~/Documents/Careti/Hooks (matches Careti branding)
+		return globalHooksDirOverride || path.join(os.homedir(), "Documents", "Careti", "Hooks")
 	}
 
 	// For workspace hooks, find the correct workspace
@@ -66,12 +66,12 @@ export async function resolveHooksDirectory(
 		if (!targetWorkspace) {
 			throw new Error(`Workspace "${workspaceName}" not found`)
 		}
-		// CARET MODIFICATION: Use .agents/hooks for Caret standard
+		// CARETI MODIFICATION: Use .agents/hooks for Careti standard
 		return path.join(targetWorkspace, ".agents", "hooks")
 	}
 
 	// Single workspace: use getCwd
 	const cwd = await getCwd(getDesktopDir())
-	// CARET MODIFICATION: Use .agents/hooks for Caret standard
+	// CARETI MODIFICATION: Use .agents/hooks for Careti standard
 	return path.join(cwd, ".agents", "hooks")
 }

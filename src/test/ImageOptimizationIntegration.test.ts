@@ -1,5 +1,5 @@
-// CARET MODIFICATION: Integration-style test for shared image optimization logic.
-import { optimizeImageDataUrl } from "@caret/utils/image-optimization"
+// CARETI MODIFICATION: Integration-style test for shared image optimization logic.
+import { optimizeImageDataUrl } from "@careti/utils/image-optimization"
 import { describe, it } from "mocha"
 import "should"
 import sharp from "sharp"

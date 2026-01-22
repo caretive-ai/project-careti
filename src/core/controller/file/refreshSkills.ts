@@ -1,5 +1,5 @@
-// CARET MODIFICATION: Skills refresh controller
-// Ported from cline-latest with Caret-specific path structure (.agents/skills)
+// CARETI MODIFICATION: Skills refresh controller
+// Ported from cline-latest with Careti-specific path structure (.agents/skills)
 
 import { RefreshedSkills, SkillInfo } from "@shared/proto/cline/file"
 import fs from "fs/promises"
@@ -106,7 +106,7 @@ export async function refreshSkills(controller: Controller): Promise<RefreshedSk
 		skill.enabled = globalToggles[skill.path] !== false
 	}
 
-	// CARET MODIFICATION: Scan local skills from .agents/skills (AAIF standard path)
+	// CARETI MODIFICATION: Scan local skills from .agents/skills (AAIF standard path)
 	const localSkills: SkillInfo[] = []
 	if (primaryWorkspace) {
 		const localDir = path.join(primaryWorkspace, ".agents", "skills")

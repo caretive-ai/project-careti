@@ -1,6 +1,6 @@
 import { NewTaskRequest } from "@shared/proto/cline/task"
 import React from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { TaskServiceClient } from "@/services/grpc-client"
 import QuickWinCard from "./QuickWinCard"
 import { QuickWinTask, quickWinTasks } from "./quickWinTasks"

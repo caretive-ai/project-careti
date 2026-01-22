@@ -1,5 +1,5 @@
 import { Mode } from "@shared/storage/types"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import BasetenModelPicker from "../BasetenModelPicker"
 import { ApiKeyField } from "../common/ApiKeyField"

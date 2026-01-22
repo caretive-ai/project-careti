@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Skills system - on-demand agent instructions prompt component
+// CARETI MODIFICATION: Skills system - on-demand agent instructions prompt component
 // Ported from Cline v3.49.1
 
 import type { PromptVariant, SystemPromptContext } from "../types"

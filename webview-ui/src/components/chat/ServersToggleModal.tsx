@@ -4,7 +4,7 @@ import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mc
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useRef, useState } from "react"
 import { useClickAway, useWindowSize } from "react-use"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import Tooltip from "@/components/common/Tooltip"
 import ServersToggleList from "@/components/mcp/configuration/tabs/installed/ServersToggleList"

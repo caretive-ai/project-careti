@@ -21,7 +21,7 @@ You are working on Caret project development following the established patterns 
    ```
 
 2. Check mandatory documents based on work type:
-   - **Cline Modification**: Backup rules, CARET MODIFICATION requirements
+   - **Cline Modification**: Backup rules, CARETI MODIFICATION requirements
    - **Frontend-Backend**: Interaction patterns, architecture guide
    - **Component/UI**: Component principles, theme integration
    - **Testing**: TDD protocols, testing guide
@@ -40,7 +40,7 @@ You are working on Caret project development following the established patterns 
 
 2. **GREEN Phase**: Minimal implementation to pass test
    - Check if Cline file modification needed
-   - Add `// CARET MODIFICATION:` comment
+   - Add `// CARETI MODIFICATION:` comment
    - `.cline` 백업 파일은 생성하지 않음(Deprecated)
    - Make minimal 1-3 line changes
 
@@ -90,12 +90,12 @@ You are working on Caret project development following the established patterns 
 3. Export token and publish:
    ```bash
    set -a; source .env; set +a
-   bash cli-caret/scripts/publish-caret-cli.sh
+   bash cli-caret/scripts/publish-careti-cli.sh
    rm -f cli-caret/.npmrc
    ```
 4. Verify:
    ```bash
-   npm view @caretive/caret-cli version
+   npm view @caretive/careti-cli version
    caret version
    ```
 
@@ -120,7 +120,7 @@ Before making any Cline file modifications:
 <general_guidelines>
 Always follow the TDD cycle: integration test first, then minimal implementation, then refactor.
 
-Never modify Cline files without `// CARET MODIFICATION:` comment (backup `.cline` is deprecated).
+Never modify Cline files without `// CARETI MODIFICATION:` comment (backup `.cline` is deprecated).
 
 Prefer Level 1 (independent modules) over Level 2 (conditional integration).
 

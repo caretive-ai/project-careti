@@ -8,10 +8,10 @@ currentMethod:
   backup:
     required: false
     deprecated: true
-    note: "새 .cline 백업을 생성하지 마세요. git 히스토리 + CARET MODIFICATION 주석을 사용하세요."
+    note: "새 .cline 백업을 생성하지 마세요. git 히스토리 + CARETI MODIFICATION 주석을 사용하세요."
   comment:
     required: true
-    format: "// CARET MODIFICATION: [명확한 설명]"
+    format: "// CARETI MODIFICATION: [명확한 설명]"
 
 protectedDirectories:
   - src/
@@ -25,7 +25,7 @@ protectedDirectories:
 
 modificationRules:
   - 파일이 보호된 디렉토리에 있는지 확인
-  - 변경 전 CARET MODIFICATION 주석 추가
+  - 변경 전 CARETI MODIFICATION 주석 추가
   - 변경을 최소로 유지 (파일당 최대 1-3줄)
   - 절대 기존 코드를 주석 처리하지 않고 완전히 교체
   - 변경 후 컴파일 검증 (npm run compile)
@@ -33,12 +33,12 @@ modificationRules:
 examples:
   - file: src/extension.ts
     code: |
-      // CARET MODIFICATION: Caret 래퍼 초기화
+      // CARETI MODIFICATION: Caret 래퍼 초기화
       const caretWrapper = new CaretProviderWrapper(context);
 
   - file: src/core/controller/index.ts
     code: |
-      // CARET MODIFICATION: Caret gRPC 핸들러 추가
+      // CARETI MODIFICATION: Caret gRPC 핸들러 추가
       await setupCaretGrpcHandlers(this);
 
 relatedWorkflows: [modification-levels, comment-protocol, verification-steps]

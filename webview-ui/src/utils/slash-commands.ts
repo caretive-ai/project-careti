@@ -83,7 +83,7 @@ export function getWorkflowCommands(
 	return workflows
 }
 
-// CARET MODIFICATION: 슬래시 커맨드를 메시지 중간에서도 인식하되 URL/path 오인 매칭을 피하도록 정규식/삭제 로직을 조정 (R-3400-03)
+// CARETI MODIFICATION: 슬래시 커맨드를 메시지 중간에서도 인식하되 URL/path 오인 매칭을 피하도록 정규식/삭제 로직을 조정 (R-3400-03)
 // Regex for detecting slash commands in text
 // Must be at start of string OR preceded by whitespace to avoid matching URLs/paths
 // e.g., matches "/newtask" or "text /newtask" but not "http://example.com/newtask"

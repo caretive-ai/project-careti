@@ -35,7 +35,7 @@ export const MessageRenderer: React.FC<MessageRendererProps> = ({
 }) => {
 	// Browser session group
 	if (Array.isArray(messageOrGroup)) {
-		// CARET MODIFICATION: 마지막 메시지가 자동승인 바에 가려지지 않도록 마지막 그룹 아이템에 bottom padding 적용 (R-3400-04)
+		// CARETI MODIFICATION: 마지막 메시지가 자동승인 바에 가려지지 않도록 마지막 그룹 아이템에 bottom padding 적용 (R-3400-04)
 		const isLast = index === groupedMessages.length - 1
 		return (
 			<div className={isLast ? "pb-2.5" : undefined}>

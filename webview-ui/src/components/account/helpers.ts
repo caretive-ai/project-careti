@@ -33,7 +33,7 @@ export const getClineUris = (
 	return credits
 }
 
-export const getCaretUris = (base: string, type: "dashboard" | "caret", route?: "profile" | "logs" | "usage") => {
+export const getCaretUris = (base: string, type: "dashboard" | "careti", route?: "profile" | "logs" | "usage") => {
 	const dashboard = new URL(type, base)
 
 	if (type === "dashboard") {

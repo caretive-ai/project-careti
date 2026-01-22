@@ -1,4 +1,4 @@
-import { getBrandIgnoreFileName } from "@caret/utils/brand-utils"
+import { getBrandIgnoreFileName } from "@careti/utils/brand-utils"
 import type { ToolParamName, ToolUse } from "@core/assistant-message"
 
 /**
@@ -93,7 +93,7 @@ export const BROWSER_ACTIONS = ["launch", "click", "type", "scroll_down", "scrol
 /**
  * Common validation error patterns
  */
-// CARET MODIFICATION: Update ignore message to brand-aware ignore filename (legacy .clineignore still recognized upstream)
+// CARETI MODIFICATION: Update ignore message to brand-aware ignore filename (legacy .clineignore still recognized upstream)
 const PRIMARY_IGNORE_FILENAME = getBrandIgnoreFileName?.() ?? ".caretignore"
 export const VALIDATION_ERROR_PATTERNS = ["Missing required parameter", `blocked by ${PRIMARY_IGNORE_FILENAME}`] as const
 

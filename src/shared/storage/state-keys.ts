@@ -50,7 +50,7 @@ export interface GlobalState {
 	primaryRootIndex: number
 	multiRootEnabled: boolean
 	hooksEnabled: boolean
-	// CARET MODIFICATION: Skills system
+	// CARETI MODIFICATION: Skills system
 	skillsEnabled: boolean
 	lastDismissedInfoBannerVersion: number
 	lastDismissedModelBannerVersion: number
@@ -58,8 +58,8 @@ export interface GlobalState {
 	nativeToolCallEnabled: boolean
 	remoteRulesToggles: ClineRulesToggles
 	remoteWorkflowToggles: ClineRulesToggles
-	// CARET MODIFICATION: Mode/Persona/Input history
-	caretModeSystem: "caret" | "cline" | undefined
+	// CARETI MODIFICATION: Mode/Persona/Input history
+	caretModeSystem: "careti" | "cline" | undefined
 	enablePersonaSystem: boolean
 	currentPersona: string | undefined
 	inputHistory: string[]
@@ -90,7 +90,7 @@ export interface Settings {
 	autoApprovalSettings: AutoApprovalSettings
 	globalClineRulesToggles: ClineRulesToggles
 	globalWorkflowToggles: ClineRulesToggles
-	globalSkillsToggles: Record<string, boolean> // CARET MODIFICATION: Skills system toggles
+	globalSkillsToggles: Record<string, boolean> // CARETI MODIFICATION: Skills system toggles
 	browserSettings: BrowserSettings
 	liteLlmBaseUrl: string | undefined
 	liteLlmUsePromptCache: boolean | undefined
@@ -130,7 +130,7 @@ export interface Settings {
 	autoCondenseThreshold: number | undefined // number from 0 to 1
 	imageGenerationAspectRatio: string | undefined
 	imageGenerationSize: string | undefined
-	// CARET MODIFICATION: Image analysis model selection
+	// CARETI MODIFICATION: Image analysis model selection
 	imageAnalysisModel: string | undefined
 	ocaBaseUrl: string | undefined
 	minimaxApiLine: string | undefined
@@ -138,7 +138,7 @@ export interface Settings {
 	aihubmixBaseUrl: string | undefined
 	aihubmixAppCode: string | undefined
 	hooksEnabled: boolean
-	// CARET MODIFICATION: Skills system
+	// CARETI MODIFICATION: Skills system
 	skillsEnabled: boolean
 	subagentsEnabled: boolean
 	hicapModelId: string | undefined
@@ -177,8 +177,8 @@ export interface Settings {
 	planModeHuggingFaceModelInfo: ModelInfo | undefined
 	planModeHuaweiCloudMaasModelId: string | undefined
 	planModeHuaweiCloudMaasModelInfo: ModelInfo | undefined
-	planModeNaverCloudModelId: string | undefined // CARET MODIFICATION: Naver Cloud
-	planModeNaverCloudModelInfo: ModelInfo | undefined // CARET MODIFICATION: Naver Cloud
+	planModeNaverCloudModelId: string | undefined // CARETI MODIFICATION: Naver Cloud
+	planModeNaverCloudModelInfo: ModelInfo | undefined // CARETI MODIFICATION: Naver Cloud
 	planModeVercelAiGatewayModelId: string | undefined
 	planModeVercelAiGatewayModelInfo: ModelInfo | undefined
 	planModeOcaModelId: string | undefined
@@ -222,8 +222,8 @@ export interface Settings {
 	actModeHuggingFaceModelInfo: ModelInfo | undefined
 	actModeHuaweiCloudMaasModelId: string | undefined
 	actModeHuaweiCloudMaasModelInfo: ModelInfo | undefined
-	actModeNaverCloudModelId: string | undefined // CARET MODIFICATION: Naver Cloud
-	actModeNaverCloudModelInfo: ModelInfo | undefined // CARET MODIFICATION: Naver Cloud
+	actModeNaverCloudModelId: string | undefined // CARETI MODIFICATION: Naver Cloud
+	actModeNaverCloudModelInfo: ModelInfo | undefined // CARETI MODIFICATION: Naver Cloud
 	actModeVercelAiGatewayModelId: string | undefined
 	actModeVercelAiGatewayModelInfo: ModelInfo | undefined
 	actModeOcaModelId: string | undefined
@@ -256,7 +256,7 @@ export interface Secrets {
 	clineAccountId: string | undefined
 	"cline:clineAccountId": string | undefined // Auth_Provider:AccountId
 	caretAccountId: string | undefined
-	"caret:caretAccountId": string | undefined // Auth_Provider:AccountId
+	"careti:caretAccountId": string | undefined // Auth_Provider:AccountId
 	openRouterApiKey: string | undefined
 	awsAccessKey: string | undefined
 	awsSecretKey: string | undefined
@@ -287,8 +287,8 @@ export interface Secrets {
 	sapAiCoreClientSecret: string | undefined
 	groqApiKey: string | undefined
 	huaweiCloudMaasApiKey: string | undefined
-	upstageApiKey: string | undefined // CARET MODIFICATION: Upstage API key
-	naverCloudApiKey: string | undefined // CARET MODIFICATION: Naver Cloud API key
+	upstageApiKey: string | undefined // CARETI MODIFICATION: Upstage API key
+	naverCloudApiKey: string | undefined // CARETI MODIFICATION: Naver Cloud API key
 	basetenApiKey: string | undefined
 	vercelAiGatewayApiKey: string | undefined
 	difyApiKey: string | undefined
@@ -309,5 +309,5 @@ export interface LocalState {
 	localAgentsRulesToggles: ClineRulesToggles
 	workflowToggles: ClineRulesToggles
 	localCaretRulesToggles: ClineRulesToggles
-	localSkillsToggles: Record<string, boolean> // CARET MODIFICATION: Skills system toggles
+	localSkillsToggles: Record<string, boolean> // CARETI MODIFICATION: Skills system toggles
 }

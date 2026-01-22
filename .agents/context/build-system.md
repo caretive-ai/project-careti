@@ -47,8 +47,8 @@
 ### Source Directories (NO .js files allowed)
 - `src/**/*.js` - FORBIDDEN
 - `src/**/*.js.map` - FORBIDDEN
-- `caret-src/**/*.js` - FORBIDDEN
-- `caret-src/**/*.js.map` - FORBIDDEN
+- `careti-src/**/*.js` - FORBIDDEN
+- `careti-src/**/*.js.map` - FORBIDDEN
 
 ### Build Output (ONLY .js files allowed)
 - `dist/` - esbuild output
@@ -60,7 +60,7 @@
 ### Pre-Development Checklist
 1. **Verify no stray .js files**: 
    ```bash
-   find src caret-src -name "*.js" -o -name "*.js.map"
+   find src careti-src -name "*.js" -o -name "*.js.map"
    # Should return nothing
    ```
 
@@ -73,7 +73,7 @@
 3. **Verify output**:
    ```bash
    ls -la dist/extension.js  # Should exist
-   find caret-src -name "*.js"  # Should be empty
+   find careti-src -name "*.js"  # Should be empty
    ```
 
 ### Common Issues
@@ -83,7 +83,7 @@
 **Solution**:
 ```bash
 # Delete all .js files in source directories
-find src caret-src -name "*.js" -o -name "*.js.map" | xargs rm -f
+find src careti-src -name "*.js" -o -name "*.js.map" | xargs rm -f
 
 # Reload VS Code
 # Developer: Reload Window (Cmd+Shift+P)
@@ -103,7 +103,7 @@ npm run check-types
 npm run compile
 
 # Verify no .js files in source
-find src caret-src -name "*.js" -o -name "*.js.map"
+find src careti-src -name "*.js" -o -name "*.js.map"
 ```
 
 ## File Modification Protocol
@@ -119,7 +119,7 @@ find src caret-src -name "*.js" -o -name "*.js.map"
 3. ✅ Test in VSCode: F5 (Run Extension)
 
 ### When modifying package.json scripts
-1. ✅ Ensure TypeScript does not emit JS into source directories (`src/`, `caret-src/`)
+1. ✅ Ensure TypeScript does not emit JS into source directories (`src/`, `careti-src/`)
 2. ✅ Keep separation: tsc for type-checking, esbuild for bundling
 3. ✅ Test full build: `npm run compile`
 
@@ -162,8 +162,8 @@ npm run package
 
 # Release package (output/ directory, with timestamp)
 npm run package:release
-# Output: output/caret-{version}-{YYYYMMDDHHMM}.vsix
-# Example: output/caret-0.4.7-202601221424.vsix
+# Output: output/careti-{version}-{YYYYMMDDHHMM}.vsix
+# Example: output/careti-0.4.7-202601221424.vsix
 ```
 
 ### Release Workflow
@@ -184,7 +184,7 @@ ls -la output/*.vsix
 
 ## Reference Documents
 
-- **Problem Analysis**: `caret-docs/work-logs/alpha/2025-10-16-js-file-generation-issue.md`
-- **Improvement Plan**: `caret-docs/work-logs/alpha/2025-10-16-build-script-improvements.md`
-- **Build Commands**: `caret-docs/development/build-and-test.md`
-- **Developer Dashboard**: `caret-docs/development/index.md`
+- **Problem Analysis**: `careti-docs/work-logs/alpha/2025-10-16-js-file-generation-issue.md`
+- **Improvement Plan**: `careti-docs/work-logs/alpha/2025-10-16-build-script-improvements.md`
+- **Build Commands**: `careti-docs/development/build-and-test.md`
+- **Developer Dashboard**: `careti-docs/development/index.md`

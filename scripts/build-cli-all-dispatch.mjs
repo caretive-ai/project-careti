@@ -1,4 +1,4 @@
-// CARET MODIFICATION: cross-platform CLI multi-platform build dispatcher.
+// CARETI MODIFICATION: cross-platform CLI multi-platform build dispatcher.
 import { execSync } from "child_process"
 import path from "path"
 import { fileURLToPath } from "url"
@@ -15,7 +15,7 @@ try {
 			{ stdio: "inherit" },
 		)
 	} else {
-		execSync(`bash "${path.join(root, "scripts", "build-cli-all-platforms-caret.sh")}"`, { stdio: "inherit" })
+		execSync(`bash "${path.join(root, "scripts", "build-cli-all-platforms-careti.sh")}"`, { stdio: "inherit" })
 	}
 } catch (error) {
 	console.error("CLI multi-platform build failed:", error?.message || error)

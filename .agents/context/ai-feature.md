@@ -58,4 +58,4 @@
 See `.agents/workflows/ai-feature.md`
 
 **📖 For Korean developer documentation:**
-See `caret-docs/development/ai-feature.md`
+See `careti-docs/development/ai-feature.md`

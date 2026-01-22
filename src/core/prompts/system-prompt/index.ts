@@ -14,10 +14,10 @@ export { validateVariant } from "./variants/variant-validator"
  * Get the system prompt by id
  */
 export async function getSystemPrompt(context: SystemPromptContext) {
-	// CARET MODIFICATION: Route Caret mode to CaretPromptWrapper while preserving cline tool shape
-	if (context.modeSystem === "caret") {
-		const { CaretPromptWrapper } = await import("@caret/core/prompts/CaretPromptWrapper")
-		return { systemPrompt: await CaretPromptWrapper.getCaretSystemPrompt(context), tools: [] }
+	// CARETI MODIFICATION: Route Careti mode to CaretiPromptWrapper while preserving cline tool shape
+	if (context.modeSystem === "careti") {
+		const { CaretiPromptWrapper } = await import("@careti/core/prompts/CaretiPromptWrapper")
+		return { systemPrompt: await CaretiPromptWrapper.getCaretSystemPrompt(context), tools: [] }
 	}
 	const registry = PromptRegistry.getInstance()
 	const systemPrompt = await registry.get(context)

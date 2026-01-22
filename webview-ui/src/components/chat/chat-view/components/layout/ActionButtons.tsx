@@ -3,8 +3,8 @@ import type { Mode } from "@shared/storage/types"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import type React from "react"
 import { useEffect, useMemo, useState } from "react"
-import { useCaretI18n } from "@/caret/hooks/useCaretI18n"
-import { shortcutManager } from "@/caret/shortcuts/ShortcutManager"
+import { useCaretI18n } from "@/careti/hooks/useCaretI18n"
+import { shortcutManager } from "@/careti/shortcuts/ShortcutManager"
 import { useShortcut } from "@/utils/hooks"
 import { type ButtonActionType, getButtonConfig } from "../../shared/buttonConfig"
 import type { ChatState, MessageHandlers } from "../../types/chatTypes"
@@ -190,7 +190,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 					className={`${secondaryButtonText ? "flex-1 mr-[6px]" : "flex-[2]"}`}
 					disabled={!enableButtons}
 					onClick={() => {
-						// CARET MODIFICATION: Always use executeButtonAction for consistent handling including new_task
+						// CARETI MODIFICATION: Always use executeButtonAction for consistent handling including new_task
 						if (primaryAction) {
 							messageHandlers.executeButtonAction(primaryAction, inputValue, selectedImages, selectedFiles)
 						}

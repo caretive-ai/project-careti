@@ -1,6 +1,6 @@
 import { Mode } from "@shared/storage/types"
 import { VSCodeCheckbox, VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useState } from "react"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ClineAccountInfoCard } from "../ClineAccountInfoCard"

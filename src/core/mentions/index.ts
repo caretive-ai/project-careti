@@ -111,7 +111,7 @@ export async function parseMentions(
 	for (const mention of uniqueMentions) {
 		// Safety guard: skip a bare "/" mention. This can surface from parsed strings or tool output and would resolve to the
 		// workspace root. Expanding it would scan the entire project, inflate context, and can trigger recursive loops.
-		// CARET MODIFICATION: If root-level expansion is ever desired, gate it behind an explicit syntax (e.g. "@root" or "@folder:/")
+		// CARETI MODIFICATION: If root-level expansion is ever desired, gate it behind an explicit syntax (e.g. "@root" or "@folder:/")
 		// and enforce strict size/.caretignore (legacy .clineignore) limits instead.
 		if (mention === "/") {
 			continue

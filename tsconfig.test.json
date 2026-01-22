@@ -24,16 +24,16 @@
 	},
 	"include": [
 		"src/**/*.test.ts",
-		"caret-src/**/*.test.ts"
+		"careti-src/**/*.test.ts"
 	],
 	"exclude": [
 		"src/test/**/*.js",
 		"src/**/__tests__/*",
 		"src/test/e2e/**/*.test.ts",
-		"caret-src/**/__tests__/*",
-		"caret-src/test/e2e/**/*.test.ts",
-		"caret-src/**/*.integration.test.ts",
-		"caret-src/core/controller/fetchLiteLlmModels.test.ts",
-		"caret-src/shared/FeatureConfig.test.ts"
+		"careti-src/**/__tests__/*",
+		"careti-src/test/e2e/**/*.test.ts",
+		"careti-src/**/*.integration.test.ts",
+		"careti-src/core/controller/fetchLiteLlmModels.test.ts",
+		"careti-src/shared/FeatureConfig.test.ts"
 	]
 }

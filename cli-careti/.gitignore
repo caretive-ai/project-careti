@@ -1,0 +1,6 @@
+node_modules/
+bin/
+dist-standalone/
+extension/
+cline-core.js
+caretive-careti-cli-*.tgz

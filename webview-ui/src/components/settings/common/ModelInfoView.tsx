@@ -1,18 +1,18 @@
 import { geminiModels, ModelInfo } from "@shared/api"
 import { ChangeEvent, Fragment, useCallback, useState } from "react"
 import styled from "styled-components"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { updateSetting } from "@/components/settings/utils/settingsHandlers"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ModelDescriptionMarkdown } from "../OpenRouterModelPicker"
 import {
-	formatPrice,
-	formatTokenLimit,
-	formatTokenPrice,
-	hasThinkingBudget,
-	supportsBrowserUse,
-	supportsImages,
-	supportsPromptCache,
+    formatPrice,
+    formatTokenLimit,
+    formatTokenPrice,
+    hasThinkingBudget,
+    supportsBrowserUse,
+    supportsImages,
+    supportsPromptCache,
 } from "../utils/pricingUtils"
 
 /**
@@ -90,7 +90,7 @@ const ModelInfoSupportsItem = ({ isSupported, supportsLabel, doesNotSupportLabel
 
 const ASPECT_RATIO_OPTIONS = ["16:9", "9:16", "4:3", "3:4", "1:1"] as const
 const IMAGE_SIZE_OPTIONS = ["1K", "2K", "3K", "4K"] as const
-/// CARET MODIFICATION: Image analysis model options
+/// CARETI MODIFICATION: Image analysis model options
 // Note: gemini-3-flash-preview (without .0) is the correct model ID
 const IMAGE_ANALYSIS_MODEL_OPTIONS = [
 	{ value: "gemini-3-flash-preview", label: "Gemini 3 Flash" },
@@ -169,11 +169,11 @@ export const ModelInfoView = ({ selectedModelId, modelInfo, isPopup }: ModelInfo
 	const isGemini = Object.keys(geminiModels).includes(selectedModelId)
 	const hasThinkingConfig = hasThinkingBudget(modelInfo)
 	const hasTiers = !!modelInfo.tiers && modelInfo.tiers.length > 0
-	const { imageGenerationAspectRatio, imageGenerationSize, imageAnalysisModel, apiConfiguration, mode } = useExtensionState() // CARET MODIFICATION: Use provider context
-	// CARET MODIFICATION: Show image settings for all providers since generate_image tool always uses Caret API
+	const { imageGenerationAspectRatio, imageGenerationSize, imageAnalysisModel, apiConfiguration, mode } = useExtensionState() // CARETI MODIFICATION: Use provider context
+	// CARETI MODIFICATION: Show image settings for all providers since generate_image tool always uses Careti API
 	const shouldShowImageSettings = supportsImages(modelInfo)
 
-	// CARET MODIFICATION: Image analysis model change handler
+	// CARETI MODIFICATION: Image analysis model change handler
 	const handleImageAnalysisModelChange = useCallback(
 		(event: ChangeEvent<HTMLSelectElement>) => {
 			const nextValue = event.target.value
@@ -343,7 +343,7 @@ export const ModelInfoView = ({ selectedModelId, modelInfo, isPopup }: ModelInfo
 								))}
 							</SettingSelect>
 						</ImageSettingColumn>
-						{/* CARET MODIFICATION: Image analysis model selection */}
+						{/* CARETI MODIFICATION: Image analysis model selection */}
 						<ImageSettingColumn>
 							<SettingLabel>{t("modelInfoView.imageGeneration.analysisModel", "settings")}</SettingLabel>
 							<SettingSelect onChange={handleImageAnalysisModelChange} value={imageAnalysisModel ?? "gemini-3-flash-preview"}>

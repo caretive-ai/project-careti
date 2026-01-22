@@ -34,7 +34,7 @@ git diff --name-only $(git describe --tags --abbrev=0)..HEAD
 
 | 문서 유형 | 파일 | 특징 |
 |----------|------|------|
-| **사용자용** | README, docs.caret.team, announcement | 사용자에게 어필, 중요 기능만 |
+| **사용자용** | README, docs.careti.ai, announcement | 사용자에게 어필, 중요 기능만 |
 | **개발자용** | CHANGELOG.md | 실제 로그, 모든 변경사항 |
 
 ### 2-2. 확인할 질문들
@@ -103,15 +103,15 @@ git diff --name-only $(git describe --tags --abbrev=0)..HEAD
 - `[v0.4.x Update]` 배너 텍스트
 - `## 🎉 v0.4.x` 섹션
 
-### docs.caret.team (7개 언어)
+### docs.careti.ai (7개 언어)
 ```
-docs-ko/getting-started/what-is-caret.mdx
-docs-en/getting-started/what-is-caret.mdx
-docs-ja/getting-started/what-is-caret.mdx
-docs-zh/getting-started/what-is-caret.mdx
-docs-fr/getting-started/what-is-caret.mdx
-docs-de/getting-started/what-is-caret.mdx
-docs-ru/getting-started/what-is-caret.mdx
+docs-ko/getting-started/what-is-careti.mdx
+docs-en/getting-started/what-is-careti.mdx
+docs-ja/getting-started/what-is-careti.mdx
+docs-zh/getting-started/what-is-careti.mdx
+docs-fr/getting-started/what-is-careti.mdx
+docs-de/getting-started/what-is-careti.mdx
+docs-ru/getting-started/what-is-careti.mdx
 ```
 
 ### announcement (선택)
@@ -154,7 +154,7 @@ git log --oneline $(git describe --tags --abbrev=0)..HEAD
 grep -n "v0\.4\." README.md CHANGELOG.md
 
 # 3. 수정 후 커밋
-git add README.md CHANGELOG.md docs.caret.team/
+git add README.md CHANGELOG.md docs.careti.ai/
 git commit -m "chore: v0.4.y 버전 업데이트"
 
 # 4. 푸시

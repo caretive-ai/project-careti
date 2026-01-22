@@ -48,7 +48,7 @@ git merge upstream/main
 git status
 
 # 파일별 해결
-# CARET MODIFICATION 주석 유지 확인
+# CARETI MODIFICATION 주석 유지 확인
 
 # 해결 완료
 git add <resolved-files>
@@ -69,7 +69,7 @@ git push origin main
 ## 충돌 해결 원칙
 
 1. **Caret 기능 우선**: Caret 특화 코드 유지
-2. **주석 보존**: `// CARET MODIFICATION:` 유지
+2. **주석 보존**: `// CARETI MODIFICATION:` 유지
 3. **테스트 확인**: 병합 후 전체 테스트 실행
 
 ## 체크리스트

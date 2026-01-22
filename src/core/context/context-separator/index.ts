@@ -1,4 +1,4 @@
-// CARET MODIFICATION: 컨텍스트 분리 클래스 - 시스템 규칙과 사용자 컨텍스트 분리
+// CARETI MODIFICATION: 컨텍스트 분리 클래스 - 시스템 규칙과 사용자 컨텍스트 분리
 // 원칙: .agents/ (AI용)과 .users/ (사용자용) 분리 (이중 디렉토리 아키텍처)
 // - .agents/context/ (시스템용, JSON/YAML)
 // - .users/context/ (사용자용, Markdown) - 레거시: .agents/context-for-user/

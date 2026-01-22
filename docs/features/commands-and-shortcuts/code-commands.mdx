@@ -3,11 +3,11 @@ title: "Code Commands"
 sidebarTitle: "Code Commands"
 ---
 
-Caret's code commands bring AI assistance directly into your editor, letting you interact with your code without leaving your workflow. With a simple right-click, you can add code to Caret, and through the lightbulb menu, you can fix errors, get explanations, or improve your code.
+Careti's code commands bring AI assistance directly into your editor, letting you interact with your code without leaving your workflow. With a simple right-click, you can add code to Careti, and through the lightbulb menu, you can fix errors, get explanations, or improve your code.
 
 ## Available Code Commands
 
-When you interact with code in your editor, you can access Caret commands in two ways:
+When you interact with code in your editor, you can access Careti commands in two ways:
 
 ### Right-Click Context Menu
 
@@ -17,15 +17,15 @@ When you right-click on selected code, you'll see:
 	<img src="https://storage.googleapis.com/cline_public_images/docs/assets/code-commands.png" alt="Right Click Menu" />
 </Frame>
 
-#### Add to Caret
+#### Add to Careti
 
-The "Add to Caret" command sends your selected code to the Caret chat panel. This is perfect for:
+The "Add to Careti" command sends your selected code to the Careti chat panel. This is perfect for:
 
 -   Asking questions about specific code snippets
 -   Requesting improvements or optimizations
 -   Getting explanations of complex logic
 
-When you use this command, Caret automatically includes:
+When you use this command, Careti automatically includes:
 
 -   The file path (as a file mention)
 -   The selected code with proper formatting
@@ -33,35 +33,35 @@ When you use this command, Caret automatically includes:
 
 ### Lightbulb Menu (Code Actions)
 
-When you see a lightbulb icon in your editor, click it to access these Caret commands:
+When you see a lightbulb icon in your editor, click it to access these Careti commands:
 
 <Frame>
 	<img src="https://storage.googleapis.com/cline_public_images/docs/assets/lightbulb-actions.png" alt="Lightbulb Menu" />
 </Frame>
 
-#### Fix with Caret
+#### Fix with Careti
 
-The "Fix with Caret" command appears in the lightbulb menu when your code has errors or warnings. This command:
+The "Fix with Careti" command appears in the lightbulb menu when your code has errors or warnings. This command:
 
 1. Captures the selected code
 2. Identifies the errors or warnings from VSCode's diagnostics
-3. Sends both to Caret with a request to fix the issues
+3. Sends both to Careti with a request to fix the issues
 4. Provides a solution that addresses the specific problems
 
 This is incredibly useful for quickly resolving syntax errors, linter warnings, or type issues without having to manually describe the problem.
 
-#### Explain with Caret
+#### Explain with Careti
 
-The "Explain with Caret" command helps you understand complex code. When you select code and use this command from the lightbulb menu, Caret:
+The "Explain with Careti" command helps you understand complex code. When you select code and use this command from the lightbulb menu, Careti:
 
 1. Analyzes the selected code
 2. Provides a clear explanation of what the code does
 3. Breaks down complex logic into understandable parts
 4. Highlights important patterns or techniques used
 
-#### Improve with Caret
+#### Improve with Careti
 
-The "Improve with Caret" command helps you enhance your code. When you select code and use this command from the lightbulb menu, Caret:
+The "Improve with Careti" command helps you enhance your code. When you select code and use this command from the lightbulb menu, Careti:
 
 1. Analyzes the selected code for potential improvements
 2. Suggests optimizations, refactorings, or better practices
@@ -70,22 +70,22 @@ The "Improve with Caret" command helps you enhance your code. When you select co
 
 ## How to Use Code Commands
 
-Using Caret's code commands is simple:
+Using Careti's code commands is simple:
 
 ### For Right-Click Commands:
 
 1. Select the code you want to work with
 2. Right-click to open the context menu
-3. Choose "Add to Caret"
-4. View the result in the Caret chat panel
+3. Choose "Add to Careti"
+4. View the result in the Careti chat panel
 
 ### For Lightbulb Menu Commands:
 
 1. Select the code you want to work with
 2. Look for the lightbulb icon that appears in the editor gutter
 3. Click the lightbulb to see available actions
-4. Choose the appropriate Caret command (Fix, Explain, or Improve)
-5. View the result in the Caret chat panel
+4. Choose the appropriate Careti command (Fix, Explain, or Improve)
+5. View the result in the Careti chat panel
 
 After using any command, you can:
 
@@ -98,7 +98,7 @@ After using any command, you can:
 When you use a code command, here's what happens behind the scenes:
 
 1. **Code Selection**: The extension captures your selected code and its context
-2. **Metadata Collection**: Caret gathers important metadata:
+2. **Metadata Collection**: Careti gathers important metadata:
 
     - File path and name
     - Programming language
@@ -107,23 +107,23 @@ When you use a code command, here's what happens behind the scenes:
 
 3. **Command Processing**:
 
-    - For "Add to Caret," the code is formatted and sent to the chat panel
-    - For "Fix with Caret," the code and diagnostics are analyzed and a fix is generated
-    - For "Explain with Caret," the code is analyzed to provide a clear explanation
-    - For "Improve with Caret," the code is analyzed for potential optimizations and improvements
+    - For "Add to Careti," the code is formatted and sent to the chat panel
+    - For "Fix with Careti," the code and diagnostics are analyzed and a fix is generated
+    - For "Explain with Careti," the code is analyzed to provide a clear explanation
+    - For "Improve with Careti," the code is analyzed for potential optimizations and improvements
 
-4. **Integration with Chat**: The results appear in the Caret chat panel, where you can:
+4. **Integration with Chat**: The results appear in the Careti chat panel, where you can:
     - See the AI's response
     - Ask follow-up questions
     - Apply suggested changes
 
-This seamless integration between your editor and Caret's AI capabilities makes it easy to get assistance without disrupting your coding flow.
+This seamless integration between your editor and Careti's AI capabilities makes it easy to get assistance without disrupting your coding flow.
 
 ## Tips for Effective Use
 
--   **Select complete logical units**: When possible, select entire functions, classes, or modules to give Caret complete context
--   **Include imports**: For language-specific help, include relevant imports so Caret understands dependencies
+-   **Select complete logical units**: When possible, select entire functions, classes, or modules to give Careti complete context
+-   **Include imports**: For language-specific help, include relevant imports so Careti understands dependencies
 -   **Combine with @ mentions**: For complex issues, use code commands along with file or problem mentions for more context
 -   **Use keyboard shortcuts**: Speed up your workflow by [assigning keyboard shortcuts](/features/commands-and-shortcuts/keyboard-shortcuts) to common code commands
 
-Next time you're struggling with a piece of code, try using Caret's code commands instead of switching to a separate chat interface. You'll be amazed at how much more efficient your workflow becomes when AI assistance is integrated directly into your editor.
+Next time you're struggling with a piece of code, try using Careti's code commands instead of switching to a separate chat interface. You'll be amazed at how much more efficient your workflow becomes when AI assistance is integrated directly into your editor.

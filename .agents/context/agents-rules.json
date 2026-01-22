@@ -1,20 +1,20 @@
 {
 	"project_identity": {
-		"name": "Caret",
+		"name": "Careti",
 		"symbol": "^",
 		"nature": "Cline-based fork with minimal extension strategy",
-		"philosophy": "Preserve Cline core, extend through caret-src/"
+		"philosophy": "Preserve Cline core, extend through careti-src/"
 	},
 	"merge_strategy": {
 		"priority": 0,
 		"phase_0_rule": ".agents/context MUST be restored BEFORE any code merging begins",
 		"hybrid_pattern": "Preserve Cline core, inject Caret logic via interception",
 		"logic_based_3way": "Compare Base(Cline) vs Target(Caret) vs Merged logic, not just text diffs",
-		"reference": "caret-docs/merging/merge-standard-guide.md"
+		"reference": "careti-docs/merging/merge-standard-guide.md"
 	},
 	"architecture_rules": {
 		"modification_levels": {
-			"L1_independent": "caret-src/, caret-docs/ (full freedom)",
+			"L1_independent": "careti-src/, careti-docs/ (full freedom)",
 			"L2_conditional": "minimal Cline changes with backup + comment",
 			"L3_direct": "last resort with full documentation"
 		},
@@ -29,12 +29,12 @@
 				"locales/",
 				"configs/"
 			],
-			"comment_required": "// CARET MODIFICATION: [description]",
+			"comment_required": "// CARETI MODIFICATION: [description]",
 			"max_changes": "1-3 lines per Cline file"
 		}
 	},
 	"branding_policy": {
-		"typescript_brand_util": "caret-src/utils/brand-utils.ts",
+		"typescript_brand_util": "careti-src/utils/brand-utils.ts",
 		"go_cli_brand_util": "cli/pkg/common/branding.go",
 		"rule": "브랜드명/규칙/파일명을 계산할 때는 반드시 위 유틸 함수를 호출하고 문자열을 하드코딩하지 않는다."
 	},
@@ -54,7 +54,7 @@
 		"typescript_command": "npm run protos",
 		"go_command": "npm run protos-go",
 		"notes": [
-			"`npm run protos` → 실행 스크립트: caret-scripts/build/build-proto.mjs (TS/JS용 generated 코드 전체 관리)",
+			"`npm run protos` → 실행 스크립트: careti-scripts/build/build-proto.mjs (TS/JS용 generated 코드 전체 관리)",
 			"`npm run protos-go` → 실행 스크립트: scripts/build-go-proto.mjs (CLI용 Go gRPC 클라이언트, src/generated/grpc-go/ 경로)",
 			"src/generated/** 와 src/shared/proto/** 는 스크립트로만 갱신하고 수동 편집 금지"
 		]
@@ -65,7 +65,7 @@
 			"NO coding without document review first",
 			"Identify work nature",
 			"TDD mandatory (integration first)",
-			"Cline file modification: comment-only (no .cline backups); new files in protected dirs must have CARET MODIFICATION header"
+			"Cline file modification: comment-only (no .cline backups); new files in protected dirs must have CARETI MODIFICATION header"
 		]
 	},
 	"workflows": {
@@ -77,13 +77,13 @@
 				"Match the category in ai-work-index.yaml",
 				"Read the matching root quick reference first",
 				"Load the workflow document only if the task still needs details",
-				"Use Korean developer docs (caret-docs/development/**) when updating human-facing guidance"
+				"Use Korean developer docs (careti-docs/development/**) when updating human-facing guidance"
 			]
 		},
 		"index": {
 			"ai_feature": ".agents/workflows/ai-feature.md (New AI features)",
 			"ai_work_protocol": ".agents/workflows/ai-work-protocol.md (General AI protocol)",
-			"caret_development": ".agents/workflows/caret-development.md (Caret core dev)",
+			"caret_development": ".agents/workflows/careti-development.md (Caret core dev)",
 			"cline_modification": ".agents/workflows/cline-modification.md (Modifying Cline files)",
 			"critical_verification": ".agents/workflows/critical-verification.md (Pre-merge checks)",
 			"document_organization": ".agents/workflows/document-organization.md (Doc structure)",

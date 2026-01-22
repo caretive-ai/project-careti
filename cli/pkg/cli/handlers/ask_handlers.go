@@ -127,7 +127,7 @@ func (h *AskHandler) handlePlanModeRespond(msg *types.ClineMessage, dc *DisplayC
 // showApprovalHint displays a hint in non-interactive mode about how to approve/deny
 func (h *AskHandler) showApprovalHint(dc *DisplayContext) {
 	if !dc.IsInteractive {
-		// CARET MODIFICATION: branding
+		// CARETI MODIFICATION: branding
 		output.Printf("\n%s\n", dc.Renderer.Dim(fmt.Sprintf("%s is requesting approval to use this tool", common.BrandDisplayName())))
 		output.Printf("%s\n", dc.Renderer.Dim("Use cline task send --approve or --deny to respond"))
 	}
@@ -258,7 +258,7 @@ func (h *AskHandler) handleMistakeLimitReached(msg *types.ClineMessage, dc *Disp
 // handleBrowserActionLaunch handles browser action launch requests
 func (h *AskHandler) handleBrowserActionLaunch(msg *types.ClineMessage, dc *DisplayContext) error {
 	url := strings.TrimSpace(msg.Text)
-		// CARET MODIFICATION: branding
+		// CARETI MODIFICATION: branding
 		err := dc.Renderer.RenderMessage("BROWSER", fmt.Sprintf("%s wants to launch browser and navigate to: %s. Approval required.", common.BrandDisplayName(), url), true)
 	h.showApprovalHint(dc)
 	return err
@@ -291,7 +291,7 @@ func (h *AskHandler) handleUseMcpServer(msg *types.ClineMessage, dc *DisplayCont
 	}
 
 	err := dc.Renderer.RenderMessage("MCP",
-		// CARET MODIFICATION: branding
+		// CARETI MODIFICATION: branding
 		fmt.Sprintf("%s wants to %s on the %s MCP server", common.BrandDisplayName(), operation, mcpReq.ServerName), true)
 
 	h.showApprovalHint(dc)
@@ -300,13 +300,13 @@ func (h *AskHandler) handleUseMcpServer(msg *types.ClineMessage, dc *DisplayCont
 
 // handleNewTask handles new task creation requests
 func (h *AskHandler) handleNewTask(msg *types.ClineMessage, dc *DisplayContext) error {
-	// CARET MODIFICATION: branding
+	// CARETI MODIFICATION: branding
 	return dc.Renderer.RenderMessage("NEW TASK", fmt.Sprintf("%s wants to start a new task: %s. Approval required.", common.BrandDisplayName(), msg.Text), true)
 }
 
 // handleCondense handles conversation condensing requests
 func (h *AskHandler) handleCondense(msg *types.ClineMessage, dc *DisplayContext) error {
-	// CARET MODIFICATION: branding
+	// CARETI MODIFICATION: branding
 	return dc.Renderer.RenderMessage("CONDENSE", fmt.Sprintf("%s wants to condense the conversation: %s. Approval required.", common.BrandDisplayName(), msg.Text), true)
 }
 
@@ -321,11 +321,11 @@ func (h *AskHandler) handleReportBug(msg *types.ClineMessage, dc *DisplayContext
 	}
 
 	if err := json.Unmarshal([]byte(msg.Text), &bugData); err != nil {
-		// CARET MODIFICATION: branding
+		// CARETI MODIFICATION: branding
 		return dc.Renderer.RenderMessage("BUG REPORT", fmt.Sprintf("%s wants to create a GitHub issue: %s. Approval required.", common.BrandDisplayName(), msg.Text), true)
 	}
 
-	// CARET MODIFICATION: branding
+	// CARETI MODIFICATION: branding
 	err := dc.Renderer.RenderMessage("BUG REPORT", fmt.Sprintf("%s wants to create a GitHub issue:", common.BrandDisplayName()), true)
 	if err != nil {
 		return fmt.Errorf("failed to render handleReportBug: %w", err)

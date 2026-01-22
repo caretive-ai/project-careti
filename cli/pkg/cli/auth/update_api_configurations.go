@@ -535,7 +535,7 @@ func UpdateProviderPartial(ctx context.Context, manager *task.Manager, provider 
 			apiConfig.PlanModeLiteLlmModelInfo = liteLlmInfo
 			apiConfig.ActModeLiteLlmModelInfo = liteLlmInfo
 		}
-		if caretInfo, ok := updates.ModelInfo.(*cline.CaretModelInfo); ok && provider == cline.ApiProvider_CARET {
+		if caretInfo, ok := updates.ModelInfo.(*cline.CaretModelInfo); ok && provider == cline.ApiProvider_CARETI {
 			apiConfig.ActModeCaretModelInfo = caretInfo
 			apiConfig.PlanModeCaretModelInfo = &cline.LiteLLMModelInfo{
 				MaxTokens:              caretInfo.MaxTokens,

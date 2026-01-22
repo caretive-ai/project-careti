@@ -30,13 +30,13 @@ Test Scenario: "Modify src/extension.ts file"
 
 Markdown Format Result:
 1. Check if Cline original: ✓
-2. Add comment: // CARET MODIFICATION: [description]
+2. Add comment: // CARETI MODIFICATION: [description]
 3. Limit changes: 1-3 lines max
 4. Verify: npm run compile
 
 JSON Format Result:
 1. Check protected_dirs: ✓
-2. Apply modification_rules.comment: // CARET MODIFICATION: [description]  
+2. Apply modification_rules.comment: // CARETI MODIFICATION: [description]  
 3. Enforce modification_rules.max_lines: 3
 4. Run modification_rules.verification: npm run compile
 
@@ -102,24 +102,24 @@ const overallScore = (
 
 ## Reference Implementation
 Based on proven methodology from:
-`caret-main/caret-docs/reports/json-caret/semantic-equivalence-report.md`
+`careti-main/careti-docs/reports/json-caret/semantic-equivalence-report.md`
 
 This established approach achieved 95.2% semantic equivalence while maintaining full functional coverage.
 
 ## Automated Tool Usage
 Use the automated semantic equivalence checker:
 ```bash
-node caret-scripts/utils/semantic-equivalence-checker.js <markdown-file> <json-file>
+node careti-scripts/utils/semantic-equivalence-checker.js <markdown-file> <json-file>
 ```
 
 Example:
 ```bash
-node caret-scripts/utils/semantic-equivalence-checker.js .agents/workflows/backup-protocol.md caret-docs/experiments/backup-protocol-json.json
+node careti-scripts/utils/semantic-equivalence-checker.js .agents/workflows/backup-protocol.md careti-docs/experiments/backup-protocol-json.json
 ```
 
 For advanced analysis, use the universal analyzer:
 ```bash
-node caret-scripts/utils/universal-semantic-analyzer.js <file1> <file2> workflow markdown json
+node careti-scripts/utils/universal-semantic-analyzer.js <file1> <file2> workflow markdown json
 ```
 
 The tool provides:

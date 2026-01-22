@@ -53,11 +53,11 @@ func (r *ClientRegistry) SetDefaultInstance(address string) error {
 	if r.lockManager != nil {
 		exists, err := r.lockManager.HasInstanceAtAddress(address)
 		if err != nil {
-			// CARET MODIFICATION: allow fallback when database unavailable
+			// CARETI MODIFICATION: allow fallback when database unavailable
 			return sqlite.SetDefaultInstance(r.configPath, address)
 		}
 		if !exists {
-			// CARET MODIFICATION: accept addresses not yet registered (health check is done elsewhere)
+			// CARETI MODIFICATION: accept addresses not yet registered (health check is done elsewhere)
 			return sqlite.SetDefaultInstance(r.configPath, address)
 		}
 	}
@@ -76,7 +76,7 @@ func (r *ClientRegistry) GetInstance(address string) (*common.CoreInstanceInfo, 
 
 // GetClient returns a connected client for the given address (created on-demand)
 func (r *ClientRegistry) GetClient(ctx context.Context, address string) (*client.ClineClient, error) {
-	// CARET MODIFICATION: do not hard-fail when registry is empty; rely on health check later
+	// CARETI MODIFICATION: do not hard-fail when registry is empty; rely on health check later
 
 	// Create client on-demand (no caching)
 	target, err := common.NormalizeAddressForGRPC(address)

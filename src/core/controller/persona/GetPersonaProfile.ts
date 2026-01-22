@@ -1,8 +1,8 @@
-// CARET MODIFICATION: Handler for getting the current persona profile
+// CARETI MODIFICATION: Handler for getting the current persona profile
 
-import { PersonaStorage } from "@caret/services/persona/persona-storage"
+import { bufferToDataUrl, PersonaStorage } from "@careti/services/persona/persona-storage"
 import type { Controller } from "@core/controller"
-import { PersonaProfile } from "@shared/proto/caret/persona"
+import { PersonaProfile } from "@shared/proto/careti/persona"
 import type { EmptyRequest } from "@shared/proto/cline/common"
 
 /**
@@ -26,19 +26,19 @@ export async function GetPersonaProfile(controller: Controller, _request: EmptyR
 
 		// Default values
 		const defaultPersona = {
-			name: "Caret",
+			name: "Careti",
 			description: "친근하고 도움되는 코딩 로봇 조수",
 			customInstruction: "",
-			avatarUri: "asset://template_characters/caret_profile.png",
-			thinkingAvatarUri: "asset://template_characters/caret_thinking.png",
+			avatarUri: "asset:/assets/template_characters/careti.webp",
+			thinkingAvatarUri: "asset:/assets/template_characters/careti-thinking.webp",
 		}
 
 		// Convert image buffers to base64 data URLs if available
 		const avatarUri = images?.avatar
-			? `data:image/png;base64,${images.avatar.toString("base64")}`
+			? bufferToDataUrl(images.avatar)
 			: legacyPersonaData.avatar_uri || defaultPersona.avatarUri
 		const thinkingAvatarUri = images?.thinkingAvatar
-			? `data:image/png;base64,${images.thinkingAvatar.toString("base64")}`
+			? bufferToDataUrl(images.thinkingAvatar)
 			: legacyPersonaData.thinking_avatar_uri || defaultPersona.thinkingAvatarUri
 
 		return PersonaProfile.create({
@@ -58,11 +58,11 @@ export async function GetPersonaProfile(controller: Controller, _request: EmptyR
 		console.error(`Failed to get persona profile: ${error}`)
 		// Return default persona on error
 		return PersonaProfile.create({
-			name: "Caret",
+			name: "Careti",
 			description: "친근하고 도움되는 코딩 로봇 조수",
 			customInstruction: "",
-			avatarUri: "asset://template_characters/caret_profile.png",
-			thinkingAvatarUri: "asset://template_characters/caret_thinking.png",
+			avatarUri: "asset:/assets/template_characters/careti.webp",
+			thinkingAvatarUri: "asset:/assets/template_characters/careti-thinking.webp",
 		})
 	}
 }

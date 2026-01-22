@@ -1,6 +1,6 @@
 import { VSCodeCheckbox, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useDebouncedInput } from "../utils/useDebouncedInput"
 
 /**

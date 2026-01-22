@@ -136,7 +136,7 @@ webview-ui/src/caret/components/
 
 ### Service Class Creation:
 ```
-caret-src/services/
+careti-src/services/
 ├── persona-service.ts
 ├── persona-service.test.ts
 └── types/
@@ -162,7 +162,7 @@ const PersonaSelector: React.FC = () => {
 ```
 
 ### Use with `/modification-levels`:
-- **Level 1**: New components in caret-src/ or caret components
+- **Level 1**: New components in careti-src/ or caret components
 - **Level 2**: Integration points with existing Cline components  
 - **Level 3**: Major modifications to existing Cline components (avoid)
 

@@ -82,7 +82,7 @@ func (c *ClineClients) StartNewInstance(ctx context.Context) (*common.CoreInstan
 			return nil
 		}
 
-		// CARET MODIFICATION: fallback when registry entry is missing but service is healthy
+		// CARETI MODIFICATION: fallback when registry entry is missing but service is healthy
 		if common.IsInstanceHealthy(ctx, fullAddress) {
 			instance = &common.CoreInstanceInfo{
 				Address:            fullAddress,
@@ -99,7 +99,7 @@ func (c *ClineClients) StartNewInstance(ctx context.Context) (*common.CoreInstan
 	})
 
 	if err != nil {
-		// CARET MODIFICATION: last-chance fallback even without registry/health (return addresses so caller can try)
+		// CARETI MODIFICATION: last-chance fallback even without registry/health (return addresses so caller can try)
 		fmt.Printf("Warning: registry/health check failed (%v), returning instance address anyway.\n", err)
 		instance = &common.CoreInstanceInfo{
 			Address:            fullAddress,
@@ -116,7 +116,7 @@ func (c *ClineClients) StartNewInstance(ctx context.Context) (*common.CoreInstan
 		fmt.Printf("  Process PID: %d\n", coreCmd.Process.Pid)
 	}
 
-	// CARET MODIFICATION: best-effort default instance registration (no-op if DB missing)
+	// CARETI MODIFICATION: best-effort default instance registration (no-op if DB missing)
 	_ = c.registry.SetDefaultInstance(instance.Address)
 
 	// If this is the first instance, set it as default
@@ -263,15 +263,15 @@ func startClineHost(hostPort, corePort int) (*exec.Cmd, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to get executable path: %w", err)
 	}
-	// CARET MODIFICATION: use filepath for Windows-style paths
+	// CARETI MODIFICATION: use filepath for Windows-style paths
 	binDir := filepath.Dir(execPath)
 	clineHostPath := filepath.Join(binDir, "cline-host")
-	// CARET MODIFICATION: prefer platform-specific host binaries on Windows
+	// CARETI MODIFICATION: prefer platform-specific host binaries on Windows
 	if runtime.GOOS == "windows" {
 		candidates := []string{
 			filepath.Join(binDir, "cline-host.exe"),
-			filepath.Join(binDir, "caret-host.exe"),
-			filepath.Join(binDir, "caret-host-windows-amd64.exe"),
+			filepath.Join(binDir, "careti-host.exe"),
+			filepath.Join(binDir, "careti-host-windows-amd64.exe"),
 			filepath.Join(binDir, "cline-host-windows-amd64.exe"),
 		}
 		for _, candidate := range candidates {
@@ -281,9 +281,9 @@ func startClineHost(hostPort, corePort int) (*exec.Cmd, error) {
 			}
 		}
 	} else {
-		// CARET MODIFICATION: support caret-host fallback for packaged caret CLI
+		// CARETI MODIFICATION: support careti-host fallback for packaged caret CLI
 		if _, statErr := os.Stat(clineHostPath); statErr != nil {
-			alt := filepath.Join(binDir, "caret-host")
+			alt := filepath.Join(binDir, "careti-host")
 			if _, altErr := os.Stat(alt); altErr == nil {
 				clineHostPath = alt
 			}
@@ -315,7 +315,7 @@ func startClineHost(hostPort, corePort int) (*exec.Cmd, error) {
 	cmd.Stderr = logFile
 
 	// Put the child process in a new process group so Ctrl+C doesn't kill it
-	// CARET MODIFICATION: platform-safe process group handling
+	// CARETI MODIFICATION: platform-safe process group handling
 	setChildProcessGroup(cmd)
 
 	if err := cmd.Start(); err != nil {
@@ -359,7 +359,7 @@ func KillInstanceByAddress(ctx context.Context, registry *ClientRegistry, addres
 	}
 
 	// Kill the process
-	// CARET MODIFICATION: platform-safe process termination
+	// CARETI MODIFICATION: platform-safe process termination
 	if err := terminateProcess(pid); err != nil {
 		return fmt.Errorf("failed to kill process %d: %w", pid, err)
 	}
@@ -421,7 +421,7 @@ func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 		}
 	}
 
-	// CARET MODIFICATION: use filepath for Windows-style paths
+	// CARETI MODIFICATION: use filepath for Windows-style paths
 	binDir := filepath.Dir(realPath)
 	installDir := filepath.Dir(binDir)
 	clineCorePath := filepath.Join(installDir, "cline-core.js")
@@ -440,7 +440,7 @@ func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 	var finalClineCorePath string
 	var finalInstallDir string
 	if _, err := os.Stat(clineCorePath); os.IsNotExist(err) {
-		// CARET MODIFICATION: support packaged caret paths
+		// CARETI MODIFICATION: support packaged caret paths
 		devPaths := []struct {
 			corePath   string
 			installDir string
@@ -475,7 +475,7 @@ func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 		}
 
 		if !found {
-			return nil, fmt.Errorf("cline-core.js not found at '%s' or in packaged dist-standalone. Please reinstall with 'npm install -g @caretive/caret-cli' or run from repository root after building dist-standalone", clineCorePath)
+			return nil, fmt.Errorf("cline-core.js not found at '%s' or in packaged dist-standalone. Please reinstall with 'npm install -g @caretive/careti-cli' or run from repository root after building dist-standalone", clineCorePath)
 		}
 	} else {
 		finalClineCorePath = clineCorePath
@@ -520,22 +520,22 @@ func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 	cmd.Stderr = logFile
 
 	// Put the child process in a new process group so Ctrl+C doesn't kill it
-	// CARET MODIFICATION: platform-safe process group handling
+	// CARETI MODIFICATION: platform-safe process group handling
 	setChildProcessGroup(cmd)
 
 	// Set environment variables with NODE_PATH for both real and fake node_modules
-	// CARET MODIFICATION: include packaged dist-standalone node_modules for caret-cli
+	// CARETI MODIFICATION: include packaged dist-standalone node_modules for careti-cli
 	env := os.Environ()
 	nodePathParts := []string{
 		path.Join(finalInstallDir, "node_modules"),
 		path.Join(finalInstallDir, "fake_node_modules"),
-		// CARET MODIFICATION: allow package-root dependencies when cline-core lives under dist-standalone
+		// CARETI MODIFICATION: allow package-root dependencies when cline-core lives under dist-standalone
 		path.Join(installDir, "node_modules"),
 		path.Join(installDir, "dist-standalone", "node_modules"),
 		path.Join(installDir, "dist-standalone", "fake_node_modules"),
-		// CARET MODIFICATION: use packaged binary-specific node_modules (map amd64->x64)
+		// CARETI MODIFICATION: use packaged binary-specific node_modules (map amd64->x64)
 		path.Join(installDir, "dist-standalone", "binaries", mapBinaryPlatform(), "node_modules"),
-		// CARET MODIFICATION: fallback to repo node_modules for native deps (better-sqlite3)
+		// CARETI MODIFICATION: fallback to repo node_modules for native deps (better-sqlite3)
 		path.Join(installDir, "..", "..", "node_modules"),
 		path.Join(installDir, "..", "..", "..", "node_modules"),
 	}
@@ -565,7 +565,7 @@ func startClineCore(corePort, hostPort int) (*exec.Cmd, error) {
 	return cmd, nil
 }
 
-// CARET MODIFICATION: helper to join path list with OS separator
+// CARETI MODIFICATION: helper to join path list with OS separator
 func pathList(paths []string) string {
 	if len(paths) == 0 {
 		return ""
@@ -585,7 +585,7 @@ func pathList(paths []string) string {
 	return result[:len(result)-1]
 }
 
-// CARET MODIFICATION: map GOOS/GOARCH to binaries folder name (amd64 -> x64, windows -> win)
+// CARETI MODIFICATION: map GOOS/GOARCH to binaries folder name (amd64 -> x64, windows -> win)
 func mapBinaryPlatform() string {
 	arch := runtime.GOARCH
 	if arch == "amd64" {

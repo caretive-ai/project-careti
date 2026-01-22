@@ -6,34 +6,34 @@ import { getApiMetrics } from "@shared/getApiMetrics"
 import { BooleanRequest, EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import { useCallback, useEffect, useMemo } from "react"
 import { useMount } from "react-use"
-import { usePersistentInputHistory } from "@/caret/hooks/usePersistentInputHistory" // CARET MODIFICATION: Persistent input history
-import { t } from "@/caret/utils/i18n"
-// CARET MODIFICATION: use CaretWebviewLogger for webview logs
-import WebviewLogger from "@/caret/utils/CaretWebviewLogger"
-// CARET MODIFICATION: Attach mention images before sending
-import { prepareMentionImagePayload } from "@/caret/utils/mention-image"
+import { usePersistentInputHistory } from "@/careti/hooks/usePersistentInputHistory"; // CARETI MODIFICATION: Persistent input history
+// CARETI MODIFICATION: use CaretWebviewLogger for webview logs
+import WebviewLogger from "@/careti/utils/CaretWebviewLogger"
+import { t } from "@/careti/utils/i18n"
+// CARETI MODIFICATION: use careti image optimization utilities
+import { optimizeImageDataUrl } from "@/careti/utils/imageOptimization"
+// CARETI MODIFICATION: Attach mention images before sending
+import { prepareMentionImagePayload } from "@/careti/utils/mention-image"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { FileServiceClient, UiServiceClient } from "@/services/grpc-client"
-// CARET MODIFICATION: use caret image optimization utilities
-import { optimizeImageDataUrl } from "@/caret/utils/imageOptimization"
 import { Navbar } from "../menu/Navbar"
 import AutoApproveBar from "./auto-approve-menu/AutoApproveBar"
 // Import utilities and hooks from the new structure
 import {
-	ActionButtons,
-	CHAT_CONSTANTS,
-	ChatLayout,
-	convertHtmlToMarkdown,
-	filterVisibleMessages,
-	groupMessages,
-	InputSection,
-	MessagesArea,
-	TaskSection,
-	useChatState,
-	useMessageHandlers,
-	useScrollBehavior,
-	WelcomeSection,
+    ActionButtons,
+    CHAT_CONSTANTS,
+    ChatLayout,
+    convertHtmlToMarkdown,
+    filterVisibleMessages,
+    groupMessages,
+    InputSection,
+    MessagesArea,
+    TaskSection,
+    useChatState,
+    useMessageHandlers,
+    useScrollBehavior,
+    WelcomeSection,
 } from "./chat-view"
 
 interface ChatViewProps {
@@ -276,7 +276,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 
 	// Set up addToInput subscription
 	useEffect(() => {
-		// CARET MODIFICATION: match Cline behavior and subscribe unconditionally so Caret (not Cline) always receives queued Add-to events
+		// CARETI MODIFICATION: match Cline behavior and subscribe unconditionally so Careti (not Cline) always receives queued Add-to events
 		const cleanup = UiServiceClient.subscribeToAddToInput(EmptyRequest.create({}), {
 			onResponse: (event) => {
 				if (event.value) {
@@ -342,10 +342,10 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 		return groupMessages(visibleMessages)
 	}, [visibleMessages])
 
-	// CARET MODIFICATION: Persistent input history functionality
+	// CARETI MODIFICATION: Persistent input history functionality
 	const { inputHistory, addToHistory } = usePersistentInputHistory()
 
-	// CARET MODIFICATION: Enhanced message handler with history tracking
+	// CARETI MODIFICATION: Enhanced message handler with history tracking
 	const enhancedMessageHandlers = useMemo(
 		() => ({
 			...messageHandlers,
@@ -426,12 +426,12 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				/>
 				<InputSection
 					chatState={chatState}
-					inputHistory={inputHistory} // CARET MODIFICATION: Use enhanced handlers with history tracking
+					inputHistory={inputHistory} // CARETI MODIFICATION: Use enhanced handlers with history tracking
 					messageHandlers={enhancedMessageHandlers}
 					placeholderText={placeholderText}
 					scrollBehavior={scrollBehavior}
 					selectFilesAndImages={selectFilesAndImages}
-					shouldDisableFilesAndImages={shouldDisableFilesAndImages} // CARET MODIFICATION: Pass persistent input history
+					shouldDisableFilesAndImages={shouldDisableFilesAndImages} // CARETI MODIFICATION: Pass persistent input history
 				/>
 			</footer>
 		</ChatLayout>

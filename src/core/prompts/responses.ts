@@ -1,5 +1,5 @@
 import { Anthropic } from "@anthropic-ai/sdk"
-import { getBrandIgnoreFileName, getBrandRulesFileName, getLegacyClineIgnoreFileName } from "@caret/utils/brand-utils" // CARET MODIFICATION: Brand-aware labels
+import { getBrandIgnoreFileName, getBrandRulesFileName, getLegacyClineIgnoreFileName } from "@careti/utils/brand-utils" // CARETI MODIFICATION: Brand-aware labels
 
 const PRIMARY_IGNORE_FILENAME = getBrandIgnoreFileName?.() ?? ".caretignore"
 const LEGACY_IGNORE_FILENAME = getLegacyClineIgnoreFileName?.() ?? ".clineignore"
@@ -29,7 +29,7 @@ export const formatResponse = {
 
 	toolError: (error?: string) => `The tool execution failed with the following error:\n<error>\n${error}\n</error>`,
 
-	// CARET MODIFICATION: Primary ignore file uses brand util (legacy .clineignore supported)
+	// CARETI MODIFICATION: Primary ignore file uses brand util (legacy .clineignore supported)
 	clineIgnoreError: (path: string) =>
 		`Access to ${path} is blocked by the ${PRIMARY_IGNORE_FILENAME} file settings (legacy ${LEGACY_IGNORE_FILENAME} supported). You must try to continue in the task without using this file, or ask the user to update the ${PRIMARY_IGNORE_FILENAME} file.`,
 
@@ -236,7 +236,7 @@ Otherwise, if you have not completed the task and do not need additional informa
 	toolAlreadyUsed: (toolName: string) =>
 		`Tool [${toolName}] was not executed because a tool has already been used in this message. Only one tool may be used per message. You must assess the first tool's result before proceeding to use the next tool.`,
 
-	// CARET MODIFICATION: Default ignore file follows brand util while retaining .clineignore as legacy input
+	// CARETI MODIFICATION: Default ignore file follows brand util while retaining .clineignore as legacy input
 	clineIgnoreInstructions: (content: string) =>
 		`# ${PRIMARY_IGNORE_FILENAME} (.clineignore legacy)\n\n(The following is provided by a root-level ${PRIMARY_IGNORE_FILENAME}/${LEGACY_IGNORE_FILENAME} file where the user has specified files and directories that should not be accessed. When using list_files, you'll notice a ${LOCK_TEXT_SYMBOL} next to files that are blocked. Attempting to access the file's contents e.g. through read_file will result in an error.)\n\n${content}\n${PRIMARY_IGNORE_FILENAME}`,
 

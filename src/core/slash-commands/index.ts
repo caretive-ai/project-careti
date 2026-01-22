@@ -62,7 +62,7 @@ export async function parseSlashCommands(
 	// Determine if the current provider/model/setting actually uses native tool calling
 	const willUseNativeTools = providerInfo ? isNativeToolCallingConfig(providerInfo, enableNativeToolCalls || false) : false
 
-	// CARET MODIFICATION: 슬래시 커맨드 매핑은 lazy 평가로 구성(테스트/런타임에서 deep-planning 프롬프트 생성 부작용 방지)
+	// CARETI MODIFICATION: 슬래시 커맨드 매핑은 lazy 평가로 구성(테스트/런타임에서 deep-planning 프롬프트 생성 부작용 방지)
 	const commandReplacements: Record<string, () => string> = {
 		newtask: () => newTaskToolResponse(willUseNativeTools),
 		smol: () => condenseToolResponse(focusChainSettings),

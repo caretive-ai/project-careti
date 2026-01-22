@@ -276,7 +276,7 @@ function reorderWithPreToolUseHooks(messages: ClineMessage[], preToolUseMap: Map
 			// Insert hooks that haven't been added yet
 			const newHooks = hooksForTool.filter((h) => !addedHooks.has(h.ts))
 			result.push(...newHooks)
-			// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+			// CARETI MODIFICATION: replace forEach to satisfy lint without behavior change
 			for (const h of newHooks) {
 				addedHooks.add(h.ts)
 			}

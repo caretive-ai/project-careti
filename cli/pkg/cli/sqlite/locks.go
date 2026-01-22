@@ -46,7 +46,7 @@ type LockManager struct {
 func NewLockManager(clineDir string) (*LockManager, error) {
 	dbPath := filepath.Join(clineDir, common.SETTINGS_SUBFOLDER, "locks.db")
 
-	// CARET MODIFICATION: fallback to legacy .cline registry if .caret registry is missing
+	// CARETI MODIFICATION: fallback to legacy .cline registry if .caret registry is missing
 	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
 		homeDir, _ := os.UserHomeDir()
 		if homeDir == "" {
@@ -101,7 +101,7 @@ func (lm *LockManager) ensureConnection() error {
 
 	// Check if database exists now (created by cline-core)
 	if _, err := os.Stat(lm.dbPath); os.IsNotExist(err) {
-		// CARET MODIFICATION: treat missing DB as empty registry (non-fatal)
+		// CARETI MODIFICATION: treat missing DB as empty registry (non-fatal)
 		return nil
 	}
 
@@ -134,7 +134,7 @@ func (lm *LockManager) GetInstanceLocks() ([]common.LockRow, error) {
 	if err := lm.ensureConnection(); err != nil {
 		return []common.LockRow{}, nil
 	}
-	// CARET MODIFICATION: missing DB should behave like empty registry
+	// CARETI MODIFICATION: missing DB should behave like empty registry
 	if lm.db == nil {
 		return []common.LockRow{}, nil
 	}
@@ -165,7 +165,7 @@ func (lm *LockManager) RemoveInstanceLock(address string) error {
 	if err := lm.ensureConnection(); err != nil {
 		return nil // Gracefully handle missing database for cleanup operations
 	}
-	// CARET MODIFICATION: missing DB should behave like no-op
+	// CARETI MODIFICATION: missing DB should behave like no-op
 	if lm.db == nil {
 		return nil
 	}
@@ -182,10 +182,10 @@ func (lm *LockManager) RemoveInstanceLock(address string) error {
 // HasInstanceAtAddress checks if an instance exists at the given address
 func (lm *LockManager) HasInstanceAtAddress(address string) (bool, error) {
 	if err := lm.ensureConnection(); err != nil {
-		// CARET MODIFICATION: missing DB means no instances, not fatal
+		// CARETI MODIFICATION: missing DB means no instances, not fatal
 		return false, nil
 	}
-	// CARET MODIFICATION: missing DB means no instances, not fatal
+	// CARETI MODIFICATION: missing DB means no instances, not fatal
 	if lm.db == nil {
 		return false, nil
 	}
@@ -204,10 +204,10 @@ func (lm *LockManager) HasInstanceAtAddress(address string) (bool, error) {
 // Handles localhost/127.0.0.1 equivalence by trying both variants.
 func (lm *LockManager) GetInstanceInfo(address string) (*common.CoreInstanceInfo, error) {
 	if err := lm.ensureConnection(); err != nil {
-		// CARET MODIFICATION: missing DB -> no info available
+		// CARETI MODIFICATION: missing DB -> no info available
 		return nil, nil
 	}
-	// CARET MODIFICATION: missing DB -> no info available
+	// CARETI MODIFICATION: missing DB -> no info available
 	if lm.db == nil {
 		return nil, nil
 	}
@@ -249,7 +249,7 @@ func (lm *LockManager) ListInstancesWithHealthCheck(ctx context.Context) ([]*com
 	if err := lm.ensureConnection(); err != nil {
 		return []*common.CoreInstanceInfo{}, nil
 	}
-	// CARET MODIFICATION: missing DB should behave like empty registry
+	// CARETI MODIFICATION: missing DB should behave like empty registry
 	if lm.db == nil {
 		return []*common.CoreInstanceInfo{}, nil
 	}
@@ -357,7 +357,7 @@ func (lm *LockManager) AcquireFileLock(filePath, heldBy string) error {
 	if err := lm.ensureConnection(); err != nil {
 		return err
 	}
-	// CARET MODIFICATION: missing DB should behave like no-op
+	// CARETI MODIFICATION: missing DB should behave like no-op
 	if lm.db == nil {
 		return nil
 	}

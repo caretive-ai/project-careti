@@ -43,7 +43,7 @@ Use 3-stage systematic approach for constructive verification.
 
 - Use before `/document-organization` for clean foundation
 - Apply during `/ai-work-protocol` Phase 0 for document review
-- Essential for `/caret-development` when modifying existing systems
+- Essential for `/careti-development` when modifying existing systems
 
 ---
 
@@ -51,4 +51,4 @@ Use 3-stage systematic approach for constructive verification.
 See `.agents/workflows/critical-verification.md`
 
 **📖 For Korean developer documentation:**
-See `caret-docs/development/critical-verification.md` (if exists)
+See `careti-docs/development/critical-verification.md` (if exists)

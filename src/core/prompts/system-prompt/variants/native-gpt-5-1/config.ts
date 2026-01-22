@@ -26,7 +26,7 @@ export const config = createVariant(ModelFamily.NATIVE_GPT_5_1)
 		const providerInfo = context.providerInfo
 		const modelId = providerInfo.model.id
 
-		// CARET MODIFICATION: GPT-5.2를 GPT-5.1과 동일한 native tool 변형으로 매칭 (R-3410-01)
+		// CARETI MODIFICATION: GPT-5.2를 GPT-5.1과 동일한 native tool 변형으로 매칭 (R-3410-01)
 		// gpt-5.1 and gpt-5.2 chat models do not support native tool use
 		return (
 			(isGPT51Model(modelId) || isGPT52Model(modelId)) && !modelId.includes("chat") && isNextGenModelProvider(providerInfo)

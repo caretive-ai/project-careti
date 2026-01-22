@@ -1,4 +1,4 @@
-import { getBrandIgnoreFileName, getLegacyClineIgnoreFileName } from "@caret/utils/brand-utils"
+import { getBrandIgnoreFileName, getLegacyClineIgnoreFileName } from "@careti/utils/brand-utils"
 import fs from "fs/promises"
 import { after, beforeEach, describe, it } from "mocha"
 import os from "os"
@@ -18,7 +18,7 @@ describe("ClineIgnoreController", () => {
 		tempDir = path.join(os.tmpdir(), `llm-test-${Date.now()}-${Math.random().toString(36).slice(2)}`)
 		await fs.mkdir(tempDir)
 
-		// CARET MODIFICATION: Default ignore file uses .caretignore (legacy .clineignore still supported)
+		// CARETI MODIFICATION: Default ignore file uses .caretignore (legacy .clineignore still supported)
 		await fs.writeFile(
 			path.join(tempDir, PRIMARY_IGNORE_FILENAME),
 			[".env", "*.secret", "private/", "# This is a comment", "", "temp.*", "file-with-space-at-end.* ", "**/.git/**"].join(
@@ -51,7 +51,7 @@ describe("ClineIgnoreController", () => {
 				controller.validateAccess("README.md"),
 				controller.validateAccess("package.json"),
 			]
-			// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+			// CARETI MODIFICATION: replace forEach to satisfy lint without behavior change
 			for (const result of results) {
 				result.should.be.true()
 			}
@@ -93,7 +93,7 @@ describe("ClineIgnoreController", () => {
 				controller.validateAccess("nested/deep/file.secret"),
 				controller.validateAccess("private/nested/deep/file.txt"),
 			]
-			// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+			// CARETI MODIFICATION: replace forEach to satisfy lint without behavior change
 			for (const result of results) {
 				result.should.be.false()
 			}
@@ -107,7 +107,7 @@ describe("ClineIgnoreController", () => {
 				controller.validateAccess("nested/deep/file.txt"),
 				controller.validateAccess("not-private/data.txt"),
 			]
-			// CARET MODIFICATION: replace forEach to satisfy lint without behavior change
+			// CARETI MODIFICATION: replace forEach to satisfy lint without behavior change
 			for (const result of results) {
 				result.should.be.true()
 			}

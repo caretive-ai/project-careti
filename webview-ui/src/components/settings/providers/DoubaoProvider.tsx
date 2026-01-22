@@ -1,6 +1,6 @@
 import { doubaoModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ApiKeyField } from "../common/ApiKeyField"
 import { ModelInfoView } from "../common/ModelInfoView"

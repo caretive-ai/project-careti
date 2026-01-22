@@ -76,7 +76,7 @@ message TaskCompleteData {
 }
 
 // Data for PreCompact hook
-// CARET MODIFICATION: Extended PreCompactData to match cline-latest
+// CARETI MODIFICATION: Extended PreCompactData to match cline-latest
 message PreCompactData {
   // Task identification
   string task_id = 1;

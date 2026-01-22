@@ -122,7 +122,7 @@ export class ClineAuthProvider implements IAuthProvider {
 					}
 					return authInfo || null
 				} catch (error: any) {
-					// CARET MODIFICATION: 네트워크 오류/오프라인 시 토큰 갱신 실패로 세션이 null 처리되어 로그아웃되는 것을 방지
+					// CARETI MODIFICATION: 네트워크 오류/오프라인 시 토큰 갱신 실패로 세션이 null 처리되어 로그아웃되는 것을 방지
 					const errorCode = error?.code ?? error?.cause?.code
 					const message = typeof error?.message === "string" ? error.message.toLowerCase() : ""
 					const networkErrorCodes = new Set([

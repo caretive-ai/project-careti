@@ -3,7 +3,7 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import mermaid from "mermaid"
 import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { FileServiceClient } from "@/services/grpc-client"
 import { useDebounceEffect } from "@/utils/useDebounceEffect"
 

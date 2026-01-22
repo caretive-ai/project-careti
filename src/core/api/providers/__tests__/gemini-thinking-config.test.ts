@@ -1,4 +1,4 @@
-// CARET MODIFICATION: TDD 회귀 테스트 - Gemini 3 Pro 계열은 thinkingLevel이 누락되면 기본 LOW로 채워지고, thinkingLevel이 있으면 includeThoughts가 활성화되어야 함 (R-3400-05)
+// CARETI MODIFICATION: TDD 회귀 테스트 - Gemini 3 Pro 계열은 thinkingLevel이 누락되면 기본 LOW로 채워지고, thinkingLevel이 있으면 includeThoughts가 활성화되어야 함 (R-3400-05)
 
 import { GeminiHandler } from "@core/api/providers/gemini"
 import { ThinkingLevel } from "@google/genai"

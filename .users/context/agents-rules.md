@@ -5,9 +5,9 @@
 ### Document Access Pattern
 - **AI reads**: `.agents/context/agents-rules.json` (English JSON, core principles only)
 - **AI workflows**: `.agents/workflows/*.md` (English MD, detailed procedures when needed)
-- **Human reads (Korean)**: `caret-docs/development/caret-rules.ko.md` (Korean MD, developer reference)
-- **Human reads (Features EN)**: `caret-docs/features.en/index.md` (feature specs, English)
-- **Sync method**: Keep `.agents/context` as the Single Source of Truth; update `caret-docs/development/` as the KO-first developer counterpart
+- **Human reads (Korean)**: `careti-docs/development/careti-rules.ko.md` (Korean MD, developer reference)
+- **Human reads (Features EN)**: `careti-docs/features.en/index.md` (feature specs, English)
+- **Sync method**: Keep `.agents/context` as the Single Source of Truth; update `careti-docs/development/` as the KO-first developer counterpart
 - **Reading flow**: AI: JSON rules → (if needed) workflow MD → implementation
 
 ### ⚠️ Document Editing Guidelines
@@ -16,11 +16,11 @@
 
 ### File Mapping
 ```
-.agents/context/agents-rules.json              ↔ caret-docs/development/caret-rules.ko.md (KO counterpart)
-.agents/workflows/*.md                ↔ caret-docs/development/index.md (KO dashboard links out to matching guides)
-.agents/workflows/atoms/*.md|*.yaml    ↔ caret-docs/development/* (referenced where needed)
-.agents/workflows/ai-work-protocol.md ↔ caret-docs/development/ai-work-protocol.md
-.agents/workflows/ai-work-index*      ↔ caret-docs/development/ai-work-index.md
+.agents/context/agents-rules.json              ↔ careti-docs/development/careti-rules.ko.md (KO counterpart)
+.agents/workflows/*.md                ↔ careti-docs/development/index.md (KO dashboard links out to matching guides)
+.agents/workflows/atoms/*.md|*.yaml    ↔ careti-docs/development/* (referenced where needed)
+.agents/workflows/ai-work-protocol.md ↔ careti-docs/development/ai-work-protocol.md
+.agents/workflows/ai-work-index*      ↔ careti-docs/development/ai-work-index.md
 ```
 
 ## Core Principles
@@ -28,7 +28,7 @@
 ### Project Identity
 - **Name**: Caret ('^' symbol, NOT carrot)
 - **Nature**: Cline-based fork with minimal extension strategy
-- **Philosophy**: Preserve Cline core, extend through caret-src/
+- **Philosophy**: Preserve Cline core, extend through careti-src/
 
 ### Development Principles
 - **Quality first**: Accuracy > speed, complete work, no technical debt
@@ -39,18 +39,18 @@
 - **Phase 0 Rule**: `.agents/context` MUST be restored BEFORE any code merging begins.
 - **Hybrid Pattern**: Preserve Cline core, inject Caret logic via interception.
 - **Logic-based 3-way**: Compare Base(Cline) vs Target(Caret) vs Merged logic, not just text diffs.
-- **Reference**: See `caret-docs/merging/merge-standard-guide.md` for full protocol.
+- **Reference**: See `careti-docs/merging/merge-standard-guide.md` for full protocol.
 
 ## Architecture Rules
 
 ### Modification Levels
-- **L1 Independent**: `caret-src/`, `caret-docs/` (full freedom)
+- **L1 Independent**: `careti-src/`, `careti-docs/` (full freedom)
 - **L2 Conditional**: minimal Cline changes with backup + comment
 - **L3 Direct**: last resort with full documentation
 
 ### Protection Rules
 - **Protected directories**: `src/`, `webview-ui/`, `proto/`, `scripts/`, `evals/`, `docs/`, `locales/`, `configs/`
-- **Comment required**: `// CARET MODIFICATION: [description]`
+- **Comment required**: `// CARETI MODIFICATION: [description]`
 - **Max changes**: 1-3 lines per Cline file
 
 ## Development Framework
@@ -71,11 +71,11 @@
 
 ### File Modification Checklist
 1. Is Cline original file?
-2. CARET MODIFICATION comment added?
+2. CARETI MODIFICATION comment added?
 3. 1-3 lines max?
 4. Complete replacement not commenting?
 5. Build system check:
-   - ✅ No .js/.js.map files in `src/` or `caret-src/`
+   - ✅ No .js/.js.map files in `src/` or `careti-src/`
    - ✅ `npm run compile` passes
    - ✅ VSCode reload (Developer: Reload Window) to load new code
 
@@ -87,13 +87,13 @@
 
 ## Development Support Scripts
 
-### Analysis Utils (`caret-scripts/utils/`)
+### Analysis Utils (`careti-scripts/utils/`)
 - `semantic-equivalence-checker.js` - Verify semantic equivalence between Markdown/JSON formats with 95.2% target score
 - `token-efficiency-analyzer.js` - Measure token usage differences between formats for optimization
 - `universal-semantic-analyzer.js` - Universal semantic equivalence analyzer for any format comparison (patent technology)
 
-### Development Tools (`caret-scripts/tools/`)
-- `caret-cline-comparison.js` - Compare Caret vs Cline API providers and model coverage
+### Development Tools (`careti-scripts/tools/`)
+- `careti-cline-comparison.js` - Compare Caret vs Cline API providers and model coverage
 - `package-release.js` - Package and release management utilities
 
 ## AI Work Flow
@@ -110,13 +110,13 @@
 - NO coding without document review first
 - Identify work nature: architecture/ai/frontend/ui/test/cline-modification
 - TDD mandatory: integration test first, NEVER unit test first
-- Cline file modification: `.cline` 백업은 deprecated, `// CARET MODIFICATION:` 주석으로만 추적 (복구는 git)
+- Cline file modification: `.cline` 백업은 deprecated, `// CARETI MODIFICATION:` 주석으로만 추적 (복구는 git)
 - AI must access same information developers have via workflows
 
 ### Available Workflows
 See `.agents/workflows/` for detailed procedures:
 
-- **Main Workflows**: `ai-work-index.md`, `ai-work-protocol.md`, `caret-development.md`
+- **Main Workflows**: `ai-work-index.md`, `ai-work-protocol.md`, `careti-development.md`
 - **Critical Verification**: `critical-verification.md`
 - **Architecture**: `merge-strategy.md`, `document-organization.md`
 - **Systems**: `branding-and-logging.md` - Current branding principles and logging systems
@@ -129,7 +129,7 @@ See `.agents/workflows/` for detailed procedures:
 - `verification-steps.md` - Test→Compile→Execute sequence
 - `storage-patterns.md` - workspaceState vs globalState usage
 - `naming-conventions.md` - Cline-compatible naming patterns
-- `comment-protocol.md` - CARET MODIFICATION tracking
+- `comment-protocol.md` - CARETI MODIFICATION tracking
 - `message-flow.md` - Frontend↔Backend↔AI communication
 - `semantic-equivalence-verification.md` - JSON vs Markdown validation
 
@@ -156,16 +156,16 @@ When a task requires workflows, select them on demand using the work index:
   2. Match a category in the index
   3. Read the root quick reference first
   4. Load the workflow only if more detail is required
-  5. Use `caret-docs/development/**` when updating human-facing guides
+  5. Use `careti-docs/development/**` when updating human-facing guides
 
 ## Forbidden Actions
 
-- Modify Cline files without CARET MODIFICATION comment
+- Modify Cline files without CARETI MODIFICATION comment
 - Start with unit tests
 - Comment out old code
-- Skip CARET MODIFICATION comment
+- Skip CARETI MODIFICATION comment
 - Run `tsc` without `--noEmit` (tsconfig.json has noEmit: true)
-- Allow .js/.js.map files in `src/` or `caret-src/` directories
+- Allow .js/.js.map files in `src/` or `careti-src/` directories
 
 ---
 
@@ -174,9 +174,9 @@ When a task requires workflows, select them on demand using the work index:
 This document is part of Caret's knowledge parity system:
 
 - **Rules/Workflows (SoT)**: `.agents/context/agents-rules.json`, `.agents/workflows/*`
-- **Developer docs (KO-first)**: `caret-docs/development/index.md`
-- **Feature specs (EN)**: `caret-docs/features.en/index.md`
+- **Developer docs (KO-first)**: `careti-docs/development/index.md`
+- **Feature specs (EN)**: `careti-docs/features.en/index.md`
 
 **Cross-references**:
-- KO counterpart: `caret-docs/development/caret-rules.ko.md`
+- KO counterpart: `careti-docs/development/careti-rules.ko.md`
 - SoT index: `.agents/context/agents-rules.json`

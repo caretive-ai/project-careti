@@ -4,12 +4,12 @@
 Merge the latest Cline upstream version into Caret while preserving all Caret features.
 
 ## 📚 References
-- **Master Guide**: `caret-docs/merging/merge-standard-guide.md` (READ THIS FIRST)
-- **Strategy Guide**: `caret-docs/merging/merging-strategy-guide.md`
+- **Master Guide**: `careti-docs/merging/merge-standard-guide.md` (READ THIS FIRST)
+- **Strategy Guide**: `careti-docs/merging/merging-strategy-guide.md`
 
 ## 🚦 Steps
 1. **Preparation**:
-   - Read `caret-docs/merging/merge-standard-guide.md` to understand the current phase and critical files.
+   - Read `careti-docs/merging/merge-standard-guide.md` to understand the current phase and critical files.
    - Ensure `auto_read_paths` are loaded.
 
 2. **Execution**:

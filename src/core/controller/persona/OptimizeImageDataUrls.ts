@@ -1,13 +1,13 @@
-// CARET MODIFICATION: gRPC handler for shared image optimization (resize + webp).
+// CARETI MODIFICATION: gRPC handler for shared image optimization (resize + webp).
 import type { Controller } from "@/core/controller"
 import { Logger } from "@/services/logging/Logger"
 import * as proto from "@/shared/proto"
-import { optimizeImageDataUrl } from "@caret/utils/image-optimization"
+import { optimizeImageDataUrl } from "@careti/utils/image-optimization"
 
 export async function OptimizeImageDataUrls(
 	_controller: Controller,
-	request: proto.caret.OptimizeImageDataUrlsRequest,
-): Promise<proto.caret.OptimizeImageDataUrlsResponse> {
+	request: proto.careti.OptimizeImageDataUrlsRequest,
+): Promise<proto.careti.OptimizeImageDataUrlsResponse> {
 	const dataUrls = request.dataUrls ?? []
 	const optimized: string[] = []
 
@@ -26,7 +26,7 @@ export async function OptimizeImageDataUrls(
 		}
 	}
 
-	return proto.caret.OptimizeImageDataUrlsResponse.create({
+	return proto.careti.OptimizeImageDataUrlsResponse.create({
 		dataUrls: optimized,
 	})
 }

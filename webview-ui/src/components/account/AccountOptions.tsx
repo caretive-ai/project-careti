@@ -1,6 +1,6 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { memo } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { AccountServiceClient } from "@/services/grpc-client"
 
 const AccountOptions = () => {

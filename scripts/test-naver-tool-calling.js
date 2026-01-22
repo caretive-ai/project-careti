@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Test script for Naver Cloud HyperCLOVA X Tool Calling
+// CARETI MODIFICATION: Test script for Naver Cloud HyperCLOVA X Tool Calling
 // Run: node scripts/test-naver-tool-calling.js
 
 const fs = require('fs')

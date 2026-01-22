@@ -18,8 +18,8 @@ import { WorkspaceRootManager } from "../workspace"
 import { ToolResponse } from "."
 import { MessageStateHandler } from "./message-state"
 import { TaskState } from "./TaskState"
-// CARET MODIFICATION: use caret image registry + tool handler from caret-src
-import { ImageRegistry } from "@caret/core/task/images/ImageRegistry"
+// CARETI MODIFICATION: use careti image registry + tool handler from careti-src
+import { ImageRegistry } from "@careti/core/task/images/ImageRegistry"
 import { AutoApprove } from "./tools/autoApprove"
 import { AccessMcpResourceHandler } from "./tools/handlers/AccessMcpResourceHandler"
 import { ActModeRespondHandler } from "./tools/handlers/ActModeRespondHandler"
@@ -29,9 +29,9 @@ import { AttemptCompletionHandler } from "./tools/handlers/AttemptCompletionHand
 import { BrowserToolHandler } from "./tools/handlers/BrowserToolHandler"
 import { CondenseHandler } from "./tools/handlers/CondenseHandler"
 import { ExecuteCommandToolHandler } from "./tools/handlers/ExecuteCommandToolHandler"
-import { GenerateImageToolHandler } from "@caret/core/task/tools/handlers/GenerateImageToolHandler"
-import { AnalyzeImageToolHandler } from "@caret/core/task/tools/handlers/AnalyzeImageToolHandler"
-import { ReadDocumentToolHandler } from "@caret/core/task/tools/handlers/ReadDocumentToolHandler"
+import { GenerateImageToolHandler } from "@careti/core/task/tools/handlers/GenerateImageToolHandler"
+import { AnalyzeImageToolHandler } from "@careti/core/task/tools/handlers/AnalyzeImageToolHandler"
+import { ReadDocumentToolHandler } from "@careti/core/task/tools/handlers/ReadDocumentToolHandler"
 import { ListCodeDefinitionNamesToolHandler } from "./tools/handlers/ListCodeDefinitionNamesToolHandler"
 import { ListFilesToolHandler } from "./tools/handlers/ListFilesToolHandler"
 import { LoadMcpDocumentationHandler } from "./tools/handlers/LoadMcpDocumentationHandler"
@@ -42,7 +42,7 @@ import { ReportBugHandler } from "./tools/handlers/ReportBugHandler"
 import { SearchFilesToolHandler } from "./tools/handlers/SearchFilesToolHandler"
 import { SummarizeTaskHandler } from "./tools/handlers/SummarizeTaskHandler"
 import { UseMcpToolHandler } from "./tools/handlers/UseMcpToolHandler"
-import { UseSkillToolHandler } from "./tools/handlers/UseSkillToolHandler" // CARET MODIFICATION: Skills system
+import { UseSkillToolHandler } from "./tools/handlers/UseSkillToolHandler" // CARETI MODIFICATION: Skills system
 import { WebFetchToolHandler } from "./tools/handlers/WebFetchToolHandler"
 import { WriteToFileToolHandler } from "./tools/handlers/WriteToFileToolHandler"
 import { IPartialBlockHandler, SharedToolHandler, ToolExecutorCoordinator } from "./tools/ToolExecutorCoordinator"
@@ -96,7 +96,7 @@ export class ToolExecutor {
 		private isMultiRootEnabled: boolean,
 
 		// Callbacks to the Task (Entity)
-		// CARET MODIFICATION: Added operationId parameter for reliable message updates
+		// CARETI MODIFICATION: Added operationId parameter for reliable message updates
 		private say: (
 			type: ClineSay,
 			text?: string,
@@ -225,7 +225,7 @@ export class ToolExecutor {
 		this.coordinator.register(new ExecuteCommandToolHandler(validator))
 		this.coordinator.register(new GenerateImageToolHandler())
 		this.coordinator.register(new AnalyzeImageToolHandler(validator))
-		this.coordinator.register(new ReadDocumentToolHandler()) // CARET MODIFICATION: Document reading
+		this.coordinator.register(new ReadDocumentToolHandler()) // CARETI MODIFICATION: Document reading
 		this.coordinator.register(new UseMcpToolHandler())
 		this.coordinator.register(new AccessMcpResourceHandler())
 		this.coordinator.register(new LoadMcpDocumentationHandler())
@@ -237,7 +237,7 @@ export class ToolExecutor {
 		this.coordinator.register(new SummarizeTaskHandler(validator))
 		this.coordinator.register(new ReportBugHandler())
 		this.coordinator.register(new ApplyPatchHandler(validator))
-		this.coordinator.register(new UseSkillToolHandler()) // CARET MODIFICATION: Skills system
+		this.coordinator.register(new UseSkillToolHandler()) // CARETI MODIFICATION: Skills system
 	}
 
 	/**
@@ -383,7 +383,7 @@ export class ToolExecutor {
 			}
 
 			// Handle complete blocks
-			this.taskState.didAlreadyUseTool = true // CARET MODIFICATION: complete tool block 동시 실행 레이스(approval ask 중복) 방지
+			this.taskState.didAlreadyUseTool = true // CARETI MODIFICATION: complete tool block 동시 실행 레이스(approval ask 중복) 방지
 			await this.handleCompleteBlock(block, config)
 			await this.saveCheckpoint()
 			return true

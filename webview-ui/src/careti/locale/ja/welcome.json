@@ -1,0 +1,57 @@
+{
+	"coreFeatures": {
+		"header": "共に成長するAIコーディングエージェントCaretiと「バイブコーディング」を始めましょう。"
+	},
+	"getStarted": {
+		"button": "始める"
+	},
+	"welcome": {
+		"tooltipContent": "ファイル編集、プロジェクト探索、コマンド実行、ブラウザ使用などを通じて段階的にソフトウェアを開発できます。MCPツールを使用して基本的なコード補完を超えた機能で拡張することもできます。",
+		"takeATour": "ツアーを開始"
+	},
+	"cliBanner": {
+		"title": "CLI をインストールしてサブエージェントを活用",
+		"description": "大規模な検索やリサーチは CLI のエージェントに任せられます。Careti/Cline モードでコマンドが異なります。",
+		"button": "CLI をインストール",
+		"copyCommand": "コマンドをコピー",
+		"copied": "コピーしました！",
+		"learnMore": "詳しく見る",
+		"installed": "インストール済み",
+		"dismissTitle": "CLIバナーを閉じる"
+	},
+	"apiSetup": {
+		"backButton": "← 戻る",
+		"title": "API設定",
+		"description": "AIモデルを使用するためのAPIプロバイダーを選択して設定してください。",
+		"instructions": "ヘルプが必要ですか？以下のリンクをご参照ください：",
+		"supportLinks": {
+			"llmList": "サポートされているLLMリスト",
+			"geminiCredit": "Gemini無料クレジットを取得"
+		},
+		"saveButton": "設定を保存",
+		"help": {
+			"title": "さらにサポートが必要ですか？",
+			"button": "ドキュメントを見る"
+		}
+	},
+	"community": {
+		"header": "コミュニティに参加",
+		"body": "Careti GitHubで最新情報をチェックし、フィードバックを共有してください。",
+		"githubLink": "GitHubを訪問"
+	},
+	"footer": {
+		"about": {
+			"description": "CaretiはCaretive Inc.が開発したオープンソースAIコーディングエージェントです。",
+			"link": "詳しく見る"
+		},
+		"links": {
+			"caretiGithub": "Careti GitHub",
+			"caretiService": "Caretiサービス",
+			"caretiveInc": "Caretive Inc.",
+			"support": "サポート"
+		},
+		"copyright": {
+			"builtWith": "Caretive Inc.が❤️で作りました"
+		}
+	}
+}

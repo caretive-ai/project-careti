@@ -1,6 +1,6 @@
 import { ApiConfiguration, ModelInfo, openRouterDefaultModelId } from "@shared/api"
 import { Mode } from "@shared/storage/types"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { getModeSpecificFields } from "@/components/settings/utils/providerUtils"
 
 export function validateApiConfiguration(currentMode: Mode, apiConfiguration?: ApiConfiguration): string | undefined {
@@ -128,13 +128,13 @@ export function validateApiConfiguration(currentMode: Mode, apiConfiguration?: A
 					return t("validation.apiKey.required", "settings")
 				}
 				break
-			// CARET MODIFICATION: Validate Upstage API key
+			// CARETI MODIFICATION: Validate Upstage API key
 			case "upstage":
 				if (!apiConfiguration.upstageApiKey) {
 					return t("validation.apiKey.required", "settings")
 				}
 				break
-			// CARET MODIFICATION: Validate Naver Cloud API key
+			// CARETI MODIFICATION: Validate Naver Cloud API key
 			case "naver-cloud":
 				if (!apiConfiguration.naverCloudApiKey) {
 					return t("validation.apiKey.required", "settings")

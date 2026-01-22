@@ -5,7 +5,7 @@ import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mc
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { McpServiceClient } from "@/services/grpc-client"
 import AddRemoteServerForm from "./tabs/add-server/AddRemoteServerForm"

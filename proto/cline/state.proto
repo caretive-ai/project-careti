@@ -52,7 +52,7 @@ message AutoApprovalSettings {
   AutoApprovalActions actions = 2;
   optional bool enable_notifications = 3;
   optional int32 max_requests = 4;
-  // CARET MODIFICATION: Allow globally disabling auto-approval without altering individual action preferences
+  // CARETI MODIFICATION: Allow globally disabling auto-approval without altering individual action preferences
   optional bool enabled = 5;
 }
 
@@ -231,7 +231,7 @@ message Settings {
   optional OpenAiCompatibleModelInfo plan_mode_aihubmix_model_info = 131;
   optional string act_mode_aihubmix_model_id = 132;
   optional OpenAiCompatibleModelInfo act_mode_aihubmix_model_info = 133;
-  // CARET MODIFICATION: Skills system
+  // CARETI MODIFICATION: Skills system
   optional bool skills_enabled = 134;
 }
 
@@ -302,7 +302,7 @@ message AutoApprovalSettingsRequest {
   AutoApprovalActions actions = 3;
   bool enable_notifications = 4;
   optional int32 max_requests = 5;
-  // CARET MODIFICATION: Propagate global auto-approval toggle from webview
+  // CARETI MODIFICATION: Propagate global auto-approval toggle from webview
   optional bool enabled = 6;
 }
 
@@ -374,18 +374,18 @@ message UpdateSettingsRequest {
   optional string cline_env = 31;
   optional bool native_tool_call_enabled = 32;
   optional OnboardingModelGroup onboarding_models = 33;
-  // CARET MODIFICATION: Skills system
+  // CARETI MODIFICATION: Skills system
   optional bool skills_enabled = 34;
-  // CARET MODIFICATION: F11 - Input History System (use 1000+ to avoid conflicts with Cline fields)
+  // CARETI MODIFICATION: F11 - Input History System (use 1000+ to avoid conflicts with Cline fields)
   repeated string input_history = 1001;
-  // CARET MODIFICATION: F01 - Mode System
+  // CARETI MODIFICATION: F01 - Mode System
   optional string mode_system = 1002;
-  // CARET MODIFICATION: F08 - Persona System
+  // CARETI MODIFICATION: F08 - Persona System
   optional bool enable_persona_system = 1003;
   optional string current_persona = 1004;
   optional string image_generation_aspect_ratio = 1005;
   optional string image_generation_size = 1006;
-  // CARET MODIFICATION: F13 - Image Analysis Model Selection
+  // CARETI MODIFICATION: F13 - Image Analysis Model Selection
   optional string image_analysis_model = 1007;
 }
 

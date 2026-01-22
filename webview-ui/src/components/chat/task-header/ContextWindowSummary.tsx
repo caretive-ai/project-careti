@@ -1,6 +1,6 @@
 import { ChevronDownIcon, ChevronRightIcon } from "lucide-react"
 import React, { memo, useCallback, useMemo, useState } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { formatLargeNumber as formatTokenNumber } from "@/utils/format"
 
 interface TokenUsageInfoProps {

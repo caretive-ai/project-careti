@@ -121,8 +121,8 @@ export async function migrateTaskHistoryToFile(context: vscode.ExtensionContext)
 }
 
 export async function migrateMcpMarketplaceEnableSetting(mcpMarketplaceEnabledRaw: boolean | undefined): Promise<boolean> {
-	// CARET MODIFICATION: brand-aware config namespace with cline fallback
-	const brandNamespace = (await import("@caret/utils/brand-utils")).getCurrentBrandName().toLowerCase()
+	// CARETI MODIFICATION: brand-aware config namespace with cline fallback
+	const brandNamespace = (await import("@careti/utils/brand-utils")).getCurrentBrandName().toLowerCase()
 	const primaryConfig = vscode.workspace.getConfiguration(brandNamespace)
 	const legacyConfig = vscode.workspace.getConfiguration("cline")
 	const mcpMarketplaceEnabled =
@@ -137,8 +137,8 @@ export async function migrateMcpMarketplaceEnableSetting(mcpMarketplaceEnabledRa
 }
 
 export async function migrateEnableCheckpointsSetting(enableCheckpointsSettingRaw: boolean | undefined): Promise<boolean> {
-	// CARET MODIFICATION: brand-aware config namespace with cline fallback
-	const brandNamespace = (await import("@caret/utils/brand-utils")).getCurrentBrandName().toLowerCase()
+	// CARETI MODIFICATION: brand-aware config namespace with cline fallback
+	const brandNamespace = (await import("@careti/utils/brand-utils")).getCurrentBrandName().toLowerCase()
 	const primaryConfig = vscode.workspace.getConfiguration(brandNamespace)
 	const legacyConfig = vscode.workspace.getConfiguration("cline")
 	const enableCheckpoints = primaryConfig.get<boolean>("enableCheckpoints") ?? legacyConfig.get<boolean>("enableCheckpoints")

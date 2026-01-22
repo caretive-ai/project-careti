@@ -1,6 +1,6 @@
 import { StringRequest } from "@shared/proto/cline/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { FileServiceClient } from "@/services/grpc-client"
 

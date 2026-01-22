@@ -16,12 +16,12 @@ import (
 )
 
 type mockLiteLlmClient struct {
-	req  *caret.FetchLiteLlmModelsRequest
-	resp *caret.FetchLiteLlmModelsResponse
+	req  *careti.FetchLiteLlmModelsRequest
+	resp *careti.FetchLiteLlmModelsResponse
 	err  error
 }
 
-func (m *mockLiteLlmClient) FetchLiteLlmModels(ctx context.Context, in *caret.FetchLiteLlmModelsRequest) (*caret.FetchLiteLlmModelsResponse, error) {
+func (m *mockLiteLlmClient) FetchLiteLlmModels(ctx context.Context, in *careti.FetchLiteLlmModelsRequest) (*careti.FetchLiteLlmModelsResponse, error) {
 	m.req = in
 	return m.resp, m.err
 }
@@ -41,7 +41,7 @@ func newIPv4TestServer(t *testing.T, handler http.Handler) *httptest.Server {
 func TestFetchLiteLlmModelsSuccess(t *testing.T) {
 	ctx := context.Background()
 	mockClient := &mockLiteLlmClient{
-		resp: &caret.FetchLiteLlmModelsResponse{
+		resp: &careti.FetchLiteLlmModelsResponse{
 			Success: true,
 			Models:  []string{"m1", "m2"},
 		},
@@ -74,7 +74,7 @@ func TestFetchLiteLlmModelsSuccess(t *testing.T) {
 func TestFetchLiteLlmModelsErrorResponse(t *testing.T) {
 	ctx := context.Background()
 	mockClient := &mockLiteLlmClient{
-		resp: &caret.FetchLiteLlmModelsResponse{
+		resp: &careti.FetchLiteLlmModelsResponse{
 			Success:      false,
 			ErrorMessage: "invalid credentials",
 		},

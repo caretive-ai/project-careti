@@ -10,18 +10,18 @@ Caret의 지원 모델 리스트를 자동 생성하고 관련 문서를 업데�
 
 ## Script Location
 ```
-caret-scripts/build/generate-support-model-list.js
+careti-scripts/build/generate-support-model-list.js
 ```
 
 ## Command
 ```bash
-node caret-scripts/build/generate-support-model-list.js
+node careti-scripts/build/generate-support-model-list.js
 ```
 
 ## Output Files
 스크립트 실행 시 다음 파일들이 자동 생성됩니다:
-- `caret-docs/development/support-model-list.mdx` (한국어)
-- `caret-docs/development/support-model-list.en.mdx` (영어)
+- `careti-docs/development/support-model-list.mdx` (한국어)
+- `careti-docs/development/support-model-list.en.mdx` (영어)
 
 ## Data Source
 - **API 정의 파일**: `src/shared/api.ts`
@@ -33,7 +33,7 @@ node caret-scripts/build/generate-support-model-list.js
 
 ### 1. 스크립트 실행
 ```bash
-node caret-scripts/build/generate-support-model-list.js
+node careti-scripts/build/generate-support-model-list.js
 ```
 
 ### 2. 출력 확인
@@ -48,12 +48,12 @@ node caret-scripts/build/generate-support-model-list.js
 ### 3. README 파일 업데이트
 다음 파일들의 프로바이더/모델 개수를 업데이트해야 합니다:
 - `README.md`
-- `caret-docs/readme-i18n/README.ko.md`
-- `caret-docs/readme-i18n/README.ja.md`
-- `caret-docs/readme-i18n/README.zh-cn.md`
-- `caret-docs/readme-i18n/README.fr.md`
-- `caret-docs/readme-i18n/README.de.md`
-- `caret-docs/readme-i18n/README.ru.md`
+- `careti-docs/readme-i18n/README.ko.md`
+- `careti-docs/readme-i18n/README.ja.md`
+- `careti-docs/readme-i18n/README.zh-cn.md`
+- `careti-docs/readme-i18n/README.fr.md`
+- `careti-docs/readme-i18n/README.de.md`
+- `careti-docs/readme-i18n/README.ru.md`
 
 업데이트할 텍스트 패턴 (스크립트 출력 참조):
 - 영어: `{N} providers, {M} models`
@@ -74,12 +74,12 @@ node caret-scripts/build/generate-support-model-list.js
 ### 프로바이더 개수가 맞지 않을 때
 `extractModelData()` 함수의 ApiProvider 파싱 로직 확인:
 - `api.ts`의 ApiProvider 타입 정의가 여러 줄에 걸쳐 있는지 확인
-- 주석이나 `CARET MODIFICATION` 마커가 파싱을 방해하지 않는지 확인
+- 주석이나 `CARETI MODIFICATION` 마커가 파싱을 방해하지 않는지 확인
 
 ### 스크립트가 실행되지 않을 때
 ```bash
 # 직접 실행
-node caret-scripts/build/generate-support-model-list.js
+node careti-scripts/build/generate-support-model-list.js
 
 # 또는 npm 스크립트 등록 후
 npm run models:generate

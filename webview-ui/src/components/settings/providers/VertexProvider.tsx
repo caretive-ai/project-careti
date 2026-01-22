@@ -1,7 +1,7 @@
 import { vertexGlobalModels, vertexModels } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { VSCodeDropdown, VSCodeLink, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { DROPDOWN_Z_INDEX, DropdownContainer } from "../ApiOptions"
 import { DebouncedTextField } from "../common/DebouncedTextField"

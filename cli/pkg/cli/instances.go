@@ -265,7 +265,7 @@ func killInstanceProcess(ctx context.Context, registry *global.ClientRegistry, a
 	pid := int(processInfo.ProcessId)
 
 	// Kill the process
-	// CARET MODIFICATION: platform-safe process termination
+	// CARETI MODIFICATION: platform-safe process termination
 	if err := terminateProcess(pid); err != nil {
 		return killResult{address: address, pid: pid, err: err}
 	}

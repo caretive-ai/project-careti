@@ -1,5 +1,12 @@
 import { setTimeout as setTimeoutPromise } from "node:timers/promises"
-import { CaretGlobalManager } from "@caret/managers/CaretGlobalManager"
+// CARETI MODIFICATION: import finish-reason handler for GLM4.7 loop fix
+import { shouldEndLoopByFinishReason } from "@careti/core/api/transform/finish-reason"
+// CARETI MODIFICATION: use careti image registry/scope from careti-src
+import { ImageRegistry } from "@careti/core/task/images/ImageRegistry"
+import { ImageScopeManager } from "@careti/core/task/images/ImageScopeManager"
+import { CaretiGlobalManager } from "@careti/managers/CaretiGlobalManager"
+// CARETI MODIFICATION: import brand utils for dynamic brand name
+import { getCurrentBrandName } from "@careti/utils/brand-utils"
 import { ApiHandler, ApiProviderInfo, buildApiHandler } from "@core/api"
 import { ApiStream } from "@core/api/transform/stream"
 import { AssistantMessageContent, parseAssistantMessageV2 } from "@core/assistant-message"
@@ -9,22 +16,19 @@ import { getContextWindowInfo } from "@core/context/context-management/context-w
 import { FileContextTracker } from "@core/context/context-tracking/FileContextTracker"
 import { ModelContextTracker } from "@core/context/context-tracking/ModelContextTracker"
 import {
-	getGlobalClineRules,
-	refreshClineRulesToggles,
-} from "@core/context/instructions/user-instructions/cline-rules"
-import {
-	formatAgentsInitInstructions,
-	formatAgentsInitNotice,
-	getAgentsInitWorkflowInstructions,
-	getAgentsStandardStatus,
-	initializeAgentsContext,
+    formatAgentsInitInstructions,
+    formatAgentsInitNotice,
+    getAgentsInitWorkflowInstructions,
+    getAgentsStandardStatus,
+    initializeAgentsContext,
 } from "@core/context/instructions/user-instructions/agents-init"
+import { getGlobalClineRules, refreshClineRulesToggles } from "@core/context/instructions/user-instructions/cline-rules"
 import {
-	getLocalAgentsRules,
-	getLocalCaretRules,
-	refreshExternalRulesToggles,
+    getLocalAgentsRules,
+    getLocalCaretRules,
+    refreshExternalRulesToggles,
 } from "@core/context/instructions/user-instructions/external-rules"
-// CARET MODIFICATION: Skills system - on-demand agent instructions
+// CARETI MODIFICATION: Skills system - on-demand agent instructions
 import { discoverSkills, getAvailableSkills } from "@core/context/instructions/user-instructions/skills"
 import { sendPartialMessageEvent } from "@core/controller/ui/subscribeToPartialMessage"
 import { ClineIgnoreController } from "@core/ignore/ClineIgnoreController"
@@ -33,11 +37,11 @@ import { summarizeTask } from "@core/prompts/contextManagement"
 import { formatResponse } from "@core/prompts/responses"
 import { parseSlashCommands } from "@core/slash-commands"
 import {
-	ensureRulesDirectoryExists,
-	ensureTaskDirectoryExists,
-	GlobalFileNames,
-	getSavedApiConversationHistory,
-	getSavedClineMessages,
+    ensureRulesDirectoryExists,
+    ensureTaskDirectoryExists,
+    GlobalFileNames,
+    getSavedApiConversationHistory,
+    getSavedClineMessages,
 } from "@core/storage/disk"
 import { releaseTaskLock } from "@core/task/TaskLockUtils"
 import { isMultiRootEnabled } from "@core/workspace/multi-root-utils"
@@ -62,12 +66,12 @@ import { findLast, findLastIndex } from "@shared/array"
 import { combineApiRequests } from "@shared/combineApiRequests"
 import { combineCommandSequences } from "@shared/combineCommandSequences"
 import {
-	ClineApiReqCancelReason,
-	ClineApiReqInfo,
-	ClineAsk,
-	ClineMessage,
-	ClineSay,
-	COMMAND_CANCEL_TOKEN,
+    ClineApiReqCancelReason,
+    ClineApiReqInfo,
+    ClineAsk,
+    ClineMessage,
+    ClineSay,
+    COMMAND_CANCEL_TOKEN,
 } from "@shared/ExtensionMessage"
 import { HistoryItem } from "@shared/HistoryItem"
 import { DEFAULT_LANGUAGE_SETTINGS, getLanguageKey, LanguageDisplay } from "@shared/Languages"
@@ -84,13 +88,6 @@ import Mutex from "p-mutex"
 import pWaitFor from "p-wait-for"
 import * as path from "path"
 import { ulid } from "ulid"
-// CARET MODIFICATION: use caret image registry/scope from caret-src
-import { ImageRegistry } from "@caret/core/task/images/ImageRegistry"
-import { ImageScopeManager } from "@caret/core/task/images/ImageScopeManager"
-// CARET MODIFICATION: import finish-reason handler for GLM4.7 loop fix
-import { shouldEndLoopByFinishReason } from "@caret/core/api/transform/finish-reason"
-// CARET MODIFICATION: import brand utils for dynamic brand name
-import { getCurrentBrandName } from "@caret/utils/brand-utils"
 import * as vscode from "vscode"
 import { ToolUseHandler } from "@/core/api/transform/tool-use-handler"
 import type { SystemPromptContext } from "@/core/prompts/system-prompt"
@@ -100,14 +97,14 @@ import { isSubagentCommand, transformClineCommand } from "@/integrations/cli-sub
 import { ClineError, ClineErrorType, ErrorService } from "@/services/error"
 import { TerminalHangStage, TerminalUserInterventionAction, telemetryService } from "@/services/telemetry"
 import {
-	ClineAssistantContent,
-	ClineAssistantRedactedThinkingBlock,
-	ClineContent,
-	ClineImageContentBlock,
-	ClineMessageModelInfo,
-	ClineStorageMessage,
-	ClineToolResponseContent,
-	ClineUserContent,
+    ClineAssistantContent,
+    ClineAssistantRedactedThinkingBlock,
+    ClineContent,
+    ClineImageContentBlock,
+    ClineMessageModelInfo,
+    ClineStorageMessage,
+    ClineToolResponseContent,
+    ClineUserContent,
 } from "@/shared/messages/content"
 import { ShowMessageType } from "@/shared/proto/index.host"
 import { isClineCliInstalled, isCliSubagentContext } from "@/utils/cli-detector"
@@ -166,7 +163,7 @@ export class Task {
 
 	// ONE mutex for ALL state modifications to prevent race conditions
 	private stateMutex = new Mutex()
-	private askMutex = new Mutex() // CARET MODIFICATION: ask()는 동시에 1개만 대기하도록 직렬화해 ask 경합(ignored) 방지
+	private askMutex = new Mutex() // CARETI MODIFICATION: ask()는 동시에 1개만 대기하도록 직렬화해 ask 경합(ignored) 방지
 
 	/**
 	 * Execute function with exclusive lock on all task state
@@ -581,7 +578,7 @@ export class Task {
 		type: ClineAsk,
 		text?: string,
 		partial?: boolean,
-		operationId?: string, // CARET MODIFICATION: allow reusing tool message for approval (prevents duplicate tool cards)
+		operationId?: string, // CARETI MODIFICATION: allow reusing tool message for approval (prevents duplicate tool cards)
 	): Promise<{
 		response: ClineAskResponse
 		text?: string
@@ -594,10 +591,10 @@ export class Task {
 			if (this.taskState.abort && type !== "resume_task" && type !== "resume_completed_task") {
 				throw new Error("Cline instance aborted")
 			}
-			let askTs: number = Date.now() // CARET MODIFICATION: avoid TS "used before assigned" in operationId reuse paths
+			let askTs: number = Date.now() // CARETI MODIFICATION: avoid TS "used before assigned" in operationId reuse paths
 			let didReuseToolAskByOperationId = false
 
-			// CARET MODIFICATION: Reuse a single tool message row for approval + progress updates
+			// CARETI MODIFICATION: Reuse a single tool message row for approval + progress updates
 			// (prevents duplicate tool cards when tool params stream in, e.g. Gemini)
 			if (operationId && type === "tool" && partial === false) {
 				const clineMessages = this.messageStateHandler.getClineMessages()
@@ -728,7 +725,7 @@ export class Task {
 				await this.postStateToWebview()
 			}
 
-			this.taskState.lastAskTs = askTs // CARET MODIFICATION: say()로 lastMessageTs가 바뀌어도 현재 ask를 취소하지 않도록 분리
+			this.taskState.lastAskTs = askTs // CARETI MODIFICATION: say()로 lastMessageTs가 바뀌어도 현재 ask를 취소하지 않도록 분리
 			await pWaitFor(
 				() =>
 					this.taskState.askResponse !== undefined ||
@@ -768,7 +765,7 @@ export class Task {
 			this.taskState.askResponseImages = undefined
 			this.taskState.askResponseFiles = undefined
 
-			// CARET MODIFICATION: Convert tool approval ask back into a say message so tool progress updates reuse the same row.
+			// CARETI MODIFICATION: Convert tool approval ask back into a say message so tool progress updates reuse the same row.
 			if (operationId && type === "tool") {
 				try {
 					const clineMessages = this.messageStateHandler.getClineMessages()
@@ -841,7 +838,7 @@ export class Task {
 		images?: string[],
 		files?: string[],
 		partial?: boolean,
-		operationId?: string, // CARET MODIFICATION: operationId for reliable message updates
+		operationId?: string, // CARETI MODIFICATION: operationId for reliable message updates
 	): Promise<number | undefined> {
 		// Allow hook messages even when aborted to enable proper cleanup
 		if (this.taskState.abort && type !== "hook" && type !== "hook_output") {
@@ -854,7 +851,7 @@ export class Task {
 			modelId: providerInfo.model.id,
 		}
 
-		// CARET MODIFICATION: operationId-based message update for reliable tool UI updates
+		// CARETI MODIFICATION: operationId-based message update for reliable tool UI updates
 		// This prevents duplicate tool messages when handlePartialBlock and execute race
 		if (operationId) {
 			const clineMessages = this.messageStateHandler.getClineMessages()
@@ -981,7 +978,7 @@ export class Task {
 	}
 
 	async sayAndCreateMissingParamError(toolName: ClineDefaultTool, paramName: string, relPath?: string) {
-		// CARET MODIFICATION: use dynamic brand name instead of hardcoded "Cline"
+		// CARETI MODIFICATION: use dynamic brand name instead of hardcoded "Cline"
 		const brandName = getCurrentBrandName()
 		await this.say(
 			"error",
@@ -1255,7 +1252,7 @@ export class Task {
 
 	// Task lifecycle
 
-	// CARET MODIFICATION: 프로젝트 지표 파일 확인 (빈 폴더/비-프로젝트 폴더 감지)
+	// CARETI MODIFICATION: 프로젝트 지표 파일 확인 (빈 폴더/비-프로젝트 폴더 감지)
 	private async checkProjectIndicators(cwd: string): Promise<boolean> {
 		const fs = await import("fs/promises")
 		const path = await import("path")
@@ -1314,7 +1311,7 @@ export class Task {
 			return
 		}
 
-		// CARET MODIFICATION: 워크스페이스가 열리지 않았으면 init 프롬프트 건너뛰기
+		// CARETI MODIFICATION: 워크스페이스가 열리지 않았으면 init 프롬프트 건너뛰기
 		// VS Code에서 실제 폴더가 열려있는지 직접 확인 (데스크톱 fallback 방지)
 		try {
 			const workspacePaths = await HostProvider.workspace.getWorkspacePaths({})
@@ -1325,14 +1322,14 @@ export class Task {
 			return
 		}
 
-		// CARET MODIFICATION: 빈 폴더이거나 프로젝트가 아닌 폴더에서는 init 프롬프트 건너뛰기
+		// CARETI MODIFICATION: 빈 폴더이거나 프로젝트가 아닌 폴더에서는 init 프롬프트 건너뛰기
 		const hasProjectIndicator = await this.checkProjectIndicators(this.cwd)
 		if (!hasProjectIndicator) {
 			return
 		}
 
-		const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretGlobalManager.currentMode
-		if (modeSystem !== "caret") {
+		const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretiGlobalManager.currentMode
+		if (modeSystem !== "careti") {
 			return
 		}
 
@@ -1356,9 +1353,7 @@ export class Task {
 
 		const responseText = (text ?? "").trim()
 		const approved =
-			responseText.startsWith("초기화") ||
-			responseText.toLowerCase().startsWith("init") ||
-			responseText.startsWith("예")
+			responseText.startsWith("초기화") || responseText.toLowerCase().startsWith("init") || responseText.startsWith("예")
 
 		if (!approved) {
 			return
@@ -1374,7 +1369,7 @@ export class Task {
 		Logger.debug(`[AgentsInit] Workflow instructions loaded: ${initInstructions ? "yes" : "no"}`)
 		const formatted = formatAgentsInitInstructions(initInstructions)
 		if (formatted) {
-			// CARET MODIFICATION: Replace original task with init workflow to ensure AI executes it
+			// CARETI MODIFICATION: Replace original task with init workflow to ensure AI executes it
 			// Clear existing userContent and set workflow as the sole task
 			Logger.debug(`[AgentsInit] Replacing original task with init workflow`)
 			userContent.length = 0
@@ -2567,8 +2562,8 @@ export class Task {
 	 * Migrates the disableBrowserTool setting from VSCode configuration to browserSettings
 	 */
 	private async migrateDisableBrowserToolSetting(): Promise<void> {
-		// CARET MODIFICATION: read browser tool setting from brand namespace, fallback to cline
-		const brandNamespace = (await import("@caret/utils/brand-utils")).getCurrentBrandName().toLowerCase()
+		// CARETI MODIFICATION: read browser tool setting from brand namespace, fallback to cline
+		const brandNamespace = (await import("@careti/utils/brand-utils")).getCurrentBrandName().toLowerCase()
 		const primaryConfig = vscode.workspace.getConfiguration(brandNamespace)
 		const legacyConfig = vscode.workspace.getConfiguration("cline")
 		const disableBrowserTool =
@@ -2649,7 +2644,7 @@ export class Task {
 		const globalClineRulesFilePath = await ensureRulesDirectoryExists()
 		const globalClineRulesFileInstructions = await getGlobalClineRules(globalClineRulesFilePath, globalToggles)
 
-			// CARET MODIFICATION: Only load .agents/context (plus AGENTS.md)
+		// CARETI MODIFICATION: Only load .agents/context (plus AGENTS.md)
 		const localClineRulesFileInstructions = await getLocalCaretRules(this.cwd, caretLocalToggles)
 
 		const localAgentsRulesFileInstructions = await getLocalAgentsRules(this.cwd, agentsLocalToggles)
@@ -2677,45 +2672,44 @@ export class Task {
 			maxConsecutiveMistakes: this.stateManager.getGlobalSettingsKey("maxConsecutiveMistakes"),
 		})
 
-		const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretGlobalManager.currentMode
-		// CARET MODIFICATION: Disable subagents in Caret mode (v0.4.4)
+		const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretiGlobalManager.currentMode
+		// CARETI MODIFICATION: Disable subagents in Careti mode (v0.4.4)
 		const subagentsEnabled = this.stateManager.getGlobalSettingsKey("subagentsEnabled")
 		let isSubagentsEnabledAndCliInstalled = false
-		if (modeSystem !== "caret" && subagentsEnabled) {
+		if (modeSystem !== "careti" && subagentsEnabled) {
 			const cliInstalled = await isClineCliInstalled()
 			isSubagentsEnabledAndCliInstalled = subagentsEnabled && cliInstalled
 		}
 
-		// CARET MODIFICATION: Get tool settings from autoApprovalSettings
+		// CARETI MODIFICATION: Get tool settings from autoApprovalSettings
 		const autoApprovalSettings = this.stateManager.getGlobalSettingsKey("autoApprovalSettings")
 		const toolSettings = {
 			generateImages: autoApprovalSettings?.actions?.generateImages ?? true,
 			analyzeImages: autoApprovalSettings?.actions?.analyzeImages ?? true,
 		}
 
-		// CARET MODIFICATION: Skills system - discover and filter available skills
+		// CARETI MODIFICATION: Skills system - discover and filter available skills
 		const allSkills = await discoverSkills(this.cwd)
 		const resolvedSkills = getAvailableSkills(allSkills)
 		// Filter by toggle state
 		const globalSkillsToggles =
 			(this.stateManager.getGlobalSettingsKey("globalSkillsToggles") as Record<string, boolean>) ?? {}
-		const localSkillsToggles =
-			(this.stateManager.getWorkspaceStateKey("localSkillsToggles") as Record<string, boolean>) ?? {}
+		const localSkillsToggles = (this.stateManager.getWorkspaceStateKey("localSkillsToggles") as Record<string, boolean>) ?? {}
 		const availableSkills = resolvedSkills.filter((skill) => {
 			const toggles = skill.source === "global" ? globalSkillsToggles : localSkillsToggles
 			return toggles[skill.path] !== false
 		})
 
-		// CARET MODIFICATION: Check if workspace folder is actually open
+		// CARETI MODIFICATION: Check if workspace folder is actually open
 		const hasOpenWorkspace = (this.workspaceManager?.getRoots()?.length ?? 0) > 0
 
 		const promptContext: SystemPromptContext = {
 			cwd: this.cwd,
-			hasOpenWorkspace, // CARET MODIFICATION: Pass workspace open state
+			hasOpenWorkspace, // CARETI MODIFICATION: Pass workspace open state
 			ide,
 			providerInfo,
 			modeSystem,
-			toolSettings, // CARET MODIFICATION: Pass tool settings for image tools
+			toolSettings, // CARETI MODIFICATION: Pass tool settings for image tools
 			supportsBrowserUse,
 			mcpHub: this.mcpHub,
 			focusChainSettings: this.stateManager.getGlobalSettingsKey("focusChainSettings"),
@@ -2736,7 +2730,7 @@ export class Task {
 			isCliSubagent,
 			enableNativeToolCalls:
 				featureFlagsService.getNativeToolCallEnabled() && this.stateManager.getGlobalStateKey("nativeToolCallEnabled"),
-			skills: availableSkills, // CARET MODIFICATION: Skills system
+			skills: availableSkills, // CARETI MODIFICATION: Skills system
 		}
 
 		const { systemPrompt, tools } = await getSystemPrompt(promptContext)
@@ -2932,7 +2926,7 @@ export class Task {
 			throw new Error("Cline instance aborted")
 		}
 
-		// CARET MODIFICATION: Fixed race condition where complete tool blocks would bypass
+		// CARETI MODIFICATION: Fixed race condition where complete tool blocks would bypass
 		// approval flow when streaming ends quickly (especially with Upstage provider).
 		// Previously, complete tool blocks could ignore the lock and execute immediately,
 		// even when a partial block was waiting for user approval via ask().
@@ -3022,7 +3016,7 @@ export class Task {
 				break
 			}
 			case "tool_use":
-				// CARET MODIFICATION: Debug logging for tool execution timing
+				// CARETI MODIFICATION: Debug logging for tool execution timing
 				Logger.debug(
 					`[ToolExec-DEBUG] Starting tool execution: name=${block.name}, partial=${block.partial}, index=${this.taskState.currentStreamingContentIndex}`,
 				)
@@ -3037,7 +3031,7 @@ export class Task {
 		*/
 		this.taskState.presentAssistantMessageLocked = false // this needs to be placed here, if not then calling this.presentAssistantMessage below would fail (sometimes) since it's locked
 		// NOTE: when tool is rejected, iterator stream is interrupted and it waits for userMessageContentReady to be true. Future calls to present will skip execution since didRejectTool and iterate until contentIndex is set to message length and it sets userMessageContentReady to true itself (instead of preemptively doing it in iterator)
-		// CARET MODIFICATION: Removed didAlreadyUseTool from condition to fix race condition.
+		// CARETI MODIFICATION: Removed didAlreadyUseTool from condition to fix race condition.
 		// When a partial tool block's UI update finishes, didAlreadyUseTool may already be true
 		// (set by a concurrent complete block execution), causing incorrect userMessageContentReady=true.
 		// The didAlreadyUseTool flag should only be used in ToolExecutor to skip tool execution,
@@ -3047,7 +3041,7 @@ export class Task {
 			if (this.taskState.currentStreamingContentIndex === this.taskState.assistantMessageContent.length - 1) {
 				// its okay that we increment if !didCompleteReadingStream, it'll just return bc out of bounds and as streaming continues it will call presentAssistantMessage if a new block is ready. if streaming is finished then we set userMessageContentReady to true when out of bounds. This gracefully allows the stream to continue on and all potential content blocks be presented.
 				// last block is complete and it is finished executing
-				// CARET MODIFICATION: Debug logging for userMessageContentReady
+				// CARETI MODIFICATION: Debug logging for userMessageContentReady
 				Logger.debug(
 					`[ToolExec-DEBUG] Setting userMessageContentReady=true: index=${this.taskState.currentStreamingContentIndex}, total=${this.taskState.assistantMessageContent.length}`,
 				)
@@ -3101,7 +3095,7 @@ export class Task {
 
 		if (this.taskState.consecutiveMistakeCount >= this.stateManager.getGlobalSettingsKey("maxConsecutiveMistakes")) {
 			const autoApprovalSettings = this.stateManager.getGlobalSettingsKey("autoApprovalSettings")
-			// CARET MODIFICATION: use dynamic brand name
+			// CARETI MODIFICATION: use dynamic brand name
 			const brandName = getCurrentBrandName()
 			if (autoApprovalSettings.enableNotifications) {
 				showSystemNotification({
@@ -3473,7 +3467,7 @@ export class Task {
 
 			try {
 				for await (const chunk of stream) {
-					if (!chunk) continue // CARET MODIFICATION: Skip empty stream chunks to avoid runtime errors.
+					if (!chunk) continue // CARETI MODIFICATION: Skip empty stream chunks to avoid runtime errors.
 					switch (chunk.type) {
 						case "usage":
 							didReceiveUsageChunk = true
@@ -3572,7 +3566,7 @@ export class Task {
 
 							this.taskState.assistantMessageContent = parseAssistantMessageV2(assistantMessage)
 
-							// CARET MODIFICATION: Debug logging for tool parsing analysis
+							// CARETI MODIFICATION: Debug logging for tool parsing analysis
 							if (this.taskState.assistantMessageContent.length > prevLength) {
 								const newBlocks = this.taskState.assistantMessageContent.slice(prevLength)
 								Logger.debug(
@@ -3584,7 +3578,7 @@ export class Task {
 							this.presentAssistantMessage()
 							break
 						}
-						// CARET MODIFICATION: Handle finish_reason for GLM4.7 loop termination fix
+						// CARETI MODIFICATION: Handle finish_reason for GLM4.7 loop termination fix
 						case "finish": {
 							this.taskState.finishReason = chunk.reason
 							break
@@ -3648,7 +3642,7 @@ export class Task {
 			} catch (error) {
 				// abandoned happens when extension is no longer waiting for the cline instance to finish aborting (error is thrown here when any function in the for loop throws due to this.abort)
 				if (!this.taskState.abandoned) {
-					Logger.error(`[Task ${this.taskId}] Streaming failed`, error) // CARET MODIFICATION: Log stream failure details.
+					Logger.error(`[Task ${this.taskId}] Streaming failed`, error) // CARETI MODIFICATION: Log stream failure details.
 					const clineError = ErrorService.get().toClineError(error, this.api.getModel().id)
 					const errorMessage = clineError.serialize()
 					// Auto-retry for streaming failures (always enabled)
@@ -3733,7 +3727,7 @@ export class Task {
 
 			this.taskState.didCompleteReadingStream = true
 
-			// CARET MODIFICATION: Debug logging for stream completion
+			// CARETI MODIFICATION: Debug logging for stream completion
 			Logger.debug(
 				`[StreamEnd-DEBUG] Stream completed: assistantMessageContent.length=${this.taskState.assistantMessageContent.length}, userMessageContentReady=${this.taskState.userMessageContentReady}`,
 			)
@@ -3746,7 +3740,7 @@ export class Task {
 			})
 			// this.assistantMessageContent.forEach((e) => (e.partial = false)) // can't just do this bc a tool could be in the middle of executing ()
 			if (partialBlocks.length > 0) {
-				// CARET MODIFICATION: Debug logging for partial block finalization
+				// CARETI MODIFICATION: Debug logging for partial block finalization
 				Logger.debug(
 					`[StreamEnd-DEBUG] Finalizing ${partialBlocks.length} partial blocks: ${JSON.stringify(partialBlocks.map((b) => ({ type: b.type, name: (b as any).name })))}`,
 				)
@@ -3769,7 +3763,7 @@ export class Task {
 			// now add to apiconversationhistory
 			// need to save assistant responses to file before proceeding to tool use since user can exit at any moment and we wouldn't be able to save the assistant's response
 			let didEndLoop = false
-			// CARET MODIFICATION: Include reasoningMessage as valid response (GLM-4.7/Gemini thinking mode fix)
+			// CARETI MODIFICATION: Include reasoningMessage as valid response (GLM-4.7/Gemini thinking mode fix)
 			if (assistantMessage.length > 0 || this.useNativeToolCalls || reasoningMessage) {
 				const currentMode = this.stateManager.getGlobalSettingsKey("mode")
 				telemetryService.captureConversationTurnEvent(
@@ -3844,7 +3838,7 @@ export class Task {
 				// if the model did not tool use, then we need to tell it to either use a tool or attempt_completion
 				const didToolUse = this.taskState.assistantMessageContent.some((block) => block.type === "tool_use")
 
-				// CARET MODIFICATION: Detailed debug logging for tool use detection
+				// CARETI MODIFICATION: Detailed debug logging for tool use detection
 				Logger.debug(
 					`[ToolUse-DEBUG] didToolUse check: assistantMessageContent=${JSON.stringify(
 						this.taskState.assistantMessageContent.map((b) => ({
@@ -3856,25 +3850,31 @@ export class Task {
 					)}, didToolUse=${didToolUse}`,
 				)
 
-				// CARET MODIFICATION: Check finish_reason BEFORE sending noToolsUsed message
+				// CARETI MODIFICATION: Check finish_reason BEFORE sending noToolsUsed message
 				// This prevents auto-continuation when model naturally ends without tool use
 				// Instead of ending the loop, we show the followup input to allow natural conversation
-				const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretGlobalManager.currentMode
-				if (modeSystem === "caret" && !didToolUse) {
+				const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretiGlobalManager.currentMode
+				if (modeSystem === "careti" && !didToolUse) {
 					Logger.debug(
 						`[GLM4.7-DEBUG] Early finish check: finishReason=${this.taskState.finishReason}, didToolUse=${didToolUse}`,
 					)
-					if (shouldEndLoopByFinishReason(this.taskState.finishReason, didToolUse, this.taskState.consecutiveMistakeCount)) {
+					if (
+						shouldEndLoopByFinishReason(
+							this.taskState.finishReason,
+							didToolUse,
+							this.taskState.consecutiveMistakeCount,
+						)
+					) {
 						Logger.debug("[GLM4.7-DEBUG] Natural conversation end detected, showing followup input")
 						this.taskState.finishReason = undefined
 
-						// CARET MODIFICATION: Show followup input for natural conversation continuation
+						// CARETI MODIFICATION: Show followup input for natural conversation continuation
 						// This matches how Gemini handles conversations with the prompt exception
-						const { text: userResponse, images, files } = await this.ask(
-							"followup",
-							JSON.stringify({ question: "", options: [] }),
-							false,
-						)
+						const {
+							text: userResponse,
+							images,
+							files,
+						} = await this.ask("followup", JSON.stringify({ question: "", options: [] }), false)
 
 						// If user provided a response, continue the conversation
 						if (userResponse || images?.length || files?.length) {
@@ -4032,19 +4032,21 @@ export class Task {
 				return true
 			}
 
-			// CARET MODIFICATION: Check finish_reason for GLM4.7 loop termination fix
-			// Only apply in Caret mode to avoid affecting Cline compatibility
-			const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretGlobalManager.currentMode
-			if (modeSystem === "caret") {
+			// CARETI MODIFICATION: Check finish_reason for GLM4.7 loop termination fix
+			// Only apply in Careti mode to avoid affecting Cline compatibility
+			const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretiGlobalManager.currentMode
+			if (modeSystem === "careti") {
 				const didToolUse = this.taskState.assistantMessageContent.some((block) => block.type === "tool_use")
 				const toolTypes = this.taskState.assistantMessageContent
 					.filter((block) => block.type === "tool_use")
 					.map((block: any) => block.name || "unknown")
-				// CARET DEBUG: Log finish_reason check
+				// CARETI DEBUG: Log finish_reason check
 				Logger.debug(
 					`[GLM4.7-DEBUG] finish_reason check: finishReason=${this.taskState.finishReason}, didToolUse=${didToolUse}, tools=[${toolTypes.join(",")}], consecutiveMistakeCount=${this.taskState.consecutiveMistakeCount}`,
 				)
-				if (shouldEndLoopByFinishReason(this.taskState.finishReason, didToolUse, this.taskState.consecutiveMistakeCount)) {
+				if (
+					shouldEndLoopByFinishReason(this.taskState.finishReason, didToolUse, this.taskState.consecutiveMistakeCount)
+				) {
 					Logger.debug("[GLM4.7-DEBUG] Loop ending by finish_reason")
 					return true
 				}

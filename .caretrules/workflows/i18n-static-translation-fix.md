@@ -49,14 +49,14 @@ export const getSettingsTabs = () => [
 
 ### B. Handle Language Reactivity in the Component
 ```typescript
-// Apply CARET MODIFICATION pattern
+// Apply CARETI MODIFICATION pattern
 import { useCaretI18nContext } from "@/caret/context/CaretI18nContext"
 
 function Component() {
-    // CARET MODIFICATION: Use i18n context to detect language changes
+    // CARETI MODIFICATION: Use i18n context to detect language changes
     const { language } = useCaretI18nContext()
     
-    // CARET MODIFICATION: Use dynamic function with language dependency for i18n updates
+    // CARETI MODIFICATION: Use dynamic function with language dependency for i18n updates
     const settingsTabs = useMemo(() => getSettingsTabs(), [language])
     
     // Use settingsTabs instead of the old SETTINGS_TABS
@@ -94,7 +94,7 @@ npm run build:webview
 - [ ] Add `useCaretI18nContext` import
 - [ ] Handle language dependency with `useMemo`
 - [ ] Update all references to the dynamic variable
-- [ ] Add `CARET MODIFICATION` comments
+- [ ] Add `CARETI MODIFICATION` comments
 
 ### Test Items
 - [ ] TypeScript compilation succeeds
@@ -123,7 +123,7 @@ npm run build:webview
 2. ✅ UI updates immediately on language change  
 3. ✅ No TypeScript compilation errors
 4. ✅ Existing functionality is fully preserved
-5. ✅ `CARET MODIFICATION` comments are complete
+5. ✅ `CARETI MODIFICATION` comments are complete
 
 ---
 **Workflow Version**: v1.1 (2025-09-06)

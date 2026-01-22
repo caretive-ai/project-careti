@@ -1,0 +1,40 @@
+{
+	"backup_protocol": {
+		"core_principle": "Never modify Cline original files without CARETI MODIFICATION comment (no .cline backups; use git)",
+		"protected_dirs": [
+			"src/",
+			"webview-ui/",
+			"proto/",
+			"scripts/",
+			"evals/",
+			"docs/",
+			"locales/",
+			"configs/"
+		],
+		"backup_format": "deprecated",
+		"pre_checks": [
+			"Is this a Cline original file?",
+			"Ensure git working tree is clean: 'git status'",
+			"Confirm recovery path: 'git checkout -- filename.ext' (or 'git restore filename.ext')"
+		],
+		"backup_commands": [],
+		"modification_rules": {
+			"comment": "// CARETI MODIFICATION: [clear description]",
+			"max_lines": 3,
+			"replacement": "complete, never comment out old code",
+			"verification": "npm run compile after change",
+			"new_file_header": "// CARETI MODIFICATION: (required for new files in protected dirs)"
+		},
+		"verification_steps": [
+			"CARETI MODIFICATION comment present",
+			"Code compiles successfully",
+			"Modification is minimal and focused"
+		],
+		"recovery": "git checkout -- filename.ext",
+		"related_workflows": [
+			"/modification-levels",
+			"/comment-protocol",
+			"/verification-steps"
+		]
+	}
+}

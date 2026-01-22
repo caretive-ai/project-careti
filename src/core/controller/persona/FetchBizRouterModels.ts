@@ -6,15 +6,15 @@ import axios from "axios"
 /**
  * Fetches available models from BizRouter /api/v1/models endpoint
  * This endpoint returns only models assigned to the provided API key
- * CARET MODIFICATION: Uses hardcoded URL https://bizrouter.ai/api/v1
+ * CARETI MODIFICATION: Uses hardcoded URL https://bizrouter.ai/api/v1
  * @param controller The controller instance
  * @param request The request containing API key
  * @returns Response with model names or error
  */
 export async function fetchBizRouterModels(
 	_controller: Controller,
-	request: proto.caret.FetchBizRouterModelsRequest,
-): Promise<proto.caret.FetchBizRouterModelsResponse> {
+	request: proto.careti.FetchBizRouterModelsRequest,
+): Promise<proto.careti.FetchBizRouterModelsResponse> {
 	const BIZROUTER_BASE_URL = "https://bizrouter.ai/api/v1"
 
 	try {
@@ -23,7 +23,7 @@ export async function fetchBizRouterModels(
 		// Validate API key
 		if (!request.apiKey || request.apiKey.trim() === "") {
 			Logger.warn("[CaretSystemService] ⚠️ API key is required for BizRouter")
-			return proto.caret.FetchBizRouterModelsResponse.create({
+			return proto.careti.FetchBizRouterModelsResponse.create({
 				success: false,
 				models: [],
 				errorMessage: "API key is required",
@@ -45,7 +45,7 @@ export async function fetchBizRouterModels(
 			timeout: 10000, // 10 second timeout
 		})
 
-		// CARET MODIFICATION: BizRouter returns { models: [...], exchange_rate: number }
+		// CARETI MODIFICATION: BizRouter returns { models: [...], exchange_rate: number }
 		const modelsData = response.data?.models || []
 		Logger.debug(`[CaretSystemService] 📋 Models response received with ${modelsData.length} models`)
 
@@ -59,7 +59,7 @@ export async function fetchBizRouterModels(
 			`[CaretSystemService] ✅ Successfully fetched ${modelNames.length} BizRouter models: ${modelNames.join(", ")}`,
 		)
 
-		return proto.caret.FetchBizRouterModelsResponse.create({
+		return proto.careti.FetchBizRouterModelsResponse.create({
 			success: true,
 			models: modelNames,
 		})
@@ -67,7 +67,7 @@ export async function fetchBizRouterModels(
 		const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
 		Logger.error(`[CaretSystemService] ❌ Failed to fetch BizRouter models: ${errorMessage}`)
 
-		return proto.caret.FetchBizRouterModelsResponse.create({
+		return proto.careti.FetchBizRouterModelsResponse.create({
 			success: false,
 			models: [],
 			errorMessage: `Failed to fetch models: ${errorMessage}`,

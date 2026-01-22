@@ -74,9 +74,9 @@ export async function isClineCliInstalled(): Promise<boolean> {
 	return checkCliInstalled("cline", "cline")
 }
 
-// CARET MODIFICATION: Caret CLI detection (Phase D-2)
+// CARETI MODIFICATION: Careti CLI detection (Phase D-2)
 export async function isCaretCliInstalled(): Promise<boolean> {
-	return checkCliInstalled("caret", "caret")
+	return checkCliInstalled("careti", "careti")
 }
 
 /**

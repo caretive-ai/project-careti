@@ -12,10 +12,10 @@ import { Controller } from ".."
  */
 export async function installClineCli(controller: Controller, _request: EmptyRequest): Promise<Empty> {
 	const modeSystem = controller.stateManager.getGlobalStateKey("caretModeSystem") || "cline"
-	// CARET MODIFICATION: install Caret CLI when caret mode is active
-	const isCaretMode = modeSystem === "caret"
-	const installCommand = isCaretMode ? "npm install -g @caretive/caret-cli" : "npm install -g cline"
-	const cliLabel = isCaretMode ? "Caret CLI" : "Cline CLI"
+	// CARETI MODIFICATION: install Careti CLI when careti mode is active
+	const isCaretMode = modeSystem === "careti"
+	const installCommand = isCaretMode ? "npm install -g @caretive/careti-cli" : "npm install -g cline"
+	const cliLabel = isCaretMode ? "Careti CLI" : "Cline CLI"
 
 	try {
 		// Use the HostProvider to execute the command in a terminal

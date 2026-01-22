@@ -80,4 +80,4 @@ Helper functions, utilities (created during refactor, not starting points)
 See `.agents/workflows/testing-work.md`
 
 **📖 For Korean developer documentation:**
-See `caret-docs/development/testing-guide.md`
+See `careti-docs/development/testing-guide.md`

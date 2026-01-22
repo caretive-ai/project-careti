@@ -7,7 +7,7 @@ You are following the 3-level modification strategy for Caret development.
 **Always prefer higher levels (L1 > L2 > L3). Lower levels require stronger justification.**
 
 ## Level 1: Independent Modules (Preferred)
-**Location**: `caret-src/`, `caret-docs/`
+**Location**: `careti-src/`, `careti-docs/`
 **Freedom**: Complete implementation freedom
 **Requirements**: None (no backup, no comments needed)
 **Use Cases**:
@@ -17,7 +17,7 @@ You are following the 3-level modification strategy for Caret development.
 - Independent services
 
 ```typescript
-// Example: caret-src/services/persona-service.ts
+// Example: careti-src/services/persona-service.ts
 export class PersonaService {
   // Complete freedom to implement
 }
@@ -26,7 +26,7 @@ export class PersonaService {
 ## Level 2: Conditional Integration (Careful)
 **Location**: Cline files (`src/`, `webview-ui/`, `proto/`, `scripts/`)
 **Requirements**: 
-- **Mandatory comment**: `// CARET MODIFICATION: [description]`
+- **Mandatory comment**: `// CARETI MODIFICATION: [description]`
 - **Minimal changes**: 1-3 lines maximum per file
 - **Complete replacement**: Never comment out existing code
 - **Verification required**: Must pass all tests
@@ -40,7 +40,7 @@ export class PersonaService {
 ```typescript
 // Example: src/extension.ts
 export function activate(context: vscode.ExtensionContext) {
-  // CARET MODIFICATION: Initialize Caret wrapper
+  // CARETI MODIFICATION: Initialize Caret wrapper
   const caretWrapper = new CaretProviderWrapper(context);
   // ... rest of Cline code unchanged
 }
@@ -60,7 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
 ## Decision Tree
 ```
 New Feature Needed
-├─ Can it be L1 independent? → Use caret-src/
+├─ Can it be L1 independent? → Use careti-src/
 ├─ Must integrate with Cline?
 │  ├─ Can be 1-3 lines? → L2 with comment
 │  └─ Requires major changes → L3 with full docs

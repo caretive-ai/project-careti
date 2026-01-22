@@ -11,7 +11,7 @@ export async function executeCommandInTerminal(
 	request: ExecuteCommandInTerminalRequest,
 ): Promise<ExecuteCommandInTerminalResponse> {
 	try {
-		// CARET MODIFICATION: Align terminal branding with current Caret skin
+		// CARETI MODIFICATION: Align terminal branding with current Careti skin
 		const branding = TerminalRegistry.getTerminalBranding()
 		// Create terminal with fixed options
 		const terminalOptions: vscode.TerminalOptions = {

@@ -1,11 +1,11 @@
 import { Accordion, AccordionItem } from "@heroui/react"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { CSSProperties, memo } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { getAsVar, VSC_DESCRIPTION_FOREGROUND, VSC_INACTIVE_SELECTION_BACKGROUND } from "@/utils/vscStyles"
 
 interface AnnouncementProps {
-	version: string // CARET MODIFICATION: Accept version from parent (AboutSection)
+	version: string // CARETI MODIFICATION: Accept version from parent (AboutSection)
 	hideAnnouncement: () => void
 	showCloseButton?: boolean
 }

@@ -35,7 +35,7 @@ TDD 통합 우선 접근법을 위한 포괄적인 테스팅 가이드입니다.
 
 | 테스트 유형 | 위치 |
 |------------|------|
-| 백엔드 유닛 테스트 | `src/**/__tests__/*.ts`, `caret-src/core/task/tools/__tests__/*.ts` |
+| 백엔드 유닛 테스트 | `src/**/__tests__/*.ts`, `careti-src/core/task/tools/__tests__/*.ts` |
 | 통합 테스트 | `src/test/**` |
 | 웹뷰 테스트 | `webview-ui/src/**` |
 

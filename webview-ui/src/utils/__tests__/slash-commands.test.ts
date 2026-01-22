@@ -1,4 +1,4 @@
-// CARET MODIFICATION: TDD 회귀 테스트 - 슬래시 커맨드(/)를 메시지 어디서든 제안/삽입해야 함
+// CARETI MODIFICATION: TDD 회귀 테스트 - 슬래시 커맨드(/)를 메시지 어디서든 제안/삽입해야 함
 
 import { describe, expect, it } from "vitest"
 import { insertSlashCommand, removeSlashCommand, shouldShowSlashCommandsMenu } from "../slash-commands"

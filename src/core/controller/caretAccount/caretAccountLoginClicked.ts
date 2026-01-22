@@ -1,5 +1,5 @@
 import { EmptyRequest, String } from "@shared/proto/cline/common"
-import { CaretAuthService } from "@caret/services/auth/CaretAuthService"
+import { CaretAuthService } from "@careti/services/auth/CaretAuthService"
 import { Controller } from "../index"
 
 /**

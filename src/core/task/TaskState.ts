@@ -3,8 +3,8 @@ import { AssistantMessageContent } from "@core/assistant-message"
 import type { ClineContent } from "@shared/messages/content"
 import { ClineAskResponse } from "@shared/WebviewMessage"
 import type { HookExecution } from "./types/HookExecution"
-// CARET MODIFICATION: use caret image scope types from caret-src
-import type { ImageScopeResult } from "@caret/core/task/images/ImageScopeResolver"
+// CARETI MODIFICATION: use careti image scope types from careti-src
+import type { ImageScopeResult } from "@careti/core/task/images/ImageScopeResolver"
 
 export class TaskState {
 	// Streaming flags
@@ -30,7 +30,7 @@ export class TaskState {
 	askResponseImages?: string[]
 	askResponseFiles?: string[]
 	lastMessageTs?: number
-	lastAskTs?: number // CARET MODIFICATION: ask 대기 취소 판정을 say() 갱신과 분리해 동시성 레이스를 완화
+	lastAskTs?: number // CARETI MODIFICATION: ask 대기 취소 판정을 say() 갱신과 분리해 동시성 레이스를 완화
 
 	// Plan mode specific state
 	isAwaitingPlanResponse = false
@@ -79,6 +79,6 @@ export class TaskState {
 	// Image scope management
 	imageScope?: ImageScopeResult
 
-	// CARET MODIFICATION: Store finish_reason for GLM4.7 loop termination fix
+	// CARETI MODIFICATION: Store finish_reason for GLM4.7 loop termination fix
 	finishReason?: string
 }

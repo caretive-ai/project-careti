@@ -355,7 +355,7 @@ func (m *InputModel) View() string {
 		modeStyle = modeStyle.Foreground(blue)
 	}
 
-	// CARET MODIFICATION: use plan/act labels for user-facing mode indicator
+	// CARETI MODIFICATION: use plan/act labels for user-facing mode indicator
 	modeIndicator := modeStyle.Render(fmt.Sprintf("[%s mode]", m.currentMode))
 	titleText := m.styles.title.Render(m.title)
 	fullTitle := fmt.Sprintf("%s %s", modeIndicator, titleText)

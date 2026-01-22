@@ -1,5 +1,5 @@
-// CARET MODIFICATION: Skills system - on-demand agent instructions
-// Ported from Cline v3.51.0 with Caret-specific path structure
+// CARETI MODIFICATION: Skills system - on-demand agent instructions
+// Ported from Cline v3.51.0 with Careti-specific path structure
 
 import { ensureSkillsDirectoryExists, GlobalFileNames } from "@core/storage/disk"
 import type { SkillContent, SkillMetadata } from "@shared/skills"
@@ -97,15 +97,15 @@ async function loadSkillMetadata(
  * Returns skills in order: project skills first, then global skills.
  * Global skills take precedence over project skills with the same name.
  *
- * CARET MODIFICATION: Uses .agents/skills path structure
+ * CARETI MODIFICATION: Uses .agents/skills path structure
  */
 export async function discoverSkills(cwd: string): Promise<SkillMetadata[]> {
 	const skills: SkillMetadata[] = []
 
-	// Get global skills directory (~/Documents/Caret/Skills)
+	// Get global skills directory (~/Documents/Careti/Skills)
 	const globalSkillsDir = await ensureSkillsDirectoryExists()
 
-	// CARET MODIFICATION: Project skills directory (.agents/skills)
+	// CARETI MODIFICATION: Project skills directory (.agents/skills)
 	const projectSkillsDir = path.join(cwd, GlobalFileNames.skillsDir)
 
 	// Load project skills first (lower priority)

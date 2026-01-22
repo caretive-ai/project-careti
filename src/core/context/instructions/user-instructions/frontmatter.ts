@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Shared YAML frontmatter parsing utility
+// CARETI MODIFICATION: Shared YAML frontmatter parsing utility
 // Ported from cline 3.51.0 for enhanced frontmatter support
 
 import * as yaml from "js-yaml"

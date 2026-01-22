@@ -38,16 +38,16 @@
 		"cli"
 	],
 	"author": {
-		"name": "Caret Team"
+		"name": "Careti Team"
 	},
 	"license": "Apache-2.0",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/aicoding-caret/caret"
+		"url": "https://github.com/caretive-ai/project-careti"
 	},
-	"homepage": "https://caret.team",
+	"homepage": "https://careti.ai",
 	"bugs": {
-		"url": "https://github.com/aicoding-caret/caret/issues"
+		"url": "https://github.com/caretive-ai/project-careti/issues"
 	},
 	"dependencies": {
 		"@grpc/grpc-js": "^1.13.3",

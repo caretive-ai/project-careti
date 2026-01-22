@@ -15,7 +15,7 @@ export async function openWalkthrough(_controller: Controller, _request: EmptyRe
 	try {
 		await vscode.commands.executeCommand(
 			"workbench.action.openWalkthrough",
-			// CARET MODIFICATION: Caret 확장에 맞는 walkthrough id로 열기
+			// CARETI MODIFICATION: Careti 확장에 맞는 walkthrough id로 열기
 			`${ExtensionRegistryInfo.id}#CaretWalkthrough`,
 		)
 		telemetryService.captureButtonClick("webview_openWalkthrough")

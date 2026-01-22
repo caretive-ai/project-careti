@@ -10,7 +10,7 @@ Cline 업스트림과의 병합 전략입니다.
 3. **Level 3 (직접 수정)**: 충돌 가능성 높음, 주의 필요
 
 ### 충돌 최소화
-- `// CARET MODIFICATION:` 주석으로 변경 영역 명확화
+- `// CARETI MODIFICATION:` 주석으로 변경 영역 명확화
 - 최소 변경 원칙 (1-3줄)
 - 기능 플래그 사용으로 조건부 활성화
 
@@ -39,7 +39,7 @@ git merge upstream/main
 
 ### 3. 충돌 해결
 충돌 발생 시:
-1. `// CARET MODIFICATION:` 주석 확인
+1. `// CARETI MODIFICATION:` 주석 확인
 2. Caret 기능 유지 우선
 3. 업스트림 변경과 조화롭게 통합
 
@@ -73,7 +73,7 @@ npm run watch
 ### 일반 충돌
 ```
 <<<<<<< HEAD
-// CARET MODIFICATION: Our feature
+// CARETI MODIFICATION: Our feature
 caretFeature();
 =======
 upstreamCode();
@@ -82,7 +82,7 @@ upstreamCode();
 
 해결:
 ```typescript
-// CARET MODIFICATION: Our feature
+// CARETI MODIFICATION: Our feature
 if (caretMode) {
   caretFeature();
 }
@@ -91,7 +91,7 @@ upstreamCode();
 
 ### 타입 정의 충돌
 - 기존 타입 확장 선호
-- 새 타입 정의는 `caret-src/types/`에 배치
+- 새 타입 정의는 `careti-src/types/`에 배치
 
 ### 의존성 충돌
 - `package.json` 변경 시 주의

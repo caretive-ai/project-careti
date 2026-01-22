@@ -210,7 +210,7 @@ export const createRuleFile = async (isGlobal: boolean, filename: string, cwd: s
 				filePath = path.join(globalClineRulesFilePath, filename)
 			}
 		} else {
-			// CARET MODIFICATION: use standard agents context directory (e.g., .agents/context)
+			// CARETI MODIFICATION: use standard agents context directory (e.g., .agents/context)
 			const localCaretRulesFilePath = path.resolve(cwd, GlobalFileNames.caretRules)
 
 			const hasError = await ensureLocalClineDirExists(localCaretRulesFilePath, "default-rules.md")
@@ -232,7 +232,7 @@ export const createRuleFile = async (isGlobal: boolean, filename: string, cwd: s
 
 				filePath = path.join(localWorkflowsFilePath, filename)
 			} else {
-				// caret rules file creation (brand-aware)
+				// careti rules file creation (brand-aware)
 				filePath = path.join(localCaretRulesFilePath, filename)
 			}
 		}

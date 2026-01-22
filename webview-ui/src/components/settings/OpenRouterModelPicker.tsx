@@ -7,7 +7,7 @@ import React, { KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from
 import { useRemark } from "react-remark"
 import { useMount } from "react-use"
 import styled from "styled-components"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "@/services/grpc-client"
@@ -15,7 +15,7 @@ import { highlight } from "../history/HistoryView"
 import { ContextWindowSwitcher } from "./common/ContextWindowSwitcher"
 import { ModelInfoView } from "./common/ModelInfoView"
 import FeaturedModelCard from "./FeaturedModelCard"
-// CARET MODIFICATION: OpenRouter Featured 모델 목록을 분리 파일에서 로드해 테스트 가능/재사용성 확보 (R-3450-01)
+// CARETI MODIFICATION: OpenRouter Featured 모델 목록을 분리 파일에서 로드해 테스트 가능/재사용성 확보 (R-3450-01)
 import { openRouterFeaturedModels } from "./openrouter-featured-models"
 import ThinkingBudgetSlider from "./ThinkingBudgetSlider"
 import { getModeSpecificFields, normalizeApiConfiguration } from "./utils/providerUtils"

@@ -1,4 +1,4 @@
-// CARET MODIFICATION: TDD 회귀 테스트 - 신규 모델 구성(Gemini 3 Flash Preview, GPT-5.2) 존재 보장
+// CARETI MODIFICATION: TDD 회귀 테스트 - 신규 모델 구성(Gemini 3 Flash Preview, GPT-5.2) 존재 보장
 
 import { expect } from "chai"
 import { describe, it } from "mocha"

@@ -1,12 +1,12 @@
+// CARETI MODIFICATION: use careti image id helper
+import { createImageId } from "@careti/shared/images/image-id"
 import { cn } from "@heroui/react"
-// CARET MODIFICATION: use caret image id helper
-import { createImageId } from "@caret/shared/images/image-id"
 import { StringRequest } from "@shared/proto/cline/common"
 import React, { memo, useLayoutEffect, useRef, useState } from "react"
 import { useWindowSize } from "react-use"
-import { t } from "@/caret/utils/i18n"
-// CARET MODIFICATION: use CaretWebviewLogger for webview logs
-import WebviewLogger from "@/caret/utils/CaretWebviewLogger"
+// CARETI MODIFICATION: use CaretWebviewLogger for webview logs
+import WebviewLogger from "@/careti/utils/CaretWebviewLogger"
+import { t } from "@/careti/utils/i18n"
 import { FileServiceClient } from "@/services/grpc-client"
 
 interface ThumbnailsProps {

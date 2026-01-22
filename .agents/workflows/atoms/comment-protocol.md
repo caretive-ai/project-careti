@@ -1,23 +1,23 @@
 You are following the comment protocol for tracking Cline file modifications.
 
 <detailed_sequence_of_steps>
-# Comment Protocol - CARET MODIFICATION Tracking
+# Comment Protocol - CARETI MODIFICATION Tracking
 
 ## Core Principle
 **Every Cline original file modification must be clearly marked and documented**
 
 ## Comment Format
-**Required format**: `// CARET MODIFICATION: [clear description]`
+**Required format**: `// CARETI MODIFICATION: [clear description]`
 
 ### Good Examples:
 ```typescript
-// CARET MODIFICATION: Initialize Caret wrapper for persona system
+// CARETI MODIFICATION: Initialize Caret wrapper for persona system
 const caretWrapper = new CaretProviderWrapper(context, clineProvider);
 
-// CARET MODIFICATION: Add branding toggle for dynamic brand switching  
+// CARETI MODIFICATION: Add branding toggle for dynamic brand switching  
 const brandName = getBrandName();
 
-// CARET MODIFICATION: Integrate i18n message filtering
+// CARETI MODIFICATION: Integrate i18n message filtering
 const filteredMessage = filterBackendMessage(originalMessage);
 ```
 
@@ -34,7 +34,7 @@ const filteredMessage = filterBackendMessage(originalMessage);
 ### Single Line Modifications:
 ```typescript
 export function initialize(context: vscode.ExtensionContext) {
-  // CARET MODIFICATION: Add Caret provider initialization
+  // CARETI MODIFICATION: Add Caret provider initialization
   const caretProvider = new CaretProvider(context);
   return originalInitialize(context);
 }
@@ -44,7 +44,7 @@ export function initialize(context: vscode.ExtensionContext) {
 ```typescript
 export class MessageProcessor {
   process(message: string): string {
-    // CARET MODIFICATION: Apply backend message filtering and branding
+    // CARETI MODIFICATION: Apply backend message filtering and branding
     const filteredMessage = applyBackendFilter(message);
     const brandedMessage = applyBrandReplacement(filteredMessage);
     return brandedMessage;
@@ -55,7 +55,7 @@ export class MessageProcessor {
 ### Block Comments for Complex Changes:
 ```typescript
 /*
- * CARET MODIFICATION: Integrate persona-aware message processing
+ * CARETI MODIFICATION: Integrate persona-aware message processing
  * - Added persona context retrieval
  * - Modified message formatting based on selected persona
  * - Maintained backward compatibility with original flow
@@ -71,38 +71,38 @@ export class MessageProcessor {
 
 ### Good Descriptions:
 ```typescript
-// CARET MODIFICATION: Enable dynamic branding for multi-tenant support
-// CARET MODIFICATION: Add TDD integration test runner for caret-src tests
-// CARET MODIFICATION: Implement persona context in system prompt generation
+// CARETI MODIFICATION: Enable dynamic branding for multi-tenant support
+// CARETI MODIFICATION: Add TDD integration test runner for careti-src tests
+// CARETI MODIFICATION: Implement persona context in system prompt generation
 ```
 
 ### Bad Descriptions:
 ```typescript
-❌ // CARET MODIFICATION: Fixed bug
-❌ // CARET MODIFICATION: Added feature  
-❌ // CARET MODIFICATION: Updated code
+❌ // CARETI MODIFICATION: Fixed bug
+❌ // CARETI MODIFICATION: Added feature  
+❌ // CARETI MODIFICATION: Updated code
 ```
 
 ## Tracking Integration
 
 ### With Modification Protocol:
 1. Verify modification approach
-2. Add CARET MODIFICATION comment
+2. Add CARETI MODIFICATION comment
 3. Make minimal change
 4. Verify functionality
 
 ### With Version Control:
 ```bash
-git log --grep="CARET MODIFICATION" --oneline
+git log --grep="CARETI MODIFICATION" --oneline
 # Shows all Caret modifications across history
 ```
 
 ## Maintenance Guidelines
 
 ### When Updating Modifications:
-- Keep original CARET MODIFICATION comment
+- Keep original CARETI MODIFICATION comment
 - Add new timestamp or version if significant change
-- Never remove CARET MODIFICATION markers
+- Never remove CARETI MODIFICATION markers
 
 ### When Removing Modifications:
 - Remove code AND comment together

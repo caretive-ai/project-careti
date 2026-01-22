@@ -257,7 +257,7 @@ export function normalizeApiConfiguration(
 				selectedModelId: bizRouterModelId || "",
 				selectedModelInfo: bizRouterModelInfo || bizRouterModelInfoSaneDefaults,
 			}
-		case "caret":
+		case "careti":
 			const caretModelId =
 				currentMode === "plan" ? apiConfiguration?.planModeCaretModelId : apiConfiguration?.actModeCaretModelId
 			const caretModelInfo =
@@ -332,7 +332,7 @@ export function normalizeApiConfiguration(
 				selectedModelId: huaweiCloudMaasModelId || huaweiCloudMaasDefaultModelId,
 				selectedModelInfo: huaweiCloudMaasModelInfo || huaweiCloudMaasModels[huaweiCloudMaasDefaultModelId],
 			}
-		// CARET MODIFICATION: Add Upstage model selection
+		// CARETI MODIFICATION: Add Upstage model selection
 		case "upstage":
 			const upstageModelId =
 				currentMode === "plan" ? apiConfiguration?.planModeUpstageModelId : apiConfiguration?.actModeUpstageModelId
@@ -345,7 +345,7 @@ export function normalizeApiConfiguration(
 				selectedModelId: upstageModelId || upstageDefaultModelId,
 				selectedModelInfo: upstageModelInfo || upstageModels[upstageDefaultModelId],
 			}
-		// CARET MODIFICATION: Add Naver Cloud model selection
+		// CARETI MODIFICATION: Add Naver Cloud model selection
 		case "naver-cloud":
 			const naverCloudModelId =
 				currentMode === "plan" ? apiConfiguration?.planModeNaverCloudModelId : apiConfiguration?.actModeNaverCloudModelId
@@ -425,8 +425,8 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 			fireworksModelId: undefined,
 			lmStudioModelId: undefined,
 			ollamaModelId: undefined,
-			caretBackendType: undefined, // caret
-			caretModelId: undefined, // caret
+			caretBackendType: undefined, // careti
+			caretModelId: undefined, // careti
 			liteLlmModelId: undefined,
 			bizRouterModelId: undefined,
 			requestyModelId: undefined,
@@ -442,7 +442,7 @@ export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undef
 
 			// Model info objects
 			openAiModelInfo: undefined,
-			caretModelInfo: undefined, // caret
+			caretModelInfo: undefined, // careti
 			liteLlmModelInfo: undefined,
 			bizRouterModelInfo: undefined,
 			openRouterModelInfo: undefined,
@@ -618,7 +618,7 @@ export async function syncModeConfigurations(
 			updates.actModeVsCodeLmModelSelector = sourceFields.vsCodeLmModelSelector
 			break
 
-		case "caret":
+		case "careti":
 			updates.planModeCaretModelId = sourceFields.caretModelId
 			updates.actModeCaretModelId = sourceFields.caretModelId
 			updates.planModeCaretModelInfo = sourceFields.caretModelInfo
@@ -684,14 +684,14 @@ export async function syncModeConfigurations(
 			updates.planModeHuaweiCloudMaasModelInfo = sourceFields.huaweiCloudMaasModelInfo
 			updates.actModeHuaweiCloudMaasModelInfo = sourceFields.huaweiCloudMaasModelInfo
 			break
-		// CARET MODIFICATION: Sync Upstage model settings
+		// CARETI MODIFICATION: Sync Upstage model settings
 		case "upstage":
 			updates.planModeUpstageModelId = sourceFields.upstageModelId
 			updates.actModeUpstageModelId = sourceFields.upstageModelId
 			updates.planModeUpstageModelInfo = sourceFields.upstageModelInfo
 			updates.actModeUpstageModelInfo = sourceFields.upstageModelInfo
 			break
-		// CARET MODIFICATION: Sync Naver Cloud model settings
+		// CARETI MODIFICATION: Sync Naver Cloud model settings
 		case "naver-cloud":
 			updates.planModeNaverCloudModelId = sourceFields.naverCloudModelId
 			updates.actModeNaverCloudModelId = sourceFields.naverCloudModelId

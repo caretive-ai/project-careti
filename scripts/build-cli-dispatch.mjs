@@ -1,4 +1,4 @@
-// CARET MODIFICATION: cross-platform CLI build dispatcher.
+// CARETI MODIFICATION: cross-platform CLI build dispatcher.
 import { execSync } from "child_process"
 import path from "path"
 import { fileURLToPath } from "url"

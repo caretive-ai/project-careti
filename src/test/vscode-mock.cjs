@@ -1,4 +1,4 @@
-// CARET MODIFICATION: 테스트 환경에서 vscode 모듈 로딩(ESM/CJS 충돌) 회피를 위한 CommonJS mock
+// CARETI MODIFICATION: 테스트 환경에서 vscode 모듈 로딩(ESM/CJS 충돌) 회피를 위한 CommonJS mock
 module.exports = {
 	env: {
 		machineId: "test-machine-id",

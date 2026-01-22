@@ -1,0 +1,57 @@
+{
+	"coreFeatures": {
+		"header": "함께 성장하는 AI 코딩 에이전트 '캐러티'와 '바이브 코딩'을 시작하세요."
+	},
+	"getStarted": {
+		"button": "시작하기"
+	},
+	"welcome": {
+		"tooltipContent": "파일 편집, 프로젝트 탐색, 명령어 실행, 브라우저 사용 등을 통해 단계별로 소프트웨어를 개발할 수 있습니다. MCP 도구를 사용하여 기본 코드 완성을 넘어선 기능으로 확장할 수도 있습니다.",
+		"takeATour": "투어 시작하기"
+	},
+	"cliBanner": {
+		"title": "CLI를 설치해 서브에이전트를 활용하세요",
+		"description": "대규모 검색·리서치 작업은 CLI로 분리된 에이전트에 맡길 수 있습니다. Caret/Cline 모드에 따라 명령이 달라집니다.",
+		"button": "CLI 설치",
+		"copyCommand": "명령어 복사",
+		"copied": "복사됨!",
+		"learnMore": "자세히 보기",
+		"installed": "설치됨",
+		"dismissTitle": "CLI 배너 닫기"
+	},
+	"apiSetup": {
+		"backButton": "← 돌아가기",
+		"title": "API 설정",
+		"description": "AI 모델을 사용하기 위한 API 제공자를 선택하고 설정해주세요.",
+		"instructions": "도움이 필요하시면 아래 링크를 참고하세요:",
+		"supportLinks": {
+			"llmList": "지원 LLM 목록 보기",
+			"geminiCredit": "Gemini 무료 크레딧 받기"
+		},
+		"saveButton": "설정 저장",
+		"help": {
+			"title": "추가 도움이 필요하신가요?",
+			"button": "문서 보기"
+		}
+	},
+	"community": {
+		"header": "커뮤니티에 참여하세요",
+		"body": "캐러티 GitHub에서 최신 업데이트를 확인하고 피드백을 공유해주세요.",
+		"githubLink": "GitHub 방문하기"
+	},
+	"footer": {
+		"about": {
+			"description": "캐러티는 Caretive Inc.에서 개발한 오픈소스 AI 코딩 에이전트입니다.",
+			"link": "더 알아보기"
+		},
+		"links": {
+			"caretiGithub": "캐러티 GitHub",
+			"caretiService": "캐러티 서비스",
+			"caretiveInc": "Caretive Inc.",
+			"support": "지원"
+		},
+		"copyright": {
+			"builtWith": "Caretive Inc. ❤️로 만들었습니다"
+		}
+	}
+}

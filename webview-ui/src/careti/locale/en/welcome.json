@@ -1,0 +1,57 @@
+{
+	"coreFeatures": {
+		"header": "Start 'Vibe Coding' with Careti, the AI coding agent that grows with you."
+	},
+	"getStarted": {
+		"button": "Get Started"
+	},
+	"welcome": {
+		"tooltipContent": "I can develop software step-by-step by editing files, exploring projects, running commands, and using browsers. I can even extend my capabilities with MCP tools to assist beyond basic code completion.",
+		"takeATour": "Take a Tour"
+	},
+	"cliBanner": {
+		"title": "Install the CLI to delegate subagents",
+		"description": "Use the CLI to launch focused agents for large searches or research tasks. Commands differ by Careti/Cline mode.",
+		"button": "Install CLI",
+		"copyCommand": "Copy command",
+		"copied": "Copied!",
+		"learnMore": "Learn more",
+		"installed": "Installed",
+		"dismissTitle": "Dismiss CLI banner"
+	},
+	"apiSetup": {
+		"backButton": "← Back",
+		"title": "API Setup",
+		"description": "Select and configure an API provider to use AI models.",
+		"instructions": "Need help? Check the links below:",
+		"supportLinks": {
+			"llmList": "View supported LLM list",
+			"geminiCredit": "Get Gemini free credits"
+		},
+		"saveButton": "Save Settings",
+		"help": {
+			"title": "Need more help?",
+			"button": "View Documentation"
+		}
+	},
+	"community": {
+		"header": "Join Our Community",
+		"body": "Check out the latest updates and share your feedback on Careti GitHub.",
+		"githubLink": "Visit GitHub"
+	},
+	"footer": {
+		"about": {
+			"description": "Careti is an open-source AI coding agent developed by Caretive Inc.",
+			"link": "Learn more"
+		},
+		"links": {
+			"caretiGithub": "Careti GitHub",
+			"caretiService": "Careti Service",
+			"caretiveInc": "Caretive Inc.",
+			"support": "Support"
+		},
+		"copyright": {
+			"builtWith": "Built with ❤️ by Caretive Inc."
+		}
+	}
+}

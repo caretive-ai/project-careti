@@ -14,7 +14,7 @@ Never skip Phase 0 - prevents architectural mistakes and ensures proper approach
 **Phase 0: Mandatory Pre-Review** (ALWAYS START HERE)
 - [ ] User identification: `git config user.name`
 - [ ] Date confirmation: OS command
-- [ ] Work log: `caret-docs/work-logs/{username}/{YYYYMMDD-N-description}.md`
+- [ ] Work log: `careti-docs/work-logs/{username}/{YYYYMMDD-N-description}.md`
 - [ ] Use `/ai-work-index` to select relevant documents
 - [ ] Read required docs based on work nature
 
@@ -22,16 +22,16 @@ Never skip Phase 0 - prevents architectural mistakes and ensures proper approach
 - [ ] Write integration/E2E test for actual usage scenario
 - [ ] Verify test type & location:
   - webview: `webview-ui/src/**` (run: `npm run test:webview`)
-  - backend unit: `src/**/__tests__/*.ts` or `caret-src/core/task/tools/__tests__/*.ts` (run: `npm run test:unit`)
+  - backend unit: `src/**/__tests__/*.ts` or `careti-src/core/task/tools/__tests__/*.ts` (run: `npm run test:unit`)
   - extension integration: `src/test/**` (run: `npm run test:integration`)
 - [ ] Run test immediately after creation (must fail)
 
 **Phase 2: TDD GREEN** 🛑 STOP - Before Modifying Cline Files
 - [ ] Check if file is protected (src/, webview-ui/, proto/, scripts/, etc.)
-- [ ] `.cline` 백업은 생성하지 않음(Deprecated). `// CARET MODIFICATION:` 주석으로만 변경 이력을 남김
-- [ ] (불가피한 경우) 보호 디렉토리 내 신규 파일 추가 시 파일 상단에 `// CARET MODIFICATION:`로 Caret 추가 파일임을 명시
+- [ ] `.cline` 백업은 생성하지 않음(Deprecated). `// CARETI MODIFICATION:` 주석으로만 변경 이력을 남김
+- [ ] (불가피한 경우) 보호 디렉토리 내 신규 파일 추가 시 파일 상단에 `// CARETI MODIFICATION:`로 Caret 추가 파일임을 명시
 - [ ] Minimal changes (1-3 lines max per file)
-- [ ] New Caret features in `caret-src/`, `caret-docs/`
+- [ ] New Caret features in `careti-src/`, `careti-docs/`
 - [ ] Compile immediately after modification
 
 **Phase 3: TDD REFACTOR**
@@ -65,4 +65,4 @@ Never skip Phase 0 - prevents architectural mistakes and ensures proper approach
 See `.agents/workflows/ai-work-protocol.md`
 
 **📖 For Korean developer documentation:**
-See `caret-docs/development/ai-work-protocol.md`
+See `careti-docs/development/ai-work-protocol.md`

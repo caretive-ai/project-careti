@@ -1,7 +1,7 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { HistoryIcon, PlusIcon, SettingsIcon, UserCircleIcon } from "lucide-react"
 import { useMemo } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { TaskServiceClient } from "@/services/grpc-client"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import HeroTooltip from "../common/HeroTooltip"
@@ -71,7 +71,7 @@ export const Navbar = () => {
 			className="flex-none inline-flex justify-end bg-transparent gap-2 mb-1 z-10 border-none items-center mr-4!"
 			id="cline-navbar-container"
 			style={{ gap: "4px" }}>
-			{SETTINGS_TABS.filter((tab) => featureConfig?.showAccountUI !== false || tab.id !== "account") // CARET MODIFICATION: Hide account tab when disabled
+			{SETTINGS_TABS.filter((tab) => featureConfig?.showAccountUI !== false || tab.id !== "account") // CARETI MODIFICATION: Hide account tab when disabled
 				.map((tab) => (
 					<HeroTooltip content={tab.tooltip} key={`navbar-tooltip-${tab.id}`} placement="bottom">
 						<VSCodeButton

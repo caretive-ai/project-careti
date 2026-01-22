@@ -1,0 +1,109 @@
+{
+	"button": {
+		"save": "Сохранить",
+		"cancel": "Отмена",
+		"done": "Готово",
+		"runCommand": "Выполнить команду",
+		"reject": "Отклонить",
+		"retry": "Повторить",
+		"approve": "Одобрить",
+		"proceed": "Продолжить",
+		"proceedAnyways": "Продолжить в любом случае",
+		"proceedWhileRunning": "Продолжить во время выполнения",
+		"resumeTask": "Возобновить задачу",
+		"startNewTaskWithContext": "Начать новую задачу с контекстом",
+		"condenseConversation": "Сжать беседу",
+		"reportGitHubIssue": "Сообщить о проблеме на GitHub"
+	},
+	"imageAlt": {
+		"caretBanner": "Баннер с логотипом Caret"
+	},
+	"welcome": {
+		"whatCanIDo": "Чем я могу вам помочь?"
+	},
+	"rulesModal": {
+		"tooltip.manageRulesWorkflows": "Управление правилами и рабочими процессами Caret",
+		"ariaLabel.CaretRulesButton": "Правила Caret"
+	},
+	"mode": {
+		"tooltip": {
+			"chatbot": "В режиме Чат-бота Caret предоставляет экспертные консультации и анализ",
+			"agent": "В режиме Агента Caret сотрудничает для реализации решений",
+			"plan": "В режиме Планирования формулируйте стратегии и планы",
+			"act": "В режиме Действия выполняйте и реализуйте планы"
+		}
+	},
+	"account": {
+		"signUpWithCaret": "Вход и регистрация",
+		"dashboard": "Панель управления",
+		"addCredits": "Пополнить кредиты",
+		"currentBalance": "Текущий баланс",
+		"logOut": "Выйти",
+		"loading": "Загрузка...",
+		"failedToFetchUserCredit": "Не удалось получить кредиты пользователя.",
+		"failedToFetchCreditBalance": "Не удалось получить баланс кредитов.",
+		"signUpDescription": "Зарегистрируйтесь, чтобы получить доступ к новейшим моделям, панели управления для просмотра использования и кредитов, а также к другим будущим функциям.",
+		"termsOfService": "Условия использования",
+		"privacyPolicy": "Политика конфиденциальности",
+		"byContining": "Продолжая, вы соглашаетесь с",
+		"profileAlt": "Аватар профиля",
+		"role": "Роль",
+		"title": "Аккаунт",
+		"totalCost": "Стоимость",
+		"lastUpdated": "Последнее обновление",
+		"credits": "Кредиты",
+		"failedToGetLoginUrl": "Не удалось получить URL для входа.",
+		"termsOfServiceUrl": "https://caretive.ai/terms.en.html",
+		"privacyPolicyUrl": "https://caretive.ai/privacy.en.html",
+		"personal": "Личный",
+		"date": "Дата",
+		"model": "Модель",
+		"creditsUsed": "Использовано кредитов",
+		"usageHistory": "История использования",
+		"paymentsHistory": "История платежей",
+		"noUsageHistory": "История использования не найдена",
+		"noPaymentHistory": "История платежей не найдена"
+	},
+	"common": {
+		"and": "и",
+		"scrollToBottom": "Прокрутить вниз",
+		"defaultValue": "0",
+		"seeMore": "Подробнее"
+	},
+	"taskHeader.task": "Задача",
+	"taskHeader.cache": "Cache",
+	"taskHeader.tokens": "Tokens",
+	"taskHeader.closeTask": "Закрыть задачу",
+	"taskHeader.seeMore": "Подробнее",
+	"taskHeader.seeLess": "Свернуть",
+	"taskHeader.promptTokens": "Tokens промпта",
+	"taskHeader.completionTokens": "Tokens ответа",
+	"taskHeader.tokensWrittenToCache": "Tokens, записанных в cache",
+	"taskHeader.tokensReadFromCache": "Tokens, прочитанных из cache",
+	"taskHeader.disablingCheckpoints": "отключение контрольных точек.",
+	"taskHeader.seeHereForInstructions": "Смотрите инструкции здесь.",
+	"taskHeader.currentTokens": "Текущее количество tokens в этом запросе",
+	"taskHeader.contextWindowUsage": "Использование контекстного окна",
+	"taskHeader.maxContextWindow": "Максимальный размер контекстного окна для этой модели",
+	"taskHeader.allStepsCompleted": "Все {{totalCount}} шагов выполнено!",
+	"taskHeader.newStepsGenerated": "Новые шаги могут быть сгенерированы на основе беседы.",
+	"taskHeader.editFocusChainList": "Редактировать список цепочки фокуса",
+	"modelInfo": {
+		"tokensSuffix": "/миллион tokens"
+	},
+	"telemetry": {
+		"helpImprove": "Поддержите развитие Caret",
+		"description": "Caret - проект с открытым исходным кодом. Посетите наш GitHub, чтобы внести вклад, сообщить о проблемах или поделиться отзывами.",
+		"githubLinkPrefix": "Узнать больше на",
+		"githubLink": "github.com/caretive-ai/project-careti",
+		"closeBannerAria": "Закрыть баннер"
+	},
+	"autoApprove": {
+		"autoApproveLabel": "Автоодобрение:"
+	},
+	"task": {
+		"deleteTask": "Удалить задачу",
+		"deleteTaskAriaLabel": "Удалить задачу",
+		"copyTask": "Копировать задачу"
+	}
+}

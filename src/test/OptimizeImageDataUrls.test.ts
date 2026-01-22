@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Integration-style test for OptimizeImageDataUrls handler.
+// CARETI MODIFICATION: Integration-style test for OptimizeImageDataUrls handler.
 import { OptimizeImageDataUrls } from "@/core/controller/persona/OptimizeImageDataUrls"
 import type { Controller } from "@/core/controller"
 import * as proto from "@/shared/proto"
@@ -20,7 +20,7 @@ describe("OptimizeImageDataUrls handler", () => {
 			.toBuffer()
 
 		const inputDataUrl = `data:image/png;base64,${inputBuffer.toString("base64")}`
-		const request = proto.caret.OptimizeImageDataUrlsRequest.create({
+		const request = proto.careti.OptimizeImageDataUrlsRequest.create({
 			dataUrls: [inputDataUrl],
 		})
 

@@ -1,9 +1,9 @@
 {
-	"name": "caret",
-	"displayName": "Caret",
+	"name": "careti",
+	"displayName": "Careti",
 	"description": "🎯 Cline-compatible AI coding agent. 266 models (Claude, GPT, Gemini), persona system, dual mode, image/document tools. 7 languages (한국어, 日本語, 中文, FR, DE, RU). Free credits on signup.",
 	"version": "0.4.6",
-	"icon": "assets/icons/icon.png",
+	"icon": "assets/icons/icon.webp",
 	"engines": {
 		"vscode": "^1.84.0"
 	},
@@ -14,9 +14,9 @@
 	"publisher": "caretive",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/aicoding-caret/caret"
+		"url": "https://github.com/caretive-ai/project-careti"
 	},
-	"homepage": "https://caret.team",
+	"homepage": "https://careti.ai",
 	"categories": [
 		"AI",
 		"Chat",
@@ -74,21 +74,21 @@
 		"walkthroughs": [
 			{
 				"id": "CaretWalkthrough",
-				"title": "Meet Caret, your new coding partner",
-				"description": "Caret codes like a developer because it thinks like one. Here are 5 ways to put it to work:",
+				"title": "Meet Careti, your new coding partner",
+				"description": "Careti codes like a developer because it thinks like one. Here are 5 ways to put it to work:",
 				"steps": [
 					{
 						"id": "welcome",
 						"title": "Start with a Goal, Not Just a Prompt",
-						"description": "Tell Caret what you want to achieve. It plans, asks, and then codes, like a true partner.",
+						"description": "Tell Careti what you want to achieve. It plans, asks, and then codes, like a true partner.",
 						"media": {
 							"markdown": "walkthrough/step1.md"
 						}
 					},
 					{
 						"id": "learn",
-						"title": "Let Caret Learn Your Codebase",
-						"description": "Point Caret to your project. It builds understanding to make smart, context-aware changes.",
+						"title": "Let Careti Learn Your Codebase",
+						"description": "Point Careti to your project. It builds understanding to make smart, context-aware changes.",
 						"media": {
 							"markdown": "walkthrough/step2.md"
 						}
@@ -96,7 +96,7 @@
 					{
 						"id": "advanced-features",
 						"title": "Always Use the Best AI Models",
-						"description": "Caret empowers you with State-of-the-Art AI, connecting to top models (Anthropic, Gemini, OpenAI & more).",
+						"description": "Careti empowers you with State-of-the-Art AI, connecting to top models (Anthropic, Gemini, OpenAI & more).",
 						"media": {
 							"markdown": "walkthrough/step3.md"
 						}
@@ -126,24 +126,24 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "caret-ActivityBar",
-					"title": "Caret (⌘+')",
+					"id": "careti-ActivityBar",
+					"title": "Careti (⌘+')",
 					"icon": "assets/icons/icon.svg",
 					"when": "isMac"
 				},
 				{
-					"id": "caret-ActivityBar",
-					"title": "Caret (Ctrl+')",
+					"id": "careti-ActivityBar",
+					"title": "Careti (Ctrl+')",
 					"icon": "assets/icons/icon.svg",
 					"when": "!isMac"
 				}
 			]
 		},
 		"views": {
-			"caret-ActivityBar": [
+			"careti-ActivityBar": [
 				{
 					"type": "webview",
-					"id": "caret.SidebarProvider",
+					"id": "careti.SidebarProvider",
 					"name": "",
 					"icon": "assets/icons/icon.svg"
 				}
@@ -151,96 +151,96 @@
 		},
 		"commands": [
 			{
-				"command": "caretive.caret.plusButtonClicked",
+				"command": "caretive.careti.plusButtonClicked",
 				"title": "New Task",
 				"icon": "$(add)"
 			},
 			{
-				"command": "caretive.caret.mcpButtonClicked",
+				"command": "caretive.careti.mcpButtonClicked",
 				"title": "MCP Servers",
 				"icon": "$(server)"
 			},
 			{
-				"command": "caretive.caret.historyButtonClicked",
+				"command": "caretive.careti.historyButtonClicked",
 				"title": "History",
 				"icon": "$(history)"
 			},
 			{
-				"command": "caretive.caret.accountButtonClicked",
+				"command": "caretive.careti.accountButtonClicked",
 				"title": "Account",
 				"icon": "$(account)"
 			},
 			{
-				"command": "caretive.caret.settingsButtonClicked",
+				"command": "caretive.careti.settingsButtonClicked",
 				"title": "Settings",
 				"icon": "$(settings-gear)"
 			},
 			{
-				"command": "caretive.caret.dev.createTestTasks",
+				"command": "caretive.careti.dev.createTestTasks",
 				"title": "Create Test Tasks",
-				"category": "Caret",
+				"category": "Careti",
 				"when": "cline.isDevMode"
 			},
 			{
-				"command": "caretive.caret.dev.expireMcpOAuthTokens",
+				"command": "caretive.careti.dev.expireMcpOAuthTokens",
 				"title": "Expire MCP OAuth Tokens (for testing)",
-				"category": "Caret",
+				"category": "Careti",
 				"when": "cline.isDevMode"
 			},
 			{
-				"command": "caretive.caret.addToChat",
+				"command": "caretive.careti.addToChat",
 				"title": "Add to Caret",
-				"category": "Caret"
+				"category": "Careti"
 			},
 			{
-				"command": "caretive.caret.addTerminalOutputToChat",
+				"command": "caretive.careti.addTerminalOutputToChat",
 				"title": "Add to Caret",
-				"category": "Caret"
+				"category": "Careti"
 			},
 			{
-				"command": "caretive.caret.focusChatInput",
+				"command": "caretive.careti.focusChatInput",
 				"title": "Jump to Chat Input",
-				"category": "Caret"
+				"category": "Careti"
 			},
 			{
-				"command": "caretive.caret.generateGitCommitMessage",
+				"command": "caretive.careti.generateGitCommitMessage",
 				"title": "Generate Commit Message with Caret",
-				"category": "Caret",
+				"category": "Careti",
 				"icon": {
-					"light": "assets/icons/robot_panel_light.png",
-					"dark": "assets/icons/robot_panel_dark.png"
+					"light": "assets/icons/robot_panel_light.webp",
+					"dark": "assets/icons/robot_panel_dark.webp"
 				}
 			},
 			{
-				"command": "caretive.caret.abortGitCommitMessage",
-				"title": "Generate Commit Message with Caret - Stop",
-				"category": "Caret",
+				"command": "caretive.careti.abortGitCommitMessage",
+				"title": "Generate Commit Message with Careti - Stop",
+				"category": "Careti",
 				"icon": "$(debug-stop)"
 			},
 			{
-				"command": "caretive.caret.explainCode",
+				"command": "caretive.careti.explainCode",
 				"title": "Explain with Caret",
-				"category": "Caret"
+				"category": "Careti"
 			},
 			{
-				"command": "caretive.caret.improveCode",
+				"command": "caretive.careti.improveCode",
 				"title": "Improve with Caret",
-				"category": "Caret"
+				"category": "Careti"
 			},
 			{
-				"command": "caretive.caret.openWalkthrough",
+				"command": "caretive.careti.openWalkthrough",
 				"title": "Open Walkthrough",
-				"category": "Caret"
+				"category": "Careti"
 			},
 			{
-				"command": "caretive.caret.reconstructTaskHistory",
+				"command": "caretive.careti.reconstructTaskHistory",
 				"title": "Reconstruct Task History",
-				"category": "Caret"
+				"category": "Careti"
 			}
 		],
 		"keybindings": [
 			{
-				"command": "caretive.caret.addToChat",
+				"command": "caretive.careti.addToChat",
 				"key": "cmd+'",
 				"mac": "cmd+'",
 				"win": "ctrl+'",
@@ -248,11 +248,11 @@
 				"when": "editorHasSelection"
 			},
 			{
-				"command": "caretive.caret.generateGitCommitMessage",
+				"command": "caretive.careti.generateGitCommitMessage",
 				"when": "config.git.enabled && scmProvider == git"
 			},
 			{
-				"command": "caretive.caret.focusChatInput",
+				"command": "caretive.careti.focusChatInput",
 				"key": "cmd+'",
 				"mac": "cmd+'",
 				"win": "ctrl+'",
@@ -263,69 +263,69 @@
 		"menus": {
 			"view/title": [
 				{
-					"command": "caretive.caret.plusButtonClicked",
+					"command": "caretive.careti.plusButtonClicked",
 					"group": "navigation@1",
-					"when": "view == caret.SidebarProvider"
+					"when": "view == careti.SidebarProvider"
 				},
 				{
-					"command": "caretive.caret.mcpButtonClicked",
+					"command": "caretive.careti.mcpButtonClicked",
 					"group": "navigation@2",
-					"when": "view == caret.SidebarProvider"
+					"when": "view == careti.SidebarProvider"
 				},
 				{
-					"command": "caretive.caret.historyButtonClicked",
+					"command": "caretive.careti.historyButtonClicked",
 					"group": "navigation@3",
-					"when": "view == caret.SidebarProvider"
+					"when": "view == careti.SidebarProvider"
 				},
 				{
-					"command": "caretive.caret.accountButtonClicked",
+					"command": "caretive.careti.accountButtonClicked",
 					"group": "navigation@5",
-					"when": "view == caret.SidebarProvider && caret.showAccountUI"
+					"when": "view == careti.SidebarProvider && careti.showAccountUI"
 				},
 				{
-					"command": "caretive.caret.settingsButtonClicked",
+					"command": "caretive.careti.settingsButtonClicked",
 					"group": "navigation@6",
-					"when": "view == caret.SidebarProvider"
+					"when": "view == careti.SidebarProvider"
 				}
 			],
 			"editor/context": [
 				{
-					"command": "caretive.caret.addToChat",
+					"command": "caretive.careti.addToChat",
 					"group": "navigation",
 					"when": "editorHasSelection"
 				}
 			],
 			"terminal/context": [
 				{
-					"command": "caretive.caret.addTerminalOutputToChat",
+					"command": "caretive.careti.addTerminalOutputToChat",
 					"group": "navigation"
 				}
 			],
 			"scm/title": [
 				{
-					"command": "caretive.caret.generateGitCommitMessage",
+					"command": "caretive.careti.generateGitCommitMessage",
 					"group": "navigation",
 					"when": "config.git.enabled && scmProvider == git && !cline.isGeneratingCommit"
 				},
 				{
-					"command": "caretive.caret.abortGitCommitMessage",
+					"command": "caretive.careti.abortGitCommitMessage",
 					"group": "navigation",
 					"when": "config.git.enabled && scmProvider == git && cline.isGeneratingCommit"
 				}
 			],
 			"commandPalette": [
 				{
-					"command": "caretive.caret.generateGitCommitMessage",
+					"command": "caretive.careti.generateGitCommitMessage",
 					"when": "config.git.enabled && !cline.isGeneratingCommit"
 				},
 				{
-					"command": "caretive.caret.abortGitCommitMessage",
+					"command": "caretive.careti.abortGitCommitMessage",
 					"when": "config.git.enabled && cline.isGeneratingCommit"
 				}
 			]
 		},
 		"configuration": {
-			"title": "Caret",
+			"title": "Careti",
 			"properties": {}
 		}
 	},
@@ -396,7 +396,7 @@
 		"docs:check-links": "cd docs && npm run check",
 		"docs:rename-file": "cd docs && npm run rename",
 		"report-issue": "node scripts/report-issue.js",
-		"package:release": "node caret-scripts/build/package-release.js"
+		"package:release": "node careti-scripts/build/package-release.js"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.1.4",

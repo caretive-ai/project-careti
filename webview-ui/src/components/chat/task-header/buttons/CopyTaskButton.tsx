@@ -1,6 +1,6 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useState } from "react"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import HeroTooltip from "@/components/common/HeroTooltip"
 
 const CopyTaskButton: React.FC<{

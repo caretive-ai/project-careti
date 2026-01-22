@@ -16,7 +16,7 @@ WebView Messages    Protocol Buffers/JSON
 
 ### 핵심 컴포넌트:
 - **Frontend**: `webview-ui/src/` React 컴포넌트
-- **Backend**: `src/core/` 익스텐션 로직 + `caret-src/` 확장
+- **Backend**: `src/core/` 익스텐션 로직 + `careti-src/` 확장
 - **Protocols**: `proto/` 타입 안전 통신 정의
 
 ## 메시지 타입 & 패턴

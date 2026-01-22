@@ -60,8 +60,12 @@ export async function loadServicesFromProtoDescriptor() {
 	}
 
 	addServices("cline", proto.cline)
+	// CARETI MODIFICATION: Support careti package after Caret → Careti rebrand
+	if (proto.careti) {
+		addServices("careti", proto.careti)
+	}
 	if (proto.caret) {
-		addServices("caret", proto.caret)
+		addServices("careti", proto.caret)
 	}
 
 	return { protobusServices, hostServices }

@@ -16,7 +16,7 @@ Caret의 이중 디렉토리 아키텍처로 작업합니다:
 - 한국어로 상세 설명
 - `context/*.md`: 사람이 읽기 좋은 가이드 (`.agents/context/` 미러링)
 
-### `caret-docs/development/`
+### `careti-docs/development/`
 - 한국어 개발자 가이드
 
 ## 작업 카테고리
@@ -25,7 +25,7 @@ Caret의 이중 디렉토리 아키텍처로 작업합니다:
 **키워드**: AI, feature, integration, system prompt, chatbot, agent, conversation
 - 빠른 참조: `.agents/context/ai-feature.md` (60줄)
 - 상세 절차: `.agents/workflows/ai-feature.md` (245줄)
-- 한국어 가이드: `caret-docs/development/ai-feature.md`
+- 한국어 가이드: `careti-docs/development/ai-feature.md`
 
 ### AI 작업 프로토콜
 **키워드**: work protocol, phase, TDD, verification, documentation review
@@ -34,19 +34,19 @@ Caret의 이중 디렉토리 아키텍처로 작업합니다:
 
 ### 아키텍처 & 설계
 **키워드**: architecture, design, structure, system, scaling, fork, Cline modification
-- 빠른 참조: `.agents/context/caret-architecture-guide.md`, `.agents/context/architecture-guide.yaml`
-- 한국어 가이드: `caret-docs/development/caret-architecture-and-implementation-guide.md`
+- 빠른 참조: `.agents/context/careti-architecture-guide.md`, `.agents/context/architecture-guide.yaml`
+- 한국어 가이드: `careti-docs/development/careti-architecture-and-implementation-guide.md`
 
-### Caret 개발 워크플로우
+### 캐러티 개발 워크플로우
 **키워드**: caret development, development workflow, TDD, document-driven
-- 빠른 참조: `.agents/context/caret-development.md` (68줄)
-- 상세 절차: `.agents/workflows/caret-development.md` (129줄)
+- 빠른 참조: `.agents/context/careti-development.md` (68줄)
+- 상세 절차: `.agents/workflows/careti-development.md` (129줄)
 
 ### Cline 원본 수정
 **키워드**: Cline modification, source change, src/ directory, L1 L2 L3, proto
 - 빠른 참조: `.agents/context/cline-modification.md` (78줄)
 - 상세 절차: `.agents/workflows/cline-modification.md` (146줄)
-- 참고: 항상 백업 + `// CARET MODIFICATION:` 주석 요구사항 준수
+- 참고: 항상 백업 + `// CARETI MODIFICATION:` 주석 요구사항 준수
 
 ### 중요 검증
 **키워드**: verification, critical analysis, 3-stage, balanced review
@@ -57,7 +57,7 @@ Caret의 이중 디렉토리 아키텍처로 작업합니다:
 **키워드**: documentation, knowledge sync, atomization, F11, 1:1 parity
 - 빠른 참조: `.agents/context/document-organization.md` (47줄)
 - 상세 절차: `.agents/workflows/document-organization.md` (100줄)
-- 한국어 가이드: `caret-docs/development/documentation-guide.md`
+- 한국어 가이드: `careti-docs/development/documentation-guide.md`
 
 ### 병합 전략
 **키워드**: merge, fork, L1 L2 L3, Cline integration, upstream
@@ -68,13 +68,13 @@ Caret의 이중 디렉토리 아키텍처로 작업합니다:
 **키워드**: component, React, new feature, UI, service, TDD
 - 빠른 참조: `.agents/context/new-component.md` (80줄)
 - 상세 절차: `.agents/workflows/new-component.md` (180줄)
-- 한국어 가이드: `caret-docs/development/component-architecture-principles.md`
+- 한국어 가이드: `careti-docs/development/component-architecture-principles.md`
 
 ### 테스팅 & 품질
 **키워드**: test, TDD, quality, coverage, verification, bug, integration test
 - 빠른 참조: `.agents/context/testing-work.md` (82줄)
 - 상세 절차: `.agents/workflows/testing-work.md` (253줄)
-- 한국어 가이드: `caret-docs/development/testing-guide.md`
+- 한국어 가이드: `careti-docs/development/testing-guide.md`
 
 ### API 프로바이더 테스팅
 **키워드**: API, provider, test script, LLM, streaming, integration test, Upstage, GLM, Gemini
@@ -86,7 +86,7 @@ Caret의 이중 디렉토리 아키텍처로 작업합니다:
 **키워드**: b2b, brand, codecenter, conversion, slexn
 - 빠른 참조: `.agents/context/b2b-branding-workflow.md`
 - 상세 절차: `.agents/workflows/branding-and-logging.md` (157줄)
-- 한국어 가이드: `caret-docs/development/b2b-branding-workflow.md`
+- 한국어 가이드: `careti-docs/development/b2b-branding-workflow.md`
 
 ### i18n 정적 번역 수정
 **키워드**: i18n, translation, static, dynamic, language switching, sovereign cloud, multilingual
@@ -96,22 +96,22 @@ Caret의 이중 디렉토리 아키텍처로 작업합니다:
 ### 프론트엔드-백엔드 통신
 **키워드**: webview, communication, state management, message passing, UI integration, gRPC
 - 빠른 참조: `.agents/context/frontend-backend-patterns.md`, `.agents/context/webview-communication.md`
-- 한국어 가이드: `caret-docs/development/frontend-backend-interaction-patterns.md`, `caret-docs/development/webview-extension-communication.md`
+- 한국어 가이드: `careti-docs/development/frontend-backend-interaction-patterns.md`, `careti-docs/development/webview-extension-communication.md`
 
 ### AI 시스템 개발
 **키워드**: AI, message, system prompt, chatbot, agent, model, provider
 - 빠른 참조: `.agents/context/system-prompt.md`, `.agents/context/message-processing.md`
-- 한국어 가이드: `caret-docs/development/system-prompt-implementation.md`, `caret-docs/development/message-processing-architecture.md`
+- 한국어 가이드: `careti-docs/development/system-prompt-implementation.md`, `careti-docs/development/message-processing-architecture.md`
 
 ### UI/UX 개발
 **키워드**: UI, UX, persona, multilingual, i18n, button, interaction, link management
 - 빠른 참조: `.agents/context/component-architecture.md`
-- 한국어 가이드: `caret-docs/development/component-architecture-principles.md`, `caret-docs/development/link-management-guide.md`
+- 한국어 가이드: `careti-docs/development/component-architecture-principles.md`, `careti-docs/development/link-management-guide.md`
 
 ### 개발 도구
 **키워드**: utility, tool, file handling, image, link, build, storage, flow
 - 빠른 참조: `.agents/context/build-system.md`
-- 한국어 가이드: `caret-docs/development/utilities.md`, `caret-docs/development/file-storage-and-image-loading-guide.md`, `caret-docs/development/ui-to-storage-flow.md`
+- 한국어 가이드: `careti-docs/development/utilities.md`, `careti-docs/development/file-storage-and-image-loading-guide.md`, `careti-docs/development/ui-to-storage-flow.md`
 
 ## 작업 단계
 
@@ -129,7 +129,7 @@ Caret의 이중 디렉토리 아키텍처로 작업합니다:
 - [ ] `.agents/context` 파일 수정 체크리스트 확인
 - [ ] TDD 원칙 (Red → Green → Refactor) 이해
 - [ ] 백업 생성 계획 (Cline 원본 수정 시)
-- [ ] CARET MODIFICATION 주석 계획 (Cline 원본 수정 시)
+- [ ] CARETI MODIFICATION 주석 계획 (Cline 원본 수정 시)
 
 ### 단계 4: 다음 단계
 문서 선택 및 읽기 후, 상세한 단계별 구현 접근을 위해 `/ai-work-protocol` 사용

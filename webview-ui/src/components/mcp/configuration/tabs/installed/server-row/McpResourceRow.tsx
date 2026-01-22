@@ -1,5 +1,5 @@
 import { McpResource, McpResourceTemplate } from "@shared/mcp"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 
 type McpResourceRowProps = {
 	item: McpResource | McpResourceTemplate

@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Skills toggle controller
+// CARETI MODIFICATION: Skills toggle controller
 // Ported from cline-latest
 
 import { SkillsToggles, ToggleSkillRequest } from "@shared/proto/cline/file"

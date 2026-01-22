@@ -2,7 +2,7 @@ import { VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { memo, useEffect, useRef, useState } from "react"
 import { useRemark } from "react-remark"
 import styled from "styled-components"
-import { t } from "@/caret/utils/i18n"
+import { t } from "@/careti/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 
 const StyledMarkdown = styled.div`

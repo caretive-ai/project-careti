@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Integration test for HWP document parsing
+// CARETI MODIFICATION: Integration test for HWP document parsing
 // Tests HWP 5.0 parser with real sample files
 // Run with: npm run test:integration -- --grep "HWP Document"
 
@@ -7,10 +7,10 @@ import { expect } from "chai"
 import * as fs from "fs/promises"
 import * as path from "path"
 
-import { parseHwp, parseHwpFromFile } from "@caret/integrations/document/hwp-parser"
-import { DocumentExtractor } from "@caret/integrations/document/document-extractor"
+import { parseHwp, parseHwpFromFile } from "@careti/integrations/document/hwp-parser"
+import { DocumentExtractor } from "@careti/integrations/document/document-extractor"
 
-const FIXTURES_DIR = path.resolve(__dirname, "../../caret-src/integrations/document/__tests__/fixtures")
+const FIXTURES_DIR = path.resolve(__dirname, "../../careti-src/integrations/document/__tests__/fixtures")
 
 describe("HWP Document Integration", function () {
 	this.timeout(10000)

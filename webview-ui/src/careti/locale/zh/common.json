@@ -1,0 +1,143 @@
+{
+	"button": {
+		"save": "保存",
+		"cancel": "取消",
+		"done": "完成",
+		"runCommand": "运行命令",
+		"reject": "拒绝",
+		"startNewTaskWithContext": "使用上下文启动新任务",
+		"retry": "Retry",
+		"approve": "Approve",
+		"proceed": "Proceed",
+		"proceedAnyways": "Proceed Anyways",
+		"proceedWhileRunning": "Proceed While Running",
+		"resumeTask": "Resume Task",
+		"condenseConversation": "Condense Conversation",
+		"reportGitHubIssue": "Report GitHub Issue"
+	},
+	"imageAlt": {
+		"caretBanner": "Caret 标志横幅"
+	},
+	"welcome": {
+		"whatCanIDo": "我能为您做什么？"
+	},
+	"rulesModal": {
+		"tooltip.manageRulesWorkflows": "管理 Caret 规则和工作流",
+		"ariaLabel.CaretRulesButton": "Caret 规则"
+	},
+	"mode": {
+		"tooltip": {
+			"chatbot": "在聊天机器人模式中，Caret 提供专家咨询和分析",
+			"agent": "在代理模式中，Caret 协作实现解决方案",
+			"plan": "在计划模式中，制定策略和计划",
+			"act": "在执行模式中，执行和实施计划"
+		}
+	},
+	"account": {
+		"signUpWithCaret": "登录和注册",
+		"dashboard": "仪表板",
+		"addCredits": "添加积分",
+		"currentBalance": "当前余额",
+		"logOut": "注销",
+		"loading": "加载中...",
+		"failedToFetchUserCredit": "获取用户积分失败。",
+		"failedToFetchCreditBalance": "获取积分余额失败。",
+		"signUpDescription": "注册账户以访问最新模型、查看使用情况和积分的账单仪表板，以及更多即将推出的功能。",
+		"termsOfService": "服务条款",
+		"privacyPolicy": "隐私政策",
+		"byContining": "继续即表示您同意",
+		"profileAlt": "个人头像",
+		"role": "角色",
+		"credits": "积分",
+		"lastUpdated": "上次更新",
+		"failedToGetLoginUrl": "获取登录链接失败。",
+		"title": "账户",
+		"personal": "个人",
+		"date": "日期",
+		"model": "模型",
+		"creditsUsed": "已用积分",
+		"usageHistory": "使用记录",
+		"paymentsHistory": "付款记录",
+		"noUsageHistory": "暂无使用记录",
+		"noPaymentHistory": "暂无付款记录"
+	},
+	"common": {
+		"and": "和",
+		"scrollToBottom": "滚动到底部",
+		"defaultValue": "0",
+		"seeMore": "查看更多"
+	},
+	"taskHeader.task": "任务",
+	"taskHeader.cache": "缓存",
+	"taskHeader.tokens": "令牌",
+	"taskHeader.closeTask": "关闭任务",
+	"taskHeader.seeMore": "查看更多",
+	"taskHeader.seeLess": "收起",
+	"taskHeader.promptTokens": "提示令牌",
+	"taskHeader.completionTokens": "完成令牌",
+	"taskHeader.tokensWrittenToCache": "写入缓存的令牌",
+	"taskHeader.tokensReadFromCache": "从缓存读取的令牌",
+	"taskHeader.disablingCheckpoints": "禁用检查点。",
+	"taskHeader.seeHereForInstructions": "请在此查看说明。",
+	"taskHeader.currentTokens": "此请求中使用的当前令牌",
+	"taskHeader.contextWindowUsage": "上下文窗口使用情况",
+	"taskHeader.maxContextWindow": "此模型的最大上下文窗口大小",
+	"taskHeader.allStepsCompleted": "所有{{totalCount}}个步骤已完成！",
+	"taskHeader.newStepsGenerated": "可能会根据对话生成新步骤。",
+	"taskHeader.editFocusChainList": "编辑焦点链列表",
+	"modelInfoView": {
+		"tokensSuffix": "/百万代币"
+	},
+	"modelInfo": {
+		"tokensSuffix": "/百万代币"
+	},
+	"telemetry": {
+		"helpImprove": "支持 Caret 开发",
+		"description": "Caret 是一个开源项目。访问我们的 GitHub 贡献代码、报告问题或分享反馈。",
+		"githubLinkPrefix": "了解更多",
+		"githubLink": "github.com/caretive-ai/project-careti",
+		"closeBannerAria": "关闭横幅"
+	},
+	"autoApprove": {
+		"autoApproveLabel": "Auto-approve:"
+	},
+	"task": {
+		"deleteTask": "Delete Task",
+		"deleteTaskAriaLabel": "Delete task",
+		"copyTask": "Copy Task"
+	},
+	"rules": {
+		"tab": {
+			"rules": "规则",
+			"workflows": "工作流"
+		},
+		"section": {
+			"personaManagement": "人格管理",
+			"globalRules": "全局规则",
+			"workspaceRules": "工作区规则",
+			"globalWorkflows": "全局工作流",
+			"localWorkflows": "本地工作流"
+		},
+		"subTitle": {
+			"caretRules": "Caret 规则 (.agents/context)",
+			"CaretRules": "Caret 规则 (.agents/context)",
+			"cursorRules": "Cursor 规则 (.agents/context)",
+			"windsurfRules": "Windsurf 规则 (.agents/context)"
+		},
+		"button": {
+			"selectPersonaTemplate": "选择模板角色",
+			"changePersonaTemplate": "更改人格模板"
+		},
+		"description": {
+			"personaManagement": "选择与您的编程风格和偏好匹配的 AI 人格。",
+			"rulesDescription": "规则允许您提供系统级指导。将它们视为为您的项目或每次对话持久包含上下文和偏好的方式。",
+			"workflowsDescription": "工作流允许您定义一系列步骤，供 Caret 执行重复性任务，如部署服务或提交 PR。要运行工作流，请在聊天中输入 /workflow-name。"
+		},
+		"action": {
+			"newRuleFile": "新建规则文件..."
+		},
+		"title": "Caret 规则和工作流管理",
+		"docsLink": "文档",
+		"toggleError": "规则切换错误"
+	}
+}

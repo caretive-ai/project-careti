@@ -629,9 +629,9 @@ export const NewTaskWithContext = quickStory(
 export const AutoApprovalMaxReached = quickStory(
 	"Auto-approval Limit",
 	"auto_approval_max_req_reached",
-	"Caret has auto-approved 5 API requests. Would you like to reset the count and proceed with the task?",
+	"Careti has auto-approved 5 API requests. Would you like to reset the count and proceed with the task?",
 	"Shows auto-approval limit reached state with Proceed/Start New Task options.",
-	"Caret has auto-approved 5 API requests. Would you like to reset the count and proceed with the task?",
+	"Careti has auto-approved 5 API requests. Would you like to reset the count and proceed with the task?",
 )
 export const ApiRequestActive: Story = {
 	decorators: [

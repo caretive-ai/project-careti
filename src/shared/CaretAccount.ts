@@ -1,4 +1,4 @@
-// CARET MODIFICATION: Caret Account types - based on ClineAccount but for Caret API server
+// CARETI MODIFICATION: Careti Account types - based on ClineAccount but for Careti API server
 
 export interface CaretUsage {
 	spend: number
@@ -49,13 +49,13 @@ export interface CaretUserResponse extends CaretUser {
 export interface CaretBalanceResponse {
 	balance: number
 	userId: string
-	// CARET MODIFICATION: Additional Caret-specific fields
+	// CARETI MODIFICATION: Additional Careti-specific fields
 	currency?: string
 	lastUpdated?: string
 }
 
 export interface CaretUsageTransaction {
-	// CARET MODIFICATION: Caret-specific field names aligned with Mock API
+	// CARETI MODIFICATION: Careti-specific field names aligned with Mock API
 	aiInferenceProviderName: string
 	aiModelName: string
 	aiModelTypeName: string
@@ -74,7 +74,7 @@ export interface CaretUsageTransaction {
 	promptTokens: number
 	totalTokens: number
 	userId: string
-	// CARET MODIFICATION: Additional Caret fields for better tracking
+	// CARETI MODIFICATION: Additional Careti fields for better tracking
 	model?: string
 	cachedTokens?: number
 	totalCost: number
@@ -87,13 +87,13 @@ export interface CaretPaymentTransaction {
 	creatorId: string
 	amountCents: number
 	credits: number
-	// CARET MODIFICATION: Additional Caret payment fields
+	// CARETI MODIFICATION: Additional Careti payment fields
 	currency?: string
 	paymentMethod?: string
 	transactionId?: string
 }
 
-// CARET MODIFICATION: Organization-specific types for Caret
+// CARETI MODIFICATION: Organization-specific types for Careti
 export interface CaretOrganizationBalanceResponse {
 	balance: number
 	organizationId: string
@@ -121,7 +121,7 @@ export interface CaretOrganizationUsageTransaction {
 	promptTokens: number
 	totalTokens: number
 	userId: string
-	// CARET MODIFICATION: Additional organization-specific fields
+	// CARETI MODIFICATION: Additional organization-specific fields
 	model?: string
 	totalCost: number
 	timestamp: string

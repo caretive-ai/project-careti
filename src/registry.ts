@@ -1,7 +1,7 @@
 import { name, publisher, version } from "../package.json"
 
-// CARET MODIFICATION: command ID 충돌 방지 위해 extension id(prefix)를 사용
-// (Cline과 Caret를 동시에 설치할 때 'cline.*' 커맨드가 중복 등록되면 활성화가 실패할 수 있음)
+// CARETI MODIFICATION: command ID 충돌 방지 위해 extension id(prefix)를 사용
+// (Cline과 Careti를 동시에 설치할 때 'cline.*' 커맨드가 중복 등록되면 활성화가 실패할 수 있음)
 const prefix = `${publisher}.${name}`
 
 /**

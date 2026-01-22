@@ -1,10 +1,10 @@
-// CARET MODIFICATION: Global path migration from ~/Documents/Caret/ to ~/Documents/.agents/
+// CARETI MODIFICATION: Global path migration from ~/Documents/Careti/ to ~/Documents/.agents/
 // This ensures consistency with project-level .agents/ directory structure
 
 import fs from "fs/promises"
 import path from "path"
 import { fileExistsAtPath, isDirectory } from "@utils/fs"
-import { getLegacyGlobalDirName, getGlobalAgentsDirName } from "@caret/utils/brand-utils"
+import { getLegacyGlobalDirName, getGlobalAgentsDirName } from "@careti/utils/brand-utils"
 
 /**
  * Result of a migration operation
@@ -41,7 +41,7 @@ const PATH_MAPPING: Record<string, string> = {
  * @returns true if legacy paths exist with content
  */
 export async function checkLegacyPathsExist(documentsPath: string): Promise<boolean> {
-	const legacyDirName = getLegacyGlobalDirName() // "Caret"
+	const legacyDirName = getLegacyGlobalDirName() // "Careti"
 	const legacyBase = path.join(documentsPath, legacyDirName)
 
 	// Check if legacy folder exists
@@ -162,7 +162,7 @@ export async function migrateGlobalPaths(documentsPath: string): Promise<Migrati
 			}
 		}
 
-		const legacyDirName = getLegacyGlobalDirName() // "Caret"
+		const legacyDirName = getLegacyGlobalDirName() // "Careti"
 		const newDirName = getGlobalAgentsDirName() // ".agents"
 		const legacyBase = path.join(documentsPath, legacyDirName)
 		const newBase = path.join(documentsPath, newDirName)

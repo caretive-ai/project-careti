@@ -154,6 +154,8 @@ function createHandlerForProvider(
 				ollamaModelId: mode === "plan" ? options.planModeOllamaModelId : options.actModeOllamaModelId,
 				ollamaApiOptionsCtxNum: options.ollamaApiOptionsCtxNum,
 				requestTimeoutMs: options.requestTimeoutMs,
+				// CARET MODIFICATION: Enable Ollama thinking based on existing thinking budget setting
+				thinkingBudgetTokens: mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
 			})
 		case "lmstudio":
 			return new LmStudioHandler({

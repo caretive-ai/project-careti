@@ -82,12 +82,9 @@ export function isGPT52Model(id: string): boolean {
 
 export function isGLMModelFamily(id: string): boolean {
 	const modelId = normalize(id)
-	return (
-		modelId.includes("glm-4.6") ||
-		modelId.includes("glm-4.5") ||
-		modelId.includes("z-ai/glm") ||
-		modelId.includes("zai-org/glm")
-	)
+	// CARET MODIFICATION: Expand GLM matching to include GLM-4.7 and common local naming (e.g., glm4:latest)
+	const glm4Regex = /\bglm[-_ ]?4(?:\.\d+)?\b/
+	return glm4Regex.test(modelId) || modelId.includes("z-ai/glm") || modelId.includes("zai-org/glm")
 }
 
 export function isMinimaxModelFamily(id: string): boolean {

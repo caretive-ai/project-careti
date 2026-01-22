@@ -1,6 +1,6 @@
 import { ModelFamily } from "@/shared/prompts"
 import { ClineDefaultTool } from "@/shared/tools"
-import { isGLMModelFamily } from "@/utils/model-utils"
+import { isGLMModelFamily, isLocalModel } from "@/utils/model-utils"
 import { SystemPromptSection } from "../../templates/placeholders"
 import { createVariant } from "../variant-builder"
 import { validateVariant } from "../variant-validator"
@@ -16,7 +16,12 @@ export const config = createVariant(ModelFamily.GLM)
 		production: 1,
 	})
 	.matcher((context) => {
-		return isGLMModelFamily(context.providerInfo.model.id)
+		// CARET MODIFICATION: Keep compact local models on XS prompt variant (avoid GLM prompt overriding local compact)
+		const providerInfo = context.providerInfo
+		if (providerInfo.customPrompt === "compact" && isLocalModel(providerInfo)) {
+			return false
+		}
+		return isGLMModelFamily(providerInfo.model.id)
 	})
 	.template(baseTemplate)
 	.components(

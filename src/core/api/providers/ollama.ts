@@ -1,5 +1,5 @@
 import { type ModelInfo, openAiModelInfoSaneDefaults } from "@shared/api"
-import { type Config, type Message, Ollama } from "ollama"
+import { type ChatRequest, type Config, type Message, Ollama } from "ollama"
 import { ClineStorageMessage } from "@/shared/messages/content"
 import type { ApiHandler, CommonApiHandlerOptions } from "../"
 import { withRetry } from "../retry"
@@ -12,6 +12,8 @@ interface OllamaHandlerOptions extends CommonApiHandlerOptions {
 	ollamaModelId?: string
 	ollamaApiOptionsCtxNum?: string
 	requestTimeoutMs?: number
+	// CARET MODIFICATION: Enable/show Ollama thinking (message.thinking) when available
+	thinkingBudgetTokens?: number
 }
 
 const DEFAULT_CONTEXT_WINDOW = 32768
@@ -53,6 +55,9 @@ export class OllamaHandler implements ApiHandler {
 		const ollamaMessages: Message[] = [{ role: "system", content: systemPrompt }, ...convertToOllamaMessages(messages)]
 
 		try {
+			// CARET MODIFICATION: Map Caret "thinking budget" to Ollama `think` mode (fallback if unsupported by server)
+			const thinkingEnabled = (this.options.thinkingBudgetTokens ?? 0) !== 0
+
 			// Create a promise that rejects after timeout
 			const timeoutMs = this.options.requestTimeoutMs || 30000
 			const timeoutPromise = new Promise<never>((_, reject) => {
@@ -60,21 +65,56 @@ export class OllamaHandler implements ApiHandler {
 			})
 
 			// Create the actual API request promise
-			const apiPromise = client.chat({
+			const baseRequest: ChatRequest & { stream: true } = {
 				model: this.getModel().id,
 				messages: ollamaMessages,
 				stream: true,
 				options: {
 					num_ctx: Number(this.options.ollamaApiOptionsCtxNum),
 				},
-			})
+			}
+
+			const createChatStream = async () => {
+				try {
+					return await client.chat({
+						...baseRequest,
+						...(thinkingEnabled ? { think: true } : {}),
+					})
+				} catch (error: any) {
+					const message = error?.message
+					const isThinkUnsupported =
+						thinkingEnabled &&
+						typeof message === "string" &&
+						(message.includes("unknown field") ||
+							message.includes("unknown argument") ||
+							message.includes("invalid") ||
+							message.includes("unsupported")) &&
+						message.includes("think")
+					if (!isThinkUnsupported) {
+						throw error
+					}
+					// Fall back to request without `think` for older Ollama servers
+					return await client.chat(baseRequest)
+				}
+			}
+
+			const apiPromise = createChatStream()
 
 			// Race the API request against the timeout
 			const stream = (await Promise.race([apiPromise, timeoutPromise])) as Awaited<typeof apiPromise>
 
 			try {
+				let didYieldFinish = false
 				for await (const chunk of stream) {
-					if (typeof chunk.message.content === "string") {
+					// CARET MODIFICATION: Ollama can stream thinking separately as `message.thinking`
+					if (typeof chunk.message.thinking === "string" && chunk.message.thinking.length > 0) {
+						yield {
+							type: "reasoning",
+							reasoning: chunk.message.thinking,
+						}
+					}
+
+					if (typeof chunk.message.content === "string" && chunk.message.content.length > 0) {
 						yield {
 							type: "text",
 							text: chunk.message.content,
@@ -87,6 +127,15 @@ export class OllamaHandler implements ApiHandler {
 							type: "usage",
 							inputTokens: chunk.prompt_eval_count || 0,
 							outputTokens: chunk.eval_count || 0,
+						}
+					}
+
+					// CARET MODIFICATION: Emit finish reason (aligns with GLM4.7 finish_reason handling)
+					if (!didYieldFinish && chunk.done && typeof chunk.done_reason === "string" && chunk.done_reason.length > 0) {
+						didYieldFinish = true
+						yield {
+							type: "finish",
+							reason: chunk.done_reason,
 						}
 					}
 				}

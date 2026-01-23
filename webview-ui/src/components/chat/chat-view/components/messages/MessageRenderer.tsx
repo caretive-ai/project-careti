@@ -1,8 +1,12 @@
+// CARETI MODIFICATION: Added ToolGroupRenderer integration from ref-cline
 import { ClineMessage } from "@shared/ExtensionMessage"
-import React from "react"
+import React, { useMemo } from "react"
 import BrowserSessionRow from "@/components/chat/BrowserSessionRow"
 import ChatRow from "@/components/chat/ChatRow"
+import { useExtensionState } from "@/context/ExtensionStateContext"
 import { MessageHandlers } from "../../types/chatTypes"
+import { findReasoningForApiReq, isTextMessagePendingToolCall, isToolGroup } from "../../utils/messageUtils"
+import { ToolGroupRenderer } from "./ToolGroupRenderer"
 
 interface MessageRendererProps {
 	index: number
@@ -33,45 +37,65 @@ export const MessageRenderer: React.FC<MessageRendererProps> = ({
 	inputValue,
 	messageHandlers,
 }) => {
-	// Browser session group
-	if (Array.isArray(messageOrGroup)) {
-		// CARETI MODIFICATION: 마지막 메시지가 자동승인 바에 가려지지 않도록 마지막 그룹 아이템에 bottom padding 적용 (R-3400-04)
-		const isLast = index === groupedMessages.length - 1
-		return (
-			<div className={isLast ? "pb-2.5" : undefined}>
-				<BrowserSessionRow
-					expandedRows={expandedRows}
-					isLast={isLast}
-					key={messageOrGroup[0]?.ts}
-					lastModifiedMessage={modifiedMessages.at(-1)}
-					messages={messageOrGroup}
-					onHeightChange={onHeightChange}
-					onSetQuote={onSetQuote}
-					onToggleExpand={onToggleExpand}
-				/>
-			</div>
-		)
+	const { mode } = useExtensionState()
+
+	const isLastMessage = useMemo(() => index === groupedMessages?.length - 1, [groupedMessages, index])
+
+	// CARETI MODIFICATION: Get reasoning content and response status for api_req_started messages
+	const reasoningData = useMemo(() => {
+		if (!Array.isArray(messageOrGroup) && messageOrGroup.say === "api_req_started") {
+			return findReasoningForApiReq(messageOrGroup.ts, modifiedMessages)
+		}
+		return { reasoning: undefined, responseStarted: false }
+	}, [messageOrGroup, modifiedMessages])
+
+	// CARETI MODIFICATION: Check if a text message is waiting for tool call completion
+	const isRequestInProgress = useMemo(() => {
+		if (!Array.isArray(messageOrGroup) && messageOrGroup.say === "text") {
+			return isTextMessagePendingToolCall(messageOrGroup.ts, modifiedMessages)
+		}
+		return false
+	}, [messageOrGroup, modifiedMessages])
+
+	// CARETI MODIFICATION: Tool group (low-stakes tools grouped together)
+	if (isToolGroup(messageOrGroup)) {
+		return <ToolGroupRenderer allMessages={modifiedMessages} messages={messageOrGroup} />
 	}
 
-	// Determine if this is the last message for status display purposes
-	const nextMessage = index < groupedMessages.length - 1 && groupedMessages[index + 1]
-	const isNextCheckpoint = !Array.isArray(nextMessage) && nextMessage && nextMessage?.say === "checkpoint_created"
-	const isLastMessageGroup = isNextCheckpoint && index === groupedMessages.length - 2
-	const isLast = index === groupedMessages.length - 1 || isLastMessageGroup
-
-	// Regular message
-	return (
-		<div className={isLast ? "pb-2.5" : undefined}>
-			<ChatRow
-				inputValue={inputValue}
-				isExpanded={expandedRows[messageOrGroup.ts] || false}
-				isLast={isLast}
-				key={messageOrGroup.ts}
+	// Browser session group
+	if (Array.isArray(messageOrGroup)) {
+		return (
+			<BrowserSessionRow
+				expandedRows={expandedRows}
+				isLast={isLastMessage}
+				key={messageOrGroup[0]?.ts}
 				lastModifiedMessage={modifiedMessages.at(-1)}
-				message={messageOrGroup}
+				messages={messageOrGroup}
 				onHeightChange={onHeightChange}
 				onSetQuote={onSetQuote}
 				onToggleExpand={onToggleExpand}
+			/>
+		)
+	}
+
+	// Regular message
+	return (
+		<div className={isLastMessage ? "pb-2.5" : undefined} data-message-ts={messageOrGroup.ts}>
+			<ChatRow
+				inputValue={inputValue}
+				isExpanded={expandedRows[messageOrGroup.ts] || false}
+				isLast={isLastMessage}
+				isRequestInProgress={isRequestInProgress}
+				key={messageOrGroup.ts}
+				lastModifiedMessage={modifiedMessages.at(-1)}
+				message={messageOrGroup}
+				mode={mode}
+				onCancelCommand={() => messageHandlers.executeButtonAction("cancel")}
+				onHeightChange={onHeightChange}
+				onSetQuote={onSetQuote}
+				onToggleExpand={onToggleExpand}
+				reasoningContent={reasoningData.reasoning}
+				responseStarted={reasoningData.responseStarted}
 				sendMessageFromChatRow={messageHandlers.handleSendMessage}
 			/>
 		</div>

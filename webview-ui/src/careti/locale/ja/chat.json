@@ -398,6 +398,23 @@
 		"userEdits": "ユーザー編集",
 		"consoleLogs": "コンソールログ"
 	},
+	"thinkingRow": {
+		"thinking": "思考中"
+	},
+	"toolGroup": {
+		"read": "読み込み",
+		"file": "ファイル",
+		"files": "ファイル",
+		"folder": "フォルダ",
+		"folders": "フォルダ",
+		"definition": "定義",
+		"definitions": "定義",
+		"performed": "実行",
+		"search": "検索",
+		"searches": "検索",
+		"context": "コンテキスト",
+		"brandName": "{{brandName}}"
+	},
 	"copyButton": {
 		"copied": "コピーしました",
 		"copy": "コピー"

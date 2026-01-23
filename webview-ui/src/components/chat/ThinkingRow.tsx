@@ -6,6 +6,7 @@
  * Removed shadcn dependencies (Button, cn) and using inline styles
  */
 
+import { t } from "@/careti/utils/i18n"
 import { ChevronDownIcon, ChevronRightIcon } from "lucide-react"
 import { memo, useEffect, useRef } from "react"
 
@@ -56,7 +57,7 @@ export const ThinkingRow = memo(
 						) : (
 							<ChevronRightIcon size={14} style={{ opacity: 0.7 }} />
 						)}
-						<span style={{ fontWeight: 600 }}>Thinking:</span>
+						<span style={{ fontWeight: 600 }}>{t("thinkingRow.thinking", "chat")}:</span>
 						<span
 							style={{
 								fontStyle: "italic",

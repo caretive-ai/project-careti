@@ -399,6 +399,23 @@
 		"userEdits": "사용자 편집",
 		"consoleLogs": "콘솔 로그"
 	},
+	"thinkingRow": {
+		"thinking": "생각 중"
+	},
+	"toolGroup": {
+		"read": "읽음",
+		"file": "파일",
+		"files": "파일",
+		"folder": "폴더",
+		"folders": "폴더",
+		"definition": "정의",
+		"definitions": "정의",
+		"performed": "수행",
+		"search": "검색",
+		"searches": "검색",
+		"context": "컨텍스트",
+		"brandName": "{{brandName}}"
+	},
 	"copyButton": {
 		"copied": "복사됨",
 		"copy": "복사"

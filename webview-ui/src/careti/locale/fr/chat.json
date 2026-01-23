@@ -399,6 +399,23 @@
 		"userEdits": "Modifications utilisateur",
 		"consoleLogs": "Logs de la console"
 	},
+	"thinkingRow": {
+		"thinking": "Réflexion"
+	},
+	"toolGroup": {
+		"read": "lu",
+		"file": "fichier",
+		"files": "fichiers",
+		"folder": "dossier",
+		"folders": "dossiers",
+		"definition": "définition",
+		"definitions": "définitions",
+		"performed": "effectué",
+		"search": "recherche",
+		"searches": "recherches",
+		"context": "Contexte",
+		"brandName": "{{brandName}}"
+	},
 	"copyButton": {
 		"copied": "Copie",
 		"copy": "Copier"

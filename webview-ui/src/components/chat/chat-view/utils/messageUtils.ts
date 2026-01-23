@@ -139,6 +139,71 @@ export function getToolsNotInCurrentActivities(toolGroupMessages: ClineMessage[]
 }
 
 /**
+ * CARETI MODIFICATION: Find reasoning content for an API request message
+ * Used for ThinkingRow display
+ */
+export function findReasoningForApiReq(
+	apiReqTs: number,
+	allMessages: ClineMessage[],
+): { reasoning: string | undefined; responseStarted: boolean } {
+	const apiReqIndex = allMessages.findIndex((m) => m.ts === apiReqTs && m.say === "api_req_started")
+	if (apiReqIndex === -1) {
+		return { reasoning: undefined, responseStarted: false }
+	}
+
+	// Collect reasoning and check if response content has started
+	const reasoningParts: string[] = []
+	let responseStarted = false
+
+	for (let i = apiReqIndex + 1; i < allMessages.length; i++) {
+		const msg = allMessages[i]
+		// Stop at next api_req_started
+		if (msg.say === "api_req_started") {
+			break
+		}
+		// Collect reasoning content
+		if (msg.say === "reasoning" && msg.text) {
+			reasoningParts.push(msg.text)
+		}
+		// Check if non-reasoning response content has started (text, tool calls, etc.)
+		if (msg.say === "text" || msg.say === "tool" || msg.ask === "tool" || msg.ask === "command" || msg.say === "command") {
+			responseStarted = true
+		}
+	}
+
+	return {
+		reasoning: reasoningParts.length > 0 ? reasoningParts.join("\n\n") : undefined,
+		responseStarted,
+	}
+}
+
+/**
+ * CARETI MODIFICATION: Check if a text message is waiting for tool call completion
+ */
+export function isTextMessagePendingToolCall(textTs: number, allMessages: ClineMessage[]): boolean {
+	// Find the api_req_started that precedes this text message
+	const textIndex = allMessages.findIndex((m) => m.ts === textTs)
+	if (textIndex === -1) {
+		return false
+	}
+
+	// Look backwards for the most recent api_req_started
+	for (let i = textIndex - 1; i >= 0; i--) {
+		const msg = allMessages[i]
+		if (msg.say === "api_req_started" && msg.text) {
+			try {
+				const info = JSON.parse(msg.text)
+				// If no cost, the request is still in progress
+				return info.cost == null
+			} catch {
+				return false
+			}
+		}
+	}
+	return false
+}
+
+/**
  * Combine API requests and command sequences in messages
  */
 export function processMessages(messages: ClineMessage[]): ClineMessage[] {

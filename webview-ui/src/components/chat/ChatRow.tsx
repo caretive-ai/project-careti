@@ -67,6 +67,9 @@ const ChatRowContainer = styled.div`
 	}
 `
 
+// CARETI MODIFICATION: Import Mode type for ChatRow props
+import { Mode } from "@shared/modes"
+
 interface ChatRowProps {
 	message: ClineMessage
 	isExpanded: boolean
@@ -77,6 +80,12 @@ interface ChatRowProps {
 	inputValue?: string
 	sendMessageFromChatRow?: (text: string, images: string[], files: string[]) => void
 	onSetQuote: (text: string) => void
+	// CARETI MODIFICATION: Additional props for ThinkingRow and UI improvements
+	onCancelCommand?: () => void
+	mode?: Mode
+	reasoningContent?: string
+	responseStarted?: boolean
+	isRequestInProgress?: boolean
 }
 
 interface QuoteButtonState {

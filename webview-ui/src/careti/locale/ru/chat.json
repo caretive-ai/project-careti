@@ -399,6 +399,23 @@
 		"userEdits": "Правки пользователя",
 		"consoleLogs": "Логи консоли"
 	},
+	"thinkingRow": {
+		"thinking": "Размышление"
+	},
+	"toolGroup": {
+		"read": "прочитано",
+		"file": "файл",
+		"files": "файлов",
+		"folder": "папка",
+		"folders": "папок",
+		"definition": "определение",
+		"definitions": "определений",
+		"performed": "выполнено",
+		"search": "поиск",
+		"searches": "поисков",
+		"context": "Контекст",
+		"brandName": "{{brandName}}"
+	},
 	"copyButton": {
 		"copied": "Скопировано",
 		"copy": "Копировать"

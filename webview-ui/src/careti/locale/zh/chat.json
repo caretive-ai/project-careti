@@ -398,6 +398,23 @@
 		"userEdits": "用户编辑",
 		"consoleLogs": "控制台日志"
 	},
+	"thinkingRow": {
+		"thinking": "思考中"
+	},
+	"toolGroup": {
+		"read": "读取",
+		"file": "文件",
+		"files": "文件",
+		"folder": "文件夹",
+		"folders": "文件夹",
+		"definition": "定义",
+		"definitions": "定义",
+		"performed": "执行",
+		"search": "搜索",
+		"searches": "搜索",
+		"context": "上下文",
+		"brandName": "{{brandName}}"
+	},
 	"copyButton": {
 		"copied": "已复制",
 		"copy": "复制"

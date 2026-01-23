@@ -6,6 +6,7 @@
  * Removed shadcn dependencies (Button, Tooltip, cn) and using inline styles
  */
 
+import { t } from "@/careti/utils/i18n"
 import { ClineMessage, ClineSayTool } from "@shared/ExtensionMessage"
 import { StringRequest } from "@shared/proto/cline/common"
 import { memo, useCallback, useMemo, useState } from "react"
@@ -303,20 +304,20 @@ function getToolGroupSummary(messages: ClineMessage[]): string {
 	}
 
 	const parts: string[] = []
-	const action = counts.read > 0 || counts.list > 0 ? " read " : " "
+	const action = counts.read > 0 || counts.list > 0 ? ` ${t("toolGroup.read", "chat")} ` : " "
 
 	if (counts.read > 0) {
-		parts.push(`${counts.read} file${counts.read > 1 ? "s" : ""}`)
+		parts.push(`${counts.read} ${counts.read > 1 ? t("toolGroup.files", "chat") : t("toolGroup.file", "chat")}`)
 	}
 	if (counts.list > 0) {
-		parts.push(`${counts.list} folder${counts.list > 1 ? "s" : ""}`)
+		parts.push(`${counts.list} ${counts.list > 1 ? t("toolGroup.folders", "chat") : t("toolGroup.folder", "chat")}`)
 	}
 	if (counts.def > 0) {
-		parts.push(`${counts.def} definition${counts.def > 1 ? "s" : ""}`)
+		parts.push(`${counts.def} ${counts.def > 1 ? t("toolGroup.definitions", "chat") : t("toolGroup.definition", "chat")}`)
 	}
 	if (counts.search > 0) {
-		parts.push(`performed ${counts.search} search${counts.search > 1 ? "es" : ""}`)
+		parts.push(`${t("toolGroup.performed", "chat")} ${counts.search} ${counts.search > 1 ? t("toolGroup.searches", "chat") : t("toolGroup.search", "chat")}`)
 	}
 
-	return parts.length === 0 ? "Context" : "Cline" + action + parts.join(", ")
+	return parts.length === 0 ? t("toolGroup.context", "chat") : t("toolGroup.brandName", "chat") + action + parts.join(", ")
 }

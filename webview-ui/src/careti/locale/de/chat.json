@@ -399,6 +399,23 @@
 		"userEdits": "Benutzerbearbeitungen",
 		"consoleLogs": "Konsolenprotokolle"
 	},
+	"thinkingRow": {
+		"thinking": "Denken"
+	},
+	"toolGroup": {
+		"read": "gelesen",
+		"file": "Datei",
+		"files": "Dateien",
+		"folder": "Ordner",
+		"folders": "Ordner",
+		"definition": "Definition",
+		"definitions": "Definitionen",
+		"performed": "durchgeführt",
+		"search": "Suche",
+		"searches": "Suchen",
+		"context": "Kontext",
+		"brandName": "{{brandName}}"
+	},
 	"copyButton": {
 		"copied": "Kopiert",
 		"copy": "Kopieren"

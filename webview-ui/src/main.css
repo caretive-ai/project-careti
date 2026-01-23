@@ -211,3 +211,17 @@ vscode-dropdown::part(listbox) {
 .bg-scheduled {
 	background-color: color-mix(in srgb, var(--vscode-peekViewResult-background) 85%, transparent);
 }
+
+/* CARETI MODIFICATION: Shimmer animation for TypewriterText */
+@keyframes shimmer {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+.animate-shimmer {
+	animation: shimmer 5s infinite linear;
+}

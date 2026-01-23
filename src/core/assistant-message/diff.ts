@@ -1,3 +1,10 @@
+// CARETI MODIFICATION: Import SmartEditEngine for enhanced fallback matching
+import {
+	WhitespaceNormalizedReplacer,
+	IndentationFlexibleReplacer,
+	EscapeNormalizedReplacer,
+} from "@careti/core/editing"
+
 const SEARCH_BLOCK_START = "------- SEARCH"
 const SEARCH_BLOCK_END = "======="
 const REPLACE_BLOCK_END = "+++++++ REPLACE"
@@ -173,6 +180,62 @@ function blockAnchorFallbackMatch(originalContent: string, searchContent: string
 	return false
 }
 
+// CARETI MODIFICATION: Enhanced fallback matching using SmartEditEngine replacers
+
+/**
+ * Attempts whitespace-normalized matching using SmartEditEngine's WhitespaceNormalizedReplacer.
+ * Collapses multiple whitespaces and compares normalized content.
+ */
+function whitespaceNormalizedFallbackMatch(
+	originalContent: string,
+	searchContent: string,
+	startIndex: number,
+): [number, number] | false {
+	for (const match of WhitespaceNormalizedReplacer(originalContent, searchContent)) {
+		const index = originalContent.indexOf(match, startIndex)
+		if (index !== -1) {
+			return [index, index + match.length]
+		}
+	}
+	return false
+}
+
+/**
+ * Attempts indentation-flexible matching using SmartEditEngine's IndentationFlexibleReplacer.
+ * Matches content regardless of base indentation level.
+ */
+function indentationFlexibleFallbackMatch(
+	originalContent: string,
+	searchContent: string,
+	startIndex: number,
+): [number, number] | false {
+	for (const match of IndentationFlexibleReplacer(originalContent, searchContent)) {
+		const index = originalContent.indexOf(match, startIndex)
+		if (index !== -1) {
+			return [index, index + match.length]
+		}
+	}
+	return false
+}
+
+/**
+ * Attempts escape-normalized matching using SmartEditEngine's EscapeNormalizedReplacer.
+ * Handles escape sequences like \n, \t, etc.
+ */
+function escapeNormalizedFallbackMatch(
+	originalContent: string,
+	searchContent: string,
+	startIndex: number,
+): [number, number] | false {
+	for (const match of EscapeNormalizedReplacer(originalContent, searchContent)) {
+		const index = originalContent.indexOf(match, startIndex)
+		if (index !== -1) {
+			return [index, index + match.length]
+		}
+	}
+	return false
+}
+
 /**
  * This function reconstructs the file content by applying a streamed diff (in a
  * specialized SEARCH/REPLACE block format) to the original file content. It is designed
@@ -336,29 +399,59 @@ async function constructNewFileContentV1(diffContent: string, originalContent: s
 					searchMatchIndex = exactIndex
 					searchEndIndex = exactIndex + currentSearchContent.length
 				} else {
-					// Attempt fallback line-trimmed matching
+					// CARETI MODIFICATION: Enhanced 6-stage fallback matching
+					// Stage 1: Line-trimmed matching
 					const lineMatch = lineTrimmedFallbackMatch(originalContent, currentSearchContent, lastProcessedIndex)
 					if (lineMatch) {
 						;[searchMatchIndex, searchEndIndex] = lineMatch
 					} else {
-						// Try block anchor fallback for larger blocks
-						const blockMatch = blockAnchorFallbackMatch(originalContent, currentSearchContent, lastProcessedIndex)
-						if (blockMatch) {
-							;[searchMatchIndex, searchEndIndex] = blockMatch
+						// Stage 2: Whitespace-normalized matching
+						const wsMatch = whitespaceNormalizedFallbackMatch(originalContent, currentSearchContent, lastProcessedIndex)
+						if (wsMatch) {
+							;[searchMatchIndex, searchEndIndex] = wsMatch
 						} else {
-							// Last resort: search the entire file from the beginning
-							const fullFileIndex = originalContent.indexOf(currentSearchContent, 0)
-							if (fullFileIndex !== -1) {
-								// Found in the file - could be out of order
-								searchMatchIndex = fullFileIndex
-								searchEndIndex = fullFileIndex + currentSearchContent.length
-								if (searchMatchIndex < lastProcessedIndex) {
-									pendingOutOfOrderReplacement = true
-								}
+							// Stage 3: Indentation-flexible matching
+							const indentMatch = indentationFlexibleFallbackMatch(
+								originalContent,
+								currentSearchContent,
+								lastProcessedIndex,
+							)
+							if (indentMatch) {
+								;[searchMatchIndex, searchEndIndex] = indentMatch
 							} else {
-								throw new Error(
-									`The SEARCH block:\n${currentSearchContent.trimEnd()}\n...does not match anything in the file.`,
+								// Stage 4: Escape-normalized matching
+								const escapeMatch = escapeNormalizedFallbackMatch(
+									originalContent,
+									currentSearchContent,
+									lastProcessedIndex,
 								)
+								if (escapeMatch) {
+									;[searchMatchIndex, searchEndIndex] = escapeMatch
+								} else {
+									// Stage 5: Block anchor fallback for larger blocks
+									const blockMatch = blockAnchorFallbackMatch(
+										originalContent,
+										currentSearchContent,
+										lastProcessedIndex,
+									)
+									if (blockMatch) {
+										;[searchMatchIndex, searchEndIndex] = blockMatch
+									} else {
+										// Stage 6: Last resort - search entire file from beginning
+										const fullFileIndex = originalContent.indexOf(currentSearchContent, 0)
+										if (fullFileIndex !== -1) {
+											searchMatchIndex = fullFileIndex
+											searchEndIndex = fullFileIndex + currentSearchContent.length
+											if (searchMatchIndex < lastProcessedIndex) {
+												pendingOutOfOrderReplacement = true
+											}
+										} else {
+											throw new Error(
+												`The SEARCH block:\n${currentSearchContent.trimEnd()}\n...does not match anything in the file.`,
+											)
+										}
+									}
+								}
 							}
 						}
 					}
@@ -665,7 +758,8 @@ class NewFileContentConstructor {
 				this.searchMatchIndex = exactIndex
 				this.searchEndIndex = exactIndex + this.currentSearchContent.length
 			} else {
-				// Attempt fallback line-trimmed matching
+				// CARETI MODIFICATION: Enhanced 6-stage fallback matching (V2)
+				// Stage 1: Line-trimmed matching
 				const lineMatch = lineTrimmedFallbackMatch(
 					this.originalContent,
 					this.currentSearchContent,
@@ -674,18 +768,48 @@ class NewFileContentConstructor {
 				if (lineMatch) {
 					;[this.searchMatchIndex, this.searchEndIndex] = lineMatch
 				} else {
-					// Try block anchor fallback for larger blocks
-					const blockMatch = blockAnchorFallbackMatch(
+					// Stage 2: Whitespace-normalized matching
+					const wsMatch = whitespaceNormalizedFallbackMatch(
 						this.originalContent,
 						this.currentSearchContent,
 						this.lastProcessedIndex,
 					)
-					if (blockMatch) {
-						;[this.searchMatchIndex, this.searchEndIndex] = blockMatch
+					if (wsMatch) {
+						;[this.searchMatchIndex, this.searchEndIndex] = wsMatch
 					} else {
-						throw new Error(
-							`The SEARCH block:\n${this.currentSearchContent.trimEnd()}\n...does not match anything in the file.`,
+						// Stage 3: Indentation-flexible matching
+						const indentMatch = indentationFlexibleFallbackMatch(
+							this.originalContent,
+							this.currentSearchContent,
+							this.lastProcessedIndex,
 						)
+						if (indentMatch) {
+							;[this.searchMatchIndex, this.searchEndIndex] = indentMatch
+						} else {
+							// Stage 4: Escape-normalized matching
+							const escapeMatch = escapeNormalizedFallbackMatch(
+								this.originalContent,
+								this.currentSearchContent,
+								this.lastProcessedIndex,
+							)
+							if (escapeMatch) {
+								;[this.searchMatchIndex, this.searchEndIndex] = escapeMatch
+							} else {
+								// Stage 5: Block anchor fallback for larger blocks
+								const blockMatch = blockAnchorFallbackMatch(
+									this.originalContent,
+									this.currentSearchContent,
+									this.lastProcessedIndex,
+								)
+								if (blockMatch) {
+									;[this.searchMatchIndex, this.searchEndIndex] = blockMatch
+								} else {
+									throw new Error(
+										`The SEARCH block:\n${this.currentSearchContent.trimEnd()}\n...does not match anything in the file.`,
+									)
+								}
+							}
+						}
 					}
 				}
 			}

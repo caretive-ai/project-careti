@@ -4,7 +4,139 @@
 
 import { combineApiRequests } from "@shared/combineApiRequests"
 import { combineCommandSequences } from "@shared/combineCommandSequences"
-import { ClineMessage, ClineSayBrowserAction } from "@shared/ExtensionMessage"
+import { ClineMessage, ClineSayBrowserAction, ClineSayTool } from "@shared/ExtensionMessage"
+// CARETI MODIFICATION: Import icons for tool group display
+import { FileIcon, FolderOpenDotIcon, FolderOpenIcon, SearchIcon, ShapesIcon, WrenchIcon } from "lucide-react"
+
+/**
+ * CARETI MODIFICATION: Low-stakes tool types that should be grouped together
+ * Ported from ref-cline for ToolGroupRenderer support
+ */
+const LOW_STAKES_TOOLS = new Set([
+	"readFile",
+	"listFilesTopLevel",
+	"listFilesRecursive",
+	"listCodeDefinitionNames",
+	"searchFiles",
+])
+
+/**
+ * CARETI MODIFICATION: Check if a tool message is a low-stakes tool
+ */
+export function isLowStakesTool(message: ClineMessage): boolean {
+	if (message.say !== "tool" && message.ask !== "tool") {
+		return false
+	}
+	try {
+		const tool = JSON.parse(message.text || "{}") as ClineSayTool
+		return LOW_STAKES_TOOLS.has(tool.tool)
+	} catch {
+		return false
+	}
+}
+
+/**
+ * CARETI MODIFICATION: Check if a message group is a tool group
+ */
+export function isToolGroup(item: ClineMessage | ClineMessage[]): item is ClineMessage[] & { _isToolGroup: true } {
+	return Array.isArray(item) && (item as any)._isToolGroup === true
+}
+
+/**
+ * CARETI MODIFICATION: Get icon component by tool name
+ */
+export function getIconByToolName(toolName: string) {
+	switch (toolName) {
+		case "readFile":
+			return FileIcon
+		case "listFilesTopLevel":
+			return FolderOpenIcon
+		case "listFilesRecursive":
+			return FolderOpenDotIcon
+		case "searchFiles":
+			return SearchIcon
+		case "listCodeDefinitionNames":
+			return ShapesIcon
+		default:
+			return WrenchIcon
+	}
+}
+
+/**
+ * CARETI MODIFICATION: Filter a tool group to exclude tools in "current activities" range
+ */
+export function getToolsNotInCurrentActivities(toolGroupMessages: ClineMessage[], allMessages: ClineMessage[]): ClineMessage[] {
+	const tsToIndex = new Map<number, number>()
+	for (let i = 0; i < allMessages.length; i++) {
+		tsToIndex.set(allMessages[i].ts, i)
+	}
+
+	let mostRecentApiReqIndex = -1
+	let mostRecentApiReq: ClineMessage | null = null
+	for (let i = allMessages.length - 1; i >= 0; i--) {
+		if (allMessages[i].say === "api_req_started") {
+			mostRecentApiReqIndex = i
+			mostRecentApiReq = allMessages[i]
+			break
+		}
+	}
+
+	if (mostRecentApiReqIndex === -1 || !mostRecentApiReq?.text) {
+		return toolGroupMessages
+	}
+
+	let mostRecentHasCost = false
+	try {
+		const info = JSON.parse(mostRecentApiReq.text)
+		mostRecentHasCost = info.cost != null
+	} catch {
+		return toolGroupMessages
+	}
+
+	if (!mostRecentHasCost) {
+		let prevCompletedApiReqIndex = -1
+		for (let i = mostRecentApiReqIndex - 1; i >= 0; i--) {
+			const msg = allMessages[i]
+			if (msg.say === "api_req_started" && msg.text) {
+				try {
+					const prevInfo = JSON.parse(msg.text)
+					if (prevInfo.cost != null) {
+						prevCompletedApiReqIndex = i
+						break
+					}
+				} catch {
+					/* continue searching */
+				}
+			}
+		}
+
+		if (prevCompletedApiReqIndex === -1) {
+			return toolGroupMessages
+		}
+
+		return toolGroupMessages.filter((msg) => {
+			if (!isLowStakesTool(msg)) return true
+			if (msg.ask === "tool") {
+				const toolIndex = tsToIndex.get(msg.ts)
+				if (toolIndex === undefined) return true
+				const isInCurrentActivitiesRange = toolIndex > prevCompletedApiReqIndex && toolIndex < mostRecentApiReqIndex
+				return !isInCurrentActivitiesRange
+			}
+			return true
+		})
+	} else {
+		return toolGroupMessages.filter((msg) => {
+			if (!isLowStakesTool(msg)) return true
+			if (msg.ask === "tool") {
+				const toolIndex = tsToIndex.get(msg.ts)
+				if (toolIndex === undefined) return true
+				const isInCurrentActivitiesRange = toolIndex > mostRecentApiReqIndex
+				return !isInCurrentActivitiesRange
+			}
+			return true
+		})
+	}
+}
 
 /**
  * Combine API requests and command sequences in messages

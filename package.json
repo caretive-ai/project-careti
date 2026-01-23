@@ -458,11 +458,6 @@
 		"@modelcontextprotocol/sdk": "^1.11.1",
 		"@napi-rs/wasm-runtime": "^1.1.1",
 		"@ohah/hwpjs": "^0.1.0-rc.3",
-		"@ohah/hwpjs-darwin-arm64": "^0.1.0-rc.3",
-		"@ohah/hwpjs-darwin-x64": "^0.1.0-rc.3",
-		"@ohah/hwpjs-linux-x64-gnu": "^0.1.0-rc.3",
-		"@ohah/hwpjs-wasm32-wasi": "^0.1.0-rc.3",
-		"@ohah/hwpjs-win32-x64-msvc": "^0.1.0-rc.3",
 		"@opentelemetry/api": "^1.9.0",
 		"@opentelemetry/core": "^2.1.0",
 		"@opentelemetry/exporter-logs-otlp-grpc": "^0.56.0",
@@ -546,6 +541,13 @@
 		"web-tree-sitter": "^0.22.6",
 		"zod": "^3.24.2"
 	},
+	"optionalDependencies": {
+		"@ohah/hwpjs-darwin-arm64": "^0.1.0-rc.3",
+		"@ohah/hwpjs-darwin-x64": "^0.1.0-rc.3",
+		"@ohah/hwpjs-linux-x64-gnu": "^0.1.0-rc.3",
+		"@ohah/hwpjs-wasm32-wasi": "^0.1.0-rc.3",
+		"@ohah/hwpjs-win32-x64-msvc": "^0.1.0-rc.3"
+	},
 	"overrides": {
 		"tar-fs": ">=3.1.1",
 		"tar": "^7.5.2",
@@ -591,6 +593,5 @@
 		"*.{ts,tsx}": [
 			"biome lint --no-errors-on-unmatched --files-ignore-unknown=true --diagnostic-level=error"
 		]
-	},
-	"packageManager": "pnpm@10.22.0+sha512.bf049efe995b28f527fd2b41ae0474ce29186f7edcb3bf545087bd61fbbebb2bf75362d1307fda09c2d288e1e499787ac12d4fcb617a974718a6051f2eee741c"
+	}
 }

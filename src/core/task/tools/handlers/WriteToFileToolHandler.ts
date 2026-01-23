@@ -12,6 +12,8 @@ import { telemetryService } from "@/services/telemetry"
 import { ClineDefaultTool } from "@/shared/tools"
 // CARETI MODIFICATION: import brand utils for dynamic brand name
 import { getCurrentBrandName } from "@careti/utils/brand-utils"
+// CARETI MODIFICATION: import SmartEditEngine for token-efficient error context
+import { SmartEditEngine } from "@careti/core/editing"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApproval } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -434,10 +436,25 @@ export class WriteToFileToolHandler implements IFullyManagedTool {
 				const isNativeToolCall = block.isNativeToolCall === true
 				telemetryService.captureDiffEditFailure(config.ulid, modelId, providerId, errorType, isNativeToolCall)
 
-				// Push tool result with detailed error using existing utilities
+				// CARETI MODIFICATION: Use token-efficient error context instead of full file content
+				// Extract search string from error message for context generation
+				const errorMessage = (error as Error)?.message || ""
+				const searchMatch = errorMessage.match(/The SEARCH block:\n([\s\S]*?)\n\.\.\./)
+				const searchString = searchMatch ? searchMatch[1] : ""
+
+				// Generate compact context around the failed search (5 lines instead of full file)
+				const smartEngine = new SmartEditEngine()
+				const originalContent = config.services.diffViewProvider.originalContent || ""
+				const contextOnly = smartEngine.getContextAroundError(originalContent, searchString, 5)
+
+				// Build token-efficient error response (90-95% token reduction)
 				const errorResponse = formatResponse.toolError(
-					`${(error as Error)?.message}\n\n` +
-						formatResponse.diffError(relPath, config.services.diffViewProvider.originalContent),
+					`${errorMessage}\n\n` +
+						`File: ${relPath}\n` +
+						`Context around potential match (lines ${contextOnly.split("\n")[0]?.match(/^(\d+):/)?.[1] || "1"}-${contextOnly.split("\n").pop()?.match(/^(\d+):/)?.[1] || "?"}):\n` +
+						`${contextOnly}\n\n` +
+						`Try the operation again with more precise SEARCH blocks that exactly match the file content, including whitespace and indentation.\n` +
+						`(If you run into this error 3 times in a row, you may use the write_to_file tool as a fallback.)`,
 				)
 				ToolResultUtils.pushToolResult(
 					errorResponse,

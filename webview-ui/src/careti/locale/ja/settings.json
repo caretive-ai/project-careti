@@ -1,6 +1,6 @@
 {
 	"settingsView": {
-		"title": "Caret設定"
+		"title": "Careti設定"
 	},
 	"tabs": {
 		"apiConfiguration": {
@@ -35,14 +35,14 @@
 		},
 		"about": {
 			"name": "情報",
-			"tooltip": "Caret情報",
+			"tooltip": "Careti情報",
 			"header": "情報"
 		}
 	},
 	"settings": {
 		"preferredLanguage": {
 			"label": "優先言語",
-			"description": "Caretがコミュニケーションに使用する言語を選択してください。"
+			"description": "Caretiがコミュニケーションに使用する言語を選択してください。"
 		},
 		"unifiedLanguage": {
 			"label": "言語",
@@ -65,11 +65,11 @@
 			"scrollUp": "上にスクロール",
 			"close": "ブラウザを閉じる"
 		},
-		"disableToolUseDescription": "Caretがブラウザアクション（起動、クリック、入力など）を使用するのを防ぎます。",
+		"disableToolUseDescription": "Caretiがブラウザアクション（起動、クリック、入力など）を使用するのを防ぎます。",
 		"viewportSize": "ビューポートサイズ",
 		"viewportSizeDescription": "スクリーンショットとインタラクションのためのブラウザビューポートのサイズを設定します。",
 		"useRemoteConnection": "リモートブラウザ接続を使用する",
-		"remoteConnectionDescription1": "CaretがChromeを使用できるようにします",
+		"remoteConnectionDescription1": "CaretiがChromeを使用できるようにします",
 		"chromeNotDetected": "(お使いのPCでは検出されませんでした)",
 		"remoteConnectionDescription2": "。カスタムパスは以下で指定できます。リモートブラウザ接続を使用するには、Chromeをデバッグモードで起動する必要があります",
 		"remoteConnectionDescription3": "手動で (`--remote-debugging-port=9222`) または下のボタンを使用して起動します。ホストアドレスを入力するか、自動検出のために空白のままにしてください。",
@@ -105,7 +105,7 @@
 		"subagents": {
 			"enable": "サブエージェントを有効化",
 			"enabled": "サブエージェントが有効です",
-			"caretWarning": "サブエージェントには Caret CLI が必要です。",
+			"caretWarning": "サブエージェントには Careti CLI が必要です。",
 			"clineWarning": "サブエージェントには Cline CLI が必要です。",
 			"install": "サブエージェント CLI をインストール",
 			"installed": "CLI を検出しました",
@@ -130,7 +130,7 @@
 		"focusChain": "フォーカスチェーンを有効にする",
 		"focusChainDescription": "タスク全体で強化されたタスク進捗追跡と自動フォーカスチェーンリスト管理を有効にします。",
 		"focusChainReminderInterval": "フォーカスチェーンリマインダー間隔",
-		"focusChainReminderIntervalDescription": "Caretにフォーカスチェーンチェックリストをリマインドする間隔（メッセージ単位、1-100）。値が小さいほど頻繁にリマインドされます。",
+		"focusChainReminderIntervalDescription": "Caretiにフォーカスチェーンチェックリストをリマインドする間隔（メッセージ単位、1-100）。値が小さいほど頻繁にリマインドされます。",
 		"enableDictation": "ディクテーションを有効にする",
 		"enableDictationDescription": "Clineアカウントを使用して音声をテキストに変換します。Whisperモデルを使用し、処理1分あたり $0.006 のクレジットを消費します。1メッセージあたり最大5分。",
 		"dictationLanguage": "ディクテーション言語",
@@ -138,7 +138,7 @@
 		"autoCompact": "自動コンパクトを有効にする",
 		"autoCompactDescription": "LLMベースの凝縮を使用した次世代モデルの高度なコンテキスト管理システムを有効にします。",
 		"enableYoloMode": "YOLOモードを有効にする",
-		"enableYoloModeDescription": "実験的かつ危険：このモードは安全チェックとユーザー確認を無効にします。Caretは確認なしにすべてのアクションを自動承認します。細心の注意を払って使用してください。",
+		"enableYoloModeDescription": "実験的かつ危険：このモードは安全チェックとユーザー確認を無効にします。Caretiは確認なしにすべてのアクションを自動承認します。細心の注意を払って使用してください。",
 		"learnMore": "詳細はこちら",
 		"enableHooks": "Hooksを有効にする",
 		"enableHooksDescription": "AIアクションの前後にシェルコマンドを実行できます（例：編集前のコードレビュー）。",
@@ -164,57 +164,57 @@
 		"readFiles": {
 			"label": "プロジェクトファイルを読み取る",
 			"shortName": "読み取り",
-			"description": "Caretがワークスペース内のファイルを読み取れるようにします。"
+			"description": "Caretiがワークスペース内のファイルを読み取れるようにします。"
 		},
 		"readFilesExternally": {
 			"label": "すべてのファイルを読み取る",
 			"shortName": "すべて読み取り",
-			"description": "Caretがコンピュータ上のすべてのファイルを読み取れるようにします。"
+			"description": "Caretiがコンピュータ上のすべてのファイルを読み取れるようにします。"
 		},
 		"editFiles": {
 			"label": "プロジェクトファイルを編集する",
 			"shortName": "編集",
-			"description": "Caretがワークスペース内のファイルを変更できるようにします。"
+			"description": "Caretiがワークスペース内のファイルを変更できるようにします。"
 		},
 		"editFilesExternally": {
 			"label": "すべてのファイルを編集する",
 			"shortName": "すべて編集",
-			"description": "Caretがコンピュータ上のすべてのファイルを変更できるようにします。"
+			"description": "Caretiがコンピュータ上のすべてのファイルを変更できるようにします。"
 		},
 		"executeSafeCommands": {
 			"label": "安全なコマンドを実行する",
 			"shortName": "安全コマンド",
-			"description": "Caretが安全なターミナルコマンドを実行できるようにします。モデルが破壊的な可能性があると判断した場合は、引き続き承認が必要です。"
+			"description": "Caretiが安全なターミナルコマンドを実行できるようにします。モデルが破壊的な可能性があると判断した場合は、引き続き承認が必要です。"
 		},
 		"executeAllCommands": {
 			"label": "すべてのコマンドを実行する",
 			"shortName": "すべてのコマンド",
-			"description": "Caretがすべてのターミナルコマンドを実行できるようにします。自己責任でご使用ください。"
+			"description": "Caretiがすべてのターミナルコマンドを実行できるようにします。自己責任でご使用ください。"
 		},
 		"useBrowser": {
 			"label": "ブラウザを使用する",
 			"shortName": "ブラウザ",
-			"description": "Caretがブラウザで任意のウェブサイトを実行および操作できるようにします。"
+			"description": "Caretiがブラウザで任意のウェブサイトを実行および操作できるようにします。"
 		},
 		"generateImages": {
 			"label": "画像生成",
 			"shortName": "生成",
-			"description": "Caretが画像生成ツールで画像を生成できるようにします。"
+			"description": "Caretiが画像生成ツールで画像を生成できるようにします。"
 		},
 		"analyzeImages": {
 			"label": "画像分析",
 			"shortName": "分析",
-			"description": "Caretが画像分析ツールで画像を分析できるようにします（画像を直接サポートしないモデル用）。"
+			"description": "Caretiが画像分析ツールで画像を分析できるようにします（画像を直接サポートしないモデル用）。"
 		},
 		"useMcp": {
 			"label": "MCPサーバーを使用する",
 			"shortName": "MCP",
-			"description": "Caretがファイルシステムを変更したりAPIと対話したりできる設定済みのMCPサーバーを使用できるようにします。"
+			"description": "Caretiがファイルシステムを変更したりAPIと対話したりできる設定済みのMCPサーバーを使用できるようにします。"
 		},
 		"enableNotifications": {
 			"label": "通知を有効にする",
 			"shortName": "通知",
-			"description": "Caretが進行のために承認が必要な場合、またはタスクが完了したときにシステム通知を受け取ります。"
+			"description": "Caretiが進行のために承認が必要な場合、またはタスクが完了したときにシステム通知を受け取ります。"
 		}
 	},
 	"debug": {
@@ -336,7 +336,7 @@
 			"latencySortingDescription": "最低レイテンシのプロバイダーを優先して、プロバイダーを応答時間順に並べ替えます",
 			"authError": "OpenRouter認証の開始に失敗しました:",
 			"modelPicker": {
-				"featuredModelDescriptionBest": "Recommended for Caret's agent coding",
+				"featuredModelDescriptionBest": "Recommended for Careti's agent coding",
 				"featuredModelLabelBest": "Best",
 				"featuredModelDescriptionGemini3FlashPreview": "速度と価格効率のための Gemini 3 Flash Preview モデル",
 				"featuredModelDescriptionKatcoder": "KwaiKATのKAT-Coderシリーズで最も高度なエージェントコーディングモデル",
@@ -347,7 +347,7 @@
 				"clearSearch": "検索をクリア",
 				"fetchModelsDescription": "The extension automatically fetches the latest list of models available on ",
 				"linkText": "OpenRouter.",
-				"unsureModelChoice": "If you're unsure which model to choose, Caret works best with "
+				"unsureModelChoice": "If you're unsure which model to choose, Careti works best with "
 			}
 		},
 		"gemini": {
@@ -532,7 +532,7 @@
 			"fetchModelsError": "Groqモデルの取得に失敗しました:",
 			"fetchModelsDescription": "拡張機能は次から利用可能な最新のモデル一覧を自動的に取得します: ",
 			"groqLinkText": "Groq.",
-			"unsureModelChoice": "どのモデルを選ぶべきかわからない場合、Caretは次のモデルで最も良く動作します: ",
+			"unsureModelChoice": "どのモデルを選ぶべきかわからない場合、Caretiは次のモデルで最も良く動作します: ",
 			"recommendedModel": "llama-3.3-70b-versatile.",
 			"recommendedModelId": "llama-3.3-70b-versatile",
 			"modelDocumentationUrl": "https://console.groq.com/docs/models"
@@ -587,7 +587,7 @@
 			"modelIdPlaceholder": "モデルIDを入力してください...",
 			"modelIdLabel": "モデルID",
 			"notePrefix": "注意:",
-			"noteText": "Caretは複雑なプロンプトを使用し、Claudeモデルと最も良く動作します。能力の低いモデルは期待通りに動作しない場合があります。"
+			"noteText": "Caretiは複雑なプロンプトを使用し、Claudeモデルと最も良く動作します。能力の低いモデルは期待通りに動作しない場合があります。"
 		},
 		"qwen": {
 			"name": "Alibaba Qwen",
@@ -646,7 +646,7 @@
 		"nebius": {
 			"name": "Nebius AI Studio",
 			"description": "Nebius AIは、Yandexのテクノロジーに基づいたAIサービスを提供します。",
-			"apiKeyHelpText": "このキーはローカルに保存され、この拡張機能からのAPIリクエストのためにのみ使用されます。(注意: Clineは複雑なプロンプトを使用し、Claudeモデルと最も良く動作します。能力の低いモデルは期待通りに動作しない場合があります。)"
+			"apiKeyHelpText": "このキーはローカルに保存され、この拡張機能からのAPIリクエストのためにのみ使用されます。(注意: Caretiは複雑なプロンプトを使用し、Claudeモデルと最も良く動作します。能力の低いモデルは期待通りに動作しない場合があります。)"
 		},
 		"asksage": {
 			"name": "AskSage",
@@ -660,7 +660,7 @@
 			"name": "X AI",
 			"description": "xAIは、真実であることを目指す大規模言語モデルGrokを開発しています。",
 			"notePrefix": "注意:",
-			"noteText": "Caretは複雑なプロンプトを使用し、Claudeモデルと最も良く動作します。能力の低いモデルは期待通りに動作しない場合があります。",
+			"noteText": "Caretiは複雑なプロンプトを使用し、Claudeモデルと最も良く動作します。能力の低いモデルは期待通りに動作しない場合があります。",
 			"reasoningEffortLabel": "推論の努力",
 			"reasoningEffortDescription": "高い努力は、より徹底的な分析を生成する可能性がありますが、時間がかかり、より多くのトークンを使用します。",
 			"providerName": "xAI",

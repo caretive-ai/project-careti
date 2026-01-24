@@ -1,6 +1,6 @@
 {
 	"settingsView": {
-		"title": "Caret-Einstellungen"
+		"title": "Careti-Einstellungen"
 	},
 	"tabs": {
 		"apiConfiguration": {
@@ -35,7 +35,7 @@
 		},
 		"about": {
 			"name": "Info",
-			"tooltip": "Über Caret",
+			"tooltip": "Über Careti",
 			"header": "Info"
 		}
 	},
@@ -53,7 +53,7 @@
 	"settings": {
 		"preferredLanguage": {
 			"label": "Bevorzugte Sprache",
-			"description": "Wählen Sie die Sprache, die Caret für die Kommunikation verwenden soll."
+			"description": "Wählen Sie die Sprache, die Careti für die Kommunikation verwenden soll."
 		},
 		"unifiedLanguage": {
 			"label": "Sprache",
@@ -68,11 +68,11 @@
 		"connected": "Verbunden",
 		"notConnected": "Nicht verbunden",
 		"disableToolUse": "Browser-Tool-Verwendung deaktivieren",
-		"disableToolUseDescription": "Verhindert, dass Caret Browser-Aktionen verwendet (z.B. starten, klicken, tippen).",
+		"disableToolUseDescription": "Verhindert, dass Careti Browser-Aktionen verwendet (z.B. starten, klicken, tippen).",
 		"viewportSize": "Viewport-Größe",
 		"viewportSizeDescription": "Legen Sie die Größe des Browser-Viewports für Screenshots und Interaktionen fest.",
 		"useRemoteConnection": "Remote-Browser-Verbindung verwenden",
-		"remoteConnectionDescription1": "Aktivieren Sie Caret, um Ihren Chrome zu verwenden",
+		"remoteConnectionDescription1": "Aktivieren Sie Careti, um Ihren Chrome zu verwenden",
 		"chromeNotDetected": "(auf Ihrem Rechner nicht erkannt)",
 		"remoteConnectionDescription2": ". Sie können unten einen benutzerdefinierten Pfad angeben. Die Verwendung einer Remote-Browser-Verbindung erfordert das Starten von Chrome im Debug-Modus",
 		"remoteConnectionDescription3": "manuell (`--remote-debugging-port=9222`) oder mit der Schaltfläche unten. Geben Sie die Host-Adresse ein oder lassen Sie sie für automatische Erkennung leer.",
@@ -116,7 +116,7 @@
 		"subagents": {
 			"enable": "Subagenten aktivieren",
 			"enabled": "Subagenten aktiviert",
-			"caretWarning": "Caret CLI ist für Subagenten erforderlich.",
+			"caretWarning": "Careti CLI ist für Subagenten erforderlich.",
 			"clineWarning": "Cline CLI ist für Subagenten erforderlich.",
 			"install": "Subagenten-CLI installieren",
 			"installed": "CLI erkannt",
@@ -141,7 +141,7 @@
 		"focusChain": "Fokuskette aktivieren",
 		"focusChainDescription": "Aktiviert erweiterte Aufgabenfortschrittsverfolgung und automatische Fokusketten-Listenverwaltung während Aufgaben.",
 		"focusChainReminderInterval": "Fokusketten-Erinnerungsintervall",
-		"focusChainReminderIntervalDescription": "Intervall (in Nachrichten), um Caret an seine Fokusketten-Checkliste zu erinnern (1-100). Niedrigere Werte bieten häufigere Erinnerungen.",
+		"focusChainReminderIntervalDescription": "Intervall (in Nachrichten), um Careti an seine Fokusketten-Checkliste zu erinnern (1-100). Niedrigere Werte bieten häufigere Erinnerungen.",
 		"enableDictation": "Diktat aktivieren",
 		"enableDictationDescription": "Aktiviert Sprache-zu-Text-Transkription über Ihr Cline-Konto. Verwendet das Whisper-Modell, bei $0.006 Credits pro Minute verarbeiteter Audio. Maximal 5 Minuten pro Nachricht.",
 		"dictationLanguage": "Diktatsprache",
@@ -149,7 +149,7 @@
 		"autoCompact": "Automatische Komprimierung aktivieren",
 		"autoCompactDescription": "Aktiviert ein fortschrittliches Kontextverwaltungssystem, das LLM-basierte Kondensierung für Next-Gen-Modelle verwendet.",
 		"enableYoloMode": "YOLO-Modus aktivieren",
-		"enableYoloModeDescription": "EXPERIMENTELL & GEFÄHRLICH: Dieser Modus deaktiviert Sicherheitsprüfungen und Benutzerbestätigungen. Caret wird automatisch alle Aktionen ohne Nachfrage genehmigen. Mit äußerster Vorsicht verwenden.",
+		"enableYoloModeDescription": "EXPERIMENTELL & GEFÄHRLICH: Dieser Modus deaktiviert Sicherheitsprüfungen und Benutzerbestätigungen. Careti wird automatisch alle Aktionen ohne Nachfrage genehmigen. Mit äußerster Vorsicht verwenden.",
 		"learnMore": "Mehr erfahren",
 		"enableHooks": "Hooks aktivieren",
 		"enableHooksDescription": "Ermöglicht das Ausführen von Shell-Befehlen vor und nach KI-Aktionen (z.B. Code-Review vor Bearbeitungen).",
@@ -175,57 +175,57 @@
 		"readFiles": {
 			"label": "Projektdateien lesen",
 			"shortName": "Lesen",
-			"description": "Erlaubt Caret, Dateien in Ihrem Arbeitsbereich zu lesen."
+			"description": "Erlaubt Careti, Dateien in Ihrem Arbeitsbereich zu lesen."
 		},
 		"readFilesExternally": {
 			"label": "Beliebige Dateien lesen",
 			"shortName": "Alle lesen",
-			"description": "Erlaubt Caret, beliebige Dateien auf Ihrem Computer zu lesen."
+			"description": "Erlaubt Careti, beliebige Dateien auf Ihrem Computer zu lesen."
 		},
 		"editFiles": {
 			"label": "Projektdateien bearbeiten",
 			"shortName": "Bearbeiten",
-			"description": "Erlaubt Caret, Dateien in Ihrem Arbeitsbereich zu ändern."
+			"description": "Erlaubt Careti, Dateien in Ihrem Arbeitsbereich zu ändern."
 		},
 		"editFilesExternally": {
 			"label": "Beliebige Dateien bearbeiten",
 			"shortName": "Alle bearbeiten",
-			"description": "Erlaubt Caret, beliebige Dateien auf Ihrem Computer zu ändern."
+			"description": "Erlaubt Careti, beliebige Dateien auf Ihrem Computer zu ändern."
 		},
 		"executeSafeCommands": {
 			"label": "Sichere Befehle ausführen",
 			"shortName": "Sichere Befehle",
-			"description": "Erlaubt Caret, sichere Terminal-Befehle auszuführen. Eine Genehmigung ist weiterhin erforderlich, wenn das Modell einen Befehl als potenziell destruktiv einstuft."
+			"description": "Erlaubt Careti, sichere Terminal-Befehle auszuführen. Eine Genehmigung ist weiterhin erforderlich, wenn das Modell einen Befehl als potenziell destruktiv einstuft."
 		},
 		"executeAllCommands": {
 			"label": "Alle Befehle ausführen",
 			"shortName": "Alle Befehle",
-			"description": "Erlaubt Caret, beliebige Terminal-Befehle auszuführen. Verwendung auf eigene Gefahr."
+			"description": "Erlaubt Careti, beliebige Terminal-Befehle auszuführen. Verwendung auf eigene Gefahr."
 		},
 		"useBrowser": {
 			"label": "Browser verwenden",
 			"shortName": "Browser",
-			"description": "Erlaubt Caret, im Browser beliebige Websites zu starten und mit ihnen zu interagieren."
+			"description": "Erlaubt Careti, im Browser beliebige Websites zu starten und mit ihnen zu interagieren."
 		},
 		"generateImages": {
 			"label": "Bilder generieren",
 			"shortName": "Bilder",
-			"description": "Erlaubt Caret, Bilder mit dem Bildgenerierungs-Tool zu erstellen."
+			"description": "Erlaubt Careti, Bilder mit dem Bildgenerierungs-Tool zu erstellen."
 		},
 		"analyzeImages": {
 			"label": "Bilder analysieren",
 			"shortName": "Analysieren",
-			"description": "Erlaubt Caret, Bilder mit dem Bildanalyse-Tool zu analysieren (für Modelle, die Bilder nicht nativ unterstützen)."
+			"description": "Erlaubt Careti, Bilder mit dem Bildanalyse-Tool zu analysieren (für Modelle, die Bilder nicht nativ unterstützen)."
 		},
 		"useMcp": {
 			"label": "MCP-Server verwenden",
 			"shortName": "MCP",
-			"description": "Erlaubt Caret, konfigurierte MCP-Server zu verwenden, die das Dateisystem ändern oder mit APIs interagieren können."
+			"description": "Erlaubt Careti, konfigurierte MCP-Server zu verwenden, die das Dateisystem ändern oder mit APIs interagieren können."
 		},
 		"enableNotifications": {
 			"label": "Benachrichtigungen aktivieren",
 			"shortName": "Benachrichtigungen",
-			"description": "Erhalten Sie Systembenachrichtigungen, wenn Caret eine Genehmigung für einen Schritt benötigt oder wenn eine Aufgabe abgeschlossen ist."
+			"description": "Erhalten Sie Systembenachrichtigungen, wenn Careti eine Genehmigung für einen Schritt benötigt oder wenn eine Aufgabe abgeschlossen ist."
 		}
 	},
 	"debug": {
@@ -307,7 +307,7 @@
 			"latencySortingDescription": "Anbieter nach Antwortzeit sortieren, Anbieter mit niedrigster Latenz priorisieren",
 			"authError": "OpenRouter-Authentifizierung konnte nicht geöffnet werden:",
 			"modelPicker": {
-				"featuredModelDescriptionBest": "Empfohlen für Carets Agent-Codierung",
+				"featuredModelDescriptionBest": "Empfohlen für Caretis Agent-Codierung",
 				"featuredModelLabelBest": "Beste",
 				"featuredModelDescriptionGemini3FlashPreview": "Intelligentes Modell für Geschwindigkeit und Preiseffizienz",
 				"featuredModelDescriptionKatcoder": "KwaiKATs fortschrittlichstes agentisches Codierungsmodell der KAT-Coder-Serie",
@@ -318,7 +318,7 @@
 				"clearSearch": "Suche löschen",
 				"fetchModelsDescription": "Die Erweiterung ruft automatisch die neueste Liste der verfügbaren Modelle auf ",
 				"linkText": "OpenRouter ab.",
-				"unsureModelChoice": "Wenn Sie unsicher sind, welches Modell Sie wählen sollen, funktioniert Caret am besten mit "
+				"unsureModelChoice": "Wenn Sie unsicher sind, welches Modell Sie wählen sollen, funktioniert Careti am besten mit "
 			}
 		},
 		"gemini": {
@@ -557,7 +557,7 @@
 			"fetchModelsError": "Groq-Modelle konnten nicht abgerufen werden:",
 			"fetchModelsDescription": "Die Erweiterung ruft automatisch die neueste Liste der verfügbaren Modelle auf ",
 			"groqLinkText": "Groq ab.",
-			"unsureModelChoice": "Wenn Sie unsicher sind, welches Modell Sie wählen sollen, funktioniert Caret am besten mit ",
+			"unsureModelChoice": "Wenn Sie unsicher sind, welches Modell Sie wählen sollen, funktioniert Careti am besten mit ",
 			"recommendedModel": "llama-3.3-70b-versatile.",
 			"recommendedModelId": "llama-3.3-70b-versatile",
 			"modelDocumentationUrl": "https://console.groq.com/docs/models"

@@ -401,6 +401,14 @@
 	"thinkingRow": {
 		"thinking": "思考中"
 	},
+	"requestStartRow": {
+		"thinking": "思考中...",
+		"planning": "规划中..."
+	},
+	"requestStartRow": {
+		"thinking": "Thinking...",
+		"planning": "Planning..."
+	},
 	"toolGroup": {
 		"read": "读取",
 		"file": "文件",

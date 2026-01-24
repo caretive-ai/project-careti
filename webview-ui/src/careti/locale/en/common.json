@@ -16,25 +16,25 @@
 		"reportGitHubIssue": "Report GitHub Issue"
 	},
 	"imageAlt": {
-		"caretBanner": "Caret Logo Banner"
+		"caretBanner": "Careti Logo Banner"
 	},
 	"welcome": {
 		"whatCanIDo": "What can I do for you?"
 	},
 	"rulesModal": {
-		"tooltip.manageRulesWorkflows": "Manage Caret Rules & Workflows",
-		"ariaLabel.CaretRulesButton": "Caret Rules"
+		"tooltip.manageRulesWorkflows": "Manage Careti Rules & Workflows",
+		"ariaLabel.CaretiRulesButton": "Careti Rules"
 	},
 	"mode": {
 		"tooltip": {
-			"chatbot": "In Chatbot mode, Caret provides expert consultation and analysis",
-			"agent": "In Agent mode, Caret collaborates to implement solutions",
+			"chatbot": "In Chatbot mode, Careti provides expert consultation and analysis",
+			"agent": "In Agent mode, Careti collaborates to implement solutions",
 			"plan": "In Plan mode, formulate strategies and plans",
 			"act": "In Act mode, execute and implement plans"
 		}
 	},
 	"account": {
-		"signUpWithCaret": "Login & Sign Up",
+		"signUpWithCareti": "Login & Sign Up",
 		"dashboard": "Dashboard",
 		"addCredits": "Add Credits",
 		"currentBalance": "Current Balance",
@@ -92,8 +92,8 @@
 		"tokensSuffix": "/million tokens"
 	},
 	"telemetry": {
-		"helpImprove": "Support Caret Development",
-		"description": "Caret is an open-source project. Visit our GitHub to contribute, report issues, or share feedback.",
+		"helpImprove": "Support Careti Development",
+		"description": "Careti is an open-source project. Visit our GitHub to contribute, report issues, or share feedback.",
 		"githubLinkPrefix": "Learn more at",
 		"githubLink": "github.com/caretive-ai/project-careti",
 		"closeBannerAria": "Close banner"
@@ -119,8 +119,8 @@
 			"localWorkflows": "Local Workflows"
 		},
 		"subTitle": {
-			"caretRules": "Caret Rules (.agents/context)",
-			"CaretRules": "Caret Rules (.agents/context)",
+			"caretiRules": "Careti Rules (.agents/context)",
+			"CaretiRules": "Careti Rules (.agents/context)",
 			"cursorRules": "Cursor Rules (.agents/context)",
 			"windsurfRules": "Windsurf Rules (.agents/context)"
 		},
@@ -131,12 +131,12 @@
 		"description": {
 			"personaManagement": "Choose an AI persona that matches your coding style and preferences.",
 			"rulesDescription": "Rules allow you to provide system-level guidance. Think of them as a persistent way to include context and preferences for your projects or globally for every conversation.",
-			"workflowsDescription": "Workflows allow you to define a series of steps for Caret to perform repetitive tasks like deploying services or submitting PRs. To run a workflow, type /workflow-name in the chat."
+			"workflowsDescription": "Workflows allow you to define a series of steps for Careti to perform repetitive tasks like deploying services or submitting PRs. To run a workflow, type /workflow-name in the chat."
 		},
 		"action": {
 			"newRuleFile": "New rule file..."
 		},
-		"title": "Caret Rules & Workflow Management",
+		"title": "Careti Rules & Workflow Management",
 		"docsLink": "Docs",
 		"toggleError": "Rule toggle error"
 	}

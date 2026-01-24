@@ -10,7 +10,7 @@
 		"local": "本地",
 		"remoteHost": "远程主机"
 	},
-	"caretWantsToUseBrowser": "Caret想要使用浏览器：",
+	"caretWantsToUseBrowser": "Careti想要使用浏览器：",
 	"paginationStep": "第 {{currentPage}} / {{totalPages}} 步",
 	"paginationPrevious": "上一页",
 	"paginationNext": "下一页"

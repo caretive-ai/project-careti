@@ -16,25 +16,25 @@
 		"reportGitHubIssue": "Report GitHub Issue"
 	},
 	"imageAlt": {
-		"caretBanner": "Caretロゴバナー"
+		"caretBanner": "Caretiロゴバナー"
 	},
 	"welcome": {
 		"whatCanIDo": "何がお手伝いできますか？"
 	},
 	"rulesModal": {
-		"tooltip.manageRulesWorkflows": "Caretルールとワークフローを管理",
-		"ariaLabel.CaretRulesButton": "Caretルール"
+		"tooltip.manageRulesWorkflows": "Caretiルールとワークフローを管理",
+		"ariaLabel.CaretiRulesButton": "Caretiルール"
 	},
 	"mode": {
 		"tooltip": {
-			"chatbot": "チャットボットモードでは、Caretが専門家によるコンサルテーションと分析を提供します",
-			"agent": "エージェントモードでは、Caretが協力してソリューションを実装します",
+			"chatbot": "チャットボットモードでは、Caretiが専門家によるコンサルテーションと分析を提供します",
+			"agent": "エージェントモードでは、Caretiが協力してソリューションを実装します",
 			"plan": "プランモードでは、戦略と計画を策定します",
 			"act": "アクトモードでは、計画を実行および実装します"
 		}
 	},
 	"account": {
-		"signUpWithCaret": "Caretアカウントでログイン＆サインアップ",
+		"signUpWithCareti": "Caretiアカウントでログイン＆サインアップ",
 		"dashboard": "ダッシュボード",
 		"addCredits": "クレジットを追加",
 		"currentBalance": "現在の残高",
@@ -92,8 +92,8 @@
 		"tokensSuffix": "/百万トークン"
 	},
 	"telemetry": {
-		"helpImprove": "Caretの開発を応援",
-		"description": "Caretはオープンソースプロジェクトです。GitHubで貢献、問題報告、フィードバックをお願いします。",
+		"helpImprove": "Caretiの開発を応援",
+		"description": "Caretiはオープンソースプロジェクトです。GitHubで貢献、問題報告、フィードバックをお願いします。",
 		"githubLinkPrefix": "詳細はこちら",
 		"githubLink": "github.com/caretive-ai/project-careti",
 		"closeBannerAria": "バナーを閉じる"
@@ -119,8 +119,8 @@
 			"localWorkflows": "ローカルワークフロー"
 		},
 		"subTitle": {
-			"caretRules": "Caret Rules (.agents/context)",
-			"CaretRules": "Caret Rules (.agents/context)",
+			"caretiRules": "Careti Rules (.agents/context)",
+			"CaretiRules": "Careti Rules (.agents/context)",
 			"cursorRules": "カーソルルール (.agents/context)",
 			"windsurfRules": "ウィンドサーフルール (.agents/context)"
 		},
@@ -131,12 +131,12 @@
 		"description": {
 			"personaManagement": "コーディングスタイルや好みに合ったAIペルソナを選択してください。",
 			"rulesDescription": "ルールを使用すると、システムレベルのガイダンスを提供できます。プロジェクトまたはすべての会話でグローバルにコンテキストと設定を含める永続的な方法と考えてください。",
-			"workflowsDescription": "ワークフローを使用すると、CaretがサービスのデプロイやPRの送信などの反復的なタスクを実行するための一連のステップを定義できます。ワークフローを実行するには、チャットで /workflow-name と入力してください。"
+			"workflowsDescription": "ワークフローを使用すると、CaretiがサービスのデプロイやPRの送信などの反復的なタスクを実行するための一連のステップを定義できます。ワークフローを実行するには、チャットで /workflow-name と入力してください。"
 		},
 		"action": {
 			"newRuleFile": "新しいルールファイル..."
 		},
-		"title": "Caretルールとワークフロー管理",
+		"title": "Caretiルールとワークフロー管理",
 		"docsLink": "ドキュメント",
 		"toggleError": "ルール切り替えエラー"
 	}

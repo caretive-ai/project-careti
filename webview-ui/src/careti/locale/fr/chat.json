@@ -152,7 +152,7 @@
 		"providerModel": "Fournisseur/Modele",
 		"operatingSystem": "Systeme d'exploitation",
 		"systemInfo": "Informations systeme",
-		"clineVersion": "Version de Caret",
+		"clineVersion": "Version de Careti",
 		"additionalContext": "Contexte supplementaire"
 	},
 	"serversToggleModal": {
@@ -401,6 +401,14 @@
 	},
 	"thinkingRow": {
 		"thinking": "Réflexion"
+	},
+	"requestStartRow": {
+		"thinking": "Réflexion...",
+		"planning": "Planification..."
+	},
+	"requestStartRow": {
+		"thinking": "Thinking...",
+		"planning": "Planning..."
 	},
 	"toolGroup": {
 		"read": "lu",

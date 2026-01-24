@@ -16,25 +16,25 @@
 		"reportGitHubIssue": "Report GitHub Issue"
 	},
 	"imageAlt": {
-		"caretBanner": "Caret 标志横幅"
+		"caretBanner": "Careti 标志横幅"
 	},
 	"welcome": {
 		"whatCanIDo": "我能为您做什么？"
 	},
 	"rulesModal": {
-		"tooltip.manageRulesWorkflows": "管理 Caret 规则和工作流",
-		"ariaLabel.CaretRulesButton": "Caret 规则"
+		"tooltip.manageRulesWorkflows": "管理 Careti 规则和工作流",
+		"ariaLabel.CaretiRulesButton": "Careti 规则"
 	},
 	"mode": {
 		"tooltip": {
-			"chatbot": "在聊天机器人模式中，Caret 提供专家咨询和分析",
-			"agent": "在代理模式中，Caret 协作实现解决方案",
+			"chatbot": "在聊天机器人模式中，Careti 提供专家咨询和分析",
+			"agent": "在代理模式中，Careti 协作实现解决方案",
 			"plan": "在计划模式中，制定策略和计划",
 			"act": "在执行模式中，执行和实施计划"
 		}
 	},
 	"account": {
-		"signUpWithCaret": "登录和注册",
+		"signUpWithCareti": "登录和注册",
 		"dashboard": "仪表板",
 		"addCredits": "添加积分",
 		"currentBalance": "当前余额",
@@ -92,8 +92,8 @@
 		"tokensSuffix": "/百万代币"
 	},
 	"telemetry": {
-		"helpImprove": "支持 Caret 开发",
-		"description": "Caret 是一个开源项目。访问我们的 GitHub 贡献代码、报告问题或分享反馈。",
+		"helpImprove": "支持 Careti 开发",
+		"description": "Careti 是一个开源项目。访问我们的 GitHub 贡献代码、报告问题或分享反馈。",
 		"githubLinkPrefix": "了解更多",
 		"githubLink": "github.com/caretive-ai/project-careti",
 		"closeBannerAria": "关闭横幅"
@@ -119,8 +119,8 @@
 			"localWorkflows": "本地工作流"
 		},
 		"subTitle": {
-			"caretRules": "Caret 规则 (.agents/context)",
-			"CaretRules": "Caret 规则 (.agents/context)",
+			"caretiRules": "Careti 规则 (.agents/context)",
+			"CaretiRules": "Careti 规则 (.agents/context)",
 			"cursorRules": "Cursor 规则 (.agents/context)",
 			"windsurfRules": "Windsurf 规则 (.agents/context)"
 		},
@@ -131,12 +131,12 @@
 		"description": {
 			"personaManagement": "选择与您的编程风格和偏好匹配的 AI 人格。",
 			"rulesDescription": "规则允许您提供系统级指导。将它们视为为您的项目或每次对话持久包含上下文和偏好的方式。",
-			"workflowsDescription": "工作流允许您定义一系列步骤，供 Caret 执行重复性任务，如部署服务或提交 PR。要运行工作流，请在聊天中输入 /workflow-name。"
+			"workflowsDescription": "工作流允许您定义一系列步骤，供 Careti 执行重复性任务，如部署服务或提交 PR。要运行工作流，请在聊天中输入 /workflow-name。"
 		},
 		"action": {
 			"newRuleFile": "新建规则文件..."
 		},
-		"title": "Caret 规则和工作流管理",
+		"title": "Careti 规则和工作流管理",
 		"docsLink": "文档",
 		"toggleError": "规则切换错误"
 	}

@@ -10,7 +10,7 @@
 		"local": "Local",
 		"remoteHost": "Hote distant"
 	},
-	"caretWantsToUseBrowser": "Caret souhaite utiliser le navigateur :",
+	"caretWantsToUseBrowser": "Careti souhaite utiliser le navigateur :",
 	"paginationStep": "Etape {{currentPage}} sur {{totalPages}}",
 	"paginationPrevious": "Precedent",
 	"paginationNext": "Suivant"

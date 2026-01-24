@@ -16,12 +16,12 @@
 		"reportGitHubIssue": "GitHub 이슈 보고"
 	},
 	"imageAlt": {
-		"caretBanner": "Caret 로고 배너"
+		"caretBanner": "캐러티 로고 배너"
 	},
 	"mode": {
 		"tooltip": {
-			"chatbot": "챗봇 모드에서 Caret은 전문가 상담과 분석을 제공합니다",
-			"agent": "에이전트 모드에서 Caret은 솔루션 구현을 위해 협업합니다",
+			"chatbot": "챗봇 모드에서 캐러티는 전문가 상담과 분석을 제공합니다",
+			"agent": "에이전트 모드에서 캐러티는 솔루션 구현을 위해 협업합니다",
 			"plan": "Plan 모드에서 전략과 계획을 수립합니다",
 			"act": "Act 모드에서 계획을 실행하고 구현합니다"
 		}
@@ -32,7 +32,7 @@
 		}
 	},
 	"account": {
-		"signUpWithCaret": "로그인 & 가입",
+		"signUpWithCareti": "로그인 & 가입",
 		"dashboard": "대시보드",
 		"addCredits": "크레딧 추가",
 		"currentBalance": "현재 잔액",
@@ -98,7 +98,7 @@
 	},
 	"telemetry": {
 		"helpImprove": "캐러티 개발 지원하기",
-		"description": "Caret은 오픈소스 프로젝트입니다. GitHub에서 기여, 이슈 보고, 피드백을 공유해주세요.",
+		"description": "캐러티는 오픈소스 프로젝트입니다. GitHub에서 기여, 이슈 보고, 피드백을 공유해주세요.",
 		"githubLinkPrefix": "자세히 보기",
 		"githubLink": "github.com/caretive-ai/project-careti",
 		"closeBannerAria": "배너 닫기"
@@ -112,8 +112,8 @@
 		"copyTask": "작업 복사"
 	},
 	"rulesModal": {
-		"tooltip.manageRulesWorkflows": "Caret 규칙 및 워크플로우 관리",
-		"ariaLabel.CaretRulesButton": "Caret 규칙"
+		"tooltip.manageRulesWorkflows": "캐러티 규칙 및 워크플로우 관리",
+		"ariaLabel.CaretiRulesButton": "캐러티 규칙"
 	},
 	"rules": {
 		"tab": {
@@ -128,8 +128,8 @@
 			"localWorkflows": "로컬 워크플로우"
 		},
 		"subTitle": {
-			"caretRules": "Caret 규칙 (.agents/context)",
-			"CaretRules": "Caret 규칙 (.agents/context)",
+			"caretiRules": "캐러티 규칙 (.agents/context)",
+			"CaretiRules": "캐러티 규칙 (.agents/context)",
 			"cursorRules": "Cursor 규칙 (.agents/context)",
 			"windsurfRules": "Windsurf 규칙 (.agents/context)"
 		},
@@ -138,14 +138,14 @@
 			"changePersonaTemplate": "페르소나 템플릿 변경"
 		},
 		"description": {
-			"rulesDescription": "규칙을 통해 Caret에게 시스템 수준의 지침을 제공할 수 있습니다. 프로젝트별 또는 모든 대화에 대한 컨텍스트와 선호사항을 지속적으로 포함하는 방법으로 생각하세요.",
-			"workflowsDescription": "워크플로우를 통해 서비스 배포나 PR 제출과 같은 반복적인 작업들을 Caret이 수행할 수 있도록 일련의 단계를 정의할 수 있습니다. 워크플로우를 실행하려면 채팅에서 /워크플로우명을 입력하세요.",
+			"rulesDescription": "규칙을 통해 캐러티에게 시스템 수준의 지침을 제공할 수 있습니다. 프로젝트별 또는 모든 대화에 대한 컨텍스트와 선호사항을 지속적으로 포함하는 방법으로 생각하세요.",
+			"workflowsDescription": "워크플로우를 통해 서비스 배포나 PR 제출과 같은 반복적인 작업들을 캐러티가 수행할 수 있도록 일련의 단계를 정의할 수 있습니다. 워크플로우를 실행하려면 채팅에서 /워크플로우명을 입력하세요.",
 			"personaManagement": "Choose an AI persona that matches your coding style and preferences."
 		},
 		"action": {
 			"newRuleFile": "새 규칙 파일..."
 		},
-		"title": "Caret 규칙 및 워크플로우 관리",
+		"title": "캐러티 규칙 및 워크플로우 관리",
 		"toggleError": "규칙 토글 오류",
 		"docsLink": "Docs"
 	}

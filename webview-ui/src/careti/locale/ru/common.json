@@ -16,25 +16,25 @@
 		"reportGitHubIssue": "Сообщить о проблеме на GitHub"
 	},
 	"imageAlt": {
-		"caretBanner": "Баннер с логотипом Caret"
+		"caretBanner": "Баннер с логотипом Careti"
 	},
 	"welcome": {
 		"whatCanIDo": "Чем я могу вам помочь?"
 	},
 	"rulesModal": {
-		"tooltip.manageRulesWorkflows": "Управление правилами и рабочими процессами Caret",
-		"ariaLabel.CaretRulesButton": "Правила Caret"
+		"tooltip.manageRulesWorkflows": "Управление правилами и рабочими процессами Careti",
+		"ariaLabel.CaretiRulesButton": "Правила Careti"
 	},
 	"mode": {
 		"tooltip": {
-			"chatbot": "В режиме Чат-бота Caret предоставляет экспертные консультации и анализ",
-			"agent": "В режиме Агента Caret сотрудничает для реализации решений",
+			"chatbot": "В режиме Чат-бота Careti предоставляет экспертные консультации и анализ",
+			"agent": "В режиме Агента Careti сотрудничает для реализации решений",
 			"plan": "В режиме Планирования формулируйте стратегии и планы",
 			"act": "В режиме Действия выполняйте и реализуйте планы"
 		}
 	},
 	"account": {
-		"signUpWithCaret": "Вход и регистрация",
+		"signUpWithCareti": "Вход и регистрация",
 		"dashboard": "Панель управления",
 		"addCredits": "Пополнить кредиты",
 		"currentBalance": "Текущий баланс",
@@ -92,8 +92,8 @@
 		"tokensSuffix": "/миллион tokens"
 	},
 	"telemetry": {
-		"helpImprove": "Поддержите развитие Caret",
-		"description": "Caret - проект с открытым исходным кодом. Посетите наш GitHub, чтобы внести вклад, сообщить о проблемах или поделиться отзывами.",
+		"helpImprove": "Поддержите развитие Careti",
+		"description": "Careti - проект с открытым исходным кодом. Посетите наш GitHub, чтобы внести вклад, сообщить о проблемах или поделиться отзывами.",
 		"githubLinkPrefix": "Узнать больше на",
 		"githubLink": "github.com/caretive-ai/project-careti",
 		"closeBannerAria": "Закрыть баннер"

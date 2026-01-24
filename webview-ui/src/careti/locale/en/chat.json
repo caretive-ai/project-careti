@@ -152,7 +152,7 @@
 		"providerModel": "Provider/Model",
 		"operatingSystem": "Operating System",
 		"systemInfo": "System Info",
-		"clineVersion": "Caret Version",
+		"clineVersion": "Careti Version",
 		"additionalContext": "Additional Context"
 	},
 	"serversToggleModal": {
@@ -401,6 +401,10 @@
 	},
 	"thinkingRow": {
 		"thinking": "Thinking"
+	},
+	"requestStartRow": {
+		"thinking": "Thinking...",
+		"planning": "Planning..."
 	},
 	"toolGroup": {
 		"read": "read",

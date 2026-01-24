@@ -11,7 +11,7 @@
 			"6": "Spracherweiterung",
 			"1-desc": "Unterstützt Thinking Mode und natürlichen Konversationsstil mit GLM-4.7-Modellen.",
 			"2-desc": "Upstage-Anbieter mit Solar Pro/Mini-Modellen aus Koreas unabhängiger KI-Stiftung hinzugefügt.",
-			"3-desc": "Reine Textmodelle können jetzt über Caret-Kontowerkzeuge Bilder generieren (Nano Banana) und analysieren (Gemini).",
+			"3-desc": "Reine Textmodelle können jetzt über Careti-Kontowerkzeuge Bilder generieren (Nano Banana) und analysieren (Gemini).",
 			"4-desc": "Definieren Sie projektspezifische Skills und Pre/Post-Tool-Ausführungs-Hooks. Verwalten in .agents/ oder .users/ Verzeichnissen.",
 			"5-desc": "read_document-Werkzeug für HWP, PDF, DOCX, PPTX und mehr. Plattformübergreifende HWP-Parsing-Unterstützung.",
 			"6-desc": "Französisch, Deutsch und Russisch hinzugefügt. Priorisierung von Ländern mit eigenen KI-Modellen. Anbieter-Länderflaggen hinzugefügt."
@@ -22,8 +22,8 @@
 			"3": "Dual-Konto-System",
 			"4": "Cline v3.45.0 Bugfix-Integration",
 			"1-desc": "Naver Cloud (Hyper Clova X)-Anbieter mit HCX-007/HCX-005/HCX-DASH-002-Modellen hinzugefügt.",
-			"2-desc": "Legacy Caret/Cline-Regeln auf AAIF-Internationalstandard aktualisiert mit Projektinitialisierungsunterstützung.",
-			"3-desc": "Verwenden Sie Caret- und Cline-Konten gleichzeitig ohne Einschränkung.",
+			"2-desc": "Legacy Careti/Cline-Regeln auf AAIF-Internationalstandard aktualisiert mit Projektinitialisierungsunterstützung.",
+			"3-desc": "Verwenden Sie Careti- und Cline-Konten gleichzeitig ohne Einschränkung.",
 			"4-desc": "Cline v3.45.0 Bugfix-Code teilweise zusammengeführt."
 		}
 	}

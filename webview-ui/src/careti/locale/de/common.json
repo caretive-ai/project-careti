@@ -16,25 +16,25 @@
 		"reportGitHubIssue": "GitHub-Problem melden"
 	},
 	"imageAlt": {
-		"caretBanner": "Caret-Logo-Banner"
+		"caretBanner": "Careti-Logo-Banner"
 	},
 	"welcome": {
 		"whatCanIDo": "Was kann ich für Sie tun?"
 	},
 	"rulesModal": {
-		"tooltip.manageRulesWorkflows": "Caret-Regeln & Workflows verwalten",
-		"ariaLabel.CaretRulesButton": "Caret-Regeln"
+		"tooltip.manageRulesWorkflows": "Careti-Regeln & Workflows verwalten",
+		"ariaLabel.CaretiRulesButton": "Careti-Regeln"
 	},
 	"mode": {
 		"tooltip": {
-			"chatbot": "Im Chatbot-Modus bietet Caret Expertenberatung und Analyse",
-			"agent": "Im Agent-Modus arbeitet Caret mit Ihnen zusammen, um Lösungen umzusetzen",
+			"chatbot": "Im Chatbot-Modus bietet Careti Expertenberatung und Analyse",
+			"agent": "Im Agent-Modus arbeitet Careti mit Ihnen zusammen, um Lösungen umzusetzen",
 			"plan": "Im Plan-Modus Strategien und Pläne formulieren",
 			"act": "Im Ausführungs-Modus Pläne ausführen und umsetzen"
 		}
 	},
 	"account": {
-		"signUpWithCaret": "Anmelden & Registrieren",
+		"signUpWithCareti": "Anmelden & Registrieren",
 		"dashboard": "Dashboard",
 		"addCredits": "Guthaben hinzufügen",
 		"currentBalance": "Aktuelles Guthaben",
@@ -92,8 +92,8 @@
 		"tokensSuffix": "/Million Tokens"
 	},
 	"telemetry": {
-		"helpImprove": "Caret-Entwicklung unterstützen",
-		"description": "Caret ist ein Open-Source-Projekt. Besuchen Sie unser GitHub, um beizutragen, Probleme zu melden oder Feedback zu geben.",
+		"helpImprove": "Careti-Entwicklung unterstützen",
+		"description": "Careti ist ein Open-Source-Projekt. Besuchen Sie unser GitHub, um beizutragen, Probleme zu melden oder Feedback zu geben.",
 		"githubLinkPrefix": "Mehr erfahren auf",
 		"githubLink": "github.com/caretive-ai/project-careti",
 		"closeBannerAria": "Banner schließen"

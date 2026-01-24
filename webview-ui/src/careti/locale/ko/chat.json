@@ -152,7 +152,7 @@
 		"providerModel": "제공자/모델",
 		"operatingSystem": "운영 체제",
 		"systemInfo": "시스템 정보",
-		"clineVersion": "Caret 버전",
+		"clineVersion": "캐러티 버전",
 		"additionalContext": "추가 컨텍스트"
 	},
 	"serversToggleModal": {
@@ -288,9 +288,9 @@
 	"configureServersView": {
 		"mcpDescription": " ",
 		"modelContextProtocol": "모델 컨텍스트 프로토콜",
-		"mcpDescriptionMiddle2": "은(는) Caret의 기능을 확장하기 위한 추가 도구 및 리소스를 제공하는 로컬에서 실행되는 MCP 서버와의 통신을 가능하게 합니다. ",
+		"mcpDescriptionMiddle2": "은(는) 캐러티의 기능을 확장하기 위한 추가 도구 및 리소스를 제공하는 로컬에서 실행되는 MCP 서버와의 통신을 가능하게 합니다. ",
 		"communityMadeServers": "커뮤니티에서 만든 서버",
-		"mcpDescriptionEnd": "를 사용하거나 Caret에게 워크플로우에 특정한 새 도구를 만들도록 요청할 수 있습니다 (예: \"최신 npm 문서를 가져오는 도구를 추가해 줘\"). ",
+		"mcpDescriptionEnd": "를 사용하거나 캐러티에게 워크플로우에 특정한 새 도구를 만들도록 요청할 수 있습니다 (예: \"최신 npm 문서를 가져오는 도구를 추가해 줘\"). ",
 		"seeDemoHere": "여기에서 데모를 확인하세요.",
 		"configureMcpServers": "MCP 서버 구성",
 		"advancedMcpSettings": "고급 MCP 설정"
@@ -344,12 +344,12 @@
 		"noMcpServersFoundInMarketplace": "마켓플레이스에서 MCP 서버를 찾을 수 없습니다."
 	},
 	"clineRulesToggleModal": {
-		"manageRulesWorkflows": "Caret 규칙 및 워크플로우 관리",
+		"manageRulesWorkflows": "캐러티 규칙 및 워크플로우 관리",
 		"rulesTab": "규칙",
 		"workflowsTab": "워크플로우",
 		"hooksTab": "Hooks",
 		"skillsTab": "Skills",
-		"rulesDescription": "규칙을 통해 Caret에 시스템 수준 지침을 제공할 수 있습니다. 프로젝트 또는 모든 대화에 전역적으로 컨텍스트 및 기본 설정을 포함하는 영구적인 방법이라고 생각하세요.",
+		"rulesDescription": "규칙을 통해 캐러티에 시스템 수준 지침을 제공할 수 있습니다. 프로젝트 또는 모든 대화에 전역적으로 컨텍스트 및 기본 설정을 포함하는 영구적인 방법이라고 생각하세요.",
 		"docs": "문서",
 		"workflowsDescription": "워크플로우를 통해 캐러티가 서비스 배포 또는 PR 제출과 같은 반복적인 작업 세트를 안내하는 일련의 단계를 정의할 수 있습니다. 워크플로우를 호출하려면 채팅에",
 		"workflowName": "/워크플로우-이름",
@@ -401,6 +401,14 @@
 	},
 	"thinkingRow": {
 		"thinking": "생각 중"
+	},
+	"requestStartRow": {
+		"thinking": "생각 중...",
+		"planning": "계획 중..."
+	},
+	"requestStartRow": {
+		"thinking": "Thinking...",
+		"planning": "Planning..."
 	},
 	"toolGroup": {
 		"read": "읽음",

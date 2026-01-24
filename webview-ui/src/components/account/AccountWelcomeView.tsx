@@ -1,14 +1,14 @@
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 // CARETI MODIFICATION: Import persona avatar and context for account welcome
 import PersonaAvatar from "@/careti/components/PersonaAvatar"
-import { useCaretState } from "@/careti/context/CaretStateContext"
+import { useCaretiState } from "@/careti/context/CaretiStateContext"
 import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { handleLogin } from "../settings/CaretAuthHandler"
+import { handleLogin } from "../settings/CaretiAuthHandler"
 
 export const AccountWelcomeView = () => {
 	// CARETI MODIFICATION: Use persona avatar for account welcome
-	const { personaProfile } = useCaretState() // Keep for working profile image
+	const { personaProfile } = useCaretiState() // Keep for working profile image
 	const { featureConfig } = useExtensionState() // Use for correct feature flag
 
 	const showCaretCta = featureConfig?.enableCaretAccountFeatures ?? true
@@ -24,7 +24,7 @@ export const AccountWelcomeView = () => {
 				<>
 					<p>{t("account.signUpDescription", "common")}</p>
 					<VSCodeButton className="w-full mb-2" onClick={() => handleLogin()}>
-						{t("account.signUpWithCaret", "common")}
+						{t("account.signUpWithCareti", "common")}
 					</VSCodeButton>
 					<p className="text-[var(--vscode-descriptionForeground)] text-xs text-center m-0">
 						{t("account.byContining", "common")}{" "}

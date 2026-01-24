@@ -1,6 +1,6 @@
 {
 	"settingsView": {
-		"title": "Caret Settings"
+		"title": "Careti Settings"
 	},
 	"tabs": {
 		"apiConfiguration": {
@@ -35,7 +35,7 @@
 		},
 		"about": {
 			"name": "About",
-			"tooltip": "About Caret",
+			"tooltip": "About Careti",
 			"header": "About"
 		}
 	},
@@ -53,7 +53,7 @@
 	"settings": {
 		"preferredLanguage": {
 			"label": "Preferred Language",
-			"description": "Select the language Caret should use for communication."
+			"description": "Select the language Careti should use for communication."
 		},
 		"unifiedLanguage": {
 			"label": "Language",
@@ -68,11 +68,11 @@
 		"connected": "Connected",
 		"notConnected": "Not Connected",
 		"disableToolUse": "Disable browser tool usage",
-		"disableToolUseDescription": "Prevent Caret from using browser actions (e.g. launch, click, type).",
+		"disableToolUseDescription": "Prevent Careti from using browser actions (e.g. launch, click, type).",
 		"viewportSize": "Viewport size",
 		"viewportSizeDescription": "Set the size of the browser viewport for screenshots and interactions.",
 		"useRemoteConnection": "Use remote browser connection",
-		"remoteConnectionDescription1": "Enable Caret to use your Chrome",
+		"remoteConnectionDescription1": "Enable Careti to use your Chrome",
 		"chromeNotDetected": "(not detected on your machine)",
 		"remoteConnectionDescription2": ". You can specify a custom path below. Using a remote browser connection requires starting Chrome in debug mode",
 		"remoteConnectionDescription3": "manually (`--remote-debugging-port=9222`) or using the button below. Enter the host address or leave it blank for automatic discovery.",
@@ -116,7 +116,7 @@
 		"subagents": {
 			"enable": "Enable subagents",
 			"enabled": "Subagents enabled",
-			"caretWarning": "Caret CLI is required for subagents.",
+			"caretWarning": "Careti CLI is required for subagents.",
 			"clineWarning": "Cline CLI is required for subagents.",
 			"install": "Install subagents CLI",
 			"installed": "CLI detected",
@@ -141,7 +141,7 @@
 		"focusChain": "Enable Focus Chain",
 		"focusChainDescription": "Enables enhanced task progress tracking and automatic focus chain list management throughout tasks.",
 		"focusChainReminderInterval": "Focus Chain Reminder Interval",
-		"focusChainReminderIntervalDescription": "Interval (in messages) to remind Caret about its focus chain checklist (1-100). Lower values provide more frequent reminders.",
+		"focusChainReminderIntervalDescription": "Interval (in messages) to remind Careti about its focus chain checklist (1-100). Lower values provide more frequent reminders.",
 		"enableDictation": "Enable Dictation",
 		"enableDictationDescription": "Enables speech-to-text transcription using your Cline account. Uses the Whisper model, at $0.006 credits per minute of audio processed. 5 minutes max per message.",
 		"dictationLanguage": "Dictation Language",
@@ -149,7 +149,7 @@
 		"autoCompact": "Enable Auto Compact",
 		"autoCompactDescription": "Enables advanced context management system which uses LLM based condensing for next-gen models.",
 		"enableYoloMode": "Enable YOLO Mode",
-		"enableYoloModeDescription": "EXPERIMENTAL & DANGEROUS: This mode disables safety checks and user confirmations. Caret will automatically approve all actions without asking. Use with extreme caution.",
+		"enableYoloModeDescription": "EXPERIMENTAL & DANGEROUS: This mode disables safety checks and user confirmations. Careti will automatically approve all actions without asking. Use with extreme caution.",
 		"learnMore": "Learn more",
 		"enableHooks": "Enable Hooks",
 		"enableHooksDescription": "Allows you to run shell commands before and after AI actions (e.g., code review before edits).",
@@ -175,57 +175,57 @@
 		"readFiles": {
 			"label": "Read project files",
 			"shortName": "Read",
-			"description": "Allows Caret to read files within your workspace."
+			"description": "Allows Careti to read files within your workspace."
 		},
 		"readFilesExternally": {
 			"label": "Read any files",
 			"shortName": "Read all",
-			"description": "Allows Caret to read any files on your computer."
+			"description": "Allows Careti to read any files on your computer."
 		},
 		"editFiles": {
 			"label": "Edit project files",
 			"shortName": "Edit",
-			"description": "Allows Caret to modify files within your workspace."
+			"description": "Allows Careti to modify files within your workspace."
 		},
 		"editFilesExternally": {
 			"label": "Edit any files",
 			"shortName": "Edit all",
-			"description": "Allows Caret to modify any files on your computer."
+			"description": "Allows Careti to modify any files on your computer."
 		},
 		"executeSafeCommands": {
 			"label": "Execute safe commands",
 			"shortName": "Safe commands",
-			"description": "Allows Caret to execute safe terminal commands. Approval will still be required if the model deems a command potentially destructive."
+			"description": "Allows Careti to execute safe terminal commands. Approval will still be required if the model deems a command potentially destructive."
 		},
 		"executeAllCommands": {
 			"label": "Execute all commands",
 			"shortName": "All commands",
-			"description": "Allows Caret to execute any terminal commands. Use at your own risk."
+			"description": "Allows Careti to execute any terminal commands. Use at your own risk."
 		},
 		"useBrowser": {
 			"label": "Use browser",
 			"shortName": "Browser",
-			"description": "Allows Caret to launch and interact with any website in the browser."
+			"description": "Allows Careti to launch and interact with any website in the browser."
 		},
 		"generateImages": {
 			"label": "Generate images",
 			"shortName": "Images",
-			"description": "Allows Caret to generate images using the image generation tool."
+			"description": "Allows Careti to generate images using the image generation tool."
 		},
 		"analyzeImages": {
 			"label": "Analyze images",
 			"shortName": "Analyze",
-			"description": "Allows Caret to analyze images using the image analysis tool (for models that don't support images natively)."
+			"description": "Allows Careti to analyze images using the image analysis tool (for models that don't support images natively)."
 		},
 		"useMcp": {
 			"label": "Use MCP server",
 			"shortName": "MCP",
-			"description": "Allows Caret to use configured MCP servers which can modify the file system or interact with APIs."
+			"description": "Allows Careti to use configured MCP servers which can modify the file system or interact with APIs."
 		},
 		"enableNotifications": {
 			"label": "Enable notifications",
 			"shortName": "Notifications",
-			"description": "Receive system notifications when Caret requires approval for a step or when a task is completed."
+			"description": "Receive system notifications when Careti requires approval for a step or when a task is completed."
 		}
 	},
 	"debug": {
@@ -307,7 +307,7 @@
 			"latencySortingDescription": "Sort providers by response time, prioritizing the provider with the lowest latency",
 			"authError": "Failed to open OpenRouter auth:",
 			"modelPicker": {
-				"featuredModelDescriptionBest": "Recommended for Caret's agent coding",
+				"featuredModelDescriptionBest": "Recommended for Careti's agent coding",
 				"featuredModelLabelBest": "Best",
 				"featuredModelDescriptionGemini3FlashPreview": "Intelligent model built for speed and price efficiency",
 				"featuredModelDescriptionKatcoder": "KwaiKAT's most advanced agentic coding model in the KAT-Coder series",
@@ -318,7 +318,7 @@
 				"clearSearch": "Clear search",
 				"fetchModelsDescription": "The extension automatically fetches the latest list of models available on ",
 				"linkText": "OpenRouter.",
-				"unsureModelChoice": "If you're unsure which model to choose, Caret works best with "
+				"unsureModelChoice": "If you're unsure which model to choose, Careti works best with "
 			}
 		},
 		"gemini": {
@@ -557,7 +557,7 @@
 			"fetchModelsError": "Failed to fetch Groq models:",
 			"fetchModelsDescription": "The extension automatically fetches the latest list of models available on ",
 			"groqLinkText": "Groq.",
-			"unsureModelChoice": "If you're unsure which model to choose, Caret works best with ",
+			"unsureModelChoice": "If you're unsure which model to choose, Careti works best with ",
 			"recommendedModel": "llama-3.3-70b-versatile.",
 			"recommendedModelId": "llama-3.3-70b-versatile",
 			"modelDocumentationUrl": "https://console.groq.com/docs/models"

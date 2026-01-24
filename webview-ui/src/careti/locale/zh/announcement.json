@@ -11,7 +11,7 @@
 			"6": "语言扩展",
 			"1-desc": "支持GLM-4.7模型的Thinking Mode和自然对话风格。",
 			"2-desc": "添加了韩国独立AI基础模型Upstage提供商和Solar Pro/Mini模型。",
-			"3-desc": "纯文本模型也可以通过Caret账户工具生成图像(Nano Banana)和分析图像(Gemini)。",
+			"3-desc": "纯文本模型也可以通过Careti账户工具生成图像(Nano Banana)和分析图像(Gemini)。",
 			"4-desc": "定义项目特定的技能和工具执行前后的钩子。在.agents/或.users/目录中管理。",
 			"5-desc": "read_document工具支持HWP、PDF、DOCX、PPTX等。跨平台HWP解析支持。",
 			"6-desc": "添加了法语、德语和俄语。优先支持拥有自主AI模型的国家。显示提供商国旗。"
@@ -22,8 +22,8 @@
 			"3": "双账户系统",
 			"4": "Cline v3.45.0 错误修复集成",
 			"1-desc": "添加了Naver Cloud(Hyper Clova X)提供商和HCX-007/HCX-005/HCX-DASH-002模型。",
-			"2-desc": "将传统Caret/Cline规则更新为AAIF国际标准，支持项目初始化。",
-			"3-desc": "可以同时使用Caret账户和Cline账户，没有限制。",
+			"2-desc": "将传统Careti/Cline规则更新为AAIF国际标准，支持项目初始化。",
+			"3-desc": "可以同时使用Careti账户和Cline账户，没有限制。",
 			"4-desc": "部分合并了Cline v3.45.0的错误修复代码。"
 		}
 	}

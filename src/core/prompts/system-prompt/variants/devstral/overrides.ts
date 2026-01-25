@@ -1,0 +1,11 @@
+// CARETI MODIFICATION: Ported from ref-cline v3.49.1 for devstral model family support
+import { SystemPromptSection } from "../../templates/placeholders"
+
+export const DEVSTRAL_AGENT_ROLE_TEMPLATE = `You are Careti, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.
+`
+
+export const devstralComponentOverrides = {
+	[SystemPromptSection.AGENT_ROLE]: {
+		template: DEVSTRAL_AGENT_ROLE_TEMPLATE,
+	},
+}

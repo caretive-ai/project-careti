@@ -45,6 +45,7 @@ export const config = createVariant(ModelFamily.NATIVE_GPT_5_1)
 		SystemPromptSection.SYSTEM_INFO,
 		SystemPromptSection.OBJECTIVE,
 		SystemPromptSection.USER_INSTRUCTIONS,
+		SystemPromptSection.SKILLS, // CARETI MODIFICATION: Added for Cline v3.49.1 parity (USE_SKILL tool requires this)
 	)
 	.tools(
 		ClineDefaultTool.BASH,
@@ -56,6 +57,7 @@ export const config = createVariant(ModelFamily.NATIVE_GPT_5_1)
 		ClineDefaultTool.LIST_CODE_DEF,
 		ClineDefaultTool.BROWSER,
 		ClineDefaultTool.WEB_FETCH,
+		ClineDefaultTool.WEB_SEARCH, // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 		ClineDefaultTool.GENERATE_IMAGE,
 		ClineDefaultTool.MCP_ACCESS,
 		ClineDefaultTool.ASK,
@@ -65,6 +67,8 @@ export const config = createVariant(ModelFamily.NATIVE_GPT_5_1)
 		ClineDefaultTool.ACT_MODE,
 		ClineDefaultTool.MCP_DOCS,
 		ClineDefaultTool.TODO,
+		ClineDefaultTool.GENERATE_EXPLANATION, // CARETI MODIFICATION: Added for Cline v3.49.1 parity
+		ClineDefaultTool.USE_SKILL, // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 	)
 	.placeholders({
 		MODEL_FAMILY: ModelFamily.NATIVE_GPT_5,

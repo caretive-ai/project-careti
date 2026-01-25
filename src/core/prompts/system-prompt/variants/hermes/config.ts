@@ -34,6 +34,7 @@ export const config = createVariant(ModelFamily.HERMES)
 		SystemPromptSection.SYSTEM_INFO,
 		SystemPromptSection.OBJECTIVE,
 		SystemPromptSection.USER_INSTRUCTIONS,
+		SystemPromptSection.SKILLS, // CARETI MODIFICATION: Added for Cline v3.49.1 parity (USE_SKILL tool requires this)
 	)
 	.tools(
 		ClineDefaultTool.BASH,
@@ -53,6 +54,8 @@ export const config = createVariant(ModelFamily.HERMES)
 		ClineDefaultTool.PLAN_MODE,
 		ClineDefaultTool.MCP_DOCS,
 		ClineDefaultTool.TODO,
+		ClineDefaultTool.GENERATE_EXPLANATION, // CARETI MODIFICATION: Added for Cline v3.49.1 parity
+		ClineDefaultTool.USE_SKILL, // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 	)
 	.placeholders({
 		MODEL_FAMILY: "hermes",

@@ -5,10 +5,11 @@ import {
     ClineAskUseMcpServer,
     ClineMessage,
     ClinePlanModeResponse,
+    ClineSayGenerateExplanation, // CARETI MODIFICATION: Added for generate_explanation UI
     ClineSayTool,
     COMPLETION_RESULT_CHANGES_FLAG,
 } from "@shared/ExtensionMessage"
-import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
+import { BooleanRequest, EmptyRequest, StringRequest } from "@shared/proto/cline/common"
 import { VSCodeButton, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
 import deepEqual from "fast-deep-equal"
 import React, { MouseEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
@@ -183,7 +184,8 @@ export const ChatRowContent = memo(
 		clineMessages = [],
 	}: ChatRowContentProps) => {
 		// CARETI MODIFICATION: Use featureConfig from ExtensionState instead of getCurrentFeatureConfig
-		const { mcpServers, mcpMarketplaceCatalog, onRelinquishControl, enablePersonaSystem, featureConfig } = useExtensionState()
+		const { mcpServers, mcpMarketplaceCatalog, onRelinquishControl, enablePersonaSystem, featureConfig, vscodeTerminalExecutionMode } =
+			useExtensionState()
 
 		// CARETI MODIFICATION: Get persona profile from Careti context
 		const { personaProfile } = useCaretiState()
@@ -1254,6 +1256,76 @@ export const ChatRowContent = memo(
 						</>
 					)
 				}
+				// CARETI MODIFICATION: Add webSearch case for web search UI (ported from ref-cline v3.49.1)
+				case "webSearch":
+					return (
+						<>
+							<div style={headerStyle}>
+								<span
+									className="codicon codicon-search"
+									style={{
+										color: normalColor,
+										marginBottom: "-1.5px",
+										transform: "rotate(90deg)",
+									}}></span>
+								{tool.operationIsLocatedInWorkspace === false &&
+									toolIcon("sign-out", "yellow", -90, t("tool.externalSearch", "chat"))}
+								<span style={{ fontWeight: "bold" }}>
+									{message.type === "ask"
+										? t("tool.webSearchWants", "chat")
+										: t("tool.webSearchDid", "chat")}
+								</span>
+							</div>
+							<div
+								style={{
+									borderRadius: 3,
+									backgroundColor: CODE_BLOCK_BG_COLOR,
+									overflow: "hidden",
+									border: "1px solid var(--vscode-editorGroup-border)",
+									padding: "9px 10px",
+								}}>
+								<span
+									className="ph-no-capture"
+									style={{
+										whiteSpace: "nowrap",
+										overflow: "hidden",
+										textOverflow: "ellipsis",
+										marginRight: "8px",
+										direction: "rtl",
+										textAlign: "left",
+									}}>
+									{tool.path + "\u200E"}
+								</span>
+							</div>
+						</>
+					)
+				// CARETI MODIFICATION: Add useSkill case for skill UI (ported from ref-cline v3.49.1)
+				case "useSkill":
+					return (
+						<>
+							<div style={headerStyle}>
+								<i
+									className="codicon codicon-lightbulb"
+									style={{
+										color: normalColor,
+										marginBottom: "-1.5px",
+									}}></i>
+								<span style={{ fontWeight: "bold" }}>{t("tool.skillLoaded", "chat", "Cline loaded the skill:")}</span>
+							</div>
+							<div
+								style={{
+									borderRadius: 3,
+									backgroundColor: CODE_BLOCK_BG_COLOR,
+									overflow: "hidden",
+									border: "1px solid var(--vscode-editorGroup-border)",
+									padding: "9px 10px",
+								}}>
+								<span className="ph-no-capture" style={{ fontWeight: 500 }}>
+									{tool.path}
+								</span>
+							</div>
+						</>
+					)
 				default:
 					return null
 			}
@@ -1565,6 +1637,125 @@ export const ChatRowContent = memo(
 								Loading MCP documentation
 							</div>
 						)
+					// CARETI MODIFICATION: Add generate_explanation case (ported from ref-cline v3.49.1)
+					case "generate_explanation": {
+						let explanationInfo: ClineSayGenerateExplanation = {
+							title: "code changes",
+							fromRef: "",
+							toRef: "",
+							status: "generating",
+						}
+						try {
+							if (message.text) {
+								explanationInfo = JSON.parse(message.text)
+							}
+						} catch {
+							// Use defaults if parsing fails
+						}
+						// Check if generation was interrupted:
+						// 1. If status is "generating" but this isn't the last message, it was interrupted
+						// 2. If status is "generating" and lastModifiedMessage is a resume ask, task was just cancelled
+						const wasCancelled =
+							explanationInfo.status === "generating" &&
+							(!isLast ||
+								lastModifiedMessage?.ask === "resume_task" ||
+								lastModifiedMessage?.ask === "resume_completed_task")
+						const isGenerating = explanationInfo.status === "generating" && !wasCancelled
+						const isError = explanationInfo.status === "error"
+						return (
+							<div
+								style={{
+									backgroundColor: CODE_BLOCK_BG_COLOR,
+									display: "flex",
+									flexDirection: "column",
+									border: "1px solid var(--vscode-editorGroup-border)",
+									borderRadius: 3,
+									padding: "10px 12px",
+								}}>
+								<div style={{ display: "flex", alignItems: "center" }}>
+									{isGenerating ? (
+										<ProgressIndicator />
+									) : isError ? (
+										<span
+											className="codicon codicon-error"
+											style={{
+												color: errorColor,
+												marginRight: 8,
+												marginBottom: "-1.5px",
+											}}></span>
+									) : wasCancelled ? (
+										<span
+											className="codicon codicon-circle-slash"
+											style={{
+												marginRight: 8,
+												marginBottom: "-1.5px",
+											}}></span>
+									) : (
+										<span
+											className="codicon codicon-check"
+											style={{
+												color: successColor,
+												marginRight: 8,
+												marginBottom: "-1.5px",
+											}}></span>
+									)}
+									<span style={{ fontWeight: 600 }}>
+										{isGenerating
+											? t("tool.generateExplanationGenerating", "chat")
+											: isError
+												? t("tool.generateExplanationFailed", "chat")
+												: wasCancelled
+													? t("tool.generateExplanationCancelled", "chat")
+													: t("tool.generateExplanationGenerated", "chat")}
+									</span>
+								</div>
+								{isError && explanationInfo.error && (
+									<div
+										style={{
+											opacity: 0.8,
+											marginLeft: 24,
+											marginTop: 6,
+											color: errorColor,
+											wordBreak: "break-word",
+										}}>
+										{explanationInfo.error}
+									</div>
+								)}
+								{!isError && (explanationInfo.title || explanationInfo.fromRef) && (
+									<div style={{ opacity: 0.8, marginLeft: 24, marginTop: 6 }}>
+										<div>{explanationInfo.title}</div>
+										{explanationInfo.fromRef && (
+											<div
+												style={{
+													opacity: 0.7,
+													marginTop: 6,
+													fontSize: 12,
+													wordBreak: "break-all",
+												}}>
+												<code
+													style={{
+														backgroundColor: "var(--vscode-textBlockQuote-background)",
+														borderRadius: 3,
+														padding: "2px 6px",
+													}}>
+													{explanationInfo.fromRef}
+												</code>
+												<span style={{ margin: "0 4px" }}>→</span>
+												<code
+													style={{
+														backgroundColor: "var(--vscode-textBlockQuote-background)",
+														borderRadius: 3,
+														padding: "2px 6px",
+													}}>
+													{explanationInfo.toRef || "working directory"}
+												</code>
+											</div>
+										)}
+									</div>
+								)}
+							</div>
+						)
+					}
 					case "completion_result": {
 						// CARETI MODIFICATION: Use new CompletionOutputRow component ported from ref-cline
 						const hasChanges = message.text?.endsWith(COMPLETION_RESULT_CHANGES_FLAG) ?? false
@@ -1647,6 +1838,80 @@ export const ChatRowContent = memo(
 								</div>
 							</div>
 						)
+					// CARETI MODIFICATION: Added shell_integration_warning_with_suggestion case (ported from ref-cline v3.49.1)
+					case "shell_integration_warning_with_suggestion": {
+						const isBackgroundModeEnabled = vscodeTerminalExecutionMode === "backgroundExec"
+						return (
+							<div
+								style={{
+									display: "flex",
+									flexDirection: "column",
+									backgroundColor: "rgba(0, 122, 204, 0.1)", // Link color at 10% opacity
+									padding: 8,
+									borderRadius: 3,
+									fontSize: 12,
+									border: "1px solid rgba(0, 122, 204, 0.3)", // Link color at 30% opacity
+								}}>
+								<div
+									style={{
+										display: "flex",
+										alignItems: "center",
+										marginBottom: 4,
+									}}>
+									<i
+										className="codicon codicon-lightbulb"
+										style={{
+											marginRight: 8,
+											fontSize: 14,
+											color: "var(--vscode-textLink-foreground)",
+										}}></i>
+									<span
+										style={{
+											fontWeight: 500,
+											color: "var(--vscode-foreground)",
+										}}>
+										Shell integration issues
+									</span>
+								</div>
+								<div style={{ color: "var(--vscode-foreground)", opacity: 0.9, marginBottom: 8 }}>
+									Since you're experiencing repeated shell integration issues, we recommend switching
+									to Background Terminal mode for better reliability.
+								</div>
+								<button
+									style={{
+										backgroundColor: isBackgroundModeEnabled
+											? "var(--vscode-testing-iconPassed)"
+											: "var(--vscode-button-background)",
+										color: "var(--vscode-button-foreground)",
+										border: "none",
+										borderRadius: 3,
+										padding: "6px 12px",
+										fontSize: 12,
+										display: "flex",
+										alignItems: "center",
+										gap: 6,
+										cursor: isBackgroundModeEnabled ? "default" : "pointer",
+										opacity: isBackgroundModeEnabled ? 0.8 : 1,
+									}}
+									disabled={isBackgroundModeEnabled}
+									onClick={async () => {
+										try {
+											// Enable background terminal execution mode
+											await UiServiceClient.setTerminalExecutionMode(
+												BooleanRequest.create({ value: true }),
+											)
+										} catch (error) {
+											console.error("Failed to enable background terminal:", error)
+										}
+									}}>
+									<i className="codicon codicon-settings-gear" style={{ fontSize: 12 }}></i>
+									{isBackgroundModeEnabled
+										? "Background Terminal Enabled"
+										: "Enable Background Terminal (Recommended)"}
+								</button>
+							</div>
+						)
+					}
 					case "hook":
 						return <HookMessage message={message} />
 					case "hook_output":

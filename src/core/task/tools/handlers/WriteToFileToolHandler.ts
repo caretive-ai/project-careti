@@ -1,10 +1,12 @@
+import * as fs from "node:fs/promises"
+import * as iconv from "iconv-lite"
 import path from "node:path"
 import { setTimeout as setTimeoutPromise } from "node:timers/promises"
 import type { ToolUse } from "@core/assistant-message"
 import { constructNewFileContent } from "@core/assistant-message/diff"
 import { formatResponse } from "@core/prompts/responses"
 import { getWorkspaceBasename, resolveWorkspacePath } from "@core/workspace"
-import { processFilesIntoText } from "@integrations/misc/extract-text"
+import { detectEncoding, processFilesIntoText } from "@integrations/misc/extract-text"
 import { ClineSayTool } from "@shared/ExtensionMessage"
 import { fileExistsAtPath } from "@utils/fs"
 import { arePathsEqual, getReadablePath, isLocatedInWorkspace } from "@utils/path"
@@ -14,6 +16,8 @@ import { ClineDefaultTool } from "@/shared/tools"
 import { getCurrentBrandName } from "@careti/utils/brand-utils"
 // CARETI MODIFICATION: import SmartEditEngine for token-efficient error context
 import { SmartEditEngine } from "@careti/core/editing"
+// CARETI MODIFICATION: import FileLock for concurrent edit prevention in background mode
+import { acquireLock, releaseLock } from "@careti/core/editing"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApproval } from "../../utils"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
@@ -74,6 +78,13 @@ export class WriteToFileToolHandler implements IFullyManagedTool {
 			} else {
 				await uiHelpers.removeLastPartialMessageIfExistsWithType("say", "tool")
 				await uiHelpers.ask("tool", partialMessage, block.partial).catch(() => {})
+			}
+
+			// CARETI MODIFICATION: Skip diff editor in background edit mode
+			if (this.isBackgroundEditEnabled(config)) {
+				// In background edit mode, we don't open the diff editor during streaming
+				// The file will be written directly in the execute method
+				return
 			}
 
 			// CRITICAL: Open editor and stream content in real-time (from original code)
@@ -144,6 +155,21 @@ export class WriteToFileToolHandler implements IFullyManagedTool {
 				content: diff || content,
 				operationIsLocatedInWorkspace: await isLocatedInWorkspace(relPath),
 			}
+
+			// CARETI MODIFICATION: Background edit mode - write directly without diff view
+			if (this.isBackgroundEditEnabled(config)) {
+				return await this.executeBackgroundEdit(config, block, {
+					relPath,
+					absolutePath,
+					fileExists,
+					diff,
+					content,
+					newContent,
+					workspaceContext,
+					sharedMessageProps,
+				})
+			}
+
 			// if isEditingFile false, that means we have the full contents of the file already.
 			// it's important to note how this function works, you can't make the assumption that the block.partial conditional will always be called since it may immediately get complete, non-partial data. So this part of the logic will always be called.
 			// in other words, you must always repeat the block.partial logic here
@@ -507,5 +533,159 @@ export class WriteToFileToolHandler implements IFullyManagedTool {
 		const providerId = (currentMode === "plan" ? apiConfig.planModeApiProvider : apiConfig.actModeApiProvider) as string
 		const modelId = config.api.getModel().id
 		return { providerId, modelId }
+	}
+
+	// CARETI MODIFICATION: Check if background edit mode is enabled
+	private isBackgroundEditEnabled(config: TaskConfig): boolean {
+		return config.services.stateManager.getGlobalSettingsKey("backgroundEditEnabled") ?? false
+	}
+
+	// CARETI MODIFICATION: Execute file edit in background without diff view
+	private async executeBackgroundEdit(
+		config: TaskConfig,
+		block: ToolUse,
+		params: {
+			relPath: string
+			absolutePath: string
+			fileExists: boolean
+			diff?: string
+			content?: string
+			newContent: string
+			workspaceContext: {
+				isMultiRootEnabled: boolean
+				usedWorkspaceHint: boolean
+				resolvedToNonPrimary: boolean
+				resolutionMethod: "hint" | "primary_fallback"
+			}
+			sharedMessageProps: ClineSayTool
+		},
+	): Promise<ToolResponse> {
+		const { relPath, absolutePath, fileExists, diff, content, newContent, workspaceContext, sharedMessageProps } = params
+		const { providerId, modelId } = this.getModelInfo(config)
+
+		// Create directories if needed
+		const dir = path.dirname(absolutePath)
+		await fs.mkdir(dir, { recursive: true })
+
+		// Show tool message in chat (without opening diff view)
+		const completeMessage = JSON.stringify({
+			...sharedMessageProps,
+			content: diff || content,
+		} satisfies ClineSayTool)
+
+		// Handle approval based on auto-approval settings
+		if (await config.callbacks.shouldAutoApproveToolWithPath(block.name, relPath)) {
+			await config.callbacks.removeLastPartialMessageIfExistsWithType("ask", "tool")
+			await config.callbacks.say("tool", completeMessage, undefined, undefined, false)
+
+			telemetryService.captureToolUsage(
+				config.ulid,
+				block.name,
+				modelId,
+				providerId,
+				true,
+				true,
+				workspaceContext,
+				block.isNativeToolCall,
+			)
+		} else {
+			// Even in background mode, we need user approval if not auto-approved
+			const notificationMessage = `${getCurrentBrandName()} wants to ${fileExists ? "edit" : "create"} ${getWorkspaceBasename(relPath, "WriteToFile.notification")} (background)`
+			showNotificationForApproval(notificationMessage, config.autoApprovalSettings.enableNotifications)
+
+			await config.callbacks.removeLastPartialMessageIfExistsWithType("say", "tool")
+			const { response, text, images, files } = await config.callbacks.ask("tool", completeMessage, false)
+
+			if (response !== "yesButtonClicked") {
+				const fileDeniedNote = fileExists
+					? "The file was not updated, and maintains its original contents."
+					: "The file was not created."
+
+				if (text || (images && images.length > 0) || (files && files.length > 0)) {
+					let fileContentString = ""
+					if (files && files.length > 0) {
+						fileContentString = await processFilesIntoText(files)
+					}
+					ToolResultUtils.pushAdditionalToolFeedback(config.taskState.userMessageContent, text, images, fileContentString)
+					await config.callbacks.say("user_feedback", text, images, files)
+				}
+
+				config.taskState.didRejectTool = true
+				telemetryService.captureToolUsage(
+					config.ulid,
+					block.name,
+					modelId,
+					providerId,
+					false,
+					false,
+					workspaceContext,
+					block.isNativeToolCall,
+				)
+
+				return `The user denied this operation. ${fileDeniedNote}`
+			}
+
+			if (text || (images && images.length > 0) || (files && files.length > 0)) {
+				let fileContentString = ""
+				if (files && files.length > 0) {
+					fileContentString = await processFilesIntoText(files)
+				}
+				ToolResultUtils.pushAdditionalToolFeedback(config.taskState.userMessageContent, text, images, fileContentString)
+				await config.callbacks.say("user_feedback", text, images, files)
+			}
+
+			telemetryService.captureToolUsage(
+				config.ulid,
+				block.name,
+				modelId,
+				providerId,
+				false,
+				true,
+				workspaceContext,
+				block.isNativeToolCall,
+			)
+		}
+
+		// Run PreToolUse hook after approval
+		try {
+			const { ToolHookUtils } = await import("../utils/ToolHookUtils")
+			await ToolHookUtils.runPreToolUseIfEnabled(config, block)
+		} catch (error) {
+			const { PreToolUseHookCancellationError } = await import("@core/hooks/PreToolUseHookCancellationError")
+			if (error instanceof PreToolUseHookCancellationError) {
+				return formatResponse.toolDenied()
+			}
+			throw error
+		}
+
+		// Write file directly (background edit - no diff view)
+		// CARETI MODIFICATION: Proper encoding detection and file locking for background edit
+		let fileEncoding = "utf8"
+		try {
+			// Acquire lock to prevent concurrent edits
+			await acquireLock(absolutePath)
+
+			// Detect existing file encoding if file exists
+			if (fileExists) {
+				const existingBuffer = await fs.readFile(absolutePath)
+				fileEncoding = await detectEncoding(existingBuffer)
+			}
+
+			const finalContent = newContent.endsWith("\n") ? newContent : newContent + "\n"
+
+			// Write with proper encoding
+			const encodedContent = iconv.encode(finalContent, fileEncoding)
+			await fs.writeFile(absolutePath, encodedContent)
+
+			// Mark file as edited and track context
+			config.services.fileContextTracker.markFileAsEditedByCline(relPath)
+			config.taskState.didEditFile = true
+			await config.services.fileContextTracker.trackFileContext(relPath, "cline_edited")
+
+			return formatResponse.fileEditWithoutUserChanges(relPath, undefined, finalContent, "")
+		} finally {
+			// Always release the lock
+			releaseLock(absolutePath)
+		}
 	}
 }

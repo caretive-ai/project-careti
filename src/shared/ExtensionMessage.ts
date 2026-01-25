@@ -229,6 +229,7 @@ export interface ClineSayTool {
 		| "listCodeDefinitionNames"
 		| "searchFiles"
 		| "webFetch"
+		| "webSearch" // CARETI MODIFICATION: SerpAPI web search
 		| "generateImage"
 		| "analyzeImage" // CARETI MODIFICATION: for analyze_image tool
 		| "readDocument" // CARETI MODIFICATION: for read_document tool

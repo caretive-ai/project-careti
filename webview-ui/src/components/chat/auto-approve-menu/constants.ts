@@ -89,6 +89,14 @@ export const getActionMetadata = (): ActionMetadata[] => [
 		description: t("autoApprove.useMcp.description", "settings"),
 		icon: "codicon-server",
 	},
+	// CARETI MODIFICATION: Web search auto-approval
+	{
+		id: "useWebSearch",
+		label: t("autoApprove.useWebSearch.label", "settings"),
+		shortName: t("autoApprove.useWebSearch.shortName", "settings"),
+		description: t("autoApprove.useWebSearch.description", "settings"),
+		icon: "codicon-search",
+	},
 ]
 
 export const getNotificationsSetting = (): ActionMetadata => ({

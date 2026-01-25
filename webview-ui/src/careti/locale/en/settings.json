@@ -58,6 +58,10 @@
 		"unifiedLanguage": {
 			"label": "Language",
 			"description": "Set language for AI responses and interface. Languages with 🎨 support both AI and UI."
+		},
+		"terminalOutputLineLimit": {
+			"label": "Terminal Output Line Limit",
+			"description": "Maximum number of lines to keep from terminal output."
 		}
 	},
 	"buttons": {
@@ -154,7 +158,14 @@
 		"enableHooks": "Enable Hooks",
 		"enableHooksDescription": "Allows you to run shell commands before and after AI actions (e.g., code review before edits).",
 		"enableSkills": "Enable Skills",
-		"enableSkillsDescription": "Allows you to define reusable instruction sets that can be invoked on demand."
+		"enableSkillsDescription": "Allows you to define reusable instruction sets that can be invoked on demand.",
+		"enableBackgroundEdit": "Enable Background Edits",
+		"enableBackgroundEditDescription": "Edit files without opening the diff view. Files are written directly in the background.",
+		"serpApiKey": "SerpAPI Key",
+		"serpApiKeyPlaceholder": "Enter your SerpAPI key",
+		"serpApiKeyDescription": "API key for web search functionality. Get your key from",
+		"mentionImageSend": "Send Images via Mention",
+		"mentionImageSendDescription": "Allows attaching images to the conversation via @ mentions."
 	},
 	"autoApprove": {
 		"title": "Auto-approve Settings",
@@ -221,6 +232,11 @@
 			"label": "Use MCP server",
 			"shortName": "MCP",
 			"description": "Allows Careti to use configured MCP servers which can modify the file system or interact with APIs."
+		},
+		"useWebSearch": {
+			"label": "Use Web Search",
+			"shortName": "Search",
+			"description": "Allows Careti to search the web using SerpAPI for current information and documentation."
 		},
 		"enableNotifications": {
 			"label": "Enable notifications",

@@ -25,6 +25,7 @@ import { search_files_variants } from "./search_files"
 import { use_mcp_tool_variants } from "./use_mcp_tool"
 import { use_skill_variants } from "./use_skill" // CARETI MODIFICATION: Skills system
 import { web_fetch_variants } from "./web_fetch"
+import { web_search_variants } from "./web_search" // CARETI MODIFICATION: SerpAPI web search
 import { write_to_file_variants } from "./write_to_file"
 
 /**
@@ -56,6 +57,7 @@ export function registerClineToolSets(): void {
 		...use_mcp_tool_variants,
 		...use_skill_variants, // CARETI MODIFICATION: Skills system
 		...web_fetch_variants,
+		...web_search_variants, // CARETI MODIFICATION: SerpAPI web search
 		...write_to_file_variants,
 		...apply_patch_variants,
 	]

@@ -7,7 +7,7 @@ import { memo, useEffect, useMemo, useState } from "react"
 // CARETI MODIFICATION: mention image send setting toggle
 import MentionImageSendToggle from "@/careti/components/MentionImageSendToggle"
 import { getLocalizedUrl } from "@/careti/constants/urls"
-import { useCaretI18nContext } from "@/careti/context/CaretI18nContext"
+import { useCaretiI18nContext } from "@/careti/context/CaretiI18nContext"
 import { t } from "@/careti/utils/i18n"
 import McpDisplayModeDropdown from "@/components/mcp/chat-display/McpDisplayModeDropdown"
 import { PLATFORM_CONFIG, PlatformType } from "@/config/platform.config"
@@ -40,9 +40,11 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 		// CARETI MODIFICATION: Hooks and Skills settings
 		hooksEnabled,
 		skillsEnabled,
+		// CARETI MODIFICATION: Background edit setting
+		backgroundEditEnabled,
 	} = useExtensionState()
 	const dictation = dictationSettings ?? DEFAULT_DICTATION_SETTINGS
-	const { language } = useCaretI18nContext()
+	const { language } = useCaretiI18nContext()
 	const [isCliInstalled, setIsCliInstalled] = useState(false)
 
 	const isCaretMode = modeSystem === "careti"
@@ -423,6 +425,50 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 						</VSCodeCheckbox>
 						<p className="text-xs text-[var(--vscode-descriptionForeground)]">
 							{t("features.enableSkillsDescription", "settings")}
+						</p>
+					</div>
+					{/* CARETI MODIFICATION: Background edit setting */}
+					<div style={{ marginTop: 10 }}>
+						<VSCodeCheckbox
+							checked={backgroundEditEnabled}
+							onChange={(e: any) => {
+								const checked = e.target.checked === true
+								updateSetting("backgroundEditEnabled", checked)
+							}}>
+							{t("features.enableBackgroundEdit", "settings")}
+						</VSCodeCheckbox>
+						<p className="text-xs text-[var(--vscode-descriptionForeground)]">
+							{t("features.enableBackgroundEditDescription", "settings")}
+						</p>
+					</div>
+					{/* CARETI MODIFICATION: SerpAPI key for web search */}
+					<div style={{ marginTop: 10 }}>
+						<label
+							className="block text-sm font-medium text-[var(--vscode-foreground)] mb-1"
+							htmlFor="serp-api-key">
+							{t("features.serpApiKey", "settings")}
+						</label>
+						<VSCodeTextField
+							className="w-full"
+							id="serp-api-key"
+							onInput={(e: any) => {
+								const value = e.target.value
+								StateServiceClient.updateSecret({ key: "serpApiKey", value }).catch((err) =>
+									console.error("Failed to save serpApiKey:", err),
+								)
+							}}
+							placeholder={t("features.serpApiKeyPlaceholder", "settings")}
+							type="password"
+						/>
+						<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
+							{t("features.serpApiKeyDescription", "settings")}{" "}
+							<a
+								className="text-[var(--vscode-textLink-foreground)] hover:text-[var(--vscode-textLink-activeForeground)]"
+								href="https://serpapi.com/"
+								rel="noopener noreferrer"
+								target="_blank">
+								serpapi.com
+							</a>
 						</p>
 					</div>
 					<div style={{ marginTop: 10 }}>

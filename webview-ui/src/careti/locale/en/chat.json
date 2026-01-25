@@ -15,6 +15,9 @@
 	},
 	"taskCompleted": "Task Completed",
 	"seeNewChanges": "See new changes",
+	"explainChanges": "Explain Changes",
+	"explaining": "Explaining...",
+	"planCreated": "Plan Created",
 	"tool": {
 		"outsideWorkspace": "This file is outside of your workspace",
 		"editFile": "{{brandName}} wants to edit this file",

@@ -141,6 +141,8 @@ export interface Settings {
 	// CARETI MODIFICATION: Skills system
 	skillsEnabled: boolean
 	subagentsEnabled: boolean
+	// CARETI MODIFICATION: Background edits - edit files without showing diff view
+	backgroundEditEnabled: boolean
 	hicapModelId: string | undefined
 
 	// Plan mode configurations
@@ -300,6 +302,7 @@ export interface Secrets {
 	mcpOAuthSecrets: string | undefined
 	nousResearchApiKey: string | undefined
 	bizRouterApiKey: string | undefined
+	serpApiKey: string | undefined // CARETI MODIFICATION: SerpAPI for web search
 }
 
 export interface LocalState {

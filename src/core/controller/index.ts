@@ -1,7 +1,7 @@
 import type { Anthropic } from "@anthropic-ai/sdk"
 import { CaretiGlobalManager } from "@careti/managers/CaretiGlobalManager"
-import { CaretAccountService } from "@careti/services/account/CaretAccountService"
-import { CaretAuthService } from "@careti/services/auth/CaretAuthService"
+import { CaretiAccountService } from "@careti/services/account/CaretiAccountService"
+import { CaretiAuthService } from "@careti/services/auth/CaretiAuthService"
 import { getCurrentFeatureConfig } from "@careti/shared/FeatureConfig"
 import { buildApiHandler } from "@core/api"
 import { tryAcquireTaskLockWithRetry } from "@core/task/TaskLockUtils"
@@ -73,10 +73,10 @@ export class Controller {
 
 	mcpHub: McpHub
 	accountService: ClineAccountService
-	caretAccountService: CaretAccountService
+	caretAccountService: CaretiAccountService
 	authService: AuthService
 	ocaAuthService: OcaAuthService
-	caretAuthService: CaretAuthService
+	caretAuthService: CaretiAuthService
 	readonly stateManager: StateManager
 
 	// NEW: Add workspace manager (optional initially)
@@ -154,10 +154,10 @@ export class Controller {
 			},
 		})
 		this.authService = AuthService.getInstance(this)
-		this.caretAuthService = CaretAuthService.getInstance(this)
+		this.caretAuthService = CaretiAuthService.getInstance(this)
 		this.ocaAuthService = OcaAuthService.initialize(this)
 		this.accountService = ClineAccountService.getInstance()
-		this.caretAccountService = CaretAccountService.getInstance()
+		this.caretAccountService = CaretiAccountService.getInstance()
 
 		const authStatusHandler: StreamingResponseHandler<AuthState> = async (response, _isLast, _seqNumber): Promise<void> => {
 			if (response.user) {
@@ -556,7 +556,9 @@ export class Controller {
 
 	async handleAuthCallback(customToken: string, provider: string | null = null) {
 		try {
-			if (provider === "careti") {
+			// CARETI MODIFICATION: Accept both "careti" and "caret" for Careti auth routing
+			// Server may return "caret" instead of "careti" in callback
+			if (provider === "careti" || provider === "caret") {
 				await this.caretAuthService.handleAuthCallback(customToken, provider)
 			} else {
 				await this.authService.handleAuthCallback(customToken, provider ? provider : "google")

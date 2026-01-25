@@ -58,6 +58,10 @@
 		"unifiedLanguage": {
 			"label": "언어",
 			"description": "AI 응답 및 인터페이스 언어를 설정합니다. 🎨가 있는 언어는 AI와 UI 모두 지원합니다."
+		},
+		"terminalOutputLineLimit": {
+			"label": "터미널 출력 줄 제한",
+			"description": "터미널 출력에서 유지할 최대 줄 수입니다."
 		}
 	},
 	"buttons": {
@@ -157,7 +161,14 @@
 		"enableHooks": "Hooks 활성화",
 		"enableHooksDescription": "AI 작업 전후에 셸 명령을 실행할 수 있습니다 (예: 편집 전 코드 리뷰).",
 		"enableSkills": "Skills 활성화",
-		"enableSkillsDescription": "필요 시 호출할 수 있는 재사용 가능한 지시 세트를 정의할 수 있습니다."
+		"enableSkillsDescription": "필요 시 호출할 수 있는 재사용 가능한 지시 세트를 정의할 수 있습니다.",
+		"enableBackgroundEdit": "백그라운드 편집 활성화",
+		"enableBackgroundEditDescription": "Diff 뷰를 열지 않고 파일을 편집합니다. 파일이 백그라운드에서 직접 작성됩니다.",
+		"serpApiKey": "SerpAPI 키",
+		"serpApiKeyPlaceholder": "SerpAPI 키를 입력하세요",
+		"serpApiKeyDescription": "웹 검색 기능을 위한 API 키입니다. 키는 다음에서 얻을 수 있습니다:",
+		"mentionImageSend": "이미지 멘션으로 전송",
+		"mentionImageSendDescription": "@ 멘션을 통해 이미지를 대화에 첨부할 수 있습니다."
 	},
 	"autoApprove": {
 		"title": "자동 승인 설정",
@@ -224,6 +235,11 @@
 			"label": "MCP 서버 사용",
 			"shortName": "MCP",
 			"description": "캐러티가 파일 시스템을 수정하거나 API와 상호 작용할 수 있는 구성된 MCP 서버를 사용하도록 허용합니다."
+		},
+		"useWebSearch": {
+			"label": "웹 검색 사용",
+			"shortName": "검색",
+			"description": "캐러티가 SerpAPI를 사용해 웹에서 최신 정보와 문서를 검색하도록 허용합니다."
 		},
 		"enableNotifications": {
 			"label": "알림 활성화",

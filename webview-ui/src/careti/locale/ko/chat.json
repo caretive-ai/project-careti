@@ -15,6 +15,9 @@
 	},
 	"taskCompleted": "작업 완료",
 	"seeNewChanges": "새 변경사항 보기",
+	"explainChanges": "변경사항 설명",
+	"explaining": "설명 중...",
+	"planCreated": "계획 생성됨",
 	"tool": {
 		"outsideWorkspace": "이 파일은 작업 공간 외부에 있습니다",
 		"editFile": "캐러티가 이 파일을 편집하려고 합니다",
@@ -405,10 +408,6 @@
 	"requestStartRow": {
 		"thinking": "생각 중...",
 		"planning": "계획 중..."
-	},
-	"requestStartRow": {
-		"thinking": "Thinking...",
-		"planning": "Planning..."
 	},
 	"toolGroup": {
 		"read": "읽음",

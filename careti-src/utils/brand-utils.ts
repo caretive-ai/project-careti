@@ -272,7 +272,16 @@ export function getGlobalWorkflowsSubdir(): string {
 }
 
 /**
- * Get global skills subdirectory name.
+ * Get global commands subdirectory name.
+ * @returns "commands"
+ */
+export function getGlobalCommandsSubdir(): string {
+	return "commands"
+}
+
+/**
+ * Get global skills subdirectory name (legacy alias).
+ * @deprecated Use getGlobalCommandsSubdir() instead
  * @returns "skills"
  */
 export function getGlobalSkillsSubdir(): string {
@@ -303,7 +312,8 @@ export function getLegacySubdirMapping(): Record<string, string> {
 	return {
 		context: "Rules",
 		workflows: "Workflows",
-		skills: "Skills",
+		commands: "Skills", // commands replaces skills
+		skills: "Skills", // legacy alias
 		hooks: "Hooks",
 		mcp: "MCP",
 	}

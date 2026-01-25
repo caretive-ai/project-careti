@@ -137,6 +137,8 @@ export interface ExtensionState {
 	skillsEnabled?: boolean
 	globalSkillsToggles?: Record<string, boolean>
 	localSkillsToggles?: Record<string, boolean>
+	// CARETI MODIFICATION: Background edit mode
+	backgroundEditEnabled?: boolean
 	nativeToolCallSetting?: ClineFeatureSetting
 	// CARETI MODIFICATION: CLI Subagent Mode
 	isCliSubagent: boolean

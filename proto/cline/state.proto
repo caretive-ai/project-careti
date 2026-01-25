@@ -387,6 +387,8 @@ message UpdateSettingsRequest {
   optional string image_generation_size = 1006;
   // CARETI MODIFICATION: F13 - Image Analysis Model Selection
   optional string image_analysis_model = 1007;
+  // CARETI MODIFICATION: Background edit mode
+  optional bool background_edit_enabled = 1008;
 }
 
 message UpdateTerminalConnectionTimeoutRequest {

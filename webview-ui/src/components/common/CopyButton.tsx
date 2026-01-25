@@ -10,6 +10,7 @@ interface CopyButtonProps {
 	onCopy?: () => string | undefined | null
 	className?: string
 	ariaLabel?: string
+	style?: React.CSSProperties // CARETI MODIFICATION: Added for CompletionOutputRow
 }
 
 interface WithCopyButtonProps {
@@ -60,7 +61,7 @@ const ButtonContainer = styled.div<{ $position?: "top-right" | "bottom-right" }>
 /**
  * Base copy button component with clipboard functionality
  */
-export const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy, onCopy, className = "", ariaLabel }) => {
+export const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy, onCopy, className = "", ariaLabel, style }) => {
 	const [copied, setCopied] = useState(false)
 
 	const handleCopy = () => {
@@ -93,7 +94,8 @@ export const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy, onCopy, clas
 			appearance="icon"
 			aria-label={copied ? t("copyButton.copied", "chat") : ariaLabel || t("copyButton.copy", "chat")}
 			className={className}
-			onClick={handleCopy}>
+			onClick={handleCopy}
+			style={style}>
 			<span className={`codicon codicon-${copied ? "check" : "copy"}`}></span>
 		</StyledButton>
 	)

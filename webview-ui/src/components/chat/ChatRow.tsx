@@ -8,19 +8,19 @@ import {
     ClineSayTool,
     COMPLETION_RESULT_CHANGES_FLAG,
 } from "@shared/ExtensionMessage"
-import { EmptyRequest, Int64Request, StringRequest } from "@shared/proto/cline/common"
-import { VSCodeBadge, VSCodeButton, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
+import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
+import { VSCodeButton, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
 import deepEqual from "fast-deep-equal"
 import React, { MouseEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useSize } from "react-use"
 import styled from "styled-components"
 // CARETI MODIFICATION: PersonaAvatar import for persona system
 import PersonaAvatar from "@/careti/components/PersonaAvatar"
-import { useCaretState } from "@/careti/context/CaretStateContext"
+import { useCaretiState } from "@/careti/context/CaretiStateContext"
 // CARETI MODIFICATION: use brand-aware generated assets path for image fallback
 import { getBrandGeneratedAssetsDirName } from "@/careti/utils/brand-utils"
-// CARETI MODIFICATION: use CaretWebviewLogger for webview logs
-import WebviewLogger from "@/careti/utils/CaretWebviewLogger"
+// CARETI MODIFICATION: use CaretiWebviewLogger for webview logs
+import WebviewLogger from "@/careti/utils/CaretiWebviewLogger"
 import { t } from "@/careti/utils/i18n"
 import { OptionsButtons } from "@/components/chat/OptionsButtons"
 import TaskFeedbackButtons from "@/components/chat/TaskFeedbackButtons"
@@ -28,17 +28,20 @@ import { CheckmarkControl } from "@/components/common/CheckmarkControl"
 import CodeBlock, { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import { WithCopyButton } from "@/components/common/CopyButton"
 import MarkdownBlock from "@/components/common/MarkdownBlock"
-import SuccessButton from "@/components/common/SuccessButton"
 import McpResponseDisplay from "@/components/mcp/chat-display/McpResponseDisplay"
 import McpResourceRow from "@/components/mcp/configuration/tabs/installed/server-row/McpResourceRow"
 import McpToolRow from "@/components/mcp/configuration/tabs/installed/server-row/McpToolRow"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { CaretAccountServiceClient, FileServiceClient, TaskServiceClient, UiServiceClient } from "@/services/grpc-client"
+import { CaretAccountServiceClient, FileServiceClient, UiServiceClient } from "@/services/grpc-client"
 import { findMatchingResourceOrTemplate, getMcpServerDisplayName } from "@/utils/mcp"
 import { CheckpointControls } from "../common/CheckpointControls"
 import CodeAccordian, { cleanPathPrefix } from "../common/CodeAccordian"
 import { ErrorBlockTitle } from "./ErrorBlockTitle"
 import ErrorRow from "./ErrorRow"
+// CARETI MODIFICATION: Import RequestStartRow for unified UI (ThinkingRow is rendered inside RequestStartRow)
+import { RequestStartRow } from "./RequestStartRow"
+// CARETI MODIFICATION: Import CompletionOutputRow for task completed UI (ported from ref-cline)
+import { CompletionOutputRow } from "./CompletionOutputRow"
 import HookMessage from "./HookMessage"
 import NewTaskPreview from "./NewTaskPreview"
 import QuoteButton from "./QuoteButton"
@@ -68,7 +71,7 @@ const ChatRowContainer = styled.div`
 `
 
 // CARETI MODIFICATION: Import Mode type for ChatRow props
-import { Mode } from "@shared/modes"
+import { Mode } from "@shared/storage/types"
 
 interface ChatRowProps {
 	message: ClineMessage
@@ -80,15 +83,16 @@ interface ChatRowProps {
 	inputValue?: string
 	sendMessageFromChatRow?: (text: string, images: string[], files: string[]) => void
 	onSetQuote: (text: string) => void
-	// CARETI MODIFICATION: Additional props for ThinkingRow and UI improvements
+	// CARETI MODIFICATION: Additional props for ThinkingRow, RequestStartRow and UI improvements
 	onCancelCommand?: () => void
 	mode?: Mode
 	reasoningContent?: string
 	responseStarted?: boolean
 	isRequestInProgress?: boolean
+	clineMessages?: ClineMessage[]
 }
 
-interface QuoteButtonState {
+export interface QuoteButtonState {
 	visible: boolean
 	top: number
 	left: number
@@ -172,13 +176,20 @@ export const ChatRowContent = memo(
 		inputValue,
 		sendMessageFromChatRow,
 		onSetQuote,
+		// CARETI MODIFICATION: Additional props for RequestStartRow
+		mode,
+		reasoningContent,
+		responseStarted,
+		clineMessages = [],
 	}: ChatRowContentProps) => {
 		// CARETI MODIFICATION: Use featureConfig from ExtensionState instead of getCurrentFeatureConfig
 		const { mcpServers, mcpMarketplaceCatalog, onRelinquishControl, enablePersonaSystem, featureConfig } = useExtensionState()
 
 		// CARETI MODIFICATION: Get persona profile from Careti context
-		const { personaProfile } = useCaretState()
+		const { personaProfile } = useCaretiState()
 		const [seeNewChangesDisabled, setSeeNewChangesDisabled] = useState(false)
+		// CARETI MODIFICATION: Add explainChangesDisabled state for CompletionOutputRow
+		const [explainChangesDisabled, setExplainChangesDisabled] = useState(false)
 		const [quoteButtonState, setQuoteButtonState] = useState<QuoteButtonState>({
 			visible: false,
 			top: 0,
@@ -1415,59 +1426,22 @@ export const ChatRowContent = memo(
 			case "say":
 				switch (message.say) {
 					case "api_req_started":
+						// CARETI MODIFICATION: Use RequestStartRow for unified API request display
 						return (
-							<>
-								<div
-									onClick={handleToggle}
-									style={{
-										...headerStyle,
-										marginBottom:
-											(cost == null && apiRequestFailedMessage) || apiReqStreamingFailedMessage ? 10 : 0,
-										justifyContent: "space-between",
-										cursor: "pointer",
-										userSelect: "none",
-										WebkitUserSelect: "none",
-										MozUserSelect: "none",
-										msUserSelect: "none",
-									}}>
-									<div
-										style={{
-											display: "flex",
-											alignItems: "center",
-											gap: "10px",
-										}}>
-										{icon}
-										{title}
-										{/* Need to render this every time since it affects height of row by 2px */}
-										<VSCodeBadge
-											style={{
-												opacity: cost != null && cost > 0 && featureConfig.showCostInformation ? 1 : 0,
-											}}>
-											${Number(cost || 0)?.toFixed(4)}
-										</VSCodeBadge>
-									</div>
-									<span className={`codicon codicon-chevron-${isExpanded ? "up" : "down"}`}></span>
-								</div>
-								{((cost == null && apiRequestFailedMessage) || apiReqStreamingFailedMessage) && (
-									<ErrorRow
-										apiReqStreamingFailedMessage={apiReqStreamingFailedMessage}
-										apiRequestFailedMessage={apiRequestFailedMessage}
-										errorType="error"
-										message={message}
-									/>
-								)}
-
-								{isExpanded && (
-									<div style={{ marginTop: "10px" }}>
-										<CodeAccordian
-											code={JSON.parse(message.text || "{}").request}
-											isExpanded={true}
-											language="markdown"
-											onToggleExpand={handleToggle}
-										/>
-									</div>
-								)}
-							</>
+							<RequestStartRow
+								apiReqStreamingFailedMessage={apiReqStreamingFailedMessage}
+								apiRequestFailedMessage={apiRequestFailedMessage}
+								clineMessages={clineMessages}
+								cost={cost}
+								handleToggle={handleToggle}
+								isExpanded={isExpanded}
+								message={message}
+								mode={mode}
+								reasoningContent={reasoningContent}
+								responseStarted={responseStarted}
+								personaProfile={personaProfile}
+								showPersonaAvatar={!!(featureConfig?.showPersonaSettings && enablePersonaSystem)}
+							/>
 						)
 					case "api_req_finished":
 						return null // we should never see this message type
@@ -1538,73 +1512,10 @@ export const ChatRowContent = memo(
 							</div>
 						)
 					case "reasoning":
-						return (
-							<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-								{featureConfig?.showPersonaSettings && enablePersonaSystem && (
-									<PersonaAvatar
-										isThinking={true}
-										personaProfile={personaProfile}
-										size={64}
-										style={{
-											marginTop: "2px",
-											flexShrink: 0,
-										}}
-									/>
-								)}
-								<div style={{ flex: 1, minWidth: 0 }}>
-									{message.text && (
-										<div
-											onClick={handleToggle}
-											style={{
-												cursor: "pointer",
-												color: "var(--vscode-descriptionForeground)",
-												fontStyle: "italic",
-												overflow: "hidden",
-											}}>
-											{isExpanded ? (
-												<div style={{ marginTop: -3 }}>
-													<span style={{ fontWeight: "bold", display: "block", marginBottom: "4px" }}>
-														Thinking
-														<span
-															className="codicon codicon-chevron-down"
-															style={{
-																display: "inline-block",
-																transform: "translateY(3px)",
-																marginLeft: "1.5px",
-															}}
-														/>
-													</span>
-													<span className="ph-no-capture">{message.text}</span>
-												</div>
-											) : (
-												<div style={{ display: "flex", alignItems: "center" }}>
-													<span style={{ fontWeight: "bold", marginRight: "4px" }}>Thinking:</span>
-													<span
-														className="ph-no-capture"
-														style={{
-															whiteSpace: "nowrap",
-															overflow: "hidden",
-															textOverflow: "ellipsis",
-															direction: "rtl",
-															textAlign: "left",
-															flex: 1,
-														}}>
-														{message.text + "\u200E"}
-													</span>
-													<span
-														className="codicon codicon-chevron-right"
-														style={{
-															marginLeft: "4px",
-															flexShrink: 0,
-														}}
-													/>
-												</div>
-											)}
-										</div>
-									)}
-								</div>
-							</div>
-						)
+						// CARETI MODIFICATION: Skip rendering here - reasoning is handled by RequestStartRow
+						// via findReasoningForApiReq() which collects reasoning content and displays it
+						// in ThinkingRow. Rendering here would cause duplicate thinking sections.
+						return null
 					case "user_feedback":
 						return (
 							<UserMessage
@@ -1654,18 +1565,16 @@ export const ChatRowContent = memo(
 								Loading MCP documentation
 							</div>
 						)
-					case "completion_result":
+					case "completion_result": {
+						// CARETI MODIFICATION: Use new CompletionOutputRow component ported from ref-cline
 						const hasChanges = message.text?.endsWith(COMPLETION_RESULT_CHANGES_FLAG) ?? false
-						const text = hasChanges ? message.text?.slice(0, -COMPLETION_RESULT_CHANGES_FLAG.length) : message.text
+						const completionText = hasChanges
+							? message.text?.slice(0, -COMPLETION_RESULT_CHANGES_FLAG.length)
+							: message.text
 						return (
 							<>
-								<div
-									style={{
-										...headerStyle,
-										marginBottom: "10px",
-									}}>
-									{icon}
-									{title}
+								{/* CARETI MODIFICATION: Keep TaskFeedbackButtons for Careti-specific feedback */}
+								<div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "8px" }}>
 									<TaskFeedbackButtons
 										isFromHistory={
 											!isLast ||
@@ -1673,52 +1582,22 @@ export const ChatRowContent = memo(
 											lastModifiedMessage?.ask === "resume_task"
 										}
 										messageTs={message.ts}
-										style={{
-											marginLeft: "auto",
-										}}
 									/>
 								</div>
-								<WithCopyButton
-									onMouseUp={handleMouseUp}
-									position="bottom-right"
-									ref={contentRef}
-									style={{
-										color: "var(--vscode-charts-green)",
-										paddingTop: 10,
-									}}
-									textToCopy={text}>
-									<Markdown markdown={text} />
-									{quoteButtonState.visible && (
-										<QuoteButton
-											left={quoteButtonState.left}
-											onClick={handleQuoteClick}
-											top={quoteButtonState.top}
-										/>
-									)}
-								</WithCopyButton>
-								{message.partial !== true && hasChanges && (
-									<div style={{ paddingTop: 17 }}>
-										<SuccessButton
-											disabled={seeNewChangesDisabled}
-											onClick={() => {
-												setSeeNewChangesDisabled(true)
-												TaskServiceClient.taskCompletionViewChanges(
-													Int64Request.create({
-														value: message.ts,
-													}),
-												).catch((err) => logger.error("Failed to show task completion view changes", err))
-											}}
-											style={{
-												cursor: seeNewChangesDisabled ? "wait" : "pointer",
-												width: "100%",
-											}}>
-											<i className="codicon codicon-new-file" style={{ marginRight: 6 }} />
-											{t("seeNewChanges", "chat")}
-										</SuccessButton>
-									</div>
-								)}
+								<CompletionOutputRow
+									explainChangesDisabled={explainChangesDisabled}
+									handleQuoteClick={handleQuoteClick}
+									messageTs={message.ts}
+									quoteButtonState={quoteButtonState}
+									seeNewChangesDisabled={seeNewChangesDisabled}
+									setExplainChangesDisabled={setExplainChangesDisabled}
+									setSeeNewChangesDisabled={setSeeNewChangesDisabled}
+									showActionRow={message.partial !== true && hasChanges}
+									text={completionText || ""}
+								/>
 							</>
 						)
+					}
 					case "shell_integration_warning":
 						return (
 							<div
@@ -1795,19 +1674,17 @@ export const ChatRowContent = memo(
 						return <ErrorRow errorType="mistake_limit_reached" message={message} />
 					case "auto_approval_max_req_reached":
 						return <ErrorRow errorType="auto_approval_max_req_reached" message={message} />
-					case "completion_result":
+					case "completion_result": {
+						// CARETI MODIFICATION: Use new CompletionOutputRow component ported from ref-cline
 						if (message.text) {
 							const hasChanges = message.text.endsWith(COMPLETION_RESULT_CHANGES_FLAG) ?? false
-							const text = hasChanges ? message.text.slice(0, -COMPLETION_RESULT_CHANGES_FLAG.length) : message.text
+							const askCompletionText = hasChanges
+								? message.text.slice(0, -COMPLETION_RESULT_CHANGES_FLAG.length)
+								: message.text
 							return (
-								<div>
-									<div
-										style={{
-											...headerStyle,
-											marginBottom: "10px",
-										}}>
-										{icon}
-										{title}
+								<>
+									{/* CARETI MODIFICATION: Keep TaskFeedbackButtons for Careti-specific feedback */}
+									<div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "8px" }}>
 										<TaskFeedbackButtons
 											isFromHistory={
 												!isLast ||
@@ -1815,60 +1692,25 @@ export const ChatRowContent = memo(
 												lastModifiedMessage?.ask === "resume_task"
 											}
 											messageTs={message.ts}
-											style={{
-												marginLeft: "auto",
-											}}
 										/>
 									</div>
-									<WithCopyButton
-										onMouseUp={handleMouseUp}
-										position="bottom-right"
-										ref={contentRef}
-										style={{
-											color: "var(--vscode-charts-green)",
-											paddingTop: 10,
-										}}
-										textToCopy={text}>
-										<Markdown markdown={text} />
-										{quoteButtonState.visible && (
-											<QuoteButton
-												left={quoteButtonState.left}
-												onClick={handleQuoteClick}
-												top={quoteButtonState.top}
-											/>
-										)}
-									</WithCopyButton>
-									{message.partial !== true && hasChanges && (
-										<div style={{ marginTop: 15 }}>
-											<SuccessButton
-												appearance="secondary"
-												disabled={seeNewChangesDisabled}
-												onClick={() => {
-													setSeeNewChangesDisabled(true)
-													TaskServiceClient.taskCompletionViewChanges(
-														Int64Request.create({
-															value: message.ts,
-														}),
-													).catch((err) =>
-														logger.error("Failed to show task completion view changes", err),
-													)
-												}}>
-												<i
-													className="codicon codicon-new-file"
-													style={{
-														marginRight: 6,
-														cursor: seeNewChangesDisabled ? "wait" : "pointer",
-													}}
-												/>
-												{t("seeNewChanges", "chat")}
-											</SuccessButton>
-										</div>
-									)}
-								</div>
+									<CompletionOutputRow
+										explainChangesDisabled={explainChangesDisabled}
+										handleQuoteClick={handleQuoteClick}
+										messageTs={message.ts}
+										quoteButtonState={quoteButtonState}
+										seeNewChangesDisabled={seeNewChangesDisabled}
+										setExplainChangesDisabled={setExplainChangesDisabled}
+										setSeeNewChangesDisabled={setSeeNewChangesDisabled}
+										showActionRow={message.partial !== true && hasChanges}
+										text={askCompletionText || ""}
+									/>
+								</>
 							)
 						} else {
 							return null // Don't render anything when we get a completion_result ask without text
 						}
+					}
 					case "followup":
 						let question: string | undefined
 						let options: string[] | undefined

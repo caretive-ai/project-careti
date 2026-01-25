@@ -93,6 +93,7 @@ export interface ApiHandlerSecrets {
 	minimaxApiKey?: string
 	hicapApiKey?: string
 	nousResearchApiKey?: string
+	serpApiKey?: string // CARETI MODIFICATION: SerpAPI for web search
 }
 
 export interface ApiHandlerOptions {

@@ -56,8 +56,14 @@ Careti은 Cline을 기반으로 한 자율 AI 코딩 어시스턴트로, 다음�
 - **[F13: 이미지 생성 도구](./f13-image-tool.md)**
   이미지 생성, 저장, 히스토리 표시 기능
 
-- **[F15: 문서 읽기 도구](./f14-document-read-tool.md)**
+- **[F14: 문서 읽기 도구](./f14-document-read-tool.md)**
   LLM이 PDF, DOCX, HWPX, HWP, PPTX 등 문서를 경로만으로 직접 읽기 (Careti 전용)
+
+- **[F15: 스마트 편집 엔진](./f15-smart-edit-engine.md)**
+  9단계 Fuzzy Matching으로 AI 편집 성공률 +50% 향상, 토큰 98% 절감
+
+- **[F16: 웹 도구 및 슬래시 명령](./f16-web-tools-and-slash-commands.md)**
+  Web Search, Explain Changes, Use Skill 도구 (Cline v3.49.1 포팅)
 
 ---
 
@@ -82,9 +88,11 @@ Careti 기능
 │   ├── Provider Setup
 │   ├── 입력 히스토리
 │   └── 지식 동기화 시스템
-└── 도구 확장 (F13-F15)
+└── 도구 확장 (F13-F16)
     ├── 이미지 생성 도구
-    └── 문서 읽기 도구 (PDF, HWPX, HWP, PPTX)
+    ├── 문서 읽기 도구 (PDF, HWPX, HWP, PPTX)
+    ├── 스마트 편집 엔진 (9단계 Fuzzy Matching)
+    └── 웹 도구 및 슬래시 명령 (Web Search, Explain Changes)
 ```
 
 ## 개발 가이드
@@ -104,5 +112,5 @@ Careti 기능
 
 ---
 
-**최종 업데이트**: 2026-01-16
-**문서 버전**: v2.3 (F15에 HWP 5.0 지원 추가)
+**최종 업데이트**: 2026-01-26
+**문서 버전**: v2.5 (F16 웹 도구 및 슬래시 명령 추가)

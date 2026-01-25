@@ -1,6 +1,6 @@
 # F06 - 에이전트 표준화(AAIF SoT)
 
-**Status**: ✅ v0.4.5 업데이트 (M02 Phase 2 - 이중 디렉토리 아키텍처 완료) | **Scope**: Backend(인스트럭션/스토리지), Webview(설정), CLI | **Priority**: 🟡 Medium
+**Status**: ✅ v0.4.6 업데이트 (USE_SKILL 도구 통합) | **Scope**: Backend(인스트럭션/스토리지), Webview(설정), CLI | **Priority**: 🟡 Medium
 
 ## 📋 개요
 Careti은 AAIF 표준에 맞춰 규칙 로딩을 표준화하고 **이중 디렉토리 아키텍처**를 채택합니다:
@@ -59,6 +59,24 @@ project/
 │
 └── AGENTS.md                   # AI 진입점
 ```
+
+## 🔧 스킬 시스템 통합 (v0.4.6)
+
+Cline v3.49.1에서 포팅된 `use_skill` 도구가 `.agents/skills/` 구조와 통합되었습니다.
+
+### USE_SKILL 도구
+- **도구 정의**: `src/shared/tools.ts` (`ClineDefaultTool.USE_SKILL`)
+- **UI 렌더링**: `webview-ui/src/components/chat/ChatRow.tsx` (`useSkill` case)
+- **타입 정의**: `src/shared/ExtensionMessage.ts` (`ClineSayTool.tool: "useSkill"`)
+
+### 동작
+1. AI가 스킬이 필요한 작업을 감지
+2. `use_skill` 도구로 `.agents/skills/<skill>/SKILL.md` 로드
+3. 스킬의 지시사항에 따라 작업 수행
+4. ChatRow에서 "Cline loaded the skill: ..." 메시지 표시
+
+### 관련 문서
+- **F16**: 웹 도구 및 슬래시 명령 - USE_SKILL 도구 상세
 
 ## 🆚 Cline 대비 개선점
 | 항목 | Cline | Careti |

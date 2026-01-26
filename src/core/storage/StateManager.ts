@@ -503,6 +503,7 @@ export class StateManager {
 			ocaMode,
 			hicapApiKey,
 			hicapModelId,
+			serpApiKey, // CARETI MODIFICATION: SerpAPI for web search
 			aihubmixApiKey,
 			aihubmixBaseUrl,
 			aihubmixAppCode,
@@ -781,6 +782,7 @@ export class StateManager {
 			zaiApiKey,
 			minimaxApiKey,
 			hicapApiKey,
+			serpApiKey, // CARETI MODIFICATION: SerpAPI for web search
 			aihubmixApiKey,
 			nousResearchApiKey,
 		})

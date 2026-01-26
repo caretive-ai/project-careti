@@ -620,6 +620,7 @@ export function convertApiConfigurationToProto(config: ApiConfiguration): ProtoA
 		aihubmixAppCode: config.aihubmixAppCode,
 		hicapApiKey: config.hicapApiKey,
 		hicapModelId: config.hicapModelId,
+		serpApiKey: config.serpApiKey, // CARETI MODIFICATION: SerpAPI for web search
 		bizRouterApiKey: config.bizRouterApiKey,
 		bizRouterUsePromptCache: config.bizRouterUsePromptCache,
 
@@ -804,6 +805,7 @@ export function convertProtoToApiConfiguration(protoConfig: ProtoApiConfiguratio
 		minimaxApiLine: protoConfig.minimaxApiLine,
 		hicapApiKey: protoConfig.hicapApiKey,
 		hicapModelId: protoConfig.hicapModelId,
+		serpApiKey: protoConfig.serpApiKey, // CARETI MODIFICATION: SerpAPI for web search
 		nousResearchApiKey: protoConfig.nousResearchApiKey,
 		bizRouterApiKey: protoConfig.bizRouterApiKey,
 		bizRouterUsePromptCache: protoConfig.bizRouterUsePromptCache,

@@ -2724,6 +2724,7 @@ export class Task {
 			browserSettings: this.stateManager.getGlobalSettingsKey("browserSettings"),
 			yoloModeToggled: this.stateManager.getGlobalSettingsKey("yoloModeToggled"),
 			clineWebToolsEnabled: this.stateManager.getGlobalSettingsKey("clineWebToolsEnabled"),
+			serpApiKeyConfigured: !!this.stateManager.getSecretKey("serpApiKey"), // CARETI MODIFICATION: SerpAPI web search
 			isMultiRootEnabled: multiRootEnabled,
 			workspaceRoots,
 			isSubagentsEnabledAndCliInstalled,

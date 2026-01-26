@@ -2,7 +2,7 @@
 import { ModelFamily } from "@/shared/prompts"
 import { ClineDefaultTool } from "@/shared/tools"
 import type { ClineToolSpec } from "../spec"
-import { TASK_PROGRESS_PARAMETER } from "../types"
+import { TASK_PROGRESS_PARAMETER, type SystemPromptContext } from "../types"
 
 /**
  * ## web_search
@@ -19,6 +19,13 @@ import { TASK_PROGRESS_PARAMETER } from "../types"
 
 const id = ClineDefaultTool.WEB_SEARCH
 
+// CARETI MODIFICATION: Check if web search is available
+// - For Cline provider: requires clineWebToolsEnabled
+// - For other providers: requires serpApiKey to be configured
+const isWebSearchEnabled = (context: SystemPromptContext) =>
+	(context.providerInfo.providerId === "cline" && context.clineWebToolsEnabled === true) ||
+	context.serpApiKeyConfigured === true
+
 const generic: ClineToolSpec = {
 	variant: ModelFamily.GENERIC,
 	id,
@@ -27,6 +34,7 @@ const generic: ClineToolSpec = {
 - Returns a list of search results with titles, URLs, and snippets
 - Use this when you need up-to-date information that may not be in your training data
 - Useful for finding documentation, API references, error solutions, and current best practices`,
+	contextRequirements: isWebSearchEnabled,
 	parameters: [
 		{
 			name: "query",
@@ -51,6 +59,7 @@ const nextGen: ClineToolSpec = {
 	description: `Search the web for current information using SerpAPI.
 - Returns search results with titles, URLs, and snippets
 - Use for up-to-date documentation, API references, or current information`,
+	contextRequirements: isWebSearchEnabled,
 	parameters: [
 		{
 			name: "query",
@@ -73,6 +82,7 @@ const NATIVE_NEXT_GEN: ClineToolSpec = {
 	id,
 	name: "web_search",
 	description: "Search the web for current information, documentation, or answers.",
+	contextRequirements: isWebSearchEnabled,
 	parameters: [
 		{
 			name: "query",

@@ -66,6 +66,7 @@ export const config = createVariant(ModelFamily.GENERIC)
 		ClineDefaultTool.TODO,
 		ClineDefaultTool.GENERATE_EXPLANATION, // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 		ClineDefaultTool.USE_SKILL, // CARETI MODIFICATION: Added for Cline v3.49.1 parity
+		ClineDefaultTool.WEB_SEARCH, // CARETI MODIFICATION: SerpAPI web search (conditionally enabled via contextRequirements)
 	)
 	.placeholders({
 		MODEL_FAMILY: "generic",

@@ -1310,7 +1310,7 @@ export const ChatRowContent = memo(
 										color: normalColor,
 										marginBottom: "-1.5px",
 									}}></i>
-								<span style={{ fontWeight: "bold" }}>{t("tool.skillLoaded", "chat", "Cline loaded the skill:")}</span>
+								<span style={{ fontWeight: "bold" }}>{t("tool.skillLoaded", "chat")}</span>
 							</div>
 							<div
 								style={{

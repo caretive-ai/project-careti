@@ -51,7 +51,8 @@
 		"analyzeImagePath": "경로",
 		"analyzeImageQuestion": "질문",
 		"analyzeImageCompleted": "이미지 분석 완료",
-		"analyzeImageAnalyzing": "이미지 분석 중..."
+		"analyzeImageAnalyzing": "이미지 분석 중...",
+		"skillLoaded": "{{brandName|}}{이가} 스킬을 로드했습니다:"
 	},
 	"image": {
 		"dimensionError": "이미지 크기가 7500px을 초과합니다",

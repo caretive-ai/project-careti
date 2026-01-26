@@ -51,7 +51,8 @@
 		"analyzeImagePath": "Path",
 		"analyzeImageQuestion": "Question",
 		"analyzeImageCompleted": "Image analysis completed",
-		"analyzeImageAnalyzing": "Analyzing image..."
+		"analyzeImageAnalyzing": "Analyzing image...",
+		"skillLoaded": "{{brandName}} loaded the skill:"
 	},
 	"image": {
 		"dimensionError": "Image dimensions exceed 7500px",

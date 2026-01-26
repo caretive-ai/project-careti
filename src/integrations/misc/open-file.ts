@@ -31,18 +31,14 @@ export async function openImage(dataUri: string) {
 
 export async function openFile(absolutePath: string, preserveFocus: boolean = false, preview: boolean = false) {
 	try {
-		await HostProvider.window.openFile({ filePath: absolutePath })
-	} catch (error) {
-		try {
-			await HostProvider.window.showTextDocument({
-				path: absolutePath,
-				options: { preserveFocus, preview },
-			})
-		} catch (_error) {
-			HostProvider.window.showMessage({
-				type: ShowMessageType.ERROR,
-				message: `Could not open file!`,
-			})
-		}
+		await HostProvider.window.showTextDocument({
+			path: absolutePath,
+			options: { preserveFocus, preview },
+		})
+	} catch (_error) {
+		HostProvider.window.showMessage({
+			type: ShowMessageType.ERROR,
+			message: `Could not open file!`,
+		})
 	}
 }

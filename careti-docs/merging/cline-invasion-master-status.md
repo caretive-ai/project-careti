@@ -509,7 +509,7 @@ git checkout HEAD -- careti-scripts/
 - [F02 - Multilingual i18n](../features/f02-multilingual-i18n.md)
 - [F03 - Branding UI](../features/f03-branding-ui.md)
 - [F04 - Careti Account](../features/f04-careti-account.md)
-- [F06 - Agent Standardization (AAIF SoT)](../features/f06-agent-standardization.md)
+- [F06 - Agent Standardization (AAIF SoT)](../features/f06-agent-standard-claude-compat.md)
 - [F06 - JSON System Prompt](../features/f06-json-system-prompt.md)
 - [F07 - Chatbot Agent Mode](../features/f07-chatbot-agent.md)
 - [F08 - Persona System](../features/f08-persona-system.md)

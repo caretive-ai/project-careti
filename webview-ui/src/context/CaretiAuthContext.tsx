@@ -12,13 +12,13 @@ export interface CaretUser {
 	appBaseUrl?: string
 }
 
-export interface CaretAuthContextType {
+export interface CaretiAuthContextType {
 	caretUser: CaretUser | null
 }
 
-export const CaretAuthContext = createContext<CaretAuthContextType | undefined>(undefined)
+export const CaretiAuthContext = createContext<CaretiAuthContextType | undefined>(undefined)
 
-export const CaretAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CaretiAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const [caretUser, setCaretUser] = useState<CaretUser | null>(null)
 
 	useEffect(() => {
@@ -56,13 +56,13 @@ export const CaretAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 		}
 	}, [])
 
-	return <CaretAuthContext.Provider value={{ caretUser }}>{children}</CaretAuthContext.Provider>
+	return <CaretiAuthContext.Provider value={{ caretUser }}>{children}</CaretiAuthContext.Provider>
 }
 
-export const useCaretAuth = () => {
-	const context = useContext(CaretAuthContext)
+export const useCaretiAuth = () => {
+	const context = useContext(CaretiAuthContext)
 	if (context === undefined) {
-		throw new Error("useCaretAuth must be used within a CaretAuthProvider")
+		throw new Error("useCaretiAuth must be used within a CaretiAuthProvider")
 	}
 	return context
 }

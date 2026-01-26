@@ -12,7 +12,7 @@ import { StringRequest } from "@shared/proto/cline/common"
 import { memo, useCallback, useMemo, useState } from "react"
 import { cleanPathPrefix } from "@/components/common/CodeAccordian"
 import { FileServiceClient } from "@/services/grpc-client"
-import { getIconByToolName, getToolsNotInCurrentActivities, isLowStakesTool } from "../../utils/messageUtils"
+import { EXPANDABLE_TOOLS, getIconByToolName, getToolsNotInCurrentActivities, isLowStakesTool } from "../../utils/messageUtils"
 
 interface ToolGroupRendererProps {
 	messages: ClineMessage[]
@@ -24,8 +24,6 @@ interface ToolWithReasoning {
 	parsedTool: ClineSayTool
 	reasoning?: string
 }
-
-const EXPANDABLE_TOOLS = new Set(["listFilesTopLevel", "listFilesRecursive", "listCodeDefinitionNames", "searchFiles"])
 
 /**
  * Renders a collapsible group of low-stakes tool calls.
@@ -227,6 +225,7 @@ function parseToolSafe(text: string | undefined): ClineSayTool {
 
 /**
  * Get display info for a tool.
+ * CARETI MODIFICATION: Added Careti-specific tool handling
  */
 function getToolDisplayInfo(tool: ClineSayTool) {
 	const icon = getIconByToolName(tool.tool)
@@ -234,6 +233,7 @@ function getToolDisplayInfo(tool: ClineSayTool) {
 	const folderPath = filePath + "/"
 
 	switch (tool.tool) {
+		// Cline original tools
 		case "readFile":
 			return { icon, path: filePath, label: "read" }
 		case "listFilesTopLevel":
@@ -249,6 +249,11 @@ function getToolDisplayInfo(tool: ClineSayTool) {
 				label: `search: ${tool.regex}`,
 				displayText: formatSearchDisplay(tool.regex || "", filePath, tool.filePattern),
 			}
+		// CARETI MODIFICATION: Careti-specific tools
+		case "analyzeImage":
+			return { icon, path: filePath, label: "analyzed" }
+		case "readDocument":
+			return { icon, path: filePath, label: "read document" }
 		default:
 			return null
 	}

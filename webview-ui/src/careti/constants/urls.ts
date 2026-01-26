@@ -1,8 +1,8 @@
 // CARETI MODIFICATION: URL constants for Careti WelcomeView links and external resources
 export const CARET_URLS = {
 	// GitHub Repository
-	GITHUB_REPOSITORY: "https://github.com/aicoding-careti/careti",
-	CARET_GITHUB: "https://github.com/aicoding-careti/careti",
+	GITHUB_REPOSITORY: "https://github.com/caretive-ai/project-careti",
+	CARET_GITHUB: "https://github.com/caretive-ai/project-careti",
 
 	// Company and Service
 	CARETIVE_COMPANY: "https://caretive.ai",
@@ -28,22 +28,22 @@ export const CARET_URLS = {
 // Language-specific URLs for educational content and documentation
 export const CARET_LOCALIZED_URLS = {
 	CARETIVE_PRIVACY: {
-		ko: "https://caretive.ai/privacy.ko.html",
-		en: "https://caretive.ai/privacy.en.html",
-		ja: "https://caretive.ai/privacy.en.html",
-		zh: "https://caretive.ai/privacy.en.html",
+		ko: "https://careti.ai/ko/privacy",
+		en: "https://careti.ai/en/privacy",
+		ja: "https://careti.ai/ja/privacy",
+		zh: "https://careti.ai/zh/privacy",
 	},
 	GEMINI_CREDIT_GUIDE: {
-		ko: "https://github.com/aicoding-careti/careti/blob/main/careti-docs/posting/ko/gemini-credit-guide.ko.md",
-		en: "https://github.com/aicoding-careti/careti/blob/main/careti-docs/posting/en/gemini-credit-guide.en.md",
-		ja: "https://github.com/aicoding-careti/careti/blob/main/careti-docs/posting/ja/gemini-credit-guide.ja.md",
-		zh: "https://github.com/aicoding-careti/careti/blob/main/careti-docs/posting/zh/gemini-credit-guide.zh.md",
+		ko: "https://github.com/caretive-ai/project-careti/blob/main/careti-docs/posting/ko/gemini-credit-guide.ko.md",
+		en: "https://github.com/caretive-ai/project-careti/blob/main/careti-docs/posting/en/gemini-credit-guide.en.md",
+		ja: "https://github.com/caretive-ai/project-careti/blob/main/careti-docs/posting/ja/gemini-credit-guide.ja.md",
+		zh: "https://github.com/caretive-ai/project-careti/blob/main/careti-docs/posting/zh/gemini-credit-guide.zh.md",
 	},
 	SUPPORT_MODEL_LIST: {
-		ko: "https://github.com/aicoding-careti/careti/blob/main/careti-docs/development/support-model-list.mdx",
-		en: "https://github.com/aicoding-careti/careti/blob/main/careti-docs/development/support-model-list.en.mdx",
-		ja: "https://github.com/aicoding-careti/careti/blob/main/careti-docs/development/support-model-list.en.mdx",
-		zh: "https://github.com/aicoding-careti/careti/blob/main/careti-docs/development/support-model-list.en.mdx",
+		ko: "https://github.com/caretive-ai/project-careti/blob/main/careti-docs/development/support-model-list.mdx",
+		en: "https://github.com/caretive-ai/project-careti/blob/main/careti-docs/development/support-model-list.en.mdx",
+		ja: "https://github.com/caretive-ai/project-careti/blob/main/careti-docs/development/support-model-list.en.mdx",
+		zh: "https://github.com/caretive-ai/project-careti/blob/main/careti-docs/development/support-model-list.en.mdx",
 	},
 	REMOTE_MCP_SERVER_DOCS: {
 		ko: "https://docs.careti.ai/ko/mcp/connecting-to-a-remote-server",
@@ -58,10 +58,10 @@ export const CARET_LOCALIZED_URLS = {
 		zh: "https://docs.careti.ai/zh/mcp/configuring-mcp-servers#editing-mcp-settings-files",
 	},
 	CARET_GITHUB_DETAILED: {
-		ko: "https://github.com/aicoding-careti/careti/blob/main/careti-docs/ko/README.md",
-		en: "https://github.com/aicoding-careti/careti/blob/main/README.md",
-		ja: "https://github.com/aicoding-careti/careti/blob/main/careti-docs/ja/README.md",
-		zh: "https://github.com/aicoding-careti/careti/blob/main/careti-docs/zh/README.md",
+		ko: "https://github.com/caretive-ai/project-careti/blob/main/careti-docs/ko/README.md",
+		en: "https://github.com/caretive-ai/project-careti/blob/main/README.md",
+		ja: "https://github.com/caretive-ai/project-careti/blob/main/careti-docs/ja/README.md",
+		zh: "https://github.com/caretive-ai/project-careti/blob/main/careti-docs/zh/README.md",
 	},
 	CARETIVE_TERMS: {
 		ko: "https://caretive.ai/terms.ko.html",

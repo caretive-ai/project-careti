@@ -1,6 +1,6 @@
 import type { ClineMessage, ClineSayTool } from "@shared/ExtensionMessage"
 import type { Mode } from "@shared/storage/types"
-import type { TFunction } from "@/careti/hooks/useCaretI18n"
+import type { TFunction } from "@/careti/hooks/useCaretiI18n"
 
 /**
  * Button action types that determine the behavior

@@ -1,14 +1,21 @@
 import { getAllHooksDirs } from "../storage/disk"
-import { HookFactory, Hooks } from "./hook-factory"
+import { HookFactory, Hooks, HookScript } from "./hook-factory"
 
 type HookName = keyof Hooks
 
 /**
  * Cached hook discovery results
+ * CARETI MODIFICATION: Now stores HookScript with matcher pattern support
  */
 interface HookCacheEntry {
-	scriptPaths: string[] // Paths to hook scripts for this hook name
+	scripts: HookScript[] // Hook scripts with matcher patterns
 	timestamp: number // When this was last scanned
+}
+
+// Legacy alias for backward compatibility
+type LegacyHookCacheEntry = {
+	scriptPaths: string[]
+	timestamp: number
 }
 
 /**
@@ -100,29 +107,38 @@ export class HookDiscoveryCache {
 
 	/**
 	 * Get cached hook scripts or scan if not cached
+	 * CARETI MODIFICATION: Now returns HookScript with matcher pattern support
 	 */
-	async get(hookName: HookName): Promise<string[]> {
+	async getScripts(hookName: HookName): Promise<HookScript[]> {
 		this.log(`Getting hooks for ${hookName}`)
 
 		const cached = this.cache.get(hookName)
 		if (cached) {
-			this.log(`Cache hit for ${hookName}: ${cached.scriptPaths.length} scripts`)
-			return cached.scriptPaths
+			this.log(`Cache hit for ${hookName}: ${cached.scripts.length} scripts`)
+			return cached.scripts
 		}
 
 		this.log(`Cache miss for ${hookName}, scanning...`)
-		return this.scan(hookName)
+		return this.scanScripts(hookName)
 	}
 
 	/**
-	 * Scan for hook scripts and cache the result
+	 * Legacy method for backward compatibility - returns just paths
 	 */
-	private async scan(hookName: HookName): Promise<string[]> {
+	async get(hookName: HookName): Promise<string[]> {
+		const scripts = await this.getScripts(hookName)
+		return scripts.map((s) => s.path)
+	}
+
+	/**
+	 * CARETI MODIFICATION: Scan for hook scripts with matcher support
+	 */
+	private async scanScripts(hookName: HookName): Promise<HookScript[]> {
 		// Prevent concurrent scans of the same hook
 		if (this.scanning.has(hookName)) {
 			this.log(`Already scanning ${hookName}, waiting...`)
 			await new Promise((resolve) => setTimeout(resolve, 50))
-			return this.get(hookName)
+			return this.getScripts(hookName)
 		}
 
 		this.scanning.add(hookName)
@@ -137,17 +153,17 @@ export class HookDiscoveryCache {
 				this.ensureWatcher(dir)
 			}
 
-			// Scan each directory for this hook
-			const scriptPromises = hooksDirs.map((dir) => HookFactory.findHookInHooksDir(hookName, dir))
+			// Scan each directory for this hook (with matcher support)
+			const scriptPromises = hooksDirs.map((dir) => HookFactory.findHooksInDir(hookName, dir))
 
 			const results = await Promise.all(scriptPromises)
-			const scripts = results.filter((path): path is string => path !== undefined)
+			const scripts = results.flat()
 
 			this.log(`Found ${scripts.length} scripts for ${hookName}`)
 
 			// Cache the result
 			this.cache.set(hookName, {
-				scriptPaths: scripts,
+				scripts,
 				timestamp: Date.now(),
 			})
 
@@ -159,6 +175,14 @@ export class HookDiscoveryCache {
 		} finally {
 			this.scanning.delete(hookName)
 		}
+	}
+
+	/**
+	 * Legacy scan method for backward compatibility
+	 */
+	private async scan(hookName: HookName): Promise<string[]> {
+		const scripts = await this.scanScripts(hookName)
+		return scripts.map((s) => s.path)
 	}
 
 	/**
@@ -222,7 +246,8 @@ export class HookDiscoveryCache {
 		let invalidated = 0
 
 		for (const [hookName, entry] of this.cache) {
-			if (entry.scriptPaths.some((scriptPath) => scriptPath.startsWith(dir))) {
+			// CARETI MODIFICATION: Updated to use scripts instead of scriptPaths
+			if (entry.scripts.some((script) => script.path.startsWith(dir))) {
 				this.cache.delete(hookName)
 				invalidated++
 			}

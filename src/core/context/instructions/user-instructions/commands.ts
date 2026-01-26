@@ -23,7 +23,7 @@ function parseFrontmatter(fileContent: string): { data: Record<string, unknown>;
  * 1. New format: *.md files directly in directory (Claude Code/OpenCode style)
  * 2. Legacy format: subdirectories with SKILL.md files (Cline style)
  */
-async function scanCommandsDirectory(dirPath: string, source: "global" | "project"): Promise<CommandMetadata[]> {
+async function scanCommandsDirectory(dirPath: string, source: "personal" | "project"): Promise<CommandMetadata[]> {
 	const commands: CommandMetadata[] = []
 
 	if (!(await fileExistsAtPath(dirPath)) || !(await isDirectory(dirPath))) {
@@ -65,7 +65,7 @@ async function scanCommandsDirectory(dirPath: string, source: "global" | "projec
  * Load command metadata from a markdown file (Claude Code/OpenCode style).
  * Filename becomes command name (without .md extension).
  */
-async function loadCommandMetadata(filePath: string, source: "global" | "project"): Promise<CommandMetadata | null> {
+async function loadCommandMetadata(filePath: string, source: "personal" | "project"): Promise<CommandMetadata | null> {
 	try {
 		const fileContent = await fs.readFile(filePath, "utf-8")
 		const { data: frontmatter } = parseFrontmatter(fileContent)
@@ -79,6 +79,15 @@ async function loadCommandMetadata(filePath: string, source: "global" | "project
 			return null
 		}
 
+		// CARETI MODIFICATION: Parse allowed-tools as comma-separated string → array
+		let allowedTools: string[] | undefined
+		if (typeof frontmatter["allowed-tools"] === "string") {
+			allowedTools = frontmatter["allowed-tools"]
+				.split(",")
+				.map((t: string) => t.trim())
+				.filter((t: string) => t.length > 0)
+		}
+
 		return {
 			name: commandName,
 			description: frontmatter.description,
@@ -88,6 +97,14 @@ async function loadCommandMetadata(filePath: string, source: "global" | "project
 			argumentHint: typeof frontmatter["argument-hint"] === "string" ? frontmatter["argument-hint"] : undefined,
 			model: typeof frontmatter.model === "string" ? frontmatter.model : undefined,
 			subtask: typeof frontmatter.subtask === "boolean" ? frontmatter.subtask : undefined,
+			// CARETI MODIFICATION: Claude Code compatible fields
+			disableModelInvocation:
+				typeof frontmatter["disable-model-invocation"] === "boolean" ? frontmatter["disable-model-invocation"] : undefined,
+			userInvocable: typeof frontmatter["user-invocable"] === "boolean" ? frontmatter["user-invocable"] : undefined,
+			allowedTools,
+			context:
+				frontmatter.context === "fork" || frontmatter.context === "inline" ? frontmatter.context : undefined,
+			agent: typeof frontmatter.agent === "string" ? frontmatter.agent : undefined,
 		}
 	} catch (error) {
 		console.warn(`Failed to load command at ${filePath}:`, error)
@@ -101,7 +118,7 @@ async function loadCommandMetadata(filePath: string, source: "global" | "project
  */
 async function loadLegacyCommandMetadata(
 	skillDir: string,
-	source: "global" | "project",
+	source: "personal" | "project",
 	skillName: string,
 ): Promise<CommandMetadata | null> {
 	const skillMdPath = path.join(skillDir, "SKILL.md")
@@ -140,15 +157,16 @@ async function loadLegacyCommandMetadata(
 }
 
 /**
- * Discover all commands from global and project directories.
- * Returns commands in order: project commands first, then global commands.
- * Global commands take precedence over project commands with the same name.
+ * Discover all commands from personal and project directories.
+ * Returns commands in order: project commands first, then personal commands.
+ * Personal commands take precedence over project commands with the same name.
  *
- * Search order:
+ * CARETI MODIFICATION: Priority order changed to match Claude Code (Personal > Project)
+ * Search order (lower priority first, higher priority wins on conflict):
  * 1. Project: .agents/commands/ (new)
  * 2. Project: .agents/skills/ (legacy)
- * 3. Global: ~/Documents/.agents/commands/ (new)
- * 4. Global: ~/Documents/.agents/skills/ (legacy)
+ * 3. Personal: ~/Documents/.agents/commands/ (new)
+ * 4. Personal: ~/Documents/.agents/skills/ (legacy)
  */
 export async function discoverCommands(cwd: string): Promise<CommandMetadata[]> {
 	const commands: CommandMetadata[] = []
@@ -165,29 +183,30 @@ export async function discoverCommands(cwd: string): Promise<CommandMetadata[]> 
 		commands.push(...projectSkills)
 	}
 
-	// Global commands directory (new)
-	const globalCommandsDir = await ensureCommandsDirectoryExists()
-	const globalCommands = await scanCommandsDirectory(globalCommandsDir, "global")
-	commands.push(...globalCommands)
+	// Personal commands directory (new) - takes precedence over project
+	const personalCommandsDir = await ensureCommandsDirectoryExists()
+	const personalCommands = await scanCommandsDirectory(personalCommandsDir, "personal")
+	commands.push(...personalCommands)
 
-	// Global skills directory (legacy)
-	const globalSkillsDir = await ensureSkillsDirectoryExists()
-	if (globalSkillsDir !== globalCommandsDir) {
-		const globalSkills = await scanCommandsDirectory(globalSkillsDir, "global")
-		commands.push(...globalSkills)
+	// Personal skills directory (legacy)
+	const personalSkillsDir = await ensureSkillsDirectoryExists()
+	if (personalSkillsDir !== personalCommandsDir) {
+		const personalSkills = await scanCommandsDirectory(personalSkillsDir, "personal")
+		commands.push(...personalSkills)
 	}
 
 	return commands
 }
 
 /**
- * Get available commands with override resolution (global > project, new > legacy).
+ * Get available commands with override resolution (personal > project, new > legacy).
+ * CARETI MODIFICATION: Renamed global to personal for Claude Code compatibility
  */
 export function getAvailableCommands(commands: CommandMetadata[]): CommandMetadata[] {
 	const seen = new Set<string>()
 	const result: CommandMetadata[] = []
 
-	// Iterate backwards: global commands (added last) are seen first and take precedence
+	// Iterate backwards: personal commands (added last) are seen first and take precedence
 	for (let i = commands.length - 1; i >= 0; i--) {
 		const command = commands[i]
 		if (!seen.has(command.name)) {

@@ -18,14 +18,25 @@ export interface CommandMetadata {
 	description: string
 	/** Path to the command file */
 	path: string
-	/** Source: global or project */
-	source: "global" | "project"
+	/** Source: personal (user home) or project (workspace) - enterprise reserved for future */
+	source: "personal" | "project" | "enterprise"
 	/** Argument hint (Claude Code style) */
 	argumentHint?: string
 	/** Preferred model (OpenCode style) */
 	model?: string
 	/** Whether this is a subtask (OpenCode style) */
 	subtask?: boolean
+	// CARETI MODIFICATION: Claude Code compatible skill system fields
+	/** If true, AI cannot auto-invoke this command - only explicit /command works */
+	disableModelInvocation?: boolean
+	/** If false, hide from slash menu (default: true) */
+	userInvocable?: boolean
+	/** Allowed tool names when this skill is active (undefined = no restriction) */
+	allowedTools?: string[]
+	/** Execution context: 'fork' runs in isolated subagent (default: 'inline') */
+	context?: "fork" | "inline"
+	/** Agent type for fork context (e.g., 'Explore', 'Plan') */
+	agent?: string
 }
 
 /**

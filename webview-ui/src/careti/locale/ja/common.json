@@ -96,7 +96,8 @@
 		"description": "Caretiはオープンソースプロジェクトです。GitHubで貢献、問題報告、フィードバックをお願いします。",
 		"githubLinkPrefix": "詳細はこちら",
 		"githubLink": "github.com/caretive-ai/project-careti",
-		"closeBannerAria": "バナーを閉じる"
+		"closeBannerAria": "バナーを閉じる",
+		"settingsLink": "プライバシーポリシー"
 	},
 	"autoApprove": {
 		"autoApproveLabel": "自動承認:"

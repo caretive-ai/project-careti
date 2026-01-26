@@ -86,7 +86,8 @@ async function updateAutoApprovalSettings(controller?: Controller) {
 export async function createTestServer(controller: Controller): Promise<http.Server> {
 	// Try to show the Cline sidebar
 	Logger.log("[createTestServer] Opening Cline in sidebar...")
-	vscode.commands.executeCommand(`workbench.view.${ExtensionRegistryInfo.name}-ActivityBar`)
+	// CARETI MODIFICATION: Use internalName ("careti") for activity bar ID
+	vscode.commands.executeCommand(`workbench.view.${ExtensionRegistryInfo.internalName}-ActivityBar`)
 
 	// Then ensure the webview is focused/loaded
 	vscode.commands.executeCommand(`${ExtensionRegistryInfo.views.Sidebar}.focus`)

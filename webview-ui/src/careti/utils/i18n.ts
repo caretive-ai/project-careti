@@ -289,7 +289,7 @@ export const convertPreferredLanguageToSupported = (preferredLanguage: string | 
 
 /**
  * ExtensionState에서 현재 언어를 가져오는 콜백을 설정합니다.
- * CaretI18nContext에서 호출됩니다.
+ * CaretiI18nContext에서 호출됩니다.
  */
 export const setExtensionLanguageProvider = (provider: () => SupportedLanguage) => {
 	getExtensionLanguage = provider

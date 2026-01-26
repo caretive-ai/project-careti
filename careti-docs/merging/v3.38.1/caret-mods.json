@@ -2100,109 +2100,109 @@
     "details": "// CARETI MODIFICATION: 자동 후처리 시스템 구현"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 30,
     "details": "├── external-rules.ts              # 🎯 핵심 우선순위 로직 (CARETI MODIFICATION)"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 36,
     "details": "└── index.ts                       # 🔗 우선순위 시스템 통합 (CARETI MODIFICATION)"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 40,
     "details": "└── refreshRules.ts                # 📡 UI 데이터 전송 (CARETI MODIFICATION)"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 44,
     "details": "└── toggleCaretRule.ts             # 🔧 .agents/context 토글 기능 (CARETI MODIFICATION)"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 48,
     "details": "├── disk.ts                        # 📁 .agents/context 파일명 정의 (CARETI MODIFICATION)"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 49,
     "details": "├── state-keys.ts                  # 🗝️ 상태 키 정의 (CARETI MODIFICATION)"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 50,
     "details": "└── utils/state-helpers.ts         # 🛠️ 상태 초기화 (CARETI MODIFICATION)"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 54,
     "details": "└── file.proto                     # 📦 gRPC 통신 프로토콜 (CARETI MODIFICATION)"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 58,
     "details": "└── ClineRulesToggleModal.tsx      # 🎨 규칙 토글 UI (CARETI MODIFICATION)"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 62,
     "details": "└── ExtensionStateContext.tsx      # 🔄 전역 상태 관리 (CARETI MODIFICATION)"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 67,
     "details": "└── rule-priority-integration.test.ts # 🧪 통합 테스트 (CARETI MODIFICATION)"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 72,
     "details": "- **CARETI MODIFICATION** 마커로 수정 부분 명확히 표시"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 81,
     "details": "// CARETI MODIFICATION: Implement rule priority system (.agents/context)"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 110,
     "details": "// CARETI MODIFICATION: Rule priority system (.agents/context)"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 127,
     "details": "// CARETI MODIFICATION: Use priority system - only pass the active rule instead of all rules"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 208,
     "details": "- **해결 방안**: CARETI MODIFICATION 마커로 안전한 추가"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 277,
     "details": "- [ ] **마커 확인**: `// CARETI MODIFICATION:` 주석으로 수정 부분 명확히 표시"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "comment",
     "line": 289,
     "details": "- [x] **CARETI MODIFICATION**: 모든 수정 부분 주석 표시 ✅"
@@ -11814,7 +11814,7 @@
     "details": "caret asset"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "kind": "careti-file",
     "line": 0,
     "details": "caret asset"

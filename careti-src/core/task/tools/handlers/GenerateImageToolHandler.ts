@@ -1,6 +1,6 @@
 // CARETI MODIFICATION: Generate images via Careti API with branded notifications and Logger output.
 import { CaretEnv } from "@careti/config"
-import { CaretAuthService } from "@careti/services/auth/CaretAuthService"
+import { CaretiAuthService } from "@careti/services/auth/CaretiAuthService"
 import { getBrandGeneratedAssetsDirName, getCurrentBrandDisplayName } from "@careti/utils/brand-utils"
 import { ClineSayTool } from "@shared/ExtensionMessage"
 import type { ToolImageEvent } from "@shared/proto/cline/ui"
@@ -660,7 +660,7 @@ export class GenerateImageToolHandler implements IFullyManagedTool {
 				throw error
 			}
 
-			const authToken = await CaretAuthService.getInstance().getAuthToken()
+			const authToken = await CaretiAuthService.getInstance().getAuthToken()
 			if (!authToken) {
 				const brandName = getCurrentBrandDisplayName()
 				// CARETI MODIFICATION: Use JSON structure for i18n support in ErrorRow

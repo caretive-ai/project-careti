@@ -6,27 +6,27 @@
 import { BooleanRequest } from "@shared/proto/cline/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useState } from "react"
-import CaretApiSetup from "@/careti/components/CaretApiSetup"
-import CaretFooter from "@/careti/components/CaretFooter"
-import CaretWelcomeSection from "@/careti/components/CaretWelcomeSection"
+import CaretiApiSetup from "@/careti/components/CaretiApiSetup"
+import CaretiFooter from "@/careti/components/CaretiFooter"
+import CaretiWelcomeSection from "@/careti/components/CaretiWelcomeSection"
 import UnifiedLanguageSetting from "@/careti/components/UnifiedLanguageSetting"
 // CARETI MODIFICATION: URL 상수 및 UiServiceClient 임포트
 import { CARET_URLS } from "@/careti/constants/urls"
-import { useCaretState } from "@/careti/context/CaretStateContext"
+import { useCaretiState } from "@/careti/context/CaretiStateContext"
 import { t } from "@/careti/utils/i18n"
-import { CaretWebviewLogger } from "@/careti/utils/webview-logger"
+import { CaretiWebviewLogger } from "@/careti/utils/webview-logger"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 // CARETI MODIFICATION: UiServiceClient 임포트 추가
 import { StateServiceClient, UiServiceClient } from "@/services/grpc-client"
 import { validateApiConfiguration } from "@/utils/validate"
 import CliInstallBanner from "./CliInstallBanner"
 
-const logger = new CaretWebviewLogger("WelcomeView")
+const logger = new CaretiWebviewLogger("WelcomeView")
 
 const WelcomeView = () => {
 	const { apiConfiguration, mode, caretBanner, featureConfig } = useExtensionState()
-	const { setShowPersonaSelector } = useCaretState()
-	// const { currentLanguage } = useCaretI18n() // Unused
+	const { setShowPersonaSelector } = useCaretiState()
+	// const { currentLanguage } = useCaretiI18n() // Unused
 	const [apiErrorMessage, setApiErrorMessage] = useState<string | undefined>(undefined)
 	const [showApiOptions, setShowApiOptions] = useState(false)
 
@@ -109,7 +109,7 @@ const WelcomeView = () => {
 		buttonAppearance: "primary" | "secondary" = "secondary",
 		children?: React.ReactNode,
 	) => (
-		<CaretWelcomeSection
+		<CaretiWelcomeSection
 			allowHtml={true}
 			bodyKey={bodyKey}
 			buttonConfig={
@@ -123,7 +123,7 @@ const WelcomeView = () => {
 			}
 			headerKey={headerKey}>
 			{children}
-		</CaretWelcomeSection>
+		</CaretiWelcomeSection>
 	)
 
 	// API 설정 페이지를 완전히 별도 페이지로 렌더링
@@ -149,7 +149,7 @@ const WelcomeView = () => {
 						overflowY: "auto",
 					}}>
 					{/* API 설정 컴포넌트 - 페이지 전체 */}
-					<CaretApiSetup
+					<CaretiApiSetup
 						disabled={disableLetsGoButton}
 						errorMessage={apiErrorMessage || undefined}
 						onBack={handleHideApiOptions}
@@ -209,7 +209,7 @@ const WelcomeView = () => {
 				<CliInstallBanner />
 				{renderSection("", "coreFeatures.description")}
 				{/* 언어 선택과 시작 섹션 */}
-				<CaretWelcomeSection allowHtml={true} bodyKey="" headerKey="">
+				<CaretiWelcomeSection allowHtml={true} bodyKey="" headerKey="">
 					{/* CARETI MODIFICATION: 언어 설정을 일반설정의 선호언어로 연결 */}
 					<div style={{ marginBottom: "20px" }}>
 						<UnifiedLanguageSetting />
@@ -229,7 +229,7 @@ const WelcomeView = () => {
 							{t("getStarted.button", "welcome")}
 						</VSCodeButton>
 					</div>
-				</CaretWelcomeSection>
+				</CaretiWelcomeSection>
 				{/* CARETI MODIFICATION: 하드코딩된 URL을 상수로 변경 */}
 				{renderSection(
 					"community.header",
@@ -239,7 +239,7 @@ const WelcomeView = () => {
 					"secondary",
 				)}
 				{/* Footer 컴포넌트 */}
-				<CaretFooter />
+				<CaretiFooter />
 			</div>
 		</div>
 	)

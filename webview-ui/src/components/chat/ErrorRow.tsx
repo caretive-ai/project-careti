@@ -7,7 +7,7 @@ import CreditLimitError from "@/components/chat/CreditLimitError"
 import { handleSignIn, useClineAuth } from "@/context/ClineAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ClineError, ClineErrorType } from "../../../../src/services/error/ClineError"
-import { handleLogin as handleCaretLogin } from "../settings/CaretAuthHandler"
+import { handleLogin as handleCaretLogin } from "../settings/CaretiAuthHandler"
 import { normalizeApiConfiguration } from "../settings/utils/providerUtils"
 
 // CARETI MODIFICATION: Type for auth_required error from image tools

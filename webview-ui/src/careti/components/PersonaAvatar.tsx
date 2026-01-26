@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react"
 import templateCharacters from "../assets/template_characters/template_characters.json"
-import { FullPersonaProfile } from "../context/CaretStateContext"
+import { FullPersonaProfile } from "../context/CaretiStateContext"
 import { caretWebviewLogger } from "../utils/webview-logger"
 
 const templateCharacterAssets = import.meta.glob<string>("@/careti/assets/template_characters/*.webp", {
@@ -73,7 +73,7 @@ const convertAssetToBase64 = async (assetUri: string): Promise<string> => {
 
 	caretWebviewLogger.info("Converting asset URI", { assetUri })
 
-	// Check if we have window template images injected by CaretProviderWrapper
+	// Check if we have window template images injected by CaretiProviderWrapper
 	if (isCaretProfile) {
 		if ((window as any).templateImage_caret) {
 			caretWebviewLogger.info("Found window.templateImage_caret")

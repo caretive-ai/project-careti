@@ -1971,7 +1971,7 @@
 			"reason": "careti-only 변경"
 		},
 		{
-			"file": "careti-docs/features/f06-agent-standardization.md",
+			"file": "careti-docs/features/f06-agent-standard-claude-compat.md",
 			"strategy": "AUTO_KEEP",
 			"category": "DOC",
 			"reason": "careti-only 변경"

@@ -23,6 +23,6 @@ export {
 	REPLACERS,
 } from "./SmartEditEngine"
 
-export { withLock, isLocked, getLockedCount } from "./FileLock"
+export { withLock, isLocked, getLockedCount, acquireLock, releaseLock } from "./FileLock"
 
 export { levenshtein, similarity } from "./utils/levenshtein"

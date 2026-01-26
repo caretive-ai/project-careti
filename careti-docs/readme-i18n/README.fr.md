@@ -203,7 +203,7 @@ Disponibles via le compte Careti même pour les modèles texte uniquement.
 | F03 | Branding et UI | [Voir](../features.en/f03-branding-ui.md) |
 | F04 | Compatibilité Cline | [Voir](../features.en/f04-cline-compatibility-and-cli.md) |
 | F05 | Compte Careti | [Voir](../features.en/f05-careti-account.md) |
-| F06 | Standardisation Agent (AAIF) | [Voir](../features.en/f06-agent-standardization.md) |
+| F06 | Standardisation Agent (AAIF) | [Voir](../features.en/f06-agent-standard-claude-compat.md) |
 | F07 | Système de prompts | [Voir](../features.en/f07-careti-prompt-system.md) |
 | F08 | Système de persona | [Voir](../features.en/f08-persona-system.md) |
 | F09 | Feature Config | [Voir](../features.en/f09-feature-config-system.md) |

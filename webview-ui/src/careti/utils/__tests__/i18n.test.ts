@@ -202,7 +202,7 @@ describe("Careti i18n System", () => {
 	})
 })
 
-describe("useCaretI18n Hook (통합 테스트)", () => {
+describe("useCaretiI18n Hook (통합 테스트)", () => {
 	test("Hook이 올바른 인터페이스 제공", () => {
 		// Note: 실제 React Hook 테스트는 @testing-library/react-hooks 필요
 		// 여기서는 타입 체크만 수행

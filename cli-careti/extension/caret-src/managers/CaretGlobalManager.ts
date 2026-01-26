@@ -1,7 +1,7 @@
 import type { CaretModeSystem } from "@careti/shared/ModeSystem"
 import { randomBytes } from "crypto"
 import * as vscode from "vscode"
-import { CaretUser } from "@/shared/CaretAccount"
+import { CaretUser } from "@/shared/CaretiAccount"
 
 /**
  * Singleton class for global Caret functionality access

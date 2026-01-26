@@ -82,6 +82,7 @@ export const MessageRenderer: React.FC<MessageRendererProps> = ({
 	return (
 		<div className={isLastMessage ? "pb-2.5" : undefined} data-message-ts={messageOrGroup.ts}>
 			<ChatRow
+				clineMessages={modifiedMessages}
 				inputValue={inputValue}
 				isExpanded={expandedRows[messageOrGroup.ts] || false}
 				isLast={isLastMessage}

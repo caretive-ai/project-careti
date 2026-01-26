@@ -1,5 +1,5 @@
 import { CaretEnv } from "@careti/config"
-import { CaretAuthService } from "@careti/services/auth/CaretAuthService"
+import { CaretiAuthService } from "@careti/services/auth/CaretiAuthService"
 import { ApiHandler, CommonApiHandlerOptions } from "@core/api"
 import { OpenRouterErrorResponse } from "@core/api/providers/types"
 import { withRetry } from "@core/api/retry"
@@ -30,7 +30,7 @@ interface CaretHandlerOptions extends CommonApiHandlerOptions {
 
 export class CaretHandler implements ApiHandler {
 	private options: CaretHandlerOptions
-	private _authService: CaretAuthService
+	private _authService: CaretiAuthService
 	private client: OpenAI | undefined
 	private readonly _baseUrl = CaretEnv.config().apiBaseUrl
 	lastGenerationId?: string
@@ -38,7 +38,7 @@ export class CaretHandler implements ApiHandler {
 
 	constructor(options: CaretHandlerOptions) {
 		this.options = options
-		this._authService = CaretAuthService.getInstance()
+		this._authService = CaretiAuthService.getInstance()
 	}
 
 	private async ensureClient(): Promise<OpenAI> {

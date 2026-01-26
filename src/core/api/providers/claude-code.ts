@@ -113,6 +113,23 @@ export class ClaudeCodeHandler implements ApiHandler {
 							}
 							break
 						case "tool_use":
+							// CARETI MODIFICATION: Skip tool calls that should be handled by Cline/Careti natively
+							// These tools should not be called by Claude Code CLI
+							const clineOnlyTools = [
+								"ask_followup_question",
+								"attempt_completion",
+								"AskUserQuestion",
+								"AskFollowupQuestion",
+								"AttemptCompletion",
+							]
+							if (clineOnlyTools.includes(content.name)) {
+								// CARETI MODIFICATION: Silently skip Cline-only tools without user-visible message
+								// These tools are handled by Careti's native implementation
+								console.debug(
+									`[ClaudeCodeHandler] Skipping Cline-only tool: ${content.name}`,
+								)
+								break
+							}
 							// Yield tool_use blocks to the streaming pipeline for proper tool execution
 							yield {
 								type: "tool_calls",

@@ -8,13 +8,13 @@ import {
     setGlobalUILanguage,
 } from "../utils/i18n"
 
-interface CaretI18nContextType {
+interface CaretiI18nContextType {
 	language: SupportedLanguage
 	setLanguage: (language: SupportedLanguage) => Promise<void>
 	isLoading: boolean
 }
 
-const CaretI18nContext = createContext<CaretI18nContextType | undefined>(undefined)
+const CaretiI18nContext = createContext<CaretiI18nContextType | undefined>(undefined)
 
 interface CaretI18nProviderProps {
 	children: ReactNode
@@ -90,20 +90,20 @@ export const CaretiI18nProvider: React.FC<CaretI18nProviderProps> = ({ children,
 		[language],
 	)
 
-	const contextValue: CaretI18nContextType = {
+	const contextValue: CaretiI18nContextType = {
 		language,
 		setLanguage,
 		isLoading,
 	}
 
-	return <CaretI18nContext.Provider value={contextValue}>{children}</CaretI18nContext.Provider>
+	return <CaretiI18nContext.Provider value={contextValue}>{children}</CaretiI18nContext.Provider>
 }
 
 // CARETI MODIFICATION: Hook to use Careti i18n context
-export const useCaretI18nContext = (): CaretI18nContextType => {
-	const context = useContext(CaretI18nContext)
+export const useCaretiI18nContext = (): CaretiI18nContextType => {
+	const context = useContext(CaretiI18nContext)
 	if (context === undefined) {
-		throw new Error("useCaretI18nContext must be used within a CaretiI18nProvider")
+		throw new Error("useCaretiI18nContext must be used within a CaretiI18nProvider")
 	}
 	return context
 }

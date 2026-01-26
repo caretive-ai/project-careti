@@ -1,14 +1,15 @@
 import { name, publisher, version } from "../package.json"
 
-// CARETI MODIFICATION: command ID 충돌 방지 위해 extension id(prefix)를 사용
-// (Cline과 Careti를 동시에 설치할 때 'cline.*' 커맨드가 중복 등록되면 활성화가 실패할 수 있음)
-const prefix = `${publisher}.${name}`
+// CARETI MODIFICATION: package name is "caret" for marketplace, but internal branding uses "careti"
+// Use hardcoded "careti" for user-facing IDs (views, commands) to maintain consistent branding
+const INTERNAL_BRAND_NAME = "careti"
+const prefix = `${publisher}.${INTERNAL_BRAND_NAME}`
 
 /**
  * List of commands with the name of the extension they are registered under.
  * These should match the command IDs defined in package.json.
- * For Nightly build, the publish script has updated all the commands to use the extension name as prefix.
- * In production, all commands are registered under "cline" for consistency.
+ * CARETI MODIFICATION: Use INTERNAL_BRAND_NAME ("careti") instead of package name ("caret")
+ * to keep user-visible branding consistent while allowing package name to be "caret" for marketplace.
  */
 const ClineCommands = {
 	PlusButton: prefix + ".plusButtonClicked",
@@ -30,10 +31,10 @@ const ClineCommands = {
 
 /**
  * IDs for the views registered by the extension.
- * These should match the name + view IDs defined in package.json.
+ * CARETI MODIFICATION: Use INTERNAL_BRAND_NAME ("careti") for view IDs to match package.json.
  */
 const ClineViewIds = {
-	Sidebar: name + ".SidebarProvider",
+	Sidebar: INTERNAL_BRAND_NAME + ".SidebarProvider",
 }
 
 /**
@@ -43,6 +44,9 @@ const ClineViewIds = {
 export const ExtensionRegistryInfo = {
 	id: publisher + "." + name,
 	name,
+	// CARETI MODIFICATION: internalName is used for view containers, activity bar, etc.
+	// where the ID in package.json is hardcoded as "careti"
+	internalName: INTERNAL_BRAND_NAME,
 	version,
 	publisher,
 	commands: ClineCommands,

@@ -406,10 +406,6 @@
 		"thinking": "Denken...",
 		"planning": "Planen..."
 	},
-	"requestStartRow": {
-		"thinking": "Thinking...",
-		"planning": "Planning..."
-	},
 	"toolGroup": {
 		"read": "gelesen",
 		"file": "Datei",

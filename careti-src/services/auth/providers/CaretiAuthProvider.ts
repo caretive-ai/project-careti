@@ -5,7 +5,7 @@ import { HostProvider } from "@hosts/host-provider"
 import { IAuthProvider } from "@services/auth/providers/IAuthProvider"
 import { Logger } from "@services/logging/Logger"
 import { fetch } from "@shared/net"
-import type { CaretAuthInfo } from "../CaretAuthService"
+import type { CaretAuthInfo } from "../CaretiAuthService"
 
 interface CaretAuthApiUser {
 	subject: string | null
@@ -34,7 +34,7 @@ export interface CaretAuthApiTokenRefreshResponse {
 	data: CaretAuthResponseData
 }
 
-export class CaretAuthProvider implements IAuthProvider {
+export class CaretiAuthProvider implements IAuthProvider {
 	readonly name = "careti"
 
 	get config(): EnvironmentConfig {

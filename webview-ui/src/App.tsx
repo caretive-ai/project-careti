@@ -1,18 +1,18 @@
-import CaretAccountView from "@careti/components/CaretAccountView"
+import CaretiAccountView from "@careti/components/CaretiAccountView"
 import type { Boolean, EmptyRequest } from "@shared/proto/cline/common"
 import { useEffect } from "react"
 import PersonaTemplateSelector from "./careti/components/PersonaTemplateSelector"
 // CARETI MODIFICATION: Add i18n support for the entire app
-import CaretiI18nProvider from "./careti/context/CaretI18nContext"
-// CARETI MODIFICATION: Import CaretStateContextProvider for persona system
-import { CaretStateContextProvider, useCaretState } from "./careti/context/CaretStateContext"
+import CaretiI18nProvider from "./careti/context/CaretiI18nContext"
+// CARETI MODIFICATION: Import CaretiStateContextProvider for persona system
+import { CaretiStateContextProvider, useCaretiState } from "./careti/context/CaretiStateContext"
 import AccountView from "./components/account/AccountView"
 import ChatView from "./components/chat/ChatView"
 import HistoryView from "./components/history/HistoryView"
 import McpView from "./components/mcp/configuration/McpConfigurationView"
 import SettingsView from "./components/settings/SettingsView"
 import WelcomeView from "./components/welcome/WelcomeView"
-import { useCaretAuth } from "./context/CaretAuthContext"
+import { useCaretiAuth } from "./context/CaretiAuthContext"
 import { useClineAuth } from "./context/ClineAuthContext"
 import { useExtensionState } from "./context/ExtensionStateContext"
 import { Providers } from "./Providers"
@@ -40,9 +40,9 @@ const AppContent = () => {
 		hideAnnouncement,
 	} = useExtensionState()
 
-	const { showPersonaSelector } = useCaretState()
+	const { showPersonaSelector } = useCaretiState()
 	const { clineUser, organizations, activeOrganization } = useClineAuth()
-	const { caretUser } = useCaretAuth()
+	const { caretUser } = useCaretiAuth()
 
 	const isCaret = caretUser !== null
 	const accountOrganizations = caretUser ? null : organizations
@@ -84,7 +84,7 @@ const AppContent = () => {
 			{showAccount &&
 				featureConfig?.showAccountUI !== false && // CARETI MODIFICATION: gate account UI by feature flag
 				(isCaret ? (
-					<CaretAccountView caretUser={caretUser} onDone={hideAccount} />
+					<CaretiAccountView caretUser={caretUser} onDone={hideAccount} />
 				) : (
 					<AccountView
 						activeOrganization={accountActiveOrganization}
@@ -109,10 +109,10 @@ const App = () => {
 		<Providers>
 			{/* CARETI MODIFICATION: Wrap app with i18n context for multilingual support */}
 			<CaretiI18nProvider defaultLanguage="en">
-				{/* CARETI MODIFICATION: Wrap with CaretStateContextProvider for persona system */}
-				<CaretStateContextProvider>
+				{/* CARETI MODIFICATION: Wrap with CaretiStateContextProvider for persona system */}
+				<CaretiStateContextProvider>
 					<AppContent />
-				</CaretStateContextProvider>
+				</CaretiStateContextProvider>
 			</CaretiI18nProvider>
 		</Providers>
 	)

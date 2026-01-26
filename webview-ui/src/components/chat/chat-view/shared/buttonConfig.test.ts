@@ -1,6 +1,6 @@
 import type { ClineMessage } from "@shared/ExtensionMessage"
 import { describe, expect, it } from "vitest"
-import type { TFunction } from "@/careti/hooks/useCaretI18n"
+import type { TFunction } from "@/careti/hooks/useCaretiI18n"
 import { getButtonConfig, getButtonConfigs } from "./buttonConfig"
 
 // Mock t function for tests

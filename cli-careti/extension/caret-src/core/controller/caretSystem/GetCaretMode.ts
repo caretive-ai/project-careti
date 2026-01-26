@@ -1,4 +1,4 @@
-import { CaretModeManager } from "@careti/core/modes/CaretModeManager"
+import { CaretModeManager } from "@careti/core/modes/CaretiModeManager"
 import type { Controller } from "@/core/controller"
 import { Logger } from "@/services/logging/Logger"
 import type * as proto from "@/shared/proto"

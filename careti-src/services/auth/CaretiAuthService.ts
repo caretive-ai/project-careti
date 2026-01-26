@@ -10,7 +10,7 @@ import { setWelcomeViewCompleted } from "@/core/controller/state/setWelcomeViewC
 import { HostProvider } from "@/hosts/host-provider"
 import { telemetryService } from "@/services/telemetry"
 import { openExternal } from "@/utils/env"
-import { CaretAuthProvider } from "./providers/CaretAuthProvider"
+import { CaretiAuthProvider } from "./providers/CaretiAuthProvider"
 
 export type ServiceConfig = {
 	URI?: string
@@ -60,8 +60,8 @@ export interface CaretAccountOrganization {
 	roles: string[]
 }
 
-export class CaretAuthService {
-	protected static instance: CaretAuthService | null = null
+export class CaretiAuthService {
+	protected static instance: CaretiAuthService | null = null
 	protected _authenticated: boolean = false
 	protected _caretAuthInfo: CaretAuthInfo | null = null
 	protected _provider: IAuthProvider | null = null
@@ -83,18 +83,18 @@ export class CaretAuthService {
 	 * @param controller - Optional reference to the Controller instance.
 	 * @returns The singleton instance of AuthService.
 	 */
-	public static getInstance(controller?: Controller): CaretAuthService {
-		if (!CaretAuthService.instance) {
+	public static getInstance(controller?: Controller): CaretiAuthService {
+		if (!CaretiAuthService.instance) {
 			if (!controller) {
 				console.warn("Extension context was not provided to AuthService.getInstance, using default context")
 				controller = {} as Controller
 			}
-			CaretAuthService.instance = new CaretAuthService(controller)
+			CaretiAuthService.instance = new CaretiAuthService(controller)
 		}
-		if (controller !== undefined && CaretAuthService.instance) {
-			CaretAuthService.instance.controller = controller
+		if (controller !== undefined && CaretiAuthService.instance) {
+			CaretiAuthService.instance.controller = controller
 		}
-		return CaretAuthService.instance!
+		return CaretiAuthService.instance!
 	}
 
 	set controller(controller: Controller) {
@@ -168,8 +168,8 @@ export class CaretAuthService {
 	}
 
 	protected _initProvider(): void {
-		// Only CaretAuthProvider is supported going forward
-		this._provider = new CaretAuthProvider()
+		// Only CaretiAuthProvider is supported going forward
+		this._provider = new CaretiAuthProvider()
 	}
 
 	/**

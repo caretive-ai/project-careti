@@ -2,9 +2,9 @@ import { caretClaudeModels, caretiGeminiModels, caretModels } from "@shared/api"
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton, VSCodeRadio, VSCodeRadioGroup } from "@vscode/webview-ui-toolkit/react"
-import { useMemo } from "react"
+import { useCallback, useMemo, useRef } from "react"
 import { t } from "@/careti/utils/i18n"
-import { useCaretAuth } from "@/context/CaretAuthContext"
+import { useCaretiAuth } from "@/context/CaretiAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CaretAccountServiceClient } from "@/services/grpc-client"
 import { DebouncedTextField } from "../common/DebouncedTextField"
@@ -53,7 +53,7 @@ type BackendType = "gemini" | "claude"
 /**
  * Props for the CaretiProvider component
  */
-interface CaretProviderProps {
+interface CaretiProviderProps {
 	showModelOptions: boolean
 	isPopup?: boolean
 	currentMode: Mode
@@ -62,8 +62,8 @@ interface CaretProviderProps {
 /**
  * The Careti provider configuration component
  */
-export const CaretiProvider = ({ showModelOptions, isPopup, currentMode }: CaretProviderProps) => {
-	const { caretUser } = useCaretAuth()
+export const CaretiProvider = ({ showModelOptions, isPopup, currentMode }: CaretiProviderProps) => {
+	const { caretUser } = useCaretiAuth()
 	const { navigateToAccount, featureConfig, apiConfiguration } = useExtensionState()
 	const { handleFieldChange, handleModeFieldsChange } = useApiConfigurationHandlers()
 	// CARETI MODIFICATION: Hide account UI when feature flag is disabled
@@ -89,56 +89,95 @@ export const CaretiProvider = ({ showModelOptions, isPopup, currentMode }: Caret
 		return normalizeApiConfiguration(apiConfiguration, currentMode)
 	}, [apiConfiguration, currentMode])
 
+	// CARETI MODIFICATION: Track if state update is in progress to prevent re-render loops
+	const isUpdatingRef = useRef(false)
+
 	// CARETI MODIFICATION: Handle backend type change by setting default model
-	const handleBackendTypeChange = (backendType: BackendType) => {
-		if (backendType === "claude") {
-			// Set default Claude model (Opus)
-			const defaultClaudeModelId = Object.keys(caretClaudeModels)[0]
-			const defaultClaudeModelInfo = caretClaudeModels[defaultClaudeModelId]
-			handleModeFieldsChange(
-				{
-					caretModelId: { plan: "planModeCaretModelId", act: "actModeCaretModelId" },
-					caretModelInfo: { plan: "planModeCaretModelInfo", act: "actModeCaretModelInfo" },
-				},
-				{
-					caretModelId: defaultClaudeModelId,
-					caretModelInfo: defaultClaudeModelInfo,
-				},
-				currentMode,
-			)
-		} else {
-			// Set default Gemini model
-			const defaultGeminiModelId = Object.keys(geminiModelsForCaret)[0]
-			const defaultGeminiModelInfo = caretiGeminiModels[defaultGeminiModelId]
-			handleModeFieldsChange(
-				{
-					caretModelId: { plan: "planModeCaretModelId", act: "actModeCaretModelId" },
-					caretModelInfo: { plan: "planModeCaretModelInfo", act: "actModeCaretModelInfo" },
-				},
-				{
-					caretModelId: defaultGeminiModelId,
-					caretModelInfo: defaultGeminiModelInfo,
-				},
-				currentMode,
-			)
-		}
-	}
+	// useCallback prevents unnecessary re-renders and race conditions
+	const handleBackendTypeChange = useCallback(
+		(backendType: BackendType) => {
+			// Prevent duplicate updates if already updating or same type selected
+			if (isUpdatingRef.current) {
+				return
+			}
+
+			// Check if backend type actually changed by comparing with current model
+			const currentModelId = modeFields.caretModelId
+			const isCurrentlyClaude = currentModelId?.startsWith("anthropic/claude-")
+			const wantsClaude = backendType === "claude"
+
+			// Skip if no actual change needed
+			if ((isCurrentlyClaude && wantsClaude) || (!isCurrentlyClaude && !wantsClaude && currentModelId)) {
+				return
+			}
+
+			isUpdatingRef.current = true
+
+			if (backendType === "claude") {
+				// Set default Claude model (Opus)
+				const defaultClaudeModelId = Object.keys(caretClaudeModels)[0]
+				const defaultClaudeModelInfo = caretClaudeModels[defaultClaudeModelId]
+				handleModeFieldsChange(
+					{
+						caretModelId: { plan: "planModeCaretModelId", act: "actModeCaretModelId" },
+						caretModelInfo: { plan: "planModeCaretModelInfo", act: "actModeCaretModelInfo" },
+					},
+					{
+						caretModelId: defaultClaudeModelId,
+						caretModelInfo: defaultClaudeModelInfo,
+					},
+					currentMode,
+				).finally(() => {
+					isUpdatingRef.current = false
+				})
+			} else {
+				// Set default Gemini model
+				const defaultGeminiModelId = Object.keys(geminiModelsForCaret)[0]
+				const defaultGeminiModelInfo = caretiGeminiModels[defaultGeminiModelId]
+				handleModeFieldsChange(
+					{
+						caretModelId: { plan: "planModeCaretModelId", act: "actModeCaretModelId" },
+						caretModelInfo: { plan: "planModeCaretModelInfo", act: "actModeCaretModelInfo" },
+					},
+					{
+						caretModelId: defaultGeminiModelId,
+						caretModelInfo: defaultGeminiModelInfo,
+					},
+					currentMode,
+				).finally(() => {
+					isUpdatingRef.current = false
+				})
+			}
+		},
+		[modeFields.caretModelId, handleModeFieldsChange, currentMode],
+	)
 
 	// CARETI MODIFICATION: Handle model selection via radio buttons
-	const handleModelChange = (modelId: string) => {
-		const modelInfo = caretModels[modelId as keyof typeof caretModels]
-		handleModeFieldsChange(
-			{
-				caretModelId: { plan: "planModeCaretModelId", act: "actModeCaretModelId" },
-				caretModelInfo: { plan: "planModeCaretModelInfo", act: "actModeCaretModelInfo" },
-			},
-			{
-				caretModelId: modelId,
-				caretModelInfo: modelInfo,
-			},
-			currentMode,
-		)
-	}
+	const handleModelChange = useCallback(
+		(modelId: string) => {
+			// Prevent duplicate updates
+			if (isUpdatingRef.current || modelId === modeFields.caretModelId) {
+				return
+			}
+
+			isUpdatingRef.current = true
+			const modelInfo = caretModels[modelId as keyof typeof caretModels]
+			handleModeFieldsChange(
+				{
+					caretModelId: { plan: "planModeCaretModelId", act: "actModeCaretModelId" },
+					caretModelInfo: { plan: "planModeCaretModelInfo", act: "actModeCaretModelInfo" },
+				},
+				{
+					caretModelId: modelId,
+					caretModelInfo: modelInfo,
+				},
+				currentMode,
+			).finally(() => {
+				isUpdatingRef.current = false
+			})
+		},
+		[modeFields.caretModelId, handleModeFieldsChange, currentMode],
+	)
 
 	const handleLogin = () => {
 		CaretAccountServiceClient.caretAccountLoginClicked(EmptyRequest.create()).catch((err) =>

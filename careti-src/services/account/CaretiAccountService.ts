@@ -1,5 +1,5 @@
 import { CaretEnv } from "@careti/config"
-import { CaretAuthService } from "@careti/services/auth/CaretAuthService"
+import { CaretiAuthService } from "@careti/services/auth/CaretiAuthService"
 import { CARET_API_ENDPOINT } from "@careti/shared/caret/api"
 import type {
 	BalanceResponse,
@@ -13,23 +13,23 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 import { Logger } from "@/services/logging/Logger"
 import { getAxiosSettings } from "@/shared/net"
 
-export class CaretAccountService {
-	private static instance: CaretAccountService
-	private _authService: CaretAuthService
+export class CaretiAccountService {
+	private static instance: CaretiAccountService
+	private _authService: CaretiAuthService
 
 	constructor() {
-		this._authService = CaretAuthService.getInstance()
+		this._authService = CaretiAuthService.getInstance()
 	}
 
 	/**
 	 * Returns the singleton instance of ClineAccountService
 	 * @returns Singleton instance of ClineAccountService
 	 */
-	public static getInstance(): CaretAccountService {
-		if (!CaretAccountService.instance) {
-			CaretAccountService.instance = new CaretAccountService()
+	public static getInstance(): CaretiAccountService {
+		if (!CaretiAccountService.instance) {
+			CaretiAccountService.instance = new CaretiAccountService()
 		}
-		return CaretAccountService.instance
+		return CaretiAccountService.instance
 	}
 
 	/**

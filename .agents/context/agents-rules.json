@@ -36,7 +36,19 @@
 	"branding_policy": {
 		"typescript_brand_util": "careti-src/utils/brand-utils.ts",
 		"go_cli_brand_util": "cli/pkg/common/branding.go",
-		"rule": "브랜드명/규칙/파일명을 계산할 때는 반드시 위 유틸 함수를 호출하고 문자열을 하드코딩하지 않는다."
+		"rule": "브랜드명/규칙/파일명을 계산할 때는 반드시 위 유틸 함수를 호출하고 문자열을 하드코딩하지 않는다.",
+		"dual_naming": {
+			"package_name": "caret",
+			"internal_brand_name": "careti",
+			"reason": "VS Code 마켓플레이스 호환성 (기존 사용자: caretive.caret)",
+			"registry_ts": "src/registry.ts - INTERNAL_BRAND_NAME 상수로 관리",
+			"usage": {
+				"extension_id": "caretive.caret (publisher + package_name)",
+				"view_ids": "careti.* (internal_brand_name)",
+				"command_ids": "caretive.careti.* (publisher + internal_brand_name)",
+				"auth_provider": "caret (backwards compatibility with stored credentials)"
+			}
+		}
 	},
 	"development_framework": {
 		"tech_stack": {

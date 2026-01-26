@@ -8,7 +8,7 @@
 - **F02 i18n**: `f02-multilingual-i18n.md` — 4개 언어(ko/en/ja/zh) 지원. UI 텍스트는 캐러티 번역 기준 유지.
 - **F03 브랜딩/UI**: `f03-branding-ui.md` — 캐러티/CodeCenter 브랜딩 전환, 에셋 사용. 온보딩/커스터마이징 문서에 캐러티 에셋 우선 명시.
 - **F04 계정 시스템**: `f04-careti-account.md` — 캐러티 계정/인증/조직 개념. 프로바이더/온보딩 문서에 계정/라우팅 차이 주석.
-- **F06 Agent Standardization**: `f06-agent-standardization.md` — `.agents/context` SoT + AGENTS.md 계층 + `/init` 스캐폴드 표준화.
+- **F06 Agent Standardization**: `f06-agent-standard-claude-compat.md` — `.agents/context` SoT + AGENTS.md 계층 + `/init` 스캐폴드 표준화.
 - **F07 캐러티 프롬프트 시스템**: `f07-careti-prompt-system.md` — 시스템/보조 프롬프트 차이. 기능 문서에 캐러티 프롬프트 구조 언급 가능.
 - **F08 페르소나**: `f08-persona-system.md` — 페르소나 시스템/자산 경로. 온보딩/기능 문서에 페르소나 사용법 주석.
 - **F09 Feature Config**: `f09-feature-config-system.md` — 기능 토글/설정. 관련 기능 문서에 캐러티 설정 경로 언급.

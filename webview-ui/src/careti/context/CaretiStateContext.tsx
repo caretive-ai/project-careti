@@ -1,9 +1,9 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { PersonaImages, PersonaProfile } from "@shared/proto/index.careti"
 import React, { createContext, type ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react"
-import { PersonaServiceClient } from "../services/CaretGrpcClient"
+import { PersonaServiceClient } from "../services/CaretiGrpcClient"
 import { type FeatureConfig, getCurrentFeatureConfig } from "../shared/FeatureConfig"
-import { CaretWebviewLogger } from "../utils/webview-logger"
+import { CaretiWebviewLogger } from "../utils/webview-logger"
 
 // CARETI MODIFICATION: Add window type definitions for persona images injected by CaretiProvider.
 declare global {
@@ -26,7 +26,7 @@ export interface FullPersonaProfile {
 	thinkingAvatarUri?: string
 }
 
-interface CaretStateContextType {
+interface CaretiStateContextType {
 	personaProfile?: FullPersonaProfile
 	updatePersona: (profile: PersonaProfile) => Promise<void>
 	showPersonaSelector: boolean
@@ -34,11 +34,11 @@ interface CaretStateContextType {
 	featureConfig?: FeatureConfig
 }
 
-const logger = new CaretWebviewLogger("CaretStateContext")
+const logger = new CaretiWebviewLogger("CaretiStateContext")
 
-const CaretStateContext = createContext<CaretStateContextType | undefined>(undefined)
+const CaretiStateContext = createContext<CaretiStateContextType | undefined>(undefined)
 
-export const CaretStateContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const CaretiStateContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 	const [showPersonaSelector, setShowPersonaSelector] = useState(false)
 	const [personaProfile, setPersonaProfile] = useState<PersonaProfile | undefined>(undefined)
 	// CARETI MODIFICATION: Initialize personaImages state from window object.
@@ -104,7 +104,7 @@ export const CaretStateContextProvider: React.FC<{ children: ReactNode }> = ({ c
 			}
 		: undefined
 
-	const contextValue: CaretStateContextType = {
+	const contextValue: CaretiStateContextType = {
 		personaProfile: fullPersonaInfo,
 		updatePersona,
 		showPersonaSelector,
@@ -112,13 +112,13 @@ export const CaretStateContextProvider: React.FC<{ children: ReactNode }> = ({ c
 		featureConfig: getCurrentFeatureConfig(),
 	}
 
-	return <CaretStateContext.Provider value={contextValue}>{children}</CaretStateContext.Provider>
+	return <CaretiStateContext.Provider value={contextValue}>{children}</CaretiStateContext.Provider>
 }
 
-export const useCaretState = () => {
-	const context = useContext(CaretStateContext)
+export const useCaretiState = () => {
+	const context = useContext(CaretiStateContext)
 	if (context === undefined) {
-		throw new Error("useCaretState must be used within a CaretStateContextProvider")
+		throw new Error("useCaretiState must be used within a CaretiStateContextProvider")
 	}
 	return context
 }

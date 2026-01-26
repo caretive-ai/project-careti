@@ -4,19 +4,19 @@ import { normalizeApiConfiguration } from "@/components/settings/utils/providerU
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import ApiOptions from "../../components/settings/ApiOptions"
 import { getLocalizedUrl } from "../constants/urls"
-import { useCaretI18n } from "../hooks/useCaretI18n"
+import { useCaretiI18n } from "../hooks/useCaretiI18n"
 import { t } from "../utils/i18n"
 
-interface CaretApiSetupProps {
+interface CaretiApiSetupProps {
 	onSubmit: () => void
 	onBack: () => void
 	disabled?: boolean
 	errorMessage?: string
 }
 
-const CaretApiSetup: React.FC<CaretApiSetupProps> = ({ onSubmit, onBack, disabled = false, errorMessage }) => {
+const CaretiApiSetup: React.FC<CaretiApiSetupProps> = ({ onSubmit, onBack, disabled = false, errorMessage }) => {
 	const { apiConfiguration, mode } = useExtensionState()
-	const { currentLanguage } = useCaretI18n()
+	const { currentLanguage } = useCaretiI18n()
 	const { selectedProvider } = normalizeApiConfiguration(apiConfiguration, mode)
 
 	const containerStyle = {
@@ -156,4 +156,4 @@ const CaretApiSetup: React.FC<CaretApiSetupProps> = ({ onSubmit, onBack, disable
 	)
 }
 
-export default CaretApiSetup
+export default CaretiApiSetup

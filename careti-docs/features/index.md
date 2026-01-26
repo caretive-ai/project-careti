@@ -26,7 +26,7 @@ Careti은 Cline을 기반으로 한 자율 AI 코딩 어시스턴트로, 다음�
 - **[F05: Careti 계정 시스템](./f05-careti-account.md)**
   Careti 전용 계정 관리 및 인증 시스템 (gRPC 기반)
 
-- **[F06: 에이전트 표준화(AAIF SoT)](./f06-agent-standardization.md)**
+- **[F06: 에이전트 표준화(AAIF SoT)](./f06-agent-standard-claude-compat.md)**
   `.agents/context` 단일 SoT 및 표준 구조
 
 ### AI 시스템 (Intelligence)

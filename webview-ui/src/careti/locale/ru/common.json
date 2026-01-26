@@ -96,7 +96,8 @@
 		"description": "Careti - проект с открытым исходным кодом. Посетите наш GitHub, чтобы внести вклад, сообщить о проблемах или поделиться отзывами.",
 		"githubLinkPrefix": "Узнать больше на",
 		"githubLink": "github.com/caretive-ai/project-careti",
-		"closeBannerAria": "Закрыть баннер"
+		"closeBannerAria": "Закрыть баннер",
+		"settingsLink": "Политика конфиденциальности"
 	},
 	"autoApprove": {
 		"autoApproveLabel": "Автоодобрение:"

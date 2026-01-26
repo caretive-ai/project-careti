@@ -8,7 +8,7 @@ import { getFeedbackSection } from "./feedback"
 import { getMcp } from "./mcp"
 import { getObjectiveSection } from "./objective"
 import { getRulesSection } from "./rules"
-import { getSkillsSection } from "./skills" // CARETI MODIFICATION: Skills system
+import { getCommandsSection } from "./commands" // CARETI MODIFICATION: Commands system (replaces skills)
 import { getSystemInfo } from "./system_info"
 import { getUpdatingTaskProgress } from "./task_progress"
 import { getToolUseSection } from "./tool_use"
@@ -38,7 +38,7 @@ export function getSystemPromptComponents() {
 			fn: getCapabilitiesSection,
 		},
 		{ id: SystemPromptSection.RULES, fn: getRulesSection },
-		{ id: SystemPromptSection.SKILLS, fn: getSkillsSection }, // CARETI MODIFICATION: Skills system
+		{ id: SystemPromptSection.SKILLS, fn: getCommandsSection }, // CARETI MODIFICATION: Commands system (replaces skills)
 		{ id: SystemPromptSection.OBJECTIVE, fn: getObjectiveSection },
 		{
 			id: SystemPromptSection.ACT_VS_PLAN,

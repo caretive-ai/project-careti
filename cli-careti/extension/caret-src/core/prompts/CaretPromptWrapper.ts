@@ -1,4 +1,4 @@
-import { CaretModeManager } from "@careti/core/modes/CaretModeManager"
+import { CaretModeManager } from "@careti/core/modes/CaretiModeManager"
 import { PromptSystemManager } from "@careti/core/prompts/system/PromptSystemManager"
 import { CaretSystemPromptContext } from "@careti/core/prompts/system/types"
 import { CARET_MODES } from "@careti/shared/constants/PromptSystemConstants"

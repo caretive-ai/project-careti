@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from "react"
 // CARETI MODIFICATION: Import i18n context for language reactivity
-import { useCaretI18nContext } from "@/careti/context/CaretI18nContext"
+import { useCaretiI18nContext } from "@/careti/context/CaretiI18nContext"
 import { t } from "@/careti/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -19,7 +19,7 @@ const AutoApproveBar = ({ style }: AutoApproveBarProps) => {
 	const { autoApprovalSettings } = useExtensionState()
 	const { isChecked, isFavorited, updateAction } = useAutoApproveActions()
 	// CARETI MODIFICATION: Use i18n context to detect language changes
-	const { language } = useCaretI18nContext()
+	const { language } = useCaretiI18nContext()
 
 	const [isModalVisible, setIsModalVisible] = useState(false)
 	const buttonRef = useRef<HTMLDivElement>(null)

@@ -4,7 +4,7 @@ import React from "react"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { t } from "../utils/i18n"
 
-const CaretFooter: React.FC = () => {
+const CaretiFooter: React.FC = () => {
 	const { version } = useExtensionState()
 
 	const footerStyle: CSSProperties = {
@@ -26,7 +26,7 @@ const CaretFooter: React.FC = () => {
 			<div style={{ marginBottom: "15px" }}>
 				<p style={{ margin: "2px 0" }}>
 					{t("footer.about.description", "welcome")}{" "}
-					<VSCodeLink href="https://github.com/aicoding-careti/careti" style={{ ...linkStyle, display: "inline" }}>
+					<VSCodeLink href="https://github.com/caretive-ai/project-careti" style={{ ...linkStyle, display: "inline" }}>
 						{t("footer.about.link", "welcome")}
 					</VSCodeLink>
 				</p>
@@ -34,7 +34,7 @@ const CaretFooter: React.FC = () => {
 			<div>
 				{/* 링크들 */}
 				<div style={{ marginBottom: "10px" }}>
-					<VSCodeLink href="https://github.com/aicoding-careti/careti" style={linkStyle}>
+					<VSCodeLink href="https://github.com/caretive-ai/project-careti" style={linkStyle}>
 						{t("footer.links.caretiGithub", "welcome")}
 					</VSCodeLink>
 					<span> • </span>
@@ -64,4 +64,4 @@ const CaretFooter: React.FC = () => {
 	)
 }
 
-export default CaretFooter
+export default CaretiFooter

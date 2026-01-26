@@ -406,10 +406,6 @@
 		"thinking": "Réflexion...",
 		"planning": "Planification..."
 	},
-	"requestStartRow": {
-		"thinking": "Thinking...",
-		"planning": "Planning..."
-	},
 	"toolGroup": {
 		"read": "lu",
 		"file": "fichier",

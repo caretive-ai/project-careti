@@ -1,4 +1,4 @@
-import { CaretModeManager } from "@careti/core/modes/CaretModeManager"
+import { CaretiModeManager } from "@careti/core/modes/CaretiModeManager"
 import type { Controller } from "@/core/controller"
 import { Logger } from "@/services/logging/Logger"
 import type * as proto from "@/shared/proto"
@@ -19,16 +19,16 @@ export async function SetCaretMode(
 			Logger.error(`[SetCaretMode] Invalid mode: ${newMode}`)
 			return {
 				success: false,
-				currentMode: CaretModeManager.getCurrentCaretMode(),
+				currentMode: CaretiModeManager.getCurrentCaretMode(),
 				errorMessage: `Invalid mode: ${newMode}. Must be 'chatbot' or 'agent'`,
 			}
 		}
 
-		const previousMode = CaretModeManager.getCurrentCaretMode()
+		const previousMode = CaretiModeManager.getCurrentCaretMode()
 		Logger.debug(`[SetCaretMode] Changing Careti mode from ${previousMode} to ${newMode}`)
 
-		// Update CaretModeManager
-		await CaretModeManager.setCaretMode(newMode)
+		// Update CaretiModeManager
+		await CaretiModeManager.setCaretMode(newMode)
 
 		Logger.info(`[SetCaretMode] Successfully changed Careti mode: ${previousMode} → ${newMode}`)
 
@@ -41,7 +41,7 @@ export async function SetCaretMode(
 		Logger.error(`[SetCaretMode] Failed to set Careti mode: ${error}`)
 		return {
 			success: false,
-			currentMode: CaretModeManager.getCurrentCaretMode(),
+			currentMode: CaretiModeManager.getCurrentCaretMode(),
 			errorMessage: `Failed to set Careti mode: ${error}`,
 		}
 	}

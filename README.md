@@ -205,7 +205,7 @@ Available via Careti account even for text-only models.
 | F03 | Branding & UI | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f03-branding-ui.md) |
 | F04 | Cline compatibility | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f04-cline-compatibility-and-cli.md) |
 | F05 | Careti account | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f05-careti-account.md) |
-| F06 | Agent standardization (AAIF) | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f06-agent-standardization.md) |
+| F06 | Agent standardization (AAIF) | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f06-agent-standard-claude-compat.md) |
 | F07 | Prompt system | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f07-careti-prompt-system.md) |
 | F08 | Persona system | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f08-persona-system.md) |
 | F09 | Feature Config | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f09-feature-config-system.md) |

@@ -18,7 +18,7 @@ import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
 // CARETI MODIFICATION: Import PersonaManagement for persona system integration
 import PersonaManagement from "@/careti/components/PersonaManagement"
-import { useCaretI18nContext } from "@/careti/context/CaretI18nContext"
+import { useCaretiI18nContext } from "@/careti/context/CaretiI18nContext"
 import { t } from "@/careti/utils/i18n"
 import { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import Tooltip from "@/components/common/Tooltip"
@@ -31,7 +31,7 @@ import RuleRow from "./RuleRow"
 import RulesToggleList from "./RulesToggleList"
 
 const ClineRulesToggleModal: React.FC = () => {
-	const { language } = useCaretI18nContext()
+	const { language } = useCaretiI18nContext()
 	const {
 		globalClineRulesToggles = {},
 		localClineRulesToggles = {},

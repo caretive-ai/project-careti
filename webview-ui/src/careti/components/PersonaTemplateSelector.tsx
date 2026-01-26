@@ -19,10 +19,10 @@ import templateCharacters from "@/careti/assets/template_characters/template_cha
 import ubuntuAvatar from "@/careti/assets/template_characters/ubuntu.webp?inline"
 import ubuntuIllust from "@/careti/assets/template_characters/ubuntu_illust.webp?inline"
 import ubuntuThinking from "@/careti/assets/template_characters/ubuntu_thinking.webp?inline"
-import { useCaretState } from "@/careti/context/CaretStateContext"
+import { useCaretiState } from "@/careti/context/CaretiStateContext"
 import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { CaretWebviewLogger } from "../utils/webview-logger"
+import { CaretiWebviewLogger } from "../utils/webview-logger"
 
 // Basename map for bare filenames (403 방지)
 const filenameMap: Record<string, string> = {
@@ -242,12 +242,12 @@ const IllustrationImage: React.FC<{ characterId: string; illustrationUri: string
 	return <img alt={altText} className="max-h-48 object-contain my-2" src={illustrationImageUrl} />
 }
 
-const logger = new CaretWebviewLogger("PersonaTemplateSelector")
+const logger = new CaretiWebviewLogger("PersonaTemplateSelector")
 
 export const PersonaTemplateSelector: React.FC<PersonaTemplateSelectorProps> = ({ isOpen, onClose, onSelectPersona }) => {
 	const [activeTab, setActiveTab] = useState<string>("")
 	const { caretSettings } = useExtensionState()
-	const { updatePersona, setShowPersonaSelector } = useCaretState()
+	const { updatePersona, setShowPersonaSelector } = useCaretiState()
 	const currentLocale = caretSettings?.uiLanguage || "en"
 
 	useEffect(() => {

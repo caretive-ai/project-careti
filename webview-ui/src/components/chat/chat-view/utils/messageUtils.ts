@@ -6,18 +6,36 @@ import { combineApiRequests } from "@shared/combineApiRequests"
 import { combineCommandSequences } from "@shared/combineCommandSequences"
 import { ClineMessage, ClineSayBrowserAction, ClineSayTool } from "@shared/ExtensionMessage"
 // CARETI MODIFICATION: Import icons for tool group display
-import { FileIcon, FolderOpenDotIcon, FolderOpenIcon, SearchIcon, ShapesIcon, WrenchIcon } from "lucide-react"
+import { FileIcon, FileTextIcon, FolderOpenDotIcon, FolderOpenIcon, ImageIcon, SearchIcon, ShapesIcon, WrenchIcon } from "lucide-react"
 
 /**
  * CARETI MODIFICATION: Low-stakes tool types that should be grouped together
  * Ported from ref-cline for ToolGroupRenderer support
+ * Added Careti-specific tools: analyzeImage, readDocument
  */
 const LOW_STAKES_TOOLS = new Set([
+	// Cline original tools
 	"readFile",
 	"listFilesTopLevel",
 	"listFilesRecursive",
 	"listCodeDefinitionNames",
 	"searchFiles",
+	// CARETI MODIFICATION: Careti-specific read-only tools
+	"analyzeImage",
+	"readDocument",
+])
+
+/**
+ * CARETI MODIFICATION: Tools that can be expanded to show content
+ * Used by ToolGroupRenderer for folder listings, search results, etc.
+ */
+export const EXPANDABLE_TOOLS = new Set([
+	"listFilesTopLevel",
+	"listFilesRecursive",
+	"listCodeDefinitionNames",
+	"searchFiles",
+	// CARETI MODIFICATION: Careti document tool with expandable content
+	"readDocument",
 ])
 
 /**
@@ -44,9 +62,11 @@ export function isToolGroup(item: ClineMessage | ClineMessage[]): item is ClineM
 
 /**
  * CARETI MODIFICATION: Get icon component by tool name
+ * Added Careti-specific tool icons
  */
 export function getIconByToolName(toolName: string) {
 	switch (toolName) {
+		// Cline original tools
 		case "readFile":
 			return FileIcon
 		case "listFilesTopLevel":
@@ -57,6 +77,11 @@ export function getIconByToolName(toolName: string) {
 			return SearchIcon
 		case "listCodeDefinitionNames":
 			return ShapesIcon
+		// CARETI MODIFICATION: Careti-specific tools
+		case "analyzeImage":
+			return ImageIcon
+		case "readDocument":
+			return FileTextIcon
 		default:
 			return WrenchIcon
 	}

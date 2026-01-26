@@ -1,4 +1,4 @@
-// webview-ui/src/careti/services/CaretGrpcClient.ts
+// webview-ui/src/careti/services/CaretiGrpcClient.ts
 import * as proto from "@shared/proto/index"
 import { Callbacks, ProtoBusClient } from "../../services/grpc-client-base"
 

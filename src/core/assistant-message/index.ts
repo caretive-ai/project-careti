@@ -52,6 +52,8 @@ export const toolParamNames = [
 	"skill_name", // CARETI MODIFICATION: for use_skill tool
 	"query", // CARETI MODIFICATION: for web_search tool
 	"num_results", // CARETI MODIFICATION: for web_search tool
+	"from_ref", // CARETI MODIFICATION: for generate_explanation tool
+	"to_ref", // CARETI MODIFICATION: for generate_explanation tool
 ] as const
 
 export type ToolParamName = (typeof toolParamNames)[number]

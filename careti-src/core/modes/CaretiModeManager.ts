@@ -12,7 +12,7 @@ import { Logger } from "@/services/logging/Logger"
  * - Uses separate workspace configuration key
  * - Completely isolated from Cline StateManager
  */
-export class CaretModeManager {
+export class CaretiModeManager {
 	private static caretMode: "chatbot" | "agent" = "agent"
 	private static initialized = false
 	private static context: vscode.ExtensionContext | undefined = undefined
@@ -21,39 +21,39 @@ export class CaretModeManager {
 	 * Set the extension context for state management
 	 */
 	static setContext(context: vscode.ExtensionContext): void {
-		CaretModeManager.context = context
+		CaretiModeManager.context = context
 	}
 
 	/**
 	 * Initialize the Careti mode from workspace configuration
 	 */
 	static async initialize(): Promise<void> {
-		if (CaretModeManager.initialized) {
-			console.log(`[CaretModeManager] ⚠️ Already initialized with mode: ${CaretModeManager.caretMode}`)
+		if (CaretiModeManager.initialized) {
+			console.log(`[CaretiModeManager] ⚠️ Already initialized with mode: ${CaretiModeManager.caretMode}`)
 			return
 		}
 
 		try {
-			console.log(`[CaretModeManager] 🚀 Initializing Careti mode system...`)
+			console.log(`[CaretiModeManager] 🚀 Initializing Careti mode system...`)
 
-			if (!CaretModeManager.context) {
+			if (!CaretiModeManager.context) {
 				throw new Error("Extension context not set. Call setContext() first.")
 			}
 
 			// CARETI MODIFICATION: Use globalState instead of VS Code configuration
-			const savedMode = CaretModeManager.context.globalState.get<"chatbot" | "agent">("careti.mode", "agent")
+			const savedMode = CaretiModeManager.context.globalState.get<"chatbot" | "agent">("careti.mode", "agent")
 
-			console.log(`[CaretModeManager] 📖 Loaded mode from globalState: ${savedMode}`)
-			CaretModeManager.caretMode = savedMode
-			CaretModeManager.initialized = true
+			console.log(`[CaretiModeManager] 📖 Loaded mode from globalState: ${savedMode}`)
+			CaretiModeManager.caretMode = savedMode
+			CaretiModeManager.initialized = true
 
-			console.log(`[CaretModeManager] ✅ Initialized with mode: ${CaretModeManager.caretMode}`)
-			Logger.debug(`[CaretModeManager] Initialized with mode: ${CaretModeManager.caretMode}`)
+			console.log(`[CaretiModeManager] ✅ Initialized with mode: ${CaretiModeManager.caretMode}`)
+			Logger.debug(`[CaretiModeManager] Initialized with mode: ${CaretiModeManager.caretMode}`)
 		} catch (error) {
-			console.error(`[CaretModeManager] ❌ Failed to initialize:`, error)
-			Logger.error(`[CaretModeManager] Failed to initialize: ${error}`)
-			CaretModeManager.caretMode = "agent" // Safe fallback
-			CaretModeManager.initialized = true
+			console.error(`[CaretiModeManager] ❌ Failed to initialize:`, error)
+			Logger.error(`[CaretiModeManager] Failed to initialize: ${error}`)
+			CaretiModeManager.caretMode = "agent" // Safe fallback
+			CaretiModeManager.initialized = true
 		}
 	}
 
@@ -61,13 +61,13 @@ export class CaretModeManager {
 	 * Get current Careti mode (CHATBOT/AGENT)
 	 */
 	static getCurrentCaretMode(): "chatbot" | "agent" {
-		if (!CaretModeManager.initialized) {
-			console.warn(`[CaretModeManager] ⚠️ Not initialized, returning default 'agent' mode`)
-			Logger.warn("[CaretModeManager] Not initialized, returning default 'agent' mode")
+		if (!CaretiModeManager.initialized) {
+			console.warn(`[CaretiModeManager] ⚠️ Not initialized, returning default 'agent' mode`)
+			Logger.warn("[CaretiModeManager] Not initialized, returning default 'agent' mode")
 			return "agent"
 		}
-		console.log(`[CaretModeManager] 📍 Current mode: ${CaretModeManager.caretMode}`)
-		return CaretModeManager.caretMode
+		console.log(`[CaretiModeManager] 📍 Current mode: ${CaretiModeManager.caretMode}`)
+		return CaretiModeManager.caretMode
 	}
 
 	/**
@@ -75,23 +75,23 @@ export class CaretModeManager {
 	 */
 	static async setCaretMode(mode: "chatbot" | "agent"): Promise<void> {
 		try {
-			const previousMode = CaretModeManager.caretMode
-			console.log(`[CaretModeManager] 🔄 Mode change request: ${previousMode} → ${mode}`)
-			CaretModeManager.caretMode = mode
+			const previousMode = CaretiModeManager.caretMode
+			console.log(`[CaretiModeManager] 🔄 Mode change request: ${previousMode} → ${mode}`)
+			CaretiModeManager.caretMode = mode
 
-			if (!CaretModeManager.context) {
+			if (!CaretiModeManager.context) {
 				throw new Error("Extension context not set. Call setContext() first.")
 			}
 
 			// CARETI MODIFICATION: Persist to globalState instead of VS Code configuration
-			await CaretModeManager.context.globalState.update("careti.mode", mode)
+			await CaretiModeManager.context.globalState.update("careti.mode", mode)
 
-			console.log(`[CaretModeManager] ✅ Mode change completed: ${previousMode} → ${mode}`)
-			console.log(`[CaretModeManager] 🔧 GlobalState updated successfully`)
-			Logger.info(`[CaretModeManager] Mode changed: ${previousMode} → ${mode}`)
+			console.log(`[CaretiModeManager] ✅ Mode change completed: ${previousMode} → ${mode}`)
+			console.log(`[CaretiModeManager] 🔧 GlobalState updated successfully`)
+			Logger.info(`[CaretiModeManager] Mode changed: ${previousMode} → ${mode}`)
 		} catch (error) {
-			console.error(`[CaretModeManager] ❌ Failed to set mode to ${mode}:`, error)
-			Logger.error(`[CaretModeManager] Failed to set mode to ${mode}: ${error}`)
+			console.error(`[CaretiModeManager] ❌ Failed to set mode to ${mode}:`, error)
+			Logger.error(`[CaretiModeManager] Failed to set mode to ${mode}: ${error}`)
 			throw error
 		}
 	}
@@ -101,7 +101,7 @@ export class CaretModeManager {
 	 * This is only for internal use and doesn't affect Cline's actual mode system
 	 */
 	static mapCaretToPlanAct(): "plan" | "act" {
-		return CaretModeManager.caretMode === "chatbot" ? "plan" : "act"
+		return CaretiModeManager.caretMode === "chatbot" ? "plan" : "act"
 	}
 
 	/**
@@ -109,9 +109,9 @@ export class CaretModeManager {
 	 */
 	static getDebugInfo(): Record<string, unknown> {
 		return {
-			caretMode: CaretModeManager.caretMode,
-			mappedPlanAct: CaretModeManager.mapCaretToPlanAct(),
-			initialized: CaretModeManager.initialized,
+			caretMode: CaretiModeManager.caretMode,
+			mappedPlanAct: CaretiModeManager.mapCaretToPlanAct(),
+			initialized: CaretiModeManager.initialized,
 		}
 	}
 
@@ -120,9 +120,9 @@ export class CaretModeManager {
 	 */
 	static isToolAllowed(toolName: string): boolean {
 		const allowed =
-			CaretModeManager.caretMode === "agent" ||
+			CaretiModeManager.caretMode === "agent" ||
 			(() => {
-				if (CaretModeManager.caretMode === "chatbot") {
+				if (CaretiModeManager.caretMode === "chatbot") {
 					// CHATBOT mode: read-only tools only
 					const allowedInChatbot = [
 						"read_file",
@@ -139,7 +139,7 @@ export class CaretModeManager {
 			})()
 
 		console.log(
-			`[CaretModeManager] 🔧 Tool permission check: "${toolName}" → ${allowed ? "ALLOWED" : "BLOCKED"} (mode: ${CaretModeManager.caretMode})`,
+			`[CaretiModeManager] 🔧 Tool permission check: "${toolName}" → ${allowed ? "ALLOWED" : "BLOCKED"} (mode: ${CaretiModeManager.caretMode})`,
 		)
 		return allowed
 	}

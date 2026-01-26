@@ -1,14 +1,14 @@
 import { PersonaProfile } from "@shared/proto/index.careti"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React, { useState } from "react"
-import { useCaretState } from "@/careti/context/CaretStateContext"
+import { useCaretiState } from "@/careti/context/CaretiStateContext"
 import { t } from "@/careti/utils/i18n"
 import { caretWebviewLogger } from "@/careti/utils/webview-logger"
 import PersonaAvatar from "./PersonaAvatar"
 import { PersonaTemplateSelector } from "./PersonaTemplateSelector"
 
-// CARETI MODIFICATION: This component has been refactored to use the dedicated `CaretStateContext`.
-// - It consumes `personaProfile` and `updatePersona` from the `useCaretState` hook.
+// CARETI MODIFICATION: This component has been refactored to use the dedicated `CaretiStateContext`.
+// - It consumes `personaProfile` and `updatePersona` from the `useCaretiState` hook.
 // - This decouples the component from the core `ExtensionStateContext` and centralizes
 //   persona logic within its own context, improving modularity and maintainability.
 // Ported from careti-compare with path changes: /assets/ → /assets/ (already applied in JSON)
@@ -21,7 +21,7 @@ export const PersonaManagement: React.FC<PersonaManagementProps> = ({ className 
 	const [isSelectorOpen, setIsSelectorOpen] = useState(false)
 	const [uploadMessage, setUploadMessage] = useState<string>("")
 	const [isUploading, setIsUploading] = useState<boolean>(false)
-	const { personaProfile, updatePersona } = useCaretState()
+	const { personaProfile, updatePersona } = useCaretiState()
 
 	const handleSelectPersonaTemplate = () => {
 		caretWebviewLogger.debug("Persona template selector button clicked. Opening modal...")

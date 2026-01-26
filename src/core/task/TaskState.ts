@@ -81,4 +81,10 @@ export class TaskState {
 
 	// CARETI MODIFICATION: Store finish_reason for GLM4.7 loop termination fix
 	finishReason?: string
+
+	// CARETI MODIFICATION: Active skill tracking for Claude Code compatible allowed-tools constraint
+	activeSkill?: {
+		name: string
+		allowedTools?: string[]
+	}
 }

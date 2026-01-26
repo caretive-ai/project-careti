@@ -1,12 +1,12 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useCallback } from "react"
-import { useCaretI18nContext } from "@/careti/context/CaretI18nContext"
+import { useCaretiI18nContext } from "@/careti/context/CaretiI18nContext"
 import { PlatformType } from "@/config/platform.config"
 import { usePlatform } from "@/context/PlatformContext"
 import { StateServiceClient } from "@/services/grpc-client"
 export const CURRENT_INFO_BANNER_VERSION = 1
 export const InfoBanner: React.FC = () => {
-	const { language } = useCaretI18nContext()
+	const { language } = useCaretiI18nContext()
 	const handleClose = useCallback((e: React.MouseEvent) => {
 		e.preventDefault()
 		e.stopPropagation()

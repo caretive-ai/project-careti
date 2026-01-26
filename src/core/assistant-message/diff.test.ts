@@ -383,3 +383,237 @@ new body content
 		expect(result1).to.equal(expectedResult)
 	})
 })
+
+// CARETI MODIFICATION: Test cases for enhanced fallback stages (T20)
+describe("Enhanced Fallback Matching (T20)", () => {
+	describe("Whitespace Normalized Fallback", () => {
+		it("should match with collapsed whitespace", async () => {
+			const original = "const   value  =   'hello';\nconst other = 'world';"
+			const diff = `------- SEARCH
+const value = 'hello';
+=======
+const value = 'updated';
++++++++ REPLACE`
+			// Note: search has single spaces but original has multiple spaces
+			const result = await cnfc(diff, original, true)
+			expect(result).to.equal("const value = 'updated';\nconst other = 'world';")
+		})
+
+		it("should match with tab vs space differences", async () => {
+			const original = "function\ttest() {\n\treturn true;\n}"
+			const diff = `------- SEARCH
+function test() {
+=======
+function test(): boolean {
++++++++ REPLACE`
+			const result = await cnfc(diff, original, true)
+			expect(result).to.equal("function test(): boolean {\n\treturn true;\n}")
+		})
+	})
+
+	describe("Indentation Flexible Fallback", () => {
+		it("should match with different indentation levels", async () => {
+			const original = "function outer() {\n\t\tfunction inner() {\n\t\t\treturn 1;\n\t\t}\n}"
+			const diff = `------- SEARCH
+function inner() {
+	return 1;
+}
+=======
+function inner() {
+	return 2;
+}
++++++++ REPLACE`
+			const result = await cnfc(diff, original, true)
+			// The replacement should be applied with adjusted indentation
+			expect(result).to.include("return 2")
+		})
+
+		it("should match code indented differently in search block", async () => {
+			const original = "class Test {\n    method() {\n        console.log('test');\n    }\n}"
+			const diff = `------- SEARCH
+method() {
+    console.log('test');
+}
+=======
+method() {
+    console.log('updated');
+}
++++++++ REPLACE`
+			const result = await cnfc(diff, original, true)
+			expect(result).to.include("console.log('updated')")
+		})
+	})
+
+	describe("Block Anchor with Levenshtein Scoring", () => {
+		it("should select best match when multiple anchors match", async () => {
+			// Two blocks with same start/end but different middle content
+			const original = `function start() {
+  const a = 1;
+  return a;
+}
+
+function start() {
+  const b = 2;
+  return b;
+}`
+			const diff = `------- SEARCH
+function start() {
+  const b = 2;
+  return b;
+}
+=======
+function start() {
+  const b = 999;
+  return b;
+}
++++++++ REPLACE`
+			const result = await cnfc(diff, original, true)
+			// Should match the second block (higher similarity for middle lines)
+			expect(result).to.include("const b = 999")
+			expect(result).to.include("const a = 1") // First block unchanged
+		})
+
+		it("should match block with similar middle lines", async () => {
+			const original = `// Header
+function process(data) {
+  validate(data);
+  transform(data);
+  return data;
+}
+// Footer`
+			const diff = `------- SEARCH
+function process(data) {
+  validate(data);
+  transform(data);
+  return data;
+}
+=======
+function process(data) {
+  validate(data);
+  sanitize(data);
+  transform(data);
+  return data;
+}
++++++++ REPLACE`
+			const result = await cnfc(diff, original, true)
+			expect(result).to.include("sanitize(data)")
+		})
+	})
+
+	describe("Trimmed Boundary Fallback", () => {
+		it("should match with trimmed boundaries", async () => {
+			const original = "  \n  const value = 1;  \n  "
+			const diff = `------- SEARCH
+const value = 1;
+=======
+const value = 2;
++++++++ REPLACE`
+			const result = await cnfc(diff, original, true)
+			expect(result).to.include("const value = 2")
+		})
+
+		it("should handle search block with extra whitespace at boundaries", async () => {
+			const original = "prefix\nconst x = 1;\nsuffix"
+			const diff = `------- SEARCH
+
+const x = 1;
+
+=======
+const x = 2;
++++++++ REPLACE`
+			// Search has extra empty lines but should match trimmed
+			const result = await cnfc(diff, original, true)
+			expect(result).to.include("const x = 2")
+		})
+	})
+
+	describe("Context Aware Fallback", () => {
+		it("should match using first/last line anchors with flexible middle", async () => {
+			const original = `function handler() {
+  // complex logic
+  const result = process();
+  // more logic
+  return result;
+}`
+			const diff = `------- SEARCH
+function handler() {
+  // slightly different middle
+  const result = process();
+  return result;
+}
+=======
+function handler() {
+  const result = enhancedProcess();
+  return result;
+}
++++++++ REPLACE`
+			const result = await cnfc(diff, original, true)
+			expect(result).to.include("enhancedProcess")
+		})
+	})
+
+	describe("Escape Normalized Fallback", () => {
+		it("should handle escaped newlines", async () => {
+			const original = 'const str = "hello\\nworld";\nconst other = true;'
+			const diff = `------- SEARCH
+const str = "hello
+world";
+=======
+const str = "hello\\nworld";
++++++++ REPLACE`
+			const result = await cnfc(diff, original, true)
+			// Test that escape normalization works
+			expect(result).to.include("const str")
+		})
+	})
+
+	describe("Combined Fallback Scenarios", () => {
+		it("should fall through multiple stages until match found", async () => {
+			// This should fail exact, line-trimmed, but pass on whitespace/indentation
+			const original = `class MyClass {
+    constructor() {
+        this.value = 1;
+    }
+}`
+			const diff = `------- SEARCH
+constructor() {
+  this.value = 1;
+}
+=======
+constructor() {
+  this.value = 42;
+}
++++++++ REPLACE`
+			const result = await cnfc(diff, original, true)
+			expect(result).to.include("this.value = 42")
+		})
+
+		it("should handle real-world fuzzy matching scenario", async () => {
+			const original = `export function processData(input: string): Result {
+    // Validate input
+    if (!input) {
+        throw new Error('Invalid input');
+    }
+
+    // Process the data
+    const processed = input.trim();
+
+    return { data: processed };
+}`
+			const diff = `------- SEARCH
+    // Process the data
+    const processed = input.trim();
+
+    return { data: processed };
+=======
+    // Process and transform the data
+    const processed = input.trim().toUpperCase();
+
+    return { data: processed, timestamp: Date.now() };
++++++++ REPLACE`
+			const result = await cnfc(diff, original, true)
+			expect(result).to.include("toUpperCase")
+			expect(result).to.include("timestamp")
+		})
+	})
+})

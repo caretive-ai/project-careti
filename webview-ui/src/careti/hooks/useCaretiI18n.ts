@@ -1,6 +1,6 @@
-// CARETI MODIFICATION: Complete useCaretI18n Hook with Context integration and lazy loading
+// CARETI MODIFICATION: Complete useCaretiI18n Hook with Context integration and lazy loading
 import { useCallback, useMemo } from "react"
-import { useCaretI18nContext } from "../context/CaretI18nContext"
+import { useCaretiI18nContext } from "../context/CaretiI18nContext"
 import { getCurrentLanguage, type SupportedLanguage, setGlobalUILanguage, t } from "../utils/i18n"
 import { performanceMonitor } from "../utils/i18n-performance"
 import { loadLanguageBundle, preloadLanguageBundles } from "../utils/lazy-i18n"
@@ -20,14 +20,14 @@ export interface UseCaretI18nReturn {
 }
 
 // CARETI MODIFICATION: Complete hook with Context integration, lazy loading, and performance monitoring
-export const useCaretI18n = (): UseCaretI18nReturn => {
+export const useCaretiI18n = (): UseCaretI18nReturn => {
 	// Try to use context if available, fallback to direct function calls
 	let contextLanguage: SupportedLanguage | undefined
 	let contextSetLanguage: ((lang: SupportedLanguage) => Promise<void>) | undefined
 	let contextIsLoading = false
 
 	try {
-		const context = useCaretI18nContext()
+		const context = useCaretiI18nContext()
 		contextLanguage = context.language
 		contextSetLanguage = context.setLanguage
 		contextIsLoading = context.isLoading
@@ -126,4 +126,4 @@ export const useCaretI18n = (): UseCaretI18nReturn => {
 	return returnValue
 }
 
-export default useCaretI18n
+export default useCaretiI18n

@@ -96,7 +96,8 @@
 		"description": "Careti est un projet open-source. Visitez notre GitHub pour contribuer.",
 		"githubLinkPrefix": "En savoir plus sur",
 		"githubLink": "github.com/caretive-ai/project-careti",
-		"closeBannerAria": "Fermer la bannière"
+		"closeBannerAria": "Fermer la bannière",
+		"settingsLink": "Politique de confidentialité"
 	},
 	"autoApprove": {
 		"autoApproveLabel": "Approbation auto :"

@@ -203,7 +203,7 @@ Cline에서 지원하지 않는 모델을 Careti에서 사용할 수 있습니�
 | F03 | 브랜딩 & UI | [보기](../features.en/f03-branding-ui.md) |
 | F04 | Cline 호환성 | [보기](../features.en/f04-cline-compatibility-and-cli.md) |
 | F05 | Careti 계정 | [보기](../features.en/f05-careti-account.md) |
-| F06 | 에이전트 표준화 (AAIF) | [보기](../features.en/f06-agent-standardization.md) |
+| F06 | 에이전트 표준화 (AAIF) | [보기](../features.en/f06-agent-standard-claude-compat.md) |
 | F07 | 프롬프트 시스템 | [보기](../features.en/f07-careti-prompt-system.md) |
 | F08 | 페르소나 시스템 | [보기](../features.en/f08-persona-system.md) |
 | F09 | Feature Config | [보기](../features.en/f09-feature-config-system.md) |

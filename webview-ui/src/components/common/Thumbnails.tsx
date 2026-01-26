@@ -4,8 +4,8 @@ import { cn } from "@heroui/react"
 import { StringRequest } from "@shared/proto/cline/common"
 import React, { memo, useLayoutEffect, useRef, useState } from "react"
 import { useWindowSize } from "react-use"
-// CARETI MODIFICATION: use CaretWebviewLogger for webview logs
-import WebviewLogger from "@/careti/utils/CaretWebviewLogger"
+// CARETI MODIFICATION: use CaretiWebviewLogger for webview logs
+import WebviewLogger from "@/careti/utils/CaretiWebviewLogger"
 import { t } from "@/careti/utils/i18n"
 import { FileServiceClient } from "@/services/grpc-client"
 

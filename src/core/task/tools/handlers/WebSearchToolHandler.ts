@@ -56,10 +56,30 @@ export class WebSearchToolHandler implements IFullyManagedTool {
 			const currentMode = config.services.stateManager.getGlobalSettingsKey("mode")
 			const provider = (currentMode === "plan" ? apiConfig.planModeApiProvider : apiConfig.actModeApiProvider) as string
 
-			// Validate required parameter
+			// Validate required parameter with detailed usage example
 			if (!query) {
 				config.taskState.consecutiveMistakeCount++
-				return await config.callbacks.sayAndCreateMissingParamError(this.name, "query")
+				const brandName = getCurrentBrandName()
+				await config.callbacks.say(
+					"error",
+					`${brandName} tried to use web_search without value for required parameter 'query'. Retrying...`,
+				)
+				return formatResponse.toolError(
+					`Missing value for required parameter 'query'. The web_search tool requires a search query.
+
+Correct usage example:
+<web_search>
+<query>your search query here</query>
+</web_search>
+
+Or with optional num_results:
+<web_search>
+<query>react hooks documentation</query>
+<num_results>5</num_results>
+</web_search>
+
+Please retry with a valid query parameter.`,
+				)
 			}
 			config.taskState.consecutiveMistakeCount = 0
 

@@ -1,20 +1,4 @@
-// CARETI MODIFICATION: Skills system support - on-demand agent instructions
-// Ported from Cline v3.49.1
+// CARETI MODIFICATION: Legacy skills module - re-exports from commands
+// @deprecated Use @shared/commands instead
 
-/**
- * Skill metadata loaded at startup for discovery.
- * Only name and description are parsed from frontmatter initially.
- */
-export interface SkillMetadata {
-	name: string
-	description: string
-	path: string
-	source: "global" | "project"
-}
-
-/**
- * Full skill content loaded on-demand when skill is activated.
- */
-export interface SkillContent extends SkillMetadata {
-	instructions: string
-}
+export type { CommandMetadata as SkillMetadata, CommandContent as SkillContent } from "./commands"

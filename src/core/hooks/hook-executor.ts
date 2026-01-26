@@ -101,10 +101,12 @@ export async function executeHook<Name extends keyof Hooks>(options: HookExecuti
 		}
 
 		// Create and execute hook
+		// CARETI MODIFICATION: Pass toolName for matcher pattern filtering
 		const hook = await hookFactory.createWithStreaming(
 			hookName,
 			streamCallback,
 			isCancellable ? abortController.signal : undefined,
+			options.toolName,
 		)
 
 		const result = await hook.run({

@@ -23,6 +23,10 @@ message HookInput {
     TaskCancelData task_cancel = 15;
     TaskCompleteData task_complete = 16;
     PreCompactData pre_compact = 17;
+    // CARETI MODIFICATION: Claude Code compatible hook events
+    SessionStartData session_start = 18;
+    SessionEndData session_end = 19;
+    StopData stop = 20;
   }
 }
 
@@ -117,4 +121,46 @@ message PreCompactData {
   // This includes the system prompt, environment details, conversation history, and all formatting
   // Represents the actual input the LLM receives (format varies by provider)
   string context_raw_path = 13;
+}
+
+// CARETI MODIFICATION: Claude Code compatible SessionStart event
+// Data for SessionStart hook - fired when a new session begins
+message SessionStartData {
+  // Source of session start:
+  // * startup:  Fresh start of the extension/CLI
+  // * resume:   Resuming a previous session
+  // * clear:    Session cleared by user
+  // * compact:  Session compacted/summarized
+  string source = 1;
+  // Session ID for tracking
+  string session_id = 2;
+}
+
+// CARETI MODIFICATION: Claude Code compatible SessionEnd event
+// Data for SessionEnd hook - fired when a session ends (useful for work log automation)
+message SessionEndData {
+  // Reason for session end:
+  // * exit:    Normal exit
+  // * clear:   Session cleared by user
+  // * logout:  User logged out
+  // * timeout: Session timed out
+  // * other:   Other reason
+  string reason = 1;
+  // Path to the transcript file (if saved)
+  string transcript_path = 2;
+  // Session ID for tracking
+  string session_id = 3;
+  // Total duration in milliseconds
+  int64 duration_ms = 4;
+  // Number of API requests made
+  int32 api_request_count = 5;
+}
+
+// CARETI MODIFICATION: Claude Code compatible Stop event
+// Data for Stop hook - fired when user stops the current operation
+message StopData {
+  // Whether a stop hook is actively running
+  bool stop_hook_active = 1;
+  // The tool that was interrupted (if any)
+  string interrupted_tool = 2;
 }

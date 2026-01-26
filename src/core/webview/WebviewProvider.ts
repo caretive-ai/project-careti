@@ -169,10 +169,11 @@ export abstract class WebviewProvider {
 		} catch (_error) {
 			// Only show the error message when in development mode.
 			if (process.env.IS_DEV) {
+				// CARETI MODIFICATION: Changed brand name from Cline to Careti
 				HostProvider.window.showMessage({
 					type: ShowMessageType.ERROR,
 					message:
-						"Cline: Local webview dev server is not running, HMR will not work. Please run 'npm run dev:webview' before launching the extension to enable HMR. Using bundled assets.",
+						"Careti: Local webview dev server is not running, HMR will not work. Please run 'npm run dev:webview' before launching the extension to enable HMR. Using bundled assets.",
 				})
 			}
 

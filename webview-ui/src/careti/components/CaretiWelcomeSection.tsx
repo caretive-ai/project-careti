@@ -1,11 +1,11 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useRef } from "react"
 import { UiServiceClient } from "@/services/grpc-client"
-import { useCaretI18n } from "../hooks/useCaretI18n"
+import { useCaretiI18n } from "../hooks/useCaretiI18n"
 import { t } from "../utils/i18n"
-import { CaretWebviewLogger } from "../utils/webview-logger"
+import { CaretiWebviewLogger } from "../utils/webview-logger"
 
-const logger = new CaretWebviewLogger("CaretWelcomeSection")
+const logger = new CaretiWebviewLogger("CaretiWelcomeSection")
 
 interface ButtonConfig {
 	textKey: string
@@ -14,7 +14,7 @@ interface ButtonConfig {
 	disabled?: boolean
 }
 
-interface CaretWelcomeSectionProps {
+interface CaretiWelcomeSectionProps {
 	headerKey: string
 	bodyKey: string
 	buttonConfig?: ButtonConfig
@@ -23,7 +23,7 @@ interface CaretWelcomeSectionProps {
 	allowHtml?: boolean
 }
 
-const CaretWelcomeSection: React.FC<CaretWelcomeSectionProps> = ({
+const CaretiWelcomeSection: React.FC<CaretiWelcomeSectionProps> = ({
 	headerKey,
 	bodyKey,
 	buttonConfig,
@@ -31,7 +31,7 @@ const CaretWelcomeSection: React.FC<CaretWelcomeSectionProps> = ({
 	children,
 	allowHtml = false,
 }) => {
-	const { currentLanguage } = useCaretI18n()
+	const { currentLanguage } = useCaretiI18n()
 	const sectionRef = useRef<HTMLDivElement>(null)
 
 	const sectionStyle = {
@@ -87,4 +87,4 @@ const CaretWelcomeSection: React.FC<CaretWelcomeSectionProps> = ({
 	)
 }
 
-export default CaretWelcomeSection
+export default CaretiWelcomeSection

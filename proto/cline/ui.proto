@@ -66,6 +66,7 @@ enum ClineSay {
   INFO = 26;
   TASK_PROGRESS = 27;
   ERROR_RETRY = 28;
+  GENERATE_EXPLANATION = 29; // CARETI MODIFICATION: Added for Cline v3.49.1 explain-changes feature
 }
 
 // Enum for ClineSayTool tool types

@@ -1,9 +1,9 @@
-// CARETI MODIFICATION: Tests for integrated useCaretI18n hook
+// CARETI MODIFICATION: Tests for integrated useCaretiI18n hook
 import { act, renderHook } from "@testing-library/react"
 import React from "react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { CaretiI18nProvider } from "@/careti/context/CaretI18nContext"
-import { useCaretI18n } from "@/careti/hooks/useCaretI18n"
+import { CaretiI18nProvider } from "@/careti/context/CaretiI18nContext"
+import { useCaretiI18n } from "@/careti/hooks/useCaretiI18n"
 import { resetI18nPerformanceMetrics } from "@/careti/utils/i18n"
 import { ExtensionStateContextProvider } from "@/context/ExtensionStateContext"
 
@@ -35,14 +35,14 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 	</ExtensionStateContextProvider>
 )
 
-describe("useCaretI18n Integration Tests", () => {
+describe("useCaretiI18n Integration Tests", () => {
 	beforeEach(() => {
 		resetI18nPerformanceMetrics()
 		vi.clearAllMocks()
 	})
 
 	it("should provide complete API with Context integration", () => {
-		const { result } = renderHook(() => useCaretI18n(), { wrapper })
+		const { result } = renderHook(() => useCaretiI18n(), { wrapper })
 
 		expect(result.current).toHaveProperty("t")
 		expect(result.current).toHaveProperty("tWithLang")
@@ -55,7 +55,7 @@ describe("useCaretI18n Integration Tests", () => {
 	})
 
 	it("should translate using context language", () => {
-		const { result } = renderHook(() => useCaretI18n(), { wrapper })
+		const { result } = renderHook(() => useCaretiI18n(), { wrapper })
 
 		const translation = result.current.t("welcome.title", "welcome")
 		// Translation should return a string (fallback to key if translation missing)
@@ -65,7 +65,7 @@ describe("useCaretI18n Integration Tests", () => {
 	})
 
 	it("should provide tWithLang functionality", () => {
-		const { result } = renderHook(() => useCaretI18n(), { wrapper })
+		const { result } = renderHook(() => useCaretiI18n(), { wrapper })
 
 		const koreanTranslation = result.current.tWithLang("welcome.title", "ko", "welcome")
 		// Should return a translation or fallback key
@@ -74,7 +74,7 @@ describe("useCaretI18n Integration Tests", () => {
 	})
 
 	it("should support language change", async () => {
-		const { result } = renderHook(() => useCaretI18n(), { wrapper })
+		const { result } = renderHook(() => useCaretiI18n(), { wrapper })
 
 		await act(async () => {
 			await result.current.changeLanguage("ko")
@@ -86,7 +86,7 @@ describe("useCaretI18n Integration Tests", () => {
 	})
 
 	it("should validate language support", () => {
-		const { result } = renderHook(() => useCaretI18n(), { wrapper })
+		const { result } = renderHook(() => useCaretiI18n(), { wrapper })
 
 		expect(result.current.isLanguageSupported("ko")).toBe(true)
 		expect(result.current.isLanguageSupported("en")).toBe(true)
@@ -96,7 +96,7 @@ describe("useCaretI18n Integration Tests", () => {
 	})
 
 	it("should provide performance metrics", () => {
-		const { result } = renderHook(() => useCaretI18n(), { wrapper })
+		const { result } = renderHook(() => useCaretiI18n(), { wrapper })
 
 		const metrics = result.current.getPerformanceMetrics()
 		expect(metrics).toHaveProperty("translationCalls")
@@ -105,7 +105,7 @@ describe("useCaretI18n Integration Tests", () => {
 	})
 
 	it("should handle preloading languages", async () => {
-		const { result } = renderHook(() => useCaretI18n(), { wrapper })
+		const { result } = renderHook(() => useCaretiI18n(), { wrapper })
 
 		await act(async () => {
 			await result.current.preloadLanguages(["ko", "ja"])
@@ -117,7 +117,7 @@ describe("useCaretI18n Integration Tests", () => {
 
 	it("should work without Context (fallback mode)", () => {
 		// Test without wrapper to verify fallback behavior
-		const { result } = renderHook(() => useCaretI18n())
+		const { result } = renderHook(() => useCaretiI18n())
 
 		// Should still provide basic functionality
 		expect(result.current.t).toBeDefined()
@@ -126,7 +126,7 @@ describe("useCaretI18n Integration Tests", () => {
 	})
 
 	it("should handle Korean particle processing in translations", () => {
-		const { result } = renderHook(() => useCaretI18n(), { wrapper })
+		const { result } = renderHook(() => useCaretiI18n(), { wrapper })
 
 		const koreanWithParticle = result.current.tWithLang("welcome.title", "ko", "welcome")
 		// Should process Korean particles like "캐러티을" or "캐러티를"
@@ -134,7 +134,7 @@ describe("useCaretI18n Integration Tests", () => {
 	})
 
 	it("should maintain translation consistency between hook and direct calls", () => {
-		const { result } = renderHook(() => useCaretI18n(), { wrapper })
+		const { result } = renderHook(() => useCaretiI18n(), { wrapper })
 
 		const hookTranslation = result.current.t("welcome.title", "welcome")
 		const directTranslation = result.current.tWithLang("welcome.title", "en", "welcome")

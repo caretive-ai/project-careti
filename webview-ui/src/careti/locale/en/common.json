@@ -86,6 +86,15 @@
 	"taskHeader.contextWindowUsage": "Context window usage",
 	"taskHeader.maxContextWindow": "Maximum context window size for this model",
 	"taskHeader.allStepsCompleted": "All {{totalCount}} steps completed!",
+	"focusChain": {
+		"allTasksCompleted": "All tasks have been completed!",
+		"todoListLabel": "To-Do list",
+		"newStepsMessage": "New steps will be generated if you continue the task",
+		"clickToEditTitle": "Click to edit to-do list in file"
+	},
+	"chatInput": {
+		"placeholder": "Type @ for context, / for slash commands & workflows, hold shift to drag in files/images"
+	},
 	"taskHeader.newStepsGenerated": "New steps may be generated based on the conversation.",
 	"taskHeader.editFocusChainList": "Edit focus chain list",
 	"modelInfo": {
@@ -96,7 +105,8 @@
 		"description": "Careti is an open-source project. Visit our GitHub to contribute, report issues, or share feedback.",
 		"githubLinkPrefix": "Learn more at",
 		"githubLink": "github.com/caretive-ai/project-careti",
-		"closeBannerAria": "Close banner"
+		"closeBannerAria": "Close banner",
+		"settingsLink": "Privacy Policy"
 	},
 	"autoApprove": {
 		"autoApproveLabel": "Auto-approve:"

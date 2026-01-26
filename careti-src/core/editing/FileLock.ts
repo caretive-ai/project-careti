@@ -3,9 +3,14 @@
  *
  * CARETI MODIFICATION: New file for file locking
  * Sourced from OpenCode implementation
+ *
+ * Supports two patterns:
+ * 1. withLock(path, fn) - for single async operations
+ * 2. acquireLock/releaseLock - for long-lived editing sessions (VS Code diff editor)
  */
 
 const locks = new Map<string, Promise<void>>()
+const lockResolvers = new Map<string, () => void>()
 
 /**
  * Execute a function while holding an exclusive lock on a file
@@ -51,4 +56,41 @@ export function isLocked(filepath: string): boolean {
  */
 export function getLockedCount(): number {
 	return locks.size
+}
+
+/**
+ * Acquire an exclusive lock on a file for long-lived editing sessions
+ * Use this with releaseLock() for VS Code diff editor workflows
+ *
+ * @param filepath The absolute path to the file
+ * @returns A promise that resolves when the lock is acquired
+ */
+export async function acquireLock(filepath: string): Promise<void> {
+	// Wait for any existing lock on this file
+	while (locks.has(filepath)) {
+		await locks.get(filepath)
+	}
+
+	// Create a new lock
+	let resolve: () => void
+	const lockPromise = new Promise<void>((r) => {
+		resolve = r
+	})
+	locks.set(filepath, lockPromise)
+	lockResolvers.set(filepath, resolve!)
+}
+
+/**
+ * Release a previously acquired lock on a file
+ * Must be called after acquireLock() to prevent deadlocks
+ *
+ * @param filepath The absolute path to the file
+ */
+export function releaseLock(filepath: string): void {
+	const resolver = lockResolvers.get(filepath)
+	if (resolver) {
+		locks.delete(filepath)
+		lockResolvers.delete(filepath)
+		resolver()
+	}
 }

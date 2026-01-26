@@ -26,7 +26,7 @@ Careti builds on Cline while adding the following enhancements.
 - **[F05: Careti Account System](./f05-careti-account.md)**  
   Careti-only account management and authentication (gRPC-based).
 
-- **[F06: Agent Standardization (AAIF SoT)](./f06-agent-standardization.md)**  
+- **[F06: Agent Standardization (AAIF SoT)](./f06-agent-standard-claude-compat.md)**  
   Standardized `.agents/context` SoT, AGENTS.md hierarchy, and init scaffolding.
 
 ### AI Systems

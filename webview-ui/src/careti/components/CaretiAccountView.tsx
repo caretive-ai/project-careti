@@ -10,7 +10,7 @@ import { CreditBalance } from "@/components/account/CreditBalance"
 import CreditsHistoryTable from "@/components/account/CreditsHistoryTable"
 import { convertProtoUsageTransactions, getCaretUris } from "@/components/account/helpers"
 import VSCodeButtonLink from "@/components/common/VSCodeButtonLink"
-import { type CaretUser, handleSignOut } from "@/context/CaretAuthContext"
+import { type CaretUser, handleSignOut } from "@/context/CaretiAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CaretAccountServiceClient } from "@/services/grpc-client"
 
@@ -19,7 +19,7 @@ type AccountViewProps = {
 	onDone: () => void
 }
 
-type CaretAccountViewProps = {
+type CaretiAccountViewProps = {
 	caretUser: CaretUser
 }
 
@@ -43,14 +43,14 @@ const AccountView = ({ onDone, caretUser }: AccountViewProps) => {
 			</div>
 			<div className="flex-grow overflow-hidden pr-[8px] flex flex-col">
 				<div className="h-full mb-[5px]">
-					{caretUser?.uid ? <CaretAccountView caretUser={caretUser} /> : <AccountWelcomeView />}
+					{caretUser?.uid ? <CaretiAccountView caretUser={caretUser} /> : <AccountWelcomeView />}
 				</div>
 			</div>
 		</div>
 	)
 }
 
-export const CaretAccountView = ({ caretUser }: CaretAccountViewProps) => {
+export const CaretiAccountView = ({ caretUser }: CaretiAccountViewProps) => {
 	const { email, displayName, appBaseUrl, uid, photoUrl } = caretUser
 	const { featureConfig } = useExtensionState()
 	const [dropdownValue, setDropdownValue] = useState<string>(uid)

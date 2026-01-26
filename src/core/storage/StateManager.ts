@@ -1098,6 +1098,7 @@ export class StateManager {
 			zaiApiKey: this.secretsCache["zaiApiKey"],
 			minimaxApiKey: this.secretsCache["minimaxApiKey"],
 			hicapApiKey: this.secretsCache["hicapApiKey"],
+			serpApiKey: this.secretsCache["serpApiKey"], // CARETI MODIFICATION: SerpAPI for web search
 			aihubmixApiKey: this.secretsCache["aihubmixApiKey"],
 			bizRouterApiKey: this.secretsCache["bizRouterApiKey"],
 

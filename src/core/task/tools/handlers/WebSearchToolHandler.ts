@@ -63,8 +63,8 @@ export class WebSearchToolHandler implements IFullyManagedTool {
 			}
 			config.taskState.consecutiveMistakeCount = 0
 
-			// Get SerpAPI key
-			const serpApiKey = config.services.stateManager.getSecretKey("serpApiKey")
+			// Get SerpAPI key from API configuration
+			const serpApiKey = config.services.stateManager.getApiConfiguration().serpApiKey
 			if (!serpApiKey) {
 				return formatResponse.toolError(
 					"SerpAPI key is not configured. Please add your SerpAPI key in Settings > Features > Web Search.",

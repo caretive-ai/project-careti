@@ -4,6 +4,8 @@ import type { ComponentProps } from "react"
 import React, { memo, useEffect, useRef } from "react"
 import { useRemark } from "react-remark"
 import rehypeHighlight, { Options } from "rehype-highlight"
+// CARETI MODIFICATION: Add remark-gfm for GFM table support
+import remarkGfm from "remark-gfm"
 import styled from "styled-components"
 import type { Node } from "unist"
 import { visit } from "unist-util-visit"
@@ -298,6 +300,41 @@ const StyledMarkdown = styled.div<{ compact?: boolean }>`
 			text-decoration: underline;
 		}
 	}
+
+	/* CARETI MODIFICATION: Add GFM table styles */
+	table {
+		border-collapse: collapse;
+		width: 100%;
+		margin: 12px 0;
+		font-size: var(--vscode-font-size, 13px);
+	}
+
+	th,
+	td {
+		border: 1px solid var(--vscode-editorGroup-border, #424242);
+		padding: 8px 12px;
+		text-align: left;
+	}
+
+	th {
+		background-color: var(--vscode-editor-background, #1e1e1e);
+		font-weight: 600;
+	}
+
+	tr:nth-child(even) {
+		background-color: var(--vscode-list-hoverBackground, rgba(255, 255, 255, 0.04));
+	}
+
+	/* GFM strikethrough */
+	del {
+		text-decoration: line-through;
+		opacity: 0.7;
+	}
+
+	/* GFM task list */
+	input[type="checkbox"] {
+		margin-right: 6px;
+	}
 `
 
 const PreWithCopyButton = ({ children, ...preProps }: React.HTMLAttributes<HTMLPreElement>) => {
@@ -360,11 +397,19 @@ const remarkFilePathDetection = () => {
 
 const MarkdownBlock = memo(({ markdown, compact }: MarkdownBlockProps) => {
 	const [reactContent, setMarkdown] = useRemark({
+		// CARETI MODIFICATION: Add onError handler to catch silent failures
+		onError: (error: Error) => {
+			console.error("[MarkdownBlock] Markdown parsing error:", error)
+		},
 		remarkPlugins: [
+			// CARETI MODIFICATION: Add remarkGfm for GFM table, strikethrough, tasklist support
+			// Type cast needed due to version mismatch between react-remark and remark-gfm v3
+			remarkGfm as any,
 			remarkPreventBoldFilenames,
 			remarkUrlToLink,
 			remarkHighlightActMode,
-			remarkFilePathDetection,
+			// TEMP: remarkFilePathDetection disabled for testing - async plugin may break react-remark
+			// remarkFilePathDetection,
 			() => {
 				return (tree) => {
 					visit(tree, "code", (node: any) => {

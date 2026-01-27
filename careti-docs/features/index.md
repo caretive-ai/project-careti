@@ -65,6 +65,9 @@ Careti은 Cline을 기반으로 한 자율 AI 코딩 어시스턴트로, 다음�
 - **[F16: 웹 도구 및 슬래시 명령](./f16-web-tools-and-slash-commands.md)**
   Web Search, Explain Changes, Use Skill 도구 (Cline v3.49.1 포팅)
 
+- **[F17: GFM 테이블 및 마크다운 확장](./f17-gfm-table-markdown-support.md)**
+  GitHub Flavored Markdown 테이블, 취소선 등 확장 마크다운 지원 (Cline 미지원 기능)
+
 ---
 
 ## 기능 맵
@@ -88,11 +91,12 @@ Careti 기능
 │   ├── Provider Setup
 │   ├── 입력 히스토리
 │   └── 지식 동기화 시스템
-└── 도구 확장 (F13-F16)
+└── 도구 확장 (F13-F17)
     ├── 이미지 생성 도구
     ├── 문서 읽기 도구 (PDF, HWPX, HWP, PPTX)
     ├── 스마트 편집 엔진 (9단계 Fuzzy Matching)
-    └── 웹 도구 및 슬래시 명령 (Web Search, Explain Changes)
+    ├── 웹 도구 및 슬래시 명령 (Web Search, Explain Changes)
+    └── GFM 테이블 및 마크다운 확장 (Cline 미지원)
 ```
 
 ## 개발 가이드
@@ -112,5 +116,5 @@ Careti 기능
 
 ---
 
-**최종 업데이트**: 2026-01-26
-**문서 버전**: v2.5 (F16 웹 도구 및 슬래시 명령 추가)
+**최종 업데이트**: 2026-01-27
+**문서 버전**: v2.6 (F17 GFM 테이블 및 마크다운 확장 추가)

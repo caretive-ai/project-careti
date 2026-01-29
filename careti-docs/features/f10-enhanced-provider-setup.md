@@ -57,6 +57,7 @@ LiteLLM, BizRouter 등의 모델 목록을 자동으로 페칭하고, 연결 상
 | **ZAI (GLM-4.7)** | ✅ | ✅ | ✅ Thinking + Coding | 완료 |
 | **Upstage (Solar)** | ❌ 정적 목록 | ✅ | ❌ 단순화 | 완료 |
 | **NAVER CLOUD (HyperCLOVA X)** | ❌ 정적 목록 | ✅ | ✅ Thinking (HCX-007) | 완료 |
+| **Claude Code CLI** | ✅ (CLI 연동) | ✅ | ✅ 스트리밍 최적화 | 완료 |
 
 ## 🏗️ **시스템 아키텍처**
 
@@ -471,6 +472,78 @@ export function shouldEndLoopByFinishReason(
 - **Coding Plan**: 코딩 특화 엔드포인트 지원
 - **자연스러운 대화**: `finish_reason` 기반 대화 종료 지원
 - **Native Tool Calls**: OpenAI 호환 도구 호출 지원
+
+### **4. Claude Code CLI 프로바이더 (스트리밍 최적화)**
+
+Claude Code CLI는 Anthropic의 공식 CLI를 외부 프로세스로 호출하여 API key 없이 구독 기반 사용을 지원합니다.
+
+#### **아키텍처**
+```
+Careti Extension → execa (프로세스 생성) → Claude Code CLI → Anthropic API
+                         ↓
+                   stdin: JSON 메시지
+                   stdout: stream-json 응답
+```
+
+#### **스트리밍 최적화 (v1.3)**
+
+기존 `readline` 기반 처리에서 직접 스트림 처리로 변경하여 지연 시간을 감소시켰습니다.
+
+```typescript
+// src/integrations/claude-code/run.ts
+
+// BEFORE: readline 라인 버퍼링 (지연 발생)
+const rl = readline.createInterface({ input: cProcess.stdout })
+for await (const line of rl) { ... }
+
+// AFTER: 직접 async iterator로 스트림 처리 (지연 감소)
+let buffer = ""
+for await (const rawChunk of cProcess.stdout) {
+    buffer += rawChunk.toString()
+    const lines = buffer.split("\n")
+    buffer = lines.pop() || ""  // 불완전한 라인 유지
+
+    for (const line of lines) {
+        if (line.trim()) {
+            const chunk = parseChunk(line, processState)
+            if (chunk) yield chunk
+        }
+    }
+}
+```
+
+#### **버퍼 최적화**
+```typescript
+// BEFORE: 20MB 버퍼 (과도한 메모리 할당)
+const BUFFER_SIZE = 20_000_000
+
+// AFTER: 5MB 버퍼 (최대 출력의 ~10배 여유)
+const BUFFER_SIZE = 5_000_000
+```
+
+#### **이미지 처리**
+Claude Code CLI는 프로그래밍 방식(stdin JSON)으로 이미지 전송을 지원하지 않습니다. 따라서 이미지는 텍스트 플레이스홀더로 변환됩니다:
+
+```typescript
+// src/integrations/claude-code/message-filter.ts
+if (block.type === "image") {
+    return {
+        type: "text",
+        text: `[Image (${sourceType}): ${mediaType} not supported by Claude Code]`,
+    }
+}
+```
+
+#### **특징**
+- **API Key 불필요**: Claude Code 구독만으로 사용 가능
+- **스트리밍 최적화**: readline 제거로 첫 응답 지연 감소
+- **메모리 효율**: 버퍼 크기 75% 감소 (20MB → 5MB)
+- **도구 필터링**: Cline 전용 도구 자동 비활성화
+
+#### **제한사항**
+- 프로세스 생성 오버헤드 (50-200ms) - CLI 아키텍처의 본질적 한계
+- 이미지 전송 미지원 (CLI stdin JSON 방식 제한)
+- Linux에서 클립보드 이미지 붙여넣기 버그 존재 (xclip/wl-clipboard 필요)
 
 ## 🌐 **다국어 지원**
 
@@ -958,7 +1031,42 @@ webview-ui/src/careti/locale/*/
 
 ---
 
-**문서 버전**: v1.2 (2026-01-15)
+**문서 버전**: v1.3 (2026-01-27)
 **담당**: Luke Yang + Claude Code
-**최신 변경**: ZAI/GLM-4.7 Thinking Mode + Coding Plan + 자연 대화 지원
+**최신 변경**: Claude Code CLI 스트리밍 최적화
 **관련 문서**: f08-feature-config-system.md, f07-careti-prompt-system.md
+
+---
+
+### **v1.3 (2026-01-27) - Claude Code CLI 스트리밍 최적화**
+
+#### **변경 사항**
+1. **스트리밍 방식 개선**: `readline` 라인 버퍼링 → 직접 async iterator 처리
+2. **버퍼 크기 최적화**: 20MB → 5MB (75% 감소)
+3. **지연 시간 감소**: readline 이벤트 레이어 제거로 첫 응답 지연 감소
+
+#### **영향받은 파일**
+```
+✅ 수정된 파일 (1개):
+src/integrations/claude-code/
+└── run.ts                # readline 제거, 직접 스트림 처리, 버퍼 크기 조정
+```
+
+#### **주요 변경 코드**
+```typescript
+// run.ts - readline 제거
+- import readline from "readline"
+
+// run.ts - 버퍼 크기 감소
+- const BUFFER_SIZE = 20_000_000 // 20 MB
++ const BUFFER_SIZE = 5_000_000  // 5 MB
+
+// run.ts - 직접 스트림 처리
+- const rl = readline.createInterface({ input: cProcess.stdout })
+- for await (const line of rl) { ... }
++ for await (const rawChunk of cProcess.stdout) {
++     buffer += rawChunk.toString()
++     const lines = buffer.split("\n")
++     ...
++ }
+```

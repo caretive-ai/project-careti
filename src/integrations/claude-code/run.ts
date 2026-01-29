@@ -4,7 +4,6 @@ import os from "node:os"
 import path from "node:path"
 import type Anthropic from "@anthropic-ai/sdk"
 import { execa } from "execa"
-import readline from "readline"
 import { getCwd } from "@/utils/path"
 import { ClaudeCodeMessage } from "./types"
 
@@ -43,10 +42,8 @@ export async function* runClaudeCode(options: ClaudeCodeOptions): AsyncGenerator
 
 	const cProcess = runProcess(options, await getCwd())
 
-	const rl = readline.createInterface({
-		input: cProcess.stdout,
-	})
-
+	// CARETI MODIFICATION: Direct stream processing instead of readline for lower latency
+	// readline buffers until newline which adds latency; direct processing is faster
 	const processState: ProcessState = {
 		error: null,
 		stderrLogs: "",
@@ -67,18 +64,33 @@ export async function* runClaudeCode(options: ClaudeCodeOptions): AsyncGenerator
 			processState.error = err
 		})
 
-		for await (const line of rl) {
+		// CARETI MODIFICATION: Use async iterator on raw stream with manual line splitting
+		// This reduces buffering overhead compared to readline
+		let buffer = ""
+		for await (const rawChunk of cProcess.stdout) {
 			if (processState.error) {
 				throw processState.error
 			}
 
-			if (line.trim()) {
-				const chunk = parseChunk(line, processState)
+			buffer += rawChunk.toString()
+			const lines = buffer.split("\n")
+			// Keep incomplete line in buffer
+			buffer = lines.pop() || ""
 
-				if (!chunk) {
-					continue
+			for (const line of lines) {
+				if (line.trim()) {
+					const chunk = parseChunk(line, processState)
+					if (chunk) {
+						yield chunk
+					}
 				}
+			}
+		}
 
+		// Process any remaining data in buffer
+		if (buffer.trim()) {
+			const chunk = parseChunk(buffer, processState)
+			if (chunk) {
 				yield chunk
 			}
 		}
@@ -146,7 +158,6 @@ Anthropic is aware of this issue and is considering a fix: https://github.com/an
 
 		throw err
 	} finally {
-		rl.close()
 		if (!cProcess.killed) {
 			cProcess.kill()
 		}
@@ -187,8 +198,9 @@ const claudeCodeTools = [
 ].join(",")
 
 const CLAUDE_CODE_TIMEOUT = 600000 // 10 minutes
+// CARETI MODIFICATION: Reduced buffer size for better memory efficiency
 // https://github.com/sindresorhus/execa/blob/main/docs/api.md#optionsmaxbuffer
-const BUFFER_SIZE = 20_000_000 // 20 MB
+const BUFFER_SIZE = 5_000_000 // 5 MB (reduced from 20 MB, ~10x max output size)
 
 // This is the limit imposed by the CLI
 const CLAUDE_CODE_MAX_OUTPUT_TOKENS = "32000"

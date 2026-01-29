@@ -13,7 +13,7 @@ import { ApiHandler, CommonApiHandlerOptions } from ".."
 import { withRetry } from "../retry"
 import { convertToOpenAiMessages } from "../transform/openai-format"
 import { ApiStream } from "../transform/stream"
-import { getOpenAIToolParams, ToolCallProcessor } from "../transform/tool-call-processor"
+import { ToolCallProcessor } from "../transform/tool-call-processor"
 
 const UPSTAGE_BASE_URL = "https://api.upstage.ai/v1"
 
@@ -60,12 +60,18 @@ export class UpstageHandler implements ApiHandler {
 			...convertToOpenAiMessages(messages),
 		]
 
+		// CARETI MODIFICATION: Upstage doesn't support parallel_tool_calls parameter
+		const toolParams = tools?.length
+			? { tools, tool_choice: "auto" as const }
+			: {}
+
 		const body: Record<string, any> = {
 			model: model.id,
 			messages: openAiMessages,
 			max_tokens: model.info.maxTokens,
 			stream: true,
-			...getOpenAIToolParams(tools),
+			stream_options: { include_usage: true }, // CARETI MODIFICATION: Request usage in stream
+			...toolParams,
 		}
 
 		const response = await fetch(`${UPSTAGE_BASE_URL}/chat/completions`, {

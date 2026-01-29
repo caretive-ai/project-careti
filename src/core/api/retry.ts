@@ -44,23 +44,32 @@ export function withRetry(options: RetryOptions = {}) {
 					}
 
 					// Get retry delay from header or calculate exponential backoff
-					// Check various rate limit headers
+					// Check various rate limit headers (including Naver Cloud format)
 					const retryAfter =
 						error.headers?.["retry-after"] ||
+						error.headers?.["x-ratelimit-reset-requests"] || // CARETI MODIFICATION: Naver Cloud format
 						error.headers?.["x-ratelimit-reset"] ||
 						error.headers?.["ratelimit-reset"] ||
 						error.retryAfter
 
 					let delay: number
 					if (retryAfter) {
-						// Handle both delta-seconds and Unix timestamp formats
-						const retryValue = parseInt(retryAfter, 10)
-						if (retryValue > Date.now() / 1000) {
-							// Unix timestamp
-							delay = retryValue * 1000 - Date.now()
+						// CARETI MODIFICATION: Handle Naver Cloud "60s" format and other formats
+						const retryString = String(retryAfter).trim()
+						const secondsMatch = retryString.match(/^(\d+)s$/i)
+						if (secondsMatch) {
+							// Naver Cloud format: "60s"
+							delay = parseInt(secondsMatch[1], 10) * 1000
 						} else {
-							// Delta seconds
-							delay = retryValue * 1000
+							// Handle both delta-seconds and Unix timestamp formats
+							const retryValue = parseInt(retryString, 10)
+							if (retryValue > Date.now() / 1000) {
+								// Unix timestamp
+								delay = retryValue * 1000 - Date.now()
+							} else {
+								// Delta seconds
+								delay = retryValue * 1000
+							}
 						}
 					} else {
 						// Use exponential backoff if no header

@@ -3954,8 +3954,17 @@ export const huaweiCloudMaasModels = {
 // CARETI MODIFICATION: Upstage Solar
 export type UpstageModelId = keyof typeof upstageModels
 export interface UpstageModelInfo extends ModelInfo {}
-export const upstageDefaultModelId: UpstageModelId = "solar-pro2"
+export const upstageDefaultModelId: UpstageModelId = "solar-pro3"
 export const upstageModels = {
+	"solar-pro3": {
+		maxTokens: 4_096,
+		contextWindow: 32_768,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.3, // TBD - placeholder pricing
+		outputPrice: 0.9, // TBD - placeholder pricing
+		description: "Upstage Solar Pro 3 - Latest flagship model with enhanced capabilities.",
+	},
 	"solar-pro2": {
 		maxTokens: 4_096,
 		contextWindow: 32_768,

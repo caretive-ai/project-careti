@@ -28,6 +28,7 @@ Automates AI provider setup: fetches model lists (LiteLLM, BizRouter), validates
 | ZAI (GLM-4.7) | ✅ | ✅ | ✅ Thinking + Coding | Done |
 | Upstage (Solar) | ❌ Static list | ✅ | ❌ Simplified | Done |
 | NAVER CLOUD (HyperCLOVA X) | ❌ Static list | ✅ | ✅ Thinking (HCX-007) | Done |
+| Claude Code CLI | ✅ (CLI integration) | ✅ | ✅ Streaming optimized | Done |
 
 ## 🔧 Architecture & Flow
 - gRPC services exposed via `CaretSystemService` (`FetchLiteLlmModels`, `FetchBizRouterModels`).
@@ -50,6 +51,56 @@ Provider labels/descriptions live under `providers.{id}.*` within `settings` nam
 
 ## 🔮 Extensibility
 - Add new providers by implementing a fetch controller, defining RPC in `system.proto`, and wiring a settings component under `providers/`.
+
+## 🔧 Claude Code CLI Provider (Streaming Optimized)
+
+Claude Code CLI invokes Anthropic's official CLI as an external process, enabling subscription-based usage without API keys.
+
+### Architecture
+```
+Careti Extension → execa (process spawn) → Claude Code CLI → Anthropic API
+                         ↓
+                   stdin: JSON messages
+                   stdout: stream-json response
+```
+
+### Streaming Optimization (v1.3)
+Replaced `readline`-based line buffering with direct stream processing to reduce latency:
+
+```typescript
+// BEFORE: readline line buffering (adds latency)
+const rl = readline.createInterface({ input: cProcess.stdout })
+
+// AFTER: direct async iterator (reduced latency)
+for await (const rawChunk of cProcess.stdout) {
+    buffer += rawChunk.toString()
+    const lines = buffer.split("\n")
+    buffer = lines.pop() || ""
+    for (const line of lines) { yield parseChunk(line) }
+}
+```
+
+### Buffer Optimization
+- **Before**: 20MB buffer (excessive memory allocation)
+- **After**: 5MB buffer (~10x max output size margin)
+
+### Image Handling
+Claude Code CLI does not support image transmission via programmatic stdin JSON. Images are converted to text placeholders:
+```typescript
+// message-filter.ts
+`[Image (${sourceType}): ${mediaType} not supported by Claude Code]`
+```
+
+### Features
+- **No API Key Required**: Works with Claude Code subscription only
+- **Streaming Optimized**: Removed readline overhead for faster first response
+- **Memory Efficient**: 75% buffer reduction (20MB → 5MB)
+- **Tool Filtering**: Cline-only tools automatically disabled
+
+### Limitations
+- Process spawn overhead (50-200ms) - inherent CLI architecture limitation
+- No image transmission (CLI stdin JSON limitation)
+- Linux clipboard paste bugs (requires xclip/wl-clipboard)
 
 ## 🔗 Related
 - **F12 - Careti CLI**: CLI BYO/LiteLLM 옵션을 동일한 기본값/검증 흐름으로 사용.

@@ -10,7 +10,7 @@
 		"local": "Локальный",
 		"remoteHost": "Удаленный хост"
 	},
-	"caretWantsToUseBrowser": "Caret хочет использовать браузер:",
+	"caretWantsToUseBrowser": "Careti хочет использовать браузер:",
 	"paginationStep": "Шаг {{currentPage}} из {{totalPages}}",
 	"paginationPrevious": "Назад",
 	"paginationNext": "Далее"

@@ -60,6 +60,7 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		aihubmixApiKey,
 		mcpOAuthSecrets,
 		nousResearchApiKey,
+		serpApiKey, // CARETI MODIFICATION: SerpAPI
 	] = await Promise.all([
 		context.secrets.get("apiKey") as Promise<Secrets["apiKey"]>,
 		context.secrets.get("openRouterApiKey") as Promise<Secrets["openRouterApiKey"]>,
@@ -108,6 +109,7 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		context.secrets.get("aihubmixApiKey") as Promise<Secrets["aihubmixApiKey"]>,
 		context.secrets.get("mcpOAuthSecrets") as Promise<Secrets["mcpOAuthSecrets"]>,
 		context.secrets.get("nousResearchApiKey") as Promise<Secrets["nousResearchApiKey"]>,
+		context.secrets.get("serpApiKey") as Promise<Secrets["serpApiKey"]>, // CARETI MODIFICATION: SerpAPI
 	])
 
 	return {
@@ -159,6 +161,7 @@ export async function readSecretsFromDisk(context: ExtensionContext): Promise<Se
 		aihubmixApiKey,
 		mcpOAuthSecrets,
 		nousResearchApiKey,
+		serpApiKey, // CARETI MODIFICATION: SerpAPI
 	}
 }
 
@@ -342,6 +345,9 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 		const openTelemetryLogMaxQueueSize =
 			context.globalState.get<GlobalStateAndSettings["openTelemetryLogMaxQueueSize"]>("openTelemetryLogMaxQueueSize")
 		const subagentsEnabled = context.globalState.get<GlobalStateAndSettings["subagentsEnabled"]>("subagentsEnabled")
+		// CARETI MODIFICATION: Background edits setting
+		const backgroundEditEnabled =
+			context.globalState.get<GlobalStateAndSettings["backgroundEditEnabled"]>("backgroundEditEnabled")
 
 		// Get mode-related configurations
 		const mode = context.globalState.get<GlobalStateAndSettings["mode"]>("mode")
@@ -755,6 +761,8 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			// CARETI MODIFICATION: Skills system - default disabled
 			skillsEnabled: skillsEnabled ?? false,
 			subagentsEnabled: subagentsEnabled ?? false,
+			// CARETI MODIFICATION: Background edits - default disabled
+			backgroundEditEnabled: backgroundEditEnabled ?? false,
 			lastDismissedInfoBannerVersion: lastDismissedInfoBannerVersion ?? 0,
 			lastDismissedModelBannerVersion: lastDismissedModelBannerVersion ?? 0,
 			lastDismissedCliBannerVersion: lastDismissedCliBannerVersion ?? 0,
@@ -853,6 +861,7 @@ export async function resetGlobalState(controller: Controller) {
 		"aihubmixApiKey",
 		"mcpOAuthSecrets",
 		"nousResearchApiKey",
+		"serpApiKey", // CARETI MODIFICATION: SerpAPI
 	]
 	await Promise.all(secretKeys.map((key) => context.secrets.delete(key)))
 	await controller.stateManager.reInitialize()

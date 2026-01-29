@@ -203,7 +203,7 @@ Clineで対応していないモデルをCaretiで使用できます。
 | F03 | ブランディング & UI | [詳細](../features.en/f03-branding-ui.md) |
 | F04 | Cline互換性 | [詳細](../features.en/f04-cline-compatibility-and-cli.md) |
 | F05 | Caretiアカウント | [詳細](../features.en/f05-careti-account.md) |
-| F06 | エージェント標準化 (AAIF) | [詳細](../features.en/f06-agent-standardization.md) |
+| F06 | エージェント標準化 (AAIF) | [詳細](../features.en/f06-agent-standard-claude-compat.md) |
 | F07 | プロンプトシステム | [詳細](../features.en/f07-careti-prompt-system.md) |
 | F08 | ペルソナシステム | [詳細](../features.en/f08-persona-system.md) |
 | F09 | Feature Config | [詳細](../features.en/f09-feature-config-system.md) |

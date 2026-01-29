@@ -159,7 +159,9 @@ Anthropic is aware of this issue and is considering a fix: https://github.com/an
 
 // We want the model to use our custom tool format instead of built-in tools.
 // Disabling built-in tools prevents tool-only responses and ensures text output.
+// CARETI MODIFICATION: Added Cline-specific tools to prevent conflicts
 const claudeCodeTools = [
+	// Claude Code native tools
 	"Task",
 	"Bash",
 	"Glob",
@@ -176,6 +178,12 @@ const claudeCodeTools = [
 	"TodoRead",
 	"TodoWrite",
 	"WebSearch",
+	// Cline/Careti-specific tools (prevent Claude Code from calling these)
+	"ask_followup_question",
+	"attempt_completion",
+	"AskUserQuestion",
+	"AskFollowupQuestion",
+	"AttemptCompletion",
 ].join(",")
 
 const CLAUDE_CODE_TIMEOUT = 600000 // 10 minutes

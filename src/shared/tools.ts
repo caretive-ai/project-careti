@@ -32,7 +32,9 @@ export enum ClineDefaultTool {
 	REPORT_BUG = "report_bug",
 	NEW_RULE = "new_rule",
 	APPLY_PATCH = "apply_patch",
+	GENERATE_EXPLANATION = "generate_explanation", // CARETI MODIFICATION: Explain code changes with AI comments
 	USE_SKILL = "use_skill", // CARETI MODIFICATION: Skills system - on-demand agent instructions
+	WEB_SEARCH = "web_search", // CARETI MODIFICATION: SerpAPI web search
 }
 
 // Array of all tool names for compatibility

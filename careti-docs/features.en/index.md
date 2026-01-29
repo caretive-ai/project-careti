@@ -26,7 +26,7 @@ Careti builds on Cline while adding the following enhancements.
 - **[F05: Careti Account System](./f05-careti-account.md)**  
   Careti-only account management and authentication (gRPC-based).
 
-- **[F06: Agent Standardization (AAIF SoT)](./f06-agent-standardization.md)**  
+- **[F06: Agent Standardization (AAIF SoT)](./f06-agent-standard-claude-compat.md)**  
   Standardized `.agents/context` SoT, AGENTS.md hierarchy, and init scaffolding.
 
 ### AI Systems
@@ -56,8 +56,11 @@ Careti builds on Cline while adding the following enhancements.
 - **[F13: Image Tool](./f13-image-tool.md)**
   Image generation, analysis, and history display features.
 
-- **[F15: Document Read Tool](./f14-document-read-tool.md)**
+- **[F14: Document Read Tool](./f14-document-read-tool.md)**
   LLM reads PDF, DOCX, HWPX, HWP, PPTX documents directly by path (Careti-only).
+
+- **[F17: GFM Table & Extended Markdown](./f17-gfm-table-markdown-support.md)**
+  GitHub Flavored Markdown tables, strikethrough, etc. (not supported in Cline)
 
 ---
 
@@ -82,9 +85,10 @@ Careti Features
 │   ├── Provider Setup
 │   ├── Input History
 │   └── Knowledge Parity
-└── Tools & Extensions (F13–F15)
+└── Tools & Extensions (F13–F17)
     ├── Image Tool
-    └── Document Read Tool (PDF, HWPX, HWP, PPTX)
+    ├── Document Read Tool (PDF, HWPX, HWP, PPTX)
+    └── GFM Table & Extended Markdown (not in Cline)
 ```
 
 ## How to Use These Docs
@@ -104,5 +108,5 @@ Each feature document provides:
 
 ---
 
-**Last Updated**: 2026-01-16
-**Document Version**: v2.3 (added Tools & Extensions section: F13 Image Tool, F15 Document Read Tool)
+**Last Updated**: 2026-01-27
+**Document Version**: v2.6 (added F17 GFM Table & Extended Markdown)

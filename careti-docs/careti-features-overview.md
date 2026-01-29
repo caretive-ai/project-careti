@@ -10,7 +10,7 @@ Careti은 Cline을 기반으로 한 VSCode AI 코딩 어시스턴트 확장 프�
 
 | 특징                                | 설명                    | 사용자 이점                      | 상세 문서                                         |
 | ----------------------------------- | ----------------------- | -------------------------------- | ------------------------------------------------- |
-| **🔧 에이전트 표준화(AAIF SoT)**          | `.agents/context` SoT + AGENTS 계층 + `/init` 스캐폴드 | 규칙 충돌 제거, 온보딩 가속 | [→ 상세보기](./features/f06-agent-standardization.md) |
+| **🔧 에이전트 표준화(AAIF SoT)**          | `.agents/context` SoT + AGENTS 계층 + `/init` 스캐폴드 | 규칙 충돌 제거, 온보딩 가속 | [→ 상세보기](./features/f06-agent-standard-claude-compat.md) |
 | **👤 계정 및 조직 관리**             | Auth0 기반 계정 시스템  | 팀 관리, 사용량 모니터링, 요금제 | [→ 상세보기](./features/account-organization.md) |
 | **🌍 다국어 i18n**                   | 4개국 완전 다국어 지원  | 한국어/영어/일본어/중국어 UI     | [→ 상세보기](./features/multilingual-i18n.md)    |
 | **📋 로깅 시스템**                   | 통합 로깅 아키텍처      | 개발 디버깅, 오류 추적 강화      | [→ 상세보기](./features/logging-system.md)       |
@@ -93,7 +93,7 @@ careti/
 
 ### **🔍 특징별 상세 문서**
 
-- [에이전트 표준화(AAIF SoT)](./features/f06-agent-standardization.md) - `.agents/context` SoT + AGENTS 계층 + `/init`
+- [에이전트 표준화(AAIF SoT)](./features/f06-agent-standard-claude-compat.md) - `.agents/context` SoT + AGENTS 계층 + `/init`
 - [계정 및 조직 관리](./features/account-organization.md) - 계정 및 조직 관리
 - [다국어 i18n](./features/multilingual-i18n.md) - 다국어 지원 시스템
 - [챗봇/에이전트 모드](./features/chatbot-agent-mode.md) - 모드 시스템

@@ -1,4 +1,4 @@
-import { CaretModeManager } from "@careti/core/modes/CaretModeManager"
+import { CaretiModeManager } from "@careti/core/modes/CaretiModeManager"
 import type { Controller } from "@/core/controller"
 import { Logger } from "@/services/logging/Logger"
 import type * as proto from "@/shared/proto"
@@ -12,7 +12,7 @@ export async function GetCaretMode(
 	_request: proto.careti.GetCaretModeRequest,
 ): Promise<proto.careti.GetCaretModeResponse> {
 	try {
-		const currentMode = CaretModeManager.getCurrentCaretMode()
+		const currentMode = CaretiModeManager.getCurrentCaretMode()
 		Logger.debug(`[GetCaretMode] Current Careti mode: ${currentMode}`)
 
 		return {

@@ -7,8 +7,8 @@ import { BooleanRequest, EmptyRequest, StringRequest } from "@shared/proto/cline
 import { useCallback, useEffect, useMemo } from "react"
 import { useMount } from "react-use"
 import { usePersistentInputHistory } from "@/careti/hooks/usePersistentInputHistory"; // CARETI MODIFICATION: Persistent input history
-// CARETI MODIFICATION: use CaretWebviewLogger for webview logs
-import WebviewLogger from "@/careti/utils/CaretWebviewLogger"
+// CARETI MODIFICATION: use CaretiWebviewLogger for webview logs
+import WebviewLogger from "@/careti/utils/CaretiWebviewLogger"
 import { t } from "@/careti/utils/i18n"
 // CARETI MODIFICATION: use careti image optimization utilities
 import { optimizeImageDataUrl } from "@/careti/utils/imageOptimization"

@@ -1,11 +1,13 @@
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { memo } from "react"
 import { t } from "@/careti/utils/i18n"
-import { AccountServiceClient } from "@/services/grpc-client"
+// CARETI MODIFICATION: Use CaretAccountServiceClient for Careti auth flow
+import { CaretAccountServiceClient } from "@/services/grpc-client"
 
 const AccountOptions = () => {
 	const handleAccountClick = () => {
-		AccountServiceClient.accountLoginClicked(EmptyRequest.create()).catch((err) =>
+		// CARETI MODIFICATION: Use caretAccountLoginClicked instead of accountLoginClicked
+		CaretAccountServiceClient.caretAccountLoginClicked(EmptyRequest.create()).catch((err) =>
 			console.error(t("account.failedToGetLoginUrl", "common"), err),
 		)
 	}

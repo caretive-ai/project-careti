@@ -1,7 +1,7 @@
 import type { CaretModeSystem } from "@careti/shared/ModeSystem"
 import { randomBytes } from "crypto"
 import * as vscode from "vscode"
-import { CaretUser } from "@/shared/CaretAccount"
+import { CaretUser } from "@/shared/CaretiAccount"
 
 /**
  * Singleton class for global Careti functionality access
@@ -172,7 +172,7 @@ export class CaretiGlobalManager {
 	// 	// Fetch user profile using Apollo Client
 	// 	try {
 	// 		// this._userInfo = await this.apolloManager.getUserProfile()
-	// 		const caretAccountService = CaretAccountService.getInstance()
+	// 		const caretAccountService = CaretiAccountService.getInstance()
 	// 		const userInfo = await caretAccountService.fetchMe()
 	// 		console.log("Careti Global Manager userInfo=====>", userInfo)
 	// 		console.log("Careti router Model", userInfo?.models)

@@ -124,6 +124,7 @@ export interface SystemPromptContext {
 	readonly runtimePlaceholders?: Readonly<Record<string, unknown>>
 	readonly yoloModeToggled?: boolean
 	readonly clineWebToolsEnabled?: boolean
+	readonly serpApiKeyConfigured?: boolean // CARETI MODIFICATION: SerpAPI web search
 	readonly isMultiRootEnabled?: boolean
 	readonly workspaceRoots?: Array<{ path: string; name: string; vcs?: string }>
 	readonly isSubagentsEnabledAndCliInstalled?: boolean

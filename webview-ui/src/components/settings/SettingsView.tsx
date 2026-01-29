@@ -14,9 +14,9 @@ import {
 // CARETI MODIFICATION: Added useMemo for i18n reactivity
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useEvent } from "react-use"
-// CARETI MODIFICATION: Import CaretFooter for About tab
+// CARETI MODIFICATION: Import CaretiFooter for About tab
 // CARETI MODIFICATION: Import i18n context for language reactivity
-import { useCaretI18nContext } from "@/careti/context/CaretI18nContext"
+import { useCaretiI18nContext } from "@/careti/context/CaretiI18nContext"
 import { t } from "@/careti/utils/i18n"
 import HeroTooltip from "@/components/common/HeroTooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -113,7 +113,7 @@ type SettingsViewProps = {
 
 const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 	// CARETI MODIFICATION: Use i18n context to detect language changes
-	const { language } = useCaretI18nContext()
+	const { language } = useCaretiI18nContext()
 
 	// CARETI MODIFICATION: Use dynamic function with language dependency for i18n updates
 	const settingsTabs = useMemo(() => getSettingsTabs(), [language])

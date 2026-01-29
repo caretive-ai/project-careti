@@ -3,7 +3,7 @@
  * This logger wraps the standard console logging methods and prefixes them with a component name.
  * It only outputs logs in development mode to keep the production console clean.
  */
-class CaretWebviewLogger {
+class CaretiWebviewLogger {
 	private component: string
 	private isDev: boolean
 
@@ -57,5 +57,5 @@ class CaretWebviewLogger {
 	}
 }
 
-export { CaretWebviewLogger }
-export const caretWebviewLogger = new CaretWebviewLogger("CaretWebview")
+export { CaretiWebviewLogger }
+export const caretWebviewLogger = new CaretiWebviewLogger("CaretWebview")

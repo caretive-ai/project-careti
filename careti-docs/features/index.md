@@ -26,7 +26,7 @@ Careti은 Cline을 기반으로 한 자율 AI 코딩 어시스턴트로, 다음�
 - **[F05: Careti 계정 시스템](./f05-careti-account.md)**
   Careti 전용 계정 관리 및 인증 시스템 (gRPC 기반)
 
-- **[F06: 에이전트 표준화(AAIF SoT)](./f06-agent-standardization.md)**
+- **[F06: 에이전트 표준화(AAIF SoT)](./f06-agent-standard-claude-compat.md)**
   `.agents/context` 단일 SoT 및 표준 구조
 
 ### AI 시스템 (Intelligence)
@@ -56,8 +56,17 @@ Careti은 Cline을 기반으로 한 자율 AI 코딩 어시스턴트로, 다음�
 - **[F13: 이미지 생성 도구](./f13-image-tool.md)**
   이미지 생성, 저장, 히스토리 표시 기능
 
-- **[F15: 문서 읽기 도구](./f14-document-read-tool.md)**
+- **[F14: 문서 읽기 도구](./f14-document-read-tool.md)**
   LLM이 PDF, DOCX, HWPX, HWP, PPTX 등 문서를 경로만으로 직접 읽기 (Careti 전용)
+
+- **[F15: 스마트 편집 엔진](./f15-smart-edit-engine.md)**
+  9단계 Fuzzy Matching으로 AI 편집 성공률 +50% 향상, 토큰 98% 절감
+
+- **[F16: 웹 도구 및 슬래시 명령](./f16-web-tools-and-slash-commands.md)**
+  Web Search, Explain Changes, Use Skill 도구 (Cline v3.49.1 포팅)
+
+- **[F17: GFM 테이블 및 마크다운 확장](./f17-gfm-table-markdown-support.md)**
+  GitHub Flavored Markdown 테이블, 취소선 등 확장 마크다운 지원 (Cline 미지원 기능)
 
 ---
 
@@ -82,9 +91,12 @@ Careti 기능
 │   ├── Provider Setup
 │   ├── 입력 히스토리
 │   └── 지식 동기화 시스템
-└── 도구 확장 (F13-F15)
+└── 도구 확장 (F13-F17)
     ├── 이미지 생성 도구
-    └── 문서 읽기 도구 (PDF, HWPX, HWP, PPTX)
+    ├── 문서 읽기 도구 (PDF, HWPX, HWP, PPTX)
+    ├── 스마트 편집 엔진 (9단계 Fuzzy Matching)
+    ├── 웹 도구 및 슬래시 명령 (Web Search, Explain Changes)
+    └── GFM 테이블 및 마크다운 확장 (Cline 미지원)
 ```
 
 ## 개발 가이드
@@ -104,5 +116,5 @@ Careti 기능
 
 ---
 
-**최종 업데이트**: 2026-01-16
-**문서 버전**: v2.3 (F15에 HWP 5.0 지원 추가)
+**최종 업데이트**: 2026-01-27
+**문서 버전**: v2.6 (F17 GFM 테이블 및 마크다운 확장 추가)

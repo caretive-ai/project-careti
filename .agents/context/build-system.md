@@ -1,5 +1,36 @@
 # Build System Rules
 
+## Dependency Installation
+
+### Package Manager
+This project supports both **npm** and **pnpm**. Use standard `npm install` without additional flags.
+
+### Platform-specific Dependencies (hwpjs)
+HWP document parsing packages are in `optionalDependencies`:
+```json
+"optionalDependencies": {
+  "@ohah/hwpjs-darwin-arm64": "...",
+  "@ohah/hwpjs-darwin-x64": "...",
+  "@ohah/hwpjs-linux-x64-gnu": "...",
+  "@ohah/hwpjs-wasm32-wasi": "...",
+  "@ohah/hwpjs-win32-x64-msvc": "..."
+}
+```
+
+This allows `npm install` to skip incompatible platform binaries without errors.
+
+### Installation Commands
+```bash
+# Install all dependencies (backend + frontend)
+npm run install:all
+
+# Backend only
+npm install
+
+# Frontend only
+cd webview-ui && npm install
+```
+
 ## Build Architecture
 
 ### Core Principle: Separation of Concerns

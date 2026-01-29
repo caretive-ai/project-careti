@@ -203,7 +203,7 @@ Von Cline nicht unterstützte Modelle, in Careti verfügbar.
 | F03 | Branding und UI | [Ansehen](../features.en/f03-branding-ui.md) |
 | F04 | Cline-Kompatibilität | [Ansehen](../features.en/f04-cline-compatibility-and-cli.md) |
 | F05 | Careti-Konto | [Ansehen](../features.en/f05-careti-account.md) |
-| F06 | Agenten-Standardisierung (AAIF) | [Ansehen](../features.en/f06-agent-standardization.md) |
+| F06 | Agenten-Standardisierung (AAIF) | [Ansehen](../features.en/f06-agent-standard-claude-compat.md) |
 | F07 | Prompt-System | [Ansehen](../features.en/f07-careti-prompt-system.md) |
 | F08 | Persona-System | [Ansehen](../features.en/f08-persona-system.md) |
 | F09 | Feature Config | [Ansehen](../features.en/f09-feature-config-system.md) |

@@ -13,4 +13,5 @@ export enum ModelFamily {
 	GENERIC = "generic",
 	XS = "xs",
 	NATIVE_NEXT_GEN = "native-next-gen", // Uses native tool calling
+	DEVSTRAL = "devstral", // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 }

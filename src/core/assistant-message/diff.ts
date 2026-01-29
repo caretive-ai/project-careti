@@ -1,3 +1,17 @@
+// CARETI MODIFICATION: Import SmartEditEngine for enhanced fallback matching
+import {
+	WhitespaceNormalizedReplacer,
+	IndentationFlexibleReplacer,
+	EscapeNormalizedReplacer,
+	TrimmedBoundaryReplacer,
+	ContextAwareReplacer,
+	levenshtein,
+} from "@careti/core/editing"
+
+// Similarity thresholds for block anchor fallback matching
+const SINGLE_CANDIDATE_SIMILARITY_THRESHOLD = 0.0
+const MULTIPLE_CANDIDATES_SIMILARITY_THRESHOLD = 0.3
+
 const SEARCH_BLOCK_START = "------- SEARCH"
 const SEARCH_BLOCK_END = "======="
 const REPLACE_BLOCK_END = "+++++++ REPLACE"
@@ -97,21 +111,9 @@ function lineTrimmedFallbackMatch(originalContent: string, searchContent: string
  * the correct location by matching the beginning and end, even if the exact content
  * differs slightly.
  *
- * The matching strategy:
- * 1. Only attempts to match blocks of 3 or more lines to avoid false positives
- * 2. Extracts from the search content:
- *    - First line as the "start anchor"
- *    - Last line as the "end anchor"
- * 3. For each position in the original content:
- *    - Checks if the next line matches the start anchor
- *    - If it does, jumps ahead by the search block size
- *    - Checks if that line matches the end anchor
- *    - All comparisons are done after trimming whitespace
- *
- * This approach is particularly useful for matching blocks of code where:
- * - The exact content might have minor differences
- * - The beginning and end of the block are distinctive enough to serve as anchors
- * - The overall structure (number of lines) remains the same
+ * CARETI MODIFICATION: Enhanced with Levenshtein similarity scoring for multiple candidates.
+ * - Single candidate: accepts with 0% threshold (relaxed)
+ * - Multiple candidates: selects best match with 30% threshold
  *
  * @param originalContent - The full content of the original file
  * @param searchContent - The content we're trying to find in the original file
@@ -144,32 +146,176 @@ function blockAnchorFallbackMatch(originalContent: string, searchContent: string
 		startLineNum++
 	}
 
-	// Look for matching start and end anchors
+	// Collect all candidate positions where both anchors match
+	const candidates: Array<{ startLine: number; endLine: number }> = []
 	for (let i = startLineNum; i <= originalLines.length - searchBlockSize; i++) {
-		// Check if first line matches
 		if (originalLines[i].trim() !== firstLineSearch) {
 			continue
 		}
-
-		// Check if last line matches at the expected position
 		if (originalLines[i + searchBlockSize - 1].trim() !== lastLineSearch) {
 			continue
 		}
+		candidates.push({ startLine: i, endLine: i + searchBlockSize - 1 })
+	}
 
-		// Calculate exact character positions
+	if (candidates.length === 0) {
+		return false
+	}
+
+	// Helper function to calculate character positions
+	const getCharPositions = (startLine: number, endLine: number): [number, number] => {
 		let matchStartIndex = 0
-		for (let k = 0; k < i; k++) {
+		for (let k = 0; k < startLine; k++) {
 			matchStartIndex += originalLines[k].length + 1
 		}
-
 		let matchEndIndex = matchStartIndex
-		for (let k = 0; k < searchBlockSize; k++) {
-			matchEndIndex += originalLines[i + k].length + 1
+		for (let k = startLine; k <= endLine; k++) {
+			matchEndIndex += originalLines[k].length + 1
 		}
-
 		return [matchStartIndex, matchEndIndex]
 	}
 
+	// Calculate similarity for a candidate using Levenshtein distance
+	const calculateSimilarity = (startLine: number): number => {
+		const actualBlockSize = searchBlockSize
+		const linesToCheck = Math.min(searchBlockSize - 2, actualBlockSize - 2)
+
+		if (linesToCheck <= 0) {
+			return 1.0 // No middle lines to compare, accept based on anchors
+		}
+
+		let similarity = 0
+		for (let j = 1; j < searchBlockSize - 1; j++) {
+			const originalLine = originalLines[startLine + j].trim()
+			const searchLine = searchLines[j].trim()
+			const maxLen = Math.max(originalLine.length, searchLine.length)
+			if (maxLen === 0) {
+				continue
+			}
+			const distance = levenshtein(originalLine, searchLine)
+			similarity += 1 - distance / maxLen
+		}
+		return similarity / linesToCheck
+	}
+
+	// Handle single candidate scenario (relaxed threshold)
+	if (candidates.length === 1) {
+		const { startLine, endLine } = candidates[0]
+		const similarity = calculateSimilarity(startLine)
+		if (similarity >= SINGLE_CANDIDATE_SIMILARITY_THRESHOLD) {
+			return getCharPositions(startLine, endLine)
+		}
+		return false
+	}
+
+	// Multiple candidates: select best match based on similarity
+	let bestMatch: { startLine: number; endLine: number } | null = null
+	let maxSimilarity = -1
+
+	for (const candidate of candidates) {
+		const similarity = calculateSimilarity(candidate.startLine)
+		if (similarity > maxSimilarity) {
+			maxSimilarity = similarity
+			bestMatch = candidate
+		}
+	}
+
+	if (maxSimilarity >= MULTIPLE_CANDIDATES_SIMILARITY_THRESHOLD && bestMatch) {
+		return getCharPositions(bestMatch.startLine, bestMatch.endLine)
+	}
+
+	return false
+}
+
+// CARETI MODIFICATION: Enhanced fallback matching using SmartEditEngine replacers
+
+/**
+ * Attempts whitespace-normalized matching using SmartEditEngine's WhitespaceNormalizedReplacer.
+ * Collapses multiple whitespaces and compares normalized content.
+ */
+function whitespaceNormalizedFallbackMatch(
+	originalContent: string,
+	searchContent: string,
+	startIndex: number,
+): [number, number] | false {
+	for (const match of WhitespaceNormalizedReplacer(originalContent, searchContent)) {
+		const index = originalContent.indexOf(match, startIndex)
+		if (index !== -1) {
+			return [index, index + match.length]
+		}
+	}
+	return false
+}
+
+/**
+ * Attempts indentation-flexible matching using SmartEditEngine's IndentationFlexibleReplacer.
+ * Matches content regardless of base indentation level.
+ */
+function indentationFlexibleFallbackMatch(
+	originalContent: string,
+	searchContent: string,
+	startIndex: number,
+): [number, number] | false {
+	for (const match of IndentationFlexibleReplacer(originalContent, searchContent)) {
+		const index = originalContent.indexOf(match, startIndex)
+		if (index !== -1) {
+			return [index, index + match.length]
+		}
+	}
+	return false
+}
+
+/**
+ * Attempts escape-normalized matching using SmartEditEngine's EscapeNormalizedReplacer.
+ * Handles escape sequences like \n, \t, etc.
+ */
+function escapeNormalizedFallbackMatch(
+	originalContent: string,
+	searchContent: string,
+	startIndex: number,
+): [number, number] | false {
+	for (const match of EscapeNormalizedReplacer(originalContent, searchContent)) {
+		const index = originalContent.indexOf(match, startIndex)
+		if (index !== -1) {
+			return [index, index + match.length]
+		}
+	}
+	return false
+}
+
+/**
+ * Attempts trimmed-boundary matching using SmartEditEngine's TrimmedBoundaryReplacer.
+ * Trims the entire search string and matches trimmed blocks.
+ */
+function trimmedBoundaryFallbackMatch(
+	originalContent: string,
+	searchContent: string,
+	startIndex: number,
+): [number, number] | false {
+	for (const match of TrimmedBoundaryReplacer(originalContent, searchContent)) {
+		const index = originalContent.indexOf(match, startIndex)
+		if (index !== -1) {
+			return [index, index + match.length]
+		}
+	}
+	return false
+}
+
+/**
+ * Attempts context-aware matching using SmartEditEngine's ContextAwareReplacer.
+ * Uses first/last lines as context anchors with 50% middle line matching threshold.
+ */
+function contextAwareFallbackMatch(
+	originalContent: string,
+	searchContent: string,
+	startIndex: number,
+): [number, number] | false {
+	for (const match of ContextAwareReplacer(originalContent, searchContent)) {
+		const index = originalContent.indexOf(match, startIndex)
+		if (index !== -1) {
+			return [index, index + match.length]
+		}
+	}
 	return false
 }
 
@@ -336,29 +482,79 @@ async function constructNewFileContentV1(diffContent: string, originalContent: s
 					searchMatchIndex = exactIndex
 					searchEndIndex = exactIndex + currentSearchContent.length
 				} else {
-					// Attempt fallback line-trimmed matching
+					// CARETI MODIFICATION: Enhanced 8-stage fallback matching
+					// Stage 1: Line-trimmed matching
 					const lineMatch = lineTrimmedFallbackMatch(originalContent, currentSearchContent, lastProcessedIndex)
 					if (lineMatch) {
 						;[searchMatchIndex, searchEndIndex] = lineMatch
 					} else {
-						// Try block anchor fallback for larger blocks
-						const blockMatch = blockAnchorFallbackMatch(originalContent, currentSearchContent, lastProcessedIndex)
-						if (blockMatch) {
-							;[searchMatchIndex, searchEndIndex] = blockMatch
+						// Stage 2: Whitespace-normalized matching
+						const wsMatch = whitespaceNormalizedFallbackMatch(originalContent, currentSearchContent, lastProcessedIndex)
+						if (wsMatch) {
+							;[searchMatchIndex, searchEndIndex] = wsMatch
 						} else {
-							// Last resort: search the entire file from the beginning
-							const fullFileIndex = originalContent.indexOf(currentSearchContent, 0)
-							if (fullFileIndex !== -1) {
-								// Found in the file - could be out of order
-								searchMatchIndex = fullFileIndex
-								searchEndIndex = fullFileIndex + currentSearchContent.length
-								if (searchMatchIndex < lastProcessedIndex) {
-									pendingOutOfOrderReplacement = true
-								}
+							// Stage 3: Indentation-flexible matching
+							const indentMatch = indentationFlexibleFallbackMatch(
+								originalContent,
+								currentSearchContent,
+								lastProcessedIndex,
+							)
+							if (indentMatch) {
+								;[searchMatchIndex, searchEndIndex] = indentMatch
 							} else {
-								throw new Error(
-									`The SEARCH block:\n${currentSearchContent.trimEnd()}\n...does not match anything in the file.`,
+								// Stage 4: Escape-normalized matching
+								const escapeMatch = escapeNormalizedFallbackMatch(
+									originalContent,
+									currentSearchContent,
+									lastProcessedIndex,
 								)
+								if (escapeMatch) {
+									;[searchMatchIndex, searchEndIndex] = escapeMatch
+								} else {
+									// Stage 5: Block anchor fallback for larger blocks
+									const blockMatch = blockAnchorFallbackMatch(
+										originalContent,
+										currentSearchContent,
+										lastProcessedIndex,
+									)
+									if (blockMatch) {
+										;[searchMatchIndex, searchEndIndex] = blockMatch
+									} else {
+										// Stage 6: Trimmed boundary matching
+										const trimmedMatch = trimmedBoundaryFallbackMatch(
+											originalContent,
+											currentSearchContent,
+											lastProcessedIndex,
+										)
+										if (trimmedMatch) {
+											;[searchMatchIndex, searchEndIndex] = trimmedMatch
+										} else {
+											// Stage 7: Context-aware matching
+											const contextMatch = contextAwareFallbackMatch(
+												originalContent,
+												currentSearchContent,
+												lastProcessedIndex,
+											)
+											if (contextMatch) {
+												;[searchMatchIndex, searchEndIndex] = contextMatch
+											} else {
+												// Stage 8: Last resort - search entire file from beginning
+												const fullFileIndex = originalContent.indexOf(currentSearchContent, 0)
+												if (fullFileIndex !== -1) {
+													searchMatchIndex = fullFileIndex
+													searchEndIndex = fullFileIndex + currentSearchContent.length
+													if (searchMatchIndex < lastProcessedIndex) {
+														pendingOutOfOrderReplacement = true
+													}
+												} else {
+													throw new Error(
+														`The SEARCH block:\n${currentSearchContent.trimEnd()}\n...does not match anything in the file.`,
+													)
+												}
+											}
+										}
+									}
+								}
 							}
 						}
 					}
@@ -665,7 +861,8 @@ class NewFileContentConstructor {
 				this.searchMatchIndex = exactIndex
 				this.searchEndIndex = exactIndex + this.currentSearchContent.length
 			} else {
-				// Attempt fallback line-trimmed matching
+				// CARETI MODIFICATION: Enhanced 8-stage fallback matching (V2)
+				// Stage 1: Line-trimmed matching
 				const lineMatch = lineTrimmedFallbackMatch(
 					this.originalContent,
 					this.currentSearchContent,
@@ -674,18 +871,68 @@ class NewFileContentConstructor {
 				if (lineMatch) {
 					;[this.searchMatchIndex, this.searchEndIndex] = lineMatch
 				} else {
-					// Try block anchor fallback for larger blocks
-					const blockMatch = blockAnchorFallbackMatch(
+					// Stage 2: Whitespace-normalized matching
+					const wsMatch = whitespaceNormalizedFallbackMatch(
 						this.originalContent,
 						this.currentSearchContent,
 						this.lastProcessedIndex,
 					)
-					if (blockMatch) {
-						;[this.searchMatchIndex, this.searchEndIndex] = blockMatch
+					if (wsMatch) {
+						;[this.searchMatchIndex, this.searchEndIndex] = wsMatch
 					} else {
-						throw new Error(
-							`The SEARCH block:\n${this.currentSearchContent.trimEnd()}\n...does not match anything in the file.`,
+						// Stage 3: Indentation-flexible matching
+						const indentMatch = indentationFlexibleFallbackMatch(
+							this.originalContent,
+							this.currentSearchContent,
+							this.lastProcessedIndex,
 						)
+						if (indentMatch) {
+							;[this.searchMatchIndex, this.searchEndIndex] = indentMatch
+						} else {
+							// Stage 4: Escape-normalized matching
+							const escapeMatch = escapeNormalizedFallbackMatch(
+								this.originalContent,
+								this.currentSearchContent,
+								this.lastProcessedIndex,
+							)
+							if (escapeMatch) {
+								;[this.searchMatchIndex, this.searchEndIndex] = escapeMatch
+							} else {
+								// Stage 5: Block anchor fallback for larger blocks
+								const blockMatch = blockAnchorFallbackMatch(
+									this.originalContent,
+									this.currentSearchContent,
+									this.lastProcessedIndex,
+								)
+								if (blockMatch) {
+									;[this.searchMatchIndex, this.searchEndIndex] = blockMatch
+								} else {
+									// Stage 6: Trimmed boundary matching
+									const trimmedMatch = trimmedBoundaryFallbackMatch(
+										this.originalContent,
+										this.currentSearchContent,
+										this.lastProcessedIndex,
+									)
+									if (trimmedMatch) {
+										;[this.searchMatchIndex, this.searchEndIndex] = trimmedMatch
+									} else {
+										// Stage 7: Context-aware matching
+										const contextMatch = contextAwareFallbackMatch(
+											this.originalContent,
+											this.currentSearchContent,
+											this.lastProcessedIndex,
+										)
+										if (contextMatch) {
+											;[this.searchMatchIndex, this.searchEndIndex] = contextMatch
+										} else {
+											throw new Error(
+												`The SEARCH block:\n${this.currentSearchContent.trimEnd()}\n...does not match anything in the file.`,
+											)
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			}

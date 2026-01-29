@@ -3,7 +3,7 @@ import type { Mode } from "@shared/storage/types"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import type React from "react"
 import { useEffect, useMemo, useState } from "react"
-import { useCaretI18n } from "@/careti/hooks/useCaretI18n"
+import { useCaretiI18n } from "@/careti/hooks/useCaretiI18n"
 import { shortcutManager } from "@/careti/shortcuts/ShortcutManager"
 import { useShortcut } from "@/utils/hooks"
 import { type ButtonActionType, getButtonConfig } from "../../shared/buttonConfig"
@@ -68,7 +68,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 	messageHandlers,
 	scrollBehavior,
 }) => {
-	const { t } = useCaretI18n()
+	const { t } = useCaretiI18n()
 	const { inputValue, selectedImages, selectedFiles, setSendingDisabled } = chatState
 	const resumeText = t("button.resumeTask", "common")
 	const cancelShortcut = shortcutManager.getKeys("cancel_stream")[0] ?? "Escape"

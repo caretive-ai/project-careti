@@ -68,7 +68,8 @@ export const GlobalFileNames = {
 	usersContextLegacyDir: BRAND_USERS_CONTEXT_LEGACY_DIR, // CARETI MODIFICATION: legacy user context (.agents/context-for-user)
 	persona: "persona.md",
 	hooksDir: ".agents/hooks",
-	skillsDir: ".agents/skills", // CARETI MODIFICATION: skills directory
+	commandsDir: ".agents/commands", // CARETI MODIFICATION: commands directory (Claude Code/OpenCode style)
+	skillsDir: ".agents/skills", // CARETI MODIFICATION: legacy skills directory (deprecated)
 	cursorRulesDir: BRAND_RULES_DIR, // CARETI MODIFICATION: legacy alias -> standard agents context
 	cursorRulesFile: BRAND_RULES_DIR, // CARETI MODIFICATION: legacy alias -> standard agents context
 	windsurfRules: BRAND_RULES_DIR, // CARETI MODIFICATION: legacy alias -> standard agents context
@@ -167,7 +168,19 @@ export async function ensureHooksDirectoryExists(): Promise<string> {
 	return globalHooksDir
 }
 
-// CARETI MODIFICATION: Global skills in ~/Documents/.agents/skills/
+// CARETI MODIFICATION: Global commands in ~/Documents/.agents/commands/ (Claude Code/OpenCode style)
+export async function ensureCommandsDirectoryExists(): Promise<string> {
+	const userDocumentsPath = await getDocumentsPath()
+	const globalCommandsDir = path.join(userDocumentsPath, BRAND_DOCS_FOLDER, "commands")
+	try {
+		await fs.mkdir(globalCommandsDir, { recursive: true })
+	} catch (_error) {
+		return path.join(os.homedir(), "Documents", BRAND_DOCS_FOLDER, "commands")
+	}
+	return globalCommandsDir
+}
+
+// CARETI MODIFICATION: Legacy skills directory (deprecated, for migration)
 export async function ensureSkillsDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath()
 	const globalSkillsDir = path.join(userDocumentsPath, BRAND_DOCS_FOLDER, "skills")

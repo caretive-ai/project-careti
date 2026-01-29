@@ -54,6 +54,7 @@ export class AutoApprove {
 
 				case ClineDefaultTool.BROWSER:
 				case ClineDefaultTool.WEB_FETCH:
+				case ClineDefaultTool.WEB_SEARCH: // CARETI MODIFICATION: Web search auto-approval
 				case ClineDefaultTool.MCP_ACCESS:
 				case ClineDefaultTool.MCP_USE:
 				case ClineDefaultTool.GENERATE_IMAGE:
@@ -91,6 +92,9 @@ export class AutoApprove {
 				return autoApprovalSettings.actions.useMcp
 			case ClineDefaultTool.GENERATE_IMAGE:
 				return autoApprovalSettings.actions.generateImages ?? false
+			// CARETI MODIFICATION: Web search auto-approval
+			case ClineDefaultTool.WEB_SEARCH:
+				return autoApprovalSettings.actions.useWebSearch ?? false
 			// CARETI MODIFICATION: analyze_image reads files, so use analyzeImages + readFilesExternally
 			case ClineDefaultTool.ANALYZE_IMAGE:
 				return [

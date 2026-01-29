@@ -17,13 +17,13 @@
 │   └── ai-work-index.yaml  # 작업 인덱스 ← 필수 읽기
 ├── workflows/             # 작업 워크플로우 (온디맨드)
 │   └── atoms/             # 재사용 가능한 빌딩 블록
-├── skills/
+├── commands/              # 슬래시 명령 (Claude Code/OpenCode 스타일)
 └── hooks/
 
 .users/                     # 사람용 (네이티브 언어, 상세)
 ├── context/               # 프로젝트 컨텍스트 (Markdown)
 ├── workflows/
-├── skills/
+├── commands/
 └── hooks/
 ```
 
@@ -36,8 +36,20 @@
 `.agents/` 또는 `.users/` 파일 수정 시 반드시 양쪽을 동기화:
 - `context/` - 프로젝트 컨텍스트/규칙
 - `workflows/` - 작업 워크플로우
-- `skills/` - 스킬 정의 (SKILL.md)
+- `commands/` - 슬래시 명령 정의 (Claude Code/OpenCode 스타일)
 - `hooks/` - 훅 정의
 
-스킬 생성 시: `.agents/skills/[name]/SKILL.md`와 `.users/skills/[name]/SKILL.md` 모두 생성
-템플릿: `SKILL_TEMPLATE.md` 참조
+명령 생성 시: `.agents/commands/[name].md`와 `.users/commands/[name].md` 모두 생성
+템플릿: `COMMAND_TEMPLATE.md` 참조
+
+# Commands (슬래시 명령)
+사용자가 `/commit`처럼 슬래시 명령을 입력하면 해당 명령의 지시를 따릅니다.
+명령 파일은 YAML frontmatter를 사용합니다:
+
+```markdown
+---
+description: 명령 설명
+argument-hint: "[인자 힌트]"
+---
+명령 지시사항...
+```

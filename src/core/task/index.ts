@@ -153,6 +153,8 @@ export class Task {
 
 	// Core task variables
 	readonly taskId: string
+	// CARETI MODIFICATION: Track task start time for SessionEnd hook duration calculation
+	private readonly taskStartTime: number = Date.now()
 	readonly ulid: string
 	private taskIsFavorited?: boolean
 	private historyItem?: HistoryItem
@@ -1426,6 +1428,27 @@ export class Task {
 		if (hooksEnabled) {
 			const { executeHook } = await import("../hooks/hook-executor")
 
+			// CARETI MODIFICATION: Run SessionStart hook (Claude Code compatible)
+			try {
+				await executeHook({
+					hookName: "SessionStart",
+					hookInput: {
+						sessionStart: {
+							source: "startup",
+							sessionId: this.taskId,
+						},
+					},
+					isCancellable: false,
+					say: this.say.bind(this),
+					messageStateHandler: this.messageStateHandler,
+					taskId: this.taskId,
+					hooksEnabled,
+				})
+			} catch (error) {
+				// SessionStart hook failed - non-fatal, just log
+				console.error("[SessionStart Hook] Failed (non-fatal):", error)
+			}
+
 			const taskStartResult = await executeHook({
 				hookName: "TaskStart",
 				hookInput: {
@@ -1892,10 +1915,35 @@ export class Task {
 				}
 			}
 
-			// PHASE 4: Run TaskCancel hook
+			// PHASE 4: Run Stop hook (Claude Code compatible)
+			// CARETI MODIFICATION: Added Stop hook for Claude Code compatibility
+			const hooksEnabled = this.stateManager.getGlobalSettingsKey("hooksEnabled")
+			if (hooksEnabled && shouldRunTaskCancelHook) {
+				try {
+					const { executeHook } = await import("../hooks/hook-executor")
+					await executeHook({
+						hookName: "Stop",
+						hookInput: {
+							stop: {
+								stopHookActive: true,
+								interruptedTool: "",
+							},
+						},
+						isCancellable: false,
+						say: this.say.bind(this),
+						messageStateHandler: this.messageStateHandler,
+						taskId: this.taskId,
+						hooksEnabled: true,
+					})
+				} catch (error) {
+					// Stop hook failed - non-fatal, just log
+					console.error("[Stop Hook] Failed (non-fatal):", error)
+				}
+			}
+
+			// PHASE 5: Run TaskCancel hook
 			// This allows the hook UI to appear in the webview
 			// Use the shouldRunTaskCancelHook value we captured in Phase 1
-			const hooksEnabled = this.stateManager.getGlobalSettingsKey("hooksEnabled")
 			if (hooksEnabled && shouldRunTaskCancelHook) {
 				try {
 					// TaskCancel completed successfully
@@ -1960,6 +2008,34 @@ export class Task {
 			this.mcpHub.clearNotificationCallback()
 			if (this.FocusChainManager) {
 				this.FocusChainManager.dispose()
+			}
+
+			// PHASE 8: Run SessionEnd hook (Claude Code compatible)
+			// CARETI MODIFICATION: Added SessionEnd hook for work log automation
+			if (hooksEnabled) {
+				try {
+					const { executeHook } = await import("../hooks/hook-executor")
+					await executeHook({
+						hookName: "SessionEnd",
+						hookInput: {
+							sessionEnd: {
+								reason: "exit",
+								transcriptPath: "", // TODO: Add transcript path if available
+								sessionId: this.taskId,
+								durationMs: Date.now() - this.taskStartTime,
+								apiRequestCount: this.taskState.apiRequestCount || 0,
+							},
+						},
+						isCancellable: false,
+						say: this.say.bind(this),
+						messageStateHandler: this.messageStateHandler,
+						taskId: this.taskId,
+						hooksEnabled: true,
+					})
+				} catch (error) {
+					// SessionEnd hook failed - non-fatal, just log
+					console.error("[SessionEnd Hook] Failed (non-fatal):", error)
+				}
 			}
 		} finally {
 			// Release task folder lock
@@ -2692,11 +2768,12 @@ export class Task {
 		const allSkills = await discoverSkills(this.cwd)
 		const resolvedSkills = getAvailableSkills(allSkills)
 		// Filter by toggle state
-		const globalSkillsToggles =
+		// CARETI MODIFICATION: source "global" renamed to "personal" for Claude Code compatibility
+		const personalSkillsToggles =
 			(this.stateManager.getGlobalSettingsKey("globalSkillsToggles") as Record<string, boolean>) ?? {}
 		const localSkillsToggles = (this.stateManager.getWorkspaceStateKey("localSkillsToggles") as Record<string, boolean>) ?? {}
 		const availableSkills = resolvedSkills.filter((skill) => {
-			const toggles = skill.source === "global" ? globalSkillsToggles : localSkillsToggles
+			const toggles = skill.source === "personal" ? personalSkillsToggles : localSkillsToggles
 			return toggles[skill.path] !== false
 		})
 
@@ -2724,6 +2801,7 @@ export class Task {
 			browserSettings: this.stateManager.getGlobalSettingsKey("browserSettings"),
 			yoloModeToggled: this.stateManager.getGlobalSettingsKey("yoloModeToggled"),
 			clineWebToolsEnabled: this.stateManager.getGlobalSettingsKey("clineWebToolsEnabled"),
+			serpApiKeyConfigured: !!this.stateManager.getApiConfiguration().serpApiKey, // CARETI MODIFICATION: SerpAPI web search
 			isMultiRootEnabled: multiRootEnabled,
 			workspaceRoots,
 			isSubagentsEnabledAndCliInstalled,

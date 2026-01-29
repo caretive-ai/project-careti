@@ -107,6 +107,7 @@ function convertClineSayToProtoEnum(say: AppClineSay | undefined): ClineSay | un
 		hook_output: (ClineSay as any).HOOK_OUTPUT ?? ClineSay.ERROR,
 		shell_integration_warning_with_suggestion:
 			(ClineSay as any).SHELL_INTEGRATION_WARNING_WITH_SUGGESTION ?? ClineSay.SHELL_INTEGRATION_WARNING,
+		generate_explanation: ClineSay.GENERATE_EXPLANATION, // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 	} as const as Record<string, ClineSay>
 
 	const result = mapping[say as any]
@@ -157,6 +158,7 @@ function convertProtoEnumToClineSay(say: ClineSay): AppClineSay | undefined {
 		[(ClineSay as any).HOOK_OUTPUT ?? "hook_output"]: "hook_output",
 		[(ClineSay as any).SHELL_INTEGRATION_WARNING_WITH_SUGGESTION ?? "shell_integration_warning_with_suggestion"]:
 			"shell_integration_warning_with_suggestion",
+		[ClineSay.GENERATE_EXPLANATION]: "generate_explanation", // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 	} as const as Record<string, AppClineSay>
 
 	return mapping[say as any]

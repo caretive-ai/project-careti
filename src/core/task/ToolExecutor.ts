@@ -43,7 +43,9 @@ import { SearchFilesToolHandler } from "./tools/handlers/SearchFilesToolHandler"
 import { SummarizeTaskHandler } from "./tools/handlers/SummarizeTaskHandler"
 import { UseMcpToolHandler } from "./tools/handlers/UseMcpToolHandler"
 import { UseSkillToolHandler } from "./tools/handlers/UseSkillToolHandler" // CARETI MODIFICATION: Skills system
+import { GenerateExplanationToolHandler } from "./tools/handlers/GenerateExplanationToolHandler" // CARETI MODIFICATION: Explain changes
 import { WebFetchToolHandler } from "./tools/handlers/WebFetchToolHandler"
+import { WebSearchToolHandler } from "./tools/handlers/WebSearchToolHandler" // CARETI MODIFICATION: SerpAPI web search
 import { WriteToFileToolHandler } from "./tools/handlers/WriteToFileToolHandler"
 import { IPartialBlockHandler, SharedToolHandler, ToolExecutorCoordinator } from "./tools/ToolExecutorCoordinator"
 import { ToolValidator } from "./tools/ToolValidator"
@@ -213,6 +215,7 @@ export class ToolExecutor {
 		this.coordinator.register(new BrowserToolHandler())
 		this.coordinator.register(new AskFollowupQuestionToolHandler())
 		this.coordinator.register(new WebFetchToolHandler())
+		this.coordinator.register(new WebSearchToolHandler()) // CARETI MODIFICATION: SerpAPI web search
 
 		// Register WriteToFileToolHandler for all three file tools with proper typing
 		const writeHandler = new WriteToFileToolHandler(validator)
@@ -238,6 +241,7 @@ export class ToolExecutor {
 		this.coordinator.register(new ReportBugHandler())
 		this.coordinator.register(new ApplyPatchHandler(validator))
 		this.coordinator.register(new UseSkillToolHandler()) // CARETI MODIFICATION: Skills system
+		this.coordinator.register(new GenerateExplanationToolHandler()) // CARETI MODIFICATION: Explain changes
 	}
 
 	/**
@@ -322,6 +326,7 @@ export class ToolExecutor {
 	 * - Checking if the tool is registered with the coordinator
 	 * - Validating tool execution is allowed (not rejected, not already used, etc.)
 	 * - Enforcing plan mode restrictions on file modification tools
+	 * - CARETI MODIFICATION: Enforcing allowed-tools restriction from active skill
 	 * - Delegating to partial or complete block handlers
 	 * - Error handling and checkpointing
 	 *
@@ -355,6 +360,19 @@ export class ToolExecutor {
 					text: formatResponse.toolAlreadyUsed(block.name),
 				})
 				return true
+			}
+
+			// CARETI MODIFICATION: Check allowed-tools restriction from active skill
+			if (this.taskState.activeSkill?.allowedTools?.length) {
+				const allowedTools = this.taskState.activeSkill.allowedTools
+				// Allow use_skill tool always (to switch skills)
+				if (block.name !== ClineDefaultTool.USE_SKILL && !allowedTools.includes(block.name)) {
+					const errorMessage = `Tool '${block.name}' is not allowed by the active skill "${this.taskState.activeSkill.name}". Allowed tools: ${allowedTools.join(", ")}`
+					await this.say("error", errorMessage)
+					this.pushToolResult(formatResponse.toolError(errorMessage), block)
+					await this.saveCheckpoint()
+					return true
+				}
 			}
 
 			// Logic for plan-mode tool call restrictions

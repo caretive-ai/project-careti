@@ -3,7 +3,7 @@ import { UpdateTerminalConnectionTimeoutResponse } from "@shared/proto/index.cli
 import { VSCodeCheckbox, VSCodeDropdown, VSCodeOption, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import React, { useState } from "react"
 import { getLocalizedUrl } from "@/careti/constants/urls"
-import { useCaretI18nContext } from "@/careti/context/CaretI18nContext"
+import { useCaretiI18nContext } from "@/careti/context/CaretiI18nContext"
 import { t } from "@/careti/utils/i18n"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "../../../services/grpc-client"
@@ -18,7 +18,7 @@ interface TerminalSettingsSectionProps {
 export const TerminalSettingsSection: React.FC<TerminalSettingsSectionProps> = ({ renderSectionHeader }) => {
 	const { shellIntegrationTimeout, terminalReuseEnabled, defaultTerminalProfile, availableTerminalProfiles } =
 		useExtensionState()
-	const { language } = useCaretI18nContext()
+	const { language } = useCaretiI18nContext()
 
 	const [inputValue, setInputValue] = useState((shellIntegrationTimeout / 1000).toString())
 	const [inputError, setInputError] = useState<string | null>(null)

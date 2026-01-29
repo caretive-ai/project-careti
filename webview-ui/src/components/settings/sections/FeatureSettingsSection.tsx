@@ -7,16 +7,18 @@ import { memo, useEffect, useMemo, useState } from "react"
 // CARETI MODIFICATION: mention image send setting toggle
 import MentionImageSendToggle from "@/careti/components/MentionImageSendToggle"
 import { getLocalizedUrl } from "@/careti/constants/urls"
-import { useCaretI18nContext } from "@/careti/context/CaretI18nContext"
+import { useCaretiI18nContext } from "@/careti/context/CaretiI18nContext"
 import { t } from "@/careti/utils/i18n"
 import McpDisplayModeDropdown from "@/components/mcp/chat-display/McpDisplayModeDropdown"
 import { PLATFORM_CONFIG, PlatformType } from "@/config/platform.config"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { StateServiceClient } from "@/services/grpc-client"
 import { isMacOSOrLinux } from "@/utils/platformUtils"
+import { DebouncedTextField } from "../common/DebouncedTextField"
 import Section from "../Section"
 import SubagentOutputLineLimitSlider from "../SubagentOutputLineLimitSlider"
 import { updateSetting } from "../utils/settingsHandlers"
+import { useApiConfigurationHandlers } from "../utils/useApiConfigurationHandlers"
 
 interface FeatureSettingsSectionProps {
 	renderSectionHeader: (tabId: string) => JSX.Element | null
@@ -40,9 +42,14 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 		// CARETI MODIFICATION: Hooks and Skills settings
 		hooksEnabled,
 		skillsEnabled,
+		// CARETI MODIFICATION: Background edit setting - TODO: Enable when proto settings are updated
+		// backgroundEditEnabled,
+		// CARETI MODIFICATION: SerpAPI for web search
+		apiConfiguration,
 	} = useExtensionState()
+	const { handleFieldChange } = useApiConfigurationHandlers()
 	const dictation = dictationSettings ?? DEFAULT_DICTATION_SETTINGS
-	const { language } = useCaretI18nContext()
+	const { language } = useCaretiI18nContext()
 	const [isCliInstalled, setIsCliInstalled] = useState(false)
 
 	const isCaretMode = modeSystem === "careti"
@@ -423,6 +430,28 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 						</VSCodeCheckbox>
 						<p className="text-xs text-[var(--vscode-descriptionForeground)]">
 							{t("features.enableSkillsDescription", "settings")}
+						</p>
+					</div>
+					{/* CARETI MODIFICATION: Background edit setting - TODO: Enable when proto settings are updated */}
+					{/* CARETI MODIFICATION: SerpAPI key for web search */}
+					<div style={{ marginTop: 10 }}>
+						<DebouncedTextField
+							initialValue={apiConfiguration?.serpApiKey || ""}
+							onChange={(value) => handleFieldChange("serpApiKey", value || undefined)}
+							placeholder={t("features.serpApiKeyPlaceholder", "settings")}
+							style={{ width: "100%" }}
+							type="password">
+							<span style={{ fontWeight: 500 }}>{t("features.serpApiKey", "settings")}</span>
+						</DebouncedTextField>
+						<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
+							{t("features.serpApiKeyDescription", "settings")}{" "}
+							<a
+								className="text-[var(--vscode-textLink-foreground)] hover:text-[var(--vscode-textLink-activeForeground)]"
+								href="https://serpapi.com/manage-api-key"
+								rel="noopener noreferrer"
+								target="_blank">
+								serpapi.com
+							</a>
 						</p>
 					</div>
 					<div style={{ marginTop: 10 }}>

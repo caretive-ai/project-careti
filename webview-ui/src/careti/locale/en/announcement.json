@@ -11,7 +11,7 @@
 			"6": "Language Expansion",
 			"1-desc": "Supports Thinking Mode and natural conversation style with GLM-4.7 models.",
 			"2-desc": "Added Upstage provider supporting Solar Pro/Mini models from Korea's independent AI foundation.",
-			"3-desc": "Text-only models can now generate images (Nano Banana) and analyze images (Gemini) via Caret account tools.",
+			"3-desc": "Text-only models can now generate images (Nano Banana) and analyze images (Gemini) via Careti account tools.",
 			"4-desc": "Define project-specific skills and pre/post tool execution hooks. Manage in .agents/ or .users/ directories.",
 			"5-desc": "read_document tool for HWP, PDF, DOCX, PPTX and more. Cross-platform HWP parsing support.",
 			"6-desc": "Added French, German, and Russian. Prioritizing countries with own AI models. Provider country flags added."
@@ -22,8 +22,8 @@
 			"3": "Dual Account System",
 			"4": "Cline v3.45.0 Bugfix Integration",
 			"1-desc": "Added Naver Cloud (Hyper Clova X) provider with HCX-007/HCX-005/HCX-DASH-002 models.",
-			"2-desc": "Updated legacy Caret/Cline rules to AAIF international standard with project initialization support.",
-			"3-desc": "Use both Caret and Cline accounts simultaneously without restriction.",
+			"2-desc": "Updated legacy Careti/Cline rules to AAIF international standard with project initialization support.",
+			"3-desc": "Use both Careti and Cline accounts simultaneously without restriction.",
 			"4-desc": "Partially merged the Cline v3.45.0 bugfix code."
 		}
 	}

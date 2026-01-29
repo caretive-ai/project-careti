@@ -15,6 +15,10 @@ import {
 	TaskResumeData,
 	TaskStartData,
 	UserPromptSubmitData,
+	// CARETI MODIFICATION: Claude Code compatible hook events
+	SessionStartData,
+	SessionEndData,
+	StopData,
 } from "../../shared/proto/cline/hooks"
 import { getAllHooksDirs } from "../storage/disk"
 import { StateManager } from "../storage/StateManager"
@@ -120,10 +124,32 @@ export interface Hooks {
 	PreCompact: {
 		preCompact: PreCompactData
 	}
+	// CARETI MODIFICATION: Claude Code compatible hook events
+	SessionStart: {
+		sessionStart: SessionStartData
+	}
+	SessionEnd: {
+		sessionEnd: SessionEndData
+	}
+	Stop: {
+		stop: StopData
+	}
 }
 
 // The names of all supported hooks. Hooks[N] is the type of data the hook takes as input.
 type HookName = keyof Hooks
+
+// CARETI MODIFICATION: Hook script with matcher pattern support
+/**
+ * Represents a discovered hook script with optional matcher pattern.
+ * Used for Claude Code compatible tool-specific hooks.
+ */
+export interface HookScript {
+	/** Path to the hook script file */
+	path: string
+	/** Matcher pattern for tool filtering (empty string matches all) */
+	matcher: string
+}
 
 /**
  * The hook input parameters for a named hook. These are the parameters the caller must
@@ -587,6 +613,8 @@ export class HookFactory {
 	 * 3. Returns NoOpRunner if no scripts found (null-object pattern)
 	 * 4. Returns CombinedHookRunner if multiple scripts found (parallel execution)
 	 *
+	 * CARETI MODIFICATION: Added toolName parameter for matcher pattern filtering
+	 *
 	 * The streaming callback receives hook output line-by-line in real-time, allowing
 	 * the UI to display progress as the hook executes. The abort signal enables
 	 * cancellation of long-running hooks.
@@ -594,18 +622,29 @@ export class HookFactory {
 	 * @param hookName The type of hook to create (e.g., "PreToolUse", "PostToolUse")
 	 * @param streamCallback Optional callback for real-time output streaming
 	 * @param abortSignal Optional signal to cancel hook execution
+	 * @param toolName Optional tool name for matcher pattern filtering (PreToolUse/PostToolUse only)
 	 * @returns A HookRunner that executes the hook(s), or NoOpRunner if none found
 	 */
 	async createWithStreaming<Name extends HookName>(
 		hookName: Name,
 		streamCallback?: HookStreamCallback,
 		abortSignal?: AbortSignal,
+		toolName?: string,
 	): Promise<HookRunner<Name>> {
 		// Use cache for hook discovery instead of direct file system scan
 		const { HookDiscoveryCache } = await import("./HookDiscoveryCache")
-		const scripts = await HookDiscoveryCache.getInstance().get(hookName)
+		const { matchesToolPattern } = await import("./hooks-utils")
+		const scripts = await HookDiscoveryCache.getInstance().getScripts(hookName)
 
-		const runners = scripts.map((script) => new StdioHookRunner(hookName, script, streamCallback, abortSignal))
+		// CARETI MODIFICATION: Filter scripts by matcher pattern if toolName is provided
+		const filteredScripts =
+			toolName && (hookName === "PreToolUse" || hookName === "PostToolUse")
+				? scripts.filter((script) => matchesToolPattern(toolName, script.matcher))
+				: scripts
+
+		const runners = filteredScripts.map(
+			(script) => new StdioHookRunner(hookName, script.path, streamCallback, abortSignal),
+		)
 		if (runners.length === 0) {
 			return new NoOpRunner(hookName)
 		}
@@ -613,75 +652,131 @@ export class HookFactory {
 	}
 
 	/**
-	 * @returns A list of paths to scripts for the given hook name.
+	 * @returns A list of HookScript objects for the given hook name.
 	 * Includes both global hooks (from ~/Documents/Cline/Hooks/) and workspace hooks
 	 * (from .agents/hooks/ in each workspace root).
+	 * CARETI MODIFICATION: Now returns HookScript with matcher pattern support
 	 */
-	private static async findHookScripts(hookName: HookName): Promise<string[]> {
-		const hookScripts = []
+	private static async findHookScripts(hookName: HookName): Promise<HookScript[]> {
+		const allScripts: HookScript[] = []
 		for (const hooksDir of await getAllHooksDirs()) {
-			hookScripts.push(HookFactory.findHookInHooksDir(hookName, hooksDir))
+			const scripts = await HookFactory.findHooksInDir(hookName, hooksDir)
+			allScripts.push(...scripts)
 		}
-		const isDefined = (scriptPath: string | undefined): scriptPath is string => Boolean(scriptPath)
-		return (await Promise.all(hookScripts)).filter(isDefined)
+		return allScripts
 	}
 
 	/**
-	 * Finds the path to a hook in a .agents/hooks hooks directory.
+	 * Legacy method for backward compatibility - returns just paths
+	 */
+	static async findHookInHooksDir(hookName: HookName, hooksDir: string): Promise<string | undefined> {
+		const scripts = await HookFactory.findHooksInDir(hookName, hooksDir)
+		return scripts.length > 0 ? scripts[0].path : undefined
+	}
+
+	/**
+	 * CARETI MODIFICATION: Claude Code compatible matcher pattern support
+	 * Finds all hooks in a directory that match the hook name, including matcher variants.
 	 *
 	 * @param hookName the name of the hook to search for, for example 'PreToolUse'
 	 * @param hooksDir the .agents/hooks directory path to search
-	 * @returns the path to the hook to execute, or undefined if none found
-	 * @throws Error if an unexpected file system error occurs
+	 * @returns array of HookScript objects with path and matcher
+	 *
+	 * Example file names:
+	 *   - PreToolUse (matches all tools)
+	 *   - PreToolUse.Edit (matches Edit tool only)
+	 *   - PreToolUse.Edit_Write (matches Edit or Write tools)
 	 */
-	static async findHookInHooksDir(hookName: HookName, hooksDir: string): Promise<string | undefined> {
+	static async findHooksInDir(hookName: HookName, hooksDir: string): Promise<HookScript[]> {
 		return process.platform === "win32"
-			? HookFactory.findWindowsHook(hookName, hooksDir)
-			: HookFactory.findUnixHook(hookName, hooksDir)
+			? HookFactory.findWindowsHooks(hookName, hooksDir)
+			: HookFactory.findUnixHooks(hookName, hooksDir)
 	}
 
 	/**
+	 * CARETI MODIFICATION: Find hooks on Windows with matcher pattern support
+	 */
+	private static async findWindowsHooks(hookName: HookName, hooksDir: string): Promise<HookScript[]> {
+		const scripts: HookScript[] = []
+
+		try {
+			const entries = await fs.readdir(hooksDir)
+
+			for (const entry of entries) {
+				// Match exact name or name.matcher pattern
+				if (entry === hookName || entry.startsWith(`${hookName}.`)) {
+					const candidate = path.join(hooksDir, entry)
+					try {
+						const stat = await fs.stat(candidate)
+						if (stat.isFile()) {
+							const matcher = entry === hookName ? "" : entry.slice(hookName.length + 1).replace(/_/g, "|")
+							scripts.push({ path: candidate, matcher })
+						}
+					} catch {
+						// File not accessible, skip
+					}
+				}
+			}
+		} catch (error) {
+			// Directory doesn't exist or not readable
+			if (!isExpectedHookError(error)) {
+				throw new Error(`Unexpected error scanning hooks directory ${hooksDir}: ${error}`)
+			}
+		}
+
+		return scripts
+	}
+
+	/**
+	 * CARETI MODIFICATION: Find hooks on Unix with matcher pattern support
+	 */
+	private static async findUnixHooks(hookName: HookName, hooksDir: string): Promise<HookScript[]> {
+		const scripts: HookScript[] = []
+
+		try {
+			const entries = await fs.readdir(hooksDir)
+
+			for (const entry of entries) {
+				// Match exact name or name.matcher pattern
+				if (entry === hookName || entry.startsWith(`${hookName}.`)) {
+					const candidate = path.join(hooksDir, entry)
+					try {
+						const [stat] = await Promise.all([fs.stat(candidate), fs.access(candidate, fs.constants.X_OK)])
+						if (stat.isFile()) {
+							const matcher = entry === hookName ? "" : entry.slice(hookName.length + 1).replace(/_/g, "|")
+							scripts.push({ path: candidate, matcher })
+						}
+					} catch {
+						// File not accessible or not executable, skip
+					}
+				}
+			}
+		} catch (error) {
+			// Directory doesn't exist or not readable
+			if (!isExpectedHookError(error)) {
+				throw new Error(`Unexpected error scanning hooks directory ${hooksDir}: ${error}`)
+			}
+		}
+
+		return scripts
+	}
+
+	/**
+	 * @deprecated Use findHooksInDir instead
 	 * Finds a hook on Windows using git-style hook discovery.
-	 * Like git, we look for a file with the hook name (no extension) and execute it
-	 * through the shell, which handles shebangs and script interpretation.
-	 *
-	 * @param hookName the name of the hook to search for
-	 * @param hooksDir the hooks directory path to search
-	 * @returns the path to the hook to execute, or undefined if none found
-	 * @throws Error if an unexpected file system error occurs
 	 */
 	private static async findWindowsHook(hookName: HookName, hooksDir: string): Promise<string | undefined> {
-		const candidate = path.join(hooksDir, hookName)
-
-		try {
-			const stat = await fs.stat(candidate)
-			return stat.isFile() ? candidate : undefined
-		} catch (error) {
-			HookFactory.handleHookDiscoveryError(error, hookName, candidate)
-			// Expected error (file doesn't exist), return undefined
-			return undefined
-		}
+		const scripts = await HookFactory.findWindowsHooks(hookName, hooksDir)
+		return scripts.length > 0 ? scripts[0].path : undefined
 	}
 
 	/**
+	 * @deprecated Use findHooksInDir instead
 	 * Finds a hook on Unix-like systems (Linux, macOS) by checking for an executable file.
-	 *
-	 * @param hookName the name of the hook to search for
-	 * @param hooksDir the .agents/hooks directory path to search
-	 * @returns the path to the hook to execute, or undefined if none found
-	 * @throws Error if an unexpected file system error occurs
 	 */
 	private static async findUnixHook(hookName: HookName, hooksDir: string): Promise<string | undefined> {
-		const candidate = path.join(hooksDir, hookName)
-
-		try {
-			const [stat, _] = await Promise.all([fs.stat(candidate), fs.access(candidate, fs.constants.X_OK)])
-			return stat.isFile() ? candidate : undefined
-		} catch (error) {
-			HookFactory.handleHookDiscoveryError(error, hookName, candidate)
-			// Expected error (file doesn't exist or not executable), return undefined
-			return undefined
-		}
+		const scripts = await HookFactory.findUnixHooks(hookName, hooksDir)
+		return scripts.length > 0 ? scripts[0].path : undefined
 	}
 
 	/**

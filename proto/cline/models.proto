@@ -624,6 +624,8 @@ message ModelsApiConfiguration {
   // CARETI MODIFICATION: BizRouter uses hardcoded URL (https://bizrouter.ai/api/v1)
   optional string biz_router_api_key = 1076;
   optional bool biz_router_use_prompt_cache = 1077;
+  // CARETI MODIFICATION: SerpAPI for web search
+  optional string serp_api_key = 1078;
 
   // Plan mode configurations
   optional ApiProvider plan_mode_api_provider = 100;

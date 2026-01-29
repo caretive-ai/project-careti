@@ -15,8 +15,8 @@ import DynamicTextArea from "react-textarea-autosize"
 import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
 import { useInputHistory } from "@/careti/hooks/useInputHistory"
-// CARETI MODIFICATION: use CaretWebviewLogger for webview logs
-import WebviewLogger from "@/careti/utils/CaretWebviewLogger"
+// CARETI MODIFICATION: use CaretiWebviewLogger for webview logs
+import WebviewLogger from "@/careti/utils/CaretiWebviewLogger"
 // CARETI MODIFICATION: Import i18n for Chatbot/Agent mode labels
 import { t } from "@/careti/utils/i18n"
 // CARETI MODIFICATION: use careti image optimization utilities
@@ -1680,9 +1680,10 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						}}
 						value={inputValue}
 					/>
+					{/* CARETI MODIFICATION: Use i18n for placeholder text */}
 					{!inputValue && selectedImages.length === 0 && selectedFiles.length === 0 && (
 						<div className="text-[10px] absolute bottom-5 left-5 right-16 text-[var(--vscode-input-placeholderForeground)]/50 whitespace-nowrap overflow-hidden text-ellipsis pointer-events-none z-1">
-							Type @ for context, / for slash commands & workflows, hold shift to drag in files/images
+							{t("chatInput.placeholder", "common")}
 						</div>
 					)}
 					{(selectedImages.length > 0 || selectedFiles.length > 0) && (

@@ -328,7 +328,7 @@
 | careti-docs/features/f02-multilingual-i18n.md | MANUAL_REVIEW | low | careti | 문서/정책 |
 | careti-docs/features/f03-branding-ui.md | MANUAL_REVIEW | low | careti | 문서/정책 |
 | careti-docs/features/f04-careti-account.md | MANUAL_REVIEW | low | careti | 문서/정책 |
-| careti-docs/features/f06-agent-standardization.md | MANUAL_REVIEW | low | careti | 문서/정책 |
+| careti-docs/features/f06-agent-standard-claude-compat.md | MANUAL_REVIEW | low | careti | 문서/정책 |
 | careti-docs/features/f06-careti-prompt-system.md | MANUAL_REVIEW | low | careti | 문서/정책 |
 | careti-docs/features/f07-persona-system.md | MANUAL_REVIEW | low | careti | 문서/정책 |
 | careti-docs/features/f08-feature-config-system.md | MANUAL_REVIEW | low | careti | 문서/정책 |

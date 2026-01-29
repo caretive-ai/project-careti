@@ -6,7 +6,7 @@ import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from
 import { useInterval } from "react-use"
 import styled from "styled-components"
 // CARETI MODIFICATION: Import i18n context for language reactivity
-import { useCaretI18nContext } from "@/careti/context/CaretI18nContext"
+import { useCaretiI18nContext } from "@/careti/context/CaretiI18nContext"
 // CARETI MODIFICATION: Import i18n
 import { t } from "@/careti/utils/i18n"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
@@ -19,7 +19,7 @@ import { AskSageProvider } from "./providers/AskSageProvider"
 import { BasetenProvider } from "./providers/BasetenProvider"
 import { BedrockProvider } from "./providers/BedrockProvider"
 import { BizRouterProvider } from "./providers/BizRouterProvider"
-import { CaretiProvider } from "./providers/CaretProvider"
+import { CaretiProvider } from "./providers/CaretiProvider"
 import { CerebrasProvider } from "./providers/CerebrasProvider"
 import { ClaudeCodeProvider } from "./providers/ClaudeCodeProvider"
 import { ClineProvider } from "./providers/ClineProvider"
@@ -103,7 +103,7 @@ const ApiOptions = ({
 	const { apiConfiguration, featureConfig } = useExtensionState()
 
 	// CARETI MODIFICATION: Use i18n context to detect language changes
-	const { language } = useCaretI18nContext()
+	const { language } = useCaretiI18nContext()
 
 	const { selectedProvider } = normalizeApiConfiguration(apiConfiguration, currentMode)
 

@@ -1,9 +1,9 @@
 import { StringRequest } from "@shared/proto/cline/common"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { t } from "@/careti/utils/i18n"
-import CaretFooter from "../../../careti/components/CaretFooter"
+import CaretiFooter from "../../../careti/components/CaretiFooter"
 import { getLocalizedUrl } from "../../../careti/constants/urls"
-import { useCaretI18nContext } from "../../../careti/context/CaretI18nContext"
+import { useCaretiI18nContext } from "../../../careti/context/CaretiI18nContext"
 import { useExtensionState } from "../../../context/ExtensionStateContext"
 import { UiServiceClient } from "../../../services/grpc-client"
 import Announcement from "../../chat/Announcement"
@@ -16,7 +16,7 @@ interface AboutSectionProps {
 
 const AboutSection = ({ version, renderSectionHeader }: AboutSectionProps) => {
 	const { setShowAnnouncement } = useExtensionState()
-	const { language } = useCaretI18nContext()
+	const { language } = useCaretiI18nContext()
 
 	return (
 		<div>
@@ -35,7 +35,7 @@ const AboutSection = ({ version, renderSectionHeader }: AboutSectionProps) => {
 				</div>
 				<Announcement hideAnnouncement={() => setShowAnnouncement(false)} version={version} />
 				<div className="mt-6 pt-4">
-					<CaretFooter />
+					<CaretiFooter />
 				</div>
 			</Section>
 		</div>

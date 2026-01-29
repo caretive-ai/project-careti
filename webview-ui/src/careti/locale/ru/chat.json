@@ -152,7 +152,7 @@
 		"providerModel": "Провайдер/Модель",
 		"operatingSystem": "Операционная система",
 		"systemInfo": "Информация о системе",
-		"clineVersion": "Версия Caret",
+		"clineVersion": "Версия Careti",
 		"additionalContext": "Дополнительный контекст"
 	},
 	"serversToggleModal": {
@@ -398,6 +398,27 @@
 	"codeAccordian": {
 		"userEdits": "Правки пользователя",
 		"consoleLogs": "Логи консоли"
+	},
+	"thinkingRow": {
+		"thinking": "Размышление"
+	},
+	"requestStartRow": {
+		"thinking": "Размышление...",
+		"planning": "Планирование..."
+	},
+	"toolGroup": {
+		"read": "прочитано",
+		"file": "файл",
+		"files": "файлов",
+		"folder": "папка",
+		"folders": "папок",
+		"definition": "определение",
+		"definitions": "определений",
+		"performed": "выполнено",
+		"search": "поиск",
+		"searches": "поисков",
+		"context": "Контекст",
+		"brandName": "{{brandName}}"
 	},
 	"copyButton": {
 		"copied": "Скопировано",

@@ -6,7 +6,7 @@ import React from "react"
 import { updateSetting } from "@/components/settings/utils/settingsHandlers"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { TaskServiceClient } from "@/services/grpc-client"
-import { useCaretI18n } from "../hooks/useCaretI18n"
+import { useCaretiI18n } from "../hooks/useCaretiI18n"
 import { t } from "../utils/i18n"
 
 interface UnifiedLanguageSettingProps {
@@ -28,7 +28,7 @@ interface UnifiedLanguageSettingProps {
  */
 const UnifiedLanguageSetting: React.FC<UnifiedLanguageSettingProps> = ({ hideLabel = false }) => {
 	const { preferredLanguage } = useExtensionState()
-	const { changeLanguage } = useCaretI18n()
+	const { changeLanguage } = useCaretiI18n()
 
 	// 현재 설정된 언어의 키 값 가져오기
 	const currentLanguageKey = getLanguageKey(preferredLanguage as LanguageDisplay)

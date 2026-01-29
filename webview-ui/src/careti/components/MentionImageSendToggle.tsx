@@ -2,7 +2,7 @@
 import { VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react"
 import type React from "react"
 import { useCallback, useEffect, useState } from "react"
-import WebviewLogger from "@/careti/utils/CaretWebviewLogger"
+import WebviewLogger from "@/careti/utils/CaretiWebviewLogger"
 import { t } from "@/careti/utils/i18n"
 import { CaretSystemServiceClient } from "@/services/grpc-client"
 

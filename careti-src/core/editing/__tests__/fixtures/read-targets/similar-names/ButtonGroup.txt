@@ -1,0 +1,17 @@
+import React from "react"
+import { Button } from "./Button"
+
+interface ButtonGroupProps {
+	buttons: Array<{ label: string; onClick: () => void }>
+	orientation?: "horizontal" | "vertical"
+}
+
+export function ButtonGroup({ buttons, orientation = "horizontal" }: ButtonGroupProps) {
+	return (
+		<div className={`btn-group btn-group-${orientation}`}>
+			{buttons.map((btn, index) => (
+				<Button key={index} label={btn.label} onClick={btn.onClick} />
+			))}
+		</div>
+	)
+}

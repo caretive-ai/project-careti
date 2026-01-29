@@ -1,0 +1,111 @@
+// CARETI MODIFICATION: Context provider for Careti i18n system
+import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react"
+import { useExtensionState } from "../../context/ExtensionStateContext"
+import {
+    convertPreferredLanguageToSupported,
+    type SupportedLanguage,
+    setExtensionLanguageProvider,
+    setGlobalUILanguage,
+} from "../utils/i18n"
+
+interface CaretiI18nContextType {
+	language: SupportedLanguage
+	setLanguage: (language: SupportedLanguage) => Promise<void>
+	isLoading: boolean
+}
+
+const CaretiI18nContext = createContext<CaretiI18nContextType | undefined>(undefined)
+
+interface CaretI18nProviderProps {
+	children: ReactNode
+	defaultLanguage?: SupportedLanguage
+}
+
+// CARETI MODIFICATION: Provider component for Careti i18n context
+export const CaretiI18nProvider: React.FC<CaretI18nProviderProps> = ({ children, defaultLanguage = "en" }) => {
+	const { preferredLanguage } = useExtensionState()
+	const [language, setLanguageState] = useState<SupportedLanguage>(defaultLanguage)
+	const [isLoading, setIsLoading] = useState(false)
+
+	// 초기화 로그는 한 번만 출력
+	const [hasInitialized, setHasInitialized] = useState(false)
+
+	if (!hasInitialized) {
+		console.log(
+			`🚀 [CaretiI18nProvider] Initializing i18n system: defaultLang="${defaultLanguage}", ExtensionState="${preferredLanguage}"`,
+		)
+		setHasInitialized(true)
+	}
+
+	// ExtensionState의 preferredLanguage를 i18n으로 변환하는 함수
+	const getLanguageFromExtensionState = useCallback((): SupportedLanguage => {
+		return convertPreferredLanguageToSupported(preferredLanguage)
+	}, [preferredLanguage])
+
+	// i18n 시스템에 ExtensionState 언어 제공자 등록
+	useEffect(() => {
+		setExtensionLanguageProvider(getLanguageFromExtensionState)
+	}, [getLanguageFromExtensionState])
+
+	// ExtensionState의 preferredLanguage가 변경될 때마다 UI 언어 업데이트
+	useEffect(() => {
+		const newLanguage = getLanguageFromExtensionState()
+		if (newLanguage !== language) {
+			setLanguageState(newLanguage)
+			setGlobalUILanguage(newLanguage)
+		}
+	}, [preferredLanguage, language, getLanguageFromExtensionState])
+
+	// Initialize language on mount
+	useEffect(() => {
+		const initialLanguage = getLanguageFromExtensionState()
+		console.log(`🎯 [CaretiI18nProvider] Initial language: "${initialLanguage}"`)
+		setLanguageState(initialLanguage)
+		setGlobalUILanguage(initialLanguage)
+	}, [])
+
+	const setLanguage = useCallback(
+		async (newLanguage: SupportedLanguage) => {
+			if (newLanguage === language) {
+				return
+			}
+
+			console.log(`🔄 [CaretiI18nProvider] Language change requested: "${language}" → "${newLanguage}"`)
+			setIsLoading(true)
+			try {
+				// Update global i18n state first
+				setGlobalUILanguage(newLanguage)
+
+				// Force immediate state update
+				setLanguageState(newLanguage)
+
+				console.log(`✅ [CaretiI18nProvider] Language change completed: "${newLanguage}"`)
+			} catch (error) {
+				console.error(`❌ [CaretiI18nProvider] Language change failed:`, error)
+				throw error // Re-throw to handle in component
+			} finally {
+				setIsLoading(false)
+			}
+		},
+		[language],
+	)
+
+	const contextValue: CaretiI18nContextType = {
+		language,
+		setLanguage,
+		isLoading,
+	}
+
+	return <CaretiI18nContext.Provider value={contextValue}>{children}</CaretiI18nContext.Provider>
+}
+
+// CARETI MODIFICATION: Hook to use Careti i18n context
+export const useCaretiI18nContext = (): CaretiI18nContextType => {
+	const context = useContext(CaretiI18nContext)
+	if (context === undefined) {
+		throw new Error("useCaretiI18nContext must be used within a CaretiI18nProvider")
+	}
+	return context
+}
+
+export default CaretiI18nProvider

@@ -12,7 +12,7 @@
 ### 1. 파일명 변경 및 번호 이동 (Shifting)
 - `f00-terminal-bugfix.md` -> `f00-cline-bugfix-patch.md`
 - `f04-careti-account.md` -> `f05-careti-account.md`
-- `f05-rule-priority-system.md` -> `f06-agent-standardization.md`
+- `f05-rule-priority-system.md` -> `f06-agent-standard-claude-compat.md`
 - `f06-careti-prompt-system.md` -> `f07-careti-prompt-system.md`
 - `f07-persona-system.md` -> `f08-persona-system.md`
 - `f08-feature-config-system.md` -> `f09-feature-config-system.md`

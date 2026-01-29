@@ -1,5 +1,5 @@
 import { EmptyRequest, String } from "@shared/proto/cline/common"
-import { CaretAuthService } from "@careti/services/auth/CaretAuthService"
+import { CaretiAuthService } from "@careti/services/auth/CaretiAuthService"
 import { Controller } from "../index"
 
 /**
@@ -11,5 +11,5 @@ import { Controller } from "../index"
  * @returns The login URL as a string.
  */
 export async function caretAccountLoginClicked(_controller: Controller, _: EmptyRequest): Promise<String> {
-	return await CaretAuthService.getInstance().createAuthRequest()
+	return await CaretiAuthService.getInstance().createAuthRequest()
 }

@@ -1,7 +1,7 @@
 // CARETI MODIFICATION: Resolve image mentions to attachments with optional setting toggle.
 import { mentionRegexGlobal } from "@shared/context-mentions"
 import { createImageId } from "@/careti/shared/images/image-id"
-import WebviewLogger from "@/careti/utils/CaretWebviewLogger"
+import WebviewLogger from "@/careti/utils/CaretiWebviewLogger"
 import { optimizeImageDataUrl } from "@/careti/utils/imageOptimization"
 import { CaretSystemServiceClient } from "@/services/grpc-client"
 

@@ -45,6 +45,7 @@ export const config = createVariant(ModelFamily.NEXT_GEN)
 		SystemPromptSection.SYSTEM_INFO,
 		SystemPromptSection.OBJECTIVE,
 		SystemPromptSection.USER_INSTRUCTIONS,
+		SystemPromptSection.SKILLS, // CARETI MODIFICATION: Added for Cline v3.49.1 parity (USE_SKILL tool requires this)
 	)
 	.tools(
 		ClineDefaultTool.BASH,
@@ -56,6 +57,7 @@ export const config = createVariant(ModelFamily.NEXT_GEN)
 		ClineDefaultTool.LIST_CODE_DEF,
 		ClineDefaultTool.BROWSER,
 		ClineDefaultTool.WEB_FETCH,
+		ClineDefaultTool.WEB_SEARCH, // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 		ClineDefaultTool.GENERATE_IMAGE,
 		ClineDefaultTool.MCP_USE,
 		ClineDefaultTool.MCP_ACCESS,
@@ -64,6 +66,8 @@ export const config = createVariant(ModelFamily.NEXT_GEN)
 		ClineDefaultTool.PLAN_MODE,
 		ClineDefaultTool.MCP_DOCS,
 		ClineDefaultTool.TODO,
+		ClineDefaultTool.GENERATE_EXPLANATION, // CARETI MODIFICATION: Added for Cline v3.49.1 parity
+		ClineDefaultTool.USE_SKILL, // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 	)
 	.placeholders({
 		MODEL_FAMILY: ModelFamily.NEXT_GEN,

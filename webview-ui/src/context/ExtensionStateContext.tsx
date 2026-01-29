@@ -8,10 +8,10 @@ import { DEFAULT_AUTO_APPROVAL_SETTINGS } from "@shared/AutoApprovalSettings"
 import { findLastIndex } from "@shared/array"
 import { DEFAULT_BROWSER_SETTINGS } from "@shared/BrowserSettings"
 // import { CaretiGlobalManager } from "@careti/managers/CaretiGlobalManager"
-// CARETI MODIFICATION: Import CaretUser from @shared/CaretAccount instead of defining locally
-import type { CaretUser } from "@shared/CaretAccount"
-import type { CaretSettings } from "@shared/CaretSettings"
-import { DEFAULT_CARET_SETTINGS } from "@shared/CaretSettings"
+// CARETI MODIFICATION: Import CaretUser from @shared/CaretiAccount instead of defining locally
+import type { CaretUser } from "@shared/CaretiAccount"
+import type { CaretSettings } from "@shared/CaretiSettings"
+import { DEFAULT_CARET_SETTINGS } from "@shared/CaretiSettings"
 import { ClineFeatureSetting } from "@shared/ClineFeatureSetting"
 import { DEFAULT_DICTATION_SETTINGS, type DictationSettings } from "@shared/DictationSettings"
 import { DEFAULT_PLATFORM, type ExtensionState } from "@shared/ExtensionMessage"
@@ -60,7 +60,7 @@ type ToolImageCacheEntry = {
 	workspaceAbsolutePath?: string
 }
 
-// CARETI NOTE: CaretUser type now imported from @shared/CaretAccount above
+// CARETI NOTE: CaretUser type now imported from @shared/CaretiAccount above
 
 export interface ExtensionStateContextType extends ExtensionState {
 	caretSettings?: CaretSettings
@@ -334,6 +334,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		skillsEnabled: false,
 		globalSkillsToggles: {} as Record<string, boolean>,
 		localSkillsToggles: {} as Record<string, boolean>,
+		// CARETI MODIFICATION: Background edit
+		backgroundEditEnabled: false,
 		nativeToolCallSetting: { user: false, featureFlag: false } as ClineFeatureSetting,
 		remoteConfigSettings: {},
 		subagentsEnabled: false,

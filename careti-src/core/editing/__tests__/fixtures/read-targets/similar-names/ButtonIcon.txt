@@ -1,0 +1,15 @@
+import React from "react"
+
+interface ButtonIconProps {
+	icon: string
+	onClick: () => void
+	ariaLabel: string
+}
+
+export function ButtonIcon({ icon, onClick, ariaLabel }: ButtonIconProps) {
+	return (
+		<button onClick={onClick} aria-label={ariaLabel} className="btn-icon">
+			<span className="icon">{icon}</span>
+		</button>
+	)
+}

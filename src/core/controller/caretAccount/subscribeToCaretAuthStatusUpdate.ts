@@ -1,6 +1,6 @@
 // CARETI MODIFICATION: gRPC handler for subscribing to Careti auth status updates
 
-import { CaretAuthService } from "@careti/services/auth/CaretAuthService"
+import { CaretiAuthService } from "@careti/services/auth/CaretiAuthService"
 import { Controller } from "@core/controller"
 import * as proto from "@shared/proto/index"
 import { StreamingResponseHandler } from "@/core/controller/grpc-handler"
@@ -15,6 +15,6 @@ export async function subscribeToCaretAuthStatusUpdate(
 	responseStream: StreamingResponseHandler<proto.careti.CaretAuthState>,
 	_requestId?: string,
 ): Promise<void> {
-	// Delegate to CaretAuthService so we stream real auth state (user info, logout, refresh)
-	return CaretAuthService.getInstance(controller).subscribeToAuthStatusUpdate(controller, request, responseStream, _requestId)
+	// Delegate to CaretiAuthService so we stream real auth state (user info, logout, refresh)
+	return CaretiAuthService.getInstance(controller).subscribeToAuthStatusUpdate(controller, request, responseStream, _requestId)
 }

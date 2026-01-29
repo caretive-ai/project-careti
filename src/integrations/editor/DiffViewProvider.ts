@@ -10,6 +10,8 @@ import { diagnosticsToProblemsString, getNewDiagnostics } from "@/integrations/d
 import { DiagnosticSeverity, FileDiagnostics } from "@/shared/proto/index.cline"
 import { detectEncoding } from "../misc/extract-text"
 import { openFile } from "../misc/open-file"
+// CARETI MODIFICATION: Import FileLock for concurrent edit prevention
+import { acquireLock, releaseLock } from "@careti/core/editing"
 
 export abstract class DiffViewProvider {
 	editType?: "create" | "modify" | "delete"
@@ -33,6 +35,9 @@ export abstract class DiffViewProvider {
 		this.absolutePath = typeof absolutePathResolved === "string" ? absolutePathResolved : absolutePathResolved.absolutePath
 		this.relPath = options?.displayPath ?? relPath
 		const fileExists = this.editType === "modify"
+
+		// CARETI MODIFICATION: Acquire lock to prevent concurrent edits
+		await acquireLock(this.absolutePath)
 
 		// if the file is already open, ensure it's not dirty before getting its contents
 		if (fileExists) {
@@ -395,6 +400,11 @@ export abstract class DiffViewProvider {
 
 	// close editor if open?
 	async reset() {
+		// CARETI MODIFICATION: Release lock before resetting state
+		if (this.absolutePath) {
+			releaseLock(this.absolutePath)
+		}
+
 		this.isEditing = false
 		this.editType = undefined
 		this.absolutePath = undefined

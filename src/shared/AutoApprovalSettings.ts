@@ -22,6 +22,7 @@ export interface AutoApprovalSettings {
 		useMcp: boolean // Use MCP servers
 		generateImages?: boolean // Generate images
 		analyzeImages?: boolean // Analyze images (for models that don't support images)
+		useWebSearch?: boolean // CARETI MODIFICATION: Use web search (SerpAPI)
 	}
 	// Global settings
 	enableNotifications: boolean // Show notifications for approval and task completion
@@ -43,6 +44,7 @@ export const DEFAULT_AUTO_APPROVAL_SETTINGS: AutoApprovalSettings = {
 		useMcp: true,
 		generateImages: true, // Default enabled
 		analyzeImages: true, // Default enabled for models that don't support images
+		useWebSearch: false, // CARETI MODIFICATION: Default disabled for web search
 	},
 	enableNotifications: false,
 }

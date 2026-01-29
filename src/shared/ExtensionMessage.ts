@@ -137,6 +137,8 @@ export interface ExtensionState {
 	skillsEnabled?: boolean
 	globalSkillsToggles?: Record<string, boolean>
 	localSkillsToggles?: Record<string, boolean>
+	// CARETI MODIFICATION: Background edit mode
+	backgroundEditEnabled?: boolean
 	nativeToolCallSetting?: ClineFeatureSetting
 	// CARETI MODIFICATION: CLI Subagent Mode
 	isCliSubagent: boolean
@@ -218,6 +220,7 @@ export type ClineSay =
 	| "error_retry"
 	| "shell_integration_warning_with_suggestion"
 	| "auto_approval_max_req_reached"
+	| "generate_explanation" // CARETI MODIFICATION: Added for Cline v3.49.1 explain-changes feature
 
 export interface ClineSayTool {
 	tool:
@@ -229,11 +232,13 @@ export interface ClineSayTool {
 		| "listCodeDefinitionNames"
 		| "searchFiles"
 		| "webFetch"
+		| "webSearch" // CARETI MODIFICATION: SerpAPI web search
 		| "generateImage"
 		| "analyzeImage" // CARETI MODIFICATION: for analyze_image tool
 		| "readDocument" // CARETI MODIFICATION: for read_document tool
 		| "summarizeTask"
 		| "fileDeleted"
+		| "useSkill" // CARETI MODIFICATION: Added for Cline v3.49.1 USE_SKILL tool
 	path?: string
 	diff?: string
 	content?: string
@@ -292,6 +297,15 @@ export interface ClineSayHook {
 		details?: string
 		scriptPath?: string
 	}
+}
+
+// CARETI MODIFICATION: Added for Cline v3.49.1 explain-changes feature
+export interface ClineSayGenerateExplanation {
+	title: string
+	fromRef: string
+	toRef: string
+	status: "generating" | "complete" | "error"
+	error?: string
 }
 
 // must keep in sync with system prompt

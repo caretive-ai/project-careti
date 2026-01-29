@@ -21,4 +21,5 @@ export * from "./replace_in_file"
 export * from "./search_files"
 export * from "./use_mcp_tool"
 export * from "./web_fetch"
+export * from "./web_search" // CARETI MODIFICATION: SerpAPI web search
 export * from "./write_to_file"

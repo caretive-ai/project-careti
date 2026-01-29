@@ -354,24 +354,24 @@
 | careti-docs/experiments/semantic-equivalence-real-test.md | comment | 21 | 4. `// CARETI MODIFICATION: Initialize Careti wrapper` 주석 추가 (modification_rules.comment) |
 | careti-docs/features/f01-common-util.md | comment | 186 | // CARETI MODIFICATION: CaretiGlobalManager 통합 |
 | careti-docs/features/f04-careti-account.md | comment | 314 | // CARETI MODIFICATION: 자동 후처리 시스템 구현 |
-| careti-docs/features/f06-agent-standardization.md | comment | 30 | ├── external-rules.ts              # 🎯 핵심 우선순위 로직 (CARETI MODIFICATION) |
-| careti-docs/features/f06-agent-standardization.md | comment | 36 | └── index.ts                       # 🔗 우선순위 시스템 통합 (CARETI MODIFICATION) |
-| careti-docs/features/f06-agent-standardization.md | comment | 40 | └── refreshRules.ts                # 📡 UI 데이터 전송 (CARETI MODIFICATION) |
-| careti-docs/features/f06-agent-standardization.md | comment | 44 | └── toggleCaretRule.ts             # 🔧 .agents/context 토글 기능 (CARETI MODIFICATION) |
-| careti-docs/features/f06-agent-standardization.md | comment | 48 | ├── disk.ts                        # 📁 .agents/context 파일명 정의 (CARETI MODIFICATION) |
-| careti-docs/features/f06-agent-standardization.md | comment | 49 | ├── state-keys.ts                  # 🗝️ 상태 키 정의 (CARETI MODIFICATION) |
-| careti-docs/features/f06-agent-standardization.md | comment | 50 | └── utils/state-helpers.ts         # 🛠️ 상태 초기화 (CARETI MODIFICATION) |
-| careti-docs/features/f06-agent-standardization.md | comment | 54 | └── file.proto                     # 📦 gRPC 통신 프로토콜 (CARETI MODIFICATION) |
-| careti-docs/features/f06-agent-standardization.md | comment | 58 | └── ClineRulesToggleModal.tsx      # 🎨 규칙 토글 UI (CARETI MODIFICATION) |
-| careti-docs/features/f06-agent-standardization.md | comment | 62 | └── ExtensionStateContext.tsx      # 🔄 전역 상태 관리 (CARETI MODIFICATION) |
-| careti-docs/features/f06-agent-standardization.md | comment | 67 | └── rule-priority-integration.test.ts # 🧪 통합 테스트 (CARETI MODIFICATION) |
-| careti-docs/features/f06-agent-standardization.md | comment | 72 | - **CARETI MODIFICATION** 마커로 수정 부분 명확히 표시 |
-| careti-docs/features/f06-agent-standardization.md | comment | 81 | // CARETI MODIFICATION: Implement rule priority system (.agents/context) |
-| careti-docs/features/f06-agent-standardization.md | comment | 110 | // CARETI MODIFICATION: Rule priority system (.agents/context) |
-| careti-docs/features/f06-agent-standardization.md | comment | 127 | // CARETI MODIFICATION: Use priority system - only pass the active rule instead of all rules |
-| careti-docs/features/f06-agent-standardization.md | comment | 208 | - **해결 방안**: CARETI MODIFICATION 마커로 안전한 추가 |
-| careti-docs/features/f06-agent-standardization.md | comment | 277 | - [ ] **마커 확인**: `// CARETI MODIFICATION:` 주석으로 수정 부분 명확히 표시 |
-| careti-docs/features/f06-agent-standardization.md | comment | 289 | - [x] **CARETI MODIFICATION**: 모든 수정 부분 주석 표시 ✅ |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 30 | ├── external-rules.ts              # 🎯 핵심 우선순위 로직 (CARETI MODIFICATION) |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 36 | └── index.ts                       # 🔗 우선순위 시스템 통합 (CARETI MODIFICATION) |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 40 | └── refreshRules.ts                # 📡 UI 데이터 전송 (CARETI MODIFICATION) |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 44 | └── toggleCaretRule.ts             # 🔧 .agents/context 토글 기능 (CARETI MODIFICATION) |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 48 | ├── disk.ts                        # 📁 .agents/context 파일명 정의 (CARETI MODIFICATION) |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 49 | ├── state-keys.ts                  # 🗝️ 상태 키 정의 (CARETI MODIFICATION) |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 50 | └── utils/state-helpers.ts         # 🛠️ 상태 초기화 (CARETI MODIFICATION) |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 54 | └── file.proto                     # 📦 gRPC 통신 프로토콜 (CARETI MODIFICATION) |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 58 | └── ClineRulesToggleModal.tsx      # 🎨 규칙 토글 UI (CARETI MODIFICATION) |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 62 | └── ExtensionStateContext.tsx      # 🔄 전역 상태 관리 (CARETI MODIFICATION) |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 67 | └── rule-priority-integration.test.ts # 🧪 통합 테스트 (CARETI MODIFICATION) |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 72 | - **CARETI MODIFICATION** 마커로 수정 부분 명확히 표시 |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 81 | // CARETI MODIFICATION: Implement rule priority system (.agents/context) |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 110 | // CARETI MODIFICATION: Rule priority system (.agents/context) |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 127 | // CARETI MODIFICATION: Use priority system - only pass the active rule instead of all rules |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 208 | - **해결 방안**: CARETI MODIFICATION 마커로 안전한 추가 |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 277 | - [ ] **마커 확인**: `// CARETI MODIFICATION:` 주석으로 수정 부분 명확히 표시 |
+| careti-docs/features/f06-agent-standard-claude-compat.md | comment | 289 | - [x] **CARETI MODIFICATION**: 모든 수정 부분 주석 표시 ✅ |
 | careti-docs/features/f06-careti-prompt-system.md | comment | 37 | // CARETI MODIFICATION: Careti mode branching |
 | careti-docs/features/f06-careti-prompt-system.md | comment | 165 | // CARETI MODIFICATION: Replace PLAN/ACT terminology with CHATBOT/AGENT in tool descriptions |
 | careti-docs/features/f07-persona-system.md | comment | 196 | - **프론트엔드 최소 수정**: ChatRow.tsx에 PersonaAvatar 통합 (`CARETI MODIFICATION` 주석 포함) |

@@ -333,7 +333,7 @@
 | careti-docs/features/f02-multilingual-i18n.md | AUTO_KEEP | DOC | careti-only 변경 |
 | careti-docs/features/f03-branding-ui.md | AUTO_KEEP | DOC | careti-only 변경 |
 | careti-docs/features/f04-careti-account.md | AUTO_KEEP | DOC | careti-only 변경 |
-| careti-docs/features/f06-agent-standardization.md | AUTO_KEEP | DOC | careti-only 변경 |
+| careti-docs/features/f06-agent-standard-claude-compat.md | AUTO_KEEP | DOC | careti-only 변경 |
 | careti-docs/features/f06-careti-prompt-system.md | AUTO_KEEP | DOC | careti-only 변경 |
 | careti-docs/features/f07-persona-system.md | AUTO_KEEP | DOC | careti-only 변경 |
 | careti-docs/features/f08-feature-config-system.md | AUTO_KEEP | DOC | careti-only 변경 |

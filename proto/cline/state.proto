@@ -95,6 +95,7 @@ message Secrets {
   optional string oca_refresh_token = 38;
   optional string hicap_api_key = 39;
   optional string mcp_oauth_secrets = 40;
+  optional string serp_api_key = 41; // CARETI MODIFICATION: SerpAPI for web search
 }
 
 message Settings {
@@ -387,6 +388,10 @@ message UpdateSettingsRequest {
   optional string image_generation_size = 1006;
   // CARETI MODIFICATION: F13 - Image Analysis Model Selection
   optional string image_analysis_model = 1007;
+  // CARETI MODIFICATION: Background edit mode
+  optional bool background_edit_enabled = 1008;
+  // CARETI MODIFICATION: Cline web tools setting (ported from ref-cline v3.49.1)
+  optional bool cline_web_tools_enabled = 1009;
 }
 
 message UpdateTerminalConnectionTimeoutRequest {

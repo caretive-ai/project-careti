@@ -1,5 +1,5 @@
 {
-	"name": "careti",
+	"name": "caret",
 	"displayName": "Careti",
 	"description": "🎯 Cline-compatible AI coding agent. 266 models (Claude, GPT, Gemini), persona system, dual mode, image/document tools. 7 languages (한국어, 日本語, 中文, FR, DE, RU). Free credits on signup.",
 	"version": "0.4.6",

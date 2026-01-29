@@ -203,7 +203,7 @@ Cline不支持的模型可在Careti中使用。
 | F03 | 品牌与UI | [查看](../features.en/f03-branding-ui.md) |
 | F04 | Cline兼容性 | [查看](../features.en/f04-cline-compatibility-and-cli.md) |
 | F05 | Careti账户 | [查看](../features.en/f05-careti-account.md) |
-| F06 | 代理标准化 (AAIF) | [查看](../features.en/f06-agent-standardization.md) |
+| F06 | 代理标准化 (AAIF) | [查看](../features.en/f06-agent-standard-claude-compat.md) |
 | F07 | 提示词系统 | [查看](../features.en/f07-careti-prompt-system.md) |
 | F08 | 角色系统 | [查看](../features.en/f08-persona-system.md) |
 | F09 | Feature Config | [查看](../features.en/f09-feature-config-system.md) |

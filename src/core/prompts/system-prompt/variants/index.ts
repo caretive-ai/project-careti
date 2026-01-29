@@ -6,6 +6,7 @@
  * and use cases.
  */
 
+export { config as devstralConfig, type DevstralVariantConfig } from "./devstral/config" // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 export { config as Gemini3Config, type Gemini3VariantConfig } from "./gemini-3/config"
 export { config as genericConfig, type GenericVariantConfig } from "./generic/config"
 export { config as glmConfig, type GLMVariantConfig } from "./glm/config"
@@ -18,6 +19,7 @@ export { config as nextGenConfig, type NextGenVariantConfig } from "./next-gen/c
 export { config as xsConfig, type XsVariantConfig } from "./xs/config"
 
 import { ModelFamily } from "@/shared/prompts"
+import { config as devstralConfig } from "./devstral/config" // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 import { config as Gemini3Config } from "./gemini-3/config"
 import { config as genericConfig } from "./generic/config"
 import { config as glmConfig } from "./glm/config"
@@ -35,6 +37,11 @@ import { config as xsConfig } from "./xs/config"
  * This registry allows for loading variant configurations.
  */
 export const VARIANT_CONFIGS = {
+	/**
+	 * Devstral variant - Optimized for Devstral model family
+	 * CARETI MODIFICATION: Added for Cline v3.49.1 parity
+	 */
+	[ModelFamily.DEVSTRAL]: devstralConfig,
 	/**
 	 * GPT-5 variant with native tool support.
 	 */

@@ -15,6 +15,9 @@
 	},
 	"taskCompleted": "Task Completed",
 	"seeNewChanges": "See new changes",
+	"explainChanges": "Explain Changes",
+	"explaining": "Explaining...",
+	"planCreated": "Plan Created",
 	"tool": {
 		"outsideWorkspace": "This file is outside of your workspace",
 		"editFile": "{{brandName}} wants to edit this file",
@@ -48,7 +51,8 @@
 		"analyzeImagePath": "Path",
 		"analyzeImageQuestion": "Question",
 		"analyzeImageCompleted": "Image analysis completed",
-		"analyzeImageAnalyzing": "Analyzing image..."
+		"analyzeImageAnalyzing": "Analyzing image...",
+		"skillLoaded": "{{brandName}} loaded the skill:"
 	},
 	"image": {
 		"dimensionError": "Image dimensions exceed 7500px",
@@ -152,7 +156,7 @@
 		"providerModel": "Provider/Model",
 		"operatingSystem": "Operating System",
 		"systemInfo": "System Info",
-		"clineVersion": "Caret Version",
+		"clineVersion": "Careti Version",
 		"additionalContext": "Additional Context"
 	},
 	"serversToggleModal": {
@@ -398,6 +402,27 @@
 	"codeAccordian": {
 		"userEdits": "User Edits",
 		"consoleLogs": "Console Logs"
+	},
+	"thinkingRow": {
+		"thinking": "Thinking"
+	},
+	"requestStartRow": {
+		"thinking": "Thinking...",
+		"planning": "Planning..."
+	},
+	"toolGroup": {
+		"read": "read",
+		"file": "file",
+		"files": "files",
+		"folder": "folder",
+		"folders": "folders",
+		"definition": "definition",
+		"definitions": "definitions",
+		"performed": "performed",
+		"search": "search",
+		"searches": "searches",
+		"context": "Context",
+		"brandName": "{{brandName}}"
 	},
 	"copyButton": {
 		"copied": "Copied",

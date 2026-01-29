@@ -5,9 +5,9 @@ import styled from "styled-components"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CaretSystemServiceClient } from "@/services/grpc-client"
 import { t } from "../utils/i18n"
-import { CaretWebviewLogger } from "../utils/webview-logger"
+import { CaretiWebviewLogger } from "../utils/webview-logger"
 
-const logger = new CaretWebviewLogger("ModeSystemToggle")
+const logger = new CaretiWebviewLogger("ModeSystemToggle")
 
 // CARETI MODIFICATION: careti-main에서 가져온 토글 스위치 스타일 (원본: SettingsView.tsx)
 const ModeSwitchContainer = styled.div<{ disabled: boolean }>`

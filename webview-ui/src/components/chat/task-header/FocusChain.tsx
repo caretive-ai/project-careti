@@ -6,6 +6,8 @@ import React, { memo, useCallback, useMemo, useState } from "react"
 import ChecklistRenderer from "@/components/common/ChecklistRenderer"
 import LightMarkdown from "@/components/common/LightMarkdown"
 import { FileServiceClient } from "@/services/grpc-client"
+// CARETI MODIFICATION: Import i18n for localization
+import { t } from "@/careti/utils/i18n"
 
 // Optimized interface with readonly properties to prevent accidental mutations
 interface TodoInfo {
@@ -21,11 +23,11 @@ interface FocusChainProps {
 	readonly currentTaskItemId?: string
 }
 
-// Static strings to avoid recreating them
-const COMPLETED_MESSAGE = "All tasks have been completed!"
-const TODO_LIST_LABEL = "To-Do list"
-const NEW_STEPS_MESSAGE = "New steps will be generated if you continue the task"
-const CLICK_TO_EDIT_TITLE = "Click to edit to-do list in file"
+// CARETI MODIFICATION: Use i18n for localization instead of static strings
+const COMPLETED_MESSAGE = () => t("focusChain.allTasksCompleted", "common")
+const TODO_LIST_LABEL = () => t("focusChain.todoListLabel", "common")
+const NEW_STEPS_MESSAGE = () => t("focusChain.newStepsMessage", "common")
+const CLICK_TO_EDIT_TITLE = () => t("focusChain.clickToEditTitle", "common")
 
 // Optimized header component with minimal re-renders
 const ToDoListHeader = memo<{
@@ -35,8 +37,8 @@ const ToDoListHeader = memo<{
 	const { currentTodo, currentIndex, totalCount, completedCount, progressPercentage } = todoInfo
 	const isCompleted = completedCount === totalCount
 
-	// Pre-compute display text
-	const displayText = isCompleted ? COMPLETED_MESSAGE : currentTodo?.text || TODO_LIST_LABEL
+	// CARETI MODIFICATION: Pre-compute display text with i18n
+	const displayText = isCompleted ? COMPLETED_MESSAGE() : currentTodo?.text || TODO_LIST_LABEL()
 
 	return (
 		<div
@@ -191,13 +193,13 @@ export const FocusChain: React.FC<FocusChainProps> = memo(
 			<div
 				className="relative rounded-sm bg-toolbar-hover/65 flex flex-col gap-1.5 select-none hover:bg-toolbar-hover overflow-hidden opacity-80 hover:opacity-100 transition-[transform,box-shadow] duration-200 cursor-pointer"
 				onClick={handleToggle}
-				title={CLICK_TO_EDIT_TITLE}>
+				title={CLICK_TO_EDIT_TITLE()}>
 				<ToDoListHeader isExpanded={isExpanded} todoInfo={todoInfo} />
 				{isExpanded && (
 					<div className="mx-1 pb-2 px-1 relative" onClick={handleEditClick}>
 						<ChecklistRenderer text={lastProgressMessageText!} />
 						{isCompleted && (
-							<div className="mt-2 text-xs font-semibold text-muted-foreground">{NEW_STEPS_MESSAGE}</div>
+							<div className="mt-2 text-xs font-semibold text-muted-foreground">{NEW_STEPS_MESSAGE()}</div>
 						)}
 					</div>
 				)}

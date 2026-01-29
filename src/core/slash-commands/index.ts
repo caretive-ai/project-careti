@@ -12,6 +12,7 @@ import { isNativeToolCallingConfig } from "@/utils/model-utils"
 import {
 	condenseToolResponse,
 	deepPlanningToolResponse,
+	explainChangesToolResponse, // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 	newRuleToolResponse,
 	newTaskToolResponse,
 	reportBugToolResponse,
@@ -57,6 +58,7 @@ export async function parseSlashCommands(
 		"reportbug",
 		"deep-planning",
 		"subagent",
+		"explain-changes", // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 	]
 
 	// Determine if the current provider/model/setting actually uses native tool calling
@@ -71,6 +73,7 @@ export async function parseSlashCommands(
 		reportbug: () => reportBugToolResponse(),
 		"deep-planning": () => deepPlanningToolResponse(focusChainSettings, providerInfo),
 		subagent: () => subagentToolResponse(),
+		"explain-changes": () => explainChangesToolResponse(), // CARETI MODIFICATION: Added for Cline v3.49.1 parity
 	}
 
 	// Regex patterns to extract content from different XML tags

@@ -203,7 +203,7 @@
 | F03 | Брендинг и UI | [Смотреть](../features.en/f03-branding-ui.md) |
 | F04 | Совместимость с Cline | [Смотреть](../features.en/f04-cline-compatibility-and-cli.md) |
 | F05 | Аккаунт Careti | [Смотреть](../features.en/f05-careti-account.md) |
-| F06 | Стандартизация агентов (AAIF) | [Смотреть](../features.en/f06-agent-standardization.md) |
+| F06 | Стандартизация агентов (AAIF) | [Смотреть](../features.en/f06-agent-standard-claude-compat.md) |
 | F07 | Система промптов | [Смотреть](../features.en/f07-careti-prompt-system.md) |
 | F08 | Система персон | [Смотреть](../features.en/f08-persona-system.md) |
 | F09 | Feature Config | [Смотреть](../features.en/f09-feature-config-system.md) |

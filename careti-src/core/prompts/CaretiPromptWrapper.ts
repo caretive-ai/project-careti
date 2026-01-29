@@ -1,4 +1,4 @@
-import { CaretModeManager } from "@careti/core/modes/CaretModeManager"
+import { CaretiModeManager } from "@careti/core/modes/CaretiModeManager"
 import { PromptSystemManager } from "@careti/core/prompts/system/PromptSystemManager"
 import { CaretSystemPromptContext } from "@careti/core/prompts/system/types"
 import { CARETI_MODES } from "@careti/shared/constants/PromptSystemConstants"
@@ -13,7 +13,7 @@ import { Logger } from "@/services/logging/Logger"
  *
  * Architecture Level: L1 (Independent)
  * - No modifications to Cline getSystemPrompt function
- * - Uses CaretModeManager for independent mode management
+ * - Uses CaretiModeManager for independent mode management
  * - Completely isolated prompt generation pipeline
  * - Only called when modeSystem === "careti"
  */
@@ -32,7 +32,7 @@ export class CaretiPromptWrapper {
 		try {
 			// CARETI MODIFICATION: JsonTemplateLoader is initialized in common.ts
 			// No need to initialize again here
-			await CaretModeManager.initialize()
+			await CaretiModeManager.initialize()
 			CaretiPromptWrapper.initialized = true
 			Logger.debug("[CaretiPromptWrapper] Initialized successfully")
 		} catch (error) {
@@ -51,10 +51,10 @@ export class CaretiPromptWrapper {
 			await CaretiPromptWrapper.initialize()
 
 			// Get current Careti mode from independent manager
-			const caretMode = CaretModeManager.getCurrentCaretMode()
+			const caretMode = CaretiModeManager.getCurrentCaretMode()
 
 			Logger.debug(`[CaretiPromptWrapper] Generating prompt for mode: ${caretMode}`)
-			Logger.debug(`[CaretiPromptWrapper] Mode debug info: ${JSON.stringify(CaretModeManager.getDebugInfo())}`)
+			Logger.debug(`[CaretiPromptWrapper] Mode debug info: ${JSON.stringify(CaretiModeManager.getDebugInfo())}`)
 
 			// Convert Careti mode to CARETI_MODES constants
 			const caretModeConstant = caretMode === "chatbot" ? CARETI_MODES.CHATBOT : CARETI_MODES.AGENT
@@ -97,14 +97,14 @@ export class CaretiPromptWrapper {
 	 * This provides additional validation layer for tool usage
 	 */
 	static isToolAllowed(toolName: string): boolean {
-		return CaretModeManager.isToolAllowed(toolName)
+		return CaretiModeManager.isToolAllowed(toolName)
 	}
 
 	/**
 	 * Get current Careti mode for external access
 	 */
 	static getCurrentMode(): "chatbot" | "agent" {
-		return CaretModeManager.getCurrentCaretMode()
+		return CaretiModeManager.getCurrentCaretMode()
 	}
 
 	/**
@@ -114,7 +114,7 @@ export class CaretiPromptWrapper {
 		return {
 			initialized: CaretiPromptWrapper.initialized,
 			currentMode: CaretiPromptWrapper.getCurrentMode(),
-			modeManagerInfo: CaretModeManager.getDebugInfo(),
+			modeManagerInfo: CaretiModeManager.getDebugInfo(),
 		}
 	}
 

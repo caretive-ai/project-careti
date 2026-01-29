@@ -152,7 +152,7 @@
 		"providerModel": "Fournisseur/Modele",
 		"operatingSystem": "Systeme d'exploitation",
 		"systemInfo": "Informations systeme",
-		"clineVersion": "Version de Caret",
+		"clineVersion": "Version de Careti",
 		"additionalContext": "Contexte supplementaire"
 	},
 	"serversToggleModal": {
@@ -398,6 +398,27 @@
 	"codeAccordian": {
 		"userEdits": "Modifications utilisateur",
 		"consoleLogs": "Logs de la console"
+	},
+	"thinkingRow": {
+		"thinking": "Réflexion"
+	},
+	"requestStartRow": {
+		"thinking": "Réflexion...",
+		"planning": "Planification..."
+	},
+	"toolGroup": {
+		"read": "lu",
+		"file": "fichier",
+		"files": "fichiers",
+		"folder": "dossier",
+		"folders": "dossiers",
+		"definition": "définition",
+		"definitions": "définitions",
+		"performed": "effectué",
+		"search": "recherche",
+		"searches": "recherches",
+		"context": "Contexte",
+		"brandName": "{{brandName}}"
 	},
 	"copyButton": {
 		"copied": "Copie",

@@ -5,22 +5,23 @@ import {
     ClineAskUseMcpServer,
     ClineMessage,
     ClinePlanModeResponse,
+    ClineSayGenerateExplanation, // CARETI MODIFICATION: Added for generate_explanation UI
     ClineSayTool,
     COMPLETION_RESULT_CHANGES_FLAG,
 } from "@shared/ExtensionMessage"
-import { EmptyRequest, Int64Request, StringRequest } from "@shared/proto/cline/common"
-import { VSCodeBadge, VSCodeButton, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
+import { BooleanRequest, EmptyRequest, StringRequest } from "@shared/proto/cline/common"
+import { VSCodeButton, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
 import deepEqual from "fast-deep-equal"
 import React, { MouseEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useSize } from "react-use"
 import styled from "styled-components"
 // CARETI MODIFICATION: PersonaAvatar import for persona system
 import PersonaAvatar from "@/careti/components/PersonaAvatar"
-import { useCaretState } from "@/careti/context/CaretStateContext"
+import { useCaretiState } from "@/careti/context/CaretiStateContext"
 // CARETI MODIFICATION: use brand-aware generated assets path for image fallback
 import { getBrandGeneratedAssetsDirName } from "@/careti/utils/brand-utils"
-// CARETI MODIFICATION: use CaretWebviewLogger for webview logs
-import WebviewLogger from "@/careti/utils/CaretWebviewLogger"
+// CARETI MODIFICATION: use CaretiWebviewLogger for webview logs
+import WebviewLogger from "@/careti/utils/CaretiWebviewLogger"
 import { t } from "@/careti/utils/i18n"
 import { OptionsButtons } from "@/components/chat/OptionsButtons"
 import TaskFeedbackButtons from "@/components/chat/TaskFeedbackButtons"
@@ -28,17 +29,20 @@ import { CheckmarkControl } from "@/components/common/CheckmarkControl"
 import CodeBlock, { CODE_BLOCK_BG_COLOR } from "@/components/common/CodeBlock"
 import { WithCopyButton } from "@/components/common/CopyButton"
 import MarkdownBlock from "@/components/common/MarkdownBlock"
-import SuccessButton from "@/components/common/SuccessButton"
 import McpResponseDisplay from "@/components/mcp/chat-display/McpResponseDisplay"
 import McpResourceRow from "@/components/mcp/configuration/tabs/installed/server-row/McpResourceRow"
 import McpToolRow from "@/components/mcp/configuration/tabs/installed/server-row/McpToolRow"
 import { useExtensionState } from "@/context/ExtensionStateContext"
-import { CaretAccountServiceClient, FileServiceClient, TaskServiceClient, UiServiceClient } from "@/services/grpc-client"
+import { CaretAccountServiceClient, FileServiceClient, UiServiceClient } from "@/services/grpc-client"
 import { findMatchingResourceOrTemplate, getMcpServerDisplayName } from "@/utils/mcp"
 import { CheckpointControls } from "../common/CheckpointControls"
 import CodeAccordian, { cleanPathPrefix } from "../common/CodeAccordian"
 import { ErrorBlockTitle } from "./ErrorBlockTitle"
 import ErrorRow from "./ErrorRow"
+// CARETI MODIFICATION: Import RequestStartRow for unified UI (ThinkingRow is rendered inside RequestStartRow)
+import { RequestStartRow } from "./RequestStartRow"
+// CARETI MODIFICATION: Import CompletionOutputRow for task completed UI (ported from ref-cline)
+import { CompletionOutputRow } from "./CompletionOutputRow"
 import HookMessage from "./HookMessage"
 import NewTaskPreview from "./NewTaskPreview"
 import QuoteButton from "./QuoteButton"
@@ -67,6 +71,9 @@ const ChatRowContainer = styled.div`
 	}
 `
 
+// CARETI MODIFICATION: Import Mode type for ChatRow props
+import { Mode } from "@shared/storage/types"
+
 interface ChatRowProps {
 	message: ClineMessage
 	isExpanded: boolean
@@ -77,9 +84,16 @@ interface ChatRowProps {
 	inputValue?: string
 	sendMessageFromChatRow?: (text: string, images: string[], files: string[]) => void
 	onSetQuote: (text: string) => void
+	// CARETI MODIFICATION: Additional props for ThinkingRow, RequestStartRow and UI improvements
+	onCancelCommand?: () => void
+	mode?: Mode
+	reasoningContent?: string
+	responseStarted?: boolean
+	isRequestInProgress?: boolean
+	clineMessages?: ClineMessage[]
 }
 
-interface QuoteButtonState {
+export interface QuoteButtonState {
 	visible: boolean
 	top: number
 	left: number
@@ -163,13 +177,21 @@ export const ChatRowContent = memo(
 		inputValue,
 		sendMessageFromChatRow,
 		onSetQuote,
+		// CARETI MODIFICATION: Additional props for RequestStartRow
+		mode,
+		reasoningContent,
+		responseStarted,
+		clineMessages = [],
 	}: ChatRowContentProps) => {
 		// CARETI MODIFICATION: Use featureConfig from ExtensionState instead of getCurrentFeatureConfig
-		const { mcpServers, mcpMarketplaceCatalog, onRelinquishControl, enablePersonaSystem, featureConfig } = useExtensionState()
+		const { mcpServers, mcpMarketplaceCatalog, onRelinquishControl, enablePersonaSystem, featureConfig, vscodeTerminalExecutionMode } =
+			useExtensionState()
 
 		// CARETI MODIFICATION: Get persona profile from Careti context
-		const { personaProfile } = useCaretState()
+		const { personaProfile } = useCaretiState()
 		const [seeNewChangesDisabled, setSeeNewChangesDisabled] = useState(false)
+		// CARETI MODIFICATION: Add explainChangesDisabled state for CompletionOutputRow
+		const [explainChangesDisabled, setExplainChangesDisabled] = useState(false)
 		const [quoteButtonState, setQuoteButtonState] = useState<QuoteButtonState>({
 			visible: false,
 			top: 0,
@@ -1234,6 +1256,76 @@ export const ChatRowContent = memo(
 						</>
 					)
 				}
+				// CARETI MODIFICATION: Add webSearch case for web search UI (ported from ref-cline v3.49.1)
+				case "webSearch":
+					return (
+						<>
+							<div style={headerStyle}>
+								<span
+									className="codicon codicon-search"
+									style={{
+										color: normalColor,
+										marginBottom: "-1.5px",
+										transform: "rotate(90deg)",
+									}}></span>
+								{tool.operationIsLocatedInWorkspace === false &&
+									toolIcon("sign-out", "yellow", -90, t("tool.externalSearch", "chat"))}
+								<span style={{ fontWeight: "bold" }}>
+									{message.type === "ask"
+										? t("tool.webSearchWants", "chat")
+										: t("tool.webSearchDid", "chat")}
+								</span>
+							</div>
+							<div
+								style={{
+									borderRadius: 3,
+									backgroundColor: CODE_BLOCK_BG_COLOR,
+									overflow: "hidden",
+									border: "1px solid var(--vscode-editorGroup-border)",
+									padding: "9px 10px",
+								}}>
+								<span
+									className="ph-no-capture"
+									style={{
+										whiteSpace: "nowrap",
+										overflow: "hidden",
+										textOverflow: "ellipsis",
+										marginRight: "8px",
+										direction: "rtl",
+										textAlign: "left",
+									}}>
+									{tool.path + "\u200E"}
+								</span>
+							</div>
+						</>
+					)
+				// CARETI MODIFICATION: Add useSkill case for skill UI (ported from ref-cline v3.49.1)
+				case "useSkill":
+					return (
+						<>
+							<div style={headerStyle}>
+								<i
+									className="codicon codicon-lightbulb"
+									style={{
+										color: normalColor,
+										marginBottom: "-1.5px",
+									}}></i>
+								<span style={{ fontWeight: "bold" }}>{t("tool.skillLoaded", "chat")}</span>
+							</div>
+							<div
+								style={{
+									borderRadius: 3,
+									backgroundColor: CODE_BLOCK_BG_COLOR,
+									overflow: "hidden",
+									border: "1px solid var(--vscode-editorGroup-border)",
+									padding: "9px 10px",
+								}}>
+								<span className="ph-no-capture" style={{ fontWeight: 500 }}>
+									{tool.path}
+								</span>
+							</div>
+						</>
+					)
 				default:
 					return null
 			}
@@ -1406,59 +1498,22 @@ export const ChatRowContent = memo(
 			case "say":
 				switch (message.say) {
 					case "api_req_started":
+						// CARETI MODIFICATION: Use RequestStartRow for unified API request display
 						return (
-							<>
-								<div
-									onClick={handleToggle}
-									style={{
-										...headerStyle,
-										marginBottom:
-											(cost == null && apiRequestFailedMessage) || apiReqStreamingFailedMessage ? 10 : 0,
-										justifyContent: "space-between",
-										cursor: "pointer",
-										userSelect: "none",
-										WebkitUserSelect: "none",
-										MozUserSelect: "none",
-										msUserSelect: "none",
-									}}>
-									<div
-										style={{
-											display: "flex",
-											alignItems: "center",
-											gap: "10px",
-										}}>
-										{icon}
-										{title}
-										{/* Need to render this every time since it affects height of row by 2px */}
-										<VSCodeBadge
-											style={{
-												opacity: cost != null && cost > 0 && featureConfig.showCostInformation ? 1 : 0,
-											}}>
-											${Number(cost || 0)?.toFixed(4)}
-										</VSCodeBadge>
-									</div>
-									<span className={`codicon codicon-chevron-${isExpanded ? "up" : "down"}`}></span>
-								</div>
-								{((cost == null && apiRequestFailedMessage) || apiReqStreamingFailedMessage) && (
-									<ErrorRow
-										apiReqStreamingFailedMessage={apiReqStreamingFailedMessage}
-										apiRequestFailedMessage={apiRequestFailedMessage}
-										errorType="error"
-										message={message}
-									/>
-								)}
-
-								{isExpanded && (
-									<div style={{ marginTop: "10px" }}>
-										<CodeAccordian
-											code={JSON.parse(message.text || "{}").request}
-											isExpanded={true}
-											language="markdown"
-											onToggleExpand={handleToggle}
-										/>
-									</div>
-								)}
-							</>
+							<RequestStartRow
+								apiReqStreamingFailedMessage={apiReqStreamingFailedMessage}
+								apiRequestFailedMessage={apiRequestFailedMessage}
+								clineMessages={clineMessages}
+								cost={cost}
+								handleToggle={handleToggle}
+								isExpanded={isExpanded}
+								message={message}
+								mode={mode}
+								reasoningContent={reasoningContent}
+								responseStarted={responseStarted}
+								personaProfile={personaProfile}
+								showPersonaAvatar={!!(featureConfig?.showPersonaSettings && enablePersonaSystem)}
+							/>
 						)
 					case "api_req_finished":
 						return null // we should never see this message type
@@ -1529,73 +1584,10 @@ export const ChatRowContent = memo(
 							</div>
 						)
 					case "reasoning":
-						return (
-							<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-								{featureConfig?.showPersonaSettings && enablePersonaSystem && (
-									<PersonaAvatar
-										isThinking={true}
-										personaProfile={personaProfile}
-										size={64}
-										style={{
-											marginTop: "2px",
-											flexShrink: 0,
-										}}
-									/>
-								)}
-								<div style={{ flex: 1, minWidth: 0 }}>
-									{message.text && (
-										<div
-											onClick={handleToggle}
-											style={{
-												cursor: "pointer",
-												color: "var(--vscode-descriptionForeground)",
-												fontStyle: "italic",
-												overflow: "hidden",
-											}}>
-											{isExpanded ? (
-												<div style={{ marginTop: -3 }}>
-													<span style={{ fontWeight: "bold", display: "block", marginBottom: "4px" }}>
-														Thinking
-														<span
-															className="codicon codicon-chevron-down"
-															style={{
-																display: "inline-block",
-																transform: "translateY(3px)",
-																marginLeft: "1.5px",
-															}}
-														/>
-													</span>
-													<span className="ph-no-capture">{message.text}</span>
-												</div>
-											) : (
-												<div style={{ display: "flex", alignItems: "center" }}>
-													<span style={{ fontWeight: "bold", marginRight: "4px" }}>Thinking:</span>
-													<span
-														className="ph-no-capture"
-														style={{
-															whiteSpace: "nowrap",
-															overflow: "hidden",
-															textOverflow: "ellipsis",
-															direction: "rtl",
-															textAlign: "left",
-															flex: 1,
-														}}>
-														{message.text + "\u200E"}
-													</span>
-													<span
-														className="codicon codicon-chevron-right"
-														style={{
-															marginLeft: "4px",
-															flexShrink: 0,
-														}}
-													/>
-												</div>
-											)}
-										</div>
-									)}
-								</div>
-							</div>
-						)
+						// CARETI MODIFICATION: Skip rendering here - reasoning is handled by RequestStartRow
+						// via findReasoningForApiReq() which collects reasoning content and displays it
+						// in ThinkingRow. Rendering here would cause duplicate thinking sections.
+						return null
 					case "user_feedback":
 						return (
 							<UserMessage
@@ -1645,18 +1637,135 @@ export const ChatRowContent = memo(
 								Loading MCP documentation
 							</div>
 						)
-					case "completion_result":
+					// CARETI MODIFICATION: Add generate_explanation case (ported from ref-cline v3.49.1)
+					case "generate_explanation": {
+						let explanationInfo: ClineSayGenerateExplanation = {
+							title: "code changes",
+							fromRef: "",
+							toRef: "",
+							status: "generating",
+						}
+						try {
+							if (message.text) {
+								explanationInfo = JSON.parse(message.text)
+							}
+						} catch {
+							// Use defaults if parsing fails
+						}
+						// Check if generation was interrupted:
+						// 1. If status is "generating" but this isn't the last message, it was interrupted
+						// 2. If status is "generating" and lastModifiedMessage is a resume ask, task was just cancelled
+						const wasCancelled =
+							explanationInfo.status === "generating" &&
+							(!isLast ||
+								lastModifiedMessage?.ask === "resume_task" ||
+								lastModifiedMessage?.ask === "resume_completed_task")
+						const isGenerating = explanationInfo.status === "generating" && !wasCancelled
+						const isError = explanationInfo.status === "error"
+						return (
+							<div
+								style={{
+									backgroundColor: CODE_BLOCK_BG_COLOR,
+									display: "flex",
+									flexDirection: "column",
+									border: "1px solid var(--vscode-editorGroup-border)",
+									borderRadius: 3,
+									padding: "10px 12px",
+								}}>
+								<div style={{ display: "flex", alignItems: "center" }}>
+									{isGenerating ? (
+										<ProgressIndicator />
+									) : isError ? (
+										<span
+											className="codicon codicon-error"
+											style={{
+												color: errorColor,
+												marginRight: 8,
+												marginBottom: "-1.5px",
+											}}></span>
+									) : wasCancelled ? (
+										<span
+											className="codicon codicon-circle-slash"
+											style={{
+												marginRight: 8,
+												marginBottom: "-1.5px",
+											}}></span>
+									) : (
+										<span
+											className="codicon codicon-check"
+											style={{
+												color: successColor,
+												marginRight: 8,
+												marginBottom: "-1.5px",
+											}}></span>
+									)}
+									<span style={{ fontWeight: 600 }}>
+										{isGenerating
+											? t("tool.generateExplanationGenerating", "chat")
+											: isError
+												? t("tool.generateExplanationFailed", "chat")
+												: wasCancelled
+													? t("tool.generateExplanationCancelled", "chat")
+													: t("tool.generateExplanationGenerated", "chat")}
+									</span>
+								</div>
+								{isError && explanationInfo.error && (
+									<div
+										style={{
+											opacity: 0.8,
+											marginLeft: 24,
+											marginTop: 6,
+											color: errorColor,
+											wordBreak: "break-word",
+										}}>
+										{explanationInfo.error}
+									</div>
+								)}
+								{!isError && (explanationInfo.title || explanationInfo.fromRef) && (
+									<div style={{ opacity: 0.8, marginLeft: 24, marginTop: 6 }}>
+										<div>{explanationInfo.title}</div>
+										{explanationInfo.fromRef && (
+											<div
+												style={{
+													opacity: 0.7,
+													marginTop: 6,
+													fontSize: 12,
+													wordBreak: "break-all",
+												}}>
+												<code
+													style={{
+														backgroundColor: "var(--vscode-textBlockQuote-background)",
+														borderRadius: 3,
+														padding: "2px 6px",
+													}}>
+													{explanationInfo.fromRef}
+												</code>
+												<span style={{ margin: "0 4px" }}>→</span>
+												<code
+													style={{
+														backgroundColor: "var(--vscode-textBlockQuote-background)",
+														borderRadius: 3,
+														padding: "2px 6px",
+													}}>
+													{explanationInfo.toRef || "working directory"}
+												</code>
+											</div>
+										)}
+									</div>
+								)}
+							</div>
+						)
+					}
+					case "completion_result": {
+						// CARETI MODIFICATION: Use new CompletionOutputRow component ported from ref-cline
 						const hasChanges = message.text?.endsWith(COMPLETION_RESULT_CHANGES_FLAG) ?? false
-						const text = hasChanges ? message.text?.slice(0, -COMPLETION_RESULT_CHANGES_FLAG.length) : message.text
+						const completionText = hasChanges
+							? message.text?.slice(0, -COMPLETION_RESULT_CHANGES_FLAG.length)
+							: message.text
 						return (
 							<>
-								<div
-									style={{
-										...headerStyle,
-										marginBottom: "10px",
-									}}>
-									{icon}
-									{title}
+								{/* CARETI MODIFICATION: Keep TaskFeedbackButtons for Careti-specific feedback */}
+								<div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "8px" }}>
 									<TaskFeedbackButtons
 										isFromHistory={
 											!isLast ||
@@ -1664,52 +1773,22 @@ export const ChatRowContent = memo(
 											lastModifiedMessage?.ask === "resume_task"
 										}
 										messageTs={message.ts}
-										style={{
-											marginLeft: "auto",
-										}}
 									/>
 								</div>
-								<WithCopyButton
-									onMouseUp={handleMouseUp}
-									position="bottom-right"
-									ref={contentRef}
-									style={{
-										color: "var(--vscode-charts-green)",
-										paddingTop: 10,
-									}}
-									textToCopy={text}>
-									<Markdown markdown={text} />
-									{quoteButtonState.visible && (
-										<QuoteButton
-											left={quoteButtonState.left}
-											onClick={handleQuoteClick}
-											top={quoteButtonState.top}
-										/>
-									)}
-								</WithCopyButton>
-								{message.partial !== true && hasChanges && (
-									<div style={{ paddingTop: 17 }}>
-										<SuccessButton
-											disabled={seeNewChangesDisabled}
-											onClick={() => {
-												setSeeNewChangesDisabled(true)
-												TaskServiceClient.taskCompletionViewChanges(
-													Int64Request.create({
-														value: message.ts,
-													}),
-												).catch((err) => logger.error("Failed to show task completion view changes", err))
-											}}
-											style={{
-												cursor: seeNewChangesDisabled ? "wait" : "pointer",
-												width: "100%",
-											}}>
-											<i className="codicon codicon-new-file" style={{ marginRight: 6 }} />
-											{t("seeNewChanges", "chat")}
-										</SuccessButton>
-									</div>
-								)}
+								<CompletionOutputRow
+									explainChangesDisabled={explainChangesDisabled}
+									handleQuoteClick={handleQuoteClick}
+									messageTs={message.ts}
+									quoteButtonState={quoteButtonState}
+									seeNewChangesDisabled={seeNewChangesDisabled}
+									setExplainChangesDisabled={setExplainChangesDisabled}
+									setSeeNewChangesDisabled={setSeeNewChangesDisabled}
+									showActionRow={message.partial !== true && hasChanges}
+									text={completionText || ""}
+								/>
 							</>
 						)
+					}
 					case "shell_integration_warning":
 						return (
 							<div
@@ -1759,6 +1838,80 @@ export const ChatRowContent = memo(
 								</div>
 							</div>
 						)
+					// CARETI MODIFICATION: Added shell_integration_warning_with_suggestion case (ported from ref-cline v3.49.1)
+					case "shell_integration_warning_with_suggestion": {
+						const isBackgroundModeEnabled = vscodeTerminalExecutionMode === "backgroundExec"
+						return (
+							<div
+								style={{
+									display: "flex",
+									flexDirection: "column",
+									backgroundColor: "rgba(0, 122, 204, 0.1)", // Link color at 10% opacity
+									padding: 8,
+									borderRadius: 3,
+									fontSize: 12,
+									border: "1px solid rgba(0, 122, 204, 0.3)", // Link color at 30% opacity
+								}}>
+								<div
+									style={{
+										display: "flex",
+										alignItems: "center",
+										marginBottom: 4,
+									}}>
+									<i
+										className="codicon codicon-lightbulb"
+										style={{
+											marginRight: 8,
+											fontSize: 14,
+											color: "var(--vscode-textLink-foreground)",
+										}}></i>
+									<span
+										style={{
+											fontWeight: 500,
+											color: "var(--vscode-foreground)",
+										}}>
+										Shell integration issues
+									</span>
+								</div>
+								<div style={{ color: "var(--vscode-foreground)", opacity: 0.9, marginBottom: 8 }}>
+									Since you're experiencing repeated shell integration issues, we recommend switching
+									to Background Terminal mode for better reliability.
+								</div>
+								<button
+									style={{
+										backgroundColor: isBackgroundModeEnabled
+											? "var(--vscode-testing-iconPassed)"
+											: "var(--vscode-button-background)",
+										color: "var(--vscode-button-foreground)",
+										border: "none",
+										borderRadius: 3,
+										padding: "6px 12px",
+										fontSize: 12,
+										display: "flex",
+										alignItems: "center",
+										gap: 6,
+										cursor: isBackgroundModeEnabled ? "default" : "pointer",
+										opacity: isBackgroundModeEnabled ? 0.8 : 1,
+									}}
+									disabled={isBackgroundModeEnabled}
+									onClick={async () => {
+										try {
+											// Enable background terminal execution mode
+											await UiServiceClient.setTerminalExecutionMode(
+												BooleanRequest.create({ value: true }),
+											)
+										} catch (error) {
+											console.error("Failed to enable background terminal:", error)
+										}
+									}}>
+									<i className="codicon codicon-settings-gear" style={{ fontSize: 12 }}></i>
+									{isBackgroundModeEnabled
+										? "Background Terminal Enabled"
+										: "Enable Background Terminal (Recommended)"}
+								</button>
+							</div>
+						)
+					}
 					case "hook":
 						return <HookMessage message={message} />
 					case "hook_output":
@@ -1786,19 +1939,17 @@ export const ChatRowContent = memo(
 						return <ErrorRow errorType="mistake_limit_reached" message={message} />
 					case "auto_approval_max_req_reached":
 						return <ErrorRow errorType="auto_approval_max_req_reached" message={message} />
-					case "completion_result":
+					case "completion_result": {
+						// CARETI MODIFICATION: Use new CompletionOutputRow component ported from ref-cline
 						if (message.text) {
 							const hasChanges = message.text.endsWith(COMPLETION_RESULT_CHANGES_FLAG) ?? false
-							const text = hasChanges ? message.text.slice(0, -COMPLETION_RESULT_CHANGES_FLAG.length) : message.text
+							const askCompletionText = hasChanges
+								? message.text.slice(0, -COMPLETION_RESULT_CHANGES_FLAG.length)
+								: message.text
 							return (
-								<div>
-									<div
-										style={{
-											...headerStyle,
-											marginBottom: "10px",
-										}}>
-										{icon}
-										{title}
+								<>
+									{/* CARETI MODIFICATION: Keep TaskFeedbackButtons for Careti-specific feedback */}
+									<div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "8px" }}>
 										<TaskFeedbackButtons
 											isFromHistory={
 												!isLast ||
@@ -1806,60 +1957,25 @@ export const ChatRowContent = memo(
 												lastModifiedMessage?.ask === "resume_task"
 											}
 											messageTs={message.ts}
-											style={{
-												marginLeft: "auto",
-											}}
 										/>
 									</div>
-									<WithCopyButton
-										onMouseUp={handleMouseUp}
-										position="bottom-right"
-										ref={contentRef}
-										style={{
-											color: "var(--vscode-charts-green)",
-											paddingTop: 10,
-										}}
-										textToCopy={text}>
-										<Markdown markdown={text} />
-										{quoteButtonState.visible && (
-											<QuoteButton
-												left={quoteButtonState.left}
-												onClick={handleQuoteClick}
-												top={quoteButtonState.top}
-											/>
-										)}
-									</WithCopyButton>
-									{message.partial !== true && hasChanges && (
-										<div style={{ marginTop: 15 }}>
-											<SuccessButton
-												appearance="secondary"
-												disabled={seeNewChangesDisabled}
-												onClick={() => {
-													setSeeNewChangesDisabled(true)
-													TaskServiceClient.taskCompletionViewChanges(
-														Int64Request.create({
-															value: message.ts,
-														}),
-													).catch((err) =>
-														logger.error("Failed to show task completion view changes", err),
-													)
-												}}>
-												<i
-													className="codicon codicon-new-file"
-													style={{
-														marginRight: 6,
-														cursor: seeNewChangesDisabled ? "wait" : "pointer",
-													}}
-												/>
-												{t("seeNewChanges", "chat")}
-											</SuccessButton>
-										</div>
-									)}
-								</div>
+									<CompletionOutputRow
+										explainChangesDisabled={explainChangesDisabled}
+										handleQuoteClick={handleQuoteClick}
+										messageTs={message.ts}
+										quoteButtonState={quoteButtonState}
+										seeNewChangesDisabled={seeNewChangesDisabled}
+										setExplainChangesDisabled={setExplainChangesDisabled}
+										setSeeNewChangesDisabled={setSeeNewChangesDisabled}
+										showActionRow={message.partial !== true && hasChanges}
+										text={askCompletionText || ""}
+									/>
+								</>
 							)
 						} else {
 							return null // Don't render anything when we get a completion_result ask without text
 						}
+					}
 					case "followup":
 						let question: string | undefined
 						let options: string[] | undefined

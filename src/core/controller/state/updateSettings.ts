@@ -372,6 +372,16 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			controller.stateManager.setGlobalState("inputHistory", request.inputHistory)
 		}
 
+		// CARETI MODIFICATION: Cline web tools setting (ported from ref-cline v3.49.1)
+		if (request.clineWebToolsEnabled !== undefined) {
+			controller.stateManager.setGlobalState("clineWebToolsEnabled", request.clineWebToolsEnabled)
+		}
+
+		// CARETI MODIFICATION: Background edit setting (ported from ref-cline v3.49.1)
+		if (request.backgroundEditEnabled !== undefined) {
+			controller.stateManager.setGlobalState("backgroundEditEnabled", !!request.backgroundEditEnabled)
+		}
+
 		// Post updated state to webview
 		await controller.postStateToWebview()
 

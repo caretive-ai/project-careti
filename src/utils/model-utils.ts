@@ -111,6 +111,12 @@ export function isGemini3ModelFamily(id: string): boolean {
 	return modelId.includes("gemini3") || modelId.includes("gemini-3")
 }
 
+// CARETI MODIFICATION: Added for Cline v3.49.1 parity
+export function isDevstralModelFamily(id: string): boolean {
+	const modelId = normalize(id)
+	return modelId.includes("devstral")
+}
+
 export function isNextGenModelFamily(id: string): boolean {
 	const modelId = normalize(id)
 	return (

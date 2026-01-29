@@ -2934,7 +2934,7 @@
     "presence": "careti"
   },
   {
-    "file": "careti-docs/features/f06-agent-standardization.md",
+    "file": "careti-docs/features/f06-agent-standard-claude-compat.md",
     "strategy": "MANUAL_REVIEW",
     "priority": "low",
     "notes": [

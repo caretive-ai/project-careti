@@ -21,6 +21,20 @@
 - TDD: Integration 테스트 우선 → 최소 구현 → 리팩터.
 - 브랜드/경로/표기 계산은 `careti-src/utils/brand-utils.ts`를 사용합니다.
 
+# Work Logs (작업 로그)
+
+작업 로그는 parent의 `docs-work-logs/luke/project-careti/` 폴더에 기록합니다.
+
+## 규칙
+- **파일명 형식**: `YYYYMMDD-{번호}-{주제}.md` (예: `20260124-20-opencode-tool-complete-port.md`)
+- **폴더 구조**: `todo/`, `doing/`, `done/`
+- **날짜 기록**: 각 작업 단계마다 날짜 기록 (일간/주간/월간 요약용)
+- **언어**: 한국어 선호
+
+## 참조
+- `docs-work-logs/AGENTS.md` - 작업 로그 저장소 가이드
+- `docs-work-logs/.agents/context/agents-rules.json` - 상세 규칙
+
 # Boundaries
 - 보호 디렉토리(`src/`, `webview-ui/` 등)에 신규 파일 추가 시 파일 상단에 `// CARETI MODIFICATION:` 표기.
 - Cline 원본 파일 수정은 최소 침습 원칙(1~3줄)과 `// CARETI MODIFICATION:` 주석을 준수.

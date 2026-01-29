@@ -72,8 +72,15 @@ steps:
       - name: Testing & Quality
         keywords: [test, TDD, quality, coverage, verification, bug, integration test]
         root: .agents/context/testing-work.md            # Quick reference (82 lines)
-        workflow: .agents/workflows/testing-work.md # Detailed (253 lines)
+        workflow:
+          - .agents/workflows/testing-work.md # Detailed (253 lines)
+          - .agents/workflows/testing-guide.md # AI testing guide
         korean: careti-docs/development/testing-guide.md
+        commands:
+          - npm run test:report      # Full test summary
+          - npm run test:report:json # JSON for AI parsing
+          - npm run test:unit        # Backend tests (mocha)
+          - npm run test:webview     # Frontend tests (vitest)
 
       - name: CLI Development
         keywords: [CLI, headless, yolo, subagent, agent mode, chatbot mode, terminal, standalone, benchmark]
@@ -137,6 +144,20 @@ steps:
           - careti-docs/development/utilities.md
           - careti-docs/development/file-storage-and-image-loading-guide.md
           - careti-docs/development/ui-to-storage-flow.md
+
+      - name: Desktop App (Tauri)
+        keywords: [desktop, tauri, standalone app, rust, avatar, independent]
+        root: desktop/README.md
+        structure:
+          frontend: desktop/src/
+          backend: desktop/src-tauri/
+        commands:
+          - cd desktop && npm install
+          - npm run tauri dev      # 개발 모드
+          - npm run tauri build    # 프로덕션 빌드
+        notes: |
+          VS Code 없이 독립 실행 가능한 데스크톱 앱
+          L1_independent 레벨 (자유롭게 수정 가능)
 
   - step: 2
     title: Smart Reading Strategy

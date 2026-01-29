@@ -1,0 +1,204 @@
+/* CARETI MODIFICATION: Standalone 전용 다크 테마 스타일시트
+ * - VSCode CSS 변수 정의 (다크 테마)
+ * - 글꼴 크기 축소
+ * - 툴팁/팝업 배경색 수정
+ *
+ * 모든 스타일은 .platform-standalone 클래스로 스코프됨
+ */
+
+body.platform-standalone {
+  /* VSCode Dark Theme Colors */
+  --vscode-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --vscode-font-size: 12px;
+  --vscode-font-weight: normal;
+  --vscode-editor-font-family: 'Azeret Mono', Consolas, 'Courier New', monospace;
+  --vscode-editor-font-size: 12px;
+  --vscode-editor-line-height: 1.5;
+
+  /* Background colors */
+  --vscode-editor-background: #1e1e1e;
+  --vscode-sideBar-background: #252526;
+  --vscode-panel-background: #1e1e1e;
+  --vscode-tab-activeBackground: #1e1e1e;
+  --vscode-editorWidget-background: #252526;
+  --vscode-dropdown-background: #3c3c3c;
+  --vscode-input-background: #3c3c3c;
+  --vscode-quickInput-background: #252526;
+  --vscode-list-activeSelectionBackground: #094771;
+  --vscode-list-hoverBackground: #2a2d2e;
+  --vscode-peekViewResult-background: #252526;
+
+  /* Foreground colors */
+  --vscode-foreground: #cccccc;
+  --vscode-editor-foreground: #d4d4d4;
+  --vscode-sideBar-foreground: #cccccc;
+  --vscode-input-foreground: #cccccc;
+  --vscode-dropdown-foreground: #f0f0f0;
+  --vscode-list-activeSelectionForeground: #ffffff;
+  --vscode-badge-foreground: #ffffff;
+  --vscode-descriptionForeground: #8b949e;
+
+  /* Border colors */
+  --vscode-panel-border: #3c3c3c;
+  --vscode-input-border: #3c3c3c;
+  --vscode-dropdown-border: #3c3c3c;
+  --vscode-editorWidget-border: #454545;
+  --vscode-sideBar-border: #3c3c3c;
+  --vscode-focusBorder: #007fd4;
+
+  /* Button colors */
+  --vscode-button-background: #0e639c;
+  --vscode-button-foreground: #ffffff;
+  --vscode-button-hoverBackground: #1177bb;
+  --vscode-button-secondaryBackground: #3a3d41;
+  --vscode-button-secondaryForeground: #ffffff;
+  --vscode-button-secondaryHoverBackground: #45494e;
+
+  /* Badge colors */
+  --vscode-badge-background: #4d4d4d;
+
+  /* Link colors */
+  --vscode-textLink-foreground: #3794ff;
+  --vscode-textLink-activeForeground: #3794ff;
+
+  /* Scrollbar colors */
+  --vscode-scrollbarSlider-background: rgba(121, 121, 121, 0.4);
+  --vscode-scrollbarSlider-hoverBackground: rgba(100, 100, 100, 0.7);
+  --vscode-scrollbarSlider-activeBackground: rgba(191, 191, 191, 0.4);
+
+  /* Error/Warning/Info colors */
+  --vscode-errorForeground: #f48771;
+  --vscode-notificationsWarningIcon-foreground: #cca700;
+  --vscode-notificationsInfoIcon-foreground: #75beff;
+
+  /* Checkbox */
+  --vscode-checkbox-background: #3c3c3c;
+  --vscode-checkbox-border: #3c3c3c;
+  --vscode-checkbox-foreground: #f0f0f0;
+
+  /* Tab colors */
+  --vscode-tab-border: #252526;
+  --vscode-tab-inactiveBackground: #2d2d2d;
+  --vscode-tab-inactiveForeground: rgba(255, 255, 255, 0.5);
+
+  /* Toolbar */
+  --vscode-toolbar-hoverBackground: rgba(90, 93, 94, 0.31);
+
+  /* Progress bar */
+  --vscode-progressBar-background: #0e70c0;
+
+  /* Status bar */
+  --vscode-statusBar-background: #007acc;
+  --vscode-statusBar-foreground: #ffffff;
+
+  /* Apply styles */
+  font-size: 12px !important;
+  background-color: var(--vscode-sideBar-background) !important;
+  color: var(--vscode-foreground) !important;
+}
+
+/* 헤더/타이틀 텍스트 크기 조정 */
+body.platform-standalone h1,
+body.platform-standalone h2,
+body.platform-standalone h3,
+body.platform-standalone h4,
+body.platform-standalone h5,
+body.platform-standalone h6 {
+  font-size: inherit !important;
+}
+
+/* 입력 요소들 크기 조정 */
+body.platform-standalone input,
+body.platform-standalone textarea,
+body.platform-standalone select,
+body.platform-standalone button {
+  font-size: 12px !important;
+}
+
+/* 툴팁/팝오버 배경색 수정 (투명 문제 해결) */
+body.platform-standalone [role="tooltip"],
+body.platform-standalone [data-radix-popper-content-wrapper],
+body.platform-standalone .tooltip,
+body.platform-standalone .popover,
+body.platform-standalone [data-state="open"][data-radix-popper-content-wrapper] > * {
+  background-color: var(--vscode-editorWidget-background) !important;
+  border: 1px solid var(--vscode-editorWidget-border) !important;
+  color: var(--vscode-foreground) !important;
+}
+
+/* Radix UI 팝오버 컨텐츠 */
+body.platform-standalone [data-radix-popper-content-wrapper] > * {
+  background-color: var(--vscode-editorWidget-background) !important;
+}
+
+/* 드롭다운 메뉴 배경색 */
+body.platform-standalone [role="listbox"],
+body.platform-standalone [role="menu"],
+body.platform-standalone [data-radix-menu-content] {
+  background-color: var(--vscode-dropdown-background) !important;
+  border: 1px solid var(--vscode-dropdown-border) !important;
+}
+
+/* VSCode toolkit 컴포넌트들 */
+body.platform-standalone vscode-button {
+  font-size: 12px !important;
+}
+
+body.platform-standalone vscode-text-field,
+body.platform-standalone vscode-text-area {
+  font-size: 12px !important;
+}
+
+body.platform-standalone vscode-dropdown {
+  font-size: 12px !important;
+}
+
+/* 코드 블록 */
+body.platform-standalone pre,
+body.platform-standalone code {
+  font-family: var(--vscode-editor-font-family) !important;
+  font-size: 11px !important;
+}
+
+/* 채팅 메시지 영역 */
+body.platform-standalone .chat-message,
+body.platform-standalone .message-content {
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+}
+
+/* 설정 패널 */
+body.platform-standalone .settings-section {
+  font-size: 12px !important;
+}
+
+/* 버튼 아이콘 크기 조정 */
+body.platform-standalone .codicon {
+  font-size: 14px !important;
+}
+
+/* 스크롤바 스타일 개선 */
+body.platform-standalone ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+body.platform-standalone ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body.platform-standalone ::-webkit-scrollbar-thumb {
+  background-color: var(--vscode-scrollbarSlider-background);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+body.platform-standalone ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--vscode-scrollbarSlider-hoverBackground);
+}
+
+/* 윈도우 타이틀바 영역 (Tauri) */
+body.platform-standalone [data-tauri-drag-region] {
+  background-color: var(--vscode-sideBar-background);
+}

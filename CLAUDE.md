@@ -14,7 +14,47 @@
 - 컴파일: `npm run compile`
 - CLI 컴파일: `npm run compile-cli` (Go 바이너리 빌드)
 - 패키지: `npm run package`
-- 테스트: `npm run test:unit`, `npm run test:integration`, `npm run test:webview`
+
+## Desktop (Tauri)
+
+**주의**: 루트에서 `npm run dev:webview` 실행 중이면 포트 충돌!
+
+```bash
+# 기존 vite 종료 (필수)
+pkill -f "npm run dev:webview"
+
+# 실행
+cd desktop
+npm run tauri dev      # 개발 모드
+npm run tauri build    # 프로덕션 빌드
+```
+
+상세 문서: `desktop/AGENTS.md`, `desktop/.agents/context/`
+
+# Testing (자동 테스트)
+
+## 테스트 명령어
+| 명령어 | 설명 |
+|--------|------|
+| `npm run test:unit` | 백엔드 유닛 테스트 (mocha) |
+| `npm run test:webview` | 웹뷰 테스트 (vitest) |
+| `npm run test:report` | 전체 테스트 실행 및 요약 보고서 |
+| `npm run test:report:json` | JSON 형식 테스트 결과 (AI 파싱용) |
+
+## AI 테스트 실행 가이드
+1. 코드 변경 후 `npm run test:report:json` 실행
+2. JSON 출력에서 `status` 필드 확인 (`pass` 또는 `fail`)
+3. 실패 시 `resultsDir` 경로에서 상세 로그 확인
+
+## 주요 테스트 파일 위치
+- Proto 변환 테스트: `src/shared/proto-conversions/models/__tests__/`
+- API Configuration 테스트: `src/shared/proto-conversions/models/__tests__/api-*.test.ts`
+- StateManager 테스트: `src/shared/proto-conversions/models/__tests__/state-manager-api-config.test.ts`
+- 웹뷰 테스트: `webview-ui/src/**/__tests__/`
+
+## 현재 테스트 상태 (2026-01-29)
+- Unit: 769+ passing, 7 failing (VRM/Vision 관련)
+- Webview: 140+ passing, 7 failing (i18n 조사 처리)
 
 # CLI Testing
 
@@ -85,6 +125,21 @@ cd cli && go test ./e2e/... -v -run TestInteractive  # 특정 테스트만
 ├── workflows/
 ├── skills/
 └── hooks/
+
+# Source Code Structure
+src/                        # Cline 원본 소스 (보호)
+careti-src/                 # Careti 전용 확장 소스
+cli/                        # Go 기반 CLI (Cline 원본)
+cli-careti/                 # Careti CLI (Node.js)
+standalone/                 # CLI용 VS Code 스텁 런타임
+desktop/                    # Tauri 데스크톱 앱 (독립)
+├── src/                   # 프론트엔드 (아바타 UI 등)
+├── src-tauri/             # Rust 백엔드
+│   ├── Cargo.toml
+│   ├── tauri.conf.json
+│   └── src/main.rs
+├── package.json
+└── vite.config.js
 ```
 
 # Skills

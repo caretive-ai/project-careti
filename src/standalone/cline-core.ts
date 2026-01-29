@@ -1,6 +1,13 @@
 import { ExternalDiffViewProvider } from "@hosts/external/ExternalDiffviewProvider"
 import { ExternalWebviewProvider } from "@hosts/external/ExternalWebviewProvider"
 import { ExternalHostBridgeClientManager } from "@hosts/external/host-bridge-client-manager"
+import {
+	DiffServiceClientInterface,
+	EnvServiceClientInterface,
+	WindowServiceClientInterface,
+	WorkspaceServiceClientInterface,
+} from "@generated/hosts/host-bridge-client-types"
+import { HostBridgeClientProvider } from "@/hosts/host-provider-types"
 import { retryOperation } from "@utils/retry"
 import * as path from "path"
 import { initialize, tearDown } from "@/common"
@@ -15,6 +22,7 @@ import { setLockManager } from "./lock-manager"
 import { PROTOBUS_PORT, startProtobusService } from "./protobus-service"
 import { log } from "./utils"
 import { initializeContext } from "./vscode-context"
+import { startStdioAdapter } from "./stdio-adapter" // CARETI MODIFICATION: Tauri stdio 모드
 
 let globalLockManager: SqliteLockManager | undefined
 
@@ -36,6 +44,12 @@ async function main() {
 
 	// Initialize context with optional custom directory from CLI
 	const { extensionContext, DATA_DIR, EXTENSION_DIR } = initializeContext(args.config)
+
+	// CARETI MODIFICATION: Tauri stdio 모드 - host-bridge 없이 최소 초기화
+	if (args.stdio) {
+		await mainStdio(extensionContext, EXTENSION_DIR, DATA_DIR)
+		return
+	}
 
 	// Configure ports - CLI args override everything
 	if (args.port) {
@@ -94,6 +108,147 @@ async function main() {
 		await shutdownGracefully(globalLockManager)
 		process.exit(1)
 	}
+}
+
+/**
+ * CARETI MODIFICATION: Tauri 앱을 위한 stdio 모드 진입점
+ * host-bridge 없이 실행되며, Tauri가 호스트 역할을 대체
+ */
+async function mainStdio(extensionContext: any, extensionDir: string, dataDir: string) {
+	log("[stdio] Starting in stdio mode for Tauri...")
+
+	try {
+		// Set up error handlers
+		setupGlobalErrorHandlers()
+
+		// stdio 모드에서는 HostProvider를 Tauri 브릿지용으로 설정
+		// Tauri가 파일시스템/터미널 등 호스트 기능을 제공
+		setupHostProviderForStdio(extensionContext, extensionDir, dataDir)
+
+		// Initialize the webview provider and controller
+		const webviewProvider = await initialize(extensionContext)
+
+		// Enable auth handler for OAuth redirects
+		AuthHandler.getInstance().setEnabled(true)
+
+		// Start stdio adapter instead of gRPC server
+		startStdioAdapter(webviewProvider.controller)
+
+		log("[stdio] cline-core running in stdio mode")
+	} catch (err) {
+		log(`[stdio] FATAL ERROR: ${err}`)
+		process.exit(1)
+	}
+}
+
+/**
+ * CARETI MODIFICATION: stdio 모드용 HostProvider 설정
+ * Tauri가 호스트 역할을 대신하므로, host-bridge 클라이언트 대신 스텁 사용
+ */
+function setupHostProviderForStdio(extensionContext: any, extensionDir: string, dataDir: string) {
+	const createWebview = (): WebviewProvider => {
+		return new ExternalWebviewProvider(extensionContext)
+	}
+	const createDiffView = (): DiffViewProvider => {
+		return new ExternalDiffViewProvider()
+	}
+	const getCallbackUrl = (): Promise<string> => {
+		return AuthHandler.getInstance().getCallbackUrl()
+	}
+	const getBinaryLocation = async (name: string): Promise<string> => path.join(process.cwd(), name)
+
+	// stdio 모드에서는 host-bridge가 없으므로 스텁 매니저 사용
+	// Tauri 측에서 필요한 호스트 기능을 구현해야 함
+	HostProvider.initialize(
+		createWebview,
+		createDiffView,
+		new StdioHostBridgeClientManager(),
+		log,
+		getCallbackUrl,
+		getBinaryLocation,
+		extensionDir,
+		dataDir,
+	)
+}
+
+/**
+ * CARETI MODIFICATION: stdio 모드용 스텁 HostBridgeClientManager
+ * 실제 호스트 기능은 Tauri 측에서 처리
+ */
+class StdioHostBridgeClientManager implements HostBridgeClientProvider {
+	workspaceClient: WorkspaceServiceClientInterface
+	envClient: EnvServiceClientInterface
+	windowClient: WindowServiceClientInterface
+	diffClient: DiffServiceClientInterface
+
+	constructor() {
+		// 스텁 클라이언트 생성 - host-bridge 없이 로컬에서 처리
+		this.workspaceClient = new StdioWorkspaceServiceClient()
+		this.envClient = new StdioEnvServiceClient()
+		this.windowClient = new StdioWindowServiceClient()
+		this.diffClient = new StubiDiffServiceClient()
+	}
+}
+
+// 스텁 Workspace 클라이언트 - stdio-adapter의 작업 경로 사용
+class StdioWorkspaceServiceClient implements WorkspaceServiceClientInterface {
+	async getWorkspacePaths(_request: any): Promise<any> {
+		// stdio-adapter에서 설정된 작업 경로 사용
+		const { getCurrentWorkspacePath } = await import("./stdio-adapter")
+		const workspacePath = getCurrentWorkspacePath()
+		log(`[stdio] getWorkspacePaths: ${workspacePath}`)
+		// proto.host.GetWorkspacePathsResponse 형식에 맞게 반환
+		return {
+			id: "standalone",
+			paths: [workspacePath],
+		}
+	}
+	async saveOpenDocumentIfDirty(_request: any): Promise<any> { return {} }
+	async getDiagnostics(_request: any): Promise<any> { return { diagnostics: [] } }
+	async openProblemsPanel(_request: any): Promise<any> { return {} }
+	async openInFileExplorerPanel(_request: any): Promise<any> { return {} }
+	async openClineSidebarPanel(_request: any): Promise<any> { return {} }
+	async openTerminalPanel(_request: any): Promise<any> { return {} }
+	async executeCommandInTerminal(_request: any): Promise<any> { return { output: "" } }
+}
+
+// 스텁 Env 클라이언트
+class StdioEnvServiceClient implements EnvServiceClientInterface {
+	async clipboardWriteText(_request: any): Promise<any> { return {} }
+	async clipboardReadText(_request: any): Promise<any> { return { value: "" } }
+	async getHostVersion(_request: any): Promise<any> { return { version: "tauri-standalone" } }
+	// CARETI MODIFICATION: Standalone 모드에서는 IDE 리다이렉트 URI가 없음
+	// undefined를 반환하면 AuthHandler가 리다이렉트 없이 성공 페이지만 표시
+	async getIdeRedirectUri(_request: any): Promise<any> { throw new Error("No IDE redirect URI in standalone mode") }
+	async getTelemetrySettings(_request: any): Promise<any> { return { enabled: false } }
+	subscribeToTelemetrySettings(_request: any, _callbacks: any): () => void { return () => {} }
+	async shutdown(_request: any): Promise<any> { return {} }
+}
+
+// 스텁 Window 클라이언트
+class StdioWindowServiceClient implements WindowServiceClientInterface {
+	async showTextDocument(_request: any): Promise<any> { return {} }
+	async showOpenDialogue(_request: any): Promise<any> { return { uris: [] } }
+	async showMessage(_request: any): Promise<any> { return {} }
+	async showInputBox(_request: any): Promise<any> { return { value: "" } }
+	async showSaveDialog(_request: any): Promise<any> { return {} }
+	async openFile(_request: any): Promise<any> { return {} }
+	async openSettings(_request: any): Promise<any> { return {} }
+	async getOpenTabs(_request: any): Promise<any> { return { paths: [] } }
+	async getVisibleTabs(_request: any): Promise<any> { return { paths: [] } }
+	async getActiveEditor(_request: any): Promise<any> { return {} }
+}
+
+// 스텁 Diff 클라이언트
+class StubiDiffServiceClient implements DiffServiceClientInterface {
+	async openDiff(_request: any): Promise<any> { return {} }
+	async getDocumentText(_request: any): Promise<any> { return { text: "" } }
+	async replaceText(_request: any): Promise<any> { return {} }
+	async scrollDiff(_request: any): Promise<any> { return {} }
+	async truncateDocument(_request: any): Promise<any> { return {} }
+	async saveDocument(_request: any): Promise<any> { return {} }
+	async closeAllDiffs(_request: any): Promise<any> { return {} }
+	async openMultiFileDiff(_request: any): Promise<any> { return {} }
 }
 
 function setupHostProvider(extensionContext: any, extensionDir: string, dataDir: string) {
@@ -235,6 +390,7 @@ interface CliArgs {
 	hostBridgePort?: number
 	config?: string
 	help?: boolean
+	stdio?: boolean // CARETI MODIFICATION: Tauri stdio 모드 지원
 }
 
 function parseArgs(): CliArgs {
@@ -259,6 +415,10 @@ function parseArgs(): CliArgs {
 			case "-h":
 				args.help = true
 				break
+			// CARETI MODIFICATION: Tauri stdio 모드 지원
+			case "--stdio":
+				args.stdio = true
+				break
 		}
 	}
 
@@ -275,6 +435,7 @@ Options:
   -p, --port <port>              Port for the main gRPC service (default: ${PROTOBUS_PORT})
   --host-bridge-port <port>      Port for the host bridge service (default: ${HOSTBRIDGE_PORT})
   -c, --config <path>            Directory for Cline data storage (default: ~/.cline)
+  --stdio                        Run in stdio mode for Tauri integration (no gRPC server)
   -h, --help                     Show this help message
 
 Environment Variables:

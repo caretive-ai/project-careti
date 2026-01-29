@@ -236,3 +236,20 @@ Available via Careti account even for text-only models.
 **Contribute**: Fork → PR
 
 </details>
+
+---
+
+## 🖥️ Desktop App (Tauri)
+
+VS Code 없이 독립 실행 가능한 데스크톱 앱입니다.
+
+```bash
+cd desktop
+npm install
+npm run tauri dev      # 개발 모드
+npm run tauri build    # 프로덕션 빌드
+```
+
+**구조:**
+- `desktop/src/` — 프론트엔드 (아바타 UI)
+- `desktop/src-tauri/` — Rust 백엔드

@@ -14,9 +14,17 @@
 	},
 	"architecture_rules": {
 		"modification_levels": {
-			"L1_independent": "careti-src/, careti-docs/ (full freedom)",
+			"L1_independent": "careti-src/, careti-docs/, desktop/ (full freedom)",
 			"L2_conditional": "minimal Cline changes with backup + comment",
 			"L3_direct": "last resort with full documentation"
+		},
+		"source_directories": {
+			"src": "Cline 원본 소스 (보호)",
+			"careti-src": "Careti 전용 확장 소스",
+			"cli": "Go 기반 CLI (Cline 원본)",
+			"cli-careti": "Careti CLI (Node.js)",
+			"standalone": "CLI용 VS Code 스텁 런타임",
+			"desktop": "Tauri 데스크톱 앱 (독립, L1_independent)"
 		},
 		"protection_rules": {
 			"protected_directories": [

@@ -33,6 +33,7 @@ cli/**
 cli-caret/**
 standalone/**
 dist-standalone/**
+desktop/**
 scripts/**
 careti-scripts/**
 testing-platform/**

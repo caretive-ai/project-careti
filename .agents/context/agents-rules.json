@@ -14,9 +14,17 @@
 	},
 	"architecture_rules": {
 		"modification_levels": {
-			"L1_independent": "careti-src/, careti-docs/ (full freedom)",
+			"L1_independent": "careti-src/, careti-docs/, desktop/ (full freedom)",
 			"L2_conditional": "minimal Cline changes with backup + comment",
 			"L3_direct": "last resort with full documentation"
+		},
+		"source_directories": {
+			"src": "Cline 원본 소스 (보호)",
+			"careti-src": "Careti 전용 확장 소스",
+			"cli": "Go 기반 CLI (Cline 원본)",
+			"cli-careti": "Careti CLI (Node.js)",
+			"standalone": "CLI용 VS Code 스텁 런타임",
+			"desktop": "Tauri 데스크톱 앱 (독립, L1_independent)"
 		},
 		"protection_rules": {
 			"protected_directories": [
@@ -47,6 +55,27 @@
 				"view_ids": "careti.* (internal_brand_name)",
 				"command_ids": "caretive.careti.* (publisher + internal_brand_name)",
 				"auth_provider": "caret (backwards compatibility with stored credentials)"
+			}
+		}
+	},
+	"feature_flags": {
+		"config_files": {
+			"extension": "careti-src/shared/feature-config.json",
+			"webview": "webview-ui/src/careti/shared/feature-config.json",
+			"cli": "cli-careti/extension/caret-src/shared/feature-config.json"
+		},
+		"type_definition": "webview-ui/src/careti/shared/FeatureConfig.ts",
+		"usage": {
+			"import": "import { getCurrentFeatureConfig } from '@/careti/shared/FeatureConfig'",
+			"read": "const config = getCurrentFeatureConfig()",
+			"conditional_render": "config.showAvatarSettings && <AvatarContainer />"
+		},
+		"rule": "새 기능 추가 시: 1) feature-config.json에 플래그 추가, 2) FeatureConfig.ts 인터페이스 업데이트, 3) 컴포넌트에서 플래그 체크",
+		"features": {
+			"avatar": {
+				"description": "VRM 아바타 (페르소나 대체)",
+				"flags": ["showAvatarSettings", "avatarEnabled"],
+				"components": ["AvatarContainer", "AvatarCanvas", "AvatarStatus"]
 			}
 		}
 	},

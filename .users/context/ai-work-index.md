@@ -113,6 +113,20 @@ Caret의 이중 디렉토리 아키텍처로 작업합니다:
 - 빠른 참조: `.agents/context/build-system.md`
 - 한국어 가이드: `careti-docs/development/utilities.md`, `careti-docs/development/file-storage-and-image-loading-guide.md`, `careti-docs/development/ui-to-storage-flow.md`
 
+### 데스크톱 앱 (Tauri)
+**키워드**: desktop, tauri, standalone app, rust, avatar, independent
+- README: `desktop/README.md`
+- 구조:
+  - 프론트엔드: `desktop/src/`
+  - 백엔드 (Rust): `desktop/src-tauri/`
+- 명령어:
+  ```bash
+  cd desktop && npm install
+  npm run tauri dev      # 개발 모드
+  npm run tauri build    # 프로덕션 빌드
+  ```
+- 참고: VS Code 없이 독립 실행 가능한 데스크톱 앱, L1_independent 레벨 (자유롭게 수정 가능)
+
 ## 작업 단계
 
 ### 단계 1: 작업 특성 분석

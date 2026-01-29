@@ -44,14 +44,61 @@
 ## Architecture Rules
 
 ### Modification Levels
-- **L1 Independent**: `careti-src/`, `careti-docs/` (full freedom)
+- **L1 Independent**: `careti-src/`, `careti-docs/`, `desktop/` (full freedom)
 - **L2 Conditional**: minimal Cline changes with backup + comment
 - **L3 Direct**: last resort with full documentation
+
+### Source Directory Structure
+| 디렉토리 | 용도 | 레벨 |
+|---------|------|------|
+| `src/` | Cline 원본 소스 | 보호 |
+| `careti-src/` | Careti 전용 확장 소스 | L1 |
+| `cli/` | Go 기반 CLI (Cline 원본) | 보호 |
+| `cli-careti/` | Careti CLI (Node.js) | L1 |
+| `standalone/` | CLI용 VS Code 스텁 런타임 | L2 |
+| `desktop/` | Tauri 데스크톱 앱 (독립) | L1 |
 
 ### Protection Rules
 - **Protected directories**: `src/`, `webview-ui/`, `proto/`, `scripts/`, `evals/`, `docs/`, `locales/`, `configs/`
 - **Comment required**: `// CARETI MODIFICATION: [description]`
 - **Max changes**: 1-3 lines per Cline file
+
+## Feature Flags
+
+### Configuration Files
+| 파일 | 용도 |
+|------|------|
+| `careti-src/shared/feature-config.json` | Extension (메인) |
+| `webview-ui/src/careti/shared/feature-config.json` | Webview |
+| `cli-careti/extension/caret-src/shared/feature-config.json` | CLI |
+
+### Type Definition
+`webview-ui/src/careti/shared/FeatureConfig.ts`
+
+### Usage Pattern
+```typescript
+import { getCurrentFeatureConfig } from '@/careti/shared/FeatureConfig'
+
+const config = getCurrentFeatureConfig()
+
+// 조건부 렌더링
+{config.showAvatarSettings && <AvatarContainer />}
+```
+
+### 새 기능 추가 규칙
+1. `feature-config.json`에 플래그 추가 (3개 파일 모두)
+2. `FeatureConfig.ts` 인터페이스 업데이트
+3. 컴포넌트에서 플래그 체크
+
+### Avatar Feature (페르소나 대체)
+VRM 아바타 기능으로 기존 페르소나 컨셉을 대체합니다.
+
+| Flag | Description |
+|------|-------------|
+| `showAvatarSettings` | 아바타 설정 UI 표시 여부 |
+| `avatarEnabled` | 아바타 기능 활성화 기본값 |
+
+**관련 컴포넌트**: `AvatarContainer`, `AvatarCanvas`, `AvatarStatus`
 
 ## Development Framework
 

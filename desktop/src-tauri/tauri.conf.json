@@ -1,0 +1,55 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "careti-standalone",
+  "version": "0.1.0",
+  "identifier": "ai.careti.standalone",
+  "build": {
+    "beforeDevCommand": "cd ../webview-ui && PLATFORM=standalone npm run dev",
+    "devUrl": "http://localhost:25463",
+    "beforeBuildCommand": "cd ../webview-ui && PLATFORM=standalone npm run build",
+    "frontendDist": "../../webview-ui/build"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "Careti",
+        "width": 368,
+        "height": 1024,
+        "resizable": true
+      },
+      {
+        "label": "avatar",
+        "title": "Caret VTuber",
+        "width": 300,
+        "height": 400,
+        "transparent": true,
+        "decorations": false,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "resizable": true,
+        "url": "/avatar"
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  },
+  "plugins": {
+    "shell": {
+      "open": true
+    }
+  }
+}

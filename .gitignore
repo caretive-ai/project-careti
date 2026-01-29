@@ -52,3 +52,6 @@ cline-latest
 # work-logs
 opencode
 .agents/generated-assets/
+packages/app/src-tauri/target/
+desktop/src-tauri/target/
+desktop/node_modules/

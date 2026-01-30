@@ -3,28 +3,26 @@
 	"previousHeader": "之前的更新:",
 	"bullets": {
 		"current": {
-			"1": "Z.AI GLM-4.7 完全支持",
-			"2": "Upstage 提供商",
-			"3": "文本模型图像工具",
-			"4": "Skills & Hooks 系统",
-			"5": "文档工具 (HWP/PDF/DOCX)",
-			"6": "语言扩展",
-			"1-desc": "支持GLM-4.7模型的Thinking Mode和自然对话风格。",
-			"2-desc": "添加了韩国独立AI基础模型Upstage提供商和Solar Pro/Mini模型。",
-			"3-desc": "纯文本模型也可以通过Careti账户工具生成图像(Nano Banana)和分析图像(Gemini)。",
-			"4-desc": "定义项目特定的技能和工具执行前后的钩子。在.agents/或.users/目录中管理。",
-			"5-desc": "read_document工具支持HWP、PDF、DOCX、PPTX等。跨平台HWP解析支持。",
-			"6-desc": "添加了法语、德语和俄语。优先支持拥有自主AI模型的国家。显示提供商国旗。"
+			"1": "Careti中的ZAI GLM-4.7",
+			"2": "Claude Code集成",
+			"3": "网络搜索",
+			"4": "思维过程显示",
+			"5": "SmartEditEngine",
+			"1-desc": "在Careti提供商中直接使用ZAI GLM-4.7。使用您自己的API密钥连接。",
+			"2-desc": "与Claude Code CLI无缝协作。AGENTS.md ↔ CLAUDE.md自动同步。",
+			"3-desc": "通过SerpAPI驱动的网络搜索获取最新信息。",
+			"4-desc": "实时观察AI的思维过程（ThinkingRow）。",
+			"5-desc": "9阶段模糊匹配，编辑成功率100%（Cline 91%），低价模型快50%。"
 		},
 		"previous": {
-			"1": "Naver Cloud 提供商",
-			"2": "Agents.md和项目初始化",
-			"3": "双账户系统",
-			"4": "Cline v3.45.0 错误修复集成",
-			"1-desc": "添加了Naver Cloud(Hyper Clova X)提供商和HCX-007/HCX-005/HCX-DASH-002模型。",
-			"2-desc": "将传统Careti/Cline规则更新为AAIF国际标准，支持项目初始化。",
-			"3-desc": "可以同时使用Careti账户和Cline账户，没有限制。",
-			"4-desc": "部分合并了Cline v3.45.0的错误修复代码。"
+			"1": "Z.AI GLM-4.7 完整支持",
+			"2": "Upstage提供商",
+			"3": "文本模型图像工具",
+			"4": "Skills & Hooks系统",
+			"1-desc": "支持GLM-4.7模型的Thinking Mode和自然对话风格。",
+			"2-desc": "添加了韩国独立AI基础模型Upstage提供商和Solar Pro/Mini模型。",
+			"3-desc": "纯文本模型现在也可以通过Careti账号工具生成图像（Nano Banana）和分析图像（Gemini）。",
+			"4-desc": "定义项目特定技能和工具执行前/后钩子。在.agents/或.users/目录中管理。"
 		}
 	}
 }

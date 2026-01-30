@@ -284,6 +284,16 @@ function createHandlerForProvider(
 						mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
 				})
 			}
+			// CARETI MODIFICATION: Use ZAI Handler for ZAI GLM models
+			if (caretModelId?.startsWith("zai/")) {
+				// Extract ZAI model ID (e.g., "zai/glm-4.7" -> "glm-4.7")
+				const zaiModelId = caretModelId.replace("zai/", "")
+				return new ZAiHandler({
+					onRetryAttempt: options.onRetryAttempt,
+					zaiApiKey: options.zaiApiKey,
+					apiModelId: zaiModelId,
+				})
+			}
 			return new CaretHandler({
 				onRetryAttempt: options.onRetryAttempt,
 				caretAccountId: options.caretAccountId,

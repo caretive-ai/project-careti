@@ -41,6 +41,41 @@
   </table>
 </div>
 
+## [0.4.7] 2026-01-30
+
+> **Note**: Careti v0.4.7 integrates Cline v3.49.1 features and introduces SmartEditEngine for improved code editing.
+
+### ✨ New Features
+- **ZAI GLM-4.7 in Careti provider**: Added Zhipu AI's GLM-4.7 as a new backend option alongside Gemini and Claude Code in the Careti provider.
+- **Web Search (SerpAPI)**: Integrated SerpAPI-powered web search with configurable API key in settings.
+- **Commands system**: Implemented Claude Code/OpenCode style commands in `.agents/commands/` directory.
+- **SmartEditEngine**: New 9-stage fuzzy matching engine with 6-stage fallback for improved code editing reliability.
+- **Background Edits** (Cline v3.49.1): Support for background file editing operations.
+- **Explain Changes** (Cline v3.49.1): New generate_explanation tool for code change explanations.
+- **GFM Markdown support**: Added GitHub Flavored Markdown tables and strikethrough rendering.
+- **TypewriterText component**: Added shimmer animation for streaming text display.
+- **ThinkingRow component**: New UI for reasoning/thinking mode display.
+- **ToolGroupRenderer**: Grouped display for low-stakes tool operations.
+
+### ✨ Improved
+- **Claude Code interop**: AGENTS.md ↔ CLAUDE.md sync hook for seamless Caret + Claude Code workflow.
+- **Caret → Careti rebrand**: Complete brand migration across codebase and all locale files.
+- **Retry logic**: Enhanced API retry logic with improved backoff handling.
+- **Upstage provider**: Improved Upstage provider configuration.
+- **Token-efficient errors**: Optimized error context in WriteToFileToolHandler.
+- **hwpjs dependencies**: Moved platform-specific packages to optionalDependencies.
+- **Ollama thinking**: Fixed thinking mode display for Ollama provider.
+
+### Fixed
+- **Plan/Act mode for Careti**: Hidden Plan/Act mode checkbox for Careti provider (single model mode only).
+- **preserveFocus option**: Fixed file opening to respect preserveFocus setting.
+- **Import paths**: Completed Caret → Careti import path migration.
+- **Web search config**: Fixed SerpAPI key handling in configuration cache.
+- **Build errors**: Resolved Cline v3.49.1 feature integration build issues.
+- **Skills translation**: Fixed t() function call and added skillLoaded translation.
+
+---
+
 ## [0.4.6] 2026-01-19
 
 ### ✨ Improved

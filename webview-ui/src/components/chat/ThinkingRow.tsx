@@ -66,9 +66,9 @@ export const ThinkingRow = memo(
 						<button
 							onClick={onToggle}
 							style={{
-								display: "inline-flex",
-								alignItems: "baseline",
-								gap: "0.125rem",
+								display: "flex",
+								alignItems: "center",
+								gap: "0.25rem",
 								textAlign: "left",
 								userSelect: "none",
 								cursor: "pointer",
@@ -80,29 +80,32 @@ export const ThinkingRow = memo(
 								font: "inherit",
 							}}>
 							{isExpanded ? (
-								<ChevronDownIcon size={14} style={{ opacity: 0.7 }} />
+								<ChevronDownIcon size={14} style={{ opacity: 0.7, flexShrink: 0 }} />
 							) : (
-								<ChevronRightIcon size={14} style={{ opacity: 0.7 }} />
+								<ChevronRightIcon size={14} style={{ opacity: 0.7, flexShrink: 0 }} />
 							)}
-							<span style={{ fontWeight: 600 }}>{t("thinkingRow.thinking", "chat")}:</span>
-							<span
-								style={{
-									fontStyle: "italic",
-									wordBreak: "break-word",
-									overflow: "hidden",
-									textOverflow: "ellipsis",
-									whiteSpace: "nowrap",
-									direction: "rtl",
-									width: "100%",
-								}}>
-								{!isExpanded ? reasoningContent : ""}
+							<span style={{ fontWeight: 600, whiteSpace: "nowrap", flexShrink: 0 }}>
+								{t("thinkingRow.thinking", "chat")}:
 							</span>
+							{!isExpanded && reasoningContent && (
+								<span
+									style={{
+										fontStyle: "italic",
+										overflow: "hidden",
+										textOverflow: "ellipsis",
+										whiteSpace: "nowrap",
+										flex: 1,
+										minWidth: 0,
+									}}>
+									{reasoningContent}
+								</span>
+							)}
 						</button>
 					)}
 
 					{isExpanded && (
 						<div
-							onClick={showTitle ? onToggle : undefined}
+							onClick={onToggle}
 							style={{
 								display: "flex",
 								gap: 0,
@@ -115,7 +118,7 @@ export const ThinkingRow = memo(
 								justifyContent: "baseline",
 								textAlign: "left",
 								padding: 0,
-								cursor: showTitle ? "pointer" : "text",
+								cursor: "pointer",
 								transition: isVisible
 									? "max-height 250ms cubic-bezier(0.4, 0, 0.2, 1), opacity 150ms ease-out"
 									: undefined,

@@ -45,12 +45,12 @@
     </tr>
   </table>
 
-  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/caret_illust.png" alt="Careti" width="360"/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/careti_illust.webp" alt="Careti" width="360"/>
 
   <h1>🎯 Careti</h1>
   <p><strong>Use your Cline settings as-is, with more features, 266 models, free monthly credits</strong></p>
 
-> [v0.4.6 Update] **Dynamic brand naming / Free credits promotion on login UI / README docs links**
+> [v0.4.7 Update] **ZAI GLM-4.7 in Careti / Claude Code integration / Web Search / Thinking display**
 
   <p>
     <a href="https://marketplace.visualstudio.com/items?itemName=caretive.careti">
@@ -74,17 +74,13 @@
 
 ---
 
-## 🎉 v0.4.6
+## 🎉 v0.4.7
 
-- 🎁 **Free Credits Promo** — Sign-up free credits info on login required UI
-- 🤖 **GLM-4.7** — Cost-effective Thinking Mode, just use your API key
-- 🖼️ **Image Tools** — Text models can generate images (Nano Banana) & analyze (Gemini Flash) via Careti account
-- 📄 **Document Tools** — HWP, PDF, DOCX, PPTX cross-platform support
-- ☀️ **Upstage** — Korea's independent AI foundation model provider, Solar Pro/Mini support
-- 🧩 **Skills/Hooks** — Define project-specific AI skills
-- 📁 **Dual Directory & /init** — AI context (`.agents/`) and user docs (`.users/`) with 1:1 mirroring policy
-- 🖼️ **Image Send Toggle** — Set image file send via @mention
-- 🌍 **Language Expansion** — French, German, Russian (countries with own AI models)
+- ✏️ **SmartEditEngine** — 100% edit success rate (vs Cline 91%), 50% faster on budget models with 9-stage fuzzy matching
+- 🤖 **ZAI GLM-4.7 in Careti** — Use ZAI directly in Careti provider with your own API key
+- 🔗 **Claude Code Integration** — Seamless workflow with AGENTS.md ↔ CLAUDE.md sync
+- 🔍 **Web Search** — SerpAPI-powered search for up-to-date information
+- 💭 **Thinking Display** — Watch AI's thinking process in real-time
 
 ---
 
@@ -118,27 +114,27 @@
 <table>
 <tr>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/careti.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/careti.webp" width="60"/><br/>
   <strong>Careti</strong><br/>
   <small>Friendly Robot</small>
 </td>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/sarang.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/sarang.webp" width="60"/><br/>
   <strong>Sarang</strong><br/>
   <small>K-POP Idol</small>
 </td>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/ichika.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/ichika.webp" width="60"/><br/>
   <strong>Ichika</strong><br/>
   <small>Windows OS-tan</small>
 </td>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/cyan.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/cyan.webp" width="60"/><br/>
   <strong>Cyan</strong><br/>
   <small>macOS Helper</small>
 </td>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/ubuntu.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/ubuntu.webp" width="60"/><br/>
   <strong>Tando</strong><br/>
   <small>Open Source Ally</small>
 </td>
@@ -195,7 +191,7 @@ Available via Careti account even for text-only models.
 
 ---
 
-## 📋 15 Core Features
+## 📋 16 Core Features
 
 | Feature | Description | Docs |
 |---------|-------------|------|
@@ -214,6 +210,7 @@ Available via Careti account even for text-only models.
 | F12 | AI-developer knowledge parity | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f12-ai-developer-knowledge-parity.md) |
 | F13 | Image tools | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f13-image-tool.md) |
 | F14 | Document tools | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f14-document-read-tool.md) |
+| F15 | SmartEditEngine (9-stage fuzzy matching) | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features/f15-smart-edit-engine.md) |
 
 ---
 

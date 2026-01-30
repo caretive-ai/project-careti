@@ -18,11 +18,19 @@ interface ApiConfigurationSectionProps {
 const ApiConfigurationSection = ({ renderSectionHeader }: ApiConfigurationSectionProps) => {
 	const { planActSeparateModelsSetting, mode, apiConfiguration } = useExtensionState()
 	const [currentTab, setCurrentTab] = useState<Mode>(mode)
-	const [localSeparateSetting, setLocalSeparateSetting] = useState(planActSeparateModelsSetting)
+
+	// CARETI MODIFICATION: Hide Plan/Act mode for Careti provider
+	// Default to Careti when apiConfiguration is not yet loaded (new user default)
+	const isCareti =
+		!apiConfiguration ||
+		apiConfiguration?.planModeApiProvider === "careti" ||
+		apiConfiguration?.actModeApiProvider === "careti"
+	const effectiveSeparateSetting = isCareti ? false : planActSeparateModelsSetting
+	const [localSeparateSetting, setLocalSeparateSetting] = useState(effectiveSeparateSetting)
 
 	useEffect(() => {
-		setLocalSeparateSetting(planActSeparateModelsSetting)
-	}, [planActSeparateModelsSetting])
+		setLocalSeparateSetting(effectiveSeparateSetting)
+	}, [effectiveSeparateSetting])
 	const { handleFieldsChange } = useApiConfigurationHandlers()
 	return (
 		<div>
@@ -67,33 +75,36 @@ const ApiConfigurationSection = ({ renderSectionHeader }: ApiConfigurationSectio
 					<ApiOptions currentMode={mode} forcePlanActSeparate={localSeparateSetting} showModelOptions={true} />
 				)}
 
-				<div className="mb-[5px]">
-					<VSCodeCheckbox
-						checked={localSeparateSetting}
-						className="mb-[5px]"
-						onChange={async (e: any) => {
-							const checked = e.target.checked === true
-							setLocalSeparateSetting(checked)
-							try {
-								// If unchecking the toggle, wait a bit for state to update, then sync configurations
-								if (!checked) {
-									await syncModeConfigurations(apiConfiguration, currentTab, handleFieldsChange)
+				{/* CARETI MODIFICATION: Hide Plan/Act checkbox for Careti provider */}
+				{!isCareti && (
+					<div className="mb-[5px]">
+						<VSCodeCheckbox
+							checked={localSeparateSetting}
+							className="mb-[5px]"
+							onChange={async (e: any) => {
+								const checked = e.target.checked === true
+								setLocalSeparateSetting(checked)
+								try {
+									// If unchecking the toggle, wait a bit for state to update, then sync configurations
+									if (!checked) {
+										await syncModeConfigurations(apiConfiguration, currentTab, handleFieldsChange)
+									}
+									await StateServiceClient.updateSettings(
+										UpdateSettingsRequest.create({
+											planActSeparateModelsSetting: checked,
+										}),
+									)
+								} catch (error) {
+									console.error("Failed to update separate models setting:", error)
 								}
-								await StateServiceClient.updateSettings(
-									UpdateSettingsRequest.create({
-										planActSeparateModelsSetting: checked,
-									}),
-								)
-							} catch (error) {
-								console.error("Failed to update separate models setting:", error)
-							}
-						}}>
-						{t("useDifferentModels", "settings")}
-					</VSCodeCheckbox>
-					<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
-						{t("useDifferentModelsDescription", "settings")}
-					</p>
-				</div>
+							}}>
+							{t("useDifferentModels", "settings")}
+						</VSCodeCheckbox>
+						<p className="text-xs mt-[5px] text-[var(--vscode-descriptionForeground)]">
+							{t("useDifferentModelsDescription", "settings")}
+						</p>
+					</div>
+				)}
 			</Section>
 		</div>
 	)

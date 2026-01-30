@@ -449,10 +449,12 @@
 			"backendType": "Модель по умолчанию",
 			"backendDescription": {
 				"gemini": "Списание кредитов",
+				"zai": "Требуется API ключ",
 				"claude": "CLI интеграция"
 			},
 			"claudeModel": "Модель Claude",
 			"geminiModel": "Модель Gemini",
+			"zaiModel": "Модель ZAI GLM",
 			"modelPicker": {
 				"modelLabel": "Модель",
 				"searchPlaceholder": "Найти и выбрать модель...",

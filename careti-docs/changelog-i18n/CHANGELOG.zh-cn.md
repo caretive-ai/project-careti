@@ -41,6 +41,50 @@
   </table>
 </div>
 
+## [0.4.7] 2026-01-30
+
+> **注意**: Careti v0.4.7集成了Cline v3.49.1功能，并引入SmartEditEngine以提高代码编辑可靠性。
+
+### ✨ 新功能
+- **Careti提供商新增ZAI GLM-4.7**: 在Gemini和Claude Code之外，新增智谱AI的GLM-4.7作为新的后端选项。
+- **Web搜索 (SerpAPI)**: 集成SerpAPI驱动的Web搜索，可在设置中配置API密钥。
+- **Commands系统**: 在`.agents/commands/`目录中实现Claude Code/OpenCode风格的命令。
+- **SmartEditEngine**: 新增9阶段模糊匹配+6阶段回退引擎，提高代码编辑可靠性。
+- **后台编辑** (Cline v3.49.1): 支持后台文件编辑操作。
+- **变更说明** (Cline v3.49.1): 新增用于代码变更说明的generate_explanation工具。
+- **GFM Markdown支持**: 新增GitHub Flavored Markdown表格和删除线渲染。
+- **TypewriterText组件**: 新增用于流式文本显示的闪烁动画。
+- **ThinkingRow组件**: 新增用于推理/思考模式显示的UI。
+- **ToolGroupRenderer**: 新增低风险工具操作的分组显示。
+
+### ✨ 改进
+- **Claude Code集成**: AGENTS.md ↔ CLAUDE.md同步钩子，无缝支持Caret + Claude Code工作流。
+- **Caret → Careti品牌重塑**: 完成代码库和所有语言文件的品牌迁移。
+- **重试逻辑**: 改进退避处理，增强API重试逻辑。
+- **Upstage提供商**: 改进Upstage提供商配置。
+- **令牌高效错误**: 优化WriteToFileToolHandler的错误上下文。
+- **hwpjs依赖**: 将平台特定包移至optionalDependencies。
+- **Ollama思考模式**: 修复Ollama提供商的思考模式显示。
+
+### 修复
+- **Careti计划/执行模式**: 在Careti提供商中隐藏计划/执行模式复选框（仅支持单模型模式）。
+- **preserveFocus选项**: 修复文件打开时遵守preserveFocus设置。
+- **导入路径**: 完成Caret → Careti导入路径迁移。
+- **Web搜索配置**: 修复配置缓存中的SerpAPI密钥处理。
+- **构建错误**: 解决Cline v3.49.1功能集成的构建问题。
+- **技能翻译**: 修复t()函数调用和skillLoaded翻译。
+
+---
+
+## [0.4.6] 2026-01-19
+
+### ✨ 改进
+- **动态品牌**: 将任务处理器中硬编码的"Cline"替换为动态品牌名(`getCurrentBrandName()`)。
+- **免费积分促销**: 在登录必需UI中添加注册时免费积分促销消息（支持7种语言）。
+- **README文档链接**: 为多语言README的语言徽章添加文档链接，方便导航。
+
+---
+
 ## [0.4.5] 2026-01-18
 
 > **注意**: Careti v0.4.5从Cline v3.49.0+中Cherry-pick了Skills系统、Hooks i18n等功能。

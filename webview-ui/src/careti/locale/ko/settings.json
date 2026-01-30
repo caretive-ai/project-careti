@@ -317,10 +317,12 @@
 			"backendType": "기본 모델",
 			"backendDescription": {
 				"gemini": "크레딧 차감",
+				"zai": "API 키 입력",
 				"claude": "CLI 연동"
 			},
 			"claudeModel": "Claude 모델",
 			"geminiModel": "Gemini 모델",
+			"zaiModel": "ZAI GLM 모델",
 			"modelPicker": {
 				"modelLabel": "모델",
 				"searchPlaceholder": "모델 검색 및 선택...",

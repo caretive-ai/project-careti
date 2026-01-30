@@ -449,10 +449,12 @@
 			"backendType": "Standardmodell",
 			"backendDescription": {
 				"gemini": "Guthaben-Abzug",
+				"zai": "API-Schlüssel erforderlich",
 				"claude": "CLI-Integration"
 			},
 			"claudeModel": "Claude-Modell",
 			"geminiModel": "Gemini-Modell",
+			"zaiModel": "ZAI GLM-Modell",
 			"modelPicker": {
 				"modelLabel": "Modell",
 				"searchPlaceholder": "Modell suchen und auswählen...",

@@ -1,5 +1,4 @@
 import type { Anthropic } from "@anthropic-ai/sdk"
-import { CaretiGlobalManager } from "@careti/managers/CaretiGlobalManager"
 import { CaretiAccountService } from "@careti/services/account/CaretiAccountService"
 import { CaretiAuthService } from "@careti/services/auth/CaretiAuthService"
 import { getCurrentFeatureConfig } from "@careti/shared/FeatureConfig"
@@ -882,7 +881,8 @@ export class Controller {
 		const preferredLanguage = this.stateManager.getGlobalSettingsKey("preferredLanguage")
 		const openaiReasoningEffort = this.stateManager.getGlobalSettingsKey("openaiReasoningEffort")
 		const mode = this.stateManager.getGlobalSettingsKey("mode")
-		const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretiGlobalManager.currentMode
+		// CARETI MODIFICATION: Use feature config default if not explicitly set
+		const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || getCurrentFeatureConfig().defaultModeSystem
 		const strictPlanModeEnabled = this.stateManager.getGlobalSettingsKey("strictPlanModeEnabled")
 		const yoloModeToggled = this.stateManager.getGlobalSettingsKey("yoloModeToggled")
 		const useAutoCondense = this.stateManager.getGlobalSettingsKey("useAutoCondense")

@@ -303,10 +303,12 @@
 			"backendType": "デフォルトモデル",
 			"backendDescription": {
 				"gemini": "クレジット課金",
+				"zai": "APIキー入力",
 				"claude": "CLI連携"
 			},
 			"claudeModel": "Claudeモデル",
 			"geminiModel": "Geminiモデル",
+			"zaiModel": "ZAI GLMモデル",
 			"modelPicker": {
 				"modelLabel": "モデル",
 				"searchPlaceholder": "モデルを検索して選択...",

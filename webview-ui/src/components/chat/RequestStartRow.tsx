@@ -170,13 +170,13 @@ export const RequestStartRow: React.FC<RequestStartRowProps> = ({
 
 	const apiReqState: ApiReqState = hasError ? "error" : hasCost ? "final" : hasReasoning ? "thinking" : "pre"
 
-	// CARETI MODIFICATION: Always show reasoning content when available (expanded by default)
-	// This helps users see COT tokens in real-time during "thinking" state
-	// Once response content starts, keep showing but allow collapse via toggle
-	const showStreamingThinking = hasReasoning && !hasResponseStarted && !hasError && !hasCost
-	const showCollapsedThinking = hasReasoning && !showStreamingThinking
-	// Always start expanded to show COT tokens immediately
-	const defaultExpanded = true
+	// DEBUG: Log reasoning content
+	console.log("[RequestStartRow] reasoningContent:", reasoningContent, "hasReasoning:", hasReasoning, "apiReqState:", apiReqState)
+
+	// CARETI MODIFICATION: Always show reasoning content when available
+	// During streaming: expanded, show header with chevron
+	// After streaming: show header, use toggle state for expand/collapse
+	const isStreaming = hasReasoning && !hasResponseStarted && !hasError && !hasCost
 
 	// Find all exploratory tool activities that are currently in flight.
 	// Only show tools between the previous completed API request and the current incomplete one.
@@ -279,11 +279,11 @@ export const RequestStartRow: React.FC<RequestStartRowProps> = ({
 			{/* CARETI MODIFICATION: Always show reasoning content expanded by default */}
 			{reasoningContent && (
 				<ThinkingRow
-					isExpanded={defaultExpanded || isExpanded || showStreamingThinking}
+					isExpanded={isStreaming || isExpanded}
 					isVisible={true}
 					onToggle={handleToggle}
 					reasoningContent={reasoningContent}
-					showTitle={showCollapsedThinking}
+					showTitle={true}
 					personaProfile={personaProfile}
 					showPersonaAvatar={showPersonaAvatar}
 				/>

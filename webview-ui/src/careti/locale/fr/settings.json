@@ -449,10 +449,12 @@
 			"backendType": "Modèle par défaut",
 			"backendDescription": {
 				"gemini": "Déduction de crédits",
+				"zai": "Clé API requise",
 				"claude": "Intégration CLI"
 			},
 			"claudeModel": "Modèle Claude",
 			"geminiModel": "Modèle Gemini",
+			"zaiModel": "Modèle ZAI GLM",
 			"modelPicker": {
 				"modelLabel": "Modele",
 				"searchPlaceholder": "Rechercher et selectionner un modele...",

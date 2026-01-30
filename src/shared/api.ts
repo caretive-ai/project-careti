@@ -495,7 +495,11 @@ export const caretDefaultModelInfo = caretModels[caretDefaultModelId]
 
 // CARETI MODIFICATION: Filtered model lists by backend type
 export const caretiGeminiModels = Object.fromEntries(
-	Object.entries(caretModels).filter(([id]) => id.startsWith("gemini/") || id.startsWith("zai/")),
+	Object.entries(caretModels).filter(([id]) => id.startsWith("gemini/")),
+) as Record<string, ModelInfo>
+
+export const caretiZaiModels = Object.fromEntries(
+	Object.entries(caretModels).filter(([id]) => id.startsWith("zai/")),
 ) as Record<string, ModelInfo>
 
 export const caretClaudeModels = Object.fromEntries(

@@ -3,28 +3,26 @@
 	"previousHeader": "Frühere Updates:",
 	"bullets": {
 		"current": {
+			"1": "ZAI GLM-4.7 in Careti",
+			"2": "Claude Code Integration",
+			"3": "Web-Suche",
+			"4": "Denkprozess-Anzeige",
+			"5": "SmartEditEngine",
+			"1-desc": "Verwenden Sie ZAI GLM-4.7 direkt im Careti-Anbieter mit Ihrem eigenen API-Schlüssel.",
+			"2-desc": "Nahtlose Zusammenarbeit mit Claude Code CLI. Automatische AGENTS.md ↔ CLAUDE.md Synchronisation.",
+			"3-desc": "Erhalten Sie aktuelle Informationen mit SerpAPI-basierter Web-Suche.",
+			"4-desc": "Beobachten Sie den Denkprozess der KI in Echtzeit (ThinkingRow).",
+			"5-desc": "100% Erfolgsrate (vs Cline 91%), 50% schneller bei Budget-Modellen mit 9-Stufen Fuzzy Matching."
+		},
+		"previous": {
 			"1": "Z.AI GLM-4.7 Vollständige Unterstützung",
 			"2": "Upstage-Anbieter",
 			"3": "Textmodell-Bildwerkzeuge",
 			"4": "Skills & Hooks System",
-			"5": "Dokumentenwerkzeuge (HWP/PDF/DOCX)",
-			"6": "Spracherweiterung",
 			"1-desc": "Unterstützt Thinking Mode und natürlichen Konversationsstil mit GLM-4.7-Modellen.",
 			"2-desc": "Upstage-Anbieter mit Solar Pro/Mini-Modellen aus Koreas unabhängiger KI-Stiftung hinzugefügt.",
 			"3-desc": "Reine Textmodelle können jetzt über Careti-Kontowerkzeuge Bilder generieren (Nano Banana) und analysieren (Gemini).",
-			"4-desc": "Definieren Sie projektspezifische Skills und Pre/Post-Tool-Ausführungs-Hooks. Verwalten in .agents/ oder .users/ Verzeichnissen.",
-			"5-desc": "read_document-Werkzeug für HWP, PDF, DOCX, PPTX und mehr. Plattformübergreifende HWP-Parsing-Unterstützung.",
-			"6-desc": "Französisch, Deutsch und Russisch hinzugefügt. Priorisierung von Ländern mit eigenen KI-Modellen. Anbieter-Länderflaggen hinzugefügt."
-		},
-		"previous": {
-			"1": "Naver Cloud-Anbieter",
-			"2": "Agents.md und Projektinitialisierung",
-			"3": "Dual-Konto-System",
-			"4": "Cline v3.45.0 Bugfix-Integration",
-			"1-desc": "Naver Cloud (Hyper Clova X)-Anbieter mit HCX-007/HCX-005/HCX-DASH-002-Modellen hinzugefügt.",
-			"2-desc": "Legacy Careti/Cline-Regeln auf AAIF-Internationalstandard aktualisiert mit Projektinitialisierungsunterstützung.",
-			"3-desc": "Verwenden Sie Careti- und Cline-Konten gleichzeitig ohne Einschränkung.",
-			"4-desc": "Cline v3.45.0 Bugfix-Code teilweise zusammengeführt."
+			"4-desc": "Definieren Sie projektspezifische Skills und Pre/Post-Tool-Ausführungs-Hooks. Verwalten in .agents/ oder .users/ Verzeichnissen."
 		}
 	}
 }

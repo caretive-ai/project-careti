@@ -13,7 +13,7 @@ export class CaretiGlobalManager {
 	// CARETI MODIFICATION: Auth0 management fields
 	private _jwtToken?: string
 	private _userInfo?: CaretUser
-	private _caretMode: "chatbot" | "agent" = "chatbot"
+	private _caretMode: "chatbot" | "agent" = "agent"
 	// CARETI MODIFICATION: Input history management fields
 	private _inputHistory: string[] = []
 	private _inputHistoryResolver?: (history: string[]) => Promise<void>

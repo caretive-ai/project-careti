@@ -465,10 +465,12 @@
 			"backendType": "Default Model",
 			"backendDescription": {
 				"gemini": "Credit-based",
+				"zai": "API key required",
 				"claude": "CLI integration"
 			},
 			"claudeModel": "Claude Model",
 			"geminiModel": "Gemini Model",
+			"zaiModel": "ZAI GLM Model",
 			"modelPicker": {
 				"modelLabel": "Model",
 				"searchPlaceholder": "Search and select model...",

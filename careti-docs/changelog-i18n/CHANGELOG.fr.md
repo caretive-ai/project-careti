@@ -41,6 +41,29 @@
   </table>
 </div>
 
+## [0.4.7] 2026-01-30
+
+### ✨ Nouvelles fonctionnalités
+- **ZAI GLM-4.7 dans le fournisseur Careti** : Utilisez ZAI GLM-4.7 directement dans le fournisseur Careti avec votre propre clé API.
+- **Recherche Web** : Recherche Web intégrée avec SerpAPI pour des informations actualisées.
+- **Intégration Claude Code** : Utilisation transparente avec Claude Code CLI via la synchronisation AGENTS.md.
+- **Édition de code améliorée** : Édition de code plus fiable avec SmartEditEngine.
+- **Affichage du processus de réflexion** : Visualisez le processus de réflexion de l'IA en temps réel (ThinkingRow).
+
+### ✨ Améliorations
+- **Renommage Caret → Careti** : Mise à jour complète de la marque.
+- **Meilleure gestion des erreurs** : Logique de réessai API optimisée.
+
+---
+
+## [0.4.6] 2026-01-19
+
+### ✨ Améliorations
+- **Crédits gratuits** : Les nouveaux utilisateurs reçoivent des crédits gratuits lors de l'inscription.
+- **Documentation améliorée** : README multilingue avec liens vers la documentation.
+
+---
+
 ## [0.4.5] 2026-01-18
 
 > **Note** : Careti v0.4.5 intègre le système Skills, Hooks i18n et d'autres fonctionnalités de Cline v3.49.0+ via cherry-pick.

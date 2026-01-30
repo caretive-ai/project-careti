@@ -176,6 +176,10 @@ export function findReasoningForApiReq(
 		return { reasoning: undefined, responseStarted: false }
 	}
 
+	// DEBUG: Log messages after api_req_started
+	const msgsAfter = allMessages.slice(apiReqIndex + 1, apiReqIndex + 10)
+	console.log("[findReasoningForApiReq] apiReqTs:", apiReqTs, "msgsAfter:", msgsAfter.map((m) => ({ say: m.say, text: m.text?.slice(0, 50) })))
+
 	// Collect reasoning and check if response content has started
 	const reasoningParts: string[] = []
 	let responseStarted = false

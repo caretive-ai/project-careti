@@ -1,4 +1,4 @@
-import { caretClaudeModels, caretiGeminiModels, caretModels } from "@shared/api"
+import { caretClaudeModels, caretiGeminiModels, caretiZaiModels, caretModels } from "@shared/api"
 import { EmptyRequest } from "@shared/proto/cline/common"
 import { Mode } from "@shared/storage/types"
 import { VSCodeButton, VSCodeRadio, VSCodeRadioGroup } from "@vscode/webview-ui-toolkit/react"
@@ -7,6 +7,7 @@ import { t } from "@/careti/utils/i18n"
 import { useCaretiAuth } from "@/context/CaretiAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CaretAccountServiceClient } from "@/services/grpc-client"
+import { ApiKeyField } from "../common/ApiKeyField"
 import { DebouncedTextField } from "../common/DebouncedTextField"
 import { ModelInfoView } from "../common/ModelInfoView"
 import { getModeSpecificFields, normalizeApiConfiguration } from "../utils/providerUtils"
@@ -48,7 +49,15 @@ const geminiModelsForCaret = {
 	},
 } as const
 
-type BackendType = "gemini" | "claude"
+// CARETI MODIFICATION: ZAI GLM models for radio button display
+const zaiModelsForCaret = {
+	"zai/glm-4.7": {
+		label: "GLM-4.7",
+		description: "Thinking mode support",
+	},
+} as const
+
+type BackendType = "gemini" | "claude" | "zai"
 
 /**
  * Props for the CaretiProvider component
@@ -80,10 +89,14 @@ export const CaretiProvider = ({ showModelOptions, isPopup, currentMode }: Caret
 		if (modelId?.startsWith("anthropic/claude-")) {
 			return "claude"
 		}
+		if (modelId?.startsWith("zai/")) {
+			return "zai"
+		}
 		return "gemini"
 	}, [modeFields.caretModelId])
 
 	const isClaudeBackend = currentBackendType === "claude"
+	const isZaiBackend = currentBackendType === "zai"
 
 	const { selectedModelId, selectedModelInfo } = useMemo(() => {
 		return normalizeApiConfiguration(apiConfiguration, currentMode)
@@ -104,10 +117,15 @@ export const CaretiProvider = ({ showModelOptions, isPopup, currentMode }: Caret
 			// Check if backend type actually changed by comparing with current model
 			const currentModelId = modeFields.caretModelId
 			const isCurrentlyClaude = currentModelId?.startsWith("anthropic/claude-")
-			const wantsClaude = backendType === "claude"
+			const isCurrentlyZai = currentModelId?.startsWith("zai/")
+			const isCurrentlyGemini = currentModelId?.startsWith("gemini/")
 
 			// Skip if no actual change needed
-			if ((isCurrentlyClaude && wantsClaude) || (!isCurrentlyClaude && !wantsClaude && currentModelId)) {
+			if (
+				(backendType === "claude" && isCurrentlyClaude) ||
+				(backendType === "zai" && isCurrentlyZai) ||
+				(backendType === "gemini" && isCurrentlyGemini)
+			) {
 				return
 			}
 
@@ -125,6 +143,23 @@ export const CaretiProvider = ({ showModelOptions, isPopup, currentMode }: Caret
 					{
 						caretModelId: defaultClaudeModelId,
 						caretModelInfo: defaultClaudeModelInfo,
+					},
+					currentMode,
+				).finally(() => {
+					isUpdatingRef.current = false
+				})
+			} else if (backendType === "zai") {
+				// Set default ZAI model (GLM-4.7)
+				const defaultZaiModelId = Object.keys(zaiModelsForCaret)[0]
+				const defaultZaiModelInfo = caretiZaiModels[defaultZaiModelId]
+				handleModeFieldsChange(
+					{
+						caretModelId: { plan: "planModeCaretModelId", act: "actModeCaretModelId" },
+						caretModelInfo: { plan: "planModeCaretModelInfo", act: "actModeCaretModelInfo" },
+					},
+					{
+						caretModelId: defaultZaiModelId,
+						caretModelInfo: defaultZaiModelInfo,
 					},
 					currentMode,
 				).finally(() => {
@@ -217,6 +252,17 @@ export const CaretiProvider = ({ showModelOptions, isPopup, currentMode }: Caret
 											({t("providers.careti.backendDescription.gemini", "settings")})
 										</span>
 									</VSCodeRadio>
+									<VSCodeRadio value="zai">
+										<span style={{ fontWeight: 500 }}>ZAI GLM</span>
+										<span
+											style={{
+												color: "var(--vscode-descriptionForeground)",
+												marginLeft: 6,
+												fontSize: 12,
+											}}>
+											({t("providers.careti.backendDescription.zai", "settings")})
+										</span>
+									</VSCodeRadio>
 									<VSCodeRadio value="claude">
 										<span style={{ fontWeight: 500 }}>Claude Code</span>
 										<span
@@ -266,6 +312,39 @@ export const CaretiProvider = ({ showModelOptions, isPopup, currentMode }: Caret
 										type="text">
 										<span style={{ fontWeight: 500 }}>{t("providers.claude-code.cliPath", "settings")}</span>
 									</DebouncedTextField>
+								</>
+							) : isZaiBackend ? (
+								<>
+									{/* ZAI GLM model selection */}
+									<div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+										<span style={{ fontWeight: 500 }}>{t("providers.careti.zaiModel", "settings")}</span>
+										<VSCodeRadioGroup
+											onChange={(e: any) => handleModelChange(e.target.value)}
+											orientation="vertical"
+											value={modeFields.caretModelId || ""}>
+											{Object.entries(zaiModelsForCaret).map(([modelId, info]) => (
+												<VSCodeRadio key={modelId} value={modelId}>
+													<span style={{ fontWeight: 500 }}>{info.label}</span>
+													<span
+														style={{
+															color: "var(--vscode-descriptionForeground)",
+															marginLeft: 8,
+															fontSize: 12,
+														}}>
+														{info.description}
+													</span>
+												</VSCodeRadio>
+											))}
+										</VSCodeRadioGroup>
+									</div>
+
+									{/* API key input for ZAI */}
+									<ApiKeyField
+										initialValue={apiConfiguration?.zaiApiKey || ""}
+										onChange={(value) => handleFieldChange("zaiApiKey", value)}
+										providerName={t("providers.zai.providerName", "settings")}
+										signupUrl="https://z.ai/manage-apikey/apikey-list"
+									/>
 								</>
 							) : (
 								<>

@@ -281,7 +281,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		environment: Environment.production,
 		telemetrySetting: "unset",
 		distinctId: "",
-		planActSeparateModelsSetting: true,
+		planActSeparateModelsSetting: false,
 		enableCheckpointsSetting: true,
 		mcpDisplayMode: DEFAULT_MCP_DISPLAY_MODE,
 		globalClineRulesToggles: {},

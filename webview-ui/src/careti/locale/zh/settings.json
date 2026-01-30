@@ -303,10 +303,12 @@
 			"backendType": "默认模型",
 			"backendDescription": {
 				"gemini": "积分扣除",
+				"zai": "需要API密钥",
 				"claude": "CLI集成"
 			},
 			"claudeModel": "Claude 模型",
 			"geminiModel": "Gemini 模型",
+			"zaiModel": "ZAI GLM 模型",
 			"modelPicker": {
 				"modelLabel": "模型",
 				"searchPlaceholder": "搜索并选择模型...",

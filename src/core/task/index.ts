@@ -7,6 +7,8 @@ import { ImageScopeManager } from "@careti/core/task/images/ImageScopeManager"
 import { CaretiGlobalManager } from "@careti/managers/CaretiGlobalManager"
 // CARETI MODIFICATION: import brand utils for dynamic brand name
 import { getCurrentBrandName } from "@careti/utils/brand-utils"
+// CARETI MODIFICATION: import SessionManager for queue/interrupt system
+import { SessionManager } from "@careti/utils/session-manager"
 import { ApiHandler, ApiProviderInfo, buildApiHandler } from "@core/api"
 import { ApiStream } from "@core/api/transform/stream"
 import { AssistantMessageContent, parseAssistantMessageV2 } from "@core/assistant-message"
@@ -267,6 +269,9 @@ export class Task {
 	// Task Locking (Sqlite)
 	private taskLockAcquired: boolean
 
+	// CARETI MODIFICATION: Session manager for queue/interrupt system
+	private sessionManager: SessionManager
+
 	constructor(params: TaskParams) {
 		const {
 			controller,
@@ -361,6 +366,10 @@ export class Task {
 
 		this.taskId = taskId
 		this.historyItem = historyItem
+
+		// CARETI MODIFICATION: Initialize SessionManager for queue/interrupt support
+		this.sessionManager = SessionManager.getInstance()
+		this.sessionManager.getOrCreate(this.taskId)
 
 		// Initialize taskId first
 		if (historyItem) {
@@ -1898,6 +1907,9 @@ export class Task {
 			// can properly detect the abort state
 			this.taskState.abort = true
 
+			// CARETI MODIFICATION: Trigger SessionManager interrupt for queue system
+			this.sessionManager.forceInterrupt(this.taskId)
+
 			// PHASE 3: Cancel any running hook execution
 			const activeHook = await this.getActiveHookExecution()
 			if (activeHook) {
@@ -2014,6 +2026,9 @@ export class Task {
 			if (this.FocusChainManager) {
 				this.FocusChainManager.dispose()
 			}
+
+			// CARETI MODIFICATION: Clean up session from SessionManager
+			this.sessionManager.delete(this.taskId)
 
 			// PHASE 8: Run SessionEnd hook (Claude Code compatible)
 			// CARETI MODIFICATION: Added SessionEnd hook for work log automation

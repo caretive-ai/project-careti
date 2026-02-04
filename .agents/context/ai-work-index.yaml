@@ -75,6 +75,17 @@ steps:
         workflow: .agents/workflows/testing-work.md # Detailed (253 lines)
         korean: careti-docs/development/testing-guide.md
 
+      - name: CLI Development
+        keywords: [CLI, headless, yolo, subagent, agent mode, chatbot mode, terminal, standalone, benchmark]
+        root: careti-docs/features/f18-cli-agent-chatbot-mode.md  # Feature doc with usage
+        config: .agents/context/agents-rules.json  # cli_standalone section
+        testing: CLAUDE.md  # CLI Testing section
+        notes: |
+          Modes: plan (yellow), act (blue), agent (green), chatbot (magenta)
+          Headless: --yolo flag for subagent/benchmark use
+          Build: npm run compile-cli
+          Test: cd cli && go test ./e2e/... -v
+
       - name: API Provider Testing
         keywords: [API, provider, test script, LLM, streaming, integration test, Upstage, GLM, Gemini]
         root: .agents/context/api-provider-testing.yaml  # Quick reference

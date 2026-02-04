@@ -76,6 +76,17 @@ Caret의 이중 디렉토리 아키텍처로 작업합니다:
 - 상세 절차: `.agents/workflows/testing-work.md` (253줄)
 - 한국어 가이드: `careti-docs/development/testing-guide.md`
 
+### CLI 개발
+**키워드**: CLI, headless, yolo, subagent, agent mode, chatbot mode, terminal, standalone, benchmark
+- 기능 문서: `careti-docs/features/f18-cli-agent-chatbot-mode.md`
+- 설정: `.agents/context/agents-rules.json` (cli_standalone 섹션)
+- 테스트: `CLAUDE.md` (CLI Testing 섹션)
+- 참고:
+  - 모드: plan (노랑), act (파랑), agent (초록), chatbot (마젠타)
+  - Headless: `--yolo` 플래그 (서브에이전트/벤치마크용)
+  - 빌드: `npm run compile-cli`
+  - 테스트: `cd cli && go test ./e2e/... -v`
+
 ### API 프로바이더 테스팅
 **키워드**: API, provider, test script, LLM, streaming, integration test, Upstage, GLM, Gemini
 - 빠른 참조: `.agents/context/api-provider-testing.yaml`

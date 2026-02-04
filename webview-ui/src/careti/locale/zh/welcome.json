@@ -1,6 +1,7 @@
 {
 	"coreFeatures": {
-		"header": "与共同成长的AI编程助手Careti一起开始'Vibe Coding'。"
+		"header": "与共同成长的AI编程助手Careti一起开始'Vibe Coding'。",
+		"description": "免费积分立即开始。Cline·Claude Code 100%兼容。编辑·提示词改进，比Cline更低成本。ZAI GLM-4.7等266+个LLM。工具：Nano Banana图像生成、图像分析、网页搜索、文档读取（PDF/HWP）。7种语言UI。"
 	},
 	"getStarted": {
 		"button": "开始使用"

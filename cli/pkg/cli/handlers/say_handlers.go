@@ -208,18 +208,14 @@ func (h *SayHandler) handleReasoning(msg *types.ClineMessage, dc *DisplayContext
 		return nil
 	}
 
+	// CARETI MODIFICATION: Always show header for reasoning to ensure it's visually distinct
+	// The partial stream may not always show the header (e.g., if message comes through state stream)
+	// Use dim/italic styling to distinguish thinking from regular response
 	var rendered string
-	if dc.IsStreamingMode {
-		// In streaming mode, header already shown by partial stream
-		rendered = dc.Renderer.RenderMarkdown(msg.Text)
-		output.Printf("%s\n", rendered)
-	} else {
-		// In non-streaming mode, render header + body together
-		// CARETI MODIFICATION: Caret branding in streaming header
-		markdown := fmt.Sprintf("### Caret is thinking\n\n%s", msg.Text)
-		rendered = dc.Renderer.RenderMarkdown(markdown)
-		output.Printf("\n%s\n", rendered)
-	}
+	// Always include header for clarity - thinking content should be visually distinct
+	markdown := fmt.Sprintf("### 💭 Caret is thinking\n\n*%s*", msg.Text)
+	rendered = dc.Renderer.RenderMarkdown(markdown)
+	output.Printf("\n%s\n", rendered)
 	return nil
 }
 

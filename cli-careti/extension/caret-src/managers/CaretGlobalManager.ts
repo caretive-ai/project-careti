@@ -148,7 +148,7 @@ export class CaretGlobalManager {
 			const vsCodeCallbackUrl = `${uriScheme}://caretive.caret/auth`
 
 			// Build external auth URL
-			const authEndpoint = process.env.CARET_AUTH_ENDPOINT || "https://caret.team"
+			const authEndpoint = process.env.CARET_AUTH_ENDPOINT || "https://careti.ai"
 			const authUrl = vscode.Uri.parse(
 				`${authEndpoint}/login?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(vsCodeCallbackUrl)}`,
 			)

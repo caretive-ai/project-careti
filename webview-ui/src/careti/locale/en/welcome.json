@@ -1,6 +1,7 @@
 {
 	"coreFeatures": {
-		"header": "Start 'Vibe Coding' with Careti, the AI coding agent that grows with you."
+		"header": "Start 'Vibe Coding' with Careti, the AI coding agent that grows with you.",
+		"description": "Start free with credits. 100% Cline & Claude Code compatible. Lower costs than Cline with improved editing & prompts. ZAI GLM-4.7 and 266+ LLMs. Tools: Nano Banana image generation, image analysis, web search, document reading (PDF/HWP). 7-language UI."
 	},
 	"getStarted": {
 		"button": "Get Started"

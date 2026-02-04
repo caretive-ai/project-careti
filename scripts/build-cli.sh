@@ -49,11 +49,11 @@ case "$ARCH" in
         ;;
 esac
 
-# Build for current platform only (Caret binary names)
+# Build for current platform only (Careti binary names)
 echo "Building for current platform ($OS-$ARCH)..."
 
-GO111MODULE=on go build -ldflags "$LDFLAGS" -o bin/caret ./cmd/cline
-echo "  ✓ bin/caret built"
+GO111MODULE=on go build -ldflags "$LDFLAGS" -o bin/careti ./cmd/cline
+echo "  ✓ bin/careti built"
 
 GO111MODULE=on go build -ldflags "$LDFLAGS" -o bin/careti-host ./cmd/cline-host
 echo "  ✓ bin/careti-host built"
@@ -61,17 +61,18 @@ echo "  ✓ bin/careti-host built"
 echo ""
 echo "Build complete for current platform!"
 
-# CARET: ensure careti-only binary names (legacy cline bins removed)
-rm -f bin/cline bin/cline-host
+# CARETI: ensure careti-only binary names (legacy cline/caret bins removed)
+rm -f bin/cline bin/cline-host bin/caret
 
 # Copy binaries to dist-standalone/bin with platform-specific names AND generic names
 cd ..
 mkdir -p dist-standalone/bin
-# CARET: clean legacy cline-named outputs (careti-only distribution)
+# CARETI: clean legacy cline/caret-named outputs (careti-only distribution)
 rm -f dist-standalone/bin/cline dist-standalone/bin/cline-* dist-standalone/bin/cline-host dist-standalone/bin/cline-host-*
+rm -f dist-standalone/bin/caret dist-standalone/bin/caret-*
 
-cp cli/bin/caret dist-standalone/bin/caret
-cp cli/bin/caret dist-standalone/bin/careti-${OS}-${ARCH}
+cp cli/bin/careti dist-standalone/bin/careti
+cp cli/bin/careti dist-standalone/bin/careti-${OS}-${ARCH}
 cp cli/bin/careti-host dist-standalone/bin/careti-host
 cp cli/bin/careti-host dist-standalone/bin/careti-host-${OS}-${ARCH}
-echo "Copied binaries to dist-standalone/bin/ (Caret naming)"
+echo "Copied binaries to dist-standalone/bin/ (Careti naming)"

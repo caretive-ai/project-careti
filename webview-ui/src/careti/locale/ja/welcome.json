@@ -1,6 +1,7 @@
 {
 	"coreFeatures": {
-		"header": "共に成長するAIコーディングエージェントCaretiと「バイブコーディング」を始めましょう。"
+		"header": "共に成長するAIコーディングエージェントCaretiと「バイブコーディング」を始めましょう。",
+		"description": "無料クレジットですぐに開始。Cline・Claude Code 100%互換。編集・プロンプト改善でClineより低コスト。ZAI GLM-4.7など266以上のLLM。ツール：Nano Banana画像生成、画像分析、ウェブ検索、文書読み取り（PDF/HWP）。7言語UI。"
 	},
 	"getStarted": {
 		"button": "始める"

@@ -24,6 +24,16 @@ Careti은 Cline을 기반으로 한 VSCode AI 코딩 어시스턴트 확장 프�
 | **📄 JSON 시스템 프롬프트** | 구조화된 프롬프트 시스템      | 부분 구현, 확장 예정    | [→ 상세보기](./features/json-system-prompt.md) |
 | **👥 페르소나 시스템**     | AI 캐릭터 페르소나 선택       | 기본 구조 완성, 보완 중 | [→ 상세보기](./features/persona-system.md)     |
 
+### **💻 CLI Standalone**
+
+| 특징                   | 설명                           | 비고                  |
+| ---------------------- | ------------------------------ | --------------------- |
+| **독립 실행**          | VS Code 없이 터미널에서 실행   | `./caret`             |
+| **다중 모드**          | plan/act/agent/chatbot 지원    | 색상별 구분           |
+| **옵션 선택**          | 숫자 키(1-9)로 옵션 선택       | followup 질문 대응    |
+| **Headless 모드**      | `-y`, `-o` 플래그로 비대화형   | CI/CD 통합 가능       |
+| **AGENTS 초기화 스킵** | CLI 모드에서 자동 초기화 비활성 | `isCliSubagent` 플래그 |
+
 ## 🎭 **주요 특징 살펴보기**
 
 ### **🔧 에이전트 표준화**
@@ -72,13 +82,27 @@ careti/
 
 ## 🚀 **시작하기**
 
-### **설치 및 설정**
+### **VSCode 확장 설치**
 
 1. VSCode에서 Careti 확장 설치
 2. 계정 생성 또는 로그인
 3. 언어 설정 선택
 4. API 키 설정
 5. 페르소나 선택 (선택사항)
+
+### **CLI Standalone 사용**
+
+```bash
+# 빌드
+npm run compile && npm run compile-cli
+
+# 실행
+./caret                          # 대화형 모드
+./caret "your prompt"            # 직접 프롬프트
+./caret --mode agent             # 에이전트 모드
+./caret -y                       # Yolo 모드 (비대화형)
+./caret -o                       # Oneshot 모드 (완전 자율)
+```
 
 ### **주요 기능 활용**
 

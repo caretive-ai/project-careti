@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
@@ -15,6 +16,7 @@ import (
 	"github.com/cline/cli/pkg/cli/display"
 	"github.com/cline/cli/pkg/cli/global"
 	"github.com/cline/cli/pkg/common"
+	"github.com/cline/cli/pkg/telemetry"
 	"github.com/cline/grpc-go/cline"
 	"github.com/spf13/cobra"
 )
@@ -28,12 +30,32 @@ var (
 	images   []string
 	files    []string
 	mode     string
+	persona  string
 	settings []string
 	yolo     bool
 	oneshot  bool
 )
 
 func main() {
+	startTime := time.Now()
+	ctx := context.Background()
+	success := true
+
+	// Initialize telemetry
+	telemetry.Init(ctx, telemetry.Config{
+		ServiceName: "careti-cli",
+		Version:     global.CliVersion,
+		Enabled:     os.Getenv("CARETI_TELEMETRY_DISABLED") != "1",
+	})
+	defer func() {
+		// Log CLI completion
+		telemetry.LogCLICompleted(ctx, time.Since(startTime).Milliseconds(), success)
+		telemetry.Shutdown(ctx)
+	}()
+
+	// Log CLI started
+	telemetry.LogCLIStarted(ctx, global.CliVersion, "cli")
+
 	brandName := common.BrandDisplayName()
 	commandName := common.BrandCommandName()
 	coreName := common.BrandCoreName()
@@ -166,6 +188,7 @@ see the manual page: man %s`,
 				Images:   images,
 				Files:    files,
 				Mode:     mode,
+				Persona:  persona,
 				Settings: settings,
 				Yolo:     yolo,
 				Address:  instanceAddress,
@@ -181,7 +204,8 @@ see the manual page: man %s`,
 	// Task creation flags (only apply when using root command with prompt)
 	rootCmd.Flags().StringSliceVarP(&images, "image", "i", nil, "attach image files")
 	rootCmd.Flags().StringSliceVarP(&files, "file", "f", nil, "attach files")
-	rootCmd.Flags().StringVarP(&mode, "mode", "m", "plan", "mode (act|plan) - defaults to plan")
+	rootCmd.Flags().StringVarP(&mode, "mode", "m", "agent", "mode (act|plan|agent|chatbot) - defaults to agent")
+	rootCmd.Flags().StringVarP(&persona, "persona", "p", "", "persona name for agent mode")
 	rootCmd.Flags().StringSliceVarP(&settings, "setting", "s", nil, "task settings (key=value format)")
 	rootCmd.Flags().BoolVarP(&yolo, "yolo", "y", false, "enable yolo mode (non-interactive)")
 	rootCmd.Flags().BoolVar(&yolo, "no-interactive", false, "enable yolo mode (non-interactive)")
@@ -195,7 +219,9 @@ see the manual page: man %s`,
 	rootCmd.AddCommand(cli.NewLogsCommand())
 	// rootCmd.AddCommand(cli.NewDoctorCommand()) // Disabled for now
 
-	if err := rootCmd.ExecuteContext(context.Background()); err != nil {
+	if err := rootCmd.ExecuteContext(ctx); err != nil {
+		success = false
+		telemetry.LogCLIError(ctx, "command_error", err.Error())
 		os.Exit(1)
 	}
 }
@@ -212,8 +238,13 @@ func promptForInitialTask(ctx context.Context, instanceAddress, modeFlag string)
 
 	// Set cursor and title color based on mode
 	modeColor := lipgloss.Color("3") // Yellow for plan
-	if modeFlag == "act" {
+	switch modeFlag {
+	case "act":
 		modeColor = lipgloss.Color("39") // Blue for act
+	case "agent":
+		modeColor = lipgloss.Color("2") // Green for agent (autonomous)
+	case "chatbot":
+		modeColor = lipgloss.Color("5") // Magenta for chatbot
 	}
 
 	theme.Focused.TextInput.Cursor = theme.Focused.TextInput.Cursor.Foreground(modeColor)
@@ -251,9 +282,9 @@ func showSessionBanner(ctx context.Context, instanceAddress, modeFlag string) {
 		Mode:    modeFlag, // Use the mode from command flag, not state
 	}
 
-	// If mode is empty, default to "plan"
+	// If mode is empty, default to "agent"
 	if bannerInfo.Mode == "" {
-		bannerInfo.Mode = "plan"
+		bannerInfo.Mode = "agent"
 	}
 
 	// Get current working directory (this is what Cline will use)
@@ -266,11 +297,17 @@ func showSessionBanner(ctx context.Context, instanceAddress, modeFlag string) {
 	if err == nil {
 		if providerList, err := auth.GetProviderConfigurations(ctx, manager); err == nil {
 			// Show provider/model for the mode we'll be using
+			// agent → act provider, chatbot → plan provider
 			var providerDisplay *auth.ProviderDisplay
-			if bannerInfo.Mode == "plan" && providerList.PlanProvider != nil {
-				providerDisplay = providerList.PlanProvider
-			} else if bannerInfo.Mode == "act" && providerList.ActProvider != nil {
-				providerDisplay = providerList.ActProvider
+			switch bannerInfo.Mode {
+			case "plan", "chatbot":
+				if providerList.PlanProvider != nil {
+					providerDisplay = providerList.PlanProvider
+				}
+			case "act", "agent":
+				if providerList.ActProvider != nil {
+					providerDisplay = providerList.ActProvider
+				}
 			}
 
 			if providerDisplay != nil {

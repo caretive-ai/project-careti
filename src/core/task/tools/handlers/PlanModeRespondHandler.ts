@@ -38,6 +38,9 @@ export class PlanModeRespondHandler implements IToolHandler, IPartialBlockHandle
 		const optionsRaw: string | undefined = block.params.options
 		const needsMoreExploration: boolean = block.params.needs_more_exploration === "true"
 
+		// CARETI DEBUG: Log PlanModeRespondHandler for debugging multiple response issue
+		console.log(`[CORE-DEBUG] PlanModeRespondHandler.execute: yoloMode=${config.yoloModeToggled}, mode=${config.mode}, needsMoreExploration=${needsMoreExploration}`)
+
 		// Validate required parameters
 		if (!response) {
 			config.taskState.consecutiveMistakeCount++
@@ -48,6 +51,7 @@ export class PlanModeRespondHandler implements IToolHandler, IPartialBlockHandle
 
 		// The plan_mode_respond tool tends to run into this issue where the model realizes mid-tool call that it should have called another tool before calling plan_mode_respond. And it ends the plan_mode_respond tool call with 'Proceeding to reading files...' which doesn't do anything because we restrict to 1 tool call per message. As an escape hatch for the model, we provide it the optionality to tack on a parameter at the end of its response `needs_more_exploration`, which will allow the loop to continue.
 		if (needsMoreExploration) {
+			console.log(`[CORE-DEBUG] PlanModeRespondHandler: needsMoreExploration=true, continuing loop`)
 			return formatResponse.toolResult(
 				`[You have indicated that you need more exploration. Proceed with calling tools to continue the planning process.]`,
 			)
@@ -55,6 +59,7 @@ export class PlanModeRespondHandler implements IToolHandler, IPartialBlockHandle
 
 		// For safety, if we are in yolo mode and we get a plan_mode_respond tool call we should always continue the loop
 		if (config.yoloModeToggled && config.mode === "act") {
+			console.log(`[CORE-DEBUG] PlanModeRespondHandler: yolo+act mode, auto-responding [Go ahead and execute.]`)
 			return formatResponse.toolResult(`[Go ahead and execute.]`)
 		}
 

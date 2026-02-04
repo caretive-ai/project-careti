@@ -235,6 +235,15 @@ func (c *ClineClients) EnsureInstanceAtAddress(ctx context.Context, address stri
 		return nil
 	}
 
+	// CARETI MODIFICATION: Check if an instance is already healthy at this address
+	// even if it's not in our registry (e.g., started by another process)
+	if common.IsInstanceHealthy(ctx, normalized) {
+		if Config.Verbose {
+			fmt.Printf("Found healthy instance at %s (not in registry), reusing it\n", normalized)
+		}
+		return nil
+	}
+
 	// Parse host:port
 	host, port, err := common.ParseHostPort(normalized)
 	if err != nil {

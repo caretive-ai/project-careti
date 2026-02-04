@@ -52,7 +52,10 @@ func (s *StreamingDisplay) HandlePartialMessage(msg *types.ClineMessage) error {
 
 	// Detect segment boundary
 	if s.activeSegment != nil && s.activeSegment.sayType != sayType {
-		// Just cleanup, don't freeze (no body to print)
+		// CARETI MODIFICATION: Freeze the previous segment before transitioning to ensure
+		// any buffered content (like reasoning) is printed, even if the complete message
+		// didn't arrive before the next segment type started
+		s.activeSegment.Freeze()
 		s.activeSegment = nil
 	}
 

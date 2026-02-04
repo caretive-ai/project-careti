@@ -107,7 +107,8 @@ function buildUserInstructions(
 
 async function buildAgentsInitNotice(context: SystemPromptContext): Promise<string | undefined> {
 	// CARETI MODIFICATION: Only show init notice when workspace folder is actually open
-	if (context.modeSystem !== "careti" || !context.cwd || !context.hasOpenWorkspace) {
+	// Also skip for CLI subagent mode - headless mode shouldn't prompt for interactive initialization
+	if (context.modeSystem !== "careti" || !context.cwd || !context.hasOpenWorkspace || context.isCliSubagent) {
 		return undefined
 	}
 

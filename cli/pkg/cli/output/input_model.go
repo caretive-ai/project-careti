@@ -20,6 +20,7 @@ const (
 	InputTypeMessage InputType = iota
 	InputTypeApproval
 	InputTypeFeedback
+	InputTypeOptions // For followup questions with options
 )
 
 // InputSubmitMsg is sent when the user submits input
@@ -169,6 +170,46 @@ func NewInputModel(inputType InputType, title, placeholder, currentMode string) 
 	return m
 }
 
+// NewInputModelWithOptions creates a new input model for option selection
+func NewInputModelWithOptions(title string, options []string, currentMode string) InputModel {
+	ta := textarea.New()
+	ta.Placeholder = "Or type a custom response..."
+	ta.Focus()
+	ta.CharLimit = 0
+	ta.ShowLineNumbers = false
+	ta.Prompt = ""
+	ta.SetHeight(3)
+	ta.SetWidth(INPUT_WIDTH)
+	ta.KeyMap.InsertNewline.SetKeys("alt+enter", "ctrl+j")
+
+	styles := newFieldStyles()
+
+	cursorColor := lipgloss.Color("3") // Yellow for plan
+	if currentMode == "act" {
+		cursorColor = lipgloss.Color("39") // Blue for act
+	}
+
+	ta.FocusedStyle.CursorLine = lipgloss.NewStyle()
+	ta.FocusedStyle.EndOfBuffer = lipgloss.NewStyle()
+	ta.FocusedStyle.Placeholder = styles.placeholder
+	ta.FocusedStyle.Text = styles.textArea
+	ta.FocusedStyle.Prompt = lipgloss.NewStyle()
+	ta.Cursor.Style = lipgloss.NewStyle().Foreground(cursorColor)
+	ta.Cursor.TextStyle = styles.textArea
+
+	return InputModel{
+		textarea:        ta,
+		inputType:       InputTypeOptions,
+		title:           title,
+		placeholder:     "Or type a custom response...",
+		currentMode:     currentMode,
+		width:           0,
+		styles:          styles,
+		approvalOptions: options,
+		selectedOption:  0,
+	}
+}
+
 // Init initializes the model
 func (m *InputModel) Init() tea.Cmd {
 	return textarea.Blink
@@ -276,6 +317,54 @@ func (m *InputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, nil
 			}
 		}
+
+		// Handle keys for options type (followup questions with options)
+		if m.inputType == InputTypeOptions {
+			key := msg.String()
+			switch key {
+			case "ctrl+c":
+				return m, func() tea.Msg { return InputCancelMsg{} }
+
+			case "enter":
+				return m.handleSubmit()
+
+			case "up":
+				if m.selectedOption > 0 {
+					m.selectedOption--
+				}
+				return m, nil
+
+			case "down":
+				if m.selectedOption < len(m.approvalOptions)-1 {
+					m.selectedOption++
+				}
+				return m, nil
+
+			case "1", "2", "3", "4", "5", "6", "7", "8", "9":
+				// Direct number selection (only when textarea is empty)
+				if m.textarea.Value() == "" {
+					num := int(key[0] - '0')
+					if num >= 1 && num <= len(m.approvalOptions) {
+						m.selectedOption = num - 1
+						return m.handleSubmit()
+					}
+				}
+				// If textarea has content, treat as text input
+				m.textarea, cmd = m.textarea.Update(msg)
+				return m, cmd
+
+			case "backspace", "delete":
+				m.textarea, cmd = m.textarea.Update(msg)
+				return m, cmd
+
+			default:
+				// Pass other keys to textarea for custom text input
+				if len(key) == 1 {
+					m.textarea, cmd = m.textarea.Update(msg)
+					return m, cmd
+				}
+			}
+		}
 	}
 
 	return m, nil
@@ -331,6 +420,26 @@ func (m *InputModel) handleSubmit() (tea.Model, tea.Cmd) {
 				Approved:  m.pendingApproval, // Pass the stored approval decision
 			}
 		}
+
+	case InputTypeOptions:
+		// Check if user typed custom text
+		customText := strings.TrimSpace(m.textarea.Value())
+		var value string
+		if customText != "" {
+			// Use custom text
+			value = customText
+		} else {
+			// Use selected option
+			if m.selectedOption >= 0 && m.selectedOption < len(m.approvalOptions) {
+				value = m.approvalOptions[m.selectedOption]
+			}
+		}
+		return m, func() tea.Msg {
+			return InputSubmitMsg{
+				Value:     value,
+				InputType: InputTypeOptions,
+			}
+		}
 	}
 
 	return m, nil
@@ -376,6 +485,22 @@ func (m *InputModel) View() string {
 			}
 		}
 		parts = append(parts, strings.Join(options, "\n"))
+
+	case InputTypeOptions:
+		// Show numbered options
+		var options []string
+		for i, option := range m.approvalOptions {
+			prefix := fmt.Sprintf("%d. ", i+1)
+			if i == m.selectedOption {
+				options = append(options, m.styles.selector.Render("")+m.styles.selectedOption.Render(prefix+option))
+			} else {
+				options = append(options, "  "+m.styles.option.Render(prefix+option))
+			}
+		}
+		parts = append(parts, strings.Join(options, "\n"))
+		// Show textarea for custom input
+		parts = append(parts, "")
+		parts = append(parts, m.textarea.View())
 	}
 
 	// Wrap everything in the base style with border

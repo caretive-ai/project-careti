@@ -121,9 +121,16 @@ func (ss *StreamingSegment) renderFinal(currentBuffer string) {
 			}
 		}
 	} else {
+		// CARETI MODIFICATION: Apply visual distinction for reasoning vs text content
+		contentToRender := currentBuffer
+		if ss.sayType == string(types.SayTypeReasoning) {
+			// Make reasoning content italic for visual distinction
+			contentToRender = "*" + currentBuffer + "*"
+		}
+
 		// For other types (reasoning, text, etc.), render markdown as-is
 		if ss.shouldMarkdown && ss.outputFormat != "plain" && isTTY() {
-			rendered, err := ss.mdRenderer.Render(currentBuffer)
+			rendered, err := ss.mdRenderer.Render(contentToRender)
 			if err == nil {
 				bodyContent = rendered
 			} else {
@@ -150,8 +157,8 @@ func (ss *StreamingSegment) renderFinal(currentBuffer string) {
 func (ss *StreamingSegment) generateRichHeader() string {
 	switch ss.sayType {
 	case string(types.SayTypeReasoning):
-		// CARETI MODIFICATION: Caret branding in CLI status messages
-		return "### Caret is thinking\n"
+		// CARETI MODIFICATION: Caret branding in CLI status messages with visual distinction
+		return "### 💭 Caret is thinking\n"
 		
 	case string(types.SayTypeText):
 		// CARETI MODIFICATION: branding

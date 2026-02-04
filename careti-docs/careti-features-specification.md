@@ -412,7 +412,64 @@ logger.error("API call failed:", error)
 
 ---
 
-### **8. Careti 브랜딩 & UI 시스템** ✅ **완전 구현**
+### **8. Careti CLI (Standalone)** ✅ **완전 구현**
+
+#### **8.1 사용자 관점 차별화**
+
+**Careti CLI 특징:**
+
+- **독립 실행**: VS Code 없이 터미널에서 직접 실행
+- **다중 모드 지원**: plan(노란색), act(파란색), agent(초록색), chatbot(마젠타)
+- **옵션 선택 UI**: followup 질문에 숫자 키로 옵션 선택 가능
+- **Headless 모드**: `--yolo`, `--oneshot` 플래그로 비대화형 실행
+- **gRPC 통신**: 백엔드(caret-core)와 효율적인 통신
+
+#### **8.2 구현 아키텍처**
+
+**CLI 구조:**
+
+```
+cli/
+├── cmd/careti/              # CLI 메인 엔트리
+├── pkg/cli/
+│   ├── display/            # 배너, UI 렌더링 (lipgloss)
+│   ├── output/             # 입력 모델, 텍스트 영역 (bubbletea)
+│   │   └── input_model.go  # 옵션 선택 UI 포함
+│   └── task/               # 태스크 관리
+│       ├── manager.go      # 승인 타입 체크
+│       └── input_handler.go # 옵션 핸들링
+└── bin/                    # 빌드된 바이너리
+```
+
+**주요 기능:**
+
+- **InputTypeOptions**: followup 질문에서 옵션 표시 및 숫자 키 선택
+- **CheckNeedsApproval**: followup, planModeRespond 타입 승인 처리
+- **CLI 모드 감지**: `isCliSubagent` 플래그로 AGENTS 초기화 스킵
+- **Headless 질문 스킵**: CLI 서브에이전트 모드에서 대화형 질문 비활성화
+
+#### **8.3 빌드 및 실행**
+
+```bash
+# 빌드
+npm run compile && npm run compile-cli
+
+# 실행
+./caret                          # 대화형 모드
+./caret "your prompt"            # 직접 프롬프트
+./caret --mode agent             # 에이전트 모드
+./caret -y                       # Yolo 모드 (비대화형)
+```
+
+#### **8.4 머징 정보**
+
+- **이식 우선순위**: **상** (독립 실행 필수)
+- **충돌 위험도**: 🟢 **하** (독립 모듈)
+- **TDD 커버리지**: ⚠️ **부분적** (수동 테스트 위주)
+
+---
+
+### **9. Careti 브랜딩 & UI 시스템** ✅ **완전 구현**
 
 #### **8.1 사용자 관점 차별화**
 

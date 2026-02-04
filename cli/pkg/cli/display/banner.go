@@ -31,9 +31,14 @@ func RenderSessionBanner(info BannerInfo) string {
 		Foreground(lipgloss.AdaptiveColor{Light: "248", Dark: "238"})
 
 	// Border color matches mode
-	borderColor := lipgloss.Color("3") // Yellow for plan
-	if info.Mode == "act" {
+	borderColor := lipgloss.Color("3") // Yellow for plan (default)
+	switch info.Mode {
+	case "act":
 		borderColor = lipgloss.Color("39") // Blue for act
+	case "agent":
+		borderColor = lipgloss.Color("2") // Green for agent
+	case "chatbot":
+		borderColor = lipgloss.Color("5") // Magenta for chatbot
 	}
 
 	boxStyle := lipgloss.NewStyle().
@@ -53,9 +58,14 @@ func RenderSessionBanner(info BannerInfo) string {
 	leftSide := titleStyle.Render("caret cli preview") + " " + dimStyle.Render(versionStr)
 
 	if info.Mode != "" {
-		modeColor := lipgloss.Color("3") // Yellow for plan
-		if info.Mode == "act" {
+		modeColor := lipgloss.Color("3") // Yellow for plan (default)
+		switch info.Mode {
+		case "act":
 			modeColor = lipgloss.Color("39") // Blue for act
+		case "agent":
+			modeColor = lipgloss.Color("2") // Green for agent
+		case "chatbot":
+			modeColor = lipgloss.Color("5") // Magenta for chatbot
 		}
 		modeStyle := lipgloss.NewStyle().Foreground(modeColor).Bold(true)
 		rightSide := modeStyle.Render(info.Mode + " mode")

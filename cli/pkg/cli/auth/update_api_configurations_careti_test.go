@@ -41,7 +41,7 @@ func TestUpdateProviderPartialCaretSetsModelInfoAndBaseURL(t *testing.T) {
 		BaseURL:   proto.String(baseURL),
 	}
 
-	if err := UpdateProviderPartial(context.Background(), nil, cline.ApiProvider_CARET, updates, true); err != nil {
+	if err := UpdateProviderPartial(context.Background(), nil, cline.ApiProvider_CARETI, updates, true); err != nil {
 		t.Fatalf("UpdateProviderPartial returned error: %v", err)
 	}
 	if got == nil || got.ApiConfiguration == nil || got.UpdateMask == nil {
@@ -49,10 +49,10 @@ func TestUpdateProviderPartialCaretSetsModelInfoAndBaseURL(t *testing.T) {
 	}
 
 	if got.ApiConfiguration.GetPlanModeApiProvider() != cline.ApiProvider_CARETI {
-		t.Fatalf("plan provider = %v, want %v", got.ApiConfiguration.GetPlanModeApiProvider(), cline.ApiProvider_CARET)
+		t.Fatalf("plan provider = %v, want %v", got.ApiConfiguration.GetPlanModeApiProvider(), cline.ApiProvider_CARETI)
 	}
 	if got.ApiConfiguration.GetActModeApiProvider() != cline.ApiProvider_CARETI {
-		t.Fatalf("act provider = %v, want %v", got.ApiConfiguration.GetActModeApiProvider(), cline.ApiProvider_CARET)
+		t.Fatalf("act provider = %v, want %v", got.ApiConfiguration.GetActModeApiProvider(), cline.ApiProvider_CARETI)
 	}
 
 	if got.ApiConfiguration.GetPlanModeCaretModelId() != modelID {

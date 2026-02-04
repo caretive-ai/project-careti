@@ -71,6 +71,34 @@
 			"src/generated/** 와 src/shared/proto/** 는 스크립트로만 갱신하고 수동 편집 금지"
 		]
 	},
+	"cli_standalone": {
+		"build": {
+			"backend": "npm run compile",
+			"cli": "npm run compile-cli",
+			"full": "npm run compile && npm run compile-cli"
+		},
+		"run": {
+			"interactive": "./caret",
+			"with_prompt": "./caret \"your prompt\"",
+			"modes": {
+				"plan": "./caret --mode plan (yellow)",
+				"act": "./caret --mode act (blue)",
+				"agent": "./caret --mode agent (green)",
+				"chatbot": "./caret --mode chatbot (magenta)"
+			},
+			"flags": {
+				"yolo": "-y, --yolo (non-interactive)",
+				"oneshot": "-o (full autonomous)"
+			}
+		},
+		"binary_location": "cli/bin/caret, cli/bin/careti-host",
+		"symlinks": "./caret, ./careti-host (project root)",
+		"cli_mode_features": {
+			"agents_init_skip": "isCliSubagent 플래그로 AGENTS 초기화 안내 스킵",
+			"headless_no_questions": "CLI 서브에이전트 모드에서 대화형 질문 비활성화",
+			"option_selection": "followup 질문에 숫자 키(1-9)로 옵션 선택"
+		}
+	},
 	"ai_workflow": {
 		"knowledge_principle": "AI knowledge = Developer knowledge (1:1 parity)",
 		"mandatory_pre_checks": [

@@ -12,8 +12,36 @@
 # Operations
 - Proto 갱신: `npm run protos`, `npm run protos-go` (proto 변경 시 순서대로 실행)
 - 컴파일: `npm run compile`
+- CLI 컴파일: `npm run compile-cli` (Go 바이너리 빌드)
 - 패키지: `npm run package`
 - 테스트: `npm run test:unit`, `npm run test:integration`, `npm run test:webview`
+
+# CLI Testing
+
+## 테스트 실행
+```bash
+cd cli && go test ./e2e/... -v           # 모든 E2E 테스트
+cd cli && go test ./e2e/... -v -short    # 빠른 테스트만 (통합 테스트 스킵)
+cd cli && go test ./e2e/... -v -run TestInteractive  # 특정 테스트만
+```
+
+## 테스트 구조 (cli/e2e/)
+| 파일 | 설명 |
+|-----|------|
+| `helpers_test.go` | 테스트 유틸리티 (바이너리 경로, gRPC 헬퍼 등) |
+| `cli_behavior_test.go` | CLI 동작 검증 (플래그, 명령어 구조) |
+| `cli_output_test.go` | 출력 형식 검증 |
+| `interactive_mode_test.go` | Interactive/Yolo 모드 동작 |
+| `start_list_test.go` | 인스턴스 시작/목록 테스트 |
+
+## 주요 테스트 시나리오
+- **Interactive 모드**: 스트림 EOF 시 재연결, 프로세스 계속 실행
+- **Yolo/Headless 모드**: 완료 후 종료, followup ask를 완료로 처리
+- **스트림 재연결**: `handleStateStream`, `handlePartialMessageStream`의 EOF 처리
+
+## 테스트 전제조건
+- `npm run compile-cli` 실행 필요
+- 통합 테스트는 실행 중인 cline-core 인스턴스 필요 (없으면 skip)
 
 # Conventions
 - **항상 한국어로 응답**합니다.

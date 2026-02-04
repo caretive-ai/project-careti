@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/cline/cli/pkg/cli/global"
-	"github.com/cline/grpc-go/caret"
+	careti "github.com/cline/grpc-go/caret"
 )
 
 func TestWaitForAuthenticationReturnsOnStreamAuth(t *testing.T) {

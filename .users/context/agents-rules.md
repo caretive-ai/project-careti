@@ -85,6 +85,37 @@
 - **Tests**: match source (`brand-utils.test.ts`)
 - **Docs**: kebab-case (`new-developer-guide.md`)
 
+## CLI Standalone
+
+### Build & Run
+```bash
+# 빌드
+npm run compile && npm run compile-cli
+
+# 실행
+./caret                          # 대화형 모드
+./caret "your prompt"            # 직접 프롬프트
+./caret --mode agent             # 에이전트 모드
+./caret -y                       # Yolo 모드 (비대화형)
+```
+
+### 실행 모드
+- **plan** (노란색): 계획 수립 모드
+- **act** (파란색): 실행 모드
+- **agent** (초록색): 에이전트 모드
+- **chatbot** (마젠타): 챗봇 모드
+
+### CLI 모드 특징
+- **AGENTS 초기화 스킵**: `isCliSubagent` 플래그로 초기화 안내 비활성화
+- **Headless 질문 스킵**: CLI 서브에이전트 모드에서 대화형 질문 비활성화
+- **옵션 선택**: followup 질문에 숫자 키(1-9)로 옵션 선택 가능
+
+### 바이너리 위치
+- **빌드 결과**: `cli/bin/caret`, `cli/bin/careti-host`
+- **심볼릭 링크**: `./caret`, `./careti-host` (프로젝트 루트)
+
+---
+
 ## Development Support Scripts
 
 ### Analysis Utils (`careti-scripts/utils/`)

@@ -1,6 +1,7 @@
 {
 	"coreFeatures": {
-		"header": "함께 성장하는 AI 코딩 에이전트 '캐러티'와 '바이브 코딩'을 시작하세요."
+		"header": "함께 성장하는 AI 코딩 에이전트 '캐러티'와 '바이브 코딩'을 시작하세요.",
+		"description": "무료 크레딧으로 바로 시작. Cline·Claude Code 100% 호환. 편집·프롬프트 개선으로 Cline 대비 비용 절감. ZAI GLM-4.7 등 266개+ LLM. 도구: 나노바나나 이미지 생성, 이미지 분석, 웹 검색, 문서 읽기(PDF/HWP). 7개 언어 UI."
 	},
 	"getStarted": {
 		"button": "시작하기"

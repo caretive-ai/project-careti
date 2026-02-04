@@ -121,6 +121,7 @@ func LogsDir(configPath string) string {
 }
 
 // ResolveBrandNameForPath infers the correct brand label from the binary path.
+// CARETI MODIFICATION: Updated to recognize "caret" as the current binary name
 func ResolveBrandNameForPath(execPath string) string {
 	if execPath == "" {
 		return defaultBrandDisplayName
@@ -130,7 +131,7 @@ func ResolveBrandNameForPath(execPath string) string {
 	switch {
 	case strings.Contains(base, "cline"):
 		return "Cline"
-	case strings.Contains(base, "careti"):
+	case strings.Contains(base, "caret"): // Matches both "caret" and legacy "careti"
 		return "Careti"
 	default:
 		return defaultBrandDisplayName

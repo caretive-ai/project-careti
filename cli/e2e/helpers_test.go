@@ -22,22 +22,26 @@ const (
 	defaultTimeout  = 30 * time.Second
 	longTimeout     = 60 * time.Second
 	pollInterval    = 250 * time.Millisecond
-	instancesBinRel = "../bin/cline"
 )
 
 func repoAwareBinPath(t *testing.T) string {
-	// Tests live in repoRoot/cli/e2e. Binary is at repoRoot/cli/bin/cline
+	// Tests live in repoRoot/cli/e2e. Binary is at repoRoot/cli/bin/caret (or cline for backward compat)
 	t.Helper()
 	wd, err := os.Getwd()
 	if err != nil {
 		t.Fatalf("Getwd error: %v", err)
 	}
-	// cli/e2e -> cli/bin/cline
-	p := filepath.Clean(filepath.Join(wd, instancesBinRel))
-	if _, err := os.Stat(p); err != nil {
-		t.Fatalf("CLI binary not found at %s; run `npm run compile-cli` first: %v", p, err)
+	// cli/e2e -> cli/bin/careti (primary) or cli/bin/cline (fallback)
+	caretiPath := filepath.Clean(filepath.Join(wd, "../bin/careti"))
+	if _, err := os.Stat(caretiPath); err == nil {
+		return caretiPath
 	}
-	return p
+	clinePath := filepath.Clean(filepath.Join(wd, "../bin/cline"))
+	if _, err := os.Stat(clinePath); err == nil {
+		return clinePath
+	}
+	t.Fatalf("CLI binary not found at %s or %s; run `npm run compile-cli` first", caretiPath, clinePath)
+	return ""
 }
 
 func setTempClineDir(t *testing.T) string {

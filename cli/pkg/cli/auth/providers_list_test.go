@@ -30,7 +30,7 @@ func TestGetProviderFieldsIncludesCaretAndLiteLLM(t *testing.T) {
 		},
 		{
 			name:                     "Caret fields",
-			provider:                 cline.ApiProvider_CARET,
+			provider:                 cline.ApiProvider_CARETI,
 			expectedAPIKeyField:      "caretApiKey",
 			expectedPlanModelField:   "planModeApiModelId",
 			expectedActModelField:    "actModeApiModelId",
@@ -79,7 +79,7 @@ func TestGetProviderFieldsIncludesCaretAndLiteLLM(t *testing.T) {
 
 func TestGetProviderDisplayNameReturnsNewLabels(t *testing.T) {
 	testCases := map[cline.ApiProvider]string{
-		cline.ApiProvider_CARET:     "Caret (Official)",
+		cline.ApiProvider_CARETI:     "Caret (Official)",
 		cline.ApiProvider_LITELLM:   "LiteLLM",
 		cline.ApiProvider_BIZROUTER: "BizRouter",
 	}

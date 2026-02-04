@@ -68,6 +68,11 @@ Careti은 Cline을 기반으로 한 자율 AI 코딩 어시스턴트로, 다음�
 - **[F17: GFM 테이블 및 마크다운 확장](./f17-gfm-table-markdown-support.md)**
   GitHub Flavored Markdown 테이블, 취소선 등 확장 마크다운 지원 (Cline 미지원 기능)
 
+### CLI 확장 (CLI Extensions)
+
+- **[F18: CLI Agent/Chatbot 모드](./f18-cli-agent-chatbot-mode.md)**
+  CLI에서 Agent/Chatbot 모드 지원, Persona 연동, 4가지 모드 색상 테마
+
 ---
 
 ## 기능 맵
@@ -91,12 +96,14 @@ Careti 기능
 │   ├── Provider Setup
 │   ├── 입력 히스토리
 │   └── 지식 동기화 시스템
-└── 도구 확장 (F13-F17)
-    ├── 이미지 생성 도구
-    ├── 문서 읽기 도구 (PDF, HWPX, HWP, PPTX)
-    ├── 스마트 편집 엔진 (9단계 Fuzzy Matching)
-    ├── 웹 도구 및 슬래시 명령 (Web Search, Explain Changes)
-    └── GFM 테이블 및 마크다운 확장 (Cline 미지원)
+├── 도구 확장 (F13-F17)
+│   ├── 이미지 생성 도구
+│   ├── 문서 읽기 도구 (PDF, HWPX, HWP, PPTX)
+│   ├── 스마트 편집 엔진 (9단계 Fuzzy Matching)
+│   ├── 웹 도구 및 슬래시 명령 (Web Search, Explain Changes)
+│   └── GFM 테이블 및 마크다운 확장 (Cline 미지원)
+└── CLI 확장 (F18)
+    └── CLI Agent/Chatbot 모드 (자율실행, 대화모드, Persona)
 ```
 
 ## 개발 가이드

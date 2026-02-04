@@ -30,6 +30,7 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 	} = chatState
 
 	// Handle sending a message
+	// CARETI MODIFICATION: Fire-and-forget pattern for non-blocking UI
 	const handleSendMessage = useCallback(
 		async (text: string, images: string[], files: string[]) => {
 			let messageToSend = text.trim()
@@ -47,12 +48,13 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 			}
 
 			if (hasContent) {
-				let didSend = false
+				let willSend = false
 
 				logger.debug("handleSendMessage - Sending message", { messageToSend })
+
+				// CARETI MODIFICATION: Determine if we will send BEFORE the async call
 				if (messages.length === 0) {
-					await TaskServiceClient.newTask(NewTaskRequest.create({ text: messageToSend, images, files }))
-					didSend = true
+					willSend = true
 				} else if (effectiveAsk) {
 					switch (effectiveAsk) {
 						case "followup":
@@ -71,37 +73,56 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 						case "new_task":
 						case "condense":
 						case "report_bug":
-							await TaskServiceClient.askResponse(
-								AskResponseRequest.create({
-									responseType: "messageResponse",
-									text: messageToSend,
-									images,
-									files,
-								}),
-							)
-							markAskResponded(effectiveAskTs)
-							didSend = true
+							willSend = true
 							break
 					}
 				}
-				if (didSend) {
+
+				// CARETI MODIFICATION: Clear input IMMEDIATELY (fire-and-forget pattern)
+				// This makes the UI feel responsive even while the backend processes
+				if (willSend) {
 					setInputValue("")
 					setActiveQuote(null)
 					setSendingDisabled(true)
 					setSelectedImages([])
 					setSelectedFiles([])
 					setEnableButtons(false)
-				} else {
+
+					// Reset auto-scroll
+					if ("disableAutoScrollRef" in chatState) {
+						;(chatState as any).disableAutoScrollRef.current = false
+					}
+				}
+
+				// CARETI MODIFICATION: Make the actual API call (async, non-blocking)
+				// Errors are logged but don't block the UI
+				if (messages.length === 0) {
+					TaskServiceClient.newTask(NewTaskRequest.create({ text: messageToSend, images, files })).catch((error) => {
+						logger.error("Failed to create new task", error)
+					})
+				} else if (effectiveAsk && willSend) {
+					TaskServiceClient.askResponse(
+						AskResponseRequest.create({
+							responseType: "messageResponse",
+							text: messageToSend,
+							images,
+							files,
+						}),
+					)
+						.then(() => {
+							markAskResponded(effectiveAskTs)
+						})
+						.catch((error) => {
+							logger.error("Failed to send message response", error)
+						})
+				}
+
+				if (!willSend) {
 					logger.warn("handleSendMessage: No pending ask to receive message response.", {
 						clineAsk,
 						effectiveAsk,
 						lastAskMessage,
 					})
-				}
-
-				// Reset auto-scroll
-				if ("disableAutoScrollRef" in chatState) {
-					;(chatState as any).disableAutoScrollRef.current = false
 				}
 			}
 		},

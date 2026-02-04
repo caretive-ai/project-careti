@@ -84,7 +84,7 @@ export class E2ETestHelper {
 
 				try {
 					const title = await frame.title()
-					if (title.startsWith("Cline")) {
+					if (title.startsWith("Cline") || title.startsWith("Caret")) {
 						this.cachedFrame = frame
 						return frame
 					}
@@ -118,14 +118,14 @@ export class E2ETestHelper {
 	}
 
 	public async signin(webview: Frame): Promise<void> {
-		await webview.getByRole("button", { name: "Login to Cline" }).click({ delay: 100 })
+		await webview.getByRole("button", { name: /Login to (Cline|Caret)/ }).click({ delay: 100 })
 
 		// Verify start up page is no longer visible
-		await expect(webview.getByRole("button", { name: "Login to Cline" })).not.toBeVisible()
+		await expect(webview.getByRole("button", { name: /Login to (Cline|Caret)/ })).not.toBeVisible()
 	}
 
 	public static async openClineSidebar(page: Page): Promise<void> {
-		await page.getByRole("tab", { name: /Cline/ }).locator("a").click()
+		await page.getByRole("tab", { name: /Cline|Caret/ }).locator("a").click()
 	}
 
 	public static async runCommandPalette(page: Page, command: string): Promise<void> {
@@ -310,3 +310,63 @@ export const E2E_WORKSPACE_TYPES = [
 	{ title: "Single Root", workspaceType: "single" },
 	{ title: "Multi-Roots", workspaceType: "multi" },
 ] as const
+
+/**
+ * CARETI MODIFICATION: Careti 온보딩 플로우를 통해 API 설정
+ * 1. "Get Started" 클릭
+ * 2. Provider 선택 및 API 키 입력
+ * 3. 설정 저장
+ * 4. 페르소나 선택 (있는 경우)
+ */
+export async function setupCaretiApiKey(sidebar: Frame): Promise<void> {
+	// Wait for welcome view
+	const welcomeView = sidebar.getByTestId("careti-welcome-view")
+	const isWelcomeVisible = await welcomeView.isVisible().catch(() => false)
+
+	if (isWelcomeVisible) {
+		// Click "Get Started" button
+		const getStartedButton = sidebar.getByRole("button", { name: /Get Started|시작하기/i })
+		await expect(getStartedButton).toBeVisible({ timeout: 10000 })
+		await getStartedButton.click()
+
+		// Wait for API setup page
+		const apiSetupPage = sidebar.getByTestId("careti-api-setup-page")
+		await expect(apiSetupPage).toBeVisible({ timeout: 5000 })
+
+		// Select Gemini provider
+		const providerSelectorInput = sidebar.getByTestId("provider-selector-input")
+		await expect(providerSelectorInput).toBeVisible()
+		await providerSelectorInput.click({ delay: 100 })
+		await sidebar.getByTestId("provider-option-gemini").click({ delay: 100 })
+
+		// Fill in Gemini API key from environment variable
+		const geminiApiKey = process.env.GEMINI_TOKEN || "test-gemini-api-key"
+		const apiKeyInput = sidebar.getByRole("textbox", { name: /Gemini API Key|API Key/i })
+		await expect(apiKeyInput).toBeVisible()
+		await apiKeyInput.fill(geminiApiKey)
+
+		// Click Save Settings
+		const saveButton = sidebar.getByRole("button", { name: /Save Settings|저장|Continue/i })
+		await saveButton.click()
+
+		// Handle persona selector - wait longer and use exact button text
+		const personaSelectButton = sidebar.getByRole("button", { name: /^Select$|^선택$/i })
+		try {
+			await personaSelectButton.waitFor({ state: "visible", timeout: 10000 })
+			await personaSelectButton.click()
+			console.log("✅ Persona selected")
+		} catch {
+			console.log("⚠️ Persona selector not found, continuing...")
+		}
+	}
+
+	// Wait for chat view to appear
+	const chatInputBox = sidebar.getByTestId("chat-input")
+	await expect(chatInputBox).toBeVisible({ timeout: 20000 })
+
+	// Close release banner if visible
+	const closeButton = sidebar.getByTestId("close-announcement-button")
+	if (await closeButton.isVisible().catch(() => false)) {
+		await closeButton.click()
+	}
+}

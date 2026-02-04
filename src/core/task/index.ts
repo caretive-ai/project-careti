@@ -1335,6 +1335,11 @@ export class Task {
 			return
 		}
 
+		// CARETI MODIFICATION: E2E/headless 테스트에서는 AGENTS 초기화 프롬프트 건너뛰기
+		if (isInTestMode()) {
+			return
+		}
+
 		const status = await getAgentsStandardStatus(this.cwd)
 		if (status.isStandard) {
 			return

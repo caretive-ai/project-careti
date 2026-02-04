@@ -178,6 +178,17 @@ export class SessionManager {
 	}
 
 	/**
+	 * 경고 상태 확인 (첫 번째 인터럽트 후 두 번째 대기 중)
+	 */
+	isWarningState(sessionId: string): boolean {
+		const session = this.sessions.get(sessionId)
+		if (!session) {
+			return false
+		}
+		return session.interruptCount > 0 && session.interruptCount < this.INTERRUPT_THRESHOLD
+	}
+
+	/**
 	 * 인터럽트 시도 (Double-press 패턴)
 	 *
 	 * @returns true면 실제 인터럽트 발생, false면 경고 상태

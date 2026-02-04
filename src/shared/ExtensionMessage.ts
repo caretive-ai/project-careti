@@ -142,6 +142,9 @@ export interface ExtensionState {
 	nativeToolCallSetting?: ClineFeatureSetting
 	// CARETI MODIFICATION: CLI Subagent Mode
 	isCliSubagent: boolean
+	// CARETI MODIFICATION: Session state for interrupt/queue system
+	sessionStatus?: "idle" | "busy" | "interrupting"
+	interruptWarning?: boolean // True when first interrupt press occurred (waiting for second)
 }
 
 export interface ClineMessage {

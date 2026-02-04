@@ -319,6 +319,15 @@ export const E2E_WORKSPACE_TYPES = [
  * 4. 페르소나 선택 (있는 경우)
  */
 export async function setupCaretiApiKey(sidebar: Frame): Promise<void> {
+	// CARETI MODIFICATION: Clear any existing task first to ensure clean state
+	// This handles test isolation when running multiple tests in a describe block
+	const clearTaskButton = sidebar.getByRole("button", { name: /New Task|새 작업|Clear/i })
+	if (await clearTaskButton.isVisible().catch(() => false)) {
+		await clearTaskButton.click()
+		// Wait for the clear action to complete
+		await sidebar.page().waitForTimeout(500)
+	}
+
 	// Wait for welcome view
 	const welcomeView = sidebar.getByTestId("careti-welcome-view")
 	const isWelcomeVisible = await welcomeView.isVisible().catch(() => false)
@@ -362,6 +371,59 @@ export async function setupCaretiApiKey(sidebar: Frame): Promise<void> {
 
 	// Wait for chat view to appear
 	const chatInputBox = sidebar.getByTestId("chat-input")
+
+	// CARETI MODIFICATION: Robust state recovery for test isolation
+	let isChatVisible = await chatInputBox.isVisible().catch(() => false)
+
+	if (!isChatVisible) {
+		// Try multiple recovery strategies
+		const recoveryStrategies = [
+			// Strategy 1: Click "New Task" button (top-right + icon)
+			async () => {
+				const newTaskBtn = sidebar.getByRole("button", { name: /New Task|새 작업/i })
+				if (await newTaskBtn.isVisible().catch(() => false)) {
+					await newTaskBtn.click()
+					return true
+				}
+				return false
+			},
+			// Strategy 2: Click + button in header
+			async () => {
+				const plusBtn = sidebar.locator('button:has-text("+")').first()
+				if (await plusBtn.isVisible().catch(() => false)) {
+					await plusBtn.click()
+					return true
+				}
+				return false
+			},
+			// Strategy 3: Use keyboard shortcut to start new task
+			async () => {
+				await sidebar.page().keyboard.press("Escape")
+				await sidebar.page().waitForTimeout(300)
+				return true
+			},
+		]
+
+		for (const strategy of recoveryStrategies) {
+			try {
+				const executed = await strategy()
+				if (executed) {
+					await sidebar.page().waitForTimeout(500)
+					isChatVisible = await chatInputBox.isVisible().catch(() => false)
+					if (isChatVisible) break
+				}
+			} catch {
+				// Continue to next strategy
+			}
+		}
+
+		// If still not visible, take diagnostic screenshot
+		if (!isChatVisible) {
+			await sidebar.page().screenshot({ path: "/tmp/e2e-debug-state.png" })
+			console.log("⚠️ Chat input not visible, screenshot saved to /tmp/e2e-debug-state.png")
+		}
+	}
+
 	await expect(chatInputBox).toBeVisible({ timeout: 20000 })
 
 	// Close release banner if visible

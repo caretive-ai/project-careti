@@ -1,5 +1,6 @@
 import type { Anthropic } from "@anthropic-ai/sdk"
 import { CaretiAccountService } from "@careti/services/account/CaretiAccountService"
+import { SessionManager } from "@careti/utils/session-manager"
 import { CaretiAuthService } from "@careti/services/auth/CaretiAuthService"
 import { getCurrentFeatureConfig } from "@careti/shared/FeatureConfig"
 import { buildApiHandler } from "@core/api"
@@ -95,6 +96,9 @@ export class Controller {
 	// Timer for periodic remote config fetching
 	private remoteConfigTimer?: NodeJS.Timeout
 
+	// CARETI MODIFICATION: SessionManager event subscription cleanup
+	private sessionManagerUnsubscribe?: () => void
+
 	// Public getter for workspace manager with lazy initialization - To get workspaces when task isn't initialized (Used by file mentions)
 	async ensureWorkspaceManager(): Promise<WorkspaceRootManager | undefined> {
 		if (!this.workspaceManager) {
@@ -185,6 +189,15 @@ export class Controller {
 			console.error("Failed to cleanup legacy checkpoints:", error)
 		})
 
+		// CARETI MODIFICATION: Subscribe to SessionManager events for real-time state updates
+		const sessionManager = SessionManager.getInstance()
+		this.sessionManagerUnsubscribe = sessionManager.on((event) => {
+			// Trigger state update on session events
+			if (event.type === "session.busy" || event.type === "session.idle" || event.type === "session.interrupted") {
+				this.postStateToWebview()
+			}
+		})
+
 		// Check CLI installation status once on startup
 		checkCliInstallation(this)
 	}
@@ -199,6 +212,12 @@ export class Controller {
 		if (this.remoteConfigTimer) {
 			clearInterval(this.remoteConfigTimer)
 			this.remoteConfigTimer = undefined
+		}
+
+		// CARETI MODIFICATION: Clean up SessionManager subscription
+		if (this.sessionManagerUnsubscribe) {
+			this.sessionManagerUnsubscribe()
+			this.sessionManagerUnsubscribe = undefined
 		}
 
 		await this.clearTask()
@@ -921,6 +940,11 @@ export class Controller {
 		const currentPersona = this.stateManager.getGlobalStateKey("currentPersona" as any)
 		const personaProfile = this.stateManager.getGlobalStateKey("personaProfile" as any)
 
+		// CARETI MODIFICATION: Get session state for interrupt/queue system
+		const sessionManager = SessionManager.getInstance()
+		const sessionStatus = this.task?.taskId ? (sessionManager.get(this.task.taskId)?.status ?? "idle") : "idle"
+		const interruptWarning = this.task?.taskId ? sessionManager.isWarningState(this.task.taskId) : false
+
 		const localClineRulesToggles = this.stateManager.getWorkspaceStateKey("localClineRulesToggles")
 		const localWindsurfRulesToggles = this.stateManager.getWorkspaceStateKey("localWindsurfRulesToggles")
 		const localCursorRulesToggles = this.stateManager.getWorkspaceStateKey("localCursorRulesToggles")
@@ -1036,6 +1060,9 @@ export class Controller {
 				user: this.stateManager.getGlobalStateKey("nativeToolCallEnabled"),
 				featureFlag: featureFlagsService.getNativeToolCallEnabled(),
 			},
+			// CARETI MODIFICATION: Session state for interrupt/queue system
+			sessionStatus,
+			interruptWarning,
 		} as any
 	}
 

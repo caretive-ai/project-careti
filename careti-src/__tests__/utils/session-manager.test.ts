@@ -153,6 +153,28 @@ describe("SessionManager", () => {
 		})
 	})
 
+	describe("isWarningState", () => {
+		it("should return false for non-existent session", () => {
+			expect(manager.isWarningState("non-existent")).toBe(false)
+		})
+
+		it("should return false when no interrupt pressed", () => {
+			manager.getOrCreate("session-1")
+			expect(manager.isWarningState("session-1")).toBe(false)
+		})
+
+		it("should return true after first interrupt", () => {
+			manager.tryInterrupt("session-1")
+			expect(manager.isWarningState("session-1")).toBe(true)
+		})
+
+		it("should return false after second interrupt (threshold reached)", () => {
+			manager.tryInterrupt("session-1")
+			manager.tryInterrupt("session-1")
+			expect(manager.isWarningState("session-1")).toBe(false)
+		})
+	})
+
 	describe("forceInterrupt", () => {
 		it("should abort the signal", () => {
 			const signal = manager.getSignal("session-1")

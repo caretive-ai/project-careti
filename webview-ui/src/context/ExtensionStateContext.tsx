@@ -344,6 +344,9 @@ export const ExtensionStateContextProvider: React.FC<{
 		lastDismissedCliBannerVersion: 0,
 		// CARETI MODIFICATION: Add isCliSubagent state
 		isCliSubagent: false,
+		// CARETI MODIFICATION: Session state for interrupt/queue system
+		sessionStatus: "idle" as const,
+		interruptWarning: false,
 	})
 	const [didHydrateState, setDidHydrateState] = useState(false)
 	const [showWelcome, setShowWelcome] = useState(false)
@@ -1223,6 +1226,9 @@ export const ExtensionStateContextProvider: React.FC<{
 			setCaretUserState(user)
 		},
 		isCliSubagent: state.isCliSubagent,
+		// CARETI MODIFICATION: Session state for interrupt/queue system
+		sessionStatus: state.sessionStatus,
+		interruptWarning: state.interruptWarning,
 	}
 
 	return <ExtensionStateContext.Provider value={contextValue}>{children}</ExtensionStateContext.Provider>

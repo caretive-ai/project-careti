@@ -109,6 +109,9 @@
 		"description": "Reduziert die Token-Nutzung durch Zusammenfassung der Aufgabe."
 	},
 	"typeMessage": "Nachricht eingeben...",
+	"pendingInput": {
+		"label": "Warteschlange"
+	},
 	"contextMenu": {
 		"problems": "Probleme",
 		"terminal": "Terminal",

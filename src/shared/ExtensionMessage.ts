@@ -145,6 +145,7 @@ export interface ExtensionState {
 	// CARETI MODIFICATION: Session state for interrupt/queue system
 	sessionStatus?: "idle" | "busy" | "interrupting"
 	interruptWarning?: boolean // True when first interrupt press occurred (waiting for second)
+	pendingInput?: string // Pending user input while AI is streaming (Claude Code style)
 }
 
 export interface ClineMessage {

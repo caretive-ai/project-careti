@@ -109,6 +109,9 @@
 		"description": "Уменьшает использование tokens путем суммирования задачи."
 	},
 	"typeMessage": "Введите сообщение...",
+	"pendingInput": {
+		"label": "В очереди"
+	},
 	"contextMenu": {
 		"problems": "Проблемы",
 		"terminal": "Терминал",

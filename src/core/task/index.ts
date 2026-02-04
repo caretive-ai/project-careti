@@ -737,6 +737,25 @@ export class Task {
 			}
 
 			this.taskState.lastAskTs = askTs // CARETI MODIFICATION: say()로 lastMessageTs가 바뀌어도 현재 ask를 취소하지 않도록 분리
+
+			// CARETI MODIFICATION: Check pending input buffer for text input types
+			// Claude Code style: single string buffer, multiple inputs combined
+			const textInputAskTypes: ClineAsk[] = ["followup", "plan_mode_respond", "command_output"]
+			if (textInputAskTypes.includes(type)) {
+				const sessionManager = SessionManager.getInstance()
+				if (sessionManager.hasPendingInput(this.taskId)) {
+					const pendingInput = sessionManager.consumePendingInput(this.taskId)
+					Logger.info(`[Task ${this.taskId}] Processing pending input: ${pendingInput.substring(0, 50)}...`)
+					return {
+						response: "messageResponse" as ClineAskResponse,
+						text: pendingInput,
+						images: [],
+						files: [],
+						askTs,
+					}
+				}
+			}
+
 			await pWaitFor(
 				() =>
 					this.taskState.askResponse !== undefined ||

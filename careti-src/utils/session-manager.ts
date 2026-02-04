@@ -1,7 +1,5 @@
 // CARETI MODIFICATION: Session state manager with AbortController support
-// Reference: ref-opencode/packages/opencode/src/session/prompt.ts
-
-import { AsyncQueue } from "./async-queue"
+// Claude Code style: single string buffer for pending input
 
 /**
  * 세션 상태 타입
@@ -9,21 +7,11 @@ import { AsyncQueue } from "./async-queue"
 export type SessionStatus = "idle" | "busy" | "interrupting"
 
 /**
- * 사용자 메시지 인터페이스
- */
-export interface UserMessage {
-	id: string
-	text: string
-	timestamp: number
-	metadata?: Record<string, unknown>
-}
-
-/**
  * 세션 상태 인터페이스
  */
 export interface SessionState {
 	abort: AbortController
-	pendingMessages: AsyncQueue<UserMessage>
+	pendingInput: string // 단일 문자열 버퍼 (여러 입력이 합쳐짐)
 	status: SessionStatus
 	interruptCount: number
 	interruptTimer?: ReturnType<typeof setTimeout>
@@ -33,11 +21,10 @@ export interface SessionState {
  * 세션 이벤트 타입
  */
 export type SessionEvent =
-	| { type: "message.queued"; sessionId: string; message: UserMessage }
-	| { type: "message.processing"; sessionId: string; messageId: string }
-	| { type: "message.completed"; sessionId: string; messageId: string }
-	| { type: "message.failed"; sessionId: string; messageId: string; error: Error }
-	| { type: "session.interrupted"; sessionId: string }
+	| { type: "input.queued"; sessionId: string; input: string }
+	| { type: "input.processed"; sessionId: string; input: string }
+	| { type: "input.cleared"; sessionId: string }
+	| { type: "session.interrupted"; sessionId: string; hasPendingInput: boolean }
 	| { type: "session.idle"; sessionId: string }
 	| { type: "session.busy"; sessionId: string }
 
@@ -49,28 +36,22 @@ export type SessionEventListener = (event: SessionEvent) => void
 /**
  * SessionManager - 세션 상태 및 AbortController 관리
  *
- * 특징:
- * - 세션별 AbortController 관리
- * - 메시지 큐잉 지원
+ * Claude Code 스타일:
+ * - 단일 문자열 버퍼 (여러 입력이 합쳐짐)
+ * - 취소 시 바로 큐 처리
  * - Double-press 안전 인터럽트
- * - 이벤트 버스 내장
  *
  * @example
  * ```typescript
  * const manager = SessionManager.getInstance()
  *
- * // 메시지 큐잉
- * manager.queueMessage("session-1", { text: "Hello" })
+ * // 입력 추가 (기존 입력에 합쳐짐)
+ * manager.appendInput("session-1", "첫 번째 지시")
+ * manager.appendInput("session-1", "두 번째 지시")
+ * // pendingInput = "첫 번째 지시\n두 번째 지시"
  *
- * // 인터럽트 (2회 호출 시 실제 중단)
+ * // 인터럽트 (2회 호출 시 실제 중단 + 큐 처리)
  * manager.tryInterrupt("session-1")
- *
- * // 이벤트 구독
- * manager.on((event) => {
- *   if (event.type === "session.interrupted") {
- *     console.log("Session interrupted:", event.sessionId)
- *   }
- * })
  * ```
  */
 export class SessionManager {
@@ -112,7 +93,7 @@ export class SessionManager {
 		if (!this.sessions.has(sessionId)) {
 			this.sessions.set(sessionId, {
 				abort: new AbortController(),
-				pendingMessages: new AsyncQueue<UserMessage>(),
+				pendingInput: "",
 				status: "idle",
 				interruptCount: 0,
 			})
@@ -148,26 +129,74 @@ export class SessionManager {
 	}
 
 	/**
-	 * 메시지 큐에 추가
+	 * 입력을 버퍼에 추가 (기존 입력과 합쳐짐)
 	 */
-	queueMessage(sessionId: string, message: Omit<UserMessage, "id" | "timestamp">): UserMessage {
+	appendInput(sessionId: string, text: string): void {
 		const session = this.getOrCreate(sessionId)
 
-		const fullMessage: UserMessage = {
-			id: this.generateMessageId(),
-			timestamp: Date.now(),
-			...message,
+		if (session.pendingInput) {
+			session.pendingInput += "\n" + text
+		} else {
+			session.pendingInput = text
 		}
 
-		session.pendingMessages.push(fullMessage)
-
 		this.emit({
-			type: "message.queued",
+			type: "input.queued",
 			sessionId,
-			message: fullMessage,
+			input: session.pendingInput,
 		})
+	}
 
-		return fullMessage
+	/**
+	 * 대기 중인 입력 가져오기 (버퍼 비우지 않음)
+	 */
+	getPendingInput(sessionId: string): string {
+		return this.sessions.get(sessionId)?.pendingInput || ""
+	}
+
+	/**
+	 * 대기 중인 입력이 있는지 확인
+	 */
+	hasPendingInput(sessionId: string): boolean {
+		const session = this.sessions.get(sessionId)
+		return !!session?.pendingInput
+	}
+
+	/**
+	 * 대기 중인 입력 가져오고 비우기
+	 */
+	consumePendingInput(sessionId: string): string {
+		const session = this.sessions.get(sessionId)
+		if (!session) {
+			return ""
+		}
+
+		const input = session.pendingInput
+		session.pendingInput = ""
+
+		if (input) {
+			this.emit({
+				type: "input.processed",
+				sessionId,
+				input,
+			})
+		}
+
+		return input
+	}
+
+	/**
+	 * 대기 중인 입력 비우기 (취소)
+	 */
+	clearPendingInput(sessionId: string): void {
+		const session = this.sessions.get(sessionId)
+		if (session) {
+			session.pendingInput = ""
+			this.emit({
+				type: "input.cleared",
+				sessionId,
+			})
+		}
 	}
 
 	/**
@@ -220,6 +249,7 @@ export class SessionManager {
 
 	/**
 	 * 강제 인터럽트 (즉시 실행)
+	 * 취소 후 대기 중인 입력이 있으면 바로 처리됨
 	 */
 	forceInterrupt(sessionId: string): void {
 		const session = this.sessions.get(sessionId)
@@ -245,9 +275,12 @@ export class SessionManager {
 		// 상태 복원
 		session.status = "idle"
 
+		const hasPendingInput = !!session.pendingInput
+
 		this.emit({
 			type: "session.interrupted",
 			sessionId,
+			hasPendingInput,
 		})
 	}
 
@@ -258,7 +291,6 @@ export class SessionManager {
 		const session = this.sessions.get(sessionId)
 		if (session) {
 			session.abort.abort()
-			session.pendingMessages.close()
 			if (session.interruptTimer) {
 				clearTimeout(session.interruptTimer)
 			}
@@ -285,13 +317,6 @@ export class SessionManager {
 				console.error("[SessionManager] Event listener error:", error)
 			}
 		}
-	}
-
-	/**
-	 * 메시지 ID 생성
-	 */
-	private generateMessageId(): string {
-		return `msg-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
 	}
 
 	/**

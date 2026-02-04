@@ -193,7 +193,14 @@ export class Controller {
 		const sessionManager = SessionManager.getInstance()
 		this.sessionManagerUnsubscribe = sessionManager.on((event) => {
 			// Trigger state update on session events
-			if (event.type === "session.busy" || event.type === "session.idle" || event.type === "session.interrupted") {
+			if (
+				event.type === "session.busy" ||
+				event.type === "session.idle" ||
+				event.type === "session.interrupted" ||
+				event.type === "input.queued" ||
+				event.type === "input.processed" ||
+				event.type === "input.cleared"
+			) {
 				this.postStateToWebview()
 			}
 		})
@@ -944,6 +951,7 @@ export class Controller {
 		const sessionManager = SessionManager.getInstance()
 		const sessionStatus = this.task?.taskId ? (sessionManager.get(this.task.taskId)?.status ?? "idle") : "idle"
 		const interruptWarning = this.task?.taskId ? sessionManager.isWarningState(this.task.taskId) : false
+		const pendingInput = this.task?.taskId ? sessionManager.getPendingInput(this.task.taskId) : undefined
 
 		const localClineRulesToggles = this.stateManager.getWorkspaceStateKey("localClineRulesToggles")
 		const localWindsurfRulesToggles = this.stateManager.getWorkspaceStateKey("localWindsurfRulesToggles")
@@ -1063,6 +1071,7 @@ export class Controller {
 			// CARETI MODIFICATION: Session state for interrupt/queue system
 			sessionStatus,
 			interruptWarning,
+			pendingInput,
 		} as any
 	}
 

@@ -13,7 +13,8 @@
 		"resumeTask": "Resume Task",
 		"startNewTaskWithContext": "Start New Task with Context",
 		"condenseConversation": "Condense Conversation",
-		"reportGitHubIssue": "Report GitHub Issue"
+		"reportGitHubIssue": "Report GitHub Issue",
+		"pressAgainToCancel": "Press again to cancel"
 	},
 	"imageAlt": {
 		"caretBanner": "Careti Logo Banner"

@@ -1,3 +1,5 @@
+import { SessionManager } from "@careti/utils/session-manager"
+import { Logger } from "@services/logging/Logger"
 import { Empty } from "@shared/proto/cline/common"
 import { AskResponseRequest } from "@shared/proto/cline/task"
 import { ClineAskResponse } from "../../../shared/WebviewMessage"
@@ -32,6 +34,15 @@ export async function askResponse(controller: Controller, request: AskResponseRe
 			default:
 				console.warn(`askResponse: Unknown response type: ${request.responseType}`)
 				return Empty.create()
+		}
+
+		// CARETI MODIFICATION: Append to pending input if streaming
+		// Claude Code style: multiple inputs are combined into single buffer
+		if (controller.task.taskState.isStreaming && responseType === "messageResponse" && request.text) {
+			const sessionManager = SessionManager.getInstance()
+			sessionManager.appendInput(controller.task.taskId, request.text)
+			Logger.debug(`[askResponse] Input appended (${request.text.length} chars): ${request.text.substring(0, 50)}...`)
+			return Empty.create()
 		}
 
 		// Call the task's handler for webview responses

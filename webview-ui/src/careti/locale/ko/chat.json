@@ -99,6 +99,9 @@
 		"description": "작업을 요약해 토큰 사용량을 줄입니다."
 	},
 	"typeMessage": "메시지를 입력하세요...",
+	"pendingInput": {
+		"label": "대기 중"
+	},
 	"mode": {
 		"act": {
 			"label": "실행"

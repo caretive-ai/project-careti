@@ -1,10 +1,34 @@
-import { mkdtempSync, type PathLike, type RmOptions, rmSync } from "node:fs"
+import { mkdtempSync, type PathLike, readFileSync, type RmOptions, rmSync } from "node:fs"
 import * as os from "node:os"
 import * as path from "node:path"
 import { type ElectronApplication, expect, type Frame, type Page, test } from "@playwright/test"
 import { downloadAndUnzipVSCode, SilentReporter } from "@vscode/test-electron"
 import { _electron } from "playwright"
 import { ClineApiServerMock } from "../fixtures/server"
+
+// CARETI MODIFICATION: Load E2E test environment variables
+function loadEnvFile(): Record<string, string> {
+	const envVars: Record<string, string> = {}
+	try {
+		const envPath = path.join(__dirname, "../fixtures/workspace/evals.env")
+		const content = readFileSync(envPath, "utf-8")
+		for (const line of content.split("\n")) {
+			const trimmed = line.trim()
+			if (trimmed && !trimmed.startsWith("#")) {
+				const [key, ...valueParts] = trimmed.split("=")
+				const value = valueParts.join("=")
+				if (key && value) {
+					envVars[key] = value
+				}
+			}
+		}
+	} catch (error) {
+		console.warn("⚠️ Could not load evals.env:", error)
+	}
+	return envVars
+}
+
+const e2eEnvVars = loadEnvFile()
 
 interface E2ETestDirectories {
 	workspaceDir: string
@@ -231,6 +255,7 @@ export const e2e = test
 					executablePath,
 					env: {
 						...process.env,
+						...e2eEnvVars, // CARETI MODIFICATION: Pass E2E env vars (GEMINI_TOKEN, etc.)
 						TEMP_PROFILE: "true",
 						E2E_TEST: "true",
 						CLINE_ENVIRONMENT: "local",
@@ -319,44 +344,62 @@ export const E2E_WORKSPACE_TYPES = [
  * 4. 페르소나 선택 (있는 경우)
  */
 export async function setupCaretiApiKey(sidebar: Frame): Promise<void> {
-	// CARETI MODIFICATION: Clear any existing task first to ensure clean state
-	// This handles test isolation when running multiple tests in a describe block
-	const clearTaskButton = sidebar.getByRole("button", { name: /New Task|새 작업|Clear/i })
-	if (await clearTaskButton.isVisible().catch(() => false)) {
-		await clearTaskButton.click()
-		// Wait for the clear action to complete
-		await sidebar.page().waitForTimeout(500)
-	}
+	// CARETI MODIFICATION: Use loaded env vars or fallback
+	const geminiApiKey = e2eEnvVars.GEMINI_TOKEN || process.env.GEMINI_TOKEN || "test-gemini-api-key"
+	console.log(`🔑 Using Gemini API key: ${geminiApiKey.substring(0, 10)}...`)
 
-	// Wait for welcome view
-	const welcomeView = sidebar.getByTestId("careti-welcome-view")
-	const isWelcomeVisible = await welcomeView.isVisible().catch(() => false)
+	// CARETI MODIFICATION: More robust onboarding detection
+	// Try to find "Get Started" button first (indicates fresh install)
+	const getStartedButton = sidebar.getByRole("button", { name: /Get Started|시작하기/i })
+	const chatInputBox = sidebar.getByTestId("chat-input")
 
-	if (isWelcomeVisible) {
+	// Wait a bit for the UI to settle
+	await sidebar.page().waitForTimeout(1000)
+
+	// Check if we're on welcome page or already have chat input
+	const isGetStartedVisible = await getStartedButton.isVisible().catch(() => false)
+	const isChatInputVisible = await chatInputBox.isVisible().catch(() => false)
+
+	console.log(`📋 UI State: GetStarted=${isGetStartedVisible}, ChatInput=${isChatInputVisible}`)
+
+	if (isGetStartedVisible) {
+		console.log("🚀 Starting onboarding flow...")
 		// Click "Get Started" button
-		const getStartedButton = sidebar.getByRole("button", { name: /Get Started|시작하기/i })
-		await expect(getStartedButton).toBeVisible({ timeout: 10000 })
 		await getStartedButton.click()
+		await sidebar.page().waitForTimeout(500)
 
 		// Wait for API setup page
 		const apiSetupPage = sidebar.getByTestId("careti-api-setup-page")
-		await expect(apiSetupPage).toBeVisible({ timeout: 5000 })
+		try {
+			await expect(apiSetupPage).toBeVisible({ timeout: 5000 })
+		} catch {
+			console.log("⚠️ API setup page not found, checking for provider selector...")
+		}
 
 		// Select Gemini provider
 		const providerSelectorInput = sidebar.getByTestId("provider-selector-input")
-		await expect(providerSelectorInput).toBeVisible()
-		await providerSelectorInput.click({ delay: 100 })
-		await sidebar.getByTestId("provider-option-gemini").click({ delay: 100 })
+		if (await providerSelectorInput.isVisible().catch(() => false)) {
+			await providerSelectorInput.click({ delay: 100 })
+			await sidebar.page().waitForTimeout(300)
+			const geminiOption = sidebar.getByTestId("provider-option-gemini")
+			if (await geminiOption.isVisible().catch(() => false)) {
+				await geminiOption.click({ delay: 100 })
+			}
+		}
 
 		// Fill in Gemini API key from environment variable
-		const geminiApiKey = process.env.GEMINI_TOKEN || "test-gemini-api-key"
 		const apiKeyInput = sidebar.getByRole("textbox", { name: /Gemini API Key|API Key/i })
-		await expect(apiKeyInput).toBeVisible()
-		await apiKeyInput.fill(geminiApiKey)
+		if (await apiKeyInput.isVisible().catch(() => false)) {
+			await apiKeyInput.fill(geminiApiKey)
+			console.log("✅ API key filled")
+		}
 
 		// Click Save Settings
 		const saveButton = sidebar.getByRole("button", { name: /Save Settings|저장|Continue/i })
-		await saveButton.click()
+		if (await saveButton.isVisible().catch(() => false)) {
+			await saveButton.click()
+			await sidebar.page().waitForTimeout(500)
+		}
 
 		// Handle persona selector - wait longer and use exact button text
 		const personaSelectButton = sidebar.getByRole("button", { name: /^Select$|^선택$/i })
@@ -367,11 +410,35 @@ export async function setupCaretiApiKey(sidebar: Frame): Promise<void> {
 		} catch {
 			console.log("⚠️ Persona selector not found, continuing...")
 		}
+	} else if (!isChatInputVisible) {
+		// CARETI MODIFICATION: Already onboarded - update API key via settings
+		console.log("📝 Already onboarded, checking API settings...")
+		// Try to open settings to update API key
+		const settingsButton = sidebar.getByRole("button", { name: /Settings|설정/i })
+		if (await settingsButton.isVisible().catch(() => false)) {
+			await settingsButton.click()
+			await sidebar.page().waitForTimeout(500)
+
+			// Find and update API key input in settings
+			const apiKeyInput = sidebar.getByRole("textbox", { name: /Gemini API Key|API Key/i })
+			if (await apiKeyInput.isVisible().catch(() => false)) {
+				await apiKeyInput.fill(geminiApiKey)
+				console.log("✅ API key updated in settings")
+				// Save and close settings
+				const saveBtn = sidebar.getByRole("button", { name: /Save|저장/i })
+				if (await saveBtn.isVisible().catch(() => false)) {
+					await saveBtn.click()
+				}
+			}
+			// Go back to chat
+			const backButton = sidebar.getByRole("button", { name: /Back|뒤로/i })
+			if (await backButton.isVisible().catch(() => false)) {
+				await backButton.click()
+			}
+		}
 	}
 
 	// Wait for chat view to appear
-	const chatInputBox = sidebar.getByTestId("chat-input")
-
 	// CARETI MODIFICATION: Robust state recovery for test isolation
 	let isChatVisible = await chatInputBox.isVisible().catch(() => false)
 

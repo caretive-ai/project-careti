@@ -36,7 +36,7 @@ describe("SessionManager", () => {
 			expect(session).toBeDefined()
 			expect(session.status).toBe("idle")
 			expect(session.abort).toBeInstanceOf(AbortController)
-			expect(session.pendingMessages).toBeDefined()
+			expect(session.pendingInput).toBe("")
 			expect(session.interruptCount).toBe(0)
 		})
 
@@ -47,38 +47,92 @@ describe("SessionManager", () => {
 		})
 	})
 
-	describe("queueMessage", () => {
-		it("should add message to queue", () => {
-			const message = manager.queueMessage("session-1", { text: "Hello" })
-
-			expect(message.id).toBeDefined()
-			expect(message.text).toBe("Hello")
-			expect(message.timestamp).toBeDefined()
+	describe("appendInput", () => {
+		it("should add input to buffer", () => {
+			manager.appendInput("session-1", "Hello")
+			expect(manager.getPendingInput("session-1")).toBe("Hello")
 		})
 
-		it("should emit message.queued event", () => {
+		it("should emit input.queued event", () => {
 			const events: SessionEvent[] = []
 			manager.on((event) => events.push(event))
 
-			manager.queueMessage("session-1", { text: "Hello" })
+			manager.appendInput("session-1", "Hello")
 
 			expect(events).toHaveLength(1)
-			expect(events[0].type).toBe("message.queued")
+			expect(events[0].type).toBe("input.queued")
 		})
 
-		it("should queue multiple messages", async () => {
-			const session = manager.getOrCreate("session-1")
+		it("should combine multiple inputs with newline", () => {
+			manager.appendInput("session-1", "First")
+			manager.appendInput("session-1", "Second")
 
-			manager.queueMessage("session-1", { text: "First" })
-			manager.queueMessage("session-1", { text: "Second" })
+			expect(manager.getPendingInput("session-1")).toBe("First\nSecond")
+		})
 
-			expect(session.pendingMessages.length).toBe(2)
+		it("should combine three inputs correctly", () => {
+			manager.appendInput("session-1", "One")
+			manager.appendInput("session-1", "Two")
+			manager.appendInput("session-1", "Three")
 
-			const msg1 = await session.pendingMessages.next()
-			const msg2 = await session.pendingMessages.next()
+			expect(manager.getPendingInput("session-1")).toBe("One\nTwo\nThree")
+		})
+	})
 
-			expect(msg1?.text).toBe("First")
-			expect(msg2?.text).toBe("Second")
+	describe("hasPendingInput", () => {
+		it("should return false when no input", () => {
+			expect(manager.hasPendingInput("session-1")).toBe(false)
+		})
+
+		it("should return true when input exists", () => {
+			manager.appendInput("session-1", "Hello")
+			expect(manager.hasPendingInput("session-1")).toBe(true)
+		})
+	})
+
+	describe("consumePendingInput", () => {
+		it("should return and clear input", () => {
+			manager.appendInput("session-1", "Hello")
+
+			const input = manager.consumePendingInput("session-1")
+
+			expect(input).toBe("Hello")
+			expect(manager.getPendingInput("session-1")).toBe("")
+		})
+
+		it("should emit input.processed event", () => {
+			manager.appendInput("session-1", "Hello")
+
+			const events: SessionEvent[] = []
+			manager.on((event) => events.push(event))
+
+			manager.consumePendingInput("session-1")
+
+			expect(events.some((e) => e.type === "input.processed")).toBe(true)
+		})
+
+		it("should return empty string for non-existent session", () => {
+			expect(manager.consumePendingInput("non-existent")).toBe("")
+		})
+	})
+
+	describe("clearPendingInput", () => {
+		it("should clear input without returning", () => {
+			manager.appendInput("session-1", "Hello")
+			manager.clearPendingInput("session-1")
+
+			expect(manager.getPendingInput("session-1")).toBe("")
+		})
+
+		it("should emit input.cleared event", () => {
+			manager.appendInput("session-1", "Hello")
+
+			const events: SessionEvent[] = []
+			manager.on((event) => events.push(event))
+
+			manager.clearPendingInput("session-1")
+
+			expect(events.some((e) => e.type === "input.cleared")).toBe(true)
 		})
 	})
 
@@ -206,6 +260,21 @@ describe("SessionManager", () => {
 			const session = manager.get("session-1")
 			expect(session?.status).toBe("idle")
 		})
+
+		it("should include hasPendingInput in event", () => {
+			manager.appendInput("session-1", "Hello")
+
+			const events: SessionEvent[] = []
+			manager.on((event) => events.push(event))
+
+			manager.forceInterrupt("session-1")
+
+			const interruptEvent = events.find((e) => e.type === "session.interrupted")
+			expect(interruptEvent).toBeDefined()
+			if (interruptEvent?.type === "session.interrupted") {
+				expect(interruptEvent.hasPendingInput).toBe(true)
+			}
+		})
 	})
 
 	describe("delete", () => {
@@ -222,12 +291,6 @@ describe("SessionManager", () => {
 			manager.delete("session-1")
 			expect(signal.aborted).toBe(true)
 		})
-
-		it("should close pending messages queue", () => {
-			const session = manager.getOrCreate("session-1")
-			manager.delete("session-1")
-			expect(session.pendingMessages.isClosed()).toBe(true)
-		})
 	})
 
 	describe("event listeners", () => {
@@ -235,12 +298,12 @@ describe("SessionManager", () => {
 			const events: SessionEvent[] = []
 			const unsubscribe = manager.on((event) => events.push(event))
 
-			manager.queueMessage("session-1", { text: "Hello" })
+			manager.appendInput("session-1", "Hello")
 			expect(events).toHaveLength(1)
 
 			unsubscribe()
 
-			manager.queueMessage("session-1", { text: "World" })
+			manager.appendInput("session-1", "World")
 			expect(events).toHaveLength(1) // No new events
 		})
 
@@ -253,7 +316,7 @@ describe("SessionManager", () => {
 
 			// Should not throw
 			expect(() => {
-				manager.queueMessage("session-1", { text: "Hello" })
+				manager.appendInput("session-1", "Hello")
 			}).not.toThrow()
 
 			expect(consoleSpy).toHaveBeenCalled()

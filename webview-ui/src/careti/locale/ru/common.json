@@ -13,7 +13,8 @@
 		"resumeTask": "Возобновить задачу",
 		"startNewTaskWithContext": "Начать новую задачу с контекстом",
 		"condenseConversation": "Сжать беседу",
-		"reportGitHubIssue": "Сообщить о проблеме на GitHub"
+		"reportGitHubIssue": "Сообщить о проблеме на GitHub",
+		"pressAgainToCancel": "Нажмите ещё раз для отмены"
 	},
 	"imageAlt": {
 		"caretBanner": "Баннер с логотипом Careti"

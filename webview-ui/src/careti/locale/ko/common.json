@@ -13,7 +13,8 @@
 		"resumeTask": "작업 재개",
 		"startNewTaskWithContext": "컨텍스트와 함께 새 작업 시작",
 		"condenseConversation": "대화 요약",
-		"reportGitHubIssue": "GitHub 이슈 보고"
+		"reportGitHubIssue": "GitHub 이슈 보고",
+		"pressAgainToCancel": "다시 눌러 취소"
 	},
 	"imageAlt": {
 		"caretBanner": "캐러티 로고 배너"

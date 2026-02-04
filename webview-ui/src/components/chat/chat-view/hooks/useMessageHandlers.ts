@@ -53,7 +53,13 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 				logger.debug("handleSendMessage - Sending message", { messageToSend })
 
 				// CARETI MODIFICATION: Determine if we will send BEFORE the async call
+				// Also allow sending during streaming (message will be queued by backend)
+				const isStreaming = lastMessage?.partial === true || lastMessage?.say === "api_req_started"
+
 				if (messages.length === 0) {
+					willSend = true
+				} else if (isStreaming) {
+					// CARETI MODIFICATION: Allow sending during streaming - message will be queued
 					willSend = true
 				} else if (effectiveAsk) {
 					switch (effectiveAsk) {
@@ -100,7 +106,8 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 					TaskServiceClient.newTask(NewTaskRequest.create({ text: messageToSend, images, files })).catch((error) => {
 						logger.error("Failed to create new task", error)
 					})
-				} else if (effectiveAsk && willSend) {
+				} else if (willSend) {
+					// CARETI MODIFICATION: Send message even during streaming (will be queued by backend)
 					TaskServiceClient.askResponse(
 						AskResponseRequest.create({
 							responseType: "messageResponse",
@@ -110,7 +117,10 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 						}),
 					)
 						.then(() => {
-							markAskResponded(effectiveAskTs)
+							// Only mark as responded if there was an actual ask to respond to
+							if (effectiveAskTs) {
+								markAskResponded(effectiveAskTs)
+							}
 						})
 						.catch((error) => {
 							logger.error("Failed to send message response", error)
@@ -243,7 +253,9 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 					break
 
 				case "cancel":
-					await TaskServiceClient.cancelTask(EmptyRequest.create({}))
+					// CARETI MODIFICATION: Use double-press pattern for cancel
+					// First press sets warning state, second press actually cancels
+					await TaskServiceClient.tryInterruptTask(EmptyRequest.create({}))
 					return // Don't disable buttons for cancel
 
 				case "utility":

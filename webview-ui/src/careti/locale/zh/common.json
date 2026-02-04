@@ -13,7 +13,8 @@
 		"proceedWhileRunning": "Proceed While Running",
 		"resumeTask": "Resume Task",
 		"condenseConversation": "Condense Conversation",
-		"reportGitHubIssue": "Report GitHub Issue"
+		"reportGitHubIssue": "Report GitHub Issue",
+		"pressAgainToCancel": "再按一次取消"
 	},
 	"imageAlt": {
 		"caretBanner": "Careti 标志横幅"

@@ -15,6 +15,10 @@ export interface SessionState {
 	isBusy: boolean
 	/** Whether the session can accept new messages */
 	canSendMessage: boolean
+	/** Pending input that will be processed when current task completes or is cancelled */
+	pendingInput?: string
+	/** Whether there is pending input queued */
+	hasPendingInput: boolean
 }
 
 /**
@@ -37,7 +41,7 @@ export interface SessionState {
  * ```
  */
 export function useSessionState(): SessionState {
-	const { sessionStatus, interruptWarning } = useExtensionState()
+	const { sessionStatus, interruptWarning, pendingInput } = useExtensionState()
 
 	return useMemo(() => {
 		const status: SessionStatus = sessionStatus ?? "idle"
@@ -45,12 +49,15 @@ export function useSessionState(): SessionState {
 		const isBusy = status === "busy" || status === "interrupting"
 		// Can send messages when idle or busy (for queuing), but not during interrupting
 		const canSendMessage = status !== "interrupting"
+		const hasPendingInput = !!pendingInput
 
 		return {
 			status,
 			isWarning,
 			isBusy,
 			canSendMessage,
+			pendingInput,
+			hasPendingInput,
 		}
-	}, [sessionStatus, interruptWarning])
+	}, [sessionStatus, interruptWarning, pendingInput])
 }

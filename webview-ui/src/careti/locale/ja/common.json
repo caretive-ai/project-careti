@@ -13,7 +13,8 @@
 		"proceedWhileRunning": "Proceed While Running",
 		"resumeTask": "Resume Task",
 		"condenseConversation": "Condense Conversation",
-		"reportGitHubIssue": "Report GitHub Issue"
+		"reportGitHubIssue": "Report GitHub Issue",
+		"pressAgainToCancel": "もう一度押してキャンセル"
 	},
 	"imageAlt": {
 		"caretBanner": "Caretiロゴバナー"

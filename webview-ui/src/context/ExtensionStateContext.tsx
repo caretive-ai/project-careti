@@ -347,6 +347,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		// CARETI MODIFICATION: Session state for interrupt/queue system
 		sessionStatus: "idle" as const,
 		interruptWarning: false,
+		pendingInput: undefined as string | undefined,
 	})
 	const [didHydrateState, setDidHydrateState] = useState(false)
 	const [showWelcome, setShowWelcome] = useState(false)
@@ -1229,6 +1230,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		// CARETI MODIFICATION: Session state for interrupt/queue system
 		sessionStatus: state.sessionStatus,
 		interruptWarning: state.interruptWarning,
+		pendingInput: state.pendingInput,
 	}
 
 	return <ExtensionStateContext.Provider value={contextValue}>{children}</ExtensionStateContext.Provider>

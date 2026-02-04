@@ -1,7 +1,7 @@
 # F04 - Cline 호환성 & CLI 확장
 
-**상태**: ✅ Phase D 완료  
-**영향 범위**: Core(Prompt/Mode), Webview(Banner/Settings), CLI(Go/Packaging)  
+**상태**: ✅ Phase D 완료, v0.4.9 서브에이전트 UI 개선
+**영향 범위**: Core(Prompt/Mode), Webview(Banner/Settings), CLI(Go/Packaging)
 **우선순위**: 🔴 High
 
 ---
@@ -32,7 +32,7 @@ CLI 세션은 기본적으로 **Cline 프롬프트 시스템**으로 시작해 �
 | **운영 모드** | Plan/Act 모드만 존재 (단일 시스템) | **Dual Mode System** (Careti ↔ Cline) 지원. 모드별로 프롬프트/도구/UI가 완전히 분리됨. |
 | **시스템 프롬프트** | 프롬프트 레지스트리(`src/core/prompts/system-prompt/*`) | **Dynamic JSON Prompt System** (`careti-src/core/prompts/system`)을 `CaretiPromptWrapper`로 분기 |
 | **인증/도메인** | `cline.bot` 고정 | **Multi-Domain Support**. `careti.ai` (Careti)과 `cline.bot` (Cline) 인증을 별도로 처리하여 계정 충돌 방지. |
-| **서브에이전트** | 실험적 기능 (UI 미노출) | **정식 UI 지원**. Settings > Features에 서브에이전트 토글·출력 제한 슬라이더 노출, Careti/Cline 모드별 CLI 설치 안내/버튼 분기, i18n(en/ko/ja/zh) 적용. |
+| **서브에이전트** | 실험적 기능 (UI 미노출) | **정식 UI 지원** (v0.4.9+). Settings > Features에 서브에이전트 토글·출력 제한 슬라이더 노출. Careti/Cline 모드 모두에서 UI 표시. CLI 설치 배너 및 버튼 분기, i18n(en/ko/ja/zh) 적용. `skillsEnabled`, `subagentsEnabled` 기본값 `true`. |
 
 ---
 
@@ -75,6 +75,8 @@ CLI 세션은 기본적으로 **Cline 프롬프트 시스템**으로 시작해 �
 - `mode-system.test.ts`: 글로벌 스테이트 영속화, careti/cline 분기, UI 라벨(Plan/Act).
 - CLI 감지/배너: careti/cline 모드에서 설치 여부에 따라 배너/명령 분기 확인.
 - `npm run compile && npm run test` 통과, 수동 `careti version`, `careti task new` 동작 확인.
+
+> **CLI Agent/Chatbot 모드**: 상세 내용은 [f18-cli-agent-chatbot-mode.md](f18-cli-agent-chatbot-mode.md) 참조
 
 ## 참고 문서
 - `careti-docs/merging/cli-provider-servers.md` (서버팀용 도메인/엔드포인트)

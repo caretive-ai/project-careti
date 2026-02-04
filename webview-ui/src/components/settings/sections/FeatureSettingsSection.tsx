@@ -95,8 +95,8 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 			<Section>
 				<div style={{ marginBottom: 20 }}>
 					{/* 서브에이전트 설정 (VS Code, macOS/Linux 한정) */}
-					{/* CARETI MODIFICATION: Disable subagents UI in Careti mode (CLI not released in v0.4.4) */}
-					{!isCaretMode && isMacOSOrLinux() && PLATFORM_CONFIG.type === PlatformType.VSCODE && (
+					{/* CARETI MODIFICATION: Show subagents UI for both Careti and Cline modes */}
+					{isMacOSOrLinux() && PLATFORM_CONFIG.type === PlatformType.VSCODE && (
 						<div
 							className="relative p-3 mb-3 rounded-md"
 							id="subagents-section"

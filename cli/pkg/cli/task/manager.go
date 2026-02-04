@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"log"
 	"os"
 	"os/signal"
 	"sync"
@@ -15,7 +17,7 @@ import (
 	"github.com/cline/cli/pkg/cli/global"
 	"github.com/cline/cli/pkg/cli/handlers"
 	"github.com/cline/cli/pkg/cli/types"
-	"github.com/cline/grpc-go/caret"
+	careti "github.com/cline/grpc-go/caret"
 	"github.com/cline/grpc-go/client"
 	"github.com/cline/grpc-go/cline"
 )
@@ -78,6 +80,8 @@ type Manager struct {
 	isStreamingMode  bool
 	isInteractive    bool
 	currentMode      string // "plan" or "act"
+	isYoloMode       bool   // CARETI MODIFICATION: yolo/headless mode flag
+	caretMode        string // CARETI MODIFICATION: "agent" or "chatbot" for display
 }
 
 // NewManager creates a new task manager
@@ -115,7 +119,7 @@ func NewManagerForAddress(ctx context.Context, address string) (*Manager, error)
 
 	manager := NewManager(client)
 	manager.clientAddress = address
-	manager.setClineMode(ctx) // CARETI MODIFICATION: default CLI to cline prompt system
+	manager.SetClineMode(ctx) // CARETI MODIFICATION: default CLI to cline prompt system
 	return manager, nil
 }
 
@@ -132,13 +136,14 @@ func NewManagerForDefault(ctx context.Context) (*Manager, error) {
 	if global.Clients != nil {
 		manager.clientAddress = global.Clients.GetRegistry().GetDefaultInstance()
 	}
-	manager.setClineMode(ctx) // CARETI MODIFICATION: default CLI to cline prompt system
+	manager.SetClineMode(ctx) // CARETI MODIFICATION: default CLI to cline prompt system
 
 	return manager, nil
 }
 
 // CARETI MODIFICATION: ensure CLI sessions run in cline prompt system
-func (m *Manager) setClineMode(ctx context.Context) {
+// SetClineMode sets the prompt system to cline mode (no Careti persona)
+func (m *Manager) SetClineMode(ctx context.Context) {
 	if m == nil || m.client == nil || m.client.Caretsystem == nil {
 		return
 	}
@@ -146,6 +151,65 @@ func (m *Manager) setClineMode(ctx context.Context) {
 	if err != nil && global.Config.Verbose {
 		fmt.Printf("[DEBUG] Failed to set cline prompt mode: %v\n", err)
 	}
+}
+
+// CARETI MODIFICATION: set agent mode with careti prompt system
+func (m *Manager) SetCaretAgentMode(ctx context.Context) error {
+	if m == nil || m.client == nil || m.client.Caretsystem == nil {
+		return fmt.Errorf("client not initialized")
+	}
+	// 1. Set prompt system to careti
+	_, err := m.client.Caretsystem.SetPromptSystemMode(ctx, &careti.SetPromptSystemModeRequest{Mode: "careti"})
+	if err != nil {
+		return fmt.Errorf("failed to set careti prompt system: %w", err)
+	}
+	// 2. Set caret mode to agent
+	_, err = m.client.Caretsystem.SetCaretMode(ctx, &careti.SetCaretModeRequest{Mode: "agent"})
+	if err != nil {
+		return fmt.Errorf("failed to set agent mode: %w", err)
+	}
+	if global.Config.Verbose {
+		fmt.Println("[DEBUG] Agent mode enabled with careti prompt system")
+	}
+	return nil
+}
+
+// CARETI MODIFICATION: set chatbot mode with careti prompt system
+func (m *Manager) SetCaretChatbotMode(ctx context.Context) error {
+	if m == nil || m.client == nil || m.client.Caretsystem == nil {
+		return fmt.Errorf("client not initialized")
+	}
+	// 1. Set prompt system to careti
+	_, err := m.client.Caretsystem.SetPromptSystemMode(ctx, &careti.SetPromptSystemModeRequest{Mode: "careti"})
+	if err != nil {
+		return fmt.Errorf("failed to set careti prompt system: %w", err)
+	}
+	// 2. Set caret mode to chatbot
+	_, err = m.client.Caretsystem.SetCaretMode(ctx, &careti.SetCaretModeRequest{Mode: "chatbot"})
+	if err != nil {
+		return fmt.Errorf("failed to set chatbot mode: %w", err)
+	}
+	if global.Config.Verbose {
+		fmt.Println("[DEBUG] Chatbot mode enabled with careti prompt system")
+	}
+	return nil
+}
+
+// CARETI MODIFICATION: set persona for agent mode
+func (m *Manager) SetPersona(ctx context.Context, personaName string) error {
+	if m == nil || m.client == nil || m.client.Persona == nil {
+		return fmt.Errorf("persona client not initialized")
+	}
+	_, err := m.client.Persona.UpdatePersona(ctx, &careti.UpdatePersonaRequest{
+		Profile: &careti.PersonaProfile{Name: personaName},
+	})
+	if err != nil {
+		return fmt.Errorf("failed to set persona: %w", err)
+	}
+	if global.Config.Verbose {
+		fmt.Printf("[DEBUG] Persona set to: %s\n", personaName)
+	}
+	return nil
 }
 
 // SwitchToInstance switches the manager to use a different Cline instance
@@ -427,6 +491,8 @@ func (m *Manager) CheckNeedsApproval(ctx context.Context) (bool, *types.ClineMes
 			string(types.AskTypeCommand),
 			string(types.AskTypeBrowserActionLaunch),
 			string(types.AskTypeUseMcpServer),
+			string(types.AskTypeFollowup),        // For followup questions with options
+			string(types.AskTypePlanModeRespond), // For plan mode with options
 		}
 
 		for _, approvalType := range approvalTypes {
@@ -450,6 +516,9 @@ func (m *Manager) SendMessage(ctx context.Context, message string, images, files
 	if approve == "false" {
 		responseType = "noButtonClicked"
 	}
+
+	// CARETI DEBUG: Always log AskResponse for debugging multiple response issue
+	log.Printf("[CLI-DEBUG] SendMessage called: responseType=%s, message=%q, approve=%s", responseType, message, approve)
 
 	if global.Config.Verbose {
 		m.renderer.RenderDebug("Sending message: %s", message)
@@ -810,6 +879,13 @@ func (m *Manager) FollowConversation(ctx context.Context, instanceAddress string
 	}
 }
 
+// SetYoloMode sets the yolo/headless mode flag
+func (m *Manager) SetYoloMode(yolo bool) {
+	m.mu.Lock()
+	m.isYoloMode = yolo
+	m.mu.Unlock()
+}
+
 // FollowConversationUntilCompletion streams conversation updates until task completion
 func (m *Manager) FollowConversationUntilCompletion(ctx context.Context) error {
 	// Enable streaming mode
@@ -858,36 +934,80 @@ func (m *Manager) FollowConversationUntilCompletion(ctx context.Context) error {
 }
 
 // handleStateStream handles the SubscribeToState stream
+// CARETI MODIFICATION: Added reconnection logic for interactive mode
 func (m *Manager) handleStateStream(ctx context.Context, coordinator *StreamCoordinator, errChan chan error, completionChan chan bool) {
-	stateStream, err := m.client.State.SubscribeToState(ctx, &cline.EmptyRequest{})
-	if err != nil {
-		errChan <- fmt.Errorf("failed to subscribe to state: %w", err)
-		return
-	}
-
 	for {
+		// Check context before attempting connection
+		if ctx.Err() != nil {
+			return
+		}
+
+		stateStream, err := m.client.State.SubscribeToState(ctx, &cline.EmptyRequest{})
+		if err != nil {
+			if ctx.Err() != nil {
+				return // Context cancelled, exit gracefully
+			}
+			errChan <- fmt.Errorf("failed to subscribe to state: %w", err)
+			return
+		}
+
+		// Inner loop for receiving messages
+		shouldReconnect := false
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				stateUpdate, err := stateStream.Recv()
+				if err != nil {
+					m.renderer.RenderDebug("State stream receive error: %v", err)
+
+					// Check if context was cancelled first
+					if ctx.Err() != nil {
+						return
+					}
+
+					// CARETI MODIFICATION: In interactive mode, EOF means stream ended normally
+					// Retry connection instead of treating as fatal error
+					m.mu.RLock()
+					isInteractive := m.isInteractive
+					m.mu.RUnlock()
+
+					if isInteractive && (err == io.EOF || errors.Is(err, io.EOF)) {
+						m.renderer.RenderDebug("Stream ended, will reconnect...")
+						shouldReconnect = true
+						break // Break inner loop to reconnect
+					}
+
+					errChan <- fmt.Errorf("failed to receive state update: %w", err)
+					return
+				}
+
+				var pErr error
+
+				if global.Config.OutputFormat == "json" {
+					pErr = m.processStateUpdateJsonMode(stateUpdate, coordinator, completionChan)
+				} else {
+					pErr = m.processStateUpdate(stateUpdate, coordinator, completionChan)
+				}
+
+				if pErr != nil {
+					m.renderer.RenderDebug("State processing error: %v", pErr)
+				}
+			}
+		}
+
+		// If not reconnecting, exit
+		if !shouldReconnect {
+			return
+		}
+
+		// Brief delay before reconnect
 		select {
 		case <-ctx.Done():
 			return
-		default:
-			stateUpdate, err := stateStream.Recv()
-			if err != nil {
-				m.renderer.RenderDebug("State stream receive error: %v", err)
-				errChan <- fmt.Errorf("failed to receive state update: %w", err)
-				return
-			}
-
-			var pErr error
-
-			if global.Config.OutputFormat == "json" {
-				pErr = m.processStateUpdateJsonMode(stateUpdate, coordinator, completionChan)
-			} else {
-				pErr = m.processStateUpdate(stateUpdate, coordinator, completionChan)
-			}
-
-			if pErr != nil {
-				m.renderer.RenderDebug("State processing error: %v", pErr)
-			}
+		case <-time.After(500 * time.Millisecond):
+			m.renderer.RenderDebug("Reconnecting state stream...")
 		}
 	}
 }
@@ -949,8 +1069,17 @@ func (m *Manager) processStateUpdateJsonMode(stateUpdate *cline.State, coordinat
 	}
 
 	// We only want to exit after we've displayed the usage, for the case of seeing completion result
-	if completionChan != nil && foundCompletion && displayedUsage {
-		completionChan <- true
+	// CARETI MODIFICATION: Also exit if completion is found but no cost info is available
+	if completionChan != nil && foundCompletion {
+		if displayedUsage {
+			completionChan <- true
+		} else {
+			// Check if the last message is a non-partial completion result
+			lastMsg := messages[len(messages)-1]
+			if lastMsg.Say == string(types.SayTypeCompletionResult) && !lastMsg.Partial {
+				completionChan <- true
+			}
+		}
 	}
 
 	return nil
@@ -969,11 +1098,21 @@ func (m *Manager) processStateUpdate(stateUpdate *cline.State, coordinator *Stre
 	// Process messages from current conversation turn onwards
 	startIndex := coordinator.GetConversationTurnStartIndex()
 
+	// CARETI DEBUG: Log message count for debugging multiple response issue (verbose only)
+	if global.Config.Verbose {
+		log.Printf("[CLI-DEBUG] processStateUpdate: totalMessages=%d, startIndex=%d", len(messages), startIndex)
+	}
+
 	var foundCompletion bool
 	var displayedUsage bool
 
 	for i := startIndex; i < len(messages); i++ {
 		msg := messages[i]
+
+		// CARETI DEBUG: Log each message type/ask (verbose only)
+		if global.Config.Verbose {
+			log.Printf("[CLI-DEBUG] processStateUpdate msg[%d]: type=%s, say=%s, ask=%s, partial=%v", i, msg.Type, msg.Say, msg.Ask, msg.Partial)
+		}
 
 		if global.Config.Verbose {
 			m.renderer.RenderDebug("State message %d: type=%s, say=%s", i, msg.Type, msg.Say)
@@ -1079,48 +1218,113 @@ func (m *Manager) processStateUpdate(stateUpdate *cline.State, coordinator *Stre
 	}
 
 	// We only want to exit after we've displayed the usage, for the case of seeing completion result
-	if completionChan != nil && foundCompletion && displayedUsage {
-		completionChan <- true
+	// CARETI MODIFICATION: Also exit if completion is found but no cost info is available
+	if completionChan != nil && foundCompletion {
+		if displayedUsage {
+			completionChan <- true
+		} else {
+			// Check if the last message is a non-partial completion result
+			lastMsg := messages[len(messages)-1]
+			if lastMsg.Say == string(types.SayTypeCompletionResult) && !lastMsg.Partial {
+				completionChan <- true
+			}
+		}
+	}
+
+	// CARETI MODIFICATION: In yolo/headless mode, treat followup ask as completion
+	// This prevents CLI from hanging when LLM asks follow-up questions
+	m.mu.RLock()
+	isYolo := m.isYoloMode
+	m.mu.RUnlock()
+	if completionChan != nil && isYolo {
+		lastMsg := messages[len(messages)-1]
+		if lastMsg.Type == types.MessageTypeAsk && lastMsg.Ask == string(types.AskTypeFollowup) && !lastMsg.Partial {
+			completionChan <- true
+		}
 	}
 
 	return nil
 }
 
 // handlePartialMessageStream handles the SubscribeToPartialMessage stream for streaming assistant text
+// CARETI MODIFICATION: Added reconnection logic for interactive mode
 func (m *Manager) handlePartialMessageStream(ctx context.Context, coordinator *StreamCoordinator, errChan chan error) {
-	partialStream, err := m.client.Ui.SubscribeToPartialMessage(ctx, &cline.EmptyRequest{})
-	if err != nil {
-		errChan <- fmt.Errorf("failed to subscribe to partial messages: %w", err)
-		return
-	}
-
 	defer func() {
 		m.streamingDisplay.FreezeActiveSegment()
 	}()
 
 	for {
+		// Check context before attempting connection
+		if ctx.Err() != nil {
+			return
+		}
+
+		partialStream, err := m.client.Ui.SubscribeToPartialMessage(ctx, &cline.EmptyRequest{})
+		if err != nil {
+			if ctx.Err() != nil {
+				return // Context cancelled, exit gracefully
+			}
+			errChan <- fmt.Errorf("failed to subscribe to partial messages: %w", err)
+			return
+		}
+
+		// Inner loop for receiving messages
+		shouldReconnect := false
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				protoMsg, err := partialStream.Recv()
+				if err != nil {
+					m.renderer.RenderDebug("Partial stream receive error: %v", err)
+
+					// Check if context was cancelled first
+					if ctx.Err() != nil {
+						return
+					}
+
+					// CARETI MODIFICATION: In interactive mode, EOF means stream ended normally
+					// Retry connection instead of treating as fatal error
+					m.mu.RLock()
+					isInteractive := m.isInteractive
+					m.mu.RUnlock()
+
+					if isInteractive && (err == io.EOF || errors.Is(err, io.EOF)) {
+						m.renderer.RenderDebug("Partial stream ended, will reconnect...")
+						shouldReconnect = true
+						break // Break inner loop to reconnect
+					}
+
+					errChan <- fmt.Errorf("failed to receive partial message: %w", err)
+					return
+				}
+
+				// Convert proto message to our Message struct
+				msg := types.ConvertProtoToMessage(protoMsg)
+
+				// Debug: Log received message (always show for debugging)
+				m.renderer.RenderDebug("Received streaming message: type=%s, partial=%v, text_len=%d",
+					msg.Type, msg.Partial, len(msg.Text))
+
+				// Handle the message with streaming support for de-dupping
+				if err := m.handleStreamingMessage(msg, coordinator); err != nil {
+					m.renderer.RenderDebug("Error handling streaming message: %v", err)
+				}
+			}
+		}
+
+		// If not reconnecting, exit
+		if !shouldReconnect {
+			return
+		}
+
+		// Brief delay before reconnect
 		select {
 		case <-ctx.Done():
 			return
-		default:
-			protoMsg, err := partialStream.Recv()
-			if err != nil {
-				m.renderer.RenderDebug("Partial stream receive error: %v", err)
-				errChan <- fmt.Errorf("failed to receive partial message: %w", err)
-				return
-			}
-
-			// Convert proto message to our Message struct
-			msg := types.ConvertProtoToMessage(protoMsg)
-
-			// Debug: Log received message (always show for debugging)
-			m.renderer.RenderDebug("Received streaming message: type=%s, partial=%v, text_len=%d",
-				msg.Type, msg.Partial, len(msg.Text))
-
-			// Handle the message with streaming support for de-dupping
-			if err := m.handleStreamingMessage(msg, coordinator); err != nil {
-				m.renderer.RenderDebug("Error handling streaming message: %v", err)
-			}
+		case <-time.After(500 * time.Millisecond):
+			m.renderer.RenderDebug("Reconnecting partial message stream...")
 		}
 	}
 }
@@ -1130,6 +1334,16 @@ func (m *Manager) handleStreamingMessage(msg *types.ClineMessage, coordinator *S
 	// Debug: Always log what we're processing
 	m.renderer.RenderDebug("Processing message: timestamp=%d, partial=%v, type=%s, text_preview=%s",
 		msg.Timestamp, msg.Partial, msg.Type, m.truncateText(msg.Text, 50))
+
+	// CARETI MODIFICATION: For complete messages, check coordinator first to avoid double display
+	// This prevents duplicate display when state stream arrives before partial stream
+	if !msg.Partial {
+		msgKey := fmt.Sprintf("%d", msg.Timestamp)
+		if coordinator.IsProcessedInCurrentTurn(msgKey) {
+			m.renderer.RenderDebug("Skipping already processed message: %s", msgKey)
+			return nil
+		}
+	}
 
 	// Use streaming display which handles deduplication internally
 	if err := m.streamingDisplay.HandlePartialMessage(msg); err != nil {
@@ -1269,11 +1483,22 @@ func (m *Manager) GetRenderer() *display.Renderer {
 	return m.renderer
 }
 
-// GetCurrentMode returns the current plan/act mode
+// GetCurrentMode returns the current mode for display
+// CARETI MODIFICATION: Returns caretMode (agent/chatbot) if set, otherwise plan/act
 func (m *Manager) GetCurrentMode() string {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
+	if m.caretMode != "" {
+		return m.caretMode
+	}
 	return m.currentMode
+}
+
+// SetCaretMode sets the Careti display mode (agent/chatbot)
+func (m *Manager) SetCaretMode(mode string) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.caretMode = mode
 }
 
 // extractModeFromState extracts the current mode from state JSON

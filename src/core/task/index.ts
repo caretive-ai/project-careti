@@ -588,6 +588,9 @@ export class Task {
 		files?: string[]
 		askTs?: number
 	}> {
+		// CARETI DEBUG: Log ask() calls for debugging multiple response issue
+		console.log(`[CORE-DEBUG] ask() called: type=${type}, partial=${partial}, textLen=${text?.length ?? 0}`)
+
 		const doAsk = async () => {
 			// Allow resume asks even when aborted to enable resume button after cancellation
 			if (this.taskState.abort && type !== "resume_task" && type !== "resume_completed_task") {
@@ -805,8 +808,12 @@ export class Task {
 	}
 
 	async handleWebviewAskResponse(askResponse: ClineAskResponse, text?: string, images?: string[], files?: string[]) {
+		// CARETI DEBUG: Log askResponse for debugging multiple response issue
+		console.log(`[CORE-DEBUG] handleWebviewAskResponse: response=${askResponse}, text=${text?.slice(0, 50) ?? ""}`)
+
 		const lastAskTs = this.taskState.lastAskTs
 		if (!lastAskTs) {
+			console.log(`[CORE-DEBUG] handleWebviewAskResponse: no lastAskTs, returning early`)
 			return
 		}
 
@@ -814,9 +821,11 @@ export class Task {
 			const clineMessages = this.messageStateHandler.getClineMessages()
 			const lastAskMessage = findLast(clineMessages, (message) => message.type === "ask" && message.ts === lastAskTs)
 			if (!lastAskMessage || lastAskMessage.askResolved) {
+				console.log(`[CORE-DEBUG] handleWebviewAskResponse: ask already resolved or not found`)
 				return
 			}
 
+			console.log(`[CORE-DEBUG] handleWebviewAskResponse: setting askResponse for ask type=${lastAskMessage.ask}`)
 			this.taskState.askResponse = askResponse
 			this.taskState.askResponseText = text
 			this.taskState.askResponseImages = images
@@ -1332,6 +1341,11 @@ export class Task {
 
 		const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretiGlobalManager.currentMode
 		if (modeSystem !== "careti") {
+			return
+		}
+
+		// CARETI MODIFICATION: yolo/headless 모드에서는 사용자 입력이 필요한 프롬프트 건너뛰기
+		if (this.stateManager.getGlobalSettingsKey("yoloModeToggled")) {
 			return
 		}
 
@@ -2718,7 +2732,11 @@ export class Task {
 		})
 
 		const globalClineRulesFilePath = await ensureRulesDirectoryExists()
-		const globalClineRulesFileInstructions = await getGlobalClineRules(globalClineRulesFilePath, globalToggles)
+		// CARETI MODIFICATION: Exclude persona.md in yolo/headless mode for subagent use
+		const yoloModeToggled = this.stateManager.getGlobalSettingsKey("yoloModeToggled")
+		const globalClineRulesFileInstructions = await getGlobalClineRules(globalClineRulesFilePath, globalToggles, {
+			excludePersona: yoloModeToggled,
+		})
 
 		// CARETI MODIFICATION: Only load .agents/context (plus AGENTS.md)
 		const localClineRulesFileInstructions = await getLocalCaretRules(this.cwd, caretLocalToggles)
@@ -3153,6 +3171,9 @@ export class Task {
 		// Increment API request counter for focus chain list management
 		this.taskState.apiRequestCount++
 		this.taskState.apiRequestsSinceLastTodoUpdate++
+
+		// CARETI DEBUG: Log API request count for debugging multiple response issue
+		console.log(`[CORE-DEBUG] API request #${this.taskState.apiRequestCount} starting (task=${this.taskId})`)
 
 		// Used to know what models were used in the task if user wants to export metadata for error reporting purposes
 		const { model, providerId, customPrompt } = this.getCurrentProviderInfo()
@@ -3932,60 +3953,76 @@ export class Task {
 				// This prevents auto-continuation when model naturally ends without tool use
 				// Instead of ending the loop, we show the followup input to allow natural conversation
 				const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretiGlobalManager.currentMode
+				// Check if this is a CLI subagent (truly non-interactive) vs agent mode (auto-approve but interactive)
+				const isCliSubagent = isCliSubagentContext({
+					yoloModeToggled: this.stateManager.getGlobalSettingsKey("yoloModeToggled"),
+					maxConsecutiveMistakes: this.stateManager.getGlobalSettingsKey("maxConsecutiveMistakes"),
+				})
 				if (modeSystem === "careti" && !didToolUse) {
 					Logger.debug(
-						`[GLM4.7-DEBUG] Early finish check: finishReason=${this.taskState.finishReason}, didToolUse=${didToolUse}`,
+						`[GLM4.7-DEBUG] Early finish check: finishReason=${this.taskState.finishReason}, didToolUse=${didToolUse}, isCliSubagent=${isCliSubagent}`,
 					)
-					if (
-						shouldEndLoopByFinishReason(
-							this.taskState.finishReason,
-							didToolUse,
-							this.taskState.consecutiveMistakeCount,
-						)
-					) {
-						Logger.debug("[GLM4.7-DEBUG] Natural conversation end detected, showing followup input")
-						this.taskState.finishReason = undefined
+					// CARETI MODIFICATION: In careti mode, ALWAYS show followup input when no tool use
+					// This prevents the infinite loop caused by noToolsUsed messages
+					// The shouldEndLoopByFinishReason check is only for logging, not for flow control
+					const shouldEnd = shouldEndLoopByFinishReason(
+						this.taskState.finishReason,
+						didToolUse,
+						this.taskState.consecutiveMistakeCount,
+					)
+					Logger.debug(
+						`[GLM4.7-DEBUG] shouldEndLoopByFinishReason=${shouldEnd}, showing followup input regardless`,
+					)
+					this.taskState.finishReason = undefined
 
-						// CARETI MODIFICATION: Show followup input for natural conversation continuation
-						// This matches how Gemini handles conversations with the prompt exception
-						const {
-							text: userResponse,
-							images,
-							files,
-						} = await this.ask("followup", JSON.stringify({ question: "", options: [] }), false)
+					// CARETI MODIFICATION: In CLI subagent mode (truly non-interactive), end conversation immediately
+					// Don't show followup because there's no user to respond
+					// Note: Agent mode has yolo=true but is NOT a subagent, so it can still have interactive conversation
+					if (isCliSubagent) {
+						Logger.debug("[GLM4.7-DEBUG] CLI subagent mode active, ending conversation without followup")
+						return true
+					}
 
-						// If user provided a response, continue the conversation
-						if (userResponse || images?.length || files?.length) {
-							Logger.debug("[GLM4.7-DEBUG] User continued conversation, processing response")
-							await this.say("user_feedback", userResponse ?? "", images, files)
+					// CARETI MODIFICATION: Show followup input for natural conversation continuation
+					// This matches how Gemini handles conversations with the prompt exception
+					const {
+						text: userResponse,
+						images,
+						files,
+					} = await this.ask("followup", JSON.stringify({ question: "", options: [] }), false)
 
-							// Add user response to conversation and continue
-							const userContent: ClineContent[] = []
-							if (userResponse) {
-								userContent.push({ type: "text", text: userResponse })
-							}
-							if (images?.length) {
-								userContent.push(...formatResponse.imageBlocks(images))
-							}
-							if (files?.length) {
-								const fileContentString = await processFilesIntoText(files)
-								if (fileContentString) {
-									userContent.push({ type: "text", text: fileContentString })
-								}
-							}
+					// If user provided a response, continue the conversation
+					if (userResponse || images?.length || files?.length) {
+						Logger.debug("[GLM4.7-DEBUG] User continued conversation, processing response")
+						await this.say("user_feedback", userResponse ?? "", images, files)
 
-							// Continue the conversation loop
-							const recDidEndLoop = await this.recursivelyMakeClineRequests(userContent)
-							didEndLoop = recDidEndLoop
-						} else {
-							// User didn't provide input, end the conversation gracefully
-							Logger.debug("[GLM4.7-DEBUG] User ended conversation")
-							return true
+						// Add user response to conversation and continue
+						const userContent: ClineContent[] = []
+						if (userResponse) {
+							userContent.push({ type: "text", text: userResponse })
 						}
+						if (images?.length) {
+							userContent.push(...formatResponse.imageBlocks(images))
+						}
+						if (files?.length) {
+							const fileContentString = await processFilesIntoText(files)
+							if (fileContentString) {
+								userContent.push({ type: "text", text: fileContentString })
+							}
+						}
+
+						// Continue the conversation loop and return the result
+						// CARETI MODIFICATION: Return here to prevent falling through to noToolsUsed
+						return await this.recursivelyMakeClineRequests(userContent)
+					} else {
+						// User didn't provide input, end the conversation gracefully
+						Logger.debug("[GLM4.7-DEBUG] User ended conversation")
+						return true
 					}
 				}
 
-				if (!didToolUse) {
+				// CARETI MODIFICATION: Skip noToolsUsed in careti mode (handled above)
+				if (!didToolUse && modeSystem !== "careti") {
 					// normal request where tool use is required
 					this.taskState.userMessageContent.push({
 						type: "text",

@@ -24,6 +24,7 @@ type TaskOptions struct {
 	Images   []string
 	Files    []string
 	Mode     string
+	Persona  string
 	Settings []string
 	Yolo     bool
 	Address  string
@@ -638,13 +639,67 @@ func CreateAndFollowTask(ctx context.Context, prompt string, opts TaskOptions) e
 		opts.Mode = "plan"
 	}
 
-	// Set mode if provided
-	if opts.Mode != "" {
-		if err := taskManager.SetMode(ctx, opts.Mode, nil, nil, nil); err != nil {
-			return fmt.Errorf("failed to set mode: %w", err)
+	// CARETI MODIFICATION: Handle careti modes (agent, chatbot)
+	// Note: --yolo flag is independent of mode. Mode controls LLM behavior, yolo controls CLI behavior.
+	// In yolo/headless mode, use cline prompt system (no Careti persona) for clean subagent operation
+	switch opts.Mode {
+	case "agent":
+		// Agent mode uses act mode internally for autonomous task execution
+		if opts.Yolo {
+			// Yolo/headless mode: use cline prompt system without persona
+			taskManager.SetClineMode(ctx)
+		} else {
+			// Interactive mode: set Careti prompt system and persona
+			if err := taskManager.SetCaretAgentMode(ctx); err != nil {
+				return fmt.Errorf("failed to enable agent mode: %w", err)
+			}
+			// Set display mode for CLI
+			taskManager.SetCaretMode("agent")
+			// Set persona if provided
+			if opts.Persona != "" {
+				if err := taskManager.SetPersona(ctx, opts.Persona); err != nil {
+					return fmt.Errorf("failed to set persona: %w", err)
+				}
+			}
 		}
-		if global.Config.Verbose {
-			fmt.Printf("Mode set to: %s\n", opts.Mode)
+		// Agent uses act mode internally - set it explicitly
+		if err := taskManager.SetMode(ctx, "act", nil, nil, nil); err != nil {
+			return fmt.Errorf("failed to set act mode for agent: %w", err)
+		}
+		opts.Mode = "act"
+	case "chatbot":
+		// Chatbot mode uses plan mode internally for interactive conversation
+		if opts.Yolo {
+			// Yolo/headless mode: use cline prompt system without persona
+			taskManager.SetClineMode(ctx)
+		} else {
+			// Interactive mode: set Careti prompt system and persona
+			if err := taskManager.SetCaretChatbotMode(ctx); err != nil {
+				return fmt.Errorf("failed to enable chatbot mode: %w", err)
+			}
+			// Set display mode for CLI
+			taskManager.SetCaretMode("chatbot")
+			// Set persona if provided
+			if opts.Persona != "" {
+				if err := taskManager.SetPersona(ctx, opts.Persona); err != nil {
+					return fmt.Errorf("failed to set persona: %w", err)
+				}
+			}
+		}
+		// Chatbot uses plan mode internally - set it explicitly
+		if err := taskManager.SetMode(ctx, "plan", nil, nil, nil); err != nil {
+			return fmt.Errorf("failed to set plan mode for chatbot: %w", err)
+		}
+		opts.Mode = "plan"
+	default:
+		// Set mode if provided (for act/plan modes)
+		if opts.Mode != "" {
+			if err := taskManager.SetMode(ctx, opts.Mode, nil, nil, nil); err != nil {
+				return fmt.Errorf("failed to set mode: %w", err)
+			}
+			if global.Config.Verbose {
+				fmt.Printf("Mode set to: %s\n", opts.Mode)
+			}
 		}
 	}
 
@@ -669,6 +724,7 @@ func CreateAndFollowTask(ctx context.Context, prompt string, opts TaskOptions) e
 	// If yolo mode is enabled, follow until completion (non-interactive)
 	// Otherwise, follow in interactive mode
 	if opts.Yolo {
+		taskManager.SetYoloMode(true)
 		return taskManager.FollowConversationUntilCompletion(ctx)
 	} else {
 		return taskManager.FollowConversation(ctx, taskManager.GetCurrentInstance(), true)

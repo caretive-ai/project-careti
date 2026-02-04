@@ -7,14 +7,29 @@ import { fileExistsAtPath, isDirectory, readDirectory } from "@utils/fs"
 import path from "path"
 import { Controller } from "@/core/controller"
 
-export const getGlobalClineRules = async (globalClineRulesFilePath: string, toggles: ClineRulesToggles) => {
+// CARETI MODIFICATION: Added excludePersona option for headless/yolo mode
+export interface GetGlobalClineRulesOptions {
+	excludePersona?: boolean // Skip persona.md in headless/yolo mode
+}
+
+export const getGlobalClineRules = async (
+	globalClineRulesFilePath: string,
+	toggles: ClineRulesToggles,
+	options: GetGlobalClineRulesOptions = {},
+) => {
 	let combinedContent = ""
 
 	// 1. Get file-based rules
 	if (await fileExistsAtPath(globalClineRulesFilePath)) {
 		if (await isDirectory(globalClineRulesFilePath)) {
 			try {
-				const rulesFilePaths = await readDirectory(globalClineRulesFilePath)
+				let rulesFilePaths = await readDirectory(globalClineRulesFilePath)
+
+				// CARETI MODIFICATION: Exclude persona.md in headless/yolo mode
+				if (options.excludePersona) {
+					rulesFilePaths = rulesFilePaths.filter((filePath) => !filePath.endsWith("persona.md"))
+				}
+
 				const rulesFilesTotalContent = await getRuleFilesTotalContent(rulesFilePaths, globalClineRulesFilePath, toggles)
 				if (rulesFilesTotalContent) {
 					combinedContent = rulesFilesTotalContent

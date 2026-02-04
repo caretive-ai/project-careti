@@ -67,6 +67,7 @@ export class CaretiPromptWrapper {
 				auto_todo: true, // Enable auto-todo for Careti
 				task_progress: undefined, // Can be extended later
 				toolSettings: context.toolSettings, // CARETI MODIFICATION: Pass tool settings for image tools
+				yoloModeToggled: context.yoloModeToggled, // CARETI MODIFICATION: Pass yolo mode for skipping collaborative principles
 			}
 
 			Logger.debug(

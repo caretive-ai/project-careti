@@ -55,6 +55,43 @@ describe("T06 - Prompt System Integration Test", () => {
 
 			expect(prompt).toContain("Task sequence:") // From CARET_TODO_MANAGEMENT
 		})
+
+		// CARETI MODIFICATION: E2E test for yolo mode skipping COLLABORATIVE_PRINCIPLES
+		it("should include COLLABORATIVE_PRINCIPLES when yoloModeToggled is false", async () => {
+			const manager = new PromptSystemManager()
+			const context: CaretSystemPromptContext & { modeSystem: "careti" } = {
+				modeSystem: "careti",
+				mode: CARETI_MODES.AGENT,
+				ide: "vscode",
+				providerInfo: { providerId: "test", model: { id: "test", info: { supportsPromptCache: false } } },
+				yoloModeToggled: false,
+			}
+			const prompt = await manager.getPrompt(context)
+
+			// Should include collaborative principles (documentation/approval requirements)
+			expect(prompt).toContain("Phase 1: Design & Document")
+			expect(prompt).toContain("Phase 2: Present & Wait")
+			expect(prompt).toContain("Phase 3: Execute on Approval")
+		})
+
+		it("should SKIP COLLABORATIVE_PRINCIPLES when yoloModeToggled is true (headless/subagent mode)", async () => {
+			const manager = new PromptSystemManager()
+			const context: CaretSystemPromptContext & { modeSystem: "careti" } = {
+				modeSystem: "careti",
+				mode: CARETI_MODES.AGENT,
+				ide: "vscode",
+				providerInfo: { providerId: "test", model: { id: "test", info: { supportsPromptCache: false } } },
+				yoloModeToggled: true, // Yolo/headless mode - skip documentation/approval
+			}
+			const prompt = await manager.getPrompt(context)
+
+			// Should NOT include collaborative principles - allows autonomous execution
+			expect(prompt).not.toContain("Phase 1: Design & Document")
+			expect(prompt).not.toContain("Phase 2: Present & Wait")
+			expect(prompt).not.toContain("Phase 3: Execute on Approval")
+			// But should still include basic behavior
+			expect(prompt).toContain("You are Careti, a skilled software engineer.")
+		})
 	})
 
 	describe("ClineLatestAdapter", () => {

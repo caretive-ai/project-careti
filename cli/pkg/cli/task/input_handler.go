@@ -303,7 +303,35 @@ func (ih *InputHandler) promptForInput(ctx context.Context) (string, bool, error
 func (ih *InputHandler) promptForApproval(ctx context.Context, msg *types.ClineMessage) (bool, string, error) {
 	// Store the approval message for later use in determining auto-approval action
 	ih.approvalMessage = msg
-	
+
+	// Check if this is a followup question
+	if msg.Ask == string(types.AskTypeFollowup) || msg.Ask == string(types.AskTypePlanModeRespond) {
+		var askData types.AskData
+		if err := json.Unmarshal([]byte(msg.Text), &askData); err == nil {
+			if len(askData.Options) > 0 {
+				// Use options prompt
+				return ih.promptForOptions(ctx, askData.Question, askData.Options)
+			}
+			// CARETI MODIFICATION: For followup without options, show message input prompt
+			// This allows natural conversation continuation after AI responds
+			model := output.NewInputModel(
+				output.InputTypeMessage,
+				"Continue the conversation...",
+				"/plan or /act to switch modes\nctrl+e to open editor",
+				ih.manager.GetCurrentMode(),
+			)
+			message, shouldSend, err := ih.runInputProgram(ctx, model)
+			if err != nil {
+				return false, "", err
+			}
+			if !shouldSend || message == "" {
+				return false, "", nil
+			}
+			// For followup messages, we "approve" with the user's text response
+			return true, message, nil
+		}
+	}
+
 	// CARETI MODIFICATION: branding
 	model := output.NewInputModel(
 		output.InputTypeApproval,
@@ -323,6 +351,28 @@ func (ih *InputHandler) promptForApproval(ctx context.Context, msg *types.ClineM
 
 	// The approval and feedback are handled via the model state
 	return ih.feedbackApproved, message, nil
+}
+
+// promptForOptions displays an options prompt for followup questions
+func (ih *InputHandler) promptForOptions(ctx context.Context, question string, options []string) (bool, string, error) {
+	title := "Select an option or type a response"
+	if question != "" {
+		title = question
+	}
+
+	model := output.NewInputModelWithOptions(title, options, ih.manager.GetCurrentMode())
+
+	message, shouldSend, err := ih.runInputProgram(ctx, model)
+	if err != nil {
+		return false, "", err
+	}
+
+	if !shouldSend {
+		return false, "", nil
+	}
+
+	// For options, we always "approve" and send the selected text
+	return true, message, nil
 }
 
 // runInputProgram runs the bubbletea program and waits for result
@@ -430,6 +480,12 @@ func (ih *InputHandler) runInputProgram(ctx context.Context, model output.InputM
 			// This came from approval flow
 			ih.feedbackApproval = true
 			ih.feedbackApproved = result.Approved // Use the approval decision from the feedback
+			return result.Value, true, nil
+
+		case output.InputTypeOptions:
+			// Options selected - return the selected option text
+			ih.feedbackApproval = false
+			ih.feedbackApproved = true // Always approve for options
 			return result.Value, true, nil
 		}
 

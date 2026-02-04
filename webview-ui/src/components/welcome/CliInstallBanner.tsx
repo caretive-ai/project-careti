@@ -29,9 +29,8 @@ const CliInstallBanner = () => {
 		[isCaretMode],
 	)
 
-	// CARETI MODIFICATION: Hide CLI banner in Careti mode until Careti CLI is released
+	// CARETI MODIFICATION: Show CLI banner for both Careti and Cline modes
 	const shouldHideBanner =
-		isCaretMode ||
 		isCliSubagent ||
 		isInstalled ||
 		isDismissed ||

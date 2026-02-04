@@ -758,9 +758,9 @@ export async function readGlobalStateFromDisk(context: ExtensionContext): Promis
 			autoCondenseThreshold: autoCondenseThreshold || 0.75, // default to 0.75 if not set
 			// Hooks require explicit user opt-in and are only supported on macOS/Linux
 			hooksEnabled: getHooksEnabledSafe(hooksEnabled),
-			// CARETI MODIFICATION: Skills system - default disabled
-			skillsEnabled: skillsEnabled ?? false,
-			subagentsEnabled: subagentsEnabled ?? false,
+			// CARETI MODIFICATION: Skills and subagents - default enabled for Careti
+			skillsEnabled: skillsEnabled ?? true,
+			subagentsEnabled: subagentsEnabled ?? true,
 			// CARETI MODIFICATION: Background edits - default disabled
 			backgroundEditEnabled: backgroundEditEnabled ?? false,
 			lastDismissedInfoBannerVersion: lastDismissedInfoBannerVersion ?? 0,

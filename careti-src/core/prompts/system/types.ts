@@ -18,4 +18,5 @@ export interface CaretSystemPromptContext extends ClineSystemPromptContext {
 	auto_todo?: boolean
 	task_progress?: string
 	toolSettings?: CaretToolSettings // Tool enablement settings
+	yoloModeToggled?: boolean // CARETI MODIFICATION: Skip documentation/approval in yolo mode
 }

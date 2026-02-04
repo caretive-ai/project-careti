@@ -41,11 +41,18 @@ export class CaretiJsonAdapter implements IPromptSystem {
 		)
 		Logger.debug(`[CaretiJsonAdapter] loading JSON templates...`)
 
+		// CARETI MODIFICATION: Skip COLLABORATIVE_PRINCIPLES in yolo/headless mode
+		// This allows subagents to run autonomously without documentation/approval requirements
+		const isYoloMode = context.yoloModeToggled === true
+		if (isYoloMode) {
+			Logger.debug(`[CaretiJsonAdapter] 🚀 Yolo mode enabled - skipping COLLABORATIVE_PRINCIPLES`)
+		}
+
 		const sectionNames = [
 			"BASE_PROMPT_INTRO",
 			"CHATBOT_AGENT_MODES", // CARETI MODIFICATION: Explicit mode system with PLAN/ACT rejection
 			"AGENT_BEHAVIOR_DIRECTIVES",
-			"COLLABORATIVE_PRINCIPLES", // CARETI MODIFICATION: Restore collaborative principles
+			isYoloMode ? null : "COLLABORATIVE_PRINCIPLES", // CARETI MODIFICATION: Skip in yolo mode
 			"CARET_SYSTEM_INFO",
 			"CARET_CAPABILITIES",
 			"CARET_USER_INSTRUCTIONS",

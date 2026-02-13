@@ -1,6 +1,6 @@
 {
 	"name": "@caretive/careti-cli",
-	"version": "0.0.18",
+	"version": "0.0.22",
 	"description": "Careti CLI (minimal fork of Cline CLI, packaged for caretive)",
 	"license": "MIT",
 	"bin": {

@@ -16,7 +16,8 @@ try {
 	hwpjs = require("@ohah/hwpjs")
 } catch (error) {
 	hwpjsLoadError = error instanceof Error ? error.message : String(error)
-	Logger.warn(`[HwpParser] @ohah/hwpjs module not available: ${hwpjsLoadError}`)
+	// CARETI MODIFICATION: Use console.warn at module-load time to avoid HostProvider initialization order issue
+	console.warn(`[HwpParser] @ohah/hwpjs module not available: ${hwpjsLoadError}`)
 }
 
 /**

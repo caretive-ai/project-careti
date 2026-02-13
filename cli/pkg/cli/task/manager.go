@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"os/signal"
 	"sync"
@@ -516,9 +515,6 @@ func (m *Manager) SendMessage(ctx context.Context, message string, images, files
 	if approve == "false" {
 		responseType = "noButtonClicked"
 	}
-
-	// CARETI DEBUG: Always log AskResponse for debugging multiple response issue
-	log.Printf("[CLI-DEBUG] SendMessage called: responseType=%s, message=%q, approve=%s", responseType, message, approve)
 
 	if global.Config.Verbose {
 		m.renderer.RenderDebug("Sending message: %s", message)
@@ -1098,21 +1094,11 @@ func (m *Manager) processStateUpdate(stateUpdate *cline.State, coordinator *Stre
 	// Process messages from current conversation turn onwards
 	startIndex := coordinator.GetConversationTurnStartIndex()
 
-	// CARETI DEBUG: Log message count for debugging multiple response issue (verbose only)
-	if global.Config.Verbose {
-		log.Printf("[CLI-DEBUG] processStateUpdate: totalMessages=%d, startIndex=%d", len(messages), startIndex)
-	}
-
 	var foundCompletion bool
 	var displayedUsage bool
 
 	for i := startIndex; i < len(messages); i++ {
 		msg := messages[i]
-
-		// CARETI DEBUG: Log each message type/ask (verbose only)
-		if global.Config.Verbose {
-			log.Printf("[CLI-DEBUG] processStateUpdate msg[%d]: type=%s, say=%s, ask=%s, partial=%v", i, msg.Type, msg.Say, msg.Ask, msg.Partial)
-		}
 
 		if global.Config.Verbose {
 			m.renderer.RenderDebug("State message %d: type=%s, say=%s", i, msg.Type, msg.Say)

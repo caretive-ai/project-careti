@@ -588,9 +588,6 @@ export class Task {
 		files?: string[]
 		askTs?: number
 	}> {
-		// CARETI DEBUG: Log ask() calls for debugging multiple response issue
-		console.log(`[CORE-DEBUG] ask() called: type=${type}, partial=${partial}, textLen=${text?.length ?? 0}`)
-
 		const doAsk = async () => {
 			// Allow resume asks even when aborted to enable resume button after cancellation
 			if (this.taskState.abort && type !== "resume_task" && type !== "resume_completed_task") {
@@ -808,12 +805,8 @@ export class Task {
 	}
 
 	async handleWebviewAskResponse(askResponse: ClineAskResponse, text?: string, images?: string[], files?: string[]) {
-		// CARETI DEBUG: Log askResponse for debugging multiple response issue
-		console.log(`[CORE-DEBUG] handleWebviewAskResponse: response=${askResponse}, text=${text?.slice(0, 50) ?? ""}`)
-
 		const lastAskTs = this.taskState.lastAskTs
 		if (!lastAskTs) {
-			console.log(`[CORE-DEBUG] handleWebviewAskResponse: no lastAskTs, returning early`)
 			return
 		}
 
@@ -821,11 +814,9 @@ export class Task {
 			const clineMessages = this.messageStateHandler.getClineMessages()
 			const lastAskMessage = findLast(clineMessages, (message) => message.type === "ask" && message.ts === lastAskTs)
 			if (!lastAskMessage || lastAskMessage.askResolved) {
-				console.log(`[CORE-DEBUG] handleWebviewAskResponse: ask already resolved or not found`)
 				return
 			}
 
-			console.log(`[CORE-DEBUG] handleWebviewAskResponse: setting askResponse for ask type=${lastAskMessage.ask}`)
 			this.taskState.askResponse = askResponse
 			this.taskState.askResponseText = text
 			this.taskState.askResponseImages = images
@@ -3172,9 +3163,6 @@ export class Task {
 		this.taskState.apiRequestCount++
 		this.taskState.apiRequestsSinceLastTodoUpdate++
 
-		// CARETI DEBUG: Log API request count for debugging multiple response issue
-		console.log(`[CORE-DEBUG] API request #${this.taskState.apiRequestCount} starting (task=${this.taskId})`)
-
 		// Used to know what models were used in the task if user wants to export metadata for error reporting purposes
 		const { model, providerId, customPrompt } = this.getCurrentProviderInfo()
 		if (providerId && model.id) {
@@ -3959,27 +3947,14 @@ export class Task {
 					maxConsecutiveMistakes: this.stateManager.getGlobalSettingsKey("maxConsecutiveMistakes"),
 				})
 				if (modeSystem === "careti" && !didToolUse) {
-					Logger.debug(
-						`[GLM4.7-DEBUG] Early finish check: finishReason=${this.taskState.finishReason}, didToolUse=${didToolUse}, isCliSubagent=${isCliSubagent}`,
-					)
 					// CARETI MODIFICATION: In careti mode, ALWAYS show followup input when no tool use
 					// This prevents the infinite loop caused by noToolsUsed messages
-					// The shouldEndLoopByFinishReason check is only for logging, not for flow control
-					const shouldEnd = shouldEndLoopByFinishReason(
-						this.taskState.finishReason,
-						didToolUse,
-						this.taskState.consecutiveMistakeCount,
-					)
-					Logger.debug(
-						`[GLM4.7-DEBUG] shouldEndLoopByFinishReason=${shouldEnd}, showing followup input regardless`,
-					)
 					this.taskState.finishReason = undefined
 
 					// CARETI MODIFICATION: In CLI subagent mode (truly non-interactive), end conversation immediately
 					// Don't show followup because there's no user to respond
 					// Note: Agent mode has yolo=true but is NOT a subagent, so it can still have interactive conversation
 					if (isCliSubagent) {
-						Logger.debug("[GLM4.7-DEBUG] CLI subagent mode active, ending conversation without followup")
 						return true
 					}
 
@@ -3993,7 +3968,6 @@ export class Task {
 
 					// If user provided a response, continue the conversation
 					if (userResponse || images?.length || files?.length) {
-						Logger.debug("[GLM4.7-DEBUG] User continued conversation, processing response")
 						await this.say("user_feedback", userResponse ?? "", images, files)
 
 						// Add user response to conversation and continue
@@ -4016,7 +3990,6 @@ export class Task {
 						return await this.recursivelyMakeClineRequests(userContent)
 					} else {
 						// User didn't provide input, end the conversation gracefully
-						Logger.debug("[GLM4.7-DEBUG] User ended conversation")
 						return true
 					}
 				}
@@ -4152,17 +4125,9 @@ export class Task {
 			const modeSystem = this.stateManager.getGlobalStateKey("caretModeSystem") || CaretiGlobalManager.currentMode
 			if (modeSystem === "careti") {
 				const didToolUse = this.taskState.assistantMessageContent.some((block) => block.type === "tool_use")
-				const toolTypes = this.taskState.assistantMessageContent
-					.filter((block) => block.type === "tool_use")
-					.map((block: any) => block.name || "unknown")
-				// CARETI DEBUG: Log finish_reason check
-				Logger.debug(
-					`[GLM4.7-DEBUG] finish_reason check: finishReason=${this.taskState.finishReason}, didToolUse=${didToolUse}, tools=[${toolTypes.join(",")}], consecutiveMistakeCount=${this.taskState.consecutiveMistakeCount}`,
-				)
 				if (
 					shouldEndLoopByFinishReason(this.taskState.finishReason, didToolUse, this.taskState.consecutiveMistakeCount)
 				) {
-					Logger.debug("[GLM4.7-DEBUG] Loop ending by finish_reason")
 					return true
 				}
 			}

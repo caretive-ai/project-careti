@@ -95,7 +95,9 @@
 	},
 	"typeMessage": "メッセージを入力...",
 	"pendingInput": {
-		"label": "待機中"
+		"label": "待機中",
+		"edit": "編集",
+		"clear": "削除"
 	},
 	"mode": {
 		"act": {

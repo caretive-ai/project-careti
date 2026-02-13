@@ -114,7 +114,9 @@
 	},
 	"typeMessage": "Type a message...",
 	"pendingInput": {
-		"label": "Queued"
+		"label": "Queued",
+		"edit": "Edit",
+		"clear": "Clear"
 	},
 	"contextMenu": {
 		"problems": "Problems",

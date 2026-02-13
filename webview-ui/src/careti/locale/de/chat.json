@@ -110,7 +110,9 @@
 	},
 	"typeMessage": "Nachricht eingeben...",
 	"pendingInput": {
-		"label": "Warteschlange"
+		"label": "Warteschlange",
+		"edit": "Bearbeiten",
+		"clear": "Löschen"
 	},
 	"contextMenu": {
 		"problems": "Probleme",

@@ -1,12 +1,12 @@
-// CARETI MODIFICATION: Double-press interrupt pattern for safe task cancellation
-// Reference: ref-opencode TUI interrupt implementation
+// CARETI MODIFICATION: Interrupt handler (single-press by default)
+// Threshold can be adjusted via options for custom behavior
 
 import { useCallback, useRef, useState } from "react"
 
 interface UseInterruptHandlerOptions {
 	/** Timeout in milliseconds before interrupt count resets (default: 3000) */
 	timeout?: number
-	/** Number of presses required to trigger interrupt (default: 2) */
+	/** Number of presses required to trigger interrupt (default: 1) */
 	threshold?: number
 	/** Callback when interrupt is triggered */
 	onInterrupt: () => void | Promise<void>
@@ -44,7 +44,7 @@ interface UseInterruptHandlerReturn {
  * ```
  */
 export function useInterruptHandler(options: UseInterruptHandlerOptions): UseInterruptHandlerReturn {
-	const { timeout = 3000, threshold = 2, onInterrupt, onWarning } = options
+	const { timeout = 3000, threshold = 1, onInterrupt, onWarning } = options
 
 	const [interruptCount, setInterruptCount] = useState(0)
 	const [isWarning, setIsWarning] = useState(false)

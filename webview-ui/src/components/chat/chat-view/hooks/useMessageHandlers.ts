@@ -252,11 +252,14 @@ export function useMessageHandlers(messages: ClineMessage[], chatState: ChatStat
 					}
 					break
 
-				case "cancel":
-					// CARETI MODIFICATION: Use double-press pattern for cancel
-					// First press sets warning state, second press actually cancels
-					await TaskServiceClient.tryInterruptTask(EmptyRequest.create({}))
+				case "cancel": {
+					// CARETI MODIFICATION: Single-press instant cancel + restore pending input
+					const result = await TaskServiceClient.tryInterruptTask(EmptyRequest.create({}))
+					if (result.value) {
+						setInputValue(result.value)
+					}
 					return // Don't disable buttons for cancel
+				}
 
 				case "utility":
 					switch (clineAsk) {

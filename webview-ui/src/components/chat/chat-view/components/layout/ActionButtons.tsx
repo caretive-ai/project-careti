@@ -4,7 +4,6 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import type React from "react"
 import { useEffect, useMemo, useState } from "react"
 import { useCaretiI18n } from "@/careti/hooks/useCaretiI18n"
-import { useSessionState } from "@/careti/hooks/useSessionState"
 import { shortcutManager } from "@/careti/shortcuts/ShortcutManager"
 import { useShortcut } from "@/utils/hooks"
 import { type ButtonActionType, getButtonConfig } from "../../shared/buttonConfig"
@@ -71,8 +70,6 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 }) => {
 	const { t } = useCaretiI18n()
 	const { inputValue, selectedImages, selectedFiles, setSendingDisabled } = chatState
-	// CARETI MODIFICATION: Get session state for double-press cancel pattern
-	const { isWarning } = useSessionState()
 	const resumeText = t("button.resumeTask", "common")
 	const cancelShortcut = shortcutManager.getKeys("cancel_stream")[0] ?? "Escape"
 	const resumeShortcut = shortcutManager.getKeys("resume_task")[0] ?? "Control+Shift+R"
@@ -127,6 +124,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 		}
 	}, [messages, setSendingDisabled, mode, t])
 
+	// CARETI MODIFICATION: ESC single-press instant cancel
 	useShortcut(
 		cancelShortcut,
 		() => {
@@ -214,11 +212,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 							messageHandlers.executeButtonAction(secondaryAction, inputValue, selectedImages, selectedFiles)
 						}
 					}}>
-					{/* CARETI MODIFICATION: Show warning text for double-press cancel pattern */}
-					{secondaryAction === "cancel" && isWarning
-						? t("button.pressAgainToCancel", "common") || "Press again to cancel"
-						: secondaryButtonText}
-					{secondaryAction === "cancel" && !isWarning && cancelShortcutLabel ? ` (${cancelShortcutLabel})` : null}
+					{secondaryButtonText}
+					{secondaryAction === "cancel" && cancelShortcutLabel ? ` (${cancelShortcutLabel})` : null}
 				</VSCodeButton>
 			)}
 		</div>

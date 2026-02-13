@@ -42,9 +42,11 @@ service TaskService {
   rpc deleteAllTaskHistory(EmptyRequest) returns (DeleteAllTaskHistoryCount);
   // CARETI MODIFICATION: Explains changes from a task completion
   rpc explainChanges(ExplainChangesRequest) returns (Empty);
-  // CARETI MODIFICATION: Try to interrupt task with double-press pattern
-  // Returns true if task was interrupted, false if in warning state (need second press)
-  rpc tryInterruptTask(EmptyRequest) returns (Boolean);
+  // CARETI MODIFICATION: Interrupt task immediately (single press)
+  // Returns pending input text for webview to restore in input field
+  rpc tryInterruptTask(EmptyRequest) returns (String);
+  // CARETI MODIFICATION: Clear pending input without processing
+  rpc clearPendingInput(EmptyRequest) returns (Empty);
 }
 
 // Request message for creating a new task

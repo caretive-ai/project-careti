@@ -950,7 +950,7 @@ export class Controller {
 		// CARETI MODIFICATION: Get session state for interrupt/queue system
 		const sessionManager = SessionManager.getInstance()
 		const sessionStatus = this.task?.taskId ? (sessionManager.get(this.task.taskId)?.status ?? "idle") : "idle"
-		const interruptWarning = this.task?.taskId ? sessionManager.isWarningState(this.task.taskId) : false
+		const interruptWarning = false // Single-press cancel: no warning state needed
 		const pendingInput = this.task?.taskId ? sessionManager.getPendingInput(this.task.taskId) : undefined
 
 		const localClineRulesToggles = this.stateManager.getWorkspaceStateKey("localClineRulesToggles")

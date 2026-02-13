@@ -110,7 +110,9 @@
 	},
 	"typeMessage": "Введите сообщение...",
 	"pendingInput": {
-		"label": "В очереди"
+		"label": "В очереди",
+		"edit": "Редактировать",
+		"clear": "Удалить"
 	},
 	"contextMenu": {
 		"problems": "Проблемы",

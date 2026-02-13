@@ -95,7 +95,9 @@
 	},
 	"typeMessage": "输入消息...",
 	"pendingInput": {
-		"label": "排队中"
+		"label": "排队中",
+		"edit": "编辑",
+		"clear": "清除"
 	},
 	"mode": {
 		"act": {

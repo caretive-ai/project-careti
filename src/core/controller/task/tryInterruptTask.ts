@@ -1,48 +1,36 @@
-// CARETI MODIFICATION: Double-press interrupt handler
-// Claude Code style: cancel → immediately process pending input
+// CARETI MODIFICATION: Single-press interrupt handler
+// ESC 1회로 즉시 중지 + 큐 내용을 입력창으로 복원
 import { SessionManager } from "@careti/utils/session-manager"
 import { Logger } from "@services/logging/Logger"
-import { Boolean as BooleanProto, EmptyRequest } from "@shared/proto/cline/common"
+import { EmptyRequest, String as StringProto } from "@shared/proto/cline/common"
 import { Controller } from ".."
 
-/** Delay before processing pending input after cancel (ms) */
-const CANCEL_PROCESS_DELAY_MS = 100
-
 /**
- * Try to interrupt the currently running task using double-press pattern
- * First call sets warning state, second call actually interrupts
- * If there's pending input, it will be processed immediately after cancellation
+ * Interrupt the currently running task immediately (single press)
+ * Cancels the task and returns any pending input for the webview to restore
  * @param controller The controller instance
  * @param _request The empty request
- * @returns Boolean - true if task was interrupted, false if in warning state
+ * @returns String - pending input text to restore in input field (empty if none)
  */
-export async function tryInterruptTask(controller: Controller, _request: EmptyRequest): Promise<BooleanProto> {
+export async function tryInterruptTask(controller: Controller, _request: EmptyRequest): Promise<StringProto> {
 	const task = controller.task
 	if (!task) {
-		return BooleanProto.create({ value: false })
+		return StringProto.create({ value: "" })
 	}
 
 	const sessionManager = SessionManager.getInstance()
-	const wasInterrupted = sessionManager.tryInterrupt(task.taskId)
 
-	if (wasInterrupted) {
-		// Actually cancel the task
-		await controller.cancelTask()
-
-		// CARETI MODIFICATION: Claude Code style - immediately process pending input after cancel
-		const pendingInput = sessionManager.consumePendingInput(task.taskId)
-		if (pendingInput) {
-			Logger.info(`[tryInterruptTask] Processing pending input (${pendingInput.length} chars) after cancel`)
-			// Start new request with pending input
-			// Use setTimeout to ensure cancel completes first
-			setTimeout(() => {
-				controller.initTask(pendingInput).catch((error) => {
-					Logger.error("[tryInterruptTask] Failed to process pending input:", error)
-				})
-			}, CANCEL_PROCESS_DELAY_MS)
-		}
+	// IMPORTANT: Consume pending input BEFORE cancelTask, because abortTask()
+	// calls sessionManager.delete(taskId) which destroys the session and its buffer
+	const pendingInput = sessionManager.consumePendingInput(task.taskId)
+	if (pendingInput) {
+		Logger.info(`[tryInterruptTask] Captured pending input (${pendingInput.length} chars) for restoration`)
 	}
 
+	// CARETI MODIFICATION: Single-press instant cancel (no double-press)
+	sessionManager.forceInterrupt(task.taskId)
+	await controller.cancelTask()
+
 	// State update is triggered by SessionManager events (subscribed in Controller constructor)
-	return BooleanProto.create({ value: wasInterrupted })
+	return StringProto.create({ value: pendingInput })
 }

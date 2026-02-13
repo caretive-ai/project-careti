@@ -100,7 +100,9 @@
 	},
 	"typeMessage": "메시지를 입력하세요...",
 	"pendingInput": {
-		"label": "대기 중"
+		"label": "대기 중",
+		"edit": "편집",
+		"clear": "삭제"
 	},
 	"mode": {
 		"act": {

@@ -110,7 +110,9 @@
 	},
 	"typeMessage": "Tapez un message...",
 	"pendingInput": {
-		"label": "En file"
+		"label": "En file",
+		"edit": "Modifier",
+		"clear": "Supprimer"
 	},
 	"contextMenu": {
 		"problems": "Problemes",

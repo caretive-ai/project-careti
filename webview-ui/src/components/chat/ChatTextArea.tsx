@@ -34,7 +34,7 @@ import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/s
 import { useClineAuth } from "@/context/ClineAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { usePlatform } from "@/context/PlatformContext"
-import { CaretSystemServiceClient, FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
+import { CaretSystemServiceClient, FileServiceClient, ModelsServiceClient, StateServiceClient, TaskServiceClient } from "@/services/grpc-client"
 import {
     ContextMenuOptionType,
     getContextMenuOptionIndex,
@@ -194,6 +194,33 @@ const PendingInputPreview = styled.div`
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		opacity: 0.9;
+	}
+
+	.pending-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		flex-shrink: 0;
+	}
+
+	.pending-action-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 2px 6px;
+		border: none;
+		background: transparent;
+		color: var(--vscode-foreground);
+		cursor: pointer;
+		opacity: 0.6;
+		transition: opacity 0.15s ease;
+		border-radius: 3px;
+		font-size: 11px;
+
+		&:hover {
+			opacity: 1;
+			background: var(--vscode-toolbar-hoverBackground);
+		}
 	}
 
 	.pending-clear {
@@ -1583,12 +1610,33 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 		return (
 			<div>
-				{/* CARETI MODIFICATION: Claude Code style pending input preview */}
+				{/* CARETI MODIFICATION: Pending input preview with edit/clear buttons */}
 				{hasPendingInput && pendingInput && (
 					<PendingInputPreview>
 						<span className="pending-label">{t("pendingInput.label", "chat") || "Queued"}</span>
 						<span className="pending-text" title={pendingInput}>
 							{pendingInput.length > 100 ? `${pendingInput.substring(0, 100)}...` : pendingInput}
+						</span>
+						<span className="pending-actions">
+							<button
+								type="button"
+								className="pending-action-btn"
+								title={t("pendingInput.edit", "chat") || "Edit"}
+								onClick={() => {
+									setInputValue(pendingInput)
+									void TaskServiceClient.clearPendingInput(EmptyRequest.create({}))
+								}}>
+								<span className="codicon codicon-edit" />
+							</button>
+							<button
+								type="button"
+								className="pending-action-btn"
+								title={t("pendingInput.clear", "chat") || "Clear"}
+								onClick={() => {
+									void TaskServiceClient.clearPendingInput(EmptyRequest.create({}))
+								}}>
+								<span className="codicon codicon-close" />
+							</button>
 						</span>
 					</PendingInputPreview>
 				)}

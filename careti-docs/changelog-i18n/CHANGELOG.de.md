@@ -41,6 +41,34 @@
   </table>
 </div>
 
+## [0.4.8] 2026-02-13
+
+> **Hinweis**: Careti v0.4.8 führt das Claude Code-artige Nachrichtenwarteschlangen-System ein und behebt das Problem des endlosen Ladens in v0.4.7.
+
+### ✨ Neue Funktionen
+- **F19 Nachrichtenwarteschlangen-System**: Geben Sie die nächsten Anweisungen ein, während die KI streamt. Die Warteschlangeneingabe wird als Inline-Vorschau über dem Eingabefeld angezeigt.
+- **ESC Sofort-Abbruch**: Ein einzelner ESC-Druck stoppt das Streaming sofort und stellt die Warteschlangeneingabe im Editor zur Bearbeitung vor dem erneuten Senden wieder her.
+- **Inline-Bearbeitung/-Löschung der Warteschlange**: Bearbeiten- (in Eingabefeld wiederherstellen) und Löschen-Buttons (verwerfen) in der Vorschau der ausstehenden Eingabe.
+- **CLI Agent-/Chatbot-Modus**: Unabhängige Agent- und Chatbot-Modi für CLI mit Headless/Yolo-Unterstützung, EOF-Wiederverbindung und verbesserter Eingabebehandlung.
+- **CLI-Telemetrie**: PostHog-basiertes Event-Tracking für CLI-Nutzungsanalysen.
+- **CLI E2E-Tests**: E2E-Tests für Agent-Modus, CLI-Verhalten, Ausgabe und interaktiven Modus.
+- **clearPendingInput RPC**: Neuer gRPC-Endpunkt zum Löschen der Warteschlangeneingabe über die Bearbeiten-/Löschen-Buttons.
+
+### ✨ Verbesserungen
+- **Paralleles Feature-Flags-Polling**: Sequenzielles Flag-Abrufen (14 Anfragen) auf parallel mit 5-Sekunden-Gesamt-Timeout umgestellt.
+- **Nicht-blockierende Initialisierung**: `featureFlagsService.poll()` auf Fire-and-Forget umgestellt, um die Aktivierung der Erweiterung nicht zu blockieren.
+- **Subagent-Befehlsmuster**: CARETI_COMMAND_PATTERN für Careti/Cline CLI-Subagent-Unterstützung hinzugefügt.
+
+### Fehlerbehebungen
+- **Endloses Laden v0.4.7**: `featureFlagsService.poll()` blockierte die Erweiterungsinitialisierung, wenn `data.cline.bot` nicht erreichbar war. Auf nicht-blockierend mit Timeout umgestellt.
+- **ApiProvider-Migration**: Migration von `"caret"` → `"careti"` für Benutzer hinzugefügt, die von v0.4.6 upgraden und deren gespeicherte Einstellungen noch den alten Anbieternamen enthielten.
+- **API-Handler-Fallback**: `case "caret":` Fallback im API-Anbieter-Switch hinzugefügt, um nicht migrierte Anbieterwerte ordnungsgemäß zu behandeln.
+- **Legacy-Migrationsaufruf**: `migrateLegacyApiConfigurationToModeSpecific()` war definiert, wurde aber bei der Initialisierung nie aufgerufen. Jetzt ordnungsgemäß aufgerufen.
+- **pendingInput Race Condition**: Korrektur von `consumePendingInput`, das nach `cancelTask()` aufgerufen wurde, welches die Sitzung bereits über `sessionManager.delete()` zerstört hatte.
+- **Debug-Log-Bereinigung**: `[CORE-DEBUG]`-, `[CLI-DEBUG]`-, `[GLM4.7-DEBUG]`-Konsolenlogs entfernt.
+
+---
+
 ## [0.4.7] 2026-01-30
 
 ### ✨ Neue Funktionen

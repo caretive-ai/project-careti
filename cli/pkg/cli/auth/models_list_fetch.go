@@ -13,7 +13,7 @@ import (
 
 	"github.com/charmbracelet/huh"
 	"github.com/cline/cli/pkg/cli/task"
-	"github.com/cline/grpc-go/caret"
+	careti "github.com/cline/grpc-go/caret"
 	"github.com/cline/grpc-go/cline"
 	"golang.org/x/term"
 	"google.golang.org/grpc/codes"

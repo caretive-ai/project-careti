@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/cline/cli/pkg/cli/task"
-	"github.com/cline/grpc-go/caret"
+	careti "github.com/cline/grpc-go/caret"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

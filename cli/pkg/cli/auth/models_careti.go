@@ -39,7 +39,7 @@ func FetchCaretModels() (map[string]*cline.CaretModelInfo, error) {
 		fmt.Printf("Fetching %s models (static)\n", common.BrandDisplayName())
 	}
 
-	modelIDs, modelInfos, err := FetchStaticModels(cline.ApiProvider_CARET)
+	modelIDs, modelInfos, err := FetchStaticModels(cline.ApiProvider_CARETI)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch %s models: %w", common.BrandDisplayName(), err)
 	}
@@ -127,7 +127,7 @@ func ConvertCaretModelsToInterface(models map[string]*cline.CaretModelInfo) map[
 }
 
 func applyCaretModelConfiguration(ctx context.Context, manager *task.Manager, modelID string, modelInfo *cline.CaretModelInfo) error {
-	provider := cline.ApiProvider_CARET
+	provider := cline.ApiProvider_CARETI
 	baseURL := DefaultCaretBaseURL
 	thinkingBudget := int64(0)
 
@@ -162,8 +162,8 @@ func hasConfiguredCaretModelIDs(apiConfig map[string]interface{}) bool {
 	if apiConfig == nil {
 		return false
 	}
-	planModelID := getProviderSpecificModelID(apiConfig, "plan", cline.ApiProvider_CARET)
-	actModelID := getProviderSpecificModelID(apiConfig, "act", cline.ApiProvider_CARET)
+	planModelID := getProviderSpecificModelID(apiConfig, "plan", cline.ApiProvider_CARETI)
+	actModelID := getProviderSpecificModelID(apiConfig, "act", cline.ApiProvider_CARETI)
 	return planModelID != "" || actModelID != ""
 }
 

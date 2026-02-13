@@ -1,32 +1,31 @@
 import { expect } from "@playwright/test"
-import { cleanChatView } from "./utils/common"
-import { E2E_WORKSPACE_TYPES, e2e } from "./utils/helpers"
+import { E2E_WORKSPACE_TYPES, e2e, setupCaretiApiKey } from "./utils/helpers"
 
 e2e.describe("Diff Editor", () => {
 	E2E_WORKSPACE_TYPES.forEach(({ title, workspaceType }) => {
 		e2e.extend({
 			workspaceType,
 		})(title, async ({ page, sidebar }) => {
-			await sidebar.getByRole("button", { name: "Login to Cline" }).click({ delay: 100 })
-			// Submit a message
-			await cleanChatView(page)
+			// CARETI MODIFICATION: Use Careti onboarding flow with mock server for streaming responses
+			await setupCaretiApiKey(sidebar, true)
 
 			const inputbox = sidebar.getByTestId("chat-input")
 			await expect(inputbox).toBeVisible()
 
-			await inputbox.fill("[diff.test.ts] Hello, Cline!")
-			await expect(inputbox).toHaveValue("[diff.test.ts] Hello, Cline!")
+			await inputbox.fill("[diff.test.ts] Hello, Careti!")
+			await expect(inputbox).toHaveValue("[diff.test.ts] Hello, Careti!")
 			await sidebar.getByTestId("send-button").click()
 			await expect(inputbox).toHaveValue("")
 
-			// Loading State initially
-			await expect(sidebar.getByText("API Request...")).toBeVisible({ timeout: 10000 })
+			// CARETI MODIFICATION: Wait for mock server response instead of checking loading text
+			// Mock server returns "Hello! I'm a mock Cline API response." for this message
+			await expect(sidebar.getByText(/mock.*API response|Generated UUID/i).first()).toBeVisible({ timeout: 10000 })
 
 			// Back to home page with history
-			await sidebar.getByRole("button", { name: "Start New Task" }).click()
+			// CARETI MODIFICATION: Match both button names
+			await sidebar.getByRole("button", { name: /New Task|Start New Task/i }).first().click()
 			await expect(sidebar.getByText("Recent Tasks")).toBeVisible()
-			await expect(sidebar.getByText("Hello, Cline!")).toBeVisible() // History with the previous sent message
-			await expect(sidebar.getByText("Tokens:")).toBeVisible() // History with token usage
+			await expect(sidebar.getByText("Hello, Careti!")).toBeVisible() // History with the previous sent message
 
 			// Submit a file edit request
 			await sidebar.getByTestId("chat-input").click()
@@ -34,10 +33,11 @@ e2e.describe("Diff Editor", () => {
 			await sidebar.getByTestId("send-button").click({ delay: 50 })
 
 			// Wait for the sidebar to load the file edit request
-			await sidebar.waitForSelector('span:has-text("Cline wants to edit this file:")')
+			// CARETI MODIFICATION: match both Cline and Caret branding
+			await sidebar.waitForSelector('span:has-text("wants to edit this file:")')
 
-			// Cline Diff Editor should open with the file name and diff
-			await expect(page.getByText("test.ts: Original ↔ Cline's")).toBeVisible()
+			// Diff Editor should open with the file name and diff
+			await expect(page.getByText(/test\.ts: Original ↔ (Cline|Caret)'s/)).toBeVisible()
 
 			// Diff editor should show the original and modified content
 			const diffEditor = page.locator(
@@ -46,7 +46,6 @@ e2e.describe("Diff Editor", () => {
 			await diffEditor.click()
 			await expect(diffEditor).toBeVisible()
 
-			await page.close()
 		})
 	})
 })

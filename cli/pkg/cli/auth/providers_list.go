@@ -102,7 +102,7 @@ func (r *ProviderListResult) GetAllReadyProviders() []*ProviderDisplay {
 	// Check all possible providers
 	// CARETI MODIFICATION: include Caret/LiteLLM providers in detection
 	allProviders := []cline.ApiProvider{
-		cline.ApiProvider_CARET,
+		cline.ApiProvider_CARETI,
 		cline.ApiProvider_CLINE,
 		cline.ApiProvider_ANTHROPIC,
 		cline.ApiProvider_OPENAI,
@@ -247,7 +247,7 @@ func mapProviderStringToEnum(providerStr string) (cline.ApiProvider, bool) {
 	case "cerebras":
 		return cline.ApiProvider_CEREBRAS, true
 	case "careti":
-		return cline.ApiProvider_CARET, true
+		return cline.ApiProvider_CARETI, true
 	case "cline":
 		return cline.ApiProvider_CLINE, true
 	case "litellm":
@@ -287,7 +287,7 @@ func GetProviderIDForEnum(provider cline.ApiProvider) string {
 		return "ollama"
 	case cline.ApiProvider_CEREBRAS:
 		return "cerebras"
-	case cline.ApiProvider_CARET:
+	case cline.ApiProvider_CARETI:
 		return "careti"
 	case cline.ApiProvider_CLINE:
 		return "cline"
@@ -374,7 +374,7 @@ func GetProviderDisplayName(provider cline.ApiProvider) string {
 		return "Ollama"
 	case cline.ApiProvider_CEREBRAS:
 		return "Cerebras"
-	case cline.ApiProvider_CARET:
+	case cline.ApiProvider_CARETI:
 		return "Caret (Official)"
 	case cline.ApiProvider_CLINE:
 		return "Cline (Official)"
@@ -490,7 +490,7 @@ func DetectAllConfiguredProviders(ctx context.Context, manager *task.Manager) ([
 	}
 	// CARETI MODIFICATION: include caret auth-based provider
 	if IsCaretAuthenticated(ctx) {
-		configuredProviders = append(configuredProviders, cline.ApiProvider_CARET)
+		configuredProviders = append(configuredProviders, cline.ApiProvider_CARETI)
 		verboseLog("[DEBUG] Caret provider is authenticated")
 	}
 

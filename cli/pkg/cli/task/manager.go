@@ -15,7 +15,7 @@ import (
 	"github.com/cline/cli/pkg/cli/global"
 	"github.com/cline/cli/pkg/cli/handlers"
 	"github.com/cline/cli/pkg/cli/types"
-	"github.com/cline/grpc-go/caret"
+	careti "github.com/cline/grpc-go/caret"
 	"github.com/cline/grpc-go/client"
 	"github.com/cline/grpc-go/cline"
 )

@@ -3,13 +3,13 @@
   <table>
     <tr>
       <td align="center">
-        <a href="https://github.com/aicoding-careti/careti/blob/main/README.md">
+        <a href="https://github.com/caretive-ai/project-careti/blob/main/README.md">
           <img src="https://img.shields.io/badge/🇺🇸_English-2563eb?style=for-the-badge&labelColor=1e40af" alt="English"/>
         </a><br/>
         <a href="https://docs.careti.ai/en/getting-started/what-is-careti">📖 Docs</a>
       </td>
       <td align="center">
-        <a href="https://github.com/aicoding-careti/careti/blob/main/careti-docs/readme-i18n/README.ko.md">
+        <a href="https://github.com/caretive-ai/project-careti/blob/main/careti-docs/readme-i18n/README.ko.md">
           <img src="https://img.shields.io/badge/🇰🇷_한국어-16a34a?style=for-the-badge&labelColor=15803d" alt="한국어"/>
         </a><br/>
         <a href="https://docs.careti.ai/ko/getting-started/what-is-careti">📖 Docs</a>
@@ -19,7 +19,7 @@
         <a href="https://docs.careti.ai/ja/getting-started/what-is-careti">📖 Docs</a>
       </td>
       <td align="center">
-        <a href="https://github.com/aicoding-careti/careti/blob/main/careti-docs/readme-i18n/README.zh-cn.md">
+        <a href="https://github.com/caretive-ai/project-careti/blob/main/careti-docs/readme-i18n/README.zh-cn.md">
           <img src="https://img.shields.io/badge/🇨🇳_中文-eab308?style=for-the-badge&labelColor=ca8a04" alt="中文"/>
         </a><br/>
         <a href="https://docs.careti.ai/zh/getting-started/what-is-careti">📖 Docs</a>
@@ -27,17 +27,17 @@
     </tr>
     <tr>
       <td align="center" colspan="4">
-        <a href="https://github.com/aicoding-careti/careti/blob/main/careti-docs/readme-i18n/README.fr.md">
+        <a href="https://github.com/caretive-ai/project-careti/blob/main/careti-docs/readme-i18n/README.fr.md">
           <img src="https://img.shields.io/badge/🇫🇷_Français-0055a4?style=for-the-badge&labelColor=003f7f" alt="Français"/>
         </a>
         <a href="https://docs.careti.ai/fr/getting-started/what-is-careti">📖</a>
         &nbsp;&nbsp;
-        <a href="https://github.com/aicoding-careti/careti/blob/main/careti-docs/readme-i18n/README.de.md">
+        <a href="https://github.com/caretive-ai/project-careti/blob/main/careti-docs/readme-i18n/README.de.md">
           <img src="https://img.shields.io/badge/🇩🇪_Deutsch-ffcc00?style=for-the-badge&labelColor=dd0000" alt="Deutsch"/>
         </a>
         <a href="https://docs.careti.ai/de/getting-started/what-is-careti">📖</a>
         &nbsp;&nbsp;
-        <a href="https://github.com/aicoding-careti/careti/blob/main/careti-docs/readme-i18n/README.ru.md">
+        <a href="https://github.com/caretive-ai/project-careti/blob/main/careti-docs/readme-i18n/README.ru.md">
           <img src="https://img.shields.io/badge/🇷🇺_Русский-0039a6?style=for-the-badge&labelColor=d52b1e" alt="Русский"/>
         </a>
         <a href="https://docs.careti.ai/ru/getting-started/what-is-careti">📖</a>
@@ -45,19 +45,19 @@
     </tr>
   </table>
 
-  <img src="https://raw.githubusercontent.com/aicoding-careti/careti/main/assets/template_characters/caret_illust.png" alt="Careti" width="360"/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/careti_illust.webp" alt="Careti" width="360"/>
 
   <h1>🎯 Careti</h1>
   <p><strong>Cline設定そのまま、より多くの機能、266モデル対応、毎月無料クレジット</strong></p>
 
-> [v0.4.5 アップデート] **コスパ最強GLM-4.7 APIキー対応 / テキストモデルでもCaretiアカウントでNano Banana画像生成・Gemini分析 / HWP/PDF/DOCX/PPTXドキュメントツール**
+> [v0.4.8 アップデート] **メッセージキューシステム / ESC即キャンセル / CLIエージェントモード / 無限ローディング修正**
 
   <p>
     <a href="https://marketplace.visualstudio.com/items?itemName=caretive.careti">
       <img src="https://img.shields.io/visual-studio-marketplace/v/caretive.careti.svg?color=blue&amp;label=VS%20Code%20Marketplace" alt="VS Code Marketplace">
     </a>
-    <a href="https://github.com/aicoding-careti/careti">
-      <img src="https://img.shields.io/github/stars/aicoding-careti/careti.svg?style=social&amp;label=Star" alt="GitHub stars">
+    <a href="https://github.com/caretive-ai/project-careti">
+      <img src="https://img.shields.io/github/stars/caretive-ai/project-careti.svg?style=social&amp;label=Star" alt="GitHub stars">
     </a>
   </p>
 
@@ -74,15 +74,13 @@
 
 ---
 
-## 🎉 v0.4.5
+## 🎉 v0.4.8
 
-- 🤖 **GLM-4.7** — コスパ最強のThinking Mode、APIキーだけで使用
-- 🖼️ **画像ツール** — テキストモデルでもCaretiアカウントでNano Banana画像生成 / Gemini Flash分析
-- 📄 **ドキュメントツール** — HWP, PDF, DOCX, PPTX クロスプラットフォーム対応
-- ☀️ **Upstage** — 韓国独自のAIファウンデーションモデルを作ったUpstage、Solar Pro/Mini対応
-- 🧩 **Skills/Hooks** — プロジェクト別AIスキル定義
-- 📁 **デュアルディレクトリ & /init** — AIコンテキスト(`.agents/`)とユーザードキュメント(`.users/`)を1:1ミラーリングポリシーで管理、`/init`自動セットアップ
-- 🖼️ **画像送信トグル** — @メンションで画像ファイル送信設定
+- 📨 **メッセージキューシステム** — AI応答中でも次の指示を入力、キュー入力がプレビュー表示
+- ⚡ **ESCで即キャンセル** — ESC一回でストリーミング停止、キュー入力をエディタに復元
+- 🖊️ **キュー編集/削除** — プレビューから直接キューメッセージの編集・削除
+- 🤖 **CLIエージェント/チャットボットモード** — ヘッドレス/yoloモード、テレメトリ、E2Eテスト、EOF再接続
+- 🔧 **無限ローディング修正** — ノンブロッキングフラグポーリング、`caret→careti`プロバイダ移行
 
 ---
 
@@ -116,27 +114,27 @@
 <table>
 <tr>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/aicoding-careti/careti/main/assets/template_characters/careti.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/careti.png" width="60"/><br/>
   <strong>Careti</strong><br/>
   <small>フレンドリーロボット</small>
 </td>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/aicoding-careti/careti/main/assets/template_characters/sarang.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/sarang.png" width="60"/><br/>
   <strong>Sarang</strong><br/>
   <small>K-POPアイドル</small>
 </td>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/aicoding-careti/careti/main/assets/template_characters/ichika.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/ichika.png" width="60"/><br/>
   <strong>Ichika</strong><br/>
   <small>Windows OS娘</small>
 </td>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/aicoding-careti/careti/main/assets/template_characters/cyan.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/cyan.png" width="60"/><br/>
   <strong>Cyan</strong><br/>
   <small>macOSヘルパー</small>
 </td>
 <td align="center" width="110">
-  <img src="https://raw.githubusercontent.com/aicoding-careti/careti/main/assets/template_characters/ubuntu.png" width="60"/><br/>
+  <img src="https://raw.githubusercontent.com/caretive-ai/project-careti/main/assets/template_characters/ubuntu.png" width="60"/><br/>
   <strong>Tando</strong><br/>
   <small>オープンソース仲間</small>
 </td>
@@ -219,7 +217,7 @@ Clineで対応していないモデルをCaretiで使用できます。
 
 - 🏠 https://careti.ai
 - 💬 https://discord.gg/WB6yaR89YN
-- 🐛 [GitHub Issues](https://github.com/aicoding-careti/careti/issues)
+- 🐛 [GitHub Issues](https://github.com/caretive-ai/project-careti/issues)
 
 ---
 

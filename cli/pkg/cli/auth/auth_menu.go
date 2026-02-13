@@ -319,7 +319,7 @@ func HandleSelectProvider(ctx context.Context) error {
 	switch selectedProvider {
 	case cline.ApiProvider_CLINE:
 		return SelectClineModel(ctx, manager)
-	case cline.ApiProvider_CARET:
+	case cline.ApiProvider_CARETI:
 		// CARETI MODIFICATION: support caret provider selection
 		return SelectCaretModel(ctx, manager)
 	default:

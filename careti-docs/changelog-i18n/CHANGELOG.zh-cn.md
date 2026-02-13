@@ -41,6 +41,34 @@
   </table>
 </div>
 
+## [0.4.8] 2026-02-13
+
+> **注意**: Careti v0.4.8引入了Claude Code风格的消息队列系统，并修复了v0.4.7的无限加载问题。
+
+### ✨ 新功能
+- **F19 消息队列系统**: 在AI流式输出期间可预先输入下一条指令。排队的输入以内联预览形式显示在输入框上方。
+- **ESC即时取消**: 单次按下ESC键立即停止流式输出，并将排队的输入恢复到编辑器中，可在重新发送前进行编辑。
+- **内联队列编辑/删除**: 在待处理输入预览上提供编辑（恢复到输入框）和删除（丢弃）按钮。
+- **CLI代理/聊天机器人模式**: 新增独立的CLI代理和聊天机器人模式，支持headless/yolo、EOF重连和改进的输入处理。
+- **CLI遥测**: 新增基于PostHog的CLI使用分析事件追踪。
+- **CLI E2E测试**: 新增代理模式、CLI行为、输出和交互模式的E2E测试。
+- **clearPendingInput RPC**: 新增用于从编辑/删除按钮清除排队输入的gRPC端点。
+
+### ✨ 改进
+- **Feature flags并行轮询**: 将顺序flag获取（14个请求）改为5秒整体超时的并行处理。
+- **非阻塞初始化**: 将`featureFlagsService.poll()`改为fire-and-forget方式，防止阻塞扩展激活。
+- **子代理命令模式**: 新增用于careti/cline CLI子代理支持的CARETI_COMMAND_PATTERN。
+
+### 修复
+- **v0.4.7无限加载**: `data.cline.bot`不可达时`featureFlagsService.poll()`阻塞扩展初始化的问题，改为带超时的非阻塞方式。
+- **ApiProvider迁移**: 为从v0.4.6升级的用户添加了`"caret"` → `"careti"`保存设置中旧提供商名称的迁移。
+- **API处理器回退**: 在API提供商switch中添加`case "caret":`回退，以优雅处理未迁移的提供商值。
+- **旧版迁移调用**: `migrateLegacyApiConfigurationToModeSpecific()`已定义但在初始化时从未调用的问题，现已正确调用。
+- **pendingInput竞态条件**: 修复了`cancelTask()`通过`sessionManager.delete()`销毁会话后`consumePendingInput`仍被调用的竞态条件。
+- **调试日志清理**: 移除了`[CORE-DEBUG]`、`[CLI-DEBUG]`、`[GLM4.7-DEBUG]`控制台日志。
+
+---
+
 ## [0.4.7] 2026-01-30
 
 > **注意**: Careti v0.4.7集成了Cline v3.49.1功能，并引入SmartEditEngine以提高代码编辑可靠性。

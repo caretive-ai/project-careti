@@ -3,9 +3,9 @@ set -euo pipefail
 
 # Build caret CLI binaries from ../cli sources (minimal fork)
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-PKG_DIR="${ROOT_DIR}/cli-caret"
+PKG_DIR="${ROOT_DIR}/cli-careti"
 CLI_DIR="${ROOT_DIR}/cli"
-OUT_DIR="${ROOT_DIR}/cli-caret/bin"
+OUT_DIR="${ROOT_DIR}/cli-careti/bin"
 
 echo "[careti-cli] Building binaries into ${OUT_DIR} ..."
 mkdir -p "${OUT_DIR}"
@@ -165,7 +165,7 @@ EOF
 create_wrapper "careti"
 create_wrapper "careti-host"
 # CARETI MODIFICATION: provide Cline-compatible names for legacy lookups
-cp "${OUT_DIR}/caret" "${OUT_DIR}/cline"
+cp "${OUT_DIR}/careti" "${OUT_DIR}/cline"
 cp "${OUT_DIR}/careti-host" "${OUT_DIR}/cline-host"
 
 echo "[careti-cli] Done. Binaries:"

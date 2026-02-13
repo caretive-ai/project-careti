@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-PKG_DIR="${ROOT_DIR}/cli-caret"
+PKG_DIR="${ROOT_DIR}/cli-careti"
 ENV_FILE="${ROOT_DIR}/.env"
 
 if [[ -z "${CARET_NPM_TOKEN:-}" && -f "${ENV_FILE}" ]]; then

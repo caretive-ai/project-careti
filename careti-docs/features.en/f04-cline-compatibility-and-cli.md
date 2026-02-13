@@ -33,7 +33,7 @@ Careti remains compatible with core Cline behavior (Plan/Act, MCP, providers, et
 | **Operating Modes** | Single Plan/Act system only | **Dual Mode System** (Careti ↔ Cline) with separated prompts/tools/UI per mode |
 | **System Prompt** | Prompt registry (`src/core/prompts/system-prompt/*`) | **Dynamic JSON Prompt System** (`careti-src/core/prompts/system`) via `CaretiPromptWrapper` when `modeSystem === "careti"` |
 | **Auth/Domain** | Fixed `cline.bot` | **Multi-domain**: handles `careti.ai` (Careti) and `cline.bot` (Cline) separately to avoid account conflicts |
-| **Subagents** | Experimental, UI hidden | **Full UI support**: settings toggles/output limit slider, i18n (en/ko/ja/zh) |
+| **Subagents** | Experimental, UI hidden | **Full UI support**: settings toggles/output limit slider, i18n (en/ko/ja/zh). **Execution**: `careti "prompt"` spawns isolated sub-agent processes (see F12) |
 | **CLI** | `cline` only | **`careti` CLI** for Careti mode, same Plan/Act flow, extra providers enabled |
 
 ---

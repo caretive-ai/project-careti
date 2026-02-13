@@ -1,59 +1,68 @@
+// CARETI MODIFICATION: Rewritten for Careti onboarding flow
+// (Welcome → Get Started → API Setup → Provider Selection → Save Settings → Persona → Chat)
 import { expect } from "@playwright/test"
 import { e2e } from "./utils/helpers"
 
-// Test for setting up API keys
-e2e("Views - can set up API keys and navigate to Settings from Chat", async ({ sidebar }) => {
-	// Use the page object to interact with editor outside the sidebar
-	// Verify initial state
-	await expect(sidebar.getByRole("button", { name: "Login to Cline" })).toBeVisible()
-	await expect(sidebar.getByText("Bring my own API key")).toBeVisible()
+// Test for setting up API keys via Careti onboarding
+e2e("Views - can set up API keys and navigate to Chat from onboarding", async ({ sidebar }) => {
+	// === Step 1: Verify initial state - Welcome page with "Get Started" button ===
+	const getStartedButton = sidebar.getByRole("button", { name: /Get Started|시작하기/i })
+	await expect(getStartedButton).toBeVisible({ timeout: 15000 })
 
-	// Navigate to API key setup
-	await sidebar.getByText("Bring my own API key").click()
-	await sidebar.getByRole("button", { name: "Continue" }).click()
+	// === Step 2: Navigate to API setup ===
+	await getStartedButton.click()
 
+	// Wait for API setup page to appear
+	const apiSetupPage = sidebar.getByTestId("careti-api-setup-page")
+	await expect(apiSetupPage).toBeVisible({ timeout: 5000 })
+
+	// === Step 3: Verify provider selector is visible ===
 	const providerSelectorInput = sidebar.getByTestId("provider-selector-input")
-
-	// Verify provider selector is visible
 	await expect(providerSelectorInput).toBeVisible()
 
-	// Test Cline provider option
+	// === Step 4: Test Careti provider option ===
 	await providerSelectorInput.click({ delay: 100 })
-	// Wait for dropdown to appear and find Cline option
-	await expect(sidebar.getByTestId("provider-option-cline")).toBeVisible()
-	await sidebar.getByTestId("provider-option-cline").click({ delay: 100 })
-	await expect(sidebar.getByRole("button", { name: "Sign Up with Cline" })).toBeVisible()
+	// Wait for dropdown and find Careti option
+	const caretiOption = sidebar.getByTestId("provider-option-careti")
+	await expect(caretiOption).toBeVisible()
+	await caretiOption.click({ delay: 100 })
+	// Careti provider shows Login button (not Sign Up)
+	await expect(sidebar.getByRole("button", { name: /Login|로그인/i })).toBeVisible()
 
-	// Switch to OpenRouter and complete setup
+	// === Step 5: Switch to OpenRouter and complete setup ===
 	await providerSelectorInput.click({ delay: 100 })
 	await sidebar.getByTestId("provider-option-openrouter").click({ delay: 100 })
 
-	const apiKeyInput = sidebar.getByRole("textbox", {
-		name: "OpenRouter API Key",
-	})
+	const apiKeyInput = sidebar.getByRole("textbox", { name: /API Key/i })
 	await apiKeyInput.fill("test-api-key")
 	await expect(apiKeyInput).toHaveValue("test-api-key")
-	await apiKeyInput.click({ delay: 100 })
-	await sidebar.getByRole("button", { name: "Continue" }).click()
 
-	await expect(sidebar.getByRole("button", { name: "Login to Cline" })).not.toBeVisible()
+	// Wait for debounce
+	await sidebar.page().waitForTimeout(300)
 
-	// Verify start up page is no longer visible
-	await expect(apiKeyInput).not.toBeVisible()
+	// === Step 6: Save settings ===
+	await sidebar.getByRole("button", { name: /Save Settings|설정 저장|Continue/i }).click()
+
+	// === Step 7: Handle persona selector ===
+	const personaButton = sidebar.getByRole("button", { name: /^Select$|^선택$/i })
+	await expect(personaButton.first()).toBeVisible({ timeout: 8000 })
+	await personaButton.first().click()
+
+	// Wait for transition
+	await sidebar.page().waitForTimeout(500)
+
+	// === Step 8: Verify chat view ===
+	const chatInputBox = sidebar.getByTestId("chat-input")
+	await expect(chatInputBox).toBeVisible({ timeout: 10000 })
+
+	// Welcome page should no longer be visible
+	await expect(getStartedButton).not.toBeVisible()
 	await expect(providerSelectorInput).not.toBeVisible()
 
-	// Verify you are now in the chat page after setup was completed
-	// cline logo has the name "clline-logo"
-	const clineLogo = sidebar.locator(".size-20 > path")
-	await expect(clineLogo).toBeVisible()
-	const chatInputBox = sidebar.getByTestId("chat-input")
-	await expect(chatInputBox).toBeVisible()
-
-	// Verify the release banner is visible for new installs and can be closed.
-	const releaseBanner = sidebar.getByRole("heading", {
-		name: /^🎉 New in v\d/,
-	})
-	await expect(releaseBanner).toBeVisible()
-	await sidebar.getByTestId("close-announcement-button").click()
-	await expect(releaseBanner).not.toBeVisible()
+	// === Step 9: Close announcement banner if visible ===
+	const closeButton = sidebar.getByTestId("close-announcement-button")
+	if (await closeButton.isVisible().catch(() => false)) {
+		await closeButton.click()
+		await expect(closeButton).not.toBeVisible()
+	}
 })

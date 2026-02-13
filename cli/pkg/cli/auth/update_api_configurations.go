@@ -78,7 +78,7 @@ func GetProviderFields(provider cline.ApiProvider) (ProviderFields, error) {
 			PlanModeProviderSpecificModelIDField: "planModeLiteLlmModelId",
 			ActModeProviderSpecificModelIDField:  "actModeLiteLlmModelId",
 		}, nil
-	case cline.ApiProvider_CARET:
+	case cline.ApiProvider_CARETI:
 		return ProviderFields{
 			APIKeyField:                          "caretApiKey",
 			BaseURLField:                         "caretBaseUrl",
@@ -339,7 +339,7 @@ func getPromptCacheField(provider cline.ApiProvider) string {
 	switch provider {
 	case cline.ApiProvider_LITELLM:
 		return "liteLlmUsePromptCache"
-	case cline.ApiProvider_CARET:
+	case cline.ApiProvider_CARETI:
 		return "caretUsePromptCache"
 	case cline.ApiProvider_BIZROUTER:
 		return "bizRouterUsePromptCache"

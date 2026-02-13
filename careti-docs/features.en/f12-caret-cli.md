@@ -31,6 +31,56 @@ Careti CLI는 Cline 호환 모드 대신 **Careti 모드만** 기본으로 사�
 - `GOCACHE=$PWD/.cache/go-build go test -short ./cli/...`
 - 수동: `scripts/careti-run.sh version`, `scripts/careti-run-auth.sh` → auth 메뉴 진입 후 BYO/LiteLLM 설정, 종료 시 인스턴스 유지 여부 확인.
 
+## 🤖 CLI Sub-Agent Execution
+
+Careti CLI can run as a **sub-agent** — a short-lived, autonomous process spawned by the main extension to execute a single task in isolation.
+
+### Command Syntax
+
+```bash
+careti "your prompt here"          # double-quoted
+careti 'your prompt here'          # single-quoted
+careti "prompt" --workdir /path    # with additional flags
+```
+
+The simplified syntax is detected by `isSubagentCommand()` and transformed by `transformClineCommand()` into a fully-flagged invocation:
+
+```bash
+careti "prompt" -s yolo_mode_toggled=true -s max_consecutive_mistakes=6 -F plain -y --oneshot
+```
+
+| Flag | Purpose |
+| --- | --- |
+| `-s yolo_mode_toggled=true` | Auto-approve tool use (no human-in-the-loop) |
+| `-s max_consecutive_mistakes=6` | Limit consecutive errors before abort |
+| `-F plain` | Plain text output (no TUI) |
+| `-y` | Auto-confirm prompts |
+| `--oneshot` | Exit after single task completion |
+
+### Detection & Context
+
+The extension detects sub-agent context via `isCliSubagentContext()` by checking the combination of `yoloModeToggled=true` + `maxConsecutiveMistakes=6`. This allows the main extension to adjust behavior (e.g., skip confirmation dialogs) when running inside a sub-agent.
+
+### Skill Fork Execution
+
+`executeSkillInFork()` in `SkillForkExecutor.ts` spawns sub-agents programmatically:
+
+1. `shouldForkSkill(skillContent)` — checks if skill declares `context: "fork"`
+2. `findCaretiCli()` — resolves binary (env var → local build → PATH)
+3. `buildForkPrompt()` — constructs prompt with skill instructions
+4. `runForkProcess()` — spawns isolated process with sub-agent flags, 5-minute timeout
+
+### Code Scope (Sub-Agent)
+- `src/integrations/cli-subagents/subagent_command.ts` — `isSubagentCommand()`, `transformClineCommand()`
+- `src/utils/cli-detector.ts` — `isCaretCliInstalled()`, `isCliSubagentContext()`
+- `src/core/task/agents/SkillForkExecutor.ts` — `executeSkillInFork()`, `findCaretiCli()`
+
+### Testing (Sub-Agent)
+- **45 tests passing** covering command detection, transformation, context detection, and binary resolution
+- Run: `npx cross-env TS_NODE_PROJECT=./tsconfig.unit-test.json mocha --grep "CLI Sub-Agent"`
+- With explicit binary: `CARETI_CLI_PATH=./cli-careti/bin/careti-linux-amd64 npm run test:unit -- --grep "CLI Sub-Agent"`
+
 ## 🚧 TODO / Risks
 - Careti Account(F05) gRPC/UI가 CLI wizard와 완전 연동됐는지 회귀 필요.
 - 모드 강제 이후 기존 Cline Plan/Act-only 기대치를 가진 사용자 혼동 가능 → 도움말/배너 정리 필요.
+- Sub-agent: `findCaretiCli()` fallback paths may need expansion for Windows/macOS distribution.

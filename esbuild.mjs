@@ -209,7 +209,8 @@ const standaloneConfig = {
 	outfile: `${destDir}/cline-core.js`,
 	// These modules need to load files from the module directory at runtime,
 	// so they cannot be bundled.
-	external: ["vscode", "@grpc/reflection", "grpc-health-check", "better-sqlite3"],
+	// CARETI MODIFICATION: add hwpjs to external to avoid .node loader issues
+	external: ["vscode", "@grpc/reflection", "grpc-health-check", "better-sqlite3", "@ohah/hwpjs", "sharp"],
 }
 
 // E2E build script configuration

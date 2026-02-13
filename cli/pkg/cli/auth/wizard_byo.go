@@ -481,7 +481,7 @@ func providerRequiresCredentialsForModelFetching(provider cline.ApiProvider) boo
 func (pw *ProviderWizard) fetchModelsForProvider(provider cline.ApiProvider, apiKey string, baseURL string) ([]string, map[string]interface{}, error) {
 	// Try dynamic/remote model fetching first
 	switch provider {
-	case cline.ApiProvider_CARET:
+	case cline.ApiProvider_CARETI:
 		modelIDs, modelInfos, err := FetchStaticModels(provider)
 		if err != nil {
 			return nil, nil, err

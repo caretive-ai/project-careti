@@ -18,7 +18,7 @@ export async function parseProtoForServices(protoFilePaths, protoDir) {
 
 		// CARETI MODIFICATION: handle careti-specific proto package
 		// Determine proto package from file path
-		const protoPackage = protoFilePath.startsWith("host/") ? "host" : protoFilePath.startsWith("caret/") ? "careti" : "cline"
+		const protoPackage = protoFilePath.startsWith("host/") ? "host" : protoFilePath.startsWith("careti/") ? "careti" : "cline"
 
 		for (const serviceMatch of serviceMatches) {
 			const serviceName = serviceMatch[1]

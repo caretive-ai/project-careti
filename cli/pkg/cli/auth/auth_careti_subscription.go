@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cline/grpc-go/caret"
+	careti "github.com/cline/grpc-go/caret"
 	"github.com/cline/grpc-go/cline"
 )
 

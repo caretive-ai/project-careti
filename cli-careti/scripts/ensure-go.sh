@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Ensure Go is available (local portable install to /tmp/go if missing or too old)
 
-MIN_GO_VERSION="1.23.0"
+MIN_GO_VERSION="1.24.0"
 
 version_ge() {
   [[ "$1" == "$2" ]] && return 0
@@ -41,7 +41,7 @@ if command -v go >/dev/null 2>&1; then
 fi
 
 echo "[careti-cli] Go not found. Downloading portable Go to /tmp/go ..."
-GO_VERSION="1.23.0"
+GO_VERSION="1.24.0"
 TAR="go${GO_VERSION}.linux-amd64.tar.gz"
 URL="https://go.dev/dl/${TAR}"
 

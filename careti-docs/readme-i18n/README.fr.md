@@ -191,7 +191,7 @@ Disponibles via le compte Careti même pour les modèles texte uniquement.
 
 ---
 
-## 📋 15 Fonctionnalités Principales
+## 📋 19 Fonctionnalités Principales
 
 | Fonctionnalité | Description | Docs |
 |----------------|-------------|------|
@@ -207,9 +207,14 @@ Disponibles via le compte Careti même pour les modèles texte uniquement.
 | F09 | Feature Config | [Voir](../features.en/f09-feature-config-system.md) |
 | F10 | Configuration fournisseur | [Voir](../features.en/f10-enhanced-provider-setup.md) |
 | F11 | Historique de saisie et raccourcis | [Voir](../features.en/f11-input-history-and-shortcuts.md) |
-| F12 | Parité des connaissances IA-développeur | [Voir](../features.en/f12-ai-developer-knowledge-parity.md) |
+| F12 | Careti CLI & Sous-agent | [Voir](../features.en/f12-caret-cli.md) |
 | F13 | Outils image | [Voir](../features.en/f13-image-tool.md) |
 | F14 | Outils document | [Voir](../features.en/f14-document-read-tool.md) |
+| F15 | SmartEditEngine (correspondance floue 9 étapes) | [Voir](../features/f15-smart-edit-engine.md) |
+| F16 | Outils web & Commandes slash | [Voir](../features/f16-web-tools-and-slash-commands.md) |
+| F17 | GFM Markdown & Affichage réflexion | [Voir](../features/f17-gfm-table-markdown-support.md) |
+| F18 | Mode Agent/Chatbot CLI | [Voir](../features/f18-cli-agent-chatbot-mode.md) |
+| F19 | Système de file de messages (style Claude Code) | [Voir](../features/f19-message-queue-system.md) |
 
 ---
 

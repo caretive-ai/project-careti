@@ -191,7 +191,7 @@ Cline不支持的模型可在Careti中使用。
 
 ---
 
-## 📋 15个核心功能
+## 📋 19个核心功能
 
 | 功能 | 描述 | 文档 |
 |------|------|------|
@@ -207,9 +207,14 @@ Cline不支持的模型可在Careti中使用。
 | F09 | Feature Config | [查看](../features.en/f09-feature-config-system.md) |
 | F10 | 提供商设置 | [查看](../features.en/f10-enhanced-provider-setup.md) |
 | F11 | 输入历史与快捷键 | [查看](../features.en/f11-input-history-and-shortcuts.md) |
-| F12 | AI-开发者知识对等 | [查看](../features.en/f12-ai-developer-knowledge-parity.md) |
+| F12 | Careti CLI & 子代理 | [查看](../features.en/f12-caret-cli.md) |
 | F13 | 图像工具 | [查看](../features.en/f13-image-tool.md) |
 | F14 | 文档工具 | [查看](../features.en/f14-document-read-tool.md) |
+| F15 | SmartEditEngine (9阶段模糊匹配) | [查看](../features/f15-smart-edit-engine.md) |
+| F16 | 网络工具 & 斜杠命令 | [查看](../features/f16-web-tools-and-slash-commands.md) |
+| F17 | GFM Markdown & 思维过程显示 | [查看](../features/f17-gfm-table-markdown-support.md) |
+| F18 | CLI代理/聊天机器人模式 | [查看](../features/f18-cli-agent-chatbot-mode.md) |
+| F19 | 消息队列系统 (Claude Code风格) | [查看](../features/f19-message-queue-system.md) |
 
 ---
 

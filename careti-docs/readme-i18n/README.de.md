@@ -191,7 +191,7 @@ Von Cline nicht unterstützte Modelle, in Careti verfügbar.
 
 ---
 
-## 📋 15 Kernfunktionen
+## 📋 19 Kernfunktionen
 
 | Funktion | Beschreibung | Docs |
 |----------|--------------|------|
@@ -207,9 +207,14 @@ Von Cline nicht unterstützte Modelle, in Careti verfügbar.
 | F09 | Feature Config | [Ansehen](../features.en/f09-feature-config-system.md) |
 | F10 | Anbieter-Einrichtung | [Ansehen](../features.en/f10-enhanced-provider-setup.md) |
 | F11 | Eingabeverlauf und Tastenkürzel | [Ansehen](../features.en/f11-input-history-and-shortcuts.md) |
-| F12 | KI-Entwickler-Wissensparität | [Ansehen](../features.en/f12-ai-developer-knowledge-parity.md) |
+| F12 | Careti CLI & Sub-Agent | [Ansehen](../features.en/f12-caret-cli.md) |
 | F13 | Bild-Werkzeuge | [Ansehen](../features.en/f13-image-tool.md) |
 | F14 | Dokumenten-Werkzeuge | [Ansehen](../features.en/f14-document-read-tool.md) |
+| F15 | SmartEditEngine (9-stufiges Fuzzy-Matching) | [Ansehen](../features/f15-smart-edit-engine.md) |
+| F16 | Web-Tools & Slash-Befehle | [Ansehen](../features/f16-web-tools-and-slash-commands.md) |
+| F17 | GFM Markdown & Denkprozess-Anzeige | [Ansehen](../features/f17-gfm-table-markdown-support.md) |
+| F18 | CLI Agent/Chatbot-Modus | [Ansehen](../features/f18-cli-agent-chatbot-mode.md) |
+| F19 | Nachrichtenwarteschlange (Claude Code Stil) | [Ansehen](../features/f19-message-queue-system.md) |
 
 ---
 

@@ -191,7 +191,7 @@
 
 ---
 
-## 📋 15 Основных функций
+## 📋 19 Основных функций
 
 | Функция | Описание | Документы |
 |---------|----------|-----------|
@@ -207,9 +207,14 @@
 | F09 | Feature Config | [Смотреть](../features.en/f09-feature-config-system.md) |
 | F10 | Настройка провайдера | [Смотреть](../features.en/f10-enhanced-provider-setup.md) |
 | F11 | История ввода и горячие клавиши | [Смотреть](../features.en/f11-input-history-and-shortcuts.md) |
-| F12 | Паритет знаний ИИ-разработчик | [Смотреть](../features.en/f12-ai-developer-knowledge-parity.md) |
+| F12 | Careti CLI & Суб-агент | [Смотреть](../features.en/f12-caret-cli.md) |
 | F13 | Инструменты изображений | [Смотреть](../features.en/f13-image-tool.md) |
 | F14 | Инструменты документов | [Смотреть](../features.en/f14-document-read-tool.md) |
+| F15 | SmartEditEngine (9-ступенчатое нечёткое сопоставление) | [Смотреть](../features/f15-smart-edit-engine.md) |
+| F16 | Веб-инструменты & Слэш-команды | [Смотреть](../features/f16-web-tools-and-slash-commands.md) |
+| F17 | GFM Markdown & Отображение мышления | [Смотреть](../features/f17-gfm-table-markdown-support.md) |
+| F18 | CLI режим агента/чатбота | [Смотреть](../features/f18-cli-agent-chatbot-mode.md) |
+| F19 | Очередь сообщений (стиль Claude Code) | [Смотреть](../features/f19-message-queue-system.md) |
 
 ---
 

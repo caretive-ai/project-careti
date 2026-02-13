@@ -191,25 +191,30 @@ Cline에서 지원하지 않는 모델을 Careti에서 사용할 수 있습니�
 
 ---
 
-## 📋 15개 핵심 기능
+## 📋 19개 핵심 기능
 
 | 기능 | 설명 | 문서 |
 |------|------|------|
-| F00 | Cline 버그수정 및 안정화 | [보기](../features.en/f00-cline-bugfix-patch.md) |
-| F01 | 공통 유틸리티 | [보기](../features.en/f01-common-util.md) |
-| F02 | 다국어 i18n | [보기](../features.en/f02-multilingual-i18n.md) |
-| F03 | 브랜딩 & UI | [보기](../features.en/f03-branding-ui.md) |
-| F04 | Cline 호환성 | [보기](../features.en/f04-cline-compatibility-and-cli.md) |
-| F05 | Careti 계정 | [보기](../features.en/f05-careti-account.md) |
-| F06 | 에이전트 표준화 (AAIF) | [보기](../features.en/f06-agent-standard-claude-compat.md) |
-| F07 | 프롬프트 시스템 | [보기](../features.en/f07-careti-prompt-system.md) |
-| F08 | 페르소나 시스템 | [보기](../features.en/f08-persona-system.md) |
-| F09 | Feature Config | [보기](../features.en/f09-feature-config-system.md) |
-| F10 | 프로바이더 설정 | [보기](../features.en/f10-enhanced-provider-setup.md) |
-| F11 | 입력 기록 & 단축키 | [보기](../features.en/f11-input-history-and-shortcuts.md) |
-| F12 | AI-개발자 지식 동등성 | [보기](../features.en/f12-ai-developer-knowledge-parity.md) |
-| F13 | 이미지 도구 | [보기](../features.en/f13-image-tool.md) |
-| F14 | 문서 도구 | [보기](../features.en/f14-document-read-tool.md) |
+| F00 | Cline 버그수정 및 안정화 | [보기](../features/f00-cline-bugfix-patch.md) |
+| F01 | 공통 유틸리티 | [보기](../features/f01-common-util.md) |
+| F02 | 다국어 i18n | [보기](../features/f02-multilingual-i18n.md) |
+| F03 | 브랜딩 & UI | [보기](../features/f03-branding-ui.md) |
+| F04 | Cline 호환성 | [보기](../features/f04-cline-compatibility-and-cli.md) |
+| F05 | Careti 계정 | [보기](../features/f05-caret-account.md) |
+| F06 | 에이전트 표준화 (AAIF) | [보기](../features/f06-agent-standard-claude-compat.md) |
+| F07 | 프롬프트 시스템 | [보기](../features/f07-caret-prompt-system.md) |
+| F08 | 페르소나 시스템 | [보기](../features/f08-persona-system.md) |
+| F09 | Feature Config | [보기](../features/f09-feature-config-system.md) |
+| F10 | 프로바이더 설정 | [보기](../features/f10-enhanced-provider-setup.md) |
+| F11 | 입력 기록 & 단축키 | [보기](../features/f11-input-history-and-shortcuts.md) |
+| F12 | Careti CLI & 서브에이전트 | [보기](../features.en/f12-caret-cli.md) |
+| F13 | 이미지 도구 | [보기](../features/f13-image-tool.md) |
+| F14 | 문서 도구 | [보기](../features/f14-document-read-tool.md) |
+| F15 | SmartEditEngine (9단계 퍼지 매칭) | [보기](../features/f15-smart-edit-engine.md) |
+| F16 | 웹 도구 & 슬래시 명령 | [보기](../features/f16-web-tools-and-slash-commands.md) |
+| F17 | GFM 마크다운 & 사고 과정 표시 | [보기](../features/f17-gfm-table-markdown-support.md) |
+| F18 | CLI 에이전트/챗봇 모드 | [보기](../features/f18-cli-agent-chatbot-mode.md) |
+| F19 | 메시지 큐 시스템 (Claude Code 스타일) | [보기](../features/f19-message-queue-system.md) |
 
 ---
 

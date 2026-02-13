@@ -1,6 +1,13 @@
 import { PostHog } from "posthog-node"
-import * as vscode from "vscode"
 import { HostProvider } from "@/hosts/host-provider"
+
+// CARETI MODIFICATION: Safe vscode import for standalone/CLI environments
+let vscode: typeof import("vscode") | undefined
+try {
+	vscode = require("vscode")
+} catch {
+	// Running in standalone/CLI mode — vscode module unavailable
+}
 import { Setting } from "@/shared/proto/index.host"
 import type { ClineAccountUserInfo } from "../../../auth/AuthService"
 import type { ITelemetryProvider, TelemetryProperties, TelemetrySettings } from "../ITelemetryProvider"
@@ -116,6 +123,10 @@ export class PostHogTelemetryProvider implements ITelemetryProvider {
 		const hostSettings = await HostProvider.env.getTelemetrySettings({})
 		if (hostSettings.isEnabled === Setting.DISABLED) {
 			return "off"
+		}
+		// CARETI MODIFICATION: Skip vscode config in standalone/CLI mode
+		if (!vscode) {
+			return "all"
 		}
 		const config = vscode.workspace.getConfiguration("telemetry")
 		return config?.get<TelemetrySettings["level"]>("telemetryLevel") || "all"

@@ -1,6 +1,13 @@
 import { getCurrentBrandName } from "@careti/utils/brand-utils" // CARETI MODIFICATION: brand-aware VS Code config scope
-import * as vscode from "vscode"
 import { HostProvider } from "@/hosts/host-provider"
+
+// CARETI MODIFICATION: Safe vscode import for standalone/CLI environments
+let vscode: typeof import("vscode") | undefined
+try {
+	vscode = require("vscode")
+} catch {
+	// Running in standalone/CLI mode — vscode module unavailable
+}
 import { getDistinctId } from "@/services/logging/distinctId"
 import { PostHogClientProvider } from "@/services/telemetry/providers/posthog/PostHogClientProvider"
 import { Setting } from "@/shared/proto/index.host"
@@ -95,13 +102,16 @@ export class PostHogErrorProvider implements IErrorProvider {
 
 		// Check extension-specific telemetry setting
 		// CARETI MODIFICATION: Read telemetry setting from brand namespace, fallback to legacy cline for compatibility
-		const brandNamespace = getCurrentBrandName().toLowerCase()
-		const caretConfig = vscode.workspace.getConfiguration(brandNamespace)
-		const clineConfig = vscode.workspace.getConfiguration("cline")
-		const telemetrySetting = caretConfig.get("telemetrySetting") ?? clineConfig.get("telemetrySetting")
+		// Skip when vscode is unavailable (standalone/CLI mode)
+		if (vscode) {
+			const brandNamespace = getCurrentBrandName().toLowerCase()
+			const caretConfig = vscode.workspace.getConfiguration(brandNamespace)
+			const clineConfig = vscode.workspace.getConfiguration("cline")
+			const telemetrySetting = caretConfig.get("telemetrySetting") ?? clineConfig.get("telemetrySetting")
 
-		if (telemetrySetting === "disabled") {
-			this.errorSettings.enabled = false
+			if (telemetrySetting === "disabled") {
+				this.errorSettings.enabled = false
+			}
 		}
 
 		this.errorSettings.level = await this.getErrorLevel()
@@ -183,6 +193,10 @@ export class PostHogErrorProvider implements IErrorProvider {
 		const hostSettings = await HostProvider.env.getTelemetrySettings({})
 		if (hostSettings.isEnabled === Setting.DISABLED) {
 			return "off"
+		}
+		// CARETI MODIFICATION: Skip vscode config in standalone/CLI mode
+		if (!vscode) {
+			return "all"
 		}
 		const config = vscode.workspace.getConfiguration("telemetry")
 		return config?.get<ErrorSettings["level"]>("telemetryLevel") || "all"

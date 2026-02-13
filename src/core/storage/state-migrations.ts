@@ -564,6 +564,23 @@ export async function migrateLegacyApiConfigurationToModeSpecific(context: vscod
 	}
 }
 
+// CARETI MODIFICATION: Migrate "caret" → "careti" provider for users upgrading from v0.4.6
+export async function migrateCaretProviderToCareti(context: vscode.ExtensionContext) {
+	try {
+		const providerKeys = ["planModeApiProvider", "actModeApiProvider", "apiProvider", "previousModeApiProvider"]
+
+		for (const key of providerKeys) {
+			const value = context.globalState.get<string>(key)
+			if (value === "caret") {
+				console.log(`[Storage Migration] Migrating ${key}: "caret" → "careti"`)
+				await context.globalState.update(key, "careti")
+			}
+		}
+	} catch (error) {
+		console.error("[Storage Migration] Failed to migrate caret provider to careti:", error)
+	}
+}
+
 export async function migrateWelcomeViewCompleted(context: vscode.ExtensionContext) {
 	try {
 		// Check if welcomeViewCompleted is already set

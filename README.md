@@ -211,8 +211,8 @@ Available via Careti account even for text-only models.
 | F13 | Image tools | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f13-image-tool.md) |
 | F14 | Document tools | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f14-document-read-tool.md) |
 | F15 | SmartEditEngine (9-stage fuzzy matching) | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features/f15-smart-edit-engine.md) |
-| F16 | Web Search (SerpAPI) | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features/f16-web-search.md) |
-| F17 | GFM Markdown & Thinking Display | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features/f17-gfm-table-markdown.md) |
+| F16 | Web Tools & Slash Commands | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features/f16-web-tools-and-slash-commands.md) |
+| F17 | GFM Markdown & Thinking Display | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features/f17-gfm-table-markdown-support.md) |
 | F18 | CLI Agent/Chatbot Mode | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features/f18-cli-agent-chatbot-mode.md) |
 | F19 | Message Queue System (Claude Code style) | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features/f19-message-queue-system.md) |
 

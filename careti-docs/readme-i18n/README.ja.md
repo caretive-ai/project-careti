@@ -191,7 +191,7 @@ Clineで対応していないモデルをCaretiで使用できます。
 
 ---
 
-## 📋 15のコア機能
+## 📋 19のコア機能
 
 | 機能 | 説明 | ドキュメント |
 |------|------|------|
@@ -207,9 +207,14 @@ Clineで対応していないモデルをCaretiで使用できます。
 | F09 | Feature Config | [詳細](../features.en/f09-feature-config-system.md) |
 | F10 | プロバイダー設定 | [詳細](../features.en/f10-enhanced-provider-setup.md) |
 | F11 | 入力履歴 & ショートカット | [詳細](../features.en/f11-input-history-and-shortcuts.md) |
-| F12 | AI-開発者知識同等性 | [詳細](../features.en/f12-ai-developer-knowledge-parity.md) |
+| F12 | Careti CLI & サブエージェント | [詳細](../features.en/f12-caret-cli.md) |
 | F13 | 画像ツール | [詳細](../features.en/f13-image-tool.md) |
 | F14 | ドキュメントツール | [詳細](../features.en/f14-document-read-tool.md) |
+| F15 | SmartEditEngine (9段階ファジーマッチング) | [詳細](../features/f15-smart-edit-engine.md) |
+| F16 | ウェブツール & スラッシュコマンド | [詳細](../features/f16-web-tools-and-slash-commands.md) |
+| F17 | GFMマークダウン & 思考プロセス表示 | [詳細](../features/f17-gfm-table-markdown-support.md) |
+| F18 | CLIエージェント/チャットボットモード | [詳細](../features/f18-cli-agent-chatbot-mode.md) |
+| F19 | メッセージキューシステム (Claude Codeスタイル) | [詳細](../features/f19-message-queue-system.md) |
 
 ---
 

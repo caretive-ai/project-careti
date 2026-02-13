@@ -50,7 +50,7 @@
   <h1>🎯 Careti</h1>
   <p><strong>Use your Cline settings as-is, with more features, 266 models, free monthly credits</strong></p>
 
-> [v0.4.7 Update] **ZAI GLM-4.7 in Careti / Claude Code integration / Web Search / Thinking display**
+> [v0.4.8 Update] **Message Queue System / ESC Instant Cancel / CLI Agent Mode / Infinite Loading Fix**
 
   <p>
     <a href="https://marketplace.visualstudio.com/items?itemName=caretive.careti">
@@ -74,13 +74,13 @@
 
 ---
 
-## 🎉 v0.4.7
+## 🎉 v0.4.8
 
-- ✏️ **SmartEditEngine** — 100% edit success rate (vs Cline 91%), 50% faster on budget models with 9-stage fuzzy matching
-- 🤖 **ZAI GLM-4.7 in Careti** — Use ZAI directly in Careti provider with your own API key
-- 🔗 **Claude Code Integration** — Seamless workflow with AGENTS.md ↔ CLAUDE.md sync
-- 🔍 **Web Search** — SerpAPI-powered search for up-to-date information
-- 💭 **Thinking Display** — Watch AI's thinking process in real-time
+- 📨 **Message Queue System** — Type next instructions while AI is streaming, queued input shown as preview
+- ⚡ **ESC Instant Cancel** — Single ESC press stops streaming and restores queued input to editor
+- 🖊️ **Inline Queue Edit/Delete** — Edit or discard queued messages directly from the preview
+- 🤖 **CLI Agent/Chatbot Mode** — Headless/yolo mode with telemetry, E2E tests, EOF reconnect
+- 🔧 **Infinite Loading Fix** — Non-blocking feature flags polling, `caret→careti` provider migration
 
 ---
 
@@ -191,7 +191,7 @@ Available via Careti account even for text-only models.
 
 ---
 
-## 📋 16 Core Features
+## 📋 19 Core Features
 
 | Feature | Description | Docs |
 |---------|-------------|------|
@@ -207,10 +207,14 @@ Available via Careti account even for text-only models.
 | F09 | Feature Config | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f09-feature-config-system.md) |
 | F10 | Provider setup | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f10-enhanced-provider-setup.md) |
 | F11 | Input history & shortcuts | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f11-input-history-and-shortcuts.md) |
-| F12 | AI-developer knowledge parity | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f12-ai-developer-knowledge-parity.md) |
+| F12 | Careti CLI & Sub-Agent | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f12-caret-cli.md) |
 | F13 | Image tools | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f13-image-tool.md) |
 | F14 | Document tools | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features.en/f14-document-read-tool.md) |
 | F15 | SmartEditEngine (9-stage fuzzy matching) | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features/f15-smart-edit-engine.md) |
+| F16 | Web Search (SerpAPI) | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features/f16-web-search.md) |
+| F17 | GFM Markdown & Thinking Display | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features/f17-gfm-table-markdown.md) |
+| F18 | CLI Agent/Chatbot Mode | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features/f18-cli-agent-chatbot-mode.md) |
+| F19 | Message Queue System (Claude Code style) | [View](https://github.com/caretive-ai/project-careti/blob/main/careti-docs/features/f19-message-queue-system.md) |
 
 ---
 

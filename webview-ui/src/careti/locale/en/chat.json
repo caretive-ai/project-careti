@@ -113,6 +113,11 @@
 		"description": "Reduces token usage by summarizing the task."
 	},
 	"typeMessage": "Type a message...",
+	"pendingInput": {
+		"label": "Queued",
+		"edit": "Edit",
+		"clear": "Clear"
+	},
 	"contextMenu": {
 		"problems": "Problems",
 		"terminal": "Terminal",

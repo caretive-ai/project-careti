@@ -94,6 +94,11 @@
 		"description": "通过总结任务来减少令牌使用。"
 	},
 	"typeMessage": "输入消息...",
+	"pendingInput": {
+		"label": "排队中",
+		"edit": "编辑",
+		"clear": "清除"
+	},
 	"mode": {
 		"act": {
 			"label": "执行"

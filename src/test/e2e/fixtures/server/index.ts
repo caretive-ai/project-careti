@@ -156,17 +156,31 @@ export class ClineApiServerMock {
 			}
 
 			// Authentication middleware
+			// CARETI MODIFICATION: Relax auth for startup endpoints to prevent webview crash
 			const authHeader = req.headers.authorization
-			const isAuthRequired = !path.startsWith("/.test/") && path !== "/health" && path !== "/api/v1/auth/token"
+			const isAuthExempt =
+				path.startsWith("/.test/") ||
+				path === "/health" ||
+				path.startsWith("/health/") ||
+				path === "/api/v1/auth/token" ||
+				path === "/api/v1/auth/refresh"
 
-			if (isAuthRequired && (!authHeader || !authHeader.startsWith("Bearer "))) {
+			if (!isAuthExempt && (!authHeader || !authHeader.startsWith("Bearer "))) {
+				// CARETI MODIFICATION: For /users/me without auth, return empty user (not logged in)
+				// instead of 401 which crashes the webview during extension startup
+				if (path === "/api/v1/users/me" && method === "GET") {
+					return sendJson({ success: true, data: null })
+				}
 				return sendApiError("Unauthorized", 401)
 			}
 
 			const authToken = authHeader?.substring(7) // Remove "Bearer " prefix
 
 			// Authenticate the token and set current user
-			if (isAuthRequired && authToken) {
+			// CARETI MODIFICATION: Skip strict user validation for chat/completions
+			// (allows E2E tests to use any provider with any API key)
+			const isChatCompletion = path === "/api/v1/chat/completions" && method === "POST"
+			if (!isAuthExempt && !isChatCompletion && authToken) {
 				log(`Authenticating token: ${authToken}`)
 				const user = ClineApiServerMock.globalSharedServer!.API_USER.getUserByToken(authToken)
 				if (!user) {
@@ -384,11 +398,25 @@ export class ClineApiServerMock {
 						if (body.includes("edit_request")) {
 							responseText = E2E_MOCK_API_RESPONSES.EDIT_REQUEST
 						}
-						if (body.includes("[diff.test.ts] Hello, Cline!")) {
+						// CARETI MODIFICATION: match both branding variants
+						if (body.includes("[diff.test.ts] Hello, Cline!") || body.includes("[diff.test.ts] Hello, Careti!")) {
 							// The playwright test in diff.test.ts needs the "API Request..." text
 							// to be on the screen long enough to detect it.  This worked at 100ms
 							// too, but setting to 500ms to cover slower CI boxes.
 							await new Promise((resolve) => setTimeout(resolve, 500))
+						}
+
+						// CARETI MODIFICATION: Slow down streaming for cancel tests so Cancel button has time to appear
+						const isCancelTest =
+							body.includes("long message") ||
+							body.includes("very long response") ||
+							body.includes("streaming test") ||
+							body.includes("cancel and resume")
+						const chunkDelay = isCancelTest ? 200 : 10
+						if (isCancelTest) {
+							responseText = Array.from({ length: 50 }, (_, i) => `Streaming chunk ${i + 1} of the cancel test response.`).join(
+								" ",
+							)
 						}
 
 						const generationId = `gen_${++controller.generationCounter}_${Date.now()}`
@@ -406,8 +434,16 @@ export class ClineApiServerMock {
 
 							const chunks = responseText.split(" ")
 							let chunkIndex = 0
+							// CARETI MODIFICATION: Handle client disconnect gracefully
+							let clientDisconnected = false
+							req.on("close", () => {
+								clientDisconnected = true
+							})
 
 							const sendChunk = () => {
+								if (clientDisconnected) {
+									return
+								}
 								if (chunkIndex < chunks.length) {
 									const chunk = {
 										id: generationId,
@@ -426,7 +462,7 @@ export class ClineApiServerMock {
 									}
 									res.write(`data: ${JSON.stringify(chunk)}\n\n`)
 									chunkIndex++
-									setTimeout(sendChunk, 10)
+									setTimeout(sendChunk, chunkDelay)
 								} else {
 									const finalChunk = {
 										id: generationId,

@@ -15,6 +15,8 @@ import DynamicTextArea from "react-textarea-autosize"
 import { useClickAway, useWindowSize } from "react-use"
 import styled from "styled-components"
 import { useInputHistory } from "@/careti/hooks/useInputHistory"
+// CARETI MODIFICATION: Import useSessionState for pending input display
+import { useSessionState } from "@/careti/hooks/useSessionState"
 // CARETI MODIFICATION: use CaretiWebviewLogger for webview logs
 import WebviewLogger from "@/careti/utils/CaretiWebviewLogger"
 // CARETI MODIFICATION: Import i18n for Chatbot/Agent mode labels
@@ -32,7 +34,7 @@ import { getModeSpecificFields, normalizeApiConfiguration } from "@/components/s
 import { useClineAuth } from "@/context/ClineAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { usePlatform } from "@/context/PlatformContext"
-import { CaretSystemServiceClient, FileServiceClient, ModelsServiceClient, StateServiceClient } from "@/services/grpc-client"
+import { CaretSystemServiceClient, FileServiceClient, ModelsServiceClient, StateServiceClient, TaskServiceClient } from "@/services/grpc-client"
 import {
     ContextMenuOptionType,
     getContextMenuOptionIndex,
@@ -160,6 +162,77 @@ const ButtonContainer = styled.div`
 	white-space: nowrap;
 	min-width: 0;
 	width: 100%;
+`
+
+// CARETI MODIFICATION: Pending input preview area (Claude Code style queue display)
+const PendingInputPreview = styled.div`
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	padding: 8px 12px;
+	margin: 0 14px 4px 14px;
+	background: var(--vscode-editorWidget-background);
+	border: 1px solid var(--vscode-editorWidget-border);
+	border-radius: 4px;
+	font-size: 12px;
+	color: var(--vscode-foreground);
+
+	.pending-label {
+		flex-shrink: 0;
+		padding: 2px 6px;
+		background: var(--vscode-badge-background);
+		color: var(--vscode-badge-foreground);
+		border-radius: 3px;
+		font-size: 10px;
+		font-weight: 500;
+		text-transform: uppercase;
+	}
+
+	.pending-text {
+		flex: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		opacity: 0.9;
+	}
+
+	.pending-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		flex-shrink: 0;
+	}
+
+	.pending-action-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 2px 6px;
+		border: none;
+		background: transparent;
+		color: var(--vscode-foreground);
+		cursor: pointer;
+		opacity: 0.6;
+		transition: opacity 0.15s ease;
+		border-radius: 3px;
+		font-size: 11px;
+
+		&:hover {
+			opacity: 1;
+			background: var(--vscode-toolbar-hoverBackground);
+		}
+	}
+
+	.pending-clear {
+		flex-shrink: 0;
+		cursor: pointer;
+		opacity: 0.6;
+		transition: opacity 0.15s ease;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
 `
 
 const ModelSelectorTooltip = styled.div.withConfig({
@@ -365,6 +438,8 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		const [searchLoading, setSearchLoading] = useState(false)
 		const [, metaKeyChar] = useMetaKeyDetection(platform)
 		const { clineUser } = useClineAuth()
+		// CARETI MODIFICATION: Claude Code style pending input display
+		const { pendingInput, hasPendingInput } = useSessionState()
 		// CARETI MODIFICATION: Persistent input history functionality - hook for handling arrow key navigation
 		const { handleKeyDown: handleHistoryKeyDown } = useInputHistory({
 			history: inputHistory,
@@ -1535,6 +1610,36 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 		return (
 			<div>
+				{/* CARETI MODIFICATION: Pending input preview with edit/clear buttons */}
+				{hasPendingInput && pendingInput && (
+					<PendingInputPreview>
+						<span className="pending-label">{t("pendingInput.label", "chat") || "Queued"}</span>
+						<span className="pending-text" title={pendingInput}>
+							{pendingInput.length > 100 ? `${pendingInput.substring(0, 100)}...` : pendingInput}
+						</span>
+						<span className="pending-actions">
+							<button
+								type="button"
+								className="pending-action-btn"
+								title={t("pendingInput.edit", "chat") || "Edit"}
+								onClick={() => {
+									setInputValue(pendingInput)
+									void TaskServiceClient.clearPendingInput(EmptyRequest.create({}))
+								}}>
+								<span className="codicon codicon-edit" />
+							</button>
+							<button
+								type="button"
+								className="pending-action-btn"
+								title={t("pendingInput.clear", "chat") || "Clear"}
+								onClick={() => {
+									void TaskServiceClient.clearPendingInput(EmptyRequest.create({}))
+								}}>
+								<span className="codicon codicon-close" />
+							</button>
+						</span>
+					</PendingInputPreview>
+				)}
 				<div
 					className="relative flex transition-colors ease-in-out duration-100 px-3.5 py-2.5"
 					onDragEnter={handleDragEnter}

@@ -41,6 +41,34 @@
   </table>
 </div>
 
+## [0.4.8] 2026-02-13
+
+> **Note**: Careti v0.4.8 introduces the Claude Code-style message queue system and fixes the v0.4.7 infinite loading issue.
+
+### ✨ New Features
+- **F19 Message Queue System**: Type next instructions while AI is streaming. Queued input displayed as inline preview above the input field.
+- **ESC Instant Cancel**: Single ESC press immediately stops streaming and restores queued input to the editor for editing before re-sending.
+- **Inline Queue Edit/Delete**: Edit (restore to input) and delete (discard) buttons on the pending input preview.
+- **CLI Agent/Chatbot Mode**: Independent agent and chatbot modes for CLI with headless/yolo support, EOF reconnect, and improved input handling.
+- **CLI Telemetry**: PostHog-based event tracking for CLI usage analytics.
+- **CLI E2E Tests**: Agent mode, CLI behavior, output, and interactive mode E2E tests.
+- **clearPendingInput RPC**: New gRPC endpoint for clearing queued input from edit/delete buttons.
+
+### ✨ Improved
+- **Feature flags parallel polling**: Changed sequential flag fetching (14 requests) to parallel with 5-second overall timeout.
+- **Non-blocking initialization**: `featureFlagsService.poll()` changed to fire-and-forget to prevent blocking extension activation.
+- **Subagent command pattern**: Added CARETI_COMMAND_PATTERN for careti/cline CLI subagent support.
+
+### Fixed
+- **v0.4.7 Infinite Loading**: `featureFlagsService.poll()` blocked extension initialization when `data.cline.bot` was unreachable. Changed to non-blocking with timeout.
+- **ApiProvider migration**: Added `"caret"` → `"careti"` migration for users upgrading from v0.4.6 whose saved settings still had the old provider name.
+- **API handler fallback**: Added `case "caret":` fallback in API provider switch to handle unmigrated provider values gracefully.
+- **Legacy migration call**: `migrateLegacyApiConfigurationToModeSpecific()` was defined but never called in initialization. Now properly invoked.
+- **pendingInput race condition**: Fixed `consumePendingInput` being called after `cancelTask()` which already destroyed the session via `sessionManager.delete()`.
+- **Debug log cleanup**: Removed `[CORE-DEBUG]`, `[CLI-DEBUG]`, `[GLM4.7-DEBUG]` console logs.
+
+---
+
 ## [0.4.7] 2026-01-30
 
 > **Note**: Careti v0.4.7 integrates Cline v3.49.1 features and introduces SmartEditEngine for improved code editing.

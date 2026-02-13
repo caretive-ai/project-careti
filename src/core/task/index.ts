@@ -7,6 +7,8 @@ import { ImageScopeManager } from "@careti/core/task/images/ImageScopeManager"
 import { CaretiGlobalManager } from "@careti/managers/CaretiGlobalManager"
 // CARETI MODIFICATION: import brand utils for dynamic brand name
 import { getCurrentBrandName } from "@careti/utils/brand-utils"
+// CARETI MODIFICATION: import SessionManager for queue/interrupt system
+import { SessionManager } from "@careti/utils/session-manager"
 import { ApiHandler, ApiProviderInfo, buildApiHandler } from "@core/api"
 import { ApiStream } from "@core/api/transform/stream"
 import { AssistantMessageContent, parseAssistantMessageV2 } from "@core/assistant-message"
@@ -267,6 +269,9 @@ export class Task {
 	// Task Locking (Sqlite)
 	private taskLockAcquired: boolean
 
+	// CARETI MODIFICATION: Session manager for queue/interrupt system
+	private sessionManager: SessionManager
+
 	constructor(params: TaskParams) {
 		const {
 			controller,
@@ -361,6 +366,10 @@ export class Task {
 
 		this.taskId = taskId
 		this.historyItem = historyItem
+
+		// CARETI MODIFICATION: Initialize SessionManager for queue/interrupt support
+		this.sessionManager = SessionManager.getInstance()
+		this.sessionManager.getOrCreate(this.taskId)
 
 		// Initialize taskId first
 		if (historyItem) {
@@ -728,6 +737,25 @@ export class Task {
 			}
 
 			this.taskState.lastAskTs = askTs // CARETI MODIFICATION: say()로 lastMessageTs가 바뀌어도 현재 ask를 취소하지 않도록 분리
+
+			// CARETI MODIFICATION: Check pending input buffer for text input types
+			// Claude Code style: single string buffer, multiple inputs combined
+			const textInputAskTypes: ClineAsk[] = ["followup", "plan_mode_respond", "command_output"]
+			if (textInputAskTypes.includes(type)) {
+				const sessionManager = SessionManager.getInstance()
+				if (sessionManager.hasPendingInput(this.taskId)) {
+					const pendingInput = sessionManager.consumePendingInput(this.taskId)
+					Logger.info(`[Task ${this.taskId}] Processing pending input: ${pendingInput.substring(0, 50)}...`)
+					return {
+						response: "messageResponse" as ClineAskResponse,
+						text: pendingInput,
+						images: [],
+						files: [],
+						askTs,
+					}
+				}
+			}
+
 			await pWaitFor(
 				() =>
 					this.taskState.askResponse !== undefined ||
@@ -1335,8 +1363,8 @@ export class Task {
 			return
 		}
 
-		// CARETI MODIFICATION: yolo/headless 모드에서는 사용자 입력이 필요한 프롬프트 건너뛰기
-		if (this.stateManager.getGlobalSettingsKey("yoloModeToggled")) {
+		// CARETI MODIFICATION: yolo/headless 모드 또는 E2E 테스트에서는 AGENTS 초기화 프롬프트 건너뛰기
+		if (this.stateManager.getGlobalSettingsKey("yoloModeToggled") || isInTestMode()) {
 			return
 		}
 
@@ -1898,6 +1926,9 @@ export class Task {
 			// can properly detect the abort state
 			this.taskState.abort = true
 
+			// CARETI MODIFICATION: Trigger SessionManager interrupt for queue system
+			this.sessionManager.forceInterrupt(this.taskId)
+
 			// PHASE 3: Cancel any running hook execution
 			const activeHook = await this.getActiveHookExecution()
 			if (activeHook) {
@@ -2014,6 +2045,9 @@ export class Task {
 			if (this.FocusChainManager) {
 				this.FocusChainManager.dispose()
 			}
+
+			// CARETI MODIFICATION: Clean up session from SessionManager
+			this.sessionManager.delete(this.taskId)
 
 			// PHASE 8: Run SessionEnd hook (Claude Code compatible)
 			// CARETI MODIFICATION: Added SessionEnd hook for work log automation

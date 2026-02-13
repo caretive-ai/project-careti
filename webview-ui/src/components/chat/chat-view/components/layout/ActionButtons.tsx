@@ -124,6 +124,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 		}
 	}, [messages, setSendingDisabled, mode, t])
 
+	// CARETI MODIFICATION: ESC single-press instant cancel
 	useShortcut(
 		cancelShortcut,
 		() => {

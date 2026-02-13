@@ -9,9 +9,10 @@ export default defineConfig({
 	forbidOnly: isCI,
 	testDir: "src/test/e2e",
 	testMatch: /.*\.test\.ts/,
-	timeout: isCI || isWindow ? 40000 : 20000,
+	// CARETI MODIFICATION: Increased timeout for Careti onboarding flow (welcome → API setup → persona → chat)
+	timeout: isCI || isWindow ? 60000 : 40000,
 	expect: {
-		timeout: isCI || isWindow ? 5000 : 2000,
+		timeout: isCI || isWindow ? 10000 : 5000,
 	},
 	fullyParallel: true,
 	reporter: isCI ? [["github"], ["list"]] : [["list"]],

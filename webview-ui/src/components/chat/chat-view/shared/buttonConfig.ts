@@ -178,9 +178,10 @@ export const getButtonConfigs = (t: TFunction): Record<string, ButtonConfig> => 
 		secondaryAction: undefined,
 	},
 
-	// Streaming/partial states - disable interaction during streaming
+	// CARETI MODIFICATION: Streaming/partial states - allow input for message queue
+	// Users can queue messages while AI is streaming, messages will be processed in order
 	partial: {
-		sendingDisabled: true,
+		sendingDisabled: false,
 		enableButtons: true,
 		primaryText: undefined,
 		secondaryText: t("button.cancel", "common"),
@@ -197,8 +198,9 @@ export const getButtonConfigs = (t: TFunction): Record<string, ButtonConfig> => 
 		primaryAction: undefined,
 		secondaryAction: undefined,
 	},
+	// CARETI MODIFICATION: Allow input during API request for message queue
 	api_req_active: {
-		sendingDisabled: true,
+		sendingDisabled: false,
 		enableButtons: true,
 		primaryText: undefined,
 		secondaryText: t("button.cancel", "common"),

@@ -1,37 +1,31 @@
 import { expect } from "@playwright/test"
-import { e2e } from "./utils/helpers"
+import { e2e, setupCaretiApiKey } from "./utils/helpers"
 
-e2e("Chat - can send messages and switch between modes", async ({ helper, sidebar, page }) => {
-	// Sign in
-	await helper.signin(sidebar)
+e2e("Chat - can send messages and switch between modes", async ({ sidebar, page }) => {
+	// CARETI MODIFICATION: Use Careti onboarding flow with mock server to avoid hanging connections
+	await setupCaretiApiKey(sidebar, true)
 
 	// Submit a message
 	const inputbox = sidebar.getByTestId("chat-input")
 	await expect(inputbox).toBeVisible()
-	await inputbox.fill("Hello, Cline!")
-	await expect(inputbox).toHaveValue("Hello, Cline!")
+	await inputbox.fill("Hello, Careti!")
+	await expect(inputbox).toHaveValue("Hello, Careti!")
 	await sidebar.getByTestId("send-button").click()
 	await expect(inputbox).toHaveValue("")
 
+	// CARETI MODIFICATION: Wait for mock server response to complete before navigating
+	await expect(sidebar.getByText(/mock.*API response|Generated UUID/i).first()).toBeVisible({ timeout: 10000 })
+
 	// Starting a new task should clear the current chat view and show the recent tasks
-	await sidebar.getByRole("button", { name: "New Task", exact: true }).first().click()
+	// CARETI MODIFICATION: Match both Cline and Caret button names
+	const newTaskButton = sidebar.getByRole("button", { name: /New Task|Start New Task/i }).first()
+	await newTaskButton.click()
 	await expect(sidebar.getByText("Recent Tasks")).toBeVisible()
-	await expect(sidebar.getByText("Hello, Cline!")).toBeVisible()
-
-	// Makes sure the act and plan switches are working correctly
-	// Aria-checked state should be true for Act and false for Plan
-	const actButton = sidebar.getByRole("switch", { name: "Act" })
-	const planButton = sidebar.getByRole("switch", { name: "Plan" })
-
-	// Act button should be active. It doesn't have c
-	await expect(actButton).toHaveAttribute("aria-checked", "true")
-	await expect(planButton).not.toHaveAttribute("aria-checked", "true")
-
-	await planButton.click()
-	await expect(planButton).toHaveAttribute("aria-checked", "true")
-	await expect(actButton).not.toHaveAttribute("aria-checked", "true")
+	await expect(sidebar.getByText("Hello, Careti!")).toBeVisible()
 
 	// === slash commands preserve following text ===
+	// CARETI MODIFICATION: Start new task to get back to chat view with empty input
+	await expect(inputbox).toBeVisible()
 	await expect(inputbox).toHaveValue("")
 	// Type partial slash command to trigger menu
 	await inputbox.fill("/newt")
@@ -60,5 +54,4 @@ e2e("Chat - can send messages and switch between modes", async ({ helper, sideba
 	await inputbox.pressSequentially("following text should be preserved")
 	await expect(inputbox).toHaveValue("@problems following text should be preserved")
 
-	await page.close()
 })

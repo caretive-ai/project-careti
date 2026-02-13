@@ -6,6 +6,9 @@ import type { FeatureFlagPayload, IFeatureFlagsProvider } from "./providers/IFea
 // Default cache time-to-live (TTL) for feature flags - an hour
 const DEFAULT_CACHE_TTL = 60 * 60 * 1000
 
+// CARETI MODIFICATION: Overall timeout for poll() to prevent blocking when network is unreachable
+const POLL_TIMEOUT_MS = 5000
+
 /**
  * FeatureFlagsService provides feature flag functionality that works independently
  * of telemetry settings. Feature flags are always available to ensure proper
@@ -40,10 +43,21 @@ export class FeatureFlagsService {
 		}
 		this.cacheInfo = { updateTime: timesNow, userId: userId || null }
 
-		for (const flag of FEATURE_FLAGS) {
-			const payload = await this.getFeatureFlag(flag).catch(() => false)
-			this.cache.set(flag, payload ?? false)
-		}
+		// CARETI MODIFICATION: Fetch flags in parallel with overall timeout
+		// to prevent blocking when PostHog host is unreachable
+		const fetchAll = Promise.all(
+			FEATURE_FLAGS.map(async (flag) => {
+				const payload = await this.getFeatureFlag(flag).catch(() => false)
+				this.cache.set(flag, payload ?? false)
+			}),
+		)
+		let timer: ReturnType<typeof setTimeout> | undefined
+		await Promise.race([
+			fetchAll.finally(() => timer && clearTimeout(timer)),
+			new Promise<void>((resolve) => {
+				timer = setTimeout(resolve, POLL_TIMEOUT_MS)
+			}),
+		])
 
 		getClineOnboardingModels() // Refresh onboarding models cache if relevant flag changed
 	}

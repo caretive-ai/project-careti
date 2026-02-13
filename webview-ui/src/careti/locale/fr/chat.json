@@ -109,6 +109,11 @@
 		"description": "Reduit l'utilisation des tokens en resumant la tache."
 	},
 	"typeMessage": "Tapez un message...",
+	"pendingInput": {
+		"label": "En file",
+		"edit": "Modifier",
+		"clear": "Supprimer"
+	},
 	"contextMenu": {
 		"problems": "Problemes",
 		"terminal": "Terminal",

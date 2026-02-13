@@ -73,6 +73,9 @@ Careti은 Cline을 기반으로 한 자율 AI 코딩 어시스턴트로, 다음�
 - **[F18: CLI Agent/Chatbot 모드](./f18-cli-agent-chatbot-mode.md)**
   CLI에서 Agent/Chatbot 모드 지원, Persona 연동, 4가지 모드 색상 테마
 
+- **[F19: 메시지 큐 시스템](./f19-message-queue-system.md)**
+  Claude Code 스타일 메시지 큐: 단일 문자열 버퍼, Double-press 인터럽트, 즉시 큐 처리
+
 ---
 
 ## 기능 맵
@@ -102,8 +105,9 @@ Careti 기능
 │   ├── 스마트 편집 엔진 (9단계 Fuzzy Matching)
 │   ├── 웹 도구 및 슬래시 명령 (Web Search, Explain Changes)
 │   └── GFM 테이블 및 마크다운 확장 (Cline 미지원)
-└── CLI 확장 (F18)
-    └── CLI Agent/Chatbot 모드 (자율실행, 대화모드, Persona)
+└── CLI/큐 확장 (F18-F19)
+    ├── CLI Agent/Chatbot 모드 (자율실행, 대화모드, Persona)
+    └── 메시지 큐 시스템 (Claude Code 스타일)
 ```
 
 ## 개발 가이드
@@ -123,5 +127,5 @@ Careti 기능
 
 ---
 
-**최종 업데이트**: 2026-01-27
-**문서 버전**: v2.6 (F17 GFM 테이블 및 마크다운 확장 추가)
+**최종 업데이트**: 2026-02-05
+**문서 버전**: v2.8 (F19 메시지 큐 시스템 추가)

@@ -15,6 +15,7 @@ Careti은 Cline을 기반으로 한 VSCode AI 코딩 어시스턴트 확장 프�
 | **🌍 다국어 i18n**                   | 4개국 완전 다국어 지원  | 한국어/영어/일본어/중국어 UI     | [→ 상세보기](./features/multilingual-i18n.md)    |
 | **📋 로깅 시스템**                   | 통합 로깅 아키텍처      | 개발 디버깅, 오류 추적 강화      | [→ 상세보기](./features/logging-system.md)       |
 | **🎨 브랜딩 및 UI**                  | Careti 고유 브랜딩       | 시각적 정체성, 전용 페이지들     | [→ 상세보기](./features/branding-ui.md)          |
+| **📨 메시지 큐 시스템**              | Claude Code 스타일 큐    | 스트리밍 중 입력, 즉시 취소 처리 | [→ 상세보기](./features/f19-message-queue-system.md) |
 
 ### **🔄 개발 중 / 고도화 기능들**
 

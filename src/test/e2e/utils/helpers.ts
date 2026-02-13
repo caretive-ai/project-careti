@@ -1,10 +1,34 @@
-import { mkdtempSync, type PathLike, type RmOptions, rmSync } from "node:fs"
+import { mkdtempSync, type PathLike, readFileSync, type RmOptions, rmSync } from "node:fs"
 import * as os from "node:os"
 import * as path from "node:path"
 import { type ElectronApplication, expect, type Frame, type Page, test } from "@playwright/test"
 import { downloadAndUnzipVSCode, SilentReporter } from "@vscode/test-electron"
 import { _electron } from "playwright"
 import { ClineApiServerMock } from "../fixtures/server"
+
+// CARETI MODIFICATION: Load E2E test environment variables
+function loadEnvFile(): Record<string, string> {
+	const envVars: Record<string, string> = {}
+	try {
+		const envPath = path.join(__dirname, "../fixtures/workspace/evals.env")
+		const content = readFileSync(envPath, "utf-8")
+		for (const line of content.split("\n")) {
+			const trimmed = line.trim()
+			if (trimmed && !trimmed.startsWith("#")) {
+				const [key, ...valueParts] = trimmed.split("=")
+				const value = valueParts.join("=")
+				if (key && value) {
+					envVars[key] = value
+				}
+			}
+		}
+	} catch (error) {
+		console.warn("⚠️ Could not load evals.env:", error)
+	}
+	return envVars
+}
+
+const e2eEnvVars = loadEnvFile()
 
 interface E2ETestDirectories {
 	workspaceDir: string
@@ -84,7 +108,7 @@ export class E2ETestHelper {
 
 				try {
 					const title = await frame.title()
-					if (title.startsWith("Cline")) {
+					if (title.startsWith("Cline") || title.startsWith("Caret")) {
 						this.cachedFrame = frame
 						return frame
 					}
@@ -118,14 +142,14 @@ export class E2ETestHelper {
 	}
 
 	public async signin(webview: Frame): Promise<void> {
-		await webview.getByRole("button", { name: "Login to Cline" }).click({ delay: 100 })
+		await webview.getByRole("button", { name: /Login to (Cline|Caret)/ }).click({ delay: 100 })
 
 		// Verify start up page is no longer visible
-		await expect(webview.getByRole("button", { name: "Login to Cline" })).not.toBeVisible()
+		await expect(webview.getByRole("button", { name: /Login to (Cline|Caret)/ })).not.toBeVisible()
 	}
 
 	public static async openClineSidebar(page: Page): Promise<void> {
-		await page.getByRole("tab", { name: /Cline/ }).locator("a").click()
+		await page.getByRole("tab", { name: /Cline|Caret/ }).locator("a").click()
 	}
 
 	public static async runCommandPalette(page: Page, command: string): Promise<void> {
@@ -231,6 +255,7 @@ export const e2e = test
 					executablePath,
 					env: {
 						...process.env,
+						...e2eEnvVars, // CARETI MODIFICATION: Pass E2E env vars (GEMINI_TOKEN, etc.)
 						TEMP_PROFILE: "true",
 						E2E_TEST: "true",
 						CLINE_ENVIRONMENT: "local",
@@ -310,3 +335,230 @@ export const E2E_WORKSPACE_TYPES = [
 	{ title: "Single Root", workspaceType: "single" },
 	{ title: "Multi-Roots", workspaceType: "multi" },
 ] as const
+
+/**
+ * CARETI MODIFICATION: Careti 온보딩 플로우를 통해 API 설정
+ * Flow: Welcome → Get Started → API Setup → Save Settings → Persona Selector → Chat View
+ *
+ * @param useMockServer - If true, use OpenAI Compatible provider with mock server URL
+ *                        for tests that need controlled streaming responses (diff, cancel).
+ *                        If false (default), use OpenRouter with a fake key (simplest setup).
+ */
+export async function setupCaretiApiKey(sidebar: Frame, useMockServer = false): Promise<void> {
+	const log = (msg: string) => console.log(`[setupCaretiApiKey] ${msg}`)
+	const screenshot = async (label: string) => {
+		await sidebar.page().screenshot({ path: `/tmp/e2e-setup-${label}.png` })
+		log(`Screenshot saved: /tmp/e2e-setup-${label}.png`)
+	}
+
+	const chatInputBox = sidebar.getByTestId("chat-input")
+	const getStartedButton = sidebar.getByRole("button", { name: /Get Started|시작하기/i })
+
+	// Wait for either chat input or "Get Started" button to appear (webview loading)
+	log("Waiting for webview to load...")
+	try {
+		await expect(chatInputBox.or(getStartedButton)).toBeVisible({ timeout: 15000 })
+	} catch {
+		log("Timed out waiting for webview")
+		await screenshot("01-webview-timeout")
+		await expect(chatInputBox).toBeVisible({ timeout: 10000 })
+		return
+	}
+
+	// Check which state we're in
+	const isChatInputVisible = await chatInputBox.isVisible().catch(() => false)
+	if (isChatInputVisible) {
+		log("Chat input already visible, skipping onboarding")
+		return
+	}
+
+	const isGetStartedVisible = await getStartedButton.isVisible().catch(() => false)
+	log(`UI State: GetStarted=${isGetStartedVisible}, ChatInput=${isChatInputVisible}`)
+
+	if (!isGetStartedVisible) {
+		log("Unexpected state - neither visible after .or() wait")
+		await screenshot("01-unexpected-state")
+		await expect(chatInputBox).toBeVisible({ timeout: 15000 })
+		return
+	}
+
+	// === Step 1: Click "Get Started" ===
+	log("Step 1: Clicking Get Started...")
+	await getStartedButton.click()
+	await sidebar.page().waitForTimeout(500)
+
+	// === Step 2: Wait for API setup page ===
+	const apiSetupPage = sidebar.getByTestId("careti-api-setup-page")
+	try {
+		await apiSetupPage.waitFor({ state: "visible", timeout: 5000 })
+		log("Step 2: API setup page visible")
+	} catch {
+		log("Step 2: API setup page NOT found by testid, continuing anyway...")
+		await screenshot("03-no-api-setup-page")
+	}
+
+	// === Step 3: Select provider ===
+	const providerSelector = sidebar.getByTestId("provider-selector-input")
+	const isProviderVisible = await providerSelector.isVisible().catch(() => false)
+	log(`Step 3: Provider selector visible=${isProviderVisible}, useMockServer=${useMockServer}`)
+
+	if (isProviderVisible) {
+		await providerSelector.click({ delay: 100 })
+		await sidebar.page().waitForTimeout(300)
+
+		if (useMockServer) {
+			// Use OpenAI Compatible provider to route chat through mock server
+			const openaiOption = sidebar.getByTestId("provider-option-openai")
+			if (await openaiOption.isVisible().catch(() => false)) {
+				await openaiOption.click({ delay: 100 })
+				await sidebar.page().waitForTimeout(300)
+				log("Step 3: Selected OpenAI Compatible provider (mock server mode)")
+			}
+		} else {
+			// Use OpenRouter (simplest: only needs API key)
+			const openrouterOption = sidebar.getByTestId("provider-option-openrouter")
+			if (await openrouterOption.isVisible().catch(() => false)) {
+				await openrouterOption.click({ delay: 100 })
+				await sidebar.page().waitForTimeout(300)
+				log("Step 3: Selected OpenRouter provider")
+			}
+		}
+	}
+
+	// === Step 4: Fill provider fields ===
+	const testApiKey = "test-e2e-api-key"
+
+	if (useMockServer) {
+		// OpenAI Compatible: needs Base URL + API Key + Model ID
+		// Fill Base URL
+		const baseUrlField = sidebar.getByRole("textbox", { name: /Base URL/i })
+		if (await baseUrlField.isVisible().catch(() => false)) {
+			await baseUrlField.fill("http://localhost:7777/api/v1")
+			log("Step 4: Base URL set to mock server")
+		}
+		await sidebar.page().waitForTimeout(200)
+
+		// Fill API Key
+		const apiKeyField = sidebar.getByRole("textbox", { name: /API Key/i })
+		if (await apiKeyField.isVisible().catch(() => false)) {
+			await apiKeyField.fill(testApiKey)
+			log("Step 4: API key filled")
+		}
+		await sidebar.page().waitForTimeout(200)
+
+		// Fill Model ID
+		const modelIdField = sidebar.getByRole("textbox", { name: /Model ID/i })
+		if (await modelIdField.isVisible().catch(() => false)) {
+			await modelIdField.fill("gpt-4")
+			log("Step 4: Model ID filled")
+		}
+	} else {
+		// OpenRouter: only needs API key
+		const apiKeyByRole = sidebar.getByRole("textbox", { name: /API Key/i })
+		if (await apiKeyByRole.isVisible().catch(() => false)) {
+			await apiKeyByRole.fill(testApiKey)
+			log("Step 4: API key filled (by role)")
+		} else {
+			const apiKeyByInput = sidebar.locator('vscode-text-field[type="password"] input, input[type="password"]').first()
+			if (await apiKeyByInput.isVisible().catch(() => false)) {
+				await apiKeyByInput.fill(testApiKey)
+				log("Step 4: API key filled (by input selector)")
+			} else {
+				log("Step 4: WARNING - Could not find API key input!")
+				await screenshot("06-no-api-key-input")
+			}
+		}
+	}
+	// Wait for debounce to propagate
+	await sidebar.page().waitForTimeout(300)
+
+	// === Step 5: Click Save Settings ===
+	const saveButton = sidebar.getByRole("button", { name: /Save Settings|저장|Continue/i })
+	const isSaveVisible = await saveButton.isVisible().catch(() => false)
+	log(`Step 5: Save button visible=${isSaveVisible}`)
+
+	if (isSaveVisible) {
+		await saveButton.click()
+		await sidebar.page().waitForTimeout(500)
+		log("Step 5: Clicked Save Settings")
+	} else {
+		log("Step 5: WARNING - Save button not found!")
+		await screenshot("07-no-save-button")
+	}
+
+	// === Step 6: Handle persona selector ===
+	// Button text: "Select" (en) / "선택" (ko) / fallback "Select This Persona"
+	// VSCodeButton renders as <vscode-button> web component - try multiple selectors
+	let personaClicked = false
+
+	// Strategy 1: getByRole button with Select text
+	try {
+		const personaByRole = sidebar.getByRole("button", { name: /^Select$|^선택$|Select This Persona/i })
+		await personaByRole.first().waitFor({ state: "visible", timeout: 8000 })
+		await personaByRole.first().click()
+		personaClicked = true
+		log("Step 6: Persona selected (by role)")
+	} catch {
+		log("Step 6: getByRole failed, trying text-based...")
+	}
+
+	// Strategy 2: Click text "Select" directly
+	if (!personaClicked) {
+		try {
+			const personaByText = sidebar.getByText(/^Select$|^선택$/, { exact: true }).last()
+			await personaByText.waitFor({ state: "visible", timeout: 3000 })
+			await personaByText.click()
+			personaClicked = true
+			log("Step 6: Persona selected (by text)")
+		} catch {
+			log("Step 6: getByText failed, trying CSS selector...")
+		}
+	}
+
+	// Strategy 3: CSS selector for vscode-button containing "Select"
+	if (!personaClicked) {
+		try {
+			const personaByCss = sidebar.locator('vscode-button:has-text("Select")').last()
+			await personaByCss.waitFor({ state: "visible", timeout: 3000 })
+			await personaByCss.click()
+			personaClicked = true
+			log("Step 6: Persona selected (by CSS)")
+		} catch {
+			log("Step 6: All persona strategies failed")
+			await screenshot("09-no-persona")
+		}
+	}
+
+	if (personaClicked) {
+		await sidebar.page().waitForTimeout(500)
+	}
+
+	// === Step 7: Wait for chat input ===
+	const finalChatVisible = await chatInputBox.isVisible().catch(() => false)
+	log(`Step 7: Chat input visible=${finalChatVisible}`)
+
+	if (!finalChatVisible) {
+		// Recovery: check if we're stuck on a banner or announcement
+		const closeAnnouncement = sidebar.getByTestId("close-announcement-button")
+		if (await closeAnnouncement.isVisible().catch(() => false)) {
+			await closeAnnouncement.click()
+			await sidebar.page().waitForTimeout(500)
+		}
+
+		const closeBanner = sidebar.getByTestId("close-button")
+		if (await closeBanner.isVisible().catch(() => false)) {
+			await closeBanner.click()
+			await sidebar.page().waitForTimeout(500)
+		}
+	}
+
+	await expect(chatInputBox).toBeVisible({ timeout: 20000 })
+
+	// Close release/announcement banners if visible
+	const closeButton = sidebar.getByTestId("close-announcement-button")
+	if (await closeButton.isVisible().catch(() => false)) {
+		await closeButton.click()
+	}
+
+	log("Onboarding complete, chat input visible")
+}

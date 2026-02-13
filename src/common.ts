@@ -2,7 +2,9 @@ import { getCurrentBrandDisplayName } from "@careti/utils/brand-utils"
 import * as vscode from "vscode"
 import {
 	cleanupMcpMarketplaceCatalogFromGlobalState,
+	migrateCaretProviderToCareti,
 	migrateCustomInstructionsToGlobalRules,
+	migrateLegacyApiConfigurationToModeSpecific,
 	migrateTaskHistoryToFile,
 	migrateWelcomeViewCompleted,
 	migrateWorkspaceToGlobalStorage,
@@ -64,7 +66,11 @@ export async function initialize(context: vscode.ExtensionContext): Promise<Webv
 
 	// Setup the external services
 	await ErrorService.initialize()
-	await featureFlagsService.poll()
+	// CARETI MODIFICATION: Fire-and-forget to prevent blocking extension activation
+	// when PostHog host (data.cline.bot) is unreachable
+	featureFlagsService.poll().catch((error) => {
+		Logger.warn(`[Extension] Feature flags polling failed (non-blocking): ${error}`)
+	})
 
 	// Migrate custom instructions to global Cline rules (one-time cleanup)
 	await migrateCustomInstructionsToGlobalRules(context)
@@ -74,6 +80,12 @@ export async function initialize(context: vscode.ExtensionContext): Promise<Webv
 
 	// Migrate workspace storage values back to global storage (reverting previous migration)
 	await migrateWorkspaceToGlobalStorage(context)
+
+	// CARETI MODIFICATION: Migrate legacy single apiProvider to mode-specific keys
+	await migrateLegacyApiConfigurationToModeSpecific(context)
+
+	// CARETI MODIFICATION: Migrate "caret" → "careti" provider for v0.4.6 upgraders
+	await migrateCaretProviderToCareti(context)
 
 	// Ensure taskHistory.json exists and migrate legacy state (runs once)
 	await migrateTaskHistoryToFile(context)

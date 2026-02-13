@@ -1,6 +1,30 @@
-import { rmSync } from "node:fs"
+import { readFileSync, rmSync } from "node:fs"
+import { join } from "node:path"
 import { test as setup } from "@playwright/test"
 import { E2ETestHelper } from "./helpers"
+
+// CARETI MODIFICATION: Load E2E test environment variables
+function loadEnvFile() {
+	try {
+		const envPath = join(__dirname, "../fixtures/workspace/evals.env")
+		const content = readFileSync(envPath, "utf-8")
+		for (const line of content.split("\n")) {
+			const trimmed = line.trim()
+			if (trimmed && !trimmed.startsWith("#")) {
+				const [key, ...valueParts] = trimmed.split("=")
+				const value = valueParts.join("=")
+				if (key && value && !process.env[key]) {
+					process.env[key] = value
+					console.log(`📝 Loaded env: ${key}=${value.substring(0, 15)}...`)
+				}
+			}
+		}
+	} catch (error) {
+		console.warn("⚠️ Could not load evals.env:", error)
+	}
+}
+
+loadEnvFile()
 
 setup("setup test environment", async () => {
 	try {

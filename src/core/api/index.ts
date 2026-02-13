@@ -270,7 +270,8 @@ function createHandlerForProvider(
 				liteLlmUsePromptCache: options.liteLlmUsePromptCache,
 				ulid: options.ulid,
 			})
-		case "careti": {
+		case "careti":
+		case "caret": { // CARETI MODIFICATION: Accept legacy "caret" provider for v0.4.6 upgraders
 			// CARETI MODIFICATION: Use Claude Code CLI for Claude 4.5 models
 			const caretModelId = mode === "plan" ? options.planModeCaretModelId : options.actModeCaretModelId
 			if (caretModelId?.startsWith("anthropic/claude-")) {

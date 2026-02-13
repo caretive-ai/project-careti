@@ -94,6 +94,11 @@
 		"description": "タスクを要約してトークン使用量を減らします。"
 	},
 	"typeMessage": "メッセージを入力...",
+	"pendingInput": {
+		"label": "待機中",
+		"edit": "編集",
+		"clear": "削除"
+	},
 	"mode": {
 		"act": {
 			"label": "実行"

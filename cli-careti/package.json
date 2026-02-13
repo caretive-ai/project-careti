@@ -1,10 +1,10 @@
 {
 	"name": "@caretive/careti-cli",
-	"version": "0.0.15",
+	"version": "0.0.16",
 	"description": "Careti CLI (minimal fork of Cline CLI, packaged for caretive)",
 	"license": "MIT",
 	"bin": {
-		"careti": "./bin/caret",
+		"careti": "./bin/careti",
 		"careti-host": "./bin/careti-host"
 	},
 	"files": [

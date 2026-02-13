@@ -1491,7 +1491,8 @@ export const openAiModelInfoSaneDefaults: OpenAiCompatibleModelInfo = {
 // Gemini
 // https://ai.google.dev/gemini-api/docs/models/gemini
 export type GeminiModelId = keyof typeof geminiModels
-export const geminiDefaultModelId: GeminiModelId = "gemini-3-pro-preview"
+// CARETI MODIFICATION: gemini-3-pro-preview는 아직 API에서 지원하지 않음, gemini-2.5-pro로 변경
+export const geminiDefaultModelId: GeminiModelId = "gemini-2.5-pro"
 export const geminiModels = {
 	"gemini-3-pro-preview": {
 		maxTokens: 65536,

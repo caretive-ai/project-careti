@@ -36,12 +36,13 @@ export const toggleNotifications = async (_page: Page) => {
 }
 
 export async function cleanChatView(sidebar: Page): Promise<Page> {
-	const signUpBtn = sidebar.getByRole("button", { name: "Login to Cline" })
+	// CARETI MODIFICATION: match both Cline and Caret branding
+	const signUpBtn = sidebar.getByRole("button", { name: /Login to (Cline|Caret)/ })
 	if (await signUpBtn.isVisible()) {
 		await signUpBtn.click({ delay: 50 })
 	}
 	// Verify the help improve banner is visible and can be closed.
-	const helpBanner = sidebar.getByText("Help Improve Cline")
+	const helpBanner = sidebar.getByText(/Help Improve (Cline|Caret)/)
 	if (await helpBanner.isVisible()) {
 		await sidebar.getByRole("button", { name: "Close banner and enable" }).click()
 	}

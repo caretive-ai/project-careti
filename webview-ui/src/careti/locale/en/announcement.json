@@ -3,6 +3,16 @@
 	"previousHeader": "Previous Updates:",
 	"bullets": {
 		"current": {
+			"1": "Message Queue System",
+			"2": "ESC Instant Cancel",
+			"3": "CLI Sub-Agent",
+			"4": "v0.4.7 Infinite Loading Fix",
+			"1-desc": "Type next instructions while AI is still responding. Input appears as preview and auto-sends when AI finishes.",
+			"2-desc": "Press ESC once to immediately stop streaming. Queued input is auto-restored to editor.",
+			"3-desc": "Run careti \"prompt\" to spawn a sub-agent in one line. Supports Agent, Chatbot, and Interactive modes.",
+			"4-desc": "Fixed extension not starting when data.cline.bot server was unreachable."
+		},
+		"previous": {
 			"1": "ZAI GLM-4.7 in Careti",
 			"2": "Claude Code Integration",
 			"3": "Web Search",
@@ -13,16 +23,6 @@
 			"3-desc": "Get up-to-date information with SerpAPI-powered web search.",
 			"4-desc": "Watch the AI's thinking process in real-time (ThinkingRow).",
 			"5-desc": "100% edit success rate (vs Cline 91%), 50% faster on budget models with 9-stage fuzzy matching."
-		},
-		"previous": {
-			"1": "Z.AI GLM-4.7 Full Support",
-			"2": "Upstage Provider",
-			"3": "Text Model Image Tools",
-			"4": "Skills & Hooks System",
-			"1-desc": "Supports Thinking Mode and natural conversation style with GLM-4.7 models.",
-			"2-desc": "Added Upstage provider supporting Solar Pro/Mini models from Korea's independent AI foundation.",
-			"3-desc": "Text-only models can now generate images (Nano Banana) and analyze images (Gemini) via Careti account tools.",
-			"4-desc": "Define project-specific skills and pre/post tool execution hooks. Manage in .agents/ or .users/ directories."
 		}
 	}
 }

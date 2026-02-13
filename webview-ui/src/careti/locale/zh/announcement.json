@@ -3,6 +3,16 @@
 	"previousHeader": "之前的更新:",
 	"bullets": {
 		"current": {
+			"1": "消息队列系统",
+			"2": "ESC即时取消",
+			"3": "CLI子代理",
+			"4": "v0.4.7无限加载修复",
+			"1-desc": "AI响应时可提前输入下一条指令。输入内容以预览形式显示，自动发送。",
+			"2-desc": "按一次ESC立即停止流式传输。排队输入自动恢复到编辑器。",
+			"3-desc": "careti \"prompt\" 一行命令执行子代理。支持Agent、Chatbot、Interactive模式。",
+			"4-desc": "修复了data.cline.bot服务器不可达时扩展无法启动的问题。"
+		},
+		"previous": {
 			"1": "Careti中的ZAI GLM-4.7",
 			"2": "Claude Code集成",
 			"3": "网络搜索",
@@ -13,16 +23,6 @@
 			"3-desc": "通过SerpAPI驱动的网络搜索获取最新信息。",
 			"4-desc": "实时观察AI的思维过程（ThinkingRow）。",
 			"5-desc": "9阶段模糊匹配，编辑成功率100%（Cline 91%），低价模型快50%。"
-		},
-		"previous": {
-			"1": "Z.AI GLM-4.7 完整支持",
-			"2": "Upstage提供商",
-			"3": "文本模型图像工具",
-			"4": "Skills & Hooks系统",
-			"1-desc": "支持GLM-4.7模型的Thinking Mode和自然对话风格。",
-			"2-desc": "添加了韩国独立AI基础模型Upstage提供商和Solar Pro/Mini模型。",
-			"3-desc": "纯文本模型现在也可以通过Careti账号工具生成图像（Nano Banana）和分析图像（Gemini）。",
-			"4-desc": "定义项目特定技能和工具执行前/后钩子。在.agents/或.users/目录中管理。"
 		}
 	}
 }

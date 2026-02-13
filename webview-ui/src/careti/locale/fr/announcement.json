@@ -3,6 +3,16 @@
 	"previousHeader": "Mises à jour précédentes:",
 	"bullets": {
 		"current": {
+			"1": "File de messages",
+			"2": "Annulation instantanée ESC",
+			"3": "Sous-agent CLI",
+			"4": "Correctif chargement infini v0.4.7",
+			"1-desc": "Saisissez les prochaines instructions pendant que l'IA répond. L'entrée s'affiche en aperçu et s'envoie automatiquement.",
+			"2-desc": "Appuyez une fois sur ESC pour arrêter immédiatement le streaming. L'entrée en attente est restaurée dans l'éditeur.",
+			"3-desc": "Exécutez careti \"prompt\" pour lancer un sous-agent en une ligne. Modes Agent, Chatbot et Interactive.",
+			"4-desc": "Correction du problème empêchant le démarrage quand le serveur data.cline.bot était inaccessible."
+		},
+		"previous": {
 			"1": "ZAI GLM-4.7 dans Careti",
 			"2": "Intégration Claude Code",
 			"3": "Recherche Web",
@@ -13,16 +23,6 @@
 			"3-desc": "Obtenez des informations actualisées avec la recherche Web basée sur SerpAPI.",
 			"4-desc": "Observez le processus de réflexion de l'IA en temps réel (ThinkingRow).",
 			"5-desc": "Taux de réussite 100% (vs Cline 91%), 50% plus rapide sur modèles économiques avec matching flou 9 étapes."
-		},
-		"previous": {
-			"1": "Support complet Z.AI GLM-4.7",
-			"2": "Fournisseur Upstage",
-			"3": "Outils d'image pour modèles texte",
-			"4": "Système Skills & Hooks",
-			"1-desc": "Prend en charge le mode Thinking et le style de conversation naturelle avec les modèles GLM-4.7.",
-			"2-desc": "Ajout du fournisseur Upstage avec les modèles Solar Pro/Mini de la fondation IA indépendante coréenne.",
-			"3-desc": "Les modèles texte uniquement peuvent générer des images (Nano Banana) et analyser des images (Gemini) via les outils du compte Careti.",
-			"4-desc": "Définissez des compétences spécifiques au projet et des hooks pré/post exécution d'outils. Gérez dans les répertoires .agents/ ou .users/."
 		}
 	}
 }

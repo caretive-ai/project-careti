@@ -3,6 +3,16 @@
 	"previousHeader": "以前のアップデート:",
 	"bullets": {
 		"current": {
+			"1": "メッセージキューシステム",
+			"2": "ESC即キャンセル",
+			"3": "CLIサブエージェント",
+			"4": "v0.4.7無限ローディング修正",
+			"1-desc": "AI応答中でも次の指示を事前に入力できます。入力内容はプレビュー表示され、自動送信されます。",
+			"2-desc": "ESCキー1回でストリーミングを即座に停止。キュー入力はエディタに自動復元されます。",
+			"3-desc": "careti \"prompt\" 1行でサブエージェントを実行。Agent、Chatbot、Interactiveモード対応。",
+			"4-desc": "data.cline.botサーバー接続不可時に拡張機能が起動しない問題を修正しました。"
+		},
+		"previous": {
 			"1": "CaretiでZAI GLM-4.7",
 			"2": "Claude Code連携",
 			"3": "Web検索",
@@ -13,16 +23,6 @@
 			"3-desc": "SerpAPI搭載のWeb検索で最新情報を取得できます。",
 			"4-desc": "AIの思考プロセスをリアルタイムで確認できます（ThinkingRow）。",
 			"5-desc": "9段階Fuzzy Matchingで編集成功率100%（Cline 91%）、低価格モデルで50%高速化。"
-		},
-		"previous": {
-			"1": "Z.AI GLM-4.7 完全サポート",
-			"2": "Upstageプロバイダー",
-			"3": "テキストモデル画像ツール",
-			"4": "Skills & Hooksシステム",
-			"1-desc": "GLM-4.7モデルのThinking Modeと自然な会話スタイルをサポートします。",
-			"2-desc": "韓国の独自AIファンデーションモデルUpstageプロバイダーとSolar Pro/Miniモデルを追加しました。",
-			"3-desc": "テキスト専用モデルでもCaretiアカウントツールで画像生成（Nano Banana）と分析（Gemini）が可能です。",
-			"4-desc": "プロジェクト別スキルとツール実行前後のフックを定義します。.agents/または.users/ディレクトリで管理します。"
 		}
 	}
 }

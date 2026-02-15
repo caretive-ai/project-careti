@@ -4,7 +4,7 @@ use std::io::{BufRead, BufReader, Write};
 use std::process::{Child, Command, Stdio};
 use std::sync::{Arc, Mutex};
 use std::thread;
-use tauri::{AppHandle, Emitter, Manager};
+use tauri::{AppHandle, Emitter, Manager, WebviewWindowBuilder, WebviewUrl};
 
 // cline-core 프로세스 상태
 struct ClineCoreProcess {
@@ -15,24 +15,6 @@ struct ClineCoreProcess {
 // 전역 상태: cline-core 프로세스 참조
 struct AppState {
     cline_core: Mutex<Option<ClineCoreProcess>>,
-}
-
-// gRPC 요청 형식 (webview → Tauri → cline-core)
-#[derive(Debug, Serialize, Deserialize)]
-struct GrpcRequest {
-    service: String,
-    method: String,
-    message: serde_json::Value,
-    request_id: String,
-    is_streaming: bool,
-}
-
-// stdio 요청 형식
-#[derive(Debug, Serialize, Deserialize)]
-struct StdioRequest {
-    #[serde(rename = "type")]
-    msg_type: String,
-    grpc_request: GrpcRequest,
 }
 
 // stdio 응답 형식
@@ -51,14 +33,6 @@ struct StdioResponse {
     #[serde(rename = "type")]
     msg_type: String,
     grpc_response: GrpcResponse,
-}
-
-// webview로부터 받는 메시지 형식
-#[derive(Debug, Deserialize)]
-struct WebviewMessage {
-    #[serde(rename = "type")]
-    msg_type: Option<String>,
-    grpc_request: Option<GrpcRequest>,
 }
 
 /// cline-core 프로세스 시작
@@ -109,18 +83,21 @@ fn spawn_cline_core(app_handle: &AppHandle) -> Result<ClineCoreProcess, String> 
                     if json_line.trim().is_empty() {
                         continue;
                     }
-                    println!("[cline-core→Tauri] {}", &json_line[..json_line.len().min(200)]);
-
-                    // JSON 파싱 및 webview로 이벤트 발송
-                    match serde_json::from_str::<StdioResponse>(&json_line) {
-                        Ok(response) => {
-                            if let Err(e) = app_handle_clone.emit("grpc_response", &response) {
-                                eprintln!("[Careti] Failed to emit grpc_response: {}", e);
+                    // JSON 줄만 파싱 시도, 나머지는 로그로 출력
+                    let trimmed = json_line.trim_start();
+                    if trimmed.starts_with('{') {
+                        match serde_json::from_str::<StdioResponse>(&json_line) {
+                            Ok(response) => {
+                                if let Err(e) = app_handle_clone.emit("grpc_response", &response) {
+                                    eprintln!("[Careti] Failed to emit grpc_response: {}", e);
+                                }
+                            }
+                            Err(_) => {
+                                // JSON이지만 StdioResponse 형식이 아닌 경우 (무시)
                             }
                         }
-                        Err(e) => {
-                            eprintln!("[Careti] Failed to parse cline-core response: {}", e);
-                        }
+                    } else {
+                        println!("[cline-core] {}", &json_line[..json_line.len().min(200)]);
                     }
                 }
                 Err(e) => {
@@ -225,30 +202,30 @@ async fn proto_bus_message(
     message: String,
     state: tauri::State<'_, Arc<AppState>>,
 ) -> Result<String, String> {
-    println!("[Tauri←webview] {}", &message[..message.len().min(200)]);
-
-    // webview 메시지 파싱
-    let parsed: WebviewMessage = serde_json::from_str(&message)
-        .map_err(|e| format!("Failed to parse message: {}", e))?;
-
-    // grpc_request가 있으면 stdio 형식으로 변환하여 cline-core로 전달
-    if let Some(grpc_request) = parsed.grpc_request {
-        let stdio_request = StdioRequest {
-            msg_type: "grpc_request".to_string(),
-            grpc_request,
-        };
-
-        let json = serde_json::to_string(&stdio_request)
-            .map_err(|e| format!("Failed to serialize request: {}", e))?;
-
-        send_to_cline_core(&state, &json, Some(&app))?;
-
-        // 실제 응답은 grpc_response 이벤트로 전달됨
-        Ok(r#"{"type":"ack","sent":true}"#.to_string())
+    // webview 메시지를 cline-core로 전달
+    // grpc_request_cancel → cancel_stream 형식 변환
+    let forwarded = if let Ok(val) = serde_json::from_str::<serde_json::Value>(&message) {
+        if val.get("type").and_then(|t| t.as_str()) == Some("grpc_request_cancel") {
+            if let Some(request_id) = val.get("grpc_request_cancel")
+                .and_then(|c| c.get("request_id"))
+                .and_then(|r| r.as_str())
+            {
+                serde_json::json!({
+                    "type": "cancel_stream",
+                    "request_id": request_id
+                }).to_string()
+            } else {
+                message.clone()
+            }
+        } else {
+            message.clone()
+        }
     } else {
-        // 기타 메시지 타입 처리
-        Ok(r#"{"type":"ack","received":true}"#.to_string())
-    }
+        message.clone()
+    };
+
+    send_to_cline_core(&state, &forwarded, Some(&app))?;
+    Ok(r#"{"type":"ack","sent":true}"#.to_string())
 }
 
 /// 스트림 취소 요청
@@ -280,6 +257,12 @@ async fn get_cline_core_status(
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
+}
+
+/// Webview 진단 로그 - webview의 console.log를 터미널에서 확인
+#[tauri::command]
+fn diag_log(message: String) {
+    println!("[WEBVIEW] {}", message);
 }
 
 /// 작업 폴더 선택 다이얼로그
@@ -316,7 +299,8 @@ pub fn run() {
             proto_bus_message,
             cancel_stream,
             get_cline_core_status,
-            select_workspace_folder
+            select_workspace_folder,
+            diag_log
         ])
         .setup(|app| {
             let app_handle = app.handle().clone();
@@ -331,57 +315,42 @@ pub fn run() {
                 }
                 Err(e) => {
                     eprintln!("[Careti] Failed to start cline-core: {}", e);
-                    // 개발 모드에서는 cline-core 없이도 앱 실행 허용
                     eprintln!("[Careti] Running without cline-core (dev mode)");
                 }
             }
 
-            // webview에 standalonePostMessage 브릿지 주입
-            let main_window = app.get_webview_window("main").unwrap();
-            main_window.eval(r#"
+            // initialization_script: 매 페이지 로드 시 HTML 파싱 전에 실행됨.
+            // eval()과 달리, devUrl에서 페이지가 교체되어도 유지됨.
+            let bridge_script = r#"
                 (function() {
-                    // CARETI: Standalone 모드 플래그 및 클라이언트 ID 설정
+                    if (window.__CARETI_BRIDGE_INITIALIZED__) return;
+                    window.__CARETI_BRIDGE_INITIALIZED__ = true;
+
                     window.__is_standalone__ = true;
                     window.clineClientId = 'standalone-' + Date.now();
-                    console.log('[Careti] Standalone mode initialized, clientId:', window.clineClientId);
 
-                    // Tauri 이벤트 리스너 설정 - cline-core 응답 수신
-                    if (window.__TAURI__) {
-                        window.__TAURI__.event.listen('grpc_response', (event) => {
-                            console.log('[Careti] grpc_response received:', event.payload);
-                            // webview-ui의 메시지 핸들러로 전달
-                            window.postMessage(event.payload, '*');
-                        });
-                    }
-
-                    // standalonePostMessage 브릿지 설정
+                    // standalonePostMessage: __TAURI_INTERNALS__.invoke 직접 사용
                     window.standalonePostMessage = async function(messageJson) {
                         try {
-                            const response = await window.__TAURI__.core.invoke('proto_bus_message', { message: messageJson });
-                            console.log('[standalonePostMessage] Ack:', response);
+                            await window.__TAURI_INTERNALS__.invoke('proto_bus_message', { message: messageJson });
                         } catch (error) {
                             console.error('[standalonePostMessage] Error:', error);
                         }
                     };
 
-                    // 스트림 취소 함수
                     window.cancelStream = async function(requestId) {
                         try {
-                            await window.__TAURI__.core.invoke('cancel_stream', { requestId: requestId });
-                            console.log('[cancelStream] Cancelled:', requestId);
+                            await window.__TAURI_INTERNALS__.invoke('cancel_stream', { requestId: requestId });
                         } catch (error) {
                             console.error('[cancelStream] Error:', error);
                         }
                     };
 
-                    // 작업 폴더 선택 함수 (Rust 커맨드 호출)
                     window.selectWorkspaceFolder = async function() {
                         try {
-                            const selected = await window.__TAURI__.core.invoke('select_workspace_folder');
+                            var selected = await window.__TAURI_INTERNALS__.invoke('select_workspace_folder');
                             if (selected) {
-                                console.log('[selectWorkspaceFolder] Selected:', selected);
-                                // cline-core에 작업 폴더 변경 알림
-                                const request = {
+                                var request = {
                                     type: 'grpc_request',
                                     grpc_request: {
                                         service: 'cline.WorkspaceService',
@@ -401,9 +370,39 @@ pub fn run() {
                         }
                     };
 
-                    console.log('[Careti] Standalone bridge with streaming support initialized');
+                    console.log('[Careti] Bridge initialized, clientId=' + window.clineClientId);
                 })();
-            "#).ok();
+            "#;
+
+            // 메인 윈도우를 프로그래밍 방식으로 생성 (initialization_script 사용)
+            let _main_window = WebviewWindowBuilder::new(
+                app,
+                "main",
+                WebviewUrl::default(), // devUrl 또는 frontendDist 자동 사용
+            )
+            .title("Careti")
+            .inner_size(368.0, 1024.0)
+            .resizable(true)
+            .initialization_script(bridge_script)
+            .build()?;
+
+            println!("[Careti] Main window created with initialization_script");
+
+            // 아바타 윈도우 (기능 비활성화 상태이므로 생성은 선택적)
+            // let _avatar_window = WebviewWindowBuilder::new(
+            //     app,
+            //     "avatar",
+            //     WebviewUrl::App("/avatar".into()),
+            // )
+            // .title("Caret VTuber")
+            // .inner_size(300.0, 400.0)
+            // .transparent(true)
+            // .decorations(false)
+            // .always_on_top(true)
+            // .skip_taskbar(true)
+            // .resizable(true)
+            // .initialization_script(bridge_script)
+            // .build()?;
 
             Ok(())
         })

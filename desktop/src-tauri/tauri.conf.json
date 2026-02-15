@@ -11,27 +11,7 @@
   },
   "app": {
     "withGlobalTauri": true,
-    "windows": [
-      {
-        "label": "main",
-        "title": "Careti",
-        "width": 368,
-        "height": 1024,
-        "resizable": true
-      },
-      {
-        "label": "avatar",
-        "title": "Caret VTuber",
-        "width": 300,
-        "height": 400,
-        "transparent": true,
-        "decorations": false,
-        "alwaysOnTop": true,
-        "skipTaskbar": true,
-        "resizable": true,
-        "url": "/avatar"
-      }
-    ],
+    "windows": [],
     "security": {
       "csp": null
     }

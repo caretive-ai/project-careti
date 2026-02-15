@@ -17,17 +17,65 @@
 
 ## Desktop (Tauri)
 
-**주의**: 루트에서 `npm run dev:webview` 실행 중이면 포트 충돌!
+Desktop은 Tauri(Rust) + webview-ui(React) + cline-core(Node.js stdio)의 3계층 구조입니다.
+
+### 빌드 순서
 
 ```bash
-# 기존 vite 종료 (필수)
-pkill -f "npm run dev:webview"
+# 1. standalone 빌드 (cline-core.js 생성 — 필수 선행)
+npm run compile-standalone
+# → dist-standalone/cline-core.js (46MB)
+# → scripts/package-standalone.mjs로 패키징 (ripgrep, proto, bins)
 
-# 실행
-cd desktop
-npm run tauri dev      # 개발 모드
-npm run tauri build    # 프로덕션 빌드
+# 2. desktop 개발 실행
+pkill -f "npm run dev:webview"   # 포트 충돌 방지 (필수)
+cd desktop && npm install && npm run tauri dev
+# → beforeDevCommand: cd ../webview-ui && PLATFORM=standalone npm run dev
+# → Tauri가 node dist-standalone/cline-core.js --stdio 자동 실행
+# → main(368x1024) + avatar(300x400) 2개 윈도우
+
+# 3. 프로덕션 빌드
+cd desktop && npm run tauri build
+# → webview-ui/build/ + Rust 컴파일 → deb/dmg/msi 패키지
 ```
+
+### 통신 흐름
+
+```
+webview → standalonePostMessage(json)
+  → Tauri proto_bus_message command
+  → node cline-core.js stdin (JSON)
+  → stdio-adapter.ts → gRPC handler
+  → stdout → Rust BufReader
+  → emit("grpc_response") → webview
+```
+
+### 주요 파일
+
+| 파일 | 역할 |
+|------|------|
+| `desktop/src-tauri/src/lib.rs` | Tauri ↔ cline-core 브릿지 |
+| `src/standalone/stdio-adapter.ts` | JSON stdio 핸들러 |
+| `src/standalone/cline-core.ts` | standalone 엔트리포인트 |
+| `desktop/src-tauri/tauri.conf.json` | Tauri 앱 설정 |
+
+### 환경 변수 (개발용 오버라이드)
+
+| 변수 | 기본값 | 설명 |
+|------|--------|------|
+| `CLINE_CORE_PATH` | `node` | cline-core 실행 바이너리 |
+| `CLINE_CORE_SCRIPT` | `dist-standalone/cline-core.js` | cline-core 스크립트 경로 |
+
+### E2E 검증 체크리스트
+
+Desktop 자동 테스트는 미구현. 수동 검증:
+1. `npm run compile-standalone` — 빌드 성공, `dist-standalone/cline-core.js` 생성
+2. `cd desktop && npm run tauri dev` — Tauri 창 표시
+3. 콘솔에서 `[cline-core→Tauri] ... ready` 메시지 확인
+4. 메시지 입력 → 응답 표시 (round-trip 검증)
+5. 스트리밍 응답 정상 표시
+6. 아바타 윈도우 렌더링
+7. 워크스페이스 폴더 선택 동작
 
 상세 문서: `desktop/AGENTS.md`, `desktop/.agents/context/`
 

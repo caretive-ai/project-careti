@@ -21,6 +21,10 @@
 		"@fontsource/azeret-mono": "^5.2.9",
 		"@heroui/react": "^2.8.0-beta.2",
 		"@paper-design/shaders-react": "^0.0.46",
+		"@pixiv/three-vrm": "^3.4.5",
+		"@pixiv/three-vrm-animation": "^3.4.5",
+		"@react-three/drei": "^10.7.7",
+		"@react-three/fiber": "^9.5.0",
 		"@vscode/webview-ui-toolkit": "^1.4.0",
 		"debounce": "^2.1.1",
 		"dompurify": "^3.2.4",
@@ -45,6 +49,7 @@
 		"remark-gfm": "^1.0.0",
 		"remark-stringify": "^11.0.0",
 		"styled-components": "^6.1.15",
+		"three": "^0.182.0",
 		"unified": "^11.0.5",
 		"uuid": "^9.0.1"
 	},

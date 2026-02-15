@@ -70,7 +70,7 @@ fn spawn_cline_core(app_handle: &AppHandle) -> Result<ClineCoreProcess, String> 
     // 하드코딩된 프로젝트 루트 경로 (개발용)
     // TODO: 배포 시에는 리소스 경로 사용
     let cline_core_script = std::env::var("CLINE_CORE_SCRIPT")
-        .unwrap_or_else(|_| "/home/luke/dev/project-careti-standalone/dist-standalone/cline-core.js".to_string());
+        .unwrap_or_else(|_| "/home/luke/dev/project-careti/dist-standalone/cline-core.js".to_string());
 
     println!("[Careti] Starting cline-core: {} {}", cline_core_path, cline_core_script);
 

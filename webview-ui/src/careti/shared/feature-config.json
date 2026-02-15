@@ -2,6 +2,8 @@
 	"enableCaretAccountFeatures": true,
 	"showPersonaSettings": true,
 	"redirectAfterApiSetup": "persona",
+	"showAvatarSettings": true,
+	"avatarEnabled": true,
 	"defaultModeSystem": "careti",
 	"firstListingProvider": "careti",
 	"defaultProvider": "careti",

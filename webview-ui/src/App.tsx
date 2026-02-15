@@ -17,6 +17,10 @@ import { useClineAuth } from "./context/ClineAuthContext"
 import { useExtensionState } from "./context/ExtensionStateContext"
 import { Providers } from "./Providers"
 import { UiServiceClient } from "./services/grpc-client"
+// CARETI MODIFICATION: Import Avatar and Navbar for standalone mode
+import { AvatarContainer } from "./components/avatar"
+import { Navbar } from "./components/menu/Navbar"
+import { IS_STANDALONE } from "./config/platform.config"
 
 const AppContent = () => {
 	const {
@@ -76,30 +80,43 @@ const AppContent = () => {
 		return <PersonaTemplateSelector onSelectPersona={() => {}} />
 	}
 
+	// CARETI MODIFICATION: Check if overlay view (settings/history/etc.) is showing
+	const isOverlayShowing = showSettings || showHistory || showMcp || (showAccount && featureConfig?.showAccountUI !== false)
+
 	return (
 		<div className="flex h-screen w-full flex-col">
-			{showSettings && <SettingsView onDone={hideSettings} />}
-			{showHistory && <HistoryView onDone={hideHistory} />}
-			{showMcp && <McpView initialTab={mcpTab} onDone={closeMcpView} />}
-			{showAccount &&
-				featureConfig?.showAccountUI !== false && // CARETI MODIFICATION: gate account UI by feature flag
-				(isCaret ? (
-					<CaretiAccountView caretUser={caretUser} onDone={hideAccount} />
-				) : (
-					<AccountView
-						activeOrganization={accountActiveOrganization}
-						clineUser={clineUser}
-						onDone={hideAccount}
-						organizations={accountOrganizations}
-					/>
-				))}
-			{/* Do not conditionally load ChatView, it's expensive and there's state we don't want to lose (user input, disableInput, askResponse promise, etc.) */}
-			<ChatView
-				hideAnnouncement={hideAnnouncement}
-				isHidden={showSettings || showHistory || showMcp || (showAccount && featureConfig?.showAccountUI !== false)}
-				showAnnouncement={showAnnouncement}
-				showHistoryView={navigateToHistory}
-			/>
+			{/* CARETI MODIFICATION: Avatar and Navbar always visible at top in standalone mode */}
+			{IS_STANDALONE && (
+				<div className="flex-none">
+					<AvatarContainer state="idle" />
+					<Navbar />
+				</div>
+			)}
+			{/* Content area below avatar */}
+			<div className="flex-1 overflow-hidden relative">
+				{showSettings && <SettingsView onDone={hideSettings} />}
+				{showHistory && <HistoryView onDone={hideHistory} />}
+				{showMcp && <McpView initialTab={mcpTab} onDone={closeMcpView} />}
+				{showAccount &&
+					featureConfig?.showAccountUI !== false && // CARETI MODIFICATION: gate account UI by feature flag
+					(isCaret ? (
+						<CaretiAccountView caretUser={caretUser} onDone={hideAccount} />
+					) : (
+						<AccountView
+							activeOrganization={accountActiveOrganization}
+							clineUser={clineUser}
+							onDone={hideAccount}
+							organizations={accountOrganizations}
+						/>
+					))}
+				{/* Do not conditionally load ChatView, it's expensive and there's state we don't want to lose (user input, disableInput, askResponse promise, etc.) */}
+				<ChatView
+					hideAnnouncement={hideAnnouncement}
+					isHidden={isOverlayShowing}
+					showAnnouncement={showAnnouncement}
+					showHistoryView={navigateToHistory}
+				/>
+			</div>
 		</div>
 	)
 }

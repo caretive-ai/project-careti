@@ -43,7 +43,7 @@ function convertProtoToThinkingConfig(config: ThinkingConfig | undefined): Model
 	return {
 		maxBudget: config.maxBudget,
 		outputPrice: config.outputPrice,
-		outputPriceTiers: config.outputPriceTiers.length > 0 ? config.outputPriceTiers : undefined,
+		outputPriceTiers: config.outputPriceTiers?.length > 0 ? config.outputPriceTiers : undefined,
 	}
 }
 
@@ -87,7 +87,7 @@ function convertProtoToModelInfo(info: OpenRouterModelInfo | undefined): ModelIn
 		description: info.description,
 		thinkingConfig: convertProtoToThinkingConfig(info.thinkingConfig),
 		supportsGlobalEndpoint: info.supportsGlobalEndpoint,
-		tiers: info.tiers.length > 0 ? info.tiers : undefined,
+		tiers: info.tiers?.length > 0 ? info.tiers : undefined,
 	}
 }
 
@@ -179,7 +179,7 @@ function convertProtoToLiteLLMModelInfo(info: LiteLLMModelInfo | undefined): App
 		cacheWritesPrice: info.cacheWritesPrice,
 		cacheReadsPrice: info.cacheReadsPrice,
 		description: info.description,
-		tiers: info.tiers.length > 0 ? info.tiers : undefined,
+		tiers: info.tiers?.length > 0 ? info.tiers : undefined,
 		temperature: info.temperature,
 	}
 }
@@ -230,7 +230,7 @@ function convertProtoToOpenAiCompatibleModelInfo(
 		cacheWritesPrice: info.cacheWritesPrice,
 		cacheReadsPrice: info.cacheReadsPrice,
 		description: info.description,
-		tiers: info.tiers.length > 0 ? info.tiers : undefined,
+		tiers: info.tiers?.length > 0 ? info.tiers : undefined,
 		temperature: info.temperature,
 		isR1FormatRequired: info.isR1FormatRequired,
 	}
@@ -277,7 +277,7 @@ function convertProtoToCaretModelInfo(info: CaretModelInfo | undefined): AppCare
 		cacheWritesPrice: info.cacheWritesPrice,
 		cacheReadsPrice: info.cacheReadsPrice,
 		description: info.description,
-		tiers: info.tiers.length > 0 ? info.tiers : undefined,
+		tiers: info.tiers?.length > 0 ? info.tiers : undefined,
 		temperature: info.temperature,
 	}
 }
@@ -329,7 +329,7 @@ function convertProtoToBizRouterModelInfo(info: BizRouterModelInfo | undefined):
 		cacheWritesPrice: info.cacheWritesPrice,
 		cacheReadsPrice: info.cacheReadsPrice,
 		description: info.description,
-		tiers: info.tiers.length > 0 ? info.tiers : undefined,
+		tiers: info.tiers?.length > 0 ? info.tiers : undefined,
 		temperature: info.temperature,
 		topP: info.topP,
 		frequencyPenalty: info.frequencyPenalty,
@@ -341,7 +341,7 @@ function convertProtoToBizRouterModelInfo(info: BizRouterModelInfo | undefined):
 }
 
 // Convert application ApiProvider to proto ApiProvider
-function convertApiProviderToProto(provider: string | undefined): ProtoApiProvider {
+export function convertApiProviderToProto(provider: string | undefined): ProtoApiProvider {
 	switch (provider) {
 		case "anthropic":
 			return ProtoApiProvider.ANTHROPIC

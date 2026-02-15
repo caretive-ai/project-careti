@@ -4,6 +4,7 @@ import PersonaAvatar from "@/careti/components/PersonaAvatar"
 import { useCaretiState } from "@/careti/context/CaretiStateContext"
 import { t } from "@/careti/utils/i18n"
 import HeroTooltip from "@/components/common/HeroTooltip"
+import { useExtensionState } from "@/context/ExtensionStateContext"
 import { UiServiceClient } from "@/services/grpc-client"
 
 interface HomeHeaderProps {
@@ -13,6 +14,8 @@ interface HomeHeaderProps {
 const HomeHeader = ({ shouldShowQuickWins = false }: HomeHeaderProps) => {
 	// CARETI MODIFICATION: Use persona avatar instead of Cline logo
 	const { personaProfile } = useCaretiState()
+	// CARETI MODIFICATION: Get featureConfig to check if 3D avatar is enabled
+	const { featureConfig } = useExtensionState()
 
 	const handleTakeATour = async () => {
 		try {
@@ -22,11 +25,17 @@ const HomeHeader = ({ shouldShowQuickWins = false }: HomeHeaderProps) => {
 		}
 	}
 
+	// CARETI MODIFICATION: Hide entire header when 3D avatar is enabled (avatar is shown at app level)
+	if (featureConfig?.avatarEnabled) {
+		return null
+	}
+
 	return (
 		<div className="flex flex-col items-center mb-5">
 			<div className="my-5">
-				{/* CARETI MODIFICATION: Show persona avatar only, no fallback to Cline logo */}
-				{personaProfile && <PersonaAvatar isThinking={false} personaProfile={personaProfile} size={64} />}
+				{personaProfile && (
+					<PersonaAvatar isThinking={false} personaProfile={personaProfile} size={64} />
+				)}
 			</div>
 			<div className="text-center flex items-center justify-center">
 				<h2 className="m-0 text-lg">{t("welcome.whatCanIDo", "common")}</h2>

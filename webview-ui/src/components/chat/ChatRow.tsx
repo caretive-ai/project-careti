@@ -1552,7 +1552,8 @@ export const ChatRowContent = memo(
 					case "text":
 						return (
 							<div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-								{featureConfig?.showPersonaSettings && enablePersonaSystem && (
+								{/* CARETI MODIFICATION: Hide PersonaAvatar when 3D avatar is enabled */}
+								{featureConfig?.showPersonaSettings && enablePersonaSystem && !featureConfig?.avatarEnabled && (
 									<PersonaAvatar
 										isThinking={false}
 										personaProfile={personaProfile}

@@ -216,7 +216,8 @@ export class CaretiAuthService {
 		}
 
 		const callbackHost = await HostProvider.get().getCallbackUrl()
-		const callbackUrl = `${callbackHost}/auth`
+		// CARETI MODIFICATION: Caret API uses /auth/callback for standalone mode
+		const callbackUrl = `${callbackHost}/auth/callback`
 
 		const authUrl = await this._provider.getAuthRequest(callbackUrl)
 		const authUrlString = authUrl.toString()

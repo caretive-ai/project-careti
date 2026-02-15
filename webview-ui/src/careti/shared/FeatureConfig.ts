@@ -29,7 +29,10 @@ export interface FeatureConfig {
 	showAccountUI: boolean
 	/** 음성 입력 토글 표시 여부 */
 	showDictationToggle: boolean
-	// 향후 추가될 기능별 옵션들
+	/** 아바타 설정 UI 표시 여부 (페르소나 대체) */
+	showAvatarSettings: boolean
+	/** 아바타 기능 활성화 기본값 */
+	avatarEnabled: boolean
 }
 
 // 현재 기능 설정을 가져오는 함수

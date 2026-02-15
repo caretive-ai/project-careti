@@ -1,5 +1,7 @@
 {
 	"navbar": {
+		"folder": "Folder",
+		"folderTooltip": "Select Workspace Folder",
 		"chatName": "Chat",
 		"newTaskTooltip": "New Task",
 		"mcpName": "MCP",

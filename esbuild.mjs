@@ -210,7 +210,7 @@ const standaloneConfig = {
 	// These modules need to load files from the module directory at runtime,
 	// so they cannot be bundled.
 	// CARETI MODIFICATION: add hwpjs and sharp to externals for native module compatibility
-	external: ["vscode", "@grpc/reflection", "grpc-health-check", "better-sqlite3", "@ohah/hwpjs", "sharp", "@napi-rs/wasm-runtime"],
+	external: ["vscode", "@grpc/reflection", "grpc-health-check", "better-sqlite3", "@ohah/hwpjs", "@ohah/hwpjs-linux-x64-gnu", "sharp", "@napi-rs/wasm-runtime"],
 }
 
 // E2E build script configuration

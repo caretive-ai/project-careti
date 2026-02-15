@@ -1,5 +1,7 @@
 {
 	"navbar": {
+		"folder": "Папка",
+		"folderTooltip": "Выбрать рабочую папку",
 		"chatName": "Чат",
 		"newTaskTooltip": "Новая задача",
 		"mcpName": "MCP",

@@ -145,6 +145,9 @@ const ApiOptions = ({
 	const dropdownListRef = useRef<HTMLDivElement>(null)
 
 	const providerOptions = useMemo(() => {
+		// CARETI MODIFICATION: Debug logging for provider options
+		console.log("[ApiOptions] providerOptions useMemo - featureConfig:", featureConfig ? "exists" : "null")
+
 		// CARETI MODIFICATION: Restore original Cline provider list, add Careti provider (Cline always visible)
 		if (!featureConfig) {
 			// featureConfig 미도착 시에도 기본 Careti/Cline 선택 가능하도록 안전값 제공
@@ -407,6 +410,12 @@ const ApiOptions = ({
 	}, [currentProviderLabel, isDropdownVisible])
 
 	const searchableItems = useMemo(() => {
+		// CARETI MODIFICATION: Debug logging
+		console.log("[ApiOptions] searchableItems useMemo - providerOptions count:", providerOptions?.length)
+		if (!providerOptions) {
+			console.error("[ApiOptions] providerOptions is undefined!")
+			return []
+		}
 		return providerOptions.map((option) => ({
 			value: option.value,
 			html: option.label,
@@ -426,17 +435,33 @@ const ApiOptions = ({
 	}, [searchableItems])
 
 	const providerSearchResults = useMemo(() => {
-		if (!searchTerm || searchTerm === currentProviderLabel) {
-			return searchableItems
+		// CARETI MODIFICATION: Debug logging
+		console.log("[ApiOptions] providerSearchResults useMemo - searchTerm:", searchTerm, "currentProviderLabel:", currentProviderLabel)
+		try {
+			if (!searchTerm || searchTerm === currentProviderLabel) {
+				console.log("[ApiOptions] Returning searchableItems, count:", searchableItems?.length)
+				return searchableItems || []
+			}
+			const results = fuse.search(searchTerm)
+			console.log("[ApiOptions] Fuse search results count:", results?.length)
+			const highlighted = highlight(results, "provider-item-highlight")
+			console.log("[ApiOptions] Highlighted results count:", highlighted?.length)
+			return highlighted || []
+		} catch (e) {
+			console.error("[ApiOptions] Error in providerSearchResults useMemo:", e)
+			return searchableItems || []
 		}
-		const results = fuse.search(searchTerm)
-		return highlight(results, "provider-item-highlight")
 	}, [searchableItems, searchTerm, fuse, currentProviderLabel])
 
-	const handleProviderChange = (newProvider: string) => {
+	const handleProviderChange = async (newProvider: string) => {
 		// CARETI MODIFICATION: Add logging for provider changes
 		console.log(`🔄 [ApiOptions] Provider change: "${selectedProvider}" → "${newProvider}" (mode: ${currentMode})`)
-		handleModeFieldChange({ plan: "planModeApiProvider", act: "actModeApiProvider" }, newProvider as any, currentMode)
+		try {
+			await handleModeFieldChange({ plan: "planModeApiProvider", act: "actModeApiProvider" }, newProvider as any, currentMode)
+			console.log(`✅ [ApiOptions] Provider change successful`)
+		} catch (e) {
+			console.error(`❌ [ApiOptions] Provider change failed:`, e)
+		}
 		setIsDropdownVisible(false)
 		setSelectedIndex(-1)
 	}

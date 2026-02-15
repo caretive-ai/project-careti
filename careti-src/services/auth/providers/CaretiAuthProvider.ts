@@ -246,7 +246,8 @@ export class CaretiAuthProvider implements IAuthProvider {
 		try {
 			// Get the callback URL that was used during the initial auth request
 			const callbackHost = await HostProvider.get().getCallbackUrl()
-			const callbackUrl = `${callbackHost}/auth`
+			// CARETI MODIFICATION: Caret API uses /auth/callback for standalone mode
+			const callbackUrl = `${callbackHost}/auth/callback`
 
 			// Exchange the authorization code for tokens
 			const tokenUrl = new URL(CARET_API_ENDPOINT.TOKEN_EXCHANGE, this.config.apiBaseUrl)

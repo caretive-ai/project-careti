@@ -6,6 +6,8 @@ import deepEqual from "fast-deep-equal"
 import { memo, useCallback, useEffect, useRef, useState } from "react"
 import { useInterval } from "react-use"
 import { t } from "@/careti/utils/i18n"
+// CARETI MODIFICATION: Import platform config for standalone mode
+import { IS_STANDALONE } from "@/config/platform.config"
 import { type ClineUser, handleSignOut } from "@/context/ClineAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
@@ -36,8 +38,9 @@ type CachedData = {
 }
 
 const AccountView = ({ onDone, clineUser, organizations, activeOrganization }: AccountViewProps) => {
+	// CARETI MODIFICATION: Use absolute positioning in standalone mode to not cover avatar
 	return (
-		<div className="fixed inset-0 flex flex-col overflow-hidden pt-[10px] pl-[20px]">
+		<div className={`${IS_STANDALONE ? "absolute" : "fixed"} inset-0 flex flex-col overflow-hidden pt-[10px] pl-[20px]`}>
 			<div className="flex justify-between items-center mb-[17px] pr-[17px]">
 				<h3 className="text-[var(--vscode-foreground)] m-0">{t("account.title", "common")}</h3>
 				<VSCodeButton onClick={onDone}>{t("button.done", "common")}</VSCodeButton>

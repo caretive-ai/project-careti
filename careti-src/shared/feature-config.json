@@ -3,6 +3,8 @@
 	"showPersonaSettings": true,
 	"defaultPersonaEnabled": true,
 	"redirectAfterApiSetup": "persona",
+	"showAvatarSettings": false,
+	"avatarEnabled": false,
 	"defaultModeSystem": "careti",
 	"firstListingProvider": "careti", 
 	"defaultProvider": "careti",

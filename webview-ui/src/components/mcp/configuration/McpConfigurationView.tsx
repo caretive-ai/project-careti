@@ -6,6 +6,8 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { t } from "@/careti/utils/i18n"
+// CARETI MODIFICATION: Import platform config for standalone mode
+import { IS_STANDALONE } from "@/config/platform.config"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { McpServiceClient } from "@/services/grpc-client"
 import AddRemoteServerForm from "./tabs/add-server/AddRemoteServerForm"
@@ -58,10 +60,11 @@ const McpConfigurationView = ({ onDone, initialTab }: McpViewProps) => {
 		}
 	}, [mcpMarketplaceEnabled])
 
+	// CARETI MODIFICATION: Use absolute positioning in standalone mode to not cover avatar
 	return (
 		<div
 			style={{
-				position: "fixed",
+				position: IS_STANDALONE ? "absolute" : "fixed",
 				top: 0,
 				left: 0,
 				right: 0,

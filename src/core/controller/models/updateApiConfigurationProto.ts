@@ -14,20 +14,42 @@ import type { Controller } from "../index"
 /**
  * Updates API configuration
  * @param controller The controller instance
- * @param request The update API configuration request
+ * @param request The update API configuration request (may be JSON or proto)
  * @returns Empty response
  */
 export async function updateApiConfigurationProto(
 	controller: Controller,
-	request: UpdateApiConfigurationRequest,
+	request: UpdateApiConfigurationRequest | any,
 ): Promise<Empty> {
 	try {
-		if (!request.apiConfiguration) {
+		// CARETI MODIFICATION: Normalize request from JSON to proto format
+		// In standalone/Tauri mode, the request is passed as raw JSON from stdio-adapter
+		// which means enum values are strings (e.g., "UPSTAGE") instead of numbers (e.g., 40)
+		// We use fromJSON to properly convert string enum values to numeric proto enum values
+		let normalizedRequest: UpdateApiConfigurationRequest
+		if (
+			typeof request.apiConfiguration?.planModeApiProvider === "string" ||
+			typeof request.apiConfiguration?.actModeApiProvider === "string"
+		) {
+			// Request is from JSON (standalone mode) - normalize using fromJSON
+			normalizedRequest = UpdateApiConfigurationRequest.fromJSON(request)
+			console.log("[APICONFIG] Normalized JSON request to proto format")
+		} else {
+			// Request is already in proto format (VS Code mode)
+			normalizedRequest = request
+		}
+
+		if (!normalizedRequest.apiConfiguration) {
 			console.log("[APICONFIG: updateApiConfigurationProto] API configuration is required")
 			throw new Error("API configuration is required")
 		}
 
-		const protoApiConfiguration = request.apiConfiguration
+		const protoApiConfiguration = normalizedRequest.apiConfiguration
+
+		// CARETI DEBUG: Log incoming provider values
+		console.log(
+			`[APICONFIG] Received proto - planModeApiProvider: ${protoApiConfiguration.planModeApiProvider}, actModeApiProvider: ${protoApiConfiguration.actModeApiProvider}`,
+		)
 
 		const convertedApiConfigurationFromProto = {
 			...protoApiConfiguration,
@@ -115,8 +137,19 @@ export async function updateApiConfigurationProto(
 
 		const mergedApiConfiguration: ApiConfiguration = { ...(convertedApiConfigurationFromProto as ApiConfiguration) }
 
+		// CARETI DEBUG: Log converted provider values
+		console.log(
+			`[APICONFIG] After conversion - planModeApiProvider: ${mergedApiConfiguration.planModeApiProvider}, actModeApiProvider: ${mergedApiConfiguration.actModeApiProvider}`,
+		)
+
 		// Update the API configuration in storage
 		controller.stateManager.setApiConfiguration(mergedApiConfiguration)
+
+		// CARETI DEBUG: Verify the stored value
+		const storedConfig = controller.stateManager.getApiConfiguration()
+		console.log(
+			`[APICONFIG] After storage - stored planModeApiProvider: ${storedConfig.planModeApiProvider}, stored actModeApiProvider: ${storedConfig.actModeApiProvider}`,
+		)
 
 		// Update the task's API handler if there's an active task
 		if (controller.task) {

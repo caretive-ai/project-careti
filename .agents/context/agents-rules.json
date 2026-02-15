@@ -50,6 +50,26 @@
 			}
 		}
 	},
+	"feature_flags": {
+		"config_files": {
+			"extension": "careti-src/shared/feature-config.json",
+			"webview": "webview-ui/src/careti/shared/feature-config.json"
+		},
+		"type_definition": "webview-ui/src/careti/shared/FeatureConfig.ts",
+		"usage": {
+			"import": "import { getCurrentFeatureConfig } from '@/careti/shared/FeatureConfig'",
+			"read": "const config = getCurrentFeatureConfig()",
+			"conditional_render": "config.showAvatarSettings && <AvatarContainer />"
+		},
+		"rule": "새 기능 추가 시: 1) feature-config.json에 플래그 추가, 2) FeatureConfig.ts 인터페이스 업데이트, 3) 컴포넌트에서 플래그 체크",
+		"features": {
+			"avatar": {
+				"description": "VRM 아바타 (페르소나 대체)",
+				"flags": ["showAvatarSettings", "avatarEnabled"],
+				"components": ["AvatarContainer", "AvatarCanvas", "AvatarStatus"]
+			}
+		}
+	},
 	"development_framework": {
 		"tech_stack": {
 			"framework": "Mocha (backend), Vitest (frontend), Biome",

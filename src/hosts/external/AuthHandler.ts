@@ -6,9 +6,15 @@ import { HostProvider } from "../host-provider"
 
 const SERVER_TIMEOUT = 10 * 60 * 1000 // 10 minutes
 
+// CARETI MODIFICATION: Standalone 모드에서 Caret API가 하드코딩된 콜백 URL을 사용하므로
+// 26042 포트를 우선순위로 추가
 const PORT_RANGE_START = 48801
 const PORT_RANGE_END = 48811
-const PORTS: number[] = Array.from({ length: PORT_RANGE_END - PORT_RANGE_START + 1 }, (_, i) => PORT_RANGE_START + i)
+const STANDALONE_CALLBACK_PORT = 26042
+const PORTS: number[] = [
+	STANDALONE_CALLBACK_PORT,
+	...Array.from({ length: PORT_RANGE_END - PORT_RANGE_START + 1 }, (_, i) => PORT_RANGE_START + i),
+]
 
 /**
  * Handles OAuth authentication flow by creating a local server to receive tokens.

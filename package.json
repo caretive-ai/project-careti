@@ -386,6 +386,8 @@
 		"dev:webview": "cd webview-ui && npm run dev",
 		"build:webview": "cd webview-ui && npm run build",
 		"test:webview": "cd webview-ui && npm run test",
+		"test:report": "bash scripts/test-report.sh",
+		"test:report:json": "bash scripts/test-report-json.sh",
 		"publish:marketplace": "vsce publish --allow-package-secrets sendgrid && ovsx publish",
 		"publish:marketplace:prerelease": "vsce publish --allow-package-secrets sendgrid --pre-release && ovsx publish --pre-release",
 		"publish:marketplace:nightly": "node ./scripts/publish-nightly.mjs",

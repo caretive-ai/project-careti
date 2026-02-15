@@ -17,7 +17,6 @@ import { prepareMentionImagePayload } from "@/careti/utils/mention-image"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { FileServiceClient, UiServiceClient } from "@/services/grpc-client"
-import { Navbar } from "../menu/Navbar"
 import AutoApproveBar from "./auto-approve-menu/AutoApproveBar"
 // Import utilities and hooks from the new structure
 import {
@@ -374,7 +373,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 	return (
 		<ChatLayout isHidden={isHidden}>
 			<div className="flex flex-col flex-1 overflow-hidden">
-				{IS_STANDALONE && <Navbar />}
+				{/* CARETI MODIFICATION: Avatar and Navbar are now rendered at App level for standalone mode */}
 				{task ? (
 					<TaskSection
 						apiMetrics={apiMetrics}

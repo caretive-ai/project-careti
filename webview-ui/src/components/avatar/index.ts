@@ -1,0 +1,13 @@
+// CARETI MODIFICATION: 아바타 컴포넌트 모음
+export { AvatarScene } from "./AvatarScene"
+export type { AvatarSceneProps } from "./AvatarScene"
+export { VRMAvatar } from "./VRMAvatar"
+export type { VRMAvatarProps } from "./VRMAvatar"
+export { AvatarDemo } from "./AvatarDemo"
+export type { AvatarDemoProps } from "./AvatarDemo"
+export { AvatarWindow } from "./AvatarWindow"
+export type { AvatarWindowProps } from "./AvatarWindow"
+export { AvatarContainer } from "./AvatarContainer"
+export type { AvatarContainerProps } from "./AvatarContainer"
+export { AvatarStatus } from "./AvatarStatus"
+export type { AvatarStatusProps, AvatarState } from "./AvatarStatus"

@@ -63,7 +63,10 @@ export class SharedUriHandler {
 					console.warn("SharedUriHandler: Missing code parameter for Requesty callback")
 					return false
 				}
-				case "/auth": {
+				case "/auth":
+				case "/auth/callback": {
+					// CARETI MODIFICATION: Support both /auth and /auth/callback paths
+					// Caret API uses /auth/callback for standalone mode
 					const providerParam = getParam("provider")
 
 					Logger.info(`SharedUriHandler - Auth callback received for ${providerParam} - ${path}`)
@@ -71,7 +74,9 @@ export class SharedUriHandler {
 					const tokenParam = getParam("token") || getParam("refreshToken") || getParam("idToken") || undefined
 					const codeParam = getParam("code") || undefined
 
-					const provider = providerParam ?? "cline"
+					// CARETI MODIFICATION: /auth/callback path는 standalone 모드에서 Careti 인증용이므로
+				// provider 파라미터가 없으면 "careti"로 기본 설정
+				const provider = providerParam ?? (path === "/auth/callback" ? "careti" : "cline")
 					const token = tokenParam || codeParam
 
 					if (token) {

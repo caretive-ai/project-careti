@@ -109,3 +109,6 @@ type MessageEncoding = "none" | "json"
 type PostMessageFunction = (message: any) => void
 type MessageEncoder = <T>(message: T, encoder: (_: T) => unknown) => any
 type MessageDecoder = <T>(message: any, decoder: (_: { [key: string]: any }) => T) => T
+
+// CARETI MODIFICATION: Convenience constant for standalone mode check
+export const IS_STANDALONE = PLATFORM_CONFIG.type === PlatformType.STANDALONE

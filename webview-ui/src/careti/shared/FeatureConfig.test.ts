@@ -42,6 +42,8 @@ describe("FeatureConfig Integration Tests", () => {
 				showModeSystemToggle: true,
 				showAccountUI: true,
 				showDictationToggle: true,
+				showAvatarSettings: true,
+				avatarEnabled: true,
 			}
 
 			// When: UI에서 페르소나 표시 여부 확인
@@ -66,6 +68,8 @@ describe("FeatureConfig Integration Tests", () => {
 				showModeSystemToggle: false,
 				showAccountUI: false,
 				showDictationToggle: false,
+				showAvatarSettings: false,
+				avatarEnabled: false,
 			}
 
 			// When: UI에서 페르소나 표시 여부 확인
@@ -90,6 +94,8 @@ describe("FeatureConfig Integration Tests", () => {
 				showModeSystemToggle: true,
 				showAccountUI: true,
 				showDictationToggle: true,
+				showAvatarSettings: true,
+				avatarEnabled: true,
 			}
 
 			// When: API 설정 완료 후 리다이렉트 위치 확인
@@ -114,6 +120,8 @@ describe("FeatureConfig Integration Tests", () => {
 				showModeSystemToggle: false,
 				showAccountUI: false,
 				showDictationToggle: false,
+				showAvatarSettings: false,
+				avatarEnabled: false,
 			}
 
 			// When: API 설정 완료 후 리다이렉트 위치 확인
@@ -140,6 +148,8 @@ describe("FeatureConfig Integration Tests", () => {
 				showModeSystemToggle: false,
 				showAccountUI: false,
 				showDictationToggle: false,
+				showAvatarSettings: false,
+				avatarEnabled: false,
 			}
 
 			// When: 프로바이더 표시 설정 확인
@@ -166,6 +176,8 @@ describe("FeatureConfig Integration Tests", () => {
 				showModeSystemToggle: true,
 				showAccountUI: true,
 				showDictationToggle: true,
+				showAvatarSettings: true,
+				avatarEnabled: true,
 			}
 
 			// When: 프로바이더 표시 설정 확인

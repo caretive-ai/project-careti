@@ -30,7 +30,15 @@ export const useApiConfigurationHandlers = (options?: { forceSeparate?: boolean 
 			[field]: value,
 		}
 
-		const protoConfig = convertApiConfigurationToProto(updatedConfig)
+		// CARETI MODIFICATION: Debug logging for proto conversion
+		let protoConfig
+		try {
+			protoConfig = convertApiConfigurationToProto(updatedConfig)
+		} catch (e) {
+			console.error("[ApiConfigHandler] Proto conversion failed:", e)
+			console.error("[ApiConfigHandler] updatedConfig:", JSON.stringify(updatedConfig, null, 2))
+			throw e
+		}
 		await ModelsServiceClient.updateApiConfigurationProto(
 			UpdateApiConfigurationRequest.create({
 				apiConfiguration: protoConfig,
@@ -53,7 +61,16 @@ export const useApiConfigurationHandlers = (options?: { forceSeparate?: boolean 
 			...updates,
 		}
 
-		const protoConfig = convertApiConfigurationToProto(updatedConfig)
+		// CARETI MODIFICATION: Debug logging for proto conversion
+		let protoConfig
+		try {
+			protoConfig = convertApiConfigurationToProto(updatedConfig)
+		} catch (e) {
+			console.error("[ApiConfigHandler] Proto conversion failed in handleFieldsChange:", e)
+			console.error("[ApiConfigHandler] updatedConfig keys:", Object.keys(updatedConfig))
+			console.error("[ApiConfigHandler] updates:", JSON.stringify(updates, null, 2))
+			throw e
+		}
 		await ModelsServiceClient.updateApiConfigurationProto(
 			UpdateApiConfigurationRequest.create({
 				apiConfiguration: protoConfig,

@@ -88,9 +88,22 @@ export function normalizeApiConfiguration(
 	apiConfiguration: ApiConfiguration | undefined,
 	currentMode: Mode,
 ): NormalizedApiConfig {
-	const provider =
-		(currentMode === "plan" ? apiConfiguration?.planModeApiProvider : apiConfiguration?.actModeApiProvider) || "anthropic"
-	const modelId = currentMode === "plan" ? apiConfiguration?.planModeApiModelId : apiConfiguration?.actModeApiModelId
+	// CARETI MODIFICATION: Map Careti modes (chatbot/agent) to Cline modes (plan/act)
+	const modeMapping: Record<string, "plan" | "act"> = {
+		chatbot: "plan", // Careti chatbot → Cline plan
+		agent: "act", // Careti agent → Cline act
+		plan: "plan",
+		act: "act",
+	}
+	const mappedMode = modeMapping[currentMode] || "act"
+
+	// CARETI DEBUG: Log provider values to trace the issue
+	const rawProvider = mappedMode === "plan" ? apiConfiguration?.planModeApiProvider : apiConfiguration?.actModeApiProvider
+	console.log(
+		`[normalizeApiConfiguration] mode: ${currentMode}→${mappedMode}, planProvider: ${apiConfiguration?.planModeApiProvider}, actProvider: ${apiConfiguration?.actModeApiProvider}, rawProvider: ${rawProvider}`,
+	)
+	const provider = rawProvider || "anthropic"
+	const modelId = mappedMode === "plan" ? apiConfiguration?.planModeApiModelId : apiConfiguration?.actModeApiModelId
 
 	const getProviderData = (models: Record<string, ModelInfo>, defaultId: string) => {
 		let selectedModelId: string
@@ -116,12 +129,12 @@ export function normalizeApiConfiguration(
 			return getProviderData(claudeCodeModels, claudeCodeDefaultModelId)
 		case "bedrock":
 			const awsBedrockCustomSelected =
-				currentMode === "plan"
+				mappedMode === "plan"
 					? apiConfiguration?.planModeAwsBedrockCustomSelected
 					: apiConfiguration?.actModeAwsBedrockCustomSelected
 			if (awsBedrockCustomSelected) {
 				const baseModelId =
-					currentMode === "plan"
+					mappedMode === "plan"
 						? apiConfiguration?.planModeAwsBedrockCustomModelBaseId
 						: apiConfiguration?.actModeAwsBedrockCustomModelBaseId
 				return {
@@ -156,9 +169,9 @@ export function normalizeApiConfiguration(
 			return getProviderData(askSageModels, askSageDefaultModelId)
 		case "openrouter":
 			const openRouterModelId =
-				currentMode === "plan" ? apiConfiguration?.planModeOpenRouterModelId : apiConfiguration?.actModeOpenRouterModelId
+				mappedMode === "plan" ? apiConfiguration?.planModeOpenRouterModelId : apiConfiguration?.actModeOpenRouterModelId
 			const openRouterModelInfo =
-				currentMode === "plan"
+				mappedMode === "plan"
 					? apiConfiguration?.planModeOpenRouterModelInfo
 					: apiConfiguration?.actModeOpenRouterModelInfo
 			return {
@@ -168,9 +181,9 @@ export function normalizeApiConfiguration(
 			}
 		case "requesty":
 			const requestyModelId =
-				currentMode === "plan" ? apiConfiguration?.planModeRequestyModelId : apiConfiguration?.actModeRequestyModelId
+				mappedMode === "plan" ? apiConfiguration?.planModeRequestyModelId : apiConfiguration?.actModeRequestyModelId
 			const requestyModelInfo =
-				currentMode === "plan" ? apiConfiguration?.planModeRequestyModelInfo : apiConfiguration?.actModeRequestyModelInfo
+				mappedMode === "plan" ? apiConfiguration?.planModeRequestyModelInfo : apiConfiguration?.actModeRequestyModelInfo
 			return {
 				selectedProvider: provider,
 				selectedModelId: requestyModelId || requestyDefaultModelId,
@@ -178,11 +191,11 @@ export function normalizeApiConfiguration(
 			}
 		case "cline":
 			const clineOpenRouterModelId =
-				(currentMode === "plan"
+				(mappedMode === "plan"
 					? apiConfiguration?.planModeOpenRouterModelId
 					: apiConfiguration?.actModeOpenRouterModelId) || openRouterDefaultModelId
 			const clineOpenRouterModelInfo =
-				(currentMode === "plan"
+				(mappedMode === "plan"
 					? apiConfiguration?.planModeOpenRouterModelInfo
 					: apiConfiguration?.actModeOpenRouterModelInfo) || openRouterDefaultModelInfo
 			return {
@@ -192,9 +205,9 @@ export function normalizeApiConfiguration(
 			}
 		case "openai":
 			const openAiModelId =
-				currentMode === "plan" ? apiConfiguration?.planModeOpenAiModelId : apiConfiguration?.actModeOpenAiModelId
+				mappedMode === "plan" ? apiConfiguration?.planModeOpenAiModelId : apiConfiguration?.actModeOpenAiModelId
 			const openAiModelInfo =
-				currentMode === "plan" ? apiConfiguration?.planModeOpenAiModelInfo : apiConfiguration?.actModeOpenAiModelInfo
+				mappedMode === "plan" ? apiConfiguration?.planModeOpenAiModelInfo : apiConfiguration?.actModeOpenAiModelInfo
 			return {
 				selectedProvider: provider,
 				selectedModelId: openAiModelId || "",
@@ -202,7 +215,7 @@ export function normalizeApiConfiguration(
 			}
 		case "ollama":
 			const ollamaModelId =
-				currentMode === "plan" ? apiConfiguration?.planModeOllamaModelId : apiConfiguration?.actModeOllamaModelId
+				mappedMode === "plan" ? apiConfiguration?.planModeOllamaModelId : apiConfiguration?.actModeOllamaModelId
 			return {
 				selectedProvider: provider,
 				selectedModelId: ollamaModelId || "",
@@ -213,7 +226,7 @@ export function normalizeApiConfiguration(
 			}
 		case "lmstudio":
 			const lmStudioModelId =
-				currentMode === "plan" ? apiConfiguration?.planModeLmStudioModelId : apiConfiguration?.actModeLmStudioModelId
+				mappedMode === "plan" ? apiConfiguration?.planModeLmStudioModelId : apiConfiguration?.actModeLmStudioModelId
 			return {
 				selectedProvider: provider,
 				selectedModelId: lmStudioModelId || "",
@@ -224,7 +237,7 @@ export function normalizeApiConfiguration(
 			}
 		case "vscode-lm":
 			const vsCodeLmModelSelector =
-				currentMode === "plan"
+				mappedMode === "plan"
 					? apiConfiguration?.planModeVsCodeLmModelSelector
 					: apiConfiguration?.actModeVsCodeLmModelSelector
 			return {
@@ -237,9 +250,9 @@ export function normalizeApiConfiguration(
 			}
 		case "litellm":
 			const liteLlmModelId =
-				currentMode === "plan" ? apiConfiguration?.planModeLiteLlmModelId : apiConfiguration?.actModeLiteLlmModelId
+				mappedMode === "plan" ? apiConfiguration?.planModeLiteLlmModelId : apiConfiguration?.actModeLiteLlmModelId
 			const liteLlmModelInfo =
-				currentMode === "plan" ? apiConfiguration?.planModeLiteLlmModelInfo : apiConfiguration?.actModeLiteLlmModelInfo
+				mappedMode === "plan" ? apiConfiguration?.planModeLiteLlmModelInfo : apiConfiguration?.actModeLiteLlmModelInfo
 			return {
 				selectedProvider: provider,
 				selectedModelId: liteLlmModelId || "",
@@ -247,9 +260,9 @@ export function normalizeApiConfiguration(
 			}
 		case "bizrouter":
 			const bizRouterModelId =
-				currentMode === "plan" ? apiConfiguration?.planModeBizRouterModelId : apiConfiguration?.actModeBizRouterModelId
+				mappedMode === "plan" ? apiConfiguration?.planModeBizRouterModelId : apiConfiguration?.actModeBizRouterModelId
 			const bizRouterModelInfo =
-				currentMode === "plan"
+				mappedMode === "plan"
 					? apiConfiguration?.planModeBizRouterModelInfo
 					: apiConfiguration?.actModeBizRouterModelInfo
 			return {
@@ -259,9 +272,9 @@ export function normalizeApiConfiguration(
 			}
 		case "careti":
 			const caretModelId =
-				currentMode === "plan" ? apiConfiguration?.planModeCaretModelId : apiConfiguration?.actModeCaretModelId
+				mappedMode === "plan" ? apiConfiguration?.planModeCaretModelId : apiConfiguration?.actModeCaretModelId
 			const caretModelInfo =
-				currentMode === "plan" ? apiConfiguration?.planModeCaretModelInfo : apiConfiguration?.actModeCaretModelInfo
+				mappedMode === "plan" ? apiConfiguration?.planModeCaretModelInfo : apiConfiguration?.actModeCaretModelInfo
 			return {
 				selectedProvider: provider,
 				selectedModelId: caretModelId || "",
@@ -273,11 +286,11 @@ export function normalizeApiConfiguration(
 			return getProviderData(moonshotModels, moonshotDefaultModelId)
 		case "huggingface":
 			const huggingFaceModelId =
-				currentMode === "plan"
+				mappedMode === "plan"
 					? apiConfiguration?.planModeHuggingFaceModelId
 					: apiConfiguration?.actModeHuggingFaceModelId
 			const huggingFaceModelInfo =
-				currentMode === "plan"
+				mappedMode === "plan"
 					? apiConfiguration?.planModeHuggingFaceModelInfo
 					: apiConfiguration?.actModeHuggingFaceModelInfo
 			return {
@@ -293,9 +306,9 @@ export function normalizeApiConfiguration(
 			return getProviderData(cerebrasModels, cerebrasDefaultModelId)
 		case "groq":
 			const groqModelId =
-				currentMode === "plan" ? apiConfiguration?.planModeGroqModelId : apiConfiguration?.actModeGroqModelId
+				mappedMode === "plan" ? apiConfiguration?.planModeGroqModelId : apiConfiguration?.actModeGroqModelId
 			const groqModelInfo =
-				currentMode === "plan" ? apiConfiguration?.planModeGroqModelInfo : apiConfiguration?.actModeGroqModelInfo
+				mappedMode === "plan" ? apiConfiguration?.planModeGroqModelInfo : apiConfiguration?.actModeGroqModelInfo
 			return {
 				selectedProvider: provider,
 				selectedModelId: groqModelId || groqDefaultModelId,
@@ -303,9 +316,9 @@ export function normalizeApiConfiguration(
 			}
 		case "baseten":
 			const basetenModelId =
-				currentMode === "plan" ? apiConfiguration?.planModeBasetenModelId : apiConfiguration?.actModeBasetenModelId
+				mappedMode === "plan" ? apiConfiguration?.planModeBasetenModelId : apiConfiguration?.actModeBasetenModelId
 			const basetenModelInfo =
-				currentMode === "plan" ? apiConfiguration?.planModeBasetenModelInfo : apiConfiguration?.actModeBasetenModelInfo
+				mappedMode === "plan" ? apiConfiguration?.planModeBasetenModelInfo : apiConfiguration?.actModeBasetenModelInfo
 			const finalBasetenModelId = basetenModelId || basetenDefaultModelId
 			return {
 				selectedProvider: provider,
@@ -320,11 +333,11 @@ export function normalizeApiConfiguration(
 			return getProviderData(sapAiCoreModels, sapAiCoreDefaultModelId)
 		case "huawei-cloud-maas":
 			const huaweiCloudMaasModelId =
-				currentMode === "plan"
+				mappedMode === "plan"
 					? apiConfiguration?.planModeHuaweiCloudMaasModelId
 					: apiConfiguration?.actModeHuaweiCloudMaasModelId
 			const huaweiCloudMaasModelInfo =
-				currentMode === "plan"
+				mappedMode === "plan"
 					? apiConfiguration?.planModeHuaweiCloudMaasModelInfo
 					: apiConfiguration?.actModeHuaweiCloudMaasModelInfo
 			return {
@@ -335,9 +348,9 @@ export function normalizeApiConfiguration(
 		// CARETI MODIFICATION: Add Upstage model selection
 		case "upstage":
 			const upstageModelId =
-				currentMode === "plan" ? apiConfiguration?.planModeUpstageModelId : apiConfiguration?.actModeUpstageModelId
+				mappedMode === "plan" ? apiConfiguration?.planModeUpstageModelId : apiConfiguration?.actModeUpstageModelId
 			const upstageModelInfo =
-				currentMode === "plan"
+				mappedMode === "plan"
 					? apiConfiguration?.planModeUpstageModelInfo
 					: apiConfiguration?.actModeUpstageModelInfo
 			return {
@@ -348,9 +361,9 @@ export function normalizeApiConfiguration(
 		// CARETI MODIFICATION: Add Naver Cloud model selection
 		case "naver-cloud":
 			const naverCloudModelId =
-				currentMode === "plan" ? apiConfiguration?.planModeNaverCloudModelId : apiConfiguration?.actModeNaverCloudModelId
+				mappedMode === "plan" ? apiConfiguration?.planModeNaverCloudModelId : apiConfiguration?.actModeNaverCloudModelId
 			const naverCloudModelInfo =
-				currentMode === "plan"
+				mappedMode === "plan"
 					? apiConfiguration?.planModeNaverCloudModelInfo
 					: apiConfiguration?.actModeNaverCloudModelInfo
 			return {
@@ -374,11 +387,11 @@ export function normalizeApiConfiguration(
 			}
 		case "vercel-ai-gateway":
 			const vercelAiGatewayModelId =
-				currentMode === "plan"
+				mappedMode === "plan"
 					? apiConfiguration?.planModeVercelAiGatewayModelId
 					: apiConfiguration?.actModeVercelAiGatewayModelId
 			const vercelAiGatewayModelInfo =
-				currentMode === "plan"
+				mappedMode === "plan"
 					? apiConfiguration?.planModeVercelAiGatewayModelInfo
 					: apiConfiguration?.actModeVercelAiGatewayModelInfo
 			return {
@@ -393,7 +406,7 @@ export function normalizeApiConfiguration(
 			return getProviderData(zaiModels, zaiDefaultId)
 		case "fireworks":
 			const fireworksModelId =
-				currentMode === "plan" ? apiConfiguration?.planModeFireworksModelId : apiConfiguration?.actModeFireworksModelId
+				mappedMode === "plan" ? apiConfiguration?.planModeFireworksModelId : apiConfiguration?.actModeFireworksModelId
 			return {
 				selectedProvider: provider,
 				selectedModelId: fireworksModelId || fireworksDefaultModelId,
@@ -414,6 +427,15 @@ export function normalizeApiConfiguration(
  * @returns Object containing mode-specific field values for clean destructuring
  */
 export function getModeSpecificFields(apiConfiguration: ApiConfiguration | undefined, mode: Mode) {
+	// CARETI MODIFICATION: Map Careti modes (chatbot/agent) to Cline modes (plan/act)
+	const modeMapping: Record<string, "plan" | "act"> = {
+		chatbot: "plan", // Careti chatbot → Cline plan
+		agent: "act", // Careti agent → Cline act
+		plan: "plan",
+		act: "act",
+	}
+	mode = modeMapping[mode] || "act"
+
 	if (!apiConfiguration) {
 		return {
 			// Core fields

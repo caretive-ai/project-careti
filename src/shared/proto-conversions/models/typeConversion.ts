@@ -19,7 +19,7 @@ function convertThinkingConfig(protoConfig: ThinkingConfig | undefined): ModelIn
 	return {
 		maxBudget: protoConfig.maxBudget,
 		outputPrice: protoConfig.outputPrice,
-		outputPriceTiers: protoConfig.outputPriceTiers.length > 0 ? protoConfig.outputPriceTiers : undefined,
+		outputPriceTiers: protoConfig.outputPriceTiers?.length > 0 ? protoConfig.outputPriceTiers : undefined,
 	}
 }
 
@@ -55,7 +55,7 @@ export function fromProtobufModelInfo(protoInfo: OpenRouterModelInfo): ModelInfo
 		description: protoInfo.description,
 		thinkingConfig: convertThinkingConfig(protoInfo.thinkingConfig),
 		supportsGlobalEndpoint: protoInfo.supportsGlobalEndpoint,
-		tiers: protoInfo.tiers.length > 0 ? protoInfo.tiers : undefined,
+		tiers: protoInfo.tiers?.length > 0 ? protoInfo.tiers : undefined,
 	}
 }
 
@@ -95,7 +95,7 @@ export function fromProtobufOpenAiCompatibleModelInfo(protoInfo: ProtoOpenAiComp
 		description: protoInfo.description,
 		thinkingConfig: convertThinkingConfig(protoInfo.thinkingConfig),
 		supportsGlobalEndpoint: protoInfo.supportsGlobalEndpoint,
-		tiers: protoInfo.tiers.length > 0 ? protoInfo.tiers : undefined,
+		tiers: protoInfo.tiers?.length > 0 ? protoInfo.tiers : undefined,
 		temperature: protoInfo.temperature,
 		isR1FormatRequired: protoInfo.isR1FormatRequired,
 	}
@@ -117,7 +117,7 @@ export function fromProtobufLiteLLMModelInfo(protoInfo: ProtoLiteLLMModelInfo): 
 		description: protoInfo.description,
 		thinkingConfig: convertThinkingConfig(protoInfo.thinkingConfig),
 		supportsGlobalEndpoint: protoInfo.supportsGlobalEndpoint,
-		tiers: protoInfo.tiers.length > 0 ? protoInfo.tiers : undefined,
+		tiers: protoInfo.tiers?.length > 0 ? protoInfo.tiers : undefined,
 		temperature: protoInfo.temperature,
 	}
 }

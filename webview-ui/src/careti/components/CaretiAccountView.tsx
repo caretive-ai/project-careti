@@ -10,6 +10,8 @@ import { CreditBalance } from "@/components/account/CreditBalance"
 import CreditsHistoryTable from "@/components/account/CreditsHistoryTable"
 import { convertProtoUsageTransactions, getCaretUris } from "@/components/account/helpers"
 import VSCodeButtonLink from "@/components/common/VSCodeButtonLink"
+// CARETI MODIFICATION: Import platform config for standalone mode
+import { IS_STANDALONE } from "@/config/platform.config"
 import { type CaretUser, handleSignOut } from "@/context/CaretiAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { CaretAccountServiceClient } from "@/services/grpc-client"
@@ -35,8 +37,9 @@ const AccountView = ({ onDone, caretUser }: AccountViewProps) => {
 	console.log("<===== account view apiConfiguration=====>", apiConfiguration)
 	console.log("<===== account view caretUser=====>", caretUser)
 
+	// CARETI MODIFICATION: Use absolute positioning in standalone mode to not cover avatar
 	return (
-		<div className="fixed inset-0 flex flex-col overflow-hidden pt-[10px] pl-[20px]">
+		<div className={`${IS_STANDALONE ? "absolute" : "fixed"} inset-0 flex flex-col overflow-hidden pt-[10px] pl-[20px]`}>
 			<div className="flex justify-between items-center mb-[17px] pr-[17px]">
 				<h3 className="text-[var(--vscode-foreground)] m-0">{t("account.title", "common")}</h3>
 				<VSCodeButton onClick={onDone}>{t("button.done", "common")}</VSCodeButton>

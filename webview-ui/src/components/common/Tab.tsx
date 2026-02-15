@@ -1,9 +1,12 @@
 import React, { forwardRef, HTMLAttributes, useCallback } from "react"
+// CARETI MODIFICATION: Import platform config for standalone mode check
+import { IS_STANDALONE } from "@/config/platform.config"
 
 type TabProps = HTMLAttributes<HTMLDivElement>
 
+// CARETI MODIFICATION: Use relative positioning in standalone mode to not cover avatar
 export const Tab = ({ className, children, ...props }: TabProps) => (
-	<div className={`fixed inset-0 flex flex-col ${className}`} {...props}>
+	<div className={`${IS_STANDALONE ? "absolute inset-0" : "fixed inset-0"} flex flex-col ${className}`} {...props}>
 		{children}
 	</div>
 )

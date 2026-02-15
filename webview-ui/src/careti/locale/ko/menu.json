@@ -1,5 +1,7 @@
 {
 	"navbar": {
+		"folder": "폴더",
+		"folderTooltip": "작업 폴더 선택",
 		"chatName": "채팅",
 		"newTaskTooltip": "새 작업",
 		"mcpName": "MCP",

@@ -6,6 +6,8 @@ import { memo, useCallback, useEffect, useMemo, useState } from "react"
 import { Virtuoso } from "react-virtuoso"
 import { t } from "@/careti/utils/i18n"
 import DangerButton from "@/components/common/DangerButton"
+// CARETI MODIFICATION: Import platform config for standalone mode
+import { IS_STANDALONE } from "@/config/platform.config"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { TaskServiceClient } from "@/services/grpc-client"
 import { formatLargeNumber, formatSize } from "@/utils/format"
@@ -298,9 +300,10 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 					}
 				`}
 			</style>
+			{/* CARETI MODIFICATION: Use absolute positioning in standalone mode to not cover avatar */}
 			<div
 				style={{
-					position: "fixed",
+					position: IS_STANDALONE ? "absolute" : "fixed",
 					top: 0,
 					left: 0,
 					right: 0,

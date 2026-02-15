@@ -447,6 +447,10 @@ export const ExtensionStateContextProvider: React.FC<{
 				if (response.stateJson) {
 					try {
 						const stateData = JSON.parse(response.stateJson) as ExtensionState
+						// CARETI DEBUG: Log provider values from backend state
+						console.log(
+							`[ESC] State received - planProvider: ${stateData.apiConfiguration?.planModeApiProvider}, actProvider: ${stateData.apiConfiguration?.actModeApiProvider}`,
+						)
 						if (stateData.enablePersonaSystem !== undefined) {
 							caretWebviewLogger.debug(
 								"Backend state received - enablePersonaSystem:",

@@ -2,6 +2,7 @@
 import { expect } from "chai"
 import { describe, it } from "mocha"
 import { spawn, ChildProcess } from "child_process"
+import * as fs from "fs"
 import * as path from "path"
 
 interface StdioResponse {
@@ -71,6 +72,13 @@ describe("Standalone Stdio Chat Flow", function () {
 	const coreJsPath = path.join(process.cwd(), "dist-standalone", "cline-core.js")
 
 	beforeEach(function (done) {
+		// CARETI MODIFICATION: standalone 번들과 extension 자산이 없는 환경(CI의 ci:build,
+		// compile-standalone 미실행 로컬)에서는 spawn이 반드시 실패하므로 skip 처리
+		// (CLI 통합 테스트가 실행 중 인스턴스 없으면 skip하는 관례와 동일)
+		const extensionPackageJson = path.join(process.cwd(), "dist-standalone", "extension", "package.json")
+		if (!fs.existsSync(coreJsPath) || !fs.existsSync(extensionPackageJson)) {
+			this.skip()
+		}
 		let isDone = false
 		const callDone = (err?: Error) => {
 			if (!isDone) {

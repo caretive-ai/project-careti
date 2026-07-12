@@ -94,7 +94,7 @@
 		"typescript_command": "npm run protos",
 		"go_command": "npm run protos-go",
 		"notes": [
-			"`npm run protos` → 실행 스크립트: careti-scripts/build/build-proto.mjs (TS/JS용 generated 코드 전체 관리)",
+			"`npm run protos` → 실행 스크립트: scripts/build-proto.mjs (TS/JS용 generated 코드 전체 관리)",
 			"`npm run protos-go` → 실행 스크립트: scripts/build-go-proto.mjs (CLI용 Go gRPC 클라이언트, src/generated/grpc-go/ 경로)",
 			"src/generated/** 와 src/shared/proto/** 는 스크립트로만 갱신하고 수동 편집 금지"
 		]

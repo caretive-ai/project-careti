@@ -25,6 +25,8 @@ import type { McpHub } from "@/services/mcp/McpHub"
 import { ModelFamily } from "@/shared/prompts"
 import { getSystemPrompt } from "../index"
 import type { SystemPromptContext } from "../types"
+// CARETI MODIFICATION: mockProviderInfo moved to ./fixtures (biome noExportsInTest)
+import { mockProviderInfo } from "./fixtures"
 
 // Check if snapshots should be updated via process argument
 const UPDATE_SNAPSHOTS = process.argv.includes("--update-snapshots") || process.env.UPDATE_SNAPSHOTS === "true"
@@ -106,16 +108,6 @@ const compareStrings = (expected: string, actual: string): string | null => {
 	}
 
 	return summary.join("\n")
-}
-
-export const mockProviderInfo = {
-	providerId: "test",
-	model: {
-		id: "fast",
-		info: {
-			supportsPromptCache: false,
-		},
-	},
 }
 
 const makeMockProviderInfo = (modelId: string, providerId: string = "test") => ({

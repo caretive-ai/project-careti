@@ -1,8 +1,8 @@
-import { expect } from "chai"
+﻿import { expect } from "chai"
 import type { McpHub } from "@/services/mcp/McpHub"
 import { TemplateEngine } from "../templates/TemplateEngine"
 import type { SystemPromptContext } from "../types"
-import { mockProviderInfo } from "./integration.test"
+import { mockProviderInfo } from "./fixtures" // CARETI MODIFICATION: fixture moved out of integration.test.ts
 
 describe("TemplateEngine", () => {
 	let templateEngine: TemplateEngine

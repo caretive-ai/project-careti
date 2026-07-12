@@ -3,6 +3,8 @@ dist
 dist-standalone
 node_modules
 tmp
+# CARETI MODIFICATION: local protoc for Windows (scripts/build-proto.mjs fallback path)
+/tools/
 # work-logs
 .vscode-test
 *.vsix

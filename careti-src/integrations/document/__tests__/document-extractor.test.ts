@@ -84,8 +84,8 @@ describe("DocumentExtractor", () => {
 
 			it("should throw error for unsupported format", async () => {
 				try {
-					// HWP (binary) is not supported in phase 1
-					await extractor.extract("sample.hwp", { cwd: FIXTURES_DIR })
+					// CARETI MODIFICATION: hwp는 @ohah/hwpjs로 지원 추가됨 — 레거시 .ppt로 미지원 케이스 검증
+					await extractor.extract("sample.ppt", { cwd: FIXTURES_DIR })
 					expect.fail("Should have thrown an error")
 				} catch (error) {
 					expect((error as Error).message).to.match(/unsupported|not supported/i)
@@ -146,10 +146,10 @@ describe("DocumentExtractor", () => {
 			expect(extractor.isSupported("sample.docx")).to.be.true
 			expect(extractor.isSupported("sample.hwpx")).to.be.true
 			expect(extractor.isSupported("sample.pptx")).to.be.true
+			expect(extractor.isSupported("sample.hwp")).to.be.true // CARETI MODIFICATION: hwp 지원 추가 반영
 		})
 
 		it("should return false for unsupported formats", () => {
-			expect(extractor.isSupported("sample.hwp")).to.be.false
 			expect(extractor.isSupported("sample.ppt")).to.be.false
 			expect(extractor.isSupported("sample.txt")).to.be.false
 			expect(extractor.isSupported("sample.xyz")).to.be.false

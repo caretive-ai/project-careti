@@ -114,10 +114,11 @@ describe("FinishReasonHandler", () => {
 		})
 
 		describe("natural end with no tool use", () => {
-			it("should return false on first occurrence (give model a chance)", () => {
-				// First occurrence: consecutiveMistakeCount = 0
-				shouldEndLoopByFinishReason("stop", false, 0).should.be.false()
-				shouldEndLoopByFinishReason("end_turn", false, 0).should.be.false()
+			// CARETI MODIFICATION: GLM-4.7 무한루프 방지로 '첫 발생 시 기회 부여' 로직이 제거되어
+			// 자연 종료 + 도구 미사용이면 즉시 종료(true)하는 현재 구현에 맞게 기대값 갱신
+			it("should return true even on first occurrence (immediate end to prevent loops)", () => {
+				shouldEndLoopByFinishReason("stop", false, 0).should.be.true()
+				shouldEndLoopByFinishReason("end_turn", false, 0).should.be.true()
 			})
 
 			it("should return true on second+ occurrence", () => {

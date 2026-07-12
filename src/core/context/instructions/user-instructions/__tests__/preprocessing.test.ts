@@ -61,7 +61,8 @@ describe("Preprocessing", () => {
 		})
 
 		it("should use provided cwd", async () => {
-			const content = "!`pwd`"
+			// CARETI MODIFICATION: Windows cmd에는 pwd가 없어 cd(현재 경로 출력)로 분기
+			const content = process.platform === "win32" ? "!`cd`" : "!`pwd`"
 			const result = await preprocessShellCommands(content, tempDir)
 
 			result.should.containEql(tempDir)

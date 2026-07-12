@@ -155,7 +155,8 @@ describe("global-migration", () => {
 			const result = await migrateGlobalPaths(mockDocumentsPath)
 
 			result.migrated.should.be.true()
-			result.skippedFiles!.should.containEql("context/existing.md")
+			// CARETI MODIFICATION: Windows 경로 구분자를 posix로 정규화해 비교
+			result.skippedFiles!.map((p: string) => p.replace(/\\/g, "/")).should.containEql("context/existing.md")
 
 			// Verify existing file was not overwritten
 			const content = await fs.readFile(path.join(newContextDir, "existing.md"), "utf8")

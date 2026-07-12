@@ -320,12 +320,17 @@ export const EscapeNormalizedReplacer: Replacer = function* (content, find) {
 	const lines = content.split("\n")
 	const findLines = unescapedFind.split("\n")
 
-	for (let i = 0; i <= lines.length - findLines.length; i++) {
-		const block = lines.slice(i, i + findLines.length).join("\n")
-		const unescapedBlock = unescapeString(block)
+	// CARETI MODIFICATION(T20): content-side escape sequences (e.g. literal "\n") can span
+	// fewer physical lines than the unescaped find — scan variable block sizes so an
+	// escaped one-liner still matches a multi-line search block.
+	for (let i = 0; i < lines.length; i++) {
+		for (let size = 1; size <= findLines.length && i + size <= lines.length; size++) {
+			const block = lines.slice(i, i + size).join("\n")
+			const unescapedBlock = unescapeString(block)
 
-		if (unescapedBlock === unescapedFind) {
-			yield block
+			if (unescapedBlock === unescapedFind) {
+				yield block
+			}
 		}
 	}
 }
@@ -399,6 +404,28 @@ export const ContextAwareReplacer: Replacer = function* (content, find) {
 					}
 
 					if (totalNonEmptyLines === 0 || matchingLines / totalNonEmptyLines >= 0.5) {
+						yield block
+						break
+					}
+				} else {
+					// CARETI MODIFICATION(T20): allow flexible middle when line counts differ —
+					// count find's non-empty middle lines found in order within the block middle;
+					// match when at least 50% are present.
+					const findMiddles = findLines
+						.slice(1, -1)
+						.map((l) => l.trim())
+						.filter((l) => l.length > 0)
+					const blockMiddles = blockLines.slice(1, -1).map((l) => l.trim())
+					let matchingLines = 0
+					let searchFrom = 0
+					for (const findLine of findMiddles) {
+						const idx = blockMiddles.indexOf(findLine, searchFrom)
+						if (idx !== -1) {
+							matchingLines++
+							searchFrom = idx + 1
+						}
+					}
+					if (findMiddles.length === 0 || matchingLines / findMiddles.length >= 0.5) {
 						yield block
 						break
 					}

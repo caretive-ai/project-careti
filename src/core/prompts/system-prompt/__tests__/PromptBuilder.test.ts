@@ -1,11 +1,11 @@
-import { expect } from "chai"
+﻿import { expect } from "chai"
 import type { McpHub } from "@/services/mcp/McpHub"
 import { ModelFamily } from "@/shared/prompts"
 import { PromptBuilder } from "../registry/PromptBuilder"
 import { SystemPromptSection } from "../templates/placeholders"
 import type { ComponentRegistry, PromptVariant, SystemPromptContext } from "../types"
 import { createVariant } from "../variants/variant-builder"
-import { mockProviderInfo } from "./integration.test"
+import { mockProviderInfo } from "./fixtures" // CARETI MODIFICATION: fixture moved out of integration.test.ts
 
 describe("PromptBuilder", () => {
 	const mockContext: SystemPromptContext = {

@@ -29,13 +29,10 @@ service CaretAccountService {
   // Fetches all Caret user credits data
   // (balance, usage transactions, payment transactions)
   rpc getCaretUserCredits(cline.EmptyRequest) returns (CaretUserCreditsData);
-
   // Fetches the current Caret user profile, including usage summaries and organizations
   // rpc getCaretUserProfile(cline.EmptyRequest) returns (CaretUserProfile);
-
   // Fetches Caret organization credits data
   // rpc getCaretOrganizationCredits(GetCaretOrganizationCreditsRequest) returns (CaretOrganizationCreditsData);
-
   // Fetches all Caret user organizations data
   // Returns a list of CaretUserOrganization objects
   // rpc getCaretUserOrganizations(cline.EmptyRequest) returns (CaretUserOrganizationsResponse);

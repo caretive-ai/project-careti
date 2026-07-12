@@ -1,9 +1,9 @@
-import { expect } from "chai"
+﻿import { expect } from "chai"
 import type { McpHub } from "@/services/mcp/McpHub"
 import { ModelFamily } from "@/shared/prompts"
 import { PromptRegistry } from "../registry/PromptRegistry"
 import type { SystemPromptContext } from "../types"
-import { mockProviderInfo } from "./integration.test"
+import { mockProviderInfo } from "./fixtures" // CARETI MODIFICATION: fixture moved out of integration.test.ts
 
 describe("PromptRegistry", () => {
 	let registry: PromptRegistry

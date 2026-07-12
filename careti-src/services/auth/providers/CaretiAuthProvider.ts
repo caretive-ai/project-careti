@@ -34,6 +34,29 @@ export interface CaretAuthApiTokenRefreshResponse {
 	data: CaretAuthResponseData
 }
 
+// CARETI MODIFICATION: 서버(api.careti.ai)가 아직 구 도메인(caret.team)으로 로그인
+// redirect URL을 반환한다. caret.team은 더 이상 서비스되지 않으므로 신 도메인
+// careti.ai로 정규화한다. 서버 응답이 갱신되면 자연스럽게 no-op이 된다.
+const LEGACY_AUTH_HOSTS: Record<string, string> = {
+	"caret.team": "careti.ai",
+	"www.caret.team": "careti.ai",
+}
+
+export const normalizeAuthRedirectUrl = (rawUrl: string): string => {
+	try {
+		const url = new URL(rawUrl)
+		const replacementHost = LEGACY_AUTH_HOSTS[url.hostname]
+		if (replacementHost) {
+			Logger.info(`[CaretiAuthProvider] Rewriting legacy auth host ${url.hostname} -> ${replacementHost}`)
+			url.hostname = replacementHost
+			return url.toString()
+		}
+	} catch {
+		// 상대 경로 등 URL로 파싱되지 않는 값은 그대로 둔다
+	}
+	return rawUrl
+}
+
 export class CaretiAuthProvider implements IAuthProvider {
 	readonly name = "careti"
 
@@ -226,13 +249,13 @@ export class CaretiAuthProvider implements IAuthProvider {
 					throw new Error("No redirect URL found in the response")
 				}
 
-				return redirectUrl
+				return normalizeAuthRedirectUrl(redirectUrl) // CARETI MODIFICATION: 구 도메인 정규화
 			}
 
 			// If we didn't get a redirect, try to parse the response as JSON
 			const responseData = await response.json()
 			if (responseData.redirect_url) {
-				return responseData.redirect_url
+				return normalizeAuthRedirectUrl(responseData.redirect_url) // CARETI MODIFICATION: 구 도메인 정규화
 			}
 
 			throw new Error("Unexpected response from auth server")

@@ -28,12 +28,13 @@
 	],
 	"exclude": [
 		"src/test/**/*.js",
-		"src/**/__tests__/*",
+		"src/**/__tests__/**",
 		"src/test/e2e/**/*.test.ts",
-		"careti-src/**/__tests__/*",
+		"careti-src/**/__tests__/**",
 		"careti-src/test/e2e/**/*.test.ts",
 		"careti-src/**/*.integration.test.ts",
 		"careti-src/core/controller/fetchLiteLlmModels.test.ts",
-		"careti-src/shared/FeatureConfig.test.ts"
+		"careti-src/shared/FeatureConfig.test.ts",
+		"src/integrations/cli-subagents/subagent_command.test.ts"
 	]
 }

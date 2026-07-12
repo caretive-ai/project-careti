@@ -16,9 +16,11 @@ import { HostProvider } from "@/hosts/host-provider"
 // (tsc는 .hwp 같은 자산을 out/으로 복사하지 않으므로 ../../는 존재하지 않는 out/careti-src를 가리킴)
 const FIXTURES_DIR = path.resolve(__dirname, "../../../careti-src/integrations/document/__tests__/fixtures")
 
-// CARETI MODIFICATION: DocumentExtractor가 Logger를 경유하므로 확장 활성화와 무관하게
-// 이 테스트 모듈 그래프의 HostProvider를 초기화해 둔다
-before(() => {
+// CARETI MODIFICATION: DocumentExtractor/hwp-parser가 Logger를 경유하므로 확장 활성화와
+// 무관하게 이 테스트 모듈 그래프의 HostProvider를 초기화해 둔다.
+// 주의: 파일 최상위 before는 전체 실행에서 1회뿐이라, 앞서 실행된 다른 테스트가
+// HostProvider.reset()을 호출하면 소용없다 — 반드시 각 describe의 before에서 초기화한다.
+const setupHostProvider = () => {
 	HostProvider.reset()
 	HostProvider.initialize(
 		(() => ({})) as any,
@@ -35,14 +37,13 @@ before(() => {
 		"/mock/extension",
 		os.tmpdir(),
 	)
-})
-
-after(() => {
-	HostProvider.reset()
-})
+}
 
 describe("HWP Document Integration", function () {
 	this.timeout(10000)
+
+	before(setupHostProvider)
+	after(() => HostProvider.reset())
 
 	describe("HWP Parser - Direct", () => {
 		it("should parse sample.hwp file successfully", async () => {
@@ -153,6 +154,7 @@ describe("HWPX Document Integration", function () {
 	const hwpxPath = path.join(FIXTURES_DIR, "sample.hwpx")
 
 	before(async function () {
+		setupHostProvider() // CARETI MODIFICATION: describe별 HostProvider 초기화
 		// Skip if no HWPX fixture
 		const exists = await fs
 			.access(hwpxPath)
@@ -163,6 +165,8 @@ describe("HWPX Document Integration", function () {
 			this.skip()
 		}
 	})
+
+	after(() => HostProvider.reset())
 
 	it("should parse HWPX file", async () => {
 		const extractor = new DocumentExtractor()

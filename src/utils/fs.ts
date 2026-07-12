@@ -137,7 +137,10 @@ export const readDirectory = async (directoryPath: string, excludedPaths: string
 					}
 
 					for (const excludedPathList of excludedPaths) {
-						const pathToSearchFor = path.sep + excludedPathList.join(path.sep) + path.sep
+						// CARETI MODIFICATION: 세그먼트에 포함된 "/"도 플랫폼 구분자로 정규화
+						// (Windows에서 "\.agents/context\workflows\" 같은 혼합 구분자가 되어 제외가 무동작)
+						const segments = excludedPathList.flatMap((segment) => segment.split("/"))
+						const pathToSearchFor = path.sep + segments.join(path.sep) + path.sep
 						if (filePath.includes(pathToSearchFor)) {
 							return false
 						}

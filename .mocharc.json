@@ -18,6 +18,9 @@
 		"./src/test/require-shim.js",
 		"./src/test/requires.ts"
 	],
+	"node-option": [
+		"no-experimental-strip-types"
+	],
 	"recursive": true,
 	"exit": true
 }

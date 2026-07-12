@@ -11,7 +11,7 @@ tmp
 .DS_Store
 .idea
 pnpm-lock.yaml
-package-lock.json
+# CARETI MODIFICATION: package-lock.json은 추적한다 — CI가 npm ci(lockfile 필수)를 사용
 .clineignore
 .venv
 .actrc

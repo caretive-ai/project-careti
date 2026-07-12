@@ -131,7 +131,9 @@ describe("GenerateImage reference images integration", () => {
 			await fs.mkdir(path.dirname(filePathA), { recursive: true })
 			await fs.mkdir(path.dirname(filePathB), { recursive: true })
 
-			const pngBuffer = await sharp({
+			// CARETI MODIFICATION: 해석 결과는 dedupeReferenceImages로 중복 제거되므로
+			// 두 파일은 서로 다른 이미지여야 XML 파싱 결과 2건이 유지된다
+			const pngBufferA = await sharp({
 				create: {
 					width: 64,
 					height: 64,
@@ -141,8 +143,18 @@ describe("GenerateImage reference images integration", () => {
 			})
 				.png()
 				.toBuffer()
-			await fs.writeFile(filePathA, pngBuffer)
-			await fs.writeFile(filePathB, pngBuffer)
+			const pngBufferB = await sharp({
+				create: {
+					width: 64,
+					height: 64,
+					channels: 3,
+					background: { r: 200, g: 100, b: 50 },
+				},
+			})
+				.png()
+				.toBuffer()
+			await fs.writeFile(filePathA, pngBufferA)
+			await fs.writeFile(filePathB, pngBufferB)
 
 			const config = {
 				taskState: {},

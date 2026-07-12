@@ -30,7 +30,13 @@ describe("Cline Extension", () => {
 		}
 
 		await new Promise((resolve) => setTimeout(resolve, 400))
-		await vscode.commands.executeCommand(`${id}.plusButtonClicked`)
+		// CARETI MODIFICATION: dual-naming 정책상 커맨드 ID는 publisher.name(caretive.caret)이 아니라
+		// caretive.careti.* 이므로 package.json contributes에서 실제 등록된 ID를 조회
+		const plusCommand = packageJSON.contributes.commands
+			.map((c: { command: string }) => c.command)
+			.find((cmd: string) => cmd.endsWith(".plusButtonClicked"))
+		should.exist(plusCommand)
+		await vscode.commands.executeCommand(plusCommand)
 	})
 
 	// New test to verify xvfb and webview functionality

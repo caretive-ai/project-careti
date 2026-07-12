@@ -230,6 +230,34 @@ function blockAnchorFallbackMatch(originalContent: string, searchContent: string
 // CARETI MODIFICATION: Enhanced fallback matching using SmartEditEngine replacers
 
 /**
+ * Shared runner for SmartEditEngine replacer-based fallbacks.
+ * Search blocks from the diff stream carry a trailing newline that the string-based
+ * replacers don't expect (e.g. ContextAwareReplacer's last-line anchor would become "").
+ * Strip it for matching, then re-consume the newline in the matched range so the
+ * replacement doesn't leave a spurious blank line (mirrors exact-match semantics).
+ */
+function replacerFallbackMatch(
+	replacer: (content: string, find: string) => Iterable<string>,
+	originalContent: string,
+	searchContent: string,
+	startIndex: number,
+): [number, number] | false {
+	const hasTrailingNewline = searchContent.endsWith("\n")
+	const search = hasTrailingNewline ? searchContent.slice(0, -1) : searchContent
+	for (const match of replacer(originalContent, search)) {
+		const index = originalContent.indexOf(match, startIndex)
+		if (index !== -1) {
+			let end = index + match.length
+			if (hasTrailingNewline && originalContent[end] === "\n") {
+				end++
+			}
+			return [index, end]
+		}
+	}
+	return false
+}
+
+/**
  * Attempts whitespace-normalized matching using SmartEditEngine's WhitespaceNormalizedReplacer.
  * Collapses multiple whitespaces and compares normalized content.
  */
@@ -238,13 +266,7 @@ function whitespaceNormalizedFallbackMatch(
 	searchContent: string,
 	startIndex: number,
 ): [number, number] | false {
-	for (const match of WhitespaceNormalizedReplacer(originalContent, searchContent)) {
-		const index = originalContent.indexOf(match, startIndex)
-		if (index !== -1) {
-			return [index, index + match.length]
-		}
-	}
-	return false
+	return replacerFallbackMatch(WhitespaceNormalizedReplacer, originalContent, searchContent, startIndex)
 }
 
 /**
@@ -256,13 +278,7 @@ function indentationFlexibleFallbackMatch(
 	searchContent: string,
 	startIndex: number,
 ): [number, number] | false {
-	for (const match of IndentationFlexibleReplacer(originalContent, searchContent)) {
-		const index = originalContent.indexOf(match, startIndex)
-		if (index !== -1) {
-			return [index, index + match.length]
-		}
-	}
-	return false
+	return replacerFallbackMatch(IndentationFlexibleReplacer, originalContent, searchContent, startIndex)
 }
 
 /**
@@ -274,13 +290,7 @@ function escapeNormalizedFallbackMatch(
 	searchContent: string,
 	startIndex: number,
 ): [number, number] | false {
-	for (const match of EscapeNormalizedReplacer(originalContent, searchContent)) {
-		const index = originalContent.indexOf(match, startIndex)
-		if (index !== -1) {
-			return [index, index + match.length]
-		}
-	}
-	return false
+	return replacerFallbackMatch(EscapeNormalizedReplacer, originalContent, searchContent, startIndex)
 }
 
 /**
@@ -292,13 +302,7 @@ function trimmedBoundaryFallbackMatch(
 	searchContent: string,
 	startIndex: number,
 ): [number, number] | false {
-	for (const match of TrimmedBoundaryReplacer(originalContent, searchContent)) {
-		const index = originalContent.indexOf(match, startIndex)
-		if (index !== -1) {
-			return [index, index + match.length]
-		}
-	}
-	return false
+	return replacerFallbackMatch(TrimmedBoundaryReplacer, originalContent, searchContent, startIndex)
 }
 
 /**
@@ -310,13 +314,7 @@ function contextAwareFallbackMatch(
 	searchContent: string,
 	startIndex: number,
 ): [number, number] | false {
-	for (const match of ContextAwareReplacer(originalContent, searchContent)) {
-		const index = originalContent.indexOf(match, startIndex)
-		if (index !== -1) {
-			return [index, index + match.length]
-		}
-	}
-	return false
+	return replacerFallbackMatch(ContextAwareReplacer, originalContent, searchContent, startIndex)
 }
 
 /**

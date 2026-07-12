@@ -96,9 +96,10 @@ describe("Careti i18n System", () => {
 			setGlobalUILanguage("ko")
 		})
 
-		test("받침 있는 단어 + 을/를 조사", () => {
+		// CARETI MODIFICATION: 브랜드명이 캐럿(받침 있음)→캐러티(받침 없음)로 변경되어 기대 조사를 '를'로 갱신
+		test("브랜드명(받침 없음) + 을/를 조사", () => {
 			const result = t("welcome.title", "common")
-			expect(result).toBe("캐러티을 사용해보세요! 🎉")
+			expect(result).toBe("캐러티를 사용해보세요! 🎉")
 		})
 
 		test("받침 없는 단어 + 을/를 조사", () => {
@@ -138,7 +139,7 @@ describe("Careti i18n System", () => {
 
 	describe("받침 검사 정확성", () => {
 		test("한글 받침 검사", () => {
-			expect(hasLastConsonant("캐러티")).toBe(true) // ㅅ 받침
+			expect(hasLastConsonant("캐러티")).toBe(false) // CARETI MODIFICATION: '티'는 받침 없음 (구 브랜드 '캐럿'은 ㅅ 받침)
 			expect(hasLastConsonant("코드센터")).toBe(false) // 받침 없음
 			expect(hasLastConsonant("김치")).toBe(false) // 받침 없음
 			expect(hasLastConsonant("한국")).toBe(true) // ㄱ 받침
@@ -176,7 +177,7 @@ describe("Careti i18n System", () => {
 			const result = t("welcome.title", "common")
 			expect(result).toContain("캐러티")
 			expect(result).toContain("🎉")
-			expect(result).toBe("캐러티을 사용해보세요! 🎉")
+			expect(result).toBe("캐러티를 사용해보세요! 🎉") // CARETI MODIFICATION: 받침 없는 브랜드명 조사 갱신
 		})
 
 		test("영어 설정 (기본)", () => {
@@ -197,7 +198,7 @@ describe("Careti i18n System", () => {
 		test("한글 조사가 포함된 브랜드 참조", () => {
 			setGlobalUILanguage("ko")
 			const result = t("welcome.title", "common")
-			expect(result).toMatch(/캐러티을/)
+			expect(result).toMatch(/캐러티를/) // CARETI MODIFICATION: 받침 없는 브랜드명 조사 갱신
 		})
 	})
 })

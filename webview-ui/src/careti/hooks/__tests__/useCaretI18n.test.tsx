@@ -92,7 +92,9 @@ describe("useCaretiI18n Integration Tests", () => {
 		expect(result.current.isLanguageSupported("en")).toBe(true)
 		expect(result.current.isLanguageSupported("ja")).toBe(true)
 		expect(result.current.isLanguageSupported("zh")).toBe(true)
-		expect(result.current.isLanguageSupported("fr")).toBe(false)
+		// CARETI MODIFICATION: 7개 언어 확장으로 fr/de/ru도 지원 언어가 됨 — 미지원 케이스는 es로 검증
+		expect(result.current.isLanguageSupported("fr")).toBe(true)
+		expect(result.current.isLanguageSupported("es")).toBe(false)
 	})
 
 	it("should provide performance metrics", () => {

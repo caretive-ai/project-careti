@@ -179,7 +179,8 @@ describe("GenerateImageToolHandler mention fallback", () => {
 
 			const resolved = await resolveReferenceImages(config, '["data/ref.png"]')
 			resolved?.length.should.equal(1)
-			resolved?.[0].startsWith("data:image/webp;base64,").should.equal(true)
+			// CARETI MODIFICATION: 이미지 최적화가 검증 전용으로 바뀌어(포맷 변환 없음) 원본 mime 유지
+			resolved?.[0].startsWith("data:image/png;base64,").should.equal(true)
 		} finally {
 			HostProvider.reset()
 			await fs.rm(tempRoot, { recursive: true, force: true })
@@ -224,7 +225,8 @@ describe("GenerateImageToolHandler mention fallback", () => {
 
 			const resolved = await resolveReferenceImages(config, "data/ref.png\ndata/ref2.jpg")
 			resolved?.length.should.equal(2)
-			resolved?.every((item) => item.startsWith("data:image/webp;base64,")).should.equal(true)
+			// CARETI MODIFICATION: 포맷 변환 없이 원본 mime(png/jpeg) 유지
+			resolved?.every((item) => item.startsWith("data:image/")).should.equal(true)
 		} finally {
 			HostProvider.reset()
 			await fs.rm(tempRoot, { recursive: true, force: true })

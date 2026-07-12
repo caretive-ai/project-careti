@@ -65,21 +65,23 @@ function sayHello() {
 		}
 
 		describe("Baseline (SimpleReplacer only)", () => {
+			// CARETI MODIFICATION: Replacer는 '후보'를 yield하는 generator이므로
+			// 실제 매치 여부는 content.includes()로 걸러야 한다 (smartReplace의 indexOf 필터와 동일)
 			it("should succeed on exact match", () => {
 				const { content, search } = testCases.exact
-				const matches = [...SimpleReplacer(content, search)]
+				const matches = [...SimpleReplacer(content, search)].filter((m) => content.includes(m))
 				expect(matches.length).to.be.greaterThan(0)
 			})
 
 			it("should fail on whitespace variations", () => {
 				const { content, search } = testCases.whitespace
-				const matches = [...SimpleReplacer(content, search)]
+				const matches = [...SimpleReplacer(content, search)].filter((m) => content.includes(m))
 				expect(matches.length).to.equal(0) // Baseline fails
 			})
 
 			it("should fail on indentation variations", () => {
 				const { content, search } = testCases.indent
-				const matches = [...SimpleReplacer(content, search)]
+				const matches = [...SimpleReplacer(content, search)].filter((m) => content.includes(m))
 				expect(matches.length).to.equal(0) // Baseline fails
 			})
 		})
@@ -121,7 +123,8 @@ function sayHello() {
 
 				for (const { content, search, replace } of cases) {
 					// Baseline: SimpleReplacer only
-					const baselineMatches = [...SimpleReplacer(content, search)]
+					// CARETI MODIFICATION: 후보를 content.includes()로 걸러 실제 매치만 집계
+					const baselineMatches = [...SimpleReplacer(content, search)].filter((m) => content.includes(m))
 					if (baselineMatches.length > 0) baselineSuccess++
 
 					// Improved: Full SmartEditEngine

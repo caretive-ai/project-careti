@@ -12,6 +12,11 @@ vi.mock("@/components/chat/BrowserSessionRow", () => ({
 	default: () => <div data-testid="browser-row" />,
 }))
 
+// CARETI MODIFICATION: MessageRenderer가 useExtensionState(mode)를 사용하게 되어 컨텍스트 mock 추가
+vi.mock("@/context/ExtensionStateContext", () => ({
+	useExtensionState: () => ({ mode: "act" }),
+}))
+
 describe("MessageRenderer bottom padding", () => {
 	const noop = () => {}
 

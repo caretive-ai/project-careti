@@ -130,7 +130,9 @@ describe("Vision Model Tool Integration Tests", function () {
 			prompt.should.containEql("Analyze an image file using vision AI")
 		})
 
-		it("should include analyze_image tool for vision model (NOT excluded)", async () => {
+		// CARETI MODIFICATION: 비전 모델은 read_file로 이미지를 직접 열람하므로 analyze_image가
+		// 의도적으로 제외됨 (CaretiJsonAdapter 참조) — 현재 설계에 맞게 기대값 갱신
+		it("should exclude analyze_image tool for vision model (read_file covers images)", async () => {
 			const manager = new PromptSystemManager()
 			const context: CaretSystemPromptContext & { modeSystem: "careti" } = {
 				modeSystem: "careti",
@@ -153,9 +155,9 @@ describe("Vision Model Tool Integration Tests", function () {
 
 			const prompt = await manager.getPrompt(context)
 
-			// analyze_image should be available even for vision models
-			// (because generated images are saved to disk, not in conversation)
-			prompt.should.containEql("analyze_image")
+			// Vision models view images (incl. generated ones on disk) via read_file,
+			// so analyze_image is excluded from their tool list
+			prompt.should.not.containEql("analyze_image")
 		})
 
 		it("should exclude analyze_image when disabled in settings", async () => {
@@ -284,7 +286,8 @@ describe("Vision Model Tool Integration Tests", function () {
 			const prompt = await manager.getPrompt(context)
 
 			// Verify all expected tools are present
-			prompt.should.containEql("analyze_image")
+			// CARETI MODIFICATION: 비전 모델은 analyze_image 대신 확장된 read_file을 사용
+			prompt.should.not.containEql("analyze_image")
 			prompt.should.containEql("generate_image")
 			prompt.should.containEql("read_file")
 			prompt.should.containEql("You can also read image files (PNG, JPG, GIF, WebP)")

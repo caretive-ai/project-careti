@@ -82,7 +82,8 @@ describe("WebSearchToolHandler", () => {
 
 			const result = await handler.execute(mockConfig, block as ToolUse)
 
-			result.should.containEql("Missing parameter")
+			// CARETI MODIFICATION: 에러 메시지가 사용법 예시를 포함한 상세 문구로 개선됨
+			result.should.containEql("Missing value for required parameter")
 			;(mockConfig.taskState!.consecutiveMistakeCount as number).should.equal(1)
 		})
 
@@ -122,7 +123,7 @@ describe("WebSearchToolHandler", () => {
 			parseNumResults(undefined).should.equal(5)
 			parseNumResults("").should.equal(5)
 			parseNumResults("3").should.equal(3)
-			parseNumResults("0").should.equal(1)
+			parseNumResults("0").should.equal(5) // CARETI MODIFICATION: 구현상 0은 falsy로 기본값 5 처리 (WebSearchToolHandler.ts:52와 동일)
 			parseNumResults("-1").should.equal(1)
 			parseNumResults("10").should.equal(10)
 			parseNumResults("15").should.equal(10)

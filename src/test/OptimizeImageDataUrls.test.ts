@@ -7,7 +7,9 @@ import "should"
 import sharp from "sharp"
 
 describe("OptimizeImageDataUrls handler", () => {
-	it("returns optimized webp data URLs", async () => {
+	// CARETI MODIFICATION: 이미지 최적화가 7500px 검증 전용으로 변경(포맷 변환/리사이즈 제거)되어
+	// 유효한 이미지는 원본 data URL이 그대로 반환된다
+	it("returns validated data URLs unchanged", async () => {
 		const inputBuffer = await sharp({
 			create: {
 				width: 2400,
@@ -26,7 +28,6 @@ describe("OptimizeImageDataUrls handler", () => {
 
 		const response = await OptimizeImageDataUrls({} as Controller, request)
 		response.dataUrls.should.have.length(1)
-		response.dataUrls[0].startsWith("data:image/webp;base64,").should.equal(true)
-		response.dataUrls[0].length.should.be.lessThan(inputDataUrl.length)
+		response.dataUrls[0].should.equal(inputDataUrl)
 	})
 })

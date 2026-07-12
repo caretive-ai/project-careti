@@ -80,12 +80,20 @@ describe("SharedUriHandler", () => {
 				sinon.assert.calledOnceWithExactly(handleAuthCallbackStub, "jwt123", "google")
 			})
 
-			// CARETI MODIFICATION: Careti token callbacks often omit provider, so default to Careti path
-			it("should successfully handle auth callback without provider", async () => {
-				const result = await SharedUriHandler.handleUri("vscode://cline.cline/auth?idToken=jwt123")
+			// CARETI MODIFICATION: 구현은 경로별로 기본 provider를 분기한다 —
+			// /auth/callback(standalone Careti 인증)은 careti, 레거시 /auth는 cline
+			it("should default to careti for /auth/callback without provider", async () => {
+				const result = await SharedUriHandler.handleUri("vscode://cline.cline/auth/callback?idToken=jwt123")
 
 				expect(result).to.be.true
 				sinon.assert.calledOnceWithExactly(handleAuthCallbackStub, "jwt123", "careti")
+			})
+
+			it("should default to cline for legacy /auth without provider", async () => {
+				const result = await SharedUriHandler.handleUri("vscode://cline.cline/auth?idToken=jwt123")
+
+				expect(result).to.be.true
+				sinon.assert.calledOnceWithExactly(handleAuthCallbackStub, "jwt123", "cline")
 			})
 
 			it("should return false when idToken is missing", async () => {

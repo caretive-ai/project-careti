@@ -12,6 +12,12 @@ const createMockProcess = () => {
 		stdout: {
 			on: sinon.fake(),
 			resume: sinon.fake(),
+			// CARETI MODIFICATION: 구현이 readline 대신 stdout을 직접 async 반복하도록 변경되어
+			// (run.ts의 'Direct stream processing' 참조) mock도 async iterable이어야 한다
+			async *[Symbol.asyncIterator]() {
+				yield '{"type":"text","text":"Hello"}\n'
+				yield '{"type":"text","text":" world"}\n'
+			},
 		},
 		stderr: {
 			on: sinon.fake(() => {}),

@@ -4,8 +4,10 @@ import { describe, it } from "mocha"
 import "should"
 import sharp from "sharp"
 
+// CARETI MODIFICATION: 이미지 최적화가 7500px 제한 검증 전용으로 변경됨
+// (리사이즈/포맷 변환 없음 — cline-latest 동작과 일치, 대용량 처리는 서버 책임)
 describe("Image optimization integration", () => {
-	it("resizes large images and converts to webp", async () => {
+	it("returns valid images unchanged (validation only)", async () => {
 		const inputBuffer = await sharp({
 			create: {
 				width: 3000,
@@ -20,16 +22,22 @@ describe("Image optimization integration", () => {
 		const inputDataUrl = `data:image/png;base64,${inputBuffer.toString("base64")}`
 		const optimized = await optimizeImageDataUrl(inputDataUrl)
 
-		optimized.startsWith("data:image/webp;base64,").should.equal(true)
-		optimized.length.should.be.lessThan(inputDataUrl.length)
+		optimized.should.equal(inputDataUrl)
+	})
 
-		const optimizedBase64 = optimized.split(",")[1] || ""
-		const optimizedBuffer = Buffer.from(optimizedBase64, "base64")
-		const metadata = await sharp(optimizedBuffer).metadata()
-		if (!metadata.width || !metadata.height) {
-			throw new Error("Missing optimized image dimensions.")
-		}
-		metadata.width.should.be.lessThanOrEqual(1024)
-		metadata.height.should.be.lessThanOrEqual(1024)
+	it("rejects images exceeding the 7500px dimension limit", async () => {
+		const inputBuffer = await sharp({
+			create: {
+				width: 7600,
+				height: 4,
+				channels: 3,
+				background: { r: 0, g: 0, b: 0 },
+			},
+		})
+			.png()
+			.toBuffer()
+
+		const inputDataUrl = `data:image/png;base64,${inputBuffer.toString("base64")}`
+		await optimizeImageDataUrl(inputDataUrl).should.be.rejectedWith(/exceed maximum allowed size/)
 	})
 })

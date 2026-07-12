@@ -2,15 +2,44 @@
 // Tests HWP 5.0 parser with real sample files
 // Run with: npm run test:integration -- --grep "HWP Document"
 
-import { describe, it } from "mocha"
+import { after, before, describe, it } from "mocha"
 import { expect } from "chai"
 import * as fs from "fs/promises"
+import * as os from "os"
 import * as path from "path"
 
 import { parseHwp, parseHwpFromFile } from "@careti/integrations/document/hwp-parser"
 import { DocumentExtractor } from "@careti/integrations/document/document-extractor"
+import { HostProvider } from "@/hosts/host-provider"
 
-const FIXTURES_DIR = path.resolve(__dirname, "../../careti-src/integrations/document/__tests__/fixtures")
+// CARETI MODIFICATION: 컴파일 위치(out/src/test) 기준으로 저장소 루트의 '소스' 픽스처를 참조
+// (tsc는 .hwp 같은 자산을 out/으로 복사하지 않으므로 ../../는 존재하지 않는 out/careti-src를 가리킴)
+const FIXTURES_DIR = path.resolve(__dirname, "../../../careti-src/integrations/document/__tests__/fixtures")
+
+// CARETI MODIFICATION: DocumentExtractor가 Logger를 경유하므로 확장 활성화와 무관하게
+// 이 테스트 모듈 그래프의 HostProvider를 초기화해 둔다
+before(() => {
+	HostProvider.reset()
+	HostProvider.initialize(
+		(() => ({})) as any,
+		(() => ({})) as any,
+		{
+			workspaceClient: { getWorkspacePaths: async () => ({ paths: [] }) },
+			envClient: {},
+			windowClient: {},
+			diffClient: {},
+		} as any,
+		() => {},
+		() => Promise.resolve("http://example.com"),
+		() => Promise.resolve("/mock/path"),
+		"/mock/extension",
+		os.tmpdir(),
+	)
+})
+
+after(() => {
+	HostProvider.reset()
+})
 
 describe("HWP Document Integration", function () {
 	this.timeout(10000)
@@ -91,7 +120,8 @@ describe("HWP Document Integration", function () {
 
 		it("should list HWP in supported formats", () => {
 			const formats = extractor.getSupportedFormats()
-			expect(formats).to.include(".hwp")
+			// CARETI MODIFICATION: getSupportedFormats()는 점 없는 포맷명 배열을 반환
+			expect(formats).to.include("hwp")
 		})
 	})
 

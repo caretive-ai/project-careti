@@ -269,7 +269,10 @@ describe("disk - global directory paths", () => {
 			result.should.match(/\.agents[\\/]mcp$/)
 		})
 
-		it("all global directories should be under .agents folder", async () => {
+		it("all global directories should be under .agents folder", async function () {
+			// CARETI MODIFICATION: 모듈 내부 호출은 stub을 우회해 실제 getDocumentsPath(Windows에서
+			// PowerShell 스폰)가 5회 실행되므로 기본 2초 타임아웃으로는 플레이키 — 여유 있게 확장
+			this.timeout(15000)
 			const disk = await import("../disk")
 			sandbox.stub(disk, "getDocumentsPath").resolves(tempDir)
 

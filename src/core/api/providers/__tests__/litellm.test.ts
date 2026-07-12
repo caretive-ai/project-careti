@@ -46,6 +46,11 @@ describe("LiteLlmHandler", () => {
 	}
 
 	beforeEach(() => {
+		// CARETI MODIFICATION: recreate the stub per test — sinon.restore() in earlier
+		// test files (e.g. retry.test.ts) evicts this module-level stub from the default
+		// sandbox, so the afterEach sinon.reset() no longer clears its call history.
+		fakeClient.chat.completions.create = sinon.stub()
+
 		mockFetchForTesting(mockFetch, () => {
 			return new Promise((resolve) => {
 				doneMockingFetch = resolve

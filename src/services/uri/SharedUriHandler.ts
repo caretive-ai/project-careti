@@ -1,5 +1,6 @@
 // CARETI MODIFICATION: Handle Careti auth token bootstrap
 import { WebviewProvider } from "@/core/webview"
+import { focusChatInput } from "@/hosts/vscode/commandUtils"
 import { Logger } from "../logging/Logger"
 
 /**
@@ -36,11 +37,19 @@ export class SharedUriHandler {
 				}),
 		)
 
-		const visibleWebview = WebviewProvider.getVisibleInstance()
+		let visibleWebview = WebviewProvider.getVisibleInstance()
 
 		if (!visibleWebview) {
-			Logger.warn("SharedUriHandler: No visible webview found")
-			return false
+			// CARETI MODIFICATION: 로그인 콜백 도착 시 Careti 사이드바가 보이지 않으면
+			// (다른 사이드바 탭/접힘 상태) 인증 정보가 조용히 드랍되던 문제 —
+			// 사이드바를 포커스해 인스턴스를 확보한 뒤 계속 처리한다
+			try {
+				visibleWebview = await focusChatInput()
+				Logger.info("SharedUriHandler: Webview was not visible; focused sidebar to handle callback")
+			} catch {
+				Logger.warn("SharedUriHandler: No webview instance available")
+				return false
+			}
 		}
 
 		try {
